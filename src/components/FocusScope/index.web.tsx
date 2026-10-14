@@ -1,4 +1,4 @@
-import {FocusScope as RadixFocusScope} from 'radix-ui/internal'
+import * as RadixFocusScope from '@radix-ui/react-focus-scope'
 
 /*
  * The web version of the FocusScope component is a proper implementation, we

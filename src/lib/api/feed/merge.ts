@@ -108,8 +108,8 @@ export class MergeFeedAPI implements FeedAPI {
 
     const promises = []
 
-    // always keep following topped up
-    if (this.following.numReady < limit) {
+    // always keep following topped up while the source has another page
+    if (this.following.hasMore && this.following.numReady < limit) {
       await this.following.fetchNext(60)
     }
 
@@ -125,7 +125,7 @@ export class MergeFeedAPI implements FeedAPI {
       !this.following.hasMore && this.following.numReady < limit
     if (this.params.mergeFeedEnabled || outOfFollows) {
       for (const feed of feeds) {
-        if (feed.numReady < 5) {
+        if (feed.hasMore && feed.numReady < 5) {
           promises.push(feed.fetchNext(10))
         }
       }
@@ -145,8 +145,12 @@ export class MergeFeedAPI implements FeedAPI {
       }
     }
 
+    const hasMore =
+      this.following.hasMore ||
+      this.following.numReady > 0 ||
+      this.customFeeds.some(feed => feed.hasMore || feed.numReady > 0)
     return {
-      cursor: String(this.itemCursor),
+      cursor: hasMore ? String(this.itemCursor) : undefined,
       feed: posts,
     }
   }
@@ -155,8 +159,8 @@ export class MergeFeedAPI implements FeedAPI {
     const i = this.itemCursor++
     const candidateFeeds = this.customFeeds.filter(f => f.numReady > 0)
     const canSample = candidateFeeds.length > 0
-    const hasFollows = this.following.hasMore
     const hasFollowsReady = this.following.numReady > 0
+    const hasFollows = this.following.hasMore || hasFollowsReady
 
     // this condition establishes the frequency that custom feeds are woven into follows
     const shouldSample =
@@ -187,6 +191,7 @@ class MergeFeedSource {
   feedTuners: FeedTunerFn[]
   sourceInfo: ReasonFeedSource | undefined
   cursor: string | undefined = undefined
+  seenCursors = new Set<string>()
   queue: app.bsky.feed.defs.FeedViewPost[] = []
   hasMore = true
 
@@ -221,10 +226,15 @@ class MergeFeedSource {
     const page = await this._getFeed(this.cursor, n)
     if (page) {
       this.cursor = page.cursor
-      if (page.feed.length) {
-        this.queue = this.queue.concat(page.feed)
+      const cursor = this.cursor
+      if (cursor) {
+        this.hasMore = !this.seenCursors.has(cursor)
+        this.seenCursors.add(cursor)
       } else {
         this.hasMore = false
+      }
+      if (page.feed.length) {
+        this.queue = this.queue.concat(page.feed)
       }
     } else {
       this.hasMore = false

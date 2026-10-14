@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef, useState} from 'react'
+import {useEffect, useEffectEvent, useMemo, useRef, useState} from 'react'
 import {
   TextInput,
   type TextInputContentSizeChangeEvent,
@@ -141,13 +141,17 @@ export function AutosizedTextarea({
    * Reset native height state after a programmatic clear. Android uses it as
    * the explicit input height, while iOS uses it to decide when to scroll.
    */
+  const reportHeight = useEffectEvent((height: number) => {
+    onUpdateHeight?.(height)
+  })
+
   const prevRawValue = useRef(rawValue || '')
   useEffect(() => {
     if (!IS_NATIVE) return
     if (rawValue === undefined) return // uncontrolled
     if (prevRawValue.current?.length && rawValue === '') {
       setNativeHeight(minInputHeight)
-      onUpdateHeight?.(minInputHeight)
+      reportHeight(minInputHeight)
     }
     prevRawValue.current = rawValue
   }, [rawValue, minInputHeight])

@@ -146,7 +146,10 @@ interface ProfileUpdateParams {
       ) => Un$Typed<app.bsky.actor.profile.Main>)
   newUserAvatar?: ImageMeta | undefined | null
   newUserBanner?: ImageMeta | undefined | null
-  checkCommitted?: (profile: app.bsky.actor.getProfile.$OutputBody) => boolean
+  checkCommitted?: (
+    profile: app.bsky.actor.getProfile.$OutputBody | undefined,
+    err: unknown,
+  ) => boolean
 }
 export function useProfileUpdateMutation() {
   const queryClient = useQueryClient()
@@ -207,6 +210,7 @@ export function useProfileUpdateMutation() {
         profile.did,
         checkCommitted ||
           (fresh => {
+            if (!fresh) return false
             if (typeof newUserAvatar !== 'undefined') {
               if (newUserAvatar === null && fresh.avatar) {
                 // url hasn't cleared yet
@@ -678,7 +682,10 @@ function useProfileUnblockMutation() {
 async function whenAppViewReady(
   client: Client,
   actor: string,
-  fn: (profile: app.bsky.actor.getProfile.$OutputBody) => boolean,
+  fn: (
+    profile: app.bsky.actor.getProfile.$OutputBody | undefined,
+    err: unknown,
+  ) => boolean,
 ) {
   await until(
     5, // 5 tries

@@ -1,14 +1,42 @@
-FROM golang:1.26-bookworm AS build-env
+#
+# Stage 1: build the embed bundle with pnpm.
+#
+# Uses the official pnpm image. Node is auto-downloaded by pnpm using the
+# `devEngines.runtime` field in package.json (onFail: "download").
+#
+FROM ghcr.io/pnpm/pnpm:11 AS web-build
 
-WORKDIR /usr/src/social-app
+WORKDIR /app/bskyembed
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Node
-ENV NODE_VERSION=24.19.0
-ENV NVM_DIR=/usr/share/nvm
+#
+# pnpm config
+#
+ENV CI=1
+# use the pnpm version specified in package.json
+ENV pnpm_config_pm_on_fail=download
 
-# Go
+COPY bskyembed ./
+COPY bskyweb /app/bskyweb
+COPY scripts/post-embed-build.js /app/scripts/post-embed-build.js
+
+#
+# Generate the embed bundle. NOTE: this will change
+#
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+  pnpm install --frozen-lockfile --ignore-scripts && \
+  pnpm build && \
+  pnpm build-snippet && \
+  node_modules/.bin/node ../scripts/post-embed-build.js
+
+#
+# Stage 2: build the embedr Go binary, embedding the assets from stage 1.
+#
+FROM golang:1.26-bookworm AS go-build
+
+WORKDIR /usr/src/social-app
+
 ENV GODEBUG="netdns=go"
 ENV GOOS="linux"
 ARG TARGETARCH
@@ -16,40 +44,14 @@ ENV GOARCH=${TARGETARCH:-amd64}
 ENV CGO_ENABLED=1
 ENV GOEXPERIMENT="loopvar"
 
-# CI environment for pnpm
-ENV CI=true
-
-COPY . .
-
-#
-# Generate the JavaScript webpack. NOTE: this will change
-#
-RUN mkdir --parents $NVM_DIR && \
-  wget \
-    --output-document=/tmp/nvm-install.sh \
-    https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh && \
-  bash /tmp/nvm-install.sh
-
-RUN \. "$NVM_DIR/nvm.sh" && \
-  nvm install $NODE_VERSION && \
-  nvm use $NODE_VERSION && \
-  npm install --global pnpm@11.21.0 && \
-  pnpm install --frozen-lockfile && \
-  cd bskyembed && pnpm install --frozen-lockfile && cd .. && \
-  pnpm intl:build && \
-  pnpm build-embed
-
-# DEBUG
-RUN find ./bskyweb/embedr-static && find ./bskyweb/embedr-templates && find ./bskyembed/dist
+COPY --from=web-build /app/bskyweb ./bskyweb
 
 # hack around issue with empty directory and go:embed
-RUN touch bskyweb/static/js/empty.txt
-RUN touch bskyweb/static/css/empty.txt
-RUN touch bskyweb/static/media/empty.txt
+RUN touch \
+  bskyweb/static/js/empty.txt \
+  bskyweb/static/css/empty.txt \
+  bskyweb/static/media/empty.txt
 
-#
-# Generate the embedr Go binary.
-#
 RUN cd bskyweb/ && \
   go mod download && \
   go mod verify
@@ -62,6 +64,9 @@ RUN cd bskyweb/ && \
     -o /embedr \
     ./cmd/embedr
 
+#
+# Stage 3: runtime image.
+#
 FROM debian:bookworm-slim
 
 ENV GODEBUG=netdns=go
@@ -75,7 +80,7 @@ RUN apt-get update && apt-get install --yes \
 ENTRYPOINT ["dumb-init", "--"]
 
 WORKDIR /embedr
-COPY --from=build-env /embedr /usr/bin/embedr
+COPY --from=go-build /embedr /usr/bin/embedr
 
 CMD ["/usr/bin/embedr"]
 

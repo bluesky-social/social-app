@@ -32,6 +32,16 @@ export class Storage<Scopes extends unknown[], Schema> {
   }
 
   /**
+   * Read the serialized `{data: value}` envelope without parsing it. Callers can
+   * compare raw values before repeating expensive parsing or validation.
+   */
+  getRaw<Key extends keyof Schema>(
+    scopes: [...Scopes, Key],
+  ): string | undefined {
+    return this.store.getString(scopes.join(this.sep))
+  }
+
+  /**
    * Get a value from storage based on scopes and/or keys
    *
    *   `get([key])`
@@ -40,7 +50,7 @@ export class Storage<Scopes extends unknown[], Schema> {
   get<Key extends keyof Schema>(
     scopes: [...Scopes, Key],
   ): Schema[Key] | undefined {
-    const res = this.store.getString(scopes.join(this.sep))
+    const res = this.getRaw(scopes)
     if (!res) return undefined
     // parsed from storage structure `{ data: <value> }`
     return JSON.parse(res).data

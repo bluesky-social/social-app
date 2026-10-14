@@ -5,10 +5,8 @@
 import {type Platform} from 'react-native'
 
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
-import {
-  type VideoCompressSkipReason,
-  type VideoUploadTransport,
-} from '#/lib/media/video/types'
+import {type VideoCompressSkipReason} from '#/lib/media/video/types'
+import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
@@ -47,6 +45,7 @@ export type Events = {
       | 'SignupQueued'
       | 'Deactivated'
       | 'Takendown'
+      | 'AgeAssuranceDataUnavailableScreen'
       | 'AgeAssuranceNoAccessScreen'
     scope: 'current' | 'every'
   }
@@ -62,9 +61,92 @@ export type Events = {
     notificationType: NotificationType
     authorCount: number
   }
-  'state:background': {
-    secondsActive: number
+  /**
+   * A tab of the Notifications screen came into view: the tab it's on when
+   * the screen gains focus, which includes mounting, and each tab the user
+   * switches to. A switch is logged once, as the pager settles on the new
+   * tab.
+   */
+  'notifications:tabDisplayed': {
+    tab: GroupedNotificationsFeed
+    /** The tab's position in the tab pills, from 0. */
+    index: number
+    /**
+     * - `focus`: the screen gained focus, or mounted, on the tab. Web mounts
+     *   the screen on every visit.
+     * - `tap`: the user pressed the tab's pill.
+     * - `swipe`: the user swiped the pager to the tab, which only native
+     *   does.
+     */
+    reason: 'focus' | 'tap' | 'swipe'
   }
+  /**
+   * A tab of the Notifications screen started loading its newest
+   * notifications, in place of what it shows. Not the tab's first load or a
+   * retry of it, nor a check that only asks whether there's anything new, as
+   * a quick return to the app or a switch between tabs does, or any return
+   * while the user is partway down the tab. Nor the refresh of "All" that
+   * refreshing any other tab sets off behind it.
+   */
+  'notifications:refresh': {
+    tab: GroupedNotificationsFeed
+    /**
+     * - `pullToRefresh`: the user pulled the tab down.
+     * - `softReset`: the user pressed Notifications in the app's navigation,
+     *   or the tab's own pill, while already on the tab.
+     * - `pill`: the user pressed the "Refresh" pill.
+     * - `focus`: the screen came back into view, e.g. from a post opened
+     *   from it, or mounted with the tab already loaded, as web's does on
+     *   every visit.
+     * - `significantReturn`: the user came back to the app after a while
+     *   away, with the screen in view.
+     * - `pushOpened`: the user opened a push notification with the screen in
+     *   view.
+     */
+    reason:
+      | 'pullToRefresh'
+      | 'softReset'
+      | 'pill'
+      | 'focus'
+      | 'significantReturn'
+      | 'pushOpened'
+  }
+  /**
+   * The "Refresh" pill came into view on a Notifications tab, offering what an
+   * unread check, or a peek at the tab, found that it hasn't loaded. Only
+   * while the tab is the one in view, on the focused screen, with the app in
+   * the foreground, and again each time it comes back into view still up. One
+   * hide follows each.
+   */
+  'notifications:refreshPill:impression': {
+    tab: GroupedNotificationsFeed
+  }
+  /**
+   * The user pressed the pill, which loads the tab's newest notifications.
+   */
+  'notifications:refreshPill:press': {
+    tab: GroupedNotificationsFeed
+    /** How long since it came into view. */
+    shownMs: number
+  }
+  /** The pill went, after it came into view. */
+  'notifications:refreshPill:hide': {
+    tab: GroupedNotificationsFeed
+    /**
+     * - `pressed`: the user pressed it.
+     * - `left`: the tab went out of view: the user switched tab, opened
+     *   another screen, or left the app, or the screen closed, as web's does
+     *   on every navigation away.
+     * - `refreshed`: the tab started loading its newest notifications some
+     *   other way, e.g. a pull-to-refresh.
+     * - `gone`: a later unread check found nothing new for the tab to load,
+     *   e.g. once the notifications were seen somewhere else.
+     */
+    reason: 'pressed' | 'left' | 'refreshed' | 'gone'
+    /** How long it was in view. */
+    shownMs: number
+  }
+  'state:background': {}
   'state:foreground': {}
   'router:navigate': {
     from?: string
@@ -93,6 +175,7 @@ export type Events = {
     item:
       | 'home'
       | 'search'
+      | 'atmosphere'
       | 'chat'
       | 'notifications'
       | 'profile'
@@ -125,8 +208,20 @@ export type Events = {
     activeStep: number
   }
   'signup:captchaSuccess': {}
-  'signup:captchaFailure': {}
-  'signup:captchaBackPress': {}
+  'signup:captchaFailure': {
+    reason: 'state-mismatch' | 'webview-error' | 'http-error'
+    host?: string
+    statusCode?: number
+  }
+  'signup:captchaSlow': {}
+  'signup:captchaBlockedLoad': {
+    host: string
+    isTopFrame: boolean
+  }
+  'signup:captchaBackPress': {
+    phase?: 'attesting' | 'challenge'
+  }
+  'signup:attestTimeout': {}
   'signup:createAccountFailure': {
     reason: string
   }
@@ -218,18 +313,54 @@ export type Events = {
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
   }
-  'feed:save': {
-    feedUrl: string
-  }
-  'feed:unsave': {
-    feedUrl: string
-  }
-  'feed:pin': {
-    feedUrl: string
-  }
-  'feed:unpin': {
-    feedUrl: string
-  }
+  'feed:save': {feedUrl: string} & (
+    | {
+        logContext?: never
+        recId?: never
+        position?: never
+      }
+    | {
+        logContext: 'Explore'
+        recId: string
+        position: number
+      }
+  )
+  'feed:unsave': {feedUrl: string} & (
+    | {
+        logContext?: never
+        recId?: never
+        position?: never
+      }
+    | {
+        logContext: 'Explore'
+        recId: string
+        position: number
+      }
+  )
+  'feed:pin': {feedUrl: string} & (
+    | {
+        logContext?: never
+        recId?: never
+        position?: never
+      }
+    | {
+        logContext: 'Explore'
+        recId: string
+        position: number
+      }
+  )
+  'feed:unpin': {feedUrl: string} & (
+    | {
+        logContext?: never
+        recId?: never
+        position?: never
+      }
+    | {
+        logContext: 'Explore'
+        recId: string
+        position: number
+      }
+  )
   'feed:like': {
     feedUrl: string
   }
@@ -241,9 +372,15 @@ export type Events = {
   }
   'feed:suggestion:seen': {
     feedUrl: string
+    logContext: 'Explore'
+    recId?: string
+    position: number
   }
   'feed:suggestion:press': {
     feedUrl: string
+    logContext: 'Explore'
+    recId?: string
+    position: number
   }
   'post:showMore': {
     uri: string
@@ -450,9 +587,14 @@ export type Events = {
     feedDescriptor?: string
     position?: number
   }
+  'post:quotes:view': {
+    uri: string
+    quoteSort: 'top' | 'latest'
+  }
   'post:view': {
     uri: string
     authorDid: string
+    isReply: boolean
     logContext:
       | 'FeedItem'
       | 'PostThreadItem'
@@ -464,6 +606,7 @@ export type Events = {
       | 'Hashtag'
       | 'Topic'
       | 'PostQuotes'
+    quoteSort?: 'top' | 'latest'
     feedDescriptor?: string
     position?: number
   }
@@ -494,6 +637,9 @@ export type Events = {
       | 'FindContacts'
       | 'GroupChat'
       | 'NotificationExpandedProfileCard'
+      | 'NotificationFollowRow'
+      | 'NotificationFollowersTabRow'
+      | 'NotificationContactMatchRow'
   }
   'profile:followers:view': {
     contextProfileDid: string
@@ -608,6 +754,9 @@ export type Events = {
       | 'FindContacts'
       | 'GroupChat'
       | 'NotificationExpandedProfileCard'
+      | 'NotificationFollowRow'
+      | 'NotificationFollowersTabRow'
+      | 'NotificationContactMatchRow'
   }
   'chat:create': {
     logContext:
@@ -706,6 +855,7 @@ export type Events = {
   }
   'starterPack:removeUser': {
     starterPack?: string
+    context?: 'opt-out'
   }
   'starterPack:share': {
     starterPack: string
@@ -716,8 +866,26 @@ export type Events = {
     logContext: 'StarterPackProfilesList' | 'Onboarding'
     starterPack: string
     count: number
+    recId?: string
+    position?: number
+  }
+  'starterPack:suggestion:seen': {
+    logContext: 'Explore' | 'Onboarding'
+    starterPack: string
+    recId: string
+    position: number
+  }
+  'starterPack:suggestion:press': {
+    logContext: 'Explore'
+    starterPack: string
+    recId: string
+    position: number
   }
   'starterPack:delete': {}
+  'starterPack:optOut': {
+    starterPack: string
+    action: 'optOut' | 'undo'
+  }
   'starterPack:create': {
     setName: boolean
     setDescription: boolean
@@ -770,12 +938,14 @@ export type Events = {
   }
   'trendingTopic:seen': {
     context: 'sidebar' | 'interstitial' | 'explore'
+    feedUri?: string
     recId?: string
     rank: number
     feedSliceIndex?: number
   }
   'trendingTopic:click': {
     context: 'sidebar' | 'interstitial' | 'explore'
+    feedUri?: string
     recId?: string
     rank: number
     feedSliceIndex?: number
@@ -1116,6 +1286,22 @@ export type Events = {
   }
   'share:press:copyLink': {}
   'share:press:nativeShare': {}
+  /**
+   * Fires when the system share sheet closes after sharing a post. Not
+   * logged on web, or on Android builds without the native share module.
+   */
+  'share:nativeShare:result': {
+    uri: string
+    authorDid: string
+    entryPoint: 'ShareMenu' | 'LongPress'
+    status: 'shared' | 'dismissed'
+    /**
+     * The app the user picked: the `activityType` on iOS, the package name on
+     * Android. Android reports the chooser's own actions (e.g. Copy) as
+     * `dismissed` with no target.
+     */
+    target?: string
+  }
   'share:press:openDmSearch': {}
   'share:press:dmSelected': {}
   'share:press:recentDm': {}
@@ -1399,6 +1585,41 @@ export type Events = {
     playlist: string
   }
 
+  /**
+   * The playable video was meaningfully visible. This is an exposure event,
+   * not proof that playback started. Fires once per mounted video item.
+   */
+  'video:impression': {
+    postUri?: string
+    postAuthorDid?: string
+    context: 'embed' | 'immersiveFeed'
+    presentation: 'video' | 'gif'
+  }
+  /**
+   * Playback advanced far enough to render the first frame. Preloading and
+   * merely becoming active do not count. Fires once per mounted video item;
+   * automatic loops do not produce another event.
+   */
+  'video:playback:start': {
+    postUri?: string
+    postAuthorDid?: string
+    context: 'embed' | 'immersiveFeed'
+    presentation: 'video' | 'gif'
+    autoplay: boolean
+  }
+  /**
+   * The user activated a third-party media player. Cross-origin players do
+   * not expose confirmed playback consistently, so this must not be treated
+   * as equivalent to video:playback:start without an explicit methodology.
+   */
+  'externalEmbed:playerActivated': {
+    postUri?: string
+    postAuthorDid?: string
+    source: string
+    playerType: string
+    mediaType: 'video' | 'audio' | 'gif' | 'other'
+  }
+
   // === Video upload funnel (Frontend Spec section D) ===
   // Every event carries uploadId (client-generated UUID, ties one upload
   // session end-to-end) + engine (compression engine id, e.g.
@@ -1473,7 +1694,6 @@ export type Events = {
     bytes: number
     elapsedMs: number
     throughputBytesPerSec: number
-    transport: VideoUploadTransport
   }
   'video:upload:uploadFailed': {
     uploadId: string
@@ -1481,7 +1701,6 @@ export type Events = {
     bytes: number
     errorClass: string
     elapsedMs: number
-    transport: VideoUploadTransport
   }
   'video:upload:processingStarted': {
     uploadId: string

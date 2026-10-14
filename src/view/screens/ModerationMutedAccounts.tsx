@@ -36,7 +36,7 @@ export function ModerationMutedAccounts({}: Props) {
     fetchNextPage,
     isFetchingNextPage,
   } = useMyMutedAccountsQuery()
-  const isEmpty = !isFetching && !data?.pages[0]?.mutes.length
+  const isEmpty = !isFetching && !data?.pages.some(page => page.mutes.length)
   const profiles = useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.mutes)

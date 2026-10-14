@@ -4,8 +4,6 @@ import {
   type ToolsOzoneSafelinkDefs,
   type ToolsOzoneSafelinkQueryEvents,
 } from '@atproto/api'
-import {ExpiredTokenError} from '@atproto/api/dist/client/types/com/atproto/server/confirmEmail.js'
-import {MINUTE} from '@atproto/common'
 import {LRUCache} from 'lru-cache'
 
 import {type ServiceConfig} from '../config.js'
@@ -171,7 +169,7 @@ export class SafelinkClient {
 
     await db.db
       .deleteFrom('safelink_rule')
-      .where('pattern', '=', 'domain')
+      .where('pattern', '=', rule.pattern)
       .where('url', '=', rule.url)
       .execute()
       .catch(err => {
@@ -269,13 +267,6 @@ export class SafelinkClient {
       if (this.stopped) {
         return
       }
-      if (err instanceof ExpiredTokenError) {
-        redirectLogger.info('ozone agent had expired session, refreshing...')
-        await this.ozoneAgent.refreshSession()
-        this.scheduleFetchEvents(SAFELINK_MIN_FETCH_INTERVAL)
-        return
-      }
-
       redirectLogger.error(
         {error: err},
         'error fetching safelink events from Ozone',
@@ -395,8 +386,6 @@ export class OzoneAgent {
   private session: CredentialSession
   private agent: AtpAgent
 
-  private refreshAt = 0
-
   constructor(pdsHost: string, identifier: string, password: string) {
     this.identifier = identifier
     this.password = password
@@ -419,22 +408,8 @@ export class OzoneAgent {
         password: this.password,
       })
       redirectLogger.info('ozone session created successfully')
-      this.refreshAt = Date.now() + 50 * MINUTE
-    }
-
-    if (Date.now() <= this.refreshAt) {
-      await this.refreshSession()
     }
 
     return this.agent
-  }
-
-  public async refreshSession() {
-    try {
-      await this.session.refreshSession()
-      this.refreshAt = Date.now() + 50 * MINUTE
-    } catch (e) {
-      redirectLogger.error({error: e}, 'error refreshing session')
-    }
   }
 }

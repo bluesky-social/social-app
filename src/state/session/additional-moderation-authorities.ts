@@ -98,10 +98,10 @@ export function configureAdditionalModerationAuthorities() {
  * reads, so a request carries the same `;redact` authorities whether or not
  * there is a session behind it.
  *
- * It is a single global producer by design. The PDS and chat clients opt out
- * with `appLabelers: null` (see `clients.ts`) because those services take no
- * moderation authorities, leaving exactly one producer on an appview request and
- * none elsewhere.
+ * It is a single global producer by design. The PDS client opts out with
+ * `appLabelers: null` (see `clients.ts`) because that service takes no
+ * moderation authorities. Appview and chat requests each carry one copy from
+ * their respective clients.
  */
 export function configureGlobalAppLabelers(dids: string[]) {
   Client.configure({appLabelers: dids as `did:${string}:${string}`[]})

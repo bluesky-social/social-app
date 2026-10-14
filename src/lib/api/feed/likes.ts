@@ -48,10 +48,8 @@ export class LikesFeedAPI implements FeedAPI {
       cursor,
       limit,
     })
-    // HACKFIX: the API incorrectly returns a cursor when there are no items -sfn
-    const isEmptyPage = data.feed.length === 0
     return {
-      cursor: isEmptyPage ? undefined : data.cursor,
+      cursor: data.cursor,
       feed: data.feed,
     }
   }

@@ -28,7 +28,10 @@ import {networkAwareFetch} from './network'
  * fetch, which is `networkAwareFetch` wrapped in the disposal kill switch.
  */
 export function buildAppviewClient(agent: Agent): Client {
-  return createLexClient(agent, {service: BLUESKY_PROXY_HEADER.get()})
+  return createLexClient(agent, {
+    service: BLUESKY_PROXY_HEADER.get(),
+    includeDeviceSessionHeaders: true,
+  })
 }
 
 /**
@@ -54,13 +57,15 @@ export function buildPdsClient(agent: Agent): Client {
  * env-configurable `CHAT_PROXY_DID` rather than a hard-coded constant, so it can
  * be retargeted per environment.
  *
- * `appLabelers: null` for the same reason as the PDS client: the chat service
- * takes no moderation authorities.
+ * Unlike the PDS client, chat carries moderation authorities. The service uses
+ * them to hydrate labels on profiles embedded in conversation responses, so
+ * this client reads the global `Client.appLabelers` and receives the account's
+ * subscriptions through `configureModerationForAccount`.
  */
 export function buildChatClient(agent: Agent): Client {
   return createLexClient(agent, {
-    appLabelers: null,
     service: CHAT_PROXY_SERVICE,
+    includeDeviceSessionHeaders: true,
   })
 }
 
@@ -147,8 +152,11 @@ let publicLexClient: Client | undefined
  * building the bundle.
  */
 export function getPublicAppviewClient(): Client {
-  return (publicLexClient ??= createLexClient({
-    service: PUBLIC_BSKY_SERVICE,
-    fetch: networkAwareFetch,
-  }))
+  return (publicLexClient ??= createLexClient(
+    {
+      service: PUBLIC_BSKY_SERVICE,
+      fetch: networkAwareFetch,
+    },
+    {includeDeviceSessionHeaders: true},
+  ))
 }

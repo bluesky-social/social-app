@@ -362,9 +362,9 @@ export function Composer({
           onKeyPress={IS_WEB ? onKeyPressWeb : undefined}
           onScroll={e => {
             if (IS_WEB) {
-              inputScrollSharedValue.value = (e.target as any).scrollTop
+              inputScrollSharedValue.set((e.target as any).scrollTop)
             } else {
-              inputScrollSharedValue.value = e.nativeEvent.contentOffset.y
+              inputScrollSharedValue.set(e.nativeEvent.contentOffset.y)
             }
           }}
           // @ts-expect-error web only

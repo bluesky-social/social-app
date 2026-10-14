@@ -187,7 +187,7 @@ function DialogInner({
     ImageMeta | undefined | null
   >()
 
-  // When creating with pre-filled values (from starter pack), consider dirty
+  // When creating with pre-filled values (from Starter Pack), consider dirty
   // immediately so the Save button is enabled
   const hasInitialValuesForCreate = !list && initialValues != null
   const dirty =
@@ -221,6 +221,16 @@ function DialogInner({
   const onPressSave = useCallback(async () => {
     setImageError('')
     setDisplayNameTooShort(false)
+    /*
+     * Hoisted above the `try`: React Compiler cannot lower a conditional
+     * expression inside one.
+     */
+    const updatedMessage = isCurateList
+      ? _(msg({message: 'User list updated', context: 'toast'}))
+      : _(msg({message: 'Moderation list updated', context: 'toast'}))
+    const createdMessage = isCurateList
+      ? _(msg({message: 'User list created', context: 'toast'}))
+      : _(msg({message: 'Moderation list created', context: 'toast'}))
     try {
       if (displayName.length === 0) {
         setDisplayNameTooShort(true)
@@ -244,11 +254,7 @@ function DialogInner({
           descriptionFacets: richText.facets,
           avatar: newListAvatar,
         })
-        Toast.show(
-          isCurateList
-            ? _(msg({message: 'User list updated', context: 'toast'}))
-            : _(msg({message: 'Moderation list updated', context: 'toast'})),
-        )
+        Toast.show(updatedMessage)
         control.close(() => onSave?.(list.uri))
       } else {
         const {uri} = await createListMutation({
@@ -258,11 +264,7 @@ function DialogInner({
           descriptionFacets: richText.facets,
           avatar: newListAvatar,
         })
-        Toast.show(
-          isCurateList
-            ? _(msg({message: 'User list created', context: 'toast'}))
-            : _(msg({message: 'Moderation list created', context: 'toast'})),
-        )
+        Toast.show(createdMessage)
         control.close(() => onSave?.(uri))
       }
     } catch (e: any) {
@@ -419,7 +421,7 @@ function DialogInner({
           </TextField.LabelText>
           <TextField.Root isInvalid={displayNameTooLong || displayNameTooShort}>
             <Dialog.Input
-              defaultValue={displayName}
+              value={displayName}
               onChangeText={onChangeDisplayName}
               label={_(msg`Name`)}
               placeholder={displayNamePlaceholder}
@@ -455,7 +457,7 @@ function DialogInner({
           </TextField.LabelText>
           <TextField.Root isInvalid={descriptionTooLong}>
             <Dialog.Input
-              defaultValue={descriptionRt.text}
+              value={descriptionRt.text}
               onChangeText={onChangeDescription}
               multiline
               label={_(msg`Description`)}

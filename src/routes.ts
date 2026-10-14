@@ -9,6 +9,7 @@ type AllNavigatableRoutes = Omit<
 export const router = new Router<AllNavigatableRoutes>({
   Home: ['/', '/download'],
   Search: '/search',
+  Atmosphere: '/atmosphere',
   Feeds: '/feeds',
   Notifications: '/notifications',
   NotificationsActivityList: '/notifications/activity',
@@ -17,6 +18,10 @@ export const router = new Router<AllNavigatableRoutes>({
   Lists: '/lists',
   // moderation
   Moderation: '/moderation',
+  ModerationInbox: '/moderation/inbox',
+  ModerationInboxSettings: '/moderation/inbox/settings',
+  ModerationInboxReportDetails: '/moderation/inbox/report/details',
+  ModerationInboxNoticeDetails: '/moderation/inbox/notice/details',
   ModerationModlists: '/moderation/modlists',
   ModerationMutedAccounts: '/moderation/muted-accounts',
   ModerationBlockedAccounts: '/moderation/blocked-accounts',
@@ -79,7 +84,7 @@ export const router = new Router<AllNavigatableRoutes>({
   MessagesConversation: '/messages/:conversation',
   MessagesConversationSettings: '/messages/:conversation/settings',
   MessagesJoinRequests: '/messages/:conversation/requests',
-  // starter packs
+  // Starter Packs
   Start: '/start/:name/:rkey',
   StarterPackEdit: '/starter-pack/edit/:rkey',
   StarterPack: '/starter-pack/:name/:rkey',

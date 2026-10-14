@@ -231,7 +231,7 @@ function ProvidedHandlePage({
               <TextField.Icon icon={AtIcon} />
               <Dialog.Input
                 editable={!isPending}
-                defaultValue={subdomain}
+                value={subdomain}
                 onChangeText={text => setSubdomain(text)}
                 label={_(msg`New handle`)}
                 placeholder={_(msg`e.g. alice`)}
@@ -387,7 +387,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
               label={_(msg`New handle`)}
               placeholder={_(msg`e.g. alice.com`)}
               editable={!isPending}
-              defaultValue={domain}
+              value={domain}
               onChangeText={text => {
                 setDomain(text)
                 resetVerification()

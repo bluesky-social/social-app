@@ -112,8 +112,6 @@ export function InviteFriendsDialogInner({
 
   const onScan = () => {
     ax.metric('invite:action:scan', {})
-    // Close dialog first, then navigate (control.close callback per CLAUDE.md
-    // Dialog footgun rule — prevents race with the navigation push).
     control.close(() => {
       navigation.navigate('InviteScanner')
     })
@@ -127,7 +125,7 @@ export function InviteFriendsDialogInner({
     try {
       await setStringAsync(canonicalShareUrl)
       ax.metric('invite:action:copy', {})
-      Toast.show(l`Invite link copied`)
+      Toast.show(l`Profile link copied`)
     } catch (err) {
       logger.error('InviteFriendsDialog: copy failed', {safeMessage: err})
       Toast.show(l`Failed to copy link`, {type: 'error'})

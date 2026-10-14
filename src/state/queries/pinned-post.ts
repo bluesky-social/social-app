@@ -10,6 +10,25 @@ import {updatePostShadow} from '../cache/post-shadow'
 import {useAppviewClient, useSession} from '../session'
 import {useProfileUpdateMutation} from './profile'
 
+/**
+ * Out of the hook because React Compiler cannot lower a `throw` inside a `try`.
+ * Keeping the check in place - rather than hoisting it above the `try` - means
+ * the catch below still shows its toast and reverts the optimistic update.
+ */
+function assertSignedIn(account: unknown): asserts account {
+  if (!account) throw new Error('Not signed in')
+}
+
+/**
+ * Out of the hook because React Compiler cannot lower an optional chain inside a
+ * `try` block, and `profile` only exists once the request inside it resolves.
+ */
+function getPinnedPostUri(profile: {
+  pinnedPost?: {uri: string}
+}): string | undefined {
+  return profile.pinnedPost?.uri
+}
+
 export function usePinnedPostMutation() {
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -33,13 +52,19 @@ export function usePinnedPostMutation() {
         updatePostShadow(queryClient, postUri, {pinned: pinCurrentPost})
 
         // get the currently pinned post so we can optimistically remove the pin from it
-        if (!currentAccount) throw new Error('Not signed in')
+        assertSignedIn(currentAccount)
         const profile = await client.call(app.bsky.actor.getProfile, {
           actor: currentAccount.did,
         })
-        prevPinnedPost = profile.pinnedPost?.uri
-        if (prevPinnedPost && prevPinnedPost !== postUri) {
-          updatePostShadow(queryClient, prevPinnedPost, {pinned: false})
+        prevPinnedPost = getPinnedPostUri(profile)
+        if (prevPinnedPost) {
+          /*
+           * Nested rather than `&&`: React Compiler cannot lower a logical
+           * expression in a test position inside a `try`.
+           */
+          if (prevPinnedPost !== postUri) {
+            updatePostShadow(queryClient, prevPinnedPost, {pinned: false})
+          }
         }
 
         await profileUpdateMutate({
@@ -54,10 +79,12 @@ export function usePinnedPostMutation() {
               : undefined
             return existing
           },
-          checkCommitted: profile =>
-            pinCurrentPost
+          checkCommitted: profile => {
+            if (!profile) return false
+            return pinCurrentPost
               ? profile.pinnedPost?.uri === postUri
-              : !profile.pinnedPost,
+              : !profile.pinnedPost
+          },
         })
 
         if (pinCurrentPost) {

@@ -122,23 +122,23 @@ let RepostButtonDialogInner = ({
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const control = Dialog.useDialogContext()
 
   const onPressRepost = useCallback(() => {
-    if (!isReposted) playHaptic()
+    if (!isReposted) haptics.confirm()
 
     control.close(() => {
       onRepost()
     })
-  }, [control, isReposted, onRepost, playHaptic])
+  }, [control, isReposted, onRepost, haptics])
 
   const onPressQuote = useCallback(() => {
-    playHaptic()
+    haptics.confirm()
     control.close(() => {
       onQuote()
     })
-  }, [control, onQuote, playHaptic])
+  }, [control, onQuote, haptics])
 
   const onPressClose = useCallback(() => control.close(), [control])
 

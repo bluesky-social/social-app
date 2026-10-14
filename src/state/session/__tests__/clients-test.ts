@@ -7,6 +7,11 @@ jest.mock('#/state/events', () => ({
   emitNetworkLost: jest.fn(),
 }))
 
+jest.mock('#/analytics/identifiers', () => ({
+  getDeviceId: () => 'device-123',
+  getSessionId: () => 'session-456',
+}))
+
 jest.mock('jwt-decode', () => ({
   jwtDecode() {
     return {scope: 'com.atproto.access'}
@@ -111,6 +116,16 @@ describe('buildAppviewClient', () => {
     ).toBe(BLUESKY_PROXY_HEADER.get())
   })
 
+  it('emits the device and session headers', async () => {
+    const client = buildAppviewClient(makeSession(fetchMock))
+
+    await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
+
+    const headers = headersFor(fetchMock, 'app.bsky.actor.getProfile')
+    expect(headers.get('x-atproto-device-id')).toBe('device-123')
+    expect(headers.get('x-atproto-session-id')).toBe('session-456')
+  })
+
   it('emits an account subscription exactly once', async () => {
     const client = buildAppviewClient(makeSession(fetchMock))
     client.setLabelers(['did:plc:labeler'])
@@ -205,6 +220,8 @@ describe('buildPdsClient', () => {
     const headers = headersFor(fetchMock, 'com.atproto.server.getSession')
     expect(headers.get('atproto-proxy')).toBeNull()
     expect(headers.get('atproto-accept-labelers')).toBeNull()
+    expect(headers.get('x-atproto-device-id')).toBeNull()
+    expect(headers.get('x-atproto-session-id')).toBeNull()
   })
 
   it('resolves the relative xrpc path against the account host', async () => {
@@ -249,21 +266,39 @@ describe('buildChatClient', () => {
      */
     expect(headers.get('atproto-proxy')).toBe(CHAT_PROXY_SERVICE)
     expect(headers.get('authorization')).toBe('Bearer access-jwt')
+    expect(headers.get('x-atproto-device-id')).toBe('device-123')
+    expect(headers.get('x-atproto-session-id')).toBe('session-456')
   })
 
-  it('emits no labeler header', async () => {
-    /* the global authorities do not apply: a chat call is not an appview read */
+  it('emits a global app labeler once, redacted', async () => {
+    const client = buildChatClient(makeSession(fetchMock))
     configureGlobalAppLabelers(['did:plc:global-labeler'])
 
-    await buildChatClient(makeSession(fetchMock))
-      .call(chat.bsky.convo.listConvos, {})
-      .catch(() => {})
+    await client.call(chat.bsky.convo.listConvos, {}).catch(() => {})
 
-    expect(
-      headersFor(fetchMock, 'chat.bsky.convo.listConvos').get(
-        'atproto-accept-labelers',
-      ),
-    ).toBeNull()
+    const labelers = headersFor(fetchMock, 'chat.bsky.convo.listConvos').get(
+      'atproto-accept-labelers',
+    )
+    const entries = labelers!
+      .split(',')
+      .map(l => l.trim())
+      .filter(l => l.includes('did:plc:global-labeler'))
+    expect(entries).toEqual(['did:plc:global-labeler;redact'])
+  })
+
+  it('emits an account subscription exactly once', async () => {
+    const client = buildChatClient(makeSession(fetchMock))
+    client.setLabelers(['did:plc:labeler'])
+
+    await client.call(chat.bsky.convo.listConvos, {}).catch(() => {})
+
+    const labelers = headersFor(fetchMock, 'chat.bsky.convo.listConvos').get(
+      'atproto-accept-labelers',
+    )
+    const entries = labelers!
+      .split(',')
+      .filter(l => l.includes('did:plc:labeler'))
+    expect(entries).toHaveLength(1)
   })
 })
 

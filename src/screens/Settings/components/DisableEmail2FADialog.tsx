@@ -49,9 +49,8 @@ export function DisableEmail2FADialog({
       setStage(Stages.ConfirmCode)
     } catch (e) {
       setError(cleanError(String(e)))
-    } finally {
-      setIsProcessing(false)
     }
+    setIsProcessing(false)
   }
 
   const onConfirmDisable = async () => {
@@ -80,9 +79,8 @@ export function DisableEmail2FADialog({
       } else {
         setError(cleanError(e))
       }
-    } finally {
-      setIsProcessing(false)
     }
+    setIsProcessing(false)
   }
 
   return (

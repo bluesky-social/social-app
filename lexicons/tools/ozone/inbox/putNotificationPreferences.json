@@ -1,0 +1,39 @@
+{
+  "id": "tools.ozone.inbox.putNotificationPreferences",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "push"
+          ],
+          "properties": {
+            "push": {
+              "type": "boolean"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "preferences"
+          ],
+          "properties": {
+            "preferences": {
+              "ref": "tools.ozone.inbox.defs#notificationPreferences",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

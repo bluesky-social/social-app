@@ -17,6 +17,10 @@ ENV CI=1
 # use the pnpm version specified in package.json
 ENV pnpm_config_pm_on_fail=download
 
+# Metro's web export needs far more heap than Node's default (~1GB in the
+# container), which crashes the bundle step with a V8 OOM.
+ENV NODE_OPTIONS="--max-old-space-size=8192"
+
 # The latest git hash of the preview branch on render.com
 # https://render.com/docs/docker-secrets#environment-variables-in-docker-builds
 ARG RENDER_GIT_COMMIT
@@ -55,7 +59,7 @@ RUN pnpm intl:build 2>&1 | tee i18n.log && \
   if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compile errors!\n\n"; fi
 
 RUN SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
-    SENTRY_RELEASE=$EXPO_PUBLIC_RELEASE_VERSION \
+    SENTRY_RELEASE=xyz.blueskyweb.app@$EXPO_PUBLIC_RELEASE_VERSION \
     SENTRY_DIST=$EXPO_PUBLIC_BUNDLE_IDENTIFIER \
     pnpm build-web
 

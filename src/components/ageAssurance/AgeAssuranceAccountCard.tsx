@@ -2,6 +2,7 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
+import {formatDateTime} from '#/lib/strings/time'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
@@ -169,7 +170,7 @@ function Inner({style}: ViewStyleProp & {}) {
                 ) : lastInitiatedAt && timeAgo && diff ? (
                   <Text
                     style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}
-                    title={i18n.date(lastInitiatedAt, {
+                    title={formatDateTime(i18n, lastInitiatedAt, {
                       dateStyle: 'medium',
                       timeStyle: 'medium',
                     })}>

@@ -1,14 +1,23 @@
-import {useCallback, useEffect, useId, useRef, useState} from 'react'
+import {
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useId,
+  useRef,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {hasPlaybackStarted} from '#/lib/media/video/analytics'
 import {atoms as a} from '#/alf'
 import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {useReportDialogMetadataContext} from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
 import * as BandwidthEstimate from './bandwidth-estimate'
+import {loadHls} from './loadHls'
 import {
   HLSFatalError,
   HLSUnsupportedError,
@@ -29,6 +38,7 @@ export function VideoEmbedInnerWeb({
   setActive,
   onScreen,
   lastKnownTime,
+  onPlaybackStart,
 }: VideoEmbedInnerWebProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -40,6 +50,7 @@ export function VideoEmbedInnerWeb({
   const [isFullscreen] = useFullscreen(containerRef)
   const isGif = embed.presentation === 'gif'
   const reportDialogMetadata = useReportDialogMetadataContext()
+  const playbackStartTrackedRef = useRef(false)
 
   // send error up to error boundary
   const [error, setError] = useState<Error | null>(null)
@@ -79,6 +90,13 @@ export function VideoEmbedInnerWeb({
             onTimeUpdate={e => {
               const currentTime = e.currentTarget.currentTime
               lastKnownTime.current = currentTime
+              if (
+                !playbackStartTrackedRef.current &&
+                hasPlaybackStarted(currentTime)
+              ) {
+                playbackStartTrackedRef.current = true
+                onPlaybackStart(!focused)
+              }
               if (
                 !isGif &&
                 reportDialogMetadata &&
@@ -147,17 +165,6 @@ function canPlayBskyVideoCodecs(): boolean {
   )
 }
 
-type CachedPromise<T> = Promise<T> & {value: undefined | T}
-const promiseForHls = import(
-  // @ts-expect-error
-  'hls.js/dist/hls.min'
-  // oxlint-disable-next-line typescript/no-unsafe-member-access
-).then(mod => mod.default) as CachedPromise<typeof HlsTypes.default>
-promiseForHls.value = undefined
-void promiseForHls.then(Hls => {
-  promiseForHls.value = Hls
-})
-
 function useHLS({
   playlist,
   setHasSubtitleTrack,
@@ -171,18 +178,30 @@ function useHLS({
   videoRef: React.RefObject<HTMLVideoElement | null>
   setHlsLoading: (v: boolean) => void
 }) {
-  const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(
-    () => promiseForHls.value,
-  )
+  const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(undefined)
   useEffect(() => {
-    if (!Hls) {
-      setHlsLoading(true)
-      void promiseForHls.then(loadedHls => {
+    let cancelled = false
+    setHlsLoading(true)
+    void loadHls().then(
+      loadedHls => {
+        if (cancelled) return
         setHls(() => loadedHls)
         setHlsLoading(false)
-      })
+      },
+      error => {
+        if (cancelled) return
+        setHlsLoading(false)
+        setError(
+          error instanceof Error
+            ? error
+            : new Error('Failed to load video player', {cause: error}),
+        )
+      },
+    )
+    return () => {
+      cancelled = true
     }
-  }, [Hls, setHlsLoading])
+  }, [setError, setHlsLoading])
 
   const hlsRef = useRef<HlsTypes.default | undefined>(undefined)
   const controlsVisibleRef = useRef(false)
@@ -264,6 +283,14 @@ function useHLS({
     },
   )
 
+  /*
+   * The hls handler below must call the latest `updateCuePositions` without the
+   * effect tearing down and re-attaching every time its identity changes.
+   */
+  const onSubtitleFragProcessed = useEffectEvent(() => {
+    updateCuePositions()
+  })
+
   useEffect(() => {
     if (!videoRef.current) return
     if (!Hls) return
@@ -302,7 +329,7 @@ function useHLS({
     })
 
     hls.on(Hls.Events.SUBTITLE_FRAG_PROCESSED, () => {
-      updateCuePositions()
+      onSubtitleFragProcessed()
     })
 
     hls.on(Hls.Events.FRAG_BUFFERED, (_event, {frag}) => {

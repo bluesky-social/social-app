@@ -57,7 +57,7 @@ let ProfileHeaderShell = ({
   const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
   const {top: topInset} = useSafeAreaInsets()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const liveStatusControl = useDialogControl()
 
   const aviRef = useAnimatedRef()
@@ -121,7 +121,7 @@ let ProfileHeaderShell = ({
 
   const onPressAvi = useCallback(() => {
     if (live.isActive) {
-      playHaptic('Light')
+      haptics.tap()
       ax.metric('live:card:open', {subject: profile.did, from: 'profile'})
       liveStatusControl.open()
     } else {
@@ -140,7 +140,7 @@ let ProfileHeaderShell = ({
     aviRef,
     liveStatusControl,
     live,
-    playHaptic,
+    haptics,
   ])
 
   const onPressBanner = useCallback(() => {

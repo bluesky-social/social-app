@@ -165,10 +165,11 @@ class NotificationService: UNNotificationServiceExtension {
   }
 
   func downloadAvatarImage(from urlString: String) -> INImage? {
+    // SiriKit cannot persist the CDN's default WebP avatar format.
     let thumbnailUrlString = urlString.replacingOccurrences(
       of: "/img/avatar/",
       with: "/img/avatar_thumbnail/"
-    )
+    ) + "@jpeg"
 
     guard let url = URL(string: thumbnailUrlString) else { return nil }
 

@@ -613,7 +613,7 @@ func TestBuildPostJSONLD_ReplyCommentsNoIsPartOf(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "main")
 	reply := makePostView("bob.bsky.social", "did:plc:bob", "rep1", "a reply")
 	isPartOf := "https://bsky.app/profile/root.bsky.social/post/rootrkey"
-	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", isPartOf, hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, threadWithReplies(buildReplies(reply)), "u", isPartOf, hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	c := main["comment"].([]any)[0].(map[string]any)
 	if _, present := c["isPartOf"]; present {
@@ -710,7 +710,7 @@ func TestBuildPostJSONLD_Comments(t *testing.T) {
 		FeedDefs_BlockedPost: &appbsky.FeedDefs_BlockedPost{Uri: "at://x/y/z"},
 	})
 
-	out, _ := buildPostJSONLD(pv, replies, "u", "", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, threadWithReplies(replies), "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 
 	if cc := main["commentCount"].(float64); int64(cc) != 14 {
@@ -836,7 +836,7 @@ func TestBuildPostJSONLD_NilAuthorReply(t *testing.T) {
 		{FeedDefs_ThreadViewPost: &appbsky.FeedDefs_ThreadViewPost{Post: goodReply}},
 		{FeedDefs_ThreadViewPost: &appbsky.FeedDefs_ThreadViewPost{Post: badReply}},
 	}
-	out, err := buildPostJSONLD(pv, replies, "u", "", hideEmbedLabels, hideReplyLabels)
+	out, err := buildPostJSONLD(pv, threadWithReplies(replies), "u", "", hideEmbedLabels, hideReplyLabels)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -857,7 +857,7 @@ func TestBuildPostJSONLD_CommentMedia(t *testing.T) {
 	replies := []*appbsky.FeedDefs_ThreadViewPost_Replies_Elem{
 		{FeedDefs_ThreadViewPost: &appbsky.FeedDefs_ThreadViewPost{Post: reply}},
 	}
-	out, _ := buildPostJSONLD(pv, replies, "u", "", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, threadWithReplies(replies), "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	c := main["comment"].([]any)[0].(map[string]any)
 	imgs, ok := c["image"].([]any)
@@ -1043,6 +1043,11 @@ func buildReplies(posts ...*appbsky.FeedDefs_PostView) []*appbsky.FeedDefs_Threa
 	return out
 }
 
+// threadWithReplies wraps replies in a thread view with no parent chain.
+func threadWithReplies(replies []*appbsky.FeedDefs_ThreadViewPost_Replies_Elem) *appbsky.FeedDefs_ThreadViewPost {
+	return &appbsky.FeedDefs_ThreadViewPost{Replies: replies}
+}
+
 // commentIdentifiers extracts the identifier of each entry in mainEntity.comment.
 func commentIdentifiers(t *testing.T, out string) []string {
 	t.Helper()
@@ -1064,7 +1069,7 @@ func TestBuildPostJSONLD_HiddenReplyDropped_PostViewLabel(t *testing.T) {
 	good := makePostView("bob.bsky.social", "did:plc:bob", "rep1", "good reply")
 	bad := makePostView("eve.bsky.social", "did:plc:eve", "rep2", "spam reply",
 		withPostLabel("!hide", false))
-	out, _ := buildPostJSONLD(pv, buildReplies(good, bad), "u", "", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, threadWithReplies(buildReplies(good, bad)), "u", "", hideEmbedLabels, hideReplyLabels)
 	ids := commentIdentifiers(t, out)
 	if len(ids) != 1 || ids[0] != good.Uri {
 		t.Errorf("expected only the unlabeled reply to remain, got %v", ids)
@@ -1077,7 +1082,7 @@ func TestBuildPostJSONLD_HiddenReplyDropped_SelfLabel(t *testing.T) {
 	good := makePostView("bob.bsky.social", "did:plc:bob", "rep1", "good reply")
 	bad := makePostView("eve.bsky.social", "did:plc:eve", "rep2", "spam reply",
 		withSelfLabel("spam"))
-	out, _ := buildPostJSONLD(pv, buildReplies(good, bad), "u", "", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, threadWithReplies(buildReplies(good, bad)), "u", "", hideEmbedLabels, hideReplyLabels)
 	ids := commentIdentifiers(t, out)
 	if len(ids) != 1 || ids[0] != good.Uri {
 		t.Errorf("expected self-labeled reply dropped, got %v", ids)
@@ -1093,7 +1098,7 @@ func TestBuildPostJSONLD_HiddenReplyDropped_EmbedLabel(t *testing.T) {
 	// union behavior.
 	bad := makePostView("eve.bsky.social", "did:plc:eve", "rep2", "concerning reply",
 		withPostLabel("self-harm", false))
-	out, _ := buildPostJSONLD(pv, buildReplies(good, bad), "u", "", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, threadWithReplies(buildReplies(good, bad)), "u", "", hideEmbedLabels, hideReplyLabels)
 	ids := commentIdentifiers(t, out)
 	if len(ids) != 1 || ids[0] != good.Uri {
 		t.Errorf("expected embed-labeled reply dropped, got %v", ids)
@@ -1105,7 +1110,7 @@ func TestBuildPostJSONLD_NegatedHideLabelKept(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "main")
 	reply := makePostView("bob.bsky.social", "did:plc:bob", "rep1", "fine reply",
 		withPostLabel("!hide", true))
-	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", "", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, threadWithReplies(buildReplies(reply)), "u", "", hideEmbedLabels, hideReplyLabels)
 	ids := commentIdentifiers(t, out)
 	if len(ids) != 1 || ids[0] != reply.Uri {
 		t.Errorf("expected negated-label reply to be kept, got %v", ids)
@@ -1116,7 +1121,7 @@ func TestBuildPostJSONLD_ReplyAuthorHasIdentifier(t *testing.T) {
 	// Reply author should also carry a DID identifier.
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "main")
 	reply := makePostView("bob.bsky.social", "did:plc:bob", "rep1", "hi")
-	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", "", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, threadWithReplies(buildReplies(reply)), "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	c := main["comment"].([]any)[0].(map[string]any)
 	auth, ok := c["author"].(map[string]any)
@@ -1297,7 +1302,7 @@ func TestBuildPostJSONLD_ReplyAuthorNoReviewedBy(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "main")
 	reply := makePostView("bob.bsky.social", "did:plc:bob", "rep1", "hi",
 		withVerifications(state))
-	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", "", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, threadWithReplies(buildReplies(reply)), "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	c := main["comment"].([]any)[0].(map[string]any)
 	auth := c["author"].(map[string]any)
@@ -1592,7 +1597,7 @@ func TestBuildPostJSONLD_VideoOnReply(t *testing.T) {
 		withVideoFull(videoEmbedOpts{
 			thumbnail: thumb, playlist: playlist, alt: "bob's clip",
 		}))
-	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", "", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, threadWithReplies(buildReplies(reply)), "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	c := main["comment"].([]any)[0].(map[string]any)
 	video, ok := c["video"].(map[string]any)
@@ -1682,7 +1687,7 @@ func TestBuildPostJSONLD_VideoHandleInvalidEmbedURL_Reply(t *testing.T) {
 		withVideoFull(videoEmbedOpts{
 			playlist: playlist, alt: "bob's clip",
 		}))
-	out, _ := buildPostJSONLD(pv, buildReplies(reply), "u", "", hideEmbedLabels, hideReplyLabels)
+	out, _ := buildPostJSONLD(pv, threadWithReplies(buildReplies(reply)), "u", "", hideEmbedLabels, hideReplyLabels)
 	main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
 	c := main["comment"].([]any)[0].(map[string]any)
 	video, ok := c["video"].(map[string]any)

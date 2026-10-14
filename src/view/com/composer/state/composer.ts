@@ -253,6 +253,8 @@ export function composerReducer(
       return {
         ...state,
         isDirty: true,
+        activePostIndex: activePostIndex + 1,
+        mutableNeedsFocusActive: true,
         thread: {
           ...state.thread,
           posts: nextPosts,

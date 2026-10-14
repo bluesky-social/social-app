@@ -16,7 +16,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, platform, useTheme} from '#/alf'
 import {BotBadge} from '#/components/BotBadge'
 import * as Toggle from '#/components/forms/Toggle'
-import {Bot_Filled as RobotIcon} from '#/components/icons/Bot'
+import {Bot_Filled_Corner0_Rounded as RobotIcon} from '#/components/icons/Bot'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
@@ -80,13 +80,15 @@ export function AutomationLabelSettingsScreen({}: Props) {
           return existing
         },
         checkCommitted: profile => {
+          if (!profile) return false
           const exists = !!profile.labels?.some(l => l.val === 'bot')
           return exists === wasAdded
         },
       },
       {
         onSuccess() {
-          queryClient.invalidateQueries({queryKey: [POST_FEED_RQKEY_ROOT]})
+          // Resetting refetches a feed's first page, not every loaded page.
+          queryClient.resetQueries({queryKey: [POST_FEED_RQKEY_ROOT]})
           queryClient.invalidateQueries({queryKey: [postThreadQueryKeyRoot]})
         },
       },

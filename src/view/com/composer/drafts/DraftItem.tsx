@@ -287,9 +287,10 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
       if (post.images && post.images.length > 0) {
         const loaded: LoadedImage[] = []
         for (const image of post.images) {
+          const alt = image.altText || ''
           try {
             const url = await storage.loadMediaFromLocal(image.localPath)
-            loaded.push({url, alt: image.altText || ''})
+            loaded.push({url, alt})
           } catch (e) {
             // Image doesn't exist locally, skip it
           }

@@ -23,6 +23,10 @@ export type CommonNavigatorParams = {
   NotFound: undefined
   Lists: undefined
   Moderation: undefined
+  ModerationInbox: undefined
+  ModerationInboxSettings: undefined
+  ModerationInboxReportDetails: undefined
+  ModerationInboxNoticeDetails: undefined
   ModerationModlists: undefined
   ModerationMutedAccounts: undefined
   ModerationBlockedAccounts: undefined
@@ -134,6 +138,7 @@ export type MessagesTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type FlatNavigatorParams = CommonNavigatorParams & {
+  Atmosphere: undefined
   Home: undefined
   Search: SearchParams
   Feeds: undefined
@@ -146,6 +151,7 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
 }
 
 export type AllNavigatorParams = CommonNavigatorParams & {
+  Atmosphere: undefined
   HomeTab: undefined
   Home: undefined
   SearchTab: undefined

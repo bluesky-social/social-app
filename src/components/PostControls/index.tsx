@@ -19,7 +19,7 @@ import {
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Reply as Bubble} from '#/components/icons/Reply'
+import {Reply_Stroke2_Corner0_Rounded as Bubble} from '#/components/icons/Reply'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import * as Skele from '#/components/Skeleton'
 import * as Toast from '#/components/Toast'
@@ -107,9 +107,10 @@ let PostControls = ({
       return
     }
 
+    const existingLike = post.viewer?.like
     try {
       setHasLikeIconBeenToggled(true)
-      if (!post.viewer?.like) {
+      if (!existingLike) {
         sendInteraction({
           item: post.uri,
           event: 'app.bsky.feed.defs#interactionLike',
@@ -137,8 +138,9 @@ let PostControls = ({
       return
     }
 
+    const existingRepost = post.viewer?.repost
     try {
-      if (!post.viewer?.repost) {
+      if (!existingRepost) {
         sendInteraction({
           item: post.uri,
           event: 'app.bsky.feed.defs#interactionRepost',

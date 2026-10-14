@@ -83,10 +83,10 @@ export function BetaFeaturesSettingsScreen({}: Props) {
     } catch (e) {
       logger.error('Failed to toggle beta features', {safeMessage: e})
       Toast.show(l`Something went wrong, please try again.`, {type: 'error'})
-      return
-    } finally {
       setIsPending(false)
+      return
     }
+    setIsPending(false)
     /*
      * The toggle already succeeded; re-evaluate feature gates against the new
      * attribute in-session as a best-effort follow-up. A failure here should

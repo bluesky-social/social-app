@@ -100,7 +100,7 @@ The module provides a React Context provider for managing preferences in the app
 import {
   BackgroundNotificationPreferencesProvider,
   useBackgroundNotificationPreferences,
-} from 'expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+} from '@bsky.app/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
 function App() {
   return (

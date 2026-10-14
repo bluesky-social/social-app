@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {ScrollForwarderView} from 'react-native-scroll-forwarder'
+import {ScrollForwarderView} from '@bsky.app/react-native-scroll-forwarder'
 import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {msg} from '@lingui/core/macro'
@@ -349,7 +349,7 @@ function ProfileScreenLoaded({
   const wrappedNavToWizard = requireEmailVerification(navToWizard, {
     instructions: [
       <Trans key="nav">
-        Before creating a starter pack, you must first verify your email.
+        Before creating a Starter Pack, you must first verify your email.
       </Trans>,
     ],
   })

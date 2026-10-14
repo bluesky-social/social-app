@@ -2,6 +2,7 @@ import {useMemo} from 'react'
 import {type StyleProp, type TextStyle} from 'react-native'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 
+import {isRTLText} from '#/lib/strings/text-direction'
 import {toShortUrl} from '#/lib/strings/url-helpers'
 import {android, atoms as a, flatten, type TextStyleProp} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
@@ -9,6 +10,7 @@ import {InlineLinkText, type LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichTextTag} from '#/components/RichTextTag'
 import {Text, type TextProps} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
@@ -82,14 +84,16 @@ export function RichText({
     }
   }, [value])
 
-  const plainStyles = style
+  const {text, facets} = richText
+  const plainStyles: StyleProp<TextStyle> = [
+    style,
+    IS_NATIVE && isRTLText(text) ? {textAlign: 'right'} : null,
+  ]
   const suffixStyles =
     suffix && suffixOffset
       ? android({paddingBottom: suffixOffset, marginBottom: -suffixOffset})
       : null
   const interactiveStyles = [plainStyles, interactiveStyle]
-
-  const {text, facets} = richText
 
   if (!facets?.length) {
     if (isOnlyEmoji(text)) {

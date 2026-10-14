@@ -1,9 +1,10 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect} from 'react'
 import {BackHandler, useWindowDimensions, View} from 'react-native'
 import {Drawer} from 'react-native-drawer-layout'
 import {SystemBars} from 'react-native-edge-to-edge'
-import {Gesture} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {BottomSheetOutlet} from '@bsky.app/bottom-sheet'
+import {updateActiveViewAsync} from '@bsky.app/expo-bluesky-swiss-army/src/VisibilityView'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
@@ -40,13 +41,12 @@ import {
 } from '#/components/PolicyUpdateOverlay'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {useAgeAssurance} from '#/ageAssurance'
+import {DataUnavailableScreen} from '#/ageAssurance/components/DataUnavailableScreen'
 import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
 import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
 import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
-import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
-import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
 import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
 
@@ -142,7 +142,6 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
   const {hasSession} = useSession()
 
   const swipeEnabled = !canGoBack && hasSession && !isDrawerSwipeDisabled
-  const [trendingScrollGesture] = useState(() => Gesture.Native())
 
   const renderDrawerContent = useCallback(() => <DrawerContent />, [])
   const onOpenDrawer = useCallback(
@@ -159,34 +158,42 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
       renderDrawerContent={renderDrawerContent}
       drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
       configureGestureHandler={handler => {
-        handler = handler.requireExternalGestureToFail(trendingScrollGesture)
-
         if (swipeEnabled) {
           if (isDrawerOpen) {
-            return handler.activeOffsetX([-1, 1])
+            return {...handler, activeOffsetX: [-1, 1]}
           } else {
-            return (
-              handler
-                // Any movement to the left is a pager swipe
-                // so fail the drawer gesture immediately.
-                .failOffsetX(-1)
-                // Don't rush declaring that a movement to the right
-                // is a drawer swipe. It could be a vertical scroll, or a
-                // slow horizontal carousel swipe. On Android a child
-                // `blocksExternalGesture` only holds the drawer off once the
-                // native scroll has activated, which on a slow swipe doesn't
-                // happen until movement crosses the native touch slop
-                // (~8-16px). Activating the drawer below that lets a slow
-                // carousel swipe pop the drawer open (APP-2119), so require
-                // more travel before claiming on Android.
-                .activeOffsetX(IS_ANDROID ? 20 : 5)
-            )
+            return {
+              ...handler,
+              /*
+               * Any movement to the left is a pager swipe, so fail the drawer
+               * gesture immediately.
+               */
+              failOffsetX: -1,
+              /*
+               * Don't rush declaring that a movement to the right is a drawer
+               * swipe. It could be a vertical scroll, or a slow horizontal
+               * carousel swipe. On Android a child's `block` relation only
+               * holds the drawer off once the native scroll has activated,
+               * which on a slow swipe doesn't happen until movement crosses
+               * the native touch slop (~8-16px). Activating the drawer below
+               * that lets a slow carousel swipe pop the drawer open (APP-2119),
+               * so require more travel before claiming on Android.
+               */
+              activeOffsetX: IS_ANDROID ? 20 : 5,
+            }
           }
         } else {
-          // Fail the gesture immediately.
-          // This seems more reliable than the `swipeEnabled` prop.
-          // With `swipeEnabled` alone, the gesture may freeze after toggling off/on.
-          return handler.failOffsetX([0, 0]).failOffsetY([0, 0])
+          /*
+           * Fail the gesture immediately and skip the edge peek on touch-down.
+           * This seems more reliable than the `swipeEnabled` prop alone, which
+           * may freeze after toggling off/on.
+           */
+          return {
+            ...handler,
+            onBegin: undefined,
+            failOffsetX: [0, 0],
+            failOffsetY: [0, 0],
+          }
         }
       }}
       open={isDrawerOpen}
@@ -245,7 +252,9 @@ export function Shell() {
         <Deactivated />
       ) : (
         <>
-          {aa.state.access === aa.Access.None ? (
+          {aa.state.error === 'account-data' ? (
+            <DataUnavailableScreen />
+          ) : aa.state.access === aa.Access.None ? (
             <NoAccessScreen />
           ) : (
             <RoutesContainer>

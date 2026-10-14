@@ -25,7 +25,7 @@ export function useListMembershipAddMutation({
   onError,
 }: {
   /**
-   * Needed for optimistic update of starter pack query
+   * Needed for optimistic update of Starter Pack query
    */
   subject?: bsky.profile.AnyProfileView
   onSuccess?: (data: {uri: AtUriString; cid: string}) => void
@@ -66,7 +66,7 @@ export function useListMembershipAddMutation({
         })
       }, 1e3)
 
-      // update WITH_MEMBERSHIPS query for starter packs
+      // update WITH_MEMBERSHIPS query for Starter Packs
       if (subject) {
         queryClient.setQueryData<
           InfiniteData<app.bsky.graph.getStarterPacksWithMembership.$OutputBody>
@@ -161,7 +161,7 @@ export function useListMembershipRemoveMutation({
         })
       }, 1e3)
 
-      // update WITH_MEMBERSHIPS query for starter packs
+      // update WITH_MEMBERSHIPS query for Starter Packs
       queryClient.setQueryData<
         InfiniteData<app.bsky.graph.getStarterPacksWithMembership.$OutputBody>
       >(STARTER_PACKS_WITH_MEMBERSHIPS_RKEY(variables.actorDid), old => {

@@ -39,10 +39,15 @@ export function useGetSuggestedFeedsQuery({enabled}: {enabled?: boolean}) {
       )
 
       return {
-        feeds: data.feeds.filter(feed => {
+        /*
+         * Preserve the response position when filtering saved feeds so
+         * feedback refers to the rank from the recommendation batch.
+         */
+        feeds: data.feeds.flatMap((feed, position) => {
           const isSaved = !!savedFeeds?.find(s => s.value === feed.uri)
-          return !isSaved
+          return isSaved ? [] : [{feed, position}]
         }),
+        recId: data.recIdStr,
       }
     },
   })

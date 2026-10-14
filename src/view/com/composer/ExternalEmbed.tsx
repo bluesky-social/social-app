@@ -10,6 +10,8 @@ import {
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
+import {AtCard} from '#/components/Post/Embed/AtCard'
+import {getAtCardProvider} from '#/components/Post/Embed/AtCard/providers'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
 import {ModeratedFeedEmbed} from '#/components/Post/Embed/FeedEmbed'
 import {JoinRequestEmbed} from '#/components/Post/Embed/JoinRequestEmbed'
@@ -90,10 +92,16 @@ export const ExternalEmbedLink = ({
   const linkComponent = useMemo(() => {
     if (data) {
       if (data.type === 'external') {
-        if (data.view && isStandardSiteEmbed(data.view.external)) {
+        const atProvider = getAtCardProvider(uri)
+        if (
+          (data.view && isStandardSiteEmbed(data.view.external)) ||
+          atProvider
+        ) {
+          const Card = atProvider ? AtCard : StandardSiteEmbed
           return (
-            <StandardSiteEmbed
+            <Card
               preview
+              authorDid={data.authorDid}
               view={{
                 ...data.view?.external,
                 title: data.view?.external?.title || data.title || uri,

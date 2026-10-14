@@ -1,9 +1,11 @@
-import {useCallback, useEffect} from 'react'
+import {useCallback, useEffect, useEffectEvent} from 'react'
 import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {BottomSheetOutlet} from '@bsky.app/bottom-sheet'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
+import {formatDateTime} from '#/lib/strings/time'
 import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
 import {useSessionApi} from '#/state/session'
 import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
@@ -25,7 +27,6 @@ import {Loader} from '#/components/Loader'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {BottomSheetOutlet} from '#/../modules/bottom-sheet'
 import {useAgeAssurance} from '#/ageAssurance'
 import {DeviceSignalsNotice} from '#/ageAssurance/components/DeviceSignalsNotice'
 import {useAgeAssuranceServerDataContext} from '#/ageAssurance/data'
@@ -76,7 +77,7 @@ export function NoAccessScreen() {
   const geolocationString = createGeolocationString(geolocation, i18n.locale)
   const isUsingGPS = !!geolocation.deviceGeolocation?.countryCode && IS_NATIVE
 
-  useEffect(() => {
+  const onShown = useEffectEvent(() => {
     // just counting overall hits here
     ax.metric(`blockedGeoOverlay:shown`, {})
     ax.metric(`ageAssurance:noAccessScreen:shown`, {
@@ -85,8 +86,10 @@ export function NoAccessScreen() {
       hasDeclaredAge,
       canUpdateBirthday,
     })
-    // TODO This can be cleaned up with useEffectEvent once we're on 19.2
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  })
+
+  useEffect(() => {
+    onShown()
   }, [])
 
   const onPressLogout = useCallback(() => {
@@ -433,7 +436,7 @@ function AccessSection() {
               ) : lastInitiatedAt && timeAgo && diff ? (
                 <Text
                   style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}
-                  title={i18n.date(lastInitiatedAt, {
+                  title={formatDateTime(i18n, lastInitiatedAt, {
                     dateStyle: 'medium',
                     timeStyle: 'medium',
                   })}>

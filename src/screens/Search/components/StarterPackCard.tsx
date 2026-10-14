@@ -11,9 +11,9 @@ import {useSession} from '#/state/session'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
-import {ButtonText} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {Link} from '#/components/Link'
+import {Link, useLink} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {useStarterPackLink} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
@@ -33,7 +33,17 @@ export function StarterPackCard({
   const {currentAccount} = useSession()
   const {gtPhone} = useBreakpoints()
   const link = useStarterPackLink({view})
+
+  const openPack = useLink({
+    to: link.to,
+    displayText: link.label,
+    onPress: () => {
+      link.precache()
+      onPress?.()
+    },
+  })
   const record = view.record
+  const isOwnStarterPack = view.creator?.did === currentAccount?.did
 
   if (!bsky.isType(app.bsky.graph.starterpack, record)) {
     return null
@@ -99,18 +109,18 @@ export function StarterPackCard({
                     t.atoms.text_contrast_medium,
                   ]}
                   numberOfLines={1}>
-                  {view.creator?.did === currentAccount?.did
+                  {isOwnStarterPack
                     ? _(msg`By you`)
                     : _(msg`By ${sanitizeHandle(view.creator.handle, '@')}`)}
                 </Text>
               </View>
-              <Link
-                to={link.to}
+              <Button
                 label={link.label}
                 onHoverIn={link.precache}
-                onPress={() => {
-                  link.precache()
-                  onPress?.()
+                onPress={e => {
+                  // don't let the press reach the surrounding card link
+                  e.stopPropagation()
+                  openPack.onPress(e)
                 }}
                 variant="solid"
                 color="secondary"
@@ -119,7 +129,7 @@ export function StarterPackCard({
                 <ButtonText>
                   <Trans>Open pack</Trans>
                 </ButtonText>
-              </Link>
+              </Button>
             </View>
           </View>
         </>

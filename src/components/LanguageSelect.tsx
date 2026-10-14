@@ -5,13 +5,15 @@ import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {APP_LANGUAGES} from '#/locale/languages'
 import * as Select from '#/components/Select'
 
+const DEFAULT_ITEMS = APP_LANGUAGES.map(l => ({
+  label: l.name,
+  value: l.code2,
+}))
+
 export function LanguageSelect({
   value,
   onChange,
-  items = APP_LANGUAGES.map(l => ({
-    label: l.name,
-    value: l.code2,
-  })),
+  items = DEFAULT_ITEMS,
   label,
   disabledBlueskySupportedLanguageSanitization = false,
 }: {

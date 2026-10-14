@@ -43,7 +43,7 @@ export function Header({
   const isModList = list.purpose === app.bsky.graph.defs.modlist.value
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
 
   const {mutateAsync: muteList, isPending: isMutePending} =
     useListMuteMutation()
@@ -62,7 +62,15 @@ export function Header({
   const isPinned = Boolean(savedFeedConfig?.pinned)
 
   const onTogglePinned = async () => {
-    playHaptic()
+    haptics.confirm()
+
+    /*
+     * Hoisted above the `try`: inside it, `pinned` is `!savedFeedConfig.pinned`,
+     * which is `!isPinned` on the branch that uses this.
+     */
+    const pinnedMessage = !isPinned
+      ? _(msg`Pinned to your feeds`)
+      : _(msg`Unpinned from your feeds`)
 
     try {
       if (savedFeedConfig) {
@@ -73,11 +81,7 @@ export function Header({
             pinned,
           },
         ])
-        Toast.show(
-          pinned
-            ? _(msg`Pinned to your feeds`)
-            : _(msg`Unpinned from your feeds`),
-        )
+        Toast.show(pinnedMessage)
       } else {
         await addSavedFeeds([
           {

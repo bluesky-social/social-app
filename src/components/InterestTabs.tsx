@@ -54,6 +54,16 @@ export function InterestTabs({
   const pendingTabOffsets = useRef<{x: number; width: number}[]>([])
   const [tabOffsets, setTabOffsets] = useState<{x: number; width: number}[]>([])
 
+  function scrollIntoViewIfNeeded(index: number) {
+    const btnLayout = tabOffsets[index]
+    if (!btnLayout) return
+    listRef.current?.scrollTo({
+      // centered
+      x: btnLayout.x - (totalWidth / 2 - btnLayout.width / 2),
+      animated: true,
+    })
+  }
+
   const onInitialLayout = useNonReactiveCallback(() => {
     const index = interests.indexOf(selectedInterest)
     scrollIntoViewIfNeeded(index)
@@ -64,16 +74,6 @@ export function InterestTabs({
       onInitialLayout()
     }
   }, [tabOffsets, onInitialLayout])
-
-  function scrollIntoViewIfNeeded(index: number) {
-    const btnLayout = tabOffsets[index]
-    if (!btnLayout) return
-    listRef.current?.scrollTo({
-      // centered
-      x: btnLayout.x - (totalWidth / 2 - btnLayout.width / 2),
-      animated: true,
-    })
-  }
 
   function handleSelectTab(index: number) {
     const tab = interests[index]
@@ -213,7 +213,7 @@ export function InterestTabs({
           decelerationRate="fast"
           snapToOffsets={
             tabOffsets.filter(o => !!o).length === interests.length
-              ? tabOffsets.map(o => o.x - tokens.space.xl)
+              ? tabOffsets.map(o => o.x - gutterWidth)
               : undefined
           }
           onLayout={evt => setTotalWidth(evt.nativeEvent.layout.width)}

@@ -161,9 +161,10 @@ function AltTextInner({
                   label={_(msg`Alt text`)}
                   placeholder={vendorAltText}
                   onChangeText={onChange}
-                  defaultValue={altText}
+                  value={altText}
                   multiline
                   autoFocus
+                  scrollEnabled={false}
                   onKeyPress={({nativeEvent}) => {
                     if (nativeEvent.key === 'Escape') {
                       control.close()
@@ -222,6 +223,7 @@ function AltTextInner({
             isPreferredAltText={true}
             params={params}
             hideAlt
+            minMobileAspectRatio={1}
           />
         </View>
       </View>

@@ -65,8 +65,8 @@ export function useActorAutocompleteFn() {
   const client = useAppviewClient()
 
   return useCallback(
-    async ({query, limit = 8}: {query: string; limit?: number}) => {
-      query = query.toLowerCase()
+    async ({query: rawQuery, limit = 8}: {query: string; limit?: number}) => {
+      const query = rawQuery.toLowerCase()
       let res
       if (query) {
         try {

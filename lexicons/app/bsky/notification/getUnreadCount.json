@@ -25,7 +25,8 @@
             "format": "datetime"
           },
           "priority": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Deprecated: this parameter is ignored."
           }
         }
       },

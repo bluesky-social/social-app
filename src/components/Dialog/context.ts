@@ -6,6 +6,7 @@ import {
   useMemo,
   useRef,
 } from 'react'
+import {BottomSheetSnapPoint} from '@bsky.app/bottom-sheet/src/BottomSheet.types'
 
 import {useDialogStateContext} from '#/state/dialogs'
 import {
@@ -14,7 +15,6 @@ import {
   type DialogOuterProps,
 } from '#/components/Dialog/types'
 import {IS_DEV} from '#/env'
-import {BottomSheetSnapPoint} from '../../../modules/bottom-sheet/src/BottomSheet.types'
 
 export const Context = createContext<DialogContextProps>({
   close: () => {},
@@ -42,7 +42,6 @@ export function useDialogControl(): DialogOuterProps['control'] {
   useEffect(() => {
     activeDialogs.current.set(id, control)
     return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       activeDialogs.current.delete(id)
     }
   }, [id, activeDialogs])

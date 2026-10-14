@@ -1,5 +1,5 @@
 import {useLayoutEffect, useRef} from 'react'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+import {GestureDetector, usePanGesture} from 'react-native-gesture-handler'
 import Animated, {
   type AnimatedRef,
   measure,
@@ -249,28 +249,55 @@ function SortableItem<T>({
   onDragEnd?: () => void
 }) {
   const t = useTheme()
-  const playHaptic = useHaptics()
+  const {dragStart: playDragStartHaptic, selection: playSelectionHaptic} =
+    useHaptics()
 
   const lastHapticSlot = useSharedValue(-1)
 
-  const gesture = Gesture.Pan()
-    .onStart(() => {
+  /**
+   * Makes this item the one being dragged. Returns false if the item has no
+   * slot yet.
+   */
+  const startDrag = () => {
+    'worklet'
+    const s = state.get()
+    const mySlot = s.slots[itemKey]
+    if (mySlot === undefined) {
+      return false
+    }
+    state.set({...s, activeKey: itemKey, dragStartSlot: mySlot})
+    dragY.set(0)
+    scrollCompensation.set(0)
+    isGestureActive.set(true)
+    measureDone.set(false)
+    lastHapticSlot.set(mySlot)
+    if (onDragStart) {
+      scheduleOnRN(onDragStart)
+    }
+    scheduleOnRN(playDragStartHaptic)
+    return true
+  }
+
+  const gesture = usePanGesture({
+    onActivate: () => {
       'worklet'
-      const s = state.get()
-      const mySlot = s.slots[itemKey]
-      state.set({...s, activeKey: itemKey, dragStartSlot: mySlot})
-      dragY.set(0)
-      scrollCompensation.set(0)
-      isGestureActive.set(true)
-      measureDone.set(false)
-      lastHapticSlot.set(mySlot)
-      if (onDragStart) {
-        scheduleOnRN(onDragStart)
+      startDrag()
+    },
+    onUpdate: e => {
+      'worklet'
+      const activeKey = state.get().activeKey
+      if (activeKey !== itemKey) {
+        /*
+         * RNGH v3 can deliver updates for a pan whose drag we already reset
+         * in onFinalize, without activating it again. Seen with Maestro's
+         * synthetic swipes on the iOS simulator, possibly because raising the
+         * item's zIndex cancels the pan right after it activates. Pick the
+         * drag back up, unless another item owns it.
+         */
+        if (activeKey !== '' || !startDrag()) {
+          return
+        }
       }
-      scheduleOnRN(playHaptic)
-    })
-    .onChange(e => {
-      'worklet'
       const startSlot = state.get().dragStartSlot
       const minY = -startSlot * itemHeight
       const maxY = (itemCount - 1 - startSlot) * itemHeight
@@ -283,15 +310,23 @@ function SortableItem<T>({
         (startSlot * itemHeight + clampedY) / itemHeight,
       )
       const clampedSlot = Math.max(0, Math.min(currentSlot, itemCount - 1))
-      if (IS_IOS && clampedSlot !== lastHapticSlot.get()) {
+      if (clampedSlot !== lastHapticSlot.get()) {
         lastHapticSlot.set(clampedSlot)
-        scheduleOnRN(playHaptic, 'Light')
+        scheduleOnRN(playSelectionHaptic)
       }
-    })
-    .onEnd(() => {
+    },
+    onDeactivate: () => {
       'worklet'
       // Stop auto-scroll BEFORE the snap animation.
       isGestureActive.set(false)
+      /*
+       * Only the item being dragged may commit. Committing while idle
+       * (dragStartSlot -1) would move sorted[-1], an undefined key, into the
+       * new order.
+       */
+      if (state.get().activeKey !== itemKey) {
+        return
+      }
       const startSlot = state.get().dragStartSlot
       const rawNewSlot = Math.round(
         (startSlot * itemHeight + dragY.get()) / itemHeight,
@@ -338,9 +373,9 @@ function SortableItem<T>({
           }
         }),
       )
-    })
-    // Reset if the gesture is cancelled without onEnd firing.
-    .onFinalize(() => {
+    },
+    // Reset if the gesture is cancelled without onDeactivate firing.
+    onFinalize: () => {
       'worklet'
       isGestureActive.set(false)
       if (state.get().activeKey === itemKey && dragY.get() === 0) {
@@ -350,7 +385,8 @@ function SortableItem<T>({
           scheduleOnRN(onDragEnd)
         }
       }
-    })
+    },
+  })
 
   // All vertical positioning is via translateY (no `top`). This avoids
   // discrete jumps when slots change — Reanimated smoothly animates from

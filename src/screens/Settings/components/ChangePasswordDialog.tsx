@@ -94,9 +94,8 @@ function Inner() {
         logger.error('Failed to request password reset', {safeMessage: e})
         setError(cleanError(e))
       }
-    } finally {
-      setIsProcessing(false)
     }
+    setIsProcessing(false)
   }
 
   const onChangePassword = async () => {
@@ -140,9 +139,8 @@ function Inner() {
         logger.error('Failed to set new password', {safeMessage: e})
         setError(cleanError(e))
       }
-    } finally {
-      setIsProcessing(false)
     }
+    setIsProcessing(false)
   }
 
   return (

@@ -41,6 +41,118 @@ export function useListQuery(uri?: string) {
   })
 }
 
+export function useReferenceListOptOutMutation({
+  list,
+  onError,
+  onSuccess,
+}: {
+  list: app.bsky.graph.defs.ListView
+  onError: (error: Error) => void
+  onSuccess?: (action: 'optOut' | 'undo') => void
+}) {
+  const queryClient = useQueryClient()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
+
+  return useMutation<
+    {
+      referenceListOptOut: AtUriString | undefined
+      didObserveRequestedState: boolean
+    },
+    Error,
+    {referenceListOptOut?: string},
+    {previous?: app.bsky.graph.defs.ListView}
+  >({
+    mutationFn: async ({referenceListOptOut}) => {
+      let nextOptOut: AtUriString | undefined
+      if (referenceListOptOut) {
+        const {rkeySafe: rkey} = new AtUri(referenceListOptOut)
+        await pdsClient.delete(app.bsky.graph.referencelistoptout, {
+          repo: pdsClient.assertDid,
+          rkey,
+        })
+      } else {
+        const result = await pdsClient.create(
+          app.bsky.graph.referencelistoptout,
+          {
+            subject: list.uri,
+            createdAt: toDatetimeString(new Date()),
+          },
+        )
+        nextOptOut = result.uri
+      }
+
+      const didObserveRequestedState = await until(
+        5,
+        1e3,
+        (value, error) => {
+          if (error) return false
+          const observedOptOut = value?.list.viewer?.referenceListOptOut
+          const didObserveRequestedState = referenceListOptOut
+            ? !observedOptOut
+            : Boolean(observedOptOut)
+          if (didObserveRequestedState) nextOptOut = observedOptOut
+          return didObserveRequestedState
+        },
+        async () =>
+          await appviewClient.call(app.bsky.graph.getList, {
+            list: list.uri,
+            limit: 1,
+          }),
+      )
+
+      return {referenceListOptOut: nextOptOut, didObserveRequestedState}
+    },
+    onMutate: async ({referenceListOptOut}) => {
+      const queryKey = RQKEY(list.uri)
+      await queryClient.cancelQueries({queryKey})
+      const previous =
+        queryClient.getQueryData<app.bsky.graph.defs.ListView>(queryKey)
+      queryClient.setQueryData<app.bsky.graph.defs.ListView>(
+        queryKey,
+        current =>
+          current
+            ? {
+                ...current,
+                viewer: {
+                  ...current.viewer,
+                  referenceListOptOut: referenceListOptOut
+                    ? undefined
+                    : `at://${pdsClient.assertDid}/app.bsky.graph.referencelistoptout/pending`,
+                },
+              }
+            : current,
+      )
+      return {previous}
+    },
+    onSuccess: ({referenceListOptOut}, variables) => {
+      queryClient.setQueryData<app.bsky.graph.defs.ListView>(
+        RQKEY(list.uri),
+        current =>
+          current
+            ? {
+                ...current,
+                viewer: {...current.viewer, referenceListOptOut},
+              }
+            : current,
+      )
+      onSuccess?.(variables.referenceListOptOut ? 'undo' : 'optOut')
+    },
+    onError: (error, _, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(RQKEY(list.uri), context.previous)
+      }
+      onError(error)
+    },
+    onSettled: data => {
+      void queryClient.invalidateQueries({
+        queryKey: RQKEY(list.uri),
+        refetchType: data && !data.didObserveRequestedState ? 'none' : 'active',
+      })
+    },
+  })
+}
+
 export interface ListCreateMutateParams {
   purpose: string
   name: string
@@ -152,9 +264,9 @@ export function useListMetadataMutation() {
 
       // wait for the appview to update
       await whenAppViewReady(appviewClient, res.uri, v => {
-        const list = v.list
+        const list = v?.list
         return (
-          list.name === record.name && list.description === record.description
+          list?.name === record.name && list.description === record.description
         )
       })
       return res
@@ -228,14 +340,10 @@ export function useListDeleteMutation() {
       }
 
       /*
-       * Wait for the appview to update. Once the list is deleted `getList`
-       * throws, `until` catches it and passes `undefined` here, so an absent
-       * body signals a completed delete - the old check read `!v.success` on
-       * the legacy response envelope, which lex does not expose.
+       * Once the deletion is indexed, `getList` throws and `until` passes the
+       * error to this predicate with an undefined response.
        */
-      await whenAppViewReady(appviewClient, uri, v => {
-        return !v
-      })
+      await whenAppViewReady(appviewClient, uri, v => !v)
     },
     onSuccess() {
       invalidateMyLists(queryClient)
@@ -299,7 +407,10 @@ export function useListBlockMutation() {
 async function whenAppViewReady(
   client: Client,
   uri: string,
-  fn: (res: app.bsky.graph.getList.$OutputBody) => boolean,
+  fn: (
+    res: app.bsky.graph.getList.$OutputBody | undefined,
+    err: unknown,
+  ) => boolean,
 ) {
   await until(
     5, // 5 tries

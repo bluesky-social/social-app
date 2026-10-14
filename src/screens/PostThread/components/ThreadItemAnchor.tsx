@@ -23,7 +23,7 @@ import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {type PostSource} from '#/state/unstable-post-source'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {KnownLikers, LikesStat} from '#/screens/PostThread/components/LikesStat'
+import {LikesStat} from '#/screens/PostThread/components/LikesStat'
 import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
   POST_NUMBER_INLINE_OFFSET,
@@ -47,6 +47,7 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
+import {KnownLikers} from '#/components/Post/KnownLikers'
 import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
@@ -57,7 +58,7 @@ import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
 import {Text} from '#/components/Typography'
 import {WhoCanReply} from '#/components/WhoCanReply'
-import {useAnalytics} from '#/analytics'
+import {Features, useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -451,9 +452,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     columnGap: a.gap_lg.gap,
                   },
                   a.border_t,
-                  a.border_b,
                   a.mt_md,
-                  a.py_md,
+                  a.py_sm,
                   t.atoms.border_contrast_low,
                 ]}>
                 {post.repostCount != null && post.repostCount !== 0 ? (
@@ -513,12 +513,15 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     </Trans>
                   </Text>
                 ) : null}
-                <KnownLikers post={post} />
               </View>
             ) : null}
+            <KnownLikers
+              post={post}
+              feature={Features.PostThreadKnownLikersEnable}
+              outerStyle={[a.pt_xs, a.pb_sm]}
+            />
             <View
               style={[
-                a.pt_sm,
                 a.pb_2xs,
                 {
                   marginLeft: -5,

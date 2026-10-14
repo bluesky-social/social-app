@@ -137,7 +137,11 @@ function GermSelfButton({did}: {did: string}) {
         rkey: 'self',
       })
 
-      await whenAppViewReady(appviewClient, did, res => !res.associated?.germ)
+      await whenAppViewReady(
+        appviewClient,
+        did,
+        res => !!res && !res.associated?.germ,
+      )
 
       return previousRecord
     },
@@ -154,7 +158,7 @@ function GermSelfButton({did}: {did: string}) {
           await whenAppViewReady(
             appviewClient,
             did,
-            res => !!res.associated?.germ,
+            res => !!res?.associated?.germ,
           )
           await queryClient.refetchQueries({queryKey: RQKEY(did)})
 
@@ -326,7 +330,10 @@ function platform() {
 async function whenAppViewReady(
   appviewClient: Client,
   actor: string,
-  fn: (res: app.bsky.actor.getProfile.$OutputBody) => boolean,
+  fn: (
+    res: app.bsky.actor.getProfile.$OutputBody | undefined,
+    err: unknown,
+  ) => boolean,
 ) {
   await until(
     5, // 5 tries

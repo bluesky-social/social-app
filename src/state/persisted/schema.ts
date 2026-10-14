@@ -1,10 +1,10 @@
 import {isDidString} from '@atproto/lex'
+import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
 import {z} from 'zod'
 
 import {deviceLanguageCodes, deviceLocales} from '#/locale/deviceLocales'
 import {findSupportedAppLanguage} from '#/locale/helpers'
 import {logger} from '#/logger'
-import {PlatformInfo} from '../../../modules/expo-bluesky-swiss-army'
 
 const externalEmbedOptions = ['show', 'hide'] as const
 
@@ -119,6 +119,7 @@ const schema = z.object({
       soundcloud: z.enum(externalEmbedOptions).optional(),
       flickr: z.enum(externalEmbedOptions).optional(),
       bandcamp: z.enum(externalEmbedOptions).optional(),
+      freemix: z.enum(externalEmbedOptions).optional(),
     })
     .optional(),
   invites: z.object({

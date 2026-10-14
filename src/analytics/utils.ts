@@ -11,12 +11,16 @@ import {
  * Thin `useMemo` wrapper that marks the metadata as memoized and provides a
  * type guard.
  */
-export function useMeta(metadata?: MergeableMetadata) {
-  const m = useMemo(() => metadata, [metadata])
-  if (!m) return
+function markMemoized<T extends MergeableMetadata>(m: T): T {
   // @ts-expect-error
   m.__meta = true
   return m
+}
+
+export function useMeta(metadata?: MergeableMetadata) {
+  const m = useMemo(() => metadata, [metadata])
+  if (!m) return
+  return markMemoized(m)
 }
 
 export function accountToSessionMetadata(
