@@ -6,26 +6,11 @@ import {type usePostFeedPrepend} from './queries/postFeed'
 import {type useRevealTop} from './useRevealTop'
 
 /**
- * Takes a press of Home on a feed that stages new posts above the reader (see
- * `usePostFeedPrepend`), as anchored Following does, in two steps:
- *
- * - Below the top, it takes the reader up to it through what's loaded,
- *   including what's staged above them (see `useRevealTop`). It makes no
- *   request and writes nothing. Getting there reads what's staged, as
- *   scrolling there does.
- * - At the top (see {@link isAtTop}), it reads what's staged, which is in view
- *   there, and asks for what's newer with a prepend, or joins the one in
- *   progress, rather than refreshing. Once that has written, it jumps up to
- *   the new posts as they render. With nothing newer, it stays at the top and
- *   clears the Home dot, as nothing is new to the reader there. If they've
- *   left the top by the time the prepend writes, what it found stays staged
- *   above them, without a jump. A failed fetch leaves the feed as it was and
- *   the dot alone.
- *
- * Without a boundary to fetch above, as when the server didn't give one, it
- * refreshes from the top, as other feeds do.
- *
- * The press returns whether it took it. Disabled, it leaves it to the page.
+ * Handles Home on an anchored feed. Below the top, scrolls up through what's
+ * loaded without fetching. At the top, marks the staged page read and prepends
+ * what's newer (or refreshes if there's no cursor to prepend from), then jumps
+ * to the new posts if the reader is still at the top. Returns false when
+ * disabled.
  */
 export function useHomePress({
   enabled,
@@ -38,7 +23,6 @@ export function useHomePress({
 }: {
   /** Whether the feed stages new posts above the reader. */
   enabled: boolean
-  /** The list's scroll offset. */
   offsetY: {get(): number}
   prepend: Pick<
     ReturnType<typeof usePostFeedPrepend>,
@@ -49,7 +33,10 @@ export function useHomePress({
   refresh: () => Promise<{fetchedAt: number} | undefined>
   /** Sets the Home dot. */
   onHasNew?: (hasNew: boolean) => void
-  /** A press asked for what's newer, for its metric. */
+  /**
+   * Called when a press at the top asks for newer posts, to log the refresh
+   * metric. Like the page's own press, it counts one that joins a fetch.
+   */
   onFetch?: () => void
 }) {
   return useNonReactiveCallback((): boolean => {
@@ -62,13 +49,16 @@ export function useHomePress({
       return true
     }
     onFetch?.()
-    // A prepend in progress may replace what's staged, so it's left to finish.
+    /*
+     * Read before `run`, so it fetches above what's staged. Reading it now
+     * would make a prepend that's replacing it drop its result.
+     */
     if (!prepend.isOwed()) {
       prepend.markRead()
     }
-    // Right to the top, past anything staged behind the header.
+    // isAtTop allows a few points of slack; close it.
     revealTop.reveal()
-    // Not one the pill offers, as the press shows what it finds itself.
+    // 'focus' as the pill doesn't offer it; the press shows what it finds.
     const prepending = prepend.run('focus')
     if (!prepending) {
       void refresh().then(page => {
