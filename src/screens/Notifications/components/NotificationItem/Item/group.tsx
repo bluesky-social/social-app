@@ -428,6 +428,8 @@ export function AvatarRow() {
           key={profile.did}
           size={PREVIEW_AVATAR_SIZE}
           profile={profile}
+          // Too small for it, and notifications only show the red ring
+          hideLiveBadge
           moderation={
             moderationOpts
               ? moderateProfile(profile, moderationOpts).ui('avatar')

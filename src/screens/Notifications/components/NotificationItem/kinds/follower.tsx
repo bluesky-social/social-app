@@ -166,10 +166,11 @@ function PlainAvatar({profile}: {profile: bsky.profile.AnyProfileView}) {
   return (
     <PreviewableUserAvatar
       // Matches `Item.Avatar`
-      size={40}
+      size={Item.AVATAR_SIZE}
       profile={profile}
       moderation={moderation?.ui('avatar')}
       type={profile.associated?.labeler ? 'labeler' : 'user'}
+      hideLiveBadge
     />
   )
 }

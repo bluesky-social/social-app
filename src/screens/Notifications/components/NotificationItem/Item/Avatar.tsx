@@ -21,7 +21,10 @@ export type BadgeTone =
  */
 const ACTIVITY_ORANGE = '#F26022'
 
-const AVATAR_SIZE = 40
+/**
+ * The size of `Item.Avatar`'s avatar, for anything that stands in for it.
+ */
+export const AVATAR_SIZE = 44
 const BADGE_SIZE = 20
 /**
  * The width of the ring around the badge, in the row's background colour,
@@ -86,6 +89,8 @@ export function Avatar({
         profile={profile}
         moderation={moderation?.ui('avatar')}
         type={profile.associated?.labeler ? 'labeler' : 'user'}
+        // It would cover the badge. The red ring still says they're live
+        hideLiveBadge
       />
       {Icon && (
         /*

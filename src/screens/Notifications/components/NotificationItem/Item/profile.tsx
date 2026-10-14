@@ -609,6 +609,8 @@ export function ActorListItem({
           moderation={moderation?.ui('avatar')}
           type={profile.associated?.labeler ? 'labeler' : 'user'}
           disableNavigation
+          // Notifications only show the red ring
+          hideLiveBadge
         />
         <View style={[a.flex_1]}>
           <View style={[a.flex_row, a.align_center]}>
