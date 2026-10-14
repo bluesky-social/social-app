@@ -189,8 +189,10 @@ function NewNotificationsScreenInner() {
      * what "All" just loaded before anyone saw it
      */
     staleFeeds.current.delete(feed)
-    await refresh(feed)
-    bringAlong(feed, {everyTab, markRead: true})
+    // One that failed, or was overtaken, leaves the others to the next
+    if (await refresh(feed)) {
+      bringAlong(feed, {everyTab, markRead: true})
+    }
   }
   /**
    * Brings the tab in view up to date as the user comes back to it, see
@@ -202,9 +204,14 @@ function NewNotificationsScreenInner() {
     feed: GroupedNotificationsFeed,
     reason: RefreshReason,
   ) => {
-    // Not loaded yet, so its first load is on the way
-    if (!isLoaded(feed)) return
     const everyTab = reason === 'significantReturn' || reason === 'pushOpened'
+    // Not loaded yet, so its first load is on the way
+    if (!isLoaded(feed)) {
+      if (everyTab) {
+        bringAlong(feed, {everyTab, markRead: false})
+      }
+      return
+    }
     if (!scrolledDownFeeds.current.has(feed)) {
       ax.metric('notifications:refresh', {tab: feed, reason})
       void refreshTab(feed, {everyTab})
@@ -286,7 +293,10 @@ function NewNotificationsScreenInner() {
          * so flicking between tabs doesn't reload them
          */
         if (staleFeeds.current.delete(feed)) {
-          void refresh(feed, {isBehind: true})
+          void refresh(feed, {isBehind: true}).then(didLoad => {
+            // Left stale, to try again next time
+            if (!didLoad) staleFeeds.current.add(feed)
+          })
         } else {
           void peekLatest(feed)
         }
@@ -421,29 +431,31 @@ function useSessionSeenAt() {
    * the snapshot from it, clearing what was tinted before. One in the
    * background (`isBehind`) leaves the snapshot alone, so what it loads is
    * tinted like the rest. Either way, a load of "All" marks what it shows as
-   * seen.
+   * seen. Resolves with whether it loaded the feed, rather than failing or
+   * leaving it to another refresh.
    */
   const refresh = async (
     feed: GroupedNotificationsFeed,
     {isBehind = false}: {isBehind?: boolean} = {},
-  ) => {
+  ): Promise<boolean> => {
     /*
      * One already on its way loads the feed anyway. Overtaking it would
      * cancel its refetch, and if the user asked for it, keep it from taking
      * the snapshot
      */
-    if (isBehind && latestRefreshes.current.has(feed)) return
+    if (isBehind && latestRefreshes.current.has(feed)) return false
     handledFeeds.current.add(feed)
     const request = {}
     latestRefreshes.current.set(feed, request)
     const startedAt = Date.now()
     await refreshGroupedNotifications(queryClient, feed)
-    if (latestRefreshes.current.get(feed) !== request) return
+    if (latestRefreshes.current.get(feed) !== request) return false
     latestRefreshes.current.delete(feed)
     const page = getGroupedNotificationsTop(queryClient, feed)
     // A failed refetch leaves the old page in place
-    if (!page || page.requestedAt < startedAt) return
+    if (!page || page.requestedAt < startedAt) return false
     applyLoad({feed, ...page}, !isBehind)
+    return true
   }
 
   return {seenAt, onFirstLoad, refresh}
