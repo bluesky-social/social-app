@@ -298,7 +298,7 @@ export function BadgeText({
 
 export function BadgeCount({count}: {count: number}) {
   const t = useTheme()
-  const {i18n} = useLingui()
+  const {i18n, t: l} = useLingui()
 
   if (count < 1) return
 
@@ -324,7 +324,13 @@ export function BadgeCount({count}: {count: number}) {
           {color: t.palette.white, fontVariant: ['tabular-nums']},
         ]}
         numberOfLines={1}>
-        {i18n.number(count)}
+        {count >= 30
+          ? l({
+              message: `${i18n.number(30)}+`,
+              comment:
+                'Displayed when the number of notifications exceeds the cap – for example, 30+',
+            })
+          : i18n.number(count)}
       </Text>
     </View>
   )
