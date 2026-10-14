@@ -772,6 +772,62 @@ describe('hydratePage', () => {
         }),
       ).toBeUndefined()
     })
+
+    it('resolves the parent of a reply when the page came with it', () => {
+      const subscribed = narrow(
+        hydrateKind({
+          $type: `${NS}#subscribedPostGroup`,
+          items: [{actor: DANIELLE, post: DANIELLE_REPLY}],
+        }),
+        'subscribedPost',
+      )
+      expect(subscribed.items[0].parent).toEqual({
+        type: 'post',
+        post: related(BASE, FUNGUS_POST),
+      })
+      // The original view, so shadows apply to it
+      expect(
+        subscribed.items[0].parent?.type === 'post' &&
+          subscribed.items[0].parent.post,
+      ).toBe(related(BASE, FUNGUS_POST))
+    })
+
+    it('has no parent for a post that is not a reply', () => {
+      const subscribed = narrow(
+        hydrateKind({
+          $type: `${NS}#subscribedPostGroup`,
+          items: [{actor: DANIELLE, post: FUNGUS_POST}],
+        }),
+        'subscribedPost',
+      )
+      expect(subscribed.items[0]).not.toHaveProperty('parent')
+    })
+
+    it('has no parent when the page did not come with it, rather than treating it as deleted', () => {
+      const page = hydratePage(
+        {
+          ...BASE,
+          relatedViews: BASE.relatedViews?.filter(
+            view => (view as {uri?: string}).uri !== FUNGUS_POST,
+          ),
+          groups: [
+            {
+              id: 'group-0',
+              isRead: false,
+              indexedAt: '2026-10-08T11:00:00.000Z',
+              count: 1,
+              kind: {
+                $type: `${NS}#subscribedPostGroup`,
+                items: [{actor: DANIELLE, post: DANIELLE_REPLY}],
+              },
+            },
+          ],
+        },
+        {viewerDid: VIEWER_DID},
+      )
+      const subscribed = narrow(page.notifications[0], 'subscribedPost')
+      expect(subscribed.items[0]).not.toHaveProperty('parent')
+    })
   })
 
   describe('parents', () => {

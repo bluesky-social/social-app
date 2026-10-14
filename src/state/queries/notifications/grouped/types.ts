@@ -123,7 +123,15 @@ export type NotificationView =
       })
   | (Base & {
       type: 'subscribedPost'
-      items: NonEmptyArray<{actor: ProfileView; post: PostView}>
+      items: NonEmptyArray<{
+        actor: ProfileView
+        post: PostView
+        /**
+         * Set when the post replies to another and the page came with that
+         * post's view.
+         */
+        parent?: ParentPost
+      }>
     })
   | (Base & ActorGroup & {type: 'generatorLike'; generator: GeneratorView})
   | (Base & {type: 'reply'; post: PostView; parent: ParentPost})
