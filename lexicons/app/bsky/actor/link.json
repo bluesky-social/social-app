@@ -32,6 +32,13 @@
             "description": "Optional label for the link. Clients can fall back to the destination's domain.",
             "maxGraphemes": 40
           },
+          "labels": {
+            "refs": [
+              "com.atproto.label.defs#selfLabels"
+            ],
+            "type": "union",
+            "description": "Self-label values for this link."
+          },
           "createdAt": {
             "type": "string",
             "format": "datetime"

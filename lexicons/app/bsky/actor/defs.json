@@ -192,14 +192,6 @@
           "type": "unknown",
           "description": "Debug information for internal development"
         },
-        "links": {
-          "type": "array",
-          "items": {
-            "ref": "#profileLinkView",
-            "type": "ref"
-          },
-          "description": "The profile's links, in display order. Links that were taken down or don't resolve are left out."
-        },
         "avatar": {
           "type": "string",
           "format": "uri"
@@ -542,6 +534,13 @@
           "type": "string",
           "maxLength": 320,
           "maxGraphemes": 40
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "ref": "com.atproto.label.defs#label",
+            "type": "ref"
+          }
         }
       }
     },
@@ -832,6 +831,14 @@
         "debug": {
           "type": "unknown",
           "description": "Debug information for internal development"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "ref": "#profileLinkView",
+            "type": "ref"
+          },
+          "description": "The profile's links, in display order. Links that were taken down or don't resolve are left out."
         },
         "avatar": {
           "type": "string",
