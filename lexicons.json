@@ -706,7 +706,7 @@
     },
     "app.bsky.notification.getGroupedNotifications": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.notification.getGroupedNotifications",
-      "cid": "bafyreierpxcqidgy57zawmtvlh5kg6paj2a3njo5cy3kj46uwkl3jyyfii"
+      "cid": "bafyreihlp4gpub6pvz7uf7b6qtch3sghv4m5heqzjaxzg5zuxk2qvltwra"
     },
     "app.bsky.notification.getPreferences": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.notification.getPreferences",
@@ -1358,7 +1358,7 @@
     },
     "tools.ozone.inbox.defs": {
       "uri": "at://did:plc:33dt5kftu3jq2h5h4jjlqezt/com.atproto.lexicon.schema/tools.ozone.inbox.defs",
-      "cid": "bafyreidt5cwylevqwmjsuq7s6zqi33vttejv63zgufxrizdgqyugl2zwxm"
+      "cid": "bafyreiedged2hwzoith3rlx3sgfgj23w5pemxzjnusmwuu64qe34og4fmy"
     },
     "tools.ozone.inbox.getAccountStatus": {
       "uri": "at://did:plc:33dt5kftu3jq2h5h4jjlqezt/com.atproto.lexicon.schema/tools.ozone.inbox.getAccountStatus",
@@ -1370,7 +1370,7 @@
     },
     "tools.ozone.inbox.getNotificationPreferences": {
       "uri": "at://did:plc:33dt5kftu3jq2h5h4jjlqezt/com.atproto.lexicon.schema/tools.ozone.inbox.getNotificationPreferences",
-      "cid": "bafyreiff6smhk4bhqjpvwmxmwotygtdalxonvfjtjavdlzuo6lapphyv7q"
+      "cid": "bafyreiazdste66eecwcgsl5vexikckasfhg7rgu6lfz27mstxz46nz7c7q"
     },
     "tools.ozone.inbox.getReport": {
       "uri": "at://did:plc:33dt5kftu3jq2h5h4jjlqezt/com.atproto.lexicon.schema/tools.ozone.inbox.getReport",
@@ -1394,7 +1394,7 @@
     },
     "tools.ozone.inbox.putNotificationPreferences": {
       "uri": "at://did:plc:33dt5kftu3jq2h5h4jjlqezt/com.atproto.lexicon.schema/tools.ozone.inbox.putNotificationPreferences",
-      "cid": "bafyreiaejh7rdbmc4pukpwtnva5wberlwmi3zeltntkhzslhmwf2xlv6tu"
+      "cid": "bafyreiazgoerjgyqfou5clawjregprsq4fbeoe7zffbondlwbza5xdgsbi"
     },
     "tools.ozone.inbox.updateSeen": {
       "uri": "at://did:plc:33dt5kftu3jq2h5h4jjlqezt/com.atproto.lexicon.schema/tools.ozone.inbox.updateSeen",
@@ -1406,11 +1406,11 @@
     },
     "tools.ozone.queue.defs": {
       "uri": "at://did:plc:33dt5kftu3jq2h5h4jjlqezt/com.atproto.lexicon.schema/tools.ozone.queue.defs",
-      "cid": "bafyreify2cxcs5fziz6pqeufotqh632tp7oxedraayjstw6tglwjpuoalm"
+      "cid": "bafyreifxbjw2p6w6k2xx2yhwt5nwfy3zudp72ywinuedvyq3z2oeuky3le"
     },
     "tools.ozone.report.defs": {
       "uri": "at://did:plc:33dt5kftu3jq2h5h4jjlqezt/com.atproto.lexicon.schema/tools.ozone.report.defs",
-      "cid": "bafyreierydps5vinv5ods32xe6vcgfdvncpaeoxyyuysidr7moedajpoou"
+      "cid": "bafyreibcqpddhvrdffur6yxwdyam7myg277pp2w7dpgcahwz72gqlneoau"
     },
     "tools.ozone.server.getCapabilities": {
       "uri": "at://did:plc:33dt5kftu3jq2h5h4jjlqezt/com.atproto.lexicon.schema/tools.ozone.server.getCapabilities",
