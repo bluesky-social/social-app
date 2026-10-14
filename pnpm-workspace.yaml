@@ -53,3 +53,4 @@ minimumReleaseAgeExclude:
   - '@atproto-labs/*'
   - '@bsky.app/*'
   - '@bsky/*'
+  - react-native-nano-icons@1.0.1
