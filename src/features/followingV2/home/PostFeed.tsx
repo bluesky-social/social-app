@@ -230,7 +230,7 @@ export function getItemsForFeedback(feedRow: FeedRow): {
 
 export type PostFeedRef = {
   /** Refreshes the feed in one write. Callers log their own metric. */
-  refresh: () => Promise<void>
+  refresh: () => Promise<unknown>
   /**
    * Takes a press of Home, if this feed handles it itself, as one that
    * stages new posts above the reader does (see `useHomePress`). Returns
@@ -448,6 +448,7 @@ let PostFeed = ({
     if (page && isAnchored) {
       revealTop.onceRendered(page.fetchedAt)
     }
+    return page
   }
 
   useEffect(() => {

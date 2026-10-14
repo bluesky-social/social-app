@@ -45,8 +45,8 @@ export function useHomePress({
     'run' | 'isOwed' | 'markRead'
   >
   revealTop: ReturnType<typeof useRevealTop>
-  /** Refreshes the feed from the top, and reveals its new top. */
-  refresh: () => Promise<unknown>
+  /** Refreshes the feed from the top, resolving to the page it wrote, if any. */
+  refresh: () => Promise<{fetchedAt: number} | undefined>
   /** Sets the Home dot. */
   onHasNew?: (hasNew: boolean) => void
   /** A press asked for what's newer, for its metric. */
@@ -70,8 +70,11 @@ export function useHomePress({
     // Not one the pill offers, as the press shows what it finds itself.
     const prepending = prepend.run('focus')
     if (!prepending) {
-      void refresh()
-      onHasNew?.(false)
+      void refresh().then(page => {
+        if (page) {
+          onHasNew?.(false)
+        }
+      })
       return true
     }
     void prepending.then(

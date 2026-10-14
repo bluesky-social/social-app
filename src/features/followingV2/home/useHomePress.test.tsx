@@ -36,7 +36,9 @@ function renderHome({
   const scrollToTop = jest.fn<void, [boolean]>()
   const onHasNew = jest.fn<void, [boolean]>()
   const onFetch = jest.fn()
-  const refresh = jest.fn(() => Promise.resolve())
+  const refresh = jest.fn(() =>
+    Promise.resolve<FeedPageUnselected | undefined>(page(PREPENDED_AT)),
+  )
   const prepending: {
     resolve: (page: FeedPageUnselected | undefined) => void
     reject: (error: Error) => void
@@ -225,15 +227,23 @@ describe('useHomePress', () => {
       expect(home.prepend.run).toHaveBeenCalledTimes(1)
     })
 
-    it('refreshes from the top without a boundary to fetch above, as other feeds do', () => {
-      const home = renderHome({offset: 0})
-      home.prepend.run.mockReturnValue(undefined)
+    it.each([
+      ['clears the Home dot once that writes', page(PREPENDED_AT), [[false]]],
+      ['leaves the Home dot alone if that writes nothing', undefined, []],
+    ])(
+      'refreshes from the top without a boundary to fetch above, and %s',
+      async (_, wrote, dot) => {
+        const home = renderHome({offset: 0})
+        home.prepend.run.mockReturnValue(undefined)
+        home.refresh.mockResolvedValue(wrote)
 
-      expect(home.press()).toBe(true)
-      expect(home.refresh).toHaveBeenCalledTimes(1)
-      expect(home.onHasNew.mock.calls).toEqual([[false]])
-      expect(home.onFetch).toHaveBeenCalledTimes(1)
-    })
+        expect(home.press()).toBe(true)
+        expect(home.refresh).toHaveBeenCalledTimes(1)
+        expect(home.onFetch).toHaveBeenCalledTimes(1)
+        await flush()
+        expect(home.onHasNew.mock.calls).toEqual(dot)
+      },
+    )
 
     it('leaves the feed and the Home dot alone when the fetch fails, and logs only unexpected errors', async () => {
       const logError = jest.spyOn(logger, 'error').mockImplementation(() => {})
