@@ -6,7 +6,7 @@ const config = {
    * changing an icon would ship as an OTA update to binaries whose font lacks
    * the new glyphs, and those icons would render blank.
    */
-  extraSources: ['ui', 'brands', 'community'].map(lane => ({
+  extraSources: ['ui', 'external'].map(lane => ({
     type: 'file',
     filePath: `assets/nano-icons/nanoicons/icons-${lane}.ttf`,
     reasons: ['react-native-nano-icons font'],

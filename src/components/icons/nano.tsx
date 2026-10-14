@@ -23,8 +23,7 @@ import {type IconWithSvgMeta} from '#/components/icons/TEMPLATE'
  */
 const iconSets = {
   ui: createNanoIconSet(glyphMaps.ui),
-  brands: createNanoIconSet(glyphMaps.brands),
-  community: createNanoIconSet(glyphMaps.community),
+  external: createNanoIconSet(glyphMaps.external),
 } as unknown as Record<
   IconSet,
   React.ComponentType<
@@ -168,9 +167,9 @@ export function withNanoGlyph(
         size={resolvedSize}
         /*
          * Layered icons keep their paint roles: layers painted `currentColor`
-         * take the icon fill and the others keep their fixed colour, e.g. the
-         * white tick in `VerifiedCheck`. Other icons are filled entirely, as
-         * `createSinglePathSVG` ignores the source colour.
+         * take the icon fill and the others keep their fixed colour. Other
+         * icons are filled entirely, as `createSinglePathSVG` ignores the
+         * source colour.
          */
         color={
           layered

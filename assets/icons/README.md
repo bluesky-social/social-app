@@ -10,9 +10,12 @@ multi-path artwork in `custom/`. It does not cover:
 | Not covered here | Rights holder | See |
 |---|---|---|
 | `flags/` | @catamphetamine, MIT licensed | [`flags/README.md`](./flags/README.md) |
-| `community/` | Third-party services | [`community/README.md`](./community/README.md) |
-| `brands/` | Bluesky Social PBC, Apple Inc., and Google LLC | [`ASSETS.md`](../../ASSETS.md#3-bluesky-trademarks-and-brand-assets) and [`ASSETS.md`](../../ASSETS.md#5-third-party-trademarks) |
+| Third-party service marks in `external/` | The respective service, Apple Inc., or Google LLC | [`external/README.md`](./external/README.md) and [`ASSETS.md`](../../ASSETS.md#5-third-party-trademarks) |
+| Bluesky marks in `external/` (`Attie`, `Mark`, `Newskie`, `StarterPack`) and `custom/` (`VerifiedCheck`, `VerifierCheck`, `StarterPackMultiPathLarge`) | Bluesky Social PBC | [`ASSETS.md`](../../ASSETS.md#3-bluesky-trademarks-and-brand-assets) |
 | Non-Central artwork in `custom/` | Its respective rights holder | [`ASSETS.md`](../../ASSETS.md) |
+
+`external/` is a single-path generated lane, not an ownership category: a file's rights holder is
+named in the documents above, never inferred from its directory.
 
 Adding an icon? Give the SVG its exact TypeScript export name, place it in the policy directory
 that describes it, and run `pnpm icons:generate`. Names in `ui/` must include their style tokens,

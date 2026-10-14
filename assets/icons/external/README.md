@@ -1,7 +1,9 @@
-The icons in this directory are the marks of third-party services that appear in the Bluesky app.
+This directory holds single-path marks and images that are neither Central UI icons nor country flags. Ownership is per file, not per directory. Most are marks of third-party services that appear in the Bluesky app, listed below. Bluesky-owned marks that moved here from the former `brands/` directory (`Attie_Filled_Corner0_Rounded.svg`, `Mark.svg`, `Newskie.svg`, and `StarterPack_Stroke2_Corner0_Rounded.svg`) are covered by [`ASSETS.md`](../../../ASSETS.md#3-bluesky-trademarks-and-brand-assets), as are the Bluesky-owned marks in [`../custom/`](../custom/) (`VerifiedCheck.svg`, `VerifierCheck.svg`, and `StarterPackMultiPathLarge.svg`).
 
 | Icon | Rights holder |
 |---|---|
+| `AndroidLogo.svg` | Google LLC |
+| `AppleLogo.svg` | Apple Inc. |
 | `Leaflet.svg` | [Leaflet](https://leaflet.pub) |
 | `Offprint.svg` | [Offprint](https://offprint.net) |
 | `Pckt.svg`, `PcktFull.svg` | [pckt](https://pckt.blog) |
@@ -43,7 +45,7 @@ The icons in this directory are the marks of third-party services that appear in
 | `Vgen.svg` | [VGen](https://vgen.co) |
 | `Zeffy.svg` | [Zeffy](https://www.zeffy.com) |
 
-**These marks belong to their respective owners.** They are not Bluesky trademarks, they are not covered by the [MIT license](../../../LICENSE) that applies to the rest of this repository, and we are not in a position to grant or withhold permission to use them. We include them to identify those services in our UI.
+**The marks in the table belong to their respective owners.** They are not Bluesky trademarks, they are not covered by the [MIT license](../../../LICENSE) that applies to the rest of this repository, and we are not in a position to grant or withhold permission to use them. We include them to identify those services in our UI.
 
 If you fork this repository and keep these icons, your use of them rests on your own nominative-use basis or on permission from the mark owner.
 

@@ -1,5 +1,4 @@
-import brandsGlyphMap from '../../../assets/nano-icons/nanoicons/icons-brands.glyphmap.json'
-import communityGlyphMap from '../../../assets/nano-icons/nanoicons/icons-community.glyphmap.json'
+import externalGlyphMap from '../../../assets/nano-icons/nanoicons/icons-external.glyphmap.json'
 import uiGlyphMap from '../../../assets/nano-icons/nanoicons/icons-ui.glyphmap.json'
 
 /**
@@ -9,8 +8,7 @@ import uiGlyphMap from '../../../assets/nano-icons/nanoicons/icons-ui.glyphmap.j
  */
 export const glyphMaps = {
   ui: uiGlyphMap,
-  brands: brandsGlyphMap,
-  community: communityGlyphMap,
+  external: externalGlyphMap,
 }
 
 export type IconSet = keyof typeof glyphMaps
