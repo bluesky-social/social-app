@@ -203,8 +203,11 @@ function hydrateGroup(
         const actor = resolveActor(item.actor, ctx)
         const post = resolvePost(item.post, ctx)
         if (!actor || !post) return []
-        const parent = resolveSubscribedPostParent(post, ctx)
-        return [parent ? {actor, post, parent} : {actor, post}]
+        return [
+          item.parent
+            ? {actor, post, parent: resolveParent(item.parent, ctx)}
+            : {actor, post},
+        ]
       }),
     )
     if (!items) return
@@ -384,22 +387,6 @@ function resolvePost(uri: string, ctx: Context): PostView | undefined {
  */
 function resolveParent(uri: string, ctx: Context): ParentPost {
   return ctx.posts.get(uri) ?? {type: 'notFound'}
-}
-
-/**
- * The parent of a subscribed post that replies to another post, if the page
- * came with it. Unlike a reply notification's, a subscribed post's parent isn't
- * named in the group, so a missing view means it wasn't sent, not that it's
- * gone.
- */
-function resolveSubscribedPostParent(
-  post: PostView,
-  ctx: Context,
-): ParentPost | undefined {
-  const parentUri = bsky.isType(app.bsky.feed.post, post.record)
-    ? post.record.reply?.parent.uri
-    : undefined
-  return parentUri ? ctx.posts.get(parentUri) : undefined
 }
 
 function nonEmpty<T>(items: T[]): NonEmptyArray<T> | undefined {

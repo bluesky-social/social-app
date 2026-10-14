@@ -127,8 +127,7 @@ export type NotificationView =
         actor: ProfileView
         post: PostView
         /**
-         * Set when the post replies to another and the page came with that
-         * post's view.
+         * Set when the post replies to another.
          */
         parent?: ParentPost
       }>
