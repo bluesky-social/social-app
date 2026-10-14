@@ -3,7 +3,7 @@ import {Keyboard, type TextInput, View} from 'react-native'
 import {LexAuthFactorError} from '@atproto/lex-password-session'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {DEFAULT_SERVICE, HITSLOP_10, HITSLOP_20} from '#/lib/constants'
+import {DEFAULT_SERVICE, HITSLOP_10} from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
@@ -16,18 +16,16 @@ import {
 } from '#/state/queries/pds-detection'
 import {useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {atoms as a, native, tokens, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
 import * as Admonition from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField'
+import {PasswordField} from '#/components/forms/PasswordField'
 import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
 import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon} from '#/components/icons/Chevron'
 import {Envelope_Stroke2_Corner0_Rounded as EmailIcon} from '#/components/icons/Envelope'
-import {Eye_Stroke2_Corner0_Rounded as EyeIcon} from '#/components/icons/Eye'
-import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlashIcon} from '#/components/icons/EyeSlash'
-import {Lock_Stroke2_Corner0_Rounded as LockIcon} from '#/components/icons/Lock'
 import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -80,7 +78,6 @@ export const LoginForm = ({
   const identifierRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const passwordRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const hasFocusedOnce = useRef(false)
-  const [revealPassword, setRevealPassword] = useState(false)
   const {t: l} = useLingui()
   const {login} = useSessionApi()
   const {accounts} = useSession()
@@ -361,57 +358,46 @@ export const LoginForm = ({
         <TextField.LabelText>
           <Trans>Password</Trans>
         </TextField.LabelText>
-        <TextField.Root isInvalid={errorField === 'password'}>
-          <TextField.Icon icon={LockIcon} />
-          <TextField.Input
-            testID="loginPasswordInput"
-            inputRef={passwordRef}
-            label={l`Password`}
-            placeholder={null}
-            autoCapitalize="none"
-            autoFocus={!IS_IOS && !!initialHandle}
-            autoCorrect={false}
-            autoComplete="current-password"
-            returnKeyType="done"
-            enablesReturnKeyAutomatically={true}
-            secureTextEntry={!revealPassword}
-            value={password}
-            onChangeText={v => {
-              setPassword(v)
-              if (errorField) setErrorField('none')
-            }}
-            onSubmitEditing={() => void onPressNext()}
-            blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
-            editable={!isProcessing}
-            accessibilityHint={l`Enter your password`}
-            onLayout={
-              IS_IOS
-                ? () => {
-                    if (hasFocusedOnce.current) return
-                    hasFocusedOnce.current = true
-                    // kinda dumb, but if we use `autoFocus` to focus an
-                    // input, it happens before the password input gets
-                    // rendered. this breaks the password autofill on iOS (it
-                    // only does the username part). delaying it until both
-                    // inputs are rendered fixes the autofill. when a handle is
-                    // prefilled we focus the password field directly so the
-                    // user can go straight to typing it -sfn
-                    if (initialHandle) {
-                      passwordRef.current?.focus()
-                    } else {
-                      identifierRef.current?.focus()
-                    }
+        <PasswordField
+          isInvalid={errorField === 'password'}
+          testID="loginPasswordInput"
+          inputRef={passwordRef}
+          label={l`Password`}
+          placeholder={null}
+          autoFocus={!IS_IOS && !!initialHandle}
+          autoComplete="current-password"
+          returnKeyType="done"
+          enablesReturnKeyAutomatically={true}
+          value={password}
+          onChangeText={v => {
+            setPassword(v)
+            if (errorField) setErrorField('none')
+          }}
+          onSubmitEditing={() => void onPressNext()}
+          blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
+          editable={!isProcessing}
+          accessibilityHint={l`Enter your password`}
+          onLayout={
+            IS_IOS
+              ? () => {
+                  if (hasFocusedOnce.current) return
+                  hasFocusedOnce.current = true
+                  // kinda dumb, but if we use `autoFocus` to focus an
+                  // input, it happens before the password input gets
+                  // rendered. this breaks the password autofill on iOS (it
+                  // only does the username part). delaying it until both
+                  // inputs are rendered fixes the autofill. when a handle is
+                  // prefilled we focus the password field directly so the
+                  // user can go straight to typing it -sfn
+                  if (initialHandle) {
+                    passwordRef.current?.focus()
+                  } else {
+                    identifierRef.current?.focus()
                   }
-                : undefined
-            }
-            hitSlop={{...HITSLOP_20, right: 0}}
-          />
-          <RevealPasswordButton
-            active={revealPassword}
-            hasPassword={!!password}
-            onPress={() => setRevealPassword(r => !r)}
-          />
-        </TextField.Root>
+                }
+              : undefined
+          }
+        />
 
         {!isAuthFactorTokenNeeded && (
           <Button
@@ -574,50 +560,6 @@ export const LoginForm = ({
         />
       )}
     </FormContainer>
-  )
-}
-
-function RevealPasswordButton({
-  active,
-  hasPassword,
-  onPress,
-}: {
-  active: boolean
-  hasPassword: boolean
-  onPress: () => void
-}) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const context = TextField.useTextFieldContext()
-
-  /*
-   * The icon shows the action the button performs, not the current state: an
-   * open eye when the password is hidden (tap to reveal), a crossed-out eye
-   * when it is visible (tap to hide).
-   */
-  const Icon = active ? EyeSlashIcon : EyeIcon
-
-  if (!hasPassword && !context.focused) return null
-
-  return (
-    <View style={[a.z_10, a.pl_sm, {marginRight: tokens.space.xs * -1}]}>
-      <Button
-        testID="showPasswordButton"
-        onPress={onPress}
-        label={active ? l`Hide password` : l`Reveal password`}
-        color="secondary"
-        size="small"
-        shape="round"
-        style={[a.bg_transparent]}
-        hitSlop={tokens.space.sm}>
-        <Icon
-          size="md"
-          style={[
-            context.focused ? t.atoms.text : t.atoms.text_contrast_medium,
-          ]}
-        />
-      </Button>
-    </View>
   )
 }
 

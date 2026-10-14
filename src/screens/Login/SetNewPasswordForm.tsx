@@ -10,8 +10,8 @@ import {atoms as a, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField'
+import {PasswordField} from '#/components/forms/PasswordField'
 import * as TextField from '#/components/forms/TextField'
-import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -114,25 +114,19 @@ export const SetNewPasswordForm = ({
         <TextField.LabelText>
           <Trans>New password</Trans>
         </TextField.LabelText>
-        <TextField.Root>
-          <TextField.Icon icon={Lock} />
-          <TextField.Input
-            testID="newPasswordInput"
-            label={l`Enter a password`}
-            autoCapitalize="none"
-            autoCorrect={false}
-            returnKeyType="done"
-            secureTextEntry={true}
-            autoComplete="new-password"
-            passwordRules="minlength: 8;"
-            clearButtonMode="while-editing"
-            value={password}
-            onChangeText={setPassword}
-            onSubmitEditing={() => void onPressNext()}
-            editable={!isProcessing}
-            accessibilityHint={l`Input new password`}
-          />
-        </TextField.Root>
+        <PasswordField
+          testID="newPasswordInput"
+          label={l`Enter a password`}
+          returnKeyType="done"
+          autoComplete="new-password"
+          passwordRules="minlength: 8;"
+          clearButtonMode="while-editing"
+          value={password}
+          onChangeText={setPassword}
+          onSubmitEditing={() => void onPressNext()}
+          editable={!isProcessing}
+          accessibilityHint={l`Input new password`}
+        />
       </View>
       {error && <Admonition type="error">{error}</Admonition>}
       <View style={[web([a.flex_row, a.align_center]), a.pt_lg]}>

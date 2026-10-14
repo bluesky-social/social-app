@@ -13,6 +13,7 @@ import {android, atoms as a, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField'
+import {PasswordField} from '#/components/forms/PasswordField'
 import * as TextField from '#/components/forms/TextField'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -175,18 +176,14 @@ function Inner() {
               <TextField.LabelText>
                 <Trans>New password</Trans>
               </TextField.LabelText>
-              <TextField.Root>
-                <TextField.Input
-                  label={l`New password`}
-                  placeholder={l`At least 8 characters`}
-                  value={newPassword}
-                  onChangeText={setNewPassword}
-                  secureTextEntry
-                  autoCapitalize="none"
-                  autoComplete="new-password"
-                  passwordRules="minlength: 8;"
-                />
-              </TextField.Root>
+              <PasswordField
+                label={l`New password`}
+                placeholder={l`At least 8 characters`}
+                value={newPassword}
+                onChangeText={setNewPassword}
+                autoComplete="new-password"
+                passwordRules="minlength: 8;"
+              />
             </View>
           </View>
         )}
