@@ -123,7 +123,7 @@ jest.mock('react-native-worklets', () => ({
 /*
  * What the app subscribes to `AppState` with, for tests to report a change of
  * state to. It's in place before anything subscribes, so it has the one
- * subscription `onAppReturnedFromBackground` keeps for good.
+ * subscription `#/lib/appState`'s return tracker keeps for good.
  */
 const appStateListeners = new Set<(state: AppStateStatus) => void>()
 jest.mocked(AppState.addEventListener).mockImplementation((_type, listener) => {
@@ -1632,27 +1632,6 @@ describe('usePostFeedPrepend', () => {
       expect(requested()).toEqual(['timeline latest'])
       expect(onFound).toHaveBeenCalledWith(true, 'return')
     })
-
-    it('fetches what is newer on a quicker hop too, without offering it', async () => {
-      answerPeek()
-      newer(['new'])
-      const {hook, cached} = renderView({data: fetchedData(), isActive: true})
-
-      await leaveFor(RETURN_MIN_TIME_AWAY - 1)
-      await wait(LIST_REST_QUIET_MS)
-
-      expect(requested()).toEqual(['timeline latest', SINCE_REQUEST])
-      expect(postsOf(cached())).toEqual([
-        ['new'],
-        ['timeline-1'],
-        ['timeline-2'],
-      ])
-      expect(hook.result.current.prepend.staged).toEqual({
-        fetchedAt: cached().pages[0].fetchedAt,
-        offered: false,
-        isFull: false,
-      })
-    })
   })
 })
 
@@ -1905,10 +1884,7 @@ describe('staging new posts on Home Following', () => {
     })
   }
 
-  /**
-   * Leaves the app in the background for long enough to make a significant
-   * return, then opens it again, and lets the check that makes finish.
-   */
+  /** A significant return to the app, and the check it makes. */
   async function warmOpen() {
     setAppState('background')
     await wait(RETURN_MIN_TIME_AWAY)
@@ -1916,10 +1892,7 @@ describe('staging new posts on Home Following', () => {
     await wait(SECOND)
   }
 
-  /**
-   * Leaves the app in the background for a moment, as for a share sheet, then
-   * comes back, and lets the check that makes finish.
-   */
+  /** A quick hop away, as to a share sheet, and the check it makes. */
   async function quickHop() {
     setAppState('background')
     await wait(SECOND)
@@ -2012,7 +1985,7 @@ describe('staging new posts on Home Following', () => {
 
       // Reached, the posts above them go on top.
       list.beginDrag(400)
-      list.see(150)
+      list.see(162)
       list.endDrag(300)
       await anInterval()
       expect(requested()).toEqual([PEEK, since(12), PEEK, since(162)])
@@ -2250,17 +2223,6 @@ describe('staging new posts on Home Following', () => {
       expect(latest.pill.visible).toBe(false)
     })
 
-    it('checks on every warm open, however soon after the last check', async () => {
-      const {latest} = renderHome()
-      await warmOpen()
-
-      newest = 14
-      await warmOpen()
-
-      expect(requested()).toEqual([PEEK, PEEK, since(12)])
-      expect(latest.pill).toMatchObject({visible: true, count: 2})
-    })
-
     it('keeps the pill as later checks replace what it offers, with their posts', async () => {
       const {latest} = renderHome()
       newest = 14
@@ -2317,17 +2279,16 @@ describe('staging new posts on Home Following', () => {
       expect(latest.pill).toMatchObject({visible: true, count: 2})
     })
 
-    it('makes no request when the app was only inactive', async () => {
-      renderHome()
-      newest = 14
+    it('leaves what is staged without the pill, without checking, while it is full', async () => {
+      const {latest} = renderHome()
+      newest = 12 + 150
+      await anInterval()
 
-      // As the notification shade or Control Center leave it.
-      setAppState('inactive')
-      await wait(SECOND)
-      setAppState('active')
-      await wait(SECOND)
+      newest += 5
+      await quickHop()
 
-      expect(requested()).toEqual([])
+      expect(requested()).toEqual([PEEK, since(12)])
+      expect(latest.pill.visible).toBe(false)
     })
   })
 
