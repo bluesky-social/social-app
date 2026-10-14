@@ -586,6 +586,7 @@ function NotificationsHeader({
   })
 
   const height = useSharedValue(0)
+  const [pillsHeight, setPillsHeight] = useState(0)
   /*
    * Shrinks the fade from the top as the pills move up, so that it always
    * ends where they do. Scaling, rather than moving it, keeps its opaque top
@@ -616,7 +617,17 @@ function NotificationsHeader({
         <Animated.View
           pointerEvents="none"
           style={[a.absolute, a.inset_0, {transformOrigin: 'top'}, fadeStyle]}>
-          <HeaderFade />
+          <HeaderFade
+            /*
+             * Solid behind the status bar, so that with the title hidden the
+             * pills get the whole fade, as they do without one
+             */
+            solidUntil={
+              pillsHeight > 0
+                ? headerPinnedHeight / (headerPinnedHeight + pillsHeight)
+                : 0
+            }
+          />
         </Animated.View>
       )}
       <Animated.View
@@ -655,7 +666,9 @@ function NotificationsHeader({
           </Layout.Header.Slot>
         </Layout.Header.Outer>
       </Animated.View>
-      <Animated.View style={pillsStyle}>
+      <Animated.View
+        style={pillsStyle}
+        onLayout={event => setPillsHeight(event.nativeEvent.layout.height)}>
         {IS_WEB && <HeaderFade />}
         <Layout.Center>{children}</Layout.Center>
       </Animated.View>
@@ -680,7 +693,15 @@ function NotificationsHeader({
  * The header's background fading out to the bottom, so content scrolling
  * under it shows through.
  */
-function HeaderFade() {
+function HeaderFade({
+  solidUntil = 0,
+}: {
+  /**
+   * How far down it stays solid before it starts to fade, as a fraction of
+   * its height.
+   */
+  solidUntil?: number
+}) {
   const t = useTheme()
   return (
     <LinearGradient
@@ -691,9 +712,11 @@ function HeaderFade() {
       end={[0.5, 1]}
       colors={[
         t.atoms.bg.backgroundColor,
+        t.atoms.bg.backgroundColor,
         utils.alpha(t.atoms.bg.backgroundColor, 0.9),
         utils.alpha(t.atoms.bg.backgroundColor, 0),
       ]}
+      locations={[0, solidUntil, (1 + solidUntil) / 2, 1]}
     />
   )
 }
