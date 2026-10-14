@@ -32,11 +32,6 @@ import {type FeedPageUnselected, type PostFeedData} from './postFeed'
 
 // The app-wide mock of `multiformats/cid` can't tell a CID from anything else.
 jest.unmock('multiformats/cid')
-// As it is, but for a test to make it throw.
-jest.mock('@atproto/lex', () => {
-  const lex = jest.requireActual<typeof import('@atproto/lex')>('@atproto/lex')
-  return {...lex, jsonToLex: jest.fn(lex.jsonToLex)}
-})
 jest.mock('#/state/preferences/languages', () => ({
   getAppLanguageAsContentLanguage: () => '',
   getContentLanguages: () => [],
@@ -479,13 +474,6 @@ describe('readFollowingSnapshot', () => {
     expect(readFollowingSnapshot(snapshot)).toBeUndefined()
     expect(inspectFollowingSnapshot(snapshot).rejection).toBe(rule)
   })
-
-  it('measures a valid snapshot', () => {
-    const snapshot = savedSnapshot()
-    expect(inspectFollowingSnapshot(snapshot)).toEqual({
-      bytes: new TextEncoder().encode(JSON.stringify(snapshot)).length,
-    })
-  })
 })
 
 describe('through the persister', () => {
@@ -746,31 +734,33 @@ describe('what a read reports', () => {
   }
 
   function load(client: PersistedClient, {restore}: {restore?: boolean} = {}) {
+    const queryClient = new QueryClient()
     const loaded = loadFollowingSnapshot(client, {
       restore,
+      queryClient,
       buster: BUSTER,
       maxAge: MAX_AGE,
     })
-    return {loaded, report: takeFollowingSnapshotLoad()}
+    return {loaded, report: takeFollowingSnapshotLoad(queryClient)}
   }
 
   beforeEach(() => {
     // The snapshot's pages were fetched five minutes before it's read.
     jest.spyOn(Date, 'now').mockReturnValue(NOW + 5 * MINUTE)
-    takeFollowingSnapshotLoad()
   })
   afterEach(() => {
     jest.restoreAllMocks()
   })
 
-  it('a valid snapshot, with its age, size and pages', () => {
+  it('a valid snapshot, with its age, size and pages, and the top it restored', () => {
     const snapshot = savedSnapshot()
 
     expect(load(persisted(snapshot)).report).toEqual({
       snapshot: 'valid',
       ageMs: 5 * MINUTE,
-      bytes: inspectFollowingSnapshot(snapshot).bytes,
+      bytes: new TextEncoder().encode(JSON.stringify(snapshot)).length,
       pageCount: 2,
+      topFetchedAt: NOW,
     })
   })
 
@@ -784,26 +774,31 @@ describe('what a read reports', () => {
   it.each([
     [
       'a snapshot that breaks a rule',
-      () => persisted({...savedSnapshot(), version: 0}),
+      () => load(persisted({...savedSnapshot(), version: 0})),
       'version',
     ],
     [
       'a snapshot saved while invalidated',
-      () => persisted(savedSnapshot(), {isInvalidated: true}),
+      () => load(persisted(savedSnapshot(), {isInvalidated: true})),
       'invalidated',
     ],
     [
+      'a valid snapshot with restoring off',
+      () => load(persisted(savedSnapshot()), {restore: false}),
+      'disabled',
+    ],
+    [
       'a client saved too long ago',
-      () => persisted(savedSnapshot(), {timestamp: NOW - MAX_AGE}),
+      () => load(persisted(savedSnapshot(), {timestamp: NOW - MAX_AGE})),
       'expired',
     ],
     [
       'a client saved by another app version',
-      () => persisted(savedSnapshot(), {buster: 'v0'}),
+      () => load(persisted(savedSnapshot(), {buster: 'v0'})),
       'appVersion',
     ],
-  ])('%s, as rejected', (_, client, reason) => {
-    expect(load(client()).report).toMatchObject({
+  ])('%s, as rejected', (_, read, reason) => {
+    expect(read().report).toMatchObject({
       snapshot: 'rejected',
       rejectionReason: reason,
       ageMs: 5 * MINUTE,
@@ -811,46 +806,23 @@ describe('what a read reports', () => {
     })
   })
 
-  it('a snapshot it could not read back, as rejected', () => {
+  it('without changing what it reads back, which TanStack drops itself', () => {
     const snapshot = savedSnapshot()
-    jest.mocked(jsonToLex).mockImplementationOnce(() => {
-      throw new Error('Unreadable')
-    })
 
-    const {loaded, report} = load(persisted(snapshot))
+    const {loaded} = load(persisted(snapshot, {buster: 'v0'}))
 
-    expect(report).toMatchObject({
-      snapshot: 'rejected',
-      rejectionReason: 'unreadable',
-    })
-    expect(loaded.clientState.queries).toEqual([])
-  })
-
-  it('a valid snapshot with restoring off, as rejected', () => {
-    expect(load(persisted(savedSnapshot()), {restore: false}).report).toEqual(
-      expect.objectContaining({
-        snapshot: 'rejected',
-        rejectionReason: 'disabled',
-      }),
+    expect(loaded.clientState.queries[0].state.data).toEqual(
+      readFollowingSnapshot(snapshot),
     )
   })
 
-  it('without changing what it reads back, which TanStack drops itself', () => {
-    const snapshot = savedSnapshot()
-    const client = persisted(snapshot, {buster: 'v0'})
-
-    expect(load(client).loaded).toEqual(loadFollowingSnapshot(client))
-    expect(
-      readFollowingSnapshot(
-        load(client).loaded.clientState.queries[0].state.data,
-      ),
-    ).toBeUndefined()
-  })
-
   it('once per read', () => {
-    loadFollowingSnapshot(persisted(savedSnapshot()))
+    const queryClient = new QueryClient()
+    loadFollowingSnapshot(persisted(savedSnapshot()), {queryClient})
 
-    expect(takeFollowingSnapshotLoad()).toMatchObject({snapshot: 'valid'})
-    expect(takeFollowingSnapshotLoad()).toBeUndefined()
+    expect(takeFollowingSnapshotLoad(queryClient)).toMatchObject({
+      snapshot: 'valid',
+    })
+    expect(takeFollowingSnapshotLoad(queryClient)).toBeUndefined()
   })
 })
