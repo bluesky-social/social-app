@@ -47,6 +47,7 @@ import {
   nextSeenAt,
 } from '#/screens/Notifications/unread'
 import {atoms as a, useBreakpoints, useTheme, utils} from '#/alf'
+import {BetaTag} from '#/components/BetaTag'
 import {ButtonIcon} from '#/components/Button'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
@@ -643,9 +644,12 @@ function NotificationsHeader({
         <Layout.Header.Outer noBottomBorder sticky={false}>
           <Layout.Header.MenuButton />
           <Layout.Header.Content>
-            <Layout.Header.TitleText>
-              <Trans>Notifications</Trans>
-            </Layout.Header.TitleText>
+            <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+              <Layout.Header.TitleText>
+                <Trans>Notifications</Trans>
+              </Layout.Header.TitleText>
+              <BetaTag />
+            </View>
           </Layout.Header.Content>
           <Layout.Header.Slot>
             <Link
