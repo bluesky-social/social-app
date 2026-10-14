@@ -53,3 +53,46 @@ anchor to adjust for, and refreshes the stale `firstVisibleItemKey`.
 **TODO: Remove once #58911 ships in a React Native release we're on.** The patch is pinned to
 0.86.3, so a React Native bump makes pnpm stop on the unused patch. Drop it then if the new
 version has the fix, otherwise re-apply it.
+
+## VirtualizedList.js - an interior spacer rescales as rows are measured
+
+Applies to every virtualized list. It only changes the size of a spacer that has rendered
+cells on both sides of it.
+
+Linear: APP-3152.
+
+### Symptom
+
+After a large prepend to a list with `maintainVisibleContentPosition`, the list and mVCP can
+fall into a cycle that never settles. Every ~67 ms the content height and the offset swing
+together by about 400 pt and back. The rows on screen don't move, because mVCP compensates
+exactly. But the scroll bar jitters, `onScroll` reports constant phantom movement, and anything
+driven by it (the Home header) reacts. In the repro it rings 75 times in 5 s at rest.
+
+### Cause
+
+`_createRenderMask` always keeps cells `[0, initialNumToRender)` rendered. After a prepend that
+leaves a spacer between that head block and the render window, directly above the viewport. A
+spacer is sized from `getCellMetricsApprox` at both ends, and for an unmeasured cell that is
+`_averageCellLength * index`, which ignores where the rendered head cells actually end. So the
+spacer's start is an estimate. It moves whenever the average changes or a cell mounts or
+unmounts at the window's edge, moving every cell after it, and mVCP chases it.
+
+### Fix
+
+When a spacer's first cell is unmeasured, start the spacer where the rendered cell before it
+ends. Only the start is anchored: sizing it from the cell after it as well would include any
+`gap` or cell margin between them, which then feeds back into the spacer every render. When
+the spacer's last cell is unmeasured, its size still follows the average, as on stock. That
+gives occasional one-off corrections rather than a cycle.
+
+Results in the repro (iOS, 4 runs each; jumps after the prepend / while nudging / 5 s at rest):
+stock 3 / 6 / 75, with the fix 2 / 1 / 0. Also stable with `contentContainerStyle={{gap: 10}}`.
+
+### Upstream and removal
+
+- Issue: https://github.com/react/react-native/issues/58870
+- PR: https://github.com/react/react-native/pull/58916, with a regression test
+- Standalone repro (RN 0.87.1): https://github.com/mozzius/virtualizedlist-spacer-ring-repro
+
+**TODO: Remove once #58916 ships in a React Native release we're on.**
