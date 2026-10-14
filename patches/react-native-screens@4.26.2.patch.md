@@ -46,30 +46,37 @@ Verified in a minimal repro (Expo 57 / RN 0.86 / RNS 4.26 / New Arch) at
 ~/work/rns-secure-pop-repro: zero fallback frames across recorded JS pops
 with the patch, ~700ms of visible fallback without it.
 
-## iOS + Android: do not dirty the Screen's Yoga node on every clone
+## iOS + Android: do not dirty shadow nodes' Yoga nodes on every clone
 
-`RNSScreenComponentDescriptor::adopt()` runs on every clone of a `Screen`
-shadow node, and once native has reported the screen's frame it calls
-`YogaLayoutableShadowNode::setSize(frameSize)`. Unlike `setPadding()`,
-`setSize()` marks the Yoga node dirty even when the size is unchanged.
+Several component descriptors call `YogaLayoutableShadowNode::setSize()` from
+`adopt()` with a size taken from native state. `adopt()` runs on every clone,
+and unlike `setPadding()`, `setSize()` marks the Yoga node dirty even when the
+size is unchanged.
 
 Every commit clones the path from the changed node up to the root, and all
-our content sits under `Screen`s (tab + stack). So every commit dirtied the
-root, and `RootShadowNode::layoutIfNeeded` ran `layoutTree` plus Yoga's
+our content sits under `Screen`s (tab + stack). When a parent is cloned with
+new children, React Native also re-clones children it no longer owns, such as
+the stack's header config next to the screen content. So every commit dirtied
+the root, and `RootShadowNode::layoutIfNeeded` ran `layoutTree` plus Yoga's
 `roundLayoutResultsToPixelGrid`, which walks the whole tree. That includes
 commits that change nothing layout-related: Reanimated's per-frame commits
 (the profile header's transforms while scrolling) and ScrollView
 `contentOffset` state updates on the JS thread while scrolling any feed.
 
-The patch adds `RNSScreenShadowNode::setSizeIfChanged()`, which compares the
-size with the one already in the node's Yoga style and only calls `setSize`
-when it differs. `adopt()` uses it for the steady-state size on both
-platforms (the Android `#ifdef` branch and the iOS `#else` branch). A clone
-with new props still resets the style from props, so the size is re-applied
-and the node dirtied as before.
+The patch adds `rnscreens::yogaStyleHasSize()` in `utils/YogaSizeUtil.h`, and
+a `setSizeIfChanged()` on each affected shadow node, which only calls
+`setSize` when the size differs from the one already in the node's Yoga style.
+A clone with new props still resets the style from props, so the size is
+re-applied and the node dirtied as before. The descriptors that use it, on
+both platforms:
 
-The Android branch that resets the size to undefined while the frame is
-still unknown (first render, orientation-change reset) is left alone.
+- v4: `Screen`, `ModalScreen`, `ScreenStackHeaderConfig`
+- v5 (unused by us, kept so this matches the upstream PR): `StackScreen`
+  (Android only), `SplitScreen`, `FormSheetHost`, `TabsBottomAccessory`,
+  `StackHeaderConfig`
+
+The Android `Screen` branch that resets the size to undefined while the frame
+is still unknown (first render, orientation-change reset) is left alone.
 
 Measured on an iOS simulator (Debug dev client, 15s scroll of a profile's
 Media tab) before the patch: 2.06s of 5.8s main-thread time was
