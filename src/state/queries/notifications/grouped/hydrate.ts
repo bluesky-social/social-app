@@ -1,6 +1,7 @@
 import {type DidString} from '@atproto/syntax'
 
 import {
+  type ActorGroup,
   type GroupedNotificationsPage,
   isNonEmpty,
   type NonEmptyArray,
@@ -49,12 +50,7 @@ export function hydratePage(
 ): GroupedNotificationsPage {
   const ctx = createContext(res.relatedViews, viewerDid)
   const notifications: NotificationView[] = []
-  let newestAt: number | undefined
   for (const group of res.groups) {
-    const indexedAt = Date.parse(group.indexedAt)
-    if (indexedAt > (newestAt ?? -Infinity)) {
-      newestAt = indexedAt
-    }
     const notification = hydrateGroup(group, ctx)
     if (notification) {
       notifications.push(notification)
@@ -64,8 +60,23 @@ export function hydratePage(
     cursor: res.cursor,
     seenAt: res.seenAt,
     notifications,
-    newestAt,
+    newestAt: getNewestAt(res.groups),
   }
+}
+
+/**
+ * When the newest of a response's groups was indexed, in ms since the epoch,
+ * or undefined if it has none. See `GroupedNotificationsPage['newestAt']`.
+ */
+export function getNewestAt(groups: OutputBody['groups']): number | undefined {
+  let newestAt: number | undefined
+  for (const group of groups) {
+    const indexedAt = Date.parse(group.indexedAt)
+    if (indexedAt > (newestAt ?? -Infinity)) {
+      newestAt = indexedAt
+    }
+  }
+  return newestAt
 }
 
 function createContext(
@@ -111,41 +122,41 @@ function hydrateGroup(
 
   if (bsky.isType(defs.likeGroup, kind)) {
     const post = resolvePost(kind.post, ctx)
-    const actors = resolveActors(kind.items, ctx)
-    if (!post || !actors) return
-    return {...base, type: 'like', post, actors}
+    const group = resolveActorGroup(kind.items, ctx)
+    if (!post || !group) return
+    return {...base, type: 'like', post, ...group}
   }
 
   if (bsky.isType(defs.repostGroup, kind)) {
     const post = resolvePost(kind.post, ctx)
-    const actors = resolveActors(kind.items, ctx)
-    if (!post || !actors) return
-    return {...base, type: 'repost', post, actors}
+    const group = resolveActorGroup(kind.items, ctx)
+    if (!post || !group) return
+    return {...base, type: 'repost', post, ...group}
   }
 
   if (bsky.isType(defs.likeViaRepostGroup, kind)) {
     const post = resolvePost(kind.post, ctx)
-    const actors = resolveActors(kind.items, ctx)
-    if (!post || !actors) return
+    const group = resolveActorGroup(kind.items, ctx)
+    if (!post || !group) return
     return {
       ...base,
       type: 'likeViaRepost',
       post,
       viaRepost: kind.viaRepost,
-      actors,
+      ...group,
     }
   }
 
   if (bsky.isType(defs.repostViaRepostGroup, kind)) {
     const post = resolvePost(kind.post, ctx)
-    const actors = resolveActors(kind.items, ctx)
-    if (!post || !actors) return
+    const group = resolveActorGroup(kind.items, ctx)
+    if (!post || !group) return
     return {
       ...base,
       type: 'repostViaRepost',
       post,
       viaRepost: kind.viaRepost,
-      actors,
+      ...group,
     }
   }
 
@@ -170,9 +181,8 @@ function hydrateGroup(
   }
 
   if (bsky.isType(defs.followGroup, kind)) {
-    const actors = resolveActors(kind.items, ctx)
-    if (!actors) return
-    const actorDids = uniqueActorDids(kind.items, ctx)
+    const group = resolveActorGroup(kind.items, ctx)
+    if (!group) return
     /*
      * Only attribute the group to a starter pack when every follow came via
      * the same one, otherwise "via <pack>" would be wrong for some actors.
@@ -183,8 +193,8 @@ function hydrateGroup(
         ? ctx.starterPacks.get(packUri)
         : undefined
     return starterPack
-      ? {...base, type: 'follow', actors, actorDids, starterPack}
-      : {...base, type: 'follow', actors, actorDids}
+      ? {...base, type: 'follow', ...group, starterPack}
+      : {...base, type: 'follow', ...group}
   }
 
   if (bsky.isType(defs.subscribedPostGroup, kind)) {
@@ -201,9 +211,9 @@ function hydrateGroup(
 
   if (bsky.isType(defs.generatorLikeGroup, kind)) {
     const generator = ctx.generators.get(kind.generator)
-    const actors = resolveActors(kind.items, ctx)
-    if (!generator || !actors) return
-    return {...base, type: 'generatorLike', generator, actors}
+    const group = resolveActorGroup(kind.items, ctx)
+    if (!generator || !group) return
+    return {...base, type: 'generatorLike', generator, ...group}
   }
 
   if (bsky.isType(defs.replyNotification, kind)) {
@@ -304,6 +314,20 @@ function resolveMultiPost(
   )
   if (!actor || !posts) return
   return {actor, posts}
+}
+
+/**
+ * Resolves the actors of a group from several people, keeping every DID
+ * alongside the profiles so the rest can be loaded later. Undefined if no
+ * actor resolves.
+ */
+function resolveActorGroup(
+  items: {actor: DidString}[],
+  ctx: Context,
+): ActorGroup | undefined {
+  const actors = resolveActors(items, ctx)
+  if (!actors) return
+  return {actors, actorDids: uniqueActorDids(items, ctx)}
 }
 
 /**

@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import Animated, {
   interpolate,
+  interpolateColor,
   type SharedValue,
   useAnimatedStyle,
   useDerivedValue,
@@ -18,7 +19,8 @@ import {useLingui} from '@lingui/react/macro'
 
 import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {atoms as a, tokens, useTheme, utils, web} from '#/alf'
+import {atoms as a, tokens, useAlf, useTheme, utils, web} from '#/alf'
+import {normalizeTextStyles} from '#/alf/typography'
 import {Button, ButtonIcon} from '#/components/Button'
 import {
   ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft,
@@ -116,6 +118,18 @@ export function TabPills({
     right: canScrollRight,
     width: gutterWidth + pillHeight + tokens.space.md,
   })
+  /*
+   * The active pill is a light grey under the usual text colour in the light
+   * theme. In the dark themes (dim and dark) it's the highest contrast colour
+   * instead, under inverted text.
+   */
+  const isDarkScheme = t.scheme === 'dark'
+  const indicatorColor = isDarkScheme
+    ? t.palette.contrast_1000
+    : t.palette.contrast_50
+  const activeLabelColor = isDarkScheme
+    ? t.atoms.text_inverted.color
+    : t.atoms.text.color
   const cleanupRef = useRef<(() => void) | null>(null)
   const isContinuouslyScrollingRef = useRef(false)
 
@@ -268,8 +282,9 @@ export function TabPills({
               <PillIndicator
                 layouts={tabOffsets}
                 dragProgress={dragProgress}
-                backgroundColor={t.atoms.bg_contrast_50.backgroundColor}
-                borderColor={t.palette.contrast_50}
+                backgroundColor={indicatorColor}
+                // Matches the fill, so no outline shows at the caps or middle
+                borderColor={indicatorColor}
               />
             )}
             {tabOffsets.map((layout, index) => (
@@ -292,15 +307,14 @@ export function TabPills({
                     height: layout.height,
                   },
                 ]}>
-                <Text
-                  style={[
-                    a.font_medium,
-                    tabs[index].key === selectedTab
-                      ? t.atoms.text
-                      : t.atoms.text_contrast_high,
-                  ]}>
-                  {tabs[index].label}
-                </Text>
+                <PillLabel
+                  label={tabs[index].label}
+                  index={index}
+                  lastIndex={tabOffsets.length - 1}
+                  dragProgress={dragProgress}
+                  activeColor={activeLabelColor}
+                  inactiveColor={t.atoms.text_contrast_high.color}
+                />
               </View>
             ))}
           </View>
@@ -458,6 +472,69 @@ function getEdgeMask({
     ? `black calc(100% - ${width}px), transparent calc(100% - ${solid}px), transparent 100%`
     : 'black 100%'
   return `linear-gradient(to right, ${start}, ${end})`
+}
+
+/**
+ * A tab's label, drawn over the pills. Its colour follows the sliding
+ * indicator rather than the selected tab, so a label reads on whatever is
+ * under it while the indicator moves, e.g. mid-swipe, or as it passes the tabs
+ * in between after a tap.
+ */
+function PillLabel({
+  label,
+  index,
+  lastIndex,
+  dragProgress,
+  activeColor,
+  inactiveColor,
+}: {
+  label: string
+  index: number
+  /**
+   * The indicator stops at the last tab, so the colour does too.
+   */
+  lastIndex: number
+  dragProgress: SharedValue<number>
+  activeColor: string
+  inactiveColor: string
+}) {
+  const {fonts, flags} = useAlf()
+  /*
+   * Reanimated can't animate our `Text`, so this is React Native's text,
+   * animated, with the styles `Text` would give the label. Unselectable `Text`
+   * renders React Native's text too, so the label measures the same as the
+   * hidden one that sizes its pill.
+   */
+  const textStyle = normalizeTextStyles(
+    [a.text_sm, a.leading_snug, a.font_medium],
+    {
+      fontScale: fonts.scaleMultiplier,
+      fontFamily: fonts.family,
+      flags,
+    },
+  )
+  const colorStyle = useAnimatedStyle(() => {
+    const progress = Math.min(Math.max(dragProgress.get(), 0), lastIndex)
+    return {
+      /*
+       * Fully active with the indicator on this tab, fading to inactive as the
+       * indicator moves a whole tab away. Halfway there, the label sits about
+       * half on the pill and half off it, so that colour has to read on both.
+       * A plain RGB blend keeps it midway in lightness, where the default
+       * gamma-corrected one leans towards the lighter end. Labels the
+       * indicator isn't moving between stay put, so only two update at once.
+       */
+      color: interpolateColor(
+        Math.abs(progress - index),
+        [0, 1],
+        [activeColor, inactiveColor],
+        'RGB',
+        {gamma: 1},
+      ),
+    }
+  })
+
+  return <Animated.Text style={[textStyle, colorStyle]}>{label}</Animated.Text>
 }
 
 function PillIndicator({

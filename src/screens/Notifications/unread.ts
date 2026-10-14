@@ -1,22 +1,9 @@
 import {
   type GroupedNotificationsFeed,
+  type GroupedNotificationsPeek,
   type LoadedGroupedNotificationsPage,
 } from '#/state/queries/notifications/grouped'
 import {type UnreadCheck} from '#/state/queries/notifications/types'
-
-/**
- * How a load updates the screen's `seenAt` snapshot:
- *
- * - `server`: from the server's `seenAt` as of the request, which is when the
- *   previous load marked everything it showed as seen. So anything new since
- *   then is tinted, and anything older isn't. This is what pull-to-refresh
- *   does, as in v1.
- * - `kept`: unchanged, so rows that were already tinted stay tinted, and
- *   anything new is tinted alongside them.
- *
- * Until there's a snapshot, every load takes it from the server.
- */
-export type SeenAtMode = 'server' | 'kept'
 
 /**
  * A fresh load of the first page of a feed. Its `seenAt` is the server's, as
@@ -29,27 +16,26 @@ export type FeedLoad = Pick<
 
 /**
  * The screen's `seenAt` snapshot after a fresh load.
+ *
+ * A refresh takes it from the server's `seenAt` as of the request, which is
+ * when the previous load marked everything it showed as seen. So what was
+ * tinted before is cleared, and only what's new since is tinted, as every
+ * refresh does in v1. Any other load, e.g. a tab's first, leaves it as it is,
+ * so that tab tints the same as the others. Until there's a snapshot, every
+ * load takes it from the server.
  */
 export function nextSeenAt({
   load,
-  mode,
+  isRefresh,
   snapshot,
 }: {
   load: FeedLoad
-  /**
-   * How the load was asked to update the snapshot. Undefined leaves it as it
-   * is, like `kept`.
-   */
-  mode: SeenAtMode | undefined
+  isRefresh: boolean
   snapshot: Date | undefined
 }): Date | undefined {
-  switch (snapshot === undefined ? 'server' : mode) {
-    case 'server':
-      // Without a `seenAt`, everything counts as seen, as in v1
-      return new Date(parseTime(load.seenAt) ?? getShownUpTo(load))
-    default:
-      return snapshot
-  }
+  if (snapshot && !isRefresh) return snapshot
+  // Without a `seenAt`, everything counts as seen, as in v1
+  return new Date(parseTime(load.seenAt) ?? getShownUpTo(load))
 }
 
 /**
@@ -68,20 +54,25 @@ export function getMarkReadAt(load: FeedLoad): Date | undefined {
 
 /**
  * Whether a tab offers its "Refresh" pill: it's the tab in view, and the last
- * unread check found unread notifications for its feed that it hasn't
+ * unread check or the last peek at its feed found a notification it hasn't
  * loaded.
  *
+ * The unread check only counts notifications that haven't been seen, for
+ * every feed at once, while a peek looks at one feed, seen or not. So a peek
+ * still finds what came in before a refresh on another tab marked it as seen.
+ *
  * "Not loaded" means newer than the newest notification in the tab's first
- * page, so unread rows already on screen don't count. A check asked before
+ * page, so rows already on screen don't count. A check or peek asked before
  * that page was requested has nothing to add to it, so the pill goes as soon
  * as the tab starts fetching its top, and stays gone once that has loaded,
- * until a later check finds more. A failed fetch loads nothing, so the pill
- * comes back for a retry.
+ * until a later check or peek finds more. A failed fetch loads nothing, so
+ * the pill comes back for a retry.
  */
 export function isRefreshPillVisible({
   feed,
   isActive,
   check,
+  peek,
   top,
   isFetchingTop,
 }: {
@@ -92,6 +83,10 @@ export function isRefreshPillVisible({
   isActive: boolean
   check: UnreadCheck | undefined
   /**
+   * The last peek at the tab's feed, see `peekGroupedNotifications`.
+   */
+  peek?: GroupedNotificationsPeek
+  /**
    * The tab's first page, once loaded.
    */
   top:
@@ -101,11 +96,29 @@ export function isRefreshPillVisible({
    */
   isFetchingTop: boolean
 }): boolean {
-  if (!isActive || !check || !top || isFetchingTop) return false
-  if (check.requestedAt <= top.requestedAt) return false
-  const newestUnreadAt = check.newestUnreadAt[feed]
-  if (newestUnreadAt === undefined) return false
-  return top.newestAt === undefined || newestUnreadAt > top.newestAt
+  if (!isActive || !top || isFetchingTop) return false
+  return (
+    hasNewerThan(
+      check && {
+        requestedAt: check.requestedAt,
+        newestAt: check.newestUnreadAt[feed],
+      },
+      top,
+    ) || hasNewerThan(peek, top)
+  )
+}
+
+/**
+ * Whether something asked after `top` was requested found a notification
+ * newer than any in it.
+ */
+function hasNewerThan(
+  found: GroupedNotificationsPeek | undefined,
+  top: Pick<LoadedGroupedNotificationsPage, 'requestedAt' | 'newestAt'>,
+) {
+  if (!found || found.requestedAt <= top.requestedAt) return false
+  if (found.newestAt === undefined) return false
+  return top.newestAt === undefined || found.newestAt > top.newestAt
 }
 
 /**

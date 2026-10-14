@@ -20,14 +20,14 @@ import {type NotificationOf} from '../types'
 /**
  * Shared anatomy for likes and reposts of one post: the headline actor's
  * avatar, the other actors, the primary sentence, a preview of the post, and
- * the post's images on the trailing edge. Pressing the row opens the post.
+ * the post's images on the trailing edge. Pressing the row opens the post,
+ * and a group expands to list everyone in it.
  */
 function PostReactionRow({
   notification,
   icon,
   tone,
   label,
-  othersHref,
   children,
 }: {
   notification: NotificationOf<
@@ -40,10 +40,6 @@ function PostReactionRow({
    */
   label: string
   /**
-   * Where the "+N" chip in the avatar row goes, if anywhere.
-   */
-  othersHref?: string
-  /**
    * The primary sentence, as an `Item.PrimaryText`.
    */
   children: React.ReactNode
@@ -53,20 +49,14 @@ function PostReactionRow({
   const mediaBlurred = Item.usePostMediaBlurred(post)
 
   return (
-    <Item.Root
+    <Item.GroupRoot
+      notification={notification}
       href={makePostLink(post)}
-      isRead={notification.isRead}
       label={label}
       testID={`notification-${notification.type}-${notification.id}`}>
       <Item.Avatar profile={actors[0]} icon={icon} tone={tone} />
       <Item.Content>
-        {notification.count > 1 && (
-          <Item.AvatarRow
-            profiles={actors.slice(1)}
-            total={notification.count - 1}
-            href={othersHref}
-          />
-        )}
+        <Item.AvatarRow />
         {children}
         <Item.PostPreview post={post} />
         <Item.Timestamp date={notification.indexedAt} />
@@ -80,7 +70,7 @@ function PostReactionRow({
           />
         </Item.Trailing>
       )}
-    </Item.Root>
+    </Item.GroupRoot>
   )
 }
 
@@ -93,26 +83,31 @@ export function LikeNotification({
   notification: NotificationOf<'like'>
 }) {
   const {t: l} = useLingui()
-  const actor = notification.actors[0]
-  const name = Item.useDisplayName(actor)
-  const others = notification.count - 1
+  const {actor, name, second, secondName, others} =
+    Item.useGroupNames(notification)
 
   return (
     <PostReactionRow
       notification={notification}
       icon={HeartIcon}
       tone="like"
-      othersHref={makePostLink(notification.post, 'liked-by')}
       label={
-        others > 0
-          ? l`${name} and ${plural(others, {
-              one: '# other',
-              other: '# others',
-            })} liked your post`
-          : l`${name} liked your post`
+        second
+          ? l`${name} and ${secondName} liked your post`
+          : others > 0
+            ? l`${name} and ${plural(others, {
+                one: '# other',
+                other: '# others',
+              })} liked your post`
+            : l`${name} liked your post`
       }>
       <Item.PrimaryText>
-        {others > 0 ? (
+        {second ? (
+          <Trans>
+            <Item.Name profile={actor} /> and <Item.Name profile={second} />{' '}
+            liked your post
+          </Trans>
+        ) : others > 0 ? (
           <Trans>
             <Item.Name profile={actor} /> and{' '}
             <Item.Strong>
@@ -139,26 +134,31 @@ export function RepostNotification({
   notification: NotificationOf<'repost'>
 }) {
   const {t: l} = useLingui()
-  const actor = notification.actors[0]
-  const name = Item.useDisplayName(actor)
-  const others = notification.count - 1
+  const {actor, name, second, secondName, others} =
+    Item.useGroupNames(notification)
 
   return (
     <PostReactionRow
       notification={notification}
       icon={RepostIcon}
       tone="repost"
-      othersHref={makePostLink(notification.post, 'reposted-by')}
       label={
-        others > 0
-          ? l`${name} and ${plural(others, {
-              one: '# other',
-              other: '# others',
-            })} reposted your post`
-          : l`${name} reposted your post`
+        second
+          ? l`${name} and ${secondName} reposted your post`
+          : others > 0
+            ? l`${name} and ${plural(others, {
+                one: '# other',
+                other: '# others',
+              })} reposted your post`
+            : l`${name} reposted your post`
       }>
       <Item.PrimaryText>
-        {others > 0 ? (
+        {second ? (
+          <Trans>
+            <Item.Name profile={actor} /> and <Item.Name profile={second} />{' '}
+            reposted your post
+          </Trans>
+        ) : others > 0 ? (
           <Trans>
             <Item.Name profile={actor} /> and{' '}
             <Item.Strong>
@@ -186,31 +186,31 @@ export function LikeViaRepostNotification({
   notification: NotificationOf<'likeViaRepost'>
 }) {
   const {t: l} = useLingui()
-  const actor = notification.actors[0]
-  const name = Item.useDisplayName(actor)
-  const others = notification.count - 1
+  const {actor, name, second, secondName, others} =
+    Item.useGroupNames(notification)
 
-  /*
-   * The post's liked-by list also has likes that didn't come via the
-   * viewer's repost, but it's the closest list there is, and a "+N" that goes
-   * nowhere looks broken.
-   */
   return (
     <PostReactionRow
       notification={notification}
       icon={LikeRepostIcon}
       tone="like"
-      othersHref={makePostLink(notification.post, 'liked-by')}
       label={
-        others > 0
-          ? l`${name} and ${plural(others, {
-              one: '# other',
-              other: '# others',
-            })} liked your repost`
-          : l`${name} liked your repost`
+        second
+          ? l`${name} and ${secondName} liked your repost`
+          : others > 0
+            ? l`${name} and ${plural(others, {
+                one: '# other',
+                other: '# others',
+              })} liked your repost`
+            : l`${name} liked your repost`
       }>
       <Item.PrimaryText>
-        {others > 0 ? (
+        {second ? (
+          <Trans>
+            <Item.Name profile={actor} /> and <Item.Name profile={second} />{' '}
+            liked your repost
+          </Trans>
+        ) : others > 0 ? (
           <Trans>
             <Item.Name profile={actor} /> and{' '}
             <Item.Strong>
@@ -238,27 +238,31 @@ export function RepostViaRepostNotification({
   notification: NotificationOf<'repostViaRepost'>
 }) {
   const {t: l} = useLingui()
-  const actor = notification.actors[0]
-  const name = Item.useDisplayName(actor)
-  const others = notification.count - 1
+  const {actor, name, second, secondName, others} =
+    Item.useGroupNames(notification)
 
-  // A superset of these people, as in `LikeViaRepostNotification`
   return (
     <PostReactionRow
       notification={notification}
       icon={RepostRepostIcon}
       tone="repost"
-      othersHref={makePostLink(notification.post, 'reposted-by')}
       label={
-        others > 0
-          ? l`${name} and ${plural(others, {
-              one: '# other',
-              other: '# others',
-            })} reposted your repost`
-          : l`${name} reposted your repost`
+        second
+          ? l`${name} and ${secondName} reposted your repost`
+          : others > 0
+            ? l`${name} and ${plural(others, {
+                one: '# other',
+                other: '# others',
+              })} reposted your repost`
+            : l`${name} reposted your repost`
       }>
       <Item.PrimaryText>
-        {others > 0 ? (
+        {second ? (
+          <Trans>
+            <Item.Name profile={actor} /> and <Item.Name profile={second} />{' '}
+            reposted your repost
+          </Trans>
+        ) : others > 0 ? (
           <Trans>
             <Item.Name profile={actor} /> and{' '}
             <Item.Strong>
@@ -475,6 +479,8 @@ export function MultiPostRepostViaRepostNotification({
 
 /**
  * Someone, or a group of people, liked one of the viewer's custom feeds.
+ * Pressing the row opens the feed, and a group expands to list everyone in
+ * it.
  */
 export function GeneratorLikeNotification({
   notification,
@@ -482,37 +488,37 @@ export function GeneratorLikeNotification({
   notification: NotificationOf<'generatorLike'>
 }) {
   const {t: l} = useLingui()
-  const {generator, actors} = notification
-  const actor = actors[0]
-  const name = Item.useDisplayName(actor)
-  const others = notification.count - 1
+  const {generator} = notification
+  const {actor, name, second, secondName, others} =
+    Item.useGroupNames(notification)
   const feedUri = new AtUri(generator.uri)
 
   return (
-    <Item.Root
+    <Item.GroupRoot
+      notification={notification}
       href={makeCustomFeedLink(feedUri.host, feedUri.rkey)}
-      isRead={notification.isRead}
       label={
-        others > 0
-          ? l`${name} and ${plural(others, {
-              one: '# other',
-              other: '# others',
-            })} liked your custom feed`
-          : l`${name} liked your custom feed`
+        second
+          ? l`${name} and ${secondName} liked your custom feed`
+          : others > 0
+            ? l`${name} and ${plural(others, {
+                one: '# other',
+                other: '# others',
+              })} liked your custom feed`
+            : l`${name} liked your custom feed`
       }
       testID={`notification-${notification.type}-${notification.id}`}>
       <Item.Avatar profile={actor} icon={HeartIcon} tone="like" />
       <Item.Content style={a.gap_sm}>
         <View style={[a.gap_xs]}>
-          {others > 0 && (
-            <Item.AvatarRow
-              profiles={actors.slice(1)}
-              total={others}
-              href={makeCustomFeedLink(feedUri.host, feedUri.rkey, 'liked-by')}
-            />
-          )}
+          <Item.AvatarRow />
           <Item.PrimaryText>
-            {others > 0 ? (
+            {second ? (
+              <Trans>
+                <Item.Name profile={actor} /> and <Item.Name profile={second} />{' '}
+                liked your custom feed
+              </Trans>
+            ) : others > 0 ? (
               <Trans>
                 <Item.Name profile={actor} /> and{' '}
                 <Item.Strong>
@@ -530,59 +536,58 @@ export function GeneratorLikeNotification({
         <Item.FeedCard generator={generator} />
         <Item.Timestamp date={notification.indexedAt} />
       </Item.Content>
-    </Item.Root>
+    </Item.GroupRoot>
   )
 }
 
 /**
  * New posts from accounts the viewer has subscribed to. A single post opens
  * that post, otherwise the row opens the activity list with all of them.
+ * Posts from several authors expand to list the authors.
  */
 export function SubscribedPostNotification({
   notification,
 }: {
   notification: NotificationOf<'subscribedPost'>
 }) {
-  const t = useTheme()
   const {t: l} = useLingui()
   const {items, count} = notification
   // Items are newest first, so this is the post to preview
-  const [{actor, post}] = items
-  const name = Item.useDisplayName(actor)
-  const authors = items
-    .map(item => item.actor)
-    .filter(
-      (author, index, all) =>
-        all.findIndex(other => other.did === author.did) === index,
-    )
-  const others = authors.length - 1
+  const [{post}] = items
+  const {actor, name, second, secondName, others} =
+    Item.useGroupNames(notification)
   const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
   const mediaBlurred = Item.usePostMediaBlurred(post)
 
   return (
-    <Item.Root
+    <Item.GroupRoot
+      notification={notification}
       href={
         items.length === 1
           ? makePostLink(post)
           : makeActivityListLink(items.map(item => item.post.uri))
       }
-      isRead={notification.isRead}
       label={
-        others > 0
-          ? l`New posts from ${name} and ${plural(others, {
-              one: '# other',
-              other: '# others',
-            })}`
-          : l`New ${plural(count, {one: 'post', other: 'posts'})} from ${name}`
+        second
+          ? l`New posts from ${name} and ${secondName}`
+          : others > 0
+            ? l`New posts from ${name} and ${plural(others, {
+                one: '# other',
+                other: '# others',
+              })}`
+            : l`New ${plural(count, {one: 'post', other: 'posts'})} from ${name}`
       }
       testID={`notification-${notification.type}-${notification.id}`}>
       <Item.Avatar profile={actor} icon={ActivityIcon} tone="activity" />
       <Item.Content>
-        {others > 0 && (
-          <Item.AvatarRow profiles={authors.slice(1)} total={others} />
-        )}
+        <Item.AvatarRow />
         <Item.PrimaryText>
-          {others > 0 ? (
+          {second ? (
+            <Trans>
+              New posts from <Item.Name profile={actor} /> and{' '}
+              <Item.Name profile={second} />
+            </Trans>
+          ) : others > 0 ? (
             <Trans>
               New posts from <Item.Name profile={actor} /> and{' '}
               <Item.Strong>
@@ -596,7 +601,7 @@ export function SubscribedPostNotification({
             </Trans>
           )}
         </Item.PrimaryText>
-        <Item.PostPreview post={post} style={t.atoms.text} />
+        <Item.PostPreview post={post} />
         <Item.Timestamp date={notification.indexedAt} />
       </Item.Content>
       {hasThumbnails && (
@@ -608,6 +613,6 @@ export function SubscribedPostNotification({
           />
         </Item.Trailing>
       )}
-    </Item.Root>
+    </Item.GroupRoot>
   )
 }

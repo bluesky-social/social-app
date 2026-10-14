@@ -1,5 +1,9 @@
 import {useCallback, useMemo} from 'react'
-import {LayoutAnimation, type TextStyle} from 'react-native'
+import {
+  type GestureResponderEvent,
+  LayoutAnimation,
+  type TextStyle,
+} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -10,14 +14,19 @@ import {Text} from '#/components/Typography'
 export function ShowMoreTextButton({
   onPress: onPressProp,
   style,
-}: TextStyleProp & {onPress: () => void}) {
+}: TextStyleProp & {
+  onPress: (event: GestureResponderEvent) => void
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
 
-  const onPress = useCallback(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    onPressProp()
-  }, [onPressProp])
+  const onPress = useCallback(
+    (event: GestureResponderEvent) => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+      onPressProp(event)
+    },
+    [onPressProp],
+  )
 
   const textStyle = useMemo(() => {
     return flatten([a.leading_snug, a.text_sm, style]) as TextStyle & {

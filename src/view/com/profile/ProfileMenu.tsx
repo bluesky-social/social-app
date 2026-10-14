@@ -5,7 +5,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
-import {shareText, shareUrl} from '#/lib/sharing'
+import {shareUrl, simpleShareText} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {type Shadow} from '#/state/cache/types'
 import {
@@ -256,11 +256,11 @@ let ProfileMenu = ({
   }, [reportDialogControl])
 
   const onPressShareATUri = useCallback(() => {
-    void shareText(`at://${profile.did}`)
+    void simpleShareText(`at://${profile.did}`)
   }, [profile.did])
 
   const onPressShareDID = useCallback(() => {
-    void shareText(profile.did)
+    void simpleShareText(profile.did)
   }, [profile.did])
 
   const onPressSearch = useCallback(() => {

@@ -1,15 +1,17 @@
 import {useState} from 'react'
-import {View} from 'react-native'
+import {type GestureResponderEvent, View} from 'react-native'
 import {moderatePost, type ModerationDecision} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {MAX_POST_LINES} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
 import {forceLTR} from '#/lib/strings/bidi'
 import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {countLines} from '#/lib/strings/helpers'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -35,6 +37,7 @@ import {Link, WebOnlyInlineLinkText} from '#/components/Link'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
+import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostMenuButton} from '#/components/PostControls/PostMenu'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -155,7 +158,7 @@ export function ContextLine({
       <Text
         emoji
         numberOfLines={1}
-        style={[a.flex_1, a.text_md, a.leading_snug, t.atoms.text]}>
+        style={[a.flex_1, a.text_sm, a.leading_snug, t.atoms.text]}>
         {children}
       </Text>
     </View>
@@ -236,7 +239,8 @@ function ReplyContextPost({
         'Shown in place of the text of a post that has no text, only images, video, a link or a quoted post',
     })
   }
-  const previewStyle = [a.text_md, a.leading_snug, t.atoms.text_contrast_medium]
+  // Nested text keeps its own size, so each part matches `ContextLine`'s
+  const previewStyle = [a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]
   const previewNode =
     record && preview && !isHidden ? (
       <RichText
@@ -261,7 +265,7 @@ function ReplyContextPost({
       <Trans>replied to: {previewNode}</Trans>
     ) : (
       <Trans>
-        replied to <Strong>{name}</Strong>: {previewNode}
+        replied to <Strong style={a.text_sm}>{name}</Strong>: {previewNode}
       </Trans>
     )
   }
@@ -270,14 +274,15 @@ function ReplyContextPost({
     <Trans>in reply to: {previewNode}</Trans>
   ) : (
     <Trans>
-      in reply to <Strong>{name}</Strong>: {previewNode}
+      in reply to <Strong style={a.text_sm}>{name}</Strong>: {previewNode}
     </Trans>
   )
 }
 
 /**
  * A post's text and a compact preview of its embed, behind the usual
- * moderation hider. Images stand in for the text when there isn't any.
+ * moderation hider. Images stand in for the text when there isn't any. Long
+ * text is cut short with a "Show more" button, as in feeds.
  */
 export function PostBody({post}: {post: PostView}) {
   const moderationOpts = useModerationOpts()
@@ -288,10 +293,25 @@ export function PostBody({post}: {post: PostView}) {
     record && record.text.trim()
       ? new RichTextAPI({text: record.text, facets: record.facets})
       : undefined
+  /*
+   * The same rule as posts in feeds: text with `MAX_POST_LINES` or more line
+   * breaks stops at that many lines until the viewer asks for the rest. Only
+   * line breaks count, not wrapping.
+   */
+  const [limitLines, setLimitLines] = useState(
+    () => countLines(richText?.text) >= MAX_POST_LINES,
+  )
   const moderation = moderationOpts
     ? moderatePost(post, moderationOpts)
     : undefined
   const embedPreview = post.embed ? getEmbedPreviewKind(post.embed) : undefined
+
+  const onPressShowMore = (event: GestureResponderEvent) => {
+    // Keep the press from reaching the row, which on web would follow its link
+    event.preventDefault()
+    event.stopPropagation()
+    setLimitLines(false)
+  }
 
   return (
     <ContentHider
@@ -302,14 +322,21 @@ export function PostBody({post}: {post: PostView}) {
         <PostAlerts post={post} modui={moderation.ui('contentView')} />
       )}
       {richText && (
-        <RichText
-          enableTags
-          value={richText}
-          authorHandle={post.author.handle}
-          shouldProxyLinks
-          // No colour here: it would override the links' and mentions'
-          style={[a.text_md, a.leading_snug]}
-        />
+        // Keeps "Show more" right under the text, without the hider's gap
+        <View>
+          <RichText
+            enableTags
+            value={richText}
+            authorHandle={post.author.handle}
+            shouldProxyLinks
+            numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+            // No colour here: it would override the links' and mentions'
+            style={[a.text_md, a.leading_snug]}
+          />
+          {limitLines && (
+            <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />
+          )}
+        </View>
       )}
       {post.embed && embedPreview && (
         /*
@@ -412,11 +439,25 @@ function EmbedPreview({
 }
 
 /**
- * Compact preview of a quoted post: author, time and two lines of text.
+ * Compact preview of a quoted post: author, time and the start of its text.
  * Pressing it opens the quoted post. Blocked, deleted and detached quotes
  * collapse to a short muted line, and other record embeds render nothing.
  */
-export function QuoteCard({embed}: {embed: app.bsky.embed.record.View}) {
+export function QuoteCard({
+  embed,
+  numberOfLines = 2,
+  isMuted = false,
+}: {
+  embed: app.bsky.embed.record.View
+  /**
+   * How many lines of the quoted post's text to show.
+   */
+  numberOfLines?: number
+  /**
+   * Mutes the quoted post's text, as for a preview of the post.
+   */
+  isMuted?: boolean
+}) {
   const t = useTheme()
   const {currentAccount} = useSession()
   const parsed = bsky.post.parseEmbedRecordView(embed)
@@ -424,7 +465,13 @@ export function QuoteCard({embed}: {embed: app.bsky.embed.record.View}) {
   let placeholder: React.ReactNode = null
   switch (parsed.type) {
     case 'post':
-      return <QuoteCardPost view={parsed.view} />
+      return (
+        <QuoteCardPost
+          view={parsed.view}
+          numberOfLines={numberOfLines}
+          isMuted={isMuted}
+        />
+      )
     case 'post_blocked':
       placeholder = <Trans>Blocked post</Trans>
       break
@@ -455,7 +502,15 @@ export function QuoteCard({embed}: {embed: app.bsky.embed.record.View}) {
   )
 }
 
-function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
+function QuoteCardPost({
+  view,
+  numberOfLines,
+  isMuted,
+}: {
+  view: app.bsky.embed.record.ViewRecord
+  numberOfLines: number
+  isMuted: boolean
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -551,8 +606,12 @@ function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
                 authorHandle={view.author.handle}
                 // The whole card is already a link
                 disableLinks
-                numberOfLines={2}
-                style={[a.text_md, a.leading_snug, t.atoms.text]}
+                numberOfLines={numberOfLines}
+                style={[
+                  a.text_md,
+                  a.leading_snug,
+                  isMuted ? t.atoms.text_contrast_medium : t.atoms.text,
+                ]}
               />
             ) : (
               <InlineImages

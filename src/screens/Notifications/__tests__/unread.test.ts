@@ -23,18 +23,18 @@ function load(overrides: Partial<FeedLoad> = {}): FeedLoad {
 }
 
 describe('nextSeenAt', () => {
-  it('takes the server seenAt in server mode', () => {
+  it('takes the server seenAt on a refresh', () => {
     expect(
-      nextSeenAt({load: load(), mode: 'server', snapshot: SNAPSHOT}),
+      nextSeenAt({load: load(), isRefresh: true, snapshot: SNAPSHOT}),
     ).toEqual(new Date(SERVER_SEEN_AT))
   })
 
-  it('moves an existing snapshot to the server seenAt in server mode, so only what arrived since the last load is tinted', () => {
+  it('moves an existing snapshot to the server seenAt on a refresh, so only what arrived since the last load is tinted', () => {
     // The previous load marked everything up to SERVER_SEEN_AT as seen
     const olderSnapshot = new Date(Date.parse(SERVER_SEEN_AT) - 60_000)
     const next = nextSeenAt({
       load: load(),
-      mode: 'server',
+      isRefresh: true,
       snapshot: olderSnapshot,
     })
     expect(next).toEqual(new Date(SERVER_SEEN_AT))
@@ -42,27 +42,28 @@ describe('nextSeenAt', () => {
     expect(next!.getTime()).toBeLessThan(REQUESTED_AT)
   })
 
-  it('keeps the snapshot in kept mode, or without a mode', () => {
-    expect(nextSeenAt({load: load(), mode: 'kept', snapshot: SNAPSHOT})).toBe(
-      SNAPSHOT,
-    )
+  it("keeps the snapshot for a load that isn't a refresh, e.g. a tab's first", () => {
     expect(
-      nextSeenAt({load: load(), mode: undefined, snapshot: SNAPSHOT}),
+      nextSeenAt({load: load(), isRefresh: false, snapshot: SNAPSHOT}),
     ).toBe(SNAPSHOT)
   })
 
-  it('takes the server seenAt when there is no snapshot yet, whatever the mode', () => {
-    for (const mode of ['server', 'kept', undefined] as const) {
-      expect(nextSeenAt({load: load(), mode, snapshot: undefined})).toEqual(
-        new Date(SERVER_SEEN_AT),
-      )
+  it('takes the server seenAt when there is no snapshot yet, refresh or not', () => {
+    for (const isRefresh of [true, false]) {
+      expect(
+        nextSeenAt({load: load(), isRefresh, snapshot: undefined}),
+      ).toEqual(new Date(SERVER_SEEN_AT))
     }
   })
 
   it('treats a missing or invalid server seenAt as everything seen', () => {
     for (const seenAt of [undefined, '', 'not a date']) {
       expect(
-        nextSeenAt({load: load({seenAt}), mode: 'server', snapshot: undefined}),
+        nextSeenAt({
+          load: load({seenAt}),
+          isRefresh: true,
+          snapshot: undefined,
+        }),
       ).toEqual(new Date(REQUESTED_AT))
     }
   })
@@ -178,5 +179,67 @@ describe('isRefreshPillVisible', () => {
     expect(
       visible({top: {requestedAt: TOP_REQUESTED_AT, newestAt: undefined}}),
     ).toBe(true)
+  })
+
+  describe('with a peek', () => {
+    const nothingUnread = check({})
+
+    it('shows for anything newer than the loaded top, read or not', () => {
+      expect(
+        visible({
+          check: nothingUnread,
+          peek: {
+            requestedAt: TOP_REQUESTED_AT + 30_000,
+            newestAt: TOP_NEWEST_AT + 60_000,
+          },
+        }),
+      ).toBe(true)
+    })
+
+    it('shows without any unread check', () => {
+      expect(
+        visible({
+          check: undefined,
+          peek: {
+            requestedAt: TOP_REQUESTED_AT + 30_000,
+            newestAt: TOP_NEWEST_AT + 60_000,
+          },
+        }),
+      ).toBe(true)
+    })
+
+    it('ignores a peek asked before the top was requested', () => {
+      expect(
+        visible({
+          check: nothingUnread,
+          peek: {
+            requestedAt: TOP_REQUESTED_AT,
+            newestAt: TOP_NEWEST_AT + 60_000,
+          },
+        }),
+      ).toBe(false)
+    })
+
+    it('ignores a peek that found nothing newer, or nothing at all', () => {
+      for (const newestAt of [TOP_NEWEST_AT, TOP_NEWEST_AT - 1, undefined]) {
+        expect(
+          visible({
+            check: nothingUnread,
+            peek: {requestedAt: TOP_REQUESTED_AT + 30_000, newestAt},
+          }),
+        ).toBe(false)
+      }
+    })
+
+    it('still hides off the tab in view, or while the top is fetching', () => {
+      const peek = {
+        requestedAt: TOP_REQUESTED_AT + 30_000,
+        newestAt: TOP_NEWEST_AT + 60_000,
+      }
+      expect(visible({check: nothingUnread, peek, isActive: false})).toBe(false)
+      expect(visible({check: nothingUnread, peek, isFetchingTop: true})).toBe(
+        false,
+      )
+    })
   })
 })

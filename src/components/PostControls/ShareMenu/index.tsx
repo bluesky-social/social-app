@@ -84,7 +84,15 @@ let ShareMenuButton = ({
     const urip = new AtUri(post.uri)
     const href = makeProfileLink(post.author, 'post', urip.rkey)
     const url = toShareUrl(href)
-    shareUrl(url)
+    void shareUrl(url).then(result => {
+      if (!result) return
+      ax.metric('share:nativeShare:result', {
+        uri: post.uri,
+        authorDid: post.author.did,
+        entryPoint: 'LongPress',
+        ...result,
+      })
+    })
     onShare()
   }
 

@@ -24,25 +24,23 @@ import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {Button} from '#/components/Button'
 import {canBeMessaged} from '#/components/dms/util'
 import {StarterPack_Stroke2_Corner0_Rounded as StarterPackIcon} from '#/components/icons/brands/StarterPack'
-import {
-  ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
-  ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
-} from '#/components/icons/Chevron'
 import {shouldShowKnownFollowers} from '#/components/KnownFollowers'
 import {InlineLinkText, Link, useLink} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {useStarterPackLink} from '#/components/StarterPack/StarterPackCard'
+import {SubtleHover} from '#/components/SubtleHover'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {type Metrics} from '#/analytics'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+import {AVATAR_SLOT_WIDTH} from './Avatar'
 import {Card} from './media'
 import {useDisplayName} from './text'
 
@@ -121,10 +119,14 @@ function PillButton({
  */
 export function FollowButton({
   profile,
-  logContext = 'ProfileCard',
+  logContext,
 }: {
   profile: bsky.profile.AnyProfileView
-  logContext?: FollowLogContext
+  /**
+   * Which row the button is in, for the follow and unfollow metrics, e.g.
+   * `NotificationFollowRow`.
+   */
+  logContext: FollowLogContext
 }) {
   const {currentAccount, hasSession} = useSession()
   if (!hasSession || profile.did === currentAccount?.did) return null
@@ -407,19 +409,6 @@ export function StarterPackCard({
 }
 
 /**
- * The trailing chevron of an expandable row. Points down when collapsed and
- * up when expanded. Decorative: the row itself handles the press.
- *
- * Swaps icons rather than rotating one, since react-native-svg applies a
- * transform on the icon to its contents too, rotating the path out of view.
- */
-export function ExpandChevron({expanded}: {expanded: boolean}) {
-  const t = useTheme()
-  const Icon = expanded ? ChevronUpIcon : ChevronDownIcon
-  return <Icon size="md" style={[t.atoms.text_contrast_high]} />
-}
-
-/**
  * How long each row of an `ActorList` takes to fade in, in ms.
  */
 const ROW_FADE_DURATION = 150
@@ -433,8 +422,27 @@ const ROW_STAGGER = 25
 const MAX_STAGGERED_ROWS = 8
 
 /**
+ * The size of each avatar in an `ActorList`.
+ */
+const ACTOR_AVATAR_SIZE = 32
+
+/**
+ * How far an `ActorList` insets its people, so that their names line up with
+ * the row's text above. `Item.Root` puts the text a padding, the avatar slot
+ * and a gap in from its edge, and each person puts their name an avatar and
+ * a gap in from theirs.
+ */
+const ACTOR_LIST_INSET =
+  tokens.space.lg +
+  AVATAR_SLOT_WIDTH +
+  tokens.space.lg -
+  ACTOR_AVATAR_SIZE -
+  tokens.space.sm
+
+/**
  * The expanded list of everyone in a grouped notification, each linking to
- * their profile with a follow button.
+ * their profile with a follow button. Each person spans the full width of
+ * the row, so their hover does too, and insets their own content.
  *
  * Rows fade in one after another as they mount. Rows appended later, e.g. by
  * "Show more", start a stagger of their own rather than waiting on the rows
@@ -479,11 +487,7 @@ export function ActorList({
                 ? undefined
                 : FadeIn.duration(ROW_FADE_DURATION).delay(step * ROW_STAGGER)
             }>
-            <ActorListItem
-              profile={actor}
-              starterPack={starterPack}
-              isLast={index === actors.length - 1 && !children}
-            />
+            <ActorListItem profile={actor} starterPack={starterPack} />
           </Animated.View>
         )
       })}
@@ -514,7 +518,13 @@ export function ShowMoreActorsButton({
       disabled={isLoading}
       hitSlop={HITSLOP_10}
       onPress={onPress}
-      style={[a.self_start, a.gap_xs, a.px_lg, a.pt_xs]}>
+      style={[
+        a.self_start,
+        a.gap_xs,
+        a.pt_xs,
+        a.mb_sm,
+        {marginLeft: ACTOR_LIST_INSET},
+      ]}>
       {({hovered, pressed}) => (
         <>
           {isLoading && (
@@ -544,16 +554,12 @@ export function ShowMoreActorsButton({
 export function ActorListItem({
   profile,
   starterPack,
-  isLast = false,
 }: {
   profile: bsky.profile.AnyProfileView
   starterPack?: bsky.starterPack.AnyStarterPackView
-  /**
-   * The last item drops its bottom padding, leaving it to the row.
-   */
-  isLast?: boolean
 }) {
   const t = useTheme()
+  const [hover, setHover] = useState(false)
   const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
@@ -581,30 +587,34 @@ export function ActorListItem({
 
   return (
     <View
+      onPointerEnter={() => setHover(true)}
+      onPointerLeave={() => setHover(false)}
       style={[
         a.flex_row,
         a.align_center,
         a.gap_sm,
-        a.px_lg,
-        isLast ? a.pt_sm : a.py_sm,
+        a.py_sm,
+        a.pr_lg,
+        {paddingLeft: ACTOR_LIST_INSET},
       ]}>
+      <SubtleHover hover={hover} />
       <Pressable
         accessibilityRole="link"
         accessibilityLabel={l`Go to ${name}’s profile`}
         accessibilityHint=""
         onPress={event => {
-          // Keep the press from also following the row's link on web
-          event.stopPropagation()
           unstableCacheProfileView(queryClient, profile)
           onPress(event)
         }}
         style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
         <PreviewableUserAvatar
-          size={32}
+          size={ACTOR_AVATAR_SIZE}
           profile={profile}
           moderation={moderation?.ui('avatar')}
           type={profile.associated?.labeler ? 'labeler' : 'user'}
           disableNavigation
+          // Notifications only show the red ring
+          hideLiveBadge
         />
         <View style={[a.flex_1]}>
           <View style={[a.flex_row, a.align_center]}>

@@ -45,6 +45,12 @@ export const UNRESOLVED_FOLLOWER_DIDS: DidString[] = [
 ]
 
 /**
+ * Likers in the `like-fungus` group past the 10 whose profiles the API puts
+ * in `relatedViews`.
+ */
+export const UNRESOLVED_LIKER_DIDS: DidString[] = fakeDids('liker', 15)
+
+/**
  * A realistic `getGroupedNotifications` response covering every kind and
  * variant, plus three groups that hydration must drop: an unknown kind, a
  * like on a blocked post, and a like whose actors are all unresolvable.
@@ -443,6 +449,10 @@ export function createGroupedNotificationsFixture(
       kind: {
         $type: `${$group}#likeGroup`,
         post: fungusPost.uri,
+        /*
+         * Only the first 10 have a profile in `relatedViews`, as the API
+         * hydrates, so "Show more" loads the rest.
+         */
         items: [
           danielle,
           michael,
@@ -454,7 +464,10 @@ export function createGroupedNotificationsFixture(
           priya,
           sofia,
           jonas,
-        ].map(p => ({actor: p.did})),
+        ]
+          .map(p => p.did)
+          .concat(UNRESOLVED_LIKER_DIDS)
+          .map(did => ({actor: did})),
       },
     },
     {
@@ -549,6 +562,7 @@ export function createGroupedNotificationsFixture(
       },
     },
     {
+      // Two people, so the row names both
       id: 'repost-via-repost-bronco',
       isRead: true,
       indexedAt: ago(5 * HOUR),
@@ -558,6 +572,38 @@ export function createGroupedNotificationsFixture(
         post: broncoPost.uri,
         viaRepost,
         items: [{actor: danielle.did}, {actor: lena.did}],
+      },
+    },
+    {
+      /*
+       * A large group with only three profiles in `relatedViews`, as when
+       * most of the accounts are gone, so the avatar row runs out early.
+       */
+      id: 'like-photos',
+      isRead: true,
+      indexedAt: ago(6 * HOUR),
+      count: 20,
+      kind: {
+        $type: `${$group}#likeGroup`,
+        post: photosPost.uri,
+        items: [theo.did, ines.did, omar.did]
+          .concat(fakeDids('photo-liker', 17))
+          .map(did => ({actor: did})),
+      },
+    },
+    {
+      /*
+       * Two people, but the second has no profile in `relatedViews`, so the
+       * row falls back to "1 other".
+       */
+      id: 'repost-photos',
+      isRead: true,
+      indexedAt: ago(7 * HOUR),
+      count: 2,
+      kind: {
+        $type: `${$group}#repostGroup`,
+        post: photosPost.uri,
+        items: [{actor: priya.did}, {actor: 'did:plc:ghost3'}],
       },
     },
     {
@@ -723,6 +769,17 @@ export function createGroupedNotificationsFixture(
       kind: {
         $type: `${$group}#followGroup`,
         items: [{actor: sofia.did, starterPack: scicommPack.uri}],
+      },
+    },
+    {
+      // Two people, so the row names both
+      id: 'follow-pair',
+      isRead: true,
+      indexedAt: ago(2 * DAY + 4 * HOUR),
+      count: 2,
+      kind: {
+        $type: `${$group}#followGroup`,
+        items: [{actor: jonas.did}, {actor: lena.did}],
       },
     },
     {
@@ -1067,6 +1124,17 @@ function followUri(from: DidString, rkey: string): AtUriString {
 
 function blockUri(): AtUriString {
   return `at://${VIEWER_DID}/app.bsky.graph.block/blockeduser`
+}
+
+/**
+ * `count` made-up DIDs, e.g. `did:plc:liker1` onwards, for actors without a
+ * profile in `relatedViews`.
+ */
+function fakeDids(prefix: string, count: number): DidString[] {
+  return Array.from(
+    {length: count},
+    (_, i): DidString => `did:plc:${prefix}${i + 1}`,
+  )
 }
 
 /**
