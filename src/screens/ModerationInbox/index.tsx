@@ -247,6 +247,7 @@ function YourAccount() {
   )
   const subjects =
     actionedSubjectsQuery.data?.pages.flatMap(page => page.subjects) ?? []
+  const isLoading = actionedSubjectsQuery.isLoading
   const isEmpty =
     actionedSubjectsQuery.data !== undefined &&
     subjects.length === 0 &&
@@ -333,7 +334,11 @@ function YourAccount() {
       )}
       ListHeaderComponent={listHeader}
       ListEmptyComponent={
-        isEmpty ? (
+        isLoading ? (
+          <View style={[a.flex_1, a.align_center, a.justify_center]}>
+            <Loader size="xl" />
+          </View>
+        ) : isEmpty ? (
           <InboxEmptyState
             message={
               filter === 'all'
@@ -343,7 +348,7 @@ function YourAccount() {
           />
         ) : undefined
       }
-      contentContainerStyle={isEmpty ? a.flex_grow : undefined}
+      contentContainerStyle={isEmpty || isLoading ? a.flex_grow : undefined}
       ListFooterComponent={
         <ListFooter
           style={a.border_t_0}
