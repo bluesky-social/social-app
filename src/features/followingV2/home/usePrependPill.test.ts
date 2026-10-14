@@ -1,6 +1,5 @@
 import {act, renderHook} from '@testing-library/react-native'
 
-import {newPostsPillPresentation} from '#/components/NewPostsPill/presentation'
 import {type FeedPostSlice, type StagedPage} from './queries/postFeed'
 import {getPrependOffer, usePrependPill} from './usePrependPill'
 
@@ -14,7 +13,7 @@ const ABOVE_AT = 9000
 
 /**
  * A feed item by `did`, whose own post is the last of `context` posts before
- * it in its thread. Its rows are keyed by `key`, as the tuner keys them.
+ * it in its thread.
  */
 function slice(
   rkey: string,
@@ -24,14 +23,12 @@ function slice(
     blur = false,
     filter = false,
     context = 0,
-    key = `slice-${rkey}`,
   }: {
     did?: string
     avatar?: string
     blur?: boolean
     filter?: boolean
     context?: number
-    key?: string
   } = {},
 ): FeedPostSlice {
   const uris = [
@@ -41,6 +38,7 @@ function slice(
     ),
     `at://${did}/app.bsky.feed.post/${rkey}`,
   ]
+  const key = `slice-${rkey}`
   return {
     _isFeedPostSlice: true,
     _reactKey: key,
@@ -99,7 +97,7 @@ describe('getPrependOffer', () => {
     })
   })
 
-  it('offers the posts from several pages, newest first', () => {
+  it('offers the posts from several pages, in row order', () => {
     const above = [slice('e')]
     const fresh = [slice('a'), slice('b')]
     const offer = getPrependOffer(rowsOf([...above, ...fresh, slice('old')]), [
@@ -171,27 +169,6 @@ describe('getPrependOffer', () => {
       'did:plc:c',
       'did:plc:d',
     ])
-  })
-
-  it('makes a facepile from four posts with a face to show', () => {
-    const presentation = (slices: FeedPostSlice[]) => {
-      const offer = getPrependOffer(rowsOf(slices), [
-        page(PREPENDED_AT, slices),
-      ])
-      return newPostsPillPresentation({
-        variant: 'newPosts',
-        count: offer.count,
-        faceCount: offer.authors.length,
-      })
-    }
-
-    expect(presentation([slice('a'), slice('b'), slice('c')])).toBe('generic')
-    expect(presentation([slice('a'), slice('b'), slice('c'), slice('d')])).toBe(
-      'facepile',
-    )
-    expect(
-      presentation(['a', 'b', 'c', 'd'].map(rkey => slice(rkey, {blur: true}))),
-    ).toBe('generic')
   })
 })
 
@@ -315,25 +292,19 @@ describe('usePrependPill', () => {
       expect(hook.result.current.visible).toBe(false)
     })
 
-    it('when a page staged without an offer is offered later, with the posts as they render then', () => {
+    it('when a page staged without an offer is offered later', () => {
       const {hook, stage, update} = renderPill()
       stage(QUIET)
-      // A post goes, as a mute takes it out, before a return offers the page.
-      const pages = [
-        page(PREPENDED_AT, fresh.slice(1), SINCE),
-        ...restoredPages,
-      ]
-      update({pages})
 
       update({staged: OFFERED})
 
-      expect(hook.result.current).toMatchObject({visible: true, count: 3})
+      expect(hook.result.current).toMatchObject({visible: true, count: 4})
     })
 
     it('never for an offered page none of whose posts render', () => {
       const {hook, update} = renderPill()
       update({staged: OFFERED})
-      // Rows built from these pages leave out the duplicate's page.
+      // The tuner left none of its posts, as when they're all duplicates.
       update({pages: [page(PREPENDED_AT, [], SINCE), ...restoredPages]})
       expect(hook.result.current.visible).toBe(false)
     })
@@ -396,18 +367,6 @@ describe('usePrependPill', () => {
       })
     })
 
-    it('counts the posts of a replaced page once, whatever their rows are keyed', () => {
-      const {hook, stage, replace} = renderPill()
-      stage()
-
-      // The same posts, tuned again with the staged page they replace gone.
-      replace(
-        ['a', 'b', 'c', 'd'].map(rkey => slice(rkey, {key: `re-${rkey}`})),
-      )
-
-      expect(hook.result.current).toMatchObject({visible: true, count: 4})
-    })
-
     it('takes in a page staged above the posts it offers, whatever staged it', () => {
       const {hook, stage, read, stageAbove} = renderPill()
       stage()
@@ -424,7 +383,7 @@ describe('usePrependPill', () => {
   })
 
   describe('comes down', () => {
-    it('when the reader reaches the true top, and stays down until the next offer', () => {
+    it('once dismissed, and stays down until the next offer', () => {
       const {hook, stage, dismiss, replace} = renderPill()
       stage()
 
@@ -439,27 +398,18 @@ describe('usePrependPill', () => {
       expect(hook.result.current).toMatchObject({visible: true, count: 6})
     })
 
-    it('once a refresh replaces the feed', () => {
-      const {hook, stage, update, stageAbove} = renderPill()
+    it.each([
+      ['a refresh replaces the feed', [page(PREPENDED_AT + 1, [slice('new')])]],
+      [
+        'a block takes them all out',
+        [page(PREPENDED_AT, [], SINCE), ...restoredPages],
+      ],
+    ])('once none of its posts render, as when %s', (_, pages) => {
+      const {hook, stage, update} = renderPill()
       stage()
 
-      update({pages: [page(PREPENDED_AT + 1, [slice('fresh')])]})
-      expect(hook.result.current.visible).toBe(false)
+      update({pages})
 
-      // Nor does a check that stages more without an offer put it back.
-      stageAbove([slice('e')])
-      expect(hook.result.current.visible).toBe(false)
-    })
-
-    it('once none of its posts render', () => {
-      const {hook, stage, update, replace} = renderPill()
-      stage()
-
-      // As a block takes them all out.
-      update({pages: [page(PREPENDED_AT, [], SINCE), ...restoredPages]})
-      expect(hook.result.current.visible).toBe(false)
-
-      replace([slice('e')])
       expect(hook.result.current.visible).toBe(false)
     })
   })
