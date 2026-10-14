@@ -29,7 +29,7 @@ import {type app} from '#/lexicons'
 import {logProfileLinkChanges} from '../metrics'
 import {PILL_LEFT, PILL_RIGHT_TEXT, PILL_VERTICAL} from '../pillSize'
 import {getLinkHost, getSupportProvider} from '../providers'
-import {linksFromProfileView, profileLinkViews} from '../record'
+import {linksFromProfileView} from '../record'
 import {buildProfileRow, GERM_KEY} from '../row'
 import {
   useOwnProfileLinksQuery,
@@ -82,7 +82,7 @@ export function ProfileHeaderLinks({
       ? []
       : isOwnProfile
         ? (ownLinks ?? [])
-        : linksFromProfileView(profileLinkViews(profile))
+        : linksFromProfileView(profile.links)
   const supportLinkCount = links.filter(link =>
     getSupportProvider(link.url),
   ).length

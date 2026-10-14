@@ -237,9 +237,8 @@ export function useProfileUpdateMutation() {
             }
             if (
               'links' in updates &&
-              ((fresh as {links?: {cid: string}[]}).links ?? [])
-                .map(link => link.cid)
-                .join() !== (updates.links ?? []).map(ref => ref.cid).join()
+              (fresh.links ?? []).map(link => link.cid).join() !==
+                (updates.links ?? []).map(ref => ref.cid).join()
             ) {
               // links come from separate records, so compare those too
               return false

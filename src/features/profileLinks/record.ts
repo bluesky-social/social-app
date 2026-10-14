@@ -29,18 +29,6 @@ function isShowable(url: string, seen: Set<string>): boolean {
   return true
 }
 
-/**
- * The AppView returns links on detailed profile views, but the published
- * `app.bsky.actor.defs` lexicon puts them on `profileView`, so the generated
- * types miss them. Validation keeps unknown fields, so they're there at
- * runtime. Drop this once the lexicon is republished.
- */
-export function profileLinkViews(
-  profile: app.bsky.actor.defs.ProfileViewDetailed,
-): app.bsky.actor.defs.ProfileLinkView[] | undefined {
-  return (profile as {links?: app.bsky.actor.defs.ProfileLinkView[]}).links
-}
-
 /** The links in a profile view, in display order. */
 export function linksFromProfileView(
   views: app.bsky.actor.defs.ProfileLinkView[] | undefined,

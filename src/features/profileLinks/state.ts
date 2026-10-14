@@ -18,7 +18,7 @@ import {createQueryKey} from '#/state/queries/util'
 import {usePdsClient} from '#/state/session'
 import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
-import {linksFromRecords, profileLinkViews} from './record'
+import {linksFromRecords} from './record'
 import {type ProfileLink} from './types'
 
 /**
@@ -193,9 +193,8 @@ export function useSaveProfileLinksMutation() {
       profile,
       updates: record => ({...record, links: refs.length ? refs : undefined}),
       checkCommitted: fresh =>
-        (fresh ? (profileLinkViews(fresh) ?? []) : [])
-          .map(link => link.cid)
-          .join() === refs.map(ref => ref.cid).join(),
+        (fresh?.links ?? []).map(link => link.cid).join() ===
+        refs.map(ref => ref.cid).join(),
     })
     setOwnProfileLinksCache(profile.did, links, refs)
     await deleteRemoved()
