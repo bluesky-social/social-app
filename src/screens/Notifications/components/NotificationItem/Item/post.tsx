@@ -158,7 +158,7 @@ export function ContextLine({
       <Text
         emoji
         numberOfLines={1}
-        style={[a.flex_1, a.text_md, a.leading_snug, t.atoms.text]}>
+        style={[a.flex_1, a.text_sm, a.leading_snug, t.atoms.text]}>
         {children}
       </Text>
     </View>
@@ -438,11 +438,25 @@ function EmbedPreview({
 }
 
 /**
- * Compact preview of a quoted post: author, time and two lines of text.
+ * Compact preview of a quoted post: author, time and the start of its text.
  * Pressing it opens the quoted post. Blocked, deleted and detached quotes
  * collapse to a short muted line, and other record embeds render nothing.
  */
-export function QuoteCard({embed}: {embed: app.bsky.embed.record.View}) {
+export function QuoteCard({
+  embed,
+  numberOfLines = 2,
+  isMuted = false,
+}: {
+  embed: app.bsky.embed.record.View
+  /**
+   * How many lines of the quoted post's text to show.
+   */
+  numberOfLines?: number
+  /**
+   * Mutes the quoted post's text, as for a preview of the post.
+   */
+  isMuted?: boolean
+}) {
   const t = useTheme()
   const {currentAccount} = useSession()
   const parsed = bsky.post.parseEmbedRecordView(embed)
@@ -450,7 +464,13 @@ export function QuoteCard({embed}: {embed: app.bsky.embed.record.View}) {
   let placeholder: React.ReactNode = null
   switch (parsed.type) {
     case 'post':
-      return <QuoteCardPost view={parsed.view} />
+      return (
+        <QuoteCardPost
+          view={parsed.view}
+          numberOfLines={numberOfLines}
+          isMuted={isMuted}
+        />
+      )
     case 'post_blocked':
       placeholder = <Trans>Blocked post</Trans>
       break
@@ -481,7 +501,15 @@ export function QuoteCard({embed}: {embed: app.bsky.embed.record.View}) {
   )
 }
 
-function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
+function QuoteCardPost({
+  view,
+  numberOfLines,
+  isMuted,
+}: {
+  view: app.bsky.embed.record.ViewRecord
+  numberOfLines: number
+  isMuted: boolean
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -577,8 +605,12 @@ function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
                 authorHandle={view.author.handle}
                 // The whole card is already a link
                 disableLinks
-                numberOfLines={2}
-                style={[a.text_md, a.leading_snug, t.atoms.text]}
+                numberOfLines={numberOfLines}
+                style={[
+                  a.text_md,
+                  a.leading_snug,
+                  isMuted ? t.atoms.text_contrast_medium : t.atoms.text,
+                ]}
               />
             ) : (
               <InlineImages

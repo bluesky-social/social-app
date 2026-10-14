@@ -13,14 +13,16 @@ import {Text} from '#/components/Typography'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {Card, getPostThumbnails} from './media'
+import {QuoteCard} from './post'
 import {SecondaryText} from './text'
 
 /**
  * A short preview of a post's rich text, muted and ellipsized.
  *
  * Posts without text render nothing if they have images or video, since rows
- * show those as a trailing `Item.InlineImages`. Otherwise this says what the
- * post contains instead, e.g. "Link to nytimes.com".
+ * show those as a trailing `Item.InlineImages`. One that only quotes another
+ * post shows the quoted post instead. Otherwise this says what the post
+ * contains, e.g. "Link to nytimes.com".
  */
 export function PostPreview({
   post,
@@ -57,24 +59,16 @@ export function PostPreview({
   const embed = getTextlessEmbed(post.embed)
   if (!embed) return null
 
-  let description: string
-  if (embed.type === 'link') {
-    const domain = embed.domain
-    description = l`Link to ${domain}`
-  } else {
-    description = l({
-      message: 'Quote post',
-      comment:
-        'Shown instead of the text of a post that only quotes another post',
-      context: 'noun',
-    })
+  if (embed.type === 'quote') {
+    return <QuoteCard embed={embed.record} numberOfLines={4} isMuted />
   }
 
+  const domain = embed.domain
   return (
     <SecondaryText
       numberOfLines={1}
       style={[a.text_sm, style, t.atoms.text_contrast_medium]}>
-      {description}
+      {l`Link to ${domain}`}
     </SecondaryText>
   )
 }
@@ -84,7 +78,10 @@ export function PostPreview({
  */
 function getTextlessEmbed(
   embed: app.bsky.feed.defs.PostView['embed'],
-): {type: 'link'; domain: string} | {type: 'quote'} | undefined {
+):
+  | {type: 'link'; domain: string}
+  | {type: 'quote'; record: app.bsky.embed.record.View}
+  | undefined {
   const media = bsky.isType(app.bsky.embed.recordWithMedia.view, embed)
     ? embed.media
     : embed
@@ -92,11 +89,11 @@ function getTextlessEmbed(
   if (bsky.isType(app.bsky.embed.external.view, media)) {
     return {type: 'link', domain: toNiceDomain(media.external.uri)}
   }
-  if (
-    bsky.isType(app.bsky.embed.record.view, embed) ||
-    bsky.isType(app.bsky.embed.recordWithMedia.view, embed)
-  ) {
-    return {type: 'quote'}
+  if (bsky.isType(app.bsky.embed.record.view, embed)) {
+    return {type: 'quote', record: embed}
+  }
+  if (bsky.isType(app.bsky.embed.recordWithMedia.view, embed)) {
+    return {type: 'quote', record: embed.record}
   }
   return undefined
 }
