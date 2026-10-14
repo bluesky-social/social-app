@@ -628,9 +628,9 @@ function isSameFeedItem(
  * While a page is staged, the next prepend fetches from the same `since` as it
  * did and replaces it, so however long the reader stays put, what's above them
  * is one page of at most {@link PREPEND_LIMIT} posts. Once it's read, the next
- * one goes above it. `staged` is the page for the pill, which goes up if a
- * restore or a significant return to the app put it there, or `check` has
- * offered it since, and takes in every page staged while it's up.
+ * one goes above it. The pill goes up for a `staged` page that a restore or a
+ * significant return put there, or that `check` has offered since, and takes
+ * in every page staged while it's up (see `usePrependPill`).
  *
  * A page only ever replaces the staged one if it has all of its posts, as
  * the list holds the reader's place only for posts added above the others:
@@ -796,10 +796,7 @@ export function usePostFeedPrepend(
     }
     setStaged({
       fetchedAt: page.fetchedAt,
-      /*
-       * Only if this prepend offers it: the pill keeps a page that replaces
-       * one it has, while it's up.
-       */
+      // A replacement isn't offered. The pill takes it in itself if it's up.
       offered: isOffering.current,
       isFull,
     })

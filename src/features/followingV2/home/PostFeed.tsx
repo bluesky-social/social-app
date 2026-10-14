@@ -484,9 +484,9 @@ let PostFeed = ({
   /*
    * Anchored Following's checks, made by the view on screen only. Each one
    * that finds newer posts stages them above the reader at rest (see
-   * `usePostFeedPrepend`) and lights the Home dot. Only one on a significant
-   * return to the app, or one that joins a restore's prepend, offers them with
-   * the pill. With no boundary to fetch above, as for an empty feed, it peeks
+   * `usePostFeedPrepend`) and lights the Home dot. A significant return or a
+   * restore puts the pill up for them, and while it's up every check's find
+   * joins it. With no boundary to fetch above, as for an empty feed, it peeks
    * for the Home dot instead, as other feeds do.
    */
   useNewPostsCheck({
