@@ -16,6 +16,7 @@ import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {useAnalytics} from '#/analytics'
+import {IS_ANDROID} from '#/env'
 import {type app} from '#/lexicons'
 import {GifPresentationControls} from './GifPresentationControls'
 import {VideoEmbedInnerNative} from './VideoEmbedInner/VideoEmbedInnerNative'
@@ -80,7 +81,15 @@ function InnerWrapper({embed, post}: Props) {
   )
   const [isLoading, setIsLoading] = useState(false)
   const [isActive, setIsActive] = useState(false)
-  const showSpinner = useThrottledValue(isActive && isLoading, 100)
+  /*
+   * No loading spinner on Android. The native indeterminate spinner animates
+   * on the RenderThread and redraws the whole window every frame while a feed
+   * video buffers, which competes with scroll frames and was a measurable
+   * share of feed scroll jank on lower-end devices. The thumbnail overlay
+   * stays up until playback starts.
+   */
+  const showSpinner =
+    useThrottledValue(isActive && isLoading, 100) && !IS_ANDROID
 
   /*
    * Created lazily on first activation so videos that are never scrolled into

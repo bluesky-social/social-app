@@ -55,6 +55,211 @@ index 06829bd00dbded262e1871aaf6db3ae0cfa9d1b1..1b158185a6d7e907aa18ddc806902fcc
      invalidate();
    }
  
+diff --git a/android/src/main/java/com/horcrux/svg/RenderableViewManager.java b/android/src/main/java/com/horcrux/svg/RenderableViewManager.java
+index 06095e4..58a5436 100644
+--- a/android/src/main/java/com/horcrux/svg/RenderableViewManager.java
++++ b/android/src/main/java/com/horcrux/svg/RenderableViewManager.java
+@@ -166,6 +166,13 @@ class VirtualViewManager<V extends VirtualView> extends ViewGroupManager<Virtual
+     return mDelegate;
+   }
+ 
++  @Override
++  public void updateProperties(
++      @Nonnull VirtualView viewToUpdate, com.facebook.react.uimanager.ReactStylesDiffMap props) {
++    viewToUpdate.mCacheProps.putAll(props.toMap());
++    super.updateProperties(viewToUpdate, props);
++  }
++
+   static class RenderableShadowNode extends LayoutShadowNode {
+ 
+     @SuppressWarnings({"unused", "EmptyMethod"})
+diff --git a/android/src/main/java/com/horcrux/svg/SvgView.java b/android/src/main/java/com/horcrux/svg/SvgView.java
+index f04da14..48d0316 100644
+--- a/android/src/main/java/com/horcrux/svg/SvgView.java
++++ b/android/src/main/java/com/horcrux/svg/SvgView.java
+@@ -62,6 +62,69 @@ public class SvgView extends ReactViewGroup implements ReactCompoundView, ReactC
+   private @Nullable Bitmap mCurrentBitmap;
+   private boolean mRemovalTransitionStarted;
+ 
++  /** Latest value of every prop set on this view; part of the shared bitmap cache key. */
++  final java.util.TreeMap<String, Object> mCacheProps = new java.util.TreeMap<>();
++
++  /*
++   * Rendered bitmaps shared between SvgViews with identical props, size and
++   * element tree (e.g. the same icon in every feed row). A shared bitmap is
++   * never recycled: views only drop their reference, and evicted entries are
++   * left to the GC. Sharing one Bitmap object also lets the RenderThread reuse
++   * a single GPU texture for every instance.
++   */
++  private static final android.util.LruCache<String, Bitmap> sBitmapCache =
++      new android.util.LruCache<String, Bitmap>(8 * 1024 * 1024) {
++        @Override
++        protected int sizeOf(String key, Bitmap value) {
++          return value.getByteCount();
++        }
++      };
++
++  /** True when mBitmap came from (or was put into) sBitmapCache. */
++  private boolean mBitmapShared;
++
++  /*
++   * Returns a cache key for this svg, or null when it can't be cached safely.
++   * Only trees made entirely of plain groups and basic shapes qualify: their
++   * output is a pure function of their props and size. Anything that loads
++   * asynchronously (images), depends on text layout, references definitions,
++   * or handles touches is rendered per view as before.
++   */
++  private @Nullable String getBitmapCacheKey(int width, int height) {
++    StringBuilder sb = new StringBuilder(256);
++    sb.append(width).append('x').append(height).append(mCacheProps);
++    for (int i = 0; i < getChildCount(); i++) {
++      if (!appendCacheKey(getChildAt(i), sb)) {
++        return null;
++      }
++    }
++    return sb.toString();
++  }
++
++  private static boolean appendCacheKey(View view, StringBuilder sb) {
++    Class<?> c = view.getClass();
++    if (c != GroupView.class
++        && c != PathView.class
++        && c != CircleView.class
++        && c != RectView.class
++        && c != EllipseView.class
++        && c != LineView.class) {
++      return false;
++    }
++    VirtualView node = (VirtualView) view;
++    if (node.isResponsible()) {
++      return false;
++    }
++    sb.append('{').append(c.getSimpleName()).append(node.mCacheProps);
++    for (int i = 0; i < node.getChildCount(); i++) {
++      if (!appendCacheKey(node.getChildAt(i), sb)) {
++        return false;
++      }
++    }
++    sb.append('}');
++    return true;
++  }
++
+   public SvgView(ReactContext reactContext) {
+     super(reactContext);
+     mScale = DisplayMetricsHolder.getScreenDisplayMetrics().density;
+@@ -104,10 +167,11 @@ public class SvgView extends ReactViewGroup implements ReactCompoundView, ReactC
+       // when view is removed from the view hierarchy, we want to recycle the mBitmap when
+       // the view is detached from window, in order to preserve it for during animation, see
+       // https://github.com/react-native-svg/react-native-svg/pull/1542
+-      if (mBitmap != null) {
++      if (mBitmap != null && !mBitmapShared) {
+         mBitmap.recycle();
+       }
+       mBitmap = null;
++      mBitmapShared = false;
+     }
+   }
+ 
+@@ -119,10 +183,14 @@ public class SvgView extends ReactViewGroup implements ReactCompoundView, ReactC
+   @Override
+   protected void onDetachedFromWindow() {
+     super.onDetachedFromWindow();
+-    if (mBitmap != null) {
+-      mBitmap.recycle();
+-    }
+-    mBitmap = null;
++    /*
++     * Keep the rendered bitmap across detach/re-attach. Lists with
++     * removeClippedSubviews detach and re-attach rows constantly while
++     * scrolling; recycling here forced a software re-render plus a new GPU
++     * texture upload for every icon each time a row came back on screen.
++     * The bitmap is still dropped on invalidate() (prop/size changes) and
++     * freed with the view.
++     */
+   }
+ 
+   @Override
+@@ -150,6 +218,21 @@ public class SvgView extends ReactViewGroup implements ReactCompoundView, ReactC
+     }
+   }
+ 
++  /*
++   * Svg elements (groups, paths, ...) are mounted as child views, but their
++   * pixels come from drawChildren() into mBitmap via VirtualView.render(), not
++   * from the normal View draw pass. Skipping them here keeps their (empty)
++   * RenderNodes out of the display list so the RenderThread doesn't walk two
++   * extra nodes per icon on every frame.
++   */
++  @Override
++  protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
++    if (child instanceof VirtualView) {
++      return false;
++    }
++    return super.drawChild(canvas, child, drawingTime);
++  }
++
+   private Runnable toDataUrlTask = null;
+ 
+   void setToDataUrlTask(Runnable task) {
+@@ -277,9 +360,23 @@ public class SvgView extends ReactViewGroup implements ReactCompoundView, ReactC
+     if (invalid) {
+       return null;
+     }
++    String key = getBitmapCacheKey((int) width, (int) height);
++    if (key != null) {
++      Bitmap cached = sBitmapCache.get(key);
++      if (cached != null) {
++        mBitmapShared = true;
++        return cached;
++      }
++    }
++    android.os.Trace.beginSection("RNSVG drawOutput");
+     Bitmap bitmap = Bitmap.createBitmap((int) width, (int) height, Bitmap.Config.ARGB_8888);
+     mCurrentBitmap = bitmap;
+     drawChildren(new Canvas(bitmap));
++    android.os.Trace.endSection();
++    if (key != null) {
++      sBitmapCache.put(key, bitmap);
++      mBitmapShared = true;
++    }
+     return bitmap;
+   }
+ 
+diff --git a/android/src/main/java/com/horcrux/svg/SvgViewManager.java b/android/src/main/java/com/horcrux/svg/SvgViewManager.java
+index 1ee4622..a805396 100644
+--- a/android/src/main/java/com/horcrux/svg/SvgViewManager.java
++++ b/android/src/main/java/com/horcrux/svg/SvgViewManager.java
+@@ -82,6 +82,16 @@ class SvgViewManager extends ReactViewManager
+     return new SvgView(reactContext);
+   }
+ 
++  @Override
++  public void updateProperties(
++      @Nonnull ReactViewGroup viewToUpdate,
++      com.facebook.react.uimanager.ReactStylesDiffMap props) {
++    if (viewToUpdate instanceof SvgView) {
++      ((SvgView) viewToUpdate).mCacheProps.putAll(props.toMap());
++    }
++    super.updateProperties(viewToUpdate, props);
++  }
++
+   @Override
+   public void updateExtraData(ReactViewGroup root, Object extraData) {
+     super.updateExtraData(root, extraData);
+diff --git a/android/src/main/java/com/horcrux/svg/VirtualView.java b/android/src/main/java/com/horcrux/svg/VirtualView.java
+index 4d71806..9c64927 100644
+--- a/android/src/main/java/com/horcrux/svg/VirtualView.java
++++ b/android/src/main/java/com/horcrux/svg/VirtualView.java
+@@ -73,6 +73,9 @@ public abstract class VirtualView extends ReactViewGroup {
+ 
+   final float mScale;
+   private boolean mResponsible;
++
++  /** Latest value of every prop set on this view; used to key SvgView's shared bitmap cache. */
++  final java.util.TreeMap<String, Object> mCacheProps = new java.util.TreeMap<>();
+   String mDisplay;
+   String mName;
+ 
 diff --git a/lib/commonjs/web/utils/prepare.js b/lib/commonjs/web/utils/prepare.js
 index d57e7c86ad2bc0f72f74673214f57e3f5a55c209..658b4482b541f41ab6dac6e023f1482a7adc72c3 100644
 --- a/lib/commonjs/web/utils/prepare.js
