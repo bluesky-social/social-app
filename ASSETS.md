@@ -55,7 +55,7 @@ See [`assets/illustrations/README.md`](./assets/illustrations/README.md).
 
 The fact that we have our own license does not mean that you cannot use these icons. It means that any right you have to use them has to come from Iconists, not us. Licenses are available from [iconists.co](https://iconists.co), and there are openly licensed alternatives if you prefer that.
 
-The policy directories keep exceptions out of this license scope. `assets/icons/external/` and `assets/icons/custom/` are not Central icons and are described below (a directory name does not decide who owns a file; the lists in Sections 3 and 5 and the README in `external/` do), and `assets/icons/flags/` is covered by [Section 6](#6-third-party-assets-you-may-redistribute).
+The policy directories keep exceptions out of this license scope. `assets/icons/external/` and `assets/icons/custom/` are not Central icons and are described below (a directory name does not decide who owns a file; the lists in Sections 3 and 5 and the README in `assets/icons/external/` do), and `assets/icons/flags/` is covered by [Section 6](#6-third-party-assets-you-may-redistribute).
 
 See [`assets/icons/README.md`](./assets/icons/README.md).
 
