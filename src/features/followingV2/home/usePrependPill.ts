@@ -1,8 +1,8 @@
 import {useState} from 'react'
 
 import {type NewPostsPillAuthor} from '#/components/NewPostsPill'
+import {SETTLE_AT_TOP_LIMIT} from './atTop'
 import {type FeedPostSlice, type StagedPage} from './queries/postFeed'
-import {SETTLE_AT_TOP_LIMIT} from './useSettleAtTop'
 
 /** How many faces the pill shows. */
 const FACE_LIMIT = 3

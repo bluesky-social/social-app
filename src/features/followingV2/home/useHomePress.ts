@@ -1,17 +1,9 @@
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {isAtTop} from './atTop'
 import {type usePostFeedPrepend} from './queries/postFeed'
 import {type useRevealTop} from './useRevealTop'
-import {SETTLE_AT_TOP_LIMIT} from './useSettleAtTop'
-
-/**
- * Whether the list is at its true top at `offsetY`: within
- * {@link SETTLE_AT_TOP_LIMIT} of it, as the settle and the pill judge it.
- */
-export function isAtTop(offsetY: number) {
-  return offsetY <= SETTLE_AT_TOP_LIMIT
-}
 
 /**
  * Takes a press of Home on a feed that stages new posts above the reader (see

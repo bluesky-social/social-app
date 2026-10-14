@@ -2,12 +2,10 @@ import {memo} from 'react'
 import {act, render} from '@testing-library/react-native'
 
 import {logger} from '#/logger'
+import {isAtTop} from './atTop'
 import {type FeedPageUnselected} from './queries/postFeed'
-import {isAtTop, useHomePress} from './useHomePress'
+import {useHomePress} from './useHomePress'
 import {ANIMATED_REVEAL_LIMIT, useRevealTop} from './useRevealTop'
-
-// Only its constant: its hooks need queries this doesn't set up.
-jest.mock('./useSettleAtTop', () => ({SETTLE_AT_TOP_LIMIT: 5}))
 
 const RENDERED_AT = 1000
 const PREPENDED_AT = 2000

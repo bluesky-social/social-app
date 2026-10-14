@@ -1,6 +1,7 @@
 import {useEffect, useRef} from 'react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {isAtTop} from './atTop'
 import {
   type FeedDescriptor,
   type FeedParams,
@@ -8,14 +9,6 @@ import {
   RQKEY,
   usePostFeedSettle,
 } from './queries/postFeed'
-
-/**
- * How close to its resting offset counts as the top of the list. That offset
- * is 0 where the header's space is padding in the content, and negative where
- * the platform applies it as an inset, so a small positive bound reads as the
- * top under both. Provisional, to be measured on device.
- */
-export const SETTLE_AT_TOP_LIMIT = 5
 
 /**
  * How long the list has to stay at the top after coming to rest there before
@@ -77,7 +70,7 @@ export function useSettleAtTop(
 
   const onRest = (offsetY: number) => {
     cancel()
-    if (!enabled || isDragging.current || offsetY > SETTLE_AT_TOP_LIMIT) {
+    if (!enabled || isDragging.current || !isAtTop(offsetY)) {
       return
     }
     const before = queryClient.getQueryData<PostFeedData>(queryKey)
