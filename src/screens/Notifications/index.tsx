@@ -589,17 +589,12 @@ function NotificationsHeader({
       pointerEvents="box-none"
       style={[a.fixed, a.z_10, a.top_0, a.left_0, a.right_0]}
       onLayout={event => onHeightChange(event.nativeEvent.layout.height)}>
-      {/* On web, the title and the pills each have their own background */}
-      {IS_LIQUID_GLASS ? (
-        <HeaderFade />
-      ) : (
-        !IS_WEB && (
-          <View
-            pointerEvents="none"
-            style={[a.absolute, a.inset_0, t.atoms.bg]}
-          />
-        )
-      )}
+      {/*
+       * On native, the background fades out under the whole header, so the
+       * list shows through below the pills as they move up. On web, the title
+       * and the pills each have their own background
+       */}
+      {!IS_WEB && <HeaderFade />}
       <Animated.View
         style={[IS_LIQUID_GLASS && {paddingTop: insets.top}, titleStyle]}
         onLayout={onTitleLayout}>
