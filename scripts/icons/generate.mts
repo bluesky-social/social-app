@@ -28,6 +28,11 @@ try {
         `${result.warnings.length} icons use a non-standard viewBox:\n${result.warnings.map(warning => `- ${warning}`).join('\n')}`,
       )
     }
+    if (result.temporaryIcons.length > 0) {
+      console.log(
+        `${result.temporaryIcons.length} temporary SVG-only icons are excluded from the fonts; move each source from assets/icons/tmp/<lane>/ to assets/icons/<lane>/ and run pnpm icons:generate before a native release:\n${result.temporaryIcons.map(file => `- ${file}`).join('\n')}`,
+      )
+    }
     console.log(`${result.deprecatedImports.length} deprecated imports remain`)
     if (result.deprecatedImports.length > 0 && !verbose) {
       console.log('run with --verbose to list deprecated import locations')
