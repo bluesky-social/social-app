@@ -12,4 +12,5 @@ export const EnvelopeNotification_Filled_Corner2_Rounded = createSVG({
     },
   ],
   viewBox: '0 0 24 24',
+  glyph: 'EnvelopeNotification_Filled_Corner2_Rounded',
 })

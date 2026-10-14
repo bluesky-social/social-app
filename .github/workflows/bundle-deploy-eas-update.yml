@@ -189,6 +189,11 @@ jobs:
       - name: 🔎 Type check
         run: pnpm typecheck
 
+      # Prebuild regenerates stale icon fonts into the native binary, so an OTA
+      # built from stale committed glyphmaps would ask for a missing font.
+      - name: 🖼️ Check generated icons
+        run: pnpm icons:check
+
       - name: 🔨 Setup EAS
         uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
         if: ${{ !steps.fingerprint.outputs.includes-changes &&

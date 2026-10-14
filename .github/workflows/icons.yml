@@ -4,11 +4,25 @@ on:
   pull_request:
     paths:
       - 'assets/icons/**'
+      - 'assets/nano-icons/**'
+      - 'scripts/icons/**'
+      - 'src/components/icons/**'
+      - 'app.config.js'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/icons.yml'
   push:
     branches:
       - main
     paths:
       - 'assets/icons/**'
+      - 'assets/nano-icons/**'
+      - 'scripts/icons/**'
+      - 'src/components/icons/**'
+      - 'app.config.js'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/icons.yml'
 
 concurrency:
   group: '${{ github.workflow }}-${{ github.head_ref || github.ref }}'
