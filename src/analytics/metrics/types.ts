@@ -1284,10 +1284,7 @@ export type Events = {
     postContext: 'feed' | 'thread'
     position?: number
   }
-  'share:press:copyLink': {
-    uri: string
-    platform: Platform['OS']
-  }
+  'share:press:copyLink': {uri: string}
   'share:press:nativeShare': {}
   /**
    * Fires when the system share sheet closes after sharing a post. Not
@@ -1306,18 +1303,9 @@ export type Events = {
     target?: string
   }
   'share:press:openDmSearch': {}
-  'share:press:dmSelected': {
-    uri: string
-    platform: Platform['OS']
-  }
-  'share:press:recentDm': {
-    uri: string
-    platform: Platform['OS']
-  }
-  'share:press:embed': {
-    uri: string
-    platform: Platform['OS']
-  }
+  'share:press:dmSelected': {uri: string}
+  'share:press:recentDm': {uri: string}
+  'share:press:embed': {uri: string}
 
   'embed:standardSite:view': {url: string}
   'embed:standardSite:article:press': {url: string}
