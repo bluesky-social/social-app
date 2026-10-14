@@ -112,7 +112,7 @@
         },
         "pendingCount": {
           "type": "integer",
-          "description": "Number of reports in 'open' status"
+          "description": "Number of unmuted reports currently not closed."
         },
         "actionedCount": {
           "type": "integer",
@@ -125,6 +125,27 @@
         "avgHandlingTimeSec": {
           "type": "integer",
           "description": "Average time in seconds from report creation to close, for reports closed in this period."
+        },
+        "closureTargetMetRate": {
+          "type": "integer",
+          "maximum": 100,
+          "minimum": 0,
+          "description": "Percent of reports meeting their closure target."
+        },
+        "closureTargetMetCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Reports whose closure meets their closure target."
+        },
+        "closureTargetMissedCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Reports whose closure exceeds their closure target."
+        },
+        "closureTargetOverdueCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Unmuted pending reports past their closure target."
         }
       }
     },

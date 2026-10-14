@@ -391,6 +391,11 @@
         "actor": {
           "type": "string",
           "format": "did"
+        },
+        "parent": {
+          "type": "string",
+          "format": "at-uri",
+          "description": "The post this one replies to, if it is a reply."
         }
       },
       "description": "One new post by an actor the requesting account subscribes to."
