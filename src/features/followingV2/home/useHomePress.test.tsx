@@ -19,8 +19,8 @@ function page(fetchedAt: number) {
 /**
  * The press, wired as `PostFeed` wires it, with the list `offset` points below
  * its top. `onHasNew` is the Home dot, and `scrollToTop` the list. The prepend
- * is a stand-in: `run` starts one the test settles, and nothing is owed unless
- * the test says so.
+ * is a stand-in whose `run` starts one the test settles; the real one is
+ * tested with the press in `queries/postFeed.test.tsx`.
  */
 function renderHome({offset = 0}: {offset?: number} = {}) {
   let offsetY = offset
@@ -132,26 +132,13 @@ describe('useHomePress', () => {
   })
 
   describe('at the top', () => {
-    it('reads what is staged and asks for what is newer with a prepend, not a refresh', () => {
+    it('scrolls right up at once, then jumps to the new posts once they render, which clears the Home dot', async () => {
       const home = renderHome({offset: 0})
-
       expect(home.press()).toBe(true)
-      expect(home.prepend.markRead).toHaveBeenCalledTimes(1)
-      expect(home.prepend.run.mock.calls).toEqual([['focus']])
-      expect(home.refresh).not.toHaveBeenCalled()
-      expect(home.onFetch).toHaveBeenCalledTimes(1)
-      expect(home.scrollToTop.mock.calls).toEqual([[true]])
-      expect(home.onHasNew).not.toHaveBeenCalled()
-    })
-
-    it('jumps up to the new posts once they render, which clears the Home dot', async () => {
-      const home = renderHome({offset: 0})
-      home.press()
-      home.scrollToTop.mockClear()
       await home.prependWrote(page(PREPENDED_AT))
       home.renderTop(PREPENDED_AT)
 
-      expect(home.scrollToTop.mock.calls).toEqual([[false]])
+      expect(home.scrollToTop.mock.calls).toEqual([[true], [false]])
       expect(home.onHasNew.mock.calls).toEqual([[false]])
     })
 
@@ -187,15 +174,6 @@ describe('useHomePress', () => {
 
       expect(home.scrollToTop).not.toHaveBeenCalled()
       expect(home.onHasNew).not.toHaveBeenCalled()
-    })
-
-    it('joins a prepend in progress, leaving what is staged to it', () => {
-      const home = renderHome({offset: 0})
-      home.prepend.isOwed.mockReturnValue(true)
-      home.press()
-
-      expect(home.prepend.markRead).not.toHaveBeenCalled()
-      expect(home.prepend.run).toHaveBeenCalledTimes(1)
     })
 
     it.each([
