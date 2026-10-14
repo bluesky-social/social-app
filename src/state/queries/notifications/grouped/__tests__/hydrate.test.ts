@@ -773,7 +773,23 @@ describe('hydratePage', () => {
       ).toBeUndefined()
     })
 
-    it('resolves the parent of a reply when the page came with it', () => {
+    it('resolves the parent the group names', () => {
+      const subscribed = narrow(
+        hydrateKind({
+          $type: `${NS}#subscribedPostGroup`,
+          items: [{actor: DANIELLE, post: DANIELLE_REPLY, parent: FUNGUS_POST}],
+        }),
+        'subscribedPost',
+      )
+      const [item] = subscribed.items
+      expect(item.parent?.type).toBe('post')
+      // The original view, so shadows apply to it
+      expect(item.parent?.type === 'post' && item.parent.post).toBe(
+        related(BASE, FUNGUS_POST),
+      )
+    })
+
+    it('has no parent when the group names none, whatever the post is', () => {
       const subscribed = narrow(
         hydrateKind({
           $type: `${NS}#subscribedPostGroup`,
@@ -781,52 +797,24 @@ describe('hydratePage', () => {
         }),
         'subscribedPost',
       )
-      expect(subscribed.items[0].parent).toEqual({
-        type: 'post',
-        post: related(BASE, FUNGUS_POST),
-      })
-      // The original view, so shadows apply to it
-      expect(
-        subscribed.items[0].parent?.type === 'post' &&
-          subscribed.items[0].parent.post,
-      ).toBe(related(BASE, FUNGUS_POST))
+      expect(subscribed.items[0]).not.toHaveProperty('parent')
     })
 
-    it('has no parent for a post that is not a reply', () => {
+    it('marks a named parent that can’t be shown as blocked or not found', () => {
       const subscribed = narrow(
         hydrateKind({
           $type: `${NS}#subscribedPostGroup`,
-          items: [{actor: DANIELLE, post: FUNGUS_POST}],
+          items: [
+            {actor: DANIELLE, post: DANIELLE_REPLY, parent: BLOCKED_POST},
+            {actor: DANIELLE, post: FUNGUS_POST, parent: MISSING_POST},
+          ],
         }),
         'subscribedPost',
       )
-      expect(subscribed.items[0]).not.toHaveProperty('parent')
-    })
-
-    it('has no parent when the page did not come with it, rather than treating it as deleted', () => {
-      const page = hydratePage(
-        {
-          ...BASE,
-          relatedViews: BASE.relatedViews?.filter(
-            view => (view as {uri?: string}).uri !== FUNGUS_POST,
-          ),
-          groups: [
-            {
-              id: 'group-0',
-              isRead: false,
-              indexedAt: '2026-10-08T11:00:00.000Z',
-              count: 1,
-              kind: {
-                $type: `${NS}#subscribedPostGroup`,
-                items: [{actor: DANIELLE, post: DANIELLE_REPLY}],
-              },
-            },
-          ],
-        },
-        {viewerDid: VIEWER_DID},
-      )
-      const subscribed = narrow(page.notifications[0], 'subscribedPost')
-      expect(subscribed.items[0]).not.toHaveProperty('parent')
+      expect(subscribed.items.map(item => item.parent)).toEqual([
+        {type: 'blocked'},
+        {type: 'notFound'},
+      ])
     })
   })
 
