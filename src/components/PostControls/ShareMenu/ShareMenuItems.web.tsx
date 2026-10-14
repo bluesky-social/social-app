@@ -56,14 +56,14 @@ let ShareMenuItems = ({
   }, [postAuthor])
 
   const onCopyLink = () => {
-    ax.metric('share:press:copyLink', {})
+    ax.metric('share:press:copyLink', {uri: postUri, platform: 'web'})
     const url = toShareUrl(href)
     void shareUrl(url)
     onShareProp()
   }
 
   const onSelectChatToShareTo = (conversation: string) => {
-    ax.metric('share:press:dmSelected', {})
+    ax.metric('share:press:dmSelected', {uri: postUri, platform: 'web'})
     navigation.navigate('MessagesConversation', {
       conversation,
       embed: postUri,
@@ -117,7 +117,7 @@ let ShareMenuItems = ({
             testID="postDropdownEmbedBtn"
             label={l`Embed post`}
             onPress={() => {
-              ax.metric('share:press:embed', {})
+              ax.metric('share:press:embed', {uri: postUri, platform: 'web'})
               embedPostControl.open()
             }}>
             <Menu.ItemText>{l`Embed post`}</Menu.ItemText>

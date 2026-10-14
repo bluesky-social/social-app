@@ -1,4 +1,5 @@
 import {memo, useMemo} from 'react'
+import {Platform} from 'react-native'
 import * as ExpoClipboard from 'expo-clipboard'
 import {AtUri} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -72,7 +73,7 @@ let ShareMenuItems = ({
   }
 
   const onCopyLink = async () => {
-    ax.metric('share:press:copyLink', {})
+    ax.metric('share:press:copyLink', {uri: postUri, platform: Platform.OS})
     const url = toShareUrl(href)
     if (IS_IOS) {
       // iOS only
