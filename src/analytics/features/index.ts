@@ -142,6 +142,23 @@ export function getFeatureDescription(feature: Features, i18n: I18n) {
           }),
         ),
       }
+    case Features.ModerationInboxEnable:
+      return {
+        key: feature,
+        name: i18n._(
+          msg({
+            message: 'Moderation inbox',
+            comment: 'Name for a feature flag',
+          }),
+        ),
+        description: i18n._(
+          msg({
+            message:
+              'Track your reports, review moderation decisions, and submit appeals.',
+            comment: 'Description of a feature flag (Moderation inbox)',
+          }),
+        ),
+      }
     default:
       return null
   }
