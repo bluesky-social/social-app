@@ -33,12 +33,13 @@ export function FeedSubjectPreview({
   const record = bsky.matches(app.bsky.feed.generator, report.record)
     ? report.record
     : undefined
-  const feedName =
-    record?.displayName ?? (matches ? view.displayName : undefined)
-  const title = feedName ? l`Feed “${sanitizeDisplayName(feedName)}”` : l`Feed`
   const moderation =
     view && opts ? moderateFeedGenerator(view, opts) : creatorModeration
   const available = !!matches && !!moderation
+  const feedName = available
+    ? (record?.displayName ?? view?.displayName)
+    : undefined
+  const title = feedName ? l`Feed “${sanitizeDisplayName(feedName)}”` : l`Feed`
   const description =
     record?.description ?? (matches ? view.description : undefined)
   const metadataText = [l`By ${name}`]

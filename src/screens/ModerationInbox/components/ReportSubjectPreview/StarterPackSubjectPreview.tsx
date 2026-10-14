@@ -63,12 +63,12 @@ export function StarterPackSubjectPreview({
     contentModeration,
     creatorModeration,
   )
-  const name = record ? sanitizeDisplayName(record.name) : undefined
+  const available = !!starterPack && !!record && !!moderationOpts
+  const name = available ? sanitizeDisplayName(record.name) : undefined
   const title = name ? l`Starter Pack “${name}”` : l`Starter Pack`
   const accountCount = starterPack?.list?.listItemCount ?? 0
   const feedCount = record?.feeds?.length ?? 0
   const isLoading = query.isPending || (!!starterPack && !moderationOpts)
-  const available = !!starterPack && !!record && !!moderationOpts
   const metadataText: string[] = []
   if (record) {
     if (accountCount > 0 && feedCount > 0) {

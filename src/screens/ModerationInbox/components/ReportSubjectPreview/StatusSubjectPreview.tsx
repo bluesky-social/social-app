@@ -1,4 +1,5 @@
 import {type AtUri} from '@atproto/syntax'
+import {moderateStatus} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useSubjectPreviewProfile} from '#/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile'
@@ -16,7 +17,24 @@ export function StatusSubjectPreview({
   uri: AtUri
 }) {
   const {i18n, t: l} = useLingui()
-  const {query, name, moderation} = useSubjectPreviewProfile(uri.host)
+  const {
+    query,
+    profile,
+    name,
+    opts,
+    moderation: creatorModeration,
+  } = useSubjectPreviewProfile(uri.host)
+  const status = profile?.status
+  const matches =
+    status?.uri === uri.toString() &&
+    'cid' in report.subject &&
+    status.cid === report.subject.cid &&
+    !status.isDisabled
+  const moderation =
+    profile && matches && opts
+      ? moderateStatus(profile, opts)
+      : creatorModeration
+  const available = !!matches && !!moderation
   const record = bsky.matches(app.bsky.actor.status, report.record)
     ? report.record
     : undefined
@@ -28,7 +46,7 @@ export function StatusSubjectPreview({
     metadataText.push(l`Set ${createdAt}`)
   }
   let title = l`Account status`
-  if (record?.status === app.bsky.actor.status.live.value) {
+  if (available && record?.status === app.bsky.actor.status.live.value) {
     title = l`Live status`
     if (record.embed && bsky.matches(app.bsky.embed.external, record.embed)) {
       try {
@@ -46,10 +64,10 @@ export function StatusSubjectPreview({
     <PreviewContent
       testID="moderationInboxStatusPreview"
       title={title}
-      loading={query.isPending || (!!query.data && !moderation)}
+      loading={query.isPending || (!!matches && !opts)}
       moderation={moderation?.ui('contentView')}
       metadataText={metadataText}>
-      {!record ? (
+      {!available || !record ? (
         <Text style={[a.text_md]}>
           <Trans>Status unavailable</Trans>
         </Text>

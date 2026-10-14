@@ -34,11 +34,11 @@ export function ListSubjectPreview({
   const record = bsky.matches(app.bsky.graph.list, report.record)
     ? report.record
     : undefined
-  const listName = record?.name ?? (matches ? view.name : undefined)
-  const title = listName ? l`List “${sanitizeDisplayName(listName)}”` : l`List`
   const moderation =
     view && opts ? moderateUserList(view, opts) : creatorModeration
   const available = !!matches && !!moderation
+  const listName = available ? (record?.name ?? view?.name) : undefined
+  const title = listName ? l`List “${sanitizeDisplayName(listName)}”` : l`List`
   const description =
     record?.description ?? (matches ? view.description : undefined)
   const count = matches ? view.listItemCount : undefined

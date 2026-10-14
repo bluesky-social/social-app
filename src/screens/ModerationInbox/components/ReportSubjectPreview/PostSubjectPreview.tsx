@@ -57,13 +57,14 @@ export function PostSubjectPreview({
           moderateProfile(parentProfile, moderationOpts).ui('displayName'),
         )
       : undefined
-  const title = record?.reply
-    ? parentName
-      ? l`Reply to ${parentName}`
-      : l`Reply`
-    : subjectLabel
   const moderation =
     post && moderationOpts ? moderatePost(post, moderationOpts) : undefined
+  const title =
+    post && moderation && record?.reply
+      ? parentName
+        ? l`Reply to ${parentName}`
+        : l`Reply`
+      : subjectLabel
   const isLoading = postQuery.isPending || (!!post && !moderationOpts)
 
   return (

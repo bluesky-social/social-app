@@ -21,7 +21,7 @@ type Report = tools.ozone.inbox.getReport.$OutputBody['report']
 export function ReportSubjectPreview({report}: {report: Report}) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const subjectLabel = useReportSubjectLabel(report.subject, report.record)
+  const subjectLabel = useReportSubjectLabel(report.subject)
   const uri =
     'uri' in report.subject &&
     typeof report.subject.uri === 'string' &&
