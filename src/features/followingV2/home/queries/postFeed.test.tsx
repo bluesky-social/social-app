@@ -28,11 +28,7 @@ import {
   useFollowingListReports,
 } from '#/features/followingV2/home/anchoredFollowing'
 import {FALLBACK_MARKER_POST} from '#/features/followingV2/home/api/home'
-import {
-  isStagedFull,
-  RECURRING_SAMPLE_RATE,
-  useFollowingV2Metrics,
-} from '#/features/followingV2/home/metrics'
+import {useFollowingV2Metrics} from '#/features/followingV2/home/metrics'
 import {
   LIST_REST_QUIET_MS,
   useListRest,
@@ -53,7 +49,6 @@ import {
   readFollowingSnapshot,
   saveFollowingSnapshot,
   selectFollowingSnapshot,
-  takeFollowingSnapshotLoad,
 } from './followingSnapshot'
 import {
   type FeedDescriptor,
@@ -1793,6 +1788,36 @@ describe('staging new posts on Home Following', () => {
     )
   }
 
+  /**
+   * A client the persister has read Following into, from `homeData` saved
+   * before this process started, as on a cold start.
+   */
+  function coldStarted() {
+    const data = homeData()
+    for (const page of data.pages) {
+      page.fetchedAt = PROCESS_STARTED_AT - MINUTE
+    }
+    const before = createQueryClient()
+    before.setQueryData(KEY, data)
+    const saved: PersistedClient = JSON.parse(
+      JSON.stringify(
+        saveFollowingSnapshot({
+          timestamp: Date.now(),
+          buster: '',
+          clientState: dehydrate(before, {
+            shouldDehydrateQuery: isFollowingSnapshotQuery,
+          }),
+        }),
+      ),
+    )
+    const queryClient = createQueryClient()
+    hydrate(
+      queryClient,
+      loadFollowingSnapshot(saved, {queryClient}).clientState,
+    )
+    return queryClient
+  }
+
   /** A since request from `t:<n>`, as `requested` has it. */
   function since(n: number) {
     return `timeline since:t:${n} limit:${PREPEND_LIMIT}`
@@ -1832,11 +1857,16 @@ describe('staging new posts on Home Following', () => {
    * Home's Following view, wired as PostFeed wires it, in a `memo()`
    * component, as PostFeed is. The list's reports go to the handlers its
    * first render made, as a list keeps them, so they must act on the latest
-   * state. `onHasNew` is the Home dot.
+   * state. `onHasNew` is the Home dot. Its feed is `homeData`, unless it's
+   * given a `queryClient` with a feed already in it.
    */
-  function renderHome({isActive = true}: {isActive?: boolean} = {}) {
-    const queryClient = createQueryClient()
-    queryClient.setQueryData(KEY, homeData())
+  function renderHome({
+    isActive = true,
+    queryClient = createQueryClient(),
+  }: {isActive?: boolean; queryClient?: QueryClient} = {}) {
+    if (!queryClient.getQueryData(KEY)) {
+      queryClient.setQueryData(KEY, homeData())
+    }
     const onHasNew = jest.fn()
     const scrollToTop = jest.fn()
     const metric = jest.fn()
@@ -1878,24 +1908,20 @@ describe('staging new posts on Home Following', () => {
         isRefreshing: isPending,
         onOutcome: metrics.onPrepend,
       })
-      const reportCheck = metrics.checkReporter({
-        isOwed: prepend.isOwed,
-        isStagedFull: () => isStagedFull(prepend.staged, pages),
-      })
       useNewPostsCheck({
         topFetchedAt,
         isEmpty: false,
         isActive,
         isBusy: isRefreshing || (query.isFetching && !query.isFetchingNextPage),
         interval: MINUTE,
-        check: reportCheck(trigger =>
+        check: (trigger, {freshAt}) =>
           checkFollowing(trigger, {
             prepend,
             top: pages?.[0],
             createFeedApi,
             onHasNew,
+            onOutcome: metrics.onCheck(trigger, freshAt),
           }),
-        ),
         onFound: () => onHasNew(true),
       })
       const offsetY = useSharedValue(400)
@@ -1973,7 +1999,7 @@ describe('staging new posts on Home Following', () => {
       metric.mock.calls
         .filter(([event]) => event === name)
         .map(([, payload]) => payload as Record<string, unknown>)
-    return {latest, cached, list, onHasNew, setActive, reported}
+    return {latest, cached, list, onHasNew, setActive, reported, metric}
   }
 
   /** Advances fake time by `ms`, letting what that sets off run. */
@@ -2017,8 +2043,6 @@ describe('staging new posts on Home Following', () => {
     AppState.currentState = 'active'
     newest = 12
     mockClient.call.mockImplementation(serve)
-    // What another test's persister read left for a Following view to report.
-    takeFollowingSnapshotLoad()
   })
 
   afterEach(() => {
@@ -2469,24 +2493,16 @@ describe('staging new posts on Home Following', () => {
       ])
     })
 
-    it('a check that only peeks, with no prepend', async () => {
+    it('checks that only peek, with no prepend, each since the last', async () => {
       const {reported} = renderHome()
+      await anInterval()
       await anInterval()
 
       expect(reported('followingV2:check')).toMatchObject([
-        {trigger: 'interval', outcome: 'nothing'},
+        {trigger: 'interval', outcome: 'nothing', lastSuccessAgeMs: MINUTE},
+        {trigger: 'interval', outcome: 'nothing', lastSuccessAgeMs: MINUTE},
       ])
       expect(reported('followingV2:prepend')).toEqual([])
-    })
-
-    it('how long since the last successful check, for each check', async () => {
-      const {reported} = renderHome()
-      await anInterval()
-      await anInterval()
-
-      expect(
-        reported('followingV2:check').map(event => event.lastSuccessAgeMs),
-      ).toEqual([MINUTE, MINUTE])
     })
 
     it('a full page staged with a gap, then checks it skips', async () => {
@@ -2527,36 +2543,6 @@ describe('staging new posts on Home Following', () => {
       expect(reported('followingV2:check').map(event => event.outcome)).toEqual(
         ['staged', 'notStaged'],
       )
-    })
-
-    it('a check on a warm open', async () => {
-      const {reported} = renderHome()
-      newest = 14
-      await warmOpen()
-
-      expect(reported('followingV2:check')).toMatchObject([
-        {trigger: 'return', outcome: 'staged'},
-      ])
-      expect(reported('followingV2:prepend')).toMatchObject([
-        {trigger: 'return', outcome: 'staged', postCount: 2},
-      ])
-    })
-
-    it('a check on a quick hop, sampled as an interval is', async () => {
-      const {reported} = renderHome()
-      newest = 14
-      await quickHop()
-
-      expect(reported('followingV2:check')).toMatchObject([
-        {
-          trigger: 'hop',
-          outcome: 'staged',
-          sampleRate: RECURRING_SAMPLE_RATE,
-        },
-      ])
-      expect(reported('followingV2:prepend')).toMatchObject([
-        {trigger: 'hop', outcome: 'staged', sampleRate: RECURRING_SAMPLE_RATE},
-      ])
     })
 
     it('a check that fails', async () => {
@@ -2612,11 +2598,58 @@ describe('staging new posts on Home Following', () => {
       expect(reported('followingV2:refresh')).toEqual([{outcome: 'refreshed'}])
     })
 
-    it('nothing for a restore without a read of the persisted client', async () => {
-      const {reported} = renderHome()
+    it('a cold start that shows the snapshot read back, its prepend and the check that joins it', async () => {
+      newest = 14
+      const {reported} = renderHome({queryClient: coldStarted()})
       await wait(SECOND)
 
-      expect(reported('followingV2:restore')).toEqual([])
+      expect(reported('followingV2:restore')).toEqual([
+        {
+          outcome: 'restored',
+          snapshot: 'valid',
+          ageMs: expect.any(Number),
+          bytes: expect.any(Number),
+          pageCount: 2,
+        },
+      ])
+      expect(reported('followingV2:prepend')).toMatchObject([
+        {trigger: 'restore', outcome: 'staged', postCount: 2},
+      ])
+      expect(reported('followingV2:check')).toMatchObject([
+        {trigger: 'focus', outcome: 'joined'},
+      ])
+    })
+
+    it('no feed content, cursors or account data', async () => {
+      // A full page from the restore, with a gap below it for a settle to cut.
+      newest = 12 + 150
+      const {latest, list, metric} = renderHome({queryClient: coldStarted()})
+      await wait(SECOND)
+      list.beginDrag(0)
+      list.endDrag(0)
+      await wait(SETTLE_QUIET_MS)
+      newest += 5
+      await warmOpen()
+      let refreshing!: Promise<unknown>
+      act(() => {
+        refreshing = latest.refresh()
+      })
+      await wait(SECOND)
+      await act(() => refreshing)
+      await anInterval()
+
+      expect(new Set(metric.mock.calls.map(([name]) => name))).toEqual(
+        new Set([
+          'followingV2:restore',
+          'followingV2:prepend',
+          'followingV2:check',
+          'followingV2:settle',
+          'followingV2:refresh',
+        ]),
+      )
+      expect(JSON.stringify(metric.mock.calls)).not.toMatch(
+        /did:|at:\/\/|"t:\d/,
+      )
     })
   })
 
@@ -2958,7 +2991,10 @@ describe('gaps', () => {
       const writes = watchWrites(queryClient)
 
       await act(async () => {
-        await expect(hook.result.current.settle(cached())).resolves.toBe(true)
+        await expect(hook.result.current.settle(cached())).resolves.toEqual({
+          outcome: 'settled',
+          droppedPageCount: 2,
+        })
       })
 
       expect(writes).toHaveLength(1)
@@ -2983,7 +3019,9 @@ describe('gaps', () => {
       const writes = watchWrites(queryClient)
 
       await act(async () => {
-        await expect(hook.result.current.settle(cached())).resolves.toBe(false)
+        await expect(
+          hook.result.current.settle(cached()),
+        ).resolves.toBeUndefined()
       })
 
       expect(writes).toHaveLength(0)
@@ -2996,7 +3034,9 @@ describe('gaps', () => {
       const writes = watchWrites(queryClient)
 
       await act(async () => {
-        await expect(hook.result.current.settle(cached())).resolves.toBe(false)
+        await expect(
+          hook.result.current.settle(cached()),
+        ).resolves.toBeUndefined()
       })
 
       expect(writes).toHaveLength(0)
@@ -3014,7 +3054,10 @@ describe('gaps', () => {
       const refreshed = cached()
 
       await act(async () => {
-        await expect(hook.result.current.settle(before)).resolves.toBe(false)
+        await expect(hook.result.current.settle(before)).resolves.toEqual({
+          outcome: 'superseded',
+          droppedPageCount: 0,
+        })
       })
 
       expect(cached()).toBe(refreshed)
@@ -3028,7 +3071,10 @@ describe('gaps', () => {
       const filled = cached()
 
       await act(async () => {
-        await expect(hook.result.current.settle(before)).resolves.toBe(false)
+        await expect(hook.result.current.settle(before)).resolves.toEqual({
+          outcome: 'superseded',
+          droppedPageCount: 0,
+        })
       })
 
       expect(cached()).toBe(filled)
@@ -3115,7 +3161,6 @@ describe('gaps', () => {
         jest.useFakeTimers()
         const {hook, cached, onSettled} = renderView()
         const {settleAtTop} = hook.result.current
-        const atRest = cached()
 
         act(() => {
           settleAtTop.onBeginDrag()
@@ -3127,8 +3172,9 @@ describe('gaps', () => {
 
         await wait(1)
         expect(postsOf(cached())).toEqual([['new']])
-        // What it settled, for metrics.
-        expect(onSettled.mock.calls).toEqual([[atRest, true]])
+        expect(onSettled.mock.calls).toEqual([
+          [{outcome: 'settled', droppedPageCount: 2}],
+        ])
       })
 
       it('settles at the end of the momentum after a fling', async () => {
