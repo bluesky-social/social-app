@@ -3725,9 +3725,9 @@ msgstr "Copied link to clipboard"
 #: src/components/dms/MessageContextMenu.tsx:96
 #: src/components/PostControls/DiscoverDebug.tsx:36
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:276
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:75
-#: src/lib/sharing.ts:24
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:83
 #: src/lib/sharing.ts:42
+#: src/lib/sharing.ts:74
 msgid "Copied to clipboard"
 msgstr ""
 
@@ -3799,8 +3799,8 @@ msgid "Copy link to list"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:167
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:140
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:143
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:148
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:151
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:86
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:89
 msgid "Copy link to post"
@@ -9331,7 +9331,7 @@ msgstr "Open QR code scanner"
 msgid "Open settings"
 msgstr "Open settings"
 
-#: src/components/PostControls/ShareMenu/index.tsx:94
+#: src/components/PostControls/ShareMenu/index.tsx:102
 msgid "Open share menu"
 msgstr ""
 
@@ -11617,7 +11617,6 @@ msgstr ""
 #: src/components/FeedInterstitials.tsx:495
 #: src/components/FeedInterstitials.tsx:554
 #: src/components/interstitials/FeedTrendingTopics.tsx:117
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:83
 msgid "See more"
 msgstr ""
 
@@ -11626,7 +11625,6 @@ msgid "See more suggested profiles"
 msgstr ""
 
 #: src/components/interstitials/FeedTrendingTopics.tsx:103
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:69
 msgid "See more trending topics"
 msgstr "See more trending topics"
 
@@ -11885,8 +11883,8 @@ msgstr ""
 msgid "Send verification email"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:114
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:120
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:122
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:128
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:103
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:109
 msgid "Send via chat"
@@ -12038,8 +12036,8 @@ msgstr "Share age range"
 msgid "Share anyway"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:174
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:177
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:182
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:185
 msgid "Share author DID"
 msgstr ""
 
@@ -12077,8 +12075,8 @@ msgstr ""
 msgid "Share my profile"
 msgstr "Share my profile"
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:165
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:168
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:173
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:176
 msgid "Share post at:// URI"
 msgstr ""
 
@@ -12109,8 +12107,8 @@ msgstr "Share this Starter Pack"
 msgid "Share this Starter Pack and help people join your community on Bluesky."
 msgstr "Share this Starter Pack and help people join your community on Bluesky."
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:130
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:138
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:141
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:184
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:190
 #: src/screens/StarterPack/StarterPackScreen.tsx:650
@@ -13682,7 +13680,7 @@ msgstr ""
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:155
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:163
 msgid "This post is only visible to logged-in users."
 msgstr ""
 
@@ -13940,7 +13938,7 @@ msgstr ""
 
 #: src/components/interstitials/FeedTrendingTopics.tsx:99
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:77
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:66
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:68
 msgid "Trending"
 msgstr ""
 
@@ -13951,7 +13949,7 @@ msgstr "Trending GIFs"
 
 #: src/components/interstitials/FeedTrendingTopics.tsx:126
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:80
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:93
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:75
 msgid "Trending options"
 msgstr ""
 
