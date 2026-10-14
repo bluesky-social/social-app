@@ -19,9 +19,13 @@ export function ReportActionSummary({
     isAtUriString(report.subject.uri, {strict: false}) &&
     new AtUri(report.subject.uri).collection === 'app.bsky.feed.post'
   const noAction = resolution?.outcome === 'noAction'
-  const restored = !noAction && resolution?.actionTaken === 'contentRestored'
+  const restored =
+    !noAction &&
+    (resolution?.actionTaken === 'contentRestored' ||
+      resolution?.actionTaken === 'accountRestored')
   const actionTaken =
     !noAction &&
+    !restored &&
     (resolution?.outcome === 'actionTaken' || !!resolution?.actionTaken)
   const actionLabel = getReportActionLabel({
     status: report.status,
@@ -52,11 +56,25 @@ export function ReportActionSummary({
         .
       </Trans>
     )
-  } else if (isPost && restored) {
+  } else if (restored && resolution?.actionTaken === 'accountRestored') {
     description = (
       <Trans>
-        The post you reported has been restored after another review. If you’d
-        rather not see it, you can mute or block the account. Read our{' '}
+        The account you reported has been restored after another review. You can
+        mute or block it if you’d rather not see its content. Read our{' '}
+        <InlineLinkText
+          to={webLinks.community}
+          label={l`Read our Community Guidelines`}
+          style={[a.text_md]}>
+          Community Guidelines
+        </InlineLinkText>
+        .
+      </Trans>
+    )
+  } else if (restored) {
+    description = (
+      <Trans>
+        The content you reported has been restored after another review. If
+        you’d rather not see it, you can mute or block the account. Read our{' '}
         <InlineLinkText
           to={webLinks.community}
           label={l`Read our Community Guidelines`}
