@@ -182,8 +182,12 @@ describe('usePrependPill', () => {
     page(PREPENDED_AT, fresh, SINCE),
     page(RESTORED_AT, old),
   ]
-  const OFFERED = {fetchedAt: PREPENDED_AT, offered: true, isFull: false}
-  const QUIET = {fetchedAt: PREPENDED_AT, offered: false, isFull: false}
+  const OFFERED: StagedPage = {
+    fetchedAt: PREPENDED_AT,
+    offeredBy: 'restore',
+    isFull: false,
+  }
+  const QUIET: StagedPage = {fetchedAt: PREPENDED_AT, isFull: false}
 
   type Props = {
     enabled?: boolean
@@ -230,10 +234,10 @@ describe('usePrependPill', () => {
     /** A later prepend from the same place, which replaces the staged page. */
     const replace = (
       slices: FeedPostSlice[],
-      {offered = false}: {offered?: boolean} = {},
+      {offeredBy}: Pick<StagedPage, 'offeredBy'> = {},
     ) => {
       const fetchedAt = replacedAt++
-      update({staged: {fetchedAt, offered, isFull: false}})
+      update({staged: {fetchedAt, offeredBy, isFull: false}})
       update({pages: [page(fetchedAt, slices, SINCE), page(RESTORED_AT, old)]})
     }
     /** The reader reaches the staged page, which reads it. */
@@ -241,9 +245,9 @@ describe('usePrependPill', () => {
     /** A later prepend above the page the reader has read. */
     const stageAbove = (
       slices: FeedPostSlice[],
-      {offered = false}: {offered?: boolean} = {},
+      {offeredBy}: Pick<StagedPage, 'offeredBy'> = {},
     ) => {
-      update({staged: {fetchedAt: ABOVE_AT, offered, isFull: false}})
+      update({staged: {fetchedAt: ABOVE_AT, offeredBy, isFull: false}})
       update({
         pages: [page(ABOVE_AT, slices, 'start:2'), ...(props.pages ?? [])],
       })
@@ -372,12 +376,14 @@ describe('usePrependPill', () => {
       stage()
       read()
 
-      stageAbove([slice('e'), slice('f')])
+      stageAbove([slice('e'), slice('f')], {offeredBy: 'return'})
 
       expect(hook.result.current).toMatchObject({
         visible: true,
         count: 6,
         authors: [{did: 'did:plc:e'}, {did: 'did:plc:f'}, {did: 'did:plc:a'}],
+        // What put it up.
+        source: 'restore',
       })
     })
   })
@@ -388,30 +394,50 @@ describe('usePrependPill', () => {
       stage()
 
       dismiss()
-      expect(hook.result.current.visible).toBe(false)
+      expect(hook.result.current).toMatchObject({
+        visible: false,
+        source: 'restore',
+        hideReason: 'reachedTop',
+      })
 
       // A check that stages more without an offer leaves it down.
       replace([slice('e'), ...fresh])
       expect(hook.result.current.visible).toBe(false)
 
-      replace([slice('f'), slice('e'), ...fresh], {offered: true})
-      expect(hook.result.current).toMatchObject({visible: true, count: 6})
+      replace([slice('f'), slice('e'), ...fresh], {offeredBy: 'return'})
+      expect(hook.result.current).toMatchObject({
+        visible: true,
+        count: 6,
+        source: 'return',
+        hideReason: undefined,
+      })
     })
 
     it.each([
-      ['a refresh replaces the feed', [page(PREPENDED_AT + 1, [slice('new')])]],
       [
+        'replaced',
+        'a refresh replaces the feed',
+        [page(PREPENDED_AT + 1, [slice('new')])],
+      ],
+      [
+        'gone',
         'a block takes them all out',
         [page(PREPENDED_AT, [], SINCE), ...restoredPages],
       ],
-    ])('once none of its posts render, as when %s', (_, pages) => {
-      const {hook, stage, update} = renderPill()
-      stage()
+    ] as const)(
+      'once none of its posts render, as %s when %s',
+      (reason, _, pages) => {
+        const {hook, stage, update} = renderPill()
+        stage()
 
-      update({pages})
+        update({pages: [...pages]})
 
-      expect(hook.result.current.visible).toBe(false)
-    })
+        expect(hook.result.current).toMatchObject({
+          visible: false,
+          hideReason: reason,
+        })
+      },
+    )
   })
 
   describe('pressed', () => {
@@ -423,7 +449,10 @@ describe('usePrependPill', () => {
       act(() => hook.result.current.onPress())
 
       expect(scrollToTop).toHaveBeenCalled()
-      expect(hook.result.current.visible).toBe(false)
+      expect(hook.result.current).toMatchObject({
+        visible: false,
+        hideReason: 'pressed',
+      })
       // The scroll reaching the top reads it.
       expect(onRead).not.toHaveBeenCalled()
     })
