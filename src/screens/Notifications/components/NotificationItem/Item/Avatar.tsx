@@ -25,7 +25,7 @@ const ACTIVITY_ORANGE = '#F26022'
  * The size of `Item.Avatar`'s avatar, for anything that stands in for it.
  */
 export const AVATAR_SIZE = 44
-const BADGE_SIZE = 20
+const BADGE_SIZE = 24
 /**
  * The width of the ring around the badge, in the row's background colour,
  * which sets it apart from the avatar.
