@@ -11,6 +11,7 @@ import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type tools} from '#/lexicons'
@@ -73,6 +74,7 @@ export function ModerationInboxSettingsScreen() {
               message: 'Get notified about your report outcomes.',
             })}
             disabled={isDisabled}
+            loading={preferencesQuery.isLoading}
             value={displayedPreferences?.reports ?? false}
             onChange={value => onChangePreference('reports', value)}
           />
@@ -87,6 +89,7 @@ export function ModerationInboxSettingsScreen() {
               message: 'Get notified about actions taken against you.',
             })}
             disabled={isDisabled}
+            loading={preferencesQuery.isLoading}
             value={displayedPreferences?.account ?? false}
             onChange={value => onChangePreference('account', value)}
           />
@@ -102,6 +105,7 @@ export function ModerationInboxSettingsScreen() {
                 'Get notified when a label is added to your account and posts.',
             })}
             disabled={isDisabled}
+            loading={preferencesQuery.isLoading}
             value={displayedPreferences?.labels ?? false}
             onChange={value => onChangePreference('labels', value)}
           />
@@ -116,6 +120,7 @@ function NotificationToggle({
   label,
   description,
   disabled = false,
+  loading = false,
   value,
   onChange,
 }: {
@@ -123,46 +128,65 @@ function NotificationToggle({
   label: string
   description?: string
   disabled?: boolean
+  loading?: boolean
   value: boolean
   onChange: (value: boolean) => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
 
+  const accessibilityLabel = description ? l`${label}. ${description}` : label
+  const content = (
+    <SettingsList.Item>
+      <View style={[a.flex_1, a.gap_2xs]}>
+        <Text
+          style={[
+            a.text_md,
+            a.font_medium,
+            disabled ? t.atoms.text_contrast_low : undefined,
+          ]}>
+          {label}
+        </Text>
+        {description ? (
+          <Text
+            style={[
+              a.text_sm,
+              a.leading_snug,
+              disabled
+                ? t.atoms.text_contrast_low
+                : t.atoms.text_contrast_medium,
+            ]}>
+            {description}
+          </Text>
+        ) : undefined}
+      </View>
+      {loading ? <Loader /> : <Toggle.Platform />}
+    </SettingsList.Item>
+  )
+
+  if (loading) {
+    return (
+      <View
+        testID={name}
+        accessible
+        accessibilityLabel={accessibilityLabel}
+        accessibilityHint={l`Loading notification settings`}
+        accessibilityState={{busy: true}}>
+        {content}
+      </View>
+    )
+  }
+
   return (
     <Toggle.Item
       testID={name}
       type="checkbox"
       name={name}
-      label={description ? l`${label}. ${description}` : label}
+      label={accessibilityLabel}
       value={value}
       disabled={disabled}
       onChange={onChange}>
-      <SettingsList.Item>
-        <View style={[a.flex_1, a.gap_2xs]}>
-          <Text
-            style={[
-              a.text_md,
-              a.font_medium,
-              disabled ? t.atoms.text_contrast_low : undefined,
-            ]}>
-            {label}
-          </Text>
-          {description ? (
-            <Text
-              style={[
-                a.text_sm,
-                a.leading_snug,
-                disabled
-                  ? t.atoms.text_contrast_low
-                  : t.atoms.text_contrast_medium,
-              ]}>
-              {description}
-            </Text>
-          ) : undefined}
-        </View>
-        <Toggle.Platform />
-      </SettingsList.Item>
+      {content}
     </Toggle.Item>
   )
 }
