@@ -5,7 +5,6 @@ import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {MAX_POST_LINES} from '#/lib/constants'
-import {useHaptics} from '#/lib/haptics'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
 import {forceLTR} from '#/lib/strings/bidi'
@@ -19,33 +18,23 @@ import {
 } from '#/state/cache/post-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {type ParentPost} from '#/state/queries/notifications/grouped/types'
-import {usePostLikeMutationQueue} from '#/state/queries/post'
-import {useRequireAuth, useSession} from '#/state/session'
+import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, select, useTheme, utils, web} from '#/alf'
-import {Button} from '#/components/Button'
+import {atoms as a, useTheme, web} from '#/alf'
 import {ArrowCornerDownRight_Stroke2_Corner2_Rounded as ArrowCornerDownRight} from '#/components/icons/Arrow'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {type Props as SVGIconProps} from '#/components/icons/common'
-import {
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
-  Heart2_Stroke2_Corner0_Rounded as Heart,
-} from '#/components/icons/Heart2'
-import {Reply_Stroke2_Corner0_Rounded as Bubble} from '#/components/icons/Reply'
 import {Link, WebOnlyInlineLinkText} from '#/components/Link'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
-import {PostMenuButton} from '#/components/PostControls/PostMenu'
+import {PostControls} from '#/components/PostControls'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
-import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {makePostLink} from '../links'
@@ -53,24 +42,6 @@ import {Card, getPostThumbnails, InlineImages} from './media'
 import {Strong, useDisplayName} from './text'
 
 type PostView = app.bsky.feed.defs.PostView
-
-/**
- * Light pink behind the "Liked" pill. There's no pink tint in the palette, so
- * the dark themes use a translucent pink instead.
- */
-function useLikedBackground() {
-  const t = useTheme()
-  return select(t.name, {
-    light: '#FFF3F9',
-    dim: utils.alpha(t.palette.pink, 0.15),
-    dark: utils.alpha(t.palette.pink, 0.15),
-  })
-}
-
-/**
- * Keeps 24px pills comfortable to tap without overlapping their neighbours.
- */
-const PILL_HITSLOP = {top: 10, bottom: 10, left: 2, right: 2}
 
 /**
  * Collapses a post's text onto one line for single-line previews, so that
@@ -628,9 +599,8 @@ function QuoteCardPost({
 }
 
 /**
- * Like, reply and the post menu for the notification's post. The menu carries
- * the rest of the usual post controls: repost, quote, share and save. Renders
- * nothing once the post has been deleted.
+ * The usual post controls for the notification's post, as a post in a feed
+ * has them. Renders nothing once the post has been deleted.
  */
 export function PostActions({post}: {post: PostView}) {
   const shadow = usePostShadow(post)
@@ -648,209 +618,34 @@ function PostActionsInner({
   post: Shadow<PostView>
   record: app.bsky.feed.post.Main
 }) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const ax = useAnalytics()
-  const haptics = useHaptics()
-  const requireAuth = useRequireAuth()
   const {openComposer} = useOpenComposer()
   const moderationOpts = useModerationOpts()
-  const likedBackground = useLikedBackground()
-  const [queueLike, queueUnlike] = usePostLikeMutationQueue(
-    post,
-    undefined,
-    undefined,
-    'Post',
-  )
-  /*
-   * There's no viewer state for "has replied", so this only reflects replies
-   * sent from this row while it's mounted.
-   */
-  const [hasReplied, setHasReplied] = useState(false)
-
-  const isLiked = Boolean(post.viewer?.like)
-  const isBlocked = Boolean(
-    post.author.viewer?.blocking ||
-    post.author.viewer?.blockedBy ||
-    post.author.viewer?.blockingByList,
-  )
-  const replyDisabled = Boolean(post.viewer?.replyDisabled)
   const richText = new RichTextAPI({text: record.text, facets: record.facets})
 
-  const showBlockedToast = () => {
-    Toast.show(l`Cannot interact with a blocked user`, {type: 'warning'})
-  }
-
-  const onToggleLike = async () => {
-    if (isBlocked) {
-      showBlockedToast()
-      return
-    }
-    try {
-      if (isLiked) {
-        await queueUnlike()
-      } else {
-        await queueLike()
-      }
-    } catch (err) {
-      const e = err as Error
-      if (e?.name !== 'AbortError') {
-        throw e
-      }
-    }
-  }
-
   const onPressReply = () => {
-    if (isBlocked) {
-      showBlockedToast()
-      return
-    }
-    if (replyDisabled) return
-    haptics.tap()
-    requireAuth(() => {
-      ax.metric('post:clickReply', {
+    openComposer({
+      replyTo: {
         uri: post.uri,
-        authorDid: post.author.did,
-        logContext: 'Post',
-      })
-      openComposer({
-        replyTo: {
-          uri: post.uri,
-          cid: post.cid,
-          text: record.text,
-          author: post.author,
-          embed: post.embed,
-          moderation: moderationOpts
-            ? moderatePost(post, moderationOpts)
-            : undefined,
-          langs: record.langs,
-        },
-        onPost: () => setHasReplied(true),
-        logContext: 'PostReply',
-      })
+        cid: post.cid,
+        text: record.text,
+        author: post.author,
+        embed: post.embed,
+        moderation: moderationOpts
+          ? moderatePost(post, moderationOpts)
+          : undefined,
+        langs: record.langs,
+      },
+      logContext: 'PostReply',
     })
   }
 
   return (
-    <View style={[a.flex_row, a.justify_between, a.align_center]}>
-      <View style={[a.flex_row, a.gap_xs]}>
-        <ActionPill
-          testID="likeBtn"
-          label={
-            isLiked
-              ? l({message: 'Unlike', comment: 'Verb, to remove a like'})
-              : l({message: 'Like', comment: 'Verb, to like a post'})
-          }
-          icon={isLiked ? HeartFilled : Heart}
-          color={isLiked ? t.palette.pink : undefined}
-          backgroundColor={isLiked ? likedBackground : undefined}
-          text={
-            isLiked
-              ? l({
-                  message: 'Liked',
-                  comment: 'Shown on the like button once the post is liked',
-                })
-              : l({message: 'Like', context: 'verb'})
-          }
-          onPress={() => {
-            haptics.tap()
-            requireAuth(() => onToggleLike())
-          }}
-        />
-        <ActionPill
-          testID="replyBtn"
-          label={l({message: 'Reply', context: 'verb'})}
-          icon={hasReplied ? Check : Bubble}
-          dimmed={replyDisabled}
-          text={
-            hasReplied
-              ? l({
-                  message: 'Replied',
-                  comment:
-                    'Shown on the reply button after replying to the post',
-                })
-              : l({message: 'Reply', context: 'verb'})
-          }
-          onPress={onPressReply}
-        />
-      </View>
-      {/*
-       * The shared menu button is a 28px tall control with 5px of padding,
-       * so pull it in to sit flush with the end of the row without making
-       * the row taller than the pills.
-       */}
-      <View style={{marginVertical: -2, marginEnd: -5}}>
-        <PostMenuButton
-          testID="postDropdownBtn"
-          post={post}
-          postFeedContext={undefined}
-          postReqId={undefined}
-          record={record}
-          richText={richText}
-          timestamp={post.indexedAt}
-          logContext="Post"
-          forceGoogleTranslate={false}
-          includeControls
-        />
-      </View>
-    </View>
-  )
-}
-
-/**
- * A small rounded action, e.g. "Like". Defaults to grey; pass `color` and
- * `backgroundColor` for an active state.
- */
-function ActionPill({
-  testID,
-  label,
-  icon: Icon,
-  color,
-  backgroundColor,
-  text,
-  dimmed = false,
-  onPress,
-}: {
-  testID?: string
-  /**
-   * Accessibility label, which may differ from the visible text, e.g. "Unlike"
-   * vs "Liked".
-   */
-  label: string
-  icon: React.ComponentType<SVGIconProps>
-  color?: string
-  backgroundColor?: string
-  text: string
-  dimmed?: boolean
-  onPress: () => void
-}) {
-  const t = useTheme()
-  const contentColor = color ?? t.atoms.text_contrast_high.color
-
-  return (
-    <Button
-      testID={testID}
-      label={label}
-      onPress={onPress}
-      hitSlop={PILL_HITSLOP}
-      style={[
-        a.gap_xs,
-        a.rounded_full,
-        backgroundColor ? {backgroundColor} : t.atoms.bg_contrast_50,
-        {height: 24, paddingLeft: 9, paddingRight: 10},
-        dimmed && {opacity: 0.6},
-      ]}
-      hoverStyle={backgroundColor ? undefined : t.atoms.bg_contrast_100}>
-      <Icon size="xs" fill={contentColor} />
-      <Text
-        style={[
-          a.text_xs,
-          a.font_medium,
-          a.user_select_none,
-          {color: contentColor},
-        ]}>
-        {text}
-      </Text>
-    </Button>
+    <PostControls
+      post={post}
+      record={record}
+      richText={richText}
+      onPressReply={onPressReply}
+      logContext="Post"
+    />
   )
 }
