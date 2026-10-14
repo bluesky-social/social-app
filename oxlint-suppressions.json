@@ -1,4 +1,9 @@
 {
+  "bskylink/src/routes/redirect.ts": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
   "modules/bottom-sheet/src/BottomSheetNativeComponent.tsx": {
     "typescript/no-explicit-any": {
       "count": 2
