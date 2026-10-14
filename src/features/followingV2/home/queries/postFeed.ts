@@ -545,8 +545,8 @@ export function usePostFeedRefresh(
 export const PROCESS_STARTED_AT = Date.now()
 
 /**
- * How many posts a prepend asks for, so a range with more than this in it
- * leaves a gap. Conservative to start, as `getTimeline` allows 100. APP-3159.
+ * How many posts a prepend asks for. A range with more than this leaves a gap.
+ * Below `getTimeline`'s max of 100 to start conservatively. APP-3159.
  */
 export const PREPEND_LIMIT = 40
 
