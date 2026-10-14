@@ -20,6 +20,7 @@ import {atoms as a, native, tokens, useBreakpoints, useTheme} from '#/alf'
 import * as Admonition from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField'
 import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
 import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon} from '#/components/icons/Chevron'
@@ -27,7 +28,6 @@ import {Envelope_Stroke2_Corner0_Rounded as EmailIcon} from '#/components/icons/
 import {Eye_Stroke2_Corner0_Rounded as EyeIcon} from '#/components/icons/Eye'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlashIcon} from '#/components/icons/EyeSlash'
 import {Lock_Stroke2_Corner0_Rounded as LockIcon} from '#/components/icons/Lock'
-import {Ticket_Stroke2_Corner0_Rounded as TicketIcon} from '#/components/icons/Ticket'
 import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -432,30 +432,22 @@ export const LoginForm = ({
           <TextField.LabelText>
             <Trans>2FA Confirmation</Trans>
           </TextField.LabelText>
-          <TextField.Root isInvalid={errorField === '2fa'}>
-            <TextField.Icon icon={TicketIcon} />
-            <TextField.Input
-              testID="loginAuthFactorTokenInput"
-              label={l`Confirmation code`}
-              autoCapitalize="none"
-              autoFocus
-              autoCorrect={false}
-              autoComplete="one-time-code"
-              returnKeyType="done"
-              blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
-              value={authFactorToken}
-              onChangeText={text => {
-                setAuthFactorToken(text)
-                if (errorField) setErrorField('none')
-              }}
-              onSubmitEditing={() => void onPressNext()}
-              editable={!isProcessing}
-              accessibilityHint={l`Input the code which has been emailed to you`}
-              style={{
-                textTransform: authFactorToken === '' ? 'none' : 'uppercase',
-              }}
-            />
-          </TextField.Root>
+          <TokenField
+            testID="loginAuthFactorTokenInput"
+            autoFocus
+            autoComplete="one-time-code"
+            returnKeyType="done"
+            blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
+            value={authFactorToken}
+            onChangeText={text => {
+              setAuthFactorToken(text)
+              if (errorField) setErrorField('none')
+            }}
+            onSubmitEditing={() => void onPressNext()}
+            editable={!isProcessing}
+            isInvalid={errorField === '2fa'}
+            accessibilityHint={l`Input the code which has been emailed to you`}
+          />
           <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.mt_sm]}>
             <Trans>
               Check your email for a sign in code and enter it here.

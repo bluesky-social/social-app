@@ -17,15 +17,26 @@ export function isValidCode(value?: string) {
 export function TokenField({
   testID,
   autoFocus,
+  autoComplete = 'off',
+  returnKeyType,
+  blurOnSubmit,
+  accessibilityHint,
   editable,
+  isInvalid = false,
   value,
   onChangeText,
   onFocus,
   onSubmitEditing,
-}: Pick<
+}: {
+  isInvalid?: boolean
+} & Pick<
   TextInputProps,
   | 'testID'
   | 'autoFocus'
+  | 'autoComplete'
+  | 'returnKeyType'
+  | 'blurOnSubmit'
+  | 'accessibilityHint'
   | 'editable'
   | 'value'
   | 'onChangeText'
@@ -33,7 +44,9 @@ export function TokenField({
   | 'onSubmitEditing'
 >) {
   const {t: l} = useLingui()
-  const isInvalid = Boolean(value && value.length > 10 && !isValidCode(value))
+  const isFormatInvalid = Boolean(
+    value && value.length > 10 && !isValidCode(value),
+  )
 
   const handleOnChangeText = (v: string) => {
     onChangeText?.(normalizeCode(v))
@@ -45,14 +58,17 @@ export function TokenField({
         <TextField.Icon icon={Shield} />
         <TextField.Input
           testID={testID}
-          autoComplete="off"
+          accessibilityHint={accessibilityHint}
+          autoComplete={autoComplete}
           autoCorrect={false}
           autoFocus={autoFocus}
+          blurOnSubmit={blurOnSubmit}
           editable={editable}
-          isInvalid={isInvalid}
+          isInvalid={isInvalid || isFormatInvalid}
           label={l`Confirmation code`}
           maxLength={11}
           placeholder="XXXXX-XXXXX"
+          returnKeyType={returnKeyType}
           value={value}
           onChangeText={handleOnChangeText}
           onFocus={onFocus}
