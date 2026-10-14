@@ -96,3 +96,47 @@ stock 3 / 6 / 75, with the fix 2 / 1 / 0. Also stable with `contentContainerStyl
 - Standalone repro (RN 0.87.1): https://github.com/mozzius/virtualizedlist-spacer-ring-repro
 
 **TODO: Remove once #58916 ships in a React Native release we're on.**
+
+## VirtualizedList.js - the window is recomputed from a scroll offset native hasn't corrected yet
+
+Applies to every list with `maintainVisibleContentPosition` that doesn't use `getItemLayout`.
+
+Linear: APP-3152.
+
+### Symptom
+
+After a large prepend above a restored position, the row the reader was on is unmounted and the
+list jumps. In the repro (scrolled to y=2500, 100 tall rows prepended) it happened in 26 of 40
+runs.
+
+### Cause
+
+On the New Architecture, a commit's `onLayout` events reach VirtualizedList before the commit is
+mounted. Native mVCP corrects the scroll offset at mount, and the scroll event reporting it comes
+after. A cells update in between combines the old `_scrollMetrics.offset` with the new cell
+positions, so it computes the window for a viewport too high by the size of the shift. If the
+shift is big, the window skips the visible row and unmounts mVCP's anchor. VirtualizedList
+already waits for the correction after a prepend (`pendingScrollUpdateCount`), but not when the
+anchor moves for any other reason: a spacer re-estimated, rows mounting above the viewport, a
+header resizing.
+
+### Fix
+
+When the layout of the cell mVCP is anchored on (a mounted cell across the start of the
+viewport) changes its offset, set `_pendingAnchorCorrection`, and don't recompute the window
+until the next scroll event clears it. It's an instance field rather than state, so cells updates
+already queued by earlier layout events in the same batch see it. It never grows the window, it
+only defers a recompute. Ported from the upstream PR with two changes for 0.86.3: the
+horizontal-RTL check is inlined (`_isHorizontalRTL` doesn't exist yet), and `_onScroll` keeps
+0.86.3's decrement of `pendingScrollUpdateCount`.
+
+Repro on iOS: stock lost the reader's row in 26/40 runs, fixed 0/40.
+
+### Upstream and removal
+
+- Issue: https://github.com/react/react-native/issues/58921
+- PR: https://github.com/react/react-native/pull/58922, with a regression test
+- Standalone repro (RN 0.87.1): https://github.com/mozzius/virtualizedlist-mvcp-stale-offset-repro
+
+**TODO: Remove once #58922 ships in a React Native release we're on.**
+
