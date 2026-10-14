@@ -969,7 +969,7 @@ let PostFeed = ({
     trendingIndices,
   ])
 
-  const prependPill = usePrependPill({
+  const pill = usePrependPill({
     enabled: isAnchored,
     isActive,
     staged: prepend.staged,
@@ -985,13 +985,7 @@ let PostFeed = ({
     },
     onRead: prepend.markRead,
   })
-  const pill = usePrependPillMetrics({
-    enabled: isAnchored,
-    metric: ax.metric,
-    isActive,
-    top: feedData?.pages[0],
-    pill: prependPill,
-  })
+  usePrependPillMetrics({enabled: isAnchored, metric: ax.metric, pill})
   const {reports: listReports, onRowSeen: onTopRowSeen} =
     useFollowingListReports(feed, feedParams, {
       enabled: isAnchored && enabled !== false,

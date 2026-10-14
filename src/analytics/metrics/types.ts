@@ -12,11 +12,7 @@ import {
   type FollowingV2CheckOutcome,
   type FollowingV2Surface,
 } from '#/features/followingV2/home/metrics'
-import {
-  type PrependPillHideReason,
-  type PrependPillPresentation,
-  type PrependPillSource,
-} from '#/features/followingV2/home/pillMetrics'
+import {type PrependPillPresentation} from '#/features/followingV2/home/pillMetrics'
 import {type FollowingSnapshotRejection} from '#/features/followingV2/home/queries/followingSnapshot'
 import {
   type GapFillOutcome,
@@ -25,6 +21,10 @@ import {
   type RefreshOutcome,
 } from '#/features/followingV2/home/queries/postFeed'
 import {type NewPostsCheckTrigger} from '#/features/followingV2/home/useNewPostsCheck'
+import {
+  type PrependPillHideReason,
+  type PrependPillSource,
+} from '#/features/followingV2/home/usePrependPill'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
 export type Events = {
@@ -435,10 +435,8 @@ export type Events = {
     droppedPageCount: number
   }
   /**
-   * The new posts pill showed an offer for the first time. One of each pill
-   * event per offer: from the pill going up, as a restore or a significant
-   * return puts it up, to it coming down. Only while Home Following is on
-   * screen, so an offer that comes down unseen reports nothing.
+   * The pill first showed an offer while Home Following was on screen. At most
+   * once per offer; an offer never shown reports nothing.
    */
   'followingV2:pill:impression': {
     surface: FollowingV2Surface
