@@ -44,6 +44,21 @@ const iconSets = {
  */
 type GlyphEntry = [number, [number, string][]]
 
+/**
+ * One `{width, height}` style per icon size, shared so that icons without a
+ * style of their own keep a stable style prop for nano's memo comparator.
+ */
+const sizeStyles = new Map<number, ViewStyle>()
+
+function sizeStyle(size: number) {
+  let style = sizeStyles.get(size)
+  if (!style) {
+    style = {width: size, height: size}
+    sizeStyles.set(size, style)
+  }
+  return style
+}
+
 const reportedFallbacks = new Set<string>()
 
 /**
@@ -127,10 +142,18 @@ export function withNanoGlyph(
       t.palette.primary_500) as ColorValue
 
     /*
+     * nano-icons sizes the glyph view by measuring it, so a parent that
+     * stretches its children (e.g. `alignItems: 'stretch'` in a row) can make
+     * it taller than the icon. The glyph is scaled to the view's height, so it
+     * then overflows its width and is clipped. Pin the size like the SVG icon,
+     * which always has an explicit width and height.
+     *
      * Icons historically accept text styles (to inherit `color`), but the
      * glyph container is a View. Only layout props are meaningful here.
      */
-    const viewStyle = style as StyleProp<ViewStyle>
+    const viewStyle: StyleProp<ViewStyle> = style
+      ? [sizeStyle(resolvedSize), style]
+      : sizeStyle(resolvedSize)
 
     return (
       /*
@@ -156,10 +179,6 @@ export function withNanoGlyph(
               )
             : resolvedFill
         }
-        /*
-         * Passed through unflattened, so that a stable style keeps nano's
-         * memo comparator effective.
-         */
         style={viewStyle}
         testID={testID}
         /*
