@@ -9,10 +9,9 @@ import {logger} from '#/logger'
 export const FOCUS_CHECK_AFTER = 60 * 1000
 
 /**
- * What prompted a check, for the surface to decide how to show its find: the
- * view becoming active (`focus`), a significant return to the app (`return`,
- * see `onAppReturnedFromBackground`), a quicker one (`hop`), or the
- * `interval`.
+ * What prompted a check: the view becoming active (`focus`), a significant
+ * return to the app (`return`), a quick one (`hop`), or the `interval`. The
+ * surface decides from it how to show what was found.
  */
 export type NewPostsCheckTrigger = 'focus' | 'return' | 'hop' | 'interval'
 
@@ -34,11 +33,10 @@ type LastCheck = {
  *
  * - Focus: becoming active checks if the clock is {@link FOCUS_CHECK_AFTER}
  *   old, or at any age if the feed is empty.
- * - Return: every return to the app while active (see `onAnyAppReturn`)
- *   checks, whatever the clock: a significant one as a `return`, a quicker
- *   one as a `hop`. One that comes while the view is busy or checking is
- *   judged once that's done, as a `return` if any of the returns since the
- *   last one judged was significant.
+ * - Return: every return to the app while active checks, whatever the clock:
+ *   as a `return` if significant (see `onAnyAppReturn`), else as a `hop`.
+ *   Returns while the view is busy or checking wait, then check once, as a
+ *   `return` if any of them was significant. Leaving the view drops them.
  * - Interval: with `interval`, checks one interval after the clock, or after a
  *   failed check. It pauses once something is found, until a new top page.
  *
@@ -160,16 +158,18 @@ export function useNewPostsCheck<T>({
   const judgeReturn = useNonReactiveCallback(() => {
     const isChecking =
       topFetchedAt !== undefined && checking.current === topFetchedAt
-    if (returnId === judgedReturnId.current || isBusy || isChecking) return
+    if (returnId === judgedReturnId.current) return
+    if (isActive && (isBusy || isChecking)) return
     judgedReturnId.current = returnId
     const trigger = hasSignificantReturn.current ? 'return' : 'hop'
     hasSignificantReturn.current = false
-    void run(trigger)
+    // One still waiting when the view is left is dropped, not saved for later.
+    if (isActive) void run(trigger)
   })
   // Judges a return at once, or once the view's work or a check is done.
   useEffect(() => {
     judgeReturn()
-  }, [returnId, isBusy, last, judgeReturn])
+  }, [returnId, isActive, isBusy, last, judgeReturn])
 
   useEffect(() => {
     if (intervalDueAt === undefined) return
