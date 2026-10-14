@@ -1142,7 +1142,7 @@ describe('usePostFeedPrepend', () => {
       // Not offered: the pill takes a replacement in itself while it's up.
       expect(hook.result.current.prepend.staged).toEqual({
         fetchedAt: cached().pages[0].fetchedAt,
-        offered: false,
+        offeredBy: undefined,
         isFull: false,
       })
     })
@@ -1169,7 +1169,7 @@ describe('usePostFeedPrepend', () => {
       ])
       expect(hook.result.current.prepend.staged).toEqual({
         fetchedAt: cached().pages[0].fetchedAt,
-        offered: false,
+        offeredBy: undefined,
         isFull: false,
       })
     })
@@ -1358,7 +1358,7 @@ describe('usePostFeedPrepend', () => {
     // The view knows which page it staged on top, for the pill to offer.
     expect(hook.result.current.prepend.staged).toEqual({
       fetchedAt: cached().pages[0].fetchedAt,
-      offered: true,
+      offeredBy: 'restore',
       isFull: false,
     })
     expect(cached().pageParams).toEqual([
@@ -1619,7 +1619,7 @@ describe('usePostFeedPrepend', () => {
       // For the pill to offer.
       expect(hook.result.current.prepend.staged).toEqual({
         fetchedAt: cached().pages[0].fetchedAt,
-        offered: true,
+        offeredBy: 'return',
         isFull: false,
       })
     })
@@ -1927,22 +1927,17 @@ describe('staging new posts on Home Following', () => {
       })
       const offsetY = useSharedValue(400)
       const rows = rowsOf(pages)
-      const pill = usePrependPillMetrics({
+      const pill = usePrependPill({
         enabled: true,
-        metric,
         isActive,
-        top: pages?.[0],
-        pill: usePrependPill({
-          enabled: true,
-          isActive,
-          staged: prepend.staged,
-          rows,
-          pages,
-          offsetY,
-          scrollToTop,
-          onRead: prepend.markRead,
-        }),
+        staged: prepend.staged,
+        rows,
+        pages,
+        offsetY,
+        scrollToTop,
+        onRead: prepend.markRead,
       })
+      usePrependPillMetrics({enabled: true, metric, pill})
       const {reports, onRowSeen: onItemSeen} = useFollowingListReports(
         'following',
         undefined,
@@ -2006,21 +2001,7 @@ describe('staging new posts on Home Following', () => {
       metric.mock.calls
         .filter(([event]) => event === name)
         .map(([, payload]) => payload as Record<string, unknown>)
-    /** The pill's metrics reported so far, in order. */
-    const pillEvents = () =>
-      metric.mock.calls.filter(([event]) =>
-        (event as string).startsWith('followingV2:pill:'),
-      ) as [string, Record<string, unknown>][]
-    return {
-      latest,
-      cached,
-      list,
-      onHasNew,
-      setActive,
-      reported,
-      pillEvents,
-      metric,
-    }
+    return {latest, cached, list, onHasNew, setActive, reported, metric}
   }
 
   /** Advances fake time by `ms`, letting what that sets off run. */
@@ -2446,41 +2427,33 @@ describe('staging new posts on Home Following', () => {
 
   describe("reports the pill's", () => {
     it('impression on a warm open, and coming down as the reader reaches the top', async () => {
-      const {list, pillEvents} = renderHome()
+      const {list, reported} = renderHome()
       newest = 14
       await warmOpen()
-      await wait(SECOND)
       list.scroll(400)
       list.scroll(0)
 
-      expect(pillEvents()).toEqual([
-        [
-          'followingV2:pill:impression',
-          {
-            surface: 'homeFollowing',
-            source: 'return',
-            count: 2,
-            presentation: 'generic',
-          },
-        ],
-        [
-          'followingV2:pill:hide',
-          {
-            surface: 'homeFollowing',
-            source: 'return',
-            reason: 'reachedTop',
-            count: 2,
-            shownMs: expect.any(Number),
-          },
-        ],
+      expect(reported('followingV2:pill:impression')).toEqual([
+        {
+          surface: 'homeFollowing',
+          source: 'return',
+          count: 2,
+          presentation: 'generic',
+        },
       ])
-      expect(pillEvents()[1][1].shownMs as number).toBeGreaterThanOrEqual(
-        SECOND,
-      )
+      expect(reported('followingV2:pill:hide')).toEqual([
+        {
+          surface: 'homeFollowing',
+          source: 'return',
+          reason: 'reachedTop',
+          count: 2,
+          shownMs: expect.any(Number),
+        },
+      ])
     })
 
     it('impression once, as later checks add to it, with the count it last showed', async () => {
-      const {list, pillEvents} = renderHome()
+      const {list, reported} = renderHome()
       newest = 14
       await warmOpen()
       newest = 15
@@ -2489,31 +2462,41 @@ describe('staging new posts on Home Following', () => {
       list.endDrag(0)
       await wait(SETTLE_QUIET_MS)
 
-      expect(pillEvents()).toMatchObject([
-        ['followingV2:pill:impression', {count: 2}],
-        ['followingV2:pill:hide', {reason: 'reachedTop', count: 3}],
+      expect(reported('followingV2:pill:impression')).toMatchObject([
+        {count: 2},
+      ])
+      expect(reported('followingV2:pill:hide')).toMatchObject([
+        {reason: 'reachedTop', count: 3},
       ])
     })
 
     it('press, and coming down for it', async () => {
-      const {latest, pillEvents} = renderHome()
+      const {latest, reported} = renderHome()
       newest = 14
       await warmOpen()
       await wait(SECOND)
 
       act(() => latest.pill.onPress())
 
-      expect(pillEvents().slice(1)).toMatchObject([
-        ['followingV2:pill:press', {source: 'return', count: 2}],
-        ['followingV2:pill:hide', {reason: 'pressed'}],
+      expect(reported('followingV2:pill:press')).toEqual([
+        {
+          surface: 'homeFollowing',
+          source: 'return',
+          count: 2,
+          presentation: 'generic',
+          shownMs: expect.any(Number),
+        },
       ])
-      expect(pillEvents()[1][1].shownMs as number).toBeGreaterThanOrEqual(
-        SECOND,
-      )
+      expect(
+        reported('followingV2:pill:press')[0].shownMs,
+      ).toBeGreaterThanOrEqual(SECOND)
+      expect(reported('followingV2:pill:hide')).toMatchObject([
+        {reason: 'pressed'},
+      ])
     })
 
     it('coming down as a refresh replaces the feed', async () => {
-      const {latest, pillEvents} = renderHome()
+      const {latest, reported} = renderHome()
       newest = 14
       await warmOpen()
 
@@ -2531,31 +2514,29 @@ describe('staging new posts on Home Following', () => {
         await refreshing
       })
 
-      expect(pillEvents()[1]).toMatchObject([
-        'followingV2:pill:hide',
+      expect(reported('followingV2:pill:hide')).toMatchObject([
         {reason: 'replaced'},
       ])
     })
 
-    it('nothing for what a quick hop or an interval stages', async () => {
-      const {pillEvents} = renderHome()
+    it('impression from a restore only once its view is on screen', async () => {
       newest = 14
-      await quickHop()
-      newest = 15
-      await anInterval()
+      const {setActive, reported} = renderHome({
+        isActive: false,
+        queryClient: coldStarted(),
+      })
+      await wait(SECOND)
+      expect(reported('followingV2:pill:impression')).toEqual([])
 
-      expect(pillEvents()).toEqual([])
-    })
-
-    it('nothing from a view that is not on screen, until it is', async () => {
-      const {setActive, pillEvents} = renderHome()
-      newest = 14
-      await warmOpen()
-      setActive(false)
       setActive(true)
 
-      expect(pillEvents()).toMatchObject([
-        ['followingV2:pill:impression', {count: 2}],
+      expect(reported('followingV2:pill:impression')).toEqual([
+        {
+          surface: 'homeFollowing',
+          source: 'restore',
+          count: 2,
+          presentation: 'generic',
+        },
       ])
     })
   })
@@ -2782,6 +2763,8 @@ describe('staging new posts on Home Following', () => {
           'followingV2:check',
           'followingV2:settle',
           'followingV2:refresh',
+          'followingV2:pill:impression',
+          'followingV2:pill:hide',
         ]),
       )
       expect(JSON.stringify(metric.mock.calls)).not.toMatch(
