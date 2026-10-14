@@ -20,9 +20,9 @@ For the assets Bluesky itself owns, we are not treating anyone's past use as bad
 | [`assets/icons/ui/`](#2-licensed-icon-system--not-ours-to-pass-on) and Central icon glyphs in `bskyembed/assets/` except the Starter Pack mark | Iconists (David & Storm GbR) | No | Source your own |
 | [Bluesky-owned marks](#3-bluesky-trademarks-and-brand-assets) — app icons, logos, favicons, Attie | Bluesky Social PBC | No | Replace |
 | [`assets/kawaii.png`, `assets/kawaii_smol.png`](#4-community-and-contest-artwork--credited-but-not-ours-to-license) | [@sawaratsuki.bsky.social](https://bsky.app/profile/sawaratsuki.bsky.social) | No | Replace or remove |
-| [`assets/icons/external/AppleLogo.svg`](#5-third-party-trademarks) | Apple Inc. | No | Rests on your own basis |
-| [`assets/icons/external/AndroidLogo.svg`](#5-third-party-trademarks) | Google LLC | No | Rests on your own basis |
-| [Third-party service marks in `assets/icons/external/`](#5-third-party-trademarks) | Leaflet, Offprint, pckt, Standard.site, Germ Network, and the services in [`assets/icons/external/README.md`](./assets/icons/external/README.md) | No | Rests on your own basis |
+| [`assets/icons/brands/AppleLogo.svg`](#5-third-party-trademarks) | Apple Inc. | No | Rests on your own basis |
+| [`assets/icons/brands/AndroidLogo.svg`](#5-third-party-trademarks) | Google LLC | No | Rests on your own basis |
+| [`assets/icons/community/`](#5-third-party-trademarks) | Leaflet, Offprint, pckt, Standard.site, Germ Network | No | Rests on your own basis |
 | [`assets/fonts/inter/`](#6-third-party-assets-you-may-redistribute), Inter files in `bskyogcard/src/assets/fonts/` | The Inter Project Authors | Separate — OFL 1.1 | **Keep, with the notice** |
 | [Noto fonts downloaded by `bskyogcard/scripts/install-fonts.ts`](#6-third-party-assets-you-may-redistribute) | Adobe, Google LLC, and The Noto Project Authors | Separate — OFL 1.1 | **Keep, with the notice** |
 | [`assets/icons/flags/`](#6-third-party-assets-you-may-redistribute) | @catamphetamine | Separate — MIT | **Keep, with the license** |
@@ -55,7 +55,7 @@ See [`assets/illustrations/README.md`](./assets/illustrations/README.md).
 
 The fact that we have our own license does not mean that you cannot use these icons. It means that any right you have to use them has to come from Iconists, not us. Licenses are available from [iconists.co](https://iconists.co), and there are openly licensed alternatives if you prefer that.
 
-The policy directories keep exceptions out of this license scope. `assets/icons/external/` and `assets/icons/custom/` are not Central icons and are described below (a directory name does not decide who owns a file; the lists in Sections 3 and 5 and the README in `assets/icons/external/` do), and `assets/icons/flags/` is covered by [Section 6](#6-third-party-assets-you-may-redistribute).
+The policy directories keep exceptions out of this license scope. `assets/icons/brands/` and `assets/icons/community/` are described below, and `assets/icons/flags/` is covered by [Section 6](#6-third-party-assets-you-may-redistribute).
 
 See [`assets/icons/README.md`](./assets/icons/README.md).
 
@@ -75,13 +75,13 @@ You may refer to Bluesky by name to describe interoperability or origin — for 
 - `assets/splash/splash.png`
 - `assets/splash/splash-dark.png`
 - `assets/splash/android-splash-logo-white.png`
-- `assets/icons/external/Attie_Filled_Corner0_Rounded.svg` — [Attie](https://attie.ai)
-- `assets/icons/external/Mark.svg`
-- `assets/icons/external/Newskie.svg`
-- `assets/icons/external/StarterPack_Stroke2_Corner0_Rounded.svg`
-- `assets/icons/custom/VerifiedCheck.svg`
-- `assets/icons/custom/VerifierCheck.svg`
-- `assets/icons/custom/StarterPackMultiPathLarge.svg`
+- `assets/icons/brands/Attie_Filled_Corner0_Rounded.svg` — [Attie](https://attie.ai)
+- `assets/icons/brands/Mark.svg`
+- `assets/icons/brands/Newskie.svg`
+- `assets/icons/brands/VerifiedCheck.svg`
+- `assets/icons/brands/VerifierCheck.svg`
+- `assets/icons/brands/StarterPackMultiPathLarge.svg`,
+  `assets/icons/brands/StarterPack_Stroke2_Corner0_Rounded.svg`
 - `bskyembed/assets/logo.svg`
 - `bskyembed/assets/logo_full_name.svg`
 - `bskyembed/assets/starterPack.svg`
@@ -113,13 +113,13 @@ Replace or remove these if you fork. If you want to use them, contact the artist
 
 These marks belong to other companies. We include them to identify their services in our UI — sign-in buttons, store badges, and links to third-party applications. We are neither granting nor withholding permission, because it is not ours to give. Your use of them rests on your own nominative-use basis or on permission from the mark owner.
 
-- `assets/icons/external/AppleLogo.svg` — **Apple Inc.**
-- `assets/icons/external/AndroidLogo.svg` — **Google LLC**
-- `assets/icons/external/Leaflet.svg` — **Leaflet**
-- `assets/icons/external/Offprint.svg` — **Offprint**
-- `assets/icons/external/Pckt.svg` and `assets/icons/external/PcktFull.svg` — **pckt**
-- `assets/icons/external/StandardSite.svg` — **Standard.site**
-- `assets/icons/external/germ_logo.webp` — **Germ Network**
+- `assets/icons/brands/AppleLogo.svg` — **Apple Inc.**
+- `assets/icons/brands/AndroidLogo.svg` — **Google LLC**
+- `assets/icons/community/Leaflet.svg` — **Leaflet**
+- `assets/icons/community/Offprint.svg` — **Offprint**
+- `assets/icons/community/Pckt.svg` and `assets/icons/community/PcktFull.svg` — **pckt**
+- `assets/icons/community/StandardSite.svg` — **Standard.site**
+- `assets/icons/community/germ_logo.webp` — **Germ Network**
 
 Apple's and Google's marks in particular carry their own brand guidelines governing size, spacing, and permitted contexts. If you ship a sign-in button or a store badge, follow their guidelines.
 

@@ -270,7 +270,7 @@ module.exports = function (_config) {
              * One font per codegen directory under `assets/icons/`, see
              * `scripts/icons/README.md`.
              */
-            iconSets: ['ui', 'external', 'custom'].map(lane => ({
+            iconSets: ['ui', 'brands', 'community'].map(lane => ({
               inputDir: `./assets/icons/${lane}`,
               outputDir: './assets/nano-icons/nanoicons',
               fontFamily: `icons-${lane}`,

@@ -21,7 +21,7 @@ const avatars: NewPostsPillAuthor[] = [
   {
     did: 'storybook:two',
     avatar: Asset.fromModule(
-      require('../../../../assets/icons/external/germ_logo.webp'),
+      require('../../../../assets/icons/community/germ_logo.webp'),
     ).uri,
   },
   {

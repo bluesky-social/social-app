@@ -206,53 +206,6 @@ test('keeps multi-path artwork out of generated icon lanes', async t => {
 
   const formerLane = await fixture(t, 'multipath', 'Multiple.svg', svg)
   await assert.rejects(readIconSource(formerLane.root, formerLane.relative), /unclassified source directory multipath/)
-
-  // Non-mergeable paints do not collapse to one path, so external rejects them too.
-  const external = await fixture(t, 'external', 'Multiple.svg', svg)
-  await assert.rejects(readIconSource(external.root, external.relative), /external\/ generated icons must optimize to exactly one path/)
-})
-
-test('rejects the retired brands and community source lanes', async t => {
-  const svg = '<svg viewBox="0 0 24 24"><path d="M0 0h2v2Z"/></svg>'
-  for (const lane of ['brands', 'community']) {
-    const normal = await fixture(t, lane, 'Retired.svg', svg)
-    await assert.rejects(readIconSource(normal.root, normal.relative), new RegExp(`${lane}/ was retired; use external/`))
-    await assert.rejects(discoverIconSources(normal.root), /unclassified SVG sources/)
-
-    const temporary = await fixture(t, `tmp/${lane}`, 'Retired.svg', svg)
-    await assert.rejects(readIconSource(temporary.root, temporary.relative), new RegExp(`tmp/${lane}/ was retired; use tmp/external/`))
-  }
-})
-
-test('external icons are strict single paths without UI naming rules', async t => {
-  const bare = await fixture(t, 'external', 'Service.svg', '<svg viewBox="0 0 24 24"><path d="M0 0h2v2Z"/></svg>')
-  const icon = await readIconSource(bare.root, bare.relative)
-  assert.deepEqual([icon.lane, icon.namespace, icon.exportName, icon.glyph], ['external', 'external', 'Service', true])
-
-  // No Large token is required for 64x64 artwork, and none is forbidden for 24x24.
-  const large = await fixture(t, 'external', 'Wordmark.svg', '<svg viewBox="0 0 64 64"><path d="M0 0h2v2Z"/></svg>')
-  assert.equal((await readIconSource(large.root, large.relative)).exportName, 'Wordmark')
-  const styled = await fixture(t, 'external', 'Mark_Large.svg', '<svg viewBox="0 0 24 24"><path d="M0 0h2v2Z"/></svg>')
-  assert.equal((await readIconSource(styled.root, styled.relative)).exportName, 'Mark_Large')
-
-  // Shapes and mixed paint roles belong in custom/.
-  const shape = await fixture(
-    t,
-    'external',
-    'Badge.svg',
-    '<svg fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M4 4h2v2Z"/></svg>',
-  )
-  await assert.rejects(readIconSource(shape.root, shape.relative), /unsupported <circle> element in external\//)
-
-  const lowercase = await fixture(t, 'external', 'lowercase.svg', '<svg viewBox="0 0 24 24"><path d="M0 0h2v2Z"/></svg>')
-  await assert.rejects(readIconSource(lowercase.root, lowercase.relative), /uppercase letter/)
-  const badFill = await fixture(
-    t,
-    'external',
-    'NonZero.svg',
-    '<svg viewBox="0 0 24 24"><path fill-rule="nonzero" d="M0 0h2v2Z"/></svg>',
-  )
-  await assert.rejects(readIconSource(badFill.root, badFill.relative), /unsupported fill-rule/)
 })
 
 test('requires UI filenames to follow the icon style scheme', async t => {
@@ -281,23 +234,18 @@ test('requires UI filenames to follow the icon style scheme', async t => {
   await assert.rejects(readIconSource(missingLarge.root, missingLarge.relative), /viewBox is 64x64/)
 })
 
-test('keeps the three custom exceptions raw and out of component codegen', async t => {
-  const sourceRoot = path.resolve(import.meta.dirname, '../../assets/icons')
-  for (const name of ['StarterPackMultiPathLarge', 'VerifiedCheck', 'VerifierCheck']) {
-    const source = await readIconSource(sourceRoot, path.join('custom', `${name}.svg`))
-    assert.equal(source.codegen, false, name)
-    assert.equal(source.lane, 'custom', name)
-  }
-  const custom = await fixture(
+test('preserves supported brand shapes and paint roles', async t => {
+  const brand = await fixture(
     t,
-    'custom',
+    'brands',
     'Badge.svg',
     '<svg fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path fill="#fff" d="M4 4h2v2Z"/></svg>',
   )
-  const icon = await readIconSource(custom.root, custom.relative)
-  assert.equal(icon.codegen, false)
-  assert.match(icon.optimized, /<circle/)
-  assert.match(icon.optimized, /#fff/)
+  const icon = await readIconSource(brand.root, brand.relative)
+  assert.deepEqual(icon.elements.map(element => [element.type, element.fill]), [
+    ['circle', 'currentColor'],
+    ['path', '#fff'],
+  ])
 })
 
 test('detects export collisions', async t => {
@@ -307,11 +255,11 @@ test('detects export collisions', async t => {
   const scanRoot = path.join(root, 'src')
   const outputRoot = path.join(scanRoot, 'components/icons')
   await fs.mkdir(path.join(sourceRoot, 'ui'), {recursive: true})
-  await fs.mkdir(path.join(sourceRoot, 'external'), {recursive: true})
+  await fs.mkdir(path.join(sourceRoot, 'brands'), {recursive: true})
   await fs.mkdir(scanRoot, {recursive: true})
   const svg = '<svg viewBox="0 0 24 24"><path d="M0 0h2v2Z"/></svg>'
   await fs.writeFile(path.join(sourceRoot, 'ui/Same_Stroke2_Corner0_Rounded.svg'), svg)
-  await fs.writeFile(path.join(sourceRoot, 'external/Same_Stroke2_Corner0_Rounded.svg'), svg)
+  await fs.writeFile(path.join(sourceRoot, 'brands/Same_Stroke2_Corner0_Rounded.svg'), svg)
   await assert.rejects(
     buildIconSet({outputRoot, scanRoot, sourceRoot}),
     /duplicate export Same_Stroke2_Corner0_Rounded/,
@@ -411,16 +359,17 @@ const require = createRequire(import.meta.url)
 const nanoDir = path.dirname(require.resolve('react-native-nano-icons/package.json'))
 const {buildAllFonts} = require('react-native-nano-icons/cli')
 
-const LANES = ['ui', 'external', 'custom']
+const LANES = ['ui', 'brands', 'community']
 const SQUARE = 'M4 4h16v16H4Z'
 const TRIANGLE = 'M2 2h20L2 22Z'
 const DIAMOND = 'M12 2l10 10-10 10L2 12Z'
 const svgOf = d => `<svg viewBox="0 0 24 24"><path d="${d}"/></svg>\n`
+const brandOf = r =>
+  `<svg fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="${r}" fill="currentColor"/><path fill="#fff" d="M4 4h2v2Z"/></svg>\n`
 const NORMAL = {
   'ui/Base_Filled_Corner0_Rounded.svg': svgOf(SQUARE),
-  'external/Service.svg': svgOf(TRIANGLE),
-  'custom/Badge.svg':
-    '<svg fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path fill="#fff" d="M8 8h8v8H8Z"/></svg>\n',
+  'brands/Badge.svg': brandOf(10),
+  'community/Service.svg': svgOf(TRIANGLE),
 }
 const DOCBLOCK = lane =>
   `/** Temporary SVG-only icon. Move its source to assets/icons/${lane}/ before a native release. */`
@@ -461,28 +410,31 @@ async function iconProject(t, files) {
 test('classifies temporary sources by their logical lane', async t => {
   const project = await iconProject(t, {
     'tmp/ui/Ota_Stroke2_Corner0_Rounded.svg': svgOf(SQUARE),
-    'tmp/external/OtaService.svg': svgOf(TRIANGLE),
+    'tmp/brands/OtaBadge.svg': brandOf(10),
+    'tmp/community/OtaService.svg': svgOf(TRIANGLE),
   })
   const read = relative => readIconSource(project.sourceRoot, path.join(...relative.split('/')))
   assert.deepEqual(
     await Promise.all(
-      ['ui/Ota_Stroke2_Corner0_Rounded', 'external/OtaService'].map(async name => {
+      ['ui/Ota_Stroke2_Corner0_Rounded', 'brands/OtaBadge', 'community/OtaService'].map(async name => {
         const icon = await read(`tmp/${name}.svg`)
         return [icon.relativePath, icon.lane, icon.namespace, icon.temporary, icon.glyph, icon.codegen]
       }),
     ),
     [
       [path.join('tmp', 'ui', 'Ota_Stroke2_Corner0_Rounded.svg'), 'ui', '', true, false, true],
-      [path.join('tmp', 'external', 'OtaService.svg'), 'external', 'external', true, false, true],
+      [path.join('tmp', 'brands', 'OtaBadge.svg'), 'brands', 'brands', true, false, true],
+      [path.join('tmp', 'community', 'OtaService.svg'), 'community', 'community', true, false, true],
     ],
   )
   assert.deepEqual(await discoverIconSources(project.sourceRoot), [
-    path.join('tmp', 'external', 'OtaService.svg'),
+    path.join('tmp', 'brands', 'OtaBadge.svg'),
+    path.join('tmp', 'community', 'OtaService.svg'),
     path.join('tmp', 'ui', 'Ota_Stroke2_Corner0_Rounded.svg'),
   ])
 })
 
-test('rejects temporary sources outside tmp/<ui|external>/<file>.svg', async t => {
+test('rejects temporary sources outside tmp/<ui|brands|community>/<file>.svg', async t => {
   const svg = svgOf(SQUARE)
   const project = await iconProject(t, {
     'tmp/Loose.svg': svg,
@@ -490,8 +442,6 @@ test('rejects temporary sources outside tmp/<ui|external>/<file>.svg', async t =
     'tmp/flags/Flag.svg': svg,
     'tmp/other/Thing.svg': svg,
     'tmp/ui/deeper/Thing_Stroke2_Corner0_Rounded.svg': svg,
-    'tmp/brands/Retired.svg': svg,
-    'tmp/community/Retired.svg': svg,
     'ui/deeper/Thing_Stroke2_Corner0_Rounded.svg': svg,
   })
   const read = (...segments) => readIconSource(project.sourceRoot, path.join(...segments))
@@ -499,11 +449,9 @@ test('rejects temporary sources outside tmp/<ui|external>/<file>.svg', async t =
   await assert.rejects(read('tmp', 'custom', 'Raw.svg'), /unsupported temporary source directory tmp\/custom/)
   await assert.rejects(read('tmp', 'flags', 'Flag.svg'), /unsupported temporary source directory tmp\/flags/)
   await assert.rejects(read('tmp', 'other', 'Thing.svg'), /unsupported temporary source directory tmp\/other/)
-  await assert.rejects(read('tmp', 'brands', 'Retired.svg'), /tmp\/brands\/ was retired; use tmp\/external\//)
-  await assert.rejects(read('tmp', 'community', 'Retired.svg'), /tmp\/community\/ was retired; use tmp\/external\//)
   await assert.rejects(read('tmp', 'ui', 'deeper', 'Thing_Stroke2_Corner0_Rounded.svg'), /nested icon source directories/)
   await assert.rejects(read('ui', 'deeper', 'Thing_Stroke2_Corner0_Rounded.svg'), /nested icon source directories/)
-  await assert.rejects(project.build(), /temporary icons must be in|unsupported temporary source directory|was retired/)
+  await assert.rejects(project.build(), /temporary icons must be in|unsupported temporary source directory/)
 
   const stray = await iconProject(t, {'elsewhere/Thing.svg': svg, 'tmp/ui/Ok_Stroke2_Corner0_Rounded.svg': svg})
   await assert.rejects(discoverIconSources(stray.sourceRoot), /unclassified SVG sources:\nelsewhere/)
@@ -516,23 +464,18 @@ test('temporary sources get the same validation as their lane', async t => {
     'tmp/ui/Broken_Stroke2_Corner0_Rounded.svg': '<svg viewBox="0 0 24 24"><path></svg>',
     'tmp/ui/Multi_Filled_Corner0_Rounded.svg':
       '<svg viewBox="0 0 24 24"><path fill="#000" d="M0 0h2v2Z"/><path fill="#111" d="M4 4h2v2Z"/></svg>',
-    'tmp/external/Opacity.svg': '<svg viewBox="0 0 24 24"><path opacity=".5" d="M0 0h2"/></svg>',
-    'tmp/external/lowercase.svg': svgOf(SQUARE),
-    'tmp/external/Multi.svg':
-      '<svg viewBox="0 0 24 24"><path fill="#000" d="M0 0h2v2Z"/><path fill="#111" d="M4 4h2v2Z"/></svg>',
-    'tmp/external/Shape.svg': '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>',
-    'tmp/external/Script.svg': '<svg viewBox="0 0 24 24"><script>alert(1)</script></svg>',
+    'tmp/community/Opacity.svg': '<svg viewBox="0 0 24 24"><path opacity=".5" d="M0 0h2"/></svg>',
+    'tmp/brands/lowercase.svg': brandOf(10),
+    'tmp/brands/Script.svg': '<svg viewBox="0 0 24 24"><script>alert(1)</script></svg>',
   })
   const read = name => readIconSource(project.sourceRoot, path.join(...name.split('/')))
   await assert.rejects(read('tmp/ui/Bare.svg'), /UI icon names must/)
   await assert.rejects(read('tmp/ui/Big_Stroke2_Corner0_Rounded.svg'), /viewBox is 64x64/)
   await assert.rejects(read('tmp/ui/Broken_Stroke2_Corner0_Rounded.svg'), /malformed SVG/)
   await assert.rejects(read('tmp/ui/Multi_Filled_Corner0_Rounded.svg'), /must optimize to exactly one path/)
-  await assert.rejects(read('tmp/external/Opacity.svg'), /unsupported opacity attribute/)
-  await assert.rejects(read('tmp/external/lowercase.svg'), /uppercase letter/)
-  await assert.rejects(read('tmp/external/Multi.svg'), /must optimize to exactly one path/)
-  await assert.rejects(read('tmp/external/Shape.svg'), /unsupported <circle>/)
-  await assert.rejects(read('tmp/external/Script.svg'), /unsupported <script>/)
+  await assert.rejects(read('tmp/community/Opacity.svg'), /unsupported opacity attribute/)
+  await assert.rejects(read('tmp/brands/lowercase.svg'), /uppercase letter/)
+  await assert.rejects(read('tmp/brands/Script.svg'), /unsupported <script>/)
 })
 
 test('generates normal exports with per-export cleanup docblocks', async t => {
@@ -540,19 +483,23 @@ test('generates normal exports with per-export cleanup docblocks', async t => {
     ...NORMAL,
     'tmp/ui/BaseTwo_Filled_Corner0_Rounded.svg': svgOf(DIAMOND),
     'tmp/ui/Wide_Filled_Corner0_Rounded.svg': '<svg viewBox="0 0 30 24"><path d="M0 0h2v2Z"/></svg>',
-    'tmp/external/OtaService.svg': svgOf(DIAMOND),
+    'tmp/brands/OtaBadge.svg': brandOf(8),
+    'tmp/community/OtaService.svg': svgOf(DIAMOND),
   })
   const result = await project.build()
   assert.deepEqual(result.temporaryIcons, [
-    path.join('tmp', 'external', 'OtaService.svg'),
+    path.join('tmp', 'brands', 'OtaBadge.svg'),
+    path.join('tmp', 'community', 'OtaService.svg'),
     path.join('tmp', 'ui', 'BaseTwo_Filled_Corner0_Rounded.svg'),
     path.join('tmp', 'ui', 'Wide_Filled_Corner0_Rounded.svg'),
   ])
   assert.deepEqual([...result.tsOutputs.keys()].sort(), [
     'Base.tsx',
     'Wide.tsx',
-    'external/OtaService.tsx',
-    'external/Service.tsx',
+    'brands/Badge.tsx',
+    'brands/OtaBadge.tsx',
+    'community/OtaService.tsx',
+    'community/Service.tsx',
   ])
 
   // A normal icon and a temporary one in the same module: only the latter is marked and glyphless.
@@ -564,14 +511,20 @@ test('generates normal exports with per-export cleanup docblocks', async t => {
   assert.ok(base.indexOf('Base_Filled_Corner0_Rounded =') < base.indexOf('BaseTwo_Filled_Corner0_Rounded ='))
   assert.doesNotMatch(base.slice(0, base.indexOf(DOCBLOCK('ui'))), /Temporary SVG-only/)
 
-  // A temporary external icon is a normal single-path export in the external namespace, without a glyph.
-  const external = result.tsOutputs.get('external/OtaService.tsx')
-  assert.ok(external.includes(`${DOCBLOCK('external')}\nexport const OtaService = createSinglePathSVG({`))
-  assert.doesNotMatch(external, /createSVG\b|glyph:/)
+  // Flexible (brands) and community exports, through createSVG and createSinglePathSVG.
+  const brand = result.tsOutputs.get('brands/OtaBadge.tsx')
+  assert.match(brand, /createSVG/)
+  assert.ok(brand.includes(`${DOCBLOCK('brands')}\nexport const OtaBadge = createSVG({`))
+  assert.doesNotMatch(brand, /glyph:/)
+  const community = result.tsOutputs.get('community/OtaService.tsx')
+  assert.ok(community.includes(`${DOCBLOCK('community')}\nexport const OtaService = createSinglePathSVG({`))
+  assert.doesNotMatch(community, /glyph:/)
 
   // Ordinary modules are untouched.
-  assert.doesNotMatch(result.tsOutputs.get('external/Service.tsx'), /Temporary/)
-  assert.match(result.tsOutputs.get('external/Service.tsx'), /glyph: 'Service'/)
+  assert.doesNotMatch(result.tsOutputs.get('brands/Badge.tsx'), /Temporary/)
+  assert.match(result.tsOutputs.get('brands/Badge.tsx'), /glyph: 'Badge'/)
+  assert.doesNotMatch(result.tsOutputs.get('community/Service.tsx'), /Temporary/)
+  assert.match(result.tsOutputs.get('community/Service.tsx'), /glyph: 'Service'/)
   assert.doesNotMatch(result.tsOutputs.get('Wide.tsx'), /glyph:/)
 })
 
@@ -590,10 +543,10 @@ test('rejects duplicates between normal and temporary sources', async t => {
   await assert.rejects(project.build(), /duplicate export Same_Stroke2_Corner0_Rounded/)
 
   const crossLane = await iconProject(t, {
-    'external/Same_Stroke2_Corner0_Rounded.svg': svgOf(SQUARE),
-    'tmp/ui/Same_Stroke2_Corner0_Rounded.svg': svgOf(SQUARE),
+    'brands/Same.svg': brandOf(10),
+    'tmp/community/Same.svg': svgOf(SQUARE),
   })
-  await assert.rejects(crossLane.build(), /duplicate export Same_Stroke2_Corner0_Rounded/)
+  await assert.rejects(crossLane.build(), /duplicate export Same/)
 
   const normalized = await iconProject(t, {
     'ui/Envelope_Stroke2_Corner0_Rounded.svg': svgOf(SQUARE),
@@ -644,11 +597,12 @@ test('moving a temporary source into its lane keeps the export and import path',
   const project = await iconProject(t, {
     ...NORMAL,
     'tmp/ui/Ota_Filled_Corner0_Rounded.svg': svgOf(DIAMOND),
-    'tmp/external/OtaService.svg': svgOf(DIAMOND),
+    'tmp/brands/OtaBadge.svg': brandOf(8),
+    'tmp/community/OtaService.svg': svgOf(DIAMOND),
     'tmp/ui/OtaWide_Filled_Corner0_Rounded.svg': '<svg viewBox="0 0 30 24"><path d="M0 0h2v2Z"/></svg>',
   })
   const before = await project.build()
-  for (const name of ['ui/Ota_Filled_Corner0_Rounded', 'external/OtaService', 'ui/OtaWide_Filled_Corner0_Rounded']) {
+  for (const name of ['ui/Ota_Filled_Corner0_Rounded', 'brands/OtaBadge', 'community/OtaService', 'ui/OtaWide_Filled_Corner0_Rounded']) {
     await project.move(path.join('tmp', ...name.split('/')) + '.svg', path.join(...name.split('/')) + '.svg')
   }
   const after = await project.build()
@@ -656,7 +610,8 @@ test('moving a temporary source into its lane keeps the export and import path',
   assert.deepEqual(after.temporaryIcons, [])
   for (const output of after.tsOutputs.values()) assert.doesNotMatch(output, /Temporary/)
   assert.match(after.tsOutputs.get('Ota.tsx'), /export const Ota_Filled_Corner0_Rounded[^]*glyph: 'Ota_Filled_Corner0_Rounded'/)
-  assert.match(after.tsOutputs.get('external/OtaService.tsx'), /glyph: 'OtaService'/)
+  assert.match(after.tsOutputs.get('brands/OtaBadge.tsx'), /glyph: 'OtaBadge'/)
+  assert.match(after.tsOutputs.get('community/OtaService.tsx'), /glyph: 'OtaService'/)
   // The existing glyph-equivalence fallback still applies after the move.
   const [, wide] = after.tsOutputs.get('Ota.tsx').split('export const OtaWide_Filled_Corner0_Rounded')
   assert.ok(wide && !wide.includes('glyph:'))
@@ -708,14 +663,11 @@ test('temporary icons never change the unmodified library fonts', async t => {
   const project = await fontProject(t, NORMAL)
   const baseline = await project.fonts()
   assert.deepEqual(LANES.map(lane => glyphNames(baseline[lane]).length), [1, 1, 1])
-  // The custom badge keeps both paint roles as separate glyph layers.
-  assert.deepEqual(baseline.custom.map.i.Badge[1].map(([, color]) => color), ['currentColor', '#fff'])
 
   // Adding.
   await project.write('tmp/ui/Ota_Filled_Corner0_Rounded.svg', svgOf(DIAMOND))
-  await project.write('tmp/external/OtaService.svg', svgOf(DIAMOND))
-  // There is no tmp/custom lane, but even a stray source there is outside every font input.
-  await project.write('tmp/custom/OtaBadge.svg', svgOf(DIAMOND))
+  await project.write('tmp/brands/OtaBadge.svg', brandOf(8))
+  await project.write('tmp/community/OtaService.svg', svgOf(DIAMOND))
   const added = await project.fonts()
   assertSameFonts(added, baseline)
   for (const lane of LANES) assert.equal(added[lane].map.m.h, baseline[lane].map.m.h, `${lane} hash`)
@@ -730,27 +682,28 @@ test('temporary icons never change the unmodified library fonts', async t => {
   assertSameFonts(await project.fonts(), baseline)
 
   // Removing.
-  for (const file of ['tmp/ui/Renamed_Filled_Corner0_Rounded.svg', 'tmp/external/OtaService.svg', 'tmp/custom/OtaBadge.svg']) {
+  for (const file of ['tmp/ui/Renamed_Filled_Corner0_Rounded.svg', 'tmp/brands/OtaBadge.svg', 'tmp/community/OtaService.svg']) {
     await project.remove(file)
   }
   assertSameFonts(await project.fonts(), baseline)
 })
 
 test('moving a temporary source into a lane changes only that lane font', async t => {
-  const project = await fontProject(t, {...NORMAL, 'tmp/external/OtaService.svg': svgOf(DIAMOND), 'tmp/ui/Ota_Filled_Corner0_Rounded.svg': svgOf(DIAMOND)})
+  const project = await fontProject(t, {...NORMAL, 'tmp/community/OtaService.svg': svgOf(DIAMOND), 'tmp/ui/Ota_Filled_Corner0_Rounded.svg': svgOf(DIAMOND)})
   const baseline = await project.fonts()
-  assert.deepEqual(glyphNames(baseline.external), ['Service'])
+  assert.deepEqual(glyphNames(baseline.community), ['Service'])
 
-  await project.move('tmp/external/OtaService.svg', 'external/OtaService.svg')
+  await project.move('tmp/community/OtaService.svg', 'community/OtaService.svg')
   const moved = await project.fonts()
-  assertSameFonts(moved, baseline, ['ui', 'custom'])
-  assert.deepEqual(glyphNames(moved.external), ['OtaService', 'Service'])
-  assert.notEqual(moved.external.map.m.h, baseline.external.map.m.h)
-  assert.ok(!moved.external.ttf.equals(baseline.external.ttf))
+  assertSameFonts(moved, baseline, ['ui', 'brands'])
+  assert.deepEqual(glyphNames(moved.community), ['OtaService', 'Service'])
+  assert.notEqual(moved.community.map.m.h, baseline.community.map.m.h)
+  assert.notEqual(moved.community.family, baseline.community.family)
+  assert.ok(!moved.community.ttf.equals(baseline.community.ttf))
 
   // The generated import path and the font glyph name now agree.
   const result = await project.build()
-  assert.match(result.tsOutputs.get('external/OtaService.tsx'), /glyph: 'OtaService'/)
+  assert.match(result.tsOutputs.get('community/OtaService.tsx'), /glyph: 'OtaService'/)
   assert.deepEqual(result.temporaryIcons, [path.join('tmp', 'ui', 'Ota_Filled_Corner0_Rounded.svg')])
 })
 
@@ -758,7 +711,7 @@ const EXPO_BUILD = `
 const fs = require('fs')
 const [pluginPath, root, outputDir, resultPath] = process.argv.slice(2)
 require(pluginPath)
-  .getOrBuildFonts(root, ['ui', 'external', 'custom'].map(lane => ({
+  .getOrBuildFonts(root, ['ui', 'brands', 'community'].map(lane => ({
     fontFamily: 'icons-' + lane,
     inputDir: './assets/icons/' + lane,
     outputDir,
@@ -801,7 +754,8 @@ test('the Expo config plugin builder agrees with the CLI builder and skips tmp',
   assertSameFonts(await expoFonts(project.root, 'baseline'), baseline)
 
   await project.write('tmp/ui/Ota_Filled_Corner0_Rounded.svg', svgOf(DIAMOND))
-  await project.write('tmp/external/OtaService.svg', svgOf(DIAMOND))
+  await project.write('tmp/brands/OtaBadge.svg', brandOf(8))
+  await project.write('tmp/community/OtaService.svg', svgOf(DIAMOND))
   const cli = await project.fonts()
   const expo = await expoFonts(project.root, 'tmp')
   assertSameFonts(expo, cli)
@@ -836,64 +790,10 @@ test('font checks ignore temporary icons but still catch stale ordinary glyphmap
   assert.deepEqual(await applyNanoFonts({check: true, repoRoot: root}), [])
 
   await write('tmp/ui/Ota_Filled_Corner0_Rounded.svg', svgOf(DIAMOND))
-  await write('tmp/external/OtaService.svg', svgOf(DIAMOND))
+  await write('tmp/brands/OtaBadge.svg', brandOf(8))
   assert.deepEqual(await applyNanoFonts({check: true, repoRoot: root}), [])
 
   const glyphmap = path.relative(process.cwd(), path.join(root, 'assets/nano-icons/nanoicons/icons-ui.glyphmap.json'))
   await write('ui/Base_Filled_Corner0_Rounded.svg', svgOf(TRIANGLE))
   assert.deepEqual(await applyNanoFonts({check: true, repoRoot: root}), [glyphmap])
-})
-
-test('the app configures, fingerprints, and imports exactly the ui, external, and custom fonts', async () => {
-  const repoRoot = path.resolve(import.meta.dirname, '../..')
-  const repoRequire = createRequire(path.join(repoRoot, 'package.json'))
-  const {exp} = repoRequire('expo/config').getConfig(repoRoot, {skipSDKVersionRequirement: true})
-  const [, {iconSets}] = exp.plugins.find(plugin => Array.isArray(plugin) && plugin[0] === 'react-native-nano-icons')
-  const sets = ['ui', 'external', 'custom']
-  assert.deepEqual(
-    iconSets,
-    sets.map(set => ({
-      fontFamily: `icons-${set}`,
-      inputDir: `./assets/icons/${set}`,
-      outputDir: './assets/nano-icons/nanoicons',
-    })),
-  )
-
-  const fingerprint = repoRequire('./fingerprint.config.js')
-  assert.deepEqual(
-    fingerprint.extraSources.map(source => source.filePath),
-    sets.map(set => `assets/nano-icons/nanoicons/icons-${set}.ttf`),
-  )
-
-  const glyphMaps = await fs.readFile(path.join(repoRoot, 'src/components/icons/glyphMaps.ts'), 'utf8')
-  const nano = await fs.readFile(path.join(repoRoot, 'src/components/icons/nano.tsx'), 'utf8')
-  for (const set of sets) {
-    assert.match(glyphMaps, new RegExp(`icons-${set}\\.glyphmap\\.json`))
-    assert.match(glyphMaps, new RegExp(`\\b${set}: ${set}GlyphMap`))
-    assert.match(nano, new RegExp(`\\b${set}: createNanoIconSet\\(glyphMaps\\.${set}\\)`))
-  }
-
-  // Committed font membership: the three exceptions are only in custom, which has nothing else.
-  const names = ['StarterPackMultiPathLarge', 'VerifiedCheck', 'VerifierCheck']
-  const map = async set =>
-    JSON.parse(await fs.readFile(path.join(repoRoot, `assets/nano-icons/nanoicons/icons-${set}.glyphmap.json`), 'utf8'))
-  assert.deepEqual(Object.keys((await map('custom')).i).sort(), names)
-  for (const set of ['ui', 'external']) {
-    const glyphs = (await map(set)).i
-    for (const name of names) assert.ok(!(name in glyphs), `${name} in ${set}`)
-  }
-  for (const name of ['VerifiedCheck', 'VerifierCheck']) {
-    assert.deepEqual((await map('custom')).i[name][1].map(([, color]) => color), ['currentColor', '#fff'], name)
-  }
-
-  // Each handwritten component names its glyph, and the SVGs are the font inputs.
-  const files = {StarterPack: 'StarterPackMultiPathLarge', VerifiedCheck: 'VerifiedCheck', VerifierCheck: 'VerifierCheck'}
-  for (const [file, name] of Object.entries(files)) {
-    const source = await fs.readFile(path.join(repoRoot, `src/components/icons/custom/${file}.tsx`), 'utf8')
-    assert.match(source, new RegExp(`export const ${name} = createSVG\\(`))
-    assert.match(source, new RegExp(`glyph: '${name}',`))
-    assert.doesNotMatch(source, /neither generated|never.*font/i)
-    await fs.access(path.join(repoRoot, `assets/icons/custom/${name}.svg`))
-  }
-  assert.deepEqual((await fs.readdir(path.join(repoRoot, 'assets/icons/custom'))).filter(f => f.endsWith('.svg')).sort(), names.map(n => `${n}.svg`))
 })

@@ -26,19 +26,19 @@ const PATH_ARGUMENTS = {
   Z: 0,
 }
 
-export const SOURCE_LANES = new Set(['custom', 'external', 'flags', 'ui'])
+export const SOURCE_LANES = new Set([
+  'brands',
+  'community',
+  'custom',
+  'flags',
+  'ui',
+])
 
-const CODEGEN_LANES = new Set(['external', 'ui'])
+const CODEGEN_LANES = new Set(['brands', 'community', 'ui'])
 
 /**
- * Former source directories, merged into `external/` (or moved to `custom/`).
- * They are rejected explicitly rather than treated as extra lanes.
- */
-const RETIRED_LANES = new Set(['brands', 'community'])
-
-/**
- * Root directory of temporary SVG-only icons: `tmp/<ui|external>/`.
- * It is a sibling of the ui/external/custom font input directories, so the fonts never see it.
+ * Root directory of temporary SVG-only icons: `tmp/<ui|brands|community>/`.
+ * It is a sibling of the font input directories, so the fonts never see it.
  */
 export const TEMPORARY_ROOT = 'tmp'
 
@@ -53,19 +53,13 @@ function classifySource(relativePath) {
   if (root === TEMPORARY_ROOT) {
     const [lane, ...deeper] = rest
     if (deeper.length === 0) {
-      fail(relativePath, `temporary icons must be in ${TEMPORARY_ROOT}/ui/ or ${TEMPORARY_ROOT}/external/`)
-    }
-    if (RETIRED_LANES.has(lane)) {
-      fail(relativePath, `${TEMPORARY_ROOT}/${lane}/ was retired; use ${TEMPORARY_ROOT}/external/`)
+      fail(relativePath, `temporary icons must be in ${TEMPORARY_ROOT}/ui/, ${TEMPORARY_ROOT}/brands/, or ${TEMPORARY_ROOT}/community/`)
     }
     if (!CODEGEN_LANES.has(lane)) {
-      fail(relativePath, `unsupported temporary source directory ${TEMPORARY_ROOT}/${lane}; use ui or external`)
+      fail(relativePath, `unsupported temporary source directory ${TEMPORARY_ROOT}/${lane}; use ui, brands, or community`)
     }
     if (deeper.length !== 1) fail(relativePath, 'nested icon source directories are not supported')
     return {filename: deeper[0], lane, temporary: true}
-  }
-  if (RETIRED_LANES.has(root)) {
-    fail(relativePath, `${root}/ was retired; use external/ (or custom/ for artwork that cannot be a single path)`)
   }
   if (!SOURCE_LANES.has(root)) fail(relativePath, `unclassified source directory ${root}`)
   if (rest.length !== 1) fail(relativePath, 'nested icon source directories are not supported')
@@ -330,6 +324,46 @@ function validateOrdinaryIcon(root, file, lane) {
   return {description, viewBox}
 }
 
+function validateFlexibleIcon(root, file, lane) {
+  const {entries, viewBox} = inspectSvg(root, file, lane)
+  const allowed = new Set(['circle', 'g', 'path', 'rect', 'svg'])
+  const unsupported = entries.find(entry => !allowed.has(entry.node.name))
+  if (unsupported) fail(file, `unsupported <${unsupported.node.name}> element in ${lane}/`)
+
+  const drawable = entries.filter(entry => ['circle', 'path', 'rect'].includes(entry.node.name))
+  if (drawable.length === 0) fail(file, 'icon has no drawable elements after optimization')
+  const elements = drawable.map(entry => {
+    const attributes = effectiveAttributes(entry)
+    const common = {
+      fill: attributes.fill ?? 'black',
+      stroke: attributes.stroke ?? 'none',
+      strokeLinecap: attributes['stroke-linecap'],
+      strokeLinejoin: attributes['stroke-linejoin'],
+      strokeWidth: attributes['stroke-width'] ? Number(attributes['stroke-width']) : undefined,
+      type: entry.node.name,
+    }
+    if (entry.node.name === 'path') {
+      return {...common, d: attributes.d, fillRule: attributes['fill-rule'], clipRule: attributes['clip-rule']}
+    }
+    if (entry.node.name === 'circle') {
+      return {...common, cx: Number(attributes.cx ?? 0), cy: Number(attributes.cy ?? 0), r: Number(attributes.r)}
+    }
+    return {
+      ...common,
+      height: Number(attributes.height),
+      rx: attributes.rx ? Number(attributes.rx) : undefined,
+      ry: attributes.ry ? Number(attributes.ry) : undefined,
+      width: Number(attributes.width),
+      x: Number(attributes.x ?? 0),
+      y: Number(attributes.y ?? 0),
+    }
+  })
+  if (elements.some(element => Object.values(element).some(value => typeof value === 'number' && !Number.isFinite(value)))) {
+    fail(file, 'shape has invalid numeric attributes')
+  }
+  return {elements, viewBox}
+}
+
 export function tokensForSemanticName(name) {
   return name.match(/[A-Z]+(?=[A-Z][a-z]|\d|$)|[A-Z]?[a-z]+|\d+/g) ?? []
 }
@@ -399,7 +433,8 @@ export function assignFamilies(icons) {
 }
 
 function namespaceForLane(lane) {
-  return lane === 'external' ? 'external' : ''
+  if (lane === 'brands' || lane === 'community') return lane
+  return ''
 }
 
 let pathKit
@@ -531,6 +566,10 @@ export async function glyphMismatch(data, width, height) {
   }
 }
 
+function cleanObject(value) {
+  return Object.fromEntries(Object.entries(value).filter(([, item]) => item !== undefined))
+}
+
 export async function readIconSource(sourceRoot, relativePath) {
   const {filename, lane, temporary} = classifySource(relativePath)
   const source = await fs.readFile(path.join(sourceRoot, relativePath), 'utf8')
@@ -568,8 +607,8 @@ export async function readIconSource(sourceRoot, relativePath) {
     validateUiSizeName(exportName, original.viewBox, relativePath)
   }
 
-  validateOrdinarySourceSemantics(original.entries, relativePath, lane)
-  const data = validateOrdinaryIcon(optimizedRoot, relativePath, lane)
+  if (lane !== 'brands') validateOrdinarySourceSemantics(original.entries, relativePath, lane)
+  const data = lane === 'brands' ? validateFlexibleIcon(optimizedRoot, relativePath, lane) : validateOrdinaryIcon(optimizedRoot, relativePath, lane)
   const [, , width, height] = data.viewBox.split(' ').map(Number)
   const glyph = !temporary && (await glyphMismatch(data, width, height)) === undefined
   const warnings =
@@ -640,13 +679,23 @@ function renderSingleIcon(icon) {
   return `${temporaryDocblock(icon)}export const ${icon.exportName} = createSinglePathSVG({\n  ${properties.join(',\n  ')},\n})\n`
 }
 
+function renderFlexibleIcon(icon) {
+  const glyph = icon.glyph ? `\n  glyph: ${JSON.stringify(icon.exportName)},` : ''
+  return `${temporaryDocblock(icon)}export const ${icon.exportName} = createSVG({\n  elements: ${JSON.stringify(icon.elements.map(cleanObject), null, 2).replaceAll('\n', '\n  ')},\n  viewBox: ${JSON.stringify(icon.viewBox)},${glyph}\n})\n`
+}
+
 function renderModule(modulePath, icons, aliases) {
+  const factoryNames = new Set()
   const imports = []
+  for (const icon of icons) {
+    if (icon.elements) factoryNames.add('createSVG')
+    else factoryNames.add('createSinglePathSVG')
+  }
   const templatePath = relativeImport(modulePath, 'TEMPLATE')
   const sections = [GENERATED_HEADER.trimEnd()]
-  if (icons.length > 0) {
+  if (factoryNames.size > 0) {
     imports.push({
-      code: `import {createSinglePathSVG} from ${JSON.stringify(templatePath)}`,
+      code: `import {${[...factoryNames].sort().join(', ')}} from ${JSON.stringify(templatePath)}`,
       source: templatePath,
     })
   }
@@ -667,7 +716,7 @@ function renderModule(modulePath, icons, aliases) {
     )
   }
   for (const icon of icons) {
-    sections.push(renderSingleIcon(icon))
+    sections.push(icon.elements ? renderFlexibleIcon(icon) : renderSingleIcon(icon))
   }
   for (const alias of aliases) {
     sections.push(`/** @deprecated Import ${alias.targetExport} from \`#/components/icons/${alias.targetModule}\` instead. */\nexport const ${alias.exportName} = ${alias.localName}\n`)
