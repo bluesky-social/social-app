@@ -4,7 +4,7 @@ import {msg, plural} from '@lingui/core/macro'
 import {type tools} from '#/lexicons'
 import {getReportActionLabel} from './reportActionLabel'
 
-/** Labels describe the returned state without inferring an appeal verdict. */
+/** Labels reflect explicit appeal outcomes and the current moderation state. */
 export function getNoticeLabels(
   data: tools.ozone.inbox.getActionedSubject.$OutputBody,
 ) {
@@ -14,6 +14,12 @@ export function getNoticeLabels(
     'uri' in data.subject &&
     isAtUriString(data.subject.uri, {strict: false}) &&
     new AtUri(data.subject.uri).collection === 'app.bsky.feed.post'
+  const isRestoredPost =
+    isPost &&
+    data.enforcement.state !== 'removed' &&
+    data.actions.some(
+      action => action.type === 'contentRemoved' && action.reversedAt,
+    )
   const appealResolved =
     data.appeal?.state === 'resolved' &&
     (!data.appeal.resolvedAt ||
@@ -24,11 +30,26 @@ export function getNoticeLabels(
       status: '',
       lastActionTaken: action?.type,
     }) ?? msg`Moderation notice`
+  let appealSummary = msg`We reviewed your appeal. The current status of your content or account is shown below.`
 
   if (data.appeal?.state === 'pending') {
     header = msg`Appeal under review`
   } else if (appealResolved) {
-    header = msg`Appeal resolved`
+    switch (data.appeal?.outcome) {
+      case 'approved':
+        header = msg`Appeal approved`
+        appealSummary = isRestoredPost
+          ? msg`A moderator reviewed your appeal and reversed the original decision. Your post has been restored and is visible again.`
+          : msg`A moderator reviewed your appeal and reversed the original decision.`
+        break
+      case 'denied':
+        header = msg`Appeal denied`
+        appealSummary = msg`We reviewed your appeal and are keeping our original decision in place.`
+        break
+      default:
+        header = msg`Appeal resolved`
+        break
+    }
   } else if (action?.reversedAt) {
     header = isAccount
       ? msg`The action against your account was reversed`
@@ -68,7 +89,7 @@ export function getNoticeLabels(
     : isPost
       ? data.enforcement.state === 'removed'
         ? msg`Removed post`
-        : data.actions.some(a => a.type === 'contentRemoved' && a.reversedAt)
+        : isRestoredPost
           ? msg`Restored post`
           : msg`Your post`
       : msg`Your content`
@@ -79,5 +100,5 @@ export function getNoticeLabels(
         ? data.appeal?.resolvedAt
         : (action?.reversedAt ?? action?.createdAt)
 
-  return {header, blockHeader, date, appealResolved}
+  return {header, blockHeader, date, appealResolved, appealSummary}
 }

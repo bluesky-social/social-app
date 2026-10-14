@@ -189,10 +189,7 @@ function NoticeDetails({
           header={i18n._(labels.header)}
           date={labels.date ? new Date(labels.date) : undefined}>
           {labels.appealResolved ? (
-            <Trans>
-              We reviewed your appeal. The current status of your content or
-              account is shown below.
-            </Trans>
+            i18n._(labels.appealSummary)
           ) : data.appeal?.state === 'pending' ? (
             <Trans>
               Your appeal has been submitted and is awaiting review.
