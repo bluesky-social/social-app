@@ -1,3 +1,4 @@
+import {useLingui} from '@lingui/react/macro'
 import {
   useInfiniteQuery,
   useMutation,
@@ -9,6 +10,7 @@ import {MOD_PROXY_SERVICE} from '#/lib/constants'
 import {STALE} from '#/state/queries'
 import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
+import * as Toast from '#/components/Toast'
 import {tools} from '#/lexicons'
 
 const QUERY_KEY_ROOT = 'moderation-inbox'
@@ -108,6 +110,7 @@ export function useModerationInboxUnreadCountQuery(isEnabled = true) {
 }
 
 export function useUpdateModerationInboxSeenMutation() {
+  const {t: l} = useLingui()
   const client = useAppviewClient()
   const queryClient = useQueryClient()
 
@@ -120,6 +123,11 @@ export function useUpdateModerationInboxSeenMutation() {
       ),
     onSuccess: async () => {
       await queryClient.invalidateQueries({queryKey: [QUERY_KEY_ROOT]})
+    },
+    onError: () => {
+      Toast.show(l`Failed to mark all as read. Please try again.`, {
+        type: 'error',
+      })
     },
   })
 }
