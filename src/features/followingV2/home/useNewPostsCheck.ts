@@ -64,9 +64,9 @@ export function useNewPostsCheck<T>({
   interval?: number
   /**
    * Resolves to what is newer than the top page, or a falsy value if nothing
-   * is. Rejects if it can't tell, which leaves the clock alone. It's told what
-   * prompted it, for a surface that shows what it finds differently on a
-   * significant return, and when the clock was set (`freshAt`), for metrics.
+   * is. Rejects if it can't tell, which leaves the clock alone. It gets the
+   * trigger, for surfaces that treat a significant return differently, and
+   * `freshAt`, when the clock was last set, for metrics.
    */
   check: (
     trigger: NewPostsCheckTrigger,

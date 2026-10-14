@@ -111,6 +111,11 @@ async function setup(initial: Partial<Props> = {}) {
   }
 }
 
+/** The triggers `check` was called with, in order. */
+function triggers(check: {mock: {calls: [NewPostsCheckTrigger, unknown][]}}) {
+  return check.mock.calls.map(([trigger]) => trigger)
+}
+
 /** Lets the promises that settle checks run their course. */
 async function flush() {
   await act(async () => {
@@ -242,12 +247,7 @@ describe('check', () => {
     await returnToApp(5 * MINUTE)
     await hopToApp()
     await advance(10 * MINUTE)
-    expect(view.check.mock.calls.map(([trigger]) => trigger)).toEqual([
-      'focus',
-      'return',
-      'hop',
-      'interval',
-    ])
+    expect(triggers(view.check)).toEqual(['focus', 'return', 'hop', 'interval'])
   })
 
   it('is told when the clock was set: the top page, then a successful check', async () => {
@@ -294,7 +294,7 @@ describe('in a memo() component', () => {
     await flush()
     await returnToApp(5 * MINUTE)
 
-    expect(check.mock.calls.map(([trigger]) => trigger)).toEqual(['return'])
+    expect(triggers(check)).toEqual(['return'])
   })
 })
 
@@ -337,9 +337,7 @@ describe('return', () => {
     const view = await setup({isBusy: true})
     await returnToApp(5 * MINUTE)
     await view.update({isBusy: false, topFetchedAt: Date.now()})
-    expect(view.check.mock.calls.map(([trigger]) => trigger)).toEqual([
-      'return',
-    ])
+    expect(triggers(view.check)).toEqual(['return'])
   })
 
   it('checks once for held-up returns, as a `return` if any was significant', async () => {
@@ -348,16 +346,11 @@ describe('return', () => {
     await returnToApp(5 * MINUTE)
     await hopToApp()
     await view.update({isBusy: false})
-    expect(view.check.mock.calls.map(([trigger]) => trigger)).toEqual([
-      'return',
-    ])
+    expect(triggers(view.check)).toEqual(['return'])
 
     // The next one starts afresh.
     await hopToApp()
-    expect(view.check.mock.calls.map(([trigger]) => trigger)).toEqual([
-      'return',
-      'hop',
-    ])
+    expect(triggers(view.check)).toEqual(['return', 'hop'])
   })
 
   it('is ignored while the view is inactive', async () => {
@@ -389,10 +382,7 @@ describe('return', () => {
     // Nor does it make a later hop significant.
     await view.update({isActive: true})
     await hopToApp()
-    expect(view.check.mock.calls.map(([trigger]) => trigger)).toEqual([
-      'focus',
-      'hop',
-    ])
+    expect(triggers(view.check)).toEqual(['focus', 'hop'])
   })
 
   it('is dropped if the view is left and come back to before it is judged', async () => {
@@ -404,7 +394,7 @@ describe('return', () => {
 
     // Nor does it make a later hop significant.
     await hopToApp()
-    expect(view.check.mock.calls.map(([trigger]) => trigger)).toEqual(['hop'])
+    expect(triggers(view.check)).toEqual(['hop'])
   })
 })
 
@@ -535,10 +525,7 @@ describe('limits', () => {
     view.check.mockResolvedValueOnce(true)
     response.reject(new Error('Network request failed'))
     await flush()
-    expect(view.check.mock.calls.map(([trigger]) => trigger)).toEqual([
-      'focus',
-      'return',
-    ])
+    expect(triggers(view.check)).toEqual(['focus', 'return'])
     expect(view.found()).toEqual(['return'])
   })
 
