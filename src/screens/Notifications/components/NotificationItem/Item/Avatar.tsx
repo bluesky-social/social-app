@@ -27,6 +27,10 @@ const ACTIVITY_ORANGE = '#F26022'
 export const AVATAR_SIZE = 44
 const BADGE_SIZE = 24
 /**
+ * Between the icon sizes, so the icon keeps its share of the badge.
+ */
+const BADGE_ICON_SIZE = 14
+/**
  * The width of the ring around the badge, in the row's background colour,
  * which sets it apart from the avatar.
  */
@@ -120,7 +124,7 @@ export function Avatar({
                 backgroundColor: badgeColor,
               },
             ]}>
-            <Icon size="xs" fill={t.palette.white} />
+            <Icon width={BADGE_ICON_SIZE} fill={t.palette.white} />
           </View>
         </View>
       )}
