@@ -1,5 +1,5 @@
 diff --git a/android/src/main/java/com/swmansion/rnscreens/Screen.kt b/android/src/main/java/com/swmansion/rnscreens/Screen.kt
-index 76bb694854b29d7f779f38244cd48113b429ea1f..fd402ac938862e8d39c5467c1b5c86c4e7eb0c83 100644
+index 2f2133bf28c8e7e0fe0d63f71ba34c6b070ae06e..ed685e27a0e491bfea04344d76e5ef3c42fe6dcd 100644
 --- a/android/src/main/java/com/swmansion/rnscreens/Screen.kt
 +++ b/android/src/main/java/com/swmansion/rnscreens/Screen.kt
 @@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi
@@ -10,7 +10,7 @@ index 76bb694854b29d7f779f38244cd48113b429ea1f..fd402ac938862e8d39c5467c1b5c86c4
  import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
  import com.facebook.react.bridge.ReactContext
  import com.facebook.react.uimanager.PixelUtil
-@@ -462,7 +463,7 @@ class Screen(
+@@ -478,7 +479,7 @@ class Screen(
                  endTransitionRecursive(childView.toolbar)
              }
  
@@ -19,7 +19,7 @@ index 76bb694854b29d7f779f38244cd48113b429ea1f..fd402ac938862e8d39c5467c1b5c86c4
                  endTransitionRecursive(childView)
              }
          }
-@@ -491,7 +492,10 @@ class Screen(
+@@ -509,7 +510,10 @@ class Screen(
                      startTransitionRecursive(child.toolbar)
                  }
  
@@ -54,7 +54,7 @@ index 79786f9aae510828521033a181d394633fd0e33c..7ee9208cb2c81ca82c003ec45fad7766
      }
  
 diff --git a/common/cpp/react/renderer/components/rnscreens/RNSFormSheetHostShadowNode.h b/common/cpp/react/renderer/components/rnscreens/RNSFormSheetHostShadowNode.h
-index 34155c61c483dc56476f4ec14d598a2c1dd6dff0..b76be74161559504593dc9dec77888f052b30b52 100644
+index 6cfc7d560d168d92737cf3b414d00c9c0db2f531..99d9a8520fdac80779acb145bfaa42ee5ca781c7 100644
 --- a/common/cpp/react/renderer/components/rnscreens/RNSFormSheetHostShadowNode.h
 +++ b/common/cpp/react/renderer/components/rnscreens/RNSFormSheetHostShadowNode.h
 @@ -5,6 +5,7 @@
@@ -77,9 +77,9 @@ index 34155c61c483dc56476f4ec14d598a2c1dd6dff0..b76be74161559504593dc9dec77888f0
 +    }
 +  }
 +
-   Point getContentOriginOffset(bool includeTransform) const override;
- };
- 
+   static ShadowNodeTraits BaseTraits() {
+     auto traits = ConcreteViewShadowNode::BaseTraits();
+     traits.set(ShadowNodeTraits::Trait::RootNodeKind);
 diff --git a/common/cpp/react/renderer/components/rnscreens/RNSModalScreenComponentDescriptor.h b/common/cpp/react/renderer/components/rnscreens/RNSModalScreenComponentDescriptor.h
 index bd3decd4dcf9b787fdc6d2803267b339787005e8..a87e485e3af36451a9001d6781063836040f66f9 100644
 --- a/common/cpp/react/renderer/components/rnscreens/RNSModalScreenComponentDescriptor.h
@@ -295,7 +295,7 @@ index a389353751c20a37aed1a0d02944fbab2f4520a8..2817b8308369427770befc27a993244b
  
    Point getContentOriginOffset(bool includeTransform) const override;
 diff --git a/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderConfigComponentDescriptor.h b/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderConfigComponentDescriptor.h
-index a70ae40c7d8fe871f08c651ac609f17876ce8b9b..ea8bbd20dbefc6a38648c913b99630ef41740a53 100644
+index 811c0a3be4f5698122d6bb083a79a3bcba07eefb..f59d2dc4aa75b56cf810e89c46134061948b9efe 100644
 --- a/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderConfigComponentDescriptor.h
 +++ b/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderConfigComponentDescriptor.h
 @@ -23,8 +23,6 @@ class RNSStackHeaderConfigComponentDescriptor final
@@ -315,9 +315,9 @@ index a70ae40c7d8fe871f08c651ac609f17876ce8b9b..ea8bbd20dbefc6a38648c913b99630ef
 +      configShadowNode.setSizeIfChanged(
            Size{stateData.frameSize.width, stateData.frameSize.height});
      }
-     ConcreteComponentDescriptor::adopt(shadowNode);
+ 
 diff --git a/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderConfigShadowNode.h b/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderConfigShadowNode.h
-index 10e40576beb64694d2e3aa234dc46c328bd1c163..d9e02ef025d0d0aa93dc90a860c0e90386d1b519 100644
+index 99d25eb5020a0be85968bc9fa6040f016073b152..d3d34c3b5f19c30cc73394d6063595f1545bc7a6 100644
 --- a/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderConfigShadowNode.h
 +++ b/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderConfigShadowNode.h
 @@ -6,6 +6,7 @@
@@ -470,7 +470,7 @@ index 0000000000000000000000000000000000000000..7498c7aea5a853ad12ea607cce921d47
 +
 +} // namespace rnscreens
 diff --git a/ios/RNSScreen.mm b/ios/RNSScreen.mm
-index 9b66012dc8db1e3af0cb5457f8dad86e7f2fe5e3..a7f1f613c291de8421f6f117c06d35ba34a2d908 100644
+index 049fd22427b2bde17fd7ca59b8de65d0ee07b4b5..ac484f9033e16f61fb382ed266eac8c3d6fe8b74 100644
 --- a/ios/RNSScreen.mm
 +++ b/ios/RNSScreen.mm
 @@ -1,4 +1,5 @@
@@ -479,7 +479,7 @@ index 9b66012dc8db1e3af0cb5457f8dad86e7f2fe5e3..a7f1f613c291de8421f6f117c06d35ba
  
  #import "RNSModalScreen.h"
  #import "RNSScreen.h"
-@@ -1180,9 +1181,82 @@ - (BOOL)hasHeaderConfig
+@@ -1226,9 +1227,82 @@ - (BOOL)hasHeaderConfig
    return _config != nil;
  }
  
@@ -492,11 +492,11 @@ index 9b66012dc8db1e3af0cb5457f8dad86e7f2fe5e3..a7f1f613c291de8421f6f117c06d35ba
 + * subtree, so a snapshot rooted BELOW the flagged canvas still includes the
 + * content.
 + *
-+ * By the time setViewToSnapshot runs, the screen's children are already
++ * By the time addSnapshotToView runs, the screen's children are already
 + * unmounted (only the pixels survive on the render server), so the secure
 + * subtrees must be captured HERE - before the transaction's mutations apply,
 + * while the subtree is intact. The overlays are stashed on the screen view
-+ * and composited over the main snapshot in setViewToSnapshot, each re-wrapped
++ * and composited over the main snapshot in addSnapshotToView, each re-wrapped
 + * in a fresh secure canvas so real captures (screenshots/recordings) taken
 + * during the transition still exclude them.
 + */
@@ -562,19 +562,30 @@ index 9b66012dc8db1e3af0cb5457f8dad86e7f2fe5e3..a7f1f613c291de8421f6f117c06d35ba
  }
  
  + (react::ComponentDescriptorProvider)componentDescriptorProvider
-@@ -1999,6 +2073,15 @@ - (void)setViewToSnapshot
-     auto afterUpdates = self.screenView.snapshotAfterUpdates;
-     UIView *snapshot = [self.view snapshotViewAfterScreenUpdates:afterUpdates];
-     snapshot.frame = self.view.frame;
+@@ -2110,6 +2184,12 @@ - (RNSOrientation)evaluateOrientation
+ 
+ - (void)addSnapshotToView
+ {
++  // PATCH (secure-snapshot): take the secure-content overlays captured in
++  // willBeUnmountedInUpcomingTransaction (see comment there). Cleared before
++  // the early return so they are released even when no snapshot is taken.
++  NSArray<UIView *> *overlays = objc_getAssociatedObject(self.screenView, &RNSSecureOverlaysKey);
++  objc_setAssociatedObject(self.screenView, &RNSSecureOverlaysKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 +
-+    // PATCH (secure-snapshot): composite the secure-content overlays captured
-+    // in willBeUnmountedInUpcomingTransaction (see comment there)
-+    NSArray<UIView *> *overlays = objc_getAssociatedObject(self.screenView, &RNSSecureOverlaysKey);
-+    for (UIView *overlay in overlays) {
-+      [snapshot addSubview:overlay];
-+    }
-+    objc_setAssociatedObject(self.screenView, &RNSSecureOverlaysKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+   // if we dismissed the view natively, it will already be detached from view hierarchy
+   if (self.view.window == nil) {
+     return;
+@@ -2123,6 +2203,13 @@ - (void)addSnapshotToView
+   snapshot.frame = self.view.bounds;
+   // fill the whole screen view with the snapshot
+   snapshot.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 +
-     [self.view removeFromSuperview];
-     self.view = snapshot;
-     [superView addSubview:snapshot];
++  // PATCH (secure-snapshot): composite the overlays over the snapshot. Their
++  // frames are in the screen view's coordinates, which match the snapshot's.
++  for (UIView *overlay in overlays) {
++    [snapshot addSubview:overlay];
++  }
++
+   [self.view addSubview:snapshot];
+ }
+ 
