@@ -6,6 +6,7 @@ import {type Platform} from 'react-native'
 
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type VideoCompressSkipReason} from '#/lib/media/video/types'
+import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
@@ -59,6 +60,90 @@ export type Events = {
   'notifications:bundleExpand': {
     notificationType: NotificationType
     authorCount: number
+  }
+  /**
+   * A tab of the Notifications screen came into view: the tab it's on when
+   * the screen gains focus, which includes mounting, and each tab the user
+   * switches to. A switch is logged once, as the pager settles on the new
+   * tab.
+   */
+  'notifications:tabDisplayed': {
+    tab: GroupedNotificationsFeed
+    /** The tab's position in the tab pills, from 0. */
+    index: number
+    /**
+     * - `focus`: the screen gained focus, or mounted, on the tab. Web mounts
+     *   the screen on every visit.
+     * - `tap`: the user pressed the tab's pill.
+     * - `swipe`: the user swiped the pager to the tab, which only native
+     *   does.
+     */
+    reason: 'focus' | 'tap' | 'swipe'
+  }
+  /**
+   * A tab of the Notifications screen started loading its newest
+   * notifications, in place of what it shows. Not the tab's first load or a
+   * retry of it, nor a check that only asks whether there's anything new, as
+   * a quick return to the app or a switch between tabs does, or any return
+   * while the user is partway down the tab. Nor the refresh of "All" that
+   * refreshing any other tab sets off behind it.
+   */
+  'notifications:refresh': {
+    tab: GroupedNotificationsFeed
+    /**
+     * - `pullToRefresh`: the user pulled the tab down.
+     * - `softReset`: the user pressed Notifications in the app's navigation,
+     *   or the tab's own pill, while already on the tab.
+     * - `pill`: the user pressed the "Refresh" pill.
+     * - `focus`: the screen came back into view, e.g. from a post opened
+     *   from it, or mounted with the tab already loaded, as web's does on
+     *   every visit.
+     * - `significantReturn`: the user came back to the app after a while
+     *   away, with the screen in view.
+     * - `pushOpened`: the user opened a push notification with the screen in
+     *   view.
+     */
+    reason:
+      | 'pullToRefresh'
+      | 'softReset'
+      | 'pill'
+      | 'focus'
+      | 'significantReturn'
+      | 'pushOpened'
+  }
+  /**
+   * The "Refresh" pill came into view on a Notifications tab, offering what an
+   * unread check found that the tab hasn't loaded. Only while the tab is the
+   * one in view, on the focused screen, with the app in the foreground, and
+   * again each time it comes back into view still up. One hide follows each.
+   */
+  'notifications:refreshPill:impression': {
+    tab: GroupedNotificationsFeed
+  }
+  /**
+   * The user pressed the pill, which loads the tab's newest notifications.
+   */
+  'notifications:refreshPill:press': {
+    tab: GroupedNotificationsFeed
+    /** How long since it came into view. */
+    shownMs: number
+  }
+  /** The pill went, after it came into view. */
+  'notifications:refreshPill:hide': {
+    tab: GroupedNotificationsFeed
+    /**
+     * - `pressed`: the user pressed it.
+     * - `left`: the tab went out of view: the user switched tab, opened
+     *   another screen, or left the app, or the screen closed, as web's does
+     *   on every navigation away.
+     * - `refreshed`: the tab started loading its newest notifications some
+     *   other way, e.g. a pull-to-refresh.
+     * - `gone`: a later unread check found nothing new for the tab to load,
+     *   e.g. once the notifications were seen somewhere else.
+     */
+    reason: 'pressed' | 'left' | 'refreshed' | 'gone'
+    /** How long it was in view. */
+    shownMs: number
   }
   'state:background': {}
   'state:foreground': {}
@@ -551,6 +636,9 @@ export type Events = {
       | 'FindContacts'
       | 'GroupChat'
       | 'NotificationExpandedProfileCard'
+      | 'NotificationFollowRow'
+      | 'NotificationFollowersTabRow'
+      | 'NotificationContactMatchRow'
   }
   'profile:followers:view': {
     contextProfileDid: string
@@ -665,6 +753,9 @@ export type Events = {
       | 'FindContacts'
       | 'GroupChat'
       | 'NotificationExpandedProfileCard'
+      | 'NotificationFollowRow'
+      | 'NotificationFollowersTabRow'
+      | 'NotificationContactMatchRow'
   }
   'chat:create': {
     logContext:

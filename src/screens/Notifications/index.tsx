@@ -14,6 +14,7 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {type AnyAppReturn, onAnyAppReturn} from '#/lib/appState'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
@@ -35,6 +36,7 @@ import {NotificationsScreen as LegacyNotificationsScreen} from '#/view/screens/N
 import {PageList} from '#/screens/Notifications/components/PageList'
 import * as Pager from '#/screens/Notifications/components/PagerView'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
+import {createTabTaps} from '#/screens/Notifications/tabTaps'
 import {
   type FeedLoad,
   getMarkReadAt,
@@ -47,13 +49,15 @@ import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/component
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import {useAnalytics} from '#/analytics'
+import {type Metrics, useAnalytics} from '#/analytics'
 import {IS_INTERNAL, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
   'Notifications'
 >
+
+type RefreshReason = Metrics['notifications:refresh']['reason']
 
 export function NotificationsScreen(props: Props) {
   const ax = useAnalytics()
@@ -80,6 +84,7 @@ export function NewNotificationsScreen({}: Props) {
 
 function NewNotificationsScreenInner() {
   const {t: l} = useLingui()
+  const ax = useAnalytics()
   const headerMode = useHomeHeaderMode()
   const initialHeaderOffset = useHeaderOffset()
   const [headerOffset, setHeaderOffset] = useState(initialHeaderOffset)
@@ -105,12 +110,16 @@ function NewNotificationsScreenInner() {
    * refreshes the feed, unless the user is partway down it, in which case
    * only the unread check runs, so the list doesn't move under them.
    */
-  const checkLatest = (feed: GroupedNotificationsFeed) => {
+  const checkLatest = (
+    feed: GroupedNotificationsFeed,
+    reason: RefreshReason,
+  ) => {
     // Not loaded yet, so its first load is on the way
     if (!getGroupedNotificationsTop(queryClient, feed)) return
     if (scrolledDownFeeds.current.has(feed)) {
       void unreadApi.checkUnread()
     } else {
+      ax.metric('notifications:refresh', {tab: feed, reason})
       void refresh(feed)
     }
   }
@@ -148,13 +157,35 @@ function NewNotificationsScreenInner() {
     }, [showHeader]),
   )
 
+  const logTabDisplayed = (
+    page: number,
+    reason: Metrics['notifications:tabDisplayed']['reason'],
+  ) => {
+    ax.metric('notifications:tabDisplayed', {
+      tab: tabs[page].key,
+      index: page,
+      reason,
+    })
+  }
+  useFocusEffect(
+    useNonReactiveCallback(() => {
+      logTabDisplayed(
+        tabs.findIndex(tab => tab.key === activeFeed.current),
+        'focus',
+      )
+    }),
+  )
+  const [tabTaps] = useState(createTabTaps)
+
   return (
     <Pager.Root
       onPageSelected={page => {
         const feed = tabs[page].key
+        const isTap = tabTaps.take(page)
         // Web reports the page it starts on, too
         if (feed === activeFeed.current) return
         activeFeed.current = feed
+        logTabDisplayed(page, isTap ? 'tap' : 'swipe')
         /*
          * Switching tabs only checks for anything new, which the "Refresh"
          * pill offers, so flicking between tabs neither reloads them nor
@@ -188,6 +219,8 @@ function NewNotificationsScreenInner() {
                   // Re-pressing the current tab scrolls it to the top
                   if (page === selectedPage) {
                     emitSoftReset()
+                  } else {
+                    tabTaps.tap(page)
                   }
                   selectPage(page)
                 }}
@@ -329,7 +362,7 @@ function useReturnToScreen({
   peekLatest,
 }: {
   activeFeed: React.RefObject<GroupedNotificationsFeed>
-  checkLatest: (feed: GroupedNotificationsFeed) => void
+  checkLatest: (feed: GroupedNotificationsFeed, reason: RefreshReason) => void
   /**
    * Asks the server for anything new without loading it, which offers the
    * "Refresh" pill if there is.
@@ -338,27 +371,29 @@ function useReturnToScreen({
 }) {
   const isFocused = useIsFocused()
 
-  const onReturn = useEffectEvent(() => {
-    checkLatest(activeFeed.current)
+  const onReturn = useEffectEvent((reason: RefreshReason) => {
+    checkLatest(activeFeed.current, reason)
   })
 
   // Mounting counts, as the cache can outlive the screen
   const wasFocused = useRef(false)
   useEffect(() => {
     if (isFocused && !wasFocused.current) {
-      onReturn()
+      onReturn('focus')
     }
     wasFocused.current = isFocused
   }, [isFocused])
 
-  const onLeftApp = useEffectEvent(() => {
-    if (isFocused) {
-      onReturn()
-    }
-  })
+  const onLeftApp = useEffectEvent(
+    (reason: 'significantReturn' | 'pushOpened') => {
+      if (isFocused) {
+        onReturn(reason)
+      }
+    },
+  )
   const onAppReturn = useEffectEvent((appReturn: AnyAppReturn) => {
     if (appReturn.isSignificant) {
-      onLeftApp()
+      onLeftApp('significantReturn')
     } else if (isFocused) {
       peekLatest()
     }
@@ -369,7 +404,9 @@ function useReturnToScreen({
      * Opening a push leaves the app too, even when it never went to the
      * background, e.g. from Notification Center on iOS.
      */
-    const unlistenPush = listenPushNotificationOpened(() => onLeftApp())
+    const unlistenPush = listenPushNotificationOpened(() =>
+      onLeftApp('pushOpened'),
+    )
     return () => {
       returns.remove()
       unlistenPush()
