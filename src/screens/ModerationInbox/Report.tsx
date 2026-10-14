@@ -145,7 +145,7 @@ function ReportDetails({
   const reasonLabel =
     selectedReason?.title ??
     fallbackReasonLabels.get(report.reasonType) ??
-    report.reasonType
+    l`Unknown report reason`
   const note = report.reason
 
   return (
