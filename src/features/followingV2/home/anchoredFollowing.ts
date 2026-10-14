@@ -1,5 +1,6 @@
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {type FeedAPI} from './api/types'
+import {type FollowingV2CheckOutcome} from './metrics'
 import {
   type FeedDescriptor,
   type FeedPage,
@@ -31,6 +32,7 @@ export async function checkFollowing(
     top,
     createFeedApi,
     onHasNew,
+    onOutcome,
   }: {
     prepend: Pick<Prepend, 'check'>
     /** The feed's top page, without saved-feed samples. */
@@ -38,17 +40,30 @@ export async function checkFollowing(
     createFeedApi: () => FeedAPI
     /** Lights the Home dot. */
     onHasNew?: (hasNew: boolean) => void
+    /** How it ended, and with what error. For metrics. */
+    onOutcome?: (outcome: FollowingV2CheckOutcome, error?: unknown) => void
   },
 ) {
-  const staging = prepend.check(trigger)
-  if (!staging) {
-    return pollLatest(top, createFeedApi())
+  try {
+    const staging = prepend.check(trigger)
+    if (!staging) {
+      const found = await pollLatest(top, createFeedApi())
+      onOutcome?.(found ? 'found' : 'nothing')
+      return found
+    }
+    const checked = await staging
+    onOutcome?.(checked.outcome)
+    if (
+      checked.outcome === 'staged' &&
+      hasUnseenPosts(top, checked.page.feed)
+    ) {
+      onHasNew?.(true)
+    }
+    return undefined
+  } catch (e) {
+    onOutcome?.('failed', e)
+    throw e
   }
-  const page = await staging
-  if (page && hasUnseenPosts(top, page.feed)) {
-    onHasNew?.(true)
-  }
-  return undefined
 }
 
 /**

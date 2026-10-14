@@ -348,10 +348,9 @@ export type Events = {
    */
 
   /**
-   * What a read of the persisted query cache found of Home Following's
-   * snapshot, and whether Following then showed it. Once per read (a cold
-   * start, or an account switch, with anything persisted), when Following
-   * first has posts or fails to load.
+   * What the persisted-cache read found of the Home Following snapshot, and
+   * whether Following showed it. Once per read, when Following first has posts
+   * or fails to load.
    */
   'followingV2:restore': {
     /**
@@ -360,19 +359,16 @@ export type Events = {
      * was dropped before Following showed it. `failed`: it couldn't load.
      */
     outcome: 'restored' | 'fetched' | 'failed'
-    /** Whether there was a snapshot, and whether it was restored. */
+    /** `valid`: passed every check. `rejected`: see `rejectionReason`. */
     snapshot: 'valid' | 'missing' | 'rejected'
     rejectionReason?: FollowingSnapshotRejection
-    /** How long before it was read its top page was fetched. */
+    /** Age of its top page when read. */
     ageMs?: number
-    /** Its size serialized, if the checks got as far as measuring it. */
+    /** Serialized size; absent if rejected before it was measured. */
     bytes?: number
     pageCount?: number
   }
-  /**
-   * A check for posts newer than the top of a feed, by the view on screen.
-   * Sampled unless the trigger is a focus or a significant return.
-   */
+  /** A check for posts newer than the top of a feed, by the view on screen. */
   'followingV2:check': {
     surface: FollowingV2Surface
     trigger: NewPostsCheckTrigger
@@ -383,17 +379,17 @@ export type Events = {
      * later.
      */
     lastSuccessAgeMs: number
-    /** For a failure, whether it was the network's. */
+    /** On failure, whether it was a network error. */
     isNetworkError?: boolean
     /** The share of processes that report it. */
     sampleRate: number
   }
   /**
-   * A fetch of the posts newer than the reader's place in Home Following, to
-   * put above them: after a restore, or a check that found newer posts.
-   * Sampled unless the trigger is a restore, a focus or a significant return.
+   * A fetch of posts newer than the top of Home Following, to stage above the
+   * reader: after a restore, or a check whose peek found something newer.
    */
   'followingV2:prepend': {
+    /** What started it. A check that joined it isn't counted. */
     trigger: PrependTrigger
     outcome: PrependOutcome['outcome']
     /** How many feed items it fetched, before tuning and moderation. */
@@ -401,11 +397,11 @@ export type Events = {
     /** Whether it was to replace the posts already waiting above the reader. */
     isReplacing: boolean
     /**
-     * Whether more was newer than it fetched, which puts a gap row below a
-     * page put above the others.
+     * Whether the fetch hit `PREPEND_LIMIT`, leaving a gap below the staged
+     * page.
      */
     isFull: boolean
-    /** For a failure, whether it was the network's. */
+    /** On failure, whether it was a network error. */
     isNetworkError?: boolean
     /** The share of processes that report it. */
     sampleRate: number
@@ -416,7 +412,7 @@ export type Events = {
    */
   'followingV2:refresh': {
     outcome: RefreshOutcome['outcome']
-    /** For a failure, whether it was the network's. */
+    /** On failure, whether it was a network error. */
     isNetworkError?: boolean
   }
   /** The reader pressed "Show more posts" at a gap in Home Following. */
