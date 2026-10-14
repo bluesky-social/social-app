@@ -70,8 +70,13 @@ describe('nextSeenAt', () => {
 })
 
 describe('getMarkReadAt', () => {
-  it('marks up to the request on All', () => {
-    expect(getMarkReadAt(load())).toEqual(new Date(REQUESTED_AT))
+  const NEWEST_AT = Date.parse('2026-10-09T11:00:00.000Z')
+
+  it('marks up to the newest notification All loaded, not the request', () => {
+    // Anything between the two may not have reached the feed yet
+    expect(getMarkReadAt(load({newestAt: NEWEST_AT}))).toEqual(
+      new Date(NEWEST_AT),
+    )
   })
 
   it('marks up to the newest notification when the server clock is ahead', () => {
@@ -80,14 +85,14 @@ describe('getMarkReadAt', () => {
   })
 
   it('never moves the server seenAt backwards', () => {
-    const seenAt = new Date(REQUESTED_AT + 60_000).toISOString()
+    const seenAt = new Date(NEWEST_AT + 60_000).toISOString()
     expect(getMarkReadAt(load({seenAt}))).toEqual(new Date(seenAt))
   })
 
-  it('marks up to the request on an empty feed', () => {
+  it('marks nothing for an empty feed', () => {
     expect(
       getMarkReadAt(load({newestAt: undefined, seenAt: undefined})),
-    ).toEqual(new Date(REQUESTED_AT))
+    ).toBeUndefined()
   })
 
   it('leaves the other feeds to All', () => {

@@ -42,14 +42,15 @@ export function nextSeenAt({
  * How far a fresh load marks notifications as seen on the server, if at all.
  *
  * Only "All" marks notifications as seen, as the other tabs leave things out.
- * It marks everything the load showed, and never moves the server's `seenAt`
+ * It marks up to the newest notification the load showed, rather than the
+ * time of the request: one from just before the request can still be on its
+ * way into the feed, and would otherwise be marked as seen before anyone saw
+ * it. An empty load marks nothing, and it never moves the server's `seenAt`
  * backwards.
  */
 export function getMarkReadAt(load: FeedLoad): Date | undefined {
-  if (load.feed !== 'all') return
-  return new Date(
-    Math.max(getShownUpTo(load), parseTime(load.seenAt) ?? -Infinity),
-  )
+  if (load.feed !== 'all' || load.newestAt === undefined) return
+  return new Date(Math.max(load.newestAt, parseTime(load.seenAt) ?? -Infinity))
 }
 
 /**
