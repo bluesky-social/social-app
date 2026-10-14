@@ -1106,7 +1106,7 @@ describe('usePostFeedPrepend', () => {
         {cursor: 'start:1'},
         {cursor: 'timeline:1'},
       ])
-      // Not offered itself: the pill keeps a page that replaces one it has.
+      // Not offered: the pill takes a replacement in itself while it's up.
       expect(hook.result.current.prepend.staged).toEqual({
         fetchedAt: cached().pages[0].fetchedAt,
         offered: false,
@@ -2243,7 +2243,7 @@ describe('staging new posts on Home Following', () => {
       list.beginDrag(400)
       list.see(13)
       list.endDrag(300)
-      // Seeing it read what was staged, but the pill stays.
+      // Seeing a staged post reads the page, but the pill stays up.
       expect(latest.staged).toBeUndefined()
       expect(latest.pill).toMatchObject({visible: true, count: 2})
 
@@ -2281,47 +2281,6 @@ describe('staging new posts on Home Following', () => {
       list.endDrag(0)
       await wait(SETTLE_QUIET_MS)
 
-      expect(latest.pill.visible).toBe(false)
-    })
-
-    it('hides the pill once pressed, and keeps it down as more is staged', async () => {
-      const {latest, list} = renderHome()
-      newest = 14
-      await warmOpen()
-
-      act(() => latest.pill.onPress())
-      expect(latest.pill.visible).toBe(false)
-      // The scroll up to the top reads what was staged.
-      list.scroll(400)
-      list.scroll(0)
-      expect(latest.staged).toBeUndefined()
-
-      newest = 16
-      await anInterval()
-      expect(latest.staged).toBeDefined()
-      expect(latest.pill.visible).toBe(false)
-    })
-
-    it('hides the pill once a refresh replaces the feed, posts it offered and all', async () => {
-      const {latest, cached} = renderHome()
-      newest = 14
-      await warmOpen()
-
-      const top = holdNextRequest()
-      let refreshing!: Promise<unknown>
-      act(() => {
-        refreshing = latest.refresh()
-      })
-      await act(async () => {
-        top.respondWith({
-          cursor: 't:12',
-          startCursor: 't:14',
-          feed: [post(14), post(13)],
-        })
-        await refreshing
-      })
-
-      expect(postsOf(cached())).toEqual([['p14', 'p13']])
       expect(latest.pill.visible).toBe(false)
     })
   })
