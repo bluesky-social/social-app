@@ -78,7 +78,7 @@ import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {checkFollowing, useFollowingListReports} from './anchoredFollowing'
 import {GapRow} from './GapRow'
-import {isStagedFull, useFollowingV2Metrics} from './metrics'
+import {useFollowingV2Metrics} from './metrics'
 import {mixSamples} from './mixSamples'
 import {PrependPill} from './PrependPill'
 import {
@@ -489,10 +489,6 @@ let PostFeed = ({
     }
   })
 
-  const reportCheck = metrics.checkReporter({
-    isOwed: prepend.isOwed,
-    isStagedFull: () => isStagedFull(prepend.staged, feedData?.pages),
-  })
   /*
    * Anchored Following's checks, made by the view on screen only. Each one
    * that finds newer posts stages them above the reader at rest (see
@@ -512,14 +508,14 @@ let PostFeed = ({
      * check replaces what's staged with the newest posts.
      */
     interval: pollInterval,
-    check: reportCheck(trigger =>
+    check: (trigger, {freshAt}) =>
       checkFollowing(trigger, {
         prepend,
         top: feedData?.pages[0],
         createFeedApi,
         onHasNew,
+        onOutcome: metrics.onCheck(trigger, freshAt),
       }),
-    ),
     onFound: () => {
       if (isEmpty) {
         void refreshToTop()
