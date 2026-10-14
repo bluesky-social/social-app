@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {HITSLOP_10} from '#/lib/constants'
+import {HITSLOP_10, UNREAD_NOTIFICATION_CAP} from '#/lib/constants'
 import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
 import * as Button from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
@@ -324,11 +324,11 @@ export function BadgeCount({count}: {count: number}) {
           {color: t.palette.white, fontVariant: ['tabular-nums']},
         ]}
         numberOfLines={1}>
-        {count >= 30
+        {count >= UNREAD_NOTIFICATION_CAP
           ? l({
-              message: `${i18n.number(30)}+`,
+              message: `${i18n.number(UNREAD_NOTIFICATION_CAP - 1)}+`,
               comment:
-                'Displayed when the number of notifications exceeds the cap – for example, 30+',
+                'Displayed when the number of notifications exceeds the cap – for example, 99+',
             })
           : i18n.number(count)}
       </Text>

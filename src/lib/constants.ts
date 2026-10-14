@@ -77,6 +77,9 @@ export const MAX_ALT_TEXT = 2000
 
 export const MAX_REPORT_REASON_GRAPHEME_LENGTH = 2000
 
+/** Moderation inbox badges display 99+ at or above this unread count. */
+export const UNREAD_NOTIFICATION_CAP = 100
+
 export function IS_TEST_USER(handle?: string) {
   return handle && handle?.endsWith('.test')
 }

@@ -4,6 +4,7 @@ import {LABELS} from '@bsky/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {UNREAD_NOTIFICATION_CAP} from '#/lib/constants'
 import {getLabelingServiceTitle, isAppLabeler} from '#/lib/moderation'
 import {
   type CommonNavigatorParams,
@@ -48,8 +49,6 @@ import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
-
-const UNREAD_NOTIFICATION_CAP = 100
 
 function ErrorState({error}: {error: string}) {
   const t = useTheme()
