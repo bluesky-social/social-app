@@ -352,6 +352,9 @@ function* postsInNotification(
     case 'subscribedPost':
       for (const item of notification.items) {
         yield item.post
+        if (item.parent?.type === 'post') {
+          yield item.parent.post
+        }
       }
       break
   }

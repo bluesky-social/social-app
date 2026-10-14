@@ -22,10 +22,20 @@ export type BadgeTone =
 const ACTIVITY_ORANGE = '#F26022'
 
 /**
+ * Reply, quote and mention badges use a purple that isn't in the ALF palette
+ * yet, which sets them apart from repost green and follow blue.
+ */
+const CONVERSATION_PURPLE = '#8679FC'
+
+/**
  * The size of `Item.Avatar`'s avatar, for anything that stands in for it.
  */
 export const AVATAR_SIZE = 44
-const BADGE_SIZE = 20
+const BADGE_SIZE = 24
+/**
+ * Between the icon sizes, so the icon keeps its share of the badge.
+ */
+const BADGE_ICON_SIZE = 14
 /**
  * The width of the ring around the badge, in the row's background colour,
  * which sets it apart from the avatar.
@@ -72,7 +82,7 @@ export function Avatar({
     like: t.palette.pink,
     repost: t.palette.positive_500,
     follow: t.palette.primary_500,
-    conversation: t.palette.positive_500,
+    conversation: CONVERSATION_PURPLE,
     activity: ACTIVITY_ORANGE,
     neutral: t.palette.contrast_500,
   }[tone]
@@ -120,7 +130,7 @@ export function Avatar({
                 backgroundColor: badgeColor,
               },
             ]}>
-            <Icon size="xs" fill={t.palette.white} />
+            <Icon width={BADGE_ICON_SIZE} fill={t.palette.white} />
           </View>
         </View>
       )}
