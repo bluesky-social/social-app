@@ -118,8 +118,17 @@ function GrowableBannerInner({
 
   const animatedSpinnerStyle = useAnimatedStyle(() => {
     const scrollYValue = scrollY.get()
+    /*
+     * Return the same style while the header isn't overscrolled, so Reanimated
+     * skips the update. Otherwise every scroll frame commits this hidden view,
+     * and Yoga never cleans the dirty flags of a `display: none` subtree, so
+     * each commit re-runs layout over the whole tree.
+     */
+    if (scrollYValue >= 0) {
+      return {display: 'none'}
+    }
     return {
-      display: scrollYValue < 0 ? 'flex' : 'none',
+      display: 'flex',
       opacity: interpolate(
         scrollYValue,
         [-60, -15],
