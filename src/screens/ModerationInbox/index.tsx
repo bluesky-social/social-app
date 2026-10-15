@@ -1,7 +1,12 @@
-import {useEffect, useRef, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {type RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {
+  type RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native'
 
 import {
   type CommonNavigatorParams,
@@ -65,6 +70,14 @@ export function ModerationInboxScreen() {
 
   const isEnabled = ax.features.enabled(ax.features.ModerationInboxEnable)
 
+  useFocusEffect(
+    useCallback(() => {
+      if (isEnabled) {
+        ax.metric('moderation:inbox:view', {tab: routeTab})
+      }
+    }, [ax, isEnabled, routeTab]),
+  )
+
   if (!isEnabled) {
     return <NotFoundScreen />
   }
@@ -117,6 +130,7 @@ export function ModerationInboxScreen() {
 function YourReports() {
   const t = useTheme()
   const {t: l} = useLingui()
+  const ax = useAnalytics()
 
   const [isPTRing, setIsPTRing] = useState(false)
   const [filter, setFilter] = useState<ReportFilter>('all')
@@ -174,12 +188,13 @@ function YourReports() {
           t.atoms.border_contrast_low,
           {minHeight: 48},
         ]}>
-        <FilterMenu filter={filter} setFilter={setFilter} />
+        <FilterMenu tab="reports" filter={filter} setFilter={setFilter} />
         {hasUnread ? (
           <SimpleInlineLinkText
             label={l`Mark all reports as read`}
             style={[a.text_md, t.atoms.text]}
             {...createStaticClick(() => {
+              ax.metric('moderation:inbox:markAllAsRead', {tab: 'reports'})
               markSeen.mutate(['reports'])
             })}>
             <Trans>Mark all as read</Trans>
@@ -235,6 +250,7 @@ function YourReports() {
 function YourAccount() {
   const t = useTheme()
   const {t: l} = useLingui()
+  const ax = useAnalytics()
 
   const [isPTRing, setIsPTRing] = useState(false)
   const [filter, setFilter] = useState<ReportFilter>('all')
@@ -304,12 +320,13 @@ function YourAccount() {
             t.atoms.border_contrast_low,
             {minHeight: 48},
           ]}>
-          <FilterMenu filter={filter} setFilter={setFilter} />
+          <FilterMenu tab="account" filter={filter} setFilter={setFilter} />
           {hasUnread ? (
             <SimpleInlineLinkText
               label={l`Mark all actions as read`}
               style={[a.text_md, t.atoms.text]}
               {...createStaticClick(() => {
+                ax.metric('moderation:inbox:markAllAsRead', {tab: 'account'})
                 markSeen.mutate(['subjects', 'accountStatus'])
               })}>
               <Trans>Mark all as read</Trans>

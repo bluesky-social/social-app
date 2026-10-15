@@ -1,7 +1,9 @@
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {isValidDid} from '@atproto/syntax'
 import {moderateProfile} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {useFocusEffect} from '@react-navigation/native'
 
 import {isAppLabeler} from '#/lib/moderation'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
@@ -65,13 +67,19 @@ export function ModerationInboxReportDetailsScreen({
         : moderationService
   const isLoading = !reportQuery.isError && !reportQuery.data
 
-  if (
-    !isEnabled ||
-    !moderationService ||
-    id === undefined ||
+  const notFound =
     matchXrpcError(reportQuery.error, tools.ozone.inbox.getReport) ===
-      'NotFound'
-  ) {
+    'NotFound'
+
+  useFocusEffect(
+    useCallback(() => {
+      if (isEnabled && moderationService && id !== undefined && !notFound) {
+        ax.metric('moderation:inbox:viewReport', {})
+      }
+    }, [ax, isEnabled, moderationService, id, notFound]),
+  )
+
+  if (!isEnabled || !moderationService || id === undefined || notFound) {
     return <NotFoundScreen />
   }
 
