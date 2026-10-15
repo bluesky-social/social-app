@@ -1,4 +1,4 @@
-import {AtUri} from '@atproto/syntax'
+import {AtUri, isAtUriString} from '@atproto/syntax'
 import {type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
@@ -26,7 +26,11 @@ export function getReportSubjectLabel(
     return authorName ? msg`Conversation with ${authorName}` : msg`Conversation`
   }
 
-  if ('uri' in subject && typeof subject.uri === 'string') {
+  if (
+    'uri' in subject &&
+    typeof subject.uri === 'string' &&
+    isAtUriString(subject.uri, {strict: false})
+  ) {
     switch (new AtUri(subject.uri).collection) {
       case 'app.bsky.feed.post':
         return authorName ? msg`Post by ${authorName}` : msg`Post`

@@ -24,10 +24,14 @@ export function getReportActionLabel({
     switch (lastActionTaken) {
       case 'contentRemoved':
         return msg`Content removed`
+      case 'contentRestored':
+        return msg`Content restored`
       case 'accountSuspended':
         return msg`Account suspended`
       case 'accountTakedown':
         return msg`Account taken down`
+      case 'accountRestored':
+        return msg`Account restored`
       case 'labelApplied':
         return msg`Label applied`
       case 'labelRemoved':
@@ -51,7 +55,9 @@ export function getReportActionLabel({
     return msg`Awaiting review`
   }
 
-  if (status === 'resolved' || resolutionOutcome === 'other') {
-    return msg`Reviewed, no action taken`
+  if (status === 'resolved') {
+    return msg`Report resolved`
   }
+
+  return undefined
 }

@@ -1,3 +1,4 @@
+import {type DidString} from '@atproto/syntax'
 import {useLingui} from '@lingui/react/macro'
 import {
   useInfiniteQuery,
@@ -46,6 +47,42 @@ export function useModerationInboxReportsQuery(filter: ReportsFilter) {
     getNextPageParam: lastPage => lastPage.cursor,
     staleTime: STALE.MINUTES.ONE,
     enabled: hasSession && !!did,
+  })
+}
+
+export function useModerationInboxReportQuery({
+  moderationService,
+  id,
+  enabled = true,
+}: {
+  moderationService?: DidString
+  id?: number
+  enabled?: boolean
+}) {
+  const client = useAppviewClient()
+  const {currentAccount, hasSession} = useSession()
+  const did = currentAccount?.did
+
+  return useQuery({
+    queryKey: createQueryKey(QUERY_KEY_ROOT, {
+      did,
+      endpoint: 'report',
+      moderationService,
+      id,
+    }),
+    queryFn: async () => {
+      if (!moderationService || id === undefined) {
+        throw new Error('Missing moderation service or report ID')
+      }
+      return await client.call(
+        tools.ozone.inbox.getReport,
+        {id},
+        {service: `${moderationService}#atproto_labeler`},
+      )
+    },
+    staleTime: STALE.MINUTES.ONE,
+    enabled:
+      enabled && hasSession && !!did && !!moderationService && id !== undefined,
   })
 }
 

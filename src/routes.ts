@@ -20,7 +20,8 @@ export const router = new Router<AllNavigatableRoutes>({
   Moderation: '/moderation',
   ModerationInbox: '/moderation/inbox',
   ModerationInboxSettings: '/moderation/inbox/settings',
-  ModerationInboxReportDetails: '/moderation/inbox/report/details',
+  ModerationInboxReportDetails:
+    '/moderation/inbox/report/:moderationService/:id',
   ModerationInboxNoticeDetails: '/moderation/inbox/notice/details',
   ModerationModlists: '/moderation/modlists',
   ModerationMutedAccounts: '/moderation/muted-accounts',
