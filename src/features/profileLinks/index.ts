@@ -5,6 +5,7 @@ export {sameProfileLinks} from './record'
 export {
   useOwnProfileLinksQuery,
   useProfileLinksEnabled,
+  useProfileViewLinks,
   useSetOwnProfileLinksCache,
   useWriteProfileLinks,
 } from './state'

@@ -29,11 +29,11 @@ import {type app} from '#/lexicons'
 import {logProfileLinkChanges} from '../metrics'
 import {PILL_LEFT, PILL_RIGHT_TEXT, PILL_VERTICAL} from '../pillSize'
 import {getLinkHost, getSupportProvider} from '../providers'
-import {linksFromProfileView} from '../record'
 import {buildProfileRow, GERM_KEY} from '../row'
 import {
   useOwnProfileLinksQuery,
   useProfileLinksEnabled,
+  useProfileViewLinks,
   useSaveProfileLinksMutation,
 } from '../state'
 import {type ProfileLink} from '../types'
@@ -74,15 +74,12 @@ export function ProfileHeaderLinks({
    * The owner's row comes from their repo: it reflects a save before the
    * AppView catches up, and editing needs the stored icon blobs.
    */
+  const viewLinks = useProfileViewLinks(profile)
   const {data: ownLinks} = useOwnProfileLinksQuery(profile.did, {
     enabled: enabled && !hidden && isOwnProfile,
   })
   const links =
-    !enabled || hidden
-      ? []
-      : isOwnProfile
-        ? (ownLinks ?? [])
-        : linksFromProfileView(profile.links)
+    !enabled || hidden ? [] : isOwnProfile ? (ownLinks ?? []) : viewLinks
   const supportLinkCount = links.filter(link =>
     getSupportProvider(link.url),
   ).length

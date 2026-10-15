@@ -2,10 +2,12 @@
 jest.unmock('multiformats/cid')
 
 import {parseCid} from '@atproto/lex'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {describe, expect, it, jest} from '@jest/globals'
 
 import {type app} from '#/lexicons'
 import {
+  filterModeratedLinkViews,
   linksFromProfileView,
   linksFromRecords,
   sameProfileLinks,
@@ -90,6 +92,56 @@ describe('linksFromProfileView', () => {
     ])
     expect(long.title).toBe('x'.repeat(30))
     expect(blank.title).toBeUndefined()
+  })
+})
+
+describe('filterModeratedLinkViews', () => {
+  const labeler = 'did:plc:labeler'
+  const opts = (adultContentEnabled = false): ModerationOpts => ({
+    userDid: 'did:plc:viewer',
+    prefs: {
+      adultContentEnabled,
+      labels: {porn: 'hide'},
+      labelers: [{did: labeler, labels: {}}],
+      mutedWords: [],
+      hiddenPosts: [],
+    },
+    labelDefs: {},
+  })
+  const label = (src: string, val: string) => ({
+    src,
+    uri: uri('a'),
+    val,
+    cts: '2026-10-15T00:00:00.000Z',
+  })
+  const labeled = (src: string, val: string) =>
+    view('a', 'https://a.example', {
+      labels: [label(src, val)] as never,
+    })
+
+  it('keeps links without labels', () => {
+    const plain = view('b', 'https://b.example')
+    expect(filterModeratedLinkViews([plain], opts())).toEqual([plain])
+  })
+
+  it('hides links a labeler marks as adult content', () => {
+    expect(
+      filterModeratedLinkViews([labeled(labeler, 'porn')], opts()),
+    ).toEqual([])
+  })
+
+  it('hides links the owner self-labels as adult content', () => {
+    expect(filterModeratedLinkViews([labeled(DID, 'porn')], opts())).toEqual([])
+  })
+
+  it('hides links taken down with !hide', () => {
+    expect(
+      filterModeratedLinkViews([labeled(labeler, '!hide')], opts()),
+    ).toEqual([])
+  })
+
+  it('returns nothing for profiles without links', () => {
+    expect(filterModeratedLinkViews(undefined, opts())).toBeUndefined()
   })
 })
 

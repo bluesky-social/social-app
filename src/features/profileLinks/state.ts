@@ -12,13 +12,18 @@ import {LINK_FAVICON_PROXY} from '#/lib/constants'
 import {isNetworkError} from '#/lib/strings/errors'
 import {isRecordNotFoundError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {useProfileUpdateMutation} from '#/state/queries/profile'
 import {createQueryKey} from '#/state/queries/util'
 import {usePdsClient} from '#/state/session'
 import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
-import {linksFromRecords} from './record'
+import {
+  filterModeratedLinkViews,
+  linksFromProfileView,
+  linksFromRecords,
+} from './record'
 import {type ProfileLink} from './types'
 
 /**
@@ -28,6 +33,21 @@ import {type ProfileLink} from './types'
 export function useProfileLinksEnabled() {
   const ax = useAnalytics()
   return __DEV__ || ax.features.enabled(ax.features.ProfileLinksEnable)
+}
+
+/**
+ * Someone's links from their profile view, minus any that labels hide for
+ * this viewer. Empty until moderation settings load, so a hidden link never
+ * flashes in.
+ */
+export function useProfileViewLinks(
+  profile: app.bsky.actor.defs.ProfileViewDetailed,
+): ProfileLink[] {
+  const moderationOpts = useModerationOpts()
+  if (!moderationOpts) return []
+  return linksFromProfileView(
+    filterModeratedLinkViews(profile.links, moderationOpts),
+  )
 }
 
 type StrongRef = {uri: l.AtUriString; cid: l.CidString}

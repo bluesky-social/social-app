@@ -1,4 +1,5 @@
 import {getBlobCidString} from '@atproto/lex'
+import {moderateProfileLink, type ModerationOpts} from '@bsky/sdk/moderation'
 import {splitGraphemes} from 'unicode-segmenter/grapheme'
 
 import {type app} from '#/lexicons'
@@ -27,6 +28,21 @@ function isShowable(url: string, seen: Set<string>): boolean {
   }
   seen.add(normalized)
   return true
+}
+
+/**
+ * Drops links the viewer's moderation settings hide, like a link labeled as
+ * adult content for someone who hasn't enabled it. A link button can't show a
+ * warning, so a label that would blur it hides it instead.
+ */
+export function filterModeratedLinkViews(
+  views: app.bsky.actor.defs.ProfileLinkView[] | undefined,
+  moderationOpts: ModerationOpts,
+): app.bsky.actor.defs.ProfileLinkView[] | undefined {
+  return views?.filter(view => {
+    const ui = moderateProfileLink(view, moderationOpts).ui('contentList')
+    return !ui.filter && !ui.blur
+  })
 }
 
 /** The links in a profile view, in display order. */
