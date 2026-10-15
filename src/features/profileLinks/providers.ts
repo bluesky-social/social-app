@@ -225,6 +225,11 @@ export function isShortenerLink(url: string): boolean {
   return SHORTENER_DOMAINS.some(domain => hostMatchesDomain(host, domain))
 }
 
+/** A link the way people type it, without the scheme. */
+export function formatLinkUrl(url: string): string {
+  return url.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '')
+}
+
 export function getLinkHost(url: string): string {
   try {
     return new URL(url).hostname.replace(/^www\./, '')

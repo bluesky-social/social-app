@@ -186,4 +186,4 @@ export const BSKY_LABELER_ONLY_REPORT_REASONS: Set<tools.ozone.report.defs.Reaso
  * moderation service.
  */
 export const BSKY_LABELER_ONLY_SUBJECT_TYPES: Set<ParsedReportSubject['type']> =
-  new Set(['convoMessage', 'convo', 'status'])
+  new Set(['convoMessage', 'convo', 'status', 'profileLink'])
