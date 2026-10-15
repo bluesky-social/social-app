@@ -1567,7 +1567,11 @@ export type Events = {
    */
   'profile:links:rejected': {
     reason: 'blocked' | 'safelink' | 'shortener' | 'insecure'
-    domain: string
+    /**
+     * Left out for Safelink blocks, which can be sensitive sites. The other
+     * reasons come from public lists in the app.
+     */
+    domain?: string
   }
 
   // Post photo embed events

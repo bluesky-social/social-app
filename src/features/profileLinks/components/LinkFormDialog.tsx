@@ -229,10 +229,7 @@ function LinkFormInner({
       if (safelinkAction === 'block') {
         setReachability('unchecked')
         setError('blocked')
-        ax.metric('profile:links:rejected', {
-          reason: 'safelink',
-          domain: getLinkHost(targetUrl),
-        })
+        ax.metric('profile:links:rejected', {reason: 'safelink'})
         return
       }
       if (meta?.error) {
