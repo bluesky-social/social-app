@@ -15,8 +15,7 @@ import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 import {useSupportPalette} from '../palette'
 import {formatLinkUrl, getLinkHost, getSupportProvider} from '../providers'
-import {linksFromProfileView} from '../record'
-import {useProfileLinksEnabled} from '../state'
+import {useProfileLinksEnabled, useProfileViewLinks} from '../state'
 import {type ProfileLink} from '../types'
 import {LinkFavicon, linkFaviconUrl} from './LinkFavicon'
 import {ProviderLogo} from './ProviderLogo'
@@ -24,17 +23,16 @@ import {ProviderLogo} from './ProviderLogo'
 const ICON_SIZE = 32
 
 /**
- * The links on someone else's profile that can be reported, i.e. those backed
- * by a link record.
+ * The links on someone else's profile that can be reported: those shown to
+ * this viewer and backed by a link record.
  */
 export function useReportableProfileLinks(
   profile: app.bsky.actor.defs.ProfileViewDetailed,
 ): ProfileLink[] {
   const enabled = useProfileLinksEnabled()
+  const links = useProfileViewLinks(profile)
   if (!enabled) return []
-  return linksFromProfileView(profile.links).filter(
-    link => link.uri && link.cid,
-  )
+  return links.filter(link => link.uri && link.cid)
 }
 
 /**
