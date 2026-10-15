@@ -21,6 +21,7 @@ import {
   useAppealModerationInboxSubjectMutation,
   useModerationInboxCacheMutation,
   useModerationInboxSubjectQuery,
+  useUpdateModerationInboxSeenMutation,
 } from '#/state/queries/moderation-inbox'
 import {useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
@@ -52,6 +53,7 @@ export function ModerationInboxNoticeDetailsScreen({
   const {t: l} = useLingui()
   const ax = useAnalytics()
   const {currentAccount, hasSession} = useSession()
+  const {mutate: markSeen} = useUpdateModerationInboxSeenMutation()
   const moderationOpts = useModerationOpts()
   const isEnabled = ax.features.enabled(ax.features.ModerationInboxEnable)
   const moderationService = isValidDid(route.params?.moderationService)
@@ -90,6 +92,17 @@ export function ModerationInboxNoticeDetailsScreen({
   const notFound =
     matchXrpcError(subjectQuery.error, tools.ozone.inbox.getActionedSubject) ===
     'NotFound'
+  const seenAt = data?.updatedAt
+  const canMarkSeen =
+    isEnabled && hasSession && !!moderationService && !!subject && !notFound
+
+  useFocusEffect(
+    useCallback(() => {
+      if (canMarkSeen && seenAt) {
+        markSeen({sections: ['subjects'], seenAt})
+      }
+    }, [canMarkSeen, seenAt, markSeen]),
+  )
 
   useFocusEffect(
     useCallback(() => {

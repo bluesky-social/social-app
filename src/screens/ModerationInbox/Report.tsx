@@ -15,7 +15,11 @@ import {cleanError} from '#/lib/strings/errors'
 import {matchXrpcError} from '#/lib/xrpc-error'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useLabelerInfoQuery} from '#/state/queries/labeler'
-import {useModerationInboxReportQuery} from '#/state/queries/moderation-inbox'
+import {
+  useModerationInboxReportQuery,
+  useUpdateModerationInboxSeenMutation,
+} from '#/state/queries/moderation-inbox'
+import {useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {NotFoundScreen} from '#/view/screens/NotFound'
 import {atoms as a, useTheme} from '#/alf'
@@ -38,6 +42,8 @@ export function ModerationInboxReportDetailsScreen({
   const t = useTheme()
   const {t: l} = useLingui()
   const ax = useAnalytics()
+  const {hasSession} = useSession()
+  const {mutate: markSeen} = useUpdateModerationInboxSeenMutation()
   const moderationOpts = useModerationOpts()
   const isEnabled = ax.features.enabled(ax.features.ModerationInboxEnable)
   const moderationService = isValidDid(route.params.moderationService)
@@ -70,6 +76,21 @@ export function ModerationInboxReportDetailsScreen({
   const notFound =
     matchXrpcError(reportQuery.error, tools.ozone.inbox.getReport) ===
     'NotFound'
+  const seenAt = reportQuery.data?.report.updatedAt
+  const canMarkSeen =
+    isEnabled &&
+    hasSession &&
+    !!moderationService &&
+    id !== undefined &&
+    !reportQuery.isError
+
+  useFocusEffect(
+    useCallback(() => {
+      if (canMarkSeen && seenAt) {
+        markSeen({sections: ['reports'], seenAt})
+      }
+    }, [canMarkSeen, seenAt, markSeen]),
+  )
 
   useFocusEffect(
     useCallback(() => {
