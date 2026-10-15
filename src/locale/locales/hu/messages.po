@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-15 00:31\n"
+"PO-Revision-Date: 2026-10-15 14:07\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -821,27 +821,27 @@ msgstr ""
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:120
 msgid "{name} and {secondName} followed you"
-msgstr ""
+msgstr "{name} és {secondName} mostantól követ Téged"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:500
 msgid "{name} and {secondName} liked your custom feed"
-msgstr ""
+msgstr "{name} és {secondName} kedvelte az egyéni hírfolyamodat"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:94
 msgid "{name} and {secondName} liked your post"
-msgstr ""
+msgstr "{name} és {secondName} kedvelte a bejegyzésedet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:197
 msgid "{name} and {secondName} liked your repost"
-msgstr ""
+msgstr "{name} és {secondName} kedvelte a megosztott bejegyzésedet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:145
 msgid "{name} and {secondName} reposted your post"
-msgstr ""
+msgstr "{name} és {secondName} megosztotta a bejegyzésedet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:249
 msgid "{name} and {secondName} reposted your repost"
-msgstr ""
+msgstr "{name} és {secondName} megosztotta a megosztott bejegyzésedet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:190
 msgid "{name} followed you back"
@@ -1002,27 +1002,27 @@ msgstr "+{computedTotal}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:146
 msgid "<0/> and <1/> followed you"
-msgstr ""
+msgstr "<0/> és <1/> mostantól követ Téged"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:515
 msgid "<0/> and <1/> liked your custom feed"
-msgstr ""
+msgstr "<0/> és <1/> kedvelte az egyéni hírfolyamodat"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:104
 msgid "<0/> and <1/> liked your post"
-msgstr ""
+msgstr "<0/> és <1/> kedvelte a bejegyzésedet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:207
 msgid "<0/> and <1/> liked your repost"
-msgstr ""
+msgstr "<0/> és <1/> kedvelte a megosztott bejegyzésedet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:155
 msgid "<0/> and <1/> reposted your post"
-msgstr ""
+msgstr "<0/> és <1/> megosztotta a bejegyzésedet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:259
 msgid "<0/> and <1/> reposted your repost"
-msgstr ""
+msgstr "<0/> és <1/> megosztotta a megosztott bejegyzésedet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:151
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> followed you"
@@ -1428,7 +1428,7 @@ msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. 
 msgstr "Másokat hitelesíteni csak a <0><1/></0> recés pipával rendelkező fiókok képesek. Ezeket a megbízható hitelesítőket a Bluesky jelöli ki."
 
 #: src/screens/Atmosphere.tsx:43
-#: src/screens/Notifications/index.tsx:106
+#: src/screens/Notifications/index.tsx:108
 msgid "Activity"
 msgstr "Tevékenység"
 
@@ -1738,7 +1738,7 @@ msgstr "janos@pelda.hu"
 
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
-#: src/screens/Notifications/index.tsx:102
+#: src/screens/Notifications/index.tsx:104
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:205
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
@@ -2493,6 +2493,7 @@ msgid "Beta Feature"
 msgstr "Kísérleti funkció"
 
 #: src/Navigation.tsx:444
+#: src/screens/Notifications/index.tsx:661
 #: src/screens/Settings/BetaFeaturesSettings.tsx:116
 #: src/screens/Settings/Settings.tsx:251
 #: src/screens/Settings/Settings.tsx:254
@@ -3996,7 +3997,7 @@ msgstr "A GIF-ek betöltése meghiúsult"
 
 #: src/screens/Notifications/components/NotificationItem/Item/group.tsx:353
 msgid "Couldn’t load more accounts, please try again"
-msgstr ""
+msgstr "A további fiókok betöltése meghiúsult. Próbáld újra."
 
 #: src/features/followingV2/home/GapRow.tsx:58
 #: src/features/followingV2/home/GapRow.tsx:83
@@ -5979,7 +5980,7 @@ msgctxt "Notifications section header"
 msgid "Followed you"
 msgstr ""
 
-#: src/screens/Notifications/index.tsx:104
+#: src/screens/Notifications/index.tsx:106
 msgid "Followers"
 msgstr ""
 
@@ -8481,11 +8482,11 @@ msgctxt "nux-description"
 msgid "New"
 msgstr "Új"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:576
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:580
 msgid "New {count, plural, one {post} other {posts}} from {name}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:596
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:604
 msgid "New {count, plural, one {post} other {posts}} from <0/>"
 msgstr ""
 
@@ -8620,20 +8621,28 @@ msgstr "{firstAuthorLink} és <0>{additionalAuthorsCount, plural, one {{formatte
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr "{firstAuthorName} és {additionalAuthorsCount, plural, one {{formattedAuthorsCount}} other {{formattedAuthorsCount}}} további személy új bejegyzéseket tett közzé"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:572
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:574
 msgid "New posts from {name} and {others, plural, one {# other} other {# others}}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:570
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:572
 msgid "New posts from {name} and {secondName}"
-msgstr ""
+msgstr "{name} és {secondName} új bejegyzéseket tett közzé"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:584
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:588
 msgid "New posts from <0/> and <1/>"
+msgstr "<0/> és <1/> új bejegyzéseket tett közzé"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:593
+msgid "New posts from <0/> and <1>{others, plural, one {# other} other {# others}}</1>"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:589
-msgid "New posts from <0/> and <1>{others, plural, one {# other} other {# others}}</1>"
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:579
+msgid "New reply from {name}"
+msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:600
+msgid "New reply from <0/>"
 msgstr ""
 
 #: src/components/dialogs/StarterPackDialog.tsx:196
@@ -8865,11 +8874,11 @@ msgstr "Még nincsenek bejegyzések"
 
 #: src/screens/Notifications/components/ActivityEmptyMessage.tsx:48
 msgid "No posts here yet. Click the {bell} bell icon on someone’s profile to keep up with their activity."
-msgstr ""
+msgstr "Még nincs itt semmi. Kattints valaki profilján a {bell} harang ikonra, ha naprakészen akarsz maradni a tevékenységeivel."
 
 #: src/screens/Notifications/components/ActivityEmptyMessage.tsx:53
 msgid "No posts here yet. Tap the {bell} bell icon on someone’s profile to keep up with their activity."
-msgstr ""
+msgstr "Még nincs itt semmi. Koppints valaki profilján a {bell} harang ikonra, ha naprakészen akarsz maradni a tevékenységeivel."
 
 #: src/screens/Profile/Sections/Feed.tsx:84
 #: src/view/screens/Profile.tsx:442
@@ -9048,7 +9057,7 @@ msgstr "Értesítés"
 #: src/components/dialogs/NotificationSettingsDialog.tsx:72
 #: src/Navigation.tsx:483
 #: src/Navigation.tsx:570
-#: src/screens/Notifications/index.tsx:657
+#: src/screens/Notifications/index.tsx:673
 #: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
 msgstr "Értesítési beállítások"
@@ -9062,7 +9071,7 @@ msgstr "Értesítési hangok"
 #: src/Navigation.tsx:804
 #: src/screens/Messages/Settings.tsx:255
 #: src/screens/Notifications/ActivityList.tsx:31
-#: src/screens/Notifications/index.tsx:649
+#: src/screens/Notifications/index.tsx:651
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
 #: src/screens/Settings/NotificationSettings/index.tsx:125
 #: src/screens/Settings/Settings.tsx:201
@@ -9515,6 +9524,10 @@ msgstr "Piszkozat szerkesztése a bejegyzésíró felületen"
 msgid "Opens this profile"
 msgstr "Saját profil megnyitása"
 
+#: src/screens/Notifications/index.tsx:662
+msgid "Opens your beta features settings"
+msgstr ""
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:792
 msgid "Opt out"
 msgstr "Kilépés"
@@ -9747,7 +9760,7 @@ msgid "People I follow can request to join"
 msgstr "Az Általad követett személyek kérelmezhetik a csatlakozást"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
-#: src/screens/Notifications/index.tsx:103
+#: src/screens/Notifications/index.tsx:105
 msgid "People you follow"
 msgstr "Az Általad követett személyek"
 
@@ -10891,7 +10904,7 @@ msgstr "Üzenet, amelyre válaszoltak. Ugrás koppintásra"
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:271
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:283
 #: src/lib/hooks/useNotificationHandler.ts:173
-#: src/screens/Notifications/index.tsx:105
+#: src/screens/Notifications/index.tsx:107
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:218
 #: src/screens/Settings/NotificationSettings/index.tsx:181
 #: src/screens/Settings/NotificationSettings/index.tsx:330
@@ -11028,7 +11041,7 @@ msgstr "Csoportbeszélgetés jelentése"
 
 #: src/components/moderation/ReportDialog/copy.ts:16
 msgid "Report this link"
-msgstr ""
+msgstr "Hivatkozás jelentése"
 
 #: src/components/moderation/ReportDialog/copy.ts:39
 msgid "Report this list"
@@ -15382,7 +15395,7 @@ msgstr "Miért kell ezt a hírfolyamot átvizsgálni?"
 
 #: src/components/moderation/ReportDialog/copy.ts:17
 msgid "Why should this link be reviewed?"
-msgstr ""
+msgstr "Miért kell ezt a hivatkozást átvizsgálni?"
 
 #: src/components/moderation/ReportDialog/copy.ts:40
 msgid "Why should this list be reviewed?"

@@ -8,7 +8,7 @@ msgstr ""
 "Language: ne\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-15 00:32\n"
+"PO-Revision-Date: 2026-10-15 14:07\n"
 "Last-Translator: \n"
 "Language-Team: Nepali\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1428,7 +1428,7 @@ msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. 
 msgstr ""
 
 #: src/screens/Atmosphere.tsx:43
-#: src/screens/Notifications/index.tsx:106
+#: src/screens/Notifications/index.tsx:108
 msgid "Activity"
 msgstr ""
 
@@ -1738,7 +1738,7 @@ msgstr ""
 
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
-#: src/screens/Notifications/index.tsx:102
+#: src/screens/Notifications/index.tsx:104
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:205
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
@@ -2493,6 +2493,7 @@ msgid "Beta Feature"
 msgstr ""
 
 #: src/Navigation.tsx:444
+#: src/screens/Notifications/index.tsx:661
 #: src/screens/Settings/BetaFeaturesSettings.tsx:116
 #: src/screens/Settings/Settings.tsx:251
 #: src/screens/Settings/Settings.tsx:254
@@ -5979,7 +5980,7 @@ msgctxt "Notifications section header"
 msgid "Followed you"
 msgstr ""
 
-#: src/screens/Notifications/index.tsx:104
+#: src/screens/Notifications/index.tsx:106
 msgid "Followers"
 msgstr ""
 
@@ -8481,11 +8482,11 @@ msgctxt "nux-description"
 msgid "New"
 msgstr "नयाँ"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:576
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:580
 msgid "New {count, plural, one {post} other {posts}} from {name}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:596
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:604
 msgid "New {count, plural, one {post} other {posts}} from <0/>"
 msgstr ""
 
@@ -8620,20 +8621,28 @@ msgstr ""
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:572
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:574
 msgid "New posts from {name} and {others, plural, one {# other} other {# others}}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:570
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:572
 msgid "New posts from {name} and {secondName}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:584
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:588
 msgid "New posts from <0/> and <1/>"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:589
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:593
 msgid "New posts from <0/> and <1>{others, plural, one {# other} other {# others}}</1>"
+msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:579
+msgid "New reply from {name}"
+msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:600
+msgid "New reply from <0/>"
 msgstr ""
 
 #: src/components/dialogs/StarterPackDialog.tsx:196
@@ -9048,7 +9057,7 @@ msgstr ""
 #: src/components/dialogs/NotificationSettingsDialog.tsx:72
 #: src/Navigation.tsx:483
 #: src/Navigation.tsx:570
-#: src/screens/Notifications/index.tsx:657
+#: src/screens/Notifications/index.tsx:673
 #: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
 msgstr "सूचना सेटिङ्स"
@@ -9062,7 +9071,7 @@ msgstr "सूचना ध्वनीहरू"
 #: src/Navigation.tsx:804
 #: src/screens/Messages/Settings.tsx:255
 #: src/screens/Notifications/ActivityList.tsx:31
-#: src/screens/Notifications/index.tsx:649
+#: src/screens/Notifications/index.tsx:651
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
 #: src/screens/Settings/NotificationSettings/index.tsx:125
 #: src/screens/Settings/Settings.tsx:201
@@ -9515,6 +9524,10 @@ msgstr ""
 msgid "Opens this profile"
 msgstr "यो प्रोफाइल खोल्नुहोस्"
 
+#: src/screens/Notifications/index.tsx:662
+msgid "Opens your beta features settings"
+msgstr ""
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:792
 msgid "Opt out"
 msgstr ""
@@ -9747,7 +9760,7 @@ msgid "People I follow can request to join"
 msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
-#: src/screens/Notifications/index.tsx:103
+#: src/screens/Notifications/index.tsx:105
 msgid "People you follow"
 msgstr ""
 
@@ -10891,7 +10904,7 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:271
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:283
 #: src/lib/hooks/useNotificationHandler.ts:173
-#: src/screens/Notifications/index.tsx:105
+#: src/screens/Notifications/index.tsx:107
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:218
 #: src/screens/Settings/NotificationSettings/index.tsx:181
 #: src/screens/Settings/NotificationSettings/index.tsx:330

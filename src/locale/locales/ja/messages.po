@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-15 00:31\n"
+"PO-Revision-Date: 2026-10-15 14:07\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -342,7 +342,7 @@ msgstr "{0}が{1}とリアクションしました"
 #. placeholder {0}: tab.label
 #: src/screens/Notifications/components/TabPills.tsx:406
 msgid "{0} tab, selected"
-msgstr ""
+msgstr "{0}タブ、選択中"
 
 #. Accessibility hint for the bottom bar chat icon when the number of unread messages exceeds the cap, with the + symbol already included – for example, 99+ unread items
 #. placeholder {0}: numUnreadMessages.numUnread
@@ -487,12 +487,12 @@ msgstr "{count, plural, other {チャットの更新#件}}"
 #. Number of people you follow who also follow this account
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:311
 msgid "{count, plural, one {# mutual follower} other {# mutual followers}}"
-msgstr ""
+msgstr "{count, plural, other {#人の相互フォロワー}}"
 
 #. Short form of “mutual followers”: the number of people you follow who also follow this account
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:318
 msgid "{count, plural, one {# mutual} other {# mutuals}}"
-msgstr ""
+msgstr "{count, plural, other {#人の相互フォロワー}}"
 
 #: src/screens/Messages/components/RequestStatus.tsx:74
 msgid "{count, plural, one {# new join request} other {# new join requests}}"
@@ -714,7 +714,7 @@ msgstr "{following} フォロー"
 #. How long ago a notification happened, e.g. "7m ago". The time is already abbreviated and translated.
 #: src/screens/Notifications/components/NotificationItem/Item/text.tsx:171
 msgid "{formatted} ago"
-msgstr ""
+msgstr "{formatted}前"
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
@@ -797,79 +797,79 @@ msgstr "{minutes, plural, other {#分}}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:121
 msgid "{name} and {others, plural, one {# other} other {# others}} followed you"
-msgstr ""
+msgstr "{name}と{others, plural, other {他#人}}があなたをフォローしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:502
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your custom feed"
-msgstr ""
+msgstr "{name}と{others, plural, other {他#人}}があなたのカスタムフィードをいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:96
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your post"
-msgstr ""
+msgstr "{name}と{others, plural, other {他#人}}があなたの投稿をいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:199
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your repost"
-msgstr ""
+msgstr "{name}と{others, plural, other {他#人}}があなたのリポストをいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:147
 msgid "{name} and {others, plural, one {# other} other {# others}} reposted your post"
-msgstr ""
+msgstr "{name}と{others, plural, other {他#人}}があなたの投稿をリポストしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:251
 msgid "{name} and {others, plural, one {# other} other {# others}} reposted your repost"
-msgstr ""
+msgstr "{name}と{others, plural, other {他#人}}があなたのリポストをリポストしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:120
 msgid "{name} and {secondName} followed you"
-msgstr ""
+msgstr "{name}と{secondName}があなたをフォローしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:500
 msgid "{name} and {secondName} liked your custom feed"
-msgstr ""
+msgstr "{name}と{secondName}があなたのカスタムフィードをいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:94
 msgid "{name} and {secondName} liked your post"
-msgstr ""
+msgstr "{name}と{secondName}があなたの投稿をいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:197
 msgid "{name} and {secondName} liked your repost"
-msgstr ""
+msgstr "{name}と{secondName}があなたのリポストをいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:145
 msgid "{name} and {secondName} reposted your post"
-msgstr ""
+msgstr "{name}と{secondName}があなたの投稿をリポストしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:249
 msgid "{name} and {secondName} reposted your repost"
-msgstr ""
+msgstr "{name}と{secondName}があなたのリポストをリポストしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:190
 msgid "{name} followed you back"
-msgstr ""
+msgstr "{name}があなたをフォローバックしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:189
 msgid "{name} followed you back via starter pack {starterPackName}"
-msgstr ""
+msgstr "{name}があなたをスターターパック{starterPackName}経由でフォローバックしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:365
 msgid "{name} liked {count} of your {count, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "{name}があなたの{count}件の{count, plural, other {投稿}}をいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:430
 msgid "{name} liked {count} of your {count, plural, one {repost} other {reposts}}"
-msgstr ""
+msgstr "{name}があなたの{count}件の{count, plural, other {リポスト}}をいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:506
 msgid "{name} liked your custom feed"
-msgstr ""
+msgstr "{name}があなたのカスタムフィードをいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:100
 msgid "{name} liked your post"
-msgstr ""
+msgstr "{name}があなたの投稿をいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:203
 msgid "{name} liked your repost"
-msgstr ""
+msgstr "{name}があなたのリポストをいいねしました"
 
 #. placeholder {0}: reaction.value
 #: src/components/dms/getReactionInfo.ts:70
@@ -878,27 +878,27 @@ msgstr "{name}が{target}に{0}とリアクションしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:262
 msgid "{name} removed their verification from your account"
-msgstr ""
+msgstr "{name} があなたのアカウントから認証を削除しました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:397
 msgid "{name} reposted {count} of your {count, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "{name}があなたの{count}件の{count, plural, other {投稿}}をリポストしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:463
 msgid "{name} reposted {count} of your {count, plural, one {repost} other {reposts}}"
-msgstr ""
+msgstr "{name}があなたの{count}件の{count, plural, other {リポスト}}をリポストしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:151
 msgid "{name} reposted your post"
-msgstr ""
+msgstr "{name}があなたの投稿をリポストしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:255
 msgid "{name} reposted your repost"
-msgstr ""
+msgstr "{name}があなたのリポストをリポストしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:227
 msgid "{name} verified you"
-msgstr ""
+msgstr "{name}があなたを認証しました"
 
 #. When the last message in a group chat came from someone other than you.
 #: src/components/dms/getMessageInfo.ts:84
@@ -1002,107 +1002,107 @@ msgstr "+{computedTotal}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:146
 msgid "<0/> and <1/> followed you"
-msgstr ""
+msgstr "<0/>と<1/>があなたをフォローしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:515
 msgid "<0/> and <1/> liked your custom feed"
-msgstr ""
+msgstr "<0/>と<1/>があなたのカスタムフィードをいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:104
 msgid "<0/> and <1/> liked your post"
-msgstr ""
+msgstr "<0/>と<1/>があなたの投稿をいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:207
 msgid "<0/> and <1/> liked your repost"
-msgstr ""
+msgstr "<0/>と<1/>があなたのリポストをいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:155
 msgid "<0/> and <1/> reposted your post"
-msgstr ""
+msgstr "<0/>と<1/>があなたの投稿をリポストしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:259
 msgid "<0/> and <1/> reposted your repost"
-msgstr ""
+msgstr "<0/>と<1/>があなたのリポストをリポストしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:151
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> followed you"
-msgstr ""
+msgstr "<0/>と<1>他{others, plural, other {#人}}</1>があなたをフォローしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:520
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your custom feed"
-msgstr ""
+msgstr "<0/>と<1>{others, plural, other {他#人}}</1>があなたのカスタムフィードをいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:109
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your post"
-msgstr ""
+msgstr "<0/>と<1>他{others, plural, other {#人}}</1>があなたの投稿をいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:212
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your repost"
-msgstr ""
+msgstr "<0/>と<1>{others, plural, other {他#人}}</1>があなたのリポストをいいねしまた"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:160
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> reposted your post"
-msgstr ""
+msgstr "<0/>と<1>{others, plural, other {他#人}}</1>があなたの投稿をリポストしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:264
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> reposted your repost"
-msgstr ""
+msgstr "<0/>と<1>{others, plural, other {他#人}}</1>があなたのリポストをリポストしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:71
 msgid "<0/> followed you"
-msgstr ""
+msgstr "<0/>があなたをフォローしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:198
 msgid "<0/> followed you back! 🎉"
-msgstr ""
+msgstr "<0/>があなたをフォローバックしました！🎉"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:371
 msgid "<0/> liked {count} of your {count, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "<0/>があなたの{count}件の{count, plural, other {投稿}}をいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:436
 msgid "<0/> liked {count} of your {count, plural, one {repost} other {reposts}}"
-msgstr ""
+msgstr "<0/>があなたの{count}件の{count, plural, other {リポスト}}をいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:528
 msgid "<0/> liked your custom feed"
-msgstr ""
+msgstr "<0/>があなたのカスタムフィードをいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:117
 msgid "<0/> liked your post"
-msgstr ""
+msgstr "<0/>があなたの投稿をいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:220
 msgid "<0/> liked your repost"
-msgstr ""
+msgstr "<0/>があなたのリポストをいいねしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:269
 msgid "<0/> removed their verification from your account"
-msgstr ""
+msgstr "<0/>があなたのアカウントから認証を削除しました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:403
 msgid "<0/> reposted {count} of your {count, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "<0/>があなたの{count}件の{count, plural, other {投稿}}をリポストしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:469
 msgid "<0/> reposted {count} of your {count, plural, one {repost} other {reposts}}"
-msgstr ""
+msgstr "<0/>があなたの{count}件の{count, plural, other {リポスト}}をリポストしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:168
 msgid "<0/> reposted your post"
-msgstr ""
+msgstr "<0/>があなたの投稿をリポストしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:272
 msgid "<0/> reposted your repost"
-msgstr ""
+msgstr "<0/>があなたのリポストをリポストしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:304
 msgid "<0/> signed up with your starter pack"
-msgstr ""
+msgstr "<0/>があなたのスターターパック経由でサインアップしました"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:234
 msgid "<0/> verified you"
-msgstr ""
+msgstr "<0/>があなたを認証しました"
 
 #. placeholder {0}: getName(items[0])
 #. placeholder {1}: getName(items[1])
@@ -1428,7 +1428,7 @@ msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. 
 msgstr "スカラップ状（帆立貝の形状）の青色のチェックマーク <0><1/></0> のあるアカウントは他のユーザを認証できます。これらの信頼できる認証者はBlueskyによって選択されています。"
 
 #: src/screens/Atmosphere.tsx:43
-#: src/screens/Notifications/index.tsx:106
+#: src/screens/Notifications/index.tsx:108
 msgid "Activity"
 msgstr "アクティビティ"
 
@@ -1651,7 +1651,7 @@ msgstr "リストに追加"
 
 #: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:159
 msgid "Added to saved posts"
-msgstr ""
+msgstr "保存済投稿へ追加しました"
 
 #: src/components/dialogs/StarterPackDialog.tsx:268
 msgid "Added to Starter Pack"
@@ -1738,7 +1738,7 @@ msgstr "alice@example.com"
 
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
-#: src/screens/Notifications/index.tsx:102
+#: src/screens/Notifications/index.tsx:104
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:205
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
@@ -2493,6 +2493,7 @@ msgid "Beta Feature"
 msgstr "ベータ機能"
 
 #: src/Navigation.tsx:444
+#: src/screens/Notifications/index.tsx:661
 #: src/screens/Settings/BetaFeaturesSettings.tsx:116
 #: src/screens/Settings/Settings.tsx:251
 #: src/screens/Settings/Settings.tsx:254
@@ -2622,7 +2623,7 @@ msgstr "ブロック中のアカウントは、あなたのスレッドでの返
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:454
 msgid "Blocked post"
-msgstr ""
+msgstr "ブロックされた投稿"
 
 #: src/screens/Profile/Sections/Labels.tsx:204
 msgid "Blocking does not prevent this labeler from placing labels on your account."
@@ -3507,7 +3508,7 @@ msgstr "ユーザーリストを折りたたむ"
 
 #: src/screens/Notifications/components/NotificationItem/Item/group.tsx:298
 msgid "Collapses list of users"
-msgstr ""
+msgstr "ユーザーリストを折りたたむ"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:973
 msgid "Collapses list of users for a given notification"
@@ -3996,7 +3997,7 @@ msgstr "GIFを読み込めませんでした"
 
 #: src/screens/Notifications/components/NotificationItem/Item/group.tsx:353
 msgid "Couldn’t load more accounts, please try again"
-msgstr ""
+msgstr "これ以上アカウントを読み込めませんでした。もう一度お試しください"
 
 #: src/features/followingV2/home/GapRow.tsx:58
 #: src/features/followingV2/home/GapRow.tsx:83
@@ -4346,7 +4347,7 @@ msgstr "削除されたリスト"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:457
 msgid "Deleted post"
-msgstr ""
+msgstr "削除された投稿"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:463
 #: src/components/SendErrorReportDialog.tsx:78
@@ -4743,7 +4744,7 @@ msgstr "例: 繰り返し広告付きで返信するユーザー。"
 #: src/screens/Notifications/components/PageList.tsx:474
 msgctxt "Notifications section header"
 msgid "Earlier"
-msgstr ""
+msgstr "以前"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:198
 msgid "Eating disorders"
@@ -5193,7 +5194,7 @@ msgstr "投稿のテキストを展開"
 
 #: src/screens/Notifications/components/NotificationItem/Item/group.tsx:299
 msgid "Expands list of users"
-msgstr ""
+msgstr "ユーザーリストを展開"
 
 #: src/screens/VideoFeed/index.tsx:1123
 msgid "Expands or collapses post text"
@@ -5647,7 +5648,7 @@ msgstr "{0}によるフィード"
 
 #: src/screens/Notifications/components/NotificationItem/Item/aggregate.tsx:133
 msgid "Feed by {handle}"
-msgstr ""
+msgstr "{handle}によるフィード"
 
 #: src/view/com/feeds/MissingFeed.tsx:153
 msgid "Feed creator"
@@ -5797,7 +5798,7 @@ msgstr "連絡先を見つける"
 #: src/screens/Notifications/components/PageList.tsx:529
 #: src/screens/Notifications/components/PageList.tsx:534
 msgid "Find friends"
-msgstr ""
+msgstr "友達を見つける"
 
 #: src/components/contacts/screens/GetContacts.tsx:275
 #: src/components/contacts/screens/GetContacts.tsx:289
@@ -5822,7 +5823,7 @@ msgstr "Blueskyの投稿、ユーザー、フィードを検索"
 
 #: src/screens/Notifications/components/PageList.tsx:523
 msgid "Find some friends to start getting notifications!"
-msgstr ""
+msgstr "友達を見つけて通知を受け取りましょう！"
 
 #: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:98
 msgid "Find your friends"
@@ -5977,11 +5978,11 @@ msgstr "<0>{0}</0>、<1>{1}</1>および{2, plural, other {他#人}}がフォロ
 #: src/screens/Notifications/components/NotificationItem/kinds/follower.tsx:52
 msgctxt "Notifications section header"
 msgid "Followed you"
-msgstr ""
+msgstr "あなたをフォロー"
 
-#: src/screens/Notifications/index.tsx:104
+#: src/screens/Notifications/index.tsx:106
 msgid "Followers"
-msgstr ""
+msgstr "フォロワー"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:360
 msgid "Followers can join"
@@ -6038,7 +6039,7 @@ msgstr "{handle}をフォローしています"
 
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:172
 msgid "Following {name}"
-msgstr ""
+msgstr "{name}をフォロー中"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:78
 #: src/screens/Settings/ContentAndMediaSettings.tsx:81
@@ -6374,7 +6375,7 @@ msgstr "{firstAuthorName}のプロフィールに移動"
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:603
 #: src/screens/Notifications/components/NotificationItem/Item/text.tsx:113
 msgid "Go to {name}’s profile"
-msgstr ""
+msgstr "{name}のプロフィールへ移動"
 
 #: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:93
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:73
@@ -6658,7 +6659,7 @@ msgstr "非表示のリスト"
 #. Shown in place of the text of a post that is hidden by the viewer’s moderation settings
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:208
 msgid "Hidden post"
-msgstr ""
+msgstr "非表示の投稿"
 
 #: src/components/interstitials/TrendingVideos.tsx:140
 #: src/components/moderation/ContentHider.tsx:208
@@ -7029,19 +7030,19 @@ msgstr "年齢に応じた体験を提供するために、あなたの生年月
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:254
 msgid "in reply to <0>{name}</0>: {previewNode}"
-msgstr ""
+msgstr "<0>{name}</0>への返信：{previewNode}"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:172
 msgid "in reply to a blocked post"
-msgstr ""
+msgstr "ブロックされた投稿への返信"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:177
 msgid "in reply to a deleted post"
-msgstr ""
+msgstr "削除された投稿への返信"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:252
 msgid "in reply to: {previewNode}"
-msgstr ""
+msgstr "返信先：{previewNode}"
 
 #: src/screens/Settings/NotificationSettings/components/SettingPreview.tsx:30
 msgid "In-app"
@@ -7690,7 +7691,7 @@ msgstr "リンクをクリップボードにコピーしました"
 
 #: src/screens/Notifications/components/NotificationItem/Item/aggregate.tsx:71
 msgid "Link to {domain}"
-msgstr ""
+msgstr "{domain}へのリンク"
 
 #: src/Navigation.tsx:283
 msgid "List"
@@ -7884,7 +7885,7 @@ msgstr "読み込み中…"
 
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:516
 msgid "Loads more people into this list"
-msgstr ""
+msgstr "このリストにさらに人を読み込む"
 
 #: src/features/followingV2/home/GapRow.tsx:61
 msgid "Loads the posts missing between here and the posts below"
@@ -8481,13 +8482,13 @@ msgctxt "nux-description"
 msgid "New"
 msgstr "新規"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:576
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:580
 msgid "New {count, plural, one {post} other {posts}} from {name}"
-msgstr ""
+msgstr "{name}からの新しい{count, plural, other {投稿}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:596
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:604
 msgid "New {count, plural, one {post} other {posts}} from <0/>"
-msgstr ""
+msgstr "<0/>からの新しい{count, plural, other {投稿}}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:551
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
@@ -8620,20 +8621,28 @@ msgstr "{firstAuthorLink}および<0>{additionalAuthorsCount, plural, other {他
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr "{firstAuthorName}および{additionalAuthorsCount, plural, other {他{formattedAuthorsCount}人}}からの新しい投稿"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:572
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:574
 msgid "New posts from {name} and {others, plural, one {# other} other {# others}}"
-msgstr ""
+msgstr "{name}と{others, plural, other {他#人}}からの新しい投稿"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:570
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:572
 msgid "New posts from {name} and {secondName}"
-msgstr ""
+msgstr "{name}と{secondName}からの新しい投稿"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:584
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:588
 msgid "New posts from <0/> and <1/>"
+msgstr "<0/>と<1/>からの新しい投稿"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:593
+msgid "New posts from <0/> and <1>{others, plural, one {# other} other {# others}}</1>"
+msgstr "<0/>と<1>{others, plural, other {他#人}}</1>からの新しい投稿"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:579
+msgid "New reply from {name}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:589
-msgid "New posts from <0/> and <1>{others, plural, one {# other} other {# others}}</1>"
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:600
+msgid "New reply from <0/>"
 msgstr ""
 
 #: src/components/dialogs/StarterPackDialog.tsx:196
@@ -8746,7 +8755,7 @@ msgstr "フィードが見つかりませんでした。他を探してみて。
 
 #: src/screens/Notifications/components/PageList.tsx:563
 msgid "No followers to show yet"
-msgstr ""
+msgstr "表示するフォロワーがまだいません"
 
 #: src/view/com/profile/ProfileFollowers.tsx:216
 msgid "No followers yet"
@@ -8793,7 +8802,7 @@ msgstr "{0}のフォローを解除しました"
 
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:169
 msgid "No longer following {name}"
-msgstr ""
+msgstr "{name}のフォローを解除しました"
 
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
@@ -8818,12 +8827,12 @@ msgstr "名前なし"
 
 #: src/screens/Notifications/components/PageList.tsx:560
 msgid "No notifications from people you follow yet"
-msgstr ""
+msgstr "フォロー中のユーザーからの通知はまだありません"
 
 #: src/screens/Notifications/components/PageList.tsx:512
 #: src/screens/Notifications/components/PageList.tsx:557
 msgid "No notifications yet"
-msgstr ""
+msgstr "まだ通知はありません"
 
 #: src/view/com/notifications/NotificationFeed.tsx:130
 msgid "No notifications yet!"
@@ -8865,11 +8874,11 @@ msgstr "ここに投稿はありません"
 
 #: src/screens/Notifications/components/ActivityEmptyMessage.tsx:48
 msgid "No posts here yet. Click the {bell} bell icon on someone’s profile to keep up with their activity."
-msgstr ""
+msgstr "ここにはまだ投稿はありません。誰かのプロフィールにある{bell}ベルアイコンをクリックして、アクティビティを追いかけましょう。"
 
 #: src/screens/Notifications/components/ActivityEmptyMessage.tsx:53
 msgid "No posts here yet. Tap the {bell} bell icon on someone’s profile to keep up with their activity."
-msgstr ""
+msgstr "ここにはまだ投稿はありません。誰かのプロフィールにある{bell}ベルアイコンをタップして、アクティビティを追いかけましょう。"
 
 #: src/screens/Profile/Sections/Feed.tsx:84
 #: src/view/screens/Profile.tsx:442
@@ -8887,7 +8896,7 @@ msgstr "最近のGIFはまだありません。ここに表示するには何か
 
 #: src/screens/Notifications/components/PageList.tsx:566
 msgid "No replies to show yet"
-msgstr ""
+msgstr "まだ表示する返信はありません"
 
 #: src/view/screens/Profile.tsx:469
 msgid "No replies yet"
@@ -9048,7 +9057,7 @@ msgstr "お知らせ"
 #: src/components/dialogs/NotificationSettingsDialog.tsx:72
 #: src/Navigation.tsx:483
 #: src/Navigation.tsx:570
-#: src/screens/Notifications/index.tsx:657
+#: src/screens/Notifications/index.tsx:673
 #: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
 msgstr "通知設定"
@@ -9062,7 +9071,7 @@ msgstr "通知音"
 #: src/Navigation.tsx:804
 #: src/screens/Messages/Settings.tsx:255
 #: src/screens/Notifications/ActivityList.tsx:31
-#: src/screens/Notifications/index.tsx:649
+#: src/screens/Notifications/index.tsx:651
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
 #: src/screens/Settings/NotificationSettings/index.tsx:125
 #: src/screens/Settings/Settings.tsx:201
@@ -9077,7 +9086,7 @@ msgstr "通知"
 #. Description of a feature flag (Redesigned notifications)
 #: src/analytics/features/index.ts:138
 msgid "Notifications sorted into tabs – people you follow, followers, replies and activity."
-msgstr ""
+msgstr "通知はタブで分類されます – フォロー中のユーザー、フォロワー、返信、そしてアクティビティ。"
 
 #: src/lib/hooks/useTimeAgo.ts:135
 msgid "now"
@@ -9515,6 +9524,10 @@ msgstr "この下書きを編集画面で開く"
 msgid "Opens this profile"
 msgstr "プロフィールを開く"
 
+#: src/screens/Notifications/index.tsx:662
+msgid "Opens your beta features settings"
+msgstr ""
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:792
 msgid "Opt out"
 msgstr "オプトアウト"
@@ -9747,7 +9760,7 @@ msgid "People I follow can request to join"
 msgstr "フォロー中の人は参加をリクエストできます"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
-#: src/screens/Notifications/index.tsx:103
+#: src/screens/Notifications/index.tsx:105
 msgid "People you follow"
 msgstr "フォロー中の人"
 
@@ -10095,7 +10108,7 @@ msgstr "{account}による投稿"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:514
 msgid "Post by {name}"
-msgstr ""
+msgstr "{name}による投稿"
 
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:296
@@ -10190,7 +10203,7 @@ msgstr "投稿の固定を解除しました"
 #. Shown in place of the text of a post that has no text, only images, video, a link or a quoted post
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:214
 msgid "Post with media"
-msgstr ""
+msgstr "メディア付きの投稿"
 
 #. placeholder {0}: i18n.date(POSTED_AT, { month: 'short', day: 'numeric', year: 'numeric', })
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:35
@@ -10570,12 +10583,12 @@ msgstr "再接続"
 #. Name for a feature flag
 #: src/analytics/features/index.ts:132
 msgid "Redesigned notifications"
-msgstr ""
+msgstr "再設計された通知"
 
 #. Pill on the notifications list, shown when there are new notifications to load.
 #: src/screens/Notifications/components/RefreshPill.tsx:87
 msgid "Refresh"
-msgstr ""
+msgstr "更新"
 
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:136
@@ -10842,7 +10855,7 @@ msgstr "Discoverで置き換える"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:245
 msgid "replied to <0>{name}</0>: {previewNode}"
-msgstr ""
+msgstr "<0>{name}</0>への返信：{previewNode}"
 
 #: src/components/Post/PostRepliedTo.tsx:39
 msgctxt "description"
@@ -10851,7 +10864,7 @@ msgstr "<0><1/></0>への返信"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:170
 msgid "replied to a blocked post"
-msgstr ""
+msgstr "ブロックされた投稿への返信"
 
 #: src/components/Post/PostRepliedTo.tsx:28
 msgctxt "description"
@@ -10860,7 +10873,7 @@ msgstr "ブロックされた投稿への返信"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:175
 msgid "replied to a deleted post"
-msgstr ""
+msgstr "削除された投稿への返信"
 
 #: src/components/Post/PostRepliedTo.tsx:30
 msgctxt "description"
@@ -10874,7 +10887,7 @@ msgstr "あなたへの返信"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:243
 msgid "replied to: {previewNode}"
-msgstr ""
+msgstr "返信先：{previewNode}"
 
 #: src/components/dms/MessageItem.tsx:943
 msgid "Replied-to message from {senderName}, tap to scroll to it"
@@ -10891,7 +10904,7 @@ msgstr "返信先のメッセージ、タップしてスクロール"
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:271
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:283
 #: src/lib/hooks/useNotificationHandler.ts:173
-#: src/screens/Notifications/index.tsx:105
+#: src/screens/Notifications/index.tsx:107
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:218
 #: src/screens/Settings/NotificationSettings/index.tsx:181
 #: src/screens/Settings/NotificationSettings/index.tsx:330
@@ -11028,7 +11041,7 @@ msgstr "このグループチャットを報告"
 
 #: src/components/moderation/ReportDialog/copy.ts:16
 msgid "Report this link"
-msgstr ""
+msgstr "このリストを報告"
 
 #: src/components/moderation/ReportDialog/copy.ts:39
 msgid "Report this list"
@@ -11080,12 +11093,12 @@ msgstr "リポストまたは引用"
 #: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:83
 msgctxt "Toast after undoing a repost"
 msgid "Repost removed"
-msgstr ""
+msgstr "リポストを削除しました"
 
 #: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:97
 msgctxt "Toast after reposting"
 msgid "Reposted"
-msgstr ""
+msgstr "リポストしました"
 
 #: src/screens/Post/PostRepostedBy.tsx:31
 msgid "Reposted By"
@@ -11687,7 +11700,7 @@ msgstr "{0}を選択"
 #. placeholder {0}: tab.label
 #: src/screens/Notifications/components/TabPills.tsx:406
 msgid "Select {0} tab"
-msgstr ""
+msgstr "{0}タブを選択"
 
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:110
 msgid "Select {langName}"
@@ -12301,7 +12314,7 @@ msgstr "ライブ状態を表示"
 #. placeholder {0}: tab.label
 #: src/screens/Notifications/components/TabPills.tsx:408
 msgid "Shows {0} notifications"
-msgstr ""
+msgstr "{0}の通知を表示"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:599
 msgid "Shows information about when this post was created"
@@ -12676,7 +12689,7 @@ msgstr "{0}によるスターターパック"
 
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:403
 msgid "Starter pack by {handle}"
-msgstr ""
+msgstr "{handle}によるスターターパック"
 
 #. placeholder {0}: creator.handle
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:193
@@ -14730,7 +14743,7 @@ msgstr "バージョン {0}"
 #. When someone followed you through a starter pack, e.g. “via starter pack [icon] Science Pack”
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:350
 msgid "via starter pack <0/> <1>{name}</1>"
-msgstr ""
+msgstr "スターターパック<0/><1>{name}</1>経由"
 
 #. When the source of a follow is a Starter Pack, i.e., 'via Starter Pack {starterPackName}'.
 #: src/view/com/notifications/NotificationFeedItem.tsx:738
@@ -14842,27 +14855,27 @@ msgstr "{publicationTitle}を表示"
 
 #: src/screens/Notifications/components/NotificationItem/Item/aggregate.tsx:169
 msgid "View all"
-msgstr ""
+msgstr "すべて表示"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:129
 msgid "View all followers"
-msgstr ""
+msgstr "すべてのフォロワーを表示"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:369
 msgid "View all posts {name} liked"
-msgstr ""
+msgstr "{name}がいいねしたすべての投稿を表示"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:401
 msgid "View all posts {name} reposted"
-msgstr ""
+msgstr "{name}がリポストしたすべての投稿を表示"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:434
 msgid "View all reposts {name} liked"
-msgstr ""
+msgstr "{name}がいいねしたリポストをすべて表示"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:467
 msgid "View all reposts {name} reposted"
-msgstr ""
+msgstr "{name}がリポストしたすべてのリポストを表示"
 
 #: src/components/ProfileHoverCard/index.web.tsx:487
 msgid "View blocked user's profile"
@@ -15380,7 +15393,7 @@ msgstr "なぜこのフィードをレビューする必要がありますか？
 
 #: src/components/moderation/ReportDialog/copy.ts:17
 msgid "Why should this link be reviewed?"
-msgstr ""
+msgstr "なぜこのリンクをレビューする必要がありますか？"
 
 #: src/components/moderation/ReportDialog/copy.ts:40
 msgid "Why should this list be reviewed?"
@@ -16135,7 +16148,7 @@ msgstr "あなたの連絡先 {name}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:341
 msgid "Your contact <0/> is on Bluesky"
-msgstr ""
+msgstr "あなたの連絡先<0/>がBlueskyにいます"
 
 #. placeholder {0}: sanitizeHandle(currentAccount?.handle || '', '@')
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:531
