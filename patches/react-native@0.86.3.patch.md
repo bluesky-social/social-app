@@ -205,3 +205,53 @@ there is no child.
 
 **TODO: Remove after upgrading to a React Native release containing this fix.**
 The upstream PR is still open as of September 9, 2026.
+
+## YogaLayoutableShadowNode.cpp Patch - Full-tree layout on every commit from `setSize`/`setPositionType` in `adopt()`
+
+`YogaLayoutableShadowNode::setSize()` and `setPositionType()` mark the Yoga
+node dirty even when the value is unchanged (unlike `setPadding()`).
+Component descriptors call them from `adopt()`, which runs on every clone:
+
+- react-native-screens: `Screen`, `ModalScreen` and `ScreenStackHeaderConfig`
+  set a size from native state. On Android, `Screen` also resets the size to
+  undefined while native hasn't reported a frame. Android only reports frames
+  for screens in a native stack, so screens in a `ScreenContainer`, like our
+  bottom tabs, stay in that branch forever.
+- React Native's own `ModalHostView` and `InputAccessoryView` set a size and
+  `position: absolute`.
+
+Every commit clones the path from the changed node up to the root, and all our
+content sits under `Screen`s, so every commit dirtied the root.
+`RootShadowNode::layoutIfNeeded` then ran `layoutTree` plus Yoga's
+`roundLayoutResultsToPixelGrid`, which walks the whole tree. That includes
+commits that change nothing layout-related: Reanimated's per-frame commits (the
+profile header's transforms while scrolling) and ScrollView `contentOffset`
+state updates on the JS thread while scrolling any feed. React commits pay for
+a layout either way, because the renderer re-appends children and so dirties
+every ancestor.
+
+The patch returns early when the new size or position type equals the one
+already in the node's Yoga style. A clone with new props still resets the style
+from props, so the size is re-applied and the node dirtied as before.
+`StyleSizeLength::points(NaN)` is `undefined()` and undefined lengths compare
+equal, so Android's "frame unknown" reset to `{YGUndefined, YGUndefined}` leaves
+the node clean once the size is unset.
+
+This replaces the `setSizeIfChanged()` hunks we carried in
+`patches/react-native-screens@*.patch`
+(https://github.com/bluesky-social/social-app/pull/12000), which fixed the same
+thing for screens only. Their upstream PR is
+https://github.com/software-mansion/react-native-screens/pull/4922.
+
+Issue: https://github.com/react/react-native/issues/59100 (repro:
+https://github.com/mozzius/modal-relayout-repro)
+PR: https://github.com/react/react-native/pull/59101 (this hunk matches its
+`YogaLayoutableShadowNode.cpp` change; its unit tests aren't included)
+
+**TODO: Remove after bumping React Native to a release containing it.**
+
+Note on build modes: iOS builds React Native from source in every build, so
+this is always active there. Android compiles react-android from source only in
+production (see the `ReactViewGroup.kt` section above), so local Android dev and
+`debugOptimized` builds run without the fix and still lay out the whole tree on
+these commits.
