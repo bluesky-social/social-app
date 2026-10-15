@@ -114,3 +114,44 @@ export function buildStateObject(
     ],
   }
 }
+
+type LinkedState = {
+  routes: {
+    name: string
+    state?: {index?: number; routes: {name: string}[]}
+  }[]
+}
+
+/**
+ * On native, `getStateFromPath` puts Home under a linked screen in the HomeTab
+ * stack so that a cold start has something to go back to. Returns the same
+ * state without that Home route, or `undefined` if there is no such route.
+ */
+export function stripHomeTabBaseRoute<T extends LinkedState>(
+  state: T,
+): T | undefined {
+  const tab = state.routes[0]
+  const routes = tab?.state?.routes
+  if (
+    state.routes.length !== 1 ||
+    tab.name !== 'HomeTab' ||
+    !routes ||
+    routes.length < 2 ||
+    routes[0].name !== 'Home'
+  ) {
+    return undefined
+  }
+  return {
+    ...state,
+    routes: [
+      {
+        ...tab,
+        state: {
+          ...tab.state,
+          index: routes.length - 2,
+          routes: routes.slice(1),
+        },
+      },
+    ],
+  }
+}

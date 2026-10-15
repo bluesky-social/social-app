@@ -13,6 +13,7 @@ import {
   createNavigationContainerRef,
   DarkTheme,
   DefaultTheme,
+  getActionFromState as getActionFromStateDefault,
   type LinkingOptions,
   NavigationContainer,
   StackActions,
@@ -31,7 +32,11 @@ import {
 } from '#/lib/hooks/useNotificationHandler'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {useCallOnce} from '#/lib/once'
-import {buildStateObject, getCurrentRoute} from '#/lib/routes/helpers'
+import {
+  buildStateObject,
+  getCurrentRoute,
+  stripHomeTabBaseRoute,
+} from '#/lib/routes/helpers'
 import {
   type AllNavigatorParams,
   type BottomTabNavigatorParams,
@@ -892,6 +897,18 @@ const LINKING = {
       const res = buildStateObject('Flat', name, params)
       return res
     }
+  },
+
+  getActionFromState(state, options) {
+    /*
+     * For a URL received while the app is running, the Home route that
+     * getStateFromPath puts under the linked screen would make React
+     * Navigation replace the whole HomeTab stack, remounting Home and losing
+     * its feeds and scroll position. Without it, the linked screen is opened
+     * on top of the existing stack, the same way notification taps do.
+     */
+    const withoutHome = IS_NATIVE ? stripHomeTabBaseRoute(state) : undefined
+    return getActionFromStateDefault(withoutHome ?? state, options)
   },
 } satisfies LinkingOptions<AllNavigatorParams>
 
