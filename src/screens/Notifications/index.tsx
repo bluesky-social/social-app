@@ -15,6 +15,7 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {type AnyAppReturn, onAnyAppReturn} from '#/lib/appState'
+import {HITSLOP_10} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
   type NativeStackScreenProps,
@@ -55,6 +56,7 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {type Metrics, useAnalytics} from '#/analytics'
+import {Features, isOnForBetaUser} from '#/analytics/features'
 import {IS_INTERNAL, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<
@@ -648,7 +650,21 @@ function NotificationsHeader({
               <Layout.Header.TitleText>
                 <Trans>Notifications</Trans>
               </Layout.Header.TitleText>
-              <BetaTag />
+              {
+                /*
+                 * Only for those who have it because they opted in to beta
+                 * features, not internal builds or a wider rollout
+                 */
+                isOnForBetaUser(Features.NotificationsV2Enable) && (
+                  <Link
+                    to={{screen: 'BetaFeaturesSettings'}}
+                    label={l`Beta features`}
+                    accessibilityHint={l`Opens your beta features settings`}
+                    hitSlop={HITSLOP_10}>
+                    <BetaTag />
+                  </Link>
+                )
+              }
             </View>
           </Layout.Header.Content>
           <Layout.Header.Slot>
