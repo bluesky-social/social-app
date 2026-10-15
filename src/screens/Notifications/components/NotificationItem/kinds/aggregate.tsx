@@ -551,7 +551,7 @@ export function SubscribedPostNotification({
   const {t: l} = useLingui()
   const {items, count} = notification
   // Items are newest first, so this is the post to preview
-  const [{post}] = items
+  const [{post, parent}] = items
   const {actor, name, second, secondName, others} =
     Item.useGroupNames(notification)
   const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
@@ -599,6 +599,8 @@ export function SubscribedPostNotification({
             </Trans>
           )}
         </Item.PrimaryText>
+        {/* A lone post that replies to another says what it replies to */}
+        {count === 1 && parent && <Item.ReplyContext parent={parent} />}
         <Item.PostPreview post={post} />
         <Item.Timestamp date={notification.indexedAt} />
       </Item.Content>
