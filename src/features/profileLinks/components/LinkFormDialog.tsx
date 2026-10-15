@@ -21,6 +21,7 @@ import {
   normalizeProfileLinkUrl,
   validateLinkInput,
 } from '../providers'
+import {checkSafelink} from '../safelink'
 import {useUploadLinkIcon} from '../state'
 import {MAX_TITLE_LENGTH, type ProfileLink} from '../types'
 import {ProviderLogo} from './ProviderLogo'
@@ -217,12 +218,23 @@ function LinkFormInner({
     // support links use bundled logos instead
     const needsIcon = !provider && !keptIcon
     let icon = keptIcon
-    if (needsCheck || needsIcon) {
+    if (needsCheck || needsIcon || isNewDestination) {
       setReachability('checking')
-      const [meta, uploadedIcon] = await Promise.all([
+      const [meta, uploadedIcon, safelinkAction] = await Promise.all([
         needsCheck ? getLinkMeta(targetUrl, 8e3) : undefined,
         needsIcon ? uploadLinkIcon(targetUrl) : undefined,
+        // unlike reachability, "save anyway" can't skip this
+        isNewDestination ? checkSafelink(targetUrl) : undefined,
       ])
+      if (safelinkAction === 'block') {
+        setReachability('unchecked')
+        setError('blocked')
+        ax.metric('profile:links:rejected', {
+          reason: 'safelink',
+          domain: getLinkHost(targetUrl),
+        })
+        return
+      }
       if (meta?.error) {
         setReachability('unreachable')
         return
