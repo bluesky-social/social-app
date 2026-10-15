@@ -552,7 +552,7 @@ export function SubscribedPostNotification({
   const {items, count} = notification
   // Items are newest first, so this is the post to preview
   const [{post, parent}] = items
-  // A lone post that replies to another reads as a reply, to what it replies to
+  // Set when the group is a lone post that replies to another
   const replyParent = count === 1 ? parent : undefined
   const {actor, name, second, secondName, others} =
     Item.useGroupNames(notification)
