@@ -552,6 +552,8 @@ export function SubscribedPostNotification({
   const {items, count} = notification
   // Items are newest first, so this is the post to preview
   const [{post, parent}] = items
+  // A lone post that replies to another reads as a reply, to what it replies to
+  const replyParent = count === 1 ? parent : undefined
   const {actor, name, second, secondName, others} =
     Item.useGroupNames(notification)
   const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
@@ -573,7 +575,9 @@ export function SubscribedPostNotification({
                 one: '# other',
                 other: '# others',
               })}`
-            : l`New ${plural(count, {one: 'post', other: 'posts'})} from ${name}`
+            : replyParent
+              ? l`New reply from ${name}`
+              : l`New ${plural(count, {one: 'post', other: 'posts'})} from ${name}`
       }
       testID={`notification-${notification.type}-${notification.id}`}>
       <Item.Avatar profile={actor} icon={ActivityIcon} tone="activity" />
@@ -592,6 +596,10 @@ export function SubscribedPostNotification({
                 <Plural value={others} one="# other" other="# others" />
               </Item.Strong>
             </Trans>
+          ) : replyParent ? (
+            <Trans>
+              New reply from <Item.Name profile={actor} />
+            </Trans>
           ) : (
             <Trans>
               New <Plural value={count} one="post" other="posts" /> from{' '}
@@ -599,8 +607,7 @@ export function SubscribedPostNotification({
             </Trans>
           )}
         </Item.PrimaryText>
-        {/* A lone post that replies to another says what it replies to */}
-        {count === 1 && parent && <Item.ReplyContext parent={parent} />}
+        {replyParent && <Item.ReplyContext parent={replyParent} />}
         <Item.PostPreview post={post} />
         <Item.Timestamp date={notification.indexedAt} />
       </Item.Content>
