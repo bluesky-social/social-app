@@ -204,6 +204,19 @@ export function getTargetedFeatures(i18n: I18n) {
 }
 
 /**
+ * Whether `feature` is on for the current user because they opted in to beta
+ * features, i.e. the rule GrowthBook matched for them targets the beta user
+ * attribute, as the features listed on the Beta features screen do.
+ */
+export function isOnForBetaUser(feature: Features): boolean {
+  const result = features.evalFeature(feature)
+  if (!result.on || !result.ruleId) return false
+  const rules = features.getFeatures()[feature]?.rules
+  const rule = rules?.find(({id}) => id === result.ruleId)
+  return conditionTargetsAttribute(rule?.condition, BETA_USER_ATTRIBUTE)
+}
+
+/**
  * Converts our metadata into GrowthBook attributes and sets them. GrowthBook
  * attributes are manually configured in the GrowthBook dashboard. So these
  * values need to match exactly. Therefore, let's add them here manually to and
