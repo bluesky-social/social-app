@@ -15,7 +15,6 @@ import {
   MentionNotification,
   QuoteNotification,
   ReplyNotification,
-  SubscribedReplyNotification,
 } from './kinds/post'
 import {
   ContactMatchNotification,
@@ -65,20 +64,8 @@ export function NotificationItem({
       return <RepostViaRepostNotification notification={notification} />
     case 'generatorLike':
       return <GeneratorLikeNotification notification={notification} />
-    case 'subscribedPost': {
-      const [{post, parent}] = notification.items
-      // A lone new post that replies to another shows as a reply
-      if (notification.count === 1 && parent) {
-        return (
-          <SubscribedReplyNotification
-            notification={notification}
-            post={post}
-            parent={parent}
-          />
-        )
-      }
+    case 'subscribedPost':
       return <SubscribedPostNotification notification={notification} />
-    }
     case 'reply':
       return <ReplyNotification notification={notification} />
     case 'quote':
