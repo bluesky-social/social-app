@@ -1,3 +1,4 @@
+import {type FeatureRule} from '@growthbook/growthbook'
 import {beforeEach, describe, expect, it, jest} from '@jest/globals'
 
 import {Features, features, isOnForBetaUser} from '#/analytics/features'
@@ -18,7 +19,7 @@ jest.mock('#/analytics/features/bootstrap', () => ({
 const FEATURE = Features.NotificationsV2Enable
 
 async function setRules(
-  rules: {id: string; condition?: Record<string, unknown>}[],
+  rules: {id: string; condition?: FeatureRule['condition']}[],
 ) {
   await features.setPayload({
     features: {
