@@ -1,4 +1,4 @@
-# react-native-screens+4.26.2.patch
+# react-native-screens+4.30.0.patch
 
 ## Android: do not transition RecyclerView children individually
 
@@ -14,13 +14,17 @@ Related issues:
 - https://github.com/callstack/react-native-pager-view/issues/1005
 - https://github.com/software-mansion/react-native-screens/issues/2461
 
+Still needed as of 4.30.0: upstream's transition traversal has no RecyclerView
+handling. 4.28.0's `SwipeRefreshLayout` filler fix (#4519) is a different crash
+in the same traversal.
+
 ## iOS: composite secure-view content into JS-pop transition snapshots
 
 Fixes the GrowthHack Follow button flashing to the butterfly logo during
 JS-driven pops (custom back button, programmatic `goBack()`).
 
 For a JS-driven pop, React unmounts the screen before the native dismiss
-animation runs, so `RNSScreen setViewToSnapshot` freezes the screen with
+animation runs, so `RNSScreen addSnapshotToView` freezes the screen with
 `snapshotViewAfterScreenUpdates:`. That is a render-server capture, and the
 render server excludes `isSecureTextEntry` canvas layers from every capture -
 the mechanism expo-privacy-sensitive borrows - so the Follow button is
@@ -30,7 +34,7 @@ unaffected because they animate the live views and never snapshot.
 
 The exclusion flag is only consulted for layers inside the captured subtree,
 so a snapshot rooted below the flagged canvas still includes the content. By
-`setViewToSnapshot` time the screen's children are already unmounted (only
+`addSnapshotToView` time the screen's children are already unmounted (only
 the rendered pixels survive on the render server), so the patch captures the
 secure subtrees in `willBeUnmountedInUpcomingTransaction` - before the
 transaction's mutations apply - stashes them on the screen view via an
@@ -45,6 +49,13 @@ fallback either way. Plain views (the Follow button) capture reliably.
 Verified in a minimal repro (Expo 57 / RN 0.86 / RNS 4.26 / New Arch) at
 ~/work/rns-secure-pop-repro: zero fallback frames across recorded JS pops
 with the patch, ~700ms of visible fallback without it.
+
+Since 4.27.0 (upstream #4407), `setViewToSnapshot` is `addSnapshotToView`,
+which adds the snapshot inside the screen view instead of replacing the
+controller's view with it. The overlays are composited the same way; their
+frames are in the screen view's coordinates, which match the snapshot's. They
+are now also released when the view has already left the window and no
+snapshot is taken. The 4.30.0 port hasn't been re-run against the repro.
 
 ## iOS + Android: do not dirty shadow nodes' Yoga nodes on every clone
 
@@ -92,4 +103,8 @@ actual layout), plus 0.88s on the JS thread under state updates.
 
 Upstream: https://github.com/software-mansion/react-native-screens/issues/4777
 (reported for Android only; repro at
-https://github.com/TantiE100/rns-setsize-layout-repro). Linear: APP-3435.
+https://github.com/TantiE100/rns-setsize-layout-repro). Fix PR:
+https://github.com/software-mansion/react-native-screens/pull/4922 (not merged
+as of 4.30.0). The C++ changes here match the PR exactly; on `main` the v4
+files live under `legacy/`, but 4.30.0 still has the flat layout. Linear:
+APP-3435.

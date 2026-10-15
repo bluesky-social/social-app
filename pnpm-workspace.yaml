@@ -21,7 +21,7 @@ overrides:
   'react-native-worklets': '0.13.0'
   'psl': '1.9.0'
   '@types/psl': '1.1.1'
-  'react-native-screens': '4.26.2'
+  'react-native-screens': '4.30.0'
 allowBuilds:
   '@sentry/cli': true
   '@swc/core': false
@@ -45,7 +45,7 @@ patchedDependencies:
   'metro@0.84.5': patches/metro@0.84.5.patch
   'react-native-pager-view@6.8.0': patches/react-native-pager-view@6.8.0.patch
   react-native-reanimated@4.7.1: patches/react-native-reanimated@4.7.1.patch
-  'react-native-screens@4.26.2': patches/react-native-screens@4.26.2.patch
+  react-native-screens@4.30.0: patches/react-native-screens@4.30.0.patch
   'react-native-svg@15.15.4': patches/react-native-svg@15.15.4.patch
   'react-native@0.86.3': patches/react-native@0.86.3.patch
 minimumReleaseAgeExclude:
