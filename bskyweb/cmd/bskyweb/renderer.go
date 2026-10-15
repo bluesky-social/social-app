@@ -45,12 +45,14 @@ func (l *RendererLoader) Get(path string) (io.Reader, error) {
 type Renderer struct {
 	TemplateSet *pongo2.TemplateSet
 	Debug       bool
+	prefix      string
 }
 
 func NewRenderer(prefix string, fsys fs.FS, debug bool) *Renderer {
 	return &Renderer{
 		TemplateSet: pongo2.NewSet(prefix, NewRendererLoader(prefix, fsys)),
 		Debug:       debug,
+		prefix:      prefix,
 	}
 }
 
@@ -71,7 +73,8 @@ func (r Renderer) Render(w io.Writer, name string, data any, c echo.Context) err
 	var err error
 
 	if r.Debug {
-		t, err = pongo2.FromFile(name)
+		dts := pongo2.NewSet("debug", pongo2.MustNewLocalFileSystemLoader(r.prefix))
+		t, err = dts.FromFile(name)
 	} else {
 		t, err = r.TemplateSet.FromCache(name)
 	}
