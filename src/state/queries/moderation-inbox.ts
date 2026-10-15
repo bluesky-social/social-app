@@ -1,6 +1,7 @@
 import {type DidString} from '@atproto/syntax'
 import {useLingui} from '@lingui/react/macro'
 import {
+  type InfiniteData,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -9,6 +10,7 @@ import {
 
 import {MOD_PROXY_SERVICE} from '#/lib/constants'
 import {isNetworkError} from '#/lib/strings/errors'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {createQueryKey} from '#/state/queries/util'
@@ -128,6 +130,117 @@ export function useModerationInboxAccountStatusQuery() {
     staleTime: STALE.MINUTES.ONE,
     enabled: hasSession && !!did,
   })
+}
+
+export function useModerationInboxSubjectQuery({
+  moderationService,
+  subject,
+  enabled = true,
+}: {
+  moderationService?: DidString
+  subject?: tools.ozone.inbox.getActionedSubject.$Params['subject']
+  enabled?: boolean
+}) {
+  const client = useAppviewClient()
+  const {currentAccount, hasSession} = useSession()
+  const did = currentAccount?.did
+
+  return useInfiniteQuery({
+    queryKey: createQueryKey(QUERY_KEY_ROOT, {
+      did,
+      endpoint: 'subject',
+      moderationService,
+      subject,
+    }),
+    queryFn: async ({pageParam}) => {
+      if (!moderationService || !subject) {
+        throw new Error('Missing moderation service or subject')
+      }
+      return await client.call(
+        tools.ozone.inbox.getActionedSubject,
+        {subject, limit: 50, cursor: pageParam},
+        {service: `${moderationService}#atproto_labeler`},
+      )
+    },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: page => page.cursor,
+    staleTime: STALE.MINUTES.ONE,
+    enabled: enabled && hasSession && !!did && !!moderationService && !!subject,
+  })
+}
+
+export function useAppealModerationInboxSubjectMutation(
+  moderationService: DidString,
+) {
+  const client = useAppviewClient()
+
+  return useMutation({
+    mutationFn: async (
+      input: tools.ozone.inbox.appealActionedSubject.$InputBody,
+    ) =>
+      await client.call(tools.ozone.inbox.appealActionedSubject, input, {
+        service: `${moderationService}#atproto_labeler`,
+      }),
+    onError: error => {
+      if (
+        !isNetworkError(error) &&
+        !matchXrpcError(error, tools.ozone.inbox.appealActionedSubject)
+      ) {
+        logger.error('Could not submit moderation inbox appeal', {
+          safeMessage: error,
+        })
+      }
+    },
+  })
+}
+
+/** Refresh after closing the appeal dialog so cache updates cannot dismiss it. */
+export function useModerationInboxCacheMutation() {
+  const queryClient = useQueryClient()
+  const {currentAccount} = useSession()
+  const queryKey = createQueryKey(QUERY_KEY_ROOT, {did: currentAccount?.did})
+
+  return async (
+    updatedSubject?: tools.ozone.inbox.appealActionedSubject.$OutputBody,
+  ) => {
+    if (updatedSubject) {
+      const subject =
+        'did' in updatedSubject.subject &&
+        typeof updatedSubject.subject.did === 'string'
+          ? updatedSubject.subject.did
+          : 'uri' in updatedSubject.subject &&
+              typeof updatedSubject.subject.uri === 'string'
+            ? updatedSubject.subject.uri
+            : undefined
+      if (subject) {
+        const subjectQueryKey = createQueryKey(QUERY_KEY_ROOT, {
+          did: currentAccount?.did,
+          endpoint: 'subject',
+          moderationService: updatedSubject.src,
+          subject,
+        })
+        await queryClient.cancelQueries({queryKey: subjectQueryKey})
+        queryClient.setQueryData<
+          InfiniteData<tools.ozone.inbox.getActionedSubject.$OutputBody>
+        >(subjectQueryKey, data =>
+          data
+            ? {
+                ...data,
+                pages: data.pages.map(page => ({
+                  ...page,
+                  enforcement: updatedSubject.enforcement,
+                  appeal: updatedSubject.appeal,
+                  availableActions: updatedSubject.availableActions,
+                  isRead: updatedSubject.isRead,
+                  updatedAt: updatedSubject.updatedAt,
+                })),
+              }
+            : data,
+        )
+      }
+    }
+    await queryClient.invalidateQueries({queryKey})
+  }
 }
 
 export function useModerationInboxUnreadCountQuery(isEnabled = true) {

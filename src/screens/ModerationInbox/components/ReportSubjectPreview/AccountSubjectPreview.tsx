@@ -1,4 +1,3 @@
-import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -12,24 +11,23 @@ export function AccountSubjectPreview({did}: {did: string}) {
   const {query, profile, moderation, name, handle} =
     useSubjectPreviewProfile(did)
   let content: React.ReactNode
+  let avatar: React.ReactNode
   const metadataText: string[] = []
 
   if (profile && moderation) {
-    content = (
-      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-        <UserAvatar
-          type="user"
-          size={40}
-          avatar={profile.avatar}
-          moderation={moderation.ui('avatar')}
-        />
-        {handle ? (
-          <Text emoji style={[a.text_md]}>
-            {handle}
-          </Text>
-        ) : null}
-      </View>
+    avatar = (
+      <UserAvatar
+        type="user"
+        size={40}
+        avatar={profile.avatar}
+        moderation={moderation.ui('avatar')}
+      />
     )
+    content = handle ? (
+      <Text emoji style={[a.text_sm]}>
+        {handle}
+      </Text>
+    ) : null
     if (profile.createdAt) {
       const createdAt = i18n.date(new Date(profile.createdAt), {
         dateStyle: 'medium',
@@ -48,6 +46,7 @@ export function AccountSubjectPreview({did}: {did: string}) {
     <PreviewContent
       testID="moderationInboxAccountPreview"
       title={name}
+      leading={avatar}
       loading={query.isPending || (!!profile && !moderation)}
       moderation={moderation?.ui('contentView')}
       metadataText={metadataText}

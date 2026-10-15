@@ -16,7 +16,10 @@ export function ListSubjectPreview({
   report,
   uri,
 }: {
-  report: tools.ozone.inbox.getReport.$OutputBody['report']
+  report: Pick<
+    tools.ozone.inbox.getReport.$OutputBody['report'],
+    'subject' | 'record'
+  >
   uri: AtUri
 }) {
   const {i18n, t: l} = useLingui()

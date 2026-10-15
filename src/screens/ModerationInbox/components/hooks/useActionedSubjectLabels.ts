@@ -9,7 +9,12 @@ import {type tools} from '#/lexicons'
 export type ActionedSubject =
   tools.ozone.inbox.listActionedSubjects.$OutputBody['subjects'][number]
 
-export function useActionedSubjectLabels(item: ActionedSubject) {
+export function useActionedSubjectLabels(
+  item: Pick<
+    ActionedSubject,
+    'src' | 'subject' | 'enforcement' | 'latestAction'
+  >,
+) {
   const {i18n, t: l} = useLingui()
   const {labelDefs} = useLabelDefinitions()
   const globalLabelStrings = useGlobalLabelStrings()

@@ -7,7 +7,10 @@ import {PreviewContent} from './PreviewContent'
 export function ChatSubjectPreview({
   report,
 }: {
-  report: tools.ozone.inbox.getReport.$OutputBody['report']
+  report: Pick<
+    tools.ozone.inbox.getReport.$OutputBody['report'],
+    'subject' | 'record'
+  >
 }) {
   const {t: l} = useLingui()
   const title = useReportSubjectLabel(report.subject)

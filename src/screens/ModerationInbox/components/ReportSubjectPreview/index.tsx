@@ -16,9 +16,18 @@ import {PostSubjectPreview} from './PostSubjectPreview'
 import {StarterPackSubjectPreview} from './StarterPackSubjectPreview'
 import {StatusSubjectPreview} from './StatusSubjectPreview'
 
-type Report = tools.ozone.inbox.getReport.$OutputBody['report']
+type Report = Pick<
+  tools.ozone.inbox.getReport.$OutputBody['report'],
+  'subject' | 'record'
+>
 
-export function ReportSubjectPreview({report}: {report: Report}) {
+export function ReportSubjectPreview({
+  report,
+  allowOwnRecordSnapshot = false,
+}: {
+  report: Report
+  allowOwnRecordSnapshot?: boolean
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const subjectLabel = useReportSubjectLabel(report.subject)
@@ -48,6 +57,7 @@ export function ReportSubjectPreview({report}: {report: Report}) {
             report={report}
             uri={uri}
             subjectLabel={subjectLabel}
+            allowOwnRecordSnapshot={allowOwnRecordSnapshot}
           />
         )
         break
