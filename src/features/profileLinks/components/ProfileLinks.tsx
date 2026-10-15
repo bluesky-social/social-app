@@ -31,6 +31,7 @@ import {PILL_LEFT, PILL_RIGHT_TEXT, PILL_VERTICAL} from '../pillSize'
 import {getLinkHost, getSupportProvider} from '../providers'
 import {buildProfileRow, GERM_KEY} from '../row'
 import {
+  useCanEditProfileLinks,
   useOwnProfileLinksQuery,
   useProfileLinksEnabled,
   useProfileViewLinks,
@@ -69,6 +70,7 @@ export function ProfileHeaderLinks({
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const enabled = useProfileLinksEnabled()
+  const canEdit = useCanEditProfileLinks()
   const isOwnProfile = currentAccount?.did === profile.did
   /*
    * The owner's row comes from their repo: it reflects a save before the
@@ -105,6 +107,7 @@ export function ProfileHeaderLinks({
       links={links}
       germButton={germButton}
       isOwnProfile={isOwnProfile}
+      canEdit={isOwnProfile && canEdit}
     />
   )
 }
@@ -114,11 +117,14 @@ function ProfileLinksRow({
   links,
   germButton,
   isOwnProfile,
+  canEdit,
 }: {
   profile: app.bsky.actor.defs.ProfileViewDetailed
   links: ProfileLink[]
   germButton?: React.ReactElement
   isOwnProfile: boolean
+  /** The owner taps a link to edit it, instead of opening it. */
+  canEdit: boolean
 }) {
   const {t: l} = useLingui()
   const ax = useAnalytics()
@@ -180,7 +186,7 @@ function ProfileLinksRow({
     const index = links.indexOf(link)
     return {
       key: item.key,
-      node: isOwnProfile ? (
+      node: canEdit ? (
         <ProfileLinkPill
           link={link}
           did={profile.did}
@@ -233,7 +239,7 @@ function ProfileLinksRow({
         expanded={expanded}
         onExpand={() => setExpanded(true)}
       />
-      {isOwnProfile ? (
+      {canEdit ? (
         <LinkFormDialog
           control={formControl}
           link={editingIndex === null ? null : links[editingIndex]}
@@ -258,7 +264,8 @@ function ProfileLinksRow({
             link={activeLink}
             onOpen={open}
             onReport={
-              activeLink?.uri && activeLink.cid
+              // nothing to report on your own profile
+              !isOwnProfile && activeLink?.uri && activeLink.cid
                 ? () => reportControl.open()
                 : undefined
             }

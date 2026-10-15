@@ -30,8 +30,8 @@ import {
   type ProfileLink,
   ProfileLinksEditor,
   sameProfileLinks,
+  useCanEditProfileLinks,
   useOwnProfileLinksQuery,
-  useProfileLinksEnabled,
   useSetOwnProfileLinksCache,
   useWriteProfileLinks,
 } from '#/features/profileLinks'
@@ -136,7 +136,7 @@ function DialogInner({
     ImageMeta | undefined | null
   >()
 
-  const linksEnabled = useProfileLinksEnabled()
+  const linksEnabled = useCanEditProfileLinks()
   const {data: storedLinks} = useOwnProfileLinksQuery(profile.did, {
     enabled: linksEnabled,
   })
