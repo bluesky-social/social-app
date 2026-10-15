@@ -26,7 +26,6 @@ type ReportsFilter = NonNullable<
 type ActionedSubjectsFilter = NonNullable<
   tools.ozone.inbox.listActionedSubjects.$Params['filter']
 >
-type SeenSection = tools.ozone.inbox.updateSeen.$InputBody['sections'][number]
 
 export function useModerationInboxReportsQuery(filter: ReportsFilter) {
   const client = useAppviewClient()
@@ -327,19 +326,19 @@ export function useUpdateModerationInboxSeenMutation() {
   const {t: l} = useLingui()
   const client = useAppviewClient()
   const queryClient = useQueryClient()
+  const {currentAccount} = useSession()
+  const queryKey = createQueryKey(QUERY_KEY_ROOT, {did: currentAccount?.did})
 
   return useMutation({
-    mutationFn: async (sections: SeenSection[]) =>
-      await client.call(
-        tools.ozone.inbox.updateSeen,
-        {sections},
-        {service: MOD_PROXY_SERVICE},
-      ),
+    mutationFn: async (input: tools.ozone.inbox.updateSeen.$InputBody) =>
+      await client.call(tools.ozone.inbox.updateSeen, input, {
+        service: MOD_PROXY_SERVICE,
+      }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({queryKey: [QUERY_KEY_ROOT]})
+      await queryClient.invalidateQueries({queryKey})
     },
     onError: () => {
-      Toast.show(l`Failed to mark all as read. Please try again.`, {
+      Toast.show(l`Failed to mark as read. Please try again.`, {
         type: 'error',
       })
     },
