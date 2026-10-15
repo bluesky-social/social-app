@@ -5,8 +5,9 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {useLingui} from '@lingui/react/macro'
 
-import {HITSLOP_10} from '#/lib/constants'
+import {HITSLOP_10, UNREAD_NOTIFICATION_CAP} from '#/lib/constants'
 import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
 import * as Button from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
@@ -292,6 +293,46 @@ export function BadgeText({
       numberOfLines={1}>
       {children}
     </Text>
+  )
+}
+
+export function BadgeCount({count}: {count: number}) {
+  const t = useTheme()
+  const {i18n, t: l} = useLingui()
+
+  if (count < 1) return
+
+  return (
+    <View
+      style={[
+        a.align_center,
+        a.justify_center,
+        a.rounded_full,
+        a.px_xs,
+        a.py_2xs,
+        {
+          minWidth: 20,
+          minHeight: 20,
+          backgroundColor: t.palette.primary_500,
+        },
+      ]}>
+      <Text
+        style={[
+          a.text_xs,
+          a.leading_tight,
+          a.font_semi_bold,
+          {color: t.palette.white, fontVariant: ['tabular-nums']},
+        ]}
+        numberOfLines={1}>
+        {count >= UNREAD_NOTIFICATION_CAP
+          ? l({
+              message: `${i18n.number(UNREAD_NOTIFICATION_CAP - 1)}+`,
+              comment:
+                'Displayed when the number of notifications exceeds the cap – for example, 99+',
+            })
+          : i18n.number(count)}
+      </Text>
+    </View>
   )
 }
 
