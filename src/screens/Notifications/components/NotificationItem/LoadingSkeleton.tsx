@@ -227,7 +227,8 @@ function PostSkeleton({index, isReply}: {index: number; isReply: boolean}) {
           />
           <TimestampSkeleton />
         </View>
-        <PostControlsSkeleton />
+        {/* Pulled up as `Item.PostActions` is, by the skeleton's padding */}
+        <PostControlsSkeleton style={{marginTop: -4}} />
       </Item.Content>
     </Row>
   )
