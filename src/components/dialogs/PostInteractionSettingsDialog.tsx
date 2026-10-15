@@ -580,9 +580,7 @@ export function PostInteractionSettingsForm({
                 ) : isListsError ? (
                   <Toggle.Panel>
                     <Toggle.PanelText>
-                      <Trans>
-                        An error occurred while loading your lists :/
-                      </Trans>
+                      <Trans>An error occurred while loading your lists.</Trans>
                     </Toggle.PanelText>
                   </Toggle.Panel>
                 ) : lists.length === 0 ? (

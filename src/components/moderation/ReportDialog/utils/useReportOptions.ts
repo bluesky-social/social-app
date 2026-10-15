@@ -203,7 +203,7 @@ export function useReportOptions() {
             reason: tools.ozone.report.defs.reasonSelfHarmStunts.value,
           },
           {
-            title: _(msg`Dangerous substances or drug abuse`),
+            title: _(msg`Dangerous substances or drug use`),
             reason: tools.ozone.report.defs.reasonSelfHarmSubstances.value,
           },
           {
