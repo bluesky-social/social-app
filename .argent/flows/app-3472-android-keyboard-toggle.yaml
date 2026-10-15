@@ -1,0 +1,14 @@
+executionPrerequisite: Android development app with an empty composer already open
+  and keyboard visible. Validate initial-entry placement separately with
+  app-3472-composer-keyboard. This fragment exercises keyboard dismissal and refocus
+  only, leaves the composer open, and never publishes.
+steps:
+  - await: {visible: {id: 'android:id/input_method_nav_back'}}
+  - tool: button
+    args: {button: back}
+  - await: {hidden: {id: 'android:id/input_method_nav_back'}}
+  - tap: {id: composerTextInput}
+  - await: {visible: {id: 'android:id/input_method_nav_back'}}
+  - await: {visible: {id: openMediaBtn}}
+  - await: {visible: {id: openCameraButton}}
+  - await: {visible: {id: openGifBtn}}

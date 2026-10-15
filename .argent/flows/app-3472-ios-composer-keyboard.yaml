@@ -1,0 +1,46 @@
+steps:
+  - echo: Signed-in iOS development app. Open an empty composer without publishing.
+  - launch: xyz.blueskyweb.app
+  - await: {visible: {id: composeFAB}, timeout: 30000}
+  - await: {idle: true}
+  - tap: {id: composeFAB}
+  - await: {visible: {id: composerTextInput}}
+  - await: {idle: true}
+  - tool: await-ui-element
+    args:
+      condition: visible
+      selector: {identifier: space}
+  - await: {visible: {id: openMediaBtn}}
+  - await: {visible: {id: openCameraButton}}
+  - await: {visible: {id: openGifBtn}}
+  - echo: Background and foreground without restarting. Keep the composer, dismiss the keyboard.
+  - tool: button
+    args: {button: home}
+  - tool: await-ui-element
+    args:
+      condition: visible
+      selector: {identifier: Bluesky}
+  - tool: launch-app
+    args: {bundleId: xyz.blueskyweb.app}
+  - await: {visible: {id: composerTextInput}}
+  - await: {idle: true}
+  - tool: await-ui-element
+    args:
+      condition: hidden
+      selector: {identifier: space}
+  - tap: {id: composerTextInput}
+  - tool: await-ui-element
+    args:
+      condition: visible
+      selector: {identifier: space}
+  - await: {visible: {id: openMediaBtn}}
+  - await: {visible: {id: openCameraButton}}
+  - await: {visible: {id: openGifBtn}}
+  - tap: {text: Cancel}
+  - await: {hidden: {id: composerTextInput}}
+  - tool: await-ui-element
+    args:
+      condition: hidden
+      selector: {identifier: space}
+  - await: {visible: {id: composeFAB}}
+  - await: {idle: true}

@@ -1,0 +1,16 @@
+diff --git a/src/components/KeyboardAvoidingView/hooks.ts b/src/components/KeyboardAvoidingView/hooks.ts
+index 64bfa65439caae3f6688f6acda35ff3b0de15037..696423999418b75bba2a68a7593b67bbc58c0eac 100644
+--- a/src/components/KeyboardAvoidingView/hooks.ts
++++ b/src/components/KeyboardAvoidingView/hooks.ts
+@@ -53,6 +53,11 @@ export const useKeyboardAnimation = () => {
+ 
+         isClosed.value = e.height === 0;
+ 
++        // Mounting during keyboard opening can miss or overwrite onStart.
++        if (e.height > 0) {
++          heightWhenOpened.value = e.height;
++        }
++
+         height.value = e.height;
+         progress.value = e.progress;
+       },
