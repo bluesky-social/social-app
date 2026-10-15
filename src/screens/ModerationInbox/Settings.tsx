@@ -1,25 +1,44 @@
-import {useState} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {
+  useModerationInboxNotificationPreferencesQuery,
+  useUpdateModerationInboxNotificationPreferencesMutation,
+} from '#/state/queries/moderation-inbox'
+import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {NotFoundScreen} from '#/view/screens/NotFound'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {type tools} from '#/lexicons'
 
 export function ModerationInboxSettingsScreen() {
   const {t: l} = useLingui()
   const ax = useAnalytics()
 
-  // TODO Local state is a placeholder. -dsb
-  const [reportNotifications, setReportNotifications] = useState(false)
-  const [accountNotifications, setAccountNotifications] = useState(false)
-  const [labelingNotifications, setLabelingNotifications] = useState(false)
-
   const isEnabled = ax.features.enabled(ax.features.ModerationInboxEnable)
+  const preferencesQuery =
+    useModerationInboxNotificationPreferencesQuery(isEnabled)
+  const updatePreferences =
+    useUpdateModerationInboxNotificationPreferencesMutation()
+  const preferences = preferencesQuery.data?.preferences
+  const isDisabled =
+    !preferences || preferencesQuery.isError || updatePreferences.isPending
+  const displayedPreferences = updatePreferences.isPending
+    ? {...preferences, ...updatePreferences.variables}
+    : preferences
+
+  const onChangePreference = (
+    key: keyof tools.ozone.inbox.putNotificationPreferences.$InputBody,
+    value: boolean,
+  ) => {
+    if (isDisabled) return
+    updatePreferences.mutate({[key]: value})
+  }
 
   if (!isEnabled) {
     return <NotFoundScreen />
@@ -31,17 +50,21 @@ export function ModerationInboxSettingsScreen() {
         <Layout.Header.BackButton />
         <Layout.Header.Content align="left">
           <Layout.Header.TitleText>
-            <Trans comment="Moderation inbox settings">
-              Mod inbox settings
-            </Trans>
+            <Trans>Moderation inbox settings</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
+          {preferencesQuery.isError ? (
+            <ErrorMessage
+              message={l`Failed to load notification settings.`}
+              onPressTryAgain={() => void preferencesQuery.refetch()}
+            />
+          ) : null}
           <NotificationToggle
-            name="report-notifications"
+            name="reports-notifications"
             label={l({
               context: 'moderation-inbox-setting',
               message: 'Your reports notifications',
@@ -50,8 +73,10 @@ export function ModerationInboxSettingsScreen() {
               context: 'moderation-inbox-setting',
               message: 'Get notified about your report outcomes.',
             })}
-            value={reportNotifications}
-            onChange={setReportNotifications}
+            disabled={isDisabled}
+            loading={preferencesQuery.isLoading}
+            value={displayedPreferences?.reports ?? false}
+            onChange={value => onChangePreference('reports', value)}
           />
           <NotificationToggle
             name="account-notifications"
@@ -63,11 +88,13 @@ export function ModerationInboxSettingsScreen() {
               context: 'moderation-inbox-setting',
               message: 'Get notified about actions taken against you.',
             })}
-            value={accountNotifications}
-            onChange={setAccountNotifications}
+            disabled={isDisabled}
+            loading={preferencesQuery.isLoading}
+            value={displayedPreferences?.account ?? false}
+            onChange={value => onChangePreference('account', value)}
           />
           <NotificationToggle
-            name="labeling-notifications"
+            name="labels-notifications"
             label={l({
               context: 'moderation-inbox-setting',
               message: 'Account labeling notifications',
@@ -77,9 +104,10 @@ export function ModerationInboxSettingsScreen() {
               message:
                 'Get notified when a label is added to your account and posts.',
             })}
-            disabled
-            value={labelingNotifications}
-            onChange={setLabelingNotifications}
+            disabled={isDisabled}
+            loading={preferencesQuery.isLoading}
+            value={displayedPreferences?.labels ?? false}
+            onChange={value => onChangePreference('labels', value)}
           />
         </SettingsList.Container>
       </Layout.Content>
@@ -92,36 +120,34 @@ function NotificationToggle({
   label,
   description,
   disabled = false,
+  loading = false,
   value,
   onChange,
 }: {
   name: string
   label: string
-  description: React.ReactNode
+  description?: string
   disabled?: boolean
+  loading?: boolean
   value: boolean
   onChange: (value: boolean) => void
 }) {
   const t = useTheme()
+  const {t: l} = useLingui()
 
-  return (
-    <Toggle.Item
-      type="checkbox"
-      name={name}
-      label={label}
-      value={value}
-      disabled={disabled}
-      onChange={onChange}>
-      <SettingsList.Item>
-        <View style={[a.flex_1, a.gap_2xs]}>
-          <Text
-            style={[
-              a.text_md,
-              a.font_medium,
-              disabled ? t.atoms.text_contrast_low : undefined,
-            ]}>
-            {label}
-          </Text>
+  const accessibilityLabel = description ? l`${label}. ${description}` : label
+  const content = (
+    <SettingsList.Item>
+      <View style={[a.flex_1, a.gap_2xs]}>
+        <Text
+          style={[
+            a.text_md,
+            a.font_medium,
+            disabled ? t.atoms.text_contrast_low : undefined,
+          ]}>
+          {label}
+        </Text>
+        {description ? (
           <Text
             style={[
               a.text_sm,
@@ -132,9 +158,35 @@ function NotificationToggle({
             ]}>
             {description}
           </Text>
-        </View>
-        <Toggle.Platform />
-      </SettingsList.Item>
+        ) : undefined}
+      </View>
+      {loading ? <Loader /> : <Toggle.Platform />}
+    </SettingsList.Item>
+  )
+
+  if (loading) {
+    return (
+      <View
+        testID={name}
+        accessible
+        accessibilityLabel={accessibilityLabel}
+        accessibilityHint={l`Loading notification settings`}
+        accessibilityState={{busy: true}}>
+        {content}
+      </View>
+    )
+  }
+
+  return (
+    <Toggle.Item
+      testID={name}
+      type="checkbox"
+      name={name}
+      label={accessibilityLabel}
+      value={value}
+      disabled={disabled}
+      onChange={onChange}>
+      {content}
     </Toggle.Item>
   )
 }
