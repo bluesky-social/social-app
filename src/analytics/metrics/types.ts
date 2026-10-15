@@ -1551,9 +1551,9 @@ export type Events = {
     supportProvider: string | undefined
   }
   /**
-   * A visitor continued past the leaving-Bluesky notice.
+   * A visitor opened a link's details, e.g. by long-pressing it.
    */
-  'profile:links:continue': {
+  'profile:links:preview': {
     domain: string
     supportProvider: string | undefined
   }
@@ -1561,7 +1561,7 @@ export type Events = {
    * A link couldn't be added, e.g. because its site is blocked.
    */
   'profile:links:rejected': {
-    reason: 'blocked'
+    reason: 'blocked' | 'shortener' | 'insecure'
     domain: string
   }
 
