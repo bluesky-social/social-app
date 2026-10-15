@@ -31,7 +31,8 @@
         "buildFromSource": [
           "expo-notifications",
           "expo-media-library",
-          "expo-image-picker"
+          "expo-image-picker",
+          "expo-splash-screen"
         ]
       }
     },
