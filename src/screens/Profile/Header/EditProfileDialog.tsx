@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
 
 import {MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls} from '#/lib/constants'
+import {useCallOnce} from '#/lib/once'
 import {cleanError} from '#/lib/strings/errors'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
@@ -109,6 +110,10 @@ function DialogInner({
   const t = useTheme()
   const ax = useAnalytics()
   const control = Dialog.useDialogContext()
+  // the dialog's contents mount on every open, so this fires once per open
+  useCallOnce(() => {
+    ax.metric('profile:edit:open', {})
+  })()
   const verification = useSimpleVerificationState({
     profile,
   })

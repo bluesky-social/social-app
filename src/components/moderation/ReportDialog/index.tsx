@@ -278,6 +278,11 @@ function Inner(
         details: !!state.details,
         videoTimestamp: state.includeVideoTimestamp,
       })
+      if (props.subject.type === 'profileLink') {
+        ax.metric('profile:links:report', {
+          reason: state.selectedOption?.reason ?? '',
+        })
+      }
       // give time for user feedback
       setTimeout(() => {
         props.control.close(() => {

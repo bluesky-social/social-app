@@ -1534,6 +1534,10 @@ export type Events = {
     isOwnProfile: boolean
   }
   /**
+   * Edit Profile was opened, from any profile header.
+   */
+  'profile:edit:open': {}
+  /**
    * Edit Profile was opened with the Links section available.
    */
   'profile:links:editorOpen': {
@@ -1556,6 +1560,13 @@ export type Events = {
   'profile:links:preview': {
     domain: string
     supportProvider: string | undefined
+  }
+  /**
+   * A report on a profile link was sent. Leaves out the domain, since reported
+   * sites can be sensitive.
+   */
+  'profile:links:report': {
+    reason: string
   }
   /**
    * A link couldn't be added, e.g. because its site is blocked.
