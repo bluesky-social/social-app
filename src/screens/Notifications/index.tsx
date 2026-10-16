@@ -11,7 +11,11 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {type AnyAppReturn, onAnyAppReturn} from '#/lib/appState'
@@ -92,6 +96,7 @@ export function NewNotificationsScreen({}: Props) {
 function NewNotificationsScreenInner() {
   const {t: l} = useLingui()
   const ax = useAnalytics()
+  const navigation = useNavigation()
   const headerMode = useHomeHeaderMode()
   const initialHeaderOffset = useHeaderOffset()
   const [headerOffset, setHeaderOffset] = useState(initialHeaderOffset)
@@ -369,6 +374,12 @@ function NewNotificationsScreenInner() {
               })
             }}
             onScrolledDownChange={isScrolledDown => {
+              /*
+               * On web, a screen left under another stays mounted but
+               * hidden, which the list reports as scrolled down. Coming back
+               * would then only peek, so a tab keeps the state it was left in
+               */
+              if (!navigation.isFocused()) return
               if (isScrolledDown) {
                 scrolledDownFeeds.current.add(tab.key)
               } else {
