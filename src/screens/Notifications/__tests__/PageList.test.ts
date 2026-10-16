@@ -4,6 +4,7 @@ import {type NotificationView} from '#/state/queries/notifications/grouped/types
 import {
   buildRows,
   getPlaceholderRow,
+  isUnreadBorder,
 } from '#/screens/Notifications/components/PageList'
 
 // The placeholder helper doesn't need the native runtime or analytics setup.
@@ -51,8 +52,8 @@ describe('buildRows', () => {
   ).toISOString()
 
   // Only the fields `buildRows` reads
-  function notification(id: string, indexedAt: string) {
-    return {id, type: 'like', indexedAt} as unknown as NotificationView
+  function notification(id: string, indexedAt: string, isRead = true) {
+    return {id, type: 'like', indexedAt, isRead} as unknown as NotificationView
   }
 
   function layout(notifications: NotificationView[]) {
@@ -98,5 +99,30 @@ describe('buildRows', () => {
     expect(
       dividers([notification('a', lastYear), notification('b', lastYear)]),
     ).toEqual([false, true])
+  })
+
+  it('tints the borders on both sides of an unread notification', () => {
+    const rows = buildRows(
+      [
+        notification('a', today, false),
+        notification('b', today),
+        notification('c', lastYear, false),
+        notification('d', lastYear),
+      ],
+      'all',
+    )
+    // The border above each row, then the one below the last
+    expect([
+      ...rows.map((row, i) => isUnreadBorder(rows[i - 1], row)),
+      isUnreadBorder(rows.at(-1), undefined),
+    ]).toEqual([
+      false, // above "Today"
+      true, // "Today" | a
+      true, // a | b
+      false, // b | "Earlier"
+      true, // "Earlier" | c
+      true, // c | d
+      false, // below d
+    ])
   })
 })
