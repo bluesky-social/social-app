@@ -346,6 +346,7 @@ module.exports = function (_config) {
         './plugins/withAndroidManifestLargeHeapPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidManifestIntentQueriesPlugin.js',
+        './plugins/withAndroidManifestOptionalCameraPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidNoJitpackPlugin.js',
         './plugins/withAndroidPreparedTextLayoutPlugin.js',
