@@ -76,4 +76,27 @@ describe('buildRows', () => {
       layout([notification('a', lastYear), notification('b', lastYear)]),
     ).toEqual(['a', 'b'])
   })
+
+  function dividers(notifications: NotificationView[]) {
+    return buildRows(notifications, 'all').map(row =>
+      row.type === 'notification' ? row.hasDivider : row.type,
+    )
+  }
+
+  it('divides notifications from the one above, but not from a header', () => {
+    expect(
+      dividers([
+        notification('a', today),
+        notification('b', today),
+        notification('c', lastYear),
+        notification('d', lastYear),
+      ]),
+    ).toEqual(['section', false, true, 'section', false, true])
+  })
+
+  it('divides every notification but the first without headers', () => {
+    expect(
+      dividers([notification('a', lastYear), notification('b', lastYear)]),
+    ).toEqual([false, true])
+  })
 })
