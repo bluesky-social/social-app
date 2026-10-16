@@ -22,6 +22,10 @@ export class ListFeedAPI implements FeedAPI {
     this.params = feedParams
   }
 
+  setClient(client: Client) {
+    this.client = client
+  }
+
   async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
     const data = await this.client.call(app.bsky.feed.getListFeed, {
       ...this.params,

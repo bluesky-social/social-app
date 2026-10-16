@@ -44,7 +44,7 @@ import {
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {useSession} from '#/state/session'
+import {useAppviewClient, useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import {useSelectedFeed} from '#/state/shell/selected-feed'
 import {List, type ListRef} from '#/view/com/util/List'
@@ -256,6 +256,7 @@ let PostFeed = ({
   const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
+  const client = useAppviewClient()
   const initialNumToRender = useInitialNumToRender()
   const feedFeedback = useFeedFeedbackContext()
   const [isPTRing, setIsPTRing] = useState(false)
@@ -328,7 +329,7 @@ let PostFeed = ({
     }
 
     try {
-      if (await pollLatest(data.pages[0])) {
+      if (await pollLatest(data.pages[0], client)) {
         if (isEmpty) {
           void refetch()
         } else {
