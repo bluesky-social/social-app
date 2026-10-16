@@ -20,10 +20,11 @@ export const Context = createContext<DialogContextProps>({
   close: () => {},
   isNativeDialog: false,
   nativeSnapPoint: BottomSheetSnapPoint.Hidden,
+  nativeFullHeight: false,
+  isHeightConstrained: false,
   disableDrag: false,
   setDisableDrag: () => {},
   isWithinDialog: false,
-  isHeightConstrained: false,
 })
 Context.displayName = 'DialogContext'
 

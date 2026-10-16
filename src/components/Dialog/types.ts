@@ -41,11 +41,12 @@ export type DialogContextProps = {
   close: DialogControlProps['close']
   isNativeDialog: boolean
   nativeSnapPoint: BottomSheetSnapPoint
+  nativeFullHeight: boolean
+  isHeightConstrained: boolean
   disableDrag: boolean
   setDisableDrag: React.Dispatch<React.SetStateAction<boolean>>
   // in the event that the hook is used outside of a dialog
   isWithinDialog: boolean
-  isHeightConstrained: boolean
 }
 
 export type DialogControlOpenOptions = {

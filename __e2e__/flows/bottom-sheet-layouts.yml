@@ -1,0 +1,358 @@
+appId: xyz.blueskyweb.app
+---
+- runScript:
+    file: ../setupServer.js
+    env:
+      SERVER_PATH: "?users&posts&feeds"
+- runFlow:
+    file: ../setupApp.yml
+- tapOn:
+    id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
+- tapOn:
+    id: "storybookBtn"
+- extendedWaitUntil:
+    visible:
+      id: "bottomSheetTestCases"
+
+# Intrinsic content should produce a small sheet.
+- tapOn:
+    id: "bottomSheetSmallOpen"
+- assertVisible:
+    id: "bottomSheetSmallContent"
+- tapOn:
+    id: "bottomSheetSmallClose"
+- assertNotVisible:
+    id: "bottomSheetSmall"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn:
+          id: "bottomSheetSmallOpen"
+      - assertVisible:
+          id: "bottomSheetSmallContent"
+      - waitForAnimationToEnd
+      - swipe:
+          start: "50%, 87%"
+          end: "50%, 99%"
+          duration: 300
+      - assertNotVisible:
+          id: "bottomSheetSmall"
+      # The content can disappear while the native dialog is still a blocking sliver.
+      - tapOn:
+          id: "bottomSheetSmallOpen"
+      - assertVisible:
+          id: "bottomSheetSmallContent"
+      - tapOn:
+          id: "bottomSheetSmallClose"
+      - assertNotVisible:
+          id: "bottomSheetSmall"
+
+# Oversized intrinsic content should be clamped to the canvas and scroll.
+- tapOn:
+    id: "bottomSheetTallOpen"
+- assertVisible:
+    id: "bottomSheetTallStart"
+- scrollUntilVisible:
+    element:
+      id: "bottomSheetTallEnd"
+    direction: DOWN
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: "bottomSheetTallStart"
+    direction: UP
+    timeout: 30000
+- assertVisible:
+    id: "bottomSheetTall"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - waitForAnimationToEnd
+      - swipe:
+          start: "50%, 45%"
+          end: "50%, 95%"
+          duration: 300
+      - assertNotVisible:
+          id: "bottomSheetTall"
+      - tapOn:
+          id: "bottomSheetTallOpen"
+      - assertVisible:
+          id: "bottomSheetTallStart"
+- tapOn:
+    id: "bottomSheetTallClose"
+- assertNotVisible:
+    id: "bottomSheetTall"
+
+# A short full-height list should fill the canvas and retain its pinned footer.
+- tapOn:
+    id: "bottomSheetFullHeightOpen"
+- assertVisible:
+    id: "bottomSheetFullHeightContent"
+- assertVisible:
+    id: "bottomSheetFullHeightDone"
+- tapOn:
+    id: "bottomSheetFullHeightDone"
+- assertNotVisible:
+    id: "bottomSheetFullHeight"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn:
+          id: "bottomSheetFullHeightOpen"
+      - assertVisible:
+          id: "bottomSheetFullHeightDone"
+      - waitForAnimationToEnd
+      - swipe:
+          start: "50%, 45%"
+          end: "50%, 95%"
+          duration: 300
+      - assertNotVisible:
+          id: "bottomSheetFullHeight"
+      - tapOn:
+          id: "bottomSheetFullHeightOpen"
+      - assertVisible:
+          id: "bottomSheetFullHeightDone"
+      - tapOn:
+          id: "bottomSheetFullHeightDone"
+      - assertNotVisible:
+          id: "bottomSheetFullHeight"
+
+# An explicit max height should constrain scrolling without hiding the footer.
+- tapOn:
+    id: "bottomSheetMaxHeightOpen"
+- assertVisible:
+    id: "bottomSheetMaxHeightDone"
+- assertVisible:
+    id: "bottomSheetMaxHeightSnapPoint"
+    text: "Snap point: Partial"
+- swipe:
+    from:
+      id: "bottomSheetMaxHeightScroll"
+    direction: UP
+- assertVisible:
+    id: "bottomSheetMaxHeightSnapPoint"
+    text: "Snap point: Partial"
+- repeat:
+    times: 5
+    commands:
+      - swipe:
+          from:
+            id: "bottomSheetMaxHeightScroll"
+          direction: UP
+          duration: 500
+- assertVisible:
+    id: "bottomSheetMaxHeightEnd"
+- assertVisible:
+    id: "bottomSheetMaxHeightDone"
+- tapOn:
+    id: "bottomSheetMaxHeightDone"
+- assertNotVisible:
+    id: "bottomSheetMaxHeight"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn:
+          id: "bottomSheetMaxHeightOpen"
+      - assertVisible:
+          id: "bottomSheetMaxHeightDone"
+      - waitForAnimationToEnd
+      - swipe:
+          start: "50%, 68%"
+          end: "50%, 98%"
+          duration: 300
+      - assertNotVisible:
+          id: "bottomSheetMaxHeight"
+      - tapOn:
+          id: "bottomSheetMaxHeightOpen"
+      - assertVisible:
+          id: "bottomSheetMaxHeightDone"
+      - tapOn:
+          id: "bottomSheetMaxHeightDone"
+      - assertNotVisible:
+          id: "bottomSheetMaxHeight"
+
+# Content should be able to grow past the canvas and shrink again while open.
+- tapOn:
+    id: "bottomSheetDynamicOpen"
+- assertVisible:
+    id: "bottomSheetDynamicState"
+    text: "Compact content"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - assertVisible:
+          id: "bottomSheetDynamicSnapPoint"
+          text: "Snap point: Partial"
+- tapOn:
+    id: "bottomSheetDynamicToggle"
+- assertVisible:
+    id: "bottomSheetDynamicState"
+    text: "Expanded content"
+- assertVisible:
+    id: "bottomSheetDynamicToggle"
+    text: "Shrink content"
+- extendedWaitUntil:
+    visible:
+      id: "bottomSheetDynamicSnapPoint"
+      text: "Snap point: Full"
+    timeout: 10000
+# The expanded sheet must occupy the screen and retain a reachable footer.
+- assertVisible:
+    id: "bottomSheetDynamicExpandedMiddle"
+- scrollUntilVisible:
+    element:
+      id: "bottomSheetDynamicDone"
+    direction: DOWN
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: "bottomSheetDynamicState"
+    direction: UP
+    timeout: 30000
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      # Growing into a scrollable Full sheet must not disable drag-to-dismiss.
+      - waitForAnimationToEnd
+      - swipe:
+          start: "50%, 45%"
+          end: "50%, 95%"
+          duration: 300
+      - assertNotVisible:
+          id: "bottomSheetDynamic"
+      - tapOn:
+          id: "bottomSheetDynamicOpen"
+      - assertVisible:
+          id: "bottomSheetDynamicState"
+          text: "Compact content"
+      - tapOn:
+          id: "bottomSheetDynamicToggle"
+      - extendedWaitUntil:
+          visible:
+            id: "bottomSheetDynamicSnapPoint"
+            text: "Snap point: Full"
+          timeout: 10000
+      - assertVisible:
+          id: "bottomSheetDynamicExpandedMiddle"
+- tapOn:
+    id: "bottomSheetDynamicToggle"
+- assertVisible:
+    id: "bottomSheetDynamicState"
+    text: "Compact content"
+- extendedWaitUntil:
+    visible:
+      id: "bottomSheetDynamicSnapPoint"
+      text: "Snap point: Partial"
+    timeout: 10000
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      # A compact sheet must expose the backdrop again, not stay pegged at Full.
+      - tapOn:
+          point: "50%, 35%"
+      - assertNotVisible:
+          id: "bottomSheetDynamic"
+      - tapOn:
+          id: "bottomSheetDynamicOpen"
+      - assertVisible:
+          id: "bottomSheetDynamicState"
+          text: "Compact content"
+      - swipe:
+          start: "50%, 73%"
+          end: "50%, 98%"
+          duration: 300
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - waitForAnimationToEnd
+      - swipe:
+          start: "50%, 70%"
+          end: "50%, 98%"
+          duration: 300
+- assertNotVisible:
+    id: "bottomSheetDynamic"
+
+# Opening the keyboard must not make the fixed footer unreachable.
+- tapOn:
+    id: "bottomSheetKeyboardOpen"
+- assertVisible:
+    id: "bottomSheetKeyboardDone"
+- tapOn:
+    id: "bottomSheetKeyboardInput"
+- inputText: "Bottom sheet keyboard test"
+- assertVisible:
+    id: "bottomSheetKeyboardDone"
+- scrollUntilVisible:
+    element:
+      id: "bottomSheetKeyboardEnd"
+    direction: DOWN
+    timeout: 30000
+- assertVisible:
+    id: "bottomSheetKeyboardDone"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - hideKeyboard
+      - assertVisible:
+          id: "bottomSheetKeyboardDone"
+- tapOn:
+    id: "bottomSheetKeyboardDone"
+- assertNotVisible:
+    id: "bottomSheetKeyboard"
+
+# A virtualized list should load another page without losing its pinned footer.
+- tapOn:
+    id: "bottomSheetInfiniteOpen"
+- assertVisible:
+    id: "bottomSheetInfiniteDone"
+- assertVisible:
+    id: "bottomSheetInfiniteLoadMore"
+- tapOn:
+    id: "bottomSheetInfiniteLoadMore"
+- scrollUntilVisible:
+    element:
+      id: "bottomSheetInfiniteRow-40"
+    direction: DOWN
+    timeout: 30000
+- assertVisible:
+    id: "bottomSheetInfiniteDone"
+- scrollUntilVisible:
+    element:
+      id: "bottomSheetInfiniteRow-1"
+    direction: UP
+    timeout: 30000
+- assertVisible:
+    id: "bottomSheetInfinite"
+- assertVisible:
+    id: "bottomSheetInfiniteDone"
+- tapOn:
+    id: "bottomSheetInfiniteDone"
+- assertNotVisible:
+    id: "bottomSheetInfinite"
+
+# Reopen repeatedly to catch races between the full-height canvas and FlatList.
+- repeat:
+    times: 3
+    commands:
+      - tapOn:
+          id: "bottomSheetInfiniteOpen"
+      - assertVisible:
+          id: "bottomSheetInfiniteDone"
+      - assertVisible:
+          id: "bottomSheetInfiniteLoadMore"
+      - tapOn:
+          id: "bottomSheetInfiniteDone"
+      - assertNotVisible:
+          id: "bottomSheetInfinite"

@@ -143,7 +143,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     }
 
     let sheetVc = SheetViewController()
-    sheetVc.setDetents(contentHeight: self.clampHeight(contentHeight), preventExpansion: self.preventExpansion, fullHeight: self.fullHeight)
+    sheetVc.setDetents(contentHeight: self.clampHeight(contentHeight), preventExpansion: self.shouldPreventExpansion, fullHeight: self.fullHeight)
     if let sheet = sheetVc.sheetPresentationController {
       sheet.delegate = self
       sheet.preferredCornerRadius = self.cornerRadius
@@ -192,7 +192,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
             oldBounds.height != newBounds.height,
             newBounds.height > 0 else { return }
       let clampedHeight = self.clampHeight(newBounds.height)
-      self.sheetVc?.updateDetents(contentHeight: clampedHeight, preventExpansion: self.preventExpansion)
+      self.sheetVc?.updateDetents(contentHeight: clampedHeight, preventExpansion: self.shouldPreventExpansion)
       self.selectedDetentIdentifier = self.sheetVc?.getCurrentDetentIdentifier()
     }
   }
@@ -219,6 +219,11 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
       return self.maxHeight
     }
     return height
+  }
+
+  private var shouldPreventExpansion: Bool {
+    let screenHeight = Util.getScreenHeight() ?? UIScreen.main.bounds.height
+    return self.preventExpansion || self.maxHeight < screenHeight
   }
 
   // MARK: - UISheetPresentationControllerDelegate
