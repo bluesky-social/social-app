@@ -1,0 +1,122 @@
+diff --git a/apple/ExpoModulesJSI.podspec b/apple/ExpoModulesJSI.podspec
+index 09231ec7bbe3be95f3c3eeb6f0bd000b7ad0e58c..1372109887ce9b4ede1aea71997c16e43c4daea0 100644
+--- a/apple/ExpoModulesJSI.podspec
++++ b/apple/ExpoModulesJSI.podspec
+@@ -51,6 +51,7 @@ Pod::Spec.new do |s|
+ 
+   s.dependency 'React-Core'
+   s.dependency 'ReactCommon'
++  s.dependency 'react-native-kahvi'
+ 
+   # Create a stub xcframework if needed, so CocoaPods generates the
+   # "[CP] Copy XCFrameworks" and "[CP] Embed Pods Frameworks" build phases.
+diff --git a/apple/Package.swift b/apple/Package.swift
+index 77b0525ad0b34e5bda544da8fe965043d638f333..7b32cb9a2becdf38f12c768d04fc1c960c6a58b1 100644
+--- a/apple/Package.swift
++++ b/apple/Package.swift
+@@ -24,7 +24,7 @@ let reactNative =
+ let headerSearchPaths = [
+   publicHeaders,
+   "\(publicHeaders)/React-jsi",
+-  "\(publicHeaders)/hermes-engine",
++  "\(publicHeaders)/react-native-kahvi",
+   "\(publicHeaders)/React-runtimescheduler",
+   "\(publicHeaders)/React-rendererconsistency",
+   "\(publicHeaders)/React-performancetimeline",
+@@ -111,7 +111,7 @@ let package = Package(
+         .unsafeFlags(swiftIncludeFlags),
+       ],
+       linkerSettings: [
+-        // React, ReactCommon, hermes, and JSI symbols are provided by the host
++        // React, ReactCommon, Kahvi, and JSI symbols are provided by the host
+         // app at final link time. Defer their resolution so the xcframework
+         // builds without those static libs being available here.
+         .unsafeFlags([
+diff --git a/apple/Sources/ExpoModulesJSI/Runtime/JavaScriptRuntime.swift b/apple/Sources/ExpoModulesJSI/Runtime/JavaScriptRuntime.swift
+index 3d796eea39a39f6b20a9ebb83b70d7eb2c8b6104..ad71c0c28615986c3509ea873e8043e607b0b78b 100644
+--- a/apple/Sources/ExpoModulesJSI/Runtime/JavaScriptRuntime.swift
++++ b/apple/Sources/ExpoModulesJSI/Runtime/JavaScriptRuntime.swift
+@@ -39,7 +39,7 @@ open class JavaScriptRuntime: Equatable, Identifiable, @unchecked Sendable {
+   internal let scheduler: expo.RuntimeScheduler
+ 
+   /// Whether this wrapper owns the underlying `jsi::Runtime` and must destroy it on `deinit`. True
+-  /// only for the standalone `init()`, which creates the runtime via `createHermesRuntime()`. The
++  /// only for the standalone `init()`, which creates the runtime via `createKahviRuntime()`. The
+   /// other initializers adopt a runtime owned elsewhere (e.g. React Native), which must never be
+   /// freed here, matching the immortal (no-op) release semantics of the imported reference type.
+   private let ownsRuntime: Bool
+@@ -67,10 +67,10 @@ open class JavaScriptRuntime: Equatable, Identifiable, @unchecked Sendable {
+     installLongLivedObjectsTeardown()
+   }
+ 
+-  /// Creates a standalone Hermes runtime. Scheduled tasks run synchronously —
++  /// Creates a standalone Kahvi runtime. Scheduled tasks run synchronously —
+   /// no React scheduler is wired up.
+   public init() {
+-    let runtime = expo.createHermesRuntime()
++    let runtime = expo.createKahviRuntime()
+     self.runtimePointee = runtime
+     self.pointee = expo.iruntime(runtime)
+     self.scheduler = expo.RuntimeScheduler()
+diff --git a/apple/Sources/ExpoModulesJSI-Cxx/JSIUtils.cpp b/apple/Sources/ExpoModulesJSI-Cxx/JSIUtils.cpp
+index 84681dfc8963c8faefe1eebc429d392e800505cf..854500142f7a01f17ab59e6e6728bad536f11502 100644
+--- a/apple/Sources/ExpoModulesJSI-Cxx/JSIUtils.cpp
++++ b/apple/Sources/ExpoModulesJSI-Cxx/JSIUtils.cpp
+@@ -1,15 +1,14 @@
+ #include "JSIUtils.h"
+ 
+-#include <hermes/hermes.h>
++#include <KahviJSI.h>
+ 
+ namespace expo {
+ 
+-jsi::Runtime* createHermesRuntime() {
+-  std::unique_ptr<facebook::hermes::HermesRuntime> runtimePtr = facebook::hermes::makeHermesRuntime();
++jsi::Runtime* createKahviRuntime() {
++  auto runtimePtr = kahvi::makeKahviRuntime();
+   jsi::Runtime *runtime = runtimePtr.release();
+ 
+-  // This version of the Hermes uses a Promise implementation that is provided by the RN.
+-  // The `setImmediate` function isn't defined, but is required by the Promise implementation.
++  // The Promise implementation provided by RN requires `setImmediate`.
+   // That's why we inject it here.
+   auto setImmediatePropName = jsi::PropNameID::forUtf8(*runtime, "setImmediate");
+   auto setImmediateFunction = jsi::Function::createFromHostFunction(*runtime, setImmediatePropName, 1, [](jsi::Runtime &rt, const jsi::Value &thisVal, const jsi::Value *args, size_t count) {
+diff --git a/apple/Sources/ExpoModulesJSI-Cxx/include/JSIUtils.h b/apple/Sources/ExpoModulesJSI-Cxx/include/JSIUtils.h
+index 7278abd5afb47aed8860c6a66e59be5ca6c7fec4..68cec44715f9d99a62a3ac88f93ab5254c1f3422 100644
+--- a/apple/Sources/ExpoModulesJSI-Cxx/include/JSIUtils.h
++++ b/apple/Sources/ExpoModulesJSI-Cxx/include/JSIUtils.h
+@@ -131,10 +131,10 @@ inline bool isHostObject(jsi::IRuntime &runtime, const jsi::Object &object) {
+   return object.isHostObject<jsi::HostObject>(runtime);
+ }
+ 
+-jsi::Runtime* createHermesRuntime();
++jsi::Runtime* createKahviRuntime();
+ 
+ /**
+- Destroys a `jsi::Runtime` created by `createHermesRuntime()`. Since the runtime is imported into
++ Destroys a `jsi::Runtime` created by `createKahviRuntime()`. Since the runtime is imported into
+  Swift as an immortal reference type (no ARC-managed lifetime), Swift can't `delete` it directly, so
+  the standalone `JavaScriptRuntime` calls this from its `deinit` to free the runtime it owns. Must
+  not be called on a runtime owned elsewhere (e.g. the React Native-provided one).
+diff --git a/apple/scripts/build-xcframework.sh b/apple/scripts/build-xcframework.sh
+index 4c506533866d411b18799e5441f02c2b3e9a0c44..0c564f6bdea83b56bcfb1694858fbfc84fd01d94 100755
+--- a/apple/scripts/build-xcframework.sh
++++ b/apple/scripts/build-xcframework.sh
+@@ -10,7 +10,7 @@
+ #     recorded source hash differs from the current one. Other slices —
+ #     including those built for other platforms in earlier runs — are left
+ #     untouched.
+-#   - Reads React/JSI/Hermes headers directly from Pods/Headers/Public, so the
++#   - Reads React/JSI/Kahvi headers directly from Pods/Headers/Public, so the
+ #     same configuration works for both prebuilt and source-built React Native
+ #   - Cleans .swiftinterface files for cross-compiler compatibility
+ #
+@@ -81,6 +81,7 @@ SOURCE_FILES=(
+   # installs into Pods/Headers/Public so the real header contents get hashed.
+   "${PODS_ROOT}/Headers/Public/React-jsi/jsi/jsi.h"
+   "${PODS_ROOT}/Headers/Public/React-jsi/jsi/jsi-inl.h"
++  "${PODS_ROOT}/Headers/Public/react-native-kahvi/KahviJSI.h"
+ )
+ 
+ compute_hash() {

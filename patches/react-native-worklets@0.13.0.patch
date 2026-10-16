@@ -1,0 +1,156 @@
+diff --git a/Common/cpp/worklets/WorkletRuntime/HermesProfiling.cpp b/Common/cpp/worklets/WorkletRuntime/HermesProfiling.cpp
+index 0ad11078fb01d04476aa4b1f428f1f0e27e80896..37c6db6d94b5f9396b2f9bbc5d63978b7b4eac36 100644
+--- a/Common/cpp/worklets/WorkletRuntime/HermesProfiling.cpp
++++ b/Common/cpp/worklets/WorkletRuntime/HermesProfiling.cpp
+@@ -1,45 +1,15 @@
+ #include <worklets/WorkletRuntime/HermesProfiling.h>
+ 
+-#include <hermes/hermes.h>
+-
+-#include <chrono>
+-#include <filesystem>
+-#include <sstream>
+ #include <string>
+ 
+ namespace worklets {
+ 
+-static std::string generateUniqueProfilePath() {
+-  auto now = std::chrono::steady_clock::now().time_since_epoch().count();
+-  std::ostringstream oss;
+-  oss << "profile-" << now << ".cpuprofile";
+-  std::filesystem::path dir = std::filesystem::temp_directory_path();
+-  return (dir / oss.str()).string();
+-}
++// Hermes's sampling profiler; kahvi has none.
+ 
+-void startProfiling(facebook::jsi::Runtime &rt, double meanHzFreq) {
+-  auto *ihermes = facebook::jsi::castInterface<facebook::hermes::IHermes>(&rt);
+-  if (ihermes) {
+-    ihermes->registerForProfiling();
+-  }
+-  auto *api = facebook::jsi::castInterface<facebook::hermes::IHermesRootAPI>(facebook::hermes::makeHermesRootAPI());
+-  if (api) {
+-    api->enableSamplingProfiler(meanHzFreq);
+-  }
+-}
++void startProfiling(facebook::jsi::Runtime &rt, double meanHzFreq) {}
+ 
+ std::string stopProfiling(facebook::jsi::Runtime &rt) {
+-  std::string path = generateUniqueProfilePath();
+-  auto *api = facebook::jsi::castInterface<facebook::hermes::IHermesRootAPI>(facebook::hermes::makeHermesRootAPI());
+-  if (api) {
+-    api->dumpSampledTraceToFile(path);
+-    api->disableSamplingProfiler();
+-  }
+-  auto *ihermes = facebook::jsi::castInterface<facebook::hermes::IHermes>(&rt);
+-  if (ihermes) {
+-    ihermes->unregisterForProfiling();
+-  }
+-  return path;
++  return "";
+ }
+ 
+ } // namespace worklets
+diff --git a/Common/cpp/worklets/WorkletRuntime/WorkletHermesRuntime.cpp b/Common/cpp/worklets/WorkletRuntime/WorkletHermesRuntime.cpp
+deleted file mode 100644
+index 3cf7482eba5883e93f81052695c71b072d816c7e..0000000000000000000000000000000000000000
+diff --git a/Common/cpp/worklets/WorkletRuntime/WorkletHermesRuntime.h b/Common/cpp/worklets/WorkletRuntime/WorkletHermesRuntime.h
+deleted file mode 100644
+index 86ddd7446e85e863d0851b74c9e641d77e877909..0000000000000000000000000000000000000000
+diff --git a/Common/cpp/worklets/WorkletRuntime/WorkletRuntime.cpp b/Common/cpp/worklets/WorkletRuntime/WorkletRuntime.cpp
+index 9dab8c7661e79e92eba43985cbbe76a1b4f0eb04..f5a5abe7649baf3d736f680ca19e78d292f5754d 100644
+--- a/Common/cpp/worklets/WorkletRuntime/WorkletRuntime.cpp
++++ b/Common/cpp/worklets/WorkletRuntime/WorkletRuntime.cpp
+@@ -1,3 +1,4 @@
++#include <KahviJSI.h>
+ #include <jsi/decorator.h>
+ #include <jsi/jsi.h>
+ #include <worklets/NativeModules/JSIWorkletsModuleProxy.h>
+@@ -5,7 +6,6 @@
+ #include <worklets/Tools/JSLogger.h>
+ #include <worklets/WorkletRuntime/RuntimeHolder.h>
+ #include <worklets/WorkletRuntime/ScriptLoader.h>
+-#include <worklets/WorkletRuntime/WorkletHermesRuntime.h>
+ #include <worklets/WorkletRuntime/WorkletRuntime.h>
+ #include <worklets/WorkletRuntime/WorkletRuntimeCollector.h>
+ #include <worklets/WorkletRuntime/WorkletRuntimeDecorator.h>
+@@ -55,9 +55,10 @@ class LockableRuntime : public jsi::WithRuntimeDecorator<AroundLock> {
+ 
+ static std::shared_ptr<jsi::Runtime>
+ makeRuntime(const std::shared_ptr<std::recursive_mutex> &runtimeMutex, bool enableLocking, bool enableMicrotaskQueue) {
+-  auto config = ::hermes::vm::RuntimeConfig::Builder().withMicrotaskQueue(enableMicrotaskQueue).build();
+-  auto hermesRuntime = facebook::hermes::makeHermesRuntime(config);
+-  std::shared_ptr<jsi::Runtime> jsiRuntime = std::make_shared<WorkletHermesRuntime>(std::move(hermesRuntime));
++  // kahvi in place of Hermes (react-native-kahvi). Its runtimes always have
++  // a microtask queue, drained by drainMicrotasks.
++  (void)enableMicrotaskQueue;
++  std::shared_ptr<jsi::Runtime> jsiRuntime = kahvi::makeKahviRuntime();
+   if (!enableLocking) {
+     return jsiRuntime;
+   }
+diff --git a/RNWorklets.podspec b/RNWorklets.podspec
+index a0487e1795ce1971ee0766a02a953370be603568..5dc0364a96009e6e210aa0b0bdb167919b069525 100644
+--- a/RNWorklets.podspec
++++ b/RNWorklets.podspec
+@@ -55,7 +55,7 @@ Pod::Spec.new do |s|
+   install_modules_dependencies(s)
+ 
+   s.dependency 'React-jsi'
+-  s.dependency 'React-hermes'
++  s.dependency 'react-native-kahvi'
+   s.pod_target_xcconfig = {
+     "USE_HEADERMAP" => "YES",
+     "DEFINES_MODULE" => "YES",
+@@ -70,7 +70,6 @@ Pod::Spec.new do |s|
+       '"$(PODS_ROOT)/Headers/Private/Yoga"',
+       '"$(PODS_CONFIGURATION_BUILD_DIR)/React-utils/React_utils.framework/Headers/react/utils/platform/ios"',
+     ].join(' '),
+-    "FRAMEWORK_SEARCH_PATHS" => '"${PODS_CONFIGURATION_BUILD_DIR}/React-hermes"',
+     "CLANG_CXX_LANGUAGE_STANDARD" => "c++20",
+     "GCC_PREPROCESSOR_DEFINITIONS[config=*Debug*]" => "$(inherited) #{hermes_debug_hidden_flags}",
+     "GCC_PREPROCESSOR_DEFINITIONS[config=*Release*]" => "$(inherited)",
+@@ -82,8 +81,7 @@ Pod::Spec.new do |s|
+       '"$(PODS_ROOT)/boost-for-react-native"',
+       '"$(PODS_ROOT)/glog"',
+       '"$(PODS_ROOT)/RCT-Folly"',
+-      '"$(PODS_ROOT)/Headers/Public/React-hermes"',
+-      '"$(PODS_ROOT)/Headers/Public/hermes-engine"',
++      '"$(PODS_ROOT)/Headers/Public/react-native-kahvi"',
+       # for static frameworks
+       "\"$(PODS_ROOT)/#{worklets_config[:react_native_common_dir]}\"",
+       "\"$(PODS_ROOT)/#{worklets_config[:react_native_common_dir]}/jsitooling\"",
+diff --git a/android/CMakeLists.txt b/android/CMakeLists.txt
+index e1f364139d81b6759fd8ed5f1e3a9a8546ee80bf..96d06b5699bf57e7a9cad6f8bf210b6064c70d0f 100644
+--- a/android/CMakeLists.txt
++++ b/android/CMakeLists.txt
+@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 20)
+ # Consume shared libraries and headers from prefabs
+ find_package(fbjni REQUIRED CONFIG)
+ find_package(ReactAndroid REQUIRED CONFIG)
+-find_package(hermes-engine REQUIRED CONFIG)
++find_package(react-native-kahvi REQUIRED CONFIG)
+ 
+ # default CMAKE_CXX_FLAGS: "-g -DANDROID -fdata-sections -ffunction-sections
+ # -funwind-tables -fstack-protector-strong -no-canonical-prefixes
+@@ -82,7 +82,7 @@ set_target_properties(worklets PROPERTIES LINKER_LANGUAGE CXX)
+ target_link_libraries(worklets android log ReactAndroid::reactnative
+                       ReactAndroid::jsi fbjni::fbjni)
+ 
+-target_link_libraries(worklets hermes-engine::hermesvm)
++target_link_libraries(worklets react-native-kahvi::kahviruntimefactory)
+ 
+ if(${HERMES_ENABLE_DEBUGGER})
+   string(APPEND CMAKE_CXX_FLAGS " -DHERMES_ENABLE_DEBUGGER=1")
+diff --git a/android/build.gradle.kts b/android/build.gradle.kts
+index 2a595470228bdb4b0ee287b6a341bc1e6156fd7b..cc0207877ef363574eeff47d7722b5256b2b1f93 100644
+--- a/android/build.gradle.kts
++++ b/android/build.gradle.kts
+@@ -345,7 +345,7 @@ dependencies {
+     "implementation"("androidx.core:core:1.15.0")
+     "implementation"("com.facebook.react:react-android") // version substituted by RNGP
+     "implementation"("androidx.core:core-ktx:1.17.0")
+-    "implementation"("com.facebook.react:hermes-android") // version substituted by RNGP
++    "implementation"(project(":react-native-kahvi"))
+ }
+ 
+ tasks.named("preBuild") { dependsOn("prepareWorkletsHeadersForPrefabs") }

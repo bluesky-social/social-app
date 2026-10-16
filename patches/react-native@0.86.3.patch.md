@@ -205,3 +205,12 @@ there is no child.
 
 **TODO: Remove after upgrading to a React Native release containing this fix.**
 The upstream PR is still open as of September 9, 2026.
+
+## Kahvi iOS runtime selection
+
+React Native 0.86's CocoaPods scripts default to Hermes and reject
+`USE_HERMES=0` unless the third-party JSC runtime is selected. Kahvi is neither
+Hermes nor JSC, so this patch adds `USE_KAHVI=1` as a third engine selection:
+it disables Hermes, routes engine-dependent pods to `react-native-kahvi`, and
+keeps the non-Hermes runtime-factory code path. The app's AppDelegate supplies
+Kahvi's `JSRuntimeFactory`.

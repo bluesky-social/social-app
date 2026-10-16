@@ -1,3 +1,17 @@
+diff --git a/Expo.podspec b/Expo.podspec
+index a10ac3ee583c2c602858d58e66d44001bd27c46a..48819fd4c2c478499065d72f453c7182f28b6a6f 100644
+--- a/Expo.podspec
++++ b/Expo.podspec
+@@ -19,6 +19,9 @@ end
+ reactNativeTargetVersion = reactNativeVersion.split('.')[1].to_i
+ 
+ compiler_flags = get_folly_config()[:compiler_flags]
++if ENV['USE_KAHVI'] == '1'
++  compiler_flags = "#{compiler_flags} -DUSE_HERMES=0 -DUSE_THIRD_PARTY_JSC=1"
++end
+ 
+ package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
+ 
 diff --git a/build/winter/runtime.native.d.ts b/build/winter/runtime.native.d.ts
 index 85c4227e4e37003dd3769a590e73a69874de5fac..e389ca8edd2310df9ce29684991465c275e804c5 100644
 --- a/build/winter/runtime.native.d.ts

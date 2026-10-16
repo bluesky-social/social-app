@@ -1,3 +1,16 @@
+diff --git a/ExpoModulesCore.podspec b/ExpoModulesCore.podspec
+index 2b5d405a4a55e0e3bfe2415067847d75f155ab83..61548b2aa83dd449f90511942317bee25031e438 100644
+--- a/ExpoModulesCore.podspec
++++ b/ExpoModulesCore.podspec
+@@ -101,6 +101,8 @@ Pod::Spec.new do |s|
+   if use_hermes
+     s.dependency 'hermes-engine'
+     add_dependency(s, "React-jsinspector", :framework_name => 'jsinspector_modern')
++  elsif use_kahvi
++    s.dependency 'react-native-kahvi'
+   else
+     s.dependency 'React-jsc'
+   end
 diff --git a/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt b/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
 index 47c4d15f6b10bbd77858cfff425cda9a618735b9..afe138d22d566244482498a7be0e14b8454eab96 100644
 --- a/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt

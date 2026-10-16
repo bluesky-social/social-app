@@ -38,6 +38,7 @@ patchedDependencies:
   'expo-age-range@57.0.2': patches/expo-age-range@57.0.2.patch
   'expo-media-library@57.0.5': patches/expo-media-library@57.0.5.patch
   'expo-modules-core@57.0.18': patches/expo-modules-core@57.0.18.patch
+  expo-modules-jsi@57.1.0: patches/expo-modules-jsi@57.1.0.patch
   expo-notifications@57.0.20: patches/expo-notifications@57.0.20.patch
   expo-updates@57.0.23: patches/expo-updates@57.0.23.patch
   expo@57.0.24: patches/expo@57.0.24.patch
@@ -47,6 +48,7 @@ patchedDependencies:
   react-native-reanimated@4.7.1: patches/react-native-reanimated@4.7.1.patch
   react-native-screens@4.30.0: patches/react-native-screens@4.30.0.patch
   'react-native-svg@15.15.4': patches/react-native-svg@15.15.4.patch
+  react-native-worklets@0.13.0: patches/react-native-worklets@0.13.0.patch
   'react-native@0.86.3': patches/react-native@0.86.3.patch
 minimumReleaseAgeExclude:
   - '@atproto/*'

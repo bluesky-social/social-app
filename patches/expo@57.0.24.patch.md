@@ -84,3 +84,12 @@ handled this with `publicPath: 'auto'`; the Metro migration lost it.
 
 Upstream: proposed against `packages/expo`; drop this section once an SDK
 ships it.
+
+## iOS: Kahvi compile flags
+
+`ExpoReactNativeFactory.mm` includes `RCTAppSetupUtils.h`, which selects its
+Hermes executor include unless `USE_THIRD_PARTY_JSC=1` is defined. The Expo pod
+does not inherit React Native's engine-specific flags, so when `USE_KAHVI=1`
+its podspec adds `USE_HERMES=0` and `USE_THIRD_PARTY_JSC=1` for this target.
+The latter selects RN's non-Hermes compile path; the app's delegate supplies
+the Kahvi runtime factory.

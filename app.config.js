@@ -64,6 +64,7 @@ module.exports = function (_config) {
       primaryColor: '#006AFF',
       ios: {
         supportsTablet: false,
+        jsEngine: 'jsc',
         bundleIdentifier: 'xyz.blueskyweb.app',
         appleTeamId: process.env.EXPO_APPLE_TEAM_ID,
         config: {
@@ -342,6 +343,7 @@ module.exports = function (_config) {
           },
         ],
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
+        './plugins/withKahviRuntime.js',
         './plugins/withGradleJVMHeapSizeIncrease.js',
         './plugins/withAndroidManifestLargeHeapPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',

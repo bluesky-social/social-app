@@ -1,3 +1,30 @@
+diff --git a/RNReanimated.podspec b/RNReanimated.podspec
+index 38a036f08f5e0352decf1061326729bf37039056..335afc9c461c5caeabacb3ea47a26b097cd01afe 100644
+--- a/RNReanimated.podspec
++++ b/RNReanimated.podspec
+@@ -68,7 +68,6 @@ Pod::Spec.new do |s|
+       '"$(PODS_ROOT)/Headers/Private/Yoga"',
+       '"$(PODS_ROOT)/Headers/Public/RNWorklets"',
+     ].join(' '),
+-    "FRAMEWORK_SEARCH_PATHS" => '"${PODS_CONFIGURATION_BUILD_DIR}/React-hermes"',
+     "CLANG_CXX_LANGUAGE_STANDARD" => "c++20",
+     "GCC_PREPROCESSOR_DEFINITIONS[config=*Debug*]" => '$(inherited)',
+     "GCC_PREPROCESSOR_DEFINITIONS[config=*Release*]" => '$(inherited)',
+@@ -80,8 +79,6 @@ Pod::Spec.new do |s|
+       '"$(PODS_ROOT)/boost-for-react-native"',
+       '"$(PODS_ROOT)/glog"',
+       '"$(PODS_ROOT)/RCT-Folly"',
+-      '"$(PODS_ROOT)/Headers/Public/React-hermes"',
+-      '"$(PODS_ROOT)/Headers/Public/hermes-engine"',
+       '"$(PODS_ROOT)/Headers/Public/RNWorklets"',
+       # for static frameworks
+       "\"$(PODS_ROOT)/#{config[:react_native_common_dir]}\"",
+@@ -94,5 +91,4 @@ Pod::Spec.new do |s|
+   install_modules_dependencies(s)
+ 
+   s.dependency 'React-jsi'
+-  s.dependency 'React-hermes'
+ end
 diff --git a/android/src/main/cpp/reanimated/android/NativeProxy.cpp b/android/src/main/cpp/reanimated/android/NativeProxy.cpp
 index c9e9b874376b9ae85be98362cf18ddfa57cc4563..81dc2be5998c74df26152e0cc5bfd88ff079766a 100644
 --- a/android/src/main/cpp/reanimated/android/NativeProxy.cpp

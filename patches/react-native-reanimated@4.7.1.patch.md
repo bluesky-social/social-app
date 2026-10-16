@@ -44,3 +44,10 @@ The changelog fragment from the PR is left out, because it is not part of the
 published package.
 
 Remove once we upgrade to a Reanimated release that includes the PR.
+
+## iOS: Kahvi runtime
+
+Reanimated's podspec hard-coded `React-hermes` and Hermes header search paths.
+The Kahvi worklets runtime is JSI-based and does not use Hermes headers; remove
+those references and let `install_modules_dependencies` select the active
+runtime (`react-native-kahvi` in this app).

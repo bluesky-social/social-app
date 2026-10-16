@@ -259,7 +259,7 @@ index 9ab1db4e21e922f69c1ce17976eb1001f01b571a..a0a15bef87537f715298d7c88a52c8f6
  
  Class<RCTComponentViewProtocol> RCTScrollViewCls(void)
 diff --git a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
-index c0e56acd2a0f1015f5a4581909e9209a56c46166..06184e0a095decd1559f8888d1d67d62eda00df2 100644
+index 917dc6d88e2840351f6ca1a3c697ffc467dec933..38c14f9020fb66097811d5222d4eca9d446715b8 100644
 --- a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
 @@ -372,6 +372,10 @@ - (void)updateLayoutMetrics:(const LayoutMetrics &)layoutMetrics
@@ -344,6 +344,19 @@ index b033b7c71914d287470b7b86bd6bf39d311294ba..7e10dc929147fa4474ca9f955f5cd85d
      layer.contents = (id)image.CGImage;
      layer.contentsScale = image.scale;
  
+diff --git a/React/Runtime/React-RCTRuntime.podspec b/React/Runtime/React-RCTRuntime.podspec
+index f2383d342336b5701f3fdf7e3267fbb4c7cbf56b..070b75f44dfac99b710b55cb42972d53331222c7 100644
+--- a/React/Runtime/React-RCTRuntime.podspec
++++ b/React/Runtime/React-RCTRuntime.podspec
+@@ -58,7 +58,7 @@ Pod::Spec.new do |s|
+   add_dependency(s, "React-RuntimeApple")
+   add_dependency(s, "React-utils", :additional_framework_paths => ["react/utils/platform/ios"])
+ 
+-  if use_third_party_jsc()
++  if !use_hermes()
+     s.exclude_files = ["RCTHermesInstanceFactory.{mm,h}", "RCTJscInstanceFactory.{mm,h}"]
+   else
+     s.dependency "hermes-engine"
 diff --git a/React/Views/RefreshControl/RCTRefreshControl.h b/React/Views/RefreshControl/RCTRefreshControl.h
 index ed306d7cadbf36a2fed79be8bd9d68b5dca135bd..d447dad534fefa9fcbdbbde6dcbbdcddadd5a824 100644
 --- a/React/Views/RefreshControl/RCTRefreshControl.h
@@ -515,3 +528,91 @@ index 4d640400dc129724b1a46e429fc90da2fb1919cc..ecbd4bdbdbbebfd1bb8c893b44f90bc6
  
      if (rootShadowNode != nullptr) {
        const auto& children = rootShadowNode->getChildren();
+diff --git a/ReactCommon/react/runtime/platform/ios/React-RuntimeApple.podspec b/ReactCommon/react/runtime/platform/ios/React-RuntimeApple.podspec
+index ea9094c02568024377b42ec5ff1ec55d964a643f..ad02d7d92e0528d7e0589d9c3d13f80a77459882 100644
+--- a/ReactCommon/react/runtime/platform/ios/React-RuntimeApple.podspec
++++ b/ReactCommon/react/runtime/platform/ios/React-RuntimeApple.podspec
+@@ -59,7 +59,7 @@ Pod::Spec.new do |s|
+   add_dependency(s, "React-RCTFBReactNativeSpec")
+   add_dependency(s, "React-utils", :additional_framework_paths => ["react/utils/platform/ios"])
+ 
+-  if use_third_party_jsc()
++  if !use_hermes()
+     s.exclude_files = ["ReactCommon/RCTHermesInstance.{mm,h}", "ReactCommon/RCTJscInstance.{mm,h}"]
+   else
+     s.dependency "hermes-engine"
+diff --git a/scripts/cocoapods/jsengine.rb b/scripts/cocoapods/jsengine.rb
+index a15c92897bb07a15b3289e9fe5231f9f4cd1776e..d4eb40542269c37cfd3ed036cc677322ce7a1a74 100644
+--- a/scripts/cocoapods/jsengine.rb
++++ b/scripts/cocoapods/jsengine.rb
+@@ -24,10 +24,13 @@ def use_third_party_jsc
+   return ENV['USE_THIRD_PARTY_JSC'] == '1'
+ end
+ 
+-# use Hermes is the default. The only other option is the third-party JSC
+-# if the 3rd party JSC is not true, we always want to use Hermes.
++def use_kahvi
++  return ENV['USE_KAHVI'] == '1'
++end
++
++# Kahvi is supplied through a JSI runtime factory, not a JSC pod.
+ def use_hermes
+-  return !use_third_party_jsc()
++  return !use_third_party_jsc() && !use_kahvi()
+ end
+ 
+ def use_hermes_flags
+@@ -35,7 +38,7 @@ def use_hermes_flags
+ end
+ 
+ def use_third_party_jsc_flags
+-  return "-DUSE_THIRD_PARTY_JSC=1"
++  return "-DUSE_HERMES=0 -DUSE_THIRD_PARTY_JSC=1"
+ end
+ 
+ def js_engine_flags()
+@@ -50,6 +53,8 @@ end
+ def depend_on_js_engine(s)
+   if use_hermes()
+     s.dependency 'hermes-engine'
++  elsif use_kahvi()
++    s.dependency 'react-native-kahvi'
+   elsif use_third_party_jsc()
+     s.dependency 'React-jsc'
+   end
+diff --git a/scripts/cocoapods/utils.rb b/scripts/cocoapods/utils.rb
+index 6d151e441052b6b2b2d369fbfcf47381affc7712..3ad458f545f851eb50de6621b91e66102f5f5e6f 100644
+--- a/scripts/cocoapods/utils.rb
++++ b/scripts/cocoapods/utils.rb
+@@ -656,7 +656,7 @@ class ReactNativePodsUtils
+             "hermes-engine",
+             "React-hermes",
+         ]
+-        if ENV['USE_THIRD_PARTY_JSC'] != '1'
++        if ENV['USE_THIRD_PARTY_JSC'] != '1' && ENV['USE_KAHVI'] != '1'
+             pods << "React-jsc"
+         end
+ 
+diff --git a/scripts/react_native_pods.rb b/scripts/react_native_pods.rb
+index a32bb5b7b84ef6a228f51e4ac5c5aa20db92ed1e..65d2f26d60defab0d1565907655edd207e876b4b 100644
+--- a/scripts/react_native_pods.rb
++++ b/scripts/react_native_pods.rb
+@@ -78,7 +78,7 @@ def use_react_native! (
+   react_native_path = Pod::Config.instance.installation_root.join(path)
+   prefix = react_native_path.relative_path_from(Pod::Config.instance.installation_root)
+ 
+-  hermes_enabled= !use_third_party_jsc()
++  hermes_enabled= use_hermes()
+   # Set the app_path as env variable so the podspecs can access it.
+   ENV['APP_PATH'] = app_path
+   ENV['REACT_NATIVE_PATH'] = react_native_path.to_s
+@@ -494,7 +494,8 @@ end
+ def error_if_try_to_use_jsc_from_core()
+   explicitly_not_use_hermes = ENV['USE_HERMES'] != nil && ENV['USE_HERMES'] == '0'
+   not_use_3rd_party_jsc = ENV['USE_THIRD_PARTY_JSC'] == nil || ENV['USE_THIRD_PARTY_JSC'] == '0'
+-  if (explicitly_not_use_hermes && not_use_3rd_party_jsc)
++  not_use_kahvi = ENV['USE_KAHVI'] != '1'
++  if (explicitly_not_use_hermes && not_use_3rd_party_jsc && not_use_kahvi)
+     message = "Hermes is the default engine and JSC has been moved to community support.\n" +
+     "Please remove the USE_HERMES=0, as it is not supported anymore.\n" +
+     "If you want to use JSC, you can install it from `@react-native-community/javascriptcore`.\n" +
