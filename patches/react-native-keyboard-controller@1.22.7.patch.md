@@ -2,9 +2,13 @@
 
 ## Stop the KeyboardAvoidingView initial state from clobbering keyboard events
 
+Upstream PR: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/1685
+(this patch is the same change, minus its unit test). Remove this patch once a
+release includes it.
+
 Fixes APP-3472: on Android, the composer's footer (media buttons, language,
 character counter) intermittently stays behind the keyboard after the composer
-opens. The `KeyboardAvoidingView` never shrinks.
+opens.
 
 ### Cause
 
@@ -26,38 +30,55 @@ run on the UI thread too. When the UI thread is busy (the composer slide-in
 plus the keyboard animation), the queued writes can land after those events
 and reset the state to "closed, height 0":
 
-- Writes land between `onStart` and `onEnd`: `onEnd` restores `isClosed` and
-  `progress`, but `heightWhenOpened` stays 0, so the relative keyboard height is
-  0 and the view keeps its full height.
-- Writes land after `onEnd`: `isClosed` is back to `true` and nothing repairs it
-  until the keyboard next moves.
-
-Instrumented on a Pixel 8 (API 34) emulator: across 30 composer opens, the two
-failures were exactly the two opens where the seed writes landed after
-`onStart` (one of each ordering above). In the 28 good opens they landed
-before, often by only 0.15-0.4s. Delaying the seed writes artificially failed
-every time.
+1. Writes land between `onStart` and `onEnd`: `onEnd` restores `isClosed` and
+   `progress`, but `heightWhenOpened` stays 0, so the relative keyboard height
+   is 0 and the view doesn't avoid the keyboard. This is the bug we see.
+2. Writes land after `onEnd`: `isClosed` is back to `true` with the keyboard
+   open. With `behavior="height"` the style worklet then returns `{}`, and
+   Reanimated keeps the last applied height, so the open looks fine but the
+   view stays shrunk after the keyboard is dismissed (until it opens again).
 
 ### Fix
 
-- Seed the state inside `runOnUI`, reading the provider's values on the UI
-  thread, and skip it if this hook has already handled a keyboard event
+- Seed inside `runOnUI`, reading the provider's values on the UI thread, and
+  skip the seed if this hook has already handled a keyboard event
   (`hasReceivedEvent`). This covers both orderings.
-- Also refresh `heightWhenOpened` from any positive-height `onEnd`, in case
-  `onStart` fired before the handler was registered. This is the same repair
-  as #12029, which on its own only covers the first ordering.
+- Also refresh `heightWhenOpened` from an `onEnd` where the keyboard ended fully
+  open (`height > 0 && progress === 1`), in case `onStart` fired before the
+  handler was registered.
+- Same guard for the `padding` seed in `useTranslateAnimation` (only affects
+  `behavior="translate-with-padding"`, which we don't use).
 
-Zero-height `onEnd` events leave `heightWhenOpened` alone, so the dismissal
-interpolation is unchanged.
+### Validation
 
-`useTranslateAnimation` seeds `padding` the same way, but that only affects
-`behavior="translate-with-padding"`, which we don't use.
+Pixel 8 emulator (API 34), Reanimated 4.7.1, composer opens checked via the
+accessibility tree: footer above the keyboard on open, back at the bottom after
+Back, above the keyboard again after refocusing.
 
-### Notes
+Deterministic orderings (seed deferred to run right after the first
+`onStart`/`onEnd`), 10 opens each:
 
-- Only `src/` is patched. Metro resolves the package's `react-native` entry
-  (`src/index`); Jest would use `lib/commonjs`, but no tests exercise this hook.
-- Also affects the login, signup and phone input `KeyboardAvoidingView`s. They
-  don't auto-focus on mount, so they were less exposed to the race.
-- Still present on upstream main. Remove this patch once the dependency
-  includes an equivalent fix.
+| `hooks.ts`              | ordering | open  | dismiss | refocus |
+| ----------------------- | -------- | ----- | ------- | ------- |
+| stock                   | 1        | 0/10  | 10/10   | 10/10   |
+| stock                   | 2        | 10/10 | 0/10    | 10/10   |
+| `onEnd` repair only[^1] | 1        | 10/10 | 10/10   | 10/10   |
+| `onEnd` repair only[^1] | 2        | 10/10 | 0/10    | 10/10   |
+| this patch              | 1        | 10/10 | 10/10   | 10/10   |
+| this patch              | 2        | 10/10 | 10/10   | 10/10   |
+
+[^1]: The approach in https://github.com/bluesky-social/social-app/pull/12029.
+
+Natural timing (no forced delays, 40 opens each): stock 39/40 passed, with the
+one failure being the one open where the seed landed after `onStart`. This
+patch passed 40/40, including 3 opens where the seed landed after `onStart` and
+was skipped. The natural rate depends heavily on load, so the deterministic
+table is the real evidence.
+
+Not tested on device: iOS (the simulator wasn't available) and
+`translate-with-padding`. Both are covered by the upstream unit test.
+
+Only `src/` is patched. Metro resolves the package's `react-native` entry
+(`src/index`); Jest would use `lib/commonjs`, but no tests exercise this hook.
+The login, signup and phone input screens use the same `KeyboardAvoidingView`
+but don't auto-focus on mount.
