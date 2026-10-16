@@ -66,7 +66,7 @@ import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interst
 import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {RichText} from '#/components/RichText'
 import {useAnalytics} from '#/analytics'
-import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {isFollowingV2Eligible} from '#/features/followingV2/eligibility'
 import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
 import {
@@ -1468,6 +1468,13 @@ let PostFeed = ({
           windowSize={9}
           maxToRenderPerBatch={IS_IOS ? 5 : 1}
           updateCellsBatchingPeriod={40}
+          /*
+           * Mount cells ahead of the viewport so a fling rides on
+           * already-rendered content instead of mounting new cells
+           * mid-flight (JS render + Fabric mount + image upload all land
+           * inside the scroll otherwise). Android-only experiment.
+           */
+          renderAheadOffset={IS_ANDROID ? 5000 : undefined}
           onItemSeen={onItemSeen}
           maintainVisibleContentPosition={
             isAnchored ? {minIndexForVisible: leadingRowCount} : undefined

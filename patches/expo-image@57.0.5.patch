@@ -1,0 +1,20 @@
+diff --git a/android/src/main/java/expo/modules/image/ExpoImageViewWrapper.kt b/android/src/main/java/expo/modules/image/ExpoImageViewWrapper.kt
+index 7abe582b602c194ee58c6e39e4812e6b21f3a4b8..2f6e885c3f0c157aab4d0da24e2c742e372b7b80 100644
+--- a/android/src/main/java/expo/modules/image/ExpoImageViewWrapper.kt
++++ b/android/src/main/java/expo/modules/image/ExpoImageViewWrapper.kt
+@@ -443,6 +443,15 @@ class ExpoImageViewWrapper(context: Context, appContext: AppContext) : ExpoView(
+       .customize(`when` = cachePolicy == CachePolicy.NONE || cachePolicy == CachePolicy.MEMORY) {
+         diskCacheStrategy(DiskCacheStrategy.NONE)
+       }
++      /*
++       * Default Glide strategy (AUTOMATIC) only caches original bytes for
++       * remote images, so every disk hit re-decodes and re-scales on Glide's
++       * pool threads while the list scrolls. RESOURCE also caches the
++       * downsampled bitmap, so a repeat hit is a cheap bitmap read.
++       */
++      .customize(`when` = cachePolicy == CachePolicy.DISK || cachePolicy == CachePolicy.MEMORY_AND_DISK) {
++        diskCacheStrategy(DiskCacheStrategy.RESOURCE)
++      }
+       .customize(blurRadius) {
+         transform(BlurTransformation(min(it, 25), 4))
+       }
