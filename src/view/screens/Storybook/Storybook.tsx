@@ -8,6 +8,7 @@ import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {GalleryStorybook} from '#/components/Gallery/Storybook'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {
   useDeviceGeolocationApi,
@@ -81,6 +82,8 @@ export default function Storybook() {
                 <ButtonText>Dark</ButtonText>
               </Button>
             </View>
+
+            <GalleryStorybook />
 
             <Button
               color="primary"

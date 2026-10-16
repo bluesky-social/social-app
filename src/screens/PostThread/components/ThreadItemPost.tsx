@@ -31,12 +31,10 @@ import {
 } from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
+import {Bleed as GalleryBleed} from '#/components/Gallery'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {
-  GalleryBleed,
-  maybeApplyGalleryOffsetStyles,
-} from '#/components/images/Gallery'
+import {maybeApplyGalleryOffsetStyles} from '#/components/images/Gallery'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {PostHider} from '#/components/moderation/PostHider'
 import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'

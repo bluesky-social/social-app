@@ -1,42 +1,44 @@
 import {useEffect} from 'react'
-import {type FlatList} from 'react-native'
 
-import {tween} from '#/components/images/Gallery/tween'
-import {getOffsetForIndex} from '#/components/images/Gallery/utils'
+import {isEditableTarget} from '#/components/Gallery/domUtils'
+import {tween} from '#/components/Gallery/tween'
+import {type NavigationHandlerArgs} from '#/components/Gallery/types'
+import {getOffsetForIndex} from '#/components/Gallery/utils'
 
 const SETTLE_DURATION = 700
 
 export function useKeyboardHandlers({
-  flatListRef,
+  scrollRef,
   itemWidthsRef,
   currentIndexRef,
   scrollTo,
   onSettle,
-  imageCount,
-}: {
-  flatListRef: React.RefObject<FlatList | null>
-  itemWidthsRef: React.RefObject<Map<number, number>>
-  currentIndexRef: React.RefObject<number>
-  scrollTo: (offset: number) => void
-  onSettle: (index: number) => void
-  imageCount: number
-}) {
+  itemCount,
+  resetKey,
+}: NavigationHandlerArgs) {
   useEffect(() => {
-    if (imageCount <= 1) return
+    if (itemCount <= 1) return
 
     let stopTween: (() => void) | null = null
     let pendingIndex: number | null = null
 
     const onKeyDown = (e: KeyboardEvent) => {
-      const el =
-        flatListRef.current?.getScrollableNode() as unknown as HTMLElement | null
+      if (e.defaultPrevented) return
+      if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return
+      const el = scrollRef.current?.getScrollableNode() as HTMLElement | null
       if (!el || !el.contains(document.activeElement)) return
+      // Text fields, selects and sliders use the arrow keys themselves
+      if (
+        isEditableTarget(e.target) ||
+        isEditableTarget(document.activeElement)
+      )
+        return
 
       const current = pendingIndex ?? currentIndexRef.current
       let targetIndex: number | undefined
 
       if (e.key === 'ArrowRight') {
-        if (current < imageCount - 1) {
+        if (current < itemCount - 1) {
           targetIndex = current + 1
         }
       } else if (e.key === 'ArrowLeft') {
@@ -55,7 +57,13 @@ export function useKeyboardHandlers({
 
         pendingIndex = targetIndex
         const from = el.scrollLeft
-        const to = getOffsetForIndex(itemWidthsRef.current, targetIndex)
+        const to = Math.max(
+          0,
+          Math.min(
+            getOffsetForIndex(itemWidthsRef.current, targetIndex),
+            el.scrollWidth - el.clientWidth,
+          ),
+        )
         const idx = targetIndex
 
         stopTween = tween(
@@ -81,11 +89,12 @@ export function useKeyboardHandlers({
       if (stopTween) stopTween()
     }
   }, [
-    flatListRef,
+    scrollRef,
     itemWidthsRef,
     currentIndexRef,
     scrollTo,
     onSettle,
-    imageCount,
+    itemCount,
+    resetKey,
   ])
 }

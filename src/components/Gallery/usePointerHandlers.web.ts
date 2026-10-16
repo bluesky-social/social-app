@@ -1,9 +1,10 @@
 import {useEffect} from 'react'
-import {type FlatList} from 'react-native'
 
-import {ITEM_GAP} from '#/components/images/Gallery/const'
-import {tween} from '#/components/images/Gallery/tween'
-import {getOffsetForIndex} from '#/components/images/Gallery/utils'
+import {ITEM_GAP} from '#/components/Gallery/const'
+import {isEditableTarget} from '#/components/Gallery/domUtils'
+import {tween} from '#/components/Gallery/tween'
+import {type NavigationHandlerArgs} from '#/components/Gallery/types'
+import {getIndexForOffset, getOffsetForIndex} from '#/components/Gallery/utils'
 import {IS_WEB_SAFARI} from '#/env'
 
 const DRAG_THRESHOLD = 3
@@ -20,12 +21,12 @@ function whichByDistance(
   currentIndex: number,
   distance: number,
   direction: -1 | 1,
-  imageCount: number,
+  itemCount: number,
 ): number {
   let remaining = distance
   let i = currentIndex
 
-  while (remaining > 0 && i >= 0 && i < imageCount) {
+  while (remaining > 0 && i >= 0 && i < itemCount) {
     const w = (itemWidths.get(i) ?? 0) + ITEM_GAP
     if (remaining > w) {
       remaining -= w
@@ -38,29 +39,22 @@ function whichByDistance(
     }
   }
 
-  return Math.max(0, Math.min(i, imageCount - 1))
+  return Math.max(0, Math.min(i, itemCount - 1))
 }
 
 export function usePointerHandlers({
-  flatListRef,
+  scrollRef,
   itemWidthsRef,
   currentIndexRef,
   scrollTo,
   onSettle,
-  imageCount,
-}: {
-  flatListRef: React.RefObject<FlatList | null>
-  itemWidthsRef: React.RefObject<Map<number, number>>
-  currentIndexRef: React.RefObject<number>
-  scrollTo: (offset: number) => void
-  onSettle: (index: number) => void
-  imageCount: number
-}) {
+  itemCount,
+  resetKey,
+}: NavigationHandlerArgs) {
   useEffect(() => {
-    if (imageCount <= 1) return
+    if (itemCount <= 1) return
 
-    const el =
-      flatListRef.current?.getScrollableNode() as unknown as HTMLElement | null
+    const el = scrollRef.current?.getScrollableNode() as HTMLElement | null
     if (!el) return
 
     let isDragging = false
@@ -82,8 +76,20 @@ export function usePointerHandlers({
       el.style.transform = ''
     }
 
+    /*
+     * We don't preventDefault on mousedown, since that would break focus and
+     * text selection inside arbitrary children. Native image and link drags
+     * are suppressed here instead.
+     */
+    const onDragStart = (e: DragEvent) => {
+      const target = e.target as HTMLElement | null
+      if (target?.closest?.('img, a')) e.preventDefault()
+    }
+
     const onMouseDown = (e: MouseEvent) => {
-      e.preventDefault() // prevent native image drag
+      if (e.button !== 0 || e.defaultPrevented) return
+      // Leave text fields, selects and sliders to behave normally
+      if (isEditableTarget(e.target)) return
 
       // Cancel any in-progress tween
       if (stopTween) {
@@ -120,6 +126,8 @@ export function usePointerHandlers({
         if (el.contains(document.activeElement)) {
           ;(document.activeElement as HTMLElement)?.blur?.()
         }
+        // Don't leave behind a text selection from dragging across content
+        window.getSelection?.()?.removeAllRanges()
       }
 
       e.preventDefault()
@@ -152,17 +160,11 @@ export function usePointerHandlers({
 
       // Update local index from scroll position (only in normal range)
       if (overscrollX === 0) {
-        const offsetX = desiredScroll
-        let accumulated = 0
-        for (let i = 0; i < imageCount; i++) {
-          const w = (itemWidthsRef.current.get(i) ?? 0) + ITEM_GAP
-          if (offsetX < accumulated + w / 2) {
-            localIndex = i
-            break
-          }
-          accumulated += w
-          if (i === imageCount - 1) localIndex = i
-        }
+        localIndex = getIndexForOffset(
+          itemWidthsRef.current,
+          desiredScroll,
+          itemCount,
+        )
       }
     }
 
@@ -178,14 +180,26 @@ export function usePointerHandlers({
 
       if (wasDragging) {
         // Suppress the click that follows mouseup after a drag
-        el.addEventListener('click', e => e.stopPropagation(), {
+        const suppressClick = (e: MouseEvent) => {
+          // Stopping propagation alone still allows native link navigation.
+          e.preventDefault()
+          e.stopPropagation()
+        }
+        el.addEventListener('click', suppressClick, {
           once: true,
           capture: true,
         })
+        /*
+         * The click fires right after mouseup. If there isn't one (e.g. the
+         * pointer was released elsewhere), don't swallow the next real click.
+         */
+        setTimeout(() => {
+          el.removeEventListener('click', suppressClick, {capture: true})
+        }, 0)
 
         if (overscrollX !== 0) {
           // Bounce back from overscroll
-          const targetIndex = overscrollX > 0 ? imageCount - 1 : 0
+          const targetIndex = overscrollX > 0 ? itemCount - 1 : 0
           const fromOverscroll = overscrollX
 
           stopTween = tween(
@@ -219,11 +233,17 @@ export function usePointerHandlers({
             localIndex,
             totalDistance,
             direction,
-            imageCount,
+            itemCount,
           )
 
           const from = el.scrollLeft
-          const to = getOffsetForIndex(itemWidthsRef.current, targetIndex)
+          const to = Math.max(
+            0,
+            Math.min(
+              getOffsetForIndex(itemWidthsRef.current, targetIndex),
+              el.scrollWidth - el.clientWidth,
+            ),
+          )
 
           if (from === to) {
             onSettle(targetIndex)
@@ -254,7 +274,7 @@ export function usePointerHandlers({
      * and apply the scroll ourselves, calling preventDefault to suppress the
      * history-nav gesture. Vertical-dominant wheel events are left untouched so
      * normal page scroll still works. Chrome/Firefox are covered by the
-     * `overscrollBehaviorX: 'contain'` style on the FlatList.
+     * `overscrollBehaviorX: 'contain'` style on the scroll view.
      *
      * Listener must be non-passive so preventDefault is honored.
      */
@@ -280,17 +300,7 @@ export function usePointerHandlers({
       // Keep the active index in sync so keyboard/lightbox stay correct, but
       // only settle when it actually changes - onSettle moves focus, which we
       // don't want to thrash on every wheel tick.
-      let accumulated = 0
-      let index = 0
-      for (let i = 0; i < imageCount; i++) {
-        const w = (itemWidthsRef.current.get(i) ?? 0) + ITEM_GAP
-        if (next < accumulated + w / 2) {
-          index = i
-          break
-        }
-        accumulated += w
-        if (i === imageCount - 1) index = i
-      }
+      const index = getIndexForOffset(itemWidthsRef.current, next, itemCount)
       if (index !== localIndex) {
         localIndex = index
         onSettle(index)
@@ -298,12 +308,14 @@ export function usePointerHandlers({
     }
 
     el.addEventListener('mousedown', onMouseDown)
+    el.addEventListener('dragstart', onDragStart)
     el.addEventListener('wheel', onWheel, {passive: false})
     window.addEventListener('mousemove', onMouseMove)
     window.addEventListener('mouseup', onMouseUp)
 
     return () => {
       el.removeEventListener('mousedown', onMouseDown)
+      el.removeEventListener('dragstart', onDragStart)
       el.removeEventListener('wheel', onWheel)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('mouseup', onMouseUp)
@@ -313,11 +325,12 @@ export function usePointerHandlers({
       el.style.userSelect = ''
     }
   }, [
-    flatListRef,
+    scrollRef,
     itemWidthsRef,
     currentIndexRef,
     scrollTo,
     onSettle,
-    imageCount,
+    itemCount,
+    resetKey,
   ])
 }

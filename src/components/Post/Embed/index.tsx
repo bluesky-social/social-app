@@ -25,8 +25,8 @@ import {
   useHasThreadItemPostNumber,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
 import {atoms as a, useTheme} from '#/alf'
+import {Bleed as GalleryBleed} from '#/components/Gallery'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {GalleryBleed} from '#/components/images/Gallery'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'

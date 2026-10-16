@@ -34,10 +34,8 @@ import {
   useHasThreadItemPostNumber,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
 import {atoms as a, select, useTheme} from '#/alf'
-import {
-  GalleryBleed,
-  maybeApplyGalleryOffsetStyles,
-} from '#/components/images/Gallery'
+import {Bleed as GalleryBleed} from '#/components/Gallery'
+import {maybeApplyGalleryOffsetStyles} from '#/components/images/Gallery'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
