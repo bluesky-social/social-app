@@ -193,6 +193,17 @@ section is at the bottom of the page, after the other component examples. `Story
 deliberately not exported from `index.tsx`, so normal imports don't pull in its
 fixtures.
 
+## Tests
+
+Automated tests live in a `__tests__` directory next to the code they cover:
+`src/components/Gallery/__tests__` and `src/components/images/Gallery/__tests__`.
+Anything only tests use, such as helpers, mocks, and fixtures, lives there too.
+The fake DOM used by the web handler tests is `__tests__/fakeDom.ts`.
+
+```bash
+pnpm test --runInBand src/components/Gallery/__tests__ src/components/images/Gallery/__tests__
+```
+
 ## QA checklist
 
 - Mixed content: every card keeps its size, the strip is as tall as the

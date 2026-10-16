@@ -1,6 +1,9 @@
 import {renderHook} from '@testing-library/react-native'
 
-import {FakeElement, installFakeDom} from '#/components/Gallery/fakeDom'
+import {
+  FakeElement,
+  installFakeDom,
+} from '#/components/Gallery/__tests__/fakeDom'
 import {useKeyboardHandlers} from '#/components/Gallery/useKeyboardHandlers.web'
 
 jest.mock('#/env', () => ({IS_WEB_SAFARI: false}))
