@@ -99,7 +99,7 @@ export type Events = {
      *   from it, or mounted with the tab already loaded, as web's does on
      *   every visit.
      * - `significantReturn`: the user came back to the app after a while
-     *   away, with the screen in view.
+     *   away, with the screen in view. Native only.
      * - `pushOpened`: the user opened a push notification with the screen in
      *   view.
      */

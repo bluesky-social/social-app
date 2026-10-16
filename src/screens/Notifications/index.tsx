@@ -467,11 +467,14 @@ function useSessionSeenAt() {
 
 /**
  * Coming back to the screen: focusing it again, mounting it (web remounts
- * the screen on every visit), or, while it's open, a significant return to
- * the app or opening a push. Each one checks the tab in view for anything
- * new, with `checkLatest`. A quick hop out of the app and back, e.g. to a
- * share sheet, only peeks with `peekLatest`, so the list stays as it is and
- * the "Refresh" pill offers anything new.
+ * the screen on every visit), or, while it's open on native, a significant
+ * return to the app or opening a push. Each one checks the tab in view for
+ * anything new, with `checkLatest`. A quick hop out of the app and back, e.g.
+ * to a share sheet, only peeks with `peekLatest`, so the list stays as it is
+ * and the "Refresh" pill offers anything new.
+ *
+ * On web, as in v1, coming back to the browser tab does nothing, as
+ * switching tabs is routine there. The unread poll still offers the pill.
  *
  * As in v1, coming back from a screen pushed within the Notifications tab
  * (e.g. a post) refreshes too, unless the user is partway down the list. So
@@ -520,6 +523,7 @@ function useReturnToScreen({
     }
   })
   useEffect(() => {
+    if (IS_WEB) return
     const returns = onAnyAppReturn(appReturn => onAppReturn(appReturn))
     /*
      * Opening a push leaves the app too, even when it never went to the
