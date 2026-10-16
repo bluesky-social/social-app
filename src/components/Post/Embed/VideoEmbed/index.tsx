@@ -11,6 +11,7 @@ import {
 } from '#/lib/media/video/playbackTelemetry'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, platform} from '#/alf'
+import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
 import {Button} from '#/components/Button'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
@@ -195,20 +196,25 @@ function InnerWrapper({embed, post}: Props) {
               altText={embed.alt}
             />
           ) : (
-            <Button
-              style={[a.flex_1, a.align_center, a.justify_center]}
-              onPress={() => {
-                ref.current?.togglePlayback()
-              }}
-              label={_(msg`Play video`)}>
-              {showSpinner ? (
-                <View style={[a.align_center, a.justify_center]}>
-                  <ActivityIndicator size="large" color="white" />
-                </View>
-              ) : (
-                <PlayButtonIcon />
+            <>
+              <Button
+                style={[a.flex_1, a.align_center, a.justify_center]}
+                onPress={() => {
+                  ref.current?.togglePlayback()
+                }}
+                label={_(msg`Play video`)}>
+                {showSpinner ? (
+                  <View style={[a.align_center, a.justify_center]}>
+                    <ActivityIndicator size="large" color="white" />
+                  </View>
+                ) : (
+                  <PlayButtonIcon />
+                )}
+              </Button>
+              {embed.alt && (
+                <AltBadgeWithDialog text={embed.alt} position="top-right" />
               )}
-            </Button>
+            </>
           ))}
       </ImageBackground>
     </>
