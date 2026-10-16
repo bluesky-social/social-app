@@ -76,6 +76,7 @@ import {
 } from '#/features/liveNow'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+import {isAtTop} from './atTop'
 import {GapRow} from './GapRow'
 import {mixSamples} from './mixSamples'
 import {PrependPill} from './PrependPill'
@@ -97,9 +98,11 @@ import {
 } from './queries/postFeed'
 import {useSavedFeedSamples} from './queries/savedFeedSamples'
 import {useAnchorCorrectionScrollHandlers} from './useAnchorCorrectionScrollHandlers'
+import {useHomePress} from './useHomePress'
 import {useListRest} from './useListRest'
 import {useNewPostsCheck} from './useNewPostsCheck'
 import {usePrependPill} from './usePrependPill'
+import {useRevealTop} from './useRevealTop'
 import {useSettleAtTop} from './useSettleAtTop'
 import {useSettleScrollHandlers} from './useSettleScrollHandlers'
 
@@ -227,7 +230,12 @@ export function getItemsForFeedback(feedRow: FeedRow): {
 
 export type PostFeedRef = {
   /** Refreshes the feed in one write. Callers log their own metric. */
-  refresh: () => Promise<void>
+  refresh: () => Promise<unknown>
+  /**
+   * Handles a Home press if this feed does (anchored Following). Returns false
+   * to let the page scroll up and refresh.
+   */
+  pressHome: () => boolean
 }
 
 // DISABLED need to check if this is causing random feed refreshes -prf
@@ -419,39 +427,28 @@ let PostFeed = ({
   /** The list's scroll offset, which its scroll handlers keep. */
   const listOffsetY = useSharedValue(0)
 
-  /**
-   * The top page a refresh from this view wrote, to take the reader up to once
-   * it has rendered: anchored, the list would otherwise hold on to the row
-   * they're on, below the new posts. Not animated, as that can be a long way.
-   */
-  const revealTopRef = useRef<number>(undefined)
-  const revealTop = useNonReactiveCallback(() => {
-    scrollElRef?.current?.scrollToOffset({
-      animated: false,
-      offset: -headerOffset,
-    })
+  const revealTop = useRevealTop({
+    topFetchedAt: lastFetchedAt,
+    offsetY: listOffsetY,
+    scrollToTop: animated => {
+      scrollElRef?.current?.scrollToOffset({animated, offset: -headerOffset})
+    },
+    // At the newest post, nothing is new to the reader any more.
+    onJump: () => onHasNew?.(false),
   })
   const refreshToTop = async () => {
     const page = await refresh()
-    if (!page || !isAnchored) {
-      return
+    if (page && isAnchored) {
+      revealTop.onceRendered(page.fetchedAt)
     }
-    if (lastFetchRef.current === page.fetchedAt) {
-      revealTop()
-    } else {
-      revealTopRef.current = page.fetchedAt
-    }
+    return page
   }
 
   useEffect(() => {
     if (lastFetchedAt) {
       lastFetchRef.current = lastFetchedAt
-      if (lastFetchedAt === revealTopRef.current) {
-        revealTopRef.current = undefined
-        revealTop()
-      }
     }
-  }, [lastFetchedAt, revealTop])
+  }, [lastFetchedAt])
 
   const checkForNew = useNonReactiveCallback(async () => {
     if (
@@ -533,6 +530,17 @@ let PostFeed = ({
 
   const myDid = currentAccount?.did || ''
   const onPostCreated = useCallback(() => {
+    /*
+     * Anchored, refresh only the on-screen view, and only with the reader at
+     * the top. A hidden or prefetched view picks the post up from a later
+     * new-posts check.
+     */
+    if (isAnchored) {
+      if (isActive && isAtTop(listOffsetY.get())) {
+        void refreshToTop()
+      }
+      return
+    }
     // NOTE
     // only invalidate if at the top of the feed
     // changing content when scrolled can trigger some UI freakouts on iOS and android
@@ -553,7 +561,16 @@ let PostFeed = ({
         void truncateAndInvalidate(queryClient, RQKEY(feed))
       }
     }
-  }, [queryClient, feed, myDid, enabled, refreshToTop])
+  }, [
+    isAnchored,
+    isActive,
+    listOffsetY,
+    queryClient,
+    feed,
+    myDid,
+    enabled,
+    refreshToTop,
+  ])
   useEffect(() => {
     return listenPostCreated(onPostCreated)
   }, [onPostCreated])
@@ -976,12 +993,7 @@ let PostFeed = ({
     // Without samples, which the pill never offers.
     pages: feedData?.pages,
     offsetY: listOffsetY,
-    scrollToTop: () => {
-      scrollElRef?.current?.scrollToOffset({
-        animated: true,
-        offset: -headerOffset,
-      })
-    },
+    scrollToTop: revealTop.reveal,
     onRead: prepend.markRead,
   })
   /** Tells the prepend the reader saw a row, if it's from the top page. */
@@ -1037,7 +1049,23 @@ let PostFeed = ({
     setIsPTRing(false)
   }
 
-  useImperativeHandle(ref, () => ({refresh: refreshToTop}))
+  const pressHome = useHomePress({
+    enabled: isAnchored,
+    offsetY: listOffsetY,
+    prepend,
+    revealTop,
+    refresh: refreshToTop,
+    onHasNew,
+    onFetch: () => {
+      ax.metric('feed:refresh', {
+        feedType: feedType,
+        feedUrl: feed,
+        reason: 'soft-reset',
+      })
+    },
+  })
+
+  useImperativeHandle(ref, () => ({refresh: refreshToTop, pressHome}))
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
