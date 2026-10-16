@@ -71,11 +71,11 @@ export function GifAltTextDialogLoaded({
   /*
    * The text being edited lives in AltTextInner, not here. The sheet's portal
    * forwards its children from an effect, so state held above it reaches the
-   * controlled input a commit late and makes typing jumpy. `draft` only catches
-   * up on close, so reopening picks up where the user left off.
+   * controlled input a commit late and makes typing jumpy. This only tracks the
+   * latest edit so it can be saved on close, however the dialog is closed.
    */
-  const [draft, setDraft] = useState(altText || vendorAltText)
-  const editedDraft = useRef<string | null>(null)
+  const editedAltText = useRef<string | null>(null)
+  const initialAltText = altText || vendorAltText
   return (
     <>
       <TouchableOpacity
@@ -119,18 +119,21 @@ export function GifAltTextDialogLoaded({
       <Dialog.Outer
         control={control}
         onClose={() => {
-          const next = editedDraft.current ?? draft
-          editedDraft.current = null
-          setDraft(next)
+          /*
+           * Closing without editing accepts the vendor alt text, which counts
+           * towards the alt text requirement.
+           */
+          const next = editedAltText.current ?? initialAltText
+          editedAltText.current = null
           onSubmit(enforceLen(next, MAX_ALT_TEXT, true))
         }}
         nativeOptions={{fullHeight: true}}>
         <Dialog.Handle />
         <AltTextInner
           vendorAltText={vendorAltText}
-          initialAltText={draft}
+          initialAltText={initialAltText}
           onChange={text => {
-            editedDraft.current = text
+            editedAltText.current = text
           }}
           thumb={thumb}
           control={control}
