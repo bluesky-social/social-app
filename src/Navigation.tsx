@@ -13,6 +13,7 @@ import {
   createNavigationContainerRef,
   DarkTheme,
   DefaultTheme,
+  getActionFromState as getActionFromStateDefault,
   type LinkingOptions,
   NavigationContainer,
   StackActions,
@@ -824,6 +825,19 @@ const FlatNavigator = ({
  * to the navigation context.
  */
 
+/**
+ * `LINKING` has no `config`, so on its own `getActionFromState` doesn't know
+ * that Home is the HomeTab stack's initial route. For the [Home, screen] state
+ * that `getStateFromPath` builds for most links, it then resets the whole
+ * HomeTab stack, remounting Home and losing its feeds and scroll position.
+ * With this, a link opens the screen on top of the existing stack, or on top of
+ * Home if the stack hasn't mounted yet. It is defined at module scope so that
+ * `getActionFromState` can cache what it derives from it.
+ */
+const NATIVE_LINK_ACTION_CONFIG = {
+  screens: {HomeTab: {initialRouteName: 'Home'}},
+}
+
 const LINKING = {
   // TODO figure out what we are going to use
   // note: `bluesky://` is what is used in app.config.js
@@ -892,6 +906,13 @@ const LINKING = {
       const res = buildStateObject('Flat', name, params)
       return res
     }
+  },
+
+  getActionFromState(state, options) {
+    return getActionFromStateDefault(
+      state,
+      IS_NATIVE ? NATIVE_LINK_ACTION_CONFIG : options,
+    )
   },
 } satisfies LinkingOptions<AllNavigatorParams>
 
