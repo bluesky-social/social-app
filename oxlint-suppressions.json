@@ -445,11 +445,8 @@
     "typescript/no-explicit-any": {
       "count": 5
     },
-    "typescript/no-unsafe-call": {
-      "count": 1
-    },
     "typescript/no-unsafe-member-access": {
-      "count": 4
+      "count": 3
     }
   },
   "src/components/images/Gallery/useKeyboardHandlers.ts": {
