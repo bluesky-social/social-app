@@ -1,14 +1,5 @@
-import {
-  cloneElement,
-  createContext,
-  isValidElement,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
-import {FlatList, Pressable, useWindowDimensions, View} from 'react-native'
+import {useEffect, useMemo, useRef, useState} from 'react'
+import {Pressable, View} from 'react-native'
 import Animated, {
   type AnimatedRef,
   useAnimatedRef,
@@ -20,31 +11,22 @@ import debounce from 'lodash.debounce'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {type Dimensions} from '#/lib/media/types'
-import {mergeRefs} from '#/lib/merge-refs'
 import {useA11y} from '#/state/a11y'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
+import * as GalleryPrimitive from '#/components/Gallery'
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {
-  ITEM_GAP,
-  MAX_ASPECT_RATIO,
-  MIN_ASPECT_RATIO,
-} from '#/components/images/Gallery/const'
-import {useKeyboardHandlers} from '#/components/images/Gallery/useKeyboardHandlers'
-import {usePointerHandlers} from '#/components/images/Gallery/usePointerHandlers'
-import {
+  computeDims,
   getAspectRatio,
-  getIndexForOffset,
-  getOffsetForIndex,
+  getContentHeight,
 } from '#/components/images/Gallery/utils'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_ANDROID, IS_WEB} from '#/env'
 import {type app} from '#/lexicons'
 
 export * from './const'
@@ -70,41 +52,13 @@ interface GalleryProps {
   }
 }
 
-const Context = createContext<{
-  bleedRef: React.RefObject<React.ComponentRef<typeof View> | null>
-  bleedWidth: number
-}>({
-  bleedRef: {current: null},
-  bleedWidth: 0,
-})
-
-export function GalleryBleed({children}: {children: React.ReactNode}) {
-  const ref = useRef<React.ComponentRef<typeof View>>(null)
-  const [bleedWidth, setBleedWidth] = useState(0)
-
-  if (!isValidElement(children)) {
-    throw new Error('GalleryBleed children must be a single React element')
-  }
-
-  const node = children as React.ReactElement<any>
-
-  return (
-    <Context.Provider value={{bleedRef: ref, bleedWidth}}>
-      {cloneElement(node, {
-        ref: mergeRefs([ref, node?.props?.ref]),
-        onLayout: (e: {nativeEvent: {layout: {width: number}}}) => {
-          setBleedWidth(e.nativeEvent.layout.width)
-          node.props.onLayout?.(e)
-        },
-        style: [node.props.style, a.overflow_hidden],
-      })}
-    </Context.Provider>
-  )
-}
-
-export function useGalleryBleed() {
-  return useContext(Context)
-}
+/**
+ * Part of the app-facing image gallery API, alongside `Gallery`. App code uses
+ * these rather than importing the generic gallery directly. They are the
+ * generic gallery's own Bleed and hook, not copies, so everything shares
+ * exactly one context.
+ */
+export {Bleed as GalleryBleed, useGalleryBleed} from '#/components/Gallery'
 
 export function Gallery({
   images,
@@ -119,156 +73,96 @@ export function Gallery({
   const {screenReaderEnabled} = useA11y()
   const largeAltBadge = useLargeAltBadgeEnabled()
   const bps = useBreakpoints()
-  const window = useWindowDimensions()
   const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage
-  const contentHeight = useMemo(() => {
-    if (isWithinChat) {
-      return 120
-    }
-    if (isWithinQuote) {
-      if (bps.gtMobile) {
-        return 220
-      } else if (bps.gtPhone) {
-        return 190
-      } else {
-        return 150
-      }
-    }
-    if (bps.gtMobile) {
-      return 300
-    } else if (bps.gtPhone) {
-      return 260
-    } else {
-      return 200
-    }
-  }, [bps, isWithinChat, isWithinQuote])
+  const contentHeight = getContentHeight({
+    isWithinChat,
+    isWithinQuote,
+    gtPhone: bps.gtPhone,
+    gtMobile: bps.gtMobile,
+  })
+
+  const galleryRef = useRef<GalleryPrimitive.GalleryRef>(null)
+  const containerRefsRef = useRef<Map<number, AnimatedRef>>(new Map())
+  const thumbDimsRef = useRef<Map<number, Dimensions>>(new Map())
 
   /*
-   * Container overflow styles
-   *
-   * Uses measureLayout to get the Gallery's offset relative to the GalleryBleed
-   * ancestor. This is a layout-relative measurement that doesn't depend on
-   * scroll position, so it works correctly for off-screen FlatList items.
+   * Debounced so that a flick through several images is one event. Created
+   * once and reading the latest context at call time, since callers don't
+   * keep `metricsPostContext` referentially stable.
    */
-  const {bleedRef, bleedWidth} = useGalleryBleed()
-  const contentRef = useRef<React.ComponentRef<typeof View>>(null)
-  const [contentDims, setContentDims] = useState<{x: number; width: number}>()
-  const measure = () => {
-    if (contentRef.current && bleedRef.current) {
-      contentRef.current.measureLayout(
-        bleedRef.current,
-        (x, _y, w) => {
-          setContentDims({x, width: w})
-        },
-        () => {},
-      )
-    }
-  }
-  const width = bleedWidth || Math.min(600, window.width)
-  const insetLeft = contentDims?.x ?? 0
-  const insetRight =
-    bleedWidth > 0
-      ? bleedWidth - (contentDims?.x ?? 0) - (contentDims?.width ?? 0)
-      : 0
-  /* End container overflow styles */
-
-  const flatListRef = useRef<FlatList>(null)
-  const itemWidthsRef = useRef<Map<number, number>>(new Map())
-  const itemRefsRef = useRef<Map<number, React.ComponentRef<typeof View>>>(
-    new Map(),
+  const emitSwipeMetric = useNonReactiveCallback(
+    (fromIndex: number, toIndex: number) => {
+      if (!metricsPostContext) return
+      ax.metric('post:photoEmbed:carouselSwipe', {
+        fromImage: fromIndex + 1, // convert to 1-based index for easier analysis
+        toImage: toIndex + 1, // convert to 1-based index for easier analysis
+        totalImages: images.length,
+        postUri: metricsPostContext.postUri,
+        postAuthorDid: metricsPostContext.postAuthorDid,
+        feedDescriptor: metricsPostContext.feedDescriptor,
+      })
+    },
   )
-  const containerRefsRef = useRef<Map<number, AnimatedRef<any>>>(new Map())
-  const thumbDimsRef = useRef<Map<number, Dimensions>>(new Map())
-  const currentIndexRef = useRef(0)
-  const scrollOffsetRef = useRef(0)
-
-  const emitSwipeMetric = useMemo(
-    () =>
-      debounce((fromIndex: number, toIndex: number) => {
-        if (!metricsPostContext) return
-        ax.metric('post:photoEmbed:carouselSwipe', {
-          fromImage: fromIndex + 1, // convert to 1-based index for easier analysis
-          toImage: toIndex + 1, // convert to 1-based index for easier analysis
-          totalImages: images.length,
-          postUri: metricsPostContext.postUri,
-          postAuthorDid: metricsPostContext.postAuthorDid,
-          feedDescriptor: metricsPostContext.feedDescriptor,
-        })
-      }, 200),
-    [ax, images.length, metricsPostContext],
+  const debouncedSwipeMetric = useMemo(
+    () => debounce(emitSwipeMetric, 200),
+    [emitSwipeMetric],
   )
-
-  const setCurrentIndex = (index: number) => {
-    const prev = currentIndexRef.current
-    if (prev !== index) {
-      currentIndexRef.current = index
-      emitSwipeMetric(prev, index)
-    }
-  }
-
-  const scrollTo = (offset: number) => {
-    flatListRef.current?.scrollToOffset({offset, animated: false})
-  }
+  /*
+   * Don't let a pending event land on a different post, feed, or set of
+   * images, or after we're gone. Keyed on the values rather than on the
+   * context object, which callers recreate on every render.
+   */
+  const postUri = metricsPostContext?.postUri
+  const postAuthorDid = metricsPostContext?.postAuthorDid
+  const feedDescriptor = metricsPostContext?.feedDescriptor
+  const imagesSignature = images.map(image => image.thumb).join('\n')
+  useEffect(
+    () => () => debouncedSwipeMetric.cancel(),
+    [
+      debouncedSwipeMetric,
+      postUri,
+      postAuthorDid,
+      feedDescriptor,
+      imagesSignature,
+    ],
+  )
 
   /*
    * Keeps the image the lightbox is showing in view, so closing it lands on
-   * the right thumbnail. The carousel is hidden behind the lightbox, so it can
-   * jump there without animating. Non-reactive because the lightbox holds
-   * onto it, and the layout can change underneath (e.g. on rotation).
+   * the right thumbnail. Non-reactive because the lightbox holds onto it, and
+   * the layout can change underneath (e.g. on rotation).
    */
   const scrollIntoView = useNonReactiveCallback((index: number) => {
-    const itemWidths = itemWidthsRef.current
-    const start = getOffsetForIndex(itemWidths, index)
-    const end =
-      start + (itemWidths.get(index) ?? 0) - (width - insetLeft - insetRight)
-    // Web scrolls outside of onScroll (see the web hooks), so read it live.
-    const current = IS_WEB
-      ? ((flatListRef.current?.getScrollableNode() as HTMLElement | null)
-          ?.scrollLeft ?? 0)
-      : scrollOffsetRef.current
-    const next = current > start ? start : current < end ? end : current
-    if (next === current) return
-    if (!IS_WEB) {
-      // Sync the index up front so the jump isn't counted as a swipe. Web's
-      // index tracks keyboard focus instead, which stays put.
-      currentIndexRef.current = getIndexForOffset(
-        itemWidths,
-        next,
-        images.length,
-      )
+    galleryRef.current?.scrollIntoView(index)
+  })
+
+  const registerContainerRef = useNonReactiveCallback(
+    (index: number, ref: AnimatedRef, registered: boolean) => {
+      if (registered) {
+        containerRefsRef.current.set(index, ref)
+      } else if (containerRefsRef.current.get(index) === ref) {
+        containerRefsRef.current.delete(index)
+      }
+    },
+  )
+  const setThumbDims = useNonReactiveCallback(
+    (index: number, dims: Dimensions | null) => {
+      if (dims) {
+        thumbDimsRef.current.set(index, dims)
+      } else {
+        thumbDimsRef.current.delete(index)
+      }
+    },
+  )
+
+  // Drop anything left over from images that are no longer here
+  useEffect(() => {
+    for (const map of [containerRefsRef.current, thumbDimsRef.current]) {
+      for (const index of map.keys()) {
+        if (index >= images.length) map.delete(index)
+      }
     }
-    scrollTo(next)
-  })
-
-  const onSettle = (index: number) => {
-    setCurrentIndex(index)
-    if (!IS_WEB) return
-    // Update tabIndex: only the active image is tab-focusable
-    itemRefsRef.current.forEach((node, i) => {
-      const el = node as unknown as HTMLElement
-      el.tabIndex = i === index ? 0 : -1
-    })
-    const el = itemRefsRef.current.get(index) as unknown as HTMLElement | null
-    el?.focus({preventScroll: true})
-  }
-
-  useKeyboardHandlers({
-    flatListRef,
-    itemWidthsRef,
-    currentIndexRef,
-    scrollTo,
-    onSettle,
-    imageCount: images.length,
-  })
-
-  usePointerHandlers({
-    flatListRef,
-    itemWidthsRef,
-    currentIndexRef,
-    scrollTo,
-    onSettle,
-    imageCount: images.length,
-  })
+  }, [images.length])
 
   if (screenReaderEnabled) {
     return (
@@ -295,129 +189,50 @@ export function Gallery({
   }
 
   return (
-    <View
-      ref={contentRef}
-      style={[
-        a.w_full,
-        {
-          height: contentHeight,
-          overflow: 'visible',
-        },
-      ]}
-      onLayout={measure}>
-      <BlockDrawerGesture>
-        <FlatList
-          ref={flatListRef}
-          role="group"
-          aria-roledescription={l`carousel`}
-          aria-label={l`Image gallery, ${images.length} images`}
-          horizontal
-          pagingEnabled={false}
-          // We use snapToOffsets on Android to ensure that if the stretch overscroll
-          // leaves the carousel slightly off the left edge, it snaps back to 0.
-          // This fixes the offset bug without disabling the native stretch behavior.
-          overScrollMode="auto"
-          snapToOffsets={IS_ANDROID ? [0] : undefined}
-          snapToEnd={false}
-          showsHorizontalScrollIndicator={false}
-          directionalLockEnabled
-          nestedScrollEnabled
-          alwaysBounceVertical={false}
-          scrollEventThrottle={16}
-          data={images}
-          keyExtractor={(item, index) => item.thumb + index}
-          renderItem={({item, index}) => {
-            const openLightboxAtIndex = onPress
-              ? () => {
-                  const refs: AnimatedRef<any>[] = []
-                  const dims: (Dimensions | null)[] = []
-                  for (let i = 0; i < images.length; i++) {
-                    refs.push(containerRefsRef.current.get(i)!)
-                    dims.push(thumbDimsRef.current.get(i) ?? null)
-                  }
-                  onPress(index, refs, dims, scrollIntoView)
-                }
-              : undefined
-            return (
+    <GalleryPrimitive.Root
+      ref={galleryRef}
+      label={l`Image gallery, ${images.length} images`}
+      onIndexChange={(index, previousIndex) =>
+        debouncedSwipeMetric(previousIndex, index)
+      }>
+      {images.map((image, index) => {
+        const openLightboxAtIndex = onPress
+          ? () => {
+              const refs: AnimatedRef[] = []
+              const dims: (Dimensions | null)[] = []
+              for (let i = 0; i < images.length; i++) {
+                refs.push(containerRefsRef.current.get(i)!)
+                dims.push(thumbDimsRef.current.get(i) ?? null)
+              }
+              onPress(index, refs, dims, scrollIntoView)
+            }
+          : undefined
+        return (
+          <GalleryPrimitive.Item
+            key={image.thumb + index}
+            label={image.alt || l`Image ${index + 1} of ${images.length}`}>
+            {({focusRef, tabIndex, onFocus}) => (
               <GalleryImage
                 largeAltBadge={largeAltBadge}
-                image={item}
+                image={image}
                 contentHeight={contentHeight}
                 index={index}
                 imageCount={images.length}
-                onWidthChange={(i, w) => {
-                  itemWidthsRef.current.set(i, w)
-                }}
-                itemRef={node => {
-                  if (node) {
-                    itemRefsRef.current.set(index, node)
-                  } else {
-                    itemRefsRef.current.delete(index)
-                  }
-                }}
-                onContainerRef={(i, ref) => {
-                  containerRefsRef.current.set(i, ref)
-                }}
-                onThumbDims={(i, dims) => {
-                  thumbDimsRef.current.set(i, dims)
-                }}
+                focusRef={focusRef}
+                tabIndex={tabIndex}
+                onFocus={onFocus}
+                onContainerRef={registerContainerRef}
+                onThumbDims={setThumbDims}
                 onPress={openLightboxAtIndex}
                 onPressIn={onPressIn ? () => onPressIn(index) : undefined}
                 onPreviewPress={openLightboxAtIndex}
               />
-            )
-          }}
-          onScroll={e => {
-            // web handles via onSettle in the web hooks
-            if (IS_WEB) return
-            const offsetX = e.nativeEvent.contentOffset.x
-            scrollOffsetRef.current = offsetX
-            setCurrentIndex(
-              getIndexForOffset(itemWidthsRef.current, offsetX, images.length),
-            )
-          }}
-          style={[
-            {
-              height: contentHeight,
-              marginLeft: -insetLeft,
-              width,
-            },
-            // Prevent horizontal trackpad/wheel swipes from triggering the
-            // browser's back/forward overscroll-navigation gesture. Handles
-            // Chrome and Firefox; Safari is handled via the wheel listener in
-            // usePointerHandlers.web.ts since it ignores overscroll-behavior.
-            web({overscrollBehaviorX: 'contain'}),
-          ]}
-          contentContainerStyle={{
-            gap: ITEM_GAP,
-            paddingLeft: insetLeft,
-            paddingRight: insetRight,
-          }}
-        />
-      </BlockDrawerGesture>
-    </View>
+            )}
+          </GalleryPrimitive.Item>
+        )
+      })}
+    </GalleryPrimitive.Root>
   )
-}
-
-function computeDims({
-  height,
-  aspectRatio,
-}: {
-  height: number
-  aspectRatio?: number
-}) {
-  /*
-   * Old images, or images from other clients can sometimes not have
-   * aspectRatio populated. In these cases, default to square and we'll
-   * resize once the image loads.
-   *
-   * Clamp between MIN_ASPECT_RATIO (portrait) and MAX_ASPECT_RATIO
-   * (landscape) so items stay a reasonable size in the carousel.
-   */
-  const raw = aspectRatio ?? 1
-  const clamped = Math.max(MIN_ASPECT_RATIO, Math.min(raw, MAX_ASPECT_RATIO))
-  const width = Math.floor(height * clamped)
-  return {width, height, aspectRatio: clamped, isCropped: raw !== clamped}
 }
 
 function GalleryImage({
@@ -425,8 +240,9 @@ function GalleryImage({
   image,
   index,
   imageCount,
-  onWidthChange,
-  itemRef,
+  focusRef,
+  tabIndex,
+  onFocus,
   largeAltBadge,
   onContainerRef,
   onThumbDims,
@@ -438,11 +254,12 @@ function GalleryImage({
   image: app.bsky.embed.images.ViewImage
   index: number
   imageCount: number
-  onWidthChange: (index: number, width: number) => void
-  itemRef: (node: React.ComponentRef<typeof View> | null) => void
+  focusRef: GalleryPrimitive.ItemFocusProps['focusRef']
+  tabIndex: GalleryPrimitive.ItemFocusProps['tabIndex']
+  onFocus: GalleryPrimitive.ItemFocusProps['onFocus']
   largeAltBadge?: boolean
-  onContainerRef: (index: number, ref: AnimatedRef<any>) => void
-  onThumbDims: (index: number, dims: Dimensions) => void
+  onContainerRef: (index: number, ref: AnimatedRef, registered: boolean) => void
+  onThumbDims: (index: number, dims: Dimensions | null) => void
   onPress?: () => void
   onPressIn?: () => void
   onPreviewPress?: () => void
@@ -458,19 +275,15 @@ function GalleryImage({
   const hasAlt = !!image.alt
 
   useEffect(() => {
-    onWidthChange(index, dims.width)
-  }, [index, dims.width, onWidthChange])
-
-  useEffect(() => {
-    onContainerRef(index, containerRef)
-  }, [index, containerRef, onContainerRef])
+    onContainerRef(index, containerRef, true)
+    return () => {
+      onContainerRef(index, containerRef, false)
+      onThumbDims(index, null)
+    }
+  }, [index, containerRef, onContainerRef, onThumbDims])
 
   return (
-    <Animated.View
-      ref={containerRef}
-      collapsable={false}
-      aria-roledescription={l`slide`}
-      aria-label={image.alt || l`Image ${index + 1} of ${imageCount}`}>
+    <Animated.View ref={containerRef} collapsable={false}>
       <ImageContextMenu
         fullsizeUri={image.fullsize}
         thumbUri={image.thumb}
@@ -478,11 +291,14 @@ function GalleryImage({
         borderRadius={tokens.borderRadius.md}
         onPreviewPress={onPreviewPress}>
         <Pressable
-          ref={itemRef}
-          tabIndex={index === 0 ? 0 : -1}
+          ref={focusRef}
+          tabIndex={tabIndex}
           onPress={onPress}
           onPressIn={onPressIn}
-          onFocus={() => setFocused(true)}
+          onFocus={() => {
+            onFocus()
+            setFocused(true)
+          }}
           onBlur={() => setFocused(false)}
           accessibilityRole="button"
           accessibilityLabel={image.alt || l`Image ${index + 1}`}
@@ -520,7 +336,7 @@ function GalleryImage({
                * Only sync from the loaded thumb if we don't already have a
                * ratio from the record. The CDN scales thumbs to integer pixel
                * dims, so its reported ratio drifts a fraction from the
-               * record's - re-syncing would jiggle the FlatList item widths.
+               * record's - re-syncing would jiggle the gallery item widths.
                */
               if (aspectRatio === undefined) {
                 const ar = getAspectRatio(e.source)

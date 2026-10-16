@@ -448,23 +448,7 @@
   },
   "src/components/images/Gallery/index.tsx": {
     "typescript/no-explicit-any": {
-      "count": 5
-    },
-    "typescript/no-unsafe-call": {
       "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 4
-    }
-  },
-  "src/components/images/Gallery/useKeyboardHandlers.ts": {
-    "typescript/no-explicit-any": {
-      "count": 6
-    }
-  },
-  "src/components/images/Gallery/usePointerHandlers.ts": {
-    "typescript/no-explicit-any": {
-      "count": 6
     }
   },
   "src/components/images/ImageLayoutGrid.tsx": {
