@@ -105,8 +105,17 @@ class SheetView: ExpoView {
     SheetManager.shared.add(self)
   }
 
+  /*
+   * Fabric deletes this view without a JS close when its owner unmounts while
+   * the sheet is still up. Dismiss the sheet here, or UIKit keeps an empty
+   * sheet presented that nothing can reach. No state events are sent from
+   * here: the view is already gone from React, so dispatching would fail.
+   */
   deinit {
-    self.destroy()
+    if let sheetVc = self.sheetVc {
+      Self.dismissOrphanedSheet(sheetVc)
+    }
+    self.teardown()
   }
 
   override func mountChildComponentView(
@@ -168,23 +177,29 @@ class SheetView: ExpoView {
     ))
   }
 
+  /** Resets state after the sheet is dismissed, which notifies JS that it closed. */
   private func destroy() {
     let shouldNotifyClosed =
       self.sheetVc != nil || self.isOpen || self.isOpening || self.isClosing
-    self.contentHeightObservation?.invalidate()
-    self.contentHeightObservation = nil
     if shouldNotifyClosed {
       self.isClosing = false
       self.isOpening = false
       self.isOpen = false
     }
-    self.sheetVc = nil
     self.selectedDetentIdentifier = nil
     self.didSeedCanvasSize = false
     self.lastPresentedSize = .zero
     self.lastPresentedInsets = nil
     self.lastPresentedBottomOffset = nil
     self.lastPresentedIsPopover = nil
+    self.teardown()
+  }
+
+  /** Releases native resources without sending any events. */
+  private func teardown() {
+    self.contentHeightObservation?.invalidate()
+    self.contentHeightObservation = nil
+    self.sheetVc = nil
 
     if let innerView = self.innerView {
       self.touchHandler?.detach(from: innerView)
@@ -387,6 +402,33 @@ class SheetView: ExpoView {
       sheetVc.dismiss(animated: true) { [weak self] in
         self?.destroy()
       }
+    }
+  }
+
+  /*
+   * Static so the closures never capture the deallocating view. Dismissing from
+   * the presenting controller also removes anything presented on top of the
+   * sheet. UIKit ignores a dismiss while the present transition is running, so
+   * in that case wait for it to finish.
+   */
+  private static func dismissOrphanedSheet(_ sheetVc: SheetViewController) {
+    guard !sheetVc.isBeingDismissed,
+          let presenting = sheetVc.presentingViewController else {
+      return
+    }
+
+    let dismiss = {
+      guard sheetVc.presentingViewController === presenting,
+            !sheetVc.isBeingDismissed else {
+        return
+      }
+      presenting.dismiss(animated: true)
+    }
+
+    if sheetVc.isBeingPresented, let coordinator = sheetVc.transitionCoordinator {
+      coordinator.animate(alongsideTransition: nil) { _ in dismiss() }
+    } else {
+      dismiss()
     }
   }
 
