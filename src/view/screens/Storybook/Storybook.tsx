@@ -83,8 +83,6 @@ export default function Storybook() {
               </Button>
             </View>
 
-            <GalleryStorybook />
-
             <Button
               color="primary"
               size="small"
@@ -144,6 +142,7 @@ export default function Storybook() {
             <Dialogs />
             <Admonitions />
             <Settings />
+            <GalleryStorybook />
 
             <Button
               color="primary"

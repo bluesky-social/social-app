@@ -158,7 +158,7 @@ This component knows nothing about any of that.
 ## Storybook
 
 Open Settings, then Storybook (the `Debug` route, `/sys/debug`). The Gallery
-section is at the top, just below the theme buttons. `Storybook.tsx` is
+section is at the bottom of the page, after the other component examples. `Storybook.tsx` is
 deliberately not exported from `index.tsx`, so normal imports don't pull in its
 fixtures.
 
