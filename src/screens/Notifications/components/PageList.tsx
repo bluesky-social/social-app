@@ -37,7 +37,7 @@ import {usePager} from '#/screens/Notifications/components/PagerView'
 import {RefreshPill} from '#/screens/Notifications/components/RefreshPill'
 import {useRefreshPillMetrics} from '#/screens/Notifications/refreshPillMetrics'
 import {isRefreshPillVisible} from '#/screens/Notifications/unread'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import {atoms as a, native, type Theme, useTheme, web} from '#/alf'
 import {ButtonText} from '#/components/Button'
 import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
 import {EnvelopeNotification_Filled_Corner2_Rounded as EnvelopeNotificationIcon} from '#/components/icons/brands/EnvelopeNotification'
@@ -277,16 +277,28 @@ export function PageList({
           headerOffset={headerOffset}
           data={rows}
           keyExtractor={(row: Row) => row.key}
-          renderItem={({item: row}: {item: Row}) => {
+          renderItem={({item: row, index}: {item: Row; index: number}) => {
             switch (row.type) {
               case 'section':
-                return <SectionHeader section={row.section} />
+                return (
+                  <SectionHeader
+                    section={row.section}
+                    isUnreadAbove={isUnreadRow(rows[index - 1])}
+                    isUnreadBelow={isUnreadRow(rows[index + 1])}
+                  />
+                )
               case 'notification':
                 return (
                   <View
                     style={[
                       row.hasDivider &&
-                        web([a.border_t, t.atoms.border_contrast_low]),
+                        web([
+                          a.border_t,
+                          getBorderColor(
+                            t,
+                            isUnreadBorder(rows[index - 1], row),
+                          ),
+                        ]),
                     ]}>
                     <NotificationItem notification={row.notification} />
                   </View>
@@ -351,7 +363,10 @@ export function PageList({
               <View
                 style={[
                   a.pt_xl,
-                  web([a.border_t, t.atoms.border_contrast_low]),
+                  web([
+                    a.border_t,
+                    getBorderColor(t, isUnreadRow(rows.at(-1))),
+                  ]),
                 ]}>
                 <ActivityIndicator />
               </View>
@@ -484,7 +499,51 @@ function buildFollowerRows(notifications: NotificationView[]): Row[] {
   return rows
 }
 
-function SectionHeader({section}: {section: 'today' | 'earlier'}) {
+/**
+ * Whether a row is tinted as unread.
+ */
+function isUnreadRow(row: Row | undefined) {
+  return (
+    (row?.type === 'notification' || row?.type === 'follower') &&
+    !row.notification.isRead
+  )
+}
+
+/**
+ * Whether the border between two rows takes the unread colour. It does when
+ * either row is unread, so an unread row is outlined on both sides.
+ */
+export function isUnreadBorder(above: Row | undefined, below: Row | undefined) {
+  return isUnreadRow(above) || isUnreadRow(below)
+}
+
+/**
+ * The colour of a border between rows, in v1's unread colour when it borders
+ * an unread row.
+ */
+function getBorderColor(t: Theme, isUnread: boolean) {
+  return isUnread
+    ? {borderColor: t.palette.primary_100}
+    : t.atoms.border_contrast_low
+}
+
+function SectionHeader({
+  section,
+  isUnreadAbove,
+  isUnreadBelow,
+}: {
+  section: 'today' | 'earlier'
+  /**
+   * Whether the row above is unread, which tints the border "Earlier" draws
+   * above itself.
+   */
+  isUnreadAbove: boolean
+  /**
+   * Whether the row below is unread, which tints the border drawn below the
+   * header on web.
+   */
+  isUnreadBelow: boolean
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
 
@@ -499,10 +558,10 @@ function SectionHeader({section}: {section: 'today' | 'earlier'}) {
               a.border_t,
               a.pt_md,
               a.pb_sm,
-              t.atoms.border_contrast_low,
+              getBorderColor(t, isUnreadAbove),
             ],
         // Rows are divided on web, so the header is too
-        web([a.border_b, t.atoms.border_contrast_low]),
+        web([a.border_b, getBorderColor(t, isUnreadBelow)]),
       ]}>
       <Text accessibilityRole="header" style={[a.text_md, a.font_bold]}>
         {section === 'today'
