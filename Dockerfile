@@ -4,7 +4,7 @@
 # Uses the official pnpm image. Node is auto-downloaded by pnpm using the
 # `devEngines.runtime` field in package.json (onFail: "download").
 #
-FROM ghcr.io/pnpm/pnpm:11 AS web-build
+FROM ghcr.io/pnpm/pnpm:12 AS web-build
 
 WORKDIR /app
 
