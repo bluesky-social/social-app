@@ -462,6 +462,46 @@ index fdabd7bab1f03966dc04ba9a462465daeccf8ae3..ef70011ee5c270fb2cac52f3a7408d1e
    bool useTurboModules() override
    {
      return true;
+diff --git a/ReactCommon/react/renderer/components/view/YogaLayoutableShadowNode.cpp b/ReactCommon/react/renderer/components/view/YogaLayoutableShadowNode.cpp
+index c630cb4201880cb474123328610d85a77544b861..276083fcae580f7d77f4ffd13ff99e1e6e276213 100644
+--- a/ReactCommon/react/renderer/components/view/YogaLayoutableShadowNode.cpp
++++ b/ReactCommon/react/renderer/components/view/YogaLayoutableShadowNode.cpp
+@@ -543,11 +543,20 @@ YogaLayoutableShadowNode& YogaLayoutableShadowNode::cloneChildInPlace(
+ void YogaLayoutableShadowNode::setSize(Size size) const {
+   ensureUnsealed();
+ 
++  auto width = yoga::StyleSizeLength::points(size.width);
++  auto height = yoga::StyleSizeLength::points(size.height);
++
++  // Component descriptors call this from `adopt`, which runs on every clone.
++  // Dirtying the node when nothing changed would make every commit that clones
++  // it re-run layout over the whole tree.
+   auto style = yogaNode_.style();
+-  style.setDimension(
+-      yoga::Dimension::Width, yoga::StyleSizeLength::points(size.width));
+-  style.setDimension(
+-      yoga::Dimension::Height, yoga::StyleSizeLength::points(size.height));
++  if (width == style.dimension(yoga::Dimension::Width) &&
++      height == style.dimension(yoga::Dimension::Height)) {
++    return;
++  }
++
++  style.setDimension(yoga::Dimension::Width, width);
++  style.setDimension(yoga::Dimension::Height, height);
+   yogaNode_.setStyle(style);
+   yogaNode_.setDirty(true);
+ }
+@@ -582,6 +591,10 @@ void YogaLayoutableShadowNode::setPositionType(
+   ensureUnsealed();
+ 
+   auto style = yogaNode_.style();
++  if (style.positionType() == yoga::scopedEnum(positionType)) {
++    return;
++  }
++
+   style.setPositionType(yoga::scopedEnum(positionType));
+   yogaNode_.setStyle(style);
+   yogaNode_.setDirty(true);
 diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
 index ac553045a9c0ce77e288277912538d9e131ebc01..d99c8f4db5a07f1e4ffe7e03ff23adce9c63137b 100644
 --- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
