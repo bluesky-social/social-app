@@ -53,8 +53,10 @@ interface GalleryProps {
 }
 
 /**
- * The bleed context lives with the generic gallery. These names are kept so
- * existing callers share exactly one context.
+ * Part of the app-facing image gallery API, alongside `Gallery`. App code uses
+ * these rather than importing the generic gallery directly. They are the
+ * generic gallery's own Bleed and hook, not copies, so everything shares
+ * exactly one context.
  */
 export {Bleed as GalleryBleed, useGalleryBleed} from '#/components/Gallery'
 

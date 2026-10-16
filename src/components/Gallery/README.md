@@ -9,6 +9,37 @@ virtualize anything.
 import * as Gallery from '#/components/Gallery'
 ```
 
+## Import boundaries
+
+App code does not import this module. It uses a configured gallery module,
+which wraps this one with the choices that make it fit a use case, and exports
+everything the app needs from there. For post images that is
+`#/components/images/Gallery`:
+
+```tsx
+import {
+  Gallery,
+  GalleryBleed,
+  useGalleryBleed,
+} from '#/components/images/Gallery'
+```
+
+`GalleryBleed` and `useGalleryBleed` are this module's `Bleed` and
+`useGalleryBleed`, re-exported, so there is still one bleed context.
+
+The `Root` and `Item` examples below are for implementing a configured wrapper,
+and for the generic Storybook. A lint rule (`no-restricted-imports` in
+`.oxlintrc.json`) rejects `#/components/Gallery` and its subpaths everywhere
+except:
+
+- `src/components/Gallery/**`: this implementation, its tests, and its
+  Storybook
+- `src/components/images/Gallery/**`: the image wrapper and its tests
+- `src/view/screens/Storybook/Storybook.tsx`: the page that shows the Storybook
+
+A new configured wrapper opts in by adding its own directory to that list when
+it is introduced.
+
 ## Usage
 
 Images (sized by the frames, not the gallery):

@@ -1,7 +1,15 @@
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
-import {Gallery} from '#/components/images/Gallery'
+import {
+  Bleed,
+  useGalleryBleed as usePrimitiveGalleryBleed,
+} from '#/components/Gallery'
+import {
+  Gallery,
+  GalleryBleed,
+  useGalleryBleed,
+} from '#/components/images/Gallery'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 
 /*
@@ -208,6 +216,11 @@ function loadThumb(i: number, width: number, height: number) {
 }
 
 describe('image gallery adapter', () => {
+  it('exports the generic gallery bleed, so there is only one context', () => {
+    expect(GalleryBleed).toBe(Bleed)
+    expect(useGalleryBleed).toBe(usePrimitiveGalleryBleed)
+  })
+
   it('describes the carousel and its slides', () => {
     render(
       <Gallery
