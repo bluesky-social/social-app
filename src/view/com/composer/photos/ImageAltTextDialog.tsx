@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react'
+import {useMemo, useRef, useState} from 'react'
 import {type ImageStyle, useWindowDimensions, View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg} from '@lingui/core/macro'
@@ -31,40 +31,48 @@ export const ImageAltTextDialog = ({
   onChange,
   sourceViewTag,
 }: Props): React.ReactNode => {
-  const [altText, setAltText] = useState(image.alt)
+  /*
+   * The text being edited lives in ImageAltTextInner, not here. The sheet's
+   * portal forwards its children from an effect, so state held above it reaches
+   * the controlled input a commit late and makes typing jumpy. This only tracks
+   * the latest edit so it can be saved on close, however the dialog is closed.
+   */
+  const editedAltText = useRef<string | null>(null)
 
   return (
     <Dialog.Outer
       control={control}
       onClose={() => {
+        if (editedAltText.current === null) return
         onChange({
           ...image,
-          alt: enforceLen(altText, MAX_ALT_TEXT, true),
+          alt: enforceLen(editedAltText.current, MAX_ALT_TEXT, true),
         })
+        editedAltText.current = null
       }}
       nativeOptions={{fullHeight: true, sourceViewTag}}>
       <Dialog.Handle />
       <ImageAltTextInner
         control={control}
         image={image}
-        altText={altText}
-        setAltText={setAltText}
+        onChangeText={text => {
+          editedAltText.current = text
+        }}
       />
     </Dialog.Outer>
   )
 }
 
 const ImageAltTextInner = ({
-  altText,
-  setAltText,
+  onChangeText,
   control,
   image,
 }: {
-  altText: string
-  setAltText: (text: string) => void
+  onChangeText: (text: string) => void
   control: DialogControlProps
   image: Props['image']
 }): React.ReactNode => {
+  const [altText, setAltText] = useState(image.alt)
   const {_, i18n} = useLingui()
   const t = useTheme()
   const {width: screenWidth} = useWindowDimensions()
@@ -128,6 +136,7 @@ const ImageAltTextInner = ({
                 label={_(msg`Alt text`)}
                 onChangeText={text => {
                   setAltText(text)
+                  onChangeText(text)
                 }}
                 value={altText}
                 multiline

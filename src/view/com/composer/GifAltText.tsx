@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useRef, useState} from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -68,7 +68,14 @@ export function GifAltTextDialogLoaded({
   const control = Dialog.useDialogControl()
   const {_} = useLingui()
   const t = useTheme()
-  const [altTextDraft, setAltTextDraft] = useState(altText || vendorAltText)
+  /*
+   * The text being edited lives in AltTextInner, not here. The sheet's portal
+   * forwards its children from an effect, so state held above it reaches the
+   * controlled input a commit late and makes typing jumpy. `draft` only catches
+   * up on close, so reopening picks up where the user left off.
+   */
+  const [draft, setDraft] = useState(altText || vendorAltText)
+  const editedDraft = useRef<string | null>(null)
   return (
     <>
       <TouchableOpacity
@@ -112,14 +119,19 @@ export function GifAltTextDialogLoaded({
       <Dialog.Outer
         control={control}
         onClose={() => {
-          onSubmit(enforceLen(altTextDraft, MAX_ALT_TEXT, true))
+          const next = editedDraft.current ?? draft
+          editedDraft.current = null
+          setDraft(next)
+          onSubmit(enforceLen(next, MAX_ALT_TEXT, true))
         }}
         nativeOptions={{fullHeight: true}}>
         <Dialog.Handle />
         <AltTextInner
           vendorAltText={vendorAltText}
-          altText={altTextDraft}
-          onChange={setAltTextDraft}
+          initialAltText={draft}
+          onChange={text => {
+            editedDraft.current = text
+          }}
           thumb={thumb}
           control={control}
           params={params}
@@ -131,19 +143,20 @@ export function GifAltTextDialogLoaded({
 
 function AltTextInner({
   vendorAltText,
-  altText,
+  initialAltText,
   onChange,
   control,
   params,
   thumb,
 }: {
   vendorAltText: string
-  altText: string
+  initialAltText: string
   onChange: (text: string) => void
   control: DialogControlProps
   params: EmbedPlayerParams
   thumb: string | undefined
 }) {
+  const [altText, setAltText] = useState(initialAltText)
   const t = useTheme()
   const {_, i18n} = useLingui()
 
@@ -160,7 +173,10 @@ function AltTextInner({
                 <Dialog.Input
                   label={_(msg`Alt text`)}
                   placeholder={vendorAltText}
-                  onChangeText={onChange}
+                  onChangeText={text => {
+                    setAltText(text)
+                    onChange(text)
+                  }}
                   value={altText}
                   multiline
                   autoFocus
