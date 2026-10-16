@@ -1,0 +1,53 @@
+diff --git a/ios/ImageView.swift b/ios/ImageView.swift
+index 45c13d3..6fd8770 100644
+--- a/ios/ImageView.swift
++++ b/ios/ImageView.swift
+@@ -45,6 +45,12 @@ public final class ImageView: ExpoView {
+ 
+   var pendingOperation: SDWebImageCombinedOperation?
+ 
++  /**
++   Incremented whenever the current load is cancelled or replaced, so a downscale
++   finishing on a background queue doesn't render an image the view no longer shows.
++   */
++  private var loadGeneration = 0
++
+   var contentFit: ContentFit = .cover
+ 
+   var contentPosition: ContentPosition = .center
+@@ -284,6 +290,27 @@ public final class ImageView: ExpoView {
+         contentFit: contentFit
+       )
+       let imageIdealSize = imageLayoutSize.rounded(.up)
++
++      // Redrawing a large image at its display size takes several milliseconds,
++      // so do it off the main thread and render once it's done.
++      if allowDownscaling && !bounds.isEmpty && !image.sd_isAnimated
++        && shouldDownscale(image: image, toSize: imageIdealSize, scale: scale) {
++        sdImageView.animationTransformer = nil
++        let generation = loadGeneration
++        let layoutSize = imageLayoutSize
++        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
++          let resized = resize(image: image, toSize: imageIdealSize, scale: scale)
++          DispatchQueue.main.async {
++            guard let self, self.loadGeneration == generation else {
++              return
++            }
++            self.applyContentPosition(contentSize: layoutSize, containerSize: self.frame.size)
++            self.renderSourceImage(resized)
++          }
++        }
++        return
++      }
++
+       let image = processImage(image, idealSize: imageIdealSize, scale: scale)
+       applyContentPosition(contentSize: imageLayoutSize, containerSize: frame.size)
+       renderSourceImage(image)
+@@ -752,6 +779,7 @@ public final class ImageView: ExpoView {
+   func cancelPendingOperation() {
+     pendingOperation?.cancel()
+     pendingOperation = nil
++    loadGeneration &+= 1
+   }
+ 
+   /**
