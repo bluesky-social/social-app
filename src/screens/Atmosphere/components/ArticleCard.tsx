@@ -6,13 +6,16 @@ import {atoms as a, useTheme} from '#/alf'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type AtmosphereArticleCardData} from '../exploreData'
+import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 export function ArticleCard({
   article,
   width,
+  galleryFocus,
 }: {
   article: AtmosphereArticleCardData
   width?: number
+  galleryFocus?: ExploreGalleryFocusProps
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
@@ -31,6 +34,9 @@ export function ArticleCard({
         <Link
           to={article.href}
           label={l`Open ${article.title}`}
+          ref={galleryFocus?.focusRef}
+          tabIndex={galleryFocus?.tabIndex}
+          onFocus={galleryFocus?.onFocus}
           style={[a.flex_col, a.flex_1, a.w_full]}>
           <View style={[a.w_full, t.atoms.bg_contrast_25, {height: 96}]}>
             {article.image ? (

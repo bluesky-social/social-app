@@ -13,8 +13,15 @@ import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type AtmospherePhotoCardData} from '../exploreData'
+import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
-export function PhotoCard({photo}: {photo: AtmospherePhotoCardData}) {
+export function PhotoCard({
+  photo,
+  galleryFocus,
+}: {
+  photo: AtmospherePhotoCardData
+  galleryFocus?: ExploreGalleryFocusProps
+}) {
   const {t: l, i18n} = useLingui()
   const t = useTheme()
   const moderationOpts = useModerationOpts()
@@ -32,6 +39,9 @@ export function PhotoCard({photo}: {photo: AtmospherePhotoCardData}) {
       to={photo.href}
       label={l`Open ${photo.title}`}
       accessibilityHint=""
+      ref={galleryFocus?.focusRef}
+      tabIndex={galleryFocus?.tabIndex}
+      onFocus={galleryFocus?.onFocus}
       style={[a.w_full, a.flex_col, a.align_start, a.gap_sm]}>
       <View
         style={[

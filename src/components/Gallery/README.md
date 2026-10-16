@@ -35,6 +35,8 @@ except:
 - `src/components/Gallery/**`: this implementation, its tests, and its
   Storybook
 - `src/components/images/Gallery/**`: the image wrapper and its tests
+- `src/screens/Atmosphere/components/ExploreGallery.tsx`: the Atmosphere Explore
+  card carousel wrapper
 - `src/view/screens/Storybook/Storybook.tsx`: the page that shows the Storybook
 
 A new configured wrapper opts in by adding its own directory to that list when

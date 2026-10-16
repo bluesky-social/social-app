@@ -14,13 +14,16 @@ import {Play_Filled_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type AtmosphereLivestreamCardData} from '../exploreData'
+import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 export function LivestreamCard({
   livestream,
   width,
+  galleryFocus,
 }: {
   livestream: AtmosphereLivestreamCardData
   width?: number
+  galleryFocus?: ExploreGalleryFocusProps
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
@@ -56,6 +59,9 @@ export function LivestreamCard({
               : l`Open livestream: ${livestream.title}`
           }
           accessibilityHint=""
+          ref={galleryFocus?.focusRef}
+          tabIndex={galleryFocus?.tabIndex}
+          onFocus={galleryFocus?.onFocus}
           style={[a.flex_col, a.flex_1, a.w_full, a.align_start]}>
           <View
             style={[

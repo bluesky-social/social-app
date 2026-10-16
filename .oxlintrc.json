@@ -394,6 +394,7 @@
       "excludeFiles": [
         "src/components/Gallery/**",
         "src/components/images/Gallery/**",
+        "src/screens/Atmosphere/components/ExploreGallery.tsx",
         "src/view/screens/Storybook/Storybook.tsx"
       ],
       "rules": {

@@ -7,6 +7,7 @@ import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {AnnouncementBanner} from './components/AnnouncementBanner'
 import {AtmosphereNux} from './components/AtmosphereNux'
+import {ExploreGalleryBleed} from './components/ExploreGallery'
 import {FeaturedApps} from './components/FeaturedApps'
 import {FeaturedArticles} from './components/FeaturedArticles'
 import {FeaturedLivestreams} from './components/FeaturedLivestreams'
@@ -59,17 +60,19 @@ export function AtmosphereExploreTab() {
     <Layout.Content
       testID="atmosphereExploreTab"
       contentContainerStyle={[a.pb_xl]}>
-      <View style={[a.gap_lg, a.px_lg, a.py_lg]}>
-        {isError ? errorMessage : undefined}
-        <AtmosphereNux />
-        {announcementBanner ? (
-          <AnnouncementBanner banner={announcementBanner} />
-        ) : undefined}
-        <FeaturedArticles articles={getAtmosphereArticles(data)} />
-        <FeaturedLivestreams livestreams={getAtmosphereLivestreams(data)} />
-        <FeaturedPhotos photos={getAtmospherePhotos(data)} />
-        <FeaturedApps apps={getAtmosphereApps(data)} />
-      </View>
+      <ExploreGalleryBleed>
+        <View style={[a.gap_lg, a.px_lg, a.py_lg]}>
+          {isError ? errorMessage : undefined}
+          <AtmosphereNux />
+          {announcementBanner ? (
+            <AnnouncementBanner banner={announcementBanner} />
+          ) : undefined}
+          <FeaturedArticles articles={getAtmosphereArticles(data)} />
+          <FeaturedLivestreams livestreams={getAtmosphereLivestreams(data)} />
+          <FeaturedPhotos photos={getAtmospherePhotos(data)} />
+          <FeaturedApps apps={getAtmosphereApps(data)} />
+        </View>
+      </ExploreGalleryBleed>
     </Layout.Content>
   )
 }

@@ -1,9 +1,9 @@
-import {ScrollView, View} from 'react-native'
+import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {atoms as a, tokens} from '#/alf'
+import {atoms as a} from '#/alf'
 import {type AtmospherePhotoCardData} from '../exploreData'
+import {ExploreGallery} from './ExploreGallery'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
 import {PhotoCard} from './PhotoCard'
 
@@ -20,29 +20,16 @@ export function FeaturedPhotos({photos}: {photos: AtmospherePhotoCardData[]}) {
         title={l`Featured photos`}
         label={l`See more photos`}
       />
-      <BlockDrawerGesture>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{marginHorizontal: -tokens.space.lg}}
-          contentContainerStyle={[
-            a.flex_row,
-            a.flex_nowrap,
-            a.align_stretch,
-            a.gap_md,
-            {
-              paddingLeft: tokens.space.lg,
-              paddingRight: tokens.space.lg,
-              paddingBottom: tokens.space.md,
-            },
-          ]}>
-          {photos.map(photo => (
-            <View key={photo.id} style={{width: CARD_WIDTH}}>
-              <PhotoCard photo={photo} />
-            </View>
-          ))}
-        </ScrollView>
-      </BlockDrawerGesture>
+      <ExploreGallery
+        items={photos}
+        label={l`Featured photos`}
+        testID="atmospherePhotosGallery"
+        renderItem={(photo, galleryFocus) => (
+          <View style={{width: CARD_WIDTH}}>
+            <PhotoCard photo={photo} galleryFocus={galleryFocus} />
+          </View>
+        )}
+      />
     </View>
   )
 }

@@ -1,10 +1,10 @@
-import {ScrollView, View} from 'react-native'
+import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {atoms as a, tokens} from '#/alf'
+import {atoms as a} from '#/alf'
 import {type AtmosphereArticleCardData} from '../exploreData'
 import {ArticleCard} from './ArticleCard'
+import {ExploreGallery} from './ExploreGallery'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
 
 const CARD_WIDTH = 214
@@ -24,31 +24,18 @@ export function FeaturedArticles({
         title={l`Featured articles`}
         label={l`See more articles`}
       />
-      <BlockDrawerGesture>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{marginHorizontal: -tokens.space.lg}}
-          contentContainerStyle={[
-            a.flex_row,
-            a.flex_nowrap,
-            a.align_stretch,
-            a.gap_md,
-            {
-              paddingLeft: tokens.space.lg,
-              paddingRight: tokens.space.lg,
-              paddingBottom: tokens.space.md,
-            },
-          ]}>
-          {articles.map(article => (
-            <ArticleCard
-              key={article.id}
-              article={article}
-              width={CARD_WIDTH}
-            />
-          ))}
-        </ScrollView>
-      </BlockDrawerGesture>
+      <ExploreGallery
+        items={articles}
+        label={l`Featured articles`}
+        testID="atmosphereArticlesGallery"
+        renderItem={(item, galleryFocus) => (
+          <ArticleCard
+            article={item}
+            width={CARD_WIDTH}
+            galleryFocus={galleryFocus}
+          />
+        )}
+      />
     </View>
   )
 }

@@ -1,9 +1,9 @@
-import {ScrollView, View} from 'react-native'
+import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {atoms as a, tokens} from '#/alf'
+import {atoms as a} from '#/alf'
 import {type AtmosphereLivestreamCardData} from '../exploreData'
+import {ExploreGallery} from './ExploreGallery'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
 import {LivestreamCard} from './LivestreamCard'
 
@@ -24,31 +24,18 @@ export function FeaturedLivestreams({
         title={l`Featured livestreams`}
         label={l`See more livestreams`}
       />
-      <BlockDrawerGesture>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{marginHorizontal: -tokens.space.lg}}
-          contentContainerStyle={[
-            a.flex_row,
-            a.flex_nowrap,
-            a.align_stretch,
-            a.gap_md,
-            {
-              paddingLeft: tokens.space.lg,
-              paddingRight: tokens.space.lg,
-              paddingBottom: tokens.space.md,
-            },
-          ]}>
-          {livestreams.map(livestream => (
-            <LivestreamCard
-              key={livestream.id}
-              livestream={livestream}
-              width={CARD_WIDTH}
-            />
-          ))}
-        </ScrollView>
-      </BlockDrawerGesture>
+      <ExploreGallery
+        items={livestreams}
+        label={l`Featured livestreams`}
+        testID="atmosphereLivestreamsGallery"
+        renderItem={(item, galleryFocus) => (
+          <LivestreamCard
+            livestream={item}
+            width={CARD_WIDTH}
+            galleryFocus={galleryFocus}
+          />
+        )}
+      />
     </View>
   )
 }
