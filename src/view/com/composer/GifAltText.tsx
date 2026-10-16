@@ -1,8 +1,6 @@
-import {useState} from 'react'
+import {useRef, useState} from 'react'
 import {TouchableOpacity, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10, MAX_ALT_TEXT} from '#/lib/constants'
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
@@ -12,7 +10,7 @@ import {
 } from '#/lib/strings/embed-player'
 import {enforceLen} from '#/lib/strings/helpers'
 import {useResolveGifQuery} from '#/state/queries/resolve-link'
-import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
+import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
@@ -24,6 +22,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {GifEmbed} from '#/components/Post/Embed/ExternalEmbed/Gif'
 import {Text} from '#/components/Typography'
+import {IS_LIQUID_GLASS} from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
 
 export function GifAltTextDialog({
@@ -66,18 +65,42 @@ export function GifAltTextDialogLoaded({
   thumb: string | undefined
 }) {
   const control = Dialog.useDialogControl()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
-  const [altTextDraft, setAltTextDraft] = useState(altText || vendorAltText)
+  const initialDraft = altText || vendorAltText
+  const [altTextDraft, setAltTextDraft] = useState(initialDraft)
+  /*
+   * Mirrors `altTextDraft` so `onClose` always sees the latest draft. On web
+   * the close callback runs synchronously inside `control.close()`, before a
+   * state update made just beforehand (as Cancel does) has committed.
+   */
+  const draftRef = useRef(initialDraft)
+  /*
+   * The draft when the sheet was opened, for Cancel to restore. Not
+   * `initialDraft`: after the user clears the field and saves, that would
+   * bring the vendor description back.
+   */
+  const openedDraftRef = useRef(initialDraft)
+
+  const setDraft = (text: string) => {
+    draftRef.current = text
+    setAltTextDraft(text)
+  }
+
+  const onOpen = () => {
+    openedDraftRef.current = draftRef.current
+    control.open()
+  }
+
   return (
     <>
       <TouchableOpacity
         testID="altTextButton"
         accessibilityRole="button"
-        accessibilityLabel={_(msg`Add alt text`)}
+        accessibilityLabel={l`Add alt text`}
         accessibilityHint=""
         hitSlop={HITSLOP_10}
-        onPress={control.open}
+        onPress={onOpen}
         style={[
           a.absolute,
           {top: 8, left: 8},
@@ -112,14 +135,17 @@ export function GifAltTextDialogLoaded({
       <Dialog.Outer
         control={control}
         onClose={() => {
-          onSubmit(enforceLen(altTextDraft, MAX_ALT_TEXT, true))
+          onSubmit(enforceLen(draftRef.current, MAX_ALT_TEXT, true))
         }}
         nativeOptions={{fullHeight: true}}>
-        <Dialog.Handle />
         <AltTextInner
           vendorAltText={vendorAltText}
           altText={altTextDraft}
-          onChange={setAltTextDraft}
+          onChange={setDraft}
+          onCancel={() => {
+            setDraft(openedDraftRef.current)
+            control.close()
+          }}
           thumb={thumb}
           control={control}
           params={params}
@@ -133,6 +159,7 @@ function AltTextInner({
   vendorAltText,
   altText,
   onChange,
+  onCancel,
   control,
   params,
   thumb,
@@ -140,94 +167,129 @@ function AltTextInner({
   vendorAltText: string
   altText: string
   onChange: (text: string) => void
+  onCancel: () => void
   control: DialogControlProps
   params: EmbedPlayerParams
   thumb: string | undefined
 }) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
+
+  const cancelButton = () => (
+    <Button
+      label={l`Cancel`}
+      onPress={onCancel}
+      size="small"
+      color="primary"
+      variant="ghost"
+      style={[a.rounded_full]}
+      testID="gifAltTextCancelBtn">
+      <ButtonText style={[a.text_md]}>
+        <Trans>Cancel</Trans>
+      </ButtonText>
+    </Button>
+  )
+
+  const saveButton = () => (
+    <Button
+      label={l`Save`}
+      onPress={() => control.close()}
+      size="small"
+      color="primary"
+      variant="ghost"
+      style={[a.rounded_full]}
+      testID="gifAltTextSaveBtn">
+      <ButtonText style={[a.text_md]}>
+        <Trans>Save</Trans>
+      </ButtonText>
+    </Button>
+  )
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
-      <View style={a.flex_col_reverse}>
-        <View style={[a.mt_md, a.gap_md]}>
-          <View style={[a.gap_sm]}>
-            <View style={[a.relative]}>
+    <Dialog.ScrollableInner
+      label={l`Add alt text`}
+      style={[a.overflow_hidden]}
+      contentContainerStyle={[a.px_0, a.pt_0]}
+      header={
+        <Dialog.Header renderLeft={cancelButton} renderRight={saveButton}>
+          <Dialog.HeaderText>
+            <Trans>Add alt text</Trans>
+          </Dialog.HeaderText>
+        </Dialog.Header>
+      }>
+      <View style={[a.pt_lg, a.gap_md, IS_LIQUID_GLASS ? a.px_2xl : a.px_xl]}>
+        {/*
+         * The field comes first so it is always fully visible above the
+         * keyboard. The GIF sits below it and scrolls into view as needed.
+         */}
+        <View style={[a.gap_sm]}>
+          <View>
+            <View style={[a.flex_row, a.justify_between, a.align_center]}>
               <TextField.LabelText>
                 <Trans>Descriptive alt text</Trans>
               </TextField.LabelText>
-              <TextField.Root>
-                <Dialog.Input
-                  label={_(msg`Alt text`)}
-                  placeholder={vendorAltText}
-                  onChangeText={onChange}
-                  value={altText}
-                  multiline
-                  autoFocus
-                  scrollEnabled={false}
-                  onKeyPress={({nativeEvent}) => {
-                    if (nativeEvent.key === 'Escape') {
-                      control.close()
-                    }
-                  }}
-                />
-              </TextField.Root>
+              <CharProgress
+                /*
+                 * The inner count Text uses flexGrow, which Yoga sizes to
+                 * nothing inside an auto-width container. The composer footer
+                 * gives it a fixed width for the same reason.
+                 */
+                style={[a.mb_sm, {minWidth: 65}]}
+                textStyle={[a.text_sm, t.atoms.text_contrast_medium]}
+                size={20}
+                count={altText.length}
+                max={MAX_ALT_TEXT}
+              />
             </View>
-
-            {altText.length > MAX_ALT_TEXT && (
-              <View style={[a.pb_sm, a.flex_row, a.gap_xs]}>
-                <CircleInfo fill={t.palette.negative_500} />
-                <Text
-                  style={[
-                    a.italic,
-                    a.leading_snug,
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  <Trans>
-                    Alt text will be truncated.{' '}
-                    <Plural
-                      value={MAX_ALT_TEXT}
-                      other={`Limit: ${i18n.number(MAX_ALT_TEXT)} characters.`}
-                    />
-                  </Trans>
-                </Text>
-              </View>
-            )}
+            <TextField.Root>
+              <Dialog.Input
+                label={l`Alt text`}
+                placeholder={vendorAltText}
+                onChangeText={onChange}
+                value={altText}
+                style={{minHeight: 120}}
+                multiline
+                autoFocus
+                scrollEnabled={false}
+                onKeyPress={({nativeEvent}) => {
+                  if (nativeEvent.key === 'Escape') {
+                    control.close()
+                  }
+                }}
+              />
+            </TextField.Root>
           </View>
 
-          <AltTextCounterWrapper altText={altText}>
-            <Button
-              label={_(msg`Save`)}
-              size="large"
-              color="primary"
-              variant="solid"
-              onPress={() => {
-                control.close()
-              }}
-              style={[a.flex_grow]}>
-              <ButtonText>
-                <Trans>Save</Trans>
-              </ButtonText>
-            </Button>
-          </AltTextCounterWrapper>
+          {altText.length > MAX_ALT_TEXT && (
+            <View style={[a.flex_row, a.gap_xs]}>
+              <CircleInfo fill={t.palette.negative_500} />
+              <Text
+                style={[
+                  a.italic,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                <Trans>
+                  Alt text will be truncated.{' '}
+                  <Plural
+                    value={MAX_ALT_TEXT}
+                    other={`Limit: ${i18n.number(MAX_ALT_TEXT)} characters.`}
+                  />
+                </Trans>
+              </Text>
+            </View>
+          )}
         </View>
-        {/* below the text input to force tab order */}
-        <View>
-          <Text
-            style={[a.text_2xl, a.font_semi_bold, a.leading_tight, a.pb_sm]}>
-            <Trans>Add alt text</Trans>
-          </Text>
-          <GifEmbed
-            thumb={thumb}
-            altText={altText}
-            isPreferredAltText={true}
-            params={params}
-            hideAlt
-            minMobileAspectRatio={1}
-          />
-        </View>
+
+        <GifEmbed
+          thumb={thumb}
+          altText={altText}
+          isPreferredAltText={true}
+          params={params}
+          hideAlt
+          minMobileAspectRatio={1}
+        />
       </View>
-      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
