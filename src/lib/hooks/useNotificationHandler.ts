@@ -16,7 +16,7 @@ import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useAnalytics} from '#/analytics'
-import {IS_IOS} from '#/env'
+import {IS_ANDROID, IS_IOS} from '#/env'
 import {resetToTab} from '#/Navigation'
 import {router} from '#/routes'
 
@@ -224,7 +224,13 @@ export function useNotificationsHandler() {
           return Promise.resolve({
             shouldShowList: shouldAlert,
             shouldShowBanner: shouldAlert,
-            shouldPlaySound: false,
+            /*
+             * On Android, the chat channel's settings decide the sound. If
+             * this is false, expo silences the notification, which also stops
+             * Android showing it as a banner. But if nothing is shown, expo
+             * plays a sound by itself, so only allow it when alerting.
+             */
+            shouldPlaySound: IS_ANDROID && shouldAlert,
             shouldSetBadge: false,
           } satisfies Notifications.NotificationBehavior)
         }
