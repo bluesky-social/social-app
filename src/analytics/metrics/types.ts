@@ -1058,6 +1058,7 @@ export type Events = {
   }
   'reportDialog:close': {}
   'reportDialog:success': {
+    subjectType: string
     reason: string
     labeler: string
     details: boolean
@@ -1533,6 +1534,10 @@ export type Events = {
     supportLinkCount: number
     isOwnProfile: boolean
   }
+  /**
+   * Edit Profile was opened, from any profile header.
+   */
+  'profile:edit:open': {}
   /**
    * Edit Profile was opened with the Links section available.
    */
