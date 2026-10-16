@@ -1,18 +1,19 @@
 import {View} from 'react-native'
-import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
+import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 
-import {type RichTextCodeSegment, segmentRichTextCode} from '#/lib/code/parse'
+import {segmentRichTextCode} from '#/lib/code/parse'
 import {countLines} from '#/lib/strings/helpers'
 import {isRTLText} from '#/lib/strings/text-direction'
 import {android, atoms as a} from '#/alf'
-import {CodeBlock, InlineCodeText} from '#/components/CodeBlock'
+import {CodeBlock, InlineCode} from '#/components/CodeBlock'
 import {RichText, type RichTextProps} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 
 /**
- * Post-only code formatting. Prose keeps the existing rich-text renderer;
- * panels are siblings of text, so native text layout never contains a block.
+ * Post text with Markdown code rendered as code. Code blocks sit between
+ * paragraphs rather than inside them, since native text layout can't contain
+ * a block.
  */
 export function PostBody({
   value,
@@ -26,28 +27,28 @@ export function PostBody({
   ...richTextProps
 }: Omit<RichTextProps, 'value' | 'onTextLayout'> & {
   value: RichTextAPI
-  /** Keep plain quotes clamped while allowing short code to use panels. */
+  /**
+   * Line clamp for previews such as quotes. Short posts with code skip it, so
+   * their code still renders as panels.
+   */
   previewNumberOfLines?: number
 }) {
-  const {segments, filteredRichText} = segmentRichTextCode(value)
-  const lineLimit =
-    numberOfLines ??
+  const code = segmentRichTextCode(value)
+  const isClamped =
+    numberOfLines !== undefined ||
     (previewNumberOfLines !== undefined &&
-    (filteredRichText === value ||
       countLines(value.text) >= previewNumberOfLines)
-      ? previewNumberOfLines
-      : undefined)
 
   /*
-   * A single Text retains the existing line-clamp behavior for previews.
-   * Opening the post or expanding it reveals the formatted panels.
+   * Clamping needs a single Text, so clamped posts show code as plain text
+   * until they're opened or expanded.
    */
-  if (filteredRichText === value || lineLimit !== undefined) {
+  if (!code || isClamped) {
     return (
       <RichText
         {...richTextProps}
-        value={filteredRichText}
-        numberOfLines={lineLimit}
+        value={code?.richText ?? value}
+        numberOfLines={numberOfLines ?? previewNumberOfLines}
         style={style}
         testID={testID}
         onLayout={onLayout}
@@ -57,111 +58,76 @@ export function PostBody({
     )
   }
 
-  const children: React.ReactNode[] = []
-  let inline: RichTextCodeSegment[] = []
-  const directionStyle =
-    IS_NATIVE && isRTLText(value.text) ? {textAlign: 'right' as const} : null
-  const suffixStyles =
+  const {selectable} = richTextProps
+  const paragraphStyle = [
+    style,
+    // A caller's flex_1 would collapse paragraphs inside this column.
+    {flex: undefined},
+    IS_NATIVE && isRTLText(value.text) ? a.text_right : null,
+  ]
+  const suffixStyle =
     suffix && suffixOffset
       ? android({paddingBottom: suffixOffset, marginBottom: -suffixOffset})
       : null
+  const children: React.ReactNode[] = []
+  let paragraph: React.ReactNode[] = []
 
-  function flushInline(last = false) {
-    if (!inline.length && !(last && suffix)) return
+  function endParagraph(isLast: boolean) {
+    if (!paragraph.length && !(isLast && suffix)) return
     children.push(
       <Text
         key={children.length}
         emoji
-        selectable={richTextProps.selectable}
-        style={[style, directionStyle, {flex: undefined}, last && suffixStyles]}
+        selectable={selectable}
+        style={[paragraphStyle, isLast && suffixStyle]}
         dataSet={{wordWrap: 1}}>
-        {inline.map((segment, index) =>
-          segment.type === 'text' ? (
-            <RichText
-              {...richTextProps}
-              key={index}
-              value={segment.richText}
-              style={[style, {flex: undefined}]}
-              emojiMultiplier={1}
-            />
-          ) : (
-            <InlineCodeText
-              key={index}
-              code={segment.code}
-              displayCode={segment.displayCode}
-              textStyle={style}
-              selectable={richTextProps.selectable}
-            />
-          ),
-        )}
-        {last && suffix ? ' ' : null}
-        {last ? suffix : null}
+        {paragraph}
+        {isLast && suffix ? ' ' : null}
+        {isLast ? suffix : null}
       </Text>,
     )
-    inline = []
+    paragraph = []
   }
 
-  for (const [index, segment] of segments.entries()) {
-    if (segment.type === 'block') {
-      flushInline()
+  for (const segment of code.segments) {
+    if (segment.type === 'text') {
+      paragraph.push(
+        <RichText
+          {...richTextProps}
+          key={paragraph.length}
+          value={segment.richText}
+          style={style}
+          // Emoji-only text beside code shouldn't be enlarged.
+          emojiMultiplier={1}
+        />,
+      )
+    } else if (segment.type === 'inline') {
+      paragraph.push(
+        <InlineCode
+          key={paragraph.length}
+          code={segment.code}
+          style={style}
+          selectable={selectable}
+        />,
+      )
+    } else {
+      endParagraph(false)
       children.push(
         <CodeBlock
           key={children.length}
           code={segment.code}
-          displayCode={segment.displayCode}
           lang={segment.lang}
-          textStyle={style}
-          selectable={richTextProps.selectable}
+          style={style}
+          selectable={selectable}
         />,
       )
-    } else if (segment.type === 'text') {
-      const richText = trimBlockSpacing(
-        segment.richText,
-        segments[index - 1]?.type === 'block',
-        segments[index + 1]?.type === 'block',
-      )
-      if (richText.text) inline.push({type: 'text', richText})
-    } else {
-      inline.push(segment)
     }
   }
-  flushInline(true)
+  endParagraph(true)
 
   return (
     <View testID={testID} onLayout={onLayout} style={[a.w_full]}>
       {children}
     </View>
   )
-}
-
-/** Panel margins replace separator line endings without changing the source. */
-function trimBlockSpacing(
-  richText: RichTextAPI,
-  afterBlock: boolean,
-  beforeBlock: boolean,
-) {
-  const leading = afterBlock
-    ? (richText.text.match(/^[\r\n]+/)?.[0].length ?? 0)
-    : 0
-  const trailing = beforeBlock
-    ? (richText.text.match(/[\r\n]+$/)?.[0].length ?? 0)
-    : 0
-  if (!leading && !trailing) return richText
-  const end = Math.max(leading, richText.unicodeText.utf8.length - trailing)
-  /* UTF-16 slicing preserves a leading BOM that SDK byte decoding can remove. */
-  return new RichTextAPI({
-    text: richText.text.slice(
-      leading,
-      Math.max(leading, richText.text.length - trailing),
-    ),
-    facets: richText.facets
-      ?.filter(({index}) => index.byteStart < end && index.byteEnd > leading)
-      .map(facet => ({
-        ...facet,
-        index: {
-          byteStart: Math.max(leading, facet.index.byteStart) - leading,
-          byteEnd: Math.min(end, facet.index.byteEnd) - leading,
-        },
-      })),
-  })
 }

@@ -3,28 +3,21 @@ import {type ThemeRegistration} from '@shikijs/core'
 
 import {themes} from '#/alf/themes'
 
-export const DEFAULT_THEME_NAME = 'bluesky-dim'
+export function getCodeThemeName(name: ThemeName) {
+  return `bluesky-${name}`
+}
 
-/** Use the app's surfaces and a small set of readable semantic token colors. */
+/**
+ * Syntax colors from the app palette, on the code panel's surface. Every token
+ * color clears 4.5:1 contrast against that surface.
+ */
 function createCodeTheme(name: ThemeName) {
-  const theme = themes[name]
-  const palette = theme.palette
-  const foreground = theme.atoms.text.color
-  const background = theme.atoms.bg_contrast_25.backgroundColor
-  /** ALF's dark link shade also clears contrast on every code surface. */
-  const primary = palette.primary_600
-  const positive =
-    name === 'light' ? palette.positive_700 : palette.positive_500
-
+  const {palette, atoms, scheme} = themes[name]
   return {
-    name: `bluesky-${name}`,
-    type: theme.scheme,
-    fg: foreground,
-    bg: background,
-    colors: {
-      'editor.foreground': foreground,
-      'editor.background': background,
-    },
+    name: getCodeThemeName(name),
+    type: scheme,
+    fg: atoms.text.color,
+    bg: atoms.bg_contrast_25.backgroundColor,
     tokenColors: [
       {
         scope: [
@@ -32,24 +25,20 @@ function createCodeTheme(name: ThemeName) {
           'storage.type',
           'storage.modifier',
           'markup.heading',
-        ],
-        settings: {foreground: primary},
-      },
-      {
-        scope: [
           'entity.name.function',
           'support.function',
           'variable.function',
+          'entity.name.tag',
+          'punctuation.definition.tag',
         ],
-        settings: {foreground: primary},
-      },
-      {
-        scope: ['entity.name.tag', 'punctuation.definition.tag'],
-        settings: {foreground: primary},
+        settings: {foreground: palette.primary_600},
       },
       {
         scope: ['string', 'markup.inline.raw'],
-        settings: {foreground: positive},
+        settings: {
+          foreground:
+            name === 'light' ? palette.positive_700 : palette.positive_500,
+        },
       },
       {
         scope: ['comment', 'punctuation.definition.comment'],
@@ -63,20 +52,8 @@ function createCodeTheme(name: ThemeName) {
   } satisfies ThemeRegistration
 }
 
-const codeThemes = {
-  light: createCodeTheme('light'),
-  dim: createCodeTheme('dim'),
-  dark: createCodeTheme('dark'),
-}
-
-export const shikiThemes = Object.values(codeThemes)
-
-/** Keep normal text, syntax colors, and the panel on the same app palette. */
-export function getCodeTheme(name: ThemeName) {
-  const theme = codeThemes[name]
-  return {
-    name: theme.name,
-    backgroundColor: theme.bg,
-    color: theme.fg,
-  }
-}
+export const shikiThemes = [
+  createCodeTheme('light'),
+  createCodeTheme('dim'),
+  createCodeTheme('dark'),
+]

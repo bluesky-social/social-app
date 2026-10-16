@@ -42,10 +42,9 @@ export function isOverMaxGraphemeCount({
   }
 }
 
-/** Count physical line boundaries for post preview thresholds. */
 export function countLines(str: string | undefined): number {
   if (!str) return 0
-  return str.match(/\r\n|\r|\n/g)?.length ?? 0
+  return str.match(/\n/g)?.length ?? 0
 }
 
 /**
