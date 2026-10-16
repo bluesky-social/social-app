@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 
 import {WebAuxClickWrapper} from '#/view/com/util/WebAuxClickWrapper'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, select, useTheme} from '#/alf'
 import {useLink} from '#/components/Link'
 import {SubtleHover} from '#/components/SubtleHover'
 
@@ -29,11 +29,18 @@ export function useItemContext() {
 }
 
 /**
- * The background colour of a row, tinted while unread.
+ * The background colour of a row, tinted while unread. The dark themes use
+ * design's own tints, which aren't in the palette: `primary_25` barely shows
+ * against their backgrounds.
  */
 export function useRowBackgroundColor(isRead: boolean) {
   const t = useTheme()
-  return isRead ? t.atoms.bg.backgroundColor : t.palette.primary_25
+  if (isRead) return t.atoms.bg.backgroundColor
+  return select(t.name, {
+    light: t.palette.primary_25,
+    dim: '#071F40',
+    dark: '#202F43',
+  })
 }
 
 /**
