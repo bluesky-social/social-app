@@ -32,11 +32,7 @@ import {
 } from '#/lib/hooks/useNotificationHandler'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {useCallOnce} from '#/lib/once'
-import {
-  buildStateObject,
-  getCurrentRoute,
-  stripHomeTabBaseRoute,
-} from '#/lib/routes/helpers'
+import {buildStateObject, getCurrentRoute} from '#/lib/routes/helpers'
 import {
   type AllNavigatorParams,
   type BottomTabNavigatorParams,
@@ -829,6 +825,19 @@ const FlatNavigator = ({
  * to the navigation context.
  */
 
+/**
+ * `LINKING` has no `config`, so on its own `getActionFromState` doesn't know
+ * that Home is the HomeTab stack's initial route. For the [Home, screen] state
+ * that `getStateFromPath` builds for most links, it then resets the whole
+ * HomeTab stack, remounting Home and losing its feeds and scroll position.
+ * With this, a link opens the screen on top of the existing stack, or on top of
+ * Home if the stack hasn't mounted yet. It is defined at module scope so that
+ * `getActionFromState` can cache what it derives from it.
+ */
+const NATIVE_LINK_ACTION_CONFIG = {
+  screens: {HomeTab: {initialRouteName: 'Home'}},
+}
+
 const LINKING = {
   // TODO figure out what we are going to use
   // note: `bluesky://` is what is used in app.config.js
@@ -900,15 +909,10 @@ const LINKING = {
   },
 
   getActionFromState(state, options) {
-    /*
-     * For a URL received while the app is running, the Home route that
-     * getStateFromPath puts under the linked screen would make React
-     * Navigation replace the whole HomeTab stack, remounting Home and losing
-     * its feeds and scroll position. Without it, the linked screen is opened
-     * on top of the existing stack, the same way notification taps do.
-     */
-    const withoutHome = IS_NATIVE ? stripHomeTabBaseRoute(state) : undefined
-    return getActionFromStateDefault(withoutHome ?? state, options)
+    return getActionFromStateDefault(
+      state,
+      IS_NATIVE ? NATIVE_LINK_ACTION_CONFIG : options,
+    )
   },
 } satisfies LinkingOptions<AllNavigatorParams>
 
