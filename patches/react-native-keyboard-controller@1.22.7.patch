@@ -1,5 +1,5 @@
 diff --git a/src/components/KeyboardAvoidingView/hooks.ts b/src/components/KeyboardAvoidingView/hooks.ts
-index 64bfa65..3bcb504 100644
+index 64bfa65439..0862b6ca6b 100644
 --- a/src/components/KeyboardAvoidingView/hooks.ts
 +++ b/src/components/KeyboardAvoidingView/hooks.ts
 @@ -1,6 +1,6 @@
@@ -10,7 +10,7 @@ index 64bfa65..3bcb504 100644
  
  import { useKeyboardContext } from "../../context";
  import { useKeyboardHandler } from "../../hooks";
-@@ -14,16 +14,30 @@ export const useKeyboardAnimation = () => {
+@@ -14,16 +14,28 @@ export const useKeyboardAnimation = () => {
    const height = useSharedValue(0);
    const progress = useSharedValue(0);
    const isClosed = useSharedValue(true);
@@ -25,12 +25,9 @@ index 64bfa65..3bcb504 100644
 -    height.value = initialHeight;
 -    progress.value = initialProgress;
 -    isClosed.value = initialProgress === 0;
-+    // Shared value writes from the JS thread are queued for the UI thread, so
-+    // they can land after keyboard events that were already handled there
-+    // (e.g. when this view mounts together with an `autoFocus` input). The
-+    // stale initial state would then overwrite `isClosed`/`heightWhenOpened`
-+    // and the view would never avoid the keyboard. Read and write on the UI
-+    // thread instead, and skip it if a keyboard event got there first.
++    // writes from JS are applied on the UI thread asynchronously, so they may
++    // overwrite values set by keyboard events that arrived in between (i. e. when
++    // input has `autoFocus`) - set initial values only if no event arrived yet
 +    runOnUI(() => {
 +      "worklet";
 +
@@ -41,6 +38,7 @@ index 64bfa65..3bcb504 100644
 +      const initialHeight = -reanimated.height.value;
 +      const initialProgress = reanimated.progress.value;
 +
++      // eslint-disable-next-line react-compiler/react-compiler
 +      heightWhenOpened.value = initialHeight;
 +      height.value = initialHeight;
 +      progress.value = initialProgress;
@@ -49,15 +47,16 @@ index 64bfa65..3bcb504 100644
    }, []);
  
    useKeyboardHandler(
-@@ -31,6 +45,7 @@ export const useKeyboardAnimation = () => {
+@@ -31,6 +43,8 @@ export const useKeyboardAnimation = () => {
        onStart: (e) => {
          "worklet";
  
 +        hasReceivedEvent.value = true;
++
          if (e.height > 0) {
            isClosed.value = false;
            heightWhenOpened.value = e.height;
-@@ -39,20 +54,29 @@ export const useKeyboardAnimation = () => {
+@@ -39,20 +53,28 @@ export const useKeyboardAnimation = () => {
        onMove: (e) => {
          "worklet";
  
@@ -78,12 +77,66 @@ index 64bfa65..3bcb504 100644
 +        hasReceivedEvent.value = true;
          isClosed.value = e.height === 0;
  
-+        // Repairs `heightWhenOpened` if `onStart` fired before this handler
-+        // was registered.
-+        if (e.height > 0) {
++        // `onStart` may have been dispatched before this handler was attached
++        if (e.height > 0 && e.progress === 1) {
 +          heightWhenOpened.value = e.height;
 +        }
 +
          height.value = e.height;
          progress.value = e.progress;
        },
+@@ -67,10 +89,18 @@ export const useTranslateAnimation = () => {
+ 
+   const padding = useSharedValue(0);
+   const translate = useSharedValue(0);
++  const hasReceivedEvent = useSharedValue(false);
+ 
+   useLayoutEffect(() => {
+-    // eslint-disable-next-line react-compiler/react-compiler
+-    padding.value = reanimated.progress.value;
++    // see `useKeyboardAnimation` for an explanation
++    runOnUI(() => {
++      "worklet";
++
++      if (!hasReceivedEvent.value) {
++        // eslint-disable-next-line react-compiler/react-compiler
++        padding.value = reanimated.progress.value;
++      }
++    })();
+   }, []);
+ 
+   useKeyboardHandler(
+@@ -78,6 +108,8 @@ export const useTranslateAnimation = () => {
+       onStart: (e) => {
+         "worklet";
+ 
++        hasReceivedEvent.value = true;
++
+         if (e.height === 0) {
+           padding.value = 0;
+         }
+@@ -88,6 +120,8 @@ export const useTranslateAnimation = () => {
+       onMove: (e) => {
+         "worklet";
+ 
++        hasReceivedEvent.value = true;
++
+         if (OS !== "ios") {
+           translate.value = e.progress;
+         }
+@@ -95,6 +129,7 @@ export const useTranslateAnimation = () => {
+       onInteractive: (e) => {
+         "worklet";
+ 
++        hasReceivedEvent.value = true;
+         padding.value = 0;
+ 
+         translate.value = e.progress;
+@@ -102,6 +137,7 @@ export const useTranslateAnimation = () => {
+       onEnd: (e) => {
+         "worklet";
+ 
++        hasReceivedEvent.value = true;
+         padding.value = e.progress;
+ 
+         if (OS !== "ios") {
