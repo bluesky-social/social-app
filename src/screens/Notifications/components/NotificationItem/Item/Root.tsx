@@ -2,6 +2,7 @@ import {createContext, useContext, useState} from 'react'
 import {
   type AccessibilityActionEvent,
   type AccessibilityProps,
+  type GestureResponderEvent,
   Pressable,
   type StyleProp,
   View,
@@ -9,7 +10,7 @@ import {
 } from 'react-native'
 
 import {WebAuxClickWrapper} from '#/view/com/util/WebAuxClickWrapper'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, select, useTheme} from '#/alf'
 import {useLink} from '#/components/Link'
 import {SubtleHover} from '#/components/SubtleHover'
 
@@ -28,19 +29,33 @@ export function useItemContext() {
 }
 
 /**
+ * The background colour of a row, tinted while unread. The dark themes use
+ * design's own tints, which aren't in the palette: `primary_25` barely shows
+ * against their backgrounds.
+ */
+export function useRowBackgroundColor(isRead: boolean) {
+  const t = useTheme()
+  if (isRead) return t.atoms.bg.backgroundColor
+  return select(t.name, {
+    light: t.palette.primary_25,
+    dim: '#071F40',
+    dark: '#202F43',
+  })
+}
+
+/**
  * The background colour of the enclosing `Item.Root`, tinted while unread,
  * for parts that have to blend into it.
  */
 export function useItemBackgroundColor() {
-  const t = useTheme()
   const {isRead} = useItemContext()
-  return isRead ? t.atoms.bg.backgroundColor : t.palette.primary_25
+  return useRowBackgroundColor(isRead)
 }
 
 /**
  * A notification row: the avatar column, `Item.Content`, and an optional
  * `Item.Trailing`, laid out horizontally. Pressing anywhere outside a nested
- * control navigates to `href`.
+ * control navigates to `href`, unless `onPress` handles it instead.
  *
  * This is a plain `Pressable` rather than a `Link`, so on web the row isn't
  * an `<a>`. Rows contain names, rich text links, buttons and menus, none of
@@ -52,9 +67,12 @@ export function Root({
   label,
   hint,
   accessible = true,
+  accessibilityRole = 'link',
+  expanded,
   accessibilityActions,
   onAccessibilityAction,
   onBeforePress,
+  onPress: onPressProp,
   style,
   testID,
   children,
@@ -75,16 +93,29 @@ export function Root({
    * actions), so that screen readers can reach them individually.
    */
   accessible?: boolean
+  /**
+   * `button` for rows that do something other than follow `href` when
+   * pressed.
+   */
+  accessibilityRole?: 'link' | 'button'
+  /**
+   * Whether the row is expanded, for rows that expand.
+   */
+  expanded?: boolean
   accessibilityActions?: AccessibilityProps['accessibilityActions']
   onAccessibilityAction?: (event: AccessibilityActionEvent) => void
   onBeforePress?: () => void
+  /**
+   * Handles presses instead of following `href`, e.g. to expand the row.
+   */
+  onPress?: (event: GestureResponderEvent) => void
   style?: StyleProp<ViewStyle>
   testID?: string
   children: React.ReactNode
 }) {
-  const t = useTheme()
+  const backgroundColor = useRowBackgroundColor(isRead)
   const [hover, setHover] = useState(false)
-  const {onPress} = useLink({to: href, displayText: ''})
+  const {onPress: followLink} = useLink({to: href, displayText: ''})
 
   return (
     <ItemContext.Provider value={{isRead}}>
@@ -92,14 +123,19 @@ export function Root({
         <Pressable
           testID={testID}
           accessible={accessible}
-          accessibilityRole="link"
+          accessibilityRole={accessibilityRole}
           accessibilityLabel={label}
           accessibilityHint={hint}
+          aria-expanded={expanded}
           accessibilityActions={accessibilityActions}
           onAccessibilityAction={onAccessibilityAction}
           onPress={event => {
+            if (onPressProp) {
+              onPressProp(event)
+              return
+            }
             onBeforePress?.()
-            onPress(event)
+            followLink(event)
           }}
           onPointerEnter={() => setHover(true)}
           onPointerLeave={() => setHover(false)}
@@ -107,9 +143,14 @@ export function Root({
             a.flex_row,
             a.align_start,
             a.gap_lg,
+            /*
+             * As a button it's a `<button>` on web, which a block parent
+             * shrinks to fit its content rather than stretching
+             */
+            a.w_full,
             a.px_lg,
             a.py_md,
-            isRead ? t.atoms.bg : {backgroundColor: t.palette.primary_25},
+            {backgroundColor},
             style,
           ]}>
           <SubtleHover hover={hover} />
@@ -135,7 +176,7 @@ export function Content({
 }
 
 /**
- * Right-hand slot for a button or chevron, aligned to the top of the row.
+ * Right-hand slot for a button or images, aligned to the top of the row.
  */
 export function Trailing({
   style,

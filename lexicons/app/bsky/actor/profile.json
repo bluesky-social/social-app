@@ -7,6 +7,15 @@
       "record": {
         "type": "object",
         "properties": {
+          "links": {
+            "type": "array",
+            "items": {
+              "ref": "com.atproto.repo.strongRef",
+              "type": "ref"
+            },
+            "maxLength": 10,
+            "description": "Links shown on the profile, in display order. Each ref points to an app.bsky.actor.link record in this repo."
+          },
           "avatar": {
             "type": "blob",
             "accept": [

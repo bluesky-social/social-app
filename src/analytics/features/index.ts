@@ -142,6 +142,23 @@ export function getFeatureDescription(feature: Features, i18n: I18n) {
           }),
         ),
       }
+    case Features.ModerationInboxEnable:
+      return {
+        key: feature,
+        name: i18n._(
+          msg({
+            message: 'Moderation inbox',
+            comment: 'Name for a feature flag',
+          }),
+        ),
+        description: i18n._(
+          msg({
+            message:
+              'Track your reports, review moderation decisions, and submit appeals.',
+            comment: 'Description of a feature flag (Moderation inbox)',
+          }),
+        ),
+      }
     default:
       return null
   }
@@ -201,6 +218,19 @@ export function getTargetedFeatures(i18n: I18n) {
   }
 
   return targetedFeatures
+}
+
+/**
+ * Whether `feature` is on for the current user because they opted in to beta
+ * features, i.e. the rule GrowthBook matched for them targets the beta user
+ * attribute, as the features listed on the Beta features screen do.
+ */
+export function isOnForBetaUser(feature: Features): boolean {
+  const result = features.evalFeature(feature)
+  if (!result.on || !result.ruleId) return false
+  const rules = features.getFeatures()[feature]?.rules
+  const rule = rules?.find(({id}) => id === result.ruleId)
+  return conditionTargetsAttribute(rule?.condition, BETA_USER_ATTRIBUTE)
 }
 
 /**

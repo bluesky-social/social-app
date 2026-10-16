@@ -14,6 +14,7 @@ export const StarterPack_Stroke2_Corner0_Rounded = createSVG({
     },
   ],
   viewBox: '0 0 24 24',
+  glyph: 'StarterPack_Stroke2_Corner0_Rounded',
 })
 
 export const StarterPackMultiPathLarge = createSVG({
@@ -36,4 +37,5 @@ export const StarterPackMultiPathLarge = createSVG({
     },
   ],
   viewBox: '0 0 24 24',
+  glyph: 'StarterPackMultiPathLarge',
 })

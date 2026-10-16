@@ -4,9 +4,8 @@ import {
   type ToolsOzoneSafelinkDefs,
   type ToolsOzoneSafelinkQueryEvents,
 } from '@atproto/api'
-import {ExpiredTokenError} from '@atproto/api/dist/client/types/com/atproto/server/confirmEmail.js'
-import {MINUTE} from '@atproto/common'
 import {LRUCache} from 'lru-cache'
+import {parse as parseDomain} from 'tldts'
 
 import {type ServiceConfig} from '../config.js'
 import type Database from '../db/index.js'
@@ -16,6 +15,34 @@ import {redirectLogger} from '../logger.js'
 const SAFELINK_MIN_FETCH_INTERVAL = 1_000
 const SAFELINK_MAX_FETCH_INTERVAL = 10_000
 const SCHEME_REGEX = /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//
+
+/**
+ * The domains whose rules apply to `host`, most specific first: the host
+ * itself, then each parent domain up to its registrable domain. Uses the
+ * Public Suffix List, including private suffixes like `github.io`, so it never
+ * reaches a shared suffix: a rule on `scam.com` covers `pay.scam.com`, but
+ * nothing walks up to `co.uk` or `github.io`.
+ */
+export function domainLookupOrder(host: string): string[] {
+  const order = [host]
+  let hostname: string
+  try {
+    hostname = new URL(`https://${host}`).hostname
+  } catch {
+    return order
+  }
+  const {domain, isIp} = parseDomain(hostname, {allowPrivateDomains: true})
+  if (isIp || !domain || !hostname.endsWith(domain)) {
+    return order
+  }
+  let current = hostname
+  while (true) {
+    if (!order.includes(current)) order.push(current)
+    if (current === domain) break
+    current = current.slice(current.indexOf('.') + 1)
+  }
+  return order
+}
 
 export class SafelinkClient {
   private domainCache: LRUCache<string, SafelinkRule | 'ok'>
@@ -63,37 +90,43 @@ export class SafelinkClient {
       return 'ok'
     }
 
-    // First, check if there is an existing URL rule. Note that even if the rule is 'ok', we still
-    // want to check for a blocking domain rule, so we will only return here if the url rule exists
-    // _and_ it is not 'ok'.
-    const urlRule = this.urlCache.get(url)
-    if (urlRule && urlRule !== 'ok') {
+    const urlRule = await this.lookupRule(this.urlCache, url, 'url')
+    if (urlRule !== 'ok') {
       return urlRule
     }
 
-    // If we find a domain rule of _any_ kind, including 'ok', we can now return that rule.
-    const domainRule = this.domainCache.get(domain)
-    if (domainRule) {
-      return domainRule
-    }
-
-    try {
-      const maybeUrlRule = await this.getRule(this.db, url, 'url')
-      this.urlCache.set(url, maybeUrlRule)
-      return maybeUrlRule
-    } catch (e) {
-      this.urlCache.set(url, 'ok')
-    }
-
-    try {
-      const maybeDomainRule = await this.getRule(this.db, domain, 'domain')
-      this.domainCache.set(domain, maybeDomainRule)
-      return maybeDomainRule
-    } catch (e) {
-      this.domainCache.set(domain, 'ok')
+    // domain rules cover subdomains too, and the most specific rule wins
+    for (const candidate of domainLookupOrder(domain)) {
+      const rule = await this.lookupRule(this.domainCache, candidate, 'domain')
+      if (rule !== 'ok') {
+        return rule
+      }
     }
 
     return 'ok'
+  }
+
+  /**
+   * The rule for `key` from the cache, or from the database on a miss. A miss
+   * is cached as 'ok' so repeat lookups skip the database.
+   */
+  private async lookupRule(
+    cache: LRUCache<string, SafelinkRule | 'ok'>,
+    key: string,
+    pattern: ToolsOzoneSafelinkDefs.PatternType,
+  ): Promise<SafelinkRule | 'ok'> {
+    const cached = cache.get(key)
+    if (cached) {
+      return cached
+    }
+    let rule: SafelinkRule | 'ok'
+    try {
+      rule = await this.getRule(this.db, key, pattern)
+    } catch {
+      rule = 'ok'
+    }
+    cache.set(key, rule)
+    return rule
   }
 
   private async getRule(
@@ -269,13 +302,6 @@ export class SafelinkClient {
       if (this.stopped) {
         return
       }
-      if (err instanceof ExpiredTokenError) {
-        redirectLogger.info('ozone agent had expired session, refreshing...')
-        await this.ozoneAgent.refreshSession()
-        this.scheduleFetchEvents(SAFELINK_MIN_FETCH_INTERVAL)
-        return
-      }
-
       redirectLogger.error(
         {error: err},
         'error fetching safelink events from Ozone',
@@ -334,7 +360,7 @@ export class SafelinkClient {
   }
 
   private async getCursor() {
-    if (this.cursor === '') {
+    if (this.cursor === undefined) {
       const res = await this.db.db
         .selectFrom('safelink_cursor')
         .selectAll()
@@ -395,8 +421,6 @@ export class OzoneAgent {
   private session: CredentialSession
   private agent: AtpAgent
 
-  private refreshAt = 0
-
   constructor(pdsHost: string, identifier: string, password: string) {
     this.identifier = identifier
     this.password = password
@@ -419,22 +443,8 @@ export class OzoneAgent {
         password: this.password,
       })
       redirectLogger.info('ozone session created successfully')
-      this.refreshAt = Date.now() + 50 * MINUTE
-    }
-
-    if (Date.now() <= this.refreshAt) {
-      await this.refreshSession()
     }
 
     return this.agent
-  }
-
-  public async refreshSession() {
-    try {
-      await this.session.refreshSession()
-      this.refreshAt = Date.now() + 50 * MINUTE
-    } catch (e) {
-      redirectLogger.error({error: e}, 'error refreshing session')
-    }
   }
 }

@@ -37,6 +37,12 @@ export function useCopyForSubject(subject: ParsedReportSubject) {
           subtitle: l`Why should this feed be reviewed?`,
         }
       }
+      case 'profileLink': {
+        return {
+          title: l`Report this link`,
+          subtitle: l`Why should this link be reviewed?`,
+        }
+      }
       case 'starterPack': {
         return {
           title: l`Report this Starter Pack`,

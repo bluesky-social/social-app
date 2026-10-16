@@ -59,7 +59,7 @@ RUN pnpm intl:build 2>&1 | tee i18n.log && \
   if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compile errors!\n\n"; fi
 
 RUN SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
-    SENTRY_RELEASE=$EXPO_PUBLIC_RELEASE_VERSION \
+    SENTRY_RELEASE="xyz.blueskyweb.app@${EXPO_PUBLIC_RELEASE_VERSION:-unset}" \
     SENTRY_DIST=$EXPO_PUBLIC_BUNDLE_IDENTIFIER \
     pnpm build-web
 

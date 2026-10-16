@@ -21,6 +21,12 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {
+  PILL_LEFT,
+  PILL_RIGHT_ARROW,
+  PILL_RIGHT_TEXT,
+  PILL_VERTICAL,
+} from '#/features/profileLinks/pillSize'
 import {app, com} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
@@ -37,10 +43,7 @@ export function GermButton({
   const {currentAccount} = useSession()
   const linkWarningControl = Dialog.useDialogControl()
 
-  // exclude `none` and all unknown values
-  if (!(
-    germ.showButtonTo === 'everyone' || germ.showButtonTo === 'usersIFollow'
-  )) {
+  if (!isGermButtonVisible(germ)) {
     return null
   }
 
@@ -73,17 +76,21 @@ export function GermButton({
         label={_(msg`Open Germ DM`)}
         overridePresentation={false}
         shouldProxy={false}
-        style={[
-          t.atoms.bg_contrast_50,
-          a.rounded_full,
-          a.self_start,
-          {padding: 6},
-        ]}>
+        size="small"
+        color="secondary"
+        style={{
+          paddingVertical: PILL_VERTICAL,
+          paddingLeft: PILL_LEFT,
+          paddingRight: PILL_RIGHT_ARROW,
+        }}>
         <GermLogo size="small" />
-        <Text style={[a.text_sm, a.font_medium, a.ml_xs]}>
+        <ButtonText style={t.atoms.text}>
           <Trans>Germ DM</Trans>
-        </Text>
-        <ArrowTopRightIcon style={[t.atoms.text, a.mx_2xs]} width={14} />
+        </ButtonText>
+        <ArrowTopRightIcon
+          style={[t.atoms.text, {marginLeft: -4}]}
+          width={12}
+        />
       </Link>
       <CustomLinkWarningDialog
         control={linkWarningControl}
@@ -110,6 +117,33 @@ function GermLogo({size}: {size: 'small' | 'large'}) {
       ]}
     />
   )
+}
+
+/**
+ * Whether a Germ declaration produces a button at all. Excludes `none` and
+ * any unknown values.
+ */
+export function isGermButtonVisible(
+  germ: app.bsky.actor.defs.ProfileAssociatedGerm | undefined,
+): germ is app.bsky.actor.defs.ProfileAssociatedGerm {
+  return (
+    !!germ &&
+    (germ.showButtonTo === 'everyone' || germ.showButtonTo === 'usersIFollow')
+  )
+}
+
+/** Whether `GermButton` renders anything for this viewer. */
+export function isGermButtonShown(
+  germ: app.bsky.actor.defs.ProfileAssociatedGerm | undefined,
+  profile: bsky.profile.AnyProfileView,
+  viewerDid: string | undefined,
+): germ is app.bsky.actor.defs.ProfileAssociatedGerm {
+  if (!isGermButtonVisible(germ)) return false
+  if (viewerDid === profile.did) return true
+  if (germ.showButtonTo === 'usersIFollow' && !profile.viewer?.followedBy) {
+    return false
+  }
+  return !!constructGermUrl(germ, profile, viewerDid)
 }
 
 function GermSelfButton({did}: {did: string}) {
@@ -219,16 +253,17 @@ function GermSelfButton({did}: {did: string}) {
           ax.metric('profile:associated:germ:click-self-info', {})
           selfExplanationDialogControl.open()
         }}
-        style={[
-          t.atoms.bg_contrast_50,
-          a.rounded_full,
-          a.self_start,
-          {padding: 6, paddingRight: 10},
-        ]}>
+        size="small"
+        color="secondary"
+        style={{
+          paddingVertical: PILL_VERTICAL,
+          paddingLeft: PILL_LEFT,
+          paddingRight: PILL_RIGHT_TEXT,
+        }}>
         <GermLogo size="small" />
-        <Text style={[a.text_sm, a.font_medium, a.ml_xs]}>
+        <ButtonText style={t.atoms.text}>
           <Trans>Germ DM</Trans>
-        </Text>
+        </ButtonText>
       </Button>
 
       <Dialog.Outer

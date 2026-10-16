@@ -5,6 +5,7 @@ import {describe, expect, it} from '@jest/globals'
 import {
   createGroupedNotificationsFixture,
   UNRESOLVED_FOLLOWER_DIDS,
+  UNRESOLVED_LIKER_DIDS,
   VIEWER_DID,
 } from '#/state/queries/notifications/grouped/__fixtures__'
 import {hydratePage} from '#/state/queries/notifications/grouped/hydrate'
@@ -209,6 +210,10 @@ describe('hydratePage', () => {
       for (const actor of like.actors) {
         expect(actor).toBe(related(res, actor.did))
       }
+      expect(like.actorDids).toEqual([
+        ...like.actors.map(actor => actor.did),
+        ...UNRESOLVED_LIKER_DIDS,
+      ])
     })
 
     it('maps a single like', () => {
@@ -767,6 +772,50 @@ describe('hydratePage', () => {
         }),
       ).toBeUndefined()
     })
+
+    it('resolves the parent the group names', () => {
+      const subscribed = narrow(
+        hydrateKind({
+          $type: `${NS}#subscribedPostGroup`,
+          items: [{actor: DANIELLE, post: DANIELLE_REPLY, parent: FUNGUS_POST}],
+        }),
+        'subscribedPost',
+      )
+      const [item] = subscribed.items
+      expect(item.parent?.type).toBe('post')
+      // The original view, so shadows apply to it
+      expect(item.parent?.type === 'post' && item.parent.post).toBe(
+        related(BASE, FUNGUS_POST),
+      )
+    })
+
+    it('has no parent when the group names none, whatever the post is', () => {
+      const subscribed = narrow(
+        hydrateKind({
+          $type: `${NS}#subscribedPostGroup`,
+          items: [{actor: DANIELLE, post: DANIELLE_REPLY}],
+        }),
+        'subscribedPost',
+      )
+      expect(subscribed.items[0]).not.toHaveProperty('parent')
+    })
+
+    it('marks a named parent that can’t be shown as blocked or not found', () => {
+      const subscribed = narrow(
+        hydrateKind({
+          $type: `${NS}#subscribedPostGroup`,
+          items: [
+            {actor: DANIELLE, post: DANIELLE_REPLY, parent: BLOCKED_POST},
+            {actor: DANIELLE, post: FUNGUS_POST, parent: MISSING_POST},
+          ],
+        }),
+        'subscribedPost',
+      )
+      expect(subscribed.items.map(item => item.parent)).toEqual([
+        {type: 'blocked'},
+        {type: 'notFound'},
+      ])
+    })
   })
 
   describe('parents', () => {
@@ -839,27 +888,65 @@ describe('hydratePage', () => {
     )
   })
 
-  describe('follow actor DIDs', () => {
-    function follow(actors: DidString[]) {
-      return narrow(
-        hydrateKind({
-          $type: `${NS}#followGroup`,
-          items: actors.map(actor => ({actor})),
-        }),
-        'follow',
-      )
+  describe('actor DIDs', () => {
+    /**
+     * A group of each kind from several actors, with the given actors.
+     */
+    function groups(actors: DidString[]) {
+      const items = actors.map(actor => ({actor}))
+      return hydrateKinds(
+        {$type: `${NS}#likeGroup`, post: FUNGUS_POST, items},
+        {$type: `${NS}#repostGroup`, post: FUNGUS_POST, items},
+        {
+          $type: `${NS}#likeViaRepostGroup`,
+          post: FUNGUS_POST,
+          viaRepost: VIA_REPOST,
+          items,
+        },
+        {
+          $type: `${NS}#repostViaRepostGroup`,
+          post: FUNGUS_POST,
+          viaRepost: VIA_REPOST,
+          items,
+        },
+        {$type: `${NS}#generatorLikeGroup`, generator: FUNGI_FEED, items},
+        {$type: `${NS}#followGroup`, items},
+      ).notifications.map(notification => {
+        if (!('actorDids' in notification)) {
+          throw new Error(`Expected ${notification.type} to have actor DIDs`)
+        }
+        return notification
+      })
     }
 
+    it('covers every kind from several actors', () => {
+      expect(groups([DANIELLE]).map(n => n.type)).toEqual([
+        'like',
+        'repost',
+        'likeViaRepost',
+        'repostViaRepost',
+        'generatorLike',
+        'follow',
+      ])
+    })
+
     it('keeps unresolved DIDs, in order, alongside the resolved actors', () => {
-      const {actors, actorDids} = follow([GHOST, DANIELLE, MICHAEL])
-      expect(actors.map(actor => actor.did)).toEqual([DANIELLE, MICHAEL])
-      expect(actorDids).toEqual([GHOST, DANIELLE, MICHAEL])
+      for (const {actors, actorDids} of groups([GHOST, DANIELLE, MICHAEL])) {
+        expect(actors.map(actor => actor.did)).toEqual([DANIELLE, MICHAEL])
+        expect(actorDids).toEqual([GHOST, DANIELLE, MICHAEL])
+      }
     })
 
     it('drops duplicates and the viewer', () => {
-      expect(
-        follow([DANIELLE, VIEWER_DID, GHOST, DANIELLE, GHOST]).actorDids,
-      ).toEqual([DANIELLE, GHOST])
+      for (const {actorDids} of groups([
+        DANIELLE,
+        VIEWER_DID,
+        GHOST,
+        DANIELLE,
+        GHOST,
+      ])) {
+        expect(actorDids).toEqual([DANIELLE, GHOST])
+      }
     })
   })
 

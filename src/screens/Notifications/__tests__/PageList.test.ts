@@ -1,6 +1,10 @@
 import {describe, expect, it, jest} from '@jest/globals'
 
-import {getPlaceholderRow} from '#/screens/Notifications/components/PageList'
+import {type NotificationView} from '#/state/queries/notifications/grouped/types'
+import {
+  buildRows,
+  getPlaceholderRow,
+} from '#/screens/Notifications/components/PageList'
 
 // The placeholder helper doesn't need the native runtime or analytics setup.
 jest.mock('#/state/queries/notifications/grouped', () => ({}))
@@ -37,5 +41,39 @@ describe('getPlaceholderRow', () => {
       'error',
     )
     expect(getPlaceholderRow({isError: true, isEmpty: true}).type).toBe('error')
+  })
+})
+
+describe('buildRows', () => {
+  const today = new Date().toISOString()
+  const lastYear = new Date(
+    Date.now() - 365 * 24 * 60 * 60 * 1000,
+  ).toISOString()
+
+  // Only the fields `buildRows` reads
+  function notification(id: string, indexedAt: string) {
+    return {id, type: 'like', indexedAt} as unknown as NotificationView
+  }
+
+  function layout(notifications: NotificationView[]) {
+    return buildRows(notifications, 'all').map(row =>
+      row.type === 'section' ? row.section : row.key,
+    )
+  }
+
+  it('splits notifications into today and earlier', () => {
+    expect(
+      layout([
+        notification('a', today),
+        notification('b', today),
+        notification('c', lastYear),
+      ]),
+    ).toEqual(['today', 'a', 'b', 'earlier', 'c'])
+  })
+
+  it('leaves the headers out when nothing happened today', () => {
+    expect(
+      layout([notification('a', lastYear), notification('b', lastYear)]),
+    ).toEqual(['a', 'b'])
   })
 })

@@ -1,3 +1,4 @@
+import {type Client} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
 import {
   type InfiniteData,
@@ -7,19 +8,24 @@ import {
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
+import {getNextCursor} from '#/state/queries/notifications/grouped/cursor'
 import {
-  createFollowActorsPage,
-  type FollowActorsPage,
+  createGroupActorsPage,
   getNextActorDids,
   getUnresolvedActorDids,
+  type GroupActorsPage,
   selectLoadedActors,
-} from '#/state/queries/notifications/grouped/follow-actors'
-import {hydratePage} from '#/state/queries/notifications/grouped/hydrate'
+} from '#/state/queries/notifications/grouped/group-actors'
+import {
+  getNewestAt,
+  hydratePage,
+} from '#/state/queries/notifications/grouped/hydrate'
 import {
   moderateNotification,
   type NotificationModerationArgs,
 } from '#/state/queries/notifications/grouped/moderate'
 import {
+  type ActorGroup,
   type GroupedNotificationsFeed,
   type GroupedNotificationsPage,
   type NotificationView,
@@ -37,6 +43,7 @@ import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export type {
+  ActorGroup,
   GroupedNotificationsFeed,
   GroupedNotificationsPage,
   NotificationView,
@@ -103,6 +110,32 @@ export function getGroupedNotificationsTop(
 }
 
 /**
+ * How far a feed has got on the server, from a peek. See
+ * `peekGroupedNotifications`.
+ */
+export type GroupedNotificationsPeek = Pick<
+  LoadedGroupedNotificationsPage,
+  'requestedAt' | 'newestAt'
+>
+
+/**
+ * Asks the server for just the newest group in a feed, to tell whether the
+ * feed has anything newer than it's loaded without loading it. Read or not,
+ * since the unread check only counts what hasn't been seen.
+ */
+export async function peekGroupedNotifications(
+  client: Client,
+  feed: GroupedNotificationsFeed,
+): Promise<GroupedNotificationsPeek> {
+  const requestedAt = Date.now()
+  const res = await client.call(app.bsky.notification.getGroupedNotifications, {
+    feed,
+    limit: 1,
+  })
+  return {requestedAt, newestAt: getNewestAt(res.groups)}
+}
+
+/**
  * Pages of `app.bsky.notification.getGroupedNotifications`, hydrated against
  * each page's `relatedViews` and moderated.
  *
@@ -151,7 +184,7 @@ export function useGroupedNotificationsQuery({
       return {...hydratePage(res, {viewerDid}), requestedAt}
     },
     initialPageParam: undefined as string | undefined,
-    getNextPageParam: lastPage => lastPage.cursor,
+    getNextPageParam: (_lastPage, pages) => getNextCursor(pages),
     select(data) {
       return selectNotifications(data, {
         moderationOpts,
@@ -237,39 +270,41 @@ function selectNotification(
   return isRead === moderated.isRead ? moderated : {...moderated, isRead}
 }
 
-const followActorsQueryKeyRoot = 'follow-actors'
+const groupActorsQueryKeyRoot = 'group-actors'
 
-export const createFollowActorsQueryKey = (args: {notificationId: string}) =>
-  createQueryKey(followActorsQueryKeyRoot, args)
+export const createGroupActorsQueryKey = (args: {notificationId: string}) =>
+  createQueryKey(groupActorsQueryKeyRoot, args)
 
 /**
- * The followers in a grouped follow notification beyond the profiles it
- * resolved, loaded a page at a time with `app.bsky.actor.getProfiles` for
- * "Show more". Nothing loads until `fetchNextPage` is called, and loaded
- * pages are kept rather than refetched.
+ * The actors in a grouped notification beyond the profiles it resolved,
+ * loaded a page at a time with `app.bsky.actor.getProfiles` for "Show more".
+ * Nothing loads until `fetchNextPage` is called, and loaded pages are kept
+ * rather than refetched.
  *
  * Returns the loaded `actors` to show, moderated as the notification's own
- * actors are, and whether any followers are left to request (`hasMore`).
+ * actors are, and whether any actors are left to request (`hasMore`).
  */
-export function useFollowActorsQuery({
-  notification,
+export function useGroupActorsQuery({
+  notificationId,
+  group,
 }: {
-  notification: Extract<NotificationView, {type: 'follow'}>
+  notificationId: string
+  group: ActorGroup
 }) {
   const client = useAppviewClient()
   const moderationOpts = useModerationOpts()
-  const unresolvedDids = getUnresolvedActorDids(notification)
+  const unresolvedDids = getUnresolvedActorDids(group)
 
   const {data, isFetching, fetchNextPage} = useInfiniteQuery({
     // Even the first page waits for `fetchNextPage`
     enabled: false,
     staleTime: STALE.INFINITY,
-    queryKey: createFollowActorsQueryKey({notificationId: notification.id}),
-    async queryFn({pageParam}): Promise<FollowActorsPage> {
+    queryKey: createGroupActorsQueryKey({notificationId}),
+    async queryFn({pageParam}): Promise<GroupActorsPage> {
       const res = await client.call(app.bsky.actor.getProfiles, {
         actors: pageParam,
       })
-      return createFollowActorsPage(pageParam, res.profiles)
+      return createGroupActorsPage(pageParam, res.profiles)
     },
     initialPageParam: getNextActorDids(unresolvedDids, []),
     getNextPageParam(_lastPage, pages) {
@@ -317,6 +352,9 @@ function* postsInNotification(
     case 'subscribedPost':
       for (const item of notification.items) {
         yield item.post
+        if (item.parent?.type === 'post') {
+          yield item.parent.post
+        }
       }
       break
   }
@@ -407,11 +445,11 @@ export function* findAllProfilesInQueryData(
       }
     }
   }
-  // Followers loaded by "Show more", so their follow buttons update too
-  const followActorsDatas = queryClient.getQueriesData<
-    InfiniteData<FollowActorsPage>
-  >({queryKey: [followActorsQueryKeyRoot]})
-  for (const [_queryKey, queryData] of followActorsDatas) {
+  // Actors loaded by "Show more", so their follow buttons update too
+  const groupActorsDatas = queryClient.getQueriesData<
+    InfiniteData<GroupActorsPage>
+  >({queryKey: [groupActorsQueryKeyRoot]})
+  for (const [_queryKey, queryData] of groupActorsDatas) {
     for (const page of queryData?.pages ?? []) {
       for (const profile of page.profiles) {
         if (profile.did === did) {

@@ -8,8 +8,9 @@ import {useLingui} from '@lingui/react/macro'
 import {HITSLOP_20} from '#/lib/constants'
 import {useHomeHeaderMode} from '#/view/com/util/MainScrollProvider'
 import {atoms as a} from '#/alf'
+import * as Layout from '#/components/Layout'
 import {NewPostsPill} from '#/components/NewPostsPill'
-import {IS_LIQUID_GLASS} from '#/env'
+import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
 /**
  * Space between the bottom edge of the header and the pill.
@@ -20,10 +21,11 @@ const HEADER_GAP = 16
  * A full-width strip whose top edge sits on the header's bottom edge. It
  * clips, so the pill slides out from behind that edge, and back behind it.
  * The bottom padding keeps the pill's hit slop inside the clip. The strip
- * itself takes no touches.
+ * itself takes no touches. On web the page scrolls with the document, so
+ * the strip is fixed to the window, as the header is.
  */
 const strip = [
-  a.absolute,
+  a.fixed,
   a.overflow_hidden,
   a.z_10,
   {
@@ -36,9 +38,10 @@ const strip = [
 ]
 
 /**
- * The "Refresh" pill on a Notifications tab, beneath the header. It follows
- * the header as the title hides on scroll, coming to rest under the tab pills
- * that stay. Render it in a tab, after its list.
+ * The "Refresh" pill on a Notifications tab, beneath the header, centred on
+ * the content column. It follows the header as the title hides on scroll,
+ * coming to rest under the tab pills that stay. The web header doesn't hide,
+ * so there it stays put. Render it in a tab, after its list.
  */
 export function RefreshPill({
   visible,
@@ -67,26 +70,29 @@ export function RefreshPill({
   const follow = useAnimatedStyle(() => ({
     transform: [
       {
-        translateY:
-          headerHeight + mode.get() * (pinnedHeight - titleHeight.get()),
+        translateY: IS_WEB
+          ? headerHeight
+          : headerHeight + mode.get() * (pinnedHeight - titleHeight.get()),
       },
     ],
   }))
 
   return (
     <Animated.View pointerEvents="box-none" style={[strip, follow]}>
-      <NewPostsPill
-        testID="notificationsRefreshPill"
-        visible={visible}
-        variant="new"
-        text={l({
-          message: 'Refresh',
-          comment:
-            'Pill on the notifications list, shown when there are new notifications to load.',
-        })}
-        label={l`Load new notifications`}
-        onPress={onPress}
-      />
+      <Layout.Center pointerEvents="box-none">
+        <NewPostsPill
+          testID="notificationsRefreshPill"
+          visible={visible}
+          variant="new"
+          text={l({
+            message: 'Refresh',
+            comment:
+              'Pill on the notifications list, shown when there are new notifications to load.',
+          })}
+          label={l`Load new notifications`}
+          onPress={onPress}
+        />
+      </Layout.Center>
     </Animated.View>
   )
 }

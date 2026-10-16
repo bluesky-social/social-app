@@ -171,7 +171,7 @@ jobs:
           output: build.tar.gz
           bump-build-number: "true"
           sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          sentry-release: ${{ steps.env.outputs.release-version }}
+          sentry-release: xyz.blueskyweb.app@${{ steps.env.outputs.release-version }}
           sentry-dist: ${{ steps.env.outputs.bundle-identifier }}
 
       - name: 📂 Extract build artifact
@@ -237,7 +237,7 @@ jobs:
       # Hand the IPA and dSYM off to the submit job. Retention is deliberately short since
       # this artifact only exists to bridge the two jobs within a single run.
       - name: 🚀 Upload build artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ios-build-${{ github.run_id }}
           retention-days: 1
@@ -277,7 +277,7 @@ jobs:
           eas-version: '24.12.0'
 
       - name: ⬇️ Download build artifact
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: ios-build-${{ github.run_id }}
           path: ios-build

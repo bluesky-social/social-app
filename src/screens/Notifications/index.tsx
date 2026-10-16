@@ -5,19 +5,18 @@ import Animated, {
   Reanimated3DefaultSpringConfig,
   type SharedValue,
   useAnimatedStyle,
+  useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native'
+import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {type AnyAppReturn, onAnyAppReturn} from '#/lib/appState'
+import {HITSLOP_10} from '#/lib/constants'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
@@ -26,10 +25,13 @@ import {emitSoftReset, listenPushNotificationOpened} from '#/state/events'
 import {
   getGroupedNotificationsTop,
   type GroupedNotificationsFeed,
+  type GroupedNotificationsPeek,
   type LoadedGroupedNotificationsPage,
+  peekGroupedNotifications,
   refreshGroupedNotifications,
 } from '#/state/queries/notifications/grouped'
 import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
+import {useAppviewClient} from '#/state/session'
 import {useShellHeaderLayout} from '#/state/shell/shell-layout'
 import {
   HomeHeaderModeProvider,
@@ -39,32 +41,36 @@ import {NotificationsScreen as LegacyNotificationsScreen} from '#/view/screens/N
 import {PageList} from '#/screens/Notifications/components/PageList'
 import * as Pager from '#/screens/Notifications/components/PagerView'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
+import {createTabTaps} from '#/screens/Notifications/tabTaps'
 import {
   type FeedLoad,
   getMarkReadAt,
   nextSeenAt,
-  type SeenAtMode,
 } from '#/screens/Notifications/unread'
 import {atoms as a, useBreakpoints, useTheme, utils} from '#/alf'
+import {BetaTag} from '#/components/BetaTag'
 import {ButtonIcon} from '#/components/Button'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import {useAnalytics} from '#/analytics'
-import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {type Metrics, useAnalytics} from '#/analytics'
+import {Features, isOnForBetaUser} from '#/analytics/features'
+import {IS_INTERNAL, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
   'Notifications'
 >
 
+type RefreshReason = Metrics['notifications:refresh']['reason']
+
 export function NotificationsScreen(props: Props) {
   const ax = useAnalytics()
-  const isNewNotificationsEnabled = ax.features.enabled(
-    ax.features.NotificationsV2Enable,
-  )
+  // Dev and TestFlight builds always get it, so it's dogfooded before rollout
+  const isNewNotificationsEnabled =
+    IS_INTERNAL || ax.features.enabled(ax.features.NotificationsV2Enable)
 
   if (isNewNotificationsEnabled) {
     return <NewNotificationsScreen {...props} />
@@ -85,6 +91,7 @@ export function NewNotificationsScreen({}: Props) {
 
 function NewNotificationsScreenInner() {
   const {t: l} = useLingui()
+  const ax = useAnalytics()
   const headerMode = useHomeHeaderMode()
   const initialHeaderOffset = useHeaderOffset()
   const [headerOffset, setHeaderOffset] = useState(initialHeaderOffset)
@@ -104,25 +111,126 @@ function NewNotificationsScreenInner() {
   const activeFeed = useRef<GroupedNotificationsFeed>(tabs[0].key)
   const scrolledDownFeeds = useRef(new Set<GroupedNotificationsFeed>())
   const queryClient = useQueryClient()
-  const unreadApi = useUnreadNotificationsApi()
-  /**
-   * Asks the server for anything new in a feed that's already loaded. It
-   * refreshes the feed, unless the user is partway down it, in which case
-   * only the unread check runs, so the list doesn't move under them.
+  const client = useAppviewClient()
+  /*
+   * Tabs that were never opened have nothing loaded, and are left to load
+   * fresh when they first are.
    */
-  const checkLatest = (feed: GroupedNotificationsFeed, mode: SeenAtMode) => {
+  const isLoaded = (feed: GroupedNotificationsFeed) =>
+    !!getGroupedNotificationsTop(queryClient, feed)
+  const [peeks, setPeeks] = useState<
+    Partial<Record<GroupedNotificationsFeed, GroupedNotificationsPeek>>
+  >({})
+  const peekingFeeds = useRef(new Set<GroupedNotificationsFeed>())
+  /**
+   * Asks the server whether a loaded feed has anything newer than its first
+   * page, which offers the "Refresh" pill if so. It never moves anything, so
+   * it's how a tab the user has switched to, or is partway down, catches up.
+   */
+  const peekLatest = async (feed: GroupedNotificationsFeed) => {
+    // One on its way answers for this one too, e.g. flicking between tabs
+    if (!isLoaded(feed) || peekingFeeds.current.has(feed)) return
+    peekingFeeds.current.add(feed)
+    try {
+      const peek = await peekGroupedNotifications(client, feed)
+      setPeeks(current => ({...current, [feed]: peek}))
+    } catch {
+      // It only offers the pill, so a failed peek is left to the next one
+    } finally {
+      peekingFeeds.current.delete(feed)
+    }
+  }
+  /**
+   * Tabs brought along while out of view, which refresh in the background
+   * when they're next opened, rather than straight away, since many won't be.
+   */
+  const staleFeeds = useRef(new Set<GroupedNotificationsFeed>())
+  /**
+   * Brings the other loaded tabs along, after the tab in view (`feed`) has
+   * refreshed or been peeked. Refreshing "All" brings every other tab along,
+   * and refreshing any other tab brings "All" along. `everyTab` brings them
+   * all along, whichever tab is in view.
+   *
+   * They're marked stale, to refresh when next opened, except that with
+   * `markRead`, "All" refreshes straight away, to mark what it loads as seen,
+   * so a refresh on any tab clears the unread badge. Tabs the user is partway
+   * down are left as they are, and get the pill when they're next in view.
+   */
+  const bringAlong = (
+    feed: GroupedNotificationsFeed,
+    {everyTab, markRead}: {everyTab: boolean; markRead: boolean},
+  ) => {
+    for (const {key: other} of tabs) {
+      if (
+        other === feed ||
+        !isLoaded(other) ||
+        scrolledDownFeeds.current.has(other) ||
+        (!everyTab && feed !== 'all' && other !== 'all')
+      ) {
+        continue
+      }
+      if (other === 'all' && markRead) {
+        staleFeeds.current.delete(other)
+        void refresh(other, {isBehind: true})
+      } else {
+        staleFeeds.current.add(other)
+      }
+    }
+  }
+  /**
+   * Refreshes the tab in view, as the user asked for or came back to, and
+   * brings the others along. "All" marks what it loads as seen, so a refresh
+   * on any tab clears the unread badge, while the snapshot keeps what's new
+   * in "All" tinted until the next refresh.
+   */
+  const refreshTab = async (
+    feed: GroupedNotificationsFeed,
+    {everyTab = false}: {everyTab?: boolean} = {},
+  ) => {
+    /*
+     * One after the other: if "All" marked what it loads as seen first,
+     * `feed` would take its snapshot from after that, clearing the tint from
+     * what "All" just loaded before anyone saw it
+     */
+    staleFeeds.current.delete(feed)
+    // One that failed, or was overtaken, leaves the others to the next
+    if (await refresh(feed)) {
+      bringAlong(feed, {everyTab, markRead: true})
+    }
+  }
+  /**
+   * Brings the tab in view up to date as the user comes back to it, see
+   * `useReturnToScreen`. It refreshes, unless the user is partway down it,
+   * in which case it's only peeked, so the list doesn't move under them. A
+   * significant return to the app, or opening a push, brings every tab along.
+   */
+  const checkLatest = (
+    feed: GroupedNotificationsFeed,
+    reason: RefreshReason,
+  ) => {
+    const everyTab = reason === 'significantReturn' || reason === 'pushOpened'
     // Not loaded yet, so its first load is on the way
-    if (!getGroupedNotificationsTop(queryClient, feed)) return
-    if (scrolledDownFeeds.current.has(feed)) {
-      void unreadApi.checkUnread()
-    } else {
-      void refresh(feed, mode)
+    if (!isLoaded(feed)) {
+      if (everyTab) {
+        bringAlong(feed, {everyTab, markRead: false})
+      }
+      return
+    }
+    if (!scrolledDownFeeds.current.has(feed)) {
+      ax.metric('notifications:refresh', {tab: feed, reason})
+      void refreshTab(feed, {everyTab})
+      return
+    }
+    void peekLatest(feed)
+    if (everyTab) {
+      // Nothing new has been seen on the tab in view, so nothing is marked
+      bringAlong(feed, {everyTab, markRead: false})
     }
   }
   useReturnToScreen({
     activeFeed,
     checkLatest,
-    peekLatest: () => void unreadApi.checkUnread(),
+    peekLatest: feed => void peekLatest(feed),
   })
   /*
    * With no notifications at all, every tab is empty, so the screen drops
@@ -153,15 +261,49 @@ function NewNotificationsScreenInner() {
     }, [showHeader]),
   )
 
+  const logTabDisplayed = (
+    page: number,
+    reason: Metrics['notifications:tabDisplayed']['reason'],
+  ) => {
+    ax.metric('notifications:tabDisplayed', {
+      tab: tabs[page].key,
+      index: page,
+      reason,
+    })
+  }
+  useFocusEffect(
+    useNonReactiveCallback(() => {
+      logTabDisplayed(
+        tabs.findIndex(tab => tab.key === activeFeed.current),
+        'focus',
+      )
+    }),
+  )
+  const [tabTaps] = useState(createTabTaps)
+
   return (
     <Pager.Root
       onPageSelected={page => {
         const feed = tabs[page].key
+        const isTap = tabTaps.take(page)
         // Web reports the page it starts on, too
         if (feed === activeFeed.current) return
         activeFeed.current = feed
-        // As in v1, switching to a tab checks it for anything new
-        checkLatest(feed, 'kept')
+        logTabDisplayed(page, isTap ? 'tap' : 'swipe')
+        /*
+         * Switching tabs never clears what's tinted. A tab brought along by
+         * a refresh elsewhere catches up in the background, once. Otherwise
+         * it only peeks for anything new, which the "Refresh" pill offers,
+         * so flicking between tabs doesn't reload them
+         */
+        if (staleFeeds.current.delete(feed)) {
+          void refresh(feed, {isBehind: true}).then(didLoad => {
+            // Left stale, to try again next time
+            if (!didLoad) staleFeeds.current.add(feed)
+          })
+        } else {
+          void peekLatest(feed)
+        }
       }}
       onTabPressed={showHeader}
       onPageScrollStateChanged={state => {
@@ -189,6 +331,8 @@ function NewNotificationsScreenInner() {
                   // Re-pressing the current tab scrolls it to the top
                   if (page === selectedPage) {
                     emitSoftReset()
+                  } else {
+                    tabTaps.tap(page)
                   }
                   selectPage(page)
                 }}
@@ -211,7 +355,8 @@ function NewNotificationsScreenInner() {
             titleHeight={titleHeight}
             seenAt={seenAt}
             onFirstLoad={onFirstLoad}
-            refresh={refresh}
+            refresh={feed => refreshTab(feed)}
+            peek={peeks[tab.key]}
             onLoadingLatestChange={isLoading => {
               setLoadingLatestPages(pages => {
                 const next = new Set(pages)
@@ -246,10 +391,11 @@ function NewNotificationsScreenInner() {
  * update it.
  *
  * Each feed's first load takes the snapshot from the server if there isn't
- * one yet. From then on, the feed's loads come from `refresh`, which updates
- * the snapshot according to its `SeenAtMode`. Only fresh loads count: a page
- * cached from before the screen mounted, or a refresh that failed, never
- * moves the snapshot or marks anything as seen.
+ * one yet. From then on, the feed's loads come from `refresh`, which takes
+ * the snapshot from the server when the user asked for it, clearing what was
+ * tinted before. Only fresh loads count: a page cached from before the
+ * screen mounted, or a refresh that failed, never moves the snapshot or marks
+ * anything as seen.
  */
 function useSessionSeenAt() {
   const queryClient = useQueryClient()
@@ -262,13 +408,13 @@ function useSessionSeenAt() {
    */
   const handledFeeds = useRef(new Set<GroupedNotificationsFeed>())
   /**
-   * The latest refresh of each feed, so that one overtaken by another leaves
-   * the load to it.
+   * The refresh of each feed that's on its way, so that one overtaken by
+   * another leaves the load to it.
    */
   const latestRefreshes = useRef(new Map<GroupedNotificationsFeed, object>())
 
-  const applyLoad = (load: FeedLoad, mode: SeenAtMode | undefined) => {
-    setSeenAt(snapshot => nextSeenAt({load, mode, snapshot}))
+  const applyLoad = (load: FeedLoad, isRefresh: boolean) => {
+    setSeenAt(snapshot => nextSeenAt({load, isRefresh, snapshot}))
     const markReadAt = getMarkReadAt(load)
     if (markReadAt) {
       void unreadApi.markAllRead({seenAt: markReadAt})
@@ -281,28 +427,39 @@ function useSessionSeenAt() {
   ) => {
     if (handledFeeds.current.has(feed) || page.requestedAt < mountedAt) return
     handledFeeds.current.add(feed)
-    applyLoad({feed, ...page}, undefined)
+    applyLoad({feed, ...page}, false)
   }
 
   /**
-   * Refetches the first page of a feed, then updates the snapshot from it.
-   * Refreshing any other feed refreshes "All" behind it, so what's new is
-   * marked as seen.
+   * Refetches the first page of a feed. A refresh the user asked for takes
+   * the snapshot from it, clearing what was tinted before. One in the
+   * background (`isBehind`) leaves the snapshot alone, so what it loads is
+   * tinted like the rest. Either way, a load of "All" marks what it shows as
+   * seen. Resolves with whether it loaded the feed, rather than failing or
+   * leaving it to another refresh.
    */
-  const refresh = async (feed: GroupedNotificationsFeed, mode?: SeenAtMode) => {
+  const refresh = async (
+    feed: GroupedNotificationsFeed,
+    {isBehind = false}: {isBehind?: boolean} = {},
+  ): Promise<boolean> => {
+    /*
+     * One already on its way loads the feed anyway. Overtaking it would
+     * cancel its refetch, and if the user asked for it, keep it from taking
+     * the snapshot
+     */
+    if (isBehind && latestRefreshes.current.has(feed)) return false
     handledFeeds.current.add(feed)
     const request = {}
     latestRefreshes.current.set(feed, request)
     const startedAt = Date.now()
     await refreshGroupedNotifications(queryClient, feed)
-    if (latestRefreshes.current.get(feed) !== request) return
+    if (latestRefreshes.current.get(feed) !== request) return false
+    latestRefreshes.current.delete(feed)
     const page = getGroupedNotificationsTop(queryClient, feed)
     // A failed refetch leaves the old page in place
-    if (!page || page.requestedAt < startedAt) return
-    applyLoad({feed, ...page}, mode)
-    if (feed !== 'all') {
-      void refresh('all')
-    }
+    if (!page || page.requestedAt < startedAt) return false
+    applyLoad({feed, ...page}, !isBehind)
+    return true
   }
 
   return {seenAt, onFirstLoad, refresh}
@@ -316,10 +473,9 @@ function useSessionSeenAt() {
  * share sheet, only peeks with `peekLatest`, so the list stays as it is and
  * the "Refresh" pill offers anything new.
  *
- * - From a screen pushed within the Notifications tab (e.g. a post), the
- *   unread tint is kept as it was, and anything new is tinted too.
- * - After switching to another tab or leaving the app, the tint is taken
- *   from the server again, so only what arrived meanwhile is tinted.
+ * As in v1, coming back from a screen pushed within the Notifications tab
+ * (e.g. a post) refreshes too, unless the user is partway down the list. So
+ * what was tinted before is cleared, having been seen.
  */
 function useReturnToScreen({
   activeFeed,
@@ -327,54 +483,40 @@ function useReturnToScreen({
   peekLatest,
 }: {
   activeFeed: React.RefObject<GroupedNotificationsFeed>
-  checkLatest: (feed: GroupedNotificationsFeed, mode: SeenAtMode) => void
+  checkLatest: (feed: GroupedNotificationsFeed, reason: RefreshReason) => void
   /**
-   * Asks the server for anything new without loading it, which offers the
-   * "Refresh" pill if there is.
+   * Asks the server for anything new in a feed without loading it, which
+   * offers the "Refresh" pill if there is.
    */
-  peekLatest: () => void
+  peekLatest: (feed: GroupedNotificationsFeed) => void
 }) {
-  const navigation = useNavigation()
   const isFocused = useIsFocused()
 
-  /*
-   * The tab navigator's own blur means the user switched tabs, rather than
-   * pushing a screen within this tab's stack. Web's flat navigator has no tab
-   * level, so there only leaving the app counts.
-   */
-  const hasLeft = useRef(false)
-  useEffect(() => {
-    return navigation.getParent()?.addListener('blur', () => {
-      hasLeft.current = true
-    })
-  }, [navigation])
-
-  const onReturn = useEffectEvent(() => {
-    const mode = hasLeft.current ? 'server' : 'kept'
-    hasLeft.current = false
-    checkLatest(activeFeed.current, mode)
+  const onReturn = useEffectEvent((reason: RefreshReason) => {
+    checkLatest(activeFeed.current, reason)
   })
 
   // Mounting counts, as the cache can outlive the screen
   const wasFocused = useRef(false)
   useEffect(() => {
     if (isFocused && !wasFocused.current) {
-      onReturn()
+      onReturn('focus')
     }
     wasFocused.current = isFocused
   }, [isFocused])
 
-  const onLeftApp = useEffectEvent(() => {
-    hasLeft.current = true
-    if (isFocused) {
-      onReturn()
-    }
-  })
+  const onLeftApp = useEffectEvent(
+    (reason: 'significantReturn' | 'pushOpened') => {
+      if (isFocused) {
+        onReturn(reason)
+      }
+    },
+  )
   const onAppReturn = useEffectEvent((appReturn: AnyAppReturn) => {
     if (appReturn.isSignificant) {
-      onLeftApp()
+      onLeftApp('significantReturn')
     } else if (isFocused) {
-      peekLatest()
+      peekLatest(activeFeed.current)
     }
   })
   useEffect(() => {
@@ -383,7 +525,9 @@ function useReturnToScreen({
      * Opening a push leaves the app too, even when it never went to the
      * background, e.g. from Notification Center on iOS.
      */
-    const unlistenPush = listenPushNotificationOpened(() => onLeftApp())
+    const unlistenPush = listenPushNotificationOpened(() =>
+      onLeftApp('pushOpened'),
+    )
     return () => {
       returns.remove()
       unlistenPush()
@@ -444,21 +588,51 @@ function NotificationsHeader({
     }
   })
 
+  const height = useSharedValue(0)
+  const [pillsHeight, setPillsHeight] = useState(0)
+  /*
+   * Shrinks the fade from the top as the pills move up, so that it always
+   * ends where they do. Scaling, rather than moving it, keeps its opaque top
+   * behind the status bar and the pills
+   */
+  const fadeStyle = useAnimatedStyle(() => {
+    const fullHeight = height.get()
+    if (fullHeight === 0) return {}
+    const shownHeight =
+      fullHeight - headerMode.get() * (titleHeight.get() - headerPinnedHeight)
+    return {transform: [{scaleY: shownHeight / fullHeight}]}
+  })
+
   return (
     <View
       pointerEvents="box-none"
       style={[a.fixed, a.z_10, a.top_0, a.left_0, a.right_0]}
-      onLayout={event => onHeightChange(event.nativeEvent.layout.height)}>
-      {/* On web, the title and the pills each have their own background */}
-      {IS_LIQUID_GLASS ? (
-        <HeaderFade />
-      ) : (
-        !IS_WEB && (
-          <View
-            pointerEvents="none"
-            style={[a.absolute, a.inset_0, t.atoms.bg]}
+      onLayout={event => {
+        height.set(event.nativeEvent.layout.height)
+        onHeightChange(event.nativeEvent.layout.height)
+      }}>
+      {/*
+       * On native, the background fades out under the header, down to the
+       * bottom of the pills as they move up. On web, the title and the pills
+       * each have their own background
+       */}
+      {!IS_WEB && (
+        <Animated.View
+          pointerEvents="none"
+          style={[a.absolute, a.inset_0, {transformOrigin: 'top'}, fadeStyle]}>
+          <HeaderFade
+            /*
+             * With the title hidden, the strong part reaches the middle of
+             * the pills, below the status bar if there is one
+             */
+            midpoint={
+              pillsHeight > 0
+                ? (headerPinnedHeight + pillsHeight / 2) /
+                  (headerPinnedHeight + pillsHeight)
+                : undefined
+            }
           />
-        )
+        </Animated.View>
       )}
       <Animated.View
         style={[IS_LIQUID_GLASS && {paddingTop: insets.top}, titleStyle]}
@@ -472,9 +646,26 @@ function NotificationsHeader({
         <Layout.Header.Outer noBottomBorder sticky={false}>
           <Layout.Header.MenuButton />
           <Layout.Header.Content>
-            <Layout.Header.TitleText>
-              <Trans>Notifications</Trans>
-            </Layout.Header.TitleText>
+            <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+              <Layout.Header.TitleText>
+                <Trans>Notifications</Trans>
+              </Layout.Header.TitleText>
+              {
+                /*
+                 * Only for those who have it because they opted in to beta
+                 * features, not internal builds or a wider rollout
+                 */
+                isOnForBetaUser(Features.NotificationsV2Enable) && (
+                  <Link
+                    to={{screen: 'BetaFeaturesSettings'}}
+                    label={l`Beta features`}
+                    accessibilityHint={l`Opens your beta features settings`}
+                    hitSlop={HITSLOP_10}>
+                    <BetaTag />
+                  </Link>
+                )
+              }
+            </View>
           </Layout.Header.Content>
           <Layout.Header.Slot>
             <Link
@@ -484,7 +675,8 @@ function NotificationsHeader({
               variant="ghost"
               color="secondary"
               shape="round"
-              style={[a.justify_center]}>
+              // Ghost buttons fill with the screen colour, which shows on the see-through header
+              style={[a.justify_center, a.bg_transparent]}>
               <ButtonIcon
                 icon={
                   loadingLatestPages.has(selectedPage) ? Loader : SettingsIcon
@@ -495,7 +687,9 @@ function NotificationsHeader({
           </Layout.Header.Slot>
         </Layout.Header.Outer>
       </Animated.View>
-      <Animated.View style={pillsStyle}>
+      <Animated.View
+        style={pillsStyle}
+        onLayout={event => setPillsHeight(event.nativeEvent.layout.height)}>
         {IS_WEB && <HeaderFade />}
         <Layout.Center>{children}</Layout.Center>
       </Animated.View>
@@ -520,7 +714,15 @@ function NotificationsHeader({
  * The header's background fading out to the bottom, so content scrolling
  * under it shows through.
  */
-function HeaderFade() {
+function HeaderFade({
+  midpoint = 0.5,
+}: {
+  /**
+   * How far down the fade is still strong, at 0.9 opacity, as a fraction of
+   * its height. It fades out completely below that.
+   */
+  midpoint?: number
+}) {
   const t = useTheme()
   return (
     <LinearGradient
@@ -531,9 +733,10 @@ function HeaderFade() {
       end={[0.5, 1]}
       colors={[
         t.atoms.bg.backgroundColor,
-        utils.alpha(t.atoms.bg.backgroundColor, 0.8),
+        utils.alpha(t.atoms.bg.backgroundColor, 0.9),
         utils.alpha(t.atoms.bg.backgroundColor, 0),
       ]}
+      locations={[0, midpoint, 1]}
     />
   )
 }
