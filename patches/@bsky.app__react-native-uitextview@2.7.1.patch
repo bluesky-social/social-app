@@ -1,0 +1,140 @@
+diff --git a/ios/RNUITextView.mm b/ios/RNUITextView.mm
+index 7dabee7a6713aa56d19b6cde4357e748a2ec2b64..d7cf2216206d1ca6ebde9be2f7e0bed93d4cbf18 100644
+--- a/ios/RNUITextView.mm
++++ b/ios/RNUITextView.mm
+@@ -687,7 +687,10 @@ - (void)handlePressGesture:(RNUITextViewPressGestureRecognizer *)sender
+     _activePressHasLongPressHandler = sender.hasLongPressHandler;
+     _longPressIsEligible = _activePressHasLongPressHandler;
+     _activePressSuppressesHighlighting = suppressHighlighting;
+-    _activePressRect = [self textRectForHighlightGroup:group];
++    // A press owned by the root Text stays alive anywhere inside the view.
++    _activePressRect = [group hasSuffix:@"r"]
++        ? _textView.bounds
++        : [self textRectForHighlightGroup:group];
+     _activePressRetentionOffset = pressRetentionOffset;
+     _pressActivationTime = CACurrentMediaTime();
+ 
+@@ -770,10 +773,10 @@ - (CGPoint)getLocationOfPress:(UIGestureRecognizer*)sender
+ 
+   const auto lastCharacterRange =
+       [_textView.attributedText.string rangeOfComposedCharacterSequenceAtIndex:textLength - 1];
+-  if ((characterIndex == 0 && fraction <= 0) ||
+-      (characterIndex >= lastCharacterRange.location && fraction >= 1)) {
+-    return nullptr;
+-  }
++  // The tap missed the text when it is before the first character, after the
++  // last one, or outside the glyphs of the nearest character's line.
++  auto missedGlyphs = (characterIndex == 0 && fraction <= 0) ||
++      (characterIndex >= lastCharacterRange.location && fraction >= 1);
+ 
+   const auto glyphIndex = [_textView.layoutManager glyphIndexForCharacterAtIndex:characterIndex];
+   const auto lineUsedRect = [_textView.layoutManager lineFragmentUsedRectForGlyphAtIndex:glyphIndex
+@@ -781,16 +784,28 @@ - (CGPoint)getLocationOfPress:(UIGestureRecognizer*)sender
+   const auto textContainerLocation = CGPointMake(
+       location.x - _textView.textContainerInset.left,
+       location.y - _textView.textContainerInset.top);
+-  if (!CGRectContainsPoint(lineUsedRect, textContainerLocation)) {
+-    return nullptr;
+-  }
++  missedGlyphs = missedGlyphs || !CGRectContainsPoint(lineUsedRect, textContainerLocation);
+ 
+   NSData *eventEmitterWrapper =
+       (NSData *)[_textView.attributedText attribute:RCTAttributedStringEventEmitterKey
+                                            atIndex:characterIndex
+                                     effectiveRange:nullptr];
+-  const auto eventEmitter = RCTUnwrapEventEmitter(eventEmitterWrapper);
+-  return std::dynamic_pointer_cast<const RNUITextViewChildEventEmitter>(eventEmitter);
++  const auto eventEmitter = std::dynamic_pointer_cast<const RNUITextViewChildEventEmitter>(
++      RCTUnwrapEventEmitter(eventEmitterWrapper));
++  if (missedGlyphs) {
++    // Links only respond on their glyphs. A handler set on the root Text
++    // itself (group id ends with 'r', see press.ts) owns the whole frame,
++    // like RN's Text, so blank space around its text still presses it.
++    const auto group = [self highlightGroupForEventEmitter:eventEmitter
++                                      suppressHighlighting:nullptr
++                                           hasPressHandler:nullptr
++                                       hasLongPressHandler:nullptr
++                                      pressRetentionOffset:nullptr];
++    if (![group hasSuffix:@"r"]) {
++      return nullptr;
++    }
++  }
++  return eventEmitter;
+ }
+ 
+ // MARK: - UITextViewDelegate
+diff --git a/lib/commonjs/Text.js b/lib/commonjs/Text.js
+index 5c57eed3d539fa0913a04ca1cd1379d9e3c210ec..f6e0daa17f659247c52fd4dd89ac7c97373269d3 100644
+--- a/lib/commonjs/Text.js
++++ b/lib/commonjs/Text.js
+@@ -54,7 +54,7 @@ function UITextViewChild({
+     pressRetentionOffset: ancestorPressRetentionOffset,
+     onPress: ancestorOnPress,
+     onLongPress: ancestorOnLongPress
+-  });
++  }, !isAncestor);
+   // The native event currently contains only `target`, while TextProps types
+   // these callbacks as full gesture events. Preserve the existing public type
+   // and adapt it only at the private Codegen boundary.
+diff --git a/lib/commonjs/press.js b/lib/commonjs/press.js
+index 418953f25904287fe6db81bf164f2f9d5a3fa60f..82a7632631276c35c6e2923ab1c141e76245e9e6 100644
+--- a/lib/commonjs/press.js
++++ b/lib/commonjs/press.js
+@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
+   value: true
+ });
+ exports.resolvePressContext = resolvePressContext;
+-function resolvePressContext(ownHighlightGroup, props, ancestor) {
++function resolvePressContext(ownHighlightGroup, props, ancestor, isRoot = false) {
+   const isPressable = props.onPress != null || props.onLongPress != null;
+   if (!isPressable) {
+     return ancestor;
+@@ -13,7 +13,7 @@ function resolvePressContext(ownHighlightGroup, props, ancestor) {
+     // Keep handler capabilities in the identifier that native already uses to
+     // group highlighted fragments. This avoids a separate prop/state channel
+     // getting out of sync with the group and its event emitter.
+-    highlightGroup: `${ownHighlightGroup}|${props.onPress ? 'p' : ''}${props.onLongPress ? 'l' : ''}`,
++    highlightGroup: `${ownHighlightGroup}|${props.onPress ? 'p' : ''}${props.onLongPress ? 'l' : ''}${isRoot ? 'r' : ''}`,
+     suppressHighlighting: props.suppressHighlighting === true,
+     pressRetentionOffset: props.pressRetentionOffset,
+     onPress: props.onPress,
+diff --git a/src/Text.tsx b/src/Text.tsx
+index 05b03b6b6e2a1347f4d443190b7bac19473951b6..b700fcc7ea3a6106fc004d8143f23a8456da1a03 100644
+--- a/src/Text.tsx
++++ b/src/Text.tsx
+@@ -70,7 +70,7 @@ function UITextViewChild({style, children, ...rest}: UITextViewProps) {
+     pressRetentionOffset: ancestorPressRetentionOffset,
+     onPress: ancestorOnPress,
+     onLongPress: ancestorOnLongPress,
+-  })
++  }, !isAncestor)
+   // The native event currently contains only `target`, while TextProps types
+   // these callbacks as full gesture events. Preserve the existing public type
+   // and adapt it only at the private Codegen boundary.
+diff --git a/src/press.ts b/src/press.ts
+index 57b79af4c5e842b550b2604d51cba79102032a98..2bc00ba15b01f79606bd4b82273cf6ba3f4bf134 100644
+--- a/src/press.ts
++++ b/src/press.ts
+@@ -15,6 +15,7 @@ export function resolvePressContext(
+     'onPress' | 'onLongPress' | 'pressRetentionOffset' | 'suppressHighlighting'
+   >,
+   ancestor: PressContext,
++  isRoot = false,
+ ): PressContext {
+   const isPressable = props.onPress != null || props.onLongPress != null
+   if (!isPressable) {
+@@ -24,10 +25,12 @@ export function resolvePressContext(
+   return {
+     // Keep handler capabilities in the identifier that native already uses to
+     // group highlighted fragments. This avoids a separate prop/state channel
+-    // getting out of sync with the group and its event emitter.
++    // getting out of sync with the group and its event emitter. A trailing
++    // 'r' marks a handler set on the root Text itself: native lets it own the
++    // whole frame, like RN's Text, while links stay glyph-only.
+     highlightGroup: `${ownHighlightGroup}|${props.onPress ? 'p' : ''}${
+       props.onLongPress ? 'l' : ''
+-    }`,
++    }${isRoot ? 'r' : ''}`,
+     suppressHighlighting: props.suppressHighlighting === true,
+     pressRetentionOffset: props.pressRetentionOffset,
+     onPress: props.onPress,
