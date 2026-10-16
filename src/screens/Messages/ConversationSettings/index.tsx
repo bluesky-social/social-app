@@ -338,12 +338,6 @@ function SettingsHeader({
   const convoId = convo.view.id
 
   const groupName = convo.details.name
-  const [newGroupName, setNewGroupName] = useState(groupName)
-
-  const openEditNamePrompt = () => {
-    setNewGroupName(groupName)
-    editNamePrompt.open()
-  }
 
   const lockStatus = convo.details.lockStatus
 
@@ -366,7 +360,6 @@ function SettingsHeader({
         Toast.show(l({message: 'Group chat name updated', context: 'toast'}))
       },
       onError: e => {
-        setNewGroupName(groupName)
         logger.error('Failed to edit group chat name', {message: e})
         Toast.show(l`Failed to edit group chat name`, {type: 'error'})
       },
@@ -483,7 +476,7 @@ function SettingsHeader({
             accessibilityRole="button"
             accessibilityHint={l`Edit this group chat’s name`}
             hitSlop={HITSLOP_10}
-            onPress={openEditNamePrompt}>
+            onPress={editNamePrompt.open}>
             {groupNameComponent}
           </Pressable>
         ) : (
@@ -533,7 +526,7 @@ function SettingsHeader({
               icon={EditIcon}
               label={l`Edit this group chat’s name`}
               text={l`Edit name`}
-              onPress={openEditNamePrompt}
+              onPress={editNamePrompt.open}
             />
           ) : null}
           {isJoinLinkEnabled ? (
@@ -588,9 +581,8 @@ function SettingsHeader({
       </View>
       <EditNamePrompt
         control={editNamePrompt}
-        value={newGroupName}
-        onChangeText={setNewGroupName}
-        onConfirm={() => editGroupName({name: newGroupName})}
+        initialValue={groupName}
+        onConfirm={name => editGroupName({name})}
       />
       {convo.primaryMember && (
         <InviteLinkDialog
