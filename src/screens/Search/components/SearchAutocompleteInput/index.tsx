@@ -3,6 +3,7 @@ import {type TextInput, View} from 'react-native'
 import {useSift} from '@bsky.app/sift'
 
 import {mergeRefs} from '#/lib/merge-refs'
+import {getActorAutocompleteState} from '#/screens/Search/actorAutocomplete'
 import {atoms as a} from '#/alf'
 import {
   Autocomplete,
@@ -21,6 +22,7 @@ import {type SearchAutocompleteInputProps} from './shared'
 export function SearchAutocompleteInput({
   fixedParams,
   onSelectProfile,
+  onSelectSearchOperator,
   onSelectSearch,
   value = '',
   onFocus,
@@ -45,15 +47,31 @@ export function SearchAutocompleteInput({
   })
 
   const active = focused && !dismissed
+  const autocompleteState = getActorAutocompleteState(value)
+  const operatorContext = autocompleteState.context
 
-  const {items} = useAutocomplete({
+  const {items: autocompleteItems} = useAutocomplete({
     type: 'profile',
     // The dropdown only shows while active, so don't fetch otherwise. This
     // avoids a typeahead request on mount when arriving with text already
     // present (e.g. /search?q=foo).
-    query: active ? value : '',
-    showSearchFallback: true,
+    query: active ? autocompleteState.query : '',
+    showSearchFallback: !autocompleteState.showFullSearchFallback,
   })
+  /*
+   * `useAutocomplete` keeps the preceding query's results while the next query
+   * resolves. Do not let those stale profiles survive when an operator has no
+   * actor fragment (or has already been completed).
+   */
+  const actorItems = autocompleteState.query ? autocompleteItems : []
+  /*
+   * The actor lookup only receives the handle fragment, but the search row
+   * must still submit the full expression rather than searching for that
+   * fragment by itself.
+   */
+  const items: AutocompleteItem[] = autocompleteState.showFullSearchFallback
+    ? [{key: `search-${value}`, type: 'search', value}, ...actorItems]
+    : actorItems
 
   const showDropdown =
     active && !fixedParams && value.length > 0 && items.length > 0
@@ -61,7 +79,14 @@ export function SearchAutocompleteInput({
   function onSelect(item: AutocompleteItem) {
     if (item.type === 'profile') {
       const position = items.filter(i => i.type === 'profile').indexOf(item)
-      onSelectProfile?.(item.profile, position)
+      if (operatorContext) {
+        onSelectSearchOperator(item.profile, position)
+        setDismissed(true)
+        inputRef.current?.focus()
+        return
+      } else {
+        onSelectProfile?.(item.profile, position)
+      }
     } else if (item.type === 'search') {
       onSelectSearch?.(item.value)
     }
