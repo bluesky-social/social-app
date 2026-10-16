@@ -348,7 +348,11 @@ export function PageList({
           }}
           ListFooterComponent={
             isFetchingNextPage ? (
-              <View style={[a.pt_xl]}>
+              <View
+                style={[
+                  a.pt_xl,
+                  web([a.border_t, t.atoms.border_contrast_low]),
+                ]}>
                 <ActivityIndicator />
               </View>
             ) : undefined
@@ -491,12 +495,14 @@ function SectionHeader({section}: {section: 'today' | 'earlier'}) {
         section === 'today'
           ? a.py_sm
           : [
-              a.mt_md,
+              native(a.mt_md),
               a.border_t,
               a.pt_md,
               a.pb_sm,
               t.atoms.border_contrast_low,
             ],
+        // Rows are divided on web, so the header is too
+        web([a.border_b, t.atoms.border_contrast_low]),
       ]}>
       <Text accessibilityRole="header" style={[a.text_md, a.font_bold]}>
         {section === 'today'
