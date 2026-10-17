@@ -9,6 +9,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
 import {List, type ListRef} from '#/view/com/util/List'
 import {findListNativeTag} from '#/view/com/util/listNativeTag'
@@ -20,7 +21,7 @@ import {Loader} from '#/components/Loader'
 import {LabelerLabelPreference} from '#/components/moderation/LabelPreference'
 import {Text} from '#/components/Typography'
 import {IS_IOS, IS_NATIVE} from '#/env'
-import {type app} from '#/lexicons'
+import {type app, type com} from '#/lexicons'
 import {ErrorState} from '../ErrorState'
 import {type SectionRef} from './types'
 
@@ -48,6 +49,7 @@ export function ProfileLabelsSection({
   setScrollViewTag,
 }: LabelsSectionProps) {
   const t = useTheme()
+  const initialNumToRender = useInitialNumToRender()
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
@@ -75,7 +77,13 @@ export function ProfileLabelsSection({
     if (isLabelerLoading || !labelerInfo || labelerError) return []
     const customDefs = interpretLabelValueDefinitions(labelerInfo)
     return labelerInfo.policies.labelValues
-      .filter((val, i, arr) => arr.indexOf(val) === i) // dedupe
+      .filter(
+        (
+          val: com.atproto.label.defs.LabelValue,
+          i: number,
+          arr: com.atproto.label.defs.LabelValue[],
+        ) => arr.indexOf(val) === i,
+      ) // dedupe
       .map(val => lookupLabelValueDefinition(val, customDefs))
       .filter(
         def => def && def?.configurable,
@@ -143,6 +151,9 @@ export function ProfileLabelsSection({
             style={a.border_transparent}
           />
         }
+        initialNumToRender={initialNumToRender}
+        windowSize={11}
+        maxToRenderPerBatch={10}
       />
     </View>
   )
