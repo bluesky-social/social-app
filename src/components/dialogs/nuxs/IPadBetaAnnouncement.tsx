@@ -43,7 +43,8 @@ export function IPadBetaAnnouncement() {
           {paddingTop: 0, paddingLeft: 0, paddingRight: 0},
         ]}>
         <IPadBetaHero />
-        <View style={[a.align_center, a.gap_2xl, a.px_xl, a.pt_xl, a.pb_sm]}>
+        {/* Matches ScrollableInner's bottom padding, so the edges are even */}
+        <View style={[a.align_center, a.gap_2xl, a.px_2xl, a.pt_xl]}>
           <View style={[a.align_center, a.gap_sm]}>
             <View style={[a.flex_row, a.align_center, a.gap_xs]}>
               <BeakerIcon fill={t.palette.primary_700} size="sm" />
