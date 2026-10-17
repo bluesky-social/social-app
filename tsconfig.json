@@ -1,5 +1,5 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json",
+  "extends": "@react-native/typescript-config",
   "compilerOptions": {
     "jsx": "react-jsx",
     "module": "esnext",
@@ -10,11 +10,15 @@
       "#/*": ["./src/*"],
       "crypto": ["./src/platform/crypto.ts"],
       /*
-       * expo-file-system 57 ships an `exports` map without `./build/*`, which
-       * blocks the deep type imports in src/platform/misc.web-check.d.ts
-       * under `moduleResolution: "bundler"`. Type-check-only escape hatch.
+       * expo-file-system (since 57) and expo-image-manipulator (since 58) ship
+       * an `exports` map without `./build/*`, which blocks the deep type
+       * imports in src/platform/misc.web-check.d.ts under
+       * `moduleResolution: "bundler"`. Type-check-only escape hatch.
        */
       "expo-file-system/build/*": ["./node_modules/expo-file-system/build/*"],
+      "expo-image-manipulator/build/*": [
+        "./node_modules/expo-image-manipulator/build/*"
+      ],
     },
     "plugins": [
       {
@@ -23,7 +27,12 @@
         "moveDownPatterns": ["react-native-reanimated/lib"],
       }
     ],
-    "customConditions": ["react-native-strict-api"]
+    /*
+     * The base config sets `["react-native"]`, which resolves some packages
+     * (e.g. react-native-view-shot) to TS sources that don't typecheck
+     * against React Native 0.88.
+     */
+    "customConditions": []
   },
   "exclude": ["bskyweb", "bskyembed", "web-build", "dist"]
 }

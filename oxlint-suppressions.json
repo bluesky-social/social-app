@@ -46,17 +46,6 @@
       "count": 2
     }
   },
-  "modules/expo-bluesky-swiss-army/src/SharedPrefs/index.native.ts": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    },
-    "typescript/no-unsafe-call": {
-      "count": 9
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 9
-    }
-  },
   "modules/expo-bluesky-swiss-army/src/VisibilityView/index.native.tsx": {
     "typescript/no-unsafe-call": {
       "count": 1
