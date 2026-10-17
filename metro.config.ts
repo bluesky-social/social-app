@@ -1,5 +1,5 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
-import {getBundleModeMetroConfig} from 'react-native-worklets/bundleMode/index.js'
+import {getBundleModeMetroConfig} from 'react-native-worklets/bundleMode'
 import {type CustomResolver} from '@expo/metro/metro-resolver'
 import {getDefaultConfig} from '@expo/metro-config'
 import {getSentryExpoConfig} from '@sentry/react-native/metro.js'
@@ -60,6 +60,19 @@ let config = getSentryExpoConfig(import.meta.dirname, {
           moduleName.replace('-prod', '-profiling'),
           platform,
         )
+      }
+      /*
+       * Sentry's withSentryFeedbackResolver checks `originModulePath.includes('@sentry/browser')`,
+       * which fails on Windows (backslashes) and pnpm (`@sentry+browser`).
+       * When includeWebFeedback is false, stub out feedbackSync/feedbackAsync to prevent
+       * TypeError: buildFeedbackIntegration is not a function at startup.
+       */
+      if (
+        platform === 'web' &&
+        /[\\/]@sentry[\\/+]browser/.test(context.originModulePath) &&
+        /\/feedback(Sync|Async)/.test(moduleName)
+      ) {
+        return {type: 'empty'}
       }
       return context.resolveRequest(context, moduleName, platform)
     }
