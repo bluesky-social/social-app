@@ -23,6 +23,7 @@ class SheetViewController: UIViewController,
   private let popoverWidth: CGFloat
   private let preferredCornerRadius: CGFloat?
   private var containerBackgroundColor: UIColor?
+  private var userInterfaceStyle: UIUserInterfaceStyle
   private let contentDetentIdentifier = UISheetPresentationController.Detent.Identifier("content")
   private var contentHeight: CGFloat = 0
   private var preventExpansion = false
@@ -40,13 +41,17 @@ class SheetViewController: UIViewController,
     popoverMode: BottomSheetPopoverMode,
     popoverWidth: CGFloat,
     preferredCornerRadius: CGFloat?,
-    containerBackgroundColor: UIColor?
+    containerBackgroundColor: UIColor?,
+    userInterfaceStyle: UIUserInterfaceStyle
   ) {
     self.popoverMode = popoverMode
     self.popoverWidth = popoverWidth
     self.preferredCornerRadius = preferredCornerRadius
     self.containerBackgroundColor = containerBackgroundColor
+    self.userInterfaceStyle = userInterfaceStyle
     super.init(nibName: nil, bundle: nil)
+
+    self.overrideUserInterfaceStyle = userInterfaceStyle
 
     self.modalPresentationStyle = popoverMode == .never ? .formSheet : .popover
     self.isModalInPresentation = false
@@ -72,8 +77,35 @@ class SheetViewController: UIViewController,
     self.view.isOpaque = (self.containerBackgroundColor?.cgColor.alpha ?? 0) >= 1
   }
 
+  func setUserInterfaceStyle(_ style: UIUserInterfaceStyle) {
+    self.userInterfaceStyle = style
+    self.applyUserInterfaceStyle()
+  }
+
+  /*
+   * The app draws its own theme, so it can be light while the system is dark.
+   * The popover's glass and the sheet chrome are drawn in the presentation's
+   * container view, outside this controller's view, so override that too. It
+   * only exists once the presentation starts, hence the lifecycle calls.
+   */
+  private func applyUserInterfaceStyle() {
+    if self.overrideUserInterfaceStyle != self.userInterfaceStyle {
+      self.overrideUserInterfaceStyle = self.userInterfaceStyle
+    }
+    if let containerView = self.presentationController?.containerView,
+       containerView.overrideUserInterfaceStyle != self.userInterfaceStyle {
+      containerView.overrideUserInterfaceStyle = self.userInterfaceStyle
+    }
+  }
+
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    self.applyUserInterfaceStyle()
+  }
+
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
+    self.applyUserInterfaceStyle()
     self.updateContentHostConstraints()
     /*
      * Popover bounds can include arrow safe-area insets. Report the content host

@@ -46,6 +46,12 @@ export interface BottomSheetViewProps {
   preventExpansion?: boolean
   backgroundColor?: ColorValue
   containerBackgroundColor?: ColorValue
+  /**
+   * The app's colour scheme, which can differ from the system appearance. iOS
+   * applies it to the native chrome, such as the popover's glass. Ignored on
+   * Android.
+   */
+  colorScheme?: 'light' | 'dark'
   disableDrag?: boolean
   sourceViewTag?: number
   /**
