@@ -8,12 +8,14 @@ const {withPodfile, CodeGenerator} = require('expo/config-plugins')
  * (Yoga.podspec, RN's CocoaPods scripts and Expo all leave
  * GCC_OPTIMIZATION_LEVEL alone), so Release falls back to Xcode's -Os.
  * Android already builds the same code with -O2 + thin LTO
- * (ReactCommon/yoga/CMakeLists.txt), and Yoga benchmarks 1.5-1.8x slower at
- * -Os.
+ * (ReactCommon/yoga/CMakeLists.txt). On replayed app trees Yoga runs ~1.3x
+ * faster at -O2 than at -Os (~1.4x with LTO); in the app the end-to-end
+ * effect is smaller, since much of the time inside layout is text
+ * measurement and React Native callbacks.
  *
  * BSKY_IOS_CPP_OPT, read at prebuild time, picks the pods:
- * - none (default): leave everything at -Os
- * - yoga: only the Yoga pod
+ * - yoga (default): only the Yoga pod (+~11 KB binary)
+ * - none: leave everything at -Os
  * - all: Yoga plus the C++ pods built from React Native's source (Fabric,
  *   renderer, JSI, cxxreact, ...) and their C++ dependencies (Folly, fmt,
  *   glog, double-conversion). Hermes ships as a prebuilt binary and is not
@@ -77,7 +79,7 @@ const ALL_TARGETS = [
 ]
 
 module.exports = function withIosCppOptimization(config) {
-  const mode = process.env.BSKY_IOS_CPP_OPT || 'none'
+  const mode = process.env.BSKY_IOS_CPP_OPT || 'yoga'
   if (!MODES.includes(mode)) {
     throw new Error(
       `BSKY_IOS_CPP_OPT must be one of ${MODES.join(', ')}, got "${mode}"`,
