@@ -78,7 +78,7 @@ export function BetaFeaturesSettingsScreen({}: Props) {
             }),
             description: l({
               message:
-                'Bluesky adapts to your iPad’s screen in any orientation or window size. This is always on while it’s in beta.',
+                'Bluesky adapts to your iPad’s screen in any orientation or window size.',
               comment: 'Description of a beta feature (iPad support)',
             }),
           },
