@@ -118,6 +118,7 @@ interface BottomSheetViewProps {
   sourceViewTag?: number            // Anchor for popovers, or iOS 26+ zoom transition origin
   popover?: 'always' | 'adaptive' | 'never' // iOS presentation policy (default 'never')
   popoverWidth?: number             // Preferred popover width in points (default 320)
+  colorScheme?: 'light' | 'dark'    // App colour scheme for the native chrome
   
   // Events
   onAttemptDismiss?: (event: BottomSheetAttemptDismissEvent) => void
@@ -244,6 +245,7 @@ BottomSheetNativeComponent.dismissAll()
 - **sourceViewTag**: iOS popover anchor and iOS 26+ zoom transition source (ignored on Android)
 - **popover** and **popoverWidth**: iOS only (ignored on Android). `'never'` (the default) uses a sheet; `'adaptive'` uses a popover in regular width and a form sheet in compact width; `'always'` keeps the anchored popover even on iPhone or compact iPad windows. `Menu.Outer` defaults to `popover="adaptive"` and can opt into either alternative; `Dialog.Outer` configures the policy through `nativeOptions.popover`.
 - **containerBackgroundColor**: iOS native presentation-view fill; defaults to `backgroundColor`. Android continues to paint the React content background as before.
+- **colorScheme**: iOS only (ignored on Android). Overrides the user interface style of the presented controller and of the presentation's container view, so the popover's glass and the sheet chrome follow the app's theme rather than the system appearance. `Dialog.Outer` passes the current theme's scheme.
 
 ## Files Reference
 

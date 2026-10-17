@@ -39,6 +39,17 @@ public class BottomSheetModule: Module {
         view.containerBackgroundColor = prop
       }
 
+      Prop("colorScheme") { (view: SheetView, prop: String?) in
+        switch prop {
+        case "light":
+          view.userInterfaceStyle = .light
+        case "dark":
+          view.userInterfaceStyle = .dark
+        default:
+          view.userInterfaceStyle = .unspecified
+        }
+      }
+
       Prop("minHeight") { (view: SheetView, prop: Double) in
         view.minHeight = CGFloat(prop)
       }

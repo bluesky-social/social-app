@@ -37,6 +37,11 @@ class SheetView: ExpoView {
       self.sheetVc?.setContainerBackgroundColor(containerBackgroundColor)
     }
   }
+  var userInterfaceStyle: UIUserInterfaceStyle = .unspecified {
+    didSet {
+      self.sheetVc?.setUserInterfaceStyle(userInterfaceStyle)
+    }
+  }
   var popover: BottomSheetPopoverMode = .never
   var popoverWidth: CGFloat = 320
   var cornerRadius: CGFloat?
@@ -207,7 +212,8 @@ class SheetView: ExpoView {
       popoverMode: self.popover,
       popoverWidth: self.popoverWidth,
       preferredCornerRadius: self.cornerRadius,
-      containerBackgroundColor: self.containerBackgroundColor
+      containerBackgroundColor: self.containerBackgroundColor,
+      userInterfaceStyle: self.userInterfaceStyle
     )
     let clampedContentHeight = self.clampHeight(
       self.desiredContentHeight ?? contentHeight

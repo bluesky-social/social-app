@@ -275,6 +275,7 @@ export function Outer({
       // device-bezel radius when undefined
       cornerRadius={IS_LIQUID_GLASS ? undefined : 20}
       backgroundColor={t.atoms.bg.backgroundColor}
+      colorScheme={t.scheme}
       {...nativeOptions}
       sourceViewTag={sourceViewTag ?? nativeOptions?.sourceViewTag}
       onSnapPointChange={onSnapPointChange}
