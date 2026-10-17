@@ -351,6 +351,7 @@ module.exports = function (_config) {
         './plugins/withAndroidPreparedTextLayoutPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
+        './plugins/withProfileableAndroid.js',
         [
           'expo-font',
           {
