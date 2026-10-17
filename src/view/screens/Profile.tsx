@@ -204,7 +204,7 @@ function ProfileScreenLoaded({
 
   useSetTitle(combinedDisplayName(profile))
 
-  const description = profile.description ?? ''
+  const description = (profile.description ?? '').trim()
   const hasDescription = description !== ''
   const [descriptionRT, isResolvingDescriptionRT] = useRichText(description)
   const showPlaceholder = isPlaceholderProfile || isResolvingDescriptionRT
