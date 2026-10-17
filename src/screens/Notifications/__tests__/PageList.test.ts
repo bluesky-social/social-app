@@ -7,6 +7,7 @@ import {
 } from '#/screens/Notifications/components/PageList'
 
 // The placeholder helper doesn't need the native runtime or analytics setup.
+jest.mock('#/lib/hooks/useBottomBarOffset', () => ({}))
 jest.mock('#/state/queries/notifications/grouped', () => ({}))
 jest.mock('#/state/queries/notifications/unread', () => ({}))
 jest.mock('#/view/com/util/List', () => ({}))
