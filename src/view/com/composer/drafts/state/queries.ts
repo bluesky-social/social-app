@@ -1,9 +1,11 @@
+import {lexEquals, lexToJson} from '@atproto/lex'
 import {
   useInfiniteQuery,
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {until} from '#/lib/async/until'
 import {isNetworkError} from '#/lib/strings/errors'
 import {matchXrpcError} from '#/lib/xrpc-error'
 import {useAppviewClient, useChatClient} from '#/state/session'
@@ -135,6 +137,7 @@ export function useSaveDraftMutation() {
       existingDraftId?: string
     }): Promise<{
       draftId: string
+      draft: app.bsky.draft.defs.Draft
       localRefPaths: Map<string, string>
       originalLocalRefs: Set<string> | undefined
     }> => {
@@ -176,11 +179,12 @@ export function useSaveDraftMutation() {
       // Return data needed for onSuccess
       return {
         draftId,
+        draft,
         localRefPaths,
         originalLocalRefs: composerState.originalLocalRefs,
       }
     },
-    onSuccess: async ({draftId, localRefPaths, originalLocalRefs}) => {
+    onSuccess: async ({draftId, draft, localRefPaths, originalLocalRefs}) => {
       // 2. LOCAL STORAGE ONLY AFTER NETWORK SUCCEEDS
       logger.debug('network save succeeded, processing local storage', {
         draftId,
@@ -208,6 +212,31 @@ export function useSaveDraftMutation() {
             await storage.deleteMediaFromLocal(oldRef)
           }
         }
+      }
+
+      /*
+       * Saves are acknowledged before the drafts index catches up. For edits,
+       * finding the ID alone can still return the previous contents. Normalize
+       * optional fields the same way as the JSON sent to the server.
+       */
+      const expectedDraft = lexToJson(draft)
+      const didObserveSave = await until(
+        5,
+        1e3,
+        data =>
+          data?.drafts.some(
+            view =>
+              view.id === draftId &&
+              lexEquals(lexToJson(view.draft), expectedDraft),
+          ) ?? false,
+        () => client.call(app.bsky.draft.getDrafts, {limit: 100}),
+      )
+      if (!didObserveSave) {
+        /*
+         * The write already succeeded. Failing the mutation here would invite
+         * retrying a create and saving a duplicate draft.
+         */
+        logger.warn('Saved draft not yet visible in drafts list', {draftId})
       }
 
       await queryClient.invalidateQueries({queryKey: DRAFTS_QUERY_KEY})
