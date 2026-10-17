@@ -9,7 +9,9 @@ describe('until', () => {
       .fn<() => Promise<string>>()
       .mockRejectedValueOnce(error)
       .mockResolvedValue('ready')
-    const cond = jest.fn((value: string | undefined) => value === 'ready')
+    const cond = jest.fn(
+      (value: string | undefined, _err: unknown) => value === 'ready',
+    )
 
     await expect(until(2, 0, cond, fn)).resolves.toBe(true)
     expect(fn).toHaveBeenCalledTimes(2)
