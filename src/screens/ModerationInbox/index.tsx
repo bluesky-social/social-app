@@ -195,7 +195,7 @@ function YourReports() {
             style={[a.text_md, t.atoms.text]}
             {...createStaticClick(() => {
               ax.metric('moderation:inbox:markAllAsRead', {tab: 'reports'})
-              markSeen.mutate(['reports'])
+              markSeen.mutate({sections: ['reports']})
             })}>
             <Trans>Mark all as read</Trans>
           </SimpleInlineLinkText>
@@ -327,14 +327,19 @@ function YourAccount() {
               style={[a.text_md, t.atoms.text]}
               {...createStaticClick(() => {
                 ax.metric('moderation:inbox:markAllAsRead', {tab: 'account'})
-                markSeen.mutate(['subjects', 'accountStatus'])
+                markSeen.mutate({sections: ['subjects', 'accountStatus']})
               })}>
               <Trans>Mark all as read</Trans>
             </SimpleInlineLinkText>
           ) : undefined}
         </View>
       ) : undefined}
-      {accountStanding ? <AccountStatus status={accountStanding} /> : undefined}
+      {accountStanding && accountStatusQuery.data ? (
+        <AccountStatus
+          status={accountStanding}
+          updatedAt={accountStatusQuery.data.updatedAt}
+        />
+      ) : undefined}
     </Layout.Center>
   )
 
