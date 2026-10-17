@@ -81,6 +81,9 @@ function mockSection(name: string, prop: string) {
 jest.mock('#/screens/Atmosphere/components/FeaturedArticles', () => ({
   FeaturedArticles: mockSection('articles', 'articles'),
 }))
+jest.mock('#/screens/Atmosphere/components/FeaturedPublications', () => ({
+  FeaturedPublications: mockSection('publications', 'publications'),
+}))
 jest.mock('#/screens/Atmosphere/components/FeaturedApps', () => ({
   FeaturedApps: mockSection('apps', 'apps'),
 }))
@@ -208,6 +211,33 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.getByText(/^banner:/)).toBeTruthy()
   })
 
+  it('renders publications from the response, even when articles are empty', () => {
+    setQuery({
+      data: {
+        ...exploreResponseFixture,
+        articles: {items: []},
+        photos: {items: []},
+        apps: [],
+      },
+    })
+    render(<AtmosphereExploreTab />)
+
+    expect(
+      screen.getByText(
+        `publications:${exploreResponseFixture.publications.items[0].view.title}`,
+      ),
+    ).toBeTruthy()
+    expect(screen.queryByText(/^articles:/)).toBeNull()
+  })
+
+  it('renders a publication-only response and hides empty publications', () => {
+    setQuery({data: {...exploreResponseFixture, publications: {items: []}}})
+    render(<AtmosphereExploreTab />)
+
+    expect(screen.queryByText(/^publications:/)).toBeNull()
+    expect(screen.getByText(/^articles:/)).toBeTruthy()
+  })
+
   it('renders the NUX only for an empty response without a banner', () => {
     setQuery({
       data: {
@@ -223,7 +253,7 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.getByText('nux')).toBeTruthy()
     expect(screen.queryByText(/^banner:/)).toBeNull()
     expect(
-      screen.queryByText(/^(articles|apps|photos|livestreams):/),
+      screen.queryByText(/^(articles|publications|apps|photos|livestreams):/),
     ).toBeNull()
   })
 

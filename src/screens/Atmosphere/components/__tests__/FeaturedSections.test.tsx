@@ -5,11 +5,13 @@ import {
   type AtmosphereArticleCardData,
   type AtmosphereLivestreamCardData,
   type AtmospherePhotoCardData,
+  type AtmospherePublicationCardData,
 } from '#/screens/Atmosphere/data/exploreData'
 import {type ExploreGalleryFocusProps} from '../ExploreGallery'
 import {FeaturedArticles} from '../FeaturedArticles'
 import {FeaturedLivestreams} from '../FeaturedLivestreams'
 import {FeaturedPhotos} from '../FeaturedPhotos'
+import {FeaturedPublications} from '../FeaturedPublications'
 
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({_: (value: {message: string}) => value.message}),
@@ -77,6 +79,9 @@ jest.mock('../ArticleCard', () => ({
 jest.mock('../LivestreamCard', () => ({
   LivestreamCard: mockCard('livestream', 'livestream'),
 }))
+jest.mock('../PublicationCard', () => ({
+  PublicationCard: mockCard('publication', 'publication'),
+}))
 jest.mock('../PhotoCard', () => ({PhotoCard: mockCard('photo', 'photo')}))
 
 const articles = [
@@ -91,6 +96,11 @@ const photos = [
   {id: 'p1', title: 'First photo'},
   {id: 'p2', title: 'Second photo'},
 ] as AtmospherePhotoCardData[]
+
+const publications = [
+  {id: 'u1', title: 'First publication'},
+  {id: 'u2', title: 'Second publication'},
+] as AtmospherePublicationCardData[]
 
 function slides() {
   return screen.UNSAFE_root.findAll(
@@ -206,5 +216,34 @@ describe('FeaturedPhotos', () => {
 
     expect(screen.queryByText('Featured photos')).toBeNull()
     expect(screen.queryByTestId('atmospherePhotosGallery')).toBeNull()
+  })
+})
+
+describe('FeaturedPublications', () => {
+  it('renders the header and one slide per publication in a labelled gallery', () => {
+    render(<FeaturedPublications publications={publications} />)
+
+    expect(screen.getByText('Featured publications')).toBeTruthy()
+    expect(screen.getByTestId('atmospherePublicationsGallery')).toBeTruthy()
+    expect(slides().map(slide => slide.props['aria-label'])).toEqual([
+      'First publication',
+      'Second publication',
+    ])
+    expect(width('publication-u1')).toBe(320)
+    expect(width('publication-u2')).toBe(320)
+  })
+
+  it('wires the gallery focus target to each card', () => {
+    render(<FeaturedPublications publications={publications} />)
+
+    expect(screen.getByTestId('publication-u1').props.tabIndex).toBe(0)
+    expect(screen.getByTestId('publication-u2').props.tabIndex).toBe(-1)
+  })
+
+  it('renders nothing, including the header, without publications', () => {
+    render(<FeaturedPublications publications={[]} />)
+
+    expect(screen.queryByText('Featured publications')).toBeNull()
+    expect(screen.queryByTestId('atmospherePublicationsGallery')).toBeNull()
   })
 })

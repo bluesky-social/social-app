@@ -7,6 +7,7 @@ import {
   getAtmosphereArticles,
   getAtmosphereLivestreams,
   getAtmospherePhotos,
+  getAtmospherePublications,
 } from '#/screens/Atmosphere/data/exploreData'
 import {app} from '#/lexicons'
 
@@ -209,6 +210,127 @@ describe('Atmosphere Explore response fixtures', () => {
       overlayColor: '#000000',
       textColor: '#ffffff',
       href: 'https://example.com/announcement',
+    })
+  })
+
+  describe('getAtmospherePublications', () => {
+    const publicationView = fixtureData.publications.items[0].view
+    const withPublications = (
+      items: {featured: boolean; view: typeof publicationView}[],
+    ) => parseData({...emptyData, publications: {items, recIdStr: '1'}})
+
+    it('returns nothing for an empty list', () => {
+      expect(getAtmospherePublications(emptyData)).toEqual([])
+    })
+
+    it('maps every publication in response order, regardless of featured', () => {
+      const data = withPublications([
+        {featured: false, view: {...publicationView, uri: 'https://a.test/'}},
+        {featured: true, view: {...publicationView, uri: 'https://b.test/'}},
+        {featured: false, view: {...publicationView, uri: 'https://c.test/'}},
+      ])
+
+      expect(getAtmospherePublications(data).map(p => p.id)).toEqual([
+        'https://a.test/',
+        'https://b.test/',
+        'https://c.test/',
+      ])
+    })
+
+    it('builds the legacy view the shared card renders', () => {
+      const [card] = getAtmospherePublications(fixtureData)
+
+      expect(card).toMatchObject({
+        id: publicationView.uri,
+        title: publicationView.title,
+        view: {
+          uri: publicationView.uri,
+          title: publicationView.title,
+          description: publicationView.description,
+          associatedProfiles: publicationView.associatedProfiles,
+          source: {
+            uri: publicationView.uri,
+            title: publicationView.title,
+            icon: publicationView.logo,
+            theme: {
+              backgroundRGB: {r: 255, g: 255, b: 255},
+              foregroundRGB: {r: 0, g: 0, b: 0},
+              accentRGB: {r: 0x12, g: 0x34, b: 0x56},
+              accentForegroundRGB: {r: 255, g: 255, b: 255},
+            },
+          },
+        },
+      })
+    })
+
+    it('copies associated metadata and does not mutate the response', () => {
+      /* Built without parsing: only the shape of the refs matters here. */
+      const data: AtmosphereData = {
+        ...emptyData,
+        publications: {
+          recIdStr: '1',
+          items: [
+            {
+              featured: true,
+              view: {
+                ...publicationView,
+                associatedRefs: [
+                  {
+                    uri: 'at://did:plc:6ayddqghxhciedbaofoxkcbs/site.standard.publication/1',
+                    cid: 'bafyreiaxduxpwdpjgvve3klfs4flkwjwfqiurszw4o6jvjarpqqmeqwiza',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      }
+      const before = JSON.stringify(data)
+      const [card] = getAtmospherePublications(data)
+
+      expect(card.view.associatedRefs).toEqual(
+        data.publications.items[0].view.associatedRefs,
+      )
+      expect(JSON.stringify(data)).toBe(before)
+      expect(data.publications.recIdStr).toBe('1')
+    })
+
+    it.each([
+      {
+        name: 'partial',
+        theme: {accent: '#fff'},
+        expected: {accentRGB: {r: 255, g: 255, b: 255}},
+      },
+      {
+        name: 'invalid',
+        theme: {accent: 'red', background: '#12'},
+        expected: {},
+      },
+    ])('converts $name theme colors', ({theme, expected}) => {
+      const data = withPublications([
+        {featured: true, view: {...publicationView, theme}},
+      ])
+      const source = getAtmospherePublications(data)[0].view.source
+
+      expect(source?.theme).toMatchObject(expected)
+      for (const key of [
+        'backgroundRGB',
+        'foregroundRGB',
+        'accentRGB',
+        'accentForegroundRGB',
+      ] as const) {
+        if (!(key in expected)) expect(source?.theme?.[key]).toBeUndefined()
+      }
+    })
+
+    it('keeps publications without a logo, theme, or profiles', () => {
+      const {logo, theme, subscribers, ...bare} = publicationView
+      const data = withPublications([{featured: false, view: bare}])
+      const [card] = getAtmospherePublications(data)
+
+      expect(card.view.source?.icon).toBeUndefined()
+      expect(card.view.source?.theme).toBeUndefined()
+      expect(card.view.associatedProfiles).toBeUndefined()
     })
   })
 

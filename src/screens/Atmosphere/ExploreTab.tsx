@@ -8,6 +8,7 @@ import {
   getAtmosphereArticles,
   getAtmosphereLivestreams,
   getAtmospherePhotos,
+  getAtmospherePublications,
 } from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
 import {atoms as a} from '#/alf'
@@ -20,6 +21,7 @@ import {FeaturedApps} from './components/FeaturedApps'
 import {FeaturedArticles} from './components/FeaturedArticles'
 import {FeaturedLivestreams} from './components/FeaturedLivestreams'
 import {FeaturedPhotos} from './components/FeaturedPhotos'
+import {FeaturedPublications} from './components/FeaturedPublications'
 
 export function AtmosphereExploreTab() {
   const {t: l} = useLingui()
@@ -68,6 +70,9 @@ export function AtmosphereExploreTab() {
             <AnnouncementBanner banner={announcementBanner} />
           ) : undefined}
           <FeaturedArticles articles={getAtmosphereArticles(data)} />
+          <FeaturedPublications
+            publications={getAtmospherePublications(data)}
+          />
           <FeaturedLivestreams livestreams={getAtmosphereLivestreams(data)} />
           <FeaturedPhotos photos={getAtmospherePhotos(data)} />
           <FeaturedApps apps={getAtmosphereApps(data)} />

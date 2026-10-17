@@ -1,5 +1,6 @@
 import {type $Typed, type l} from '@atproto/lex'
 
+import {hexToRgb} from '#/alf/util/colorGeneration'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
@@ -20,6 +21,12 @@ export type AtmosphereArticleCardData = {
   image?: string
   publisher?: string
   publisherAvatar?: string
+}
+
+export type AtmospherePublicationCardData = {
+  id: string
+  title: string
+  view: app.bsky.embed.external.ViewExternal
 }
 
 export type AtmosphereAppCardData = {
@@ -95,6 +102,49 @@ export function getAtmosphereArticles(
     image: article.image,
     publisher: article.publisher?.title,
     publisherAvatar: getProfile(article.associatedProfiles)?.avatar,
+  }))
+}
+
+function toColorRgb(
+  hex?: string,
+): app.bsky.embed.external.ColorRgb | undefined {
+  const rgb = hex ? hexToRgb(hex) : null
+  return rgb ?? undefined
+}
+
+/**
+ * The shared publication card renders the legacy external view, so adapt the
+ * publication view to it instead of reimplementing the card.
+ */
+export function getAtmospherePublications(
+  data: AtmosphereData,
+): AtmospherePublicationCardData[] {
+  return data.publications.items.map(({view: publication}) => ({
+    id: publication.uri,
+    title: publication.title,
+    view: {
+      uri: publication.uri,
+      title: publication.title,
+      description: publication.description,
+      thumb: publication.image,
+      createdAt: publication.createdAt,
+      updatedAt: publication.updatedAt,
+      labels: publication.labels,
+      associatedRefs: publication.associatedRefs,
+      associatedProfiles: publication.associatedProfiles,
+      source: {
+        uri: publication.uri,
+        title: publication.title,
+        description: publication.description,
+        icon: publication.logo,
+        theme: publication.theme && {
+          backgroundRGB: toColorRgb(publication.theme.background),
+          foregroundRGB: toColorRgb(publication.theme.foreground),
+          accentRGB: toColorRgb(publication.theme.accent),
+          accentForegroundRGB: toColorRgb(publication.theme.accentForeground),
+        },
+      },
+    },
   }))
 }
 
