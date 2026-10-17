@@ -1,10 +1,12 @@
 import {View} from 'react-native'
+import {updateActiveVideoViewAsync} from '@bsky.app/video'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useNuxDialogContext} from '#/components/dialogs/nuxs'
+import {IPadBetaHero} from '#/components/dialogs/nuxs/IPadBetaHero'
 import {createIsEnabledCheck} from '#/components/dialogs/nuxs/utils'
 import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/Beaker'
 import {Text} from '#/components/Typography'
@@ -28,11 +30,20 @@ export function IPadBetaAnnouncement() {
   return (
     <Dialog.Outer
       control={control}
-      onClose={() => nuxDialogs.dismissActiveNux()}
+      onClose={() => {
+        nuxDialogs.dismissActiveNux()
+        // The hero took over playback, so hand it back to any feed video
+        void updateActiveVideoViewAsync()
+      }}
       nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
-      <Dialog.ScrollableInner label={l`iPad support is here`}>
-        <View style={[a.align_center, a.gap_2xl, a.pt_lg, a.pb_sm]}>
+      <Dialog.ScrollableInner
+        label={l`iPad support is here`}
+        contentContainerStyle={[
+          {paddingTop: 0, paddingLeft: 0, paddingRight: 0},
+        ]}>
+        <IPadBetaHero />
+        <View style={[a.align_center, a.gap_2xl, a.px_xl, a.pt_xl, a.pb_sm]}>
           <View style={[a.align_center, a.gap_sm]}>
             <View style={[a.flex_row, a.align_center, a.gap_xs]}>
               <BeakerIcon fill={t.palette.primary_700} size="sm" />
