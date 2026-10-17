@@ -14,12 +14,12 @@ const {withPodfile, CodeGenerator} = require('expo/config-plugins')
  * measurement and React Native callbacks.
  *
  * BSKY_IOS_CPP_OPT, read at prebuild time, picks the pods:
- * - yoga (default): only the Yoga pod (+~11 KB binary)
+ * - all (default): Yoga plus the C++ pods built from React Native's source
+ *   (Fabric, renderer, JSI, cxxreact, ...) and their C++ dependencies (Folly,
+ *   fmt, glog, double-conversion). Hermes ships as a prebuilt binary and is not
+ *   affected. The binary comes out ~170 KB smaller than at -Os.
+ * - yoga: only the Yoga pod (+~11 KB binary)
  * - none: leave everything at -Os
- * - all: Yoga plus the C++ pods built from React Native's source (Fabric,
- *   renderer, JSI, cxxreact, ...) and their C++ dependencies (Folly, fmt,
- *   glog, double-conversion). Hermes ships as a prebuilt binary and is not
- *   affected.
  */
 
 const MODES = ['none', 'yoga', 'all']
@@ -79,7 +79,7 @@ const ALL_TARGETS = [
 ]
 
 module.exports = function withIosCppOptimization(config) {
-  const mode = process.env.BSKY_IOS_CPP_OPT || 'yoga'
+  const mode = process.env.BSKY_IOS_CPP_OPT || 'all'
   if (!MODES.includes(mode)) {
     throw new Error(
       `BSKY_IOS_CPP_OPT must be one of ${MODES.join(', ')}, got "${mode}"`,
