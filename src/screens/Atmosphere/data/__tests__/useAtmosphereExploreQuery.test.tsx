@@ -4,8 +4,8 @@ import {renderHook, waitFor} from '@testing-library/react-native'
 
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useAppviewClient} from '#/state/session'
-import {getAtmosphereExploreTab} from './exploreApi'
-import {useAtmosphereExploreQuery} from './useAtmosphereExploreQuery'
+import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
+import {app} from '#/lexicons'
 
 jest.mock('#/state/preferences/languages', () => ({
   useLanguagePrefs: jest.fn(),
@@ -15,11 +15,11 @@ jest.mock('#/state/session', () => ({
   useAppviewClient: jest.fn(),
 }))
 
-const data = {
-  articles: [],
-  publications: [],
-  photos: [],
-  livestreams: [],
+const data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody = {
+  articles: {items: []},
+  publications: {items: []},
+  photos: {items: []},
+  livestreams: {items: []},
   apps: [],
 }
 
@@ -49,7 +49,7 @@ beforeEach(() => {
 })
 
 describe('useAtmosphereExploreQuery', () => {
-  it('calls the appview client with the query, empty params, and a signal', async () => {
+  it('calls the appview client with the generated query, langs, and a signal', async () => {
     const {client, wrapper} = setup()
     client.call.mockResolvedValue(data)
 
@@ -59,8 +59,8 @@ describe('useAtmosphereExploreQuery', () => {
     expect(result.current.data).toBe(data)
     expect(client.call).toHaveBeenCalledTimes(1)
     expect(client.call).toHaveBeenCalledWith(
-      getAtmosphereExploreTab,
-      {},
+      app.bsky.unspecced.getAtmosphereExploreTab,
+      {langs: ['en']},
       {
         signal: expect.any(AbortSignal),
         headers: {'Accept-Language': 'en'},
@@ -73,7 +73,7 @@ describe('useAtmosphereExploreQuery', () => {
     {languages: ['pt-BR'], header: 'pt-BR'},
     {languages: [], header: ''},
   ])(
-    'sends content languages $languages as Accept-Language "$header"',
+    'sends content languages $languages as langs and Accept-Language "$header"',
     async ({languages, header}) => {
       const {client, wrapper} = setup()
       setLanguages(languages)
@@ -83,8 +83,8 @@ describe('useAtmosphereExploreQuery', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true))
       expect(client.call).toHaveBeenCalledWith(
-        getAtmosphereExploreTab,
-        {},
+        app.bsky.unspecced.getAtmosphereExploreTab,
+        languages.length ? {langs: languages} : {},
         {
           signal: expect.any(AbortSignal),
           headers: {'Accept-Language': header},
@@ -108,14 +108,33 @@ describe('useAtmosphereExploreQuery', () => {
     await waitFor(() => expect(client.call).toHaveBeenCalledTimes(2))
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(client.call).toHaveBeenLastCalledWith(
-      getAtmosphereExploreTab,
-      {},
+      app.bsky.unspecced.getAtmosphereExploreTab,
+      {langs: ['fr', 'en']},
       {
         signal: expect.any(AbortSignal),
         headers: {'Accept-Language': 'fr,en'},
       },
     )
     expect(queryClient.getQueryCache().getAll()).toHaveLength(2)
+  })
+
+  it('retains every list recommendation ID in the response and cache', async () => {
+    const {client, queryClient, wrapper} = setup()
+    const response = {
+      ...data,
+      articles: {items: [], recIdStr: '18446744073709551615'},
+      publications: {items: [], recIdStr: '18446744073709551614'},
+      photos: {items: [], recIdStr: '18446744073709551613'},
+      livestreams: {items: [], recIdStr: '18446744073709551612'},
+    }
+    client.call.mockResolvedValue(response)
+
+    const {result} = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+    expect(result.current.data).toBe(response)
+    expect(queryClient.getQueryCache().getAll()[0].state.data).toBe(response)
+    expect(result.current.data?.articles.recIdStr).toBe('18446744073709551615')
   })
 
   it('reuses cached data before the stale time elapses', async () => {
@@ -132,23 +151,26 @@ describe('useAtmosphereExploreQuery', () => {
     expect(queryClient.getQueryCache().getAll()).toHaveLength(1)
   })
 
-  it('keys the cache by the viewer', async () => {
-    const {client, queryClient, wrapper} = setup('did:plc:one')
-    client.call.mockResolvedValue(data)
+  it.each(['did:plc:two', undefined])(
+    'isolates the cache for viewer %s',
+    async did => {
+      const {client, queryClient, wrapper} = setup('did:plc:one')
+      client.call.mockResolvedValue(data)
 
-    const first = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
-    await waitFor(() => expect(first.result.current.isSuccess).toBe(true))
-    first.unmount()
+      const first = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
+      await waitFor(() => expect(first.result.current.isSuccess).toBe(true))
+      first.unmount()
 
-    jest
-      .mocked(useAppviewClient)
-      .mockReturnValue({did: 'did:plc:two', call: client.call} as never)
-    const second = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
-    await waitFor(() => expect(second.result.current.isSuccess).toBe(true))
+      jest
+        .mocked(useAppviewClient)
+        .mockReturnValue({did, call: client.call} as never)
+      const second = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
+      await waitFor(() => expect(second.result.current.isSuccess).toBe(true))
 
-    expect(client.call).toHaveBeenCalledTimes(2)
-    expect(queryClient.getQueryCache().getAll()).toHaveLength(2)
-  })
+      expect(client.call).toHaveBeenCalledTimes(2)
+      expect(queryClient.getQueryCache().getAll()).toHaveLength(2)
+    },
+  )
 
   it('surfaces failures and recovers on refetch', async () => {
     const {client, wrapper} = setup()

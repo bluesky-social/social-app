@@ -4,7 +4,7 @@ import {
   type AtmosphereArticleCardData,
   type AtmosphereLivestreamCardData,
   type AtmospherePhotoCardData,
-} from '../../exploreData'
+} from '#/screens/Atmosphere/data/exploreData'
 import {ArticleCard} from '../ArticleCard'
 import {type ExploreGalleryFocusProps} from '../ExploreGallery'
 import {LivestreamCard} from '../LivestreamCard'

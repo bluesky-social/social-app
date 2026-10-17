@@ -1,8 +1,8 @@
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
+import {type AtmosphereArticleCardData} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a} from '#/alf'
-import {type AtmosphereArticleCardData} from '../exploreData'
 import {ArticleCard} from './ArticleCard'
 import {ExploreGallery} from './ExploreGallery'
 import {ExploreSectionHeader} from './ExploreSectionHeader'

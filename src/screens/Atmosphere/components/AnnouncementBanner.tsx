@@ -3,10 +3,10 @@ import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {useLingui} from '@lingui/react/macro'
 
+import {type AtmosphereAnnouncementBannerData} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, utils} from '#/alf'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {type AtmosphereAnnouncementBannerData} from '../exploreData'
 
 export function AnnouncementBanner({
   banner,

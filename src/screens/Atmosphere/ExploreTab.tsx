@@ -2,6 +2,14 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
+import {
+  getAtmosphereAnnouncementBanner,
+  getAtmosphereApps,
+  getAtmosphereArticles,
+  getAtmosphereLivestreams,
+  getAtmospherePhotos,
+} from '#/screens/Atmosphere/data/exploreData'
+import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
 import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
@@ -12,14 +20,6 @@ import {FeaturedApps} from './components/FeaturedApps'
 import {FeaturedArticles} from './components/FeaturedArticles'
 import {FeaturedLivestreams} from './components/FeaturedLivestreams'
 import {FeaturedPhotos} from './components/FeaturedPhotos'
-import {
-  getAtmosphereAnnouncementBanner,
-  getAtmosphereApps,
-  getAtmosphereArticles,
-  getAtmosphereLivestreams,
-  getAtmospherePhotos,
-} from './exploreData'
-import {useAtmosphereExploreQuery} from './useAtmosphereExploreQuery'
 
 export function AtmosphereExploreTab() {
   const {t: l} = useLingui()

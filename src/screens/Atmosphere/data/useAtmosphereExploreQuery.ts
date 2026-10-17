@@ -4,7 +4,7 @@ import {useLanguagePrefs} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient} from '#/state/session'
-import {getAtmosphereExploreTab} from './exploreApi'
+import {app} from '#/lexicons'
 
 export const useAtmosphereExploreQueryRoot = 'useAtmosphereExploreQuery'
 
@@ -21,8 +21,8 @@ export function useAtmosphereExploreQuery() {
     staleTime: STALE.MINUTES.FIVE,
     queryFn: ({signal}) =>
       client.call(
-        getAtmosphereExploreTab,
-        {},
+        app.bsky.unspecced.getAtmosphereExploreTab,
+        contentLanguages.length ? {langs: contentLanguages} : {},
         {signal, headers: {'Accept-Language': acceptLanguage}},
       ),
   })

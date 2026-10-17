@@ -1,9 +1,11 @@
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
-import {type AtmosphereData} from './exploreApi'
-import {AtmosphereExploreTab} from './ExploreTab'
-import {livestreamPreviewFixture} from './fixtures/livestreamPreview'
-import {useAtmosphereExploreQuery} from './useAtmosphereExploreQuery'
+import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/exploreResponse'
+import {livestreamPreviewFixture} from '#/screens/Atmosphere/__tests__/fixtures/livestreamPreview'
+import {type AtmosphereData} from '#/screens/Atmosphere/data/exploreData'
+import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
+import {AtmosphereExploreTab} from '#/screens/Atmosphere/ExploreTab'
+import {app} from '#/lexicons'
 
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({
@@ -12,7 +14,7 @@ jest.mock('@lingui/react', () => ({
   }),
 }))
 
-jest.mock('./useAtmosphereExploreQuery', () => ({
+jest.mock('#/screens/Atmosphere/data/useAtmosphereExploreQuery', () => ({
   useAtmosphereExploreQuery: jest.fn(),
 }))
 
@@ -51,13 +53,13 @@ jest.mock('#/view/com/util/error/ErrorMessage', () => {
   }
 })
 
-jest.mock('./components/AtmosphereNux', () => {
+jest.mock('#/screens/Atmosphere/components/AtmosphereNux', () => {
   const {Text} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {AtmosphereNux: () => <Text>nux</Text>}
 })
 
-jest.mock('./components/AnnouncementBanner', () => {
+jest.mock('#/screens/Atmosphere/components/AnnouncementBanner', () => {
   const {Text} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {
@@ -76,16 +78,16 @@ function mockSection(name: string, prop: string) {
     ) : null
 }
 
-jest.mock('./components/FeaturedArticles', () => ({
+jest.mock('#/screens/Atmosphere/components/FeaturedArticles', () => ({
   FeaturedArticles: mockSection('articles', 'articles'),
 }))
-jest.mock('./components/FeaturedApps', () => ({
+jest.mock('#/screens/Atmosphere/components/FeaturedApps', () => ({
   FeaturedApps: mockSection('apps', 'apps'),
 }))
-jest.mock('./components/FeaturedLivestreams', () => ({
+jest.mock('#/screens/Atmosphere/components/FeaturedLivestreams', () => ({
   FeaturedLivestreams: mockSection('livestreams', 'livestreams'),
 }))
-jest.mock('./components/FeaturedPhotos', () => ({
+jest.mock('#/screens/Atmosphere/components/FeaturedPhotos', () => ({
   FeaturedPhotos: mockSection('photos', 'photos'),
 }))
 
@@ -106,19 +108,21 @@ function setQuery(
 
 const data: AtmosphereData = {
   announcementBanner: {title: 'Launch', url: 'https://example.com/launch'},
-  articles: [
-    {
-      featured: true,
-      view: {
-        uri: 'https://example.com/article',
-        title: 'Live article',
-        description: '',
+  articles: {
+    items: [
+      {
+        featured: true,
+        view: {
+          uri: 'https://example.com/article',
+          title: 'Live article',
+          description: '',
+        },
       },
-    },
-  ],
-  publications: [],
-  photos: [],
-  livestreams: [],
+    ],
+  },
+  publications: {items: []},
+  photos: {items: []},
+  livestreams: {items: []},
   apps: [{id: 'app', title: 'Live app', url: 'https://example.com/app'}],
 }
 
@@ -169,13 +173,48 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.queryByTestId('retry')).toBeNull()
   })
 
+  it('renders nonfeatured recommendations in server order', () => {
+    setQuery({
+      data: {
+        ...data,
+        articles: {
+          recIdStr: '18446744073709551615',
+          items: ['Second', 'First'].map(title => ({
+            featured: false,
+            view: {uri: `https://example.com/${title}`, title, description: ''},
+          })),
+        },
+      },
+    })
+    render(<AtmosphereExploreTab />)
+
+    expect(screen.getByText('articles:Second,First')).toBeTruthy()
+  })
+
+  it('hides only articles when recommendations are empty', () => {
+    const populated =
+      app.bsky.unspecced.getAtmosphereExploreTab.$output.schema.parse({
+        ...exploreResponseFixture,
+        articles: {items: [], recIdStr: '18446744073709551615'},
+        livestreams: {items: livestreamPreviewFixture},
+      })
+    setQuery({data: populated})
+    render(<AtmosphereExploreTab />)
+
+    expect(screen.queryByText(/^articles:/)).toBeNull()
+    expect(screen.getByText(/^photos:/)).toBeTruthy()
+    expect(screen.getByText(/^livestreams:/)).toBeTruthy()
+    expect(screen.getByText(/^apps:/)).toBeTruthy()
+    expect(screen.getByText(/^banner:/)).toBeTruthy()
+  })
+
   it('renders the NUX only for an empty response without a banner', () => {
     setQuery({
       data: {
-        articles: [],
-        publications: [],
-        photos: [],
-        livestreams: [],
+        articles: {items: []},
+        publications: {items: []},
+        photos: {items: []},
+        livestreams: {items: []},
         apps: [],
       },
     })

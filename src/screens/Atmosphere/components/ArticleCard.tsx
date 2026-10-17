@@ -2,10 +2,10 @@ import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 
+import {type AtmosphereArticleCardData} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, useTheme} from '#/alf'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {type AtmosphereArticleCardData} from '../exploreData'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 export function ArticleCard({

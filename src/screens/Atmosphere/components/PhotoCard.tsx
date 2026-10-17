@@ -8,11 +8,11 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {type AtmospherePhotoCardData} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, useTheme} from '#/alf'
 import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {type AtmospherePhotoCardData} from '../exploreData'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 export function PhotoCard({

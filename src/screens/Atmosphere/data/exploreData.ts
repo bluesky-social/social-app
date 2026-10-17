@@ -1,20 +1,16 @@
-import {type l} from '@atproto/lex'
+import {type $Typed, type l} from '@atproto/lex'
 
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import {type AtmosphereData, viewGalleryImage} from './exploreApi'
 
-export type {AtmosphereData}
+export type AtmosphereData =
+  app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody
 
 type AtmosphereProfileView = l.InferOutput<
   typeof app.bsky.actor.defs.profileViewBasic
 >
-type AtmosphereViewGalleryItem =
-  AtmosphereData['photos'][number]['view']['items'][number]
-type AtmosphereViewGalleryImage = Extract<
-  AtmosphereViewGalleryItem,
-  {$type: 'app.bsky.embed.external#viewGalleryImage'}
->
+type AtmosphereViewGalleryImage =
+  $Typed<app.bsky.embed.external.ViewGalleryImage>
 
 export type AtmosphereArticleCardData = {
   id: string
@@ -83,14 +79,15 @@ function getProfile(
 
 function isGalleryImage(item: unknown): item is AtmosphereViewGalleryImage {
   return (
-    bsky.isType(viewGalleryImage, item) && bsky.matches(viewGalleryImage, item)
+    bsky.isType(app.bsky.embed.external.viewGalleryImage, item) &&
+    bsky.matches(app.bsky.embed.external.viewGalleryImage, item)
   )
 }
 
 export function getAtmosphereArticles(
   data: AtmosphereData,
 ): AtmosphereArticleCardData[] {
-  return data.articles.map(({view: article}) => ({
+  return data.articles.items.map(({view: article}) => ({
     id: article.uri,
     href: article.uri,
     title: article.title.trim(),
@@ -142,7 +139,7 @@ export function getAtmosphereAnnouncementBanner(
 export function getAtmosphereLivestreams(
   data: Pick<AtmosphereData, 'livestreams'>,
 ): AtmosphereLivestreamCardData[] {
-  return data.livestreams.flatMap(({view: livestream}) => {
+  return data.livestreams.items.flatMap(({view: livestream}) => {
     const authorProfile = getProfile(livestream.associatedProfiles)
     if (!authorProfile) return []
 
@@ -162,7 +159,7 @@ export function getAtmosphereLivestreams(
 export function getAtmospherePhotos(
   data: AtmosphereData,
 ): AtmospherePhotoCardData[] {
-  return data.photos.flatMap(({view: photo}) => {
+  return data.photos.items.flatMap(({view: photo}) => {
     const image = photo.items.find(isGalleryImage)
     const authorProfile = getProfile(photo.associatedProfiles)
     if (!image || !authorProfile) return []

@@ -1,8 +1,8 @@
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
+import {type AtmosphereLivestreamCardData} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a} from '#/alf'
-import {type AtmosphereLivestreamCardData} from '../exploreData'
 import {ExploreGallery} from './ExploreGallery'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
 import {LivestreamCard} from './LivestreamCard'

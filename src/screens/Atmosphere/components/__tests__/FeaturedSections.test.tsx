@@ -5,7 +5,7 @@ import {
   type AtmosphereArticleCardData,
   type AtmosphereLivestreamCardData,
   type AtmospherePhotoCardData,
-} from '../../exploreData'
+} from '#/screens/Atmosphere/data/exploreData'
 import {type ExploreGalleryFocusProps} from '../ExploreGallery'
 import {FeaturedArticles} from '../FeaturedArticles'
 import {FeaturedLivestreams} from '../FeaturedLivestreams'

@@ -1,7 +1,8 @@
 /**
  * Raw livestream preview data for tests. The live endpoint can return
  * livestreams, so this is not used by the app. Parse with
- * `atmosphereDataSchema` before passing it to the adapters.
+ * `app.bsky.unspecced.getAtmosphereExploreTab.$output.schema` on the full
+ * response envelope before passing it to the adapters.
  */
 const previewAuthorProfile = {
   $type: 'app.bsky.actor.defs#profileViewBasic',

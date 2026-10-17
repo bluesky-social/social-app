@@ -8,12 +8,12 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {type AtmosphereLivestreamCardData} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, useTheme} from '#/alf'
 import {Eye_Stroke2_Corner0_Rounded as EyeIcon} from '#/components/icons/Eye'
 import {Play_Filled_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {type AtmosphereLivestreamCardData} from '../exploreData'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 export function LivestreamCard({
