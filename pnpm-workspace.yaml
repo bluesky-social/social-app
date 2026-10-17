@@ -39,6 +39,7 @@ patchedDependencies:
   'expo-media-library@57.0.5': patches/expo-media-library@57.0.5.patch
   'expo-modules-core@57.0.18': patches/expo-modules-core@57.0.18.patch
   expo-notifications@57.0.20: patches/expo-notifications@57.0.20.patch
+  expo-splash-screen@57.0.9: patches/expo-splash-screen@57.0.9.patch
   expo-updates@57.0.23: patches/expo-updates@57.0.23.patch
   expo@57.0.24: patches/expo@57.0.24.patch
   'metro-runtime@0.84.5': patches/metro-runtime@0.84.5.patch
