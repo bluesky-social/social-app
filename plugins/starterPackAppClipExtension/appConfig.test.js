@@ -13,14 +13,14 @@ afterEach(() => {
 })
 
 it.each([
-  ['local development', undefined, true, '"1,2"'],
-  ['development', 'development', true, '"1,2"'],
-  ['end-to-end testing', 'e2e', true, '"1,2"'],
-  ['TestFlight', 'testflight', true, '"1,2"'],
-  ['production', 'production', false, '"1"'],
+  ['local development', undefined],
+  ['development', 'development'],
+  ['end-to-end testing', 'e2e'],
+  ['TestFlight', 'testflight'],
+  ['production', 'production'],
 ])(
-  'gates tablet support and parent device families for %s',
-  (_name, environment, supportsTablet, expectedDeviceFamilies) => {
+  'supports tablets and sets parent device families for %s',
+  (_name, environment) => {
     if (environment === undefined) {
       delete process.env.EXPO_PUBLIC_ENV
     } else {
@@ -29,12 +29,12 @@ it.each([
 
     const config = createAppConfig({name: 'Bluesky', slug: 'bluesky'}).expo
 
-    expect(config.ios.supportsTablet).toBe(supportsTablet)
+    expect(config.ios.supportsTablet).toBe(true)
     expect(
       IOSConfig.DeviceFamily.formatDeviceFamilies(
         IOSConfig.DeviceFamily.getDeviceFamilies(config),
       ),
-    ).toBe(expectedDeviceFamilies)
+    ).toBe('"1,2"')
     expect(config.ios.infoPlist.UISupportedInterfaceOrientations).toEqual([
       'UIInterfaceOrientationPortrait',
     ])

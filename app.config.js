@@ -63,7 +63,7 @@ module.exports = function (_config) {
       userInterfaceStyle: 'automatic',
       primaryColor: '#006AFF',
       ios: {
-        supportsTablet: IS_DEV || IS_TESTFLIGHT,
+        supportsTablet: true,
         bundleIdentifier: 'xyz.blueskyweb.app',
         appleTeamId: process.env.EXPO_APPLE_TEAM_ID,
         config: {
