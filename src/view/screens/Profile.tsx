@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {StyleSheet} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {StyleSheet, useWindowDimensions} from 'react-native'
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 import {ScrollForwarderView} from '@bsky.app/react-native-scroll-forwarder'
 import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
@@ -38,9 +38,10 @@ import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListRef} from '#/view/com/util/List'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
+import {getProfileBannerSafeAreaCoverHeight} from '#/screens/Profile/Header/layout'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Circle_And_Square_Stroke1_Corner0_Rounded_Filled as CircleAndSquareIcon} from '#/components/icons/CircleAndSquare'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {Heart2_Stroke1_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
@@ -59,9 +60,29 @@ interface SectionRef {
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export function ProfileScreen(props: Props) {
+  const t = useTheme()
+  const {gtMobile} = useBreakpoints()
+  const {top: topInset} = useSafeAreaInsets()
+  const safeAreaCoverHeight = getProfileBannerSafeAreaCoverHeight({
+    gtMobile,
+    topInset,
+  })
+
   return (
     <Layout.Screen testID="profileScreen" style={[a.pt_0]}>
       <ProfileScreenInner {...props} />
+      {safeAreaCoverHeight > 0 && (
+        <Layout.Center
+          pointerEvents="none"
+          style={[
+            a.absolute,
+            a.top_0,
+            a.z_50,
+            {height: safeAreaCoverHeight, alignSelf: 'center'},
+            t.atoms.bg,
+          ]}
+        />
+      )}
     </Layout.Screen>
   )
 }
@@ -173,6 +194,8 @@ function ProfileScreenLoaded({
   isPlaceholderProfile: boolean
 }) {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
+  const {height: windowHeight} = useWindowDimensions()
   const profile = useProfileShadow(profileUnshadowed)
   const {hasSession, currentAccount} = useSession()
   const {openComposer} = useOpenComposer()
@@ -401,7 +424,8 @@ function ProfileScreenLoaded({
         onPageSelected={onPageSelected}
         onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}
-        allowHeaderOverScroll>
+        allowHeaderOverScroll
+        headerOverflowInset={gtMobile ? windowHeight : undefined}>
         {showFiltersTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileLabelsSection

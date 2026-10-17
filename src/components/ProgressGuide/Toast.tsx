@@ -115,7 +115,7 @@ export const ProgressGuideToast = forwardRef<
   const containerStyle = useMemo(() => {
     let left = 10
     let right = 10
-    if (IS_WEB && winDim.width > 400) {
+    if (winDim.width > 400) {
       left = right = (winDim.width - 380) / 2
     }
     return {
