@@ -10,12 +10,12 @@ import {LayoutAnimation, type TextInput, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useListConvoMembersQuery} from '#/state/queries/messages/list-convo-members'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {type ListMethods} from '#/view/com/util/List'
 import {android, atoms as a, native, useTheme, web} from '#/alf'
+import {useAutocomplete} from '#/components/Autocomplete'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {canBeAddedToGroup, type ConvoWithDetails} from '#/components/dms/util'
@@ -25,6 +25,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Ti
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {useFollowsSource} from '#/features/autocomplete/useFollowsSource'
 import type * as bsky from '#/types/bsky'
 import {ChatProfileTabs} from './ChatProfileTabs'
 import {EmptyMemberList} from './components/EmptyMemberList'
@@ -145,11 +146,20 @@ export function AddMembersFlow({
     },
   )
 
+  const followsSource = useFollowsSource()
   const {
-    data: autocompleteResults,
+    items: autocompleteItems,
     isError,
     isFetching: isAutocompleteFetching,
-  } = useActorAutocompleteQuery(searchText, true, 12)
+  } = useAutocomplete({
+    type: 'profile',
+    query: searchText,
+    limit: 12,
+    sources: [followsSource],
+  })
+  const autocompleteResults = autocompleteItems
+    .filter(item => item.type === 'profile')
+    .map(item => item.profile)
   const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
   const {data: memberListData = [], isPending: isMemberListPending} =
     useListConvoMembersQuery({
