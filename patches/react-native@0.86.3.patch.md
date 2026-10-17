@@ -205,3 +205,17 @@ there is no child.
 
 **TODO: Remove after upgrading to a React Native release containing this fix.**
 The upstream PR is still open as of September 9, 2026.
+
+## Android: throttle scroll-driven ScrollView state updates
+
+`ReactScrollViewHelper.updateStateOnScrollChanged` pushed the scroll offset into the
+ScrollView's Fabric state on every `onScrollChanged`, i.e. every frame of a drag or fling.
+Each state update is a full shadow tree commit plus layout on the JS thread (~3 ms each on
+a Galaxy A16), ~40 per second while scrolling the home feed: more JS thread time than all
+React commits combined.
+
+The patch limits these updates to one per 100 ms per scroll view, with a trailing update
+so the state always catches up with the final offset. The other places that sync the
+state are unchanged and still update immediately: touch up, `scrollTo`, and the runnable
+that runs once momentum scrolling has settled. The trade-off is that a JS `measure()` of
+something inside a ScrollView *while it is scrolling* can see an offset up to 100 ms old.
