@@ -261,7 +261,17 @@ module.exports = function (_config) {
         'expo-asset',
         'expo-sharing',
         'expo-video',
-        'expo-localization',
+        [
+          'expo-localization',
+          {
+            /*
+             * React Native 0.88 fixed Android RTL detection, which until then
+             * always reported LTR. Opt out so Android keeps rendering LTR like
+             * iOS, until RTL layouts get a proper QA pass.
+             */
+            supportsRTL: false,
+          },
+        ],
         'expo-web-browser',
         [
           'react-native-nano-icons',
@@ -322,12 +332,11 @@ module.exports = function (_config) {
                   branch: 'main',
                 },
               ],
-              enableSceneSupport: true,
             },
             android: {
-              compileSdkVersion: 36,
+              compileSdkVersion: 37,
               targetSdkVersion: 36,
-              buildToolsVersion: '36.0.0',
+              buildToolsVersion: '37.0.0',
               buildReactNativeFromSource: IS_PRODUCTION,
               enableMinifyInReleaseBuilds: true,
             },

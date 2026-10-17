@@ -1,41 +1,41 @@
 # ***This second part of this patch is load bearing, do not remove.***
 
-## Scheduler delegate invalidation - iOS use-after-free
+## Scheduler.cpp / Scheduler.h Patch - iOS use-after-free (restored delegate invalidation guard)
 
 Fixes Sentry issue APP-T28X: an `EXC_BAD_ACCESS` in
 `Scheduler::uiManagerDidFinishTransaction` or
 `Scheduler::uiManagerDidDispatchCommand` after a queued rendering update
 outlives its captured raw `SchedulerDelegate` pointer.
 
-React Native 0.86 contains the invalidation-token guard from
-facebook/react-native#56680, but `enableSchedulerDelegateInvalidation` is false
-for the stable release level used by Expo. Override only this flag in
-`ReactNativeFeatureFlagsOverridesOSSStable` instead of opting the app into all
-experimental React Native flags.
+React Native 0.86 shipped an invalidation-token guard for this
+(facebook/react-native#56680) behind `enableSchedulerDelegateInvalidation`,
+which was false for the stable release level used by Expo, so we overrode that
+one flag in `ReactNativeFeatureFlagsOverridesOSSStable` (merged September 2,
+2026, first released in 1.132.0). Builds with the override have had no APP-T28X
+events: of about 3,450 events in the 90 days to October 17, 2026, all came from
+1.129-1.131 except five 1.132.0 events on or before August 26, before the
+override merged.
+
+React Native 0.88 removes both the flag and the guard
+(https://github.com/react/react-native/pull/58138, commit `9682967a09`).
+Upstream now relies on `RuntimeScheduler_Modern::handleTaskError` clearing the
+pending task and rendering-update queues before the error handler runs
+(https://github.com/react/react-native/pull/56892, commit `9cbddbd478`), which
+closes the path where a JS error tears the delegate down. The #58138 commit
+message says one window is still open: a delegate dropped and destroyed with no
+error involved never reaches `handleTaskError`, so the queued lambda still
+dereferences freed memory. We don't know which path APP-T28X takes, so this
+patch keeps the guard.
+
+It restores the 0.86 implementation without the flag checks: a
+`shared_ptr<atomic<bool>>` token on `Scheduler`, captured into the two deferred
+rendering-update lambdas, flipped in `~Scheduler()` and when `setDelegate`
+swaps the delegate. To drop it, delete the `Scheduler.cpp` and `Scheduler.h`
+hunks.
 
 **TODO: Remove after upgrading to a React Native release that closes the
-queued Scheduler delegate lifetime race by default.**
-
-## UIManager.cpp Patch - Fabric focus navigation use-after-free
-
-Fixes Sentry issue APP-T4H9: a SIGSEGV in
-`FabricUIManagerBinding::findNextFocusableElement` during focus navigation.
-
-React Native 0.86 contains the safe implementation behind
-`fixFindShadowNodeByTagRaceCondition`, but the public default is false. The
-fallback captures a raw root shadow-node pointer in `tryCommit` and dereferences
-it after the lock is released, allowing a concurrent commit or surface stop to
-free the node first. This backports the final upstream implementation, which
-holds the current revision's `shared_ptr` for the entire traversal.
-
-**TODO: Remove after bumping React Native to a release containing
-facebook/react-native#56850.**
-
-## RefreshControl Patch - iOS 17.4 Haptic Regression
-
-Patching `RCTRefreshControl.mm` temporarily to play an impact haptic on refresh when using iOS 17.4 or higher. Since
-17.4, there has been a regression somewhere causing haptics to not play on iOS on refresh. Should monitor for an update
-in the RN repo: https://github.com/facebook/react-native/issues/43388
+no-error teardown window (the "runtime-scheduler-level shutdown signal"
+#58138 mentions), or once we decide #56892's queue clearing is enough.**
 
 ## RCTPullToRefreshViewComponentView.mm Patch - iOS 17.4+ haptic regression and iOS 26 progressViewOffset cancellation on New Arch
 
@@ -61,11 +61,12 @@ home header (home is the only screen passing a non-zero offset). Stock RN appear
 by accident: its own pre-attach `tintColor` write materialized the content view at origin 0
 *before* the offset write. Possibly related upstream: react-native#54183.
 
-**2. Haptic (react-native#43388).** The Paper fix above does not cover Fabric: `updateProps`
-writes `tintColor` pre-attach, and a tint write on a detached control materializes the content
-view outside the scroll view, permanently suppressing the trigger haptic on iOS 17.4+ (the
-creation-time-state story likely explains this too, though the haptic wiring itself is not
-observable in logs).
+**2. Haptic (react-native#43388).** `updateProps` writes `tintColor` pre-attach, and a tint
+write on a detached control materializes the content view outside the scroll view, permanently
+suppressing the trigger haptic on iOS 17.4+ (the creation-time-state story likely explains this
+too, though the haptic wiring itself is not observable in logs). We used to carry a separate
+fix for the Paper `RCTRefreshControl`; React Native 0.88 removed the legacy RefreshControl
+files, so only this Fabric fix remains.
 
 **The fix**: both `tintColor` and `progressViewOffset` are parked in the component view
 (`_pendingTintColor` / `_pendingProgressViewOffset`, no `UIRefreshControl` subclass) and applied
@@ -88,51 +89,25 @@ History: an earlier iteration fixed the offset by porting Paper's frame-offset t
 deferral once the root cause was understood. The control's `didMoveToSuperview` appeared broken
 as a tint application point in early non-rigorous testing; unproven, not disproven.
 
-Upstream issue #43388 still open as of Aug 2026. Haptics cannot be verified on the simulator -
+Upstream issue #43388 still open as of October 2026. Haptics cannot be verified on the simulator -
 physical device only. Spinner position verified via frame logs; haptic on this variant NOT yet
 device-verified.
 
-Opened issue in RN repo: https://github.com/react/react-native/issues/57843
+Opened issue in RN repo: https://github.com/react/react-native/issues/57843 (still open as of
+October 2026; `RCTPullToRefreshViewComponentView.mm` is unchanged between 0.86.3 and 0.88.0).
 
-## RCTEnhancedScrollView.mm / RCTScrollViewComponentView.mm Patch - centerContent insets stale after content resize on New Arch
+## RCTScrollViewComponentView.mm Patch - disable ScrollView recycling
 
-**TODO: Remove after bumping React Native to 0.87+** (fixed upstream by facebook/react-native#56832,
-commit d50c1b5207; first shipped in 0.87.0-rc.0).
+Opts `RCTScrollViewComponentView` out of Fabric view recycling with
+`+shouldBeRecycled` returning `NO`.
 
-On Fabric, `centerContent` centers by computing `contentInset` in `centerContentIfNeeded`, but that
-recompute only ran on `setFrame`/`didAddSubview`/`scrollViewDidZoom` - not when a state update assigns a
-new `contentSize` in `updateState`. Any content that resizes after mount inside a `centerContent`
-ScrollView (e.g. the lightbox image crop view getting its real aspect ratio from `onLoad` when the embed
-has no aspectRatio metadata) keeps the old insets: content rests off-center and the excess inset creates
-phantom scroll range, so the image can be dragged and parked off-center and the native scroll steals the
-swipe-down-to-dismiss pan. The old architecture paired every `contentSize` update with re-centering in
-`RCTScrollView.updateContentSizeIfNeeded`; Fabric dropped that link.
-
-Backport of the upstream fix: `setContentSize:`/`setCenterContent:` overrides on `RCTEnhancedScrollView`
-that call `centerContentIfNeeded`, plus the `updateProps` guards so the `contentInset` prop does not
-fight the computed centering inset.
-
-Issue: https://github.com/facebook/react-native/issues/55090
-
-## RCTScrollViewComponentView.mm Patch - ScrollView pinch/pan ignored outside content area on New Arch
-
-**TODO: Remove after bumping React Native to 0.87+** (fixed upstream by facebook/react-native#56747,
-commit efcab20908; first shipped in 0.87.0-rc.0).
-
-On Fabric, `betterHitTest` in `RCTScrollViewComponentView` deliberately skips the `_containerView`
-and hit-tests its grandchildren, returning `self` (the wrapper component view) when the touch lands
-inside the scroll view bounds but outside any content. UIKit only delivers touches to a gesture
-recognizer when the hit view is the recognizer's view or a descendant of it, and the `UIScrollView`
-is a *child* of the wrapper - so its native pinch/pan recognizers never see those touches. In the
-lightbox this means pinch-to-zoom and pan-while-zoomed only respond when the fingers are over the
-image itself, not over the letterbox bars above/below it. On the old architecture, default UIKit
-hit-testing returns the `UIScrollView` itself for those touches, so everything works.
-
-Backport of the upstream one-liner: return `_scrollView` instead of `self` so touches in the
-content-less area are attributed to the `UIScrollView`.
-
-Issue: https://github.com/facebook/react-native/issues/54123
-PR: https://github.com/react/react-native/pull/56747
+This hunk predates these notes: it was added during the New Architecture
+migration (social-app commit `200b7fe26`, "disable recycling in scrollview", May
+2025, shipped in #8295) without a recorded reason. A likely motivation is the
+recycled-ScrollView bug where `contentInset`/`contentOffset` leaked into the
+next mount (https://github.com/facebook/react-native/issues/55090, fixed in
+0.87 by facebook/react-native#56832), but that is unconfirmed. Re-evaluate
+before removing.
 
 ## ReactViewGroup.kt Patch - Fatal "Required value was null" during subview clipping on Android
 
@@ -149,7 +124,7 @@ listeners, animation-end callbacks, Fabric mounting on the UI thread), which com
 variant throws `IllegalStateException` and escapes as a fatal crash. A null entry means the
 view is already detached, so we skip it and count it as clipped to keep index math aligned.
 
-Not fixed upstream as of July 2026 (identical `checkNotNull` on `main`); the sibling fix
+Not fixed upstream as of 0.88.0 (identical `checkNotNull`, October 2026); the sibling fix
 attempt facebook/react-native#57365 for the same bookkeeping corruption (different stack)
 was abandoned. Re-check when bumping React Native.
 
@@ -160,11 +135,6 @@ active in production releases. Local dev builds prebuilt in a non-production env
 the prebuilt AAR from Maven Central instead, where this hunk (like any ReactAndroid
 source change) has no effect - do not expect to see the fix in a local debug build unless
 you prebuild with EXPO_PUBLIC_ENV=production or add the substitution block manually.
-
-## RCTTextLayoutManager.mm Patch - Text overflows instead of wrapping on the last line
-
-Issue: https://github.com/react/react-native/issues/53450#issuecomment-3298157830 
-Bandaid fix taken from: https://github.com/react/react-native/commit/581d643a9e59fd88f93757f80194e1efd11bd0e5
 
 ## RCTViewComponentView.mm Patch - Hairline border strokes dropped at certain subpixel Y offsets on New Arch
 
@@ -183,12 +153,13 @@ of the stroke - no line.
 Fix: compute the middle from the cap insets (`size - caps`) instead of assuming 1pt.
 
 Upstream issue: https://github.com/react/react-native/issues/58054 (repro:
-https://github.com/abulenok/HairlineBorderRepro, fails identically on 0.86.0 and 0.87.0).
+https://github.com/abulenok/HairlineBorderRepro, fails identically on 0.86.0 and 0.87.0; the
+1pt formula is still there in 0.88.0).
 
 ## RCTTextInputComponentView.mm Patch - reveal the caret after a multiline input grows (iOS New Arch)
 
-Fixes ScrollView doesn't scroll up on new line in TextInput issue 
-https://github.com/react/react-native/issues/58517
+Fixes ScrollView doesn't scroll up on new line in TextInput issue
+https://github.com/react/react-native/issues/58517 (still open as of October 2026).
 
 ## RCTModalHostViewComponentView.mm Patch - Blank sheet when dismissing a modal with a child controller
 
@@ -197,11 +168,14 @@ Undo Typing alert while submitting a post or reply can leave an empty composer
 sheet that cannot be dismissed. UIKit dismisses only the child controller when
 the modal itself receives `dismissViewControllerAnimated:completion:`.
 
-Backport of https://github.com/react/react-native/pull/58364, commit
-`3f556d7574999bcba5fa8a1ba70de57346284463`: when a child is presented, dismiss
-through the modal's presenting controller to close the entire stack. Fall back
-to the modal if its presenting controller is nil, and keep direct dismissal when
-there is no child.
+Backport of https://github.com/react/react-native/pull/58364: when a child is
+presented, dismiss through the modal's presenting controller to close the
+entire stack. Fall back to the modal if its presenting controller is nil, and
+keep direct dismissal when there is no child.
 
-**TODO: Remove after upgrading to a React Native release containing this fix.**
-The upstream PR is still open as of September 9, 2026.
+The PR merged on September 11, 2026 as commit
+`f20f857241df8ce7dba0c965f7f6748d20a48c6f`, after the 0.88 branch was cut, so
+0.88.0 does not contain it.
+
+**TODO: Remove after upgrading to React Native 0.89 (or any release containing
+`f20f857241df`).**

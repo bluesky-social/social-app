@@ -14,11 +14,14 @@
         "./node_modules/expo-file-system/build/legacy/index.d.ts"
       ],
       /*
-       * Mirrors the root tsconfig mapping (paths does not merge across
-       * extends): expo-file-system 57's `exports` map blocks the deep type
-       * imports in src/platform/misc.web-check.d.ts.
+       * Mirrors the root tsconfig mappings (paths does not merge across
+       * extends): expo-file-system's and expo-image-manipulator's `exports`
+       * maps block the deep type imports in src/platform/misc.web-check.d.ts.
        */
       "expo-file-system/build/*": ["./node_modules/expo-file-system/build/*"],
+      "expo-image-manipulator/build/*": [
+        "./node_modules/expo-image-manipulator/build/*"
+      ],
       /*
        * The react-native exports condition resolves to the package's raw
        * TypeScript source, whose findNodeHandle usage breaks under the web

@@ -1,8 +1,6 @@
 package expo.modules.blueskyswissarmy.sharedprefs
 
 import android.content.Context
-import android.util.Log
-import expo.modules.kotlin.jni.JavaScriptValue
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
@@ -20,22 +18,14 @@ class ExpoBlueskySharedPrefsModule : Module() {
         return@Function SharedPrefs(getContext()).setValue(key, value)
       }
 
-      Function("setValue") { key: String, value: JavaScriptValue ->
-        val context = getContext()
-        Log.d("ExpoBlueskySharedPrefs", "Setting value for key: $key")
-        try {
-          if (value.isNumber()) {
-            SharedPrefs(context).setValue(key, value.getFloat())
-          } else if (value.isBool()) {
-            SharedPrefs(context).setValue(key, value.getBool())
-          } else if (value.isNull() || value.isUndefined()) {
-            SharedPrefs(context).removeValue(key)
-          } else {
-            Log.d(NAME, "Unsupported type: ${value.kind()}")
-          }
-        } catch (e: Error) {
-          Log.d(NAME, "Error setting value: $e")
-        }
+      // Mirrors iOS, where `JavaScriptValue` can't be a `Function` argument
+      // since SDK 58.
+      Function("setNumber") { key: String, value: Float ->
+        return@Function SharedPrefs(getContext()).setValue(key, value)
+      }
+
+      Function("setBool") { key: String, value: Boolean ->
+        return@Function SharedPrefs(getContext()).setValue(key, value)
       }
 
       Function("removeValue") { key: String ->
