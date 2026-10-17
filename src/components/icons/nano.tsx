@@ -98,7 +98,21 @@ export function withNanoGlyph(
 
   const Icon = forwardRef<Svg, Props>(function NanoIcon(props, ref) {
     const t = useTheme()
-    const {fill, size, style, width, height, testID, gradient, ...rest} = props
+    const {
+      fill,
+      size,
+      style,
+      width,
+      height,
+      testID,
+      gradient,
+      /*
+       * Only the SVG needs this, on web. The glyph is always hidden from
+       * screen readers, see its accessibilityLabel below.
+       */
+      'aria-hidden': _ariaHidden,
+      ...rest
+    } = props
 
     /*
      * Mirrors useCommonSVGProps: an explicit `size` token wins, then a raw
