@@ -55,11 +55,11 @@ index a4b9be7..a6e2fe7 100644
           paragraphAttributes:(facebook::react::ParagraphAttributes)paragraphAttributes
                         frame:(CGRect)frame
 diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
-index ac55304..994c66b 100644
+index 5f9847a..d10506f 100644
 --- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
 +++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
-@@ -14,11 +14,133 @@
- #import <react/featureflags/ReactNativeFeatureFlags.h>
+@@ -17,11 +17,133 @@
+ #import <react/renderer/textlayoutmanager/TextMeasurementRounding.h>
  #import <react/utils/ManagedObjectWrapper.h>
  #import <react/utils/SimpleThreadSafeCache.h>
 +#import <react/utils/hash_combine.h>
@@ -192,7 +192,7 @@ index ac55304..994c66b 100644
  }
  
  static NSLineBreakMode RCTNSLineBreakModeFromEllipsizeMode(EllipsizeMode ellipsizeMode)
-@@ -60,10 +182,67 @@ - (TextMeasurement)measureAttributedString:(AttributedString)attributedString
+@@ -63,10 +185,67 @@ - (TextMeasurement)measureAttributedString:(AttributedString)attributedString
                               layoutContext:(TextLayoutContext)layoutContext
                           layoutConstraints:(LayoutConstraints)layoutConstraints
  {
@@ -263,8 +263,8 @@ index ac55304..994c66b 100644
 +  _preparedLayouts.add(key, RCTTextLayout{.textStorage = textStorage, .size = size});
  }
  
- - (void)drawAttributedString:(AttributedString)attributedString
-@@ -71,10 +250,20 @@ - (void)drawAttributedString:(AttributedString)attributedString
+ - (CGRect)drawingFrameForAttributedString:(AttributedString)attributedString
+@@ -132,10 +311,20 @@ - (void)drawAttributedString:(AttributedString)attributedString
                         frame:(CGRect)frame
             drawHighlightPath:(void (^_Nullable)(UIBezierPath *highlightPath))block
  {
@@ -311,10 +311,10 @@ index ce564b0..c842534 100644
    std::shared_ptr<const ContextContainer> contextContainer_;
    std::shared_ptr<void> nativeTextLayoutManager_;
 diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.mm
-index cddafb5..c31e530 100644
+index 82cad8f..4f435b5 100644
 --- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.mm
 +++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.mm
-@@ -99,6 +99,17 @@
+@@ -100,6 +100,17 @@
    return measurement;
  }
  

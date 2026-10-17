@@ -1,9 +1,9 @@
 diff --git a/build/src/start/server/serverLogLikeMetro.js b/build/src/start/server/serverLogLikeMetro.js
-index b1f633512f0dea3203d1f1acd89edefe02cc30d5..34ed7d1d389ff51c9e08e743c79bd84782d7953d 100644
+index 1c90fee8cfef807283f0df37145301af9c1e530e..335c530785e18c4c450ccf83d10db223fc61bc14 100644
 --- a/build/src/start/server/serverLogLikeMetro.js
 +++ b/build/src/start/server/serverLogLikeMetro.js
-@@ -176,8 +176,15 @@ async function maybeSymbolicateAndFormatJSErrorStackLogAsync(projectRoot, level,
-         stack: ((_log_symbolicated = log.symbolicated) == null ? void 0 : (_log_symbolicated_stack = _log_symbolicated.stack) == null ? void 0 : _log_symbolicated_stack.stack) ?? [],
+@@ -181,8 +181,15 @@ async function maybeSymbolicateAndFormatJSErrorStackLogAsync(projectRoot, level,
+         stack: log.symbolicated?.stack?.stack ?? [],
          codeFrame: log.codeFrame
      });
 -    // NOTE: Message is printed above stack by the default Metro logic. So we don't need to include it here.

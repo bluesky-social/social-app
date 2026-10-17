@@ -1,8 +1,8 @@
 diff --git a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
-index 917dc6d..38c14f9 100644
+index 8f55121..8bbb6cf 100644
 --- a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
-@@ -372,6 +372,10 @@ - (void)updateLayoutMetrics:(const LayoutMetrics &)layoutMetrics
+@@ -381,6 +381,10 @@ - (void)updateLayoutMetrics:(const LayoutMetrics &)layoutMetrics
      _previousContentSize = _backedTextInputView.contentSize;
      static_cast<const TextInputEventEmitter &>(*_eventEmitter).onContentSizeChange([self _textInputMetrics]);
    }
@@ -13,7 +13,7 @@ index 917dc6d..38c14f9 100644
  }
  
  - (void)prepareForRecycle
-@@ -821,6 +825,47 @@ - (void)scrollCursorIntoView
+@@ -843,6 +847,47 @@ - (void)scrollCursorIntoView
    }
  }
  

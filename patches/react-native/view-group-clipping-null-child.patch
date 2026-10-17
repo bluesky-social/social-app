@@ -1,8 +1,8 @@
 diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
-index 5977524..426de3a 100644
+index ae2e36c..0eeeb63 100644
 --- a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
 +++ b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
-@@ -459,6 +459,13 @@ public open class ReactViewGroup public constructor(context: Context?) :
+@@ -461,6 +461,13 @@ public open class ReactViewGroup public constructor(context: Context?) :
      inSubviewClippingLoop = true
      var clippedSoFar = 0
      for (i in 0..<allChildrenCount) {
@@ -16,7 +16,7 @@ index 5977524..426de3a 100644
        try {
          updateSubviewClipStatus(clippingRect, i, clippedSoFar, excludedViewsSet)
        } catch (ex: IndexOutOfBoundsException) {
-@@ -496,7 +503,9 @@ public open class ReactViewGroup public constructor(context: Context?) :
+@@ -498,7 +505,9 @@ public open class ReactViewGroup public constructor(context: Context?) :
    ) {
      assertOnUiThread()
  
