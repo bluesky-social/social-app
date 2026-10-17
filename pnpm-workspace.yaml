@@ -54,3 +54,21 @@ minimumReleaseAgeExclude:
   - '@bsky.app/*'
   - '@bsky/*'
   - react-native-nano-icons@1.0.1
+  - '@expo/cli@58.1.11'
+  - '@expo/schema-utils@58.0.2'
+  - '@expo/ui@58.0.20'
+  - babel-preset-expo@58.0.17
+  - expo-application@58.1.2
+  - expo-blur@58.0.4
+  - expo-build-properties@58.0.11
+  - expo-dev-client@58.0.14
+  - expo-dev-launcher@58.0.14
+  - expo-haptics@58.0.7
+  - expo-location@58.0.17
+  - expo-media-library@58.0.10
+  - expo-modules-core@58.0.22
+  - expo-modules-jsi@58.0.15
+  - expo-notifications@58.1.5
+  - expo-sharing@58.0.19
+  - expo-splash-screen@58.0.10
+  - expo@58.0.14
