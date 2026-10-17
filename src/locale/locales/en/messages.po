@@ -276,7 +276,7 @@ msgid "{0} following"
 msgstr ""
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkFormDialog.tsx:355
+#: src/features/profileLinks/components/LinkFormDialog.tsx:364
 msgid "{0} is a recognized support link. It gets the green Support button."
 msgstr "{0} is a recognized support link. It gets the green Support button."
 
@@ -332,7 +332,7 @@ msgid "{0} of {1}"
 msgstr ""
 
 #. placeholder {0}: title.length
-#: src/features/profileLinks/components/LinkFormDialog.tsx:384
+#: src/features/profileLinks/components/LinkFormDialog.tsx:393
 msgid "{0} out of {MAX_TITLE_LENGTH} characters"
 msgstr "{0} out of {MAX_TITLE_LENGTH} characters"
 
@@ -434,7 +434,7 @@ msgstr "{0}/{1} {2, plural, one {member} other {members}}"
 
 #. Badge showing the current image position out of the total number of images in a gallery.
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:563
+#: src/components/images/Gallery/index.tsx:379
 msgctxt "gallery-badge-image-position-numbers"
 msgid "{0}/{imageCount}"
 msgstr "{0}/{imageCount}"
@@ -815,11 +815,11 @@ msgstr "{label}. {description}"
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:443
+#: src/screens/Profile/Header/EditProfileDialog.tsx:448
 msgid "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:392
+#: src/screens/Profile/Header/EditProfileDialog.tsx:397
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 
@@ -1284,6 +1284,14 @@ msgstr ""
 msgid "A collection of popular feeds you can find on Bluesky, including News, Booksky, Game Dev, Blacksky, and Fountain Pens"
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:46
+msgid "A horizontal strip of any content. Each item keeps its own width and height, and the strip is as tall as the tallest one."
+msgstr "A horizontal strip of any content. Each item keeps its own width and height, and the strip is as tall as the tallest one."
+
+#: src/components/Gallery/Storybook.tsx:188
+msgid "A kawaii scene"
+msgstr "A kawaii scene"
+
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:78
 msgid "A label was added to your account"
@@ -1373,7 +1381,11 @@ msgstr ""
 msgid "A selected recipient is not followed by the sender."
 msgstr "A selected recipient is not followed by the sender."
 
-#: src/Navigation.tsx:513
+#: src/components/Gallery/Storybook.tsx:201
+msgid "A small kawaii scene with no ratio on record"
+msgstr "A small kawaii scene with no ratio on record"
+
+#: src/Navigation.tsx:514
 #: src/screens/Settings/AboutSettings.tsx:85
 #: src/screens/Settings/Settings.tsx:287
 #: src/screens/Settings/Settings.tsx:290
@@ -1422,11 +1434,11 @@ msgstr "Access requested! The group owner will review your request."
 msgid "Accessibility"
 msgstr ""
 
-#: src/Navigation.tsx:420
+#: src/Navigation.tsx:421
 msgid "Accessibility Settings"
 msgstr ""
 
-#: src/Navigation.tsx:436
+#: src/Navigation.tsx:437
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:22
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:23
 #: src/screens/Settings/AccountSettings.tsx:54
@@ -1532,6 +1544,13 @@ msgstr ""
 msgid "Action taken"
 msgstr "Action taken"
 
+#. placeholder {0}: nav.index
+#. placeholder {1}: nav.previous
+#. placeholder {2}: nav.events
+#: src/components/Gallery/Storybook.tsx:576
+msgid "Active index {0} (from {1}), {2} user navigation events"
+msgstr "Active index {0} (from {1}), {2} user navigation events"
+
 #: src/screens/Atmosphere.tsx:43
 #: src/screens/Notifications/index.tsx:108
 msgid "Activity"
@@ -1543,7 +1562,7 @@ msgstr "Activity"
 msgid "Activity from others"
 msgstr ""
 
-#: src/Navigation.tsx:489
+#: src/Navigation.tsx:490
 msgid "Activity notifications"
 msgstr "Activity notifications"
 
@@ -1554,6 +1573,7 @@ msgstr "Activity notifications"
 #: src/components/dialogs/StarterPackDialog.tsx:364
 #: src/components/dialogs/StarterPackDialog.tsx:376
 #: src/components/dms/AddMembersFlow.tsx:410
+#: src/components/Gallery/Storybook.tsx:467
 msgid "Add"
 msgstr ""
 
@@ -1571,8 +1591,8 @@ msgstr "Add {displayName} to Starter Pack"
 msgid "Add a content warning"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:262
-#: src/features/profileLinks/components/LinkFormDialog.tsx:282
+#: src/features/profileLinks/components/LinkFormDialog.tsx:271
+#: src/features/profileLinks/components/LinkFormDialog.tsx:291
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:133
 msgid "Add a link"
 msgstr "Add a link"
@@ -1591,13 +1611,13 @@ msgstr ""
 msgid "Add account"
 msgstr ""
 
-#: src/view/com/composer/GifAltText.tsx:77
-#: src/view/com/composer/GifAltText.tsx:151
-#: src/view/com/composer/GifAltText.tsx:218
+#: src/view/com/composer/GifAltText.tsx:84
+#: src/view/com/composer/GifAltText.tsx:167
+#: src/view/com/composer/GifAltText.tsx:237
 #: src/view/com/composer/photos/Gallery.tsx:201
 #: src/view/com/composer/photos/Gallery.tsx:236
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:95
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:103
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:111
 msgid "Add alt text"
 msgstr ""
 
@@ -1612,11 +1632,11 @@ msgstr ""
 msgid "Add another account"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1623
+#: src/view/com/composer/Composer.tsx:1621
 msgid "Add another post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2294
+#: src/view/com/composer/Composer.tsx:2290
 msgid "Add another post to thread"
 msgstr ""
 
@@ -1638,6 +1658,10 @@ msgstr ""
 msgid "Add automation label to account"
 msgstr "Add automation label to account"
 
+#: src/components/Gallery/Storybook.tsx:456
+msgid "Add card"
+msgstr "Add card"
+
 #: src/components/dms/EmojiReactionPicker.web.tsx:31
 msgid "Add emoji reaction"
 msgstr ""
@@ -1654,8 +1678,8 @@ msgstr "Add group chat members"
 msgid "Add image"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:405
-#: src/features/profileLinks/components/LinkFormDialog.tsx:424
+#: src/features/profileLinks/components/LinkFormDialog.tsx:414
+#: src/features/profileLinks/components/LinkFormDialog.tsx:433
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:149
 msgid "Add link"
 msgstr "Add link"
@@ -1671,8 +1695,8 @@ msgstr ""
 msgid "Add members"
 msgstr "Add members"
 
-#: src/components/moderation/ReportDialog/index.tsx:605
-#: src/components/moderation/ReportDialog/index.tsx:609
+#: src/components/moderation/ReportDialog/index.tsx:606
+#: src/components/moderation/ReportDialog/index.tsx:610
 msgid "Add more details (optional)"
 msgstr ""
 
@@ -1783,7 +1807,7 @@ msgstr ""
 msgid "Additional details (limit 1000 characters)"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:623
+#: src/components/moderation/ReportDialog/index.tsx:624
 msgid "Additional details (limit 300 characters)"
 msgstr ""
 
@@ -1968,16 +1992,16 @@ msgstr ""
 
 #: src/components/AltBadgeWithDialog.tsx:76
 #: src/components/images/AutoSizedImage.tsx:218
-#: src/components/images/Gallery/index.tsx:627
+#: src/components/images/Gallery/index.tsx:443
 #: src/components/images/ImageLayoutGridItem.tsx:138
-#: src/view/com/composer/GifAltText.tsx:101
+#: src/view/com/composer/GifAltText.tsx:108
 #: src/view/com/composer/photos/Gallery.tsx:211
 msgid "ALT"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:55
-#: src/view/com/composer/GifAltText.tsx:161
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:128
+#: src/view/com/composer/GifAltText.tsx:177
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:136
 #: src/view/com/composer/videos/SubtitleDialog.tsx:41
 #: src/view/com/composer/videos/SubtitleDialog.tsx:59
 #: src/view/com/composer/videos/SubtitleDialog.tsx:110
@@ -1989,14 +2013,14 @@ msgstr ""
 msgid "Alt Text"
 msgstr ""
 
-#: src/view/com/composer/GifAltText.tsx:106
+#: src/view/com/composer/GifAltText.tsx:113
 #: src/view/com/composer/photos/Gallery.tsx:130
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr ""
 
 #. placeholder {0}: i18n.number(MAX_ALT_TEXT)
-#: src/view/com/composer/GifAltText.tsx:186
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:149
+#: src/view/com/composer/GifAltText.tsx:205
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:158
 msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
 msgstr ""
 
@@ -2004,6 +2028,10 @@ msgstr ""
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:100
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr ""
+
+#: src/components/Gallery/Storybook.tsx:674
+msgid "An empty gallery takes up no space. A single item behaves like any other, without dragging or arrow key navigation to go anywhere."
+msgstr "An empty gallery takes up no space. A single item behaves like any other, without dragging or arrow key navigation to go anywhere."
 
 #. Accessibility label for the dialog shown when the GIF picker hits an unexpected runtime error and falls back to its error boundary.
 #: src/components/dialogs/LanguageSelectDialog.tsx:344
@@ -2196,7 +2224,7 @@ msgstr ""
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 msgstr "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 
-#: src/Navigation.tsx:521
+#: src/Navigation.tsx:522
 #: src/screens/Settings/AppIconSettings/index.tsx:65
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:19
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:24
@@ -2234,7 +2262,7 @@ msgstr ""
 msgid "App passwords"
 msgstr ""
 
-#: src/Navigation.tsx:388
+#: src/Navigation.tsx:389
 #: src/screens/Settings/AppPasswords.tsx:52
 msgid "App Passwords"
 msgstr ""
@@ -2311,7 +2339,7 @@ msgstr "Appeal this label"
 msgid "Appeal under review"
 msgstr "Appeal under review"
 
-#: src/Navigation.tsx:428
+#: src/Navigation.tsx:429
 #: src/screens/Settings/AppearanceSettings.tsx:71
 #: src/screens/Settings/Settings.tsx:249
 #: src/screens/Settings/Settings.tsx:252
@@ -2382,7 +2410,7 @@ msgid "Are you sure you want to delete this Starter Pack?"
 msgstr "Are you sure you want to delete this Starter Pack?"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
-#: src/screens/Profile/Header/EditProfileDialog.tsx:88
+#: src/screens/Profile/Header/EditProfileDialog.tsx:89
 msgid "Are you sure you want to discard your changes?"
 msgstr ""
 
@@ -2408,7 +2436,7 @@ msgstr ""
 msgid "Are you sure you want to rescind your request to join {0}?"
 msgstr "Are you sure you want to rescind your request to join {0}?"
 
-#: src/view/com/composer/Composer.tsx:1761
+#: src/view/com/composer/Composer.tsx:1759
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -2416,7 +2444,7 @@ msgstr ""
 msgid "Are you sure?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:928
+#: src/components/moderation/ReportDialog/index.tsx:929
 msgid "Are you the person depicted, or an authorized representative acting on behalf of the person depicted?"
 msgstr "Are you the person depicted, or an authorized representative acting on behalf of the person depicted?"
 
@@ -2455,7 +2483,7 @@ msgstr ""
 msgid "AT Protocol FAQ"
 msgstr "AT Protocol FAQ"
 
-#: src/Navigation.tsx:179
+#: src/Navigation.tsx:180
 #: src/screens/Atmosphere.tsx:31
 #: src/view/shell/desktop/LeftNav.tsx:714
 #: src/view/shell/Drawer.tsx:515
@@ -2487,7 +2515,7 @@ msgstr "Automatic"
 msgid "Automation label"
 msgstr "Automation label"
 
-#: src/Navigation.tsx:452
+#: src/Navigation.tsx:453
 #: src/screens/Settings/AutomationLabelSettings.tsx:104
 msgid "Automation Label"
 msgstr "Automation Label"
@@ -2627,7 +2655,7 @@ msgstr "Beta"
 msgid "Beta Feature"
 msgstr ""
 
-#: src/Navigation.tsx:444
+#: src/Navigation.tsx:445
 #: src/screens/Notifications/index.tsx:661
 #: src/screens/Settings/BetaFeaturesSettings.tsx:116
 #: src/screens/Settings/Settings.tsx:271
@@ -2743,7 +2771,7 @@ msgstr ""
 msgid "Blocked accounts"
 msgstr ""
 
-#: src/Navigation.tsx:224
+#: src/Navigation.tsx:225
 #: src/view/screens/ModerationBlockedAccounts.tsx:95
 msgid "Blocked Accounts"
 msgstr ""
@@ -2939,12 +2967,16 @@ msgstr ""
 msgid "Button to go back to the home timeline"
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:329
+msgid "Buttons and text fields work without starting a drag. Type, select text with the arrow keys, and click. The last item uses the focus render function to make its own button the keyboard target, which Enter and Space should press."
+msgstr "Buttons and text fields work without starting a drag. Type, select text with the arrow keys, and click. The last item uses the focus render function to make its own button the keyboard target, which Enter and Space should press."
+
 #. The owner (creator) of a group chat.
 #. placeholder {0}: createSanitizedDisplayName( joinLinkPreview.owner, true, moderateProfile( joinLinkPreview.owner, moderationOpts, ).ui('displayName'), )
 #. placeholder {0}: sanitizeHandle(handle, '@')
 #. placeholder {0}: sanitizeHandle(item.feed.creator.handle, '@')
 #: src/components/LabelingServiceCard/index.tsx:62
-#: src/components/moderation/ReportDialog/index.tsx:1092
+#: src/components/moderation/ReportDialog/index.tsx:1093
 #: src/screens/Messages/JoinRequest.tsx:185
 #: src/screens/Search/components/StarterPackCard.tsx:114
 #: src/screens/Search/Explore.tsx:996
@@ -3036,7 +3068,7 @@ msgstr "Camera access needed"
 #: src/components/SendErrorReportDialog.tsx:102
 #: src/features/liveNow/components/GoLiveDialog.tsx:258
 #: src/features/liveNow/components/GoLiveDialog.tsx:264
-#: src/features/profileLinks/components/LinkFormDialog.tsx:264
+#: src/features/profileLinks/components/LinkFormDialog.tsx:273
 #: src/lib/media/picker.tsx:38
 #: src/screens/Deactivated.tsx:154
 #: src/screens/Messages/components/InviteLinkDialog.tsx:498
@@ -3046,8 +3078,8 @@ msgstr "Camera access needed"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
 #: src/screens/ModerationInbox/Notice.tsx:414
-#: src/screens/Profile/Header/EditProfileDialog.tsx:277
-#: src/screens/Profile/Header/EditProfileDialog.tsx:285
+#: src/screens/Profile/Header/EditProfileDialog.tsx:282
+#: src/screens/Profile/Header/EditProfileDialog.tsx:290
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
 #: src/screens/Settings/AppIconSettings/index.tsx:42
@@ -3061,8 +3093,8 @@ msgstr "Camera access needed"
 #: src/screens/Settings/Settings.tsx:332
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1839
-#: src/view/com/composer/Composer.tsx:1849
+#: src/view/com/composer/Composer.tsx:1835
+#: src/view/com/composer/Composer.tsx:1845
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:232
@@ -3110,7 +3142,33 @@ msgstr ""
 msgid "Captions & alt text"
 msgstr ""
 
-#: src/components/images/Gallery/index.tsx:312
+#. placeholder {0}: card.id
+#: src/components/Gallery/Storybook.tsx:559
+#: src/components/Gallery/Storybook.tsx:564
+msgid "Card {0}"
+msgstr "Card {0}"
+
+#: src/components/Gallery/Storybook.tsx:276
+msgid "Cards and images of different sizes"
+msgstr "Cards and images of different sizes"
+
+#: src/components/Gallery/Storybook.tsx:640
+msgid "Cards in a constrained panel"
+msgstr "Cards in a constrained panel"
+
+#: src/components/Gallery/Storybook.tsx:268
+msgid "Cards of different widths and heights, an image, and a card wider than the gallery. The strip is as tall as the tallest card, and nothing is cropped or resized."
+msgstr "Cards of different widths and heights, an image, and a card wider than the gallery. The strip is as tall as the tallest card, and nothing is cropped or resized."
+
+#: src/components/Gallery/Storybook.tsx:657
+msgid "Cards that bleed to the container edges"
+msgstr "Cards that bleed to the container edges"
+
+#: src/components/Gallery/Storybook.tsx:545
+msgid "Cards that change"
+msgstr "Cards that change"
+
+#: src/components/Gallery/index.tsx:365
 msgid "carousel"
 msgstr "carousel"
 
@@ -3152,7 +3210,7 @@ msgstr ""
 msgid "Change hosting provider"
 msgstr "Change hosting provider"
 
-#: src/components/moderation/ReportDialog/index.tsx:522
+#: src/components/moderation/ReportDialog/index.tsx:523
 msgid "Change moderation service"
 msgstr ""
 
@@ -3165,13 +3223,17 @@ msgstr ""
 msgid "Change password dialog"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:384
+#: src/components/moderation/ReportDialog/index.tsx:385
 msgid "Change report category"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:463
+#: src/components/moderation/ReportDialog/index.tsx:464
 msgid "Change report reason"
 msgstr ""
+
+#: src/components/Gallery/Storybook.tsx:448
+msgid "Change the items from outside. Resizing, reordering, and revealing are not user navigation, so the event count should only go up when you swipe, drag, or use the arrow keys."
+msgstr "Change the items from outside. Resizing, reordering, and revealing are not user navigation, so the event count should only go up when you swipe, drag, or use the arrow keys."
 
 #: src/components/Post/Translated/index.tsx:421
 msgid "Change the source language"
@@ -3198,13 +3260,17 @@ msgstr ""
 msgid "Changes to the Starter Pack will not be reflected in the list after creation. The list will be an independent copy."
 msgstr "Changes to the Starter Pack will not be reflected in the list after creation. The list will be an independent copy."
 
+#: src/components/Gallery/Storybook.tsx:446
+msgid "Changing content"
+msgstr "Changing content"
+
 #: src/components/OTAChannelNotice.tsx:203
 #: src/components/OTAChannelNotice.tsx:207
 msgid "Channel"
 msgstr "Channel"
 
 #: src/lib/hooks/useNotificationHandler.ts:134
-#: src/Navigation.tsx:539
+#: src/Navigation.tsx:540
 #: src/view/shell/bottom-bar/BottomBar.tsx:246
 #: src/view/shell/desktop/LeftNav.tsx:726
 #: src/view/shell/Drawer.tsx:567
@@ -3264,7 +3330,7 @@ msgstr "Chat owners cannot leave a group chat."
 msgid "Chat recipient is not followed by the sender."
 msgstr "Chat recipient is not followed by the sender."
 
-#: src/Navigation.tsx:559
+#: src/Navigation.tsx:560
 msgid "Chat request inbox"
 msgstr ""
 
@@ -3274,7 +3340,7 @@ msgid "Chat requests"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:88
-#: src/Navigation.tsx:554
+#: src/Navigation.tsx:555
 #: src/screens/Messages/ChatList.tsx:97
 #: src/screens/Messages/ChatList.tsx:101
 #: src/screens/Messages/ChatList.tsx:671
@@ -3633,7 +3699,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1847
+#: src/view/com/composer/Composer.tsx:1843
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -3677,7 +3743,7 @@ msgid "Communication sent"
 msgstr "Communication sent"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:46
-#: src/Navigation.tsx:378
+#: src/Navigation.tsx:379
 #: src/view/screens/CommunityGuidelines.tsx:28
 msgid "Community Guidelines"
 msgstr ""
@@ -3697,7 +3763,7 @@ msgid "Compose new post"
 msgstr ""
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1723
+#: src/view/com/composer/Composer.tsx:1721
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -3705,11 +3771,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2680
+#: src/view/com/composer/Composer.tsx:2676
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2682
+#: src/view/com/composer/Composer.tsx:2678
 msgid "Compressing video..."
 msgstr ""
 
@@ -3752,6 +3818,10 @@ msgstr "Connecting…"
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:209
 msgid "Connection issue"
 msgstr ""
+
+#: src/components/Gallery/Storybook.tsx:612
+msgid "Constrained and bleeding containers"
+msgstr "Constrained and bleeding containers"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:407
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:129
@@ -3800,7 +3870,7 @@ msgstr ""
 msgid "Content and media"
 msgstr ""
 
-#: src/Navigation.tsx:497
+#: src/Navigation.tsx:498
 msgid "Content and Media"
 msgstr ""
 
@@ -4057,7 +4127,7 @@ msgstr ""
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:41
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:108
-#: src/Navigation.tsx:383
+#: src/Navigation.tsx:384
 #: src/view/screens/CopyrightPolicy.tsx:25
 msgid "Copyright Policy"
 msgstr ""
@@ -4174,9 +4244,17 @@ msgstr "Couldn’t load more posts. Try again"
 msgid "Couldn’t save your links. Please try again."
 msgstr "Couldn’t save your links. Please try again."
 
+#: src/components/Gallery/Storybook.tsx:339
+msgid "Counter"
+msgstr "Counter"
+
 #: src/components/InternationalPhoneCodeSelect.tsx:80
 msgid "Country code"
 msgstr ""
+
+#: src/components/Gallery/Storybook.tsx:372
+msgid "Counts how many times it was focused and pressed"
+msgstr "Counts how many times it was focused and pressed"
 
 #. Advanced search: Example of a “none of these words” search. Paired with “cats dogs”.
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:268
@@ -4207,7 +4285,7 @@ msgstr "Create a QR code for a Starter Pack"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:206
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
-#: src/Navigation.tsx:590
+#: src/Navigation.tsx:591
 #: src/view/screens/Profile.tsx:575
 #: src/view/screens/Profile.tsx:576
 msgid "Create a Starter Pack"
@@ -4286,8 +4364,8 @@ msgstr "Create or modify an invite link for this group chat"
 
 #. Accessibility label for button to create a moderation report for the selected option
 #. placeholder {0}: option.title
-#: src/components/moderation/ReportDialog/index.tsx:834
-#: src/components/moderation/ReportDialog/index.tsx:879
+#: src/components/moderation/ReportDialog/index.tsx:835
+#: src/components/moderation/ReportDialog/index.tsx:880
 msgid "Create report for {0}"
 msgstr ""
 
@@ -4486,7 +4564,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:821
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:823
-#: src/view/com/composer/Composer.tsx:1735
+#: src/view/com/composer/Composer.tsx:1733
 msgid "Delete post"
 msgstr ""
 
@@ -4534,8 +4612,8 @@ msgstr "Deleted post"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:463
 #: src/components/SendErrorReportDialog.tsx:78
-#: src/screens/Profile/Header/EditProfileDialog.tsx:423
-#: src/screens/Profile/Header/EditProfileDialog.tsx:430
+#: src/screens/Profile/Header/EditProfileDialog.tsx:428
+#: src/screens/Profile/Header/EditProfileDialog.tsx:435
 msgid "Description"
 msgstr ""
 
@@ -4553,8 +4631,8 @@ msgstr "Description: “{0}”"
 msgid "Description: “{description}”"
 msgstr "Description: “{description}”"
 
-#: src/view/com/composer/GifAltText.tsx:157
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:124
+#: src/view/com/composer/GifAltText.tsx:173
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:132
 msgid "Descriptive alt text"
 msgstr ""
 
@@ -4658,28 +4736,28 @@ msgid "Disabled"
 msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:102
-#: src/screens/Profile/Header/EditProfileDialog.tsx:90
-#: src/view/com/composer/Composer.tsx:1513
-#: src/view/com/composer/Composer.tsx:1558
-#: src/view/com/composer/Composer.tsx:1768
+#: src/screens/Profile/Header/EditProfileDialog.tsx:91
+#: src/view/com/composer/Composer.tsx:1511
+#: src/view/com/composer/Composer.tsx:1556
+#: src/view/com/composer/Composer.tsx:1766
 #: src/view/com/composer/drafts/DraftItem.tsx:243
 #: src/view/com/composer/drafts/DraftsButton.tsx:128
 msgid "Discard"
 msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:99
-#: src/screens/Profile/Header/EditProfileDialog.tsx:87
+#: src/screens/Profile/Header/EditProfileDialog.tsx:88
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1511
+#: src/view/com/composer/Composer.tsx:1509
 #: src/view/com/composer/drafts/DraftItem.tsx:240
 #: src/view/com/composer/drafts/DraftsButton.tsx:94
 msgid "Discard draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1528
-#: src/view/com/composer/Composer.tsx:1760
+#: src/view/com/composer/Composer.tsx:1526
+#: src/view/com/composer/Composer.tsx:1758
 msgid "Discard post?"
 msgstr ""
 
@@ -4717,7 +4795,7 @@ msgstr ""
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2622
+#: src/view/com/composer/Composer.tsx:2618
 msgid "Dismiss error"
 msgstr ""
 
@@ -4751,8 +4829,8 @@ msgstr "Dismisses the QR scanner"
 msgid "Display larger alt text badges"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:373
-#: src/screens/Profile/Header/EditProfileDialog.tsx:379
+#: src/screens/Profile/Header/EditProfileDialog.tsx:378
+#: src/screens/Profile/Header/EditProfileDialog.tsx:384
 msgid "Display name"
 msgstr ""
 
@@ -4909,7 +4987,7 @@ msgstr "Dusk"
 msgid "e.g. alice"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:380
+#: src/screens/Profile/Header/EditProfileDialog.tsx:385
 msgid "e.g. Alice Lastname"
 msgstr ""
 
@@ -4925,7 +5003,7 @@ msgstr ""
 msgid "e.g. Great Posters"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:373
+#: src/features/profileLinks/components/LinkFormDialog.tsx:382
 msgid "e.g. Portfolio"
 msgstr "e.g. Portfolio"
 
@@ -5009,8 +5087,8 @@ msgctxt "button"
 msgid "Edit invite link"
 msgstr "Edit invite link"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:262
-#: src/features/profileLinks/components/LinkFormDialog.tsx:282
+#: src/features/profileLinks/components/LinkFormDialog.tsx:271
+#: src/features/profileLinks/components/LinkFormDialog.tsx:291
 #: src/features/profileLinks/components/ProfileLinks.tsx:193
 msgid "Edit link"
 msgstr "Edit link"
@@ -5033,7 +5111,7 @@ msgstr ""
 msgid "Edit moderation list"
 msgstr ""
 
-#: src/Navigation.tsx:393
+#: src/Navigation.tsx:394
 #: src/view/screens/Feeds.tsx:512
 msgid "Edit My Feeds"
 msgstr ""
@@ -5056,8 +5134,8 @@ msgstr ""
 msgid "Edit post interaction settings"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:327
-#: src/screens/Profile/Header/EditProfileDialog.tsx:334
+#: src/screens/Profile/Header/EditProfileDialog.tsx:332
+#: src/screens/Profile/Header/EditProfileDialog.tsx:339
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:300
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:353
 msgid "Edit profile"
@@ -5085,7 +5163,7 @@ msgstr ""
 msgid "Edit who can reply"
 msgstr ""
 
-#: src/Navigation.tsx:595
+#: src/Navigation.tsx:596
 msgid "Edit your Starter Pack"
 msgstr "Edit your Starter Pack"
 
@@ -5153,6 +5231,14 @@ msgstr ""
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:78
 msgid "Embedded video player"
 msgstr ""
+
+#: src/components/Gallery/Storybook.tsx:672
+msgid "Empty and single"
+msgstr "Empty and single"
+
+#: src/components/Gallery/Storybook.tsx:681
+msgid "Empty gallery"
+msgstr "Empty gallery"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:101
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:108
@@ -5222,6 +5308,14 @@ msgstr ""
 #: src/screens/Moderation/index.tsx:462
 msgid "Enabled"
 msgstr ""
+
+#: src/components/Gallery/Storybook.tsx:571
+msgid "End"
+msgstr "End"
+
+#: src/components/Gallery/Storybook.tsx:570
+msgid "End card"
+msgstr "End card"
 
 #: src/screens/Profile/Sections/Feed.tsx:135
 msgid "End of feed"
@@ -5296,7 +5390,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2700
+#: src/view/com/composer/Composer.tsx:2696
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr ""
@@ -5450,7 +5544,7 @@ msgstr ""
 msgid "Explicit sexual images."
 msgstr ""
 
-#: src/Navigation.tsx:799
+#: src/Navigation.tsx:800
 #: src/screens/Atmosphere.tsx:43
 #: src/screens/Search/Shell.tsx:549
 #: src/view/shell/desktop/LeftNav.tsx:692
@@ -5493,7 +5587,7 @@ msgstr ""
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr ""
 
-#: src/Navigation.tsx:412
+#: src/Navigation.tsx:413
 #: src/screens/Settings/ExternalMediaPreferences.tsx:35
 msgid "External Media Preferences"
 msgstr ""
@@ -5752,7 +5846,7 @@ msgstr "Failed to rescind your request. Please try again."
 msgid "Failed to resolve location. Please try again."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:739
+#: src/view/com/composer/Composer.tsx:738
 msgid "Failed to save draft"
 msgstr ""
 
@@ -5853,7 +5947,7 @@ msgstr ""
 msgid "False information about elections"
 msgstr ""
 
-#: src/Navigation.tsx:323
+#: src/Navigation.tsx:324
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:45
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:42
 msgid "Feed"
@@ -5914,7 +6008,7 @@ msgctxt "toast"
 msgid "Feedback sent to feed operator"
 msgstr ""
 
-#: src/Navigation.tsx:575
+#: src/Navigation.tsx:576
 #: src/screens/SavedFeeds.tsx:112
 #: src/screens/SavedFeeds.tsx:303
 #: src/screens/Search/SearchResults.tsx:108
@@ -6022,8 +6116,8 @@ msgstr ""
 msgid "Find and invite friends"
 msgstr "Find and invite friends"
 
-#: src/Navigation.tsx:476
-#: src/Navigation.tsx:617
+#: src/Navigation.tsx:477
+#: src/Navigation.tsx:618
 msgid "Find Contacts"
 msgstr ""
 
@@ -6097,9 +6191,19 @@ msgstr ""
 msgid "Focus code input"
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:365
+#: src/components/Gallery/Storybook.tsx:371
+#: src/components/Gallery/Storybook.tsx:393
+msgid "Focus target"
+msgstr "Focus target"
+
 #: src/lib/hotkeys/index.tsx:73
 msgid "Focus the search field"
 msgstr "Focus the search field"
+
+#: src/components/Gallery/Storybook.tsx:398
+msgid "Focused {focusCount} times"
+msgstr "Focused {focusCount} times"
 
 #. User is not following this account, click to follow
 #. User is not following this account, click to follow
@@ -6221,7 +6325,7 @@ msgid "Followers can join"
 msgstr "Followers can join"
 
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:277
+#: src/Navigation.tsx:278
 msgid "Followers of @{0} that you know"
 msgstr ""
 
@@ -6278,7 +6382,7 @@ msgstr "Following {name}"
 msgid "Following feed preferences"
 msgstr ""
 
-#: src/Navigation.tsx:399
+#: src/Navigation.tsx:400
 #: src/screens/Settings/FollowingFeedPreferences.tsx:57
 msgid "Following Feed Preferences"
 msgstr ""
@@ -6377,6 +6481,18 @@ msgstr ""
 #: src/screens/Search/components/AdvancedSearchDialog/hooks.tsx:30
 msgid "From these people"
 msgstr "From these people"
+
+#: src/components/Gallery/Storybook.tsx:43
+msgid "Gallery"
+msgstr "Gallery"
+
+#: src/components/Gallery/Storybook.tsx:357
+msgid "Gallery text field"
+msgstr "Gallery text field"
+
+#: src/components/Gallery/Storybook.tsx:689
+msgid "Gallery with one item"
+msgstr "Gallery with one item"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:335
 msgid "Generate a Starter Pack"
@@ -6518,7 +6634,7 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2705
+#: src/view/com/composer/Composer.tsx:2701
 msgid "GIF uploaded"
 msgstr ""
 
@@ -6705,7 +6821,7 @@ msgctxt "toast"
 msgid "Group chat name updated"
 msgstr "Group chat name updated"
 
-#: src/Navigation.tsx:544
+#: src/Navigation.tsx:545
 #: src/screens/Messages/ConversationSettings/index.tsx:110
 msgid "Group chat settings"
 msgstr "Group chat settings"
@@ -6807,7 +6923,7 @@ msgstr ""
 msgid "Harming or endangering minors"
 msgstr ""
 
-#: src/Navigation.tsx:528
+#: src/Navigation.tsx:529
 msgid "Hashtag"
 msgstr ""
 
@@ -7026,8 +7142,8 @@ msgstr ""
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr ""
 
-#: src/Navigation.tsx:794
-#: src/Navigation.tsx:815
+#: src/Navigation.tsx:795
+#: src/Navigation.tsx:816
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
 #: src/view/shell/desktop/LeftNav.tsx:681
 #: src/view/shell/Drawer.tsx:541
@@ -7151,25 +7267,23 @@ msgstr ""
 msgid "If you're trying to change your handle or email, do so before you deactivate."
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:291
 #: src/components/images/ImageLayoutGridItem.tsx:94
 msgid "Image"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:488
+#: src/components/images/Gallery/index.tsx:304
 msgid "Image {0}"
 msgstr "Image {0}"
 
 #. placeholder {0}: index + 1
+#. placeholder {1}: images.length
 #. placeholder {1}: imgs.length
+#: src/components/images/Gallery/index.tsx:213
 #: src/components/Lightbox/Lightbox.web.tsx:267
 msgid "Image {0} of {1}"
 msgstr ""
-
-#. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:473
-msgid "Image {0} of {imageCount}"
-msgstr "Image {0} of {imageCount}"
 
 #: src/screens/Settings/AboutSettings.tsx:74
 msgid "Image cache cleared"
@@ -7181,8 +7295,16 @@ msgstr ""
 msgid "Image cache cleared, freed {0}"
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:151
+msgid "Image content"
+msgstr "Image content"
+
+#: src/components/Gallery/Storybook.tsx:159
+msgid "Image frames in different shapes"
+msgstr "Image frames in different shapes"
+
 #. placeholder {0}: images.length
-#: src/components/images/Gallery/index.tsx:313
+#: src/components/images/Gallery/index.tsx:194
 msgid "Image gallery, {0} images"
 msgstr "Image gallery, {0} images"
 
@@ -7333,13 +7455,17 @@ msgid "Include posts made until this date"
 msgstr "Include posts made until this date"
 
 #. Checkbox shown when reporting a video. The value is the current playback position, formatted as minutes:seconds.
-#: src/components/moderation/ReportDialog/index.tsx:701
+#: src/components/moderation/ReportDialog/index.tsx:702
 msgid "Include video timestamp ({videoTimestamp})"
 msgstr "Include video timestamp ({videoTimestamp})"
 
 #: src/screens/Login/LoginForm.tsx:158
 msgid "Incorrect username or password"
 msgstr ""
+
+#: src/components/Gallery/Storybook.tsx:342
+msgid "Increment counter"
+msgstr "Increment counter"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:128
 msgid "Input new password"
@@ -7356,6 +7482,22 @@ msgstr ""
 #: src/screens/Moderation/index.tsx:332
 msgid "Interaction settings"
 msgstr ""
+
+#: src/components/Gallery/Storybook.tsx:327
+msgid "Interactive children"
+msgstr "Interactive children"
+
+#: src/components/Gallery/Storybook.tsx:337
+msgid "Interactive items"
+msgstr "Interactive items"
+
+#: src/components/Gallery/Storybook.tsx:552
+msgid "Intro"
+msgstr "Intro"
+
+#: src/components/Gallery/Storybook.tsx:551
+msgid "Intro card"
+msgstr "Intro card"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:33
 msgid "Introducing activity notifications"
@@ -7514,7 +7656,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr ""
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2641
+#: src/view/com/composer/Composer.tsx:2637
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -7558,8 +7700,8 @@ msgstr "Joined {createdAt}"
 msgid "Journalism"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1556
-#: src/view/com/composer/Composer.tsx:1571
+#: src/view/com/composer/Composer.tsx:1554
+#: src/view/com/composer/Composer.tsx:1569
 #: src/view/com/composer/drafts/DraftsButton.tsx:126
 msgid "Keep editing"
 msgstr ""
@@ -7625,11 +7767,15 @@ msgstr ""
 msgid "Labels on your account"
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:167
+msgid "Landscape frame"
+msgstr "Landscape frame"
+
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:357
 msgid "Language"
 msgstr "Language"
 
-#: src/Navigation.tsx:250
+#: src/Navigation.tsx:251
 msgid "Language Settings"
 msgstr ""
 
@@ -7663,7 +7809,7 @@ msgstr ""
 #: src/components/verification/VerificationsDialog.tsx:169
 #: src/components/verification/VerifierDialog.tsx:137
 #: src/screens/Moderation/VerificationSettings.tsx:50
-#: src/screens/Profile/Header/EditProfileDialog.tsx:409
+#: src/screens/Profile/Header/EditProfileDialog.tsx:414
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:215
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:279
 msgctxt "english-only-resource"
@@ -7859,8 +8005,8 @@ msgstr ""
 msgid "Like this labeler"
 msgstr ""
 
-#: src/Navigation.tsx:328
-#: src/Navigation.tsx:333
+#: src/Navigation.tsx:329
+#: src/Navigation.tsx:334
 msgid "Liked by"
 msgstr ""
 
@@ -7928,8 +8074,8 @@ msgstr "Limited profile"
 msgid "Linear"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:301
-#: src/features/profileLinks/components/LinkFormDialog.tsx:307
+#: src/features/profileLinks/components/LinkFormDialog.tsx:310
+#: src/features/profileLinks/components/LinkFormDialog.tsx:316
 msgid "Link"
 msgstr "Link"
 
@@ -7953,7 +8099,7 @@ msgstr "Link to {domain}"
 msgid "Links"
 msgstr "Links"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:285
+#: src/features/profileLinks/components/LinkFormDialog.tsx:294
 msgid "Links show as buttons under your bio. Links to support sites like Ko-fi or Patreon show as a green Support button. <0>See all sites</0>"
 msgstr "Links show as buttons under your bio. Links to support sites like Ko-fi or Patreon show as a green Support button. <0>See all sites</0>"
 
@@ -7961,7 +8107,7 @@ msgstr "Links show as buttons under your bio. Links to support sites like Ko-fi 
 msgid "Links to these sites show as a green Support button."
 msgstr "Links to these sites show as a green Support button."
 
-#: src/Navigation.tsx:283
+#: src/Navigation.tsx:284
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:44
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:40
 msgid "List"
@@ -8062,7 +8208,7 @@ msgctxt "toast"
 msgid "List unmuted"
 msgstr ""
 
-#: src/Navigation.tsx:184
+#: src/Navigation.tsx:185
 #: src/view/screens/Lists.tsx:60
 #: src/view/screens/Profile.tsx:234
 #: src/view/screens/Profile.tsx:242
@@ -8215,7 +8361,7 @@ msgstr "Lock this group chat"
 msgid "Locked"
 msgstr "Locked"
 
-#: src/Navigation.tsx:358
+#: src/Navigation.tsx:359
 msgid "Log"
 msgstr ""
 
@@ -8258,6 +8404,10 @@ msgstr "Love GIFs"
 msgid "Make adjustments to email settings for your account"
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:627
+msgid "Make narrow"
+msgstr "Make narrow"
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:310
 msgid "Make one for me"
 msgstr ""
@@ -8265,6 +8415,26 @@ msgstr ""
 #: src/components/dialogs/LinkWarning.tsx:101
 msgid "Make sure this is where you intend to go!"
 msgstr ""
+
+#: src/components/Gallery/Storybook.tsx:501
+msgid "Make the first card taller or shorter"
+msgstr "Make the first card taller or shorter"
+
+#: src/components/Gallery/Storybook.tsx:511
+msgid "Make the first card wider or narrower"
+msgstr "Make the first card wider or narrower"
+
+#: src/components/Gallery/Storybook.tsx:621
+msgid "Make the panel narrow"
+msgstr "Make the panel narrow"
+
+#: src/components/Gallery/Storybook.tsx:621
+msgid "Make the panel wide"
+msgstr "Make the panel wide"
+
+#: src/components/Gallery/Storybook.tsx:627
+msgid "Make wide"
+msgstr "Make wide"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:62
 #: src/screens/Settings/ContentAndMediaSettings.tsx:65
@@ -8360,6 +8530,14 @@ msgstr ""
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:284
+msgid "Medium"
+msgstr "Medium"
+
+#: src/components/Gallery/Storybook.tsx:283
+msgid "Medium card"
+msgstr "Medium card"
+
 #: src/components/moderation/BlockDialog.tsx:300
 msgid "Member removed from group chat."
 msgstr "Member removed from group chat."
@@ -8452,7 +8630,7 @@ msgstr "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgid "Message options"
 msgstr ""
 
-#: src/Navigation.tsx:809
+#: src/Navigation.tsx:810
 msgid "Messages"
 msgstr ""
 
@@ -8481,11 +8659,15 @@ msgstr ""
 msgid "Missing media"
 msgstr ""
 
-#: src/Navigation.tsx:199
+#: src/components/Gallery/Storybook.tsx:266
+msgid "Mixed content and sizes"
+msgstr "Mixed content and sizes"
+
+#: src/Navigation.tsx:200
 msgid "Mod inbox settings"
 msgstr "Mod inbox settings"
 
-#: src/Navigation.tsx:189
+#: src/Navigation.tsx:190
 #: src/screens/Moderation/index.tsx:103
 msgid "Moderation"
 msgstr ""
@@ -8496,7 +8678,7 @@ msgstr ""
 
 #. Name for a feature flag
 #: src/analytics/features/index.ts:149
-#: src/Navigation.tsx:194
+#: src/Navigation.tsx:195
 #: src/screens/Moderation/index.tsx:299
 #: src/screens/ModerationInbox/index.tsx:98
 msgid "Moderation inbox"
@@ -8537,7 +8719,7 @@ msgstr ""
 msgid "Moderation lists"
 msgstr ""
 
-#: src/Navigation.tsx:214
+#: src/Navigation.tsx:215
 #: src/view/screens/ModerationModlists.tsx:60
 msgid "Moderation Lists"
 msgstr ""
@@ -8550,7 +8732,7 @@ msgstr "Moderation notice"
 msgid "moderation settings"
 msgstr ""
 
-#: src/Navigation.tsx:343
+#: src/Navigation.tsx:344
 msgid "Moderation states"
 msgstr ""
 
@@ -8701,7 +8883,7 @@ msgstr "Muted"
 msgid "Muted accounts"
 msgstr ""
 
-#: src/Navigation.tsx:219
+#: src/Navigation.tsx:220
 #: src/view/screens/ModerationMutedAccounts.tsx:107
 msgid "Muted Accounts"
 msgstr ""
@@ -8773,8 +8955,8 @@ msgstr ""
 msgid "Navigates to your profile"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:414
-#: src/components/moderation/ReportDialog/index.tsx:430
+#: src/components/moderation/ReportDialog/index.tsx:415
+#: src/components/moderation/ReportDialog/index.tsx:431
 msgid "Need to report a copyright violation, legal request, or regulatory compliance issue?"
 msgstr ""
 
@@ -9014,8 +9196,8 @@ msgstr ""
 msgid "Night"
 msgstr "Night"
 
-#: src/components/moderation/ReportDialog/index.tsx:1010
-#: src/components/moderation/ReportDialog/index.tsx:1019
+#: src/components/moderation/ReportDialog/index.tsx:1011
+#: src/components/moderation/ReportDialog/index.tsx:1020
 msgctxt "Answer to a yes/no question"
 msgid "No"
 msgstr "No"
@@ -9345,7 +9527,7 @@ msgstr ""
 msgid "Not followed by anyone you’re following"
 msgstr "Not followed by anyone you’re following"
 
-#: src/Navigation.tsx:174
+#: src/Navigation.tsx:175
 #: src/view/screens/Profile.tsx:132
 msgid "Not Found"
 msgstr ""
@@ -9370,14 +9552,14 @@ msgstr ""
 msgid "Nothing saved yet"
 msgstr ""
 
-#: src/Navigation.tsx:209
+#: src/Navigation.tsx:210
 #: src/screens/ModerationInbox/Notice.tsx:118
 msgid "Notice"
 msgstr "Notice"
 
 #: src/components/dialogs/NotificationSettingsDialog.tsx:72
-#: src/Navigation.tsx:483
-#: src/Navigation.tsx:570
+#: src/Navigation.tsx:484
+#: src/Navigation.tsx:571
 #: src/screens/Notifications/index.tsx:673
 #: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
@@ -9388,8 +9570,8 @@ msgstr ""
 msgid "Notification sounds"
 msgstr ""
 
-#: src/Navigation.tsx:565
-#: src/Navigation.tsx:804
+#: src/Navigation.tsx:566
+#: src/Navigation.tsx:805
 #: src/screens/Messages/Settings.tsx:255
 #: src/screens/Notifications/ActivityList.tsx:31
 #: src/screens/Notifications/index.tsx:651
@@ -9476,6 +9658,10 @@ msgstr ""
 msgid "Onboarding reset"
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:590
+msgid "One"
+msgstr "One"
+
 #: src/components/dms/dialogs/NewChatDialog.tsx:108
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:124
 msgid "One of the selected recipients does not allow group chats."
@@ -9486,11 +9672,11 @@ msgstr "One of the selected recipients does not allow group chats."
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "One of the selected recipients has blocked you and cannot be messaged."
 
-#: src/view/com/composer/Composer.tsx:947
+#: src/view/com/composer/Composer.tsx:946
 msgid "One or more GIFs is missing alt text."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:944
+#: src/view/com/composer/Composer.tsx:943
 msgid "One or more images is missing alt text."
 msgstr ""
 
@@ -9502,13 +9688,17 @@ msgstr ""
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 msgstr "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 
-#: src/view/com/composer/Composer.tsx:750
+#: src/view/com/composer/Composer.tsx:749
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:954
+#: src/view/com/composer/Composer.tsx:953
 msgid "One or more videos is missing alt text."
 msgstr ""
+
+#: src/components/Gallery/Storybook.tsx:692
+msgid "Only"
+msgstr "Only"
 
 #. placeholder {0}: settings.map((rule, i) => ( <Fragment key={`rule-${i}`}> <Rule rule={rule} post={post} lists={post.threadgate!.lists} /> <Separator i={i} length={settings.length} /> </Fragment> ))
 #: src/components/WhoCanReply.tsx:265
@@ -9519,7 +9709,7 @@ msgstr ""
 #. placeholder {0}: result.accepted.length
 #. placeholder {1}: next.length
 #. placeholder {2}: next.length
-#: src/view/com/composer/Composer.tsx:236
+#: src/view/com/composer/Composer.tsx:235
 msgid "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
 msgstr "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
 
@@ -9530,6 +9720,10 @@ msgstr "Only admins can accept join requests."
 #: src/screens/Messages/JoinRequests.tsx:228
 msgid "Only admins can reject join requests."
 msgstr "Only admins can reject join requests."
+
+#: src/components/Gallery/Storybook.tsx:691
+msgid "Only card"
+msgstr "Only card"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:154
 msgid "Only followers can join this group chat."
@@ -9571,7 +9765,7 @@ msgstr "Only posts with videos"
 msgid "Only replies"
 msgstr "Only replies"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:249
+#: src/features/profileLinks/components/LinkFormDialog.tsx:258
 msgid "Only secure links can be added. Use a link that starts with https://."
 msgstr "Only secure links can be added. Use a link that starts with https://."
 
@@ -9646,7 +9840,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageComposer.tsx:228
-#: src/view/com/composer/Composer.tsx:2271
+#: src/view/com/composer/Composer.tsx:2267
 msgid "Open emoji picker"
 msgstr ""
 
@@ -9836,7 +10030,7 @@ msgstr ""
 msgid "Opens flow to sign in to your existing Bluesky account"
 msgstr ""
 
-#: src/components/images/Gallery/index.tsx:489
+#: src/components/images/Gallery/index.tsx:305
 msgid "Opens full image"
 msgstr "Opens full image"
 
@@ -10023,6 +10217,10 @@ msgstr "Owner"
 msgid "Owner must lock the group before leaving."
 msgstr "Owner must lock the group before leaving."
 
+#: src/components/Gallery/Storybook.tsx:654
+msgid "Padded container"
+msgstr "Padded container"
+
 #: src/components/Lists.tsx:204
 #: src/components/Lists.tsx:219
 #: src/view/screens/NotFound.tsx:34
@@ -10088,12 +10286,12 @@ msgid "People {ownerName} follows can request to join"
 msgstr "People {ownerName} follows can request to join"
 
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:270
+#: src/Navigation.tsx:271
 msgid "People followed by @{0}"
 msgstr ""
 
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:263
+#: src/Navigation.tsx:264
 msgid "People following @{0}"
 msgstr ""
 
@@ -10394,7 +10592,7 @@ msgstr ""
 msgid "Please sign in as @{0}"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:961
+#: src/components/moderation/ReportDialog/index.tsx:962
 msgctxt "english-only-resource"
 msgid "Please submit your report through the Report non-consensual intimate imagery (NCII) form."
 msgstr "Please submit your report through the Report non-consensual intimate imagery (NCII) form."
@@ -10428,11 +10626,19 @@ msgstr ""
 msgid "Porn"
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:161
+msgid "Portrait frame"
+msgstr "Portrait frame"
+
+#: src/components/Gallery/Storybook.tsx:153
+msgid "Portrait, square, and landscape frames as plain children. The frames, not the gallery, decide the sizes."
+msgstr "Portrait, square, and landscape frames as plain children. The frames, not the gallery, decide the sizes."
+
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:36
 msgid "Post"
 msgstr "Post"
 
-#: src/view/com/composer/Composer.tsx:1913
+#: src/view/com/composer/Composer.tsx:1909
 msgctxt "action"
 msgid "Post"
 msgstr ""
@@ -10458,12 +10664,12 @@ msgstr ""
 msgid "Post a video"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1911
+#: src/view/com/composer/Composer.tsx:1907
 msgctxt "action"
 msgid "Post All"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1570
+#: src/view/com/composer/Composer.tsx:1568
 msgid "Post anyway"
 msgstr "Post anyway"
 
@@ -10480,10 +10686,10 @@ msgid "Post by {name}"
 msgstr "Post by {name}"
 
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:296
-#: src/Navigation.tsx:303
-#: src/Navigation.tsx:310
-#: src/Navigation.tsx:317
+#: src/Navigation.tsx:297
+#: src/Navigation.tsx:304
+#: src/Navigation.tsx:311
+#: src/Navigation.tsx:318
 msgid "Post by @{0}"
 msgstr ""
 
@@ -10517,7 +10723,7 @@ msgstr ""
 msgid "Post interaction settings"
 msgstr ""
 
-#: src/Navigation.tsx:230
+#: src/Navigation.tsx:231
 #: src/screens/ModerationInteractionSettings/index.tsx:36
 msgid "Post Interaction Settings"
 msgstr ""
@@ -10622,6 +10828,10 @@ msgstr ""
 msgid "Press to view followers of this account that you also follow"
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:403
+msgid "Pressed {pressCount} times"
+msgstr "Pressed {pressCount} times"
+
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:121
 msgid "Preview"
 msgstr ""
@@ -10645,8 +10855,8 @@ msgstr ""
 msgid "Privacy and security"
 msgstr ""
 
-#: src/Navigation.tsx:460
-#: src/Navigation.tsx:468
+#: src/Navigation.tsx:461
+#: src/Navigation.tsx:469
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
 msgid "Privacy and Security"
@@ -10659,7 +10869,7 @@ msgstr ""
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:36
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:103
-#: src/Navigation.tsx:368
+#: src/Navigation.tsx:369
 #: src/screens/Settings/AboutSettings.tsx:102
 #: src/screens/Settings/AboutSettings.tsx:105
 #: src/view/screens/PrivacyPolicy.tsx:25
@@ -10672,17 +10882,21 @@ msgstr ""
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2694
+#: src/view/com/composer/Composer.tsx:2690
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2696
+#: src/view/com/composer/Composer.tsx:2692
 msgid "Processing video..."
 msgstr ""
 
 #: src/lib/api/index.ts:66
 msgid "Processing..."
 msgstr ""
+
+#: src/components/Gallery/Storybook.tsx:240
+msgid "Production image adapter"
+msgstr "Production image adapter"
 
 #: src/view/screens/DebugMod/index.tsx:960
 msgid "profile"
@@ -10708,7 +10922,7 @@ msgstr "Profile link copied"
 msgid "Profile not found"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:242
+#: src/screens/Profile/Header/EditProfileDialog.tsx:247
 msgctxt "toast"
 msgid "Profile updated"
 msgstr ""
@@ -10727,22 +10941,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1897
+#: src/view/com/composer/Composer.tsx:1893
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1892
+#: src/view/com/composer/Composer.tsx:1888
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1881
+#: src/view/com/composer/Composer.tsx:1877
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1886
+#: src/view/com/composer/Composer.tsx:1882
 msgid "Publish reply"
 msgstr ""
 
@@ -11078,6 +11292,14 @@ msgstr ""
 msgid "Remove filter"
 msgstr "Remove filter"
 
+#: src/components/Gallery/Storybook.tsx:487
+msgid "Remove first"
+msgstr "Remove first"
+
+#: src/components/Gallery/Storybook.tsx:481
+msgid "Remove first card"
+msgstr "Remove first card"
+
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:238
 msgid "Remove from chat"
 msgstr "Remove from chat"
@@ -11113,8 +11335,16 @@ msgstr ""
 msgid "Remove image"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:432
-#: src/features/profileLinks/components/LinkFormDialog.tsx:437
+#: src/components/Gallery/Storybook.tsx:477
+msgid "Remove last"
+msgstr "Remove last"
+
+#: src/components/Gallery/Storybook.tsx:471
+msgid "Remove last card"
+msgstr "Remove last card"
+
+#: src/features/profileLinks/components/LinkFormDialog.tsx:441
+#: src/features/profileLinks/components/LinkFormDialog.tsx:446
 msgid "Remove link"
 msgstr "Remove link"
 
@@ -11315,7 +11545,7 @@ msgstr ""
 msgid "Reply"
 msgstr "Reply"
 
-#: src/view/com/composer/Composer.tsx:1909
+#: src/view/com/composer/Composer.tsx:1905
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -11391,7 +11621,7 @@ msgid "Report conversation"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/index.tsx:138
-#: src/components/moderation/ReportDialog/index.tsx:335
+#: src/components/moderation/ReportDialog/index.tsx:336
 msgid "Report dialog"
 msgstr ""
 
@@ -11592,7 +11822,7 @@ msgstr "Requested"
 msgid "Requests"
 msgstr "Requests"
 
-#: src/Navigation.tsx:549
+#: src/Navigation.tsx:550
 #: src/screens/Messages/JoinRequests.tsx:56
 #: src/screens/Messages/JoinRequests.tsx:422
 msgid "Requests to join"
@@ -11711,7 +11941,7 @@ msgstr ""
 #: src/components/contacts/screens/VerifyNumber.tsx:358
 #: src/components/Error.tsx:74
 #: src/components/Lists.tsx:115
-#: src/components/moderation/ReportDialog/index.tsx:369
+#: src/components/moderation/ReportDialog/index.tsx:370
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:56
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:59
 #: src/components/StarterPack/ProfileStarterPacks.tsx:371
@@ -11734,7 +11964,7 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:366
+#: src/components/moderation/ReportDialog/index.tsx:367
 #: src/view/screens/Storybook/Admonitions.tsx:61
 msgid "Retry loading report options"
 msgstr ""
@@ -11760,9 +11990,25 @@ msgstr ""
 msgid "Returns to the previous step"
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:539
+msgid "Reveal last"
+msgstr "Reveal last"
+
 #: src/components/forms/PasswordField.tsx:74
 msgid "Reveal password"
 msgstr "Reveal password"
+
+#: src/components/Gallery/Storybook.tsx:531
+msgid "Reveal the last card"
+msgstr "Reveal the last card"
+
+#: src/components/Gallery/Storybook.tsx:497
+msgid "Reverse"
+msgstr "Reverse"
+
+#: src/components/Gallery/Storybook.tsx:491
+msgid "Reverse the order"
+msgstr "Reverse the order"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:20
 msgid "Reviewed, no action taken"
@@ -11782,22 +12028,22 @@ msgstr "Sad GIFs"
 #: src/features/liveNow/components/EditLiveDialog.tsx:199
 #: src/features/liveNow/components/EditLiveDialog.tsx:206
 #: src/screens/Messages/ConversationSettings/prompts.tsx:74
-#: src/screens/Profile/Header/EditProfileDialog.tsx:295
-#: src/screens/Profile/Header/EditProfileDialog.tsx:309
+#: src/screens/Profile/Header/EditProfileDialog.tsx:300
+#: src/screens/Profile/Header/EditProfileDialog.tsx:314
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:315
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:269
-#: src/view/com/composer/GifAltText.tsx:200
-#: src/view/com/composer/GifAltText.tsx:209
+#: src/view/com/composer/GifAltText.tsx:219
+#: src/view/com/composer/GifAltText.tsx:228
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:63
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:76
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:163
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:173
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:172
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:182
 msgid "Save"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:402
-#: src/features/profileLinks/components/LinkFormDialog.tsx:420
+#: src/features/profileLinks/components/LinkFormDialog.tsx:411
+#: src/features/profileLinks/components/LinkFormDialog.tsx:429
 msgid "Save anyway"
 msgstr "Save anyway"
 
@@ -11807,28 +12053,28 @@ msgstr ""
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:195
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:204
-#: src/features/profileLinks/components/LinkFormDialog.tsx:404
-#: src/features/profileLinks/components/LinkFormDialog.tsx:422
+#: src/features/profileLinks/components/LinkFormDialog.tsx:413
+#: src/features/profileLinks/components/LinkFormDialog.tsx:431
 #: src/screens/SavedFeeds.tsx:120
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
 #: src/screens/SavedFeeds.tsx:315
-#: src/view/com/composer/Composer.tsx:1551
+#: src/view/com/composer/Composer.tsx:1549
 #: src/view/com/composer/drafts/DraftsButton.tsx:121
 msgid "Save changes"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1523
+#: src/view/com/composer/Composer.tsx:1521
 #: src/view/com/composer/drafts/DraftsButton.tsx:89
 msgid "Save changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1551
+#: src/view/com/composer/Composer.tsx:1549
 #: src/view/com/composer/drafts/DraftsButton.tsx:121
 msgid "Save draft"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1525
+#: src/view/com/composer/Composer.tsx:1523
 #: src/view/com/composer/drafts/DraftsButton.tsx:91
 msgid "Save draft?"
 msgstr ""
@@ -11876,7 +12122,7 @@ msgid "Saved Feeds"
 msgstr ""
 
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:145
-#: src/Navigation.tsx:609
+#: src/Navigation.tsx:610
 #: src/screens/Bookmarks.tsx:60
 msgid "Saved Posts"
 msgstr ""
@@ -11908,7 +12154,7 @@ msgstr "Scan"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:82
 #: src/features/inviteFriends/InviteScannerScreen.web.tsx:23
-#: src/Navigation.tsx:348
+#: src/Navigation.tsx:349
 msgid "Scan QR code"
 msgstr "Scan QR code"
 
@@ -11949,7 +12195,7 @@ msgstr ""
 
 #. placeholder {0}: profile.handle
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:289
+#: src/Navigation.tsx:290
 #: src/screens/Profile/ProfileSearch.tsx:37
 msgid "Search @{0}'s posts"
 msgstr ""
@@ -12079,7 +12325,7 @@ msgstr ""
 msgid "See #{tag} posts by user"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:289
+#: src/features/profileLinks/components/LinkFormDialog.tsx:298
 msgid "See all supported sites"
 msgstr "See all supported sites"
 
@@ -12142,7 +12388,7 @@ msgstr ""
 msgid "Select a color"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:452
+#: src/components/moderation/ReportDialog/index.tsx:453
 msgid "Select a reason"
 msgstr ""
 
@@ -12239,7 +12485,7 @@ msgstr ""
 msgid "Select languages"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:507
+#: src/components/moderation/ReportDialog/index.tsx:508
 msgid "Select moderation service"
 msgstr ""
 
@@ -12342,7 +12588,7 @@ msgstr ""
 msgid "Send post to..."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:1063
+#: src/components/moderation/ReportDialog/index.tsx:1064
 msgid "Send report to {title}"
 msgstr ""
 
@@ -12418,7 +12664,7 @@ msgstr "Set your hosting provider manually"
 msgid "Sets email for password reset"
 msgstr ""
 
-#: src/Navigation.tsx:245
+#: src/Navigation.tsx:246
 #: src/screens/Settings/Settings.tsx:113
 #: src/view/shell/desktop/LeftNav.tsx:783
 #: src/view/shell/Drawer.tsx:708
@@ -12603,7 +12849,7 @@ msgstr ""
 msgid "Share your thoughts…"
 msgstr "Share your thoughts…"
 
-#: src/Navigation.tsx:353
+#: src/Navigation.tsx:354
 msgid "Shared Preferences Tester"
 msgstr ""
 
@@ -12617,7 +12863,7 @@ msgstr "Sharing your age range reveals only the range associated with your Apple
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:247
+#: src/features/profileLinks/components/LinkFormDialog.tsx:256
 msgid "Short links can’t be added. Use the full link instead."
 msgstr "Short links can’t be added. Use the full link instead."
 
@@ -12703,6 +12949,10 @@ msgstr "Show more posts"
 #: src/screens/PostThread/components/ThreadItemShowOtherReplies.tsx:15
 msgid "Show more replies"
 msgstr ""
+
+#: src/components/Gallery/Storybook.tsx:521
+msgid "Show or hide the intro card"
+msgstr "Show or hide the intro card"
 
 #: src/screens/Settings/ThreadPreferences.tsx:99
 msgid "Show post replies in a threaded tree view"
@@ -12880,6 +13130,10 @@ msgstr ""
 msgid "Since"
 msgstr "Since"
 
+#: src/components/Gallery/Storybook.tsx:302
+msgid "Sizes: 100×80, 220×160, 140×240, 180×120, and a wide card of {wideCardSize}×100, which is the gallery width of {galleryWidth} plus 80."
+msgstr "Sizes: 100×80, 220×160, 140×240, 180×120, and a wide card of {wideCardSize}×100, which is the gallery width of {galleryWidth} plus 80."
+
 #: src/components/contacts/screens/PhoneInput.tsx:163
 #: src/components/contacts/screens/VerifyNumber.tsx:208
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:86
@@ -12897,7 +13151,7 @@ msgstr ""
 msgid "Skip contact sharing and continue to the app"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1568
+#: src/view/com/composer/Composer.tsx:1566
 msgid "Skip empty posts?"
 msgstr "Skip empty posts?"
 
@@ -12911,9 +13165,17 @@ msgstr ""
 msgid "Skip to next step"
 msgstr ""
 
-#: src/components/images/Gallery/index.tsx:472
+#: src/components/Gallery/index.tsx:474
 msgid "slide"
 msgstr "slide"
+
+#: src/components/Gallery/Storybook.tsx:281
+msgid "Small"
+msgstr "Small"
+
+#: src/components/Gallery/Storybook.tsx:279
+msgid "Small card"
+msgstr "Small card"
 
 #: src/screens/Settings/AppearanceSettings.tsx:150
 msgid "Smaller"
@@ -13013,7 +13275,7 @@ msgid "Something went wrong"
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:141
-#: src/components/moderation/ReportDialog/index.tsx:361
+#: src/components/moderation/ReportDialog/index.tsx:362
 #: src/screens/Deactivated.tsx:92
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:60
 #: src/view/screens/Storybook/Admonitions.tsx:56
@@ -13035,7 +13297,7 @@ msgstr ""
 msgid "Something went wrong. Please try again in a moment."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:309
+#: src/components/moderation/ReportDialog/index.tsx:310
 msgid "Something went wrong. Please try again."
 msgstr ""
 
@@ -13087,6 +13349,10 @@ msgstr ""
 msgid "Spot posts your friends and follows have liked."
 msgstr "Spot posts your friends and follows have liked."
 
+#: src/components/Gallery/Storybook.tsx:164
+msgid "Square frame"
+msgstr "Square frame"
+
 #: src/components/PostControls/ShareMenu/RecentChats.tsx:231
 msgid "Start a conversation, and it will appear here."
 msgstr ""
@@ -13119,8 +13385,8 @@ msgstr "Start chat"
 msgid "Start chat with {displayName}"
 msgstr ""
 
-#: src/Navigation.tsx:580
-#: src/Navigation.tsx:585
+#: src/Navigation.tsx:581
+#: src/Navigation.tsx:586
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:60
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:46
 #: src/screens/StarterPack/Wizard/index.tsx:190
@@ -13211,7 +13477,7 @@ msgstr ""
 msgid "Stored as part of a secure code for matching with others"
 msgstr ""
 
-#: src/Navigation.tsx:338
+#: src/Navigation.tsx:339
 #: src/screens/Settings/Settings.tsx:497
 msgid "Storybook"
 msgstr ""
@@ -13248,13 +13514,13 @@ msgstr ""
 msgid "Submit feedback"
 msgstr "Submit feedback"
 
-#: src/components/moderation/ReportDialog/index.tsx:585
-#: src/components/moderation/ReportDialog/index.tsx:658
-#: src/components/moderation/ReportDialog/index.tsx:665
+#: src/components/moderation/ReportDialog/index.tsx:586
+#: src/components/moderation/ReportDialog/index.tsx:659
+#: src/components/moderation/ReportDialog/index.tsx:666
 msgid "Submit report"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:941
+#: src/components/moderation/ReportDialog/index.tsx:942
 msgctxt "english-only-resource"
 msgid "Submit your report through the Report non-consensual intimate imagery (NCII) form"
 msgstr "Submit your report through the Report non-consensual intimate imagery (NCII) form"
@@ -13347,7 +13613,7 @@ msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr ""
 
-#: src/Navigation.tsx:363
+#: src/Navigation.tsx:364
 #: src/view/screens/Support.tsx:25
 #: src/view/screens/Support.tsx:28
 msgid "Support"
@@ -13358,7 +13624,7 @@ msgid "Support for this feature in your country has not been enabled yet! Please
 msgstr ""
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkFormDialog.tsx:373
+#: src/features/profileLinks/components/LinkFormDialog.tsx:382
 msgid "Support on {0}"
 msgstr "Support on {0}"
 
@@ -13432,6 +13698,18 @@ msgstr ""
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:184
 msgid "Take the conversation private."
 msgstr "Take the conversation private."
+
+#: src/components/Gallery/Storybook.tsx:289
+msgid "Tall"
+msgstr "Tall"
+
+#: src/components/Gallery/Storybook.tsx:507
+msgid "Tall / short"
+msgstr "Tall / short"
+
+#: src/components/Gallery/Storybook.tsx:287
+msgid "Tall card"
+msgstr "Tall card"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:110
 msgid "Tap below to allow Bluesky to access your GPS location. We will then use that data to more accurately determine the content and features available in your region."
@@ -13512,6 +13790,10 @@ msgstr "Tap to show all reactions"
 msgid "Tap to view reactions"
 msgstr "Tap to view reactions"
 
+#: src/components/Gallery/Storybook.tsx:348
+msgid "Tapped {count} times"
+msgstr "Tapped {count} times"
+
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:105
 msgid "Targeted harassment"
 msgstr ""
@@ -13532,7 +13814,7 @@ msgstr ""
 msgid "Tech"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:431
+#: src/screens/Profile/Header/EditProfileDialog.tsx:436
 msgid "Tell us a bit about yourself"
 msgstr ""
 
@@ -13556,7 +13838,7 @@ msgstr ""
 #: src/components/dialogs/BirthDateSettings.tsx:181
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:31
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:98
-#: src/Navigation.tsx:373
+#: src/Navigation.tsx:374
 #: src/screens/Settings/AboutSettings.tsx:94
 #: src/screens/Settings/AboutSettings.tsx:97
 #: src/view/screens/TermsOfService.tsx:25
@@ -13569,11 +13851,19 @@ msgstr ""
 msgid "Text & tags"
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:353
+msgid "Text field"
+msgstr "Text field"
+
 #: src/components/moderation/AppealForm.tsx:130
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:120
 #: src/screens/Messages/components/ChatDisabled.tsx:139
 msgid "Text input field"
 msgstr ""
+
+#: src/components/Gallery/Storybook.tsx:410
+msgid "Text: “{text}”"
+msgstr "Text: “{text}”"
 
 #: src/view/com/posts/ShowLessFollowup.tsx:39
 msgid "Thank you for your feedback! It has been sent to the feed operator."
@@ -13608,7 +13898,7 @@ msgstr ""
 msgid "That contains the following:"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:243
+#: src/features/profileLinks/components/LinkFormDialog.tsx:252
 msgid "That doesn’t look like a link. Try something like yoursite.com."
 msgstr "That doesn’t look like a link. Try something like yoursite.com."
 
@@ -13674,6 +13964,10 @@ msgstr ""
 msgid "The Bluesky web application"
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:242
+msgid "The carousel used for post images. Tap an image to open the lightbox, change images, and close it: it should land on the right thumbnail. The first and last images are cropped, and the third learns its size when it loads."
+msgstr "The carousel used for post images. Tap an image to open the lightbox, change images, and close it: it should land on the right thumbnail. The first and last images are cropped, and the third learns its size when it loads."
+
 #: src/view/screens/CommunityGuidelines.tsx:32
 msgid "The Community Guidelines have been moved to <0/>"
 msgstr ""
@@ -13718,6 +14012,10 @@ msgstr ""
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:614
+msgid "The gallery fills whatever width it has. Inside a bleed ancestor, the first and last items line up with the padded content while the rest run to the outer edge."
+msgstr "The gallery fills whatever width it has. Inside a bleed ancestor, the first and last items line up with the padded content while the rest run to the outer edge."
+
 #: src/components/ageAssurance/useAgeAssuranceCopy.ts:23
 msgid "The laws in your region require you to verify you're an adult to access certain features. Tap to learn more."
 msgstr ""
@@ -13727,7 +14025,7 @@ msgstr ""
 msgid "The member limit has been reached."
 msgstr "The member limit has been reached."
 
-#: src/components/moderation/ReportDialog/index.tsx:315
+#: src/components/moderation/ReportDialog/index.tsx:316
 msgid "The moderation service is temporarily unavailable. Please try again later."
 msgstr "The moderation service is temporarily unavailable. Please try again later."
 
@@ -13788,6 +14086,10 @@ msgstr ""
 #: src/view/screens/TermsOfService.tsx:29
 msgid "The Terms of Service have been moved to"
 msgstr ""
+
+#: src/components/Gallery/Storybook.tsx:686
+msgid "The two lines above should touch."
+msgstr "The two lines above should touch."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
@@ -14182,7 +14484,7 @@ msgstr "This label was applied to the entire user account and will appear on all
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:245
+#: src/features/profileLinks/components/LinkFormDialog.tsx:254
 msgid "This link can’t be added. It goes to a site that’s blocked on Bluesky."
 msgstr "This link can’t be added. It goes to a site that’s blocked on Bluesky."
 
@@ -14217,7 +14519,7 @@ msgstr "This message is hidden because this user is blocking you."
 msgid "This message is hidden because you are blocking this user."
 msgstr "This message is hidden because you are blocking this user."
 
-#: src/components/moderation/ReportDialog/index.tsx:313
+#: src/components/moderation/ReportDialog/index.tsx:314
 msgid "This moderation service does not support that report reason. Please choose a different reason or moderation service."
 msgstr "This moderation service does not support that report reason. Please choose a different reason or moderation service."
 
@@ -14251,7 +14553,7 @@ msgstr ""
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1141
+#: src/view/com/composer/Composer.tsx:1140
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
@@ -14386,7 +14688,7 @@ msgstr ""
 msgid "Threaded"
 msgstr ""
 
-#: src/Navigation.tsx:406
+#: src/Navigation.tsx:407
 msgid "Threads Preferences"
 msgstr ""
 
@@ -14394,13 +14696,17 @@ msgstr ""
 msgid "Threats or incitement"
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:596
+msgid "Three"
+msgstr "Three"
+
 #. placeholder {0}: Number(time) || 0
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/TimeIndicator.tsx:34
 msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr ""
 
 #: src/components/SendErrorReportDialog.tsx:68
-#: src/features/profileLinks/components/LinkFormDialog.tsx:371
+#: src/features/profileLinks/components/LinkFormDialog.tsx:380
 msgid "Title"
 msgstr "Title"
 
@@ -14408,7 +14714,7 @@ msgstr "Title"
 msgid "Title (100 characters max)"
 msgstr "Title (100 characters max)"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:366
+#: src/features/profileLinks/components/LinkFormDialog.tsx:375
 msgid "Title (optional)"
 msgstr "Title (optional)"
 
@@ -14434,6 +14740,10 @@ msgstr ""
 msgctxt "Notifications section header"
 msgid "Today"
 msgstr "Today"
+
+#: src/components/Gallery/Storybook.tsx:527
+msgid "Toggle intro"
+msgstr "Toggle intro"
 
 #: src/screens/Moderation/index.tsx:452
 msgid "Toggle to enable or disable adult content"
@@ -14469,7 +14779,7 @@ msgstr ""
 msgid "Top replies first"
 msgstr ""
 
-#: src/Navigation.tsx:533
+#: src/Navigation.tsx:534
 msgid "Topic"
 msgstr ""
 
@@ -14585,6 +14895,10 @@ msgstr ""
 #: src/features/inviteFriends/components/ThemePicker.tsx:32
 msgid "Twilight"
 msgstr "Twilight"
+
+#: src/components/Gallery/Storybook.tsx:593
+msgid "Two"
+msgstr "Two"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:67
 msgid "Two-factor authentication (2FA)"
@@ -14766,7 +15080,7 @@ msgstr ""
 msgid "Unfollows the user"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:569
+#: src/components/moderation/ReportDialog/index.tsx:570
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr ""
 
@@ -14933,7 +15247,7 @@ msgstr ""
 msgid "Unsupported clipboard content"
 msgstr "Unsupported clipboard content"
 
-#: src/view/com/composer/Composer.tsx:1660
+#: src/view/com/composer/Composer.tsx:1658
 msgid "Unsupported video type: {mimeType}"
 msgstr ""
 
@@ -15026,7 +15340,7 @@ msgstr ""
 msgid "Upload from Library"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2687
+#: src/view/com/composer/Composer.tsx:2683
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -15040,7 +15354,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2689
+#: src/view/com/composer/Composer.tsx:2685
 msgid "Uploading video..."
 msgstr ""
 
@@ -15181,7 +15495,7 @@ msgstr ""
 msgid "Verification settings"
 msgstr ""
 
-#: src/Navigation.tsx:238
+#: src/Navigation.tsx:239
 #: src/screens/Moderation/VerificationSettings.tsx:34
 msgid "Verification Settings"
 msgstr ""
@@ -15299,7 +15613,7 @@ msgstr ""
 msgid "Video failed to process"
 msgstr ""
 
-#: src/Navigation.tsx:601
+#: src/Navigation.tsx:602
 msgid "Video Feed"
 msgstr ""
 
@@ -15334,7 +15648,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2707
+#: src/view/com/composer/Composer.tsx:2703
 msgid "Video uploaded"
 msgstr ""
 
@@ -15347,13 +15661,13 @@ msgstr ""
 msgid "Videos"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:452
-#: src/view/com/composer/Composer.tsx:584
+#: src/view/com/composer/Composer.tsx:451
+#: src/view/com/composer/Composer.tsx:583
 #: src/view/com/composer/SelectMediaButton.tsx:446
 msgid "Videos must be 10 minutes or less."
 msgstr "Videos must be 10 minutes or less."
 
-#: src/view/com/composer/Composer.tsx:1248
+#: src/view/com/composer/Composer.tsx:1247
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr ""
@@ -15470,7 +15784,7 @@ msgstr ""
 msgid "View more trending videos"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1243
+#: src/view/com/composer/Composer.tsx:1242
 msgid "View post"
 msgstr ""
 
@@ -15657,7 +15971,7 @@ msgstr "We couldn’t load this conversation’s settings"
 msgid "We couldn't load your account settings. Check your internet connection and try again."
 msgstr "We couldn't load your account settings. Check your internet connection and try again."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:253
+#: src/features/profileLinks/components/LinkFormDialog.tsx:262
 msgid "We couldn’t reach this link. Check it, or save anyway."
 msgstr "We couldn’t reach this link. Check it, or save anyway."
 
@@ -15841,7 +16155,7 @@ msgstr "We’re sorry, but your search could not be completed. Please try again 
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1139
+#: src/view/com/composer/Composer.tsx:1138
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
@@ -15913,7 +16227,7 @@ msgid "what’s up"
 msgstr "what’s up"
 
 #: src/view/com/auth/SplashScreen.web.tsx:98
-#: src/view/com/composer/Composer.tsx:1624
+#: src/view/com/composer/Composer.tsx:1622
 #: src/view/com/feeds/ComposerPrompt.tsx:206
 msgid "What's up?"
 msgstr ""
@@ -15995,6 +16309,18 @@ msgstr "Why should this Starter Pack be reviewed?"
 msgid "Why should this user be reviewed?"
 msgstr ""
 
+#: src/components/Gallery/Storybook.tsx:297
+msgid "Wide"
+msgstr "Wide"
+
+#: src/components/Gallery/Storybook.tsx:517
+msgid "Wide / narrow"
+msgstr "Wide / narrow"
+
+#: src/components/Gallery/Storybook.tsx:295
+msgid "Wide card"
+msgstr "Wide card"
+
 #: src/components/dms/AfterReportDialog.tsx:51
 msgid "Would you like to block this user and/or delete this conversation?"
 msgstr ""
@@ -16007,7 +16333,7 @@ msgstr "Would you like to block this user and/or leave this conversation?"
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1539
+#: src/view/com/composer/Composer.tsx:1537
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
@@ -16016,12 +16342,12 @@ msgstr ""
 msgid "Write a post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1722
+#: src/view/com/composer/Composer.tsx:1720
 msgid "Write post"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1622
+#: src/view/com/composer/Composer.tsx:1620
 msgid "Write your reply"
 msgstr ""
 
@@ -16044,8 +16370,8 @@ msgstr "Wrong kind of conversation"
 msgid "www.mylivestream.tv"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:994
-#: src/components/moderation/ReportDialog/index.tsx:1003
+#: src/components/moderation/ReportDialog/index.tsx:995
+#: src/components/moderation/ReportDialog/index.tsx:1004
 msgctxt "Answer to a yes/no question"
 msgid "Yes"
 msgstr "Yes"
@@ -16147,7 +16473,7 @@ msgstr ""
 msgid "You are verified"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:404
+#: src/screens/Profile/Header/EditProfileDialog.tsx:409
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
 msgstr ""
 
@@ -16203,11 +16529,11 @@ msgid "You can now sign in with your new password."
 msgstr ""
 
 #. Toast shown when the user tries to add more images but the post gallery is already at the cap
-#: src/view/com/composer/Composer.tsx:223
+#: src/view/com/composer/Composer.tsx:222
 msgid "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 msgstr "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 
-#: src/view/com/composer/Composer.tsx:1544
+#: src/view/com/composer/Composer.tsx:1542
 msgid "You can only save drafts up to 1000 characters."
 msgstr ""
 
@@ -16355,7 +16681,7 @@ msgstr ""
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1534
+#: src/view/com/composer/Composer.tsx:1532
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr ""
 
@@ -16590,7 +16916,7 @@ msgstr ""
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:251
+#: src/features/profileLinks/components/LinkFormDialog.tsx:260
 msgid "You’ve already added this link."
 msgstr "You’ve already added this link."
 
@@ -16619,7 +16945,7 @@ msgstr ""
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:737
+#: src/view/com/composer/Composer.tsx:736
 msgid "You've reached the maximum number of drafts"
 msgstr ""
 
@@ -16657,7 +16983,7 @@ msgstr "Your ability to submit reports was restricted"
 msgid "Your account"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:311
+#: src/components/moderation/ReportDialog/index.tsx:312
 msgid "Your account cannot submit reports while it is suspended."
 msgstr "Your account cannot submit reports while it is suspended."
 
@@ -16815,7 +17141,7 @@ msgstr "Your hosting provider does not support videos this large. Please try aga
 msgid "Your hosting provider is detected automatically from the username you enter."
 msgstr "Your hosting provider is detected automatically from the username you enter."
 
-#: src/Navigation.tsx:505
+#: src/Navigation.tsx:506
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:62
 #: src/screens/Settings/ContentAndMediaSettings.tsx:94
 #: src/screens/Settings/ContentAndMediaSettings.tsx:97
@@ -16865,11 +17191,11 @@ msgstr "Your post"
 msgid "Your post was removed"
 msgstr "Your post was removed"
 
-#: src/view/com/composer/Composer.tsx:1239
+#: src/view/com/composer/Composer.tsx:1238
 msgid "Your post was sent"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1236
+#: src/view/com/composer/Composer.tsx:1235
 msgid "Your posts were sent"
 msgstr ""
 
@@ -16890,11 +17216,11 @@ msgstr ""
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1238
+#: src/view/com/composer/Composer.tsx:1237
 msgid "Your reply was sent"
 msgstr ""
 
-#: src/Navigation.tsx:204
+#: src/Navigation.tsx:205
 #: src/screens/ModerationInbox/Report.tsx:92
 msgid "Your report"
 msgstr "Your report"
@@ -16904,7 +17230,7 @@ msgid "Your report has been resolved. Read our <0>Community Guidelines</0>."
 msgstr "Your report has been resolved. Read our <0>Community Guidelines</0>."
 
 #. placeholder {0}: state.selectedLabeler?.creator.displayName
-#: src/components/moderation/ReportDialog/index.tsx:596
+#: src/components/moderation/ReportDialog/index.tsx:597
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr ""
 
@@ -16929,7 +17255,7 @@ msgstr "Your standing doesn’t restrict your account right now, and strikes com
 msgid "Your standing may restrict certain features on your account. Strikes come off your record over time."
 msgstr "Your standing may restrict certain features on your account. Strikes come off your record over time."
 
-#: src/view/com/composer/Composer.tsx:1569
+#: src/view/com/composer/Composer.tsx:1567
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 
