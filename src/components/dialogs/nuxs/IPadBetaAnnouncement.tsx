@@ -59,7 +59,7 @@ export function IPadBetaAnnouncement() {
               <Trans>
                 Bluesky now makes full use of your iPad’s screen, in any
                 orientation. It’s still in beta, so if something looks off, let
-                us know in Settings → Beta features.
+                us know in Settings → Beta features.
               </Trans>
             </Text>
           </View>
