@@ -204,6 +204,28 @@ jobs:
           payload: |
             {"text": "Android ${{ inputs.profile || 'testflight-android' }} build submitted to Google Play!\n```Version Number: ${{ needs.build.outputs.package-version }}\nBuild Number: ${{ needs.build.outputs.version-code }}```"}
 
+      - name: 🔢 Record main testflight build number
+        if: ${{ github.ref == 'refs/heads/main' &&
+          needs.build.outputs.source-sha == github.sha &&
+          (inputs.profile || 'testflight-android') == 'testflight-android' }}
+        env:
+          BUILD_NUMBER: ${{ needs.build.outputs.version-code }}
+        run: |
+          [[ "$BUILD_NUMBER" =~ ^[0-9]+$ ]] ||
+            (echo "::error::Refusing to record the non-numeric build number '$BUILD_NUMBER'" && exit 1)
+          echo "$BUILD_NUMBER" > android-build-number
+
+      - name: 🚀 Upload main testflight build number
+        if: ${{ github.ref == 'refs/heads/main' &&
+          needs.build.outputs.source-sha == github.sha &&
+          (inputs.profile || 'testflight-android') == 'testflight-android' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: testflight-android-build-number
+          path: android-build-number
+          retention-days: 90
+          if-no-files-found: error
+
   # Runs in parallel with submit: the QA APK shouldn't be blocked by a Play submission failure.
   universalApk:
     name: Build universal APK
