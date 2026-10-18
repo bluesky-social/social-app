@@ -26,6 +26,7 @@ import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/cont
 import {useTheme, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {useAnalytics} from '#/analytics'
+import {useListVirtualizer} from './useListVirtualizer.web'
 
 export type ListMethods = {
   scrollToTop: () => void
@@ -101,6 +102,8 @@ function ListImpl<ItemT>(
     renderItem,
     extraData,
     style,
+    disableVirtualization,
+    initialNumToRender,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
@@ -108,6 +111,7 @@ function ListImpl<ItemT>(
   const contextScrollHandlers = useScrollHandlers()
   const {isWithinSplitView} = useIsWithinSplitView()
   const t = useTheme()
+  const ax = useAnalytics()
 
   // automatically disable full window scroll when within split view
   const disableFullWindowScroll =
@@ -253,6 +257,21 @@ function ListImpl<ItemT>(
     [],
   )
 
+  // --- virtualization ---
+  const [isInsideVisibleTree, setIsInsideVisibleTree] = useState(false)
+  const keys = isEmpty
+    ? []
+    : (data as Array<ItemT>).map((item, index) => keyExtractor!(item, index))
+  const virtualizer = useListVirtualizer({
+    enabled:
+      !disableVirtualization &&
+      ax.features.enabled(ax.features.WebListVirtualizationEnable),
+    keys,
+    initialNumToRender,
+    scrollRootRef: disableFullWindowScroll ? nativeRef : null,
+    isActive: isInsideVisibleTree,
+  })
+
   useImperativeHandle(
     ref,
     () => ({
@@ -284,17 +303,39 @@ function ListImpl<ItemT>(
       },
 
       scrollToIndex({animated = true, index}) {
-        const node = rowNodesRef.current.get(index)
         // scrollIntoView with block: 'center' roughly matches the caller's
         // viewPosition of 0.3 - not exact, but close enough and it respects
         // whichever element is the scroll container (window or nativeRef).
-        node?.scrollIntoView({
-          block: 'center',
-          behavior: animated ? 'smooth' : 'instant',
-        })
+        const scrollIntoView = (node: HTMLElement) =>
+          node.scrollIntoView({
+            block: 'center',
+            behavior: animated ? 'smooth' : 'instant',
+          })
+        const node = rowNodesRef.current.get(index)
+        if (node) {
+          scrollIntoView(node)
+          return
+        }
+
+        /*
+         * The row isn't mounted, so jump to where we estimate it is. Once the
+         * virtualizer has rendered it there, settle on its real position.
+         */
+        const offset = virtualizer.getScrollOffsetForIndex(index)
+        if (offset == null) return
+        getScrollableNode()?.scrollTo({top: offset, behavior: 'instant'})
+        const settle = (attempt: number) => {
+          const mounted = rowNodesRef.current.get(index)
+          if (mounted) {
+            scrollIntoView(mounted)
+          } else if (attempt < 10) {
+            requestAnimationFrame(() => settle(attempt + 1))
+          }
+        }
+        requestAnimationFrame(() => settle(1))
       },
     }),
-    [getScrollableNode],
+    [getScrollableNode, virtualizer.getScrollOffsetForIndex],
   )
 
   // --- onContentSizeChange, maintainVisibleContentPosition ---
@@ -302,7 +343,6 @@ function ListImpl<ItemT>(
   useResizeObserver(containerRef, onContentSizeChange)
 
   // --- onScroll ---
-  const [isInsideVisibleTree, setIsInsideVisibleTree] = useState(false)
   useWebListTelemetry({
     containerRef: nativeRef,
     enabled: isInsideVisibleTree,
@@ -440,22 +480,44 @@ function ListImpl<ItemT>(
             />
           )}
           {headerComponent}
-          {isEmpty
-            ? emptyComponent
-            : (data as Array<ItemT>)?.map((item, index) => {
-                const key = keyExtractor!(item, index)
-                return (
-                  <Row<ItemT>
-                    key={key}
-                    item={item}
-                    index={index}
-                    renderItem={renderItem}
-                    extraData={extraData}
-                    onItemSeen={onItemSeen}
-                    registerRowNode={registerRowNode}
-                  />
-                )
-              })}
+          {isEmpty ? (
+            emptyComponent
+          ) : (
+            <>
+              {virtualizer.observeRow && (
+                <View
+                  ref={
+                    virtualizer.markerRef as unknown as React.Ref<
+                      React.ComponentRef<typeof View>
+                    >
+                  }
+                  style={{height: virtualizer.topSpacerHeight}}
+                />
+              )}
+              {(data as Array<ItemT>)
+                .slice(virtualizer.start, virtualizer.end)
+                .map((item, i) => {
+                  const index = virtualizer.start + i
+                  const key = keys[index]
+                  return (
+                    <Row<ItemT>
+                      key={key}
+                      rowKey={key}
+                      item={item}
+                      index={index}
+                      renderItem={renderItem}
+                      extraData={extraData}
+                      onItemSeen={onItemSeen}
+                      registerRowNode={registerRowNode}
+                      observeRow={virtualizer.observeRow}
+                    />
+                  )
+                })}
+              {virtualizer.observeRow && (
+                <View style={{height: virtualizer.bottomSpacerHeight}} />
+              )}
+            </>
+          )}
           {onEndReached && !isEmpty && (
             <EdgeVisibility
               root={disableFullWindowScroll ? nativeRef : null}
@@ -636,13 +698,16 @@ function useResizeObserver(
 }
 
 let Row = function RowImpl<ItemT>({
+  rowKey,
   item,
   index,
   renderItem,
   extraData: _unused,
   onItemSeen,
   registerRowNode,
+  observeRow,
 }: {
+  rowKey: string
   item: ItemT
   index: number
   renderItem:
@@ -650,6 +715,7 @@ let Row = function RowImpl<ItemT>({
   extraData: unknown
   onItemSeen: ListProps<ItemT>['onItemSeen']
   registerRowNode: (index: number, node: HTMLElement | null) => void
+  observeRow: ((key: string, node: HTMLElement | null) => void) | undefined
 }): React.ReactNode {
   const rowRef = useRef(null)
   const intersectionTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(
@@ -709,6 +775,16 @@ let Row = function RowImpl<ItemT>({
     }
   }, [index, registerRowNode])
 
+  // Let the virtualizer track this row's height.
+  useEffect(() => {
+    if (!observeRow) return
+    const node: HTMLElement | null = rowRef.current
+    observeRow(rowKey, node)
+    return () => {
+      observeRow(rowKey, null)
+    }
+  }, [rowKey, observeRow])
+
   if (!renderItem) {
     return null
   }
@@ -727,6 +803,7 @@ let Row = function RowImpl<ItemT>({
   )
 }
 Row = memo(Row) as <ItemT>(props: {
+  rowKey: string
   item: ItemT
   index: number
   renderItem:
@@ -734,6 +811,7 @@ Row = memo(Row) as <ItemT>(props: {
   extraData: unknown
   onItemSeen: ListProps<ItemT>['onItemSeen']
   registerRowNode: (index: number, node: HTMLElement | null) => void
+  observeRow: ((key: string, node: HTMLElement | null) => void) | undefined
 }) => React.ReactNode
 
 let Visibility = ({
