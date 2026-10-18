@@ -839,7 +839,7 @@ Row = memo(Row) as <ItemT>(props: {
   observeRow: ((key: string, node: HTMLElement | null) => void) | undefined
 }) => React.ReactNode
 
-let Visibility = ({
+let Visibility = function VisibilityImpl({
   root,
   topMargin = '0px',
   bottomMargin = '0px',
@@ -851,7 +851,7 @@ let Visibility = ({
   bottomMargin?: string
   onVisibleChange: (isVisible: boolean) => void
   style?: ViewProps['style']
-}): React.ReactNode => {
+}): React.ReactNode {
   const tailRef = useRef(null)
   const isIntersecting = useRef(false)
 
