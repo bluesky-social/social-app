@@ -51,7 +51,7 @@ import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {useAnalytics} from '#/analytics'
-import {IS_NATIVE} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {
   FeedFeedbackProvider,
   FeedItemProvider,
@@ -619,6 +619,12 @@ export function PostThread({uri}: {uri: string}) {
              * {@link https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition}
              */
             maintainVisibleContentPosition={{minIndexForVisible: 0}}
+            /*
+             * The web anchor positioning in onContentSizeChangeWebOnly reads
+             * the parents' layout as they're prepended, so the thread renders
+             * every row on web.
+             */
+            disableVirtualization={IS_WEB}
             desktopFixedHeight
             sideBorders={false}
             ListFooterComponent={
