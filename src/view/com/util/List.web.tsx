@@ -593,7 +593,9 @@ function useWebListTelemetry({
   const ax = useAnalytics()
   const reportedMilestones = useRef(new Set<number>())
   const itemCountRef = useRef(itemCount)
-  itemCountRef.current = itemCount
+  useEffect(() => {
+    itemCountRef.current = itemCount
+  })
   const isLargeList = itemCount >= LARGE_LIST_MILESTONES[0]
 
   useEffect(() => {
