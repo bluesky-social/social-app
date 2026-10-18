@@ -246,7 +246,12 @@ export function useListVirtualizer({
       while (nextEnd < count && offsets[nextEnd] < targetBottom) {
         nextEnd++
       }
-      if (prev && current.start === nextStart && current.end === nextEnd) {
+      if (
+        prev &&
+        current.start === nextStart &&
+        current.end === nextEnd &&
+        prev.startKey === currentKeys[nextStart]
+      ) {
         return prev
       }
       return {start: nextStart, end: nextEnd, startKey: currentKeys[nextStart]}
@@ -276,9 +281,21 @@ export function useListVirtualizer({
         const width = box
           ? box.inlineSize
           : (entry.target as HTMLElement).offsetWidth
+        if (widthRef.current !== undefined && widthRef.current !== width) {
+          /*
+           * Rows wrap differently at a new width, so heights measured at the
+           * old one are wrong. Keep only those cached at this width.
+           */
+          next = new Map()
+          for (const currentKey of keysRef.current) {
+            const cached = heightCache.get(currentKey)
+            if (cached?.width === width) next.set(currentKey, cached.height)
+          }
+        }
         widthRef.current = width
         cacheHeight(key, width, height)
-        if (heightsRef.current.get(key) !== height) {
+        const current = next ?? heightsRef.current
+        if (current.get(key) !== height) {
           if (!next) next = new Map(heightsRef.current)
           next.set(key, height)
         }

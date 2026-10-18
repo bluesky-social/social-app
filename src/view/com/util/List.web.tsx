@@ -773,6 +773,11 @@ let Row = function RowImpl<ItemT>({
       observer.observe(row)
     }
     return () => {
+      // The row may unmount mid-wait now that rows leave the virtualized window.
+      if (intersectionTimeout.current) {
+        clearTimeout(intersectionTimeout.current)
+        intersectionTimeout.current = undefined
+      }
       if (row) {
         observer.unobserve(row)
       }
