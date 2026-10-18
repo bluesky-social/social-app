@@ -261,7 +261,15 @@ function ListImpl<ItemT>(
   const keys = isEmpty
     ? []
     : (data as Array<ItemT>).map((item, index) => keyExtractor!(item, index))
-  const virtualizer = useListVirtualizer({
+  const {
+    start: windowStart,
+    end: windowEnd,
+    topSpacerHeight,
+    bottomSpacerHeight,
+    markerRef,
+    observeRow,
+    getScrollOffsetForIndex,
+  } = useListVirtualizer({
     enabled:
       !disableVirtualization &&
       ax.features.enabled(ax.features.WebListVirtualizationEnable),
@@ -320,21 +328,13 @@ function ListImpl<ItemT>(
          * The row isn't mounted, so jump to where we estimate it is. Once the
          * virtualizer has rendered it there, settle on its real position.
          */
-        const offset = virtualizer.getScrollOffsetForIndex(index)
+        const offset = getScrollOffsetForIndex(index)
         if (offset == null) return
         getScrollableNode()?.scrollTo({top: offset, behavior: 'instant'})
-        const settle = (attempt: number) => {
-          const mounted = rowNodesRef.current.get(index)
-          if (mounted) {
-            scrollIntoView(mounted)
-          } else if (attempt < 10) {
-            requestAnimationFrame(() => settle(attempt + 1))
-          }
-        }
-        requestAnimationFrame(() => settle(1))
+        whenRowMounts(() => rowNodesRef.current.get(index), scrollIntoView)
       },
     }),
-    [getScrollableNode, virtualizer.getScrollOffsetForIndex],
+    [getScrollableNode, getScrollOffsetForIndex],
   )
 
   // --- onContentSizeChange, maintainVisibleContentPosition ---
@@ -483,20 +483,20 @@ function ListImpl<ItemT>(
             emptyComponent
           ) : (
             <>
-              {virtualizer.observeRow && (
+              {observeRow && (
                 <View
                   ref={
-                    virtualizer.markerRef as unknown as React.Ref<
+                    markerRef as unknown as React.Ref<
                       React.ComponentRef<typeof View>
                     >
                   }
-                  style={{height: virtualizer.topSpacerHeight}}
+                  style={{height: topSpacerHeight}}
                 />
               )}
               {(data as Array<ItemT>)
-                .slice(virtualizer.start, virtualizer.end)
+                .slice(windowStart, windowEnd)
                 .map((item, i) => {
-                  const index = virtualizer.start + i
+                  const index = windowStart + i
                   const key = keys[index]
                   return (
                     <Row<ItemT>
@@ -508,13 +508,11 @@ function ListImpl<ItemT>(
                       extraData={extraData}
                       onItemSeen={onItemSeen}
                       registerRowNode={registerRowNode}
-                      observeRow={virtualizer.observeRow}
+                      observeRow={observeRow}
                     />
                   )
                 })}
-              {virtualizer.observeRow && (
-                <View style={{height: virtualizer.bottomSpacerHeight}} />
-              )}
+              {observeRow && <View style={{height: bottomSpacerHeight}} />}
             </>
           )}
           {onEndReached && !isEmpty && (
@@ -530,6 +528,22 @@ function ListImpl<ItemT>(
       </Layout.Center>
     </View>
   )
+}
+
+/** Calls onMounted with the row once it's in the DOM, checking once a frame. */
+function whenRowMounts(
+  getNode: () => HTMLElement | undefined,
+  onMounted: (node: HTMLElement) => void,
+  attempts = 10,
+) {
+  requestAnimationFrame(() => {
+    const node = getNode()
+    if (node) {
+      onMounted(node)
+    } else if (attempts > 1) {
+      whenRowMounts(getNode, onMounted, attempts - 1)
+    }
+  })
 }
 
 type ChromiumPerformance = Performance & {
