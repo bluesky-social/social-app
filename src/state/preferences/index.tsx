@@ -2,6 +2,7 @@ import {Provider as AltTextRequiredProvider} from './alt-text-required'
 import {Provider as AutoplayProvider} from './autoplay'
 import {Provider as DisableHapticsProvider} from './disable-haptics'
 import {Provider as ExternalEmbedsProvider} from './external-embeds-prefs'
+import {Provider as FeedShowMoreProvider} from './feed-show-more'
 import {Provider as HiddenPostsProvider} from './hidden-posts'
 import {Provider as InAppBrowserProvider} from './in-app-browser'
 import {Provider as KawaiiProvider} from './kawaii'
@@ -21,6 +22,12 @@ export {
   useExternalEmbedsPrefs,
   useSetExternalEmbedPref,
 } from './external-embeds-prefs'
+export {
+  useFeedShowMoreBatchSize,
+  useFeedShowMoreEnabled,
+  useSetFeedShowMoreBatchSize,
+  useSetFeedShowMoreEnabled,
+} from './feed-show-more'
 export {useHiddenPosts, useHiddenPostsApi} from './hidden-posts'
 export {useLabelDefinitions} from './label-defs'
 export {useLanguagePrefs, useLanguagePrefsApi} from './languages'
@@ -32,21 +39,23 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       <AltTextRequiredProvider>
         <LargeAltBadgeProvider>
           <ExternalEmbedsProvider>
-            <HiddenPostsProvider>
-              <InAppBrowserProvider>
-                <DisableHapticsProvider>
-                  <AutoplayProvider>
-                    <UsedStarterPacksProvider>
-                      <SubtitlesProvider>
-                        <TrendingSettingsProvider>
-                          <KawaiiProvider>{children}</KawaiiProvider>
-                        </TrendingSettingsProvider>
-                      </SubtitlesProvider>
-                    </UsedStarterPacksProvider>
-                  </AutoplayProvider>
-                </DisableHapticsProvider>
-              </InAppBrowserProvider>
-            </HiddenPostsProvider>
+            <FeedShowMoreProvider>
+              <HiddenPostsProvider>
+                <InAppBrowserProvider>
+                  <DisableHapticsProvider>
+                    <AutoplayProvider>
+                      <UsedStarterPacksProvider>
+                        <SubtitlesProvider>
+                          <TrendingSettingsProvider>
+                            <KawaiiProvider>{children}</KawaiiProvider>
+                          </TrendingSettingsProvider>
+                        </SubtitlesProvider>
+                      </UsedStarterPacksProvider>
+                    </AutoplayProvider>
+                  </DisableHapticsProvider>
+                </InAppBrowserProvider>
+              </HiddenPostsProvider>
+            </FeedShowMoreProvider>
           </ExternalEmbedsProvider>
         </LargeAltBadgeProvider>
       </AltTextRequiredProvider>

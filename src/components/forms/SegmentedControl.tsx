@@ -200,7 +200,12 @@ export function Item({
         {...props}
         onPress={onPress}
         role={ctx.type === 'tabs' ? 'tab' : 'radio'}
-        accessibilityState={{selected: active}}
+        accessibilityState={
+          ctx.type === 'radio' ? {checked: active} : {selected: active}
+        }
+        {...(ctx.type === 'radio'
+          ? {'aria-checked': active}
+          : {'aria-selected': active})}
         style={[
           a.flex_1,
           a.bg_transparent,

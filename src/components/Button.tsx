@@ -572,6 +572,11 @@ export const Button = forwardRef<React.ComponentRef<typeof View>, ButtonProps>(
       [state, variant, color, size, shape, disabled],
     )
 
+    const accessibilityState = {
+      ...rest.accessibilityState,
+      disabled: disabled || false,
+    }
+
     return (
       <PressableComponent
         role="button"
@@ -582,9 +587,7 @@ export const Button = forwardRef<React.ComponentRef<typeof View>, ButtonProps>(
         aria-pressed={state.pressed}
         accessibilityLabel={label}
         disabled={disabled || false}
-        accessibilityState={{
-          disabled: disabled || false,
-        }}
+        accessibilityState={accessibilityState}
         style={[
           a.flex_row,
           a.align_center,

@@ -206,3 +206,21 @@ export function* findAllPostsInQueryData(
     }
   }
 }
+
+/** A one-post slice for incremental search-result rendering. */
+export type SearchPostSlice = {
+  key: string
+  post: app.bsky.feed.defs.PostView
+  items: readonly [app.bsky.feed.defs.PostView]
+}
+
+export function searchPostSlicesFromData(
+  data: ReturnType<typeof useSearchPostsV2Query>['data'],
+): SearchPostSlice[] {
+  const seen = new Set<string>()
+  return (data?.pages.flatMap(page => page.posts) ?? []).flatMap(post => {
+    if (seen.has(post.uri)) return []
+    seen.add(post.uri)
+    return [{key: post.uri, post, items: [post] as const}]
+  })
+}
