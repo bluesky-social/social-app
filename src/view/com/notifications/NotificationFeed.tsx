@@ -2,15 +2,21 @@ import {useCallback, useEffect, useMemo, useState} from 'react'
 import {ActivityIndicator, type ListRenderItemInfo, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
+import {useIncrementalList} from '#/lib/hooks/useIncrementalList'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {
+  useFeedShowMoreBatchSize,
+  useFeedShowMoreEnabled,
+} from '#/state/preferences/feed-show-more'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   type FeedNotification,
   useNotificationFeedQuery,
 } from '#/state/queries/notifications/feed'
+import {useSession} from '#/state/session'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListProps, type ListRef} from '#/view/com/util/List'
@@ -18,6 +24,7 @@ import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceho
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {atoms as a, platform} from '#/alf'
 import {Bell_Stroke2_Corner0_Rounded as BellIcon} from '#/components/icons/Bell'
+import {ShowMoreButton} from '#/components/ShowMoreButton'
 import {NotificationFeedItem} from './NotificationFeedItem'
 
 const EMPTY_FEED_ITEM = {type: 'empty', _reactKey: '__empty__'} as const
@@ -32,6 +39,24 @@ type NotificationFeedListItem =
   | typeof EMPTY_FEED_ITEM
   | typeof LOAD_MORE_ERROR_ITEM
   | typeof LOADING_ITEM
+
+type NotificationSlice = {
+  key: string
+  notification: FeedNotification
+  items: readonly [FeedNotification]
+}
+
+function notificationSlicesFromData(
+  data: {pages: {items: FeedNotification[]}[]} | undefined,
+): NotificationSlice[] {
+  return (data?.pages ?? []).flatMap(page =>
+    page.items.map(notification => ({
+      key: notification._reactKey,
+      notification,
+      items: [notification] as const,
+    })),
+  )
+}
 
 export function NotificationFeed({
   filter,
@@ -55,6 +80,9 @@ export function NotificationFeed({
   const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
   const trackPostView = usePostViewTracking('Notifications')
+  const {currentAccount} = useSession()
+  const showMoreEnabled = useFeedShowMoreEnabled()
+  const showMoreBatchSize = useFeedShowMoreBatchSize()
   const {
     data,
     isFetching,
@@ -75,6 +103,27 @@ export function NotificationFeed({
   // the `.find()` won't need to go any further than the first page -sfn
   const isEmpty =
     !isFetching && !data?.pages.find(page => page.items.length > 0)
+  const slices = notificationSlicesFromData(data)
+  const {
+    visibleSlices,
+    canShowMore,
+    showMorePostCount,
+    isLoadingMore,
+    onPressShowMore,
+    reset: resetIncrementalList,
+  } = useIncrementalList({
+    enabled: showMoreEnabled,
+    active: enabled,
+    batchSize: showMoreBatchSize,
+    slices,
+    slicesFromData: notificationSlicesFromData,
+    resetKey: JSON.stringify([currentAccount?.did, filter]),
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    isError,
+    fetchNextPage,
+  })
 
   const items = useMemo(() => {
     let arr: NotificationFeedListItem[] = []
@@ -82,9 +131,11 @@ export function NotificationFeed({
       if (isEmpty) {
         arr = arr.concat([EMPTY_FEED_ITEM])
       } else if (data) {
-        for (const page of data?.pages) {
-          arr = arr.concat(page.items)
-        }
+        arr = arr.concat(
+          (showMoreEnabled ? visibleSlices : slices).map(
+            slice => slice.notification,
+          ),
+        )
       }
       if (isError && !isEmpty) {
         arr = arr.concat([LOAD_MORE_ERROR_ITEM])
@@ -93,21 +144,31 @@ export function NotificationFeed({
       arr.push(LOADING_ITEM)
     }
     return arr
-  }, [isFetched, isError, isEmpty, data])
+  }, [
+    isFetched,
+    isError,
+    isEmpty,
+    data,
+    showMoreEnabled,
+    visibleSlices,
+    slices,
+  ])
 
   const onRefresh = useCallback(async () => {
     try {
       setIsPTRing(true)
       await refreshNotifications()
+      resetIncrementalList()
     } catch (err) {
       logger.error('Failed to refresh notifications feed', {
         message: err,
       })
     }
     setIsPTRing(false)
-  }, [refreshNotifications, setIsPTRing])
+  }, [refreshNotifications, setIsPTRing, resetIncrementalList])
 
   const onEndReached = useCallback(async () => {
+    if (showMoreEnabled) return
     if (isFetching || !hasNextPage || isError) return
 
     try {
@@ -115,7 +176,7 @@ export function NotificationFeed({
     } catch (err) {
       logger.error('Failed to load more notifications', {message: err})
     }
-  }, [isFetching, hasNextPage, isError, fetchNextPage])
+  }, [showMoreEnabled, isFetching, hasNextPage, isError, fetchNextPage])
 
   const onPressRetryLoadMore = useCallback(() => {
     void fetchNextPage()
@@ -190,10 +251,21 @@ export function NotificationFeed({
         keyExtractor={(item: NotificationFeedListItem) => item._reactKey}
         renderItem={renderItem}
         ListHeaderComponent={ListHeaderComponent}
-        ListFooterComponent={FeedFooter}
+        ListFooterComponent={
+          showMoreEnabled && canShowMore ? (
+            <ShowMoreButton
+              kind="notifications"
+              loading={isLoadingMore}
+              onPress={() => void onPressShowMore()}
+              postCount={showMorePostCount}
+            />
+          ) : (
+            FeedFooter
+          )
+        }
         refreshing={isPTRing}
         onRefresh={() => void onRefresh()}
-        onEndReached={() => void onEndReached()}
+        onEndReached={showMoreEnabled ? undefined : () => void onEndReached()}
         onEndReachedThreshold={2}
         onScrolledDownChange={onScrolledDownChange}
         onItemSeen={(item: NotificationFeedListItem) => {

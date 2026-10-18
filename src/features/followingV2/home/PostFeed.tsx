@@ -25,6 +25,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
+import {useIncrementalList} from '#/lib/hooks/useIncrementalList'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ScrollProvider} from '#/lib/ScrollContext'
@@ -33,6 +34,10 @@ import {logger} from '#/logger'
 import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
 import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {
+  useFeedShowMoreBatchSize,
+  useFeedShowMoreEnabled,
+} from '#/state/preferences/feed-show-more'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {STALE} from '#/state/queries'
 import {truncateAndInvalidate} from '#/state/queries/util'
@@ -65,6 +70,7 @@ import {FeedTrendingTopicsInterstitial} from '#/components/interstitials/FeedTre
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
 import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {RichText} from '#/components/RichText'
+import {ShowMoreButton} from '#/components/ShowMoreButton'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {isFollowingV2Eligible} from '#/features/followingV2/eligibility'
@@ -433,6 +439,7 @@ let PostFeed = ({
   })
   const refreshToTop = async () => {
     const page = await refresh()
+    if (page) resetIncrementalList()
     if (!page || !isAnchored) {
       return
     }
@@ -618,6 +625,67 @@ let PostFeed = ({
    */
   const isRetryingError = isRefreshing && isError && isEmpty
 
+  const showMoreEnabled = useFeedShowMoreEnabled()
+  const showMoreBatchSize = useFeedShowMoreBatchSize()
+  const includeSlice = (slice: FeedPostSlice) => {
+    if (!showMoreEnabled || slice.isFallbackMarker) return true
+    if (isVideoFeed) {
+      const item = slice.items.find(item => item.uri === slice.feedPostUri)
+      return (
+        !!item &&
+        bsky.isType(app.bsky.embed.video.view, item.post.embed) &&
+        !blockedOrMutedAuthors.includes(item.post.author.did)
+      )
+    }
+    return !slice.items.some(item =>
+      blockedOrMutedAuthors.includes(item.post.author.did),
+    )
+  }
+  const allSlices = (data?.pages.flatMap(page => page.slices) ?? []).filter(
+    includeSlice,
+  )
+  const slicesFromData = (nextData: typeof feedData) =>
+    (
+      (nextData && samples
+        ? mixSamples(nextData.pages, samples)
+        : nextData?.pages
+      )?.flatMap(page => page.slices) ?? []
+    ).filter(includeSlice)
+  const {
+    visibleSlices,
+    canShowMore,
+    showMorePostCount,
+    isLoadingMore,
+    onPressShowMore,
+    reset: resetIncrementalList,
+  } = useIncrementalList({
+    enabled: showMoreEnabled,
+    active: enabled !== false,
+    batchSize: showMoreBatchSize,
+    slices: allSlices,
+    slicesFromData,
+    getItemCount: slice =>
+      slice.isFallbackMarker
+        ? 0
+        : isVideoFeed
+          ? 1
+          : slice.isIncompleteThread && slice.items.length >= 3
+            ? 3
+            : slice.items.length,
+    resetKey: JSON.stringify([currentAccount?.did, feed, feedParams]),
+    hasNextPage,
+    isFetching: isFetching || isRefreshPending(),
+    isFetchingNextPage,
+    isError,
+    fetchNextPage,
+  })
+  const visibleSliceKeys = new Set(visibleSlices.map(slice => slice._reactKey))
+  const lastVisibleKey = visibleSlices.at(-1)?._reactKey
+  const lastVisiblePage =
+    data?.pages.findIndex(page =>
+      page.slices.some(slice => slice._reactKey === lastVisibleKey),
+    ) ?? -1
+
   const feedItems: FeedRow[] = useMemo(() => {
     // wraps a slice item, and replaces it with a showLessFollowup item
     // if the user has pressed show less on it
@@ -679,6 +747,8 @@ let PostFeed = ({
           }[] = []
           for (const page of data.pages) {
             for (const slice of page.slices) {
+              if (showMoreEnabled && !visibleSliceKeys.has(slice._reactKey))
+                continue
               const item = slice.items.find(
                 item => item.uri === slice.feedPostUri,
               )
@@ -733,6 +803,8 @@ let PostFeed = ({
           const gaps = isAnchored ? findGaps(data.pages) : undefined
           for (const [pageIndex, page] of data.pages.entries()) {
             for (const slice of page.slices) {
+              if (showMoreEnabled && !visibleSliceKeys.has(slice._reactKey))
+                continue
               sliceIndex++
 
               if (hasSession) {
@@ -888,7 +960,16 @@ let PostFeed = ({
               }
             }
             const gap = gaps?.get(pageIndex)
-            if (gap && page.cursor) {
+            const pageIsRevealed =
+              !showMoreEnabled ||
+              pageIndex < lastVisiblePage ||
+              (pageIndex === lastVisiblePage &&
+                page.slices.every(
+                  slice =>
+                    !includeSlice(slice) ||
+                    visibleSliceKeys.has(slice._reactKey),
+                ))
+            if (gap && page.cursor && pageIsRevealed) {
               // The same key once it's filled, so the row stays.
               arr.push({
                 type: 'gap',
@@ -942,6 +1023,10 @@ let PostFeed = ({
 
     return arr
   }, [
+    showMoreEnabled,
+    visibleSliceKeys,
+    includeSlice,
+    lastVisiblePage,
     isAnchored,
     refreshError,
     isRetryingError,
@@ -1040,6 +1125,7 @@ let PostFeed = ({
   useImperativeHandle(ref, () => ({refresh: refreshToTop}))
 
   const onEndReached = useCallback(async () => {
+    if (showMoreEnabled) return
     if (isFetching || !hasNextPage || isError) return
 
     ax.metric('feed:endReached', {
@@ -1053,6 +1139,7 @@ let PostFeed = ({
       logger.error('Failed to load more posts', {message: err})
     }
   }, [
+    showMoreEnabled,
     ax,
     isFetching,
     hasNextPage,
@@ -1447,7 +1534,21 @@ let PostFeed = ({
           data={feedItems}
           keyExtractor={(item: FeedRow) => item.key}
           renderItem={renderItem}
-          ListFooterComponent={FeedFooter}
+          ListFooterComponent={
+            showMoreEnabled && canShowMore ? (
+              <ShowMoreButton
+                loading={isLoadingMore}
+                onPress={() => void onPressShowMore()}
+                postCount={showMorePostCount}
+                bottomOffset={
+                  Math.max(headerOffset, 32) * (IS_WEB ? 1 : 2) +
+                  (IS_WEB ? bottomBarOffset : 0)
+                }
+              />
+            ) : (
+              FeedFooter
+            )
+          }
           ListHeaderComponent={ListHeaderComponent}
           refreshing={isPTRing}
           onRefresh={() => void onRefresh()}
@@ -1457,7 +1558,7 @@ let PostFeed = ({
             minHeight: Dimensions.get('window').height * 1.5,
           }}
           onScrolledDownChange={handleScrolledDownChange}
-          onEndReached={() => void onEndReached()}
+          onEndReached={showMoreEnabled ? undefined : () => void onEndReached()}
           onEndReachedThreshold={2} // number of posts left to trigger load more
           removeClippedSubviews={true}
           extraData={extraData}

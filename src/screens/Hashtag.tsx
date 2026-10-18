@@ -4,6 +4,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {useIncrementalList} from '#/lib/hooks/useIncrementalList'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
@@ -11,7 +12,14 @@ import {shareUrl} from '#/lib/sharing'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {enforceLen} from '#/lib/strings/helpers'
-import {useSearchPostsV2Query} from '#/state/queries/search-posts-v2'
+import {
+  useFeedShowMoreBatchSize,
+  useFeedShowMoreEnabled,
+} from '#/state/preferences/feed-show-more'
+import {
+  searchPostSlicesFromData,
+  useSearchPostsV2Query,
+} from '#/state/queries/search-posts-v2'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -26,6 +34,7 @@ import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {SearchError} from '#/components/SearchError'
+import {ShowMoreButton} from '#/components/ShowMoreButton'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 
@@ -168,8 +177,10 @@ function HashtagScreenTab({
   const initialNumToRender = useInitialNumToRender()
   const [isPTR, setIsPTR] = useState(false)
   const t = useTheme()
-  const {hasSession} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const trackPostView = usePostViewTracking('Hashtag')
+  const showMoreEnabled = useFeedShowMoreEnabled()
+  const showMoreBatchSize = useFeedShowMoreBatchSize()
 
   const isCashtag = fullTag.startsWith('$')
 
@@ -181,6 +192,7 @@ function HashtagScreenTab({
   const {
     data,
     isFetched,
+    isFetching,
     isFetchingNextPage,
     isLoading,
     isError,
@@ -200,17 +212,43 @@ function HashtagScreenTab({
   const posts = useMemo(() => {
     return data?.pages.flatMap(page => page.posts) || []
   }, [data])
+  const slices = searchPostSlicesFromData(data)
+  const {
+    visibleSlices,
+    canShowMore,
+    showMorePostCount,
+    isLoadingMore,
+    onPressShowMore,
+    reset: resetIncrementalList,
+  } = useIncrementalList({
+    enabled: showMoreEnabled,
+    active,
+    batchSize: showMoreBatchSize,
+    slices,
+    slicesFromData: searchPostSlicesFromData,
+    resetKey: JSON.stringify([currentAccount?.did, fullTag, author, sort]),
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    isError,
+    fetchNextPage,
+  })
+  const visiblePosts = showMoreEnabled
+    ? visibleSlices.map(slice => slice.post)
+    : posts
 
   const onRefresh = useCallback(async () => {
     setIsPTR(true)
-    await refetch()
+    const result = await refetch()
+    if (result.isSuccess) resetIncrementalList()
     setIsPTR(false)
-  }, [refetch])
+  }, [refetch, resetIncrementalList])
 
   const onEndReached = useCallback(() => {
+    if (showMoreEnabled) return
     if (isFetchingNextPage || !hasNextPage || error) return
     void fetchNextPage()
-  }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
+  }, [showMoreEnabled, isFetchingNextPage, hasNextPage, error, fetchNextPage])
 
   const closeAllActiveElements = useCloseAllActiveElements()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
@@ -263,21 +301,29 @@ function HashtagScreenTab({
         />
       ) : (
         <List
-          data={posts}
+          data={visiblePosts}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           refreshing={isPTR}
           onRefresh={() => void onRefresh()}
-          onEndReached={onEndReached}
+          onEndReached={showMoreEnabled ? undefined : onEndReached}
           onEndReachedThreshold={4}
           onItemSeen={trackPostView}
           desktopFixedHeight
           ListFooterComponent={
-            <ListFooter
-              isFetchingNextPage={isFetchingNextPage}
-              error={cleanError(error)}
-              onRetry={fetchNextPage}
-            />
+            showMoreEnabled && canShowMore ? (
+              <ShowMoreButton
+                loading={isLoadingMore}
+                onPress={() => void onPressShowMore()}
+                postCount={showMorePostCount}
+              />
+            ) : (
+              <ListFooter
+                isFetchingNextPage={isFetchingNextPage}
+                error={cleanError(error)}
+                onRetry={fetchNextPage}
+              />
+            )
           }
           initialNumToRender={initialNumToRender}
           windowSize={11}

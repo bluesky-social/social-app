@@ -3,6 +3,7 @@ import {ActivityIndicator, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
+import {useIncrementalList} from '#/lib/hooks/useIncrementalList'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {useCallOnce} from '#/lib/once'
 import {
@@ -11,9 +12,16 @@ import {
   shouldRetryError,
 } from '#/lib/strings/errors'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
+import {
+  useFeedShowMoreBatchSize,
+  useFeedShowMoreEnabled,
+} from '#/state/preferences/feed-show-more'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
-import {useSearchPostsV2Query} from '#/state/queries/search-posts-v2'
+import {
+  searchPostSlicesFromData,
+  useSearchPostsV2Query,
+} from '#/state/queries/search-posts-v2'
 import {useStarterPackSearch} from '#/state/queries/starter-pack-search'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -34,6 +42,7 @@ import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {SearchError} from '#/components/SearchError'
+import {ShowMoreButton} from '#/components/ShowMoreButton'
 import {Text} from '#/components/Typography'
 import {type Metrics, useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
@@ -300,9 +309,11 @@ let SearchScreenPostResults = ({
 }): React.ReactNode => {
   const ax = useAnalytics()
   const {t: l} = useLingui()
-  const {hasSession} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const [isPTR, setIsPTR] = useState(false)
   const trackPostView = usePostViewTracking('SearchResults')
+  const showMoreEnabled = useFeedShowMoreEnabled()
+  const showMoreBatchSize = useFeedShowMoreBatchSize()
 
   const augmentedV2Query = useMemo(() => {
     return augmentSearchQuery(query || '')
@@ -326,15 +337,43 @@ let SearchScreenPostResults = ({
   } = v2
 
   const t = useTheme()
+  const slices = searchPostSlicesFromData(results)
+  const {
+    visibleSlices,
+    canShowMore,
+    showMorePostCount,
+    isLoadingMore,
+    onPressShowMore,
+    reset: resetIncrementalList,
+  } = useIncrementalList({
+    enabled: showMoreEnabled,
+    active,
+    batchSize: showMoreBatchSize,
+    slices,
+    slicesFromData: searchPostSlicesFromData,
+    resetKey: JSON.stringify([
+      currentAccount?.did,
+      augmentedV2Query,
+      sort,
+      filters,
+    ]),
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    isError: !!error,
+    fetchNextPage,
+  })
   const onPullToRefresh = useCallback(async () => {
     setIsPTR(true)
-    await refetch()
+    const result = await refetch()
+    if (result.isSuccess) resetIncrementalList()
     setIsPTR(false)
-  }, [setIsPTR, refetch])
+  }, [setIsPTR, refetch, resetIncrementalList])
   const onEndReached = useCallback(() => {
+    if (showMoreEnabled) return
     if (isFetching || !hasNextPage || error) return
     void fetchNextPage()
-  }, [isFetching, error, hasNextPage, fetchNextPage])
+  }, [showMoreEnabled, isFetching, error, hasNextPage, fetchNextPage])
 
   const posts = useMemo(() => {
     return results?.pages.flatMap(page => page.posts) || []
@@ -343,7 +382,9 @@ let SearchScreenPostResults = ({
     let temp: SearchResultSlice[] = []
 
     const seenUris = new Set()
-    for (const post of posts) {
+    for (const post of showMoreEnabled
+      ? visibleSlices.map(slice => slice.post)
+      : posts) {
       if (seenUris.has(post.uri)) {
         continue
       }
@@ -355,7 +396,7 @@ let SearchScreenPostResults = ({
       seenUris.add(post.uri)
     }
 
-    if (isFetchingNextPage) {
+    if (!showMoreEnabled && isFetchingNextPage) {
       temp.push({
         type: 'loadingMore',
         key: 'loadingMore',
@@ -363,7 +404,7 @@ let SearchScreenPostResults = ({
     }
 
     return temp
-  }, [posts, isFetchingNextPage])
+  }, [posts, visibleSlices, showMoreEnabled, isFetchingNextPage])
 
   const closeAllActiveElements = useCloseAllActiveElements()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
@@ -453,7 +494,7 @@ let SearchScreenPostResults = ({
               onRefresh={() => {
                 void onPullToRefresh()
               }}
-              onEndReached={onEndReached}
+              onEndReached={showMoreEnabled ? undefined : onEndReached}
               onItemSeen={(item: SearchResultSlice) => {
                 if (item.type === 'post') {
                   trackPostView(item.post)
@@ -461,10 +502,18 @@ let SearchScreenPostResults = ({
               }}
               desktopFixedHeight
               ListFooterComponent={
-                <ListFooter
-                  isFetchingNextPage={isFetchingNextPage}
-                  hasNextPage={hasNextPage}
-                />
+                showMoreEnabled && canShowMore ? (
+                  <ShowMoreButton
+                    loading={isLoadingMore}
+                    onPress={() => void onPressShowMore()}
+                    postCount={showMorePostCount}
+                  />
+                ) : (
+                  <ListFooter
+                    isFetchingNextPage={isFetchingNextPage}
+                    hasNextPage={hasNextPage}
+                  />
+                )
               }
             />
           ) : (
