@@ -191,6 +191,7 @@ function ListImpl<ItemT>(
     end: windowEnd,
     topSpacerHeight,
     bottomSpacerHeight,
+    placeholders,
     markerRef,
     observeRow,
     getScrollOffsetForIndex,
@@ -415,9 +416,17 @@ function ListImpl<ItemT>(
                       React.ComponentRef<typeof View>
                     >
                   }
-                  style={{height: topSpacerHeight}}
                 />
               )}
+              {placeholders
+                ? placeholders.before.map(placeholder => (
+                    <FindablePlaceholder
+                      key={placeholder.key}
+                      height={placeholder.height}
+                      text={placeholder.text}
+                    />
+                  ))
+                : observeRow && <View style={{height: topSpacerHeight}} />}
               {(data as Array<ItemT>)
                 .slice(windowStart, windowEnd)
                 .map((item, i) => {
@@ -437,7 +446,15 @@ function ListImpl<ItemT>(
                     />
                   )
                 })}
-              {observeRow && <View style={{height: bottomSpacerHeight}} />}
+              {placeholders
+                ? placeholders.after.map(placeholder => (
+                    <FindablePlaceholder
+                      key={placeholder.key}
+                      height={placeholder.height}
+                      text={placeholder.text}
+                    />
+                  ))
+                : observeRow && <View style={{height: bottomSpacerHeight}} />}
             </>
           )}
           {onEndReached && !isEmpty && (
@@ -839,6 +856,35 @@ Row = memo(Row) as <ItemT>(props: {
   registerRowNode: (index: number, node: HTMLElement | null) => void
   observeRow: ((key: string, node: HTMLElement | null) => void) | undefined
 }) => React.ReactNode
+
+/**
+ * Stands in for a row outside the virtualized window. `hidden="until-found"`
+ * keeps it at the row's height without rendering its text, while still letting
+ * find-in-page match it. On a match the browser reveals it and scrolls to it,
+ * and the window then mounts the real row in its place, so the text stays
+ * transparent in the meantime.
+ */
+let FindablePlaceholder = function FindablePlaceholderImpl({
+  height,
+  text,
+}: {
+  height: number
+  text: string
+}): React.ReactNode {
+  return (
+    <div
+      ref={setHiddenUntilFound}
+      style={{height, overflow: 'hidden', color: 'transparent'}}>
+      {text}
+    </div>
+  )
+}
+FindablePlaceholder = memo(FindablePlaceholder)
+
+// React's types only allow a boolean `hidden`.
+function setHiddenUntilFound(node: HTMLDivElement | null) {
+  node?.setAttribute('hidden', 'until-found')
+}
 
 let Visibility = function VisibilityImpl({
   root,
