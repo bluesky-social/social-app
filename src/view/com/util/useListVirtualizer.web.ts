@@ -44,15 +44,12 @@ function cacheText(key: string, text: string) {
   }
 }
 
-/** The row's text, with a space between each text node. */
+/**
+ * The row's text. Adjacent text nodes are kept together, as find-in-page sees
+ * them, so words split across inline elements (links, emoji) still match.
+ */
 function snapshotText(node: HTMLElement) {
-  const parts: string[] = []
-  const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT)
-  for (let text = walker.nextNode(); text; text = walker.nextNode()) {
-    const value = text.nodeValue?.trim()
-    if (value) parts.push(value)
-  }
-  return parts.join(' ')
+  return node.textContent ?? ''
 }
 
 let supportsFindInPage: boolean | undefined
@@ -388,7 +385,7 @@ export function useListVirtualizer({
     if (!canFindHiddenText()) return
     const text = snapshotText(node)
     cacheText(key, text)
-    if (textsRef.current.get(key) === text) return
+    if ((pendingTextsRef.current ?? textsRef.current).get(key) === text) return
     if (!pendingTextsRef.current) {
       pendingTextsRef.current = new Map(textsRef.current)
       queueMicrotask(() => {
