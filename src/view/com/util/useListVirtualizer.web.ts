@@ -32,7 +32,7 @@ let supportsScrollAnchoring: boolean | undefined
 
 /**
  * Whether the browser keeps content in place for us when rows above the
- * viewport change size. Safari has no scroll anchoring at all, and some
+ * viewport change size. Safari only has scroll anchoring from 27, and some
  * screens (e.g. Profile) opt out with `overflow-anchor: none`.
  */
 function hasNativeScrollAnchoring(node: HTMLElement) {
