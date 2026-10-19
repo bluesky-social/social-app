@@ -1,5 +1,5 @@
 diff --git a/android/src/main/java/com/reactnativepagerview/ComposePagerView.kt b/android/src/main/java/com/reactnativepagerview/ComposePagerView.kt
-index 17e2766b478b09873a82a4f3540e4627c6459776..814b7df39c558b2725b69c458b92b10ab702932d 100644
+index 17e2766b478b09873a82a4f3540e4627c6459776..0426f52295c7e8013379c363276648bcff601e78 100644
 --- a/android/src/main/java/com/reactnativepagerview/ComposePagerView.kt
 +++ b/android/src/main/java/com/reactnativepagerview/ComposePagerView.kt
 @@ -1,12 +1,14 @@
@@ -17,8 +17,14 @@ index 17e2766b478b09873a82a4f3540e4627c6459776..814b7df39c558b2725b69c458b92b10a
  import androidx.compose.foundation.ExperimentalFoundationApi
  import androidx.compose.foundation.LocalOverscrollConfiguration
  import androidx.compose.foundation.interaction.DragInteraction
-@@ -33,12 +35,14 @@ import androidx.lifecycle.findViewTreeLifecycleOwner
+@@ -31,14 +33,20 @@ import androidx.lifecycle.LifecycleOwner
+ import androidx.lifecycle.LifecycleRegistry
+ import androidx.lifecycle.findViewTreeLifecycleOwner
  import androidx.lifecycle.setViewTreeLifecycleOwner
++import androidx.savedstate.SavedStateRegistry
++import androidx.savedstate.SavedStateRegistryController
++import androidx.savedstate.SavedStateRegistryOwner
++import androidx.savedstate.setViewTreeSavedStateRegistryOwner
  import com.facebook.react.bridge.ReactContext
  import com.facebook.react.uimanager.UIManagerHelper
 +import com.facebook.react.uimanager.events.NativeGestureUtil
@@ -32,7 +38,7 @@ index 17e2766b478b09873a82a4f3540e4627c6459776..814b7df39c558b2725b69c458b92b10a
  import kotlin.math.sign
  
  @OptIn(ExperimentalFoundationApi::class)
-@@ -64,7 +68,6 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
+@@ -64,7 +72,6 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
    private val pageMarginState = mutableStateOf(0)
    private val offscreenPageLimitState = mutableStateOf(DEFAULT_OFFSCREEN_PAGE_LIMIT)
    private val overScrollModeState = mutableStateOf(OverScrollMode.Auto)
@@ -40,7 +46,7 @@ index 17e2766b478b09873a82a4f3540e4627c6459776..814b7df39c558b2725b69c458b92b10a
    private var initialPage = 0
    private var didEmitInitialPage = false
    private var currentPage = 0
-@@ -72,7 +75,8 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
+@@ -72,7 +79,8 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
    private var touchSlop = 0
    private var initialTouchX = 0f
    private var initialTouchY = 0f
@@ -50,7 +56,21 @@ index 17e2766b478b09873a82a4f3540e4627c6459776..814b7df39c558b2725b69c458b92b10a
    private val scrollCommandState = mutableStateOf<ScrollCommand?>(null)
    private var lastEmittedScrollState: String? = null
    private var lastEmittedPageSelected: Int? = null
-@@ -122,7 +126,6 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
+@@ -95,6 +103,13 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
+       // resolves it instead of walking up to the ambient (and repeatedly
+       // destroyed) Fragment view-tree Lifecycle - see the field comment above.
+       setViewTreeLifecycleOwner(composeLifecycleOwner)
++      // Same for saved state. Compose would otherwise store the pager's
++      // rememberSaveable state (current page, page view state) in the host
++      // Fragment's SavedStateRegistry under a key derived from this view's
++      // id. It has none, so every pager shares one key and a remounted pager
++      // restores the previous pager's page instead of using initialPage.
++      // React owns the pager state, so the owner's registry is never saved.
++      setViewTreeSavedStateRegistryOwner(composeLifecycleOwner)
+       setViewCompositionStrategy(
+         ViewCompositionStrategy.DisposeOnLifecycleDestroyed(composeLifecycleOwner)
+       )
+@@ -122,7 +137,6 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
    }
  
    override fun onDetachedFromWindow() {
@@ -58,7 +78,7 @@ index 17e2766b478b09873a82a4f3540e4627c6459776..814b7df39c558b2725b69c458b92b10a
      // composeView is intentionally left attached and alive here: its
      // Lifecycle is self-owned (see composeLifecycleOwner) and only reaches
      // DESTROYED in dispose(). We pause it to CREATED instead, so lifecycle-
-@@ -141,21 +144,31 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
+@@ -141,21 +155,31 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
      when (event.actionMasked) {
        MotionEvent.ACTION_DOWN -> {
@@ -97,7 +117,7 @@ index 17e2766b478b09873a82a4f3540e4627c6459776..814b7df39c558b2725b69c458b92b10a
    override fun canScrollHorizontally(direction: Int): Boolean {
      if (orientationState.value != Orientation.Horizontal) {
        return false
-@@ -260,8 +273,6 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
+@@ -260,8 +284,6 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
      scrollCommandState.value = null
      lastEmittedScrollState = null
      lastEmittedPageSelected = null
@@ -106,7 +126,7 @@ index 17e2766b478b09873a82a4f3540e4627c6459776..814b7df39c558b2725b69c458b92b10a
    }
  
    fun setInitialPage(value: Int) {
-@@ -324,56 +335,76 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
+@@ -324,56 +346,76 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
      }
    }
  
@@ -171,11 +191,11 @@ index 17e2766b478b09873a82a4f3540e4627c6459776..814b7df39c558b2725b69c458b92b10a
 +  private fun canViewScroll(view: View, direction: Int): Boolean {
 +    if (orientationState.value == Orientation.Vertical) {
 +      return view.canScrollVertically(direction)
-     }
++    }
 +    val canScroll = view.canScrollHorizontally(direction)
 +    if (!canScroll || view !is HorizontalScrollView) {
 +      return canScroll
-+    }
+     }
 +    val contentWidth = view.getChildAt(0)?.width ?: 0
 +    val maxScrollX = contentWidth - (view.width - view.paddingLeft - view.paddingRight)
 +    return if (direction < 0) view.scrollX > 0 else view.scrollX < maxScrollX
@@ -222,7 +242,7 @@ index 17e2766b478b09873a82a4f3540e4627c6459776..814b7df39c558b2725b69c458b92b10a
    }
  
    private fun canScrollInDirection(direction: Int): Boolean {
-@@ -393,31 +424,6 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
+@@ -393,31 +435,6 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
      }
    }
  
@@ -254,7 +274,7 @@ index 17e2766b478b09873a82a4f3540e4627c6459776..814b7df39c558b2725b69c458b92b10a
    fun setCurrentItem(selectedPage: Int, animated: Boolean) {
      if (selectedPage < 0 || selectedPage >= pages.size) {
        return
-@@ -570,7 +576,6 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
+@@ -570,7 +587,6 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
  
      val pageSpacing = pageMarginState.value.dp
      val beyondViewportPageCount = getBeyondViewportPageCount()
@@ -262,7 +282,7 @@ index 17e2766b478b09873a82a4f3540e4627c6459776..814b7df39c558b2725b69c458b92b10a
      val overscrollConfiguration = if (overScrollModeState.value == OverScrollMode.Never) {
        null
      } else {
-@@ -583,7 +588,7 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
+@@ -583,7 +599,7 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
            state = pagerState,
            modifier = Modifier.fillMaxSize(),
            pageSpacing = pageSpacing,
@@ -271,7 +291,7 @@ index 17e2766b478b09873a82a4f3540e4627c6459776..814b7df39c558b2725b69c458b92b10a
            reverseLayout = false,
            beyondViewportPageCount = beyondViewportPageCount
          ) { page ->
-@@ -594,7 +599,7 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
+@@ -594,7 +610,7 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
            state = pagerState,
            modifier = Modifier.fillMaxSize(),
            pageSpacing = pageSpacing,
@@ -280,6 +300,41 @@ index 17e2766b478b09873a82a4f3540e4627c6459776..814b7df39c558b2725b69c458b92b10a
            reverseLayout = false,
            beyondViewportPageCount = beyondViewportPageCount
          ) { page ->
+@@ -682,18 +698,29 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
+ // A stable Lifecycle that follows the currently attached host through
+ // CREATED/STARTED/RESUMED, but only moves to DESTROYED when destroy() is
+ // called explicitly. This lets it survive react-native-screens replacing the
+-// ambient Fragment view-tree owner (see the field comment above).
+-internal class ComposeViewLifecycleOwner : LifecycleOwner, LifecycleEventObserver {
+-  private val registry = LifecycleRegistry(this).apply {
+-    currentState = Lifecycle.State.CREATED
+-  }
++// ambient Fragment view-tree owner (see the field comment above). It also
++// provides an empty SavedStateRegistry that is never saved, so nothing in the
++// composition is persisted or restored.
++internal class ComposeViewLifecycleOwner :
++  LifecycleOwner, SavedStateRegistryOwner, LifecycleEventObserver {
++  private val registry = LifecycleRegistry(this)
++  private val savedStateController = SavedStateRegistryController.create(this)
+   private var hostLifecycle: Lifecycle? = null
+   private var isAttached = false
+   private var isDestroyed = false
+ 
++  init {
++    // Must run while the Lifecycle is still INITIALIZED.
++    savedStateController.performRestore(null)
++    registry.currentState = Lifecycle.State.CREATED
++  }
++
+   override val lifecycle: Lifecycle
+     get() = registry
+ 
++  override val savedStateRegistry: SavedStateRegistry
++    get() = savedStateController.savedStateRegistry
++
+   fun attach(lifecycle: Lifecycle?) {
+     if (isDestroyed) {
+       return
 diff --git a/ios/PagerGestureObserver.swift b/ios/PagerGestureObserver.swift
 new file mode 100644
 index 0000000000000000000000000000000000000000..956a1afef488ba566f703d94b9df8903a2deed29

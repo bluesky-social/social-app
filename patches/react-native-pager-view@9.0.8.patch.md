@@ -1,8 +1,9 @@
 # react-native-pager-view+9.0.8.patch
 
-Carries two upstream Android changes that are not in the 9.0.8 release. Both
-only touch `android/src/main/java/com/reactnativepagerview/ComposePagerView.kt`.
-Drop this patch once a release contains both.
+Carries two upstream Android changes that are not in the 9.0.8 release, one
+local Android fix, and two iOS changes. The Android parts only touch
+`android/src/main/java/com/reactnativepagerview/ComposePagerView.kt`. Drop each
+part once a release contains it.
 
 ## Let nested horizontal ScrollViews scroll inside a page
 
@@ -32,6 +33,29 @@ from a post card can open the post. `notifyNativeGestureEnded` is sent on
 The notification lives in `onInterceptTouchEvent`, which Android stops
 calling once a child has claimed the touch, so it only fires when the pager
 itself is dragging.
+
+## Keep the pager's Compose state out of the host's saved state
+
+Compose stores a `ComposeView`'s `rememberSaveable`
+state (the pager's current page, the saved view state of page hosts) in the
+view-tree `SavedStateRegistry`, which is the host Fragment's, under the key
+`"SaveableStateRegistry:<view id>"`. The pager's internal `ComposeView` has no
+id, so every pager shared the key `-1`. When react-native-screens destroys the
+Fragment view of a covered screen, the old pager's state is saved under that
+key, and a pager mounted afterwards restores it, starting on the old page and
+ignoring `initialPage`.
+
+In this app Home remounts its pager (`key={allFeeds.join(',')}`) after pinned
+feeds are reordered or unpinned in My Feeds. The new pager opened on the
+selected feed's old index, so the tab bar and the visible feed disagreed until
+another tab was tapped.
+
+The `ComposeView` now gets its `SavedStateRegistryOwner` from the same private
+owner that already supplies its Lifecycle. Its registry starts empty and is
+never saved, so nothing is persisted or restored. React owns the pager state,
+so nothing is lost. A unique view id would also fix the mismatch, but every
+remount would then leave an orphaned entry in the Fragment's saved state for
+the rest of the session.
 
 ## iOS: yield to the navigation back gesture on the first page
 
