@@ -19,6 +19,15 @@
       "expo-image-manipulator/build/*": [
         "./node_modules/expo-image-manipulator/build/*"
       ],
+      /*
+       * The react-native exports condition (set by the base config) resolves
+       * to the package's raw TypeScript source, which doesn't typecheck
+       * against React Native 0.88. Use the compiled declarations instead,
+       * where skipLibCheck applies.
+       */
+      "react-native-view-shot": [
+        "./node_modules/react-native-view-shot/lib/index.d.ts"
+      ],
     },
     "plugins": [
       {
@@ -26,13 +35,7 @@
         "moveUpPatterns": ["#/", "@lingui/react/macro"],
         "moveDownPatterns": ["react-native-reanimated/lib"],
       }
-    ],
-    /*
-     * The base config sets `["react-native"]`, which resolves some packages
-     * (e.g. react-native-view-shot) to TS sources that don't typecheck
-     * against React Native 0.88.
-     */
-    "customConditions": []
+    ]
   },
   "exclude": ["bskyweb", "bskyembed", "web-build", "dist"]
 }
