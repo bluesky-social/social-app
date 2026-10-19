@@ -14,11 +14,12 @@ import {
   parseHistoryEntry,
 } from '#/screens/Search/searchParams'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
+import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
@@ -30,6 +31,7 @@ export function SearchHistory({
   onProfileClick,
   onRemoveItemClick,
   onRemoveProfileClick,
+  onClearAll,
 }: {
   searchHistory: string[]
   selectedProfiles: bsky.profile.AnyProfileView[]
@@ -37,20 +39,45 @@ export function SearchHistory({
   onProfileClick: (profile: bsky.profile.AnyProfileView) => void
   onRemoveItemClick: (item: string) => void
   onRemoveProfileClick: (profile: bsky.profile.AnyProfileView) => void
+  onClearAll: () => void
 }) {
   const ax = useAnalytics()
+  const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
+  const clearAllPromptControl = Prompt.usePromptControl()
+
+  const totalCount = searchHistory.length + selectedProfiles.length
 
   return (
     <Layout.Content
       keyboardDismissMode="interactive"
       keyboardShouldPersistTaps="handled">
       <View style={[a.w_full, a.gap_md]}>
-        {(searchHistory.length > 0 || selectedProfiles.length > 0) && (
-          <View style={[a.px_lg, a.pt_sm]}>
+        {totalCount > 0 && (
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.justify_between,
+              a.gap_md,
+              a.px_lg,
+              a.pt_sm,
+            ]}>
             <Text style={[a.text_md, a.font_semi_bold]}>
               <Trans>Recent searches</Trans>
             </Text>
+            {totalCount > 1 && (
+              <Button
+                label={l`Clear all recent searches`}
+                onPress={() => clearAllPromptControl.open()}
+                size="tiny"
+                color="secondary"
+                testID="searchHistoryClearAllBtn">
+                <ButtonText>
+                  <Trans context="action">Clear all</Trans>
+                </ButtonText>
+              </Button>
+            )}
           </View>
         )}
 
@@ -113,6 +140,22 @@ export function SearchHistory({
           </View>
         )}
       </View>
+
+      <Prompt.Basic
+        control={clearAllPromptControl}
+        title={l`Clear all recent searches?`}
+        description={l`This can’t be undone, and all of your recent searches will be removed.`}
+        onConfirm={() => {
+          ax.metric('search:recent:clearAll', {
+            termCount: searchHistory.length,
+            profileCount: selectedProfiles.length,
+          })
+          onClearAll()
+        }}
+        confirmButtonCta={l({message: 'Clear', context: 'action'})}
+        cancelButtonCta={l`Cancel`}
+        confirmButtonColor="negative"
+      />
     </Layout.Content>
   )
 }

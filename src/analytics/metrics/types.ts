@@ -998,6 +998,11 @@ export type Events = {
     position: number
   }
 
+  'search:recent:clearAll': {
+    termCount: number
+    profileCount: number
+  }
+
   'search:autocomplete:press': {
     profileDid: string
     position: number

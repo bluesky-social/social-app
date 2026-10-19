@@ -210,6 +210,10 @@ export function SearchScreenShell({
     },
     [accountHistory, setAccountHistory],
   )
+  const clearAllHistory = useCallback(() => {
+    setTermHistory([])
+    setAccountHistory([])
+  }, [setTermHistory, setAccountHistory])
 
   const showFilters = Boolean((query || hasFilters) && !showAutocomplete)
 
@@ -689,6 +693,7 @@ export function SearchScreenShell({
                 onProfileClick={handleProfileClick}
                 onRemoveItemClick={deleteSearchHistoryItem}
                 onRemoveProfileClick={deleteProfileHistoryItem}
+                onClearAll={clearAllHistory}
               />
             )}
           </Animated.View>
