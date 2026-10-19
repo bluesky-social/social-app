@@ -82,6 +82,51 @@ it.each(['freemix.fm', 'www.freemix.fm', 'staging.freemix.fm.example.com'])(
   },
 )
 
+describe.each(['3speak.tv', 'www.3speak.tv'])('3Speak videos on %s', host => {
+  it.each(['', '&t=31', '&ref=share#player'])(
+    'embeds a video with suffix %s',
+    suffix => {
+      expect(
+        parseEmbedPlayerFromUrl(
+          `https://${host}/watch?v=seckorama/sumski-vinodol${suffix}`,
+        ),
+      ).toEqual({
+        type: 'threespeak_video',
+        source: 'threespeak',
+        playerUri:
+          'https://play.3speak.tv/watch?v=seckorama/sumski-vinodol&mode=iframe',
+      })
+    },
+  )
+
+  it.each([
+    '/watch',
+    '/watch?v=',
+    '/watch?v=seckorama',
+    '/watch?v=seckorama/',
+    '/watch?v=/sumski-vinodol',
+    '/watch?v=seckorama/sumski-vinodol/extra',
+    '/watch?v=Seckorama/sumski-vinodol',
+    '/watch?v=seckorama/sumski%26vinodol',
+    '/watch?v=ab/sumski-vinodol',
+    '/watch/seckorama/sumski-vinodol',
+    '/user/seckorama',
+  ])('does not embed unsupported path %s', path => {
+    expect(parseEmbedPlayerFromUrl(`https://${host}${path}`)).toBeUndefined()
+  })
+})
+
+it.each(['play.3speak.tv', '3speak.tv.example.com', 'fake3speak.tv'])(
+  'does not embed 3Speak videos on unsupported host %s',
+  host => {
+    expect(
+      parseEmbedPlayerFromUrl(
+        `https://${host}/watch?v=seckorama/sumski-vinodol`,
+      ),
+    ).toBeUndefined()
+  },
+)
+
 describe('getEmbedPlayerMediaType', () => {
   it.each<
     readonly [EmbedPlayerType, ReturnType<typeof getEmbedPlayerMediaType>]
@@ -90,6 +135,7 @@ describe('getEmbedPlayerMediaType', () => {
     ['youtube_short', 'video'],
     ['twitch_video', 'video'],
     ['vimeo_video', 'video'],
+    ['threespeak_video', 'video'],
     ['spotify_song', 'audio'],
     ['soundcloud_set', 'audio'],
     ['apple_music_album', 'audio'],
