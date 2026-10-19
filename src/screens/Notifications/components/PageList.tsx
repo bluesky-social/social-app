@@ -32,6 +32,7 @@ import {
   isFollowerNotification,
   LoadingSkeleton,
   NotificationItem,
+  useHeaderGutterStyle,
 } from '#/screens/Notifications/components/NotificationItem'
 import {usePager} from '#/screens/Notifications/components/PagerView'
 import {RefreshPill} from '#/screens/Notifications/components/RefreshPill'
@@ -563,11 +564,12 @@ function SectionHeader({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const gutters = useHeaderGutterStyle()
 
   return (
     <View
       style={[
-        a.px_lg,
+        gutters,
         section === 'today'
           ? a.py_sm
           : [
