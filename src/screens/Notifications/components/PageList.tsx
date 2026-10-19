@@ -388,7 +388,7 @@ export function getPlaceholderRow({
 
 /**
  * Splits notifications into "Today" and "Earlier". When nothing happened
- * today the headers are left out entirely, per the designs. The Followers tab
+ * today the headers are left out entirely, per the designs. The Follows tab
  * is laid out differently, see `buildFollowerRows`.
  */
 export function buildRows(
@@ -421,7 +421,7 @@ export function buildRows(
 }
 
 /**
- * The Followers tab is a list of people rather than a feed: a single
+ * The Follows tab is a list of people rather than a feed: a single
  * "Followed you" header, then a row per follower. Any other kind keeps its
  * usual notification row.
  *

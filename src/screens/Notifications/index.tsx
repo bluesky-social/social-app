@@ -102,9 +102,9 @@ function NewNotificationsScreenInner() {
   const {height: titleHeight, onLayout: onTitleLayout} = useShellHeaderLayout()
   const tabs: {key: GroupedNotificationsFeed; label: string}[] = [
     {key: 'all', label: l`All`},
-    {key: 'people-i-follow', label: l`People you follow`},
-    {key: 'followers', label: l`Followers`},
+    {key: 'people-i-follow', label: l`People I follow`},
     {key: 'conversations', label: l`Replies`},
+    {key: 'followers', label: l`Follows`},
     {key: 'activity', label: l`Activity`},
   ]
   const {seenAt, onFirstLoad, refresh} = useSessionSeenAt()
