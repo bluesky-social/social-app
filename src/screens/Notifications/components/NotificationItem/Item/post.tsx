@@ -499,7 +499,8 @@ export function QuoteCard({
   }
 
   if (isClassic) {
-    // The placeholder in a post has the top margin that an embed has there
+    // Cancels the top margin `PostPlaceholder` has below a post's text, as the
+    // row's own gap separates it here
     return (
       <View style={{marginTop: -8}}>
         <PostPlaceholder>{placeholder}</PostPlaceholder>

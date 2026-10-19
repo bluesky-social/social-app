@@ -210,7 +210,11 @@ export function GroupRoot({
 }) {
   const isClassic = useIsClassicLayout()
   const group = getNotificationGroup(notification)
-  // Activity keeps its avatar in the classic layout, so there's no one to add
+  /*
+   * Activity keeps its avatar in the classic layout, so there's no one to add.
+   * Every other kind's `Item.Avatar` is an icon there, so this has to agree
+   * with the rule in `Item.Avatar` for which badges become icons.
+   */
   const showsPrimary = isClassic && notification.type !== 'subscribedPost'
 
   if (group.count < 2 || isNamedPair(group)) {

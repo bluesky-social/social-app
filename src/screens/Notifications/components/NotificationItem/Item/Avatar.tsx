@@ -249,11 +249,15 @@ function ClassicAvatar({
 
   return (
     <View
-      style={{
-        width: CLASSIC_LEAD_WIDTH,
-        paddingLeft: CLASSIC_AVATAR_INSET,
-        height: CLASSIC_AVATAR_SIZE + (Icon ? CLASSIC_BADGE_OVERHANG : 0),
-      }}>
+      style={[
+        // So the avatar's link wraps the avatar rather than the whole column
+        a.align_start,
+        {
+          width: CLASSIC_LEAD_WIDTH,
+          paddingLeft: CLASSIC_AVATAR_INSET,
+          height: CLASSIC_AVATAR_SIZE + (Icon ? CLASSIC_BADGE_OVERHANG : 0),
+        },
+      ]}>
       <PreviewableUserAvatar
         size={CLASSIC_AVATAR_SIZE}
         profile={profile}
