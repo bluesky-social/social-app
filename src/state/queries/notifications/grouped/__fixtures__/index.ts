@@ -323,6 +323,19 @@ export function createGroupedNotificationsFixture(
     indexedAt: ago(2 * DAY),
     reply: {root: notFoundPost, parent: notFoundPost},
   })
+  const omarEmoji = post({
+    author: omar,
+    rkey: 'emoji',
+    text: '😅',
+    indexedAt: ago(1 * DAY + 1 * HOUR + 30 * MINUTE),
+  })
+  const theoEmojiReply = post({
+    author: theo,
+    rkey: 'reply-emoji',
+    text: 'Wat',
+    indexedAt: ago(1 * DAY + 1 * HOUR),
+    reply: {root: omarEmoji, parent: omarEmoji},
+  })
   const marcusQuote = post({
     author: marcus,
     rkey: 'quote-fungus',
@@ -707,6 +720,17 @@ export function createGroupedNotificationsFixture(
       },
     },
     {
+      id: 'reply-emoji-parent',
+      isRead: true,
+      indexedAt: ago(1 * DAY + 1 * HOUR),
+      count: 1,
+      kind: {
+        $type: `${$group}#replyNotification`,
+        post: theoEmojiReply.uri,
+        parent: omarEmoji.uri,
+      },
+    },
+    {
       id: 'reply-oyster',
       isRead: true,
       indexedAt: ago(1 * DAY + 2 * HOUR),
@@ -902,6 +926,8 @@ export function createGroupedNotificationsFixture(
       lenaMention,
       aikoReply,
       jonasReply,
+      omarEmoji,
+      theoEmojiReply,
       marcusQuote,
       samuelMention,
       samuelBlog,
