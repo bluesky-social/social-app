@@ -7,7 +7,8 @@ import {
 } from 'react-native'
 
 import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {SHOW_ROW_BORDERS} from '#/screens/Notifications/rowBorders'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {PostControlsSkeleton} from '#/components/PostControls'
 import * as Skele from '#/components/Skeleton'
 import * as Item from './Item'
@@ -85,10 +86,13 @@ export function LoadingSkeleton({feed}: {feed: GroupedNotificationsFeed}) {
     const index = counts.get(kind) ?? 0
     counts.set(kind, index + 1)
     rows.push(
-      // Divided like the rows they stand in for, on web
+      // Divided like the rows they stand in for
       <View
         key={i}
-        style={[i > 0 && web([a.border_t, t.atoms.border_contrast_low])]}>
+        style={[
+          i > 0 &&
+            SHOW_ROW_BORDERS && [a.border_t, t.atoms.border_contrast_low],
+        ]}>
         <RowSkeleton kind={kind} index={index} />
       </View>,
     )
@@ -115,7 +119,7 @@ function TodayHeaderSkeleton() {
       style={[
         a.px_lg,
         a.py_sm,
-        web([a.border_b, t.atoms.border_contrast_low]),
+        SHOW_ROW_BORDERS && [a.border_b, t.atoms.border_contrast_low],
       ]}>
       <Skele.Text style={[a.text_md, a.font_bold, {width: 48}]} />
     </View>

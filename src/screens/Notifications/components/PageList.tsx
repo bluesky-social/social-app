@@ -36,6 +36,7 @@ import {
 import {usePager} from '#/screens/Notifications/components/PagerView'
 import {RefreshPill} from '#/screens/Notifications/components/RefreshPill'
 import {useRefreshPillMetrics} from '#/screens/Notifications/refreshPillMetrics'
+import {SHOW_ROW_BORDERS} from '#/screens/Notifications/rowBorders'
 import {isRefreshPillVisible} from '#/screens/Notifications/unread'
 import {atoms as a, native, type Theme, useTheme, web} from '#/alf'
 import {ButtonText} from '#/components/Button'
@@ -55,7 +56,7 @@ type Row =
       notification: NotificationView
       /**
        * Whether a divider separates it from the notification above. Only
-       * drawn on web.
+       * drawn when `SHOW_ROW_BORDERS` is on.
        */
       hasDivider: boolean
     }
@@ -292,13 +293,13 @@ export function PageList({
                   <View
                     style={[
                       row.hasDivider &&
-                        web([
+                        SHOW_ROW_BORDERS && [
                           a.border_t,
                           getBorderColor(
                             t,
                             isUnreadBorder(rows[index - 1], row),
                           ),
-                        ]),
+                        ],
                     ]}>
                     <NotificationItem notification={row.notification} />
                   </View>
@@ -363,10 +364,10 @@ export function PageList({
               <View
                 style={[
                   a.pt_xl,
-                  web([
+                  SHOW_ROW_BORDERS && [
                     a.border_t,
                     getBorderColor(t, isUnreadRow(rows.at(-1))),
-                  ]),
+                  ],
                 ]}>
                 <ActivityIndicator />
               </View>
@@ -540,7 +541,7 @@ function SectionHeader({
   isUnreadAbove: boolean
   /**
    * Whether the row below is unread, which tints the border drawn below the
-   * header on web.
+   * header.
    */
   isUnreadBelow: boolean
 }) {
@@ -554,14 +555,15 @@ function SectionHeader({
         section === 'today'
           ? a.py_sm
           : [
-              native(a.mt_md),
+              // With row borders, its own border sits flush like a divider
+              !SHOW_ROW_BORDERS && a.mt_md,
               a.border_t,
               a.pt_md,
               a.pb_sm,
               getBorderColor(t, isUnreadAbove),
             ],
-        // Rows are divided on web, so the header is too
-        web([a.border_b, getBorderColor(t, isUnreadBelow)]),
+        // Rows are divided, so the header is too
+        SHOW_ROW_BORDERS && [a.border_b, getBorderColor(t, isUnreadBelow)],
       ]}>
       <Text accessibilityRole="header" style={[a.text_md, a.font_bold]}>
         {section === 'today'
