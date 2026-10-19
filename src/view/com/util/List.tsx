@@ -26,7 +26,7 @@ import {
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {useLightbox} from '#/components/Lightbox/state'
-import {IS_IOS} from '#/env'
+import {IS_IOS, IS_IPAD} from '#/env'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
@@ -250,9 +250,20 @@ List.displayName = 'List'
 List = memo(List)
 export {List}
 
-// We only want to use this context value on iOS because the `scrollsToTop` prop is iOS-only
-// removing it saves us a re-render on Android
-const useAllowScrollToTop = IS_IOS ? useAllowScrollToTopIOS : () => undefined
+/*
+ * We only want to use this context value on iOS because the `scrollsToTop`
+ * prop is iOS-only, so removing it saves us a re-render on Android.
+ *
+ * iPadOS 26 also scrolls to the top when a header button is tapped, and only
+ * after the button's onPress has run, so it lands on the screen underneath a
+ * closed lightbox or after a back navigation. Turn it off there entirely. See
+ * https://github.com/facebook/react-native/issues/56061
+ */
+const useAllowScrollToTop = IS_IPAD
+  ? () => false
+  : IS_IOS
+    ? useAllowScrollToTopIOS
+    : () => undefined
 function useAllowScrollToTopIOS() {
   const {activeLightbox} = useLightbox()
   return useDeferredValue(!activeLightbox)

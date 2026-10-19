@@ -30,7 +30,7 @@ import {
   SCROLLBAR_OFFSET,
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
-import {IS_WEB} from '#/env'
+import {IS_IPAD, IS_WEB} from '#/env'
 
 export * from '#/components/Layout/const'
 export * as Header from '#/components/Layout/Header'
@@ -139,6 +139,8 @@ export const Content = memo(function Content({
           : false)
       }
       indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
+      // Header taps scroll to the top on iPadOS 26, see `List`
+      scrollsToTop={IS_IPAD ? false : undefined}
       style={[
         a.w_full,
         animatedStyle,
