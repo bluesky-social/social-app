@@ -328,6 +328,11 @@ a physical device via the haptics section of the Storybook.
 
 All user-facing strings must be wrapped for translation using Lingui. Include `comment` and/or `context` props when necessary to avoid ambiguity, e.g., “Post” as a noun vs a verb.
 
+Do not mark debug-only strings as translatable. This includes anything only
+developers or internal testers see: debug menus, dev-only screens, logs, and all
+strings in Storybook (`src/view/screens/Storybook`). Use plain string literals
+there.
+
 Prefer using `t` via `import {useLingui} '@lingui/react/macro'` vs `_` via `import {useLingui} from '@lingui/react'`. Alias `t` to `l` to avoid collisions with `const t = useTheme()`. Refactor existing uses of ``_(msg`foo`)`` to use `` l`foo` ``.
 
 Prefer Unicode punctuation over keyboard punctuation, e.g., `“quote”` over `"quote"`. Prefer en dashes preceded by a non-breaking space over em dashes, e.g., `one – two` over `one—two`.
