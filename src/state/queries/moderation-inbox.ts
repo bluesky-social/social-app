@@ -342,11 +342,10 @@ export function useUpdateModerationInboxSeenMutation({
       await queryClient.invalidateQueries({queryKey})
     },
     onError: () => {
-      if (!silent) {
-        Toast.show(l`Failed to mark as read. Please try again.`, {
-          type: 'error',
-        })
-      }
+      if (silent) return
+      Toast.show(l`Failed to mark as read. Please try again.`, {
+        type: 'error',
+      })
     },
   })
 }
