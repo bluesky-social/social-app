@@ -322,7 +322,11 @@ export function useUpdateModerationInboxNotificationPreferencesMutation() {
   })
 }
 
-export function useUpdateModerationInboxSeenMutation() {
+export function useUpdateModerationInboxSeenMutation({
+  silent = false,
+}: {
+  silent?: boolean
+} = {}) {
   const {t: l} = useLingui()
   const client = useAppviewClient()
   const queryClient = useQueryClient()
@@ -338,9 +342,11 @@ export function useUpdateModerationInboxSeenMutation() {
       await queryClient.invalidateQueries({queryKey})
     },
     onError: () => {
-      Toast.show(l`Failed to mark as read. Please try again.`, {
-        type: 'error',
-      })
+      if (!silent) {
+        Toast.show(l`Failed to mark as read. Please try again.`, {
+          type: 'error',
+        })
+      }
     },
   })
 }

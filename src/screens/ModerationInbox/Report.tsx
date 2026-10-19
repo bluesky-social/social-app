@@ -43,7 +43,9 @@ export function ModerationInboxReportDetailsScreen({
   const {t: l} = useLingui()
   const ax = useAnalytics()
   const {hasSession} = useSession()
-  const {mutate: markSeen} = useUpdateModerationInboxSeenMutation()
+  const {mutate: markSeen} = useUpdateModerationInboxSeenMutation({
+    silent: true,
+  })
   const moderationOpts = useModerationOpts()
   const isEnabled = ax.features.enabled(ax.features.ModerationInboxEnable)
   const moderationService = isValidDid(route.params.moderationService)

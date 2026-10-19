@@ -21,7 +21,7 @@ export function AccountStatus({
   const t = useTheme()
   const {t: l} = useLingui()
   const ax = useAnalytics()
-  const markSeen = useUpdateModerationInboxSeenMutation()
+  const markSeen = useUpdateModerationInboxSeenMutation({silent: true})
 
   const control = Prompt.usePromptControl()
 
