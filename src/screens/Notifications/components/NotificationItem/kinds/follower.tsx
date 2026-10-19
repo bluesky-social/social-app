@@ -45,9 +45,10 @@ export function getFollowers(notification: FollowerNotificationView) {
  */
 export function FollowedYouHeader() {
   const {t: l} = useLingui()
+  const gutters = Item.useHeaderGutterStyle()
 
   return (
-    <View style={[a.px_lg, a.py_md]}>
+    <View style={[gutters, a.py_md]}>
       <Text accessibilityRole="header" style={[a.text_md, a.font_bold]}>
         {l({
           message: 'Followed you',
@@ -81,6 +82,7 @@ export function FollowerNotification({
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
+  const isClassic = Item.useIsClassicLayout()
   const queryClient = useQueryClient()
   const name = Item.useDisplayName(profile)
 
@@ -121,7 +123,10 @@ export function FollowerNotification({
       onBeforePress={() => unstableCacheProfileView(queryClient, profile)}
       style={[a.align_center, a.py_sm]}
       testID={`notification-${notification.type}-${notification.id}`}>
-      {gtMobile ? (
+      {isClassic ? (
+        // People, not reactions: they keep their avatar, without a badge
+        <Item.Avatar profile={profile} />
+      ) : gtMobile ? (
         <Item.Avatar profile={profile} icon={PersonPlusIcon} tone="follow" />
       ) : (
         <PlainAvatar profile={profile} />
