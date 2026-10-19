@@ -230,6 +230,8 @@ function ReplyContextPost({
         }
         authorHandle={post.author.handle}
         disableLinks
+        // Text with only emoji is scaled up, which the one-line preview clips
+        emojiMultiplier={1}
         style={previewStyle}
       />
     ) : (
