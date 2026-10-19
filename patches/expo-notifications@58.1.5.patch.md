@@ -20,9 +20,3 @@ patch only added the write, which would misalign every field when a scheduled no
 back from SharedPreferences (the only place `NotificationContent` goes through Java serialization;
 the app does not schedule local notifications, so this was latent). `mChannelId` is always null for
 `NotificationContent`; it exists to satisfy `INotificationContent.channelId`.
-
-### `setBadgeCountAsync` fix on Android (upstream)
-
-`ShortcutBadger`'s `setCount` doesn't work for clearing the badge on Android. This used to be patched, but
-upstream `BadgeHelper.setBadgeCount` now cancels all notifications when the count is 0, so the hunk was
-dropped (in the RN 0.76 upgrade) and is not part of this patch.
