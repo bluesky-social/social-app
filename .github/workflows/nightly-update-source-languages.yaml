@@ -35,7 +35,7 @@ jobs:
           commit_message: Nightly source-language update
           file_pattern: ./src/locale/locales/en/messages.po
       - name: 🚀 Push source lang to Crowdin
-        uses: crowdin/github-action@8f01d54f70f1713ee3f09d82c2bbb2daeac28689 # v2.17.1
+        uses: crowdin/github-action@9c23991700c0ec5256fd41089b9d9d7d540e424e # v3.3.0
         with:
           upload_sources: true
           upload_sources_args: "-b main"
