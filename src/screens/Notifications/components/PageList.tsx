@@ -521,11 +521,27 @@ export function isUnreadBorder(above: Row | undefined, below: Row | undefined) {
 /**
  * The colour of a border between rows, in v1's unread colour when it borders
  * an unread row.
+ *
+ * `borderColor` colours all four sides, so a view with borders on two sides
+ * that can differ, like the "Earlier" header, passes the `side` of each. Else
+ * the border style that comes last would colour both.
  */
-function getBorderColor(t: Theme, isUnread: boolean) {
-  return isUnread
-    ? {borderColor: t.palette.primary_100}
-    : t.atoms.border_contrast_low
+export function getBorderColor(
+  t: Theme,
+  isUnread: boolean,
+  side?: 'top' | 'bottom',
+) {
+  const borderColor = isUnread
+    ? t.palette.primary_100
+    : t.atoms.border_contrast_low.borderColor
+  switch (side) {
+    case 'top':
+      return {borderTopColor: borderColor}
+    case 'bottom':
+      return {borderBottomColor: borderColor}
+    default:
+      return {borderColor}
+  }
 }
 
 function SectionHeader({
@@ -560,10 +576,13 @@ function SectionHeader({
               a.border_t,
               a.pt_md,
               a.pb_sm,
-              getBorderColor(t, isUnreadAbove),
+              getBorderColor(t, isUnreadAbove, 'top'),
             ],
         // Rows are divided, so the header is too
-        SHOW_ROW_BORDERS && [a.border_b, getBorderColor(t, isUnreadBelow)],
+        SHOW_ROW_BORDERS && [
+          a.border_b,
+          getBorderColor(t, isUnreadBelow, 'bottom'),
+        ],
       ]}>
       <Text accessibilityRole="header" style={[a.text_md, a.font_bold]}>
         {section === 'today'
