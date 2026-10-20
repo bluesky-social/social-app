@@ -10,12 +10,13 @@ profiles catch up, and cloud profiles start over with every release.
 (AGP merges them with the profiles AndroidX libraries ship) and adds
 ProfileInstaller, which installs the profile outside of Play.
 
-- `profiles/react-native.txt` is ReactAndroid's startup code, from
-  https://github.com/react/react-native/pull/59175 (commit `d54294584fe3`). Delete it
-  once React Native ships it in `react-android`. About 5% of its rules don't
-  match 0.86.3, which only means those methods aren't compiled.
 - `profiles/app.txt` is recorded from our own cold start and first few
-  flings through the feed, with `BaselineProfileGenerator`.
+  flings through the feed, with `BaselineProfileGenerator`. It covers every
+  library the app runs at startup, React Native included, so it doesn't need
+  ReactAndroid's own profile from
+  https://github.com/react/react-native/pull/59175. That profile measured within
+  noise on top of AndroidX's, and the 540 rules it adds are mostly for
+  TextInput, which the first screen doesn't use.
 - `profiles/startup-prof.txt` is a
   [startup profile](https://developer.android.com/topic/performance/baselineprofiles/dex-layout-optimizations):
   only the code that runs until the feed's first page is on screen. R8 uses it
