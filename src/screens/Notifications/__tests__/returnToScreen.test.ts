@@ -214,7 +214,7 @@ describe('useReturnToScreen on web, focusing the screen', () => {
   )
 
   it('handles a remount the same way, with scrolledDownFeeds starting empty', () => {
-    // As after browser back/forward to a route web evicted
+    // As after being popped off the stack, or WEB_MAX_CACHED_SCREENS eviction
     scrollY = 500
     const {checkLatest, scrolledDownFeeds} = setup({isWeb: true})
     expect(scrolledDownFeeds.current.size).toBe(0)

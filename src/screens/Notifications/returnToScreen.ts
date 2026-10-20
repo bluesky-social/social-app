@@ -19,9 +19,11 @@ const WEB_NEAR_TOP_SCROLL_Y = 200
 
 /**
  * Coming back to the screen: focusing it again, mounting it (its first
- * visit, or a remount after web evicts it, see `WEB_MAX_CACHED_SCREENS`), or,
- * while it's open, a significant return to the app or opening a push. Each
- * one checks the tab in view for anything new, with `checkLatest`.
+ * visit, or a remount - on web, after being popped off the stack by
+ * navigating to a route below it, e.g. the left nav or bottom bar's
+ * `{pop: true}`, or after `WEB_MAX_CACHED_SCREENS` eviction), or, while it's
+ * open, a significant return to the app or opening a push. Each one checks
+ * the tab in view for anything new, with `checkLatest`.
  *
  * On web, an app or browser-tab return (`onAnyAppReturn`) only ever peeks
  * with `peekLatest`, however long it was away: v1 had no hook for this at
@@ -93,9 +95,10 @@ export function useReturnToScreen({
      * runs in between, on the first frame - has already called
      * `window.scrollTo`, which applies synchronously.
      *
-     * This also covers a remount from browser back/forward to a route web
-     * evicted (see `WEB_MAX_CACHED_SCREENS`): the restored offset can be
-     * mid-list, and `scrolledDownFeeds` starts empty on a remount, so it
+     * This also covers a remount - after being popped off the stack by
+     * navigating to a route below it (e.g. Home, when the session started
+     * there), or after `WEB_MAX_CACHED_SCREENS` eviction - where the restored
+     * offset can be mid-list, and `scrolledDownFeeds` starts empty, so it
      * can't be used to tell.
      */
     requestAnimationFrame(() => {
