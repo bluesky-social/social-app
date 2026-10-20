@@ -18,6 +18,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
 import {type RichText as RichTextType} from '@bsky/sdk/richtext'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
@@ -316,6 +317,12 @@ let PostFeed = ({
       lastFetchRef.current = lastFetchedAt
     }
   }, [lastFetchedAt])
+
+  useEffect(() => {
+    if (isFetched) {
+      PlatformInfo.reportFullyDrawn()
+    }
+  }, [isFetched])
 
   const checkForNew = useNonReactiveCallback(async () => {
     if (!data?.pages[0] || isFetching || !onHasNew || !enabled || disablePoll) {
