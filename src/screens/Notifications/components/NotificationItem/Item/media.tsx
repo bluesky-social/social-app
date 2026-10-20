@@ -156,8 +156,8 @@ function cornerRadius(isOuter: boolean) {
 
 /**
  * Outlined container for compact previews of feeds, starter packs, links and
- * quoted posts. Transparent on the unread tint, so it doesn't punch a white
- * hole in the row.
+ * quoted posts. Its border is the one the same embeds have in a post. It is
+ * transparent on the unread tint, so it doesn't punch a white hole in the row.
  */
 export function Card({
   style,
@@ -176,7 +176,7 @@ export function Card({
         a.rounded_md,
         a.curve_continuous,
         a.border,
-        t.atoms.border_contrast_high,
+        t.atoms.border_contrast_low,
         isRead && t.atoms.bg,
         style,
       ]}>
