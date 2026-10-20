@@ -40,6 +40,32 @@ jest.mock('#/state/session', () => ({
   useAppviewClient: jest.fn(),
 }))
 
+jest.mock('@bsky/sdk/moderation', () => ({
+  ...jest.requireActual('@bsky/sdk/moderation'),
+  moderatePost: () => ({ui: () => ({filter: false})}),
+}))
+
+function feedViewPost(id: string) {
+  return {
+    post: {
+      $type: 'app.bsky.feed.defs#postView',
+      uri: `at://did:plc:alice/app.bsky.feed.post/${id}`,
+      cid: id,
+      author: {
+        $type: 'app.bsky.actor.defs#profileViewBasic',
+        did: 'did:plc:alice',
+        handle: 'alice.test',
+      },
+      record: {
+        $type: 'app.bsky.feed.post',
+        text: id,
+        createdAt: '2026-08-31T00:00:00.000Z',
+      },
+      indexedAt: '2026-08-31T00:00:00.000Z',
+    },
+  } satisfies app.bsky.feed.defs.FeedViewPost
+}
+
 const feeds = [
   {uri: 'at://did:plc:first/app.bsky.feed.generator/feed'},
   {uri: 'at://did:plc:second/app.bsky.feed.generator/feed'},
@@ -142,5 +168,21 @@ describe('useFeedPreviews', () => {
 
     await act(() => hook.result.current.query.fetchNextPage())
     expect(mockFetchFeed).toHaveBeenCalledTimes(2)
+  })
+
+  it('ends with a retry row when a later feed fails to load', async () => {
+    mockFetchFeed
+      .mockResolvedValueOnce({feed: [feedViewPost('first')]})
+      .mockRejectedValueOnce(new Error('network down'))
+    const {hook} = setup()
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+
+    await act(() => hook.result.current.query.fetchNextPage())
+    await waitFor(() => expect(hook.result.current.query.isError).toBe(true))
+
+    const types = hook.result.current.data.map(item => item.type)
+    expect(types).toContain('preview:sliceItem')
+    expect(types.at(-1)).toBe('preview:loadMoreError')
+    hook.unmount()
   })
 })
