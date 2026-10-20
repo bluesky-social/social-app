@@ -943,6 +943,14 @@ function setThumbHidden(
   setNativeProps(thumbRef, {opacity: hidden ? 0 : 1})
 }
 
+function withClampedSpring<T extends AnimatableValue>(
+  value: T,
+  config: WithSpringConfig,
+): T {
+  'worklet'
+  return withSpring(value, {...config, overshootClamping: true})
+}
+
 /**
  * Springs the lightbox open or closed, starting on the second UI frame from
  * now. If the main thread is busy (e.g. mounting the lightbox) when the display
@@ -950,6 +958,9 @@ function setThumbHidden(
  * so a spring started on it would skip ahead on its first step. Worklet rAF
  * callbacks run in order, so a close followed by a quick reopen still ends up
  * open.
+ *
+ * Keep this below `withClampedSpring`: a module-level worklet captures the
+ * functions it calls when it's defined, so it would capture `undefined`.
  */
 function animateOpenProgress(
   openProgress: SharedValue<number>,
@@ -962,12 +973,4 @@ function animateOpenProgress(
       openProgress.set(isAnimated ? withClampedSpring(to, SLOW_SPRING) : to)
     })
   })
-}
-
-function withClampedSpring<T extends AnimatableValue>(
-  value: T,
-  config: WithSpringConfig,
-): T {
-  'worklet'
-  return withSpring(value, {...config, overshootClamping: true})
 }
