@@ -78,20 +78,20 @@ export function ModerationInboxReportDetailsScreen({
   const notFound =
     matchXrpcError(reportQuery.error, tools.ozone.inbox.getReport) ===
     'NotFound'
-  const seenAt = reportQuery.data?.report.updatedAt
   const canMarkSeen =
     isEnabled &&
     hasSession &&
     !!moderationService &&
     id !== undefined &&
-    !reportQuery.isError
+    !reportQuery.isError &&
+    !!reportQuery.data
 
   useFocusEffect(
     useCallback(() => {
-      if (canMarkSeen && seenAt) {
-        markSeen({sections: ['reports'], seenAt})
+      if (canMarkSeen) {
+        markSeen({sections: ['reports']})
       }
-    }, [canMarkSeen, seenAt, markSeen]),
+    }, [canMarkSeen, markSeen]),
   )
 
   useFocusEffect(

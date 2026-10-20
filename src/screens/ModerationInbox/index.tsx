@@ -334,12 +334,7 @@ function YourAccount() {
           ) : undefined}
         </View>
       ) : undefined}
-      {accountStanding && accountStatusQuery.data ? (
-        <AccountStatus
-          status={accountStanding}
-          updatedAt={accountStatusQuery.data.updatedAt}
-        />
-      ) : undefined}
+      {accountStanding ? <AccountStatus status={accountStanding} /> : undefined}
     </Layout.Center>
   )
 

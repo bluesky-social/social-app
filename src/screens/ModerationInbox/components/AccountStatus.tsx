@@ -9,14 +9,11 @@ import {ExclamationCircle_Stroke2_Corner0_Rounded as ExclamationCircleIcon} from
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {type tools} from '#/lexicons'
 
 export function AccountStatus({
   status,
-  updatedAt,
 }: {
   status: 'good' | 'warning' | 'atRisk'
-  updatedAt: tools.ozone.inbox.getAccountStatus.$OutputBody['updatedAt']
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -71,7 +68,7 @@ export function AccountStatus({
         onPress={() => {
           ax.metric('moderation:inbox:viewAccountStatus', {status})
           control.open()
-          markSeen.mutate({sections: ['accountStatus'], seenAt: updatedAt})
+          markSeen.mutate({sections: ['accountStatus']})
         }}
         style={[
           a.p_lg,
