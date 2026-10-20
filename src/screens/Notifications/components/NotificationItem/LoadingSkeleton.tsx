@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 
 import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
+import {SHOW_ROW_BORDERS} from '#/screens/Notifications/rowBorders'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {PostControlsSkeleton} from '#/components/PostControls'
 import * as Skele from '#/components/Skeleton'
@@ -67,6 +68,8 @@ const FOLLOWER_ROW_COUNT = 20
  * when they replace them.
  */
 export function LoadingSkeleton({feed}: {feed: GroupedNotificationsFeed}) {
+  const t = useTheme()
+
   if (feed === 'followers') {
     return <FollowersSkeleton />
   }
@@ -82,7 +85,17 @@ export function LoadingSkeleton({feed}: {feed: GroupedNotificationsFeed}) {
     const kind = kinds[i % kinds.length]
     const index = counts.get(kind) ?? 0
     counts.set(kind, index + 1)
-    rows.push(<RowSkeleton key={i} kind={kind} index={index} />)
+    rows.push(
+      // Divided like the rows they stand in for
+      <View
+        key={i}
+        style={[
+          i > 0 &&
+            SHOW_ROW_BORDERS && [a.border_t, t.atoms.border_contrast_low],
+        ]}>
+        <RowSkeleton kind={kind} index={index} />
+      </View>,
+    )
   }
 
   return (
@@ -99,8 +112,15 @@ export function LoadingSkeleton({feed}: {feed: GroupedNotificationsFeed}) {
  * move when it arrives.
  */
 function TodayHeaderSkeleton() {
+  const t = useTheme()
+
   return (
-    <View style={[a.px_lg, a.py_sm]}>
+    <View
+      style={[
+        a.px_lg,
+        a.py_sm,
+        SHOW_ROW_BORDERS && [a.border_b, t.atoms.border_contrast_low],
+      ]}>
       <Skele.Text style={[a.text_md, a.font_bold, {width: 48}]} />
     </View>
   )
