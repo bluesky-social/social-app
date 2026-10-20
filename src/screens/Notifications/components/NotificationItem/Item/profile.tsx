@@ -41,6 +41,11 @@ import {type Metrics} from '#/analytics'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {AVATAR_SLOT_WIDTH} from './Avatar'
+import {
+  CLASSIC_CONTENT_START,
+  CLASSIC_PADDING_RIGHT,
+  useIsClassicLayout,
+} from './layout'
 import {Card} from './media'
 import {useDisplayName} from './text'
 
@@ -440,6 +445,23 @@ const ACTOR_LIST_INSET =
   tokens.space.sm
 
 /**
+ * The same, for the classic layout, where the text starts as it does in a
+ * post.
+ */
+const CLASSIC_ACTOR_LIST_INSET =
+  CLASSIC_CONTENT_START - ACTOR_AVATAR_SIZE - tokens.space.sm
+
+/**
+ * The insets of an `ActorList`: before each person's avatar, and after their
+ * follow button.
+ */
+function useActorListInsets() {
+  return useIsClassicLayout()
+    ? {start: CLASSIC_ACTOR_LIST_INSET, end: CLASSIC_PADDING_RIGHT}
+    : {start: ACTOR_LIST_INSET, end: tokens.space.lg}
+}
+
+/**
  * The expanded list of everyone in a grouped notification, each linking to
  * their profile with a follow button. Each person spans the full width of
  * the row, so their hover does too, and insets their own content.
@@ -509,6 +531,7 @@ export function ShowMoreActorsButton({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const insets = useActorListInsets()
 
   return (
     <Button
@@ -523,7 +546,7 @@ export function ShowMoreActorsButton({
         a.gap_xs,
         a.pt_xs,
         a.mb_sm,
-        {marginLeft: ACTOR_LIST_INSET},
+        {marginLeft: insets.start},
       ]}>
       {({hovered, pressed}) => (
         <>
@@ -567,6 +590,7 @@ export function ActorListItem({
     ? moderateProfile(profile, moderationOpts)
     : undefined
   const name = useDisplayName(profile)
+  const insets = useActorListInsets()
   const {onPress} = useLink({to: makeProfileLink(profile), displayText: ''})
 
   let secondLine: React.ReactNode
@@ -594,8 +618,7 @@ export function ActorListItem({
         a.align_center,
         a.gap_sm,
         a.py_sm,
-        a.pr_lg,
-        {paddingLeft: ACTOR_LIST_INSET},
+        {paddingLeft: insets.start, paddingRight: insets.end},
       ]}>
       <SubtleHover hover={hover} />
       <Pressable

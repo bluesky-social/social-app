@@ -12,6 +12,7 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+import {useIsClassicLayout} from './layout'
 import {Card, getPostThumbnails} from './media'
 import {QuoteCard} from './post'
 import {SecondaryText} from './text'
@@ -37,6 +38,7 @@ export function PostPreview({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const isClassic = useIsClassicLayout()
   const record = bsky.isType(app.bsky.feed.post, post.record)
     ? post.record
     : undefined
@@ -60,7 +62,12 @@ export function PostPreview({
   if (!embed) return null
 
   if (embed.type === 'quote') {
-    return <QuoteCard embed={embed.record} numberOfLines={4} isMuted />
+    return (
+      // A quote in a post has 8px above it, so the classic card has too
+      <View style={isClassic && a.mt_xs}>
+        <QuoteCard embed={embed.record} numberOfLines={4} isMuted />
+      </View>
+    )
   }
 
   const domain = embed.domain

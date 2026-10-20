@@ -1,6 +1,9 @@
 import {describe, expect, it} from '@jest/globals'
 
-import {fitAvatarCount} from '#/screens/Notifications/components/NotificationItem/Item/avatarRow'
+import {
+  fitAvatarCount,
+  getAvatarRowActors,
+} from '#/screens/Notifications/components/NotificationItem/Item/avatarRow'
 
 /*
  * Each avatar takes 36 (28 and a gap of 8). The toggle takes 32 with just
@@ -43,5 +46,33 @@ describe('fitAvatarCount', () => {
     expect(
       fitAvatarCount({width: 28, resolved: 1, total: 1, hasToggle: false}),
     ).toBe(1)
+  })
+})
+
+describe('getAvatarRowActors', () => {
+  const actors = ['alice', 'bob', 'carol']
+
+  it('leaves out the primary actor, who has their own avatar', () => {
+    expect(
+      getAvatarRowActors({actors, count: 24, showsPrimary: false}),
+    ).toEqual({others: ['bob', 'carol'], othersTotal: 23})
+  })
+
+  it('includes the primary actor when they have no avatar of their own', () => {
+    expect(getAvatarRowActors({actors, count: 24, showsPrimary: true})).toEqual(
+      {
+        others: ['alice', 'bob', 'carol'],
+        othersTotal: 24,
+      },
+    )
+  })
+
+  it('lists a lone actor when the row includes the primary actor', () => {
+    expect(
+      getAvatarRowActors({actors: ['alice'], count: 1, showsPrimary: true}),
+    ).toEqual({others: ['alice'], othersTotal: 1})
+    expect(
+      getAvatarRowActors({actors: ['alice'], count: 1, showsPrimary: false}),
+    ).toEqual({others: [], othersTotal: 0})
   })
 })

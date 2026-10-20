@@ -66,6 +66,7 @@ function SingleFollowNotification({
       testID={`notification-follow-${notification.id}`}>
       <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
       <Item.Content>
+        <Item.AvatarRow actor={actor} />
         <View style={[a.gap_xs]}>
           <Item.PrimaryText>
             <Trans>
@@ -194,6 +195,7 @@ export function FollowBackNotification({
       testID={`notification-followBack-${notification.id}`}>
       <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
       <Item.Content style={a.gap_2xs}>
+        <Item.AvatarRow actor={actor} />
         <Item.PrimaryText>
           <Trans>
             <Item.Name profile={actor} /> followed you back! 🎉
@@ -228,8 +230,14 @@ export function VerifiedNotification({
       onBeforePress={cacheProfile}
       style={a.align_center}
       testID={`notification-verified-${notification.id}`}>
-      <Item.Avatar profile={actor} icon={CheckIcon} tone="follow" />
+      <Item.Avatar
+        profile={actor}
+        icon={CheckIcon}
+        tone="follow"
+        glyph="verified"
+      />
       <Item.Content>
+        <Item.AvatarRow actor={actor} />
         <Item.PrimaryText>
           <Trans>
             <Item.Name profile={actor} /> verified you
@@ -263,8 +271,14 @@ export function UnverifiedNotification({
       onBeforePress={cacheProfile}
       style={a.align_center}
       testID={`notification-unverified-${notification.id}`}>
-      <Item.Avatar profile={actor} icon={CheckIcon} tone="neutral" />
+      <Item.Avatar
+        profile={actor}
+        icon={CheckIcon}
+        tone="neutral"
+        glyph="unverified"
+      />
       <Item.Content>
+        <Item.AvatarRow actor={actor} />
         <Item.PrimaryText>
           <Trans>
             <Item.Name profile={actor} /> removed their verification from your
@@ -297,8 +311,14 @@ export function StarterPackJoinedNotification({
       accessible={false}
       onBeforePress={cacheProfile}
       testID={`notification-starterPackJoined-${notification.id}`}>
-      <Item.Avatar profile={actor} icon={StarterPackIcon} tone="follow" />
+      <Item.Avatar
+        profile={actor}
+        icon={StarterPackIcon}
+        tone="follow"
+        glyph="starterPack"
+      />
       <Item.Content style={a.gap_sm}>
+        <Item.AvatarRow actor={actor} />
         <View style={[a.flex_row, a.align_start, a.gap_2xl]}>
           <Item.PrimaryText style={a.flex_1}>
             <Trans>
@@ -335,8 +355,9 @@ export function ContactMatchNotification({
       onBeforePress={cacheProfile}
       style={a.align_center}
       testID={`notification-contactMatch-${notification.id}`}>
-      <Item.Avatar profile={actor} />
+      <Item.Avatar profile={actor} glyph="contacts" />
       <Item.Content>
+        <Item.AvatarRow actor={actor} />
         <Item.PrimaryText>
           <Trans>
             Your contact <Item.Name profile={actor} /> is on Bluesky

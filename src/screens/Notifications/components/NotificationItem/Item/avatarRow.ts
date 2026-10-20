@@ -60,3 +60,27 @@ export function fitAvatarCount({
   const fit = Math.floor((width - withChip) / perAvatar)
   return Math.min(Math.max(fit, 0), resolved)
 }
+
+/**
+ * Which actors an avatar row lists, and how many people they stand for. The
+ * primary actor comes first, and normally has an avatar in the row's left
+ * column, so the row leaves them out. Where they don't have one, as in the
+ * classic layout, `showsPrimary` includes them.
+ */
+export function getAvatarRowActors<T>({
+  actors,
+  count,
+  showsPrimary,
+}: {
+  actors: T[]
+  /**
+   * How many people the group has, which may be more than `actors`.
+   */
+  count: number
+  showsPrimary: boolean
+}) {
+  return {
+    others: showsPrimary ? actors : actors.slice(1),
+    othersTotal: showsPrimary ? count : count - 1,
+  }
+}
