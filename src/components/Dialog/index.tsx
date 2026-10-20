@@ -19,6 +19,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {useReanimatedKeyboardAnimation} from 'react-native-keyboard-controller'
 import Animated, {
   type ScrollEvent,
@@ -186,13 +187,33 @@ export function Outer({
       onStateChange={onStateChange}
       disableDrag={disableDrag}>
       <Context.Provider value={context}>
-        <View
-          testID={testID}
-          style={[a.relative, isHeightConstrained && a.flex_1]}>
-          {children}
-        </View>
+        <SheetGestureRoot style={isHeightConstrained && a.flex_1}>
+          <View
+            testID={testID}
+            style={[a.relative, isHeightConstrained && a.flex_1]}>
+            {children}
+          </View>
+        </SheetGestureRoot>
       </Context.Provider>
     </BottomSheet>
+  )
+}
+
+/**
+ * On Android the sheet is its own window with its own React root, outside the
+ * app's `GestureHandlerRootView`, so gesture-handler gestures inside it (like
+ * dragging to reorder) never activate without a root of their own.
+ */
+function SheetGestureRoot({
+  style,
+  children,
+}: {
+  style?: StyleProp<ViewStyle>
+  children: React.ReactNode
+}) {
+  if (!IS_ANDROID) return children
+  return (
+    <GestureHandlerRootView style={style}>{children}</GestureHandlerRootView>
   )
 }
 
