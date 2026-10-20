@@ -63,7 +63,7 @@ module.exports = function (_config) {
       userInterfaceStyle: 'automatic',
       primaryColor: '#006AFF',
       ios: {
-        supportsTablet: false,
+        supportsTablet: IS_DEV || IS_TESTFLIGHT,
         bundleIdentifier: 'xyz.blueskyweb.app',
         appleTeamId: process.env.EXPO_APPLE_TEAM_ID,
         config: {
@@ -71,6 +71,13 @@ module.exports = function (_config) {
         },
         icon: IOS_ICON_FILE,
         infoPlist: {
+          UISupportedInterfaceOrientations: ['UIInterfaceOrientationPortrait'],
+          'UISupportedInterfaceOrientations~ipad': [
+            'UIInterfaceOrientationPortrait',
+            'UIInterfaceOrientationPortraitUpsideDown',
+            'UIInterfaceOrientationLandscapeLeft',
+            'UIInterfaceOrientationLandscapeRight',
+          ],
           CADisableMinimumFrameDurationOnPhone: true,
           UIBackgroundModes: ['remote-notification'],
           NSUserActivityTypes: ['INSendMessageIntent'],
@@ -328,7 +335,7 @@ module.exports = function (_config) {
               compileSdkVersion: 36,
               targetSdkVersion: 36,
               buildToolsVersion: '36.0.0',
-              buildReactNativeFromSource: IS_PRODUCTION,
+              buildReactNativeFromSource: true,
               enableMinifyInReleaseBuilds: true,
             },
           },
@@ -349,6 +356,7 @@ module.exports = function (_config) {
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidNoJitpackPlugin.js',
         './plugins/withAndroidPreparedTextLayoutPlugin.js',
+        './plugins/withAndroidComposeVersion.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
         [
@@ -476,7 +484,7 @@ module.exports = function (_config) {
             },
           },
         ],
-        ['expo-screen-orientation', {initialOrientation: 'PORTRAIT_UP'}],
+        ['expo-screen-orientation'],
         ['expo-location'],
         [
           'expo-contacts',

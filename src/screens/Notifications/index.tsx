@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useEffectEvent, useRef, useState} from 'react'
+import {useCallback, useRef, useState} from 'react'
 import {type LayoutChangeEvent, View} from 'react-native'
 import Animated, {
   interpolate,
@@ -11,17 +11,16 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {type AnyAppReturn, onAnyAppReturn} from '#/lib/appState'
 import {HITSLOP_10} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
 } from '#/lib/routes/types'
-import {emitSoftReset, listenPushNotificationOpened} from '#/state/events'
+import {emitSoftReset} from '#/state/events'
 import {
   getGroupedNotificationsTop,
   type GroupedNotificationsFeed,
@@ -41,6 +40,10 @@ import {NotificationsScreen as LegacyNotificationsScreen} from '#/view/screens/N
 import {PageList} from '#/screens/Notifications/components/PageList'
 import * as Pager from '#/screens/Notifications/components/PagerView'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
+import {
+  type RefreshReason,
+  useReturnToScreen,
+} from '#/screens/Notifications/returnToScreen'
 import {createTabTaps} from '#/screens/Notifications/tabTaps'
 import {
   type FeedLoad,
@@ -63,8 +66,6 @@ type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
   'Notifications'
 >
-
-type RefreshReason = Metrics['notifications:refresh']['reason']
 
 export function NotificationsScreen(props: Props) {
   const ax = useAnalytics()
@@ -92,6 +93,7 @@ export function NewNotificationsScreen({}: Props) {
 function NewNotificationsScreenInner() {
   const {t: l} = useLingui()
   const ax = useAnalytics()
+  const navigation = useNavigation()
   const headerMode = useHomeHeaderMode()
   const initialHeaderOffset = useHeaderOffset()
   const [headerOffset, setHeaderOffset] = useState(initialHeaderOffset)
@@ -203,10 +205,15 @@ function NewNotificationsScreenInner() {
    * `useReturnToScreen`. It refreshes, unless the user is partway down it,
    * in which case it's only peeked, so the list doesn't move under them. A
    * significant return to the app, or opening a push, brings every tab along.
+   *
+   * On web, a `'focus'` return passes `isScrolledDown` from the real window
+   * position, rather than leaving this to read `scrolledDownFeeds`, which
+   * starts empty after a remount; see `useReturnToScreen`.
    */
   const checkLatest = (
     feed: GroupedNotificationsFeed,
     reason: RefreshReason,
+    {isScrolledDown}: {isScrolledDown?: boolean} = {},
   ) => {
     const everyTab = reason === 'significantReturn' || reason === 'pushOpened'
     // Not loaded yet, so its first load is on the way
@@ -216,7 +223,7 @@ function NewNotificationsScreenInner() {
       }
       return
     }
-    if (!scrolledDownFeeds.current.has(feed)) {
+    if (!(isScrolledDown ?? scrolledDownFeeds.current.has(feed))) {
       ax.metric('notifications:refresh', {tab: feed, reason})
       void refreshTab(feed, {everyTab})
       return
@@ -231,6 +238,7 @@ function NewNotificationsScreenInner() {
     activeFeed,
     checkLatest,
     peekLatest: feed => void peekLatest(feed),
+    scrolledDownFeeds,
   })
   /*
    * With no notifications at all, every tab is empty, so the screen drops
@@ -369,6 +377,12 @@ function NewNotificationsScreenInner() {
               })
             }}
             onScrolledDownChange={isScrolledDown => {
+              /*
+               * On web, a screen left under another stays mounted but
+               * hidden, which the list reports as scrolled down. Coming back
+               * would then only peek, so a tab keeps the state it was left in
+               */
+              if (!navigation.isFocused()) return
               if (isScrolledDown) {
                 scrolledDownFeeds.current.add(tab.key)
               } else {
@@ -463,76 +477,6 @@ function useSessionSeenAt() {
   }
 
   return {seenAt, onFirstLoad, refresh}
-}
-
-/**
- * Coming back to the screen: focusing it again, mounting it (web remounts
- * the screen on every visit), or, while it's open, a significant return to
- * the app or opening a push. Each one checks the tab in view for anything
- * new, with `checkLatest`. A quick hop out of the app and back, e.g. to a
- * share sheet, only peeks with `peekLatest`, so the list stays as it is and
- * the "Refresh" pill offers anything new.
- *
- * As in v1, coming back from a screen pushed within the Notifications tab
- * (e.g. a post) refreshes too, unless the user is partway down the list. So
- * what was tinted before is cleared, having been seen.
- */
-function useReturnToScreen({
-  activeFeed,
-  checkLatest,
-  peekLatest,
-}: {
-  activeFeed: React.RefObject<GroupedNotificationsFeed>
-  checkLatest: (feed: GroupedNotificationsFeed, reason: RefreshReason) => void
-  /**
-   * Asks the server for anything new in a feed without loading it, which
-   * offers the "Refresh" pill if there is.
-   */
-  peekLatest: (feed: GroupedNotificationsFeed) => void
-}) {
-  const isFocused = useIsFocused()
-
-  const onReturn = useEffectEvent((reason: RefreshReason) => {
-    checkLatest(activeFeed.current, reason)
-  })
-
-  // Mounting counts, as the cache can outlive the screen
-  const wasFocused = useRef(false)
-  useEffect(() => {
-    if (isFocused && !wasFocused.current) {
-      onReturn('focus')
-    }
-    wasFocused.current = isFocused
-  }, [isFocused])
-
-  const onLeftApp = useEffectEvent(
-    (reason: 'significantReturn' | 'pushOpened') => {
-      if (isFocused) {
-        onReturn(reason)
-      }
-    },
-  )
-  const onAppReturn = useEffectEvent((appReturn: AnyAppReturn) => {
-    if (appReturn.isSignificant) {
-      onLeftApp('significantReturn')
-    } else if (isFocused) {
-      peekLatest(activeFeed.current)
-    }
-  })
-  useEffect(() => {
-    const returns = onAnyAppReturn(appReturn => onAppReturn(appReturn))
-    /*
-     * Opening a push leaves the app too, even when it never went to the
-     * background, e.g. from Notification Center on iOS.
-     */
-    const unlistenPush = listenPushNotificationOpened(() =>
-      onLeftApp('pushOpened'),
-    )
-    return () => {
-      returns.remove()
-      unlistenPush()
-    }
-  }, [])
 }
 
 function NotificationsHeader({

@@ -9,7 +9,10 @@ export type ProfileLink = {
    * Support links don't need one; they use bundled logos.
    */
   icon?: BlobRef
-  /** The icon's image URL, as returned in profile views. */
+  /**
+   * The icon's image URL, as returned in profile views. For an icon that was
+   * just fetched and isn't saved yet, a data URI of it.
+   */
   iconUrl?: string
   /** The `app.bsky.actor.link` record, once the link has been saved. */
   uri?: string

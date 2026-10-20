@@ -1,11 +1,5 @@
 import {forwardRef, useCallback, useId, useMemo, useState} from 'react'
-import {
-  Pressable,
-  type StyleProp,
-  type TextStyle,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import {Pressable, type StyleProp, type TextStyle, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
@@ -26,6 +20,7 @@ import {
   type ItemIconProps,
   type ItemProps,
   type ItemTextProps,
+  type OuterProps,
   type RadixPassThroughTriggerProps,
   type TriggerProps,
 } from '#/components/Menu/types'
@@ -180,17 +175,7 @@ export function Trigger({
   )
 }
 
-export function Outer({
-  children,
-  style,
-  onCloseAutoFocus,
-}: React.PropsWithChildren<{
-  showCancel?: boolean
-  style?: StyleProp<ViewStyle>
-  onCloseAutoFocus?: React.ComponentProps<
-    typeof DropdownMenu.Content
-  >['onCloseAutoFocus']
-}>) {
+export function Outer({children, style, onCloseAutoFocus}: OuterProps) {
   const t = useTheme()
   const {reduceMotionEnabled} = useA11y()
 

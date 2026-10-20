@@ -8,7 +8,7 @@ import {SUPPORT_PROVIDERS} from '../providers'
 import {ProviderLogo} from './ProviderLogo'
 
 /**
- * Lists the sites whose links get the green Support button. Built from
+ * Lists the sites whose links get the green support button. Built from
  * `SUPPORT_PROVIDERS`, so it always matches what the app recognizes.
  */
 export function SupportedSitesDialog({
@@ -42,7 +42,7 @@ function SupportedSitesInner() {
           <Trans>Supported sites</Trans>
         </Text>
         <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
-          <Trans>Links to these sites show as a green Support button.</Trans>
+          <Trans>Links to these sites show as a green support button.</Trans>
         </Text>
       </View>
       <View>

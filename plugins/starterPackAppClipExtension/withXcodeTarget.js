@@ -1,4 +1,4 @@
-const {withXcodeProject} = require('expo/config-plugins')
+const {IOSConfig, withXcodeProject} = require('expo/config-plugins')
 
 const BUILD_PHASE_FILES = ['AppDelegate.swift', 'ViewController.swift']
 
@@ -54,7 +54,11 @@ const withXcodeTarget = (config, {targetName}) => {
           buildSettingsObj.PRODUCT_BUNDLE_IDENTIFIER = `"${config.ios?.bundleIdentifier}.AppClip"`
           buildSettingsObj.SWIFT_EMIT_LOC_STRINGS = 'YES'
           buildSettingsObj.SWIFT_VERSION = '5.0'
-          buildSettingsObj.TARGETED_DEVICE_FAMILY = `"1"`
+          // App Clips must support exactly the same device families as their parent.
+          buildSettingsObj.TARGETED_DEVICE_FAMILY =
+            IOSConfig.DeviceFamily.formatDeviceFamilies(
+              IOSConfig.DeviceFamily.getDeviceFamilies(config),
+            )
           buildSettingsObj.DEVELOPMENT_TEAM = 'B3LX46C5HS'
           buildSettingsObj.IPHONEOS_DEPLOYMENT_TARGET = '16.4'
           buildSettingsObj.ASSETCATALOG_COMPILER_APPICON_NAME = 'AppIcon'

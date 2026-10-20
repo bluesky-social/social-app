@@ -1,5 +1,9 @@
-import {forwardRef, memo, useMemo} from 'react'
-import {type ListViewToken as ViewToken, RefreshControl} from 'react-native'
+import {forwardRef, memo, useContext, useMemo} from 'react'
+import {
+  type ListViewToken as ViewToken,
+  RefreshControl,
+  StyleSheet,
+} from 'react-native'
 import {
   type FlatListPropsWithLayout,
   useAnimatedProps,
@@ -13,9 +17,17 @@ import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
-import {useTheme} from '#/alf'
+import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
+import {useBreakpoints, useLayoutBreakpoints, useTheme} from '#/alf'
+import {shouldCenterNativeTabletContent} from '#/alf/breakpoints.shared'
+import {useDialogContext} from '#/components/Dialog/context'
+import {
+  CENTER_COLUMN_OFFSET,
+  CENTER_COLUMN_WIDTH,
+} from '#/components/Layout/const'
+import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {useLightboxIsOpenSharedValue} from '#/components/Lightbox/state'
-import {IS_IOS} from '#/env'
+import {IS_IOS, IS_IPAD} from '#/env'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
@@ -40,6 +52,8 @@ export type ListProps<ItemT = any> = Omit<
   desktopFixedHeight?: number | boolean
   // Web only prop to contain the scroll to the container rather than the window
   disableFullWindowScroll?: boolean
+  /** Disable the centered native tablet column for full-bleed content. */
+  disableTabletLayout?: boolean
   sideBorders?: boolean
   progressViewOffset?: number
 }
@@ -55,15 +69,35 @@ let List = forwardRef<ListMethods, ListProps>(
       onRefresh,
       onItemSeen,
       headerOffset,
+      sideBorders,
+      disableTabletLayout = false,
       style,
+      contentContainerStyle,
       progressViewOffset,
-      automaticallyAdjustsScrollIndicatorInsets = false,
+      automaticallyAdjustsScrollIndicatorInsets,
       ...props
     },
     ref,
   ): React.ReactElement => {
     const isScrolledDown = useSharedValue(false)
     const t = useTheme()
+    const {gtMobile} = useBreakpoints()
+    const {centerColumnOffset} = useLayoutBreakpoints()
+    const {isWithinDialog} = useDialogContext()
+    const {isWithinSplitView} = useIsWithinSplitView()
+    const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
+    const centerOnTablet = shouldCenterNativeTabletContent({
+      gtMobile,
+      isWithinDialog,
+      isWithinSplitView,
+      isWithinOffsetView,
+      disabled: disableTabletLayout,
+    })
+    const isWithinContainedTabletSurface =
+      isWithinDialog || isWithinSplitView || isWithinOffsetView
+    const usesSystemScrollIndicatorInsets =
+      gtMobile && !isWithinContainedTabletSurface
+    const offsetContext = useMemo(() => ({isWithinOffsetView: true}), [])
     const dedupe = useDedupe(400)
     const scrollsToTopProps = useScrollsToTopProps()
 
@@ -155,27 +189,60 @@ let List = forwardRef<ListMethods, ListProps>(
     }
 
     return (
-      <FlatList_INTERNAL
-        showsVerticalScrollIndicator // overridable
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
-        {...props}
-        automaticallyAdjustsScrollIndicatorInsets={
-          automaticallyAdjustsScrollIndicatorInsets
-        }
-        scrollIndicatorInsets={{
-          top: headerOffset,
-          right: 1,
-          ...props.scrollIndicatorInsets,
-        }}
-        indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
-        refreshControl={refreshControl}
-        onScroll={scrollHandler}
-        animatedProps={scrollsToTopProps}
-        scrollEventThrottle={1}
-        style={style}
-        ref={ref}
-      />
+      <ScrollbarOffsetContext.Provider value={offsetContext}>
+        <FlatList_INTERNAL
+          showsVerticalScrollIndicator // overridable
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={viewabilityConfig}
+          {...props}
+          automaticallyAdjustsScrollIndicatorInsets={
+            automaticallyAdjustsScrollIndicatorInsets ??
+            (usesSystemScrollIndicatorInsets || isWithinContainedTabletSurface
+              ? undefined
+              : false)
+          }
+          scrollIndicatorInsets={
+            usesSystemScrollIndicatorInsets
+              ? props.scrollIndicatorInsets
+              : isWithinContainedTabletSurface
+                ? headerOffset != null || props.scrollIndicatorInsets
+                  ? {top: headerOffset, ...props.scrollIndicatorInsets}
+                  : undefined
+                : {
+                    top: headerOffset,
+                    right: 1,
+                    ...props.scrollIndicatorInsets,
+                  }
+          }
+          indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
+          refreshControl={refreshControl}
+          onScroll={scrollHandler}
+          animatedProps={scrollsToTopProps}
+          scrollEventThrottle={1}
+          style={[style, centerOnTablet && {width: '100%'}]}
+          contentContainerStyle={[
+            // Keep the gutters inside the scrollable viewport.
+            centerOnTablet && {
+              width: '100%',
+              maxWidth: CENTER_COLUMN_WIDTH,
+              alignSelf: 'center',
+              transform: [
+                {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
+              ],
+            },
+            centerOnTablet &&
+              sideBorders && [
+                {
+                  borderLeftWidth: StyleSheet.hairlineWidth,
+                  borderRightWidth: StyleSheet.hairlineWidth,
+                },
+                t.atoms.border_contrast_low,
+              ],
+            contentContainerStyle,
+          ]}
+          ref={ref}
+        />
+      </ScrollbarOffsetContext.Provider>
     )
   },
 )
@@ -184,12 +251,21 @@ List.displayName = 'List'
 List = memo(List)
 export {List}
 
-/*
+/**
  * Stops a status bar tap from scrolling the list while the lightbox is open.
  * It's an animated prop so opening the lightbox doesn't re-render every list
  * in the app just as the open animation starts. `scrollsToTop` is iOS-only.
+ *
+ * iPadOS 26 also scrolls to the top when a header button is tapped, and only
+ * after the button's onPress has run, so it lands on the screen underneath a
+ * closed lightbox or after a back navigation. Turn it off there entirely. See
+ * https://github.com/facebook/react-native/issues/56061
  */
-const useScrollsToTopProps = IS_IOS ? useScrollsToTopPropsIOS : () => undefined
+const useScrollsToTopProps = IS_IPAD
+  ? () => ({scrollsToTop: false})
+  : IS_IOS
+    ? useScrollsToTopPropsIOS
+    : () => undefined
 function useScrollsToTopPropsIOS() {
   const isLightboxOpen = useLightboxIsOpenSharedValue()
   return useAnimatedProps(() => ({scrollsToTop: !isLightboxOpen?.get()}))

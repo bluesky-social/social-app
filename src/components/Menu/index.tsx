@@ -1,5 +1,6 @@
-import {cloneElement, Fragment, isValidElement, useMemo} from 'react'
+import {cloneElement, Fragment, isValidElement, useMemo, useRef} from 'react'
 import {
+  type GestureResponderEvent,
   Pressable,
   type StyleProp,
   type TextStyle,
@@ -19,16 +20,18 @@ import {
   useMenuContext,
   useMenuItemContext,
 } from '#/components/Menu/context'
+import {getMenuSourceViewTag} from '#/components/Menu/sourceViewTag'
 import {
   type ContextType,
   type GroupProps,
   type ItemIconProps,
   type ItemProps,
   type ItemTextProps,
+  type OuterProps,
   type TriggerProps,
 } from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID, IS_IOS, IS_NATIVE} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_IPAD, IS_LIQUID_GLASS, IS_NATIVE} from '#/env'
 
 // iOS 26's floaty sheet presentation subtracts the bottom safe-area inset from
 // the requested detent, which eats the visible bottom padding of short (e.g.
@@ -66,12 +69,23 @@ export function Trigger({
   hint,
 }: TriggerProps) {
   const context = useMenuContext()
+  const triggerRef = useRef<React.ComponentRef<typeof View>>(null)
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
     onIn: onPressIn,
     onOut: onPressOut,
   } = useInteractionState()
+
+  const onPress = (event?: GestureResponderEvent) => {
+    if (!IS_IOS) {
+      context.control.open(event)
+      return
+    }
+
+    const sourceViewTag = getMenuSourceViewTag(triggerRef.current, event)
+    context.control.open({sourceViewTag})
+  }
 
   return children({
     IS_NATIVE: true,
@@ -82,8 +96,8 @@ export function Trigger({
       pressed,
     },
     props: {
-      ref: null,
-      onPress: context.control.open,
+      ref: triggerRef,
+      onPress,
       onFocus,
       onBlur,
       onPressIn,
@@ -98,11 +112,8 @@ export function Trigger({
 export function Outer({
   children,
   showCancel,
-}: React.PropsWithChildren<{
-  showCancel?: boolean
-  style?: StyleProp<ViewStyle>
-  onCloseAutoFocus?: (event: Event) => void
-}>) {
+  popover = 'adaptive',
+}: OuterProps) {
   const context = useMenuContext()
   const {t: l} = useLingui()
 
@@ -110,8 +121,10 @@ export function Outer({
     <Dialog.Outer
       control={context.control}
       nativeOptions={{
+        popover: IS_IOS ? popover : 'never',
         preventExpansion: true,
         minHeight: IS_IOS ? IOS_MENU_MIN_HEIGHT : undefined,
+        ...(IS_IPAD && IS_LIQUID_GLASS ? {backgroundColor: 'transparent'} : {}),
       }}>
       <Dialog.Handle />
       {/* Re-wrap with context since Dialogs are portal-ed to root */}

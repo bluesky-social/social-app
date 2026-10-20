@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import {View} from 'react-native'
+import {type LayoutChangeEvent, View} from 'react-native'
 import {DrawerGestureContext} from 'react-native-drawer-layout'
 import {GestureDetector, useNativeGesture} from 'react-native-gesture-handler'
 import PagerView, {
@@ -17,16 +17,19 @@ import PagerView, {
   type PageScrollStateChangedNativeEventData,
 } from 'react-native-pager-view'
 import Animated, {
+  interpolate,
   type SharedValue,
+  useAnimatedStyle,
   useEvent,
   useHandler,
   useSharedValue,
 } from 'react-native-reanimated'
 import {scheduleOnRN} from 'react-native-worklets'
+import {updateActiveVideoViewAsync} from '@bsky.app/video'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {useSetDrawerSwipeDisabled} from '#/state/shell'
-import {atoms as a, native} from '#/alf'
+import {atoms as a, native, useBreakpoints} from '#/alf'
 
 export type PageSelectedEvent = PagerViewOnPageSelectedEvent
 
@@ -59,6 +62,7 @@ interface Props {
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 const MemoizedAnimatedPagerView = memo(AnimatedPagerView)
+const PAGE_FADE_DISTANCE = 100
 
 export function Pager({
   ref,
@@ -71,6 +75,8 @@ export function Pager({
   testID,
 }: React.PropsWithChildren<Props>) {
   const [selectedPage, setSelectedPage] = useState(initialPage)
+  const [pageWidth, setPageWidth] = useState(0)
+  const {gtMobile} = useBreakpoints()
   const pagerView = useRef<PagerView>(null)
 
   const [isIdle, setIsIdle] = useState(true)
@@ -110,6 +116,16 @@ export function Pager({
   const dragState = useSharedValue<'idle' | 'settling' | 'dragging'>('idle')
   const dragProgress = useSharedValue(selectedPage)
   const didInit = useSharedValue(false)
+  const pagerFadeStyle = useAnimatedStyle(() => {
+    if (!gtMobile || pageWidth === 0) {
+      return {opacity: 1}
+    }
+    const progress = dragProgress.get()
+    const distance = Math.abs(progress - Math.round(progress)) * pageWidth
+    return {
+      opacity: interpolate(distance, [0, PAGE_FADE_DISTANCE], [1, 0], 'clamp'),
+    }
+  })
   const handlePageScroll = usePagerHandlers({
     onPageScroll(e: PagerViewOnPageScrollEventData) {
       'worklet'
@@ -124,6 +140,14 @@ export function Pager({
     onPageScrollStateChanged(e: PageScrollStateChangedNativeEventData) {
       'worklet'
       scheduleOnRN(setIsIdle, e.pageScrollState === 'idle')
+      if (e.pageScrollState === 'idle') {
+        /*
+         * Adjacent pages stay attached to the window, so their videos are not
+         * torn down when paged away from. Re-pick the active video once the
+         * pager settles so the one on the old page stops.
+         */
+        scheduleOnRN(updateActiveVideoViewAsync)
+      }
       if (dragState.get() === 'idle' && e.pageScrollState === 'settling') {
         // This is a programmatic scroll on Android.
         // Stay "idle" to match iOS and avoid confusing downstream code.
@@ -134,10 +158,17 @@ export function Pager({
     },
     onPageSelected(e: PagerViewOnPageSelectedEventData) {
       'worklet'
+      if (!didInit.get()) {
+        dragProgress.set(e.position)
+      }
       didInit.set(true)
       scheduleOnRN(onPageSelectedJSThread, e.position)
     },
   })
+
+  const onPagerLayout = (event: LayoutChangeEvent) => {
+    setPageWidth(event.nativeEvent.layout.width)
+  }
 
   return (
     <View testID={testID} style={[a.flex_1, native(a.overflow_hidden)]}>
@@ -150,8 +181,9 @@ export function Pager({
       <DrawerGestureRequireFail>
         <MemoizedAnimatedPagerView
           ref={pagerView}
-          style={a.flex_1}
+          style={[a.flex_1, pagerFadeStyle]}
           initialPage={initialPage}
+          onLayout={gtMobile ? onPagerLayout : undefined}
           onPageScroll={handlePageScroll}>
           {children}
         </MemoizedAnimatedPagerView>

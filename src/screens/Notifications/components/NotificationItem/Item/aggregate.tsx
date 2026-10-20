@@ -1,18 +1,16 @@
-import {type StyleProp, type TextStyle, View} from 'react-native'
+import {type StyleProp, type TextStyle} from 'react-native'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {sanitizeHandle} from '#/lib/strings/handles'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, tokens, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {Link} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import {Card, getPostThumbnails} from './media'
+import {getPostThumbnails} from './media'
 import {QuoteCard} from './post'
 import {SecondaryText} from './text'
 
@@ -96,46 +94,6 @@ function getTextlessEmbed(
     return {type: 'quote', record: embed.record}
   }
   return undefined
-}
-
-/**
- * Compact, non-interactive card for a feed generator: its avatar, name, and
- * creator.
- */
-export function FeedCard({
-  generator,
-}: {
-  generator: app.bsky.feed.defs.GeneratorView
-}) {
-  const t = useTheme()
-  const handle = sanitizeHandle(generator.creator.handle, '@')
-
-  return (
-    <Card>
-      <View style={[a.flex_row, a.align_start, a.gap_sm]}>
-        <UserAvatar
-          type="algo"
-          size={32}
-          avatar={generator.avatar}
-          extraAviStyle={{borderRadius: tokens.borderRadius.sm}}
-        />
-        <View style={[a.flex_1]}>
-          <Text
-            emoji
-            numberOfLines={1}
-            style={[a.text_md, a.leading_snug, a.font_semi_bold]}>
-            {generator.displayName}
-          </Text>
-          <Text
-            emoji
-            numberOfLines={1}
-            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
-            <Trans>Feed by {handle}</Trans>
-          </Text>
-        </View>
-      </View>
-    </Card>
-  )
 }
 
 /**

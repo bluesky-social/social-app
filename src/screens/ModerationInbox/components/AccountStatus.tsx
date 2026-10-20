@@ -1,6 +1,7 @@
 import {Pressable, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {useUpdateModerationInboxSeenMutation} from '#/state/queries/moderation-inbox'
 import {atoms as a, useTheme} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/Circle'
@@ -17,6 +18,7 @@ export function AccountStatus({
   const t = useTheme()
   const {t: l} = useLingui()
   const ax = useAnalytics()
+  const markSeen = useUpdateModerationInboxSeenMutation({silent: true})
 
   const control = Prompt.usePromptControl()
 
@@ -66,6 +68,7 @@ export function AccountStatus({
         onPress={() => {
           ax.metric('moderation:inbox:viewAccountStatus', {status})
           control.open()
+          markSeen.mutate({sections: ['accountStatus']})
         }}
         style={[
           a.p_lg,
