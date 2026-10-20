@@ -1,6 +1,6 @@
 # react-native-pager-view+9.0.9.patch
 
-Carries one local Android fix and two iOS changes. The Android part only
+Carries one local Android fix and three iOS changes. The Android part only
 touches `android/src/main/java/com/reactnativepagerview/ComposePagerView.kt`.
 Drop each part once a release contains it.
 
@@ -63,3 +63,25 @@ introspected collection view. React Native's own scroll views do this, and the
 6.x pager did it for its page scroll view, so press feedback inside pager pages
 was immediate. `UICollectionView` defaults to delaying content touches, which
 made every post and button inside Home and Profile pages respond late.
+
+## iOS: keep the top scroll edge effect on horizontal pagers
+
+Reverts the horizontal half of upstream PR
+https://github.com/callstack/react-native-pager-view/pull/1178 (fixing
+https://github.com/callstack/react-native-pager-view/issues/1177, released in
+9.0.9). That PR hides the introspected collection view's `topEdgeEffect` on
+every pager on iOS 26, with no way to opt out. The patch restores the 9.0.8
+behaviour: all four edge effects are hidden only on vertical pagers, which
+rotate the scroll view and would show the effects sideways.
+
+On iOS 26 the Home tab sets `scrollEdgeEffects: {top: 'soft'}` with a
+transparent native header (`HomeTabNavigator` in `src/Navigation.tsx`).
+react-native-screens applies that to the first scroll view down the screen's
+first-subview chain, which on Home is the pager's collection view. The pager
+hides the effect in its own introspection callback, which runs at least as late
+as the screen attaching, so the soft blur behind the Home header disappeared.
+
+This can't be fixed from JS. react-native-screens re-applies the option only
+when the screen attaches or the prop changes, and RN views do not trigger
+UIKit's edge effect. Drop this part if upstream adds a prop to keep the top
+edge effect.

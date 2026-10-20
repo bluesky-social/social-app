@@ -1,5 +1,5 @@
 diff --git a/android/src/main/java/com/reactnativepagerview/ComposePagerView.kt b/android/src/main/java/com/reactnativepagerview/ComposePagerView.kt
-index 814b7df..0426f52 100644
+index 814b7df39c558b2725b69c458b92b10ab702932d..0426f52295c7e8013379c363276648bcff601e78 100644
 --- a/android/src/main/java/com/reactnativepagerview/ComposePagerView.kt
 +++ b/android/src/main/java/com/reactnativepagerview/ComposePagerView.kt
 @@ -33,6 +33,10 @@ import androidx.lifecycle.LifecycleOwner
@@ -64,7 +64,7 @@ index 814b7df..0426f52 100644
        return
 diff --git a/ios/PagerGestureObserver.swift b/ios/PagerGestureObserver.swift
 new file mode 100644
-index 0000000..956a1af
+index 0000000000000000000000000000000000000000..956a1afef488ba566f703d94b9df8903a2deed29
 --- /dev/null
 +++ b/ios/PagerGestureObserver.swift
 @@ -0,0 +1,153 @@
@@ -222,7 +222,7 @@ index 0000000..956a1af
 +  }
 +}
 diff --git a/ios/PagerView.swift b/ios/PagerView.swift
-index e0283a3..1319e7e 100644
+index e0283a35261b41ec3fa4a28d88eced7d043ad8e2..325ab68e342e7d29858f049ed64cfcd0f1a0a201 100644
 --- a/ios/PagerView.swift
 +++ b/ios/PagerView.swift
 @@ -7,6 +7,7 @@ import SwiftUI
@@ -233,7 +233,31 @@ index e0283a3..1319e7e 100644
    @State private var didEmitInitialPageSelection = false
    weak var delegate: PagerViewProviderDelegate?
  
-@@ -77,6 +78,17 @@ struct PagerView: View {
+@@ -57,17 +58,13 @@ struct PagerView: View {
+         collectionView.showsVerticalScrollIndicator = false
+         collectionView.showsHorizontalScrollIndicator = false
+ 
+-        if #available(iOS 26.0, *) {
+-          // The top edge effect can obscure pages beneath transparent headers.
++        // The vertical pager rotates this horizontal scroll view by 90 degrees.
++        // Native edge effects would rotate with it and cover the page sideways.
++        if isVertical, #available(iOS 26.0, *) {
+           collectionView.topEdgeEffect.isHidden = true
+-
+-          // The vertical pager rotates this horizontal scroll view by 90 degrees.
+-          // Native edge effects would rotate with it and cover the page sideways.
+-          if isVertical {
+-            collectionView.bottomEdgeEffect.isHidden = true
+-            collectionView.leftEdgeEffect.isHidden = true
+-            collectionView.rightEdgeEffect.isHidden = true
+-          }
++          collectionView.bottomEdgeEffect.isHidden = true
++          collectionView.leftEdgeEffect.isHidden = true
++          collectionView.rightEdgeEffect.isHidden = true
+         }
+ 
+         if scrollDelegate.originalDelegate == nil {
+@@ -77,6 +74,17 @@ struct PagerView: View {
            scrollDelegate.orientation = .horizontal
            collectionView.delegate = scrollDelegate
          }
@@ -251,7 +275,7 @@ index e0283a3..1319e7e 100644
        }
      }
      // GeometryReader is the root since the vertical layout; without this it
-@@ -104,6 +116,7 @@ struct PagerView: View {
+@@ -104,6 +112,7 @@ struct PagerView: View {
        }
      }
      .onChange(of: props.currentPage) { newValue in
