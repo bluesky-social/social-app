@@ -16,6 +16,7 @@ import {moderateProfile} from '@bsky/sdk/moderation'
 import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {useHaptics} from '#/lib/haptics'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -256,6 +257,7 @@ function ExpandableGroupRoot({
 }) {
   const {t: l} = useLingui()
   const ax = useAnalytics()
+  const haptics = useHaptics()
   const [isExpanded, setIsExpanded] = useState(false)
   const backgroundColor = useRowBackgroundColor(notification.isRead)
 
@@ -263,6 +265,7 @@ function ExpandableGroupRoot({
     // Keep the press from reaching the row, which on web would follow its link
     event?.preventDefault()
     event?.stopPropagation()
+    haptics.tap()
     if (!isExpanded) {
       ax.metric('notifications:bundleExpand', {
         notificationType: METRIC_NOTIFICATION_TYPES[notification.type],
