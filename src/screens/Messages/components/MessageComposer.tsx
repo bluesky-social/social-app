@@ -341,7 +341,6 @@ function SubmitButton({
       disabled={disabled}>
       <GlassView
         pointerEvents="none"
-        isInteractive
         glassEffectStyle="regular"
         style={[a.absolute, a.inset_0, a.rounded_full]}
         tintColor={disabled ? t.palette.contrast_100 : t.palette.primary_500}
