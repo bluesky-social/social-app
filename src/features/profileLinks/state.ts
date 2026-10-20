@@ -245,6 +245,9 @@ const FAVICON_TIMEOUT = 8e3
  * Also resolves to a data URI of the icon: the CDN can't serve the blob until
  * the profile is saved and a record points at it, so the editor shows this
  * instead.
+ *
+ * Always asks for the site's current icon, skipping cardyb's and the HTTP
+ * cache, so re-adding a link picks up a favicon the site has since changed.
  */
 export function useUploadLinkIcon() {
   const pdsClient = usePdsClient()
@@ -256,8 +259,8 @@ export function useUploadLinkIcon() {
     let icon: Blob
     try {
       const res = await fetch(
-        `${LINK_FAVICON_PROXY()}${encodeURIComponent(url)}`,
-        {signal: controller.signal},
+        `${LINK_FAVICON_PROXY()}${encodeURIComponent(url)}&fresh=true`,
+        {signal: controller.signal, cache: 'no-store'},
       )
       if (!res.ok || res.headers.get('content-type') !== 'image/png') {
         return undefined
