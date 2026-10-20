@@ -64,7 +64,7 @@ export default function (ctx: AppContext, app: Express) {
       let warned: boolean = false
 
       if (ctx.cfg.service.safelinkEnabled) {
-        const rule = await ctx.safelinkClient.tryFindRule(link)
+        const rule = await ctx.safelinkClient.tryFindRuleForLink(link)
         if (rule !== 'ok') {
           switch (rule.action) {
             case 'whitelist':

@@ -29,7 +29,7 @@ export default function (ctx: AppContext, app: Express) {
       if (!ctx.cfg.service.safelinkEnabled) {
         return res.json({action: 'none'})
       }
-      const rule = await ctx.safelinkClient.tryFindRule(url.href)
+      const rule = await ctx.safelinkClient.tryFindRuleForLink(url.href)
       return res.json({action: rule === 'ok' ? 'none' : rule.action})
     }),
   )

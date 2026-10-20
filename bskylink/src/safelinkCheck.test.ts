@@ -29,7 +29,7 @@ const serve = (rules: Record<string, SafelinkRule>, safelinkEnabled = true) => {
   const ctx = {
     cfg: {service: {safelinkEnabled}},
     safelinkClient: {
-      tryFindRule: (link: string) => {
+      tryFindRuleForLink: (link: string) => {
         lookups.push(link)
         return Promise.resolve(rules[new URL(link).hostname] ?? 'ok')
       },

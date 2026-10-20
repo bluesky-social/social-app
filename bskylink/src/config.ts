@@ -13,6 +13,8 @@ export type ServiceConfig = {
   hostnamesSet: Set<string>
   appHostname: string
   safelinkEnabled: boolean
+  /** Also check where short links lead. On unless turned off. */
+  safelinkExpandShortLinks: boolean
   safelinkPdsUrl?: string
   safelinkAgentIdentifier?: string
   safelinkAgentPass?: string
@@ -45,6 +47,7 @@ export type Environment = {
   dbPostgresPoolMaxUses?: number
   dbPostgresPoolIdleTimeoutMs?: number
   safelinkEnabled?: boolean
+  safelinkExpandShortLinks?: boolean
   safelinkPdsUrl?: string
   safelinkAgentIdentifier?: string
   safelinkAgentPass?: string
@@ -67,6 +70,7 @@ export const readEnv = (): Environment => {
       'LINK_DB_POSTGRES_POOL_IDLE_TIMEOUT_MS',
     ),
     safelinkEnabled: envBool('LINK_SAFELINK_ENABLED'),
+    safelinkExpandShortLinks: envBool('LINK_SAFELINK_EXPAND_SHORTLINKS'),
     safelinkPdsUrl: envStr('LINK_SAFELINK_PDS_URL'),
     safelinkAgentIdentifier: envStr('LINK_SAFELINK_AGENT_IDENTIFIER'),
     safelinkAgentPass: envStr('LINK_SAFELINK_AGENT_PASS'),
@@ -83,6 +87,7 @@ export const envToCfg = (env: Environment): Config => {
     hostnamesSet: new Set(env.hostnames),
     appHostname: env.appHostname ?? 'bsky.app',
     safelinkEnabled: env.safelinkEnabled ?? false,
+    safelinkExpandShortLinks: env.safelinkExpandShortLinks ?? true,
     safelinkPdsUrl: env.safelinkPdsUrl,
     safelinkAgentIdentifier: env.safelinkAgentIdentifier,
     safelinkAgentPass: env.safelinkAgentPass,

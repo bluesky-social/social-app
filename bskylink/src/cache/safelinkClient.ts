@@ -11,6 +11,7 @@ import {type ServiceConfig} from '../config.js'
 import type Database from '../db/index.js'
 import {type SafelinkRule} from '../db/schema.js'
 import {redirectLogger} from '../logger.js'
+import {ShortLinkExpander} from './shortLinks.js'
 
 const SAFELINK_MIN_FETCH_INTERVAL = 1_000
 const SAFELINK_MAX_FETCH_INTERVAL = 10_000
@@ -23,6 +24,32 @@ const SCHEME_REGEX = /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//
  * reaches a shared suffix: a rule on `scam.com` covers `pay.scam.com`, but
  * nothing walks up to `co.uk` or `github.io`.
  */
+const SEVERITY: Partial<Record<SafelinkRule['action'], number>> = {
+  block: 2,
+  warn: 1,
+}
+
+/**
+ * The verdict for a link and the URLs it redirects through: the strictest
+ * rule wins, so a short link can't hide a blocked destination. An allow rule
+ * only applies to the URL it matches, so it only wins when nothing in the
+ * chain is blocked or warned.
+ */
+export function strictestRule(
+  rules: (SafelinkRule | 'ok')[],
+): SafelinkRule | 'ok' {
+  let strictest = rules[0] ?? 'ok'
+  let severity = 0
+  for (const rule of rules) {
+    const s = rule === 'ok' ? 0 : (SEVERITY[rule.action] ?? 0)
+    if (s > severity) {
+      strictest = rule
+      severity = s
+    }
+  }
+  return strictest
+}
+
 export function domainLookupOrder(host: string): string[] {
   const order = [host]
   let hostname: string
@@ -52,6 +79,9 @@ export class SafelinkClient {
 
   private ozoneAgent: OzoneAgent
 
+  /** Unset when short-link expansion is turned off. */
+  private shortLinks?: ShortLinkExpander
+
   private cursor?: string
   private fetchEventsPromise?: Promise<void>
   private fetchEventsTimeout?: NodeJS.Timeout
@@ -68,11 +98,26 @@ export class SafelinkClient {
 
     this.db = db
 
+    if (cfg.safelinkExpandShortLinks) {
+      this.shortLinks = new ShortLinkExpander()
+    }
+
     this.ozoneAgent = new OzoneAgent(
       cfg.safelinkPdsUrl!,
       cfg.safelinkAgentIdentifier!,
       cfg.safelinkAgentPass!,
     )
+  }
+
+  /**
+   * The rule for a link, also checking where it leads if it's a short link.
+   * Expansion fails open: a short link that can't be expanded is judged on
+   * its own URL, as before.
+   */
+  public async tryFindRuleForLink(link: string): Promise<SafelinkRule | 'ok'> {
+    const chain = this.shortLinks ? await this.shortLinks.expand(link) : [link]
+    const rules = await Promise.all(chain.map(url => this.tryFindRule(url)))
+    return strictestRule(rules)
   }
 
   public async tryFindRule(link: string): Promise<SafelinkRule | 'ok'> {

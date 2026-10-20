@@ -26,7 +26,7 @@ const ctx = {
   },
   metrics: {track: () => {}},
   safelinkClient: {
-    tryFindRule: (link: string) => {
+    tryFindRuleForLink: (link: string) => {
       const action = rules[link]
       return Promise.resolve(action ? {action} : 'ok')
     },
