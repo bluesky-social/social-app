@@ -2,6 +2,30 @@
 # yarn lockfile v1
 
 
+"@atproto-labs/fetch-node@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@atproto-labs/fetch-node/-/fetch-node-0.4.2.tgz#2c93543c9b314ed7bfae3664316bfc7d6d1836db"
+  integrity sha512-LGf1LzUj9u8f+CwVIqsr06h4NEhzzuKDCf7T6A16WX29zsD/+XCRp0DnMbpjUVas0hzbNlMlpGAzpy2BMFq4wQ==
+  dependencies:
+    "@atproto-labs/fetch" "^0.4.0"
+    "@atproto-labs/pipe" "^0.2.4"
+    ipaddr.js "^2.1.0"
+    undici_v6 "npm:undici@^6.x"
+    undici_v7 "npm:undici@^7.x"
+    undici_v8 "npm:undici@^8.x"
+
+"@atproto-labs/fetch@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@atproto-labs/fetch/-/fetch-0.4.0.tgz#5e7e8632537a2100cd6e1d28ca81b2e5c6f97545"
+  integrity sha512-9HEcZuCU4nWAzV3XZ7nwbDPdV8tbhICzyYeyE5SPHTPuuKS6C3i5WOdwGP1diCCUaYF3Vadw5ArVlQPtXnn73w==
+  dependencies:
+    "@atproto-labs/pipe" "^0.2.4"
+
+"@atproto-labs/pipe@^0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@atproto-labs/pipe/-/pipe-0.2.4.tgz#5a3fb21957b71131f33fed163bf4e94240cd9d26"
+  integrity sha512-n67jCcrC+ouAeO10cWkpPzzLMlDi/lDCU30Us+LGqhOPhT6c4t5ASdBLQi9W3jUQtRzQBt3G9zipF+xKWNvVbw==
+
 "@atproto/api@^0.16.7":
   version "0.16.7"
   resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.16.7.tgz#eb0c520dbdaf74ba6f5ad7f9c6afe2d1389b8a0a"
@@ -725,6 +749,11 @@ ipaddr.js@1.9.1:
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
   integrity sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==
 
+ipaddr.js@^2.1.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-2.5.0.tgz#7d4b6c39f9392fb61cf807de6e425e22c10e061f"
+  integrity sha512-aq+t5NAc+cS6rZQQVWC2x98CPqGtKKTMDd4Gaodv0wShnItdKg/51djkGJ1hqH+Oy0ivDftCbSLCQob8zso01w==
+
 iso-datestring-validator@^2.2.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/iso-datestring-validator/-/iso-datestring-validator-2.2.2.tgz#2daa80d2900b7a954f9f731d42f96ee0c19a6895"
@@ -1348,6 +1377,21 @@ undici-types@~5.26.4:
   version "5.26.5"
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-5.26.5.tgz#bcd539893d00b56e964fd2657a4866b221a65617"
   integrity sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==
+
+"undici_v6@npm:undici@^6.x":
+  version "6.29.1"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-6.29.1.tgz#a3317c5df0236e0633727d9a7bd4f7ed195d8575"
+  integrity sha512-EvRlUt/QqAEvXdQeRMYUfwOQsfzpDztykrG2owGEE/rBOBoYv9uF39ZzsNDh4lTFHhTr2XOZjKkYgueD12ZmGA==
+
+"undici_v7@npm:undici@^7.x":
+  version "7.30.1"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-7.30.1.tgz#360b3de104b94abc52729aa1a4a07e027aa71f73"
+  integrity sha512-03KrMbjIFDWQR5RNPrSw3bd1r12JpyFQl9/yxjUbJtqkjmllqC5lFjZh6ujeuJCKr8EOQvRW872Oy/az+nLYxg==
+
+"undici_v8@npm:undici@^8.x":
+  version "8.12.3"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-8.12.3.tgz#e76a91feee9c275ad0f43bfc0eb632b6124d3bb6"
+  integrity sha512-+fdndUTwBP86cVjihTp21hZHo7d6oj1c/47XPA3lL8mM0XHs+C4EkcjmgRsFnFk2f/UONGDy9ItBItmXsLOQHw==
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"
