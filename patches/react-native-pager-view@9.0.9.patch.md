@@ -1,6 +1,6 @@
 # react-native-pager-view+9.0.9.patch
 
-Carries one local Android fix and three iOS changes. The Android part only
+Carries one local Android fix and two iOS changes. The Android part only
 touches `android/src/main/java/com/reactnativepagerview/ComposePagerView.kt`.
 Drop each part once a release contains it.
 
@@ -55,14 +55,6 @@ paging scroll views. It flips a page on a quick flick even when the pan never
 begins and consults the same delegate method, so the override refuses it under
 the same conditions. Without that, only slow drags reached the back gesture
 (verified on the iOS 26.5 simulator).
-
-## iOS: deliver touches to page content immediately
-
-Same `PagerView.swift` change: sets `delaysContentTouches = false` on the
-introspected collection view. React Native's own scroll views do this, and the
-6.x pager did it for its page scroll view, so press feedback inside pager pages
-was immediate. `UICollectionView` defaults to delaying content touches, which
-made every post and button inside Home and Profile pages respond late.
 
 ## iOS: keep the top scroll edge effect on horizontal pagers
 
