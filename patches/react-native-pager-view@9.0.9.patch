@@ -1,5 +1,5 @@
 diff --git a/android/src/main/java/com/reactnativepagerview/ComposePagerView.kt b/android/src/main/java/com/reactnativepagerview/ComposePagerView.kt
-index 814b7df39c558b2725b69c458b92b10ab702932d..0426f52295c7e8013379c363276648bcff601e78 100644
+index 814b7df..0426f52 100644
 --- a/android/src/main/java/com/reactnativepagerview/ComposePagerView.kt
 +++ b/android/src/main/java/com/reactnativepagerview/ComposePagerView.kt
 @@ -33,6 +33,10 @@ import androidx.lifecycle.LifecycleOwner
@@ -64,7 +64,7 @@ index 814b7df39c558b2725b69c458b92b10ab702932d..0426f52295c7e8013379c363276648bc
        return
 diff --git a/ios/PagerGestureObserver.swift b/ios/PagerGestureObserver.swift
 new file mode 100644
-index 0000000000000000000000000000000000000000..956a1afef488ba566f703d94b9df8903a2deed29
+index 0000000..956a1af
 --- /dev/null
 +++ b/ios/PagerGestureObserver.swift
 @@ -0,0 +1,153 @@
@@ -222,7 +222,7 @@ index 0000000000000000000000000000000000000000..956a1afef488ba566f703d94b9df8903
 +  }
 +}
 diff --git a/ios/PagerView.swift b/ios/PagerView.swift
-index e0283a35261b41ec3fa4a28d88eced7d043ad8e2..325ab68e342e7d29858f049ed64cfcd0f1a0a201 100644
+index e0283a3..9e286ab 100644
 --- a/ios/PagerView.swift
 +++ b/ios/PagerView.swift
 @@ -7,6 +7,7 @@ import SwiftUI
@@ -257,7 +257,7 @@ index e0283a35261b41ec3fa4a28d88eced7d043ad8e2..325ab68e342e7d29858f049ed64cfcd0
          }
  
          if scrollDelegate.originalDelegate == nil {
-@@ -77,6 +74,17 @@ struct PagerView: View {
+@@ -77,6 +74,11 @@ struct PagerView: View {
            scrollDelegate.orientation = .horizontal
            collectionView.delegate = scrollDelegate
          }
@@ -266,16 +266,10 @@ index e0283a35261b41ec3fa4a28d88eced7d043ad8e2..325ab68e342e7d29858f049ed64cfcd0
 +        gestureObserver.currentPage = props.currentPage
 +        gestureObserver.layoutDirection = props.layoutDirection
 +        gestureObserver.orientation = props.orientation
-+
-+        // React Native scroll views hand touches to their content immediately
-+        // (RCTScrollView sets delaysContentTouches = NO) and the UIKit pager in
-+        // 6.x did the same for its page scroll view. UICollectionView defaults
-+        // to YES, which delays press feedback inside every page.
-+        collectionView.delaysContentTouches = false
        }
      }
      // GeometryReader is the root since the vertical layout; without this it
-@@ -104,6 +112,7 @@ struct PagerView: View {
+@@ -104,6 +106,7 @@ struct PagerView: View {
        }
      }
      .onChange(of: props.currentPage) { newValue in
