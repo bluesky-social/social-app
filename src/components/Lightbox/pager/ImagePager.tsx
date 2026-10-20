@@ -162,16 +162,9 @@ export default function ImageViewRoot({
     thumbRects.set(initial)
 
     const isAnimated = canAnimate(nextLightbox)
-
-    // https://github.com/software-mansion/react-native-reanimated/issues/6677
-    rAF_FIXED(() => {
-      openProgress.set(isAnimated ? withClampedSpring(1, SLOW_SPRING) : 1)
-    })
+    scheduleOnUI(animateOpenProgress, openProgress, 1, isAnimated)
     return () => {
-      // https://github.com/software-mansion/react-native-reanimated/issues/6677
-      rAF_FIXED(() => {
-        openProgress.set(isAnimated ? withClampedSpring(0, SLOW_SPRING) : 0)
-      })
+      scheduleOnUI(animateOpenProgress, openProgress, 0, isAnimated)
     }
   }, [nextLightbox, openProgress, thumbRects])
 
@@ -959,31 +952,26 @@ function withClampedSpring<T extends AnimatableValue>(
   return withSpring(value, {...config, overshootClamping: true})
 }
 
-// We have to do this because we can't trust RN's rAF to fire in order.
-// https://github.com/facebook/react-native/issues/48005
-let isFrameScheduled = false
-let pendingFrameCallbacks: Array<() => void> = []
-function rAF_FIXED(callback: () => void) {
-  pendingFrameCallbacks.push(callback)
-  if (!isFrameScheduled) {
-    isFrameScheduled = true
+/**
+ * Springs the lightbox open or closed, starting on the second UI frame from
+ * now. If the main thread is busy (e.g. mounting the lightbox) when the display
+ * link wakes up, its first frame carries the timestamp of the vsync it missed,
+ * so a spring started on it would skip ahead on its first step. Worklet rAF
+ * callbacks run in order, so a close followed by a quick reopen still ends up
+ * open.
+ *
+ * Keep this below `withClampedSpring`: a module-level worklet captures the
+ * functions it calls when it's defined, so it would capture `undefined`.
+ */
+function animateOpenProgress(
+  openProgress: SharedValue<number>,
+  to: number,
+  isAnimated: boolean,
+) {
+  'worklet'
+  requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      const callbacks = pendingFrameCallbacks.slice()
-      isFrameScheduled = false
-      pendingFrameCallbacks = []
-      let hasError = false
-      let error
-      for (let i = 0; i < callbacks.length; i++) {
-        try {
-          callbacks[i]()
-        } catch (e) {
-          hasError = true
-          error = e
-        }
-      }
-      if (hasError) {
-        throw error
-      }
+      openProgress.set(isAnimated ? withClampedSpring(to, SLOW_SPRING) : to)
     })
-  }
+  })
 }

@@ -1,4 +1,4 @@
-import {forwardRef, memo, useContext, useDeferredValue, useMemo} from 'react'
+import {forwardRef, memo, useContext, useMemo} from 'react'
 import {
   type ListViewToken as ViewToken,
   RefreshControl,
@@ -6,6 +6,7 @@ import {
 } from 'react-native'
 import {
   type FlatListPropsWithLayout,
+  useAnimatedProps,
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated'
@@ -25,7 +26,7 @@ import {
   CENTER_COLUMN_WIDTH,
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
-import {useLightbox} from '#/components/Lightbox/state'
+import {useLightboxIsOpenSharedValue} from '#/components/Lightbox/state'
 import {IS_IOS, IS_IPAD} from '#/env'
 import {FlatList_INTERNAL} from './Views'
 
@@ -98,7 +99,7 @@ let List = forwardRef<ListMethods, ListProps>(
       gtMobile && !isWithinContainedTabletSurface
     const offsetContext = useMemo(() => ({isWithinOffsetView: true}), [])
     const dedupe = useDedupe(400)
-    const scrollsToTop = useAllowScrollToTop()
+    const scrollsToTopProps = useScrollsToTopProps()
 
     const handleScrolledDownChange = useNonReactiveCallback(
       (didScrollDown: boolean) => {
@@ -216,7 +217,7 @@ let List = forwardRef<ListMethods, ListProps>(
           indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
           refreshControl={refreshControl}
           onScroll={scrollHandler}
-          scrollsToTop={scrollsToTop}
+          animatedProps={scrollsToTopProps}
           scrollEventThrottle={1}
           style={[style, centerOnTablet && {width: '100%'}]}
           contentContainerStyle={[
@@ -250,21 +251,22 @@ List.displayName = 'List'
 List = memo(List)
 export {List}
 
-/*
- * We only want to use this context value on iOS because the `scrollsToTop`
- * prop is iOS-only, so removing it saves us a re-render on Android.
+/**
+ * Stops a status bar tap from scrolling the list while the lightbox is open.
+ * It's an animated prop so opening the lightbox doesn't re-render every list
+ * in the app just as the open animation starts. `scrollsToTop` is iOS-only.
  *
  * iPadOS 26 also scrolls to the top when a header button is tapped, and only
  * after the button's onPress has run, so it lands on the screen underneath a
  * closed lightbox or after a back navigation. Turn it off there entirely. See
  * https://github.com/facebook/react-native/issues/56061
  */
-const useAllowScrollToTop = IS_IPAD
-  ? () => false
+const useScrollsToTopProps = IS_IPAD
+  ? () => ({scrollsToTop: false})
   : IS_IOS
-    ? useAllowScrollToTopIOS
+    ? useScrollsToTopPropsIOS
     : () => undefined
-function useAllowScrollToTopIOS() {
-  const {activeLightbox} = useLightbox()
-  return useDeferredValue(!activeLightbox)
+function useScrollsToTopPropsIOS() {
+  const isLightboxOpen = useLightboxIsOpenSharedValue()
+  return useAnimatedProps(() => ({scrollsToTop: !isLightboxOpen?.get()}))
 }
