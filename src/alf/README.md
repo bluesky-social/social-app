@@ -47,6 +47,19 @@ const t = useTheme()
 
 ### Breakpoints
 
+Web and native use the same width thresholds: `gtPhone` at 500, `gtMobile` at
+800, and `gtTablet` at 1300. On native, these follow the current app window,
+not the device's screen or model. A compact tablet window stays below
+`gtMobile`; the same device in a wider window can show the sidebar. Rotation,
+Split View, and window resizing can cross these thresholds.
+
+Width does not imply mouse or hover support: keep touch actions available on
+native tablets even when `gtMobile` is true.
+
+`useLayoutBreakpoints().rightNavVisible` stays false on native because the
+native shell has no right rail. Feed modules that move into that rail on web
+must remain in the native feed.
+
 ```tsx
 const b = useBreakpoints()
 
