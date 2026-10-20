@@ -1,4 +1,4 @@
-import {createContext, useContext, useState} from 'react'
+import {createContext, useContext} from 'react'
 import {
   type AccessibilityActionEvent,
   type AccessibilityProps,
@@ -13,6 +13,7 @@ import {WebAuxClickWrapper} from '#/view/com/util/WebAuxClickWrapper'
 import {atoms as a, select, useTheme} from '#/alf'
 import {useLink} from '#/components/Link'
 import {SubtleHover} from '#/components/SubtleHover'
+import {SuppressHoverContext, useRowHover} from './hover'
 
 type ItemContextValue = {
   isRead: boolean
@@ -114,49 +115,50 @@ export function Root({
   children: React.ReactNode
 }) {
   const backgroundColor = useRowBackgroundColor(isRead)
-  const [hover, setHover] = useState(false)
+  const {hover, hoverProps, setSuppressed} = useRowHover()
   const {onPress: followLink} = useLink({to: href, displayText: ''})
 
   return (
     <ItemContext.Provider value={{isRead}}>
-      <WebAuxClickWrapper>
-        <Pressable
-          testID={testID}
-          accessible={accessible}
-          accessibilityRole={accessibilityRole}
-          accessibilityLabel={label}
-          accessibilityHint={hint}
-          aria-expanded={expanded}
-          accessibilityActions={accessibilityActions}
-          onAccessibilityAction={onAccessibilityAction}
-          onPress={event => {
-            if (onPressProp) {
-              onPressProp(event)
-              return
-            }
-            onBeforePress?.()
-            followLink(event)
-          }}
-          onPointerEnter={() => setHover(true)}
-          onPointerLeave={() => setHover(false)}
-          style={[
-            a.flex_row,
-            a.align_start,
-            a.gap_lg,
-            /*
-             * As a button it's a `<button>` on web, which a block parent
-             * shrinks to fit its content rather than stretching
-             */
-            a.w_full,
-            a.px_lg,
-            a.py_md,
-            {backgroundColor},
-            style,
-          ]}>
-          <SubtleHover hover={hover} />
-          {children}
-        </Pressable>
-      </WebAuxClickWrapper>
+      <SuppressHoverContext.Provider value={setSuppressed}>
+        <WebAuxClickWrapper>
+          <Pressable
+            testID={testID}
+            accessible={accessible}
+            accessibilityRole={accessibilityRole}
+            accessibilityLabel={label}
+            accessibilityHint={hint}
+            aria-expanded={expanded}
+            accessibilityActions={accessibilityActions}
+            onAccessibilityAction={onAccessibilityAction}
+            onPress={event => {
+              if (onPressProp) {
+                onPressProp(event)
+                return
+              }
+              onBeforePress?.()
+              followLink(event)
+            }}
+            {...hoverProps}
+            style={[
+              a.flex_row,
+              a.align_start,
+              a.gap_lg,
+              /*
+               * As a button it's a `<button>` on web, which a block parent
+               * shrinks to fit its content rather than stretching
+               */
+              a.w_full,
+              a.px_lg,
+              a.py_md,
+              {backgroundColor},
+              style,
+            ]}>
+            <SubtleHover hover={hover} />
+            {children}
+          </Pressable>
+        </WebAuxClickWrapper>
+      </SuppressHoverContext.Provider>
     </ItemContext.Provider>
   )
 }
