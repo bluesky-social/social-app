@@ -24,7 +24,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {features, useAnalytics} from '#/analytics'
 import {getTargetedFeatures} from '#/analytics/features'
-import {IS_WEB} from '#/env'
+import {IS_IPAD, IS_WEB} from '#/env'
 import {account} from '#/storage'
 
 type Props = NativeStackScreenProps<
@@ -63,6 +63,31 @@ export function BetaFeaturesSettingsScreen({}: Props) {
     }
   }, [i18n])
 
+  /*
+   * iPad support isn't a GrowthBook gate and can't be switched off in the app,
+   * so on iPad it's listed whether or not beta features are enabled.
+   */
+  const listedFeatures = [
+    ...(IS_IPAD
+      ? [
+          {
+            key: 'ipad_support',
+            name: l({
+              message: 'iPad support',
+              comment: 'Name for a beta feature',
+            }),
+            description: l({
+              message:
+                'Bluesky adapts to your iPad’s screen in any orientation or window size.',
+              comment: 'Description of a beta feature (iPad support)',
+            }),
+          },
+        ]
+      : []),
+    ...betaFeatures,
+  ]
+  const feedbackFeatureKeys = listedFeatures.map(feature => feature.key)
+
   const onChange = async (next: boolean) => {
     try {
       setIsPending(true)
@@ -100,12 +125,13 @@ export function BetaFeaturesSettingsScreen({}: Props) {
 
   const onPressShareFeedback = () => {
     ax.metric('betaFeatures:feedback:open', {
-      betaFeatureKeys: betaFeatures.map(feature => feature.key),
+      betaFeatureKeys: feedbackFeatureKeys,
     })
     feedbackControl.open()
   }
 
-  const canSubmitFeedback = !isPending && isBetaUser && betaFeatures.length > 0
+  const canSubmitFeedback =
+    !isPending && (isBetaUser || IS_IPAD) && listedFeatures.length > 0
 
   return (
     <Layout.Screen>
@@ -174,7 +200,7 @@ export function BetaFeaturesSettingsScreen({}: Props) {
               </ButtonText>
             </Button>
 
-            {betaFeatures.length < 1 ? (
+            {listedFeatures.length < 1 ? (
               <View style={[a.align_center, a.gap_xs, a.py_5xl]}>
                 <BeakerIcon
                   size="4xl"
@@ -196,7 +222,7 @@ export function BetaFeaturesSettingsScreen({}: Props) {
                   <Trans>Current beta features</Trans>
                 </Text>
                 <View style={[a.gap_sm]}>
-                  {betaFeatures.map(feature => (
+                  {listedFeatures.map(feature => (
                     <View
                       key={feature.key}
                       style={[
@@ -233,7 +259,7 @@ export function BetaFeaturesSettingsScreen({}: Props) {
 
       <BetaFeaturesFeedbackDialog
         control={feedbackControl}
-        betaFeatureKeys={betaFeatures.map(feature => feature.key)}
+        betaFeatureKeys={feedbackFeatureKeys}
       />
     </Layout.Screen>
   )

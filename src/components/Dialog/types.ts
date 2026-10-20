@@ -40,12 +40,21 @@ export type DialogControlProps = DialogControlRefProps & {
 export type DialogContextProps = {
   close: DialogControlProps['close']
   isNativeDialog: boolean
+  /** Actual content width of the presented native sheet or popover. */
+  availableWidth?: number
+  /** Distance between the presentation bottom and the presentation window bottom. */
+  presentationBottomOffset: number
+  isNativePopover: boolean
   nativeSnapPoint: BottomSheetSnapPoint
   disableDrag: boolean
   setDisableDrag: React.Dispatch<React.SetStateAction<boolean>>
   // in the event that the hook is used outside of a dialog
   isWithinDialog: boolean
   isHeightConstrained: boolean
+  shouldMeasureContentHeight: boolean
+  setDesiredContentHeight: React.Dispatch<
+    React.SetStateAction<number | undefined>
+  >
 }
 
 export type DialogControlOpenOptions = {
@@ -56,6 +65,12 @@ export type DialogControlOpenOptions = {
    * 0, which is the first snap point (i.e. "open").
    */
   index?: number
+  /**
+   * NATIVE ONLY
+   *
+   * Optional source view for popover positioning or iOS 26+ zoom transitions.
+   */
+  sourceViewTag?: number
 }
 
 export type DialogOuterProps = {
