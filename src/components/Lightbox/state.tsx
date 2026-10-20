@@ -1,4 +1,5 @@
 import {createContext, useContext, useEffect, useMemo, useState} from 'react'
+import {makeMutable} from 'react-native-reanimated'
 import {nanoid} from 'nanoid/non-secure'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -27,6 +28,12 @@ export type Lightbox = {
    */
   onIndexChange?: (index: number) => void
 }
+
+/**
+ * Whether a lightbox is open, for UI-thread readers. Unlike `useLightbox()`,
+ * reading it doesn't re-render anything when the lightbox opens or closes.
+ */
+export const isLightboxOpen = makeMutable(false)
 
 const LightboxContext = createContext<{
   activeLightbox: Lightbox | null
@@ -78,12 +85,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           return {...lightbox, id: nanoid()}
         }
       })
+      isLightboxOpen.set(true)
     },
   )
 
   const closeLightbox = useNonReactiveCallback(() => {
     let wasActive = !!activeLightbox
     setActiveLightbox(null)
+    isLightboxOpen.set(false)
     return wasActive
   })
 

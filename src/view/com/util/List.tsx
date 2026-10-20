@@ -1,7 +1,8 @@
-import {forwardRef, memo, useDeferredValue, useMemo} from 'react'
+import {forwardRef, memo, useMemo} from 'react'
 import {type ListViewToken as ViewToken, RefreshControl} from 'react-native'
 import {
   type FlatListPropsWithLayout,
+  useAnimatedProps,
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated'
@@ -13,7 +14,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
 import {useTheme} from '#/alf'
-import {useLightbox} from '#/components/Lightbox/state'
+import {isLightboxOpen} from '#/components/Lightbox/state'
 import {IS_IOS} from '#/env'
 import {FlatList_INTERNAL} from './Views'
 
@@ -64,7 +65,7 @@ let List = forwardRef<ListMethods, ListProps>(
     const isScrolledDown = useSharedValue(false)
     const t = useTheme()
     const dedupe = useDedupe(400)
-    const scrollsToTop = useAllowScrollToTop()
+    const scrollsToTopProps = useScrollsToTopProps()
 
     const handleScrolledDownChange = useNonReactiveCallback(
       (didScrollDown: boolean) => {
@@ -170,7 +171,7 @@ let List = forwardRef<ListMethods, ListProps>(
         indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
         refreshControl={refreshControl}
         onScroll={scrollHandler}
-        scrollsToTop={scrollsToTop}
+        animatedProps={scrollsToTopProps}
         scrollEventThrottle={1}
         style={style}
         ref={ref}
@@ -183,10 +184,12 @@ List.displayName = 'List'
 List = memo(List)
 export {List}
 
-// We only want to use this context value on iOS because the `scrollsToTop` prop is iOS-only
-// removing it saves us a re-render on Android
-const useAllowScrollToTop = IS_IOS ? useAllowScrollToTopIOS : () => undefined
-function useAllowScrollToTopIOS() {
-  const {activeLightbox} = useLightbox()
-  return useDeferredValue(!activeLightbox)
+/*
+ * Stops a status bar tap from scrolling the list while the lightbox is open.
+ * It's an animated prop so opening the lightbox doesn't re-render every list
+ * in the app just as the open animation starts. `scrollsToTop` is iOS-only.
+ */
+const useScrollsToTopProps = IS_IOS ? useScrollsToTopPropsIOS : () => undefined
+function useScrollsToTopPropsIOS() {
+  return useAnimatedProps(() => ({scrollsToTop: !isLightboxOpen.get()}))
 }
