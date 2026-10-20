@@ -14,7 +14,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
 import {useTheme} from '#/alf'
-import {isLightboxOpen} from '#/components/Lightbox/state'
+import {useLightboxIsOpenSharedValue} from '#/components/Lightbox/state'
 import {IS_IOS} from '#/env'
 import {FlatList_INTERNAL} from './Views'
 
@@ -191,5 +191,6 @@ export {List}
  */
 const useScrollsToTopProps = IS_IOS ? useScrollsToTopPropsIOS : () => undefined
 function useScrollsToTopPropsIOS() {
-  return useAnimatedProps(() => ({scrollsToTop: !isLightboxOpen.get()}))
+  const isLightboxOpen = useLightboxIsOpenSharedValue()
+  return useAnimatedProps(() => ({scrollsToTop: !isLightboxOpen?.get()}))
 }
