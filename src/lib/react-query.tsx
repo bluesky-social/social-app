@@ -52,7 +52,6 @@ async function checkIsOnline(): Promise<boolean> {
 
 let receivedNetworkLost = false
 let receivedNetworkConfirmed = false
-let isNetworkStateUnclear = false
 
 listenNetworkLost(() => {
   receivedNetworkLost = true
@@ -73,23 +72,25 @@ function checkIsOnlineIfNeeded() {
   receivedNetworkConfirmed = false
   checkPromise = checkIsOnline().then(nextIsOnline => {
     checkPromise = undefined
-    if (nextIsOnline && receivedNetworkLost) {
-      isNetworkStateUnclear = true
-    }
-    if (!nextIsOnline && receivedNetworkConfirmed) {
-      isNetworkStateUnclear = true
-    }
-    if (!isNetworkStateUnclear) {
+    /*
+     * A real request that settled while the check was in flight is fresher
+     * than the check's verdict, so defer to it. We only skip this one verdict:
+     * the next tick checks again. This must never latch. While offline, queries
+     * are paused and make no requests, so nothing but this poll can bring us
+     * back online, and a poll that gave up would leave every query paused.
+     */
+    const wasContradicted = nextIsOnline
+      ? receivedNetworkLost
+      : receivedNetworkConfirmed
+    if (!wasContradicted) {
       onlineManager.setOnline(nextIsOnline)
     }
   })
 }
 
 setInterval(() => {
-  if (AppState.currentState === 'active') {
-    if (!onlineManager.isOnline() || isNetworkStateUnclear) {
-      checkIsOnlineIfNeeded()
-    }
+  if (AppState.currentState === 'active' && !onlineManager.isOnline()) {
+    checkIsOnlineIfNeeded()
   }
 }, 2000)
 
