@@ -1,6 +1,10 @@
 import {onlineManager} from '@tanstack/react-query'
 
-import {emitNetworkConfirmed, emitNetworkLost} from '#/state/events'
+import {
+  emitNetworkConfirmed,
+  emitNetworkLost,
+  emitNetworkRetry,
+} from '#/state/events'
 
 jest.mock('react-native/Libraries/AppState/AppState', () => ({
   __esModule: true,
@@ -100,6 +104,25 @@ describe('online status', () => {
 
     const settle = await beginHealthCheck()
     await settle(true)
+
+    expect(onlineManager.isOnline()).toBe(true)
+  })
+
+  it('assumes the network is back when the user retries', () => {
+    emitNetworkLost()
+    expect(onlineManager.isOnline()).toBe(false)
+
+    emitNetworkRetry()
+
+    expect(onlineManager.isOnline()).toBe(true)
+  })
+
+  it('does not let a stale offline verdict undo a retry', async () => {
+    emitNetworkLost()
+
+    const settle = await beginHealthCheck()
+    emitNetworkRetry()
+    await settle(false)
 
     expect(onlineManager.isOnline()).toBe(true)
   })

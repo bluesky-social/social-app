@@ -13,7 +13,11 @@ import {
 } from '@tanstack/react-query-persist-client'
 
 import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
-import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
+import {
+  listenNetworkConfirmed,
+  listenNetworkLost,
+  listenNetworkRetry,
+} from '#/state/events'
 import {isQueryPersisted} from '#/state/queries/util'
 import * as env from '#/env'
 import {IS_NATIVE, IS_WEB} from '#/env'
@@ -58,10 +62,19 @@ listenNetworkLost(() => {
   onlineManager.setOnline(false)
 })
 
-listenNetworkConfirmed(() => {
+function onNetworkUp() {
   receivedNetworkConfirmed = true
   onlineManager.setOnline(true)
-})
+}
+
+listenNetworkConfirmed(onNetworkUp)
+
+/*
+ * Offline pauses queries, so a retry the user asked for would sit paused and
+ * look like it did nothing. Assume we're back and let the retry find out. If
+ * the network really is down it will fail and report that.
+ */
+listenNetworkRetry(onNetworkUp)
 
 let checkPromise: Promise<void> | undefined
 function checkIsOnlineIfNeeded() {
