@@ -492,10 +492,6 @@ msgstr "{accountCount, plural, one {# account} other {# accounts}}"
 msgid "{accountCount, plural, one {# account} other {# accounts}}, {feedCount, plural, one {# feed} other {# feeds}}"
 msgstr "{accountCount, plural, one {# account} other {# accounts}}, {feedCount, plural, one {# feed} other {# feeds}}"
 
-#: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:53
-msgid "{authorName}"
-msgstr "{authorName}"
-
 #: src/screens/Moderation/index.tsx:179
 msgid "{badge, plural, one {# update} other {# updates}}"
 msgstr "{badge, plural, one {# update} other {# updates}}"
@@ -1447,6 +1443,10 @@ msgstr ""
 msgid "Account"
 msgstr ""
 
+#: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:53
+msgid "Account {authorName}"
+msgstr "Account {authorName}"
+
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:430
 #: src/screens/Messages/components/RequestButtons.tsx:104
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:122
@@ -1528,6 +1528,10 @@ msgstr ""
 msgctxt "toast"
 msgid "Account unfollowed"
 msgstr ""
+
+#: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:53
+msgid "Account unknown"
+msgstr "Account unknown"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:452
 #: src/view/com/profile/ProfileMenu.tsx:140
@@ -2784,7 +2788,7 @@ msgstr ""
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:454
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:456
 msgid "Blocked post"
 msgstr "Blocked post"
 
@@ -4606,7 +4610,7 @@ msgstr ""
 msgid "Deleted list"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:457
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:459
 msgid "Deleted post"
 msgstr "Deleted post"
 
@@ -6316,10 +6320,6 @@ msgctxt "Notifications section header"
 msgid "Followed you"
 msgstr "Followed you"
 
-#: src/screens/Notifications/index.tsx:106
-msgid "Followers"
-msgstr "Followers"
-
 #: src/components/intents/GroupChatJoinDialog.tsx:360
 msgid "Followers can join"
 msgstr "Followers can join"
@@ -6386,6 +6386,10 @@ msgstr ""
 #: src/screens/Settings/FollowingFeedPreferences.tsx:57
 msgid "Following Feed Preferences"
 msgstr ""
+
+#: src/screens/Notifications/index.tsx:107
+msgid "Follows"
+msgstr "Follows"
 
 #: src/components/Pills.tsx:215
 #: src/screens/Profile/Header/Handle.tsx:33
@@ -7372,7 +7376,7 @@ msgstr ""
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:254
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:256
 msgid "in reply to <0>{name}</0>: {previewNode}"
 msgstr "in reply to <0>{name}</0>: {previewNode}"
 
@@ -7384,7 +7388,7 @@ msgstr "in reply to a blocked post"
 msgid "in reply to a deleted post"
 msgstr "in reply to a deleted post"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:252
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:254
 msgid "in reply to: {previewNode}"
 msgstr "in reply to: {previewNode}"
 
@@ -10295,6 +10299,7 @@ msgstr ""
 msgid "People following @{0}"
 msgstr ""
 
+#: src/screens/Notifications/index.tsx:105
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:180
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:184
 msgid "People I follow"
@@ -10324,7 +10329,6 @@ msgid "People I follow can request to join"
 msgstr "People I follow can request to join"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
-#: src/screens/Notifications/index.tsx:105
 msgid "People you follow"
 msgstr ""
 
@@ -10681,7 +10685,7 @@ msgstr ""
 msgid "Post by {authorName}"
 msgstr "Post by {authorName}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:514
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:516
 msgid "Post by {name}"
 msgstr "Post by {name}"
 
@@ -11404,12 +11408,12 @@ msgid "Remove your verification for this account?"
 msgstr ""
 
 #: src/components/Post/Embed/index.tsx:294
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:466
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:468
 msgid "Removed by author"
 msgstr ""
 
 #: src/components/Post/Embed/index.tsx:292
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:464
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:466
 msgid "Removed by you"
 msgstr ""
 
@@ -11472,7 +11476,7 @@ msgstr "Reorder {0}"
 msgid "Replace with Discover"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:245
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:247
 msgid "replied to <0>{name}</0>: {previewNode}"
 msgstr "replied to <0>{name}</0>: {previewNode}"
 
@@ -11504,7 +11508,7 @@ msgctxt "description"
 msgid "Replied to you"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:243
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:245
 msgid "replied to: {previewNode}"
 msgstr "replied to: {previewNode}"
 
@@ -11523,7 +11527,7 @@ msgstr "Replied-to message, tap to scroll to it"
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:271
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:283
 #: src/lib/hooks/useNotificationHandler.ts:173
-#: src/screens/Notifications/index.tsx:107
+#: src/screens/Notifications/index.tsx:106
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:218
 #: src/screens/Settings/NotificationSettings/index.tsx:181
 #: src/screens/Settings/NotificationSettings/index.tsx:330
@@ -12336,6 +12340,7 @@ msgstr ""
 #: src/components/FeedInterstitials.tsx:495
 #: src/components/FeedInterstitials.tsx:554
 #: src/components/interstitials/FeedTrendingTopics.tsx:117
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:83
 msgid "See more"
 msgstr ""
 
@@ -12344,6 +12349,7 @@ msgid "See more suggested profiles"
 msgstr ""
 
 #: src/components/interstitials/FeedTrendingTopics.tsx:103
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:69
 msgid "See more trending topics"
 msgstr "See more trending topics"
 
@@ -14821,7 +14827,7 @@ msgstr ""
 
 #: src/components/interstitials/FeedTrendingTopics.tsx:99
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:77
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:68
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:66
 msgid "Trending"
 msgstr ""
 
@@ -14832,7 +14838,7 @@ msgstr "Trending GIFs"
 
 #: src/components/interstitials/FeedTrendingTopics.tsx:126
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:80
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:75
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:93
 msgid "Trending options"
 msgstr ""
 
@@ -15091,10 +15097,6 @@ msgstr ""
 #: src/ageAssurance/components/NoAccessScreen.tsx:250
 msgid "Unfortunately, your declared age indicates that you are not old enough to access Bluesky in your region."
 msgstr ""
-
-#: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:53
-msgid "unknown account"
-msgstr "unknown account"
 
 #: src/screens/ModerationInbox/Report.tsx:163
 msgid "Unknown report reason"
