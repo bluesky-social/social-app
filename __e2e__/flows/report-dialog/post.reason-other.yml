@@ -25,7 +25,7 @@ appId: xyz.blueskyweb.app
     id: "report:details"
 - tapOn:
     id: "report:details"
-- inputText: "This is a test report"
+- inputText: "This is a test note"
 - hideKeyboard
 - tapOn:
     id: "report:submit"

@@ -12,6 +12,12 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "selectServiceButton"
 - tapOn:
+    text: "Continue"
+    optional: true
+- tapOn:
+    id: "selectServiceButton"
+    optional: true
+- tapOn:
     id: "manualSelectBtn"
 - tapOn:
     id: "customServerTextInput"

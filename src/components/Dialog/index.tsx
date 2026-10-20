@@ -23,6 +23,7 @@ import {useReanimatedKeyboardAnimation} from 'react-native-keyboard-controller'
 import Animated, {
   type ScrollEvent,
   useAnimatedStyle,
+  useSharedValue,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {scheduleOnRN} from 'react-native-worklets'
@@ -80,7 +81,9 @@ export function Outer({
 
   const [disableDrag, setDisableDrag] = useState(false)
   const [snapPoint, setSnapPoint] = useState<BottomSheetSnapPoint>(
-    BottomSheetSnapPoint.Partial,
+    nativeOptions?.fullHeight
+      ? BottomSheetSnapPoint.Full
+      : BottomSheetSnapPoint.Partial,
   )
 
   const callQueuedCallbacks = useCallback(() => {
@@ -100,8 +103,20 @@ export function Outer({
     callQueuedCallbacks()
     onOpen?.()
     setDialogIsOpen(control.id, true)
+    setDisableDrag(false)
+    setSnapPoint(
+      nativeOptions?.fullHeight
+        ? BottomSheetSnapPoint.Full
+        : BottomSheetSnapPoint.Partial,
+    )
     ref.current?.present()
-  }, [setDialogIsOpen, control.id, callQueuedCallbacks, onOpen])
+  }, [
+    setDialogIsOpen,
+    control.id,
+    callQueuedCallbacks,
+    onOpen,
+    nativeOptions?.fullHeight,
+  ])
 
   // This is the function that we call when we want to dismiss the dialog.
   const close = useCallback<DialogControlProps['close']>(cb => {
@@ -161,18 +176,30 @@ export function Outer({
 
   const isHeightConstrained =
     nativeOptions?.maxHeight != null || nativeOptions?.fullHeight === true
+  const contentFillsCanvas =
+    IS_ANDROID &&
+    !nativeOptions?.fullHeight &&
+    snapPoint === BottomSheetSnapPoint.Full
 
   const context = useMemo(
     () => ({
       close,
       isNativeDialog: true,
       nativeSnapPoint: snapPoint,
+      nativeFullHeight: nativeOptions?.fullHeight === true,
+      isHeightConstrained,
       disableDrag,
       setDisableDrag,
       isWithinDialog: true,
-      isHeightConstrained,
     }),
-    [close, snapPoint, disableDrag, setDisableDrag, isHeightConstrained],
+    [
+      close,
+      snapPoint,
+      nativeOptions?.fullHeight,
+      isHeightConstrained,
+      disableDrag,
+      setDisableDrag,
+    ],
   )
 
   return (
@@ -184,11 +211,20 @@ export function Outer({
       {...nativeOptions}
       onSnapPointChange={onSnapPointChange}
       onStateChange={onStateChange}
+      contentFillsCanvas={contentFillsCanvas}
       disableDrag={disableDrag}>
       <Context.Provider value={context}>
         <View
           testID={testID}
-          style={[a.relative, isHeightConstrained && a.flex_1]}>
+          style={[
+            a.relative,
+            {maxHeight: '100%'},
+            (IS_IOS
+              ? isHeightConstrained
+              : nativeOptions?.fullHeight ||
+                snapPoint === BottomSheetSnapPoint.Full) && a.flex_1,
+            contentFillsCanvas && a.h_full,
+          ]}>
           {children}
         </View>
       </Context.Provider>
@@ -214,13 +250,33 @@ export function ScrollableInner({
 }: DialogInnerProps & {
   ref?: React.Ref<React.ComponentRef<typeof ScrollView>>
 }) {
-  const {nativeSnapPoint, disableDrag, setDisableDrag, isHeightConstrained} =
-    useDialogContext()
+  const {
+    nativeSnapPoint,
+    nativeFullHeight,
+    isHeightConstrained,
+    disableDrag,
+    setDisableDrag,
+  } = useDialogContext()
   const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
   const insets = useSafeAreaInsets()
+  const scrollPhase = useRef<'idle' | 'drag' | 'momentum'>('idle')
   const [keyboardHeight, setKeyboardHeight] = useState(() =>
     IS_ANDROID ? (Keyboard.metrics()?.height ?? 0) : 0,
   )
+  const {height: animatedKeyboardHeight, progress: keyboardProgress} =
+    useReanimatedKeyboardAnimation()
+
+  const footerAnimatedStyle = useAnimatedStyle(() => {
+    if (!IS_IOS) return {}
+    return {
+      marginBottom: Math.max(
+        0,
+        -animatedKeyboardHeight.get() -
+          insets.bottom +
+          10 * keyboardProgress.get(),
+      ),
+    }
+  })
 
   const keyboardEventHandler = useCallback((e: KeyboardEvent) => {
     setKeyboardHeight(e.endCoordinates.height)
@@ -233,17 +289,55 @@ export function ScrollableInner({
       return
     }
     const {contentOffset} = e.nativeEvent
-    if (contentOffset.y > 0 && !disableDrag) {
+    if (contentOffset.y > 1 && !disableDrag) {
       setDisableDrag(true)
-    } else if (contentOffset.y <= 1 && disableDrag) {
+    } else if (
+      contentOffset.y <= 1 &&
+      scrollPhase.current === 'idle' &&
+      disableDrag
+    ) {
       setDisableDrag(false)
     }
+  }
+
+  const onScrollBeginDrag = () => {
+    scrollPhase.current = 'drag'
+  }
+
+  const onScrollEndDrag = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (!IS_ANDROID) {
+      return
+    }
+    const {contentOffset, velocity} = e.nativeEvent
+    const hasMomentum = Math.abs(velocity?.y ?? 0) > 0
+    scrollPhase.current = hasMomentum ? 'momentum' : 'idle'
+    if (!hasMomentum) {
+      setDisableDrag(contentOffset.y > 1)
+    }
+  }
+
+  const onMomentumScrollBegin = () => {
+    scrollPhase.current = 'momentum'
+  }
+
+  const onMomentumScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (!IS_ANDROID) {
+      return
+    }
+    scrollPhase.current = 'idle'
+    setDisableDrag(e.nativeEvent.contentOffset.y > 1)
   }
 
   return (
     <>
       <ScrollView
-        style={[isHeightConstrained && a.flex_1, style]}
+        style={[
+          {flexShrink: 1},
+          (IS_IOS
+            ? isHeightConstrained
+            : nativeFullHeight || isAtMaxSnapPoint) && a.flex_1,
+          style,
+        ]}
         contentContainerStyle={[
           a.pt_2xl,
           IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,
@@ -264,12 +358,16 @@ export function ScrollableInner({
         {...props}
         bounces={isAtMaxSnapPoint}
         scrollEventThrottle={50}
-        // set drag state based on scroll on android.
-        // we want to detect if it's at the top or not, so watch
-        // scrollEndDrag and momentumScrollEnd as well
+        /*
+         * Only re-enable sheet dragging after the scroll gesture ends. Doing
+         * so from onScroll can hand the rest of a downward gesture to the
+         * sheet as soon as the content reaches the top, dismissing it.
+         */
+        onScrollBeginDrag={android(onScrollBeginDrag)}
         onScroll={android(onScroll)}
-        onScrollEndDrag={android(onScroll)}
-        onMomentumScrollEnd={android(onScroll)}
+        onScrollEndDrag={android(onScrollEndDrag)}
+        onMomentumScrollBegin={android(onMomentumScrollBegin)}
+        onMomentumScrollEnd={android(onMomentumScrollEnd)}
         keyboardShouldPersistTaps="handled"
         // TODO: figure out why this positions the header absolutely (rather than stickily)
         // on Android. fine to disable for now, because we don't have any
@@ -278,7 +376,17 @@ export function ScrollableInner({
         {header}
         {children}
       </ScrollView>
-      {footer}
+      {footer ? (
+        <Animated.View
+          style={[
+            footerAnimatedStyle,
+            android({
+              transform: [{translateY: -keyboardHeight}],
+            }),
+          ]}>
+          {footer}
+        </Animated.View>
+      ) : null}
     </>
   )
 }
@@ -295,7 +403,9 @@ export const InnerFlatList = forwardRef<
   ref,
 ) {
   const insets = useSafeAreaInsets()
-  const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
+  const {nativeSnapPoint, nativeFullHeight, disableDrag, setDisableDrag} =
+    useDialogContext()
+  const scrollPhase = useSharedValue<'idle' | 'drag' | 'momentum'>('idle')
 
   const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
 
@@ -305,18 +415,49 @@ export const InnerFlatList = forwardRef<
       return
     }
     const {contentOffset} = e
-    if (contentOffset.y > 0 && !disableDrag) {
+    if (contentOffset.y > 1 && !disableDrag) {
       scheduleOnRN(setDisableDrag, true)
-    } else if (contentOffset.y <= 1 && disableDrag) {
+    } else if (
+      contentOffset.y <= 1 &&
+      scrollPhase.get() === 'idle' &&
+      disableDrag
+    ) {
       scheduleOnRN(setDisableDrag, false)
     }
   }
 
+  const onScrollBeginDrag = () => {
+    'worklet'
+    scrollPhase.set('drag')
+  }
+
+  const onScrollEndDrag = (e: ScrollEvent) => {
+    'worklet'
+    if (!IS_ANDROID) {
+      return
+    }
+    const hasMomentum = Math.abs(e.velocity?.y ?? 0) > 0
+    scrollPhase.set(hasMomentum ? 'momentum' : 'idle')
+    if (!hasMomentum) {
+      scheduleOnRN(setDisableDrag, e.contentOffset.y > 1)
+    }
+  }
+
+  const onMomentumScrollEnd = (e: ScrollEvent) => {
+    'worklet'
+    if (!IS_ANDROID) {
+      return
+    }
+    scrollPhase.set('idle')
+    scheduleOnRN(setDisableDrag, e.contentOffset.y > 1)
+  }
+
   return (
     <ScrollProvider
+      onBeginDrag={onScrollBeginDrag}
       onScroll={onScroll}
-      onEndDrag={onScroll}
-      onMomentumEnd={onScroll}>
+      onEndDrag={onScrollEndDrag}
+      onMomentumEnd={onMomentumScrollEnd}>
       <List
         keyboardShouldPersistTaps="handled"
         contentInsetAdjustmentBehavior={
@@ -328,7 +469,11 @@ export const InnerFlatList = forwardRef<
         ref={ref}
         showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
         {...props}
-        style={[a.h_full, style]}
+        style={[
+          IS_IOS ? a.h_full : {flexShrink: 1},
+          IS_ANDROID && (nativeFullHeight || isAtMaxSnapPoint) && a.flex_1,
+          style,
+        ]}
         contentContainerStyle={[
           {paddingTop: headerOffset},
           android({
