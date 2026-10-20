@@ -119,7 +119,8 @@ export function Author({profile}: {profile: bsky.profile.AnyProfileView}) {
 
 /**
  * A single line of context under the author, with a small leading icon, e.g.
- * "replied to: ...". Children are text spans, truncated with an ellipsis.
+ * "replied to **you**: ...". Children are text spans, truncated with an
+ * ellipsis.
  */
 export function ContextLine({
   icon: Icon,
@@ -144,8 +145,8 @@ export function ContextLine({
 }
 
 /**
- * Which post a notification's post is responding to, e.g. "replied to: <your
- * post>" or "replied to **bob**: <bob's post>".
+ * Which post a notification's post is responding to, e.g. "replied to **you**:
+ * <your post>" or "replied to **bob**: <bob's post>".
  */
 export function ReplyContext({
   parent,
@@ -195,6 +196,13 @@ function ReplyContextPost({
   const moderationOpts = useModerationOpts()
   const name = forceLTR(useDisplayName(post.author))
   const isViewer = post.author.did === currentAccount?.did
+  const subject = isViewer
+    ? l({
+        message: 'you',
+        comment:
+          'Emphasised in “replied to you: ...”, in a notification where someone replied to the viewer’s own post',
+      })
+    : name
 
   const isHidden = moderationOpts
     ? moderatePost(post, moderationOpts).ui('contentList').blur
@@ -241,20 +249,16 @@ function ReplyContextPost({
     )
 
   if (variant === 'reply') {
-    return isViewer ? (
-      <Trans>replied to: {previewNode}</Trans>
-    ) : (
+    return (
       <Trans>
-        replied to <Strong style={a.text_sm}>{name}</Strong>: {previewNode}
+        replied to <Strong style={a.text_sm}>{subject}</Strong>: {previewNode}
       </Trans>
     )
   }
 
-  return isViewer ? (
-    <Trans>in reply to: {previewNode}</Trans>
-  ) : (
+  return (
     <Trans>
-      in reply to <Strong style={a.text_sm}>{name}</Strong>: {previewNode}
+      in reply to <Strong style={a.text_sm}>{subject}</Strong>: {previewNode}
     </Trans>
   )
 }
