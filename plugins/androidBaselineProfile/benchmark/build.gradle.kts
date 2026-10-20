@@ -45,6 +45,12 @@ kotlin {
     }
 }
 
+// Resolving the app to test needs the repositories its build.gradle adds, such as bitdrift's
+evaluationDependsOn(":app")
+repositories {
+    project(":app").repositories.withType<MavenArtifactRepository>().forEach { maven(it.url) }
+}
+
 androidComponents {
     // Macrobenchmark refuses to measure a debuggable app, so only keep the variant that targets `benchmark`
     beforeVariants(selector().all()) {

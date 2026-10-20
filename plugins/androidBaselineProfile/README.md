@@ -56,14 +56,22 @@ pnpm android:benchmark -Pbsky.baselineProfile=false
 
 ```sh
 pnpm android:baseline-profile
+pnpm android:baseline-profile:update
 ```
 
-This builds the app without R8 (`-Pbsky.benchmark.minify=false`), since R8
-renames the classes a profile has to name, runs `BaselineProfileGenerator` and
-writes what it recorded to `profiles/app.txt` with `updateProfile.mjs`. That
-marks every method hot, startup and post-startup (`HSP`), because Android 14
-and older only compile methods marked hot at install, and ART marks few of the
-methods it records as hot.
+The first builds the app without R8 (`-Pbsky.benchmark.minify=false`), since
+R8 renames the classes a profile has to name, and runs
+`BaselineProfileGenerator`. The second writes what it recorded to
+`profiles/app.txt` with `updateProfile.mjs`, which marks every method hot,
+startup and post-startup (`HSP`), because Android 14 and older only compile
+methods marked hot at install, and ART marks few of the methods it records as
+hot.
 
 Re-run `pnpm android:benchmark` afterwards: compiling more code isn't free, and
-a profile that covers too much can make startup slower.
+a profile that covers too much can make startup slower. That run also rebuilds
+the app with R8 again.
+
+Macrobenchmark refuses to run below 25% battery, among other checks. Recording
+doesn't depend on timing, so it can skip a check with
+`-Pandroid.testInstrumentationRunnerArguments.androidx.benchmark.suppressErrors=LOW-BATTERY`.
+Don't skip them for timing runs.
