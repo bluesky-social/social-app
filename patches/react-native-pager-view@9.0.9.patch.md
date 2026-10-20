@@ -1,38 +1,12 @@
-# react-native-pager-view+9.0.8.patch
+# react-native-pager-view+9.0.9.patch
 
-Carries two upstream Android changes that are not in the 9.0.8 release, one
-local Android fix, and two iOS changes. The Android parts only touch
-`android/src/main/java/com/reactnativepagerview/ComposePagerView.kt`. Drop each
-part once a release contains it.
+Carries one local Android fix and two iOS changes. The Android part only
+touches `android/src/main/java/com/reactnativepagerview/ComposePagerView.kt`.
+Drop each part once a release contains it.
 
-## Let nested horizontal ScrollViews scroll inside a page
-
-Upstream PR https://github.com/callstack/react-native-pager-view/pull/1182
-(merged 2026-10-15), fixing
-https://github.com/callstack/react-native-pager-view/issues/1156.
-
-The 9.0 Jetpack Compose pager claimed every horizontal swipe, so a React
-Native horizontal `ScrollView` inside a page (feed interstitials, Explore
-pills) never scrolled. When a drag crosses the touch slop along the pager
-axis, the pager now hit-tests the page under the finger for a view that can
-scroll in that direction and, if it finds one, asks its parent to stop
-intercepting so the child keeps the touch. The same lookup replaces the old
-nested-pager coordination, which only knew about other `ComposePagerView`s.
-
-## Cancel the JS touch when the pager starts dragging
-
-Upstream PR https://github.com/callstack/react-native-pager-view/pull/1183
-(open as of 2026-10-15). It restores a behaviour the ViewPager2 host had in
-8.x: once the drag crosses the touch slop, call
-`NativeGestureUtil.notifyNativeGestureStarted` so React Native sends
-`touchcancel` to JS. Without it a swipe that starts on a `Pressable` still
-fires `onPress` on release, which in this app means swiping between feeds
-from a post card can open the post. `notifyNativeGestureEnded` is sent on
-`ACTION_UP`.
-
-The notification lives in `onInterceptTouchEvent`, which Android stops
-calling once a child has claimed the touch, so it only fires when the pager
-itself is dragging.
+Upstream PRs #1182 (nested horizontal ScrollViews inside a page) and #1183
+(cancel the JS touch when the pager starts dragging) were carried here until
+they shipped in 9.0.9.
 
 ## Keep the pager's Compose state out of the host's saved state
 
