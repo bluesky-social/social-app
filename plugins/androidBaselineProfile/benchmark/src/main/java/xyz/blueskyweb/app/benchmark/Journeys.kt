@@ -1,6 +1,8 @@
 package xyz.blueskyweb.app.benchmark
 
+import android.app.KeyguardManager
 import androidx.benchmark.macro.MacrobenchmarkScope
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Direction
 import androidx.test.uiautomator.Until
@@ -23,6 +25,11 @@ private val FEED_LIST = By.res(Pattern.compile(".*FeedPage-feed-flatlist"))
  * device once before running anything.
  */
 fun MacrobenchmarkScope.startAndWaitForFeed() {
+    // Behind the lock screen the app never draws, which Macrobenchmark reports as an unconfirmed launch
+    val keyguard = InstrumentationRegistry.getInstrumentation().context.getSystemService(KeyguardManager::class.java)
+    check(device.isScreenOn && !keyguard.isKeyguardLocked) {
+        "The device is asleep or locked. Unlock it, and turn on Stay awake in Developer options."
+    }
     pressHome()
     startActivityAndWait()
     check(device.wait(Until.hasObject(FEED_ITEM), 30_000)) {
