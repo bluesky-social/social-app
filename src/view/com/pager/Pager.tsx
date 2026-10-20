@@ -23,6 +23,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import {scheduleOnRN} from 'react-native-worklets'
+import {updateActiveVideoViewAsync} from '@bsky.app/video'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {useSetDrawerSwipeDisabled} from '#/state/shell'
@@ -124,6 +125,14 @@ export function Pager({
     onPageScrollStateChanged(e: PageScrollStateChangedNativeEventData) {
       'worklet'
       scheduleOnRN(setIsIdle, e.pageScrollState === 'idle')
+      if (e.pageScrollState === 'idle') {
+        /*
+         * Adjacent pages stay attached to the window, so their videos are not
+         * torn down when paged away from. Re-pick the active video once the
+         * pager settles so the one on the old page stops.
+         */
+        scheduleOnRN(updateActiveVideoViewAsync)
+      }
       if (dragState.get() === 'idle' && e.pageScrollState === 'settling') {
         // This is a programmatic scroll on Android.
         // Stay "idle" to match iOS and avoid confusing downstream code.
