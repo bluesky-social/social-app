@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Lets Macrobenchmark look up the app's launch intent on Android 11+ -->
+    <queries>
+        <package android:name="xyz.blueskyweb.app" />
+    </queries>
+</manifest>
