@@ -197,6 +197,9 @@ importers:
 
   .:
     dependencies:
+      '@atproto-labs/fetch-node':
+        specifier: ^0.4.2
+        version: 0.4.2
       '@atproto/api':
         specifier: 0.20.13
         version: 0.20.13
@@ -248,6 +251,18 @@ importers:
         version: 6.0.3
 
 packages:
+
+  '@atproto-labs/fetch-node@0.4.2':
+    resolution: {integrity: sha512-LGf1LzUj9u8f+CwVIqsr06h4NEhzzuKDCf7T6A16WX29zsD/+XCRp0DnMbpjUVas0hzbNlMlpGAzpy2BMFq4wQ==}
+    engines: {node: '>=22'}
+
+  '@atproto-labs/fetch@0.4.0':
+    resolution: {integrity: sha512-9HEcZuCU4nWAzV3XZ7nwbDPdV8tbhICzyYeyE5SPHTPuuKS6C3i5WOdwGP1diCCUaYF3Vadw5ArVlQPtXnn73w==}
+    engines: {node: '>=22'}
+
+  '@atproto-labs/pipe@0.2.4':
+    resolution: {integrity: sha512-n67jCcrC+ouAeO10cWkpPzzLMlDi/lDCU30Us+LGqhOPhT6c4t5ASdBLQi9W3jUQtRzQBt3G9zipF+xKWNvVbw==}
+    engines: {node: '>=22'}
 
   '@atproto/api@0.20.13':
     resolution: {integrity: sha512-AN7NTUsygHXnXs5Cnc6v7/BAjQydwAhE0P8hL21RpIAB4fmTksRKTU3TV//wPg4fk9ESsfNwGIAlwoybbyoZKg==}
@@ -830,6 +845,10 @@ packages:
     resolution: {integrity: sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==}
     engines: {node: '>= 0.10'}
 
+  ipaddr.js@2.5.0:
+    resolution: {integrity: sha512-aq+t5NAc+cS6rZQQVWC2x98CPqGtKKTMDd4Gaodv0wShnItdKg/51djkGJ1hqH+Oy0ivDftCbSLCQob8zso01w==}
+    engines: {node: '>= 10'}
+
   iso-datestring-validator@2.2.2:
     resolution: {integrity: sha512-yLEMkBbLZTlVQqOnQ4FiMujR6T4DEcCb1xizmvXS+OxuhwcbtynoosRzdMA69zZCShCNAbi+gJ71FxZBBXx1SA==}
 
@@ -1110,6 +1129,18 @@ packages:
   undici-types@7.16.0:
     resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
 
+  undici@6.29.1:
+    resolution: {integrity: sha512-EvRlUt/QqAEvXdQeRMYUfwOQsfzpDztykrG2owGEE/rBOBoYv9uF39ZzsNDh4lTFHhTr2XOZjKkYgueD12ZmGA==}
+    engines: {node: '>=18.17'}
+
+  undici@7.30.1:
+    resolution: {integrity: sha512-03KrMbjIFDWQR5RNPrSw3bd1r12JpyFQl9/yxjUbJtqkjmllqC5lFjZh6ujeuJCKr8EOQvRW872Oy/az+nLYxg==}
+    engines: {node: '>=20.18.1'}
+
+  undici@8.12.3:
+    resolution: {integrity: sha512-+fdndUTwBP86cVjihTp21hZHo7d6oj1c/47XPA3lL8mM0XHs+C4EkcjmgRsFnFk2f/UONGDy9ItBItmXsLOQHw==}
+    engines: {node: '>=22.19.0'}
+
   unicode-segmenter@0.14.5:
     resolution: {integrity: sha512-jHGmj2LUuqDcX3hqY12Ql+uhUTn8huuxNZGq7GvtF6bSybzH3aFgedYu/KTzQStEgt1Ra2F3HxadNXsNjb3m3g==}
 
@@ -1143,6 +1174,21 @@ packages:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
 snapshots:
+
+  '@atproto-labs/fetch-node@0.4.2':
+    dependencies:
+      '@atproto-labs/fetch': 0.4.0
+      '@atproto-labs/pipe': 0.2.4
+      ipaddr.js: 2.5.0
+      undici_v6: undici@6.29.1
+      undici_v7: undici@7.30.1
+      undici_v8: undici@8.12.3
+
+  '@atproto-labs/fetch@0.4.0':
+    dependencies:
+      '@atproto-labs/pipe': 0.2.4
+
+  '@atproto-labs/pipe@0.2.4': {}
 
   '@atproto/api@0.20.13':
     dependencies:
@@ -1689,6 +1735,8 @@ snapshots:
 
   ipaddr.js@1.9.1: {}
 
+  ipaddr.js@2.5.0: {}
+
   iso-datestring-validator@2.2.2: {}
 
   jsonfile@4.0.0:
@@ -1996,6 +2044,12 @@ snapshots:
       multiformats: 13.4.2
 
   undici-types@7.16.0: {}
+
+  undici@6.29.1: {}
+
+  undici@7.30.1: {}
+
+  undici@8.12.3: {}
 
   unicode-segmenter@0.14.5: {}
 
