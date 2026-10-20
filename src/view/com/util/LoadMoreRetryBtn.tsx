@@ -1,10 +1,8 @@
-import {StyleSheet} from 'react-native'
-
-import {usePalette} from '#/lib/hooks/usePalette'
 import {emitNetworkRetry} from '#/state/events'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateIcon} from '#/components/icons/ArrowRotate'
-import {Button} from './forms/Button'
-import {Text} from './text/Text'
+import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateIcon} from '#/components/icons/Arrow'
+import {Text} from '#/components/Typography'
 
 export function LoadMoreRetryBtn({
   label,
@@ -13,10 +11,10 @@ export function LoadMoreRetryBtn({
   label: string
   onPress: () => void
 }) {
-  const pal = usePalette('default')
+  const t = useTheme()
   return (
     <Button
-      type="default-light"
+      label={label}
       onPress={() => {
         /*
          * If we think we're offline, queries are paused and the retry would
@@ -25,24 +23,27 @@ export function LoadMoreRetryBtn({
         emitNetworkRetry()
         onPress()
       }}
-      style={styles.loadMoreRetry}>
-      <ArrowRotateIcon width={18} style={pal.textLight} />
-      <Text style={[pal.textLight, styles.label]}>{label}</Text>
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.gap_md,
+        a.px_xl,
+        a.py_md,
+        a.border_t,
+        t.atoms.bg,
+        t.atoms.border_contrast_low,
+      ]}
+      hoverStyle={t.atoms.bg_contrast_25}>
+      <ArrowRotateIcon size="md" fill={t.atoms.text_contrast_medium.color} />
+      <Text
+        style={[
+          a.flex_1,
+          a.text_md,
+          a.leading_snug,
+          t.atoms.text_contrast_medium,
+        ]}>
+        {label}
+      </Text>
     </Button>
   )
 }
-
-const styles = StyleSheet.create({
-  loadMoreRetry: {
-    flexDirection: 'row',
-    gap: 14,
-    alignItems: 'center',
-    borderRadius: 0,
-    marginTop: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-  },
-  label: {
-    flex: 1,
-  },
-})
