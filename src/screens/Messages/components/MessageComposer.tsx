@@ -19,6 +19,7 @@ import {useLingui} from '@lingui/react/macro'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
+import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {isBskyChatInviteUrl, isBskyPostUrl} from '#/lib/strings/url-helpers'
@@ -324,36 +325,37 @@ function SubmitButton({
   const t = useTheme()
 
   return (
-    <GlassView
-      isInteractive
-      glassEffectStyle="regular"
-      style={[a.rounded_full]}
-      tintColor={disabled ? t.palette.contrast_100 : t.palette.primary_500}
-      fallbackStyle={{
-        backgroundColor: disabled
-          ? t.palette.contrast_100
-          : t.palette.primary_500,
-      }}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={l`Send message`}
-        accessibilityHint=""
-        hitSlop={HITSLOP_10}
-        style={[
-          a.rounded_full,
-          a.align_center,
-          a.justify_center,
-          {height: MIN_HEIGHT, width: MIN_HEIGHT},
-        ]}
-        onPress={onPress}
-        disabled={disabled}>
-        {loading ? (
-          <Loader size="md" fill={t.palette.white} style={[a.mb_2xs]} />
-        ) : (
-          <PaperPlaneIcon size="md" fill={t.palette.white} style={[a.mb_2xs]} />
-        )}
-      </Pressable>
-    </GlassView>
+    <PressableScale
+      accessibilityRole="button"
+      accessibilityLabel={l`Send message`}
+      accessibilityHint=""
+      hitSlop={HITSLOP_10}
+      targetScale={0.95}
+      style={[
+        a.rounded_full,
+        a.align_center,
+        a.justify_center,
+        {height: MIN_HEIGHT, width: MIN_HEIGHT},
+      ]}
+      onPress={onPress}
+      disabled={disabled}>
+      <GlassView
+        pointerEvents="none"
+        glassEffectStyle="regular"
+        style={[a.absolute, a.inset_0, a.rounded_full]}
+        tintColor={disabled ? t.palette.contrast_100 : t.palette.primary_500}
+        fallbackStyle={{
+          backgroundColor: disabled
+            ? t.palette.contrast_100
+            : t.palette.primary_500,
+        }}
+      />
+      {loading ? (
+        <Loader size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+      ) : (
+        <PaperPlaneIcon size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+      )}
+    </PressableScale>
   )
 }
 
