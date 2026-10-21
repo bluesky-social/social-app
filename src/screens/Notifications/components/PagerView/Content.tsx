@@ -126,8 +126,15 @@ export function Content({
         event.eventName.endsWith('onPageSelected') &&
         'position' in event
       ) {
+        /*
+         * Only seed the initial page. iOS selects the next page as soon as a
+         * drag passes the midpoint, so setting it later would snap the
+         * progress to a whole page for a frame mid-swipe.
+         */
+        if (!didInit.get()) {
+          dragProgress.set(event.position)
+        }
         didInit.set(true)
-        dragProgress.set(event.position)
         scheduleOnRN(handlePageSelected, event.position)
       }
     },
