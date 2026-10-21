@@ -48,7 +48,6 @@ import {ShowLessFollowup} from '#/view/com/posts/ShowLessFollowup'
 import {ViewFullThread} from '#/view/com/posts/ViewFullThread'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListRef} from '#/view/com/util/List'
-import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {atoms as a, useBreakpoints, useLayoutBreakpoints, useTheme} from '#/alf'
@@ -64,6 +63,7 @@ import {
 import {FeedTrendingTopicsInterstitial} from '#/components/interstitials/FeedTrendingTopics'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
 import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
+import {PostFeedSkeleton} from '#/components/PostFeedSkeleton'
 import {RichText} from '#/components/RichText'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
@@ -1103,7 +1103,7 @@ let PostFeed = ({
           />
         )
       } else if (row.type === 'loading') {
-        return <PostFeedLoadingPlaceholder />
+        return <PostFeedSkeleton />
       } else if (row.type === 'feedShutdownMsg') {
         return <FeedShutdownMsg feedUri={feedUriOrActorDid} />
       } else if (row.type === 'description') {
