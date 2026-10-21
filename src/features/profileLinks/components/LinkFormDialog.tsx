@@ -214,10 +214,13 @@ function LinkFormInner({
     const isNewDestination = targetUrl !== link?.url
     // a saved link has proven itself; only check new destinations
     const needsCheck = isNewDestination && reachability === 'unchecked'
-    const keptIcon = isNewDestination ? undefined : link?.icon
-    // support links use bundled logos instead
-    const needsIcon = !provider && !keptIcon
-    let icon = keptIcon
+    /*
+     * Fetch the icon on every save, not just for new links, so editing a link
+     * picks up a favicon the site has changed. If that fails, an edit keeps
+     * the icon it had. Support links use bundled logos instead.
+     */
+    const needsIcon = !provider
+    let icon = isNewDestination ? undefined : link?.icon
     let iconUrl = isNewDestination ? undefined : link?.iconUrl
     if (needsCheck || needsIcon || isNewDestination) {
       setReachability('checking')
