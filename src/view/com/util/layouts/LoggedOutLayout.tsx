@@ -4,6 +4,7 @@ import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {atoms as a, BreakpointWidthContext} from '#/alf'
+import {CENTER_COLUMN_WIDTH} from '#/components/Layout'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {Text} from '../text/Text'
 
@@ -32,12 +33,16 @@ export const LoggedOutLayout = ({
   if (IS_NATIVE || isMobile) {
     const content = (
       <BreakpointWidthContext
-        value={IS_NATIVE ? Math.min(width, 600) : undefined}>
+        value={IS_NATIVE ? Math.min(width, CENTER_COLUMN_WIDTH) : undefined}>
         <View
           style={[
             scrollable && a.flex_1,
             a.pt_lg,
-            IS_NATIVE && [a.w_full, a.self_center, {maxWidth: 600}],
+            IS_NATIVE && [
+              a.w_full,
+              a.self_center,
+              {maxWidth: CENTER_COLUMN_WIDTH},
+            ],
           ]}>
           {children}
         </View>
