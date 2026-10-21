@@ -40,11 +40,15 @@ import {
 } from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {getCurrentState, useOnAppStateChange} from '#/lib/appState'
 import {HITSLOP_20} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {hasPlaybackStarted} from '#/lib/media/video/analytics'
+import {
+  createPlaybackDurationTracker,
+  hasPlaybackStarted,
+} from '#/lib/media/video/analytics'
 import {
   createPlaybackTelemetry,
   type PlaybackTelemetry,
@@ -635,10 +639,44 @@ function VideoItemInner({
     ReportDialogMetadataContext.useReportDialogMetadataContext()
   const ax = useAnalytics()
   const playbackStartTrackedRef = useRef(false)
+  const [durationTracker] = useState(() => {
+    const tracker = createPlaybackDurationTracker({
+      enabled: embed.presentation !== 'gif',
+      onSegment: segment => {
+        ax.metric('video:playback:duration', {
+          ...segment,
+          postUri: post.uri,
+          postAuthorDid: post.author.did,
+          context: 'immersiveFeed',
+          presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+        })
+      },
+    })
+    tracker.setForeground(getCurrentState() === 'active')
+    return tracker
+  })
 
-  usePlaybackTelemetry({player, active, playlist: embed.playlist})
+  useOnAppStateChange(state => {
+    durationTracker.setForeground(state === 'active')
+  })
+
+  useEffect(() => {
+    durationTracker.setActive(active)
+  }, [active, durationTracker])
+
+  useEffect(() => {
+    return () => durationTracker.flush('unmounted')
+  }, [durationTracker])
+
+  usePlaybackTelemetry({
+    player,
+    active,
+    playlist: embed.playlist,
+    presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+  })
 
   useEventListener(player, 'timeUpdate', evt => {
+    durationTracker.observeProgress(evt.currentTime)
     if (IS_ANDROID && !isReady && evt.currentTime >= 0.05) {
       setIsReady(true)
     }
@@ -671,6 +709,14 @@ function VideoItemInner({
     }
   })
 
+  useEventListener(player, 'playingChange', evt => {
+    durationTracker.setPlaying(evt.isPlaying)
+  })
+
+  useEventListener(player, 'statusChange', evt => {
+    if (evt.status === 'error') durationTracker.flush('error')
+  })
+
   return (
     <VideoView
       accessible={false}
@@ -701,10 +747,12 @@ function usePlaybackTelemetry({
   player,
   active,
   playlist,
+  presentation,
 }: {
   player: VideoPlayer
   active: boolean
   playlist: string
+  presentation: 'video' | 'gif'
 }) {
   const ax = useAnalytics()
   const telemetryRef = useRef<PlaybackTelemetry | null>(null)
@@ -714,7 +762,7 @@ function usePlaybackTelemetry({
     if (telemetryRef.current == null) {
       telemetryRef.current = createPlaybackTelemetry({
         surface: 'immersiveFeed',
-        presentation: 'video',
+        presentation,
       })
     }
     const telemetry = telemetryRef.current
@@ -726,7 +774,7 @@ function usePlaybackTelemetry({
     return () => {
       telemetry.deactivated()
     }
-  }, [active, player])
+  }, [active, player, presentation])
 
   useEventListener(player, 'statusChange', evt => {
     if (evt.status === 'readyToPlay') {
@@ -741,7 +789,7 @@ function usePlaybackTelemetry({
       if (active) {
         ax.metric('video:playback:failed', {
           surface: 'immersiveFeed',
-          presentation: 'video',
+          presentation,
           errorClass: 'PlayerError',
           errorMessage: message.slice(0, 256),
           playlist,
