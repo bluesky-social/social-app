@@ -63,7 +63,7 @@ export function SearchHistory({
               a.px_lg,
               a.pt_sm,
             ]}>
-            <Text style={[a.text_md, a.font_semi_bold]}>
+            <Text style={[a.flex_1, a.text_md, a.font_semi_bold]}>
               <Trans>Recent searches</Trans>
             </Text>
             {totalCount > 1 && (
@@ -72,6 +72,7 @@ export function SearchHistory({
                 onPress={() => clearAllPromptControl.open()}
                 size="tiny"
                 color="secondary"
+                style={[a.flex_shrink_0]}
                 testID="searchHistoryClearAllBtn">
                 <ButtonText>
                   <Trans context="action">Clear all</Trans>
@@ -145,13 +146,7 @@ export function SearchHistory({
         control={clearAllPromptControl}
         title={l`Clear all recent searches?`}
         description={l`This can’t be undone, and all of your recent searches will be removed.`}
-        onConfirm={() => {
-          ax.metric('search:recent:clearAll', {
-            termCount: searchHistory.length,
-            profileCount: selectedProfiles.length,
-          })
-          onClearAll()
-        }}
+        onConfirm={onClearAll}
         confirmButtonCta={l({message: 'Clear', context: 'action'})}
         cancelButtonCta={l`Cancel`}
         confirmButtonColor="negative"
