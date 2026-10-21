@@ -9,6 +9,7 @@ import {
 
 import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {getMessagesNavigationAction} from '#/lib/routes/navigation'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -234,7 +235,13 @@ function RequestList({
                           if (navigation.canGoBack()) {
                             navigation.goBack()
                           } else {
-                            navigation.navigate('Messages', {animation: 'pop'})
+                            navigation.dispatch(
+                              getMessagesNavigationAction(
+                                {animation: 'pop'},
+                                navigation.getState(),
+                                'navigate',
+                              ),
+                            )
                           }
                         },
                         size: 'small',

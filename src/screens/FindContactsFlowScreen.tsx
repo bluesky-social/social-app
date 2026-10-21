@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import {usePreventRemove} from '@react-navigation/native'
 
 import {
-  type AllNavigatorParams,
+  type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {useEnableMinimalShellMode} from '#/state/shell'
@@ -16,7 +16,7 @@ import * as Layout from '#/components/Layout'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {IS_NATIVE} from '#/env'
 
-type Props = NativeStackScreenProps<AllNavigatorParams, 'FindContactsFlow'>
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'FindContactsFlow'>
 export function FindContactsFlowScreen({navigation}: Props) {
   const {_} = useLingui()
 

@@ -13,6 +13,7 @@ import {batchedUpdates} from '#/lib/batchedUpdates'
 import {HITSLOP_20} from '#/lib/constants'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {makeProfileLink, makeStarterPackLink} from '#/lib/routes/links'
+import {getHomeNavigationAction} from '#/lib/routes/navigation'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
@@ -537,7 +538,9 @@ function OverflowMenu({
         if (navigation.canGoBack()) {
           navigation.popToTop()
         } else {
-          navigation.navigate('Home')
+          navigation.dispatch(
+            getHomeNavigationAction(navigation.getState(), 'navigate'),
+          )
         }
       })
     },
@@ -817,7 +820,9 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
-      navigation.replace('Home')
+      navigation.dispatch(
+        getHomeNavigationAction(navigation.getState(), 'replace'),
+      )
     }
   }
 

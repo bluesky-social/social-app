@@ -49,6 +49,7 @@ import {
   createPlaybackTelemetry,
   type PlaybackTelemetry,
 } from '#/lib/media/video/playbackTelemetry'
+import {getHomeNavigationAction} from '#/lib/routes/navigation'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
@@ -1304,7 +1305,9 @@ function EndMessage() {
           if (navigation.canGoBack()) {
             navigation.goBack()
           } else {
-            navigation.navigate('Home')
+            navigation.dispatch(
+              getHomeNavigationAction(navigation.getState(), 'navigate'),
+            )
           }
         }}
         variant="solid"

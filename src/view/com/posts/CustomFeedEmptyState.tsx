@@ -6,6 +6,7 @@ import {useNavigation} from '@react-navigation/native'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
+import {getTabNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
@@ -48,7 +49,7 @@ export function CustomFeedEmptyState() {
     if (IS_WEB) {
       navigation.navigate('Search', {})
     } else {
-      navigation.navigate('SearchTab')
+      navigation.dispatch(getTabNavigationAction('Search'))
       navigation.popToTop()
     }
   }, [navigation])
