@@ -12,11 +12,6 @@ import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/B
 import {Text} from '#/components/Typography'
 import {IS_E2E, IS_IPAD} from '#/env'
 
-/*
- * Only builds that support tablets report `IS_IPAD` (an iPhone-only build
- * running on an iPad reports the phone idiom), and for now those are the dev
- * and TestFlight builds, see `supportsTablet` in app.config.js.
- */
 export const enabled = createIsEnabledCheck(() => IS_IPAD && !IS_E2E)
 
 export function IPadBetaAnnouncement() {
