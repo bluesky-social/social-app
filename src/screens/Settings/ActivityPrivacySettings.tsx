@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {
-  type AllNavigatorParams,
+  type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {
@@ -22,7 +22,7 @@ import * as SettingsList from './components/SettingsList'
 import {ItemTextWithSubtitle} from './NotificationSettings/components/ItemTextWithSubtitle'
 
 type Props = NativeStackScreenProps<
-  AllNavigatorParams,
+  CommonNavigatorParams,
   'ActivityPrivacySettings'
 >
 export function ActivityPrivacySettingsScreen({}: Props) {
