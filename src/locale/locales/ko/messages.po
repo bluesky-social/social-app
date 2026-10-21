@@ -9020,11 +9020,11 @@ msgstr "새로 만들기"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:580
 msgid "New {count, plural, one {post} other {posts}} from {name}"
-msgstr "{name} 님의 새 게시물"
+msgstr "{name} 님의 {count, plural, other {새 게시물}}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:604
 msgid "New {count, plural, one {post} other {posts}} from <0/>"
-msgstr "<0/> 님의 새 게시물"
+msgstr "<0/> 님의 {count, plural, other {새 게시물}}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:551
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
