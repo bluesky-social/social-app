@@ -1,4 +1,8 @@
-import {type NavigationState, type PartialState} from '@react-navigation/native'
+import {
+  type NavigationState,
+  type NavigatorScreenParams,
+  type PartialState,
+} from '@react-navigation/native'
 import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
 
 import {type SearchFilters} from '#/screens/Search/searchParams'
@@ -108,17 +112,18 @@ export type CommonNavigatorParams = {
   FindContactsFlow: undefined
 }
 
-export type BottomTabNavigatorParams = CommonNavigatorParams & {
-  HomeTab: undefined
-  SearchTab: undefined
-  NotificationsTab: undefined
-  MyProfileTab: undefined
-  MessagesTab: undefined
-  AtmosphereTab: undefined
-  FeedsTab: undefined
-  ListsTab: undefined
-  BookmarksTab: undefined
-  SettingsTab: undefined
+export type BottomTabNavigatorParams = {
+  HomeTab: NavigatorScreenParams<HomeTabNavigatorParams> | undefined
+  SearchTab: NavigatorScreenParams<SearchTabNavigatorParams> | undefined
+  NotificationsTab:
+    NavigatorScreenParams<NotificationsTabNavigatorParams> | undefined
+  MyProfileTab: NavigatorScreenParams<MyProfileTabNavigatorParams> | undefined
+  MessagesTab: NavigatorScreenParams<MessagesTabNavigatorParams> | undefined
+  AtmosphereTab: NavigatorScreenParams<CommonNavigatorParams> | undefined
+  FeedsTab: NavigatorScreenParams<CommonNavigatorParams> | undefined
+  ListsTab: NavigatorScreenParams<CommonNavigatorParams> | undefined
+  BookmarksTab: NavigatorScreenParams<CommonNavigatorParams> | undefined
+  SettingsTab: NavigatorScreenParams<CommonNavigatorParams> | undefined
 }
 
 export type HomeTabNavigatorParams = CommonNavigatorParams & {
@@ -138,11 +143,13 @@ export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type MessagesTabNavigatorParams = CommonNavigatorParams & {
-  Messages: {
-    pushToConversation?: string
-    pushToNewGroupChat?: boolean
-    animation?: 'push' | 'pop'
-  }
+  Messages:
+    | {
+        pushToConversation?: string
+        pushToNewGroupChat?: boolean
+        animation?: 'push' | 'pop'
+      }
+    | undefined
 }
 
 export type FlatNavigatorParams = CommonNavigatorParams & {
@@ -157,32 +164,12 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
   }
 }
 
-export type AllNavigatorParams = CommonNavigatorParams & {
-  HomeTab: undefined
-  Home: undefined
-  SearchTab: undefined
-  Search: SearchParams
-  Feeds: undefined
-  NotificationsTab: undefined
-  Notifications: undefined
-  MyProfileTab: undefined
-  MessagesTab: undefined
-  AtmosphereTab: undefined
-  FeedsTab: undefined
-  ListsTab: undefined
-  BookmarksTab: undefined
-  SettingsTab: undefined
-  Messages: {
-    pushToConversation?: string
-    pushToNewGroupChat?: boolean
-    animation?: 'push' | 'pop'
-  }
-}
+export type AllNavigatorParams = FlatNavigatorParams & BottomTabNavigatorParams
 
-// NOTE
-// this isn't strictly correct but it should be close enough
-// a TS wizard might be able to get this 100%
-// -prf
+/**
+ * Shared navigation across the web stack and native tab stacks. Destination
+ * params are checked, but stack helpers are not scoped to the current navigator.
+ */
 export type NavigationProp = NativeStackNavigationProp<AllNavigatorParams>
 
 export type State =
@@ -192,5 +179,5 @@ export type RouteParams = Record<string, string>
 export type MatchResult = {params: RouteParams}
 export type Route = {
   match: (path: string) => MatchResult | undefined
-  build: (params?: Record<string, any>) => string
+  build: (params?: Record<string, unknown>) => string
 }
