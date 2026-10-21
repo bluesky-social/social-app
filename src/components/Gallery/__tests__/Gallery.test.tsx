@@ -769,9 +769,9 @@ describe('Gallery.Bleed', () => {
   })
 
   it('shares one context with useGalleryBleed', () => {
-    let seen = 0
+    let seen: ReturnType<typeof Gallery.useGalleryBleed>['bleedRef'] | undefined
     function Probe() {
-      seen = Gallery.useGalleryBleed().bleedWidth
+      seen = Gallery.useGalleryBleed().bleedRef
       return null
     }
     render(
@@ -781,11 +781,16 @@ describe('Gallery.Bleed', () => {
         </View>
       </Gallery.Bleed>,
     )
-    expect(seen).toBe(0)
-    fireEvent(screen.getByTestId('bleed'), 'layout', {
-      nativeEvent: {layout: {x: 0, y: 0, width: 400, height: 50}},
-    })
-    expect(seen).toBe(400)
+    expect(seen?.current).toBeTruthy()
+  })
+
+  it('does not listen for layout itself', () => {
+    render(
+      <Gallery.Bleed>
+        <View testID="bleed" />
+      </Gallery.Bleed>,
+    )
+    expect(screen.getByTestId('bleed').props.onLayout).toBeUndefined()
   })
 
   it('clips the bleed container and keeps its own onLayout', () => {
@@ -810,8 +815,13 @@ describe('Gallery.Bleed', () => {
     }
     const measureLayout = jest
       .spyOn(viewProto, 'measureLayout')
-      .mockImplementation((_relativeTo, onSuccess) => {
-        onSuccess(16, 0, 368, 100)
+      .mockImplementation(function (this: unknown, relativeTo, onSuccess) {
+        // The bleed is measured against itself to get its width
+        if (relativeTo === this) {
+          onSuccess(0, 0, 400, 100)
+        } else {
+          onSuccess(16, 0, 368, 100)
+        }
       })
     render(
       <Gallery.Bleed>
@@ -822,9 +832,6 @@ describe('Gallery.Bleed', () => {
         </View>
       </Gallery.Bleed>,
     )
-    fireEvent(screen.getByTestId('bleed'), 'layout', {
-      nativeEvent: {layout: {x: 0, y: 0, width: 400, height: 100}},
-    })
     layout('gallery', 368, 100)
     const style = flat(scrollView().props.style)
     expect(style.width).toBe(400)

@@ -131,7 +131,7 @@ jest.mock('#/components/Gallery', () => {
   return {
     __esModule: true,
     Bleed: ({children}: {children: React.ReactNode}) => children,
-    useGalleryBleed: () => ({bleedRef: {current: null}, bleedWidth: 0}),
+    useGalleryBleed: () => ({bleedRef: {current: null}}),
     Root: ({
       children,
       ref,

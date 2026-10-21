@@ -117,25 +117,44 @@ export function Root({
    * ancestor, if any. This is a layout-relative measurement that doesn't
    * depend on scroll position, so it works correctly for off-screen items.
    */
-  const {bleedRef, bleedWidth} = useGalleryBleed()
+  const {bleedRef} = useGalleryBleed()
   const contentRef = useRef<React.ComponentRef<typeof View>>(null)
-  const [contentDims, setContentDims] = useState<{x: number; width: number}>()
+  const [contentDims, setContentDims] = useState<{
+    x: number
+    width: number
+    bleedWidth: number
+  }>()
   const measure = useNonReactiveCallback(() => {
-    if (contentRef.current && bleedRef.current) {
-      contentRef.current.measureLayout(
-        bleedRef.current,
+    const content = contentRef.current
+    const bleed = bleedRef.current
+    if (content && bleed) {
+      content.measureLayout(
+        bleed,
         (x, _y, w) => {
-          setContentDims(prev =>
-            prev && prev.x === x && prev.width === w ? prev : {x, width: w},
+          /*
+           * Measured against itself rather than with measure(), which on
+           * native applies ancestor transforms and would return a scaled width.
+           */
+          bleed.measureLayout(
+            bleed,
+            (_bx, _by, bleedWidth) => {
+              setContentDims(prev =>
+                prev &&
+                prev.x === x &&
+                prev.width === w &&
+                prev.bleedWidth === bleedWidth
+                  ? prev
+                  : {x, width: w, bleedWidth},
+              )
+            },
+            () => {},
           )
         },
         () => {},
       )
     }
   })
-  useEffect(() => {
-    measure()
-  }, [bleedWidth, measure])
+  const bleedWidth = contentDims?.bleedWidth ?? 0
   const isBleeding = bleedWidth > 0
   const insetLeft = isBleeding ? (contentDims?.x ?? 0) : 0
   const insetRight = isBleeding
