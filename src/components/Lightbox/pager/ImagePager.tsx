@@ -66,6 +66,11 @@ type ImagePlacement = {
 }
 
 const PORTRAIT_UP = ScreenOrientation.OrientationLock.PORTRAIT_UP
+/**
+ * iPhone keeps the app locked to portrait and only unlocks rotation while the
+ * lightbox is open. Everywhere else the whole app rotates.
+ */
+const IS_PORTRAIT_LOCKED = IS_IOS && !IS_IPAD
 const PIXEL_RATIO = PixelRatio.get()
 const AT_REST: ImagePlacement = {
   translateX: 0,
@@ -213,7 +218,7 @@ export default function ImageViewRoot({
   useAnimatedReaction(
     () => openProgress.get() === 1,
     (isOpen, wasOpen) => {
-      if (!IS_IOS || IS_IPAD) return
+      if (!IS_PORTRAIT_LOCKED) return
       if (isOpen && !wasOpen) {
         scheduleOnRN(ScreenOrientation.unlockAsync)
       } else if (!isOpen && wasOpen) {
@@ -327,10 +332,16 @@ function ImageView({
     return {pointerEvents: 'auto', opacity: 1}
   })
 
+  /*
+   * Rotating the lightbox on a portrait-locked iPhone rotates the app behind
+   * it too, into a layout it doesn't support, so keep that hidden.
+   */
+  const hidesAppBehind = IS_PORTRAIT_LOCKED && orientation === 'landscape'
+
   const backdropStyle = useAnimatedStyle(() => {
     const screenSize = measure(safeAreaRef)
     let opacity = 1
-    if (screenSize && orientation === 'portrait') {
+    if (screenSize && !hidesAppBehind) {
       opacity -= getDismissSwipeProgress(
         dismissSwipeTranslateY.get(),
         screenSize.height,
