@@ -28,8 +28,7 @@ export function LoadLatestBtn({
   const {hasSession} = useSession()
   const {isDesktop, isTablet, isMobile, isTabletOrMobile} = useWebMediaQueries()
   const {centerColumnOffset} = useLayoutBreakpoints()
-  const {height: windowHeight, width: windowWidth} = useWindowDimensions()
-  const centerColumnLeftOffset = centerColumnOffset ? CENTER_COLUMN_OFFSET : 0
+  const {width: windowWidth} = useWindowDimensions()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
   const insets = useSafeAreaInsets()
   const t = useTheme()
@@ -40,8 +39,7 @@ export function LoadLatestBtn({
   } = useInteractionState()
 
   // move button inline if it starts overlapping the left nav
-  const isTallViewportMedia = useMediaQuery({minHeight: 700})
-  const isTallViewport = IS_NATIVE ? windowHeight >= 700 : isTallViewportMedia
+  const isTallViewport = useMediaQuery({minHeight: 700})
 
   // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
@@ -66,13 +64,11 @@ export function LoadLatestBtn({
           (centerColumnOffset
             ? styles.loadLatestInlineOffset
             : styles.loadLatestInline),
-        IS_NATIVE &&
-          (isTablet || isDesktop) && {
-            left:
-              isDesktop && isTallViewport
-                ? windowWidth / 2 - 382
-                : windowWidth / 2 - 282 + centerColumnLeftOffset,
-          },
+        /*
+         * Always inline on native: the native left nav is a scroll view drawn
+         * above the screen, so it would swallow taps on the out-of-line spot.
+         */
+        IS_NATIVE && (isTablet || isDesktop) && {left: windowWidth / 2 - 282},
         bottomPosition,
         showBottomBar && fabMinimalShellTransform,
       ]}>
