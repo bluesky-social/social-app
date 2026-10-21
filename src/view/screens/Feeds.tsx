@@ -25,7 +25,6 @@ import {useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {List, type ListMethods} from '#/view/com/util/List'
-import {FeedFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
@@ -33,6 +32,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import * as FeedCard from '#/components/FeedCard'
+import {FeedCardListSkeleton} from '#/components/FeedCardSkeleton'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {IconCircle} from '#/components/IconCircle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
@@ -447,7 +447,7 @@ export function FeedsScreen(_props: Props) {
           </>
         )
       } else if (item.type === 'popularFeedsLoading') {
-        return <FeedFeedLoadingPlaceholder />
+        return <FeedCardListSkeleton />
       } else if (item.type === 'popularFeed') {
         return (
           <View style={[a.px_lg, a.pt_lg, a.gap_lg]}>
