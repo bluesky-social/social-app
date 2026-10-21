@@ -232,7 +232,6 @@ function StepCaptchaInner({
               url={url}
               stateParam={stateParam}
               state={state}
-              onComplete={() => setCompleted(true)}
               onSuccess={onSuccess}
               onError={onError}
               onSlow={onSlow}
