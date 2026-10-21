@@ -26,7 +26,11 @@ import {useQueryClient} from '@tanstack/react-query'
 import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {MagnifyingGlassIcon} from '#/lib/icons'
-import {type NavigationProp, type SearchParams} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+  type SearchParams,
+} from '#/lib/routes/types'
 import {listenSoftReset} from '#/state/events'
 import {
   unstableCacheProfileView,
@@ -113,7 +117,10 @@ export function SearchScreenShell({
   const ax = useAnalytics()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const navigation = useNavigation<NavigationProp>()
+  const navigation =
+    useNavigation<
+      NavigationProp<CommonNavigatorParams, 'Search' | 'ProfileSearch'>
+    >()
   const route = useRoute()
   const textInput = useRef<React.ComponentRef<typeof TextInput>>(null)
   const {t: l} = useLingui()
@@ -778,7 +785,10 @@ function useQueryManager({
   initialQuery: string
   fixedParams?: SearchFilters
 }) {
-  const navigation = useNavigation<NavigationProp>()
+  const navigation =
+    useNavigation<
+      NavigationProp<CommonNavigatorParams, 'Search' | 'ProfileSearch'>
+    >()
   const route = useRoute()
 
   // A raw Me operator remains part of the query until the advanced dialog

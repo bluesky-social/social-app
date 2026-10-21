@@ -45,7 +45,10 @@ export type MessageEmbedState =
 export function useMessageEmbed() {
   const route =
     useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>()
-  const navigation = useNavigation<NavigationProp>()
+  const navigation =
+    useNavigation<
+      NavigationProp<CommonNavigatorParams, 'MessagesConversation'>
+    >()
   const embedFromParams = route.params.embed
 
   const [embed, setEmbed] = useState<MessageEmbedState | undefined>(

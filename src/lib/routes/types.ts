@@ -1,6 +1,9 @@
 import {
+  type CompositeNavigationProp,
+  type NavigationProp as BaseNavigationProp,
   type NavigationState,
   type NavigatorScreenParams,
+  type ParamListBase,
   type PartialState,
 } from '@react-navigation/native'
 import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
@@ -166,11 +169,25 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
 
 export type AllNavigatorParams = FlatNavigatorParams & BottomTabNavigatorParams
 
+/** Shared root navigation without assuming a native tab or web stack router. */
+export type RootNavigationProp = BaseNavigationProp<AllNavigatorParams>
+
 /**
- * Shared navigation across the web stack and native tab stacks. Destination
- * params are checked, but stack helpers are not scoped to the current navigator.
+ * Stack navigation with access to native parent tab destinations. Only the
+ * parent's common navigation methods are included because shared callers also
+ * run on web, where there is no tab navigator.
+ *
+ * Pass the current stack and route to scope stack helpers and param updates.
+ * The default retains all web leaf routes for shared callers whose native
+ * stack is not known, but excludes tab routes from stack helpers.
  */
-export type NavigationProp = NativeStackNavigationProp<AllNavigatorParams>
+export type NavigationProp<
+  ParamList extends ParamListBase = FlatNavigatorParams,
+  RouteName extends keyof ParamList & string = keyof ParamList & string,
+> = CompositeNavigationProp<
+  NativeStackNavigationProp<ParamList, RouteName>,
+  BaseNavigationProp<BottomTabNavigatorParams>
+>
 
 export type State =
   NavigationState | Omit<PartialState<NavigationState>, 'stale'>
