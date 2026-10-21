@@ -558,12 +558,23 @@ function NotificationsHeader({
       {/*
        * On native, the background fades out under the header, down to the
        * bottom of the pills as they move up. On web, the title and the pills
-       * each have their own background
+       * each have their own background. On tablets it stays inside the center
+       * column, like `NativeCenterBorders`, so it doesn't cover the column's
+       * borders or the scroll indicator at the edge of the screen
        */}
       {!IS_WEB && (
         <Animated.View
           pointerEvents="none"
-          style={[a.absolute, a.inset_0, {transformOrigin: 'top'}, fadeStyle]}>
+          style={[
+            a.absolute,
+            a.top_0,
+            a.bottom_0,
+            a.w_full,
+            a.self_center,
+            gtMobile && {maxWidth: Layout.CENTER_COLUMN_WIDTH},
+            {transformOrigin: 'top'},
+            fadeStyle,
+          ]}>
           <HeaderFade
             /*
              * With the title hidden, the strong part reaches the middle of
