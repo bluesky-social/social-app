@@ -136,6 +136,19 @@ export function Outer({
         }),
       )
       setDesiredContentHeight(undefined)
+      /*
+       * A full-height sheet only has the large detent, so it always opens at
+       * Full. Set that before the content mounts rather than waiting for
+       * onSnapPointChange: an autofocused input raises the keyboard mid-present,
+       * and ScrollView ignores that keyboard notification if
+       * automaticallyAdjustKeyboardInsets is still false, leaving the content
+       * unscrollable until the keyboard reopens.
+       */
+      setSnapPoint(
+        nativeOptions?.fullHeight
+          ? BottomSheetSnapPoint.Full
+          : BottomSheetSnapPoint.Partial,
+      )
       onOpen?.()
       setDialogIsOpen(control.id, true)
       ref.current?.present()
@@ -147,6 +160,7 @@ export function Outer({
       onOpen,
       nativeOptions?.popover,
       nativeOptions?.sourceViewTag,
+      nativeOptions?.fullHeight,
       setDesiredContentHeight,
     ],
   )
