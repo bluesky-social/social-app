@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import {type LayoutChangeEvent, View} from 'react-native'
+import {View} from 'react-native'
 import {DrawerGestureContext} from 'react-native-drawer-layout'
 import {GestureDetector, useNativeGesture} from 'react-native-gesture-handler'
 import PagerView, {
@@ -17,9 +17,7 @@ import PagerView, {
   type PageScrollStateChangedNativeEventData,
 } from 'react-native-pager-view'
 import Animated, {
-  interpolate,
   type SharedValue,
-  useAnimatedStyle,
   useEvent,
   useHandler,
   useSharedValue,
@@ -28,8 +26,9 @@ import {scheduleOnRN} from 'react-native-worklets'
 import {updateActiveVideoViewAsync} from '@bsky.app/video'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {usePagerFade} from '#/lib/hooks/usePagerFade'
 import {useSetDrawerSwipeDisabled} from '#/state/shell'
-import {atoms as a, native, useBreakpoints} from '#/alf'
+import {atoms as a, native} from '#/alf'
 
 export type PageSelectedEvent = PagerViewOnPageSelectedEvent
 
@@ -62,7 +61,6 @@ interface Props {
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 const MemoizedAnimatedPagerView = memo(AnimatedPagerView)
-const PAGE_FADE_DISTANCE = 100
 
 export function Pager({
   ref,
@@ -75,8 +73,6 @@ export function Pager({
   testID,
 }: React.PropsWithChildren<Props>) {
   const [selectedPage, setSelectedPage] = useState(initialPage)
-  const [pageWidth, setPageWidth] = useState(0)
-  const {gtMobile} = useBreakpoints()
   const pagerView = useRef<PagerView>(null)
 
   const [isIdle, setIsIdle] = useState(true)
@@ -116,16 +112,7 @@ export function Pager({
   const dragState = useSharedValue<'idle' | 'settling' | 'dragging'>('idle')
   const dragProgress = useSharedValue(selectedPage)
   const didInit = useSharedValue(false)
-  const pagerFadeStyle = useAnimatedStyle(() => {
-    if (!gtMobile || pageWidth === 0) {
-      return {opacity: 1}
-    }
-    const progress = dragProgress.get()
-    const distance = Math.abs(progress - Math.round(progress)) * pageWidth
-    return {
-      opacity: interpolate(distance, [0, PAGE_FADE_DISTANCE], [1, 0], 'clamp'),
-    }
-  })
+  const pagerFade = usePagerFade(dragProgress)
   const handlePageScroll = usePagerHandlers({
     onPageScroll(e: PagerViewOnPageScrollEventData) {
       'worklet'
@@ -166,10 +153,6 @@ export function Pager({
     },
   })
 
-  const onPagerLayout = (event: LayoutChangeEvent) => {
-    setPageWidth(event.nativeEvent.layout.width)
-  }
-
   return (
     <View testID={testID} style={[a.flex_1, native(a.overflow_hidden)]}>
       {renderTabBar({
@@ -181,9 +164,9 @@ export function Pager({
       <DrawerGestureRequireFail>
         <MemoizedAnimatedPagerView
           ref={pagerView}
-          style={[a.flex_1, pagerFadeStyle]}
+          style={[a.flex_1, pagerFade.style]}
           initialPage={initialPage}
-          onLayout={gtMobile ? onPagerLayout : undefined}
+          onLayout={pagerFade.onLayout}
           onPageScroll={handlePageScroll}>
           {children}
         </MemoizedAnimatedPagerView>
