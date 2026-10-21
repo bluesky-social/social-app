@@ -4,9 +4,22 @@ import {useLingui} from '@lingui/react/macro'
 import * as TextField from '#/components/forms/TextField'
 import {Shield_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
 
+/**
+ * Codes are base32 (A-Z and 2-7), so the digits 0 and 1 never appear in one.
+ * People read them off the letters O and I, though, so map them back rather
+ * than silently dropping the keypress.
+ */
 export function normalizeCode(value: string) {
-  const normalized = value.toUpperCase().replace(/[^A-Z2-7]/g, '')
-  if (normalized.length <= 5) return normalized
+  const normalized = value
+    .toUpperCase()
+    .replace(/0/g, 'O')
+    .replace(/1/g, 'I')
+    .replace(/[^A-Z2-7]/g, '')
+  if (normalized.length < 5) return normalized
+  if (normalized.length === 5) {
+    // keep the hyphen if the user typed it themselves
+    return value.endsWith('-') ? `${normalized}-` : normalized
+  }
   return `${normalized.slice(0, 5)}-${normalized.slice(5)}`
 }
 

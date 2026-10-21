@@ -55,8 +55,33 @@ describe('TokenField', () => {
   it('strips characters outside the base32 alphabet', () => {
     const onChangeText = jest.fn()
     render(<TokenField testID={TEST_ID} onChangeText={onChangeText} />)
-    fireEvent.changeText(getInput(), 'a1b0c8d-9e')
+    fireEvent.changeText(getInput(), 'a!b8c-9d e')
     expect(onChangeText).toHaveBeenCalledWith('ABCDE')
+  })
+
+  it('maps 0 and 1 to the letters O and I', () => {
+    const onChangeText = jest.fn()
+    render(<TokenField testID={TEST_ID} onChangeText={onChangeText} />)
+    fireEvent.changeText(getInput(), 'e6kdf-jrk70')
+    expect(onChangeText).toHaveBeenCalledWith('E6KDF-JRK7O')
+    fireEvent.changeText(getInput(), '1bcde')
+    expect(onChangeText).toHaveBeenCalledWith('IBCDE')
+  })
+
+  it('keeps a hyphen typed after the first group', () => {
+    const onChangeText = jest.fn()
+    render(<TokenField testID={TEST_ID} onChangeText={onChangeText} />)
+    fireEvent.changeText(getInput(), 'ABCDE-')
+    expect(onChangeText).toHaveBeenCalledWith('ABCDE-')
+    fireEvent.changeText(getInput(), 'ABCDE-F')
+    expect(onChangeText).toHaveBeenCalledWith('ABCDE-F')
+  })
+
+  it('drops a hyphen typed inside the first group', () => {
+    const onChangeText = jest.fn()
+    render(<TokenField testID={TEST_ID} onChangeText={onChangeText} />)
+    fireEvent.changeText(getInput(), 'AB-')
+    expect(onChangeText).toHaveBeenCalledWith('AB')
   })
 
   it('defaults autocomplete to off', () => {
