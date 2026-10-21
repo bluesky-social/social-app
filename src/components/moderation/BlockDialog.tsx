@@ -60,7 +60,7 @@ export function BlockDialog({
   currentConvoId,
 }: BlockDialogProps) {
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <BlockDialogInner
         control={control}
