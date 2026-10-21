@@ -677,6 +677,10 @@ function TabsNavigator({
         name="MyProfileTab"
         getComponent={() => MyProfileTabNavigator}
       />
+      <Tab.Screen
+        name="AtmosphereTab"
+        getComponent={() => AtmosphereTabNavigator}
+      />
       <Tab.Screen name="FeedsTab" getComponent={() => FeedsTabNavigator} />
       <Tab.Screen name="ListsTab" getComponent={() => ListsTabNavigator} />
       <Tab.Screen
@@ -704,6 +708,10 @@ function SecondaryTabNavigator({
       {commonScreens(SecondaryTab as typeof Flat)}
     </SecondaryTab.Navigator>
   )
+}
+
+function AtmosphereTabNavigator() {
+  return <SecondaryTabNavigator initialRouteName="Atmosphere" />
 }
 
 function FeedsTabNavigator() {
@@ -1018,6 +1026,7 @@ const LINKING = {
         return buildStateObject('MessagesTab', 'Messages', params)
       }
       if (
+        name === 'Atmosphere' ||
         name === 'Feeds' ||
         name === 'Lists' ||
         name === 'Bookmarks' ||

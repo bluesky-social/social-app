@@ -42,6 +42,7 @@ export function isStateAtTabRoot(state: State | undefined) {
   const currentRoute = getCurrentRoute(state)
   const activeTab = state.routes[state.index || 0].name
   const isSecondaryTabRoot =
+    (activeTab === 'AtmosphereTab' && currentRoute.name === 'Atmosphere') ||
     (activeTab === 'FeedsTab' && currentRoute.name === 'Feeds') ||
     (activeTab === 'ListsTab' && currentRoute.name === 'Lists') ||
     (activeTab === 'BookmarksTab' && currentRoute.name === 'Bookmarks') ||
@@ -94,6 +95,7 @@ export enum TabState {
 }
 
 const SECONDARY_TAB_ROUTES: Record<string, string> = {
+  Atmosphere: 'AtmosphereTab',
   Feeds: 'FeedsTab',
   Lists: 'ListsTab',
   Bookmarks: 'BookmarksTab',
