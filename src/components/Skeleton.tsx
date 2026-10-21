@@ -92,6 +92,24 @@ export function Pill({
   )
 }
 
+/**
+ * A rounded rectangle, for images and square avatars. Give it a size, and a
+ * radius if the real thing isn't `a.rounded_md`.
+ */
+export function Block({blend, style}: ViewStyleProp & SkeletonProps) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.rounded_md,
+        t.atoms.bg_contrast_50,
+        {opacity: blend ? 0.6 : 1},
+        style,
+      ]}
+    />
+  )
+}
+
 export function Col({
   children,
   style,
