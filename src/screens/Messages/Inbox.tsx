@@ -23,7 +23,7 @@ import {useListConvoRequests} from '#/state/queries/messages/list-conversation-r
 import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
-import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {ChatListSkeleton} from '#/screens/Messages/components/ChatListSkeleton'
 import {atoms as a, useTheme, web} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
@@ -175,7 +175,7 @@ function RequestList({
     return (
       <Layout.Center style={web([a.h_full])}>
         {isLoading ? (
-          <ChatListLoadingPlaceholder />
+          <ChatListSkeleton />
         ) : (
           <>
             {isError ? (
