@@ -74,11 +74,13 @@ import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
 
 const iconWidth = 26
-type SecondarySidebarTab = 'Feeds' | 'Lists' | 'Bookmarks' | 'Settings'
+type SecondarySidebarTab =
+  'Atmosphere' | 'Feeds' | 'Lists' | 'Bookmarks' | 'Settings'
 const SECONDARY_TAB_ROUTES: Record<
   SecondarySidebarTab,
-  'FeedsTab' | 'ListsTab' | 'BookmarksTab' | 'SettingsTab'
+  'AtmosphereTab' | 'FeedsTab' | 'ListsTab' | 'BookmarksTab' | 'SettingsTab'
 > = {
+  Atmosphere: 'AtmosphereTab',
   Feeds: 'FeedsTab',
   Lists: 'ListsTab',
   Bookmarks: 'BookmarksTab',
@@ -319,9 +321,10 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
 
   const onPressAtmosphere = useCallback(() => {
     ax.metric('nav:click', {item: 'atmosphere', surface: 'drawer'})
-    navigation.navigate('Atmosphere')
-    setDrawerOpen(false)
-  }, [navigation, setDrawerOpen, ax])
+    if (IS_WEB) navigation.navigate('Atmosphere')
+    else navigateToSecondaryTab('Atmosphere')
+    if (IS_WEB) setDrawerOpen(false)
+  }, [navigation, navigateToSecondaryTab, setDrawerOpen, ax])
 
   const onPressLists = useCallback(() => {
     ax.metric('nav:click', {item: 'lists', surface: 'drawer'})

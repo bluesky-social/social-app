@@ -121,6 +121,7 @@ const NAV_ITEM_TO_TAB: Partial<
   chat: 'Messages',
   notifications: 'Notifications',
   profile: 'MyProfile',
+  atmosphere: 'Atmosphere',
   feeds: 'Feeds',
   lists: 'Lists',
   saved: 'Bookmarks',
@@ -741,6 +742,7 @@ export function DesktopLeftNav({
               label={l`Atmosphere`}
               href="/atmosphere"
               navItem="atmosphere"
+              onNavigateTab={onNavigateTab}
               minimal={leftNavMinimal}
               beta
               icons={{
