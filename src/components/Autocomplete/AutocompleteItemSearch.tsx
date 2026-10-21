@@ -1,6 +1,8 @@
 import {View} from 'react-native'
 import {SiftItem} from '@bsky.app/sift'
+import {Plural} from '@lingui/react/macro'
 
+import {countActiveFilters} from '#/screens/Search/searchParams'
 import {atoms as a, useTheme} from '#/alf'
 import {MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon} from '#/components/icons/MagnifyingGlass'
 import {Text} from '#/components/Typography'
@@ -16,6 +18,7 @@ export function AutocompleteItemSearch({
   const t = useTheme()
 
   if (item.type !== 'search') return null
+  const filterCount = countActiveFilters(item.filters ?? {})
 
   return (
     <SiftItem
@@ -43,7 +46,14 @@ export function AutocompleteItemSearch({
         ]}>
         <MagnifyingGlassIcon fill={t.atoms.text_contrast_low.color} size="xl" />
       </View>
-      <Text style={[a.text_md, a.leading_snug]}>{item.value}</Text>
+      <Text emoji style={[a.text_md, a.leading_snug]}>
+        {item.value}
+      </Text>
+      {filterCount > 0 && (
+        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+          <Plural value={filterCount} one="+# filter" other="+# filters" />
+        </Text>
+      )}
     </SiftItem>
   )
 }
