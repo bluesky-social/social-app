@@ -134,6 +134,35 @@ content-less area are attributed to the `UIScrollView`.
 Issue: https://github.com/facebook/react-native/issues/54123
 PR: https://github.com/react/react-native/pull/56747
 
+## RCTScrollViewComponentView.mm Patch - automaticallyAdjustKeyboardInsets ignores changes while the keyboard is visible
+
+Fixes APP-2673: the alt text sheet couldn't scroll to Save on the first keyboard
+appearance. `automaticallyAdjustKeyboardInsets` only takes effect when a
+`UIKeyboardWillChangeFrameNotification` arrives. `Dialog.ScrollableInner` turns it on
+only once the sheet reports the full snap point, which is an async event, so when an
+autofocused input raises the keyboard during presentation the notification arrives
+while the prop is still off. No inset is applied until the keyboard is hidden and
+shown again. Turning the prop off while the keyboard is up has the mirror-image bug:
+the inset stays, and since the hide notification is ignored too, it never goes away.
+
+The fix stores the keyboard's end frame from every notification, including those that
+arrive while the prop is off. When `updateProps` sees the prop change while the
+keyboard is visible, it applies the inset as if the keyboard had just appeared, or
+removes it and clamps the offset. https://github.com/bluesky-social/social-app/pull/12121
+also fixed the alt text sheet in JS, by opening
+full-height sheets at the full snap point. This patch covers the other ways in: sheets
+that grow to the full detent while the keyboard is up, or that get dragged there.
+
+The flag is now assigned unconditionally, as on main since
+https://github.com/react/react-native/pull/57811, rather than only when the old and new
+props differ.
+
+Repro: https://github.com/mozzius/scrollview-keyboard-insets-repro
+Issue: https://github.com/react/react-native/issues/59305
+PR: https://github.com/react/react-native/pull/59306
+
+**TODO: Remove after bumping React Native to a release containing the upstream fix.**
+
 ## ReactViewGroup.kt Patch - Fatal "Required value was null" during subview clipping on Android
 
 Fixes Sentry issue APP-T20Q: `IllegalStateException: Required value was null` thrown by
