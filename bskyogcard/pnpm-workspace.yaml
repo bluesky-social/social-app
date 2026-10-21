@@ -4,6 +4,7 @@ strictPeerDependencies: false # default: false
 trustPolicy: 'no-downgrade' # default: off
 trustPolicyIgnoreAfter: 10080 # 7 days, default: undefined
 minimumReleaseAgeExclude:
+  - '@atproto-labs/fetch-node@0.4.2'
   - '@atproto/*'
   - '@bsky.app/*'
 allowBuilds:

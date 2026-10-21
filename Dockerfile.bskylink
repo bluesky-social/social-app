@@ -30,6 +30,7 @@ EXPOSE 3000 9090
 ENV LINK_PORT=3000
 ENV LINK_METRICS_PORT=9090
 ENV NODE_ENV=production
+ENV NODE_OPTIONS="--import=@atproto-labs/fetch-node/emudhra-preload"
 
 # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#non-root-user
 USER node

@@ -13,7 +13,7 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
 
-export const DEFAULT_LIMIT = 5
+export const DEFAULT_LIMIT = 10
 export const DEFAULT_FETCH_LIMIT = 20
 
 type QueryProps = {

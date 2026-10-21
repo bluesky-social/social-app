@@ -9,6 +9,7 @@ import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
 import {LINK_FAVICON_PROXY} from '#/lib/constants'
+import {blobToDataUri} from '#/lib/media/util'
 import {isNetworkError} from '#/lib/strings/errors'
 import {isRecordNotFoundError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
@@ -240,17 +241,26 @@ const FAVICON_TIMEOUT = 8e3
  * like a link card thumbnail. Storing the blob on the record means it's
  * scanned like any other profile image, instead of hotlinked. Resolves to
  * undefined when the site has no usable icon; the pill falls back to a globe.
+ *
+ * Also resolves to a data URI of the icon: the CDN can't serve the blob until
+ * the profile is saved and a record points at it, so the editor shows this
+ * instead.
+ *
+ * Always asks for the site's current icon, skipping cardyb's and the HTTP
+ * cache, so re-adding a link picks up a favicon the site has since changed.
  */
 export function useUploadLinkIcon() {
   const pdsClient = usePdsClient()
-  return async (url: string): Promise<BlobRef | undefined> => {
+  return async (
+    url: string,
+  ): Promise<{icon: BlobRef; previewUrl: string} | undefined> => {
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), FAVICON_TIMEOUT)
     let icon: Blob
     try {
       const res = await fetch(
-        `${LINK_FAVICON_PROXY()}${encodeURIComponent(url)}`,
-        {signal: controller.signal},
+        `${LINK_FAVICON_PROXY()}${encodeURIComponent(url)}&fresh=true`,
+        {signal: controller.signal, cache: 'no-store'},
       )
       if (!res.ok || res.headers.get('content-type') !== 'image/png') {
         return undefined
@@ -263,8 +273,11 @@ export function useUploadLinkIcon() {
       clearTimeout(timeout)
     }
     try {
-      const {blob} = await uploadBlob(pdsClient, icon, 'image/png')
-      return blob
+      const [{blob}, previewUrl] = await Promise.all([
+        uploadBlob(pdsClient, icon, 'image/png'),
+        blobToDataUri(icon),
+      ])
+      return {icon: blob, previewUrl}
     } catch (e) {
       if (!isNetworkError(e)) {
         logger.error('Failed to upload profile link icon', {safeMessage: e})

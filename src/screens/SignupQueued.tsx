@@ -14,7 +14,7 @@ import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
-import {IS_IOS, IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {IS_IOS, IS_IPAD, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 import {com} from '#/lexicons'
 
 const COL_WIDTH = 400
@@ -112,6 +112,16 @@ export function SignupQueued() {
       visible
       animationType={native('slide')}
       presentationStyle="formSheet"
+      supportedOrientations={
+        IS_IPAD
+          ? [
+              'portrait',
+              'portrait-upside-down',
+              'landscape-left',
+              'landscape-right',
+            ]
+          : ['portrait']
+      }
       style={[web(a.util_screen_outer)]}>
       {IS_IOS && !IS_LIQUID_GLASS && (
         <SystemBars style={{statusBar: 'light'}} />

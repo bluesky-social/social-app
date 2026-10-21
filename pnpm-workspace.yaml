@@ -44,7 +44,7 @@ patchedDependencies:
   expo@57.0.24: patches/expo@57.0.24.patch
   'metro-runtime@0.84.5': patches/metro-runtime@0.84.5.patch
   'metro@0.84.5': patches/metro@0.84.5.patch
-  'react-native-pager-view@6.8.0': patches/react-native-pager-view@6.8.0.patch
+  react-native-pager-view@9.0.9: patches/react-native-pager-view@9.0.9.patch
   react-native-reanimated@4.7.1: patches/react-native-reanimated@4.7.1.patch
   react-native-screens@4.30.0: patches/react-native-screens@4.30.0.patch
   'react-native-svg@15.15.4': patches/react-native-svg@15.15.4.patch

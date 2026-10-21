@@ -10,6 +10,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@atproto-labs/fetch-node": "^0.4.2",
     "@atproto/api": "^0.16.7",
     "@atproto/common": "^0.4.11",
     "@types/escape-html": "^1.0.4",

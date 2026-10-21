@@ -153,18 +153,55 @@ Not fixed upstream as of July 2026 (identical `checkNotNull` on `main`); the sib
 attempt facebook/react-native#57365 for the same bookkeeping corruption (different stack)
 was abandoned. Re-check when bumping React Native.
 
-Note on build modes: production Android builds compile react-android from source
-(`buildReactNativeFromSource: IS_PRODUCTION` via expo-build-properties in app.config.js
-injects the includeBuild/dependency-substitution block at prebuild), so this hunk IS
-active in production releases. Local dev builds prebuilt in a non-production env consume
-the prebuilt AAR from Maven Central instead, where this hunk (like any ReactAndroid
-source change) has no effect - do not expect to see the fix in a local debug build unless
-you prebuild with EXPO_PUBLIC_ENV=production or add the substitution block manually.
+Note on build modes: every Android build compiles react-android from source
+(`buildReactNativeFromSource: true` via expo-build-properties in app.config.js injects
+the includeBuild/dependency-substitution block at prebuild), so this hunk, like any
+ReactAndroid or ReactCommon change in this patch, is active in dev builds too. Before
+that, only production builds compiled from source, and dev builds used the prebuilt AAR
+from Maven Central, where these hunks have no effect.
 
 ## RCTTextLayoutManager.mm Patch - Text overflows instead of wrapping on the last line
 
 Issue: https://github.com/react/react-native/issues/53450#issuecomment-3298157830 
 Bandaid fix taken from: https://github.com/react/react-native/commit/581d643a9e59fd88f93757f80194e1efd11bd0e5
+
+## RCTTextLayoutManager.mm / TextLayoutManager / ParagraphShadowNode.cpp Patch - text laid out on the main thread when first drawn
+
+The first time a text view draws, `drawAttributedString:` runs on the main
+thread and lays the text out from scratch: it rebuilds the attributed string
+(font lookups), attaches a new layout manager (font fixing, glyph generation)
+and lays out every line. Measurement already did the same work off the main
+thread, but throws it away. Painting the glyphs is only a small part of the
+cost. While scrolling the feed this was the largest single main-thread cost
+when new posts appear. React Native's `enablePreparedTextLayout` flag solves
+this only on Android.
+
+- After layout, `ParagraphShadowNode::layout` calls the new
+  `TextLayoutManager::prepareForDrawing` whenever a text view's attributed
+  string changes, which is when the view redraws. It passes the content frame
+  size the view will draw into. This only compiles on Apple platforms.
+- `prepareAttributedStringForDrawing:` makes the layout the draw would make
+  for that size, on the calling thread (usually the JS thread). If measuring
+  already laid the text out at the same width (within 0.5pt of pixel
+  rounding), and the frame is tall enough for every measured line, it reuses
+  that layout. Measurement uses unlimited height, so the result is the same.
+  Otherwise it lays the text out at exactly that size.
+- `drawAttributedString:` takes the prepared layout for its exact frame size.
+  If there is none (for example, the frame changed without new text), it lays
+  the text out as before.
+- Layouts are handed out once, so only one thread uses a text storage at a
+  time. Unused ones (text that is never drawn) are evicted oldest-first, with
+  at most 512 texts kept per kind.
+- Measured layouts are never reused for `adjustsFontSizeToFit`, whose font size
+  depends on the final frame.
+
+Measured on an iPhone 16 Pro Max (Release build, 30s fling through the feed):
+main-thread time in `drawAttributedString:` went from about 570ms to 160ms, all
+draws on launch used a prepared layout, and the JS thread spent about 300ms
+preparing text. About half of the prepared layouts are never drawn (text in
+views that are offscreen or replaced before mounting).
+
+**TODO: Re-evaluate on React Native upgrades.** Not an upstream backport.
 
 ## RCTViewComponentView.mm Patch - Hairline border strokes dropped at certain subpixel Y offsets on New Arch
 

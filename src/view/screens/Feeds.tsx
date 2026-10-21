@@ -519,23 +519,23 @@ export function FeedsScreen(_props: Props) {
             </Link>
           </Layout.Header.Slot>
         </Layout.Header.Outer>
-
-        <List
-          ref={listRef}
-          data={items}
-          keyExtractor={item => item.key}
-          contentContainerStyle={styles.contentContainer}
-          renderItem={renderItem}
-          refreshing={isPTR}
-          onRefresh={isUserSearching ? undefined : onPullToRefresh}
-          initialNumToRender={10}
-          onEndReached={onEndReached}
-          desktopFixedHeight
-          keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag"
-          sideBorders={false}
-        />
       </Layout.Center>
+
+      <List
+        ref={listRef}
+        data={items}
+        keyExtractor={item => item.key}
+        contentContainerStyle={styles.contentContainer}
+        renderItem={renderItem}
+        refreshing={isPTR}
+        onRefresh={isUserSearching ? undefined : onPullToRefresh}
+        initialNumToRender={10}
+        onEndReached={onEndReached}
+        desktopFixedHeight
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        sideBorders={false}
+      />
 
       {hasSession && (
         <FAB

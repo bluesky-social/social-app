@@ -119,11 +119,15 @@ export function Outer({
     () => ({
       close,
       isNativeDialog: false,
+      presentationBottomOffset: 0,
+      isNativePopover: false,
       nativeSnapPoint: 0,
       disableDrag: false,
       setDisableDrag: () => {},
       isWithinDialog: true,
       isHeightConstrained: false,
+      shouldMeasureContentHeight: false,
+      setDesiredContentHeight: () => {},
     }),
     [close],
   )
