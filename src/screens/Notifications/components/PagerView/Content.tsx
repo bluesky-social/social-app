@@ -126,8 +126,17 @@ export function Content({
         event.eventName.endsWith('onPageSelected') &&
         'position' in event
       ) {
+        /*
+         * Only the first selection, of the initial page, moves dragProgress.
+         * On iOS, later ones arrive as soon as the selection changes, while
+         * the page is still moving, and would snap the tab indicator onto a
+         * tab for a frame. onPageScroll follows the page the whole way and
+         * ends on it.
+         */
+        if (!didInit.get()) {
+          dragProgress.set(event.position)
+        }
         didInit.set(true)
-        dragProgress.set(event.position)
         scheduleOnRN(handlePageSelected, event.position)
       }
     },
