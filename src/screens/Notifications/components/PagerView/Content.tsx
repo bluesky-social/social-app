@@ -25,6 +25,7 @@ import Animated, {useEvent, useSharedValue} from 'react-native-reanimated'
 import {scheduleOnRN} from 'react-native-worklets'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {usePagerFade} from '#/lib/hooks/usePagerFade'
 import {useSetDrawerSwipeDisabled} from '#/state/shell'
 import {atoms as a} from '#/alf'
 import {usePagerContext} from './context'
@@ -61,6 +62,7 @@ export function Content({
   const currentPage = useRef(initialPage)
   const [isIdle, setIsIdle] = useState(true)
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
+  const pagerFade = usePagerFade(dragProgress)
 
   useFocusEffect(
     useCallback(() => {
@@ -137,9 +139,10 @@ export function Content({
     <MemoizedAnimatedPagerView
       ref={pagerRef}
       testID={testID}
-      style={[a.flex_1, style]}
+      style={[a.flex_1, style, pagerFade.style]}
       initialPage={initialPage}
       scrollEnabled={scrollEnabled}
+      onLayout={pagerFade.onLayout}
       onPageScroll={handlePageScroll}>
       {Children.map(children, child => (
         <View collapsable={false} style={a.flex_1}>
