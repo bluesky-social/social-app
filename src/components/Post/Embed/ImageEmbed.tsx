@@ -1,5 +1,5 @@
 import {useRef} from 'react'
-import {InteractionManager, View} from 'react-native'
+import {View} from 'react-native'
 import {type AnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 
@@ -101,12 +101,17 @@ export function ImageEmbed({
       })
     }
     const onPressIn = (_: number) => {
-      InteractionManager.runAfterInteractions(() => {
+      const prefetch = () => {
         void Image.prefetch(
           items.map(i => i.uri),
           'memory',
         )
-      })
+      }
+      if (typeof requestIdleCallback === 'function') {
+        requestIdleCallback(prefetch)
+      } else {
+        prefetch()
+      }
     }
 
     if (images.length === 1) {
