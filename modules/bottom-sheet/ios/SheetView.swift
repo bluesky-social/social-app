@@ -243,6 +243,15 @@ class SheetView: ExpoView {
     sheetVc.onWillDismiss = { [weak self] in
       self?.isClosing = true
     }
+    /*
+     * Otherwise `isClosing` stays set after a cancelled swipe, and the sheet
+     * ignores dismiss() and content size changes until it's closed (APP-3609).
+     */
+    sheetVc.onDismissCancelled = { [weak self] in
+      guard let self = self, self.isClosing else { return }
+      self.isClosing = false
+      self.isOpen = true
+    }
     sheetVc.onDidDismiss = { [weak self] in
       self?.destroy()
     }
