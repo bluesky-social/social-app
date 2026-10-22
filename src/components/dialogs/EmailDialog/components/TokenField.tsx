@@ -10,7 +10,7 @@ import {Shield_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shiel
  * than silently dropping the keypress.
  */
 export function normalizeCode(value: string) {
-  const normalized = value.toUpperCase().replace(/[^A-Z0-9]/g, '')
+  const normalized = value.toUpperCase().replace(/[^A-Z0-9]/gi, '')
   if (normalized.length < 5) return normalized
   if (normalized.length === 5) {
     // keep the hyphen if the user typed it themselves
