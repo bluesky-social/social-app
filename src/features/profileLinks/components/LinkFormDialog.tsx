@@ -153,7 +153,8 @@ function LinkFormInner({
     void getLinkMeta(targetUrl, 8e3).then(meta => {
       if (cancelled || meta.error) return
       setReachability('reachable')
-      const suggestion = suggestTitle(meta.title)
+      // a standard.site record's title, like a blog's name, beats the HTML one
+      const suggestion = suggestTitle(meta.view?.external?.title || meta.title)
       if (!suggestion) return
       const previousAuto = autoTitle.current
       autoTitle.current = suggestion
