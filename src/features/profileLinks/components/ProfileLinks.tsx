@@ -153,12 +153,6 @@ function ProfileLinksRow({
     })
   }
 
-  const open = (link: ProfileLink) => {
-    logClick(link)
-    // through the redirect service, so Safelink rules apply
-    openLink(link.url, undefined, true)
-  }
-
   const showPreview = (link: ProfileLink) => {
     ax.metric('profile:links:preview', {
       domain: getLinkHost(link.url),
@@ -267,7 +261,15 @@ function ProfileLinksRow({
           <LinkPreviewSheet
             control={previewControl}
             link={activeLink}
-            onOpen={open}
+            onOpen={link => {
+              logClick(link)
+              /*
+               * The sheet closes before this runs, so unlike the pills it
+               * can't be a Link. Through the redirect service, so Safelink
+               * rules apply.
+               */
+              openLink(link.url, undefined, true)
+            }}
             onReport={
               // nothing to report on your own profile
               !isOwnProfile && activeLink?.uri && activeLink.cid
