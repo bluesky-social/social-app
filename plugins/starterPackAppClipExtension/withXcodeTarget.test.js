@@ -58,6 +58,22 @@ describe('App Clip device family', () => {
     IOSConfig.DeviceFamily.setDeviceFamily(config, {project})
     withXcodeTarget(config, {targetName: 'BlueskyClip'})
 
+    expect(project.addBuildPhase).toHaveBeenCalledWith(
+      [
+        'BlueskyClip/AppDelegate.swift',
+        'BlueskyClip/SceneDelegate.swift',
+        'BlueskyClip/ViewController.swift',
+      ],
+      'PBXSourcesBuildPhase',
+      'Sources',
+      'APP_CLIP_TARGET',
+      'application',
+      '"AppClips"',
+    )
+    expect(project.addPbxGroup).toHaveBeenCalledWith(
+      expect.arrayContaining(['SceneDelegate.swift']),
+    )
+
     for (const buildType of ['DEBUG', 'RELEASE']) {
       const parent = configurations[`APP_${buildType}`].buildSettings
       const clip = configurations[`CLIP_${buildType}`].buildSettings

@@ -803,6 +803,9 @@ importers:
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.4(@types/react@19.2.18)
+      '@types/xcode':
+        specifier: ^3.0.0
+        version: 3.0.0
       '@typescript/native':
         specifier: npm:typescript@^7.0.2
         version: typescript@7.0.2
@@ -4169,6 +4172,9 @@ packages:
 
   '@types/use-sync-external-store@0.0.6':
     resolution: {integrity: sha512-zFDAD+tlpf2r4asuHEj0XH6pY6i0g5NeAHPn+15wk3BV6JA69eERFXC1gyGThDkVa1zCyKr5jox1+2LbV/AMLg==}
+
+  '@types/xcode@3.0.0':
+    resolution: {integrity: sha512-QF542gE2z7c5mVAKYPu7WnLv7TX+O/m2ZcCAsK2mstzeh8X0Q4ueC52DL8sSRFnQdTzF4WU+G/sWWx5cRO7HcQ==}
 
   '@types/yargs-parser@21.0.3':
     resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
@@ -13251,6 +13257,8 @@ snapshots:
   '@types/tough-cookie@4.0.5': {}
 
   '@types/use-sync-external-store@0.0.6': {}
+
+  '@types/xcode@3.0.0': {}
 
   '@types/yargs-parser@21.0.3': {}
 

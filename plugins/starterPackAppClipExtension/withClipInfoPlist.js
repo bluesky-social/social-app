@@ -18,6 +18,17 @@ const withClipInfoPlist = (config, {targetName}) => {
         NSAppClipRequestLocationConfirmation: false,
       },
       UILaunchScreen: {},
+      UIApplicationSceneManifest: {
+        UIApplicationSupportsMultipleScenes: false,
+        UISceneConfigurations: {
+          UIWindowSceneSessionRoleApplication: [
+            {
+              UISceneConfigurationName: 'Default Configuration',
+              UISceneDelegateClassName: '$(PRODUCT_MODULE_NAME).SceneDelegate',
+            },
+          ],
+        },
+      },
       CFBundleName: '$(PRODUCT_NAME)',
       CFBundleIdentifier: '$(PRODUCT_BUNDLE_IDENTIFIER)',
       CFBundleVersion: '$(CURRENT_PROJECT_VERSION)',
