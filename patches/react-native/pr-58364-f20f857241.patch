@@ -1,8 +1,8 @@
 diff --git a/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
-index c27f816..a779613 100644
+index 2cd2795..7c09d9c 100644
 --- a/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
-@@ -159,7 +159,13 @@ - (void)dismissViewController:(UIViewController *)modalViewController
+@@ -158,7 +158,13 @@ - (void)dismissViewController:(UIViewController *)modalViewController
                       animated:(BOOL)animated
                     completion:(void (^)(void))completion
  {

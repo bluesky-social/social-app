@@ -1,8 +1,8 @@
 diff --git a/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
-index c27f816e14e1bd33e41b92aea075c5e6379fc758..a77961366293d8077b294aa402bb88ace51b0f2c 100644
+index 2cd279590a30dd2f39e7f93a255106786e870cd5..7c09d9cf73ef5ae8e34969bc6759e4fccba1ce96 100644
 --- a/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
-@@ -159,7 +159,13 @@ - (void)dismissViewController:(UIViewController *)modalViewController
+@@ -158,7 +158,13 @@ - (void)dismissViewController:(UIViewController *)modalViewController
                       animated:(BOOL)animated
                     completion:(void (^)(void))completion
  {
@@ -17,31 +17,6 @@ index c27f816e14e1bd33e41b92aea075c5e6379fc758..a77961366293d8077b294aa402bb88ac
  }
  
  - (void)ensurePresentedOnlyIfNeeded
-diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
-index 1b02e8b2d39672063551411d5c403a69b671a869..b3481c1b98b45dea769035140dc2fd8d9b088b24 100644
---- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
-+++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
-@@ -102,6 +102,20 @@ - (void)setContentOffset:(CGPoint)contentOffset
-       RCTSanitizeNaNValue(contentOffset.y, @"scrollView.contentOffset.y"));
- }
- 
-+- (void)setCenterContent:(BOOL)centerContent
-+{
-+  if (_centerContent != centerContent) {
-+    _centerContent = centerContent;
-+    [self centerContentIfNeeded];
-+  }
-+}
-+
-+- (void)setContentSize:(CGSize)contentSize
-+{
-+  [super setContentSize:contentSize];
-+  [self centerContentIfNeeded];
-+}
-+
- - (void)setFrame:(CGRect)frame
- {
-   [super setFrame:frame];
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm
 index 60160efb163d91813fa2ca7ca758b51afcf261e1..fb646fe945ffe4aa4a386f80a1e42a90180691f1 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm
@@ -217,36 +192,10 @@ index 60160efb163d91813fa2ca7ca758b51afcf261e1..fb646fe945ffe4aa4a386f80a1e42a90
  }
  
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-index 9ab1db4e21e922f69c1ce17976eb1001f01b571a..a0a15bef87537f715298d7c88a52c8f6c4aea0bd 100644
+index 14a08b49cb7c93374a2625294bfb082226e6d933..21abb2d60e00aaaecb35c5579a77802c4ff4b233 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-@@ -396,7 +396,15 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
- 
-   MAP_SCROLL_VIEW_PROP(zoomScale);
- 
--  if (oldScrollViewProps.contentInset != newScrollViewProps.contentInset) {
-+  // When disabling centerContent, reset inset to prop value
-+  // (enabling is handled automatically by the setCenterContent: setter)
-+  if (oldScrollViewProps.centerContent && !newScrollViewProps.centerContent) {
-+    _scrollView.contentInset = RCTUIEdgeInsetsFromEdgeInsets(newScrollViewProps.contentInset);
-+  }
-+
-+  // Only apply contentInset from props if centerContent is disabled
-+  // When centerContent is enabled, the inset is calculated by centerContentIfNeeded
-+  if (oldScrollViewProps.contentInset != newScrollViewProps.contentInset && !newScrollViewProps.centerContent) {
-     _scrollView.contentInset = RCTUIEdgeInsetsFromEdgeInsets(newScrollViewProps.contentInset);
-   }
- 
-@@ -523,7 +531,7 @@ - (UIView *)betterHitTest:(CGPoint)point withEvent:(UIEvent *)event
-     }
-   }
- 
--  return isPointInside ? self : nil;
-+  return isPointInside ? _scrollView : nil;
- }
- 
- /*
-@@ -1133,6 +1141,11 @@ - (RCTVirtualViewContainerState *)virtualViewContainerState
+@@ -1157,6 +1157,11 @@ - (RCTVirtualViewContainerState *)virtualViewContainerState
    return _virtualViewContainerState;
  }
  
@@ -259,10 +208,10 @@ index 9ab1db4e21e922f69c1ce17976eb1001f01b571a..a0a15bef87537f715298d7c88a52c8f6
  
  Class<RCTComponentViewProtocol> RCTScrollViewCls(void)
 diff --git a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
-index 917dc6d88e2840351f6ca1a3c697ffc467dec933..38c14f9020fb66097811d5222d4eca9d446715b8 100644
+index 8f55121cd23d27577bab45716d91d6cdad878e41..8bbb6cfea2970fd13b41082767807dfecbb488cb 100644
 --- a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
-@@ -372,6 +372,10 @@ - (void)updateLayoutMetrics:(const LayoutMetrics &)layoutMetrics
+@@ -381,6 +381,10 @@ - (void)updateLayoutMetrics:(const LayoutMetrics &)layoutMetrics
      _previousContentSize = _backedTextInputView.contentSize;
      static_cast<const TextInputEventEmitter &>(*_eventEmitter).onContentSizeChange([self _textInputMetrics]);
    }
@@ -273,7 +222,7 @@ index 917dc6d88e2840351f6ca1a3c697ffc467dec933..38c14f9020fb66097811d5222d4eca9d
  }
  
  - (void)prepareForRecycle
-@@ -821,6 +825,47 @@ - (void)scrollCursorIntoView
+@@ -843,6 +847,47 @@ - (void)scrollCursorIntoView
    }
  }
  
@@ -322,10 +271,10 @@ index 917dc6d88e2840351f6ca1a3c697ffc467dec933..38c14f9020fb66097811d5222d4eca9d
  {
    [_backedTextInputView removeFromSuperview];
 diff --git a/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
-index b033b7c71914d287470b7b86bd6bf39d311294ba..7e10dc929147fa4474ca9f955f5cd85d27aea935 100644
+index 0912c50fec13f41894b5351c7ff62b40bb8e3fad..376a554317fd355aadb733cf67b09e3f9b30fbc7 100644
 --- a/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
-@@ -827,9 +827,17 @@ static void RCTAddContourEffectToLayer(
+@@ -885,9 +885,17 @@ static void RCTAddContourEffectToLayer(
    } else {
      CGSize imageSize = image.size;
      UIEdgeInsets imageCapInsets = image.capInsets;
@@ -344,85 +293,11 @@ index b033b7c71914d287470b7b86bd6bf39d311294ba..7e10dc929147fa4474ca9f955f5cd85d
      layer.contents = (id)image.CGImage;
      layer.contentsScale = image.scale;
  
-diff --git a/React/Views/RefreshControl/RCTRefreshControl.h b/React/Views/RefreshControl/RCTRefreshControl.h
-index ed306d7cadbf36a2fed79be8bd9d68b5dca135bd..d447dad534fefa9fcbdbbde6dcbbdcddadd5a824 100644
---- a/React/Views/RefreshControl/RCTRefreshControl.h
-+++ b/React/Views/RefreshControl/RCTRefreshControl.h
-@@ -18,6 +18,7 @@ __attribute__((deprecated("This API will be removed along with the legacy archit
- @property (nonatomic, copy) NSString *title;
- @property (nonatomic, copy) RCTDirectEventBlock onRefresh;
- @property (nonatomic, weak) UIScrollView *scrollView;
-+@property (nonatomic, copy) UIColor *customTintColor;
- 
- @end
- 
-diff --git a/React/Views/RefreshControl/RCTRefreshControl.m b/React/Views/RefreshControl/RCTRefreshControl.m
-index 2dc86e464264c9450eef18d7b153d35bf6a5cc55..6661dc69a04766afa0284d6e83839b219e98cf57 100644
---- a/React/Views/RefreshControl/RCTRefreshControl.m
-+++ b/React/Views/RefreshControl/RCTRefreshControl.m
-@@ -25,6 +25,7 @@ @implementation RCTRefreshControl {
-   UIColor *_titleColor;
-   CGFloat _progressViewOffset;
-   BOOL _hasMovedToWindow;
-+  UIColor *_customTintColor;
- }
- 
- - (instancetype)init
-@@ -60,6 +61,12 @@ - (void)layoutSubviews
-   _isInitialRender = false;
- }
- 
-+- (void)didMoveToSuperview
-+{
-+  [super didMoveToSuperview];
-+  [self setTintColor:_customTintColor];
-+}
-+
- - (void)didMoveToWindow
- {
-   [super didMoveToWindow];
-@@ -225,6 +232,18 @@ - (void)refreshControlValueChanged
-   }
- }
- 
-+// Fix for https://github.com/facebook/react-native/issues/43388
-+// A bug in iOS 17.4 causes the haptic to not play when refreshing if the tintColor
-+// is set before the refresh control gets added to the scrollview. We'll call this
-+// function whenever the superview changes. We'll also call it if the value of customTintColor
-+// changes.
-+- (void)setTintColor:(UIColor *)tintColor
-+{
-+  if ([self.superview isKindOfClass:[UIScrollView class]] && self.tintColor != tintColor) {
-+    [super setTintColor:tintColor];
-+  }
-+}
-+
- @end
- 
- #endif // RCT_REMOVE_LEGACY_ARCH
-diff --git a/React/Views/RefreshControl/RCTRefreshControlManager.m b/React/Views/RefreshControl/RCTRefreshControlManager.m
-index 1e9ff527f4e6691d716da624031113a397876981..44329c5422c6f24d8a437fa35c6f2bad6bf8622b 100644
---- a/React/Views/RefreshControl/RCTRefreshControlManager.m
-+++ b/React/Views/RefreshControl/RCTRefreshControlManager.m
-@@ -24,11 +24,12 @@ - (UIView *)view
- 
- RCT_EXPORT_VIEW_PROPERTY(onRefresh, RCTDirectEventBlock)
- RCT_EXPORT_VIEW_PROPERTY(refreshing, BOOL)
--RCT_EXPORT_VIEW_PROPERTY(tintColor, UIColor)
- RCT_EXPORT_VIEW_PROPERTY(title, NSString)
- RCT_EXPORT_VIEW_PROPERTY(titleColor, UIColor)
- RCT_EXPORT_VIEW_PROPERTY(progressViewOffset, CGFloat)
- 
-+RCT_REMAP_VIEW_PROPERTY(tintColor, customTintColor, UIColor)
-+
- RCT_EXPORT_METHOD(setNativeRefreshing : (nonnull NSNumber *)viewTag toRefreshing : (BOOL)refreshing)
- {
-   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
 diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
-index 59775241c80bec99ad3ec080f2425aacc8900c24..426de3aa77cda2032d7b0991e2ca3f8482a438d3 100644
+index ae2e36ca1ed64d9f6cb44e6c2519a17fcca3ca18..0eeeb63b1225a3c575abb257a79aaef609659e2f 100644
 --- a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
 +++ b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
-@@ -459,6 +459,13 @@ public open class ReactViewGroup public constructor(context: Context?) :
+@@ -461,6 +461,13 @@ public open class ReactViewGroup public constructor(context: Context?) :
      inSubviewClippingLoop = true
      var clippedSoFar = 0
      for (i in 0..<allChildrenCount) {
@@ -436,7 +311,7 @@ index 59775241c80bec99ad3ec080f2425aacc8900c24..426de3aa77cda2032d7b0991e2ca3f84
        try {
          updateSubviewClipStatus(clippingRect, i, clippedSoFar, excludedViewsSet)
        } catch (ex: IndexOutOfBoundsException) {
-@@ -496,7 +503,9 @@ public open class ReactViewGroup public constructor(context: Context?) :
+@@ -498,7 +505,9 @@ public open class ReactViewGroup public constructor(context: Context?) :
    ) {
      assertOnUiThread()
  
@@ -447,21 +322,6 @@ index 59775241c80bec99ad3ec080f2425aacc8900c24..426de3aa77cda2032d7b0991e2ca3f84
      val intersects = clippingRect.intersects(child.left, child.top, child.right, child.bottom)
      var needUpdateClippingRecursive = false
  
-diff --git a/ReactCommon/react/featureflags/ReactNativeFeatureFlagsOverridesOSSStable.h b/ReactCommon/react/featureflags/ReactNativeFeatureFlagsOverridesOSSStable.h
-index fdabd7bab1f03966dc04ba9a462465daeccf8ae3..ef70011ee5c270fb2cac52f3a7408d1e87334145 100644
---- a/ReactCommon/react/featureflags/ReactNativeFeatureFlagsOverridesOSSStable.h
-+++ b/ReactCommon/react/featureflags/ReactNativeFeatureFlagsOverridesOSSStable.h
-@@ -21,6 +21,10 @@ class ReactNativeFeatureFlagsOverridesOSSStable : public ReactNativeFeatureFlags
-   {
-     return true;
-   }
-+  bool enableSchedulerDelegateInvalidation() override
-+  {
-+    return true;
-+  }
-   bool useTurboModules() override
-   {
-     return true;
 diff --git a/ReactCommon/react/renderer/components/text/ParagraphShadowNode.cpp b/ReactCommon/react/renderer/components/text/ParagraphShadowNode.cpp
 index 17b14c439f16534365c1fb41b3f10a4e12f59001..9c46cd9906ad31621534009a6151e0042972d134 100644
 --- a/ReactCommon/react/renderer/components/text/ParagraphShadowNode.cpp
@@ -498,6 +358,95 @@ index 17b14c439f16534365c1fb41b3f10a4e12f59001..9c46cd9906ad31621534009a6151e004
    TextLayoutContext textLayoutContext{
        .pointScaleFactor = layoutContext.pointScaleFactor,
        .surfaceId = getSurfaceId(),
+diff --git a/ReactCommon/react/renderer/scheduler/Scheduler.cpp b/ReactCommon/react/renderer/scheduler/Scheduler.cpp
+index e74e8025c267022145beca65dbb525b8fc1c7836..1b6123318a0748cb9ef10a36b177b04c72d70ffa 100644
+--- a/ReactCommon/react/renderer/scheduler/Scheduler.cpp
++++ b/ReactCommon/react/renderer/scheduler/Scheduler.cpp
+@@ -31,7 +31,8 @@ Scheduler::Scheduler(
+     const SchedulerToolbox& schedulerToolbox,
+     UIManagerAnimationDelegate* animationDelegate,
+     SchedulerDelegate* delegate)
+-    : runtimeExecutor_(schedulerToolbox.runtimeExecutor),
++    : delegateInvalidated_(std::make_shared<std::atomic<bool>>(false)),
++      runtimeExecutor_(schedulerToolbox.runtimeExecutor),
+       contextContainer_(schedulerToolbox.contextContainer) {
+   // Creating a container for future `EventDispatcher` instance.
+   eventDispatcher_ = std::make_shared<std::optional<const EventDispatcher>>();
+@@ -181,6 +182,12 @@ Scheduler::~Scheduler() {
+   LOG(WARNING) << "Scheduler::~Scheduler() was called (address: " << this
+                << ").";
+ 
++  // Invalidate any lambdas already queued via scheduleRenderingUpdate that
++  // captured a raw delegate_ pointer; without this they'd dereference a
++  // dangling SchedulerDelegate after Scheduler teardown. (No replacement
++  // token is allocated here - Scheduler is going away.)
++  *delegateInvalidated_ = true;
++
+   auto weakRuntimeScheduler =
+       contextContainer_->find<std::weak_ptr<RuntimeScheduler>>(
+           RuntimeSchedulerKey);
+@@ -270,6 +277,19 @@ Scheduler::findComponentDescriptorByHandle_DO_NOT_USE_THIS_IS_BROKEN(
+ #pragma mark - Delegate
+ 
+ void Scheduler::setDelegate(SchedulerDelegate* delegate) {
++  if (delegate_ != delegate) {
++    // Mark the *current* token invalid: any rendering-update lambda already
++    // queued holds a shared_ptr to this atomic and will observe `true` on
++    // its next read, so it no-ops instead of calling into the previous
++    // delegate (which the caller is about to drop).
++    *delegateInvalidated_ = true;
++    // Then install a *fresh* token (a new atomic) so lambdas captured
++    // against the new delegate use their own non-invalidated flag.
++    // Reusing the previous atomic and flipping it back to `false` would
++    // re-arm the in-flight lambdas - exactly the use-after-free we're
++    // trying to prevent - because they share the same shared_ptr.
++    delegateInvalidated_ = std::make_shared<std::atomic<bool>>(false);
++  }
+   delegate_ = delegate;
+ }
+ 
+@@ -304,7 +324,11 @@ void Scheduler::uiManagerDidFinishTransaction(
+       runtimeScheduler_->scheduleRenderingUpdate(
+           surfaceId,
+           [delegate = delegate_,
++           invalidated = delegateInvalidated_,
+            mountingCoordinator = std::move(mountingCoordinator)]() {
++            if (*invalidated) {
++              return;
++            }
+             delegate->schedulerShouldRenderTransactions(mountingCoordinator);
+           });
+     } else {
+@@ -330,9 +354,13 @@ void Scheduler::uiManagerDidDispatchCommand(
+     runtimeScheduler_->scheduleRenderingUpdate(
+         shadowNode->getSurfaceId(),
+         [delegate = delegate_,
++         invalidated = delegateInvalidated_,
+          shadowView = std::move(shadowView),
+          commandName,
+          args]() {
++          if (*invalidated) {
++            return;
++          }
+           delegate->schedulerDidDispatchCommand(shadowView, commandName, args);
+         });
+   }
+diff --git a/ReactCommon/react/renderer/scheduler/Scheduler.h b/ReactCommon/react/renderer/scheduler/Scheduler.h
+index 1f5a59d1e1e296629f3d525430d4dcd90c5d4f25..bdac7c974223a72d7b02a2bc65ddf8b1249d02d1 100644
+--- a/ReactCommon/react/renderer/scheduler/Scheduler.h
++++ b/ReactCommon/react/renderer/scheduler/Scheduler.h
+@@ -126,6 +126,11 @@ class Scheduler final : public UIManagerDelegate {
+   friend class SurfaceHandler;
+ 
+   SchedulerDelegate *delegate_;
++  // Invalidation token captured by-value into lambdas deferred via
++  // runtimeScheduler_->scheduleRenderingUpdate. Set to true on delegate
++  // change or Scheduler destruction so a lambda that outlives its captured
++  // raw delegate pointer can no-op instead of dereferencing dangling memory.
++  std::shared_ptr<std::atomic<bool>> delegateInvalidated_;
+   SharedComponentDescriptorRegistry componentDescriptorRegistry_;
+   RuntimeExecutor runtimeExecutor_;
+   std::shared_ptr<UIManager> uiManager_;
 diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.h b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.h
 index a4b9be72c453574998499d3b41bb013e05a3ba3b..a6e2fe7ed1906370ac0af26eda02a1df0319c4ff 100644
 --- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.h
@@ -519,11 +468,11 @@ index a4b9be72c453574998499d3b41bb013e05a3ba3b..a6e2fe7ed1906370ac0af26eda02a1df
           paragraphAttributes:(facebook::react::ParagraphAttributes)paragraphAttributes
                         frame:(CGRect)frame
 diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
-index ac553045a9c0ce77e288277912538d9e131ebc01..30e2fc89a7710bc17a9e4dcc482e4d9f2d33c2df 100644
+index 5f9847a398faaef208c5b1ea3c507e8019c8803c..d10506fd32a93b338fc31ee265df81201fdd9096 100644
 --- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
 +++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
-@@ -14,11 +14,133 @@
- #import <react/featureflags/ReactNativeFeatureFlags.h>
+@@ -17,11 +17,133 @@
+ #import <react/renderer/textlayoutmanager/TextMeasurementRounding.h>
  #import <react/utils/ManagedObjectWrapper.h>
  #import <react/utils/SimpleThreadSafeCache.h>
 +#import <react/utils/hash_combine.h>
@@ -656,7 +605,7 @@ index ac553045a9c0ce77e288277912538d9e131ebc01..30e2fc89a7710bc17a9e4dcc482e4d9f
  }
  
  static NSLineBreakMode RCTNSLineBreakModeFromEllipsizeMode(EllipsizeMode ellipsizeMode)
-@@ -60,10 +182,67 @@ - (TextMeasurement)measureAttributedString:(AttributedString)attributedString
+@@ -63,10 +185,67 @@ - (TextMeasurement)measureAttributedString:(AttributedString)attributedString
                               layoutContext:(TextLayoutContext)layoutContext
                           layoutConstraints:(LayoutConstraints)layoutConstraints
  {
@@ -727,8 +676,8 @@ index ac553045a9c0ce77e288277912538d9e131ebc01..30e2fc89a7710bc17a9e4dcc482e4d9f
 +  _preparedLayouts.add(key, RCTTextLayout{.textStorage = textStorage, .size = size});
  }
  
- - (void)drawAttributedString:(AttributedString)attributedString
-@@ -71,10 +250,20 @@ - (void)drawAttributedString:(AttributedString)attributedString
+ - (CGRect)drawingFrameForAttributedString:(AttributedString)attributedString
+@@ -132,10 +311,20 @@ - (void)drawAttributedString:(AttributedString)attributedString
                         frame:(CGRect)frame
             drawHighlightPath:(void (^_Nullable)(UIBezierPath *highlightPath))block
  {
@@ -753,18 +702,6 @@ index ac553045a9c0ce77e288277912538d9e131ebc01..30e2fc89a7710bc17a9e4dcc482e4d9f
    NSLayoutManager *layoutManager = textStorage.layoutManagers.firstObject;
    NSTextContainer *textContainer = layoutManager.textContainers.firstObject;
  
-@@ -389,8 +578,9 @@ - (TextMeasurement)_measureTextStorage:(NSTextStorage *)textStorage
-     size.height = enumeratedLinesHeight;
-   }
- 
--  size = (CGSize){ceil(size.width * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor,
--                  ceil(size.height * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor};
-+  CGFloat epsilon = 0.001;
-+  size = (CGSize){ceil((size.width + epsilon) * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor,
-+                  ceil((size.height + epsilon) * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor};
- 
-   NSRange visibleGlyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
- 
 diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.h b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.h
 index ce564b01254f423782412453c1b51a7d18cb8026..c842534e75307046cefbefc0be367a629a01a5f6 100644
 --- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.h
@@ -787,10 +724,10 @@ index ce564b01254f423782412453c1b51a7d18cb8026..c842534e75307046cefbefc0be367a62
    std::shared_ptr<const ContextContainer> contextContainer_;
    std::shared_ptr<void> nativeTextLayoutManager_;
 diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.mm
-index cddafb5a6ef2b8e176f15ff250a05a40f5c1eb84..c31e530dbf048bcc05fe1a6a7c7e5fceb105609d 100644
+index 82cad8fd2eed44f8567e5007a52a755996ac2c95..4f435b528aa43b4109f8d406d6d77fc7342dd9d2 100644
 --- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.mm
 +++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.mm
-@@ -99,6 +99,17 @@
+@@ -100,6 +100,17 @@
    return measurement;
  }
  
@@ -808,40 +745,3 @@ index cddafb5a6ef2b8e176f15ff250a05a40f5c1eb84..c31e530dbf048bcc05fe1a6a7c7e5fce
  LinesMeasurements TextLayoutManager::measureLines(
      const AttributedStringBox &attributedStringBox,
      const ParagraphAttributes &paragraphAttributes,
-diff --git a/ReactCommon/react/renderer/uimanager/UIManager.cpp b/ReactCommon/react/renderer/uimanager/UIManager.cpp
-index 4d640400dc129724b1a46e429fc90da2fb1919cc..ecbd4bdbdbbebfd1bb8c893b44f90bc66103711e 100644
---- a/ReactCommon/react/renderer/uimanager/UIManager.cpp
-+++ b/ReactCommon/react/renderer/uimanager/UIManager.cpp
-@@ -535,30 +535,8 @@ std::shared_ptr<const ShadowNode> UIManager::findShadowNodeByTag_DEPRECATED(
-   auto shadowNode = std::shared_ptr<const ShadowNode>{};
- 
-   shadowTreeRegistry_.enumerate([&](const ShadowTree& shadowTree, bool& stop) {
--    // Obtain a pointer to the root node. The flag-gated path uses
--    // getCurrentRevision() which keeps the root alive via shared_ptr for
--    // the entire traversal, fixing a use-after-free race condition.
--    RootShadowNode::Shared rootShadowNodeHolder;
--    const RootShadowNode* rootShadowNode = nullptr;
--    if (ReactNativeFeatureFlags::fixFindShadowNodeByTagRaceCondition()) {
--      rootShadowNodeHolder = shadowTree.getCurrentRevision().rootShadowNode;
--      rootShadowNode = rootShadowNodeHolder.get();
--    } else {
--      // TODO(T257154369): Remove after flag rollout.
--      // The public interface of `ShadowTree` discourages accessing a stored
--      // pointer to a root node because of the possible data race.
--      // To work around this, we ask for a commit and immediately cancel it
--      // returning `nullptr` instead of a new shadow tree.
--      // We don't want to add a way to access a stored pointer to a root
--      // node because this `findShadowNodeByTag` is deprecated. It is only
--      // added to make migration to the new architecture easier.
--      shadowTree.tryCommit(
--          [&](const RootShadowNode& oldRootShadowNode) {
--            rootShadowNode = &oldRootShadowNode;
--            return nullptr;
--          },
--          {/* default commit options */});
--    }
-+    auto rootShadowNodeHolder = shadowTree.getCurrentRevision().rootShadowNode;
-+    const auto* rootShadowNode = rootShadowNodeHolder.get();
- 
-     if (rootShadowNode != nullptr) {
-       const auto& children = rootShadowNode->getChildren();

@@ -116,14 +116,14 @@ class DialogRootViewGroup(
 
   override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
     eventDispatcher?.let { jSTouchDispatcher.handleTouchEvent(event, it) }
-    jSPointerDispatcher?.handleMotionEvent(event, eventDispatcher, true)
+    eventDispatcher?.let { jSPointerDispatcher?.handleMotionEvent(event, it, true) }
     return super.onInterceptTouchEvent(event)
   }
 
   @SuppressLint("ClickableViewAccessibility")
   override fun onTouchEvent(event: MotionEvent): Boolean {
     eventDispatcher?.let { jSTouchDispatcher.handleTouchEvent(event, it) }
-    jSPointerDispatcher?.handleMotionEvent(event, eventDispatcher, false)
+    eventDispatcher?.let { jSPointerDispatcher?.handleMotionEvent(event, it, false) }
     super.onTouchEvent(event)
 
     // In case when there is no children interested in handling touch event, we return true from
@@ -132,12 +132,12 @@ class DialogRootViewGroup(
   }
 
   override fun onInterceptHoverEvent(event: MotionEvent): Boolean {
-    jSPointerDispatcher?.handleMotionEvent(event, eventDispatcher, true)
+    eventDispatcher?.let { jSPointerDispatcher?.handleMotionEvent(event, it, true) }
     return super.onHoverEvent(event)
   }
 
   override fun onHoverEvent(event: MotionEvent): Boolean {
-    jSPointerDispatcher?.handleMotionEvent(event, eventDispatcher, false)
+    eventDispatcher?.let { jSPointerDispatcher?.handleMotionEvent(event, it, false) }
     return super.onHoverEvent(event)
   }
 
@@ -146,7 +146,7 @@ class DialogRootViewGroup(
     ev: MotionEvent,
   ) {
     eventDispatcher?.let { jSTouchDispatcher.onChildStartedNativeGesture(ev, it) }
-    jSPointerDispatcher?.onChildStartedNativeGesture(childView, ev, eventDispatcher)
+    eventDispatcher?.let { jSPointerDispatcher?.onChildStartedNativeGesture(childView, ev, it) }
   }
 
   override fun onChildEndedNativeGesture(

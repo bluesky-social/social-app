@@ -1,8 +1,8 @@
 diff --git a/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt b/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
-index 47c4d15..afe138d 100644
+index 3ca59fc5167dafc7957485c0eea88ccb4eb8a691..ae0370e22b277640ba29962104adc4f518c9f2ea 100644
 --- a/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
 +++ b/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
-@@ -125,6 +125,10 @@ internal fun peekResponseBody(
+@@ -129,6 +129,10 @@ internal fun peekResponseBody(
  }
  
  internal fun shouldParseBody(response: Response): Boolean {
@@ -14,7 +14,7 @@ index 47c4d15..afe138d 100644
    val skipContentTypes = listOf(
      "text/event-stream", // Server Sent Events
 diff --git a/ios/Utilities/ConstantsProvider.swift b/ios/Utilities/ConstantsProvider.swift
-index b573eb8..0898eb7 100644
+index 372d855472d852d356a15840b5d862e5219ce4a9..3a3c31e87ff7a91692f725b9c78c1e8c637d692b 100644
 --- a/ios/Utilities/ConstantsProvider.swift
 +++ b/ios/Utilities/ConstantsProvider.swift
 @@ -5,13 +5,16 @@ internal final class ConstantsProvider: EXConstantsInterface {

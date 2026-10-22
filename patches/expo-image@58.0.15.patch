@@ -1,0 +1,54 @@
+diff --git a/ios/ImageView.swift b/ios/ImageView.swift
+index bf865ebaa990861eb534b3e1695d9594b0e55de6..730a79d42827bb99f516a7bfc709149527b8da38 100644
+--- a/ios/ImageView.swift
++++ b/ios/ImageView.swift
+@@ -49,6 +49,12 @@ public final class ImageView: ExpoView {
+   /// Rebuilds the image from a substituted SVG document after the manager delivered the original.
+   var pendingSVGVariablesTask: Task<Void, Never>?
+ 
++  /**
++   Incremented whenever the current load is cancelled or replaced, so a downscale
++   finishing on a background queue doesn't render an image the view no longer shows.
++   */
++  private var loadGeneration = 0
++
+   var contentFit: ContentFit = .cover
+ 
+   var contentPosition: ContentPosition = .center
+@@ -375,6 +381,28 @@ public final class ImageView: ExpoView {
+       contentFit: contentFit
+     )
+     let imageIdealSize = imageLayoutSize.rounded(.up)
++
++    // Redrawing a large image at its display size takes several milliseconds,
++    // so do it off the main thread and render once it's done.
++    if allowDownscaling && !bounds.isEmpty && !image.sd_isAnimated
++      && shouldDownscale(image: image, toSize: imageIdealSize, scale: scale) {
++      sdImageView.animationTransformer = nil
++      let generation = loadGeneration
++      let layoutSize = imageLayoutSize
++      let renderCacheType = ImageCacheType.fromSdCacheType(cacheType)
++      DispatchQueue.global(qos: .userInitiated).async { [weak self] in
++        let resized = resize(image: image, toSize: imageIdealSize, scale: scale)
++        DispatchQueue.main.async {
++          guard let self, self.loadGeneration == generation else {
++            return
++          }
++          self.applyContentPosition(contentSize: layoutSize, containerSize: self.frame.size)
++          self.renderSourceImage(resized, cacheType: renderCacheType)
++        }
++      }
++      return
++    }
++
+     let image = processImage(image, idealSize: imageIdealSize, scale: scale)
+     applyContentPosition(contentSize: imageLayoutSize, containerSize: frame.size)
+     renderSourceImage(image, cacheType: ImageCacheType.fromSdCacheType(cacheType))
+@@ -847,6 +875,7 @@ public final class ImageView: ExpoView {
+     pendingOperation = nil
+     pendingSVGVariablesTask?.cancel()
+     pendingSVGVariablesTask = nil
++    loadGeneration &+= 1
+   }
+ 
+   /**

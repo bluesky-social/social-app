@@ -22,11 +22,12 @@ home header (home is the only screen passing a non-zero offset). Stock RN appear
 by accident: its own pre-attach `tintColor` write materialized the content view at origin 0
 *before* the offset write. Possibly related upstream: react-native#54183.
 
-**2. Haptic (react-native#43388).** The Paper fix above does not cover Fabric: `updateProps`
-writes `tintColor` pre-attach, and a tint write on a detached control materializes the content
-view outside the scroll view, permanently suppressing the trigger haptic on iOS 17.4+ (the
-creation-time-state story likely explains this too, though the haptic wiring itself is not
-observable in logs).
+**2. Haptic (react-native#43388).** `updateProps` writes `tintColor` pre-attach, and a tint
+write on a detached control materializes the content view outside the scroll view, permanently
+suppressing the trigger haptic on iOS 17.4+ (the creation-time-state story likely explains this
+too, though the haptic wiring itself is not observable in logs). We used to carry a separate
+fix for the Paper `RCTRefreshControl`; React Native 0.88 removed the legacy RefreshControl
+files, so only this Fabric fix remains.
 
 **The fix**: both `tintColor` and `progressViewOffset` are parked in the component view
 (`_pendingTintColor` / `_pendingProgressViewOffset`, no `UIRefreshControl` subclass) and applied
@@ -49,8 +50,9 @@ History: an earlier iteration fixed the offset by porting Paper's frame-offset t
 deferral once the root cause was understood. The control's `didMoveToSuperview` appeared broken
 as a tint application point in early non-rigorous testing; unproven, not disproven.
 
-Upstream issue #43388 still open as of Aug 2026. Haptics cannot be verified on the simulator -
+Upstream issue #43388 still open as of October 2026. Haptics cannot be verified on the simulator -
 physical device only. Spinner position verified via frame logs; haptic on this variant NOT yet
 device-verified.
 
-Opened issue in RN repo: https://github.com/react/react-native/issues/57843
+Opened issue in RN repo: https://github.com/react/react-native/issues/57843 (still open as of
+October 2026; `RCTPullToRefreshViewComponentView.mm` is unchanged between 0.86.3 and 0.88.0).

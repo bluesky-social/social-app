@@ -34,4 +34,11 @@ draws on launch used a prepared layout, and the JS thread spent about 300ms
 preparing text. About half of the prepared layouts are never drawn (text in
 views that are offscreen or replaced before mounting).
 
+React Native 0.88 adds `drawingFrameForAttributedString:`, which can hand the
+draw a taller frame than the content frame. It only runs behind
+`enableIOSCompressedTextFrameAdjustment`, which is off in the stable release
+level. If that flag is ever turned on, prepared layouts for affected text would
+no longer match the draw's frame size, and those draws would fall back to the
+default path.
+
 **TODO: Re-evaluate on React Native upgrades.** Not an upstream backport.
