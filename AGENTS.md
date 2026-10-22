@@ -570,6 +570,14 @@ Only use `useMemo`/`useCallback` when you have a specific reason, such as:
 - The value is immediately used in an effect's dependency array
 - You're passing a callback to a non-React library that needs referential stability
 
+### Patching react-native
+
+`patches/react-native@<version>.patch` is generated - don't edit it or use
+`pnpm patch react-native` directly. Each change lives in `patches/react-native/`
+as its own patch against pristine react-native, with a `.patch.md` explaining
+it. After adding or changing one, run `pnpm patch:react-native` to rebuild the
+combined patch. See `patches/react-native/README.md`.
+
 ## Best Practices
 
 1. **Accessibility**: Always provide `label` prop for interactive elements, use `accessibilityHint` where helpful
