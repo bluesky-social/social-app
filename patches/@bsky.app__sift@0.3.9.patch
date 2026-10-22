@@ -1,0 +1,38 @@
+diff --git a/build/useKeyboardHandling.web.js b/build/useKeyboardHandling.web.js
+index ff08477ac57f837d349e0f189bdb717c332383cc..624a166acba1d7702fdcec9f63dc88ad4f426de0 100644
+--- a/build/useKeyboardHandling.web.js
++++ b/build/useKeyboardHandling.web.js
+@@ -9,6 +9,14 @@ export function useKeyboardHandling(props) {
+         function onKeyDown(e) {
+             if (!callbacksRef.current.sift.isActive())
+                 return;
++            /*
++             * Leave keys that are part of an IME composition to the IME, e.g. the
++             * Enter that confirms a Japanese conversion or the arrows that pick a
++             * candidate. Safari fires the confirming keydown after compositionend,
++             * so isComposing is already false there, but keyCode is still 229.
++             */
++            if (e.isComposing || e.keyCode === 229)
++                return;
+             let handled = false;
+             switch (e.key) {
+                 case 'ArrowDown':
+diff --git a/src/useKeyboardHandling.web.ts b/src/useKeyboardHandling.web.ts
+index 417ef9b09981321399a6fc4d0ff2d63efba9e09b..a25b771241feda43941db64e46f815247c997aac 100644
+--- a/src/useKeyboardHandling.web.ts
++++ b/src/useKeyboardHandling.web.ts
+@@ -22,6 +22,14 @@ export function useKeyboardHandling(props: {
+     function onKeyDown(e: KeyboardEvent) {
+       if (!callbacksRef.current.sift.isActive()) return
+ 
++      /*
++       * Leave keys that are part of an IME composition to the IME, e.g. the
++       * Enter that confirms a Japanese conversion or the arrows that pick a
++       * candidate. Safari fires the confirming keydown after compositionend,
++       * so isComposing is already false there, but keyCode is still 229.
++       */
++      if (e.isComposing || e.keyCode === 229) return
++
+       let handled = false
+ 
+       switch (e.key) {
