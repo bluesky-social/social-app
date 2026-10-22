@@ -8,7 +8,7 @@ msgstr ""
 "Language: cy\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-21 19:48\n"
+"PO-Revision-Date: 2026-10-22 08:29\n"
 "Last-Translator: \n"
 "Language-Team: Welsh\n"
 "Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n == 3) ? 3 : ((n == 6) ? 4 : 5))));\n"
@@ -576,7 +576,7 @@ msgstr "{estimatedTimeMins, plural, one {munud} other {munud}}"
 msgid "{feedCount, plural, one {# feed} other {# feeds}}"
 msgstr ""
 
-#: src/screens/Search/components/SearchHistory.tsx:170
+#: src/screens/Search/components/SearchHistory.tsx:208
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
 msgstr "{filterCount, plural, zero {+# hidlyddion} one {+# hidlydd} two {+# hidlydd} few {+# hidlydd} many {+# hidlydd} other {+# hidlydd}}"
 
@@ -3109,6 +3109,7 @@ msgstr "Mae angen mynediad i'r camera"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:290
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
+#: src/screens/Search/components/SearchHistory.tsx:151
 #: src/screens/Settings/AppIconSettings/index.tsx:42
 #: src/screens/Settings/AppIconSettings/index.tsx:228
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:143
@@ -3144,7 +3145,7 @@ msgstr "Diddymu'r ailweithredu ac allgofnodi"
 msgid "Cancel reply"
 msgstr "Diddymu'r ateb"
 
-#: src/screens/Search/Shell.tsx:592
+#: src/screens/Search/Shell.tsx:600
 msgid "Cancel search"
 msgstr "Diddymu'r chwilio"
 
@@ -3516,6 +3517,24 @@ msgstr "Dewiswch eich enw defnyddiwr"
 msgid "Clear"
 msgstr "Clirio"
 
+#: src/screens/Search/components/SearchHistory.tsx:150
+msgctxt "action"
+msgid "Clear"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:78
+msgctxt "action"
+msgid "Clear all"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:71
+msgid "Clear all recent searches"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:147
+msgid "Clear all recent searches?"
+msgstr ""
+
 #: src/screens/Settings/Settings.tsx:539
 msgid "Clear all storage data"
 msgstr "Clirio'r holl ddata storio"
@@ -3822,7 +3841,7 @@ msgstr "Wedi'i ffurfweddu yn y <0>gosodiadau cymedroli</0>."
 msgid "Confirm"
 msgstr "Cadarnhau"
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:81
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:77
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:171
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:250
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
@@ -4030,7 +4049,7 @@ msgstr ""
 msgid "Copied build version to clipboard"
 msgstr "Fersiwn adeiladu wedi'i gopïo i'r clipfwrdd"
 
-#: src/screens/Search/Shell.tsx:512
+#: src/screens/Search/Shell.tsx:520
 msgid "Copied link to clipboard"
 msgstr "Wedi copïo'r ddolen i'r clipfwrdd"
 
@@ -5574,7 +5593,7 @@ msgstr "Delweddau di-noethol amlwg."
 
 #: src/Navigation.tsx:930
 #: src/screens/Atmosphere.tsx:43
-#: src/screens/Search/Shell.tsx:549
+#: src/screens/Search/Shell.tsx:557
 #: src/view/shell/desktop/LeftNav.tsx:721
 #: src/view/shell/Drawer.tsx:537
 msgid "Explore"
@@ -5657,7 +5676,7 @@ msgstr "Wedi methu newid enw dangos. Ceisiwch eto."
 
 #: src/components/Lightbox/Lightbox.web.tsx:308
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:131
-#: src/screens/Search/Shell.tsx:513
+#: src/screens/Search/Shell.tsx:521
 msgid "Failed to copy link"
 msgstr "Methu copïo dolen"
 
@@ -6171,7 +6190,7 @@ msgstr "Chwilio am bobl i'w dilyn"
 msgid "Find people you know"
 msgstr "Dewch o hyd i bobl rydych yn eu hadnabod"
 
-#: src/screens/Search/Shell.tsx:765
+#: src/screens/Search/Shell.tsx:774
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Canfod postiadau, defnyddwyr a ffrydiau ar Bluesky"
 
@@ -11189,7 +11208,7 @@ msgstr "Derbyn gwthio hysbysiadau"
 msgid "Recent GIFs"
 msgstr "GIFau diweddar"
 
-#: src/screens/Search/components/SearchHistory.tsx:52
+#: src/screens/Search/components/SearchHistory.tsx:67
 msgid "Recent searches"
 msgstr "Chwilio diweddar"
 
@@ -11276,7 +11295,7 @@ msgstr "Tynnu {displayName} o'r sgwrsio grŵp hwn"
 msgid "Remove {displayName}?"
 msgstr "Tynnu {displayName}?"
 
-#: src/screens/Search/components/SearchHistory.tsx:182
+#: src/screens/Search/components/SearchHistory.tsx:220
 msgid "Remove {q}"
 msgstr "Tynnu {q}"
 
@@ -11399,7 +11418,7 @@ msgstr "Tynnu aelod"
 msgid "Remove mute word from your list"
 msgstr "Tynnu'ry gair tewi oddi ar eich rhestr"
 
-#: src/screens/Search/components/SearchHistory.tsx:243
+#: src/screens/Search/components/SearchHistory.tsx:281
 msgid "Remove profile"
 msgstr "Dileu proffil"
 
@@ -12219,9 +12238,9 @@ msgstr "Sgrolio i'r brig"
 #: src/components/forms/SearchInput.tsx:59
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
-#: src/screens/Search/Shell.tsx:549
-#: src/screens/Search/Shell.tsx:612
-#: src/screens/Search/Shell.tsx:753
+#: src/screens/Search/Shell.tsx:557
+#: src/screens/Search/Shell.tsx:620
+#: src/screens/Search/Shell.tsx:762
 #: src/view/shell/bottom-bar/BottomBar.tsx:220
 msgid "Search"
 msgstr "Chwilio"
@@ -12259,7 +12278,7 @@ msgstr "Chwiliwch am \"{interestsDisplayName}\" (gweithredol)"
 msgid "Search for “{searchText}”"
 msgstr "Chwilio am \"{searchText}\""
 
-#: src/screens/Search/components/SearchHistory.tsx:136
+#: src/screens/Search/components/SearchHistory.tsx:174
 msgid "Search for {q}"
 msgstr "Chwilio am {q}"
 
@@ -12849,8 +12868,8 @@ msgstr "Rhannwch god QR"
 msgid "Share this feed"
 msgstr "Rhannwch y ffrwd hon"
 
-#: src/screens/Search/Shell.tsx:565
-#: src/screens/Search/Shell.tsx:634
+#: src/screens/Search/Shell.tsx:573
+#: src/screens/Search/Shell.tsx:642
 msgid "Share this search"
 msgstr "Rhannu'r chwilio hwn"
 
@@ -14349,6 +14368,10 @@ msgstr "Mae'r awdur hwn wedi dewis gwneud ei bostiadau'n weladwy ddim ond i bobl
 #: src/screens/Profile/components/GermButton.tsx:284
 msgid "This button lets others open the Germ DM app to send you a message. You can manage its visibility from the Germ DM app, or you can disconnect your Bluesky account from Germ DM altogether by clicking the button below."
 msgstr "Mae'r botwm yma'n gadael i bobl eraill agor yr ap Germ DM i anfon neges atoch chi. Gallwch reoli ei welededd o'r ap Germ DM, neu ddatgysylltu eich cyfrif Bluesky o Germ DM yn llwyr drwy glicio'r botwm isod."
+
+#: src/screens/Search/components/SearchHistory.tsx:148
+msgid "This can’t be undone, and all of your recent searches will be removed."
+msgstr ""
 
 #: src/screens/Messages/components/ChatEnded.tsx:48
 msgid "This chat has ended"

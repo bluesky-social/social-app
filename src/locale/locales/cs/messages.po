@@ -8,7 +8,7 @@ msgstr ""
 "Language: cs\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-21 19:47\n"
+"PO-Revision-Date: 2026-10-22 08:29\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
@@ -283,7 +283,7 @@ msgstr "{0} sledujících"
 #. placeholder {0}: provider.name
 #: src/features/profileLinks/components/LinkFormDialog.tsx:362
 msgid "{0} is a recognized support link. It gets the green support button."
-msgstr ""
+msgstr "{0} je rozpoznaný odkaz na podporu. Získá zelené tlačítko Podpořit."
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
 #: src/components/dms/MessageItem.tsx:739
@@ -576,7 +576,7 @@ msgstr "{estimatedTimeMins, plural, one {minuta} few {minuty} many {minut} other
 msgid "{feedCount, plural, one {# feed} other {# feeds}}"
 msgstr "{feedCount, plural, one {# kanál} few {# kanály} many {# kanálů} other {# kanálů}}"
 
-#: src/screens/Search/components/SearchHistory.tsx:170
+#: src/screens/Search/components/SearchHistory.tsx:208
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
 msgstr "{filterCount, plural, one {+# filtr} few {+# filtry} many {+# filtrů} other {+# filtrů}}"
 
@@ -1454,7 +1454,7 @@ msgstr "Účet"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:53
 msgid "Account {authorName}"
-msgstr ""
+msgstr "Účet {authorName}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:430
 #: src/screens/Messages/components/RequestButtons.tsx:104
@@ -1540,7 +1540,7 @@ msgstr "Ukončeno sledování účtu"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:53
 msgid "Account unknown"
-msgstr ""
+msgstr "Neznámý účet"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:452
 #: src/view/com/profile/ProfileMenu.tsx:140
@@ -2141,7 +2141,7 @@ msgstr "Odkaz na pozvánku umožňuje lidem připojit se k této skupinové konv
 
 #: src/components/dialogs/nuxs/IPadBetaHero/index.tsx:30
 msgid "An iPad Pro floating above the clouds, showing an illustration of people enjoying a sunny park in a futuristic city."
-msgstr ""
+msgstr "iPad Pro vznášející se nad mraky zobrazující ilustraci lidí užívajících si slunečného parku ve futuristickém městě."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:238
 msgid "An issue not included in these options"
@@ -2836,7 +2836,7 @@ msgstr "Bluesky"
 #. Description of a beta feature (iPad support)
 #: src/screens/Settings/BetaFeaturesSettings.tsx:79
 msgid "Bluesky adapts to your iPad’s screen in any orientation or window size."
-msgstr ""
+msgstr "Bluesky se přizpůsobí obrazovce vašeho iPadu v jakékoli orientaci nebo velikosti okna."
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:652
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
@@ -2887,7 +2887,7 @@ msgstr "Bluesky potřebuje přístup k fotoaparátu pro skenování QR kódů z 
 
 #: src/components/dialogs/nuxs/IPadBetaAnnouncement.tsx:66
 msgid "Bluesky now makes full use of your iPad’s screen, in any orientation. It’s still in beta, so if something looks off, let us know in Settings → Beta features."
-msgstr ""
+msgstr "Bluesky nyní plně využívá obrazovku vašeho iPadu, v jakékoli orientaci. Stále se jedná o beta verzi, takže pokud něco vypadá špatně, dejte nám vědět v Nastavení → Beta funkce."
 
 #: src/screens/Takendown.tsx:213
 msgid "Bluesky Social Terms of Service"
@@ -3109,6 +3109,7 @@ msgstr "Je vyžadován přístup ke kameře"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:290
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
+#: src/screens/Search/components/SearchHistory.tsx:151
 #: src/screens/Settings/AppIconSettings/index.tsx:42
 #: src/screens/Settings/AppIconSettings/index.tsx:228
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:143
@@ -3144,7 +3145,7 @@ msgstr "Zrušit opětovné aktivaci a odhlásit se"
 msgid "Cancel reply"
 msgstr "Zrušit odpověď"
 
-#: src/screens/Search/Shell.tsx:592
+#: src/screens/Search/Shell.tsx:600
 msgid "Cancel search"
 msgstr "Zrušit vyhledávání"
 
@@ -3516,6 +3517,24 @@ msgstr "Zvolte své uživatelské jméno"
 msgid "Clear"
 msgstr "Vymazat"
 
+#: src/screens/Search/components/SearchHistory.tsx:150
+msgctxt "action"
+msgid "Clear"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:78
+msgctxt "action"
+msgid "Clear all"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:71
+msgid "Clear all recent searches"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:147
+msgid "Clear all recent searches?"
+msgstr ""
+
 #: src/screens/Settings/Settings.tsx:539
 msgid "Clear all storage data"
 msgstr "Vymazat všechna data úložiště"
@@ -3822,7 +3841,7 @@ msgstr "Nastaveno v <0>nastavení moderování</0>."
 msgid "Confirm"
 msgstr "Potvrdit"
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:81
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:77
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:171
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:250
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
@@ -4030,7 +4049,7 @@ msgstr "Konverzace s {authorName}"
 msgid "Copied build version to clipboard"
 msgstr "Verze sestavení zkopírována do schránky"
 
-#: src/screens/Search/Shell.tsx:512
+#: src/screens/Search/Shell.tsx:520
 msgid "Copied link to clipboard"
 msgstr "Odkaz zkopírován do schránky"
 
@@ -5574,7 +5593,7 @@ msgstr "Explicitní sexuální obrázky."
 
 #: src/Navigation.tsx:930
 #: src/screens/Atmosphere.tsx:43
-#: src/screens/Search/Shell.tsx:549
+#: src/screens/Search/Shell.tsx:557
 #: src/view/shell/desktop/LeftNav.tsx:721
 #: src/view/shell/Drawer.tsx:537
 msgid "Explore"
@@ -5657,7 +5676,7 @@ msgstr "Nepodařilo se změnit uživatelské jméno. Zkuste to prosím znovu."
 
 #: src/components/Lightbox/Lightbox.web.tsx:308
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:131
-#: src/screens/Search/Shell.tsx:513
+#: src/screens/Search/Shell.tsx:521
 msgid "Failed to copy link"
 msgstr "Nepodařilo se zkopírovat odkaz"
 
@@ -5814,7 +5833,7 @@ msgstr "Nepodařilo se označit všechny žádosti jako přečtené"
 
 #: src/state/queries/moderation-inbox.ts:346
 msgid "Failed to mark as read. Please try again."
-msgstr ""
+msgstr "Nepodařilo se označit jako přečtené. Zkuste to prosím znovu."
 
 #: src/screens/Messages/ConversationSettings/index.tsx:387
 msgid "Failed to mute group chat"
@@ -6171,7 +6190,7 @@ msgstr "Najděte lidi, které budete sledovat"
 msgid "Find people you know"
 msgstr "Najděte lidi, které znáte"
 
-#: src/screens/Search/Shell.tsx:765
+#: src/screens/Search/Shell.tsx:774
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Najděte příspěvky, uživatele a kanály na Bluesky"
 
@@ -6413,7 +6432,7 @@ msgstr "Předvolby kanálu Sledované"
 
 #: src/screens/Notifications/index.tsx:109
 msgid "Follows"
-msgstr ""
+msgstr "Sledující"
 
 #: src/components/Pills.tsx:215
 #: src/screens/Profile/Header/Handle.tsx:33
@@ -7404,7 +7423,7 @@ msgstr "Abychom mohli poskytnout zážitek odpovídající vašemu věku, potře
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:260
 msgid "in reply to <0>{subject}</0>: {previewNode}"
-msgstr ""
+msgstr "v odpovědi na <0>{subject}</0>: {previewNode}"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:173
 msgid "in reply to a blocked post"
@@ -7667,12 +7686,12 @@ msgstr "Pozvánky, ale osobní"
 #. Name for a beta feature
 #: src/screens/Settings/BetaFeaturesSettings.tsx:75
 msgid "iPad support"
-msgstr ""
+msgstr "Podpora iPadu"
 
 #: src/components/dialogs/nuxs/IPadBetaAnnouncement.tsx:36
 #: src/components/dialogs/nuxs/IPadBetaAnnouncement.tsx:57
 msgid "iPad support is here"
-msgstr ""
+msgstr "Podpora pro iPad je tady"
 
 #: src/components/contacts/components/InviteInfo.tsx:47
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
@@ -8137,11 +8156,11 @@ msgstr "Odkazy"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:302
 msgid "Links show as buttons under your bio. Links to support sites like Ko-fi or Patreon show as a green button. <0>View all support sites</0>"
-msgstr ""
+msgstr "Odkazy se zobrazují jako tlačítka pod vaším bio. Odkazy na stránky pro podporu, jako jsou Ko-fi nebo Patreon, se zobrazují jako zelené tlačítko. <0>Zobrazit všechny stránky pro podporu</0>"
 
 #: src/features/profileLinks/components/SupportedSitesDialog.tsx:45
 msgid "Links to these sites show as a green support button."
-msgstr ""
+msgstr "Odkazy na tyto weby se zobrazují jako zelené tlačítko Podpořit."
 
 #: src/Navigation.tsx:300
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:44
@@ -11189,7 +11208,7 @@ msgstr "Dostávat push oznámení"
 msgid "Recent GIFs"
 msgstr "Nedávné GIFy"
 
-#: src/screens/Search/components/SearchHistory.tsx:52
+#: src/screens/Search/components/SearchHistory.tsx:67
 msgid "Recent searches"
 msgstr "Nedávná hledání"
 
@@ -11276,7 +11295,7 @@ msgstr "Odebrat uživatele {displayName} z této skupinové konverzace"
 msgid "Remove {displayName}?"
 msgstr "Odebrat uživatele {displayName}?"
 
-#: src/screens/Search/components/SearchHistory.tsx:182
+#: src/screens/Search/components/SearchHistory.tsx:220
 msgid "Remove {q}"
 msgstr "Odebrat {q}"
 
@@ -11399,7 +11418,7 @@ msgstr "Odebrat člena"
 msgid "Remove mute word from your list"
 msgstr "Odebrat ztlumené slovo ze seznamu"
 
-#: src/screens/Search/components/SearchHistory.tsx:243
+#: src/screens/Search/components/SearchHistory.tsx:281
 msgid "Remove profile"
 msgstr "Odebrat profil"
 
@@ -11511,7 +11530,7 @@ msgstr "Nahradit kanálem Discover"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:253
 msgid "replied to <0>{subject}</0>: {previewNode}"
-msgstr ""
+msgstr "odpověděl/a uživateli <0>{subject}</0>: {previewNode}"
 
 #: src/components/Post/PostRepliedTo.tsx:39
 msgctxt "description"
@@ -12219,9 +12238,9 @@ msgstr "Přejít nahoru"
 #: src/components/forms/SearchInput.tsx:59
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
-#: src/screens/Search/Shell.tsx:549
-#: src/screens/Search/Shell.tsx:612
-#: src/screens/Search/Shell.tsx:753
+#: src/screens/Search/Shell.tsx:557
+#: src/screens/Search/Shell.tsx:620
+#: src/screens/Search/Shell.tsx:762
 #: src/view/shell/bottom-bar/BottomBar.tsx:220
 msgid "Search"
 msgstr "Hledat"
@@ -12259,7 +12278,7 @@ msgstr "Hledat „{interestsDisplayName}“ (aktivní)"
 msgid "Search for “{searchText}”"
 msgstr "Hledat „{searchText}“"
 
-#: src/screens/Search/components/SearchHistory.tsx:136
+#: src/screens/Search/components/SearchHistory.tsx:174
 msgid "Search for {q}"
 msgstr "Hledat {q}"
 
@@ -12849,8 +12868,8 @@ msgstr "Sdílet QR kód"
 msgid "Share this feed"
 msgstr "Sdílet tento kanál"
 
-#: src/screens/Search/Shell.tsx:565
-#: src/screens/Search/Shell.tsx:634
+#: src/screens/Search/Shell.tsx:573
+#: src/screens/Search/Shell.tsx:642
 msgid "Share this search"
 msgstr "Sdílet toto hledání"
 
@@ -14350,6 +14369,10 @@ msgstr "Tento autor se rozhodl zveřejnit své příspěvky pouze přihlášený
 msgid "This button lets others open the Germ DM app to send you a message. You can manage its visibility from the Germ DM app, or you can disconnect your Bluesky account from Germ DM altogether by clicking the button below."
 msgstr "Toto tlačítko umožňuje ostatním otevřít aplikaci Germ DM a poslat vám zprávu. Jeho viditelnost můžete spravovat v aplikaci Germ DM, nebo můžete svůj účet Bluesky od Germ DM zcela odpojit kliknutím na tlačítko níže."
 
+#: src/screens/Search/components/SearchHistory.tsx:148
+msgid "This can’t be undone, and all of your recent searches will be removed."
+msgstr ""
+
 #: src/screens/Messages/components/ChatEnded.tsx:48
 msgid "This chat has ended"
 msgstr "Tato konverzace skončila"
@@ -15761,7 +15784,7 @@ msgstr "Zobrazit všechny reposty, které {name} repostoval/a"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:306
 msgid "View all support sites"
-msgstr ""
+msgstr "Zobrazit všechny podporované weby"
 
 #: src/components/ProfileHoverCard/index.web.tsx:487
 msgid "View blocked user's profile"
@@ -16445,7 +16468,7 @@ msgstr "Včera"
 #. Emphasised in “replied to you: ...”, in a notification where someone replied to the viewer’s own post
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:200
 msgid "you"
-msgstr ""
+msgstr "vám"
 
 #: src/components/verification/VerifierDialog.tsx:61
 msgid "You are a trusted verifier"

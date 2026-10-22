@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-21 19:48\n"
+"PO-Revision-Date: 2026-10-22 08:29\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -283,7 +283,7 @@ msgstr "{0} urmăriți"
 #. placeholder {0}: provider.name
 #: src/features/profileLinks/components/LinkFormDialog.tsx:362
 msgid "{0} is a recognized support link. It gets the green support button."
-msgstr ""
+msgstr "{0} este un link recunoscut pentru susținere. Primește butonul verde de susținere."
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
 #: src/components/dms/MessageItem.tsx:739
@@ -576,7 +576,7 @@ msgstr "{estimatedTimeMins, plural, one {minut} few {minute} other {de minute}}"
 msgid "{feedCount, plural, one {# feed} other {# feeds}}"
 msgstr "{feedCount, plural, one {un flux} few {# fluxuri} other {# de fluxuri}}"
 
-#: src/screens/Search/components/SearchHistory.tsx:170
+#: src/screens/Search/components/SearchHistory.tsx:208
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
 msgstr "{filterCount, plural, one {peste un filtru} few {peste # filtre} other {peste # de filtre}}"
 
@@ -775,7 +775,7 @@ msgstr "Nu se pot trimite mesaje către {handle}"
 
 #: src/components/moderation/BlockDialog.tsx:199
 msgid "{hiddenCount, plural, one {See # more} other {See # more}}"
-msgstr ""
+msgstr "{hiddenCount, plural, one {Vedeți încă unul} few {Vedeți încă #} other {Vedeți încă #}}"
 
 #: src/features/liveNow/utils.ts:40
 msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesString}}}"
@@ -2141,7 +2141,7 @@ msgstr "Un link de invitație permite utilizatorilor să se alăture acestei con
 
 #: src/components/dialogs/nuxs/IPadBetaHero/index.tsx:30
 msgid "An iPad Pro floating above the clouds, showing an illustration of people enjoying a sunny park in a futuristic city."
-msgstr ""
+msgstr "Un iPad Pro plutind deasupra norilor, afișând o ilustrație cu oameni care se bucură de o zi însorită într-un parc într-un oraș futurist."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:238
 msgid "An issue not included in these options"
@@ -2836,7 +2836,7 @@ msgstr "Bluesky"
 #. Description of a beta feature (iPad support)
 #: src/screens/Settings/BetaFeaturesSettings.tsx:79
 msgid "Bluesky adapts to your iPad’s screen in any orientation or window size."
-msgstr ""
+msgstr "Bluesky se adaptează la ecranul iPad-ului dvs., indiferent de orientare sau de dimensiunea ferestrei."
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:652
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
@@ -2887,7 +2887,7 @@ msgstr "Bluesky are nevoie de acces la cameră pentru a scana codurile QR ale al
 
 #: src/components/dialogs/nuxs/IPadBetaAnnouncement.tsx:66
 msgid "Bluesky now makes full use of your iPad’s screen, in any orientation. It’s still in beta, so if something looks off, let us know in Settings → Beta features."
-msgstr ""
+msgstr "Bluesky utilizează acum pe deplin ecranul iPad-ului dvs., indiferent de orientare. Caracteristica se află încă în stadiul beta; așadar, dacă observați ceva în neregulă, anunțați-ne în secțiunea Setări → Caracteristici beta."
 
 #: src/screens/Takendown.tsx:213
 msgid "Bluesky Social Terms of Service"
@@ -3109,6 +3109,7 @@ msgstr "Este necesar accesul la cameră"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:290
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
+#: src/screens/Search/components/SearchHistory.tsx:151
 #: src/screens/Settings/AppIconSettings/index.tsx:42
 #: src/screens/Settings/AppIconSettings/index.tsx:228
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:143
@@ -3144,7 +3145,7 @@ msgstr "Anulați reactivarea și deconectați-vă"
 msgid "Cancel reply"
 msgstr "Anulare răspuns"
 
-#: src/screens/Search/Shell.tsx:592
+#: src/screens/Search/Shell.tsx:600
 msgid "Cancel search"
 msgstr "Anulare căutare"
 
@@ -3516,6 +3517,24 @@ msgstr "Alegeți-vă numele de utilizator"
 msgid "Clear"
 msgstr "Ștergere"
 
+#: src/screens/Search/components/SearchHistory.tsx:150
+msgctxt "action"
+msgid "Clear"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:78
+msgctxt "action"
+msgid "Clear all"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:71
+msgid "Clear all recent searches"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:147
+msgid "Clear all recent searches?"
+msgstr ""
+
 #: src/screens/Settings/Settings.tsx:539
 msgid "Clear all storage data"
 msgstr "Ștergeți toate datele de stocare"
@@ -3822,7 +3841,7 @@ msgstr "Configurat în <0>setările de moderare</0>."
 msgid "Confirm"
 msgstr "Confirmare"
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:81
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:77
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:171
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:250
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
@@ -4030,7 +4049,7 @@ msgstr "Conversație cu {authorName}"
 msgid "Copied build version to clipboard"
 msgstr "Versiunea de compilare a fost copiată în clipboard"
 
-#: src/screens/Search/Shell.tsx:512
+#: src/screens/Search/Shell.tsx:520
 msgid "Copied link to clipboard"
 msgstr "Link copiat în clipboard"
 
@@ -5574,7 +5593,7 @@ msgstr "Imagini sexuale explicite."
 
 #: src/Navigation.tsx:930
 #: src/screens/Atmosphere.tsx:43
-#: src/screens/Search/Shell.tsx:549
+#: src/screens/Search/Shell.tsx:557
 #: src/view/shell/desktop/LeftNav.tsx:721
 #: src/view/shell/Drawer.tsx:537
 msgid "Explore"
@@ -5657,7 +5676,7 @@ msgstr "Nu s-a putut modifica identificatorul. Vă rugăm să încercați din no
 
 #: src/components/Lightbox/Lightbox.web.tsx:308
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:131
-#: src/screens/Search/Shell.tsx:513
+#: src/screens/Search/Shell.tsx:521
 msgid "Failed to copy link"
 msgstr "Copierea link-ului a eșuat"
 
@@ -5814,7 +5833,7 @@ msgstr "Nu s-a reușit marcarea tuturor cererilor ca fiind citite"
 
 #: src/state/queries/moderation-inbox.ts:346
 msgid "Failed to mark as read. Please try again."
-msgstr ""
+msgstr "Nu s-a reușit marcarea ca citite. Vă rugăm să încercați din nou."
 
 #: src/screens/Messages/ConversationSettings/index.tsx:387
 msgid "Failed to mute group chat"
@@ -6171,7 +6190,7 @@ msgstr "Găsiți persoane pe care să le urmăriți"
 msgid "Find people you know"
 msgstr "Găsiți persoane pe care le cunoașteți"
 
-#: src/screens/Search/Shell.tsx:765
+#: src/screens/Search/Shell.tsx:774
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Găsiți postări, utilizatori și fluxuri pe Bluesky"
 
@@ -7404,7 +7423,7 @@ msgstr "Pentru a oferi o experiență adecvată vârstei, trebuie să vă știm 
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:260
 msgid "in reply to <0>{subject}</0>: {previewNode}"
-msgstr ""
+msgstr "ca răspuns la <0>{subject}</0>: {previewNode}"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:173
 msgid "in reply to a blocked post"
@@ -7667,12 +7686,12 @@ msgstr "Invitații, dar personale"
 #. Name for a beta feature
 #: src/screens/Settings/BetaFeaturesSettings.tsx:75
 msgid "iPad support"
-msgstr ""
+msgstr "Suport pentru iPad"
 
 #: src/components/dialogs/nuxs/IPadBetaAnnouncement.tsx:36
 #: src/components/dialogs/nuxs/IPadBetaAnnouncement.tsx:57
 msgid "iPad support is here"
-msgstr ""
+msgstr "Suportul pentru iPad este aici"
 
 #: src/components/contacts/components/InviteInfo.tsx:47
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
@@ -8137,11 +8156,11 @@ msgstr "Linkuri"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:302
 msgid "Links show as buttons under your bio. Links to support sites like Ko-fi or Patreon show as a green button. <0>View all support sites</0>"
-msgstr ""
+msgstr "Linkurile apar sub formă de butoane sub biografia dvs. Linkurile către site-uri de susținere precum Ko-fi sau Patreon apar sub forma unui buton verde de Susținere. <0>Vizualizați toate site-urile acceptate</0>"
 
 #: src/features/profileLinks/components/SupportedSitesDialog.tsx:45
 msgid "Links to these sites show as a green support button."
-msgstr ""
+msgstr "Linkurile către aceste site-uri apar ca un buton verde de susținere."
 
 #: src/Navigation.tsx:300
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:44
@@ -11189,7 +11208,7 @@ msgstr "Primiți notificări push"
 msgid "Recent GIFs"
 msgstr "GIF-uri recente"
 
-#: src/screens/Search/components/SearchHistory.tsx:52
+#: src/screens/Search/components/SearchHistory.tsx:67
 msgid "Recent searches"
 msgstr "Căutări recente"
 
@@ -11276,7 +11295,7 @@ msgstr "Eliminați pe {displayName} din această conversație de grup"
 msgid "Remove {displayName}?"
 msgstr "Eliminați pe {displayName}?"
 
-#: src/screens/Search/components/SearchHistory.tsx:182
+#: src/screens/Search/components/SearchHistory.tsx:220
 msgid "Remove {q}"
 msgstr "Eliminare {q}"
 
@@ -11399,7 +11418,7 @@ msgstr "Eliminare membru"
 msgid "Remove mute word from your list"
 msgstr "Eliminați cuvântul amuțit din listele dvs."
 
-#: src/screens/Search/components/SearchHistory.tsx:243
+#: src/screens/Search/components/SearchHistory.tsx:281
 msgid "Remove profile"
 msgstr "Eliminați profilul"
 
@@ -11511,7 +11530,7 @@ msgstr "Înlocuiți cu Descoperiți"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:253
 msgid "replied to <0>{subject}</0>: {previewNode}"
-msgstr ""
+msgstr "răspuns la <0>{subject}</0>: {previewNode}"
 
 #: src/components/Post/PostRepliedTo.tsx:39
 msgctxt "description"
@@ -12219,9 +12238,9 @@ msgstr "Derulați până sus"
 #: src/components/forms/SearchInput.tsx:59
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
-#: src/screens/Search/Shell.tsx:549
-#: src/screens/Search/Shell.tsx:612
-#: src/screens/Search/Shell.tsx:753
+#: src/screens/Search/Shell.tsx:557
+#: src/screens/Search/Shell.tsx:620
+#: src/screens/Search/Shell.tsx:762
 #: src/view/shell/bottom-bar/BottomBar.tsx:220
 msgid "Search"
 msgstr "Căutare"
@@ -12259,7 +12278,7 @@ msgstr "Căutați „{interestsDisplayName}”(activ)"
 msgid "Search for “{searchText}”"
 msgstr "Căutați „{searchText}”"
 
-#: src/screens/Search/components/SearchHistory.tsx:136
+#: src/screens/Search/components/SearchHistory.tsx:174
 msgid "Search for {q}"
 msgstr "Căutați {q}"
 
@@ -12849,8 +12868,8 @@ msgstr "Partajați codul QR"
 msgid "Share this feed"
 msgstr "Partajați acest flux"
 
-#: src/screens/Search/Shell.tsx:565
-#: src/screens/Search/Shell.tsx:634
+#: src/screens/Search/Shell.tsx:573
+#: src/screens/Search/Shell.tsx:642
 msgid "Share this search"
 msgstr "Partajați această căutare"
 
@@ -14350,6 +14369,10 @@ msgstr "Acest autor a ales să facă postările vizibile doar persoanelor care s
 msgid "This button lets others open the Germ DM app to send you a message. You can manage its visibility from the Germ DM app, or you can disconnect your Bluesky account from Germ DM altogether by clicking the button below."
 msgstr "Acest buton permite celorlalți să deschidă aplicația Germ DM pentru a vă trimite un mesaj. Puteți gestiona vizibilitatea din aplicația Germ DM, sau puteți deconecta contul Bluesky de la Germ DM apăsând butonul de mai jos."
 
+#: src/screens/Search/components/SearchHistory.tsx:148
+msgid "This can’t be undone, and all of your recent searches will be removed."
+msgstr ""
+
 #: src/screens/Messages/components/ChatEnded.tsx:48
 msgid "This chat has ended"
 msgstr "Această conversație s-a încheiat"
@@ -15761,7 +15784,7 @@ msgstr "Vizualizați toate repostările repostate de {name}"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:306
 msgid "View all support sites"
-msgstr ""
+msgstr "Vizualizați toate site-urile acceptate"
 
 #: src/components/ProfileHoverCard/index.web.tsx:487
 msgid "View blocked user's profile"
@@ -16445,7 +16468,7 @@ msgstr "Ieri"
 #. Emphasised in “replied to you: ...”, in a notification where someone replied to the viewer’s own post
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:200
 msgid "you"
-msgstr ""
+msgstr "dvs."
 
 #: src/components/verification/VerifierDialog.tsx:61
 msgid "You are a trusted verifier"

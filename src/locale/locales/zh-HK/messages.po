@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-21 19:47\n"
+"PO-Revision-Date: 2026-10-22 08:29\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -576,7 +576,7 @@ msgstr "{estimatedTimeMins, plural, one {分鐘} other {分鐘}}"
 msgid "{feedCount, plural, one {# feed} other {# feeds}}"
 msgstr ""
 
-#: src/screens/Search/components/SearchHistory.tsx:170
+#: src/screens/Search/components/SearchHistory.tsx:208
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
 msgstr "{filterCount, plural, other {+# 篩選條件}}"
 
@@ -3109,6 +3109,7 @@ msgstr "需要取用相機權限"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:290
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
+#: src/screens/Search/components/SearchHistory.tsx:151
 #: src/screens/Settings/AppIconSettings/index.tsx:42
 #: src/screens/Settings/AppIconSettings/index.tsx:228
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:143
@@ -3144,7 +3145,7 @@ msgstr "取消重新啓動兼登出"
 msgid "Cancel reply"
 msgstr "唔再覆佢"
 
-#: src/screens/Search/Shell.tsx:592
+#: src/screens/Search/Shell.tsx:600
 msgid "Cancel search"
 msgstr "唔再搵嘢"
 
@@ -3516,6 +3517,24 @@ msgstr "設定你嘅用戶名稱"
 msgid "Clear"
 msgstr "剷晒"
 
+#: src/screens/Search/components/SearchHistory.tsx:150
+msgctxt "action"
+msgid "Clear"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:78
+msgctxt "action"
+msgid "Clear all"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:71
+msgid "Clear all recent searches"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:147
+msgid "Clear all recent searches?"
+msgstr ""
+
 #: src/screens/Settings/Settings.tsx:539
 msgid "Clear all storage data"
 msgstr "剷晒所有資料"
@@ -3822,7 +3841,7 @@ msgstr "已喺 <0>內容審覈設定</0> 度設定。"
 msgid "Confirm"
 msgstr "確認"
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:81
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:77
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:171
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:250
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
@@ -4030,7 +4049,7 @@ msgstr ""
 msgid "Copied build version to clipboard"
 msgstr "已複製組建版本號到剪貼簿"
 
-#: src/screens/Search/Shell.tsx:512
+#: src/screens/Search/Shell.tsx:520
 msgid "Copied link to clipboard"
 msgstr "已複製連結到剪貼簿"
 
@@ -5574,7 +5593,7 @@ msgstr "打大赤肋嘅鹹溼相。"
 
 #: src/Navigation.tsx:930
 #: src/screens/Atmosphere.tsx:43
-#: src/screens/Search/Shell.tsx:549
+#: src/screens/Search/Shell.tsx:557
 #: src/view/shell/desktop/LeftNav.tsx:721
 #: src/view/shell/Drawer.tsx:537
 msgid "Explore"
@@ -5657,7 +5676,7 @@ msgstr "改唔到帳號代碼，唔該試多次。"
 
 #: src/components/Lightbox/Lightbox.web.tsx:308
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:131
-#: src/screens/Search/Shell.tsx:513
+#: src/screens/Search/Shell.tsx:521
 msgid "Failed to copy link"
 msgstr "複製唔到連結"
 
@@ -6171,7 +6190,7 @@ msgstr "睇吓跟啲乜人好"
 msgid "Find people you know"
 msgstr "搵返你識嘅人"
 
-#: src/screens/Search/Shell.tsx:765
+#: src/screens/Search/Shell.tsx:774
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "喺 Bluesky 度搵帖文、用戶同埋動態源"
 
@@ -11189,7 +11208,7 @@ msgstr "接收推播通知"
 msgid "Recent GIFs"
 msgstr "近排使用啲 GIF"
 
-#: src/screens/Search/components/SearchHistory.tsx:52
+#: src/screens/Search/components/SearchHistory.tsx:67
 msgid "Recent searches"
 msgstr "近排嘅搵嘢記錄"
 
@@ -11276,7 +11295,7 @@ msgstr "將 {displayName} 移出此羣組傾偈"
 msgid "Remove {displayName}?"
 msgstr "移除 {displayName}？"
 
-#: src/screens/Search/components/SearchHistory.tsx:182
+#: src/screens/Search/components/SearchHistory.tsx:220
 msgid "Remove {q}"
 msgstr "移除 {q}"
 
@@ -11399,7 +11418,7 @@ msgstr "移除成員"
 msgid "Remove mute word from your list"
 msgstr "喺你嘅清單度刪除靜音字詞"
 
-#: src/screens/Search/components/SearchHistory.tsx:243
+#: src/screens/Search/components/SearchHistory.tsx:281
 msgid "Remove profile"
 msgstr "刪除個人檔案"
 
@@ -12219,9 +12238,9 @@ msgstr "轆到去頂部"
 #: src/components/forms/SearchInput.tsx:59
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
-#: src/screens/Search/Shell.tsx:549
-#: src/screens/Search/Shell.tsx:612
-#: src/screens/Search/Shell.tsx:753
+#: src/screens/Search/Shell.tsx:557
+#: src/screens/Search/Shell.tsx:620
+#: src/screens/Search/Shell.tsx:762
 #: src/view/shell/bottom-bar/BottomBar.tsx:220
 msgid "Search"
 msgstr "搵嘢"
@@ -12259,7 +12278,7 @@ msgstr "搵「{interestsDisplayName}」（已揀選）"
 msgid "Search for “{searchText}”"
 msgstr "搵「{searchText}」"
 
-#: src/screens/Search/components/SearchHistory.tsx:136
+#: src/screens/Search/components/SearchHistory.tsx:174
 msgid "Search for {q}"
 msgstr "搵 {q}"
 
@@ -12849,8 +12868,8 @@ msgstr "分享 QR code"
 msgid "Share this feed"
 msgstr "分享呢個動態源"
 
-#: src/screens/Search/Shell.tsx:565
-#: src/screens/Search/Shell.tsx:634
+#: src/screens/Search/Shell.tsx:573
+#: src/screens/Search/Shell.tsx:642
 msgid "Share this search"
 msgstr "分享此搵嘢結果"
 
@@ -14349,6 +14368,10 @@ msgstr "呢位作者設定咗得登入咗嘅人先睇到佢啲帖文。"
 #: src/screens/Profile/components/GermButton.tsx:284
 msgid "This button lets others open the Germ DM app to send you a message. You can manage its visibility from the Germ DM app, or you can disconnect your Bluesky account from Germ DM altogether by clicking the button below."
 msgstr "呢粒掣方便其他人打開 Germ DM 向你傳送訊息。你可以喺 Germ DM 度設定佢係咪顯示出嚟，抑或撳下低粒掣將你嘅 Bluesky 帳號同 Germ DM 帳號斷開連線。"
+
+#: src/screens/Search/components/SearchHistory.tsx:148
+msgid "This can’t be undone, and all of your recent searches will be removed."
+msgstr ""
 
 #: src/screens/Messages/components/ChatEnded.tsx:48
 msgid "This chat has ended"

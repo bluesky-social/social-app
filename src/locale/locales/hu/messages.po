@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-21 19:48\n"
+"PO-Revision-Date: 2026-10-22 08:29\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -576,7 +576,7 @@ msgstr "{estimatedTimeMins, plural, one {# perc} other {# perc}}"
 msgid "{feedCount, plural, one {# feed} other {# feeds}}"
 msgstr "{feedCount, plural, other {# hírfolyam}}"
 
-#: src/screens/Search/components/SearchHistory.tsx:170
+#: src/screens/Search/components/SearchHistory.tsx:208
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
 msgstr "és még {filterCount, plural, other {#}} szűrő"
 
@@ -3109,6 +3109,7 @@ msgstr "Kamera-hozzáférés szükséges"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:290
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
+#: src/screens/Search/components/SearchHistory.tsx:151
 #: src/screens/Settings/AppIconSettings/index.tsx:42
 #: src/screens/Settings/AppIconSettings/index.tsx:228
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:143
@@ -3144,7 +3145,7 @@ msgstr "Újraaktiválás megszakítása és kilépés"
 msgid "Cancel reply"
 msgstr "Válaszolás megszakítása"
 
-#: src/screens/Search/Shell.tsx:592
+#: src/screens/Search/Shell.tsx:600
 msgid "Cancel search"
 msgstr "Keresés megszakítása"
 
@@ -3516,6 +3517,24 @@ msgstr "Felhasználónév megadása"
 msgid "Clear"
 msgstr "Törlés"
 
+#: src/screens/Search/components/SearchHistory.tsx:150
+msgctxt "action"
+msgid "Clear"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:78
+msgctxt "action"
+msgid "Clear all"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:71
+msgid "Clear all recent searches"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:147
+msgid "Clear all recent searches?"
+msgstr ""
+
 #: src/screens/Settings/Settings.tsx:539
 msgid "Clear all storage data"
 msgstr "Összes adat törlése"
@@ -3822,7 +3841,7 @@ msgstr "A <0>moderálási beállításokban</0> módosítható."
 msgid "Confirm"
 msgstr "Megerősítés"
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:81
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:77
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:171
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:250
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
@@ -4030,7 +4049,7 @@ msgstr "Beszélgetés – Másik fél: {authorName}"
 msgid "Copied build version to clipboard"
 msgstr "Buildszám a vágólapra helyezve"
 
-#: src/screens/Search/Shell.tsx:512
+#: src/screens/Search/Shell.tsx:520
 msgid "Copied link to clipboard"
 msgstr "Hivatkozás vágólapra helyezve"
 
@@ -5574,7 +5593,7 @@ msgstr "Szexuális tartalmakat ábrázoló képek."
 
 #: src/Navigation.tsx:930
 #: src/screens/Atmosphere.tsx:43
-#: src/screens/Search/Shell.tsx:549
+#: src/screens/Search/Shell.tsx:557
 #: src/view/shell/desktop/LeftNav.tsx:721
 #: src/view/shell/Drawer.tsx:537
 msgid "Explore"
@@ -5657,7 +5676,7 @@ msgstr "A felhasználónév megváltoztatása meghiúsult. Próbáld újra."
 
 #: src/components/Lightbox/Lightbox.web.tsx:308
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:131
-#: src/screens/Search/Shell.tsx:513
+#: src/screens/Search/Shell.tsx:521
 msgid "Failed to copy link"
 msgstr "A hivatkozás másolása meghiúsult"
 
@@ -6171,7 +6190,7 @@ msgstr "Követendő személyek felfedezése"
 msgid "Find people you know"
 msgstr "Ismerősök felkutatása"
 
-#: src/screens/Search/Shell.tsx:765
+#: src/screens/Search/Shell.tsx:774
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Bejegyzések, felhasználók és hírfolyamok felfedezése a Blueskyon"
 
@@ -11189,7 +11208,7 @@ msgstr "Leküldéses értesítések fogadása"
 msgid "Recent GIFs"
 msgstr "GIF-előzmények"
 
-#: src/screens/Search/components/SearchHistory.tsx:52
+#: src/screens/Search/components/SearchHistory.tsx:67
 msgid "Recent searches"
 msgstr "Keresési előzmények"
 
@@ -11276,7 +11295,7 @@ msgstr "{displayName} eltávolítása a csoportbeszélgetésből"
 msgid "Remove {displayName}?"
 msgstr "Biztosan el akarod távolítani {displayName} felhasználót?"
 
-#: src/screens/Search/components/SearchHistory.tsx:182
+#: src/screens/Search/components/SearchHistory.tsx:220
 msgid "Remove {q}"
 msgstr "A(z) „{q}” kifejezés eltávolítása"
 
@@ -11399,7 +11418,7 @@ msgstr "Tag eltávolítása"
 msgid "Remove mute word from your list"
 msgstr "Szó némításának feloldása"
 
-#: src/screens/Search/components/SearchHistory.tsx:243
+#: src/screens/Search/components/SearchHistory.tsx:281
 msgid "Remove profile"
 msgstr "Profil eltávolítása"
 
@@ -12219,9 +12238,9 @@ msgstr "Vissza a tetejére"
 #: src/components/forms/SearchInput.tsx:59
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
-#: src/screens/Search/Shell.tsx:549
-#: src/screens/Search/Shell.tsx:612
-#: src/screens/Search/Shell.tsx:753
+#: src/screens/Search/Shell.tsx:557
+#: src/screens/Search/Shell.tsx:620
+#: src/screens/Search/Shell.tsx:762
 #: src/view/shell/bottom-bar/BottomBar.tsx:220
 msgid "Search"
 msgstr "Keresés"
@@ -12259,7 +12278,7 @@ msgstr "Keresés: {interestsDisplayName} (aktív)"
 msgid "Search for “{searchText}”"
 msgstr "Keresés: {searchText}"
 
-#: src/screens/Search/components/SearchHistory.tsx:136
+#: src/screens/Search/components/SearchHistory.tsx:174
 msgid "Search for {q}"
 msgstr "Keresés: {q}"
 
@@ -12849,8 +12868,8 @@ msgstr "QR-kód továbbítása"
 msgid "Share this feed"
 msgstr "Hírfolyam továbbítása"
 
-#: src/screens/Search/Shell.tsx:565
-#: src/screens/Search/Shell.tsx:634
+#: src/screens/Search/Shell.tsx:573
+#: src/screens/Search/Shell.tsx:642
 msgid "Share this search"
 msgstr "Keresés továbbítása"
 
@@ -14351,6 +14370,10 @@ msgstr "Ez a szerző csak a bejelentkezett felhasználók számára kívánja me
 #: src/screens/Profile/components/GermButton.tsx:284
 msgid "This button lets others open the Germ DM app to send you a message. You can manage its visibility from the Germ DM app, or you can disconnect your Bluesky account from Germ DM altogether by clicking the button below."
 msgstr "Ezzel a gombbal mások megnyithatják a Germ DM-profilodat üzenetküldés céljából. Az elérhetőség láthatósága a Germ DM-alkalmazásban kezelheő. Ha szét kívánod választani a Bluesky- és Germ DM-fiókjaidat, azt az alábbi gombbal teheted meg."
+
+#: src/screens/Search/components/SearchHistory.tsx:148
+msgid "This can’t be undone, and all of your recent searches will be removed."
+msgstr ""
 
 #: src/screens/Messages/components/ChatEnded.tsx:48
 msgid "This chat has ended"
