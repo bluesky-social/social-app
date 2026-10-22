@@ -7,3 +7,10 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - '@atproto/*'
   - '@atproto-labs/*'
+overrides:
+  'undici@>=6.0.0 <6.29.1': '6.29.1'
+  'undici@>=7.0.0 <7.30.1': '7.30.1'
+  'undici@>=8.0.0 <8.12.2': '8.12.2'
+  undici_v6: npm:undici@6.29.1
+  undici_v7: npm:undici@7.30.1
+  undici_v8: npm:undici@8.12.2
