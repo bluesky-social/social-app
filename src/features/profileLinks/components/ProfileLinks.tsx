@@ -145,12 +145,16 @@ function ProfileLinksRow({
     }, []),
   )
 
-  const open = (link: ProfileLink) => {
+  const logClick = (link: ProfileLink) => {
     ax.metric('profile:links:click', {
       domain: getLinkHost(link.url),
       supportProvider: getSupportProvider(link.url)?.name,
       isOwnProfile,
     })
+  }
+
+  const open = (link: ProfileLink) => {
+    logClick(link)
     // through the redirect service, so Safelink rules apply
     openLink(link.url, undefined, true)
   }
@@ -203,10 +207,11 @@ function ProfileLinksRow({
             link={link}
             did={profile.did}
             arrow
+            opensLink
             hint={l`Opens ${getLinkHost(link.url)} outside Bluesky`}
             onPress={() => {
               playTapHaptic()
-              open(link)
+              logClick(link)
             }}
             onLongPress={
               IS_NATIVE

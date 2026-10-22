@@ -4,6 +4,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon} from '#/components/icons/Arrow'
+import {Link} from '#/components/Link'
 import {useSupportPalette} from '../palette'
 import {
   PILL_LEFT,
@@ -30,8 +31,8 @@ export function linkLabel(link: ProfileLink): string {
 
 /**
  * The pill for a profile link: green with the provider's logo for a
- * recognized support platform, gray with a globe for any other site. Purely
- * visual; the caller decides what a tap does.
+ * recognized support platform, gray with a globe for any other site. The
+ * caller decides what a tap does, unless `opensLink` is set.
  */
 export function ProfileLinkPill({
   link,
@@ -44,6 +45,7 @@ export function ProfileLinkPill({
   testID = 'profileLinkPill',
   a11yActions,
   did,
+  opensLink = false,
 }: {
   link: ProfileLink
   /** The profile owner, whose repo holds the link's stored icon. Needed for links without an `iconUrl`. */
@@ -60,6 +62,12 @@ export function ProfileLinkPill({
   handle?: boolean
   testID?: string
   a11yActions?: PillA11yActions
+  /**
+   * Render as a link to the URL, opened through the redirect service so
+   * Safelink applies. On web it's a real anchor, so the browser shows where
+   * it goes on hover. `onPress` still runs first.
+   */
+  opensLink?: boolean
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
@@ -74,29 +82,30 @@ export function ProfileLinkPill({
     <ArrowTopRightIcon width={12} style={{color, marginLeft: -4}} />
   ) : null
 
-  return (
-    <Button
-      testID={testID}
-      label={label ?? l`Open ${linkLabel(link)}`}
-      size="small"
-      color={provider ? 'primary' : 'secondary'}
-      onPress={onPress}
-      onLongPress={onLongPress}
-      accessibilityHint={hint}
-      {...a11yActions}
-      style={[
-        {
-          paddingVertical: PILL_VERTICAL,
-          paddingLeft: PILL_LEFT,
-          paddingRight: handle
-            ? PILL_RIGHT_GRIP
-            : arrow
-              ? PILL_RIGHT_ARROW
-              : PILL_RIGHT_TEXT,
-        },
-        provider && {backgroundColor: palette.bg},
-      ]}
-      hoverStyle={provider ? {backgroundColor: palette.bgHover} : undefined}>
+  const props = {
+    testID,
+    label: label ?? l`Open ${linkLabel(link)}`,
+    size: 'small',
+    color: provider ? 'primary' : 'secondary',
+    onLongPress,
+    accessibilityHint: hint,
+    ...a11yActions,
+    style: [
+      {
+        paddingVertical: PILL_VERTICAL,
+        paddingLeft: PILL_LEFT,
+        paddingRight: handle
+          ? PILL_RIGHT_GRIP
+          : arrow
+            ? PILL_RIGHT_ARROW
+            : PILL_RIGHT_TEXT,
+      },
+      provider && {backgroundColor: palette.bg},
+    ],
+    hoverStyle: provider ? {backgroundColor: palette.bgHover} : undefined,
+  } as const
+  const content = (
+    <>
       {faviconUrl ? (
         <ButtonFavicon key={faviconUrl} uri={faviconUrl} />
       ) : (
@@ -114,6 +123,19 @@ export function ProfileLinkPill({
         )}
       </ButtonText>
       {trailing}
+    </>
+  )
+
+  if (opensLink) {
+    return (
+      <Link {...props} to={link.url} onPress={onPress} shouldProxy>
+        {content}
+      </Link>
+    )
+  }
+  return (
+    <Button {...props} onPress={onPress}>
+      {content}
     </Button>
   )
 }
