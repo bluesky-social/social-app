@@ -92,6 +92,14 @@ jobs:
       package-version: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
       version-code: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
     steps:
+      # Temporary until fixed runner images roll out:
+      # https://github.com/actions/runner-images/issues/15018
+      - name: Update Ubuntu CA certificates
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --only-upgrade --no-install-recommends -y ca-certificates
+
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -171,6 +179,13 @@ jobs:
     # Submit unless explicitly disabled; on events where inputs is empty this still submits.
     if: ${{ inputs.submit != false }}
     steps:
+      # Temporary until fixed runner images roll out:
+      # https://github.com/actions/runner-images/issues/15018
+      - name: Update Ubuntu CA certificates
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --only-upgrade --no-install-recommends -y ca-certificates
+
       # eas submit reads app config from the repo, so we need a checkout.
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -212,6 +227,13 @@ jobs:
     outputs:
       apk-artifact-name: build-${{ steps.timestamp.outputs.time }}.apk
     steps:
+      # Temporary until fixed runner images roll out:
+      # https://github.com/actions/runner-images/issues/15018
+      - name: Update Ubuntu CA certificates
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --only-upgrade --no-install-recommends -y ca-certificates
+
       - name: ⬇️ Download AAB artifact
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
@@ -288,6 +310,13 @@ jobs:
     permissions:
       contents: write
     steps:
+      # Temporary until fixed runner images roll out:
+      # https://github.com/actions/runner-images/issues/15018
+      - name: Update Ubuntu CA certificates
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --only-upgrade --no-install-recommends -y ca-certificates
+
       # We only attach to a release that already exists — never create one.
       - name: 🔎 Check for matching GitHub Release
         id: release-check
