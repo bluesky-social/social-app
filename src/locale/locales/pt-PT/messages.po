@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-21 19:48\n"
+"PO-Revision-Date: 2026-10-22 08:29\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -576,7 +576,7 @@ msgstr "{estimatedTimeMins, plural, one {minuto} other {minutos}}"
 msgid "{feedCount, plural, one {# feed} other {# feeds}}"
 msgstr "{feedCount, plural, one {# feed} other {# feeds}}"
 
-#: src/screens/Search/components/SearchHistory.tsx:170
+#: src/screens/Search/components/SearchHistory.tsx:208
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
 msgstr "{filterCount, plural, one {+# filtro} other {+# filtros}}"
 
@@ -3109,6 +3109,7 @@ msgstr "Acesso à câmara necessário"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:290
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
+#: src/screens/Search/components/SearchHistory.tsx:151
 #: src/screens/Settings/AppIconSettings/index.tsx:42
 #: src/screens/Settings/AppIconSettings/index.tsx:228
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:143
@@ -3144,7 +3145,7 @@ msgstr "Cancelar reativação e terminar sessão"
 msgid "Cancel reply"
 msgstr "Cancelar resposta"
 
-#: src/screens/Search/Shell.tsx:592
+#: src/screens/Search/Shell.tsx:600
 msgid "Cancel search"
 msgstr "Cancelar pesquisa"
 
@@ -3516,6 +3517,24 @@ msgstr "Escolha o seu nome de utilizador"
 msgid "Clear"
 msgstr "Limpar"
 
+#: src/screens/Search/components/SearchHistory.tsx:150
+msgctxt "action"
+msgid "Clear"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:78
+msgctxt "action"
+msgid "Clear all"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:71
+msgid "Clear all recent searches"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:147
+msgid "Clear all recent searches?"
+msgstr ""
+
 #: src/screens/Settings/Settings.tsx:539
 msgid "Clear all storage data"
 msgstr "Limpar todos os dados armazenados"
@@ -3822,7 +3841,7 @@ msgstr "Configurado nas <0>definições de moderação</0>."
 msgid "Confirm"
 msgstr "Confirmar"
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:81
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:77
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:171
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:250
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
@@ -4030,7 +4049,7 @@ msgstr "Conversa com {authorName}"
 msgid "Copied build version to clipboard"
 msgstr "Versão de compilação copiada para a área de transferência"
 
-#: src/screens/Search/Shell.tsx:512
+#: src/screens/Search/Shell.tsx:520
 msgid "Copied link to clipboard"
 msgstr "Link copiado para a área de transferência"
 
@@ -5574,7 +5593,7 @@ msgstr "Imagens sexuais explícitas."
 
 #: src/Navigation.tsx:930
 #: src/screens/Atmosphere.tsx:43
-#: src/screens/Search/Shell.tsx:549
+#: src/screens/Search/Shell.tsx:557
 #: src/view/shell/desktop/LeftNav.tsx:721
 #: src/view/shell/Drawer.tsx:537
 msgid "Explore"
@@ -5657,7 +5676,7 @@ msgstr "Falha ao tentar alterar nome de utilizador. Tente novamente."
 
 #: src/components/Lightbox/Lightbox.web.tsx:308
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:131
-#: src/screens/Search/Shell.tsx:513
+#: src/screens/Search/Shell.tsx:521
 msgid "Failed to copy link"
 msgstr "Falha ao copiar o link"
 
@@ -6171,7 +6190,7 @@ msgstr "Encontrar pessoas para seguir"
 msgid "Find people you know"
 msgstr "Encontre as pessoas que conhece"
 
-#: src/screens/Search/Shell.tsx:765
+#: src/screens/Search/Shell.tsx:774
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Procure publicações, utilizadores, e feeds no Bluesky"
 
@@ -11189,7 +11208,7 @@ msgstr "Receber notificações push"
 msgid "Recent GIFs"
 msgstr "GIFs recentes"
 
-#: src/screens/Search/components/SearchHistory.tsx:52
+#: src/screens/Search/components/SearchHistory.tsx:67
 msgid "Recent searches"
 msgstr "Pesquisas recentes"
 
@@ -11276,7 +11295,7 @@ msgstr "Remover {displayName} desta conversa de grupo"
 msgid "Remove {displayName}?"
 msgstr "Remover {displayName}?"
 
-#: src/screens/Search/components/SearchHistory.tsx:182
+#: src/screens/Search/components/SearchHistory.tsx:220
 msgid "Remove {q}"
 msgstr "Remover {q}"
 
@@ -11399,7 +11418,7 @@ msgstr "Remover membro"
 msgid "Remove mute word from your list"
 msgstr "Remover palavra silenciada da sua lista"
 
-#: src/screens/Search/components/SearchHistory.tsx:243
+#: src/screens/Search/components/SearchHistory.tsx:281
 msgid "Remove profile"
 msgstr "Remover perfil"
 
@@ -12219,9 +12238,9 @@ msgstr "Voltar ao topo"
 #: src/components/forms/SearchInput.tsx:59
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
-#: src/screens/Search/Shell.tsx:549
-#: src/screens/Search/Shell.tsx:612
-#: src/screens/Search/Shell.tsx:753
+#: src/screens/Search/Shell.tsx:557
+#: src/screens/Search/Shell.tsx:620
+#: src/screens/Search/Shell.tsx:762
 #: src/view/shell/bottom-bar/BottomBar.tsx:220
 msgid "Search"
 msgstr "Procurar"
@@ -12259,7 +12278,7 @@ msgstr "Procurar por \"{interestsDisplayName}\" (ativo)"
 msgid "Search for “{searchText}”"
 msgstr "Procurar por “{searchText}”"
 
-#: src/screens/Search/components/SearchHistory.tsx:136
+#: src/screens/Search/components/SearchHistory.tsx:174
 msgid "Search for {q}"
 msgstr "Pesquisar por {q}"
 
@@ -12849,8 +12868,8 @@ msgstr "Partilhar código QR"
 msgid "Share this feed"
 msgstr "Partilhar este feed"
 
-#: src/screens/Search/Shell.tsx:565
-#: src/screens/Search/Shell.tsx:634
+#: src/screens/Search/Shell.tsx:573
+#: src/screens/Search/Shell.tsx:642
 msgid "Share this search"
 msgstr "Partilhar esta pesquisa"
 
@@ -14349,6 +14368,10 @@ msgstr "Este autor optou por tornar as suas publicações visíveis apenas para 
 #: src/screens/Profile/components/GermButton.tsx:284
 msgid "This button lets others open the Germ DM app to send you a message. You can manage its visibility from the Germ DM app, or you can disconnect your Bluesky account from Germ DM altogether by clicking the button below."
 msgstr "Este botão permite que outros abram a aplicação Germ DM para lhe enviar uma mensagem. Pode gerir a visibilidade da aplicação Germ DM, ou pode desconectar a sua conta do Bluesky da Germ DM por completo ao clicar no botão abaixo."
+
+#: src/screens/Search/components/SearchHistory.tsx:148
+msgid "This can’t be undone, and all of your recent searches will be removed."
+msgstr ""
 
 #: src/screens/Messages/components/ChatEnded.tsx:48
 msgid "This chat has ended"

@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-21 19:48\n"
+"PO-Revision-Date: 2026-10-22 08:29\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -283,7 +283,7 @@ msgstr "{0} följda"
 #. placeholder {0}: provider.name
 #: src/features/profileLinks/components/LinkFormDialog.tsx:362
 msgid "{0} is a recognized support link. It gets the green support button."
-msgstr ""
+msgstr "{0} är en känd bidragslänk. Den får en grön bidragsknapp."
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
 #: src/components/dms/MessageItem.tsx:739
@@ -576,7 +576,7 @@ msgstr "{estimatedTimeMins, plural, one {minut} other {minuter}}"
 msgid "{feedCount, plural, one {# feed} other {# feeds}}"
 msgstr "{feedCount, plural, one {# flöde} other {# flöden}}"
 
-#: src/screens/Search/components/SearchHistory.tsx:170
+#: src/screens/Search/components/SearchHistory.tsx:208
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
 msgstr "{filterCount, plural, one {+# filter} other {+# filter}}"
 
@@ -775,7 +775,7 @@ msgstr "Det går inte att skicka meddelanden till {handle}"
 
 #: src/components/moderation/BlockDialog.tsx:199
 msgid "{hiddenCount, plural, one {See # more} other {See # more}}"
-msgstr ""
+msgstr "{hiddenCount, plural,  other {Visa # till}}"
 
 #: src/features/liveNow/utils.ts:40
 msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesString}}}"
@@ -2141,7 +2141,7 @@ msgstr "En inbjudningslänk låter personer gå med i chatten utan att läggas t
 
 #: src/components/dialogs/nuxs/IPadBetaHero/index.tsx:30
 msgid "An iPad Pro floating above the clouds, showing an illustration of people enjoying a sunny park in a futuristic city."
-msgstr ""
+msgstr "En iPad Pro svävar bland molnen och visar en illustration av människor som njuter av en solig park i en futuristisk stad."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:238
 msgid "An issue not included in these options"
@@ -3109,6 +3109,7 @@ msgstr "Kameraåtkomst krävs"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:290
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
+#: src/screens/Search/components/SearchHistory.tsx:151
 #: src/screens/Settings/AppIconSettings/index.tsx:42
 #: src/screens/Settings/AppIconSettings/index.tsx:228
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:143
@@ -3144,7 +3145,7 @@ msgstr "Avbryt återaktivering och logga ut"
 msgid "Cancel reply"
 msgstr "Avbryt svar"
 
-#: src/screens/Search/Shell.tsx:592
+#: src/screens/Search/Shell.tsx:600
 msgid "Cancel search"
 msgstr "Avbryt sökning"
 
@@ -3516,6 +3517,24 @@ msgstr "Välj ditt användarnamn"
 msgid "Clear"
 msgstr "Rensa"
 
+#: src/screens/Search/components/SearchHistory.tsx:150
+msgctxt "action"
+msgid "Clear"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:78
+msgctxt "action"
+msgid "Clear all"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:71
+msgid "Clear all recent searches"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:147
+msgid "Clear all recent searches?"
+msgstr ""
+
 #: src/screens/Settings/Settings.tsx:539
 msgid "Clear all storage data"
 msgstr "Rensa all lagrad data"
@@ -3768,7 +3787,7 @@ msgstr "Serier"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:40
 msgid "Communication sent"
-msgstr ""
+msgstr "Ett meddelande har skickats"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:46
 #: src/Navigation.tsx:395
@@ -3822,7 +3841,7 @@ msgstr "Konfigureras i <0>modereringsinställningar</0>."
 msgid "Confirm"
 msgstr "Bekräfta"
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:81
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:77
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:171
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:250
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
@@ -4030,7 +4049,7 @@ msgstr "Konversation med {authorName}"
 msgid "Copied build version to clipboard"
 msgstr "Byggversion kopierad till urklipp"
 
-#: src/screens/Search/Shell.tsx:512
+#: src/screens/Search/Shell.tsx:520
 msgid "Copied link to clipboard"
 msgstr "Länken kopierades till urklipp"
 
@@ -4430,7 +4449,7 @@ msgstr "Skaparen har blockerats"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:44
 msgid "Credentials revoked"
-msgstr ""
+msgstr "Kontouppgifterna har återkallats"
 
 #: src/lib/interests.ts:57
 msgid "Culture"
@@ -5574,7 +5593,7 @@ msgstr "Explicit sexuella bilder."
 
 #: src/Navigation.tsx:930
 #: src/screens/Atmosphere.tsx:43
-#: src/screens/Search/Shell.tsx:549
+#: src/screens/Search/Shell.tsx:557
 #: src/view/shell/desktop/LeftNav.tsx:721
 #: src/view/shell/Drawer.tsx:537
 msgid "Explore"
@@ -5657,7 +5676,7 @@ msgstr "Det gick inte att ändra användarnamn. Försök igen."
 
 #: src/components/Lightbox/Lightbox.web.tsx:308
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:131
-#: src/screens/Search/Shell.tsx:513
+#: src/screens/Search/Shell.tsx:521
 msgid "Failed to copy link"
 msgstr "Det gick inte att kopiera länk"
 
@@ -6171,7 +6190,7 @@ msgstr "Hitta personer att följa"
 msgid "Find people you know"
 msgstr "Hitta personer du känner"
 
-#: src/screens/Search/Shell.tsx:765
+#: src/screens/Search/Shell.tsx:774
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Hitta inlägg, användare och flöden på Bluesky"
 
@@ -7757,7 +7776,7 @@ msgstr "KWS webbplats"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:36
 msgid "Label applied"
-msgstr ""
+msgstr "En etikett har applicerats"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:38
 msgid "Label removed"
@@ -10454,7 +10473,7 @@ msgstr "Spela"
 #. placeholder {0}: link.title
 #: src/components/Post/Embed/ExternalEmbed/ExternalGif.tsx:110
 msgid "Play {0}"
-msgstr "Spela {0}"
+msgstr "Spela upp {0}"
 
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:32
 msgid "Play GIF"
@@ -11189,7 +11208,7 @@ msgstr "Ta emot pushnotiser"
 msgid "Recent GIFs"
 msgstr "Senaste gif-bilder"
 
-#: src/screens/Search/components/SearchHistory.tsx:52
+#: src/screens/Search/components/SearchHistory.tsx:67
 msgid "Recent searches"
 msgstr "Senaste sökningar"
 
@@ -11276,7 +11295,7 @@ msgstr "Ta bort {displayName} från den här gruppchatten"
 msgid "Remove {displayName}?"
 msgstr "Ta bort {displayName}?"
 
-#: src/screens/Search/components/SearchHistory.tsx:182
+#: src/screens/Search/components/SearchHistory.tsx:220
 msgid "Remove {q}"
 msgstr "Ta bort {q}"
 
@@ -11399,7 +11418,7 @@ msgstr "Ta bort medlem"
 msgid "Remove mute word from your list"
 msgstr "Ta bort ignorerat ord från din lista"
 
-#: src/screens/Search/components/SearchHistory.tsx:243
+#: src/screens/Search/components/SearchHistory.tsx:281
 msgid "Remove profile"
 msgstr "Ta bort profil"
 
@@ -12219,9 +12238,9 @@ msgstr "Gå till toppen"
 #: src/components/forms/SearchInput.tsx:59
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
-#: src/screens/Search/Shell.tsx:549
-#: src/screens/Search/Shell.tsx:612
-#: src/screens/Search/Shell.tsx:753
+#: src/screens/Search/Shell.tsx:557
+#: src/screens/Search/Shell.tsx:620
+#: src/screens/Search/Shell.tsx:762
 #: src/view/shell/bottom-bar/BottomBar.tsx:220
 msgid "Search"
 msgstr "Sök"
@@ -12259,7 +12278,7 @@ msgstr "Sök efter ”{interestsDisplayName}” (aktiv)"
 msgid "Search for “{searchText}”"
 msgstr "Sök efter ”{searchText}”"
 
-#: src/screens/Search/components/SearchHistory.tsx:136
+#: src/screens/Search/components/SearchHistory.tsx:174
 msgid "Search for {q}"
 msgstr "Sök efter {q}"
 
@@ -12849,8 +12868,8 @@ msgstr "Dela QR-kod"
 msgid "Share this feed"
 msgstr "Dela det här flödet"
 
-#: src/screens/Search/Shell.tsx:565
-#: src/screens/Search/Shell.tsx:634
+#: src/screens/Search/Shell.tsx:573
+#: src/screens/Search/Shell.tsx:642
 msgid "Share this search"
 msgstr "Dela den här sökningen"
 
@@ -14350,6 +14369,10 @@ msgstr "Den här författaren har valt att bara visa sina inlägg för inloggade
 msgid "This button lets others open the Germ DM app to send you a message. You can manage its visibility from the Germ DM app, or you can disconnect your Bluesky account from Germ DM altogether by clicking the button below."
 msgstr "Med den här knappen kan andra öppna Germ DM-appen för att skicka ett meddelande till dig. Du kan ställa in om knappen ska visas eller inte i Germ DM-appen. Du kan också koppla från ditt Bluesky-konto från Germ DM helt och hållet genom att trycka på knappen nedan."
 
+#: src/screens/Search/components/SearchHistory.tsx:148
+msgid "This can’t be undone, and all of your recent searches will be removed."
+msgstr ""
+
 #: src/screens/Messages/components/ChatEnded.tsx:48
 msgid "This chat has ended"
 msgstr "Den här chatten är avslutad"
@@ -14383,7 +14406,7 @@ msgstr "Den här bekräftelsekoden är ogiltig. Försök igen."
 
 #: src/screens/ModerationInbox/Notice.tsx:379
 msgid "This content could not be appealed. Please reload the notice and try again."
-msgstr ""
+msgstr "Det gick inte att begära omprövning av det här innehållet. Ladda om beskedet och försök igen."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "This content has been hidden by the moderators."
@@ -14624,7 +14647,7 @@ msgstr ""
 
 #: src/screens/ModerationInbox/Notice.tsx:370
 msgid "This subject has already been appealed."
-msgstr ""
+msgstr "En omprövning har redan begärts för det här ärendet."
 
 #: src/components/verification/VerificationCreatePrompt.tsx:94
 msgid "This user does not have a display name, and therefore cannot be verified."
@@ -17026,7 +17049,7 @@ msgstr "Ditt konto kan inte skicka anmälningar när det är avstängt."
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:92
 msgid "Your account credentials were revoked"
-msgstr ""
+msgstr "Dina kontouppgifter har återkallats"
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:133
 msgid "Your account has been deleted, see ya! ✌️"
