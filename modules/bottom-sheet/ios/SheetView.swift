@@ -17,7 +17,6 @@ class SheetView: ExpoView {
   private let onStateChange = EventDispatcher()
   private let onPresentationSizeChange = EventDispatcher()
   private var didSeedCanvasSize = false
-  private var lastCanvasSize: CGSize?
 
   // Open event firing
   private var isOpen: Bool = false {
@@ -155,17 +154,18 @@ class SheetView: ExpoView {
     self.updateCanvasSize(width: canvasWidth)
   }
 
+  /*
+   * No dedupe here: `setViewSize` silently drops the update if the view has no
+   * state yet, so remembering the last size would stop a retry from landing.
+   * Expo already skips updates that don't change the stored size.
+   */
   private func updateCanvasSize(width: CGFloat) {
     let bounds = self.window?.bounds ?? UIScreen.main.bounds
     let safeAreaInsets = self.window?.safeAreaInsets ?? .zero
-    let size = CGSize(
+    self.setViewSize(CGSize(
       width: width,
       height: max(0, bounds.height - safeAreaInsets.top)
-    )
-    guard size != self.lastCanvasSize else { return }
-
-    self.lastCanvasSize = size
-    self.setViewSize(size)
+    ))
   }
 
   private func destroy() {
@@ -181,7 +181,6 @@ class SheetView: ExpoView {
     self.sheetVc = nil
     self.selectedDetentIdentifier = nil
     self.didSeedCanvasSize = false
-    self.lastCanvasSize = nil
     self.lastPresentedSize = .zero
     self.lastPresentedInsets = nil
     self.lastPresentedBottomOffset = nil
