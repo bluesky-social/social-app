@@ -1,0 +1,16 @@
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
+index ac55304..d99c8f4 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
+@@ -389,8 +389,9 @@ - (TextMeasurement)_measureTextStorage:(NSTextStorage *)textStorage
+     size.height = enumeratedLinesHeight;
+   }
+ 
+-  size = (CGSize){ceil(size.width * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor,
+-                  ceil(size.height * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor};
++  CGFloat epsilon = 0.001;
++  size = (CGSize){ceil((size.width + epsilon) * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor,
++                  ceil((size.height + epsilon) * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor};
+ 
+   NSRange visibleGlyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+ 
