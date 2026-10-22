@@ -15,6 +15,44 @@ permissions:
   contents: read
 
 jobs:
+  node-versions:
+    name: Verify Node versions
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Check out Git repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - name: 🔧 Install node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
+          cache: pnpm
+      - name: 🔍 Verify Node versions against package.json
+        run: |
+          set -euo pipefail
+          version_range=$(node -p "require('./package.json').engines.node")
+          version_exact=$(node -p "require('./package.json').engines.node.replace(/[^0-9.]/g, '')")
+          rc=0
+          check() {
+            if [ "$2" != "$version_exact" ]; then
+              echo "::error file=$1::Node version mismatch: $1 pins '$2' but package.json is '$version_exact'"
+              rc=1
+            fi
+          }
+          for f in Dockerfile.bskylink Dockerfile.bskyogcard; do
+            images=$(grep -oE '^FROM node:[^[:space:]]+' "$f" | cut -d ' ' -f2 | sort -u)
+            for image in $images; do
+              v=$(docker run --rm --entrypoint node "$image" --version)
+              if ! pnpm dlx semver@7 "$v" --range "$version_range"; then
+                echo "::error file=$f::Node version mismatch: $image runs '$v' but package.json requires '$version_range'"
+                rc=1
+              fi
+            done
+          done
+          # eas.json "node": "X.Y.Z"
+          v=$(grep -oE '"node":[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"' eas.json | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
+          check "eas.json" "$v"
+          exit $rc
   linting:
     name: Run linters
     runs-on: ubuntu-latest
@@ -40,26 +78,6 @@ jobs:
         with:
           node-version-file: package.json
           cache: pnpm
-      - name: 🔍 Verify Node version pins match package.json
-        run: |
-          set -euo pipefail
-          expected=$(node -p "require('./package.json').engines.node.replace(/[^0-9.]/g, '')")
-          rc=0
-          check() {
-            if [ "$2" != "$expected" ]; then
-              echo "::error file=$1::Node version mismatch: $1 pins '$2' but package.json is '$expected'"
-              rc=1
-            fi
-          }
-          # FROM node:X.Y.Z - service runtime images
-          for f in Dockerfile.bskylink Dockerfile.bskyogcard; do
-            v=$(grep -oE 'FROM node:[0-9]+\.[0-9]+\.[0-9]+' "$f" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
-            check "$f" "$v"
-          done
-          # eas.json "node": "X.Y.Z"
-          v=$(grep -oE '"node":[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"' eas.json | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
-          check "eas.json" "$v"
-          exit $rc
       - name: 📦 pnpm install
         run: pnpm install --frozen-lockfile
       - name: 🔤 Check & compile i18n
@@ -73,15 +91,18 @@ jobs:
   linting-summary:
     name: Run linters
     if: always()
-    needs: [linting]
+    needs: [linting, node-versions]
     runs-on: ubuntu-latest
     steps:
       - name: ✅ Require linting to have succeeded
         env:
           RESULT: ${{ needs.linting.result }}
+          NODE_VERSIONS_RESULT: ${{ needs.node-versions.result }}
         run: |
           echo "linting result: $RESULT"
           test "$RESULT" = "success"
+          echo "Node versions result: $NODE_VERSIONS_RESULT"
+          test "$NODE_VERSIONS_RESULT" = "success"
   testing:
     name: Run tests
     runs-on: ubuntu-latest
