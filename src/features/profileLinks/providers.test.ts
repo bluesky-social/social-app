@@ -30,6 +30,12 @@ describe('getSupportProvider', () => {
     expect(getSupportProvider('https://www.givesendgo.com/kat')?.name).toBe(
       'GiveSendGo',
     )
+    expect(
+      getSupportProvider('https://www.backerkit.com/c/projects/kat/zine')?.name,
+    ).toBe('BackerKit')
+    expect(getSupportProvider('https://zine.backerkit.com')?.name).toBe(
+      'BackerKit',
+    )
     expect(getSupportProvider('https://www.fanbox.cc')).toBe(undefined)
   })
 

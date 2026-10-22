@@ -1,6 +1,7 @@
 import {createElement} from 'react'
 
 import {type Props as SVGIconProps} from '#/components/icons/common'
+import {BackerKit} from '#/components/icons/community/BackerKit'
 import {BigCartel} from '#/components/icons/community/BigCartel'
 import {Boosty} from '#/components/icons/community/Boosty'
 import {Booth} from '#/components/icons/community/Booth'
@@ -38,6 +39,7 @@ import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Glo
 import {type SupportProvider, type SupportProviderLogoName} from '../providers'
 
 const SUPPORT_PROVIDER_LOGOS: Record<SupportProviderLogoName, typeof KoFi> = {
+  BackerKit,
   BigCartel,
   Boosty,
   Booth,
