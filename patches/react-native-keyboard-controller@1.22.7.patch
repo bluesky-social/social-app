@@ -1,0 +1,233 @@
+diff --git a/android/src/fabric/java/com/reactnativekeyboardcontroller/ClippingScrollViewDecoratorViewManager.kt b/android/src/fabric/java/com/reactnativekeyboardcontroller/ClippingScrollViewDecoratorViewManager.kt
+index c7325994a9efbce50c45507c343db0805c70cf60..f20cd8c2cd540b9ff01498f23ff6e9775eb11557 100644
+--- a/android/src/fabric/java/com/reactnativekeyboardcontroller/ClippingScrollViewDecoratorViewManager.kt
++++ b/android/src/fabric/java/com/reactnativekeyboardcontroller/ClippingScrollViewDecoratorViewManager.kt
+@@ -35,6 +35,18 @@ class ClippingScrollViewDecoratorViewManager :
+     view?.setContentInsetTop(value)
+   }
+ 
++  override fun setContentInsetBottomExtra(
++    view: ClippingScrollViewDecoratorView?,
++    value: Double,
++  ) {
++    view?.setContentInsetBottomExtra(value)
++  }
++
++  override fun onAfterUpdateTransaction(view: ClippingScrollViewDecoratorView) {
++    super.onAfterUpdateTransaction(view)
++    view.applyInsets()
++  }
++
+   override fun setApplyWorkaroundForContentInsetHitTestBug(
+     view: ClippingScrollViewDecoratorView?,
+     value: Boolean,
+diff --git a/android/src/main/java/com/reactnativekeyboardcontroller/views/ClippingScrollViewDecoratorView.kt b/android/src/main/java/com/reactnativekeyboardcontroller/views/ClippingScrollViewDecoratorView.kt
+index dbf4eca24ec87b9e37bc0ffc5258b9be080f3534..3fbf59324f84d016833cfb522525ed40c4aae372 100644
+--- a/android/src/main/java/com/reactnativekeyboardcontroller/views/ClippingScrollViewDecoratorView.kt
++++ b/android/src/main/java/com/reactnativekeyboardcontroller/views/ClippingScrollViewDecoratorView.kt
+@@ -10,6 +10,7 @@ import com.facebook.react.uimanager.ThemedReactContext
+ import com.facebook.react.views.view.ReactViewGroup
+ import com.reactnativekeyboardcontroller.extensions.px
+ import kotlin.math.max
++import kotlin.math.min
+ 
+ @SuppressLint("ViewConstructor")
+ class ClippingScrollViewDecoratorView(
+@@ -17,7 +18,10 @@ class ClippingScrollViewDecoratorView(
+ ) : ReactViewGroup(reactContext) {
+   private var insetBottom = 0.0
+   private var insetTop = 0.0
++  private var insetBottomExtra = 0.0
+   private var appliedTopInsetPx = 0
++  private var appliedBottomInsetPx = 0
++  private var appliedBottomExtraPx = 0
+   private var paddingScrollWorkaroundActive = false
+ 
+   override fun onAttachedToWindow() {
+@@ -54,13 +58,21 @@ class ClippingScrollViewDecoratorView(
+     return handled
+   }
+ 
++  // Setters only store values: `applyInsets` runs once per prop transaction,
++  // so related props that change together are applied as a single update.
+   fun setContentInsetBottom(value: Double) {
+     insetBottom = value
+-    decorateScrollView()
+   }
+ 
+   fun setContentInsetTop(value: Double) {
+     insetTop = value
++  }
++
++  fun setContentInsetBottomExtra(value: Double) {
++    insetBottomExtra = value
++  }
++
++  fun applyInsets() {
+     decorateScrollView()
+   }
+ 
+@@ -82,6 +94,22 @@ class ClippingScrollViewDecoratorView(
+     val contentView = scrollView.getChildAt(0) as? ViewGroup ?: return
+     contentView.translationY = newTopInsetPx.toFloat()
+ 
++    // On Fabric the JS `scrollTo` that follows an `extraContentPadding` change
++    // can be executed before this prop update is mounted (view commands are
++    // dispatched ahead of prop updates), so it gets clamped to the old scroll
++    // range and the list ends up short of the end by the inset delta. Keep a
++    // list that was at the end of the old range pinned to the end of the new
++    // one. Keyboard-driven inset changes are left alone: the keyboard handler
++    // animates the scroll position itself.
++    val newBottomInsetPx = insetBottom.toFloat().px.toInt()
++    val newBottomExtraPx = insetBottomExtra.toFloat().px.toInt()
++    val pinDelta =
++      pinToEndDelta(
++        newBottomInsetPx - appliedBottomInsetPx,
++        newBottomExtraPx - appliedBottomExtraPx,
++      )
++    val wasAtEnd = pinDelta != 0 && isScrolledToEnd(scrollView, contentView)
++
+     scrollView.setPadding(
+       scrollView.paddingLeft,
+       scrollView.paddingTop,
+@@ -98,6 +126,45 @@ class ClippingScrollViewDecoratorView(
+     }
+ 
+     appliedTopInsetPx = newTopInsetPx
++
++    if (wasAtEnd) {
++      // `scrollBy` is clamped by the scroll view to the new range
++      scrollView.scrollBy(0, pinDelta)
++    }
++
++    appliedBottomInsetPx = newBottomInsetPx
++    appliedBottomExtraPx = newBottomExtraPx
++  }
++
++  /**
++   * The share of the bottom inset change that comes from the extra padding.
++   * The total can differ from the extra delta when the keyboard padding
++   * changes in the same update or the inset is clamped (`blankSpace`, viewport
++   * height), so take the smaller move in the direction of the extra change.
++   */
++  private fun pinToEndDelta(
++    totalDelta: Int,
++    extraDelta: Int,
++  ): Int =
++    when {
++      extraDelta > 0 -> min(extraDelta, max(totalDelta, 0))
++      extraDelta < 0 -> max(extraDelta, min(totalDelta, 0))
++      else -> 0
++    }
++
++  private fun isScrolledToEnd(
++    scrollView: ViewGroup,
++    contentView: View,
++  ): Boolean {
++    if (!scrollView.isLaidOut) {
++      return false
++    }
++
++    val viewportHeight =
++      scrollView.height - scrollView.paddingTop - scrollView.paddingBottom
++    val maxScrollY = max(0, contentView.height - viewportHeight)
++
++    return scrollView.scrollY >= maxScrollY - AT_END_TOLERANCE_PX
+   }
+ 
+   private fun shouldUsePaddingScrollWorkaround(
+@@ -182,5 +249,6 @@ class ClippingScrollViewDecoratorView(
+   companion object {
+     private const val COORDINATES_SIZE = 2
+     private const val MIN_SCROLL_RANGE_PX = 2
++    private const val AT_END_TOLERANCE_PX = 1
+   }
+ }
+diff --git a/android/src/paper/java/com/reactnativekeyboardcontroller/ClippingScrollViewDecoratorViewManager.kt b/android/src/paper/java/com/reactnativekeyboardcontroller/ClippingScrollViewDecoratorViewManager.kt
+index f7251d495a2376ede83a0f6b955f96027237f8e2..9241a6c8fa5d3ca18f03cf3a64f9a682619b3d1e 100644
+--- a/android/src/paper/java/com/reactnativekeyboardcontroller/ClippingScrollViewDecoratorViewManager.kt
++++ b/android/src/paper/java/com/reactnativekeyboardcontroller/ClippingScrollViewDecoratorViewManager.kt
+@@ -30,6 +30,19 @@ class ClippingScrollViewDecoratorViewManager : ViewGroupManager<ClippingScrollVi
+     view.setContentInsetTop(value)
+   }
+ 
++  @ReactProp(name = "contentInsetBottomExtra")
++  fun setContentInsetBottomExtra(
++    view: ClippingScrollViewDecoratorView,
++    value: Double,
++  ) {
++    view.setContentInsetBottomExtra(value)
++  }
++
++  override fun onAfterUpdateTransaction(view: ClippingScrollViewDecoratorView) {
++    super.onAfterUpdateTransaction(view)
++    view.applyInsets()
++  }
++
+   @ReactProp(name = "applyWorkaroundForContentInsetHitTestBug")
+   fun setApplyWorkaroundForContentInsetHitTestBug(
+     view: ClippingScrollViewDecoratorView,
+diff --git a/src/components/KeyboardChatScrollView/index.tsx b/src/components/KeyboardChatScrollView/index.tsx
+index 935bc71dabad6cd5c82bab77f64b5b6e1e5dc9b6..9b9015b98f6ba43966a588ad0642c07541525094 100644
+--- a/src/components/KeyboardChatScrollView/index.tsx
++++ b/src/components/KeyboardChatScrollView/index.tsx
+@@ -156,6 +156,7 @@ const KeyboardChatScrollView: React.ForwardRefExoticComponent<
+             applyWorkaroundForContentInsetHitTestBug
+           }
+           bottomPadding={totalPadding}
++          extraBottomPadding={extraContentPadding}
+           contentOffsetY={contentOffsetY}
+           inverted={inverted}
+           scrollIndicatorPadding={indicatorPadding}
+diff --git a/src/components/ScrollViewWithBottomPadding/index.tsx b/src/components/ScrollViewWithBottomPadding/index.tsx
+index 6902a73cd39b165d6aa919d5058f032b4e316a93..9ea04fdb741d53df7590c3fb299cf03bc750fe83 100644
+--- a/src/components/ScrollViewWithBottomPadding/index.tsx
++++ b/src/components/ScrollViewWithBottomPadding/index.tsx
+@@ -42,6 +42,8 @@ type ScrollViewWithBottomPaddingProps = {
+   bottomPadding: SharedValue<number>;
+   /** Padding for scroll indicator insets (excludes blankSpace). Falls back to bottomPadding when not provided. */
+   scrollIndicatorPadding?: SharedValue<number>;
++  /** Part of `bottomPadding` that comes from `extraContentPadding`. Android pins a list at the end to the end when it changes. */
++  extraBottomPadding?: SharedValue<number>;
+   /** Absolute Y content offset (iOS only, for KeyboardChatScrollView). */
+   contentOffsetY?: SharedValue<number>;
+   applyWorkaroundForContentInsetHitTestBug?: boolean;
+@@ -62,6 +64,7 @@ const ScrollViewWithBottomPadding = forwardRef<
+       ScrollViewComponent,
+       bottomPadding,
+       scrollIndicatorPadding,
++      extraBottomPadding,
+       contentInset,
+       scrollIndicatorInsets,
+       inverted,
+@@ -150,6 +153,8 @@ const ScrollViewWithBottomPadding = forwardRef<
+         // Android prop
+         contentInsetBottom: dynamic.bottom,
+         contentInsetTop: dynamic.top,
++        contentInsetBottomExtra:
++          !inverted && extraBottomPadding ? extraBottomPadding.value : 0,
+       };
+ 
+       if (contentOffsetY) {
+diff --git a/src/specs/ClippingScrollViewDecoratorViewNativeComponent.ts b/src/specs/ClippingScrollViewDecoratorViewNativeComponent.ts
+index 2685024568af76875b33123a31cf3f1363546dda..79aab566b60cc0e76227c28ede5fdee39104cea0 100644
+--- a/src/specs/ClippingScrollViewDecoratorViewNativeComponent.ts
++++ b/src/specs/ClippingScrollViewDecoratorViewNativeComponent.ts
+@@ -2,11 +2,16 @@ import codegenNativeComponent from "react-native/Libraries/Utilities/codegenNati
+ 
+ import type { HostComponent } from "react-native";
+ import type { ViewProps } from "react-native";
+-import type { Double } from "react-native/Libraries/Types/CodegenTypes";
++import type {
++  Double,
++  WithDefault,
++} from "react-native/Libraries/Types/CodegenTypes";
+ 
+ export interface NativeProps extends ViewProps {
+   contentInsetBottom: Double;
+   contentInsetTop: Double;
++  /** Part of `contentInsetBottom` that comes from `extraContentPadding` (Android). */
++  contentInsetBottomExtra?: WithDefault<Double, 0>;
+   applyWorkaroundForContentInsetHitTestBug?: boolean;
+ }
+ 
