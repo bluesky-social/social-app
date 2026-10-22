@@ -1,0 +1,19 @@
+diff --git a/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
+index c27f816..a779613 100644
+--- a/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
++++ b/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
+@@ -159,7 +159,13 @@ - (void)dismissViewController:(UIViewController *)modalViewController
+                      animated:(BOOL)animated
+                    completion:(void (^)(void))completion
+ {
+-  [modalViewController dismissViewControllerAnimated:animated completion:completion];
++  if (modalViewController.presentedViewController) {
++    // Dismissing a controller that is itself presenting only dismisses its child, so dismiss both.
++    UIViewController *presentingViewController = modalViewController.presentingViewController ?: modalViewController;
++    [presentingViewController dismissViewControllerAnimated:animated completion:completion];
++  } else {
++    [modalViewController dismissViewControllerAnimated:animated completion:completion];
++  }
+ }
+ 
+ - (void)ensurePresentedOnlyIfNeeded
