@@ -106,6 +106,7 @@ describe('isBlockedProfileLink', () => {
   it('blocks listed domains and their subdomains', () => {
     expect(isBlockedProfileLink('https://onlyfans.com/kat')).toBe(true)
     expect(isBlockedProfileLink('https://www.fansly.com/kat')).toBe(true)
+    expect(isBlockedProfileLink('https://videy.at/v/abc')).toBe(true)
   })
 
   it('does not block lookalikes or other sites', () => {
@@ -119,6 +120,7 @@ describe('isShortenerLink', () => {
     expect(isShortenerLink('https://bit.ly/abc')).toBe(true)
     expect(isShortenerLink('https://www.tinyurl.com/abc')).toBe(true)
     expect(isShortenerLink('https://x.gd/abc')).toBe(true)
+    expect(isShortenerLink('https://shorten.world/abc')).toBe(true)
   })
 
   it('allows brand short links and lookalikes', () => {

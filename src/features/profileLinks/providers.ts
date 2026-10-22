@@ -122,10 +122,21 @@ export function normalizeProfileLinkUrl(input: string): string | null {
 }
 
 /**
- * Sites that can't be added as profile links. Adult-content platforms are
- * excluded for now; T&S owns the full list.
+ * Sites that can't be added as profile links: adult-content platforms, and
+ * file and link hosts T&S has seen used the same way as shorteners. T&S owns
+ * the full list.
  */
-export const BLOCKED_DOMAINS = ['onlyfans.com', 'fansly.com']
+export const BLOCKED_DOMAINS = [
+  'aceimg.in',
+  'fansly.com',
+  'onlyfans.com',
+  'onlylinks.cc',
+  'slicedrve.in',
+  'vdey.in',
+  'videy.at',
+  'videy.lt',
+  'videy.my',
+]
 
 /**
  * General-purpose URL shorteners, which hide where a link goes. Per T&S, most
@@ -133,6 +144,7 @@ export const BLOCKED_DOMAINS = ['onlyfans.com', 'fansly.com']
  * links (youtu.be, amzn.to) only lead to that brand, so they aren't listed.
  */
 export const SHORTENER_DOMAINS = [
+  'acel.me',
   'adf.ly',
   'bit.ly',
   'bitly.com',
@@ -140,21 +152,47 @@ export const SHORTENER_DOMAINS = [
   'buff.ly',
   'clck.ru',
   'cutt.ly',
+  'fc-lc.xyz',
   'goo.gl',
+  'goto.now',
   'is.gd',
+  'link2.fm',
+  'ln.run',
+  'lnk.ua',
   'lnkd.in',
+  'n9.cl',
   'ow.ly',
+  'psee.io',
   'rb.gy',
   'rebrand.ly',
+  'rg.by',
   's.id',
+  'short.do',
   'short.gy',
+  'shorten.as',
+  'shorten.ee',
+  'shorten.is',
+  'shorten.so',
+  'shorten.tv',
+  'shorten.world',
+  'shorter.me',
+  'shortn.icu',
   'shorturl.at',
+  'shorturl.lt',
+  'shorturl.ly',
+  'slnt.to',
+  'smarturl.lt',
+  'smarturl.my',
+  'sprl.me',
+  'sw.run',
   't.co',
   't.ly',
   'tiny.cc',
   'tinyurl.com',
+  'urlr.me',
   'v.gd',
   'x.gd',
+  'zig.ht',
 ]
 
 function parseWebUrl(url: string): URL | undefined {
