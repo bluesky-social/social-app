@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react'
 import {AppState} from 'react-native'
+import {WidgetInfo} from '@bsky.app/expo-bluesky-swiss-army'
 import {useLingui} from '@lingui/react/macro'
 
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
@@ -12,7 +13,6 @@ import {
   saveTrendingWidgetBackgroundConfig,
 } from '#/features/trendingWidget/BackgroundTask'
 import {updateTrendingWidgetSnapshot} from '#/features/trendingWidget/Snapshot'
-import {WidgetInfo} from '@bsky.app/expo-bluesky-swiss-army'
 
 export function TrendingTopicsWidgetSync() {
   const {t: l} = useLingui()

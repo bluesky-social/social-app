@@ -1,5 +1,6 @@
 import * as BackgroundTask from 'expo-background-task'
 import * as TaskManager from 'expo-task-manager'
+import {WidgetInfo} from '@bsky.app/expo-bluesky-swiss-army'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {createBskyTopicsHeader} from '#/lib/api/feed/utils'
@@ -11,7 +12,6 @@ import {
   updateTrendingWidgetSnapshot,
 } from '#/features/trendingWidget/Snapshot'
 import {app} from '#/lexicons'
-import {WidgetInfo} from '@bsky.app/expo-bluesky-swiss-army'
 
 const TASK_NAME = 'bluesky-trending-widget-refresh'
 const CONFIG_KEY = 'bluesky-trending-widget-background-config'
