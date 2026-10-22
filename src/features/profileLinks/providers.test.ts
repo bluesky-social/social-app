@@ -18,6 +18,21 @@ describe('getSupportProvider', () => {
     )
   })
 
+  it('matches account pages on subdomains or in the path', () => {
+    expect(getSupportProvider('https://kat.fanbox.cc')?.name).toBe(
+      'pixivFANBOX',
+    )
+    expect(getSupportProvider('https://www.fanbox.cc/@kat')?.name).toBe(
+      'pixivFANBOX',
+    )
+    expect(getSupportProvider('https://kat.booth.pm')?.name).toBe('BOOTH')
+    expect(getSupportProvider('https://skeb.jp/@kat')?.name).toBe('Skeb')
+    expect(getSupportProvider('https://www.givesendgo.com/kat')?.name).toBe(
+      'GiveSendGo',
+    )
+    expect(getSupportProvider('https://www.fanbox.cc')).toBe(undefined)
+  })
+
   it('does not match lookalike domains', () => {
     expect(getSupportProvider('https://ko-fi.com.example.net/kat')).toBe(
       undefined,
