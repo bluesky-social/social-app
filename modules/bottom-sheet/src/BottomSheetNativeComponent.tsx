@@ -183,8 +183,13 @@ function BottomSheetNativeComponentInner({
        * iOS now uses the same native sizing path. UIKit knows the actual presented
        * controller bounds, including popover width, form-sheet width, and changes
        * after adaptation or rotation.
+       *
+       * `left` and `right` are a fallback for when that state size hasn't landed.
+       * Without them an unsized absolute view shrinks to fit its content, which
+       * squeezes `flex: 1` rows down to their icons (APP-3602). The state size
+       * still wins, since a defined width takes precedence over the insets.
        */
-      style={{position: 'absolute'}}
+      style={{position: 'absolute', left: 0, right: 0}}
       containerBackgroundColor={nativeContainerBackgroundColor}>
       <View
         style={[

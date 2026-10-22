@@ -103,6 +103,8 @@ it.each(['always', 'adaptive', 'never'] as const)(
     expect(nativeProps.maxHeight).toBe(240)
     expect(StyleSheet.flatten(nativeProps.style)).toEqual({
       position: 'absolute',
+      left: 0,
+      right: 0,
     })
     expect(nativeProps).not.toHaveProperty('popover')
     expect(nativeProps).not.toHaveProperty('desiredContentHeight')
