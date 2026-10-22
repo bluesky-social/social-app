@@ -3,6 +3,7 @@ import {useLingui} from '@lingui/react/macro'
 
 import * as TextField from '#/components/forms/TextField'
 import {Shield_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
+import {IS_ANDROID} from '#/env'
 
 /**
  * Uppercase letters, preserve all digits, and remove other characters before
@@ -68,8 +69,11 @@ export function TokenField({
         <TextField.Input
           testID={testID}
           accessibilityHint={accessibilityHint}
+          autoCapitalize="characters"
           autoComplete={autoComplete}
           autoCorrect={false}
+          spellCheck={false}
+          keyboardType={IS_ANDROID ? 'visible-password' : 'ascii-capable'}
           autoFocus={autoFocus}
           blurOnSubmit={blurOnSubmit}
           editable={editable}
