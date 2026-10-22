@@ -13,8 +13,6 @@ packageExtensions:
 trustPolicy: 'no-downgrade' # default: off
 trustPolicyIgnoreAfter: 10080 # 7 days, default: undefined
 overrides:
-  'undici@>=6.0.0 <6.29.1': '6.29.1'
-  'undici@>=7.0.0 <7.30.1': '7.30.1'
   '@react-native/babel-preset': '0.86.3'
   '@react-native/normalize-colors': '0.86.3'
   '@expo/image-utils': '0.8.12'
