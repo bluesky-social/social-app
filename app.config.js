@@ -286,6 +286,7 @@ module.exports = function (_config) {
           {
             bundleIdentifier: 'xyz.blueskyweb.app.BlueskyWidgets',
             groupIdentifier: 'group.app.bsky',
+            enableAndroid: true,
             widgets: [
               {
                 name: 'TrendingTopicsWidget',
@@ -298,6 +299,16 @@ module.exports = function (_config) {
                     'systemMedium',
                     'systemLarge',
                   ],
+                },
+                android: {
+                  // 4x3 cells, or 250x180dp on Android 11 and lower
+                  minWidth: 250,
+                  minHeight: 180,
+                  targetCellWidth: 4,
+                  targetCellHeight: 3,
+                  // lets the widget render before the app is first opened
+                  initialLayout:
+                    'src/features/trendingWidget/TrendingTopicsWidget.android.tsx',
                 },
               },
             ],
