@@ -1,5 +1,5 @@
-// Regex for base32 string for testing reset code
-const RESET_CODE_REGEX = /^[A-Z2-7]{5}-[A-Z2-7]{5}$/
+/** Regex for the alphanumeric reset code format. */
+const RESET_CODE_REGEX = /^[A-Z0-9]{5}-[A-Z0-9]{5}$/i
 
 export function checkAndFormatResetCode(code: string): string | false {
   // Trim the reset code

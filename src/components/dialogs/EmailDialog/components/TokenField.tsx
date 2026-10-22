@@ -5,16 +5,12 @@ import * as TextField from '#/components/forms/TextField'
 import {Shield_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
 
 /**
- * Codes are base32 (A-Z and 2-7), so the digits 0 and 1 never appear in one.
- * People read them off the letters O and I, though, so map them back rather
- * than silently dropping the keypress.
+ * Uppercase letters, preserve all digits, and remove other characters before
+ * formatting the code with a hyphen after the first five characters.
+ * Preserve a trailing hyphen typed after exactly five characters.
  */
 export function normalizeCode(value: string) {
-  const normalized = value
-    .toUpperCase()
-    .replace(/0/g, 'O')
-    .replace(/1/g, 'I')
-    .replace(/[^A-Z2-7]/g, '')
+  const normalized = value.toUpperCase().replace(/[^A-Z0-9]/gi, '')
   if (normalized.length < 5) return normalized
   if (normalized.length === 5) {
     // keep the hyphen if the user typed it themselves
@@ -24,7 +20,7 @@ export function normalizeCode(value: string) {
 }
 
 export function isValidCode(value?: string) {
-  return Boolean(value && /^[A-Z2-7]{5}-[A-Z2-7]{5}$/.test(value))
+  return Boolean(value && /^[A-Z0-9]{5}-[A-Z0-9]{5}$/i.test(value))
 }
 
 export function TokenField({
