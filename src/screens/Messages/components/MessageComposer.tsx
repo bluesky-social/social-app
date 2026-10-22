@@ -354,7 +354,11 @@ function SubmitButton({
       {loading ? (
         <Loader size="md" fill={t.palette.white} style={[a.mb_2xs]} />
       ) : (
-        <PaperPlaneIcon size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+        <PaperPlaneIcon
+          size="md"
+          fill={t.palette.white}
+          style={[a.relative, a.z_10, a.mb_2xs]}
+        />
       )}
     </PressableScale>
   )
