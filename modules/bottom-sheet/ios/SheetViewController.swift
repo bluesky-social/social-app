@@ -16,6 +16,7 @@ class SheetViewController: UIViewController,
   var onDetentChange: ((UISheetPresentationController.Detent.Identifier?) -> Void)?
   var onShouldDismiss: (() -> Bool)?
   var onWillDismiss: (() -> Void)?
+  var onDismissCancelled: (() -> Void)?
   var onDidDismiss: (() -> Void)?
 
   private let popoverMode: BottomSheetPopoverMode
@@ -397,6 +398,17 @@ class SheetViewController: UIViewController,
     _ presentationController: UIPresentationController
   ) {
     self.onWillDismiss?()
+    /*
+     * A swipe that springs back cancels the dismissal, and UIKit then never
+     * calls presentationControllerDidDismiss. Wait for the cancel animation to
+     * finish rather than the end of the interaction, since a programmatic
+     * dismiss during the transition would be dropped.
+     */
+    self.transitionCoordinator?.animate(alongsideTransition: nil) { [weak self] context in
+      if context.isCancelled {
+        self?.onDismissCancelled?()
+      }
+    }
   }
 
   func presentationControllerDidDismiss(
