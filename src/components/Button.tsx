@@ -101,7 +101,6 @@ export type ButtonProps = Pick<
   | 'onPressOut'
   | 'onFocus'
   | 'onBlur'
-  | 'tabIndex'
   | 'onAccessibilityAction'
   | 'onAccessibilityEscape'
 > &
