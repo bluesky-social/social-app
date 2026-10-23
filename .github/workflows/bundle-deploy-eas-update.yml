@@ -30,6 +30,18 @@ on:
 permissions:
   contents: read
 
+# Serialize whole runs, not just bundleDeploy. recordBaseline only advances the
+# fingerprint baseline once both native builds ship, so a run that starts while
+# an earlier one is still building reads the pre-build baseline and triggers a
+# redundant native build. Even with the right baseline, an OTA published
+# mid-build would target the old native build. Pushes and testflight dispatches
+# share a group since they share the baseline and the build counters. GitHub
+# keeps only the newest pending run, which is fine as each deploy ships all of
+# main. Never cancel in progress, as that would kill in-flight native builds.
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.channel || 'testflight' }}-${{ github.ref }}
+  cancel-in-progress: false
+
 # denis release tag in bluesky-social/tango whose linux-amd64 binary this
 # workflow downloads to publish OTA bundles. Bump this one line to roll denis.
 env:
@@ -47,9 +59,6 @@ jobs:
       id-token: write
       actions: read
       contents: read
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-deploy
-      cancel-in-progress: true
     outputs:
       # A version bump forces a native build even if the fingerprint is unchanged
       changes-detected: ${{ steps.fingerprint.outputs.includes-changes ||
