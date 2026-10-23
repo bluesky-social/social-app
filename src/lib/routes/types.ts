@@ -55,6 +55,7 @@ export type CommonNavigatorParams = {
   ProfileLabelerLikedBy: {name: string}
   Debug: undefined
   DebugMod: undefined
+  PrependLab: undefined
   SharedPreferencesTester: undefined
   Log: undefined
   Support: undefined
