@@ -19,6 +19,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {useSharedValue} from 'react-native-reanimated'
+import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
 import {type RichText as RichTextType} from '@bsky/sdk/richtext'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
@@ -967,6 +968,14 @@ let PostFeed = ({
     blockedOrMutedAuthors,
     trendingIndices,
   ])
+
+  // Same condition as feedItems uses to replace the loading row
+  const isFirstPageShown = isFetched && !isRetryingError && (!!data || isError)
+  useEffect(() => {
+    if (isFirstPageShown) {
+      PlatformInfo.reportFullyDrawn()
+    }
+  }, [isFirstPageShown])
 
   const pill = usePrependPill({
     enabled: isAnchored,
