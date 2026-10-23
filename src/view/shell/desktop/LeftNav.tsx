@@ -684,7 +684,7 @@ export function DesktopLeftNav({
   const numUnreadMessages = useUnreadMessageCount()
   const hasHomeBadge = useHomeBadge()
   const isAtmosphereExploreEnabled = ax.features.enabled(
-    ax.features.AtmosphereExploreEnable,
+    ax.features.AtmosphereScreenEnable,
   )
   const insets = useSafeAreaInsets()
 

@@ -14,7 +14,7 @@ import {AtmosphereExploreTab} from './ExploreTab'
 export function AtmosphereScreen() {
   const {t: l} = useLingui()
   const ax = useAnalytics()
-  const isEnabled = ax.features.enabled(ax.features.AtmosphereExploreEnable)
+  const isEnabled = ax.features.enabled(ax.features.AtmosphereScreenEnable)
 
   if (!isEnabled) {
     return <NotFoundScreen />
