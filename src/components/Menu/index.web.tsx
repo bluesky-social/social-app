@@ -45,7 +45,6 @@ export function useMenuControl(): Dialog.DialogControlProps {
       },
       close(cb) {
         setIsOpen(false)
-        // Run after the caller's handler finishes, matching the web Dialog.
         if (cb) setTimeout(cb)
       },
     }),
