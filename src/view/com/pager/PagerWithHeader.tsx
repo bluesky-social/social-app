@@ -304,9 +304,15 @@ let PagerTabBar = ({
             fallbackHeaderOnlyHeight.current = e.nativeEvent.layout.height
           }
         }}>
-        {/* The extended clipping bounds must not intercept touches over the feed. */}
+        {/*
+         * Center always forms a native view (its translateX transform keeps it
+         * from being flattened), so it must be box-none: on Android, swipes on
+         * the header only scroll the list if they fall through to it. The
+         * extended clipping bounds must not intercept touches over the feed
+         * either.
+         */}
         <Center
-          pointerEvents={headerOverflowInset != null ? 'box-none' : undefined}
+          pointerEvents="box-none"
           style={
             headerOverflowInset != null && {
               overflow: 'hidden',
