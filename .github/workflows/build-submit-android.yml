@@ -90,7 +90,8 @@ jobs:
     outputs:
       source-sha: ${{ steps.source.outputs.sha }}
       package-version: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
-      version-code: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
+      version-code: ${{ steps.aab-version-code.outputs.version-code ||
+        steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
     steps:
       # Temporary until fixed runner images roll out:
       # https://github.com/actions/runner-images/issues/15018
