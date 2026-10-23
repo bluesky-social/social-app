@@ -12,6 +12,7 @@ import Animated, {
   type SharedValue,
   useAnimatedRef,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated'
 import {scheduleOnUI} from 'react-native-worklets'
@@ -264,22 +265,23 @@ let PagerTabBar = ({
 }): React.ReactNode => {
   const t = useTheme()
   const [minimumHeaderHeight, setMinimumHeaderHeight] = useState(0)
-  const headerTransform = useAnimatedStyle(() => {
+  /*
+   * Reanimated compares `transform` arrays by reference, so an animated style
+   * computing the transform straight from scrollY commits on every scroll
+   * frame, even once the header is pinned. A derived value only notifies the
+   * style when the offset changes, so it commits only while the header moves.
+   */
+  const headerTranslateY = useDerivedValue(() => {
     const translateY =
       Math.min(
         scrollY.get(),
         Math.max(headerOnlyHeight - minimumHeaderHeight, 0),
       ) * -1
-    return {
-      transform: [
-        {
-          translateY: allowHeaderOverScroll
-            ? translateY
-            : Math.min(translateY, 0),
-        },
-      ],
-    }
+    return allowHeaderOverScroll ? translateY : Math.min(translateY, 0)
   })
+  const headerTransform = useAnimatedStyle(() => ({
+    transform: [{translateY: headerTranslateY.get()}],
+  }))
   const headerRef = useRef<React.ComponentRef<typeof View>>(null)
   const fallbackHeaderOnlyHeight = useRef(0)
   return (

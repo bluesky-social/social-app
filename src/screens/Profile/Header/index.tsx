@@ -3,6 +3,8 @@ import {type LayoutChangeEvent, StyleSheet, View} from 'react-native'
 import Animated, {
   useAnimatedReaction,
   useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -121,6 +123,18 @@ const MinimalHeader = memo(function MinimalHeader({
   if (!ctx) throw new Error('MinimalHeader cannot be used on web')
   const {scrollY, headerHeight} = ctx
 
+  /*
+   * Keep the style free of scrollY and animations: returning `withTiming` from
+   * the style, or a new `transform` array computed from scrollY, makes
+   * Reanimated commit this view on every scroll frame even when nothing
+   * changed. The fade starts only when crossing the threshold, and the derived
+   * offset only notifies the style when it changes.
+   */
+  const opacity = useSharedValue(0)
+  const translateY = useDerivedValue(() =>
+    Math.min(scrollY.get(), headerHeight - minimalHeaderHeight),
+  )
+
   const animatedStyle = useAnimatedStyle(() => {
     // if we don't yet have the min header height in JS, hide
     if (!_WORKLET || minimalHeaderHeight === 0) {
@@ -128,19 +142,9 @@ const MinimalHeader = memo(function MinimalHeader({
         opacity: 0,
       }
     }
-    const pastThreshold = scrollY.get() > 100
     return {
-      opacity: pastThreshold
-        ? withTiming(1, {duration: 75})
-        : withTiming(0, {duration: 75}),
-      transform: [
-        {
-          translateY: Math.min(
-            scrollY.get(),
-            headerHeight - minimalHeaderHeight,
-          ),
-        },
-      ],
+      opacity: opacity.get(),
+      transform: [{translateY: translateY.get()}],
     }
   })
 
@@ -148,6 +152,7 @@ const MinimalHeader = memo(function MinimalHeader({
     () => scrollY.get() > 100,
     (value, prev) => {
       if (prev !== value) {
+        opacity.set(withTiming(value ? 1 : 0, {duration: 75}))
         scheduleOnRN(setVisible, value)
       }
     },
