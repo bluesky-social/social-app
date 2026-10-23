@@ -8,6 +8,7 @@ import Animated, {
   type SharedValue,
   useAnimatedRef,
   useAnimatedStyle,
+  useDerivedValue,
   useFrameCallback,
   useSharedValue,
   withSpring,
@@ -48,6 +49,7 @@ interface SortableListProps<T> {
 
 const AUTO_SCROLL_THRESHOLD = 50
 const AUTO_SCROLL_SPEED = 4
+const SHADOW_OFFSET = {width: 0, height: 1}
 
 /**
  * Bundled into a single shared value so all fields update atomically
@@ -388,63 +390,47 @@ function SortableItem<T>({
     },
   })
 
-  // All vertical positioning is via translateY (no `top`). This avoids
-  // discrete jumps when slots change — Reanimated smoothly animates from
-  // the current translateY to the new target on every state transition.
-  // On first mount we skip the animation so items appear instantly.
-  const isFirstRender = useSharedValue(true)
-
-  const animatedStyle = useAnimatedStyle(() => {
+  /*
+   * All vertical positioning is via translateY (no `top`), so items animate
+   * from their current position to the new slot instead of jumping.
+   *
+   * The values below are derived so each one only changes when it has to: the
+   * dragged item follows the finger every frame, but the other items only
+   * start an animation when the dragged item crosses into another slot, and
+   * the scale and shadow only when an item is picked up or dropped. The style
+   * reads these values and returns no animations of its own, so it only
+   * updates the view when one of them changes.
+   */
+  const dragOverSlot = useDerivedValue(() => {
+    const s = state.get()
+    if (s.activeKey === '') {
+      return -1
+    }
+    const pos = Math.round(
+      (s.dragStartSlot * itemHeight + dragY.get()) / itemHeight,
+    )
+    return Math.max(0, Math.min(pos, itemCount - 1))
+  })
+  const activeTranslateY = useDerivedValue(() => {
+    const s = state.get()
+    return s.activeKey === itemKey
+      ? s.dragStartSlot * itemHeight + dragY.get()
+      : 0
+  })
+  const translateY = useDerivedValue(() => {
     const s = state.get()
     const mySlot = s.slots[itemKey]
     if (mySlot === undefined) {
-      return {}
+      return 0
     }
-    const baseY = mySlot * itemHeight
-
-    // Active item: follow the finger with a slight scale-up and shadow.
+    // Active item: follow the finger.
     if (s.activeKey === itemKey) {
-      return {
-        transform: [
-          {translateY: s.dragStartSlot * itemHeight + dragY.get()},
-          {scale: withSpring(1.03, Reanimated3DefaultSpringConfig)},
-        ],
-        zIndex: 999,
-        ...(IS_IOS
-          ? {
-              shadowColor: '#000',
-              shadowOffset: {width: 0, height: 1},
-              shadowOpacity: withSpring(0.08, Reanimated3DefaultSpringConfig),
-              shadowRadius: withSpring(4, Reanimated3DefaultSpringConfig),
-            }
-          : {
-              elevation: withSpring(3, Reanimated3DefaultSpringConfig),
-            }),
-      }
+      return activeTranslateY.get()
     }
-
-    // Reset for non-active states. Without this, shadow props
-    // set during dragging linger on the native view.
-    const inactive = {
-      ...(IS_IOS
-        ? {
-            shadowOpacity: withSpring(0, Reanimated3DefaultSpringConfig),
-            shadowRadius: withSpring(0, Reanimated3DefaultSpringConfig),
-          }
-        : {
-            elevation: withSpring(0, Reanimated3DefaultSpringConfig),
-          }),
-    }
-
-    // Another item is being dragged — shift to make room.
+    // Another item is being dragged: shift to make room.
+    let offset = 0
     if (s.activeKey !== '') {
-      isFirstRender.set(false)
-      const currentDragPos = Math.round(
-        (s.dragStartSlot * itemHeight + dragY.get()) / itemHeight,
-      )
-      const clampedPos = Math.max(0, Math.min(currentDragPos, itemCount - 1))
-
-      let offset = 0
+      const clampedPos = dragOverSlot.get()
       if (
         s.dragStartSlot < clampedPos &&
         mySlot > s.dragStartSlot &&
@@ -458,33 +444,46 @@ function SortableItem<T>({
       ) {
         offset = itemHeight
       }
-
-      return {
-        transform: [
-          {translateY: withTiming(baseY + offset, {duration: 200})},
-          {scale: withSpring(1, Reanimated3DefaultSpringConfig)},
-        ],
-        zIndex: 0,
-        ...inactive,
-      }
     }
+    /*
+     * Animating to where the item already is does nothing, so this neither
+     * moves items on mount nor the dropped item, which the snap animation
+     * already left at its new slot.
+     */
+    return withTiming(mySlot * itemHeight + offset, {duration: 200})
+  })
+  const scale = useDerivedValue(() =>
+    state.get().activeKey === itemKey
+      ? withSpring(1.03, Reanimated3DefaultSpringConfig)
+      : 1,
+  )
+  // 0 at rest, 1 while dragged. Shadow props must be reset after a drag.
+  const shadowProgress = useDerivedValue(() =>
+    withSpring(
+      state.get().activeKey === itemKey ? 1 : 0,
+      Reanimated3DefaultSpringConfig,
+    ),
+  )
 
-    // Idle: sit at our slot. On first render use a direct value so items
-    // don't animate from y=0. After any drag, use withTiming so the
-    // shift→idle transition is smooth (no discrete jump).
-    if (isFirstRender.get()) {
-      isFirstRender.set(false)
-      return {
-        transform: [{translateY: baseY}, {scale: 1}],
-        zIndex: 0,
-        ...inactive,
-      }
+  const animatedStyle = useAnimatedStyle(() => {
+    const s = state.get()
+    if (s.slots[itemKey] === undefined) {
+      return {}
     }
-
+    const shadow = shadowProgress.get()
     return {
-      transform: [{translateY: withTiming(baseY, {duration: 200})}, {scale: 1}],
-      zIndex: 0,
-      ...inactive,
+      transform: [{translateY: translateY.get()}, {scale: scale.get()}],
+      zIndex: s.activeKey === itemKey ? 999 : 0,
+      ...(IS_IOS
+        ? {
+            shadowColor: '#000',
+            shadowOffset: SHADOW_OFFSET,
+            shadowOpacity: 0.08 * shadow,
+            shadowRadius: 4 * shadow,
+          }
+        : {
+            elevation: 3 * shadow,
+          }),
     }
   })
 
