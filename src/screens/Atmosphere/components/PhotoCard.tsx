@@ -42,7 +42,7 @@ export function PhotoCard({
       ref={galleryFocus?.focusRef}
       tabIndex={galleryFocus?.tabIndex}
       onFocus={galleryFocus?.onFocus}
-      style={[a.w_full, a.flex_col, a.align_start, a.gap_sm]}>
+      style={[a.flex_grow, a.w_full, a.flex_col, a.align_start, a.gap_sm]}>
       <View
         style={[
           a.w_full,

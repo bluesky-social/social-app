@@ -6,6 +6,7 @@ import {type AtmosphereArticleCardData} from '#/screens/Atmosphere/data/exploreD
 import {atoms as a, useTheme} from '#/alf'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 export function ArticleCard({
@@ -23,6 +24,7 @@ export function ArticleCard({
   return (
     <View
       style={[
+        a.flex_grow,
         width ? {width} : a.w_full,
         a.rounded_md,
         a.border,
@@ -38,7 +40,8 @@ export function ArticleCard({
           tabIndex={galleryFocus?.tabIndex}
           onFocus={galleryFocus?.onFocus}
           style={[a.flex_col, a.flex_1, a.w_full]}>
-          <View style={[a.w_full, t.atoms.bg_contrast_25, {height: 96}]}>
+          <View
+            style={[a.w_full, t.atoms.bg_contrast_25, {aspectRatio: 16 / 9}]}>
             {article.image ? (
               <Image
                 source={article.image}
@@ -48,14 +51,14 @@ export function ArticleCard({
               />
             ) : undefined}
           </View>
-          <View
-            style={[a.w_full, a.flex_1, a.gap_xs, a.p_md, {paddingTop: 10}]}>
+          <View style={[a.w_full, a.flex_1, a.p_md]}>
             {article.publisher || article.publisherAvatar ? (
               <View
                 style={[
                   a.flex_row,
                   a.align_center,
-                  a.gap_xs,
+                  a.gap_sm,
+                  IS_NATIVE ? a.pb_xs : a.pb_sm,
                   {alignSelf: 'flex-start'},
                 ]}>
                 {article.publisherAvatar ? (
@@ -76,14 +79,17 @@ export function ArticleCard({
                 ) : undefined}
               </View>
             ) : undefined}
-            <Text emoji style={[a.text_sm, a.font_semi_bold]} numberOfLines={2}>
+            <Text
+              emoji
+              style={[a.text_md, a.font_bold, a.pb_xs, a.leading_tight]}
+              numberOfLines={2}>
               {article.title}
             </Text>
             {article.description ? (
               <Text
                 emoji
                 style={[
-                  a.text_xs,
+                  a.text_sm,
                   a.leading_snug,
                   t.atoms.text_contrast_medium,
                 ]}

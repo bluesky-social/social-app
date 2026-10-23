@@ -41,7 +41,13 @@ export function LivestreamCard({
     : undefined
 
   return (
-    <View style={[width ? {width} : a.w_full, a.rounded_md, t.atoms.bg]}>
+    <View
+      style={[
+        a.flex_grow,
+        width ? {width} : a.w_full,
+        a.rounded_md,
+        t.atoms.bg,
+      ]}>
       <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
         <Link
           to={livestream.href}

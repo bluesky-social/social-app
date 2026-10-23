@@ -13,7 +13,7 @@ export type ExploreGalleryFocusProps = GalleryPrimitive.ItemFocusProps
 
 /**
  * Horizontal card carousel for the Atmosphere Explore sections. Cards own
- * their own width, and the strip is as tall as the tallest card.
+ * their own width and stretch to the tallest card in the strip.
  */
 export function ExploreGallery<T extends {id: string; title: string}>({
   items,
@@ -27,7 +27,7 @@ export function ExploreGallery<T extends {id: string; title: string}>({
   renderItem: (item: T, focusProps: ExploreGalleryFocusProps) => React.ReactNode
 }) {
   return (
-    <GalleryPrimitive.Root label={label} testID={testID}>
+    <GalleryPrimitive.Root label={label} testID={testID} stretch>
       {items.map(item => (
         <GalleryPrimitive.Item key={item.id} label={item.title}>
           {focusProps => (
@@ -36,7 +36,9 @@ export function ExploreGallery<T extends {id: string; title: string}>({
              * scrolled with the card, which keeps card shadows from being
              * clipped.
              */
-            <View style={[a.pb_md]}>{renderItem(item, focusProps)}</View>
+            <View style={[a.flex_grow, a.pb_md]}>
+              {renderItem(item, focusProps)}
+            </View>
           )}
         </GalleryPrimitive.Item>
       ))}

@@ -25,7 +25,7 @@ export function FeaturedPhotos({photos}: {photos: AtmospherePhotoCardData[]}) {
         label={l`Featured photos`}
         testID="atmospherePhotosGallery"
         renderItem={(photo, galleryFocus) => (
-          <View style={{width: CARD_WIDTH}}>
+          <View style={[a.flex_grow, {width: CARD_WIDTH}]}>
             <PhotoCard photo={photo} galleryFocus={galleryFocus} />
           </View>
         )}

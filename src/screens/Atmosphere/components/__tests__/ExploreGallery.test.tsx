@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import {
   Pressable,
+  ScrollView,
   type StyleProp,
   StyleSheet,
   Text,
@@ -118,10 +119,31 @@ describe('ExploreGallery', () => {
     for (const slide of slides()) {
       const [wrapper] = slide.children
       if (typeof wrapper === 'string') throw new Error('expected an element')
-      expect(flat(wrapper.props.style)).toEqual({atom: 'pb_md'})
+      expect(wrapper.props.style).toEqual([
+        {atom: 'flex_grow'},
+        {atom: 'pb_md'},
+      ])
     }
     const root = screen.getByTestId('thingsGallery')
     expect(flat(root.props.style).height).toBeUndefined()
+  })
+
+  it('opts into stretch without imposing measured heights', () => {
+    render(renderGallery())
+
+    const scroll = screen.UNSAFE_getByType(ScrollView)
+    expect(flat(scroll.props.contentContainerStyle)).toMatchObject({
+      atom: 'align_stretch',
+    })
+    for (const slide of slides()) {
+      expect(flat(slide.props.style)).toMatchObject({atom: 'self_stretch'})
+      fireEvent(slide, 'layout', {
+        nativeEvent: {layout: {x: 0, y: 0, width: 100, height: 200}},
+      })
+    }
+    expect(
+      flat(screen.getByTestId('thingsGallery').props.style).height,
+    ).toBeUndefined()
   })
 
   it('attaches focus to the rendered element rather than the slide', () => {

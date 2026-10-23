@@ -1,3 +1,4 @@
+import {StyleSheet} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {
@@ -17,7 +18,10 @@ jest.mock('@lingui/react', () => ({
   }),
 }))
 jest.mock('#/alf', () => {
-  const atoms = new Proxy({}, {get: () => ({})})
+  const atoms = new Proxy(
+    {},
+    {get: (_, name) => (name === 'flex_grow' ? {flexGrow: 1} : {})},
+  )
   return {
     atoms,
     useTheme: () => ({atoms, palette: new Proxy({}, {get: () => ''})}),
@@ -63,6 +67,7 @@ jest.mock('#/components/Link', () => {
       ref,
       tabIndex,
       onFocus,
+      style,
     }: {
       children: React.ReactNode
       label: string
@@ -70,6 +75,7 @@ jest.mock('#/components/Link', () => {
       ref?: React.Ref<unknown>
       tabIndex?: number
       onFocus?: () => void
+      style?: React.ComponentProps<typeof Pressable>['style']
     }) => (
       <Pressable
         testID="link"
@@ -79,7 +85,8 @@ jest.mock('#/components/Link', () => {
         accessibilityValue={{text: to}}
         ref={ref as never}
         tabIndex={tabIndex as never}
-        onFocus={onFocus}>
+        onFocus={onFocus}
+        style={style}>
         {children}
       </Pressable>
     ),
@@ -129,6 +136,13 @@ const cards: [
 ]
 
 describe.each(cards)('%s gallery focus', (_name, renderCard) => {
+  it('lets the card root fill a stretched slide', () => {
+    render(renderCard())
+    expect(StyleSheet.flatten(screen.root.props.style)).toMatchObject({
+      flexGrow: 1,
+    })
+  })
+
   it('attaches the focus props to its single Link', () => {
     const galleryFocus = {
       focusRef: jest.fn(),

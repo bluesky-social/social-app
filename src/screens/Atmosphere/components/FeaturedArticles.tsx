@@ -7,7 +7,7 @@ import {ArticleCard} from './ArticleCard'
 import {ExploreGallery} from './ExploreGallery'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
 
-const CARD_WIDTH = 214
+const CARD_WIDTH = 250
 
 export function FeaturedArticles({
   articles,

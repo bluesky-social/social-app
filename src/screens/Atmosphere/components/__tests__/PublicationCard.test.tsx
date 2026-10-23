@@ -1,3 +1,4 @@
+import {StyleSheet} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {type AtmospherePublicationCardData} from '#/screens/Atmosphere/data/exploreData'
@@ -9,7 +10,10 @@ jest.mock('@lingui/react', () => ({
   useLingui: () => ({_: (value: {message: string}) => value.message}),
 }))
 jest.mock('#/alf', () => {
-  const atoms = new Proxy({}, {get: () => ({})})
+  const atoms = new Proxy(
+    {},
+    {get: (_, name) => (name === 'flex_grow' ? {flexGrow: 1} : {})},
+  )
   return {
     atoms,
     web: () => undefined,
@@ -144,6 +148,14 @@ beforeEach(() => {
 describe.each([true, false])('PublicationCard (gtPhone: %s)', gtPhone => {
   beforeEach(() => {
     mockBreakpoints.gtPhone = gtPhone
+  })
+
+  it('lets the shared card fill a stretched slide while keeping its width', () => {
+    render(<PublicationCard publication={publication} width={320} />)
+    expect(StyleSheet.flatten(screen.root.props.style)).toMatchObject({
+      flexGrow: 1,
+      width: 320,
+    })
   })
 
   it('renders the primary link and the call to action', () => {

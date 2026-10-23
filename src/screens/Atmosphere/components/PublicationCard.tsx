@@ -1,5 +1,5 @@
 import {type AtmospherePublicationCardData} from '#/screens/Atmosphere/data/exploreData'
-import {useTheme, utils} from '#/alf'
+import {atoms as a, useTheme, utils} from '#/alf'
 import {PublicationCard as SharedPublicationCard} from '#/components/Post/Embed/StandardSiteEmbed'
 import type * as ssTypes from '#/components/Post/Embed/StandardSiteEmbed/types'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
@@ -37,7 +37,7 @@ export function PublicationCard({
       hideSubscribe
       view={publication.view}
       themeColors={themeColors}
-      style={width ? {width} : undefined}
+      style={[a.flex_grow, width ? {width} : undefined]}
       linkProps={
         galleryFocus && {
           ref: galleryFocus.focusRef,
