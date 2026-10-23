@@ -1,9 +1,9 @@
 # Gallery
 
 A horizontal strip of arbitrary content. Each item owns its own width and
-height, and the strip is as tall as the tallest item. It handles swiping,
-dragging, trackpads, and the arrow keys; it does not crop, resize, or
-virtualize anything.
+height, and the strip is as tall as the tallest item. An opt-in `stretch` mode
+lets slides share that height. It handles swiping, dragging, trackpads, and the
+arrow keys; it does not crop or virtualize anything.
 
 ```tsx
 import * as Gallery from '#/components/Gallery'
@@ -35,6 +35,8 @@ except:
 - `src/components/Gallery/**`: this implementation, its tests, and its
   Storybook
 - `src/components/images/Gallery/**`: the image wrapper and its tests
+- `src/screens/Atmosphere/components/ExploreGallery.tsx`: the Atmosphere Explore
+  card carousel wrapper
 - `src/view/screens/Storybook/Storybook.tsx`: the page that shows the Storybook
 
 A new configured wrapper opts in by adding its own directory to that list when
@@ -77,6 +79,7 @@ Anything else, at any size:
 | `label`         | Required, translated. Names the carousel for assistive tech.                |
 | `testID`        | Optional.                                                                   |
 | `ref`           | Optional `GalleryRef`, see below.                                           |
+| `stretch`       | Optional boolean, default false. Stretch slides to the tallest sibling.     |
 | `onIndexChange` | `(index, previousIndex) => void`. Called when the user navigates to a different item. |
 | `children`      | `Gallery.Item`s. Fragments, arrays, and conditional `null`s are flattened.  |
 
@@ -100,8 +103,9 @@ a nearby one.
 | `testID`   | Optional.                                         |
 | `children` | A node, or a function, see "Focus" below.         |
 
-The item wraps its children in a view that is measured as it is: never
-stretched, and given no width, aspect ratio, or height by the gallery.
+The item wraps its children in a view with no imposed width, aspect ratio, or
+height. By default it stays at its intrinsic height; with `Root stretch` its
+wrapper stretches to the tallest sibling.
 
 ### `GalleryRef`
 
@@ -139,7 +143,13 @@ with the padded content.
   children and the two would depend on each other.
 - The strip is as tall as its tallest current item, and follows items as they
   grow, shrink, or leave. An item wider than the gallery scrolls rather than
-  shrinking. Items are aligned to the top.
+  shrinking. Items are aligned to the top by default.
+- With `stretch`, the flex row determines its own height instead of applying a
+  measured height back to it. This lets it shrink when the tallest child shrinks
+  or leaves. To fill a slide, use `flexGrow: 1` on the card and any intermediate
+  wrappers. Keep image dimensions/aspect ratios on an inner frame rather than
+  stretching the image itself. The Atmosphere Explore wrapper uses this mode;
+  post-image galleries retain intrinsic sizing.
 - The space between items is fixed at 8, since the navigation math depends on
   it.
 - An empty gallery takes up no height.
@@ -208,6 +218,9 @@ pnpm test --runInBand src/components/Gallery/__tests__ src/components/images/Gal
 
 - Mixed content: every card keeps its size, the strip is as tall as the
   tallest card, and the wide card scrolls instead of being cropped.
+- Stretching cards: all card backgrounds share a height. Toggle tall content
+  and remove/re-add the tallest card; the row must grow and shrink without a
+  stale height. Check rotation and larger font sizes too.
 - Changing content: add, remove, reverse, tall/short and wide/narrow all
   resize the strip without stale offsets. Neither these nor "Reveal last"
   increase the navigation event count; swiping, dragging, and arrow keys do.

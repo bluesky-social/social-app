@@ -55,6 +55,7 @@ const ItemContext = createContext<{
   isFocusTarget: boolean
   /** Whether to apply a roving tabIndex at all */
   rovingEnabled: boolean
+  stretch: boolean
   onItemLayout: (key: string, size: Size) => void
   registerFocusNode: (key: string, node: unknown) => void
   onItemFocus: (index: number) => void
@@ -63,8 +64,8 @@ ItemContext.displayName = 'GalleryItemContext'
 
 /**
  * A horizontal strip of arbitrary content. Each child must render a
- * `Gallery.Item`. Children own their width and height; the strip is as tall
- * as the tallest one.
+ * `Gallery.Item`. Children own their width and intrinsic height; the strip is
+ * as tall as the tallest one. Opt into `stretch` to equalize slide heights.
  *
  * Children are all rendered eagerly, so this is meant for a small number of
  * items rather than an unbounded list.
@@ -75,12 +76,15 @@ export function Root({
   testID,
   ref,
   onIndexChange,
+  stretch = false,
 }: {
   children?: React.ReactNode
   /** Translated accessible label for the whole gallery */
   label: string
   testID?: string
   ref?: React.Ref<GalleryRef>
+  /** Stretch slides to the tallest sibling, without imposing child heights. */
+  stretch?: boolean
   /**
    * Called when the user navigates to a different item via native swipe,
    * mouse drag, arrow keys, or Safari horizontal wheel events. Browser touch
@@ -369,7 +373,8 @@ export function Root({
       style={[
         a.w_full,
         {
-          height: maxHeight > 0 ? maxHeight : undefined,
+          /* Let the row size itself so stretched measurements cannot lock its height. */
+          height: !stretch && maxHeight > 0 ? maxHeight : undefined,
           overflow: 'visible',
         },
       ]}
@@ -418,7 +423,7 @@ export function Root({
             web({overscrollBehaviorX: 'contain'}),
           ]}
           contentContainerStyle={[
-            a.align_start,
+            stretch ? a.align_stretch : a.align_start,
             {
               gap: ITEM_GAP,
               paddingLeft: insetLeft,
@@ -433,6 +438,7 @@ export function Root({
                 index,
                 isFocusTarget: index === activeFocusIndex,
                 rovingEnabled,
+                stretch,
                 onItemLayout,
                 registerFocusNode,
                 onItemFocus,
@@ -447,8 +453,8 @@ export function Root({
 }
 
 /**
- * One slide. Measured at whatever size its children take up, so it never
- * imposes a width or height. Pass a function as children to receive props for
+ * One slide. Never imposes a width or height; the root can opt into stretching
+ * slides to the tallest sibling. Pass a function as children to receive props for
  * attaching to an interactive element that should be the keyboard focus target
  * for this slide, instead of the slide itself.
  */
@@ -471,6 +477,7 @@ export function Item({
     index,
     isFocusTarget,
     rovingEnabled,
+    stretch,
     onItemLayout,
     registerFocusNode,
     onItemFocus,
@@ -499,7 +506,7 @@ export function Item({
             tabIndex,
             ...(IS_WEB ? {onFocus} : null),
           })}
-      style={[a.flex_shrink_0, a.self_start]}
+      style={[a.flex_shrink_0, stretch ? a.self_stretch : a.self_start]}
       onLayout={(e: LayoutChangeEvent) => {
         const {width, height} = e.nativeEvent.layout
         onItemLayout(itemKey, {width, height})

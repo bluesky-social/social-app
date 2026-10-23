@@ -213,7 +213,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const inviteFriendsControl = useDialogControl()
   const isAtmosphereExploreEnabled = ax.features.enabled(
-    ax.features.AtmosphereExploreEnable,
+    ax.features.AtmosphereScreenEnable,
   )
 
   // events

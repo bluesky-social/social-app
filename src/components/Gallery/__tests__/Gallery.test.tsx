@@ -33,7 +33,14 @@ jest.mock('#/view/shell/BlockDrawerGesture', () => ({
   BlockDrawerGesture: ({children}: {children: React.ReactNode}) => children,
 }))
 jest.mock('#/alf', () => ({
-  atoms: new Proxy({}, {get: () => ({})}),
+  atoms: {
+    w_full: {width: '100%'},
+    align_start: {alignItems: 'flex-start'},
+    align_stretch: {alignItems: 'stretch'},
+    self_start: {alignSelf: 'flex-start'},
+    self_stretch: {alignSelf: 'stretch'},
+    flex_shrink_0: {flexShrink: 0},
+  },
   web: () => undefined,
 }))
 
@@ -278,6 +285,102 @@ describe('Gallery sizing', () => {
       expect(screen.getByTestId(id)).toBeTruthy()
     }
     expect(screen.queryByTestId('hidden')).toBeNull()
+  })
+})
+
+describe('Gallery stretching', () => {
+  it('keeps intrinsic sizing as the default', () => {
+    render(
+      <Gallery.Root testID="gallery" label="Cards">
+        {card('short', 100, 80)}
+      </Gallery.Root>,
+    )
+    expect(flat(scrollView().props.contentContainerStyle).alignItems).toBe(
+      'flex-start',
+    )
+    expect(flat(screen.getByTestId('short').props.style).alignSelf).toBe(
+      'flex-start',
+    )
+    layout('short', 100, 80)
+    expect(rootHeight()).toBe(80)
+  })
+
+  it('stretches slides without feeding their measured height back into the row', () => {
+    render(
+      <Gallery.Root stretch testID="gallery" label="Cards">
+        {card('short', 100, 80)}
+        {card('tall', 140, 240)}
+      </Gallery.Root>,
+    )
+    expect(flat(scrollView().props.contentContainerStyle).alignItems).toBe(
+      'stretch',
+    )
+    for (const id of ['short', 'tall']) {
+      const style = flat(screen.getByTestId(id).props.style)
+      expect(style.alignSelf).toBe('stretch')
+      expect(style.width).toBeUndefined()
+      expect(style.height).toBeUndefined()
+      layout(id, id === 'short' ? 100 : 140, 240)
+    }
+    expect(rootHeight()).toBeUndefined()
+    expect(flat(scrollView().props.style).height).toBeUndefined()
+    expect(
+      flat(scrollView().props.contentContainerStyle).height,
+    ).toBeUndefined()
+  })
+
+  it('does not retain stretched heights after removing or shrinking content', () => {
+    const gallery = (tall: boolean) => (
+      <Gallery.Root stretch testID="gallery" label="Cards">
+        {card('short', 100, 80)}
+        {tall ? card('tall', 140, 240) : null}
+      </Gallery.Root>
+    )
+    const {rerender} = render(gallery(true))
+    layout('short', 100, 240)
+    layout('tall', 140, 240)
+    rerender(gallery(false))
+    expect(rootHeight()).toBeUndefined()
+    layout('short', 100, 80)
+    expect(rootHeight()).toBeUndefined()
+    expect(flat(screen.getByTestId('short').props.style).height).toBeUndefined()
+  })
+
+  it('can switch between intrinsic and stretched sizing', () => {
+    const gallery = (stretch: boolean) => (
+      <Gallery.Root stretch={stretch} testID="gallery" label="Cards">
+        {card('short', 100, 80)}
+        {card('tall', 140, 240)}
+      </Gallery.Root>
+    )
+    const {rerender} = render(gallery(false))
+    layout('short', 100, 80)
+    layout('tall', 140, 240)
+    expect(rootHeight()).toBe(240)
+    rerender(gallery(true))
+    expect(rootHeight()).toBeUndefined()
+    expect(flat(screen.getByTestId('short').props.style).alignSelf).toBe(
+      'stretch',
+    )
+    rerender(gallery(false))
+    expect(rootHeight()).toBe(240)
+    expect(flat(screen.getByTestId('short').props.style).alignSelf).toBe(
+      'flex-start',
+    )
+  })
+
+  it('does not impose a height on empty or single-item stretched galleries', () => {
+    const {rerender} = render(
+      <Gallery.Root stretch testID="gallery" label="Cards" />,
+    )
+    expect(rootHeight()).toBeUndefined()
+    rerender(
+      <Gallery.Root stretch testID="gallery" label="Cards">
+        {card('only', 100, 80)}
+      </Gallery.Root>,
+    )
+    layout('only', 100, 80)
+    expect(rootHeight()).toBeUndefined()
   })
 })
 
