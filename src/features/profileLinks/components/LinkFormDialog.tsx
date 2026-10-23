@@ -208,6 +208,8 @@ function LinkFormInner({
     const needsIcon = !provider
     let icon = isNewDestination ? undefined : link?.icon
     let iconUrl = isNewDestination ? undefined : link?.iconUrl
+    let iconDark = isNewDestination ? undefined : link?.iconDark
+    let iconDarkUrl = isNewDestination ? undefined : link?.iconDarkUrl
     if (needsCheck || needsIcon || isNewDestination) {
       setReachability('checking')
       const [meta, uploadedIcon, safelinkAction] = await Promise.all([
@@ -229,12 +231,16 @@ function LinkFormInner({
       if (uploadedIcon) {
         icon = uploadedIcon.icon
         iconUrl = uploadedIcon.previewUrl
+        iconDark = uploadedIcon.iconDark
+        iconDarkUrl = uploadedIcon.previewDarkUrl
       }
     }
     const saved: ProfileLink = {url: targetUrl}
     if (nextTitle) saved.title = nextTitle
     if (icon) saved.icon = icon
     if (iconUrl) saved.iconUrl = iconUrl
+    if (iconDark) saved.iconDark = iconDark
+    if (iconDarkUrl) saved.iconDarkUrl = iconDarkUrl
     // an edit rewrites the same record, so a report on it still points here
     if (link?.uri) saved.uri = link.uri
     control.close(() => onSave(saved))

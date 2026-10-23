@@ -530,6 +530,11 @@
           "format": "uri",
           "description": "Image URL for the destination site's icon."
         },
+        "iconDark": {
+          "type": "string",
+          "format": "uri",
+          "description": "Image URL for the destination site's icon in a dark color scheme, when it has one."
+        },
         "title": {
           "type": "string",
           "maxLength": 320,

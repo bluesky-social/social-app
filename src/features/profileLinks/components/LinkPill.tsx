@@ -5,6 +5,7 @@ import {useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon} from '#/components/icons/Arrow'
 import {Link} from '#/components/Link'
+import {linkFaviconUrl} from '../favicon'
 import {useSupportPalette} from '../palette'
 import {
   PILL_LEFT,
@@ -16,7 +17,7 @@ import {
 import {getLinkHost, getSupportProvider} from '../providers'
 import {type ProfileLink} from '../types'
 import {DragHandle} from './DragHandle'
-import {ButtonFavicon, linkFaviconUrl} from './LinkFavicon'
+import {ButtonFavicon} from './LinkFavicon'
 import {linkIcon} from './ProviderLogo'
 
 export type PillA11yActions = {
@@ -74,7 +75,9 @@ export function ProfileLinkPill({
   const palette = useSupportPalette()
   const provider = getSupportProvider(link.url)
   const color = provider ? palette.fg : t.atoms.text.color
-  const faviconUrl = provider ? undefined : linkFaviconUrl(link, did)
+  const faviconUrl = provider
+    ? undefined
+    : linkFaviconUrl(link, did, t.scheme === 'dark')
 
   const trailing = handle ? (
     <DragHandle onGreen={!!provider} />
