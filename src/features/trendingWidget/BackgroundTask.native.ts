@@ -71,8 +71,16 @@ export async function registerTrendingWidgetBackgroundTask() {
   })
 }
 
+export async function unregisterTrendingWidgetBackgroundTask() {
+  await BackgroundTask.unregisterTaskAsync(TASK_NAME)
+}
+
 export async function saveTrendingWidgetBackgroundConfig(
   config: BackgroundConfig,
 ) {
   await AsyncStorage.setItem(CONFIG_KEY, JSON.stringify(config))
+}
+
+export async function clearTrendingWidgetBackgroundConfig() {
+  await AsyncStorage.removeItem(CONFIG_KEY)
 }

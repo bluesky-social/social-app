@@ -10,6 +10,10 @@ type BackgroundConfig = {
 
 export async function registerTrendingWidgetBackgroundTask() {}
 
+export async function unregisterTrendingWidgetBackgroundTask() {}
+
 export async function saveTrendingWidgetBackgroundConfig(
   _config: BackgroundConfig,
 ) {}
+
+export async function clearTrendingWidgetBackgroundConfig() {}
