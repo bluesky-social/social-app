@@ -18,13 +18,10 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
 import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
-import {useBreakpoints, useLayoutBreakpoints, useTheme} from '#/alf'
+import {useBreakpoints, useTheme} from '#/alf'
 import {shouldCenterNativeTabletContent} from '#/alf/breakpoints.shared'
 import {useDialogContext} from '#/components/Dialog/context'
-import {
-  CENTER_COLUMN_OFFSET,
-  CENTER_COLUMN_WIDTH,
-} from '#/components/Layout/const'
+import {CENTER_COLUMN_WIDTH} from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {useLightboxIsOpenSharedValue} from '#/components/Lightbox/state'
 import {IS_IOS, IS_IPAD} from '#/env'
@@ -82,7 +79,6 @@ let List = forwardRef<ListMethods, ListProps>(
     const isScrolledDown = useSharedValue(false)
     const t = useTheme()
     const {gtMobile} = useBreakpoints()
-    const {centerColumnOffset} = useLayoutBreakpoints()
     const {isWithinDialog} = useDialogContext()
     const {isWithinSplitView} = useIsWithinSplitView()
     const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
@@ -226,9 +222,6 @@ let List = forwardRef<ListMethods, ListProps>(
               width: '100%',
               maxWidth: CENTER_COLUMN_WIDTH,
               alignSelf: 'center',
-              transform: [
-                {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
-              ],
             },
             centerOnTablet &&
               sideBorders && [
