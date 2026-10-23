@@ -152,6 +152,32 @@ jobs:
         id: get-build-info
         run: bash scripts/setGitHubOutput.sh
 
+      # The versionCode the AAB actually carries is the one Play and clients
+      # see, so the embedded bundle artifact is named after it. The EAS counter
+      # read above is only a fallback.
+      - name: 🔧 Setup bundletool
+        continue-on-error: true
+        uses: amyu/setup-bundletool@cc2e1857284660bd625e43f2c8a45626f034302f # v1.1
+        with:
+          version: "1.18.3"
+
+      - name: 🔢 Read version code from AAB
+        id: aab-version-code
+        env:
+          REMOTE_VERSION_CODE: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
+        run: |
+          if version_code="$(bundletool dump manifest --bundle=build.aab --xpath=/manifest/@android:versionCode)" &&
+            [[ "$version_code" =~ ^[0-9]+$ ]]; then
+            echo "AAB version code: $version_code"
+            if [ "$version_code" != "$REMOTE_VERSION_CODE" ]; then
+              echo "::warning::The AAB's versionCode ($version_code) differs from the EAS counter ($REMOTE_VERSION_CODE)."
+            fi
+          else
+            echo "::warning::Could not read the versionCode from build.aab with bundletool, so using the EAS counter ($REMOTE_VERSION_CODE) instead."
+            version_code="$REMOTE_VERSION_CODE"
+          fi
+          echo "version-code=$version_code" >> "$GITHUB_OUTPUT"
+
       # Save the JS bundle and update ID this build embeds. OTAs for this build
       # are compiled and diffed against them, since the embedded update is what
       # most clients are running. Only testflight and production builds have
@@ -165,7 +191,7 @@ jobs:
           PLATFORM: android
           ARCHIVE: build.aab
           OUT_DIR: ${{ runner.temp }}/embedded-bundle
-          BUILD_NUMBER: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
+          BUILD_NUMBER: ${{ steps.aab-version-code.outputs.version-code }}
           PROFILE: ${{ inputs.profile || 'testflight-android' }}
           COMMIT: ${{ steps.source.outputs.sha }}
         run: |
@@ -181,7 +207,7 @@ jobs:
         continue-on-error: true
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: embedded-bundle-android-${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
+          name: embedded-bundle-android-${{ steps.aab-version-code.outputs.version-code }}
           path: ${{ runner.temp }}/embedded-bundle
           retention-days: 90
           if-no-files-found: error
