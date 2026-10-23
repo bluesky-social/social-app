@@ -4,7 +4,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {HITSLOP_10} from '#/lib/constants'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {atoms as a, tokens} from '#/alf'
-import {Button} from '#/components/Button'
+import {Button, ButtonIcon} from '#/components/Button'
 import {GradientFill} from '#/components/GradientFill'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/TimesLarge'
 import {Text} from '#/components/Typography'
@@ -69,22 +69,16 @@ export function AtmosphereNux() {
           hitSlop={HITSLOP_10}
           testID="atmosphereNuxDismiss"
           onPress={dismiss}
+          color="secondary_inverted"
+          shape="round"
+          size="tiny"
           style={[
             a.absolute,
             a.align_center,
             a.justify_center,
-            {top: 0, right: 7, width: 44, height: 44},
-          ]}
-          hoverStyle={[a.bg_transparent, {opacity: 0.5}]}>
-          <View
-            style={[
-              a.align_center,
-              a.justify_center,
-              a.rounded_full,
-              {width: 20, height: 20, backgroundColor: 'rgba(0, 0, 0, 0.25)'},
-            ]}>
-            <XIcon size="xs" style={{color: 'white'}} />
-          </View>
+            {top: a.p_md.padding, right: a.p_md.padding},
+          ]}>
+          <ButtonIcon icon={XIcon} size="sm" />
         </Button>
       </View>
     </View>
