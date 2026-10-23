@@ -12,8 +12,6 @@ import {useFocusEffect} from '@react-navigation/native'
 
 import {useHaptics} from '#/lib/haptics'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {isNetworkError} from '#/lib/strings/errors'
-import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -22,23 +20,18 @@ import {
   ReportDialog,
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
-import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
-import {logProfileLinkChanges} from '../metrics'
 import {PILL_LEFT, PILL_RIGHT_TEXT, PILL_VERTICAL} from '../pillSize'
 import {getLinkHost, getSupportProvider} from '../providers'
 import {buildProfileRow, GERM_KEY} from '../row'
 import {
-  useCanEditProfileLinks,
   useOwnProfileLinksQuery,
   useProfileLinksEnabled,
   useProfileViewLinks,
-  useSaveProfileLinksMutation,
 } from '../state'
 import {type ProfileLink} from '../types'
-import {LinkFormDialog} from './LinkFormDialog'
 import {LinkHoverPreview} from './LinkHoverPreview'
 import {ProfileLinkPill} from './LinkPill'
 import {LinkPreviewSheet} from './LinkPreviewSheet'
@@ -54,8 +47,7 @@ const EASE_OUT = Easing.out(Easing.cubic)
  * The row of link pills under the bio, followed by the Germ DM button. Hidden
  * whenever moderation hides the bio.
  *
- * Visitors open a link with a tap and see where it goes on hover or long
- * press. The owner taps a link to edit it.
+ * A tap opens a link, and hover or long press shows where it goes.
  */
 export function ProfileHeaderLinks({
   profile,
@@ -70,7 +62,6 @@ export function ProfileHeaderLinks({
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const enabled = useProfileLinksEnabled()
-  const canEdit = useCanEditProfileLinks()
   const isOwnProfile = currentAccount?.did === profile.did
   /*
    * The owner's row comes from their repo: it reflects a save before the
@@ -107,7 +98,6 @@ export function ProfileHeaderLinks({
       links={links}
       germButton={germButton}
       isOwnProfile={isOwnProfile}
-      canEdit={isOwnProfile && canEdit}
     />
   )
 }
@@ -117,14 +107,11 @@ function ProfileLinksRow({
   links,
   germButton,
   isOwnProfile,
-  canEdit,
 }: {
   profile: app.bsky.actor.defs.ProfileViewDetailed
   links: ProfileLink[]
   germButton?: React.ReactElement
   isOwnProfile: boolean
-  /** The owner taps a link to edit it, instead of opening it. */
-  canEdit: boolean
 }) {
   const {t: l} = useLingui()
   const ax = useAnalytics()
@@ -132,10 +119,7 @@ function ProfileLinksRow({
   const openLink = useOpenLink()
   const previewControl = useDialogControl()
   const reportControl = useReportDialogControl()
-  const formControl = useDialogControl()
-  const {save} = useSaveProfileLinksMutation()
   const [activeLink, setActiveLink] = useState<ProfileLink | null>(null)
-  const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [expanded, setExpanded] = useState(false)
 
   // the profile screen stays mounted elsewhere in the app, so fold back up on leave
@@ -162,40 +146,14 @@ function ProfileLinksRow({
     previewControl.open()
   }
 
-  const saveLinks = async (next: ProfileLink[]) => {
-    try {
-      await save(profile, next, links)
-      logProfileLinkChanges(ax, links, next)
-    } catch (e) {
-      if (!isNetworkError(e)) {
-        logger.error('Failed to save profile links', {safeMessage: e})
-      }
-      Toast.show(l`Couldn’t save your links. Please try again.`, {
-        type: 'error',
-      })
-    }
-  }
-
   const items = buildProfileRow(links, !!germButton).map(item => {
     if (item.type === 'germ') {
       return {key: GERM_KEY, node: germButton}
     }
     const {link} = item
-    const index = links.indexOf(link)
     return {
       key: item.key,
-      node: canEdit ? (
-        <ProfileLinkPill
-          link={link}
-          did={profile.did}
-          label={l`Edit link`}
-          onPress={() => {
-            playTapHaptic()
-            setEditingIndex(index)
-            formControl.open()
-          }}
-        />
-      ) : (
+      node: (
         <LinkHoverPreview url={link.url}>
           <ProfileLinkPill
             link={link}
@@ -238,59 +196,37 @@ function ProfileLinksRow({
         expanded={expanded}
         onExpand={() => setExpanded(true)}
       />
-      {canEdit ? (
-        <LinkFormDialog
-          control={formControl}
-          link={editingIndex === null ? null : links[editingIndex]}
-          existingUrls={links
-            .filter((_, i) => i !== editingIndex)
-            .map(link => link.url)}
-          onSave={saved => {
-            if (editingIndex === null) return
-            void saveLinks(
-              links.map((link, i) => (i === editingIndex ? saved : link)),
-            )
-          }}
-          onRemove={() => {
-            if (editingIndex === null) return
-            void saveLinks(links.filter((_, i) => i !== editingIndex))
+      <LinkPreviewSheet
+        control={previewControl}
+        link={activeLink}
+        onOpen={link => {
+          logClick(link)
+          /*
+           * The sheet closes before this runs, so unlike the pills it
+           * can't be a Link. Through the redirect service, so Safelink
+           * rules apply.
+           */
+          openLink(link.url, undefined, true)
+        }}
+        onReport={
+          // nothing to report on your own profile
+          !isOwnProfile && activeLink?.uri && activeLink.cid
+            ? () => reportControl.open()
+            : undefined
+        }
+      />
+      {activeLink?.uri && activeLink.cid ? (
+        <ReportDialog
+          control={reportControl}
+          // the link was read off a profile view, so these are well-formed
+          subject={{
+            $type: 'app.bsky.actor.defs#profileLinkView',
+            uri: activeLink.uri as app.bsky.actor.defs.ProfileLinkView['uri'],
+            cid: activeLink.cid,
+            url: activeLink.url as app.bsky.actor.defs.ProfileLinkView['url'],
           }}
         />
-      ) : (
-        <>
-          <LinkPreviewSheet
-            control={previewControl}
-            link={activeLink}
-            onOpen={link => {
-              logClick(link)
-              /*
-               * The sheet closes before this runs, so unlike the pills it
-               * can't be a Link. Through the redirect service, so Safelink
-               * rules apply.
-               */
-              openLink(link.url, undefined, true)
-            }}
-            onReport={
-              // nothing to report on your own profile
-              !isOwnProfile && activeLink?.uri && activeLink.cid
-                ? () => reportControl.open()
-                : undefined
-            }
-          />
-          {activeLink?.uri && activeLink.cid ? (
-            <ReportDialog
-              control={reportControl}
-              // the link was read off a profile view, so these are well-formed
-              subject={{
-                $type: 'app.bsky.actor.defs#profileLinkView',
-                uri: activeLink.uri as app.bsky.actor.defs.ProfileLinkView['uri'],
-                cid: activeLink.cid,
-                url: activeLink.url as app.bsky.actor.defs.ProfileLinkView['url'],
-              }}
-            />
-          ) : null}
-        </>
-      )}
+      ) : null}
     </>
   )
 }
