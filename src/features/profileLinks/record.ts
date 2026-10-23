@@ -4,7 +4,6 @@ import {splitGraphemes} from 'unicode-segmenter/grapheme'
 
 import {type app} from '#/lexicons'
 import {
-  isBlockedProfileLink,
   isInsecureLink,
   isShortenerLink,
   normalizeProfileLinkUrl,
@@ -20,7 +19,6 @@ function isShowable(url: string, seen: Set<string>): boolean {
   if (
     !normalized ||
     seen.has(normalized) ||
-    isBlockedProfileLink(normalized) ||
     isShortenerLink(normalized) ||
     isInsecureLink(normalized)
   ) {

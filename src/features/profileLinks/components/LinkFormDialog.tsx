@@ -143,7 +143,6 @@ function LinkFormInner({
     if (
       !targetUrl ||
       provider ||
-      validation.isBlocked ||
       validation.isShortener ||
       validation.isInsecure
     ) {
@@ -165,13 +164,7 @@ function LinkFormInner({
     return () => {
       cancelled = true
     }
-  }, [
-    targetUrl,
-    provider,
-    validation.isBlocked,
-    validation.isShortener,
-    validation.isInsecure,
-  ])
+  }, [targetUrl, provider, validation.isShortener, validation.isInsecure])
 
   const nextTitle = title.trim() || undefined
   const isUnchanged =
@@ -186,14 +179,6 @@ function LinkFormInner({
     if (!canSave) return
     if (!targetUrl) {
       setError('invalid')
-      return
-    }
-    if (validation.isBlocked) {
-      setError('blocked')
-      ax.metric('profile:links:rejected', {
-        reason: 'blocked',
-        domain: getLinkHost(targetUrl),
-      })
       return
     }
     if (validation.isShortener) {
