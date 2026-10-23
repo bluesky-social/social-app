@@ -138,7 +138,7 @@ module.exports = function (_config) {
         entitlements: {
           'com.apple.developer.kernel.increased-memory-limit': true,
           'com.apple.developer.kernel.extended-virtual-addressing': true,
-          'com.apple.security.application-groups': 'group.app.bsky',
+          'com.apple.security.application-groups': ['group.app.bsky'],
           'com.apple.developer.usernotifications.communication': true,
           // 'com.apple.developer.device-information.user-assigned-device-name': true,
           'com.apple.developer.declared-age-range': true,
@@ -280,6 +280,43 @@ module.exports = function (_config) {
           },
         ],
         'expo-web-browser',
+        'expo-background-task',
+        [
+          'expo-widgets',
+          {
+            bundleIdentifier: 'xyz.blueskyweb.app.BlueskyWidgets',
+            groupIdentifier: 'group.app.bsky',
+            enableAndroid: true,
+            widgets: [
+              {
+                name: 'TrendingTopicsWidget',
+                displayName: 'Trending Topics',
+                description: 'See what people are talking about on Bluesky.',
+                ios: {
+                  contentMarginsDisabled: true,
+                  supportedFamilies: [
+                    'systemSmall',
+                    'systemMedium',
+                    'systemLarge',
+                  ],
+                  // lets the widget render before the app is first opened
+                  initialLayout:
+                    'src/features/trendingWidget/TrendingTopicsWidget.ios.tsx',
+                },
+                android: {
+                  // 4x3 cells, or 250x180dp on Android 11 and lower
+                  minWidth: 250,
+                  minHeight: 180,
+                  targetCellWidth: 4,
+                  targetCellHeight: 3,
+                  // lets the widget render before the app is first opened
+                  initialLayout:
+                    'src/features/trendingWidget/TrendingTopicsWidget.android.tsx',
+                },
+              },
+            ],
+          },
+        ],
         [
           'react-native-nano-icons',
           {
