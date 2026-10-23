@@ -293,6 +293,73 @@ index 0912c50fec13f41894b5351c7ff62b40bb8e3fad..376a554317fd355aadb733cf67b09e3f
      layer.contents = (id)image.CGImage;
      layer.contentsScale = image.scale;
  
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt b/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt
+index e6e0660d174bc9c62b500e23ba48bedd5e1818c5..0eb0b8fbde39b22919eecca42690f6daabf52e49 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt
++++ b/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt
+@@ -12,6 +12,7 @@ import android.animation.ValueAnimator
+ import android.content.Context
+ import android.graphics.Point
+ import android.os.Build
++import android.os.SystemClock
+ import android.view.View
+ import android.view.ViewGroup
+ import android.widget.OverScroller
+@@ -31,6 +32,7 @@ import com.facebook.react.uimanager.StateWrapper
+ import com.facebook.react.uimanager.UIManagerHelper
+ import com.facebook.react.uimanager.common.UIManagerType
+ import java.lang.ref.WeakReference
++import java.util.WeakHashMap
+ import java.util.concurrent.CopyOnWriteArrayList
+ import kotlin.math.abs
+ import kotlin.math.max
+@@ -45,6 +47,14 @@ public object ReactScrollViewHelper {
+   private const val SCROLL_AWAY_PADDING_TOP = "scrollAwayPaddingTop"
+   private const val SCROLL_AWAY_PADDING_BOTTOM = "scrollAwayPaddingBottom"
+ 
++  /**
++   * Minimum time between Fabric scroll state updates sent while scrolling. Each update commits the
++   * shadow tree, so sending one on every scroll event commits it on almost every frame.
++   */
++  private const val SCROLL_STATE_UPDATE_INTERVAL_MS = 100L
++  private val lastScrollStateUpdateTimes = WeakHashMap<View, Long>()
++  private val pendingScrollStateUpdates = WeakHashMap<View, Runnable>()
++
+   public const val MOMENTUM_DELAY: Long = 20
+   public const val OVER_SCROLL_ALWAYS: String = "always"
+   public const val AUTO: String = "auto"
+@@ -452,11 +462,26 @@ public object ReactScrollViewHelper {
+           T : HasScrollState?,
+           T : HasStateWrapper?,
+           T : ViewGroup {
+-    // Race an UpdateState with every onScroll. This makes it more likely that, in Fabric,
+-    // when JS processes the scroll event, the C++ ShadowNode representation will have a
+-    // "more correct" scroll position. It will frequently be /incorrect/ but this decreases
+-    // the error as much as possible.
+-    updateFabricScrollState(scrollView, scrollView.scrollX, scrollView.scrollY)
++    // Race an UpdateState with onScroll. This makes it more likely that, in Fabric, when JS
++    // processes the scroll event, the C++ ShadowNode representation will have a "more correct"
++    // scroll position. Each update commits the shadow tree, so while scrolling send at most one
++    // per SCROLL_STATE_UPDATE_INTERVAL_MS, plus a trailing update so the final position is never
++    // stale (touch up and the end of a fling also update it).
++    val now = SystemClock.uptimeMillis()
++    val elapsed = now - (lastScrollStateUpdateTimes[scrollView] ?: 0L)
++    if (elapsed >= SCROLL_STATE_UPDATE_INTERVAL_MS) {
++      pendingScrollStateUpdates.remove(scrollView)?.let { scrollView.removeCallbacks(it) }
++      lastScrollStateUpdateTimes[scrollView] = now
++      updateFabricScrollState(scrollView, scrollView.scrollX, scrollView.scrollY)
++    } else if (!pendingScrollStateUpdates.containsKey(scrollView)) {
++      val update = Runnable {
++        pendingScrollStateUpdates.remove(scrollView)
++        lastScrollStateUpdateTimes[scrollView] = SystemClock.uptimeMillis()
++        updateFabricScrollState(scrollView, scrollView.scrollX, scrollView.scrollY)
++      }
++      pendingScrollStateUpdates[scrollView] = update
++      scrollView.postDelayed(update, SCROLL_STATE_UPDATE_INTERVAL_MS - elapsed)
++    }
+     emitScrollEvent(scrollView, xVelocity, yVelocity)
+   }
+ 
 diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
 index ae2e36ca1ed64d9f6cb44e6c2519a17fcca3ca18..0eeeb63b1225a3c575abb257a79aaef609659e2f 100644
 --- a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
