@@ -62,6 +62,10 @@ fi
 unzip -q "$work_dir/artifact.zip" -d "$work_dir/files" || not_found "could not unzip the artifact from run $run_id"
 
 files="$work_dir/files"
+# unzip restores symlinks, and one to /dev/zero would hang the reads below
+if [ -n "$(find "$files" ! -type f ! -type d -print -quit)" ]; then
+  not_found "the artifact from run $run_id contains something other than plain files"
+fi
 jq -e \
   --arg platform "$PLATFORM" \
   --arg buildNumber "$BUILD_NUMBER" \
