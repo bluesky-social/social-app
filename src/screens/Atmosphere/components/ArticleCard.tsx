@@ -79,24 +79,26 @@ export function ArticleCard({
                 ) : undefined}
               </View>
             ) : undefined}
-            <Text
-              emoji
-              style={[a.text_md, a.font_bold, a.pb_xs, a.leading_tight]}
-              numberOfLines={2}>
-              {article.title}
-            </Text>
-            {article.description ? (
+            <View style={[a.flex_1, a.gap_xs]}>
               <Text
                 emoji
-                style={[
-                  a.text_sm,
-                  a.leading_snug,
-                  t.atoms.text_contrast_medium,
-                ]}
+                style={[a.text_md, a.font_bold, a.leading_tight]}
                 numberOfLines={2}>
-                {article.description}
+                {article.title}
               </Text>
-            ) : undefined}
+              {article.description ? (
+                <Text
+                  emoji
+                  style={[
+                    a.text_sm,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                  ]}
+                  numberOfLines={2}>
+                  {article.description}
+                </Text>
+              ) : undefined}
+            </View>
           </View>
         </Link>
       </View>
