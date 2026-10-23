@@ -299,6 +299,9 @@ module.exports = function (_config) {
                     'systemMedium',
                     'systemLarge',
                   ],
+                  // lets the widget render before the app is first opened
+                  initialLayout:
+                    'src/features/trendingWidget/TrendingTopicsWidget.ios.tsx',
                 },
                 android: {
                   // 4x3 cells, or 250x180dp on Android 11 and lower
