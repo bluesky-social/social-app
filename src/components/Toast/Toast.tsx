@@ -85,7 +85,17 @@ export function Icon({icon}: {icon?: React.ComponentType<SVGIconProps>}) {
   return <IconComponent size="md" fill={styles.iconColor} />
 }
 
-export function Text({children}: {children: React.ReactNode}) {
+export function Text({
+  children,
+  emoji,
+}: {
+  children: React.ReactNode
+  /**
+   * Forwarded to the underlying `Text`. Enable when children may contain
+   * emoji, e.g. user-generated text such as display names.
+   */
+  emoji?: boolean
+}) {
   const {type} = useContext(ToastConfigContext)
   const {textColor} = useToastStyles({type})
   const {fontScaleCompensation} = useToastFontScaleCompensation()
@@ -99,6 +109,7 @@ export function Text({children}: {children: React.ReactNode}) {
         },
       ]}>
       <BaseText
+        emoji={emoji}
         selectable={false}
         style={[
           a.text_md,
@@ -179,7 +190,6 @@ export function Action(
   }, [t, type])
 
   const onPress = (e: GestureResponderEvent) => {
-    console.log('Toast Action pressed, dismissing toast', id)
     dismiss(id)
     props.onPress?.(e)
   }
