@@ -1,5 +1,10 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {StyleSheet, useWindowDimensions} from 'react-native'
+import {
+  type LayoutChangeEvent,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 import {ScrollForwarderView} from '@bsky.app/react-native-scroll-forwarder'
 import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
@@ -30,17 +35,24 @@ import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useAppviewClient, useSession} from '#/state/session'
-import {ProfileFeedgens} from '#/view/com/feeds/ProfileFeedgens'
-import {ProfileLists} from '#/view/com/lists/ProfileLists'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
-import {type PostFeedRef} from '#/view/com/posts/PostFeed'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListRef} from '#/view/com/util/List'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {getProfileBannerSafeAreaCoverHeight} from '#/screens/Profile/Header/layout'
-import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
-import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
+import {ProfileTabPage} from '#/screens/Profile/ProfileTabPage'
+import {type ProfileSection} from '#/screens/Profile/Sections/types'
+import {useProfileFeedSection} from '#/screens/Profile/Sections/useProfileFeedSection'
+import {useProfileFeedsSection} from '#/screens/Profile/Sections/useProfileFeedsSection'
+import {useProfileLabelsSection} from '#/screens/Profile/Sections/useProfileLabelsSection'
+import {useProfileListsSection} from '#/screens/Profile/Sections/useProfileListsSection'
+import {useProfileStarterPacksSection} from '#/screens/Profile/Sections/useProfileStarterPacksSection'
+import {
+  type ProfileTabKey,
+  profileTabKeys,
+  profileTabMessages,
+} from '#/screens/Profile/tabs'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Circle_And_Square_Stroke1_Corner0_Rounded_Filled as CircleAndSquareIcon} from '#/components/icons/CircleAndSquare'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
@@ -50,13 +62,9 @@ import {Message_Stroke1_Corner0_Rounded_Filled as MessageIcon} from '#/component
 import {VideoClip_Stroke1_Corner0_Rounded as VideoIcon} from '#/components/icons/VideoClip'
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
-import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
+import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
 import {navigate} from '#/Navigation'
-
-interface SectionRef {
-  scrollToTop: () => void
-}
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export function ProfileScreen(props: Props) {
@@ -209,21 +217,11 @@ function ProfileScreenLoaded({
     did: profile.did,
     enabled: !!profile.associated?.labeler,
   })
-  const [currentPage, setCurrentPage] = useState(0)
-  const [isRefreshing, setIsRefreshing] = useState(false)
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
 
   const [scrollViewTag, setScrollViewTag] = useState<number | null>(null)
-
-  const postsSectionRef = useRef<SectionRef>(null)
-  const repliesSectionRef = useRef<SectionRef>(null)
-  const mediaSectionRef = useRef<SectionRef>(null)
-  const videosSectionRef = useRef<SectionRef>(null)
-  const likesSectionRef = useRef<SectionRef>(null)
-  const feedsSectionRef = useRef<SectionRef>(null)
-  const listsSectionRef = useRef<SectionRef>(null)
-  const starterPacksSectionRef = useRef<SectionRef>(null)
-  const labelsSectionRef = useRef<SectionRef>(null)
+  /** The header's own height: everything above the tab strip. */
+  const [headerContentHeight, setHeaderContentHeight] = useState(0)
 
   useSetTitle(combinedDisplayName(profile))
 
@@ -238,112 +236,172 @@ function ProfileScreenLoaded({
 
   const isMe = profile.did === currentAccount?.did
   const hasLabeler = !!profile.associated?.labeler
-  const showFiltersTab = hasLabeler
-  const showPostsTab = true
-  const showRepliesTab = hasSession
-  const showMediaTab = !hasLabeler
-  const showVideosTab = !hasLabeler
-  const showLikesTab = isMe
   const feedGenCount = profile.associated?.feedgens || 0
-  const showFeedsTab = isMe || feedGenCount > 0
   const starterPackCount = profile.associated?.starterPacks || 0
-  const showStarterPacksTab = isMe || starterPackCount > 0
   // subtract starterpack count from list count, since starterpacks are a type of list
   const listCount = (profile.associated?.lists || 0) - starterPackCount
-  const showListsTab = hasSession && (isMe || listCount > 0)
 
-  const sectionTitles = [
-    showFiltersTab ? _(msg`Labels`) : undefined,
-    showListsTab && hasLabeler ? _(msg`Lists`) : undefined,
-    showPostsTab ? _(msg`Posts`) : undefined,
-    showRepliesTab ? _(msg`Replies`) : undefined,
-    showMediaTab ? _(msg`Media`) : undefined,
-    showVideosTab ? _(msg`Videos`) : undefined,
-    showLikesTab ? _(msg`Likes`) : undefined,
-    showFeedsTab ? _(msg`Feeds`) : undefined,
-    showStarterPacksTab ? _(msg`Starter Packs`) : undefined,
-    showListsTab && !hasLabeler ? _(msg`Lists`) : undefined,
-  ].filter(Boolean) as string[]
-
-  let nextIndex = 0
-  let filtersIndex: number | null = null
-  let postsIndex: number | null = null
-  let repliesIndex: number | null = null
-  let mediaIndex: number | null = null
-  let videosIndex: number | null = null
-  let likesIndex: number | null = null
-  let feedsIndex: number | null = null
-  let starterPacksIndex: number | null = null
-  let listsIndex: number | null = null
-  if (showFiltersTab) {
-    filtersIndex = nextIndex++
-  }
-  if (showPostsTab) {
-    postsIndex = nextIndex++
-  }
-  if (showRepliesTab) {
-    repliesIndex = nextIndex++
-  }
-  if (showMediaTab) {
-    mediaIndex = nextIndex++
-  }
-  if (showVideosTab) {
-    videosIndex = nextIndex++
-  }
-  if (showLikesTab) {
-    likesIndex = nextIndex++
-  }
-  if (showFeedsTab) {
-    feedsIndex = nextIndex++
-  }
-  if (showStarterPacksTab) {
-    starterPacksIndex = nextIndex++
-  }
-  if (showListsTab) {
-    listsIndex = nextIndex++
-  }
-
-  const scrollSectionToTop = useCallback(
-    (index: number) => {
-      if (index === filtersIndex) {
-        labelsSectionRef.current?.scrollToTop()
-      } else if (index === postsIndex) {
-        postsSectionRef.current?.scrollToTop()
-      } else if (index === repliesIndex) {
-        repliesSectionRef.current?.scrollToTop()
-      } else if (index === mediaIndex) {
-        mediaSectionRef.current?.scrollToTop()
-      } else if (index === videosIndex) {
-        videosSectionRef.current?.scrollToTop()
-      } else if (index === likesIndex) {
-        likesSectionRef.current?.scrollToTop()
-      } else if (index === feedsIndex) {
-        feedsSectionRef.current?.scrollToTop()
-      } else if (index === starterPacksIndex) {
-        starterPacksSectionRef.current?.scrollToTop()
-      } else if (index === listsIndex) {
-        listsSectionRef.current?.scrollToTop()
-      }
-    },
-    [
-      filtersIndex,
-      postsIndex,
-      repliesIndex,
-      mediaIndex,
-      videosIndex,
-      likesIndex,
-      feedsIndex,
-      listsIndex,
-      starterPacksIndex,
-    ],
+  const tabs = useMemo(
+    () =>
+      profileTabKeys({
+        hasSession,
+        isMe,
+        hasLabeler,
+        listCount,
+        feedCount: feedGenCount,
+        starterPackCount,
+      }),
+    [hasSession, isMe, hasLabeler, listCount, feedGenCount, starterPackCount],
   )
+
+  /*
+   * The pager owns which page is showing; the screen only needs to know which
+   * tab that is, so that the header's pull-to-refresh and the soft reset know
+   * what to refresh.
+   */
+  const [currentTab, setCurrentTab] = useState<ProfileTabKey>(() => tabs[0])
+  const activeTab = tabs.includes(currentTab) ? currentTab : tabs[0]
+
+  // Each page offers to scroll itself back to the top; the screen keeps the
+  // one that is showing.
+  const scrollToTopOf = useRef(new Map<ProfileTabKey, () => void>())
+
+  const scrollActiveTabToTop = useCallback(() => {
+    scrollToTopOf.current.get(activeTab)?.()
+  }, [activeTab])
+
+  const navToWizard = useCallback(() => {
+    navigation.navigate('StarterPackWizard', {})
+  }, [navigation])
+  const wrappedNavToWizard = requireEmailVerification(navToWizard, {
+    instructions: [
+      <Trans key="nav">
+        Before creating a Starter Pack, you must first verify your email.
+      </Trans>,
+    ],
+  })
+
+  // section contents
+  // =
+  //
+  // Every tab asks for its own contents, but only the one that is showing is
+  // enabled, so a profile fetches nothing it is not showing.
+
+  const postsSection = useProfileFeedSection({
+    feed: `author|${profile.did}|posts_and_author_threads`,
+    enabled: activeTab === 'posts',
+    ignoreFilterFor: profile.did,
+    emptyStateMessage: _(msg`No posts yet`),
+    emptyStateButton: isMe
+      ? {
+          label: _(msg`Write a post`),
+          text: _(msg`Write a post`),
+          onPress: () => openComposer({logContext: 'ProfileFeed'}),
+          size: 'small',
+          color: 'primary',
+        }
+      : undefined,
+  })
+  const repliesSection = useProfileFeedSection({
+    feed: `author|${profile.did}|posts_with_replies`,
+    enabled: activeTab === 'replies',
+    ignoreFilterFor: profile.did,
+    emptyStateMessage: _(msg`No replies yet`),
+    emptyStateIcon: MessageIcon,
+  })
+  const mediaSection = useProfileFeedSection({
+    feed: `author|${profile.did}|posts_with_media`,
+    enabled: activeTab === 'media',
+    ignoreFilterFor: profile.did,
+    emptyStateMessage: _(msg`No media yet`),
+    emptyStateButton: isMe
+      ? {
+          label: _(msg`Post a photo`),
+          text: _(msg`Post a photo`),
+          onPress: () => openComposer({logContext: 'ProfileFeed'}),
+          size: 'small',
+          color: 'primary',
+        }
+      : undefined,
+    emptyStateIcon: ImageIcon,
+  })
+  const videosSection = useProfileFeedSection({
+    feed: `author|${profile.did}|posts_with_video`,
+    enabled: activeTab === 'videos',
+    ignoreFilterFor: profile.did,
+    emptyStateMessage: _(msg`No video posts yet`),
+    emptyStateButton: isMe
+      ? {
+          label: _(msg`Post a video`),
+          text: _(msg`Post a video`),
+          onPress: () => openComposer({logContext: 'ProfileFeed'}),
+          size: 'small',
+          color: 'primary',
+        }
+      : undefined,
+    emptyStateIcon: VideoIcon,
+    isVideoFeed: IS_NATIVE,
+  })
+  const likesSection = useProfileFeedSection({
+    feed: `likes|${profile.did}`,
+    enabled: activeTab === 'likes',
+    ignoreFilterFor: profile.did,
+    emptyStateMessage: _(msg`No likes yet`),
+    emptyStateIcon: HeartIcon,
+  })
+  const feedsSection = useProfileFeedsSection({
+    did: profile.did,
+    enabled: activeTab === 'feeds',
+  })
+  const listsSection = useProfileListsSection({
+    did: profile.did,
+    enabled: activeTab === 'lists',
+  })
+  const starterPacksSection = useProfileStarterPacksSection({
+    did: profile.did,
+    enabled: activeTab === 'starterPacks',
+    isMe,
+    emptyStateMessage: isMe
+      ? _(
+          msg`Starter Packs let you share your favorite feeds and people with your friends.`,
+        )
+      : _(msg`No Starter Packs yet`),
+    emptyStateButton: isMe
+      ? {
+          label: _(msg`Create a Starter Pack`),
+          text: _(msg`Create a Starter Pack`),
+          onPress: wrappedNavToWizard,
+          color: 'primary',
+          size: 'small',
+        }
+      : undefined,
+    emptyStateIcon: CircleAndSquareIcon,
+  })
+  const labelsSection = useProfileLabelsSection({
+    isLabelerLoading,
+    labelerInfo,
+    labelerError,
+    moderationOpts,
+  })
+
+  const sections: Record<ProfileTabKey, ProfileSection> = {
+    labels: labelsSection,
+    lists: listsSection,
+    posts: postsSection,
+    replies: repliesSection,
+    media: mediaSection,
+    videos: videosSection,
+    likes: likesSection,
+    feeds: feedsSection,
+    starterPacks: starterPacksSection,
+  }
 
   useFocusEffect(
     useCallback(() => {
       return listenSoftReset(() => {
-        scrollSectionToTop(currentPage)
+        scrollActiveTabToTop()
       })
-    }, [currentPage, scrollSectionToTop]),
+    }, [scrollActiveTabToTop]),
   )
 
   // events
@@ -359,30 +417,21 @@ function ProfileScreenLoaded({
   }
 
   const onPageSelected = (i: number) => {
-    setCurrentPage(i)
+    const tab = tabs[i]
+    if (tab) setCurrentTab(tab)
   }
 
-  const onCurrentPageSelected = (index: number) => {
-    scrollSectionToTop(index)
+  const onCurrentPageSelected = (_index: number) => {
+    scrollActiveTabToTop()
   }
 
-  const navToWizard = useCallback(() => {
-    navigation.navigate('StarterPackWizard', {})
-  }, [navigation])
-  const wrappedNavToWizard = requireEmailVerification(navToWizard, {
-    instructions: [
-      <Trans key="nav">
-        Before creating a Starter Pack, you must first verify your email.
-      </Trans>,
-    ],
-  })
-
-  const postFeedRef = useRef<PostFeedRef>(null)
-
-  const onRefresh = async () => {
-    setIsRefreshing(true)
-    await postFeedRef.current?.refreshFeed()
-    setIsRefreshing(false)
+  /*
+   * Pulling the header refreshes whichever tab is showing: the header is drawn
+   * above the pages, so the gesture starts outside the list that would
+   * otherwise handle it.
+   */
+  const onRefreshHeader = () => {
+    sections[activeTab].onRefresh?.()
   }
 
   // rendering
@@ -396,17 +445,29 @@ function ProfileScreenLoaded({
     return (
       <ScrollForwarderView
         scrollViewTag={scrollViewTag}
-        refreshing={isRefreshing}
-        onRefresh={onRefresh}>
-        <ProfileHeader
-          profile={profile}
-          labeler={labelerInfo}
-          descriptionRT={hasDescription ? descriptionRT : null}
-          moderationOpts={moderationOpts}
-          hideBackButton={hideBackButton}
-          isPlaceholderProfile={showPlaceholder}
-          setMinimumHeight={setMinimumHeight}
-        />
+        refreshing={sections[activeTab].refreshing}
+        onRefresh={onRefreshHeader}>
+        {/*
+         * The height is measured here, on the header itself, rather than left
+         * to the pager measuring the wrapper around it: the wrapper is a native
+         * view that reports more height than the header draws, which showed up
+         * as a gap above the first row.
+         */}
+        <View
+          onLayout={(e: LayoutChangeEvent) => {
+            const height = Math.round(e.nativeEvent.layout.height * 2) / 2
+            if (height > 0) setHeaderContentHeight(height)
+          }}>
+          <ProfileHeader
+            profile={profile}
+            labeler={labelerInfo}
+            descriptionRT={hasDescription ? descriptionRT : null}
+            moderationOpts={moderationOpts}
+            hideBackButton={hideBackButton}
+            isPlaceholderProfile={showPlaceholder}
+            setMinimumHeight={setMinimumHeight}
+          />
+        </View>
       </ScrollForwarderView>
     )
   }
@@ -420,206 +481,30 @@ function ProfileScreenLoaded({
       <PagerWithHeader
         testID="profilePager"
         isHeaderReady={!showPlaceholder}
-        items={sectionTitles}
+        items={tabs.map(key => i18n._(profileTabMessages[key]))}
         onPageSelected={onPageSelected}
         onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}
         allowHeaderOverScroll
-        headerOverflowInset={gtMobile ? windowHeight : undefined}>
-        {showFiltersTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileLabelsSection
-                ref={labelsSectionRef}
-                labelerInfo={labelerInfo}
-                labelerError={labelerError}
-                isLabelerLoading={isLabelerLoading}
-                moderationOpts={moderationOpts}
-                scrollElRef={scrollElRef as ListRef}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
-        {showListsTab && !!profile.associated?.labeler
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileLists
-                ref={listsSectionRef}
-                did={profile.did}
-                scrollElRef={scrollElRef as ListRef}
-                headerOffset={headerHeight}
-                enabled={isFocused}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
-        {showPostsTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileFeedSection
-                ref={postsSectionRef}
-                feed={`author|${profile.did}|posts_and_author_threads`}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                scrollElRef={scrollElRef as ListRef}
-                ignoreFilterFor={profile.did}
-                setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={_(msg`No posts yet`)}
-                emptyStateButton={
-                  isMe
-                    ? {
-                        label: _(msg`Write a post`),
-                        text: _(msg`Write a post`),
-                        onPress: () =>
-                          openComposer({logContext: 'ProfileFeed'}),
-                        size: 'small',
-                        color: 'primary',
-                      }
-                    : undefined
-                }
-                postFeedRef={postFeedRef}
-              />
-            )
-          : null}
-        {showRepliesTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileFeedSection
-                ref={repliesSectionRef}
-                feed={`author|${profile.did}|posts_with_replies`}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                scrollElRef={scrollElRef as ListRef}
-                ignoreFilterFor={profile.did}
-                setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={_(msg`No replies yet`)}
-                emptyStateIcon={MessageIcon}
-              />
-            )
-          : null}
-        {showMediaTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileFeedSection
-                ref={mediaSectionRef}
-                feed={`author|${profile.did}|posts_with_media`}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                scrollElRef={scrollElRef as ListRef}
-                ignoreFilterFor={profile.did}
-                setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={_(msg`No media yet`)}
-                emptyStateButton={
-                  isMe
-                    ? {
-                        label: _(msg`Post a photo`),
-                        text: _(msg`Post a photo`),
-                        onPress: () =>
-                          openComposer({logContext: 'ProfileFeed'}),
-                        size: 'small',
-                        color: 'primary',
-                      }
-                    : undefined
-                }
-                emptyStateIcon={ImageIcon}
-              />
-            )
-          : null}
-        {showVideosTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileFeedSection
-                ref={videosSectionRef}
-                feed={`author|${profile.did}|posts_with_video`}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                scrollElRef={scrollElRef as ListRef}
-                ignoreFilterFor={profile.did}
-                setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={_(msg`No video posts yet`)}
-                emptyStateButton={
-                  isMe
-                    ? {
-                        label: _(msg`Post a video`),
-                        text: _(msg`Post a video`),
-                        onPress: () =>
-                          openComposer({logContext: 'ProfileFeed'}),
-                        size: 'small',
-                        color: 'primary',
-                      }
-                    : undefined
-                }
-                emptyStateIcon={VideoIcon}
-              />
-            )
-          : null}
-        {showLikesTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileFeedSection
-                ref={likesSectionRef}
-                feed={`likes|${profile.did}`}
-                headerHeight={headerHeight}
-                isFocused={isFocused}
-                scrollElRef={scrollElRef as ListRef}
-                ignoreFilterFor={profile.did}
-                setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={_(msg`No likes yet`)}
-                emptyStateIcon={HeartIcon}
-              />
-            )
-          : null}
-        {showFeedsTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileFeedgens
-                ref={feedsSectionRef}
-                did={profile.did}
-                scrollElRef={scrollElRef as ListRef}
-                headerOffset={headerHeight}
-                enabled={isFocused}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
-        {showStarterPacksTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileStarterPacks
-                ref={starterPacksSectionRef}
-                did={profile.did}
-                isMe={isMe}
-                scrollElRef={scrollElRef as ListRef}
-                headerOffset={headerHeight}
-                enabled={isFocused}
-                setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={
-                  isMe
-                    ? _(
-                        msg`Starter Packs let you share your favorite feeds and people with your friends.`,
-                      )
-                    : _(msg`No Starter Packs yet`)
-                }
-                emptyStateButton={
-                  isMe
-                    ? {
-                        label: _(msg`Create a Starter Pack`),
-                        text: _(msg`Create a Starter Pack`),
-                        onPress: wrappedNavToWizard,
-                        color: 'primary',
-                        size: 'small',
-                      }
-                    : undefined
-                }
-                emptyStateIcon={CircleAndSquareIcon}
-              />
-            )
-          : null}
-        {showListsTab && !profile.associated?.labeler
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileLists
-                ref={listsSectionRef}
-                did={profile.did}
-                scrollElRef={scrollElRef as ListRef}
-                headerOffset={headerHeight}
-                enabled={isFocused}
-                setScrollViewTag={setScrollViewTag}
-              />
-            )
-          : null}
+        headerOverflowInset={gtMobile ? windowHeight : undefined}
+        headerContentHeight={headerContentHeight || undefined}>
+        {tabs.map(tab => ({headerHeight, isFocused, scrollElRef}) => (
+          <ProfileTabPage
+            key={tab}
+            section={sections[tab]}
+            headerHeight={headerHeight}
+            isFocused={isFocused}
+            scrollElRef={scrollElRef as ListRef}
+            setScrollViewTag={setScrollViewTag}
+            registerScrollToTop={handle => {
+              if (handle) {
+                scrollToTopOf.current.set(tab, handle)
+              } else {
+                scrollToTopOf.current.delete(tab)
+              }
+            }}
+          />
+        ))}
       </PagerWithHeader>
       {hasSession && (
         <FAB

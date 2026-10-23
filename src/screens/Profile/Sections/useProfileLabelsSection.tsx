@@ -1,71 +1,48 @@
-import {useCallback, useEffect, useImperativeHandle, useMemo} from 'react'
-import {type ListRenderItemInfo, View} from 'react-native'
+import {useMemo} from 'react'
+import {View} from 'react-native'
 import {
   type InterpretedLabelValueDefinition,
   interpretLabelValueDefinitions,
   type ModerationOpts,
 } from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
-import {List, type ListRef} from '#/view/com/util/List'
-import {findListNativeTag} from '#/view/com/util/listNativeTag'
-import {atoms as a, ios, tokens, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {LabelerLabelPreference} from '#/components/moderation/LabelPreference'
 import {Text} from '#/components/Typography'
-import {IS_IOS, IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
 import {ErrorState} from '../ErrorState'
-import {type SectionRef} from './types'
+import {type ProfileSection} from './types'
 
-interface LabelsSectionProps {
-  ref: React.Ref<SectionRef>
-  isLabelerLoading: boolean
-  labelerInfo: app.bsky.labeler.defs.LabelerViewDetailed | undefined
-  labelerError: Error | null
-  moderationOpts: ModerationOpts
-  scrollElRef: ListRef
-  headerHeight: number
-  isFocused: boolean
-  setScrollViewTag: (tag: number | null) => void
-}
+const INTRO_ROW = {_reactKey: '__labeler_intro__'}
 
-export function ProfileLabelsSection({
-  ref,
+type LabelRow = typeof INTRO_ROW | InterpretedLabelValueDefinition
+
+/**
+ * What a labeler says it labels, and the reader's settings for each one.
+ *
+ * A labeler's profile has no posts, so this is what its tab strip opens on. The
+ * rows are preferences rather than content: nothing here pages or refreshes.
+ */
+export function useProfileLabelsSection({
   isLabelerLoading,
   labelerInfo,
   labelerError,
   moderationOpts,
-  scrollElRef,
-  headerHeight,
-  isFocused,
-  setScrollViewTag,
-}: LabelsSectionProps) {
+}: {
+  isLabelerLoading: boolean
+  labelerInfo: app.bsky.labeler.defs.LabelerViewDetailed | undefined
+  labelerError: Error | null
+  moderationOpts: ModerationOpts
+}): ProfileSection {
   const t = useTheme()
-
-  const onScrollToTop = useCallback(() => {
-    scrollElRef.current?.scrollToOffset({
-      animated: IS_NATIVE,
-      offset: -headerHeight,
-    })
-  }, [scrollElRef, headerHeight])
-
-  useImperativeHandle(ref, () => ({
-    scrollToTop: onScrollToTop,
-  }))
-
-  useEffect(() => {
-    if (IS_IOS && isFocused && scrollElRef.current) {
-      const nativeTag = findListNativeTag(scrollElRef.current)
-      setScrollViewTag(nativeTag)
-    }
-  }, [isFocused, scrollElRef, setScrollViewTag])
 
   const isSubscribed = labelerInfo
     ? !!isLabelerSubscribed(labelerInfo, moderationOpts)
@@ -82,74 +59,68 @@ export function ProfileLabelsSection({
       ) as InterpretedLabelValueDefinition[]
   }, [labelerInfo, labelerError, isLabelerLoading])
 
-  const numItems = labelValues.length
+  const rows: LabelRow[] = [INTRO_ROW, ...labelValues]
 
-  const renderItem = useCallback(
-    ({item, index}: ListRenderItemInfo<InterpretedLabelValueDefinition>) => {
+  return {
+    data: rows,
+    keyExtractor: (row: LabelRow) =>
+      'identifier' in row ? row.identifier : row._reactKey,
+    isEmpty: false,
+    refreshing: false,
+    renderItem: ({item}) => {
       if (!labelerInfo) return null
+      if (item === INTRO_ROW) {
+        return (
+          <View style={a.px_xl}>
+            <LabelerListHeader
+              isLabelerLoading={isLabelerLoading}
+              labelerInfo={labelerInfo}
+              labelerError={labelerError}
+              hasValues={labelValues.length !== 0}
+              isSubscribed={isSubscribed}
+            />
+          </View>
+        )
+      }
+      const index = labelValues.indexOf(item)
+      const isFirst = index === 0
+      const isLast = index === labelValues.length - 1
       return (
-        <View
-          style={[
-            t.atoms.bg_contrast_25,
-            index === 0 && [
-              a.overflow_hidden,
-              {
-                borderTopLeftRadius: tokens.borderRadius.md,
-                borderTopRightRadius: tokens.borderRadius.md,
-              },
-            ],
-            index === numItems - 1 && [
-              a.overflow_hidden,
-              {
-                borderBottomLeftRadius: tokens.borderRadius.md,
-                borderBottomRightRadius: tokens.borderRadius.md,
-              },
-            ],
-          ]}>
-          {index !== 0 && <Divider />}
-          <LabelerLabelPreference
-            disabled={isSubscribed ? undefined : true}
-            labelDefinition={item}
-            labelerDid={labelerInfo.creator.did}
-          />
+        <View style={a.px_xl}>
+          <View
+            style={[
+              t.atoms.bg_contrast_25,
+              isFirst && [
+                a.overflow_hidden,
+                {
+                  borderTopLeftRadius: tokens.borderRadius.md,
+                  borderTopRightRadius: tokens.borderRadius.md,
+                },
+              ],
+              isLast && [
+                a.overflow_hidden,
+                {
+                  borderBottomLeftRadius: tokens.borderRadius.md,
+                  borderBottomRightRadius: tokens.borderRadius.md,
+                },
+              ],
+            ]}>
+            {!isFirst && <Divider />}
+            <LabelerLabelPreference
+              disabled={isSubscribed ? undefined : true}
+              labelDefinition={item}
+              labelerDid={labelerInfo.creator.did}
+            />
+          </View>
         </View>
       )
     },
-    [labelerInfo, isSubscribed, numItems, t],
-  )
-
-  return (
-    <View>
-      <List
-        ref={scrollElRef}
-        data={labelValues}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        contentContainerStyle={a.px_xl}
-        headerOffset={headerHeight}
-        progressViewOffset={ios(0)}
-        ListHeaderComponent={
-          <LabelerListHeader
-            isLabelerLoading={isLabelerLoading}
-            labelerInfo={labelerInfo}
-            labelerError={labelerError}
-            hasValues={labelValues.length !== 0}
-            isSubscribed={isSubscribed}
-          />
-        }
-        ListFooterComponent={
-          <ListFooter
-            height={headerHeight + 180}
-            style={a.border_transparent}
-          />
-        }
-      />
-    </View>
-  )
-}
-
-function keyExtractor(item: InterpretedLabelValueDefinition) {
-  return item.identifier
+    ListFooterComponent: (
+      <View style={a.px_xl}>
+        <ListFooter height={180} style={a.border_transparent} />
+      </View>
+    ),
+  }
 }
 
 export function LabelerListHeader({
@@ -166,7 +137,7 @@ export function LabelerListHeader({
   isSubscribed: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   if (isLabelerLoading) {
     return (
@@ -182,7 +153,7 @@ export function LabelerListHeader({
         <ErrorState
           error={
             labelerError?.toString() ||
-            _(msg`Something went wrong, please try again.`)
+            l(msg`Something went wrong, please try again.`)
           }
         />
       </View>

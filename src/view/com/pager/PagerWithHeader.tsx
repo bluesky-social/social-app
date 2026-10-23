@@ -56,6 +56,16 @@ export interface PagerWithHeaderProps {
   allowHeaderOverScroll?: boolean
   /** Extra vertical clipping bounds for a header that must clip horizontally. */
   headerOverflowInset?: number
+  /**
+   * The header's own height, for headers that can measure themselves.
+   *
+   * Measuring the wrapper around the header is unreliable when the header is
+   * wrapped in a native view that reports its own size, and every point it is
+   * over-measured is a point of blank space above the first row and a strip
+   * that comes to rest in the wrong place. A header that knows its own height
+   * should say so.
+   */
+  headerContentHeight?: number
 }
 export function PagerWithHeader({
   ref,
@@ -69,10 +79,12 @@ export function PagerWithHeader({
   onCurrentPageSelected,
   allowHeaderOverScroll,
   headerOverflowInset,
+  headerContentHeight,
 }: PagerWithHeaderProps) {
   const [currentPage, setCurrentPage] = useState(0)
   const [tabBarHeight, setTabBarHeight] = useState(0)
-  const [headerOnlyHeight, setHeaderOnlyHeight] = useState(0)
+  const [measuredHeaderOnlyHeight, setHeaderOnlyHeight] = useState(0)
+  const headerOnlyHeight = headerContentHeight ?? measuredHeaderOnlyHeight
   const scrollY = useSharedValue(0)
   const headerHeight = headerOnlyHeight + tabBarHeight
 
@@ -143,26 +155,69 @@ export function PagerWithHeader({
     [scrollRefs],
   )
 
-  const lastForcedScrollY = useSharedValue(0)
-  const adjustScrollForOtherPages = useCallback(
+  const isSyncingPages = useSharedValue(false)
+  /**
+   * Where the page being left is scrolled to, clamped so that a page with
+   * nothing below the fold does not try to go past its own end.
+   */
+  const syncTarget = useCallback(() => {
+    'worklet'
+    return Math.min(scrollY.get(), headerOnlyHeight)
+  }, [scrollY, headerOnlyHeight])
+
+  /**
+   * Put the pages either side of this one where this one is.
+   *
+   * The header is drawn above the pages rather than inside them, so pages at
+   * different offsets would show the header in two places mid-swipe and leave
+   * the reader at the top of the tab they swiped to. This runs once at the
+   * start of a drag, against the two pages a swipe can reach, and they then
+   * agree for the rest of the gesture. It used to run on every frame of the
+   * drag, against every page.
+   */
+  const alignNeighbouringPages = useCallback(
     (scrollState: 'idle' | 'dragging' | 'settling') => {
       'worklet'
-      if (scrollState !== 'dragging') return
-      const currentScrollY = scrollY.get()
-      const forcedScrollY = Math.min(currentScrollY, headerOnlyHeight)
-      if (lastForcedScrollY.get() !== forcedScrollY) {
-        lastForcedScrollY.set(forcedScrollY)
-        const refs = scrollRefs.get()
-        for (let i = 0; i < refs.length; i++) {
-          const scollRef = refs[i]
-          if (i !== currentPage && scollRef != null) {
-            scrollTo(scollRef, 0, forcedScrollY, false)
-          }
+      if (scrollState !== 'dragging') {
+        isSyncingPages.set(false)
+        return
+      }
+      if (isSyncingPages.get()) return
+      isSyncingPages.set(true)
+      const target = syncTarget()
+      const refs = scrollRefs.get()
+      for (const i of [currentPage - 1, currentPage + 1]) {
+        const scrollRef = refs[i]
+        if (i >= 0 && scrollRef != null) {
+          scrollTo(scrollRef, 0, target, false)
         }
       }
     },
-    [currentPage, headerOnlyHeight, lastForcedScrollY, scrollRefs, scrollY],
+    [
+      currentPage,
+      headerOnlyHeight,
+      isSyncingPages,
+      scrollRefs,
+      scrollY,
+      syncTarget,
+    ],
   )
+
+  /**
+   * Pressing a tab jumps rather than swipes, so every page - including the one
+   * being jumped to - takes the offset of the page being left behind.
+   */
+  const alignAllPages = useCallback(() => {
+    'worklet'
+    const target = syncTarget()
+    const refs = scrollRefs.get()
+    for (let i = 0; i < refs.length; i++) {
+      const scrollRef = refs[i]
+      if (i !== currentPage && scrollRef != null) {
+        scrollTo(scrollRef, 0, target, false)
+      }
+    }
+  }, [currentPage, scrollRefs, syncTarget])
 
   const onScrollWorklet = useCallback(
     (e: NativeScrollEvent) => {
@@ -189,8 +244,8 @@ export function PagerWithHeader({
   )
 
   const onTabPressed = useCallback(() => {
-    scheduleOnUI(adjustScrollForOtherPages, 'dragging')
-  }, [adjustScrollForOtherPages])
+    scheduleOnUI(alignAllPages)
+  }, [alignAllPages])
 
   return (
     <Pager
@@ -200,7 +255,7 @@ export function PagerWithHeader({
       onTabPressed={onTabPressed}
       onPageSelected={onPageSelectedInner}
       renderTabBar={renderTabBar}
-      onPageScrollStateChanged={adjustScrollForOtherPages}>
+      onPageScrollStateChanged={alignNeighbouringPages}>
       {toArray(children)
         .filter(Boolean)
         .map((child, i) => {
