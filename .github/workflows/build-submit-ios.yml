@@ -234,6 +234,39 @@ jobs:
           echo "IPA build number: $build_number"
           echo "build-number=$build_number" >> "$GITHUB_OUTPUT"
 
+      # Save the JS bundle and update ID this build embeds. OTAs for this build
+      # are compiled and diffed against them, since the embedded update is what
+      # most clients are running. Only testflight and production builds have
+      # updates enabled. A failure here must not block the build: OTAs then fall
+      # back to full downloads.
+      - name: 📦 Extract embedded bundle
+        id: embedded-bundle
+        if: ${{ contains(fromJSON('["testflight", "production"]'), inputs.profile || 'testflight') }}
+        continue-on-error: true
+        env:
+          PLATFORM: ios
+          OUT_DIR: ${{ runner.temp }}/embedded-bundle
+          BUILD_NUMBER: ${{ steps.ipa-build-number.outputs.build-number }}
+          PROFILE: ${{ inputs.profile || 'testflight' }}
+          COMMIT: ${{ steps.source.outputs.sha }}
+        run: |
+          ARCHIVE="$BUILD_DIR/Bluesky.ipa" bash scripts/extractEmbeddedBundle.sh
+          if [ -f "$OUT_DIR/embedded.json" ]; then
+            echo "extracted=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Read by .github/actions/fetch-embedded-bundle. 90 days is the maximum
+      # retention for a public repo.
+      - name: 💾 Upload embedded bundle
+        if: ${{ steps.embedded-bundle.outputs.extracted == 'true' }}
+        continue-on-error: true
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: embedded-bundle-ios-${{ steps.ipa-build-number.outputs.build-number }}
+          path: ${{ runner.temp }}/embedded-bundle
+          retention-days: 90
+          if-no-files-found: error
+
       # Hand the IPA and dSYM off to the submit job. Retention is deliberately short since
       # this artifact only exists to bridge the two jobs within a single run.
       - name: 🚀 Upload build artifact

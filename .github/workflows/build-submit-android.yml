@@ -152,6 +152,40 @@ jobs:
         id: get-build-info
         run: bash scripts/setGitHubOutput.sh
 
+      # Save the JS bundle and update ID this build embeds. OTAs for this build
+      # are compiled and diffed against them, since the embedded update is what
+      # most clients are running. Only testflight and production builds have
+      # updates enabled. A failure here must not block the build: OTAs then fall
+      # back to full downloads.
+      - name: 📦 Extract embedded bundle
+        id: embedded-bundle
+        if: ${{ contains(fromJSON('["testflight-android", "production"]'), inputs.profile || 'testflight-android') }}
+        continue-on-error: true
+        env:
+          PLATFORM: android
+          ARCHIVE: build.aab
+          OUT_DIR: ${{ runner.temp }}/embedded-bundle
+          BUILD_NUMBER: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
+          PROFILE: ${{ inputs.profile || 'testflight-android' }}
+          COMMIT: ${{ steps.source.outputs.sha }}
+        run: |
+          bash scripts/extractEmbeddedBundle.sh
+          if [ -f "$OUT_DIR/embedded.json" ]; then
+            echo "extracted=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Read by .github/actions/fetch-embedded-bundle. 90 days is the maximum
+      # retention for a public repo.
+      - name: 💾 Upload embedded bundle
+        if: ${{ steps.embedded-bundle.outputs.extracted == 'true' }}
+        continue-on-error: true
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: embedded-bundle-android-${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
+          path: ${{ runner.temp }}/embedded-bundle
+          retention-days: 90
+          if-no-files-found: error
+
       # Hands the built bundle off to the submit / universalApk jobs. Retention is
       # deliberately short (1 day) since it's only an intra-run handoff artifact.
       - name: 🚀 Upload AAB artifact
