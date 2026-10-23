@@ -181,4 +181,4 @@ function TrendingTopicsWidget(
   )
 }
 
-export default createWidget('TrendingTopicsWidget', TrendingTopicsWidget)
+export default createWidget('TrendingTopicsWidget', TrendingTopicsWidget, {})
