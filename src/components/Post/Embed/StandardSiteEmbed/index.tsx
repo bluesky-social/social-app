@@ -424,7 +424,7 @@ export function PublicationCard({
       </View>
 
       <View style={[a.flex_1, a.pointer_events_none]}>
-        {view.description && (
+        {!!view.description && (
           <View style={[a.pt_sm]}>
             <Text emoji style={[a.text_sm, a.leading_snug]} numberOfLines={3}>
               {view.description}

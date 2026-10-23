@@ -1,4 +1,5 @@
-import {StyleSheet} from 'react-native'
+import {Children} from 'react'
+import {StyleSheet, View} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {type AtmospherePublicationCardData} from '#/screens/Atmosphere/data/exploreData'
@@ -206,6 +207,27 @@ describe.each([true, false])('PublicationCard (gtPhone: %s)', gtPhone => {
       expect(link.props.tabIndex).toBeUndefined()
       expect(() => fireEvent(link, 'focus')).not.toThrow()
     }
+  })
+
+  it('does not render a raw text node for an empty description', () => {
+    render(
+      <PublicationCard
+        publication={{
+          ...publication,
+          view: {...publication.view, description: ''},
+        }}
+      />,
+    )
+
+    /*
+     * Inspect the supplied children: the native test renderer can drop empty
+     * strings from its output, while React Native Web checks props directly.
+     */
+    const rawTextNodes = screen
+      .UNSAFE_getAllByType(View)
+      .flatMap(view => Children.toArray(view.props.children))
+      .filter(child => typeof child === 'string' || typeof child === 'number')
+    expect(rawTextNodes).toEqual([])
   })
 
   it('falls back to an initial when there is no logo or theme', () => {
