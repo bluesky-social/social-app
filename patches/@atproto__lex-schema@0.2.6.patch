@@ -1,0 +1,51 @@
+diff --git a/dist/schema/optional.js b/dist/schema/optional.js
+index f8a2b0dc949adac7223e083516523e22f567b9ef..d8b6307380f66a91e096496c7829453af2fb9a1f 100644
+--- a/dist/schema/optional.js
++++ b/dist/schema/optional.js
+@@ -21,22 +21,35 @@ export class OptionalSchema extends Schema {
+         super();
+         this.validator = validator;
+         this.type = 'optional';
++        /**
++         * Bit set of the validation option combinations (strict = 1, non-strict = 2)
++         * for which the inner validator is known to reject `undefined`.
++         */
++        this.rejectsUndefined = 0;
+     }
+     validateInContext(input, ctx) {
+-        // Optimization: No need to apply child schema defaults in validation mode
+-        if (input === undefined && ctx.options.mode === 'validate') {
+-            return ctx.success(input);
+-        }
+-        // @NOTE The inner schema might apply a default value so we need to run it
+-        // even if input is undefined.
+-        const result = ctx.validate(input, this.validator);
+-        if (result.success) {
+-            return result;
+-        }
+         if (input === undefined) {
++            // Optimization: No need to apply child schema defaults in validation mode
++            if (ctx.options.mode === 'validate') {
++                return ctx.success(input);
++            }
++            // @NOTE The inner schema might apply a default value so we need to run it
++            // even if input is undefined. Validators are stateless, so once the inner
++            // schema rejects undefined it always will (for the same options). Remember
++            // that, so that parsing an absent optional value does not build (and
++            // discard) a validation error every time.
++            const key = ctx.options.strict ? 1 : 2;
++            if ((this.rejectsUndefined & key) !== 0) {
++                return ctx.success(input);
++            }
++            const result = ctx.validate(input, this.validator);
++            if (result.success) {
++                return result;
++            }
++            this.rejectsUndefined |= key;
+             return ctx.success(input);
+         }
+-        return result;
++        return ctx.validate(input, this.validator);
+     }
+ }
+ /**
