@@ -7,6 +7,7 @@ import {atoms as a, tokens} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {GradientFill} from '#/components/GradientFill'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/TimesLarge'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
@@ -19,6 +20,8 @@ export function AtmosphereNux() {
   if (variables || nux?.completed) return null
 
   const dismiss = () => {
+    Toast.show(`TEMP: Dismissed the banner. Will remove for production.`)
+    return
     save({
       id: Nux.AtmosphereNux,
       completed: true,
