@@ -1,8 +1,12 @@
-import {classifyOTAPatchLogEntries} from './patchTelemetry'
+import {
+  classifyOTADownloadFailure,
+  classifyOTAPatchLogEntries,
+} from './patchTelemetry'
 
 /*
- * Messages are copied from expo-updates 58's `FileDownloader.swift` and
- * `FileDownloader.kt`, with their interpolations filled in.
+ * Messages are copied from expo-updates 58's `FileDownloader.swift`,
+ * `FileDownloader.kt` and the errors that `fetchUpdateAsync` rejects with, with
+ * their interpolations filled in.
  */
 const ASSET_KEY = 'f3c4e5a6b7c8d9e0'
 const FETCH_STARTED_AT = Date.UTC(2026, 9, 23, 12, 0, 0, 500)
@@ -195,5 +199,89 @@ describe('classifyOTAPatchLogEntries', () => {
         FETCH_STARTED_AT,
       ),
     ).toEqual({patched: false, patchFallbackReason: 'patchedHashMismatch'})
+  })
+})
+
+describe('classifyOTADownloadFailure', () => {
+  const ASSET_URL = `https://updates.bsky.app/file/${ASSET_KEY}`
+
+  it('finds a mismatched asset hash in the iOS log', () => {
+    expect(
+      classifyOTADownloadFailure(
+        new Error('Failed to download new update: Failed to load all assets'),
+        [
+          entry(
+            `Asset download was successful but base64url-encoded SHA-256 did not match expected; URL: ${ASSET_URL}; expected hash: AAAA; actual hash: BBBB`,
+          ),
+        ],
+        FETCH_STARTED_AT,
+      ),
+    ).toEqual({failureReason: 'assetHashMismatch'})
+  })
+
+  it('finds a mismatched asset hash in the Android error', () => {
+    expect(
+      classifyOTADownloadFailure(
+        new Error(
+          `Failed to download new update: Failed to download asset ${ASSET_KEY}: Failed to download asset from URL ${ASSET_URL}: File download was successful but base64url-encoded SHA-256 did not match expected; expected: AAAA; actual: BBBB`,
+        ),
+        [
+          entry(`Failed to download asset from URL ${ASSET_URL}`),
+          entry(`Failed to download asset ${ASSET_KEY}`),
+        ],
+        FETCH_STARTED_AT,
+      ),
+    ).toEqual({failureReason: 'assetHashMismatch'})
+  })
+
+  it('reports the patch fallback that came before a failed full download', () => {
+    expect(
+      classifyOTADownloadFailure(
+        new Error('Failed to download new update: Failed to load all assets'),
+        [
+          entry(
+            'Patch response missing required headers or had mismatched identifiers; retrying with full asset download',
+            100,
+          ),
+          entry(
+            `Asset download was successful but base64url-encoded SHA-256 did not match expected; URL: ${ASSET_URL}; expected hash: AAAA; actual hash: BBBB`,
+            200,
+          ),
+        ],
+        FETCH_STARTED_AT,
+      ),
+    ).toEqual({
+      failureReason: 'assetHashMismatch',
+      patchFallbackReason: 'baseUpdateIdMismatch',
+    })
+  })
+
+  it('recognizes network failures in the error or the log', () => {
+    expect(
+      classifyOTADownloadFailure(
+        new Error(
+          `Failed to download new update: Failed to download asset ${ASSET_KEY}: Failed to download asset from URL ${ASSET_URL}: Unable to resolve host "updates.bsky.app": No address associated with hostname`,
+        ),
+        [],
+        FETCH_STARTED_AT,
+      ),
+    ).toEqual({failureReason: 'network'})
+    expect(
+      classifyOTADownloadFailure(
+        new Error('Failed to download new update: Failed to load all assets'),
+        [entry('Unknown error: The network connection was lost.')],
+        FETCH_STARTED_AT,
+      ),
+    ).toEqual({failureReason: 'network'})
+  })
+
+  it('reports anything else as other', () => {
+    expect(
+      classifyOTADownloadFailure(
+        new Error('Failed to download new update: Failed to load all assets'),
+        [entry('HTTP response error 503: Service Unavailable')],
+        FETCH_STARTED_AT,
+      ),
+    ).toEqual({failureReason: 'other'})
   })
 })
