@@ -1,5 +1,5 @@
 diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt b/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt
-index e6e0660..0eb0b8f 100644
+index e6e0660..7eedc04 100644
 --- a/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt
 +++ b/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt
 @@ -12,6 +12,7 @@ import android.animation.ValueAnimator
@@ -10,7 +10,15 @@ index e6e0660..0eb0b8f 100644
  import android.view.View
  import android.view.ViewGroup
  import android.widget.OverScroller
-@@ -31,6 +32,7 @@ import com.facebook.react.uimanager.StateWrapper
+@@ -20,6 +21,7 @@ import androidx.core.view.ViewCompat.FocusDirection
+ import androidx.core.view.ViewCompat.FocusRealDirection
+ import com.facebook.common.logging.FLog
+ import com.facebook.react.bridge.ReactContext
++import com.facebook.react.bridge.UiThreadUtil
+ import com.facebook.react.bridge.WritableMap
+ import com.facebook.react.bridge.WritableNativeMap
+ import com.facebook.react.common.ReactConstants
+@@ -31,6 +33,7 @@ import com.facebook.react.uimanager.StateWrapper
  import com.facebook.react.uimanager.UIManagerHelper
  import com.facebook.react.uimanager.common.UIManagerType
  import java.lang.ref.WeakReference
@@ -18,7 +26,7 @@ index e6e0660..0eb0b8f 100644
  import java.util.concurrent.CopyOnWriteArrayList
  import kotlin.math.abs
  import kotlin.math.max
-@@ -45,6 +47,14 @@ public object ReactScrollViewHelper {
+@@ -45,6 +48,14 @@ public object ReactScrollViewHelper {
    private const val SCROLL_AWAY_PADDING_TOP = "scrollAwayPaddingTop"
    private const val SCROLL_AWAY_PADDING_BOTTOM = "scrollAwayPaddingBottom"
  
@@ -33,7 +41,7 @@ index e6e0660..0eb0b8f 100644
    public const val MOMENTUM_DELAY: Long = 20
    public const val OVER_SCROLL_ALWAYS: String = "always"
    public const val AUTO: String = "auto"
-@@ -452,11 +462,26 @@ public object ReactScrollViewHelper {
+@@ -452,11 +463,28 @@ public object ReactScrollViewHelper {
            T : HasScrollState?,
            T : HasStateWrapper?,
            T : ViewGroup {
@@ -50,7 +58,7 @@ index e6e0660..0eb0b8f 100644
 +    val now = SystemClock.uptimeMillis()
 +    val elapsed = now - (lastScrollStateUpdateTimes[scrollView] ?: 0L)
 +    if (elapsed >= SCROLL_STATE_UPDATE_INTERVAL_MS) {
-+      pendingScrollStateUpdates.remove(scrollView)?.let { scrollView.removeCallbacks(it) }
++      pendingScrollStateUpdates.remove(scrollView)?.let { UiThreadUtil.removeOnUiThread(it) }
 +      lastScrollStateUpdateTimes[scrollView] = now
 +      updateFabricScrollState(scrollView, scrollView.scrollX, scrollView.scrollY)
 +    } else if (!pendingScrollStateUpdates.containsKey(scrollView)) {
@@ -60,7 +68,9 @@ index e6e0660..0eb0b8f 100644
 +        updateFabricScrollState(scrollView, scrollView.scrollX, scrollView.scrollY)
 +      }
 +      pendingScrollStateUpdates[scrollView] = update
-+      scrollView.postDelayed(update, SCROLL_STATE_UPDATE_INTERVAL_MS - elapsed)
++      // Not View.postDelayed: a detached view holds its runnables until it is attached again, and
++      // the pending entry would keep a scroll view that is dropped while detached alive forever.
++      UiThreadUtil.runOnUiThread(update, SCROLL_STATE_UPDATE_INTERVAL_MS - elapsed)
 +    }
      emitScrollEvent(scrollView, xVelocity, yVelocity)
    }
