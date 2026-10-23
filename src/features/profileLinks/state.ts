@@ -138,7 +138,8 @@ export function useWriteProfileLinks() {
           before.cid &&
           before.url === link.url &&
           before.title === link.title &&
-          sameIcon(before.icon, link.icon)
+          sameIcon(before.icon, link.icon) &&
+          sameIcon(before.iconDark, link.iconDark)
         ) {
           return {
             uri: before.uri as l.AtUriString,
@@ -149,6 +150,7 @@ export function useWriteProfileLinks() {
           url: link.url as UriString,
           title: link.title,
           icon: link.icon,
+          iconDark: link.iconDark,
           createdAt: toDatetimeString(new Date()),
         }
         const res = before?.uri
@@ -204,14 +206,39 @@ export function useSetOwnProfileLinksCache() {
 
 const FAVICON_TIMEOUT = 8e3
 
+async function fetchFavicon(
+  url: string,
+  scheme: 'light' | 'dark',
+): Promise<Blob | undefined> {
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), FAVICON_TIMEOUT)
+  const params = scheme === 'dark' ? '&fresh=true&scheme=dark' : '&fresh=true'
+  try {
+    const res = await fetch(
+      `${LINK_FAVICON_PROXY()}${encodeURIComponent(url)}${params}`,
+      {signal: controller.signal, cache: 'no-store'},
+    )
+    if (!res.ok || res.headers.get('content-type') !== 'image/png') {
+      return undefined
+    }
+    return await res.blob()
+  } catch {
+    // no icon is a normal outcome, e.g. a slow site
+    return undefined
+  } finally {
+    clearTimeout(timeout)
+  }
+}
+
 /**
  * Fetches a site's favicon through cardyb and uploads it to the user's PDS,
  * like a link card thumbnail. Storing the blob on the record means it's
  * scanned like any other profile image, instead of hotlinked. Resolves to
  * undefined when the site has no usable icon; the pill falls back to a globe.
+ * A dark color scheme variant is uploaded too when the site has one.
  *
- * Also resolves to a data URI of the icon: the CDN can't serve the blob until
- * the profile is saved and a record points at it, so the editor shows this
+ * Also resolves to data URIs of the icons: the CDN can't serve the blobs until
+ * the profile is saved and a record points at them, so the editor shows these
  * instead.
  *
  * Always asks for the site's current icon, skipping cardyb's and the HTTP
@@ -221,31 +248,33 @@ export function useUploadLinkIcon() {
   const pdsClient = usePdsClient()
   return async (
     url: string,
-  ): Promise<{icon: BlobRef; previewUrl: string} | undefined> => {
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), FAVICON_TIMEOUT)
-    let icon: Blob
-    try {
-      const res = await fetch(
-        `${LINK_FAVICON_PROXY()}${encodeURIComponent(url)}&fresh=true`,
-        {signal: controller.signal, cache: 'no-store'},
-      )
-      if (!res.ok || res.headers.get('content-type') !== 'image/png') {
-        return undefined
+  ): Promise<
+    | {
+        icon: BlobRef
+        previewUrl: string
+        iconDark?: BlobRef
+        previewDarkUrl?: string
       }
-      icon = await res.blob()
-    } catch {
-      // no icon is a normal outcome, e.g. a slow site
-      return undefined
-    } finally {
-      clearTimeout(timeout)
-    }
+    | undefined
+  > => {
+    const [light, dark] = await Promise.all([
+      fetchFavicon(url, 'light'),
+      fetchFavicon(url, 'dark'),
+    ])
+    if (!light) return undefined
     try {
-      const [{blob}, previewUrl] = await Promise.all([
-        uploadBlob(pdsClient, icon, 'image/png'),
-        blobToDataUri(icon),
+      const [previewUrl, previewDarkUrl] = await Promise.all([
+        blobToDataUri(light),
+        dark ? blobToDataUri(dark) : undefined,
       ])
-      return {icon: blob, previewUrl}
+      const hasDark = !!previewDarkUrl && previewDarkUrl !== previewUrl
+      const [{blob: icon}, darkUpload] = await Promise.all([
+        uploadBlob(pdsClient, light, 'image/png'),
+        hasDark && dark ? uploadBlob(pdsClient, dark, 'image/png') : undefined,
+      ])
+      return darkUpload
+        ? {icon, previewUrl, iconDark: darkUpload.blob, previewDarkUrl}
+        : {icon, previewUrl}
     } catch (e) {
       if (!isNetworkError(e)) {
         logger.error('Failed to upload profile link icon', {safeMessage: e})

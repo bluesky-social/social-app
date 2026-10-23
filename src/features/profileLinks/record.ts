@@ -56,6 +56,7 @@ export function linksFromProfileView(
     const title = view.title ? truncateTitle(view.title.trim()) : ''
     if (title) link.title = title
     if (view.icon) link.iconUrl = view.icon
+    if (view.iconDark) link.iconDarkUrl = view.iconDark
     links.push(link)
   }
   return links
@@ -86,6 +87,7 @@ export function linksFromRecords(
       : ''
     if (title) link.title = title
     if (record.value.icon) link.icon = record.value.icon
+    if (record.value.iconDark) link.iconDark = record.value.iconDark
     links.push(link)
   }
   return links
@@ -108,7 +110,9 @@ export function sameProfileLinks(a: ProfileLink[], b: ProfileLink[]): boolean {
         link.title === b[i].title &&
         link.uri === b[i].uri &&
         (link.icon && getBlobCidString(link.icon)) ===
-          (b[i].icon && getBlobCidString(b[i].icon)),
+          (b[i].icon && getBlobCidString(b[i].icon)) &&
+        (link.iconDark && getBlobCidString(link.iconDark)) ===
+          (b[i].iconDark && getBlobCidString(b[i].iconDark)),
     )
   )
 }

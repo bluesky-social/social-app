@@ -13,11 +13,12 @@ import {
 } from '#/components/moderation/ReportDialog'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
+import {linkFaviconUrl} from '../favicon'
 import {useSupportPalette} from '../palette'
 import {formatLinkUrl, getLinkHost, getSupportProvider} from '../providers'
 import {useProfileLinksEnabled, useProfileViewLinks} from '../state'
 import {type ProfileLink} from '../types'
-import {LinkFavicon, linkFaviconUrl} from './LinkFavicon'
+import {LinkFavicon} from './LinkFavicon'
 import {ProviderLogo} from './ProviderLogo'
 
 const ICON_SIZE = 32
@@ -196,7 +197,7 @@ function LinkRowIcon({link}: {link: ProfileLink}) {
       </View>
     )
   }
-  const faviconUrl = linkFaviconUrl(link, undefined)
+  const faviconUrl = linkFaviconUrl(link, undefined, t.scheme === 'dark')
   return (
     <View
       style={[

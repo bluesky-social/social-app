@@ -14,6 +14,10 @@ export type ProfileLink = {
    * just fetched and isn't saved yet, a data URI of it.
    */
   iconUrl?: string
+  /** The site's favicon for a dark color scheme, when it has one. */
+  iconDark?: BlobRef
+  /** Like `iconUrl`, for `iconDark`. */
+  iconDarkUrl?: string
   /** The `app.bsky.actor.link` record, once the link has been saved. */
   uri?: string
   cid?: string

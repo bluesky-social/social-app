@@ -26,6 +26,16 @@
             "maxSize": 100000,
             "description": "The destination site's icon, uploaded when the link is saved."
           },
+          "iconDark": {
+            "type": "blob",
+            "accept": [
+              "image/png",
+              "image/jpeg",
+              "image/webp"
+            ],
+            "maxSize": 100000,
+            "description": "The destination site's icon for a dark color scheme, when the site provides one. Clients use icon when this is missing."
+          },
           "title": {
             "type": "string",
             "maxLength": 320,

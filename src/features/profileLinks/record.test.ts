@@ -21,6 +21,11 @@ const icon = {
   size: 1024,
 }
 
+const iconDark = {
+  ...icon,
+  ref: parseCid('bafkreihdwdcefgh4dqkjv67uzcmw7ojee6xedzdetojuzjevtenxquvyku'),
+}
+
 const DID = 'did:plc:kat'
 const uri = (rkey: string) => `at://${DID}/app.bsky.actor.link/${rkey}`
 
@@ -60,6 +65,17 @@ describe('linksFromProfileView', () => {
         cid: 'cid-b',
       },
     ])
+  })
+
+  it('reads the dark icon URL when there is one', () => {
+    const [link] = linksFromProfileView([
+      view('a', 'https://a.example', {
+        icon: 'https://cdn.example/light.png',
+        iconDark: 'https://cdn.example/dark.png',
+      }),
+    ])
+    expect(link.iconUrl).toBe('https://cdn.example/light.png')
+    expect(link.iconDarkUrl).toBe('https://cdn.example/dark.png')
   })
 
   it('returns nothing for profiles without links', () => {
@@ -184,6 +200,15 @@ describe('linksFromRecords', () => {
     ])
   })
 
+  it('keeps the dark icon', () => {
+    const [link] = linksFromRecords(
+      [ref('a')],
+      [record('a', 'https://a.example', {icon, iconDark})],
+    )
+    expect(link.icon).toBe(icon)
+    expect(link.iconDark).toBe(iconDark)
+  })
+
   it('skips refs whose record is missing', () => {
     expect(
       linksFromRecords(
@@ -212,6 +237,7 @@ describe('sameProfileLinks', () => {
     const other = {url: 'https://b.example', uri: uri('b')}
     expect(sameProfileLinks([{...link, title: 'A'}], [link])).toBe(false)
     expect(sameProfileLinks([{...link, icon: undefined}], [link])).toBe(false)
+    expect(sameProfileLinks([{...link, iconDark}], [link])).toBe(false)
     expect(sameProfileLinks([other, link], [link, other])).toBe(false)
     expect(sameProfileLinks([link], [link, other])).toBe(false)
   })
