@@ -11,6 +11,7 @@ import {
 import {act, renderHook, waitFor} from '@testing-library/react-native'
 
 import {logger} from '#/logger'
+import {metrics} from '#/analytics/metrics'
 import {APP_VERSION} from '#/env'
 import {device} from '#/storage'
 import {
@@ -55,6 +56,10 @@ jest.mock('#/storage', () => ({
 const mockMetric = jest.fn()
 jest.mock('#/analytics', () => ({
   useAnalytics: () => ({metric: mockMetric}),
+}))
+
+jest.mock('#/analytics/metrics', () => ({
+  metrics: {flush: jest.fn()},
 }))
 
 jest.mock('#/alf', () => ({
@@ -353,6 +358,7 @@ describe('useApplyPullRequestOTAUpdate', () => {
       mockCurrentlyRunning({buildChannel: 'testflight', channel: 'testflight'})
       jest.mocked(checkForUpdateAsync).mockResolvedValue({
         isAvailable: true,
+        manifest: {id: 'patched-update'},
       } as Awaited<ReturnType<typeof checkForUpdateAsync>>)
       jest.mocked(fetchUpdateAsync).mockResolvedValue({
         isNew: true,
@@ -373,11 +379,54 @@ describe('useApplyPullRequestOTAUpdate', () => {
       await waitFor(() =>
         expect(mockMetric).toHaveBeenCalledWith('ota:download', {
           patched: true,
+          updateId: 'patched-update',
           channel: 'testflight',
           isEmbeddedLaunch: false,
         }),
       )
       expect(mockMetric).toHaveBeenCalledTimes(1)
+      expect(metrics.flush).toHaveBeenCalledTimes(1)
+    })
+
+    it('reports a failed download and still informs the user', async () => {
+      mockCurrentlyRunning({buildChannel: 'testflight', channel: 'testflight'})
+      jest.mocked(checkForUpdateAsync).mockResolvedValue({
+        isAvailable: true,
+        manifest: {id: 'poisoned-update'},
+      } as Awaited<ReturnType<typeof checkForUpdateAsync>>)
+      jest
+        .mocked(fetchUpdateAsync)
+        .mockRejectedValue(
+          new Error('Failed to download new update: Failed to load all assets'),
+        )
+      jest.mocked(readLogEntriesAsync).mockResolvedValue([
+        {
+          timestamp: Date.now() + 1e3,
+          message:
+            'Asset download was successful but base64url-encoded SHA-256 did not match expected; URL: https://updates.bsky.app/file/f3c4e5a6b7c8d9e0; expected hash: AAAA; actual hash: BBBB',
+        },
+      ] as Awaited<ReturnType<typeof readLogEntriesAsync>>)
+      const {result} = renderHook(() => useApplyPullRequestOTAUpdate())
+
+      await act(() => result.current.checkForUpdates())
+
+      expect(Alert.alert).toHaveBeenCalledWith(
+        'Update Check Failed',
+        expect.stringContaining('Failed to load all assets'),
+      )
+      expect(logger.error).toHaveBeenCalledWith(
+        'Internal OTA Update Error',
+        expect.anything(),
+      )
+      await waitFor(() =>
+        expect(mockMetric).toHaveBeenCalledWith('ota:downloadFailed', {
+          failureReason: 'assetHashMismatch',
+          updateId: 'poisoned-update',
+          channel: 'testflight',
+          isEmbeddedLaunch: false,
+        }),
+      )
+      expect(metrics.flush).toHaveBeenCalled()
     })
 
     it('reports being up to date on a standard channel', async () => {

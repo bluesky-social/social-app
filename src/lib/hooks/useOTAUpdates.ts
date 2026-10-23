@@ -20,7 +20,7 @@ import {
 } from 'expo-updates'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {reportOTADownload} from '#/lib/ota/patchTelemetry'
+import {fetchUpdateAndReport} from '#/lib/ota/patchTelemetry'
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -108,13 +108,10 @@ async function updateTestflight(
 
   const res = await checkForUpdateAsync()
   if (res.isAvailable) {
-    const fetchStartedAt = Date.now()
-    const result = await fetchUpdateAsync()
-    void reportOTADownload({
+    await fetchUpdateAndReport({
       metric,
-      result,
-      fetchStartedAt,
       channel: buildChannel,
+      requestedUpdateId: res.manifest?.id,
     })
     Alert.alert(
       'Update Available',
@@ -299,13 +296,10 @@ export function useApplyPullRequestOTAUpdate() {
         return
       }
 
-      const fetchStartedAt = Date.now()
-      const result = await fetchUpdateAsync()
-      void reportOTADownload({
+      await fetchUpdateAndReport({
         metric: ax.metric,
-        result,
-        fetchStartedAt,
         channel,
+        requestedUpdateId: res.manifest?.id,
       })
       Alert.alert(
         'Update Available',
@@ -447,13 +441,10 @@ export function useOTAUpdates() {
 
         if (res.isAvailable) {
           logger.debug('Attempting to fetch update...')
-          const fetchStartedAt = Date.now()
-          const result = await fetchUpdateAsync()
-          void reportOTADownload({
+          await fetchUpdateAndReport({
             metric,
-            result,
-            fetchStartedAt,
             channel: defaultChannel,
+            requestedUpdateId: res.manifest?.id,
           })
         } else {
           logger.debug('No update available.')
