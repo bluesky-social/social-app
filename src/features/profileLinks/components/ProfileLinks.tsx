@@ -342,6 +342,8 @@ function CappedPillRow({
   let revealIndex = 0
   return (
     <Animated.View
+      // on Android, swipes between the pills must fall through to scroll the profile
+      pointerEvents="box-none"
       layout={LinearTransition.duration(300).easing(EASE_OUT)}
       onLayout={e => setWidth(e.nativeEvent.layout.width)}
       style={[
