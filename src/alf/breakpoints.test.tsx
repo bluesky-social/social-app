@@ -12,7 +12,7 @@ import {
 } from '#/alf/breakpoints.shared'
 import * as env from '#/env'
 
-jest.mock('#/env', () => ({__esModule: true, IS_IPAD: true}))
+jest.mock('#/env', () => ({__esModule: true, IS_IPAD: true, IS_WEB: false}))
 
 const initialWindow = Dimensions.get('window')
 
@@ -167,5 +167,17 @@ describe('native responsive layout', () => {
         isWithinOffsetView: false,
       }),
     ).toBe(true)
+  })
+
+  it('leaves web centering to Layout.Center', () => {
+    jest.replaceProperty(env, 'IS_WEB', true)
+    expect(
+      shouldCenterNativeTabletContent({
+        gtMobile: true,
+        isWithinDialog: false,
+        isWithinSplitView: false,
+        isWithinOffsetView: false,
+      }),
+    ).toBe(false)
   })
 })
