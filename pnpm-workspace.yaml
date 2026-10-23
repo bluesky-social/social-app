@@ -34,6 +34,8 @@ allowBuilds:
   'protobufjs': false
   'unrs-resolver': true
 patchedDependencies:
+  '@atproto/lex-schema@0.2.6': patches/@atproto__lex-schema@0.2.6.patch
+  '@atproto/syntax@0.7.5': patches/@atproto__syntax@0.7.5.patch
   '@expo/cli@58.1.14': patches/@expo__cli@58.1.14.patch
   '@formatjs/bigdecimal@0.2.5': patches/@formatjs__bigdecimal@0.2.5.patch
   '@sentry/expo-upload-sourcemaps@8.26.0': patches/@sentry__expo-upload-sourcemaps@8.26.0.patch
