@@ -417,6 +417,7 @@ function SortableItem<T>({
       ? s.dragStartSlot * itemHeight + dragY.get()
       : 0
   })
+  const isPlaced = useSharedValue(false)
   const translateY = useDerivedValue(() => {
     const s = state.get()
     const mySlot = s.slots[itemKey]
@@ -445,12 +446,25 @@ function SortableItem<T>({
         offset = itemHeight
       }
     }
+    const target = mySlot * itemHeight + offset
     /*
-     * Animating to where the item already is does nothing, so this neither
-     * moves items on mount nor the dropped item, which the snap animation
-     * already left at its new slot.
+     * An item added while the list is mounted (e.g. a newly pinned feed)
+     * renders before it has a slot, so place it directly the first time it
+     * gets one instead of sliding it in from the top. The first run happens
+     * on the JS thread during render, so only mark it placed on the UI thread.
      */
-    return withTiming(mySlot * itemHeight + offset, {duration: 200})
+    if (!isPlaced.get()) {
+      if (_WORKLET) {
+        isPlaced.set(true)
+      }
+      return target
+    }
+    /*
+     * Animating to where the item already is does nothing, so this doesn't
+     * move the dropped item, which the snap animation already left at its
+     * new slot.
+     */
+    return withTiming(target, {duration: 200})
   })
   const scale = useDerivedValue(() =>
     state.get().activeKey === itemKey
