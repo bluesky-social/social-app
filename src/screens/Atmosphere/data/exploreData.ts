@@ -70,6 +70,16 @@ export type AtmosphereLivestreamCardData = {
   authorProfile: app.bsky.actor.defs.ProfileViewBasic
 }
 
+/** Keeps the first item for each id, preserving order. */
+function dedupeById<T extends {id: string}>(items: T[]): T[] {
+  const seen = new Set<string>()
+  return items.filter(item => {
+    if (seen.has(item.id)) return false
+    seen.add(item.id)
+    return true
+  })
+}
+
 function getProfile(
   profiles?: AtmosphereProfileView[],
 ): app.bsky.actor.defs.ProfileViewBasic | undefined {
@@ -94,8 +104,8 @@ function isGalleryImage(item: unknown): item is AtmosphereViewGalleryImage {
 export function getAtmosphereArticles(
   data: AtmosphereData,
 ): AtmosphereArticleCardData[] {
-  return data.articles.items
-    .map(({view: article}) => ({
+  return dedupeById(
+    data.articles.items.map(({view: article}) => ({
       id: article.uri,
       href: article.uri,
       title: article.title.trim(),
@@ -103,13 +113,12 @@ export function getAtmosphereArticles(
       image: article.image,
       publisher: article.publisher?.title,
       publisherAvatar: article.publisher?.logo,
-    }))
-    .sort(
-      (a, b) =>
-        Number(Boolean(b.image)) - Number(Boolean(a.image)) ||
-        (b.description?.trim().length ?? 0) -
-          (a.description?.trim().length ?? 0),
-    )
+    })),
+  ).sort(
+    (a, b) =>
+      Number(Boolean(b.image)) - Number(Boolean(a.image)) ||
+      (b.description?.trim().length ?? 0) - (a.description?.trim().length ?? 0),
+  )
 }
 
 function toColorRgb(
@@ -126,8 +135,8 @@ function toColorRgb(
 export function getAtmospherePublications(
   data: AtmosphereData,
 ): AtmospherePublicationCardData[] {
-  return data.publications.items
-    .map(({view: publication}) => ({
+  return dedupeById(
+    data.publications.items.map(({view: publication}) => ({
       id: publication.uri,
       title: publication.title,
       view: {
@@ -153,32 +162,34 @@ export function getAtmospherePublications(
           },
         },
       },
-    }))
-    .sort(
-      (a, b) =>
-        b.view.description.trim().length - a.view.description.trim().length,
-    )
+    })),
+  ).sort(
+    (a, b) =>
+      b.view.description.trim().length - a.view.description.trim().length,
+  )
 }
 
 export function getAtmosphereApps(
   data: AtmosphereData,
 ): AtmosphereAppCardData[] {
-  return data.apps.flatMap(app => {
-    if (!app.id || !app.title || !app.url) return []
+  return dedupeById(
+    data.apps.flatMap(app => {
+      if (!app.id || !app.title || !app.url) return []
 
-    return [
-      {
-        id: app.id,
-        title: app.title,
-        description: app.description || undefined,
-        logo: app.logo,
-        backgroundImage: app.backgroundImage,
-        overlayColor: app.overlayColor,
-        textColor: app.textColor,
-        href: app.url,
-      },
-    ]
-  })
+      return [
+        {
+          id: app.id,
+          title: app.title,
+          description: app.description || undefined,
+          logo: app.logo,
+          backgroundImage: app.backgroundImage,
+          overlayColor: app.overlayColor,
+          textColor: app.textColor,
+          href: app.url,
+        },
+      ]
+    }),
+  )
 }
 
 export function getAtmosphereAnnouncementBanner(
@@ -201,41 +212,45 @@ export function getAtmosphereAnnouncementBanner(
 export function getAtmosphereLivestreams(
   data: Pick<AtmosphereData, 'livestreams'>,
 ): AtmosphereLivestreamCardData[] {
-  return data.livestreams.items.flatMap(({view: livestream}) => {
-    const authorProfile = getProfile(livestream.associatedProfiles)
-    if (!authorProfile) return []
+  return dedupeById(
+    data.livestreams.items.flatMap(({view: livestream}) => {
+      const authorProfile = getProfile(livestream.associatedProfiles)
+      if (!authorProfile) return []
 
-    return [
-      {
-        id: livestream.uri,
-        href: livestream.uri,
-        title: livestream.title.trim(),
-        active: livestream.active,
-        image: livestream.image,
-        authorProfile,
-      },
-    ]
-  })
+      return [
+        {
+          id: livestream.uri,
+          href: livestream.uri,
+          title: livestream.title.trim(),
+          active: livestream.active,
+          image: livestream.image,
+          authorProfile,
+        },
+      ]
+    }),
+  )
 }
 
 export function getAtmospherePhotos(
   data: AtmosphereData,
 ): AtmospherePhotoCardData[] {
-  return data.photos.items.flatMap(({view: photo}) => {
-    const image = photo.items.find(isGalleryImage)
-    const authorProfile = getProfile(photo.associatedProfiles)
-    if (!image || !authorProfile) return []
+  return dedupeById(
+    data.photos.items.flatMap(({view: photo}) => {
+      const image = photo.items.find(isGalleryImage)
+      const authorProfile = getProfile(photo.associatedProfiles)
+      if (!image || !authorProfile) return []
 
-    return [
-      {
-        id: photo.uri,
-        href: photo.uri,
-        title: photo.title,
-        image: image.thumbnail,
-        imageAlt: image.alt || undefined,
-        likeCount: photo.likeCount ?? 0,
-        authorProfile,
-      },
-    ]
-  })
+      return [
+        {
+          id: photo.uri,
+          href: photo.uri,
+          title: photo.title,
+          image: image.thumbnail,
+          imageAlt: image.alt || undefined,
+          likeCount: photo.likeCount ?? 0,
+          authorProfile,
+        },
+      ]
+    }),
+  )
 }

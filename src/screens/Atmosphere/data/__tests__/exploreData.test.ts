@@ -254,7 +254,7 @@ describe('Atmosphere Explore response fixtures', () => {
       id: 'https://example.com/first-article',
       href: 'https://example.com/first-article',
       image: 'https://example.com/article.jpg',
-      publisherAvatar: 'https://example.com/avatar.jpg',
+      publisherAvatar: 'https://example.com/logo.jpg',
     })
 
     const photos = getAtmospherePhotos(fixtureData)
@@ -412,6 +412,65 @@ describe('Atmosphere Explore response fixtures', () => {
       expect(card.view.source?.icon).toBeUndefined()
       expect(card.view.source?.theme).toBeUndefined()
       expect(card.view.associatedProfiles).toBeUndefined()
+    })
+  })
+
+  describe('dedupes items by id', () => {
+    const [article] = fixtureData.articles.items
+    const [photo] = fixtureData.photos.items
+    const [livestream] = parseData({
+      ...emptyData,
+      livestreams: {items: livestreamPreviewFixture},
+    }).livestreams.items
+    const [publication] = fixtureData.publications.items
+    const [firstApp] = fixtureData.apps
+
+    function twoOf<T extends {view: {uri: string}}>(item: T) {
+      return {
+        first: item,
+        second: {...item, view: {...item.view, uri: 'https://other.test/'}},
+      }
+    }
+
+    it.each([
+      ['articles', article, getAtmosphereArticles],
+      ['publications', publication, getAtmospherePublications],
+      ['photos', photo, getAtmospherePhotos],
+      ['livestreams', livestream, getAtmosphereLivestreams],
+    ] as const)('in %s, keeping the first occurrence', (name, item, adapt) => {
+      const {first, second} = twoOf(item)
+      const duplicate = {
+        ...first,
+        view: {...first.view, title: 'duplicate'},
+      }
+      const data = {
+        ...emptyData,
+        [name]: {items: [first, second, duplicate]},
+      }
+
+      const result = adapt(data)
+
+      expect(result).toHaveLength(2)
+      expect(result.map(r => r.id).sort()).toEqual(
+        [first.view.uri, second.view.uri].sort(),
+      )
+      expect(result.map(r => r.title)).not.toContain('duplicate')
+    })
+
+    it('in apps, keeping the first occurrence', () => {
+      const data = {
+        ...emptyData,
+        apps: [
+          firstApp,
+          {...firstApp, id: 'other'},
+          {...firstApp, title: 'dupe'},
+        ],
+      } satisfies AtmosphereData
+
+      const result = getAtmosphereApps(data)
+
+      expect(result.map(r => r.id)).toEqual([firstApp.id, 'other'])
+      expect(result[0].title).toBe(firstApp.title)
     })
   })
 
@@ -595,9 +654,6 @@ describe('Atmosphere Explore response fixtures', () => {
               uri: 'https://example.com/article',
               title: 'Article',
               description: '',
-              associatedProfiles: [
-                {...implicitProfile, avatar: image.thumbnail},
-              ],
             },
           },
         ],
@@ -632,7 +688,6 @@ describe('Atmosphere Explore response fixtures', () => {
       },
     })
 
-    expect(getAtmosphereArticles(data)[0].publisherAvatar).toBe(image.thumbnail)
     expect(getAtmospherePhotos(data)).toHaveLength(1)
     expect(getAtmosphereLivestreams(data)).toHaveLength(1)
 

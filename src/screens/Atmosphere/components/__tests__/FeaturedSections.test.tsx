@@ -128,8 +128,8 @@ describe('FeaturedArticles', () => {
       'First article',
       'Second article',
     ])
-    expect(width('article-a1')).toBe(214)
-    expect(width('article-a2')).toBe(214)
+    expect(width('article-a1')).toBe(250)
+    expect(width('article-a2')).toBe(250)
   })
 
   it('wires the gallery focus target to each card', () => {
@@ -191,7 +191,7 @@ describe('FeaturedPhotos', () => {
     ])
   })
 
-  it('keeps the card inside a 160px wrapper', () => {
+  it('keeps the card inside a 225px wrapper', () => {
     render(<FeaturedPhotos photos={photos} />)
 
     for (const id of ['p1', 'p2']) {
@@ -200,7 +200,7 @@ describe('FeaturedPhotos', () => {
       while (node && flat(node.props.style).width == null) {
         node = node.parent
       }
-      expect(flat(node?.props.style).width).toBe(160)
+      expect(flat(node?.props.style).width).toBe(225)
     }
   })
 

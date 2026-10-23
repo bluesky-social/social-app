@@ -172,19 +172,50 @@ describe('useAtmosphereExploreQuery', () => {
     },
   )
 
-  it('surfaces failures and recovers on refetch', async () => {
+  it('retries once before surfacing a failure', async () => {
     const {client, wrapper} = setup()
-    client.call.mockRejectedValueOnce(new Error('offline'))
+    client.call.mockRejectedValue(new Error('offline'))
 
     const {result} = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
-    await waitFor(() => expect(result.current.isError).toBe(true))
-    expect(result.current.data).toBeUndefined()
+    await waitFor(() => expect(result.current.isError).toBe(true), {
+      timeout: 3000,
+    })
 
-    client.call.mockResolvedValueOnce(data)
+    expect(client.call).toHaveBeenCalledTimes(2)
+  })
+
+  it('recovers when the retry succeeds', async () => {
+    const {client, wrapper} = setup()
+    client.call
+      .mockRejectedValueOnce(new Error('502'))
+      .mockResolvedValueOnce(data)
+
+    const {result} = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
+    await waitFor(() => expect(result.current.isSuccess).toBe(true), {
+      timeout: 3000,
+    })
+
+    expect(result.current.data).toBe(data)
+    expect(result.current.isError).toBe(false)
+    expect(client.call).toHaveBeenCalledTimes(2)
+  })
+
+  it('surfaces failures and recovers on refetch', async () => {
+    const {client, wrapper} = setup()
+    client.call.mockRejectedValue(new Error('offline'))
+
+    const {result} = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
+    await waitFor(() => expect(result.current.isError).toBe(true), {
+      timeout: 3000,
+    })
+    expect(result.current.data).toBeUndefined()
+    expect(client.call).toHaveBeenCalledTimes(2)
+
+    client.call.mockResolvedValue(data)
     await result.current.refetch()
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data).toBe(data)
-    expect(client.call).toHaveBeenCalledTimes(2)
+    expect(client.call).toHaveBeenCalledTimes(3)
   })
 })

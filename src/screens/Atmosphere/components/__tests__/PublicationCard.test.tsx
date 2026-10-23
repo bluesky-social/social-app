@@ -146,6 +146,9 @@ beforeEach(() => {
 })
 
 describe.each([true, false])('PublicationCard (gtPhone: %s)', gtPhone => {
+  /* The Atmosphere card hides the CTA on wide layouts (`hideSubscribe`). */
+  const linkCount = gtPhone ? 1 : 2
+
   beforeEach(() => {
     mockBreakpoints.gtPhone = gtPhone
   })
@@ -161,7 +164,7 @@ describe.each([true, false])('PublicationCard (gtPhone: %s)', gtPhone => {
   it('renders the primary link and the call to action', () => {
     render(<PublicationCard publication={publication} width={320} />)
 
-    expect(links()).toHaveLength(2)
+    expect(links()).toHaveLength(linkCount)
     for (const link of links()) {
       expect(link.props.accessibilityValue).toEqual({
         text: 'https://example.com/pub',
@@ -193,7 +196,7 @@ describe.each([true, false])('PublicationCard (gtPhone: %s)', gtPhone => {
 
     for (const link of links()) fireEvent(link, 'focus')
 
-    expect(focus.onFocus).toHaveBeenCalledTimes(2)
+    expect(focus.onFocus).toHaveBeenCalledTimes(linkCount)
   })
 
   it('renders without gallery focus props', () => {
@@ -221,6 +224,6 @@ describe.each([true, false])('PublicationCard (gtPhone: %s)', gtPhone => {
 
     expect(screen.queryByTestId('logo')).toBeNull()
     expect(screen.getByText('T')).toBeTruthy()
-    expect(links()).toHaveLength(2)
+    expect(links()).toHaveLength(linkCount)
   })
 })

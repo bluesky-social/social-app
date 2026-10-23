@@ -19,6 +19,7 @@ export function useAtmosphereExploreQuery() {
       acceptLanguage,
     }),
     staleTime: STALE.MINUTES.FIVE,
+    retry: 1,
     queryFn: ({signal}) =>
       client.call(
         app.bsky.unspecced.getAtmosphereExploreTab,
