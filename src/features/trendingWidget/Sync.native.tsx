@@ -9,16 +9,21 @@ import {useLanguagePrefs} from '#/state/preferences'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
 import {
+  clearTrendingWidgetBackgroundConfig,
   registerTrendingWidgetBackgroundTask,
   saveTrendingWidgetBackgroundConfig,
+  unregisterTrendingWidgetBackgroundTask,
 } from '#/features/trendingWidget/BackgroundTask'
 import {updateTrendingWidgetSnapshot} from '#/features/trendingWidget/Snapshot'
 
 export function TrendingTopicsWidgetSync() {
   const {t: l} = useLingui()
-  const [isWidgetInstalled, setIsWidgetInstalled] = useState(false)
+  /**
+   * `undefined` until the first check finishes.
+   */
+  const [isWidgetInstalled, setIsWidgetInstalled] = useState<boolean>()
   const {data} = useGetTrendsQuery({
-    enabled: isWidgetInstalled,
+    enabled: isWidgetInstalled === true,
     fetchLimit: 10,
     limit: 5,
     refetchOnWindowFocus: true,
@@ -62,16 +67,33 @@ export function TrendingTopicsWidgetSync() {
     }
   }, [])
 
+  // keep the background refresh registered only while the widget is installed
   useEffect(() => {
-    registerTrendingWidgetBackgroundTask().catch(error => {
-      logger.error('Failed to register the trending widget background task', {
+    if (isWidgetInstalled === undefined) return
+
+    const update = isWidgetInstalled
+      ? registerTrendingWidgetBackgroundTask
+      : unregisterTrendingWidgetBackgroundTask
+    update().catch(error => {
+      logger.error('Failed to update the trending widget background task', {
         safeMessage: error,
       })
     })
-  }, [])
+  }, [isWidgetInstalled])
 
   useEffect(() => {
-    if (!preferences) return
+    /*
+     * Without this account's preferences, skip background refreshes rather
+     * than filter them with a previous account's muted words.
+     */
+    if (!preferences) {
+      clearTrendingWidgetBackgroundConfig().catch(error => {
+        logger.error('Failed to clear the trending widget background config', {
+          safeMessage: error,
+        })
+      })
+      return
+    }
 
     saveTrendingWidgetBackgroundConfig({
       contentLanguages: languagePrefs.contentLanguages,
