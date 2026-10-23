@@ -105,15 +105,12 @@ export const Content = memo(function Content({
   const {gtMobile} = useBreakpoints()
   const {isWithinDialog} = useDialogContext()
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
-  // On web, the `Center` wrapper below centers and offsets the column instead
-  const centerOnTablet =
-    !IS_WEB &&
-    shouldCenterNativeTabletContent({
-      gtMobile,
-      isWithinDialog,
-      isWithinSplitView,
-      isWithinOffsetView,
-    })
+  const centerOnTablet = shouldCenterNativeTabletContent({
+    gtMobile,
+    isWithinDialog,
+    isWithinSplitView,
+    isWithinOffsetView,
+  })
   const isWithinContainedTabletSurface =
     isWithinDialog || isWithinSplitView || isWithinOffsetView
   const usesSystemScrollIndicatorInsets =
