@@ -187,6 +187,7 @@ export function useApplyPullRequestOTAUpdate() {
       void (async () => {
         try {
           if (!(await checkForDeployment())) return
+          // Not reported: PR updates are never patched, and the reload drops the event
           const fetchedUpdate = await fetchUpdateAsync()
           if (!fetchedUpdate.isNew) {
             throw new Error('Expo did not download a new update.')
@@ -341,6 +342,7 @@ export function useApplyPullRequestOTAUpdate() {
     setPending(true)
     try {
       await setExtraParams(defaultChannel)
+      // Not reported: the immediate reload would drop the event
       await fetchUpdateAsync()
       await reloadAsync({
         reloadScreenOptions: splash(t.scheme),
