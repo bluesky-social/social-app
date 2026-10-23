@@ -50,8 +50,7 @@ appId: xyz.blueskyweb.app
     when:
       platform: Android
     commands:
-      # The year toggle's a11y label. It was "Switch to selecting a year"
-      # before material3 1.5 (Expo SDK 58).
+      # The year toggle's a11y label (material3 `m3c_date_picker_switch_to_year_selection`).
       - tapOn: "Activate to change the year"
       # The Material 3 picker labels year cells "Navigate to year 2007" and day
       # cells with the full date (e.g. "Friday, October 12, 2007"), and Maestro
