@@ -102,7 +102,7 @@ export function getAtmosphereArticles(
       description: article.description || undefined,
       image: article.image,
       publisher: article.publisher?.title,
-      publisherAvatar: getProfile(article.associatedProfiles)?.avatar,
+      publisherAvatar: article.publisher?.logo,
     }))
     .sort(
       (a, b) =>
