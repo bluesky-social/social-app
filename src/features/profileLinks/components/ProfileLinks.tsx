@@ -145,14 +145,12 @@ function ProfileLinksRow({
     }, []),
   )
 
-  const open = (link: ProfileLink) => {
+  const logClick = (link: ProfileLink) => {
     ax.metric('profile:links:click', {
       domain: getLinkHost(link.url),
       supportProvider: getSupportProvider(link.url)?.name,
       isOwnProfile,
     })
-    // through the redirect service, so Safelink rules apply
-    openLink(link.url, undefined, true)
   }
 
   const showPreview = (link: ProfileLink) => {
@@ -203,10 +201,11 @@ function ProfileLinksRow({
             link={link}
             did={profile.did}
             arrow
+            opensLink
             hint={l`Opens ${getLinkHost(link.url)} outside Bluesky`}
             onPress={() => {
               playTapHaptic()
-              open(link)
+              logClick(link)
             }}
             onLongPress={
               IS_NATIVE
@@ -262,7 +261,15 @@ function ProfileLinksRow({
           <LinkPreviewSheet
             control={previewControl}
             link={activeLink}
-            onOpen={open}
+            onOpen={link => {
+              logClick(link)
+              /*
+               * The sheet closes before this runs, so unlike the pills it
+               * can't be a Link. Through the redirect service, so Safelink
+               * rules apply.
+               */
+              openLink(link.url, undefined, true)
+            }}
             onReport={
               // nothing to report on your own profile
               !isOwnProfile && activeLink?.uri && activeLink.cid
