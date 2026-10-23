@@ -73,7 +73,7 @@ describe('Atmosphere Explore response fixtures', () => {
     },
   )
 
-  it('preserves algorithmic and curated articles in server order', () => {
+  it('keeps algorithmic and curated articles and recommendation metadata', () => {
     const items = [...fixtureData.articles.items]
       .reverse()
       .map((item, index) => ({
@@ -86,9 +86,10 @@ describe('Atmosphere Explore response fixtures', () => {
     })
 
     expect(data.articles.recIdStr).toBe('18446744073709551615')
-    expect(getAtmosphereArticles(data).map(article => article.href)).toEqual(
-      items.map(item => item.view.uri),
-    )
+    expect(getAtmosphereArticles(data).map(article => article.href)).toEqual([
+      'https://example.com/first-article',
+      'https://example.com/second-article',
+    ])
     expect(data.articles.items.map(item => item.featured)).toEqual([
       false,
       true,
@@ -149,7 +150,87 @@ describe('Atmosphere Explore response fixtures', () => {
     ).toEqual([])
   })
 
-  it('maps populated card fields in response order', () => {
+  it.each(['articles', 'publications'] as const)(
+    'sorts %s by description length without mutating the response',
+    section => {
+      const item = fixtureData[section].items[0]
+      const descriptions = [
+        '',
+        'Short',
+        ' \n\t '.repeat(10),
+        'The longest description in this list.',
+        'Other',
+        '  Tiny  ',
+        '',
+      ]
+      const data = parseData({
+        ...emptyData,
+        [section]: {
+          recIdStr: '42',
+          items: descriptions.map((description, index) => ({
+            ...item,
+            featured: index !== 3,
+            view: {
+              ...item.view,
+              uri: `https://example.com/${index}`,
+              description,
+            },
+          })),
+        },
+      })
+      const before = JSON.stringify(data)
+      Object.freeze(data[section].items)
+
+      const cards =
+        section === 'articles'
+          ? getAtmosphereArticles(data)
+          : getAtmospherePublications(data)
+
+      expect(cards.map(card => card.id)).toEqual(
+        [3, 1, 4, 5, 0, 2, 6].map(index => `https://example.com/${index}`),
+      )
+      expect(JSON.stringify(data)).toBe(before)
+      expect(data[section].recIdStr).toBe('42')
+    },
+  )
+
+  it('sorts articles with images first, then by description length', () => {
+    const item = fixtureData.articles.items[0]
+    const entries = [
+      {description: 'The longest description. '.repeat(10)},
+      {description: 'Short', image: 'https://example.com/short.jpg'},
+      {description: '', image: 'https://example.com/empty.jpg'},
+      {
+        description: 'An image article with a longer description',
+        image: 'https://example.com/long.jpg',
+      },
+      {description: 'Tiny'},
+      {description: 'Medium text', image: 'https://example.com/medium.jpg'},
+    ]
+    const data = parseData({
+      ...emptyData,
+      articles: {
+        items: entries.map(({description, image}, index) => ({
+          ...item,
+          view: {
+            ...item.view,
+            uri: `https://example.com/${index}`,
+            description,
+            image,
+          },
+        })),
+      },
+    })
+    const before = JSON.stringify(data)
+    Object.freeze(data.articles.items)
+
+    expect(getAtmosphereArticles(data).map(article => article.id)).toEqual(
+      [3, 5, 1, 2, 0, 4].map(index => `https://example.com/${index}`),
+    )
+    expect(JSON.stringify(data)).toBe(before)
+  })
+
+  it('maps populated card fields and prioritizes article images', () => {
     const articles = getAtmosphereArticles(fixtureData)
     expect(
       articles.map(({title, publisher, description}) => ({
@@ -223,7 +304,7 @@ describe('Atmosphere Explore response fixtures', () => {
       expect(getAtmospherePublications(emptyData)).toEqual([])
     })
 
-    it('maps every publication in response order, regardless of featured', () => {
+    it('keeps response order for equal-length descriptions, regardless of featured', () => {
       const data = withPublications([
         {featured: false, view: {...publicationView, uri: 'https://a.test/'}},
         {featured: true, view: {...publicationView, uri: 'https://b.test/'}},

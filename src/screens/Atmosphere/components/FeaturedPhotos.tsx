@@ -7,7 +7,7 @@ import {ExploreGallery} from './ExploreGallery'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
 import {PhotoCard} from './PhotoCard'
 
-const CARD_WIDTH = 160
+const CARD_WIDTH = 225
 
 export function FeaturedPhotos({photos}: {photos: AtmospherePhotoCardData[]}) {
   const {t: l} = useLingui()

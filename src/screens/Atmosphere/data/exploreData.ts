@@ -94,15 +94,22 @@ function isGalleryImage(item: unknown): item is AtmosphereViewGalleryImage {
 export function getAtmosphereArticles(
   data: AtmosphereData,
 ): AtmosphereArticleCardData[] {
-  return data.articles.items.map(({view: article}) => ({
-    id: article.uri,
-    href: article.uri,
-    title: article.title.trim(),
-    description: article.description || undefined,
-    image: article.image,
-    publisher: article.publisher?.title,
-    publisherAvatar: getProfile(article.associatedProfiles)?.avatar,
-  }))
+  return data.articles.items
+    .map(({view: article}) => ({
+      id: article.uri,
+      href: article.uri,
+      title: article.title.trim(),
+      description: article.description || undefined,
+      image: article.image,
+      publisher: article.publisher?.title,
+      publisherAvatar: getProfile(article.associatedProfiles)?.avatar,
+    }))
+    .sort(
+      (a, b) =>
+        Number(Boolean(b.image)) - Number(Boolean(a.image)) ||
+        (b.description?.trim().length ?? 0) -
+          (a.description?.trim().length ?? 0),
+    )
 }
 
 function toColorRgb(
@@ -119,33 +126,38 @@ function toColorRgb(
 export function getAtmospherePublications(
   data: AtmosphereData,
 ): AtmospherePublicationCardData[] {
-  return data.publications.items.map(({view: publication}) => ({
-    id: publication.uri,
-    title: publication.title,
-    view: {
-      uri: publication.uri,
+  return data.publications.items
+    .map(({view: publication}) => ({
+      id: publication.uri,
       title: publication.title,
-      description: publication.description,
-      thumb: publication.image,
-      createdAt: publication.createdAt,
-      updatedAt: publication.updatedAt,
-      labels: publication.labels,
-      associatedRefs: publication.associatedRefs,
-      associatedProfiles: publication.associatedProfiles,
-      source: {
+      view: {
         uri: publication.uri,
         title: publication.title,
         description: publication.description,
-        icon: publication.logo,
-        theme: publication.theme && {
-          backgroundRGB: toColorRgb(publication.theme.background),
-          foregroundRGB: toColorRgb(publication.theme.foreground),
-          accentRGB: toColorRgb(publication.theme.accent),
-          accentForegroundRGB: toColorRgb(publication.theme.accentForeground),
+        thumb: publication.image,
+        createdAt: publication.createdAt,
+        updatedAt: publication.updatedAt,
+        labels: publication.labels,
+        associatedRefs: publication.associatedRefs,
+        associatedProfiles: publication.associatedProfiles,
+        source: {
+          uri: publication.uri,
+          title: publication.title,
+          description: publication.description,
+          icon: publication.logo,
+          theme: publication.theme && {
+            backgroundRGB: toColorRgb(publication.theme.background),
+            foregroundRGB: toColorRgb(publication.theme.foreground),
+            accentRGB: toColorRgb(publication.theme.accent),
+            accentForegroundRGB: toColorRgb(publication.theme.accentForeground),
+          },
         },
       },
-    },
-  }))
+    }))
+    .sort(
+      (a, b) =>
+        b.view.description.trim().length - a.view.description.trim().length,
+    )
 }
 
 export function getAtmosphereApps(
