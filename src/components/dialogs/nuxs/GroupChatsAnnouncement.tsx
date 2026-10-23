@@ -79,7 +79,6 @@ export function GroupChatsAnnouncement() {
         navigation.navigate('Messages', {pushToNewGroupChat: true})
       } else {
         // On native, Messages is nested inside MessagesTab.
-        // @ts-expect-error nested navigators aren't typed -sfn
         navigation.navigate('MessagesTab', {
           screen: 'Messages',
           params: {pushToNewGroupChat: true},

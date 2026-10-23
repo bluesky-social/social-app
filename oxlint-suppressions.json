@@ -656,11 +656,6 @@
       "count": 1
     }
   },
-  "src/lib/routes/types.ts": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/lib/sharing.ts": {
     "typescript/no-floating-promises": {
       "count": 1
