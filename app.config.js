@@ -406,6 +406,7 @@ module.exports = function (_config) {
         './plugins/withAndroidNoJitpackPlugin.js',
         './plugins/withAndroidPreparedTextLayoutPlugin.js',
         './plugins/withAndroidComposeVersion.js',
+        './plugins/withIOSWindowingControlStyle.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
         [
