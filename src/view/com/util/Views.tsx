@@ -3,13 +3,10 @@ import {StyleSheet, View, type ViewProps} from 'react-native'
 import Animated from 'react-native-reanimated'
 
 import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
-import {useBreakpoints, useLayoutBreakpoints, useTheme} from '#/alf'
+import {useBreakpoints, useTheme} from '#/alf'
 import {shouldCenterNativeTabletContent} from '#/alf/breakpoints.shared'
 import {useDialogContext} from '#/components/Dialog/context'
-import {
-  CENTER_COLUMN_OFFSET,
-  CENTER_COLUMN_WIDTH,
-} from '#/components/Layout/const'
+import {CENTER_COLUMN_WIDTH} from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 
 const CENTERED_VIEW_OFFSET_CONTEXT = {isWithinOffsetView: true}
@@ -41,7 +38,6 @@ export const CenteredView = forwardRef<
   const {style, sideBorders, topBorder, ...rest} = props
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const {centerColumnOffset} = useLayoutBreakpoints()
   const {isWithinDialog} = useDialogContext()
   const {isWithinSplitView} = useIsWithinSplitView()
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
@@ -61,9 +57,6 @@ export const CenteredView = forwardRef<
             width: '100%',
             maxWidth: CENTER_COLUMN_WIDTH,
             alignSelf: 'center',
-            transform: [
-              {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
-            ],
           },
           centerOnTablet &&
             sideBorders && [
