@@ -1571,7 +1571,7 @@ export type Events = {
    * A link couldn't be added, e.g. because its site is blocked.
    */
   'profile:links:rejected': {
-    reason: 'blocked' | 'safelink' | 'shortener' | 'insecure'
+    reason: 'safelink' | 'shortener' | 'insecure'
     /**
      * Left out for Safelink blocks, which can be sensitive sites. The other
      * reasons come from public lists in the app.

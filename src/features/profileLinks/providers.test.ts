@@ -3,7 +3,6 @@ import {describe, expect, it} from '@jest/globals'
 import {
   getLinkHost,
   getSupportProvider,
-  isBlockedProfileLink,
   isInsecureLink,
   isShortenerLink,
   normalizeProfileLinkUrl,
@@ -102,31 +101,30 @@ describe('getLinkHost', () => {
   })
 })
 
-describe('isBlockedProfileLink', () => {
-  it('blocks listed domains and their subdomains', () => {
-    expect(isBlockedProfileLink('https://onlyfans.com/kat')).toBe(true)
-    expect(isBlockedProfileLink('https://www.fansly.com/kat')).toBe(true)
-    expect(isBlockedProfileLink('https://videy.at/v/abc')).toBe(true)
-  })
-
-  it('does not block lookalikes or other sites', () => {
-    expect(isBlockedProfileLink('https://notonlyfans.com/kat')).toBe(false)
-    expect(isBlockedProfileLink('https://ko-fi.com/kat')).toBe(false)
-  })
-})
-
 describe('isShortenerLink', () => {
   it('flags general-purpose shorteners and their subdomains', () => {
     expect(isShortenerLink('https://bit.ly/abc')).toBe(true)
     expect(isShortenerLink('https://www.tinyurl.com/abc')).toBe(true)
     expect(isShortenerLink('https://x.gd/abc')).toBe(true)
     expect(isShortenerLink('https://shorten.world/abc')).toBe(true)
+    expect(isShortenerLink('https://videy.at/v/abc')).toBe(true)
   })
 
   it('allows brand short links and lookalikes', () => {
     expect(isShortenerLink('https://youtu.be/abc')).toBe(false)
     expect(isShortenerLink('https://amzn.to/abc')).toBe(false)
     expect(isShortenerLink('https://notbit.ly/abc')).toBe(false)
+  })
+})
+
+describe('other sites', () => {
+  it('can be added as regular links', () => {
+    for (const input of ['onlyfans.com/kat', 'fansly.com/kat']) {
+      const result = validateLinkInput(input)
+      expect(result.url).toBe(`https://${input}`)
+      expect(result.isShortener).toBe(false)
+      expect(result.provider).toBe(undefined)
+    }
   })
 })
 
@@ -143,11 +141,10 @@ describe('validateLinkInput', () => {
     expect(result.url).toBe('https://ko-fi.com/kat')
     expect(result.provider?.name).toBe('Ko-fi')
     expect(result.isEmpty).toBe(false)
-    expect(result.isBlocked).toBe(false)
+    expect(result.isShortener).toBe(false)
   })
 
-  it('flags blocked sites and empty input', () => {
-    expect(validateLinkInput('onlyfans.com/kat').isBlocked).toBe(true)
+  it('flags short links and insecure links', () => {
     expect(validateLinkInput('bit.ly/kat').isShortener).toBe(true)
     expect(validateLinkInput('http://example.com').isInsecure).toBe(true)
     expect(validateLinkInput('example.com').isInsecure).toBe(false)
