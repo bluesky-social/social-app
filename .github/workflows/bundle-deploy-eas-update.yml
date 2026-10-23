@@ -247,12 +247,14 @@ jobs:
       # The embedded bundles of the target builds, saved by the native build
       # workflows. Each is its platform's Hermes delta base in the export, so
       # the update diffs small against what most clients are running. A
-      # missing one only means a normal compile. TODO: pass these to
-      # `denis publish --embedded-base` too, once DENIS_RELEASE_TAG has it.
+      # missing one, or a fetch that fails outright, only means a normal
+      # compile. TODO: pass these to `denis publish --embedded-base` too, once
+      # DENIS_RELEASE_TAG has it.
       - name: ⬇️ Fetch iOS embedded bundle
         id: embedded-ios
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
           !steps.version.outputs.version-changed }}
+        continue-on-error: true
         uses: $/.github/actions/fetch-embedded-bundle
         with:
           platform: ios
@@ -263,6 +265,7 @@ jobs:
         id: embedded-android
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
           !steps.version.outputs.version-changed }}
+        continue-on-error: true
         uses: $/.github/actions/fetch-embedded-bundle
         with:
           platform: android
