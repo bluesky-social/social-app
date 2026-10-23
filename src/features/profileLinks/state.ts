@@ -15,7 +15,6 @@ import {isRecordNotFoundError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
-import {useProfileUpdateMutation} from '#/state/queries/profile'
 import {createQueryKey} from '#/state/queries/util'
 import {usePdsClient} from '#/state/session'
 import {useAgeAssurance} from '#/ageAssurance'
@@ -201,37 +200,6 @@ export function useSetOwnProfileLinksCache() {
       links.map((link, i) => ({...link, uri: refs[i].uri, cid: refs[i].cid})),
     )
   }
-}
-
-/**
- * Saves the owner's links, for edits made outside Edit Profile (tapping a link
- * on your own profile).
- */
-export function useSaveProfileLinksMutation() {
-  const {mutateAsync: updateProfile, isPending} = useProfileUpdateMutation()
-  const writeProfileLinks = useWriteProfileLinks()
-  const setOwnProfileLinksCache = useSetOwnProfileLinksCache()
-  const save = async (
-    profile: app.bsky.actor.defs.ProfileViewDetailed,
-    links: ProfileLink[],
-    existing: ProfileLink[],
-  ) => {
-    const {refs, deleteRemoved} = await writeProfileLinks(
-      profile.did,
-      links,
-      existing,
-    )
-    await updateProfile({
-      profile,
-      updates: record => ({...record, links: refs.length ? refs : undefined}),
-      checkCommitted: fresh =>
-        (fresh?.links ?? []).map(link => link.cid).join() ===
-        refs.map(ref => ref.cid).join(),
-    })
-    setOwnProfileLinksCache(profile.did, links, refs)
-    await deleteRemoved()
-  }
-  return {save, isPending}
 }
 
 const FAVICON_TIMEOUT = 8e3

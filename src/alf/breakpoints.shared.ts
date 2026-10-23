@@ -1,5 +1,7 @@
 import {createContext} from 'react'
 
+import {IS_WEB} from '#/env'
+
 export type Breakpoint = 'gtPhone' | 'gtMobile' | 'gtTablet'
 
 export const BREAKPOINTS = {
@@ -44,6 +46,9 @@ export function getLayoutBreakpoints(width: number) {
   }
 }
 
+/**
+ * Always false on web, where `Layout.Center` centers and offsets the column.
+ */
 export function shouldCenterNativeTabletContent({
   gtMobile,
   isWithinDialog,
@@ -58,6 +63,7 @@ export function shouldCenterNativeTabletContent({
   disabled?: boolean
 }) {
   return (
+    !IS_WEB &&
     gtMobile &&
     !isWithinDialog &&
     !isWithinSplitView &&

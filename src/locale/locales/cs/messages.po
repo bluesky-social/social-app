@@ -8,7 +8,7 @@ msgstr ""
 "Language: cs\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-22 08:29\n"
+"PO-Revision-Date: 2026-10-23 14:40\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
@@ -281,7 +281,7 @@ msgid "{0} following"
 msgstr "{0} sledujících"
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkFormDialog.tsx:362
+#: src/features/profileLinks/components/LinkFormDialog.tsx:348
 msgid "{0} is a recognized support link. It gets the green support button."
 msgstr "{0} je rozpoznaný odkaz na podporu. Získá zelené tlačítko Podpořit."
 
@@ -337,7 +337,7 @@ msgid "{0} of {1}"
 msgstr "{0} z {1}"
 
 #. placeholder {0}: title.length
-#: src/features/profileLinks/components/LinkFormDialog.tsx:391
+#: src/features/profileLinks/components/LinkFormDialog.tsx:377
 msgid "{0} out of {MAX_TITLE_LENGTH} characters"
 msgstr "{0} z {MAX_TITLE_LENGTH} znaků"
 
@@ -535,7 +535,7 @@ msgstr "{count, plural, one {# žádost} few {# žádosti} many {# žádostí} o
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# nepřečtená položka} few {# nepřečtené položky} many {# nepřečtených položek} other {# nepřečtených položek}}"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:401
+#: src/features/profileLinks/components/ProfileLinks.tsx:346
 msgid "{count, plural, one {Show # more link} other {Show # more links}}"
 msgstr "{count, plural, one {Zobrazit # další odkaz} few {Zobrazit # další odkazy} many {Zobrazit # dalších odkazů} other {Zobrazit # dalších odkazů}}"
 
@@ -775,7 +775,7 @@ msgstr "Nemůžete posílat zprávy {handle}"
 
 #: src/components/moderation/BlockDialog.tsx:199
 msgid "{hiddenCount, plural, one {See # more} other {See # more}}"
-msgstr ""
+msgstr "{hiddenCount, plural, one {Zobrazit # další} few {Zobrazit # další} many {Zobrazit # dalších} other {Zobrazit # dalších}}"
 
 #: src/features/liveNow/utils.ts:40
 msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesString}}}"
@@ -1604,8 +1604,8 @@ msgstr "Přidat {displayName} do Startovacího balíčku"
 msgid "Add a content warning"
 msgstr "Přidat varování o obsahu"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:279
-#: src/features/profileLinks/components/LinkFormDialog.tsx:299
+#: src/features/profileLinks/components/LinkFormDialog.tsx:265
+#: src/features/profileLinks/components/LinkFormDialog.tsx:285
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:133
 msgid "Add a link"
 msgstr "Přidat odkaz"
@@ -1691,8 +1691,8 @@ msgstr "Přidat účastníky skupinové konverzace"
 msgid "Add image"
 msgstr "Přidat obrázek"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:412
-#: src/features/profileLinks/components/LinkFormDialog.tsx:431
+#: src/features/profileLinks/components/LinkFormDialog.tsx:398
+#: src/features/profileLinks/components/LinkFormDialog.tsx:417
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:149
 msgid "Add link"
 msgstr "Přidat odkaz"
@@ -3095,7 +3095,7 @@ msgstr "Je vyžadován přístup ke kameře"
 #: src/components/SendErrorReportDialog.tsx:102
 #: src/features/liveNow/components/GoLiveDialog.tsx:258
 #: src/features/liveNow/components/GoLiveDialog.tsx:264
-#: src/features/profileLinks/components/LinkFormDialog.tsx:281
+#: src/features/profileLinks/components/LinkFormDialog.tsx:267
 #: src/lib/media/picker.tsx:38
 #: src/screens/Deactivated.tsx:154
 #: src/screens/Messages/components/InviteLinkDialog.tsx:498
@@ -3520,7 +3520,7 @@ msgstr "Vymazat"
 #: src/screens/Search/components/SearchHistory.tsx:150
 msgctxt "action"
 msgid "Clear"
-msgstr ""
+msgstr "Vymazat"
 
 #: src/screens/Search/components/SearchHistory.tsx:78
 msgctxt "action"
@@ -3675,8 +3675,8 @@ msgstr "Klikněte pro opakování neúspěšné zprávy"
 msgid "Close"
 msgstr "Zavřít"
 
-#: src/components/Dialog/index.web.tsx:143
-#: src/components/Dialog/index.web.tsx:357
+#: src/components/Dialog/index.web.tsx:155
+#: src/components/Dialog/index.web.tsx:372
 msgid "Close active dialog"
 msgstr "Zavřít aktivní dialogové okno"
 
@@ -3841,7 +3841,7 @@ msgstr "Nastaveno v <0>nastavení moderování</0>."
 msgid "Confirm"
 msgstr "Potvrdit"
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:77
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:81
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:171
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:250
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
@@ -3969,7 +3969,7 @@ msgstr "Varování o obsahu"
 msgid "Content warnings"
 msgstr "Varování o obsahu"
 
-#: src/components/Menu/index.web.tsx:88
+#: src/components/Menu/index.web.tsx:89
 msgid "Context menu backdrop, click to close the menu."
 msgstr "Pozadí kontextové nabídky, kliknutím nabídku zavřete."
 
@@ -4286,10 +4286,6 @@ msgstr "Nepodařilo se načíst další účty, zkuste to znovu"
 #: src/features/followingV2/home/GapRow.tsx:83
 msgid "Couldn’t load more posts. Try again"
 msgstr "Nepodařilo se načíst další příspěvky. Zkuste to znovu"
-
-#: src/features/profileLinks/components/ProfileLinks.tsx:175
-msgid "Couldn’t save your links. Please try again."
-msgstr "Nepodařilo se uložit vaše odkazy. Zkuste to prosím znovu."
 
 #: src/components/Gallery/Storybook.tsx:339
 msgid "Counter"
@@ -5050,7 +5046,7 @@ msgstr "Např. umělecké akty."
 msgid "e.g. Great Posters"
 msgstr "např. Skvělí přispěvatelé"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:380
+#: src/features/profileLinks/components/LinkFormDialog.tsx:366
 msgid "e.g. Portfolio"
 msgstr "např. Portfolio"
 
@@ -5134,9 +5130,8 @@ msgctxt "button"
 msgid "Edit invite link"
 msgstr "Upravit odkaz na pozvánku"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:279
-#: src/features/profileLinks/components/LinkFormDialog.tsx:299
-#: src/features/profileLinks/components/ProfileLinks.tsx:193
+#: src/features/profileLinks/components/LinkFormDialog.tsx:265
+#: src/features/profileLinks/components/LinkFormDialog.tsx:285
 msgid "Edit link"
 msgstr "Upravit odkaz"
 
@@ -8129,8 +8124,8 @@ msgstr "Omezený profil"
 msgid "Linear"
 msgstr "Lineární"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:318
-#: src/features/profileLinks/components/LinkFormDialog.tsx:324
+#: src/features/profileLinks/components/LinkFormDialog.tsx:304
+#: src/features/profileLinks/components/LinkFormDialog.tsx:310
 msgid "Link"
 msgstr "Odkaz"
 
@@ -8154,7 +8149,7 @@ msgstr "Odkaz na {domain}"
 msgid "Links"
 msgstr "Odkazy"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:302
+#: src/features/profileLinks/components/LinkFormDialog.tsx:288
 msgid "Links show as buttons under your bio. Links to support sites like Ko-fi or Patreon show as a green button. <0>View all support sites</0>"
 msgstr "Odkazy se zobrazují jako tlačítka pod vaším bio. Odkazy na stránky pro podporu, jako jsou Ko-fi nebo Patreon, se zobrazují jako zelené tlačítko. <0>Zobrazit všechny stránky pro podporu</0>"
 
@@ -9821,7 +9816,7 @@ msgstr "Pouze příspěvky s videem"
 msgid "Only replies"
 msgstr "Pouze odpovědi"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:266
+#: src/features/profileLinks/components/LinkFormDialog.tsx:252
 msgid "Only secure links can be added. Use a link that starts with https://."
 msgstr "Lze přidat pouze zabezpečené odkazy. Použijte odkaz začínající na https://."
 
@@ -9847,7 +9842,7 @@ msgid "Oops!"
 msgstr "Jejda!"
 
 #. placeholder {0}: linkLabel(link)
-#: src/features/profileLinks/components/LinkPill.tsx:80
+#: src/features/profileLinks/components/LinkPill.tsx:87
 msgid "Open {0}"
 msgstr "Otevřít {0}"
 
@@ -10017,7 +10012,7 @@ msgstr "Otevřít tuto skupinovou konverzaci"
 #. placeholder {0}: getLinkHost(link.url)
 #. placeholder {0}: link.url
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:85
-#: src/features/profileLinks/components/ProfileLinks.tsx:206
+#: src/features/profileLinks/components/ProfileLinks.tsx:168
 msgid "Opens {0} outside Bluesky"
 msgstr "Otevře {0} mimo Bluesky"
 
@@ -11399,8 +11394,8 @@ msgstr "Odebrat poslední"
 msgid "Remove last card"
 msgstr "Odebrat poslední kartu"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:439
-#: src/features/profileLinks/components/LinkFormDialog.tsx:444
+#: src/features/profileLinks/components/LinkFormDialog.tsx:425
+#: src/features/profileLinks/components/LinkFormDialog.tsx:430
 msgid "Remove link"
 msgstr "Odebrat odkaz"
 
@@ -12094,8 +12089,8 @@ msgstr "Smutné GIFy"
 msgid "Save"
 msgstr "Uložit"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:409
-#: src/features/profileLinks/components/LinkFormDialog.tsx:427
+#: src/features/profileLinks/components/LinkFormDialog.tsx:395
+#: src/features/profileLinks/components/LinkFormDialog.tsx:413
 msgid "Save anyway"
 msgstr "Přesto uložit"
 
@@ -12105,8 +12100,8 @@ msgstr "Uložit datum narození"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:195
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:204
-#: src/features/profileLinks/components/LinkFormDialog.tsx:411
-#: src/features/profileLinks/components/LinkFormDialog.tsx:429
+#: src/features/profileLinks/components/LinkFormDialog.tsx:397
+#: src/features/profileLinks/components/LinkFormDialog.tsx:415
 #: src/screens/SavedFeeds.tsx:120
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
@@ -12914,7 +12909,7 @@ msgstr "Sdílením vašeho věkového rozmezí odhalíte pouze rozmezí spojené
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr "Sdílení věkového rozmezí odhalí pouze rozmezí spojené s vaším účtem Google – například že je vám alespoň 18 let. <0>Vaše přesné datum narození ani věk nejsou nikdy sdíleny</0> a tato data nikdy neopouštějí toto zařízení. Umožňují tedy přístup pouze na tomto zařízení. Případně <1>můžete využít našeho důvěryhodného partnera KWS</1> a dokončit ověření, které vám umožní přístup na všech platformách."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:264
+#: src/features/profileLinks/components/LinkFormDialog.tsx:250
 msgid "Short links can’t be added. Use the full link instead."
 msgstr "Krátké odkazy nelze přidat. Použijte místo toho celý odkaz."
 
@@ -12969,7 +12964,7 @@ msgstr "Zobrazit aktualizace skupinové konverzace"
 msgid "Show less like this"
 msgstr "Zobrazovat méně podobného obsahu"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:221
+#: src/features/profileLinks/components/ProfileLinks.tsx:183
 msgid "Show link details"
 msgstr "Zobrazit podrobnosti odkazu"
 
@@ -13675,12 +13670,12 @@ msgid "Support for this feature in your country has not been enabled yet! Please
 msgstr "Podpora této funkce ve vaší zemi zatím nebyla povolena! Zkuste to prosím později."
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkFormDialog.tsx:380
+#: src/features/profileLinks/components/LinkFormDialog.tsx:366
 msgid "Support on {0}"
 msgstr "Podpořit na {0}"
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkPill.tsx:109
+#: src/features/profileLinks/components/LinkPill.tsx:118
 msgctxt "Creator support button, e.g. Support on Ko-fi"
 msgid "Support on {0}"
 msgstr "Podpořit na {0}"
@@ -13949,7 +13944,7 @@ msgstr "Děkujeme! Vše je nastaveno."
 msgid "That contains the following:"
 msgstr "Který obsahuje následující:"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:260
+#: src/features/profileLinks/components/LinkFormDialog.tsx:246
 msgid "That doesn’t look like a link. Try something like yoursite.com."
 msgstr "Toto nevypadá jako odkaz. Zkuste něco jako vasestranka.cz."
 
@@ -14539,7 +14534,7 @@ msgstr "Tento štítek byl použit na celý uživatelský účet a zobrazí se u
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr "Tento labeler neuvedl, jaké štítky vydává, a nemusí být aktivní."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:262
+#: src/features/profileLinks/components/LinkFormDialog.tsx:248
 msgid "This link can’t be added. It goes to a site that’s blocked on Bluesky."
 msgstr "Tento odkaz nelze přidat. Vede na stránku, která je na Bluesky blokována."
 
@@ -14761,7 +14756,7 @@ msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr "Zbývající čas: {0, plural, one {# sekunda} few {# sekundy} many {# sekund} other {# sekund}}"
 
 #: src/components/SendErrorReportDialog.tsx:68
-#: src/features/profileLinks/components/LinkFormDialog.tsx:378
+#: src/features/profileLinks/components/LinkFormDialog.tsx:364
 msgid "Title"
 msgstr "Název"
 
@@ -14769,7 +14764,7 @@ msgstr "Název"
 msgid "Title (100 characters max)"
 msgstr "Název (max. 100 znaků)"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:373
+#: src/features/profileLinks/components/LinkFormDialog.tsx:359
 msgid "Title (optional)"
 msgstr "Název (volitelné)"
 
@@ -15782,7 +15777,7 @@ msgstr "Zobrazit všechny reposty, které se uživatek {name} líbí"
 msgid "View all reposts {name} reposted"
 msgstr "Zobrazit všechny reposty, které {name} repostoval/a"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:306
+#: src/features/profileLinks/components/LinkFormDialog.tsx:292
 msgid "View all support sites"
 msgstr "Zobrazit všechny podporované weby"
 
@@ -16026,7 +16021,7 @@ msgstr "Nastavení této konverzace se nám nepodařilo načíst"
 msgid "We couldn't load your account settings. Check your internet connection and try again."
 msgstr "Nepodařilo se nám načíst nastavení vašeho účtu. Zkontrolujte připojení k internetu a zkuste to znovu."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:270
+#: src/features/profileLinks/components/LinkFormDialog.tsx:256
 msgid "We couldn’t reach this link. Check it, or save anyway."
 msgstr "Tento odkaz se nám nepodařilo načíst. Zkontrolujte ho, nebo ho přesto uložte."
 
@@ -16976,7 +16971,7 @@ msgstr "Jste ve frontě"
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
 msgstr "Jste přihlášeni pomocí App Password. Pro pokračování v deaktivaci účtu se prosím přihlaste svým hlavním heslem."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:268
+#: src/features/profileLinks/components/LinkFormDialog.tsx:254
 msgid "You’ve already added this link."
 msgstr "Tento odkaz jste již přidali."
 

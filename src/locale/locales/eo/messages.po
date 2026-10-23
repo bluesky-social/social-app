@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-22 08:29\n"
+"PO-Revision-Date: 2026-10-23 14:40\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -281,7 +281,7 @@ msgid "{0} following"
 msgstr "{0} sekvataj"
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkFormDialog.tsx:362
+#: src/features/profileLinks/components/LinkFormDialog.tsx:348
 msgid "{0} is a recognized support link. It gets the green support button."
 msgstr ""
 
@@ -337,7 +337,7 @@ msgid "{0} of {1}"
 msgstr "{0} el {1}"
 
 #. placeholder {0}: title.length
-#: src/features/profileLinks/components/LinkFormDialog.tsx:391
+#: src/features/profileLinks/components/LinkFormDialog.tsx:377
 msgid "{0} out of {MAX_TITLE_LENGTH} characters"
 msgstr "{0} el {MAX_TITLE_LENGTH} signoj"
 
@@ -535,7 +535,7 @@ msgstr "{count, plural, one {# peto} other {# petoj}}"
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# nelegita elemento} other {# nelegitaj elementoj}}"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:401
+#: src/features/profileLinks/components/ProfileLinks.tsx:346
 msgid "{count, plural, one {Show # more link} other {Show # more links}}"
 msgstr "{count, plural, one {Montri # pli ligilon} other {Montri # pli ligilojn}}"
 
@@ -775,7 +775,7 @@ msgstr "{handle} nemesaĝeblas"
 
 #: src/components/moderation/BlockDialog.tsx:199
 msgid "{hiddenCount, plural, one {See # more} other {See # more}}"
-msgstr ""
+msgstr "{hiddenCount, plural, other {Vidi # pli}}"
 
 #: src/features/liveNow/utils.ts:40
 msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesString}}}"
@@ -1295,7 +1295,7 @@ msgstr ""
 
 #: src/components/Gallery/Storybook.tsx:188
 msgid "A kawaii scene"
-msgstr ""
+msgstr "Kawaii-a sceno"
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:78
@@ -1454,7 +1454,7 @@ msgstr "Konto"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:53
 msgid "Account {authorName}"
-msgstr ""
+msgstr "Konto {authorName}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:430
 #: src/screens/Messages/components/RequestButtons.tsx:104
@@ -1540,7 +1540,7 @@ msgstr "Konto ne plu sekvata"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:53
 msgid "Account unknown"
-msgstr ""
+msgstr "Konto nekonata"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:452
 #: src/view/com/profile/ProfileMenu.tsx:140
@@ -1562,7 +1562,7 @@ msgstr "Faris agon"
 #. placeholder {2}: nav.events
 #: src/components/Gallery/Storybook.tsx:576
 msgid "Active index {0} (from {1}), {2} user navigation events"
-msgstr ""
+msgstr "Aktiva indekso {0} (el {1}), {2} uzantaj navigaj eventoj"
 
 #: src/screens/Atmosphere.tsx:43
 #: src/screens/Notifications/index.tsx:110
@@ -1604,8 +1604,8 @@ msgstr "Aldoni {displayName} al startpako"
 msgid "Add a content warning"
 msgstr "Aldoni averton pri enhavo"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:279
-#: src/features/profileLinks/components/LinkFormDialog.tsx:299
+#: src/features/profileLinks/components/LinkFormDialog.tsx:265
+#: src/features/profileLinks/components/LinkFormDialog.tsx:285
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:133
 msgid "Add a link"
 msgstr "Aldoni ligilon"
@@ -1673,7 +1673,7 @@ msgstr "Aldoni aŭtomatigan etikedon al konto"
 
 #: src/components/Gallery/Storybook.tsx:456
 msgid "Add card"
-msgstr ""
+msgstr "Aldoni karton"
 
 #: src/components/dms/EmojiReactionPicker.web.tsx:31
 msgid "Add emoji reaction"
@@ -1691,8 +1691,8 @@ msgstr "Aldoni anojn al grupa babilejo"
 msgid "Add image"
 msgstr "Aldoni bildon"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:412
-#: src/features/profileLinks/components/LinkFormDialog.tsx:431
+#: src/features/profileLinks/components/LinkFormDialog.tsx:398
+#: src/features/profileLinks/components/LinkFormDialog.tsx:417
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:149
 msgid "Add link"
 msgstr "Aldoni ligilon"
@@ -2044,7 +2044,7 @@ msgstr "Retmesaĝo estis sendita al {0}. Ĝi enhavas konfirmkodon, kiun vi povas
 
 #: src/components/Gallery/Storybook.tsx:674
 msgid "An empty gallery takes up no space. A single item behaves like any other, without dragging or arrow key navigation to go anywhere."
-msgstr ""
+msgstr "Malplena galerio ne okupas spacon. Unuopa elemento kondutas kiel iu ajn alia, sen ŝov-demeto aŭ sagoklava navigado."
 
 #. Accessibility label for the dialog shown when the GIF picker hits an unexpected runtime error and falls back to its error boundary.
 #: src/components/dialogs/LanguageSelectDialog.tsx:344
@@ -2141,7 +2141,7 @@ msgstr "Invitilo ebligas al homoj la aliĝon al ĉi tiu grupa babilejo sen rekta
 
 #: src/components/dialogs/nuxs/IPadBetaHero/index.tsx:30
 msgid "An iPad Pro floating above the clouds, showing an illustration of people enjoying a sunny park in a futuristic city."
-msgstr ""
+msgstr "iPad Pro ŝvebanta super la nuboj, montranta ilustraĵon de homoj ĝuantaj sunan parkon en futurisma urbo."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:238
 msgid "An issue not included in these options"
@@ -2836,7 +2836,7 @@ msgstr "Bluesky"
 #. Description of a beta feature (iPad support)
 #: src/screens/Settings/BetaFeaturesSettings.tsx:79
 msgid "Bluesky adapts to your iPad’s screen in any orientation or window size."
-msgstr ""
+msgstr "Bluesky adaptas al ekrano de via iPad en ĉiu orientiĝo aŭ fenestra grando."
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:652
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
@@ -2887,7 +2887,7 @@ msgstr "Bluesky bezonas aliron al la kamerao por skani la QR-kodojn de aliaj pro
 
 #: src/components/dialogs/nuxs/IPadBetaAnnouncement.tsx:66
 msgid "Bluesky now makes full use of your iPad’s screen, in any orientation. It’s still in beta, so if something looks off, let us know in Settings → Beta features."
-msgstr ""
+msgstr "Bluesky nun plene uzas ekranon de via iPad, en ĉiu orientiĝo. Ĝi ankoraŭ estas en beta, do se io misaspektas konigu ĝin al ni en Agordoj → Beta-funkcioj."
 
 #: src/screens/Takendown.tsx:213
 msgid "Bluesky Social Terms of Service"
@@ -3095,7 +3095,7 @@ msgstr "Aliro al kamerao estas bezonata"
 #: src/components/SendErrorReportDialog.tsx:102
 #: src/features/liveNow/components/GoLiveDialog.tsx:258
 #: src/features/liveNow/components/GoLiveDialog.tsx:264
-#: src/features/profileLinks/components/LinkFormDialog.tsx:281
+#: src/features/profileLinks/components/LinkFormDialog.tsx:267
 #: src/lib/media/picker.tsx:38
 #: src/screens/Deactivated.tsx:154
 #: src/screens/Messages/components/InviteLinkDialog.tsx:498
@@ -3174,27 +3174,27 @@ msgstr "Subtekstoj kaj alternativa teksto"
 #: src/components/Gallery/Storybook.tsx:559
 #: src/components/Gallery/Storybook.tsx:564
 msgid "Card {0}"
-msgstr ""
+msgstr "Karto {0}"
 
 #: src/components/Gallery/Storybook.tsx:276
 msgid "Cards and images of different sizes"
-msgstr ""
+msgstr "Kartoj kaj bildoj de diversaj grandoj"
 
 #: src/components/Gallery/Storybook.tsx:640
 msgid "Cards in a constrained panel"
-msgstr ""
+msgstr "Kartoj en panelo kun limigita larĝo"
 
 #: src/components/Gallery/Storybook.tsx:268
 msgid "Cards of different widths and heights, an image, and a card wider than the gallery. The strip is as tall as the tallest card, and nothing is cropped or resized."
-msgstr ""
+msgstr "Kartoj de diversaj larĝoj kaj altoj, bildo kaj karto pli larĝa ol la galerio. La strio estas tiel alta kiel la plej alta karto kaj nenio estas stucita aŭ aligrandigita."
 
 #: src/components/Gallery/Storybook.tsx:657
 msgid "Cards that bleed to the container edges"
-msgstr ""
+msgstr "Kartoj kiuj etendiĝas ĝis la randoj de la ujo"
 
 #: src/components/Gallery/Storybook.tsx:545
 msgid "Cards that change"
-msgstr ""
+msgstr "Kartoj kiuj ŝanĝiĝas"
 
 #: src/components/Gallery/index.tsx:384
 msgid "carousel"
@@ -3290,7 +3290,7 @@ msgstr "Ŝanĝoj al la startpako ne estos reflektotaj en la listo post kreado. L
 
 #: src/components/Gallery/Storybook.tsx:446
 msgid "Changing content"
-msgstr ""
+msgstr "Enhava modifo"
 
 #: src/components/OTAChannelNotice.tsx:203
 #: src/components/OTAChannelNotice.tsx:207
@@ -3520,20 +3520,20 @@ msgstr "Viŝi"
 #: src/screens/Search/components/SearchHistory.tsx:150
 msgctxt "action"
 msgid "Clear"
-msgstr ""
+msgstr "Viŝi"
 
 #: src/screens/Search/components/SearchHistory.tsx:78
 msgctxt "action"
 msgid "Clear all"
-msgstr ""
+msgstr "Viŝi ĉiujn"
 
 #: src/screens/Search/components/SearchHistory.tsx:71
 msgid "Clear all recent searches"
-msgstr ""
+msgstr "Viŝi ĉiujn plej lastajn serĉojn"
 
 #: src/screens/Search/components/SearchHistory.tsx:147
 msgid "Clear all recent searches?"
-msgstr ""
+msgstr "Ĉu viŝi ĉiujn plej lastajn serĉojn?"
 
 #: src/screens/Settings/Settings.tsx:539
 msgid "Clear all storage data"
@@ -3675,8 +3675,8 @@ msgstr "Alklaku por reprovi sendi mesaĝon"
 msgid "Close"
 msgstr "Fermi"
 
-#: src/components/Dialog/index.web.tsx:143
-#: src/components/Dialog/index.web.tsx:357
+#: src/components/Dialog/index.web.tsx:155
+#: src/components/Dialog/index.web.tsx:372
 msgid "Close active dialog"
 msgstr "Fermi la aktivan dialogujon"
 
@@ -3841,7 +3841,7 @@ msgstr "Agordita en <0>agordoj de kontrolado</0>."
 msgid "Confirm"
 msgstr "Konfirmi"
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:77
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:81
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:171
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:250
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
@@ -3868,7 +3868,7 @@ msgstr "Konekta problemo"
 
 #: src/components/Gallery/Storybook.tsx:612
 msgid "Constrained and bleeding containers"
-msgstr ""
+msgstr "Ujoj kun limigita larĝo kaj ujoj kiuj etendiĝas ĝis la randoj"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:407
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:129
@@ -3969,7 +3969,7 @@ msgstr "Averto de enhavo"
 msgid "Content warnings"
 msgstr "Avertoj de enhavo"
 
-#: src/components/Menu/index.web.tsx:88
+#: src/components/Menu/index.web.tsx:89
 msgid "Context menu backdrop, click to close the menu."
 msgstr "Fono de kuntekstmenuo, alklaku por fermi la menuon."
 
@@ -4287,13 +4287,9 @@ msgstr "Ne eblis ŝargi pli da kontoj, bonvolu reprovi"
 msgid "Couldn’t load more posts. Try again"
 msgstr "Ne povis ŝargi pliajn afiŝojn. Reprovu"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:175
-msgid "Couldn’t save your links. Please try again."
-msgstr "Ne eblis konservi viajn ligilojn. Bonvolu reprovi."
-
 #: src/components/Gallery/Storybook.tsx:339
 msgid "Counter"
-msgstr ""
+msgstr "Nombrilo"
 
 #: src/components/InternationalPhoneCodeSelect.tsx:80
 msgid "Country code"
@@ -4301,7 +4297,7 @@ msgstr "Landkodo"
 
 #: src/components/Gallery/Storybook.tsx:372
 msgid "Counts how many times it was focused and pressed"
-msgstr ""
+msgstr "Nombras kiom da fojoj ĝi estis enfokusigita kaj premita"
 
 #. Advanced search: Example of a “none of these words” search. Paired with “cats dogs”.
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:268
@@ -5050,7 +5046,7 @@ msgstr "Ekz. artista nudeco."
 msgid "e.g. Great Posters"
 msgstr "ekz. Plej bonaj kontoj"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:380
+#: src/features/profileLinks/components/LinkFormDialog.tsx:366
 msgid "e.g. Portfolio"
 msgstr "ekz. Verka kolekto"
 
@@ -5134,9 +5130,8 @@ msgctxt "button"
 msgid "Edit invite link"
 msgstr "Redakti invitilon"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:279
-#: src/features/profileLinks/components/LinkFormDialog.tsx:299
-#: src/features/profileLinks/components/ProfileLinks.tsx:193
+#: src/features/profileLinks/components/LinkFormDialog.tsx:265
+#: src/features/profileLinks/components/LinkFormDialog.tsx:285
 msgid "Edit link"
 msgstr "Redakti ligilon"
 
@@ -5281,11 +5276,11 @@ msgstr "Enkorpigita videoludilo"
 
 #: src/components/Gallery/Storybook.tsx:672
 msgid "Empty and single"
-msgstr ""
+msgstr "Malplena kaj unuopa"
 
 #: src/components/Gallery/Storybook.tsx:681
 msgid "Empty gallery"
-msgstr ""
+msgstr "Malplena galerio"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:101
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:108
@@ -5358,11 +5353,11 @@ msgstr "Ŝaltita"
 
 #: src/components/Gallery/Storybook.tsx:571
 msgid "End"
-msgstr ""
+msgstr "Fino"
 
 #: src/components/Gallery/Storybook.tsx:570
 msgid "End card"
-msgstr ""
+msgstr "Fina karto"
 
 #: src/screens/Profile/Sections/Feed.tsx:135
 msgid "End of feed"
@@ -5833,7 +5828,7 @@ msgstr "Malsukcesis marki ĉiujn petojn kiel legitajn"
 
 #: src/state/queries/moderation-inbox.ts:346
 msgid "Failed to mark as read. Please try again."
-msgstr ""
+msgstr "Malsukcesis marki kiel legita(j)n. Bonvolu reprovi."
 
 #: src/screens/Messages/ConversationSettings/index.tsx:387
 msgid "Failed to mute group chat"
@@ -6242,7 +6237,7 @@ msgstr "Enfokusigi la kodujon"
 #: src/components/Gallery/Storybook.tsx:371
 #: src/components/Gallery/Storybook.tsx:393
 msgid "Focus target"
-msgstr ""
+msgstr "Enfokusigi celon"
 
 #: src/lib/hotkeys/index.tsx:73
 msgid "Focus the search field"
@@ -6250,7 +6245,7 @@ msgstr "Enfokusigi la serĉujon"
 
 #: src/components/Gallery/Storybook.tsx:398
 msgid "Focused {focusCount} times"
-msgstr ""
+msgstr "Enfokusigita {focusCount} fojojn"
 
 #. User is not following this account, click to follow
 #. User is not following this account, click to follow
@@ -6432,7 +6427,7 @@ msgstr "Preferoj de la fluo de sekvatoj"
 
 #: src/screens/Notifications/index.tsx:109
 msgid "Follows"
-msgstr ""
+msgstr "Abonas"
 
 #: src/components/Pills.tsx:215
 #: src/screens/Profile/Header/Handle.tsx:33
@@ -6531,15 +6526,15 @@ msgstr "De ĉi tiuj homoj"
 
 #: src/components/Gallery/Storybook.tsx:43
 msgid "Gallery"
-msgstr ""
+msgstr "Galerio"
 
 #: src/components/Gallery/Storybook.tsx:357
 msgid "Gallery text field"
-msgstr ""
+msgstr "Galeria tekstokampo"
 
 #: src/components/Gallery/Storybook.tsx:689
 msgid "Gallery with one item"
-msgstr ""
+msgstr "Galerio kun unu elemento"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:335
 msgid "Generate a Starter Pack"
@@ -7346,11 +7341,11 @@ msgstr "Bilda kaŝmemoro viŝita, {0} liberita(j)"
 
 #: src/components/Gallery/Storybook.tsx:151
 msgid "Image content"
-msgstr ""
+msgstr "Bilda enhavo"
 
 #: src/components/Gallery/Storybook.tsx:159
 msgid "Image frames in different shapes"
-msgstr ""
+msgstr "Bildaj kadroj en diversaj formoj"
 
 #. placeholder {0}: images.length
 #: src/components/images/Gallery/index.tsx:194
@@ -7423,7 +7418,7 @@ msgstr "Por provizi sperton taŭgan por via aĝo, ni bezonas ekscii vian naskiĝ
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:260
 msgid "in reply to <0>{subject}</0>: {previewNode}"
-msgstr ""
+msgstr "responde al <0>{subject}</0>: {previewNode}"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:173
 msgid "in reply to a blocked post"
@@ -7510,7 +7505,7 @@ msgstr "Malĝusta uzantnomo aŭ pasvorto"
 
 #: src/components/Gallery/Storybook.tsx:342
 msgid "Increment counter"
-msgstr ""
+msgstr "Alkrementa nombrilo"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:128
 msgid "Input new password"
@@ -7530,19 +7525,19 @@ msgstr "Agordoj pri interagado"
 
 #: src/components/Gallery/Storybook.tsx:327
 msgid "Interactive children"
-msgstr ""
+msgstr "Interagaj idoj"
 
 #: src/components/Gallery/Storybook.tsx:337
 msgid "Interactive items"
-msgstr ""
+msgstr "Interagaj elementoj"
 
 #: src/components/Gallery/Storybook.tsx:552
 msgid "Intro"
-msgstr ""
+msgstr "Enkonduko"
 
 #: src/components/Gallery/Storybook.tsx:551
 msgid "Intro card"
-msgstr ""
+msgstr "Enkonduka karto"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:33
 msgid "Introducing activity notifications"
@@ -7686,12 +7681,12 @@ msgstr "Invitoj sed personaj"
 #. Name for a beta feature
 #: src/screens/Settings/BetaFeaturesSettings.tsx:75
 msgid "iPad support"
-msgstr ""
+msgstr "Subteno de iPad"
 
 #: src/components/dialogs/nuxs/IPadBetaAnnouncement.tsx:36
 #: src/components/dialogs/nuxs/IPadBetaAnnouncement.tsx:57
 msgid "iPad support is here"
-msgstr ""
+msgstr "Subteno de iPad estas ĉi tie"
 
 #: src/components/contacts/components/InviteInfo.tsx:47
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
@@ -7824,7 +7819,7 @@ msgstr "Etikedoj sur via konto"
 
 #: src/components/Gallery/Storybook.tsx:167
 msgid "Landscape frame"
-msgstr ""
+msgstr "Horizontala kadro"
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:357
 msgid "Language"
@@ -8129,8 +8124,8 @@ msgstr "Limigita profilo"
 msgid "Linear"
 msgstr "Linie"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:318
-#: src/features/profileLinks/components/LinkFormDialog.tsx:324
+#: src/features/profileLinks/components/LinkFormDialog.tsx:304
+#: src/features/profileLinks/components/LinkFormDialog.tsx:310
 msgid "Link"
 msgstr "Ligilo"
 
@@ -8154,13 +8149,13 @@ msgstr "Ligilo al {domain}"
 msgid "Links"
 msgstr "Ligiloj"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:302
+#: src/features/profileLinks/components/LinkFormDialog.tsx:288
 msgid "Links show as buttons under your bio. Links to support sites like Ko-fi or Patreon show as a green button. <0>View all support sites</0>"
 msgstr ""
 
 #: src/features/profileLinks/components/SupportedSitesDialog.tsx:45
 msgid "Links to these sites show as a green support button."
-msgstr ""
+msgstr "Ligiloj al ĉi tiuj retejoj montras kiel verdajn \"Subtenu\"-butonojn."
 
 #: src/Navigation.tsx:300
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:44
@@ -8315,19 +8310,19 @@ msgstr "Tujelsenda ligilo"
 #. placeholder {0}: url.hostname
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:58
 msgid "Live link: “{0}”"
-msgstr ""
+msgstr "Tujelsenda ligilo \"{0}\""
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:53
 msgid "Live status"
-msgstr ""
+msgstr "Tujelsenda stato"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:38
 msgid "Livestream"
-msgstr ""
+msgstr "Tujelsendo"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:38
 msgid "Livestream by {authorName}"
-msgstr ""
+msgstr "Tujelsendo de {authorName}"
 
 #: src/screens/Search/Explore.tsx:84
 msgid "Load more"
@@ -8461,7 +8456,7 @@ msgstr "Faru ĝustigojn al retpoŝtaj agordoj por via konto"
 
 #: src/components/Gallery/Storybook.tsx:627
 msgid "Make narrow"
-msgstr ""
+msgstr "Mallarĝigi"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:310
 msgid "Make one for me"
@@ -8473,23 +8468,23 @@ msgstr "Certiĝu, ke vi volas iri tien!"
 
 #: src/components/Gallery/Storybook.tsx:501
 msgid "Make the first card taller or shorter"
-msgstr ""
+msgstr "Altigi aŭ malaltigi la unuan karton"
 
 #: src/components/Gallery/Storybook.tsx:511
 msgid "Make the first card wider or narrower"
-msgstr ""
+msgstr "Larĝigi aŭ mallarĝigi la unuan karton"
 
 #: src/components/Gallery/Storybook.tsx:621
 msgid "Make the panel narrow"
-msgstr ""
+msgstr "Mallarĝigi panelon"
 
 #: src/components/Gallery/Storybook.tsx:621
 msgid "Make the panel wide"
-msgstr ""
+msgstr "Larĝigi panelon"
 
 #: src/components/Gallery/Storybook.tsx:627
 msgid "Make wide"
-msgstr ""
+msgstr "Larĝigi"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:62
 #: src/screens/Settings/ContentAndMediaSettings.tsx:65
@@ -8587,11 +8582,11 @@ msgstr "Aŭdvidaĵoj, kiuj povas esti maltrankviligaj aŭ nekonvenaj por kelkaj 
 
 #: src/components/Gallery/Storybook.tsx:284
 msgid "Medium"
-msgstr ""
+msgstr "Mezgranda"
 
 #: src/components/Gallery/Storybook.tsx:283
 msgid "Medium card"
-msgstr ""
+msgstr "Mezgranda karto"
 
 #: src/components/moderation/BlockDialog.tsx:425
 msgid "Member removed from group chat."
@@ -9716,7 +9711,7 @@ msgstr "Restarigi la lernilon"
 
 #: src/components/Gallery/Storybook.tsx:590
 msgid "One"
-msgstr ""
+msgstr "Unu"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:108
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:124
@@ -9754,7 +9749,7 @@ msgstr "Al unu aŭ pli da videaĵoj mankas alternativa teksto."
 
 #: src/components/Gallery/Storybook.tsx:692
 msgid "Only"
-msgstr ""
+msgstr "Sola"
 
 #. placeholder {0}: settings.map((rule, i) => ( <Fragment key={`rule-${i}`}> <Rule rule={rule} post={post} lists={post.threadgate!.lists} /> <Separator i={i} length={settings.length} /> </Fragment> ))
 #: src/components/WhoCanReply.tsx:265
@@ -9779,7 +9774,7 @@ msgstr "Nur administrantoj povas malakcepti aliĝpetojn."
 
 #: src/components/Gallery/Storybook.tsx:691
 msgid "Only card"
-msgstr ""
+msgstr "Sola karto"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:154
 msgid "Only followers can join this group chat."
@@ -9821,7 +9816,7 @@ msgstr "Nur afiŝoj kun videaĵoj"
 msgid "Only replies"
 msgstr "Nur respondoj"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:266
+#: src/features/profileLinks/components/LinkFormDialog.tsx:252
 msgid "Only secure links can be added. Use a link that starts with https://."
 msgstr "Nur sekuraj ligiloj povas esti aldonitaj. Uzu ligilon komencantan per https://."
 
@@ -9847,7 +9842,7 @@ msgid "Oops!"
 msgstr "Ups!"
 
 #. placeholder {0}: linkLabel(link)
-#: src/features/profileLinks/components/LinkPill.tsx:80
+#: src/features/profileLinks/components/LinkPill.tsx:87
 msgid "Open {0}"
 msgstr "Malfermi {0}"
 
@@ -10017,7 +10012,7 @@ msgstr "Malfermi ĉi tiun grupan babilejon"
 #. placeholder {0}: getLinkHost(link.url)
 #. placeholder {0}: link.url
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:85
-#: src/features/profileLinks/components/ProfileLinks.tsx:206
+#: src/features/profileLinks/components/ProfileLinks.tsx:168
 msgid "Opens {0} outside Bluesky"
 msgstr "Malfermas {0} ekster Bluesky"
 
@@ -10142,7 +10137,7 @@ msgstr "Malfermas ĉi tiun profilon"
 
 #: src/screens/Notifications/index.tsx:617
 msgid "Opens your beta features settings"
-msgstr ""
+msgstr "Malfermas agordojn de viaj beta-funkcioj"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:792
 msgid "Opt out"
@@ -10275,7 +10270,7 @@ msgstr "La posedanto devas ŝlosi la grupon antaŭ ol forlasi ĝin."
 
 #: src/components/Gallery/Storybook.tsx:654
 msgid "Padded container"
-msgstr ""
+msgstr "Ujo kun marĝenoj"
 
 #: src/components/Lists.tsx:204
 #: src/components/Lists.tsx:219
@@ -10684,7 +10679,7 @@ msgstr "Pornografio"
 
 #: src/components/Gallery/Storybook.tsx:161
 msgid "Portrait frame"
-msgstr ""
+msgstr "Vertikala kadro"
 
 #: src/components/Gallery/Storybook.tsx:153
 msgid "Portrait, square, and landscape frames as plain children. The frames, not the gallery, decide the sizes."
@@ -10886,7 +10881,7 @@ msgstr "Premu por vidi sekvantojn de ĉi tiu konto kiun vi ankaŭ sekvas"
 
 #: src/components/Gallery/Storybook.tsx:403
 msgid "Pressed {pressCount} times"
-msgstr ""
+msgstr "Premita {pressCount} fojojn"
 
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:121
 msgid "Preview"
@@ -11350,11 +11345,11 @@ msgstr "Forigi filtrilon"
 
 #: src/components/Gallery/Storybook.tsx:487
 msgid "Remove first"
-msgstr ""
+msgstr "Forigi la unuan"
 
 #: src/components/Gallery/Storybook.tsx:481
 msgid "Remove first card"
-msgstr ""
+msgstr "Forigi la unuan karton"
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:238
 msgid "Remove from chat"
@@ -11393,14 +11388,14 @@ msgstr "Forigi bildon"
 
 #: src/components/Gallery/Storybook.tsx:477
 msgid "Remove last"
-msgstr ""
+msgstr "Forigi la lastan"
 
 #: src/components/Gallery/Storybook.tsx:471
 msgid "Remove last card"
-msgstr ""
+msgstr "Forigi la lastan karton"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:439
-#: src/features/profileLinks/components/LinkFormDialog.tsx:444
+#: src/features/profileLinks/components/LinkFormDialog.tsx:425
+#: src/features/profileLinks/components/LinkFormDialog.tsx:430
 msgid "Remove link"
 msgstr "Forigi ligilon"
 
@@ -11530,7 +11525,7 @@ msgstr "Anstataŭigi per Malkovri"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:253
 msgid "replied to <0>{subject}</0>: {previewNode}"
-msgstr ""
+msgstr "respondis al <0>{subject}</0>: {previewNode}"
 
 #: src/components/Post/PostRepliedTo.tsx:39
 msgctxt "description"
@@ -12044,7 +12039,7 @@ msgstr "Revenas al la antaŭa paŝo"
 
 #: src/components/Gallery/Storybook.tsx:539
 msgid "Reveal last"
-msgstr ""
+msgstr "Forigi la lastan"
 
 #: src/components/forms/PasswordField.tsx:74
 msgid "Reveal password"
@@ -12052,15 +12047,15 @@ msgstr "Malkaŝi pasvorton"
 
 #: src/components/Gallery/Storybook.tsx:531
 msgid "Reveal the last card"
-msgstr ""
+msgstr "Forigi la lastan karton"
 
 #: src/components/Gallery/Storybook.tsx:497
 msgid "Reverse"
-msgstr ""
+msgstr "Inversigi"
 
 #: src/components/Gallery/Storybook.tsx:491
 msgid "Reverse the order"
-msgstr ""
+msgstr "Inversigi la ordon"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:20
 msgid "Reviewed, no action taken"
@@ -12094,8 +12089,8 @@ msgstr "GIF-oj pri malfeliĉo"
 msgid "Save"
 msgstr "Konservi"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:409
-#: src/features/profileLinks/components/LinkFormDialog.tsx:427
+#: src/features/profileLinks/components/LinkFormDialog.tsx:395
+#: src/features/profileLinks/components/LinkFormDialog.tsx:413
 msgid "Save anyway"
 msgstr "Konservi malgraŭ tio"
 
@@ -12105,8 +12100,8 @@ msgstr "Konservi naskiĝdaton"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:195
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:204
-#: src/features/profileLinks/components/LinkFormDialog.tsx:411
-#: src/features/profileLinks/components/LinkFormDialog.tsx:429
+#: src/features/profileLinks/components/LinkFormDialog.tsx:397
+#: src/features/profileLinks/components/LinkFormDialog.tsx:415
 #: src/screens/SavedFeeds.tsx:120
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
@@ -12914,7 +12909,7 @@ msgstr ""
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:264
+#: src/features/profileLinks/components/LinkFormDialog.tsx:250
 msgid "Short links can’t be added. Use the full link instead."
 msgstr "Mallongaj ligiloj ne povas esti aldonitaj. Uzu la tutan ligilon anstataŭe."
 
@@ -12969,7 +12964,7 @@ msgstr "Montri aktualigojn de grupaj babilejoj"
 msgid "Show less like this"
 msgstr "Montri malpli da similaj afiŝoj"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:221
+#: src/features/profileLinks/components/ProfileLinks.tsx:183
 msgid "Show link details"
 msgstr "Montri ligilajn deltalojn"
 
@@ -13003,7 +12998,7 @@ msgstr "Montri pli da respondoj"
 
 #: src/components/Gallery/Storybook.tsx:521
 msgid "Show or hide the intro card"
-msgstr ""
+msgstr "Montri aŭ kaŝi la enkondukan karton"
 
 #: src/screens/Settings/ThreadPreferences.tsx:99
 msgid "Show post replies in a threaded tree view"
@@ -13183,7 +13178,7 @@ msgstr "Ekde"
 
 #: src/components/Gallery/Storybook.tsx:302
 msgid "Sizes: 100×80, 220×160, 140×240, 180×120, and a wide card of {wideCardSize}×100, which is the gallery width of {galleryWidth} plus 80."
-msgstr ""
+msgstr "Grandoj: 100×80, 220×160, 140×240, 180×120, kaj larĝa karto {wideCardSize}×100, kiu estas la galeria larĝo {galleryWidth} plus 80."
 
 #: src/components/contacts/screens/PhoneInput.tsx:163
 #: src/components/contacts/screens/VerifyNumber.tsx:208
@@ -13222,11 +13217,11 @@ msgstr "lumbilda"
 
 #: src/components/Gallery/Storybook.tsx:281
 msgid "Small"
-msgstr ""
+msgstr "Malgranda"
 
 #: src/components/Gallery/Storybook.tsx:279
 msgid "Small card"
-msgstr ""
+msgstr "Malgranda karto"
 
 #: src/screens/Settings/AppearanceSettings.tsx:150
 msgid "Smaller"
@@ -13402,7 +13397,7 @@ msgstr "Rimarku afiŝojn kiujn ŝatis viaj amikoj kaj sekvatoj."
 
 #: src/components/Gallery/Storybook.tsx:164
 msgid "Square frame"
-msgstr ""
+msgstr "Kvadrata kadro"
 
 #: src/components/PostControls/ShareMenu/RecentChats.tsx:231
 msgid "Start a conversation, and it will appear here."
@@ -13675,12 +13670,12 @@ msgid "Support for this feature in your country has not been enabled yet! Please
 msgstr "Subteno por ĉi tiu funkcio en via lando ankoraŭ ne estis ebligita. Bonvolu rekontroli poste."
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkFormDialog.tsx:380
+#: src/features/profileLinks/components/LinkFormDialog.tsx:366
 msgid "Support on {0}"
 msgstr "Subtenu ĉe {0}"
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkPill.tsx:109
+#: src/features/profileLinks/components/LinkPill.tsx:118
 msgctxt "Creator support button, e.g. Support on Ko-fi"
 msgid "Support on {0}"
 msgstr "Subtenu ĉe {0}"
@@ -13752,15 +13747,15 @@ msgstr "Igi la konversacion privata."
 
 #: src/components/Gallery/Storybook.tsx:289
 msgid "Tall"
-msgstr ""
+msgstr "Alta"
 
 #: src/components/Gallery/Storybook.tsx:507
 msgid "Tall / short"
-msgstr ""
+msgstr "Alta / malalta"
 
 #: src/components/Gallery/Storybook.tsx:287
 msgid "Tall card"
-msgstr ""
+msgstr "Alta karto"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:110
 msgid "Tap below to allow Bluesky to access your GPS location. We will then use that data to more accurately determine the content and features available in your region."
@@ -13843,7 +13838,7 @@ msgstr "Tuŝetu por vidi reagojn"
 
 #: src/components/Gallery/Storybook.tsx:348
 msgid "Tapped {count} times"
-msgstr ""
+msgstr "Tuŝetita {count} fojojn"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:105
 msgid "Targeted harassment"
@@ -13904,7 +13899,7 @@ msgstr "Teksto kaj kradvortoj"
 
 #: src/components/Gallery/Storybook.tsx:353
 msgid "Text field"
-msgstr ""
+msgstr "Tekstokampo"
 
 #: src/components/moderation/AppealForm.tsx:130
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:120
@@ -13914,7 +13909,7 @@ msgstr "Kampo de teksta enigo"
 
 #: src/components/Gallery/Storybook.tsx:410
 msgid "Text: “{text}”"
-msgstr ""
+msgstr "Teksto: “{text}”"
 
 #: src/view/com/posts/ShowLessFollowup.tsx:39
 msgid "Thank you for your feedback! It has been sent to the feed operator."
@@ -13949,7 +13944,7 @@ msgstr "Dankon! Ĉio agordita."
 msgid "That contains the following:"
 msgstr "Tio enhavas la jenan:"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:260
+#: src/features/profileLinks/components/LinkFormDialog.tsx:246
 msgid "That doesn’t look like a link. Try something like yoursite.com."
 msgstr "Tio ne aspektas kiel ligilo. Provu iun kiel viaretpaĝo.com."
 
@@ -14539,7 +14534,7 @@ msgstr "Ĉi tiu etikedo estis aplikita al la tuta uzantokonto kaj aperos sur ĉi
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr "Ĉi tiu etikedilo ne deklaris, kiajn etikedojn ĝi publikigas kaj ĝi povas esti neaktiva."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:262
+#: src/features/profileLinks/components/LinkFormDialog.tsx:248
 msgid "This link can’t be added. It goes to a site that’s blocked on Bluesky."
 msgstr "Ĉi tiu ligilo ne povas esti aldonita. Ĝi kondukas al retejo kiu estas blokita ĉe Bluesky."
 
@@ -14761,7 +14756,7 @@ msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr "Tempo restanta: {0, plural, one {# sekundo} other {# sekundoj}}"
 
 #: src/components/SendErrorReportDialog.tsx:68
-#: src/features/profileLinks/components/LinkFormDialog.tsx:378
+#: src/features/profileLinks/components/LinkFormDialog.tsx:364
 msgid "Title"
 msgstr "Titolo"
 
@@ -14769,7 +14764,7 @@ msgstr "Titolo"
 msgid "Title (100 characters max)"
 msgstr "Titolo (100 signoj maksimume)"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:373
+#: src/features/profileLinks/components/LinkFormDialog.tsx:359
 msgid "Title (optional)"
 msgstr "Titolo (nedeviga)"
 
@@ -15782,7 +15777,7 @@ msgstr "Vidi ĉiujn reafiŝojn ŝatatajn de {name}"
 msgid "View all reposts {name} reposted"
 msgstr "Vidi ĉiujn reafiŝojn reafiŝitajn de {name}"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:306
+#: src/features/profileLinks/components/LinkFormDialog.tsx:292
 msgid "View all support sites"
 msgstr ""
 
@@ -16026,7 +16021,7 @@ msgstr "Ni ne povis ŝargi agordojn de ĉi tiu konversacio"
 msgid "We couldn't load your account settings. Check your internet connection and try again."
 msgstr "Ni ne povis ŝargi agordojn de via konto. Kontrolu vian interretan konekton kaj reprovu."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:270
+#: src/features/profileLinks/components/LinkFormDialog.tsx:256
 msgid "We couldn’t reach this link. Check it, or save anyway."
 msgstr "Ni ne povis atingi ĉi tiun ligilon. Kontrolu aŭ konservu ĝin malgraŭ tio."
 
@@ -16976,7 +16971,7 @@ msgstr "Vi estas en vico"
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
 msgstr "Vi estas ensalutinta per apa pasvorto. Bonvolu ensaluti per via ĉefa pasvorto por daŭrigi malaktivigi vian konton."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:268
+#: src/features/profileLinks/components/LinkFormDialog.tsx:254
 msgid "You’ve already added this link."
 msgstr "Vi jam aldonis ĉi tiun ligilon."
 

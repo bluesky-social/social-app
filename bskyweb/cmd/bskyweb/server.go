@@ -267,6 +267,10 @@ func serve(cctx *cli.Context) error {
 			return c.Redirect(http.StatusMovedPermanently, "/.well-known/security.txt")
 		})
 		e.GET("/.well-known/*", echo.WrapHandler(staticHandler))
+		// https://w3c.github.io/webappsec-change-password-url/
+		e.GET("/.well-known/change-password", func(c echo.Context) error {
+			return c.Redirect(http.StatusFound, "/settings/account")
+		})
 	}
 
 	// default to permissive, but Disallow all if flag set

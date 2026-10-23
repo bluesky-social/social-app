@@ -143,7 +143,6 @@ function LinkFormInner({
     if (
       !targetUrl ||
       provider ||
-      validation.isBlocked ||
       validation.isShortener ||
       validation.isInsecure
     ) {
@@ -153,7 +152,8 @@ function LinkFormInner({
     void getLinkMeta(targetUrl, 8e3).then(meta => {
       if (cancelled || meta.error) return
       setReachability('reachable')
-      const suggestion = suggestTitle(meta.title)
+      // a standard.site record's title, like a blog's name, beats the HTML one
+      const suggestion = suggestTitle(meta.view?.external?.title || meta.title)
       if (!suggestion) return
       const previousAuto = autoTitle.current
       autoTitle.current = suggestion
@@ -164,13 +164,7 @@ function LinkFormInner({
     return () => {
       cancelled = true
     }
-  }, [
-    targetUrl,
-    provider,
-    validation.isBlocked,
-    validation.isShortener,
-    validation.isInsecure,
-  ])
+  }, [targetUrl, provider, validation.isShortener, validation.isInsecure])
 
   const nextTitle = title.trim() || undefined
   const isUnchanged =
@@ -185,14 +179,6 @@ function LinkFormInner({
     if (!canSave) return
     if (!targetUrl) {
       setError('invalid')
-      return
-    }
-    if (validation.isBlocked) {
-      setError('blocked')
-      ax.metric('profile:links:rejected', {
-        reason: 'blocked',
-        domain: getLinkHost(targetUrl),
-      })
       return
     }
     if (validation.isShortener) {

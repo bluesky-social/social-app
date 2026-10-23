@@ -17,7 +17,7 @@ export function SupportedSitesDialog({
   control: Dialog.DialogControlProps
 }) {
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       <Dialog.Handle />
       <SupportedSitesInner />
     </Dialog.Outer>

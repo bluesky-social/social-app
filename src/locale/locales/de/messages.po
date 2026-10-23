@@ -8,7 +8,7 @@ msgstr ""
 "Language: de\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-22 08:29\n"
+"PO-Revision-Date: 2026-10-23 14:40\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. placeholder {0}: record.text
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:87
 msgid "“{0}”"
-msgstr ""
+msgstr "\"{0}\""
 
 #. Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is currently selected.
 #: src/components/InterestTabs.tsx:333
@@ -222,7 +222,7 @@ msgstr "{0, plural, one {Post} other {Posts}}"
 #. placeholder {0}: policies.length
 #: src/screens/ModerationInbox/Notice.tsx:266
 msgid "{0, plural, one {Rule violated:} other {Rules violated:}}"
-msgstr ""
+msgstr "{0, plural, one {Verletzte Regel:} other {Verletzte Regeln:}}"
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific Starter Pack
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
@@ -281,7 +281,7 @@ msgid "{0} following"
 msgstr "{0} Folge ich"
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkFormDialog.tsx:362
+#: src/features/profileLinks/components/LinkFormDialog.tsx:348
 msgid "{0} is a recognized support link. It gets the green support button."
 msgstr ""
 
@@ -337,9 +337,9 @@ msgid "{0} of {1}"
 msgstr "{0} von {1}"
 
 #. placeholder {0}: title.length
-#: src/features/profileLinks/components/LinkFormDialog.tsx:391
+#: src/features/profileLinks/components/LinkFormDialog.tsx:377
 msgid "{0} out of {MAX_TITLE_LENGTH} characters"
-msgstr ""
+msgstr "{0} von {MAX_TITLE_LENGTH} Zeichen"
 
 #. Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field
 #. placeholder {0}: state.name?.length
@@ -356,7 +356,7 @@ msgstr "{0} hat mit {1} reagiert"
 #. placeholder {0}: tab.label
 #: src/screens/Notifications/components/TabPills.tsx:406
 msgid "{0} tab, selected"
-msgstr ""
+msgstr "Tab „{0}“, ausgewählt"
 
 #. Accessibility hint for the bottom bar chat icon when the number of unread messages exceeds the cap, with the + symbol already included – for example, 99+ unread items
 #. placeholder {0}: numUnreadMessages.numUnread
@@ -491,11 +491,11 @@ msgstr "{0} Sek."
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:75
 msgid "{accountCount, plural, one {# account} other {# accounts}}"
-msgstr ""
+msgstr "{accountCount, plural, one {# Account} other {# Accounts}}"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:71
 msgid "{accountCount, plural, one {# account} other {# accounts}}, {feedCount, plural, one {# feed} other {# feeds}}"
-msgstr ""
+msgstr "{accountCount, plural, one {# Account} other {# Accounts}}, {feedCount, plural, one {# Feed} other {# Feeds}}"
 
 #: src/screens/Moderation/index.tsx:179
 msgid "{badge, plural, one {# update} other {# updates}}"
@@ -507,7 +507,7 @@ msgstr "{count, plural, =0 {Keine Beitrittsanfragen} one {# Beitrittsanfrage} ot
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:52
 msgid "{count, plural, one {# account} other {# accounts}}"
-msgstr ""
+msgstr "{count, plural, one {# Account} other {# Accounts}}"
 
 #: src/components/dms/SystemMessageGroup.tsx:38
 msgid "{count, plural, one {# chat update} other {# chat updates}}"
@@ -516,12 +516,12 @@ msgstr "{count, plural, one {# Chat-Update} other {# Chat-Updates}}"
 #. Number of people you follow who also follow this account
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:316
 msgid "{count, plural, one {# mutual follower} other {# mutual followers}}"
-msgstr ""
+msgstr "{count, plural, one {# gemeinsamer Follower} other {# gemeinsame Follower}}"
 
 #. Short form of “mutual followers”: the number of people you follow who also follow this account
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:323
 msgid "{count, plural, one {# mutual} other {# mutuals}}"
-msgstr ""
+msgstr "{count, plural, one {# gemeinsamer} other {# gemeinsame}}"
 
 #: src/screens/Messages/components/RequestStatus.tsx:74
 msgid "{count, plural, one {# new join request} other {# new join requests}}"
@@ -535,9 +535,9 @@ msgstr "{count, plural, one {# Anfrage} other {# Anfragen}}"
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# ungelesenes Element} other {# ungelesene Elemente}}"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:401
+#: src/features/profileLinks/components/ProfileLinks.tsx:346
 msgid "{count, plural, one {Show # more link} other {Show # more links}}"
-msgstr ""
+msgstr "{count, plural, one {# weiteren Link anzeigen} other {# weitere Links anzeigen}}"
 
 #: src/features/followingV2/home/PrependPill.tsx:76
 msgid "{count, plural, one {Show # new post} other {Show # new posts}}"
@@ -574,7 +574,7 @@ msgstr "{estimatedTimeMins, plural, one {Minute} other {Minuten}}"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:79
 msgid "{feedCount, plural, one {# feed} other {# feeds}}"
-msgstr ""
+msgstr "{feedCount, plural, one {# Feed} other {# Feeds}}"
 
 #: src/screens/Search/components/SearchHistory.tsx:208
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
@@ -751,7 +751,7 @@ msgstr "{following} Folge ich"
 #. How long ago a notification happened, e.g. "7m ago". The time is already abbreviated and translated.
 #: src/screens/Notifications/components/NotificationItem/Item/text.tsx:171
 msgid "{formatted} ago"
-msgstr ""
+msgstr "vor {formatted}"
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
@@ -814,7 +814,7 @@ msgstr "{label}, Beta"
 
 #: src/screens/ModerationInbox/Settings.tsx:138
 msgid "{label}. {description}"
-msgstr ""
+msgstr "{label}. {description}"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:138
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
@@ -843,59 +843,59 @@ msgstr "{minutes, plural, one {# Minute} other {# Minuten}}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:121
 msgid "{name} and {others, plural, one {# other} other {# others}} followed you"
-msgstr ""
+msgstr "{name} und {others, plural, one {# weitere Person} other {# weitere Personen}} sind dir gefolgt"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:502
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your custom feed"
-msgstr ""
+msgstr "{name} und {others, plural, one {# weitere Person} other {# weitere Personen}} gefällt dein benutzerdefinierten Feed"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:96
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your post"
-msgstr ""
+msgstr "{name} und {others, plural, one {# weitere Person} other {# weitere Personen}} gefällt dein Post"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:199
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your repost"
-msgstr ""
+msgstr "{name} und {others, plural, one {# weitere Person} other {# weitere Personen}} gefällt dein Repost"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:147
 msgid "{name} and {others, plural, one {# other} other {# others}} reposted your post"
-msgstr ""
+msgstr "{name} und {others, plural, one {# weitere Person} other {# weitere Personen}} haben deinen Post repostet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:251
 msgid "{name} and {others, plural, one {# other} other {# others}} reposted your repost"
-msgstr ""
+msgstr "{name} und {others, plural, one {# weitere Person} other {# weitere Personen}} haben deinen Repost repostet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:120
 msgid "{name} and {secondName} followed you"
-msgstr ""
+msgstr "{name} und {secondName} folgen dir"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:500
 msgid "{name} and {secondName} liked your custom feed"
-msgstr ""
+msgstr "{name} und {secondName} gefällt dein benutzerdefinierten Feed"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:94
 msgid "{name} and {secondName} liked your post"
-msgstr ""
+msgstr "{name} und {secondName} gefällt dein Post"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:197
 msgid "{name} and {secondName} liked your repost"
-msgstr ""
+msgstr "{name} und {secondName} gefällt dein Repost"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:145
 msgid "{name} and {secondName} reposted your post"
-msgstr ""
+msgstr "{name} und {secondName} haben deinen Post repostet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:249
 msgid "{name} and {secondName} reposted your repost"
-msgstr ""
+msgstr "{name} und {secondName} haben deinen Repost repostet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:190
 msgid "{name} followed you back"
-msgstr ""
+msgstr "{name} folgt dir ebenfalls"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:189
 msgid "{name} followed you back via starter pack {starterPackName}"
-msgstr ""
+msgstr "{name} ist dir über das Startpaket {starterPackName} ebenfalls gefolgt"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:365
 msgid "{name} liked {count} of your {count, plural, one {post} other {posts}}"
@@ -907,15 +907,15 @@ msgstr ""
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:506
 msgid "{name} liked your custom feed"
-msgstr ""
+msgstr "{name} gefällt dein benutzerdefinierter Feed"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:100
 msgid "{name} liked your post"
-msgstr ""
+msgstr "{name} gefällt dein Post"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:203
 msgid "{name} liked your repost"
-msgstr ""
+msgstr "{name} gefällt dein Repost"
 
 #. placeholder {0}: reaction.value
 #: src/components/dms/getReactionInfo.ts:70
@@ -936,15 +936,15 @@ msgstr ""
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:151
 msgid "{name} reposted your post"
-msgstr ""
+msgstr "{name} hat deinen Post repostet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:255
 msgid "{name} reposted your repost"
-msgstr ""
+msgstr "{name} hat deinen Repost repostet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:227
 msgid "{name} verified you"
-msgstr ""
+msgstr "{name} hat dich verifiziert"
 
 #. When the last message in a group chat came from someone other than you.
 #: src/components/dms/getMessageInfo.ts:84
@@ -969,11 +969,11 @@ msgstr "{numMatches, plural, one {# Kontakt gefunden} other {# Kontakte gefunden
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:77
 msgid "{policyLabel} – {duration}"
-msgstr ""
+msgstr "{policyLabel} – {duration}"
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
 msgid "{policyLabel} – {duration}, now expired"
-msgstr ""
+msgstr "{policyLabel} – {duration}, inzwischen abgelaufen"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:49
 msgid "{profileName} joined Bluesky {timeAgoString} ago"
@@ -1026,11 +1026,11 @@ msgstr "{requestCount}+ Anfragen"
 
 #: src/screens/ModerationInbox/Notice.tsx:242
 msgid "{serviceName} removed your content for violating our <0>Community Guidelines</0>."
-msgstr ""
+msgstr "{serviceName} hat deinen Inhalt entfernt, weil er gegen unsere <0>Community-Richtlinien</0> verstoßen hat."
 
 #: src/screens/Settings/Settings.tsx:207
 msgid "{unreadCount, plural, one {# unread update} other {# unread updates}}"
-msgstr ""
+msgstr "{unreadCount, plural, one {# ungelesenes Update} other {# ungelesene Updates}}"
 
 #: src/components/verification/VerifierDialog.tsx:62
 msgid "{userName} is a trusted verifier"
@@ -1064,27 +1064,27 @@ msgstr "+{computedTotal}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:146
 msgid "<0/> and <1/> followed you"
-msgstr ""
+msgstr "<0/> und <1/> folgen dir"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:515
 msgid "<0/> and <1/> liked your custom feed"
-msgstr ""
+msgstr "<0/> und <1/> gefällt dein benutzerdefinierter Feed"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:104
 msgid "<0/> and <1/> liked your post"
-msgstr ""
+msgstr "<0/> und <1/> gefällt dein Post"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:207
 msgid "<0/> and <1/> liked your repost"
-msgstr ""
+msgstr "<0/> und <1/> gefällt dein Repost"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:155
 msgid "<0/> and <1/> reposted your post"
-msgstr ""
+msgstr "<0/> und <1/> haben deinen Post repostet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:259
 msgid "<0/> and <1/> reposted your repost"
-msgstr ""
+msgstr "<0/> und <1/> haben deinen Repost repostet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:151
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> followed you"
@@ -1112,11 +1112,11 @@ msgstr ""
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:71
 msgid "<0/> followed you"
-msgstr ""
+msgstr "<0/> folgt dir"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:198
 msgid "<0/> followed you back! 🎉"
-msgstr ""
+msgstr "<0/> folgt dir ebenfalls! 🎉"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:371
 msgid "<0/> liked {count} of your {count, plural, one {post} other {posts}}"
@@ -1128,15 +1128,15 @@ msgstr ""
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:528
 msgid "<0/> liked your custom feed"
-msgstr ""
+msgstr "<0/> gefällt dein benutzerdefinierten Feed"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:117
 msgid "<0/> liked your post"
-msgstr ""
+msgstr "<0/> gefällt dein Post"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:220
 msgid "<0/> liked your repost"
-msgstr ""
+msgstr "<0/> gefällt dein Repost"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:269
 msgid "<0/> removed their verification from your account"
@@ -1152,7 +1152,7 @@ msgstr ""
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:168
 msgid "<0/> reposted your post"
-msgstr ""
+msgstr "<0/> hat deinen Post repostet"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:272
 msgid "<0/> reposted your repost"
@@ -1604,8 +1604,8 @@ msgstr "{displayName} zum Startpaket hinzufügen"
 msgid "Add a content warning"
 msgstr "Inhaltswarnung hinzufügen"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:279
-#: src/features/profileLinks/components/LinkFormDialog.tsx:299
+#: src/features/profileLinks/components/LinkFormDialog.tsx:265
+#: src/features/profileLinks/components/LinkFormDialog.tsx:285
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:133
 msgid "Add a link"
 msgstr ""
@@ -1691,8 +1691,8 @@ msgstr "Mitglieder zum Gruppenchat hinzufügen"
 msgid "Add image"
 msgstr "Bild hinzufügen"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:412
-#: src/features/profileLinks/components/LinkFormDialog.tsx:431
+#: src/features/profileLinks/components/LinkFormDialog.tsx:398
+#: src/features/profileLinks/components/LinkFormDialog.tsx:417
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:149
 msgid "Add link"
 msgstr ""
@@ -3095,7 +3095,7 @@ msgstr "Kamerazugriff erforderlich"
 #: src/components/SendErrorReportDialog.tsx:102
 #: src/features/liveNow/components/GoLiveDialog.tsx:258
 #: src/features/liveNow/components/GoLiveDialog.tsx:264
-#: src/features/profileLinks/components/LinkFormDialog.tsx:281
+#: src/features/profileLinks/components/LinkFormDialog.tsx:267
 #: src/lib/media/picker.tsx:38
 #: src/screens/Deactivated.tsx:154
 #: src/screens/Messages/components/InviteLinkDialog.tsx:498
@@ -3520,7 +3520,7 @@ msgstr "Leeren"
 #: src/screens/Search/components/SearchHistory.tsx:150
 msgctxt "action"
 msgid "Clear"
-msgstr ""
+msgstr "Leeren"
 
 #: src/screens/Search/components/SearchHistory.tsx:78
 msgctxt "action"
@@ -3675,8 +3675,8 @@ msgstr "Klicke hier, um die fehlgeschlagene Nachricht erneut zu senden"
 msgid "Close"
 msgstr "Schließen"
 
-#: src/components/Dialog/index.web.tsx:143
-#: src/components/Dialog/index.web.tsx:357
+#: src/components/Dialog/index.web.tsx:155
+#: src/components/Dialog/index.web.tsx:372
 msgid "Close active dialog"
 msgstr "Aktiven Dialog schließen"
 
@@ -3841,7 +3841,7 @@ msgstr "Konfiguriert in <0>Moderationseinstellungen</0>"
 msgid "Confirm"
 msgstr "Bestätigen"
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:77
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:81
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:171
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:250
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
@@ -3969,7 +3969,7 @@ msgstr "Inhaltswarnung"
 msgid "Content warnings"
 msgstr "Inhaltswarnungen"
 
-#: src/components/Menu/index.web.tsx:88
+#: src/components/Menu/index.web.tsx:89
 msgid "Context menu backdrop, click to close the menu."
 msgstr "Hintergrund des Kontextmenüs; klicken, um das Menü zu schließen"
 
@@ -4287,10 +4287,6 @@ msgstr ""
 msgid "Couldn’t load more posts. Try again"
 msgstr "Weitere Posts konnten nicht geladen werden. Versuche es erneut"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:175
-msgid "Couldn’t save your links. Please try again."
-msgstr ""
-
 #: src/components/Gallery/Storybook.tsx:339
 msgid "Counter"
 msgstr ""
@@ -4449,7 +4445,7 @@ msgstr "Ersteller wurde blockiert"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:44
 msgid "Credentials revoked"
-msgstr ""
+msgstr "Zugangsdaten widerrufen"
 
 #: src/lib/interests.ts:57
 msgid "Culture"
@@ -4655,7 +4651,7 @@ msgstr "Gelöschte Liste"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:478
 msgid "Deleted post"
-msgstr ""
+msgstr "Gelöschter Post"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:463
 #: src/components/SendErrorReportDialog.tsx:78
@@ -4671,12 +4667,12 @@ msgstr "Beschreibung (max. 1000 Zeichen)"
 #. placeholder {0}: record.description
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:103
 msgid "Description: “{0}”"
-msgstr ""
+msgstr "Beschreibung: „{0}“"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:65
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:70
 msgid "Description: “{description}”"
-msgstr ""
+msgstr "Beschreibung: „{description}\""
 
 #: src/view/com/composer/GifAltText.tsx:173
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:115
@@ -4725,11 +4721,11 @@ msgstr "Gedimmt"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:24
 msgid "Direct message"
-msgstr ""
+msgstr "Direktnachricht"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:23
 msgid "Direct message from {authorName}"
-msgstr ""
+msgstr "Direktnachricht von {authorName}"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:383
 #: src/screens/Messages/components/InviteLinkDialog.tsx:388
@@ -5050,9 +5046,9 @@ msgstr "z. B. künstlerische Nacktheit"
 msgid "e.g. Great Posters"
 msgstr "z. B. Großartige Poster"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:380
+#: src/features/profileLinks/components/LinkFormDialog.tsx:366
 msgid "e.g. Portfolio"
-msgstr ""
+msgstr "z. B. Portfolio"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:381
 msgid "e.g. Spammers"
@@ -5069,7 +5065,7 @@ msgstr "z. B. Nutzer, die wiederholt mit Werbung antworten."
 #: src/screens/Notifications/components/PageList.tsx:590
 msgctxt "Notifications section header"
 msgid "Earlier"
-msgstr ""
+msgstr "Früher"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:195
 msgid "Eating disorders"
@@ -5093,7 +5089,7 @@ msgstr "Bearbeiten"
 #. placeholder {0}: linkLabel(item.link)
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:78
 msgid "Edit {0}"
-msgstr ""
+msgstr "{0} bearbeiten"
 
 #: src/view/com/util/UserAvatar.tsx:465
 #: src/view/com/util/UserBanner.tsx:132
@@ -5134,11 +5130,10 @@ msgctxt "button"
 msgid "Edit invite link"
 msgstr "Einladungslink bearbeiten"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:279
-#: src/features/profileLinks/components/LinkFormDialog.tsx:299
-#: src/features/profileLinks/components/ProfileLinks.tsx:193
+#: src/features/profileLinks/components/LinkFormDialog.tsx:265
+#: src/features/profileLinks/components/LinkFormDialog.tsx:285
 msgid "Edit link"
-msgstr ""
+msgstr "Link bearbeiten"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:367
 msgid "Edit link settings"
@@ -5285,7 +5280,7 @@ msgstr ""
 
 #: src/components/Gallery/Storybook.tsx:681
 msgid "Empty gallery"
-msgstr ""
+msgstr "Leere Galerie"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:101
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:108
@@ -5358,7 +5353,7 @@ msgstr "Aktiviert"
 
 #: src/components/Gallery/Storybook.tsx:571
 msgid "End"
-msgstr ""
+msgstr "Ende"
 
 #: src/components/Gallery/Storybook.tsx:570
 msgid "End card"
@@ -5546,7 +5541,7 @@ msgstr "Text des Posts ausklappen"
 
 #: src/screens/Notifications/components/NotificationItem/Item/group.tsx:302
 msgid "Expands list of users"
-msgstr ""
+msgstr "Klappt die Nutzerliste aus"
 
 #: src/screens/VideoFeed/index.tsx:1176
 msgid "Expands or collapses post text"
@@ -5933,7 +5928,7 @@ msgstr "Einspruch konnte nicht eingereicht werden. Bitte versuche es erneut."
 
 #: src/screens/ModerationInbox/Notice.tsx:382
 msgid "Failed to submit appeal. Please try again."
-msgstr ""
+msgstr "Einspruch konnte nicht eingereicht werden. Bitte versuche es erneut."
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:255
 msgid "Failed to toggle thread mute, please try again"
@@ -6003,7 +5998,7 @@ msgstr "Feed"
 #. placeholder {0}: sanitizeDisplayName(feedName)
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:45
 msgid "Feed “{0}”"
-msgstr ""
+msgstr "Feed „{0}“"
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #. placeholder {0}: sanitizeHandle(feed.creatorHandle, '@')
@@ -6016,11 +6011,11 @@ msgstr "Feed von {0}"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:42
 msgid "Feed by {authorName}"
-msgstr ""
+msgstr "Feed von {authorName}"
 
 #: src/screens/Notifications/components/NotificationItem/Item/media.tsx:224
 msgid "Feed by {handle}"
-msgstr ""
+msgstr "Feed von {handle}"
 
 #: src/view/com/feeds/MissingFeed.tsx:153
 msgid "Feed creator"
@@ -6171,7 +6166,7 @@ msgstr "Kontakte finden"
 #: src/screens/Notifications/components/PageList.tsx:645
 #: src/screens/Notifications/components/PageList.tsx:650
 msgid "Find friends"
-msgstr ""
+msgstr "Freunde finden"
 
 #: src/components/contacts/screens/GetContacts.tsx:275
 #: src/components/contacts/screens/GetContacts.tsx:289
@@ -6196,7 +6191,7 @@ msgstr "Finde Posts, Nutzer und Feeds auf Bluesky"
 
 #: src/screens/Notifications/components/PageList.tsx:639
 msgid "Find some friends to start getting notifications!"
-msgstr ""
+msgstr "Finde ein paar Freunde, um Mitteilungen zu erhalten!"
 
 #: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:98
 msgid "Find your friends"
@@ -6361,7 +6356,7 @@ msgstr "Gefolgt von <0>{0}</0>, <1>{1}</1> und {2, plural, one {# weiteren Perso
 #: src/screens/Notifications/components/NotificationItem/kinds/follower.tsx:52
 msgctxt "Notifications section header"
 msgid "Followed you"
-msgstr ""
+msgstr "Folgt dir"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:360
 msgid "Followers can join"
@@ -6418,7 +6413,7 @@ msgstr "{handle} Folge ich"
 
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:177
 msgid "Following {name}"
-msgstr ""
+msgstr "{name} Folge ich"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:78
 #: src/screens/Settings/ContentAndMediaSettings.tsx:81
@@ -6531,7 +6526,7 @@ msgstr "Von diesen Personen"
 
 #: src/components/Gallery/Storybook.tsx:43
 msgid "Gallery"
-msgstr ""
+msgstr "Galerie"
 
 #: src/components/Gallery/Storybook.tsx:357
 msgid "Gallery text field"
@@ -6770,7 +6765,7 @@ msgstr "Zum Profil von {firstAuthorName} gehen"
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:608
 #: src/screens/Notifications/components/NotificationItem/Item/text.tsx:113
 msgid "Go to {name}’s profile"
-msgstr ""
+msgstr "Zum Profil von {name} gehen"
 
 #: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:93
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:73
@@ -7046,7 +7041,7 @@ msgstr "Ausgeblendete Liste"
 #. Shown in place of the text of a post that is hidden by the viewer’s moderation settings
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:216
 msgid "Hidden post"
-msgstr ""
+msgstr "Ausgeblendeter Post"
 
 #: src/components/interstitials/TrendingVideos.tsx:140
 #: src/components/moderation/ContentHider.tsx:208
@@ -7346,7 +7341,7 @@ msgstr "Bildcache geleert, {0} freigegeben"
 
 #: src/components/Gallery/Storybook.tsx:151
 msgid "Image content"
-msgstr ""
+msgstr "Bildinhalt"
 
 #: src/components/Gallery/Storybook.tsx:159
 msgid "Image frames in different shapes"
@@ -7776,11 +7771,11 @@ msgstr "KWS-Website"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:36
 msgid "Label applied"
-msgstr ""
+msgstr "Kennzeichnung angewendet"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:38
 msgid "Label removed"
-msgstr ""
+msgstr "Kennzeichnung entfernt"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:640
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:642
@@ -7790,7 +7785,7 @@ msgstr "Antwort für den Algorithmus kennzeichnen"
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:57
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
 msgid "Label: {labelName}"
-msgstr ""
+msgstr "Kennzeichnung: {labelName}"
 
 #. placeholder {0}: sanitizeDisplayName(desc.source!)
 #: src/components/moderation/ContentHider.tsx:236
@@ -8129,14 +8124,14 @@ msgstr ""
 msgid "Linear"
 msgstr "Linear"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:318
-#: src/features/profileLinks/components/LinkFormDialog.tsx:324
+#: src/features/profileLinks/components/LinkFormDialog.tsx:304
+#: src/features/profileLinks/components/LinkFormDialog.tsx:310
 msgid "Link"
-msgstr ""
+msgstr "Link"
 
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:61
 msgid "Link copied"
-msgstr ""
+msgstr "Link kopiert"
 
 #: src/components/Lightbox/Lightbox.web.tsx:306
 msgid "Link copied to clipboard"
@@ -8144,17 +8139,17 @@ msgstr "Link in die Zwischenablage kopiert"
 
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:68
 msgid "Link details"
-msgstr ""
+msgstr "Link-Details"
 
 #: src/screens/Notifications/components/NotificationItem/Item/aggregate.tsx:69
 msgid "Link to {domain}"
-msgstr ""
+msgstr "Link zu {domain}"
 
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:92
 msgid "Links"
-msgstr ""
+msgstr "Links"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:302
+#: src/features/profileLinks/components/LinkFormDialog.tsx:288
 msgid "Links show as buttons under your bio. Links to support sites like Ko-fi or Patreon show as a green button. <0>View all support sites</0>"
 msgstr ""
 
@@ -8171,7 +8166,7 @@ msgstr "Liste"
 #. placeholder {0}: sanitizeDisplayName(listName)
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:44
 msgid "List “{0}”"
-msgstr ""
+msgstr "Liste „{0}“"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:407
 msgid "List avatar"
@@ -8191,7 +8186,7 @@ msgstr "Liste von {0}"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:40
 msgid "List by {authorName}"
-msgstr ""
+msgstr "Liste von {authorName}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:142
 msgid "List by <0/>"
@@ -8249,7 +8244,7 @@ msgstr "Listenname ist zu lang. {DISPLAY_NAME_MAX_GRAPHEMES, plural, other {Die 
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:64
 msgid "List unavailable"
-msgstr ""
+msgstr "Liste nicht verfügbar"
 
 #: src/screens/ProfileList/components/Header.tsx:120
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:156
@@ -8315,15 +8310,15 @@ msgstr "Live-Link"
 #. placeholder {0}: url.hostname
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:58
 msgid "Live link: “{0}”"
-msgstr ""
+msgstr "Live-Link: „{0}“"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:53
 msgid "Live status"
-msgstr ""
+msgstr "Live-Status"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:38
 msgid "Livestream"
-msgstr ""
+msgstr "Livestream"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:38
 msgid "Livestream by {authorName}"
@@ -9821,7 +9816,7 @@ msgstr "Nur Posts mit Videos"
 msgid "Only replies"
 msgstr "Nur Antworten"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:266
+#: src/features/profileLinks/components/LinkFormDialog.tsx:252
 msgid "Only secure links can be added. Use a link that starts with https://."
 msgstr ""
 
@@ -9847,7 +9842,7 @@ msgid "Oops!"
 msgstr "Huch!"
 
 #. placeholder {0}: linkLabel(link)
-#: src/features/profileLinks/components/LinkPill.tsx:80
+#: src/features/profileLinks/components/LinkPill.tsx:87
 msgid "Open {0}"
 msgstr ""
 
@@ -10017,7 +10012,7 @@ msgstr "Diesen Gruppenchat öffnen"
 #. placeholder {0}: getLinkHost(link.url)
 #. placeholder {0}: link.url
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:85
-#: src/features/profileLinks/components/ProfileLinks.tsx:206
+#: src/features/profileLinks/components/ProfileLinks.tsx:168
 msgid "Opens {0} outside Bluesky"
 msgstr ""
 
@@ -11228,7 +11223,7 @@ msgstr ""
 #. Pill on the notifications list, shown when there are new notifications to load.
 #: src/screens/Notifications/components/RefreshPill.tsx:87
 msgid "Refresh"
-msgstr ""
+msgstr "Aktualisieren"
 
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:136
@@ -11257,7 +11252,7 @@ msgstr "Konversationen neu laden"
 #: src/screens/ModerationInbox/Notice.tsx:491
 #: src/screens/ModerationInbox/Notice.tsx:500
 msgid "Reload notice"
-msgstr ""
+msgstr "Hinweis neu laden"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:194
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:319
@@ -11399,10 +11394,10 @@ msgstr ""
 msgid "Remove last card"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:439
-#: src/features/profileLinks/components/LinkFormDialog.tsx:444
+#: src/features/profileLinks/components/LinkFormDialog.tsx:425
+#: src/features/profileLinks/components/LinkFormDialog.tsx:430
 msgid "Remove link"
-msgstr ""
+msgstr "Link entfernen"
 
 #: src/features/liveNow/components/EditLiveDialog.tsx:223
 #: src/features/liveNow/components/EditLiveDialog.tsx:230
@@ -11496,7 +11491,7 @@ msgstr "Aus deinen Feeds entfernt"
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:91
 msgid "Removed post"
-msgstr ""
+msgstr "Entfernter Post"
 
 #: src/screens/Moderation/index.tsx:231
 msgid "Removed unavailable services"
@@ -11521,7 +11516,7 @@ msgstr "Stummgeschaltetes Wort erneuern"
 #. placeholder {0}: item.label
 #: src/features/profileLinks/components/SortablePills/index.web.tsx:355
 msgid "Reorder {0}"
-msgstr ""
+msgstr "{0} neu anordnen"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:134
 #: src/view/com/posts/FeedShutdownMsg.tsx:138
@@ -11539,7 +11534,7 @@ msgstr "Antwort an <0><1/></0>"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:171
 msgid "replied to a blocked post"
-msgstr ""
+msgstr "hat auf einen blockierten Post geantwortet"
 
 #: src/components/Post/PostRepliedTo.tsx:28
 msgctxt "description"
@@ -11548,7 +11543,7 @@ msgstr "Antwort auf einen blockierten Post"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:176
 msgid "replied to a deleted post"
-msgstr ""
+msgstr "hat auf einen gelöschten Post geantwortet"
 
 #: src/components/Post/PostRepliedTo.tsx:30
 msgctxt "description"
@@ -11632,7 +11627,7 @@ msgstr "Antwort an {handle}"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:81
 msgid "Reply to {parentName}"
-msgstr ""
+msgstr "Antwort an {parentName}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:392
 msgctxt "toast"
@@ -11651,14 +11646,14 @@ msgstr "Melden"
 
 #: src/features/profileLinks/components/ReportLinkDialog.tsx:113
 msgid "Report {label}"
-msgstr ""
+msgstr "{label} melden"
 
 #: src/features/profileLinks/components/ReportLinkDialog.tsx:97
 #: src/features/profileLinks/components/ReportLinkDialog.tsx:100
 #: src/view/com/profile/ProfileMenu.tsx:532
 #: src/view/com/profile/ProfileMenu.tsx:535
 msgid "Report a link"
-msgstr ""
+msgstr "Einen Link melden"
 
 #: src/view/com/profile/ProfileMenu.tsx:522
 #: src/view/com/profile/ProfileMenu.tsx:525
@@ -11685,7 +11680,7 @@ msgstr "Feed melden"
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:108
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:114
 msgid "Report link"
-msgstr ""
+msgstr "Link melden"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:235
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:238
@@ -11736,7 +11731,7 @@ msgstr "Diesen Gruppenchat melden"
 
 #: src/components/moderation/ReportDialog/copy.ts:42
 msgid "Report this link"
-msgstr ""
+msgstr "Diesen Link melden"
 
 #: src/components/moderation/ReportDialog/copy.ts:30
 msgid "Report this list"
@@ -11792,12 +11787,12 @@ msgstr "Reposten oder Post zitieren"
 #: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:83
 msgctxt "Toast after undoing a repost"
 msgid "Repost removed"
-msgstr ""
+msgstr "Repost entfernt"
 
 #: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:97
 msgctxt "Toast after reposting"
 msgid "Reposted"
-msgstr ""
+msgstr "Repostet"
 
 #: src/screens/Post/PostRepostedBy.tsx:31
 msgid "Reposted By"
@@ -11971,7 +11966,7 @@ msgstr "Bereitstellung von {defaultChannel} wiederherstellen"
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:93
 msgid "Restored post"
-msgstr ""
+msgstr "Wiederhergestellter Post"
 
 #: src/screens/Settings/FindContactsSettings.tsx:553
 #: src/screens/Settings/FindContactsSettings.tsx:569
@@ -12094,10 +12089,10 @@ msgstr "Traurige GIFs"
 msgid "Save"
 msgstr "Speichern"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:409
-#: src/features/profileLinks/components/LinkFormDialog.tsx:427
+#: src/features/profileLinks/components/LinkFormDialog.tsx:395
+#: src/features/profileLinks/components/LinkFormDialog.tsx:413
 msgid "Save anyway"
-msgstr ""
+msgstr "Trotzdem speichern"
 
 #: src/components/dialogs/BirthDateSettings.tsx:193
 msgid "Save birthdate"
@@ -12105,8 +12100,8 @@ msgstr "Geburtsdatum speichern"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:195
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:204
-#: src/features/profileLinks/components/LinkFormDialog.tsx:411
-#: src/features/profileLinks/components/LinkFormDialog.tsx:429
+#: src/features/profileLinks/components/LinkFormDialog.tsx:397
+#: src/features/profileLinks/components/LinkFormDialog.tsx:415
 #: src/screens/SavedFeeds.tsx:120
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
@@ -12429,7 +12424,7 @@ msgstr "{0} auswählen"
 #. placeholder {0}: tab.label
 #: src/screens/Notifications/components/TabPills.tsx:406
 msgid "Select {0} tab"
-msgstr ""
+msgstr "Tab „{0}“ auswählen"
 
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:110
 msgid "Select {langName}"
@@ -12914,9 +12909,9 @@ msgstr "Beim Teilen deines Altersbereichs wird nur der mit deinem Apple Account 
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr "Beim Teilen deines Altersbereichs wird nur der mit deinem Google Account verknüpfte Bereich offengelegt – zum Beispiel, dass du mindestens 18 Jahre alt bist. <0>Dein genaues Alter und dein Geburtsdatum werden niemals weitergegeben</0> und diese Daten verlassen dieses Gerät niemals. Daher wird der Zugriff nur auf diesem Gerät ermöglicht. Alternativ <1>kannst du unseren vertrauenswürdigen Partner KWS nutzen</1>, um deine Verifizierung abzuschließen und den Zugriff auf allen Plattformen freizuschalten."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:264
+#: src/features/profileLinks/components/LinkFormDialog.tsx:250
 msgid "Short links can’t be added. Use the full link instead."
-msgstr ""
+msgstr "Verkürzte Links können nicht hinzugefügt werden. Verwende stattdessen den vollständigen Link."
 
 #: src/components/moderation/ContentHider.tsx:208
 #: src/components/moderation/LabelPreference.tsx:143
@@ -12969,9 +12964,9 @@ msgstr "Gruppenchat-Updates anzeigen"
 msgid "Show less like this"
 msgstr "Weniger davon anzeigen"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:221
+#: src/features/profileLinks/components/ProfileLinks.tsx:183
 msgid "Show link details"
-msgstr ""
+msgstr "Link-Details anzeigen"
 
 #: src/screens/List/ListHiddenScreen.tsx:189
 msgid "Show list anyway"
@@ -13059,7 +13054,7 @@ msgstr "Anzeigen, wenn du live bist"
 #. placeholder {0}: tab.label
 #: src/screens/Notifications/components/TabPills.tsx:408
 msgid "Shows {0} notifications"
-msgstr ""
+msgstr "Zeigt Mitteilungen für {0} an"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:599
 msgid "Shows information about when this post was created"
@@ -13446,11 +13441,11 @@ msgstr "Startpaket"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:60
 msgid "Starter Pack “{name}”"
-msgstr ""
+msgstr "Startpaket „{name}“"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:45
 msgid "Starter Pack “{starterPackName}”"
-msgstr ""
+msgstr "Startpaket „{starterPackName}“"
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #: src/components/StarterPack/StarterPackCard.tsx:86
@@ -13459,7 +13454,7 @@ msgstr "Startpaket von {0}"
 
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:408
 msgid "Starter pack by {handle}"
-msgstr ""
+msgstr "Startpaket von {handle}"
 
 #. placeholder {0}: creator.handle
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:193
@@ -13481,7 +13476,7 @@ msgstr "Startpaket ist ungültig"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:97
 msgid "Starter pack unavailable"
-msgstr ""
+msgstr "Startpaket nicht verfügbar"
 
 #: src/screens/Search/Explore.tsx:663
 #: src/screens/Search/SearchResults.tsx:114
@@ -13500,7 +13495,7 @@ msgstr "Startpakete ermöglichen es dir, deine liebsten Feeds und Personen mit d
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:44
 msgid "Status by {name}"
-msgstr ""
+msgstr "Status von {name}"
 
 #: src/screens/Settings/AboutSettings.tsx:110
 #: src/screens/Settings/AboutSettings.tsx:113
@@ -13509,7 +13504,7 @@ msgstr "Status-Seite"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:75
 msgid "Status unavailable"
-msgstr ""
+msgstr "Status nicht verfügbar"
 
 #. placeholder {0}: state.activeStep + 1
 #. placeholder {0}: state.activeStepIndex + 1
@@ -13675,20 +13670,20 @@ msgid "Support for this feature in your country has not been enabled yet! Please
 msgstr "Die Unterstützung für diese Funktion in deinem Land ist noch nicht aktiviert! Bitte versuche es später erneut."
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkFormDialog.tsx:380
+#: src/features/profileLinks/components/LinkFormDialog.tsx:366
 msgid "Support on {0}"
-msgstr ""
+msgstr "Auf {0} unterstützen"
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkPill.tsx:109
+#: src/features/profileLinks/components/LinkPill.tsx:118
 msgctxt "Creator support button, e.g. Support on Ko-fi"
 msgid "Support on {0}"
-msgstr ""
+msgstr "Auf {0} unterstützen"
 
 #: src/features/profileLinks/components/SupportedSitesDialog.tsx:39
 #: src/features/profileLinks/components/SupportedSitesDialog.tsx:42
 msgid "Supported sites"
-msgstr ""
+msgstr "Unterstützte Websites"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:93
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:109
@@ -13949,7 +13944,7 @@ msgstr "Danke! Du bist startklar."
 msgid "That contains the following:"
 msgstr "Das enthält Folgendes:"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:260
+#: src/features/profileLinks/components/LinkFormDialog.tsx:246
 msgid "That doesn’t look like a link. Try something like yoursite.com."
 msgstr ""
 
@@ -14539,7 +14534,7 @@ msgstr "Diese Kennzeichnung wurde auf den gesamten Account angewendet und wird b
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr "Dieser Kennzeichner hat nicht angegeben, welche Kennzeichnungen er veröffentlicht und ist möglicherweise nicht aktiv."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:262
+#: src/features/profileLinks/components/LinkFormDialog.tsx:248
 msgid "This link can’t be added. It goes to a site that’s blocked on Bluesky."
 msgstr ""
 
@@ -14761,7 +14756,7 @@ msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr "Verbleibende Zeit: {0, plural, one {# Sekunde} other {# Sekunden}}"
 
 #: src/components/SendErrorReportDialog.tsx:68
-#: src/features/profileLinks/components/LinkFormDialog.tsx:378
+#: src/features/profileLinks/components/LinkFormDialog.tsx:364
 msgid "Title"
 msgstr "Titel"
 
@@ -14769,7 +14764,7 @@ msgstr "Titel"
 msgid "Title (100 characters max)"
 msgstr "Titel (max. 100 Zeichen)"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:373
+#: src/features/profileLinks/components/LinkFormDialog.tsx:359
 msgid "Title (optional)"
 msgstr ""
 
@@ -15782,7 +15777,7 @@ msgstr ""
 msgid "View all reposts {name} reposted"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:306
+#: src/features/profileLinks/components/LinkFormDialog.tsx:292
 msgid "View all support sites"
 msgstr ""
 
@@ -16026,7 +16021,7 @@ msgstr "Einstellungen für diese Konversation konnten nicht geladen werden"
 msgid "We couldn't load your account settings. Check your internet connection and try again."
 msgstr "Wir konnten deine Account-Einstellungen nicht laden. Überprüfe deine Internetverbindung und versuche es erneut."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:270
+#: src/features/profileLinks/components/LinkFormDialog.tsx:256
 msgid "We couldn’t reach this link. Check it, or save anyway."
 msgstr ""
 
@@ -16976,7 +16971,7 @@ msgstr "Du bist in der Warteschlange"
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
 msgstr "Du bist mit einem App-Passwort eingeloggt. Bitte logge dich mit deinem Hauptpasswort ein, um die Deaktivierung deines Accounts fortzusetzen."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:268
+#: src/features/profileLinks/components/LinkFormDialog.tsx:254
 msgid "You’ve already added this link."
 msgstr ""
 

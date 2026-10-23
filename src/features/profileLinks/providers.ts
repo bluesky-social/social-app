@@ -5,8 +5,10 @@ import {definitelyUrl} from '#/lib/strings/url-helpers'
  * module stays free of native imports.
  */
 export type SupportProviderLogoName =
+  | 'BackerKit'
   | 'BigCartel'
   | 'Boosty'
+  | 'Booth'
   | 'BuyMeACoffee'
   | 'CashApp'
   | 'Chuffed'
@@ -15,6 +17,7 @@ export type SupportProviderLogoName =
   | 'Etsy'
   | 'Fourthwall'
   | 'Givebutter'
+  | 'GiveSendGo'
   | 'GoFundMe'
   | 'Gumroad'
   | 'Indiegogo'
@@ -27,7 +30,9 @@ export type SupportProviderLogoName =
   | 'OpenCollective'
   | 'Patreon'
   | 'PayPal'
+  | 'PixivFanbox'
   | 'Redbubble'
+  | 'Skeb'
   | 'Stripe'
   | 'Substack'
   | 'Throne'
@@ -55,8 +60,10 @@ export type SupportProvider = {
  * `assets/icons/community/`. Adult platforms are excluded per T&S.
  */
 export const SUPPORT_PROVIDERS: SupportProvider[] = [
+  {name: 'BackerKit', logo: 'BackerKit', domain: 'backerkit.com'},
   {name: 'Big Cartel', logo: 'BigCartel', domain: 'bigcartel.com'},
   {name: 'Boosty', logo: 'Boosty', domain: 'boosty.to'},
+  {name: 'BOOTH', logo: 'Booth', domain: 'booth.pm'},
   {name: 'Buy Me a Coffee', logo: 'BuyMeACoffee', domain: 'buymeacoffee.com'},
   {name: 'Cash App', logo: 'CashApp', domain: 'cash.app'},
   {
@@ -76,6 +83,7 @@ export const SUPPORT_PROVIDERS: SupportProvider[] = [
   {name: 'Etsy', logo: 'Etsy', domain: 'etsy.com'},
   {name: 'Fourthwall', logo: 'Fourthwall', domain: 'fourthwall.com'},
   {name: 'Givebutter', logo: 'Givebutter', domain: 'givebutter.com'},
+  {name: 'GiveSendGo', logo: 'GiveSendGo', domain: 'givesendgo.com'},
   {name: 'GoFundMe', logo: 'GoFundMe', domain: 'gofundme.com'},
   {name: 'Gumroad', logo: 'Gumroad', domain: 'gumroad.com'},
   {name: 'Indiegogo', logo: 'Indiegogo', domain: 'indiegogo.com'},
@@ -103,7 +111,9 @@ export const SUPPORT_PROVIDERS: SupportProvider[] = [
     pathPrefix: '/paypalme/',
   },
   {name: 'PayPal', logo: 'PayPal', domain: 'paypal.me'},
+  {name: 'pixivFANBOX', logo: 'PixivFanbox', domain: 'fanbox.cc'},
   {name: 'Redbubble', logo: 'Redbubble', domain: 'redbubble.com'},
+  {name: 'Skeb', logo: 'Skeb', domain: 'skeb.jp'},
   {name: 'Stripe', logo: 'Stripe', domain: 'buy.stripe.com'},
   {name: 'Stripe', logo: 'Stripe', domain: 'donate.stripe.com'},
   {name: 'Substack', logo: 'Substack', domain: 'substack.com'},
@@ -122,17 +132,13 @@ export function normalizeProfileLinkUrl(input: string): string | null {
 }
 
 /**
- * Sites that can't be added as profile links. Adult-content platforms are
- * excluded for now; T&S owns the full list.
- */
-export const BLOCKED_DOMAINS = ['onlyfans.com', 'fansly.com']
-
-/**
- * General-purpose URL shorteners, which hide where a link goes. Per T&S, most
- * taps on adult links from profiles went through one. A brand's own short
- * links (youtu.be, amzn.to) only lead to that brand, so they aren't listed.
+ * General-purpose URL shorteners, which hide where a link goes. A brand's own
+ * short links (youtu.be, amzn.to) only lead to that brand, so they aren't
+ * listed.
  */
 export const SHORTENER_DOMAINS = [
+  'aceimg.in',
+  'acel.me',
   'adf.ly',
   'bit.ly',
   'bitly.com',
@@ -140,21 +146,53 @@ export const SHORTENER_DOMAINS = [
   'buff.ly',
   'clck.ru',
   'cutt.ly',
+  'fc-lc.xyz',
   'goo.gl',
+  'goto.now',
   'is.gd',
+  'link2.fm',
+  'ln.run',
+  'lnk.ua',
   'lnkd.in',
+  'n9.cl',
+  'onlylinks.cc',
   'ow.ly',
+  'psee.io',
   'rb.gy',
   'rebrand.ly',
+  'rg.by',
   's.id',
+  'short.do',
   'short.gy',
+  'shorten.as',
+  'shorten.ee',
+  'shorten.is',
+  'shorten.so',
+  'shorten.tv',
+  'shorten.world',
+  'shorter.me',
+  'shortn.icu',
   'shorturl.at',
+  'shorturl.lt',
+  'shorturl.ly',
+  'slicedrve.in',
+  'slnt.to',
+  'smarturl.lt',
+  'smarturl.my',
+  'sprl.me',
+  'sw.run',
   't.co',
   't.ly',
   'tiny.cc',
   'tinyurl.com',
+  'urlr.me',
   'v.gd',
+  'vdey.in',
+  'videy.at',
+  'videy.lt',
+  'videy.my',
   'x.gd',
+  'zig.ht',
 ]
 
 function parseWebUrl(url: string): URL | undefined {
@@ -206,13 +244,6 @@ export function getSupportProvider(url: string): SupportProvider | undefined {
   )
 }
 
-export function isBlockedProfileLink(url: string): boolean {
-  const parsed = parseWebUrl(url)
-  if (!parsed) return false
-  const host = parsed.hostname.toLowerCase()
-  return BLOCKED_DOMAINS.some(domain => hostMatchesDomain(host, domain))
-}
-
 /** Plain http links can be tampered with on the way, so only https is allowed. */
 export function isInsecureLink(url: string): boolean {
   return parseWebUrl(url)?.protocol === 'http:'
@@ -243,7 +274,6 @@ export type LinkInputValidation = {
   url: string | null
   provider: SupportProvider | undefined
   isEmpty: boolean
-  isBlocked: boolean
   isShortener: boolean
   isInsecure: boolean
 }
@@ -256,7 +286,6 @@ export function validateLinkInput(input: string): LinkInputValidation {
     url,
     provider: url ? getSupportProvider(url) : undefined,
     isEmpty: trimmed.length === 0,
-    isBlocked: !!url && isBlockedProfileLink(url),
     isShortener: !!url && isShortenerLink(url),
     // typing more can't fix an http scheme, so flag it before the host is done
     isInsecure: /^http:/i.test(trimmed) || (!!url && isInsecureLink(url)),

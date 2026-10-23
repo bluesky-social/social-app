@@ -8,7 +8,7 @@ msgstr ""
 "Language: az\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-22 08:29\n"
+"PO-Revision-Date: 2026-10-23 14:40\n"
 "Last-Translator: \n"
 "Language-Team: Azerbaijani\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -281,7 +281,7 @@ msgid "{0} following"
 msgstr ""
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkFormDialog.tsx:362
+#: src/features/profileLinks/components/LinkFormDialog.tsx:363
 msgid "{0} is a recognized support link. It gets the green support button."
 msgstr ""
 
@@ -296,7 +296,7 @@ msgid "{0} is live"
 msgstr ""
 
 #. placeholder {0}: createFullHandle(draftValue, state.userDomain)
-#: src/screens/Signup/StepHandle/index.tsx:212
+#: src/screens/Signup/StepHandle/index.tsx:220
 msgid "{0} is not available"
 msgstr ""
 
@@ -337,7 +337,7 @@ msgid "{0} of {1}"
 msgstr ""
 
 #. placeholder {0}: title.length
-#: src/features/profileLinks/components/LinkFormDialog.tsx:391
+#: src/features/profileLinks/components/LinkFormDialog.tsx:392
 msgid "{0} out of {MAX_TITLE_LENGTH} characters"
 msgstr ""
 
@@ -576,7 +576,7 @@ msgstr ""
 msgid "{feedCount, plural, one {# feed} other {# feeds}}"
 msgstr ""
 
-#: src/screens/Search/components/SearchHistory.tsx:170
+#: src/screens/Search/components/SearchHistory.tsx:208
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
 msgstr ""
 
@@ -1604,8 +1604,8 @@ msgstr ""
 msgid "Add a content warning"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:279
-#: src/features/profileLinks/components/LinkFormDialog.tsx:299
+#: src/features/profileLinks/components/LinkFormDialog.tsx:280
+#: src/features/profileLinks/components/LinkFormDialog.tsx:300
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:133
 msgid "Add a link"
 msgstr ""
@@ -1691,8 +1691,8 @@ msgstr ""
 msgid "Add image"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:412
-#: src/features/profileLinks/components/LinkFormDialog.tsx:431
+#: src/features/profileLinks/components/LinkFormDialog.tsx:413
+#: src/features/profileLinks/components/LinkFormDialog.tsx:432
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:149
 msgid "Add link"
 msgstr ""
@@ -3095,7 +3095,7 @@ msgstr ""
 #: src/components/SendErrorReportDialog.tsx:102
 #: src/features/liveNow/components/GoLiveDialog.tsx:258
 #: src/features/liveNow/components/GoLiveDialog.tsx:264
-#: src/features/profileLinks/components/LinkFormDialog.tsx:281
+#: src/features/profileLinks/components/LinkFormDialog.tsx:282
 #: src/lib/media/picker.tsx:38
 #: src/screens/Deactivated.tsx:154
 #: src/screens/Messages/components/InviteLinkDialog.tsx:498
@@ -3109,6 +3109,7 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:290
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
+#: src/screens/Search/components/SearchHistory.tsx:151
 #: src/screens/Settings/AppIconSettings/index.tsx:42
 #: src/screens/Settings/AppIconSettings/index.tsx:228
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:143
@@ -3144,7 +3145,7 @@ msgstr ""
 msgid "Cancel reply"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:592
+#: src/screens/Search/Shell.tsx:600
 msgid "Cancel search"
 msgstr ""
 
@@ -3514,6 +3515,24 @@ msgstr ""
 #: src/screens/Search/components/AdvancedSearchDialog/AutocompleteInput/index.tsx:110
 #: src/screens/Search/components/AdvancedSearchDialog/ClearableInput.tsx:50
 msgid "Clear"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:150
+msgctxt "action"
+msgid "Clear"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:78
+msgctxt "action"
+msgid "Clear all"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:71
+msgid "Clear all recent searches"
+msgstr ""
+
+#: src/screens/Search/components/SearchHistory.tsx:147
+msgid "Clear all recent searches?"
 msgstr ""
 
 #: src/screens/Settings/Settings.tsx:539
@@ -4030,7 +4049,7 @@ msgstr ""
 msgid "Copied build version to clipboard"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:512
+#: src/screens/Search/Shell.tsx:520
 msgid "Copied link to clipboard"
 msgstr ""
 
@@ -5031,7 +5050,7 @@ msgstr ""
 msgid "e.g. Great Posters"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:380
+#: src/features/profileLinks/components/LinkFormDialog.tsx:381
 msgid "e.g. Portfolio"
 msgstr ""
 
@@ -5115,8 +5134,8 @@ msgctxt "button"
 msgid "Edit invite link"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:279
-#: src/features/profileLinks/components/LinkFormDialog.tsx:299
+#: src/features/profileLinks/components/LinkFormDialog.tsx:280
+#: src/features/profileLinks/components/LinkFormDialog.tsx:300
 #: src/features/profileLinks/components/ProfileLinks.tsx:193
 msgid "Edit link"
 msgstr ""
@@ -5574,7 +5593,7 @@ msgstr ""
 
 #: src/Navigation.tsx:930
 #: src/screens/Atmosphere.tsx:43
-#: src/screens/Search/Shell.tsx:549
+#: src/screens/Search/Shell.tsx:557
 #: src/view/shell/desktop/LeftNav.tsx:721
 #: src/view/shell/Drawer.tsx:537
 msgid "Explore"
@@ -5657,7 +5676,7 @@ msgstr ""
 
 #: src/components/Lightbox/Lightbox.web.tsx:308
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:131
-#: src/screens/Search/Shell.tsx:513
+#: src/screens/Search/Shell.tsx:521
 msgid "Failed to copy link"
 msgstr ""
 
@@ -6171,7 +6190,7 @@ msgstr ""
 msgid "Find people you know"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:765
+#: src/screens/Search/Shell.tsx:774
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr ""
 
@@ -8110,8 +8129,8 @@ msgstr ""
 msgid "Linear"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:318
-#: src/features/profileLinks/components/LinkFormDialog.tsx:324
+#: src/features/profileLinks/components/LinkFormDialog.tsx:319
+#: src/features/profileLinks/components/LinkFormDialog.tsx:325
 msgid "Link"
 msgstr ""
 
@@ -8135,7 +8154,7 @@ msgstr ""
 msgid "Links"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:302
+#: src/features/profileLinks/components/LinkFormDialog.tsx:303
 msgid "Links show as buttons under your bio. Links to support sites like Ko-fi or Patreon show as a green button. <0>View all support sites</0>"
 msgstr ""
 
@@ -9802,7 +9821,7 @@ msgstr ""
 msgid "Only replies"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:266
+#: src/features/profileLinks/components/LinkFormDialog.tsx:267
 msgid "Only secure links can be added. Use a link that starts with https://."
 msgstr ""
 
@@ -11189,7 +11208,7 @@ msgstr ""
 msgid "Recent GIFs"
 msgstr ""
 
-#: src/screens/Search/components/SearchHistory.tsx:52
+#: src/screens/Search/components/SearchHistory.tsx:67
 msgid "Recent searches"
 msgstr ""
 
@@ -11276,7 +11295,7 @@ msgstr ""
 msgid "Remove {displayName}?"
 msgstr ""
 
-#: src/screens/Search/components/SearchHistory.tsx:182
+#: src/screens/Search/components/SearchHistory.tsx:220
 msgid "Remove {q}"
 msgstr ""
 
@@ -11380,8 +11399,8 @@ msgstr ""
 msgid "Remove last card"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:439
-#: src/features/profileLinks/components/LinkFormDialog.tsx:444
+#: src/features/profileLinks/components/LinkFormDialog.tsx:440
+#: src/features/profileLinks/components/LinkFormDialog.tsx:445
 msgid "Remove link"
 msgstr ""
 
@@ -11399,7 +11418,7 @@ msgstr ""
 msgid "Remove mute word from your list"
 msgstr ""
 
-#: src/screens/Search/components/SearchHistory.tsx:243
+#: src/screens/Search/components/SearchHistory.tsx:281
 msgid "Remove profile"
 msgstr ""
 
@@ -12075,8 +12094,8 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:409
-#: src/features/profileLinks/components/LinkFormDialog.tsx:427
+#: src/features/profileLinks/components/LinkFormDialog.tsx:410
+#: src/features/profileLinks/components/LinkFormDialog.tsx:428
 msgid "Save anyway"
 msgstr ""
 
@@ -12086,8 +12105,8 @@ msgstr ""
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:195
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:204
-#: src/features/profileLinks/components/LinkFormDialog.tsx:411
-#: src/features/profileLinks/components/LinkFormDialog.tsx:429
+#: src/features/profileLinks/components/LinkFormDialog.tsx:412
+#: src/features/profileLinks/components/LinkFormDialog.tsx:430
 #: src/screens/SavedFeeds.tsx:120
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
@@ -12219,9 +12238,9 @@ msgstr ""
 #: src/components/forms/SearchInput.tsx:59
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
-#: src/screens/Search/Shell.tsx:549
-#: src/screens/Search/Shell.tsx:612
-#: src/screens/Search/Shell.tsx:753
+#: src/screens/Search/Shell.tsx:557
+#: src/screens/Search/Shell.tsx:620
+#: src/screens/Search/Shell.tsx:762
 #: src/view/shell/bottom-bar/BottomBar.tsx:220
 msgid "Search"
 msgstr ""
@@ -12259,7 +12278,7 @@ msgstr ""
 msgid "Search for “{searchText}”"
 msgstr ""
 
-#: src/screens/Search/components/SearchHistory.tsx:136
+#: src/screens/Search/components/SearchHistory.tsx:174
 msgid "Search for {q}"
 msgstr ""
 
@@ -12849,8 +12868,8 @@ msgstr ""
 msgid "Share this feed"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:565
-#: src/screens/Search/Shell.tsx:634
+#: src/screens/Search/Shell.tsx:573
+#: src/screens/Search/Shell.tsx:642
 msgid "Share this search"
 msgstr ""
 
@@ -12895,7 +12914,7 @@ msgstr ""
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:264
+#: src/features/profileLinks/components/LinkFormDialog.tsx:265
 msgid "Short links can’t be added. Use the full link instead."
 msgstr ""
 
@@ -13656,7 +13675,7 @@ msgid "Support for this feature in your country has not been enabled yet! Please
 msgstr ""
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkFormDialog.tsx:380
+#: src/features/profileLinks/components/LinkFormDialog.tsx:381
 msgid "Support on {0}"
 msgstr ""
 
@@ -13930,7 +13949,7 @@ msgstr ""
 msgid "That contains the following:"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:260
+#: src/features/profileLinks/components/LinkFormDialog.tsx:261
 msgid "That doesn’t look like a link. Try something like yoursite.com."
 msgstr ""
 
@@ -14350,6 +14369,10 @@ msgstr ""
 msgid "This button lets others open the Germ DM app to send you a message. You can manage its visibility from the Germ DM app, or you can disconnect your Bluesky account from Germ DM altogether by clicking the button below."
 msgstr ""
 
+#: src/screens/Search/components/SearchHistory.tsx:148
+msgid "This can’t be undone, and all of your recent searches will be removed."
+msgstr ""
+
 #: src/screens/Messages/components/ChatEnded.tsx:48
 msgid "This chat has ended"
 msgstr ""
@@ -14516,7 +14539,7 @@ msgstr ""
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:262
+#: src/features/profileLinks/components/LinkFormDialog.tsx:263
 msgid "This link can’t be added. It goes to a site that’s blocked on Bluesky."
 msgstr ""
 
@@ -14738,7 +14761,7 @@ msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr ""
 
 #: src/components/SendErrorReportDialog.tsx:68
-#: src/features/profileLinks/components/LinkFormDialog.tsx:378
+#: src/features/profileLinks/components/LinkFormDialog.tsx:379
 msgid "Title"
 msgstr ""
 
@@ -14746,7 +14769,7 @@ msgstr ""
 msgid "Title (100 characters max)"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:373
+#: src/features/profileLinks/components/LinkFormDialog.tsx:374
 msgid "Title (optional)"
 msgstr ""
 
@@ -15481,15 +15504,19 @@ msgctxt "toast"
 msgid "User list updated"
 msgstr ""
 
-#: src/screens/Signup/StepHandle/index.tsx:258
+#: src/screens/Signup/StepHandle/index.tsx:266
 msgid "Username cannot be longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
 msgstr ""
 
-#: src/screens/Signup/StepHandle/index.tsx:242
+#: src/screens/Signup/StepHandle/index.tsx:250
 msgid "Username cannot begin or end with a hyphen"
 msgstr ""
 
-#: src/screens/Signup/StepHandle/index.tsx:246
+#: src/screens/Signup/StepHandle/index.tsx:200
+msgid "Username is available"
+msgstr ""
+
+#: src/screens/Signup/StepHandle/index.tsx:254
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
 msgstr ""
 
@@ -15759,7 +15786,7 @@ msgstr ""
 msgid "View all reposts {name} reposted"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:306
+#: src/features/profileLinks/components/LinkFormDialog.tsx:307
 msgid "View all support sites"
 msgstr ""
 
@@ -16003,7 +16030,7 @@ msgstr ""
 msgid "We couldn't load your account settings. Check your internet connection and try again."
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:270
+#: src/features/profileLinks/components/LinkFormDialog.tsx:271
 msgid "We couldn’t reach this link. Check it, or save anyway."
 msgstr ""
 
@@ -16953,7 +16980,7 @@ msgstr ""
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:268
+#: src/features/profileLinks/components/LinkFormDialog.tsx:269
 msgid "You’ve already added this link."
 msgstr ""
 
