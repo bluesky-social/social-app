@@ -301,6 +301,7 @@ export function PublicationCard({
   style,
   linkProps,
   onEmbedInteractionCallback,
+  hideSubscribe,
 }: ssTypes.CommonProps &
   ssTypes.PreviewProps &
   ssTypes.PublicApiProps & {
@@ -314,6 +315,7 @@ export function PublicationCard({
      * `onFocus`.
      */
     linkProps?: Pick<LinkProps, 'ref' | 'tabIndex' | 'onFocus'>
+    hideSubscribe?: boolean
   }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -411,7 +413,7 @@ export function PublicationCard({
           </View>
         </View>
 
-        {gtPhone && (
+        {gtPhone && !hideSubscribe && (
           <SubscribeButton
             preview={preview}
             view={view}

@@ -34,6 +34,7 @@ export function PublicationCard({
 
   return (
     <SharedPublicationCard
+      hideSubscribe
       view={publication.view}
       themeColors={themeColors}
       style={width ? {width} : undefined}

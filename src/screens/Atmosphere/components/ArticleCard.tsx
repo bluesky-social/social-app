@@ -48,7 +48,8 @@ export function ArticleCard({
               />
             ) : undefined}
           </View>
-          <View style={[a.flex_1, a.gap_xs, a.p_md, {paddingTop: 10}]}>
+          <View
+            style={[a.w_full, a.flex_1, a.gap_xs, a.p_md, {paddingTop: 10}]}>
             {article.publisher || article.publisherAvatar ? (
               <View
                 style={[
