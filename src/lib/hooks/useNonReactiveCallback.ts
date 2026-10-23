@@ -13,6 +13,12 @@ const noop = () => {}
  * the values captured by it are going to lag behind.
  *
  * For objects, see `useNonReactiveObject` instead.
+ *
+ * Use this rather than `useEffectEvent` in a component wrapped in `memo()` or
+ * `forwardRef()`, and in any hook that such a component calls. React 19.2
+ * never updates a `useEffectEvent` there after the first render, so it keeps
+ * calling the first render's closure, with stale props and state, and nothing
+ * warns (react/react#35187, fixed in React 19.3).
  */
 export function useNonReactiveCallback<T extends Function = () => void>(
   fn?: T,
