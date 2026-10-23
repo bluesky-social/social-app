@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-22 08:29\n"
+"PO-Revision-Date: 2026-10-23 14:40\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -281,7 +281,7 @@ msgid "{0} following"
 msgstr "{0} följda"
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkFormDialog.tsx:362
+#: src/features/profileLinks/components/LinkFormDialog.tsx:348
 msgid "{0} is a recognized support link. It gets the green support button."
 msgstr "{0} är en känd bidragslänk. Den får en grön bidragsknapp."
 
@@ -337,7 +337,7 @@ msgid "{0} of {1}"
 msgstr "{0} av {1}"
 
 #. placeholder {0}: title.length
-#: src/features/profileLinks/components/LinkFormDialog.tsx:391
+#: src/features/profileLinks/components/LinkFormDialog.tsx:377
 msgid "{0} out of {MAX_TITLE_LENGTH} characters"
 msgstr "{0} av {MAX_TITLE_LENGTH} tecken"
 
@@ -535,7 +535,7 @@ msgstr "{count, plural, one {# förfrågan} other {# förfrågningar}}"
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# oläst notis} other {# olästa notiser}}"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:401
+#: src/features/profileLinks/components/ProfileLinks.tsx:346
 msgid "{count, plural, one {Show # more link} other {Show # more links}}"
 msgstr "{count, plural, one {Visa en länk till} other {Visa # länkar till}}"
 
@@ -1604,8 +1604,8 @@ msgstr "Lägg till {displayName} i startpaketet"
 msgid "Add a content warning"
 msgstr "Lägg till innehållsvarning"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:279
-#: src/features/profileLinks/components/LinkFormDialog.tsx:299
+#: src/features/profileLinks/components/LinkFormDialog.tsx:265
+#: src/features/profileLinks/components/LinkFormDialog.tsx:285
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:133
 msgid "Add a link"
 msgstr "Lägg till en länk"
@@ -1691,8 +1691,8 @@ msgstr "Lägg till medlemmar i gruppchatt"
 msgid "Add image"
 msgstr "Lägg till bild"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:412
-#: src/features/profileLinks/components/LinkFormDialog.tsx:431
+#: src/features/profileLinks/components/LinkFormDialog.tsx:398
+#: src/features/profileLinks/components/LinkFormDialog.tsx:417
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:149
 msgid "Add link"
 msgstr "Lägg till länk"
@@ -3095,7 +3095,7 @@ msgstr "Kameraåtkomst krävs"
 #: src/components/SendErrorReportDialog.tsx:102
 #: src/features/liveNow/components/GoLiveDialog.tsx:258
 #: src/features/liveNow/components/GoLiveDialog.tsx:264
-#: src/features/profileLinks/components/LinkFormDialog.tsx:281
+#: src/features/profileLinks/components/LinkFormDialog.tsx:267
 #: src/lib/media/picker.tsx:38
 #: src/screens/Deactivated.tsx:154
 #: src/screens/Messages/components/InviteLinkDialog.tsx:498
@@ -3520,20 +3520,20 @@ msgstr "Rensa"
 #: src/screens/Search/components/SearchHistory.tsx:150
 msgctxt "action"
 msgid "Clear"
-msgstr ""
+msgstr "Rensa"
 
 #: src/screens/Search/components/SearchHistory.tsx:78
 msgctxt "action"
 msgid "Clear all"
-msgstr ""
+msgstr "Rensa alla"
 
 #: src/screens/Search/components/SearchHistory.tsx:71
 msgid "Clear all recent searches"
-msgstr ""
+msgstr "Rensa alla senaste sökningar"
 
 #: src/screens/Search/components/SearchHistory.tsx:147
 msgid "Clear all recent searches?"
-msgstr ""
+msgstr "Rensa alla senaste sökningar?"
 
 #: src/screens/Settings/Settings.tsx:539
 msgid "Clear all storage data"
@@ -3675,8 +3675,8 @@ msgstr "Klicka för att försöka på nytt med misslyckat meddelande"
 msgid "Close"
 msgstr "Stäng"
 
-#: src/components/Dialog/index.web.tsx:143
-#: src/components/Dialog/index.web.tsx:357
+#: src/components/Dialog/index.web.tsx:155
+#: src/components/Dialog/index.web.tsx:372
 msgid "Close active dialog"
 msgstr "Stäng aktiv dialogruta"
 
@@ -3841,7 +3841,7 @@ msgstr "Konfigureras i <0>modereringsinställningar</0>."
 msgid "Confirm"
 msgstr "Bekräfta"
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:77
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:81
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:171
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:250
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
@@ -3969,7 +3969,7 @@ msgstr "Innehållsvarning"
 msgid "Content warnings"
 msgstr "Innehållsvarningar"
 
-#: src/components/Menu/index.web.tsx:88
+#: src/components/Menu/index.web.tsx:89
 msgid "Context menu backdrop, click to close the menu."
 msgstr "Utanför kontextmenyn. Klicka för att stänga menyn."
 
@@ -4286,10 +4286,6 @@ msgstr "Kunde inte läsa in fler konton. Försök igen."
 #: src/features/followingV2/home/GapRow.tsx:83
 msgid "Couldn’t load more posts. Try again"
 msgstr "Kunde inte läsa in fler inlägg. Försök igen"
-
-#: src/features/profileLinks/components/ProfileLinks.tsx:175
-msgid "Couldn’t save your links. Please try again."
-msgstr "Kunde inte spara dina länkar. Försök igen."
 
 #: src/components/Gallery/Storybook.tsx:339
 msgid "Counter"
@@ -5050,7 +5046,7 @@ msgstr "T.ex. konstnärliga nakenbilder."
 msgid "e.g. Great Posters"
 msgstr "t.ex. Framstående inläggsförfattare"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:380
+#: src/features/profileLinks/components/LinkFormDialog.tsx:366
 msgid "e.g. Portfolio"
 msgstr "t.ex. portfolio"
 
@@ -5134,9 +5130,8 @@ msgctxt "button"
 msgid "Edit invite link"
 msgstr "Redigera inbjudningslänk"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:279
-#: src/features/profileLinks/components/LinkFormDialog.tsx:299
-#: src/features/profileLinks/components/ProfileLinks.tsx:193
+#: src/features/profileLinks/components/LinkFormDialog.tsx:265
+#: src/features/profileLinks/components/LinkFormDialog.tsx:285
 msgid "Edit link"
 msgstr "Redigera länk"
 
@@ -8129,8 +8124,8 @@ msgstr "Profilen har begränsats"
 msgid "Linear"
 msgstr "Linjär vy"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:318
-#: src/features/profileLinks/components/LinkFormDialog.tsx:324
+#: src/features/profileLinks/components/LinkFormDialog.tsx:304
+#: src/features/profileLinks/components/LinkFormDialog.tsx:310
 msgid "Link"
 msgstr "Länk"
 
@@ -8154,9 +8149,9 @@ msgstr "Länk till {domain}"
 msgid "Links"
 msgstr "Länkar"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:302
+#: src/features/profileLinks/components/LinkFormDialog.tsx:288
 msgid "Links show as buttons under your bio. Links to support sites like Ko-fi or Patreon show as a green button. <0>View all support sites</0>"
-msgstr ""
+msgstr "Länkar visas som knappar under din profilbeskrivning. Länkar till webbplatser där besökare kan ge bidrag – t.ex. Ko-fi och Patreon – visas som gröna bidragsknappar. <0>Se vilka webbplatser som visas som bidragsknappar</0>"
 
 #: src/features/profileLinks/components/SupportedSitesDialog.tsx:45
 msgid "Links to these sites show as a green support button."
@@ -9821,7 +9816,7 @@ msgstr "Endast inlägg med videoklipp"
 msgid "Only replies"
 msgstr "Endast svar"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:266
+#: src/features/profileLinks/components/LinkFormDialog.tsx:252
 msgid "Only secure links can be added. Use a link that starts with https://."
 msgstr "Endast säkra länkar kan läggas till. Ange en länk som börjar med https://."
 
@@ -9847,7 +9842,7 @@ msgid "Oops!"
 msgstr "Hoppsan!"
 
 #. placeholder {0}: linkLabel(link)
-#: src/features/profileLinks/components/LinkPill.tsx:80
+#: src/features/profileLinks/components/LinkPill.tsx:87
 msgid "Open {0}"
 msgstr "Öppna {0}"
 
@@ -10017,7 +10012,7 @@ msgstr "Öppna den här gruppchatten"
 #. placeholder {0}: getLinkHost(link.url)
 #. placeholder {0}: link.url
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:85
-#: src/features/profileLinks/components/ProfileLinks.tsx:206
+#: src/features/profileLinks/components/ProfileLinks.tsx:168
 msgid "Opens {0} outside Bluesky"
 msgstr "Öppnar {0} utanför Bluesky"
 
@@ -11399,8 +11394,8 @@ msgstr ""
 msgid "Remove last card"
 msgstr ""
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:439
-#: src/features/profileLinks/components/LinkFormDialog.tsx:444
+#: src/features/profileLinks/components/LinkFormDialog.tsx:425
+#: src/features/profileLinks/components/LinkFormDialog.tsx:430
 msgid "Remove link"
 msgstr "Ta bort länk"
 
@@ -12094,8 +12089,8 @@ msgstr "Ledsna gif-bilder"
 msgid "Save"
 msgstr "Spara"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:409
-#: src/features/profileLinks/components/LinkFormDialog.tsx:427
+#: src/features/profileLinks/components/LinkFormDialog.tsx:395
+#: src/features/profileLinks/components/LinkFormDialog.tsx:413
 msgid "Save anyway"
 msgstr "Spara ändå"
 
@@ -12105,8 +12100,8 @@ msgstr "Spara födelsedatum"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:195
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:204
-#: src/features/profileLinks/components/LinkFormDialog.tsx:411
-#: src/features/profileLinks/components/LinkFormDialog.tsx:429
+#: src/features/profileLinks/components/LinkFormDialog.tsx:397
+#: src/features/profileLinks/components/LinkFormDialog.tsx:415
 #: src/screens/SavedFeeds.tsx:120
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
@@ -12914,7 +12909,7 @@ msgstr "När du delar din åldersgrupp delar du bara det intervall som är koppl
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr "När du delar din åldersgrupp delar du bara det intervall som är kopplat till ditt Google-konto, till exempel att du är 18 år eller äldre. <0>Din exakta ålder eller ditt födelsedatum delas inte,</0> och informationen lämnar aldrig din enhet. Därför ger det här alternativet endast åtkomst för den här enheten. Du kan också välja att göra en <1>fullbordad verifiering via vår betrodda partner KWS</1>. En sådan möjliggör åtkomst från alla plattformar."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:264
+#: src/features/profileLinks/components/LinkFormDialog.tsx:250
 msgid "Short links can’t be added. Use the full link instead."
 msgstr "Kortlänkar kan inte läggas till. Ange den fullständiga länken istället."
 
@@ -12969,7 +12964,7 @@ msgstr "Visa chatthändelser"
 msgid "Show less like this"
 msgstr "Visa mindre av sånt här"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:221
+#: src/features/profileLinks/components/ProfileLinks.tsx:183
 msgid "Show link details"
 msgstr "Visa länkdetaljer"
 
@@ -13675,12 +13670,12 @@ msgid "Support for this feature in your country has not been enabled yet! Please
 msgstr "Den här funktionen har inte aktiverats för ditt land ännu. Kom tillbaka senare."
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkFormDialog.tsx:380
+#: src/features/profileLinks/components/LinkFormDialog.tsx:366
 msgid "Support on {0}"
 msgstr "Bidra via {0}"
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkPill.tsx:109
+#: src/features/profileLinks/components/LinkPill.tsx:118
 msgctxt "Creator support button, e.g. Support on Ko-fi"
 msgid "Support on {0}"
 msgstr "Bidra via {0}"
@@ -13949,7 +13944,7 @@ msgstr "Tack! Då var det klart."
 msgid "That contains the following:"
 msgstr "Som innehåller följande:"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:260
+#: src/features/profileLinks/components/LinkFormDialog.tsx:246
 msgid "That doesn’t look like a link. Try something like yoursite.com."
 msgstr "Det här ser inte ut som en länk. Försök med något i stil med dinsida.se."
 
@@ -14371,7 +14366,7 @@ msgstr "Med den här knappen kan andra öppna Germ DM-appen för att skicka ett 
 
 #: src/screens/Search/components/SearchHistory.tsx:148
 msgid "This can’t be undone, and all of your recent searches will be removed."
-msgstr ""
+msgstr "Alla dina senaste sökningar kommer att tas bort. Det här går inte att ångra."
 
 #: src/screens/Messages/components/ChatEnded.tsx:48
 msgid "This chat has ended"
@@ -14539,7 +14534,7 @@ msgstr "Den här etiketten gäller för hela användarkontot och visas på alla 
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr "Den här etikettsättaren har inte lämnat någon information om sina etiketter, och är kanske inte aktiv."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:262
+#: src/features/profileLinks/components/LinkFormDialog.tsx:248
 msgid "This link can’t be added. It goes to a site that’s blocked on Bluesky."
 msgstr "Den här länken kan inte läggas till. Den leder till en webbplats som är blockerad på Bluesky."
 
@@ -14761,7 +14756,7 @@ msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr "Återstående tid: {0, plural, one {# sekund} other {# sekunder}}"
 
 #: src/components/SendErrorReportDialog.tsx:68
-#: src/features/profileLinks/components/LinkFormDialog.tsx:378
+#: src/features/profileLinks/components/LinkFormDialog.tsx:364
 msgid "Title"
 msgstr "Titel"
 
@@ -14769,7 +14764,7 @@ msgstr "Titel"
 msgid "Title (100 characters max)"
 msgstr "Titel (max 100 tecken)"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:373
+#: src/features/profileLinks/components/LinkFormDialog.tsx:359
 msgid "Title (optional)"
 msgstr "Titel (valfritt)"
 
@@ -15782,9 +15777,9 @@ msgstr "Visa alla återpubliceringar som {name} gillade"
 msgid "View all reposts {name} reposted"
 msgstr "Visa alla återpubliceringar som {name} återpublicerade"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:306
+#: src/features/profileLinks/components/LinkFormDialog.tsx:292
 msgid "View all support sites"
-msgstr ""
+msgstr "Se vilka webbplatser som visas som bidragsknappar"
 
 #: src/components/ProfileHoverCard/index.web.tsx:487
 msgid "View blocked user's profile"
@@ -16026,7 +16021,7 @@ msgstr "Vi kunde inte läsa in den här konversationens inställningar"
 msgid "We couldn't load your account settings. Check your internet connection and try again."
 msgstr "Vi kunde inte läsa in dina kontoinställningar. Kontrollera din internetanslutning och försök igen."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:270
+#: src/features/profileLinks/components/LinkFormDialog.tsx:256
 msgid "We couldn’t reach this link. Check it, or save anyway."
 msgstr "Vi kunde inte nå den här länken. Kontrollera den, eller spara ändå."
 
@@ -16976,7 +16971,7 @@ msgstr "Du står i kö"
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
 msgstr "Du är inloggad med ett applösenord. Logga in med ditt vanliga lösenord för att fortsätta inaktiveringen av ditt konto."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:268
+#: src/features/profileLinks/components/LinkFormDialog.tsx:254
 msgid "You’ve already added this link."
 msgstr "Du har redan lagt till den här länken."
 

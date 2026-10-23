@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-22 08:29\n"
+"PO-Revision-Date: 2026-10-23 14:40\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -281,7 +281,7 @@ msgid "{0} following"
 msgstr "{0} abonnements"
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkFormDialog.tsx:362
+#: src/features/profileLinks/components/LinkFormDialog.tsx:348
 msgid "{0} is a recognized support link. It gets the green support button."
 msgstr "{0} est un lien de soutien reconnu. Il s’affichera comme un bouton de soutien en vert."
 
@@ -337,7 +337,7 @@ msgid "{0} of {1}"
 msgstr "{0} sur {1}"
 
 #. placeholder {0}: title.length
-#: src/features/profileLinks/components/LinkFormDialog.tsx:391
+#: src/features/profileLinks/components/LinkFormDialog.tsx:377
 msgid "{0} out of {MAX_TITLE_LENGTH} characters"
 msgstr "{0} sur {MAX_TITLE_LENGTH} caractères maximum"
 
@@ -535,7 +535,7 @@ msgstr "{count, plural, one {# demande} other {# demandes}}"
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# élément non lu} other {# éléments non lus}}"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:401
+#: src/features/profileLinks/components/ProfileLinks.tsx:346
 msgid "{count, plural, one {Show # more link} other {Show # more links}}"
 msgstr "Afficher {count, plural, one {un lien} other {# liens}} en plus"
 
@@ -775,7 +775,7 @@ msgstr "{handle} ne peut être contacté·e par message"
 
 #: src/components/moderation/BlockDialog.tsx:199
 msgid "{hiddenCount, plural, one {See # more} other {See # more}}"
-msgstr ""
+msgstr "Afficher {hiddenCount, plural, one {un de plus} other {# de plus}}"
 
 #: src/features/liveNow/utils.ts:40
 msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesString}}}"
@@ -1604,8 +1604,8 @@ msgstr "Ajouter {displayName} au kit de démarrage"
 msgid "Add a content warning"
 msgstr "Ajouter un avertissement sur le contenu"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:279
-#: src/features/profileLinks/components/LinkFormDialog.tsx:299
+#: src/features/profileLinks/components/LinkFormDialog.tsx:265
+#: src/features/profileLinks/components/LinkFormDialog.tsx:285
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:133
 msgid "Add a link"
 msgstr "Ajouter un lien"
@@ -1691,8 +1691,8 @@ msgstr "Ajouter des membres à la discussion de groupe"
 msgid "Add image"
 msgstr "Ajouter une image"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:412
-#: src/features/profileLinks/components/LinkFormDialog.tsx:431
+#: src/features/profileLinks/components/LinkFormDialog.tsx:398
+#: src/features/profileLinks/components/LinkFormDialog.tsx:417
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:149
 msgid "Add link"
 msgstr "Ajouter un lien"
@@ -3095,7 +3095,7 @@ msgstr "Accès à l’appareil photo nécessaire"
 #: src/components/SendErrorReportDialog.tsx:102
 #: src/features/liveNow/components/GoLiveDialog.tsx:258
 #: src/features/liveNow/components/GoLiveDialog.tsx:264
-#: src/features/profileLinks/components/LinkFormDialog.tsx:281
+#: src/features/profileLinks/components/LinkFormDialog.tsx:267
 #: src/lib/media/picker.tsx:38
 #: src/screens/Deactivated.tsx:154
 #: src/screens/Messages/components/InviteLinkDialog.tsx:498
@@ -3520,20 +3520,20 @@ msgstr "Effacer"
 #: src/screens/Search/components/SearchHistory.tsx:150
 msgctxt "action"
 msgid "Clear"
-msgstr ""
+msgstr "Effacer"
 
 #: src/screens/Search/components/SearchHistory.tsx:78
 msgctxt "action"
 msgid "Clear all"
-msgstr ""
+msgstr "Tout effacer"
 
 #: src/screens/Search/components/SearchHistory.tsx:71
 msgid "Clear all recent searches"
-msgstr ""
+msgstr "Effacer toutes les recherches récentes"
 
 #: src/screens/Search/components/SearchHistory.tsx:147
 msgid "Clear all recent searches?"
-msgstr ""
+msgstr "Effacer toutes les recherches récentes ?"
 
 #: src/screens/Settings/Settings.tsx:539
 msgid "Clear all storage data"
@@ -3675,8 +3675,8 @@ msgstr "Cliquer pour réessayer l’envoi échoué du message"
 msgid "Close"
 msgstr "Fermer"
 
-#: src/components/Dialog/index.web.tsx:143
-#: src/components/Dialog/index.web.tsx:357
+#: src/components/Dialog/index.web.tsx:155
+#: src/components/Dialog/index.web.tsx:372
 msgid "Close active dialog"
 msgstr "Fermer le dialogue actif"
 
@@ -3841,7 +3841,7 @@ msgstr "Configuré dans <0>les paramètres de modération</0>."
 msgid "Confirm"
 msgstr "Confirmer"
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:77
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:81
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:171
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:250
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
@@ -3969,7 +3969,7 @@ msgstr "Avertissement sur le contenu"
 msgid "Content warnings"
 msgstr "Avertissements sur le contenu"
 
-#: src/components/Menu/index.web.tsx:88
+#: src/components/Menu/index.web.tsx:89
 msgid "Context menu backdrop, click to close the menu."
 msgstr "Menu contextuel en arrière-plan, cliquez pour fermer le menu."
 
@@ -4286,10 +4286,6 @@ msgstr "Échec du chargement de plus de comptes, veuillez réessayer"
 #: src/features/followingV2/home/GapRow.tsx:83
 msgid "Couldn’t load more posts. Try again"
 msgstr "Impossible de charger plus de posts. Réessayez"
-
-#: src/features/profileLinks/components/ProfileLinks.tsx:175
-msgid "Couldn’t save your links. Please try again."
-msgstr "Impossible d’enregistrer vos liens. Veuillez réessayer."
 
 #: src/components/Gallery/Storybook.tsx:339
 msgid "Counter"
@@ -5050,7 +5046,7 @@ msgstr "Nudité artistique par exemple."
 msgid "e.g. Great Posters"
 msgstr "ex. Les meilleurs comptes"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:380
+#: src/features/profileLinks/components/LinkFormDialog.tsx:366
 msgid "e.g. Portfolio"
 msgstr "ex. Portfolio"
 
@@ -5134,9 +5130,8 @@ msgctxt "button"
 msgid "Edit invite link"
 msgstr "Modifier le lien d’invitation"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:279
-#: src/features/profileLinks/components/LinkFormDialog.tsx:299
-#: src/features/profileLinks/components/ProfileLinks.tsx:193
+#: src/features/profileLinks/components/LinkFormDialog.tsx:265
+#: src/features/profileLinks/components/LinkFormDialog.tsx:285
 msgid "Edit link"
 msgstr "Modifier le lien"
 
@@ -8129,8 +8124,8 @@ msgstr "Profil restreint"
 msgid "Linear"
 msgstr "Linéaire"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:318
-#: src/features/profileLinks/components/LinkFormDialog.tsx:324
+#: src/features/profileLinks/components/LinkFormDialog.tsx:304
+#: src/features/profileLinks/components/LinkFormDialog.tsx:310
 msgid "Link"
 msgstr "Lien"
 
@@ -8154,7 +8149,7 @@ msgstr "Lien vers {domain}"
 msgid "Links"
 msgstr "Liens"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:302
+#: src/features/profileLinks/components/LinkFormDialog.tsx:288
 msgid "Links show as buttons under your bio. Links to support sites like Ko-fi or Patreon show as a green button. <0>View all support sites</0>"
 msgstr "Les liens s’affichent comme des boutons sous votre bio. Les liens vers des sites de soutien comme Ko-fi ou Patreon s’affichent avec un bouton vert de soutien. <0>Voir tous les sites</0>"
 
@@ -9821,7 +9816,7 @@ msgstr "Uniquement les posts avec des vidéos"
 msgid "Only replies"
 msgstr "Uniquement les réponses"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:266
+#: src/features/profileLinks/components/LinkFormDialog.tsx:252
 msgid "Only secure links can be added. Use a link that starts with https://."
 msgstr "Seuls les liens sécurisés peuvent être ajoutés. Utilisez un lien qui commence par https://."
 
@@ -9847,7 +9842,7 @@ msgid "Oops!"
 msgstr "Oups !"
 
 #. placeholder {0}: linkLabel(link)
-#: src/features/profileLinks/components/LinkPill.tsx:80
+#: src/features/profileLinks/components/LinkPill.tsx:87
 msgid "Open {0}"
 msgstr "Ouvrir {0}"
 
@@ -10017,7 +10012,7 @@ msgstr "Ouvrir cette discussion de groupe"
 #. placeholder {0}: getLinkHost(link.url)
 #. placeholder {0}: link.url
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:85
-#: src/features/profileLinks/components/ProfileLinks.tsx:206
+#: src/features/profileLinks/components/ProfileLinks.tsx:168
 msgid "Opens {0} outside Bluesky"
 msgstr "Ouvre {0} hors de Bluesky"
 
@@ -11399,8 +11394,8 @@ msgstr "Supprimer le dernier"
 msgid "Remove last card"
 msgstr "Supprimer la dernière carte"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:439
-#: src/features/profileLinks/components/LinkFormDialog.tsx:444
+#: src/features/profileLinks/components/LinkFormDialog.tsx:425
+#: src/features/profileLinks/components/LinkFormDialog.tsx:430
 msgid "Remove link"
 msgstr "Supprimer le lien"
 
@@ -12094,8 +12089,8 @@ msgstr "GIFs tristes"
 msgid "Save"
 msgstr "Enregistrer"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:409
-#: src/features/profileLinks/components/LinkFormDialog.tsx:427
+#: src/features/profileLinks/components/LinkFormDialog.tsx:395
+#: src/features/profileLinks/components/LinkFormDialog.tsx:413
 msgid "Save anyway"
 msgstr "Enregistrer quand même"
 
@@ -12105,8 +12100,8 @@ msgstr "Enregistrer la date de naissance"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:195
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:204
-#: src/features/profileLinks/components/LinkFormDialog.tsx:411
-#: src/features/profileLinks/components/LinkFormDialog.tsx:429
+#: src/features/profileLinks/components/LinkFormDialog.tsx:397
+#: src/features/profileLinks/components/LinkFormDialog.tsx:415
 #: src/screens/SavedFeeds.tsx:120
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
@@ -12914,7 +12909,7 @@ msgstr "Partager votre tranche d’âge ne révèle que celle associée à votre
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr "Partager votre tranche d’âge ne révèle que celle associée à votre compte Google — par exemple, le fait que vous ayez au moins 18 ans. <0>Votre âge exact et votre date de naissance ne nous seront jamais partagées,</0> et cette donnée reste sur votre appareil. En contrepartie de quoi, cela n’activera votre accès que sur cet appareil. Vous pouvez sinon <1>passer par notre partenaire de confiance KWS</1> pour compléter votre vérification d’âge et activer votre accès quelle que soit la plateforme."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:264
+#: src/features/profileLinks/components/LinkFormDialog.tsx:250
 msgid "Short links can’t be added. Use the full link instead."
 msgstr "Les liens courts ne peuvent pas être ajoutés. Utilisez le lien complet à la place."
 
@@ -12969,7 +12964,7 @@ msgstr "Afficher les évènements de discussion"
 msgid "Show less like this"
 msgstr "En montrer moins comme ça"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:221
+#: src/features/profileLinks/components/ProfileLinks.tsx:183
 msgid "Show link details"
 msgstr "Voir les détails du lien"
 
@@ -13675,12 +13670,12 @@ msgid "Support for this feature in your country has not been enabled yet! Please
 msgstr "Cette fonctionnalité n’a pas encore été activée dans votre pays ! Veuillez revenir plus tard."
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkFormDialog.tsx:380
+#: src/features/profileLinks/components/LinkFormDialog.tsx:366
 msgid "Support on {0}"
 msgstr "Soutenir sur {0}"
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkPill.tsx:109
+#: src/features/profileLinks/components/LinkPill.tsx:118
 msgctxt "Creator support button, e.g. Support on Ko-fi"
 msgid "Support on {0}"
 msgstr "Soutenir sur {0}"
@@ -13949,7 +13944,7 @@ msgstr "Merci ! C’est tout bon."
 msgid "That contains the following:"
 msgstr "Qui contient les éléments suivants :"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:260
+#: src/features/profileLinks/components/LinkFormDialog.tsx:246
 msgid "That doesn’t look like a link. Try something like yoursite.com."
 msgstr "Ça ne ressemble pas à un lien. Essayez plutôt quelque chose comme votresite.com."
 
@@ -14371,7 +14366,7 @@ msgstr "Ce bouton permet à d’autres d’ouvrir l’app Germ DM pour vous env
 
 #: src/screens/Search/components/SearchHistory.tsx:148
 msgid "This can’t be undone, and all of your recent searches will be removed."
-msgstr ""
+msgstr "Ça ne peut pas être annulé, et toutes vos recherches récentes seront supprimées."
 
 #: src/screens/Messages/components/ChatEnded.tsx:48
 msgid "This chat has ended"
@@ -14539,7 +14534,7 @@ msgstr "Cette étiquette a été appliquée sur l’intégralité du compte et a
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr "Cet étiqueteur n’a pas déclaré les étiquettes qu’il publie et peut ne pas être actif."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:262
+#: src/features/profileLinks/components/LinkFormDialog.tsx:248
 msgid "This link can’t be added. It goes to a site that’s blocked on Bluesky."
 msgstr "Ce lien n’a pas pu être ajouté. Il mène à un site qui est bloqué par Bluesky."
 
@@ -14761,7 +14756,7 @@ msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr "Temps restant : {0, plural, one {# seconde} other {# secondes}}"
 
 #: src/components/SendErrorReportDialog.tsx:68
-#: src/features/profileLinks/components/LinkFormDialog.tsx:378
+#: src/features/profileLinks/components/LinkFormDialog.tsx:364
 msgid "Title"
 msgstr "Titre"
 
@@ -14769,7 +14764,7 @@ msgstr "Titre"
 msgid "Title (100 characters max)"
 msgstr "Titre (100 caractères max)"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:373
+#: src/features/profileLinks/components/LinkFormDialog.tsx:359
 msgid "Title (optional)"
 msgstr "Titre (facultatif)"
 
@@ -15782,7 +15777,7 @@ msgstr "Voir tous les reposts aimés par {name}"
 msgid "View all reposts {name} reposted"
 msgstr "Voir tous les reposts repostés par {name}"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:306
+#: src/features/profileLinks/components/LinkFormDialog.tsx:292
 msgid "View all support sites"
 msgstr "Voir tous les sites pris en charge"
 
@@ -16026,7 +16021,7 @@ msgstr "Nous n’avons pas pu charger cette discussion"
 msgid "We couldn't load your account settings. Check your internet connection and try again."
 msgstr "Nous n’avons pas pu charger les paramètres de votre compte. Vérifiez votre connexion Internet et réessayez."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:270
+#: src/features/profileLinks/components/LinkFormDialog.tsx:256
 msgid "We couldn’t reach this link. Check it, or save anyway."
 msgstr "Nous n’avons pas pu accéder à ce lien. Vérifiez-le, ou enregistrez-le quand même."
 
@@ -16976,7 +16971,7 @@ msgstr "Vous êtes dans la file d’attente"
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
 msgstr "Vous êtes connecté·e avec un mot de passe d’application. Connectez-vous plutôt avec votre mot de passe principal pour continuer à désactiver votre compte."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:268
+#: src/features/profileLinks/components/LinkFormDialog.tsx:254
 msgid "You’ve already added this link."
 msgstr "Vous avez déjà ajouté ce lien."
 

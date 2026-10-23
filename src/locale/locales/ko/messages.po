@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-22 08:29\n"
+"PO-Revision-Date: 2026-10-23 14:40\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -281,7 +281,7 @@ msgid "{0} following"
 msgstr "{0} 팔로우 중"
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkFormDialog.tsx:362
+#: src/features/profileLinks/components/LinkFormDialog.tsx:348
 msgid "{0} is a recognized support link. It gets the green support button."
 msgstr "{0}(은)는 인식된 후원 링크입니다. 녹색 후원 버튼이 표시됩니다."
 
@@ -337,7 +337,7 @@ msgid "{0} of {1}"
 msgstr "{0}/{1}"
 
 #. placeholder {0}: title.length
-#: src/features/profileLinks/components/LinkFormDialog.tsx:391
+#: src/features/profileLinks/components/LinkFormDialog.tsx:377
 msgid "{0} out of {MAX_TITLE_LENGTH} characters"
 msgstr "{0}/{MAX_TITLE_LENGTH}자"
 
@@ -535,7 +535,7 @@ msgstr "{count, plural, other {#개}} 요청"
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "읽지 않은 항목 {count, plural, other {#개}}"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:401
+#: src/features/profileLinks/components/ProfileLinks.tsx:346
 msgid "{count, plural, one {Show # more link} other {Show # more links}}"
 msgstr "링크 {count, plural, other {#개}} 더 표시"
 
@@ -1604,8 +1604,8 @@ msgstr "스타터 팩에 {displayName} 님 추가"
 msgid "Add a content warning"
 msgstr "콘텐츠 경고 추가"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:279
-#: src/features/profileLinks/components/LinkFormDialog.tsx:299
+#: src/features/profileLinks/components/LinkFormDialog.tsx:265
+#: src/features/profileLinks/components/LinkFormDialog.tsx:285
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:133
 msgid "Add a link"
 msgstr "링크 추가"
@@ -1691,8 +1691,8 @@ msgstr "그룹 대화 멤버 추가"
 msgid "Add image"
 msgstr "이미지 추가"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:412
-#: src/features/profileLinks/components/LinkFormDialog.tsx:431
+#: src/features/profileLinks/components/LinkFormDialog.tsx:398
+#: src/features/profileLinks/components/LinkFormDialog.tsx:417
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:149
 msgid "Add link"
 msgstr "링크 추가"
@@ -3095,7 +3095,7 @@ msgstr "카메라 접근 권한이 필요합니다"
 #: src/components/SendErrorReportDialog.tsx:102
 #: src/features/liveNow/components/GoLiveDialog.tsx:258
 #: src/features/liveNow/components/GoLiveDialog.tsx:264
-#: src/features/profileLinks/components/LinkFormDialog.tsx:281
+#: src/features/profileLinks/components/LinkFormDialog.tsx:267
 #: src/lib/media/picker.tsx:38
 #: src/screens/Deactivated.tsx:154
 #: src/screens/Messages/components/InviteLinkDialog.tsx:498
@@ -3520,20 +3520,20 @@ msgstr "지우기"
 #: src/screens/Search/components/SearchHistory.tsx:150
 msgctxt "action"
 msgid "Clear"
-msgstr ""
+msgstr "지우기"
 
 #: src/screens/Search/components/SearchHistory.tsx:78
 msgctxt "action"
 msgid "Clear all"
-msgstr ""
+msgstr "모두 지우기"
 
 #: src/screens/Search/components/SearchHistory.tsx:71
 msgid "Clear all recent searches"
-msgstr ""
+msgstr "모든 최근 검색 지우기"
 
 #: src/screens/Search/components/SearchHistory.tsx:147
 msgid "Clear all recent searches?"
-msgstr ""
+msgstr "최근 검색 기록을 모두 지우시겠습니까?"
 
 #: src/screens/Settings/Settings.tsx:539
 msgid "Clear all storage data"
@@ -3675,8 +3675,8 @@ msgstr "클릭하여 메시지 다시 보내기"
 msgid "Close"
 msgstr "닫기"
 
-#: src/components/Dialog/index.web.tsx:143
-#: src/components/Dialog/index.web.tsx:357
+#: src/components/Dialog/index.web.tsx:155
+#: src/components/Dialog/index.web.tsx:372
 msgid "Close active dialog"
 msgstr "열려 있는 대화 상자 닫기"
 
@@ -3841,7 +3841,7 @@ msgstr "<0>검토 설정</0>에서 설정합니다."
 msgid "Confirm"
 msgstr "확인"
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:77
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:81
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:171
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:250
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
@@ -3969,7 +3969,7 @@ msgstr "콘텐츠 경고"
 msgid "Content warnings"
 msgstr "콘텐츠 경고"
 
-#: src/components/Menu/index.web.tsx:88
+#: src/components/Menu/index.web.tsx:89
 msgid "Context menu backdrop, click to close the menu."
 msgstr "컨텍스트 메뉴 배경을 클릭하여 메뉴를 닫습니다."
 
@@ -4286,10 +4286,6 @@ msgstr "계정을 더 불러올 수 없습니다. 다시 시도해 주세요"
 #: src/features/followingV2/home/GapRow.tsx:83
 msgid "Couldn’t load more posts. Try again"
 msgstr "게시물을 더 불러올 수 없습니다. 다시 시도하세요"
-
-#: src/features/profileLinks/components/ProfileLinks.tsx:175
-msgid "Couldn’t save your links. Please try again."
-msgstr "링크를 저장하지 못했습니다. 다시 시도해 주세요."
 
 #: src/components/Gallery/Storybook.tsx:339
 msgid "Counter"
@@ -5050,7 +5046,7 @@ msgstr "예: 예술적인 나체."
 msgid "e.g. Great Posters"
 msgstr "예: 멋진 게시자"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:380
+#: src/features/profileLinks/components/LinkFormDialog.tsx:366
 msgid "e.g. Portfolio"
 msgstr "예: 포트폴리오"
 
@@ -5134,9 +5130,8 @@ msgctxt "button"
 msgid "Edit invite link"
 msgstr "초대 링크 편집"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:279
-#: src/features/profileLinks/components/LinkFormDialog.tsx:299
-#: src/features/profileLinks/components/ProfileLinks.tsx:193
+#: src/features/profileLinks/components/LinkFormDialog.tsx:265
+#: src/features/profileLinks/components/LinkFormDialog.tsx:285
 msgid "Edit link"
 msgstr "링크 편집"
 
@@ -8129,8 +8124,8 @@ msgstr "제한된 프로필"
 msgid "Linear"
 msgstr "일반"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:318
-#: src/features/profileLinks/components/LinkFormDialog.tsx:324
+#: src/features/profileLinks/components/LinkFormDialog.tsx:304
+#: src/features/profileLinks/components/LinkFormDialog.tsx:310
 msgid "Link"
 msgstr "링크"
 
@@ -8154,7 +8149,7 @@ msgstr "{domain}(으)로 연결되는 링크"
 msgid "Links"
 msgstr "링크"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:302
+#: src/features/profileLinks/components/LinkFormDialog.tsx:288
 msgid "Links show as buttons under your bio. Links to support sites like Ko-fi or Patreon show as a green button. <0>View all support sites</0>"
 msgstr "링크는 소개 아래에 버튼으로 표시됩니다. Ko-fi나 Patreon과 같은 후원 사이트로 연결되는 링크는 녹색 버튼으로 표시됩니다. <0>모든 후원 사이트 보기</0>"
 
@@ -9821,7 +9816,7 @@ msgstr "동영상이 포함된 게시물만"
 msgid "Only replies"
 msgstr "답글만"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:266
+#: src/features/profileLinks/components/LinkFormDialog.tsx:252
 msgid "Only secure links can be added. Use a link that starts with https://."
 msgstr "보안 링크만 추가할 수 있습니다. https://로 시작하는 링크를 사용하세요."
 
@@ -9847,7 +9842,7 @@ msgid "Oops!"
 msgstr "이런!"
 
 #. placeholder {0}: linkLabel(link)
-#: src/features/profileLinks/components/LinkPill.tsx:80
+#: src/features/profileLinks/components/LinkPill.tsx:87
 msgid "Open {0}"
 msgstr "{0} 열기"
 
@@ -10017,7 +10012,7 @@ msgstr "이 그룹 대화를 엽니다"
 #. placeholder {0}: getLinkHost(link.url)
 #. placeholder {0}: link.url
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:85
-#: src/features/profileLinks/components/ProfileLinks.tsx:206
+#: src/features/profileLinks/components/ProfileLinks.tsx:168
 msgid "Opens {0} outside Bluesky"
 msgstr "Bluesky 외부에서 {0}(을)를 엽니다"
 
@@ -11399,8 +11394,8 @@ msgstr "마지막 카드 제거"
 msgid "Remove last card"
 msgstr "마지막 카드 제거"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:439
-#: src/features/profileLinks/components/LinkFormDialog.tsx:444
+#: src/features/profileLinks/components/LinkFormDialog.tsx:425
+#: src/features/profileLinks/components/LinkFormDialog.tsx:430
 msgid "Remove link"
 msgstr "링크 제거"
 
@@ -12094,8 +12089,8 @@ msgstr "슬픈 GIF"
 msgid "Save"
 msgstr "저장"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:409
-#: src/features/profileLinks/components/LinkFormDialog.tsx:427
+#: src/features/profileLinks/components/LinkFormDialog.tsx:395
+#: src/features/profileLinks/components/LinkFormDialog.tsx:413
 msgid "Save anyway"
 msgstr "무시하고 저장"
 
@@ -12105,8 +12100,8 @@ msgstr "생년월일 저장"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:195
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:204
-#: src/features/profileLinks/components/LinkFormDialog.tsx:411
-#: src/features/profileLinks/components/LinkFormDialog.tsx:429
+#: src/features/profileLinks/components/LinkFormDialog.tsx:397
+#: src/features/profileLinks/components/LinkFormDialog.tsx:415
 #: src/screens/SavedFeeds.tsx:120
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
@@ -12914,7 +12909,7 @@ msgstr "연령대를 공유하면 Apple 계정과 관련된 범위(예: 만 18�
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr "연령대를 공유하면 Google 계정과 관련된 범위(예: 만 18세 이상)만 공개합니다. <0>정확한 나이와 생년월일은 절대 공유되지 않으며,</0> 이 데이터는 이 기기를 벗어나지 않습니다. 따라서 이 기기에서만 접근할 수 있습니다. 또는 <1>신뢰할 수 있는 파트너인 KWS를 사용</1>하여 인증을 완료하고 모든 플랫폼에서 접근을 활성화할 수 있습니다."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:264
+#: src/features/profileLinks/components/LinkFormDialog.tsx:250
 msgid "Short links can’t be added. Use the full link instead."
 msgstr "단축 링크는 추가할 수 없습니다. 대신 전체 링크를 사용하세요."
 
@@ -12969,7 +12964,7 @@ msgstr "그룹 대화 업데이트를 표시합니다"
 msgid "Show less like this"
 msgstr "이런 항목 덜 보기"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:221
+#: src/features/profileLinks/components/ProfileLinks.tsx:183
 msgid "Show link details"
 msgstr "링크 세부 정보 표시"
 
@@ -13675,12 +13670,12 @@ msgid "Support for this feature in your country has not been enabled yet! Please
 msgstr "내 국가에서는 아직 이 기능이 지원되지 않습니다! 나중에 다시 확인해 주세요."
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkFormDialog.tsx:380
+#: src/features/profileLinks/components/LinkFormDialog.tsx:366
 msgid "Support on {0}"
 msgstr "{0}에서 후원하기"
 
 #. placeholder {0}: provider.name
-#: src/features/profileLinks/components/LinkPill.tsx:109
+#: src/features/profileLinks/components/LinkPill.tsx:118
 msgctxt "Creator support button, e.g. Support on Ko-fi"
 msgid "Support on {0}"
 msgstr "{0}에서 후원하기"
@@ -13949,7 +13944,7 @@ msgstr "감사합니다! 모든 준비가 완료되었습니다."
 msgid "That contains the following:"
 msgstr "텍스트 파일 내용:"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:260
+#: src/features/profileLinks/components/LinkFormDialog.tsx:246
 msgid "That doesn’t look like a link. Try something like yoursite.com."
 msgstr "링크처럼 보이지 않습니다. yoursite.com과 같은 형식으로 입력해 보세요."
 
@@ -14371,7 +14366,7 @@ msgstr "이 버튼을 누르면 다른 사람이 Germ DM 앱을 열어 메시지
 
 #: src/screens/Search/components/SearchHistory.tsx:148
 msgid "This can’t be undone, and all of your recent searches will be removed."
-msgstr ""
+msgstr "이 작업은 취소할 수 없으며, 최근 검색 기록이 모두 삭제됩니다."
 
 #: src/screens/Messages/components/ChatEnded.tsx:48
 msgid "This chat has ended"
@@ -14539,7 +14534,7 @@ msgstr "이 라벨은 사용자 계정 전체에 적용되었으며 모든 게�
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr "이 라벨러는 라벨을 등록하지 않았으며 활성화되어 있지 않을 수 있습니다."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:262
+#: src/features/profileLinks/components/LinkFormDialog.tsx:248
 msgid "This link can’t be added. It goes to a site that’s blocked on Bluesky."
 msgstr "이 링크는 추가할 수 없습니다. Bluesky에서 차단된 사이트로 연결됩니다."
 
@@ -14761,7 +14756,7 @@ msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr "남은 시간: {0, plural, other {#초}}"
 
 #: src/components/SendErrorReportDialog.tsx:68
-#: src/features/profileLinks/components/LinkFormDialog.tsx:378
+#: src/features/profileLinks/components/LinkFormDialog.tsx:364
 msgid "Title"
 msgstr "제목"
 
@@ -14769,7 +14764,7 @@ msgstr "제목"
 msgid "Title (100 characters max)"
 msgstr "제목 (최대 100자)"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:373
+#: src/features/profileLinks/components/LinkFormDialog.tsx:359
 msgid "Title (optional)"
 msgstr "제목 (선택 사항)"
 
@@ -15782,7 +15777,7 @@ msgstr "{name} 님이 좋아요 표시한 모든 재게시물 보기"
 msgid "View all reposts {name} reposted"
 msgstr "{name} 님이 재게시한 모든 재게시물 보기"
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:306
+#: src/features/profileLinks/components/LinkFormDialog.tsx:292
 msgid "View all support sites"
 msgstr "지원되는 모든 사이트 보기"
 
@@ -16026,7 +16021,7 @@ msgstr "이 대화 설정을 불러올 수 없습니다"
 msgid "We couldn't load your account settings. Check your internet connection and try again."
 msgstr "계정 설정을 불러오지 못했습니다. 인터넷 연결을 확인한 후 다시 시도해 주세요."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:270
+#: src/features/profileLinks/components/LinkFormDialog.tsx:256
 msgid "We couldn’t reach this link. Check it, or save anyway."
 msgstr "이 링크에 연결할 수 없습니다. 확인하거나 그대로 저장하세요."
 
@@ -16976,7 +16971,7 @@ msgstr "대기 중입니다"
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
 msgstr "앱 비밀번호로 로그인한 상태입니다. 계정 비활성화를 계속하려면 원래 비밀번호로 로그인하세요."
 
-#: src/features/profileLinks/components/LinkFormDialog.tsx:268
+#: src/features/profileLinks/components/LinkFormDialog.tsx:254
 msgid "You’ve already added this link."
 msgstr "이 링크는 이미 추가했습니다."
 
