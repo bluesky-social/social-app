@@ -12,23 +12,34 @@ set -o pipefail
 # the base stay small. The output is still a complete bundle.
 #
 # Expects:
-#   HERMESC_REAL              the hermesc to run
-#   HERMES_BASE_BYTECODE      base .hbc; unset or empty means a normal compile
-#   HERMES_DELTA_STATUS_FILE  optional; gets one line per compile, starting
-#                             with "delta" or "fallback". Expo hides hermesc's
-#                             output unless it fails, so the caller reports it.
+#   HERMESC_REAL                     the hermesc to run
+#   HERMES_BASE_BYTECODE             base .hbc; unset or empty means a normal
+#                                    compile
+#   HERMES_DELTA_MAX_GROWTH_PERCENT  optional, default 10; see the size guard
+#   HERMES_DELTA_STATUS_FILE         optional; gets one line per compile,
+#                                    starting with "delta" or "fallback". Expo
+#                                    hides hermesc's output unless it fails, so
+#                                    the caller reports it.
 #
 # An unusable base never fails the compile: it falls back to a normal one.
 
 real=${HERMESC_REAL:?HERMESC_REAL must point at the real hermesc}
 base=${HERMES_BASE_BYTECODE:-}
+max_growth=${HERMES_DELTA_MAX_GROWTH_PERCENT:-10}
 status_file=${HERMES_DELTA_STATUS_FILE:-/dev/null}
 
 compiling=false
+out=""
+prev=""
 for arg in "$@"; do
-  if [ "$arg" = "-emit-binary" ]; then
-    compiling=true
+  case "$arg" in
+    -emit-binary) compiling=true ;;
+    -out=*) out=${arg#-out=} ;;
+  esac
+  if [ "$prev" = "-out" ]; then
+    out=$arg
   fi
+  prev=$arg
 done
 
 if [ -z "$base" ] || [ "$compiling" != true ]; then
@@ -60,8 +71,28 @@ if [ "$base_version" != "$hermesc_version" ]; then
   fallback "base $base is bytecode version $base_version but hermesc emits ${hermesc_version:-an unknown version}" "$@"
 fi
 
-if "$real" "$@" "-base-bytecode=$base"; then
-  echo "delta: compiled against $base (bytecode version $base_version)" >> "$status_file"
-  exit 0
+if [[ ! "$max_growth" =~ ^[0-9]+$ ]]; then
+  fallback "HERMES_DELTA_MAX_GROWTH_PERCENT must be a whole number, got '$max_growth'" "$@"
 fi
-fallback "hermesc failed with -base-bytecode=$base" "$@"
+
+if ! "$real" "$@" "-base-bytecode=$base"; then
+  fallback "hermesc failed with -base-bytecode=$base" "$@"
+fi
+
+# Size guard. Delta mode keeps every base string and appends the ones that
+# changed, so changing a big string duplicates it. The Lingui catalogs are one
+# string per locale, so a catalog-wide change grows the bundle by ~50%. Past
+# the limit, compile normally instead, trading a bigger patch for a normal
+# size bundle. Within one runtime, the base's size stands in for a normal
+# compile's: ordinary changes move it well under 1%.
+base_size=$(wc -c < "$base" | tr -d ' ')
+if [ -z "$out" ] || [ ! -f "$out" ]; then
+  fallback "could not find hermesc's output to check its size" "$@"
+fi
+out_size=$(wc -c < "$out" | tr -d ' ')
+growth=$(awk -v o="$out_size" -v b="$base_size" 'BEGIN { printf "%+.1f%%", (o - b) * 100 / b }')
+if [ $(((out_size - base_size) * 100)) -gt $((base_size * max_growth)) ]; then
+  fallback "the delta output is ${growth#+} bigger than base $base, over the $max_growth% limit" "$@"
+fi
+
+echo "delta: compiled against $base (bytecode version $base_version, $growth vs the base)" >> "$status_file"

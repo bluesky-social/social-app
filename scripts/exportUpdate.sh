@@ -21,9 +21,17 @@ set -o nounset
 #     The embedded bundle (Hermes bytecode) of the native build the update
 #     targets. Without one, that platform compiles normally. A base hermesc
 #     can't use falls back to a normal compile with a warning.
+#   HERMES_DELTA_MAX_GROWTH_PERCENT
+#     How much bigger than its base a delta-compiled bundle may be before it's
+#     compiled normally instead (with a warning). Defaults to 10.
 
 cd "$(dirname "$0")/.."
 OUT_DIR=dist
+MAX_GROWTH=${HERMES_DELTA_MAX_GROWTH_PERCENT:-10}
+if [[ ! "$MAX_GROWTH" =~ ^[0-9]+$ ]]; then
+  echo "HERMES_DELTA_MAX_GROWTH_PERCENT must be a whole number, got '$MAX_GROWTH'" >&2
+  exit 1
+fi
 
 warn() {
   if [ "${GITHUB_ACTIONS:-}" = true ]; then
@@ -78,6 +86,7 @@ for platform in ios android; do
       export REACT_NATIVE_OVERRIDE_HERMES_DIR="$override_dir"
       export HERMESC_REAL="$hermesc_real"
       export HERMES_BASE_BYTECODE="$base"
+      export HERMES_DELTA_MAX_GROWTH_PERCENT="$MAX_GROWTH"
       export HERMES_DELTA_STATUS_FILE="$status_file"
     fi
     pnpm exec expo export \
