@@ -9,8 +9,12 @@ set -o nounset
 # Each platform gets its own `expo export`, so that its Hermes compile can use
 # that platform's embedded bundle as a delta base (see hermescDelta.sh). That
 # keeps bsdiff patches from the embedded bundle in the tens of KB rather than
-# ~1.6 MB. expo export clears its output directory and writes a metadata.json
-# for just the platforms it exported, so the two exports are merged here.
+# ~1.6 MB. It also matches how native builds bundle: one export for both
+# platforms shares Metro's module IDs between them, so whichever platform
+# serializes second gets different IDs than its embedded bundle.
+#
+# expo export clears its output directory and writes a metadata.json for just
+# the platforms it exported, so the two exports are merged here.
 #
 # Optional:
 #   HERMES_BASE_BYTECODE_IOS, HERMES_BASE_BYTECODE_ANDROID
@@ -82,14 +86,16 @@ for platform in ios android; do
       --source-maps
   )
 
+  fallback=$(sed -n 's/^fallback: //p' "$status_file" | head -1)
+  delta=$(sed -n 's/^delta: //p' "$status_file" | head -1)
   if [ -z "$base" ]; then
     echo "$platform: no delta base given, compiled normally"
-  elif grep -q '^fallback' "$status_file"; then
-    warn "$platform: $(grep '^fallback' "$status_file" | head -1). Patches for this update will be larger."
-  elif grep -q '^delta' "$status_file"; then
-    echo "$platform: $(grep '^delta' "$status_file" | head -1)"
+  elif [ -n "$fallback" ]; then
+    warn "$platform: $fallback, so it compiled normally and patches for this update will be larger"
+  elif [ -n "$delta" ]; then
+    echo "$platform: $delta"
   else
-    warn "$platform: the hermesc wrapper never ran, so Expo may have changed how it finds hermesc. Compiled without a base."
+    warn "$platform: the hermesc wrapper never ran, so Expo may have changed how it finds hermesc, and it compiled normally"
   fi
 done
 
