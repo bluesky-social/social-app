@@ -19,10 +19,13 @@ import {
   useUpdates,
 } from 'expo-updates'
 
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {reportOTADownload} from '#/lib/ota/patchTelemetry'
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useTheme} from '#/alf'
+import {type AnalyticsContextType, useAnalytics} from '#/analytics'
 import {APP_VERSION, IS_IOS, IS_TESTFLIGHT} from '#/env'
 import {device} from '#/storage'
 
@@ -99,12 +102,20 @@ async function setExtraParams(channel: string) {
 async function updateTestflight(
   scheme: 'light' | 'dark',
   buildChannel: string,
+  metric: AnalyticsContextType['metric'],
 ) {
   await setExtraParams(buildChannel)
 
   const res = await checkForUpdateAsync()
   if (res.isAvailable) {
-    await fetchUpdateAsync()
+    const fetchStartedAt = Date.now()
+    const result = await fetchUpdateAsync()
+    void reportOTADownload({
+      metric,
+      result,
+      fetchStartedAt,
+      channel: buildChannel,
+    })
     Alert.alert(
       'Update Available',
       'A new version of the app is available. Relaunch now?',
@@ -129,6 +140,7 @@ async function updateTestflight(
 
 export function useApplyPullRequestOTAUpdate() {
   const t = useTheme()
+  const ax = useAnalytics()
   const {currentlyRunning} = useUpdates()
   const [pending, setPending] = useState(false)
   const currentChannel = getRunningChannel(currentlyRunning)
@@ -287,7 +299,14 @@ export function useApplyPullRequestOTAUpdate() {
         return
       }
 
-      await fetchUpdateAsync()
+      const fetchStartedAt = Date.now()
+      const result = await fetchUpdateAsync()
+      void reportOTADownload({
+        metric: ax.metric,
+        result,
+        fetchStartedAt,
+        channel,
+      })
       Alert.alert(
         'Update Available',
         `A newer update of ${deploymentName} has been downloaded. Relaunch now?`,
@@ -403,6 +422,7 @@ export function useOTAUpdates() {
   const shouldReceiveUpdates = isEnabled && !__DEV__
 
   const t = useTheme()
+  const ax = useAnalytics()
   const appState = useRef<AppStateStatus>('active')
   const lastMinimize = useRef(0)
   const ranInitialCheck = useRef(false)
@@ -410,6 +430,11 @@ export function useOTAUpdates() {
   const {currentlyRunning, isUpdatePending} = useUpdates()
   const currentChannel = getRunningChannel(currentlyRunning)
   const defaultChannel = currentlyRunning?.channel || DEFAULT_CHANNEL
+  /*
+   * Stable, so that changes to the analytics context (e.g. geolocation
+   * arriving) don't re-run the effects below and check for updates again.
+   */
+  const metric = useNonReactiveCallback(ax.metric)
 
   const setCheckTimeout = useCallback(() => {
     timeout.current = setTimeout(async () => {
@@ -422,7 +447,14 @@ export function useOTAUpdates() {
 
         if (res.isAvailable) {
           logger.debug('Attempting to fetch update...')
-          await fetchUpdateAsync()
+          const fetchStartedAt = Date.now()
+          const result = await fetchUpdateAsync()
+          void reportOTADownload({
+            metric,
+            result,
+            fetchStartedAt,
+            channel: defaultChannel,
+          })
         } else {
           logger.debug('No update available.')
         }
@@ -432,17 +464,17 @@ export function useOTAUpdates() {
         }
       }
     }, 10e3)
-  }, [defaultChannel])
+  }, [defaultChannel, metric])
 
   const onIsTestFlight = useCallback(async () => {
     try {
-      await updateTestflight(t.scheme, defaultChannel)
+      await updateTestflight(t.scheme, defaultChannel, metric)
     } catch (err: any) {
       if (!isNetworkError(err)) {
         logger.error('Internal OTA Update Error', {safeMessage: err})
       }
     }
-  }, [defaultChannel, t.scheme])
+  }, [defaultChannel, t.scheme, metric])
 
   useEffect(() => {
     // We don't need to check anything if the current update is a PR update

@@ -2,6 +2,7 @@ import {Alert} from 'react-native'
 import {
   checkForUpdateAsync,
   fetchUpdateAsync,
+  readLogEntriesAsync,
   reloadAsync,
   setExtraParamAsync,
   UpdateCheckResultNotAvailableReason,
@@ -20,7 +21,9 @@ import {
 jest.mock('expo-updates', () => ({
   checkForUpdateAsync: jest.fn(),
   fetchUpdateAsync: jest.fn(),
+  isEmbeddedLaunch: false,
   isEnabled: true,
+  readLogEntriesAsync: jest.fn(),
   reloadAsync: jest.fn(),
   setExtraParamAsync: jest.fn(),
   UpdateCheckResultNotAvailableReason: {
@@ -47,6 +50,11 @@ jest.mock('#/storage', () => ({
     remove: jest.fn(),
     set: jest.fn(),
   },
+}))
+
+const mockMetric = jest.fn()
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: mockMetric}),
 }))
 
 jest.mock('#/alf', () => ({
@@ -91,6 +99,7 @@ beforeEach(() => {
   mockCurrentlyRunning()
   jest.mocked(setExtraParamAsync).mockResolvedValue(undefined)
   jest.mocked(reloadAsync).mockResolvedValue(undefined)
+  jest.mocked(readLogEntriesAsync).mockResolvedValue([])
   jest.spyOn(Alert, 'alert').mockImplementation(() => {})
 })
 
@@ -338,6 +347,37 @@ describe('useApplyPullRequestOTAUpdate', () => {
 
       await waitFor(() => expect(reloadAsync).toHaveBeenCalled())
       expect(result.current.pending).toBe(false)
+    })
+
+    it('reports whether the downloaded update was patched, once per update', async () => {
+      mockCurrentlyRunning({buildChannel: 'testflight', channel: 'testflight'})
+      jest.mocked(checkForUpdateAsync).mockResolvedValue({
+        isAvailable: true,
+      } as Awaited<ReturnType<typeof checkForUpdateAsync>>)
+      jest.mocked(fetchUpdateAsync).mockResolvedValue({
+        isNew: true,
+        isRollBackToEmbedded: false,
+        manifest: {id: 'patched-update'},
+      } as Awaited<ReturnType<typeof fetchUpdateAsync>>)
+      jest.mocked(readLogEntriesAsync).mockResolvedValue([
+        {
+          timestamp: Date.now() + 1e3,
+          message: 'Applied diff for asset f3c4e5a6b7c8d9e0',
+        },
+      ] as Awaited<ReturnType<typeof readLogEntriesAsync>>)
+      const {result} = renderHook(() => useApplyPullRequestOTAUpdate())
+
+      await act(() => result.current.checkForUpdates())
+      await act(() => result.current.checkForUpdates())
+
+      await waitFor(() =>
+        expect(mockMetric).toHaveBeenCalledWith('ota:download', {
+          patched: true,
+          channel: 'testflight',
+          isEmbeddedLaunch: false,
+        }),
+      )
+      expect(mockMetric).toHaveBeenCalledTimes(1)
     })
 
     it('reports being up to date on a standard channel', async () => {
