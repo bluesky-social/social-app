@@ -219,13 +219,15 @@ jobs:
       # remote counter, which a --local build does not advance, so it can be off by one —
       # using it here would make distribute_only poll for a nonexistent build.
       # PlistBuddy is macOS-only, which is why this stays in the build job.
+      # unzip's `*` also matches `/`, so a Payload/*.app/Info.plist pattern would
+      # pull in the App Clip's Info.plist too; match the main app's entry exactly.
       - name: 🔢 Read build number from IPA
         id: ipa-build-number
         run: |
           plist_dir="$(mktemp -d)"
-          unzip -o -q "$BUILD_DIR/Bluesky.ipa" 'Payload/*.app/Info.plist' -d "$plist_dir"
-          plist="$(find "$plist_dir" -name Info.plist -print -quit)"
-          build_number="$(/usr/libexec/PlistBuddy -c 'Print CFBundleVersion' "$plist")"
+          plist_entry="$(unzip -Z1 "$BUILD_DIR/Bluesky.ipa" | grep -E '^Payload/[^/]+\.app/Info\.plist$')"
+          unzip -o -q "$BUILD_DIR/Bluesky.ipa" "$plist_entry" -d "$plist_dir"
+          build_number="$(/usr/libexec/PlistBuddy -c 'Print CFBundleVersion' "$plist_dir/$plist_entry")"
           rm -rf "$plist_dir"
           if [ -z "$build_number" ]; then
             echo "ERROR: could not read CFBundleVersion from IPA"
