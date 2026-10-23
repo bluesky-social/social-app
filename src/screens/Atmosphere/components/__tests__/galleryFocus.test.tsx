@@ -22,9 +22,22 @@ jest.mock('#/alf', () => {
     {},
     {get: (_, name) => (name === 'flex_grow' ? {flexGrow: 1} : {})},
   )
+  const themeAtoms = new Proxy(
+    {
+      bg: {backgroundColor: '#ffffff'},
+      bg_contrast_25: {backgroundColor: '#f8f8f8'},
+      border_contrast_low: {borderColor: '#dddddd'},
+      border_contrast_high: {borderColor: '#555555'},
+    },
+    {get: (target, name) => target[name as keyof typeof target] ?? {}},
+  )
   return {
     atoms,
-    useTheme: () => ({atoms, palette: new Proxy({}, {get: () => ''})}),
+    web: (props: Record<string, unknown>) => props,
+    useTheme: () => ({
+      atoms: themeAtoms,
+      palette: new Proxy({}, {get: () => ''}),
+    }),
   }
 })
 jest.mock('#/components/Typography', () => {
@@ -67,6 +80,9 @@ jest.mock('#/components/Link', () => {
       ref,
       tabIndex,
       onFocus,
+      onBlur,
+      onMouseEnter,
+      onMouseLeave,
       style,
     }: {
       children: React.ReactNode
@@ -75,6 +91,9 @@ jest.mock('#/components/Link', () => {
       ref?: React.Ref<unknown>
       tabIndex?: number
       onFocus?: () => void
+      onBlur?: () => void
+      onMouseEnter?: () => void
+      onMouseLeave?: () => void
       style?: React.ComponentProps<typeof Pressable>['style']
     }) => (
       <Pressable
@@ -85,7 +104,9 @@ jest.mock('#/components/Link', () => {
         accessibilityValue={{text: to}}
         ref={ref as never}
         tabIndex={tabIndex as never}
+        {...{onMouseEnter, onMouseLeave}}
         onFocus={onFocus}
+        onBlur={onBlur}
         style={style}>
         {children}
       </Pressable>
@@ -175,3 +196,51 @@ describe.each(cards)('%s gallery focus', (_name, renderCard) => {
     expect(link.props.accessibilityLabel).toMatch(/^Open/)
   })
 })
+
+const interactions = [
+  ['hover', 'mouseEnter', 'mouseLeave'],
+  ['focus', 'focus', 'blur'],
+]
+
+it.each(interactions)(
+  'highlights the article background and border on %s',
+  (_name, enter, leave) => {
+    render(<ArticleCard article={article} />)
+    const link = screen.getByTestId('link')
+    const card = screen.root
+
+    expect(card).toHaveStyle({
+      backgroundColor: '#ffffff',
+      borderColor: '#dddddd',
+    })
+    fireEvent(link, enter)
+    expect(card).toHaveStyle({
+      backgroundColor: '#f8f8f8',
+      borderColor: '#555555',
+    })
+    fireEvent(link, leave)
+    expect(card).toHaveStyle({
+      backgroundColor: '#ffffff',
+      borderColor: '#dddddd',
+    })
+  },
+)
+
+it.each(interactions)(
+  'dims the photo image on %s without intercepting interactions',
+  (_name, enter, leave) => {
+    render(<PhotoCard photo={photo} />)
+    const link = screen.getByTestId('link')
+
+    expect(screen.queryByTestId('atmospherePhotoHoverOverlay')).toBeNull()
+    fireEvent(link, enter)
+    const overlay = screen.getByTestId('atmospherePhotoHoverOverlay')
+    expect(overlay).toHaveStyle({backgroundColor: 'rgba(0, 0, 0, 0.1)'})
+    expect(overlay.props.pointerEvents).toBe('none')
+    expect(overlay.props.accessible).toBe(false)
+    expect(screen.getByText(photo.title)).toBeTruthy()
+
+    fireEvent(link, leave)
+    expect(screen.queryByTestId('atmospherePhotoHoverOverlay')).toBeNull()
+  },
+)

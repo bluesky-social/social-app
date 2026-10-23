@@ -3,7 +3,8 @@ import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 
 import {type AtmosphereArticleCardData} from '#/screens/Atmosphere/data/exploreData'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
@@ -20,6 +21,11 @@ export function ArticleCard({
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
+  const {
+    state: interacted,
+    onIn: onInteract,
+    onOut: onInteractOut,
+  } = useInteractionState()
 
   return (
     <View
@@ -28,8 +34,9 @@ export function ArticleCard({
         width ? {width} : a.w_full,
         a.rounded_md,
         a.border,
-        t.atoms.border_contrast_low,
-        t.atoms.bg,
+        interacted
+          ? [t.atoms.bg_contrast_25, t.atoms.border_contrast_high]
+          : [t.atoms.bg, t.atoms.border_contrast_low],
         t.atoms.shadow_xs,
       ]}>
       <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
@@ -38,7 +45,15 @@ export function ArticleCard({
           label={l`Open ${article.title}`}
           ref={galleryFocus?.focusRef}
           tabIndex={galleryFocus?.tabIndex}
-          onFocus={galleryFocus?.onFocus}
+          {...web({
+            onMouseEnter: onInteract,
+            onMouseLeave: onInteractOut,
+          })}
+          onFocus={() => {
+            onInteract()
+            galleryFocus?.onFocus()
+          }}
+          onBlur={onInteractOut}
           style={[a.flex_col, a.flex_1, a.w_full]}>
           <View
             style={[a.w_full, t.atoms.bg_contrast_25, {aspectRatio: 16 / 9}]}>

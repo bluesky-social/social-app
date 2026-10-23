@@ -9,7 +9,8 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {type AtmospherePhotoCardData} from '#/screens/Atmosphere/data/exploreData'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -24,6 +25,11 @@ export function PhotoCard({
 }) {
   const {t: l, i18n} = useLingui()
   const t = useTheme()
+  const {
+    state: interacted,
+    onIn: onInteract,
+    onOut: onInteractOut,
+  } = useInteractionState()
   const moderationOpts = useModerationOpts()
   const moderation = moderationOpts
     ? moderateProfile(photo.authorProfile, moderationOpts)
@@ -41,7 +47,15 @@ export function PhotoCard({
       accessibilityHint=""
       ref={galleryFocus?.focusRef}
       tabIndex={galleryFocus?.tabIndex}
-      onFocus={galleryFocus?.onFocus}
+      {...web({
+        onMouseEnter: onInteract,
+        onMouseLeave: onInteractOut,
+      })}
+      onFocus={() => {
+        onInteract()
+        galleryFocus?.onFocus()
+      }}
+      onBlur={onInteractOut}
       style={[a.flex_grow, a.w_full, a.flex_col, a.align_start, a.gap_sm]}>
       <View
         style={[
@@ -59,6 +73,18 @@ export function PhotoCard({
           style={[a.w_full, a.h_full]}
           accessible={!!photo.imageAlt}
         />
+        {interacted ? (
+          <View
+            testID="atmospherePhotoHoverOverlay"
+            accessible={false}
+            pointerEvents="none"
+            style={[
+              a.absolute,
+              a.inset_0,
+              {backgroundColor: 'rgba(0, 0, 0, 0.1)'},
+            ]}
+          />
+        ) : undefined}
         {photo.likeCount > 0 ? (
           <View
             accessible={false}
