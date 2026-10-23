@@ -20,10 +20,7 @@ export function FeaturedLivestreams({
 
   return (
     <View style={[a.gap_md]}>
-      <ExploreSectionHeader
-        title={l`Featured livestreams`}
-        label={l`See more livestreams`}
-      />
+      <ExploreSectionHeader title={l`Featured livestreams`} />
       <ExploreGallery
         items={livestreams}
         label={l`Featured livestreams`}

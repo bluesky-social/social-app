@@ -16,10 +16,7 @@ export function FeaturedPhotos({photos}: {photos: AtmospherePhotoCardData[]}) {
 
   return (
     <View style={[a.gap_md]}>
-      <ExploreSectionHeader
-        title={l`Featured photos`}
-        label={l`See more photos`}
-      />
+      <ExploreSectionHeader title={l`Featured photos`} />
       <ExploreGallery
         items={photos}
         label={l`Featured photos`}

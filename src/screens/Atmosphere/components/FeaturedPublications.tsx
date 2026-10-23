@@ -20,10 +20,7 @@ export function FeaturedPublications({
 
   return (
     <View style={[a.gap_md]}>
-      <ExploreSectionHeader
-        title={l`Featured publications`}
-        label={l`See more publications`}
-      />
+      <ExploreSectionHeader title={l`Featured publications`} />
       <ExploreGallery
         items={publications}
         label={l`Featured publications`}
