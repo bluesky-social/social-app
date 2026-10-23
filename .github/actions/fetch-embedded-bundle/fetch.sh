@@ -79,10 +79,18 @@ sha256=$(sha256sum "$files/$bundle_file" | cut -d' ' -f1)
 [ "$sha256" = "$(jq -r '.sha256' "$files/embedded.json")" ] ||
   not_found "$bundle_file from run $run_id doesn't match its sha256"
 
+# The update ID goes into GITHUB_OUTPUT, so it must be a plain UUID
+update_id=$(jq -er '.updateId | select(type == "string" and test("^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$"))' \
+  "$files/embedded.json" 2> /dev/null) ||
+  not_found "embedded.json from run $run_id has no valid updateId"
+manifest_id=$(jq -er '.id | select(type == "string") | ascii_downcase' "$files/app.manifest" 2> /dev/null) ||
+  not_found "app.manifest from run $run_id is missing or has no id"
+[ "$update_id" = "$manifest_id" ] ||
+  not_found "updateId from run $run_id doesn't match its app.manifest"
+
 mkdir -p "$DESTINATION"
 cp -R "$files/." "$DESTINATION/"
 dir=$(cd "$DESTINATION" && pwd)
-update_id=$(jq -r '.updateId' "$dir/embedded.json")
 
 echo "Fetched $name from run $run_id:"
 cat "$dir/embedded.json"
