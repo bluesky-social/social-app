@@ -123,7 +123,7 @@ function ProfileScreenInner({route}: Props) {
     if (resolveError) {
       if (name === 'lulaoficial.bsky.social') {
         console.log('Applying redirect to lula.com.br')
-        void navigate('Profile', {name: 'lula.com.br'})
+        void navigate({name: 'Profile', params: {name: 'lula.com.br'}})
       }
     }
   }, [name, resolveError])

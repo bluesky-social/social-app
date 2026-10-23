@@ -9,12 +9,10 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import {
-  CommonActions,
   createNavigationContainerRef,
   DarkTheme,
   DefaultTheme,
-  getActionFromState as getActionFromStateDefault,
-  type LinkingOptions,
+  type NavigationAction,
   NavigationContainer,
   StackActions,
 } from '@react-navigation/native'
@@ -32,28 +30,28 @@ import {
 } from '#/lib/hooks/useNotificationHandler'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {useCallOnce} from '#/lib/once'
+import {getCurrentRoute, getTabState, TabState} from '#/lib/routes/helpers'
+import {getNavigationActionFromPath, LINKING} from '#/lib/routes/linking'
 import {
-  buildStateObject,
-  getCurrentRoute,
-  getTabState,
-  TabState,
-} from '#/lib/routes/helpers'
+  getCommonNavigationAction,
+  getMessagesNavigationAction,
+  getTabNavigationAction,
+  getTabResetAction,
+} from '#/lib/routes/navigation'
 import {type SidebarTab} from '#/lib/routes/tab-to-nav-item'
 import {
-  type AllNavigatorParams,
   type BottomTabNavigatorParams,
+  type CommonNavigationDestination,
   type CommonNavigatorParams,
   type FlatNavigatorParams,
   type HomeTabNavigatorParams,
   type MessagesTabNavigatorParams,
   type MyProfileTabNavigatorParams,
   type NotificationsTabNavigatorParams,
-  type RouteParams,
+  type RootNavigatorParams,
   type SearchTabNavigatorParams,
-  type State,
 } from '#/lib/routes/types'
 import {bskyTitle} from '#/lib/strings/headings'
-import {CHAT_INVITE_CODE_REGEX} from '#/lib/strings/url-helpers'
 import {emitSoftReset} from '#/state/events'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
@@ -162,7 +160,7 @@ import {HomeScreen} from '#/features/followingV2/home'
 import {InviteScannerScreen} from '#/features/inviteFriends'
 import {router} from '#/routes'
 
-const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
+const navigationRef = createNavigationContainerRef<RootNavigatorParams>()
 
 const HomeTab = createNativeStackNavigatorWithAuth<HomeTabNavigatorParams>()
 const SearchTab = createNativeStackNavigatorWithAuth<SearchTabNavigatorParams>()
@@ -950,113 +948,9 @@ const FlatNavigator = ({
   )
 }
 
-/**
- * The RoutesContainer should wrap all components which need access
- * to the navigation context.
- */
-
-/**
- * `LINKING` has no `config`, so on its own `getActionFromState` doesn't know
- * that Home is the HomeTab stack's initial route. For the [Home, screen] state
- * that `getStateFromPath` builds for most links, it then resets the whole
- * HomeTab stack, remounting Home and losing its feeds and scroll position.
- * With this, a link opens the screen on top of the existing stack, or on top of
- * Home if the stack hasn't mounted yet. It is defined at module scope so that
- * `getActionFromState` can cache what it derives from it.
- */
-const NATIVE_LINK_ACTION_CONFIG = {
-  screens: {HomeTab: {initialRouteName: 'Home'}},
-}
-
-const LINKING = {
-  // TODO figure out what we are going to use
-  // note: `bluesky://` is what is used in app.config.js
-  prefixes: ['bsky://', 'bluesky://', 'https://bsky.app'],
-
-  getPathFromState(state: State) {
-    // find the current node in the navigation tree
-    const node = getCurrentRoute(state)
-
-    // build the path
-    const route = router.matchName(node.name)
-    if (typeof route === 'undefined') {
-      return '/' // default to home
-    }
-    return route.build((node.params || {}) as RouteParams)
-  },
-
-  getStateFromPath(path: string) {
-    const [name, params] = router.matchPath(path)
-
-    // Any time we receive a url that starts with `intent/` we want to ignore it here. It will be handled in the
-    // intent handler hook. We should check for the trailing slash, because if there isn't one then it isn't a valid
-    // intent
-    // On web, there is no route state that's created by default, so we should initialize it as the home route. On
-    // native, since the home tab and the home screen are defined as initial routes, we don't need to return a state
-    // since it will be created by react-navigation.
-    if (path.includes('intent/')) {
-      if (IS_NATIVE) return
-      return buildStateObject('Flat', 'Home', params)
-    }
-
-    // Chat invite URLs (`/chat/:code`) are handled by `useIntentHandler`, which
-    // opens the GroupChatJoinDialog (or the logged-out join flow). Route the
-    // path to Home so the dialog overlays Home instead of NotFound. On native,
-    // react-navigation strips the `bluesky://` prefix and passes the path
-    // without a leading slash, so normalize before matching.
-    const normalizedPath = path.startsWith('/') ? path : `/${path}`
-    if (CHAT_INVITE_CODE_REGEX.test(normalizedPath.split('?')[0])) {
-      if (IS_NATIVE) {
-        return buildStateObject('HomeTab', 'Home', params)
-      }
-      return buildStateObject('Flat', 'Home', params)
-    }
-
-    if (IS_NATIVE) {
-      if (name === 'Search') {
-        return buildStateObject('SearchTab', 'Search', params)
-      }
-      if (name === 'Notifications') {
-        return buildStateObject('NotificationsTab', 'Notifications', params)
-      }
-      if (name === 'Home') {
-        return buildStateObject('HomeTab', 'Home', params)
-      }
-      if (name === 'Messages') {
-        return buildStateObject('MessagesTab', 'Messages', params)
-      }
-      if (
-        name === 'Atmosphere' ||
-        name === 'Feeds' ||
-        name === 'Lists' ||
-        name === 'Bookmarks' ||
-        name === 'Settings'
-      ) {
-        return buildStateObject(`${name}Tab`, name, params)
-      }
-      // if the path is something else, like a post, profile, or even settings, we need to initialize the home tab as pre-existing state otherwise the back button will not work
-      return buildStateObject('HomeTab', name, params, [
-        {
-          name: 'Home',
-          params: {},
-        },
-      ])
-    } else {
-      const res = buildStateObject('Flat', name, params)
-      return res
-    }
-  },
-
-  getActionFromState(state, options) {
-    return getActionFromStateDefault(
-      state,
-      IS_NATIVE ? NATIVE_LINK_ACTION_CONFIG : options,
-    )
-  },
-} satisfies LinkingOptions<AllNavigatorParams>
-
 let didHandlePushNotificationEntry = false
 
+/** Wrap components that need access to the navigation context. */
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const ax = useAnalytics()
   // eslint-disable-next-line react-compiler/react-compiler
@@ -1098,16 +992,13 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       ) {
         // chat-added-to-group routes to the convo because the recipient was
         // just added and now has access.
-        void navigate('MessagesTab', {
-          screen: 'Messages',
-          params: {
-            pushToConversation: payload.convoId,
-          },
-        })
+        void dispatchNavigationAction(
+          getMessagesNavigationAction({pushToConversation: payload.convoId}),
+        )
       } else {
         // chat-removed-from-group, chat-join-request-rejected: the convo is
         // no longer accessible to the recipient, so just open the list.
-        void navigate('MessagesTab', {screen: 'Messages'})
+        void dispatchNavigationAction(getMessagesNavigationAction())
       }
     },
   )
@@ -1157,12 +1048,11 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
           const path = notificationToURL(payload)
 
           if (path === '/notifications') {
-            resetToTab('NotificationsTab')
+            resetToTab('Notifications')
             notyLogger.debug(`handlePushNotificationEntry: default navigate`)
           } else if (path) {
             const [screen, params] = router.matchPath(path)
-            // @ts-expect-error router.matchPath does not correlate screen names with params
-            void navigate('HomeTab', {screen, params})
+            void navigateToPath(path)
             notyLogger.debug(`handlePushNotificationEntry: navigate`, {
               screen,
               params,
@@ -1256,10 +1146,23 @@ function getCurrentRouteName() {
  * (eg in the state models).
  */
 
-function navigate<K extends keyof AllNavigatorParams>(
-  name: K,
-  params?: AllNavigatorParams[K],
-) {
+function navigate(destination: CommonNavigationDestination) {
+  return dispatchNavigationAction(
+    getCommonNavigationAction(
+      destination,
+      navigationRef.isReady() ? navigationRef.getRootState() : undefined,
+    ),
+  )
+}
+
+/** Reuse the container's linking rules for notification URLs. */
+function navigateToPath(path: string) {
+  const action = getNavigationActionFromPath(path)
+  if (action) return dispatchNavigationAction(action)
+  return Promise.resolve()
+}
+
+function dispatchNavigationAction(action: NavigationAction) {
   if (navigationRef.isReady()) {
     return Promise.race([
       new Promise<void>(resolve => {
@@ -1269,8 +1172,7 @@ function navigate<K extends keyof AllNavigatorParams>(
         }
         navigationRef.addListener('state', handler)
 
-        // @ts-expect-error I don't know what would make typescript happy but I have a life -prf
-        navigationRef.navigate(name, params)
+        navigationRef.dispatch(action)
       }),
       timeout(1e3),
     ])
@@ -1278,11 +1180,9 @@ function navigate<K extends keyof AllNavigatorParams>(
   return Promise.resolve()
 }
 
-function resetToTab(
-  tabName: 'HomeTab' | 'SearchTab' | 'MessagesTab' | 'NotificationsTab',
-) {
+function resetToTab(tabName: 'Home' | 'Search' | 'Messages' | 'Notifications') {
   if (navigationRef.isReady()) {
-    void navigate(tabName)
+    void dispatchNavigationAction(getTabNavigationAction(tabName))
     if (navigationRef.canGoBack()) {
       navigationRef.dispatch(StackActions.popToTop()) //we need to check .canGoBack() before calling it
     }
@@ -1292,12 +1192,7 @@ function resetToTab(
 // returns a promise that resolves after the state reset is complete
 function reset(): Promise<void> {
   if (navigationRef.isReady()) {
-    navigationRef.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{name: IS_NATIVE ? 'HomeTab' : 'Home'}],
-      }),
-    )
+    navigationRef.dispatch(getTabResetAction('Home'))
     return Promise.race([
       timeout(1e3),
       new Promise<void>(resolve => {
@@ -1316,6 +1211,7 @@ function reset(): Promise<void> {
 export {
   FlatNavigator,
   navigate,
+  navigateToPath,
   reset,
   resetToTab,
   RoutesContainer,

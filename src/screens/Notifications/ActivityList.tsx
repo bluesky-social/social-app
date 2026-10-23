@@ -3,7 +3,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {type AllNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {PostFeed} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
@@ -11,7 +11,7 @@ import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 
 type Props = NativeStackScreenProps<
-  AllNavigatorParams,
+  CommonNavigatorParams,
   'NotificationsActivityList'
 >
 export function NotificationsActivityListScreen({

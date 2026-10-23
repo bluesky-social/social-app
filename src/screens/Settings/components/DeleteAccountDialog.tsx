@@ -131,7 +131,7 @@ function DeleteAccountDialogInner({
       })
       control.close(() => {
         toast.show(_(msg`Your account has been deleted, see ya! ✌️`))
-        resetToTab('HomeTab')
+        resetToTab('Home')
         removeAccount(currentAccount)
       })
     } catch (e: any) {
