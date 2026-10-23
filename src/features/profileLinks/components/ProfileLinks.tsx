@@ -11,11 +11,11 @@ import {useLingui} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {useHaptics} from '#/lib/haptics'
-import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {useLink} from '#/components/Link'
 import {
   ReportDialog,
   useReportDialogControl,
@@ -116,11 +116,16 @@ function ProfileLinksRow({
   const {t: l} = useLingui()
   const ax = useAnalytics()
   const {tap: playTapHaptic, longPress: playLongPressHaptic} = useHaptics()
-  const openLink = useOpenLink()
   const previewControl = useDialogControl()
   const reportControl = useReportDialogControl()
   const [activeLink, setActiveLink] = useState<ProfileLink | null>(null)
   const [expanded, setExpanded] = useState(false)
+  // the same handling as tapping the pill, e.g. bsky.app links open in-app
+  const {onPress: followActiveLink} = useLink({
+    to: activeLink?.url ?? '',
+    displayText: '',
+    shouldProxy: true,
+  })
 
   // the profile screen stays mounted elsewhere in the app, so fold back up on leave
   useFocusEffect(
@@ -199,14 +204,9 @@ function ProfileLinksRow({
       <LinkPreviewSheet
         control={previewControl}
         link={activeLink}
-        onOpen={link => {
+        onOpen={(link, e) => {
           logClick(link)
-          /*
-           * The sheet closes before this runs, so unlike the pills it
-           * can't be a Link. Through the redirect service, so Safelink
-           * rules apply.
-           */
-          openLink(link.url, undefined, true)
+          followActiveLink(e)
         }}
         onReport={
           // nothing to report on your own profile
