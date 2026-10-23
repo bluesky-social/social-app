@@ -1406,9 +1406,6 @@ export type Events = {
    */
   'blockedGeoOverlay:shown': {}
 
-  // user dismisses the Atmosphere introduction banner
-  'atmosphere:nux:bannerDismissed': {}
-
   'geo:debug': {}
 
   /*
