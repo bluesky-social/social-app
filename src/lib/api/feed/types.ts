@@ -1,3 +1,5 @@
+import {type Client} from '@atproto/lex'
+
 import {type app} from '#/lexicons'
 
 export interface FeedAPIResponse {
@@ -6,6 +8,8 @@ export interface FeedAPIResponse {
 }
 
 export interface FeedAPI {
+  /** Replace the transport without resetting any pagination state. */
+  setClient(client: Client): void
   peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost>
   fetch({
     cursor,
