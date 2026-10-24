@@ -228,9 +228,56 @@ jobs:
           google-services-token: ${{ secrets.GOOGLE_SERVICES_TOKEN }}
           expo-public-env: ${{ inputs.channel || 'testflight' }}
 
+      # Resolve the native builds this update targets once, so the bundles are
+      # compiled against the same builds denis publishes them for. Production
+      # passes them in; testflight reads the latest from the EAS counters.
+      - name: 🔢 Resolve target build numbers
+        id: build-numbers
+        if: ${{ !steps.fingerprint.outputs.includes-changes &&
+          !steps.version.outputs.version-changed }}
+        env:
+          BSKY_IOS_BUILD_NUMBER: ${{ inputs.iosBuildNumber }}
+          BSKY_ANDROID_VERSION_CODE: ${{ inputs.androidVersionCode }}
+        run: |
+          set -o pipefail
+          ./scripts/useBuildNumberEnv.sh jq -rn \
+            '"ios=\(env.BSKY_IOS_BUILD_NUMBER)", "android=\(env.BSKY_ANDROID_VERSION_CODE)"' |
+            tee -a "$GITHUB_OUTPUT"
+
+      # The embedded bundles of the target builds, saved by the native build
+      # workflows. Each is its platform's Hermes delta base in the export, so
+      # the update diffs small against what most clients are running. A
+      # missing one, or a fetch that fails outright, only means a normal
+      # compile. TODO: pass these to `denis publish --embedded-base` too, once
+      # DENIS_RELEASE_TAG has it.
+      - name: ⬇️ Fetch iOS embedded bundle
+        id: embedded-ios
+        if: ${{ !steps.fingerprint.outputs.includes-changes &&
+          !steps.version.outputs.version-changed }}
+        continue-on-error: true
+        uses: $/.github/actions/fetch-embedded-bundle
+        with:
+          platform: ios
+          build-number: ${{ steps.build-numbers.outputs.ios }}
+          destination: ${{ runner.temp }}/embedded-bundles/ios
+
+      - name: ⬇️ Fetch Android embedded bundle
+        id: embedded-android
+        if: ${{ !steps.fingerprint.outputs.includes-changes &&
+          !steps.version.outputs.version-changed }}
+        continue-on-error: true
+        uses: $/.github/actions/fetch-embedded-bundle
+        with:
+          platform: android
+          build-number: ${{ steps.build-numbers.outputs.android }}
+          destination: ${{ runner.temp }}/embedded-bundles/android
+
       - name: 🏗️ Create Bundle
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
           !steps.version.outputs.version-changed }}
+        env:
+          HERMES_BASE_BYTECODE_IOS: ${{ steps.embedded-ios.outputs.bundle-path }}
+          HERMES_BASE_BYTECODE_ANDROID: ${{ steps.embedded-android.outputs.bundle-path }}
         run: >
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=xyz.blueskyweb.app@${{ steps.env.outputs.release-version }}
@@ -261,10 +308,11 @@ jobs:
         env:
           RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
           CHANNEL_NAME: ${{ inputs.channel || 'testflight' }}
-          # When set (required for production), these take precedence over the
-          # global EAS counters inside the use-build-number wrapper
-          BSKY_IOS_BUILD_NUMBER: ${{ inputs.iosBuildNumber }}
-          BSKY_ANDROID_VERSION_CODE: ${{ inputs.androidVersionCode }}
+          # The builds the bundles were compiled against. Being set, these take
+          # precedence over the global EAS counters inside the use-build-number
+          # wrapper.
+          BSKY_IOS_BUILD_NUMBER: ${{ steps.build-numbers.outputs.ios }}
+          BSKY_ANDROID_VERSION_CODE: ${{ steps.build-numbers.outputs.android }}
 
   buildIfNecessaryIOS:
     name: Build and Submit iOS
