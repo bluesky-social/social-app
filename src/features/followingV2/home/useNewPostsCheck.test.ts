@@ -72,9 +72,10 @@ afterEach(() => {
  * fetched just now. Its check finds nothing unless told otherwise.
  */
 async function setup(initial: Partial<Props> = {}) {
-  const check = jest.fn<Promise<boolean>, [NewPostsCheckTrigger]>(() =>
-    Promise.resolve(false),
-  )
+  const check = jest.fn<
+    Promise<boolean>,
+    [NewPostsCheckTrigger, {freshAt: number}]
+  >(() => Promise.resolve(false))
   const onFound = jest.fn<void, [boolean, NewPostsCheckTrigger]>()
   let props: Props = {
     topFetchedAt: Date.now(),
@@ -108,6 +109,11 @@ async function setup(initial: Partial<Props> = {}) {
       await update({isActive: true})
     },
   }
+}
+
+/** The triggers `check` was called with, in order. */
+function triggers(check: {mock: {calls: [NewPostsCheckTrigger, unknown][]}}) {
+  return check.mock.calls.map(([trigger]) => trigger)
 }
 
 /** Lets the promises that settle checks run their course. */
@@ -241,11 +247,18 @@ describe('check', () => {
     await returnToApp(5 * MINUTE)
     await hopToApp()
     await advance(10 * MINUTE)
-    expect(view.check.mock.calls).toEqual([
-      ['focus'],
-      ['return'],
-      ['hop'],
-      ['interval'],
+    expect(triggers(view.check)).toEqual(['focus', 'return', 'hop', 'interval'])
+  })
+
+  it('is told when the clock was set: the top page, then a successful check', async () => {
+    const view = await setup()
+    const fetchedAt = Date.now()
+    await view.refocus(FOCUS_CHECK_AFTER)
+    const checkedAt = Date.now()
+    await returnToApp(5 * MINUTE)
+    expect(view.check.mock.calls.map(([, {freshAt}]) => freshAt)).toEqual([
+      fetchedAt,
+      checkedAt,
     ])
   })
 })
@@ -261,9 +274,10 @@ describe('in a memo() component', () => {
   })
 
   it('checks a return against the latest props', async () => {
-    const check = jest.fn<Promise<boolean>, [NewPostsCheckTrigger]>(() =>
-      Promise.resolve(false),
-    )
+    const check = jest.fn<
+      Promise<boolean>,
+      [NewPostsCheckTrigger, {freshAt: number}]
+    >(() => Promise.resolve(false))
     const props: Props = {
       topFetchedAt: undefined,
       isEmpty: false,
@@ -280,7 +294,7 @@ describe('in a memo() component', () => {
     await flush()
     await returnToApp(5 * MINUTE)
 
-    expect(check.mock.calls).toEqual([['return']])
+    expect(triggers(check)).toEqual(['return'])
   })
 })
 
@@ -323,7 +337,7 @@ describe('return', () => {
     const view = await setup({isBusy: true})
     await returnToApp(5 * MINUTE)
     await view.update({isBusy: false, topFetchedAt: Date.now()})
-    expect(view.check.mock.calls).toEqual([['return']])
+    expect(triggers(view.check)).toEqual(['return'])
   })
 
   it('checks once for held-up returns, as a `return` if any was significant', async () => {
@@ -332,11 +346,11 @@ describe('return', () => {
     await returnToApp(5 * MINUTE)
     await hopToApp()
     await view.update({isBusy: false})
-    expect(view.check.mock.calls).toEqual([['return']])
+    expect(triggers(view.check)).toEqual(['return'])
 
     // The next one starts afresh.
     await hopToApp()
-    expect(view.check.mock.calls).toEqual([['return'], ['hop']])
+    expect(triggers(view.check)).toEqual(['return', 'hop'])
   })
 
   it('is ignored while the view is inactive', async () => {
@@ -368,7 +382,7 @@ describe('return', () => {
     // Nor does it make a later hop significant.
     await view.update({isActive: true})
     await hopToApp()
-    expect(view.check.mock.calls).toEqual([['focus'], ['hop']])
+    expect(triggers(view.check)).toEqual(['focus', 'hop'])
   })
 
   it('is dropped if the view is left and come back to before it is judged', async () => {
@@ -380,7 +394,7 @@ describe('return', () => {
 
     // Nor does it make a later hop significant.
     await hopToApp()
-    expect(view.check.mock.calls).toEqual([['hop']])
+    expect(triggers(view.check)).toEqual(['hop'])
   })
 })
 
@@ -511,7 +525,7 @@ describe('limits', () => {
     view.check.mockResolvedValueOnce(true)
     response.reject(new Error('Network request failed'))
     await flush()
-    expect(view.check.mock.calls).toEqual([['focus'], ['return']])
+    expect(triggers(view.check)).toEqual(['focus', 'return'])
     expect(view.found()).toEqual(['return'])
   })
 

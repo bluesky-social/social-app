@@ -1,5 +1,6 @@
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {type FeedAPI} from './api/types'
+import {type FollowingV2CheckOutcome} from './metrics'
 import {
   type FeedDescriptor,
   type FeedPage,
@@ -14,6 +15,7 @@ import {useSettleAtTop} from './useSettleAtTop'
 import {type ListScrollReports} from './useSettleScrollHandlers'
 
 type Prepend = ReturnType<typeof usePostFeedPrepend>
+type SettleAtTopOptions = Parameters<typeof useSettleAtTop>[2]
 
 /** The parts of a feed row that tell whether it's from the top page. */
 type Row = {type: string; slice?: FeedPostSlice; cursor?: string}
@@ -30,6 +32,7 @@ export async function checkFollowing(
     top,
     createFeedApi,
     onHasNew,
+    onOutcome,
   }: {
     prepend: Pick<Prepend, 'check'>
     /** The feed's top page, without saved-feed samples. */
@@ -37,17 +40,30 @@ export async function checkFollowing(
     createFeedApi: () => FeedAPI
     /** Lights the Home dot. */
     onHasNew?: (hasNew: boolean) => void
+    /** How it ended, and with what error. For metrics. */
+    onOutcome?: (outcome: FollowingV2CheckOutcome, error?: unknown) => void
   },
 ) {
-  const staging = prepend.check(trigger)
-  if (!staging) {
-    return pollLatest(top, createFeedApi())
+  try {
+    const staging = prepend.check(trigger)
+    if (!staging) {
+      const found = await pollLatest(top, createFeedApi())
+      onOutcome?.(found ? 'found' : 'nothing')
+      return found
+    }
+    const checked = await staging
+    onOutcome?.(checked.outcome)
+    if (
+      checked.outcome === 'staged' &&
+      hasUnseenPosts(top, checked.page.feed)
+    ) {
+      onHasNew?.(true)
+    }
+    return undefined
+  } catch (e) {
+    onOutcome?.('failed', e)
+    throw e
   }
-  const page = await staging
-  if (page && hasUnseenPosts(top, page.feed)) {
-    onHasNew?.(true)
-  }
-  return undefined
 }
 
 /**
@@ -63,6 +79,7 @@ export function useFollowingListReports(
     top,
     pill,
     onHasNew,
+    onSettled,
   }: {
     /** Whether the feed settles at the top (see `useSettleAtTop`). */
     enabled: boolean
@@ -73,6 +90,7 @@ export function useFollowingListReports(
     pill: {dismiss: () => void}
     /** Puts the Home dot out. */
     onHasNew?: (hasNew: boolean) => void
+    onSettled?: SettleAtTopOptions['onSettled']
   },
 ): {reports: ListScrollReports; onRowSeen: (row: Row) => void} {
   const settleAtTop = useSettleAtTop(feed, params, {
@@ -82,6 +100,7 @@ export function useFollowingListReports(
       onHasNew?.(false)
       pill.dismiss()
     },
+    onSettled,
   })
   const onRowSeen = useNonReactiveCallback((row: Row) => {
     if (

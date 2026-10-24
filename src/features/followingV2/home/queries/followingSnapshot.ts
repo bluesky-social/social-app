@@ -1,5 +1,5 @@
 import {jsonToLex, type JsonValue, lexToJson, utf8Len} from '@atproto/lex'
-import {hashKey} from '@tanstack/react-query'
+import {hashKey, type QueryClient} from '@tanstack/react-query'
 import {type PersistedClient} from '@tanstack/react-query-persist-client'
 
 import {IS_NATIVE} from '#/env'
@@ -73,16 +73,126 @@ export function saveFollowingSnapshot(client: PersistedClient) {
  *
  * A query saved while invalidated is left out too, as it would be refetched,
  * and so replaced, as soon as it's shown.
+ *
+ * Records what it found for {@link takeFollowingSnapshotLoad}. `buster` and
+ * `maxAge` mirror the persister's options; they only label the report
+ * (`expired`, `appVersion`) and never change what's returned.
  */
 export function loadFollowingSnapshot(
   client: PersistedClient,
-  {restore = FOLLOWING_SNAPSHOT_RESTORE_ENABLED}: {restore?: boolean} = {},
+  {
+    restore = FOLLOWING_SNAPSHOT_RESTORE_ENABLED,
+    queryClient,
+    buster,
+    maxAge,
+  }: {
+    restore?: boolean
+    /** The client it's read into, which what it found is recorded for. */
+    queryClient?: QueryClient
+    buster?: string
+    maxAge?: number
+  } = {},
 ) {
-  return replaceFollowingData(client, state =>
-    restore && !state?.isInvalidated
-      ? readFollowingSnapshot(state?.data)
-      : undefined,
-  )
+  let load: FollowingSnapshotLoad = {snapshot: 'missing'}
+  const loaded = replaceFollowingData(client, state => {
+    const {rejection, bytes} = inspectFollowingSnapshot(state?.data)
+    const unrestored = !restore
+      ? 'disabled'
+      : state?.isInvalidated
+        ? 'invalidated'
+        : rejection
+    const rejectionReason =
+      droppedClientReason(client, {buster, maxAge}) ?? unrestored
+    load = {
+      snapshot: rejectionReason ? 'rejected' : 'valid',
+      rejectionReason,
+      ...snapshotFacts(state?.data, bytes),
+    }
+    if (unrestored) {
+      return undefined
+    }
+    const data = toFollowingData(state?.data as FollowingSnapshot)
+    load.topFetchedAt = data.pages[0]?.fetchedAt
+    return data
+  })
+  if (queryClient) {
+    loads.set(queryClient, load)
+  }
+  return loaded
+}
+
+/**
+ * Why a Following snapshot read back from disk wasn't restored:
+ *
+ * - `expired` and `appVersion`: TanStack drops the whole persisted client,
+ *   saved longer than its `maxAge` ago or by another app version (its
+ *   `buster`), so not even a valid snapshot is restored.
+ * - `disabled`: restoring is off.
+ * - `invalidated`: its query was invalidated when it was saved.
+ * - Any other: the rule it breaks (see {@link inspectFollowingSnapshot}).
+ */
+export type FollowingSnapshotRejection =
+  'expired' | 'appVersion' | 'disabled' | 'invalidated' | FollowingSnapshotRule
+
+/**
+ * What `loadFollowingSnapshot` found, for `followingV2:restore`, whose fields
+ * these are, and the `fetchedAt` of the top page it restored, if it did.
+ */
+export type FollowingSnapshotLoad = {
+  snapshot: 'valid' | 'missing' | 'rejected'
+  rejectionReason?: FollowingSnapshotRejection
+  ageMs?: number
+  bytes?: number
+  pageCount?: number
+  /** Tells whether Following showed the restored page. Not reported. */
+  topFetchedAt?: number
+}
+
+/** What each client's read found, until a Following view takes it. */
+const loads = new WeakMap<QueryClient, FollowingSnapshotLoad>()
+
+/**
+ * What the read of the persisted client into `queryClient` found of the
+ * Following snapshot, once: `undefined` if it has been taken since, or there
+ * was no read, as when the account has nothing persisted yet.
+ */
+export function takeFollowingSnapshotLoad(queryClient: QueryClient) {
+  const load = loads.get(queryClient)
+  loads.delete(queryClient)
+  return load
+}
+
+/**
+ * Mirrors `persistQueryClientRestore`'s discard rules: `expired` past
+ * `maxAge`, `appVersion` on a `buster` mismatch. Unknown without them.
+ */
+function droppedClientReason(
+  client: PersistedClient,
+  {buster, maxAge}: {buster?: string; maxAge?: number},
+): FollowingSnapshotRejection | undefined {
+  if (
+    maxAge !== undefined &&
+    (!client.timestamp || Date.now() - client.timestamp > maxAge)
+  ) {
+    return 'expired'
+  }
+  if (buster !== undefined && client.buster !== buster) {
+    return 'appVersion'
+  }
+}
+
+/** The age and size of what may be a snapshot, as far as they can be read. */
+function snapshotFacts(snapshot: unknown, bytes: number | undefined) {
+  const pages = isRecord(snapshot) ? snapshot.pages : undefined
+  const top: unknown = Array.isArray(pages) ? pages[0] : undefined
+  const fetchedAt = isRecord(top) ? top.fetchedAt : undefined
+  return {
+    ...(typeof fetchedAt === 'number' && {
+      ageMs: Math.max(0, Date.now() - fetchedAt),
+    }),
+    ...(bytes !== undefined && {bytes}),
+    ...(Array.isArray(pages) && {pageCount: pages.length}),
+  }
 }
 
 /**
@@ -211,6 +321,11 @@ export function readFollowingSnapshot(
   if (!isValidFollowingSnapshot(snapshot)) {
     return
   }
+  return toFollowingData(snapshot)
+}
+
+/** The query data a valid snapshot holds. */
+function toFollowingData(snapshot: FollowingSnapshot): PostFeedData {
   return {
     pages: snapshot.pages.map(page => ({
       ...page,
@@ -223,7 +338,27 @@ export function readFollowingSnapshot(
   }
 }
 
+/** Whether `snapshot` keeps every rule (see {@link inspectFollowingSnapshot}). */
+function isValidFollowingSnapshot(
+  snapshot: unknown,
+): snapshot is FollowingSnapshot {
+  return inspectFollowingSnapshot(snapshot).rejection === undefined
+}
+
+/** A rule of {@link inspectFollowingSnapshot} that a snapshot breaks. */
+export type FollowingSnapshotRule =
+  | 'version'
+  | 'malformed'
+  | 'pageCount'
+  | 'discover'
+  | 'noStartCursor'
+  | 'misaligned'
+  | 'tooLarge'
+
 /**
+ * The first rule that `snapshot` breaks, if any, and its size serialized, if
+ * the checks got as far as measuring it.
+ *
  * The rules for a snapshot, checked on saving and on loading: the current
  * version, one to {@link FOLLOWING_SNAPSHOT_MAX_PAGES} pages with a page param
  * each, the top one fetched from the top and every other continuing the
@@ -234,23 +369,35 @@ export function readFollowingSnapshot(
  * A page put above the others with `since` is fetched from the top too, and
  * the page below it continues from its cursor, so the same rules hold for it.
  */
-function isValidFollowingSnapshot(
-  snapshot: unknown,
-): snapshot is FollowingSnapshot {
-  if (!isRecord(snapshot) || snapshot.version !== FOLLOWING_SNAPSHOT_VERSION) {
-    return false
+export function inspectFollowingSnapshot(snapshot: unknown): {
+  rejection?: FollowingSnapshotRule
+  bytes?: number
+} {
+  if (!isRecord(snapshot)) {
+    return {rejection: 'malformed'}
+  }
+  if (snapshot.version !== FOLLOWING_SNAPSHOT_VERSION) {
+    return {rejection: 'version'}
   }
   const {pages, pageParams} = snapshot
   if (
     !Array.isArray(pages) ||
     !Array.isArray(pageParams) ||
-    pages.length === 0 ||
-    pages.length > FOLLOWING_SNAPSHOT_MAX_PAGES ||
-    pages.length !== pageParams.length ||
-    !pages.every(isFollowingPage) ||
-    !pages[0].startCursor
+    pages.length !== pageParams.length
   ) {
-    return false
+    return {rejection: 'malformed'}
+  }
+  if (pages.length === 0 || pages.length > FOLLOWING_SNAPSHOT_MAX_PAGES) {
+    return {rejection: 'pageCount'}
+  }
+  if (pages.some(page => isRecord(page) && page.source !== undefined)) {
+    return {rejection: 'discover'}
+  }
+  if (!pages.every(isFollowingPage)) {
+    return {rejection: 'malformed'}
+  }
+  if (!pages[0].startCursor) {
+    return {rejection: 'noStartCursor'}
   }
   const isAligned = pageParams.every((param, i) =>
     i === 0
@@ -260,10 +407,13 @@ function isValidFollowingSnapshot(
         typeof param.cursor === 'string' &&
         param.cursor === pages[i - 1].cursor,
   )
-  return (
-    isAligned &&
-    utf8Len(JSON.stringify(snapshot)) <= FOLLOWING_SNAPSHOT_MAX_BYTES
-  )
+  if (!isAligned) {
+    return {rejection: 'misaligned'}
+  }
+  const bytes = utf8Len(JSON.stringify(snapshot))
+  return bytes > FOLLOWING_SNAPSHOT_MAX_BYTES
+    ? {rejection: 'tooLarge', bytes}
+    : {bytes}
 }
 
 function isFollowingPage(page: unknown): page is SnapshotPage {
