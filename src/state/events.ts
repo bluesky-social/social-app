@@ -49,6 +49,18 @@ export function listenNetworkLost(fn: () => void): UnlistenFn {
   return () => emitter.off('network-lost', fn)
 }
 
+/**
+ * The user explicitly asked to retry something that failed. The network may
+ * still be down, but let the retry find that out rather than sit paused.
+ */
+export function emitNetworkRetry() {
+  emitter.emit('network-retry')
+}
+export function listenNetworkRetry(fn: () => void): UnlistenFn {
+  emitter.on('network-retry', fn)
+  return () => emitter.off('network-retry', fn)
+}
+
 export function emitPostCreated() {
   emitter.emit('post-created')
 }

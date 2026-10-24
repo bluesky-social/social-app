@@ -13,7 +13,11 @@ import {
 } from '@tanstack/react-query-persist-client'
 
 import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
-import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
+import {
+  listenNetworkConfirmed,
+  listenNetworkLost,
+  listenNetworkRetry,
+} from '#/state/events'
 import {isQueryPersisted} from '#/state/queries/util'
 import * as env from '#/env'
 import {IS_NATIVE, IS_WEB} from '#/env'
@@ -52,17 +56,25 @@ async function checkIsOnline(): Promise<boolean> {
 
 let receivedNetworkLost = false
 let receivedNetworkConfirmed = false
-let isNetworkStateUnclear = false
 
 listenNetworkLost(() => {
   receivedNetworkLost = true
   onlineManager.setOnline(false)
 })
 
-listenNetworkConfirmed(() => {
+function onNetworkUp() {
   receivedNetworkConfirmed = true
   onlineManager.setOnline(true)
-})
+}
+
+listenNetworkConfirmed(onNetworkUp)
+
+/*
+ * Offline pauses queries, so a retry the user asked for would sit paused and
+ * look like it did nothing. Assume we're back and let the retry find out. If
+ * the network really is down it will fail and report that.
+ */
+listenNetworkRetry(onNetworkUp)
 
 let checkPromise: Promise<void> | undefined
 function checkIsOnlineIfNeeded() {
@@ -73,23 +85,25 @@ function checkIsOnlineIfNeeded() {
   receivedNetworkConfirmed = false
   checkPromise = checkIsOnline().then(nextIsOnline => {
     checkPromise = undefined
-    if (nextIsOnline && receivedNetworkLost) {
-      isNetworkStateUnclear = true
-    }
-    if (!nextIsOnline && receivedNetworkConfirmed) {
-      isNetworkStateUnclear = true
-    }
-    if (!isNetworkStateUnclear) {
+    /*
+     * A real request that settled while the check was in flight is fresher
+     * than the check's verdict, so defer to it. We only skip this one verdict:
+     * the next tick checks again. This must never latch. While offline, queries
+     * are paused and make no requests, so nothing but this poll can bring us
+     * back online, and a poll that gave up would leave every query paused.
+     */
+    const wasContradicted = nextIsOnline
+      ? receivedNetworkLost
+      : receivedNetworkConfirmed
+    if (!wasContradicted) {
       onlineManager.setOnline(nextIsOnline)
     }
   })
 }
 
 setInterval(() => {
-  if (AppState.currentState === 'active') {
-    if (!onlineManager.isOnline() || isNetworkStateUnclear) {
-      checkIsOnlineIfNeeded()
-    }
+  if (AppState.currentState === 'active' && !onlineManager.isOnline()) {
+    checkIsOnlineIfNeeded()
   }
 }, 2000)
 
