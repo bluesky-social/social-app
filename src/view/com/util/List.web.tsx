@@ -158,85 +158,9 @@ function ListImpl<ItemT>(
     if (disableFullWindowScroll) {
       const element = nativeRef.current
       if (!element) return
-
-      return {
-        get scrollWidth() {
-          return element.scrollWidth
-        },
-        get scrollHeight() {
-          return element.scrollHeight
-        },
-        get clientWidth() {
-          return element.clientWidth
-        },
-        get clientHeight() {
-          return element.clientHeight
-        },
-        get scrollY() {
-          return element.scrollTop
-        },
-        get scrollX() {
-          return element.scrollLeft
-        },
-        scrollTo(options?: ScrollToOptions) {
-          element.scrollTo(options)
-        },
-        scrollBy(options: ScrollToOptions) {
-          element.scrollBy(options)
-        },
-        addEventListener(
-          event: string,
-          handler: EventListenerOrEventListenerObject,
-        ) {
-          element.addEventListener(event, handler)
-        },
-        removeEventListener(
-          event: string,
-          handler: EventListenerOrEventListenerObject,
-        ) {
-          element.removeEventListener(event, handler)
-        },
-      }
-    } else {
-      return {
-        get scrollWidth() {
-          return document.documentElement.scrollWidth
-        },
-        get scrollHeight() {
-          return document.documentElement.scrollHeight
-        },
-        get clientWidth() {
-          return window.innerWidth
-        },
-        get clientHeight() {
-          return window.innerHeight
-        },
-        get scrollY() {
-          return window.scrollY
-        },
-        get scrollX() {
-          return window.scrollX
-        },
-        scrollTo(options: ScrollToOptions) {
-          window.scrollTo(options)
-        },
-        scrollBy(options: ScrollToOptions) {
-          window.scrollBy(options)
-        },
-        addEventListener(
-          event: string,
-          handler: EventListenerOrEventListenerObject,
-        ) {
-          window.addEventListener(event, handler)
-        },
-        removeEventListener(
-          event: string,
-          handler: EventListenerOrEventListenerObject,
-        ) {
-          window.removeEventListener(event, handler)
-        },
-      }
+      return createElementScrollable(element)
     }
+    return windowScrollable
   }, [disableFullWindowScroll])
 
   const nativeRef = useRef<HTMLDivElement>(null)
@@ -530,6 +454,87 @@ function ListImpl<ItemT>(
   )
 }
 
+/*
+ * Scroll metrics and methods for the element that scrolls the list. Kept out
+ * of the component because React Compiler can't compile getters.
+ */
+function createElementScrollable(element: HTMLElement) {
+  return {
+    get scrollWidth() {
+      return element.scrollWidth
+    },
+    get scrollHeight() {
+      return element.scrollHeight
+    },
+    get clientWidth() {
+      return element.clientWidth
+    },
+    get clientHeight() {
+      return element.clientHeight
+    },
+    get scrollY() {
+      return element.scrollTop
+    },
+    get scrollX() {
+      return element.scrollLeft
+    },
+    scrollTo(options?: ScrollToOptions) {
+      element.scrollTo(options)
+    },
+    scrollBy(options: ScrollToOptions) {
+      element.scrollBy(options)
+    },
+    addEventListener(
+      event: string,
+      handler: EventListenerOrEventListenerObject,
+    ) {
+      element.addEventListener(event, handler)
+    },
+    removeEventListener(
+      event: string,
+      handler: EventListenerOrEventListenerObject,
+    ) {
+      element.removeEventListener(event, handler)
+    },
+  }
+}
+
+const windowScrollable = {
+  get scrollWidth() {
+    return document.documentElement.scrollWidth
+  },
+  get scrollHeight() {
+    return document.documentElement.scrollHeight
+  },
+  get clientWidth() {
+    return window.innerWidth
+  },
+  get clientHeight() {
+    return window.innerHeight
+  },
+  get scrollY() {
+    return window.scrollY
+  },
+  get scrollX() {
+    return window.scrollX
+  },
+  scrollTo(options: ScrollToOptions) {
+    window.scrollTo(options)
+  },
+  scrollBy(options: ScrollToOptions) {
+    window.scrollBy(options)
+  },
+  addEventListener(event: string, handler: EventListenerOrEventListenerObject) {
+    window.addEventListener(event, handler)
+  },
+  removeEventListener(
+    event: string,
+    handler: EventListenerOrEventListenerObject,
+  ) {
+    window.removeEventListener(event, handler)
+  },
+}
+
 /** Calls onMounted with the row once it's in the DOM, checking once a frame. */
 function whenRowMounts(
   getNode: () => HTMLElement | undefined,
@@ -588,7 +593,9 @@ function useWebListTelemetry({
   const ax = useAnalytics()
   const reportedMilestones = useRef(new Set<number>())
   const itemCountRef = useRef(itemCount)
-  itemCountRef.current = itemCount
+  useEffect(() => {
+    itemCountRef.current = itemCount
+  })
   const isLargeList = itemCount >= LARGE_LIST_MILESTONES[0]
 
   useEffect(() => {
@@ -832,7 +839,7 @@ Row = memo(Row) as <ItemT>(props: {
   observeRow: ((key: string, node: HTMLElement | null) => void) | undefined
 }) => React.ReactNode
 
-let Visibility = ({
+let Visibility = function VisibilityImpl({
   root,
   topMargin = '0px',
   bottomMargin = '0px',
@@ -844,7 +851,7 @@ let Visibility = ({
   bottomMargin?: string
   onVisibleChange: (isVisible: boolean) => void
   style?: ViewProps['style']
-}): React.ReactNode => {
+}): React.ReactNode {
   const tailRef = useRef(null)
   const isIntersecting = useRef(false)
 
