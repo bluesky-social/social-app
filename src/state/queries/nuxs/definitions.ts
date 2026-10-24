@@ -24,7 +24,6 @@ export enum Nux {
    */
   PolicyUpdate202508 = 'PolicyUpdate202508',
 }
-
 export const nuxNames = new Set(Object.values(Nux))
 
 export type AppNux = BaseNux<
