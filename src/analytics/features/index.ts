@@ -125,6 +125,26 @@ export function getFeatureDescription(feature: Features, i18n: I18n) {
           }),
         ),
       }
+    case Features.WebListVirtualizationEnable:
+      // Only the web List is affected; native lists are already virtualized
+      if (!env.IS_WEB) return null
+      return {
+        key: feature,
+        name: i18n._(
+          msg({
+            message: 'Feed rendering improvements',
+            comment: 'Name for a feature flag',
+          }),
+        ),
+        description: i18n._(
+          msg({
+            message:
+              'Feeds and lists keep only nearby posts in the page, so performance stays steady however far you scroll.',
+            comment:
+              'Description of a feature flag (Feed rendering improvements)',
+          }),
+        ),
+      }
     case Features.NotificationsV2Enable:
       return {
         key: feature,
