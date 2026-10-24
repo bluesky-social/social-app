@@ -1,0 +1,52 @@
+---
+name: Fetch embedded bundle
+description: >
+  Download the embedded-bundle-<platform>-<buildNumber> artifact that the
+  native build workflows save: the JS bundle a native build embeds, its
+  app.manifest and embedded.json (see scripts/extractEmbeddedBundle.sh). Only
+  artifacts from this repository's own runs are trusted. A missing, expired or
+  invalid artifact sets found to false with a warning rather than failing, so
+  callers fall back to a normal compile and full downloads. The job needs
+  actions: read.
+
+inputs:
+  platform:
+    description: ios or android
+    required: true
+  build-number:
+    description: iOS build number or Android version code of the native build
+    required: true
+  destination:
+    description: Directory to download into. It must be empty or not exist yet.
+    required: true
+  github-token:
+    description: Token that can read this repository's Actions artifacts
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  found:
+    description: "'true' if the artifact was downloaded and verified, otherwise 'false'"
+    value: ${{ steps.fetch.outputs.found }}
+  dir:
+    description: Absolute path of the downloaded files, if found
+    value: ${{ steps.fetch.outputs.dir }}
+  bundle-path:
+    description: Absolute path of the embedded bundle (Hermes bytecode), if found
+    value: ${{ steps.fetch.outputs.bundle-path }}
+  update-id:
+    description: The build's embedded update ID, if found
+    value: ${{ steps.fetch.outputs.update-id }}
+
+runs:
+  using: composite
+  steps:
+    - name: ⬇️ Fetch embedded bundle
+      id: fetch
+      shell: bash
+      env:
+        PLATFORM: ${{ inputs.platform }}
+        BUILD_NUMBER: ${{ inputs.build-number }}
+        DESTINATION: ${{ inputs.destination }}
+        GH_TOKEN: ${{ inputs.github-token }}
+      run: bash "$GITHUB_ACTION_PATH/fetch.sh"
