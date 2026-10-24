@@ -369,6 +369,7 @@ module.exports = function (_config) {
         './plugins/withAndroidComposeVersion.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
+        './plugins/withProfileableAndroid.js',
         [
           'expo-font',
           {
