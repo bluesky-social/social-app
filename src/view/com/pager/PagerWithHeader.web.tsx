@@ -39,6 +39,8 @@ export interface PagerWithHeaderProps {
   allowHeaderOverScroll?: boolean // Ignored on web.
   /** Native-only vertical room for horizontally clipped headers. */
   headerOverflowInset?: number
+  /** Native-only: the header measure the pager would otherwise take. */
+  headerContentHeight?: number
 }
 export const PagerWithHeader = forwardRef<PagerRef, PagerWithHeaderProps>(
   function PageWithHeaderImpl(

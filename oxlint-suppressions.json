@@ -773,14 +773,6 @@
       "count": 2
     }
   },
-  "src/screens/Profile/Sections/Feed.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    },
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/screens/Profile/components/GermButton.tsx": {
     "typescript/no-explicit-any": {
       "count": 1
@@ -1257,20 +1249,6 @@
       "count": 2
     }
   },
-  "src/view/com/feeds/ProfileFeedgens.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 3
-    },
-    "typescript/no-floating-promises": {
-      "count": 2
-    },
-    "typescript/no-misused-promises": {
-      "count": 3
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 2
-    }
-  },
   "src/view/com/lists/MyLists.tsx": {
     "typescript/no-explicit-any": {
       "count": 2
@@ -1280,20 +1258,6 @@
     },
     "typescript/no-unsafe-member-access": {
       "count": 6
-    }
-  },
-  "src/view/com/lists/ProfileLists.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 3
-    },
-    "typescript/no-floating-promises": {
-      "count": 2
-    },
-    "typescript/no-misused-promises": {
-      "count": 3
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 2
     }
   },
   "src/view/com/pager/Pager.tsx": {
