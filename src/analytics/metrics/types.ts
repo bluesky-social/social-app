@@ -13,6 +13,7 @@ import {
   type FollowingV2CheckOutcome,
   type FollowingV2Surface,
 } from '#/features/followingV2/home/metrics'
+import {type PrependPillPresentation} from '#/features/followingV2/home/pillMetrics'
 import {type FollowingSnapshotRejection} from '#/features/followingV2/home/queries/followingSnapshot'
 import {
   type GapFillOutcome,
@@ -21,6 +22,10 @@ import {
   type RefreshOutcome,
 } from '#/features/followingV2/home/queries/postFeed'
 import {type NewPostsCheckTrigger} from '#/features/followingV2/home/useNewPostsCheck'
+import {
+  type PrependPillHideReason,
+  type PrependPillSource,
+} from '#/features/followingV2/home/usePrependPill'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
 export type Events = {
@@ -514,6 +519,36 @@ export type Events = {
     outcome: 'settled' | 'superseded'
     /** How many pages below the gap it dropped. */
     droppedPageCount: number
+  }
+  /**
+   * The pill first showed an offer while Home Following was on screen. At most
+   * once per offer; an offer never shown reports nothing.
+   */
+  'followingV2:pill:impression': {
+    surface: FollowingV2Surface
+    source: PrependPillSource
+    /** How many posts it offered as it showed. */
+    count: number
+    presentation: PrependPillPresentation
+  }
+  /** The reader pressed the pill, which scrolls up to its posts. */
+  'followingV2:pill:press': {
+    surface: FollowingV2Surface
+    source: PrependPillSource
+    count: number
+    presentation: PrependPillPresentation
+    /** How long since it first showed. */
+    shownMs: number
+  }
+  /** The pill came down, after it had shown. */
+  'followingV2:pill:hide': {
+    surface: FollowingV2Surface
+    source: PrependPillSource
+    reason: PrependPillHideReason
+    /** How many posts it offered as it last showed. */
+    count: number
+    /** How long since it first showed. */
+    shownMs: number
   }
 
   'composer:gif:open': {}
