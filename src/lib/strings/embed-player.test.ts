@@ -93,6 +93,9 @@ describe('getEmbedPlayerMediaType', () => {
     ['youtube_short', 'video'],
     ['twitch_video', 'video'],
     ['vimeo_video', 'video'],
+    ['chzzk_video', 'video'],
+    ['soop_video', 'video'],
+    ['soop_catch', 'video'],
     ['spotify_song', 'audio'],
     ['soundcloud_set', 'audio'],
     ['apple_music_album', 'audio'],
@@ -108,39 +111,121 @@ describe('getEmbedPlayerMediaType', () => {
 describe('getPlayerAspect', () => {
   afterEach(() => jest.restoreAllMocks())
 
-  it('updates portrait video sizing when the app window is resized', () => {
-    const dimensions = jest.spyOn(Dimensions, 'get')
-    const params = {type: 'youtube_short', hasThumb: true, width: 600} as const
+  it.each<EmbedPlayerType>(['youtube_short', 'soop_catch'])(
+    'updates %s sizing when the app window is resized',
+    type => {
+      const dimensions = jest.spyOn(Dimensions, 'get')
+      const params = {type, hasThumb: true, width: 600}
 
-    dimensions.mockReturnValue({
-      width: 1024,
-      height: 1366,
-      scale: 2,
-      fontScale: 1,
-    })
-    expect(getPlayerAspect(params)).toEqual({aspectRatio: (9 / 16) * 1.5})
+      dimensions.mockReturnValue({
+        width: 1024,
+        height: 1366,
+        scale: 2,
+        fontScale: 1,
+      })
+      expect(getPlayerAspect(params)).toEqual({aspectRatio: (9 / 16) * 1.5})
 
-    dimensions.mockReturnValue({
-      width: 1024,
-      height: 599,
-      scale: 2,
-      fontScale: 1,
-    })
-    expect(getPlayerAspect(params)).toEqual({aspectRatio: (9 / 16) * 1.75})
-    expect(dimensions).toHaveBeenLastCalledWith('window')
+      dimensions.mockReturnValue({
+        width: 1024,
+        height: 599,
+        scale: 2,
+        fontScale: 1,
+      })
+      expect(getPlayerAspect(params)).toEqual({aspectRatio: (9 / 16) * 1.75})
+      expect(dimensions).toHaveBeenLastCalledWith('window')
 
-    dimensions.mockReturnValue({
-      width: 744,
-      height: 1133,
-      scale: 2,
-      fontScale: 1,
-    })
-    expect(getPlayerAspect(params)).toEqual({aspectRatio: (9 / 16) * 1.5})
-  })
+      dimensions.mockReturnValue({
+        width: 744,
+        height: 1133,
+        scale: 2,
+        fontScale: 1,
+      })
+      expect(getPlayerAspect(params)).toEqual({aspectRatio: (9 / 16) * 1.5})
+    },
+  )
 
   it('preserves the placeholder aspect without a thumbnail', () => {
     expect(
       getPlayerAspect({type: 'youtube_short', hasThumb: false, width: 600}),
     ).toEqual({aspectRatio: 16 / 9})
   })
+})
+
+describe('CHZZK clips', () => {
+  it.each(['chzzk.naver.com', 'm.chzzk.naver.com'])(
+    'embeds shared clips from %s',
+    host => {
+      expect(
+        parseEmbedPlayerFromUrl(`https://${host}/clips/clipId?share=true`),
+      ).toEqual({
+        type: 'chzzk_video',
+        source: 'chzzk',
+        playerUri: 'https://chzzk.naver.com/embed/clip/clipId?autoplay=1',
+      })
+    },
+  )
+})
+
+describe('SOOP players', () => {
+  it.each([
+    [
+      'play.sooplive.co.kr/streamer',
+      'play.sooplive.co.kr/streamer/embed',
+      'soop_video',
+    ],
+    [
+      'play.sooplive.co.kr/streamer/12345',
+      'play.sooplive.co.kr/streamer/12345/embed',
+      'soop_video',
+    ],
+    [
+      'vod.sooplive.co.kr/player/12345',
+      'vod.sooplive.co.kr/player/12345/embed',
+      'soop_video',
+    ],
+    [
+      'vod.sooplive.co.kr/player/12345/catch',
+      'vod.sooplive.co.kr/player/12345/embed',
+      'soop_catch',
+    ],
+  ])('embeds %s', (url, player, type) => {
+    expect(parseEmbedPlayerFromUrl(`https://${url}?ref=share`)).toEqual({
+      type,
+      source: 'soop',
+      playerUri: `https://${player}?autoPlay=true&mutePlay=true${type === 'soop_catch' ? '&type=catch' : ''}`,
+    })
+  })
+
+  it.each(['sooplive.com', 'www.sooplive.com'])(
+    'embeds global channels and videos from %s',
+    host => {
+      for (const path of ['streamer', 'video/videoId']) {
+        expect(parseEmbedPlayerFromUrl(`https://${host}/${path}`)).toEqual({
+          type: 'soop_video',
+          source: 'soop',
+          playerUri: `https://www.sooplive.com/player/embed/${path}`,
+        })
+      }
+    },
+  )
+})
+
+it.each([
+  'https://chzzk.naver.com/clips/',
+  'https://chzzk.naver.com/video/12345',
+  'https://chzzk.naver.com/clips/clipId/extra',
+  'https://chzzk.naver.com.example.com/clips/clipId',
+  'https://play.sooplive.co.kr/',
+  'https://play.sooplive.co.kr/streamer/not-a-broadcast',
+  'https://vod.sooplive.co.kr/player/',
+  'https://vod.sooplive.co.kr/player/not-a-video',
+  'https://vod.sooplive.co.kr/player/12345/unknown',
+  'https://vod.sooplive.co.kr.example.com/player/12345',
+  'https://sooplive.com/video',
+  'https://sooplive.com/video/videoId/extra',
+  'https://sooplive.com.example.com/streamer',
+  'https://tv.naver.com/v/12345',
+  'https://tv.naver.com/h/12345',
+])('leaves unsupported links as regular link cards: %s', url => {
+  expect(parseEmbedPlayerFromUrl(url)).toBeUndefined()
 })

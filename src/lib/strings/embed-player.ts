@@ -24,6 +24,8 @@ export const embedPlayerSources = [
   'flickr',
   'bandcamp',
   'freemix',
+  'chzzk',
+  'soop',
 ] as const
 
 export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
@@ -48,6 +50,9 @@ export type EmbedPlayerType =
   | 'bandcamp_album'
   | 'bandcamp_track'
   | 'freemix_track'
+  | 'chzzk_video'
+  | 'soop_video'
+  | 'soop_catch'
 
 export function getEmbedPlayerMediaType(
   type: EmbedPlayerType,
@@ -56,7 +61,10 @@ export function getEmbedPlayerMediaType(
     type === 'youtube_video' ||
     type === 'youtube_short' ||
     type === 'twitch_video' ||
-    type === 'vimeo_video'
+    type === 'vimeo_video' ||
+    type === 'chzzk_video' ||
+    type === 'soop_video' ||
+    type === 'soop_catch'
   ) {
     return 'video'
   }
@@ -87,6 +95,8 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   flickr: 'Flickr',
   bandcamp: 'Bandcamp',
   freemix: 'FreeMix',
+  chzzk: 'CHZZK',
+  soop: 'SOOP',
 }
 
 /**
@@ -560,6 +570,75 @@ export function parseEmbedPlayerFromUrl(
     }
   }
 
+  if (
+    urlp.hostname === 'chzzk.naver.com' ||
+    urlp.hostname === 'm.chzzk.naver.com'
+  ) {
+    const match = /^\/clips\/([a-zA-Z0-9_-]+)\/?$/.exec(urlp.pathname)
+
+    if (match) {
+      const [, id] = match
+      return {
+        type: 'chzzk_video',
+        source: 'chzzk',
+        playerUri: `https://chzzk.naver.com/embed/clip/${id}?autoplay=1`,
+      }
+    }
+  }
+
+  if (urlp.hostname === 'play.sooplive.co.kr') {
+    const match = /^\/([a-zA-Z0-9_-]+)(?:\/(\d+))?\/?$/.exec(urlp.pathname)
+
+    if (match) {
+      const [, station, id] = match
+      return {
+        type: 'soop_video',
+        source: 'soop',
+        playerUri: id
+          ? `https://play.sooplive.co.kr/${station}/${id}/embed?autoPlay=true&mutePlay=true`
+          : `https://play.sooplive.co.kr/${station}/embed?autoPlay=true&mutePlay=true`,
+      }
+    }
+  }
+  if (urlp.hostname === 'vod.sooplive.co.kr') {
+    const match = /^\/player\/(\d+)(?:\/(catch))?\/?$/.exec(urlp.pathname)
+
+    if (match) {
+      const [, id, type] = match
+      const isCatch = type === 'catch'
+      return {
+        type: isCatch ? 'soop_catch' : 'soop_video',
+        source: 'soop',
+        playerUri: isCatch
+          ? `https://vod.sooplive.co.kr/player/${id}/embed?autoPlay=true&mutePlay=true&type=catch`
+          : `https://vod.sooplive.co.kr/player/${id}/embed?autoPlay=true&mutePlay=true`,
+      }
+    }
+  }
+  if (
+    urlp.hostname === 'sooplive.com' ||
+    urlp.hostname === 'www.sooplive.com'
+  ) {
+    const video = /^\/video\/([a-zA-Z0-9_-]+)\/?$/.exec(urlp.pathname)
+    const channel = /^\/([a-zA-Z0-9_-]+)\/?$/.exec(urlp.pathname)
+
+    if (video) {
+      const [, id] = video
+      return {
+        type: 'soop_video',
+        source: 'soop',
+        playerUri: `https://www.sooplive.com/player/embed/video/${id}`,
+      }
+    } else if (channel && channel[1] !== 'video') {
+      const [, channelOrType] = channel
+      return {
+        type: 'soop_video',
+        source: 'soop',
+        playerUri: `https://www.sooplive.com/player/embed/${channelOrType}`,
+      }
+    }
+  }
+
   // freemix
   if (freemixHosts.includes(urlp.hostname)) {
     const segments = urlp.pathname.split('/').filter(Boolean)
@@ -603,8 +682,11 @@ export function getPlayerAspect({
     case 'youtube_video':
     case 'twitch_video':
     case 'vimeo_video':
+    case 'chzzk_video':
+    case 'soop_video':
       return {aspectRatio: 16 / 9}
     case 'youtube_short':
+    case 'soop_catch':
       if (Dimensions.get('window').height < 600) {
         return {aspectRatio: (9 / 16) * 1.75}
       } else {

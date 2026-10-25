@@ -28,6 +28,7 @@ import {Patreon} from '#/components/icons/community/Patreon'
 import {PayPal} from '#/components/icons/community/PayPal'
 import {PixivFanbox} from '#/components/icons/community/PixivFanbox'
 import {Redbubble} from '#/components/icons/community/Redbubble'
+import {Shoulder} from '#/components/icons/community/Shoulder'
 import {Skeb} from '#/components/icons/community/Skeb'
 import {Stripe} from '#/components/icons/community/Stripe'
 import {Substack} from '#/components/icons/community/Substack'
@@ -66,6 +67,7 @@ const SUPPORT_PROVIDER_LOGOS: Record<SupportProviderLogoName, typeof KoFi> = {
   PayPal,
   PixivFanbox,
   Redbubble,
+  Shoulder,
   Skeb,
   Stripe,
   Substack,
