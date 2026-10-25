@@ -34,6 +34,7 @@ The icons in this directory are the marks of third-party services that appear in
 | `PayPal.svg` | [PayPal](https://www.paypal.com) |
 | `PixivFanbox.svg` | [pixivFANBOX](https://www.fanbox.cc) |
 | `Redbubble.svg` | [Redbubble](https://www.redbubble.com) |
+| `Shoulder.svg` | [Shoulder](https://shoulder.fan) |
 | `Skeb.svg` | [Skeb](https://skeb.jp) |
 | `Stripe.svg` | [Stripe](https://stripe.com) |
 | `Substack.svg` | [Substack](https://substack.com) |
