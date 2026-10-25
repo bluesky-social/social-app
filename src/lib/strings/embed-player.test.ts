@@ -173,6 +173,26 @@ describe('CHZZK clips', () => {
 describe('SOOP players', () => {
   it.each([
     [
+      'play.sooplive.com/nanajam',
+      'play.sooplive.com/nanajam/embed',
+      'soop_video',
+    ],
+    [
+      'play.sooplive.com/nanajam/298107873',
+      'play.sooplive.com/nanajam/298107873/embed',
+      'soop_video',
+    ],
+    [
+      'vod.sooplive.com/player/210191551',
+      'vod.sooplive.com/player/210191551/embed',
+      'soop_video',
+    ],
+    [
+      'vod.sooplive.com/player/210298737/catch',
+      'vod.sooplive.com/player/210298737/embed',
+      'soop_catch',
+    ],
+    [
       'play.sooplive.co.kr/streamer',
       'play.sooplive.co.kr/streamer/embed',
       'soop_video',
@@ -219,6 +239,13 @@ it.each([
   'https://chzzk.naver.com/video/12345',
   'https://chzzk.naver.com/clips/clipId/extra',
   'https://chzzk.naver.com.example.com/clips/clipId',
+  'https://play.sooplive.com/',
+  'https://play.sooplive.com/nanajam/not-a-broadcast',
+  'https://play.sooplive.com.example.com/nanajam/298107873',
+  'https://vod.sooplive.com/player/',
+  'https://vod.sooplive.com/player/not-a-video',
+  'https://vod.sooplive.com/player/210191551/unknown',
+  'https://vod.sooplive.com.example.com/player/210191551',
   'https://play.sooplive.co.kr/',
   'https://play.sooplive.co.kr/streamer/not-a-broadcast',
   'https://vod.sooplive.co.kr/player/',

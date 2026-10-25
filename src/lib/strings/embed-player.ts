@@ -611,7 +611,10 @@ export function parseEmbedPlayerFromUrl(
     }
   }
 
-  if (urlp.hostname === 'play.sooplive.co.kr') {
+  if (
+    urlp.hostname === 'play.sooplive.com' ||
+    urlp.hostname === 'play.sooplive.co.kr'
+  ) {
     const match = /^\/([a-zA-Z0-9_-]+)(?:\/(\d+))?\/?$/.exec(urlp.pathname)
 
     if (match) {
@@ -620,12 +623,15 @@ export function parseEmbedPlayerFromUrl(
         type: 'soop_video',
         source: 'soop',
         playerUri: id
-          ? `https://play.sooplive.co.kr/${station}/${id}/embed?autoPlay=true&mutePlay=true`
-          : `https://play.sooplive.co.kr/${station}/embed?autoPlay=true&mutePlay=true`,
+          ? `https://${urlp.hostname}/${station}/${id}/embed?autoPlay=true&mutePlay=true`
+          : `https://${urlp.hostname}/${station}/embed?autoPlay=true&mutePlay=true`,
       }
     }
   }
-  if (urlp.hostname === 'vod.sooplive.co.kr') {
+  if (
+    urlp.hostname === 'vod.sooplive.com' ||
+    urlp.hostname === 'vod.sooplive.co.kr'
+  ) {
     const match = /^\/player\/(\d+)(?:\/(catch))?\/?$/.exec(urlp.pathname)
 
     if (match) {
@@ -635,8 +641,8 @@ export function parseEmbedPlayerFromUrl(
         type: isCatch ? 'soop_catch' : 'soop_video',
         source: 'soop',
         playerUri: isCatch
-          ? `https://vod.sooplive.co.kr/player/${id}/embed?autoPlay=true&mutePlay=true&type=catch`
-          : `https://vod.sooplive.co.kr/player/${id}/embed?autoPlay=true&mutePlay=true`,
+          ? `https://${urlp.hostname}/player/${id}/embed?autoPlay=true&mutePlay=true&type=catch`
+          : `https://${urlp.hostname}/player/${id}/embed?autoPlay=true&mutePlay=true`,
       }
     }
   }
