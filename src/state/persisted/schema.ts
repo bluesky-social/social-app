@@ -121,6 +121,7 @@ const schema = z.object({
       bandcamp: z.enum(externalEmbedOptions).optional(),
       freemix: z.enum(externalEmbedOptions).optional(),
       chzzk: z.enum(externalEmbedOptions).optional(),
+      naverClip: z.enum(externalEmbedOptions).optional(),
       soop: z.enum(externalEmbedOptions).optional(),
     })
     .optional(),

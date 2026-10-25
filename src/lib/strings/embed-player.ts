@@ -25,6 +25,7 @@ export const embedPlayerSources = [
   'bandcamp',
   'freemix',
   'chzzk',
+  'naverClip',
   'soop',
 ] as const
 
@@ -51,6 +52,7 @@ export type EmbedPlayerType =
   | 'bandcamp_track'
   | 'freemix_track'
   | 'chzzk_video'
+  | 'naver_clip'
   | 'soop_video'
   | 'soop_catch'
 
@@ -63,6 +65,7 @@ export function getEmbedPlayerMediaType(
     type === 'twitch_video' ||
     type === 'vimeo_video' ||
     type === 'chzzk_video' ||
+    type === 'naver_clip' ||
     type === 'soop_video' ||
     type === 'soop_catch'
   ) {
@@ -96,6 +99,7 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   bandcamp: 'Bandcamp',
   freemix: 'FreeMix',
   chzzk: 'CHZZK',
+  naverClip: 'NAVER Clip',
   soop: 'SOOP',
 }
 
@@ -571,6 +575,27 @@ export function parseEmbedPlayerFromUrl(
   }
 
   if (
+    urlp.hostname === 'm.naver.com' &&
+    /^\/shorts\/?$/.test(urlp.pathname) &&
+    (urlp.protocol === 'https:' || urlp.protocol === 'http:')
+  ) {
+    const id = urlp.searchParams.get('seedMediaId')
+    const service = urlp.searchParams.get('serviceType')
+
+    if (
+      id &&
+      /^[a-fA-F0-9]+$/.test(id) &&
+      (service === 'CLIP' || service === 'CHZZK')
+    ) {
+      return {
+        type: 'naver_clip',
+        source: 'naverClip',
+        playerUri: `https://clip-viewer.naver.com/oembed/?seedMediaId=${id}&mediaType=SHORT_FORM&serviceType=${service}`,
+      }
+    }
+  }
+
+  if (
     urlp.hostname === 'chzzk.naver.com' ||
     urlp.hostname === 'm.chzzk.naver.com'
   ) {
@@ -686,6 +711,7 @@ export function getPlayerAspect({
     case 'soop_video':
       return {aspectRatio: 16 / 9}
     case 'youtube_short':
+    case 'naver_clip':
     case 'soop_catch':
       if (Dimensions.get('window').height < 600) {
         return {aspectRatio: (9 / 16) * 1.75}

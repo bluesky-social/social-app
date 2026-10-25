@@ -94,6 +94,7 @@ describe('getEmbedPlayerMediaType', () => {
     ['twitch_video', 'video'],
     ['vimeo_video', 'video'],
     ['chzzk_video', 'video'],
+    ['naver_clip', 'video'],
     ['soop_video', 'video'],
     ['soop_catch', 'video'],
     ['spotify_song', 'audio'],
@@ -111,7 +112,7 @@ describe('getEmbedPlayerMediaType', () => {
 describe('getPlayerAspect', () => {
   afterEach(() => jest.restoreAllMocks())
 
-  it.each<EmbedPlayerType>(['youtube_short', 'soop_catch'])(
+  it.each<EmbedPlayerType>(['youtube_short', 'naver_clip', 'soop_catch'])(
     'updates %s sizing when the app window is resized',
     type => {
       const dimensions = jest.spyOn(Dimensions, 'get')
@@ -144,11 +145,14 @@ describe('getPlayerAspect', () => {
     },
   )
 
-  it('preserves the placeholder aspect without a thumbnail', () => {
-    expect(
-      getPlayerAspect({type: 'youtube_short', hasThumb: false, width: 600}),
-    ).toEqual({aspectRatio: 16 / 9})
-  })
+  it.each<EmbedPlayerType>(['youtube_short', 'naver_clip', 'soop_catch'])(
+    'preserves the %s placeholder aspect without a thumbnail',
+    type => {
+      expect(getPlayerAspect({type, hasThumb: false, width: 600})).toEqual({
+        aspectRatio: 16 / 9,
+      })
+    },
+  )
 })
 
 describe('CHZZK clips', () => {
@@ -228,4 +232,46 @@ it.each([
   'https://tv.naver.com/h/12345',
 ])('leaves unsupported links as regular link cards: %s', url => {
   expect(parseEmbedPlayerFromUrl(url)).toBeUndefined()
+})
+
+describe('NAVER Clip', () => {
+  const id = '781A7BB2AC2E78EE02B75508428F425CE66C'
+
+  it.each(['CLIP', 'CHZZK'])(
+    'preserves the %s service in the embed URL',
+    service => {
+      for (const path of ['/shorts', '/shorts/']) {
+        expect(
+          parseEmbedPlayerFromUrl(
+            `https://m.naver.com${path}?serviceType=${service}&seedMediaId=${id}&ref=share`,
+          ),
+        ).toEqual({
+          type: 'naver_clip',
+          source: 'naverClip',
+          playerUri: `https://clip-viewer.naver.com/oembed/?seedMediaId=${id}&mediaType=SHORT_FORM&serviceType=${service}`,
+        })
+      }
+    },
+  )
+
+  it.each([
+    `https://m.naver.com/shorts/?seedMediaId=${id}`,
+    'https://m.naver.com/shorts/?serviceType=CLIP',
+    'https://m.naver.com/shorts/?seedMediaId=invalid&serviceType=CLIP',
+    `https://m.naver.com/shorts/?seedMediaId=${id}&serviceType=UNKNOWN`,
+    `https://m.naver.com/shorts/extra?seedMediaId=${id}&serviceType=CLIP`,
+    `https://m.naver.com.example.com/shorts/?seedMediaId=${id}&serviceType=CLIP`,
+    `ftp://m.naver.com/shorts/?seedMediaId=${id}&serviceType=CLIP`,
+  ])('does not embed unsupported URL %s', url => {
+    expect(parseEmbedPlayerFromUrl(url)).toBeUndefined()
+  })
+
+  it.each([true, false])('matches Shorts sizing with hasThumb=%s', hasThumb => {
+    expect(getPlayerAspect({type: 'naver_clip', hasThumb, width: 393})).toEqual(
+      getPlayerAspect({type: 'youtube_short', hasThumb, width: 393}),
+    )
+    expect(
+      getPlayerAspect({type: 'chzzk_video', hasThumb, width: 393}),
+    ).toEqual({aspectRatio: 16 / 9})
+  })
 })
