@@ -3,11 +3,12 @@ module github.com/bluesky-social/social-app/bskyweb
 go 1.26.10
 
 require (
+	github.com/bluesky-social/gttp v0.1.0
 	github.com/bluesky-social/indigo v0.0.0-20260605210604-af2fec94f34c
 	github.com/flosch/pongo2/v6 v6.0.0
 	github.com/ipfs/go-log v1.0.5
 	github.com/joho/godotenv v1.5.1
-	github.com/klauspost/compress v1.18.0
+	github.com/klauspost/compress v1.18.6
 	github.com/labstack/echo-contrib v0.17.4
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/prometheus/client_golang v1.22.0

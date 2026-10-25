@@ -92,7 +92,7 @@ func serve(cctx *cli.Context) error {
 	server := &Server{
 		echo:         e,
 		xrpcc:        xrpcc,
-		dir:          identity.DefaultDirectory(),
+		dir:          newIdentityDirectory(),
 		metricsHttpd: metricsHttpd,
 	}
 
