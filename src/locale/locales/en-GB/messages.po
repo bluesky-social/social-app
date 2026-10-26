@@ -8,7 +8,7 @@ msgstr ""
 "Language: en_GB\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-23 14:40\n"
+"PO-Revision-Date: 2026-10-26 20:28\n"
 "Last-Translator: \n"
 "Language-Team: English, United Kingdom\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -514,12 +514,12 @@ msgid "{count, plural, one {# chat update} other {# chat updates}}"
 msgstr "{count, plural, one {# chat update} other {# chat updates}}"
 
 #. Number of people you follow who also follow this account
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:316
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:352
 msgid "{count, plural, one {# mutual follower} other {# mutual followers}}"
 msgstr ""
 
 #. Short form of “mutual followers”: the number of people you follow who also follow this account
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:323
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:359
 msgid "{count, plural, one {# mutual} other {# mutuals}}"
 msgstr ""
 
@@ -749,7 +749,7 @@ msgid "{following} following"
 msgstr "{following} following"
 
 #. How long ago a notification happened, e.g. "7m ago". The time is already abbreviated and translated.
-#: src/screens/Notifications/components/NotificationItem/Item/text.tsx:171
+#: src/screens/Notifications/components/NotificationItem/Item/text.tsx:175
 msgid "{formatted} ago"
 msgstr ""
 
@@ -841,7 +841,7 @@ msgstr "{memberCount}/{memberLimit}"
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr "{minutes, plural, one {# minute} other {# minutes}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:121
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:126
 msgid "{name} and {others, plural, one {# other} other {# others}} followed you"
 msgstr ""
 
@@ -865,7 +865,7 @@ msgstr ""
 msgid "{name} and {others, plural, one {# other} other {# others}} reposted your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:120
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:125
 msgid "{name} and {secondName} followed you"
 msgstr ""
 
@@ -889,11 +889,11 @@ msgstr ""
 msgid "{name} and {secondName} reposted your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:190
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:195
 msgid "{name} followed you back"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:189
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:194
 msgid "{name} followed you back via starter pack {starterPackName}"
 msgstr ""
 
@@ -922,7 +922,7 @@ msgstr ""
 msgid "{name} reacted {0} to {target}"
 msgstr "{name} reacted {0} to {target}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:262
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:267
 msgid "{name} removed their verification from your account"
 msgstr ""
 
@@ -942,7 +942,7 @@ msgstr ""
 msgid "{name} reposted your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:227
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:232
 msgid "{name} verified you"
 msgstr ""
 
@@ -1062,7 +1062,7 @@ msgstr "+{0}"
 msgid "+{computedTotal}"
 msgstr "+{computedTotal}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:146
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:151
 msgid "<0/> and <1/> followed you"
 msgstr ""
 
@@ -1086,7 +1086,7 @@ msgstr ""
 msgid "<0/> and <1/> reposted your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:151
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:156
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> followed you"
 msgstr ""
 
@@ -1110,11 +1110,11 @@ msgstr ""
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> reposted your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:71
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:78
 msgid "<0/> followed you"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:198
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:203
 msgid "<0/> followed you back! 🎉"
 msgstr ""
 
@@ -1138,7 +1138,7 @@ msgstr ""
 msgid "<0/> liked your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:269
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:274
 msgid "<0/> removed their verification from your account"
 msgstr ""
 
@@ -1158,11 +1158,11 @@ msgstr ""
 msgid "<0/> reposted your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:304
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:309
 msgid "<0/> signed up with your starter pack"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:234
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:239
 msgid "<0/> verified you"
 msgstr ""
 
@@ -2161,7 +2161,7 @@ msgstr "An issue occurred starting the group chat, please try again."
 #: src/components/hooks/useFollowMethods.ts:52
 #: src/components/ProfileCard.tsx:515
 #: src/components/ProfileCard.tsx:540
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:181
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:217
 #: src/view/com/notifications/NotificationFeedItem.tsx:827
 #: src/view/com/notifications/NotificationFeedItem.tsx:848
 msgid "An issue occurred, please try again."
@@ -2648,7 +2648,7 @@ msgstr "Before you can get notifications for {name}'s posts, you must first veri
 #: src/screens/Messages/ChatList.tsx:543
 #: src/screens/Messages/Conversation.tsx:206
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:249
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:285
 msgid "Before you can message another user, you must first verify your email."
 msgstr "Before you can message another user, you must first verify your email."
 
@@ -2802,7 +2802,7 @@ msgstr "Blocked accounts cannot reply in your threads, mention you, or otherwise
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:475
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:484
 msgid "Blocked post"
 msgstr ""
 
@@ -4649,7 +4649,7 @@ msgstr "Deleted by Plivo after verification"
 msgid "Deleted list"
 msgstr "Deleted list"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:478
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:487
 msgid "Deleted post"
 msgstr ""
 
@@ -5062,7 +5062,7 @@ msgstr "e.g. The posters who never miss."
 msgid "e.g. Users that repeatedly reply with ads."
 msgstr "e.g. Users that repeatedly reply with ads."
 
-#: src/screens/Notifications/components/PageList.tsx:590
+#: src/screens/Notifications/components/PageList.tsx:575
 msgctxt "Notifications section header"
 msgid "Earlier"
 msgstr ""
@@ -5681,7 +5681,7 @@ msgstr "Failed to create app password. Please try again."
 
 #: src/components/dms/MessageProfileButton.tsx:38
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:66
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:239
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:275
 msgid "Failed to create conversation"
 msgstr "Failed to create conversation"
 
@@ -6013,7 +6013,7 @@ msgstr "Feed by {0}"
 msgid "Feed by {authorName}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/media.tsx:224
+#: src/screens/Notifications/components/NotificationItem/Item/media.tsx:225
 msgid "Feed by {handle}"
 msgstr ""
 
@@ -6163,8 +6163,8 @@ msgstr "Find and invite friends"
 msgid "Find Contacts"
 msgstr "Find Contacts"
 
-#: src/screens/Notifications/components/PageList.tsx:645
-#: src/screens/Notifications/components/PageList.tsx:650
+#: src/screens/Notifications/components/PageList.tsx:631
+#: src/screens/Notifications/components/PageList.tsx:636
 msgid "Find friends"
 msgstr ""
 
@@ -6189,7 +6189,7 @@ msgstr "Find people you know"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Find posts, users and feeds on Bluesky"
 
-#: src/screens/Notifications/components/PageList.tsx:639
+#: src/screens/Notifications/components/PageList.tsx:625
 msgid "Find some friends to start getting notifications!"
 msgstr ""
 
@@ -6253,7 +6253,7 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:503
 #: src/components/ProfileHoverCard/index.web.tsx:514
 #: src/screens/Messages/ConversationSettings/Member.tsx:170
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:196
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:232
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:430
 #: src/screens/VideoFeed/index.tsx:1059
@@ -6312,7 +6312,7 @@ msgstr "Follow all accounts"
 #. User is not following this account, click to follow back
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:552
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:192
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:228
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:155
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:428
 #: src/view/com/notifications/NotificationFeedItem.tsx:890
@@ -6378,7 +6378,7 @@ msgstr "Followers you know"
 #: src/components/ProfileCard.tsx:547
 #: src/components/ProfileHoverCard/index.web.tsx:502
 #: src/components/ProfileHoverCard/index.web.tsx:513
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:187
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:223
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:426
 #: src/screens/VideoFeed/index.tsx:1057
@@ -6411,7 +6411,7 @@ msgstr "Following {displayName}"
 msgid "Following {handle}"
 msgstr "Following {handle}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:177
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:213
 msgid "Following {name}"
 msgstr ""
 
@@ -6762,7 +6762,7 @@ msgid "Go to {firstAuthorName}'s profile"
 msgstr "Go to {firstAuthorName}'s profile"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:78
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:608
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:644
 #: src/screens/Notifications/components/NotificationItem/Item/text.tsx:113
 msgid "Go to {name}’s profile"
 msgstr ""
@@ -7039,7 +7039,7 @@ msgid "Hidden list"
 msgstr "Hidden list"
 
 #. Shown in place of the text of a post that is hidden by the viewer’s moderation settings
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:216
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:213
 msgid "Hidden post"
 msgstr ""
 
@@ -7416,8 +7416,14 @@ msgstr "Imported on {0}"
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:260
+#. In a notification about a mention or quote, the post is a reply to another person’s post. {subject} is that person’s name, followed by a preview of their post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:269
 msgid "in reply to <0>{subject}</0>: {previewNode}"
+msgstr ""
+
+#. In a notification about a mention or quote, the post is a reply to the viewer’s own post. Followed by a preview of that post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:265
+msgid "in reply to <0>you</0>: {previewNode}"
 msgstr ""
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:173
@@ -8383,7 +8389,7 @@ msgstr "Loading post interaction settings..."
 msgid "Loading..."
 msgstr "Loading..."
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:521
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:557
 msgid "Loads more people into this list"
 msgstr ""
 
@@ -9307,7 +9313,7 @@ msgstr "No expiry set"
 msgid "No feeds found. Try searching for something else."
 msgstr "No feeds found. Try searching for something else."
 
-#: src/screens/Notifications/components/PageList.tsx:679
+#: src/screens/Notifications/components/PageList.tsx:665
 msgid "No followers to show yet"
 msgstr ""
 
@@ -9354,7 +9360,7 @@ msgstr "No lists"
 msgid "No longer following {0}"
 msgstr "No longer following {0}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:174
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:210
 msgid "No longer following {name}"
 msgstr ""
 
@@ -9379,12 +9385,12 @@ msgstr "No more doomscrolling junk-filled algorithms. Find feeds that work for y
 msgid "No name"
 msgstr "No name"
 
-#: src/screens/Notifications/components/PageList.tsx:676
+#: src/screens/Notifications/components/PageList.tsx:662
 msgid "No notifications from people you follow yet"
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:628
-#: src/screens/Notifications/components/PageList.tsx:673
+#: src/screens/Notifications/components/PageList.tsx:614
+#: src/screens/Notifications/components/PageList.tsx:659
 msgid "No notifications yet"
 msgstr ""
 
@@ -9448,7 +9454,7 @@ msgstr "No quotes yet"
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "No recent GIFs yet. Pick one to see it here."
 
-#: src/screens/Notifications/components/PageList.tsx:682
+#: src/screens/Notifications/components/PageList.tsx:668
 msgid "No replies to show yet"
 msgstr ""
 
@@ -10732,7 +10738,7 @@ msgstr "Post blocked"
 msgid "Post by {authorName}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:535
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:544
 msgid "Post by {name}"
 msgstr ""
 
@@ -10818,7 +10824,7 @@ msgid "Post unpinned"
 msgstr "Post unpinned"
 
 #. Shown in place of the text of a post that has no text, only images, video, a link or a quoted post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:222
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:219
 msgid "Post with media"
 msgstr ""
 
@@ -11455,12 +11461,12 @@ msgid "Remove your verification for this account?"
 msgstr "Remove your verification for this account?"
 
 #: src/components/Post/Embed/index.tsx:294
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:487
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:496
 msgid "Removed by author"
 msgstr "Removed by author"
 
 #: src/components/Post/Embed/index.tsx:292
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:485
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:494
 msgid "Removed by you"
 msgstr "Removed by you"
 
@@ -11523,7 +11529,8 @@ msgstr ""
 msgid "Replace with Discover"
 msgstr "Replace with Discover"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:253
+#. In a notification, someone replied to another person’s post. {subject} is that person’s name, followed by a preview of their post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:258
 msgid "replied to <0>{subject}</0>: {previewNode}"
 msgstr ""
 
@@ -11531,6 +11538,11 @@ msgstr ""
 msgctxt "description"
 msgid "Replied to <0><1/></0>"
 msgstr "Replied to <0><1/></0>"
+
+#. In a notification, someone replied to the viewer’s own post. Followed by a preview of that post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:254
+msgid "replied to <0>you</0>: {previewNode}"
+msgstr ""
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:171
 msgid "replied to a blocked post"
@@ -12180,7 +12192,7 @@ msgid "Saved to your feeds"
 msgstr "Saved to your feeds"
 
 #: src/components/dialogs/NewskieDialog/index.tsx:119
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:258
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:294
 #: src/view/com/notifications/NotificationFeedItem.tsx:937
 #: src/view/com/notifications/NotificationFeedItem.tsx:945
 msgid "Say hello!"
@@ -12977,8 +12989,8 @@ msgid "Show lists of users to select from"
 msgstr "Show lists of users to select from"
 
 #: src/components/Post/ShowMoreTextButton.tsx:59
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:520
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:546
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:556
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:582
 msgid "Show more"
 msgstr "Show more"
 
@@ -13452,7 +13464,7 @@ msgstr ""
 msgid "Starter Pack by {0}"
 msgstr "Starter Pack by {0}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:408
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:444
 msgid "Starter pack by {handle}"
 msgstr ""
 
@@ -14192,7 +14204,7 @@ msgstr "There was an issue contacting the server"
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "There was an issue contacting the server, please check your internet connection and try again."
 
-#: src/screens/Notifications/components/PageList.tsx:356
+#: src/screens/Notifications/components/PageList.tsx:362
 #: src/view/com/notifications/NotificationFeed.tsx:137
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "There was an issue fetching notifications. Tap here to try again."
@@ -14786,7 +14798,7 @@ msgstr "To log out, <0>click here</0>. Or if you’d prefer, you can <1>delete y
 msgid "Today"
 msgstr "Today"
 
-#: src/screens/Notifications/components/PageList.tsx:589
+#: src/screens/Notifications/components/PageList.tsx:574
 msgctxt "Notifications section header"
 msgid "Today"
 msgstr "Today"
@@ -15641,7 +15653,7 @@ msgid "Version {0}"
 msgstr "Version {0}"
 
 #. When someone followed you through a starter pack, e.g. “via starter pack [icon] Science Pack”
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:355
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:391
 msgid "via starter pack <0/> <1>{name}</1>"
 msgstr ""
 
@@ -15757,7 +15769,7 @@ msgstr "View {publicationTitle}"
 msgid "View all"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:129
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:134
 msgid "View all followers"
 msgstr ""
 
@@ -16460,11 +16472,6 @@ msgstr "Yes, reactivate my account"
 msgid "Yesterday"
 msgstr "Yesterday"
 
-#. Emphasised in “replied to you: ...”, in a notification where someone replied to the viewer’s own post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:200
-msgid "you"
-msgstr ""
-
 #: src/components/verification/VerifierDialog.tsx:61
 msgid "You are a trusted verifier"
 msgstr "You are a trusted verifier"
@@ -17129,7 +17136,7 @@ msgstr "Your contact {firstAuthorName} is on Bluesky"
 msgid "Your contact {name}"
 msgstr "Your contact {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:341
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:353
 msgid "Your contact <0/> is on Bluesky"
 msgstr ""
 
