@@ -1,9 +1,9 @@
 import {describe, expect, it, jest} from '@jest/globals'
 
 import {type NotificationView} from '#/state/queries/notifications/grouped/types'
+import {getRowBorderColor} from '#/screens/Notifications/components/NotificationItem/Item/Root'
 import {
   buildRows,
-  getBorderColor,
   getPlaceholderRow,
   isUnreadBorder,
 } from '#/screens/Notifications/components/PageList'
@@ -104,7 +104,7 @@ describe('buildRows', () => {
     ).toEqual([false, true])
   })
 
-  it('tints the borders on both sides of an unread notification', () => {
+  it('counts the borders on both sides of an unread notification', () => {
     const rows = buildRows(
       [
         notification('a', today, false),
@@ -130,34 +130,24 @@ describe('buildRows', () => {
   })
 })
 
-describe('getBorderColor', () => {
-  const UNREAD = '#unread'
-  const READ = '#read'
-  const t = {
-    palette: {primary_100: UNREAD},
-    atoms: {border_contrast_low: {borderColor: READ}},
-  } as unknown as Theme
+describe('getRowBorderColor', () => {
+  function theme(name: Theme['name']) {
+    return {
+      name,
+      atoms: {
+        border_contrast_low: {borderColor: '#low'},
+        border_contrast_medium: {borderColor: '#medium'},
+      },
+    } as unknown as Theme
+  }
 
-  it('colours every side by default', () => {
-    expect(getBorderColor(t, true)).toEqual({borderColor: UNREAD})
-    expect(getBorderColor(t, false)).toEqual({borderColor: READ})
+  it('is stronger beside an unread row in the dark theme', () => {
+    expect(getRowBorderColor(theme('dark'), true)).toBe('#medium')
+    expect(getRowBorderColor(theme('dark'), false)).toBe('#low')
   })
 
-  it('colours only the side asked for', () => {
-    expect(getBorderColor(t, true, 'top')).toEqual({borderTopColor: UNREAD})
-    expect(getBorderColor(t, false, 'bottom')).toEqual({
-      borderBottomColor: READ,
-    })
-  })
-
-  it("lets one view's two borders take different colours", () => {
-    // The "Earlier" header, with an unread row above it and a read one below
-    expect(
-      Object.assign(
-        {},
-        getBorderColor(t, true, 'top'),
-        getBorderColor(t, false, 'bottom'),
-      ),
-    ).toEqual({borderTopColor: UNREAD, borderBottomColor: READ})
+  it('is the usual divider colour in the other themes', () => {
+    expect(getRowBorderColor(theme('dim'), true)).toBe('#low')
+    expect(getRowBorderColor(theme('light'), true)).toBe('#low')
   })
 })

@@ -11,7 +11,7 @@ import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import {useItemContext} from './Root'
+import {getRowBorderColor, useItemContext} from './Root'
 
 type Thumbnail = {
   uri: string
@@ -160,7 +160,8 @@ function cornerRadius(isOuter: boolean) {
 
 /**
  * Outlined container for compact previews of feeds, starter packs, links and
- * quoted posts. Its border is the one the same embeds have in a post. It is
+ * quoted posts. Its border is the one the same embeds have in a post, but
+ * for the dark theme's unread tint, see `getRowBorderColor`. It is
  * transparent on the unread tint, so it doesn't punch a white hole in the row.
  */
 export function Card({
@@ -180,7 +181,7 @@ export function Card({
         a.rounded_md,
         a.curve_continuous,
         a.border,
-        t.atoms.border_contrast_low,
+        {borderColor: getRowBorderColor(t, !isRead)},
         isRead && t.atoms.bg,
         style,
       ]}>

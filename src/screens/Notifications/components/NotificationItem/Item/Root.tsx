@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 
 import {WebAuxClickWrapper} from '#/view/com/util/WebAuxClickWrapper'
-import {atoms as a, select, useTheme} from '#/alf'
+import {atoms as a, select, type Theme, useTheme} from '#/alf'
 import {useLink} from '#/components/Link'
 import {SubtleHover} from '#/components/SubtleHover'
 import {SuppressHoverContext, useRowHover} from './hover'
@@ -42,6 +42,17 @@ export function useRowBackgroundColor(isRead: boolean) {
     dim: '#071F40',
     dark: '#202F43',
   })
+}
+
+/**
+ * The colour of a border on or beside a row. The dark theme's unread tint is
+ * about as light as `border_contrast_low`, which vanishes against it, so
+ * there a border that touches an unread row is a step stronger.
+ */
+export function getRowBorderColor(t: Theme, touchesUnread: boolean) {
+  return touchesUnread && t.name === 'dark'
+    ? t.atoms.border_contrast_medium.borderColor
+    : t.atoms.border_contrast_low.borderColor
 }
 
 /**
