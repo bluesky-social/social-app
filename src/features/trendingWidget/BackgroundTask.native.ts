@@ -15,8 +15,7 @@ import {app} from '#/lexicons'
 
 const TASK_NAME = 'bluesky-trending-widget-refresh'
 const CONFIG_KEY = 'bluesky-trending-widget-background-config'
-const FETCH_LIMIT = 10
-const DISPLAY_LIMIT = 5
+const LIMIT = 10
 const MINIMUM_INTERVAL_MINUTES = 60
 
 type BackgroundConfig = {
@@ -41,7 +40,7 @@ TaskManager.defineTask(TASK_NAME, async () => {
     const config: BackgroundConfig = JSON.parse(storedConfig)
     const data = await getPublicAppviewClient().call(
       app.bsky.unspecced.getTrends,
-      {limit: FETCH_LIMIT},
+      {limit: LIMIT},
       {
         headers: {
           ...createBskyTopicsHeader(config.interests),
@@ -49,11 +48,7 @@ TaskManager.defineTask(TASK_NAME, async () => {
         },
       },
     )
-    const trends = filterTrends(
-      data.trends ?? [],
-      config.mutedWords,
-      DISPLAY_LIMIT,
-    )
+    const trends = filterTrends(data.trends ?? [], config.mutedWords, LIMIT)
 
     updateTrendingWidgetSnapshot(trends, config.copy)
     return BackgroundTask.BackgroundTaskResult.Success

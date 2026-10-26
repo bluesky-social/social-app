@@ -22,15 +22,11 @@ export function TrendingTopicsWidgetSync() {
    * `undefined` until the first check finishes.
    */
   const [isWidgetInstalled, setIsWidgetInstalled] = useState<boolean>()
-  /*
-   * Refetch on every foreground, not just once the data is stale, so opening
-   * the app (e.g. by tapping the widget) always refreshes the widget.
-   */
-  const {data, dataUpdatedAt} = useGetTrendsQuery({
+  const {data} = useGetTrendsQuery({
     enabled: isWidgetInstalled === true,
     fetchLimit: 10,
-    limit: 5,
-    refetchOnWindowFocus: 'always',
+    limit: 10,
+    refetchOnWindowFocus: true,
   })
   const {data: preferences} = usePreferencesQuery()
   const languagePrefs = useLanguagePrefs()
@@ -112,20 +108,38 @@ export function TrendingTopicsWidgetSync() {
   }, [copy, languagePrefs.contentLanguages, preferences])
 
   /*
-   * Push on every fetch, even when the trends haven't changed, so the widget
-   * re-renders and picks up things like a light/dark mode change.
+   * The widget is only visible while the app isn't, so sync it whenever the
+   * app leaves the foreground. That also re-renders it, which picks up things
+   * like a light/dark mode change. If the trends arrive after the app has
+   * already left, sync straight away.
    */
   useEffect(() => {
     if (!data) return
 
-    try {
-      updateTrendingWidgetSnapshot(data.trends, copy)
-    } catch (error) {
-      logger.error('Failed to update the trending topics widget', {
-        safeMessage: error,
-      })
+    const sync = () => {
+      try {
+        updateTrendingWidgetSnapshot(data.trends, copy)
+      } catch (error) {
+        logger.error('Failed to update the trending topics widget', {
+          safeMessage: error,
+        })
+      }
     }
-  }, [copy, data, dataUpdatedAt])
+
+    let isActive = AppState.currentState === 'active'
+    if (!isActive) {
+      sync()
+    }
+    // iOS goes through `inactive` on the way to `background`
+    const subscription = AppState.addEventListener('change', state => {
+      if (isActive && state !== 'active') {
+        sync()
+      }
+      isActive = state === 'active'
+    })
+
+    return () => subscription.remove()
+  }, [copy, data])
 
   return null
 }
