@@ -266,11 +266,6 @@ module.exports = function (_config) {
         'expo-asset',
         'expo-sharing',
         'expo-video',
-        /*
-         * Prebuild applies these two plugins even when they're not listed, and
-         * by default both request the microphone. We only ever take photos, so
-         * opt out on both platforms.
-         */
         [
           'expo-camera',
           {
