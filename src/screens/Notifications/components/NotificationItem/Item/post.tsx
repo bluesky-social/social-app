@@ -194,15 +194,12 @@ function ReplyContextPost({
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
-  const name = forceLTR(useDisplayName(post.author))
+  /*
+   * Who was replied to, when it isn't the viewer. The sentences name their
+   * placeholder after this, so it stays `subject` to keep their translations
+   */
+  const subject = forceLTR(useDisplayName(post.author))
   const isViewer = post.author.did === currentAccount?.did
-  const subject = isViewer
-    ? l({
-        message: 'you',
-        comment:
-          'Emphasised in “replied to you: ...”, in a notification where someone replied to the viewer’s own post',
-      })
-    : name
 
   const isHidden = moderationOpts
     ? moderatePost(post, moderationOpts).ui('contentList').blur
@@ -248,16 +245,28 @@ function ReplyContextPost({
       </Text>
     )
 
+  /*
+   * The viewer gets sentences of their own, rather than "you" filled in for
+   * `subject`, since some languages word the rest differently for "you"
+   */
   if (variant === 'reply') {
-    return (
-      <Trans>
+    return isViewer ? (
+      <Trans comment="In a notification, someone replied to the viewer’s own post. Followed by a preview of that post">
+        replied to <Strong style={a.text_sm}>you</Strong>: {previewNode}
+      </Trans>
+    ) : (
+      <Trans comment="In a notification, someone replied to another person’s post. {subject} is that person’s name, followed by a preview of their post">
         replied to <Strong style={a.text_sm}>{subject}</Strong>: {previewNode}
       </Trans>
     )
   }
 
-  return (
-    <Trans>
+  return isViewer ? (
+    <Trans comment="In a notification about a mention or quote, the post is a reply to the viewer’s own post. Followed by a preview of that post">
+      in reply to <Strong style={a.text_sm}>you</Strong>: {previewNode}
+    </Trans>
+  ) : (
+    <Trans comment="In a notification about a mention or quote, the post is a reply to another person’s post. {subject} is that person’s name, followed by a preview of their post">
       in reply to <Strong style={a.text_sm}>{subject}</Strong>: {previewNode}
     </Trans>
   )
