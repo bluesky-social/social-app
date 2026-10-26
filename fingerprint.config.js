@@ -8,6 +8,13 @@ const config = {
    */
   preset: 'strict',
   /*
+   * The worklets Babel plugin writes generated JS into this directory whenever
+   * Metro bundles, which would otherwise change the fingerprint of any checkout
+   * that has run Metro and make EAS build cache lookups miss. Only `*.js` is
+   * ignored so the shipped `dummy.md` keeps clean-install hashes unchanged.
+   */
+  ignorePaths: ['**/node_modules/react-native-worklets/.worklets/*.js'],
+  /*
    * The nano icon fonts are linked into the native binary, but the fingerprint
    * only sees the plugin config, not the icons. Without this, adding or
    * changing an icon would ship as an OTA update to binaries whose font lacks
