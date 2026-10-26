@@ -1,6 +1,6 @@
 # react-native-pager-view+9.0.9.patch
 
-Carries one local Android fix and two iOS changes. The Android part only
+Carries two local Android fixes and two iOS changes. The Android part only
 touches `android/src/main/java/com/reactnativepagerview/ComposePagerView.kt`.
 Drop each part once a release contains it.
 
@@ -30,6 +30,26 @@ never saved, so nothing is persisted or restored. React owns the pager state,
 so nothing is lost. A unique view id would also fix the mismatch, but every
 remount would then leave an orphaned entry in the Fragment's saved state for
 the rest of the session.
+
+## Android: report `settling` until the pager actually comes to rest
+
+Compose ends a drag's scroll before the fling that snaps it to a page starts
+its own: `Draggable` emits `DragInteraction.Stop` and then launches the fling
+in a new coroutine. The pager decided between `settling` and `idle` when it
+saw the Stop, so it always found `isScrollInProgress` false and reported
+`idle` the moment the finger lifted. `onPageScroll` kept firing for the rest of
+the snap, and `settling` was never sent for a swipe.
+
+`TabBar` only follows `dragProgress` while the pager isn't idle, so on Home the
+tab strip froze wherever it was at release, then jumped on the next swipe
+(APP-3643). The fix reports `settling` on every Stop/Cancel, since a drag always
+ends in a snap fling. It reports `idle` only once `isScrollInProgress` is still
+false a frame later, so that gap between drag and fling doesn't count as
+coming to rest. Swipes now report `dragging` -> `settling` -> `idle`, and
+programmatic paging `settling` -> `idle`, which is what v6.8 reported.
+
+`onPageSelected` still fires at release. `settledPage` reads `currentPage`
+during the same gap, and the fling then pins it there.
 
 ## iOS: yield to the navigation back gesture on the first page
 
