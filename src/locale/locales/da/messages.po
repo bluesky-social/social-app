@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-23 14:40\n"
+"PO-Revision-Date: 2026-10-26 20:28\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. placeholder {0}: record.text
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:87
 msgid "“{0}”"
-msgstr ""
+msgstr "“{0}”"
 
 #. Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is currently selected.
 #: src/components/InterestTabs.tsx:333
@@ -222,7 +222,7 @@ msgstr "{0, plural, one {opslag} other {opslag}}"
 #. placeholder {0}: policies.length
 #: src/screens/ModerationInbox/Notice.tsx:266
 msgid "{0, plural, one {Rule violated:} other {Rules violated:}}"
-msgstr ""
+msgstr "{0, plural, one {Overtrådt regel:} other {Overtrådte regler:}}"
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific Starter Pack
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
@@ -283,7 +283,7 @@ msgstr "{0} følger"
 #. placeholder {0}: provider.name
 #: src/features/profileLinks/components/LinkFormDialog.tsx:348
 msgid "{0} is a recognized support link. It gets the green support button."
-msgstr ""
+msgstr "{0} er et anerkendt støttelink. Det får den grønne støtteknap."
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
 #: src/components/dms/MessageItem.tsx:739
@@ -339,7 +339,7 @@ msgstr "{0} af {1}"
 #. placeholder {0}: title.length
 #: src/features/profileLinks/components/LinkFormDialog.tsx:377
 msgid "{0} out of {MAX_TITLE_LENGTH} characters"
-msgstr ""
+msgstr "{0} af {MAX_TITLE_LENGTH} tegn"
 
 #. Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field
 #. placeholder {0}: state.name?.length
@@ -491,11 +491,11 @@ msgstr "{0}s"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:75
 msgid "{accountCount, plural, one {# account} other {# accounts}}"
-msgstr ""
+msgstr "{accountCount, plural, one {# konto} other {# konti}}"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:71
 msgid "{accountCount, plural, one {# account} other {# accounts}}, {feedCount, plural, one {# feed} other {# feeds}}"
-msgstr ""
+msgstr "{accountCount, plural, one {# konto} other {# konti}}, {feedCount, plural, one {# feed} other {# feeds}}"
 
 #: src/screens/Moderation/index.tsx:179
 msgid "{badge, plural, one {# update} other {# updates}}"
@@ -507,21 +507,21 @@ msgstr "{count, plural, =0 {Ingen anmodninger om deltagelse} one {# anmodning om
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:52
 msgid "{count, plural, one {# account} other {# accounts}}"
-msgstr ""
+msgstr "{count, plural, one {# konto} other {# konti}}"
 
 #: src/components/dms/SystemMessageGroup.tsx:38
 msgid "{count, plural, one {# chat update} other {# chat updates}}"
 msgstr "{count, plural, one {# chatopdatering} other {# chatopdateringer}}"
 
 #. Number of people you follow who also follow this account
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:316
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:352
 msgid "{count, plural, one {# mutual follower} other {# mutual followers}}"
-msgstr ""
+msgstr "{count, plural, one {# fælles følger} other {# fælles følgere}}"
 
 #. Short form of “mutual followers”: the number of people you follow who also follow this account
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:323
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:359
 msgid "{count, plural, one {# mutual} other {# mutuals}}"
-msgstr ""
+msgstr "{count, plural, one {# fælles} other {# fælles}}"
 
 #: src/screens/Messages/components/RequestStatus.tsx:74
 msgid "{count, plural, one {# new join request} other {# new join requests}}"
@@ -537,11 +537,11 @@ msgstr "{count, plural, one {# ulæst besked} other {# ulæste beskeder}}"
 
 #: src/features/profileLinks/components/ProfileLinks.tsx:346
 msgid "{count, plural, one {Show # more link} other {Show # more links}}"
-msgstr ""
+msgstr "{count, plural, one {Vis yderligere ét link} other {Vis yderligere # links}}"
 
 #: src/features/followingV2/home/PrependPill.tsx:76
 msgid "{count, plural, one {Show # new post} other {Show # new posts}}"
-msgstr ""
+msgstr "{count, plural, one {Vis ét nyt opslag} other {Vis # nye opslag}}"
 
 #. Displayed when there are more requests to join a group chat than have been loaded
 #: src/screens/Messages/JoinRequests.tsx:424
@@ -574,7 +574,7 @@ msgstr "{estimatedTimeMins, plural, one {minut} other {minutter}}"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:79
 msgid "{feedCount, plural, one {# feed} other {# feeds}}"
-msgstr ""
+msgstr "{feedCount, plural, one {# feed} other {# feeds}}"
 
 #: src/screens/Search/components/SearchHistory.tsx:208
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
@@ -749,9 +749,9 @@ msgid "{following} following"
 msgstr "{following} følger"
 
 #. How long ago a notification happened, e.g. "7m ago". The time is already abbreviated and translated.
-#: src/screens/Notifications/components/NotificationItem/Item/text.tsx:171
+#: src/screens/Notifications/components/NotificationItem/Item/text.tsx:175
 msgid "{formatted} ago"
-msgstr ""
+msgstr "{formatted} siden"
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
@@ -775,7 +775,7 @@ msgstr "{handle} kan ikke modtage beskeder"
 
 #: src/components/moderation/BlockDialog.tsx:199
 msgid "{hiddenCount, plural, one {See # more} other {See # more}}"
-msgstr ""
+msgstr "{hiddenCount, plural, one {Se én mere} other {Se # flere}}"
 
 #: src/features/liveNow/utils.ts:40
 msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesString}}}"
@@ -810,11 +810,11 @@ msgstr "{joinedAllTimeCount, plural, one {}other {# brugere}} har oprettet sig!"
 #: src/view/shell/desktop/LeftNav.tsx:449
 #: src/view/shell/Drawer.tsx:766
 msgid "{label}, Beta"
-msgstr ""
+msgstr "{label}, Beta"
 
 #: src/screens/ModerationInbox/Settings.tsx:138
 msgid "{label}. {description}"
-msgstr ""
+msgstr "{label}. {description}"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:138
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
@@ -841,108 +841,108 @@ msgstr "{memberCount}/{memberLimit}"
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr "{minutes, plural, one {# minut} other {# minutter}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:121
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:126
 msgid "{name} and {others, plural, one {# other} other {# others}} followed you"
-msgstr ""
+msgstr "{name} og {others, plural, one {# anden} other {# andre}} fulgte dig"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:502
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your custom feed"
-msgstr ""
+msgstr "{name} og {others, plural, one {# anden} other {# andre}} likede dit specialbyggede feed"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:96
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your post"
-msgstr ""
+msgstr "{name} og {others, plural, one {# anden} other {# andre}} likede dit opslag"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:199
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your repost"
-msgstr ""
+msgstr "{name} og {others, plural, one {# anden} other {# andre}} likede din videredeling"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:147
 msgid "{name} and {others, plural, one {# other} other {# others}} reposted your post"
-msgstr ""
+msgstr "{name} og {others, plural, one {# anden} other {# andre}} videredelte dit opslag"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:251
 msgid "{name} and {others, plural, one {# other} other {# others}} reposted your repost"
-msgstr ""
+msgstr "{name} og {others, plural, one {# anden} other {# andre}} videredelte din videredeling"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:120
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:125
 msgid "{name} and {secondName} followed you"
-msgstr ""
+msgstr "{name} og {secondName} fulgte dig"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:500
 msgid "{name} and {secondName} liked your custom feed"
-msgstr ""
+msgstr "{name} og {secondName} likede dit specialbyggede feed"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:94
 msgid "{name} and {secondName} liked your post"
-msgstr ""
+msgstr "{name} og {secondName} likede dit opslag"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:197
 msgid "{name} and {secondName} liked your repost"
-msgstr ""
+msgstr "{name} og {secondName} likede din videredeling"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:145
 msgid "{name} and {secondName} reposted your post"
-msgstr ""
+msgstr "{name} og {secondName} videredelte dit opslag"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:249
 msgid "{name} and {secondName} reposted your repost"
-msgstr ""
+msgstr "{name} og {secondName} videredelte din videredeling"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:190
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:195
 msgid "{name} followed you back"
-msgstr ""
+msgstr "{name} fulgte dig tilbage"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:189
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:194
 msgid "{name} followed you back via starter pack {starterPackName}"
-msgstr ""
+msgstr "{name} fulgte dig tilbage via startpakken {starterPackName}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:365
 msgid "{name} liked {count} of your {count, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "{name} likede {count} af dine {count, plural, one {opslag} other {opslag}}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:430
 msgid "{name} liked {count} of your {count, plural, one {repost} other {reposts}}"
-msgstr ""
+msgstr "{name} likede {count} af dine {count, plural, one {videredelinger} other {videredelinger}}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:506
 msgid "{name} liked your custom feed"
-msgstr ""
+msgstr "{name} likede dit specialbyggede feed"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:100
 msgid "{name} liked your post"
-msgstr ""
+msgstr "{name} likede dit opslag"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:203
 msgid "{name} liked your repost"
-msgstr ""
+msgstr "{name} likede din videredeling"
 
 #. placeholder {0}: reaction.value
 #: src/components/dms/getReactionInfo.ts:70
 msgid "{name} reacted {0} to {target}"
 msgstr "{name} reagerede med {0} på {target}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:262
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:267
 msgid "{name} removed their verification from your account"
 msgstr ""
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:397
 msgid "{name} reposted {count} of your {count, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "{name} videredelte {count} af {count, plural, one {dit opslag} other {dine opslag}}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:463
 msgid "{name} reposted {count} of your {count, plural, one {repost} other {reposts}}"
-msgstr ""
+msgstr "{name} videredelte {count} af {count, plural, one {din videredeling} other {dine videredelinger}} igen"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:151
 msgid "{name} reposted your post"
-msgstr ""
+msgstr "{name} videredelte dit opslag"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:255
 msgid "{name} reposted your repost"
-msgstr ""
+msgstr "{name} videredelte din videredeling"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:227
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:232
 msgid "{name} verified you"
 msgstr ""
 
@@ -973,7 +973,7 @@ msgstr ""
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
 msgid "{policyLabel} – {duration}, now expired"
-msgstr ""
+msgstr "{policyLabel} – {duration}, nu udløbet"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:49
 msgid "{profileName} joined Bluesky {timeAgoString} ago"
@@ -1030,7 +1030,7 @@ msgstr ""
 
 #: src/screens/Settings/Settings.tsx:207
 msgid "{unreadCount, plural, one {# unread update} other {# unread updates}}"
-msgstr ""
+msgstr "{unreadCount, plural, one {# ulæst opdatering} other {# ulæste opdateringer}}"
 
 #: src/components/verification/VerifierDialog.tsx:62
 msgid "{userName} is a trusted verifier"
@@ -1062,107 +1062,107 @@ msgstr "+{0}"
 msgid "+{computedTotal}"
 msgstr "+{computedTotal}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:146
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:151
 msgid "<0/> and <1/> followed you"
-msgstr ""
+msgstr "<0/> og <1/> fulgte dig"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:515
 msgid "<0/> and <1/> liked your custom feed"
-msgstr ""
+msgstr "<0/> og <1/> likede dit specialbyggede feed"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:104
 msgid "<0/> and <1/> liked your post"
-msgstr ""
+msgstr "<0/> og <1/> likede dit opslag"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:207
 msgid "<0/> and <1/> liked your repost"
-msgstr ""
+msgstr "<0/> og <1/> likede din videredeling"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:155
 msgid "<0/> and <1/> reposted your post"
-msgstr ""
+msgstr "<0/> og <1/> videredelte dit opslag"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:259
 msgid "<0/> and <1/> reposted your repost"
-msgstr ""
+msgstr "<0/> and <1/> videredelte din ulæst videredeling"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:151
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:156
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> followed you"
-msgstr ""
+msgstr "<0/> og <1>{others, plural, one {# anden} other {# andre}}</1> fulgte dig"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:520
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your custom feed"
-msgstr ""
+msgstr "<0/> og <1>{others, plural, one {# anden} other {# andre}}</1> likede dit specialbyggede feed"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:109
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your post"
-msgstr ""
+msgstr "<0/> og <1>{others, plural, one {# anden} other {# andre}}</1> likede dit opslag"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:212
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your repost"
-msgstr ""
+msgstr "<0/> og <1>{others, plural, one {# anden} other {# andre}}</1> likede din videredeling"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:160
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> reposted your post"
-msgstr ""
+msgstr "<0/> og <1>{others, plural, one {# anden} other {# andre}}</1> videredelte dit opslag"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:264
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> reposted your repost"
-msgstr ""
+msgstr "<0/> og <1>{others, plural, one {# anden} other {# andre}}</1> videredelte din videredeling"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:71
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:78
 msgid "<0/> followed you"
-msgstr ""
+msgstr "<0/> fulgte dig"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:198
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:203
 msgid "<0/> followed you back! 🎉"
-msgstr ""
+msgstr "<0/> fulgte dig tilbage! 🎉"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:371
 msgid "<0/> liked {count} of your {count, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "<0/> likede {count} af dine {count, plural, one {opslag} other {opslag}}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:436
 msgid "<0/> liked {count} of your {count, plural, one {repost} other {reposts}}"
-msgstr ""
+msgstr "<0/> likede {count} af dine {count, plural, one {videredelinger} other {videredelinger}}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:528
 msgid "<0/> liked your custom feed"
-msgstr ""
+msgstr "<0/> likede dit specialbyggede feed"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:117
 msgid "<0/> liked your post"
-msgstr ""
+msgstr "<0/> likede dit opslag"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:220
 msgid "<0/> liked your repost"
-msgstr ""
+msgstr "<0/> likede din videredeling"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:269
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:274
 msgid "<0/> removed their verification from your account"
 msgstr ""
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:403
 msgid "<0/> reposted {count} of your {count, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "<0/> videredelte {count} af dine {count, plural, one {opslag} other {opslag}}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:469
 msgid "<0/> reposted {count} of your {count, plural, one {repost} other {reposts}}"
-msgstr ""
+msgstr "<0/> videredelte {count} af dine {count, plural, one {videredelinger} other {videredelinger}}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:168
 msgid "<0/> reposted your post"
-msgstr ""
+msgstr "<0/> videredelte dit opslag"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:272
 msgid "<0/> reposted your repost"
-msgstr ""
+msgstr "<0/> videredelte din videredeling"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:304
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:309
 msgid "<0/> signed up with your starter pack"
-msgstr ""
+msgstr "<0/> oprettede sig via din startpakke"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:234
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:239
 msgid "<0/> verified you"
 msgstr ""
 
@@ -1365,7 +1365,7 @@ msgstr "Et svar til en besked sendt, før du meldte dig ind"
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:147
 msgid "A screenshot of a post from @esb.lol, showing the user is currently livestreaming content on Twitch. The post reads: \"Hello! I'm live on Twitch, and I'm testing Bluesky's latest feature too!\""
-msgstr "Et skærmdump af et indlæg fra @esb.lol, der viser brugeren livestreame indhold på Twitch. Indlægget lyder: \"Hej! Jeg er live på Twitch og tester samtidig Blueskys nyeste feature!\""
+msgstr "Et skærmdump af et opslag fra @esb.lol, der viser brugeren livestreame indhold på Twitch. Opslaget lyder: \"Hej! Jeg er live på Twitch og tester samtidig Blueskys nyeste feature!\""
 
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:121
@@ -1454,7 +1454,7 @@ msgstr "Konto"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:53
 msgid "Account {authorName}"
-msgstr ""
+msgstr "Konto {authorName}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:430
 #: src/screens/Messages/components/RequestButtons.tsx:104
@@ -1507,15 +1507,15 @@ msgstr "Konto fjernet fra kvikadgang"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:34
 msgid "Account restored"
-msgstr ""
+msgstr "Konto genskabt"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:51
 msgid "Account status"
-msgstr ""
+msgstr "Kontostatus"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:30
 msgid "Account suspended"
-msgstr ""
+msgstr "Konto spærret"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:32
 msgid "Account taken down"
@@ -1523,7 +1523,7 @@ msgstr ""
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:40
 msgid "Account unavailable"
-msgstr ""
+msgstr "Konto utilgængelig"
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:109
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:88
@@ -1540,7 +1540,7 @@ msgstr "Konto følges ikke længere"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:53
 msgid "Account unknown"
-msgstr ""
+msgstr "Konto ukendt"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:452
 #: src/view/com/profile/ProfileMenu.tsx:140
@@ -1567,7 +1567,7 @@ msgstr ""
 #: src/screens/Atmosphere.tsx:43
 #: src/screens/Notifications/index.tsx:110
 msgid "Activity"
-msgstr ""
+msgstr "Aktivitet"
 
 #: src/lib/hooks/useNotificationHandler.ts:215
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:105
@@ -1608,7 +1608,7 @@ msgstr "Tilføj en indholdsadvarsel"
 #: src/features/profileLinks/components/LinkFormDialog.tsx:285
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:133
 msgid "Add a link"
-msgstr ""
+msgstr "Tilføj et link"
 
 #: src/features/liveNow/components/GoLiveDialog.tsx:118
 msgid "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event."
@@ -1673,7 +1673,7 @@ msgstr "Tilføj botmærkat til konto"
 
 #: src/components/Gallery/Storybook.tsx:456
 msgid "Add card"
-msgstr ""
+msgstr "Tilføj kort"
 
 #: src/components/dms/EmojiReactionPicker.web.tsx:31
 msgid "Add emoji reaction"
@@ -1695,7 +1695,7 @@ msgstr "Tilføj billede"
 #: src/features/profileLinks/components/LinkFormDialog.tsx:417
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:149
 msgid "Add link"
-msgstr ""
+msgstr "Tilføj link"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
 #: src/view/com/composer/SelectMediaButton.tsx:520
@@ -1805,7 +1805,7 @@ msgstr "Tilføjet liste"
 
 #: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:159
 msgid "Added to saved posts"
-msgstr ""
+msgstr "Føjet til gemte opslag"
 
 #: src/components/dialogs/StarterPackDialog.tsx:268
 msgid "Added to Starter Pack"
@@ -2161,7 +2161,7 @@ msgstr "Der opstod en fejl ved start af gruppechat, prøv igen."
 #: src/components/hooks/useFollowMethods.ts:52
 #: src/components/ProfileCard.tsx:515
 #: src/components/ProfileCard.tsx:540
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:181
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:217
 #: src/view/com/notifications/NotificationFeedItem.tsx:827
 #: src/view/com/notifications/NotificationFeedItem.tsx:848
 msgid "An issue occurred, please try again."
@@ -2300,11 +2300,11 @@ msgstr "Klag over mærkatet \"{0}\""
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:40
 msgid "Appeal approved"
-msgstr ""
+msgstr "Klage taget til følge"
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:46
 msgid "Appeal denied"
-msgstr ""
+msgstr "Klage afvist"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:159
 msgid "Appeal label"
@@ -2316,7 +2316,7 @@ msgstr "Klag over livestreamblokering"
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:50
 msgid "Appeal resolved"
-msgstr ""
+msgstr "Klage afgjort"
 
 #: src/screens/ModerationInbox/Notice.tsx:414
 msgid "Appeal submitted"
@@ -2354,7 +2354,7 @@ msgstr "Klag over denne mærkat"
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:36
 msgid "Appeal under review"
-msgstr ""
+msgstr "Klage under behandling"
 
 #: src/Navigation.tsx:445
 #: src/screens/Settings/AppearanceSettings.tsx:71
@@ -2505,7 +2505,7 @@ msgstr "AT Protocol-FAQ"
 #: src/view/shell/desktop/LeftNav.tsx:742
 #: src/view/shell/Drawer.tsx:558
 msgid "Atmosphere"
-msgstr ""
+msgstr "Atmosfære"
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:48
 msgctxt "Name of app icon variant"
@@ -2648,7 +2648,7 @@ msgstr "Før du kan modtage notifikationer om opslag fra {name}, skal du først 
 #: src/screens/Messages/ChatList.tsx:543
 #: src/screens/Messages/Conversation.tsx:206
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:249
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:285
 msgid "Before you can message another user, you must first verify your email."
 msgstr "Før du kan sende beskeder til andre brugere, skal du bekræfte din e-mail."
 
@@ -2666,7 +2666,7 @@ msgstr "Begynd alderstjek ved at udfylde felterne herunder."
 
 #: src/components/BetaTag.tsx:23
 msgid "Beta"
-msgstr ""
+msgstr "Beta"
 
 #: src/components/dialogs/nuxs/IPadBetaAnnouncement.tsx:47
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:99
@@ -2802,9 +2802,9 @@ msgstr "Blokerede konti kan ikke svare i dine tråde, omtale dig eller på anden
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Blokerede konti kan ikke svare i dine tråde, omtale dig eller på anden måde interagere med dig. Du vil ikke se deres indhold, og de vil ikke se dit."
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:475
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:484
 msgid "Blocked post"
-msgstr ""
+msgstr "Blokeret opslag"
 
 #: src/screens/Profile/Sections/Labels.tsx:204
 msgid "Blocking does not prevent this labeler from placing labels on your account."
@@ -2836,7 +2836,7 @@ msgstr "Bluesky"
 #. Description of a beta feature (iPad support)
 #: src/screens/Settings/BetaFeaturesSettings.tsx:79
 msgid "Bluesky adapts to your iPad’s screen in any orientation or window size."
-msgstr ""
+msgstr "Bluesky tilpasser sig din iPads skærm på begge leder og i alle vinduesstørrelser."
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:652
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
@@ -2887,7 +2887,7 @@ msgstr "Bluesky har brug for adgang til kameraet for at skanne QR-koder fra andr
 
 #: src/components/dialogs/nuxs/IPadBetaAnnouncement.tsx:66
 msgid "Bluesky now makes full use of your iPad’s screen, in any orientation. It’s still in beta, so if something looks off, let us know in Settings → Beta features."
-msgstr ""
+msgstr "Bluesky udnytter nu hele din iPads skærm på begge leder. Det er stadig i beta, så hvis noget ser forkert ud, så lad os det vide under Indstillinger → Betafunktioner."
 
 #: src/screens/Takendown.tsx:213
 msgid "Bluesky Social Terms of Service"
@@ -3012,12 +3012,12 @@ msgstr "Af {0}"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:84
 msgid "By {authorName}"
-msgstr ""
+msgstr "Af {authorName}"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:48
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:55
 msgid "By {name}"
-msgstr ""
+msgstr "Af {name}"
 
 #. placeholder {0}: authorProfile.handle
 #: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:77
@@ -3174,7 +3174,7 @@ msgstr "Undertekster og alt-tekst"
 #: src/components/Gallery/Storybook.tsx:559
 #: src/components/Gallery/Storybook.tsx:564
 msgid "Card {0}"
-msgstr ""
+msgstr "Kort {0}"
 
 #: src/components/Gallery/Storybook.tsx:276
 msgid "Cards and images of different sizes"
@@ -3525,15 +3525,15 @@ msgstr "Ryd"
 #: src/screens/Search/components/SearchHistory.tsx:78
 msgctxt "action"
 msgid "Clear all"
-msgstr ""
+msgstr "Ryd alle"
 
 #: src/screens/Search/components/SearchHistory.tsx:71
 msgid "Clear all recent searches"
-msgstr ""
+msgstr "Ryd alle seneste søgninger"
 
 #: src/screens/Search/components/SearchHistory.tsx:147
 msgid "Clear all recent searches?"
-msgstr ""
+msgstr "Ryd alle seneste søgninger?"
 
 #: src/screens/Settings/Settings.tsx:539
 msgid "Clear all storage data"
@@ -3906,7 +3906,7 @@ msgstr "Kontakter fjernet"
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:48
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:56
 msgid "Content"
-msgstr ""
+msgstr "Indhold"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:53
 msgid "Content & Media"
@@ -3927,7 +3927,7 @@ msgstr "Indhold blokeret"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:48
 msgid "Content by {authorName}"
-msgstr ""
+msgstr "Indhold af {authorName}"
 
 #: src/screens/Moderation/index.tsx:424
 msgid "Content filters"
@@ -3948,15 +3948,15 @@ msgstr "Opfordring til eller afbildning af selvskade"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:26
 msgid "Content removed"
-msgstr ""
+msgstr "Indhold fjernet"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:28
 msgid "Content restored"
-msgstr ""
+msgstr "Indhold genskabt"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:83
 msgid "Content unavailable"
-msgstr ""
+msgstr "Indhold ikke tilgængeligt"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:70
 #: src/components/moderation/ScreenHider.tsx:98
@@ -4043,7 +4043,7 @@ msgstr "Samtale ikke fundet."
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:26
 msgid "Conversation with {authorName}"
-msgstr ""
+msgstr "Samtale med {authorName}"
 
 #: src/screens/Settings/AboutSettings.tsx:169
 msgid "Copied build version to clipboard"
@@ -4285,11 +4285,11 @@ msgstr ""
 #: src/features/followingV2/home/GapRow.tsx:58
 #: src/features/followingV2/home/GapRow.tsx:83
 msgid "Couldn’t load more posts. Try again"
-msgstr ""
+msgstr "Kunne ikke indlæse flere opslag. Prøv igen"
 
 #: src/components/Gallery/Storybook.tsx:339
 msgid "Counter"
-msgstr ""
+msgstr "Tæller"
 
 #: src/components/InternationalPhoneCodeSelect.tsx:80
 msgid "Country code"
@@ -4433,11 +4433,11 @@ msgstr "Oprettet {0}"
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:53
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:90
 msgid "Created {createdAt}"
-msgstr ""
+msgstr "Oprettet {createdAt}"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:58
 msgid "Created {date}"
-msgstr ""
+msgstr "Oprettet {date}"
 
 #: src/screens/List/ListHiddenScreen.tsx:130
 msgid "Creator has been blocked"
@@ -4649,9 +4649,9 @@ msgstr "Slettes af Plivo efter bekræftelse"
 msgid "Deleted list"
 msgstr "Slettet liste"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:478
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:487
 msgid "Deleted post"
-msgstr ""
+msgstr "Slettet opslag"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:463
 #: src/components/SendErrorReportDialog.tsx:78
@@ -4667,12 +4667,12 @@ msgstr "Beskrivelse (maks. 1000 tegn)"
 #. placeholder {0}: record.description
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:103
 msgid "Description: “{0}”"
-msgstr ""
+msgstr "Beskrivelse: \"{0}\""
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:65
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:70
 msgid "Description: “{description}”"
-msgstr ""
+msgstr "Beskrivelse: \"{description}\""
 
 #: src/view/com/composer/GifAltText.tsx:173
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:115
@@ -4721,11 +4721,11 @@ msgstr "Dæmpet"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:24
 msgid "Direct message"
-msgstr ""
+msgstr "Direkte besked"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:23
 msgid "Direct message from {authorName}"
-msgstr ""
+msgstr "Direkte besked fra {authorName}"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:383
 #: src/screens/Messages/components/InviteLinkDialog.tsx:388
@@ -5062,10 +5062,10 @@ msgstr "fx Profiler, der altid rammer plet."
 msgid "e.g. Users that repeatedly reply with ads."
 msgstr "fx Brugere, der laver for mange reklameopslag."
 
-#: src/screens/Notifications/components/PageList.tsx:590
+#: src/screens/Notifications/components/PageList.tsx:575
 msgctxt "Notifications section header"
 msgid "Earlier"
-msgstr ""
+msgstr "Tidligere"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:195
 msgid "Eating disorders"
@@ -5089,7 +5089,7 @@ msgstr "Rediger"
 #. placeholder {0}: linkLabel(item.link)
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:78
 msgid "Edit {0}"
-msgstr ""
+msgstr "Rediger {0}"
 
 #: src/view/com/util/UserAvatar.tsx:465
 #: src/view/com/util/UserBanner.tsx:132
@@ -5133,7 +5133,7 @@ msgstr "Rediger invitationslink"
 #: src/features/profileLinks/components/LinkFormDialog.tsx:265
 #: src/features/profileLinks/components/LinkFormDialog.tsx:285
 msgid "Edit link"
-msgstr ""
+msgstr "Rediger link"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:367
 msgid "Edit link settings"
@@ -5280,7 +5280,7 @@ msgstr ""
 
 #: src/components/Gallery/Storybook.tsx:681
 msgid "Empty gallery"
-msgstr ""
+msgstr "Tomt galleri"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:101
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:108
@@ -5541,7 +5541,7 @@ msgstr "Udvid opslagets tekst"
 
 #: src/screens/Notifications/components/NotificationItem/Item/group.tsx:302
 msgid "Expands list of users"
-msgstr ""
+msgstr "Udvider brugerliste"
 
 #: src/screens/VideoFeed/index.tsx:1176
 msgid "Expands or collapses post text"
@@ -5681,7 +5681,7 @@ msgstr "Oprettelse af appadgangskode fejlede. Prøv igen."
 
 #: src/components/dms/MessageProfileButton.tsx:38
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:66
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:239
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:275
 msgid "Failed to create conversation"
 msgstr "Kunne ikke starte samtale"
 
@@ -5828,7 +5828,7 @@ msgstr "Kunne ikke markere alle anmodninger som læst"
 
 #: src/state/queries/moderation-inbox.ts:346
 msgid "Failed to mark as read. Please try again."
-msgstr ""
+msgstr "Kunne ikke markere som læst. Prøv igen."
 
 #: src/screens/Messages/ConversationSettings/index.tsx:387
 msgid "Failed to mute group chat"
@@ -5928,7 +5928,7 @@ msgstr "Afsendelse af klage fejlede, prøv igen."
 
 #: src/screens/ModerationInbox/Notice.tsx:382
 msgid "Failed to submit appeal. Please try again."
-msgstr ""
+msgstr "Afsendelse af klage fejlede. Prøv igen."
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:255
 msgid "Failed to toggle thread mute, please try again"
@@ -5998,7 +5998,7 @@ msgstr "Feed"
 #. placeholder {0}: sanitizeDisplayName(feedName)
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:45
 msgid "Feed “{0}”"
-msgstr ""
+msgstr "Feed “{0}”"
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #. placeholder {0}: sanitizeHandle(feed.creatorHandle, '@')
@@ -6011,11 +6011,11 @@ msgstr "Feed af {0}"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:42
 msgid "Feed by {authorName}"
-msgstr ""
+msgstr "Feed af {authorName}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/media.tsx:224
+#: src/screens/Notifications/components/NotificationItem/Item/media.tsx:225
 msgid "Feed by {handle}"
-msgstr ""
+msgstr "Feed af {handle}"
 
 #: src/view/com/feeds/MissingFeed.tsx:153
 msgid "Feed creator"
@@ -6163,10 +6163,10 @@ msgstr "Find og inviter venner"
 msgid "Find Contacts"
 msgstr "Find kontakter"
 
-#: src/screens/Notifications/components/PageList.tsx:645
-#: src/screens/Notifications/components/PageList.tsx:650
+#: src/screens/Notifications/components/PageList.tsx:631
+#: src/screens/Notifications/components/PageList.tsx:636
 msgid "Find friends"
-msgstr ""
+msgstr "Find venner"
 
 #: src/components/contacts/screens/GetContacts.tsx:275
 #: src/components/contacts/screens/GetContacts.tsx:289
@@ -6189,7 +6189,7 @@ msgstr "Find personer du kender"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Find opslag, brugere og feeds på Bluesky"
 
-#: src/screens/Notifications/components/PageList.tsx:639
+#: src/screens/Notifications/components/PageList.tsx:625
 msgid "Find some friends to start getting notifications!"
 msgstr ""
 
@@ -6253,7 +6253,7 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:503
 #: src/components/ProfileHoverCard/index.web.tsx:514
 #: src/screens/Messages/ConversationSettings/Member.tsx:170
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:196
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:232
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:430
 #: src/screens/VideoFeed/index.tsx:1059
@@ -6312,7 +6312,7 @@ msgstr "Følg alle konti"
 #. User is not following this account, click to follow back
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:552
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:192
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:228
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:155
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:428
 #: src/view/com/notifications/NotificationFeedItem.tsx:890
@@ -6356,7 +6356,7 @@ msgstr "Følges af <0>{0}</0>, <1>{1}</1> og {2, plural, one {# anden} other {# 
 #: src/screens/Notifications/components/NotificationItem/kinds/follower.tsx:52
 msgctxt "Notifications section header"
 msgid "Followed you"
-msgstr ""
+msgstr "Fulgte dig"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:360
 msgid "Followers can join"
@@ -6378,7 +6378,7 @@ msgstr "Følgere, du kender"
 #: src/components/ProfileCard.tsx:547
 #: src/components/ProfileHoverCard/index.web.tsx:502
 #: src/components/ProfileHoverCard/index.web.tsx:513
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:187
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:223
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:426
 #: src/screens/VideoFeed/index.tsx:1057
@@ -6411,9 +6411,9 @@ msgstr "Følger {displayName}"
 msgid "Following {handle}"
 msgstr "Følger {handle}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:177
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:213
 msgid "Following {name}"
-msgstr ""
+msgstr "Følger {name}"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:78
 #: src/screens/Settings/ContentAndMediaSettings.tsx:81
@@ -6526,7 +6526,7 @@ msgstr "Fra disse personer"
 
 #: src/components/Gallery/Storybook.tsx:43
 msgid "Gallery"
-msgstr ""
+msgstr "Galleri"
 
 #: src/components/Gallery/Storybook.tsx:357
 msgid "Gallery text field"
@@ -6534,7 +6534,7 @@ msgstr ""
 
 #: src/components/Gallery/Storybook.tsx:689
 msgid "Gallery with one item"
-msgstr ""
+msgstr "Galleri med ét element"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:335
 msgid "Generate a Starter Pack"
@@ -6658,7 +6658,7 @@ msgstr "Bliv notificeret, når {name} laver opslag"
 #: src/screens/ModerationInbox/Settings.tsx:102
 msgctxt "moderation-inbox-setting"
 msgid "Get notified when a label is added to your account and posts."
-msgstr "Få notifikationer, når en etiket føjes til din konto eller dine indlæg."
+msgstr "Få notifikationer, når en etiket føjes til din konto eller dine opslag."
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:139
 msgid "Get notified when someone posts"
@@ -6762,10 +6762,10 @@ msgid "Go to {firstAuthorName}'s profile"
 msgstr "Gå til {firstAuthorName}s profil"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:78
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:608
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:644
 #: src/screens/Notifications/components/NotificationItem/Item/text.tsx:113
 msgid "Go to {name}’s profile"
-msgstr ""
+msgstr "Gå til {name}s profil"
 
 #: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:93
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:73
@@ -7039,9 +7039,9 @@ msgid "Hidden list"
 msgstr "Skjult liste"
 
 #. Shown in place of the text of a post that is hidden by the viewer’s moderation settings
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:216
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:213
 msgid "Hidden post"
-msgstr ""
+msgstr "Skjult opslag"
 
 #: src/components/interstitials/TrendingVideos.tsx:140
 #: src/components/moderation/ContentHider.tsx:208
@@ -7341,7 +7341,7 @@ msgstr "Billedcache tømt, frigjorde {0}"
 
 #: src/components/Gallery/Storybook.tsx:151
 msgid "Image content"
-msgstr ""
+msgstr "Billedindhold"
 
 #: src/components/Gallery/Storybook.tsx:159
 msgid "Image frames in different shapes"
@@ -7416,8 +7416,14 @@ msgstr "Importeret {0}"
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr "For at kunne tilbyde en alderssvarende oplevelse har vi brug for at kende din fødselsdato. Det er hurtigt klaret, og vi passer godt på dine oplysninger."
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:260
+#. In a notification about a mention or quote, the post is a reply to another person’s post. {subject} is that person’s name, followed by a preview of their post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:269
 msgid "in reply to <0>{subject}</0>: {previewNode}"
+msgstr "som svar til <0>{subject}</0>: {previewNode}"
+
+#. In a notification about a mention or quote, the post is a reply to the viewer’s own post. Followed by a preview of that post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:265
+msgid "in reply to <0>you</0>: {previewNode}"
 msgstr ""
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:173
@@ -7681,7 +7687,7 @@ msgstr "Invitationer, men personlige"
 #. Name for a beta feature
 #: src/screens/Settings/BetaFeaturesSettings.tsx:75
 msgid "iPad support"
-msgstr ""
+msgstr "iPad-understøttelse"
 
 #: src/components/dialogs/nuxs/IPadBetaAnnouncement.tsx:36
 #: src/components/dialogs/nuxs/IPadBetaAnnouncement.tsx:57
@@ -7771,11 +7777,11 @@ msgstr "KWS hjemmeside"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:36
 msgid "Label applied"
-msgstr ""
+msgstr "Mærkat tilføjet"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:38
 msgid "Label removed"
-msgstr ""
+msgstr "Mærkat fjernet"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:640
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:642
@@ -7785,7 +7791,7 @@ msgstr "Marker svar for algo"
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:57
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
 msgid "Label: {labelName}"
-msgstr ""
+msgstr "Mærkat: {labelName}"
 
 #. placeholder {0}: sanitizeDisplayName(desc.source!)
 #: src/components/moderation/ContentHider.tsx:236
@@ -8117,7 +8123,7 @@ msgstr "Likes af dette opslag"
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:87
 msgid "Limited profile"
-msgstr ""
+msgstr "Begrænset profil"
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:49
 #: src/screens/PostThread/components/HeaderDropdown.tsx:54
@@ -8127,11 +8133,11 @@ msgstr "Lineært"
 #: src/features/profileLinks/components/LinkFormDialog.tsx:304
 #: src/features/profileLinks/components/LinkFormDialog.tsx:310
 msgid "Link"
-msgstr ""
+msgstr "Link"
 
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:61
 msgid "Link copied"
-msgstr ""
+msgstr "Link kopieret"
 
 #: src/components/Lightbox/Lightbox.web.tsx:306
 msgid "Link copied to clipboard"
@@ -8139,23 +8145,23 @@ msgstr "Link kopieret til udklipsholder"
 
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:68
 msgid "Link details"
-msgstr ""
+msgstr "Linkdetaljer"
 
 #: src/screens/Notifications/components/NotificationItem/Item/aggregate.tsx:69
 msgid "Link to {domain}"
-msgstr ""
+msgstr "Link til {domain}"
 
 #: src/features/profileLinks/components/ProfileLinksEditor.tsx:92
 msgid "Links"
-msgstr ""
+msgstr "Links"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:288
 msgid "Links show as buttons under your bio. Links to support sites like Ko-fi or Patreon show as a green button. <0>View all support sites</0>"
-msgstr ""
+msgstr "Links vises som knapper under din bio. Links til støttesider som Ko-fi eller Patreon vises som en grøn knap. <0>Se alle støttesider</0>"
 
 #: src/features/profileLinks/components/SupportedSitesDialog.tsx:45
 msgid "Links to these sites show as a green support button."
-msgstr ""
+msgstr "Links til disse sider vises som en grøn støtteknap."
 
 #: src/Navigation.tsx:300
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:44
@@ -8166,7 +8172,7 @@ msgstr "Liste"
 #. placeholder {0}: sanitizeDisplayName(listName)
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:44
 msgid "List “{0}”"
-msgstr ""
+msgstr "Liste “{0}”"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:407
 msgid "List avatar"
@@ -8186,7 +8192,7 @@ msgstr "Liste af {0}"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:40
 msgid "List by {authorName}"
-msgstr ""
+msgstr "Liste af {authorName}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:142
 msgid "List by <0/>"
@@ -8244,7 +8250,7 @@ msgstr "Listens navn er for lang. {DISPLAY_NAME_MAX_GRAPHEMES, plural, one {}oth
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:64
 msgid "List unavailable"
-msgstr ""
+msgstr "Liste utilgængelig"
 
 #: src/screens/ProfileList/components/Header.tsx:120
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:156
@@ -8310,19 +8316,19 @@ msgstr "Livelink"
 #. placeholder {0}: url.hostname
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:58
 msgid "Live link: “{0}”"
-msgstr ""
+msgstr "Livelink: “{0}”"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:53
 msgid "Live status"
-msgstr ""
+msgstr "Live-status"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:38
 msgid "Livestream"
-msgstr ""
+msgstr "Livestream"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:38
 msgid "Livestream by {authorName}"
-msgstr ""
+msgstr "Livestream af {authorName}"
 
 #: src/screens/Search/Explore.tsx:84
 msgid "Load more"
@@ -8369,11 +8375,11 @@ msgstr "Indlæser lister..."
 
 #: src/features/followingV2/home/GapRow.tsx:56
 msgid "Loading more posts"
-msgstr ""
+msgstr "Indlæser flere opslag"
 
 #: src/screens/ModerationInbox/Settings.tsx:173
 msgid "Loading notification settings"
-msgstr ""
+msgstr "Indlæser notifikationsindstillinger"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:275
 msgid "Loading post interaction settings..."
@@ -8383,13 +8389,13 @@ msgstr "Indlæser opslagsinteraktionsindstillinger..."
 msgid "Loading..."
 msgstr "Indlæser..."
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:521
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:557
 msgid "Loads more people into this list"
-msgstr ""
+msgstr "Indlæser flere personer på denne liste"
 
 #: src/features/followingV2/home/GapRow.tsx:61
 msgid "Loads the posts missing between here and the posts below"
-msgstr ""
+msgstr "Indlæser de opslag, der mangler mellem dette og opslagene herunder"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:562
 msgid "Lock"
@@ -8456,7 +8462,7 @@ msgstr "Tilpas e-mailindstillinger for din konto"
 
 #: src/components/Gallery/Storybook.tsx:627
 msgid "Make narrow"
-msgstr ""
+msgstr "Gør smal"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:310
 msgid "Make one for me"
@@ -8468,19 +8474,19 @@ msgstr "Tjek, at det virkelig er dette website, du ønsker at besøge!"
 
 #: src/components/Gallery/Storybook.tsx:501
 msgid "Make the first card taller or shorter"
-msgstr ""
+msgstr "Gør det første kort højere eller lavere"
 
 #: src/components/Gallery/Storybook.tsx:511
 msgid "Make the first card wider or narrower"
-msgstr ""
+msgstr "Gør det første kort bredere eller smallere"
 
 #: src/components/Gallery/Storybook.tsx:621
 msgid "Make the panel narrow"
-msgstr ""
+msgstr "Gør panelet smalt"
 
 #: src/components/Gallery/Storybook.tsx:621
 msgid "Make the panel wide"
-msgstr ""
+msgstr "Gør panelet bredt"
 
 #: src/components/Gallery/Storybook.tsx:627
 msgid "Make wide"
@@ -9034,11 +9040,11 @@ msgstr "Ny"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:580
 msgid "New {count, plural, one {post} other {posts}} from {name}"
-msgstr ""
+msgstr "{count, plural, one {Nyt} other {Nye}} opslag fra {name}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:604
 msgid "New {count, plural, one {post} other {posts}} from <0/>"
-msgstr ""
+msgstr "{count, plural, one {Nyt opslag} other {Nye opslag}} fra <0/>"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:551
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
@@ -9161,7 +9167,7 @@ msgstr "Nye opslag"
 
 #: src/view/screens/Storybook/NewPostsPill.tsx:136
 msgid "New posts are ready to load from the people you follow"
-msgstr ""
+msgstr "Nye opslag er klar til at blive indlæst fra personer, du følger"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:540
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> "
@@ -9173,27 +9179,27 @@ msgstr "Nye opslag fra {firstAuthorName} og {additionalAuthorsCount, plural, one
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:574
 msgid "New posts from {name} and {others, plural, one {# other} other {# others}}"
-msgstr ""
+msgstr "Nye opslag fra {name} og {others, plural, one {# anden} other {# andre}}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:572
 msgid "New posts from {name} and {secondName}"
-msgstr ""
+msgstr "Nye opslag fra {name} og {secondName}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:588
 msgid "New posts from <0/> and <1/>"
-msgstr ""
+msgstr "Nye opslag fra <0/> og <1/>"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:593
 msgid "New posts from <0/> and <1>{others, plural, one {# other} other {# others}}</1>"
-msgstr ""
+msgstr "Nye opslag fra <0/> og <1>{others, plural, one {# anden} other {# andre}}</1>"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:579
 msgid "New reply from {name}"
-msgstr ""
+msgstr "Nyt svar fra {name}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:600
 msgid "New reply from <0/>"
-msgstr ""
+msgstr "Nyt svar fra <0/>"
 
 #: src/components/dialogs/StarterPackDialog.tsx:196
 msgid "New Starter Pack"
@@ -9307,9 +9313,9 @@ msgstr "Intet udløbstidspunkt angivet"
 msgid "No feeds found. Try searching for something else."
 msgstr "Ingen feeds fundet. Prøv at søge efter noget andet."
 
-#: src/screens/Notifications/components/PageList.tsx:679
+#: src/screens/Notifications/components/PageList.tsx:665
 msgid "No followers to show yet"
-msgstr ""
+msgstr "Ingen følgere at vise endnu"
 
 #: src/view/com/profile/ProfileFollowers.tsx:216
 msgid "No followers yet"
@@ -9354,9 +9360,9 @@ msgstr "Ingen lister"
 msgid "No longer following {0}"
 msgstr "Følger ikke længere {0}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:174
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:210
 msgid "No longer following {name}"
-msgstr ""
+msgstr "Følger ikke længere {name}"
 
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
@@ -9379,14 +9385,14 @@ msgstr "Ingen algoritmer, der prioriterer spam og belønner doomscrolling. Find 
 msgid "No name"
 msgstr "Intet navn"
 
-#: src/screens/Notifications/components/PageList.tsx:676
+#: src/screens/Notifications/components/PageList.tsx:662
 msgid "No notifications from people you follow yet"
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:628
-#: src/screens/Notifications/components/PageList.tsx:673
+#: src/screens/Notifications/components/PageList.tsx:614
+#: src/screens/Notifications/components/PageList.tsx:659
 msgid "No notifications yet"
-msgstr ""
+msgstr "Ingen notifikationer endnu"
 
 #: src/view/com/notifications/NotificationFeed.tsx:130
 msgid "No notifications yet!"
@@ -9428,11 +9434,11 @@ msgstr "Ingen opslag her"
 
 #: src/screens/Notifications/components/ActivityEmptyMessage.tsx:48
 msgid "No posts here yet. Click the {bell} bell icon on someone’s profile to keep up with their activity."
-msgstr ""
+msgstr "Ingen opslag her endnu. Klik på {bell} klokkeikonet på nogens profil for at følge med i deres aktivitet."
 
 #: src/screens/Notifications/components/ActivityEmptyMessage.tsx:53
 msgid "No posts here yet. Tap the {bell} bell icon on someone’s profile to keep up with their activity."
-msgstr ""
+msgstr "Ingen opslag her endnu. Tryk på {bell}-klokkeikonet på en andens profil for at følge med i deres aktivitet."
 
 #: src/screens/Profile/Sections/Feed.tsx:84
 #: src/view/screens/Profile.tsx:466
@@ -9448,9 +9454,9 @@ msgstr "Ingen citater endnu"
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "Endnu ingen senest anvendte GIF’er. Vælg en for at se den her."
 
-#: src/screens/Notifications/components/PageList.tsx:682
+#: src/screens/Notifications/components/PageList.tsx:668
 msgid "No replies to show yet"
-msgstr ""
+msgstr "Ingen svar at vise endnu"
 
 #: src/view/screens/Profile.tsx:493
 msgid "No replies yet"
@@ -9458,7 +9464,7 @@ msgstr "Ingen svar endnu"
 
 #: src/screens/ModerationInbox/index.tsx:227
 msgid "No reports match this filter"
-msgstr ""
+msgstr "Ingen anmeldelser matcher dette filter"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:90
 msgid "No reposts yet"
@@ -9699,7 +9705,7 @@ msgstr "Aktiveret"
 
 #: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
 msgid "On Bluesky, this means your posts will only appear in the Discover feed to people who follow you. Other apps can choose to use this preference in their own algorithmic recommendations."
-msgstr "På Bluesky betyder det, at dine indlæg kun vises i Opdag-feedet for folk, der følger dig. Andre apps kan vælge at anvende denne præference i deres egne algoritmiske anbefalinger."
+msgstr "På Bluesky betyder det, at dine opslag kun vises i Opdag-feedet for folk, der følger dig. Andre apps kan vælge at anvende denne præference i deres egne algoritmiske anbefalinger."
 
 #: src/components/StarterPack/QrCode.tsx:78
 msgid "on<0><1/><2><3/></2></0>"
@@ -9711,7 +9717,7 @@ msgstr "Nulstil velkomst"
 
 #: src/components/Gallery/Storybook.tsx:590
 msgid "One"
-msgstr ""
+msgstr "En"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:108
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:124
@@ -9749,7 +9755,7 @@ msgstr "Et eller flere videoer mangler alt-tekst."
 
 #: src/components/Gallery/Storybook.tsx:692
 msgid "Only"
-msgstr ""
+msgstr "Kun"
 
 #. placeholder {0}: settings.map((rule, i) => ( <Fragment key={`rule-${i}`}> <Rule rule={rule} post={post} lists={post.threadgate!.lists} /> <Separator i={i} length={settings.length} /> </Fragment> ))
 #: src/components/WhoCanReply.tsx:265
@@ -9844,11 +9850,11 @@ msgstr "Ups!"
 #. placeholder {0}: linkLabel(link)
 #: src/features/profileLinks/components/LinkPill.tsx:87
 msgid "Open {0}"
-msgstr ""
+msgstr "Åbn {0}"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:58
 msgid "Open account"
-msgstr ""
+msgstr "Åbn konto"
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:66
 msgid "Open advanced search options"
@@ -9875,7 +9881,7 @@ msgstr "Åbn chatmedlemindstillinger for {displayName}"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:41
 msgid "Open content"
-msgstr ""
+msgstr "Åbn indhold"
 
 #: src/screens/Messages/components/ChatListItem.tsx:508
 #: src/screens/Messages/components/ChatListItem.tsx:512
@@ -9897,7 +9903,7 @@ msgstr "Åbn emojivælger"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:84
 msgid "Open feed"
-msgstr ""
+msgstr "Åbn feed"
 
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:214
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:228
@@ -9934,7 +9940,7 @@ msgstr "Åbn i Google Translate"
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:84
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:90
 msgid "Open link"
-msgstr ""
+msgstr "Åbn link"
 
 #: src/components/Post/Embed/ExternalEmbed/index.tsx:90
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:146
@@ -9943,7 +9949,7 @@ msgstr "Åbn link til {niceUrl}"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:89
 msgid "Open list"
-msgstr ""
+msgstr "Åbn liste"
 
 #: src/components/dms/ActionsWrapper.tsx:41
 msgid "Open message options"
@@ -9991,7 +9997,7 @@ msgstr "Åbn delemenu"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:120
 msgid "Open starter pack"
-msgstr ""
+msgstr "Åbn startpakke"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:596
 msgid "Open Starter Pack menu"
@@ -10014,7 +10020,7 @@ msgstr "Åbner denne gruppechat"
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:85
 #: src/features/profileLinks/components/ProfileLinks.tsx:168
 msgid "Opens {0} outside Bluesky"
-msgstr ""
+msgstr "Åbner {0} uden for Bluesky"
 
 #: src/view/shell/desktop/Feeds.tsx:185
 msgid "Opens {displayName} feed"
@@ -10137,7 +10143,7 @@ msgstr "Åbner denne profil"
 
 #: src/screens/Notifications/index.tsx:617
 msgid "Opens your beta features settings"
-msgstr ""
+msgstr "Åbner dine indstillinger for betafunktioner"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:792
 msgid "Opt out"
@@ -10730,11 +10736,11 @@ msgstr "Opslag blokeret"
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:36
 msgid "Post by {authorName}"
-msgstr ""
+msgstr "Opslag af {authorName}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:535
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:544
 msgid "Post by {name}"
-msgstr ""
+msgstr "Opslag af {name}"
 
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:313
@@ -10758,7 +10764,7 @@ msgstr "Opslag kunne ikke publiceres. Tjek din internetforbindelse og prøv igen
 #: src/screens/PostThread/components/ThreadItemTreePost.tsx:112
 #: src/screens/VideoFeed/index.tsx:586
 msgid "Post has been deleted"
-msgstr "Indlæg er blevet slettet"
+msgstr "Opslag er blevet slettet"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:127
 #: src/lib/moderation/useModerationCauseDescription.ts:104
@@ -10810,7 +10816,7 @@ msgstr "Opslagstype"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:139
 msgid "Post unavailable"
-msgstr ""
+msgstr "Opslag utilgængeligt"
 
 #: src/state/queries/pinned-post.ts:93
 msgctxt "toast"
@@ -10818,9 +10824,9 @@ msgid "Post unpinned"
 msgstr "Opslag blev frigjort"
 
 #. Shown in place of the text of a post that has no text, only images, video, a link or a quoted post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:222
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:219
 msgid "Post with media"
-msgstr ""
+msgstr "Opslag med medier"
 
 #. placeholder {0}: i18n.date(POSTED_AT, { month: 'short', day: 'numeric', year: 'numeric', })
 #. placeholder {0}: i18n.date(new Date(record.createdAt), {dateStyle: 'medium'})
@@ -11223,7 +11229,7 @@ msgstr ""
 #. Pill on the notifications list, shown when there are new notifications to load.
 #: src/screens/Notifications/components/RefreshPill.tsx:87
 msgid "Refresh"
-msgstr ""
+msgstr "Opdater"
 
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:136
@@ -11345,11 +11351,11 @@ msgstr "Fjern filter"
 
 #: src/components/Gallery/Storybook.tsx:487
 msgid "Remove first"
-msgstr ""
+msgstr "Fjern første"
 
 #: src/components/Gallery/Storybook.tsx:481
 msgid "Remove first card"
-msgstr ""
+msgstr "Fjern første kort"
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:238
 msgid "Remove from chat"
@@ -11388,16 +11394,16 @@ msgstr "Fjern billede"
 
 #: src/components/Gallery/Storybook.tsx:477
 msgid "Remove last"
-msgstr ""
+msgstr "Fjern sidste"
 
 #: src/components/Gallery/Storybook.tsx:471
 msgid "Remove last card"
-msgstr ""
+msgstr "Fjern sidste kort"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:425
 #: src/features/profileLinks/components/LinkFormDialog.tsx:430
 msgid "Remove link"
-msgstr ""
+msgstr "Fjern link"
 
 #: src/features/liveNow/components/EditLiveDialog.tsx:223
 #: src/features/liveNow/components/EditLiveDialog.tsx:230
@@ -11455,12 +11461,12 @@ msgid "Remove your verification for this account?"
 msgstr "Fjern verifikation fra denne konto?"
 
 #: src/components/Post/Embed/index.tsx:294
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:487
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:496
 msgid "Removed by author"
 msgstr "Fjernet af forfatter"
 
 #: src/components/Post/Embed/index.tsx:292
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:485
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:494
 msgid "Removed by you"
 msgstr "Fjernet af dig"
 
@@ -11523,7 +11529,8 @@ msgstr ""
 msgid "Replace with Discover"
 msgstr "Erstat med Opdag"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:253
+#. In a notification, someone replied to another person’s post. {subject} is that person’s name, followed by a preview of their post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:258
 msgid "replied to <0>{subject}</0>: {previewNode}"
 msgstr ""
 
@@ -11531,6 +11538,11 @@ msgstr ""
 msgctxt "description"
 msgid "Replied to <0><1/></0>"
 msgstr "Svarede <0><1/></0>"
+
+#. In a notification, someone replied to the viewer’s own post. Followed by a preview of that post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:254
+msgid "replied to <0>you</0>: {previewNode}"
+msgstr ""
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:171
 msgid "replied to a blocked post"
@@ -11627,7 +11639,7 @@ msgstr "Svar {handle}"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:81
 msgid "Reply to {parentName}"
-msgstr ""
+msgstr "Svar {parentName}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:392
 msgctxt "toast"
@@ -11646,14 +11658,14 @@ msgstr "Anmeld"
 
 #: src/features/profileLinks/components/ReportLinkDialog.tsx:113
 msgid "Report {label}"
-msgstr ""
+msgstr "Anmeld {label}"
 
 #: src/features/profileLinks/components/ReportLinkDialog.tsx:97
 #: src/features/profileLinks/components/ReportLinkDialog.tsx:100
 #: src/view/com/profile/ProfileMenu.tsx:532
 #: src/view/com/profile/ProfileMenu.tsx:535
 msgid "Report a link"
-msgstr ""
+msgstr "Anmeld et link"
 
 #: src/view/com/profile/ProfileMenu.tsx:522
 #: src/view/com/profile/ProfileMenu.tsx:525
@@ -11680,7 +11692,7 @@ msgstr "Anmeld feed"
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:108
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:114
 msgid "Report link"
-msgstr ""
+msgstr "Anmeld link"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:235
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:238
@@ -11698,7 +11710,7 @@ msgstr "Anmeld opslag"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:59
 msgid "Report resolved"
-msgstr ""
+msgstr "Anmeldelse afgjort"
 
 #: src/components/SendErrorReportDialog.tsx:47
 msgid "Report sent"
@@ -11731,7 +11743,7 @@ msgstr "Anmeld denne gruppechat"
 
 #: src/components/moderation/ReportDialog/copy.ts:42
 msgid "Report this link"
-msgstr ""
+msgstr "Anmeld dette link"
 
 #: src/components/moderation/ReportDialog/copy.ts:30
 msgid "Report this list"
@@ -11787,12 +11799,12 @@ msgstr "Videredel eller citer"
 #: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:83
 msgctxt "Toast after undoing a repost"
 msgid "Repost removed"
-msgstr ""
+msgstr "Videredeling fjernet"
 
 #: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:97
 msgctxt "Toast after reposting"
 msgid "Reposted"
-msgstr ""
+msgstr "Videredelt"
 
 #: src/screens/Post/PostRepostedBy.tsx:31
 msgid "Reposted By"
@@ -11954,7 +11966,7 @@ msgstr "Nulstil din adgangskode ved at sende en kode til din e-mail"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:31
 msgctxt "moderation-report-filter"
 msgid "Resolved"
-msgstr ""
+msgstr "Afgjort"
 
 #: src/components/OTAChannelNotice.tsx:109
 msgid "Restore default"
@@ -11966,7 +11978,7 @@ msgstr "Gendan {defaultChannel}-udrulningen"
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:93
 msgid "Restored post"
-msgstr ""
+msgstr "Genskabt opslag"
 
 #: src/screens/Settings/FindContactsSettings.tsx:553
 #: src/screens/Settings/FindContactsSettings.tsx:569
@@ -12092,7 +12104,7 @@ msgstr "Gem"
 #: src/features/profileLinks/components/LinkFormDialog.tsx:395
 #: src/features/profileLinks/components/LinkFormDialog.tsx:413
 msgid "Save anyway"
-msgstr ""
+msgstr "Gem alligevel"
 
 #: src/components/dialogs/BirthDateSettings.tsx:193
 msgid "Save birthdate"
@@ -12180,7 +12192,7 @@ msgid "Saved to your feeds"
 msgstr "Tilføjet dine feeds"
 
 #: src/components/dialogs/NewskieDialog/index.tsx:119
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:258
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:294
 #: src/view/com/notifications/NotificationFeedItem.tsx:937
 #: src/view/com/notifications/NotificationFeedItem.tsx:945
 msgid "Say hello!"
@@ -12358,19 +12370,19 @@ msgstr "Se opslag med {0} af bruger"
 
 #: src/components/RichTextTag.tsx:122
 msgid "See {tag} posts"
-msgstr "Se {tag}-indlæg"
+msgstr "Se {tag}-opslag"
 
 #: src/components/RichTextTag.tsx:140
 msgid "See {tag} posts by user"
-msgstr "Se {tag}-indlæg af bruger"
+msgstr "Se {tag}-opslag af bruger"
 
 #: src/components/RichTextTag.tsx:124
 msgid "See #{tag} posts"
-msgstr "Se #{tag}-indlæg"
+msgstr "Se #{tag}-opslag"
 
 #: src/components/RichTextTag.tsx:142
 msgid "See #{tag} posts by user"
-msgstr "Se #{tag}-indlæg af bruger"
+msgstr "Se #{tag}-opslag af bruger"
 
 #: src/view/com/auth/SplashScreen.web.tsx:177
 msgid "See jobs at Bluesky"
@@ -12911,7 +12923,7 @@ msgstr "Deling af din aldersgruppe afslører kun aldersgruppen angivet for din G
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:250
 msgid "Short links can’t be added. Use the full link instead."
-msgstr ""
+msgstr "Korte links kan ikke tilføjes. Brug det fulde link i stedet."
 
 #: src/components/moderation/ContentHider.tsx:208
 #: src/components/moderation/LabelPreference.tsx:143
@@ -12966,7 +12978,7 @@ msgstr "Vis mindre som dette"
 
 #: src/features/profileLinks/components/ProfileLinks.tsx:183
 msgid "Show link details"
-msgstr ""
+msgstr "Vis linkdetaljer"
 
 #: src/screens/List/ListHiddenScreen.tsx:189
 msgid "Show list anyway"
@@ -12977,8 +12989,8 @@ msgid "Show lists of users to select from"
 msgstr "Vis liste over brugere at vælge fra"
 
 #: src/components/Post/ShowMoreTextButton.tsx:59
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:520
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:546
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:556
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:582
 msgid "Show more"
 msgstr "Vis mere"
 
@@ -12990,7 +13002,7 @@ msgstr "Vis mere som dette"
 #: src/features/followingV2/home/GapRow.tsx:59
 #: src/features/followingV2/home/GapRow.tsx:85
 msgid "Show more posts"
-msgstr ""
+msgstr "Vis flere opslag"
 
 #: src/screens/PostThread/components/ThreadItemShowOtherReplies.tsx:15
 msgid "Show more replies"
@@ -13178,7 +13190,7 @@ msgstr "Siden"
 
 #: src/components/Gallery/Storybook.tsx:302
 msgid "Sizes: 100×80, 220×160, 140×240, 180×120, and a wide card of {wideCardSize}×100, which is the gallery width of {galleryWidth} plus 80."
-msgstr ""
+msgstr "Størrelser: 100×80, 220×160, 140×240, 180×120 og et bredt kort på {wideCardSize}×100, hvilket er galleribredden på {galleryWidth} plus 80."
 
 #: src/components/contacts/screens/PhoneInput.tsx:163
 #: src/components/contacts/screens/VerifyNumber.tsx:208
@@ -13217,11 +13229,11 @@ msgstr "swipe"
 
 #: src/components/Gallery/Storybook.tsx:281
 msgid "Small"
-msgstr ""
+msgstr "Lille"
 
 #: src/components/Gallery/Storybook.tsx:279
 msgid "Small card"
-msgstr ""
+msgstr "Lille kort"
 
 #: src/screens/Settings/AppearanceSettings.tsx:150
 msgid "Smaller"
@@ -13441,20 +13453,20 @@ msgstr "Startpakke"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:60
 msgid "Starter Pack “{name}”"
-msgstr ""
+msgstr "Startpakke \"{name}\""
 
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:45
 msgid "Starter Pack “{starterPackName}”"
-msgstr ""
+msgstr "Startpakke “{starterPackName}”"
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #: src/components/StarterPack/StarterPackCard.tsx:86
 msgid "Starter Pack by {0}"
 msgstr "Startpakke af {0}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:408
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:444
 msgid "Starter pack by {handle}"
-msgstr ""
+msgstr "Startpakke af {handle}"
 
 #. placeholder {0}: creator.handle
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:193
@@ -13476,7 +13488,7 @@ msgstr "Startpakke er ugyldig"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:97
 msgid "Starter pack unavailable"
-msgstr ""
+msgstr "Startpakke utilgængelig"
 
 #: src/screens/Search/Explore.tsx:663
 #: src/screens/Search/SearchResults.tsx:114
@@ -13495,7 +13507,7 @@ msgstr "Startpakker lader dig dele dine foretrukne feeds og konto med dine venne
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:44
 msgid "Status by {name}"
-msgstr ""
+msgstr "Status af {name}"
 
 #: src/screens/Settings/AboutSettings.tsx:110
 #: src/screens/Settings/AboutSettings.tsx:113
@@ -13504,7 +13516,7 @@ msgstr "Statusside"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:75
 msgid "Status unavailable"
-msgstr ""
+msgstr "Status utilgængelig"
 
 #. placeholder {0}: state.activeStep + 1
 #. placeholder {0}: state.activeStepIndex + 1
@@ -13672,18 +13684,18 @@ msgstr "Denne funktion er endnu ikke lanceret i dit land! Kom igen senere."
 #. placeholder {0}: provider.name
 #: src/features/profileLinks/components/LinkFormDialog.tsx:366
 msgid "Support on {0}"
-msgstr ""
+msgstr "Støt på {0}"
 
 #. placeholder {0}: provider.name
 #: src/features/profileLinks/components/LinkPill.tsx:118
 msgctxt "Creator support button, e.g. Support on Ko-fi"
 msgid "Support on {0}"
-msgstr ""
+msgstr "Støt på {0}"
 
 #: src/features/profileLinks/components/SupportedSitesDialog.tsx:39
 #: src/features/profileLinks/components/SupportedSitesDialog.tsx:42
 msgid "Supported sites"
-msgstr ""
+msgstr "Understøttede sites"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:93
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:109
@@ -13747,15 +13759,15 @@ msgstr "Tag samtalen privat."
 
 #: src/components/Gallery/Storybook.tsx:289
 msgid "Tall"
-msgstr ""
+msgstr "Høj"
 
 #: src/components/Gallery/Storybook.tsx:507
 msgid "Tall / short"
-msgstr ""
+msgstr "Høj/lav"
 
 #: src/components/Gallery/Storybook.tsx:287
 msgid "Tall card"
-msgstr ""
+msgstr "Højt kort"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:110
 msgid "Tap below to allow Bluesky to access your GPS location. We will then use that data to more accurately determine the content and features available in your region."
@@ -13870,7 +13882,7 @@ msgstr "Fortæl os lidt mere"
 
 #: src/screens/ModerationInbox/Notice.tsx:480
 msgid "Tell us why you believe this decision was a mistake. We will review your appeal along with the original content."
-msgstr ""
+msgstr "Fortæl os, hvorfor du mener, at denne beslutning var forkert. Vi vil gennemgå din klage sammen med det oprindelige indhold."
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:220
 msgid "Temporarily deactivate your account"
@@ -13899,7 +13911,7 @@ msgstr "Tekst og tags"
 
 #: src/components/Gallery/Storybook.tsx:353
 msgid "Text field"
-msgstr ""
+msgstr "Tekstfelt"
 
 #: src/components/moderation/AppealForm.tsx:130
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:120
@@ -13909,7 +13921,7 @@ msgstr "Tekstfelt"
 
 #: src/components/Gallery/Storybook.tsx:410
 msgid "Text: “{text}”"
-msgstr ""
+msgstr "Tekst: “{text}”"
 
 #: src/view/com/posts/ShowLessFollowup.tsx:39
 msgid "Thank you for your feedback! It has been sent to the feed operator."
@@ -13917,7 +13929,7 @@ msgstr "Tak for din feedback! Den er sendt videre til feedets ejer."
 
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:117
 msgid "Thanks for helping keep Bluesky safe. This post violated our <0>Community Guidelines</0>."
-msgstr ""
+msgstr "Tak fordi du hjælper med at holde Bluesky sikker. Dette indlæg overtrådte vores <0>fællesskabsretningslinjer</0>."
 
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:130
 msgid "Thanks for helping keep Bluesky safe. We reviewed your report and took action. Read our <0>Community Guidelines</0>."
@@ -13929,7 +13941,7 @@ msgstr "Tak for din feedback!"
 
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:47
 msgid "Thanks for your report. We’ll look into it and take action in accordance with our <0>Community Guidelines</0>."
-msgstr ""
+msgstr "Tak for din anmeldelse. Vi vil undersøge den og handle i overensstemmelse med vores <0>Fællesskabsregler</0>."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
@@ -13946,7 +13958,7 @@ msgstr "Som indeholder følgende:"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:246
 msgid "That doesn’t look like a link. Try something like yoursite.com."
-msgstr ""
+msgstr "Det ligner ikke et link. Prøv noget i stil med ditwebsted.dk."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:112
 #: src/screens/StarterPack/StarterPackScreen.tsx:113
@@ -14044,7 +14056,7 @@ msgstr "Feedet er erstattet af Opdag."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:64
 msgid "The following labels were applied to this post."
-msgstr "Følgende mærkater er blevet føjet til dette indlæg."
+msgstr "Følgende mærkater er blevet føjet til dette opslag."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:63
 msgid "The following labels were applied to your account."
@@ -14192,7 +14204,7 @@ msgstr "Der kunne ikke skabes forbindelse til serveren"
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "Der kunne ikke skabes forbindelse til serveren. Tjek din internetforbindelse og prøv igen."
 
-#: src/screens/Notifications/components/PageList.tsx:356
+#: src/screens/Notifications/components/PageList.tsx:362
 #: src/view/com/notifications/NotificationFeed.tsx:137
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Notifikationer kunne ikke indlæses. Tryk her for at prøve igen."
@@ -14366,7 +14378,7 @@ msgstr "Denne knap lader andre åbne Germ DM-appen for at sende dig en besked. D
 
 #: src/screens/Search/components/SearchHistory.tsx:148
 msgid "This can’t be undone, and all of your recent searches will be removed."
-msgstr ""
+msgstr "Dette kan ikke fortrydes, og alle dine seneste søgninger vil blive fjernet."
 
 #: src/screens/Messages/components/ChatEnded.tsx:48
 msgid "This chat has ended"
@@ -14748,7 +14760,7 @@ msgstr "Trusler eller opfordringer til ulovligheder"
 
 #: src/components/Gallery/Storybook.tsx:596
 msgid "Three"
-msgstr ""
+msgstr "Tre"
 
 #. placeholder {0}: Number(time) || 0
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/TimeIndicator.tsx:34
@@ -14766,7 +14778,7 @@ msgstr "Overskrift (maks. 100 tegn)"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:359
 msgid "Title (optional)"
-msgstr ""
+msgstr "Titel (valgfri)"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:106
 msgid "To disable the email 2FA method, please verify your access to the email address."
@@ -14786,7 +14798,7 @@ msgstr "For at logge ud, <0>klik her</0>. Eller hvis du foretrækker, kan du <1>
 msgid "Today"
 msgstr "I dag"
 
-#: src/screens/Notifications/components/PageList.tsx:589
+#: src/screens/Notifications/components/PageList.tsx:574
 msgctxt "Notifications section header"
 msgid "Today"
 msgstr "I dag"
@@ -14948,7 +14960,7 @@ msgstr "Tusmørke"
 
 #: src/components/Gallery/Storybook.tsx:593
 msgid "Two"
-msgstr ""
+msgstr "To"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:67
 msgid "Two-factor authentication (2FA)"
@@ -15641,9 +15653,9 @@ msgid "Version {0}"
 msgstr "Version {0}"
 
 #. When someone followed you through a starter pack, e.g. “via starter pack [icon] Science Pack”
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:355
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:391
 msgid "via starter pack <0/> <1>{name}</1>"
-msgstr ""
+msgstr "via startpakken <0/> <1>{name}</1>"
 
 #. When the source of a follow is a Starter Pack, i.e., 'via Starter Pack {starterPackName}'.
 #: src/view/com/notifications/NotificationFeedItem.tsx:738
@@ -15755,31 +15767,31 @@ msgstr "Se {publicationTitle}"
 
 #: src/screens/Notifications/components/NotificationItem/Item/aggregate.tsx:127
 msgid "View all"
-msgstr ""
+msgstr "Vis alle"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:129
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:134
 msgid "View all followers"
-msgstr ""
+msgstr "Vis alle følgere"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:369
 msgid "View all posts {name} liked"
-msgstr ""
+msgstr "Vis alle opslag, som {name} har liket"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:401
 msgid "View all posts {name} reposted"
-msgstr ""
+msgstr "Vis alle opslag, som {name} har videredelt"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:434
 msgid "View all reposts {name} liked"
-msgstr ""
+msgstr "Vis alle videredelinger, som {name} har liket"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:467
 msgid "View all reposts {name} reposted"
-msgstr ""
+msgstr "Vis alle videredelinger, som {name} har videredelt"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:292
 msgid "View all support sites"
-msgstr ""
+msgstr "Vis alle støttesites"
 
 #: src/components/ProfileHoverCard/index.web.tsx:487
 msgid "View blocked user's profile"
@@ -15860,7 +15872,7 @@ msgstr "Vis udgivelse"
 
 #: src/screens/ModerationInbox/components/ReportRow.tsx:32
 msgid "View report details: {subject}"
-msgstr ""
+msgstr "Vis anmeldelsesdetaljer: {subject}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:105
 msgid "View the avatar"
@@ -15927,7 +15939,7 @@ msgstr "Viser videoen i fuldskærmstilstand"
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:46
 msgid "Violates Community Guideline: {policyLabel}"
-msgstr ""
+msgstr "Overtræder fællesskabsregel: {policyLabel}"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:124
 msgid "Violence"
@@ -16023,7 +16035,7 @@ msgstr "Vi kunne ikke indlæse dine kontoindstillinger. Tjek din internetforbind
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:256
 msgid "We couldn’t reach this link. Check it, or save anyway."
-msgstr ""
+msgstr "Vi kunne ikke indlæse dette link. Tjek det, eller gem alligevel."
 
 #: src/screens/Login/LoginForm.tsx:457
 msgid "We couldn’t verify your hosting provider. Check your internet connection, or <0>set your hosting provider manually</0>."
@@ -16072,7 +16084,7 @@ msgstr "Vi anbefaler at vælge mindst to interesser."
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:47
 msgid "We reviewed your appeal and are keeping our original decision in place."
-msgstr ""
+msgstr "Vi har gennemgået din klage og fastholder vores oprindelige beslutning."
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:33
 msgid "We reviewed your appeal. The current status of your content or account is shown below."
@@ -16080,11 +16092,11 @@ msgstr ""
 
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:103
 msgid "We reviewed your report and found that this doesn’t break our rules. Read our <0>Community Guidelines</0>."
-msgstr ""
+msgstr "Vi har gennemgået din anmeldelse og fundet, at dette ikke bryder vores regler. Læs vores <0>fællesskabsregler</0>."
 
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:89
 msgid "We reviewed your report and found that this doesn’t break our rules. You can mute or block the account if you’d rather not see the post. Read our <0>Community Guidelines</0>."
-msgstr ""
+msgstr "Vi har gennemgået din anmeldelse og fundet, at dette ikke bryder vores regler. Du kan skjule eller blokere kontoen, hvis du helst ikke vil se opslaget. Læs vores <0>fællesskabsregler</0>."
 
 #. placeholder {0}: currentAccount!.email
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:250
@@ -16288,7 +16300,7 @@ msgstr "Når du trykker på et flueben, kan du se, hvilken organisation der har 
 
 #: src/features/profileLinks/components/ReportLinkDialog.tsx:103
 msgid "Which link do you want to report?"
-msgstr ""
+msgstr "Hvilket link vil du anmelde?"
 
 #: src/components/WhoCanReply.tsx:208
 msgid "Who can interact with this post?"
@@ -16333,7 +16345,7 @@ msgstr "Hvorfor skal dette feed gennemgås?"
 
 #: src/components/moderation/ReportDialog/copy.ts:43
 msgid "Why should this link be reviewed?"
-msgstr ""
+msgstr "Hvorfor skal dette link gennemgås?"
 
 #: src/components/moderation/ReportDialog/copy.ts:31
 msgid "Why should this list be reviewed?"
@@ -16361,15 +16373,15 @@ msgstr "Hvorfor skal denne bruger gennemgås?"
 
 #: src/components/Gallery/Storybook.tsx:297
 msgid "Wide"
-msgstr ""
+msgstr "Bred"
 
 #: src/components/Gallery/Storybook.tsx:517
 msgid "Wide / narrow"
-msgstr ""
+msgstr "Bred/smal"
 
 #: src/components/Gallery/Storybook.tsx:295
 msgid "Wide card"
-msgstr ""
+msgstr "Bredt kort"
 
 #: src/components/dms/AfterReportDialog.tsx:51
 msgid "Would you like to block this user and/or delete this conversation?"
@@ -16459,11 +16471,6 @@ msgstr "Ja, genaktiver min konto"
 #: src/components/dms/DateDivider.tsx:30
 msgid "Yesterday"
 msgstr "I går"
-
-#. Emphasised in “replied to you: ...”, in a notification where someone replied to the viewer’s own post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:200
-msgid "you"
-msgstr ""
 
 #: src/components/verification/VerifierDialog.tsx:61
 msgid "You are a trusted verifier"
@@ -16973,7 +16980,7 @@ msgstr "Du er logget ind med en appadgangskode. Log ind med din primære adgangs
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:254
 msgid "You’ve already added this link."
-msgstr ""
+msgstr "Du har allerede tilføjet dette link."
 
 #: src/components/moderation/AppealForm.tsx:85
 msgid "You've already appealed this label and it's being reviewed by our moderation team."
@@ -17091,11 +17098,11 @@ msgstr "Din konto overtræder <0>Bluesky Socials tjenestevilkår</0>. Du har få
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:73
 msgid "Your account was suspended"
-msgstr ""
+msgstr "Din konto blev spærret"
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:65
 msgid "Your account was temporarily suspended for {hours, plural, one {# hour} other {# hours}}"
-msgstr ""
+msgstr "Din konto blev midlertidigt spærret i {hours, plural, one {# time} other {# timer}}"
 
 #: src/screens/ModerationInbox/Notice.tsx:237
 msgid "Your appeal has been submitted and is awaiting review."
@@ -17129,17 +17136,17 @@ msgstr "Din kontakt {firstAuthorName} er på Bluesky"
 msgid "Your contact {name}"
 msgstr "Din kontakt {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:341
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:353
 msgid "Your contact <0/> is on Bluesky"
-msgstr ""
+msgstr "Din kontakt <0/> er på Bluesky"
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:95
 msgid "Your content"
-msgstr ""
+msgstr "Dit indhold"
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
 msgid "Your content was removed"
-msgstr ""
+msgstr "Dit indhold blev fjernet"
 
 #. placeholder {0}: sanitizeHandle(currentAccount?.handle || '', '@')
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:531
@@ -17239,7 +17246,7 @@ msgstr "Din adgangskode skal bestå af mindst 8 tegn."
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:94
 msgid "Your post"
-msgstr "Dit indlæg"
+msgstr "Dit opslag"
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:44
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:75

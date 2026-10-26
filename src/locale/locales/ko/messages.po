@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-23 14:40\n"
+"PO-Revision-Date: 2026-10-26 20:28\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -514,12 +514,12 @@ msgid "{count, plural, one {# chat update} other {# chat updates}}"
 msgstr "대화 업데이트 {count, plural, other {#개}}"
 
 #. Number of people you follow who also follow this account
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:316
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:352
 msgid "{count, plural, one {# mutual follower} other {# mutual followers}}"
 msgstr "{count, plural, other {# 맞팔로워}}"
 
 #. Short form of “mutual followers”: the number of people you follow who also follow this account
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:323
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:359
 msgid "{count, plural, one {# mutual} other {# mutuals}}"
 msgstr "{count, plural, other {# 맞팔로워}}"
 
@@ -749,7 +749,7 @@ msgid "{following} following"
 msgstr "{following} 팔로우 중"
 
 #. How long ago a notification happened, e.g. "7m ago". The time is already abbreviated and translated.
-#: src/screens/Notifications/components/NotificationItem/Item/text.tsx:171
+#: src/screens/Notifications/components/NotificationItem/Item/text.tsx:175
 msgid "{formatted} ago"
 msgstr "{formatted} 전"
 
@@ -841,7 +841,7 @@ msgstr "{memberCount}/{memberLimit}"
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr "{minutes, plural, other {#분}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:121
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:126
 msgid "{name} and {others, plural, one {# other} other {# others}} followed you"
 msgstr "{name} 님 {others, plural, other {외 #명}}이 나를 팔로우했습니다"
 
@@ -865,7 +865,7 @@ msgstr "{name} 님 {others, plural, other {외 #명}}이 내 게시물을 재게
 msgid "{name} and {others, plural, one {# other} other {# others}} reposted your repost"
 msgstr "{name} 님 {others, plural, other {외 #명}}이 내 재게시물을 재게시했습니다"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:120
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:125
 msgid "{name} and {secondName} followed you"
 msgstr "{name} 님과 {secondName} 님이 나를 팔로우했습니다"
 
@@ -889,11 +889,11 @@ msgstr "{name} 님과 {secondName} 님이 내 게시물을 재게시했습니다
 msgid "{name} and {secondName} reposted your repost"
 msgstr "{name} 님과 {secondName} 님이 내 재게시물을 재게시했습니다"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:190
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:195
 msgid "{name} followed you back"
 msgstr "{name} 님이 나를 맞팔로우했습니다"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:189
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:194
 msgid "{name} followed you back via starter pack {starterPackName}"
 msgstr "{name} 님이 스타터 팩 {starterPackName}(을)를 통해 나를 맞팔로우했습니다"
 
@@ -922,7 +922,7 @@ msgstr "{name} 님이 내 재게시물을 좋아합니다"
 msgid "{name} reacted {0} to {target}"
 msgstr "{name} 님이 {target}에 {0}(으)로 반응했습니다"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:262
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:267
 msgid "{name} removed their verification from your account"
 msgstr "{name} 님이 나를 인증 취소했습니다"
 
@@ -942,7 +942,7 @@ msgstr "{name} 님이 내 게시물을 재게시했습니다"
 msgid "{name} reposted your repost"
 msgstr "{name} 님이 내 재게시물을 재게시했습니다"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:227
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:232
 msgid "{name} verified you"
 msgstr "{name} 님이 나를 인증했습니다"
 
@@ -1062,7 +1062,7 @@ msgstr "+{0}"
 msgid "+{computedTotal}"
 msgstr "+{computedTotal}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:146
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:151
 msgid "<0/> and <1/> followed you"
 msgstr "<0/> 님과 <1/> 님이 나를 팔로우했습니다"
 
@@ -1086,7 +1086,7 @@ msgstr "<0/> 님과 <1/> 님이 내 게시물을 재게시했습니다"
 msgid "<0/> and <1/> reposted your repost"
 msgstr "<0/> 님과 <1/> 님이 내 재게시물을 재게시했습니다"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:151
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:156
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> followed you"
 msgstr "<0/> 님 <1>{others, plural, other {외 #명}}</1>이 나를 팔로우했습니다"
 
@@ -1110,11 +1110,11 @@ msgstr "<0/> 님 <1>{others, plural, other {외 #명}}</1>이 내 게시물을 �
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> reposted your repost"
 msgstr "<0/> 님 <1>{others, plural, other {외 #명}}</1>이 내 재게시물을 재게시했습니다"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:71
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:78
 msgid "<0/> followed you"
 msgstr "<0/> 님이 나를 팔로우했습니다"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:198
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:203
 msgid "<0/> followed you back! 🎉"
 msgstr "<0/> 님이 나를 맞팔로우했습니다! 🎉"
 
@@ -1138,7 +1138,7 @@ msgstr "<0/> 님이 내 게시물을 좋아합니다"
 msgid "<0/> liked your repost"
 msgstr "<0/> 님이 내 재게시물을 좋아합니다"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:269
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:274
 msgid "<0/> removed their verification from your account"
 msgstr "<0/> 님이 나를 인증 취소했습니다"
 
@@ -1158,11 +1158,11 @@ msgstr "<0/> 님이 내 게시물을 재게시했습니다"
 msgid "<0/> reposted your repost"
 msgstr "<0/> 님이 내 재게시물을 재게시했습니다"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:304
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:309
 msgid "<0/> signed up with your starter pack"
 msgstr "<0/> 님이 내 스타터 팩을 통해 가입했습니다"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:234
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:239
 msgid "<0/> verified you"
 msgstr "<0/> 님이 나를 인증했습니다"
 
@@ -2161,7 +2161,7 @@ msgstr "그룹 대화를 시작하는 동안 문제가 발생했습니다. 다�
 #: src/components/hooks/useFollowMethods.ts:52
 #: src/components/ProfileCard.tsx:515
 #: src/components/ProfileCard.tsx:540
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:181
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:217
 #: src/view/com/notifications/NotificationFeedItem.tsx:827
 #: src/view/com/notifications/NotificationFeedItem.tsx:848
 msgid "An issue occurred, please try again."
@@ -2648,7 +2648,7 @@ msgstr "{name} 님의 게시물에 대한 알림을 받으려면 먼저 이메�
 #: src/screens/Messages/ChatList.tsx:543
 #: src/screens/Messages/Conversation.tsx:206
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:249
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:285
 msgid "Before you can message another user, you must first verify your email."
 msgstr "다른 사용자에게 메시지를 보내려면 먼저 이메일을 인증해야 합니다."
 
@@ -2802,7 +2802,7 @@ msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션�
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션하거나 기타 다른 방식으로 나와 상호작용할 수 없습니다. 차단한 계정의 콘텐츠를 볼 수 없으며 해당 계정도 내 콘텐츠를 볼 수 없게 됩니다."
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:475
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:484
 msgid "Blocked post"
 msgstr "차단된 게시물"
 
@@ -4649,7 +4649,7 @@ msgstr "Plivo에서는 인증한 후 삭제됩니다"
 msgid "Deleted list"
 msgstr "삭제된 리스트"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:478
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:487
 msgid "Deleted post"
 msgstr "삭제된 게시물"
 
@@ -5062,7 +5062,7 @@ msgstr "예: 놓칠 수 없는 게시자들."
 msgid "e.g. Users that repeatedly reply with ads."
 msgstr "예: 반복적으로 광고 답글을 다는 계정."
 
-#: src/screens/Notifications/components/PageList.tsx:590
+#: src/screens/Notifications/components/PageList.tsx:575
 msgctxt "Notifications section header"
 msgid "Earlier"
 msgstr "이전"
@@ -5681,7 +5681,7 @@ msgstr "앱 비밀번호를 만들지 못했습니다. 다시 시도해 주세�
 
 #: src/components/dms/MessageProfileButton.tsx:38
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:66
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:239
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:275
 msgid "Failed to create conversation"
 msgstr "대화를 만들지 못했습니다"
 
@@ -6013,7 +6013,7 @@ msgstr "{0} 님의 피드"
 msgid "Feed by {authorName}"
 msgstr "{authorName} 님의 피드"
 
-#: src/screens/Notifications/components/NotificationItem/Item/media.tsx:224
+#: src/screens/Notifications/components/NotificationItem/Item/media.tsx:225
 msgid "Feed by {handle}"
 msgstr "{handle} 님의 피드"
 
@@ -6163,8 +6163,8 @@ msgstr "친구를 찾고 초대하기"
 msgid "Find Contacts"
 msgstr "연락처 찾기"
 
-#: src/screens/Notifications/components/PageList.tsx:645
-#: src/screens/Notifications/components/PageList.tsx:650
+#: src/screens/Notifications/components/PageList.tsx:631
+#: src/screens/Notifications/components/PageList.tsx:636
 msgid "Find friends"
 msgstr "친구 찾기"
 
@@ -6189,7 +6189,7 @@ msgstr "아는 사람 찾아보기"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Bluesky에서 게시물, 사용자, 피드 찾기"
 
-#: src/screens/Notifications/components/PageList.tsx:639
+#: src/screens/Notifications/components/PageList.tsx:625
 msgid "Find some friends to start getting notifications!"
 msgstr "알림을 받기 시작하려면 친구를 찾아보세요!"
 
@@ -6253,7 +6253,7 @@ msgstr "{focusCount}번 포커스됨"
 #: src/components/ProfileHoverCard/index.web.tsx:503
 #: src/components/ProfileHoverCard/index.web.tsx:514
 #: src/screens/Messages/ConversationSettings/Member.tsx:170
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:196
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:232
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:430
 #: src/screens/VideoFeed/index.tsx:1059
@@ -6312,7 +6312,7 @@ msgstr "모든 계정을 팔로우"
 #. User is not following this account, click to follow back
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:552
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:192
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:228
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:155
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:428
 #: src/view/com/notifications/NotificationFeedItem.tsx:890
@@ -6378,7 +6378,7 @@ msgstr "내가 아는 팔로워"
 #: src/components/ProfileCard.tsx:547
 #: src/components/ProfileHoverCard/index.web.tsx:502
 #: src/components/ProfileHoverCard/index.web.tsx:513
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:187
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:223
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:426
 #: src/screens/VideoFeed/index.tsx:1057
@@ -6411,7 +6411,7 @@ msgstr "{displayName} 님을 팔로우했습니다"
 msgid "Following {handle}"
 msgstr "{handle} 님을 팔로우 중"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:177
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:213
 msgid "Following {name}"
 msgstr "{name} 님을 팔로우했습니다"
 
@@ -6762,7 +6762,7 @@ msgid "Go to {firstAuthorName}'s profile"
 msgstr "{firstAuthorName} 님의 프로필로 이동"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:78
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:608
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:644
 #: src/screens/Notifications/components/NotificationItem/Item/text.tsx:113
 msgid "Go to {name}’s profile"
 msgstr "{name} 님의 프로필로 이동"
@@ -7039,7 +7039,7 @@ msgid "Hidden list"
 msgstr "숨겨진 리스트"
 
 #. Shown in place of the text of a post that is hidden by the viewer’s moderation settings
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:216
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:213
 msgid "Hidden post"
 msgstr "숨겨진 게시물"
 
@@ -7416,9 +7416,15 @@ msgstr "{0}에 가져옴"
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr "연령에 적합한 경험을 제공하기 위해 생년월일이 필요합니다. 생년월일은 한 번만 입력하면 되며 비공개로 안전하게 보관됩니다."
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:260
+#. In a notification about a mention or quote, the post is a reply to another person’s post. {subject} is that person’s name, followed by a preview of their post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:269
 msgid "in reply to <0>{subject}</0>: {previewNode}"
 msgstr "<0>{subject}</0>에게 보내는 답글: {previewNode}"
+
+#. In a notification about a mention or quote, the post is a reply to the viewer’s own post. Followed by a preview of that post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:265
+msgid "in reply to <0>you</0>: {previewNode}"
+msgstr ""
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:173
 msgid "in reply to a blocked post"
@@ -8383,7 +8389,7 @@ msgstr "게시물 상호작용 설정 불러오는 중…"
 msgid "Loading..."
 msgstr "불러오는 중…"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:521
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:557
 msgid "Loads more people into this list"
 msgstr "이 목록에 더 많은 사람들을 불러옵니다"
 
@@ -9307,7 +9313,7 @@ msgstr "종료 시간 미정"
 msgid "No feeds found. Try searching for something else."
 msgstr "피드를 찾을 수 없습니다. 다른 피드를 검색해 보세요."
 
-#: src/screens/Notifications/components/PageList.tsx:679
+#: src/screens/Notifications/components/PageList.tsx:665
 msgid "No followers to show yet"
 msgstr "아직 표시할 팔로워가 없습니다"
 
@@ -9354,7 +9360,7 @@ msgstr "리스트가 없습니다"
 msgid "No longer following {0}"
 msgstr "{0} 님을 언팔로우했습니다"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:174
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:210
 msgid "No longer following {name}"
 msgstr "{name} 님을 언팔로우했습니다"
 
@@ -9379,12 +9385,12 @@ msgstr "더 이상 쓰레기 같은 정보만 보여주는 알고리즘에 끌�
 msgid "No name"
 msgstr "이름 없음"
 
-#: src/screens/Notifications/components/PageList.tsx:676
+#: src/screens/Notifications/components/PageList.tsx:662
 msgid "No notifications from people you follow yet"
 msgstr "아직 팔로우하는 사람들의 알림이 없습니다"
 
-#: src/screens/Notifications/components/PageList.tsx:628
-#: src/screens/Notifications/components/PageList.tsx:673
+#: src/screens/Notifications/components/PageList.tsx:614
+#: src/screens/Notifications/components/PageList.tsx:659
 msgid "No notifications yet"
 msgstr "아직 알림이 없습니다"
 
@@ -9448,7 +9454,7 @@ msgstr "아직 인용 없음"
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "최근에 사용한 GIF가 없습니다. GIF를 선택하면 여기에 표시됩니다."
 
-#: src/screens/Notifications/components/PageList.tsx:682
+#: src/screens/Notifications/components/PageList.tsx:668
 msgid "No replies to show yet"
 msgstr "아직 표시할 답글이 없습니다"
 
@@ -10732,7 +10738,7 @@ msgstr "게시물 차단됨"
 msgid "Post by {authorName}"
 msgstr "{authorName} 님의 게시물"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:535
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:544
 msgid "Post by {name}"
 msgstr "{name} 님의 게시물"
 
@@ -10818,7 +10824,7 @@ msgid "Post unpinned"
 msgstr "게시물을 고정 해제했습니다"
 
 #. Shown in place of the text of a post that has no text, only images, video, a link or a quoted post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:222
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:219
 msgid "Post with media"
 msgstr "미디어가 포함된 게시물"
 
@@ -11349,7 +11355,7 @@ msgstr "첫 카드 제거"
 
 #: src/components/Gallery/Storybook.tsx:481
 msgid "Remove first card"
-msgstr "첫 카드 제거"
+msgstr "첫 번째 카드 제거"
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:238
 msgid "Remove from chat"
@@ -11455,12 +11461,12 @@ msgid "Remove your verification for this account?"
 msgstr "이 계정을 인증 취소하시겠습니까?"
 
 #: src/components/Post/Embed/index.tsx:294
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:487
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:496
 msgid "Removed by author"
 msgstr "작성자가 제거함"
 
 #: src/components/Post/Embed/index.tsx:292
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:485
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:494
 msgid "Removed by you"
 msgstr "내가 제거함"
 
@@ -11523,7 +11529,8 @@ msgstr "{0} 재정렬하기"
 msgid "Replace with Discover"
 msgstr "‘둘러보기’로 교체"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:253
+#. In a notification, someone replied to another person’s post. {subject} is that person’s name, followed by a preview of their post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:258
 msgid "replied to <0>{subject}</0>: {previewNode}"
 msgstr "<0>{subject}</0>에게 보내는 답글: {previewNode}"
 
@@ -11531,6 +11538,11 @@ msgstr "<0>{subject}</0>에게 보내는 답글: {previewNode}"
 msgctxt "description"
 msgid "Replied to <0><1/></0>"
 msgstr "<0><1/></0> 님에게 보내는 답글"
+
+#. In a notification, someone replied to the viewer’s own post. Followed by a preview of that post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:254
+msgid "replied to <0>you</0>: {previewNode}"
+msgstr ""
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:171
 msgid "replied to a blocked post"
@@ -12180,7 +12192,7 @@ msgid "Saved to your feeds"
 msgstr "내 피드에 저장했습니다"
 
 #: src/components/dialogs/NewskieDialog/index.tsx:119
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:258
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:294
 #: src/view/com/notifications/NotificationFeedItem.tsx:937
 #: src/view/com/notifications/NotificationFeedItem.tsx:945
 msgid "Say hello!"
@@ -12977,8 +12989,8 @@ msgid "Show lists of users to select from"
 msgstr "선택할 수 있는 사용자 리스트 표시"
 
 #: src/components/Post/ShowMoreTextButton.tsx:59
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:520
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:546
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:556
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:582
 msgid "Show more"
 msgstr "더 보기"
 
@@ -13452,7 +13464,7 @@ msgstr "스타터 팩 ‘{starterPackName}’"
 msgid "Starter Pack by {0}"
 msgstr "{0} 님의 스타터 팩"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:408
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:444
 msgid "Starter pack by {handle}"
 msgstr "{handle} 님의 스타터 팩"
 
@@ -14192,7 +14204,7 @@ msgstr "서버에 연결하는 동안 문제가 발생했습니다"
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "서버에 연결하는 동안 문제가 발생했습니다. 인터넷 연결 상태를 확인하고 다시 시도해 주세요."
 
-#: src/screens/Notifications/components/PageList.tsx:356
+#: src/screens/Notifications/components/PageList.tsx:362
 #: src/view/com/notifications/NotificationFeed.tsx:137
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "알림을 가져오는 동안 문제가 발생했습니다. 다시 시도하려면 이곳을 탭하세요."
@@ -14786,7 +14798,7 @@ msgstr "로그아웃하려면 <0>이곳을 클릭</0>하세요. 또는 원하는
 msgid "Today"
 msgstr "오늘"
 
-#: src/screens/Notifications/components/PageList.tsx:589
+#: src/screens/Notifications/components/PageList.tsx:574
 msgctxt "Notifications section header"
 msgid "Today"
 msgstr "오늘"
@@ -15641,7 +15653,7 @@ msgid "Version {0}"
 msgstr "버전 {0}"
 
 #. When someone followed you through a starter pack, e.g. “via starter pack [icon] Science Pack”
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:355
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:391
 msgid "via starter pack <0/> <1>{name}</1>"
 msgstr "스타터 팩 <0/> <1>{name}</1> 사용"
 
@@ -15757,7 +15769,7 @@ msgstr "{publicationTitle} 보기"
 msgid "View all"
 msgstr "모두 보기"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:129
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:134
 msgid "View all followers"
 msgstr "모든 팔로워 보기"
 
@@ -16257,7 +16269,7 @@ msgstr "잘 오셨습니다!"
 
 #: src/screens/Atmosphere.tsx:61
 msgid "Welcome!"
-msgstr "환영합니다!"
+msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:98
 msgid "What are your interests?"
@@ -16459,11 +16471,6 @@ msgstr "내 계정 재활성화"
 #: src/components/dms/DateDivider.tsx:30
 msgid "Yesterday"
 msgstr "어제"
-
-#. Emphasised in “replied to you: ...”, in a notification where someone replied to the viewer’s own post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:200
-msgid "you"
-msgstr "나"
 
 #: src/components/verification/VerifierDialog.tsx:61
 msgid "You are a trusted verifier"
@@ -17129,7 +17136,7 @@ msgstr "연락처에 있는 {firstAuthorName} 님이 Bluesky에 있습니다"
 msgid "Your contact {name}"
 msgstr "연락처에 있는 {name} 님"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:341
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:353
 msgid "Your contact <0/> is on Bluesky"
 msgstr "연락처에 있는 <0/> 님이 Bluesky에 있습니다"
 
