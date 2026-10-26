@@ -1,0 +1,56 @@
+diff --git a/android/src/main/java/expo/modules/widgets/ExpoWidgetEmittableTree.kt b/android/src/main/java/expo/modules/widgets/ExpoWidgetEmittableTree.kt
+index 3df9e4a4d92155a00d3f5652d17d20be10bef1c1..50b3ea37a2cfe33ae098b33b21795209d10e1fdc 100644
+--- a/android/src/main/java/expo/modules/widgets/ExpoWidgetEmittableTree.kt
++++ b/android/src/main/java/expo/modules/widgets/ExpoWidgetEmittableTree.kt
+@@ -295,8 +295,8 @@ private fun ImageContentScale.toGlanceContentScale(): ContentScale {
+ private fun ReadableMap.toPeekButton(converterContext: WidgetConverterContext, source: InteractionSource): Emittable {
+   val props = props<WidgetButtonProps>(converterContext)
+   val children = children()
+-  val action =
+-    props.target?.let { target -> WidgetInteraction(source, target).toGlanceAction(converterContext.applicationContext) }
++  val action = props.url?.let { url -> openUrlAction(converterContext.applicationContext, url) }
++    ?: props.target?.let { target -> WidgetInteraction(source, target).toGlanceAction(converterContext.applicationContext) }
+   val modifier = props.buttonModifier(converterContext)
+   val contentColor = props.contentColorProvider()
+   val textContent = children.textContent(converterContext) ?: props.label
+@@ -680,7 +680,8 @@ internal data class WidgetButtonProps(
+   val enabled: Boolean = true,
+   val label: String? = null,
+   val modifiers: ModifierList = emptyList(),
+-  val target: String? = null
++  val target: String? = null,
++  val url: String? = null
+ ) : ComposeProps
+ 
+ @OptimizedComposeProps
+diff --git a/android/src/main/java/expo/modules/widgets/WidgetInteractionAction.kt b/android/src/main/java/expo/modules/widgets/WidgetInteractionAction.kt
+index b0b6479c2292763fd18eaee78b5e8d2dc4234493..694e901b1aef0e2ea569f071b5b2705a9c9df84e 100644
+--- a/android/src/main/java/expo/modules/widgets/WidgetInteractionAction.kt
++++ b/android/src/main/java/expo/modules/widgets/WidgetInteractionAction.kt
+@@ -5,6 +5,7 @@ import android.content.Intent
+ import android.net.Uri
+ import androidx.glance.action.Action
+ import androidx.glance.appwidget.action.actionSendBroadcast
++import androidx.glance.appwidget.action.actionStartActivity
+ import expo.modules.widgets.notifications.ExpoWidgetsNotificationReceiver
+ 
+ internal const val WIDGET_INTERACTION_ACTION = "expo.modules.widgets.ACTION_WIDGET_INTERACTION"
+@@ -52,6 +53,18 @@ internal fun WidgetInteraction.toGlanceAction(context: Context): Action {
+   return actionSendBroadcast(intent)
+ }
+ 
++/**
++ * Opens [url] in the app. The view intent is the click's own PendingIntent: a broadcast receiver
++ * cannot start an activity from the background on Android 10+, so a button that opens a deep link
++ * cannot go through the interaction broadcast.
++ */
++internal fun openUrlAction(context: Context, url: String): Action {
++  val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
++    .setPackage(context.packageName)
++    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
++  return actionStartActivity(intent)
++}
++
+ internal object WidgetsInteraction {
+   fun handle(context: Context, source: String, target: String) {
+     val layout = WidgetsLayoutRegistry.layout(context, source) ?: return
