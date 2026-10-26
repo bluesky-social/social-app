@@ -53,7 +53,7 @@ on:
         default: none
       runner:
         type: string
-        description: Runner for the build job (defaults to macos-26-xlarge)
+        description: Runner for the build job (defaults to xcode-27-xlarge)
         required: false
         default: ''
     outputs:
@@ -98,7 +98,7 @@ jobs:
   build:
     if: github.repository == 'bluesky-social/social-app'
     name: Build iOS
-    runs-on: ${{ inputs.runner || 'macos-26-xlarge' }}
+    runs-on: ${{ inputs.runner || 'xcode-27-xlarge' }}
     concurrency:
       group: ios-build
       cancel-in-progress: false
@@ -127,7 +127,7 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
         with:
-          xcode-version: "26.4"
+          xcode-version: "27.1"
 
       - name: ☕️ Assert Cocoapods version
         run: |
@@ -135,7 +135,7 @@ jobs:
           ACTUAL=$(pod --version)
           if [ "$ACTUAL" != "$EXPECTED" ]; then
             echo "Expected Cocoapods $EXPECTED but runner has $ACTUAL."
-            echo "The version ships preinstalled with the macOS runner image: https://github.com/actions/runner-images/blob/main/images/macos/macos-26-Readme.md"
+            echo "The version ships preinstalled with the macOS runner image: https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md"
             echo "If the runner image changed, update EXPECTED here or reinstall the pinned version."
             exit 1
           fi

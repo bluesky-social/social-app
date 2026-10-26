@@ -38,9 +38,9 @@ sequentially on one explicitly selected simulator or emulator. The flows share a
 stateful mock-server manager, so the suite must not be sharded.
 
 The jobs run Maestro CLI 2.6.1 locally on GitHub Actions; Maestro Cloud is not
-used. iOS runs on `macos-26-xlarge` with Xcode 26.4. Android runs on
+used. iOS runs on `xcode-27-xlarge` with Xcode 27.1. Android runs on
 `Linux-x64-32core`. Both use Java 17 and the Node and pnpm versions declared in
-`package.json`. The iOS job selects an iPhone 17 simulator running iOS 26.5;
+`package.json`. The iOS job selects an iPhone 17 simulator running iOS 27.0;
 Android directly provisions and boots a Pixel 6 AVD with the API 35 Google APIs
 x86_64 image using the Android SDK command-line tools.
 Both development clients use the `e2e` EAS profile and the same reusable local
