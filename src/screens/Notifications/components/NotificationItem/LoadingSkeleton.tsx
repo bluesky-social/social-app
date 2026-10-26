@@ -197,8 +197,8 @@ function ReactionSkeleton({index}: {index: number}) {
 }
 
 /**
- * Stands in for a single follow: the headline, a short line of who you have
- * in common, the time, and a follow button.
+ * Stands in for a single follow: the headline with a follow button beside
+ * it, a short line of who you have in common, and the time.
  */
 function FollowSkeleton({index}: {index: number}) {
   const even = index % 2 === 0
@@ -207,13 +207,12 @@ function FollowSkeleton({index}: {index: number}) {
     <Row>
       <Item.AvatarSkeleton />
       <Item.Content>
-        <Lines style={a.text_md} widths={[even ? '60%' : '50%']} />
+        <Item.HeadlineWithButton button={<FollowButtonSkeleton />}>
+          <Lines style={a.text_md} widths={[even ? '60%' : '50%']} />
+        </Item.HeadlineWithButton>
         <Lines blend style={a.text_sm} widths={[even ? '45%' : '55%']} />
         <TimestampSkeleton />
       </Item.Content>
-      <Item.Trailing>
-        <FollowButtonSkeleton />
-      </Item.Trailing>
     </Row>
   )
 }

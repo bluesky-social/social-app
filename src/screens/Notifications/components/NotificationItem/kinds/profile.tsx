@@ -67,11 +67,19 @@ function SingleFollowNotification({
       <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
       <Item.Content>
         <View style={[a.gap_xs]}>
-          <Item.PrimaryText>
-            <Trans>
-              <Item.Name profile={actor} /> followed you
-            </Trans>
-          </Item.PrimaryText>
+          <Item.HeadlineWithButton
+            button={
+              <Item.FollowButton
+                profile={actor}
+                logContext="NotificationFollowRow"
+              />
+            }>
+            <Item.PrimaryText>
+              <Trans>
+                <Item.Name profile={actor} /> followed you
+              </Trans>
+            </Item.PrimaryText>
+          </Item.HeadlineWithButton>
           {starterPack && Item.getStarterPackName(starterPack) ? (
             <Item.ViaStarterPack starterPack={starterPack} />
           ) : (
@@ -80,9 +88,6 @@ function SingleFollowNotification({
         </View>
         <Item.Timestamp date={notification.indexedAt} />
       </Item.Content>
-      <Item.Trailing>
-        <Item.FollowButton profile={actor} logContext="NotificationFollowRow" />
-      </Item.Trailing>
     </Item.Root>
   )
 }
@@ -337,19 +342,21 @@ export function ContactMatchNotification({
       testID={`notification-contactMatch-${notification.id}`}>
       <Item.Avatar profile={actor} />
       <Item.Content>
-        <Item.PrimaryText>
-          <Trans>
-            Your contact <Item.Name profile={actor} /> is on Bluesky
-          </Trans>
-        </Item.PrimaryText>
+        <Item.HeadlineWithButton
+          button={
+            <Item.FollowButton
+              profile={actor}
+              logContext="NotificationContactMatchRow"
+            />
+          }>
+          <Item.PrimaryText>
+            <Trans>
+              Your contact <Item.Name profile={actor} /> is on Bluesky
+            </Trans>
+          </Item.PrimaryText>
+        </Item.HeadlineWithButton>
         <Item.Timestamp date={notification.indexedAt} />
       </Item.Content>
-      <Item.Trailing>
-        <Item.FollowButton
-          profile={actor}
-          logContext="NotificationContactMatchRow"
-        />
-      </Item.Trailing>
     </Item.Root>
   )
 }
