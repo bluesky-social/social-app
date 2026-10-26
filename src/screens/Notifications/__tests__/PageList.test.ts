@@ -1,10 +1,13 @@
 import {describe, expect, it, jest} from '@jest/globals'
 
 import {type NotificationView} from '#/state/queries/notifications/grouped/types'
+import {getRowBorderColor} from '#/screens/Notifications/components/NotificationItem/Item/Root'
 import {
   buildRows,
   getPlaceholderRow,
+  isUnreadBorder,
 } from '#/screens/Notifications/components/PageList'
+import {type Theme} from '#/alf'
 
 // The placeholder helper doesn't need the native runtime or analytics setup.
 jest.mock('#/lib/hooks/useBottomBarOffset', () => ({}))
@@ -99,5 +102,52 @@ describe('buildRows', () => {
     expect(
       dividers([notification('a', lastYear), notification('b', lastYear)]),
     ).toEqual([false, true])
+  })
+
+  it('counts the borders on both sides of an unread notification', () => {
+    const rows = buildRows(
+      [
+        notification('a', today, false),
+        notification('b', today),
+        notification('c', lastYear, false),
+        notification('d', lastYear),
+      ],
+      'all',
+    )
+    // The border above each row, then the one below the last
+    expect([
+      ...rows.map((row, i) => isUnreadBorder(rows[i - 1], row)),
+      isUnreadBorder(rows.at(-1), undefined),
+    ]).toEqual([
+      false, // above "Today"
+      true, // "Today" | a
+      true, // a | b
+      false, // b | "Earlier"
+      true, // "Earlier" | c
+      true, // c | d
+      false, // below d
+    ])
+  })
+})
+
+describe('getRowBorderColor', () => {
+  function theme(name: Theme['name']) {
+    return {
+      name,
+      atoms: {
+        border_contrast_low: {borderColor: '#low'},
+        border_contrast_medium: {borderColor: '#medium'},
+      },
+    } as unknown as Theme
+  }
+
+  it('is stronger beside an unread row in the dark theme', () => {
+    expect(getRowBorderColor(theme('dark'), true)).toBe('#medium')
+    expect(getRowBorderColor(theme('dark'), false)).toBe('#low')
+  })
+
+  it('is the usual divider colour in the other themes', () => {
+    expect(getRowBorderColor(theme('dim'), true)).toBe('#low')
+    expect(getRowBorderColor(theme('light'), true)).toBe('#low')
   })
 })
