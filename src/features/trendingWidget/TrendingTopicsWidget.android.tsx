@@ -84,7 +84,7 @@ function TrendingTopicsWidget(
           {topics.map((topic, index) => (
             <Column key={topic.destination} modifiers={[fillMaxWidth()]}>
               <Button url={topic.destination} modifiers={[fillMaxWidth()]}>
-                <Row modifiers={[fillMaxWidth(), padding(0, 7, 0, 7)]}>
+                <Row modifiers={[fillMaxWidth(), padding(0, 5, 0, 5)]}>
                   <Text
                     color={secondaryTextColor}
                     style={{fontSize: 13, fontWeight: '500'}}
