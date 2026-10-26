@@ -252,7 +252,11 @@ function NoticeDetails({
           ) : undefined}
         </ActionSummaryText>
         <ContentBlock header={i18n._(labels.blockHeader)}>
-          <ReportSubjectPreview report={data} allowOwnRecordSnapshot />
+          <ReportSubjectPreview
+            report={data}
+            enforcement={data.enforcement}
+            allowOwnRecordSnapshot
+          />
           {(data.actions[0]?.type === 'labelApplied' ||
             data.actions[0]?.type === 'labelRemoved') &&
           actionLabels?.summary ? (
