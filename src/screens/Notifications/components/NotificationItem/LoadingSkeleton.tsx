@@ -112,15 +112,8 @@ export function LoadingSkeleton({feed}: {feed: GroupedNotificationsFeed}) {
  * move when it arrives.
  */
 function TodayHeaderSkeleton() {
-  const t = useTheme()
-
   return (
-    <View
-      style={[
-        a.px_lg,
-        a.py_sm,
-        SHOW_ROW_BORDERS && [a.border_b, t.atoms.border_contrast_low],
-      ]}>
+    <View style={[a.px_lg, a.py_sm]}>
       <Skele.Text style={[a.text_md, a.font_bold, {width: 48}]} />
     </View>
   )
