@@ -20,7 +20,7 @@ type QueryProps = {
   enabled?: boolean
   fetchLimit?: number
   limit?: number
-  refetchOnWindowFocus?: boolean
+  refetchOnWindowFocus?: boolean | 'always'
 }
 
 function dedupe<T extends {link: string}>(trends: T[]): T[] {

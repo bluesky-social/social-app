@@ -22,11 +22,15 @@ export function TrendingTopicsWidgetSync() {
    * `undefined` until the first check finishes.
    */
   const [isWidgetInstalled, setIsWidgetInstalled] = useState<boolean>()
-  const {data} = useGetTrendsQuery({
+  /*
+   * Refetch on every foreground, not just once the data is stale, so opening
+   * the app (e.g. by tapping the widget) always refreshes the widget.
+   */
+  const {data, dataUpdatedAt} = useGetTrendsQuery({
     enabled: isWidgetInstalled === true,
     fetchLimit: 10,
     limit: 5,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: 'always',
   })
   const {data: preferences} = usePreferencesQuery()
   const languagePrefs = useLanguagePrefs()
@@ -107,6 +111,10 @@ export function TrendingTopicsWidgetSync() {
     })
   }, [copy, languagePrefs.contentLanguages, preferences])
 
+  /*
+   * Push on every fetch, even when the trends haven't changed, so the widget
+   * re-renders and picks up things like a light/dark mode change.
+   */
   useEffect(() => {
     if (!data) return
 
@@ -117,7 +125,7 @@ export function TrendingTopicsWidgetSync() {
         safeMessage: error,
       })
     }
-  }, [copy, data])
+  }, [copy, data, dataUpdatedAt])
 
   return null
 }
