@@ -197,8 +197,8 @@ function ReactionSkeleton({index}: {index: number}) {
 }
 
 /**
- * Stands in for a single follow: the headline, a short line of who you have
- * in common, the time, and a follow button.
+ * Stands in for a single follow: the headline with a follow button beside
+ * it, a short line of who you have in common, and the time.
  */
 function FollowSkeleton({index}: {index: number}) {
   const even = index % 2 === 0
@@ -207,13 +207,12 @@ function FollowSkeleton({index}: {index: number}) {
     <Row>
       <Item.AvatarSkeleton />
       <Item.Content>
-        <Lines style={a.text_md} widths={[even ? '60%' : '50%']} />
+        <Item.HeadlineWithButton button={<FollowButtonSkeleton />}>
+          <Lines style={a.text_md} widths={[even ? '60%' : '50%']} />
+        </Item.HeadlineWithButton>
         <Lines blend style={a.text_sm} widths={[even ? '45%' : '55%']} />
         <TimestampSkeleton />
       </Item.Content>
-      <Item.Trailing>
-        <FollowButtonSkeleton />
-      </Item.Trailing>
     </Row>
   )
 }
@@ -360,8 +359,8 @@ function TimestampSkeleton() {
 }
 
 /**
- * Stands in for `Item.AvatarRow` and its avatars. With `overflow`, a
- * fainter circle at the end stands in for its "+N" chip.
+ * Stands in for `Item.AvatarRow` and its avatars. With `overflow`, a fainter
+ * bar at the end stands in for its "+N" count.
  */
 function AvatarRowSkeleton({
   count,
@@ -375,7 +374,13 @@ function AvatarRowSkeleton({
       {Array.from({length: count}, (_, index) => (
         <Skele.Circle key={index} size={Item.PREVIEW_AVATAR_SIZE} />
       ))}
-      {overflow && <Skele.Circle blend size={Item.PREVIEW_AVATAR_SIZE} />}
+      {overflow && (
+        <Skele.Block
+          blend
+          // Inset by the toggle's padding, as the "+N" is
+          style={{width: 24, height: 12, marginLeft: Item.TOGGLE_PADDING}}
+        />
+      )}
     </View>
   )
 }

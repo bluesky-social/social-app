@@ -9,10 +9,10 @@ import {
   type AccessibilityActionEvent,
   type AccessibilityProps,
   type GestureResponderEvent,
-  StyleSheet,
   View,
 } from 'react-native'
 import {moderateProfile} from '@bsky/sdk/moderation'
+import {type I18n} from '@lingui/core'
 import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -383,12 +383,13 @@ function GroupActorList({
  * Renders nothing in a row about one person.
  *
  * Shows as many avatars as fit the row's width, each linking to its profile.
- * Then, if the group expands, a "+N" chip for everyone else and a chevron
+ * Then, if the group expands, a "+N" count of everyone else and a chevron
  * saying whether it's expanded. The group may have resolved fewer profiles
- * than it has people, in which case the avatars run out early and the chip
- * counts the rest.
+ * than it has people, in which case the avatars run out early and the count
+ * covers the rest.
  */
 export function AvatarRow() {
+  const {i18n} = useLingui()
   const moderationOpts = useModerationOpts()
   const group = useContext(GroupContext)
   const rowRef = useRef<React.ComponentRef<typeof View>>(null)
@@ -417,6 +418,7 @@ export function AvatarRow() {
           resolved: others.length,
           total: group.count - 1,
           hasToggle: !!group.expansion,
+          formatRemaining: remaining => formatRemaining(i18n, remaining),
         })
   const shown = others.slice(0, count)
   const remaining = Math.max(group.count - 1 - shown.length, 0)
@@ -449,7 +451,7 @@ export function AvatarRow() {
 }
 
 /**
- * The end of an `AvatarRow`: a "+N" chip for anyone it didn't show, and the
+ * The end of an `AvatarRow`: a "+N" count of anyone it didn't show, and the
  * chevron. Unless pressing the row toggles the group already, they're a
  * button that does, with some slop around them. On native, screen readers
  * don't reach it inside the row's header, which they can expand instead.
@@ -470,13 +472,11 @@ function GroupToggle({
     a.align_center,
     a.gap_xs,
     a.rounded_full,
-    {height: PREVIEW_AVATAR_SIZE, paddingRight: TOGGLE_PADDING},
-    // A chevron on its own is padded to a circle
-    remaining === 0 && {paddingLeft: TOGGLE_PADDING},
+    {height: PREVIEW_AVATAR_SIZE, paddingHorizontal: TOGGLE_PADDING},
   ]
   const contents = (
     <>
-      {remaining > 0 && <OverflowChip count={remaining} />}
+      {remaining > 0 && <OverflowCount count={remaining} />}
       <ExpandChevron expanded={isExpanded} />
     </>
   )
@@ -499,34 +499,28 @@ function GroupToggle({
 }
 
 /**
- * The "+N" in an `AvatarRow`, sized to match the avatars.
+ * The text of an `AvatarRow`'s "+N", e.g. "+21" or "+1.2K".
  */
-function OverflowChip({count}: {count: number}) {
+function formatRemaining(i18n: I18n, count: number) {
+  return `+${formatCount(i18n, count)}`
+}
+
+/**
+ * The "+N" in an `AvatarRow`, counting everyone it didn't show. It doesn't
+ * scale with the font size, so that `fitAvatarCount` knows how much room it
+ * takes.
+ */
+function OverflowCount({count}: {count: number}) {
   const t = useTheme()
   const {i18n} = useLingui()
 
   return (
-    <View
-      style={[
-        a.align_center,
-        a.justify_center,
-        a.rounded_full,
-        t.atoms.bg_contrast_50,
-        t.atoms.border_contrast_low,
-        {
-          width: PREVIEW_AVATAR_SIZE,
-          height: PREVIEW_AVATAR_SIZE,
-          borderWidth: StyleSheet.hairlineWidth,
-        },
-      ]}>
-      {/* Fixed size, since it has to fit inside the circle */}
-      <Text
-        allowFontScaling={false}
-        numberOfLines={1}
-        style={[a.text_xs, t.atoms.text_contrast_medium]}>
-        {`+${formatCount(i18n, count)}`}
-      </Text>
-    </View>
+    <Text
+      allowFontScaling={false}
+      numberOfLines={1}
+      style={[a.text_sm, t.atoms.text_contrast_medium]}>
+      {formatRemaining(i18n, count)}
+    </Text>
   )
 }
 
