@@ -6,6 +6,7 @@ import {SafelinkClient} from './cache/safelinkClient.js'
 const createClient = (storedCursor: string | undefined) => {
   const client: SafelinkClient = Object.create(SafelinkClient.prototype)
   const requestedCursors: Array<string | undefined> = []
+  let cursorReads = 0
 
   Reflect.set(client, 'stopped', false)
   Reflect.set(client, 'ozoneAgent', {
@@ -28,19 +29,21 @@ const createClient = (storedCursor: string | undefined) => {
       selectFrom: () => ({
         selectAll: () => ({
           where: () => ({
-            executeTakeFirst: () =>
-              Promise.resolve(
+            executeTakeFirst: () => {
+              cursorReads++
+              return Promise.resolve(
                 storedCursor === undefined
                   ? undefined
                   : {id: 1, cursor: storedCursor},
-              ),
+              )
+            },
           }),
         }),
       }),
     },
   })
 
-  return {client, requestedCursors}
+  return {client, requestedCursors, cursorReads: () => cursorReads}
 }
 
 void describe('Safelink cursor', () => {
@@ -61,6 +64,19 @@ void describe('Safelink cursor', () => {
     await client.runFetchEvents()
     try {
       assert.deepStrictEqual(requestedCursors, [''])
+    } finally {
+      await client.stop(1_000)
+    }
+  })
+
+  void it('reads a missing cursor from the database only once', async () => {
+    const {client, requestedCursors, cursorReads} = createClient(undefined)
+
+    await client.runFetchEvents()
+    await client.runFetchEvents()
+    try {
+      assert.deepStrictEqual(requestedCursors, ['', ''])
+      assert.strictEqual(cursorReads(), 1)
     } finally {
       await client.stop(1_000)
     }
