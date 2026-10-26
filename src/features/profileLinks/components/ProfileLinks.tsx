@@ -26,7 +26,7 @@ import {type app} from '#/lexicons'
 import {PILL_LEFT, PILL_RIGHT_TEXT, PILL_VERTICAL} from '../pillSize'
 import {getLinkHost, getSupportProvider} from '../providers'
 import {buildProfileRow, GERM_KEY} from '../row'
-import {useProfileLinksEnabled, useProfileViewLinks} from '../state'
+import {useProfileViewLinks} from '../state'
 import {type ProfileLink} from '../types'
 import {LinkHoverPreview} from './LinkHoverPreview'
 import {ProfileLinkPill} from './LinkPill'
@@ -57,10 +57,9 @@ export function ProfileHeaderLinks({
 }) {
   const ax = useAnalytics()
   const {currentAccount} = useSession()
-  const enabled = useProfileLinksEnabled()
   const isOwnProfile = currentAccount?.did === profile.did
   const viewLinks = useProfileViewLinks(profile)
-  const links = !enabled || hidden ? [] : viewLinks
+  const links = hidden ? [] : viewLinks
   const supportLinkCount = links.filter(link =>
     getSupportProvider(link.url),
   ).length
