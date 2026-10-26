@@ -54,3 +54,18 @@ index b0b6479c2292763fd18eaee78b5e8d2dc4234493..694e901b1aef0e2ea569f071b5b2705a
  internal object WidgetsInteraction {
    fun handle(context: Context, source: String, target: String) {
      val layout = WidgetsLayoutRegistry.layout(context, source) ?: return
+diff --git a/scripts/build-layout-registry.mjs b/scripts/build-layout-registry.mjs
+index d5fc1c8c396d652be23256129978cbd9cb7355a5..a1bdd8f8ff4f00078ba838bc1c2a6dd275a7bda9 100644
+--- a/scripts/build-layout-registry.mjs
++++ b/scripts/build-layout-registry.mjs
+@@ -19,7 +19,9 @@ const registryEntryPath = path.join(__dirname, '../bundle/layout-registry-entry.
+ const registryMetroConfigPath = path.join(__dirname, '../layout-registry.metro.config.js');
+ 
+ async function main() {
+-  const projectRoot = path.resolve(possibleProjectRoot);
++  // Xcode passes `$PROJECT_DIR` unresolved (e.g. `/var/...` rather than `/private/var/...` on macOS),
++  // but Metro only knows files by their real paths, so the layout imports must use the real path too.
++  const projectRoot = fs.realpathSync(path.resolve(possibleProjectRoot));
+   const outputPath = path.resolve(projectRoot, registryOutput ?? defaultOutputPath);
+   const defaultConfigPath =
+     platform === 'android'
