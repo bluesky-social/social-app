@@ -1,0 +1,62 @@
+diff --git a/lib/commonjs/NativeSafeAreaProvider.web.js b/lib/commonjs/NativeSafeAreaProvider.web.js
+index d272a37..05d2876 100644
+--- a/lib/commonjs/NativeSafeAreaProvider.web.js
++++ b/lib/commonjs/NativeSafeAreaProvider.web.js
+@@ -70,10 +70,10 @@ function NativeSafeAreaProvider({
+         // overlapping the provider view.
+         const rect = providerElement.getBoundingClientRect();
+         insets = {
+-          top: Math.max(0, windowInsets.top - rect.top),
+-          bottom: Math.max(0, windowInsets.bottom - (window.innerHeight - rect.bottom)),
+-          left: Math.max(0, windowInsets.left - rect.left),
+-          right: Math.max(0, windowInsets.right - (window.innerWidth - rect.right))
++          top: Math.max(0, windowInsets.top - Math.max(0, rect.top)),
++          bottom: Math.max(0, windowInsets.bottom - Math.max(0, window.innerHeight - rect.bottom)),
++          left: Math.max(0, windowInsets.left - Math.max(0, rect.left)),
++          right: Math.max(0, windowInsets.right - Math.max(0, window.innerWidth - rect.right))
+         };
+         frame = {
+           x: rect.left,
+diff --git a/lib/module/NativeSafeAreaProvider.web.js b/lib/module/NativeSafeAreaProvider.web.js
+index 359ed9f..5b389d9 100644
+--- a/lib/module/NativeSafeAreaProvider.web.js
++++ b/lib/module/NativeSafeAreaProvider.web.js
+@@ -63,10 +63,10 @@ export function NativeSafeAreaProvider({
+         // overlapping the provider view.
+         const rect = providerElement.getBoundingClientRect();
+         insets = {
+-          top: Math.max(0, windowInsets.top - rect.top),
+-          bottom: Math.max(0, windowInsets.bottom - (window.innerHeight - rect.bottom)),
+-          left: Math.max(0, windowInsets.left - rect.left),
+-          right: Math.max(0, windowInsets.right - (window.innerWidth - rect.right))
++          top: Math.max(0, windowInsets.top - Math.max(0, rect.top)),
++          bottom: Math.max(0, windowInsets.bottom - Math.max(0, window.innerHeight - rect.bottom)),
++          left: Math.max(0, windowInsets.left - Math.max(0, rect.left)),
++          right: Math.max(0, windowInsets.right - Math.max(0, window.innerWidth - rect.right))
+         };
+         frame = {
+           x: rect.left,
+diff --git a/src/NativeSafeAreaProvider.web.tsx b/src/NativeSafeAreaProvider.web.tsx
+index 5bcdf5c..16a688c 100644
+--- a/src/NativeSafeAreaProvider.web.tsx
++++ b/src/NativeSafeAreaProvider.web.tsx
+@@ -75,15 +75,15 @@ export function NativeSafeAreaProvider({
+         // overlapping the provider view.
+         const rect = providerElement.getBoundingClientRect();
+         insets = {
+-          top: Math.max(0, windowInsets.top - rect.top),
++          top: Math.max(0, windowInsets.top - Math.max(0, rect.top)),
+           bottom: Math.max(
+             0,
+-            windowInsets.bottom - (window.innerHeight - rect.bottom),
++            windowInsets.bottom - Math.max(0, window.innerHeight - rect.bottom),
+           ),
+-          left: Math.max(0, windowInsets.left - rect.left),
++          left: Math.max(0, windowInsets.left - Math.max(0, rect.left)),
+           right: Math.max(
+             0,
+-            windowInsets.right - (window.innerWidth - rect.right),
++            windowInsets.right - Math.max(0, window.innerWidth - rect.right),
+           ),
+         };
+         frame = {
