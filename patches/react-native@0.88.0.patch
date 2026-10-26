@@ -192,10 +192,139 @@ index 60160efb163d91813fa2ca7ca758b51afcf261e1..fb646fe945ffe4aa4a386f80a1e42a90
  }
  
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-index 14a08b49cb7c93374a2625294bfb082226e6d933..21abb2d60e00aaaecb35c5579a77802c4ff4b233 100644
+index 14a08b49cb7c93374a2625294bfb082226e6d933..c9ffd58acc2db65ef11342a516c5eb14fe442f20 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-@@ -1157,6 +1157,11 @@ - (RCTVirtualViewContainerState *)virtualViewContainerState
+@@ -104,6 +104,10 @@ @implementation RCTScrollViewComponentView {
+   BOOL _isUserTriggeredScrolling;
+   BOOL _shouldUpdateContentInsetAdjustmentBehavior;
+   BOOL _automaticallyAdjustKeyboardInsets;
++  // The keyboard's end frame from the latest keyboard notification, tracked even while
++  // `automaticallyAdjustKeyboardInsets` is off so that turning it on can apply the inset.
++  // CGRectNull until the first notification.
++  CGRect _keyboardEndFrame;
+ 
+   CGPoint _contentOffsetWhenClipped;
+ 
+@@ -147,6 +151,7 @@ - (instancetype)initWithFrame:(CGRect)frame
+     _isUserTriggeredScrolling = NO;
+     _shouldUpdateContentInsetAdjustmentBehavior = YES;
+     _automaticallyAdjustKeyboardInsets = NO;
++    _keyboardEndFrame = CGRectNull;
+     _isAccessibilityAPIUsed = NO;
+     [self addSubview:_scrollView];
+ 
+@@ -186,21 +191,78 @@ - (void)_registerKeyboardListener
+ 
+ - (void)_keyboardWillChangeFrame:(NSNotification *)notification
+ {
++  CGRect keyboardEndFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
++  _keyboardEndFrame = keyboardEndFrame;
+   if (!_automaticallyAdjustKeyboardInsets) {
+     return;
+   }
++
++  double duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
++  UIViewAnimationCurve curve =
++      (UIViewAnimationCurve)[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
++  CGRect keyboardBeginFrame = [notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
++
++  [self _adjustInsetsForKeyboardEndFrame:keyboardEndFrame
++                      keyboardBeginFrame:keyboardBeginFrame
++                                duration:duration
++                                   curve:curve];
++}
++
++- (BOOL)_isKeyboardVisible
++{
++  return !CGRectIsNull(_keyboardEndFrame) && CGRectGetHeight(_keyboardEndFrame) > 0 &&
++      CGRectGetMinY(_keyboardEndFrame) < CGRectGetMaxY(self.window.screen.bounds);
++}
++
++/*
++ * The inset is otherwise only updated by keyboard notifications, so when
++ * `automaticallyAdjustKeyboardInsets` changes while the keyboard is visible, apply or remove it here.
++ */
++- (void)_updateInsetsForAutomaticallyAdjustKeyboardInsetsChange
++{
++  if (self.window == nil || ![self _isKeyboardVisible]) {
++    return;
++  }
++
++  if (_automaticallyAdjustKeyboardInsets) {
++    // Treat the keyboard as if it had just appeared where it is now.
++    [self _adjustInsetsForKeyboardEndFrame:_keyboardEndFrame
++                        keyboardBeginFrame:_keyboardEndFrame
++                                  duration:0
++                                     curve:UIViewAnimationCurveLinear];
++    return;
++  }
++
+   BOOL isHorizontal = _scrollView.contentSize.width > self.frame.size.width;
+   if (isHorizontal) {
+     return;
+   }
+ 
+-  bool isInverted = [self isInverted];
+-  double duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
++  // Remove the keyboard inset, which no keyboard notification will do now that the prop is off.
++  const auto &props = static_cast<const ScrollViewProps &>(*_props);
++  UIEdgeInsets newEdgeInsets = _scrollView.contentInset;
++  if ([self isInverted]) {
++    newEdgeInsets.top = props.contentInset.top;
++  } else {
++    newEdgeInsets.bottom = props.contentInset.bottom;
++  }
++  _scrollView.contentInset = newEdgeInsets;
++  _scrollView.verticalScrollIndicatorInsets = newEdgeInsets;
++  // Clamps the offset to the smaller scrollable range.
++  [self scrollTo:_scrollView.contentOffset.x y:_scrollView.contentOffset.y animated:NO];
++}
+ 
+-  UIViewAnimationCurve curve =
+-      (UIViewAnimationCurve)[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+-  CGRect keyboardEndFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+-  CGRect keyboardBeginFrame = [notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
++- (void)_adjustInsetsForKeyboardEndFrame:(CGRect)keyboardEndFrame
++                      keyboardBeginFrame:(CGRect)keyboardBeginFrame
++                                duration:(double)duration
++                                   curve:(UIViewAnimationCurve)curve
++{
++  BOOL isHorizontal = _scrollView.contentSize.width > self.frame.size.width;
++  if (isHorizontal) {
++    return;
++  }
++
++  bool isInverted = [self isInverted];
+ 
+   CGPoint absoluteViewOrigin = [self convertPoint:self.bounds.origin toView:nil];
+   CGFloat scrollViewLowerY = isInverted ? absoluteViewOrigin.y : absoluteViewOrigin.y + self.bounds.size.height;
+@@ -360,6 +422,10 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+   MAP_SCROLL_VIEW_PROP(showsHorizontalScrollIndicator);
+   MAP_SCROLL_VIEW_PROP(showsVerticalScrollIndicator);
+ 
++#if TARGET_OS_IOS
++  BOOL automaticallyAdjustKeyboardInsetsChanged =
++      _automaticallyAdjustKeyboardInsets != newScrollViewProps.automaticallyAdjustKeyboardInsets;
++#endif
+   _automaticallyAdjustKeyboardInsets = newScrollViewProps.automaticallyAdjustKeyboardInsets;
+ 
+   if (oldScrollViewProps.scrollIndicatorInsets != newScrollViewProps.scrollIndicatorInsets) {
+@@ -455,6 +521,13 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+   }
+ 
+   [super updateProps:props oldProps:oldProps];
++
++#if TARGET_OS_IOS
++  // Runs after the contentInset prop is applied above, which would overwrite the keyboard inset.
++  if (automaticallyAdjustKeyboardInsetsChanged) {
++    [self _updateInsetsForAutomaticallyAdjustKeyboardInsetsChange];
++  }
++#endif
+ }
+ 
+ - (void)updateState:(const State::Shared &)state oldState:(const State::Shared &)oldState
+@@ -1157,6 +1230,11 @@ - (RCTVirtualViewContainerState *)virtualViewContainerState
    return _virtualViewContainerState;
  }
  
