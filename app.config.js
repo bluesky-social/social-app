@@ -83,8 +83,6 @@ module.exports = function (_config) {
           NSUserActivityTypes: ['INSendMessageIntent'],
           NSCameraUsageDescription:
             'Used for profile pictures, posts, and other kinds of content.',
-          NSMicrophoneUsageDescription:
-            'Used for posts and other kinds of content.',
           NSPhotoLibraryAddUsageDescription:
             'Used to save images to your library.',
           NSPhotoLibraryUsageDescription:
@@ -268,6 +266,24 @@ module.exports = function (_config) {
         'expo-asset',
         'expo-sharing',
         'expo-video',
+        /*
+         * Prebuild applies these two plugins even when they're not listed, and
+         * by default both request the microphone. We only ever take photos, so
+         * opt out on both platforms.
+         */
+        [
+          'expo-camera',
+          {
+            microphonePermission: false,
+            recordAudioAndroid: false,
+          },
+        ],
+        [
+          'expo-image-picker',
+          {
+            microphonePermission: false,
+          },
+        ],
         [
           'expo-localization',
           {
