@@ -1,7 +1,6 @@
 import {useEffect} from 'react'
 import {Linking} from 'react-native'
 import * as Notifications from 'expo-notifications'
-import BackgroundNotificationHandler from '@bsky.app/expo-background-notification-handler'
 import {useLingui} from '@lingui/react/macro'
 
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
@@ -62,15 +61,10 @@ export function useNotificationChannels() {
 }
 
 async function setUpChatChannel(name: string) {
-  /*
-   * Android ignores sound changes to a channel that already exists, so the
-   * old in-app toggle is only read when this channel is first created.
-   */
-  const {playSoundChat} = await BackgroundNotificationHandler.getAllPrefsAsync()
   await Notifications.setNotificationChannelAsync(CHAT_CHANNEL_ID, {
     name,
     importance: Notifications.AndroidImportance.HIGH,
-    sound: playSoundChat === false ? null : 'dm.mp3',
+    sound: 'dm.mp3',
     enableVibrate: true,
     lockscreenVisibility: Notifications.AndroidNotificationVisibility.PRIVATE,
   })
