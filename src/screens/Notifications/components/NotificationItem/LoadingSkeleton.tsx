@@ -360,8 +360,8 @@ function TimestampSkeleton() {
 }
 
 /**
- * Stands in for `Item.AvatarRow` and its avatars. With `overflow`, a
- * fainter circle at the end stands in for its "+N" chip.
+ * Stands in for `Item.AvatarRow` and its avatars. With `overflow`, a fainter
+ * bar at the end stands in for its "+N" count.
  */
 function AvatarRowSkeleton({
   count,
@@ -375,7 +375,13 @@ function AvatarRowSkeleton({
       {Array.from({length: count}, (_, index) => (
         <Skele.Circle key={index} size={Item.PREVIEW_AVATAR_SIZE} />
       ))}
-      {overflow && <Skele.Circle blend size={Item.PREVIEW_AVATAR_SIZE} />}
+      {overflow && (
+        <Skele.Block
+          blend
+          // Inset by the toggle's padding, as the "+N" is
+          style={{width: 24, height: 12, marginLeft: Item.TOGGLE_PADDING}}
+        />
+      )}
     </View>
   )
 }
