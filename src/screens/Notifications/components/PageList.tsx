@@ -504,10 +504,6 @@ function isUnreadRow(row: Row | undefined) {
   )
 }
 
-/**
- * "Today" or "Earlier". Neither has a border below it, since the header
- * already sets the rows under it apart.
- */
 function SectionHeader({
   section,
   isUnreadAbove,
@@ -532,9 +528,10 @@ function SectionHeader({
       <View
         style={[
           a.px_lg,
-          section === 'today'
-            ? a.py_sm
-            : [a.border_t, a.pt_md, a.pb_sm, t.atoms.border_contrast_low],
+          section === 'today' ? a.py_sm : [a.border_t, a.pt_md, a.pb_sm],
+          // Rows are divided, so the header is too
+          SHOW_ROW_BORDERS && a.border_b,
+          t.atoms.border_contrast_low,
         ]}>
         <Text accessibilityRole="header" style={[a.text_md, a.font_bold]}>
           {section === 'today'
