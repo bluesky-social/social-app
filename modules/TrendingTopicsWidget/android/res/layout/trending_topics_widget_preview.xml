@@ -45,12 +45,12 @@
     android:paddingBottom="5dp">
 
     <TextView
-      android:layout_width="20dp"
+      android:layout_width="24dp"
       android:layout_height="wrap_content"
       android:fontFamily="sans-serif-medium"
       android:text="1."
       android:textColor="@color/trending_topics_widget_preview_secondary_text"
-      android:textSize="13sp" />
+      android:textSize="14sp" />
 
     <LinearLayout
       android:layout_width="0dp"
@@ -87,12 +87,12 @@
     android:paddingBottom="5dp">
 
     <TextView
-      android:layout_width="20dp"
+      android:layout_width="24dp"
       android:layout_height="wrap_content"
       android:fontFamily="sans-serif-medium"
       android:text="2."
       android:textColor="@color/trending_topics_widget_preview_secondary_text"
-      android:textSize="13sp" />
+      android:textSize="14sp" />
 
     <LinearLayout
       android:layout_width="0dp"
@@ -129,12 +129,12 @@
     android:paddingBottom="5dp">
 
     <TextView
-      android:layout_width="20dp"
+      android:layout_width="24dp"
       android:layout_height="wrap_content"
       android:fontFamily="sans-serif-medium"
       android:text="3."
       android:textColor="@color/trending_topics_widget_preview_secondary_text"
-      android:textSize="13sp" />
+      android:textSize="14sp" />
 
     <LinearLayout
       android:layout_width="0dp"
@@ -171,12 +171,12 @@
     android:paddingBottom="5dp">
 
     <TextView
-      android:layout_width="20dp"
+      android:layout_width="24dp"
       android:layout_height="wrap_content"
       android:fontFamily="sans-serif-medium"
       android:text="4."
       android:textColor="@color/trending_topics_widget_preview_secondary_text"
-      android:textSize="13sp" />
+      android:textSize="14sp" />
 
     <LinearLayout
       android:layout_width="0dp"
@@ -213,12 +213,12 @@
     android:paddingBottom="5dp">
 
     <TextView
-      android:layout_width="20dp"
+      android:layout_width="24dp"
       android:layout_height="wrap_content"
       android:fontFamily="sans-serif-medium"
       android:text="5."
       android:textColor="@color/trending_topics_widget_preview_secondary_text"
-      android:textSize="13sp" />
+      android:textSize="14sp" />
 
     <LinearLayout
       android:layout_width="0dp"
