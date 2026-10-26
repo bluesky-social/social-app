@@ -944,12 +944,17 @@ export type Events = {
     feedSliceIndex?: number
   }
   'trendingTopic:click': {
-    context: 'sidebar' | 'interstitial' | 'explore'
+    context: 'sidebar' | 'interstitial' | 'explore' | 'widget'
     feedUri?: string
     recId?: string
     rank: number
     feedSliceIndex?: number
   }
+  /**
+   * The trending topics home screen widget was seen installed on this device
+   * for the first time.
+   */
+  'trendingWidget:installed': {}
   'trendingVideos:show': {
     context: 'settings'
   }

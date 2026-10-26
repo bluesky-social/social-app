@@ -10,4 +10,5 @@ type Trend = app.bsky.unspecced.getTrends.$OutputBody['trends'][number]
 export function updateTrendingWidgetSnapshot(
   _trends: Trend[],
   _copy: TrendingWidgetCopy,
+  _recId?: string,
 ) {}

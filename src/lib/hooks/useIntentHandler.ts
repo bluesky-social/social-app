@@ -13,8 +13,10 @@ import {useSetActiveLanding} from '#/state/shell/landing'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
+import {getTrendingTopicFeedUri} from '#/components/TrendingTopics'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
+import {parseWidgetTopicClick} from '#/features/trendingWidget/links'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
 
 type IntentType = 'compose' | 'verify-email' | 'age-assurance' | 'apply-ota'
@@ -49,6 +51,15 @@ export function useIntentHandler() {
         })
       }
       const urlp = parseLinkingUrl(url)
+      const widgetTopicClick = parseWidgetTopicClick(urlp)
+      if (widgetTopicClick) {
+        ax.metric('trendingTopic:click', {
+          context: 'widget',
+          feedUri: getTrendingTopicFeedUri({link: widgetTopicClick.path}),
+          rank: widgetTopicClick.rank,
+          recId: widgetTopicClick.recId,
+        })
+      }
       const chatInviteMatch = urlp.pathname.match(CHAT_INVITE_CODE_REGEX)
       if (chatInviteMatch) {
         groupChatJoinIntent(chatInviteMatch[1], url)

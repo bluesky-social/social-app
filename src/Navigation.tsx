@@ -160,6 +160,7 @@ import {setNavigationMetadata} from '#/analytics/metadata'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {HomeScreen} from '#/features/followingV2/home'
 import {InviteScannerScreen} from '#/features/inviteFriends'
+import {stripWidgetTopicParams} from '#/features/trendingWidget/links'
 import {router} from '#/routes'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
@@ -985,7 +986,9 @@ const LINKING = {
     return route.build((node.params || {}) as RouteParams)
   },
 
-  getStateFromPath(path: string) {
+  getStateFromPath(rawPath: string) {
+    // `useIntentHandler` has already logged a click from the widget
+    const path = stripWidgetTopicParams(rawPath)
     const [name, params] = router.matchPath(path)
 
     // Any time we receive a url that starts with `intent/` we want to ignore it here. It will be handled in the
