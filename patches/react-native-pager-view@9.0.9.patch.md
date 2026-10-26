@@ -51,6 +51,10 @@ programmatic paging `settling` -> `idle`, which is what v6.8 reported.
 `onPageSelected` still fires at release. `settledPage` reads `currentPage`
 during the same gap, and the fling then pins it there.
 
+Upstream issue
+https://github.com/callstack/react-native-pager-view/issues/1199, fixed by
+https://github.com/callstack/react-native-pager-view/pull/1201.
+
 ## iOS: yield to the navigation back gesture on the first page
 
 Adds `ios/PagerGestureObserver.swift` and wires it up in `ios/PagerView.swift`.
