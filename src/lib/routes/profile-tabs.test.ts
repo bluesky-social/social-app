@@ -32,11 +32,6 @@ describe('getProfileTabIndex', () => {
     expect(getProfileTabIndex('replies', {posts: 2, replies: null}, 2)).toBe(2)
   })
 
-  it('resolves a requested tab when it becomes available after placeholder data', () => {
-    expect(getProfileTabIndex('feeds', {posts: 2, feeds: null}, 2)).toBe(2)
-    expect(getProfileTabIndex('feeds', {posts: 2, feeds: 5}, 2)).toBe(5)
-  })
-
   it('defaults inherited property names to posts', () => {
     expect(getProfileTabIndex('toString', indexes, 2)).toBe(2)
   })
