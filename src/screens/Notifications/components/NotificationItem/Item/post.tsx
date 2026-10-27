@@ -39,6 +39,7 @@ import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {makePostLink} from '../links'
 import {Card, FeedCard, getPostThumbnails, InlineImages} from './media'
+import {getRowBorderColor, useItemContext} from './Root'
 import {Strong, useDisplayName} from './text'
 
 type PostView = app.bsky.feed.defs.PostView
@@ -410,6 +411,9 @@ function EmbedPreview({
    */
   moderation: ModerationDecision | undefined
 }) {
+  const t = useTheme()
+  const {isRead} = useItemContext()
+
   if (bsky.isType(app.bsky.embed.recordWithMedia.view, embed)) {
     return (
       <View style={[a.gap_sm]}>
@@ -424,7 +428,12 @@ function EmbedPreview({
   if (bsky.isType(app.bsky.embed.external.view, embed)) {
     return (
       <ContentHider modui={moderation?.ui('contentMedia')}>
-        <ExternalEmbed link={embed.external} post={post} />
+        <ExternalEmbed
+          link={embed.external}
+          post={post}
+          // Matches `Card`, whose border the post's own embeds don't share
+          borderColor={getRowBorderColor(t, !isRead)}
+        />
       </ContentHider>
     )
   }
