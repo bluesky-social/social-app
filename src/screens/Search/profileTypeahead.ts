@@ -1,9 +1,5 @@
 import {tokenizeQuery} from '#/state/queries/search-posts-params'
 
-/**
- * Post search operators. Their values name a filter, not an account, so they
- * are left out of the profile typeahead lookup.
- */
 const SEARCH_OPERATORS = new Set([
   'from',
   'to',
@@ -21,11 +17,8 @@ function isSearchOperator(token: string): boolean {
 }
 
 /**
- * The text to look up in the profile typeahead for a search query, which is
- * the query minus any search operators. The typeahead matches on display
- * names too, so sending `from:me cats` as-is suggests accounts with "from:me"
- * in their name, and a half-typed `from:alice-b` matches popular accounts on
- * the "b" alone.
+ * Removes post search operators from profile lookups, preserving the original
+ * query when no operators are removed.
  */
 export function getProfileTypeaheadQuery(query: string): string {
   const tokens = tokenizeQuery(query)
