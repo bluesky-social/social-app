@@ -103,11 +103,51 @@ function NewNotificationsScreenInner() {
    */
   const {height: titleHeight, onLayout: onTitleLayout} = useShellHeaderLayout()
   const tabs: {key: GroupedNotificationsFeed; label: string}[] = [
-    {key: 'all', label: l`All`},
-    {key: 'people-i-follow', label: l`People I follow`},
-    {key: 'conversations', label: l`Replies`},
-    {key: 'followers', label: l`Follows`},
-    {key: 'activity', label: l`Activity`},
+    {
+      key: 'all',
+      label: l({
+        message: 'All',
+        context: 'notifications tab',
+        comment:
+          'Tab label in Notifications that shows every notification. Space is tight, so keep it as short as possible.',
+      }),
+    },
+    {
+      key: 'people-i-follow',
+      label: l({
+        message: 'People I follow',
+        context: 'notifications tab',
+        comment:
+          'Tab label in Notifications that shows only notifications from accounts you follow. Space is tight, so keep it as short as possible, ideally one or two words.',
+      }),
+    },
+    {
+      key: 'conversations',
+      label: l({
+        message: 'Replies',
+        context: 'notifications tab',
+        comment:
+          'Tab label in Notifications that shows replies, quotes and mentions. Space is tight, so keep it as short as possible.',
+      }),
+    },
+    {
+      key: 'followers',
+      label: l({
+        message: 'Follows',
+        context: 'notifications tab',
+        comment:
+          'Tab label in Notifications that shows people who followed you. Space is tight, so keep it as short as possible.',
+      }),
+    },
+    {
+      key: 'activity',
+      label: l({
+        message: 'Activity',
+        context: 'notifications tab',
+        comment:
+          'Tab label in Notifications that shows new posts from accounts you get activity notifications for. Space is tight, so keep it as short as possible.',
+      }),
+    },
   ]
   const {seenAt, onFirstLoad, refresh} = useSessionSeenAt()
   const activeFeed = useRef<GroupedNotificationsFeed>(tabs[0].key)
