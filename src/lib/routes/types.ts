@@ -3,6 +3,7 @@ import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
 
 import {type SearchFilters} from '#/screens/Search/searchParams'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
+import {type ProfileTab} from './profile-tabs'
 
 export type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -36,7 +37,7 @@ export type CommonNavigatorParams = {
   ModerationInteractionSettings: undefined
   ModerationVerificationSettings: undefined
   Settings: undefined
-  Profile: {name: string; hideBackButton?: boolean}
+  Profile: {name: string; hideBackButton?: boolean; tab?: ProfileTab | ''}
   ProfileFollowers: {name: string}
   ProfileFollows: {name: string}
   ProfileKnownFollowers: {name: string}
