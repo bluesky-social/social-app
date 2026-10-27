@@ -177,12 +177,12 @@ export function BetaFeaturesSettingsScreen({}: Props) {
               {IS_WEB
                 ? l({
                     message:
-                      'Beta features may be unstable. Some changes may require reloading the app.',
+                      'Beta features may be unstable. Some changes may require reloading the app. Some beta features may not work properly with ad blockers or VPNs enabled.',
                     context: 'web',
                   })
                 : l({
                     message:
-                      'Beta features may be unstable. Some changes may require restarting the app.',
+                      'Beta features may be unstable. Some changes may require restarting the app. Some beta features may not work properly with ad blockers or VPNs enabled.',
                     context: 'native',
                   })}
             </Admonition>
