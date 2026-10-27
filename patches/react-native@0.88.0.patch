@@ -1,0 +1,747 @@
+diff --git a/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
+index 2cd279590a30dd2f39e7f93a255106786e870cd5..7c09d9cf73ef5ae8e34969bc6759e4fccba1ce96 100644
+--- a/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
++++ b/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
+@@ -158,7 +158,13 @@ - (void)dismissViewController:(UIViewController *)modalViewController
+                      animated:(BOOL)animated
+                    completion:(void (^)(void))completion
+ {
+-  [modalViewController dismissViewControllerAnimated:animated completion:completion];
++  if (modalViewController.presentedViewController) {
++    // Dismissing a controller that is itself presenting only dismisses its child, so dismiss both.
++    UIViewController *presentingViewController = modalViewController.presentingViewController ?: modalViewController;
++    [presentingViewController dismissViewControllerAnimated:animated completion:completion];
++  } else {
++    [modalViewController dismissViewControllerAnimated:animated completion:completion];
++  }
+ }
+ 
+ - (void)ensurePresentedOnlyIfNeeded
+diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm
+index 60160efb163d91813fa2ca7ca758b51afcf261e1..fb646fe945ffe4aa4a386f80a1e42a90180691f1 100644
+--- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm
++++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm
+@@ -42,6 +42,32 @@ - (void)setRefreshing:(BOOL)refreshing
+ @implementation RCTPullToRefreshViewComponentView {
+   UIRefreshControl *_refreshControl;
+   RCTScrollViewComponentView *__weak _scrollViewComponentView;
++  /*
++   * Deferred props: updateProps runs during the Create mount mutation, before
++   * _attach puts the control on the scroll view, and writes to a detached
++   * UIRefreshControl are hazardous:
++   *
++   * - tintColor: writing it to a detached control permanently suppresses the
++   *   pull-to-refresh trigger haptic on iOS 17.4+
++   *   (https://github.com/facebook/react-native/issues/43388).
++   *
++   * - progressViewOffset (the bounds.origin shift): on iOS 26 the control's
++   *   _UIRefreshControlModernContentView positions itself at whatever
++   *   bounds.origin it observes when it is CREATED - at insertion into the
++   *   scroll view, or earlier if a pre-attach property write materializes it -
++   *   and keeps that y forever (width tracks, y never re-pins; verified via
++   *   on-device frame logging, Aug 2026). A pre-attach shift is therefore
++   *   baked into the content view's own frame and cancelled exactly, hiding
++   *   the spinner. Applied post-attach, the content view has already been
++   *   created at origin 0 and the same bounds shift works as intended.
++   *
++   * Both props are parked here and applied only once the control is inside
++   * the scroll view.
++   */
++  UIColor *_pendingTintColor;
++  BOOL _hasPendingTintColor;
++  CGFloat _pendingProgressViewOffset;
++  BOOL _hasPendingProgressViewOffset;
+   // This variable keeps track of whether the view is recycled or not. Once the view is recycled, the component
+   // creates a new instance of UIRefreshControl, resetting the native props to the default values.
+   // However, when recycling, we are keeping around the old _props. The flag is used to force the application
+@@ -79,10 +105,25 @@ + (ComponentDescriptorProvider)componentDescriptorProvider
+   return concreteComponentDescriptorProvider<PullToRefreshViewComponentDescriptor>();
+ }
+ 
++// Recycled instances get all props force-applied in updateProps, which runs
++// before the new UIRefreshControl is inserted into the scroll view hierarchy;
++// touching the control that early suppresses the pull-to-refresh haptic on
++// iOS 17.4+ (react-native#43388). Opting out of recycling keeps every mount on
++// the untouched-before-attach path. Refresh controls are rare and cheap, so
++// losing recycling for them is negligible.
+++ (BOOL)shouldBeRecycled
++{
++  return NO;
++}
++
+ - (void)prepareForRecycle
+ {
+   [super prepareForRecycle];
+   _scrollViewComponentView = nil;
++  _pendingTintColor = nil;
++  _hasPendingTintColor = NO;
++  _pendingProgressViewOffset = 0;
++  _hasPendingProgressViewOffset = NO;
+   [self _initializeUIRefreshControl];
+   _recycled = YES;
+ }
+@@ -93,7 +134,8 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+   const auto &newConcreteProps = static_cast<const PullToRefreshViewProps &>(*props);
+ 
+   if (_recycled || newConcreteProps.tintColor != oldConcreteProps.tintColor) {
+-    _refreshControl.tintColor = RCTUIColorFromSharedColor(newConcreteProps.tintColor);
++    // Deferred until the control is inside the scroll view (#43388).
++    [self _updateTintColor:RCTUIColorFromSharedColor(newConcreteProps.tintColor)];
+   }
+ 
+   if (_recycled || newConcreteProps.progressViewOffset != oldConcreteProps.progressViewOffset) {
+@@ -141,11 +183,50 @@ - (void)handleUIControlEventValueChanged
+ 
+ - (void)_updateProgressViewOffset:(Float)progressViewOffset
+ {
++  _pendingProgressViewOffset = progressViewOffset;
++  _hasPendingProgressViewOffset = YES;
++  // Applies immediately for runtime changes while the control is attached;
++  // pre-attach sets wait until the control is inside the scroll view (see the
++  // _pendingProgressViewOffset declaration).
++  [self _applyPendingProgressViewOffsetIfPossible];
++  if (_hasPendingProgressViewOffset) {
++    [self setNeedsLayout];
++  }
++}
++
++- (void)_applyPendingProgressViewOffsetIfPossible
++{
++  if (!_hasPendingProgressViewOffset || ![_refreshControl.superview isKindOfClass:[UIScrollView class]]) {
++    return;
++  }
+   _refreshControl.bounds = CGRectMake(
+       _refreshControl.bounds.origin.x,
+-      -progressViewOffset,
++      -_pendingProgressViewOffset,
+       _refreshControl.bounds.size.width,
+       _refreshControl.bounds.size.height);
++  _hasPendingProgressViewOffset = NO;
++}
++
++- (void)_updateTintColor:(UIColor *)tintColor
++{
++  _pendingTintColor = tintColor;
++  _hasPendingTintColor = YES;
++  // Applies immediately for runtime changes while the control is attached;
++  // pre-attach sets wait until the control is inside the scroll view.
++  [self _applyPendingTintColorIfPossible];
++  if (_hasPendingTintColor) {
++    [self setNeedsLayout];
++  }
++}
++
++- (void)_applyPendingTintColorIfPossible
++{
++  if (!_hasPendingTintColor || ![_refreshControl.superview isKindOfClass:[UIScrollView class]]) {
++    return;
++  }
++  _refreshControl.tintColor = _pendingTintColor;
++  _pendingTintColor = nil;
++  _hasPendingTintColor = NO;
+ }
+ 
+ - (void)_updateTitle
+@@ -153,7 +234,12 @@ - (void)_updateTitle
+   const auto &concreteProps = static_cast<const PullToRefreshViewProps &>(*_props);
+ 
+   if (concreteProps.title.empty()) {
+-    _refreshControl.attributedTitle = nil;
++    // Avoid touching the control when there is nothing to clear - writing
++    // attributedTitle (even nil) before the control is in the scroll view
++    // hierarchy can suppress the pull-to-refresh haptic (#43388).
++    if (_refreshControl.attributedTitle != nil) {
++      _refreshControl.attributedTitle = nil;
++    }
+     return;
+   }
+ 
+@@ -172,6 +258,18 @@ - (void)layoutSubviews
+ {
+   [super layoutSubviews];
+ 
++  /*
++   * Fallback for the pending props: _attach applies them right after the
++   * refreshControl assignment (insertion is synchronous there on current iOS),
++   * but should UIKit ever defer the insertion to a later layout pass, re-arm
++   * and retry until the control is actually inside the scroll view.
++   */
++  [self _applyPendingTintColorIfPossible];
++  [self _applyPendingProgressViewOffsetIfPossible];
++  if ((_hasPendingTintColor || _hasPendingProgressViewOffset) && _scrollViewComponentView != nil) {
++    [self setNeedsLayout];
++  }
++
+   // Attempts to begin refreshing before the initial layout are ignored by _refreshControl. So if the control is
+   // refreshing when mounted, we need to call beginRefreshing in layoutSubviews or it won't work.
+   if (self.window) {
+@@ -209,6 +307,15 @@ - (void)_attach
+ 
+     // This ensures that layoutSubviews is called. Without this, recycled instances won't refresh on mount
+     [self setNeedsLayout];
++
++    /*
++     * The assignment above inserts the control (and creates its content view)
++     * synchronously on current iOS - verified via frame logging - so the
++     * pending props can be applied immediately. layoutSubviews is the fallback
++     * if insertion is ever deferred.
++     */
++    [self _applyPendingTintColorIfPossible];
++    [self _applyPendingProgressViewOffsetIfPossible];
+   }
+ }
+ 
+diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
+index 14a08b49cb7c93374a2625294bfb082226e6d933..21abb2d60e00aaaecb35c5579a77802c4ff4b233 100644
+--- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
++++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
+@@ -1157,6 +1157,11 @@ - (RCTVirtualViewContainerState *)virtualViewContainerState
+   return _virtualViewContainerState;
+ }
+ 
+++ (BOOL)shouldBeRecycled
++{
++  return NO;
++}
++
+ @end
+ 
+ Class<RCTComponentViewProtocol> RCTScrollViewCls(void)
+diff --git a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
+index 8f55121cd23d27577bab45716d91d6cdad878e41..8bbb6cfea2970fd13b41082767807dfecbb488cb 100644
+--- a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
++++ b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
+@@ -381,6 +381,10 @@ - (void)updateLayoutMetrics:(const LayoutMetrics &)layoutMetrics
+     _previousContentSize = _backedTextInputView.contentSize;
+     static_cast<const TextInputEventEmitter &>(*_eventEmitter).onContentSizeChange([self _textInputMetrics]);
+   }
++
++  if (layoutMetrics.frame.size.height > oldLayoutMetrics.frame.size.height) {
++    [self _scrollCaretIntoEnclosingScrollView];
++  }
+ }
+ 
+ - (void)prepareForRecycle
+@@ -843,6 +847,47 @@ - (void)scrollCursorIntoView
+   }
+ }
+ 
++/*
++ * A multiline input grows one commit after UIKit has inserted the newline. UIKit reveals the caret
++ * synchronously inside the text change and never again when the frame changes. While scrolling is
++ * disabled the text container tracks the frame, so at that moment the new line has no layout yet and
++ * UIKit reveals the previous line instead; the new line then sits under the keyboard until the next
++ * keystroke. Reveal it here, right after the taller frame has been applied, so growth and scroll land
++ * in the same frame.
++ */
++- (void)_scrollCaretIntoEnclosingScrollView
++{
++  if (![_backedTextInputView isKindOfClass:[UITextView class]] || !_backedTextInputView.isFirstResponder) {
++    return;
++  }
++
++  UIScrollView *enclosingScrollView = nil;
++  for (UIView *view = self.superview; view != nil; view = view.superview) {
++    if ([view isKindOfClass:[UIScrollView class]]) {
++      enclosingScrollView = (UIScrollView *)view;
++      break;
++    }
++  }
++  if (enclosingScrollView == nil) {
++    return;
++  }
++
++  UITextRange *selectedTextRange = _backedTextInputView.selectedTextRange;
++  if (selectedTextRange == nil) {
++    return;
++  }
++
++  [_backedTextInputView layoutIfNeeded];
++  CGRect caretRect = [_backedTextInputView caretRectForPosition:selectedTextRange.end];
++  if (CGRectIsNull(caretRect) || CGRectIsInfinite(caretRect) || CGRectGetMaxY(caretRect) <= 0) {
++    return;
++  }
++
++  CGRect caretRectInScrollView = [_backedTextInputView convertRect:caretRect toView:enclosingScrollView];
++  // Keep the same breathing room UIKit adds when it reveals the caret itself.
++  [enclosingScrollView scrollRectToVisible:CGRectInset(caretRectInScrollView, 0, -4) animated:NO];
++}
++
+ - (void)_setMultiline:(BOOL)multiline
+ {
+   [_backedTextInputView removeFromSuperview];
+diff --git a/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
+index 0912c50fec13f41894b5351c7ff62b40bb8e3fad..376a554317fd355aadb733cf67b09e3f9b30fbc7 100644
+--- a/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
++++ b/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
+@@ -885,9 +885,17 @@ static void RCTAddContourEffectToLayer(
+   } else {
+     CGSize imageSize = image.size;
+     UIEdgeInsets imageCapInsets = image.capInsets;
++    // The stretchable middle is whatever lies between the cap insets. The image
++    // may be larger than capInsets + 1 (its size is ceil'd to whole points), so
++    // deriving the middle from the caps rather than assuming a 1pt band keeps
++    // the bottom/right caps at their true size. A phantom cap here makes the
++    // caps overflow sub-pixel-sized layers (e.g. hairline borders), and the
++    // squeezed mesh + nearest-neighbor filtering drops the stroke entirely.
+     CGRect contentsCenter = CGRect{
+         CGPoint{imageCapInsets.left / imageSize.width, imageCapInsets.top / imageSize.height},
+-        CGSize{(CGFloat)1.0 / imageSize.width, (CGFloat)1.0 / imageSize.height}};
++        CGSize{
++            (imageSize.width - imageCapInsets.left - imageCapInsets.right) / imageSize.width,
++            (imageSize.height - imageCapInsets.top - imageCapInsets.bottom) / imageSize.height}};
+     layer.contents = (id)image.CGImage;
+     layer.contentsScale = image.scale;
+ 
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
+index ae2e36ca1ed64d9f6cb44e6c2519a17fcca3ca18..0eeeb63b1225a3c575abb257a79aaef609659e2f 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
++++ b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
+@@ -461,6 +461,13 @@ public open class ReactViewGroup public constructor(context: Context?) :
+     inSubviewClippingLoop = true
+     var clippedSoFar = 0
+     for (i in 0..<allChildrenCount) {
++      // Reentrant child removal during this loop can compact allChildren and leave a null at
++      // an index below allChildrenCount. A null entry means the view is already detached, so
++      // treat it as clipped instead of crashing.
++      if (childArray[i] == null) {
++        clippedSoFar++
++        continue
++      }
+       try {
+         updateSubviewClipStatus(clippingRect, i, clippedSoFar, excludedViewsSet)
+       } catch (ex: IndexOutOfBoundsException) {
+@@ -498,7 +505,9 @@ public open class ReactViewGroup public constructor(context: Context?) :
+   ) {
+     assertOnUiThread()
+ 
+-    val child = checkNotNull(allChildren?.get(idx))
++    // allChildren can be mutated reentrantly while a clipping pass is running, so a stale
++    // index can point at a null slot. Skip it instead of crashing.
++    val child = allChildren?.get(idx) ?: return
+     val intersects = clippingRect.intersects(child.left, child.top, child.right, child.bottom)
+     var needUpdateClippingRecursive = false
+ 
+diff --git a/ReactCommon/react/renderer/components/text/ParagraphShadowNode.cpp b/ReactCommon/react/renderer/components/text/ParagraphShadowNode.cpp
+index 17b14c439f16534365c1fb41b3f10a4e12f59001..9c46cd9906ad31621534009a6151e0042972d134 100644
+--- a/ReactCommon/react/renderer/components/text/ParagraphShadowNode.cpp
++++ b/ReactCommon/react/renderer/components/text/ParagraphShadowNode.cpp
+@@ -315,6 +315,12 @@ void ParagraphShadowNode::layout(LayoutContext layoutContext) {
+ 
+   auto measuredLayout = findUsableLayout();
+ 
++#ifdef __APPLE__
++  // [Bluesky] The text view redraws when its attributed string changes.
++  const bool attributedStringChanged =
++      !(getStateData().attributedString == content.attributedString);
++#endif
++
+   if constexpr (
+       TextLayoutManagerExtended::supportsPreparedTextLayout() &&
+       std::is_constructible_v<
+@@ -342,6 +348,18 @@ void ParagraphShadowNode::layout(LayoutContext layoutContext) {
+     updateStateIfNeeded(content);
+   }
+ 
++#ifdef __APPLE__
++  // [Bluesky] Lay the text out now, off the main thread, for the content frame
++  // the text view will draw into. Otherwise its first draw does it on the main
++  // thread.
++  if (attributedStringChanged && !content.attributedString.isEmpty()) {
++    textLayoutManager_->prepareForDrawing(
++        content.attributedString,
++        content.paragraphAttributes,
++        layoutMetrics.getContentFrame().size);
++  }
++#endif
++
+   TextLayoutContext textLayoutContext{
+       .pointScaleFactor = layoutContext.pointScaleFactor,
+       .surfaceId = getSurfaceId(),
+diff --git a/ReactCommon/react/renderer/scheduler/Scheduler.cpp b/ReactCommon/react/renderer/scheduler/Scheduler.cpp
+index e74e8025c267022145beca65dbb525b8fc1c7836..1b6123318a0748cb9ef10a36b177b04c72d70ffa 100644
+--- a/ReactCommon/react/renderer/scheduler/Scheduler.cpp
++++ b/ReactCommon/react/renderer/scheduler/Scheduler.cpp
+@@ -31,7 +31,8 @@ Scheduler::Scheduler(
+     const SchedulerToolbox& schedulerToolbox,
+     UIManagerAnimationDelegate* animationDelegate,
+     SchedulerDelegate* delegate)
+-    : runtimeExecutor_(schedulerToolbox.runtimeExecutor),
++    : delegateInvalidated_(std::make_shared<std::atomic<bool>>(false)),
++      runtimeExecutor_(schedulerToolbox.runtimeExecutor),
+       contextContainer_(schedulerToolbox.contextContainer) {
+   // Creating a container for future `EventDispatcher` instance.
+   eventDispatcher_ = std::make_shared<std::optional<const EventDispatcher>>();
+@@ -181,6 +182,12 @@ Scheduler::~Scheduler() {
+   LOG(WARNING) << "Scheduler::~Scheduler() was called (address: " << this
+                << ").";
+ 
++  // Invalidate any lambdas already queued via scheduleRenderingUpdate that
++  // captured a raw delegate_ pointer; without this they'd dereference a
++  // dangling SchedulerDelegate after Scheduler teardown. (No replacement
++  // token is allocated here - Scheduler is going away.)
++  *delegateInvalidated_ = true;
++
+   auto weakRuntimeScheduler =
+       contextContainer_->find<std::weak_ptr<RuntimeScheduler>>(
+           RuntimeSchedulerKey);
+@@ -270,6 +277,19 @@ Scheduler::findComponentDescriptorByHandle_DO_NOT_USE_THIS_IS_BROKEN(
+ #pragma mark - Delegate
+ 
+ void Scheduler::setDelegate(SchedulerDelegate* delegate) {
++  if (delegate_ != delegate) {
++    // Mark the *current* token invalid: any rendering-update lambda already
++    // queued holds a shared_ptr to this atomic and will observe `true` on
++    // its next read, so it no-ops instead of calling into the previous
++    // delegate (which the caller is about to drop).
++    *delegateInvalidated_ = true;
++    // Then install a *fresh* token (a new atomic) so lambdas captured
++    // against the new delegate use their own non-invalidated flag.
++    // Reusing the previous atomic and flipping it back to `false` would
++    // re-arm the in-flight lambdas - exactly the use-after-free we're
++    // trying to prevent - because they share the same shared_ptr.
++    delegateInvalidated_ = std::make_shared<std::atomic<bool>>(false);
++  }
+   delegate_ = delegate;
+ }
+ 
+@@ -304,7 +324,11 @@ void Scheduler::uiManagerDidFinishTransaction(
+       runtimeScheduler_->scheduleRenderingUpdate(
+           surfaceId,
+           [delegate = delegate_,
++           invalidated = delegateInvalidated_,
+            mountingCoordinator = std::move(mountingCoordinator)]() {
++            if (*invalidated) {
++              return;
++            }
+             delegate->schedulerShouldRenderTransactions(mountingCoordinator);
+           });
+     } else {
+@@ -330,9 +354,13 @@ void Scheduler::uiManagerDidDispatchCommand(
+     runtimeScheduler_->scheduleRenderingUpdate(
+         shadowNode->getSurfaceId(),
+         [delegate = delegate_,
++         invalidated = delegateInvalidated_,
+          shadowView = std::move(shadowView),
+          commandName,
+          args]() {
++          if (*invalidated) {
++            return;
++          }
+           delegate->schedulerDidDispatchCommand(shadowView, commandName, args);
+         });
+   }
+diff --git a/ReactCommon/react/renderer/scheduler/Scheduler.h b/ReactCommon/react/renderer/scheduler/Scheduler.h
+index 1f5a59d1e1e296629f3d525430d4dcd90c5d4f25..bdac7c974223a72d7b02a2bc65ddf8b1249d02d1 100644
+--- a/ReactCommon/react/renderer/scheduler/Scheduler.h
++++ b/ReactCommon/react/renderer/scheduler/Scheduler.h
+@@ -126,6 +126,11 @@ class Scheduler final : public UIManagerDelegate {
+   friend class SurfaceHandler;
+ 
+   SchedulerDelegate *delegate_;
++  // Invalidation token captured by-value into lambdas deferred via
++  // runtimeScheduler_->scheduleRenderingUpdate. Set to true on delegate
++  // change or Scheduler destruction so a lambda that outlives its captured
++  // raw delegate pointer can no-op instead of dereferencing dangling memory.
++  std::shared_ptr<std::atomic<bool>> delegateInvalidated_;
+   SharedComponentDescriptorRegistry componentDescriptorRegistry_;
+   RuntimeExecutor runtimeExecutor_;
+   std::shared_ptr<UIManager> uiManager_;
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.h b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.h
+index a4b9be72c453574998499d3b41bb013e05a3ba3b..a6e2fe7ed1906370ac0af26eda02a1df0319c4ff 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.h
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.h
+@@ -37,6 +37,15 @@ using RCTTextLayoutFragmentEnumerationBlock =
+                                                 layoutContext:(facebook::react::TextLayoutContext)layoutContext
+                                             layoutConstraints:(facebook::react::LayoutConstraints)layoutConstraints;
+ 
++/**
++ * [Bluesky] Lays out `attributedString` for a text view with a content frame
++ * of `size`, so that drawAttributedString: at that size doesn't lay it out
++ * again on the main thread. Can be called from any thread.
++ */
++- (void)prepareAttributedStringForDrawing:(facebook::react::AttributedString)attributedString
++                      paragraphAttributes:(facebook::react::ParagraphAttributes)paragraphAttributes
++                                     size:(CGSize)size;
++
+ - (void)drawAttributedString:(facebook::react::AttributedString)attributedString
+          paragraphAttributes:(facebook::react::ParagraphAttributes)paragraphAttributes
+                        frame:(CGRect)frame
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
+index 5f9847a398faaef208c5b1ea3c507e8019c8803c..d10506fd32a93b338fc31ee265df81201fdd9096 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
+@@ -17,11 +17,133 @@
+ #import <react/renderer/textlayoutmanager/TextMeasurementRounding.h>
+ #import <react/utils/ManagedObjectWrapper.h>
+ #import <react/utils/SimpleThreadSafeCache.h>
++#import <react/utils/hash_combine.h>
++
++#include <deque>
++#include <functional>
++#include <mutex>
++#include <unordered_map>
++#include <vector>
+ 
+ using namespace facebook::react;
+ 
++/*
++ * [Bluesky] Text layouts made off the main thread, so that a text view's first
++ * draw doesn't lay its text out again on the main thread.
++ *
++ * - Measuring keeps its laid-out text storage ("measured layouts").
++ * - After layout, ParagraphShadowNode asks for the text of every text view
++ *   whose content changed to be prepared at its final content frame size
++ *   ("prepared layouts"). That reuses a measured layout when it lays out the
++ *   same way, or lays the text out at exactly the frame size, as the draw
++ *   would.
++ * - The draw takes the prepared layout for its exact size and otherwise lays
++ *   the text out itself, as React Native does by default.
++ */
++namespace {
++
++struct RCTTextLayoutKey {
++  AttributedString attributedString;
++  ParagraphAttributes paragraphAttributes;
++
++  bool operator==(const RCTTextLayoutKey &rhs) const
++  {
++    return attributedString == rhs.attributedString && paragraphAttributes == rhs.paragraphAttributes;
++  }
++};
++
++struct RCTTextLayoutKeyHash {
++  size_t operator()(const RCTTextLayoutKey &key) const
++  {
++    return hash_combine(key.attributedString, key.paragraphAttributes);
++  }
++};
++
++struct RCTTextLayout {
++  NSTextStorage *textStorage;
++  // Size of the frame the text was laid out for. For measured layouts, the
++  // width of the text container and the measured height.
++  CGSize size;
++};
++
++/*
++ * Text layouts waiting to be taken, a few per key. Each layout is handed out
++ * once, so only one thread uses a text storage at a time. Keys that are never
++ * taken (text that is never drawn, or drawn at another size) are evicted
++ * oldest-first.
++ */
++template <size_t maxKeys_, size_t maxPerKey_>
++class RCTTextLayoutPool {
++ public:
++  void add(const RCTTextLayoutKey &key, RCTTextLayout layout)
++  {
++    std::lock_guard<std::mutex> lock(mutex_);
++    auto &layouts = layouts_[key];
++    if (layouts.empty()) {
++      order_.push_back(key);
++    }
++    if (layouts.size() >= maxPerKey_) {
++      layouts.erase(layouts.begin());
++    }
++    layouts.push_back(std::move(layout));
++
++    while (order_.size() > maxKeys_) {
++      // A taken key stays in order_, so this can drop a newer layout for the
++      // same text. That text then just takes the default path.
++      layouts_.erase(order_.front());
++      order_.pop_front();
++    }
++  }
++
++  /*
++   * Removes and returns the newest layout for `key` that satisfies `matches`.
++   */
++  NSTextStorage *_Nullable take(const RCTTextLayoutKey &key, const std::function<bool(CGSize)> &matches)
++  {
++    std::lock_guard<std::mutex> lock(mutex_);
++    auto it = layouts_.find(key);
++    if (it == layouts_.end()) {
++      return nil;
++    }
++
++    auto &layouts = it->second;
++    for (auto layout = layouts.rbegin(); layout != layouts.rend(); ++layout) {
++      if (matches(layout->size)) {
++        NSTextStorage *textStorage = layout->textStorage;
++        layouts.erase(std::next(layout).base());
++        if (layouts.empty()) {
++          layouts_.erase(it);
++        }
++        return textStorage;
++      }
++    }
++
++    return nil;
++  }
++
++ private:
++  std::mutex mutex_;
++  std::unordered_map<RCTTextLayoutKey, std::vector<RCTTextLayout>, RCTTextLayoutKeyHash> layouts_;
++  std::deque<RCTTextLayoutKey> order_;
++};
++
++// Yoga rounds frames to the pixel grid, so a frame can differ from the
++// measured size by a fraction of a point.
++constexpr CGFloat kRCTMeasuredTextLayoutTolerance = 0.5;
++// Prepared layouts are made for the same frame size the draw uses.
++constexpr CGFloat kRCTPreparedTextLayoutTolerance = 0.01;
++
++} // namespace
++
+ @implementation RCTTextLayoutManager {
+   SimpleThreadSafeCache<AttributedString, std::shared_ptr<void>, 256> _cache;
++  /*
++   * [Bluesky] See RCTTextLayoutPool. Yoga measures every text in a commit
++   * before any of them is prepared, and a screen can have a few hundred. Texts
++   * are often measured more than once while Yoga resolves flex sizes.
++   */
++  RCTTextLayoutPool<512, 3> _measuredLayouts;
++  RCTTextLayoutPool<512, 2> _preparedLayouts;
+ }
+ 
+ static NSLineBreakMode RCTNSLineBreakModeFromEllipsizeMode(EllipsizeMode ellipsizeMode)
+@@ -63,10 +185,67 @@ - (TextMeasurement)measureAttributedString:(AttributedString)attributedString
+                              layoutContext:(TextLayoutContext)layoutContext
+                          layoutConstraints:(LayoutConstraints)layoutConstraints
+ {
+-  return [self measureNSAttributedString:[self _nsAttributedStringFromAttributedString:attributedString]
+-                     paragraphAttributes:paragraphAttributes
+-                           layoutContext:layoutContext
+-                       layoutConstraints:layoutConstraints];
++  NSAttributedString *nsAttributedString = [self _nsAttributedStringFromAttributedString:attributedString];
++  if (nsAttributedString.length == 0) {
++    // See measureNSAttributedString:.
++    return {};
++  }
++
++  CGSize maximumSize = CGSize{layoutConstraints.maximumSize.width, CGFLOAT_MAX};
++  NSTextStorage *textStorage = [self _textStorageAndLayoutManagerWithAttributesString:nsAttributedString
++                                                                  paragraphAttributes:paragraphAttributes
++                                                                                 size:maximumSize];
++  TextMeasurement measurement = [self _measureTextStorage:textStorage
++                                      paragraphAttributes:paragraphAttributes
++                                            layoutContext:layoutContext];
++
++  // [Bluesky] Font scaling depends on the final frame size, so those layouts
++  // can't be reused.
++  if (!paragraphAttributes.adjustsFontSizeToFit && isfinite(maximumSize.width)) {
++    _measuredLayouts.add(
++        RCTTextLayoutKey{.attributedString = attributedString, .paragraphAttributes = paragraphAttributes},
++        RCTTextLayout{.textStorage = textStorage, .size = CGSize{maximumSize.width, measurement.size.height}});
++  }
++
++  return measurement;
++}
++
++- (void)prepareAttributedStringForDrawing:(AttributedString)attributedString
++                      paragraphAttributes:(ParagraphAttributes)paragraphAttributes
++                                     size:(CGSize)size
++{
++  if (size.width <= 0 || size.height <= 0) {
++    return;
++  }
++
++  RCTTextLayoutKey key{.attributedString = attributedString, .paragraphAttributes = paragraphAttributes};
++
++  /*
++   * Measuring lays text out at the full available width with unlimited
++   * height. That gives the same result as a layout at `size` when the width
++   * is the same and the frame is tall enough for every measured line.
++   */
++  NSTextStorage *textStorage = paragraphAttributes.adjustsFontSizeToFit
++      ? nil
++      : _measuredLayouts.take(key, [&](CGSize measured) {
++          return fabs(measured.width - size.width) <= kRCTMeasuredTextLayoutTolerance &&
++              size.height >= measured.height - kRCTMeasuredTextLayoutTolerance;
++        });
++
++  if (textStorage == nil) {
++    NSAttributedString *nsAttributedString = [self _nsAttributedStringFromAttributedString:attributedString];
++    if (nsAttributedString.length == 0) {
++      return;
++    }
++    // Exactly what drawAttributedString: would make for this size.
++    textStorage = [self _textStorageAndLayoutManagerWithAttributesString:nsAttributedString
++                                                     paragraphAttributes:paragraphAttributes
++                                                                    size:size];
++    NSLayoutManager *layoutManager = textStorage.layoutManagers.firstObject;
++    [layoutManager ensureLayoutForTextContainer:layoutManager.textContainers.firstObject];
++  }
++
++  _preparedLayouts.add(key, RCTTextLayout{.textStorage = textStorage, .size = size});
+ }
+ 
+ - (CGRect)drawingFrameForAttributedString:(AttributedString)attributedString
+@@ -132,10 +311,20 @@ - (void)drawAttributedString:(AttributedString)attributedString
+                        frame:(CGRect)frame
+            drawHighlightPath:(void (^_Nullable)(UIBezierPath *highlightPath))block
+ {
+-  NSTextStorage *textStorage = [self
+-      _textStorageAndLayoutManagerWithAttributesString:[self _nsAttributedStringFromAttributedString:attributedString]
+-                                   paragraphAttributes:paragraphAttributes
+-                                                  size:frame.size];
++  // [Bluesky] Use the layout prepared off the main thread for this size, if
++  // any. Otherwise lay the text out here, as React Native does by default.
++  NSTextStorage *textStorage = _preparedLayouts.take(
++      RCTTextLayoutKey{.attributedString = attributedString, .paragraphAttributes = paragraphAttributes},
++      [&](CGSize prepared) {
++        return fabs(prepared.width - frame.size.width) <= kRCTPreparedTextLayoutTolerance &&
++            fabs(prepared.height - frame.size.height) <= kRCTPreparedTextLayoutTolerance;
++      });
++  if (textStorage == nil) {
++    textStorage = [self
++        _textStorageAndLayoutManagerWithAttributesString:[self _nsAttributedStringFromAttributedString:attributedString]
++                                     paragraphAttributes:paragraphAttributes
++                                                    size:frame.size];
++  }
+   NSLayoutManager *layoutManager = textStorage.layoutManagers.firstObject;
+   NSTextContainer *textContainer = layoutManager.textContainers.firstObject;
+ 
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.h b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.h
+index ce564b01254f423782412453c1b51a7d18cb8026..c842534e75307046cefbefc0be367a629a01a5f6 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.h
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.h
+@@ -61,6 +61,16 @@ class TextLayoutManager {
+    */
+   std::shared_ptr<void> getNativeTextLayoutManager() const;
+ 
++  /*
++   * [Bluesky] Lays out `attributedString` ahead of time for a text view whose
++   * content frame has `size`, so its first draw on the main thread can reuse
++   * it.
++   */
++  void prepareForDrawing(
++      const AttributedString &attributedString,
++      const ParagraphAttributes &paragraphAttributes,
++      const Size &size) const;
++
+  protected:
+   std::shared_ptr<const ContextContainer> contextContainer_;
+   std::shared_ptr<void> nativeTextLayoutManager_;
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.mm
+index 82cad8fd2eed44f8567e5007a52a755996ac2c95..4f435b528aa43b4109f8d406d6d77fc7342dd9d2 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.mm
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.mm
+@@ -100,6 +100,17 @@
+   return measurement;
+ }
+ 
++void TextLayoutManager::prepareForDrawing(
++    const AttributedString &attributedString,
++    const ParagraphAttributes &paragraphAttributes,
++    const Size &size) const
++{
++  RCTTextLayoutManager *textLayoutManager = (RCTTextLayoutManager *)unwrapManagedObject(nativeTextLayoutManager_);
++  [textLayoutManager prepareAttributedStringForDrawing:attributedString
++                                   paragraphAttributes:paragraphAttributes
++                                                  size:CGSizeMake(size.width, size.height)];
++}
++
+ LinesMeasurements TextLayoutManager::measureLines(
+     const AttributedStringBox &attributedStringBox,
+     const ParagraphAttributes &paragraphAttributes,

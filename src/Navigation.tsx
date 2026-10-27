@@ -1,4 +1,4 @@
-import {type JSX, useCallback, useRef} from 'react'
+import {type JSX, useCallback, useEffect, useRef} from 'react'
 import * as Linking from 'expo-linking'
 import * as Notifications from 'expo-notifications'
 import {Referrer} from '@bsky.app/expo-bluesky-swiss-army'
@@ -13,6 +13,7 @@ import {
   createNavigationContainerRef,
   DarkTheme,
   DefaultTheme,
+  getActionFromState as getActionFromStateDefault,
   type LinkingOptions,
   NavigationContainer,
   StackActions,
@@ -31,10 +32,17 @@ import {
 } from '#/lib/hooks/useNotificationHandler'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {useCallOnce} from '#/lib/once'
-import {buildStateObject, getCurrentRoute} from '#/lib/routes/helpers'
+import {
+  buildStateObject,
+  getCurrentRoute,
+  getTabState,
+  TabState,
+} from '#/lib/routes/helpers'
+import {type SidebarTab} from '#/lib/routes/tab-to-nav-item'
 import {
   type AllNavigatorParams,
   type BottomTabNavigatorParams,
+  type CommonNavigatorParams,
   type FlatNavigatorParams,
   type HomeTabNavigatorParams,
   type MessagesTabNavigatorParams,
@@ -46,13 +54,19 @@ import {
 } from '#/lib/routes/types'
 import {bskyTitle} from '#/lib/strings/headings'
 import {CHAT_INVITE_CODE_REGEX} from '#/lib/strings/url-helpers'
+import {emitSoftReset} from '#/state/events'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useOnboardingState} from '#/state/shell'
+import {
+  useLoggedOutView,
+  useLoggedOutViewControls,
+} from '#/state/shell/logged-out'
 import {
   shouldRequestEmailConfirmation,
   snoozeEmailConfirmationPrompt,
 } from '#/state/shell/reminders'
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {useCloseAllActiveElements} from '#/state/util'
 import {CommunityGuidelinesScreen} from '#/view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from '#/view/screens/CopyrightPolicy'
@@ -71,6 +85,8 @@ import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
+import {DesktopLeftNav} from '#/view/shell/desktop/LeftNav'
+import {getNativeTabBarVisibility} from '#/view/shell/nativeTabBarVisibility'
 import {AtmosphereScreen} from '#/screens/Atmosphere'
 import {BookmarksScreen} from '#/screens/Bookmarks'
 import {CustomFeedScreen} from '#/screens/CustomFeed'
@@ -134,7 +150,7 @@ import {
 import {Wizard} from '#/screens/StarterPack/Wizard'
 import TopicScreen from '#/screens/Topic'
 import {VideoFeed} from '#/screens/VideoFeed'
-import {type Theme, useTheme} from '#/alf'
+import {type Theme, useBreakpoints, useTheme} from '#/alf'
 import {
   EmailDialogScreenID,
   useEmailDialogControl,
@@ -144,6 +160,7 @@ import {setNavigationMetadata} from '#/analytics/metadata'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {HomeScreen} from '#/features/followingV2/home'
 import {InviteScannerScreen} from '#/features/inviteFriends'
+import {stripWidgetTopicParams} from '#/features/trendingWidget/links'
 import {router} from '#/routes'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
@@ -156,6 +173,7 @@ const MyProfileTab =
   createNativeStackNavigatorWithAuth<MyProfileTabNavigatorParams>()
 const MessagesTab =
   createNativeStackNavigatorWithAuth<MessagesTabNavigatorParams>()
+const SecondaryTab = createNativeStackNavigatorWithAuth<CommonNavigatorParams>()
 const Flat = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
 const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
 
@@ -634,7 +652,7 @@ function TabsNavigator({
 }) {
   const tabBar = useCallback(
     (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
-      <BottomBar {...props} />
+      <NativeTabBar {...props} />
     ),
     [],
   )
@@ -660,8 +678,120 @@ function TabsNavigator({
         name="MyProfileTab"
         getComponent={() => MyProfileTabNavigator}
       />
+      <Tab.Screen
+        name="AtmosphereTab"
+        getComponent={() => AtmosphereTabNavigator}
+      />
+      <Tab.Screen name="FeedsTab" getComponent={() => FeedsTabNavigator} />
+      <Tab.Screen name="ListsTab" getComponent={() => ListsTabNavigator} />
+      <Tab.Screen
+        name="BookmarksTab"
+        getComponent={() => BookmarksTabNavigator}
+      />
+      <Tab.Screen
+        name="SettingsTab"
+        getComponent={() => SettingsTabNavigator}
+      />
     </Tab.Navigator>
   )
+}
+
+function SecondaryTabNavigator({
+  initialRouteName,
+}: {
+  initialRouteName: keyof CommonNavigatorParams
+}) {
+  const t = useTheme()
+  return (
+    <SecondaryTab.Navigator
+      screenOptions={screenOptions(t)}
+      initialRouteName={initialRouteName}>
+      {commonScreens(SecondaryTab as typeof Flat)}
+    </SecondaryTab.Navigator>
+  )
+}
+
+function AtmosphereTabNavigator() {
+  return <SecondaryTabNavigator initialRouteName="Atmosphere" />
+}
+
+function FeedsTabNavigator() {
+  return <SecondaryTabNavigator initialRouteName="Feeds" />
+}
+
+function ListsTabNavigator() {
+  return <SecondaryTabNavigator initialRouteName="Lists" />
+}
+
+function BookmarksTabNavigator() {
+  return <SecondaryTabNavigator initialRouteName="Bookmarks" />
+}
+
+function SettingsTabNavigator() {
+  return <SecondaryTabNavigator initialRouteName="Settings" />
+}
+
+function NativeTabBar(props: BottomTabBarProps) {
+  const {gtMobile} = useBreakpoints()
+  const {hasSession, currentAccount} = useSession()
+  const onboardingState = useOnboardingState()
+  const {showLoggedOut} = useLoggedOutView()
+  const {footerHeight} = useShellLayout()
+  const currentRouteName = getCurrentRoute(props.state).name
+  const {showTabletSidebar, hideTabBar} = getNativeTabBarVisibility({
+    gtMobile,
+    hasSession,
+    signupQueued: !!currentAccount?.signupQueued,
+    showLoggedOut,
+    onboardingActive: onboardingState.isActive,
+    isVideoFeed: currentRouteName === 'VideoFeed',
+  })
+
+  useEffect(() => {
+    if (showTabletSidebar || hideTabBar) {
+      footerHeight.set(0)
+    }
+  }, [showTabletSidebar, hideTabBar, footerHeight])
+
+  const onNavigateTab = (tab: SidebarTab) => {
+    const state = props.navigation.getState()
+    const tabState = getTabState(state, tab)
+    if (tabState === TabState.InsideAtRoot) {
+      emitSoftReset()
+    } else if (tabState === TabState.Inside) {
+      const target = state.routes.find(route => route.name === `${tab}Tab`)
+        ?.state?.key
+      if (target) {
+        props.navigation.dispatch({
+          ...StackActions.popToTop(),
+          target,
+        })
+      } else {
+        props.navigation.reset({
+          index: 0,
+          routes: [{name: `${tab}Tab`}],
+        })
+      }
+    } else {
+      // The tab navigator route names mirror the shared navigation tab names.
+      props.navigation.navigate(`${tab}Tab`)
+    }
+  }
+
+  if (hideTabBar) {
+    return null
+  }
+
+  if (showTabletSidebar) {
+    return (
+      <DesktopLeftNav
+        routeName={currentRouteName}
+        onNavigateTab={onNavigateTab}
+      />
+    )
+  }
+
+  return <BottomBar {...props} />
 }
 
 function screenOptions(t: Theme) {
@@ -674,18 +804,20 @@ function screenOptions(t: Theme) {
 
 function HomeTabNavigator() {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
 
-  const BLURRED_SCROLL_EDGE_EFFECT = IS_LIQUID_GLASS
-    ? ({
-        headerShown: true,
-        headerTransparent: true,
-        headerTitle: '',
-        headerBackVisible: false,
-        scrollEdgeEffects: {
-          top: 'soft',
-        },
-      } as const)
-    : {}
+  const BLURRED_SCROLL_EDGE_EFFECT =
+    IS_LIQUID_GLASS && !gtMobile
+      ? ({
+          headerShown: true,
+          headerTransparent: true,
+          headerTitle: '',
+          headerBackVisible: false,
+          scrollEdgeEffects: {
+            top: 'soft',
+          },
+        } as const)
+      : {}
 
   return (
     <HomeTab.Navigator screenOptions={screenOptions(t)} initialRouteName="Home">
@@ -824,6 +956,19 @@ const FlatNavigator = ({
  * to the navigation context.
  */
 
+/**
+ * `LINKING` has no `config`, so on its own `getActionFromState` doesn't know
+ * that Home is the HomeTab stack's initial route. For the [Home, screen] state
+ * that `getStateFromPath` builds for most links, it then resets the whole
+ * HomeTab stack, remounting Home and losing its feeds and scroll position.
+ * With this, a link opens the screen on top of the existing stack, or on top of
+ * Home if the stack hasn't mounted yet. It is defined at module scope so that
+ * `getActionFromState` can cache what it derives from it.
+ */
+const NATIVE_LINK_ACTION_CONFIG = {
+  screens: {HomeTab: {initialRouteName: 'Home'}},
+}
+
 const LINKING = {
   // TODO figure out what we are going to use
   // note: `bluesky://` is what is used in app.config.js
@@ -841,7 +986,9 @@ const LINKING = {
     return route.build((node.params || {}) as RouteParams)
   },
 
-  getStateFromPath(path: string) {
+  getStateFromPath(rawPath: string) {
+    // `useIntentHandler` has already logged a click from the widget
+    const path = stripWidgetTopicParams(rawPath)
     const [name, params] = router.matchPath(path)
 
     // Any time we receive a url that starts with `intent/` we want to ignore it here. It will be handled in the
@@ -881,6 +1028,15 @@ const LINKING = {
       if (name === 'Messages') {
         return buildStateObject('MessagesTab', 'Messages', params)
       }
+      if (
+        name === 'Atmosphere' ||
+        name === 'Feeds' ||
+        name === 'Lists' ||
+        name === 'Bookmarks' ||
+        name === 'Settings'
+      ) {
+        return buildStateObject(`${name}Tab`, name, params)
+      }
       // if the path is something else, like a post, profile, or even settings, we need to initialize the home tab as pre-existing state otherwise the back button will not work
       return buildStateObject('HomeTab', name, params, [
         {
@@ -892,6 +1048,13 @@ const LINKING = {
       const res = buildStateObject('Flat', name, params)
       return res
     }
+  },
+
+  getActionFromState(state, options) {
+    return getActionFromStateDefault(
+      state,
+      IS_NATIVE ? NATIVE_LINK_ACTION_CONFIG : options,
+    )
   },
 } satisfies LinkingOptions<AllNavigatorParams>
 

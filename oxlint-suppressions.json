@@ -4,6 +4,11 @@
       "count": 1
     }
   },
+  "bskylink/src/routes/safelinkCheck.ts": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
   "modules/bottom-sheet/src/BottomSheetNativeComponent.tsx": {
     "typescript/no-explicit-any": {
       "count": 2
@@ -39,17 +44,6 @@
     },
     "typescript/no-unsafe-member-access": {
       "count": 2
-    }
-  },
-  "modules/expo-bluesky-swiss-army/src/SharedPrefs/index.native.ts": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    },
-    "typescript/no-unsafe-call": {
-      "count": 9
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 9
     }
   },
   "modules/expo-bluesky-swiss-army/src/VisibilityView/index.native.tsx": {
@@ -443,23 +437,7 @@
   },
   "src/components/images/Gallery/index.tsx": {
     "typescript/no-explicit-any": {
-      "count": 5
-    },
-    "typescript/no-unsafe-call": {
       "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 4
-    }
-  },
-  "src/components/images/Gallery/useKeyboardHandlers.ts": {
-    "typescript/no-explicit-any": {
-      "count": 6
-    }
-  },
-  "src/components/images/Gallery/usePointerHandlers.ts": {
-    "typescript/no-explicit-any": {
-      "count": 6
     }
   },
   "src/components/images/ImageLayoutGrid.tsx": {

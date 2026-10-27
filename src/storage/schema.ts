@@ -61,6 +61,11 @@ export type Device = {
   activitySubscriptionsNudged?: boolean
   threadgateNudged?: boolean
   inviteFriendsFollowersPromoDismissed?: boolean
+  /**
+   * Whether the trending topics widget has ever been seen installed on this
+   * device, so `trendingWidget:installed` is only logged once.
+   */
+  trendingWidgetInstalled?: boolean
   pendingOTAUpdate?: {
     attemptedAt: number
     channel: string

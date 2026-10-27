@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mirrors the dark colors in TrendingTopicsWidget.android.tsx -->
+<resources>
+  <color name="trending_topics_widget_preview_background">#10161F</color>
+  <color name="trending_topics_widget_preview_text">#F1F3F5</color>
+  <color name="trending_topics_widget_preview_secondary_text">#AEBBC9</color>
+  <color name="trending_topics_widget_preview_border">#2E4052</color>
+  <color name="trending_topics_widget_preview_title_bar">#2E4052</color>
+  <color name="trending_topics_widget_preview_description_bar">#1E2A37</color>
+</resources>

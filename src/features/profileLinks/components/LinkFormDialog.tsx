@@ -21,6 +21,7 @@ import {
   normalizeProfileLinkUrl,
   validateLinkInput,
 } from '../providers'
+import {checkSafelink} from '../safelink'
 import {useUploadLinkIcon} from '../state'
 import {MAX_TITLE_LENGTH, type ProfileLink} from '../types'
 import {ProviderLogo} from './ProviderLogo'
@@ -142,7 +143,6 @@ function LinkFormInner({
     if (
       !targetUrl ||
       provider ||
-      validation.isBlocked ||
       validation.isShortener ||
       validation.isInsecure
     ) {
@@ -152,7 +152,8 @@ function LinkFormInner({
     void getLinkMeta(targetUrl, 8e3).then(meta => {
       if (cancelled || meta.error) return
       setReachability('reachable')
-      const suggestion = suggestTitle(meta.title)
+      // a standard.site record's title, like a blog's name, beats the HTML one
+      const suggestion = suggestTitle(meta.view?.external?.title || meta.title)
       if (!suggestion) return
       const previousAuto = autoTitle.current
       autoTitle.current = suggestion
@@ -163,13 +164,7 @@ function LinkFormInner({
     return () => {
       cancelled = true
     }
-  }, [
-    targetUrl,
-    provider,
-    validation.isBlocked,
-    validation.isShortener,
-    validation.isInsecure,
-  ])
+  }, [targetUrl, provider, validation.isShortener, validation.isInsecure])
 
   const nextTitle = title.trim() || undefined
   const isUnchanged =
@@ -184,14 +179,6 @@ function LinkFormInner({
     if (!canSave) return
     if (!targetUrl) {
       setError('invalid')
-      return
-    }
-    if (validation.isBlocked) {
-      setError('blocked')
-      ax.metric('profile:links:rejected', {
-        reason: 'blocked',
-        domain: getLinkHost(targetUrl),
-      })
       return
     }
     if (validation.isShortener) {
@@ -213,25 +200,41 @@ function LinkFormInner({
     const isNewDestination = targetUrl !== link?.url
     // a saved link has proven itself; only check new destinations
     const needsCheck = isNewDestination && reachability === 'unchecked'
-    const keptIcon = isNewDestination ? undefined : link?.icon
-    // support links use bundled logos instead
-    const needsIcon = !provider && !keptIcon
-    let icon = keptIcon
-    if (needsCheck || needsIcon) {
+    /*
+     * Fetch the icon on every save, not just for new links, so editing a link
+     * picks up a favicon the site has changed. If that fails, an edit keeps
+     * the icon it had. Support links use bundled logos instead.
+     */
+    const needsIcon = !provider
+    let icon = isNewDestination ? undefined : link?.icon
+    let iconUrl = isNewDestination ? undefined : link?.iconUrl
+    if (needsCheck || needsIcon || isNewDestination) {
       setReachability('checking')
-      const [meta, uploadedIcon] = await Promise.all([
+      const [meta, uploadedIcon, safelinkAction] = await Promise.all([
         needsCheck ? getLinkMeta(targetUrl, 8e3) : undefined,
         needsIcon ? uploadLinkIcon(targetUrl) : undefined,
+        // unlike reachability, "save anyway" can't skip this
+        isNewDestination ? checkSafelink(targetUrl) : undefined,
       ])
+      if (safelinkAction === 'block') {
+        setReachability('unchecked')
+        setError('blocked')
+        ax.metric('profile:links:rejected', {reason: 'safelink'})
+        return
+      }
       if (meta?.error) {
         setReachability('unreachable')
         return
       }
-      icon = uploadedIcon ?? icon
+      if (uploadedIcon) {
+        icon = uploadedIcon.icon
+        iconUrl = uploadedIcon.previewUrl
+      }
     }
     const saved: ProfileLink = {url: targetUrl}
     if (nextTitle) saved.title = nextTitle
     if (icon) saved.icon = icon
+    if (iconUrl) saved.iconUrl = iconUrl
     // an edit rewrites the same record, so a report on it still points here
     if (link?.uri) saved.uri = link.uri
     control.close(() => onSave(saved))
@@ -284,12 +287,12 @@ function LinkFormInner({
           <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
             <Trans>
               Links show as buttons under your bio. Links to support sites like
-              Ko-fi or Patreon show as a green Support button.{' '}
+              Ko-fi or Patreon show as a green button.{' '}
               <InlineLinkText
-                label={l`See all supported sites`}
+                label={l`View all support sites`}
                 style={[a.text_md, a.leading_snug]}
                 {...createStaticClick(() => supportedSitesControl.open())}>
-                See all sites
+                View all support sites
               </InlineLinkText>
             </Trans>
           </Text>
@@ -312,16 +315,6 @@ function LinkFormInner({
                   setTouched(true)
                   setReachability('unchecked')
                   setError(undefined)
-                  /*
-                   * "patreon.com" isn't a support link yet, so it may have
-                   * picked up the homepage's title. Drop that once it
-                   * becomes one, so the pill reads "Support on Patreon".
-                   */
-                  if (autoTitle.current && validateLinkInput(value).provider) {
-                    const previousAuto = autoTitle.current
-                    autoTitle.current = ''
-                    setTitle(prev => (prev === previousAuto ? '' : prev))
-                  }
                 }}
                 autoFocus
                 autoCapitalize="none"
@@ -354,7 +347,7 @@ function LinkFormInner({
                   ]}>
                   <Trans>
                     {provider.name} is a recognized support link. It gets the
-                    green Support button.
+                    green support button.
                   </Trans>
                 </Text>
               </View>

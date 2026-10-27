@@ -52,11 +52,36 @@ describe('TokenField', () => {
     expect(onChangeText).toHaveBeenCalledWith('ABCDE-23456')
   })
 
-  it('strips characters outside the base32 alphabet', () => {
+  it('strips non-alphanumeric characters while preserving digits', () => {
     const onChangeText = jest.fn()
     render(<TokenField testID={TEST_ID} onChangeText={onChangeText} />)
-    fireEvent.changeText(getInput(), 'a1b0c8d-9e')
-    expect(onChangeText).toHaveBeenCalledWith('ABCDE')
+    fireEvent.changeText(getInput(), 'a!b8c-9d e')
+    expect(onChangeText).toHaveBeenCalledWith('AB8C9-DE')
+  })
+
+  it('preserves 0 and 1 without mapping them to letters', () => {
+    const onChangeText = jest.fn()
+    render(<TokenField testID={TEST_ID} onChangeText={onChangeText} />)
+    fireEvent.changeText(getInput(), 'e6kdf-jrk70')
+    expect(onChangeText).toHaveBeenCalledWith('E6KDF-JRK70')
+    fireEvent.changeText(getInput(), '1bcde')
+    expect(onChangeText).toHaveBeenCalledWith('1BCDE')
+  })
+
+  it('keeps a hyphen typed after the first group', () => {
+    const onChangeText = jest.fn()
+    render(<TokenField testID={TEST_ID} onChangeText={onChangeText} />)
+    fireEvent.changeText(getInput(), 'ABCDE-')
+    expect(onChangeText).toHaveBeenCalledWith('ABCDE-')
+    fireEvent.changeText(getInput(), 'ABCDE-F')
+    expect(onChangeText).toHaveBeenCalledWith('ABCDE-F')
+  })
+
+  it('drops a hyphen typed inside the first group', () => {
+    const onChangeText = jest.fn()
+    render(<TokenField testID={TEST_ID} onChangeText={onChangeText} />)
+    fireEvent.changeText(getInput(), 'AB-')
+    expect(onChangeText).toHaveBeenCalledWith('AB')
   })
 
   it('defaults autocomplete to off', () => {

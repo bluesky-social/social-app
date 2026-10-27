@@ -944,11 +944,27 @@ export type Events = {
     feedSliceIndex?: number
   }
   'trendingTopic:click': {
-    context: 'sidebar' | 'interstitial' | 'explore'
+    context: 'sidebar' | 'interstitial' | 'explore' | 'widget'
     feedUri?: string
     recId?: string
     rank: number
     feedSliceIndex?: number
+  }
+  /**
+   * The trending topics home screen widget was seen installed on this device
+   * for the first time.
+   */
+  'trendingWidget:installed': {}
+  /**
+   * The trending topics widget was tapped outside a topic, which opens
+   * Explore. On the small iOS widget that's every tap, because it can't have
+   * per-topic links. Topic taps log `trendingTopic:click` instead.
+   */
+  'trendingWidget:explore:click': {
+    /**
+     * The iOS widget family, e.g. `systemSmall`. Android doesn't report it.
+     */
+    size?: string
   }
   'trendingVideos:show': {
     context: 'settings'
@@ -996,6 +1012,11 @@ export type Events = {
   'search:recent:press': {
     profileDid: string
     position: number
+  }
+
+  'search:recent:clearAll': {
+    termCount: number
+    profileCount: number
   }
 
   'search:autocomplete:press': {
@@ -1058,6 +1079,7 @@ export type Events = {
   }
   'reportDialog:close': {}
   'reportDialog:success': {
+    subjectType: string
     reason: string
     labeler: string
     details: boolean
@@ -1400,6 +1422,9 @@ export type Events = {
    */
   'blockedGeoOverlay:shown': {}
 
+  // user dismisses the Atmosphere introduction banner
+  'atmosphere:nux:bannerDismissed': {}
+
   'geo:debug': {}
 
   /*
@@ -1534,6 +1559,10 @@ export type Events = {
     isOwnProfile: boolean
   }
   /**
+   * Edit Profile was opened, from any profile header.
+   */
+  'profile:edit:open': {}
+  /**
    * Edit Profile was opened with the Links section available.
    */
   'profile:links:editorOpen': {
@@ -1561,8 +1590,12 @@ export type Events = {
    * A link couldn't be added, e.g. because its site is blocked.
    */
   'profile:links:rejected': {
-    reason: 'blocked' | 'shortener' | 'insecure'
-    domain: string
+    reason: 'safelink' | 'shortener' | 'insecure'
+    /**
+     * Left out for Safelink blocks, which can be sensitive sites. The other
+     * reasons come from public lists in the app.
+     */
+    domain?: string
   }
 
   // Post photo embed events
@@ -1676,6 +1709,28 @@ export type Events = {
     context: 'embed' | 'immersiveFeed'
     presentation: 'video' | 'gif'
     autoplay: boolean
+  }
+  /**
+   * Incremental, non-overlapping wall-clock watch time. Segments are uniquely
+   * identified by playbackSessionId + segmentIndex for downstream deduping.
+   */
+  'video:playback:duration': {
+    playbackSessionId: string
+    segmentIndex: number
+    durationMs: number
+    postUri?: string
+    postAuthorDid?: string
+    context: 'embed' | 'immersiveFeed'
+    presentation: 'video' | 'gif'
+    endReason:
+      | 'paused'
+      | 'deactivated'
+      | 'backgrounded'
+      | 'buffering'
+      | 'checkpoint'
+      | 'ended'
+      | 'error'
+      | 'unmounted'
   }
   /**
    * The user activated a third-party media player. Cross-origin players do

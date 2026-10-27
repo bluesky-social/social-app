@@ -1,5 +1,5 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json",
+  "extends": "@react-native/typescript-config",
   "compilerOptions": {
     "jsx": "react-jsx",
     "module": "esnext",
@@ -10,11 +10,24 @@
       "#/*": ["./src/*"],
       "crypto": ["./src/platform/crypto.ts"],
       /*
-       * expo-file-system 57 ships an `exports` map without `./build/*`, which
-       * blocks the deep type imports in src/platform/misc.web-check.d.ts
-       * under `moduleResolution: "bundler"`. Type-check-only escape hatch.
+       * expo-file-system (since 57) and expo-image-manipulator (since 58) ship
+       * an `exports` map without `./build/*`, which blocks the deep type
+       * imports in src/platform/misc.web-check.d.ts under
+       * `moduleResolution: "bundler"`. Type-check-only escape hatch.
        */
       "expo-file-system/build/*": ["./node_modules/expo-file-system/build/*"],
+      "expo-image-manipulator/build/*": [
+        "./node_modules/expo-image-manipulator/build/*"
+      ],
+      /*
+       * The react-native exports condition (set by the base config) resolves
+       * to the package's raw TypeScript source, which doesn't typecheck
+       * against React Native 0.88. Use the compiled declarations instead,
+       * where skipLibCheck applies.
+       */
+      "react-native-view-shot": [
+        "./node_modules/react-native-view-shot/lib/index.d.ts"
+      ],
     },
     "plugins": [
       {
@@ -22,8 +35,7 @@
         "moveUpPatterns": ["#/", "@lingui/react/macro"],
         "moveDownPatterns": ["react-native-reanimated/lib"],
       }
-    ],
-    "customConditions": ["react-native-strict-api"]
+    ]
   },
   "exclude": ["bskyweb", "bskyembed", "web-build", "dist"]
 }

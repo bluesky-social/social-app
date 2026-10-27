@@ -4,7 +4,7 @@ import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {makeCustomFeedLink} from '#/lib/routes/links'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {
   NotificationActivitySmall_Filled_Corner0_Rounded as ActivityIcon,
@@ -312,7 +312,6 @@ function MultiPostRow({
    */
   children: React.ReactNode
 }) {
-  const t = useTheme()
   const {actor, posts} = notification
   const [post] = posts
   const href = makeActivityListLink(posts.map(p => p.uri))
@@ -328,7 +327,7 @@ function MultiPostRow({
       <Item.Avatar profile={actor} icon={icon} tone={tone} />
       <Item.Content>
         {children}
-        <Item.PostPreview post={post} style={t.atoms.text_contrast_high} />
+        <Item.PostPreview post={post} />
         <Item.Timestamp date={notification.indexedAt} />
         <Item.ViewAllLink href={href} label={viewAllLabel} />
       </Item.Content>

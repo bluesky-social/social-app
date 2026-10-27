@@ -57,10 +57,14 @@ export function useLandingEntry() {
       let uri: string | null | undefined
 
       if (IS_ANDROID) {
-        const res = await Referrer.getGooglePlayReferrerInfoAsync()
+        try {
+          const res = await Referrer.getGooglePlayReferrerInfoAsync()
 
-        if (res && res.installReferrer) {
-          uri = createStarterPackLinkFromAndroidReferrer(res.installReferrer)
+          if (res && res.installReferrer) {
+            uri = createStarterPackLinkFromAndroidReferrer(res.installReferrer)
+          }
+        } catch {
+          // No Play Store, or it failed to answer - treat it as having no referrer
         }
       } else {
         const starterPackUri = SharedPrefs.getString('starterPackUri')

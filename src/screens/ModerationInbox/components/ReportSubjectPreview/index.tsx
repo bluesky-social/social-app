@@ -23,9 +23,11 @@ type Report = Pick<
 
 export function ReportSubjectPreview({
   report,
+  enforcement,
   allowOwnRecordSnapshot = false,
 }: {
   report: Report
+  enforcement?: tools.ozone.inbox.defs.EnforcementView
   allowOwnRecordSnapshot?: boolean
 }) {
   const t = useTheme()
@@ -55,6 +57,7 @@ export function ReportSubjectPreview({
         preview = (
           <PostSubjectPreview
             report={report}
+            enforcement={enforcement}
             uri={uri}
             subjectLabel={subjectLabel}
             allowOwnRecordSnapshot={allowOwnRecordSnapshot}

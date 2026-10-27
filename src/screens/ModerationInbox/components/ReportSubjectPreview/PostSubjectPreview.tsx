@@ -25,11 +25,13 @@ type Report = Pick<
 
 export function PostSubjectPreview({
   report,
+  enforcement,
   uri,
   subjectLabel,
   allowOwnRecordSnapshot = false,
 }: {
   report: Report
+  enforcement?: tools.ozone.inbox.defs.EnforcementView
   uri: AtUri
   subjectLabel: string
   allowOwnRecordSnapshot?: boolean
@@ -75,6 +77,12 @@ export function PostSubjectPreview({
       : undefined
   const moderation =
     post && moderationOpts ? moderatePost(post, moderationOpts) : undefined
+  const canOpenPost =
+    post &&
+    moderation &&
+    postQuery.isSuccess &&
+    enforcement?.state !== 'removed' &&
+    enforcement?.state !== 'takendown'
   const title =
     post && moderation && record?.reply
       ? parentName
@@ -115,7 +123,7 @@ export function PostSubjectPreview({
               {i18n.date(new Date(record.createdAt), {dateStyle: 'medium'})}
             </Trans>
           </Text>
-          {post && moderation ? (
+          {canOpenPost ? (
             <View style={[a.align_start]}>
               <Link
                 testID="moderationInboxOpenPost"

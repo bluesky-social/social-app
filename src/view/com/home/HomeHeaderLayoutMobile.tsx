@@ -14,7 +14,7 @@ import {useSession} from '#/state/session'
 import {useShellHeaderLayout} from '#/state/shell/shell-layout'
 import {useHomeHeaderTransform} from '#/view/com/util/MainScrollProvider'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
@@ -37,6 +37,7 @@ export function HomeHeaderLayoutMobile({
   const {hasSession} = useSession()
   const haptics = useHaptics()
   const {navigate} = useNavigation<NavigationProp>()
+  const {gtMobile} = useBreakpoints()
 
   return (
     <Animated.View
@@ -44,11 +45,15 @@ export function HomeHeaderLayoutMobile({
         a.fixed,
         a.z_10,
         t.atoms.bg,
-        {
-          top: 0,
-          left: 0,
-          right: 0,
-        },
+        {top: 0},
+        /*
+         * On tablets, stay inside the center column like `NativeCenterBorders`,
+         * so the header doesn't cover the column's borders or swallow touches
+         * on either side of it
+         */
+        gtMobile
+          ? [a.w_full, a.self_center, {maxWidth: Layout.CENTER_COLUMN_WIDTH}]
+          : {left: 0, right: 0},
         IS_LIQUID_GLASS && {paddingTop: insets.top},
         headerMinimalShellTransform,
       ]}

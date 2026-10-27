@@ -1,0 +1,69 @@
+diff --git a/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt b/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
+index 3ca59fc5167dafc7957485c0eea88ccb4eb8a691..ae0370e22b277640ba29962104adc4f518c9f2ea 100644
+--- a/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
++++ b/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
+@@ -129,6 +129,10 @@ internal fun peekResponseBody(
+ }
+ 
+ internal fun shouldParseBody(response: Response): Boolean {
++  if (response.request.url.encodedPath == "/bitdrift_public.protobuf.client.v1.ApiService/Mux") {
++    return false
++  }
++
+   // Check for Content-Type
+   val skipContentTypes = listOf(
+     "text/event-stream", // Server Sent Events
+diff --git a/ios/Utilities/ConstantsProvider.swift b/ios/Utilities/ConstantsProvider.swift
+index 372d855472d852d356a15840b5d862e5219ce4a9..3a3c31e87ff7a91692f725b9c78c1e8c637d692b 100644
+--- a/ios/Utilities/ConstantsProvider.swift
++++ b/ios/Utilities/ConstantsProvider.swift
+@@ -5,13 +5,16 @@ internal final class ConstantsProvider: EXConstantsInterface {
+ 
+   func constants() -> [AnyHashable: Any] {
+     // Some constants can be safely read only on the main thread
+-    let (statusBarHeight, deviceName, systemFonts) = performSynchronouslyOnMainActor {
++    let (statusBarHeight, deviceName) = performSynchronouslyOnMainActor {
+       return (
+         getStatusBarHeight(),
+-        getDeviceName(),
+-        getSystemFontNames()
++        getDeviceName()
+       )
+     }
++    // [Bluesky] Listing every installed font makes CoreText load all of them,
++    // on the main thread at launch while the JS thread waits for these
++    // constants. Nothing in the app reads `systemFonts`.
++    let systemFonts: [String] = []
+     #if DEBUG
+     let isDebugXcodeScheme = true
+     #else
+@@ -55,29 +58,6 @@ private func getStatusBarHeight() -> Double {
+   #endif
+ }
+ 
+-@MainActor
+-private func getSystemFontNames() -> [String] {
+-  #if os(iOS) || os(tvOS)
+-  let familyNames = UIFont.familyNames
+-  var fontNames = Set<String>()
+-
+-  // "System Font" is added to `UIFont.familyNames` in iOS 15, and the font names that
+-  // correspond with it are dot prefixed .SFUI-* fonts which log the following warning
+-  // when passed in to `UIFont.fontNames(forFamilyName:)`:
+-  // > CoreText note: Client requested name “.SFUI-HeavyItalic”, it will get TimesNewRomanPSMT rather than the intended font.
+-  // All system UI font access should be through proper APIs such as `CTFontCreateUIFontForLanguage()` or `UIFont.systemFont(ofSize:)`.
+-  for familyName in familyNames where familyName != "System Font" {
+-    fontNames.insert(familyName)
+-    UIFont.fontNames(forFamilyName: familyName).forEach { fontName in
+-      fontNames.insert(fontName)
+-    }
+-  }
+-  return fontNames.sorted()
+-  #elseif os(macOS)
+-  return NSFontManager.shared.availableFontFamilies
+-  #endif
+-}
+-
+ @MainActor
+ private func getDeviceName() -> String {
+   #if os(iOS) || os(tvOS)

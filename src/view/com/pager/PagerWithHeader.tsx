@@ -12,6 +12,7 @@ import Animated, {
   type SharedValue,
   useAnimatedRef,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated'
 import {scheduleOnUI} from 'react-native-worklets'
@@ -23,6 +24,7 @@ import {
   type RenderTabBarFnProps,
 } from '#/view/com/pager/Pager'
 import {useTheme} from '#/alf'
+import {Center} from '#/components/Layout'
 import {IS_IOS} from '#/env'
 import {type ListMethods} from '../util/List'
 import {PagerHeaderProvider} from './PagerHeaderContext'
@@ -53,6 +55,8 @@ export interface PagerWithHeaderProps {
   onPageSelected?: (index: number) => void
   onCurrentPageSelected?: (index: number) => void
   allowHeaderOverScroll?: boolean
+  /** Extra vertical clipping bounds for a header that must clip horizontally. */
+  headerOverflowInset?: number
 }
 export function PagerWithHeader({
   ref,
@@ -65,6 +69,7 @@ export function PagerWithHeader({
   onPageSelected,
   onCurrentPageSelected,
   allowHeaderOverScroll,
+  headerOverflowInset,
 }: PagerWithHeaderProps) {
   const [currentPage, setCurrentPage] = useState(0)
   const [tabBarHeight, setTabBarHeight] = useState(0)
@@ -97,6 +102,7 @@ export function PagerWithHeader({
             isHeaderReady={isHeaderReady}
             renderHeader={renderHeader}
             currentPage={currentPage}
+            headerOverflowInset={headerOverflowInset}
             onCurrentPageSelected={onCurrentPageSelected}
             onTabBarLayout={onTabBarLayout}
             onHeaderOnlyLayout={onHeaderOnlyLayout}
@@ -122,6 +128,7 @@ export function PagerWithHeader({
       scrollY,
       testID,
       allowHeaderOverScroll,
+      headerOverflowInset,
     ],
   )
 
@@ -231,6 +238,7 @@ let PagerTabBar = ({
   onCurrentPageSelected,
   onSelect,
   allowHeaderOverScroll,
+  headerOverflowInset,
   dragProgress,
   dragState,
 }: {
@@ -250,27 +258,30 @@ let PagerTabBar = ({
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
   allowHeaderOverScroll?: boolean
+  /** Extra vertical clipping bounds for a header that must clip horizontally. */
+  headerOverflowInset?: number
   dragProgress: SharedValue<number>
   dragState: SharedValue<'idle' | 'dragging' | 'settling'>
 }): React.ReactNode => {
   const t = useTheme()
   const [minimumHeaderHeight, setMinimumHeaderHeight] = useState(0)
-  const headerTransform = useAnimatedStyle(() => {
+  /*
+   * Reanimated compares `transform` arrays by reference, so an animated style
+   * computing the transform straight from scrollY commits on every scroll
+   * frame, even once the header is pinned. A derived value only notifies the
+   * style when the offset changes, so it commits only while the header moves.
+   */
+  const headerTranslateY = useDerivedValue(() => {
     const translateY =
       Math.min(
         scrollY.get(),
         Math.max(headerOnlyHeight - minimumHeaderHeight, 0),
       ) * -1
-    return {
-      transform: [
-        {
-          translateY: allowHeaderOverScroll
-            ? translateY
-            : Math.min(translateY, 0),
-        },
-      ],
-    }
+    return allowHeaderOverScroll ? translateY : Math.min(translateY, 0)
   })
+  const headerTransform = useAnimatedStyle(() => ({
+    transform: [{translateY: headerTranslateY.get()}],
+  }))
   const headerRef = useRef<React.ComponentRef<typeof View>>(null)
   const fallbackHeaderOnlyHeight = useRef(0)
   return (
@@ -293,7 +304,24 @@ let PagerTabBar = ({
             fallbackHeaderOnlyHeight.current = e.nativeEvent.layout.height
           }
         }}>
-        {renderHeader?.({setMinimumHeight: setMinimumHeaderHeight})}
+        {/*
+         * Center always forms a native view (its translateX transform keeps it
+         * from being flattened), so it must be box-none: on Android, swipes on
+         * the header only scroll the list if they fall through to it. The
+         * extended clipping bounds must not intercept touches over the feed
+         * either.
+         */}
+        <Center
+          pointerEvents="box-none"
+          style={
+            headerOverflowInset != null && {
+              overflow: 'hidden',
+              marginVertical: -headerOverflowInset,
+              paddingVertical: headerOverflowInset,
+            }
+          }>
+          {renderHeader?.({setMinimumHeight: setMinimumHeaderHeight})}
+        </Center>
         {
           // It wouldn't be enough to place `onLayout` on the parent node because
           // this would risk measuring before `isHeaderReady` has turned `true`.

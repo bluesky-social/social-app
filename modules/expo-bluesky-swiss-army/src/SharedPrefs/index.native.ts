@@ -1,17 +1,36 @@
 import {requireNativeModule} from 'expo-modules-core'
 
-const NativeModule = requireNativeModule('ExpoBlueskySharedPrefs')
+const NativeModule = requireNativeModule<{
+  setString(key: string, value: string): void
+  setNumber(key: string, value: number): void
+  setBool(key: string, value: boolean): void
+  removeValue(key: string): void
+  getString(key: string): string | null | undefined
+  getNumber(key: string): number | null | undefined
+  getBool(key: string): boolean | null | undefined
+  addToSet(key: string, value: string): void
+  removeFromSet(key: string, value: string): void
+  setContains(key: string, value: string): boolean
+}>('ExpoBlueskySharedPrefs')
 
 export function setValue(
   key: string,
   value: string | number | boolean | null | undefined,
 ): void {
-  // A bug on Android causes `JavaScripValue.isString()` to cause a crash on some occasions, seemingly because of a
-  // memory violation. Instead, we will use a specific function to set strings on this platform.
-  if (typeof value === 'string') {
-    return NativeModule.setString(key, value)
+  /*
+   * Each type has its own native setter: `JavaScriptValue` can't be a
+   * function argument since Expo SDK 58.
+   */
+  switch (typeof value) {
+    case 'string':
+      return NativeModule.setString(key, value)
+    case 'number':
+      return NativeModule.setNumber(key, value)
+    case 'boolean':
+      return NativeModule.setBool(key, value)
+    default:
+      return NativeModule.removeValue(key)
   }
-  return NativeModule.setValue(key, value)
 }
 
 export function removeValue(key: string): void {
@@ -43,7 +62,7 @@ export function setContains(key: string, value: string): boolean {
 }
 
 // iOS returns `null` if a value does not exist, and Android returns `undefined. Normalize these here for JS types
-function nullToUndefined(value: any) {
+function nullToUndefined<T>(value: T | null | undefined): T | undefined {
   if (value == null) {
     return undefined
   }

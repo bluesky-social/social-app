@@ -19,6 +19,7 @@ import {useLingui} from '@lingui/react/macro'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
+import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {isBskyChatInviteUrl, isBskyPostUrl} from '#/lib/strings/url-helpers'
@@ -38,6 +39,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {type chat} from '#/lexicons'
+import {getMessageComposerHorizontalPadding} from './messageComposerLayout'
 import {type MessageEmbedState} from './MessageInputEmbed'
 
 const MIN_HEIGHT = 40
@@ -324,36 +326,41 @@ function SubmitButton({
   const t = useTheme()
 
   return (
-    <GlassView
-      isInteractive
-      glassEffectStyle="regular"
-      style={[a.rounded_full]}
-      tintColor={disabled ? t.palette.contrast_100 : t.palette.primary_500}
-      fallbackStyle={{
-        backgroundColor: disabled
-          ? t.palette.contrast_100
-          : t.palette.primary_500,
-      }}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={l`Send message`}
-        accessibilityHint=""
-        hitSlop={HITSLOP_10}
-        style={[
-          a.rounded_full,
-          a.align_center,
-          a.justify_center,
-          {height: MIN_HEIGHT, width: MIN_HEIGHT},
-        ]}
-        onPress={onPress}
-        disabled={disabled}>
-        {loading ? (
-          <Loader size="md" fill={t.palette.white} style={[a.mb_2xs]} />
-        ) : (
-          <PaperPlaneIcon size="md" fill={t.palette.white} style={[a.mb_2xs]} />
-        )}
-      </Pressable>
-    </GlassView>
+    <PressableScale
+      accessibilityRole="button"
+      accessibilityLabel={l`Send message`}
+      accessibilityHint=""
+      hitSlop={HITSLOP_10}
+      targetScale={0.95}
+      style={[
+        a.rounded_full,
+        a.align_center,
+        a.justify_center,
+        {height: MIN_HEIGHT, width: MIN_HEIGHT},
+      ]}
+      onPress={onPress}
+      disabled={disabled}>
+      <GlassView
+        pointerEvents="none"
+        glassEffectStyle="regular"
+        style={[a.absolute, a.inset_0, a.rounded_full]}
+        tintColor={disabled ? t.palette.contrast_100 : t.palette.primary_500}
+        fallbackStyle={{
+          backgroundColor: disabled
+            ? t.palette.contrast_100
+            : t.palette.primary_500,
+        }}
+      />
+      {loading ? (
+        <Loader size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+      ) : (
+        <PaperPlaneIcon
+          size="md"
+          fill={t.palette.white}
+          style={[a.relative, a.z_10, a.mb_2xs]}
+        />
+      )}
+    </PressableScale>
   )
 }
 
@@ -361,17 +368,13 @@ function ComposerContainer({children}: {children: React.ReactNode}) {
   const {bottom: bottomInset} = useSafeAreaInsets()
   const {progress} = useReanimatedKeyboardAnimation()
   const t = useTheme()
+  const horizontalPadding = getMessageComposerHorizontalPadding(bottomInset)
 
   const animatedContainerStyle = useAnimatedStyle(() => ({
-    paddingHorizontal: interpolate(
-      progress.get(),
-      [0, 1],
-      [bottomInset, tokens.space.md],
-      {
-        extrapolateRight: Extrapolation.CLAMP,
-        extrapolateLeft: Extrapolation.CLAMP,
-      },
-    ),
+    paddingHorizontal: interpolate(progress.get(), [0, 1], horizontalPadding, {
+      extrapolateRight: Extrapolation.CLAMP,
+      extrapolateLeft: Extrapolation.CLAMP,
+    }),
   }))
 
   if (IS_LIQUID_GLASS) {

@@ -25,6 +25,7 @@ import Animated, {useEvent, useSharedValue} from 'react-native-reanimated'
 import {scheduleOnRN} from 'react-native-worklets'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {usePagerFade} from '#/lib/hooks/usePagerFade'
 import {useSetDrawerSwipeDisabled} from '#/state/shell'
 import {atoms as a} from '#/alf'
 import {usePagerContext} from './context'
@@ -61,6 +62,7 @@ export function Content({
   const currentPage = useRef(initialPage)
   const [isIdle, setIsIdle] = useState(true)
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
+  const pagerFade = usePagerFade(dragProgress)
 
   useFocusEffect(
     useCallback(() => {
@@ -124,8 +126,15 @@ export function Content({
         event.eventName.endsWith('onPageSelected') &&
         'position' in event
       ) {
+        /*
+         * Only seed the initial page. iOS selects the next page as soon as a
+         * drag passes the midpoint, so setting it later would snap the
+         * progress to a whole page for a frame mid-swipe.
+         */
+        if (!didInit.get()) {
+          dragProgress.set(event.position)
+        }
         didInit.set(true)
-        dragProgress.set(event.position)
         scheduleOnRN(handlePageSelected, event.position)
       }
     },
@@ -137,9 +146,10 @@ export function Content({
     <MemoizedAnimatedPagerView
       ref={pagerRef}
       testID={testID}
-      style={[a.flex_1, style]}
+      style={[a.flex_1, style, pagerFade.style]}
       initialPage={initialPage}
       scrollEnabled={scrollEnabled}
+      onLayout={pagerFade.onLayout}
       onPageScroll={handlePageScroll}>
       {Children.map(children, child => (
         <View collapsable={false} style={a.flex_1}>

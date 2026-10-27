@@ -63,7 +63,7 @@ module.exports = function (_config) {
       userInterfaceStyle: 'automatic',
       primaryColor: '#006AFF',
       ios: {
-        supportsTablet: false,
+        supportsTablet: true,
         bundleIdentifier: 'xyz.blueskyweb.app',
         appleTeamId: process.env.EXPO_APPLE_TEAM_ID,
         config: {
@@ -71,6 +71,13 @@ module.exports = function (_config) {
         },
         icon: IOS_ICON_FILE,
         infoPlist: {
+          UISupportedInterfaceOrientations: ['UIInterfaceOrientationPortrait'],
+          'UISupportedInterfaceOrientations~ipad': [
+            'UIInterfaceOrientationPortrait',
+            'UIInterfaceOrientationPortraitUpsideDown',
+            'UIInterfaceOrientationLandscapeLeft',
+            'UIInterfaceOrientationLandscapeRight',
+          ],
           CADisableMinimumFrameDurationOnPhone: true,
           UIBackgroundModes: ['remote-notification'],
           NSUserActivityTypes: ['INSendMessageIntent'],
@@ -131,7 +138,7 @@ module.exports = function (_config) {
         entitlements: {
           'com.apple.developer.kernel.increased-memory-limit': true,
           'com.apple.developer.kernel.extended-virtual-addressing': true,
-          'com.apple.security.application-groups': 'group.app.bsky',
+          'com.apple.security.application-groups': ['group.app.bsky'],
           'com.apple.developer.usernotifications.communication': true,
           // 'com.apple.developer.device-information.user-assigned-device-name': true,
           'com.apple.developer.declared-age-range': true,
@@ -261,8 +268,57 @@ module.exports = function (_config) {
         'expo-asset',
         'expo-sharing',
         'expo-video',
-        'expo-localization',
+        [
+          'expo-localization',
+          {
+            /*
+             * React Native 0.88 fixed Android RTL detection, which until then
+             * always reported LTR. Opt out so Android keeps rendering LTR like
+             * iOS, until RTL layouts get a proper QA pass.
+             */
+            supportsRTL: false,
+          },
+        ],
         'expo-web-browser',
+        'expo-background-task',
+        // edits expo-widgets' output, and mods run in reverse order
+        './plugins/withTrendingWidget.js',
+        [
+          'expo-widgets',
+          {
+            bundleIdentifier: 'xyz.blueskyweb.app.BlueskyWidgets',
+            groupIdentifier: 'group.app.bsky',
+            enableAndroid: true,
+            widgets: [
+              {
+                name: 'TrendingTopicsWidget',
+                displayName: 'Trending Topics',
+                description: 'See what people are talking about on Bluesky.',
+                ios: {
+                  contentMarginsDisabled: true,
+                  supportedFamilies: [
+                    'systemSmall',
+                    'systemMedium',
+                    'systemLarge',
+                  ],
+                  // lets the widget render before the app is first opened
+                  initialLayout:
+                    'src/features/trendingWidget/TrendingTopicsWidget.ios.tsx',
+                },
+                android: {
+                  // 4x3 cells, or 250x180dp on Android 11 and lower
+                  minWidth: 250,
+                  minHeight: 180,
+                  targetCellWidth: 4,
+                  targetCellHeight: 3,
+                  // lets the widget render before the app is first opened
+                  initialLayout:
+                    'src/features/trendingWidget/TrendingTopicsWidget.android.tsx',
+                },
+              },
+            ],
+          },
+        ],
         [
           'react-native-nano-icons',
           {
@@ -322,13 +378,12 @@ module.exports = function (_config) {
                   branch: 'main',
                 },
               ],
-              enableSceneSupport: true,
             },
             android: {
-              compileSdkVersion: 36,
+              compileSdkVersion: 37,
               targetSdkVersion: 36,
-              buildToolsVersion: '36.0.0',
-              buildReactNativeFromSource: IS_PRODUCTION,
+              buildToolsVersion: '37.0.0',
+              buildReactNativeFromSource: true,
               enableMinifyInReleaseBuilds: true,
             },
           },
@@ -346,26 +401,43 @@ module.exports = function (_config) {
         './plugins/withAndroidManifestLargeHeapPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidManifestIntentQueriesPlugin.js',
+        './plugins/withAndroidManifestOptionalCameraPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidNoJitpackPlugin.js',
+        './plugins/withAndroidPreparedTextLayoutPlugin.js',
+        './plugins/withAndroidComposeVersion.js',
+        './plugins/withIOSWindowingControlStyle.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
         [
           'expo-font',
           {
-            fonts: [
-              './assets/fonts/inter/InterVariable.woff2',
-              './assets/fonts/inter/InterVariable-Italic.woff2',
-              // Android only
-              './assets/fonts/inter/Inter-Regular.otf',
-              './assets/fonts/inter/Inter-Italic.otf',
-              './assets/fonts/inter/Inter-Medium.otf',
-              './assets/fonts/inter/Inter-MediumItalic.otf',
-              './assets/fonts/inter/Inter-SemiBold.otf',
-              './assets/fonts/inter/Inter-SemiBoldItalic.otf',
-              './assets/fonts/inter/Inter-Bold.otf',
-              './assets/fonts/inter/Inter-BoldItalic.otf',
-            ],
+            ios: {
+              /*
+               * Uncompressed TTF rather than WOFF2: iOS decompresses WOFF2
+               * fonts on every launch, which took ~200 ms of the startup
+               * critical path. These are the same Inter 4.001 fonts as the
+               * WOFF2 files used on web.
+               */
+              fonts: [
+                './assets/fonts/inter/InterVariable.ttf',
+                './assets/fonts/inter/InterVariable-Italic.ttf',
+              ],
+            },
+            android: {
+              fonts: [
+                './assets/fonts/inter/InterVariable.woff2',
+                './assets/fonts/inter/InterVariable-Italic.woff2',
+                './assets/fonts/inter/Inter-Regular.otf',
+                './assets/fonts/inter/Inter-Italic.otf',
+                './assets/fonts/inter/Inter-Medium.otf',
+                './assets/fonts/inter/Inter-MediumItalic.otf',
+                './assets/fonts/inter/Inter-SemiBold.otf',
+                './assets/fonts/inter/Inter-SemiBoldItalic.otf',
+                './assets/fonts/inter/Inter-Bold.otf',
+                './assets/fonts/inter/Inter-BoldItalic.otf',
+              ],
+            },
           },
         ],
         [
@@ -462,7 +534,7 @@ module.exports = function (_config) {
             },
           },
         ],
-        ['expo-screen-orientation', {initialOrientation: 'PORTRAIT_UP'}],
+        ['expo-screen-orientation'],
         ['expo-location'],
         [
           'expo-contacts',

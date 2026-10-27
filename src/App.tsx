@@ -85,6 +85,7 @@ import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,
 } from '#/features/liveEvents/context'
+import {TrendingTopicsWidgetSync} from '#/features/trendingWidget/Sync'
 import * as Geo from '#/geolocation'
 import {Splash} from '#/Splash'
 
@@ -95,14 +96,10 @@ if (IS_IOS) {
   void SystemUI.setBackgroundColorAsync('black')
 }
 if (IS_ANDROID) {
-  // iOS is handled by the config plugin -sfn
-  ScreenOrientation.lockAsync(
-    ScreenOrientation.OrientationLock.PORTRAIT_UP,
-  ).catch(error =>
-    logger.debug('Could not lock orientation', {safeMessage: error}),
+  void ScreenOrientation.unlockAsync().catch(error =>
+    logger.debug('Could not unlock orientation', {safeMessage: error}),
   )
 }
-
 /**
  * Begin geolocation ASAP
  */
@@ -175,6 +172,7 @@ function InnerApp() {
                                                 <MutedThreadsProvider>
                                                   <ProgressGuideProvider>
                                                     <ServiceAccountManager>
+                                                      <TrendingTopicsWidgetSync />
                                                       <EmailVerificationProvider>
                                                         <HideBottomBarBorderProvider>
                                                           <GlobalGestureEventsProvider>

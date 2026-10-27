@@ -1,0 +1,22 @@
+diff --git a/build/src/start/server/serverLogLikeMetro.js b/build/src/start/server/serverLogLikeMetro.js
+index 1c90fee8cfef807283f0df37145301af9c1e530e..335c530785e18c4c450ccf83d10db223fc61bc14 100644
+--- a/build/src/start/server/serverLogLikeMetro.js
++++ b/build/src/start/server/serverLogLikeMetro.js
+@@ -181,8 +181,15 @@ async function maybeSymbolicateAndFormatJSErrorStackLogAsync(projectRoot, level,
+         stack: log.symbolicated?.stack?.stack ?? [],
+         codeFrame: log.codeFrame
+     });
+-    // NOTE: Message is printed above stack by the default Metro logic. So we don't need to include it here.
+-    const symbolicatedErrorStackLog = `\n\n${formatted.stack}`;
++    /*
++     * The original code assumed the message is printed above the stack by the default Metro
++     * logic and returned only the formatted stack. That only holds when the message and stack
++     * arrive as separate console arguments. React 19 owner-stack errors arrive as ONE merged
++     * string ("<message>\n    at ..."), so the caller replaces the whole argument with this
++     * return value and the message was silently dropped (terminal showed a blank "Web ERROR").
++     * Prepend the parsed message when present so it is never lost.
++     */
++    const symbolicatedErrorStackLog = error.message ? `${error.message}\n\n${formatted.stack}` : `\n\n${formatted.stack}`;
+     return {
+         isFallback: formatted.isFallback,
+         stack: symbolicatedErrorStackLog

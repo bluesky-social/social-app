@@ -1,4 +1,5 @@
 import {createContext, useContext, useEffect, useMemo, useState} from 'react'
+import {type SharedValue, useSharedValue} from 'react-native-reanimated'
 import {nanoid} from 'nanoid/non-secure'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -44,8 +45,12 @@ const LightboxControlContext = createContext<{
 })
 LightboxControlContext.displayName = 'LightboxControlContext'
 
+const LightboxIsOpenContext = createContext<SharedValue<boolean> | null>(null)
+LightboxIsOpenContext.displayName = 'LightboxIsOpenContext'
+
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [activeLightbox, setActiveLightbox] = useState<Lightbox | null>(null)
+  const isOpen = useSharedValue(false)
   const {disableScope, enableScope} = useHotkeysContext()
 
   useEffect(() => {
@@ -78,12 +83,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           return {...lightbox, id: nanoid()}
         }
       })
+      isOpen.set(true)
     },
   )
 
   const closeLightbox = useNonReactiveCallback(() => {
     let wasActive = !!activeLightbox
     setActiveLightbox(null)
+    isOpen.set(false)
     return wasActive
   })
 
@@ -105,7 +112,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   return (
     <LightboxContext.Provider value={state}>
       <LightboxControlContext.Provider value={methods}>
-        {children}
+        <LightboxIsOpenContext.Provider value={isOpen}>
+          {children}
+        </LightboxIsOpenContext.Provider>
       </LightboxControlContext.Provider>
     </LightboxContext.Provider>
   )
@@ -117,4 +126,13 @@ export function useLightbox() {
 
 export function useLightboxControls() {
   return useContext(LightboxControlContext)
+}
+
+/**
+ * Whether a lightbox is open, as a shared value for UI-thread readers. Unlike
+ * `useLightbox()`, reading it doesn't re-render anything when the lightbox
+ * opens or closes.
+ */
+export function useLightboxIsOpenSharedValue() {
+  return useContext(LightboxIsOpenContext)
 }

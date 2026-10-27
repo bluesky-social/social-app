@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 
 import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
+import {SHOW_ROW_BORDERS} from '#/screens/Notifications/rowBorders'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {PostControlsSkeleton} from '#/components/PostControls'
 import * as Skele from '#/components/Skeleton'
@@ -67,6 +68,8 @@ const FOLLOWER_ROW_COUNT = 20
  * when they replace them.
  */
 export function LoadingSkeleton({feed}: {feed: GroupedNotificationsFeed}) {
+  const t = useTheme()
+
   if (feed === 'followers') {
     return <FollowersSkeleton />
   }
@@ -82,7 +85,17 @@ export function LoadingSkeleton({feed}: {feed: GroupedNotificationsFeed}) {
     const kind = kinds[i % kinds.length]
     const index = counts.get(kind) ?? 0
     counts.set(kind, index + 1)
-    rows.push(<RowSkeleton key={i} kind={kind} index={index} />)
+    rows.push(
+      // Divided like the rows they stand in for
+      <View
+        key={i}
+        style={[
+          i > 0 &&
+            SHOW_ROW_BORDERS && [a.border_t, t.atoms.border_contrast_low],
+        ]}>
+        <RowSkeleton kind={kind} index={index} />
+      </View>,
+    )
   }
 
   return (
@@ -99,8 +112,15 @@ export function LoadingSkeleton({feed}: {feed: GroupedNotificationsFeed}) {
  * move when it arrives.
  */
 function TodayHeaderSkeleton() {
+  const t = useTheme()
+
   return (
-    <View style={[a.px_lg, a.py_sm]}>
+    <View
+      style={[
+        a.px_lg,
+        a.py_sm,
+        SHOW_ROW_BORDERS && [a.border_b, t.atoms.border_contrast_low],
+      ]}>
       <Skele.Text style={[a.text_md, a.font_bold, {width: 48}]} />
     </View>
   )
@@ -177,8 +197,8 @@ function ReactionSkeleton({index}: {index: number}) {
 }
 
 /**
- * Stands in for a single follow: the headline, a short line of who you have
- * in common, the time, and a follow button.
+ * Stands in for a single follow: the headline with a follow button beside
+ * it, a short line of who you have in common, and the time.
  */
 function FollowSkeleton({index}: {index: number}) {
   const even = index % 2 === 0
@@ -187,13 +207,12 @@ function FollowSkeleton({index}: {index: number}) {
     <Row>
       <Item.AvatarSkeleton />
       <Item.Content>
-        <Lines style={a.text_md} widths={[even ? '60%' : '50%']} />
+        <Item.HeadlineWithButton button={<FollowButtonSkeleton />}>
+          <Lines style={a.text_md} widths={[even ? '60%' : '50%']} />
+        </Item.HeadlineWithButton>
         <Lines blend style={a.text_sm} widths={[even ? '45%' : '55%']} />
         <TimestampSkeleton />
       </Item.Content>
-      <Item.Trailing>
-        <FollowButtonSkeleton />
-      </Item.Trailing>
     </Row>
   )
 }
@@ -340,8 +359,8 @@ function TimestampSkeleton() {
 }
 
 /**
- * Stands in for `Item.AvatarRow` and its avatars. With `overflow`, a
- * fainter circle at the end stands in for its "+N" chip.
+ * Stands in for `Item.AvatarRow` and its avatars. With `overflow`, a fainter
+ * bar at the end stands in for its "+N" count.
  */
 function AvatarRowSkeleton({
   count,
@@ -355,7 +374,13 @@ function AvatarRowSkeleton({
       {Array.from({length: count}, (_, index) => (
         <Skele.Circle key={index} size={Item.PREVIEW_AVATAR_SIZE} />
       ))}
-      {overflow && <Skele.Circle blend size={Item.PREVIEW_AVATAR_SIZE} />}
+      {overflow && (
+        <Skele.Block
+          blend
+          // Inset by the toggle's padding, as the "+N" is
+          style={{width: 24, height: 12, marginLeft: Item.TOGGLE_PADDING}}
+        />
+      )}
     </View>
   )
 }

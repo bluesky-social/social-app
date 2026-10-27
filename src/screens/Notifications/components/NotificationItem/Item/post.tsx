@@ -38,7 +38,7 @@ import {Text} from '#/components/Typography'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {makePostLink} from '../links'
-import {Card, getPostThumbnails, InlineImages} from './media'
+import {Card, FeedCard, getPostThumbnails, InlineImages} from './media'
 import {Strong, useDisplayName} from './text'
 
 type PostView = app.bsky.feed.defs.PostView
@@ -119,7 +119,8 @@ export function Author({profile}: {profile: bsky.profile.AnyProfileView}) {
 
 /**
  * A single line of context under the author, with a small leading icon, e.g.
- * "replied to: ...". Children are text spans, truncated with an ellipsis.
+ * "replied to **you**: ...". Children are text spans, truncated with an
+ * ellipsis.
  */
 export function ContextLine({
   icon: Icon,
@@ -144,8 +145,8 @@ export function ContextLine({
 }
 
 /**
- * Which post a notification's post is responding to, e.g. "replied to: <your
- * post>" or "replied to **bob**: <bob's post>".
+ * Which post a notification's post is responding to, e.g. "replied to **you**:
+ * <your post>" or "replied to **bob**: <bob's post>".
  */
 export function ReplyContext({
   parent,
@@ -193,7 +194,11 @@ function ReplyContextPost({
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
-  const name = forceLTR(useDisplayName(post.author))
+  /*
+   * Who was replied to, when it isn't the viewer. The sentences name their
+   * placeholder after this, so it stays `subject` to keep their translations
+   */
+  const subject = forceLTR(useDisplayName(post.author))
   const isViewer = post.author.did === currentAccount?.did
 
   const isHidden = moderationOpts
@@ -230,6 +235,8 @@ function ReplyContextPost({
         }
         authorHandle={post.author.handle}
         disableLinks
+        // Text with only emoji is scaled up, which the one-line preview clips
+        emojiMultiplier={1}
         style={previewStyle}
       />
     ) : (
@@ -238,21 +245,29 @@ function ReplyContextPost({
       </Text>
     )
 
+  /*
+   * The viewer gets sentences of their own, rather than "you" filled in for
+   * `subject`, since some languages word the rest differently for "you"
+   */
   if (variant === 'reply') {
     return isViewer ? (
-      <Trans>replied to: {previewNode}</Trans>
+      <Trans comment="In a notification, someone replied to the viewer’s own post. Followed by a preview of that post">
+        replied to <Strong style={a.text_sm}>you</Strong>: {previewNode}
+      </Trans>
     ) : (
-      <Trans>
-        replied to <Strong style={a.text_sm}>{name}</Strong>: {previewNode}
+      <Trans comment="In a notification, someone replied to another person’s post. {subject} is that person’s name, followed by a preview of their post">
+        replied to <Strong style={a.text_sm}>{subject}</Strong>: {previewNode}
       </Trans>
     )
   }
 
   return isViewer ? (
-    <Trans>in reply to: {previewNode}</Trans>
+    <Trans comment="In a notification about a mention or quote, the post is a reply to the viewer’s own post. Followed by a preview of that post">
+      in reply to <Strong style={a.text_sm}>you</Strong>: {previewNode}
+    </Trans>
   ) : (
-    <Trans>
-      in reply to <Strong style={a.text_sm}>{name}</Strong>: {previewNode}
+    <Trans comment="In a notification about a mention or quote, the post is a reply to another person’s post. {subject} is that person’s name, followed by a preview of their post">
+      in reply to <Strong style={a.text_sm}>{subject}</Strong>: {previewNode}
     </Trans>
   )
 }
@@ -337,19 +352,19 @@ export function PostBody({post}: {post: PostView}) {
 
 /**
  * What `EmbedPreview` shows for an embed, by what it ends with: `media` for
- * thumbnails and links, `quote` for a quoted post (with or without media
- * above it), or undefined when it shows nothing.
+ * thumbnails and links, `quote` for a quoted post or a shared feed (with or
+ * without media above it), or undefined when it shows nothing.
  */
 function getEmbedPreviewKind(
   embed: NonNullable<PostView['embed']>,
 ): 'media' | 'quote' | undefined {
   if (bsky.isType(app.bsky.embed.recordWithMedia.view, embed)) {
-    return hasQuoteCard(embed.record)
+    return hasRecordCard(embed.record)
       ? 'quote'
       : getEmbedPreviewKind(embed.media)
   }
   if (bsky.isType(app.bsky.embed.record.view, embed)) {
-    return hasQuoteCard(embed) ? 'quote' : undefined
+    return hasRecordCard(embed) ? 'quote' : undefined
   }
   if (bsky.isType(app.bsky.embed.external.view, embed)) {
     return 'media'
@@ -358,14 +373,15 @@ function getEmbedPreviewKind(
 }
 
 /**
- * Whether `QuoteCard` renders anything for a record embed.
+ * Whether `RecordPreview` renders anything for a record embed.
  */
-function hasQuoteCard(embed: app.bsky.embed.record.View) {
+function hasRecordCard(embed: app.bsky.embed.record.View) {
   switch (bsky.post.parseEmbedRecordView(embed).type) {
     case 'post':
     case 'post_blocked':
     case 'post_not_found':
     case 'post_detached':
+    case 'feed':
       return true
     default:
       return false
@@ -373,9 +389,23 @@ function hasQuoteCard(embed: app.bsky.embed.record.View) {
 }
 
 /**
+ * The card for a record embed: a quoted post, or a feed that was shared.
+ * Without it a post that shares a feed reads like a plain reply to whoever
+ * made the feed. Other records, like lists, render nothing.
+ */
+function RecordPreview({embed}: {embed: app.bsky.embed.record.View}) {
+  const parsed = bsky.post.parseEmbedRecordView(embed)
+
+  if (parsed.type === 'feed') {
+    return <FeedCard generator={parsed.view} />
+  }
+  return <QuoteCard embed={embed} />
+}
+
+/**
  * A compact stand-in for the full post embed: thumbnails for media, the
- * usual external embed for links, a card for quoted posts, and nothing for
- * feeds, lists and the like.
+ * usual external embed for links, a card for quoted posts and shared feeds,
+ * and nothing for lists and the like.
  */
 function EmbedPreview({
   embed,
@@ -393,12 +423,12 @@ function EmbedPreview({
     return (
       <View style={[a.gap_sm]}>
         <EmbedPreview embed={embed.media} post={post} moderation={moderation} />
-        <QuoteCard embed={embed.record} />
+        <RecordPreview embed={embed.record} />
       </View>
     )
   }
   if (bsky.isType(app.bsky.embed.record.view, embed)) {
-    return <QuoteCard embed={embed} />
+    return <RecordPreview embed={embed} />
   }
   if (bsky.isType(app.bsky.embed.external.view, embed)) {
     return (
