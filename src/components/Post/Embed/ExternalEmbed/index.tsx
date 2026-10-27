@@ -30,6 +30,7 @@ export const ExternalEmbed = ({
   style,
   hideAlt,
   presentation = 'default',
+  borderColor,
 }: {
   link: app.bsky.embed.external.ViewExternal
   onOpen?: () => void
@@ -41,6 +42,11 @@ export const ExternalEmbed = ({
    * beside its title and domain. It never plays media inline.
    */
   presentation?: 'default' | 'compact'
+  /**
+   * The colour of the card's borders while it isn't hovered, for a card on a
+   * background that `border_contrast_low` doesn't show against.
+   */
+  borderColor?: string
 }) => {
   const {t: l} = useLingui()
   const t = useTheme()
@@ -79,6 +85,7 @@ export const ExternalEmbed = ({
         onPress={onPress}
         onLongPress={onShareExternal}
         style={style}
+        borderColor={borderColor}
       />
     )
   }
@@ -123,7 +130,9 @@ export const ExternalEmbed = ({
             style,
             hovered
               ? t.atoms.border_contrast_high
-              : t.atoms.border_contrast_low,
+              : borderColor
+                ? {borderColor}
+                : t.atoms.border_contrast_low,
           ]}>
           {imageUri && !embedPlayerParams ? (
             <Image
@@ -153,7 +162,9 @@ export const ExternalEmbed = ({
               hasMedia && a.border_t,
               hovered
                 ? t.atoms.border_contrast_high
-                : t.atoms.border_contrast_low,
+                : borderColor
+                  ? {borderColor}
+                  : t.atoms.border_contrast_low,
             ]}>
             <View style={[{gap: 3}, a.pb_xs, a.px_md]}>
               {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
@@ -220,11 +231,13 @@ function CompactExternalEmbed({
   onPress,
   onLongPress,
   style,
+  borderColor,
 }: {
   link: app.bsky.embed.external.ViewExternal
   onPress: () => void
   onLongPress?: () => void
   style?: StyleProp<ViewStyle>
+  borderColor?: string
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
@@ -254,7 +267,9 @@ function CompactExternalEmbed({
             style,
             hovered
               ? t.atoms.border_contrast_high
-              : t.atoms.border_contrast_low,
+              : borderColor
+                ? {borderColor}
+                : t.atoms.border_contrast_low,
           ]}>
           {link.thumb && (
             <Image
