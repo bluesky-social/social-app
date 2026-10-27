@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 
 import * as Item from '#/screens/Notifications/components/NotificationItem/Item'
-import {atoms as a, platform, ThemeProvider, useAlf, useTheme} from '#/alf'
+import {atoms as a, ThemeProvider, useAlf, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {ProfileBadges as Badges, type Size} from '#/components/ProfileBadges'
 import {H1, H3, Text} from '#/components/Typography'
@@ -226,7 +226,6 @@ const CALL_SITE_CASES: CallSiteCase[] = [
     size: 'sm',
     row: [a.flex_row, a.align_center, a.gap_xs],
     text: [a.text_md, a.font_semi_bold, a.leading_snug],
-    badge: [{marginTop: platform({android: -2})}],
   },
   {
     id: 'S3',
@@ -242,11 +241,7 @@ const CALL_SITE_CASES: CallSiteCase[] = [
     size: 'md',
     row: [a.flex_row, a.align_end, a.flex_shrink],
     text: [a.font_semi_bold, a.leading_tight, a.flex_shrink_0],
-    badge: [
-      a.pl_2xs,
-      a.self_center,
-      {marginTop: platform({default: 0, android: -1})},
-    ],
+    badge: [a.pl_2xs, a.self_center],
   },
   {
     id: 'S5',
