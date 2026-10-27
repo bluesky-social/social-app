@@ -41,7 +41,6 @@ patchedDependencies:
   'expo-image@58.0.15': patches/expo-image@58.0.15.patch
   'expo-media-library@58.0.10': patches/expo-media-library@58.0.10.patch
   'expo-modules-core@58.0.22': patches/expo-modules-core@58.0.22.patch
-  expo-notifications@58.1.5: patches/expo-notifications@58.1.5.patch
   expo-updates@58.0.17: patches/expo-updates@58.0.17.patch
   expo-widgets@58.0.22: patches/expo-widgets@58.0.22.patch
   expo@58.0.14: patches/expo@58.0.14.patch
