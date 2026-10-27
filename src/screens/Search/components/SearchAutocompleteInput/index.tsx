@@ -3,7 +3,11 @@ import {type TextInput, View} from 'react-native'
 import {useSift} from '@bsky.app/sift'
 
 import {mergeRefs} from '#/lib/merge-refs'
-import {getProfileTypeaheadQuery} from '#/screens/Search/profileTypeahead'
+import {
+  completeTrailingFrom,
+  getProfileTypeaheadQuery,
+  getTrailingFromValue,
+} from '#/screens/Search/profileTypeahead'
 import {atoms as a} from '#/alf'
 import {
   Autocomplete,
@@ -53,13 +57,19 @@ export function SearchAutocompleteInput({
     // avoids a typeahead request on mount when arriving with text already
     // present (e.g. /search?q=foo).
     query: active ? getProfileTypeaheadQuery(value) : '',
-    searchFallback: active ? value : undefined,
+    // Trimmed since completing a from: handle leaves a trailing space.
+    searchFallback: active ? value.trim() : undefined,
   })
 
   const showDropdown =
     active && !fixedParams && value.length > 0 && items.length > 0
 
   function onSelect(item: AutocompleteItem) {
+    if (item.type === 'profile' && getTrailingFromValue(value) !== undefined) {
+      // Fill in the from: handle and keep typing rather than open the profile.
+      onChangeText?.(completeTrailingFrom(value, item.profile.handle))
+      return
+    }
     if (item.type === 'profile') {
       const position = items.filter(i => i.type === 'profile').indexOf(item)
       onSelectProfile?.(item.profile, position)

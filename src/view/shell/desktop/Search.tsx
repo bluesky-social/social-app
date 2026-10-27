@@ -4,7 +4,11 @@ import {useSift} from '@bsky.app/sift'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
-import {getProfileTypeaheadQuery} from '#/screens/Search/profileTypeahead'
+import {
+  completeTrailingFrom,
+  getProfileTypeaheadQuery,
+  getTrailingFromValue,
+} from '#/screens/Search/profileTypeahead'
 import {atoms as a} from '#/alf'
 import {
   Autocomplete as AutocompleteBase,
@@ -52,6 +56,11 @@ export function DesktopSearch() {
   }
 
   const onSelect = (item: AutocompleteItem) => {
+    if (item.type === 'profile' && getTrailingFromValue(query) !== undefined) {
+      // Fill in the from: handle and keep typing rather than open the profile.
+      setQuery(completeTrailingFrom(query, item.profile.handle))
+      return
+    }
     if (item.type === 'profile') {
       onClearText()
       sift.elements.input.blur()
@@ -101,7 +110,8 @@ function Inner({
   const {items} = useAutocomplete({
     type: 'profile',
     query: getProfileTypeaheadQuery(query),
-    searchFallback: query,
+    // Trimmed since completing a from: handle leaves a trailing space.
+    searchFallback: query.trim(),
   })
 
   return items && items.length ? (
