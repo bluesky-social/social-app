@@ -311,7 +311,9 @@ jobs:
     uses: $/.github/workflows/build-submit-android.yml
     with:
       profile: testflight-android
-      runner: ubuntu-latest
+      # No runner override: the build keeps the reusable workflow's 32-core default.
+      # Building React Native from source gets killed mid-Gradle on ubuntu-latest
+      # (Ubuntu 26.04), and the post-build jobs already run on ubuntu-latest.
     # Pass only the secrets the reusable workflow declares, rather than `secrets: inherit`,
     # so this workflow never hands the reusable workflow the entire repo secret store.
     secrets:
