@@ -8,6 +8,7 @@ import {logger} from '#/logger'
 import {useLanguagePrefs} from '#/state/preferences'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
+import {useAnalytics} from '#/analytics'
 import {
   clearTrendingWidgetBackgroundConfig,
   registerTrendingWidgetBackgroundTask,
@@ -15,17 +16,22 @@ import {
   unregisterTrendingWidgetBackgroundTask,
 } from '#/features/trendingWidget/BackgroundTask'
 import {updateTrendingWidgetSnapshot} from '#/features/trendingWidget/Snapshot'
+import {device} from '#/storage'
 
 export function TrendingTopicsWidgetSync() {
   const {t: l} = useLingui()
+  const ax = useAnalytics()
   /**
    * `undefined` until the first check finishes.
    */
   const [isWidgetInstalled, setIsWidgetInstalled] = useState<boolean>()
+  /*
+   * Fetched whether or not the widget is installed, so it has data as soon as
+   * it's added. The default fetch limit shares the cache with the feed's
+   * trending topics.
+   */
   const {data} = useGetTrendsQuery({
-    enabled: isWidgetInstalled === true,
-    fetchLimit: 10,
-    limit: 5,
+    limit: 10,
     refetchOnWindowFocus: true,
   })
   const {data: preferences} = usePreferencesQuery()
@@ -41,8 +47,11 @@ export function TrendingTopicsWidgetSync() {
     const updateInstalledState = async () => {
       try {
         const isInstalled = await WidgetInfo.isInstalled('TrendingTopicsWidget')
-        if (!cancelled) {
-          setIsWidgetInstalled(isInstalled)
+        if (cancelled) return
+        setIsWidgetInstalled(isInstalled)
+        if (isInstalled && !device.get(['trendingWidgetInstalled'])) {
+          device.set(['trendingWidgetInstalled'], true)
+          ax.metric('trendingWidget:installed', {})
         }
       } catch (error) {
         logger.error(
@@ -65,7 +74,7 @@ export function TrendingTopicsWidgetSync() {
       cancelled = true
       subscription.remove()
     }
-  }, [])
+  }, [ax])
 
   // keep the background refresh registered only while the widget is installed
   useEffect(() => {
@@ -107,16 +116,38 @@ export function TrendingTopicsWidgetSync() {
     })
   }, [copy, languagePrefs.contentLanguages, preferences])
 
+  /*
+   * The widget is only visible while the app isn't, so sync it whenever the
+   * app leaves the foreground. That also re-renders it, which picks up things
+   * like a light/dark mode change. If the trends arrive after the app has
+   * already left, sync straight away.
+   */
   useEffect(() => {
     if (!data) return
 
-    try {
-      updateTrendingWidgetSnapshot(data.trends, copy)
-    } catch (error) {
-      logger.error('Failed to update the trending topics widget', {
-        safeMessage: error,
-      })
+    const sync = () => {
+      try {
+        updateTrendingWidgetSnapshot(data.trends, copy, data.recId)
+      } catch (error) {
+        logger.error('Failed to update the trending topics widget', {
+          safeMessage: error,
+        })
+      }
     }
+
+    let isActive = AppState.currentState === 'active'
+    if (!isActive) {
+      sync()
+    }
+    // iOS goes through `inactive` on the way to `background`
+    const subscription = AppState.addEventListener('change', state => {
+      if (isActive && state !== 'active') {
+        sync()
+      }
+      isActive = state === 'active'
+    })
+
+    return () => subscription.remove()
   }, [copy, data])
 
   return null

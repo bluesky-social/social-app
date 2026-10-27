@@ -281,6 +281,8 @@ module.exports = function (_config) {
         ],
         'expo-web-browser',
         'expo-background-task',
+        // edits expo-widgets' output, and mods run in reverse order
+        './plugins/withTrendingWidget.js',
         [
           'expo-widgets',
           {

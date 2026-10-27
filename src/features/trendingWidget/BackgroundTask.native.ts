@@ -5,7 +5,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {createBskyTopicsHeader} from '#/lib/api/feed/utils'
 import {logger} from '#/logger'
-import {filterTrends} from '#/state/queries/trending/useGetTrendsQuery'
+import {
+  DEFAULT_FETCH_LIMIT,
+  filterTrends,
+} from '#/state/queries/trending/useGetTrendsQuery'
 import {getPublicAppviewClient} from '#/state/session/clients'
 import {
   type TrendingWidgetCopy,
@@ -15,8 +18,7 @@ import {app} from '#/lexicons'
 
 const TASK_NAME = 'bluesky-trending-widget-refresh'
 const CONFIG_KEY = 'bluesky-trending-widget-background-config'
-const FETCH_LIMIT = 10
-const DISPLAY_LIMIT = 5
+const TOPIC_LIMIT = 10
 const MINIMUM_INTERVAL_MINUTES = 60
 
 type BackgroundConfig = {
@@ -41,7 +43,7 @@ TaskManager.defineTask(TASK_NAME, async () => {
     const config: BackgroundConfig = JSON.parse(storedConfig)
     const data = await getPublicAppviewClient().call(
       app.bsky.unspecced.getTrends,
-      {limit: FETCH_LIMIT},
+      {limit: DEFAULT_FETCH_LIMIT},
       {
         headers: {
           ...createBskyTopicsHeader(config.interests),
@@ -52,10 +54,10 @@ TaskManager.defineTask(TASK_NAME, async () => {
     const trends = filterTrends(
       data.trends ?? [],
       config.mutedWords,
-      DISPLAY_LIMIT,
+      TOPIC_LIMIT,
     )
 
-    updateTrendingWidgetSnapshot(trends, config.copy)
+    updateTrendingWidgetSnapshot(trends, config.copy, data.recIdStr)
     return BackgroundTask.BackgroundTaskResult.Success
   } catch (error) {
     logger.error('Failed to refresh the trending widget in the background', {

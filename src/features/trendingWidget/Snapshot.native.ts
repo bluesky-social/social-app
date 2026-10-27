@@ -1,3 +1,4 @@
+import {createWidgetTopicUrl} from '#/features/trendingWidget/links'
 import TrendingTopicsWidget from '#/features/trendingWidget/TrendingTopicsWidget'
 import {type app} from '#/lexicons'
 
@@ -11,16 +12,15 @@ type Trend = app.bsky.unspecced.getTrends.$OutputBody['trends'][number]
 export function updateTrendingWidgetSnapshot(
   trends: Trend[],
   copy: TrendingWidgetCopy,
+  recId?: string,
 ) {
   TrendingTopicsWidget.updateSnapshot({
     emptyMessage: copy.emptyMessage,
     title: copy.title,
-    topics: trends.map(trend => ({
+    topics: trends.map((trend, index) => ({
       displayName: trend.displayName,
       description: trend.description,
-      destination: trend.link.startsWith('http')
-        ? trend.link
-        : `https://bsky.app${trend.link.startsWith('/') ? '' : '/'}${trend.link}`,
+      destination: createWidgetTopicUrl(trend.link, {rank: index + 1, recId}),
     })),
   })
 }

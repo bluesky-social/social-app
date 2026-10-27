@@ -9,6 +9,8 @@ import {
   VStack,
 } from '@expo/ui/swift-ui'
 import {
+  background,
+  clipShape,
   containerBackground,
   font,
   foregroundStyle,
@@ -16,6 +18,7 @@ import {
   lineLimit,
   minimumScaleFactor,
   padding,
+  resizable,
   widgetURL,
 } from '@expo/ui/swift-ui/modifiers'
 
@@ -135,10 +138,11 @@ function TrendingTopicsWidget(
       ]}>
       {!isSmall ? (
         <HStack spacing={6} modifiers={[padding({bottom: 4})]}>
+          {/* from the extension's asset catalog, see plugins/withTrendingWidget.js */}
           <Image
-            systemName="chart.line.uptrend.xyaxis"
-            size={14}
+            assetName="BlueskyButterfly"
             color="#0085FF"
+            modifiers={[resizable(), frame({width: 14, height: 14})]}
           />
           <Text
             modifiers={[
@@ -175,6 +179,20 @@ function TrendingTopicsWidget(
             ]}>
             {props.emptyMessage ?? 'Open Bluesky to load trending topics.'}
           </Text>
+          {/* the whole widget opens the app, this just makes that obvious */}
+          {props.topics ? null : (
+            <Text
+              modifiers={[
+                font({size: 13, weight: 'semibold'}),
+                foregroundStyle('#FFFFFF'),
+                padding({horizontal: 14, vertical: 7}),
+                background('#0085FF'),
+                clipShape('capsule'),
+                padding({top: 6}),
+              ]}>
+              Open Bluesky
+            </Text>
+          )}
         </VStack>
       )}
     </VStack>

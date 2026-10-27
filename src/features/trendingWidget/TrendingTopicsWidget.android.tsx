@@ -45,7 +45,7 @@ function TrendingTopicsWidget(
   'widget'
 
   const isDark = environment.colorScheme === 'dark'
-  const topics = (props.topics ?? []).slice(0, 5)
+  const topics = props.topics ?? []
   const backgroundColor = isDark ? '#10161F' : '#FFFFFF'
   const textColor = isDark ? '#F1F3F5' : '#0A0A0A'
   const secondaryTextColor = isDark ? '#AEBBC9' : '#536471'
@@ -84,18 +84,17 @@ function TrendingTopicsWidget(
           {topics.map((topic, index) => (
             <Column key={topic.destination} modifiers={[fillMaxWidth()]}>
               <Button url={topic.destination} modifiers={[fillMaxWidth()]}>
-                <Row modifiers={[fillMaxWidth(), padding(0, 7, 0, 7)]}>
+                <Row modifiers={[fillMaxWidth(), padding(0, 5, 0, 5)]}>
                   <Text
                     color={secondaryTextColor}
-                    style={{fontSize: 13, fontWeight: '500'}}
-                    modifiers={[width(20)]}>
+                    style={{fontSize: 14, fontWeight: '500'}}
+                    modifiers={[width(24)]}>
                     {`${index + 1}.`}
                   </Text>
                   <Column modifiers={[fillMaxWidth()]}>
                     <Text
                       color={textColor}
-                      maxLines={1}
-                      style={{fontSize: 14, fontWeight: '600'}}>
+                      style={{fontSize: 14, fontWeight: 'bold'}}>
                       {topic.displayName}
                     </Text>
                     {topic.description ? (
@@ -130,6 +129,25 @@ function TrendingTopicsWidget(
               style={{fontSize: 13}}>
               {props.emptyMessage ?? 'Open Bluesky to load trending topics.'}
             </Text>
+            {/* the whole card opens the app, this just makes that obvious */}
+            {props.topics ? null : (
+              <Column>
+                <Spacer modifiers={[height(12)]} />
+                <Row
+                  modifiers={[
+                    cornerRadius(16),
+                    background('#0085FF'),
+                    padding(14, 7, 14, 7),
+                  ]}>
+                  <Text
+                    color="#FFFFFF"
+                    maxLines={1}
+                    style={{fontSize: 13, fontWeight: 'bold'}}>
+                    Open Bluesky
+                  </Text>
+                </Row>
+              </Column>
+            )}
           </Column>
         </Button>
       )}
