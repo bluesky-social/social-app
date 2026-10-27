@@ -13,6 +13,7 @@ import {
   type AutocompleteItemType,
   type AutocompleteProfile,
 } from '#/components/Autocomplete/types'
+import {isWholeWordMatch} from '#/components/Autocomplete/util'
 import {app} from '#/lexicons'
 import {useEmojiSearch} from './useEmojiSearch'
 
@@ -58,12 +59,14 @@ export function useAutocomplete({
           limit: limit || 8,
         })
 
-        return (data?.actors || []).map(profile => ({
-          key: profile.did,
-          type: 'profile' as const,
-          value: '@' + profile.handle,
-          profile,
-        }))
+        return (data?.actors || [])
+          .filter(isWholeWordMatch(q))
+          .map(profile => ({
+            key: profile.did,
+            type: 'profile' as const,
+            value: '@' + profile.handle,
+            profile,
+          }))
       } else if (type === 'emoji') {
         return emojiSearch(q, limit || 8)
       }
