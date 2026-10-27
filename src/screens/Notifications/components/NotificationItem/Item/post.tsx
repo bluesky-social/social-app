@@ -446,6 +446,9 @@ function EmbedPreview({
    */
   moderation: ModerationDecision | undefined
 }) {
+  const t = useTheme()
+  const {isRead} = useItemContext()
+
   if (bsky.isType(app.bsky.embed.recordWithMedia.view, embed)) {
     return (
       <View style={[a.gap_sm]}>
@@ -460,7 +463,12 @@ function EmbedPreview({
   if (bsky.isType(app.bsky.embed.external.view, embed)) {
     return (
       <ContentHider modui={moderation?.ui('contentMedia')}>
-        <ExternalEmbed link={embed.external} post={post} />
+        <ExternalEmbed
+          link={embed.external}
+          post={post}
+          // Matches `Card`, whose border the post's own embeds don't share
+          borderColor={getRowBorderColor(t, !isRead)}
+        />
       </ContentHider>
     )
   }
