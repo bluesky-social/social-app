@@ -34,6 +34,7 @@ import {
 } from '#/state/queries/profile'
 import {extractFromMe} from '#/state/queries/search-posts-params'
 import {useSession} from '#/state/session'
+import {getProfileTypeaheadQuery} from '#/screens/Search/profileTypeahead'
 import {
   countActiveFilters,
   definedFilterParams,
@@ -150,7 +151,7 @@ export function SearchScreenShell({
        * query; only the native inline list consumes this one, so pass an empty
        * query on web to keep the hook a no-op instead of doing wasted work.
        */
-      query: IS_NATIVE ? searchText : '',
+      query: IS_NATIVE ? getProfileTypeaheadQuery(searchText) : '',
     })
 
   const [showAutocomplete, setShowAutocomplete] = useState(false)

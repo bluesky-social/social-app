@@ -4,6 +4,7 @@ import {useSift} from '@bsky.app/sift'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
+import {getProfileTypeaheadQuery} from '#/screens/Search/profileTypeahead'
 import {atoms as a} from '#/alf'
 import {
   Autocomplete as AutocompleteBase,
@@ -99,8 +100,8 @@ function Inner({
 }) {
   const {items} = useAutocomplete({
     type: 'profile',
-    query,
-    showSearchFallback: true,
+    query: getProfileTypeaheadQuery(query),
+    searchFallback: query,
   })
 
   return items && items.length ? (

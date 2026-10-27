@@ -3,6 +3,7 @@ import {type TextInput, View} from 'react-native'
 import {useSift} from '@bsky.app/sift'
 
 import {mergeRefs} from '#/lib/merge-refs'
+import {getProfileTypeaheadQuery} from '#/screens/Search/profileTypeahead'
 import {atoms as a} from '#/alf'
 import {
   Autocomplete,
@@ -51,8 +52,8 @@ export function SearchAutocompleteInput({
     // The dropdown only shows while active, so don't fetch otherwise. This
     // avoids a typeahead request on mount when arriving with text already
     // present (e.g. /search?q=foo).
-    query: active ? value : '',
-    showSearchFallback: true,
+    query: active ? getProfileTypeaheadQuery(value) : '',
+    searchFallback: active ? value : undefined,
   })
 
   const showDropdown =

@@ -25,12 +25,17 @@ export function useAutocomplete({
   type,
   query: q,
   limit,
-  showSearchFallback = false,
+  searchFallback,
 }: {
   type: AutocompleteItemType
   query: string
   limit?: number
-  showSearchFallback?: boolean
+  /**
+   * When non-empty, a "Search for ..." item that submits this text leads the
+   * results. It may differ from `query`, e.g. when only part of a search is
+   * looked up as a profile.
+   */
+  searchFallback?: string
 }): AutocompleteApi {
   const client = useAppviewClient()
   const moderationOpts = useModerationOpts()
@@ -103,18 +108,19 @@ export function useAutocomplete({
       return []
     }
 
-    const results = [...query.data]
+    // keepPreviousData holds the last matches for a moment after `query` empties.
+    const results = q ? [...query.data] : []
 
-    if (showSearchFallback && q) {
+    if (searchFallback) {
       results.unshift({
-        key: `search-${q}`,
+        key: `search-${searchFallback}`,
         type: 'search' as const,
-        value: q,
+        value: searchFallback,
       })
     }
 
     return results
-  }, [query.data, showSearchFallback, q])
+  }, [query.data, searchFallback, q])
 
   return {
     query: q,
