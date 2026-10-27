@@ -10,6 +10,23 @@ import {
 } from './providers'
 
 describe('getSupportProvider', () => {
+  it.each(['https://shoulder.fan/@kat', 'https://www.shoulder.fan/@kat/main'])(
+    'recognizes Shoulder creator pages: %s',
+    url => {
+      expect(getSupportProvider(url)?.name).toBe('Shoulder')
+    },
+  )
+
+  it.each([
+    'https://shoulder.fan',
+    'https://www.shoulder.fan/',
+    'https://notshoulder.fan/@kat',
+    'https://shoulder.fan.example.com/@kat',
+    'https://shoulder.fan@example.com/@kat',
+  ])('does not classify homepages or lookalikes as Shoulder: %s', url => {
+    expect(getSupportProvider(url)).toBeUndefined()
+  })
+
   it('matches a provider domain and its subdomains', () => {
     expect(getSupportProvider('https://ko-fi.com/kat')?.name).toBe('Ko-fi')
     expect(getSupportProvider('https://www.patreon.com/kat')?.name).toBe(
@@ -157,6 +174,14 @@ describe('isInsecureLink', () => {
 })
 
 describe('validateLinkInput', () => {
+  it('normalizes a Shoulder profile link into a support link', () => {
+    const result = validateLinkInput(' shoulder.fan/@kat ')
+    expect(result.url).toBe('https://shoulder.fan/@kat')
+    expect(result.provider?.name).toBe('Shoulder')
+    expect(result.isInsecure).toBe(false)
+    expect(result.isShortener).toBe(false)
+  })
+
   it('normalizes a typed link and recognizes support providers', () => {
     const result = validateLinkInput(' ko-fi.com/kat ')
     expect(result.url).toBe('https://ko-fi.com/kat')
