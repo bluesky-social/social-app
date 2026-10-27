@@ -1,13 +1,16 @@
 /*
- * Topic links in the widget carry these params so the app can log a
- * `trendingTopic:click` when it opens from one. They are stripped again before
- * the link is routed.
+ * Links in the widget carry these params so the app can log a
+ * `trendingTopic:click` (topics) or `trendingWidget:explore:click` (everything
+ * else, which opens Explore) when it opens from one. They are stripped again
+ * before the link is routed. The widget layouts can't import this file, so
+ * their Explore URL is written out by hand.
  */
 const REF_SRC = 'widget'
 const PARAMS = {
   src: 'ref_src',
   rank: 'ref_rank',
   recId: 'ref_rec_id',
+  size: 'ref_size',
 }
 
 /**
@@ -41,6 +44,16 @@ export function parseWidgetTopicClick(
     rank,
     recId: url.searchParams.get(PARAMS.recId) ?? undefined,
   }
+}
+
+/**
+ * Returns the widget size if the URL was opened from the widget's Explore link
+ * (anything but a topic). Only iOS reports a size.
+ */
+export function parseWidgetExploreClick(url: URL): {size?: string} | undefined {
+  if (url.searchParams.get(PARAMS.src) !== REF_SRC) return
+  if (url.searchParams.has(PARAMS.rank)) return
+  return {size: url.searchParams.get(PARAMS.size) ?? undefined}
 }
 
 /**

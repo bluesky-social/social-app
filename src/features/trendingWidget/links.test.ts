@@ -2,6 +2,7 @@ import {describe, expect, it} from '@jest/globals'
 
 import {
   createWidgetTopicUrl,
+  parseWidgetExploreClick,
   parseWidgetTopicClick,
   stripWidgetTopicParams,
 } from './links'
@@ -50,6 +51,35 @@ describe('parseWidgetTopicClick', () => {
   })
 })
 
+describe('parseWidgetExploreClick', () => {
+  it('reads the size from an iOS Explore link', () => {
+    expect(
+      parseWidgetExploreClick(
+        new URL('https://bsky.app/search?ref_src=widget&ref_size=systemSmall'),
+      ),
+    ).toEqual({size: 'systemSmall'})
+  })
+
+  it('accepts an Explore link without a size', () => {
+    expect(
+      parseWidgetExploreClick(
+        new URL('https://bsky.app/search?ref_src=widget'),
+      ),
+    ).toEqual({size: undefined})
+  })
+
+  it('ignores topic and other links', () => {
+    expect(
+      parseWidgetExploreClick(
+        new URL(createWidgetTopicUrl('/search?q=bluesky', {rank: 1})),
+      ),
+    ).toBeUndefined()
+    expect(
+      parseWidgetExploreClick(new URL('https://bsky.app/search?ref_src=embed')),
+    ).toBeUndefined()
+  })
+})
+
 describe('stripWidgetTopicParams', () => {
   it('removes the widget params from native paths', () => {
     expect(
@@ -57,6 +87,12 @@ describe('stripWidgetTopicParams', () => {
         'profile/trending.bsky.app/feed/abc?ref_src=widget&ref_rank=1&ref_rec_id=123',
       ),
     ).toBe('profile/trending.bsky.app/feed/abc')
+  })
+
+  it('removes the params from the Explore link', () => {
+    expect(
+      stripWidgetTopicParams('search?ref_src=widget&ref_size=systemSmall'),
+    ).toBe('search')
   })
 
   it('keeps other params', () => {

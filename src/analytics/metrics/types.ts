@@ -955,6 +955,17 @@ export type Events = {
    * for the first time.
    */
   'trendingWidget:installed': {}
+  /**
+   * The trending topics widget was tapped outside a topic, which opens
+   * Explore. On the small iOS widget that's every tap, because it can't have
+   * per-topic links. Topic taps log `trendingTopic:click` instead.
+   */
+  'trendingWidget:explore:click': {
+    /**
+     * The iOS widget family, e.g. `systemSmall`. Android doesn't report it.
+     */
+    size?: string
+  }
   'trendingVideos:show': {
     context: 'settings'
   }
