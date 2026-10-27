@@ -6,7 +6,6 @@ import {
   useRef,
   useState,
 } from 'react'
-import {InteractionManager} from 'react-native'
 import {type ModerationDecision} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -21,7 +20,16 @@ import {
   RQKEY_LINK_ROOT,
 } from '#/state/queries/resolve-link'
 import * as Toast from '#/components/Toast'
+import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
+
+/** Native provides idle callbacks; use the next frame on web for browser support. */
+function schedulePurge(callback: () => void): number {
+  return IS_NATIVE
+    ? requestIdleCallback(callback)
+    : requestAnimationFrame(callback)
+}
+const cancelPurge = IS_NATIVE ? cancelIdleCallback : cancelAnimationFrame
 
 export interface ComposerOptsPostRef {
   uri: string
@@ -76,13 +84,21 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const {_} = useLingui()
   const [state, setState] = useState<StateContext>()
   const queryClient = useQueryClient()
-  const pendingPurgeRef =
-    useRef<ReturnType<typeof InteractionManager.runAfterInteractions>>(
-      undefined,
-    )
+  const pendingPurgeRef = useRef<number | undefined>(undefined)
+
+  function cancelPendingPurge() {
+    if (pendingPurgeRef.current !== undefined) {
+      cancelPurge(pendingPurgeRef.current)
+      pendingPurgeRef.current = undefined
+    }
+  }
 
   useEffect(() => {
-    return () => pendingPurgeRef.current?.cancel()
+    return () => {
+      if (pendingPurgeRef.current !== undefined) {
+        cancelPurge(pendingPurgeRef.current)
+      }
+    }
   }, [])
 
   const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
@@ -117,8 +133,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
        * A purge scheduled by the previous composer must not delete files from
        * a composer that is opened before the callback gets to run.
        */
-      pendingPurgeRef.current?.cancel()
-      pendingPurgeRef.current = undefined
+      cancelPendingPurge()
       setState(prevOpts => {
         if (prevOpts) {
           // Never replace an already open composer.
@@ -133,8 +148,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     let wasOpen = !!state
     if (wasOpen) {
       setState(undefined)
-      pendingPurgeRef.current?.cancel()
-      pendingPurgeRef.current = InteractionManager.runAfterInteractions(() => {
+      cancelPendingPurge()
+      pendingPurgeRef.current = schedulePurge(() => {
         pendingPurgeRef.current = undefined
         purgeTemporaryImageFiles()
         // Purging deletes cached thumbnails on disk, so remove the query

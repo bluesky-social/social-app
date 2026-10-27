@@ -2,10 +2,7 @@ import {Directory, File, Paths} from 'expo-file-system'
 import {type ImageManipulatorContext, SaveFormat} from 'expo-image-manipulator'
 import {nanoid} from 'nanoid/non-secure'
 
-import {
-  getImageCacheDirectory,
-  moveIfNecessary,
-} from '#/lib/media/image/cache'
+import {getImageCacheDirectory, moveIfNecessary} from '#/lib/media/image/cache'
 import {renderImage} from '#/lib/media/image-manipulator'
 import {getImageDim} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'

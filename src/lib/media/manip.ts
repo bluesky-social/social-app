@@ -358,7 +358,7 @@ export async function saveToDevice(
     } else {
       const directory = await Directory.pickDirectoryAsync()
       const file = directory.createFile(filename, type)
-      file.write(encoded, {
+      await file.write(encoded, {
         encoding: EncodingType.Base64,
       })
       return true
@@ -383,7 +383,7 @@ async function withTempFile<T>(
 
   try {
     const tmpFile = new File(tmpDir, filename)
-    tmpFile.write(encoded, {
+    await tmpFile.write(encoded, {
       encoding: EncodingType.Base64,
     })
 
