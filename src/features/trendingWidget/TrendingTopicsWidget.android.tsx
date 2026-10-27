@@ -50,7 +50,8 @@ function TrendingTopicsWidget(
   const textColor = isDark ? '#F1F3F5' : '#0A0A0A'
   const secondaryTextColor = isDark ? '#AEBBC9' : '#536471'
   const borderColor = isDark ? '#2E4052' : '#E5E7EB'
-  const rootDestination = 'https://bsky.app/search'
+  // Explore, tagged for `trendingWidget:explore:click` (see links.ts)
+  const rootDestination = 'https://bsky.app/search?ref_src=widget'
 
   return (
     <Column

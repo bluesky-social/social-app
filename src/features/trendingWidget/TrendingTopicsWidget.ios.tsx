@@ -24,6 +24,10 @@ import {
 
 export type TrendingTopicsWidgetProps = {
   emptyMessage?: string
+  /**
+   * Header for the small widget, which has no room for `title`.
+   */
+  shortTitle?: string
   title?: string
   topics?: {
     description?: string
@@ -48,8 +52,11 @@ function TrendingTopicsWidget(
   const textColor = isDark ? '#F1F3F5' : '#0A0A0A'
   const secondaryTextColor = isDark ? '#AEBBC9' : '#536471'
   const borderColor = isDark ? '#2E4052' : '#E5E7EB'
-  const rootDestination =
-    isSmall && topics[0] ? topics[0].destination : 'https://bsky.app/search'
+  /*
+   * Explore, tagged for `trendingWidget:explore:click` (see links.ts). Small
+   * widgets can't contain links, so this is their only tap target.
+   */
+  const rootDestination = `https://bsky.app/search?ref_src=widget&ref_size=${environment.widgetFamily}`
 
   function TopicRow({
     topic,
@@ -136,23 +143,33 @@ function TrendingTopicsWidget(
         padding({all: isSmall ? 14 : 18}),
         widgetURL(rootDestination),
       ]}>
-      {!isSmall ? (
-        <HStack spacing={6} modifiers={[padding({bottom: 4})]}>
-          {/* from the extension's asset catalog, see plugins/withTrendingWidget.js */}
-          <Image
-            assetName="BlueskyButterfly"
-            color="#0085FF"
-            modifiers={[resizable(), frame({width: 14, height: 14})]}
-          />
-          <Text
-            modifiers={[
-              font({size: isMedium ? 13 : 15, weight: 'bold'}),
-              foregroundStyle(textColor),
-            ]}>
-            {props.title ?? 'Trending on Bluesky'}
-          </Text>
-          <Spacer minLength={0} />
-        </HStack>
+      <HStack
+        spacing={isSmall ? 5 : 6}
+        modifiers={[padding({bottom: isSmall ? 2 : 4})]}>
+        {/* from the extension's asset catalog, see plugins/withTrendingWidget.js */}
+        <Image
+          assetName="BlueskyButterfly"
+          color="#0085FF"
+          modifiers={[
+            resizable(),
+            frame({width: isSmall ? 12 : 14, height: isSmall ? 12 : 14}),
+          ]}
+        />
+        <Text
+          modifiers={[
+            font({size: isSmall || isMedium ? 13 : 15, weight: 'bold'}),
+            foregroundStyle(textColor),
+            lineLimit(1),
+          ]}>
+          {isSmall
+            ? (props.shortTitle ?? 'Trending')
+            : (props.title ?? 'Trending on Bluesky')}
+        </Text>
+        <Spacer minLength={0} />
+      </HStack>
+      {/* only takes spare room, so three wrapped topics still fit on smaller phones */}
+      {isSmall ? (
+        <Spacer minLength={0} modifiers={[frame({maxHeight: 8})]} />
       ) : null}
 
       {topics.length ? (

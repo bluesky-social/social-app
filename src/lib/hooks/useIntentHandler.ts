@@ -16,7 +16,10 @@ import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {getTrendingTopicFeedUri} from '#/components/TrendingTopics'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
-import {parseWidgetTopicClick} from '#/features/trendingWidget/links'
+import {
+  parseWidgetExploreClick,
+  parseWidgetTopicClick,
+} from '#/features/trendingWidget/links'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
 
 type IntentType = 'compose' | 'verify-email' | 'age-assurance' | 'apply-ota'
@@ -59,6 +62,10 @@ export function useIntentHandler() {
           rank: widgetTopicClick.rank,
           recId: widgetTopicClick.recId,
         })
+      }
+      const widgetExploreClick = parseWidgetExploreClick(urlp)
+      if (widgetExploreClick) {
+        ax.metric('trendingWidget:explore:click', widgetExploreClick)
       }
       const chatInviteMatch = urlp.pathname.match(CHAT_INVITE_CODE_REGEX)
       if (chatInviteMatch) {

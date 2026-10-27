@@ -38,6 +38,11 @@ export function TrendingTopicsWidgetSync() {
   const languagePrefs = useLanguagePrefs()
   const copy = {
     emptyMessage: l`No trending topics are available right now.`,
+    shortTitle: l({
+      message: 'Trending',
+      comment:
+        'Header of the small Trending Topics home screen widget, next to the Bluesky logo. Keep it short.',
+    }),
     title: l`Trending on Bluesky`,
   }
 
