@@ -9,7 +9,7 @@ import {createComposerImage} from '#/state/gallery'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
-import {IS_NATIVE, IS_WEB_MOBILE} from '#/env'
+import {IS_ANDROID, IS_NATIVE, IS_WEB_MOBILE} from '#/env'
 import {type OpenCameraBtnProps} from './OpenCameraBtn.shared'
 
 export function OpenCameraBtn({disabled, onAdd}: OpenCameraBtnProps) {
@@ -48,7 +48,8 @@ export function OpenCameraBtn({disabled, onAdd}: OpenCameraBtnProps) {
         return
       }
 
-      if (canSaveToMediaLibrary) {
+      // Modern Android can save app-owned photos without library read access.
+      if (IS_ANDROID || canSaveToMediaLibrary) {
         try {
           await Asset.create(img.path)
         } catch (err) {
