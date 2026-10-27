@@ -54,7 +54,7 @@ import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {useAnalytics} from '#/analytics'
-import {IS_ANDROID, IS_NATIVE, IS_WEB, IS_WEB_TOUCH_DEVICE} from '#/env'
+import {IS_NATIVE, IS_WEB, IS_WEB_TOUCH_DEVICE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
 import {LiveStatusDialog} from '#/features/liveNow/components/LiveStatusDialog'
@@ -307,8 +307,7 @@ let UserAvatar = ({
     ]
   }, [size, style])
 
-  return avatar &&
-    !(moderation?.blur && IS_ANDROID /* android crashes with blur */) ? (
+  return avatar ? (
     <View style={containerStyle}>
       {usePlainRNImage ? (
         <RNImage
