@@ -32,18 +32,26 @@ export function ChangePasswordDialog({
   control: Dialog.DialogControlProps
 }) {
   const {height} = useWindowDimensions()
+  const [isProcessing, setIsProcessing] = useState(false)
 
   return (
     <Dialog.Outer
       control={control}
+      preventDismiss={isProcessing}
       nativeOptions={android({minHeight: height / 2})}>
       <Dialog.Handle />
-      <Inner />
+      <Inner isProcessing={isProcessing} setIsProcessing={setIsProcessing} />
     </Dialog.Outer>
   )
 }
 
-function Inner() {
+function Inner({
+  isProcessing,
+  setIsProcessing,
+}: {
+  isProcessing: boolean
+  setIsProcessing: (isProcessing: boolean) => void
+}) {
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const client = usePdsClient()
@@ -51,7 +59,6 @@ function Inner() {
   const control = Dialog.useDialogContext()
 
   const [stage, setStage] = useState(Stages.RequestCode)
-  const [isProcessing, setIsProcessing] = useState(false)
   const [resetCode, setResetCode] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [error, setError] = useState('')

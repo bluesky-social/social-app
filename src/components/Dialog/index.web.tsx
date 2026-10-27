@@ -57,6 +57,7 @@ export function Outer({
   control,
   onOpen,
   onClose,
+  preventDismiss = false,
   webOptions,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const {_} = useLingui()
@@ -113,9 +114,10 @@ export function Outer({
       const startTarget = pressStartTarget.current
       pressStartTarget.current = null
       if (startTarget && startTarget !== e.target) return
+      if (preventDismiss) return
       webOptions?.onBackgroundPress ? webOptions.onBackgroundPress(e) : close()
     },
-    [webOptions, close],
+    [webOptions, close, preventDismiss],
   )
 
   useImperativeHandle(
@@ -135,13 +137,14 @@ export function Outer({
       isNativePopover: false,
       nativeSnapPoint: 0,
       disableDrag: false,
+      preventDismiss,
       setDisableDrag: () => {},
       isWithinDialog: true,
       isHeightConstrained: false,
       shouldMeasureContentHeight: false,
       setDesiredContentHeight: () => {},
     }),
-    [close],
+    [close, preventDismiss],
   )
 
   return (
@@ -208,7 +211,7 @@ export function Inner({
   contentContainerStyle,
 }: DialogInnerProps) {
   const t = useTheme()
-  const {close} = useContext(Context)
+  const {close, preventDismiss} = useContext(Context)
   const {gtMobile} = useBreakpoints()
   const {reduceMotionEnabled} = useA11y()
   FocusGuards.useFocusGuards()
@@ -244,7 +247,9 @@ export function Inner({
         <DismissableLayer.DismissableLayer
           onInteractOutside={preventDefault}
           onFocusOutside={preventDefault}
-          onDismiss={close}
+          onDismiss={() => {
+            if (!preventDismiss) close()
+          }}
           style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
           {header}
           <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
@@ -352,7 +357,7 @@ export function FlatListFooter({
 
 export function Close() {
   const {_} = useLingui()
-  const {close} = useContext(Context)
+  const {close, preventDismiss} = useContext(Context)
   return (
     <View
       style={[
@@ -369,6 +374,7 @@ export function Close() {
         color="secondary"
         shape="round"
         onPress={() => close()}
+        disabled={preventDismiss}
         label={_(msg`Close active dialog`)}>
         <ButtonIcon icon={X} size="md" />
       </Button>

@@ -31,7 +31,20 @@ jest.mock('#/alf', () => ({
   web: () => ({}),
 }))
 jest.mock('#/components/Dialog', () => ({
-  Outer: ({children}: {children: React.ReactNode}) => <>{children}</>,
+  Outer: ({
+    children,
+    preventDismiss,
+  }: {
+    children: React.ReactNode
+    preventDismiss?: boolean
+  }) => {
+    const {View} = require('react-native') as typeof import('react-native')
+    return (
+      <View testID="dialogOuter" accessibilityState={{busy: !!preventDismiss}}>
+        {children}
+      </View>
+    )
+  },
   Handle: () => null,
   ScrollableInner: ({children}: {children: React.ReactNode}) => <>{children}</>,
   Close: () => null,
@@ -129,6 +142,35 @@ async function submit() {
   })
 }
 
+function deferred() {
+  let resolve!: (value: unknown) => void
+  let reject!: (reason: unknown) => void
+  const promise = new Promise((res, rej) => {
+    resolve = res
+    reject = rej
+  })
+  return {promise, resolve, reject}
+}
+
+function isDismissPrevented() {
+  const state = screen.getByTestId('dialogOuter').props.accessibilityState as {
+    busy: boolean
+  }
+  return state.busy
+}
+
+function isDisabled(label: string) {
+  const state = screen.getByLabelText(label).props.accessibilityState as
+    {disabled?: boolean} | undefined
+  return !!state?.disabled
+}
+
+function fillCodeStage() {
+  enterCodeStage()
+  fireEvent.changeText(screen.getByTestId('resetCode'), 'abcde23456')
+  fireEvent.changeText(screen.getByTestId('newPassword'), 'new-password')
+}
+
 describe('ChangePasswordDialog', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -217,5 +259,98 @@ describe('ChangePasswordDialog', () => {
     )
     expect(mockClose).not.toHaveBeenCalled()
     expect(mockLogoutCurrentAccount).not.toHaveBeenCalled()
+  })
+
+  describe('while a request is pending', () => {
+    it('prevents dismissal until a successful reset closes the dialog', async () => {
+      const request = deferred()
+      mockCall.mockReturnValueOnce(request.promise)
+      renderDialog()
+      expect(isDismissPrevented()).toBe(false)
+      fillCodeStage()
+      await submit()
+
+      expect(isDismissPrevented()).toBe(true)
+      expect(isDisabled('Change password')).toBe(true)
+      expect(isDisabled('Back')).toBe(true)
+      expect(mockClose).not.toHaveBeenCalled()
+      expect(mockLogoutCurrentAccount).not.toHaveBeenCalled()
+      expect(mockToastShow).not.toHaveBeenCalled()
+
+      await act(async () => {
+        request.resolve({})
+        await request.promise
+      })
+
+      // Still locked for the user, but the programmatic close is requested.
+      expect(isDismissPrevented()).toBe(true)
+      expect(mockClose).toHaveBeenCalledTimes(1)
+      expect(mockClose).toHaveBeenCalledWith(expect.any(Function))
+      expect(mockLogoutCurrentAccount).not.toHaveBeenCalled()
+      expect(mockToastShow).not.toHaveBeenCalled()
+
+      mockClose.mock.calls[0]?.[0]?.()
+      expect(mockLogoutCurrentAccount).toHaveBeenCalledTimes(1)
+      expect(mockLogoutCurrentAccount).toHaveBeenCalledWith('Settings')
+      expect(mockToastShow).toHaveBeenCalledTimes(1)
+    })
+
+    it('restores dismissal when the reset fails, and a retry can succeed', async () => {
+      const request = deferred()
+      mockCall.mockReturnValueOnce(request.promise)
+      renderDialog()
+      fillCodeStage()
+      await submit()
+      expect(isDismissPrevented()).toBe(true)
+
+      await act(async () => {
+        request.reject(new Error('Network request failed'))
+        await request.promise.catch(() => {})
+      })
+
+      expect(isDismissPrevented()).toBe(false)
+      expect(isDisabled('Change password')).toBe(false)
+      expect(mockClose).not.toHaveBeenCalled()
+      expect(mockLogoutCurrentAccount).not.toHaveBeenCalled()
+      expect(mockToastShow).not.toHaveBeenCalled()
+
+      await submit()
+      expect(mockCall).toHaveBeenCalledTimes(2)
+      expect(mockClose).toHaveBeenCalledTimes(1)
+      mockClose.mock.calls[0]?.[0]?.()
+      expect(mockLogoutCurrentAccount).toHaveBeenCalledTimes(1)
+      expect(mockToastShow).toHaveBeenCalledTimes(1)
+    })
+
+    it('prevents dismissal while requesting a code, then releases it without logging out', async () => {
+      const request = deferred()
+      mockCall.mockReturnValueOnce(request.promise)
+      renderDialog()
+      await act(async () => {
+        fireEvent.press(screen.getByLabelText('Request code'))
+        await Promise.resolve()
+      })
+      expect(isDismissPrevented()).toBe(true)
+
+      await act(async () => {
+        request.resolve({})
+        await request.promise
+      })
+
+      expect(isDismissPrevented()).toBe(false)
+      expect(mockClose).not.toHaveBeenCalled()
+      expect(mockLogoutCurrentAccount).not.toHaveBeenCalled()
+    })
+
+    it('does not prevent dismissal on a validation failure', async () => {
+      renderDialog()
+      enterCodeStage()
+      fireEvent.changeText(screen.getByTestId('resetCode'), 'abcde23456')
+      fireEvent.changeText(screen.getByTestId('newPassword'), 'short')
+      await submit()
+
+      expect(mockCall).not.toHaveBeenCalled()
+      expect(isDismissPrevented()).toBe(false)
+    })
   })
 })
