@@ -120,10 +120,10 @@ index faf88fc1164c2a9391039f1cb9ed880933e0fe55..ca16524c001cc257dabdb34627d0cfeb
  import './setupReactNativeEnvironment';
 -import '../../types';
 diff --git a/package.json b/package.json
-index 3c1fd278fd111de525d93f24c95c266ecd221241..ae14575551da0eaeee74f10e066fdca5578492d1 100644
+index b9b6e9d2864eae62b8d98930819bc6e03ce04004..3faf08aabe7bec7a5133433f0b0e5efb7c258893 100644
 --- a/package.json
 +++ b/package.json
-@@ -65,7 +65,9 @@
+@@ -66,7 +66,9 @@
      "./src/winter/*.ts",
      "./build/winter/*.js",
      "./src/async-require/*.ts",

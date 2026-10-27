@@ -1,10 +1,10 @@
 diff --git a/ios/ImageView.swift b/ios/ImageView.swift
-index bf865ebaa990861eb534b3e1695d9594b0e55de6..730a79d42827bb99f516a7bfc709149527b8da38 100644
+index a1f94fe8c039d2649c7144a8db5229efc310c65b..df16ca65b76b762c75f2cff122a4b5450357bfd0 100644
 --- a/ios/ImageView.swift
 +++ b/ios/ImageView.swift
-@@ -49,6 +49,12 @@ public final class ImageView: ExpoView {
-   /// Rebuilds the image from a substituted SVG document after the manager delivered the original.
-   var pendingSVGVariablesTask: Task<Void, Never>?
+@@ -52,6 +52,12 @@ public final class ImageView: ExpoView {
+   /// Blurs an asset catalog image, which doesn't go through SDWebImage's transformers.
+   var pendingAssetCatalogBlurTask: Task<Void, Never>?
  
 +  /**
 +   Incremented whenever the current load is cancelled or replaced, so a downscale
@@ -15,7 +15,7 @@ index bf865ebaa990861eb534b3e1695d9594b0e55de6..730a79d42827bb99f516a7bfc7091495
    var contentFit: ContentFit = .cover
  
    var contentPosition: ContentPosition = .center
-@@ -375,6 +381,28 @@ public final class ImageView: ExpoView {
+@@ -378,6 +384,28 @@ public final class ImageView: ExpoView {
        contentFit: contentFit
      )
      let imageIdealSize = imageLayoutSize.rounded(.up)
@@ -44,10 +44,10 @@ index bf865ebaa990861eb534b3e1695d9594b0e55de6..730a79d42827bb99f516a7bfc7091495
      let image = processImage(image, idealSize: imageIdealSize, scale: scale)
      applyContentPosition(contentSize: imageLayoutSize, containerSize: frame.size)
      renderSourceImage(image, cacheType: ImageCacheType.fromSdCacheType(cacheType))
-@@ -847,6 +875,7 @@ public final class ImageView: ExpoView {
-     pendingOperation = nil
-     pendingSVGVariablesTask?.cancel()
+@@ -883,6 +911,7 @@ public final class ImageView: ExpoView {
      pendingSVGVariablesTask = nil
+     pendingAssetCatalogBlurTask?.cancel()
+     pendingAssetCatalogBlurTask = nil
 +    loadGeneration &+= 1
    }
  
