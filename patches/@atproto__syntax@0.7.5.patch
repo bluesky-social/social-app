@@ -1,0 +1,37 @@
+diff --git a/dist/datetime.js b/dist/datetime.js
+index 02e489f38e0f0be4ebe063f529d3aed06f7cc2e4..7a3800af6bc2dc6503c54f143dfe2210c3201944 100644
+--- a/dist/datetime.js
++++ b/dist/datetime.js
+@@ -80,20 +80,23 @@ export function isDatetimeStringLenient(input) {
+     // instead of a template literal for the "datetime" format
+     if (typeof input !== 'string')
+         return false;
++    // @NOTE The "iso-datestring-validator" implementation is *not* compliant with
++    // the AT Protocol datetime specification. In particular, it rejects some
++    // valid AT Protocol datetimes (eg: "1985-04-12T23:20:50.1235678912345Z",
++    // "1985-04-12T23:20:50.123+01:45", "1985-04-12T23:20:50.1234567890Z"). For
++    // this reason, we accept anything that passes "isDatetimeString" validation.
++    // That check runs first because it is much cheaper: "isValidISODateString"
++    // builds and compiles new RegExp objects on every call, while virtually every
++    // datetime in practice is a valid AT Protocol datetime.
++    if (isDatetimeString(input))
++        return true;
+     try {
+-        if (isValidISODateString(input))
+-            return true;
++        return isValidISODateString(input);
+     }
+     catch {
+         // isValidISODateString can throw on some inputs.
++        return false;
+     }
+-    // @NOTE The "iso-datestring-validator" implementation is *not* compliant with
+-    // the AT Protocol datetime specification. In particular, it rejects some
+-    // valid AT Protocol datetimes (eg: "1985-04-12T23:20:50.1235678912345Z",
+-    // "1985-04-12T23:20:50.123+01:45", "1985-04-12T23:20:50.1234567890Z"). For
+-    // this reason, we run "isDatetimeString" validation if "isValidISODateString"
+-    // does not return true.
+-    return isDatetimeString(input);
+ }
+ /**
+  * Returns the input if it is a valid {@link DatetimeString} format string, or
