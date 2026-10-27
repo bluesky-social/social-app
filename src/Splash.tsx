@@ -19,7 +19,7 @@ import {Image} from 'expo-image'
 import * as SplashScreen from 'expo-splash-screen'
 
 import {Logotype} from '#/view/icons/Logotype'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 // @ts-expect-error
 import splashImagePointer from '../assets/splash/splash.png'
 // @ts-expect-error
@@ -55,6 +55,7 @@ type Props = {
 export function Splash(props: React.PropsWithChildren<Props>) {
   'use no memo'
   const insets = useSafeAreaInsets()
+  const {gtMobile} = useBreakpoints()
   const intro = useSharedValue(0)
   const outroLogo = useSharedValue(0)
   const outroApp = useSharedValue(0)
@@ -114,13 +115,16 @@ export function Splash(props: React.PropsWithChildren<Props>) {
 
   /**
    * Keep the app opaque so iOS blur/glass effects can initialize while the
-   * splash hides it.
+   * splash hides it. No scale on tablet layouts, where it leaves the top of
+   * the sidebar blurred by its scroll edge effect after launch.
    */
   const appAnimation = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          scale: interpolate(outroApp.get(), [0, 1], [1.1, 1], 'clamp'),
+          scale: gtMobile
+            ? 1
+            : interpolate(outroApp.get(), [0, 1], [1.1, 1], 'clamp'),
         },
       ],
     }
