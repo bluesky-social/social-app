@@ -28,7 +28,7 @@ function isSearchOperator(token: string): boolean {
  * the "b" alone.
  */
 export function getProfileTypeaheadQuery(query: string): string {
-  return tokenizeQuery(query)
-    .filter(token => !isSearchOperator(token))
-    .join(' ')
+  const tokens = tokenizeQuery(query)
+  const kept = tokens.filter(token => !isSearchOperator(token))
+  return kept.length === tokens.length ? query : kept.join(' ')
 }
