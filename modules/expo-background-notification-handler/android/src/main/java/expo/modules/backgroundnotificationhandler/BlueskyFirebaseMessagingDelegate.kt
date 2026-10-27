@@ -11,6 +11,12 @@ import expo.modules.notifications.service.delegates.FirebaseMessagingDelegate
  */
 const val CHAT_CHANNEL_ID = "chat"
 
+/**
+ * Bundle key that FCM uses to mark a message as having a notification part.
+ * See `com.google.firebase.messaging.Constants.MessageNotificationKeys`.
+ */
+private const val FCM_ENABLE_NOTIFICATION_KEY = "gcm.n.e"
+
 class BlueskyFirebaseMessagingDelegate(
   context: Context,
 ) : FirebaseMessagingDelegate(context) {
@@ -21,7 +27,7 @@ class BlueskyFirebaseMessagingDelegate(
       // content and nothing handles them yet, so don't hand them to expo.
       reason?.startsWith("mark-read-") == true -> return
       reason?.startsWith("chat-") == true ->
-        super.onMessageReceived(withChannelId(remoteMessage, CHAT_CHANNEL_ID))
+        super.onMessageReceived(asChatNotification(remoteMessage))
       else -> super.onMessageReceived(remoteMessage)
     }
   }
@@ -31,17 +37,21 @@ class BlueskyFirebaseMessagingDelegate(
    * expo reads it from `data["channelId"]`, and falls back to its default
    * channel if the channel hasn't been created yet.
    *
+   * We also mark them as having a notification part. While the app is in the
+   * foreground, expo doesn't pass data-only messages to the JS notification
+   * handler, so DMs that arrive while the app is open would never be shown.
+   * The notification part is empty, and expo falls back to the data for the
+   * title, text and sound, so this doesn't change how the DM looks.
+   *
    * We can't just write to `remoteMessage.data`: it's a copy (or a cache) of
    * the message's backing bundle, and expo parcels the message to its
    * receiver, which rebuilds it from that bundle. Instead, build a new message
    * from an edited copy of the bundle.
    */
-  private fun withChannelId(
-    remoteMessage: RemoteMessage,
-    channelId: String,
-  ): RemoteMessage {
+  private fun asChatNotification(remoteMessage: RemoteMessage): RemoteMessage {
     val bundle = remoteMessage.toIntent().extras ?: Bundle()
-    bundle.putString("channelId", channelId)
+    bundle.putString("channelId", CHAT_CHANNEL_ID)
+    bundle.putString(FCM_ENABLE_NOTIFICATION_KEY, "1")
     return RemoteMessage(bundle)
   }
 }
