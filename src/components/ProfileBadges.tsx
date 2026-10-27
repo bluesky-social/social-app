@@ -123,12 +123,6 @@ export function ProfileBadges({
         a.align_center,
         gap,
         inline && [
-          /*
-           * Besides spacing them from the text, the padding keeps
-           * react-native-nano-icons from re-aligning the icons to the
-           * baseline on iOS, which would undo the offset. It only corrects
-           * icons that start where the inline view does.
-           */
           a.px_2xs,
           {transform: [{translateY: INLINE_OFFSET * scaleMultiplier}]},
         ],
