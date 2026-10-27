@@ -164,6 +164,10 @@ function TrendingTopicsWidget(
         </Text>
         <Spacer minLength={0} />
       </HStack>
+      {/* only takes spare room, so three wrapped topics still fit on smaller phones */}
+      {isSmall ? (
+        <Spacer minLength={0} modifiers={[frame({maxHeight: 8})]} />
+      ) : null}
 
       {topics.length ? (
         <VStack alignment="leading" spacing={0}>
