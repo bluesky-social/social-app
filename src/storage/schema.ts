@@ -1,3 +1,4 @@
+import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped'
 import {type ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
 import {type SessionRecord} from '#/analytics/identifiers/session'
 import {type Gif} from '#/features/gifPicker/types'
@@ -94,6 +95,12 @@ export type Account = {
   birthdateLastUpdatedAt?: string
 
   lastSelectedHomeFeed?: string
+
+  /**
+   * The notifications tab the account last switched to, which the
+   * notifications screen opens on.
+   */
+  lastSelectedNotificationsTab?: GroupedNotificationsFeed
 
   /**
    * Recently selected GIFs in the GIF picker. Most recent first, capped at 20.
