@@ -73,8 +73,8 @@ const NAMES = {
     rest: ' FOLLOWED YOU',
   },
   real: {
-    short: 'Eli Mallon',
-    long: 'Eli Mallon the extremely verbose and lengthy display name',
+    short: 'Paul Frazee',
+    long: 'Paul Frazee the extremely verbose and lengthy display name',
     rest: ' followed you back!',
   },
 } as const
