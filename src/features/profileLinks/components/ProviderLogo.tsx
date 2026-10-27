@@ -12,6 +12,7 @@ import {Crowdfundr} from '#/components/icons/community/Crowdfundr'
 import {Donorbox} from '#/components/icons/community/Donorbox'
 import {Etsy} from '#/components/icons/community/Etsy'
 import {Fourthwall} from '#/components/icons/community/Fourthwall'
+import {Github} from '#/components/icons/community/Github'
 import {Givebutter} from '#/components/icons/community/Givebutter'
 import {GiveSendGo} from '#/components/icons/community/GiveSendGo'
 import {GoFundMe} from '#/components/icons/community/GoFundMe'
@@ -50,6 +51,7 @@ const SUPPORT_PROVIDER_LOGOS: Record<SupportProviderLogoName, typeof KoFi> = {
   Donorbox,
   Etsy,
   Fourthwall,
+  Github,
   Givebutter,
   GiveSendGo,
   GoFundMe,
