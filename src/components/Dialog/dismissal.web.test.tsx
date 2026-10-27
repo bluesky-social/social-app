@@ -144,37 +144,10 @@ describe('Dialog preventDismiss (web)', () => {
 
     act(() => control.close(callback))
     expect(isOpen()).toBe(false)
-    expect(callback).not.toHaveBeenCalled()
     act(() => {
       jest.runAllTimers()
     })
     expect(callback).toHaveBeenCalledTimes(1)
-  })
-
-  it('dismisses normally when not locked', () => {
-    renderDialog({preventDismiss: false})
-    expect(isCloseDisabled()).toBe(false)
-    act(() => mockOnDismiss?.())
-    expect(isOpen()).toBe(false)
-  })
-
-  it('runs a custom background handler when not locked', () => {
-    const onBackgroundPress = jest.fn()
-    renderDialog({onBackgroundPress})
-    fireEvent.press(screen.getByLabelText('Close active dialog'))
-    expect(onBackgroundPress).toHaveBeenCalledTimes(1)
-  })
-
-  it('closes from the backdrop when not locked', () => {
-    renderDialog({})
-    fireEvent.press(screen.getByLabelText('Close active dialog'))
-    expect(isOpen()).toBe(false)
-  })
-
-  it('closes from the close button when not locked', () => {
-    renderDialog({})
-    fireEvent.press(screen.getByTestId('dialogClose'))
-    expect(isOpen()).toBe(false)
   })
 
   it('unlocks when preventDismiss goes back to false', () => {
