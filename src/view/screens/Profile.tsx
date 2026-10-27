@@ -162,7 +162,11 @@ function ProfileScreenInner({route}: Props) {
   if (profile && moderationOpts) {
     return (
       <ProfileScreenLoaded
-        key={isPlaceholderProfile ? 'placeholder' : 'profile'}
+        key={
+          route.params.tab !== undefined
+            ? `${profile.did}-${route.params.tab}-${isPlaceholderProfile}`
+            : profile.did
+        }
         profile={profile}
         moderationOpts={moderationOpts}
         isPlaceholderProfile={isPlaceholderProfile}
