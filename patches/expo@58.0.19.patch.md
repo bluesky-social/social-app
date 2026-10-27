@@ -65,7 +65,7 @@ caller did not set. This matches browser behavior.
 
 Upstream: expo/expo#33405 introduced the override. The `Request` rewrite that
 was expected to fix this (expo/expo#46630) is still an open, unmerged PR, and
-neither SDK 58.0.14 nor `main` changed this code, so re-evaluate on the next
+neither SDK 58.0.19 nor `main` (as of 2026-10-16) changed this code, so re-evaluate on the next
 SDK bump. Worth filing an issue against expo/expo referencing this. Setting
 `EXPO_PUBLIC_USE_RN_FETCH=1` keeps React Native's fetch instead and would also
 avoid the bug, at the cost of losing `expo/fetch` globally.
