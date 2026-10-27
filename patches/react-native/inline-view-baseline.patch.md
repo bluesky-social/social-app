@@ -25,7 +25,11 @@ line out with: the line fragment's origin plus the attachment glyph's location,
 which already includes the baseline offset. `react-native-nano-icons` does the
 same layout to correct its inline icons (`NanoIconInlineBaseline.mm`).
 
-The current formula came from facebook/react-native#53341 (first in 0.82).
-Repro: `~/Documents/Programming/inline-view-baseline-repro` (not yet
-published), where the patched placement sits exactly on the baseline for every
-font size and `lineHeight` tested, at the default and accessibility text sizes.
+The current formula came from https://github.com/react/react-native/pull/53341
+(first in 0.82). Drop this patch once a release contains a fix.
+
+- Issue: https://github.com/react/react-native/issues/59549
+- Upstream PR: https://github.com/react/react-native/pull/59551
+- Repro: https://github.com/mozzius/inline-view-baseline-repro. The patched
+  placement sits exactly on the baseline for every font size and `lineHeight`
+  tested, at the default and accessibility text sizes.

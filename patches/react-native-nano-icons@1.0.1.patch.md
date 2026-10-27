@@ -16,4 +16,6 @@ the icon's on-screen frame, so it undoes deliberate offsets such as
 the inline view does.
 
 Drop this together with the react-native patch, once React Native places
-inline views on the baseline (and nano-icons' version check accounts for it).
+inline views on the baseline (and nano-icons' version check accounts for it):
+https://github.com/react/react-native/issues/59549,
+https://github.com/react/react-native/pull/59551.
