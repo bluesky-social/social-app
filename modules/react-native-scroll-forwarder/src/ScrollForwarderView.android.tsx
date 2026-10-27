@@ -13,7 +13,10 @@ export const isScrollForwarderAvailable = UIManager.hasViewManagerConfig(
 export function ScrollForwarderView({children, ...rest}: NativeProps) {
   if (!isScrollForwarderAvailable) return children
 
+  // Empty header space must fall through to the pager beneath the overlay.
   return (
-    <NativeScrollForwarderView {...rest}>{children}</NativeScrollForwarderView>
+    <NativeScrollForwarderView {...rest} pointerEvents="box-none">
+      {children}
+    </NativeScrollForwarderView>
   )
 }

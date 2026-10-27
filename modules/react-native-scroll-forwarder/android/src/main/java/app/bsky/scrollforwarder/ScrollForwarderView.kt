@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import com.facebook.react.uimanager.IllegalViewOperationException
+import com.facebook.react.uimanager.PointerEvents
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.events.NativeGestureUtil
@@ -15,6 +16,11 @@ import kotlin.math.abs
 
 /** Hands vertical header drags to the focused list's native touch handling. */
 class ScrollForwarderView(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
+  init {
+    // The codegen base delegate does not apply the JS pointerEvents prop to ReactViewGroup.
+    pointerEvents = PointerEvents.BOX_NONE
+  }
+
   var scrollViewTag: Int = -1
     set(value) {
       if (field != value) finishGesture()
