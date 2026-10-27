@@ -52,8 +52,8 @@ function TrendingTopicsWidget(
   const textColor = isDark ? '#F1F3F5' : '#0A0A0A'
   const secondaryTextColor = isDark ? '#AEBBC9' : '#536471'
   const borderColor = isDark ? '#2E4052' : '#E5E7EB'
-  const rootDestination =
-    isSmall && topics[0] ? topics[0].destination : 'https://bsky.app/search'
+  // Explore. Small widgets can't contain links, so this is their only tap target
+  const rootDestination = 'https://bsky.app/search'
 
   function TopicRow({
     topic,
