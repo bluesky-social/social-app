@@ -4,6 +4,7 @@ import {useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
+import {getTrailingAccountOperator} from '#/screens/Search/profileTypeahead'
 import {atoms as a, native, useTheme} from '#/alf'
 import {type AutocompleteItem} from '#/components/Autocomplete'
 import * as Layout from '#/components/Layout'
@@ -21,7 +22,7 @@ let AutocompleteResults = ({
   onSubmit,
   onResultPress,
   onProfileClick,
-  onCompleteFrom,
+  onCompleteAccount,
 }: {
   items: AutocompleteItem[]
   isFetching: boolean
@@ -29,15 +30,12 @@ let AutocompleteResults = ({
   onSubmit: () => void
   onResultPress: () => void
   onProfileClick: (profile: bsky.profile.AnyProfileView) => void
-  /**
-   * Set while a `from:` operator is being typed. Picking a profile then fills
-   * in its handle instead of opening the profile.
-   */
-  onCompleteFrom?: (profile: bsky.profile.AnyProfileView) => void
+  onCompleteAccount: (profile: bsky.profile.AnyProfileView) => void
 }): React.ReactNode => {
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
+  const accountOperator = getTrailingAccountOperator(searchText)
 
   return (
     <>
@@ -68,16 +66,18 @@ let AutocompleteResults = ({
                 key={item.key}
                 profile={item.profile}
                 moderationOpts={moderationOpts}
-                label={
-                  onCompleteFrom
-                    ? l`Filter search to posts from ${item.profile.handle}`
+                selection={
+                  accountOperator
+                    ? {
+                        label:
+                          accountOperator.operator === 'from'
+                            ? l`Filter search to posts from ${item.profile.handle}`
+                            : l`Filter search to posts mentioning ${item.profile.handle}`,
+                        onPress: () => onCompleteAccount(item.profile),
+                      }
                     : undefined
                 }
                 onPress={() => {
-                  if (onCompleteFrom) {
-                    onCompleteFrom(item.profile)
-                    return false
-                  }
                   ax.metric('search:autocomplete:press', {
                     profileDid: item.profile.did,
                     position: index,

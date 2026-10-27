@@ -4,9 +4,9 @@ import {useSift} from '@bsky.app/sift'
 
 import {mergeRefs} from '#/lib/merge-refs'
 import {
-  completeTrailingFrom,
+  completeTrailingAccount,
   getProfileTypeaheadQuery,
-  getTrailingFromValue,
+  getTrailingAccountOperator,
 } from '#/screens/Search/profileTypeahead'
 import {atoms as a} from '#/alf'
 import {
@@ -57,7 +57,7 @@ export function SearchAutocompleteInput({
     // avoids a typeahead request on mount when arriving with text already
     // present (e.g. /search?q=foo).
     query: active ? getProfileTypeaheadQuery(value) : '',
-    // Trimmed since completing a from: handle leaves a trailing space.
+    // Account completion leaves a trailing space.
     searchFallback: active ? value.trim() : undefined,
   })
 
@@ -65,9 +65,9 @@ export function SearchAutocompleteInput({
     active && !fixedParams && value.length > 0 && items.length > 0
 
   function onSelect(item: AutocompleteItem) {
-    if (item.type === 'profile' && getTrailingFromValue(value) !== undefined) {
-      // Fill in the from: handle and keep typing rather than open the profile.
-      onChangeText?.(completeTrailingFrom(value, item.profile.handle))
+    if (item.type === 'profile' && getTrailingAccountOperator(value)) {
+      setDismissed(true)
+      onChangeText?.(completeTrailingAccount(value, item.profile.handle))
       return
     }
     if (item.type === 'profile') {

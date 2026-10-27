@@ -35,9 +35,8 @@ import {
 import {extractFromMe} from '#/state/queries/search-posts-params'
 import {useSession} from '#/state/session'
 import {
-  completeTrailingFrom,
+  completeTrailingAccount,
   getProfileTypeaheadQuery,
-  getTrailingFromValue,
 } from '#/screens/Search/profileTypeahead'
 import {
   countActiveFilters,
@@ -423,14 +422,10 @@ export function SearchScreenShell({
     [updateProfileHistory, queryClient, updateSearchText],
   )
 
-  /**
-   * Native only. Selecting a profile while typing a `from:` operator fills in
-   * its handle and leaves the input focused to keep typing.
-   */
-  const onCompleteFrom = useCallback(
+  const onCompleteAccount = useCallback(
     (profile: bsky.profile.AnyProfileView) => {
       updateSearchText(
-        completeTrailingFrom(searchTextRef.current, profile.handle),
+        completeTrailingAccount(searchTextRef.current, profile.handle),
       )
     },
     [updateSearchText],
@@ -702,11 +697,7 @@ export function SearchScreenShell({
                 onSubmit={onSubmit('autocomplete')}
                 onResultPress={onAutocompleteResultPress}
                 onProfileClick={handleProfileClick}
-                onCompleteFrom={
-                  getTrailingFromValue(searchText) !== undefined
-                    ? onCompleteFrom
-                    : undefined
-                }
+                onCompleteAccount={onCompleteAccount}
               />
             ) : (
               <SearchHistory
