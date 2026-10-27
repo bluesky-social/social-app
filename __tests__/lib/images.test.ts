@@ -1,7 +1,8 @@
-import {File, Paths} from 'expo-file-system'
+import {Directory, File, Paths} from 'expo-file-system'
 import {ImageManipulator, SaveFormat} from 'expo-image-manipulator'
 import * as Sharing from 'expo-sharing'
 
+import * as env from '#/env'
 import {IMAGE_SIZE_CONFIG_2K_1MB} from '../../src/lib/constants'
 import {
   downloadAndResize,
@@ -16,6 +17,14 @@ jest.mock('expo-sharing', () => ({
   isAvailableAsync: jest.fn().mockResolvedValue(true),
   shareAsync: jest.fn().mockResolvedValue(undefined),
 }))
+
+/** Read a successful mock result without including Jest's untyped thrown value. */
+function getMockReturn<T>(result: jest.MockResult<T>): T {
+  if (result.type !== 'return') {
+    throw new Error('Expected the mock to return successfully')
+  }
+  return result.value
+}
 
 const mockResizedImage = {
   size: 100,
@@ -85,22 +94,21 @@ describe('downloadAndResize', () => {
       1,
       expect.any(String),
     )
-    const firstContext = (ImageManipulator.manipulate as jest.Mock).mock
-      .results[0].value
+    const mockedManipulate = jest.mocked(ImageManipulator.manipulate)
+    const firstContext = getMockReturn(mockedManipulate.mock.results[0])
     expect(firstContext.resize).not.toHaveBeenCalled()
 
     // The mocked source image is 100x100, below maxDimension, so it is not
     // downsized.
-    const secondContext = (ImageManipulator.manipulate as jest.Mock).mock
-      .results[1].value
+    const secondContext = getMockReturn(mockedManipulate.mock.results[1])
     expect(secondContext.resize).toHaveBeenCalledWith({
       height: 100,
       width: 100,
     })
-    const lastContext = (
-      ImageManipulator.manipulate as jest.Mock
-    ).mock.results.at(-1)!.value
-    const resizedImage = await lastContext.renderAsync.mock.results[0].value
+    const lastContext = getMockReturn(mockedManipulate.mock.results.at(-1)!)
+    const resizedImage = await getMockReturn(
+      jest.mocked(lastContext.renderAsync).mock.results[0],
+    )
     expect(resizedImage.saveAsync).toHaveBeenCalledWith(
       expect.objectContaining({format: SaveFormat.JPEG, compress: 1.0}),
     )
@@ -136,12 +144,14 @@ describe('downloadAndResize', () => {
   })
 
   it('deletes every intermediate image when resizing fails', async () => {
-    const mockedManipulate = ImageManipulator.manipulate as jest.Mock
+    const mockedManipulate = jest.mocked(ImageManipulator.manipulate)
     const createContext = mockedManipulate.getMockImplementation()!
     mockedManipulate.mockImplementation((...args) => {
       const context = createContext(...args)
       if (mockedManipulate.mock.calls.length === 3) {
-        context.renderAsync.mockRejectedValue(new Error('render failed'))
+        jest
+          .mocked(context.renderAsync)
+          .mockRejectedValue(new Error('render failed'))
       }
       return context
     })
@@ -245,7 +255,7 @@ describe('temporary file lifecycles', () => {
   it('retains a successfully shared image for lazy consumers', async () => {
     await shareImageModal({uri: 'https://example.com/image.jpg'})
 
-    const sharedPath = (Sharing.shareAsync as jest.Mock).mock.calls[0][0]
+    const sharedPath = jest.mocked(Sharing.shareAsync).mock.calls[0][0]
     const deletedPaths = (Paths.info as jest.Mock).mock.calls.map(
       ([path]) => path,
     )
@@ -253,16 +263,27 @@ describe('temporary file lifecycles', () => {
     expect(deletedPaths).not.toContain(sharedPath)
   })
 
-  it('does not report user cancellation as an error', async () => {
+  it('does not report Android directory picker cancellation as an error', async () => {
+    const isIOS = jest.replaceProperty(env, 'IS_IOS', false)
+    const isAndroid = jest.replaceProperty(env, 'IS_ANDROID', true)
     const errorSpy = jest.spyOn(logger, 'error')
-    ;(Sharing.shareAsync as jest.Mock).mockRejectedValueOnce(
-      new Error('Picker cancelled'),
+    jest.mocked(Directory.pickDirectoryAsync).mockRejectedValueOnce(
+      Object.assign(new Error('The file picker was cancelled by the user'), {
+        code: 'ERR_PICKER_CANCELLED',
+      }),
     )
 
-    await expect(
-      saveToDevice('test.txt', 'dGVzdA==', 'text/plain'),
-    ).resolves.toBe(false)
-    expect(errorSpy).not.toHaveBeenCalled()
-    errorSpy.mockRestore()
+    try {
+      await expect(
+        saveToDevice('test.txt', 'dGVzdA==', 'text/plain'),
+      ).resolves.toBe(false)
+      expect(Directory.pickDirectoryAsync).toHaveBeenCalledTimes(1)
+      expect(errorSpy).not.toHaveBeenCalled()
+      expect(Sharing.shareAsync).not.toHaveBeenCalled()
+    } finally {
+      errorSpy.mockRestore()
+      isAndroid.restore()
+      isIOS.restore()
+    }
   })
 })
