@@ -252,7 +252,7 @@ const CALL_SITE_CASES: CallSiteCase[] = [
     id: 'S5',
     source: 'GroupChatJoinDialog',
     size: 'sm',
-    row: [a.flex_row, a.align_center, a.justify_center],
+    row: [a.flex_row, a.gap_xs, a.align_center, a.justify_center],
     text: [a.flex_shrink, a.text_sm, a.leading_snug, a.font_semi_bold],
   },
   {
