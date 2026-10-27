@@ -1,3 +1,5 @@
+import {isScrollForwarderAvailable} from '@bsky.app/react-native-scroll-forwarder'
+
 import {AccordionAnimation} from '#/lib/custom-animations/AccordionAnimation'
 import {useSuggestedFollowsByActorWithDismiss} from '#/state/queries/suggested-follows'
 import {ProfileGrid} from '#/components/FeedInterstitials'
@@ -15,12 +17,8 @@ export function ProfileHeaderSuggestedFollows({
   const {profiles, onDismiss, isLoading, error} =
     useSuggestedFollowsByActorWithDismiss({did: actorDid})
 
-  /* NOTE (caidanw):
-   * Android does not work well with this feature yet.
-   * This issue stems from Android not allowing dragging on clickable elements in the profile header.
-   * Blocking the ability to scroll on Android is too much of a trade-off for now.
-   **/
-  if (IS_ANDROID) return null
+  // OTA bundles must preserve the exclusion on binaries without native forwarding.
+  if (IS_ANDROID && !isScrollForwarderAvailable) return null
 
   return (
     <AccordionAnimation isExpanded={isExpanded}>
