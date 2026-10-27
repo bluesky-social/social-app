@@ -259,7 +259,7 @@ export function BetaFeaturesSettingsScreen({}: Props) {
 
       <BetaFeaturesFeedbackDialog
         control={feedbackControl}
-        betaFeatureKeys={feedbackFeatureKeys}
+        betaFeatures={listedFeatures}
       />
     </Layout.Screen>
   )
