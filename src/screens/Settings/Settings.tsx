@@ -32,7 +32,7 @@ import {useCloseAllActiveElements} from '#/state/util'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {GrowthbookDialog} from '#/screens/Settings/components/GrowthbookDialog'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
-import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {AgeAssuranceDismissibleNotice} from '#/components/ageAssurance/AgeAssuranceDismissibleNotice'
 import {AvatarStackWithFetch} from '#/components/AvatarStack'
 import {Button, ButtonText} from '#/components/Button'
@@ -374,29 +374,20 @@ function ProfilePreview({
           a.align_center,
           a.justify_center,
           a.w_full,
+          a.pt_sm,
         ]}>
         <Text
           emoji
           testID="profileHeaderDisplayName"
           numberOfLines={1}
           style={[
-            a.pt_sm,
             t.atoms.text,
             gtMobile ? a.text_4xl : a.text_3xl,
             a.font_bold,
           ]}>
           {displayName}
         </Text>
-        <ProfileBadges
-          profile={shadow}
-          size="xl"
-          interactive
-          style={[
-            {
-              marginTop: platform({web: 8, ios: 8, android: 10}),
-            },
-          ]}
-        />
+        <ProfileBadges profile={shadow} size="xl" interactive />
       </View>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
         {sanitizeHandle(profile.handle, '@')}
