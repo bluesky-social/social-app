@@ -4,6 +4,7 @@ import {type app} from '#/lexicons'
 
 export type TrendingWidgetCopy = {
   emptyMessage: string
+  shortTitle: string
   title: string
 }
 
@@ -16,6 +17,7 @@ export function updateTrendingWidgetSnapshot(
 ) {
   TrendingTopicsWidget.updateSnapshot({
     emptyMessage: copy.emptyMessage,
+    shortTitle: copy.shortTitle,
     title: copy.title,
     topics: trends.map((trend, index) => ({
       displayName: trend.displayName,

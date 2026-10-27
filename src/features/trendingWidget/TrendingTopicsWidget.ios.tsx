@@ -24,6 +24,10 @@ import {
 
 export type TrendingTopicsWidgetProps = {
   emptyMessage?: string
+  /**
+   * Header for the small widget, which has no room for `title`.
+   */
+  shortTitle?: string
   title?: string
   topics?: {
     description?: string
@@ -78,7 +82,7 @@ function TrendingTopicsWidget(
           modifiers={[
             font({size: 12, weight: 'semibold'}),
             foregroundStyle(textColor),
-            lineLimit(3),
+            lineLimit(2),
             minimumScaleFactor(0.8),
           ]}>
           {topic.displayName}
@@ -136,24 +140,30 @@ function TrendingTopicsWidget(
         padding({all: isSmall ? 14 : 18}),
         widgetURL(rootDestination),
       ]}>
-      {!isSmall ? (
-        <HStack spacing={6} modifiers={[padding({bottom: 4})]}>
-          {/* from the extension's asset catalog, see plugins/withTrendingWidget.js */}
-          <Image
-            assetName="BlueskyButterfly"
-            color="#0085FF"
-            modifiers={[resizable(), frame({width: 14, height: 14})]}
-          />
-          <Text
-            modifiers={[
-              font({size: isMedium ? 13 : 15, weight: 'bold'}),
-              foregroundStyle(textColor),
-            ]}>
-            {props.title ?? 'Trending on Bluesky'}
-          </Text>
-          <Spacer minLength={0} />
-        </HStack>
-      ) : null}
+      <HStack
+        spacing={isSmall ? 5 : 6}
+        modifiers={[padding({bottom: isSmall ? 2 : 4})]}>
+        {/* from the extension's asset catalog, see plugins/withTrendingWidget.js */}
+        <Image
+          assetName="BlueskyButterfly"
+          color="#0085FF"
+          modifiers={[
+            resizable(),
+            frame({width: isSmall ? 12 : 14, height: isSmall ? 12 : 14}),
+          ]}
+        />
+        <Text
+          modifiers={[
+            font({size: isSmall || isMedium ? 13 : 15, weight: 'bold'}),
+            foregroundStyle(textColor),
+            lineLimit(1),
+          ]}>
+          {isSmall
+            ? (props.shortTitle ?? 'Trending')
+            : (props.title ?? 'Trending on Bluesky')}
+        </Text>
+        <Spacer minLength={0} />
+      </HStack>
 
       {topics.length ? (
         <VStack alignment="leading" spacing={0}>
