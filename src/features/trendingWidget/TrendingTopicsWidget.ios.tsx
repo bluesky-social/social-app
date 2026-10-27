@@ -82,7 +82,7 @@ function TrendingTopicsWidget(
           modifiers={[
             font({size: 12, weight: 'semibold'}),
             foregroundStyle(textColor),
-            lineLimit(2),
+            lineLimit(3),
             minimumScaleFactor(0.8),
           ]}>
           {topic.displayName}
