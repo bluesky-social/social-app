@@ -30,12 +30,18 @@ export const ExternalEmbed = ({
   post,
   style,
   hideAlt,
+  borderColor,
 }: {
   link: app.bsky.embed.external.ViewExternal
   onOpen?: () => void
   post?: app.bsky.feed.defs.PostView
   style?: StyleProp<ViewStyle>
   hideAlt?: boolean
+  /**
+   * The colour of the card's borders while it isn't hovered, for a card on a
+   * background that `border_contrast_low` doesn't show against.
+   */
+  borderColor?: string
 }) => {
   const {_} = useLingui()
   const t = useTheme()
@@ -107,7 +113,9 @@ export const ExternalEmbed = ({
             style,
             hovered
               ? t.atoms.border_contrast_high
-              : t.atoms.border_contrast_low,
+              : borderColor
+                ? {borderColor}
+                : t.atoms.border_contrast_low,
           ]}>
           {imageUri && !embedPlayerParams ? (
             <Image
@@ -137,7 +145,9 @@ export const ExternalEmbed = ({
               hasMedia && a.border_t,
               hovered
                 ? t.atoms.border_contrast_high
-                : t.atoms.border_contrast_low,
+                : borderColor
+                  ? {borderColor}
+                  : t.atoms.border_contrast_low,
             ]}>
             <View style={[{gap: 3}, a.pb_xs, a.px_md]}>
               {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
