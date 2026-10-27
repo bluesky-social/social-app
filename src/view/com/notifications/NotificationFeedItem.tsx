@@ -249,11 +249,7 @@ let NotificationFeedItem = ({
         emoji
         label={l`Go to ${firstAuthorName}'s profile`}>
         {forceLTR(firstAuthorName)}
-        <ProfileBadges
-          profile={firstAuthor.profile}
-          size="sm"
-          style={[a.px_2xs, {transform: [{translateY: 1}]}]}
-        />
+        <ProfileBadges profile={firstAuthor.profile} size="sm" inline />
       </InlineLinkText>
     </ProfileHoverCard>
   )
