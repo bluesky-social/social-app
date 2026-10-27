@@ -21,6 +21,7 @@ The icons in this directory are the marks of third-party services that appear in
 | `Givebutter.svg` | [Givebutter](https://givebutter.com) |
 | `GiveSendGo.svg` | [GiveSendGo](https://www.givesendgo.com) |
 | `GoFundMe.svg` | [GoFundMe](https://www.gofundme.com) |
+| `Github.svg` | [GitHub](https://github.com) |
 | `Gumroad.svg` | [Gumroad](https://gumroad.com) |
 | `Indiegogo.svg` | [Indiegogo](https://www.indiegogo.com) |
 | `Inprint.svg` | [INPRNT](https://www.inprnt.com) |

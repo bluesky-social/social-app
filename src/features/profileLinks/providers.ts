@@ -19,6 +19,7 @@ export type SupportProviderLogoName =
   | 'Givebutter'
   | 'GiveSendGo'
   | 'GoFundMe'
+  | 'Github'
   | 'Gumroad'
   | 'Indiegogo'
   | 'Inprint'
@@ -85,6 +86,12 @@ export const SUPPORT_PROVIDERS: SupportProvider[] = [
   {name: 'Givebutter', logo: 'Givebutter', domain: 'givebutter.com'},
   {name: 'GiveSendGo', logo: 'GiveSendGo', domain: 'givesendgo.com'},
   {name: 'GoFundMe', logo: 'GoFundMe', domain: 'gofundme.com'},
+  {
+    name: 'GitHub Sponsors',
+    logo: 'Github',
+    domain: 'github.com',
+    pathPrefix: '/sponsors/',
+  },
   {name: 'Gumroad', logo: 'Gumroad', domain: 'gumroad.com'},
   {name: 'Indiegogo', logo: 'Indiegogo', domain: 'indiegogo.com'},
   {
