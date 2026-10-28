@@ -40,9 +40,8 @@ const BADGE_RING = 2
 
 /**
  * The space the avatar sits in, with room below for the badge to overlap its
- * bottom-end corner. It's only as wide as the avatar, so that the text beside
- * it lines up with a feed post's, and the badge hangs out of its end side
- * into the gap instead.
+ * bottom-end corner. It's only as wide as the avatar: the badge hangs out of
+ * its end side into the gap rather than pushing the text along.
  */
 const SLOT_SIZE = {
   width: AVATAR_SIZE,
