@@ -1,5 +1,4 @@
 import {
-  type NavigationProp as BaseNavigationProp,
   type NavigationState,
   type NavigatorScreenParams,
   type PartialState,
@@ -166,9 +165,12 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
 }
 
 /** A checked leaf destination for navigation from outside a screen stack. */
-export type CommonNavigationDestination = Parameters<
-  BaseNavigationProp<CommonNavigatorParams>['navigate']
->[0]
+export type CommonNavigationDestination = {
+  [Name in keyof CommonNavigatorParams]: {
+    name: Name
+    params: CommonNavigatorParams[Name]
+  }
+}[keyof CommonNavigatorParams]
 
 export type State =
   NavigationState | Omit<PartialState<NavigationState>, 'stale'>
