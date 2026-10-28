@@ -19,54 +19,11 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
-      - name: Write Java downloader
+      - name: Preinstall the NDK with sdkmanager
         run: |
-          cat > "$RUNNER_TEMP/Dl.java" <<'JAVA'
-          import java.io.*;
-          import java.net.*;
-          import java.nio.file.*;
-          import java.security.*;
-          public class Dl {
-            public static void main(String[] a) throws Exception {
-              HttpURLConnection c = (HttpURLConnection) new URL(a[0]).openConnection();
-              System.out.println("status=" + c.getResponseCode());
-              c.getHeaderFields().forEach((k, v) -> System.out.println("  " + k + ": " + v));
-              MessageDigest md = MessageDigest.getInstance("SHA-1");
-              long n = 0;
-              byte[] buf = new byte[1 << 20];
-              InputStream in = c.getResponseCode() >= 400 ? c.getErrorStream() : c.getInputStream();
-              try (in; OutputStream out = Files.newOutputStream(Path.of(a[1]))) {
-                int r;
-                while ((r = in.read(buf)) > 0) { md.update(buf, 0, r); out.write(buf, 0, r); n += r; }
-              }
-              System.out.printf("bytes=%d sha1=%s%n", n, java.util.HexFormat.of().formatHex(md.digest()));
-            }
-          }
-          JAVA
-
-      - name: Download before the CA update
-        run: &download |
-          url=https://dl.google.com/android/repository/android-ndk-r27b-linux.zip
-          echo "expected: 663976775 bytes, sha1 6fc476b2e57d7c01ac0c95817746b927035b9749"
-          echo "== curl"
-          curl -sS -L -D curl-headers.txt -o ndk-curl.zip \
-            -w 'http=%{http_code} size=%{size_download} type=%{content_type} ip=%{remote_ip} url=%{url_effective}\n' \
-            "$url" || echo "curl exit $?"
-          cat curl-headers.txt
-          sha1sum ndk-curl.zip
-          head -c 256 ndk-curl.zip | xxd | head -8
-          unzip -l ndk-curl.zip | tail -1 || true
-          echo "== java"
-          java "$RUNNER_TEMP/Dl.java" "$url" ndk-java.zip || echo "java exit $?"
-          head -c 256 ndk-java.zip | xxd | head -8
-          unzip -l ndk-java.zip | tail -1 || true
-          df -h . /tmp
-          rm -f ndk-curl.zip ndk-java.zip
-
-      - name: Update Ubuntu CA certificates
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install --only-upgrade --no-install-recommends -y ca-certificates
-
-      - name: Download after the CA update
-        run: *download
+          ls "$ANDROID_HOME/ndk" || true
+          SM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          "$SM" --version
+          yes | "$SM" --install "ndk;27.1.12297006" | tr '\r' '\n' | grep -v -E '^\[=*' | tail -20
+          cat "$ANDROID_HOME/ndk/27.1.12297006/source.properties"
+          ls "$ANDROID_HOME/ndk"
