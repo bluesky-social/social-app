@@ -57,10 +57,7 @@ import {
 } from '#/alf'
 import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {Context, useDialogContext} from '#/components/Dialog/context'
-import {
-  getMeasuredDialogContentHeight,
-  shouldMeasureDialogContentHeight,
-} from '#/components/Dialog/sheetSizing'
+import {getMeasuredDialogContentHeight} from '#/components/Dialog/sheetSizing'
 import {getDialogSourceViewTag} from '#/components/Dialog/sourceViewTag'
 import {
   type DialogControlProps,
@@ -69,7 +66,7 @@ import {
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
 import {useOnKeyboard} from '#/components/hooks/useOnKeyboard'
-import {IS_ANDROID, IS_IOS, IS_IPAD, IS_LIQUID_GLASS} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/shared'
@@ -107,11 +104,15 @@ export function Outer({
     BottomSheetSnapPoint.Partial,
   )
   const [desiredContentHeight, setDesiredContentHeight] = useState<number>()
-  const shouldMeasureContentHeight = shouldMeasureDialogContentHeight({
-    isIOS: IS_IOS,
-    isIPad: IS_IPAD,
-    popover: nativeOptions?.popover,
-  })
+  /*
+   * On iOS, `ScrollableInner` reports its content height to size the sheet,
+   * so its ScrollView can be capped at the presented height and scroll when
+   * the content is taller than the sheet. Sizing the sheet from the laid-out
+   * content instead means the content can't be capped, because the cap would
+   * change the height it reports (APP-3704). Full-height sheets are always at
+   * the large detent, so they don't need to report anything.
+   */
+  const shouldMeasureContentHeight = IS_IOS && !nativeOptions?.fullHeight
 
   /*
    * Only user dismissal paths are blocked natively; the imperative `close`
