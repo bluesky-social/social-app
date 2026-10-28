@@ -202,6 +202,7 @@ module.exports = function (_config) {
         },
         googleServicesFile: './google-services.json',
         package: 'xyz.blueskyweb.app',
+        blockedPermissions: ['android.permission.ACCESS_FINE_LOCATION'],
         intentFilters: [
           {
             action: 'VIEW',
@@ -546,7 +547,18 @@ module.exports = function (_config) {
           },
         ],
         ['expo-screen-orientation'],
-        ['expo-location'],
+        [
+          'expo-location',
+          {
+            locationWhenInUsePermission:
+              'Bluesky uses your approximate location via GPS to determine the content and features available in your region.',
+            locationAlwaysAndWhenInUsePermission: false,
+            locationAlwaysPermission: false,
+            motionUsagePermission: false,
+            locationFullAccuracyPermission: false,
+            isIosReducedAccuracyByDefault: true,
+          },
+        ],
         [
           'expo-contacts',
           {
