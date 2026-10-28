@@ -53,10 +53,11 @@ export function getHomeNavigationAction(
 }
 
 export function getMessagesNavigationAction(
-  params?: MessagesParams,
+  {animation: _animation, ...params}: MessagesParams = {},
   _state?: NavigatorState,
   mode: NavigationMode = 'navigate',
 ) {
+  // Native transition hints should not become query parameters in web URLs.
   return mode === 'replace'
     ? StackActions.replace('Messages', params)
     : CommonActions.navigate('Messages', params)
