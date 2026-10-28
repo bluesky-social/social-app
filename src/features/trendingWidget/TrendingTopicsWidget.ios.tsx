@@ -61,6 +61,7 @@ function TrendingTopicsWidget(
   function TopicRow({
     topic,
     rank,
+    isLast,
   }: {
     topic: {
       description?: string
@@ -68,11 +69,19 @@ function TrendingTopicsWidget(
       displayName: string
     }
     rank: number
+    isLast: boolean
   }) {
     'use no memo'
 
+    const verticalPadding = isSmall || isMedium ? 3 : 7
+    // the widget's own padding is below the last row, so it gets none
+    const rowPadding = padding({
+      top: verticalPadding,
+      bottom: isLast ? 0 : verticalPadding,
+    })
+
     const row = isSmall ? (
-      <HStack alignment="top" spacing={5} modifiers={[padding({vertical: 3})]}>
+      <HStack alignment="top" spacing={5} modifiers={[rowPadding]}>
         <Text
           modifiers={[
             frame({width: 16, alignment: 'leading'}),
@@ -93,10 +102,7 @@ function TrendingTopicsWidget(
         <Spacer minLength={0} />
       </HStack>
     ) : (
-      <HStack
-        alignment="top"
-        spacing={6}
-        modifiers={[padding({vertical: isMedium ? 3 : 7})]}>
+      <HStack alignment="top" spacing={6} modifiers={[rowPadding]}>
         <Text
           modifiers={[
             frame({width: 18, alignment: 'leading'}),
@@ -167,16 +173,21 @@ function TrendingTopicsWidget(
         </Text>
         <Spacer minLength={0} />
       </HStack>
-      {/* only takes spare room, so three wrapped topics still fit on smaller phones */}
-      {isSmall ? (
-        <Spacer minLength={0} modifiers={[frame({maxHeight: 8})]} />
-      ) : null}
+      {/* only takes spare room, so wrapped topics still fit on smaller phones */}
+      <Spacer
+        minLength={0}
+        modifiers={[frame({maxHeight: isSmall ? 8 : 12})]}
+      />
 
       {topics.length ? (
         <VStack alignment="leading" spacing={0}>
           {topics.map((topic, index) => (
             <VStack key={topic.destination} alignment="leading" spacing={0}>
-              <TopicRow topic={topic} rank={index + 1} />
+              <TopicRow
+                topic={topic}
+                rank={index + 1}
+                isLast={index === topics.length - 1}
+              />
               {index < topics.length - 1 ? (
                 <Divider modifiers={[foregroundStyle(borderColor)]} />
               ) : null}
