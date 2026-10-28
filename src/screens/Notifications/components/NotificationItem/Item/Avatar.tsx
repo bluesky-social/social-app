@@ -31,11 +31,11 @@ const CONVERSATION_PURPLE = '#8679FC'
  * The size of `Item.Avatar`'s avatar, for anything that stands in for it.
  */
 export const AVATAR_SIZE = 44
-const BADGE_SIZE = 24
+const BADGE_SIZE = 18
 /**
  * Between the icon sizes, so the icon keeps its share of the badge.
  */
-const BADGE_ICON_SIZE = 14
+const BADGE_ICON_SIZE = 10
 /**
  * The width of the ring around the badge, in the row's background colour,
  * which sets it apart from the avatar.
