@@ -1101,7 +1101,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       ) {
         // chat-added-to-group routes to the convo because the recipient was
         // just added and now has access.
-        // @ts-expect-error nested navigators aren't typed -sfn
         void navigate('MessagesTab', {
           screen: 'Messages',
           params: {
@@ -1111,7 +1110,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       } else {
         // chat-removed-from-group, chat-join-request-rejected: the convo is
         // no longer accessible to the recipient, so just open the list.
-        // @ts-expect-error nested navigators aren't typed -sfn
         void navigate('MessagesTab', {screen: 'Messages'})
       }
     },
@@ -1166,7 +1164,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
             notyLogger.debug(`handlePushNotificationEntry: default navigate`)
           } else if (path) {
             const [screen, params] = router.matchPath(path)
-            // @ts-expect-error nested navigators aren't typed -sfn
+            // @ts-expect-error router.matchPath does not correlate screen names with params
             void navigate('HomeTab', {screen, params})
             notyLogger.debug(`handlePushNotificationEntry: navigate`, {
               screen,
