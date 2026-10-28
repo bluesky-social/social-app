@@ -101,7 +101,7 @@ function TrendingTopicsWidget(
         <Text
           modifiers={[
             frame({width: 18, alignment: 'leading'}),
-            font({size: 13, weight: 'medium'}),
+            font({size: isMedium ? 13 : 14, weight: 'medium'}),
             foregroundStyle(secondaryTextColor),
           ]}>
           {rank}.
