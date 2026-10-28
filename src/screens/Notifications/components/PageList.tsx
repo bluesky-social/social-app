@@ -32,6 +32,7 @@ import {
   isFollowerNotification,
   LoadingSkeleton,
   NotificationItem,
+  useHeaderGutterStyle,
 } from '#/screens/Notifications/components/NotificationItem'
 import {
   getRowBorderColor,
@@ -551,6 +552,7 @@ function SectionHeader({
   const t = useTheme()
   const {t: l} = useLingui()
   const gapColor = useRowBackgroundColor(!isUnreadAbove)
+  const gutters = useHeaderGutterStyle()
 
   return (
     <>
@@ -559,7 +561,7 @@ function SectionHeader({
       )}
       <View
         style={[
-          a.px_lg,
+          gutters,
           section === 'today' ? a.py_sm : [a.border_t, a.pt_md, a.pb_sm],
           // Rows are divided, so the header is too
           SHOW_ROW_BORDERS && a.border_b,

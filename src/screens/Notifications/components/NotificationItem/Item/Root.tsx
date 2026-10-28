@@ -14,6 +14,7 @@ import {atoms as a, select, type Theme, useTheme} from '#/alf'
 import {useLink} from '#/components/Link'
 import {SubtleHover} from '#/components/SubtleHover'
 import {SuppressHoverContext, useRowHover} from './hover'
+import {useIsClassicLayout, useRowGutterStyle} from './layout'
 
 type ItemContextValue = {
   isRead: boolean
@@ -126,6 +127,7 @@ export function Root({
   children: React.ReactNode
 }) {
   const backgroundColor = useRowBackgroundColor(isRead)
+  const gutters = useRowGutterStyle()
   const {hover, hoverProps, setSuppressed} = useRowHover()
   const {onPress: followLink} = useLink({to: href, displayText: ''})
 
@@ -154,13 +156,12 @@ export function Root({
             style={[
               a.flex_row,
               a.align_start,
-              a.gap_lg,
+              gutters,
               /*
                * As a button it's a `<button>` on web, which a block parent
                * shrinks to fit its content rather than stretching
                */
               a.w_full,
-              a.px_lg,
               a.py_md,
               {backgroundColor},
               style,
@@ -198,5 +199,12 @@ export function Trailing({
   style?: StyleProp<ViewStyle>
   children: React.ReactNode
 }) {
-  return <View style={[a.flex_shrink_0, style]}>{children}</View>
+  // The classic layout's row has no gap, as its left column has its own space
+  const isClassic = useIsClassicLayout()
+
+  return (
+    <View style={[a.flex_shrink_0, isClassic && a.ml_lg, style]}>
+      {children}
+    </View>
+  )
 }

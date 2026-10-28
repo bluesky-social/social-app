@@ -326,6 +326,7 @@ function MultiPostRow({
       testID={`notification-${notification.type}-${notification.id}`}>
       <Item.Avatar profile={actor} icon={icon} tone={tone} />
       <Item.Content>
+        <Item.AvatarRow actor={actor} />
         {children}
         <Item.PostPreview post={post} />
         <Item.Timestamp date={notification.indexedAt} />

@@ -3,6 +3,7 @@ import {type GestureResponderEvent, View} from 'react-native'
 import {moderatePost, type ModerationDecision} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -18,16 +19,21 @@ import {
 } from '#/state/cache/post-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {type ParentPost} from '#/state/queries/notifications/grouped/types'
+import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
+import {Link as PostLink} from '#/view/com/util/Link'
+import {PostMeta} from '#/view/com/util/PostMeta'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowCornerDownRight_Stroke2_Corner2_Rounded as ArrowCornerDownRight} from '#/components/icons/Arrow'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Link, WebOnlyInlineLinkText} from '#/components/Link'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
+import {PostPlaceholder} from '#/components/Post/Embed/PostPlaceholder'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostControls} from '#/components/PostControls'
 import {ProfileBadges} from '#/components/ProfileBadges'
@@ -38,6 +44,7 @@ import {Text} from '#/components/Typography'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {makePostLink} from '../links'
+import {useIsClassicLayout} from './layout'
 import {Card, FeedCard, getPostThumbnails, InlineImages} from './media'
 import {Strong, useDisplayName} from './text'
 
@@ -450,6 +457,9 @@ function EmbedPreview({
  * Compact preview of a quoted post: author, time and the start of its text.
  * Pressing it opens the quoted post. Blocked, deleted and detached quotes
  * collapse to a short muted line, and other record embeds render nothing.
+ *
+ * In the classic layout it looks as a quote does in a post, down to the
+ * pixel, apart from showing only the start of the text.
  */
 export function QuoteCard({
   embed,
@@ -467,13 +477,20 @@ export function QuoteCard({
   isMuted?: boolean
 }) {
   const t = useTheme()
+  const isClassic = useIsClassicLayout()
   const {currentAccount} = useSession()
   const parsed = bsky.post.parseEmbedRecordView(embed)
 
   let placeholder: React.ReactNode = null
   switch (parsed.type) {
     case 'post':
-      return (
+      return isClassic ? (
+        <ClassicQuoteCardPost
+          view={parsed.view}
+          numberOfLines={numberOfLines}
+          isMuted={isMuted}
+        />
+      ) : (
         <QuoteCardPost
           view={parsed.view}
           numberOfLines={numberOfLines}
@@ -481,10 +498,18 @@ export function QuoteCard({
         />
       )
     case 'post_blocked':
-      placeholder = <Trans>Blocked post</Trans>
+      placeholder = isClassic ? (
+        <Trans>Blocked</Trans>
+      ) : (
+        <Trans>Blocked post</Trans>
+      )
       break
     case 'post_not_found':
-      placeholder = <Trans>Deleted post</Trans>
+      placeholder = isClassic ? (
+        <Trans>Deleted</Trans>
+      ) : (
+        <Trans>Deleted post</Trans>
+      )
       break
     case 'post_detached': {
       const isViewerOwner = currentAccount?.did
@@ -501,12 +526,132 @@ export function QuoteCard({
       return null
   }
 
+  if (isClassic) {
+    // Cancels the top margin `PostPlaceholder` has below a post's text, as the
+    // row's own gap separates it here
+    return (
+      <View style={{marginTop: -8}}>
+        <PostPlaceholder>{placeholder}</PostPlaceholder>
+      </View>
+    )
+  }
+
   return (
     <Card>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
         {placeholder}
       </Text>
     </Card>
+  )
+}
+
+/**
+ * The classic layout's quoted post, built from the same parts as a quote in a
+ * post (`QuoteEmbed`), so it matches it exactly: the border, the radius, the
+ * padding, the author line, the text and the hover. Only the number of lines
+ * and the stand-in for media differ, to keep it compact.
+ */
+function ClassicQuoteCardPost({
+  view,
+  numberOfLines,
+  isMuted,
+}: {
+  view: app.bsky.embed.record.ViewRecord
+  numberOfLines: number
+  isMuted: boolean
+}) {
+  const t = useTheme()
+  const queryClient = useQueryClient()
+  const moderationOpts = useModerationOpts()
+  const quote: PostView = {
+    ...view,
+    $type: 'app.bsky.feed.defs#postView',
+    record: view.value,
+    embed: view.embeds?.[0],
+  }
+  const moderation = moderationOpts
+    ? moderatePost(quote, moderationOpts)
+    : undefined
+  const href = makePostLink(view)
+  const quotedRecord = bsky.isType(app.bsky.feed.post, view.value)
+    ? view.value
+    : undefined
+  const richText = quotedRecord?.text.trim()
+    ? new RichTextAPI({text: quotedRecord.text, facets: quotedRecord.facets})
+    : undefined
+  const {
+    state: hover,
+    onIn: onPointerEnter,
+    onOut: onPointerLeave,
+  } = useInteractionState()
+  const {
+    state: pressed,
+    onIn: onPressIn,
+    onOut: onPressOut,
+  } = useInteractionState()
+
+  return (
+    <View onPointerEnter={onPointerEnter} onPointerLeave={onPointerLeave}>
+      <ContentHider
+        modui={moderation?.ui('contentList')}
+        style={[a.rounded_md, a.border, t.atoms.border_contrast_low]}
+        activeStyle={[a.p_md, a.pt_sm]}
+        childContainerStyle={[a.pt_sm]}>
+        {({active}) => (
+          <>
+            {!active && (
+              <SubtleHover
+                native
+                hover={hover || pressed}
+                style={[a.rounded_md]}
+              />
+            )}
+            <PostLink
+              style={[!active && a.p_md]}
+              hoverStyle={t.atoms.border_contrast_high}
+              href={href}
+              title={`Post by ${view.author.handle}`}
+              onBeforePress={() =>
+                unstableCacheProfileView(queryClient, quote.author)
+              }
+              onPressIn={onPressIn}
+              onPressOut={onPressOut}>
+              <PostMeta
+                author={quote.author}
+                moderation={moderation}
+                showAvatar
+                postHref={href}
+                timestamp={quote.indexedAt}
+                linkDisabled
+              />
+              {moderation ? (
+                <PostAlerts
+                  post={quote}
+                  modui={moderation.ui('contentView')}
+                  style={[a.py_xs]}
+                />
+              ) : null}
+              {richText ? (
+                <RichText
+                  value={richText}
+                  authorHandle={view.author.handle}
+                  // The whole card is already a link
+                  disableLinks
+                  numberOfLines={numberOfLines}
+                  style={[a.text_md, isMuted && t.atoms.text_contrast_medium]}
+                />
+              ) : (
+                <InlineImages
+                  embed={quote.embed}
+                  size={60}
+                  blurred={moderation?.ui('contentMedia').blur ?? false}
+                />
+              )}
+            </PostLink>
+          </>
+        )}
+      </ContentHider>
+    </View>
   )
 }
 

@@ -39,8 +39,14 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
-import {fitAvatarCount, PREVIEW_AVATAR_SIZE, TOGGLE_PADDING} from './avatarRow'
+import {
+  fitAvatarCount,
+  getAvatarRowActors,
+  PREVIEW_AVATAR_SIZE,
+  TOGGLE_PADDING,
+} from './avatarRow'
 import {Expandable} from './Expandable'
+import {useIsClassicLayout} from './layout'
 import {ActorList, ShowMoreActorsButton} from './profile'
 import {Root, useRowBackgroundColor} from './Root'
 import {useDisplayName} from './text'
@@ -138,6 +144,12 @@ type GroupContextValue = NotificationGroup & {
    * How the group expands, if it does.
    */
   expansion?: GroupExpansion
+  /**
+   * Whether `AvatarRow` includes the primary actor. They do when they have no
+   * avatar of their own, as in the classic layout, where a like or repost has
+   * an icon in the left column.
+   */
+  showsPrimary?: boolean
 }
 
 /**
@@ -197,11 +209,18 @@ export function GroupRoot({
    */
   children: React.ReactNode
 }) {
+  const isClassic = useIsClassicLayout()
   const group = getNotificationGroup(notification)
+  /*
+   * Activity keeps its avatar in the classic layout, so there's no one to add.
+   * Every other kind's `Item.Avatar` is an icon there, so this has to agree
+   * with the rule in `Item.Avatar` for which badges become icons.
+   */
+  const showsPrimary = isClassic && notification.type !== 'subscribedPost'
 
   if (group.count < 2 || isNamedPair(group)) {
     return (
-      <GroupContext.Provider value={group}>
+      <GroupContext.Provider value={{...group, showsPrimary}}>
         <Root
           href={href}
           isRead={notification.isRead}
@@ -220,6 +239,7 @@ export function GroupRoot({
     <ExpandableGroupRoot
       notification={notification}
       group={group}
+      showsPrimary={showsPrimary}
       href={href}
       label={label}
       toggleOnPress={toggleOnPress}
@@ -235,6 +255,7 @@ export function GroupRoot({
 function ExpandableGroupRoot({
   notification,
   group,
+  showsPrimary,
   href,
   label,
   toggleOnPress,
@@ -246,6 +267,7 @@ function ExpandableGroupRoot({
 }: {
   notification: GroupNotificationView
   group: NotificationGroup
+  showsPrimary: boolean
   href: string
   label: string
   toggleOnPress: boolean
@@ -288,7 +310,11 @@ function ExpandableGroupRoot({
 
   return (
     <GroupContext.Provider
-      value={{...group, expansion: {isExpanded, toggleOnPress, onToggle}}}>
+      value={{
+        ...group,
+        showsPrimary,
+        expansion: {isExpanded, toggleOnPress, onToggle},
+      }}>
       {/* Carries the row's unread tint down behind the list */}
       <View style={{backgroundColor}}>
         <Root
@@ -382,14 +408,20 @@ function GroupActorList({
  * sentence and leaves out the primary actor, who already has `Item.Avatar`.
  * Renders nothing in a row about one person.
  *
+ * In the classic layout a like, repost or follow has an icon in the left
+ * column rather than an avatar, so the row includes the primary actor, even
+ * if they are the only one. Rows that aren't in a `GroupRoot` pass their
+ * `actor` for that. Without the classic layout, those render nothing.
+ *
  * Shows as many avatars as fit the row's width, each linking to its profile.
  * Then, if the group expands, a "+N" count of everyone else and a chevron
  * saying whether it's expanded. The group may have resolved fewer profiles
  * than it has people, in which case the avatars run out early and the count
  * covers the rest.
  */
-export function AvatarRow() {
+export function AvatarRow({actor}: {actor?: ProfileView}) {
   const {i18n} = useLingui()
+  const isClassic = useIsClassicLayout()
   const moderationOpts = useModerationOpts()
   const group = useContext(GroupContext)
   const rowRef = useRef<React.ComponentRef<typeof View>>(null)
@@ -406,22 +438,28 @@ export function AvatarRow() {
     if (rect) setWidth(rect.width)
   }, [])
 
-  if (!group || group.count < 2) return null
+  const showsPrimary = group ? !!group.showsPrimary : isClassic && !!actor
+  const actors = group ? group.actors : actor ? [actor] : []
+  const total = group ? group.count : 1
+  if (actors.length === 0 || (!showsPrimary && total < 2)) return null
 
-  // The primary actor comes first, and has their own avatar
-  const others = group.actors.slice(1)
+  const {others, othersTotal} = getAvatarRowActors({
+    actors,
+    count: total,
+    showsPrimary,
+  })
   const count =
     width === undefined
       ? 0
       : fitAvatarCount({
           width,
           resolved: others.length,
-          total: group.count - 1,
-          hasToggle: !!group.expansion,
+          total: othersTotal,
+          hasToggle: !!group?.expansion,
           formatRemaining: remaining => formatRemaining(i18n, remaining),
         })
   const shown = others.slice(0, count)
-  const remaining = Math.max(group.count - 1 - shown.length, 0)
+  const remaining = Math.max(othersTotal - shown.length, 0)
 
   return (
     <View
@@ -443,7 +481,7 @@ export function AvatarRow() {
           type={profile.associated?.labeler ? 'labeler' : 'user'}
         />
       ))}
-      {group.expansion && (
+      {group?.expansion && (
         <GroupToggle expansion={group.expansion} remaining={remaining} />
       )}
     </View>
