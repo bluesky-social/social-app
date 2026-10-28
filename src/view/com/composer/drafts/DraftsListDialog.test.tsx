@@ -99,6 +99,8 @@ function queryState(overrides = {}) {
     isError: false,
     isFetching: false,
     isRefetching: false,
+    isRefetchError: false,
+    isFetchingNextPage: false,
     isFetchNextPageError: false,
     hasNextPage: false,
     fetchNextPage: jest.fn(),
@@ -140,27 +142,38 @@ it('shows an error instead of an empty state and retries the list request', () =
   expect(screen.getByText('No drafts yet')).toBeTruthy()
 })
 
-it.each([false, true])(
-  'keeps loaded drafts and retries a failed page or refresh (next page: %s)',
-  isFetchNextPageError => {
-    const query = queryState({
-      data: {pages: [{drafts: [{id: 'existing draft'}]}]},
-      isError: true,
-      isFetchNextPageError,
-      hasNextPage: true,
-    })
-    jest.mocked(useDraftsQuery).mockReturnValue(query as never)
-    render(dialog())
-    expect(screen.getByText('existing draft')).toBeTruthy()
-    fireEvent.press(screen.getByTestId('draftsFooterRetry'))
-    expect(
-      isFetchNextPageError ? query.fetchNextPage : query.refetch,
-    ).toHaveBeenCalledTimes(1)
-    expect(
-      isFetchNextPageError ? query.refetch : query.fetchNextPage,
-    ).not.toHaveBeenCalled()
-  },
-)
+it('keeps loaded drafts and retries a failed next page from the footer', () => {
+  const query = queryState({
+    data: {pages: [{drafts: [{id: 'existing draft'}]}]},
+    isError: true,
+    isFetchNextPageError: true,
+    hasNextPage: true,
+  })
+  jest.mocked(useDraftsQuery).mockReturnValue(query as never)
+  render(dialog())
+  expect(screen.getByText('existing draft')).toBeTruthy()
+  expect(screen.queryByTestId('draftsRefreshError')).toBeNull()
+  fireEvent.press(screen.getByTestId('draftsFooterRetry'))
+  expect(query.fetchNextPage).toHaveBeenCalledTimes(1)
+  expect(query.refetch).not.toHaveBeenCalled()
+})
+
+it('keeps loaded drafts and flags a failed refresh above the list', () => {
+  const query = queryState({
+    data: {pages: [{drafts: [{id: 'existing draft'}]}]},
+    isError: true,
+    isRefetchError: true,
+    hasNextPage: true,
+  })
+  jest.mocked(useDraftsQuery).mockReturnValue(query as never)
+  render(dialog())
+  expect(screen.getByText('existing draft')).toBeTruthy()
+  expect(screen.getByTestId('draftsRefreshError')).toBeTruthy()
+  expect(screen.queryByTestId('draftsFooterRetry')).toBeNull()
+  fireEvent.press(screen.getByTestId('draftsRefreshRetryButton'))
+  expect(query.refetch).toHaveBeenCalledTimes(1)
+  expect(query.fetchNextPage).not.toHaveBeenCalled()
+})
 
 it('refreshes when the dialog is opened', () => {
   const query = queryState()
