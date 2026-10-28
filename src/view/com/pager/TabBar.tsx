@@ -15,6 +15,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import {scheduleOnRN, scheduleOnUI} from 'react-native-worklets'
+import {useLingui} from '@lingui/react/macro'
 
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
@@ -26,6 +27,8 @@ export interface TabBarProps {
   testID?: string
   selectedPage: number
   items: string[]
+  /** Unread status by tab index. */
+  unread?: boolean[]
   align?: 'center' | 'left'
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
@@ -44,6 +47,7 @@ export function TabBar({
   testID,
   selectedPage,
   items,
+  unread,
   align = 'center',
   onSelect,
   onPressSelected,
@@ -353,6 +357,7 @@ export function TabBar({
                   testID={testID}
                   dragProgress={dragProgress}
                   item={item}
+                  unread={unread?.[i]}
                   onPressItem={onPressItem}
                   onItemLayout={onItemLayout}
                   onTextLayout={onTextLayout}
@@ -386,6 +391,7 @@ function TabBarItem({
   testID,
   dragProgress,
   item,
+  unread,
   onPressItem,
   onItemLayout,
   onTextLayout,
@@ -395,12 +401,14 @@ function TabBarItem({
   testID: string | undefined
   dragProgress: SharedValue<number>
   item: string
+  unread?: boolean
   onPressItem: (index: number) => void
   onItemLayout: (index: number, layout: {x: number; width: number}) => void
   onTextLayout: (index: number, layout: {width: number}) => void
   align: 'center' | 'left'
 }) {
   const t = useTheme()
+  const {t: l} = useLingui()
   const style = useAnimatedStyle(() => {
     if (!_WORKLET) {
       return {opacity: 0.7}
@@ -441,15 +449,39 @@ function TabBarItem({
         style={[styles.item, align === 'center' && styles.itemCentered]}
         hoverStyle={t.atoms.bg_contrast_25}
         onPress={() => onPressItem(index)}
+        accessibilityLabel={unread ? l`${item}, unread` : undefined}
+        accessibilityHint=""
         accessibilityRole="tab">
         <Animated.View style={[style, styles.itemInner]}>
-          <Text
-            emoji
-            testID={testID ? `${testID}-${item}` : undefined}
-            style={[styles.itemText, t.atoms.text, a.text_md, a.font_semi_bold]}
-            onLayout={handleTextLayout}>
-            {item}
-          </Text>
+          <View style={unread !== undefined && {paddingHorizontal: 12}}>
+            <Text
+              emoji
+              testID={testID ? `${testID}-${item}` : undefined}
+              style={[
+                styles.itemText,
+                t.atoms.text,
+                a.text_md,
+                a.font_semi_bold,
+              ]}
+              onLayout={handleTextLayout}>
+              {item}
+            </Text>
+            {unread && (
+              <View
+                aria-hidden
+                testID={testID ? `${testID}-unread-${index}` : undefined}
+                style={{
+                  position: 'absolute',
+                  top: 2,
+                  right: 0,
+                  width: 8,
+                  height: 8,
+                  borderRadius: 4,
+                  backgroundColor: t.palette.primary_500,
+                }}
+              />
+            )}
+          </View>
         </Animated.View>
       </PressableWithHover>
     </View>

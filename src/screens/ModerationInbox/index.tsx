@@ -69,6 +69,8 @@ export function ModerationInboxScreen() {
   }
 
   const isEnabled = ax.features.enabled(ax.features.ModerationInboxEnable)
+  const unreadCountQuery = useModerationInboxUnreadCountQuery(isEnabled)
+  const unreadCounts = unreadCountQuery.data?.unreadCounts
 
   useFocusEffect(
     useCallback(() => {
@@ -115,6 +117,12 @@ export function ModerationInboxScreen() {
             <TabBar
               testID="moderationInboxTabs"
               items={[l`Your reports`, l`Your account`]}
+              unread={[
+                (unreadCounts?.reports ?? 0) > 0,
+                (unreadCounts?.subjects ?? 0) +
+                  (unreadCounts?.accountStatus ?? 0) >
+                  0,
+              ]}
               align="left"
               {...props}
             />
