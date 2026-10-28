@@ -823,6 +823,37 @@ func (srv *Server) WebChatInvite(c echo.Context) error {
 	return c.Render(http.StatusOK, "chatinvite.html", data)
 }
 
+func bskyProfileCanonicalURL(handle, tab string) string {
+	canonicalURL := bskyProfileURL(handle)
+	if canonicalURL == "" {
+		return ""
+	}
+
+	switch tab {
+	case "replies", "media", "videos", "feeds", "starter-packs", "lists":
+		query := url.Values{}
+		query.Set("tab", tab)
+		return canonicalURL + "?" + query.Encode()
+	default:
+		return canonicalURL
+	}
+}
+
+func profileAuthorFeedFilter(tab string) (string, bool) {
+	switch tab {
+	case "replies":
+		return "posts_with_replies", true
+	case "media":
+		return "posts_with_media", true
+	case "videos":
+		return "posts_with_video", true
+	case "feeds", "starter-packs", "lists":
+		return "", false
+	default:
+		return "posts_no_replies", true
+	}
+}
+
 func (srv *Server) WebProfile(c echo.Context) error {
 	ctx := c.Request().Context()
 	data := srv.NewTemplateContext()
@@ -847,11 +878,11 @@ func (srv *Server) WebProfile(c echo.Context) error {
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 	data["requestHost"] = req.Host
 
-	// Prefer the handle-form URL so JSON-LD `url` and
-	// <link rel="canonical"> match. Template falls back to requestURI
-	// when the handle is unusable.
-	if url := bskyProfileURL(pv.Handle); url != "" {
-		data["canonicalURL"] = url
+	tab := c.QueryParam("tab")
+	// Keep non-default profile tabs distinct for crawlers. `posts`, blank, and
+	// unknown values all render the default Posts tab and share its canonical.
+	if canonicalURL := bskyProfileCanonicalURL(pv.Handle, tab); canonicalURL != "" {
+		data["canonicalURL"] = canonicalURL
 	}
 
 	// Fetch recent posts for ProfilePage.hasPart. Skipped for auth-required
@@ -862,21 +893,23 @@ func (srv *Server) WebProfile(c echo.Context) error {
 	// caching per-profile if upstream load becomes a concern.
 	var recentPosts []*appbsky.FeedDefs_PostView
 	if unauthedViewingOkay {
-		af, err := appbsky.FeedGetAuthorFeed(ctx, srv.xrpcc, pv.Did, "", "posts_no_replies", false, authorFeedFetchLimit)
-		if err != nil {
-			log.Warnf("failed to fetch author feed for: %s\t%v", pv.Did, err)
-		} else {
-			for _, p := range af.Feed {
-				if p == nil || p.Post == nil {
-					continue
-				}
-				// Only the author's own posts (matches RSS handler).
-				if p.Post.Author == nil || p.Post.Author.Did != pv.Did {
-					continue
-				}
-				recentPosts = append(recentPosts, p.Post)
-				if len(recentPosts) >= maxRecentPosts {
-					break
+		if feedFilter, includeFeed := profileAuthorFeedFilter(tab); includeFeed {
+			af, err := appbsky.FeedGetAuthorFeed(ctx, srv.xrpcc, pv.Did, "", feedFilter, false, authorFeedFetchLimit)
+			if err != nil {
+				log.Warnf("failed to fetch author feed for: %s\t%v", pv.Did, err)
+			} else {
+				for _, p := range af.Feed {
+					if p == nil || p.Post == nil {
+						continue
+					}
+					// Only the author's own posts (matches RSS handler).
+					if p.Post.Author == nil || p.Post.Author.Did != pv.Did {
+						continue
+					}
+					recentPosts = append(recentPosts, p.Post)
+					if len(recentPosts) >= maxRecentPosts {
+						break
+					}
 				}
 			}
 		}

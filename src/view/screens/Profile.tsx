@@ -13,6 +13,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
+import {getProfileTabIndex} from '#/lib/routes/profile-tabs'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -161,10 +162,16 @@ function ProfileScreenInner({route}: Props) {
   if (profile && moderationOpts) {
     return (
       <ProfileScreenLoaded
+        key={
+          route.params.tab !== undefined
+            ? `${profile.did}-${route.params.tab}-${isPlaceholderProfile}`
+            : profile.did
+        }
         profile={profile}
         moderationOpts={moderationOpts}
         isPlaceholderProfile={isPlaceholderProfile}
         hideBackButton={!!route.params.hideBackButton}
+        tab={route.params.tab}
       />
     )
   }
@@ -187,11 +194,13 @@ function ProfileScreenLoaded({
   isPlaceholderProfile,
   moderationOpts,
   hideBackButton,
+  tab,
 }: {
   profile: app.bsky.actor.defs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hideBackButton: boolean
   isPlaceholderProfile: boolean
+  tab?: string
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
@@ -209,7 +218,6 @@ function ProfileScreenLoaded({
     did: profile.did,
     enabled: !!profile.associated?.labeler,
   })
-  const [currentPage, setCurrentPage] = useState(0)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const {_} = useLingui()
 
@@ -240,7 +248,8 @@ function ProfileScreenLoaded({
   const hasLabeler = !!profile.associated?.labeler
   const showFiltersTab = hasLabeler
   const showPostsTab = true
-  const showRepliesTab = hasSession
+  // Reply deep links must work without a session so crawlers can index reply-heavy profiles.
+  const showRepliesTab = hasSession || tab === 'replies'
   const showMediaTab = !hasLabeler
   const showVideosTab = !hasLabeler
   const showLikesTab = isMe
@@ -250,7 +259,9 @@ function ProfileScreenLoaded({
   const showStarterPacksTab = isMe || starterPackCount > 0
   // subtract starterpack count from list count, since starterpacks are a type of list
   const listCount = (profile.associated?.lists || 0) - starterPackCount
-  const showListsTab = hasSession && (isMe || listCount > 0)
+  // Lists are public, so direct links can bypass the logged-in-only tab visibility.
+  const showListsTab =
+    (hasSession || tab === 'lists') && (isMe || listCount > 0)
 
   const sectionTitles = [
     showFiltersTab ? _(msg`Labels`) : undefined,
@@ -278,6 +289,9 @@ function ProfileScreenLoaded({
   if (showFiltersTab) {
     filtersIndex = nextIndex++
   }
+  if (showListsTab && hasLabeler) {
+    listsIndex = nextIndex++
+  }
   if (showPostsTab) {
     postsIndex = nextIndex++
   }
@@ -299,9 +313,24 @@ function ProfileScreenLoaded({
   if (showStarterPacksTab) {
     starterPacksIndex = nextIndex++
   }
-  if (showListsTab) {
+  if (showListsTab && !hasLabeler) {
     listsIndex = nextIndex++
   }
+
+  const initialPage = getProfileTabIndex(
+    tab,
+    {
+      posts: postsIndex,
+      replies: repliesIndex,
+      media: mediaIndex,
+      videos: videosIndex,
+      feeds: feedsIndex,
+      'starter-packs': starterPacksIndex,
+      lists: listsIndex,
+    },
+    0,
+  )
+  const [currentPage, setCurrentPage] = useState(initialPage)
 
   const scrollSectionToTop = useCallback(
     (index: number) => {
@@ -419,6 +448,7 @@ function ProfileScreenLoaded({
       modui={moderation.ui('profileView')}>
       <PagerWithHeader
         testID="profilePager"
+        initialPage={initialPage}
         isHeaderReady={!showPlaceholder}
         items={sectionTitles}
         onPageSelected={onPageSelected}
