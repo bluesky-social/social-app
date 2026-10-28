@@ -15,6 +15,7 @@ import {
   font,
   foregroundStyle,
   frame,
+  layoutPriority,
   lineLimit,
   minimumScaleFactor,
   padding,
@@ -167,11 +168,11 @@ function TrendingTopicsWidget(
         </Text>
         <Spacer minLength={0} />
       </HStack>
-      {/* only takes spare room, so wrapped topics still fit on smaller phones */}
+      {/* the topics' layout priority leaves this only the spare room */}
       <Spacer minLength={0} modifiers={[frame({maxHeight: isSmall ? 8 : 6})]} />
 
       {topics.length ? (
-        <VStack alignment="leading" spacing={0}>
+        <VStack alignment="leading" spacing={0} modifiers={[layoutPriority(1)]}>
           {topics.map((topic, index) => (
             <VStack key={topic.destination} alignment="leading" spacing={0}>
               <TopicRow topic={topic} rank={index + 1} />
