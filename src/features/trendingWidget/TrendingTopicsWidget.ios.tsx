@@ -61,7 +61,6 @@ function TrendingTopicsWidget(
   function TopicRow({
     topic,
     rank,
-    isLast,
   }: {
     topic: {
       description?: string
@@ -69,19 +68,11 @@ function TrendingTopicsWidget(
       displayName: string
     }
     rank: number
-    isLast: boolean
   }) {
     'use no memo'
 
-    const verticalPadding = isSmall || isMedium ? 3 : 7
-    // the widget's own padding is below the last row, so it gets none
-    const rowPadding = padding({
-      top: verticalPadding,
-      bottom: isLast ? 0 : verticalPadding,
-    })
-
     const row = isSmall ? (
-      <HStack alignment="top" spacing={5} modifiers={[rowPadding]}>
+      <HStack alignment="top" spacing={5} modifiers={[padding({vertical: 3})]}>
         <Text
           modifiers={[
             frame({width: 16, alignment: 'leading'}),
@@ -102,7 +93,10 @@ function TrendingTopicsWidget(
         <Spacer minLength={0} />
       </HStack>
     ) : (
-      <HStack alignment="top" spacing={6} modifiers={[rowPadding]}>
+      <HStack
+        alignment="top"
+        spacing={6}
+        modifiers={[padding({vertical: isMedium ? 3 : 7})]}>
         <Text
           modifiers={[
             frame({width: 18, alignment: 'leading'}),
@@ -183,11 +177,7 @@ function TrendingTopicsWidget(
         <VStack alignment="leading" spacing={0}>
           {topics.map((topic, index) => (
             <VStack key={topic.destination} alignment="leading" spacing={0}>
-              <TopicRow
-                topic={topic}
-                rank={index + 1}
-                isLast={index === topics.length - 1}
-              />
+              <TopicRow topic={topic} rank={index + 1} />
               {index < topics.length - 1 ? (
                 <Divider modifiers={[foregroundStyle(borderColor)]} />
               ) : null}
