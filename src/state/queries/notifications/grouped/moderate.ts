@@ -92,15 +92,27 @@ export function moderateNotification(
         : notification
     }
     case 'subscribedPost': {
-      const items = notification.items.filter(
-        item =>
-          !isActorHidden(item.actor, moderationOpts) &&
-          !hasMutedWordInPost(item.post, moderationOpts) &&
-          !isSubscribedPostHidden(item.post, moderationOpts),
+      const hiddenUris = new Set(
+        notification.items
+          .filter(
+            item =>
+              isActorHidden(item.actor, moderationOpts) ||
+              hasMutedWordInPost(item.post, moderationOpts) ||
+              isSubscribedPostHidden(item.post, moderationOpts),
+          )
+          .map(item => item.post.uri),
       )
-      if (items.length === notification.items.length) return notification
+      if (hiddenUris.size === 0) return notification
+      const items = notification.items.filter(
+        item => !hiddenUris.has(item.post.uri),
+      )
       if (!isNonEmpty(items)) return undefined
-      return {...notification, items}
+      return {
+        ...notification,
+        items,
+        // So the activity list matches the row
+        postUris: notification.postUris.filter(uri => !hiddenUris.has(uri)),
+      }
     }
     case 'reply':
     case 'quote':
