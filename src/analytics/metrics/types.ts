@@ -951,10 +951,16 @@ export type Events = {
     feedSliceIndex?: number
   }
   /**
-   * The trending topics home screen widget was seen installed on this device
-   * for the first time.
+   * The trending topics home screen widget was seen installed on this device,
+   * having not been installed the last time we checked.
    */
   'trendingWidget:installed': {}
+  /**
+   * The last trending topics home screen widget was removed from this device.
+   * Only checked when the app comes to the foreground, so it can lag the
+   * actual removal.
+   */
+  'trendingWidget:uninstalled': {}
   /**
    * The trending topics widget was tapped outside a topic, which opens
    * Explore. On the small iOS widget that's every tap, because it can't have

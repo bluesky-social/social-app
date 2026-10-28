@@ -54,9 +54,14 @@ export function TrendingTopicsWidgetSync() {
         const isInstalled = await WidgetInfo.isInstalled('TrendingTopicsWidget')
         if (cancelled) return
         setIsWidgetInstalled(isInstalled)
-        if (isInstalled && !device.get(['trendingWidgetInstalled'])) {
-          device.set(['trendingWidgetInstalled'], true)
-          ax.metric('trendingWidget:installed', {})
+        const wasInstalled = device.get(['trendingWidgetInstalled']) ?? false
+        if (isInstalled !== wasInstalled) {
+          device.set(['trendingWidgetInstalled'], isInstalled)
+          if (isInstalled) {
+            ax.metric('trendingWidget:installed', {})
+          } else {
+            ax.metric('trendingWidget:uninstalled', {})
+          }
         }
       } catch (error) {
         logger.error(

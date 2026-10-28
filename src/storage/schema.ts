@@ -62,8 +62,9 @@ export type Device = {
   threadgateNudged?: boolean
   inviteFriendsFollowersPromoDismissed?: boolean
   /**
-   * Whether the trending topics widget has ever been seen installed on this
-   * device, so `trendingWidget:installed` is only logged once.
+   * Whether the trending topics widget was installed the last time we checked,
+   * so `trendingWidget:installed` and `trendingWidget:uninstalled` are only
+   * logged when that changes.
    */
   trendingWidgetInstalled?: boolean
   pendingOTAUpdate?: {
