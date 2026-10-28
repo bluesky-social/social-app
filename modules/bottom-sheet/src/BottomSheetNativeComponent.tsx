@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
-import {IS_IPAD} from '#/env'
 import {
   type BottomSheetPresentationSizeChangeEvent,
   type BottomSheetState,
@@ -129,8 +128,12 @@ function BottomSheetNativeComponentInner({
   const presentationHeight =
     Platform.OS === 'ios' ? presentationSize?.height : undefined
   const hasPresentedPopover = presentationSize?.isPopover === true
+  /*
+   * Content that reports its own height can be capped at the presented height,
+   * since the cap doesn't change what it reports.
+   */
   const usesReportedContentHeight =
-    (IS_IPAD || (Platform.OS === 'ios' && popover !== 'never')) &&
+    Platform.OS === 'ios' &&
     presentationHeight != null &&
     desiredContentHeight != null
   const isHeightConstrained =
