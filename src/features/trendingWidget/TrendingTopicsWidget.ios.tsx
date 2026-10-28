@@ -170,7 +170,7 @@ function TrendingTopicsWidget(
       {/* only takes spare room, so wrapped topics still fit on smaller phones */}
       <Spacer
         minLength={0}
-        modifiers={[frame({maxHeight: isSmall ? 8 : 12})]}
+        modifiers={[frame({maxHeight: isSmall ? 8 : isMedium ? 6 : 12})]}
       />
 
       {topics.length ? (
