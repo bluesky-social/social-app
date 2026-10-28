@@ -15,6 +15,18 @@ import {useLink} from '#/components/Link'
 import {SubtleHover} from '#/components/SubtleHover'
 import {SuppressHoverContext, useRowHover} from './hover'
 
+/**
+ * A row's padding before the avatar. With the avatar and `ROW_GAP`, it puts
+ * the text where a feed post's is. Section headers use it too, to line up
+ * with the avatars.
+ */
+export const ROW_PADDING_START = 18
+
+/**
+ * The space between a row's avatar and its content.
+ */
+export const ROW_GAP = 10
+
 type ItemContextValue = {
   isRead: boolean
 }
@@ -154,15 +166,14 @@ export function Root({
             style={[
               a.flex_row,
               a.align_start,
-              a.gap_sm,
               /*
                * As a button it's a `<button>` on web, which a block parent
                * shrinks to fit its content rather than stretching
                */
               a.w_full,
-              a.px_lg,
+              a.pr_lg,
               a.py_md,
-              {backgroundColor},
+              {gap: ROW_GAP, paddingLeft: ROW_PADDING_START, backgroundColor},
               style,
             ]}>
             <SubtleHover hover={hover} />

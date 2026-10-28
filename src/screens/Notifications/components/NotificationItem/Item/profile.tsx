@@ -40,9 +40,10 @@ import {Text} from '#/components/Typography'
 import {type Metrics} from '#/analytics'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import {AVATAR_SLOT_WIDTH} from './Avatar'
+import {AVATAR_SIZE} from './Avatar'
 import {SuppressHoverContext, useRowHover, useSuppressHover} from './hover'
 import {Card} from './media'
+import {ROW_GAP, ROW_PADDING_START} from './Root'
 import {useDisplayName} from './text'
 
 type FollowLogContext = Metrics['profile:follow']['logContext'] &
@@ -469,14 +470,14 @@ const ACTOR_AVATAR_SIZE = 32
 
 /**
  * How far an `ActorList` insets its people, so that their names line up with
- * the row's text above. `Item.Root` puts the text a padding, the avatar slot
- * and a gap in from its edge, and each person puts their name an avatar and
- * a gap in from theirs.
+ * the row's text above. `Item.Root` puts the text a padding, the avatar and
+ * a gap in from its edge, and each person puts their name an avatar and a
+ * gap in from theirs.
  */
 const ACTOR_LIST_INSET =
-  tokens.space.lg +
-  AVATAR_SLOT_WIDTH +
-  tokens.space.sm -
+  ROW_PADDING_START +
+  AVATAR_SIZE +
+  ROW_GAP -
   ACTOR_AVATAR_SIZE -
   tokens.space.sm
 
