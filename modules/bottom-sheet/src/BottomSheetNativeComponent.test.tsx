@@ -19,7 +19,10 @@ type NativeViewProps = Pick<
   BottomSheetViewProps,
   'popover' | 'desiredContentHeight' | 'onPresentationSizeChange'
 > & {
-  children: React.ReactElement<{style: StyleProp<ViewStyle>}>
+  children: React.ReactElement<{
+    style: StyleProp<ViewStyle>
+    children: React.ReactElement<{style: StyleProp<ViewStyle>}>
+  }>
   containerBackgroundColor?: string
   maxHeight?: number
   style: StyleProp<ViewStyle>
@@ -189,10 +192,17 @@ it.each(['always', 'adaptive', 'never', undefined] as const)(
       } as BottomSheetPresentationSizeChangeEvent),
     )
 
-    const contentStyle = StyleSheet.flatten(
-      lastNativeProps().children.props.style,
-    )
+    const content = lastNativeProps().children
+    const contentStyle = StyleSheet.flatten(content.props.style)
     expect(contentStyle?.maxHeight).toBe(180)
+
+    /*
+     * Measured sheet content is capped but not stretched, so it keeps its
+     * natural height when the sheet is taller. Popovers fill their frame.
+     */
+    const viewportStyle = StyleSheet.flatten(content.props.children.props.style)
+    expect(viewportStyle?.maxHeight).toBe(180)
+    expect(viewportStyle?.flex).toBe(popover === 'always' ? 1 : undefined)
   },
 )
 

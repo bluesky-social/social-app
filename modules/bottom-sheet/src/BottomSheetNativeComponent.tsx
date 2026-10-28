@@ -130,17 +130,16 @@ function BottomSheetNativeComponentInner({
   const hasPresentedPopover = presentationSize?.isPopover === true
   /*
    * Content that reports its own height can be capped at the presented height,
-   * since the cap doesn't change what it reports.
+   * since the cap doesn't change what it reports. It isn't stretched to fill
+   * the presentation, though: content shorter than the sheet keeps its natural
+   * height, so it doesn't follow the sheet around while it's dragged or resized.
    */
   const usesReportedContentHeight =
     Platform.OS === 'ios' &&
     presentationHeight != null &&
     desiredContentHeight != null
   const isHeightConstrained =
-    maxHeight != null ||
-    rest.fullHeight === true ||
-    hasPresentedPopover ||
-    usesReportedContentHeight
+    maxHeight != null || rest.fullHeight === true || hasPresentedPopover
   const viewportMaxHeight =
     maxHeight != null
       ? presentationHeight != null
@@ -216,16 +215,12 @@ function BottomSheetNativeComponentInner({
           },
         ]}>
         <View
-          style={
-            isHeightConstrained
-              ? [
-                  {flex: 1},
-                  effectiveViewportMaxHeight != null && {
-                    maxHeight: effectiveViewportMaxHeight,
-                  },
-                ]
-              : undefined
-          }>
+          style={[
+            isHeightConstrained && {flex: 1},
+            effectiveViewportMaxHeight != null && {
+              maxHeight: effectiveViewportMaxHeight,
+            },
+          ]}>
           <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
         </View>
       </View>

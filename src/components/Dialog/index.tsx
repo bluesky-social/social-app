@@ -244,13 +244,15 @@ export function Outer({
     [open, close],
   )
 
+  /*
+   * Full-height and max-height sheets and popovers fill their presentation.
+   * Content that reports its height is only capped at it (see
+   * `BottomSheetNativeComponentInner`), and its ScrollView shrinks by default.
+   */
   const isHeightConstrained =
     nativeOptions?.maxHeight != null ||
     nativeOptions?.fullHeight === true ||
-    presentation?.isPopover === true ||
-    (shouldMeasureContentHeight &&
-      presentation != null &&
-      desiredContentHeight != null)
+    presentation?.isPopover === true
   const presentationMaxHeight =
     presentation?.height != null &&
     (presentation?.isPopover === true ||
