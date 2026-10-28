@@ -25,3 +25,5 @@ Standalone repro: https://github.com/mozzius/hermes-tarball-repro
 
 Opened issue in RN repo: https://github.com/react/react-native/issues/59587 (React Native `main`
 and `0.88-stable` still had the old check on 2026-10-28).
+
+Upstream PR: https://github.com/react/react-native/pull/59588
