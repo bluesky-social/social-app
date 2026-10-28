@@ -1,9 +1,6 @@
-import {isScrollForwarderAvailable} from '@bsky.app/react-native-scroll-forwarder'
-
 import {AccordionAnimation} from '#/lib/custom-animations/AccordionAnimation'
 import {useSuggestedFollowsByActorWithDismiss} from '#/state/queries/suggested-follows'
 import {ProfileGrid} from '#/components/FeedInterstitials'
-import {IS_ANDROID} from '#/env'
 
 export function ProfileHeaderSuggestedFollows({
   isExpanded,
@@ -16,9 +13,6 @@ export function ProfileHeaderSuggestedFollows({
 }) {
   const {profiles, onDismiss, isLoading, error} =
     useSuggestedFollowsByActorWithDismiss({did: actorDid})
-
-  // OTA bundles must preserve the exclusion on binaries without native forwarding.
-  if (IS_ANDROID && !isScrollForwarderAvailable) return null
 
   return (
     <AccordionAnimation isExpanded={isExpanded}>

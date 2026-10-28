@@ -1,5 +1,2 @@
-export {
-  isScrollForwarderAvailable,
-  ScrollForwarderView,
-} from './ScrollForwarderView'
+export {ScrollForwarderView} from './ScrollForwarderView'
 export * from './ScrollForwarderViewNativeComponent'
