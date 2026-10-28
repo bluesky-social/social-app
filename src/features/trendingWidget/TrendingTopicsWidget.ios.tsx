@@ -169,7 +169,7 @@ function TrendingTopicsWidget(
         <Spacer minLength={0} />
       </HStack>
       {/* the topics' layout priority leaves this only the spare room */}
-      <Spacer minLength={0} modifiers={[frame({maxHeight: isSmall ? 8 : 6})]} />
+      <Spacer minLength={0} modifiers={[frame({maxHeight: 6})]} />
 
       {topics.length ? (
         <VStack alignment="leading" spacing={0} modifiers={[layoutPriority(1)]}>
