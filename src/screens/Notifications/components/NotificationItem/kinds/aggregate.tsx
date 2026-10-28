@@ -3,6 +3,7 @@ import {AtUri} from '@atproto/syntax'
 import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
+import {makeActivityListLink} from '#/lib/routes/activity-list'
 import {makeCustomFeedLink} from '#/lib/routes/links'
 import {atoms as a} from '#/alf'
 import {type Props as SVGIconProps} from '#/components/icons/common'
@@ -12,7 +13,7 @@ import {
   NotificationRepostSmall_Filled_Corner0_Rounded as RepostIcon,
 } from '#/components/icons/Notification'
 import * as Item from '../Item'
-import {makeActivityListLink, makePostLink} from '../links'
+import {makePostLink} from '../links'
 import {type NotificationOf} from '../types'
 
 /**
@@ -312,9 +313,9 @@ function MultiPostRow({
    */
   children: React.ReactNode
 }) {
-  const {actor, posts} = notification
+  const {actor, posts, postUris} = notification
   const [post] = posts
-  const href = makeActivityListLink(posts.map(p => p.uri))
+  const href = makeActivityListLink(postUris)
   const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
   const mediaBlurred = Item.usePostMediaBlurred(post)
 
@@ -548,7 +549,7 @@ export function SubscribedPostNotification({
   notification: NotificationOf<'subscribedPost'>
 }) {
   const {t: l} = useLingui()
-  const {items, count} = notification
+  const {items, count, postUris} = notification
   // Items are newest first, so this is the post to preview
   const [{post, parent}] = items
   // Set when the group is a lone post that replies to another
@@ -562,9 +563,9 @@ export function SubscribedPostNotification({
     <Item.GroupRoot
       notification={notification}
       href={
-        items.length === 1
+        postUris.length === 1
           ? makePostLink(post)
-          : makeActivityListLink(items.map(item => item.post.uri))
+          : makeActivityListLink(postUris)
       }
       label={
         second
