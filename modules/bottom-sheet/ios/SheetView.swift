@@ -10,6 +10,12 @@ class SheetView: ExpoView {
 
   // Native content height observation (eliminates JS bridge round-trip)
   private var contentHeightObservation: NSKeyValueObservation?
+  private weak var contentScrollComponentView: UIView?
+  private weak var contentScrollView: UIScrollView?
+  private var scrollViewBoundsObservation: NSKeyValueObservation?
+  private var scrollContentSizeObservation: NSKeyValueObservation?
+  private var lastMeasuredContentHeight: CGFloat?
+  private var isContentMeasurementScheduled = false
 
   // Events
   private let onAttemptDismiss = EventDispatcher()
@@ -47,17 +53,15 @@ class SheetView: ExpoView {
   var sourceViewTag: Int?
   var minHeight: CGFloat = 0
   var maxHeight: CGFloat?
-  var desiredContentHeight: CGFloat? {
+  /*
+   * React tag of the ScrollView that holds the content's scrollable part. Its
+   * content size gives the content's natural height even when the content is
+   * capped at the presented height, see `measureContentHeight()`.
+   */
+  var contentScrollViewTag: Int? {
     didSet {
-      guard let desiredContentHeight,
-            (self.isOpen || self.isOpening),
-            !self.isClosing else { return }
-      let clampedHeight = self.clampHeight(desiredContentHeight)
-      self.sheetVc?.updateContentSize(
-        contentHeight: clampedHeight,
-        preventExpansion: self.preventExpansion
-      )
-      self.selectedDetentIdentifier = self.sheetVc?.getCurrentDetentIdentifier()
+      guard self.contentScrollViewTag != oldValue else { return }
+      self.observeContentScrollView()
     }
   }
   private var lastPresentedSize = CGSize.zero
@@ -173,6 +177,7 @@ class SheetView: ExpoView {
       self.sheetVc != nil || self.isOpen || self.isOpening || self.isClosing
     self.contentHeightObservation?.invalidate()
     self.contentHeightObservation = nil
+    self.lastMeasuredContentHeight = nil
     if shouldNotifyClosed {
       self.isClosing = false
       self.isOpening = false
@@ -201,7 +206,7 @@ class SheetView: ExpoView {
           !self.isOpening,
           !self.isClosing,
           let innerView = self.innerView,
-          let contentHeight = innerView.subviews.first?.frame.height,
+          let contentHeight = self.measureContentHeight(),
           contentHeight > 0 || self.fullHeight,
           let rvc = self.reactViewController() else {
       return
@@ -214,9 +219,8 @@ class SheetView: ExpoView {
       containerBackgroundColor: self.containerBackgroundColor,
       userInterfaceStyle: self.userInterfaceStyle
     )
-    let clampedContentHeight = self.clampHeight(
-      self.desiredContentHeight ?? contentHeight
-    )
+    let clampedContentHeight = self.clampHeight(contentHeight)
+    self.lastMeasuredContentHeight = contentHeight
     sheetVc.setDetents(
       contentHeight: clampedContentHeight,
       preventExpansion: self.preventExpansion,
@@ -306,9 +310,6 @@ class SheetView: ExpoView {
 
   // Observe the content view's bounds via KVO so that height changes are detected
   // purely on the native side, without a JS bridge round-trip through onLayout.
-  // Calls updateContentSize directly with the observed height rather than going through
-  // updateLayout(), which has a prevLayoutDetentIdentifier guard that can block
-  // legitimate content-driven updates when detent identifiers drift during animations.
   private func startObservingContentHeight() {
     self.contentHeightObservation?.invalidate()
 
@@ -316,22 +317,93 @@ class SheetView: ExpoView {
 
     self.contentHeightObservation = contentView.observe(
       \.bounds,
-      options: [.old, .new]
-    ) { [weak self] _, change in
-      guard let self = self,
-            (self.isOpen || self.isOpening) && !self.isClosing,
-            let oldBounds = change.oldValue,
-            let newBounds = change.newValue,
-            self.desiredContentHeight == nil,
-            oldBounds.height != newBounds.height,
-            newBounds.height > 0 else { return }
-      let clampedHeight = self.clampHeight(newBounds.height)
-      self.sheetVc?.updateContentSize(
-        contentHeight: clampedHeight,
-        preventExpansion: self.preventExpansion
-      )
-      self.selectedDetentIdentifier = self.sheetVc?.getCurrentDetentIdentifier()
+      options: [.new]
+    ) { [weak self] _, _ in
+      self?.scheduleContentMeasurement()
     }
+  }
+
+  private func observeContentScrollView() {
+    self.scrollViewBoundsObservation?.invalidate()
+    self.scrollContentSizeObservation?.invalidate()
+    self.scrollViewBoundsObservation = nil
+    self.scrollContentSizeObservation = nil
+    self.contentScrollComponentView = nil
+    self.contentScrollView = nil
+
+    if let tag = self.contentScrollViewTag,
+       let componentView = self.appContext?.findView(withTag: tag, ofType: UIView.self),
+       let scrollView = (componentView as? UIScrollView)
+         ?? componentView.subviews.lazy.compactMap({ $0 as? UIScrollView }).first {
+      self.contentScrollComponentView = componentView
+      self.contentScrollView = scrollView
+      // The component view's bounds, unlike the scroll view's, don't move on scroll
+      self.scrollViewBoundsObservation = componentView.observe(
+        \.bounds,
+        options: [.new]
+      ) { [weak self] _, _ in
+        self?.scheduleContentMeasurement()
+      }
+      self.scrollContentSizeObservation = scrollView.observe(
+        \.contentSize,
+        options: [.new]
+      ) { [weak self] _, _ in
+        self?.scheduleContentMeasurement()
+      }
+    }
+
+    self.scheduleContentMeasurement()
+  }
+
+  /*
+   * The content's natural height: its laid-out height, plus whatever part of
+   * the ScrollView's content doesn't fit in the ScrollView. Capping the content
+   * shrinks the first and grows the second by the same amount, so JS can cap the
+   * content at the presented height and the ScrollView scrolls, without the cap
+   * feeding back into the sheet's size (APP-3704).
+   */
+  private func measureContentHeight() -> CGFloat? {
+    guard let contentView = self.innerView?.subviews.first else { return nil }
+    var height = contentView.bounds.height
+    if let componentView = self.contentScrollComponentView,
+       let scrollView = self.contentScrollView,
+       componentView.isDescendant(of: contentView) {
+      height += scrollView.contentSize.height - componentView.bounds.height
+    }
+    return height
+  }
+
+  /*
+   * Fabric mounts one layout change as several frame and content size updates,
+   * and the measurement is only right once they've all landed.
+   */
+  private func scheduleContentMeasurement() {
+    guard !self.isContentMeasurementScheduled else { return }
+    self.isContentMeasurementScheduled = true
+    DispatchQueue.main.async { [weak self] in
+      guard let self = self else { return }
+      self.isContentMeasurementScheduled = false
+      self.updateContentHeight()
+    }
+  }
+
+  // Calls updateContentSize directly rather than going through updateLayout(),
+  // which has a prevLayoutDetentIdentifier guard that can block legitimate
+  // content-driven updates when detent identifiers drift during animations.
+  private func updateContentHeight() {
+    guard (self.isOpen || self.isOpening),
+          !self.isClosing,
+          !self.fullHeight,
+          let height = self.measureContentHeight(),
+          height > 0,
+          self.lastMeasuredContentHeight.map({ abs($0 - height) >= 0.5 }) ?? true
+    else { return }
+    self.lastMeasuredContentHeight = height
+    self.sheetVc?.updateContentSize(
+      contentHeight: self.clampHeight(height),
+      preventExpansion: self.preventExpansion
+    )
+    self.selectedDetentIdentifier = self.sheetVc?.getCurrentDetentIdentifier()
   }
 
   private func updatePresentedSize(
