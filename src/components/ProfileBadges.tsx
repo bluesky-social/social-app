@@ -37,6 +37,15 @@ const betaIconSizes: Record<Size, number> = {
   xl: 12,
 } as const
 
+/*
+ * Inside a Text, the badges sit with their bottom on the baseline on every
+ * platform (iOS needs patches/react-native/inline-view-baseline.patch). They
+ * are a little taller than the cap height of the names they follow, which
+ * leaves them about 0.75pt above its centre on iOS, Android and web (measured
+ * in the Storybook "Profile badges" section), so nudge them down by that.
+ */
+const INLINE_OFFSET = 0.75
+
 const betaBadgePadding: Record<Size, number> = {
   xs: 1,
   sm: 2,
@@ -48,12 +57,18 @@ const betaBadgePadding: Record<Size, number> = {
 export function ProfileBadges({
   profile,
   interactive = false,
+  inline = false,
   size,
   style,
   allowFontScaling = true,
 }: ViewStyleProp & {
   profile: bsky.profile.AnyProfileView
   interactive?: boolean
+  /**
+   * Set when the badges are rendered inside a `Text`, after a name, so that
+   * they're centred on the name's cap height.
+   */
+  inline?: boolean
   size: Size
   allowFontScaling?: boolean
 }) {
@@ -102,7 +117,17 @@ export function ProfileBadges({
   }
 
   return (
-    <View style={[a.flex_row, a.align_center, gap, style]}>
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        gap,
+        inline && [
+          a.px_2xs,
+          {transform: [{translateY: INLINE_OFFSET * scaleMultiplier}]},
+        ],
+        style,
+      ]}>
       {interactive ? (
         <>
           <VerificationCheckButton

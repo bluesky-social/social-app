@@ -468,7 +468,7 @@ index a4b9be72c453574998499d3b41bb013e05a3ba3b..a6e2fe7ed1906370ac0af26eda02a1df
           paragraphAttributes:(facebook::react::ParagraphAttributes)paragraphAttributes
                         frame:(CGRect)frame
 diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
-index 5f9847a398faaef208c5b1ea3c507e8019c8803c..d10506fd32a93b338fc31ee265df81201fdd9096 100644
+index 5f9847a398faaef208c5b1ea3c507e8019c8803c..0996f41196c1aee1f051295bdb9357303eb26e5e 100644
 --- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
 +++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
 @@ -17,11 +17,133 @@
@@ -702,6 +702,32 @@ index 5f9847a398faaef208c5b1ea3c507e8019c8803c..d10506fd32a93b338fc31ee265df8120
    NSLayoutManager *layoutManager = textStorage.layoutManagers.firstObject;
    NSTextContainer *textContainer = layoutManager.textContainers.firstObject;
  
+@@ -621,15 +810,16 @@ - (TextMeasurement)_measureTextStorage:(NSTextStorage *)textStorage
+                   CGSize attachmentSize = attachment.bounds.size;
+                   CGRect glyphRect = [layoutManager boundingRectForGlyphRange:range inTextContainer:textContainer];
+ 
+-                  CGRect frame;
+-                  UIFont *font = [[textStorage attributedSubstringFromRange:range] attribute:NSFontAttributeName
+-                                                                                     atIndex:0
+-                                                                              effectiveRange:nil];
+-                  frame = {
+-                      .origin =
+-                          {glyphRect.origin.x,
+-                           glyphRect.origin.y + glyphRect.size.height - attachmentSize.height + font.descender},
+-                      .size = attachmentSize};
++                  // Sit the attachment on the baseline TextKit laid its line out with. That baseline already
++                  // includes the offset that centers glyphs within a custom `lineHeight`, which the line
++                  // bottom plus the font's descender does not.
++                  NSUInteger glyphIndex = attachmentGlyphRange.location;
++                  CGRect lineFragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex
++                                                                            effectiveRange:NULL];
++                  CGFloat baseline = lineFragmentRect.origin.y + [layoutManager locationForGlyphAtIndex:glyphIndex].y;
++
++                  CGRect frame = {
++                      .origin = {glyphRect.origin.x, baseline - attachmentSize.height}, .size = attachmentSize};
+ 
+                   auto rect = facebook::react::Rect{
+                       .origin = facebook::react::Point{.x = frame.origin.x, .y = frame.origin.y},
 diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.h b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.h
 index ce564b01254f423782412453c1b51a7d18cb8026..c842534e75307046cefbefc0be367a629a01a5f6 100644
 --- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.h

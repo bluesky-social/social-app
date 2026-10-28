@@ -171,10 +171,10 @@ export function JoinRequest({setScreenState}: Props) {
                     a.gap_xs,
                     a.align_center,
                     a.justify_center,
+                    a.mb_xs,
                   ]}>
                   <Text
                     style={[
-                      a.mb_xs,
                       a.text_center,
                       a.text_sm,
                       a.leading_snug,
@@ -194,11 +194,7 @@ export function JoinRequest({setScreenState}: Props) {
                       )}
                     </Trans>
                   </Text>
-                  <ProfileBadges
-                    profile={joinLinkPreview.owner}
-                    size="sm"
-                    style={{marginTop: -4}}
-                  />
+                  <ProfileBadges profile={joinLinkPreview.owner} size="sm" />
                 </View>
                 <Text
                   style={[

@@ -25,6 +25,7 @@ import {Links} from './Links'
 import {Menus} from './Menus'
 import {NewPostsPill} from './NewPostsPill'
 import {Notifications} from './Notifications'
+import {ProfileBadges} from './ProfileBadges'
 import {Settings} from './Settings'
 import {Shadows} from './Shadows'
 import {Spacing} from './Spacing'
@@ -133,6 +134,7 @@ export default function Storybook() {
             <Notifications />
             <Forms />
             <Typography />
+            <ProfileBadges />
             <Spacing />
             <Shadows />
             <Icons />
