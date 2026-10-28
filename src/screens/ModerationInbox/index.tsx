@@ -48,7 +48,8 @@ type InboxReport = tools.ozone.inbox.listReports.$OutputBody['reports'][number]
 export function ModerationInboxScreen() {
   const {t: l} = useLingui()
   const ax = useAnalytics()
-  const navigation = useNavigation<NavigationProp>()
+  const navigation =
+    useNavigation<NavigationProp<CommonNavigatorParams, 'ModerationInbox'>>()
   const route = useRoute<RouteProp<CommonNavigatorParams, 'ModerationInbox'>>()
   const routeTab = route.params?.tab ?? 'reports'
   const initialPage = routeTab === 'account' ? 1 : 0

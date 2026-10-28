@@ -17,7 +17,11 @@ import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
 import {useGroupChatJoinIntent} from '#/lib/hooks/useIntentHandler'
 import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {type AllNavigatorParams, type RouteParams} from '#/lib/routes/types'
+import {
+  type AllNavigatorParams,
+  type FlatNavigatorParams,
+  type RouteParams,
+} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
   convertBskyAppUrlIfNeeded,
@@ -188,7 +192,7 @@ export function useLink({
             void openLink(href)
           } else {
             const [screen, params] = router.matchPath(href) as [
-              screen: keyof AllNavigatorParams,
+              screen: keyof FlatNavigatorParams,
               params?: RouteParams,
             ]
 
