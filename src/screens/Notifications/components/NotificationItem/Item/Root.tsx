@@ -154,7 +154,7 @@ export function Root({
             style={[
               a.flex_row,
               a.align_start,
-              a.gap_lg,
+              a.gap_sm,
               /*
                * As a button it's a `<button>` on web, which a block parent
                * shrinks to fit its content rather than stretching

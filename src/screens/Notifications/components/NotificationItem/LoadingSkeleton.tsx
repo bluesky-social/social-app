@@ -320,7 +320,7 @@ function Row({
 }) {
   return (
     <View
-      style={[a.flex_row, a.align_start, a.gap_lg, a.px_lg, a.py_md, style]}>
+      style={[a.flex_row, a.align_start, a.gap_sm, a.px_lg, a.py_md, style]}>
       {children}
     </View>
   )

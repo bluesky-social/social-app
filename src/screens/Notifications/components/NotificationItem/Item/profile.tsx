@@ -476,7 +476,7 @@ const ACTOR_AVATAR_SIZE = 32
 const ACTOR_LIST_INSET =
   tokens.space.lg +
   AVATAR_SLOT_WIDTH +
-  tokens.space.lg -
+  tokens.space.sm -
   ACTOR_AVATAR_SIZE -
   tokens.space.sm
 
