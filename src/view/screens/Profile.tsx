@@ -328,7 +328,7 @@ function ProfileScreenLoaded({
       'starter-packs': starterPacksIndex,
       lists: listsIndex,
     },
-    postsIndex ?? 0,
+    0,
   )
   const [currentPage, setCurrentPage] = useState(initialPage)
 
