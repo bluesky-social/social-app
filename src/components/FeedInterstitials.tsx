@@ -10,6 +10,7 @@ import Animated, {
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {getTabNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
@@ -669,7 +670,7 @@ export function SuggestedFeeds() {
               <Button
                 label={l`Browse more feeds on the Explore page`}
                 onPress={() => {
-                  navigation.navigate('SearchTab')
+                  navigation.dispatch(getTabNavigationAction('Search'))
                 }}
                 style={[a.flex_col]}>
                 <CardOuter>

@@ -9,12 +9,17 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
+import {type NavigationState} from '@react-navigation/native'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {type PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {getTabState, TabState} from '#/lib/routes/helpers'
+import {
+  getTabNavigationAction,
+  getTabResetAction,
+} from '#/lib/routes/navigation'
 import {type SharedNavTab, TAB_TO_NAV_ITEM} from '#/lib/routes/tab-to-nav-item'
 import {type RootNavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -225,16 +230,10 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
         item: TAB_TO_NAV_ITEM[tab],
         surface,
       })
-      const state = navigation.getState()
+      const state: NavigationState = navigation.getState()
       setDrawerOpen(false)
       if (IS_WEB) {
-        // hack because we have flat navigator for web and MyProfile does not exist on the web navigator -ansh
-        if (tab === 'MyProfile') {
-          navigation.navigate('Profile', {name: currentAccount!.handle})
-        } else {
-          // @ts-expect-error struggles with string unions, apparently
-          navigation.navigate(tab)
-        }
+        navigation.dispatch(getTabNavigationAction(tab, currentAccount?.handle))
       } else {
         const tabState = getTabState(state, tab)
         if (tabState === TabState.InsideAtRoot) {
@@ -251,13 +250,10 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
             })
           } else {
             // fallback: reset navigation
-            navigation.reset({
-              index: 0,
-              routes: [{name: `${tab}Tab`}],
-            })
+            navigation.dispatch(getTabResetAction(tab))
           }
         } else {
-          navigation.navigate(`${tab}Tab`)
+          navigation.dispatch(getTabNavigationAction(tab))
         }
       }
     },
@@ -288,7 +284,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
 
   const navigateToSecondaryTab = useCallback(
     (tab: SecondarySidebarTab) => {
-      const state = navigation.getState()
+      const state: NavigationState = navigation.getState()
       const tabState = getTabState(state, tab)
       const routeName = SECONDARY_TAB_ROUTES[tab]
       if (tabState === TabState.InsideAtRoot) {
@@ -302,10 +298,10 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
             target,
           })
         } else {
-          navigation.reset({index: 0, routes: [{name: routeName}]})
+          navigation.dispatch(getTabResetAction(tab))
         }
       } else {
-        navigation.navigate(routeName)
+        navigation.dispatch(getTabNavigationAction(tab))
       }
       setDrawerOpen(false)
     },
@@ -314,35 +310,35 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
 
   const onPressMyFeeds = useCallback(() => {
     ax.metric('nav:click', {item: 'feeds', surface: 'drawer'})
-    if (IS_WEB) navigation.navigate('Feeds')
+    if (IS_WEB) navigation.dispatch(getTabNavigationAction('Feeds'))
     else navigateToSecondaryTab('Feeds')
     if (IS_WEB) setDrawerOpen(false)
   }, [navigation, navigateToSecondaryTab, setDrawerOpen, ax])
 
   const onPressAtmosphere = useCallback(() => {
     ax.metric('nav:click', {item: 'atmosphere', surface: 'drawer'})
-    if (IS_WEB) navigation.navigate('Atmosphere')
+    if (IS_WEB) navigation.dispatch(getTabNavigationAction('Atmosphere'))
     else navigateToSecondaryTab('Atmosphere')
     if (IS_WEB) setDrawerOpen(false)
   }, [navigation, navigateToSecondaryTab, setDrawerOpen, ax])
 
   const onPressLists = useCallback(() => {
     ax.metric('nav:click', {item: 'lists', surface: 'drawer'})
-    if (IS_WEB) navigation.navigate('Lists')
+    if (IS_WEB) navigation.dispatch(getTabNavigationAction('Lists'))
     else navigateToSecondaryTab('Lists')
     if (IS_WEB) setDrawerOpen(false)
   }, [navigation, navigateToSecondaryTab, setDrawerOpen, ax])
 
   const onPressBookmarks = useCallback(() => {
     ax.metric('nav:click', {item: 'saved', surface: 'drawer'})
-    if (IS_WEB) navigation.navigate('Bookmarks')
+    if (IS_WEB) navigation.dispatch(getTabNavigationAction('Bookmarks'))
     else navigateToSecondaryTab('Bookmarks')
     if (IS_WEB) setDrawerOpen(false)
   }, [navigation, navigateToSecondaryTab, setDrawerOpen, ax])
 
   const onPressSettings = useCallback(() => {
     ax.metric('nav:click', {item: 'settings', surface: 'drawer'})
-    if (IS_WEB) navigation.navigate('Settings')
+    if (IS_WEB) navigation.dispatch(getTabNavigationAction('Settings'))
     else navigateToSecondaryTab('Settings')
     if (IS_WEB) setDrawerOpen(false)
   }, [navigation, navigateToSecondaryTab, setDrawerOpen, ax])

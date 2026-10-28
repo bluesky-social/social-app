@@ -1,17 +1,18 @@
 import {
-  type CompositeNavigationProp,
-  type NavigationProp as BaseNavigationProp,
   type NavigationState,
   type NavigatorScreenParams,
-  type ParamListBase,
   type PartialState,
 } from '@react-navigation/native'
-import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
 
 import {type SearchFilters} from '#/screens/Search/searchParams'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 
 export type {NativeStackScreenProps} from '@react-navigation/native-stack'
+export type {
+  NavigationProp,
+  RootNavigationProp,
+  RootNavigatorParams,
+} from '#/lib/routes/navigation'
 
 /**
  * The advanced-search filter params are owned by searchParams.ts (the param
@@ -160,34 +161,16 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
   Search: SearchParams
   Feeds: undefined
   Notifications: undefined
-  Messages: {
-    pushToConversation?: string
-    pushToNewGroupChat?: boolean
-    animation?: 'push' | 'pop'
-  }
+  Messages: MessagesTabNavigatorParams['Messages']
 }
 
-export type AllNavigatorParams = FlatNavigatorParams & BottomTabNavigatorParams
-
-/** Shared root navigation without assuming a native tab or web stack router. */
-export type RootNavigationProp = BaseNavigationProp<AllNavigatorParams>
-
-/**
- * Stack navigation with access to native parent tab destinations. Only the
- * parent's common navigation methods are included because shared callers also
- * run on web, where there is no tab navigator.
- *
- * Pass the current stack and route to scope stack helpers and param updates.
- * The default retains all web leaf routes for shared callers whose native
- * stack is not known, but excludes tab routes from stack helpers.
- */
-export type NavigationProp<
-  ParamList extends ParamListBase = FlatNavigatorParams,
-  RouteName extends keyof ParamList & string = keyof ParamList & string,
-> = CompositeNavigationProp<
-  NativeStackNavigationProp<ParamList, RouteName>,
-  BaseNavigationProp<BottomTabNavigatorParams>
->
+/** A checked leaf destination for navigation from outside a screen stack. */
+export type CommonNavigationDestination = {
+  [Name in keyof CommonNavigatorParams]: {
+    name: Name
+    params: CommonNavigatorParams[Name]
+  }
+}[keyof CommonNavigatorParams]
 
 export type State =
   NavigationState | Omit<PartialState<NavigationState>, 'stale'>

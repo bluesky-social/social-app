@@ -18,7 +18,7 @@ import {
 import {DISCOVER_FEED_URI, VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
-import {type AllNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {useSetHomeBadge} from '#/state/home-badge'
@@ -67,7 +67,7 @@ export function FeedPage({
   const ax = useAnalytics()
   const {hasSession} = useSession()
   const {_} = useLingui()
-  const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
+  const navigation = useNavigation<NavigationProp<CommonNavigatorParams>>()
   const isScreenFocused = useIsFocused()
   const {openComposer} = useOpenComposer()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
