@@ -43,7 +43,7 @@ const ONE_DAY = 24 * 60 * 60 * 1000
 export function MutedWordsDialog() {
   const {mutedWordsDialogControl: control} = useGlobalDialogsControlContext()
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       <Dialog.Handle />
       <MutedWordsInner />
     </Dialog.Outer>
