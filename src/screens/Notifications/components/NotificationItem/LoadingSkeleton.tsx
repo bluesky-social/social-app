@@ -374,13 +374,7 @@ function AvatarRowSkeleton({
       {Array.from({length: count}, (_, index) => (
         <Skele.Circle key={index} size={Item.PREVIEW_AVATAR_SIZE} />
       ))}
-      {overflow && (
-        <Skele.Block
-          blend
-          // Inset by the toggle's padding, as the "+N" is
-          style={{width: 24, height: 12, marginLeft: Item.TOGGLE_PADDING}}
-        />
-      )}
+      {overflow && <Skele.Block blend style={{width: 24, height: 12}} />}
     </View>
   )
 }
