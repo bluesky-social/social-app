@@ -16,6 +16,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
@@ -32,6 +33,7 @@ import {
 import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
 import {useAppviewClient} from '#/state/session'
 import {useShellHeaderLayout} from '#/state/shell/shell-layout'
+import {FAB} from '#/view/com/util/fab/FAB'
 import {
   HomeHeaderModeProvider,
   useHomeHeaderMode,
@@ -54,6 +56,7 @@ import {atoms as a, useBreakpoints, useTheme, utils} from '#/alf'
 import {BetaTag} from '#/components/BetaTag'
 import {ButtonIcon} from '#/components/Button'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
@@ -81,11 +84,23 @@ export function NotificationsScreen(props: Props) {
 }
 
 export function NewNotificationsScreen({}: Props) {
+  const {t: l} = useLingui()
+  const t = useTheme()
+  const {openComposer} = useOpenComposer()
+
   return (
     <Layout.Screen testID="newNotificationsScreen" noInsetTop={IS_LIQUID_GLASS}>
       <HomeHeaderModeProvider>
         <NewNotificationsScreenInner />
       </HomeHeaderModeProvider>
+      <FAB
+        testID="composeFAB"
+        onPress={() => openComposer({logContext: 'Fab'})}
+        icon={<EditBigIcon size="lg" fill={t.palette.white} />}
+        accessibilityRole="button"
+        accessibilityLabel={l({message: 'New post', context: 'action'})}
+        accessibilityHint=""
+      />
     </Layout.Screen>
   )
 }
