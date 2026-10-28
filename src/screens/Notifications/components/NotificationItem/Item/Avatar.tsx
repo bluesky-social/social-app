@@ -30,12 +30,8 @@ const CONVERSATION_PURPLE = '#8679FC'
 /**
  * The size of `Item.Avatar`'s avatar, for anything that stands in for it.
  */
-export const AVATAR_SIZE = 44
-const BADGE_SIZE = 18
-/**
- * Between the icon sizes, so the icon keeps its share of the badge.
- */
-const BADGE_ICON_SIZE = 10
+export const AVATAR_SIZE = 42
+const BADGE_SIZE = 20
 /**
  * The width of the ring around the badge, in the row's background colour,
  * which sets it apart from the avatar.
@@ -43,19 +39,24 @@ const BADGE_ICON_SIZE = 10
 const BADGE_RING = 2
 
 /**
- * The space the avatar sits in, with room for the badge to overlap its
- * bottom-end corner.
+ * The space the avatar sits in, with room below for the badge to overlap its
+ * bottom-end corner. It's only as wide as the avatar, so that the text beside
+ * it lines up with a feed post's, and the badge hangs out of its end side
+ * into the gap instead.
  */
 const SLOT_SIZE = {
-  width: AVATAR_SIZE + 6 + BADGE_RING,
+  width: AVATAR_SIZE,
   height: AVATAR_SIZE + 4 + BADGE_RING,
 }
 
 /**
- * How wide `Item.Avatar` is, for lining things up with the content column
- * beside it.
+ * Where the badge's ring sits in the slot. The badge itself sticks out 2px
+ * past the avatar's end edge.
  */
-export const AVATAR_SLOT_WIDTH = SLOT_SIZE.width
+const BADGE_POSITION = {
+  end: -(2 + BADGE_RING),
+  bottom: 0,
+}
 
 /**
  * The primary actor's avatar, with an icon badge overlapping its bottom-end
@@ -112,12 +113,8 @@ export function Avatar({
           style={[
             a.absolute,
             a.rounded_full,
-            {
-              end: 0,
-              bottom: 0,
-              padding: BADGE_RING,
-              backgroundColor: ringColor,
-            },
+            BADGE_POSITION,
+            {padding: BADGE_RING, backgroundColor: ringColor},
           ]}>
           <View
             style={[
@@ -130,7 +127,7 @@ export function Avatar({
                 backgroundColor: badgeColor,
               },
             ]}>
-            <Icon width={BADGE_ICON_SIZE} fill={t.palette.white} />
+            <Icon size="xs" fill={t.palette.white} />
           </View>
         </View>
       )}
@@ -152,12 +149,8 @@ export function AvatarSkeleton() {
         style={[
           a.absolute,
           a.rounded_full,
-          {
-            end: 0,
-            bottom: 0,
-            padding: BADGE_RING,
-            backgroundColor: ringColor,
-          },
+          BADGE_POSITION,
+          {padding: BADGE_RING, backgroundColor: ringColor},
         ]}>
         <Skele.Circle blend size={BADGE_SIZE} />
       </View>
