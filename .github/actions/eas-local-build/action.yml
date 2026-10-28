@@ -36,6 +36,22 @@ inputs:
 runs:
   using: composite
   steps:
+    # The runner image doesn't ship the NDK version React Native pins, and since
+    # 2026-10-28 AGP's automatic install of it fails with "Archive is not a ZIP
+    # archive" while sdkmanager installs the same package fine. Installing it
+    # up front means AGP finds it and skips its own download.
+    - name: Install the Android NDK
+      if: inputs.platform == 'android'
+      shell: bash
+      run: |
+        ndk_version=$(sed -n 's/^ndkVersion = "\(.*\)"$/\1/p' node_modules/react-native/gradle/libs.versions.toml)
+        echo "Installing NDK $ndk_version"
+        if ! "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "ndk;$ndk_version" < <(yes) > "$RUNNER_TEMP/sdkmanager.log"; then
+          cat "$RUNNER_TEMP/sdkmanager.log"
+          exit 1
+        fi
+        cat "$ANDROID_HOME/ndk/$ndk_version/source.properties"
+
     - name: Build locally with EAS
       shell: bash
       env:
