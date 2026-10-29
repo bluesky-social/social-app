@@ -3,7 +3,6 @@ import {type TextStyle} from 'react-native'
 import {nativeNanoSymbol} from 'react-native-nano-icons/symbols'
 import {
   DropdownMenu,
-  DropdownMenuGroup,
   DropdownMenuItem,
   HorizontalDivider,
   Host,
@@ -109,21 +108,13 @@ export function InlineRoot({control, trigger, children}: InlineRootProps) {
       <DropdownMenu
         expanded={expanded}
         onDismissRequest={() => setExpanded(false)}
+        expressive
         anchorGap={ANCHOR_GAP}
         properties={POPUP_PROPERTIES}>
         <DropdownMenu.Trigger>
           <RNHostView matchContents>{trigger}</RNHostView>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Items>
-          {/*
-           * One surface, with the sections divided inside it. Separate groups
-           * read as a stack of cards next to the rest of the app.
-           */}
-          <DropdownMenuGroup
-            modifiers={[defaultMinSize({minWidth: MIN_WIDTH})]}>
-            {children}
-          </DropdownMenuGroup>
-        </DropdownMenu.Items>
+        <DropdownMenu.Items>{children}</DropdownMenu.Items>
       </DropdownMenu>
     </Host>
   )
@@ -182,7 +173,11 @@ export function InlineItem({
           : undefined
       }
       selected={selected}
-      modifiers={testID ? [testIDModifier(testID)] : undefined}
+      modifiers={[
+        // Also sets the menu's min width, which is its widest item's.
+        defaultMinSize({minWidth: MIN_WIDTH}),
+        ...(testID ? [testIDModifier(testID)] : []),
+      ]}
       onClick={() => {
         control.close()
         onPress()

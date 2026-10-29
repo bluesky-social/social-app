@@ -1,41 +1,33 @@
 # @expo/ui+58.0.23.patch
 
-## Material 3 Expressive grouped menus (Android)
+## Material 3 Expressive menus (Android)
 
-`android/src/main/java/expo/modules/ui/menu/*`, `ExpoUIModule.kt`, and the
-`jetpack-compose/DropdownMenu` JS in `build/` and `src/`
+`android/src/main/java/expo/modules/ui/menu/*` and the `jetpack-compose/DropdownMenu`
+types in `build/` and `src/`
 
 `DropdownMenu` wraps Compose's original `DropdownMenu` and `DropdownMenuItem`:
 one flat surface with 4dp corners and full-width dividers. The Material 3
 Expressive menu is in material3 1.5.0-beta01, which @expo/ui already depends
-on, but @expo/ui doesn't expose it. In that menu, groups are separate rounded
-surfaces spaced apart, groups can have labels, and selected items get a tinted
-highlight and a leading check.
+on, but @expo/ui doesn't expose it.
 
 The patch adds:
 
-- `DropdownMenuGroup` (`DropdownMenuGroupView`), with an optional `Label` slot.
-  When a `DropdownMenu`'s items are groups, the menu renders with
-  `DropdownMenuPopup`. Groups are spaced by
-  `MenuDefaults.GroupSpacing` and shaped by `MenuDefaults.groupShape(index,
-  count)`.
-- For items in a group, the Expressive `DropdownMenuItem`, shaped by
-  `MenuDefaults.itemShape(index, count)`. Positions come from the native
-  children, so conditional items in JS shape correctly.
+- `DropdownMenu`'s `expressive` prop. The menu renders as a `DropdownMenuPopup`
+  holding one `DropdownMenuGroup`, and each item is an Expressive
+  `DropdownMenuItem`, shaped by `MenuDefaults.itemShape(index, count)`.
+  Positions come from the native children, so conditional items in JS shape
+  correctly.
 - `DropdownMenuItem`'s `selected` prop and `SelectedLeadingIcon` slot, which
-  render a `SelectableDropdownMenuItem`.
-- `DropdownMenu`'s `anchorGap`, the space between a grouped menu and its
+  render a `SelectableDropdownMenuItem` (tinted highlight and leading check).
+- `DropdownMenu`'s `anchorGap`, the space between an expressive menu and its
   trigger. The menu's position candidates are internal to Compose, so it's
   vertical padding on the popup content, which keeps the gap on the trigger's
   side whether the menu opens below or above.
 
 Colours come from the `Host`'s Material theme, which we derive from ALF (see
-`useMaterialTheme` in `src/alf/material.ts`).
-
-Menus without groups render exactly as before. Our `<Menu.Root inline>`
-(`src/components/Menu/inline/index.android.tsx`) is the only user. It renders a
-single group and divides its sections inside it, so it doesn't use the group
-`Label` slot.
+`useMaterialTheme` in `src/alf/material.ts`). Menus without `expressive` render
+exactly as before. Our `<Menu.Root inline>`
+(`src/components/Menu/inline/index.android.tsx`) is the only user.
 
 @expo/ui ships a prebuilt Android AAR, so it must stay in
 `expo.autolinking.android.buildFromSource` (as `expo-ui`), or Gradle links the
