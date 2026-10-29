@@ -59,7 +59,7 @@ export function linkWarningLayout(
         class: css({
           ...a.w_full,
           ...a.text_center,
-          maxWidth: 400,
+          maxWidth: 320,
         }),
       },
       containerContents,

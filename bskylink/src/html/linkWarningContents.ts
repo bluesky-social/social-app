@@ -8,14 +8,13 @@ import {css} from './styles.js'
 const t = themes.light
 const button = {
   ...a.w_full,
-  ...a.py_md,
-  ...a.px_4xl,
-  ...a.text_lg,
+  ...a.py_sm,
+  ...a.px_2xl,
+  ...a.text_md,
   ...a.font_semi_bold,
   ...a.border_0,
   ...a.rounded_full,
   ...a.pointer,
-  maxWidth: 280,
   transition: 'background-color 0.2s',
 }
 
@@ -50,10 +49,8 @@ export function linkWarningContents(
         class: css({
           ...a.pb_lg,
           ...a.text_md,
-          ...a.leading_relaxed,
+          ...a.leading_snug,
           ...t.atoms.text_contrast_medium,
-          paddingLeft: [a.px_md.paddingLeft, a.px_xl.paddingLeft],
-          paddingRight: [a.px_md.paddingRight, a.px_xl.paddingRight],
         }),
       },
       opts.type === 'warn'
@@ -68,10 +65,10 @@ export function linkWarningContents(
       'div',
       {
         class: css({
-          ...a.mb_2xl,
+          ...a.mb_xl,
           ...a.rounded_md,
           ...t.atoms.bg_contrast_50,
-          padding: [a.p_sm.padding, a.p_lg.padding],
+          padding: a.p_lg.padding,
           wordBreak: 'break-all',
         }),
       },
