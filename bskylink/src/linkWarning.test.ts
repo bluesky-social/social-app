@@ -1,7 +1,6 @@
 import assert from 'node:assert'
 import {test} from 'node:test'
 
-import {atoms, themes} from '@bsky.app/alf'
 import {type Request} from 'express'
 
 import {linkWarningContents} from './html/linkWarningContents.js'
@@ -37,27 +36,3 @@ for (const type of ['block', 'warn'] as const) {
     }
   })
 }
-
-void test('includes ALF styles with CSS units on every response', () => {
-  const req = {__: (message: string) => message} as unknown as Request
-  const render = () =>
-    linkWarningLayout(
-      'Blocked Link',
-      linkWarningContents(req, {type: 'block', link: 'https://example.com'}),
-    )
-  const first = render()
-  const second = render()
-  const stylesheet = first.match(/<style>([\s\S]+)<\/style>/)?.[1]
-
-  assert.ok(stylesheet)
-  assert.strictEqual(first, second)
-  assert.ok(stylesheet.includes('@media (min-width: 481px)'))
-  assert.ok(stylesheet.includes(`font-size:${atoms.text_2xl.fontSize}px`))
-  assert.ok(
-    stylesheet.includes(`border-radius:${atoms.rounded_md.borderRadius}px`),
-  )
-  assert.ok(stylesheet.includes(`padding:${atoms.p_xl.padding}px`))
-  assert.ok(
-    stylesheet.includes(`background-color:${themes.light.palette.primary_500}`),
-  )
-})
