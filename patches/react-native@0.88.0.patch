@@ -293,6 +293,27 @@ index 0912c50fec13f41894b5351c7ff62b40bb8e3fad..376a554317fd355aadb733cf67b09e3f
      layer.contents = (id)image.CGImage;
      layer.contentsScale = image.scale;
  
+diff --git a/ReactAndroid/hermes-engine/build.gradle.kts b/ReactAndroid/hermes-engine/build.gradle.kts
+index 0a1ea2abc558505f734b584066feef723bb93c00..97d829a24760741d1a3d8cbfa5c6b4c88a080357 100644
+--- a/ReactAndroid/hermes-engine/build.gradle.kts
++++ b/ReactAndroid/hermes-engine/build.gradle.kts
+@@ -119,11 +119,11 @@ val unzipHermes by
+       dependsOn(downloadHermes)
+       from(tarTree(downloadHermesDest)) {
+         eachFile {
+-          // We flatten the unzip as the tarball contains a `facebook-hermes-<SHA>`
+-          // folder at the top level.
+-          if (this.path.startsWith("facebook-hermes-")) {
+-            this.path = this.path.substringAfter("/")
+-          }
++          // We flatten the unzip as the tarball contains a single
++          // `<owner>-hermes-<SHA>` folder at the top level. Strip it regardless
++          // of the owner, which changes when the repository moves (it went
++          // from `facebook-hermes-` to `meta-hermes-`).
++          this.path = this.path.substringAfter("/")
+         }
+       }
+       into(hermesDir)
 diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
 index ae2e36ca1ed64d9f6cb44e6c2519a17fcca3ca18..0eeeb63b1225a3c575abb257a79aaef609659e2f 100644
 --- a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
