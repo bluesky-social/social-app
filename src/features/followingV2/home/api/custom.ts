@@ -4,7 +4,11 @@ import {
   XrpcResponseError,
 } from '@atproto/lex'
 
-import {createBskyTopicsHeader, isBlueskyOwnedFeed} from '#/lib/api/feed/utils'
+import {
+  createBskyGeolocationHeaders,
+  createBskyTopicsHeader,
+  isBlueskyOwnedFeed,
+} from '#/lib/api/feed/utils'
 import {PUBLIC_APPVIEW} from '#/lib/constants'
 import {createLexClient} from '#/lib/lexClient'
 import {
@@ -43,7 +47,12 @@ export class CustomFeedAPI implements FeedAPI {
         ...this.params,
         limit: 1,
       },
-      {headers: {'Accept-Language': contentLangs}},
+      {
+        headers: {
+          ...createBskyGeolocationHeaders(this.params.feed),
+          'Accept-Language': contentLangs,
+        },
+      },
     )
     return data.feed[0]
   }
@@ -77,6 +86,7 @@ export class CustomFeedAPI implements FeedAPI {
           {
             signal,
             headers: {
+              ...createBskyGeolocationHeaders(this.params.feed),
               ...(isBlueskyOwned
                 ? createBskyTopicsHeader(this.userInterests)
                 : {}),
@@ -179,7 +189,13 @@ async function getFeedOrNull(
     return await getLoggedOutAppviewClient().call(
       app.bsky.feed.getFeed,
       params,
-      {signal, headers: {'Accept-Language': contentLangs}},
+      {
+        signal,
+        headers: {
+          ...createBskyGeolocationHeaders(params.feed),
+          'Accept-Language': contentLangs,
+        },
+      },
     )
   } catch (e) {
     if (e instanceof XrpcResponseError) {
