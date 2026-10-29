@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-28 23:10\n"
+"PO-Revision-Date: 2026-10-29 14:16\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -799,7 +799,7 @@ msgstr "{index}/{count}"
 #: src/view/com/pager/TabBar.tsx:452
 #: src/view/com/pager/TabBar.web.tsx:132
 msgid "{item}, unread"
-msgstr ""
+msgstr "{item}, non lu"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/RequestStatus.tsx:69
@@ -1261,7 +1261,7 @@ msgstr "<0>Se connecter</0><1> ou </1><2>créer un compte</2><3></3><4> pour rec
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:251
 msgid "<0>Tap here to update your approximate location via GPS.</0>"
-msgstr ""
+msgstr "<0>Tapez ici pour mettre à jour votre position approximative via GPS.</0>"
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #: src/screens/StarterPack/Wizard/index.tsx:500
@@ -2718,12 +2718,12 @@ msgstr "Fonctionnalités bêta activées"
 #: src/screens/Settings/BetaFeaturesSettings.tsx:178
 msgctxt "web"
 msgid "Beta features may be unstable. Some changes may require reloading the app. Some beta features may not work properly with ad blockers or VPNs enabled."
-msgstr ""
+msgstr "Les fonctionnalités bêta peuvent être instables. Certains changements peuvent nécessiter de recharger l’appli. Certaines fonctionnalités bêta peuvent ne pas fonctionner correctement avec certains bloqueurs de pubs ou certains VPNs."
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:183
 msgctxt "native"
 msgid "Beta features may be unstable. Some changes may require restarting the app. Some beta features may not work properly with ad blockers or VPNs enabled."
-msgstr ""
+msgstr "Les fonctionnalités bêta peuvent être instables. Certains changements peuvent nécessiter de redémarrer l’appli. Certaines fonctionnalités bêta peuvent ne pas fonctionner correctement avec certains bloqueurs de pubs ou certains VPNs."
 
 #: src/components/dialogs/BirthDateSettings.tsx:163
 msgid "Birthdate"
@@ -3334,7 +3334,7 @@ msgstr "Modification du contenu"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:185
 msgid "Changing your password will sign you out. You’ll need to sign in again with your new password."
-msgstr ""
+msgstr "Changer votre mot de passe vous déconnectera. Vous devrez vous reconnecter avec votre nouveau mot de passe."
 
 #: src/components/OTAChannelNotice.tsx:203
 #: src/components/OTAChannelNotice.tsx:207
@@ -6507,7 +6507,7 @@ msgstr "Préférences du fil Abonnements"
 #: src/screens/Notifications/index.tsx:150
 msgctxt "notifications tab"
 msgid "Follows"
-msgstr ""
+msgstr "Abonné·e·s"
 
 #: src/components/Pills.tsx:215
 #: src/screens/Profile/Header/Handle.tsx:33
@@ -10428,7 +10428,7 @@ msgstr "Le mot de passe doit comporter au moins 8 caractères."
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:143
 msgid "Password successfully reset. Please sign in with your new password."
-msgstr ""
+msgstr "Mot de passe réinitialisé avec succès. Veuillez vous reconnecter avec votre nouveau mot de passe."
 
 #: src/screens/Login/index.tsx:206
 msgid "Password updated"
@@ -12579,7 +12579,7 @@ msgstr "Sélectionner {langName}"
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:117
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:121
 msgid "Select a beta feature"
-msgstr ""
+msgstr "Sélectionner une fonctionnalité bêta"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -13914,7 +13914,7 @@ msgstr "Carte haute"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:110
 msgid "Tap below to allow Bluesky to access your approximate location via GPS. We will then use that data to more accurately determine the content and features available in your region."
-msgstr ""
+msgstr "Appuyez ci-dessous pour autoriser Bluesky à accéder à votre position approximative via GPS. Nous utiliserons ensuite cette information pour déterminer plus précisément les contenus et fonctionnalités disponibles dans votre région."
 
 #: src/components/dms/MessageItem.tsx:697
 msgid "Tap for details"
@@ -13930,7 +13930,7 @@ msgstr "Tapez pour plus d’infos"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:216
 msgid "Tap here to update your approximate location via GPS."
-msgstr ""
+msgstr "Tapez ici pour mettre à jour votre position approximative par GPS."
 
 #: src/screens/Signup/StepInfo/index.tsx:341
 msgid "Tap here to update your location with GPS."
