@@ -91,8 +91,17 @@ export function HomeScreen(props: Props) {
   ])
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
+    /*
+     * Without `collapsable={false}`, Fabric mounts this testID-only View empty
+     * and hoists its children up beside it. react-native-screens finds the
+     * scroll view for `scrollEdgeEffects` by following each view's first
+     * subview, so it stops at this View and the soft top edge never applies
+     */
     return (
-      <Layout.Screen testID="HomeScreen" noInsetTop={IS_LIQUID_GLASS}>
+      <Layout.Screen
+        testID="HomeScreen"
+        noInsetTop={IS_LIQUID_GLASS}
+        collapsable={false}>
         <HomeHeaderModeProvider>
           <HomeScreenReady
             {...props}
