@@ -23,7 +23,7 @@ import {
 import {useCloseAnyActiveElement} from '#/state/util'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Deactivated} from '#/screens/Deactivated'
-import {Takendown} from '#/screens/Takendown'
+import {TakendownNavigator} from '#/screens/TakendownNavigator'
 import {atoms as a, select, useBreakpoints, useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
@@ -256,7 +256,7 @@ export function Shell() {
         }}
       />
       {currentAccount?.status === 'takendown' ? (
-        <Takendown />
+        <TakendownNavigator />
       ) : currentAccount?.status === 'deactivated' ? (
         <Deactivated />
       ) : (

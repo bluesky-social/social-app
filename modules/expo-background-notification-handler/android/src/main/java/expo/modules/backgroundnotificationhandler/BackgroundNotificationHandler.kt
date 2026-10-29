@@ -48,7 +48,7 @@ class BackgroundNotificationHandler(
       // If one of "like", "repost", "follow", "mention", "reply", "quote", "like-via-repost", "repost-via-repost", "subscribed-post"
       // assign to it's eponymous channel. otherwise do nothing, let expo handle it
       when (remoteMessage.data["reason"]) {
-        "like", "repost", "follow", "mention", "reply", "quote", "like-via-repost", "repost-via-repost", "subscribed-post" -> {
+        "like", "repost", "follow", "mention", "reply", "quote", "like-via-repost", "repost-via-repost", "subscribed-post", "moderation-inbox" -> {
           remoteMessage.data["channelId"] = remoteMessage.data["reason"]
         }
       }
