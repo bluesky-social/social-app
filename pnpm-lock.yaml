@@ -222,7 +222,7 @@ patchedDependencies:
   metro-runtime@0.87.1: 4a386cd6f62275a31620c3b0cb489d818359125e5c94f6144933de2dea7e4d98
   metro@0.87.1: 15eec39e654a1ba09b4d6e582cda194f1331621f0f2b7e55db9a3a0364a9ebc3
   react-native-keyboard-controller@1.22.7: 0c820c84aaf84f847db8770a021188043505355371998f479b594f50d2c66c11
-  react-native-nano-icons@1.0.1: 266457e86a516b83c44c4622ad93b034c5694595b7b51bed1e225b9cc22b02d0
+  react-native-nano-icons@1.0.1: e2f8a24e850ea602f2c7add86084050cb9c267c6ab54e5bc1650714fd3184921
   react-native-pager-view@9.0.11: b0a4f26b0d7ae5967fe4cedb5985e153e13172dc0a32d85ba2df8c1ba1e96a59
   react-native-reanimated@4.7.1: 557541b187597797db03adf716a768717a574dbdff8b221683f4b3f7bd912185
   react-native-screens@4.30.1: 27d99fef060ee2110f9035f8bdcd8cfa3f30a7a559f506ec18408df5d012833b
@@ -685,7 +685,7 @@ importers:
         version: 3.3.3(react-native@0.88.1(patch_hash=905e68a17bb8b11f9e555f6c8dea94e2738f48b2c6e5f88e42ed2ef4e4778019)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)
       react-native-nano-icons:
         specifier: 1.0.1
-        version: 1.0.1(patch_hash=266457e86a516b83c44c4622ad93b034c5694595b7b51bed1e225b9cc22b02d0)(@expo/config@58.0.11(@typescript/typescript6@6.0.2)(supports-color@8.1.1))(@typescript/typescript6@6.0.2)(expo@58.0.23)(react-native@0.88.1(patch_hash=905e68a17bb8b11f9e555f6c8dea94e2738f48b2c6e5f88e42ed2ef4e4778019)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)(supports-color@8.1.1)
+        version: 1.0.1(patch_hash=e2f8a24e850ea602f2c7add86084050cb9c267c6ab54e5bc1650714fd3184921)(@expo/config@58.0.11(@typescript/typescript6@6.0.2)(supports-color@8.1.1))(@typescript/typescript6@6.0.2)(expo@58.0.23)(react-native@0.88.1(patch_hash=905e68a17bb8b11f9e555f6c8dea94e2738f48b2c6e5f88e42ed2ef4e4778019)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)(supports-color@8.1.1)
       react-native-pager-view:
         specifier: 9.0.11
         version: 9.0.11(patch_hash=b0a4f26b0d7ae5967fe4cedb5985e153e13172dc0a32d85ba2df8c1ba1e96a59)(react-native@0.88.1(patch_hash=905e68a17bb8b11f9e555f6c8dea94e2738f48b2c6e5f88e42ed2ef4e4778019)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)
@@ -18702,7 +18702,7 @@ snapshots:
       react: 19.3.0
       react-native: 0.88.1(patch_hash=905e68a17bb8b11f9e555f6c8dea94e2738f48b2c6e5f88e42ed2ef4e4778019)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1)
 
-  react-native-nano-icons@1.0.1(patch_hash=266457e86a516b83c44c4622ad93b034c5694595b7b51bed1e225b9cc22b02d0)(@expo/config@58.0.11(@typescript/typescript6@6.0.2)(supports-color@8.1.1))(@typescript/typescript6@6.0.2)(expo@58.0.23)(react-native@0.88.1(patch_hash=905e68a17bb8b11f9e555f6c8dea94e2738f48b2c6e5f88e42ed2ef4e4778019)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)(supports-color@8.1.1):
+  react-native-nano-icons@1.0.1(patch_hash=e2f8a24e850ea602f2c7add86084050cb9c267c6ab54e5bc1650714fd3184921)(@expo/config@58.0.11(@typescript/typescript6@6.0.2)(supports-color@8.1.1))(@typescript/typescript6@6.0.2)(expo@58.0.23)(react-native@0.88.1(patch_hash=905e68a17bb8b11f9e555f6c8dea94e2738f48b2c6e5f88e42ed2ef4e4778019)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)(supports-color@8.1.1):
     dependencies:
       '@expo/config-plugins': 57.0.9(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
       '@xmldom/xmldom': 0.9.10
