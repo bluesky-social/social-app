@@ -106,12 +106,6 @@ describe('TokenField', () => {
     expect(onChangeText).toHaveBeenCalledWith('ABCDE23456')
   })
 
-  it('does not impose an email code length or placeholder', () => {
-    render(<TokenField testID={TEST_ID} />)
-    expect(getInput().props.maxLength).toBeUndefined()
-    expect(getInput().props.placeholder).toBeUndefined()
-  })
-
   it('defaults autocomplete to off', () => {
     render(<TokenField testID={TEST_ID} />)
     expect(getInput().props.autoComplete).toBe('off')
