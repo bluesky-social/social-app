@@ -2,18 +2,15 @@ import {useImperativeHandle, useState} from 'react'
 import {nativeNanoSymbol} from 'react-native-nano-icons/symbols'
 import {
   DropdownMenu,
+  DropdownMenuGroup,
   DropdownMenuItem,
-  HorizontalDivider,
   Host,
   Icon,
   RNHostView,
   Text,
   useMaterialColors,
 } from '@expo/ui/jetpack-compose'
-import {
-  padding,
-  testID as testIDModifier,
-} from '@expo/ui/jetpack-compose/modifiers'
+import {testID as testIDModifier} from '@expo/ui/jetpack-compose/modifiers'
 
 import {useTheme} from '#/alf'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -40,6 +37,9 @@ function drawable(glyph: NanoGlyphName | undefined) {
 }
 
 const CHECK = drawable(Check.glyph)
+
+/** `MenuDefaults.LeadingIconSize` */
+const ICON_SIZE = 20
 
 /**
  * Anchors a Material `DropdownMenu` to the trigger, which opens it through
@@ -79,29 +79,16 @@ export function InlineRoot({control, trigger, children}: InlineRootProps) {
 }
 
 /**
- * A group of items, with an optional heading. Material menus have no
- * sections, so sections are separated by dividers.
+ * A group of items, with an optional label. Groups make the menu a Material 3
+ * Expressive one, with each group a separate surface.
  */
-export function InlineSection({title, divider, children}: InlineSectionProps) {
-  const colors = useMaterialColors()
-  return (
-    <>
-      {divider && <HorizontalDivider />}
-      {title && (
-        <Text
-          color={colors.onSurfaceVariant}
-          style={{typography: 'labelMedium'}}
-          modifiers={[padding(12, 8, 12, 8)]}>
-          {title}
-        </Text>
-      )}
-      {children}
-    </>
-  )
+export function InlineSection({title, children}: InlineSectionProps) {
+  return <DropdownMenuGroup label={title}>{children}</DropdownMenuGroup>
 }
 
 /**
- * A menu row. Radio items show a trailing checkmark when selected.
+ * A menu row. Radio items are selectable items, which show a leading check
+ * and a highlight when selected.
  */
 export function InlineItem({
   title,
@@ -124,23 +111,25 @@ export function InlineItem({
           ? {textColor: colors.error, leadingIconColor: colors.error}
           : undefined
       }
+      selected={selected}
       modifiers={testID ? [testIDModifier(testID)] : undefined}
       onClick={() => {
         control.close()
         onPress()
       }}>
       <DropdownMenuItem.Text>
-        <Text>{title}</Text>
+        {/* The Expressive menu's text style, which `Text` doesn't inherit */}
+        <Text style={{typography: 'labelLarge'}}>{title}</Text>
       </DropdownMenuItem.Text>
       {icon && (
         <DropdownMenuItem.LeadingIcon>
-          <Icon source={icon} size={24} />
+          <Icon source={icon} size={ICON_SIZE} />
         </DropdownMenuItem.LeadingIcon>
       )}
-      {selected && CHECK && (
-        <DropdownMenuItem.TrailingIcon>
-          <Icon source={CHECK} size={24} />
-        </DropdownMenuItem.TrailingIcon>
+      {CHECK && (
+        <DropdownMenuItem.SelectedLeadingIcon>
+          <Icon source={CHECK} size={ICON_SIZE} />
+        </DropdownMenuItem.SelectedLeadingIcon>
       )}
     </DropdownMenuItem>
   )

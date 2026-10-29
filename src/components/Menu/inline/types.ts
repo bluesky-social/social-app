@@ -10,11 +10,6 @@ export type InlineRootProps = React.PropsWithChildren<{
 export type InlineSectionProps = React.PropsWithChildren<{
   /** From a `Menu.LabelText` directly above the group. */
   title?: string
-  /**
-   * Whether to separate this section from the one above. Android only: iOS
-   * separates sections itself.
-   */
-  divider?: boolean
 }>
 
 export type InlineItemProps = {

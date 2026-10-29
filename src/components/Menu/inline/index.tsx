@@ -71,7 +71,7 @@ export function InlineRoot({control, trigger, children}: InlineRootProps) {
 }
 
 /**
- * A group of items. iOS separates sections itself, so `divider` is ignored.
+ * A group of items, which iOS separates from the others.
  */
 export function InlineSection({title, children}: InlineSectionProps) {
   return <Section title={title}>{children}</Section>
