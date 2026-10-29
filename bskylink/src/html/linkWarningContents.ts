@@ -29,7 +29,7 @@ export function linkWarningContents(
               'This link may be malicious. You should proceed at your own risk.',
             )
           : req.__(
-              'This link has been identified as malicious and has blocked for your safety.',
+              'This link has been identified as malicious and has been blocked for your safety.',
             )
       }
     </p>
