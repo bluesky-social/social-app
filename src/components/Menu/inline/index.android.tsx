@@ -3,6 +3,7 @@ import {type TextStyle} from 'react-native'
 import {nativeNanoSymbol} from 'react-native-nano-icons/symbols'
 import {
   DropdownMenu,
+  DropdownMenuGroup,
   DropdownMenuItem,
   HorizontalDivider,
   Host,
@@ -108,13 +109,14 @@ export function InlineRoot({control, trigger, children}: InlineRootProps) {
       <DropdownMenu
         expanded={expanded}
         onDismissRequest={() => setExpanded(false)}
-        expressive
         anchorGap={ANCHOR_GAP}
         properties={POPUP_PROPERTIES}>
         <DropdownMenu.Trigger>
           <RNHostView matchContents>{trigger}</RNHostView>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Items>{children}</DropdownMenu.Items>
+        <DropdownMenu.Items>
+          <DropdownMenuGroup>{children}</DropdownMenuGroup>
+        </DropdownMenu.Items>
       </DropdownMenu>
     </Host>
   )
