@@ -345,10 +345,7 @@ module.exports = function (_config) {
             })),
           },
         ],
-        [
-          'react-native-edge-to-edge',
-          {android: {enforceNavigationBarContrast: false}},
-        ],
+        ['expo-navigation-bar', {enforceContrast: false}],
         /*
          * Expo runs Gradle mods in reverse registration order. Keep Bitdrift
          * before Sentry so its plugins block is prepended after Sentry's apply
