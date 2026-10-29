@@ -49,6 +49,11 @@ function TrendingTopicsWidget(
   const isMedium = environment.widgetFamily === 'systemMedium'
   const topicLimit = isSmall || isMedium ? 3 : 5
   const topics = (props.topics ?? []).slice(0, topicLimit)
+  /**
+   * The header's icon gets the same width, so its title lines up with the
+   * topic names.
+   */
+  const rankWidth = isSmall ? 16 : 18
   const backgroundColor = isDark ? '#10161F' : '#FFFFFF'
   const textColor = isDark ? '#F1F3F5' : '#0A0A0A'
   const secondaryTextColor = isDark ? '#AEBBC9' : '#536471'
@@ -76,7 +81,7 @@ function TrendingTopicsWidget(
       <HStack alignment="top" spacing={5} modifiers={[padding({vertical: 3})]}>
         <Text
           modifiers={[
-            frame({width: 16, alignment: 'leading'}),
+            frame({width: rankWidth, alignment: 'leading'}),
             font({size: 12, weight: 'medium'}),
             foregroundStyle(secondaryTextColor),
           ]}>
@@ -100,7 +105,7 @@ function TrendingTopicsWidget(
         modifiers={[padding({vertical: isMedium ? 3 : 7})]}>
         <Text
           modifiers={[
-            frame({width: 18, alignment: 'leading'}),
+            frame({width: rankWidth, alignment: 'leading'}),
             font({size: isMedium ? 13 : 14, weight: 'medium'}),
             foregroundStyle(secondaryTextColor),
           ]}>
@@ -153,7 +158,8 @@ function TrendingTopicsWidget(
           color="#0085FF"
           modifiers={[
             resizable(),
-            frame({width: isSmall ? 12 : 14, height: isSmall ? 12 : 14}),
+            frame({width: isSmall ? 13 : 15, height: isSmall ? 13 : 15}),
+            frame({width: rankWidth, alignment: 'leading'}),
           ]}
         />
         <Text

@@ -70,7 +70,8 @@ function TrendingTopicsWidget(
             tint="#0085FF"
             modifiers={[size(16, 16)]}
           />
-          <Spacer modifiers={[width(6)]} />
+          {/* lines the title up with the topics, after the 24dp rank column */}
+          <Spacer modifiers={[width(8)]} />
           <Text
             color={textColor}
             maxLines={1}
