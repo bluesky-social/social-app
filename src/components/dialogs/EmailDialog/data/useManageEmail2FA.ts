@@ -1,5 +1,6 @@
 import {useMutation} from '@tanstack/react-query'
 
+import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {usePdsClient, useSession, useSessionApi} from '#/state/session'
 import {com} from '#/lexicons'
 
@@ -21,7 +22,7 @@ export function useManageEmail2FA() {
       await pdsClient.call(com.atproto.server.updateEmail, {
         email: currentAccount.email,
         emailAuthFactor: enabled,
-        token,
+        token: token ? checkAndFormatResetCode(token) || token : token,
       })
       // will update session state at root of app
       await refreshSession()
