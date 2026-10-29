@@ -1,9 +1,72 @@
+import {atoms as a, themes} from '@bsky.app/alf'
 import escapeHTML from 'escape-html'
+import {h} from 'hyposcript'
+
+import {createGlobal, css, flush} from './styles.js'
+
+const t = themes.light
+
+const globalStyles = createGlobal({
+  'html, body': {
+    ...a.m_0,
+    ...a.font_normal,
+    ...a.leading_relaxed,
+    fontFamily: '-apple-system, system-ui, BlinkMacSystemFont, sans-serif',
+    fontSize: '100%',
+    WebkitFontSmoothing: 'antialiased',
+  },
+  body: {
+    ...a.flex,
+    ...a.align_center,
+    ...a.justify_center,
+    ...a.p_xl,
+    ...t.atoms.bg,
+    ...t.atoms.text,
+    minHeight: '100vh',
+  },
+  '*, *::before, *::after': {
+    ...a.m_0,
+    ...a.p_0,
+    boxSizing: 'border-box',
+  },
+  'a, button, [role="button"]': {
+    ...a.p_0,
+    display: 'inline-block',
+    touchAction: 'manipulation',
+    textDecoration: 'none',
+  },
+  button: {
+    ...a.border_0,
+    ...a.rounded_0,
+    ...a.pointer,
+    backgroundColor: 'transparent',
+    color: 'inherit',
+    font: 'inherit',
+    WebkitAppearance: 'none',
+  },
+})
 
 export function linkWarningLayout(
   title: string,
   containerContents: string,
 ): string {
+  const body = h(
+    'body',
+    {},
+    h(
+      'div',
+      {
+        class: css({
+          ...a.w_full,
+          ...a.text_center,
+          maxWidth: 400,
+        }),
+      },
+      containerContents,
+    ),
+  )
+  const stylesheet = globalStyles + flush()
+
   return `
     <!DOCTYPE html>
     <html>
@@ -15,106 +78,21 @@ export function linkWarningLayout(
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="0" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="apple-touch-icon" sizes="180x180" href="https://web-cdn.bsky.app/static/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="https://web-cdn.bsky.app/static/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="https://web-cdn.bsky.app/static/favicon-16x16.png">
+        <link rel="mask-icon" href="https://web-cdn.bsky.app/static/safari-pinned-tab.svg" color="#1185fe">
+        <meta name="theme-color">
+        <meta name="application-name" content="Bluesky">
+        <meta name="generator" content="bskyweb">
+        <meta property="og:site_name" content="Bluesky Social">
+        <meta property="og:logo" content="https://web-cdn.bsky.app/static/favicon.png">
+        <meta name="twitter:site" content="@bluesky" />
+
         <title>${escapeHTML(title)}</title>
-        <style>
-          * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-          }
-          body {
-            font-family:
-              -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial,
-              sans-serif;
-            background-color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-          }
-          .container {
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-          }
-          .warning-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-          }
-          h1 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #000000;
-          }
-          .warning-text {
-            font-size: 15px;
-            color: #536471;
-            line-height: 1.4;
-            margin-bottom: 24px;
-            padding: 0 20px;
-          }
-          .blocked-site {
-            background-color: #f7f9fa;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 24px;
-            text-align: left;
-            word-break: break-all;
-          }
-          .site-name {
-            font-size: 16px;
-            font-weight: 500;
-            color: #000000;
-            margin-bottom: 4px;
-            word-break: break-word;
-            display: block;
-            text-align: center;
-          }
-          .site-url {
-            font-size: 14px;
-            color: #536471;
-            word-break: break-all;
-            display: block;
-            text-align: center;
-          }
-          .button {
-            border: none;
-            border-radius: 24px;
-            padding: 12px 32px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            max-width: 280px;
-            transition: background-color 0.2s;
-          }
-          .primary {
-            background-color: #1d9bf0;
-            color: white;
-          }
-          .secondary {
-          }
-          .back-button:hover {
-            background-color: #1a8cd8;
-          }
-          .back-button:active {
-            background-color: #1681c4;
-          }
-          @media (max-width: 480px) {
-            .warning-text {
-              padding: 0 10px;
-            }
-            .blocked-site {
-              padding: 8px;
-            }
-          }
-        </style>
+        <style>${stylesheet}</style>
       </head>
-      <body>
-        <div class="container">${containerContents}</div>
-      </body>
+      ${body}
     </html>
   `
 }
