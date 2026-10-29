@@ -1,27 +1,21 @@
 import {type TextInputProps, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
+import {checkAndFormatResetCode} from '#/lib/strings/password'
 import * as TextField from '#/components/forms/TextField'
 import {Shield_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
 import {IS_ANDROID} from '#/env'
 
 /**
- * Uppercase letters, preserve all digits, and remove other characters before
- * formatting the code with a hyphen after the first five characters.
- * Preserve a trailing hyphen typed after exactly five characters.
+ * Uppercase letters and preserve digits and supplied hyphens without imposing
+ * a code format. The hosting provider determines which format is valid.
  */
 export function normalizeCode(value: string) {
-  const normalized = value.toUpperCase().replace(/[^A-Z0-9]/gi, '')
-  if (normalized.length < 5) return normalized
-  if (normalized.length === 5) {
-    // keep the hyphen if the user typed it themselves
-    return value.endsWith('-') ? `${normalized}-` : normalized
-  }
-  return `${normalized.slice(0, 5)}-${normalized.slice(5)}`
+  return value.toUpperCase().replace(/[^A-Z0-9-]/g, '')
 }
 
 export function isValidCode(value?: string) {
-  return Boolean(value && /^[A-Z0-9]{5}-[A-Z0-9]{5}$/i.test(value))
+  return Boolean(value && checkAndFormatResetCode(value))
 }
 
 export function TokenField({
@@ -54,10 +48,6 @@ export function TokenField({
   | 'onSubmitEditing'
 >) {
   const {t: l} = useLingui()
-  const isFormatInvalid = Boolean(
-    value && value.length > 10 && !isValidCode(value),
-  )
-
   const handleOnChangeText = (v: string) => {
     onChangeText?.(normalizeCode(v))
   }
@@ -77,10 +67,8 @@ export function TokenField({
           autoFocus={autoFocus}
           blurOnSubmit={blurOnSubmit}
           editable={editable}
-          isInvalid={isInvalid || isFormatInvalid}
+          isInvalid={isInvalid}
           label={l`Confirmation code`}
-          maxLength={11}
-          placeholder="XXXXX-XXXXX"
           returnKeyType={returnKeyType}
           value={value}
           onChangeText={handleOnChangeText}

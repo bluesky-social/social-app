@@ -1,6 +1,7 @@
 import {act} from 'react'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
+import {com} from '#/lexicons'
 import {ChangePasswordDialog} from '../ChangePasswordDialog'
 
 const mockCall = jest.fn()
@@ -174,6 +175,10 @@ describe('ChangePasswordDialog', () => {
     fillCodeStage()
     await submit()
 
+    expect(mockCall).toHaveBeenCalledWith(com.atproto.server.resetPassword, {
+      token: 'ABCDE-23456',
+      password: 'new-password',
+    })
     expect(isDismissPrevented()).toBe(true)
     expect(isDisabled('Change password')).toBe(true)
     expect(isDisabled('Back')).toBe(true)
