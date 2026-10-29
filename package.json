@@ -30,7 +30,8 @@
       "android": {
         "buildFromSource": [
           "expo-notifications",
-          "expo-media-library"
+          "expo-media-library",
+          "expo-ui"
         ]
       }
     },
