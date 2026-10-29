@@ -38,15 +38,18 @@ export class PostListFeedAPI implements FeedAPI {
     // The cursor is the offset into `uris` of the next page
     const start = cursor ? Number(cursor) : 0
     const end = start + MAX_URIS_PER_REQUEST
+    const uris = this.uris.slice(start, end)
+    // An unreadable link leaves nothing to fetch, which reads as an empty feed
+    if (uris.length === 0) {
+      return {feed: []}
+    }
     /*
      * A failed request rejects rather than resolving, so the error propagates
      * to the query and drives the feed error UI. The agent behaved the same
      * way - its `success` flag was only ever true - so the empty-page branch
      * this replaces was unreachable.
      */
-    const data = await this.client.call(app.bsky.feed.getPosts, {
-      uris: this.uris.slice(start, end),
-    })
+    const data = await this.client.call(app.bsky.feed.getPosts, {uris})
     if (start === 0) {
       this.peek = {post: data.posts[0]}
     }

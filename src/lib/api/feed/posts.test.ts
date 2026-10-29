@@ -41,4 +41,11 @@ describe('PostListFeedAPI', () => {
     expect(page.feed).toHaveLength(25)
     expect(page.cursor).toBeUndefined()
   })
+
+  it('returns an empty page without a request when there are no posts', async () => {
+    const {api, call} = setup(0)
+    const page = await api.fetch({cursor: undefined})
+    expect(page).toEqual({feed: []})
+    expect(call).not.toHaveBeenCalled()
+  })
 })
