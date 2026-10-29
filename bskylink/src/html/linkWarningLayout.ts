@@ -1,4 +1,4 @@
-import {atoms as a, themes} from '@bsky.app/alf'
+import {atoms as a, themes} from '@bsky.app/alf/core.js'
 import escapeHTML from 'escape-html'
 import {h} from 'hyposcript'
 

@@ -1,4 +1,4 @@
-import {atoms as a, themes} from '@bsky.app/alf'
+import {atoms as a, themes} from '@bsky.app/alf/core.js'
 import escapeHTML from 'escape-html'
 import {type Request} from 'express'
 import {h} from 'hyposcript'
@@ -39,9 +39,7 @@ export function linkWarningContents(
           ...t.atoms.text,
         }),
       },
-      opts.type === 'warn'
-        ? req.__('Potentially Dangerous Link')
-        : req.__('Blocked Link'),
+      opts.type === 'warn' ? req.__('Warning') : req.__('Blocked Link'),
     ),
     h(
       'p',
@@ -55,10 +53,10 @@ export function linkWarningContents(
       },
       opts.type === 'warn'
         ? req.__(
-            'This link may be malicious. You should proceed at your own risk.',
+            `This link may violate Bluesky's Community Guidelines. Proceed with caution.`,
           )
         : req.__(
-            'This link has been identified as malicious and has been blocked for your safety.',
+            `This link has been disabled because it violates Bluesky’s Community Guidelines.`,
           ),
     ),
     h(

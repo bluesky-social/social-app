@@ -5,5 +5,8 @@
 	"This link has been identified as malicious and has blocked for your safety.": "This link has been identified as malicious and has blocked for your safety.",
 	"Continue Anyway": "Continue Anyway",
 	"Return to Bluesky": "Return to Bluesky",
-	"This link has been identified as malicious and has been blocked for your safety.": "This link has been identified as malicious and has been blocked for your safety."
+	"This link has been identified as malicious and has been blocked for your safety.": "This link has been identified as malicious and has been blocked for your safety.",
+	"This link has been disabled because it violates Bluesky’s Community Guidelines.": "This link has been disabled because it violates Bluesky’s Community Guidelines.",
+	"This link may violate Bluesky's Community Guidelines. Proceed with caution.": "This link may violate Bluesky's Community Guidelines. Proceed with caution.",
+	"Warning": "Warning"
 }
