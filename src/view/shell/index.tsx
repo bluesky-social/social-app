@@ -1,8 +1,9 @@
 import {useCallback, useEffect} from 'react'
 import {BackHandler, useWindowDimensions, View} from 'react-native'
 import {Drawer} from 'react-native-drawer-layout'
-import {SystemBars} from 'react-native-edge-to-edge'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {NavigationBar} from 'expo-navigation-bar'
+import {StatusBar} from 'expo-status-bar'
 import {BottomSheetOutlet} from '@bsky.app/bottom-sheet'
 import {updateActiveViewAsync} from '@bsky.app/expo-bluesky-swiss-army/src/VisibilityView'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
@@ -241,20 +242,16 @@ export function Shell() {
 
   return (
     <View testID="mobileShellView" style={[a.h_full, t.atoms.bg]}>
-      <SystemBars
-        hidden={{
-          statusBar: false,
-          navigationBar: false,
-        }}
-        style={{
-          statusBar:
-            t.name !== 'light' ||
-            (IS_IOS && !IS_LIQUID_GLASS && fullyExpandedCount > 0)
-              ? 'light'
-              : 'dark',
-          navigationBar: t.name !== 'light' ? 'light' : 'dark',
-        }}
+      <StatusBar
+        animated
+        style={
+          t.name !== 'light' ||
+          (IS_IOS && !IS_LIQUID_GLASS && fullyExpandedCount > 0)
+            ? 'light'
+            : 'dark'
+        }
       />
+      <NavigationBar style={t.name !== 'light' ? 'light' : 'dark'} />
       {currentAccount?.status === 'takendown' ? (
         <Takendown />
       ) : currentAccount?.status === 'deactivated' ? (

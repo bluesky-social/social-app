@@ -1,16 +1,15 @@
 import {useEffect} from 'react'
-import {SystemBars} from 'react-native-edge-to-edge'
+import {StatusBar} from 'react-native'
 
 export function useSetLightStatusBar(enabled: boolean) {
   useEffect(() => {
     if (enabled) {
-      const entry = SystemBars.pushStackEntry({
-        style: {
-          statusBar: 'light',
-        },
+      const entry = StatusBar.pushStackEntry({
+        barStyle: 'light-content',
+        animated: true,
       })
       return () => {
-        SystemBars.popStackEntry(entry)
+        StatusBar.popStackEntry(entry)
       }
     }
   }, [enabled])

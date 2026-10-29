@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react'
-import {Modal, View} from 'react-native'
-import {SystemBars} from 'react-native-edge-to-edge'
+import {Modal, StatusBar, View} from 'react-native'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 
 import {useComposerState} from '#/state/shell/composer'
@@ -19,12 +18,11 @@ export function Composer() {
 
   useEffect(() => {
     if (open && !IS_LIQUID_GLASS) {
-      const entry = SystemBars.pushStackEntry({
-        style: {
-          statusBar: 'light',
-        },
+      const entry = StatusBar.pushStackEntry({
+        barStyle: 'light-content',
+        animated: true,
       })
-      return () => SystemBars.popStackEntry(entry)
+      return () => StatusBar.popStackEntry(entry)
     }
   }, [open])
 
