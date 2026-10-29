@@ -7,6 +7,7 @@ import {DEFAULT_SERVICE, HITSLOP_10} from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
+import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {isBlueskyHostedUrl, toNiceHostingUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
@@ -123,7 +124,8 @@ export const LoginForm = ({
           service,
           identifier: fullIdent,
           password,
-          authFactorToken: authFactorToken.trim(),
+          authFactorToken:
+            checkAndFormatResetCode(authFactorToken) || authFactorToken.trim(),
         },
         'LoginForm',
       )
