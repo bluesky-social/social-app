@@ -13,7 +13,33 @@ import {type BottomSheetPopoverMode} from '../../../modules/bottom-sheet'
 
 export type ContextType = {
   control: Dialog.DialogOuterProps['control']
+  /**
+   * Whether this menu renders as the platform's native menu, see
+   * `RootProps['inline']`. Always `false` on web.
+   */
+  inline: boolean
 }
+
+export type RootProps = React.PropsWithChildren<{
+  control?: Dialog.DialogControlProps
+  /**
+   * Renders the menu as the platform's own menu, anchored to the trigger,
+   * instead of a bottom sheet: SwiftUI `Menu` on iOS, Material
+   * `DropdownMenu` on Android. Ignored on web, which always renders a
+   * dropdown.
+   *
+   * Groups, items, icons, radios and labels map to their native
+   * counterparts. Native menus can't host React Native views, so
+   * `ContainerItem` and any custom item content are dropped, and icons only
+   * show if they render as nano-icons glyphs. `Menu.Trigger` and `Menu.Outer`
+   * must be direct children of `Menu.Root`, and the items must be mounted
+   * before the menu opens. Otherwise the menu falls back to the bottom sheet.
+   *
+   * iOS menus can't be opened programmatically, so `control.open()` does
+   * nothing there.
+   */
+  inline?: boolean
+}>
 
 export type ItemContextType = {
   disabled: boolean
@@ -113,7 +139,10 @@ export type ItemProps = React.PropsWithChildren<
   Omit<PressableProps, 'style'> &
     ViewStyleProp & {
       label: string
-      onPress: (e: GestureResponderEvent) => void
+      /**
+       * Inline menus have no press event, so the event is `undefined` there.
+       */
+      onPress: (e?: GestureResponderEvent) => void
       destructive?: boolean
     }
 >
