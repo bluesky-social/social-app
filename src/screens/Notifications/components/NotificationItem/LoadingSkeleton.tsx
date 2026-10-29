@@ -16,7 +16,7 @@ import * as Item from './Item'
 /**
  * A kind of skeleton row, after the notifications it stands in for: `group`
  * for a like or repost from several people, `reaction` for one from a single
- * person or a new post on the Activity tab, `follow`, `reply` (with its
+ * person or a new post on the Post alerts tab, `follow`, `reply` (with its
  * "replied to" line), and `mention` for mentions and quotes.
  */
 type SkeletonKind = 'group' | 'reaction' | 'follow' | 'reply' | 'mention'
@@ -170,7 +170,7 @@ function GroupSkeleton({index}: {index: number}) {
 
 /**
  * Stands in for a like or repost from one person, or a new post on the
- * Activity tab, sometimes of a post with images.
+ * Post alerts tab, sometimes of a post with images.
  */
 function ReactionSkeleton({index}: {index: number}) {
   const even = index % 2 === 0
