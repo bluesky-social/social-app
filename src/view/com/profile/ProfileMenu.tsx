@@ -282,7 +282,7 @@ let ProfileMenu = ({
 
   return (
     <EventStopper onKeyDown={false}>
-      <Menu.Root>
+      <Menu.Root inline>
         <Menu.Trigger label={l`More options`}>
           {({props}) => {
             return (
