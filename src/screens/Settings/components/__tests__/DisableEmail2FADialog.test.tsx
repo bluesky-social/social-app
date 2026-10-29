@@ -144,6 +144,26 @@ describe('DisableEmail2FADialog', () => {
     expect(mockCall).not.toHaveBeenCalled()
   })
 
+  it('normalizes the code and submits it via the confirm button', async () => {
+    const control = renderDialog()
+    enterCodeStage()
+    fireEvent.changeText(getInput(), 'abcde23456')
+    expect(getInput().props.value).toBe('ABCDE23456')
+
+    await act(async () => {
+      fireEvent.press(screen.getByTestId('confirmBtn'))
+      await Promise.resolve()
+    })
+    expect(mockCall).toHaveBeenCalledWith(com.atproto.server.updateEmail, {
+      email: 'alice@example.com',
+      token: 'ABCDE-23456',
+      emailAuthFactor: false,
+    })
+    expect(mockRefreshSession).toHaveBeenCalledTimes(1)
+    expect(mockToastShow).toHaveBeenCalledWith('Email 2FA disabled')
+    expect(control.close).toHaveBeenCalledTimes(1)
+  })
+
   it('submits the normalized token via keyboard submission', async () => {
     renderDialog()
     enterCodeStage()
@@ -155,7 +175,7 @@ describe('DisableEmail2FADialog', () => {
     })
     expect(mockCall).toHaveBeenCalledWith(com.atproto.server.updateEmail, {
       email: 'alice@example.com',
-      token: 'ABCDE23456',
+      token: 'ABCDE-23456',
       emailAuthFactor: false,
     })
   })
