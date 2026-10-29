@@ -1,6 +1,7 @@
 import {type TextInputProps, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
+import {checkAndFormatResetCode} from '#/lib/strings/password'
 import * as TextField from '#/components/forms/TextField'
 import {Shield_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
 import {IS_ANDROID} from '#/env'
@@ -14,7 +15,7 @@ export function normalizeCode(value: string) {
 }
 
 export function isValidCode(value?: string) {
-  return Boolean(value && /^[A-Z0-9]{5}-[A-Z0-9]{5}$/i.test(value))
+  return Boolean(value && checkAndFormatResetCode(value))
 }
 
 export function TokenField({

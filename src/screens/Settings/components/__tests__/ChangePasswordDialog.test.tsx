@@ -1,6 +1,7 @@
 import {act} from 'react'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
+import {com} from '#/lexicons'
 import {ChangePasswordDialog} from '../ChangePasswordDialog'
 
 const mockCall = jest.fn()
@@ -165,6 +166,21 @@ describe('ChangePasswordDialog', () => {
     jest.clearAllMocks()
     mockCall.mockResolvedValue({})
   })
+
+  it.each(['abcde23456', 'abcde-23456', '012345'])(
+    'submits reset code %s without adding or removing a hyphen',
+    async code => {
+      renderDialog()
+      enterCodeStage()
+      fireEvent.changeText(screen.getByTestId('resetCode'), code)
+      fireEvent.changeText(screen.getByTestId('newPassword'), 'new-password')
+      await submit()
+      expect(mockCall).toHaveBeenCalledWith(com.atproto.server.resetPassword, {
+        token: code.toUpperCase(),
+        password: 'new-password',
+      })
+    },
+  )
 
   it('locks dismissal while a reset is pending, until the programmatic close', async () => {
     const request = deferred()

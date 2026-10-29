@@ -169,10 +169,22 @@ describe('TokenField', () => {
     },
   )
 
-  it('keeps email-specific validation available to callers', () => {
+  it('accepts alphanumeric codes with or without the email hyphen', () => {
     expect(isValidCode('ABCDE-23456')).toBe(true)
-    expect(isValidCode('ABCDE23456')).toBe(false)
-    expect(isValidCode('012345')).toBe(false)
+    expect(isValidCode('ABCDE23456')).toBe(true)
+    expect(isValidCode('012345')).toBe(true)
+  })
+
+  it.each([
+    '',
+    'AB-CD',
+    'ABCDE-2345',
+    'ABCDE--23456',
+    'ABCDEF-23456',
+    'ABCDE-234567',
+    'ABC!234',
+  ])('rejects malformed code %s', value => {
+    expect(isValidCode(value)).toBe(false)
   })
 
   it('does not flag an incomplete code', () => {

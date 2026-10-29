@@ -144,25 +144,28 @@ describe('DisableEmail2FADialog', () => {
     expect(mockCall).not.toHaveBeenCalled()
   })
 
-  it('normalizes the code and submits it via the confirm button', async () => {
-    const control = renderDialog()
-    enterCodeStage()
-    fireEvent.changeText(getInput(), 'abcde23456')
-    expect(getInput().props.value).toBe('ABCDE-23456')
+  it.each(['abcde23456', 'abcde-23456', '012345'])(
+    'submits %s without adding or removing a hyphen',
+    async input => {
+      const control = renderDialog()
+      enterCodeStage()
+      fireEvent.changeText(getInput(), input)
+      expect(getInput().props.value).toBe(input.toUpperCase())
 
-    await act(async () => {
-      fireEvent.press(screen.getByTestId('confirmBtn'))
-      await Promise.resolve()
-    })
-    expect(mockCall).toHaveBeenCalledWith(com.atproto.server.updateEmail, {
-      email: 'alice@example.com',
-      token: 'ABCDE-23456',
-      emailAuthFactor: false,
-    })
-    expect(mockRefreshSession).toHaveBeenCalledTimes(1)
-    expect(mockToastShow).toHaveBeenCalledWith('Email 2FA disabled')
-    expect(control.close).toHaveBeenCalledTimes(1)
-  })
+      await act(async () => {
+        fireEvent.press(screen.getByTestId('confirmBtn'))
+        await Promise.resolve()
+      })
+      expect(mockCall).toHaveBeenCalledWith(com.atproto.server.updateEmail, {
+        email: 'alice@example.com',
+        token: input.toUpperCase(),
+        emailAuthFactor: false,
+      })
+      expect(mockRefreshSession).toHaveBeenCalledTimes(1)
+      expect(mockToastShow).toHaveBeenCalledWith('Email 2FA disabled')
+      expect(control.close).toHaveBeenCalledTimes(1)
+    },
+  )
 
   it('submits the normalized token via keyboard submission', async () => {
     renderDialog()
@@ -175,7 +178,7 @@ describe('DisableEmail2FADialog', () => {
     })
     expect(mockCall).toHaveBeenCalledWith(com.atproto.server.updateEmail, {
       email: 'alice@example.com',
-      token: 'ABCDE-23456',
+      token: 'ABCDE23456',
       emailAuthFactor: false,
     })
   })
