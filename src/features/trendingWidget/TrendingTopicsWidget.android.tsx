@@ -70,8 +70,7 @@ function TrendingTopicsWidget(
             tint="#0085FF"
             modifiers={[size(16, 16)]}
           />
-          {/* lines the title up with the topics, after the 24dp rank column */}
-          <Spacer modifiers={[width(8)]} />
+          <Spacer modifiers={[width(6)]} />
           <Text
             color={textColor}
             maxLines={1}
@@ -90,7 +89,8 @@ function TrendingTopicsWidget(
                   <Text
                     color={secondaryTextColor}
                     style={{fontSize: 14, fontWeight: '500'}}
-                    modifiers={[width(24)]}>
+                    // the icon + spacer width, to line up with the header title
+                    modifiers={[width(22)]}>
                     {`${index + 1}.`}
                   </Text>
                   <Column modifiers={[fillMaxWidth()]}>
