@@ -345,6 +345,12 @@ module.exports = function (_config) {
             })),
           },
         ],
+        /*
+         * Mods run in reverse registration order. Register the system bars
+         * plugin before expo-navigation-bar, which removes
+         * `android:windowLightNavigationBar` when no `style` is set.
+         */
+        './plugins/withAndroidStylesSystemBarsPlugin.js',
         ['expo-navigation-bar', {enforceContrast: false}],
         /*
          * Expo runs Gradle mods in reverse registration order. Keep Bitdrift
