@@ -65,7 +65,9 @@ function itemProps() {
 }
 
 function sectionProps() {
-  return jest.mocked(Inline.InlineSection).mock.calls.map(([{title}]) => title)
+  return jest
+    .mocked(Inline.InlineSection)
+    .mock.calls.map(([{title, divider}]) => ({title, divider}))
 }
 
 function trigger() {
@@ -191,11 +193,11 @@ describe('inline menu', () => {
     )
 
     expect(sectionProps()).toEqual([
-      undefined,
-      'Show replies as',
-      undefined,
-      undefined,
-      undefined,
+      {title: undefined, divider: false},
+      {title: 'Show replies as', divider: true},
+      {title: undefined, divider: true},
+      {title: undefined, divider: true},
+      {title: undefined, divider: true},
     ])
     expect(itemProps().map(item => item.title)).toEqual([
       'Loose',

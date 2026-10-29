@@ -262,7 +262,7 @@ function InlineOuter({children}: {children: React.ReactNode}) {
   }
 
   return sections.map((section, i) => (
-    <InlineSection key={section.key ?? i} title={section.title}>
+    <InlineSection key={section.key ?? i} title={section.title} divider={i > 0}>
       {section.items}
     </InlineSection>
   ))
