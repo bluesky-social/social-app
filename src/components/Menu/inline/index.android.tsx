@@ -158,7 +158,7 @@ export function InlineItem({
 }: InlineItemProps) {
   const t = useTheme()
   const {control} = useMenuContext()
-  const textStyle = useComposeTextStyle([a.text_md, a.font_semi_bold])
+  const textStyle = useComposeTextStyle([a.text_md, a.font_medium])
   const icon = drawable(glyph)
 
   return (
