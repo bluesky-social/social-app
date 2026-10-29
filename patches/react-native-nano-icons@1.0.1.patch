@@ -24,3 +24,40 @@ index f20efaaa4ed2fbd0413e285a4dc3f95d9a299139..3e55ed55dd523b9c55e9abfb0211a2e1
  }
  
  // The paragraph view is the direct superview of an inline icon; a couple of
+diff --git a/lib/commonjs/cli/buildSymbols.js b/lib/commonjs/cli/buildSymbols.js
+index 2151321..e7dbd69 100644
+--- a/lib/commonjs/cli/buildSymbols.js
++++ b/lib/commonjs/cli/buildSymbols.js
+@@ -69,7 +69,8 @@ function shouldSkipGeneration(inputHash, outputDir, name, logger) {
+ // inputDir, matching the font pipeline's convention.
+ async function buildAllSymbols(symbolSets, projectRoot, options) {
+     const logger = options?.logger;
+-    const version = (0, packageVersion_1.packageVersion)();
++    // Bluesky: invalidate symbols built before the patch to prepareSymbol.js.
++    const version = `${(0, packageVersion_1.packageVersion)()}+bsky.1`;
+     const toolchain = (0, packageVersion_1.fontToolchainVersions)();
+     const results = [];
+     const failures = [];
+diff --git a/lib/commonjs/src/core/pipeline/prepareSymbol.js b/lib/commonjs/src/core/pipeline/prepareSymbol.js
+index 30fab86..341399d 100644
+--- a/lib/commonjs/src/core/pipeline/prepareSymbol.js
++++ b/lib/commonjs/src/core/pipeline/prepareSymbol.js
+@@ -64,15 +64,16 @@ async function prepareSymbol(task, pathkit) {
+             logger,
+         }),
+         contents: (0, contents_1.symbolsetContentsJson)(svgFilename),
++        // Bluesky: drawables keep the SVG's viewBox, padding included, like
++        // Material icons. Fitting the content made menu icons too big, and
++        // the cropping <group> is ignored by @expo/ui's drawable parser.
+         vdXml: (0, vectorDrawable_1.buildVectorDrawableXml)({
+             layers: [{ d: monochrome, fill: null }],
+             viewBox: prepared.viewBox,
+-            contentBounds: bounds,
+         }),
+         vdOriginalXml: (0, vectorDrawable_1.buildVectorDrawableXml)({
+             layers,
+             viewBox: prepared.viewBox,
+-            contentBounds: bounds,
+         }),
+     };
+     return result;
