@@ -1,4 +1,11 @@
-import {cloneElement, Fragment, isValidElement, useMemo, useRef} from 'react'
+import {
+  cloneElement,
+  Fragment,
+  isValidElement,
+  useContext,
+  useMemo,
+  useRef,
+} from 'react'
 import {
   type GestureResponderEvent,
   Pressable,
@@ -14,12 +21,16 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {type NanoGlyphName} from '#/components/icons/glyphMaps'
+import {type IconWithSvgMeta} from '#/components/icons/TEMPLATE'
 import {
   Context,
   ItemContext,
   useMenuContext,
   useMenuItemContext,
 } from '#/components/Menu/context'
+import {InlineItem, InlineRoot, InlineSection} from '#/components/Menu/inline'
+import {getText} from '#/components/Menu/inline/getText'
 import {getMenuSourceViewTag} from '#/components/Menu/sourceViewTag'
 import {
   type ContextType,
@@ -28,10 +39,18 @@ import {
   type ItemProps,
   type ItemTextProps,
   type OuterProps,
+  type RootProps,
   type TriggerProps,
 } from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID, IS_IOS, IS_IPAD, IS_LIQUID_GLASS, IS_NATIVE} from '#/env'
+import {
+  IS_ANDROID,
+  IS_DEV,
+  IS_IOS,
+  IS_IPAD,
+  IS_LIQUID_GLASS,
+  IS_NATIVE,
+} from '#/env'
 
 // iOS 26's floaty sheet presentation subtracts the bottom safe-area inset from
 // the requested detent, which eats the visible bottom padding of short (e.g.
@@ -45,21 +64,68 @@ export {
 
 export {useMenuContext}
 
-export function Root({
-  children,
-  control,
-}: React.PropsWithChildren<{
-  control?: Dialog.DialogControlProps
-}>) {
+export function Root({children, control, inline = false}: RootProps) {
   const defaultControl = Dialog.useDialogControl()
+  const inlineParts = inline ? getInlineParts(children) : undefined
+  const isInline = inlineParts !== undefined
   const context = useMemo<ContextType>(
     () => ({
       control: control || defaultControl,
+      inline: isInline,
     }),
-    [control, defaultControl],
+    [control, defaultControl, isInline],
   )
 
-  return <Context.Provider value={context}>{children}</Context.Provider>
+  return (
+    <Context.Provider value={context}>
+      {inlineParts ? (
+        <>
+          <InlineRoot control={context.control} trigger={inlineParts.trigger}>
+            {inlineParts.outer}
+          </InlineRoot>
+          {inlineParts.rest}
+        </>
+      ) : (
+        children
+      )}
+    </Context.Provider>
+  )
+}
+
+/**
+ * A native menu holds its anchor and its items in one view, so pull the
+ * trigger and the items out of `Root`'s children.
+ */
+function getInlineParts(children: React.ReactNode) {
+  let trigger: React.ReactElement<TriggerProps> | undefined
+  let outer: React.ReactElement<OuterProps> | undefined
+  const rest: React.ReactNode[] = []
+  for (const child of flattenReactChildren(children)) {
+    if (
+      !trigger &&
+      isValidElement<TriggerProps>(child) &&
+      child.type === Trigger
+    ) {
+      trigger = child
+    } else if (
+      !outer &&
+      isValidElement<OuterProps>(child) &&
+      child.type === Outer
+    ) {
+      outer = child
+    } else {
+      rest.push(child)
+    }
+  }
+  if (!trigger || !outer) {
+    if (IS_DEV) {
+      console.warn(
+        'An inline Menu.Root needs Menu.Trigger and Menu.Outer as direct children. Falling back to a bottom sheet.',
+      )
+    }
+    return undefined
+  }
+  return {trigger, outer, rest}
 }
 
 export function Trigger({
@@ -78,6 +144,12 @@ export function Trigger({
   } = useInteractionState()
 
   const onPress = (event?: GestureResponderEvent) => {
+    if (context.inline) {
+      // On iOS, the SwiftUI menu around the trigger opens itself.
+      if (IS_ANDROID) context.control.open()
+      return
+    }
+
     if (!IS_IOS) {
       context.control.open(event)
       return
@@ -117,6 +189,10 @@ export function Outer({
   const context = useMenuContext()
   const {t: l} = useLingui()
 
+  if (context.inline) {
+    return <InlineOuter>{children}</InlineOuter>
+  }
+
   return (
     <Dialog.Outer
       control={context.control}
@@ -140,6 +216,58 @@ export function Outer({
   )
 }
 
+/**
+ * Splits the items into native sections: each `Group`, with the `LabelText`
+ * above it as its title, and each run of loose items between groups and
+ * `Divider`s.
+ */
+function InlineOuter({children}: {children: React.ReactNode}) {
+  const {i18n} = useLingui()
+  const sections: {
+    key: React.Key | null
+    title?: string
+    items: React.ReactNode
+  }[] = []
+  let title: string | undefined
+  let looseItems: React.ReactNode[] | undefined
+
+  for (const child of flattenReactChildren(children)) {
+    if (isValidElement<{children?: React.ReactNode}>(child)) {
+      if (child.type === LabelText) {
+        title = getText(child.props.children, i18n)
+        looseItems = undefined
+        continue
+      }
+      if (child.type === Group) {
+        sections.push({key: child.key, title, items: child.props.children})
+        title = undefined
+        looseItems = undefined
+        continue
+      }
+      if (child.type === Divider) {
+        looseItems = undefined
+        continue
+      }
+    }
+    if (!looseItems) {
+      looseItems = []
+      sections.push({
+        key: isValidElement(child) ? child.key : null,
+        title,
+        items: looseItems,
+      })
+      title = undefined
+    }
+    looseItems.push(child)
+  }
+
+  return sections.map((section, i) => (
+    <InlineSection key={section.key ?? i} title={section.title} divider={i > 0}>
+      {section.items}
+    </InlineSection>
+  ))
+}
+
 export function Item({
   children,
   label,
@@ -156,6 +284,19 @@ export function Item({
     onIn: onPressIn,
     onOut: onPressOut,
   } = useInteractionState()
+
+  if (context.inline) {
+    return (
+      <InlineItemFromChildren
+        label={label}
+        onPress={onPress}
+        destructive={destructive}
+        disabled={Boolean(rest.disabled)}
+        testID={rest.testID}>
+        {children}
+      </InlineItemFromChildren>
+    )
+  }
 
   return (
     <Pressable
@@ -208,6 +349,60 @@ export function Item({
         {children}
       </ItemContext.Provider>
     </Pressable>
+  )
+}
+
+/**
+ * Native menu rows take a title, an icon and a checked state rather than
+ * views, so read them off the item's `ItemText`, `ItemIcon` and `ItemRadio`.
+ * Any other content can't be shown.
+ */
+function InlineItemFromChildren({
+  children,
+  label,
+  onPress,
+  destructive,
+  disabled,
+  testID,
+}: React.PropsWithChildren<{
+  label: string
+  onPress: () => void
+  destructive: boolean
+  disabled: boolean
+  testID?: string
+}>) {
+  const {i18n} = useLingui()
+  let title = ''
+  let glyph: NanoGlyphName | undefined
+  let selected: boolean | undefined
+
+  for (const child of flattenReactChildren(children)) {
+    if (isValidElement<ItemTextProps>(child) && child.type === ItemText) {
+      title += getText(child.props.children, i18n)
+    } else if (
+      isValidElement<ItemIconProps>(child) &&
+      child.type === ItemIcon
+    ) {
+      glyph ??= (child.props.icon as Partial<IconWithSvgMeta>).glyph
+    } else if (
+      isValidElement<{selected: boolean}>(child) &&
+      child.type === ItemRadio
+    ) {
+      selected = child.props.selected
+    }
+  }
+
+  return (
+    <InlineItem
+      // The accessibility label is the closest match to text we can't read.
+      title={title || label}
+      glyph={glyph}
+      selected={selected}
+      destructive={destructive}
+      disabled={disabled}
+      testID={testID}
+      onPress={onPress}
+    />
   )
 }
 
@@ -297,6 +492,9 @@ export function ContainerItem({
   style?: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
+  const inline = useContext(Context)?.inline
+  // Native menus can't host views.
+  if (inline) return null
   return (
     <View
       style={[
@@ -325,6 +523,9 @@ export function LabelText({
   style?: StyleProp<TextStyle>
 }) {
   const t = useTheme()
+  const inline = useContext(Context)?.inline
+  // `Outer` makes it the title of the group below it.
+  if (inline) return null
   return (
     <Text
       style={[
@@ -340,6 +541,10 @@ export function LabelText({
 
 export function Group({children, style}: GroupProps) {
   const t = useTheme()
+  const inline = useContext(Context)?.inline
+  if (inline) {
+    return <InlineSection>{children}</InlineSection>
+  }
   return (
     <View
       style={[

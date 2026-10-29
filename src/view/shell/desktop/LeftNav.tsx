@@ -310,8 +310,8 @@ function SwitchMenuItems({
     closeEverything()
   }
 
-  const onProfilePress = (e: GestureResponderEvent) => {
-    if (IS_WEB) {
+  const onProfilePress = (e?: GestureResponderEvent) => {
+    if (IS_WEB && e) {
       const mouseEvent = e as unknown as React.MouseEvent<
         HTMLAnchorElement,
         MouseEvent
