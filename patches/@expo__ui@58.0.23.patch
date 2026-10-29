@@ -25,15 +25,16 @@ index c33aff8..7e9bfa2 100644
        Content { props ->
          LoadingIndicatorContent(props)
 diff --git a/android/src/main/java/expo/modules/ui/menu/DropdownMenu.kt b/android/src/main/java/expo/modules/ui/menu/DropdownMenu.kt
-index 292a3a8..ece0cc2 100644
+index 292a3a8..ac6e840 100644
 --- a/android/src/main/java/expo/modules/ui/menu/DropdownMenu.kt
 +++ b/android/src/main/java/expo/modules/ui/menu/DropdownMenu.kt
-@@ -1,10 +1,14 @@
+@@ -1,10 +1,15 @@
  package expo.modules.ui.menu
  
  import androidx.compose.foundation.layout.Box
 +import androidx.compose.foundation.layout.Spacer
 +import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.padding
  import androidx.compose.foundation.shape.RoundedCornerShape
  import androidx.compose.material3.DropdownMenu
 +import androidx.compose.material3.DropdownMenuPopup
@@ -43,7 +44,7 @@ index 292a3a8..ece0cc2 100644
  import androidx.compose.ui.unit.dp
  import androidx.compose.ui.window.PopupProperties
  import expo.modules.kotlin.views.FunctionalComposableScope
-@@ -21,27 +25,43 @@ fun FunctionalComposableScope.DropdownMenuContent(
+@@ -21,27 +26,47 @@ fun FunctionalComposableScope.DropdownMenuContent(
  ) {
    val itemsSlotView = findChildSlotView(view, "items")
  
@@ -81,11 +82,15 @@ index 292a3a8..ece0cc2 100644
 +      DropdownMenuPopup(
 +        expanded = props.expanded,
 +        onDismissRequest = onDismissRequest,
++        // Padded on both sides, so the gap faces the trigger whichever way the menu opens.
++        modifier = Modifier.padding(vertical = (props.anchorGap ?: 0f).dp),
 +        properties = popupProperties
 +      ) {
-+        itemsSlotView.ChildrenWithPosition(UIComposableScope(columnScope = this), LocalMenuGroupPosition) {
-+          Spacer(Modifier.height(MenuDefaults.GroupSpacing))
-+        }
++        itemsSlotView.ChildrenWithPosition(
++          UIComposableScope(columnScope = this),
++          LocalMenuGroupPosition,
++          separator = { Spacer(Modifier.height(MenuDefaults.GroupSpacing)) }
++        )
 +      }
 +    } else {
 +      DropdownMenu(
@@ -106,23 +111,19 @@ index 292a3a8..ece0cc2 100644
        }
 diff --git a/android/src/main/java/expo/modules/ui/menu/DropdownMenuGroup.kt b/android/src/main/java/expo/modules/ui/menu/DropdownMenuGroup.kt
 new file mode 100644
-index 0000000..587de0c
+index 0000000..03cd0f9
 --- /dev/null
 +++ b/android/src/main/java/expo/modules/ui/menu/DropdownMenuGroup.kt
-@@ -0,0 +1,90 @@
+@@ -0,0 +1,92 @@
 +package expo.modules.ui.menu
 +
 +import android.view.ViewGroup
-+import androidx.compose.foundation.layout.padding
 +import androidx.compose.material3.DropdownMenuGroup
-+import androidx.compose.material3.HorizontalDivider
 +import androidx.compose.material3.MenuDefaults
-+import androidx.compose.material3.Text
 +import androidx.compose.runtime.Composable
 +import androidx.compose.runtime.CompositionLocalProvider
 +import androidx.compose.runtime.ProvidableCompositionLocal
 +import androidx.compose.runtime.compositionLocalOf
-+import androidx.compose.ui.Modifier
 +import androidx.core.view.size
 +import expo.modules.kotlin.views.ComposableScope
 +import expo.modules.kotlin.views.ComposeProps
@@ -132,6 +133,9 @@ index 0000000..587de0c
 +import expo.modules.ui.ModifierList
 +import expo.modules.ui.ModifierRegistry
 +import expo.modules.ui.UIComposableScope
++import expo.modules.ui.findChildSlotView
++import expo.modules.ui.isSlotView
++import expo.modules.ui.renderSlot
 +
 +/**
 + * A child's position among its siblings, which picks its Material 3 Expressive shape:
@@ -147,7 +151,6 @@ index 0000000..587de0c
 +
 +@OptimizedComposeProps
 +data class DropdownMenuGroupProps(
-+  val label: String? = null,
 +  val modifiers: ModifierList = emptyList()
 +) : ComposeProps
 +
@@ -165,14 +168,16 @@ index 0000000..587de0c
 +internal fun ExpoComposeView<*>.ChildrenWithPosition(
 +  composableScope: ComposableScope,
 +  position: ProvidableCompositionLocal<MenuPosition?>,
++  filter: (child: ExpoComposeView<*>) -> Boolean = { true },
 +  separator: @Composable () -> Unit = {}
 +) {
 +  val indices = (0..<size).filter {
-+    (getChildAt(it) as? ExpoComposeView<*>)?.shouldUseAndroidLayout == false
++    val child = getChildAt(it) as? ExpoComposeView<*>
++    child != null && !child.shouldUseAndroidLayout && filter(child)
 +  }
 +  if (indices.isEmpty()) {
 +    // Renders nothing, but subscribes to children being added.
-+    Children(composableScope)
++    Children(composableScope, filter = { false })
 +    return
 +  }
 +  indices.forEachIndexed { i, childIndex ->
@@ -188,16 +193,18 @@ index 0000000..587de0c
 +@Composable
 +fun FunctionalComposableScope.DropdownMenuGroupContent(props: DropdownMenuGroupProps) {
 +  val position = LocalMenuGroupPosition.current ?: MenuPosition(0, 1)
++  val labelSlotView = findChildSlotView(view, "label")
 +
 +  DropdownMenuGroup(
 +    shapes = MenuDefaults.groupShape(position.index, position.count),
 +    modifier = ModifierRegistry.applyModifiers(props.modifiers, appContext, composableScope, globalEventDispatcher)
 +  ) {
-+    props.label?.let { label ->
-+      MenuDefaults.DropdownMenuGroupLabel { Text(label) }
-+      HorizontalDivider(modifier = Modifier.padding(MenuDefaults.HorizontalDividerPadding))
-+    }
-+    view.ChildrenWithPosition(UIComposableScope(columnScope = this), LocalMenuItemPosition)
++    labelSlotView?.let { MenuDefaults.DropdownMenuGroupLabel { it.renderSlot() } }
++    view.ChildrenWithPosition(
++      UIComposableScope(columnScope = this),
++      LocalMenuItemPosition,
++      filter = { !isSlotView(it) }
++    )
 +  }
 +}
 diff --git a/android/src/main/java/expo/modules/ui/menu/DropdownMenuItem.kt b/android/src/main/java/expo/modules/ui/menu/DropdownMenuItem.kt
@@ -294,6 +301,17 @@ index e4654ea..634e331 100644
    DropdownMenuItem(
      text = { textSlotView?.let { with(UIComposableScope()) { with(it) { Content() } } } ?: Unit },
      enabled = props.enabled,
+diff --git a/android/src/main/java/expo/modules/ui/menu/DropdownMenuRecords.kt b/android/src/main/java/expo/modules/ui/menu/DropdownMenuRecords.kt
+index f08ba78..e572b97 100644
+--- a/android/src/main/java/expo/modules/ui/menu/DropdownMenuRecords.kt
++++ b/android/src/main/java/expo/modules/ui/menu/DropdownMenuRecords.kt
+@@ -30,5 +30,6 @@ data class DropdownMenuProps(
+   val cornerRadius: Float? = null,
+   val modifiers: ModifierList = emptyList(),
+   val shadowElevation: Float? = null,
++  val anchorGap: Float? = null,
+   val properties: ExpoPopupProperties = ExpoPopupProperties()
+ ) : ComposeProps
 diff --git a/build/jetpack-compose/Button/index.d.ts b/build/jetpack-compose/Button/index.d.ts
 index 57dab89..0af1a62 100644
 --- a/build/jetpack-compose/Button/index.d.ts
@@ -367,10 +385,24 @@ index dca9f2f..1f80ade 100644
  
  //# sourceMappingURL=DropdownMenuItem.js.map
 diff --git a/build/jetpack-compose/DropdownMenu/index.d.ts b/build/jetpack-compose/DropdownMenu/index.d.ts
-index 2f5ea5e..7331993 100644
+index 2f5ea5e..575482d 100644
 --- a/build/jetpack-compose/DropdownMenu/index.d.ts
 +++ b/build/jetpack-compose/DropdownMenu/index.d.ts
-@@ -77,6 +77,31 @@ export declare namespace Trigger {
+@@ -37,6 +37,13 @@ export interface DropdownMenuProps {
+      * @platform android
+      */
+     shadowElevation?: number;
++    /**
++     * Space in dp between the menu and its trigger. Only applies to menus of
++     * `DropdownMenuGroup`s.
++     *
++     * @platform android
++     */
++    anchorGap?: number;
+     /**
+      * Properties for the popup window of the dropdown menu.
+      *
+@@ -77,6 +84,32 @@ export declare namespace Trigger {
  export declare function Preview(props: {
      children: ReactNode;
  }): import("react").JSX.Element;
@@ -378,10 +410,6 @@ index 2f5ea5e..7331993 100644
 + * Props of the `DropdownMenuGroup` component.
 + */
 +export interface DropdownMenuGroupProps {
-+    /**
-+     * A label shown at the top of the group.
-+     */
-+    label?: string;
 +    /**
 +     * Modifiers for the component.
 +     */
@@ -399,11 +427,16 @@ index 2f5ea5e..7331993 100644
 + * @platform android
 + */
 +export declare function DropdownMenuGroup(props: DropdownMenuGroupProps): import("react").JSX.Element;
++export declare namespace DropdownMenuGroup {
++    var Label: (props: {
++        children: ReactNode;
++    }) => import("react").JSX.Element;
++}
  declare function DropdownMenu(props: DropdownMenuProps): import("react").JSX.Element;
  declare namespace DropdownMenu {
      var Trigger: typeof import(".").Trigger;
 diff --git a/build/jetpack-compose/DropdownMenu/index.js b/build/jetpack-compose/DropdownMenu/index.js
-index 12c6592..5bd6b6f 100644
+index 12c6592..de743c6 100644
 --- a/build/jetpack-compose/DropdownMenu/index.js
 +++ b/build/jetpack-compose/DropdownMenu/index.js
 @@ -3,6 +3,7 @@ import { requireNativeView } from 'expo';
@@ -414,7 +447,7 @@ index 12c6592..5bd6b6f 100644
  // TODO: Extract into separate SlotView similar to swift-ui
  const SlotNativeView = requireNativeView('ExpoUI', 'SlotView');
  /**
-@@ -41,6 +42,20 @@ function DropdownMenu(props) {
+@@ -41,6 +42,30 @@ function DropdownMenu(props) {
          children: props.children
      });
  }
@@ -432,6 +465,16 @@ index 12c6592..5bd6b6f 100644
 +        ...restProps
 +    });
 +}
++/**
++ * A label slot for `DropdownMenuGroup`, shown at the top of the group.
++ *
++ * @platform android
++ */ DropdownMenuGroup.Label = function Label(props) {
++    return /*#__PURE__*/ _jsx(SlotNativeView, {
++        slotName: "label",
++        children: props.children
++    });
++};
  DropdownMenu.Trigger = Trigger;
  DropdownMenu.Preview = Preview;
  DropdownMenu.Items = Items;
@@ -493,7 +536,7 @@ index 813f366..998390c 100644
  
  export { DropdownMenuItemComponent as DropdownMenuItem };
 diff --git a/src/jetpack-compose/DropdownMenu/index.tsx b/src/jetpack-compose/DropdownMenu/index.tsx
-index 4bb0cae..ee36654 100644
+index 4bb0cae..cd6c2ea 100644
 --- a/src/jetpack-compose/DropdownMenu/index.tsx
 +++ b/src/jetpack-compose/DropdownMenu/index.tsx
 @@ -11,6 +11,11 @@ const MenuNativeView: React.ComponentType<NativeMenuProps> = requireNativeView(
@@ -508,7 +551,29 @@ index 4bb0cae..ee36654 100644
  // TODO: Extract into separate SlotView similar to swift-ui
  const SlotNativeView: React.ComponentType<{
    slotName: string;
-@@ -118,6 +123,42 @@ export function Preview(props: { children: ReactNode }) {
+@@ -58,6 +63,13 @@ export interface DropdownMenuProps {
+    * @platform android
+    */
+   shadowElevation?: number;
++  /**
++   * Space in dp between the menu and its trigger. Only applies to menus of
++   * `DropdownMenuGroup`s.
++   *
++   * @platform android
++   */
++  anchorGap?: number;
+ 
+   /**
+    * Properties for the popup window of the dropdown menu.
+@@ -83,6 +95,7 @@ type NativeMenuProps = {
+   color?: ColorValue;
+   cornerRadius?: number;
+   shadowElevation?: number;
++  anchorGap?: number;
+   properties?: PopupProperties;
+   style?: StyleProp<ViewStyle>;
+   modifiers?: ModifierConfig[];
+@@ -118,6 +131,47 @@ export function Preview(props: { children: ReactNode }) {
    return <></>;
  }
  
@@ -516,10 +581,6 @@ index 4bb0cae..ee36654 100644
 + * Props of the `DropdownMenuGroup` component.
 + */
 +export interface DropdownMenuGroupProps {
-+  /**
-+   * A label shown at the top of the group.
-+   */
-+  label?: string;
 +  /**
 +   * Modifiers for the component.
 +   */
@@ -547,6 +608,15 @@ index 4bb0cae..ee36654 100644
 +    />
 +  );
 +}
++
++/**
++ * A label slot for `DropdownMenuGroup`, shown at the top of the group.
++ *
++ * @platform android
++ */
++DropdownMenuGroup.Label = function Label(props: { children: ReactNode }) {
++  return <SlotNativeView slotName="label">{props.children}</SlotNativeView>;
++};
 +
  function DropdownMenu(props: DropdownMenuProps) {
    const { modifiers, ...restProps } = props;

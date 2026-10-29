@@ -14,18 +14,28 @@ highlight and a leading check.
 
 The patch adds:
 
-- `DropdownMenuGroup` (`DropdownMenuGroupView`), with an optional `label`. When
-  a `DropdownMenu`'s items are groups, the menu renders with
-  `DropdownMenuPopup`. Groups are spaced by `MenuDefaults.GroupSpacing` and
-  shaped by `MenuDefaults.groupShape(index, count)`.
+- `DropdownMenuGroup` (`DropdownMenuGroupView`), with an optional `Label` slot.
+  When a `DropdownMenu`'s items are groups, the menu renders with
+  `DropdownMenuPopup`. Groups are spaced by
+  `MenuDefaults.GroupSpacing` and shaped by `MenuDefaults.groupShape(index,
+  count)`.
 - For items in a group, the Expressive `DropdownMenuItem`, shaped by
   `MenuDefaults.itemShape(index, count)`. Positions come from the native
   children, so conditional items in JS shape correctly.
 - `DropdownMenuItem`'s `selected` prop and `SelectedLeadingIcon` slot, which
   render a `SelectableDropdownMenuItem`.
+- `DropdownMenu`'s `anchorGap`, the space between a grouped menu and its
+  trigger. The menu's position candidates are internal to Compose, so it's
+  vertical padding on the popup content, which keeps the gap on the trigger's
+  side whether the menu opens below or above.
+
+Colours come from the `Host`'s Material theme, which we derive from ALF (see
+`useMaterialTheme` in `src/alf/material.ts`).
 
 Menus without groups render exactly as before. Our `<Menu.Root inline>`
-(`src/components/Menu/inline/index.android.tsx`) is the only user.
+(`src/components/Menu/inline/index.android.tsx`) is the only user. It renders a
+single group and divides its sections inside it, so it doesn't use the group
+`Label` slot.
 
 @expo/ui ships a prebuilt Android AAR, so it must stay in
 `expo.autolinking.android.buildFromSource` (as `expo-ui`), or Gradle links the
