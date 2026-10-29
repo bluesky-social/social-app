@@ -204,5 +204,10 @@ export function withNanoGlyph(
   Icon.svgPaths = SvgIcon.svgPaths
   Icon.svgViewBox = SvgIcon.svgViewBox
   Icon.svgStrokeWidth = SvgIcon.svgStrokeWidth
+  /*
+   * The symbol sets in `app.config.js` are built from the same SVGs, so a
+   * glyph's name is also its native symbol's, e.g. for `<Menu.Root inline>`.
+   */
+  Icon.glyph = name
   return Icon
 }

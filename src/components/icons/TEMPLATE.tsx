@@ -15,6 +15,11 @@ export type IconWithSvgMeta = ForwardRefExoticComponent<
   svgPaths: string[]
   svgViewBox: string
   svgStrokeWidth: number
+  /**
+   * The icon's glyph, and native symbol, name. Native only, and only set on
+   * icons that render as glyphs. See `withNanoGlyph`.
+   */
+  glyph?: NanoGlyphName
 }
 
 export const IconTemplate_Stroke2_Corner0_Rounded = forwardRef(
