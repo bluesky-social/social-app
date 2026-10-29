@@ -9,7 +9,6 @@
 // https://github.com/jobtoday/react-native-image-viewing
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {PixelRatio, StyleSheet, useWindowDimensions, View} from 'react-native'
-import {SystemBars} from 'react-native-edge-to-edge'
 import {usePanGesture} from 'react-native-gesture-handler'
 import PagerView, {
   type PagerViewOnPageSelectedEvent,
@@ -34,7 +33,9 @@ import Animated, {
 } from 'react-native-reanimated'
 import {scheduleOnRN, scheduleOnUI} from 'react-native-worklets'
 import {Image} from 'expo-image'
+import {NavigationBar} from 'expo-navigation-bar'
 import * as ScreenOrientation from 'expo-screen-orientation'
+import {StatusBar} from 'expo-status-bar'
 import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
 
 import {type Dimensions} from '#/lib/media/types'
@@ -462,13 +463,8 @@ function ImageView({
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
-      <SystemBars
-        style={{statusBar: 'light', navigationBar: 'light'}}
-        hidden={{
-          statusBar: isScaled || !showControls,
-          navigationBar: false,
-        }}
-      />
+      <StatusBar animated style="light" hidden={isScaled || !showControls} />
+      <NavigationBar style="light" />
       <Animated.View
         style={[styles.backdrop, backdropStyle]}
         renderToHardwareTextureAndroid
