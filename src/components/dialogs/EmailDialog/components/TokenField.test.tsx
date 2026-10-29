@@ -1,6 +1,6 @@
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
-import {TokenField} from './TokenField'
+import {isValidCode, TokenField} from './TokenField'
 
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({_: (value: {message: string}) => value.message}),
@@ -42,7 +42,7 @@ describe('TokenField', () => {
     const onChangeText = jest.fn()
     render(<TokenField testID={TEST_ID} onChangeText={onChangeText} />)
     fireEvent.changeText(getInput(), 'abcde23456')
-    expect(onChangeText).toHaveBeenCalledWith('ABCDE-23456')
+    expect(onChangeText).toHaveBeenCalledWith('ABCDE23456')
   })
 
   it('keeps formatted input stable', () => {
@@ -52,11 +52,11 @@ describe('TokenField', () => {
     expect(onChangeText).toHaveBeenCalledWith('ABCDE-23456')
   })
 
-  it('strips non-alphanumeric characters while preserving digits', () => {
+  it('strips other characters while preserving digits and supplied hyphens', () => {
     const onChangeText = jest.fn()
     render(<TokenField testID={TEST_ID} onChangeText={onChangeText} />)
     fireEvent.changeText(getInput(), 'a!b8c-9d e')
-    expect(onChangeText).toHaveBeenCalledWith('AB8C9-DE')
+    expect(onChangeText).toHaveBeenCalledWith('AB8C-9DE')
   })
 
   it('preserves 0 and 1 without mapping them to letters', () => {
@@ -77,11 +77,39 @@ describe('TokenField', () => {
     expect(onChangeText).toHaveBeenCalledWith('ABCDE-F')
   })
 
-  it('drops a hyphen typed inside the first group', () => {
+  it('preserves a hyphen regardless of its position', () => {
     const onChangeText = jest.fn()
     render(<TokenField testID={TEST_ID} onChangeText={onChangeText} />)
     fireEvent.changeText(getInput(), 'AB-')
-    expect(onChangeText).toHaveBeenCalledWith('AB')
+    expect(onChangeText).toHaveBeenCalledWith('AB-')
+  })
+
+  it('preserves a TOTP code and leading zeros as it is typed', () => {
+    const onChangeText = jest.fn()
+    render(<TokenField testID={TEST_ID} onChangeText={onChangeText} />)
+    for (const value of ['0', '01', '012', '0123', '01234', '012345']) {
+      fireEvent.changeText(getInput(), value)
+      expect(onChangeText).toHaveBeenLastCalledWith(value)
+    }
+  })
+
+  it('does not restore a deleted hyphen', () => {
+    const onChangeText = jest.fn()
+    render(
+      <TokenField
+        testID={TEST_ID}
+        value="ABCDE-23456"
+        onChangeText={onChangeText}
+      />,
+    )
+    fireEvent.changeText(getInput(), 'ABCDE23456')
+    expect(onChangeText).toHaveBeenCalledWith('ABCDE23456')
+  })
+
+  it('does not impose an email code length or placeholder', () => {
+    render(<TokenField testID={TEST_ID} />)
+    expect(getInput().props.maxLength).toBeUndefined()
+    expect(getInput().props.placeholder).toBeUndefined()
   })
 
   it('defaults autocomplete to off', () => {
@@ -133,9 +161,18 @@ describe('TokenField', () => {
     expect(getInput().props['aria-invalid']).toBeUndefined()
   })
 
-  it('flags a malformed full-length code independently', () => {
-    render(<TokenField testID={TEST_ID} value="ABCDE-2345!" />)
-    expect(getInput().props['aria-invalid']).toBe(true)
+  it.each(['012345', '01234567', 'ABCDEFGHIJKL', 'ABCDE23456'])(
+    'leaves validation of %s to the caller',
+    value => {
+      render(<TokenField testID={TEST_ID} value={value} />)
+      expect(getInput().props['aria-invalid']).toBeUndefined()
+    },
+  )
+
+  it('keeps email-specific validation available to callers', () => {
+    expect(isValidCode('ABCDE-23456')).toBe(true)
+    expect(isValidCode('ABCDE23456')).toBe(false)
+    expect(isValidCode('012345')).toBe(false)
   })
 
   it('does not flag an incomplete code', () => {

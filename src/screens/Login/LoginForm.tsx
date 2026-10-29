@@ -432,11 +432,11 @@ export const LoginForm = ({
             onSubmitEditing={() => void onPressNext()}
             editable={!isProcessing}
             isInvalid={errorField === '2fa'}
-            accessibilityHint={l`Input the code which has been emailed to you`}
+            accessibilityHint={l`Enter the code from your email or authenticator app`}
           />
           <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.mt_sm]}>
             <Trans>
-              Check your email for a sign in code and enter it here.
+              Enter the sign in code from your email or authenticator app.
             </Trans>
           </Text>
         </View>
