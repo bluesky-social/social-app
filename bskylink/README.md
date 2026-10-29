@@ -20,6 +20,6 @@ for translations. Node restarts when imported source files change; refresh the
 browser to see changes. Restart manually after editing locale JSON files.
 Set `LINK_PORT` to use a different port.
 
-The same preview route is available in the full service when
-`NODE_ENV=development`. It returns 404 in production, test, or when `NODE_ENV` is
-unset. `dev:preview` explicitly sets `NODE_ENV=development` and binds to loopback.
+The standalone preview route is enabled only when `NODE_ENV=development`. It
+returns 404 in production, test, or when `NODE_ENV` is unset. `dev:preview`
+explicitly sets `NODE_ENV=development` and binds to loopback.

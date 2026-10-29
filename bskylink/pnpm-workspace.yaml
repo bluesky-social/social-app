@@ -1,3 +1,5 @@
+overrides:
+  body-parser: ^1.20.9
 allowBuilds:
   cbor-extract: false
 minimumReleaseAgeExclude:
