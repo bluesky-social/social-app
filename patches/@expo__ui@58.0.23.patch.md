@@ -24,7 +24,8 @@ https://github.com/expo/expo/pull/52574:
   by `MenuDefaults.itemShape(index, count)` from its position among the group's
   items, so labels, dividers and conditional items in JS don't throw it off. A
   submenu's trigger item sits inside its `DropdownMenu`, so it takes that menu's
-  place in the group. Its
+  place in the group, and a grouped submenu opens beside its trigger
+  (`MenuAnchorPosition.End`, like Compose's cascading menus). Its
   `selected` prop and `SelectedLeadingIcon` slot render a
   `SelectableDropdownMenuItem` (tinted highlight and leading check).
 

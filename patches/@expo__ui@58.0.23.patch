@@ -25,10 +25,10 @@ index c33aff8..7e9bfa2 100644
        Content { props ->
          LoadingIndicatorContent(props)
 diff --git a/android/src/main/java/expo/modules/ui/menu/DropdownMenu.kt b/android/src/main/java/expo/modules/ui/menu/DropdownMenu.kt
-index 292a3a8..9c18ff3 100644
+index 292a3a8..7beb0bd 100644
 --- a/android/src/main/java/expo/modules/ui/menu/DropdownMenu.kt
 +++ b/android/src/main/java/expo/modules/ui/menu/DropdownMenu.kt
-@@ -1,12 +1,18 @@
+@@ -1,12 +1,19 @@
  package expo.modules.ui.menu
  
  import androidx.compose.foundation.layout.Box
@@ -38,6 +38,7 @@ index 292a3a8..9c18ff3 100644
  import androidx.compose.foundation.shape.RoundedCornerShape
  import androidx.compose.material3.DropdownMenu
 +import androidx.compose.material3.DropdownMenuPopup
++import androidx.compose.material3.MenuAnchorPosition
  import androidx.compose.material3.MenuDefaults
  import androidx.compose.runtime.Composable
 +import androidx.compose.ui.Modifier
@@ -47,7 +48,7 @@ index 292a3a8..9c18ff3 100644
  import expo.modules.kotlin.views.FunctionalComposableScope
  import expo.modules.ui.UIComposableScope
  import expo.modules.ui.ModifierRegistry
-@@ -20,16 +26,41 @@ fun FunctionalComposableScope.DropdownMenuContent(
+@@ -20,16 +27,46 @@ fun FunctionalComposableScope.DropdownMenuContent(
    onDismissRequest: () -> Unit
  ) {
    val itemsSlotView = findChildSlotView(view, "items")
@@ -59,11 +60,16 @@ index 292a3a8..9c18ff3 100644
      Children(UIComposableScope(), filter = { !isSlotView(it) })
  
 +    if (itemsSlotView != null && isGrouped) {
++      // A menu in a group is a submenu, which opens beside its trigger item, like Compose's cascading menus.
++      val isSubmenu = isMenuGroup(view.parent)
 +      DropdownMenuPopup(
 +        expanded = props.expanded,
 +        onDismissRequest = onDismissRequest,
++        popupPositionProvider = MenuDefaults.rememberDropdownMenuPopupPositionProvider(
++          if (isSubmenu) MenuAnchorPosition.End else MenuAnchorPosition.Below
++        ),
 +        // Padded on both sides, so the gap faces the trigger whichever way the menu opens.
-+        modifier = Modifier.padding(vertical = (props.anchorGap ?: 0f).dp),
++        modifier = if (isSubmenu) Modifier else Modifier.padding(vertical = (props.anchorGap ?: 0f).dp),
 +        properties = PopupProperties(
 +          focusable = props.properties.focusable,
 +          dismissOnBackPress = props.properties.dismissOnBackPress,
