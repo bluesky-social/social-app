@@ -31,6 +31,7 @@ import {
   getEmbedThumbnails,
 } from '#/components/Post/Embed/CompactMedia'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
+import {VideoEmbed} from '#/components/Post/Embed/VideoEmbed'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostControls} from '#/components/PostControls'
 import {ProfileBadges} from '#/components/ProfileBadges'
@@ -345,6 +346,7 @@ export function PostBody({post}: {post: PostView}) {
             embed={post.embed}
             post={post}
             moderation={moderation}
+            isMediaOnly={!richText}
           />
         </View>
       )}
@@ -438,6 +440,7 @@ function EmbedPreview({
   embed,
   post,
   moderation,
+  isMediaOnly,
 }: {
   embed: NonNullable<PostView['embed']>
   post: PostView
@@ -445,6 +448,11 @@ function EmbedPreview({
    * The post's own moderation, for its media. Quoted posts apply their own.
    */
   moderation: ModerationDecision | undefined
+  /**
+   * Whether the post is nothing but this embed, so a video plays in full as
+   * a GIF does, rather than as a thumbnail.
+   */
+  isMediaOnly: boolean
 }) {
   const t = useTheme()
   const {isRead} = useItemContext()
@@ -452,7 +460,12 @@ function EmbedPreview({
   if (bsky.isType(app.bsky.embed.recordWithMedia.view, embed)) {
     return (
       <View style={[a.gap_sm]}>
-        <EmbedPreview embed={embed.media} post={post} moderation={moderation} />
+        <EmbedPreview
+          embed={embed.media}
+          post={post}
+          moderation={moderation}
+          isMediaOnly={false}
+        />
         <RecordPreview embed={embed.record} />
       </View>
     )
@@ -469,6 +482,16 @@ function EmbedPreview({
           // Matches `Card`, whose border the post's own embeds don't share
           borderColor={getRowBorderColor(t, !isRead)}
         />
+      </ContentHider>
+    )
+  }
+  if (isMediaOnly && bsky.isType(app.bsky.embed.video.view, embed)) {
+    return (
+      <ContentHider modui={moderation?.ui('contentMedia')}>
+        {/* Cancels the video's own top padding, which the row already gives */}
+        <View style={{marginTop: -tokens.space.xs}}>
+          <VideoEmbed embed={embed} post={post} />
+        </View>
       </ContentHider>
     )
   }
