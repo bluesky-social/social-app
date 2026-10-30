@@ -55,8 +55,11 @@ export type PostMediaUploadStatus =
 
 export type UploadedCaption = {lang: string; blob: BlobRef}
 
+/**
+ * Planning metadata for an image upload, from the compressor's output. The
+ * output file itself is released once its upload settles, so no URI is kept.
+ */
 export type PreparedImage = {
-  uri: string
   width: number
   height: number
   mimeType: string
@@ -66,15 +69,15 @@ export type PreparedImage = {
 
 /**
  * Display and planning metadata for a video upload (the planner prefers it over
- * the item's source fields). `uri`, `size`, and `mimeType` describe the
- * compressed output; `width`, `height`, and `aspectRatio` are the source's
- * display dimensions, because the shared `CompressedVideo` contract carries
- * no output dimensions. It is not the reusable result: retries read the
- * store's private compression cache, which also holds the web `bytes` and
- * passthrough reason this type omits so published state stays small.
+ * the item's source fields). `size` and `mimeType` describe the compressed
+ * output; `width`, `height`, and `aspectRatio` are the source's display
+ * dimensions, because the shared `CompressedVideo` contract carries no output
+ * dimensions. It is not the reusable result and carries no output URI: retries
+ * read the store's private compression cache, which also holds the output's
+ * location, the web `bytes`, and the passthrough reason this type omits so
+ * published state stays small.
  */
 export type PreparedVideo = {
-  uri: string
   size: number
   mimeType: string
   width: number

@@ -178,7 +178,6 @@ function lateCallbacks(attempt: Attempt) {
     () =>
       attempt.setMediaCompressionResult?.(postId, mediaId, {
         kind: attempt.media.kind,
-        uri: 'file:///late',
         size: 1,
         mimeType: 'application/octet-stream',
         width: 1,

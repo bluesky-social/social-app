@@ -89,7 +89,6 @@ function readyImages(state: ThreadState, count = 1) {
     const height = item.height ?? 1
     item.upload = {state: 'uploaded', blob: blob('image/jpeg')}
     item.prepared = {
-      uri: item.uri,
       width,
       height,
       mimeType: 'image/jpeg',
@@ -996,7 +995,6 @@ describe('ComposerV2 no-write planner', () => {
       blob: blob('video/mp4'),
     }
     media.item.prepared = {
-      uri: media.item.uri,
       size: 100,
       mimeType: 'video/mp4',
       width: 1920,
@@ -1386,7 +1384,6 @@ describe('ComposerV2 no-write planner', () => {
       const mediaId = attempts[0].mediaId
       attempts[0].setMediaCompressionResult?.(postId, mediaId, {
         kind: 'image',
-        uri: 'file:///full-compressed.jpg',
         width: 100,
         height: 80,
         mimeType: 'image/jpeg',
@@ -1411,7 +1408,6 @@ describe('ComposerV2 no-write planner', () => {
 
       attempts[1].setMediaCompressionResult?.(postId, mediaId, {
         kind: 'image',
-        uri: 'file:///crop-compressed.jpg',
         width: 48,
         height: 38,
         mimeType: 'image/jpeg',

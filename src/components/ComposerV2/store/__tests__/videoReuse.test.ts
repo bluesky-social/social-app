@@ -328,8 +328,8 @@ describe('compression reuse after an upload failure', () => {
     /* Bytes live in memory, so there is no file to stat. */
     expect(getFileSize).not.toHaveBeenCalled()
     expect(h.video(mediaId).prepared).not.toHaveProperty('bytes')
+    expect(h.video(mediaId).prepared).not.toHaveProperty('uri')
     expect(h.video(mediaId).prepared).toMatchObject({
-      uri: 'blob:original',
       size: bytes.byteLength,
       mimeType: 'video/mp4',
       width: 1920,

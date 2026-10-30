@@ -284,7 +284,7 @@ not removed agent APIs.
 
 **Images:** retain original source fields, resolving only missing dimensions
 (see below); compress with the existing
-`compressImage` and `IMAGE_SIZE_CONFIG_POSTS`; retain prepared path/MIME/dimensions
+`compressImage` and `IMAGE_SIZE_CONFIG_POSTS`; retain prepared MIME/dimensions/size
 separately; upload through the platform PDS blob helper. The compressor has no
 abort signal: cancellation is logical, its late result is ignored, and a
 cancelled compression must not start the following upload. Do not duplicate the
@@ -303,7 +303,7 @@ runs after the slot is released. Items waiting for the slot still report
 `compressing`; there is no separate queued state. Cancelling a queued attempt
 removes it and its compressor never runs. Cancelling a running one is still
 logical, so it keeps the slot until its compression settles, and its late
-result is ignored (releasing that output is not handled here). This lowers
+result is ignored and released (see Resource ownership). This lowers
 concurrent peak memory but does not stop a single oversized image from
 running out of it. Tests pass a real limiter instance through
 `fakeImageDependencies` and never use the production singleton.
@@ -325,8 +325,9 @@ The store adopts the processed video blob onto the item before captions begin,
 without marking the upload complete, so editing captions while they upload
 restarts from that blob instead of compressing and uploading the video again.
 `prepared` is display and planning metadata, not what a retry reuses; it carries
-no multipart controllers or web buffers (see below for retry reuse). For a video,
-`uri`, `size`, and `mimeType` describe the compressed output, but `width`,
+no multipart controllers, web buffers, or output URI, since the output is
+released when no longer needed (see Resource ownership). For a video,
+`size` and `mimeType` describe the compressed output, but `width`,
 `height`, and `aspectRatio` are the source's display dimensions: the shared
 `CompressedVideo` contract carries no output dimensions. That is sound for the
 aspect ratio because compression preserves it up to even-pixel rounding, which is
@@ -414,9 +415,10 @@ helper runs only for values still missing:
   URL); it always re-encodes to JPEG, so no source type is assumed.
 - Non-GIF video uses the shared video metadata helper only when the MIME type,
   dimensions, or duration is missing, passing a URI on native and a `File` on
-  web. A web URI-only source is fetched into a `File` only when it must be
-  probed or its type is unknown, and that `File` is then handed to the
-  compressor rather than fetched again.
+  web. The worker's dependency returns scalars only; see Resource ownership for
+  the URL the production helper creates. A web URI-only source is fetched into
+  a `File` only when it must be probed or its type is unknown, and that `File`
+  is then handed to the compressor rather than fetched again.
 - GIF files (known type, `File` type, data URI, or `.gif` extension) never
   reach the video metadata helper; on iOS it never settles for a file without
   a video track. Dimensions come from the image loader and, on native, size
@@ -491,9 +493,56 @@ supersedes it. Retiring stops new leases at once, but cleanup (releasing an
 aliased Android copy) waits for attempts still reading the output, so removal
 never deletes a file a non-abortable step is using. Late results from a retired
 attempt are rejected by the task-identity guard and never repopulate the map.
-Caller-owned source URIs and durable draft files are never deleted; the
-compressor's own output file is not deleted either. The video blob still takes
-priority over any retained compression.
+Caller-owned source URIs and durable draft files are never deleted. The video
+blob still takes priority over any retained compression.
+
+#### Resource ownership
+
+Each V2-visible resource has one owner and a last reader. Cleanup is
+deterministic and tested through injected release dependencies; it is not a
+claim about measured memory.
+
+| Resource                                               | Owner                               | Released                                                                                                 |
+| ------------------------------------------------------ | ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Source URI/`File`, `original`, `supersededUri`, drafts | The caller or draft storage         | Never by V2                                                                                              |
+| Web metadata probe URL                                 | The production metadata adapter     | Right after the scalars are extracted                                                                    |
+| Selected image compression output                      | The image worker                    | Once, after the upload (or a cancelled/failed attempt) settles                                           |
+| Native encoded video output (file)                     | The worker, then the retained entry | By the worker if never retained; otherwise with the entry after its last reader                          |
+| Android readable copy, web `bytes`                     | Unchanged (see above)               | As described above                                                                                       |
+| Prepared planning metadata                             | The item                            | Scalars only; has no URI, so it never advertises a released output                                       |
+| Video telemetry and `videoUploadIds`                   | The store                           | `videoUploadIds` on removal/teardown; telemetry by blob (`publishableVideos`) outlives removal for plans |
+
+- **Probe URL.** The shared web `getVideoMetadata` creates a new object URL for
+  each probe and returns it as `uri`. `createScalarVideoMetadata` (wired in
+  `store/uploadDependencies.ts`) returns only `width`, `height`, `mimeType`,
+  `duration`, and `fileSize`, and revokes that URL through
+  `releaseVideoProbeUri` (web only; native returns the source URI, which is
+  never released). Ownership comes from that helper contract, not a `blob:`
+  prefix. Direct worker tests inject scalar fakes, so a fake's URI is never
+  revoked. A helper that rejects before returning leaves any internal URL to the
+  shared code.
+- **Image output.** `compressImage` always writes a new file (native) or object
+  URL (web). The worker owns it from the moment `compressImage` resolves, and
+  calls the required `releaseCompressedImage({uri})` dependency once, after its
+  last reader settles: the upload when one started, otherwise the cancelled,
+  stale, or throwing step. Because the limiter settles only after a running task
+  does, a late result is released too. Native deletes the file with
+  `safeDeleteAsync`; web revokes the URL.
+- **Native encoded video output.** Only a result with no `passthroughReason` and
+  no `bytes` is a new file; the worker owns it, hands its delete to the retained
+  cache entry as `release`, and the entry runs it after the last lease. A result
+  that is never retained (stale attempt, oversized output) is deleted by the
+  worker once its own readers settle. Pass-through, GIF, and web output alias
+  the source, the Android copy, or memory, and are never deleted
+  (`releaseCompressedVideo` is a no-op on web).
+- **Telemetry.** The worker passes `createVideoTelemetry` a scalar asset (URI,
+  dimensions, MIME type, duration, size), never the source `File`/`Blob`, since
+  the telemetry object is retained. Per-item `videoUploadIds` survive retries
+  and caption restarts and are cleared on removal and teardown. A captured plan
+  still reports publication after removal or destruction.
+- Cleanup errors, sync or async, are swallowed and never change an upload's
+  outcome. Deleting or revoking an editor-created `supersededUri` stays with the
+  caller (see Replacing an image source).
 
 ### Adapter fidelity
 
@@ -703,6 +752,8 @@ need `pnpm test src/lib/media/video --watchman=false --runInBand`. Useful suites
 
 - `store/__tests__/`: actions, capacities, ownership, notifications, hydration,
   gates/tags, media/captions/reordering, and diagnostic boundaries.
+  `mediaRelease.test.ts` and `utils/__tests__/createScalarVideoMetadata.test.ts` cover
+  the Resource ownership contracts.
 - `sequences.test.ts`: four reproducible seeds (`7`, `42`, `2025`, `0xc0ffee`),
   60 operations each, plus explicit stale-callback scenarios. Keep operation
   traces reproducible; avoid a duplicate store model or new framework by default.

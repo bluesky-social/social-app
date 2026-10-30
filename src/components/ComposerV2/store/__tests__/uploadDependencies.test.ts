@@ -14,7 +14,6 @@ import {compressVideo} from '#/lib/media/video/compress'
 import {createVideoTelemetry} from '#/lib/media/video/telemetry'
 import {uploadVideo} from '#/lib/media/video/upload'
 import {createTokenlessVideoServiceClient} from '#/lib/media/video/util'
-import {getVideoMetadata} from '#/view/com/composer/videos/metadata'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   fakeAnalytics,
@@ -27,6 +26,8 @@ import {
   type VideoUploadDependencies,
 } from '#/components/ComposerV2/store/uploads'
 import {copyVideoToCache} from '#/components/ComposerV2/store/utils/copyVideoToCache'
+import {releaseCompressedImage} from '#/components/ComposerV2/store/utils/releaseCompressedImage'
+import {releaseCompressedVideo} from '#/components/ComposerV2/store/utils/releaseCompressedVideo'
 
 const resolvers = {} as LinkResolvers
 
@@ -94,16 +95,19 @@ describe('upload worker dependency wiring', () => {
       getImageDimensions: getImageDim,
       compressImage,
       uploadBlob,
+      releaseCompressedImage,
       limitImageCompression: expect.any(Function),
     })
     expect(video).toMatchObject({
-      getVideoMetadata,
+      /* The scalar adapter, covered in createScalarVideoMetadata.test.ts. */
+      getVideoMetadata: expect.any(Function),
       getImageDimensions: getImageDim,
       getFileSize: getUriSize,
       copyVideoToCache,
       createVideoTelemetry,
       compressVideo,
       uploadVideo,
+      releaseCompressedVideo,
       uploadBlob,
       createVideoServiceClient: createTokenlessVideoServiceClient,
     })

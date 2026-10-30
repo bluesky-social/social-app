@@ -143,7 +143,6 @@ test('a real caption retry reuses video and unchanged captions after a partial f
   const getVideoMetadata = jest
     .fn<VideoUploadDependencies['getVideoMetadata']>()
     .mockResolvedValue({
-      uri: videoInput.item.uri,
       width: 1920,
       height: 1080,
       mimeType: 'video/mp4',

@@ -169,6 +169,8 @@ export function fakeImageDependencies(
     getImageDimensions: unexpected('getImageDimensions'),
     compressImage: unexpected('compressImage'),
     uploadBlob: unexpected('uploadBlob'),
+    releaseCompressedImage:
+      jest.fn<ImageUploadDependencies['releaseCompressedImage']>(),
     limitImageCompression: unboundedImageCompression,
     ...overrides,
   }
@@ -186,6 +188,8 @@ export function fakeVideoDependencies(
     createVideoTelemetry: noopVideoTelemetry,
     compressVideo: unexpected('compressVideo'),
     uploadVideo: unexpected('uploadVideo'),
+    releaseCompressedVideo:
+      jest.fn<VideoUploadDependencies['releaseCompressedVideo']>(),
     uploadBlob: unexpected('uploadBlob'),
     createVideoServiceClient: unexpected('createVideoServiceClient'),
     sleep: unexpected('sleep'),

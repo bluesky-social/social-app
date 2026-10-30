@@ -75,10 +75,9 @@ function addImages(store: Store, count = 1) {
   )!.addedMediaIds
 }
 
-function compressionOutput(uri: string, width: number, height: number) {
+function compressionOutput(width: number, height: number) {
   return {
     kind: 'image' as const,
-    uri,
     width,
     height,
     mimeType: 'image/jpeg',
@@ -230,11 +229,7 @@ describe('replaceImageSource', () => {
     expect(old.cancel).toHaveBeenCalledTimes(1)
     expect(attempts).toHaveLength(2)
     const afterEdit = store.getState()
-    old.setMediaCompressionResult?.(
-      root,
-      id,
-      compressionOutput('file:///old-compressed.jpg', 400, 300),
-    )
+    old.setMediaCompressionResult?.(root, id, compressionOutput(400, 300))
     old.setMediaSourceMetadata?.(root, id, {
       width: 1,
       height: 1,
@@ -244,15 +239,11 @@ describe('replaceImageSource', () => {
     expect(store.getState()).toBe(afterEdit)
 
     const fresh = attempts[1]
-    fresh.setMediaCompressionResult?.(
-      root,
-      id,
-      compressionOutput('file:///crop-compressed.jpg', 190, 140),
-    )
+    fresh.setMediaCompressionResult?.(root, id, compressionOutput(190, 140))
     fresh.report({state: 'uploaded', blob: blob('fresh')})
     expect(images(store)[0]).toMatchObject({
       uri: crop.uri,
-      prepared: {uri: 'file:///crop-compressed.jpg', width: 190},
+      prepared: {width: 190},
       upload: {state: 'uploaded', blob: blob('fresh')},
     })
     store.destroy()
@@ -266,7 +257,7 @@ describe('replaceImageSource', () => {
     attempts[0].setMediaCompressionResult?.(
       root,
       id,
-      compressionOutput('file:///compressed.jpg', 400, 300),
+      compressionOutput(400, 300),
     )
     attempts[0].report({state: 'uploaded', blob: blob('before')})
     expect(images(store)[0]).toMatchObject({upload: {state: 'uploaded'}})
@@ -429,10 +420,11 @@ describe('replaceImageSource with the real image worker', () => {
       height: 150,
     })
     expect(uploadBlob).toHaveBeenCalledTimes(1)
+    expect(uploadBlob.mock.calls[0][1]).toBe('file:///out.jpg')
     expect(images(store)[0]).toMatchObject({
       uri: crop.uri,
       original,
-      prepared: {uri: 'file:///out.jpg'},
+      prepared: {width: 10},
       upload: {state: 'uploaded'},
     })
     store.destroy()

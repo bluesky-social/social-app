@@ -10,6 +10,10 @@ import {createTokenlessVideoServiceClient} from '#/lib/media/video/util'
 import {getVideoMetadata} from '#/view/com/composer/videos/metadata'
 import {copyVideoToCache} from '#/components/ComposerV2/store/utils/copyVideoToCache'
 import {createConcurrencyLimit} from '#/components/ComposerV2/store/utils/createConcurrencyLimit'
+import {createScalarVideoMetadata} from '#/components/ComposerV2/store/utils/createScalarVideoMetadata'
+import {releaseCompressedImage} from '#/components/ComposerV2/store/utils/releaseCompressedImage'
+import {releaseCompressedVideo} from '#/components/ComposerV2/store/utils/releaseCompressedVideo'
+import {releaseVideoProbeUri} from '#/components/ComposerV2/store/utils/releaseVideoProbeUri'
 import {
   type ImageUploadDependencies,
   type VideoUploadDependencies,
@@ -32,17 +36,23 @@ export const imageUploadDependencies: ImageUploadDependencies = {
   getImageDimensions: getImageDim,
   compressImage,
   uploadBlob,
+  releaseCompressedImage,
   limitImageCompression,
 }
 
 export const videoUploadDependencies: VideoUploadDependencies = {
-  getVideoMetadata,
+  /* The shared helper's returned URI is a new object URL on web; see the adapter. */
+  getVideoMetadata: createScalarVideoMetadata({
+    getVideoMetadata,
+    releaseProbeUri: releaseVideoProbeUri,
+  }),
   getImageDimensions: getImageDim,
   getFileSize: getUriSize,
   copyVideoToCache,
   createVideoTelemetry,
   compressVideo,
   uploadVideo,
+  releaseCompressedVideo,
   uploadBlob,
   createVideoServiceClient: createTokenlessVideoServiceClient,
   sleep: abortableSleep,

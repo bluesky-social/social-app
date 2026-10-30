@@ -23,7 +23,11 @@ import {type ComposerImage} from '#/state/gallery'
 import {type AnalyticsContextType} from '#/analytics'
 import {IS_ANDROID, IS_WEB} from '#/env'
 import {app} from '#/lexicons'
-import {prepareImageSource, prepareVideoSource} from './prepareMediaSource'
+import {
+  type GetVideoMetadata,
+  prepareImageSource,
+  prepareVideoSource,
+} from './prepareMediaSource'
 import {
   type PostMediaImage,
   type PostMediaVideo,
@@ -63,7 +67,6 @@ type SetStatus = (
 export type PreparedOutput =
   | {
       kind: 'image'
-      uri: string
       width: number
       height: number
       mimeType: string
@@ -72,7 +75,6 @@ export type PreparedOutput =
     }
   | {
       kind: 'video'
-      uri: string
       size: number
       mimeType: string
       width: number
@@ -107,6 +109,12 @@ export type ImageUploadDependencies = {
   compressImage: (typeof import('#/lib/media/image/compress'))['compressImage']
   uploadBlob: UploadBlob
   /**
+   * Frees the selected compression output. The worker owns it from the moment
+   * `compressImage` resolves and calls this once, after its last reader (the
+   * upload) settles. Never called for the source. Failures are ignored.
+   */
+  releaseCompressedImage: (args: {uri: string}) => void | Promise<void>
+  /**
    * Gates the memory-heavy phase: the dimension read and compression. A task
    * queued when its signal aborts never runs; a running one keeps its slot
    * until it settles, since neither step can be aborted. Upload runs outside
@@ -118,8 +126,11 @@ export type ImageUploadDependencies = {
 
 /** Implementations the video worker calls, including caption blob uploads. */
 export type VideoUploadDependencies = {
-  /** Called only for non-GIF sources still missing metadata. */
-  getVideoMetadata: (typeof import('#/view/com/composer/videos/metadata'))['getVideoMetadata']
+  /**
+   * Called only for non-GIF sources still missing metadata. Returns scalars
+   * only; any URL the probe created is the implementation's to release.
+   */
+  getVideoMetadata: GetVideoMetadata
   /** GIF dimensions; GIFs never reach the video metadata probe. */
   getImageDimensions: GetImageDimensions
   /** Native file stat for a source whose size is unknown; unused on web. */
@@ -133,6 +144,12 @@ export type VideoUploadDependencies = {
   copyVideoToCache: (typeof import('./utils/copyVideoToCache'))['copyVideoToCache']
   compressVideo: (typeof import('#/lib/media/video/compress'))['compressVideo']
   uploadVideo: (typeof import('#/lib/media/video/upload'))['uploadVideo']
+  /**
+   * Deletes a native encoded compression output. The worker calls it only for
+   * output it produced (no pass-through reason, no web `bytes`), never for
+   * the source, a readable copy, or a pass-through alias. Failures are ignored.
+   */
+  releaseCompressedVideo: (args: {uri: string}) => void | Promise<void>
   /** Caption blobs go to the account PDS. */
   uploadBlob: UploadBlob
   createVideoServiceClient: (typeof import('#/lib/media/video/util'))['createTokenlessVideoServiceClient']
@@ -211,10 +228,10 @@ type VideoOptions = BaseOptions &
     ) => CompressedVideoLease | undefined
     /**
      * Retains a completed, validated compression result for later attempts
-     * and returns this attempt's lease on it. When `release` is given, the
-     * output aliases a readable copy: on success the store takes over calling
-     * it, once nothing reads the output. Returns undefined, taking nothing
-     * over, when the attempt is stale.
+     * and returns this attempt's lease on it. When `release` is given (the
+     * output aliases a readable copy, or is a native encoded file), on success
+     * the store takes over calling it, once nothing reads the output. Returns
+     * undefined, taking nothing over, when the attempt is stale.
      */
     retainCompressedVideo?: (
       postId: string,
@@ -270,8 +287,15 @@ async function runImageUpload({
     getImageDimensions,
     compressImage,
     uploadBlob,
+    releaseCompressedImage,
     limitImageCompression,
   } = opts
+  /*
+   * Owned from the moment compressImage resolves, wherever the attempt ends.
+   * The limiter settles only after a running task does, so this finally runs
+   * after a late compression result and after any started upload.
+   */
+  let output: {path: string} | undefined
   try {
     report({...opts, status: {state: 'uploading', phase: 'compressing'}})
 
@@ -305,19 +329,19 @@ async function runImageUpload({
             mime: source.mimeType ?? 'image/jpeg',
           },
         }
-        const output = await compressImage({image, ...IMAGE_SIZE_CONFIG_POSTS})
+        const result = await compressImage({image, ...IMAGE_SIZE_CONFIG_POSTS})
+        output = result
         throwIfAborted({signal})
         const prepared = {
           kind: 'image' as const,
-          uri: output.path,
-          width: output.width,
-          height: output.height,
-          mimeType: output.mime,
-          aspectRatio: {width: output.width, height: output.height},
-          size: output.size,
+          width: result.width,
+          height: result.height,
+          mimeType: result.mime,
+          aspectRatio: {width: result.width, height: result.height},
+          size: result.size,
         }
         opts.setMediaCompressionResult?.(opts.postId, opts.mediaId, prepared)
-        return output
+        return result
       },
     })
     throwIfAborted({signal})
@@ -332,6 +356,11 @@ async function runImageUpload({
       status: failureStatus({error, i18n, kind: 'image'}),
       cause: error,
     })
+  } finally {
+    if (output) {
+      const {path} = output
+      releaseQuietly(() => releaseCompressedImage({uri: path}))
+    }
   }
 }
 
@@ -352,12 +381,18 @@ async function runVideoUpload({
     createVideoTelemetry,
     compressVideo,
     uploadVideo,
+    releaseCompressedVideo,
     uploadBlob,
     metric,
   } = opts
   let videoBlob: BlobRef | undefined = media.videoBlob
   let captionBlobs = [...media.captionBlobs]
   let releaseCopy: (() => void) | undefined
+  /**
+   * Deletes a native encoded output this attempt produced. Cleared once the
+   * store's retained entry takes over deleting it.
+   */
+  let releaseOutput: (() => void) | undefined
   let lease: CompressedVideoLease | undefined
   /** Idempotent; the lease must not outlive the need for its output. */
   const releaseLease = () => {
@@ -443,8 +478,12 @@ async function runVideoUpload({
         })
         throwIfAborted({signal})
         opts.setMediaSourceMetadata?.(opts.postId, opts.mediaId, metadata)
+        /*
+         * Telemetry outlives this attempt, so it gets scalars only; the asset
+         * carries the source File, which only the compressor needs.
+         */
         attempt = createVideoTelemetry({
-          asset,
+          asset: scalarVideoAsset({asset}),
           signal: abandonmentSignal,
           metric,
         })
@@ -477,6 +516,11 @@ async function runVideoUpload({
             }
           },
         })
+        const {uri: outputUri} = compressed
+        if (isNativeEncodedOutput({video: compressed})) {
+          releaseOutput = () =>
+            releaseQuietly(() => releaseCompressedVideo({uri: outputUri}))
+        }
         throwIfAborted({signal})
         if (compressed.passthroughReason) {
           attempt.compressSkipped({
@@ -500,7 +544,6 @@ async function runVideoUpload({
         validateCompressedVideo({video: compressed})
         opts.setMediaCompressionResult?.(opts.postId, opts.mediaId, {
           kind: 'video',
-          uri: compressed.uri,
           size: compressed.size,
           mimeType: compressed.mimeType,
           /* Source display dimensions; the CompressedVideo contract has none. */
@@ -511,15 +554,21 @@ async function runVideoUpload({
         /*
          * Only a finished, validated result is retained. A passthrough that
          * returns the readable copy's URI needs the copy for as long as the
-         * entry lives, so the store takes over releasing it; an encoded
-         * output does not, and the source copy is released below.
+         * entry lives, so the store takes over releasing it. Likewise the
+         * store deletes a native encoded output with the entry, once its last
+         * reader is done. An encoded output does not alias the copy, which
+         * this attempt still releases below. Whatever the store does not take
+         * over is released in the finally block.
          */
         const aliasesCopy = !!releaseCopy && compressed.uri === source.uri
         lease = opts.retainCompressedVideo?.(opts.postId, opts.mediaId, {
           video: compressed,
-          release: aliasesCopy ? releaseCopy : undefined,
+          release: aliasesCopy ? releaseCopy : releaseOutput,
         })
-        if (lease && aliasesCopy) releaseCopy = undefined
+        if (lease) {
+          if (aliasesCopy) releaseCopy = undefined
+          else releaseOutput = undefined
+        }
       }
 
       report({
@@ -650,6 +699,46 @@ async function runVideoUpload({
     } catch {
       /* A leftover cache file is harmless; it must not fail the upload. */
     }
+    /* An output the store never retained (stale, invalid, or unretained). */
+    releaseOutput?.()
+  }
+}
+
+/**
+ * Runs a cleanup dependency without letting it throw or reject into the
+ * operation whose outcome it must not change.
+ */
+function releaseQuietly(release: () => void | Promise<void>) {
+  try {
+    void Promise.resolve(release()).catch(() => {})
+  } catch {
+    /* A leftover file or URL is harmless; it must not fail the upload. */
+  }
+}
+
+/**
+ * A native compressor output that is a new file this worker owns: re-encoded
+ * (no pass-through reason) and file-backed (no web `bytes`). Pass-through and
+ * GIF results alias the source or its readable copy, and web output keeps its
+ * `uri` as the original source.
+ */
+function isNativeEncodedOutput({video}: {video: CompressedVideo}) {
+  return !video.passthroughReason && !video.bytes
+}
+
+/** Source metadata without the `File`, for telemetry that outlives the attempt. */
+function scalarVideoAsset({
+  asset,
+}: {
+  asset: ImagePickerAsset
+}): ImagePickerAsset {
+  return {
+    uri: asset.uri,
+    width: asset.width,
+    height: asset.height,
+    mimeType: asset.mimeType,
+    duration: asset.duration,
+    fileSize: asset.fileSize,
   }
 }
 

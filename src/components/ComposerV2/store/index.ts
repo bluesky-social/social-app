@@ -59,7 +59,10 @@ import * as bsky from '#/types/bsky'
  */
 type CompressionEntry = {
   video: CompressedVideo
-  /** Frees a readable copy the output aliases; absent for caller-owned files. */
+  /**
+   * Frees what the entry owns: a readable copy the output aliases, or a native
+   * encoded output file. Absent for caller-owned files and web output.
+   */
   release?: () => void
   /** Attempts still reading the output. Cleanup waits for them. */
   readers: number
@@ -166,7 +169,10 @@ export function createThreadStore({
    * the item fails for good, or the store is destroyed.
    */
   const compressionCache = new Map<string, CompressionEntry>()
-  /** The latest attempt's uploadId per video, linking restarts to it. */
+  /**
+   * The latest attempt's uploadId per video, linking restarts to it. Kept
+   * across retries and caption restarts; cleared on removal and teardown.
+   */
   const videoUploadIds = new Map<string, string>()
   /** Replacing one attachment slot must not invalidate work in the other. */
   const resolutionRevs = {
@@ -331,7 +337,7 @@ export function createThreadStore({
         media: s.posts[postId].attachments.media,
       })) {
         cancelUploadTask(item.id, {abandoned: 'removed'})
-        retireCompression(item.id)
+        forgetRemovedMedia(item.id)
       }
       resolutionRevs.record.clearFor({key: postId})
       resolutionRevs.media.clearFor({key: postId})
@@ -383,7 +389,7 @@ export function createThreadStore({
       const next = items.filter(item => item.id !== mediaId)
       if (next.length === items.length) return null
       cancelUploadTask(mediaId, {abandoned: 'removed'})
-      retireCompression(mediaId)
+      forgetRemovedMedia(mediaId)
       s.posts[postId] = replacePostMediaItems(post, next)
       s.isDirty = true
       return s
@@ -398,7 +404,7 @@ export function createThreadStore({
       resolutionRevs.media.incrementFor({key: postId})
       for (const item of getMediaItems({media: post.attachments.media})) {
         cancelUploadTask(item.id, {abandoned: 'removed'})
-        retireCompression(item.id)
+        forgetRemovedMedia(item.id)
       }
       s.posts[postId] = replacePostMedia(post, undefined)
       s.isDirty = true
@@ -827,6 +833,16 @@ export function createThreadStore({
     compressionCache.delete(mediaId)
     entry.retired = true
     cleanUpCompression(entry)
+  }
+
+  /**
+   * Drops the per-item video registries for media that left the composition. A
+   * captured plan still reports publication through `publishableVideos`,
+   * which is keyed by blob and deliberately outlives the item.
+   */
+  function forgetRemovedMedia(mediaId: string) {
+    retireCompression(mediaId)
+    videoUploadIds.delete(mediaId)
   }
 
   function cleanUpCompression(entry: CompressionEntry) {
@@ -1352,6 +1368,7 @@ export function createThreadStore({
     for (const mediaId of [...compressionCache.keys()]) {
       retireCompression(mediaId)
     }
+    videoUploadIds.clear()
     resolutionRevs.record.clearAll()
     resolutionRevs.media.clearAll()
     listeners.clear()

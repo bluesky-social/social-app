@@ -207,7 +207,6 @@ describe('ComposerV2 real media workers', () => {
     )
     expect(prepared).toHaveBeenCalledWith('post-1', 'image-1', {
       kind: 'image',
-      uri: 'file:///compressed.jpg',
       width: 400,
       height: 300,
       mimeType: 'image/jpeg',
@@ -331,7 +330,6 @@ describe('ComposerV2 real media workers', () => {
         'post-1',
         'video-1',
         expect.objectContaining({
-          uri: 'file:///compressed.mp4',
           width: 3840,
           height: 2160,
           aspectRatio: {width: 3840, height: 2160},

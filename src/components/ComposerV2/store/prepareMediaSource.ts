@@ -21,6 +21,25 @@ type GetImageDimensions = (
   uri: string,
 ) => Promise<{width: number; height: number}>
 
+/**
+ * What the worker reads from a video metadata probe. Deliberately omits the
+ * probed asset's `uri` and `file`: the production adapter owns and releases
+ * any URL the shared helper created (see `createScalarVideoMetadata`).
+ */
+export type ProbedVideoMetadata = {
+  width: number
+  height: number
+  mimeType?: string | null
+  /** Milliseconds. */
+  duration?: number | null
+  fileSize?: number
+}
+
+export type GetVideoMetadata = (
+  file: File | string,
+  fallbackMimeType?: string,
+) => Promise<ProbedVideoMetadata>
+
 /** Resolve image dimensions and MIME type without re-reading known values. */
 export async function prepareImageSource({
   media,
@@ -54,10 +73,7 @@ export async function prepareVideoSource({
   getFileSize,
 }: {
   media: PostMediaVideo
-  getVideoMetadata: (
-    file: File | string,
-    fallbackMimeType?: string,
-  ) => Promise<ImagePickerAsset>
+  getVideoMetadata: GetVideoMetadata
   getImageDimensions: GetImageDimensions
   getFileSize: (uri: string) => Promise<number>
 }): Promise<{asset: ImagePickerAsset; metadata: ResolvedSourceMetadata}> {

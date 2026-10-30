@@ -379,9 +379,7 @@ describe('image compression limit', () => {
 
       fakes.compressions[1].gate.resolve(compressed('file:///crop-out.jpg'))
       await settle()
-      expect(imagesOf(store, root)[0].prepared?.uri).toBe(
-        'file:///crop-out.jpg',
-      )
+      expect(imagesOf(store, root)[0].prepared).toMatchObject({width: 200})
       expect(fakes.uploads.map(u => u.path)).toEqual(['file:///crop-out.jpg'])
       expect(states).not.toContain('failed')
       store.destroy()
