@@ -31,6 +31,9 @@
         "buildFromSource": [
           "expo-notifications",
           "expo-media-library"
+        ],
+        "exclude": [
+          "expo-ai"
         ]
       }
     },
@@ -190,6 +193,7 @@
     "eventemitter3": "^5.0.1",
     "expo": "58.0.19",
     "expo-age-range": "58.0.2",
+    "expo-ai": "0.1.2",
     "expo-application": "~58.1.2",
     "expo-asset": "~58.0.18",
     "expo-atlas": "^0.4.3",
