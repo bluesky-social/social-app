@@ -302,6 +302,12 @@ export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
   Omit<ButtonProps, 'onPress' | 'disabled'> & {
     overridePresentation?: boolean
     /**
+     * The text the user sees for this link, checked against the href to decide
+     * whether to warn before leaving Bluesky. Defaults to `children` when it is
+     * a string, so only set this when the children are not plain text.
+     */
+    displayText?: string
+    /**
      * Forwarded to the underlying `Button`, e.g. for a roving focus target.
      */
     ref?: React.Ref<React.ComponentRef<typeof View>>
@@ -325,11 +331,12 @@ export function Link({
   shouldProxy,
   overridePresentation,
   peek,
+  displayText,
   ...rest
 }: LinkProps) {
   const {href, isExternal, onPress, onLongPress, openExternally} = useLink({
     to,
-    displayText: typeof children === 'string' ? children : '',
+    displayText: displayText ?? (typeof children === 'string' ? children : ''),
     action,
     onPress: outerOnPress,
     onLongPress: outerOnLongPress,
