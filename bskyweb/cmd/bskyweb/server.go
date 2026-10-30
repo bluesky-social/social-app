@@ -313,6 +313,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/topic/:topic", server.WebGeneric)
 	e.GET("/search", server.WebGenericNoindex)
 	e.GET("/feeds", server.WebGenericNoindex)
+	e.GET("/atmosphere", server.WebGenericNoindex)
 	e.GET("/notifications", server.WebGenericNoindex)
 	e.GET("/notifications/settings", server.WebGenericNoindex)
 	e.GET("/notifications/activity", server.WebGenericNoindex)
