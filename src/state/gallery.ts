@@ -1,17 +1,8 @@
-import {
-  cacheDirectory,
-  copyAsync,
-  deleteAsync,
-  makeDirectoryAsync,
-} from 'expo-file-system/legacy'
+import {Directory, File, Paths} from 'expo-file-system'
 import {type ImageManipulatorContext, SaveFormat} from 'expo-image-manipulator'
 import {nanoid} from 'nanoid/non-secure'
 
-import {
-  getImageCacheDirectory,
-  joinPath,
-  moveIfNecessary,
-} from '#/lib/media/image/cache'
+import {getImageCacheDirectory, moveIfNecessary} from '#/lib/media/image/cache'
 import {renderImage} from '#/lib/media/image-manipulator'
 import {getImageDim} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
@@ -218,20 +209,15 @@ async function copyToCache(from: string): Promise<string> {
 
   // Native: copy to cache directory to survive OS temp file cleanup
   const cacheDir = getImageCacheDirectory()
-  if (!cacheDir || from.startsWith(cacheDir)) {
+  if (!cacheDir || from.startsWith(cacheDir.uri)) {
     return from
   }
 
-  const to = joinPath(cacheDir, nanoid(36))
-  await makeDirectoryAsync(cacheDir, {intermediates: true})
+  const destination = new File(cacheDir, nanoid(36))
+  cacheDir.create({idempotent: true, intermediates: true})
 
-  let normalizedFrom = from
-  if (!from.startsWith('file://') && from.startsWith('/')) {
-    normalizedFrom = `file://${from}`
-  }
-
-  await copyAsync({from: normalizedFrom, to})
-  return to
+  await new File(normalizeFileUri(from)).copy(destination)
+  return destination.uri
 }
 
 /**
@@ -265,22 +251,40 @@ function blobToDataUri(blob: Blob): Promise<string> {
 const SYSTEM_MEDIA_CACHE_DIRS = ['ImagePicker', 'ImageManipulator']
 
 /** Purge files that were created to accomodate image manipulation */
-export async function purgeTemporaryImageFiles() {
+export function purgeTemporaryImageFiles() {
   if (!IS_NATIVE) {
     return
   }
 
   const cacheDir = getImageCacheDirectory()
   if (cacheDir) {
-    await deleteAsync(cacheDir, {idempotent: true})
-    await makeDirectoryAsync(cacheDir)
+    try {
+      if (cacheDir.exists) {
+        cacheDir.delete()
+      }
+      cacheDir.create()
+    } catch (err) {
+      logger.warn('Failed to purge composer image cache', {safeMessage: err})
+    }
   }
 
   // We don't recreate these - the respective expo modules recreate them on
   // demand the next time they run.
-  await Promise.all(
-    SYSTEM_MEDIA_CACHE_DIRS.map(dir =>
-      deleteAsync(joinPath(cacheDirectory!, dir), {idempotent: true}),
-    ),
-  )
+  for (const dir of SYSTEM_MEDIA_CACHE_DIRS) {
+    try {
+      const directory = new Directory(Paths.cache, dir)
+      if (directory.exists) {
+        directory.delete()
+      }
+    } catch (err) {
+      logger.warn('Failed to purge system image cache', {
+        safeMessage: err,
+        directory: dir,
+      })
+    }
+  }
+}
+
+function normalizeFileUri(uri: string): string {
+  return uri.startsWith('/') ? `file://${uri}` : uri
 }
