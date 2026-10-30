@@ -24,7 +24,7 @@ export function Embeds() {
 
       <Section
         title="Compact quotes"
-        description="Images, video and GIFs become a square beside the text, links a compact card. Media behind a warning moves under the text, behind the usual warning.">
+        description="Images, video and GIFs become a square beside the text, links a compact card. Media without text shows in full. Media behind a warning moves under the text, behind the usual warning.">
         {QUOTES.map(({title, embed}) => (
           <Case key={title} title={title}>
             <Embed embed={embed} quotePresentation="compact" />
@@ -88,7 +88,7 @@ export function Embeds() {
 
       <Section
         title="Compact media"
-        description="The square a compact quote shows at 120, which Notifications v2 also uses at 80 in place of a post's text and at 60 trailing a row.">
+        description="The square a compact quote shows at 100, which Notifications v2 also uses at 80 in place of a post's text and at 60 trailing a row.">
         {(
           [
             ['One image', MEDIA.oneImage],
@@ -103,7 +103,7 @@ export function Embeds() {
         ).map(([title, embed]) => (
           <Case key={title} title={title}>
             <View style={[a.flex_row, a.align_start, a.gap_md]}>
-              <CompactMedia embed={embed} size={120} />
+              <CompactMedia embed={embed} size={100} />
               <CompactMedia embed={embed} size={80} />
               <CompactMedia embed={embed} size={60} />
               <CompactMedia embed={embed} size={60} blurred />

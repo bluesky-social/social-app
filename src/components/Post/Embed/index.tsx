@@ -338,7 +338,7 @@ export function PostDetachedEmbed({
 /**
  * Lines of text in a compact quote, about as tall as its media square.
  */
-const COMPACT_QUOTE_LINES = 6
+const COMPACT_QUOTE_LINES = 5
 
 /*
  * Nests parent `Embed` component and therefore must live in this file to avoid
@@ -352,7 +352,7 @@ export function QuoteEmbed({
   isWithinQuote: parentIsWithinQuote,
   allowNestedQuotes: parentAllowNestedQuotes,
   viewContext,
-  quotePresentation = 'default',
+  quotePresentation: requestedQuotePresentation = 'default',
   isQuoteTextMuted = false,
   borderColor,
 }: Omit<CommonProps, 'viewContext'> & {
@@ -389,6 +389,16 @@ export function QuoteEmbed({
       ? new RichTextAPI({text: text, facets: facets})
       : undefined
   }, [quote.record])
+  /*
+   * A compact quote puts its media beside its text, so one with nothing but
+   * media shows it in full instead.
+   */
+  const quotePresentation =
+    requestedQuotePresentation === 'compact' &&
+    !richText &&
+    getEmbedThumbnails(quote.embed).length > 0
+      ? 'default'
+      : requestedQuotePresentation
 
   const onBeforePress = useCallback(() => {
     unstableCacheProfileView(queryClient, quote.author)
@@ -564,7 +574,7 @@ function CompactQuoteBody({
    */
   const isMediaHidden = Boolean(mediaModui?.blurs[0])
   const square = hasThumbnails && (
-    <CompactMedia embed={quote.embed} size={120} />
+    <CompactMedia embed={quote.embed} size={100} />
   )
 
   return (

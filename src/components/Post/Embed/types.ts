@@ -18,9 +18,10 @@ export type CommonProps = {
   allowNestedQuotes?: boolean
   /**
    * How a quoted post is laid out. `compact` shows its images, video or GIF
-   * as a small square beside its text, and its link as a compact card.
-   * Defaults to `compact` beside the post's own media (a record with media),
-   * and `default` otherwise.
+   * as a small square beside its text, and its link as a compact card. A
+   * quoted post with media but no text shows in full either way. Defaults to
+   * `compact` beside the post's own media (a record with media), and
+   * `default` otherwise.
    */
   quotePresentation?: 'default' | 'compact'
   /**
