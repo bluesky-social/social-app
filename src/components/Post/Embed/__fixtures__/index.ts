@@ -185,8 +185,8 @@ function videoView({
   return {
     $type: 'app.bsky.embed.video#view',
     cid: cid(`video${presentation ?? ''}${thumbnail ? 'thumb' : ''}`),
-    // Never loaded: compact presentations only show the thumbnail
-    playlist: 'https://video.example.com/fixture/playlist.m3u8',
+    // A public HLS test stream, for the places a video plays in full
+    playlist: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
     thumbnail,
     alt: 'A short clip of Bluesky on an iPad',
     aspectRatio: {width: 16, height: 9},
