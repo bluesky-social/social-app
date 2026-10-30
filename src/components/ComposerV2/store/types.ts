@@ -64,6 +64,12 @@ export type PreparedImage = {
   size?: number
 }
 
+/**
+ * Display and planning metadata for a video's compressed output (the planner
+ * prefers these dimensions). It is not the reusable result: retries read the
+ * store's private compression cache, which also holds the web `bytes` and
+ * passthrough reason this type omits so published state stays small.
+ */
 export type PreparedVideo = {
   uri: string
   size: number
@@ -130,7 +136,10 @@ export type PostMediaVideo = {
   captions: Array<{lang: string; content: string}>
   /** Uploaded caption refs are kept separate from editable caption contents. */
   captionBlobs: UploadedCaption[]
-  /** The compressed output used by a later retry, without web byte buffers. */
+  /**
+   * Planning metadata for the compressed output, kept apart from the source
+   * fields above. Not what a retry reuses; see `PreparedVideo`.
+   */
   prepared?: PreparedVideo
   /** A completed video is retained when a later caption upload fails. */
   videoBlob?: BlobRef

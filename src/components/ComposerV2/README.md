@@ -305,7 +305,12 @@ Editable captions are `{lang, content}`; uploaded caption blobs are separate.
 A completed video survives a later caption-upload failure. `setVideoCaptions`
 keeps blobs only for unchanged language/content, restarts running/completed work
 when necessary, and allows the worker to reuse the video and unchanged captions.
-Prepared outputs do not retain multipart controllers or transient web buffers.
+The store adopts the processed video blob onto the item before captions begin,
+without marking the upload complete, so editing captions while they upload
+restarts from that blob instead of compressing and uploading the video again.
+`prepared` is display and planning metadata for the compressed output, not what
+a retry reuses; it carries no multipart controllers or web buffers (see below
+for retry reuse).
 
 **Video telemetry** reuses `createVideoTelemetry` and emits the existing
 composer's `video:upload:*` funnel with the same meanings, so V1 and V2 data
@@ -313,7 +318,10 @@ stay comparable. Each attempt that compresses gets its own telemetry and
 `uploadId`, created after source preparation because it reads source metadata
 only once: `picked`, compression (`compressStarted`, `probed`,
 `compressCompleted` or `compressSkipped`), upload, processing, and their
-`*Failed` events. A job that completes immediately still records
+`*Failed` events. A retry that reuses a retained compression result is still a
+new attempt with its own `uploadId`, `picked`, `restarted`, and upload and
+processing events, but emits no compression or probe events: it ran no
+compressor, and reuse is not a passthrough `skipReason`. A job that completes immediately still records
 `uploadCompleted`, `processingStarted`, and `processingCompleted`. The output
 size limit fails as an upload, where the existing composer's native path fails.
 Cancelled work records no failure. V2 adds events the existing composer lacks:
@@ -402,7 +410,10 @@ native metadata helper and compressor cannot read. The existing composer copies
 restored Android videos for the same reason. Each attempt owns its copy and
 releases it when the attempt settles, including after cancellation, removal, or
 store disposal, and after upload, since a compressor pass-through returns the
-copy's URI. A retry makes a new copy. The item keeps its original URI and local
+copy's URI. When a validated pass-through result aliases the copy, the store
+takes over releasing it with the retained result (below), so a retry after an
+upload failure reads the same copy; any other attempt, including one whose
+compression failed, releases its copy and a retry makes a new one. The item keeps its original URI and local
 ref, so draft data never points at the copy. GIFs take the same copy, then the
 GIF path. Other platforms and sources are read directly.
 
@@ -412,8 +423,28 @@ only fills fields the item did not know, publishes nothing when nothing is
 new, and does not mark the composition dirty. Items never change source, so a retry, caption restart, or
 reorder reuses the metadata; a replacement is a new item with its own
 preparation, and a late result for a removed item or superseded attempt is
-dropped by the task-identity guard. This retains metadata only; compressed
-output is not cached across retries.
+dropped by the task-identity guard.
+
+The compressed output is retained separately, as a private runtime map in the
+store keyed by media ID, never in `ThreadState`. Only a completed compression
+that passed output validation is retained, with everything the uploader needs:
+URI, MIME type, size, passthrough reason, and web `bytes`. Because an item's
+source never changes and captions or alt text do not affect compression, the ID
+identifies the result. A retry after an upload failure leases it and uploads it
+without copying, probing, or compressing. Native output is first checked with
+the injected `getFileSize`; if the file is gone or its size changed, the entry
+is dropped and the attempt compresses once. Web output lives in memory and is
+not checked.
+
+The entry is retired when the item or its post is removed, the store is
+destroyed, a non-retryable failure occurs, or the processed video blob
+supersedes it. Retiring stops new leases at once, but cleanup (releasing an
+aliased Android copy) waits for attempts still reading the output, so removal
+never deletes a file a non-abortable step is using. Late results from a retired
+attempt are rejected by the task-identity guard and never repopulate the map.
+Caller-owned source URIs and durable draft files are never deleted; the
+compressor's own output file is not deleted either. The video blob still takes
+priority over any retained compression.
 
 ### Adapter fidelity
 

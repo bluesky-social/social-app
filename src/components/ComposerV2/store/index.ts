@@ -10,6 +10,7 @@ import {
 } from '#/lib/api/resolve'
 import {errorClass, type VideoTelemetry} from '#/lib/media/video/telemetry'
 import {
+  type CompressedVideo,
   type VideoAbandonReason,
   type VideoRestartReason,
 } from '#/lib/media/video/types'
@@ -25,6 +26,7 @@ import {
   videoUploadDependencies,
 } from '#/components/ComposerV2/store/uploadDependencies'
 import {
+  type CompressedVideoLease,
   type PreparedOutput,
   startImageUpload,
   startVideoUpload,
@@ -50,6 +52,19 @@ import {parseResolveLinkError} from '#/components/ComposerV2/store/utils/parseRe
 import {type AnalyticsContextType} from '#/analytics'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+
+/**
+ * A completed video compression result kept so a retry can skip compression.
+ * It lives outside `ThreadState`, which must not carry web byte buffers.
+ */
+type CompressionEntry = {
+  video: CompressedVideo
+  /** Frees a readable copy the output aliases; absent for caller-owned files. */
+  release?: () => void
+  /** Attempts still reading the output. Cleanup waits for them. */
+  readers: number
+  retired: boolean
+}
 
 function hasDimensions(value: {width?: number; height?: number}) {
   return Boolean(value.width && value.height)
@@ -143,6 +158,14 @@ export function createThreadStore({
    * publishes them. Weak keys drop entries whose blob nothing references.
    */
   const publishableVideos = new WeakMap<BlobRef, VideoTelemetry>()
+  /**
+   * Compression results by media ID. An item's source never changes (a
+   * replacement is a new item with a new ID) and caption or alt text edits do
+   * not affect compression, so the ID identifies a result. An entry is removed
+   * when the item is removed, a processed blob supersedes it, the item fails
+   * for good, or the store is destroyed.
+   */
+  const compressionCache = new Map<string, CompressionEntry>()
   /** The latest attempt's uploadId per video, linking restarts to it. */
   const videoUploadIds = new Map<string, string>()
   /** Replacing one attachment slot must not invalidate work in the other. */
@@ -308,6 +331,7 @@ export function createThreadStore({
         media: s.posts[postId].attachments.media,
       })) {
         cancelUploadTask(item.id, {abandoned: 'removed'})
+        retireCompression(item.id)
       }
       resolutionRevs.record.clearFor({key: postId})
       resolutionRevs.media.clearFor({key: postId})
@@ -359,6 +383,7 @@ export function createThreadStore({
       const next = items.filter(item => item.id !== mediaId)
       if (next.length === items.length) return null
       cancelUploadTask(mediaId, {abandoned: 'removed'})
+      retireCompression(mediaId)
       s.posts[postId] = replacePostMediaItems(post, next)
       s.isDirty = true
       return s
@@ -373,6 +398,7 @@ export function createThreadStore({
       resolutionRevs.media.incrementFor({key: postId})
       for (const item of getMediaItems({media: post.attachments.media})) {
         cancelUploadTask(item.id, {abandoned: 'removed'})
+        retireCompression(item.id)
       }
       s.posts[postId] = replacePostMedia(post, undefined)
       s.isDirty = true
@@ -640,10 +666,29 @@ export function createThreadStore({
               },
               uploadedVideoTelemetry:
                 item.videoBlob && publishableVideos.get(item.videoBlob),
+              acquireCompressedVideo: (p, m) => {
+                if (uploadTasks.get(m) !== registered) return undefined
+                const entry = compressionCache.get(m)
+                return entry && leaseCompression(m, entry)
+              },
+              retainCompressedVideo: (p, m, {video, release}) => {
+                if (uploadTasks.get(m) !== registered) return undefined
+                retireCompression(m)
+                const entry = {video, release, readers: 0, retired: false}
+                compressionCache.set(m, entry)
+                return leaseCompression(m, entry)
+              },
               setVideoTelemetry: (p, m, {telemetry, blob}) => {
                 if (uploadTasks.get(m) !== registered) return
                 videoUploadIds.set(m, telemetry.uploadId)
-                if (blob) publishableVideos.set(blob, telemetry)
+                if (!blob) return
+                /*
+                 * Register the telemetry before notifying subscribers: one
+                 * may restart this item, and the restart looks it up by blob.
+                 */
+                publishableVideos.set(blob, telemetry)
+                retireCompression(m)
+                applyVideoBlob(p, m, blob)
               },
               media: item,
             })
@@ -672,6 +717,51 @@ export function createThreadStore({
         )
       }
       throw cause
+    }
+  }
+
+  /** Lets an attempt read a retained output; cleanup waits for its release. */
+  function leaseCompression(
+    mediaId: string,
+    entry: CompressionEntry,
+  ): CompressedVideoLease {
+    entry.readers += 1
+    let released = false
+    return {
+      video: entry.video,
+      invalidate() {
+        if (compressionCache.get(mediaId) === entry) retireCompression(mediaId)
+      },
+      release() {
+        if (released) return
+        released = true
+        entry.readers -= 1
+        cleanUpCompression(entry)
+      },
+    }
+  }
+
+  /**
+   * Stops offering a retained result to later attempts. Readers already using
+   * it keep it until they release, so cancelling an attempt never deletes an
+   * output a non-abortable step is still reading.
+   */
+  function retireCompression(mediaId: string) {
+    const entry = compressionCache.get(mediaId)
+    if (!entry) return
+    compressionCache.delete(mediaId)
+    entry.retired = true
+    cleanUpCompression(entry)
+  }
+
+  function cleanUpCompression(entry: CompressionEntry) {
+    if (!entry.retired || entry.readers > 0) return
+    const {release} = entry
+    entry.release = undefined
+    try {
+      release?.()
+    } catch {
+      /* A leftover cache file is harmless. */
     }
   }
 
@@ -746,8 +836,14 @@ export function createThreadStore({
       item => item.id === mediaId,
     )
     if (!found || found.kind === 'gif') return
-    if (input.state === 'failed') cancelUploadTask(mediaId)
-    else if (input.state === 'uploaded') uploadTasks.delete(mediaId)
+    if (input.state === 'failed') {
+      cancelUploadTask(mediaId)
+      /* Nothing can retry a failure that is not retryable. */
+      if (input.retryable === false) retireCompression(mediaId)
+    } else if (input.state === 'uploaded') {
+      uploadTasks.delete(mediaId)
+      retireCompression(mediaId)
+    }
     const status: types.PostMediaUploadStatus =
       input.state === 'failed'
         ? input.retryable === false
@@ -817,6 +913,28 @@ export function createThreadStore({
         diagnostic?.cause,
       )
     }
+  }
+
+  /**
+   * Keep a processed video blob on the item while its captions upload, so a
+   * caption edit then restarts from it. The upload stays in progress: only the
+   * worker reports completion, after captions.
+   */
+  function applyVideoBlob(postId: string, mediaId: string, blob: BlobRef) {
+    mutateState(s => {
+      const post = s.posts[postId]
+      if (!post) return null
+      const items = getMediaItems({media: post.attachments.media})
+      const current = items.find(item => item.id === mediaId)
+      if (!current || current.kind !== 'video') return null
+      s.posts[postId] = replacePostMediaItems(
+        post,
+        items.map(item =>
+          item.id === mediaId ? {...current, videoBlob: blob} : item,
+        ),
+      )
+      return s
+    })
   }
 
   /**
@@ -1154,6 +1272,9 @@ export function createThreadStore({
     destroyed = true
     for (const task of uploadTasks.values()) task.cancel(options)
     uploadTasks.clear()
+    for (const mediaId of [...compressionCache.keys()]) {
+      retireCompression(mediaId)
+    }
     resolutionRevs.record.clearAll()
     resolutionRevs.media.clearAll()
     listeners.clear()
