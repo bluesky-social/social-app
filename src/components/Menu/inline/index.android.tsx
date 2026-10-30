@@ -170,7 +170,7 @@ export function InlineItem({
         destructive
           ? {
               textColor: t.palette.negative_500,
-              leadingIconColor: t.palette.negative_500,
+              trailingIconColor: t.palette.negative_500,
             }
           : undefined
       }
