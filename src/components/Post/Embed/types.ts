@@ -29,6 +29,12 @@ export type CommonProps = {
    */
   isQuoteTextMuted?: boolean
   /**
+   * The colour of card borders (quotes and their placeholders, links, feeds
+   * and lists) while they aren't hovered, for embeds on a background that
+   * `border_contrast_low` doesn't show against.
+   */
+  borderColor?: string
+  /**
    * The post that contains this embed. Used for analytics on photo embed
    * events (post:photoEmbed:*). When the embed has no owning post (e.g.
    * composer previews), leave this undefined and no events will be emitted.
