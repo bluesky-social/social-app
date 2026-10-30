@@ -56,6 +56,13 @@ export type Device = {
   mergedGeolocation?: Geolocation
 
   trendingBetaEnabled: boolean
+  /**
+   * Whether the user has opted in to on-device alt text generation in the
+   * composer. Deliberately tri-state: `undefined` means the user has never
+   * touched the setting, which is distinct from an explicit opt-out (`false`).
+   * Only `true` turns generation on.
+   */
+  altTextGenerationEnabled?: boolean
   devMode: boolean
   demoMode: boolean
   activitySubscriptionsNudged?: boolean
