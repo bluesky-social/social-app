@@ -1,22 +1,23 @@
-import * as MediaLibrary from 'expo-media-library/legacy'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useCameraPermission} from '#/lib/hooks/usePermissions'
+import {Asset, usePermissions} from '#/lib/media/media-library'
 import {openCamera} from '#/lib/media/picker'
 import {logger} from '#/logger'
 import {createComposerImage} from '#/state/gallery'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
-import {IS_NATIVE, IS_WEB_MOBILE} from '#/env'
+import {IS_ANDROID, IS_NATIVE, IS_WEB_MOBILE} from '#/env'
 import {type OpenCameraBtnProps} from './OpenCameraBtn.shared'
 
 export function OpenCameraBtn({disabled, onAdd}: OpenCameraBtnProps) {
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
-  const [mediaPermissionRes, requestMediaPermission] =
-    MediaLibrary.usePermissions({granularPermissions: ['photo']})
+  const [mediaPermissionRes, requestMediaPermission] = usePermissions({
+    granularPermissions: ['photo'],
+  })
   const t = useTheme()
 
   const mediaGranted = mediaPermissionRes?.granted
@@ -32,9 +33,11 @@ export function OpenCameraBtn({disabled, onAdd}: OpenCameraBtnProps) {
       if (!(await requestCameraAccessIfNeeded())) {
         return
       }
+      let canSaveToMediaLibrary = mediaGranted === true
       if (!mediaGranted) {
         if (mediaCanAskAgain) {
-          await requestMediaPermission()
+          const permission = await requestMediaPermission()
+          canSaveToMediaLibrary = permission.granted
         }
       }
 
@@ -45,10 +48,15 @@ export function OpenCameraBtn({disabled, onAdd}: OpenCameraBtnProps) {
         return
       }
 
-      // If we don't have permissions it's fine, we just wont save it. The post itself will still have access to
-      // the image even without these permissions
-      if (mediaPermissionRes) {
-        await MediaLibrary.createAssetAsync(img.path)
+      // Modern Android can save app-owned photos without library read access.
+      if (IS_ANDROID || canSaveToMediaLibrary) {
+        try {
+          await Asset.create(img.path)
+        } catch (err) {
+          logger.warn('Failed to save camera image to media library', {
+            safeMessage: err,
+          })
+        }
       }
 
       const res = await createComposerImage(img)
