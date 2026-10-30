@@ -234,7 +234,11 @@ const GalleryItem = ({
         onPress={onAltTextEdit}
         style={[styles.altTextControl, altTextControlStyle]}>
         {isGeneratingAltText ? (
-          <Loader width={10} fill={t.palette.white} />
+          /*
+           * Not `fill`: Loader styles the icon with a text colour, which the
+           * native icon view also reads as a tint, overriding `fill`.
+           */
+          <Loader width={10} style={{color: t.palette.white}} />
         ) : isGeneratedAltText(image) ? (
           <SparkleIcon width={10} style={{color: t.palette.white}} />
         ) : image.alt.length !== 0 ? (
