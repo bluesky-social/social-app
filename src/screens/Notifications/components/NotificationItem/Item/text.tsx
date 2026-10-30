@@ -40,29 +40,6 @@ export function PrimaryText({
 }
 
 /**
- * Muted supporting text, e.g. a preview of the post that was liked.
- */
-export function SecondaryText({
-  numberOfLines,
-  style,
-  children,
-}: {
-  numberOfLines?: number
-  style?: StyleProp<TextStyle>
-  children: React.ReactNode
-}) {
-  const t = useTheme()
-  return (
-    <Text
-      emoji
-      numberOfLines={numberOfLines}
-      style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium, style]}>
-      {children}
-    </Text>
-  )
-}
-
-/**
  * Emphasised inline text within `Item.PrimaryText`, e.g. "**3 others**".
  * Pass `style` to match smaller text around it, e.g. its size.
  */

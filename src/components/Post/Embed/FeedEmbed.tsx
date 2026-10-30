@@ -10,6 +10,7 @@ import {type CommonProps} from './types'
 
 export function FeedEmbed({
   embed,
+  borderColor,
 }: CommonProps & {
   embed: EmbedType<'feed'>
 }) {
@@ -17,7 +18,13 @@ export function FeedEmbed({
   return (
     <FeedCard.Link
       view={embed.view}
-      style={[a.border, t.atoms.border_contrast_low, a.p_sm, a.rounded_md]}>
+      style={[
+        a.border,
+        t.atoms.border_contrast_low,
+        borderColor !== undefined && {borderColor},
+        a.p_sm,
+        a.rounded_md,
+      ]}>
       <FeedCard.Outer>
         <FeedCard.Header>
           <FeedCard.Avatar src={embed.view.avatar} size={48} />
@@ -34,6 +41,7 @@ export function FeedEmbed({
 
 export function ModeratedFeedEmbed({
   embed,
+  borderColor,
 }: CommonProps & {
   embed: EmbedType<'feed'>
 }) {
@@ -47,7 +55,7 @@ export function ModeratedFeedEmbed({
     <ContentHider
       modui={moderation?.ui('contentList')}
       childContainerStyle={[a.pt_xs]}>
-      <FeedEmbed embed={embed} />
+      <FeedEmbed embed={embed} borderColor={borderColor} />
     </ContentHider>
   )
 }

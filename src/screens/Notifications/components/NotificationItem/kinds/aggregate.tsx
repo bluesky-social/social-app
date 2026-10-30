@@ -11,6 +11,10 @@ import {
   NotificationLikeSmall_Filled_Corner0_Rounded as HeartIcon,
   NotificationRepostSmall_Filled_Corner0_Rounded as RepostIcon,
 } from '#/components/icons/Notification'
+import {
+  CompactMedia,
+  getEmbedThumbnails,
+} from '#/components/Post/Embed/CompactMedia'
 import * as Item from '../Item'
 import {makeActivityListLink, makePostLink} from '../links'
 import {type NotificationOf} from '../types'
@@ -43,7 +47,7 @@ function PostReactionRow({
   children: React.ReactNode
 }) {
   const {post, actors} = notification
-  const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
+  const hasThumbnails = getEmbedThumbnails(post.embed).length > 0
   const mediaBlurred = Item.usePostMediaBlurred(post)
 
   return (
@@ -61,11 +65,7 @@ function PostReactionRow({
       </Item.Content>
       {hasThumbnails && (
         <Item.Trailing>
-          <Item.InlineImages
-            embed={post.embed}
-            size={60}
-            blurred={mediaBlurred}
-          />
+          <CompactMedia embed={post.embed} size={60} blurred={mediaBlurred} />
         </Item.Trailing>
       )}
     </Item.GroupRoot>
@@ -315,7 +315,7 @@ function MultiPostRow({
   const {actor, posts} = notification
   const [post] = posts
   const href = makeActivityListLink(posts.map(p => p.uri))
-  const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
+  const hasThumbnails = getEmbedThumbnails(post.embed).length > 0
   const mediaBlurred = Item.usePostMediaBlurred(post)
 
   return (
@@ -333,11 +333,7 @@ function MultiPostRow({
       </Item.Content>
       {hasThumbnails && (
         <Item.Trailing>
-          <Item.InlineImages
-            embed={post.embed}
-            size={60}
-            blurred={mediaBlurred}
-          />
+          <CompactMedia embed={post.embed} size={60} blurred={mediaBlurred} />
         </Item.Trailing>
       )}
     </Item.Root>
@@ -555,7 +551,7 @@ export function SubscribedPostNotification({
   const replyParent = count === 1 ? parent : undefined
   const {actor, name, second, secondName, others} =
     Item.useGroupNames(notification)
-  const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
+  const hasThumbnails = getEmbedThumbnails(post.embed).length > 0
   const mediaBlurred = Item.usePostMediaBlurred(post)
 
   return (
@@ -612,11 +608,7 @@ export function SubscribedPostNotification({
       </Item.Content>
       {hasThumbnails && (
         <Item.Trailing>
-          <Item.InlineImages
-            embed={post.embed}
-            size={60}
-            blurred={mediaBlurred}
-          />
+          <CompactMedia embed={post.embed} size={60} blurred={mediaBlurred} />
         </Item.Trailing>
       )}
     </Item.GroupRoot>
