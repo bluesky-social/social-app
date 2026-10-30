@@ -1,8 +1,7 @@
 import {useMemo} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {useHaptics} from '#/lib/haptics'
@@ -30,14 +29,20 @@ export const ExternalEmbed = ({
   post,
   style,
   hideAlt,
+  presentation = 'default',
 }: {
   link: app.bsky.embed.external.ViewExternal
   onOpen?: () => void
   post?: app.bsky.feed.defs.PostView
   style?: StyleProp<ViewStyle>
   hideAlt?: boolean
+  /**
+   * `compact` is a single row: a small square of the link's thumbnail
+   * beside its title and domain. It never plays media inline.
+   */
+  presentation?: 'default' | 'compact'
 }) => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const haptics = useHaptics()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
@@ -67,6 +72,17 @@ export const ExternalEmbed = ({
       }
     : undefined
 
+  if (presentation === 'compact') {
+    return (
+      <CompactExternalEmbed
+        link={link}
+        onPress={onPress}
+        onLongPress={onShareExternal}
+        style={style}
+      />
+    )
+  }
+
   if (
     embedPlayerParams?.source === 'tenor' ||
     embedPlayerParams?.source === 'klipy'
@@ -87,7 +103,7 @@ export const ExternalEmbed = ({
 
   return (
     <Link
-      label={link.title || _(msg`Open link to ${niceUrl}`)}
+      label={link.title || l`Open link to ${niceUrl}`}
       to={link.uri}
       shouldProxy={true}
       peek
@@ -191,6 +207,100 @@ export const ExternalEmbed = ({
                   {toNiceDomain(link.uri)}
                 </Text>
               </View>
+            </View>
+          </View>
+        </View>
+      )}
+    </Link>
+  )
+}
+
+function CompactExternalEmbed({
+  link,
+  onPress,
+  onLongPress,
+  style,
+}: {
+  link: app.bsky.embed.external.ViewExternal
+  onPress: () => void
+  onLongPress?: () => void
+  style?: StyleProp<ViewStyle>
+}) {
+  const {t: l} = useLingui()
+  const t = useTheme()
+  const niceUrl = toNiceDomain(link.uri)
+
+  return (
+    <Link
+      label={link.title || l`Open link to ${niceUrl}`}
+      to={link.uri}
+      shouldProxy={true}
+      peek
+      style={[a.rounded_md]}
+      onPress={onPress}
+      onLongPress={onLongPress}>
+      {({hovered, pressed}) => (
+        <View
+          style={[
+            a.transition_color,
+            a.flex_row,
+            a.align_center,
+            a.gap_sm,
+            a.p_sm,
+            a.rounded_md,
+            a.w_full,
+            a.border,
+            pressed && t.atoms.bg,
+            style,
+            hovered
+              ? t.atoms.border_contrast_high
+              : t.atoms.border_contrast_low,
+          ]}>
+          {link.thumb && (
+            <Image
+              // The card's corner radius, less its padding
+              style={[
+                a.rounded_xs,
+                t.atoms.bg_contrast_25,
+                {width: 48, height: 48},
+              ]}
+              source={{uri: link.thumb}}
+              accessibilityIgnoresInvertColors
+              loading="lazy"
+              useAppleWebpCodec
+              contentFit="cover"
+            />
+          )}
+          <View style={[a.flex_1, {gap: 3}]}>
+            <Text
+              emoji
+              numberOfLines={2}
+              style={[a.text_sm, a.font_semi_bold, a.leading_snug]}>
+              {link.title || link.uri}
+            </Text>
+            <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
+              <Globe
+                size="xs"
+                style={[
+                  a.transition_color,
+                  hovered
+                    ? t.atoms.text_contrast_medium
+                    : t.atoms.text_contrast_low,
+                ]}
+              />
+              <Text
+                numberOfLines={1}
+                style={[
+                  a.flex_shrink,
+                  a.transition_color,
+                  a.text_xs,
+                  a.leading_snug,
+                  hovered
+                    ? t.atoms.text_contrast_high
+                    : t.atoms.text_contrast_medium,
+                ]}>
+                {niceUrl}
+              </Text>
             </View>
           </View>
         </View>
