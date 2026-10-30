@@ -425,7 +425,7 @@ export function RecordPreview({
         embed={parsed}
         quotePresentation="compact"
         isQuoteTextMuted={isMuted}
-        style={{borderColor: getRowBorderColor(t, !isRead)}}
+        borderColor={getRowBorderColor(t, !isRead)}
       />
     </View>
   )

@@ -160,6 +160,7 @@ function MediaEmbed({
             post={rest.post}
             style={[a.mt_sm, rest.style]}
             presentation={presentation}
+            borderColor={rest.borderColor}
           />
         </ContentHider>
       )
@@ -223,6 +224,7 @@ function ExternalCardEmbed({
           post={rest.post}
           style={[a.mt_sm, rest.style]}
           presentation="compact"
+          borderColor={rest.borderColor}
         />
       ) : (
         <Card
@@ -257,7 +259,7 @@ export function RecordEmbed({
     case 'list': {
       return (
         <View style={a.mt_sm}>
-          <ModeratedListEmbed embed={embed} />
+          <ModeratedListEmbed embed={embed} borderColor={rest.borderColor} />
         </View>
       )
     }
@@ -289,20 +291,20 @@ export function RecordEmbed({
     }
     case 'post_not_found': {
       return (
-        <PostPlaceholderText>
+        <PostPlaceholderText borderColor={rest.borderColor}>
           <Trans>Deleted</Trans>
         </PostPlaceholderText>
       )
     }
     case 'post_blocked': {
       return (
-        <PostPlaceholderText>
+        <PostPlaceholderText borderColor={rest.borderColor}>
           <Trans>Blocked</Trans>
         </PostPlaceholderText>
       )
     }
     case 'post_detached': {
-      return <PostDetachedEmbed embed={embed} />
+      return <PostDetachedEmbed embed={embed} borderColor={rest.borderColor} />
     }
     default: {
       return null
@@ -312,8 +314,10 @@ export function RecordEmbed({
 
 export function PostDetachedEmbed({
   embed,
+  borderColor,
 }: {
   embed: EmbedType<'post_detached'>
+  borderColor?: string
 }) {
   const {currentAccount} = useSession()
   const isViewerOwner = currentAccount?.did
@@ -321,7 +325,7 @@ export function PostDetachedEmbed({
     : false
 
   return (
-    <PostPlaceholderText>
+    <PostPlaceholderText borderColor={borderColor}>
       {isViewerOwner ? (
         <Trans>Removed by you</Trans>
       ) : (
@@ -350,6 +354,7 @@ export function QuoteEmbed({
   viewContext,
   quotePresentation = 'default',
   isQuoteTextMuted = false,
+  borderColor,
 }: Omit<CommonProps, 'viewContext'> & {
   embed: EmbedType<'post'>
   viewContext?: PostEmbedViewContext
@@ -443,7 +448,8 @@ export function QuoteEmbed({
           isWithinQuote={parentIsWithinQuote ?? true}
           allowNestedQuotes={
             parentIsWithinQuote ? false : parentAllowNestedQuotes
-          }>
+          }
+          borderColor={borderColor}>
           {text}
         </CompactQuoteBody>
       ) : (
@@ -462,6 +468,7 @@ export function QuoteEmbed({
               // The photo embed belongs to the quoted post, so attribute its
               // analytics to the quoted post rather than the parent.
               post={quote}
+              borderColor={borderColor}
             />
           )}
         </>
@@ -477,7 +484,13 @@ export function QuoteEmbed({
         onPointerLeave={linkDisabled ? undefined : onPointerLeave}>
         <ContentHider
           modui={moderation?.ui('contentList')}
-          style={[a.rounded_md, a.border, t.atoms.border_contrast_low, style]}
+          style={[
+            a.rounded_md,
+            a.border,
+            t.atoms.border_contrast_low,
+            borderColor !== undefined && {borderColor},
+            style,
+          ]}
           activeStyle={[a.p_md, a.pt_sm]}
           childContainerStyle={[a.pt_sm]}>
           {({active}) => (
@@ -524,10 +537,15 @@ function CompactQuoteBody({
   viewContext,
   isWithinQuote,
   allowNestedQuotes,
+  borderColor,
   children,
 }: Pick<
   CommonProps,
-  'moderation' | 'viewContext' | 'isWithinQuote' | 'allowNestedQuotes'
+  | 'moderation'
+  | 'viewContext'
+  | 'isWithinQuote'
+  | 'allowNestedQuotes'
+  | 'borderColor'
 > & {
   quote: app.bsky.feed.defs.PostView
   /**
@@ -570,6 +588,7 @@ function CompactQuoteBody({
           moderation={moderation}
           viewContext={viewContext}
           post={quote}
+          borderColor={borderColor}
         />
       )}
       <RecordEmbed
@@ -579,6 +598,7 @@ function CompactQuoteBody({
         isWithinQuote={isWithinQuote}
         allowNestedQuotes={allowNestedQuotes}
         post={quote}
+        borderColor={borderColor}
       />
     </>
   )
