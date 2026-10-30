@@ -11,6 +11,7 @@ import {
   Icon,
   RNHostView,
   SelectableDropdownMenuItem,
+  Spacer,
   Text,
   type TextProps,
 } from '@expo/ui/jetpack-compose'
@@ -24,7 +25,7 @@ import {
 import {atoms as a, useAlf, useTheme} from '#/alf'
 import {useMaterialTheme} from '#/alf/material'
 import {normalizeTextStyles} from '#/alf/typography'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {type NanoGlyphName} from '#/components/icons/glyphMaps'
 import {
   InlineItemPositionContext,
@@ -55,11 +56,14 @@ const CHECK = drawable(Check.glyph)
 /** `MenuDefaults.LeadingIconSize` */
 const ICON_SIZE = 20
 
-/** Extra space between an item's text and its trailing icon. */
-const ICON_GAP = 12
-
 /** Our `sm` icon size, so the check sits lighter than the item icons. */
 const CHECK_SIZE = 16
+
+/**
+ * Centres the check in an icon-sized slot, so radio items' text lines up
+ * with icon items' text.
+ */
+const CHECK_INSET = (ICON_SIZE - CHECK_SIZE) / 2
 
 /** Keeps menus of short items from looking cramped. */
 const MIN_WIDTH = 200
@@ -153,8 +157,10 @@ export function InlineSection({title, divider, children}: InlineSectionProps) {
 }
 
 /**
- * A menu row, with its icon on the trailing side. Radio items are selectable
- * items, which show a leading check and a highlight when selected.
+ * A menu row, with its icon on the leading side. Radio items are selectable
+ * items, which show a leading check and a highlight when selected. Their
+ * leading slot is always there, so the text doesn't move when the check
+ * appears, and a radio item's icon goes on the trailing side.
  */
 export function InlineItem({
   title,
@@ -182,16 +188,7 @@ export function InlineItem({
     onPress()
   }
   const text = <Text style={textStyle}>{title}</Text>
-  /*
-   * Keeps the longest item's text off its icon. The `size` prop would apply
-   * before the padding and squeeze the glyph, so size it after.
-   */
-  const trailingIcon = icon && (
-    <Icon
-      source={icon}
-      modifiers={[padding(ICON_GAP, 0, 0, 0), size(ICON_SIZE, ICON_SIZE)]}
-    />
-  )
+  const itemIcon = icon && <Icon source={icon} size={ICON_SIZE} />
 
   if (selected !== undefined) {
     return (
@@ -201,28 +198,38 @@ export function InlineItem({
         enabled={!disabled}
         colors={{
           textColor: destructiveColor,
-          trailingContentColor: destructiveColor,
+          trailingContentColor: destructiveColor ?? t.atoms.text.color,
           selectedTextColor: destructiveColor,
-          selectedTrailingContentColor: destructiveColor,
+          selectedTrailingContentColor: destructiveColor ?? t.atoms.text.color,
         }}
         modifiers={modifiers}
         onClick={onClick}>
         <SelectableDropdownMenuItem.Text>
           {text}
         </SelectableDropdownMenuItem.Text>
-        {trailingIcon && (
-          <SelectableDropdownMenuItem.TrailingContent>
-            {trailingIcon}
-          </SelectableDropdownMenuItem.TrailingContent>
-        )}
+        <SelectableDropdownMenuItem.LeadingIcon>
+          <Spacer modifiers={[size(ICON_SIZE, ICON_SIZE)]} />
+        </SelectableDropdownMenuItem.LeadingIcon>
         {CHECK && (
           <SelectableDropdownMenuItem.SelectedLeadingIcon>
+            {/*
+             * The `size` prop would apply before the padding and squeeze the
+             * glyph, so size it after.
+             */}
             <Icon
               source={CHECK}
-              size={CHECK_SIZE}
               tint={t.palette.primary_500}
+              modifiers={[
+                padding(CHECK_INSET, CHECK_INSET, CHECK_INSET, CHECK_INSET),
+                size(CHECK_SIZE, CHECK_SIZE),
+              ]}
             />
           </SelectableDropdownMenuItem.SelectedLeadingIcon>
+        )}
+        {itemIcon && (
+          <SelectableDropdownMenuItem.TrailingContent>
+            {itemIcon}
+          </SelectableDropdownMenuItem.TrailingContent>
         )}
       </SelectableDropdownMenuItem>
     )
@@ -234,15 +241,13 @@ export function InlineItem({
       enabled={!disabled}
       elementColors={{
         textColor: destructiveColor,
-        trailingIconColor: destructiveColor,
+        leadingIconColor: destructiveColor ?? t.atoms.text.color,
       }}
       modifiers={modifiers}
       onClick={onClick}>
       <DropdownMenuItem.Text>{text}</DropdownMenuItem.Text>
-      {trailingIcon && (
-        <DropdownMenuItem.TrailingIcon>
-          {trailingIcon}
-        </DropdownMenuItem.TrailingIcon>
+      {itemIcon && (
+        <DropdownMenuItem.LeadingIcon>{itemIcon}</DropdownMenuItem.LeadingIcon>
       )}
     </DropdownMenuItem>
   )
