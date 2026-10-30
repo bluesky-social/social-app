@@ -15,6 +15,7 @@ import {getMessagesNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {emitPushNotificationOpened} from '#/state/events'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
+import {useMaybeMessagesEventBus} from '#/state/messages/events'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
 import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
 import {truncateAndInvalidate} from '#/state/queries/util'
@@ -120,6 +121,7 @@ export function useNotificationsHandler() {
   const {onPressSwitchAccount} = useAccountSwitcher()
   const navigation = useNavigation<NavigationProp>()
   const {currentConvoId} = useCurrentConvoId()
+  const messagesBus = useMaybeMessagesEventBus()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const {t: l} = useLingui()
@@ -314,6 +316,11 @@ export function useNotificationsHandler() {
           isChatNotificationPayload(payload) &&
           payload.recipientDid === currentAccount?.did
         ) {
+          // A chat push means new events probably exist - force an immediate
+          // poll so the convo list / open convo update without waiting for the
+          // next scheduled tick. No-op unless the bus is actively polling.
+          messagesBus?.pollNow()
+
           // chat-removed-from-group / chat-join-request-rejected always alert,
           // even if the recipient is currently viewing the affected convo -
           // they need to know they were removed/rejected.
@@ -428,6 +435,7 @@ export function useNotificationsHandler() {
     navigation,
     onPressSwitchAccount,
     setShowLoggedOut,
+    messagesBus,
   ])
 }
 
