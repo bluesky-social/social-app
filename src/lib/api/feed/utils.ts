@@ -1,3 +1,4 @@
+import {Platform} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 
 import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
@@ -18,12 +19,15 @@ export function createBskyTopicsHeader(userInterests?: string) {
 }
 
 /**
- * Only disclose IP-based service data to Bluesky-owned feeds, never GPS data.
+ * Only disclose platform and IP-based service data to Bluesky-owned feeds,
+ * never GPS data.
  * Read at request time so long-lived feed APIs pick up service updates.
  */
-export function createBskyGeolocationHeaders(feedUri: string) {
+export function createBskyFeedHeaders(feedUri: string) {
   const headers: Record<string, string> = {}
   if (!isBlueskyOwnedFeed(feedUri)) return headers
+
+  headers['x-atproto-bsky-platform'] = Platform.OS
 
   const geolocation = device.get(['geolocationServiceResponse'])
   if (geolocation?.countryCode) {

@@ -13,7 +13,7 @@ import {
 import {app} from '#/lexicons'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 import {
-  createBskyGeolocationHeaders,
+  createBskyFeedHeaders,
   createBskyTopicsHeader,
   isBlueskyOwnedFeed,
 } from './utils'
@@ -49,7 +49,7 @@ export class CustomFeedAPI implements FeedAPI {
       },
       {
         headers: {
-          ...createBskyGeolocationHeaders(this.params.feed),
+          ...createBskyFeedHeaders(this.params.feed),
           'Accept-Language': contentLangs,
         },
       },
@@ -86,7 +86,7 @@ export class CustomFeedAPI implements FeedAPI {
           {
             signal,
             headers: {
-              ...createBskyGeolocationHeaders(this.params.feed),
+              ...createBskyFeedHeaders(this.params.feed),
               ...(isBlueskyOwned
                 ? createBskyTopicsHeader(this.userInterests)
                 : {}),
@@ -192,7 +192,7 @@ async function getFeedOrNull(
       {
         signal,
         headers: {
-          ...createBskyGeolocationHeaders(params.feed),
+          ...createBskyFeedHeaders(params.feed),
           'Accept-Language': contentLangs,
         },
       },

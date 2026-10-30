@@ -16,7 +16,7 @@ import {
   type ReasonFeedSource,
 } from './types'
 import {
-  createBskyGeolocationHeaders,
+  createBskyFeedHeaders,
   createBskyTopicsHeader,
   isBlueskyOwnedFeed,
 } from './utils'
@@ -329,7 +329,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
         },
         {
           headers: {
-            ...createBskyGeolocationHeaders(this.feedUri),
+            ...createBskyFeedHeaders(this.feedUri),
             ...(isBlueskyOwned
               ? createBskyTopicsHeader(this.userInterests)
               : {}),

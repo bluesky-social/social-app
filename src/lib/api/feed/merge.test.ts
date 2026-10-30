@@ -1,3 +1,4 @@
+import {Platform} from 'react-native'
 import {type Client} from '@atproto/lex'
 
 import {DISCOVER_FEED_URI} from '#/lib/constants'
@@ -9,7 +10,7 @@ import {MergeFeedAPI} from './merge'
 const post = {} as app.bsky.feed.defs.FeedViewPost
 
 describe('MergeFeedAPI', () => {
-  it('sends service geolocation only to Bluesky-owned merged sources', async () => {
+  it('sends platform and service geolocation only to Bluesky-owned merged sources', async () => {
     const get = jest.spyOn(device, 'get').mockReturnValue({
       countryCode: 'JP',
       regionCode: '13',
@@ -39,6 +40,7 @@ describe('MergeFeedAPI', () => {
         expect.objectContaining({feed: DISCOVER_FEED_URI}),
         {
           headers: {
+            'x-atproto-bsky-platform': Platform.OS,
             'x-atproto-bsky-topics': 'music',
             'x-atproto-bsky-geo-country': 'JP',
             'x-atproto-bsky-geo-region': '13',

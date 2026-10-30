@@ -1,3 +1,4 @@
+import {Platform} from 'react-native'
 import {type Client} from '@atproto/lex'
 
 import {DISCOVER_FEED_URI} from '#/lib/constants'
@@ -29,7 +30,8 @@ beforeEach(() => fetchMock.mockReset())
 afterAll(() => fetchMock.mockRestore())
 
 const thirdPartyFeed = 'at://did:example:feed/app.bsky.feed.generator/test'
-const geoHeaders = {
+const feedHeaders = {
+  'x-atproto-bsky-platform': Platform.OS,
   'x-atproto-bsky-geo-country': 'JP',
   'x-atproto-bsky-geo-region': '13',
   'x-atproto-bsky-geo-city': '%E6%9D%B1%E4%BA%AC',
@@ -41,7 +43,7 @@ describe.each([
   ['following v2', FollowingV2CustomFeedAPI],
 ] as const)('CustomFeedAPI (%s)', (_name, CustomFeedAPI) => {
   it.each([DISCOVER_FEED_URI, thirdPartyFeed] as const)(
-    'gates geolocation headers for authenticated fetches and peeks: %s',
+    'gates platform and geolocation headers for authenticated fetches and peeks: %s',
     async feed => {
       const call = jest.fn().mockResolvedValue({feed: []})
       const api = new CustomFeedAPI({
@@ -55,7 +57,7 @@ describe.each([
 
       const owned = feed === DISCOVER_FEED_URI
       const headers = {
-        ...(owned ? geoHeaders : {}),
+        ...(owned ? feedHeaders : {}),
         'Accept-Language': '',
       }
       expect(call).toHaveBeenNthCalledWith(
@@ -103,7 +105,7 @@ describe.each([
   })
 
   it.each([DISCOVER_FEED_URI, thirdPartyFeed] as const)(
-    'preserves the cursor and gates geo headers on both logged-out attempts: %s',
+    'preserves the cursor and gates feed headers on both logged-out attempts: %s',
     async feed => {
       fetchMock
         .mockResolvedValueOnce(Response.json({feed: []}))
@@ -120,7 +122,7 @@ describe.each([
       expect(fetchMock).toHaveBeenCalledTimes(2)
       for (const [, init] of fetchMock.mock.calls) {
         const headers = new Headers(init?.headers)
-        for (const [key, value] of Object.entries(geoHeaders)) {
+        for (const [key, value] of Object.entries(feedHeaders)) {
           expect(headers.get(key)).toBe(
             feed === DISCOVER_FEED_URI ? value : null,
           )
