@@ -87,7 +87,10 @@ export type PostAction =
   | {type: 'update_labels'; labels: SelfLabel[]}
   | {type: 'embed_add_images'; images: ComposerImage[]}
   | {type: 'embed_update_image'; image: ComposerImage}
-  /** Fills in alt text for an image, unless it already has some. */
+  /**
+   * Sets suggested alt text for an image, unless the user has written their
+   * own. Replaces a previous suggestion the user hasn't edited.
+   */
   | {type: 'embed_add_generated_image_alt'; id: string; alt: string}
   | {type: 'embed_remove_image'; image: ComposerImage}
   | {
@@ -231,7 +234,13 @@ export function composerReducer(
       }
       return {
         ...state,
-        isDirty: true,
+        /*
+         * Suggestions aren't saved to drafts, so getting one doesn't give the
+         * user anything to save.
+         */
+        isDirty:
+          state.isDirty ||
+          action.postAction.type !== 'embed_add_generated_image_alt',
         thread: {
           ...state.thread,
           posts: nextPosts,
@@ -436,8 +445,9 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
         const nextMedia = {
           ...prevMedia,
           images: prevMedia.images.map(img => {
-            if (img.source.id === action.id && !img.alt) {
-              return {...img, alt: action.alt}
+            const isUnedited = !img.alt || img.alt === img.generatedAlt
+            if (img.source.id === action.id && isUnedited) {
+              return {...img, alt: action.alt, generatedAlt: action.alt}
             }
             return img
           }),

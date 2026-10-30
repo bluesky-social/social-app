@@ -22,6 +22,7 @@ import {
 import {type VideoState} from '#/view/com/composer/state/video'
 import {type AnalyticsContextType} from '#/analytics'
 import {getDeviceId} from '#/analytics/identifiers'
+import {isGeneratedAltText} from '#/features/altTextGeneration/utils'
 import {type Gif} from '#/features/gifPicker/types'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -199,7 +200,11 @@ function serializeImages(
         $type: 'app.bsky.draft.defs#draftEmbedLocalRef',
         path: localRefPath,
       },
-      alt: image.alt || undefined,
+      /*
+       * Unedited suggestions aren't saved. They're generated again when the
+       * draft is restored, so they keep showing up as suggestions.
+       */
+      alt: (!isGeneratedAltText(image) && image.alt) || undefined,
     }
   })
 }

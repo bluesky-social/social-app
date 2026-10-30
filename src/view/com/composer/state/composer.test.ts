@@ -82,10 +82,14 @@ describe('composerReducer', () => {
       })
     }
 
-    function getAlts(state: ReturnType<typeof createState>) {
+    function getImages(state: ReturnType<typeof createState>) {
       const media = state.thread.posts[0].embed.media
       if (media?.type !== 'images' && media?.type !== 'gallery') return []
-      return media.images.map(image => image.alt)
+      return media.images
+    }
+
+    function getAlts(state: ReturnType<typeof createState>) {
+      return getImages(state).map(image => image.alt)
     }
 
     it('fills in alt text for the matching image', () => {
@@ -102,6 +106,7 @@ describe('composerReducer', () => {
       })
 
       expect(getAlts(nextState)).toEqual(['', 'A dog'])
+      expect(getImages(nextState)[1].generatedAlt).toBe('A dog')
     })
 
     it('keeps alt text the user already wrote', () => {
@@ -118,6 +123,60 @@ describe('composerReducer', () => {
       })
 
       expect(getAlts(nextState)).toEqual(['My cat'])
+      expect(getImages(nextState)[0].generatedAlt).toBeUndefined()
+    })
+
+    it('replaces a suggestion the user has not edited', () => {
+      const state = withImages([
+        {...createImage('a', 'A dog'), generatedAlt: 'A dog'},
+      ])
+
+      const nextState = composerReducer(state, {
+        type: 'update_post',
+        postId: state.thread.posts[0].id,
+        postAction: {
+          type: 'embed_add_generated_image_alt',
+          id: 'a',
+          alt: 'Un chien',
+        },
+      })
+
+      expect(getAlts(nextState)).toEqual(['Un chien'])
+      expect(getImages(nextState)[0].generatedAlt).toBe('Un chien')
+    })
+
+    it('keeps a suggestion the user has edited', () => {
+      const state = withImages([
+        {...createImage('a', 'A good dog'), generatedAlt: 'A dog'},
+      ])
+
+      const nextState = composerReducer(state, {
+        type: 'update_post',
+        postId: state.thread.posts[0].id,
+        postAction: {
+          type: 'embed_add_generated_image_alt',
+          id: 'a',
+          alt: 'Un chien',
+        },
+      })
+
+      expect(getAlts(nextState)).toEqual(['A good dog'])
+    })
+
+    it('does not mark the composer as dirty', () => {
+      const state = {...withImages([createImage('a')]), isDirty: false}
+
+      const nextState = composerReducer(state, {
+        type: 'update_post',
+        postId: state.thread.posts[0].id,
+        postAction: {
+          type: 'embed_add_generated_image_alt',
+          id: 'a',
+          alt: 'A dog',
+        },
+      })
+
+      expect(nextState.isDirty).toBe(false)
     })
   })
 })

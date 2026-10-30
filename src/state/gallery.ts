@@ -41,6 +41,11 @@ type ComposerImageBase = {
   source: ImageSource
   /** Original localRef path from draft, if editing an existing draft. Used to reuse the same storage key. */
   localRefPath?: string
+  /**
+   * Alt text the on-device model suggested for this image, if any. While
+   * `alt` still matches it, the alt text is the unedited suggestion.
+   */
+  generatedAlt?: string
 }
 type ComposerImageWithoutTransformation = ComposerImageBase & {
   transformed?: undefined
@@ -128,6 +133,7 @@ export async function cropImage(img: ComposerImage): Promise<ComposerImage> {
 
     return {
       alt: img.alt,
+      generatedAlt: img.generatedAlt,
       source: source,
       transformed: {
         path: await moveIfNecessary(cropped.path),
