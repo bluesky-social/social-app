@@ -6,6 +6,7 @@ import {
   type FeedParams,
   type PostFeedData,
   RQKEY,
+  type SettleOutcome,
   usePostFeedSettle,
 } from './queries/postFeed'
 
@@ -57,10 +58,13 @@ export function useSettleAtTop(
   {
     enabled,
     onRestAtTop,
+    onSettled,
   }: {
     enabled: boolean
     /** The reader has come to rest at the true top. */
     onRestAtTop?: () => void
+    /** Called after each settle with how it ended. For metrics. */
+    onSettled?: (outcome: SettleOutcome | undefined) => void
   },
 ): SettleAtTopHandlers {
   const queryClient = useQueryClient()
@@ -84,7 +88,7 @@ export function useSettleAtTop(
     timeout.current = setTimeout(() => {
       timeout.current = undefined
       onRestAtTop?.()
-      void settle(before)
+      void settle(before).then(outcome => onSettled?.(outcome))
     }, SETTLE_QUIET_MS)
   }
 

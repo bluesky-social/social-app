@@ -481,6 +481,12 @@ export type PostFeedData = InfiniteData<FeedPageUnselected, RQPageParam>
 export function usePostFeedRefresh(
   feedDesc: FeedDescriptor,
   params?: FeedParams,
+  {
+    onOutcome,
+  }: {
+    /** How each refresh ended, for metrics. */
+    onOutcome?: (outcome: RefreshOutcome) => void
+  } = {},
 ) {
   const queryClient = useQueryClient()
   const {fetchPage} = usePostFeedFetcher(feedDesc)
@@ -500,8 +506,10 @@ export function usePostFeedRefresh(
         pages: [page],
         pageParams: [undefined],
       }))
+      onOutcome?.({outcome: wrote ? 'refreshed' : 'superseded'})
       return wrote ? page : undefined
     } catch (e) {
+      onOutcome?.({outcome: 'failed', isNetworkError: isNetworkError(e)})
       if (!isNetworkError(e)) {
         logger.error('Failed to refresh posts feed', {safeMessage: e})
       }
@@ -538,6 +546,17 @@ export function usePostFeedRefresh(
 }
 
 /**
+ * How a refresh (see {@link usePostFeedRefresh}) ended: it `refreshed` the
+ * feed, `failed` to fetch, or was `superseded`, writing nothing, as something
+ * else had replaced the top page or was fetching it.
+ */
+export type RefreshOutcome = {
+  outcome: 'refreshed' | 'superseded' | 'failed'
+  /** On failure, whether it was a network error. */
+  isNetworkError?: boolean
+}
+
+/**
  * When this JS process started. A page fetched before it was restored from
  * disk, which is how a restored top page is told from a fetched one without
  * marking it.
@@ -556,6 +575,51 @@ export const PREPEND_LIMIT = 40
  * a `hop`) offer what they find with the pill.
  */
 export type PrependTrigger = 'restore' | NewPostsCheckTrigger
+
+/**
+ * How a prepend's fetch (see {@link usePostFeedPrepend}) ended, for metrics
+ * (see `followingV2:prepend` for its fields). `outcome` is one of:
+ *
+ * - `staged`: it put the page above the reader.
+ * - `empty`: nothing newer came back, so there was nothing to write.
+ * - `keptFull`: it was to replace the staged page, but more was newer than a
+ *   page holds, so the staged page stays as it was, now full.
+ * - `refreshWon`: a refresh was in flight once the list was at rest, so it
+ *   dropped what it found.
+ * - `superseded`: the reader reached the staged page it was to replace, or
+ *   something else replaced the pages it depends on, so it dropped what it
+ *   found.
+ * - `failed`: the fetch failed.
+ */
+export type PrependOutcome = {
+  trigger: PrependTrigger
+  outcome:
+    'staged' | 'empty' | 'keptFull' | 'refreshWon' | 'superseded' | 'failed'
+  postCount: number
+  isReplacing: boolean
+  isFull: boolean
+  isNetworkError?: boolean
+}
+
+/** How a prepend that fetched ended, and the page it staged, if it did. */
+type Prepended = {
+  outcome: Exclude<PrependOutcome['outcome'], 'failed'>
+  page?: FeedPageUnselected
+}
+
+/**
+ * What a check (see {@link usePostFeedPrepend}) did:
+ *
+ * - `joined`: a prepend in flight, or owed to a restored top, answered it.
+ * - `skipped`: what's staged is full, so it made no request.
+ * - `nothing`: nothing was newer.
+ * - `staged`: it put `page` above the reader.
+ * - `notStaged`: it fetched newer posts but staged none of them, for the
+ *   reason its prepend reports (see {@link PrependOutcome}).
+ */
+export type PrependCheck =
+  | {outcome: 'joined' | 'skipped' | 'nothing' | 'notStaged'}
+  | {outcome: 'staged'; page: FeedPageUnselected}
 
 /**
  * The page a view's prepends put above where the reader was, which they
@@ -653,7 +717,8 @@ function isSameFeedItem(
  * runs a prepend only if that's not the one on top already. It makes no
  * request while the staged page is full. A check on a significant return to
  * the app offers what's staged even if it found nothing newer, or couldn't
- * tell. It's `undefined` when there's nothing to fetch above.
+ * tell. It resolves to what it did (see {@link PrependCheck}), and is
+ * `undefined` when there's nothing to fetch above.
  *
  * A top page fetched before this process started (see
  * {@link PROCESS_STARTED_AT}) is a restored one. The view prepends above it as
@@ -679,6 +744,7 @@ export function usePostFeedPrepend(
     topFetchedAt,
     listAtRest,
     isRefreshing,
+    onOutcome,
   }: {
     enabled: boolean
     /** The `fetchedAt` of the top page as rendered, if there is one. */
@@ -690,13 +756,15 @@ export function usePostFeedPrepend(
     listAtRest: () => Promise<void>
     /** Whether the view's refresh is in flight, which a prepend gives way to. */
     isRefreshing: () => boolean
+    /** How each prepend's fetch ended, for metrics. */
+    onOutcome?: (outcome: PrependOutcome) => void
   },
 ) {
   const queryClient = useQueryClient()
   const {createFeedApi, fetchPage} = usePostFeedFetcher(feedDesc)
   const queryKey = RQKEY(feedDesc, params)
   /** The prepend in progress, fetching or holding what it found. */
-  const pending = useRef<Promise<FeedPageUnselected | undefined>>(undefined)
+  const pending = useRef<Promise<Prepended>>(undefined)
   /** Whether the prepend in progress offers what it finds with the pill. */
   const isOffering = useRef(false)
   /** Whether this view has started a prepend, as a restored top needs once. */
@@ -753,8 +821,32 @@ export function usePostFeedPrepend(
   const prepend = async (
     before: PostFeedData,
     {since, replacing}: {since: string; replacing?: {fetchedAt: number}},
-  ) => {
-    const page = await fetchPage(undefined, {since, limit: PREPEND_LIMIT})
+    trigger: PrependTrigger,
+  ): Promise<Prepended> => {
+    const report = (
+      outcome: PrependOutcome['outcome'],
+      page?: FeedPageUnselected,
+      error?: unknown,
+    ) =>
+      onOutcome?.({
+        trigger,
+        outcome,
+        postCount: page?.feed.length ?? 0,
+        isReplacing: !!replacing,
+        isFull: !!page?.feed.length && page.cursor !== since,
+        ...(error !== undefined && {isNetworkError: isNetworkError(error)}),
+      })
+    const end = (outcome: Prepended['outcome'], page: FeedPageUnselected) => {
+      report(outcome, page)
+      return outcome === 'staged' ? {outcome, page} : {outcome}
+    }
+    const page = await fetchPage(undefined, {
+      since,
+      limit: PREPEND_LIMIT,
+    }).catch((e: unknown) => {
+      report('failed', undefined, e)
+      throw e
+    })
     /*
      * A bounded range always comes back with a cursor, the echo of `since` or
      * one into what it didn't return, so a page without one can't go above the
@@ -762,7 +854,7 @@ export function usePostFeedPrepend(
      */
     const {cursor} = page
     if (!page.feed.length || cursor === undefined) {
-      return undefined
+      return end('empty', page)
     }
     const isFull = cursor !== since
     if (replacing && isFull) {
@@ -771,14 +863,14 @@ export function usePostFeedPrepend(
       if (current?.fetchedAt === replacing.fetchedAt) {
         setStaged({...current, isFull})
       }
-      return undefined
+      return end('keptFull', page)
     }
     await listAtRest()
     if (
       isRefreshing() ||
       (replacing && stagedRef.current?.fetchedAt !== replacing.fetchedAt)
     ) {
-      return undefined
+      return end(isRefreshing() ? 'refreshWon' : 'superseded', page)
     }
     const count = replacing ? 1 : 0
     const wrote = await commit(
@@ -792,7 +884,7 @@ export function usePostFeedPrepend(
       {dependsOn: count + 1},
     )
     if (!wrote) {
-      return undefined
+      return end('superseded', page)
     }
     setStaged({
       fetchedAt: page.fetchedAt,
@@ -800,10 +892,10 @@ export function usePostFeedPrepend(
       offered: isOffering.current,
       isFull,
     })
-    return page
+    return end('staged', page)
   }
 
-  const run = (trigger: PrependTrigger) => {
+  const start = (trigger: PrependTrigger) => {
     const isOffered = trigger === 'restore' || trigger === 'return'
     if (pending.current) {
       isOffering.current ||= isOffered
@@ -816,12 +908,15 @@ export function usePostFeedPrepend(
     }
     hasStarted.current = true
     isOffering.current = isOffered
-    const prepending = prepend(before, target).finally(() => {
+    const prepending = prepend(before, target, trigger).finally(() => {
       pending.current = undefined
     })
     pending.current = prepending
     return prepending
   }
+
+  const run = (trigger: PrependTrigger) =>
+    start(trigger)?.then(({page}) => page)
 
   /** Offers the staged page with the pill, if there is one. */
   const offerStaged = () => {
@@ -837,10 +932,14 @@ export function usePostFeedPrepend(
     }
   }
 
-  const check = (trigger: NewPostsCheckTrigger) => {
+  const check = (
+    trigger: NewPostsCheckTrigger,
+  ): Promise<PrependCheck> | undefined => {
     if (isOwed()) {
       // The restore's prepend answers it, without a peek or a second fetch.
-      return run(pending.current ? trigger : 'restore')?.then(() => undefined)
+      return start(pending.current ? trigger : 'restore')?.then(() => ({
+        outcome: 'joined',
+      }))
     }
     const before = getData()
     const top = before?.pages[0]
@@ -848,24 +947,29 @@ export function usePostFeedPrepend(
       if (trigger === 'return') {
         offerStaged()
       }
-      return Promise.resolve(undefined)
+      return Promise.resolve({outcome: 'skipped'})
     }
     if (!before || !top || !targetOf(before)) {
       return undefined
     }
     return (async () => {
-      let page: FeedPageUnselected | undefined
+      let checked: PrependCheck = {outcome: 'nothing'}
       try {
         const latest = await createFeedApi().peekLatest({source: top.source})
         if (latest && !isSameFeedItem(latest, top.feed[0])) {
-          page = await run(trigger)
+          const prepended = await start(trigger)
+          if (prepended?.page) {
+            checked = {outcome: 'staged', page: prepended.page}
+          } else if (prepended && prepended.outcome !== 'empty') {
+            checked = {outcome: 'notStaged'}
+          }
         }
       } finally {
-        if (trigger === 'return' && !page) {
+        if (trigger === 'return' && checked.outcome !== 'staged') {
           offerStaged()
         }
       }
-      return page
+      return checked
     })()
   }
 
@@ -1045,7 +1149,7 @@ export function usePostFeedGapFill(
  * above the gap and dropping every page below it. That page's cursor goes on
  * into the gap, so ordinary pagination loads what's missing and nothing is
  * lost. A feed with no open gap is left as it is, so settling again writes
- * nothing. Resolves to whether it wrote.
+ * nothing. Resolves to how it ended, or `undefined` without an open gap.
  *
  * `before` is the data as it was when the reader came to rest at the top. The
  * write depends on its pages down to the one below the gap, so it gives way
@@ -1060,14 +1164,16 @@ export function usePostFeedSettle(
   const queryClient = useQueryClient()
   const queryKey = RQKEY(feedDesc, params)
 
-  return async (before: PostFeedData | undefined) => {
+  return async (
+    before: PostFeedData | undefined,
+  ): Promise<SettleOutcome | undefined> => {
     const index =
       before?.pages.findIndex((_, i) => gapBelow(before.pages, i) === 'open') ??
       -1
     if (!before || index === -1) {
-      return false
+      return undefined
     }
-    return commit(
+    const wrote = await commit(
       queryClient,
       queryKey,
       before,
@@ -1077,7 +1183,20 @@ export function usePostFeedSettle(
       }),
       {dependsOn: index + 2},
     )
+    return wrote
+      ? {outcome: 'settled', droppedPageCount: before.pages.length - index - 1}
+      : {outcome: 'superseded', droppedPageCount: 0}
   }
+}
+
+/**
+ * How a settle (see {@link usePostFeedSettle}) ended: it cut the feed, dropping
+ * `droppedPageCount` pages, or was `superseded`, writing nothing, as something
+ * had replaced the pages it depends on.
+ */
+export type SettleOutcome = {
+  outcome: 'settled' | 'superseded'
+  droppedPageCount: number
 }
 
 /** Whether a page fetched at `fetchedAt` was restored from disk. */
