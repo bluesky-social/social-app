@@ -60,7 +60,7 @@ jobs:
           no-cache: true
 
       - name: 🤖 Claude review
-        uses: anthropics/claude-code-action@1d6de8cb0c237e7c15e9e1bdf973826ebae490cc # v1.0.248
+        uses: anthropics/claude-code-action@db77d4d3c98f3f6380e7cd45ffba2342a3dbde3c # v1.0.254
         env:
           ANTHROPIC_BASE_URL: https://agentgateway.k1.prod.bsky.dev
         with:
