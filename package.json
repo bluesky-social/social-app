@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.137.0",
+  "version": "1.138.0",
   "private": true,
   "sideEffects": [
     "*.css",
