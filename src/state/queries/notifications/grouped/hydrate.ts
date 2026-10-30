@@ -1,4 +1,4 @@
-import {type DidString} from '@atproto/syntax'
+import {type AtUriString, type DidString} from '@atproto/syntax'
 
 import {
   type ActorGroup,
@@ -7,6 +7,7 @@ import {
   type NonEmptyArray,
   type NotificationView,
   type ParentPost,
+  type PostGroup,
 } from '#/state/queries/notifications/grouped/types'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -211,7 +212,12 @@ function hydrateGroup(
       }),
     )
     if (!items) return
-    return {...base, type: 'subscribedPost', items}
+    return {
+      ...base,
+      type: 'subscribedPost',
+      items,
+      postUris: resolvePostUris(kind.items, ctx),
+    }
   }
 
   if (bsky.isType(defs.generatorLikeGroup, kind)) {
@@ -307,9 +313,11 @@ function resolveActor(did: string, ctx: Context): ProfileView | undefined {
  * posts that don't resolve. Undefined if the actor or every post is missing.
  */
 function resolveMultiPost(
-  kind: {actor: string; items: {post: string}[]},
+  kind: {actor: string; items: {post: AtUriString}[]},
   ctx: Context,
-): {actor: ProfileView; posts: NonEmptyArray<PostView>} | undefined {
+):
+  | ({actor: ProfileView; posts: NonEmptyArray<PostView>} & PostGroup)
+  | undefined {
   const actor = resolveActor(kind.actor, ctx)
   const posts = nonEmpty(
     kind.items.flatMap(item => {
@@ -318,7 +326,22 @@ function resolveMultiPost(
     }),
   )
   if (!actor || !posts) return
-  return {actor, posts}
+  return {actor, posts, postUris: resolvePostUris(kind.items, ctx)}
+}
+
+/**
+ * Every post uri in a group, for the activity list. The API only includes
+ * views for the newest 10 posts per group, so posts without a view are kept,
+ * and only those known to be blocked or deleted are dropped.
+ */
+function resolvePostUris(
+  items: {post: AtUriString}[],
+  ctx: Context,
+): AtUriString[] {
+  return items.flatMap(item => {
+    const entry = ctx.posts.get(item.post)
+    return !entry || entry.type === 'post' ? [item.post] : []
+  })
 }
 
 /**

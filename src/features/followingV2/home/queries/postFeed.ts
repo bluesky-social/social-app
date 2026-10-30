@@ -1221,7 +1221,7 @@ function createApi({
     const [__, uriList] = feedDesc.split('|')
     return new PostListFeedAPI({
       client,
-      feedParams: {uris: uriList.split(',') as AtUriString[]},
+      feedParams: {uris: uriList.split(',').filter(Boolean) as AtUriString[]},
     })
   } else if (feedDesc === 'demo') {
     return new DemoFeedAPI({client})
