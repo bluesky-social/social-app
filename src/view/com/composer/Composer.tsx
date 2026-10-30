@@ -1495,6 +1495,7 @@ export const ComposePost = ({
                   onClearVideo={clearVideo}
                   onPublish={onComposerPostPublish}
                   onError={setError}
+                  currentLanguages={currentLanguages}
                 />
                 {IS_WEBFooterSticky && post.id === activePost.id && (
                   <View style={styles.stickyFooterWeb}>{footer}</View>
@@ -1591,6 +1592,7 @@ let ComposerPost = memo(function ComposerPost({
   onSelectVideo,
   onError,
   onPublish,
+  currentLanguages,
 }: {
   post: PostDraft
   dispatch: (action: ComposerAction) => void
@@ -1609,6 +1611,7 @@ let ComposerPost = memo(function ComposerPost({
   ) => void | Promise<void>
   onError: (error: string) => void
   onPublish: (richtext: RichText) => void
+  currentLanguages: string[]
 }) {
   const {currentAccount} = useSession()
   const currentDid = currentAccount!.did
@@ -1777,6 +1780,7 @@ let ComposerPost = memo(function ComposerPost({
         dispatch={dispatchPost}
         clearVideo={() => onClearVideo(post.id)}
         isActivePost={isActive}
+        currentLanguages={currentLanguages}
       />
     </View>
   )
@@ -1934,18 +1938,24 @@ function ComposerEmbeds({
   clearVideo,
   canRemoveQuote,
   isActivePost,
+  currentLanguages,
 }: {
   embed: EmbedDraft
   dispatch: (action: PostAction) => void
   clearVideo: () => void
   canRemoveQuote: boolean
   isActivePost: boolean
+  currentLanguages: string[]
 }) {
   const video = embed.media?.type === 'video' ? embed.media.video : null
   return (
     <>
       {(embed.media?.type === 'images' || embed.media?.type === 'gallery') && (
-        <Gallery images={embed.media.images} dispatch={dispatch} />
+        <Gallery
+          images={embed.media.images}
+          dispatch={dispatch}
+          postLanguages={currentLanguages}
+        />
       )}
 
       {embed.media?.type === 'gif' && (

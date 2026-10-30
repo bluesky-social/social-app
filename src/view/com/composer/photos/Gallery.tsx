@@ -11,9 +11,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Dimensions} from '#/lib/media/types'
@@ -26,10 +24,12 @@ import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Che
 import {Pencil_Stroke2_Corner0_Rounded as PencilIcon} from '#/components/icons/Pencil'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {TimesLarge_Stroke2_Corner0_Rounded as TimesIcon} from '#/components/icons/Times'
+import {Loader} from '#/components/Loader'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
+import {useGeneratedAltText} from '#/features/altTextGeneration'
 import {type PostAction} from '../state/composer'
 import {EditImageDialog} from './EditImageDialog'
 import {ImageAltTextDialog} from './ImageAltTextDialog'
@@ -39,6 +39,7 @@ const IMAGE_GAP = 8
 interface GalleryProps {
   images: ComposerImage[]
   dispatch: (action: PostAction) => void
+  postLanguages: string[]
 }
 
 export let Gallery = (props: GalleryProps): React.ReactNode => {
@@ -66,7 +67,12 @@ interface GalleryInnerProps extends GalleryProps {
   containerInfo: Dimensions
 }
 
-const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
+const GalleryInner = ({
+  images,
+  containerInfo,
+  dispatch,
+  postLanguages,
+}: GalleryInnerProps) => {
   const {isMobile} = useWebMediaQueries()
 
   const {altTextControlStyle, imageControlsStyle, imageStyle} = useMemo(() => {
@@ -115,8 +121,16 @@ const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
               altTextControlStyle={altTextControlStyle}
               imageControlsStyle={imageControlsStyle}
               imageStyle={imageStyle}
+              postLanguages={postLanguages}
               onChange={next => {
                 dispatch({type: 'embed_update_image', image: next})
+              }}
+              onAltTextGenerated={alt => {
+                dispatch({
+                  type: 'embed_add_generated_image_alt',
+                  id: image.source.id,
+                  alt,
+                })
               }}
               onRemove={() => {
                 dispatch({type: 'embed_remove_image', image})
@@ -142,7 +156,9 @@ type GalleryItemProps = {
   altTextControlStyle?: ViewStyle
   imageControlsStyle?: ViewStyle
   imageStyle?: ImageStyle
+  postLanguages: string[]
   onChange: (next: ComposerImage) => void
+  onAltTextGenerated: (alt: string) => void
   onRemove: () => void
 }
 
@@ -151,12 +167,19 @@ const GalleryItem = ({
   altTextControlStyle,
   imageControlsStyle,
   imageStyle,
+  postLanguages,
   onChange,
+  onAltTextGenerated,
   onRemove,
 }: GalleryItemProps): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const ax = useAnalytics()
+  const isGeneratingAltText = useGeneratedAltText({
+    image,
+    postLanguages,
+    onGenerated: onAltTextGenerated,
+  })
 
   const altTextControl = Dialog.useDialogControl()
   const editControl = Dialog.useDialogControl()
@@ -198,11 +221,15 @@ const GalleryItem = ({
       <TouchableOpacity
         testID="altTextButton"
         accessibilityRole="button"
-        accessibilityLabel={_(msg`Add alt text`)}
+        accessibilityLabel={
+          isGeneratingAltText ? l`Generating alt text` : l`Add alt text`
+        }
         accessibilityHint=""
         onPress={onAltTextEdit}
         style={[styles.altTextControl, altTextControlStyle]}>
-        {image.alt.length !== 0 ? (
+        {isGeneratingAltText ? (
+          <Loader width={10} fill={t.palette.white} />
+        ) : image.alt.length !== 0 ? (
           <CheckIcon width={10} style={{color: t.palette.white}} />
         ) : (
           <PlusIcon width={10} style={{color: t.palette.white}} />
@@ -215,7 +242,7 @@ const GalleryItem = ({
         <TouchableOpacity
           testID="editPhotoButton"
           accessibilityRole="button"
-          accessibilityLabel={_(msg`Edit image`)}
+          accessibilityLabel={l`Edit image`}
           accessibilityHint=""
           onPress={onImageEdit}
           style={styles.imageControl}>
@@ -224,7 +251,7 @@ const GalleryItem = ({
         <TouchableOpacity
           testID="removePhotoButton"
           accessibilityRole="button"
-          accessibilityLabel={_(msg`Remove image`)}
+          accessibilityLabel={l`Remove image`}
           accessibilityHint=""
           onPress={onRemove}
           style={styles.imageControl}>
@@ -233,7 +260,7 @@ const GalleryItem = ({
       </View>
       <TouchableOpacity
         accessibilityRole="button"
-        accessibilityLabel={_(msg`Add alt text`)}
+        accessibilityLabel={l`Add alt text`}
         accessibilityHint=""
         onPress={onAltTextEdit}
         style={styles.altTextHiddenRegion}

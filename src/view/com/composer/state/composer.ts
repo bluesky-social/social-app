@@ -87,6 +87,8 @@ export type PostAction =
   | {type: 'update_labels'; labels: SelfLabel[]}
   | {type: 'embed_add_images'; images: ComposerImage[]}
   | {type: 'embed_update_image'; image: ComposerImage}
+  /** Fills in alt text for an image, unless it already has some. */
+  | {type: 'embed_add_generated_image_alt'; id: string; alt: string}
   | {type: 'embed_remove_image'; image: ComposerImage}
   | {
       type: 'embed_add_video'
@@ -413,6 +415,29 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
           images: prevMedia.images.map(img => {
             if (img.source.id === updatedImage.source.id) {
               return updatedImage
+            }
+            return img
+          }),
+        }
+        return {
+          ...state,
+          embed: {
+            ...state.embed,
+            media: nextMedia,
+          },
+        }
+      }
+      return state
+    }
+    case 'embed_add_generated_image_alt': {
+      const prevMedia = state.embed.media
+      if (prevMedia?.type === 'images' || prevMedia?.type === 'gallery') {
+        // Never overwrite alt text the user wrote while generation ran
+        const nextMedia = {
+          ...prevMedia,
+          images: prevMedia.images.map(img => {
+            if (img.source.id === action.id && !img.alt) {
+              return {...img, alt: action.alt}
             }
             return img
           }),

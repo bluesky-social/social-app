@@ -1,3 +1,4 @@
+import {type ComposerImage} from '#/state/gallery'
 import {composerReducer, createComposerState} from './composer'
 
 jest.mock('#/state/gallery', () => ({
@@ -55,6 +56,68 @@ describe('composerReducer', () => {
       expect(nextState.thread.posts[2].id).not.toBe(lastPostId)
       expect(nextState.thread.posts[3].id).toBe(lastPostId)
       expect(nextState.mutableNeedsFocusActive).toBe(true)
+    })
+  })
+
+  describe('embed_add_generated_image_alt', () => {
+    function createImage(id: string, alt = ''): ComposerImage {
+      return {
+        alt,
+        source: {
+          id,
+          path: `file:///cache/${id}.jpg`,
+          width: 100,
+          height: 100,
+          mime: 'image/jpeg',
+        },
+      }
+    }
+
+    function withImages(images: ComposerImage[]) {
+      const state = createState()
+      return composerReducer(state, {
+        type: 'update_post',
+        postId: state.thread.posts[0].id,
+        postAction: {type: 'embed_add_images', images},
+      })
+    }
+
+    function getAlts(state: ReturnType<typeof createState>) {
+      const media = state.thread.posts[0].embed.media
+      if (media?.type !== 'images' && media?.type !== 'gallery') return []
+      return media.images.map(image => image.alt)
+    }
+
+    it('fills in alt text for the matching image', () => {
+      const state = withImages([createImage('a'), createImage('b')])
+
+      const nextState = composerReducer(state, {
+        type: 'update_post',
+        postId: state.thread.posts[0].id,
+        postAction: {
+          type: 'embed_add_generated_image_alt',
+          id: 'b',
+          alt: 'A dog',
+        },
+      })
+
+      expect(getAlts(nextState)).toEqual(['', 'A dog'])
+    })
+
+    it('keeps alt text the user already wrote', () => {
+      const state = withImages([createImage('a', 'My cat')])
+
+      const nextState = composerReducer(state, {
+        type: 'update_post',
+        postId: state.thread.posts[0].id,
+        postAction: {
+          type: 'embed_add_generated_image_alt',
+          id: 'a',
+          alt: 'A dog',
+        },
+      })
+
+      expect(getAlts(nextState)).toEqual(['My cat'])
     })
   })
 })
