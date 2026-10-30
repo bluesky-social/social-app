@@ -4,16 +4,18 @@ import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
-import {sanitizeHandle} from '#/lib/strings/handles'
+import {forceLTR} from '#/lib/strings/bidi'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
-import {AvatarStack} from '#/components/AvatarStack'
 import {Text, type TextProps} from '#/components/Typography'
-import {ACTIVITY_ROW_AVATAR_SIZE} from '../constants'
+import {
+  ACTIVITY_ROW_CONTENT_INSET,
+  ACTIVITY_ROW_PADDING_START,
+} from '../constants'
 import {type ActivityPresentationProps} from '../presentation'
+import {ActivityHandle, useActivityDisplayName} from './ActivityIdentity'
 import {ActivityInlineLinkText} from './ActivityInlineLinkText'
-
-const MAX_ACTIVITY_HEADER_AVATARS = 5
+import {ActivityRowContent} from './ActivityPrimitives'
 
 export function ActivityRow({
   children,
@@ -23,7 +25,7 @@ export function ActivityRow({
   testID?: string
 }>) {
   return (
-    <View style={a.gap_sm} testID={testID}>
+    <View style={a.gap_md} testID={testID}>
       {children}
     </View>
   )
@@ -32,17 +34,20 @@ export function ActivityRow({
 export function ActivityRowHeader({
   computedItemView,
   item,
+  actions,
   children,
-}: React.PropsWithChildren<ActivityPresentationProps>) {
+}: React.PropsWithChildren<
+  ActivityPresentationProps & {actions?: React.ReactNode}
+>) {
   const {t: l} = useLingui()
   const t = useTheme()
   const actors = computedItemView.actors
   const primaryActor = actors[0]
+  const primaryLabel = useActivityDisplayName(primaryActor)
   if (!primaryActor) {
     return null
   }
 
-  const primaryLabel = sanitizeHandle(primaryActor.handle, '@')
   const othersCount =
     item.type === 'group' && item.group.groupBy === 'subject'
       ? actors.length - 1
@@ -65,31 +70,33 @@ export function ActivityRowHeader({
   return (
     <TimeElapsed timestamp={timestamp}>
       {({timeElapsed}) => (
-        <View style={[a.flex_row, a.align_center, a.gap_md, a.px_xl]}>
-          <AvatarStack
-            profiles={actors.slice(0, MAX_ACTIVITY_HEADER_AVATARS)}
-            size={ACTIVITY_ROW_AVATAR_SIZE}
+        <View style={[a.pr_lg, {paddingLeft: ACTIVITY_ROW_PADDING_START}]}>
+          <ActivityRowContent
+            actors={actors}
+            actions={actions}
+            header={
+              <>
+                <ActivityRowHeaderText
+                  accessibilityHint=""
+                  accessibilityLabel={`${actionLabel} · ${timeElapsed}`}
+                  emoji>
+                  <ActivityInlineLinkText
+                    label={l`View ${primaryLabel}’s profile`}
+                    to={makeProfileLink({
+                      did: primaryActor.did,
+                      handle: primaryActor.handle,
+                    })}>
+                    {forceLTR(primaryLabel)}
+                  </ActivityInlineLinkText>
+                  {othersLabel ? ` ${othersLabel}` : ''} {children}
+                  <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                    {` · ${timeElapsed}`}
+                  </Text>
+                </ActivityRowHeaderText>
+                <ActivityHandle actor={primaryActor} />
+              </>
+            }
           />
-          <View style={[a.flex_1, a.justify_center]}>
-            <ActivityRowHeaderText
-              accessibilityHint=""
-              accessibilityLabel={`${actionLabel} · ${timeElapsed}`}
-              numberOfLines={2}
-              emoji>
-              <ActivityInlineLinkText
-                label={l`View ${primaryLabel}’s profile`}
-                to={makeProfileLink({
-                  did: primaryActor.did,
-                  handle: primaryActor.handle,
-                })}>
-                {primaryLabel}
-              </ActivityInlineLinkText>
-              {othersLabel ? ` ${othersLabel}` : ''} {children}
-              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-                {` · ${timeElapsed}`}
-              </Text>
-            </ActivityRowHeaderText>
-          </View>
         </View>
       )}
     </TimeElapsed>
@@ -100,7 +107,7 @@ export function ActivityRowHeaderText({style, ...rest}: TextProps) {
   const t = useTheme()
 
   return (
-    <Text {...rest} style={[a.text_sm, a.leading_snug, t.atoms.text, style]} />
+    <Text {...rest} style={[a.text_md, a.leading_snug, t.atoms.text, style]} />
   )
 }
 
@@ -109,7 +116,11 @@ export function ActivityRowBody({children}: React.PropsWithChildren<{}>) {
     return null
   }
 
-  return <View style={a.px_xl}>{children}</View>
+  return (
+    <View style={[a.pr_lg, {paddingLeft: ACTIVITY_ROW_CONTENT_INSET}]}>
+      {children}
+    </View>
+  )
 }
 
 function getActivityRowText(node: React.ReactNode): string {

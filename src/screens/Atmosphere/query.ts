@@ -1,5 +1,9 @@
 import {AtUri, type DidString, isValidDid} from '@atproto/syntax'
-import {useInfiniteQuery} from '@tanstack/react-query'
+import {
+  type InfiniteData,
+  type QueryClient,
+  useInfiniteQuery,
+} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {createQueryKey} from '#/state/queries/util'
@@ -81,4 +85,22 @@ export function useAtmosphereQuery() {
     getNextPageParam: page => page.cursor,
     staleTime: STALE.SECONDS.FIFTEEN,
   })
+}
+
+/** Keeps activity actors in sync with optimistic account moderation changes. */
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<ActivityActor, void> {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<AtmosphereActivityPage>
+  >({
+    queryKey: [useAtmosphereQueryRoot],
+  })
+  for (const [, data] of queryDatas) {
+    for (const page of data?.pages ?? []) {
+      const actor = page.actors[did]
+      if (actor) yield actor
+    }
+  }
 }

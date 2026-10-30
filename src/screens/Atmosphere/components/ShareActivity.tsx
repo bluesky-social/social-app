@@ -3,9 +3,8 @@ import {Image} from 'expo-image'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
-import {makeProfileLink} from '#/lib/routes/links'
-import {sanitizeHandle} from '#/lib/strings/handles'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
+import {ACTIVITY_ROW_PADDING_START} from '#/screens/Atmosphere/constants'
 import {getArticleExternalView} from '#/screens/Atmosphere/externalViews'
 import {getRecordActor} from '#/screens/Atmosphere/presentation'
 import {getFirstActivity} from '#/screens/Atmosphere/relationships'
@@ -15,23 +14,25 @@ import {
   getShareActivities,
 } from '#/screens/Atmosphere/rowLayout'
 import {type ActivityActor} from '#/screens/Atmosphere/types'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ShareIcon} from '#/components/icons/ArrowOutOfBox'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
+import {ActivityByline} from './ActivityIdentity'
 import {
   ActivityActorLine,
   ActivityCard,
   ActivityFootnote,
+  ActivityRowContent,
 } from './ActivityPrimitives'
-import {DocumentMenuPlaceholder} from './DocumentMenu'
 import {ShareSnippets} from './ShareSnippets'
 
 export function ShareActivityRenderer({
   item,
   computedItemView,
   testID,
+  actions,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
   const first = getFirstActivity(item)
@@ -58,34 +59,39 @@ export function ShareActivityRenderer({
   const isMultiple = shares.length > 1
 
   return (
-    <View testID={testID} style={a.px_xl}>
+    <View
+      testID={testID}
+      style={[a.pr_lg, {paddingLeft: ACTIVITY_ROW_PADDING_START}]}>
       {shares.length > 0 ? (
-        <View testID="atmosphereShareCard">
-          <ActivityCard>
-            <View style={[a.flex_row, a.align_start, a.gap_sm]}>
-              <View style={a.flex_1}>
-                <ActivityActorLine
-                  actors={actors}
-                  action={l`shared`}
-                  timestamp={timestamp}
+        <ActivityRowContent
+          actors={actors}
+          icon={ShareIcon}
+          actions={actions}
+          header={
+            <ActivityActorLine
+              actors={actors}
+              action={l`shared`}
+              timestamp={timestamp}
+              showAvatars={false}
+            />
+          }>
+          <View testID="atmosphereShareCard">
+            <ActivityCard>
+              {!isMultiple ? (
+                <ShareSnippets shares={shares} showActorMetadata={false} />
+              ) : null}
+              <View style={[!isMultiple && a.pt_md]}>
+                <ShareDocumentPreview
+                  view={view}
+                  title={title}
+                  suffix={suffix}
+                  author={author}
                 />
               </View>
-              <DocumentMenuPlaceholder />
-            </View>
-            {!isMultiple ? (
-              <ShareSnippets shares={shares} showActorMetadata={false} />
-            ) : null}
-            <View style={[a.pt_md]}>
-              <ShareDocumentPreview
-                view={view}
-                title={title}
-                suffix={suffix}
-                author={author}
-              />
-            </View>
-            {isMultiple ? <ShareSnippets shares={shares} /> : null}
-          </ActivityCard>
-        </View>
+              {isMultiple ? <ShareSnippets shares={shares} /> : null}
+            </ActivityCard>
+          </View>
+        </ActivityRowContent>
       ) : (
         <ActivityFootnote
           title={l`Post unavailable`}
@@ -94,6 +100,7 @@ export function ShareActivityRenderer({
           action={l`shared`}
           timestamp={timestamp}
           suffix={suffix}
+          actions={actions}
         />
       )}
     </View>
@@ -113,11 +120,9 @@ function ShareDocumentPreview({
   author?: ActivityActor
 }) {
   const t = useTheme()
-  const {t: l} = useLingui()
   const sourceTitle = view
     ? view.source?.title || toNiceDomain(view.uri)
     : undefined
-  const {gtPhone} = useBreakpoints()
   const content = (
     <View
       testID="atmosphereShareDocumentPreview"
@@ -127,7 +132,7 @@ function ShareDocumentPreview({
           <InlineLinkText
             to={view.uri}
             label={title}
-            style={[t.atoms.text, a.text_lg, a.font_semi_bold, a.leading_snug]}
+            style={[a.text_md, a.font_semi_bold, a.leading_snug, t.atoms.text]}
             numberOfLines={3}>
             {title}
           </InlineLinkText>
@@ -135,19 +140,19 @@ function ShareDocumentPreview({
           <Text
             emoji
             numberOfLines={3}
-            style={[a.text_lg, a.font_semi_bold, a.leading_snug]}>
+            style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
             {title}
           </Text>
         )}
         {suffix ? (
-          <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
             {suffix}
           </Text>
         ) : null}
         {view ? (
           <View
             testID="atmosphereShareDocumentByline"
-            style={[a.flex_row, a.align_center, a.gap_xs, {minWidth: 0}]}>
+            style={[a.gap_sm, {minWidth: 0}]}>
             {sourceTitle ? (
               <InlineLinkText
                 to={view.source?.uri || view.uri}
@@ -155,7 +160,7 @@ function ShareDocumentPreview({
                 style={[
                   a.flex_shrink,
                   a.justify_start,
-                  a.text_xs,
+                  a.text_sm,
                   t.atoms.text_contrast_medium,
                 ]}>
                 <Text
@@ -163,34 +168,15 @@ function ShareDocumentPreview({
                   emoji
                   numberOfLines={1}
                   ellipsizeMode="middle"
-                  style={[a.flex_1, a.text_xs, t.atoms.text_contrast_medium]}>
+                  style={[a.flex_1, a.text_sm, t.atoms.text_contrast_medium]}>
                   {sourceTitle}
                 </Text>
               </InlineLinkText>
             ) : null}
-            {author && gtPhone ? (
-              <>
-                <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>•</Text>
-                <InlineLinkText
-                  to={makeProfileLink(author)}
-                  label={l`View ${sanitizeHandle(author.handle, '@')}’s profile`}
-                  style={[
-                    a.flex_1,
-                    a.justify_start,
-                    a.text_xs,
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  <Text
-                    testID="atmosphereShareDocumentAuthor"
-                    emoji
-                    numberOfLines={1}
-                    ellipsizeMode="middle"
-                    style={[a.text_xs, t.atoms.text_contrast_medium]}>
-                    {l`by ${sanitizeHandle(author.handle, '@')}`}
-                  </Text>
-                </InlineLinkText>
-              </>
-            ) : null}
+            <ActivityByline
+              actor={author}
+              testID="atmosphereShareDocumentAuthor"
+            />
           </View>
         ) : null}
       </View>
@@ -202,7 +188,7 @@ function ShareDocumentPreview({
           <Image
             testID="atmosphereShareDocumentThumbnail"
             source={{uri: view.thumb}}
-            style={[a.rounded_sm, {width: 110, aspectRatio: 16 / 9}]}
+            style={[a.rounded_sm, {width: 60, height: 60}]}
             contentFit="cover"
             accessible={false}
             accessibilityIgnoresInvertColors

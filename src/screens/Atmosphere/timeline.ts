@@ -47,14 +47,12 @@ export function buildActivityTimelineItems(
       'key' in bucket && !headings.has(bucket.key) ? bucket : undefined
     if ('key' in bucket) headings.add(bucket.key)
     const gap = !previousKind
-      ? 20
+      ? 24
       : heading
-        ? 32
-        : previousKind !== kind
-          ? 14
-          : kind === 'card'
-            ? 14
-            : 20
+        ? 40
+        : kind === 'card' || previousKind === 'card'
+          ? 32
+          : 28
     result.push({
       ...row,
       layout: {

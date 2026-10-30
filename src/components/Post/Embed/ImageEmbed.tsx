@@ -86,12 +86,22 @@ export function ImageEmbed({
           ...postContext,
         })
       }
+      /** Screen-reader galleries supply only the selected image's thumbnail. */
+      const selectedOnly = refs.length === 1 && images.length > 1
       openLightbox({
         images: items.map((item, i) => ({
           ...item,
           thumbRect: null,
-          thumbRef: refs[i] ?? null,
-          thumbDimensions: fetchedDims[i] ?? null,
+          thumbRef: selectedOnly
+            ? i === index
+              ? refs[0]
+              : null
+            : (refs[i] ?? null),
+          thumbDimensions: selectedOnly
+            ? i === index
+              ? (fetchedDims[0] ?? null)
+              : null
+            : (fetchedDims[i] ?? null),
           thumbBorderRadius: tokens.borderRadius.md,
           type: 'image',
         })),

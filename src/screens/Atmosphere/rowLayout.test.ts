@@ -139,7 +139,7 @@ describe('Atmosphere row layout classification', () => {
     ])
   })
 
-  it('requires an explicitly active, safely linked, non-actor-group livestream for a card', () => {
+  it('features safely linked active, ended, and actor-group streams', () => {
     const view = createLivestreamView()
     const first = createActivity({
       collection: activityCollections.livestream,
@@ -148,7 +148,7 @@ describe('Atmosphere row layout classification', () => {
     const row = createRow([first])
     expect(kind(row)).toBe('card')
     view.active = false
-    expect(kind(row)).toBe('footnote')
+    expect(kind(row)).toBe('card')
     view.active = true
     view.uri = 'javascript:bad'
     expect(kind(row)).toBe('footnote')
@@ -167,7 +167,7 @@ describe('Atmosphere row layout classification', () => {
           {groupBy: 'actor'},
         ),
       ),
-    ).toBe('footnote')
+    ).toBe('card')
   })
 
   it('renders root publications while keeping unknown collections and missing profiles safe', () => {

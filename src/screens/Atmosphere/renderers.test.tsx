@@ -1,11 +1,11 @@
+import type * as ReactNative from 'react-native'
 import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
-import {act, fireEvent, render} from '@testing-library/react-native'
+import {fireEvent, render} from '@testing-library/react-native'
 
-import {sanitizeHandle} from '#/lib/strings/handles'
+import {type ImageLayoutGrid} from '#/components/images/ImageLayoutGrid'
 import {type app} from '#/lexicons'
 import {ActivityPresentationRow} from './components/ActivityPresentationRow'
-import {atmospherePresentationConfig} from './config'
 import {getActivityPostView, getArticleExternalView} from './externalViews'
 import {type ActivityPresentationItem} from './presentation'
 import {getActivityRowKind} from './rowLayout'
@@ -29,9 +29,7 @@ import {
   type ActivityItem,
 } from './types'
 
-const mockAvatarStack = jest.fn()
 const mockLink = jest.fn((_props: Record<string, unknown>) => {})
-const mockMenu = jest.fn()
 const mockShareSnippets = jest.fn(
   (
     _props: React.ComponentProps<
@@ -45,6 +43,9 @@ const mockGallery = jest.fn(
       typeof import('#/components/images/Gallery').Gallery
     >,
   ) => {},
+)
+const mockImageLayoutGrid = jest.fn(
+  (_props: React.ComponentProps<typeof ImageLayoutGrid>) => {},
 )
 const mockAutoSizedImage = jest.fn(
   (
@@ -69,6 +70,22 @@ const mockSubscribeButton = jest.fn(
 )
 
 jest.unmock('multiformats/cid')
+jest.mock('#/state/preferences/moderation-opts', () => ({
+  useModerationOpts: () => undefined,
+}))
+jest.mock('#/lib/haptics', () => ({
+  useHaptics: () => ({tap: jest.fn(), longPress: jest.fn()}),
+}))
+jest.mock('#/analytics', () => ({useAnalytics: () => ({metric: jest.fn()})}))
+jest.mock('#/view/com/util/UserAvatar', () => ({UserAvatar: () => null}))
+jest.mock('#/lib/sharing', () => ({shareUrl: jest.fn()}))
+jest.mock('#/components/MediaInsetBorder', () => ({
+  MediaInsetBorder: () => null,
+}))
+jest.mock(
+  '#/components/Post/Embed/StandardSiteEmbed/StandardSiteCompactDocumentCard',
+  () => ({StandardSiteCompactDocumentCard: () => null}),
+)
 jest.mock('expo-image', () => {
   const {View} =
     jest.requireActual<typeof import('react-native')>('react-native')
@@ -86,6 +103,7 @@ jest.mock('#/alf', () => ({
     },
   ),
   tokens: {borderRadius: {md: 12}},
+  utils: jest.requireActual('#/alf/util/colorGeneration'),
   web: (styles: object) => styles,
   useBreakpoints: () => ({gtPhone: true}),
   useTheme: () => ({
@@ -109,16 +127,14 @@ jest.mock('#/components/AvatarStack', () => {
   const {View} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {
-    AvatarStack: (props: unknown) => {
-      mockAvatarStack(props)
-      return <View testID="avatars" />
-    },
+    AvatarStack: () => <View testID="avatars" />,
   }
 })
 jest.mock('#/components/images/Gallery', () => {
   const {View} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {
+    GalleryBleed: ({children}: React.PropsWithChildren) => <>{children}</>,
     Gallery: (
       props: React.ComponentProps<
         typeof import('#/components/images/Gallery').Gallery
@@ -127,7 +143,15 @@ jest.mock('#/components/images/Gallery', () => {
       mockGallery(props)
       return <View testID="gallery" />
     },
-    GalleryBleed: ({children}: React.PropsWithChildren) => <>{children}</>,
+  }
+})
+jest.mock('#/components/images/ImageLayoutGrid', () => {
+  const {View} = jest.requireActual<typeof ReactNative>('react-native')
+  return {
+    ImageLayoutGrid: (props: React.ComponentProps<typeof ImageLayoutGrid>) => {
+      mockImageLayoutGrid(props)
+      return <View testID="image-grid" />
+    },
   }
 })
 jest.mock('#/components/images/AutoSizedImage', () => {
@@ -158,7 +182,7 @@ jest.mock('#/components/Lightbox/state', () => ({
   useLightboxControls: () => ({openLightbox: mockOpenLightbox}),
 }))
 jest.mock('#/components/Button', () => {
-  const {Pressable, View} =
+  const {Pressable, View, Text} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {
     Button: ({
@@ -180,6 +204,7 @@ jest.mock('#/components/Button', () => {
       </Pressable>
     ),
     ButtonIcon: () => <View />,
+    ButtonText: Text,
   }
 })
 jest.mock('#/components/Link', () => {
@@ -196,26 +221,20 @@ jest.mock('#/components/Link', () => {
     Link: ({
       children,
       ...props
-    }: React.PropsWithChildren<Record<string, unknown>>) => {
+    }: {
+      children?:
+        React.ReactNode | ((state: {pressed: boolean}) => React.ReactNode)
+      [key: string]: unknown
+    }) => {
       mockLink({children, ...props})
-      return <View {...props}>{children}</View>
+      return (
+        <View {...props}>
+          {typeof children === 'function'
+            ? children({pressed: false})
+            : children}
+        </View>
+      )
     },
-  }
-})
-jest.mock('./components/DocumentMenu', () => {
-  const {View} =
-    jest.requireActual<typeof import('react-native')>('react-native')
-  return {
-    DocumentMenu: (props: unknown) => {
-      mockMenu(props)
-      return <View testID="article-menu" />
-    },
-    DocumentMenuPlaceholder: () => (
-      <View
-        testID="atmosphereDocumentMenuPlaceholder"
-        style={{width: 1, height: 25}}
-      />
-    ),
   }
 })
 jest.mock('./components/ShareSnippets', () => {
@@ -251,6 +270,7 @@ jest.mock('#/components/Post/Embed/StandardSiteEmbed', () => {
   const {View} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {
+    ...jest.requireActual('#/components/Post/Embed/StandardSiteEmbed'),
     PublicationCard: (props: unknown) => {
       mockPublicationCard(props)
       return <View testID="publication-card" />
@@ -273,14 +293,11 @@ jest.mock('#/view/com/util/TimeElapsed', () => ({
     children: (value: {timeElapsed: string}) => React.ReactNode
   }) => children({timeElapsed: `elapsed:${timestamp}`}),
 }))
+jest.mock('./components/ActivityMenu', () => ({ActivityMenu: () => null}))
 
 i18n.loadAndActivate({locale: 'en', messages: {}})
 beforeEach(() => {
   jest.clearAllMocks()
-})
-afterEach(() => {
-  atmospherePresentationConfig.recommendationCardThreshold = 2
-  atmospherePresentationConfig.subscriptionCardThreshold = 2
 })
 
 function renderRow(item: ActivityPresentationItem) {
@@ -297,6 +314,7 @@ function renderRow(item: ActivityPresentationItem) {
       'atmosphereSubscriptionCard',
       'atmosphereShareCard',
       'atmosphereActiveLivestream',
+      'atmosphereEndedLivestream',
       'atmospherePhotoCard',
       'publication-card',
     ].some(id => screen.queryAllByTestId(id).length > 0)
@@ -439,66 +457,40 @@ function activities(row: ActivityPresentationItem) {
 
 describe('hydrated articles and recommendation proof', () => {
   it.each([false, true])(
-    'uses subscribed=%s to select the root article treatment',
+    'features hydrated articles regardless of subscription (%s)',
     subscribed => {
       const screen = renderRow(documentRow(subscribed))
-      expect(Boolean(screen.queryByTestId('atmosphereArticleCard'))).toBe(
-        subscribed,
-      )
-      expect(Boolean(screen.queryByTestId('atmosphereFootnote'))).toBe(
-        !subscribed,
-      )
+      expect(screen.getByTestId('atmosphereArticleCard')).toBeTruthy()
+      expect(screen.queryByTestId('atmosphereFootnote')).toBeNull()
       expect(screen.getByText('An article')).toBeTruthy()
       hasLink('https://publication.example/')
       hasLink('/profile/author.example')
     },
   )
 
+  it('shows the display name without hiding the account handle', () => {
+    const row = documentRow()
+    row.actors['did:plc:author'].displayName = 'Alex Rivera 🌿'
+    const screen = renderRow(row)
+    expect(screen.getByText(/Alex Rivera 🌿/)).toBeOnTheScreen()
+    expect(screen.getByText(/@author\.example/)).toBeOnTheScreen()
+  })
+
   it('keeps recommendation actor and hydrated article links', () => {
     const screen = renderRow(recommendationRow())
-    expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereArticleCard')).toBeTruthy()
     hasLink('/profile/actor0.example')
     hasLink('https://publication.example/article')
   })
 
-  it('applies the configured recommendation boundary to groups and related proof', () => {
-    atmospherePresentationConfig.recommendationCardThreshold = 3
-    for (const count of [2, 3]) {
-      const group = renderRow(recommendationRow(count))
-      expect(Boolean(group.queryByTestId('atmosphereArticleCard'))).toBe(
-        count === 3,
-      )
-      group.unmount()
-      const root = renderRow(
-        documentRow(
-          false,
-          Array.from({length: count}, (_, i) => recommend(`did:plc:actor${i}`)),
-        ),
-      )
-      expect(Boolean(root.queryByTestId('atmosphereArticleCard'))).toBe(
-        count === 3,
-      )
-      root.unmount()
-    }
-  })
-
-  it('bounds distinct usable recommendation avatars in API order', () => {
+  it('counts distinct usable recommendation actors', () => {
     const row = recommendationRow(8)
     if (row.type !== 'group') throw new Error('Expected group')
     row.group.items.push(row.group.items[0])
     delete row.actors['did:plc:actor6']
     row.actors['did:plc:actor7'].handle = 'handle.invalid'
     const screen = renderRow(row)
-    expect(
-      screen.getByLabelText(
-        `${sanitizeHandle('actor0.example', '@')} and 5 others recommended`,
-      ),
-    ).toBeTruthy()
-    expect(mockAvatarStack).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        profiles: [0, 1, 2, 3, 4].map(i => row.actors[`did:plc:actor${i}`]),
-      }),
-    )
+    expect(screen.getByLabelText(/and 5 others recommended/)).toBeTruthy()
   })
 
   it.each([activityCollections.document, activityCollections.recommendation])(
@@ -558,29 +550,6 @@ describe('hydrated articles and recommendation proof', () => {
     },
   )
 
-  it.each([false, true])(
-    'uses only supplied image URLs for subscribed=%s',
-    subscribed => {
-      const activity = createActivity({
-        subscribed,
-        view: createArticleView({image: undefined}),
-      })
-      const screen = renderRow(createRow([activity]))
-      expect(screen.queryByTestId('atmosphereArticleCover')).toBeNull()
-      expect(screen.queryByTestId('atmosphereFootnoteThumbnail')).toBeNull()
-      screen.unmount()
-      activity.view = createArticleView({
-        image: 'https://media.example/actual.png',
-      })
-      const withImage = renderRow(createRow([activity]))
-      expect(
-        withImage.getByTestId(
-          subscribed ? 'atmosphereArticleCover' : 'atmosphereFootnoteThumbnail',
-        ).props.source,
-      ).toEqual({uri: 'https://media.example/actual.png'})
-    },
-  )
-
   it('preserves Unicode titles and hydrated description', () => {
     const title = 'مرحبا 🌌 '.repeat(30)
     const screen = renderRow(
@@ -612,49 +581,17 @@ describe('hydrated articles and recommendation proof', () => {
 })
 
 describe('hydrated publication and subscriptions', () => {
-  it.each([2, 3, 4])(
-    'applies the independent subscription threshold to %s subscribers',
+  it.each([1, 2, 4])(
+    'renders a publication card for %s usable subscribers',
     count => {
-      atmospherePresentationConfig.subscriptionCardThreshold = 3
       const screen = renderRow(subscriptionRow(count))
-      expect(Boolean(screen.queryByTestId('atmosphereSubscriptionCard'))).toBe(
-        count >= 3,
-      )
-      expect(Boolean(screen.queryByTestId('publication-cta'))).toBe(count >= 3)
-      expect(screen.getByText('A publication')).toBeTruthy()
+      expect(screen.getByTestId('atmosphereSubscriptionCard')).toBeOnTheScreen()
+      expect(screen.queryByTestId('atmosphereFootnote')).toBeNull()
+      expect(screen.getByText('A publication')).toBeOnTheScreen()
       hasLink('https://publication.example/')
       hasLink('/profile/subscriber0.example')
     },
   )
-
-  it('passes supplied publication metadata to the existing card and CTA', () => {
-    const view = createPublicationView({
-      logo: 'https://media.example/logo.png',
-      description: 'Real publication description',
-    })
-    const screen = renderRow(subscriptionRow(2, view))
-    expect(screen.getByText('Real publication description')).toBeTruthy()
-    expect(
-      screen.getByTestId('atmospherePublicationIcon').props.source,
-    ).toEqual({uri: view.logo})
-    expect(mockSubscribeButton).toHaveBeenCalledWith(
-      expect.objectContaining({view: expect.objectContaining({uri: view.uri})}),
-    )
-    screen.unmount()
-    const publication = renderRow(
-      createRow([
-        createActivity({
-          collection: activityCollections.publication,
-          did: 'did:plc:publisher',
-          view,
-        }),
-      ]),
-    )
-    expect(publication.getByTestId('publication-card')).toBeTruthy()
-    expect(mockPublicationCard).toHaveBeenCalledWith(
-      expect.objectContaining({view: expect.objectContaining({uri: view.uri})}),
-    )
-  })
 
   it('summarizes actor-group subscriptions without selecting a later publication', () => {
     const items = Array.from({length: 10}, (_, i) =>
@@ -669,7 +606,7 @@ describe('hydrated publication and subscriptions', () => {
     expect(screen.getByText(/^Publication 0/)).toBeTruthy()
     expect(screen.getByText(/and 9 more publications/)).toBeTruthy()
     expect(screen.queryByText('Publication 1')).toBeNull()
-    expect(screen.queryByTestId('publication-cta')).toBeNull()
+    expect(screen.getByTestId('atmosphereSubscriptionCard')).toBeOnTheScreen()
     screen.unmount()
     items[0].view = undefined
     const missing = renderRow(row)
@@ -748,19 +685,11 @@ describe('hydrated share cards', () => {
 })
 
 describe('hydrated stream lifecycle', () => {
-  it('uses hydrated lifecycle duration but outer indexed time for an ended footnote', () => {
+  it('preserves hydrated lifecycle duration on an ended stream card', () => {
     const row = streamRow({active: false, endedAt: '2026-01-01T00:48:59Z'})
     const screen = renderRow(row)
     expect(screen.getByTestId('atmosphereEndedLivestream')).toBeTruthy()
-    expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
     expect(screen.getByText('A real stream')).toBeTruthy()
-    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
-      /48 min/,
-    )
-    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
-      'elapsed:2026-09-10T12:00:00.000Z',
-      {exact: false},
-    )
     expect(screen.queryByText('LIVE NOW')).toBeNull()
     hasLink('https://stream.example/real0')
   })
@@ -775,52 +704,8 @@ describe('hydrated stream lifecycle', () => {
         }),
       )
       expect(screen.getByTestId('atmosphereEndedLivestream')).toBeTruthy()
-      expect(
-        screen.getByTestId('atmosphereFootnoteText'),
-      ).not.toHaveTextContent(/\b(?:sec|min)\b|NaN|Infinity/)
+      expect(screen.queryByLabelText(/\b(?:sec|min)\b|NaN|Infinity/)).toBeNull()
       expect(screen.queryByTestId('atmosphereActiveLivestream')).toBeNull()
-    },
-  )
-
-  it('updates duration units when the locale changes', () => {
-    const screen = renderRow(
-      streamRow({active: false, endedAt: '2026-01-01T00:48:00Z'}),
-    )
-    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
-      /48 min/,
-    )
-    try {
-      act(() => i18n.loadAndActivate({locale: 'fr', messages: {}}))
-      const duration = i18n.number(48, {
-        style: 'unit',
-        unit: 'minute',
-        unitDisplay: 'short',
-      })
-      expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
-        duration,
-        {exact: false, normalizer: text => text},
-      )
-      expect(
-        screen.getByTestId('atmosphereFootnoteText'),
-      ).not.toHaveTextContent('48 min', {
-        exact: false,
-        normalizer: text => text,
-      })
-    } finally {
-      act(() => i18n.activate('en'))
-    }
-  })
-
-  it.each([0, 59])(
-    'uses seconds below a minute, including %s seconds',
-    seconds => {
-      const endedAt =
-        `2026-01-01T00:00:${String(seconds).padStart(2, '0')}Z` as app.bsky.embed.external.ViewLivestream['endedAt']
-      const screen = renderRow(streamRow({active: false, endedAt}))
-      expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
-        `${seconds} sec`,
-        {exact: false},
-      )
     },
   )
 
@@ -828,7 +713,7 @@ describe('hydrated stream lifecycle', () => {
     const screen = renderRow(streamRow({active: false, endedAt: undefined}))
     expect(screen.queryByTestId('atmosphereActiveLivestream')).toBeNull()
     expect(screen.queryByText('LIVE NOW')).toBeNull()
-    expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereEndedLivestream')).toBeTruthy()
   })
 
   it('uses supplied active status, URI and image without inventing viewers', () => {
@@ -851,9 +736,7 @@ describe('hydrated stream lifecycle', () => {
         endedAt: '2026-01-01T00:02:00Z',
       }),
     )
-    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
-      /2 min/,
-    )
+    expect(screen.getByLabelText(/streamed for 2 min/)).toBeTruthy()
   })
 
   it.each(['', 'javascript:alert(1)', 'https://user:pass@stream.example/'])(
@@ -881,14 +764,11 @@ describe('hydrated gallery media and accessible lightboxes', () => {
     )
   }
 
-  it('uses the existing constrained single-image surface and real lightbox fields', () => {
+  it('opens a single-image lightbox with the captured reference and dimensions', () => {
     const screen = renderRow(photoRow())
     expect(screen.getByTestId('atmospherePhotoCard')).toBeTruthy()
-    expect(screen.getByTestId('atmosphereSinglePhoto')).toBeTruthy()
-    expect(screen.queryByTestId('atmospherePhotoGallery')).toBeNull()
     expect(screen.getByLabelText(/posted a gallery/)).toBeTruthy()
     const props = mockAutoSizedImage.mock.calls[0][0]
-    expect(props.crop).toBe('constrained')
     const ref = imageRef(),
       dims = {width: 400, height: 600}
     props.onPress?.(ref, dims)
@@ -909,7 +789,6 @@ describe('hydrated gallery media and accessible lightboxes', () => {
       },
     ])
     expect(mockGallery).not.toHaveBeenCalled()
-    expect(mockMenu).not.toHaveBeenCalled()
   })
 
   it('uses the captured single-image ref and dimensions for a context-menu preview', () => {
@@ -945,7 +824,6 @@ describe('hydrated gallery media and accessible lightboxes', () => {
     expect(props.images.map(image => image.alt)).toEqual(
       Array.from({length: 10}, (_, i) => `Photo ${i}`),
     )
-    expect(Object.keys(props).sort()).toEqual(['images', 'onPress'])
     props.onPress?.(9, [], [])
     const lightbox = mockOpenLightbox.mock.calls[0][0]
     expect(lightbox.images).toHaveLength(10)
@@ -962,7 +840,7 @@ describe('hydrated gallery media and accessible lightboxes', () => {
     row.group.items[1].view = createGalleryView({items: []})
     const screen = renderRow(row)
     expect(screen.getByLabelText(/posted 3 galleries/)).toBeTruthy()
-    const gallery = mockGallery.mock.calls[0][0]
+    const gallery = mockImageLayoutGrid.mock.calls[0][0]
     expect(gallery.images.map(image => image.alt)).toEqual([
       'Photo 0',
       'Photo 2',
@@ -984,8 +862,8 @@ describe('hydrated gallery media and accessible lightboxes', () => {
     expect(row.group.items).toHaveLength(3)
   })
 
-  it('aligns the selected-only ref from Gallery screen-reader mode', () => {
-    renderRow(photoRow(2))
+  it('aligns a screen-reader carousel thumbnail with the selected lightbox image', () => {
+    renderRow(photoRow(5))
     const ref = imageRef(),
       dims = {width: 600, height: 900}
     mockGallery.mock.calls[0][0].onPress?.(1, [ref], [dims])
@@ -995,6 +873,7 @@ describe('hydrated gallery media and accessible lightboxes', () => {
     expect(lightbox.images[0].thumbDimensions).toBeNull()
     expect(lightbox.images[1].thumbRef).toBe(ref)
     expect(lightbox.images[1].thumbDimensions).toBe(dims)
+    expect(lightbox.images[4].thumbRef).toBeNull()
   })
 
   it('keeps a surviving image as a singleton without changing the raw group count', () => {
@@ -1003,7 +882,6 @@ describe('hydrated gallery media and accessible lightboxes', () => {
     row.group.items[0].view = undefined
     row.group.items[2].view = undefined
     const screen = renderRow(row)
-    expect(screen.getByTestId('atmosphereSinglePhoto')).toBeTruthy()
     expect(screen.getByLabelText(/posted 3 galleries/)).toBeTruthy()
     const image = mockAutoSizedImage.mock.calls[0][0]
     expect(image.image.alt).toBe('Photo 1')
@@ -1061,27 +939,6 @@ describe('collection dispatch and hydrated view boundaries', () => {
     },
   )
 
-  it.each([
-    activityCollections.grainGallery,
-    activityCollections.grainFavorite,
-  ])('uses hydrated gallery media for %s', collection => {
-    const screen = renderRow(photoRow(2, collection))
-    expect(screen.getByTestId('atmospherePhotoGallery')).toBeTruthy()
-    expect(mockGallery.mock.calls[0][0].images).toEqual(
-      [0, 1].map(i =>
-        expect.objectContaining({
-          fullsize: `https://images.example/full-${i}.jpg`,
-          thumb: `https://images.example/thumb-${i}.jpg`,
-          alt: `Photo ${i}`,
-          aspectRatio: {width: 2, height: 3},
-        }),
-      ),
-    )
-    expect(screen.getByText('A gallery')).toBeTruthy()
-    expect(screen.getByText('A gallery description')).toBeTruthy()
-    hasLink('https://grain.social/gallery/example')
-  })
-
   it('does not render incompatible views as media for a known collection', () => {
     const screen = renderRow(
       createRow([
@@ -1098,38 +955,6 @@ describe('collection dispatch and hydrated view boundaries', () => {
 })
 
 describe('hydrated metadata regressions', () => {
-  it.each([
-    ['https://writer.leaflet.pub', 'https://bsky.app/profile/leaflet.pub'],
-    ['https://writer.pckt.blog', 'https://bsky.app/profile/pckt.blog'],
-    ['https://offprint.app', 'https://bsky.app/profile/offprint.app'],
-  ] as const)('keeps publisher branding links for %s', (uri, profile) => {
-    renderRow(
-      createRow([
-        createActivity({
-          subscribed: true,
-          view: createArticleView({publisher: createPublicationView({uri})}),
-        }),
-      ]),
-    )
-    hasLink(profile)
-  })
-
-  it('does not brand lookalike publication domains', () => {
-    const screen = renderRow(
-      createRow([
-        createActivity({
-          subscribed: true,
-          view: createArticleView({
-            publisher: createPublicationView({
-              uri: 'https://leaflet.pub.evil.example',
-            }),
-          }),
-        }),
-      ]),
-    )
-    expect(screen.queryByTestId('atmosphereArticlePublisher')).toBeNull()
-  })
-
   it('keeps original hydrated objects reachable from the outer debug control', () => {
     const row = documentRow(true, [recommend('did:plc:one')])
     const log = jest.spyOn(console, 'log').mockImplementation()
@@ -1146,43 +971,19 @@ describe('hydrated metadata regressions', () => {
     }
   })
 
-  it('uses group indexed time instead of hidden child or content publication time', () => {
-    const row = createRow([createActivity(), createActivity({rkey: 'other'})], {
-      groupBy: 'actor',
-    })
-    if (row.type !== 'group') throw new Error('Expected group')
-    row.group.indexedAt = '2026-09-09T05:00:00Z'
-    const screen = renderRow(row)
-    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
-      'elapsed:2026-09-09T05:00:00Z',
-      {exact: false},
-    )
-  })
-
-  it('counts distinct usable subscribers and bounds their avatars', () => {
+  it('keeps grouped subscriber counts distinct without suppressing a single subscriber card', () => {
     const row = subscriptionRow(8)
     if (row.type !== 'group') throw new Error('Expected group')
     row.group.items.push(row.group.items[0])
     delete row.actors['did:plc:subscriber6']
     row.actors['did:plc:subscriber7'].handle = 'handle.invalid'
     const screen = renderRow(row)
-    expect(
-      screen.getByLabelText(
-        `${sanitizeHandle('subscriber0.example', '@')} and 5 others subscribed`,
-      ),
-    ).toBeTruthy()
-    expect(mockAvatarStack).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        profiles: [0, 1, 2, 3, 4].map(
-          i => row.actors[`did:plc:subscriber${i}`],
-        ),
-      }),
-    )
+    expect(screen.getByLabelText(/and 5 others subscribed/)).toBeTruthy()
     screen.unmount()
     for (const i of [1, 2, 3, 4, 5]) delete row.actors[`did:plc:subscriber${i}`]
     expect(
       renderRow(row).queryByTestId('atmosphereSubscriptionCard'),
-    ).toBeNull()
+    ).toBeOnTheScreen()
   })
 
   it('ignores viewer subscription on subscription interaction rows', () => {
@@ -1191,7 +992,7 @@ describe('hydrated metadata regressions', () => {
     row.activity.viewerState.subscribed = true
     expect(
       renderRow(row).queryByTestId('atmosphereSubscriptionCard'),
-    ).toBeNull()
+    ).toBeOnTheScreen()
   })
 
   it('excludes unavailable actors and different share targets from social proof', () => {
@@ -1242,12 +1043,8 @@ describe('hydrated metadata regressions', () => {
     const row = streamRow({active: false, endedAt: '2026-01-01T01:53:10Z'}, 13)
     if (row.type !== 'group') throw new Error('Expected group')
     const screen = renderRow(row)
-    expect(
-      screen.getByText(/A real stream and 12 more livestreams/),
-    ).toBeTruthy()
-    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
-      /113 min/,
-    )
+    expect(screen.getByText('A real stream')).toBeTruthy()
+    expect(screen.getByText('and 12 more livestreams')).toBeTruthy()
     expect(screen.queryByText(/Hidden stream/)).toBeNull()
     expect(row.group.items).toHaveLength(13)
   })
@@ -1292,28 +1089,6 @@ it('renders external record-with-media shares without displaying the quoted post
   ).toBe(false)
 })
 
-it('skips unknown gallery items without inventing media or losing supplied images', () => {
-  const view = createGalleryView()
-  view.items.unshift({
-    $type: 'example.unknown.media',
-  } as unknown as app.bsky.embed.external.ViewGallery['items'][number])
-  const screen = renderRow(
-    createRow([
-      createActivity({
-        collection: activityCollections.grainGallery,
-        view,
-      }),
-    ]),
-  )
-  expect(screen.getByTestId('atmosphereSinglePhoto')).toBeTruthy()
-  expect(mockAutoSizedImage.mock.calls[0][0].image.fullsize).toBe(
-    'https://grain.social/photo-full.jpg',
-  )
-  expect(mockAutoSizedImage.mock.calls[0][0].image.thumb).toBe(
-    'https://grain.social/photo-thumb.jpg',
-  )
-})
-
 it('does not fabricate an unavailable article author from recommendation actors', () => {
   const row = createRow(
     [0, 1].map(i =>
@@ -1330,7 +1105,6 @@ it('does not fabricate an unavailable article author from recommendation actors'
       ([props]) => props.to === '/profile/author.example',
     ),
   ).toBe(false)
-  expect(mockMenu).not.toHaveBeenCalled()
 })
 
 it('omits missing hydrated stream images without generating a thumbnail', () => {

@@ -1,6 +1,6 @@
 # Atmosphere screen frontend specification
 
-Status: social-proof prototype implemented in `src/screens/Atmosphere/`; implementation changes remain uncommitted. The current presentation contract below and [`atmosphere-social-proof-design.md`](./atmosphere-social-proof-design.md) supersede the original row proposals later in this document. See that plan for exact verification evidence and remaining manual-QA limitations.
+Status: social-proof prototype implemented in `src/screens/Atmosphere/`; implementation changes remain uncommitted. The current presentation contract below supersedes conflicting historical proposals here and in [`atmosphere-social-proof-design.md`](./atmosphere-social-proof-design.md). That design history retains earlier verification evidence and manual-QA limitations.
 
 This document specifies the first frontend for the Atmosphere activity API described in [`atmosphere-api-contract.md`](./atmosphere-api-contract.md).
 
@@ -21,26 +21,43 @@ document -> publication
 
 ## Current presentation contract
 
-| Collection | Presentation |
-| --- | --- |
-| Documents/recommendations | Content-first article card for subscribed documents or qualifying recommendation/share proof; otherwise a title-first footnote. Recommendation threshold defaults to two distinct usable actors. No target-author-follow exception. |
-| Subscriptions | Publication card for two or more distinct usable subscribers; otherwise a footnote. Threshold is independently configurable. CTA uses the existing publisher-aware external-link path, not an account mutation. |
-| Raw document shares | Sharer metadata, original text/facets, and one compact document preview. Same-subject groups expand beyond two initial snippets; distinct-subject actor groups keep the first preview plus count. Related shares stay separate from recommendation proof on their parent article. |
-| Streams | Absent `endedAt`: active standalone card. Any defined `endedAt`: ended footnote. Duration requires valid ordered raw dates; grouped duration is explicitly the first stream's. Missing thumbnails are omitted. Stale no-end records remain an accepted backend limitation. |
-| Grain photos | Existing single-image or Gallery/lightbox composition. First ten usable photos in API order, with original alt and safe dimensions. Original group counts and sidecars remain intact. Shared Gallery/lightbox code is unchanged. |
-| Publication roots/unknown collections | Retained publication creation rendering or generic compact activity fallback. No diagnostic colored rails. |
+| Collection                            | Presentation                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Documents/recommendations             | Reuse the standard.site post embed for every usable hydrated article, including single recommendations and unsubscribed documents. Feature its supplied cover above the title and description, retain the publication footer and external CTA, and place supplied like counts inside the card. Keep related proof below. Unavailable content stays a compact fallback; actor groups keep the first article plus count. |
+| Subscriptions                         | Every usable hydrated publication renders the shared post-embed publication card below the "Name subscribed to a new blog site · elapsed time" header, including single-person subscriptions. Actor groups keep the first publication plus a remainder count. Unavailable or unpinned targets stay compact. CTA uses the existing publisher-aware external-link path, not an account mutation.                         |
+| Raw document shares                   | Sharer metadata, original text/facets, and one compact document preview. Same-subject groups expand beyond two initial snippets; distinct-subject actor groups keep the first preview plus count. Related shares stay separate from recommendation proof on their parent article.                                                                                                                                      |
+| Streams                               | Safely linked active, ended, and grouped streams use cards with a full-width 16:9 preview above the title. The served `active` flag controls the live badge. Ended streams with valid ordered supplied dates say "Name streamed for N minutes", using whole minutes; grouped duration belongs to the first stream. Missing thumbnails are omitted, and missing/unsafe targets retain a compact fallback.               |
+| Grain photos                          | Reuse the post ImageEmbed renderer: constrained single images, grids for two to four images, and the shared carousel for five to ten. Keep title and description in a compact text section, with larger like totals on the title row's right. No "via Grain" attribution. First ten usable photos in API order, with original alt and safe dimensions. Original group counts and sidecars remain intact.               |
+| Publication roots/unknown collections | Retained publication creation rendering or generic compact activity fallback. No diagnostic colored rails.                                                                                                                                                                                                                                                                                                             |
 
 Use hydrated usable actors, never DID placeholders or invented friends/counts. Keep original related children, sidecar references, and item/group keys. Only normalized actor references and root-document subscription aggregation belong in `computedItemView`; content and transient timeline layout are resolved separately.
+
+### Feed and notification alignment
+
+- Match feed posts and Notifications v2 with a fixed 42px primary avatar column, an 18px leading inset, and a 12px avatar/content gap. Cards, previews, and compact-row text share the resulting 72px content inset.
+- Place the activity-kind icon in a 20px badge overlapping the avatar's lower end corner, separated by a 2px ring in the current background color. Do not insert the primary action icon between an avatar and its text.
+- Use ALF `text_md` for primary actor/action sentences, descriptions, and shared-post text; reserve `text_sm` for handles, timestamps, and supporting source/byline metadata. Article typography follows the shared standard.site embed. Preserve responsive type sizing and the user's font settings.
+- Use moderated, sanitized display names in actor sentences and author bylines, falling back to the sanitized handle when the name is empty or hidden. Put the linked handle in muted subtext below the line containing the display name.
+- Keep the primary actor separate from the remaining grouped actors, whose bounded avatar stack sits above the sentence in the content column. Group counts and API order are unchanged.
+- Show the actor/action header above a card rather than burying the primary actor in its footer. Feature-owned cards use the normal theme background, medium corner radius, and a low-contrast border. Stream media meet the card's top and side borders; only the text below gets 16px padding. Grain cards reuse the shared post image renderer and contain its gallery bleed within the card; their text section has 12px horizontal padding, 8px vertical padding, and a 4px title/description gap. Article cards reuse the shared embed's styling.
+- Article card headers say "Name recommended an article" or "Name published a new article". Compact unavailable-content fallbacks retain the verb followed by the title.
+- Generic standard.site document CTAs say "Read now" and open the document, including on long press. Publication cards retain "View publication", and recognized publishers retain their subscription CTAs.
+- Supporting publication/share thumbnails retain a 60px trailing slot; article and stream images are featured media, not trailing thumbnails. Long handles, source names, and titles must wrap or truncate inside their content column without covering a badge, menu, or image. Profile, document, publication, and media interactions retain their independent targets.
+- Put a compact top-right toolbar in the actor/action header, outside the content card. Always show the canonical Bluesky Mark path and viewBox beside the ellipsis, rendered as a 1.5px rounded outline. Use contrast_900 in light themes and contrast_500 in dark/dim themes for a darker neutral stroke. The butterfly button has no background, including on hover. Enable post navigation only for a real associated Bluesky post: the first activity's own post record, directly hydrated post view, or explicit post strong reference. Otherwise show a disabled button labeled "Bluesky post unavailable". Never borrow a later grouped item's post, related share, quote, article URL, or publication reference.
+- The ellipsis reuses the post control button and icon styling, plus the existing account mutation queues and profile shadows for mute/unmute and confirmed block/unblock, targeting the primary activity actor. Respect self-account and moderation-list restrictions. Register cached Atmosphere actors with the shared shadow cache so optimistic changes and rollbacks update the menu.
+- Report the actual associated post, fetching its full view on demand when only a strong reference exists. Require a matching URI/CID and a supported post record; show a visible load error rather than inventing a post or silently falling back to an account report. Activities without an associated post offer account reporting instead. Reuse sign-in gating and the native menu/dialog close sequencing.
+- Show available hydrated article recommendation and Grain gallery like totals with a heart icon, and publication subscription totals with a bookmark/subscription icon. Grain likes use a larger icon and semibold count at the right of the title bar. Article publisher subscription totals remain distinct from article recommendation totals. Reuse localized compact number formatting and full-count accessible labels; preserve explicit zeroes and omit missing totals. Never infer totals from bounded liker/subscriber previews, related activity, or group size, and do not duplicate Bluesky post metrics.
 
 ### Timeline
 
 - Use outer item/group `indexedAt` for heading placement. The rolling last three hours are unheaded, even across midnight; remaining local-today rows use **Earlier today**, yesterday uses **Yesterday**, and older rows use a Lingui-localized full date.
 - Invalid timestamps create no heading; future timestamps remain unheaded. Recompute on the shared minute tick and app resume. Locale changes update translated headings/date formatting.
-- Approximately 14px between cards, 24px between cards and footnote runs, and 8px within compact runs, with faint internal separators. A heading belongs to its first visible row; suppressed rows leave no orphan heading or gap. Each group stays one virtualized row, not an unbounded nested list.
+- Timeline rows own inter-row spacing, without extra renderer margins. Compact-run separators start at the content inset. A heading belongs to its first visible row; suppressed rows leave no orphan heading or gap. Each group stays one virtualized row, not an unbounded nested list.
+- Give rows more breathing room: 24px before the first row or after overflow, 40px before a new date bucket, 32px between rows involving a card, and 28px between compact rows. Avatar/content stacks use a 12px gap; grouped share snippets use 16px separation.
 - Preserve loading/empty/error/retry, pull-to-refresh, next-page guards/footer, and account-scoped query caches. Opaque cursors pass through unchanged.
 - Web-only `?debug` remains one object-log control per outer row, with reference-preserving reachable sidecars. No native debug button.
 
-The detailed implementation proposals below are historical where they conflict with this contract. In particular, expanded group children, target-author-follow promotion, colored diagnostic borders, and DID identity fallbacks are not current behavior.
+The detailed implementation proposals below, and earlier threshold/card proposals in the design history, are historical where they conflict with this contract. In particular, subscriber thresholds, recommendation-count promotion, target-author-follow promotion, ended-stream footnotes, colored diagnostic borders, and DID identity fallbacks are not current behavior.
 
 ## Scope
 
@@ -63,7 +80,7 @@ This work does not include:
 - full article rendering;
 - interactions that create, delete, or update Atmosphere records;
 - a detail screen for Activity rows;
-- persisted query data or live cache updates.
+- persisted query data or live timeline subscriptions; account moderation shadows still update immediately.
 
 ## Transport and generated schema
 

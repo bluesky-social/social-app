@@ -1,18 +1,12 @@
-import {atmospherePresentationConfig} from '#/screens/Atmosphere/config'
 import {
   getActivityPostView,
   getArticleExternalView,
 } from '#/screens/Atmosphere/externalViews'
-import {
-  type ActivityPresentationProps,
-  getActivityActor,
-} from '#/screens/Atmosphere/presentation'
+import {getActivityActor} from '#/screens/Atmosphere/presentation'
 import {
   getActivityDocumentUri,
-  getFirstActivity,
   getSharePostHref,
 } from '#/screens/Atmosphere/relationships'
-import {getLivestreamStatus} from '#/screens/Atmosphere/streams'
 import {
   type ActivityActor,
   type ActivityActors,
@@ -64,49 +58,4 @@ export function getDocumentSocialProof(
     }
   }
   return {recommenders, shares}
-}
-
-/** Signal-level presentation; renderers still resolve usable content and links. */
-export function getActivityPresentationKind(
-  {item, computedItemView}: ActivityPresentationProps,
-  config = atmospherePresentationConfig,
-): 'card' | 'footnote' {
-  const collection =
-    item.type === 'activity' ? item.activity.collection : item.group.collection
-  const first = getFirstActivity(item)
-  if (!first || computedItemView.actors.length === 0) return 'footnote'
-  const isActorGroup = item.type === 'group' && item.group.groupBy === 'actor'
-  switch (collection) {
-    case activityCollections.document: {
-      if (!getArticleExternalView(first)) return 'footnote'
-      const {recommenders, shares} = getDocumentSocialProof(first, item)
-      return computedItemView.subscriptionState === 'all' ||
-        recommenders.length >= config.recommendationCardThreshold ||
-        shares.length > 0
-        ? 'card'
-        : 'footnote'
-    }
-    case activityCollections.recommendation:
-      return !isActorGroup &&
-        computedItemView.actors.length >= config.recommendationCardThreshold
-        ? 'card'
-        : 'footnote'
-    case activityCollections.subscription:
-      return !isActorGroup &&
-        computedItemView.actors.length >= config.subscriptionCardThreshold
-        ? 'card'
-        : 'footnote'
-    case activityCollections.share:
-    case activityCollections.grainGallery:
-    case activityCollections.grainFavorite:
-      return 'card'
-    case activityCollections.livestream:
-      return !isActorGroup &&
-        bsky.isType(app.bsky.embed.external.viewLivestream, first.view) &&
-        getLivestreamStatus(first.view) === 'active'
-        ? 'card'
-        : 'footnote'
-    default:
-      return 'footnote'
-  }
 }

@@ -6,10 +6,12 @@ import * as bsky from '#/types/bsky'
 /** Gallery and lightbox share this cap; the original activity group stays intact. */
 const MAX_GRAIN_PHOTOS = 10
 
-export function getGrainPhotos(
-  item: ActivityPresentationItem,
-): app.bsky.embed.images.ViewImage[] {
-  const photos: app.bsky.embed.images.ViewImage[] = []
+type GrainPhoto = app.bsky.embed.images.ViewImage & {
+  aspectRatio: app.bsky.embed.defs.AspectRatio
+}
+
+export function getGrainPhotos(item: ActivityPresentationItem): GrainPhoto[] {
+  const photos: GrainPhoto[] = []
   const activities =
     item.type === 'activity' ? [item.activity] : item.group.items
   for (const activity of activities) {

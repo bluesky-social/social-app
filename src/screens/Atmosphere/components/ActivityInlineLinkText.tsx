@@ -17,7 +17,7 @@ export function ActivityInlineLinkText({
       label={label}
       to={to}
       disableMismatchWarning={disableMismatchWarning}
-      style={[a.text_sm, a.leading_snug, a.font_semi_bold, t.atoms.text]}
+      style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]}
       emoji>
       {children}
     </InlineLinkText>

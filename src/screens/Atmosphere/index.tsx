@@ -26,6 +26,7 @@ import {IS_IOS} from '#/env'
 import {AtmosphereAppsTab} from './AppsTab'
 import {RawActivityList} from './components/RawActivityList'
 import {TimelineRow} from './components/TimelineRow'
+import {ACTIVITY_ROW_CONTENT_INSET} from './constants'
 import {AtmosphereExploreTab} from './ExploreTab'
 import {buildActivityListItems} from './model'
 import {buildActivityPresentationListItems} from './presentation'
@@ -279,16 +280,23 @@ function AtmosphereOverflow({overflow}: {overflow: ActivityOverflow}) {
       label = l`${plural(count, {one: '# more activity', other: '# more activities'})}`
   }
   return (
-    <View testID="atmosphereOverflowRow" style={[a.px_xl, a.py_md, a.gap_xs]}>
-      <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>{label}</Text>
+    <View
+      testID="atmosphereOverflowRow"
+      style={[
+        a.pr_lg,
+        a.py_md,
+        a.gap_xs,
+        {paddingLeft: ACTIVITY_ROW_CONTENT_INSET},
+      ]}>
+      <Text style={[a.text_md, t.atoms.text_contrast_medium]}>{label}</Text>
       {overflow.associatedProfiles.length > 0 ? (
-        <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
           {overflow.associatedProfiles.map((profile, index) => (
             <InlineLinkText
               key={profile.did}
               to={makeProfileLink(profile)}
               label={l`View ${sanitizeHandle(profile.handle, '@')}’s profile`}
-              style={[a.text_xs, t.atoms.text_contrast_medium]}>
+              style={[a.text_sm, t.atoms.text_contrast_medium]}>
               {index > 0 ? ', ' : ''}
               {sanitizeHandle(profile.handle, '@')}
             </InlineLinkText>

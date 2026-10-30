@@ -16,11 +16,7 @@ import {
   getFirstActivity,
   getSharePostHref,
 } from '#/screens/Atmosphere/relationships'
-import {getActivityPresentationKind} from '#/screens/Atmosphere/socialProof'
-import {
-  getLivestreamStatus,
-  getLivestreamUrl,
-} from '#/screens/Atmosphere/streams'
+import {getLivestreamUrl} from '#/screens/Atmosphere/streams'
 import {
   type ActivityActor,
   activityCollections,
@@ -44,14 +40,12 @@ export function getActivityRowKind(
   switch (collection) {
     case activityCollections.document:
     case activityCollections.recommendation:
-      return getActivityPresentationKind(props) === 'card' &&
-        getArticleActivityUri(item) &&
+      return getArticleActivityUri(item) &&
         getArticleExternalView(first)?.title.trim()
         ? 'card'
         : 'footnote'
     case activityCollections.subscription:
-      return getActivityPresentationKind(props) === 'card' &&
-        getSubscriptionActivityUri(item) &&
+      return getSubscriptionActivityUri(item) &&
         getPublicationExternalView(first)?.title.trim()
         ? 'card'
         : 'footnote'
@@ -61,9 +55,7 @@ export function getActivityRowKind(
     case activityCollections.grainFavorite:
       return getGrainPhotos(item).length > 0 ? 'card' : 'footnote'
     case activityCollections.livestream:
-      return !(item.type === 'group' && item.group.groupBy === 'actor') &&
-        bsky.isType(app.bsky.embed.external.viewLivestream, first.view) &&
-        getLivestreamStatus(first.view) === 'active' &&
+      return bsky.isType(app.bsky.embed.external.viewLivestream, first.view) &&
         getLivestreamUrl(first.view)
         ? 'card'
         : 'footnote'

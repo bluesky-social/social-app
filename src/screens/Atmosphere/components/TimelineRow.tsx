@@ -1,6 +1,10 @@
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
+import {
+  ACTIVITY_ROW_CONTENT_INSET,
+  ACTIVITY_ROW_PADDING_START,
+} from '#/screens/Atmosphere/constants'
 import {type ActivityPresentationProps} from '#/screens/Atmosphere/presentation'
 import {type ActivityTimelineListItem} from '#/screens/Atmosphere/timeline'
 import {atoms as a, useTheme} from '#/alf'
@@ -33,7 +37,7 @@ export function TimelineRow({
   return (
     <View
       testID="atmosphereTimelineRow"
-      style={[a.relative, a.mt_sm, {paddingTop: layout.gap}]}>
+      style={[a.relative, {paddingTop: layout.gap}]}>
       {layout.separator ? (
         <View
           testID="atmosphereTimelineSeparator"
@@ -41,7 +45,7 @@ export function TimelineRow({
             a.absolute,
             a.border_t,
             t.atoms.border_contrast_low,
-            {top: layout.gap / 3, start: 48, end: 20},
+            {top: layout.gap / 2, start: ACTIVITY_ROW_CONTENT_INSET, end: 16},
           ]}
         />
       ) : null}
@@ -51,9 +55,10 @@ export function TimelineRow({
             a.flex_row,
             a.align_center,
             a.justify_start,
-            a.px_xl,
-            a.pb_lg,
+            a.pr_lg,
+            a.pb_xl,
             a.gap_sm,
+            {paddingLeft: ACTIVITY_ROW_PADDING_START},
           ]}>
           <Text
             testID="atmosphereDateHeading"

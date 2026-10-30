@@ -38,6 +38,9 @@ type Children = {children?: React.ReactNode}
 
 i18n.loadAndActivate({locale: 'en', messages: {}})
 i18n.load('de', {})
+jest.mock('#/state/preferences/moderation-opts', () => ({
+  useModerationOpts: () => undefined,
+}))
 
 jest.mock('#/alf', () => ({
   atoms: new Proxy(

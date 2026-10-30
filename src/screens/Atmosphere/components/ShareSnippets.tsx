@@ -56,7 +56,7 @@ export function ShareSnippets({
   const hasOverflow = remainingCount > 0
 
   return (
-    <View style={[a.gap_xs]}>
+    <View style={[a.gap_lg]}>
       {visibleShares.map(share => (
         <ShareSnippet
           key={share.activity.record.uri}
@@ -123,7 +123,7 @@ function ShareSnippet({
   const emojiOnly = !richText.facets?.length && isOnlyEmoji(richText.text)
 
   return (
-    <View testID="atmosphereShareSnippet" style={[a.gap_xs]}>
+    <View testID="atmosphereShareSnippet" style={[a.gap_md]}>
       {showActorMetadata ? (
         <ActivityActorLine
           actors={[share.actor]}
@@ -148,7 +148,7 @@ function ShareSnippet({
                 testID="atmosphereShareText"
                 emoji
                 numberOfLines={4}
-                style={[a.text_sm, a.leading_snug, t.atoms.text]}>
+                style={[a.text_md, a.leading_snug, t.atoms.text]}>
                 {share.record.text}
               </Text>
             ) : (
@@ -162,7 +162,7 @@ function ShareSnippet({
                   event.preventDefault()
                 }}
                 numberOfLines={4}
-                style={[a.text_sm, a.leading_snug, a.italic, t.atoms.text]}
+                style={[a.text_md, a.leading_snug, t.atoms.text]}
               />
             )}
             <ShareMetrics view={share.post} />
@@ -171,7 +171,7 @@ function ShareSnippet({
       ) : (
         <View style={[a.gap_sm]}>
           <Link to={share.href} label={l`View post`} style={[a.justify_start]}>
-            <Text style={[a.text_xs, a.font_semi_bold]}>{l`View post`}</Text>
+            <Text style={[a.text_sm, a.font_semi_bold]}>{l`View post`}</Text>
           </Link>
           <ShareMetrics view={share.post} />
         </View>

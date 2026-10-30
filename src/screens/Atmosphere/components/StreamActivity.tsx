@@ -3,6 +3,7 @@ import {Image} from 'expo-image'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
+import {ACTIVITY_ROW_PADDING_START} from '#/screens/Atmosphere/constants'
 import {getActivityActor} from '#/screens/Atmosphere/presentation'
 import {getFirstActivity} from '#/screens/Atmosphere/relationships'
 import {type ActivityRendererProps} from '#/screens/Atmosphere/renderers'
@@ -21,22 +22,22 @@ import {
   ActivityActorLine,
   ActivityCard,
   ActivityFootnote,
-  ActivityTimestamp,
+  ActivityRowContent,
 } from './ActivityPrimitives'
 
 export function LivestreamActivityRenderer({
   item,
   testID,
+  actions,
 }: ActivityRendererProps) {
   const t = useTheme()
-  const {t: l, i18n} = useLingui()
+  const {t: l} = useLingui()
   const first = getFirstActivity(item)
   if (!first) return null
   const record = bsky.isType(app.bsky.embed.external.viewLivestream, first.view)
     ? first.view
     : undefined
   const status = record ? getLivestreamStatus(record) : undefined
-  const isActorGroup = item.type === 'group' && item.group.groupBy === 'actor'
   const actor = getActivityActor(first, item.actors)
   const actors = actor ? [actor] : []
   const title = record
@@ -51,19 +52,11 @@ export function LivestreamActivityRenderer({
       ? l`and ${plural(remainingCount, {one: '# more livestream', other: '# more livestreams'})}`
       : undefined
   const seconds = record ? getLivestreamDurationSeconds(record) : undefined
-  const duration =
-    seconds === undefined
-      ? undefined
-      : i18n.number(seconds < 60 ? seconds : Math.floor(seconds / 60), {
-          style: 'unit',
-          unit: seconds < 60 ? 'second' : 'minute',
-          unitDisplay: 'short',
-        })
-  const endedAction = duration
-    ? remainingCount > 0
-      ? l`streamed (first stream: ${duration})`
-      : l`streamed for ${duration}`
-    : l`streamed`
+  const minutes = seconds === undefined ? undefined : Math.floor(seconds / 60)
+  const endedAction =
+    minutes === undefined
+      ? l`streamed`
+      : l`streamed for ${plural(minutes, {one: '# minute', other: '# minutes'})}`
   const footnoteAction =
     status === 'active' ? l`started a livestream` : endedAction
   const thumb = record?.image?.trim() || undefined
@@ -72,7 +65,7 @@ export function LivestreamActivityRenderer({
     <Text
       emoji
       numberOfLines={3}
-      style={[a.text_lg, a.font_semi_bold, a.leading_snug]}>
+      style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
       {title}
     </Text>
   )
@@ -80,7 +73,14 @@ export function LivestreamActivityRenderer({
     <Image
       testID="atmosphereLivestreamThumbnail"
       source={{uri: thumb}}
-      style={[a.rounded_md, {width: 78, height: 78}]}
+      style={[
+        a.w_full,
+        {
+          aspectRatio: 16 / 9,
+          borderTopLeftRadius: a.rounded_md.borderRadius,
+          borderTopRightRadius: a.rounded_md.borderRadius,
+        },
+      ]}
       contentFit="cover"
       accessible={false}
       accessibilityIgnoresInvertColors
@@ -90,60 +90,69 @@ export function LivestreamActivityRenderer({
   ) : null
 
   return (
-    <View testID={testID} style={a.px_xl}>
-      {status === 'active' && !isActorGroup && href ? (
-        <View testID="atmosphereActiveLivestream" style={a.gap_sm}>
-          <View style={[a.flex_row, a.flex_wrap, a.align_center, a.gap_sm]}>
-            <View
-              style={[
-                a.px_sm,
-                a.py_xs,
-                a.rounded_full,
-                {backgroundColor: t.palette.negative_500},
-              ]}>
-              <Text
-                style={[
-                  a.text_2xs,
-                  a.font_semi_bold,
-                  {color: t.palette.white},
-                ]}>{l`LIVE NOW`}</Text>
-            </View>
-            <ActivityTimestamp timestamp={timestamp} />
-          </View>
-          <ActivityCard>
-            <View style={[a.flex_row, a.align_start, a.gap_md]}>
-              <View style={[a.flex_1, a.gap_sm, {minWidth: 0}]}>
-                {href ? (
-                  <Link
-                    testID="atmosphereLivestreamTitle"
-                    to={href}
-                    label={title}>
-                    {titleContent}
-                  </Link>
-                ) : (
-                  titleContent
-                )}
-                {suffix ? (
-                  <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-                    {suffix}
-                  </Text>
-                ) : null}
+    <View
+      testID={testID}
+      style={[a.pr_lg, {paddingLeft: ACTIVITY_ROW_PADDING_START}]}>
+      {href ? (
+        <ActivityRowContent
+          actors={actors}
+          icon={StreamIcon}
+          iconColor={status === 'active' ? t.palette.negative_500 : undefined}
+          actions={actions}
+          header={
+            <View style={[a.flex_row, a.flex_wrap, a.align_start, a.gap_sm]}>
+              <View style={[a.flex_1, {minWidth: 120}]}>
                 <ActivityActorLine
                   actors={actors}
-                  action={l`streaming`}
+                  action={status === 'active' ? l`streaming` : endedAction}
+                  timestamp={timestamp}
                   showAvatars={false}
                 />
               </View>
-              {image && href ? (
-                <Link to={href} label={title}>
-                  {image}
-                </Link>
-              ) : (
-                image
-              )}
+              {status === 'active' ? (
+                <View
+                  style={[
+                    a.flex_shrink_0,
+                    a.px_sm,
+                    a.py_xs,
+                    a.rounded_full,
+                    {backgroundColor: t.palette.negative_500},
+                  ]}>
+                  <Text
+                    style={[
+                      a.text_xs,
+                      a.font_semi_bold,
+                      {color: t.palette.white},
+                    ]}>{l`LIVE NOW`}</Text>
+                </View>
+              ) : null}
             </View>
-          </ActivityCard>
-        </View>
+          }>
+          <View
+            testID={
+              status === 'active'
+                ? 'atmosphereActiveLivestream'
+                : 'atmosphereEndedLivestream'
+            }>
+            <ActivityCard padded={false}>
+              <Link
+                testID="atmosphereLivestreamTitle"
+                to={href}
+                label={title}
+                style={[a.flex_col, a.align_start, a.w_full, a.rounded_md]}>
+                {image}
+                <View style={[a.w_full, a.p_lg, a.gap_md]}>
+                  {titleContent}
+                  {suffix ? (
+                    <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                      {suffix}
+                    </Text>
+                  ) : null}
+                </View>
+              </Link>
+            </ActivityCard>
+          </View>
+        </ActivityRowContent>
       ) : (
         <View
           testID={
@@ -161,6 +170,7 @@ export function LivestreamActivityRenderer({
             action={footnoteAction}
             timestamp={timestamp}
             suffix={suffix}
+            actions={actions}
           />
         </View>
       )}

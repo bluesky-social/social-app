@@ -29,6 +29,7 @@ import {
 export type ActivityRendererProps = ActivityPresentationProps & {
   hideTopBorder: boolean
   testID: string
+  actions?: React.ReactNode
 }
 
 export type ActivityRenderer = React.ComponentType<ActivityRendererProps>
@@ -68,12 +69,16 @@ export function UnknownActivityRenderer({
   computedItemView,
   hideTopBorder,
   item,
+  actions,
   testID,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
-      <ActivityRowHeader item={item} computedItemView={computedItemView}>
+      <ActivityRowHeader
+        item={item}
+        computedItemView={computedItemView}
+        actions={actions}>
         <ActivityRowHeaderText>{l`did something`}</ActivityRowHeaderText>
       </ActivityRowHeader>
     </ActivityRow>
@@ -84,6 +89,7 @@ function PublicationActivityRenderer({
   computedItemView,
   hideTopBorder,
   item,
+  actions,
   testID,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
@@ -94,7 +100,10 @@ function PublicationActivityRenderer({
       : l`created a publication`
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
-      <ActivityRowHeader item={item} computedItemView={computedItemView}>
+      <ActivityRowHeader
+        item={item}
+        computedItemView={computedItemView}
+        actions={actions}>
         <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
       <ActivityPublicationCardBody

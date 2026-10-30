@@ -14,12 +14,13 @@ import {
   createLivestreamView,
   createPostView,
   createPublicationView,
-  documentUri,
 } from './testFixtures'
-import {type ActivityTimelineListItem} from './timeline'
 import {activityCollections, type AtmosphereActivityPage} from './types'
 
 jest.unmock('multiformats/cid')
+jest.mock('#/state/preferences/moderation-opts', () => ({
+  useModerationOpts: () => undefined,
+}))
 
 const mockUseAtmosphereQuery = jest.fn()
 const mockQueryUpdates = createContext(0)
@@ -110,17 +111,10 @@ jest.mock('./AppsTab', () => {
   return {AtmosphereAppsTab: () => <View testID="atmosphereAppsTab" />}
 })
 jest.mock('#/components/images/Gallery', () => ({
-  Gallery: () => null,
   GalleryBleed: ({children}: React.PropsWithChildren) => <>{children}</>,
 }))
-jest.mock('#/components/images/AutoSizedImage', () => ({
-  AutoSizedImage: () => null,
-}))
-jest.mock('#/components/Post/Embed/ImageContextMenu', () => ({
-  ImageContextMenu: ({children}: React.PropsWithChildren) => <>{children}</>,
-}))
-jest.mock('#/components/Lightbox/state', () => ({
-  useLightboxControls: () => ({openLightbox: jest.fn()}),
+jest.mock('#/components/Post/Embed/ImageEmbed', () => ({
+  ImageEmbed: () => null,
 }))
 jest.mock('#/components/AvatarStack', () => {
   const {View} =
@@ -265,6 +259,7 @@ jest.mock('#/components/Post/Embed/StandardSiteEmbed', () => {
       mockStandardSiteEmbed(props)
       return <View testID="atmosphereStandardSiteEmbed" />
     },
+    SubscribeButton: () => null,
   }
 })
 jest.mock('#/components/Typography', () => {
@@ -328,16 +323,7 @@ jest.mock('#/view/com/util/List', () => {
     },
   }
 })
-jest.mock('./components/DocumentMenu', () => {
-  const {View} =
-    jest.requireActual<typeof import('react-native')>('react-native')
-  return {
-    DocumentMenu: () => null,
-    DocumentMenuPlaceholder: () => (
-      <View testID="atmosphereDocumentMenuPlaceholder" />
-    ),
-  }
-})
+jest.mock('./components/ActivityMenu', () => ({ActivityMenu: () => null}))
 jest.mock('./query', () => {
   const {use} = jest.requireActual<typeof import('react')>('react')
   return {
@@ -827,63 +813,4 @@ it('moves a row across the recent cutoff without changing its key', () => {
     'Earlier today',
   )
   expect(latestListProps!.data.map(latestListProps!.keyExtractor)).toEqual(keys)
-})
-
-it('recomputes presentation and spacing after a refresh crosses the recommendation threshold', async () => {
-  const first = createActivity({
-    collection: activityCollections.recommendation,
-    did: 'did:plc:one',
-    view: createArticleView(),
-  })
-  const second = createActivity({
-    collection: activityCollections.recommendation,
-    did: 'did:plc:two',
-    view: createArticleView(),
-  })
-  const query = basicQuery()
-  const context = {
-    actors: {
-      'did:plc:one': createActor('did:plc:one'),
-      'did:plc:two': createActor('did:plc:two'),
-    },
-  }
-  mockUseAtmosphereQuery.mockReturnValue({
-    ...query,
-    data: {pages: [{...context, feed: [first]}], pageParams: [undefined]},
-  })
-  const screen = renderScreen()
-  expect(
-    (latestListProps!.data as ActivityTimelineListItem[])[0].layout?.kind,
-  ).toBe('footnote')
-  await act(async () => {
-    await latestListProps?.onRefresh?.()
-  })
-  mockUseAtmosphereQuery.mockReturnValue({
-    ...query,
-    data: {
-      pages: [
-        {
-          ...context,
-          feed: [
-            {
-              $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup',
-              id: 'recommendation-cluster',
-              collection: activityCollections.recommendation,
-              groupBy: 'subject',
-              subject: documentUri,
-              indexedAt: first.record.indexedAt,
-              items: [first, second],
-            },
-          ],
-        },
-      ],
-      pageParams: [undefined],
-    },
-  })
-  screen.rerender(screenElement())
-  expect(
-    (latestListProps!.data as ActivityTimelineListItem[])[0].layout?.kind,
-  ).toBe('card')
-  expect(screen.getByTestId('atmosphereArticleCard')).toBeTruthy()
-  expect(screen.queryByTestId('atmosphereTimelineSeparator')).toBeNull()
 })

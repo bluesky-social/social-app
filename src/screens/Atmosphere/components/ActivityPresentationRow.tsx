@@ -4,6 +4,7 @@ import {useLingui} from '@lingui/react/macro'
 import {atoms as a, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {CircleQuestion_Stroke2_Corner2_Rounded as QuestionIcon} from '#/components/icons/CircleQuestion'
+import {getActivityAssociatedPost} from '../activityPost'
 import {createAtmosphereDebugItem, isAtmosphereDebugEnabled} from '../debug'
 import {type ActivityPresentationProps} from '../presentation'
 import {
@@ -12,6 +13,7 @@ import {
   UnknownActivityRenderer,
 } from '../renderers'
 import {isKnownActivityCollection} from '../types'
+import {ActivityActions} from './ActivityActions'
 
 export function ActivityPresentationRow({
   computedItemView,
@@ -27,6 +29,7 @@ export function ActivityPresentationRow({
     ? activityRenderers[collection]
     : UnknownActivityRenderer
   const showDebugButton = isAtmosphereDebugEnabled()
+  const actor = computedItemView.actors[0]
 
   return (
     <View style={a.relative}>
@@ -35,6 +38,14 @@ export function ActivityPresentationRow({
         computedItemView={computedItemView}
         hideTopBorder={hideTopBorder}
         testID={getActivityRendererTestID(collection)}
+        actions={
+          actor ? (
+            <ActivityActions
+              actor={actor}
+              post={getActivityAssociatedPost(item)}
+            />
+          ) : undefined
+        }
       />
       {showDebugButton ? (
         <View style={[a.absolute, a.right_0, a.bottom_0, a.p_xs, a.z_10]}>

@@ -2,15 +2,16 @@ import {View} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
+import {ACTIVITY_ROW_PADDING_START} from '#/screens/Atmosphere/constants'
 import {getArticleExternalView} from '#/screens/Atmosphere/externalViews'
 import {getRecordActor} from '#/screens/Atmosphere/presentation'
 import {getFirstActivity} from '#/screens/Atmosphere/relationships'
 import {type ActivityRendererProps} from '#/screens/Atmosphere/renderers'
-import {getArticleActivityUri} from '#/screens/Atmosphere/rowLayout'
 import {
-  getActivityPresentationKind,
-  getDocumentSocialProof,
-} from '#/screens/Atmosphere/socialProof'
+  getActivityRowKind,
+  getArticleActivityUri,
+} from '#/screens/Atmosphere/rowLayout'
+import {getDocumentSocialProof} from '#/screens/Atmosphere/socialProof'
 import {atoms as a, useTheme} from '#/alf'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as RecommendIcon} from '#/components/icons/Heart2'
 import {PageText_Stroke2_Corner0_Rounded as ArticleIcon} from '#/components/icons/PageText'
@@ -19,8 +20,12 @@ import {matchStandardSitePublisherByViewHints} from '#/components/Post/Embed/Sta
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {ActivityArticleCard} from './ActivityArticleCard'
-import {ActivityActorLine, ActivityFootnote} from './ActivityPrimitives'
-import {DocumentMenuPlaceholder} from './DocumentMenu'
+import {ActivityCounts} from './ActivityCounts'
+import {
+  ActivityActorLine,
+  ActivityFootnote,
+  ActivityRowContent,
+} from './ActivityPrimitives'
 import {ShareSnippets} from './ShareSnippets'
 
 export function DocumentActivityRenderer(props: ActivityRendererProps) {
@@ -36,6 +41,7 @@ function ArticleActivity({
   computedItemView,
   testID,
   recommendation,
+  actions,
 }: ActivityRendererProps & {recommendation: boolean}) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -59,47 +65,58 @@ function ArticleActivity({
       ? l`and ${plural(remainingCount, {one: '# more article', other: '# more articles'})}`
       : undefined
   const {recommenders, shares} = getDocumentSocialProof(first, item)
-  const action = recommendation ? l`recommended` : l`published`
-  const isCard =
-    Boolean(view?.title.trim()) &&
-    getActivityPresentationKind({item, computedItemView}) === 'card'
+  const action = recommendation
+    ? l`recommended an article`
+    : l`published a new article`
+  const isCard = getActivityRowKind({item, computedItemView}) === 'card'
   const publisher = view
     ? matchStandardSitePublisherByViewHints(view)
     : undefined
 
   return (
-    <View testID={testID} style={[a.px_xl]}>
+    <View
+      testID={testID}
+      style={[a.pr_lg, {paddingLeft: ACTIVITY_ROW_PADDING_START}]}>
       {isCard && view ? (
-        <ActivityArticleCard
-          item={item}
-          computedItemView={computedItemView}
-          view={view}
-          timestamp={timestamp}
-          remainingCount={remainingCount}>
-          <View style={a.gap_sm}>
+        <ActivityRowContent
+          actors={computedItemView.actors}
+          icon={recommendation ? RecommendIcon : ArticleIcon}
+          iconColor={recommendation ? t.palette.primary_500 : undefined}
+          actions={actions}
+          header={
             <ActivityActorLine
               actors={computedItemView.actors}
               action={action}
-              icon={recommendation ? RecommendIcon : undefined}
-              iconColor={recommendation ? t.palette.primary_500 : undefined}
+              timestamp={timestamp}
+              showAvatars={false}
             />
-            {!recommendation && recommenders.length > 0 ? (
-              <ActivityActorLine
-                testID="atmosphereArticleRecommendations"
-                actors={recommenders}
-                action={l`recommended`}
-                icon={RecommendIcon}
-                iconColor={t.palette.primary_500}
-              />
+          }>
+          <ActivityArticleCard
+            item={item}
+            view={view}
+            remainingCount={remainingCount}>
+            {!recommendation &&
+            (recommenders.length > 0 || shares.length > 0) ? (
+              <View style={a.gap_lg}>
+                {recommenders.length > 0 ? (
+                  <ActivityActorLine
+                    testID="atmosphereArticleRecommendations"
+                    actors={recommenders}
+                    action={l`recommended`}
+                    icon={RecommendIcon}
+                    iconColor={t.palette.primary_500}
+                  />
+                ) : null}
+                {shares.length > 0 ? (
+                  <ShareSnippets
+                    shares={shares}
+                    hideActorMetadataForDid={author?.did}
+                  />
+                ) : null}
+              </View>
             ) : null}
-            {!recommendation && shares.length > 0 ? (
-              <ShareSnippets
-                shares={shares}
-                hideActorMetadataForDid={author?.did}
-              />
-            ) : null}
-          </View>
-        </ActivityArticleCard>
+          </ActivityArticleCard>
+        </ActivityRowContent>
       ) : (
         <ActivityFootnote
           title={title}
@@ -107,14 +124,15 @@ function ArticleActivity({
           icon={recommendation ? RecommendIcon : ArticleIcon}
           iconColor={recommendation ? t.palette.primary_500 : undefined}
           actors={computedItemView.actors}
-          action={action}
+          action={recommendation ? l`recommended` : l`published`}
           timestamp={timestamp}
           app={
             publisher ? {name: publisher.name, to: publisher.url} : undefined
           }
           suffix={suffix}
           thumb={view?.thumb}
-          menu={<DocumentMenuPlaceholder />}>
+          actions={actions}>
+          <ActivityCounts view={first.view} />
           {view?.source ? (
             <InlineLinkText
               to={view.source.uri}

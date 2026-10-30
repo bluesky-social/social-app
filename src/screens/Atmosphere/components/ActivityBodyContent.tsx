@@ -1,4 +1,4 @@
-import {useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {PublicationCard} from '#/components/Post/Embed/StandardSiteEmbed'
 import type * as ssTypes from '#/components/Post/Embed/StandardSiteEmbed/types'
 import {
@@ -6,6 +6,7 @@ import {
   getPublicationExternalView,
 } from '../externalViews'
 import {type ActivityPresentationProps} from '../presentation'
+import {ActivityCounts} from './ActivityCounts'
 import {ActivityRowBody} from './ActivityHeader'
 
 export function ActivityPublicationCardBody({item}: ActivityPresentationProps) {
@@ -27,7 +28,9 @@ export function ActivityPublicationCardBody({item}: ActivityPresentationProps) {
 
     return (
       <ActivityRowBody>
-        <PublicationCard view={view} themeColors={themeColors} />
+        <PublicationCard view={view} themeColors={themeColors}>
+          <ActivityCounts view={activity.view} style={a.pt_sm} />
+        </PublicationCard>
       </ActivityRowBody>
     )
   }
