@@ -1,26 +1,29 @@
 import {useRef, useState} from 'react'
 import {type ImageStyle, View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {enforceLen} from '#/lib/strings/helpers'
 import {type ComposerImage} from '#/state/gallery'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {type DialogControlProps} from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
+import {TimesLarge_Stroke2_Corner0_Rounded as TimesIcon} from '#/components/icons/Times'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
 
 type Props = {
   control: Dialog.DialogOuterProps['control']
   image: ComposerImage
+  /** Whether alt text is being generated for the image. */
+  isGenerating?: boolean
   onChange: (next: ComposerImage) => void
   sourceViewTag?: number
 }
@@ -28,6 +31,7 @@ type Props = {
 export const ImageAltTextDialog = ({
   control,
   image,
+  isGenerating = false,
   onChange,
   sourceViewTag,
 }: Props): React.ReactNode => {
@@ -55,6 +59,7 @@ export const ImageAltTextDialog = ({
       <ImageAltTextInner
         control={control}
         image={image}
+        isGenerating={isGenerating}
         onChangeText={text => {
           editedAltText.current = text
         }}
@@ -67,14 +72,34 @@ const ImageAltTextInner = ({
   onChangeText,
   control,
   image,
+  isGenerating,
 }: {
   onChangeText: (text: string) => void
   control: DialogControlProps
   image: Props['image']
+  isGenerating: boolean
 }): React.ReactNode => {
   const [altText, setAltText] = useState(image.alt)
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const t = useTheme()
+
+  /*
+   * A suggestion can arrive while the dialog is open. Show it, unless the user
+   * has already started typing.
+   */
+  const [prevAlt, setPrevAlt] = useState(image.alt)
+  if (image.alt !== prevAlt) {
+    setPrevAlt(image.alt)
+    if (altText === prevAlt) setAltText(image.alt)
+  }
+  const isSuggestion = altText.length > 0 && altText === image.generatedAlt
+  const showGenerating = isGenerating && (!altText || isSuggestion)
+
+  const onChangeAltText = (text: string) => {
+    setAltText(text)
+    onChangeText(text)
+  }
+
   const source = image.transformed ?? image.source
   const imageStyle: ImageStyle = {
     width: '100%',
@@ -83,7 +108,7 @@ const ImageAltTextInner = ({
   }
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
+    <Dialog.ScrollableInner label={l`Add alt text`}>
       <Dialog.Close />
 
       <View>
@@ -116,11 +141,8 @@ const ImageAltTextInner = ({
             </TextField.LabelText>
             <TextField.Root>
               <Dialog.Input
-                label={_(msg`Alt text`)}
-                onChangeText={text => {
-                  setAltText(text)
-                  onChangeText(text)
-                }}
+                label={l`Alt text`}
+                onChangeText={onChangeAltText}
                 value={altText}
                 multiline
                 autoFocus
@@ -128,6 +150,40 @@ const ImageAltTextInner = ({
               />
             </TextField.Root>
           </View>
+
+          {showGenerating ? (
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <Loader size="sm" />
+              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                <Trans>Generating alt text…</Trans>
+              </Text>
+            </View>
+          ) : isSuggestion ? (
+            <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+              <SparkleIcon size="sm" fill={t.palette.primary_500} />
+              <Text
+                style={[
+                  a.flex_1,
+                  a.text_sm,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                <Trans>
+                  Generated. Check that it’s accurate before posting.
+                </Trans>
+              </Text>
+              <Button
+                label={l`Clear generated alt text`}
+                size="tiny"
+                color="secondary"
+                onPress={() => onChangeAltText('')}>
+                <ButtonIcon icon={TimesIcon} />
+                <ButtonText>
+                  <Trans>Clear</Trans>
+                </ButtonText>
+              </Button>
+            </View>
+          ) : null}
 
           {altText.length > MAX_ALT_TEXT && (
             <View style={[a.pb_sm, a.flex_row, a.gap_xs]}>
@@ -152,7 +208,7 @@ const ImageAltTextInner = ({
 
         <AltTextCounterWrapper altText={altText}>
           <Button
-            label={_(msg`Save`)}
+            label={l`Save`}
             disabled={altText === image.alt}
             size="large"
             color="primary"

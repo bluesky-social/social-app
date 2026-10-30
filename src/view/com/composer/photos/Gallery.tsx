@@ -23,6 +23,7 @@ import * as Dialog from '#/components/Dialog'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Pencil_Stroke2_Corner0_Rounded as PencilIcon} from '#/components/icons/Pencil'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import {TimesLarge_Stroke2_Corner0_Rounded as TimesIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
@@ -30,6 +31,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {useGeneratedAltText} from '#/features/altTextGeneration'
+import {isGeneratedAltText} from '#/features/altTextGeneration/utils'
 import {type PostAction} from '../state/composer'
 import {EditImageDialog} from './EditImageDialog'
 import {ImageAltTextDialog} from './ImageAltTextDialog'
@@ -222,13 +224,19 @@ const GalleryItem = ({
         testID="altTextButton"
         accessibilityRole="button"
         accessibilityLabel={
-          isGeneratingAltText ? l`Generating alt text` : l`Add alt text`
+          isGeneratingAltText
+            ? l`Generating alt text`
+            : isGeneratedAltText(image)
+              ? l`Review generated alt text`
+              : l`Add alt text`
         }
         accessibilityHint=""
         onPress={onAltTextEdit}
         style={[styles.altTextControl, altTextControlStyle]}>
         {isGeneratingAltText ? (
           <Loader width={10} fill={t.palette.white} />
+        ) : isGeneratedAltText(image) ? (
+          <SparkleIcon width={10} style={{color: t.palette.white}} />
         ) : image.alt.length !== 0 ? (
           <CheckIcon width={10} style={{color: t.palette.white}} />
         ) : (
@@ -285,6 +293,7 @@ const GalleryItem = ({
       <ImageAltTextDialog
         control={altTextControl}
         image={image}
+        isGenerating={isGeneratingAltText}
         onChange={onChange}
         sourceViewTag={altBtnViewTag}
       />
