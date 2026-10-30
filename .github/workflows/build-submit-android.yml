@@ -90,7 +90,7 @@ jobs:
     outputs:
       source-sha: ${{ steps.source.outputs.sha }}
       package-version: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
-      version-code: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
+      version-code: ${{ steps.aab-version-code.outputs.version-code }}
     steps:
       # Temporary until fixed runner images roll out:
       # https://github.com/actions/runner-images/issues/15018
@@ -152,6 +152,26 @@ jobs:
         id: get-build-info
         run: bash scripts/setGitHubOutput.sh
 
+      - name: 🔧 Setup bundletool
+        uses: amyu/setup-bundletool@cc2e1857284660bd625e43f2c8a45626f034302f # v1.1
+        with:
+          version: "1.18.3"
+
+      # Read the version code straight from the AAB, like the iOS job reads
+      # CFBundleVersion from the IPA. `eas build:version:get` reads the global
+      # remote counter once the build has finished, so it can report a different
+      # build's number. Production OTAs and the Slack posts need the real one.
+      - name: 🔢 Read version code from AAB
+        id: aab-version-code
+        run: |
+          version_code="$(bundletool dump manifest --bundle=build.aab --xpath=/manifest/@android:versionCode)"
+          if ! [[ "$version_code" =~ ^[0-9]+$ ]]; then
+            echo "ERROR: could not read versionCode from AAB (got '$version_code')"
+            exit 1
+          fi
+          echo "AAB version code: $version_code"
+          echo "version-code=$version_code" >> "$GITHUB_OUTPUT"
+
       # Hands the built bundle off to the submit / universalApk jobs. Retention is
       # deliberately short (1 day) since it's only an intra-run handoff artifact.
       - name: 🚀 Upload AAB artifact
@@ -164,12 +184,12 @@ jobs:
 
       - name: 📝 Write build summary
         env:
-          REMOTE_VERSION_CODE: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
+          VERSION_CODE: ${{ steps.aab-version-code.outputs.version-code }}
         run: |
           {
             echo "### Android build number"
             echo
-            echo "\`$REMOTE_VERSION_CODE\`"
+            echo "\`$VERSION_CODE\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
   submit:
