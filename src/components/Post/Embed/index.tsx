@@ -45,6 +45,7 @@ import {
   parseEmbed,
 } from '#/types/bsky/post'
 import {ChatInviteEmbed} from './ChatInviteEmbed'
+import {CompactMedia, getEmbedThumbnails} from './CompactMedia'
 import {ExternalEmbed} from './ExternalEmbed'
 import {ModeratedFeedEmbed} from './FeedEmbed'
 import {ImageEmbed} from './ImageEmbed'
@@ -83,7 +84,12 @@ export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
             rest.viewContext === PostEmbedViewContext.ChatMessage && a.gap_sm,
           ]}>
           <MediaEmbed embed={embed.media} {...rest} />
-          <RecordEmbed embed={embed.view} {...rest} />
+          <RecordEmbed
+            embed={embed.view}
+            {...rest}
+            // The post's own media comes first, so its quote steps back
+            quotePresentation={rest.quotePresentation ?? 'compact'}
+          />
         </View>
       )
     }
@@ -95,9 +101,16 @@ export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
 
 function MediaEmbed({
   embed,
+  presentation = 'default',
   ...rest
 }: CommonProps & {
   embed: TEmbed
+  /**
+   * `compact` shows links as compact cards, for a compact quote. Images and
+   * video aren't compacted here, since a compact quote puts them beside its
+   * text.
+   */
+  presentation?: 'default' | 'compact'
 }) {
   switch (embed.type) {
     case 'images':
@@ -117,12 +130,13 @@ function MediaEmbed({
           <ExternalCardEmbed
             embed={embed}
             Card={atProvider ? AtCard : StandardSiteEmbed}
+            presentation={presentation}
             {...rest}
           />
         )
       }
       const chatInviteCode = getChatInviteCodeFromUrl(embed.view.external.uri)
-      if (chatInviteCode) {
+      if (chatInviteCode && presentation === 'default') {
         return (
           <ContentHider
             modui={rest.moderation?.ui('contentMedia')}
@@ -145,6 +159,7 @@ function MediaEmbed({
             onOpen={rest.onOpen}
             post={rest.post}
             style={[a.mt_sm, rest.style]}
+            presentation={presentation}
           />
         </ContentHider>
       )
@@ -174,10 +189,15 @@ function MediaEmbed({
 function ExternalCardEmbed({
   embed,
   Card,
+  presentation,
   ...rest
 }: CommonProps & {
   embed: EmbedType<'link'>
   Card: typeof AtCard | typeof StandardSiteEmbed
+  /**
+   * `compact` swaps the rich card for a compact link card.
+   */
+  presentation: 'default' | 'compact'
 }) {
   const postModerationDecision = rest.moderation
   const moderationOpts = useModerationOpts()
@@ -196,17 +216,31 @@ function ExternalCardEmbed({
 
   return (
     <ContentHider modui={mergeModUIResults(...moduis)} activeStyle={[a.mt_sm]}>
-      <Card
-        view={external}
-        authorDid={getEmbedCreator(rest.post?.record, external.uri)}
-        onEmbedInteractionCallback={rest.onOpen}
-        style={[a.mt_sm, rest.style]}
-      />
+      {presentation === 'compact' ? (
+        <ExternalEmbed
+          link={external}
+          onOpen={rest.onOpen}
+          post={rest.post}
+          style={[a.mt_sm, rest.style]}
+          presentation="compact"
+        />
+      ) : (
+        <Card
+          view={external}
+          authorDid={getEmbedCreator(rest.post?.record, external.uri)}
+          onEmbedInteractionCallback={rest.onOpen}
+          style={[a.mt_sm, rest.style]}
+        />
+      )}
     </ContentHider>
   )
 }
 
-function RecordEmbed({
+/**
+ * A record embed on its own, from `parseEmbed` or `parseEmbedRecordView`:
+ * a quoted post or its placeholder, a feed, a list or a starter pack.
+ */
+export function RecordEmbed({
   embed,
   ...rest
 }: CommonProps & {
@@ -297,6 +331,11 @@ export function PostDetachedEmbed({
   )
 }
 
+/**
+ * Lines of text in a compact quote, about as tall as its media square.
+ */
+const COMPACT_QUOTE_LINES = 3
+
 /*
  * Nests parent `Embed` component and therefore must live in this file to avoid
  * circular imports.
@@ -309,6 +348,8 @@ export function QuoteEmbed({
   isWithinQuote: parentIsWithinQuote,
   allowNestedQuotes: parentAllowNestedQuotes,
   viewContext,
+  quotePresentation = 'default',
+  isQuoteTextMuted = false,
 }: Omit<CommonProps, 'viewContext'> & {
   embed: EmbedType<'post'>
   viewContext?: PostEmbedViewContext
@@ -360,6 +401,23 @@ export function QuoteEmbed({
     onOut: onPressOut,
   } = useInteractionState()
 
+  const text = richText?.text ? (
+    <RichText
+      value={richText}
+      style={[a.text_md, isQuoteTextMuted && t.atoms.text_contrast_medium]}
+      numberOfLines={quotePresentation === 'compact' ? COMPACT_QUOTE_LINES : 20}
+      disableLinks
+      suffixOffset={POST_NUMBER_INLINE_OFFSET}
+      suffix={
+        showPostNumber ? (
+          <ThreadItemPostNumber value={postNumbering} />
+        ) : undefined
+      }
+    />
+  ) : (
+    <ThreadItemPostNumber inline={false} value={postNumbering} />
+  )
+
   const contents = (
     <ReportDialogMetadataContext.Provider key={quote.uri}>
       <PostMeta
@@ -377,36 +435,36 @@ export function QuoteEmbed({
           style={[a.py_xs]}
         />
       ) : null}
-      {richText?.text ? (
-        <RichText
-          value={richText}
-          style={a.text_md}
-          numberOfLines={20}
-          disableLinks
-          suffixOffset={POST_NUMBER_INLINE_OFFSET}
-          suffix={
-            showPostNumber ? (
-              <ThreadItemPostNumber value={postNumbering} />
-            ) : undefined
-          }
-        />
-      ) : (
-        <ThreadItemPostNumber inline={false} value={postNumbering} />
-      )}
-      {quote.embed && (
-        <Embed
-          embed={quote.embed}
+      {quotePresentation === 'compact' ? (
+        <CompactQuoteBody
+          quote={quote}
           moderation={moderation}
           viewContext={viewContext}
           isWithinQuote={parentIsWithinQuote ?? true}
-          // already within quote? override nested
           allowNestedQuotes={
             parentIsWithinQuote ? false : parentAllowNestedQuotes
-          }
-          // The photo embed belongs to the quoted post, so attribute its
-          // analytics to the quoted post rather than the parent.
-          post={quote}
-        />
+          }>
+          {text}
+        </CompactQuoteBody>
+      ) : (
+        <>
+          {text}
+          {quote.embed && (
+            <Embed
+              embed={quote.embed}
+              moderation={moderation}
+              viewContext={viewContext}
+              isWithinQuote={parentIsWithinQuote ?? true}
+              // already within quote? override nested
+              allowNestedQuotes={
+                parentIsWithinQuote ? false : parentAllowNestedQuotes
+              }
+              // The photo embed belongs to the quoted post, so attribute its
+              // analytics to the quoted post rather than the parent.
+              post={quote}
+            />
+          )}
+        </>
       )}
     </ReportDialogMetadataContext.Provider>
   )
@@ -452,5 +510,74 @@ export function QuoteEmbed({
         </ContentHider>
       </View>
     </GalleryBleed>
+  )
+}
+
+/**
+ * Everything in a compact quote below its header: the quoted post's images,
+ * video or GIF as a square beside its text, then a compact card for its
+ * link, then any record it embeds in turn, as a full quote would show it.
+ */
+function CompactQuoteBody({
+  quote,
+  moderation,
+  viewContext,
+  isWithinQuote,
+  allowNestedQuotes,
+  children,
+}: Pick<
+  CommonProps,
+  'moderation' | 'viewContext' | 'isWithinQuote' | 'allowNestedQuotes'
+> & {
+  quote: app.bsky.feed.defs.PostView
+  /**
+   * The quoted post's text.
+   */
+  children: React.ReactNode
+}) {
+  const embed = parseEmbed(quote.embed)
+  const media = embed.type === 'post_with_media' ? embed.media : embed
+  const record = embed.type === 'post_with_media' ? embed.view : embed
+  const hasThumbnails = getEmbedThumbnails(quote.embed).length > 0
+  const mediaModui = moderation?.ui('contentMedia')
+  /*
+   * A media warning doesn't fit in the square, so hidden media moves under
+   * the text, behind the usual warning, and appears there once revealed.
+   */
+  const isMediaHidden = Boolean(mediaModui?.blurs[0])
+  const square = hasThumbnails && <CompactMedia embed={quote.embed} size={60} />
+
+  return (
+    <>
+      <View style={[a.flex_row, a.gap_sm]}>
+        {!isMediaHidden && square}
+        <View style={[a.flex_1]}>{children}</View>
+      </View>
+      {isMediaHidden && square && (
+        <ContentHider
+          modui={mediaModui}
+          activeStyle={[a.mt_sm]}
+          childContainerStyle={[a.pt_sm]}>
+          {square}
+        </ContentHider>
+      )}
+      {!hasThumbnails && media.type === 'link' && (
+        <MediaEmbed
+          embed={media}
+          presentation="compact"
+          moderation={moderation}
+          viewContext={viewContext}
+          post={quote}
+        />
+      )}
+      <RecordEmbed
+        embed={record}
+        moderation={moderation}
+        viewContext={viewContext}
+        isWithinQuote={isWithinQuote}
+        allowNestedQuotes={allowNestedQuotes}
+        post={quote}
+      />
+    </>
   )
 }
