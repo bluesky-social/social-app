@@ -16,7 +16,7 @@ import * as Item from './Item'
 /**
  * A kind of skeleton row, after the notifications it stands in for: `group`
  * for a like or repost from several people, `reaction` for one from a single
- * person or a new post on the Activity tab, `follow`, `reply` (with its
+ * person or a new post on the Post alerts tab, `follow`, `reply` (with its
  * "replied to" line), and `mention` for mentions and quotes.
  */
 type SkeletonKind = 'group' | 'reaction' | 'follow' | 'reply' | 'mention'
@@ -117,8 +117,9 @@ function TodayHeaderSkeleton() {
   return (
     <View
       style={[
-        a.px_lg,
+        a.pr_lg,
         a.py_sm,
+        {paddingLeft: Item.ROW_PADDING_START},
         SHOW_ROW_BORDERS && [a.border_b, t.atoms.border_contrast_low],
       ]}>
       <Skele.Text style={[a.text_md, a.font_bold, {width: 48}]} />
@@ -170,7 +171,7 @@ function GroupSkeleton({index}: {index: number}) {
 
 /**
  * Stands in for a like or repost from one person, or a new post on the
- * Activity tab, sometimes of a post with images.
+ * Post alerts tab, sometimes of a post with images.
  */
 function ReactionSkeleton({index}: {index: number}) {
   const even = index % 2 === 0
@@ -262,7 +263,7 @@ function FollowersSkeleton() {
   return (
     <>
       {/* Matches `FollowedYouHeader` */}
-      <View style={[a.px_lg, a.py_md]}>
+      <View style={[a.pr_lg, a.py_md, {paddingLeft: Item.ROW_PADDING_START}]}>
         <Skele.Text style={[a.text_md, {width: 96}]} />
       </View>
       {Array.from({length: FOLLOWER_ROW_COUNT}, (_, index) => (
@@ -320,7 +321,14 @@ function Row({
 }) {
   return (
     <View
-      style={[a.flex_row, a.align_start, a.gap_lg, a.px_lg, a.py_md, style]}>
+      style={[
+        a.flex_row,
+        a.align_start,
+        a.pr_lg,
+        a.py_md,
+        {gap: Item.ROW_GAP, paddingLeft: Item.ROW_PADDING_START},
+        style,
+      ]}>
       {children}
     </View>
   )

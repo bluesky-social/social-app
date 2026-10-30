@@ -8,7 +8,7 @@ msgstr ""
 "Language: ast\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-29 14:16\n"
+"PO-Revision-Date: 2026-10-30 14:58\n"
 "Last-Translator: \n"
 "Language-Team: Asturian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -518,12 +518,12 @@ msgid "{count, plural, one {# chat update} other {# chat updates}}"
 msgstr ""
 
 #. Number of people you follow who also follow this account
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:352
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:353
 msgid "{count, plural, one {# mutual follower} other {# mutual followers}}"
 msgstr ""
 
 #. Short form of “mutual followers”: the number of people you follow who also follow this account
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:359
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:360
 msgid "{count, plural, one {# mutual} other {# mutuals}}"
 msgstr ""
 
@@ -1279,7 +1279,7 @@ msgstr "⚠L'indicador ye inválidu"
 msgid "24 hours"
 msgstr "24 hores"
 
-#: src/screens/Login/LoginForm.tsx:419
+#: src/screens/Login/LoginForm.tsx:421
 msgid "2FA Confirmation"
 msgstr ""
 
@@ -1579,12 +1579,6 @@ msgid "Active index {0} (from {1}), {2} user navigation events"
 msgstr ""
 
 #: src/screens/Atmosphere/index.tsx:43
-msgid "Activity"
-msgstr ""
-
-#. Tab label in Notifications that shows new posts from accounts you get activity notifications for. Space is tight, so keep it as short as possible.
-#: src/screens/Notifications/index.tsx:159
-msgctxt "notifications tab"
 msgid "Activity"
 msgstr ""
 
@@ -2062,7 +2056,7 @@ msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} char
 msgstr ""
 
 #. placeholder {0}: currentAccount?.email || '(no email)'
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:100
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:102
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr "Unvióse un mensaxe a {0}. Inclúi un códigu de confirmación que pues introducir abaxo."
 
@@ -2185,7 +2179,7 @@ msgstr ""
 #: src/components/hooks/useFollowMethods.ts:52
 #: src/components/ProfileCard.tsx:510
 #: src/components/ProfileCard.tsx:535
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:217
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:218
 #: src/view/com/notifications/NotificationFeedItem.tsx:823
 #: src/view/com/notifications/NotificationFeedItem.tsx:844
 msgid "An issue occurred, please try again."
@@ -2419,7 +2413,7 @@ msgstr ""
 msgid "Archived post"
 msgstr "Archivóse la publicación"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:327
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:329
 msgid "Are you really, really sure?"
 msgstr ""
 
@@ -2524,7 +2518,7 @@ msgstr ""
 msgid "At least 8 characters"
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:338
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:340
 msgid "AT Protocol FAQ"
 msgstr ""
 
@@ -2597,8 +2591,8 @@ msgstr ""
 #: src/screens/Login/ChooseAccountForm.tsx:99
 #: src/screens/Login/ForgotPasswordForm.tsx:123
 #: src/screens/Login/ForgotPasswordForm.tsx:128
-#: src/screens/Login/LoginForm.tsx:486
-#: src/screens/Login/LoginForm.tsx:491
+#: src/screens/Login/LoginForm.tsx:488
+#: src/screens/Login/LoginForm.tsx:493
 #: src/screens/Login/SetNewPasswordForm.tsx:136
 #: src/screens/Login/SetNewPasswordForm.tsx:142
 #: src/screens/Messages/components/ChatDisabled.tsx:161
@@ -2676,7 +2670,7 @@ msgstr ""
 #: src/screens/Messages/ChatList.tsx:543
 #: src/screens/Messages/Conversation.tsx:207
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:285
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:286
 msgid "Before you can message another user, you must first verify your email."
 msgstr ""
 
@@ -3274,7 +3268,7 @@ msgstr ""
 msgid "Change Handle"
 msgstr "Cambéu del identificador"
 
-#: src/screens/Login/LoginForm.tsx:580
+#: src/screens/Login/LoginForm.tsx:582
 msgid "Change hosting provider"
 msgstr ""
 
@@ -3449,7 +3443,7 @@ msgstr "La charra dexó de tar silenciada"
 msgid "Chats"
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:239
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:241
 msgid "Check <0>{currentEmail}</0> for an email with the confirmation code to enter below:"
 msgstr ""
 
@@ -3468,10 +3462,6 @@ msgstr ""
 #: src/screens/SignupQueued.tsx:85
 #: src/screens/SignupQueued.tsx:89
 msgid "Check my status"
-msgstr ""
-
-#: src/screens/Login/LoginForm.tsx:438
-msgid "Check your email for a sign in code and enter it here."
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:160
@@ -3629,12 +3619,12 @@ msgstr ""
 msgid "Click here to log out"
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:269
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:278
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:271
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:280
 msgid "Click here to resend the email"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:388
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:386
 msgid "Click here to restart the verification process."
 msgstr ""
 
@@ -3878,15 +3868,15 @@ msgstr "Configuróse nes <0>opciones de moderación</0>."
 
 #: src/components/Prompt.tsx:211
 #: src/components/Prompt.tsx:214
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:185
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:188
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:187
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:190
 msgid "Confirm"
 msgstr ""
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:81
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:71
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:196
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:250
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:252
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:153
 msgid "Confirmation code"
 msgstr "Códigu de confirmación"
 
@@ -3894,12 +3884,12 @@ msgstr "Códigu de confirmación"
 msgid "Connecting to service..."
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:517
+#: src/screens/Login/LoginForm.tsx:519
 msgid "Connecting to service…"
 msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:142
-#: src/screens/Login/LoginForm.tsx:523
+#: src/screens/Login/LoginForm.tsx:525
 msgid "Connecting…"
 msgstr ""
 
@@ -4595,8 +4585,8 @@ msgstr "Desaniciar"
 msgid "Delete account"
 msgstr "Desaniciar la cuenta"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:189
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:236
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:191
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:238
 msgid "Delete account “{currentHandle}”"
 msgstr ""
 
@@ -4647,7 +4637,7 @@ msgstr ""
 msgid "Delete message for me"
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:309
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:311
 msgid "Delete my account"
 msgstr ""
 
@@ -4779,7 +4769,7 @@ msgid "Disable"
 msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:231
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:240
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:238
 msgid "Disable 2FA"
 msgstr ""
 
@@ -4791,7 +4781,7 @@ msgstr ""
 msgid "Disable email 2FA"
 msgstr ""
 
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:96
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:98
 msgid "Disable Email 2FA"
 msgstr ""
 
@@ -4952,11 +4942,11 @@ msgstr "Nun inclúin desnudos."
 msgid "Domain verified!"
 msgstr "¡Verificóse'l dominiu!"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:385
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:383
 msgid "Don't have a code or need a new one? <0>Click here.</0>"
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:275
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:277
 msgid "Don’t see a code? <0>Click here to resend.</0>"
 msgstr ""
 
@@ -5116,7 +5106,7 @@ msgstr ""
 msgid "e.g. Users that repeatedly reply with ads."
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:575
+#: src/screens/Notifications/components/PageList.tsx:577
 msgctxt "Notifications section header"
 msgid "Earlier"
 msgstr ""
@@ -5276,7 +5266,7 @@ msgstr ""
 msgid "Email"
 msgstr "Direición de corréu"
 
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:67
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:69
 msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr ""
@@ -5297,7 +5287,7 @@ msgstr ""
 msgid "Email sent!"
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:266
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:268
 msgid "Email sent! <0>Click here to resend.</0>"
 msgstr ""
 
@@ -5448,6 +5438,10 @@ msgstr ""
 msgid "Enter the 6-digit code sent to {prettyNumber}"
 msgstr ""
 
+#: src/screens/Login/LoginForm.tsx:437
+msgid "Enter the code from your email or authenticator app"
+msgstr ""
+
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:382
 msgid "Enter the domain you want to use"
 msgstr "Introduz el dominiu que quies usar"
@@ -5456,7 +5450,11 @@ msgstr "Introduz el dominiu que quies usar"
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "Introduz la direición de corréu electrónicu qu'usesti pa crear la cuenta. Vamos unviate un «códigu de restauración» pa que puedas afitar una contraseña nueva."
 
-#: src/screens/Login/LoginForm.tsx:331
+#: src/screens/Login/LoginForm.tsx:440
+msgid "Enter the sign in code from your email or authenticator app."
+msgstr ""
+
+#: src/screens/Login/LoginForm.tsx:333
 msgid "Enter the username or email address you used when you created your account"
 msgstr ""
 
@@ -5469,8 +5467,8 @@ msgstr ""
 msgid "Enter your email address"
 msgstr "Introduz la to direición de corréu electrónicu"
 
-#: src/screens/Login/LoginForm.tsx:379
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:295
+#: src/screens/Login/LoginForm.tsx:381
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:297
 msgid "Enter your password"
 msgstr ""
 
@@ -5739,7 +5737,7 @@ msgstr "La creación de la contraseña d'aplicación falló. Volvi tentalo."
 
 #: src/components/dms/MessageProfileButton.tsx:38
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:66
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:275
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:276
 msgid "Failed to create conversation"
 msgstr ""
 
@@ -6241,8 +6239,8 @@ msgstr ""
 msgid "Find Contacts"
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:631
-#: src/screens/Notifications/components/PageList.tsx:636
+#: src/screens/Notifications/components/PageList.tsx:633
+#: src/screens/Notifications/components/PageList.tsx:638
 msgid "Find friends"
 msgstr ""
 
@@ -6267,7 +6265,7 @@ msgstr ""
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:625
+#: src/screens/Notifications/components/PageList.tsx:627
 msgid "Find some friends to start getting notifications!"
 msgstr ""
 
@@ -6331,7 +6329,7 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:503
 #: src/components/ProfileHoverCard/index.web.tsx:514
 #: src/screens/Messages/ConversationSettings/Member.tsx:170
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:232
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:233
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:430
 #: src/screens/VideoFeed/index.tsx:1060
@@ -6390,7 +6388,7 @@ msgstr ""
 #. User is not following this account, click to follow back
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:547
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:228
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:229
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:155
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:428
 #: src/view/com/notifications/NotificationFeedItem.tsx:886
@@ -6456,7 +6454,7 @@ msgstr "Siguidores que conoces"
 #: src/components/ProfileCard.tsx:542
 #: src/components/ProfileHoverCard/index.web.tsx:502
 #: src/components/ProfileHoverCard/index.web.tsx:513
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:223
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:224
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:426
 #: src/screens/VideoFeed/index.tsx:1058
@@ -6489,7 +6487,7 @@ msgstr ""
 msgid "Following {handle}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:213
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:214
 msgid "Following {name}"
 msgstr ""
 
@@ -6534,7 +6532,7 @@ msgstr ""
 msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:192
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:194
 msgid "For security reasons, we’ll need to send a confirmation code to your email address <0>{currentEmail}</0>."
 msgstr ""
 
@@ -6567,8 +6565,8 @@ msgstr ""
 msgid "Forgot Password"
 msgstr "Contraseña escaecida"
 
-#: src/screens/Login/LoginForm.tsx:404
-#: src/screens/Login/LoginForm.tsx:411
+#: src/screens/Login/LoginForm.tsx:406
+#: src/screens/Login/LoginForm.tsx:413
 msgid "Forgot password?"
 msgstr "¿Escaeciesti la contraseña?"
 
@@ -6842,7 +6840,7 @@ msgid "Go to {firstAuthorName}'s profile"
 msgstr ""
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:78
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:644
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:645
 #: src/screens/Notifications/components/NotificationItem/Item/text.tsx:113
 msgid "Go to {name}’s profile"
 msgstr ""
@@ -7285,16 +7283,16 @@ msgstr "Agospiador:"
 #: src/components/dialogs/ServerInput.tsx:138
 #: src/screens/Login/components/HostingProviderDialog.tsx:159
 #: src/screens/Login/ForgotPasswordForm.tsx:84
-#: src/screens/Login/LoginForm.tsx:595
+#: src/screens/Login/LoginForm.tsx:597
 msgid "Hosting provider"
 msgstr "Agospiador"
 
 #. placeholder {0}: toNiceHostingUrl(state.pdsUrl)
-#: src/screens/Login/LoginForm.tsx:591
+#: src/screens/Login/LoginForm.tsx:593
 msgid "Hosting provider: {0}"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:593
+#: src/screens/Login/LoginForm.tsx:595
 msgid "Hosting provider: Bluesky"
 msgstr ""
 
@@ -7319,8 +7317,8 @@ msgstr ""
 msgid "I consent to Bluesky using my contacts for mutual friend discovery and to retain hashed data for matching until I opt out."
 msgstr ""
 
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:140
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:143
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:142
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:145
 msgid "I have a code"
 msgstr "Tengo un códigu"
 
@@ -7589,7 +7587,7 @@ msgstr ""
 msgid "Include video timestamp ({videoTimestamp})"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:158
+#: src/screens/Login/LoginForm.tsx:160
 msgid "Incorrect username or password"
 msgstr ""
 
@@ -7599,10 +7597,6 @@ msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:128
 msgid "Input new password"
-msgstr ""
-
-#: src/screens/Login/LoginForm.tsx:435
-msgid "Input the code which has been emailed to you"
 msgstr ""
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:137
@@ -7649,8 +7643,8 @@ msgstr ""
 msgid "Introducing saved posts AKA bookmarks"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:149
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:78
+#: src/screens/Login/LoginForm.tsx:151
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:80
 msgid "Invalid 2FA confirmation code."
 msgstr ""
 
@@ -8481,7 +8475,7 @@ msgstr ""
 msgid "Loading..."
 msgstr "Cargando…"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:557
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:558
 msgid "Loads more people into this list"
 msgstr ""
 
@@ -9096,7 +9090,7 @@ msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:148
 #: src/screens/Login/ForgotPasswordForm.tsx:173
-#: src/screens/Login/LoginForm.tsx:530
+#: src/screens/Login/LoginForm.tsx:532
 msgid "Navigates to the next screen"
 msgstr ""
 
@@ -9298,7 +9292,7 @@ msgstr ""
 msgid "New Starter Pack"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:544
+#: src/screens/Login/LoginForm.tsx:546
 msgid "New to Bluesky? <0>Sign up</0>"
 msgstr ""
 
@@ -9406,7 +9400,7 @@ msgstr ""
 msgid "No feeds found. Try searching for something else."
 msgstr "Nun s'atopó nengún feed. Prueba a buscar otra cosa."
 
-#: src/screens/Notifications/components/PageList.tsx:665
+#: src/screens/Notifications/components/PageList.tsx:667
 msgid "No followers to show yet"
 msgstr ""
 
@@ -9453,7 +9447,7 @@ msgstr ""
 msgid "No longer following {0}"
 msgstr "Yá nun sigues a {0}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:210
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:211
 msgid "No longer following {name}"
 msgstr ""
 
@@ -9478,12 +9472,12 @@ msgstr ""
 msgid "No name"
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:662
+#: src/screens/Notifications/components/PageList.tsx:664
 msgid "No notifications from people you follow yet"
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:614
-#: src/screens/Notifications/components/PageList.tsx:659
+#: src/screens/Notifications/components/PageList.tsx:616
+#: src/screens/Notifications/components/PageList.tsx:661
 msgid "No notifications yet"
 msgstr ""
 
@@ -9547,7 +9541,7 @@ msgstr "Nun hai nenguna cita"
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:668
+#: src/screens/Notifications/components/PageList.tsx:670
 msgid "No replies to show yet"
 msgstr ""
 
@@ -10153,7 +10147,7 @@ msgstr ""
 msgid "Opens a dialog to add a content warning to your post"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:581
+#: src/screens/Login/LoginForm.tsx:583
 msgid "Opens a dialog to change the hosting provider you sign in to"
 msgstr ""
 
@@ -10413,11 +10407,11 @@ msgstr "Nun s'atopó la páxina"
 msgid "Party GIFs"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:359
-#: src/screens/Login/LoginForm.tsx:365
+#: src/screens/Login/LoginForm.tsx:361
+#: src/screens/Login/LoginForm.tsx:367
 #: src/screens/Settings/AccountSettings.tsx:124
 #: src/screens/Settings/AccountSettings.tsx:128
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:290
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:292
 #: src/screens/Signup/StepInfo/index.tsx:272
 msgid "Password"
 msgstr "Contraseña"
@@ -10729,11 +10723,11 @@ msgstr "Introduz el to códigu d'invitación."
 msgid "Please enter your new email address."
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:190
+#: src/screens/Login/LoginForm.tsx:192
 msgid "Please enter your password"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:184
+#: src/screens/Login/LoginForm.tsx:186
 msgid "Please enter your username"
 msgstr ""
 
@@ -10847,6 +10841,12 @@ msgstr ""
 #: src/view/screens/Profile.tsx:569
 #: src/view/screens/Profile.tsx:570
 msgid "Post a video"
+msgstr ""
+
+#. Tab label in Notifications that shows new posts from accounts you get activity notifications for. Space is tight, so keep it as short as possible.
+#: src/screens/Notifications/index.tsx:159
+msgctxt "notifications tab"
+msgid "Post alerts"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1909
@@ -12061,8 +12061,8 @@ msgstr ""
 msgid "Resend code in <0>00:{0}</0>"
 msgstr ""
 
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:173
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:176
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:175
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:178
 msgid "Resend email"
 msgstr ""
 
@@ -12092,7 +12092,7 @@ msgstr ""
 msgid "Reset password"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:405
+#: src/screens/Login/LoginForm.tsx:407
 msgid "Reset your password by sending a code to your email"
 msgstr ""
 
@@ -12118,7 +12118,7 @@ msgstr ""
 msgid "Resync contacts"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:507
+#: src/screens/Login/LoginForm.tsx:509
 msgid "Retries signing in"
 msgstr ""
 
@@ -12137,8 +12137,8 @@ msgstr "Volvi tentar la última aición, la que produxo l'error"
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:56
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:59
 #: src/components/StarterPack/ProfileStarterPacks.tsx:371
-#: src/screens/Login/LoginForm.tsx:506
-#: src/screens/Login/LoginForm.tsx:512
+#: src/screens/Login/LoginForm.tsx:508
+#: src/screens/Login/LoginForm.tsx:514
 #: src/screens/Messages/ChatList.tsx:429
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:211
@@ -12325,7 +12325,7 @@ msgid "Saved to your feeds"
 msgstr "Guardóse nos tos feeds"
 
 #: src/components/dialogs/NewskieDialog/index.tsx:119
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:294
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:295
 #: src/view/com/notifications/NotificationFeedItem.tsx:933
 #: src/view/com/notifications/NotificationFeedItem.tsx:941
 msgid "Say hello!"
@@ -12757,7 +12757,7 @@ msgstr ""
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:172
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:179
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:311
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:205
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:207
 msgid "Send email"
 msgstr ""
 
@@ -12794,8 +12794,8 @@ msgid "Send the message from your phone"
 msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:304
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:127
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:130
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:129
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:132
 msgid "Send verification email"
 msgstr ""
 
@@ -12849,11 +12849,11 @@ msgstr ""
 msgid "Set your birthdate below and we'll get you back to posting and exploring in no time!"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:346
+#: src/screens/Login/LoginForm.tsx:348
 msgid "set your hosting provider manually"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:461
+#: src/screens/Login/LoginForm.tsx:463
 msgid "Set your hosting provider manually"
 msgstr ""
 
@@ -13128,8 +13128,8 @@ msgid "Show lists of users to select from"
 msgstr ""
 
 #: src/components/Post/ShowMoreTextButton.tsx:59
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:556
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:582
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:557
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:583
 msgid "Show more"
 msgstr ""
 
@@ -13227,9 +13227,9 @@ msgstr ""
 #: src/screens/Hashtag.tsx:233
 #: src/screens/Login/index.tsx:143
 #: src/screens/Login/index.tsx:165
-#: src/screens/Login/LoginForm.tsx:269
-#: src/screens/Login/LoginForm.tsx:529
-#: src/screens/Login/LoginForm.tsx:535
+#: src/screens/Login/LoginForm.tsx:271
+#: src/screens/Login/LoginForm.tsx:531
+#: src/screens/Login/LoginForm.tsx:537
 #: src/screens/Messages/JoinRequest.tsx:294
 #: src/screens/Messages/JoinRequest.tsx:300
 #: src/screens/Search/SearchResults.tsx:399
@@ -13307,7 +13307,7 @@ msgstr ""
 msgid "Sign out?"
 msgstr "¿Quies zarrar la sesión?"
 
-#: src/screens/Login/LoginForm.tsx:547
+#: src/screens/Login/LoginForm.tsx:549
 msgid "Sign up"
 msgstr ""
 
@@ -13603,7 +13603,7 @@ msgstr ""
 msgid "Starter Pack by {0}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:444
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:445
 msgid "Starter pack by {handle}"
 msgstr ""
 
@@ -14030,7 +14030,7 @@ msgstr ""
 msgid "Tell us why you believe this decision was a mistake. We will review your appeal along with the original content."
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:220
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:222
 msgid "Temporarily deactivate your account"
 msgstr ""
 
@@ -14354,7 +14354,7 @@ msgstr "Hebo un problema al conectase col sirvidor"
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "Hebo un problema al conectase col sirvidor. Comprueba la conexón a internet y volvi tentalo."
 
-#: src/screens/Notifications/components/PageList.tsx:362
+#: src/screens/Notifications/components/PageList.tsx:363
 #: src/view/com/notifications/NotificationFeed.tsx:137
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Hebo un problema al catar los avisos. Toca equí pa volver tentalo."
@@ -14872,7 +14872,7 @@ msgstr ""
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:330
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:332
 msgid "This will irreversibly delete your Bluesky account <0>{currentHandle}</0> and all associated data. Note that this will affect any other <1>AT Protocol</1> services you use with this account."
 msgstr ""
 
@@ -14934,7 +14934,7 @@ msgstr ""
 msgid "Title (optional)"
 msgstr ""
 
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:106
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:108
 msgid "To disable the email 2FA method, please verify your access to the email address."
 msgstr ""
 
@@ -14952,7 +14952,7 @@ msgstr ""
 msgid "Today"
 msgstr "Güei"
 
-#: src/screens/Notifications/components/PageList.tsx:574
+#: src/screens/Notifications/components/PageList.tsx:576
 msgctxt "Notifications section header"
 msgid "Today"
 msgstr "Güei"
@@ -15156,7 +15156,7 @@ msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:70
 #: src/screens/Login/index.tsx:100
-#: src/screens/Login/LoginForm.tsx:162
+#: src/screens/Login/LoginForm.tsx:164
 #: src/screens/Login/SetNewPasswordForm.tsx:82
 #: src/screens/Signup/index.tsx:89
 msgid "Unable to contact your service. Please check your Internet connection."
@@ -15499,7 +15499,7 @@ msgid "Update {0} in Lists"
 msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:293
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:305
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:304
 #: src/screens/Settings/AccountSettings.tsx:110
 #: src/screens/Settings/AccountSettings.tsx:118
 msgid "Update email"
@@ -15697,11 +15697,11 @@ msgstr ""
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:300
+#: src/screens/Login/LoginForm.tsx:302
 msgid "Username or email"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:310
+#: src/screens/Login/LoginForm.tsx:312
 msgid "Username or email address"
 msgstr "Identificador o direición de corréu"
 
@@ -15754,7 +15754,7 @@ msgstr ""
 #. Button text and accessibility label for action to verify the user's email address using the code entered
 #. Button text and accessibility label for action to verify the user's email address using the code entered
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:357
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:372
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:370
 msgctxt "action"
 msgid "Verify code"
 msgstr ""
@@ -15827,7 +15827,7 @@ msgid "Version {0}"
 msgstr ""
 
 #. When someone followed you through a starter pack, e.g. “via starter pack [icon] Science Pack”
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:391
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:392
 msgid "via starter pack <0/> <1>{name}</1>"
 msgstr ""
 
@@ -16179,7 +16179,7 @@ msgstr ""
 msgid "We could not find this list. It was probably deleted."
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:342
+#: src/screens/Login/LoginForm.tsx:344
 msgid "We couldn't find an account with that username. Please check that you've typed it correctly, or <0>set your hosting provider manually</0>."
 msgstr ""
 
@@ -16211,7 +16211,7 @@ msgstr ""
 msgid "We couldn’t reach this link. Check it, or save anyway."
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:457
+#: src/screens/Login/LoginForm.tsx:459
 msgid "We couldn’t verify your hosting provider. Check your internet connection, or <0>set your hosting provider manually</0>."
 msgstr ""
 
@@ -16618,7 +16618,7 @@ msgstr ""
 msgid "Yes, deactivate"
 msgstr "Sí, desactivar"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:348
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:350
 msgid "Yes, delete my account"
 msgstr ""
 
@@ -16717,7 +16717,7 @@ msgstr ""
 msgid "You can adjust your interests at any time from \"Content and media\" settings."
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:217
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:219
 msgid "You can also <0>temporarily deactivate</0> your account instead. Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr ""
 
@@ -17223,7 +17223,7 @@ msgstr ""
 msgid "Your account credentials were revoked"
 msgstr ""
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:133
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:135
 msgid "Your account has been deleted, see ya! ✌️"
 msgstr ""
 

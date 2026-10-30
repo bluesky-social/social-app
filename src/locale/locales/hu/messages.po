@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-29 14:17\n"
+"PO-Revision-Date: 2026-10-30 14:58\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -518,12 +518,12 @@ msgid "{count, plural, one {# chat update} other {# chat updates}}"
 msgstr "{count, plural, one {#} other {#}} új esemény a csevegésben"
 
 #. Number of people you follow who also follow this account
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:352
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:353
 msgid "{count, plural, one {# mutual follower} other {# mutual followers}}"
 msgstr "{count, plural, other {#}} ismert követő"
 
 #. Short form of “mutual followers”: the number of people you follow who also follow this account
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:359
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:360
 msgid "{count, plural, one {# mutual} other {# mutuals}}"
 msgstr "{count, plural, other {#}} ismert követő"
 
@@ -1279,7 +1279,7 @@ msgstr "⚠Érvénytelen felhasználónév"
 msgid "24 hours"
 msgstr "24 óráig"
 
-#: src/screens/Login/LoginForm.tsx:419
+#: src/screens/Login/LoginForm.tsx:421
 msgid "2FA Confirmation"
 msgstr "Kétlépcsős azonosítás"
 
@@ -1580,13 +1580,7 @@ msgstr "Aktív index: {0}; előző: {1}; {2} navigációs művelet"
 
 #: src/screens/Atmosphere/index.tsx:43
 msgid "Activity"
-msgstr ""
-
-#. Tab label in Notifications that shows new posts from accounts you get activity notifications for. Space is tight, so keep it as short as possible.
-#: src/screens/Notifications/index.tsx:159
-msgctxt "notifications tab"
-msgid "Activity"
-msgstr "Feliratkozások"
+msgstr "Tevékenységek"
 
 #: src/lib/hooks/useNotificationHandler.ts:220
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:105
@@ -2062,7 +2056,7 @@ msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} char
 msgstr "A helyettesítő szöveg össze lesz csukva. {MAX_ALT_TEXT, plural, other {Korlát: {0} karakter.}}"
 
 #. placeholder {0}: currentAccount?.email || '(no email)'
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:100
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:102
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr "Küldtünk egy e-mailt a(z) {0} címre. Ez a levél egy ellenőrzőkódot tartalmaz, amit alább adhatsz meg."
 
@@ -2185,7 +2179,7 @@ msgstr "Hiba történt a csoportbeszélgetés létrehozása közben. Próbáld �
 #: src/components/hooks/useFollowMethods.ts:52
 #: src/components/ProfileCard.tsx:510
 #: src/components/ProfileCard.tsx:535
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:217
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:218
 #: src/view/com/notifications/NotificationFeedItem.tsx:823
 #: src/view/com/notifications/NotificationFeedItem.tsx:844
 msgid "An issue occurred, please try again."
@@ -2419,7 +2413,7 @@ msgstr "Archiválás dátuma: {0}"
 msgid "Archived post"
 msgstr "Archivált bejegyzés"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:327
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:329
 msgid "Are you really, really sure?"
 msgstr "Egészen biztos vagy benne?"
 
@@ -2524,7 +2518,7 @@ msgstr "Témakör hozzárendelése"
 msgid "At least 8 characters"
 msgstr "Adj meg legalább 8 karaktert"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:338
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:340
 msgid "AT Protocol FAQ"
 msgstr "AT protokoll GYIK"
 
@@ -2597,8 +2591,8 @@ msgstr "Átvizsgálásra vár"
 #: src/screens/Login/ChooseAccountForm.tsx:99
 #: src/screens/Login/ForgotPasswordForm.tsx:123
 #: src/screens/Login/ForgotPasswordForm.tsx:128
-#: src/screens/Login/LoginForm.tsx:486
-#: src/screens/Login/LoginForm.tsx:491
+#: src/screens/Login/LoginForm.tsx:488
+#: src/screens/Login/LoginForm.tsx:493
 #: src/screens/Login/SetNewPasswordForm.tsx:136
 #: src/screens/Login/SetNewPasswordForm.tsx:142
 #: src/screens/Messages/components/ChatDisabled.tsx:161
@@ -2676,7 +2670,7 @@ msgstr "A feliratkozás előtt vissza kell igazolnod az e-mail-címedet."
 #: src/screens/Messages/ChatList.tsx:543
 #: src/screens/Messages/Conversation.tsx:207
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:285
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:286
 msgid "Before you can message another user, you must first verify your email."
 msgstr "Az üzenetküldés előtt ellenőriznünk kell az e-mail-címedet."
 
@@ -3274,7 +3268,7 @@ msgstr "Alkalmazás nyelvének megváltoztatása"
 msgid "Change Handle"
 msgstr "Felhasználónév megváltoztatása"
 
-#: src/screens/Login/LoginForm.tsx:580
+#: src/screens/Login/LoginForm.tsx:582
 msgid "Change hosting provider"
 msgstr "Tárhelyszolgáltató megváltoztatása"
 
@@ -3449,7 +3443,7 @@ msgstr "Csevegés némítása feloldva"
 msgid "Chats"
 msgstr "Csevegések"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:239
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:241
 msgid "Check <0>{currentEmail}</0> for an email with the confirmation code to enter below:"
 msgstr "Küldtünk egy levelet a(z) <0>{currentEmail}</0> e-mail-címre. Add meg a benne található ellenőrzőkódot:"
 
@@ -3469,10 +3463,6 @@ msgstr "Frissítések keresése"
 #: src/screens/SignupQueued.tsx:89
 msgid "Check my status"
 msgstr "Állapot ellenőrzése"
-
-#: src/screens/Login/LoginForm.tsx:438
-msgid "Check your email for a sign in code and enter it here."
-msgstr "Add meg az e-mailben kapott megerősítőkódot."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:160
 msgid "Child safety"
@@ -3629,12 +3619,12 @@ msgstr "Kattints ide a fiókod törléséhez"
 msgid "Click here to log out"
 msgstr "Kattints ide a kijelentkezéshez"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:269
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:278
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:271
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:280
 msgid "Click here to resend the email"
 msgstr "Az e-mail újraküldéséhez kattints ide"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:388
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:386
 msgid "Click here to restart the verification process."
 msgstr "Hitelesítés most."
 
@@ -3878,15 +3868,15 @@ msgstr "A <0>moderálási beállításokban</0> módosítható."
 
 #: src/components/Prompt.tsx:211
 #: src/components/Prompt.tsx:214
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:185
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:188
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:187
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:190
 msgid "Confirm"
 msgstr "Megerősítés"
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:81
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:71
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:196
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:250
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:252
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:153
 msgid "Confirmation code"
 msgstr "Megerősítőkód"
 
@@ -3894,12 +3884,12 @@ msgstr "Megerősítőkód"
 msgid "Connecting to service..."
 msgstr "Csatlakozás a szolgáltatáshoz…"
 
-#: src/screens/Login/LoginForm.tsx:517
+#: src/screens/Login/LoginForm.tsx:519
 msgid "Connecting to service…"
 msgstr "Csatlakozás a szolgáltatáshoz…"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:142
-#: src/screens/Login/LoginForm.tsx:523
+#: src/screens/Login/LoginForm.tsx:525
 msgid "Connecting…"
 msgstr "Csatlakozás folyamatban…"
 
@@ -4595,8 +4585,8 @@ msgstr "Törlés"
 msgid "Delete account"
 msgstr "Fiók törlése"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:189
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:236
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:191
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:238
 msgid "Delete account “{currentHandle}”"
 msgstr "A(z) „{currentHandle}” fiók törlése"
 
@@ -4647,7 +4637,7 @@ msgstr "Üzenet törlése"
 msgid "Delete message for me"
 msgstr "Üzenet törlése helyileg"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:309
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:311
 msgid "Delete my account"
 msgstr "Fiók törlése"
 
@@ -4779,7 +4769,7 @@ msgid "Disable"
 msgstr "Letiltás"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:231
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:240
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:238
 msgid "Disable 2FA"
 msgstr "Kétlépcsős azonosítás kikapcsolása"
 
@@ -4791,7 +4781,7 @@ msgstr "Feliratok ki"
 msgid "Disable email 2FA"
 msgstr "E-mailes kétlépcsős azonosítás kikapcsolása"
 
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:96
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:98
 msgid "Disable Email 2FA"
 msgstr "Kétlépcsős azonosítás kikapcsolása"
 
@@ -4952,11 +4942,11 @@ msgstr "Nem ábrázol meztelenséget."
 msgid "Domain verified!"
 msgstr "A tartományellenőrzés kész."
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:385
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:383
 msgid "Don't have a code or need a new one? <0>Click here.</0>"
 msgstr "Ha nem rendelkezel kóddal vagy újra van szükséged, <0>kattints ide</0>."
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:275
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:277
 msgid "Don’t see a code? <0>Click here to resend.</0>"
 msgstr "Ha nem kaptad meg, <0>kattints ide</0> egy új kód küldéséhez."
 
@@ -5116,7 +5106,7 @@ msgstr "pl.: Akik sosem tévednek."
 msgid "e.g. Users that repeatedly reply with ads."
 msgstr "pl.: Akik folyton csak reklámokkal válaszolnak."
 
-#: src/screens/Notifications/components/PageList.tsx:575
+#: src/screens/Notifications/components/PageList.tsx:577
 msgctxt "Notifications section header"
 msgid "Earlier"
 msgstr "Korábbiak megjelenítése"
@@ -5276,7 +5266,7 @@ msgstr "Letiltottad a lista szerzőjét vagy ő tiltott le Téged."
 msgid "Email"
 msgstr "E-mail-cím"
 
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:67
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:69
 msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr "Kétlépcsős azonosítás kikapcsolva"
@@ -5297,7 +5287,7 @@ msgstr "E-mail újraküldve"
 msgid "Email sent!"
 msgstr "E-mail elküldve!"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:266
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:268
 msgid "Email sent! <0>Click here to resend.</0>"
 msgstr "E-mail elküldve. <0>Kattints ide az újraküldéshez.</0>"
 
@@ -5448,6 +5438,10 @@ msgstr "Belépés teljes képernyős módba"
 msgid "Enter the 6-digit code sent to {prettyNumber}"
 msgstr "Add meg a hatjegyű kódot, amelyet a következő telefonszámra küldtünk: {prettyNumber}"
 
+#: src/screens/Login/LoginForm.tsx:437
+msgid "Enter the code from your email or authenticator app"
+msgstr "E-mailben kapott vagy hitelesítőalkalmazásban előállított kód megadása"
+
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:382
 msgid "Enter the domain you want to use"
 msgstr "Add meg a használni kívánt tartományt"
@@ -5456,7 +5450,11 @@ msgstr "Add meg a használni kívánt tartományt"
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "Add meg a regisztrációkor használt e-mail-címedet. Küldeni fogunk egy „helyreállítási kódot”, amivel megváltoztathatod a jelszavad."
 
-#: src/screens/Login/LoginForm.tsx:331
+#: src/screens/Login/LoginForm.tsx:440
+msgid "Enter the sign in code from your email or authenticator app."
+msgstr "Add meg a bejelentkezési kódot, amelyet e-mailben kaptál vagy egy hitelesítőalkalmazás állított elő."
+
+#: src/screens/Login/LoginForm.tsx:333
 msgid "Enter the username or email address you used when you created your account"
 msgstr "Add meg a fiók létrehozásakor használt felhasználónevet vagy e-mail-címet."
 
@@ -5469,8 +5467,8 @@ msgstr "Születési dátum megadása"
 msgid "Enter your email address"
 msgstr "Add meg az e-mail-címedet"
 
-#: src/screens/Login/LoginForm.tsx:379
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:295
+#: src/screens/Login/LoginForm.tsx:381
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:297
 msgid "Enter your password"
 msgstr "Jelszó megadása"
 
@@ -5739,7 +5737,7 @@ msgstr "Az alkalmazásjelszó létrehozása meghiúsult. Próbáld újra."
 
 #: src/components/dms/MessageProfileButton.tsx:38
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:66
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:275
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:276
 msgid "Failed to create conversation"
 msgstr "A csevegés törlése meghiúsult"
 
@@ -6241,8 +6239,8 @@ msgstr "Barátok meghívása"
 msgid "Find Contacts"
 msgstr "Ismerősök felkutatása"
 
-#: src/screens/Notifications/components/PageList.tsx:631
-#: src/screens/Notifications/components/PageList.tsx:636
+#: src/screens/Notifications/components/PageList.tsx:633
+#: src/screens/Notifications/components/PageList.tsx:638
 msgid "Find friends"
 msgstr "Ismerősök felkutatása"
 
@@ -6267,7 +6265,7 @@ msgstr "Ismerősök felkutatása"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Bejegyzések, felhasználók és hírfolyamok felfedezése a Blueskyon"
 
-#: src/screens/Notifications/components/PageList.tsx:625
+#: src/screens/Notifications/components/PageList.tsx:627
 msgid "Find some friends to start getting notifications!"
 msgstr "Köss barátságokat, hogy értesítéseket kaphass!"
 
@@ -6331,7 +6329,7 @@ msgstr "{focusCount}× fókuszba helyezve"
 #: src/components/ProfileHoverCard/index.web.tsx:503
 #: src/components/ProfileHoverCard/index.web.tsx:514
 #: src/screens/Messages/ConversationSettings/Member.tsx:170
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:232
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:233
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:430
 #: src/screens/VideoFeed/index.tsx:1060
@@ -6390,7 +6388,7 @@ msgstr "Összes fiók követése"
 #. User is not following this account, click to follow back
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:547
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:228
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:229
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:155
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:428
 #: src/view/com/notifications/NotificationFeedItem.tsx:886
@@ -6456,7 +6454,7 @@ msgstr "Ismert követők"
 #: src/components/ProfileCard.tsx:542
 #: src/components/ProfileHoverCard/index.web.tsx:502
 #: src/components/ProfileHoverCard/index.web.tsx:513
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:223
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:224
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:426
 #: src/screens/VideoFeed/index.tsx:1058
@@ -6489,7 +6487,7 @@ msgstr "Mostantól követed: {displayName}"
 msgid "Following {handle}"
 msgstr "Mostantól követed: {handle}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:213
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:214
 msgid "Following {name}"
 msgstr "Mostantól követed: {name}"
 
@@ -6534,7 +6532,7 @@ msgstr "A fellebbezési és helyreállítási eljárásról további informáci�
 msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
 msgstr "Vállalati fiók esetén a felelős személy születési dátumát add meg."
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:192
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:194
 msgid "For security reasons, we’ll need to send a confirmation code to your email address <0>{currentEmail}</0>."
 msgstr "Biztonsági okokból egy ellenőrzőkódot fogunk küldeni a(z) <0>{currentEmail}</0> e-mail-címre."
 
@@ -6567,8 +6565,8 @@ msgstr "Szűrd ki a zajt!"
 msgid "Forgot Password"
 msgstr "Elfelejtett jelszó"
 
-#: src/screens/Login/LoginForm.tsx:404
-#: src/screens/Login/LoginForm.tsx:411
+#: src/screens/Login/LoginForm.tsx:406
+#: src/screens/Login/LoginForm.tsx:413
 msgid "Forgot password?"
 msgstr "Elfelejtett jelszó"
 
@@ -6842,7 +6840,7 @@ msgid "Go to {firstAuthorName}'s profile"
 msgstr "{firstAuthorName} profiljának megnyitása"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:78
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:644
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:645
 #: src/screens/Notifications/components/NotificationItem/Item/text.tsx:113
 msgid "Go to {name}’s profile"
 msgstr "{name} profiljának megnyitása"
@@ -7285,16 +7283,16 @@ msgstr "Gazda:"
 #: src/components/dialogs/ServerInput.tsx:138
 #: src/screens/Login/components/HostingProviderDialog.tsx:159
 #: src/screens/Login/ForgotPasswordForm.tsx:84
-#: src/screens/Login/LoginForm.tsx:595
+#: src/screens/Login/LoginForm.tsx:597
 msgid "Hosting provider"
 msgstr "Tárhelyszolgáltató"
 
 #. placeholder {0}: toNiceHostingUrl(state.pdsUrl)
-#: src/screens/Login/LoginForm.tsx:591
+#: src/screens/Login/LoginForm.tsx:593
 msgid "Hosting provider: {0}"
 msgstr "Tárhelyszolgáltató: {0}"
 
-#: src/screens/Login/LoginForm.tsx:593
+#: src/screens/Login/LoginForm.tsx:595
 msgid "Hosting provider: Bluesky"
 msgstr "Tárhelyszolgáltató: Bluesky"
 
@@ -7319,8 +7317,8 @@ msgstr "Embercsempészet"
 msgid "I consent to Bluesky using my contacts for mutual friend discovery and to retain hashed data for matching until I opt out."
 msgstr "Beleegyezem abba, hogy a Bluesky ismerősfelkutatás céljából felhasználja a névjegyeimből előállított titkosított kivonatokat, és hogy ezeket az adatokat későbbi ismerősfelkutatásokhoz is megtartsa, amíg ezt az engedélyt vissza nem vonom."
 
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:140
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:143
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:142
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:145
 msgid "I have a code"
 msgstr "Kóddal rendelkezem"
 
@@ -7589,7 +7587,7 @@ msgstr "Az alábbi dátumig közzétett bejegyzések megtartása"
 msgid "Include video timestamp ({videoTimestamp})"
 msgstr "A videó jelenlegi pontjának kiemelése ({videoTimestamp})"
 
-#: src/screens/Login/LoginForm.tsx:158
+#: src/screens/Login/LoginForm.tsx:160
 msgid "Incorrect username or password"
 msgstr "Érvénytelen felhasználónév vagy jelszó"
 
@@ -7600,10 +7598,6 @@ msgstr "Számláló megnövelése"
 #: src/screens/Login/SetNewPasswordForm.tsx:128
 msgid "Input new password"
 msgstr "Új jelszó megadása"
-
-#: src/screens/Login/LoginForm.tsx:435
-msgid "Input the code which has been emailed to you"
-msgstr "E-mailben kapott kód megadása"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:137
 msgid "Interaction limited"
@@ -7649,8 +7643,8 @@ msgstr "Bemutatjuk a csoportbeszélgetéseket"
 msgid "Introducing saved posts AKA bookmarks"
 msgstr "Bejegyzések mentése (más néven: könyvjelzők)"
 
-#: src/screens/Login/LoginForm.tsx:149
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:78
+#: src/screens/Login/LoginForm.tsx:151
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:80
 msgid "Invalid 2FA confirmation code."
 msgstr "Érvénytelen kétlépcsős azonosítási kód."
 
@@ -8481,7 +8475,7 @@ msgstr "Kapcsolatbalépési beállítások betöltése…"
 msgid "Loading..."
 msgstr "Betöltés…"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:557
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:558
 msgid "Loads more people into this list"
 msgstr "További személyek betöltése"
 
@@ -9096,7 +9090,7 @@ msgstr "Ugrás a kezdőcsomaghoz"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:148
 #: src/screens/Login/ForgotPasswordForm.tsx:173
-#: src/screens/Login/LoginForm.tsx:530
+#: src/screens/Login/LoginForm.tsx:532
 msgid "Navigates to the next screen"
 msgstr "Ugrás a következő képernyőre"
 
@@ -9298,7 +9292,7 @@ msgstr "<0/> válaszolt"
 msgid "New Starter Pack"
 msgstr "Új kezdőcsomag"
 
-#: src/screens/Login/LoginForm.tsx:544
+#: src/screens/Login/LoginForm.tsx:546
 msgid "New to Bluesky? <0>Sign up</0>"
 msgstr "Meg nem ismered a Blueskyt? <0>Regisztrálj</0>!"
 
@@ -9406,7 +9400,7 @@ msgstr "Nem jár le"
 msgid "No feeds found. Try searching for something else."
 msgstr "Nincs találat. Próbálj megadni egy másik keresési kifejezést."
 
-#: src/screens/Notifications/components/PageList.tsx:665
+#: src/screens/Notifications/components/PageList.tsx:667
 msgid "No followers to show yet"
 msgstr "Még nincsenek megjeleníthető követők"
 
@@ -9453,7 +9447,7 @@ msgstr "Még nincsenek listák"
 msgid "No longer following {0}"
 msgstr "Abbahagytad {0} követését"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:210
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:211
 msgid "No longer following {name}"
 msgstr "Abbahagytad {name} követését"
 
@@ -9478,12 +9472,12 @@ msgstr "Vess véget a szeméttel teli hírfolyamok örökös görgetésének! In
 msgid "No name"
 msgstr "Névtelen"
 
-#: src/screens/Notifications/components/PageList.tsx:662
+#: src/screens/Notifications/components/PageList.tsx:664
 msgid "No notifications from people you follow yet"
 msgstr "Még nincsenek értesítések az Általad követett személyektől"
 
-#: src/screens/Notifications/components/PageList.tsx:614
-#: src/screens/Notifications/components/PageList.tsx:659
+#: src/screens/Notifications/components/PageList.tsx:616
+#: src/screens/Notifications/components/PageList.tsx:661
 msgid "No notifications yet"
 msgstr "Még nincsenek értesítések"
 
@@ -9547,7 +9541,7 @@ msgstr "Még nincsenek idézések"
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "Még nincsenek előzmények. Ha kiválasztasz egy GIF-et, akkor a jövőben itt megtalálhatod."
 
-#: src/screens/Notifications/components/PageList.tsx:668
+#: src/screens/Notifications/components/PageList.tsx:670
 msgid "No replies to show yet"
 msgstr "Még nincsenek megjeleníthető válaszok"
 
@@ -10153,7 +10147,7 @@ msgstr "Ugrás a(z) {displayName} hírfolyamra"
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "A tartalomfigyelmeztetések alkalmazására alkalmas párbeszédablak megnyitása"
 
-#: src/screens/Login/LoginForm.tsx:581
+#: src/screens/Login/LoginForm.tsx:583
 msgid "Opens a dialog to change the hosting provider you sign in to"
 msgstr "A tárhelyszolgáltató-kiválasztási párbeszédablak megnyitása"
 
@@ -10413,11 +10407,11 @@ msgstr "Az oldal nem található"
 msgid "Party GIFs"
 msgstr "Bulizós GIF-ek"
 
-#: src/screens/Login/LoginForm.tsx:359
-#: src/screens/Login/LoginForm.tsx:365
+#: src/screens/Login/LoginForm.tsx:361
+#: src/screens/Login/LoginForm.tsx:367
 #: src/screens/Settings/AccountSettings.tsx:124
 #: src/screens/Settings/AccountSettings.tsx:128
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:290
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:292
 #: src/screens/Signup/StepInfo/index.tsx:272
 msgid "Password"
 msgstr "Jelszó"
@@ -10478,7 +10472,7 @@ msgstr "Az őt követő személyek: @{0}"
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:180
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:184
 msgid "People I follow"
-msgstr ""
+msgstr "Követett személyektől"
 
 #: src/screens/Messages/Settings.tsx:97
 msgctxt "allow group chat invites from"
@@ -10729,11 +10723,11 @@ msgstr "Add meg a meghívókódodat."
 msgid "Please enter your new email address."
 msgstr "Add meg az új e-mail-címedet."
 
-#: src/screens/Login/LoginForm.tsx:190
+#: src/screens/Login/LoginForm.tsx:192
 msgid "Please enter your password"
 msgstr "Add meg a jelszót"
 
-#: src/screens/Login/LoginForm.tsx:184
+#: src/screens/Login/LoginForm.tsx:186
 msgid "Please enter your username"
 msgstr "Add meg a felhasználónevedet"
 
@@ -10848,6 +10842,12 @@ msgstr "Fénykép közzététele"
 #: src/view/screens/Profile.tsx:570
 msgid "Post a video"
 msgstr "Videó közzététele"
+
+#. Tab label in Notifications that shows new posts from accounts you get activity notifications for. Space is tight, so keep it as short as possible.
+#: src/screens/Notifications/index.tsx:159
+msgctxt "notifications tab"
+msgid "Post alerts"
+msgstr "Feliratkozások"
 
 #: src/view/com/composer/Composer.tsx:1909
 msgctxt "action"
@@ -12061,8 +12061,8 @@ msgstr "Kód újraküldése"
 msgid "Resend code in <0>00:{0}</0>"
 msgstr "<0>00:{0}</0> múlva új kódot kérhetsz"
 
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:173
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:176
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:175
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:178
 msgid "Resend email"
 msgstr "E-mail újraküldése"
 
@@ -12092,7 +12092,7 @@ msgstr "Regisztrációs varázsló állapotának alaphelyzetbe állítása"
 msgid "Reset password"
 msgstr "Jelszó helyreállítása"
 
-#: src/screens/Login/LoginForm.tsx:405
+#: src/screens/Login/LoginForm.tsx:407
 msgid "Reset your password by sending a code to your email"
 msgstr "A jelszó helyreállítása e-mailben küldött ellenőrzőkód segítségével"
 
@@ -12118,7 +12118,7 @@ msgstr "Bejegyzés visszaállítva"
 msgid "Resync contacts"
 msgstr "Névjegyek frissítése"
 
-#: src/screens/Login/LoginForm.tsx:507
+#: src/screens/Login/LoginForm.tsx:509
 msgid "Retries signing in"
 msgstr "Bejelentkezés újrapróbálása"
 
@@ -12137,8 +12137,8 @@ msgstr "A legutóbb meghiúsult folyamat újrapróbálása"
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:56
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:59
 #: src/components/StarterPack/ProfileStarterPacks.tsx:371
-#: src/screens/Login/LoginForm.tsx:506
-#: src/screens/Login/LoginForm.tsx:512
+#: src/screens/Login/LoginForm.tsx:508
+#: src/screens/Login/LoginForm.tsx:514
 #: src/screens/Messages/ChatList.tsx:429
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:211
@@ -12325,7 +12325,7 @@ msgid "Saved to your feeds"
 msgstr "Hírfolyam elmentve"
 
 #: src/components/dialogs/NewskieDialog/index.tsx:119
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:294
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:295
 #: src/view/com/notifications/NotificationFeedItem.tsx:933
 #: src/view/com/notifications/NotificationFeedItem.tsx:941
 msgid "Say hello!"
@@ -12757,7 +12757,7 @@ msgstr "Kód küldése"
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:172
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:179
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:311
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:205
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:207
 msgid "Send email"
 msgstr "E-mail küldése"
 
@@ -12794,8 +12794,8 @@ msgid "Send the message from your phone"
 msgstr "Üzenet küldése a telefonról"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:304
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:127
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:130
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:129
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:132
 msgid "Send verification email"
 msgstr "Visszaigazoló e-mail küldése"
 
@@ -12849,11 +12849,11 @@ msgstr "Add meg, hogy ki léphet kapcsolatba a bejegyzéssel"
 msgid "Set your birthdate below and we'll get you back to posting and exploring in no time!"
 msgstr "Add meg a születési dátumodat és seperc alatt folytathatod a böngészést és bejegyzésírást!"
 
-#: src/screens/Login/LoginForm.tsx:346
+#: src/screens/Login/LoginForm.tsx:348
 msgid "set your hosting provider manually"
 msgstr "tárhelyszolgáltató kézi beállítása"
 
-#: src/screens/Login/LoginForm.tsx:461
+#: src/screens/Login/LoginForm.tsx:463
 msgid "Set your hosting provider manually"
 msgstr "Tárhelyszolgáltató kézi beállítása"
 
@@ -13128,8 +13128,8 @@ msgid "Show lists of users to select from"
 msgstr "Választható felhasználólisták megjelenítése"
 
 #: src/components/Post/ShowMoreTextButton.tsx:59
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:556
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:582
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:557
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:583
 msgid "Show more"
 msgstr "Továbbiak"
 
@@ -13227,9 +13227,9 @@ msgstr "Tartalom megjelenítése"
 #: src/screens/Hashtag.tsx:233
 #: src/screens/Login/index.tsx:143
 #: src/screens/Login/index.tsx:165
-#: src/screens/Login/LoginForm.tsx:269
-#: src/screens/Login/LoginForm.tsx:529
-#: src/screens/Login/LoginForm.tsx:535
+#: src/screens/Login/LoginForm.tsx:271
+#: src/screens/Login/LoginForm.tsx:531
+#: src/screens/Login/LoginForm.tsx:537
 #: src/screens/Messages/JoinRequest.tsx:294
 #: src/screens/Messages/JoinRequest.tsx:300
 #: src/screens/Search/SearchResults.tsx:399
@@ -13307,7 +13307,7 @@ msgstr "Kijelentkezés"
 msgid "Sign out?"
 msgstr "Kijelentkezés"
 
-#: src/screens/Login/LoginForm.tsx:547
+#: src/screens/Login/LoginForm.tsx:549
 msgid "Sign up"
 msgstr "Regisztráció"
 
@@ -13603,7 +13603,7 @@ msgstr "Kezdőcsomag – Cím: „{starterPackName}”"
 msgid "Starter Pack by {0}"
 msgstr "Kezdőcsomag – Szerző: {0}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:444
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:445
 msgid "Starter pack by {handle}"
 msgstr "Kezdőcsomag – Szerző: {handle}"
 
@@ -14032,7 +14032,7 @@ msgstr "További részletek"
 msgid "Tell us why you believe this decision was a mistake. We will review your appeal along with the original content."
 msgstr "Oszd meg, hogy miért gondolod úgy, hogy tévedésből távolítottuk el a bejegyzést. Az eltávolított tartalmat a fellebbezés fényében ismét átvizsgáljuk."
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:220
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:222
 msgid "Temporarily deactivate your account"
 msgstr "A fiókod átmeneti deaktiválása"
 
@@ -14356,7 +14356,7 @@ msgstr "Megszakadt a kapcsolat a kiszolgálóval"
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "Megszakadt a kapcsolat a kiszolgálóval. Ellenőrizd az internetkapcsolatot, majd próbáld újra."
 
-#: src/screens/Notifications/components/PageList.tsx:362
+#: src/screens/Notifications/components/PageList.tsx:363
 #: src/view/com/notifications/NotificationFeed.tsx:137
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Az értesítések frissítése meghiúsult. Koppints ide az újrapróbálkozáshoz."
@@ -14874,7 +14874,7 @@ msgstr "Ezzel a funkcióval létrehozhatsz egy új listát, amely ugyanazokkal a
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr "Ezzel a(z) „{0}” kifejezés el lesz távolítva az elnémított szavak listájáról. Később bármikor újra felveheted."
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:330
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:332
 msgid "This will irreversibly delete your Bluesky account <0>{currentHandle}</0> and all associated data. Note that this will affect any other <1>AT Protocol</1> services you use with this account."
 msgstr "Ez véglegesen törölni fogja a(z) <0>{currentHandle}</0> Bluesky-fiókot és minden hozzá tartozó adatot. Ez a fiókot használó többi <1>AT Protokoll</1>-szolgáltatást is érinti."
 
@@ -14936,7 +14936,7 @@ msgstr "Cím (legfeljebb 100 karakter)"
 msgid "Title (optional)"
 msgstr "Cím (nem kötelező)"
 
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:106
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:108
 msgid "To disable the email 2FA method, please verify your access to the email address."
 msgstr "A kétlépcsős azonosítás kikapcsolásához vissza kell igazolnod az e-mail-címedet."
 
@@ -14954,7 +14954,7 @@ msgstr "A kijelentkezéshez <0>kattints ide</0>. Ha szeretnéd, akkor lehetősé
 msgid "Today"
 msgstr "Ma"
 
-#: src/screens/Notifications/components/PageList.tsx:574
+#: src/screens/Notifications/components/PageList.tsx:576
 msgctxt "Notifications section header"
 msgid "Today"
 msgstr "Ma"
@@ -15158,7 +15158,7 @@ msgstr "A kiszolgáló nem található. Ellenőrizd az internetkapcsolatot, majd
 
 #: src/screens/Login/ForgotPasswordForm.tsx:70
 #: src/screens/Login/index.tsx:100
-#: src/screens/Login/LoginForm.tsx:162
+#: src/screens/Login/LoginForm.tsx:164
 #: src/screens/Login/SetNewPasswordForm.tsx:82
 #: src/screens/Signup/index.tsx:89
 msgid "Unable to contact your service. Please check your Internet connection."
@@ -15501,7 +15501,7 @@ msgid "Update {0} in Lists"
 msgstr "{0} listatagságának szerkesztése"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:293
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:305
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:304
 #: src/screens/Settings/AccountSettings.tsx:110
 #: src/screens/Settings/AccountSettings.tsx:118
 msgid "Update email"
@@ -15699,11 +15699,11 @@ msgstr "Elérhető"
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
 msgstr "A felhasználónév csak az angol ábécé betűit (A–Z), számokat és kötőjeleket tartalmazhat"
 
-#: src/screens/Login/LoginForm.tsx:300
+#: src/screens/Login/LoginForm.tsx:302
 msgid "Username or email"
 msgstr "Felhasználónév vagy e-mail-cím"
 
-#: src/screens/Login/LoginForm.tsx:310
+#: src/screens/Login/LoginForm.tsx:312
 msgid "Username or email address"
 msgstr "Felhasználónév vagy e-mail-cím"
 
@@ -15756,7 +15756,7 @@ msgstr "Igazolás ismét"
 #. Button text and accessibility label for action to verify the user's email address using the code entered
 #. Button text and accessibility label for action to verify the user's email address using the code entered
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:357
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:372
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:370
 msgctxt "action"
 msgid "Verify code"
 msgstr "Kód megerősítése"
@@ -15829,7 +15829,7 @@ msgid "Version {0}"
 msgstr "Verziószám: {0}"
 
 #. When someone followed you through a starter pack, e.g. “via starter pack [icon] Science Pack”
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:391
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:392
 msgid "via starter pack <0/> <1>{name}</1>"
 msgstr "a(z) <0/> <1>{name}</1> kezdőcsomag alapján"
 
@@ -16181,7 +16181,7 @@ msgstr "A hírfolyam szolgáltatójával történő kapcsolódás meghiúsult. L
 msgid "We could not find this list. It was probably deleted."
 msgstr "A lista nem található. Lehetséges, hogy törölték."
 
-#: src/screens/Login/LoginForm.tsx:342
+#: src/screens/Login/LoginForm.tsx:344
 msgid "We couldn't find an account with that username. Please check that you've typed it correctly, or <0>set your hosting provider manually</0>."
 msgstr "A felhasználónév nem található. Ellenőrizd, hogy helyesen van-e megadva vagy <0>add meg a tárhelyszolgáltatót kézileg</0>."
 
@@ -16213,7 +16213,7 @@ msgstr "A fiókbeállítások betöltése meghiúsult. Ellenőrizd az internetka
 msgid "We couldn’t reach this link. Check it, or save anyway."
 msgstr "A webhely nem elérhető. Ellenőrizd, hogy elgépelted-e."
 
-#: src/screens/Login/LoginForm.tsx:457
+#: src/screens/Login/LoginForm.tsx:459
 msgid "We couldn’t verify your hosting provider. Check your internet connection, or <0>set your hosting provider manually</0>."
 msgstr "A tárhelyszolgáltató nem ellenőrizhető. Ellenőrizd az internetkapcsolatot vagy <0>add meg a tárhelyszolgáltatót kézileg</0>."
 
@@ -16620,7 +16620,7 @@ msgstr "Helyeslő GIF-ek"
 msgid "Yes, deactivate"
 msgstr "Igen – deaktiválás"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:348
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:350
 msgid "Yes, delete my account"
 msgstr "Igen – fiók törlése"
 
@@ -16719,7 +16719,7 @@ msgstr "Jelenleg hitelesítve vagy. Ha megváltoztatod a felhasználónevedet, a
 msgid "You can adjust your interests at any time from \"Content and media\" settings."
 msgstr "A megjelenített érdeklődési köröket bármikor szerkesztheted a Tartalom és mellékletek menüben."
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:217
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:219
 msgid "You can also <0>temporarily deactivate</0> your account instead. Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Ha szeretnéd, akkor lehetőséged van a fiók <0>átmeneti deaktiválására</0> is. Ezzel a fiókhoz tartozó profil, bejegyzések, hírfolyamok és listák mind eltűnnek más felhasználók számára, viszont lehetőséged lesz bejelentkezéssel újra aktiválni azt."
 
@@ -17225,7 +17225,7 @@ msgstr "Felfüggesztett fiókként nem küldhetsz jelentéseket."
 msgid "Your account credentials were revoked"
 msgstr "A fiókod hitelesítési adatait visszavonták"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:133
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:135
 msgid "Your account has been deleted, see ya! ✌️"
 msgstr "A fiókod törölve. Viszlát! ✌️"
 

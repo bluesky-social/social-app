@@ -157,7 +157,7 @@ function NewNotificationsScreenInner() {
     {
       key: 'activity',
       label: l({
-        message: 'Activity',
+        message: 'Post alerts',
         context: 'notifications tab',
         comment:
           'Tab label in Notifications that shows new posts from accounts you get activity notifications for. Space is tight, so keep it as short as possible.',

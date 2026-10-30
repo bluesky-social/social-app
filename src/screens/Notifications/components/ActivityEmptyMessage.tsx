@@ -15,9 +15,9 @@ import {IS_WEB} from '#/env'
 const BELL_EM = 0.875
 
 /**
- * The Activity tab's empty state, which points to the bell on a profile that
- * subscribes to someone's activity, drawn inline as that profile button draws
- * it.
+ * The Post alerts tab's empty state, which points to the bell on a profile
+ * that subscribes to someone's activity, drawn inline as that profile button
+ * draws it.
  */
 export function ActivityEmptyMessage() {
   const t = useTheme()
