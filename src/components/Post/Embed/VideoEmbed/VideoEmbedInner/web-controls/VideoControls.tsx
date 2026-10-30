@@ -12,6 +12,7 @@ import {
   useSubtitlesEnabled,
 } from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
+import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -407,6 +408,7 @@ export function Controls({
               onPress={onPressSubtitles}
             />
           )}
+          {altText && <AltBadgeWithDialog text={altText} />}
           <VolumeControl
             muted={muted}
             changeMuted={changeMuted}
