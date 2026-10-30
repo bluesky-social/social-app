@@ -24,6 +24,12 @@ export enum Features {
   ModerationInboxEnable = 'moderation_inbox:enable',
   AtmosphereScreenEnable = 'atmosphere_screen:enable',
   NotificationsV2Enable = 'notifications_v2:enable',
+  /**
+   * Provisional private video watch feed feedback. Keep off until the
+   * contract is published and receivers are deployed (see
+   * src/lib/media/video/feedFeedback.md).
+   */
+  FeedVideoWatchEnable = 'feed:video_watch:enable',
 
   // values
   StarterPacksConfig = 'starter_packs:config',
