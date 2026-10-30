@@ -1,6 +1,5 @@
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {View} from 'react-native'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
@@ -15,19 +14,26 @@ import {
   useSetLargeAltBadgeEnabled,
 } from '#/state/preferences/large-alt-badge'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {BetaTag} from '#/components/BetaTag'
 import * as Toggle from '#/components/forms/Toggle'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
 import {Haptic_Stroke2_Corner2_Rounded as HapticIcon} from '#/components/icons/Haptic'
 import * as Layout from '#/components/Layout'
+import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {
+  useAltTextGenerationPref,
+  useIsAltTextGenerationAvailable,
+} from '#/features/altTextGeneration'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'AccessibilitySettings'
 >
 export function AccessibilitySettingsScreen({}: Props) {
-  const {_} = useLingui()
+  const t = useTheme()
+  const {t: l} = useLingui()
 
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const setRequireAltTextEnabled = useSetRequireAltTextEnabled()
@@ -35,6 +41,9 @@ export function AccessibilitySettingsScreen({}: Props) {
   const setHapticsDisabled = useSetHapticsDisabled()
   const largeAltBadgeEnabled = useLargeAltBadgeEnabled()
   const setLargeAltBadgeEnabled = useSetLargeAltBadgeEnabled()
+  const isAltTextGenerationAvailable = useIsAltTextGenerationAvailable()
+  const [altTextGenerationEnabled, setAltTextGenerationEnabled] =
+    useAltTextGenerationPref()
 
   return (
     <Layout.Screen>
@@ -56,7 +65,7 @@ export function AccessibilitySettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <Toggle.Item
               name="require_alt_text"
-              label={_(msg`Require alt text before posting`)}
+              label={l`Require alt text before posting`}
               value={requireAltTextEnabled ?? false}
               onChange={value => setRequireAltTextEnabled(value)}
               style={[a.w_full]}>
@@ -67,7 +76,7 @@ export function AccessibilitySettingsScreen({}: Props) {
             </Toggle.Item>
             <Toggle.Item
               name="large_alt_badge"
-              label={_(msg`Display larger alt text badges`)}
+              label={l`Display larger alt text badges`}
               value={!!largeAltBadgeEnabled}
               onChange={value => setLargeAltBadgeEnabled(value)}
               style={[a.w_full]}>
@@ -76,6 +85,38 @@ export function AccessibilitySettingsScreen({}: Props) {
               </Toggle.LabelText>
               <Toggle.Platform />
             </Toggle.Item>
+            {isAltTextGenerationAvailable && (
+              <Toggle.Item
+                name="alt_text_generation"
+                label={l`Suggest alt text for images`}
+                value={altTextGenerationEnabled === true}
+                onChange={value => setAltTextGenerationEnabled(value)}
+                style={[a.w_full]}>
+                <View style={[a.flex_1, a.gap_2xs]}>
+                  <View
+                    style={[a.flex_row, a.flex_wrap, a.align_center, a.gap_sm]}>
+                    <Toggle.LabelText>
+                      <Trans>Suggest alt text for images</Trans>
+                    </Toggle.LabelText>
+                    <BetaTag label={l`Experimental`} />
+                  </View>
+                  <Text
+                    style={[
+                      a.text_sm,
+                      a.leading_snug,
+                      t.atoms.text_contrast_medium,
+                    ]}>
+                    <Trans>
+                      Drafts alt text as soon as you add an image to a post.
+                      Suggestions are generated entirely on your device by its
+                      built-in model, without sending your images anywhere.
+                      Check them before posting.
+                    </Trans>
+                  </Text>
+                </View>
+                <Toggle.Platform />
+              </Toggle.Item>
+            )}
           </SettingsList.Group>
           {IS_NATIVE && (
             <>
@@ -87,7 +128,7 @@ export function AccessibilitySettingsScreen({}: Props) {
                 </SettingsList.ItemText>
                 <Toggle.Item
                   name="haptics"
-                  label={_(msg`Disable haptic feedback`)}
+                  label={l`Disable haptic feedback`}
                   value={hapticsDisabled ?? false}
                   onChange={value => setHapticsDisabled(value)}
                   style={[a.w_full]}>

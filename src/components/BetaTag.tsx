@@ -3,7 +3,12 @@ import {Trans} from '@lingui/react/macro'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
-export function BetaTag() {
+export function BetaTag({
+  label,
+}: {
+  /** Overrides the default "Beta" label, e.g. with "Experimental". */
+  label?: string
+}) {
   const t = useTheme()
 
   return (
@@ -20,7 +25,7 @@ export function BetaTag() {
           paddingBottom: 3,
         },
       ]}>
-      <Trans>Beta</Trans>
+      {label ?? <Trans>Beta</Trans>}
     </Text>
   )
 }
