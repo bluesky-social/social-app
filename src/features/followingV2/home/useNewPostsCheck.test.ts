@@ -2,30 +2,27 @@ import {createElement, memo} from 'react'
 import {type AppStateStatus} from 'react-native'
 import {act, render, renderHook} from '@testing-library/react-native'
 
-import {type AppReturn} from '#/lib/appState'
+import {type AnyAppReturn} from '#/lib/appState'
 import {
   FOCUS_CHECK_AFTER,
   type NewPostsCheckTrigger,
-  RETURN_STALE_AFTER,
   useNewPostsCheck,
 } from './useNewPostsCheck'
 
 /*
  * Returns and app state are driven directly rather than through a mocked
- * `AppState`: what counts as a real return is `onAppReturnedFromBackground`'s
- * business, and only the hooks it exports are relied on here.
+ * `AppState`: what counts as a significant return is `#/lib/appState`'s
+ * business, so only its hooks are mocked.
  */
-const mockReturnListeners = new Set<(appReturn: AppReturn) => void>()
+const mockReturnListeners = new Set<(appReturn: AnyAppReturn) => void>()
 const mockAppStateListeners = new Set<(state: AppStateStatus) => void>()
 let mockAppState: AppStateStatus = 'active'
 jest.mock('#/lib/appState', () => {
-  const {useEffect, useEffectEvent, useState} = jest.requireActual<{
-    useEffect: (effect: () => () => void, deps: unknown[]) => void
-    useEffectEvent: <A extends unknown[]>(
-      fn: (...args: A) => void,
-    ) => (...args: A) => void
-    useState: <S>(initial: S) => [S, (next: S) => void]
-  }>('react')
+  const {useEffect, useState} =
+    jest.requireActual<typeof import('react')>('react')
+  const {useNonReactiveCallback} = jest.requireActual<
+    typeof import('#/lib/hooks/useNonReactiveCallback')
+  >('#/lib/hooks/useNonReactiveCallback')
   return {
     getCurrentState: () => mockAppState,
     useAppState() {
@@ -38,15 +35,16 @@ jest.mock('#/lib/appState', () => {
       }, [])
       return state
     },
-    useOnAppReturnedFromBackground(cb: (appReturn: AppReturn) => void) {
-      const onReturn = useEffectEvent(cb)
+    // As the real hook is, so it works in a `memo()` component.
+    useOnAnyAppReturn(cb: (appReturn: AnyAppReturn) => void) {
+      const onReturn = useNonReactiveCallback(cb)
       useEffect(() => {
-        const listener = (appReturn: AppReturn) => onReturn(appReturn)
+        const listener = (appReturn: AnyAppReturn) => onReturn(appReturn)
         mockReturnListeners.add(listener)
         return () => {
           mockReturnListeners.delete(listener)
         }
-      }, [])
+      }, [onReturn])
     },
   }
 })
@@ -128,12 +126,26 @@ async function advance(ms: number) {
   await flush()
 }
 
-/** Returns to the app from the background after `away` there. */
-async function returnToApp(away = 0) {
+/** A significant return, after `away` in the background. */
+function returnToApp(away: number) {
+  return comeBack(away, true)
+}
+
+/** A return too quick to be significant. */
+function hopToApp() {
+  return comeBack(0, false)
+}
+
+async function comeBack(away: number, isSignificant: boolean) {
   await setAppState('background')
   await advance(away)
   mockAppState = 'active'
-  const appReturn: AppReturn = {id: ++lastReturnId, timestamp: Date.now()}
+  const appReturn: AnyAppReturn = {
+    id: ++lastReturnId,
+    timestamp: Date.now(),
+    timeAway: away,
+    isSignificant,
+  }
   act(() => {
     for (const listener of [...mockReturnListeners]) listener(appReturn)
     for (const listener of [...mockAppStateListeners]) listener('active')
@@ -226,9 +238,15 @@ describe('check', () => {
   it('is told what prompted it', async () => {
     const view = await setup({interval: 10 * MINUTE})
     await view.refocus(FOCUS_CHECK_AFTER)
-    await returnToApp(RETURN_STALE_AFTER)
+    await returnToApp(5 * MINUTE)
+    await hopToApp()
     await advance(10 * MINUTE)
-    expect(view.check.mock.calls).toEqual([['focus'], ['return'], ['interval']])
+    expect(view.check.mock.calls).toEqual([
+      ['focus'],
+      ['return'],
+      ['hop'],
+      ['interval'],
+    ])
   })
 })
 
@@ -260,25 +278,27 @@ describe('in a memo() component', () => {
     // The feed loads after the view mounts.
     rerender(createElement(Checker, {...props, topFetchedAt: Date.now()}))
     await flush()
-    await returnToApp(RETURN_STALE_AFTER)
+    await returnToApp(5 * MINUTE)
 
     expect(check.mock.calls).toEqual([['return']])
   })
 })
 
 describe('return', () => {
-  it('checks on a return to stale data', async () => {
+  it('checks on a significant return, however fresh the data', async () => {
     const view = await setup()
     view.check.mockResolvedValueOnce(true)
-    await returnToApp(RETURN_STALE_AFTER)
+    await returnToApp(30 * SECOND)
     expect(view.check).toHaveBeenCalledTimes(1)
     expect(view.found()).toEqual(['return'])
   })
 
-  it('makes no request on a return to fresh data', async () => {
+  it('checks on a hop, as a `hop`', async () => {
     const view = await setup()
-    await returnToApp(RETURN_STALE_AFTER - SECOND)
-    expect(view.check).not.toHaveBeenCalled()
+    view.check.mockResolvedValueOnce(true)
+    await hopToApp()
+    expect(view.check).toHaveBeenCalledTimes(1)
+    expect(view.found()).toEqual(['hop'])
   })
 
   it('makes one request for a return and a focus within a minute of it', async () => {
@@ -299,11 +319,24 @@ describe('return', () => {
     expect(view.found()).toEqual(['return'])
   })
 
-  it('makes no request once a refresh that held it up commits a new top', async () => {
+  it('still checks once a refresh that held it up commits a new top', async () => {
     const view = await setup({isBusy: true})
     await returnToApp(5 * MINUTE)
     await view.update({isBusy: false, topFetchedAt: Date.now()})
-    expect(view.check).not.toHaveBeenCalled()
+    expect(view.check.mock.calls).toEqual([['return']])
+  })
+
+  it('checks once for held-up returns, as a `return` if any was significant', async () => {
+    const view = await setup({isBusy: true})
+    await hopToApp()
+    await returnToApp(5 * MINUTE)
+    await hopToApp()
+    await view.update({isBusy: false})
+    expect(view.check.mock.calls).toEqual([['return']])
+
+    // The next one starts afresh.
+    await hopToApp()
+    expect(view.check.mock.calls).toEqual([['return'], ['hop']])
   })
 
   it('is ignored while the view is inactive', async () => {
@@ -331,6 +364,23 @@ describe('return', () => {
     await view.update({isActive: false})
     await view.update({isBusy: false})
     expect(view.check).not.toHaveBeenCalled()
+
+    // Nor does it make a later hop significant.
+    await view.update({isActive: true})
+    await hopToApp()
+    expect(view.check.mock.calls).toEqual([['focus'], ['hop']])
+  })
+
+  it('is dropped if the view is left and come back to before it is judged', async () => {
+    const view = await setup({isBusy: true})
+    await returnToApp(5 * MINUTE)
+    await view.refocus()
+    await view.update({isBusy: false})
+    expect(view.check).not.toHaveBeenCalled()
+
+    // Nor does it make a later hop significant.
+    await hopToApp()
+    expect(view.check.mock.calls).toEqual([['hop']])
   })
 })
 
@@ -440,7 +490,7 @@ describe('limits', () => {
     expect(view.check).not.toHaveBeenCalled()
   })
 
-  it('runs one check at a time, and lets one that finds nothing answer a return', async () => {
+  it('runs one check at a time, and checks a return it held up once it is done', async () => {
     const response = deferred<boolean>()
     const view = await setup({
       topFetchedAt: T0 - 10 * MINUTE,
@@ -457,24 +507,11 @@ describe('limits', () => {
     await advance(SECOND)
     expect(view.check).toHaveBeenCalledTimes(1)
 
-    // It started well within two minutes of the return, so it answers it.
-    response.resolve(false)
-    await flush()
-    expect(view.check).toHaveBeenCalledTimes(1)
-  })
-
-  it('retries a return held up by a check that fails', async () => {
-    const response = deferred<boolean>()
-    const view = await setup()
-    view.check.mockImplementationOnce(() => response.promise)
-    await view.refocus(FOCUS_CHECK_AFTER)
-    await returnToApp(5 * MINUTE)
-    expect(view.check).toHaveBeenCalledTimes(1)
-
+    // Once it's done, the return it held up checks, even if it failed.
     view.check.mockResolvedValueOnce(true)
     response.reject(new Error('Network request failed'))
     await flush()
-    expect(view.check).toHaveBeenCalledTimes(2)
+    expect(view.check.mock.calls).toEqual([['focus'], ['return']])
     expect(view.found()).toEqual(['return'])
   })
 
