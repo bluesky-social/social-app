@@ -68,6 +68,14 @@ const BundleContext = createContext<SessionBundle | PublicSessionBundle | null>(
 )
 BundleContext.displayName = 'SessionBundleContext'
 
+/**
+ * Live check against the session store. See {@link useIsCurrentAppviewClient}.
+ */
+const IsCurrentAppviewClientContext = createContext<
+  (client: Client) => boolean
+>(() => false)
+IsCurrentAppviewClientContext.displayName = 'IsCurrentAppviewClientContext'
+
 const ApiContext = createContext<SessionApiContext>({
   createAccount: async () => {},
   login: async () => {},
@@ -684,6 +692,24 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const bundle = state.currentBundleState.bundle as unknown as
     SessionBundle | PublicSessionBundle
 
+  /*
+   * Reads the store, not render state, because callers may be components
+   * being removed by the logout/account switch itself, whose captured values
+   * are stale. The store is updated synchronously on dispatch.
+   */
+  const isCurrentAppviewClient = useCallback(
+    (client: Client) => {
+      const {currentBundleState} = store.getState()
+      const currentBundle = currentBundleState.bundle as unknown as
+        SessionBundle | PublicSessionBundle
+      return (
+        Boolean(currentBundleState.did) &&
+        currentBundle.appviewClient === client
+      )
+    },
+    [store],
+  )
+
   useEffect(() => {
     if (!__DEV__ || !IS_WEB) return
     // @ts-expect-error window type is not declared, debug only
@@ -722,7 +748,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
                 stateContext.currentAccount,
               ),
             })}>
-            {children}
+            <IsCurrentAppviewClientContext.Provider
+              value={isCurrentAppviewClient}>
+              {children}
+            </IsCurrentAppviewClientContext.Provider>
           </AnalyticsContext>
         </ApiContext.Provider>
       </StateContext.Provider>
@@ -778,6 +807,17 @@ export function useAppviewClient(): Client {
     throw Error('useAppviewClient() must be below <SessionProvider>.')
   }
   return bundle.appviewClient
+}
+
+/**
+ * Returns a stable function that checks, at call time, whether `client` is the
+ * signed-in account's current appview client. Use it to gate private data that
+ * may be sent late, e.g. from cleanup in a subtree that a logout or account
+ * switch is removing, before React has re-rendered with the new session.
+ * Always false when logged out.
+ */
+export function useIsCurrentAppviewClient() {
+  return useContext(IsCurrentAppviewClientContext)
 }
 
 /**
