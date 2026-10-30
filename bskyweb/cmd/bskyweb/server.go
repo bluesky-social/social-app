@@ -30,6 +30,8 @@ import (
 	"github.com/bluesky-social/indigo/xrpc"
 	"github.com/bluesky-social/social-app/bskyweb"
 
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/flosch/pongo2/v6"
 	"github.com/klauspost/compress/gzhttp"
 	"github.com/klauspost/compress/gzip"
@@ -93,9 +95,14 @@ func serve(cctx *cli.Context) error {
 		if debug {
 			log.Warnf("ignoring app version %s: debug mode serves templates and static files from the local file system", appVersion)
 		} else {
-			baseURL := fmt.Sprintf("https://%s.s3.%s.amazonaws.com/%s", appStaticsBucket, appStaticsRegion, url.PathEscape(appVersion))
-			log.Infof("serving app version %s from %s", appVersion, baseURL)
-			templateFS, staticFS = remoteAppFS(baseURL)
+			// Credentials come from the environment (the IRSA role in production)
+			// and are only fetched on the first download.
+			awsCfg, err := config.LoadDefaultConfig(context.Background(), config.WithRegion(appStaticsRegion))
+			if err != nil {
+				return fmt.Errorf("loading AWS config: %w", err)
+			}
+			log.Infof("serving app version %s from s3://%s/%s", appVersion, appStaticsBucket, appVersion)
+			templateFS, staticFS = remoteAppFS(s3.NewFromConfig(awsCfg), appStaticsBucket, appVersion)
 		}
 	}
 

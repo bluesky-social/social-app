@@ -134,7 +134,7 @@ func run(args []string) {
 				},
 				&cli.StringFlag{
 					Name:     "bsky-app-statics-bucket",
-					Usage:    "public S3 bucket with the web app builds, used when bsky-app-version is set",
+					Usage:    "S3 bucket with the web app builds, used when bsky-app-version is set",
 					Required: false,
 					Value:    "bsky-app-web-statics-prod",
 					EnvVars:  []string{"BSKY_APP_STATICS_BUCKET"},
