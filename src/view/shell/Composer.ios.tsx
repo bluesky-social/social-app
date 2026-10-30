@@ -1,54 +1,77 @@
-import {useEffect, useRef} from 'react'
+import {useEffect, useState} from 'react'
 import {Modal, View} from 'react-native'
+import {SystemBars} from 'react-native-edge-to-edge'
+import {SafeAreaProvider} from 'react-native-safe-area-context'
 
-import {useDialogStateControlContext} from '#/state/dialogs'
 import {useComposerState} from '#/state/shell/composer'
 import {ComposePost, useComposerCancelRef} from '#/view/com/composer/Composer'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, BreakpointWidthContext, useTheme} from '#/alf'
 import {SheetCompatProvider as TooltipSheetCompatProvider} from '#/components/Tooltip'
+import {IS_IPAD, IS_LIQUID_GLASS} from '#/env'
 
-export function Composer({}: {winHeight: number}) {
-  const {setFullyExpandedCount} = useDialogStateControlContext()
+export function Composer() {
   const t = useTheme()
   const state = useComposerState()
   const ref = useComposerCancelRef()
+  const [width, setWidth] = useState<number>()
 
   const open = !!state
-  const prevOpen = useRef(open)
 
   useEffect(() => {
-    if (open && !prevOpen.current) {
-      setFullyExpandedCount(c => c + 1)
-    } else if (!open && prevOpen.current) {
-      setFullyExpandedCount(c => c - 1)
+    if (open && !IS_LIQUID_GLASS) {
+      const entry = SystemBars.pushStackEntry({
+        style: {
+          statusBar: 'light',
+        },
+      })
+      return () => SystemBars.popStackEntry(entry)
     }
-    prevOpen.current = open
-  }, [open, setFullyExpandedCount])
+  }, [open])
 
   return (
     <Modal
       aria-modal
       accessibilityViewIsModal
       visible={open}
-      presentationStyle="pageSheet"
+      presentationStyle={IS_IPAD ? 'formSheet' : 'pageSheet'}
+      supportedOrientations={
+        IS_IPAD
+          ? [
+              'portrait',
+              'portrait-upside-down',
+              'landscape-left',
+              'landscape-right',
+            ]
+          : ['portrait']
+      }
       animationType="slide"
       onRequestClose={() => ref.current?.onPressCancel()}
       backdropColor="transparent">
-      <View style={[a.flex_1, t.atoms.bg]}>
-        <TooltipSheetCompatProvider>
-          <ComposePost
-            cancelRef={ref}
-            replyTo={state?.replyTo}
-            onPost={state?.onPost}
-            onPostSuccess={state?.onPostSuccess}
-            quote={state?.quote}
-            mention={state?.mention}
-            text={state?.text}
-            imageUris={state?.imageUris}
-            videoUri={state?.videoUri}
-          />
-        </TooltipSheetCompatProvider>
-      </View>
+      <ComposerSafeArea>
+        <View
+          onLayout={evt => setWidth(evt.nativeEvent.layout.width)}
+          style={[a.flex_1, t.atoms.bg]}>
+          <BreakpointWidthContext value={width}>
+            <TooltipSheetCompatProvider>
+              <ComposePost
+                cancelRef={ref}
+                replyTo={state?.replyTo}
+                onPost={state?.onPost}
+                onPostSuccess={state?.onPostSuccess}
+                quote={state?.quote}
+                mention={state?.mention}
+                text={state?.text}
+                imageUris={state?.imageUris}
+                videoUri={state?.videoUri}
+              />
+            </TooltipSheetCompatProvider>
+          </BreakpointWidthContext>
+        </View>
+      </ComposerSafeArea>
     </Modal>
   )
+}
+
+function ComposerSafeArea({children}: {children: React.ReactNode}) {
+  return IS_IPAD ? <SafeAreaProvider>{children}</SafeAreaProvider> : children
 }

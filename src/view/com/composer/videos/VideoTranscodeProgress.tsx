@@ -1,11 +1,9 @@
 import {View} from 'react-native'
-// @ts-expect-error no type definition
-import ProgressPie from 'react-native-progress/Pie'
+import {Pie as ProgressPie} from 'react-native-progress'
 import {type ImagePickerAsset} from 'expo-image-picker'
 
 import {atoms as a, useTheme} from '#/alf'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
-import {IS_WEB} from '#/env'
 import {ExternalEmbedRemoveBtn} from '../ExternalEmbedRemoveBtn'
 import {VideoTranscodeBackdrop} from './VideoTranscodeBackdrop'
 
@@ -19,8 +17,6 @@ export function VideoTranscodeProgress({
   clear: () => void
 }) {
   const t = useTheme()
-
-  if (IS_WEB) return null
 
   let aspectRatio: number | undefined
   if (asset.width && asset.height) {

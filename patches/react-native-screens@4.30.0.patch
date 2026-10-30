@@ -1,0 +1,591 @@
+diff --git a/android/src/main/java/com/swmansion/rnscreens/Screen.kt b/android/src/main/java/com/swmansion/rnscreens/Screen.kt
+index 2f2133bf28c8e7e0fe0d63f71ba34c6b070ae06e..ed685e27a0e491bfea04344d76e5ef3c42fe6dcd 100644
+--- a/android/src/main/java/com/swmansion/rnscreens/Screen.kt
++++ b/android/src/main/java/com/swmansion/rnscreens/Screen.kt
+@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi
+ import androidx.coordinatorlayout.widget.CoordinatorLayout
+ import androidx.core.view.children
+ import androidx.fragment.app.Fragment
++import androidx.recyclerview.widget.RecyclerView
+ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+ import com.facebook.react.bridge.ReactContext
+ import com.facebook.react.uimanager.PixelUtil
+@@ -478,7 +479,7 @@ class Screen(
+                 endTransitionRecursive(childView.toolbar)
+             }
+ 
+-            if (childView is ViewGroup) {
++            if (childView is ViewGroup && childView !is RecyclerView) {
+                 endTransitionRecursive(childView)
+             }
+         }
+@@ -509,7 +510,10 @@ class Screen(
+                     startTransitionRecursive(child.toolbar)
+                 }
+ 
+-                if (child is ViewGroup) {
++                // Transition a RecyclerView as one unit. Marking its recyclable children as
++                // transitioning keeps their parent set after removal, so RecyclerView crashes
++                // when it tries to recycle them during the screen transition.
++                if (child is ViewGroup && child !is RecyclerView) {
+                     startTransitionRecursive(child)
+                 }
+             }
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSFormSheetHostComponentDescriptor.h b/common/cpp/react/renderer/components/rnscreens/RNSFormSheetHostComponentDescriptor.h
+index 79786f9aae510828521033a181d394633fd0e33c..7ee9208cb2c81ca82c003ec45fad7766711ae16f 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSFormSheetHostComponentDescriptor.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSFormSheetHostComponentDescriptor.h
+@@ -19,8 +19,6 @@ class RNSFormSheetHostComponentDescriptor final
+ 
+     react_native_assert(
+         dynamic_cast<YogaLayoutableShadowNode *>(&concreteShadowNode));
+-    auto &layoutableShadowNode =
+-        static_cast<YogaLayoutableShadowNode &>(concreteShadowNode);
+ 
+     auto state = std::static_pointer_cast<
+         const RNSFormSheetHostShadowNode::ConcreteState>(shadowNode.getState());
+@@ -28,7 +26,7 @@ class RNSFormSheetHostComponentDescriptor final
+     auto stateData = state->getData();
+ 
+     if (stateData.frameSize.width > 0 && stateData.frameSize.height > 0) {
+-      layoutableShadowNode.setSize(
++      concreteShadowNode.setSizeIfChanged(
+           Size{stateData.frameSize.width, stateData.frameSize.height});
+     }
+ 
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSFormSheetHostShadowNode.h b/common/cpp/react/renderer/components/rnscreens/RNSFormSheetHostShadowNode.h
+index 6cfc7d560d168d92737cf3b414d00c9c0db2f531..99d9a8520fdac80779acb145bfaa42ee5ca781c7 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSFormSheetHostShadowNode.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSFormSheetHostShadowNode.h
+@@ -5,6 +5,7 @@
+ #include <react/renderer/components/rnscreens/Props.h>
+ #include <react/renderer/components/view/ConcreteViewShadowNode.h>
+ #include "RNSFormSheetHostState.h"
++#include "utils/YogaSizeUtil.h"
+ 
+ namespace facebook::react {
+ 
+@@ -19,6 +20,14 @@ class JSI_EXPORT RNSFormSheetHostShadowNode final
+  public:
+   using ConcreteViewShadowNode::ConcreteViewShadowNode;
+ 
++  // Like `setSize`, but leaves the Yoga node clean when the size is unchanged.
++  // See `rnscreens::yogaStyleHasSize`.
++  void setSizeIfChanged(Size size) const {
++    if (!rnscreens::yogaStyleHasSize(yogaNode_.style(), size)) {
++      setSize(size);
++    }
++  }
++
+   static ShadowNodeTraits BaseTraits() {
+     auto traits = ConcreteViewShadowNode::BaseTraits();
+     traits.set(ShadowNodeTraits::Trait::RootNodeKind);
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSModalScreenComponentDescriptor.h b/common/cpp/react/renderer/components/rnscreens/RNSModalScreenComponentDescriptor.h
+index bd3decd4dcf9b787fdc6d2803267b339787005e8..a87e485e3af36451a9001d6781063836040f66f9 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSModalScreenComponentDescriptor.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSModalScreenComponentDescriptor.h
+@@ -19,8 +19,6 @@ class RNSModalScreenComponentDescriptor final
+ 
+     react_native_assert(
+         dynamic_cast<YogaLayoutableShadowNode *>(&screenShadowNode));
+-    auto &layoutableShadowNode =
+-        dynamic_cast<YogaLayoutableShadowNode &>(screenShadowNode);
+ 
+     auto state =
+         std::static_pointer_cast<const RNSModalScreenShadowNode::ConcreteState>(
+@@ -28,7 +26,7 @@ class RNSModalScreenComponentDescriptor final
+     auto stateData = state->getData();
+ 
+     if (stateData.frameSize.width != 0 && stateData.frameSize.height != 0) {
+-      layoutableShadowNode.setSize(
++      screenShadowNode.setSizeIfChanged(
+           Size{stateData.frameSize.width, stateData.frameSize.height});
+     }
+ 
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSModalScreenShadowNode.h b/common/cpp/react/renderer/components/rnscreens/RNSModalScreenShadowNode.h
+index af1a193cdeb4c48579cef17c3462dadeef0349f1..1cceb4d9394d4c225cb4625897b7cf250493f67d 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSModalScreenShadowNode.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSModalScreenShadowNode.h
+@@ -4,6 +4,7 @@
+ #include <react/renderer/components/rnscreens/EventEmitters.h>
+ #include <react/renderer/components/rnscreens/Props.h>
+ #include <react/renderer/components/view/ConcreteViewShadowNode.h>
++#include "utils/YogaSizeUtil.h"
+ #include "RNSScreenState.h"
+ 
+ namespace facebook {
+@@ -20,6 +21,14 @@ class JSI_EXPORT RNSModalScreenShadowNode final
+  public:
+   using ConcreteViewShadowNode::ConcreteViewShadowNode;
+ 
++  // Like `setSize`, but leaves the Yoga node clean when the size is unchanged.
++  // See `rnscreens::yogaStyleHasSize`.
++  void setSizeIfChanged(Size size) const {
++    if (!rnscreens::yogaStyleHasSize(yogaNode_.style(), size)) {
++      setSize(size);
++    }
++  }
++
+   Point getContentOriginOffset(bool includeTransform) const override;
+   static ShadowNodeTraits BaseTraits() {
+     auto traits = ConcreteViewShadowNode::BaseTraits();
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSScreenComponentDescriptor.h b/common/cpp/react/renderer/components/rnscreens/RNSScreenComponentDescriptor.h
+index 2389f94a28fe4543c2737c1b8de379dcfaa8947f..f806f8d1fe6a0128a0ac36f9600ba403312fbb5f 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSScreenComponentDescriptor.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSScreenComponentDescriptor.h
+@@ -38,8 +38,6 @@ class RNSScreenComponentDescriptor final
+ 
+     react_native_assert(
+         dynamic_cast<YogaLayoutableShadowNode *>(&screenShadowNode));
+-    auto &layoutableShadowNode =
+-        static_cast<YogaLayoutableShadowNode &>(screenShadowNode);
+ 
+     auto state =
+         std::static_pointer_cast<const RNSScreenShadowNode::ConcreteState>(
+@@ -99,19 +97,21 @@ class RNSScreenComponentDescriptor final
+           FrameCorrectionModes::Mode::FrameHeightCorrection);
+       screenShadowNode.getFrameCorrectionModes().unset(
+           FrameCorrectionModes::Mode::FrameOriginCorrection);
+-      layoutableShadowNode.setSize(
++      screenShadowNode.setSizeIfChanged(
+           Size{stateData.frameSize.width, stateData.frameSize.height});
+     } else if (
+         stateData.frameSize.width == 0 && stateData.frameSize.height == 0) {
+       // Reset YogaNode so it recalculates its layout. Useful for the case
+       // when native orientation changes and react has not been notified yet.
+       // The if condition holds true on first render and when it is reset inside
+-      // RNSScreenShadowNodeCommitHook.
+-      layoutableShadowNode.setSize({YGUndefined, YGUndefined});
++      // RNSScreenShadowNodeCommitHook. It also holds for as long as native
++      // never reports a frame, which is the case for screens outside a native
++      // stack (e.g. tabs), so the reset must not dirty the node on every clone.
++      screenShadowNode.setSizeIfChanged({YGUndefined, YGUndefined});
+     }
+ #else
+     if (stateData.frameSize.width != 0 && stateData.frameSize.height != 0) {
+-      layoutableShadowNode.setSize(
++      screenShadowNode.setSizeIfChanged(
+           Size{stateData.frameSize.width, stateData.frameSize.height});
+     }
+ #endif // ANDROID
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSScreenShadowNode.h b/common/cpp/react/renderer/components/rnscreens/RNSScreenShadowNode.h
+index 93c9f4ba6c6199d3194be6ecd1e69dcbcd372b2b..2ec05c1b31abdca9fb5da7e289a673df8fd155f0 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSScreenShadowNode.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSScreenShadowNode.h
+@@ -6,6 +6,7 @@
+ #include <react/renderer/components/view/ConcreteViewShadowNode.h>
+ #include <react/renderer/core/LayoutContext.h>
+ #include "FrameCorrectionModes.h"
++#include "utils/YogaSizeUtil.h"
+ #include "RNSScreenState.h"
+ 
+ namespace facebook {
+@@ -38,6 +39,14 @@ class JSI_EXPORT RNSScreenShadowNode final : public ConcreteViewShadowNode<
+ 
+   FrameCorrectionModes &getFrameCorrectionModes();
+ 
++  // Like `setSize`, but leaves the Yoga node clean when the size is unchanged.
++  // See `rnscreens::yogaStyleHasSize`.
++  void setSizeIfChanged(Size size) const {
++    if (!rnscreens::yogaStyleHasSize(yogaNode_.style(), size)) {
++      setSize(size);
++    }
++  }
++
+ #ifdef ANDROID
+   void resetFrameSizeState();
+ 
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSScreenStackHeaderConfigComponentDescriptor.h b/common/cpp/react/renderer/components/rnscreens/RNSScreenStackHeaderConfigComponentDescriptor.h
+index e9c97bd332bf673ab16d19a9c5a8ed685bd101e6..3151686d7e62d9758e0334a6ee22c822135d3d57 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSScreenStackHeaderConfigComponentDescriptor.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSScreenStackHeaderConfigComponentDescriptor.h
+@@ -36,7 +36,8 @@ class RNSScreenStackHeaderConfigComponentDescriptor final
+ 
+ #ifdef ANDROID
+     if (stateData.frameSize.width != 0) {
+-      layoutableShadowNode.setSize({stateData.frameSize.width, YGUndefined});
++      configShadowNode.setSizeIfChanged(
++          {stateData.frameSize.width, YGUndefined});
+       layoutableShadowNode.setPadding({
+           stateData.paddingStart,
+           0,
+@@ -46,7 +47,7 @@ class RNSScreenStackHeaderConfigComponentDescriptor final
+     }
+ #else
+     if (stateData.frameSize.width != 0 && stateData.frameSize.height != 0) {
+-      layoutableShadowNode.setSize(stateData.frameSize);
++      configShadowNode.setSizeIfChanged(stateData.frameSize);
+       layoutableShadowNode.setPadding(stateData.edgeInsets);
+     }
+ #endif // ANDROID
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSScreenStackHeaderConfigShadowNode.h b/common/cpp/react/renderer/components/rnscreens/RNSScreenStackHeaderConfigShadowNode.h
+index 4586ad2309da7a86748149fdb934f6a434f1d627..46d159d55d18eeee03de2a1fbb25c38013147964 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSScreenStackHeaderConfigShadowNode.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSScreenStackHeaderConfigShadowNode.h
+@@ -6,6 +6,7 @@
+ #include <react/renderer/components/view/ConcreteViewShadowNode.h>
+ #include <react/renderer/core/LayoutContext.h>
+ #include "FrameCorrectionModes.h"
++#include "utils/YogaSizeUtil.h"
+ #include "RNSScreenStackHeaderConfigState.h"
+ 
+ namespace facebook::react {
+@@ -24,6 +25,14 @@ class JSI_EXPORT RNSScreenStackHeaderConfigShadowNode final
+   using ConcreteViewShadowNode::ConcreteViewShadowNode;
+   using StateData = ConcreteViewShadowNode::ConcreteStateData;
+ 
++  // Like `setSize`, but leaves the Yoga node clean when the size is unchanged.
++  // See `rnscreens::yogaStyleHasSize`.
++  void setSizeIfChanged(Size size) const {
++    if (!rnscreens::yogaStyleHasSize(yogaNode_.style(), size)) {
++      setSize(size);
++    }
++  }
++
+ #pragma mark - ShadowNode overrides
+   void layout(LayoutContext layoutContext) override;
+ 
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSSplitScreenComponentDescriptor.h b/common/cpp/react/renderer/components/rnscreens/RNSSplitScreenComponentDescriptor.h
+index d9c682577f712a448ff5e150f9ba41f2bd987112..c99e693bf1b4e88435b7b1f3d7b1baa7cc8e84c3 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSSplitScreenComponentDescriptor.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSSplitScreenComponentDescriptor.h
+@@ -20,8 +20,6 @@ class RNSSplitScreenComponentDescriptor final
+ 
+     react_native_assert(
+         dynamic_cast<YogaLayoutableShadowNode *>(&splitScreenShadowNode));
+-    auto &layoutableShadowNode =
+-        static_cast<YogaLayoutableShadowNode &>(splitScreenShadowNode);
+ 
+     auto state =
+         std::static_pointer_cast<const RNSSplitScreenShadowNode::ConcreteState>(
+@@ -29,7 +27,7 @@ class RNSSplitScreenComponentDescriptor final
+     auto stateData = state->getData();
+ 
+     if (stateData.frameSize.width != 0 && stateData.frameSize.height != 0) {
+-      layoutableShadowNode.setSize(stateData.frameSize);
++      splitScreenShadowNode.setSizeIfChanged(stateData.frameSize);
+     }
+ 
+     ConcreteComponentDescriptor::adopt(shadowNode);
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSSplitScreenShadowNode.h b/common/cpp/react/renderer/components/rnscreens/RNSSplitScreenShadowNode.h
+index a389353751c20a37aed1a0d02944fbab2f4520a8..2817b8308369427770befc27a993244bf2ceb7de 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSSplitScreenShadowNode.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSSplitScreenShadowNode.h
+@@ -6,6 +6,7 @@
+ #include <react/renderer/components/view/ConcreteViewShadowNode.h>
+ #include <react/renderer/core/LayoutContext.h>
+ #include "RNSSplitScreenState.h"
++#include "utils/YogaSizeUtil.h"
+ 
+ namespace facebook::react {
+ 
+@@ -23,6 +24,14 @@ class JSI_EXPORT RNSSplitScreenShadowNode final
+   using ConcreteViewShadowNode::ConcreteViewShadowNode;
+   using StateData = ConcreteViewShadowNode::ConcreteStateData;
+ 
++  // Like `setSize`, but leaves the Yoga node clean when the size is unchanged.
++  // See `rnscreens::yogaStyleHasSize`.
++  void setSizeIfChanged(Size size) const {
++    if (!rnscreens::yogaStyleHasSize(yogaNode_.style(), size)) {
++      setSize(size);
++    }
++  }
++
+ #pragma mark - ShadowNode overrides
+ 
+   Point getContentOriginOffset(bool includeTransform) const override;
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderConfigComponentDescriptor.h b/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderConfigComponentDescriptor.h
+index 811c0a3be4f5698122d6bb083a79a3bcba07eefb..f59d2dc4aa75b56cf810e89c46134061948b9efe 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderConfigComponentDescriptor.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderConfigComponentDescriptor.h
+@@ -23,8 +23,6 @@ class RNSStackHeaderConfigComponentDescriptor final
+         static_cast<RNSStackHeaderConfigShadowNode &>(shadowNode);
+     react_native_assert(
+         dynamic_cast<YogaLayoutableShadowNode *>(&configShadowNode));
+-    auto &layoutableShadowNode =
+-        static_cast<YogaLayoutableShadowNode &>(configShadowNode);
+ 
+     auto state = std::static_pointer_cast<
+         const RNSStackHeaderConfigShadowNode::ConcreteState>(
+@@ -32,7 +30,7 @@ class RNSStackHeaderConfigComponentDescriptor final
+     auto stateData = state->getData();
+ 
+     if (stateData.frameSize.width != 0 && stateData.frameSize.height != 0) {
+-      layoutableShadowNode.setSize(
++      configShadowNode.setSizeIfChanged(
+           Size{stateData.frameSize.width, stateData.frameSize.height});
+     }
+ 
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderConfigShadowNode.h b/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderConfigShadowNode.h
+index 99d25eb5020a0be85968bc9fa6040f016073b152..d3d34c3b5f19c30cc73394d6063595f1545bc7a6 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderConfigShadowNode.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSStackHeaderConfigShadowNode.h
+@@ -6,6 +6,7 @@
+ #include <react/renderer/components/view/ConcreteViewShadowNode.h>
+ #include <react/renderer/core/LayoutContext.h>
+ #include "RNSStackHeaderConfigState.h"
++#include "utils/YogaSizeUtil.h"
+ 
+ namespace facebook::react {
+ 
+@@ -26,6 +27,14 @@ class JSI_EXPORT RNSStackHeaderConfigShadowNode final
+   using ConcreteViewShadowNode::ConcreteViewShadowNode;
+   using StateData = ConcreteViewShadowNode::ConcreteStateData;
+ 
++  // Like `setSize`, but leaves the Yoga node clean when the size is unchanged.
++  // See `rnscreens::yogaStyleHasSize`.
++  void setSizeIfChanged(Size size) const {
++    if (!rnscreens::yogaStyleHasSize(yogaNode_.style(), size)) {
++      setSize(size);
++    }
++  }
++
+ #ifdef ANDROID
+   Point getContentOriginOffset(bool includeTransform) const override;
+ #else // ANDROID
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSStackScreenComponentDescriptor.h b/common/cpp/react/renderer/components/rnscreens/RNSStackScreenComponentDescriptor.h
+index 299e7ba5784f6a8feb973df1459df64494a97703..24d5e1ce30f04d83e67b62822bf55c53ea0ecd25 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSStackScreenComponentDescriptor.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSStackScreenComponentDescriptor.h
+@@ -22,8 +22,6 @@ class RNSStackScreenComponentDescriptor final
+         static_cast<RNSStackScreenShadowNode &>(shadowNode);
+     react_native_assert(
+         dynamic_cast<YogaLayoutableShadowNode *>(&screenShadowNode));
+-    auto &layoutableShadowNode =
+-        static_cast<YogaLayoutableShadowNode &>(screenShadowNode);
+ 
+     auto state =
+         std::static_pointer_cast<const RNSStackScreenShadowNode::ConcreteState>(
+@@ -31,7 +29,7 @@ class RNSStackScreenComponentDescriptor final
+     auto stateData = state->getData();
+ 
+     if (stateData.frameSize.width != 0 && stateData.frameSize.height != 0) {
+-      layoutableShadowNode.setSize(
++      screenShadowNode.setSizeIfChanged(
+           Size{stateData.frameSize.width, stateData.frameSize.height});
+     }
+ #endif // ANDROID
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSStackScreenShadowNode.h b/common/cpp/react/renderer/components/rnscreens/RNSStackScreenShadowNode.h
+index 8e64c48ea303a0cafc67ccc834d8dc55759d4e2f..387010e44f2f71ea3f5c34e15a9481c8b08cde27 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSStackScreenShadowNode.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSStackScreenShadowNode.h
+@@ -5,6 +5,7 @@
+ #include <react/renderer/components/rnscreens/Props.h>
+ #include <react/renderer/components/view/ConcreteViewShadowNode.h>
+ #include "RNSStackScreenState.h"
++#include "utils/YogaSizeUtil.h"
+ 
+ namespace facebook::react {
+ 
+@@ -20,6 +21,14 @@ class JSI_EXPORT RNSStackScreenShadowNode final
+   using ConcreteViewShadowNode::ConcreteViewShadowNode;
+   using StateData = ConcreteViewShadowNode::ConcreteStateData;
+ 
++  // Like `setSize`, but leaves the Yoga node clean when the size is unchanged.
++  // See `rnscreens::yogaStyleHasSize`.
++  void setSizeIfChanged(Size size) const {
++    if (!rnscreens::yogaStyleHasSize(yogaNode_.style(), size)) {
++      setSize(size);
++    }
++  }
++
+ #pragma mark - ShadowNode overrides
+ 
+ #ifdef ANDROID
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSTabsBottomAccessoryComponentDescriptor.h b/common/cpp/react/renderer/components/rnscreens/RNSTabsBottomAccessoryComponentDescriptor.h
+index 90d8db6426f798aad7fa4b25058b639de1d84e15..3e426d1db489e7b5f204f805856e83732dae878d 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSTabsBottomAccessoryComponentDescriptor.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSTabsBottomAccessoryComponentDescriptor.h
+@@ -24,7 +24,7 @@ class RNSTabsBottomAccessoryComponentDescriptor final
+     auto stateData = state->getData();
+ 
+     if (stateData.frameSize.width != 0 && stateData.frameSize.height != 0) {
+-      tabsBottomAccessoryShadowNode.setSize(stateData.frameSize);
++      tabsBottomAccessoryShadowNode.setSizeIfChanged(stateData.frameSize);
+     }
+ 
+     ConcreteComponentDescriptor::adopt(shadowNode);
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSTabsBottomAccessoryShadowNode.h b/common/cpp/react/renderer/components/rnscreens/RNSTabsBottomAccessoryShadowNode.h
+index b57b66a4b206262041c382c9f4466652d87a719d..b9b73074c5c27e78de1ebca5de26dac739720fbf 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSTabsBottomAccessoryShadowNode.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSTabsBottomAccessoryShadowNode.h
+@@ -6,6 +6,7 @@
+ #include <react/renderer/components/view/ConcreteViewShadowNode.h>
+ #include <react/renderer/core/LayoutContext.h>
+ #include "RNSTabsBottomAccessoryState.h"
++#include "utils/YogaSizeUtil.h"
+ 
+ namespace facebook::react {
+ 
+@@ -21,6 +22,14 @@ class JSI_EXPORT RNSTabsBottomAccessoryShadowNode final
+   using ConcreteViewShadowNode::ConcreteViewShadowNode;
+   using StateData = ConcreteViewShadowNode::ConcreteStateData;
+ 
++  // Like `setSize`, but leaves the Yoga node clean when the size is unchanged.
++  // See `rnscreens::yogaStyleHasSize`.
++  void setSizeIfChanged(Size size) const {
++    if (!rnscreens::yogaStyleHasSize(yogaNode_.style(), size)) {
++      setSize(size);
++    }
++  }
++
+ #pragma mark - ShadowNode overrides
+ 
+   Point getContentOriginOffset(bool includeTransform) const override;
+diff --git a/common/cpp/react/renderer/components/rnscreens/utils/YogaSizeUtil.h b/common/cpp/react/renderer/components/rnscreens/utils/YogaSizeUtil.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..7498c7aea5a853ad12ea607cce921d47dae6f27e
+--- /dev/null
++++ b/common/cpp/react/renderer/components/rnscreens/utils/YogaSizeUtil.h
+@@ -0,0 +1,31 @@
++#pragma once
++
++#include <react/renderer/components/view/YogaLayoutableShadowNode.h>
++#include <react/renderer/graphics/Size.h>
++
++namespace rnscreens {
++
++namespace react = facebook::react;
++namespace yoga = facebook::yoga;
++
++/**
++ * Whether the Yoga style already has the given width and height, as set by
++ * `YogaLayoutableShadowNode::setSize`.
++ *
++ * `setSize` marks the Yoga node dirty even when the size is unchanged.
++ * Component descriptors call it from `adopt`, which runs on every clone, and
++ * every commit clones the path from the changed node to the root. Calling it
++ * unconditionally therefore makes the root re-run layout and pixel-grid
++ * rounding over the whole tree on every commit, including ones that change
++ * nothing layout-related (scroll offset state updates, animated transforms).
++ */
++inline bool yogaStyleHasSize(
++    const yoga::Style &style,
++    const react::Size &size) {
++  return style.dimension(yoga::Dimension::Width) ==
++      yoga::StyleSizeLength::points(size.width) &&
++      style.dimension(yoga::Dimension::Height) ==
++      yoga::StyleSizeLength::points(size.height);
++}
++
++} // namespace rnscreens
+diff --git a/ios/RNSScreen.mm b/ios/RNSScreen.mm
+index 049fd22427b2bde17fd7ca59b8de65d0ee07b4b5..ac484f9033e16f61fb382ed266eac8c3d6fe8b74 100644
+--- a/ios/RNSScreen.mm
++++ b/ios/RNSScreen.mm
+@@ -1,4 +1,5 @@
+ #import <UIKit/UIKit.h>
++#import <objc/runtime.h>
+ 
+ #import "RNSModalScreen.h"
+ #import "RNSScreen.h"
+@@ -1226,9 +1227,82 @@ - (BOOL)hasHeaderConfig
+   return _config != nil;
+ }
+ 
++/*
++ * PATCH (secure-snapshot): content protected by an isSecureTextEntry canvas
++ * (per-view capture protection, e.g. expo-privacy-sensitive) is stripped from
++ * the render-server snapshot RNSScreen takes for JS-driven pops, so the user
++ * sees the hidden fallback (the GrowthHack butterfly) during the transition.
++ * The capture-exclusion flag is only consulted for layers INSIDE a captured
++ * subtree, so a snapshot rooted BELOW the flagged canvas still includes the
++ * content.
++ *
++ * By the time addSnapshotToView runs, the screen's children are already
++ * unmounted (only the pixels survive on the render server), so the secure
++ * subtrees must be captured HERE - before the transaction's mutations apply,
++ * while the subtree is intact. The overlays are stashed on the screen view
++ * and composited over the main snapshot in addSnapshotToView, each re-wrapped
++ * in a fresh secure canvas so real captures (screenshots/recordings) taken
++ * during the transition still exclude them.
++ */
++static void RNSCollectPrivacySensitiveViews(UIView *view, NSMutableArray<UIView *> *out)
++{
++  // Swift classes are namespaced in the ObjC runtime ("Module.ClassName")
++  if ([NSStringFromClass([view class]) hasSuffix:@"ExpoPrivacySensitiveView"]) {
++    [out addObject:view];
++    return;
++  }
++  for (UIView *subview in view.subviews) {
++    RNSCollectPrivacySensitiveViews(subview, out);
++  }
++}
++
++static UIView *_Nullable RNSMakeSecureCanvas(void)
++{
++  UITextField *field = [UITextField new];
++  field.secureTextEntry = YES;
++  field.userInteractionEnabled = NO;
++  UIView *canvas = (UIView *)field.layer.sublayers.firstObject.delegate;
++  if (![canvas isKindOfClass:[UIView class]]) {
++    return nil;
++  }
++  canvas.clipsToBounds = NO;
++  canvas.backgroundColor = UIColor.clearColor;
++  // retain the field alongside the canvas in case the capture exclusion ever
++  // depends on the owning field staying alive
++  objc_setAssociatedObject(canvas, "RNSSecureCanvasField", field, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
++  return canvas;
++}
++
++static char RNSSecureOverlaysKey;
++
+ - (void)willBeUnmountedInUpcomingTransaction
+ {
+   _markedForUnmountInCurrentTransaction = YES;
++
++  NSMutableArray<UIView *> *sensitiveViews = [NSMutableArray new];
++  RNSCollectPrivacySensitiveViews(self, sensitiveViews);
++  NSMutableArray<UIView *> *overlays = [NSMutableArray new];
++  for (UIView *sensitiveView in sensitiveViews) {
++    UIView *canvas = sensitiveView.subviews.firstObject;
++    for (UIView *content in canvas.subviews) {
++      UIView *pieceSnapshot = [content snapshotViewAfterScreenUpdates:NO];
++      if (pieceSnapshot == nil) {
++        continue;
++      }
++      CGRect frameInScreen = [content convertRect:content.bounds toView:self];
++      UIView *secureWrap = RNSMakeSecureCanvas();
++      if (secureWrap != nil) {
++        secureWrap.frame = frameInScreen;
++        pieceSnapshot.frame = secureWrap.bounds;
++        [secureWrap addSubview:pieceSnapshot];
++        [overlays addObject:secureWrap];
++      } else {
++        pieceSnapshot.frame = frameInScreen;
++        [overlays addObject:pieceSnapshot];
++      }
++    }
++  }
++  objc_setAssociatedObject(self, &RNSSecureOverlaysKey, overlays.count > 0 ? overlays : nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+ }
+ 
+ + (react::ComponentDescriptorProvider)componentDescriptorProvider
+@@ -2110,6 +2184,12 @@ - (RNSOrientation)evaluateOrientation
+ 
+ - (void)addSnapshotToView
+ {
++  // PATCH (secure-snapshot): take the secure-content overlays captured in
++  // willBeUnmountedInUpcomingTransaction (see comment there). Cleared before
++  // the early return so they are released even when no snapshot is taken.
++  NSArray<UIView *> *overlays = objc_getAssociatedObject(self.screenView, &RNSSecureOverlaysKey);
++  objc_setAssociatedObject(self.screenView, &RNSSecureOverlaysKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
++
+   // if we dismissed the view natively, it will already be detached from view hierarchy
+   if (self.view.window == nil) {
+     return;
+@@ -2123,6 +2203,13 @@ - (void)addSnapshotToView
+   snapshot.frame = self.view.bounds;
+   // fill the whole screen view with the snapshot
+   snapshot.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
++
++  // PATCH (secure-snapshot): composite the overlays over the snapshot. Their
++  // frames are in the screen view's coordinates, which match the snapshot's.
++  for (UIView *overlay in overlays) {
++    [snapshot addSubview:overlay];
++  }
++
+   [self.view addSubview:snapshot];
+ }
+ 

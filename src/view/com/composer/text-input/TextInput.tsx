@@ -6,17 +6,16 @@ import {
   useState,
 } from 'react'
 import {
-  type NativeSyntheticEvent,
   Text as RNText,
   TextInput as RNTextInput,
-  type TextInputSelectionChangeEventData,
+  type TextInputSelectionChangeEvent,
   View,
 } from 'react-native'
 import {type PasteEventPayload, TextInputWrapper} from 'expo-paste-input'
-import {AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {RichText} from '@bsky/sdk/richtext'
 import {useLingui} from '@lingui/react/macro'
 
-import {POST_IMG_MAX} from '#/lib/constants'
+import {IMAGE_SIZE_CONFIG_POSTS} from '#/lib/constants'
 import {downloadAndResize} from '#/lib/media/manip'
 import {isUriImage} from '#/lib/media/util'
 import {getMentionAt, insertMentionAt} from '#/lib/strings/mention-manip'
@@ -27,7 +26,9 @@ import {
 } from '#/view/com/composer/text-input/text-input-util'
 import {atoms as a, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
-import {IS_ANDROID, IS_NATIVE} from '#/env'
+import {IS_ANDROID} from '#/env'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {Autocomplete} from './mobile/Autocomplete'
 import {type TextInputProps} from './TextInput.types'
 
@@ -49,7 +50,7 @@ export function TextInput({
 }: TextInputProps) {
   const {t: l} = useLingui()
   const {theme: t, fonts} = useAlf()
-  const textInput = useRef<RNTextInput>(null)
+  const textInput = useRef<React.ComponentRef<typeof RNTextInput>>(null)
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const theme = useTheme()
   const [autocompletePrefix, setAutocompletePrefix] = useState('')
@@ -89,14 +90,11 @@ export function TextInput({
       if (newRt.facets) {
         for (const facet of newRt.facets) {
           for (const feature of facet.features) {
-            if (AppBskyRichtextFacet.isLink(feature)) {
+            if (bsky.isType(app.bsky.richtext.facet.link, feature)) {
               if (isUriImage(feature.uri)) {
                 const res = await downloadAndResize({
                   uri: feature.uri,
-                  width: POST_IMG_MAX.width,
-                  height: POST_IMG_MAX.height,
-                  mode: 'contain',
-                  maxSize: POST_IMG_MAX.size,
+                  ...IMAGE_SIZE_CONFIG_POSTS,
                   timeout: 15e3,
                 })
 
@@ -144,7 +142,7 @@ export function TextInput({
   )
 
   const onSelectionChange = useCallback(
-    (evt: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
+    (evt: TextInputSelectionChangeEvent) => {
       // NOTE we track the input selection using a ref to avoid excessive renders -prf
       textInputSelection.current = evt.nativeEvent.selection
     },
@@ -153,7 +151,7 @@ export function TextInput({
 
   const onSelectAutocompleteItem = useCallback(
     (item: string) => {
-      onChangeText(
+      void onChangeText(
         insertMentionAt(
           richtext.text,
           textInputSelection.current?.start || 0,
@@ -175,36 +173,29 @@ export function TextInput({
       },
     )
 
-    /**
-     * PasteInput doesn't like `lineHeight`, results in jumpiness
-     */
-    if (IS_NATIVE) {
-      style.lineHeight = undefined
-    }
-
     /*
      * Android impl of `PasteInput` doesn't support the array syntax for `fontVariant`
      */
     if (IS_ANDROID) {
-      // @ts-ignore
-      style.fontVariant = style.fontVariant
-        ? style.fontVariant.join(' ')
-        : undefined
+      style.fontVariant =
+        typeof style.fontVariant === 'string'
+          ? style.fontVariant
+          : style.fontVariant?.join(' ')
     }
     return style
   }, [t, fonts])
 
   const textDecorated = useMemo(() => {
-    let i = 0
-
-    return Array.from(richtext.segments()).map(segment => {
+    return Array.from(richtext.segments()).map((segment, i) => {
       return (
         <RNText
-          key={i++}
+          key={i}
           style={[
             inputTextStyle,
             {
-              color: segment.facet ? t.palette.primary_500 : t.atoms.text.color,
+              color: segment.facet
+                ? t.atoms.text_link.color
+                : t.atoms.text.color,
               marginTop: -1,
             },
           ]}>
@@ -220,7 +211,7 @@ export function TextInput({
         <RNTextInput
           testID="composerTextInput"
           ref={textInput}
-          onChangeText={onChangeText}
+          onChangeText={(newText: string) => void onChangeText(newText)}
           onSelectionChange={onSelectionChange}
           placeholder={placeholder}
           placeholderTextColor={t.atoms.text_contrast_low.color}
@@ -229,7 +220,6 @@ export function TextInput({
           allowFontScaling
           multiline
           scrollEnabled={false}
-          numberOfLines={2}
           // Note: should be the default value, but as of v1.104
           // it switched to "none" on Android
           autoCapitalize="sentences"

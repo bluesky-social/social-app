@@ -6,6 +6,7 @@ import Animated, {
   LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
+import {useSift} from '@bsky.app/sift'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -28,6 +29,7 @@ import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import {BackNextButtons} from '../BackNextButtons'
 import {HandleSuggestions} from './HandleSuggestions'
 
@@ -39,6 +41,13 @@ export function StepHandle() {
   const [draftValue, setDraftValue] = useState(state.handle)
   const isNextLoading = useThrottledValue(state.isLoading, 500)
 
+  /*
+   * Web anchors a floating Sift dropdown of suggestions to the input; native
+   * renders them inline and ignores this. `offset` leaves a small gap below the
+   * anchor, matching the inline `mt_xs` spacing.
+   */
+  const sift = useSift({offset: a.p_xs.padding, placement: 'bottom-start'})
+
   const validCheck = validateServiceHandle(draftValue, state.userDomain)
 
   const {
@@ -49,7 +58,7 @@ export function StepHandle() {
     username: draftValue,
     serviceDid: state.serviceDescription?.did ?? 'UNKNOWN',
     serviceDomain: state.userDomain,
-    birthDate: state.dateOfBirth.toISOString(),
+    birthDate: state.dateOfBirth?.toISOString() ?? '',
     email: state.email,
     enabled: validCheck.overall,
   })
@@ -67,10 +76,11 @@ export function StepHandle() {
 
     dispatch({type: 'setIsLoading', value: true})
 
+    const serviceDid = state.serviceDescription?.did ?? 'UNKNOWN'
     try {
       const {available: handleAvailable} = await checkHandleAvailability(
         createFullHandle(handle, state.userDomain),
-        state.serviceDescription?.did ?? 'UNKNOWN',
+        serviceDid,
         {},
       )
 
@@ -81,6 +91,7 @@ export function StepHandle() {
           value: _(msg`That username is already taken`),
           field: 'handle',
         })
+        dispatch({type: 'setIsLoading', value: false})
         return
       } else {
         ax.metric('signup:handleAvailable', {typeahead: false})
@@ -90,9 +101,8 @@ export function StepHandle() {
         safeMessage: error,
       })
       // do nothing on error, let them pass
-    } finally {
-      dispatch({type: 'setIsLoading', value: false})
     }
+    dispatch({type: 'setIsLoading', value: false})
 
     ax.metric('signup:nextPressed', {
       activeStep: state.activeStep,
@@ -137,13 +147,28 @@ export function StepHandle() {
     !validCheck.hyphenStartOrEnd ||
     !validCheck.totalLength
 
+  /*
+   * Web-only Sift wiring. The anchor is the input section, whose bottom edge in
+   * the taken-and-valid state sits right below the availability error, so the
+   * floating dropdown lands beneath it. The input ref feeds Sift's keyboard
+   * handling and the combobox a11y props describe the typeahead relationship.
+   * Native ignores all of this and renders suggestions inline.
+   */
+  const {ref: inputAnchorRef, ...comboboxProps} = sift.targetProps
+
   return (
     <>
-      <View style={[a.gap_sm, a.pt_lg, a.z_10]}>
+      <View
+        collapsable={false}
+        ref={IS_WEB ? sift.refs.setAnchor : undefined}
+        onLayout={IS_WEB ? () => void sift.updatePosition() : undefined}
+        style={[a.gap_sm, a.pt_lg, a.z_10]}>
         <View>
           <TextField.Root isInvalid={textFieldInvalid}>
             <TextField.Icon icon={AtIcon} />
             <TextField.Input
+              {...(IS_WEB ? comboboxProps : {})}
+              inputRef={IS_WEB ? inputAnchorRef : undefined}
               testID="handleInput"
               onChangeText={val => {
                 if (state.error) {
@@ -165,16 +190,25 @@ export function StepHandle() {
               </TextField.GhostText>
             )}
             {isHandleAvailable?.available && (
-              <CheckIcon
+              /*
+               * Nano glyph icons are hidden from the accessibility tree, so
+               * the testID has to live on a wrapper for e2e flows to find it.
+               */
+              <View
                 testID="handleAvailableCheck"
-                style={[{color: t.palette.positive_500}, a.z_20]}
-              />
+                accessible
+                accessibilityLabel={_(msg`Username is available`)}
+                accessibilityHint=""
+                style={a.z_20}>
+                <CheckIcon style={{color: t.palette.positive_500}} />
+              </View>
             )}
           </TextField.Root>
         </View>
         <LayoutAnimationConfig skipEntering skipExiting>
-          <View style={[a.gap_xs]}>
-            {state.error && (
+          {/* Reserve space for one line of text to avoid layout shift. */}
+          <View style={[a.gap_xs, {minHeight: 21}]}>
+            {!!state.error && (
               <Requirement>
                 <RequirementText>{state.error}</RequirementText>
               </Requirement>
@@ -192,6 +226,7 @@ export function StepHandle() {
                 {isHandleAvailable.suggestions &&
                   isHandleAvailable.suggestions.length > 0 && (
                     <HandleSuggestions
+                      sift={sift}
                       suggestions={isHandleAvailable.suggestions}
                       onSelect={suggestion => {
                         setDraftValue(
@@ -246,7 +281,7 @@ export function StepHandle() {
           isLoading={isNextLoading}
           isNextDisabled={isNextDisabled}
           onBackPress={onBackPress}
-          onNextPress={onNextPress}
+          onNextPress={() => void onNextPress()}
         />
       </Animated.View>
     </>

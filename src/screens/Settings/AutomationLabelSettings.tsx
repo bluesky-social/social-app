@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type $Typed, ComAtprotoLabelDefs} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
@@ -16,12 +16,13 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, platform, useTheme} from '#/alf'
 import {BotBadge} from '#/components/BotBadge'
 import * as Toggle from '#/components/forms/Toggle'
-import {Bot_Filled as RobotIcon} from '#/components/icons/Bot'
+import {Bot_Filled_Corner0_Rounded as RobotIcon} from '#/components/icons/Bot'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {useAnalytics} from '#/analytics'
+import {com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 type Props = NativeStackScreenProps<
@@ -53,15 +54,13 @@ export function AutomationLabelSettingsScreen({}: Props) {
       {
         profile,
         updates: existing => {
-          const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.validate(
-            existing.labels,
-            ComAtprotoLabelDefs.validateSelfLabels,
-          )
-            ? existing.labels
-            : {
-                $type: 'com.atproto.label.defs#selfLabels',
-                values: [],
-              }
+          const labels: $Typed<com.atproto.label.defs.SelfLabels> =
+            bsky.matches(com.atproto.label.defs.selfLabels, existing.labels)
+              ? existing.labels
+              : {
+                  $type: 'com.atproto.label.defs#selfLabels',
+                  values: [],
+                }
 
           const hasLabel = labels.values.some(l => l.val === 'bot')
           if (hasLabel) {
@@ -80,14 +79,16 @@ export function AutomationLabelSettingsScreen({}: Props) {
 
           return existing
         },
-        checkCommitted: res => {
-          const exists = !!res.data.labels?.some(l => l.val === 'bot')
+        checkCommitted: profile => {
+          if (!profile) return false
+          const exists = !!profile.labels?.some(l => l.val === 'bot')
           return exists === wasAdded
         },
       },
       {
         onSuccess() {
-          queryClient.invalidateQueries({queryKey: [POST_FEED_RQKEY_ROOT]})
+          // Resetting refetches a feed's first page, not every loaded page.
+          queryClient.resetQueries({queryKey: [POST_FEED_RQKEY_ROOT]})
           queryClient.invalidateQueries({queryKey: [postThreadQueryKeyRoot]})
         },
       },
@@ -123,7 +124,11 @@ export function AutomationLabelSettingsScreen({}: Props) {
                   paddingRight: 20, // helps visually center
                 },
               ]}>
-              <UserAvatar size={42} avatar={profile.avatar} type="user" />
+              <UserAvatar
+                size={42}
+                avatar={profile.avatar}
+                type={profile.associated?.labeler ? 'labeler' : 'user'}
+              />
               <View>
                 <View style={[a.flex_row, a.align_baseline]}>
                   <View style={[a.flex_row, a.align_center, a.gap_xs]}>

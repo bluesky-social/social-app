@@ -1,5 +1,4 @@
 import {useCallback} from 'react'
-import {View} from 'react-native'
 import {Sift, type UseSiftReturn} from '@bsky.app/sift'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -22,7 +21,7 @@ function renderItem(
     case 'search':
       return <AutocompleteItemSearch {...item} />
     default:
-      return <View />
+      return <></>
   }
 }
 
@@ -33,6 +32,7 @@ export function Autocomplete({
   render = renderItem,
   onSelect,
   onDismiss,
+  fullWidth = false,
 }: {
   inverted?: boolean
   sift: UseSiftReturn
@@ -40,15 +40,23 @@ export function Autocomplete({
   render?: Parameters<typeof Sift<AutocompleteItem>>[0]['render']
   onSelect: (item: AutocompleteItem) => void
   onDismiss: () => void
+  /**
+   * Match the anchor's width instead of the default capped width. Use for
+   * full-width anchors like the search bar; leave off for inline mention
+   * inputs.
+   */
+  fullWidth?: boolean
 }) {
   const t = useTheme()
 
   const updatePosition = useCallback(() => {
-    sift.updatePosition()
+    void sift.updatePosition()
   }, [sift])
 
   useOnKeyboard('keyboardDidShow', updatePosition)
   useOnKeyboard('keyboardDidHide', updatePosition)
+
+  const maxWidth = IS_WEB && !fullWidth ? {maxWidth: 300} : {}
 
   return (
     <Portal>
@@ -58,16 +66,7 @@ export function Autocomplete({
         data={data}
         onSelect={onSelect}
         onDismiss={onDismiss}
-        outerStyle={[
-          a.rounded_md,
-          a.w_full,
-          t.atoms.shadow_lg,
-          IS_WEB
-            ? {
-                maxWidth: 300,
-              }
-            : {},
-        ]}
+        outerStyle={[a.rounded_md, a.w_full, t.atoms.shadow_lg, maxWidth]}
         innerStyle={[
           a.overflow_hidden,
           a.rounded_md,
@@ -75,11 +74,7 @@ export function Autocomplete({
           t.atoms.border_contrast_low,
           t.atoms.bg,
           a.w_full,
-          IS_WEB
-            ? {
-                maxWidth: 300,
-              }
-            : {},
+          maxWidth,
         ]}
         render={render}
       />

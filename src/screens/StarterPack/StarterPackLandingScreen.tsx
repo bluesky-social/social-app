@@ -1,13 +1,8 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
-import {
-  AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
-  AtUri,
-  type ModerationOpts,
-} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {AtUri} from '@atproto/syntax'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -20,7 +15,7 @@ import {useStarterPackQuery} from '#/state/queries/starter-packs'
 import {
   useActiveStarterPack,
   useSetActiveStarterPack,
-} from '#/state/shell/starter-pack'
+} from '#/state/shell/landing'
 import {LoggedOutScreenState} from '#/view/com/auth/LoggedOut'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {Logo} from '#/view/icons/Logo'
@@ -29,6 +24,7 @@ import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import * as FeedCard from '#/components/FeedCard'
 import {useRichText} from '#/components/hooks/useRichText'
+import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
 import * as Layout from '#/components/Layout'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {ListMaybePlaceholder} from '#/components/Lists'
@@ -38,6 +34,7 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB, IS_WEB_MOBILE_ANDROID} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
@@ -72,8 +69,8 @@ export function LandingScreen({
   const isValid =
     starterPack &&
     starterPack.list &&
-    AppBskyGraphDefs.validateStarterPackView(starterPack) &&
-    AppBskyGraphStarterpack.validateRecord(starterPack.record)
+    bsky.matches(app.bsky.graph.defs.starterPackView, starterPack) &&
+    bsky.matches(app.bsky.graph.starterpack, starterPack.record)
 
   useEffect(() => {
     if (isErrorStarterPack || (starterPack && !isValid)) {
@@ -86,12 +83,7 @@ export function LandingScreen({
   }
 
   // Just for types, this cannot be hit
-  if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      starterPack.record,
-      AppBskyGraphStarterpack.isRecord,
-    )
-  ) {
+  if (!bsky.isType(app.bsky.graph.starterpack, starterPack.record)) {
     return null
   }
 
@@ -113,8 +105,8 @@ function LandingScreenLoaded({
 
   moderationOpts,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
-  starterPackRecord: AppBskyGraphStarterpack.Record
+  starterPack: app.bsky.graph.defs.StarterPackView
+  starterPackRecord: app.bsky.graph.starterpack.Main
   setScreenState: (state: LoggedOutScreenState) => void
   moderationOpts: ModerationOpts
 }) {
@@ -179,7 +171,7 @@ function LandingScreenLoaded({
             },
           ]}>
           <View style={[a.flex_row, a.gap_md, a.pb_sm]}>
-            <Logo width={76} fill="white" />
+            <Logo allowVariants={false} width={76} fill="white" />
           </View>
           <Text
             style={[
@@ -198,7 +190,7 @@ function LandingScreenLoaded({
               a.text_md,
               {color: 'white'},
             ]}>
-            Starter pack by {`@${creator.handle}`}
+            <Trans>Starter Pack by {`@${creator.handle}`}</Trans>
           </Text>
         </LinearGradientBackground>
         <View style={[a.gap_2xl, a.mx_lg, a.my_2xl]}>
@@ -209,18 +201,16 @@ function LandingScreenLoaded({
             <Button
               label={_(msg`Join Bluesky`)}
               onPress={onJoinPress}
-              variant="solid"
               color="primary"
               size="large">
               <ButtonText style={[a.text_lg]}>
                 <Trans>Join Bluesky</Trans>
               </ButtonText>
             </Button>
-            <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-              <FontAwesomeIcon
-                icon="arrow-trend-up"
-                size={12}
-                color={t.atoms.text_contrast_medium.color}
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <TrendingIcon
+                width={16}
+                style={{color: t.atoms.text_contrast_medium.color}}
               />
               <Text
                 style={[
@@ -309,14 +299,14 @@ function LandingScreenLoaded({
             ) : null}
           </View>
           <Button
-            label={_(msg`Create an account without using this starter pack`)}
+            label={_(msg`Create an account without using this Starter Pack`)}
             variant="solid"
             color="secondary"
             size="large"
             style={[a.py_lg]}
             onPress={onJoinWithoutPress}>
             <ButtonText>
-              <Trans>Create an account without using this starter pack</Trans>
+              <Trans>Create an account without using this Starter Pack</Trans>
             </ButtonText>
           </Button>
         </View>
@@ -406,7 +396,7 @@ export function AppClipOverlay({
             Download Bluesky to get started!
           </Text>
           <Text style={[a.text_lg, {color: 'white'}]}>
-            We'll remember the starter pack you chose and use it when you create
+            We’ll remember the Starter Pack you chose and use it when you create
             an account in the app.
           </Text>
         </View>

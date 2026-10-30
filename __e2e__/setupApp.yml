@@ -1,32 +1,30 @@
 appId: xyz.blueskyweb.app
 ---
-- launchApp:
-    appId: "xyz.blueskyweb.app"
-    clearState: true
-    arguments:
-      "-EXDevMenuIsOnboardingFinished": true
-- runFlow:
-    when:
-      platform: iOS
-    commands:
-      - openLink: "exp+bluesky://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
-      - runFlow:
-          when:
-            visible: 'Open in "Bluesky"'
-          commands:
-            - tapOn: Open
+# On Android, name the permissions to grant rather than taking launchApp's
+# default (all: allow). To grant "all", Maestro pulls the whole debug APK over
+# adb on every launch to read its manifest, and that transfer has no timeout,
+# so it occasionally hangs a flow for 25-45 minutes.
 - runFlow:
     when:
       platform: Android
     commands:
-      - tapOn: 'http://localhost:8081'
-      - runFlow:
-          label: "Dismiss Expo dev menu"
-          when:
-            visible: "Continue"
-          commands:
-            - back
-- tapOn:
-    id: e2eProxyHeaderInput
-- inputText: ${output.result}
-- pressKey: Enter
+      - launchApp:
+          appId: "xyz.blueskyweb.app"
+          clearState: true
+          permissions:
+            notifications: allow
+            camera: allow
+            microphone: allow
+            medialibrary: allow
+            contacts: allow
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - launchApp:
+          appId: "xyz.blueskyweb.app"
+          clearState: true
+- extendedWaitUntil:
+    visible: "Sign in"
+    timeout: 180000
+- waitForAnimationToEnd

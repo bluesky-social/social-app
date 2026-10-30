@@ -41,10 +41,8 @@ export const AnimatedCheck = forwardRef<AnimatedCheckRef, AnimatedCheckProps>(
         circleAnim.set(0)
         checkAnim.set(0)
 
-        circleAnim.set(() =>
-          withTiming(1, {duration: 500, easing: Easing.linear}),
-        )
-        checkAnim.set(() =>
+        circleAnim.set(withTiming(1, {duration: 500, easing: Easing.linear}))
+        checkAnim.set(
           withDelay(
             500,
             withTiming(1, {duration: 300, easing: Easing.linear}, cb),

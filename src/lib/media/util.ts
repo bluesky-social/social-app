@@ -2,6 +2,31 @@ export function extractDataUriMime(uri: string): string {
   return uri.substring(uri.indexOf(':') + 1, uri.indexOf(';'))
 }
 
+export function getResizedDimensions(
+  originalDims: {
+    width: number
+    height: number
+  },
+  maxDimension: number,
+) {
+  if (
+    originalDims.width <= maxDimension &&
+    originalDims.height <= maxDimension
+  ) {
+    return originalDims
+  }
+
+  const ratio = Math.min(
+    maxDimension / originalDims.width,
+    maxDimension / originalDims.height,
+  )
+
+  return {
+    width: Math.round(originalDims.width * ratio),
+    height: Math.round(originalDims.height * ratio),
+  }
+}
+
 // Fairly accurate estimate that is more performant
 // than decoding and checking length of URI
 export function getDataUriSize(uri: string): number {

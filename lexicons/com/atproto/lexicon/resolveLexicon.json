@@ -1,0 +1,58 @@
+{
+  "id": "com.atproto.lexicon.resolveLexicon",
+  "defs": {
+    "main": {
+      "type": "query",
+      "errors": [
+        {
+          "name": "LexiconNotFound",
+          "description": "No lexicon was resolved for the NSID."
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "uri",
+            "cid",
+            "schema"
+          ],
+          "properties": {
+            "cid": {
+              "type": "string",
+              "format": "cid",
+              "description": "The CID of the lexicon schema record."
+            },
+            "uri": {
+              "type": "string",
+              "format": "at-uri",
+              "description": "The AT-URI of the lexicon schema record."
+            },
+            "schema": {
+              "ref": "com.atproto.lexicon.schema#main",
+              "type": "ref",
+              "description": "The resolved lexicon schema record."
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "nsid"
+        ],
+        "properties": {
+          "nsid": {
+            "type": "string",
+            "format": "nsid",
+            "description": "The lexicon NSID to resolve."
+          }
+        }
+      },
+      "description": "Resolves an atproto lexicon (NSID) to a schema."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

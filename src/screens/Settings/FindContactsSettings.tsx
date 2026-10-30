@@ -1,11 +1,8 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useEffectEvent, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
-import * as Contacts from 'expo-contacts'
-import {
-  type AppBskyContactDefs,
-  type AppBskyContactGetSyncStatus,
-  type ModerationOpts,
-} from '@atproto/api'
+import * as Contacts from 'expo-contacts/legacy'
+import {type DidString} from '@atproto/syntax'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -16,7 +13,7 @@ import {wait} from '#/lib/async/wait'
 import {HITSLOP_10, urls} from '#/lib/constants'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {
-  type AllNavigatorParams,
+  type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
@@ -32,13 +29,14 @@ import {
   useContactsMatchesQuery,
   useContactsSyncStatusQuery,
 } from '#/state/queries/find-contacts'
-import {useAgent, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {List} from '#/view/com/util/List'
 import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ContactsHeroImage} from '#/components/contacts/components/HeroImage'
+import {useDialogControl} from '#/components/Dialog'
 import {ArrowRotateClockwise_Stroke2_Corner0_Rounded as ResyncIcon} from '#/components/icons/ArrowRotate'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
@@ -50,10 +48,15 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {InviteFriendsDialog} from '#/features/inviteFriends'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {bulkWriteFollows} from '../Onboarding/util'
 
-type Props = NativeStackScreenProps<AllNavigatorParams, 'FindContactsSettings'>
+type Props = NativeStackScreenProps<
+  CommonNavigatorParams,
+  'FindContactsSettings'
+>
 export function FindContactsSettingsScreen({}: Props) {
   const {_} = useLingui()
   const ax = useAnalytics()
@@ -61,12 +64,17 @@ export function FindContactsSettingsScreen({}: Props) {
   const {data, error, refetch} = useContactsSyncStatusQuery()
 
   const isFocused = useIsFocused()
+
+  const logPresented = useEffectEvent(() => {
+    ax.metric('contacts:settings:presented', {
+      hasPreviouslySynced: !!data?.syncStatus,
+      matchCount: data?.syncStatus?.matchesCount,
+    })
+  })
+
   useEffect(() => {
     if (data && isFocused) {
-      ax.metric('contacts:settings:presented', {
-        hasPreviouslySynced: !!data.syncStatus,
-        matchCount: data.syncStatus?.matchesCount,
-      })
+      logPresented()
     }
   }, [data, isFocused])
 
@@ -76,7 +84,7 @@ export function FindContactsSettingsScreen({}: Props) {
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
-            <Trans>Find Friends</Trans>
+            <Trans>Find and invite friends</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot />
@@ -113,6 +121,8 @@ function Intro() {
   const gutter = useGutters(['base'])
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
+  const inviteFriendsControl = useDialogControl()
 
   const {data: isAvailable, isSuccess} = useQuery({
     queryKey: ['contacts-available'],
@@ -122,6 +132,9 @@ function Intro() {
   return (
     <Layout.Content contentContainerStyle={[gutter, a.gap_lg]}>
       <ContactsHeroImage />
+      <Text style={[a.text_xl, a.font_bold]}>
+        <Trans>Find people you know</Trans>
+      </Text>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
         <Trans>
           Find your friends on Bluesky by verifying your phone number and
@@ -161,6 +174,20 @@ function Intro() {
           </Admonition>
         )
       )}
+      <Button
+        label={_(msg`Share my profile`)}
+        size="large"
+        color="secondary"
+        onPress={() => {
+          ax.metric('invite:dialog:open', {logContext: 'FindContactsSettings'})
+          inviteFriendsControl.open()
+        }}
+        style={[a.flex_1, a.justify_center]}>
+        <ButtonText>
+          <Trans>Share my profile</Trans>
+        </ButtonText>
+      </Button>
+      <InviteFriendsDialog control={inviteFriendsControl} />
     </Layout.Content>
   )
 }
@@ -169,11 +196,11 @@ function SyncStatus({
   info,
   refetchStatus,
 }: {
-  info: AppBskyContactDefs.SyncStatus
+  info: app.bsky.contact.defs.SyncStatus
   refetchStatus: () => Promise<any>
 }) {
   const ax = useAnalytics()
-  const agent = useAgent()
+  const client = useAppviewClient()
   const queryClient = useQueryClient()
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -198,7 +225,9 @@ function SyncStatus({
 
   const {mutate: dismissMatch} = useMutation({
     mutationFn: async (did: string) => {
-      await agent.app.bsky.contact.dismissMatch({subject: did})
+      await client.call(app.bsky.contact.dismissMatch, {
+        subject: did as DidString,
+      })
     },
     onMutate: async (did: string) => {
       ax.metric('contacts:settings:dismiss', {})
@@ -349,7 +378,8 @@ function StatusHeader({
 }) {
   const {_} = useLingui()
   const ax = useAnalytics()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
+  const client = useAppviewClient()
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
 
@@ -363,12 +393,12 @@ function StatusHeader({
 
       let cursor: string | undefined
       do {
-        const page = await agent.app.bsky.contact.getMatches({
+        const page = await client.call(app.bsky.contact.getMatches, {
           limit: 100,
           cursor,
         })
-        cursor = page.data.cursor
-        for (const profile of page.data.matches) {
+        cursor = page.cursor
+        for (const profile of page.matches) {
           if (
             profile.did !== currentAccount?.did &&
             !isBlockedOrBlocking(profile) &&
@@ -384,7 +414,10 @@ function StatusHeader({
         followCount: didsToFollow.length,
       })
 
-      const uris = await wait(500, bulkWriteFollows(agent, didsToFollow))
+      const uris = await wait(
+        500,
+        bulkWriteFollows(pdsClient, client, didsToFollow),
+      )
 
       for (const did of didsToFollow) {
         const uri = uris.get(did)
@@ -466,17 +499,17 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
   const {_, i18n} = useLingui()
   const t = useTheme()
   const ax = useAnalytics()
-  const agent = useAgent()
+  const client = useAppviewClient()
   const queryClient = useQueryClient()
 
   const {mutate: removeData, isPending} = useMutation({
     mutationFn: async () => {
-      await agent.app.bsky.contact.removeData({})
+      await client.call(app.bsky.contact.removeData, {})
     },
     onMutate: () => ax.metric('contacts:settings:removeData', {}),
     onSuccess: () => {
       Toast.show(_(msg`Contacts removed`))
-      queryClient.setQueryData<AppBskyContactGetSyncStatus.OutputSchema>(
+      queryClient.setQueryData<app.bsky.contact.getSyncStatus.$OutputBody>(
         findContactsStatusQueryKey,
         {syncStatus: undefined},
       )

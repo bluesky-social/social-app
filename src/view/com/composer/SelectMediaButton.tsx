@@ -5,21 +5,26 @@ import {type ImagePickerAsset} from 'expo-image-picker'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {VIDEO_MAX_DURATION_MS, VIDEO_MAX_SIZE} from '#/lib/constants'
+import {
+  VIDEO_MAX_DURATION_MS,
+  VIDEO_MAX_SIZE,
+  VIDEO_MAX_SIZE_MB,
+} from '#/lib/constants'
 import {
   usePhotoLibraryPermission,
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
 import {openUnifiedPicker} from '#/lib/media/picker'
-import {extractDataUriMime} from '#/lib/media/util'
-import {MAX_IMAGES} from '#/view/com/composer/state/composer'
+import {blobToDataUri, extractDataUriMime} from '#/lib/media/util'
+import {MAX_GALLERY_IMAGES} from '#/view/com/composer/state/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
-import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
+import {Image_Stroke2_Corner2_Rounded as ImageIcon} from '#/components/icons/Image'
 import * as toast from '#/components/Toast'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {isAnimatedGif} from './videos/isAnimatedGif'
+import {hasWebCodecs} from './videos/metadata'
 
 export type SelectMediaButtonProps = {
   disabled?: boolean
@@ -231,9 +236,11 @@ async function processImagePickerAssets(
   {
     selectionCountRemaining,
     allowedAssetTypes,
+    videoMaxDurationMs,
   }: {
     selectionCountRemaining: number
     allowedAssetTypes: AssetType | undefined
+    videoMaxDurationMs: number
   },
 ) {
   /*
@@ -287,9 +294,15 @@ async function processImagePickerAssets(
       /*
        * Filesize appears to be stable across all platforms, so we can use it
        * to filter out large files on web. On native, we compress these anyway,
-       * so we only check on web.
+       * so we only check on web. On web, we can reject early if the browser
+       * doesn't support WebCodecs.
        */
-      if (IS_WEB && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
+      if (
+        IS_WEB &&
+        !hasWebCodecs() &&
+        asset.fileSize &&
+        asset.fileSize > VIDEO_MAX_SIZE
+      ) {
         errors.add(SelectedAssetError.FileTooBig)
         continue
       }
@@ -305,8 +318,7 @@ async function processImagePickerAssets(
     if (type === 'gif') {
       /*
        * Filesize appears to be stable across all platforms, so we can use it
-       * to filter out large files on web. On native, we compress GIFs as
-       * videos anyway, so we only check on web.
+       * to filter out large files. We can't compress GIFs on either platform.
        */
       if (IS_WEB && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
         errors.add(SelectedAssetError.FileTooBig)
@@ -317,18 +329,21 @@ async function processImagePickerAssets(
     /*
      * All validations passed, we have an asset!
      */
+    let uri = asset.uri
+    if (IS_WEB && type === 'image' && asset.file) {
+      uri = await blobToDataUri(asset.file)
+    }
+
     supportedAssets.push({
       mimeType,
       ...asset,
       /*
        * In `expo-image-picker` >= v17, `uri` is now a `blob:` URL, not a
        * data-uri. Our handling elsewhere in the app (for web) relies on the
-       * base64 data-uri, so we construct it here for web only.
+       * data-uri, so read images only after their type has been validated.
+       * Videos retain their File/blob URL and avoid an expensive base64 read.
        */
-      uri:
-        IS_WEB && asset.base64
-          ? `data:${mimeType};base64,${asset.base64}`
-          : asset.uri,
+      uri,
     })
   }
 
@@ -352,7 +367,7 @@ async function processImagePickerAssets(
           supportedAssets[0].duration = supportedAssets[0].duration * 1000
         }
 
-        if (supportedAssets[0].duration > VIDEO_MAX_DURATION_MS) {
+        if (supportedAssets[0].duration > videoMaxDurationMs) {
           errors.add(SelectedAssetError.VideoTooLong)
           supportedAssets = []
         }
@@ -389,7 +404,9 @@ export function SelectMediaButton({
   const t = useTheme()
   const hasAutoOpened = useRef(false)
 
-  const selectionCountRemaining = MAX_IMAGES - selectedAssetsCount
+  // Picker uses the gallery cap; the reducer decides which embed variant
+  // to land in based on the final image count.
+  const selectionCountRemaining = MAX_GALLERY_IMAGES - selectedAssetsCount
 
   const processSelectedAssets = useCallback(
     async (rawAssets: ImagePickerAsset[]) => {
@@ -400,6 +417,7 @@ export function SelectMediaButton({
       } = await processImagePickerAssets(rawAssets, {
         selectionCountRemaining,
         allowedAssetTypes,
+        videoMaxDurationMs: VIDEO_MAX_DURATION_MS,
       })
 
       /*
@@ -415,23 +433,23 @@ export function SelectMediaButton({
           ),
           [SelectedAssetError.MaxImages]: _(
             msg({
-              message: `You can select up to ${plural(MAX_IMAGES, {
+              message: `You can select up to ${plural(MAX_GALLERY_IMAGES, {
                 other: '# images',
               })} in total.`,
-              comment: `Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.`,
+              comment: `Error message for maximum number of images that can be selected to add to a post.`,
             }),
           ),
           [SelectedAssetError.MaxVideos]: _(
             msg`You can only select one video at a time.`,
           ),
           [SelectedAssetError.VideoTooLong]: _(
-            msg`Videos must be less than 3 minutes long.`,
+            msg`Videos must be 10 minutes or less.`,
           ),
           [SelectedAssetError.MaxGIFs]: _(
             msg`You can only select one GIF at a time.`,
           ),
           [SelectedAssetError.FileTooBig]: _(
-            msg`One or more of your selected files are too large. Maximum size is 100 MB.`,
+            msg`One or more of your selected files are too large. Maximum size is ${VIDEO_MAX_SIZE_MB} MB.`,
           ),
         }[error]
       })
@@ -469,7 +487,10 @@ export function SelectMediaButton({
     }
 
     const {assets, canceled} = await sheetWrapper(
-      openUnifiedPicker({selectionCountRemaining}),
+      openUnifiedPicker({
+        selectionCountRemaining,
+        videoMaxDurationMs: VIDEO_MAX_DURATION_MS,
+      }),
     )
 
     if (canceled) return
@@ -503,10 +524,11 @@ export function SelectMediaButton({
       )}
       accessibilityHint={_(
         msg({
-          message: `Opens device gallery to select up to ${plural(MAX_IMAGES, {
-            other: '# images',
-          })}, or a single video or GIF.`,
-          comment: `Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.`,
+          message: `Opens device gallery to select up to ${plural(
+            MAX_GALLERY_IMAGES,
+            {other: '# images'},
+          )}, or a single video or GIF.`,
+          comment: `Accessibility hint for button in composer to add images, a video, or a GIF to a post.`,
         }),
       )}
       style={a.p_sm}
@@ -517,7 +539,7 @@ export function SelectMediaButton({
       <ImageIcon
         size="lg"
         style={disabled && t.atoms.text_contrast_low}
-        accessibilityIgnoresInvertColors={true}
+        {...(IS_NATIVE && {accessibilityIgnoresInvertColors: true})}
       />
     </Button>
   )

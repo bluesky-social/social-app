@@ -1,0 +1,394 @@
+import {type DidString} from '@atproto/syntax'
+
+import {
+  type ActorGroup,
+  type GroupedNotificationsPage,
+  isNonEmpty,
+  type NonEmptyArray,
+  type NotificationView,
+  type ParentPost,
+} from '#/state/queries/notifications/grouped/types'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
+
+type OutputBody = app.bsky.notification.getGroupedNotifications.$OutputBody
+type Group = app.bsky.notification.getGroupedNotifications.Group
+type ProfileView = app.bsky.actor.defs.ProfileViewBasic
+type PostView = app.bsky.feed.defs.PostView
+type GeneratorView = app.bsky.feed.defs.GeneratorView
+type StarterPackView = app.bsky.graph.defs.StarterPackViewBasic
+
+const defs = app.bsky.notification.getGroupedNotifications
+
+/**
+ * Lookups built from a page's `relatedViews`, plus the viewer to exclude from
+ * actor lists.
+ */
+type Context = {
+  viewerDid: string | undefined
+  profiles: Map<string, ProfileView>
+  /**
+   * Every post-like view by uri. Blocked and not-found posts are kept as
+   * markers so a reply can say why its parent is missing.
+   */
+  posts: Map<string, ParentPost>
+  generators: Map<string, GeneratorView>
+  starterPacks: Map<string, StarterPackView>
+}
+
+/**
+ * Resolves every DID and at-uri in a `getGroupedNotifications` response
+ * against its `relatedViews`, dropping groups that can't be rendered (unknown
+ * kinds, missing subjects, no resolvable actors).
+ *
+ * Views in the result are the original objects from `res`, never copies,
+ * since post and profile shadows are keyed by object identity.
+ */
+export function hydratePage(
+  res: OutputBody,
+  {viewerDid}: {viewerDid?: string},
+): GroupedNotificationsPage {
+  const ctx = createContext(res.relatedViews, viewerDid)
+  const notifications: NotificationView[] = []
+  for (const group of res.groups) {
+    const notification = hydrateGroup(group, ctx)
+    if (notification) {
+      notifications.push(notification)
+    }
+  }
+  return {
+    cursor: res.cursor,
+    seenAt: res.seenAt,
+    notifications,
+    newestAt: getNewestAt(res.groups),
+  }
+}
+
+/**
+ * When the newest of a response's groups was indexed, in ms since the epoch,
+ * or undefined if it has none. See `GroupedNotificationsPage['newestAt']`.
+ */
+export function getNewestAt(groups: OutputBody['groups']): number | undefined {
+  let newestAt: number | undefined
+  for (const group of groups) {
+    const indexedAt = Date.parse(group.indexedAt)
+    if (indexedAt > (newestAt ?? -Infinity)) {
+      newestAt = indexedAt
+    }
+  }
+  return newestAt
+}
+
+function createContext(
+  relatedViews: OutputBody['relatedViews'],
+  viewerDid: string | undefined,
+): Context {
+  const ctx: Context = {
+    viewerDid,
+    profiles: new Map(),
+    posts: new Map(),
+    generators: new Map(),
+    starterPacks: new Map(),
+  }
+  for (const view of relatedViews ?? []) {
+    if (bsky.isType(app.bsky.actor.defs.profileViewBasic, view)) {
+      ctx.profiles.set(view.did, view)
+    } else if (bsky.isType(app.bsky.feed.defs.postView, view)) {
+      ctx.posts.set(view.uri, {type: 'post', post: view})
+    } else if (bsky.isType(app.bsky.feed.defs.blockedPost, view)) {
+      ctx.posts.set(view.uri, {type: 'blocked'})
+    } else if (bsky.isType(app.bsky.feed.defs.notFoundPost, view)) {
+      ctx.posts.set(view.uri, {type: 'notFound'})
+    } else if (bsky.isType(app.bsky.feed.defs.generatorView, view)) {
+      ctx.generators.set(view.uri, view)
+    } else if (bsky.isType(app.bsky.graph.defs.starterPackViewBasic, view)) {
+      ctx.starterPacks.set(view.uri, view)
+    }
+  }
+  return ctx
+}
+
+function hydrateGroup(
+  group: Group,
+  ctx: Context,
+): NotificationView | undefined {
+  const {kind} = group
+  const base = {
+    id: group.id,
+    isRead: group.isRead,
+    indexedAt: group.indexedAt,
+    count: group.count,
+  }
+
+  if (bsky.isType(defs.likeGroup, kind)) {
+    const post = resolvePost(kind.post, ctx)
+    const group = resolveActorGroup(kind.items, ctx)
+    if (!post || !group) return
+    return {...base, type: 'like', post, ...group}
+  }
+
+  if (bsky.isType(defs.repostGroup, kind)) {
+    const post = resolvePost(kind.post, ctx)
+    const group = resolveActorGroup(kind.items, ctx)
+    if (!post || !group) return
+    return {...base, type: 'repost', post, ...group}
+  }
+
+  if (bsky.isType(defs.likeViaRepostGroup, kind)) {
+    const post = resolvePost(kind.post, ctx)
+    const group = resolveActorGroup(kind.items, ctx)
+    if (!post || !group) return
+    return {
+      ...base,
+      type: 'likeViaRepost',
+      post,
+      viaRepost: kind.viaRepost,
+      ...group,
+    }
+  }
+
+  if (bsky.isType(defs.repostViaRepostGroup, kind)) {
+    const post = resolvePost(kind.post, ctx)
+    const group = resolveActorGroup(kind.items, ctx)
+    if (!post || !group) return
+    return {
+      ...base,
+      type: 'repostViaRepost',
+      post,
+      viaRepost: kind.viaRepost,
+      ...group,
+    }
+  }
+
+  if (bsky.isType(defs.multiPostLikeGroup, kind)) {
+    const multi = resolveMultiPost(kind, ctx)
+    return multi && {...base, type: 'multiPostLike', ...multi}
+  }
+
+  if (bsky.isType(defs.multiPostRepostGroup, kind)) {
+    const multi = resolveMultiPost(kind, ctx)
+    return multi && {...base, type: 'multiPostRepost', ...multi}
+  }
+
+  if (bsky.isType(defs.multiPostLikeViaRepostGroup, kind)) {
+    const multi = resolveMultiPost(kind, ctx)
+    return multi && {...base, type: 'multiPostLikeViaRepost', ...multi}
+  }
+
+  if (bsky.isType(defs.multiPostRepostViaRepostGroup, kind)) {
+    const multi = resolveMultiPost(kind, ctx)
+    return multi && {...base, type: 'multiPostRepostViaRepost', ...multi}
+  }
+
+  if (bsky.isType(defs.followGroup, kind)) {
+    const group = resolveActorGroup(kind.items, ctx)
+    if (!group) return
+    /*
+     * Only attribute the group to a starter pack when every follow came via
+     * the same one, otherwise "via <pack>" would be wrong for some actors.
+     */
+    const packUri = kind.items[0]?.starterPack
+    const starterPack =
+      packUri && kind.items.every(item => item.starterPack === packUri)
+        ? ctx.starterPacks.get(packUri)
+        : undefined
+    return starterPack
+      ? {...base, type: 'follow', ...group, starterPack}
+      : {...base, type: 'follow', ...group}
+  }
+
+  if (bsky.isType(defs.subscribedPostGroup, kind)) {
+    const items = nonEmpty(
+      kind.items.flatMap(item => {
+        const actor = resolveActor(item.actor, ctx)
+        const post = resolvePost(item.post, ctx)
+        if (!actor || !post) return []
+        return [
+          item.parent
+            ? {actor, post, parent: resolveParent(item.parent, ctx)}
+            : {actor, post},
+        ]
+      }),
+    )
+    if (!items) return
+    return {...base, type: 'subscribedPost', items}
+  }
+
+  if (bsky.isType(defs.generatorLikeGroup, kind)) {
+    const generator = ctx.generators.get(kind.generator)
+    const group = resolveActorGroup(kind.items, ctx)
+    if (!generator || !group) return
+    return {...base, type: 'generatorLike', generator, ...group}
+  }
+
+  if (bsky.isType(defs.replyNotification, kind)) {
+    const post = resolvePost(kind.post, ctx)
+    if (!post) return
+    return {
+      ...base,
+      type: 'reply',
+      post,
+      parent: resolveParent(kind.parent, ctx),
+    }
+  }
+
+  if (bsky.isType(defs.quoteNotification, kind)) {
+    const post = resolvePost(kind.post, ctx)
+    if (!post) return
+    return kind.parent
+      ? {...base, type: 'quote', post, parent: resolveParent(kind.parent, ctx)}
+      : {...base, type: 'quote', post}
+  }
+
+  if (bsky.isType(defs.mentionNotification, kind)) {
+    const post = resolvePost(kind.post, ctx)
+    if (!post) return
+    return kind.parent
+      ? {
+          ...base,
+          type: 'mention',
+          post,
+          parent: resolveParent(kind.parent, ctx),
+        }
+      : {...base, type: 'mention', post}
+  }
+
+  if (bsky.isType(defs.followBackNotification, kind)) {
+    const actor = resolveActor(kind.actor, ctx)
+    if (!actor) return
+    const starterPack = kind.starterPack
+      ? ctx.starterPacks.get(kind.starterPack)
+      : undefined
+    return starterPack
+      ? {...base, type: 'followBack', actor, starterPack}
+      : {...base, type: 'followBack', actor}
+  }
+
+  if (bsky.isType(defs.verifiedNotification, kind)) {
+    const actor = resolveActor(kind.actor, ctx)
+    if (!actor) return
+    return {...base, type: 'verified', actor}
+  }
+
+  if (bsky.isType(defs.unverifiedNotification, kind)) {
+    const actor = resolveActor(kind.actor, ctx)
+    if (!actor) return
+    return {...base, type: 'unverified', actor}
+  }
+
+  if (bsky.isType(defs.starterPackJoinedNotification, kind)) {
+    const actor = resolveActor(kind.actor, ctx)
+    const starterPack = ctx.starterPacks.get(kind.starterPack)
+    if (!actor || !starterPack) return
+    return {...base, type: 'starterPackJoined', actor, starterPack}
+  }
+
+  if (bsky.isType(defs.contactMatchNotification, kind)) {
+    const actor = resolveActor(kind.actor, ctx)
+    if (!actor) return
+    return {...base, type: 'contactMatch', actor}
+  }
+
+  // Unknown kind, which the lexicon tells clients to ignore.
+  return undefined
+}
+
+/**
+ * Resolves a DID to its profile view. The viewer is treated as unresolved,
+ * so self-likes and the like never show up as actors.
+ */
+function resolveActor(did: string, ctx: Context): ProfileView | undefined {
+  if (did === ctx.viewerDid) return undefined
+  return ctx.profiles.get(did)
+}
+
+/**
+ * Resolves a group of one actor's likes or reposts of several posts, skipping
+ * posts that don't resolve. Undefined if the actor or every post is missing.
+ */
+function resolveMultiPost(
+  kind: {actor: string; items: {post: string}[]},
+  ctx: Context,
+): {actor: ProfileView; posts: NonEmptyArray<PostView>} | undefined {
+  const actor = resolveActor(kind.actor, ctx)
+  const posts = nonEmpty(
+    kind.items.flatMap(item => {
+      const post = resolvePost(item.post, ctx)
+      return post ? [post] : []
+    }),
+  )
+  if (!actor || !posts) return
+  return {actor, posts}
+}
+
+/**
+ * Resolves the actors of a group from several people, keeping every DID
+ * alongside the profiles so the rest can be loaded later. Undefined if no
+ * actor resolves.
+ */
+function resolveActorGroup(
+  items: {actor: DidString}[],
+  ctx: Context,
+): ActorGroup | undefined {
+  const actors = resolveActors(items, ctx)
+  if (!actors) return
+  return {actors, actorDids: uniqueActorDids(items, ctx)}
+}
+
+/**
+ * Resolves each item's actor, skipping unresolved ones and duplicates. The
+ * first resolved actor is the group's primary actor.
+ */
+function resolveActors(
+  items: {actor: string}[],
+  ctx: Context,
+): NonEmptyArray<ProfileView> | undefined {
+  const seen = new Set<string>()
+  const actors: ProfileView[] = []
+  for (const {actor: did} of items) {
+    if (seen.has(did)) continue
+    seen.add(did)
+    const actor = resolveActor(did, ctx)
+    if (actor) {
+      actors.push(actor)
+    }
+  }
+  return nonEmpty(actors)
+}
+
+/**
+ * Each item's actor DID, resolved or not, without duplicates or the viewer.
+ */
+function uniqueActorDids(
+  items: {actor: DidString}[],
+  ctx: Context,
+): DidString[] {
+  const dids = new Set<DidString>()
+  for (const {actor: did} of items) {
+    if (did !== ctx.viewerDid) {
+      dids.add(did)
+    }
+  }
+  return [...dids]
+}
+
+/**
+ * Resolves an at-uri to a viewable post. Blocked and not-found posts resolve
+ * to `undefined`.
+ */
+function resolvePost(uri: string, ctx: Context): PostView | undefined {
+  const entry = ctx.posts.get(uri)
+  return entry?.type === 'post' ? entry.post : undefined
+}
+
+/**
+ * Resolves a parent at-uri. A uri with no view at all is treated as not
+ * found, since there's nothing to render either way.
+ */
+function resolveParent(uri: string, ctx: Context): ParentPost {
+  return ctx.posts.get(uri) ?? {type: 'notFound'}
+}
+
+function nonEmpty<T>(items: T[]): NonEmptyArray<T> | undefined {
+  return isNonEmpty(items) ? items : undefined
+}

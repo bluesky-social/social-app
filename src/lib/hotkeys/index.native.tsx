@@ -4,7 +4,7 @@ export function Provider({children}: {children: React.ReactNode}) {
   return children
 }
 
-const noop = () => {}
+const noop = (_scope: string) => {}
 
 export function useHotkeysContext() {
   return useMemo(

@@ -1,7 +1,7 @@
-import {useState} from 'react'
+import {useMemo, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
-import {type AppBskyFeedDefs, type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {Trans} from '@lingui/react/macro'
 
 import {DISCOVER_FEED_URI} from '#/lib/constants'
@@ -16,12 +16,14 @@ import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
+import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 
-function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
+function keyExtractor(item: app.bsky.feed.defs.GeneratorView) {
   return item.uri
 }
 
@@ -36,7 +38,7 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
     useSavedFeeds()
   const savedFeeds = savedFeedsAndLists?.feeds
     .filter(f => f.type === 'feed' && f.view.uri !== DISCOVER_FEED_URI)
-    .map(f => f.view) as AppBskyFeedDefs.GeneratorView[]
+    .map(f => f.view) as app.bsky.feed.defs.GeneratorView[]
 
   const {
     data: popularFeedsPages,
@@ -58,15 +60,23 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
         : savedFeeds
       : undefined
 
-  const {data: searchedFeeds, isFetching: isFetchingSearchedFeeds} =
-    usePopularFeedsSearch({query: throttledQuery})
+  const {
+    data: searchedFeedsPages,
+    fetchNextPage: fetchNextSearchedFeedsPage,
+    hasNextPage: hasNextSearchedFeedsPage,
+    isFetching: isFetchingSearchedFeeds,
+    isFetchingNextPage: isFetchingNextSearchedFeedsPage,
+  } = usePopularFeedsSearch({query: throttledQuery})
+  const searchedFeeds = useMemo(() => {
+    return searchedFeedsPages?.pages.flatMap(page => page.feeds) ?? []
+  }, [searchedFeedsPages])
 
   const isLoading =
     !isFetchedSavedFeeds || isLoadingPopularFeeds || isFetchingSearchedFeeds
 
   const renderItem = ({
     item,
-  }: ListRenderItemInfo<AppBskyFeedDefs.GeneratorView>) => {
+  }: ListRenderItemInfo<app.bsky.feed.defs.GeneratorView>) => {
     return (
       <WizardFeedCard
         generator={item}
@@ -97,7 +107,17 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         onEndReached={
-          !query && !screenReaderEnabled ? () => fetchNextPage() : undefined
+          !screenReaderEnabled
+            ? () => {
+                if (query) {
+                  if (hasNextSearchedFeedsPage) {
+                    void fetchNextSearchedFeedsPage()
+                  }
+                } else {
+                  void fetchNextPage()
+                }
+              }
+            : undefined
         }
         onEndReachedThreshold={2}
         keyboardDismissMode="on-drag"
@@ -106,6 +126,14 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
         disableFullWindowScroll={true}
         sideBorders={false}
         style={{flex: 1}}
+        ListFooterComponent={
+          query ? (
+            <ListFooter
+              hasNextPage={hasNextSearchedFeedsPage}
+              isFetchingNextPage={isFetchingNextSearchedFeedsPage}
+            />
+          ) : undefined
+        }
         ListEmptyComponent={
           <View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>
             {isLoading ? (

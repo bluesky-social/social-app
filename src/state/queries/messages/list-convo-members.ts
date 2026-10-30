@@ -1,19 +1,15 @@
-import {useEffect} from 'react'
-import {type ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
-import {type QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
+import {type QueryClient, useQuery} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
-import {useMessagesEventBus} from '#/state/messages/events'
 import {STALE} from '#/state/queries'
 import {createQueryKey} from '#/state/queries/util'
-import {useAgent} from '#/state/session'
-import * as bsky from '#/types/bsky'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
 
 const RQKEY_ROOT = 'listConvoMembers'
 export const listConvoMembersQueryKey = (convoId: string) =>
   createQueryKey(RQKEY_ROOT, {convoId})
 
-// group chat size is 50, so should fetch the whole list in one go
+// Group chat size is at least 50, so should fetch the whole list in one go
 const LIMIT = 50
 
 export function useListConvoMembersQuery({
@@ -21,80 +17,29 @@ export function useListConvoMembersQuery({
   placeholderData,
 }: {
   convoId: string
-  placeholderData?: ChatBskyActorDefs.ProfileViewBasic[]
+  placeholderData?: chat.bsky.actor.defs.ProfileViewBasic[]
 }) {
-  const agent = useAgent()
-  const queryClient = useQueryClient()
-  const messagesBus = useMessagesEventBus()
-
-  useEffect(() => {
-    const unsub = messagesBus.on(
-      ev => {
-        if (ev.type !== 'logs') return
-
-        function mutateList(
-          fn: (
-            update: ChatBskyActorDefs.ProfileViewBasic[],
-          ) => ChatBskyActorDefs.ProfileViewBasic[],
-        ) {
-          queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
-            listConvoMembersQueryKey(convoId),
-            old => {
-              if (!old) return // query doesn't exist yet, skip
-              return fn(old)
-            },
-          )
-        }
-
-        for (const log of ev.logs) {
-          if (ChatBskyConvoDefs.isLogAddMember(log)) {
-            const data = log.message.data
-            if (
-              bsky.dangerousIsType<ChatBskyConvoDefs.SystemMessageDataAddMember>(
-                data,
-                ChatBskyConvoDefs.isSystemMessageDataAddMember,
-              )
-            ) {
-              const newMember = log.relatedProfiles.find(
-                r => r.did === data.member.did,
-              )
-              if (newMember) {
-                mutateList(list =>
-                  list.some(m => m.did === newMember.did)
-                    ? list
-                    : list.concat(newMember),
-                )
-              }
-            }
-          } else if (ChatBskyConvoDefs.isLogRemoveMember(log)) {
-            const data = log.message.data
-            if (
-              bsky.dangerousIsType<ChatBskyConvoDefs.SystemMessageDataRemoveMember>(
-                data,
-                ChatBskyConvoDefs.isSystemMessageDataRemoveMember,
-              )
-            ) {
-              mutateList(list => list.filter(m => m.did !== data.member.did))
-            }
-          }
-        }
-      },
-      {convoId},
-    )
-    return () => unsub()
-  }, [convoId, messagesBus, queryClient])
+  const client = useChatClient()
 
   return useQuery({
     queryKey: listConvoMembersQueryKey(convoId),
     queryFn: async () => {
-      const members = []
-      let cursor
+      /*
+       * Both locals are annotated because the loop is self-referential: `data`
+       * is inferred from a call whose params include `cursor`, so leaving
+       * `cursor` to be inferred from `data.cursor` is circular. Annotating
+       * `members` with the exported profile type also keeps the hook's result
+       * type unchanged for consumers.
+       */
+      const members: chat.bsky.actor.defs.ProfileViewBasic[] = []
+      let cursor: string | undefined
 
       do {
-        const {data} = await agent.chat.bsky.convo.getConvoMembers(
-          {convoId, cursor, limit: LIMIT},
-          {headers: DM_SERVICE_HEADERS},
-        )
+        const data = await client.call(chat.bsky.convo.getConvoMembers, {
+          convoId,
+          cursor,
+          limit: LIMIT,
+        })
         members.push(...data.members)
         cursor = data.cursor
       } while (cursor)
@@ -109,9 +54,9 @@ export function useListConvoMembersQuery({
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<ChatBskyActorDefs.ProfileViewBasic, void> {
+): Generator<chat.bsky.actor.defs.ProfileViewBasic, void> {
   const queryDatas = queryClient.getQueriesData<
-    ChatBskyActorDefs.ProfileViewBasic[]
+    chat.bsky.actor.defs.ProfileViewBasic[]
   >({
     queryKey: [RQKEY_ROOT],
   })

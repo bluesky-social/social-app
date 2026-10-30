@@ -1,12 +1,12 @@
 import {useCallback} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
 
 import {
   ScaleAndFadeIn,
@@ -25,25 +25,25 @@ export function NewMessagesPill({
   onPress: () => void
 }) {
   const t = useTheme()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const {bottom: bottomInset} = useSafeAreaInsets()
 
   const scale = useSharedValue(1)
 
   const onPressIn = useCallback(() => {
     if (IS_WEB) return
-    scale.set(() => withTiming(1.075, {duration: 100}))
+    scale.set(withTiming(1.075, {duration: 100}))
   }, [scale])
 
   const onPressOut = useCallback(() => {
     if (IS_WEB) return
-    scale.set(() => withTiming(1, {duration: 100}))
+    scale.set(withTiming(1, {duration: 100}))
   }, [scale])
 
   const onPress = useCallback(() => {
-    runOnJS(playHaptic)()
+    scheduleOnRN(haptics.tap)
     onPressInner?.()
-  }, [onPressInner, playHaptic])
+  }, [onPressInner, haptics])
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{scale: scale.get()}],

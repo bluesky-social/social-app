@@ -1,11 +1,10 @@
 import {View} from 'react-native'
-import {type AppBskyNotificationDeclaration} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {
-  type AllNavigatorParams,
+  type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {
@@ -18,11 +17,12 @@ import * as Toggle from '#/components/forms/Toggle'
 import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {type app} from '#/lexicons'
 import * as SettingsList from './components/SettingsList'
 import {ItemTextWithSubtitle} from './NotificationSettings/components/ItemTextWithSubtitle'
 
 type Props = NativeStackScreenProps<
-  AllNavigatorParams,
+  CommonNavigatorParams,
   'ActivityPrivacySettings'
 >
 export function ActivityPrivacySettingsScreen({}: Props) {
@@ -85,7 +85,7 @@ export function Inner({
   notificationDeclaration: {
     uri?: string
     cid?: string
-    value: AppBskyNotificationDeclaration.Record
+    value: app.bsky.notification.declaration.Main
   }
 }) {
   const t = useTheme()

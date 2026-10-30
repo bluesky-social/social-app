@@ -1,0 +1,73 @@
+{
+  "id": "app.bsky.feed.generator",
+  "defs": {
+    "main": {
+      "key": "any",
+      "type": "record",
+      "record": {
+        "type": "object",
+        "required": [
+          "did",
+          "displayName",
+          "createdAt"
+        ],
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did"
+          },
+          "avatar": {
+            "type": "blob",
+            "accept": [
+              "image/png",
+              "image/jpeg"
+            ],
+            "maxSize": 1000000
+          },
+          "labels": {
+            "refs": [
+              "com.atproto.label.defs#selfLabels"
+            ],
+            "type": "union",
+            "description": "Self-label values"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "contentMode": {
+            "type": "string",
+            "knownValues": [
+              "app.bsky.feed.defs#contentModeUnspecified",
+              "app.bsky.feed.defs#contentModeVideo"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 3000,
+            "maxGraphemes": 300
+          },
+          "displayName": {
+            "type": "string",
+            "maxLength": 240,
+            "maxGraphemes": 24
+          },
+          "descriptionFacets": {
+            "type": "array",
+            "items": {
+              "ref": "app.bsky.richtext.facet",
+              "type": "ref"
+            }
+          },
+          "acceptsInteractions": {
+            "type": "boolean",
+            "description": "Declaration that a feed accepts feedback interactions from a client through app.bsky.feed.sendInteractions"
+          }
+        }
+      },
+      "description": "Record declaring of the existence of a feed generator, and containing metadata about it. The record can exist in any repository."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

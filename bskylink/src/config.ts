@@ -7,6 +7,7 @@ export type Config = {
 
 export type ServiceConfig = {
   port: number
+  metricsPort: number
   version?: string
   hostnames: string[]
   hostnamesSet: Set<string>
@@ -33,6 +34,7 @@ export type DbPoolConfig = {
 
 export type Environment = {
   port?: number
+  metricsPort?: number
   version?: string
   hostnames: string[]
   appHostname?: string
@@ -52,6 +54,7 @@ export type Environment = {
 export const readEnv = (): Environment => {
   return {
     port: envInt('LINK_PORT'),
+    metricsPort: envInt('LINK_METRICS_PORT'),
     version: envStr('LINK_VERSION'),
     hostnames: envList('LINK_HOSTNAMES'),
     appHostname: envStr('LINK_APP_HOSTNAME'),
@@ -74,6 +77,7 @@ export const readEnv = (): Environment => {
 export const envToCfg = (env: Environment): Config => {
   const serviceCfg: ServiceConfig = {
     port: env.port ?? 3000,
+    metricsPort: env.metricsPort ?? 9090,
     version: env.version,
     hostnames: env.hostnames,
     hostnamesSet: new Set(env.hostnames),

@@ -1,20 +1,32 @@
 import {createContext, useContext, useEffect, useMemo, useState} from 'react'
-import {
-  measure,
-  type MeasuredDimensions,
-  runOnJS,
-  runOnUI,
-} from 'react-native-reanimated'
+import {type SharedValue, useSharedValue} from 'react-native-reanimated'
 import {nanoid} from 'nanoid/non-secure'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useHotkeysContext} from '#/lib/hotkeys'
+import {measureThumb} from '#/components/Lightbox/measureThumb'
 import {type ImageSource} from '#/components/Lightbox/types'
+
+export type LightboxMetricsContext = {
+  layout: 'single' | 'grid' | 'carousel'
+  postUri: string
+  postAuthorDid: string
+  feedDescriptor?: string
+}
 
 export type Lightbox = {
   id: string
   images: ImageSource[]
   index: number
+  // Set for post photo embeds so the lightbox can emit post:photoEmbed:lightboxSwipe.
+  // Left unset for non-post contexts (e.g. profile avatar/banner lightbox).
+  metricsContext?: LightboxMetricsContext
+  /**
+   * Called as the user pages through the images, so the source can keep the
+   * matching thumbnail in view (e.g. by scrolling a carousel) for when the
+   * lightbox closes.
+   */
+  onIndexChange?: (index: number) => void
 }
 
 const LightboxContext = createContext<{
@@ -33,8 +45,12 @@ const LightboxControlContext = createContext<{
 })
 LightboxControlContext.displayName = 'LightboxControlContext'
 
+const LightboxIsOpenContext = createContext<SharedValue<boolean> | null>(null)
+LightboxIsOpenContext.displayName = 'LightboxIsOpenContext'
+
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [activeLightbox, setActiveLightbox] = useState<Lightbox | null>(null)
+  const isOpen = useSharedValue(false)
   const {disableScope, enableScope} = useHotkeysContext()
 
   useEffect(() => {
@@ -45,48 +61,36 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }
   }, [activeLightbox, disableScope, enableScope])
 
-  const doOpen = useNonReactiveCallback((lightbox: Omit<Lightbox, 'id'>) => {
-    setActiveLightbox(prevLightbox => {
-      if (prevLightbox) {
-        // Ignore duplicate open requests. If it's already open,
-        // the user has to explicitly close the previous one first.
-        return prevLightbox
-      } else {
-        return {...lightbox, id: nanoid()}
-      }
-    })
-  })
-
   const openLightbox = useNonReactiveCallback(
     (lightbox: Omit<Lightbox, 'id'>) => {
       const thumbRef = lightbox.images[lightbox.index]?.thumbRef
       if (thumbRef) {
-        // Measure the tapped image on the UI thread, then open with
-        // the rect baked in so it's available from the first render.
-        // Only the rect (plain data) goes through runOnJS — AnimatedRef
-        // objects can't survive serialization across threads.
-        const openWithRect = (rect: MeasuredDimensions | null) => {
-          doOpen({
-            ...lightbox,
-            images: lightbox.images.map((img, i) =>
-              i === lightbox.index ? {...img, thumbRect: rect} : img,
-            ),
-          })
+        // Bake the tapped image's rect in so it's there from the first render.
+        const thumbRect = measureThumb(thumbRef)
+        lightbox = {
+          ...lightbox,
+          images: lightbox.images.map((img, i) =>
+            i === lightbox.index ? {...img, thumbRect} : img,
+          ),
         }
-        runOnUI(() => {
-          'worklet'
-          const rect = measure(thumbRef)
-          runOnJS(openWithRect)(rect)
-        })()
-      } else {
-        doOpen(lightbox)
       }
+      setActiveLightbox(prevLightbox => {
+        if (prevLightbox) {
+          // Ignore duplicate open requests. If it's already open,
+          // the user has to explicitly close the previous one first.
+          return prevLightbox
+        } else {
+          return {...lightbox, id: nanoid()}
+        }
+      })
+      isOpen.set(true)
     },
   )
 
   const closeLightbox = useNonReactiveCallback(() => {
     let wasActive = !!activeLightbox
     setActiveLightbox(null)
+    isOpen.set(false)
     return wasActive
   })
 
@@ -108,7 +112,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   return (
     <LightboxContext.Provider value={state}>
       <LightboxControlContext.Provider value={methods}>
-        {children}
+        <LightboxIsOpenContext.Provider value={isOpen}>
+          {children}
+        </LightboxIsOpenContext.Provider>
       </LightboxControlContext.Provider>
     </LightboxContext.Provider>
   )
@@ -120,4 +126,13 @@ export function useLightbox() {
 
 export function useLightboxControls() {
   return useContext(LightboxControlContext)
+}
+
+/**
+ * Whether a lightbox is open, as a shared value for UI-thread readers. Unlike
+ * `useLightbox()`, reading it doesn't re-render anything when the lightbox
+ * opens or closes.
+ */
+export function useLightboxIsOpenSharedValue() {
+  return useContext(LightboxIsOpenContext)
 }

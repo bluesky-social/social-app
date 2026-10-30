@@ -2,8 +2,7 @@ import {lazy, useState} from 'react'
 import {View} from 'react-native'
 // @ts-expect-error missing types
 import QRCode from 'react-native-qrcode-styled'
-import type ViewShot from 'react-native-view-shot'
-import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {type ViewShotRef} from 'react-native-view-shot'
 import {Trans} from '@lingui/react/macro'
 
 import {Logo} from '#/view/icons/Logo'
@@ -12,30 +11,23 @@ import {atoms as a, useTheme} from '#/alf'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
-const LazyViewShot = lazy(
-  // @ts-expect-error dynamic import
-  () => import('react-native-view-shot/src/index'),
-)
+const LazyViewShot = lazy(() => import('react-native-view-shot'))
 
 export function QrCode({
   starterPack,
   link,
   ref,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: app.bsky.graph.defs.StarterPackView
   link: string
-  ref: React.Ref<ViewShot>
+  ref: React.Ref<ViewShotRef>
 }) {
   const {record} = starterPack
 
-  if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      record,
-      AppBskyGraphStarterpack.isRecord,
-    )
-  ) {
+  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
     return null
   }
 
@@ -86,7 +78,7 @@ export function QrCode({
             <Trans>
               on
               <View style={[a.flex_row, a.align_center, {gap: 6}]}>
-                <Logo width={25} fill="white" />
+                <Logo allowVariants={false} width={25} fill="white" />
                 <View style={[{marginTop: 3.5}]}>
                   <Logotype width={72} fill="white" />
                 </View>
@@ -129,7 +121,11 @@ export function QrCodeInner({link}: {link: string}) {
             zIndex: 1,
             padding: 4,
           }}>
-          <Logo width={logoArea.width - 14} height={logoArea.height - 14} />
+          <Logo
+            allowVariants={false}
+            width={logoArea.width - 14}
+            height={logoArea.height - 14}
+          />
         </View>
       )}
       <QRCode

@@ -7,8 +7,6 @@ import {
 } from 'react-native'
 import Animated, {
   interpolate,
-  runOnJS,
-  runOnUI,
   scrollTo,
   type SharedValue,
   useAnimatedReaction,
@@ -16,16 +14,22 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
+import {scheduleOnRN, scheduleOnUI} from 'react-native-worklets'
+import {useLingui} from '@lingui/react/macro'
 
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useTheme} from '#/alf'
+import {Center} from '#/components/Layout'
 import {Text} from '#/components/Typography'
 
 export interface TabBarProps {
   testID?: string
   selectedPage: number
   items: string[]
+  /** Unread status by tab index. */
+  unread?: boolean[]
+  align?: 'center' | 'left'
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
   dragProgress: SharedValue<number>
@@ -43,6 +47,8 @@ export function TabBar({
   testID,
   selectedPage,
   items,
+  unread,
+  align = 'center',
   onSelect,
   onPressSelected,
   dragProgress,
@@ -78,10 +84,13 @@ export function TabBar({
       'worklet'
       const layout = layouts.get()[index]
       const availableSize = containerSize.get() - 2 * CONTENT_PADDING
+      const maxOffset = Math.max(0, contentSize.get() - availableSize)
       if (!layout) {
         // Should not happen, but fall back to equal sizes.
-        const offsetPerPage = contentSize.get() - availableSize
-        return (index / (itemsLength - 1)) * offsetPerPage
+        return itemsLength > 1 ? (index / (itemsLength - 1)) * maxOffset : 0
+      }
+      if (maxOffset === 0) {
+        return 0
       }
       const freeSpace = availableSize - layout.width
       const accumulatingOffset = interpolate(
@@ -92,7 +101,7 @@ export function TabBar({
         [0, freeSpace],
         'clamp',
       )
-      return layout.x - accumulatingOffset
+      return Math.min(Math.max(layout.x - accumulatingOffset, 0), maxOffset)
     },
     [itemsLength, contentSize, containerSize, layouts],
   )
@@ -126,7 +135,7 @@ export function TabBar({
           const progress = dragProgress.get()
           const offset = progressToOffset(progress)
           // It's unclear why we need to go back to JS here. It seems iOS-specific.
-          runOnJS(scrollToOffsetJS)(offset)
+          scheduleOnRN(scrollToOffsetJS, offset)
         }
       }
     },
@@ -303,7 +312,7 @@ export function TabBar({
 
   const onPressItem = useCallback(
     (index: number) => {
-      runOnUI(onPressUIThread)(index)
+      scheduleOnUI(onPressUIThread, index)
       onSelect?.(index)
       if (index === selectedPage) {
         onPressSelected?.(index)
@@ -313,7 +322,7 @@ export function TabBar({
   )
 
   return (
-    <View
+    <Center
       testID={testID}
       style={[!transparent && t.atoms.bg, a.flex_row]}
       accessibilityRole="tablist">
@@ -333,13 +342,13 @@ export function TabBar({
             syncScrollState.set('unsynced')
           }}
           onScroll={e => {
-            scrollX.value = Math.round(e.nativeEvent.contentOffset.x)
+            scrollX.set(Math.round(e.nativeEvent.contentOffset.x))
           }}>
           <Animated.View
             onLayout={e => {
               contentSize.set(e.nativeEvent.layout.width)
             }}
-            style={{flexDirection: 'row', flexGrow: 1}}>
+            style={[styles.items, align === 'center' && styles.itemsCentered]}>
             {items.map((item, i) => {
               return (
                 <TabBarItem
@@ -348,9 +357,11 @@ export function TabBar({
                   testID={testID}
                   dragProgress={dragProgress}
                   item={item}
+                  unread={unread?.[i]}
                   onPressItem={onPressItem}
                   onItemLayout={onItemLayout}
                   onTextLayout={onTextLayout}
+                  align={align}
                 />
               )
             })}
@@ -370,8 +381,8 @@ export function TabBar({
           </Animated.View>
         </ScrollView>
       </BlockDrawerGesture>
-      <View style={[t.atoms.border_contrast_low, styles.outerBottomBorder]} />
-    </View>
+      <View style={[t.atoms.bg_contrast_100, styles.outerBottomBorder]} />
+    </Center>
   )
 }
 
@@ -380,19 +391,24 @@ function TabBarItem({
   testID,
   dragProgress,
   item,
+  unread,
   onPressItem,
   onItemLayout,
   onTextLayout,
+  align,
 }: {
   index: number
   testID: string | undefined
   dragProgress: SharedValue<number>
   item: string
+  unread?: boolean
   onPressItem: (index: number) => void
   onItemLayout: (index: number, layout: {x: number; width: number}) => void
   onTextLayout: (index: number, layout: {width: number}) => void
+  align: 'center' | 'left'
 }) {
   const t = useTheme()
+  const {t: l} = useLingui()
   const style = useAnimatedStyle(() => {
     if (!_WORKLET) {
       return {opacity: 0.7}
@@ -409,34 +425,63 @@ function TabBarItem({
 
   const handleLayout = useCallback(
     (e: LayoutChangeEvent) => {
-      runOnUI(onItemLayout)(index, e.nativeEvent.layout)
+      scheduleOnUI(onItemLayout, index, e.nativeEvent.layout)
     },
     [index, onItemLayout],
   )
 
   const handleTextLayout = useCallback(
     (e: LayoutChangeEvent) => {
-      runOnUI(onTextLayout)(index, e.nativeEvent.layout)
+      scheduleOnUI(onTextLayout, index, e.nativeEvent.layout)
     },
     [index, onTextLayout],
   )
 
   return (
-    <View onLayout={handleLayout} style={{flexGrow: 1}}>
+    <View
+      onLayout={handleLayout}
+      style={[
+        styles.itemContainer,
+        align === 'center' && styles.itemContainerCentered,
+      ]}>
       <PressableWithHover
         testID={`${testID}-selector-${index}`}
-        style={styles.item}
+        style={[styles.item, align === 'center' && styles.itemCentered]}
         hoverStyle={t.atoms.bg_contrast_25}
         onPress={() => onPressItem(index)}
+        accessibilityLabel={unread ? l`${item}, unread` : undefined}
+        accessibilityHint=""
         accessibilityRole="tab">
         <Animated.View style={[style, styles.itemInner]}>
-          <Text
-            emoji
-            testID={testID ? `${testID}-${item}` : undefined}
-            style={[styles.itemText, t.atoms.text, a.text_md, a.font_semi_bold]}
-            onLayout={handleTextLayout}>
-            {item}
-          </Text>
+          <View style={unread !== undefined && {paddingHorizontal: 12}}>
+            <Text
+              emoji
+              testID={testID ? `${testID}-${item}` : undefined}
+              style={[
+                styles.itemText,
+                t.atoms.text,
+                a.text_md,
+                a.font_semi_bold,
+              ]}
+              onLayout={handleTextLayout}>
+              {item}
+            </Text>
+            {unread && (
+              <View
+                aria-hidden
+                testID={testID ? `${testID}-unread-${index}` : undefined}
+                style={{
+                  position: 'absolute',
+                  top: 2,
+                  right: 0,
+                  width: 8,
+                  height: 8,
+                  borderRadius: 4,
+                  backgroundColor: t.palette.primary_500,
+                }}
+              />
+            )}
+          </View>
         </Animated.View>
       </PressableWithHover>
     </View>
@@ -449,11 +494,25 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     paddingHorizontal: CONTENT_PADDING,
   },
-  item: {
+  items: {
+    flexDirection: 'row',
+  },
+  itemsCentered: {
     flexGrow: 1,
+  },
+  itemContainer: {
+    flexShrink: 0,
+  },
+  itemContainerCentered: {
+    flexGrow: 1,
+  },
+  item: {
     paddingTop: 10,
     paddingHorizontal: ITEM_PADDING,
     justifyContent: 'center',
+  },
+  itemCentered: {
+    flexGrow: 1,
   },
   itemInner: {
     alignItems: 'center',
@@ -471,6 +530,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: '100%',
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    height: StyleSheet.hairlineWidth,
   },
 })

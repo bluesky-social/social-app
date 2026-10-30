@@ -1,10 +1,7 @@
 import {useCallback} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {useAnimatedRef} from 'react-native-reanimated'
-import {type AppBskyGraphDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -17,9 +14,10 @@ import {TextLink} from '#/view/com/util/Link'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar, type UserAvatarType} from '#/view/com/util/UserAvatar'
-import {StarterPack} from '#/components/icons/StarterPack'
+import {StarterPackMultiPathLarge as StarterPackIcon} from '#/components/icons/StarterPack'
 import * as Layout from '#/components/Layout'
 import {useLightboxControls} from '#/components/Lightbox/state'
+import {type app} from '#/lexicons'
 
 export function ProfileSubpageHeader({
   isLoading,
@@ -37,7 +35,7 @@ export function ProfileSubpageHeader({
   title: string | undefined
   avatar: string | undefined
   isOwner: boolean | undefined
-  purpose: AppBskyGraphDefs.ListPurpose | undefined
+  purpose: app.bsky.graph.defs.ListPurpose | undefined
   creator:
     | {
         did: string
@@ -47,7 +45,7 @@ export function ProfileSubpageHeader({
   avatarType: UserAvatarType | 'starter-pack'
 }>) {
   const navigation = useNavigation<NavigationProp>()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const {openLightbox} = useLightboxControls()
   const pal = usePalette('default')
@@ -90,7 +88,6 @@ export function ProfileSubpageHeader({
         <Layout.Header.Content />
         {children}
       </Layout.Header.Outer>
-
       <View
         style={{
           flexDirection: 'row',
@@ -105,11 +102,11 @@ export function ProfileSubpageHeader({
             testID="headerAviButton"
             onPress={onPressAvi}
             accessibilityRole="image"
-            accessibilityLabel={_(msg`View the avatar`)}
+            accessibilityLabel={l`View the avatar`}
             accessibilityHint=""
             style={{width: 58}}>
             {avatarType === 'starter-pack' ? (
-              <StarterPack width={58} gradient="sky" />
+              <StarterPackIcon width={58} gradient="sky" />
             ) : (
               <UserAvatar type={avatarType} size={58} avatar={avatar} />
             )}
@@ -166,10 +163,10 @@ export function ProfileSubpageHeader({
                 )
               ) : purpose === 'app.bsky.graph.defs#referencelist' ? (
                 isOwner ? (
-                  <Trans>Starter pack by you</Trans>
+                  <Trans>Starter Pack by you</Trans>
                 ) : (
                   <Trans>
-                    Starter pack by{' '}
+                    Starter Pack by{' '}
                     <TextLink
                       text={sanitizeHandle(creator.handle || '', '@')}
                       href={makeProfileLink(creator)}

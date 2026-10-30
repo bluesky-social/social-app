@@ -7,10 +7,11 @@ import {
   useState,
 } from 'react'
 import {View} from 'react-native'
-import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {getCurrentState, useOnAppStateChange} from '#/lib/appState'
+import {createPlaybackDurationTracker} from '#/lib/media/video/analytics'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
@@ -18,17 +19,33 @@ import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {
+  HLSFatalError,
   HLSUnsupportedError,
   VideoEmbedInnerWeb,
   VideoNotFoundError,
 } from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB_FIREFOX} from '#/env'
+import {type app} from '#/lexicons'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 const noop = () => {}
 
-export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
+/**
+ * Minimum card width for the overlay controls (play, time, CC, volume,
+ * fullscreen) to fit without crowding. Narrower cards fall back to the
+ * full-width pillarbox.
+ */
+const MIN_CARD_WIDTH = 280
+
+export function VideoEmbed({
+  embed,
+  post,
+}: {
+  embed: app.bsky.embed.video.View
+  post?: app.bsky.feed.defs.PostView
+}) {
   const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
   const {
@@ -38,12 +55,55 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     currentActiveView,
   } = useActiveVideoWeb()
   const [onScreen, setOnScreen] = useState(false)
+  const [meaningfullyVisible, setMeaningfullyVisible] = useState(false)
   const [isFullscreen] = useFullscreen()
   const lastKnownTime = useRef<number | undefined>(undefined)
+  const impressionTrackedRef = useRef(false)
+  const playbackStartTrackedRef = useRef(false)
+  const ax = useAnalytics()
 
   const isGif = embed.presentation === 'gif'
   // GIFs don't participate in the "one video at a time" system
   const active = isGif || activeFromContext
+  const [durationTracker] = useState(() => {
+    const tracker = createPlaybackDurationTracker({
+      enabled: !isGif,
+      onSegment: segment => {
+        ax.metric('video:playback:duration', {
+          ...segment,
+          postUri: post?.uri,
+          postAuthorDid: post?.author.did,
+          context: 'embed',
+          presentation: isGif ? 'gif' : 'video',
+        })
+      },
+    })
+    tracker.setForeground(getCurrentState() === 'active')
+    return tracker
+  })
+
+  useOnAppStateChange(state => {
+    durationTracker.setForeground(state === 'active')
+  })
+
+  useEffect(() => {
+    durationTracker.setActive(active && onScreen)
+  }, [active, durationTracker, onScreen])
+
+  useEffect(() => {
+    return () => durationTracker.flush('unmounted')
+  }, [durationTracker])
+
+  useEffect(() => {
+    if (!meaningfullyVisible || impressionTrackedRef.current) return
+    impressionTrackedRef.current = true
+    ax.metric('video:impression', {
+      postUri: post?.uri,
+      postAuthorDid: post?.author.did,
+      context: 'embed',
+      presentation: isGif ? 'gif' : 'video',
+    })
+  }, [ax, isGif, meaningfullyVisible, post?.author.did, post?.uri])
 
   useEffect(() => {
     if (!ref.current) return
@@ -53,6 +113,9 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
         const entry = entries[0]
         if (!entry) return
         setOnScreen(entry.isIntersecting)
+        setMeaningfullyVisible(
+          entry.isIntersecting && entry.intersectionRatio >= 0.5,
+        )
         // GIFs don't send position - they don't compete to be the active video
         if (!isGif) {
           sendPosition(
@@ -69,10 +132,20 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   const [key, setKey] = useState(0)
   const renderError = useCallback(
     (error: unknown) => (
-      <VideoError error={error} retry={() => setKey(key + 1)} />
+      <VideoError embed={embed} error={error} retry={() => setKey(key + 1)} />
     ),
-    [key],
+    [key, embed],
   )
+  const getErrorMetadata = useCallback((error: Error) => {
+    if (!(error instanceof HLSFatalError)) return {}
+    return {
+      tags: {
+        hls_error_detail: error.detail,
+        hls_error_type: error.type,
+      },
+      hls: error.diagnostics,
+    }
+  }, [])
 
   let aspectRatio: number | undefined
   const dims = embed.aspectRatio
@@ -89,6 +162,21 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     constrained = Math.max(aspectRatio, ratio)
   }
 
+  const [containerWidth, setContainerWidth] = useState(0)
+
+  /*
+   * Portrait videos render at their own ratio instead of pillarboxed, but
+   * only when the resulting card fits the overlay controls. Videos taller
+   * than 1:2 would still show bars inside a ratio-fit card, and an unknown
+   * ratio can't be fit, so both keep the full-width pillarbox - a narrow
+   * card with black slices down the sides looks broken (see #9371).
+   */
+  const cardWidth = containerWidth * Math.min(aspectRatio ?? 1, 1)
+  const fullBleed =
+    aspectRatio === undefined ||
+    aspectRatio < 1 / 2 ||
+    (containerWidth > 0 && cardWidth < MIN_CARD_WIDTH)
+
   const contents = (
     <div
       ref={ref}
@@ -96,6 +184,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
         display: 'flex',
         flex: 1,
         cursor: 'default',
+        position: 'relative',
         backgroundColor: t.palette.black,
         backgroundImage: `url(${embed.thumbnail})`,
         backgroundSize: 'contain',
@@ -103,7 +192,40 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
         backgroundRepeat: 'no-repeat',
       }}
       onClick={evt => evt.stopPropagation()}>
-      <ErrorBoundary renderError={renderError} key={key}>
+      {fullBleed && embed.thumbnail && (
+        <>
+          {/* blurred backdrop fills the bars when the video is boxed */}
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: `url(${embed.thumbnail})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              filter: 'blur(32px)',
+              // hide the transparent fade the blur creates at the edges
+              transform: 'scale(1.2)',
+            }}
+          />
+          {/* redraw the sharp thumbnail above the blur */}
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: `url(${embed.thumbnail})`,
+              backgroundSize: 'contain',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          />
+        </>
+      )}
+      <ErrorBoundary
+        renderError={renderError}
+        getErrorMetadata={getErrorMetadata}
+        key={key}>
         <OnlyNearScreen>
           <VideoEmbedInnerWeb
             embed={embed}
@@ -111,6 +233,25 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
             setActive={setActive}
             onScreen={onScreen}
             lastKnownTime={lastKnownTime}
+            onPlaybackStart={autoplay => {
+              if (playbackStartTrackedRef.current) return
+              playbackStartTrackedRef.current = true
+              ax.metric('video:playback:start', {
+                postUri: post?.uri,
+                postAuthorDid: post?.author.did,
+                context: 'embed',
+                presentation: isGif ? 'gif' : 'video',
+                autoplay,
+              })
+            }}
+            onPlaybackProgress={progressSeconds => {
+              durationTracker.observeProgress(progressSeconds)
+            }}
+            onPlaybackStateChange={state => {
+              durationTracker.setBuffering(state === 'buffering')
+              durationTracker.setPlaying(state === 'playing')
+            }}
+            onPlaybackEnd={() => durationTracker.flush('ended')}
           />
         </OnlyNearScreen>
       </ErrorBoundary>
@@ -118,12 +259,14 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   )
 
   return (
-    <View style={[a.pt_xs]}>
+    <View
+      style={[a.pt_xs]}
+      onLayout={e => setContainerWidth(e.nativeEvent.layout.width)}>
       <ViewportObserver
         sendPosition={isGif ? noop : sendPosition}
         isAnyViewActive={currentActiveView !== null}>
         <ConstrainedImage
-          fullBleed
+          fullBleed={fullBleed}
           aspectRatio={constrained || 1}
           // slightly smaller max height than images
           // images use 16 / 9, for reference
@@ -222,22 +365,62 @@ export const OnlyNearScreen = ({children}: {children: React.ReactNode}) => {
   return nearScreen ? children : null
 }
 
-function VideoError({error, retry}: {error: unknown; retry: () => void}) {
+function VideoError({
+  embed,
+  error,
+  retry,
+}: {
+  embed: app.bsky.embed.video.View
+  error: unknown
+  retry: () => void
+}) {
   const {_} = useLingui()
+  const ax = useAnalytics()
 
   let showRetryButton = true
   let text = null
+  let errorClass: string
 
   if (error instanceof VideoNotFoundError) {
     text = _(msg`Video not found.`)
+    errorClass = 'VideoNotFoundError'
   } else if (error instanceof HLSUnsupportedError) {
     showRetryButton = false
     text = _(
-      msg`Your browser does not support the video format. Please try a different browser.`,
+      msg`This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC).`,
     )
+    errorClass = 'HLSUnsupportedError'
   } else {
     text = _(msg`An error occurred while loading the video. Please try again.`)
+    if (error instanceof HLSFatalError) {
+      errorClass = error.detail
+    } else if (error instanceof Error) {
+      errorClass = error.name || 'Error'
+    } else {
+      errorClass = 'Unknown'
+    }
   }
+
+  const errorMessage = error instanceof Error ? error.message : String(error)
+  const presentation = embed.presentation === 'gif' ? 'gif' : 'video'
+  const playlist = embed.playlist
+  /*
+   * Fire exactly once per failure - the analytics context identity can change
+   * (session/geolocation updates) while this fallback stays mounted, which
+   * would otherwise re-run the effect and double-count.
+   */
+  const fired = useRef(false)
+  useEffect(() => {
+    if (fired.current) return
+    fired.current = true
+    ax.metric('video:playback:failed', {
+      surface: 'feed',
+      presentation,
+      errorClass,
+      errorMessage: errorMessage.slice(0, 256),
+      playlist,
+    })
+  }, [ax, presentation, playlist, errorClass, errorMessage])
 
   return (
     <VideoFallback.Container>

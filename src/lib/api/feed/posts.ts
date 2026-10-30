@@ -1,25 +1,24 @@
-import {
-  type Agent,
-  type AppBskyFeedDefs,
-  type AppBskyFeedGetPosts,
-} from '@atproto/api'
+import {type Client, type XrpcRequestParams} from '@atproto/lex'
 
 import {logger} from '#/logger'
+import {app} from '#/lexicons'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
+type GetPostsParams = XrpcRequestParams<typeof app.bsky.feed.getPosts.main>
+
 export class PostListFeedAPI implements FeedAPI {
-  agent: Agent
-  params: AppBskyFeedGetPosts.QueryParams
-  peek: AppBskyFeedDefs.FeedViewPost | null = null
+  client: Client
+  params: GetPostsParams
+  peek: app.bsky.feed.defs.FeedViewPost | null = null
 
   constructor({
-    agent,
+    client,
     feedParams,
   }: {
-    agent: Agent
-    feedParams: AppBskyFeedGetPosts.QueryParams
+    client: Client
+    feedParams: GetPostsParams
   }) {
-    this.agent = agent
+    this.client = client
     if (feedParams.uris.length > 25) {
       logger.warn(
         `Too many URIs provided - expected 25, got ${feedParams.uris.length}`,
@@ -30,23 +29,24 @@ export class PostListFeedAPI implements FeedAPI {
     }
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
     if (this.peek) return this.peek
     throw new Error('Has not fetched yet')
   }
 
   async fetch({}: {}): Promise<FeedAPIResponse> {
-    const res = await this.agent.app.bsky.feed.getPosts({
+    /*
+     * A failed request rejects rather than resolving, so the error propagates
+     * to the query and drives the feed error UI. The agent behaved the same
+     * way - its `success` flag was only ever true - so the empty-page branch
+     * this replaces was unreachable.
+     */
+    const data = await this.client.call(app.bsky.feed.getPosts, {
       ...this.params,
     })
-    if (res.success) {
-      this.peek = {post: res.data.posts[0]}
-      return {
-        feed: res.data.posts.map(post => ({post})),
-      }
-    }
+    this.peek = {post: data.posts[0]}
     return {
-      feed: [],
+      feed: data.posts.map(post => ({post})),
     }
   }
 }

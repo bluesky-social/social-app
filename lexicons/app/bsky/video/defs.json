@@ -1,0 +1,65 @@
+{
+  "id": "app.bsky.video.defs",
+  "defs": {
+    "jobStatus": {
+      "type": "object",
+      "required": [
+        "jobId",
+        "did",
+        "state"
+      ],
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "did"
+        },
+        "blob": {
+          "type": "blob"
+        },
+        "error": {
+          "type": "string"
+        },
+        "jobId": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string",
+          "description": "The state of the video processing job. All values not listed as a known value indicate that the job is in process.",
+          "knownValues": [
+            "JOB_STATE_CREATED",
+            "JOB_STATE_ENCODING",
+            "JOB_STATE_ENCODED",
+            "JOB_STATE_SCANNING",
+            "JOB_STATE_SCANNED",
+            "JOB_STATE_UPLOADING",
+            "JOB_STATE_UPLOADED",
+            "JOB_STATE_COMPLETED",
+            "JOB_STATE_FAILED"
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "progress": {
+          "type": "integer",
+          "maximum": 100,
+          "minimum": 0,
+          "description": "Progress within the current processing state."
+        },
+        "failureCode": {
+          "type": "string",
+          "description": "A machine-readable code for why the video processing job failed.",
+          "knownValues": [
+            "validation_failure",
+            "encoding_failure",
+            "pds_upload_failure",
+            "pds_upload_unsupported_blob_size",
+            "generic_failure"
+          ]
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

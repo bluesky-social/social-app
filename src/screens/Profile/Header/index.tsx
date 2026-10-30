@@ -1,19 +1,16 @@
 import {memo, useMemo, useState} from 'react'
 import {type LayoutChangeEvent, StyleSheet, View} from 'react-native'
 import Animated, {
-  runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {
-  type AppBskyActorDefs,
-  type AppBskyLabelerDefs,
-  moderateProfile,
-  type ModerationOpts,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
+import {scheduleOnRN} from 'react-native-worklets'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
+import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {useIsFocused} from '@react-navigation/native'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -22,10 +19,12 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Header} from '#/components/Layout'
 import * as ProfileCard from '#/components/ProfileCard'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
+import {shouldUseProfileLightStatusBar} from './layout'
 import {
   HeaderLabelerButtons,
   ProfileHeaderLabeler,
@@ -60,8 +59,8 @@ ProfileHeaderLoading = memo(ProfileHeaderLoading)
 export {ProfileHeaderLoading}
 
 interface Props {
-  profile: AppBskyActorDefs.ProfileViewDetailed
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed | undefined
+  profile: app.bsky.actor.defs.ProfileViewDetailed
+  labeler: app.bsky.labeler.defs.LabelerViewDetailed | undefined
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
@@ -105,8 +104,8 @@ const MinimalHeader = memo(function MinimalHeader({
   hideBackButton = false,
 }: {
   onLayout: (e: LayoutChangeEvent) => void
-  profile: AppBskyActorDefs.ProfileViewDetailed
-  labeler?: AppBskyLabelerDefs.LabelerViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
+  labeler?: app.bsky.labeler.defs.LabelerViewDetailed
   hideBackButton?: boolean
 }) {
   const t = useTheme()
@@ -124,6 +123,18 @@ const MinimalHeader = memo(function MinimalHeader({
   if (!ctx) throw new Error('MinimalHeader cannot be used on web')
   const {scrollY, headerHeight} = ctx
 
+  /*
+   * Keep the style free of scrollY and animations: returning `withTiming` from
+   * the style, or a new `transform` array computed from scrollY, makes
+   * Reanimated commit this view on every scroll frame even when nothing
+   * changed. The fade starts only when crossing the threshold, and the derived
+   * offset only notifies the style when it changes.
+   */
+  const opacity = useSharedValue(0)
+  const translateY = useDerivedValue(() =>
+    Math.min(scrollY.get(), headerHeight - minimalHeaderHeight),
+  )
+
   const animatedStyle = useAnimatedStyle(() => {
     // if we don't yet have the min header height in JS, hide
     if (!_WORKLET || minimalHeaderHeight === 0) {
@@ -131,19 +142,9 @@ const MinimalHeader = memo(function MinimalHeader({
         opacity: 0,
       }
     }
-    const pastThreshold = scrollY.get() > 100
     return {
-      opacity: pastThreshold
-        ? withTiming(1, {duration: 75})
-        : withTiming(0, {duration: 75}),
-      transform: [
-        {
-          translateY: Math.min(
-            scrollY.get(),
-            headerHeight - minimalHeaderHeight,
-          ),
-        },
-      ],
+      opacity: opacity.get(),
+      transform: [{translateY: translateY.get()}],
     }
   })
 
@@ -151,12 +152,20 @@ const MinimalHeader = memo(function MinimalHeader({
     () => scrollY.get() > 100,
     (value, prev) => {
       if (prev !== value) {
-        runOnJS(setVisible)(value)
+        opacity.set(withTiming(value ? 1 : 0, {duration: 75}))
+        scheduleOnRN(setVisible, value)
       }
     },
   )
 
-  useSetLightStatusBar(isScreenFocused && !visible)
+  const {gtMobile} = useBreakpoints()
+  useSetLightStatusBar(
+    shouldUseProfileLightStatusBar({
+      gtMobile,
+      isScreenFocused,
+      isHeaderHidden: !visible,
+    }),
+  )
 
   return (
     <Animated.View

@@ -6,6 +6,7 @@ import {Trans} from '@lingui/react/macro'
 
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {cleanError} from '#/lib/strings/errors'
+import {formatDateTime} from '#/lib/strings/time'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useTickEveryMinute} from '#/state/shell'
@@ -20,7 +21,9 @@ import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import {
   displayDuration,
+  getLiveLinkFromStatusRecord,
   getLiveServiceNames,
+  useActorStatus,
   useLiveLinkMetaQuery,
   useLiveNowConfig,
   useUpsertLiveStatusMutation,
@@ -50,14 +53,18 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const control = Dialog.useDialogContext()
   const {_, i18n} = useLingui()
   const t = useTheme()
-  const [liveLink, setLiveLink] = useState('')
   const [liveLinkError, setLiveLinkError] = useState('')
   const [duration, setDuration] = useState(60)
   const moderationOpts = useModerationOpts()
   const tick = useTickEveryMinute()
   const liveNowConfig = useLiveNowConfig()
+  const status = useActorStatus(profile)
   const {formatted: allowedServices} = getLiveServiceNames(
     liveNowConfig.currentAccountAllowedHosts,
+  )
+
+  const [liveLink, setLiveLink] = useState(() =>
+    getLiveLinkFromStatusRecord(status.record),
   )
 
   const time = useCallback(
@@ -66,7 +73,10 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
 
       const date = new Date()
       date.setMinutes(date.getMinutes() + offset)
-      return i18n.date(date, {hour: 'numeric', minute: '2-digit', hour12: true})
+      return formatDateTime(i18n, date, {
+        hour: 'numeric',
+        minute: '2-digit',
+      })
     },
     [tick, i18n],
   )

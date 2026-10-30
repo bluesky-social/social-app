@@ -78,6 +78,7 @@ export function FindContactsAnnouncement() {
               alt={_(
                 msg`An illustration depicting user avatars flowing from a contact book into the Bluesky app`,
               )}
+              useAppleWebpCodec
             />
           </View>
         </View>
@@ -118,7 +119,7 @@ export function FindContactsAnnouncement() {
             onPress={() => {
               ax.metric('contacts:nux:ctaPressed', {})
               control.close(() => {
-                navigate('FindContactsFlow')
+                navigate({name: 'FindContactsFlow', params: undefined})
               })
             }}
             style={[a.w_full]}>

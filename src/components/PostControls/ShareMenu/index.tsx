@@ -1,12 +1,7 @@
 import {memo, useMemo, useState} from 'react'
 import {type Insets} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type AppBskyFeedThreadgate,
-  AtUri,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -21,6 +16,7 @@ import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon} from '#/
 import * as Menu from '#/components/Menu'
 import {useMenuControl} from '#/components/Menu'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 import {PostControlButton, PostControlButtonIcon} from '../PostControlButton'
 import {ShareMenuItems} from './ShareMenuItems'
 
@@ -37,12 +33,12 @@ let ShareMenuButton = ({
   logContext,
 }: {
   testID: string
-  post: Shadow<AppBskyFeedDefs.PostView>
+  post: Shadow<app.bsky.feed.defs.PostView>
   big?: boolean
-  record: AppBskyFeedPost.Record
+  record: app.bsky.feed.post.Main
   richText: RichTextAPI
   timestamp: string
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: app.bsky.feed.threadgate.Main
   onShare: () => void
   hitSlop?: Insets
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
@@ -56,11 +52,11 @@ let ShareMenuButton = ({
   const lazyMenuControl = useMemo(
     () => ({
       ...menuControl,
-      open() {
+      open(options?: Parameters<typeof menuControl.open>[0]) {
         setHasBeenOpen(true)
         // HACK. We need the state update to be flushed by the time
         // menuControl.open() fires but RN doesn't expose flushSync.
-        setTimeout(menuControl.open)
+        setTimeout(() => menuControl.open(options))
 
         ax.metric('post:share', {
           uri: post.uri,
@@ -88,7 +84,15 @@ let ShareMenuButton = ({
     const urip = new AtUri(post.uri)
     const href = makeProfileLink(post.author, 'post', urip.rkey)
     const url = toShareUrl(href)
-    shareUrl(url)
+    void shareUrl(url).then(result => {
+      if (!result) return
+      ax.metric('share:nativeShare:result', {
+        uri: post.uri,
+        authorDid: post.author.did,
+        entryPoint: 'LongPress',
+        ...result,
+      })
+    })
     onShare()
   }
 

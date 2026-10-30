@@ -1,6 +1,5 @@
 import {useCallback, useState} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
@@ -21,7 +20,7 @@ export function useEmailDialogControl() {
 }
 
 export function EmailDialog() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const emailDialogControl = useEmailDialogControl()
   const {isEmailVerified} = useAccountEmailState()
   const onClose = useCallback(() => {
@@ -36,9 +35,8 @@ export function EmailDialog() {
   return (
     <Dialog.Outer control={emailDialogControl.control} onClose={onClose}>
       <Dialog.Handle />
-
       <Dialog.ScrollableInner
-        label={_(msg`Make adjustments to email settings for your account`)}
+        label={l`Make adjustments to email settings for your account`}
         style={web({maxWidth: 400})}>
         <Inner control={emailDialogControl} />
         <Dialog.Close />

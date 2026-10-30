@@ -1,6 +1,7 @@
 import {
   forwardRef,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -8,7 +9,7 @@ import {
 } from 'react'
 import {
   Keyboard,
-  type KeyboardEventListener,
+  type KeyboardEvent,
   type LayoutChangeEvent,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
@@ -19,13 +20,24 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {useReanimatedKeyboardAnimation} from 'react-native-keyboard-controller'
 import Animated, {
-  runOnJS,
   type ScrollEvent,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {
+  SafeAreaInsetsContext,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
+import {BottomSheet, BottomSheetSnapPoint} from '@bsky.app/bottom-sheet'
+import {
+  type BottomSheetPresentationSizeChangeEvent,
+  type BottomSheetSnapPointChangeEvent,
+  type BottomSheetStateChangeEvent,
+} from '@bsky.app/bottom-sheet/src/BottomSheet.types'
+import {type BottomSheetNativeComponent} from '@bsky.app/bottom-sheet/src/BottomSheetNativeComponent'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -34,9 +46,22 @@ import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
-import {android, atoms as a, ios, platform, tokens, useTheme} from '#/alf'
+import {
+  android,
+  atoms as a,
+  BreakpointWidthContext,
+  ios,
+  platform,
+  tokens,
+  useTheme,
+} from '#/alf'
 import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {Context, useDialogContext} from '#/components/Dialog/context'
+import {
+  getMeasuredDialogContentHeight,
+  shouldMeasureDialogContentHeight,
+} from '#/components/Dialog/sheetSizing'
+import {getDialogSourceViewTag} from '#/components/Dialog/sourceViewTag'
 import {
   type DialogControlProps,
   type DialogInnerProps,
@@ -44,13 +69,7 @@ import {
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
 import {useOnKeyboard} from '#/components/hooks/useOnKeyboard'
-import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
-import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
-import {
-  type BottomSheetSnapPointChangeEvent,
-  type BottomSheetStateChangeEvent,
-} from '../../../modules/bottom-sheet/src/BottomSheet.types'
-import {type BottomSheetNativeComponent} from '../../../modules/bottom-sheet/src/BottomSheetNativeComponent'
+import {IS_ANDROID, IS_IOS, IS_IPAD, IS_LIQUID_GLASS} from '#/env'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/shared'
@@ -62,7 +81,9 @@ export const Input = createInput(TextInput)
 export function Outer({
   children,
   control,
+  onOpen,
   onClose,
+  preventDismiss = false,
   nativeOptions,
   testID,
 }: React.PropsWithChildren<DialogOuterProps>) {
@@ -72,15 +93,31 @@ export function Outer({
   const closeCallbacks = useRef<(() => void)[]>([])
   const {setDialogIsOpen, setFullyExpandedCount} =
     useDialogStateControlContext()
+  const safeAreaInsets = useSafeAreaInsets()
 
   const prevSnapPoint = useRef<BottomSheetSnapPoint>(
     BottomSheetSnapPoint.Hidden,
   )
 
   const [disableDrag, setDisableDrag] = useState(false)
+  const [presentation, setPresentation] =
+    useState<BottomSheetPresentationSizeChangeEvent['nativeEvent']>()
+  const [sourceViewTag, setSourceViewTag] = useState<number>()
   const [snapPoint, setSnapPoint] = useState<BottomSheetSnapPoint>(
     BottomSheetSnapPoint.Partial,
   )
+  const [desiredContentHeight, setDesiredContentHeight] = useState<number>()
+  const shouldMeasureContentHeight = shouldMeasureDialogContentHeight({
+    isIOS: IS_IOS,
+    isIPad: IS_IPAD,
+    popover: nativeOptions?.popover,
+  })
+
+  /*
+   * Only user dismissal paths are blocked natively; the imperative `close`
+   * below still dismisses the sheet.
+   */
+  const shouldPreventDismiss = preventDismiss || !!nativeOptions?.preventDismiss
 
   const callQueuedCallbacks = useCallback(() => {
     for (const cb of closeCallbacks.current) {
@@ -94,12 +131,46 @@ export function Outer({
     closeCallbacks.current = []
   }, [])
 
-  const open = useCallback<DialogControlProps['open']>(() => {
-    // Run any leftover callbacks that might have been queued up before calling `.open()`
-    callQueuedCallbacks()
-    setDialogIsOpen(control.id, true)
-    ref.current?.present()
-  }, [setDialogIsOpen, control.id, callQueuedCallbacks])
+  const open = useCallback<DialogControlProps['open']>(
+    options => {
+      // Run any leftover callbacks that might have been queued up before calling `.open()`
+      callQueuedCallbacks()
+      setSourceViewTag(
+        getDialogSourceViewTag({
+          popover: nativeOptions?.popover,
+          nativeSourceViewTag: nativeOptions?.sourceViewTag,
+          options,
+        }),
+      )
+      setDesiredContentHeight(undefined)
+      /*
+       * A full-height sheet only has the large detent, so it always opens at
+       * Full. Set that before the content mounts rather than waiting for
+       * onSnapPointChange: an autofocused input raises the keyboard mid-present,
+       * and ScrollView ignores that keyboard notification if
+       * automaticallyAdjustKeyboardInsets is still false, leaving the content
+       * unscrollable until the keyboard reopens.
+       */
+      setSnapPoint(
+        nativeOptions?.fullHeight
+          ? BottomSheetSnapPoint.Full
+          : BottomSheetSnapPoint.Partial,
+      )
+      onOpen?.()
+      setDialogIsOpen(control.id, true)
+      ref.current?.present()
+    },
+    [
+      setDialogIsOpen,
+      control.id,
+      callQueuedCallbacks,
+      onOpen,
+      nativeOptions?.popover,
+      nativeOptions?.sourceViewTag,
+      nativeOptions?.fullHeight,
+      setDesiredContentHeight,
+    ],
+  )
 
   // This is the function that we call when we want to dismiss the dialog.
   const close = useCallback<DialogControlProps['close']>(cb => {
@@ -115,9 +186,16 @@ export function Outer({
     // This removes the dialog from our list of stored dialogs. Not super necessary on iOS, but on Android this
     // tells us that we need to toggle the accessibility overlay setting
     setDialogIsOpen(control.id, false)
+    setDesiredContentHeight(undefined)
     callQueuedCallbacks()
     onClose?.()
-  }, [callQueuedCallbacks, control.id, onClose, setDialogIsOpen])
+  }, [
+    callQueuedCallbacks,
+    control.id,
+    onClose,
+    setDialogIsOpen,
+    setDesiredContentHeight,
+  ])
 
   const onSnapPointChange = (e: BottomSheetSnapPointChangeEvent) => {
     const {snapPoint} = e.nativeEvent
@@ -137,9 +215,17 @@ export function Outer({
     prevSnapPoint.current = snapPoint
   }
 
+  const onPresentationSizeChange = useCallback(
+    (e: BottomSheetPresentationSizeChangeEvent) => {
+      setPresentation(e.nativeEvent)
+    },
+    [setPresentation],
+  )
+
   const onStateChange = (e: BottomSheetStateChangeEvent) => {
     if (e.nativeEvent.state === 'closed') {
       onCloseAnimationComplete()
+      setPresentation(undefined)
 
       if (prevSnapPoint.current === BottomSheetSnapPoint.Full) {
         setFullyExpandedCount(c => c - 1)
@@ -157,19 +243,54 @@ export function Outer({
     [open, close],
   )
 
-  const isHeightConstrained = nativeOptions?.maxHeight != null
+  const isHeightConstrained =
+    nativeOptions?.maxHeight != null ||
+    nativeOptions?.fullHeight === true ||
+    presentation?.isPopover === true ||
+    (shouldMeasureContentHeight &&
+      presentation != null &&
+      desiredContentHeight != null)
+  const presentationMaxHeight =
+    presentation?.height != null &&
+    (presentation?.isPopover === true ||
+      nativeOptions?.fullHeight === true ||
+      nativeOptions?.maxHeight != null ||
+      (shouldMeasureContentHeight && desiredContentHeight != null))
+      ? Math.min(
+          nativeOptions?.maxHeight ?? presentation.height,
+          presentation.height,
+        )
+      : undefined
 
   const context = useMemo(
     () => ({
       close,
       isNativeDialog: true,
+      availableWidth: presentation?.width,
+      presentationBottomOffset: presentation?.bottomOffset ?? 0,
+      isNativePopover: IS_IOS && presentation?.isPopover === true,
       nativeSnapPoint: snapPoint,
       disableDrag,
+      preventDismiss: shouldPreventDismiss,
       setDisableDrag,
       isWithinDialog: true,
       isHeightConstrained,
+      shouldMeasureContentHeight,
+      setDesiredContentHeight,
     }),
-    [close, snapPoint, disableDrag, setDisableDrag, isHeightConstrained],
+    [
+      close,
+      presentation,
+      snapPoint,
+      disableDrag,
+      shouldPreventDismiss,
+      setDisableDrag,
+      isHeightConstrained,
+      shouldMeasureContentHeight,
+      setDesiredContentHeight,
+      presentation?.isPopover,
+      nativeOptions?.popover,
+    ],
   )
 
   return (
@@ -178,76 +299,134 @@ export function Outer({
       // device-bezel radius when undefined
       cornerRadius={IS_LIQUID_GLASS ? undefined : 20}
       backgroundColor={t.atoms.bg.backgroundColor}
+      colorScheme={t.scheme}
       {...nativeOptions}
+      preventDismiss={shouldPreventDismiss}
+      sourceViewTag={sourceViewTag ?? nativeOptions?.sourceViewTag}
       onSnapPointChange={onSnapPointChange}
       onStateChange={onStateChange}
+      onPresentationSizeChange={onPresentationSizeChange}
+      desiredContentHeight={
+        shouldMeasureContentHeight ? desiredContentHeight : undefined
+      }
       disableDrag={disableDrag}>
-      <Context.Provider value={context}>
-        <View
-          testID={testID}
-          style={[a.relative, isHeightConstrained && a.flex_1]}>
-          {children}
-        </View>
-      </Context.Provider>
+      <SafeAreaInsetsContext.Provider
+        value={presentation?.safeAreaInsets ?? safeAreaInsets}>
+        <Context.Provider value={context}>
+          <BreakpointWidthContext.Provider value={presentation?.width}>
+            <SheetGestureRoot style={isHeightConstrained && a.flex_1}>
+              <View
+                testID={testID}
+                style={[
+                  a.relative,
+                  isHeightConstrained && a.flex_1,
+                  presentationMaxHeight != null && {
+                    maxHeight: presentationMaxHeight,
+                  },
+                ]}>
+                {children}
+              </View>
+            </SheetGestureRoot>
+          </BreakpointWidthContext.Provider>
+        </Context.Provider>
+      </SafeAreaInsetsContext.Provider>
     </BottomSheet>
+  )
+}
+
+/**
+ * On Android the sheet is its own window with its own React root, outside the
+ * app's `GestureHandlerRootView`, so gesture-handler gestures inside it (like
+ * dragging to reorder) never activate without a root of their own.
+ */
+function SheetGestureRoot({
+  style,
+  children,
+}: {
+  style?: StyleProp<ViewStyle>
+  children: React.ReactNode
+}) {
+  if (!IS_ANDROID) return children
+  return (
+    <GestureHandlerRootView style={style}>{children}</GestureHandlerRootView>
   )
 }
 
 /**
  * @deprecated use `Dialog.ScrollableInner` instead
  */
-export function Inner({children, style, header}: DialogInnerProps) {
-  const insets = useSafeAreaInsets()
-  return (
-    <>
-      {header}
-      <View
-        style={[
-          a.pt_2xl,
-          a.px_xl,
-          IS_LIQUID_GLASS
-            ? a.pb_2xl
-            : {paddingBottom: insets.bottom + insets.top},
-          style,
-        ]}>
-        {children}
-      </View>
-    </>
-  )
+export function Inner(props: DialogInnerProps) {
+  return <ScrollableInner {...props} />
 }
 
-export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
-  function ScrollableInner(
-    {children, contentContainerStyle, header, style, ...props},
-    ref,
-  ) {
-    const {nativeSnapPoint, disableDrag, setDisableDrag, isHeightConstrained} =
-      useDialogContext()
-    const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
-    const insets = useSafeAreaInsets()
-    const [keyboardHeight, setKeyboardHeight] = useState(() =>
-      IS_ANDROID ? (Keyboard.metrics()?.height ?? 0) : 0,
+export function ScrollableInner({
+  ref,
+  children,
+  contentContainerStyle,
+  header,
+  footer,
+  style,
+  ...props
+}: DialogInnerProps & {
+  ref?: React.Ref<React.ComponentRef<typeof ScrollView>>
+}) {
+  const {
+    nativeSnapPoint,
+    disableDrag,
+    setDisableDrag,
+    isHeightConstrained,
+    shouldMeasureContentHeight,
+    isNativePopover,
+    setDesiredContentHeight,
+  } = useDialogContext()
+  const isAtMaxSnapPoint =
+    nativeSnapPoint === BottomSheetSnapPoint.Full || isNativePopover
+  const insets = useSafeAreaInsets()
+  const [keyboardHeight, setKeyboardHeight] = useState(() =>
+    IS_ANDROID ? (Keyboard.metrics()?.height ?? 0) : 0,
+  )
+  const contentHeight = useRef(0)
+  const footerHeight = useRef(0)
+
+  const updateDesiredContentHeight = () => {
+    setDesiredContentHeight(
+      getMeasuredDialogContentHeight({
+        shouldMeasureContentHeight,
+        contentHeight: contentHeight.current,
+        footerHeight: footerHeight.current,
+      }),
     )
+  }
 
-    const keyboardEventHandler = useCallback<KeyboardEventListener>(e => {
-      setKeyboardHeight(e.endCoordinates.height)
-    }, [])
-    useOnKeyboard('keyboardDidShow', keyboardEventHandler)
-    useOnKeyboard('keyboardDidHide', keyboardEventHandler)
+  useEffect(
+    () => () => {
+      if (shouldMeasureContentHeight) {
+        setDesiredContentHeight(undefined)
+      }
+    },
+    [setDesiredContentHeight, shouldMeasureContentHeight],
+  )
 
-    const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      if (!IS_ANDROID) {
-        return
-      }
-      const {contentOffset} = e.nativeEvent
-      if (contentOffset.y > 0 && !disableDrag) {
-        setDisableDrag(true)
-      } else if (contentOffset.y <= 1 && disableDrag) {
-        setDisableDrag(false)
-      }
+  const keyboardEventHandler = useCallback((e: KeyboardEvent) => {
+    setKeyboardHeight(e.endCoordinates.height)
+  }, [])
+  useOnKeyboard('keyboardDidShow', keyboardEventHandler)
+  useOnKeyboard('keyboardDidHide', keyboardEventHandler)
+
+  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (!IS_ANDROID) {
+      return
     }
+    const {contentOffset} = e.nativeEvent
+    if (contentOffset.y > 0 && !disableDrag) {
+      setDisableDrag(true)
+    } else if (contentOffset.y <= 1 && disableDrag) {
+      setDisableDrag(false)
+    }
+  }
 
-    return (
+  return (
+    <>
       <ScrollView
         style={[isHeightConstrained && a.flex_1, style]}
         contentContainerStyle={[
@@ -276,6 +455,10 @@ export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
         onScroll={android(onScroll)}
         onScrollEndDrag={android(onScroll)}
         onMomentumScrollEnd={android(onScroll)}
+        onContentSizeChange={(_, height) => {
+          contentHeight.current = height
+          updateDesiredContentHeight()
+        }}
         keyboardShouldPersistTaps="handled"
         // TODO: figure out why this positions the header absolutely (rather than stickily)
         // on Android. fine to disable for now, because we don't have any
@@ -284,9 +467,18 @@ export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
         {header}
         {children}
       </ScrollView>
-    )
-  },
-)
+      {footer != null && (
+        <View
+          onLayout={e => {
+            footerHeight.current = e.nativeEvent.layout.height
+            updateDesiredContentHeight()
+          }}>
+          {footer}
+        </View>
+      )}
+    </>
+  )
+}
 
 export const InnerFlatList = forwardRef<
   ListMethods,
@@ -300,9 +492,11 @@ export const InnerFlatList = forwardRef<
   ref,
 ) {
   const insets = useSafeAreaInsets()
-  const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
+  const {nativeSnapPoint, disableDrag, setDisableDrag, isNativePopover} =
+    useDialogContext()
 
-  const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
+  const isAtMaxSnapPoint =
+    nativeSnapPoint === BottomSheetSnapPoint.Full || isNativePopover
 
   const onScroll = (e: ScrollEvent) => {
     'worklet'
@@ -311,9 +505,9 @@ export const InnerFlatList = forwardRef<
     }
     const {contentOffset} = e
     if (contentOffset.y > 0 && !disableDrag) {
-      runOnJS(setDisableDrag)(true)
+      scheduleOnRN(setDisableDrag, true)
     } else if (contentOffset.y <= 1 && disableDrag) {
-      runOnJS(setDisableDrag)(false)
+      scheduleOnRN(setDisableDrag, false)
     }
   }
 
@@ -350,18 +544,28 @@ export const InnerFlatList = forwardRef<
 export function FlatListFooter({
   children,
   onLayout,
+  border = true,
 }: {
   children: React.ReactNode
   onLayout?: (event: LayoutChangeEvent) => void
+  border?: boolean
 }) {
   const t = useTheme()
   const {bottom} = useSafeAreaInsets()
+  const {presentationBottomOffset} = useDialogContext()
   const {height} = useReanimatedKeyboardAnimation()
 
   const animatedStyle = useAnimatedStyle(() => {
     if (!IS_IOS) return {}
     return {
-      transform: [{translateY: Math.min(0, height.get() + bottom - 10)}],
+      transform: [
+        {
+          translateY: Math.min(
+            0,
+            height.get() + bottom + presentationBottomOffset - 10,
+          ),
+        },
+      ],
     }
   })
 
@@ -373,7 +577,7 @@ export function FlatListFooter({
         a.bottom_0,
         a.w_full,
         a.z_10,
-        a.border_t,
+        border && a.border_t,
         t.atoms.bg,
         t.atoms.border_contrast_low,
         a.px_lg,
@@ -398,7 +602,7 @@ export function Handle({
   const t = useTheme()
   const {_} = useLingui()
   const {screenReaderEnabled} = useA11y()
-  const {close} = useDialogContext()
+  const {close, isNativePopover} = useDialogContext()
 
   return (
     <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 20}]}>
@@ -407,29 +611,31 @@ export function Handle({
         onPress={() => close()}
         accessibilityLabel={_(msg`Dismiss`)}
         accessibilityHint={_(msg`Double tap to close the dialog`)}>
-        <View
-          style={[
-            a.rounded_sm,
-            {
-              top: tokens.space._2xl / 2 - 2.5,
-              width: 35,
-              height: 5,
-              alignSelf: 'center',
-            },
-            difference
-              ? {
-                  // TODO: mixBlendMode is only available on the new architecture -sfn
-                  // backgroundColor: t.palette.white,
-                  // mixBlendMode: 'difference',
-                  backgroundColor: t.palette.white,
-                  opacity: 0.75,
-                }
-              : {
-                  backgroundColor: fill || t.palette.contrast_975,
-                  opacity: 0.5,
-                },
-          ]}
-        />
+        {!isNativePopover && (
+          <View
+            style={[
+              a.rounded_sm,
+              {
+                top: tokens.space._2xl / 2 - 2.5,
+                width: 35,
+                height: 5,
+                alignSelf: 'center',
+              },
+              difference
+                ? {
+                    // TODO: mixBlendMode is only available on the new architecture -sfn
+                    // backgroundColor: t.palette.white,
+                    // mixBlendMode: 'difference',
+                    backgroundColor: t.palette.white,
+                    opacity: 0.75,
+                  }
+                : {
+                    backgroundColor: fill || t.palette.contrast_975,
+                    opacity: 0.5,
+                  },
+            ]}
+          />
+        )}
       </Pressable>
     </View>
   )

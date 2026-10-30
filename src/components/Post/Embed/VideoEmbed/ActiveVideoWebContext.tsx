@@ -108,10 +108,15 @@ export function useActiveVideoWeb() {
 
   return {
     active: activeViewId === id,
-    setActive: () => {
+    setActive: useCallback(() => {
       setActiveView(id)
-    },
+    }, [setActiveView, id]),
     currentActiveView: activeViewId,
-    sendPosition: (y: number) => sendViewPosition(id, y),
+    sendPosition: useCallback(
+      (y: number) => {
+        sendViewPosition(id, y)
+      },
+      [sendViewPosition, id],
+    ),
   }
 }

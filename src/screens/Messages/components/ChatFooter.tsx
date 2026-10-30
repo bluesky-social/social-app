@@ -31,6 +31,7 @@ export function ChatFooter({
           style={[
             a.flex_row,
             a.align_center,
+            a.flex_1,
             {
               minHeight: 32,
             },
@@ -40,7 +41,7 @@ export function ChatFooter({
             fill={t.atoms.text_contrast_medium.color}
             style={[a.mr_sm]}
           />
-          <View>
+          <View style={[a.flex_1]}>
             <Text
               numberOfLines={1}
               style={[
@@ -52,7 +53,7 @@ export function ChatFooter({
             </Text>
             {subheading ? (
               <Text
-                numberOfLines={1}
+                numberOfLines={2}
                 style={[
                   a.text_xs,
                   a.leading_snug,

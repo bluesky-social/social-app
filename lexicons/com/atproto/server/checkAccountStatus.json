@@ -1,0 +1,58 @@
+{
+  "id": "com.atproto.server.checkAccountStatus",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "activated",
+            "validDid",
+            "repoCommit",
+            "repoRev",
+            "repoBlocks",
+            "indexedRecords",
+            "privateStateValues",
+            "expectedBlobs",
+            "importedBlobs"
+          ],
+          "properties": {
+            "repoRev": {
+              "type": "string"
+            },
+            "validDid": {
+              "type": "boolean"
+            },
+            "activated": {
+              "type": "boolean"
+            },
+            "repoBlocks": {
+              "type": "integer"
+            },
+            "repoCommit": {
+              "type": "string",
+              "format": "cid"
+            },
+            "expectedBlobs": {
+              "type": "integer"
+            },
+            "importedBlobs": {
+              "type": "integer"
+            },
+            "indexedRecords": {
+              "type": "integer"
+            },
+            "privateStateValues": {
+              "type": "integer"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Returns the status of an account, especially as pertaining to import or recovery. Can be called many times over the course of an account migration. Requires auth and can only be called pertaining to oneself."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

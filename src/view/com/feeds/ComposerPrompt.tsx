@@ -12,13 +12,13 @@ import {
 } from '#/lib/hooks/usePermissions'
 import {openCamera, openUnifiedPicker} from '#/lib/media/picker'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
-import {MAX_IMAGES} from '#/view/com/composer/state/composer'
+import {MAX_GALLERY_IMAGES} from '#/view/com/composer/state/composer'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Camera_Stroke2_Corner0_Rounded as CameraIcon} from '#/components/icons/Camera'
-import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
+import {Image_Stroke2_Corner2_Rounded as ImageIcon} from '#/components/icons/Image'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -56,15 +56,17 @@ export function ComposerPrompt() {
         requestVideoAccessIfNeeded(),
       ])
 
-      if (!photoAccess && !videoAccess) {
-        return
+      if (!photoAccess) {
+        if (!videoAccess) {
+          return
+        }
       }
 
       if (Keyboard.isVisible()) {
         Keyboard.dismiss()
       }
 
-      const selectionCountRemaining = MAX_IMAGES
+      const selectionCountRemaining = MAX_GALLERY_IMAGES
       const {assets, canceled} = await sheetWrapper(
         openUnifiedPicker({selectionCountRemaining}),
       )
@@ -76,7 +78,7 @@ export function ComposerPrompt() {
       if (assets.length > 0) {
         const imageUris = assets
           .filter(asset => asset.mimeType?.startsWith('image/'))
-          .slice(0, MAX_IMAGES)
+          .slice(0, MAX_GALLERY_IMAGES)
           .map(asset => ({
             uri: asset.uri,
             width: asset.width,
@@ -108,13 +110,18 @@ export function ComposerPrompt() {
         return
       }
 
-      if (IS_NATIVE && Keyboard.isVisible()) {
-        Keyboard.dismiss()
+      if (IS_NATIVE) {
+        if (Keyboard.isVisible()) {
+          Keyboard.dismiss()
+        }
       }
 
       const image = await openCamera({
         mediaTypes: 'images',
       })
+      if (!image) {
+        return
+      }
 
       const imageUris = [
         {
@@ -124,8 +131,16 @@ export function ComposerPrompt() {
         },
       ]
 
+      /*
+       * Statement form rather than a ternary: React Compiler cannot lower a
+       * conditional expression inside a `try`, and `imageUris` is built here.
+       */
+      let nativeImageUris
+      if (IS_NATIVE) {
+        nativeImageUris = imageUris
+      }
       openComposer({
-        imageUris: IS_NATIVE ? imageUris : undefined,
+        imageUris: nativeImageUris,
         logContext: 'Fab',
       })
     } catch (err: any) {
@@ -142,8 +157,7 @@ export function ComposerPrompt() {
   return (
     <Pressable
       onPress={onPress}
-      android_ripple={null}
-      accessibilityRole="button"
+      accessibilityRole={IS_NATIVE ? 'button' : undefined} // In HTML, <button> cannot be a descendant of <button>.
       accessibilityLabel={_(msg`Compose new post`)}
       accessibilityHint={_(msg`Opens the post composer`)}
       onPointerEnter={() => setHover(true)}
@@ -163,7 +177,6 @@ export function ComposerPrompt() {
         }),
         web({
           cursor: 'pointer',
-          outline: 'none',
         }),
         pressed && web({outline: 'none'}),
       ]}>

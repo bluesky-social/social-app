@@ -1,8 +1,10 @@
 import {useCallback, useMemo} from 'react'
-import {LayoutAnimation, type TextStyle} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {
+  type GestureResponderEvent,
+  LayoutAnimation,
+  type TextStyle,
+} from 'react-native'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {atoms as a, flatten, type TextStyleProp, useTheme} from '#/alf'
@@ -12,14 +14,19 @@ import {Text} from '#/components/Typography'
 export function ShowMoreTextButton({
   onPress: onPressProp,
   style,
-}: TextStyleProp & {onPress: () => void}) {
+}: TextStyleProp & {
+  onPress: (event: GestureResponderEvent) => void
+}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
-  const onPress = useCallback(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    onPressProp()
-  }, [onPressProp])
+  const onPress = useCallback(
+    (event: GestureResponderEvent) => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+      onPressProp(event)
+    },
+    [onPressProp],
+  )
 
   const textStyle = useMemo(() => {
     return flatten([a.leading_snug, a.text_sm, style]) as TextStyle & {
@@ -30,7 +37,7 @@ export function ShowMoreTextButton({
 
   return (
     <Button
-      label={_(msg`Expand post text`)}
+      label={l`Expand post text`}
       onPress={onPress}
       style={[
         a.self_start,
@@ -43,13 +50,13 @@ export function ShowMoreTextButton({
         <Text
           style={[
             textStyle,
+            t.atoms.text_link,
             {
-              color: t.palette.primary_500,
               opacity: pressed ? 0.6 : 1,
               textDecorationLine: hovered ? 'underline' : undefined,
             },
           ]}>
-          <Trans>Show More</Trans>
+          <Trans>Show more</Trans>
         </Text>
       )}
     </Button>

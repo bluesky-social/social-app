@@ -1,17 +1,11 @@
 import {forwardRef, useCallback, useId, useMemo, useState} from 'react'
-import {
-  Pressable,
-  type StyleProp,
-  type TextStyle,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import {Pressable, type StyleProp, type TextStyle, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {DropdownMenu} from 'radix-ui'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import {useA11y} from '#/state/a11y'
-import {atoms as a, flatten, useTheme, web} from '#/alf'
+import {atoms as a, flatten, flattenToCSS, useTheme, web} from '#/alf'
 import type * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {
@@ -26,11 +20,14 @@ import {
   type ItemIconProps,
   type ItemProps,
   type ItemTextProps,
+  type OuterProps,
   type RadixPassThroughTriggerProps,
   type TriggerProps,
 } from '#/components/Menu/types'
 import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
+
+export {type DialogControlProps as MenuControlProps} from '#/components/Dialog'
 
 export {useMenuContext}
 
@@ -46,8 +43,9 @@ export function useMenuControl(): Dialog.DialogControlProps {
       open() {
         setIsOpen(true)
       },
-      close() {
+      close(cb) {
         setIsOpen(false)
+        if (cb) setTimeout(cb)
       },
     }),
     [id, isOpen, setIsOpen],
@@ -178,13 +176,7 @@ export function Trigger({
   )
 }
 
-export function Outer({
-  children,
-  style,
-}: React.PropsWithChildren<{
-  showCancel?: boolean
-  style?: StyleProp<ViewStyle>
-}>) {
+export function Outer({children, style, onCloseAutoFocus}: OuterProps) {
   const t = useTheme()
   const {reduceMotionEnabled} = useA11y()
 
@@ -195,6 +187,7 @@ export function Outer({
         collisionPadding={{left: 5, right: 5, bottom: 5}}
         loop
         aria-label="Test"
+        onCloseAutoFocus={onCloseAutoFocus}
         className="dropdown-menu-transform-origin dropdown-menu-constrain-size">
         <View
           style={[
@@ -406,7 +399,7 @@ export function Divider() {
   const t = useTheme()
   return (
     <DropdownMenu.Separator
-      style={flatten([
+      style={flattenToCSS([
         a.my_xs,
         t.atoms.bg_contrast_100,
         a.flex_shrink_0,

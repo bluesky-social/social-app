@@ -7,20 +7,37 @@ import {
   useState,
 } from 'react'
 import {LayoutAnimation, type TextInput, View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
+import {MAX_GROUP_NAME_GRAPHEME_LENGTH} from '#/lib/constants'
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
+import {useChatActorStatusQuery} from '#/state/queries/messages/get-status'
+import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {type ListMethods} from '#/view/com/util/List'
 import {android, atoms as a, native, useTheme, web} from '#/alf'
+import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {canBeMessaged} from '#/components/dms/util'
+import {ChatProfileTabs} from '#/components/dms/ChatProfileTabs'
+import {EmptyMemberList} from '#/components/dms/components/EmptyMemberList'
+import {GroupChatProfileCard} from '#/components/dms/components/GroupChatProfileCard'
+import {ProfileCardSkeleton} from '#/components/dms/components/ProfileCardSkeleton'
+import {UserLabel} from '#/components/dms/components/UserLabel'
+import {UserSearchInput} from '#/components/dms/components/UserSearchInput'
+import {
+  canBeAddedToGroup,
+  canBeMessaged,
+  type ConvoWithDetails,
+  parseConvoView,
+} from '#/components/dms/util'
 import * as TextField from '#/components/forms/TextField'
 import * as Toggle from '#/components/forms/Toggle'
 import {
@@ -30,16 +47,13 @@ import {
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import * as ProfileCard from '#/components/ProfileCard'
+import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {useAgeAssurance} from '#/ageAssurance'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
-import {ChatProfileTabs} from './ChatProfileTabs'
-import {EmptyMemberList} from './components/EmptyMemberList'
-import {GroupChatProfileCard} from './components/GroupChatProfileCard'
-import {ProfileCardSkeleton} from './components/ProfileCardSkeleton'
-import {UserLabel} from './components/UserLabel'
-import {UserSearchInput} from './components/UserSearchInput'
 
 type NewGroupChatItem = {
   type: 'newGroupChat'
@@ -56,6 +70,12 @@ type ProfileItem = {
   type: 'profile'
   key: string
   profile: bsky.profile.AnyProfileView
+}
+
+type ExistingChatItem = {
+  type: 'existingChat'
+  key: string
+  convo: ConvoWithDetails
 }
 
 type EmptyItem = {
@@ -78,6 +98,7 @@ type Item =
   | NewGroupChatItem
   | LabelItem
   | ProfileItem
+  | ExistingChatItem
   | EmptyItem
   | PlaceholderItem
   | ErrorItem
@@ -94,6 +115,7 @@ export type State = {
   groupChatDids: string[]
   groupChatProfiles: bsky.profile.AnyProfileView[]
   groupName: string
+  searchText: string
 }
 
 export type Action =
@@ -127,6 +149,10 @@ export type Action =
       type: 'goBackFromGroupName'
       screenTitle: string
     }
+  | {
+      type: 'setSearchText'
+      searchText: string
+    }
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -145,6 +171,7 @@ function reducer(state: State, action: Action): State {
         ...state,
         groupChatDids: action.groupChatDids,
         groupChatProfiles: action.groupChatProfiles,
+        searchText: '',
       }
     }
     case 'removeDids': {
@@ -159,6 +186,7 @@ function reducer(state: State, action: Action): State {
         ...state,
         chatState: ChatState.GROUP_NAME,
         screenTitle: action.screenTitle,
+        searchText: '',
       }
     }
     case 'nameGroup': {
@@ -175,6 +203,7 @@ function reducer(state: State, action: Action): State {
         groupChatDids: [],
         groupChatProfiles: [],
         groupName: '',
+        searchText: '',
       }
     }
     case 'goBackFromGroupName': {
@@ -185,6 +214,12 @@ function reducer(state: State, action: Action): State {
         groupName: '',
       }
     }
+    case 'setSearchText': {
+      return {
+        ...state,
+        searchText: action.searchText,
+      }
+    }
   }
 }
 
@@ -192,10 +227,18 @@ export function InitiateChatFlow({
   title,
   onSelectChat,
   onSelectGroupChat,
+  startInGroupChat = false,
+  showRecentConvos = false,
+  onSelectExistingChat,
+  sortByMessageDeclaration = false,
 }: {
   title: string
   onSelectChat: (did: string) => void
   onSelectGroupChat: (dids: string[], groupName: string) => void
+  startInGroupChat?: boolean
+  showRecentConvos?: boolean
+  onSelectExistingChat?: (convoId: string) => void
+  sortByMessageDeclaration?: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -205,9 +248,38 @@ export function InitiateChatFlow({
   const [footerHeight, setFooterHeight] = useState(0)
   const listRef = useRef<ListMethods>(null)
   const {currentAccount} = useSession()
-  const inputRef = useRef<TextInput>(null)
+  const aa = useAgeAssurance()
+  const inputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
+  const accountTooNewPromptControl = Dialog.useDialogControl()
 
-  const [searchText, setSearchText] = useState('')
+  const {data: convos} = useListConvosQuery({
+    enabled: showRecentConvos,
+    status: 'accepted',
+    lockStatus: 'unlocked',
+  })
+
+  const {data: chatStatus} = useChatActorStatusQuery()
+  const canCreateGroups = chatStatus?.canCreateGroups ?? true
+  const groupMemberLimit = chatStatus?.groupMemberLimit
+
+  const [
+    {
+      chatState,
+      screenTitle,
+      groupChatDids,
+      groupChatProfiles,
+      groupName,
+      searchText,
+    },
+    dispatch,
+  ] = useReducer(reducer, {
+    chatState: startInGroupChat ? ChatState.NEW_GROUP_CHAT : ChatState.NEW_CHAT,
+    screenTitle: startInGroupChat ? l`New group chat` : title,
+    groupChatDids: [],
+    groupChatProfiles: [],
+    groupName: '',
+    searchText: '',
+  })
 
   const {
     data: results,
@@ -215,17 +287,6 @@ export function InitiateChatFlow({
     isFetching,
   } = useActorAutocompleteQuery(searchText, true, 12)
   const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
-
-  const [
-    {chatState, screenTitle, groupChatDids, groupChatProfiles, groupName},
-    dispatch,
-  ] = useReducer(reducer, {
-    chatState: ChatState.NEW_CHAT,
-    screenTitle: title,
-    groupChatDids: [],
-    groupChatProfiles: [],
-    groupName: '',
-  })
 
   const newGroupChatTitle = l`New group chat`
   const groupNameTitle = l`Group name`
@@ -246,6 +307,12 @@ export function InitiateChatFlow({
 
   const items = useMemo(() => {
     let _items: Item[] = []
+    const checker =
+      chatState === ChatState.NEW_GROUP_CHAT ? canBeAddedToGroup : canBeMessaged
+    const messageDeclarationRank = (item: Item) =>
+      item.type === 'profile' && checker(item.profile) ? 0 : 1
+    const compareByMessageDeclaration = (a: Item, b: Item) =>
+      messageDeclarationRank(a) - messageDeclarationRank(b)
 
     if (isError) {
       _items.push({
@@ -275,9 +342,9 @@ export function InitiateChatFlow({
           })
         }
 
-        _items = _items.sort(item => {
-          return item.type === 'profile' && canBeMessaged(item.profile) ? -1 : 1
-        })
+        if (sortByMessageDeclaration) {
+          _items = _items.sort(compareByMessageDeclaration)
+        }
       }
     } else {
       const placeholders: Item[] = Array(10)
@@ -287,10 +354,48 @@ export function InitiateChatFlow({
           key: i + '',
         }))
 
-      if (follows) {
+      if (
+        chatState === ChatState.NEW_CHAT &&
+        showRecentConvos &&
+        convos &&
+        follows
+      ) {
+        const usedDids = new Set()
+
+        for (const page of convos.pages) {
+          for (const convoView of page.convos) {
+            const convo = parseConvoView(convoView, currentAccount?.did)
+
+            if (!convo) continue
+
+            if (convo.kind === 'group') {
+              _items.push({
+                type: 'existingChat',
+                key: convo.view.id,
+                convo,
+              })
+            } else {
+              if (convo.primaryMember.handle === 'missing.invalid') continue
+              if (usedDids.has(convo.primaryMember.did)) continue
+
+              usedDids.add(convo.primaryMember.did)
+
+              _items.push({
+                type: 'existingChat',
+                key: convo.view.id,
+                convo,
+              })
+            }
+          }
+        }
+
+        let followsItems: ProfileItem[] = []
+
         for (const page of follows.pages) {
           for (const profile of page.follows) {
-            _items.push({
+            if (usedDids.has(profile.did)) continue
+            if (!checker(profile)) continue
+            followsItems.push({
               type: 'profile',
               key: profile.did,
               profile,
@@ -298,9 +403,18 @@ export function InitiateChatFlow({
           }
         }
 
-        _items = _items.sort(item => {
-          return item.type === 'profile' && canBeMessaged(item.profile) ? -1 : 1
-        })
+        _items.push(...followsItems)
+      } else if (follows) {
+        for (const page of follows.pages) {
+          for (const profile of page.follows) {
+            if (!checker(profile)) continue
+            _items.push({
+              type: 'profile',
+              key: profile.did,
+              profile,
+            })
+          }
+        }
       } else {
         _items.push(...placeholders)
       }
@@ -308,6 +422,7 @@ export function InitiateChatFlow({
 
     if (
       searchText === '' &&
+      _items.length > 0 &&
       (chatState === ChatState.NEW_CHAT ||
         chatState === ChatState.NEW_GROUP_CHAT)
     ) {
@@ -318,20 +433,36 @@ export function InitiateChatFlow({
       })
     }
 
-    if (chatState === ChatState.NEW_CHAT && searchText === '') {
+    if (
+      chatState === ChatState.NEW_CHAT &&
+      searchText === '' &&
+      !aa.flags.groupChatDisabled
+    ) {
       _items.unshift({type: 'newGroupChat', key: 'newGroupChat'})
     }
 
-    return _items
+    const profileDids = new Set<string>()
+
+    return _items.filter(item => {
+      if (item.type !== 'profile') return true
+      if (profileDids.has(item.profile.did)) return false
+
+      profileDids.add(item.profile.did)
+      return true
+    })
   }, [
     isError,
     chatState,
+    convos,
     searchText,
     l,
     groupChatProfiles,
     results,
     currentAccount?.did,
     follows,
+    aa.flags.groupChatDisabled,
+    showRecentConvos,
+    sortByMessageDeclaration,
   ])
 
   if (searchText && !isFetching && !items.length && !isError) {
@@ -346,7 +477,6 @@ export function InitiateChatFlow({
       case ChatState.NEW_GROUP_CHAT:
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         dispatch({type: 'goBackFromNewGroupChat', screenTitle: title})
-        setSearchText('')
         break
       case ChatState.GROUP_NAME:
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -356,14 +486,17 @@ export function InitiateChatFlow({
   }, [chatState, control, newGroupChatTitle, title])
 
   const handlePressNewGroupChat = useCallback(() => {
+    if (!canCreateGroups) {
+      accountTooNewPromptControl.open()
+      return
+    }
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     dispatch({type: 'startNewGroupChat', screenTitle: newGroupChatTitle})
-  }, [newGroupChatTitle])
+  }, [accountTooNewPromptControl, canCreateGroups, newGroupChatTitle])
 
   const handlePressNext = useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     dispatch({type: 'startNameGroup', screenTitle: groupNameTitle})
-    setSearchText('')
   }, [groupNameTitle])
 
   const handlePressConfirm = useCallback(() => {
@@ -382,11 +515,22 @@ export function InitiateChatFlow({
             <NewGroupChatButton
               key={item.key}
               onPress={handlePressNewGroupChat}
+              dimmed={!canCreateGroups}
             />
           )
         }
         case 'label': {
           return <UserLabel key={item.key} message={item.message} />
+        }
+        case 'existingChat': {
+          return showRecentConvos && onSelectExistingChat ? (
+            <ExistingChatCard
+              key={item.key}
+              convo={item.convo}
+              moderationOpts={moderationOpts!}
+              onPress={onSelectExistingChat}
+            />
+          ) : null
         }
         case 'profile': {
           switch (chatState) {
@@ -427,7 +571,15 @@ export function InitiateChatFlow({
           return null
       }
     },
-    [chatState, handlePressNewGroupChat, moderationOpts, onSelectChat],
+    [
+      canCreateGroups,
+      chatState,
+      handlePressNewGroupChat,
+      moderationOpts,
+      onSelectChat,
+      onSelectExistingChat,
+      showRecentConvos,
+    ],
   )
 
   useLayoutEffect(() => {
@@ -437,6 +589,11 @@ export function InitiateChatFlow({
       })
     }
   }, [])
+
+  const groupNameTooLong = isOverMaxGraphemeCount({
+    text: groupName,
+    maxCount: MAX_GROUP_NAME_GRAPHEME_LENGTH,
+  })
 
   let buttonLabel = l`Continue to group name`
   let buttonText = l`Next`
@@ -450,7 +607,7 @@ export function InitiateChatFlow({
       buttonText = l`Create`
       handleButtonPress = handlePressConfirm
       showButton = true
-      isButtonDisabled = groupName === ''
+      isButtonDisabled = groupName === '' || groupNameTooLong
       break
   }
 
@@ -482,7 +639,6 @@ export function InitiateChatFlow({
               a.relative,
               a.align_center,
               a.justify_between,
-              web(a.pb_lg),
             ]}>
             {IS_NATIVE ? (
               <Button
@@ -518,7 +674,7 @@ export function InitiateChatFlow({
                 color="secondary"
                 style={[a.absolute, a.z_20, {right: -4}]}
                 onPress={() => control.close()}>
-                <ButtonIcon icon={XIcon} size="lg" />
+                <ButtonIcon icon={XIcon} size="md" />
               </Button>
             ) : showButton ? (
               <Button
@@ -544,7 +700,7 @@ export function InitiateChatFlow({
             {chatState === ChatState.GROUP_NAME ? (
               <View
                 style={[a.w_full, a.relative, web(a.pt_md), native(a.pt_xl)]}>
-                <TextField.Root>
+                <TextField.Root isInvalid={groupNameTooLong}>
                   <TextField.Input
                     label={l`Group name`}
                     value={groupName}
@@ -553,6 +709,7 @@ export function InitiateChatFlow({
                     selectTextOnFocus={IS_NATIVE}
                     autoFocus={false}
                     accessibilityRole="text"
+                    clearButtonMode="while-editing"
                     autoCorrect={false}
                     autoComplete="off"
                     autoCapitalize="none"
@@ -562,13 +719,30 @@ export function InitiateChatFlow({
                     }
                   />
                 </TextField.Root>
+                {groupNameTooLong ? (
+                  <Text
+                    style={[
+                      a.text_sm,
+                      a.mt_xs,
+                      a.font_semi_bold,
+                      {color: t.palette.negative_400},
+                    ]}>
+                    <Trans>
+                      Group name is too long.{' '}
+                      <Plural
+                        value={MAX_GROUP_NAME_GRAPHEME_LENGTH}
+                        other="The maximum number of characters is #."
+                      />
+                    </Trans>
+                  </Text>
+                ) : null}
               </View>
             ) : (
               <UserSearchInput
                 inputRef={inputRef}
                 value={searchText}
                 onChangeText={text => {
-                  setSearchText(text)
+                  dispatch({type: 'setSearchText', searchText: text})
                   listRef.current?.scrollToOffset({offset: 0, animated: false})
                 }}
                 onEscape={control.close}
@@ -602,6 +776,8 @@ export function InitiateChatFlow({
       handleButtonPress,
       buttonText,
       groupName,
+      groupNameTooLong,
+      t.palette.negative_400,
       searchText,
       control,
       showChatProfileTabs,
@@ -644,12 +820,25 @@ export function InitiateChatFlow({
       values={groupChatDids}
       onChange={setGroupChatMembers}
       type="checkbox"
+      maxSelections={
+        // groupMemberLimit counts the creator, who is added implicitly, so
+        // reserve one slot for them
+        groupMemberLimit ? groupMemberLimit - 1 : undefined
+      }
       label={
         chatState === ChatState.NEW_GROUP_CHAT
           ? l`Select group chat members`
           : l`Start chat`
       }
       style={web([a.contents])}>
+      <Prompt.Basic
+        control={accountTooNewPromptControl}
+        title={l`Your account is too new`}
+        description={l`Your account must be at least 7 days old to create a new group chat.`}
+        confirmButtonCta={l`Okay`}
+        onConfirm={() => {}}
+        showCancel={false}
+      />
       <Dialog.InnerFlatList
         ref={listRef}
         data={items}
@@ -701,16 +890,24 @@ export function InitiateChatFlow({
   )
 }
 
-function NewGroupChatButton({onPress}: {onPress: () => void}) {
+function NewGroupChatButton({
+  onPress,
+  dimmed = false,
+}: {
+  onPress: () => void
+  dimmed?: boolean
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
 
-  const handleOnPress = () => {
-    onPress()
-  }
-
   return (
-    <Button label={l`New group chat`} onPress={handleOnPress}>
+    <Button
+      label={l({
+        message: 'New group chat',
+        context: 'action',
+        comment: 'Button used to create a new group chat.',
+      })}
+      onPress={onPress}>
       {({hovered, pressed, focused}) => (
         <View
           style={[
@@ -722,6 +919,7 @@ function NewGroupChatButton({onPress}: {onPress: () => void}) {
             a.align_center,
             a.gap_sm,
             pressed || focused || hovered ? t.atoms.bg_contrast_25 : t.atoms.bg,
+            dimmed && {opacity: 0.5},
           ]}>
           <View
             style={[
@@ -738,10 +936,122 @@ function NewGroupChatButton({onPress}: {onPress: () => void}) {
           <View style={[a.flex_grow]}>
             <Text
               style={[a.text_md, a.font_medium, a.leading_snug, t.atoms.text]}>
-              <Trans>New group chat</Trans>
+              <Trans
+                context="action"
+                comment="Button used to create a new group chat.">
+                New group chat
+              </Trans>
             </Text>
           </View>
           <ChevronRightIcon size="md" fill={t.palette.contrast_1000} />
+        </View>
+      )}
+    </Button>
+  )
+}
+
+function ExistingChatCard({
+  convo,
+  moderationOpts,
+  onPress,
+}: {
+  convo: ConvoWithDetails
+  moderationOpts: ModerationOpts
+  onPress: (convoId: string) => void
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const enabled =
+    convo.kind === 'group' ? convo.details.lockStatus === 'unlocked' : true
+  const name =
+    convo.kind === 'group'
+      ? convo.details.name
+      : createSanitizedDisplayName(
+          convo.primaryMember,
+          true,
+          moderateProfile(convo.primaryMember, moderationOpts).ui(
+            'displayName',
+          ),
+        )
+
+  const handleOnPress = useCallback(() => {
+    onPress(convo.view.id)
+  }, [onPress, convo.view.id])
+
+  return (
+    <Button
+      disabled={!enabled}
+      label={l`Select chat "${name}"`}
+      onPress={handleOnPress}>
+      {({hovered, pressed, focused}) => (
+        <View
+          style={[
+            a.flex_1,
+            a.py_sm,
+            a.px_lg,
+            !enabled
+              ? {opacity: 0.5}
+              : pressed || focused || hovered
+                ? t.atoms.bg_contrast_25
+                : t.atoms.bg,
+          ]}>
+          <ProfileCard.Header>
+            {convo.kind === 'group' ? (
+              <AvatarBubbles profiles={convo.members} size={40} />
+            ) : (
+              <ProfileCard.Avatar
+                profile={convo.primaryMember}
+                moderationOpts={moderationOpts}
+                disabledPreview
+              />
+            )}
+            <View style={[a.flex_1]}>
+              <View style={[a.flex_row, a.align_center, a.max_w_full]}>
+                <Text
+                  emoji
+                  style={[
+                    a.text_md,
+                    a.font_semi_bold,
+                    a.leading_snug,
+                    a.self_start,
+                    a.flex_shrink,
+                  ]}
+                  numberOfLines={1}>
+                  {name}
+                </Text>
+                {convo.kind === 'direct' && (
+                  <ProfileBadges
+                    profile={convo.primaryMember}
+                    size="md"
+                    style={[a.pl_xs]}
+                  />
+                )}
+              </View>
+              {convo.kind === 'direct' ? (
+                <ProfileCard.Handle profile={convo.primaryMember} />
+              ) : (
+                <>
+                  {enabled ? (
+                    <Text
+                      style={[a.leading_snug, t.atoms.text_contrast_medium]}
+                      numberOfLines={2}>
+                      <Plural
+                        value={convo.details.memberCount}
+                        one="# member"
+                        other="# members"
+                      />
+                    </Text>
+                  ) : (
+                    <Text
+                      style={[a.leading_snug, t.atoms.text_contrast_high]}
+                      numberOfLines={2}>
+                      <Trans>Group is locked</Trans>
+                    </Text>
+                  )}
+                </>
+              )}
+            </View>
+          </ProfileCard.Header>
         </View>
       )}
     </Button>
@@ -825,7 +1135,7 @@ function GroupChatMemberProfileCard({
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
-  const enabled = canBeMessaged(profile)
+  const enabled = canBeAddedToGroup(profile)
   const handle = sanitizeHandle(profile.handle, '@')
 
   return (
@@ -845,7 +1155,7 @@ function GroupChatMemberProfileCard({
             <Text
               style={[a.leading_snug, t.atoms.text_contrast_high]}
               numberOfLines={2}>
-              <Trans>{handle} can’t be messaged</Trans>
+              <Trans>{handle} can’t be added</Trans>
             </Text>
           )}
         </View>

@@ -1,0 +1,42 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "moduleSuffixes": [".web", ""],
+    "paths": {
+      "#/*": ["./src/*"],
+      "crypto": ["./src/platform/crypto.ts"],
+      /*
+       * expo-file-system/legacy resolves to the package's raw TypeScript
+       * source, whose internals break under .web module suffixes. Point it
+       * at the compiled declarations, where skipLibCheck applies.
+       */
+      "expo-file-system/legacy": [
+        "./node_modules/expo-file-system/build/legacy/index.d.ts"
+      ],
+      /*
+       * Mirrors the root tsconfig mappings (paths does not merge across
+       * extends): expo-file-system's and expo-image-manipulator's `exports`
+       * maps block the deep type imports in src/platform/misc.web-check.d.ts.
+       */
+      "expo-file-system/build/*": ["./node_modules/expo-file-system/build/*"],
+      "expo-image-manipulator/build/*": [
+        "./node_modules/expo-image-manipulator/build/*"
+      ],
+      /*
+       * The react-native exports condition resolves to the package's raw
+       * TypeScript source, whose findNodeHandle usage breaks under the web
+       * pass. Point it at the compiled declarations, where skipLibCheck
+       * applies.
+       */
+      "react-native-view-shot": [
+        "./node_modules/react-native-view-shot/lib/index.d.ts"
+      ]
+    }
+  },
+  "include": [
+    "index.web.ts",
+    "src/**/*.web.ts",
+    "src/**/*.web.tsx",
+    "src/platform/*.web-check.d.ts"
+  ]
+}

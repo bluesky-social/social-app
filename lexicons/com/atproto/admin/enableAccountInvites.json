@@ -1,0 +1,30 @@
+{
+  "id": "com.atproto.admin.enableAccountInvites",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "account"
+          ],
+          "properties": {
+            "note": {
+              "type": "string",
+              "description": "Optional reason for enabled invites."
+            },
+            "account": {
+              "type": "string",
+              "format": "did"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Re-enable an account's ability to receive invite codes."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

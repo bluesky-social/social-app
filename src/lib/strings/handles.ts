@@ -1,5 +1,8 @@
 // Regex from the go implementation
 // https://github.com/bluesky-social/indigo/blob/main/atproto/syntax/handle.go#L10
+import {i18n} from '@lingui/core'
+import {msg} from '@lingui/core/macro'
+
 import {forceLTR} from '#/lib/strings/bidi'
 
 const VALIDATE_REGEX =
@@ -32,7 +35,7 @@ export function sanitizeHandle(
 ): string {
   const lowercasedWithPrefix = `${prefix}${handle.toLocaleLowerCase()}`
   return isInvalidHandle(handle)
-    ? '⚠Invalid Handle'
+    ? i18n._(msg({message: `⚠Invalid Handle`}))
     : forceLeftToRight
       ? forceLTR(lowercasedWithPrefix)
       : lowercasedWithPrefix

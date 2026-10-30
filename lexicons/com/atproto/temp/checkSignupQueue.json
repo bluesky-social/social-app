@@ -1,0 +1,22 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.temp.checkSignupQueue",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Check accounts location in signup queue.",
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["activated"],
+          "properties": {
+            "activated": { "type": "boolean" },
+            "placeInQueue": { "type": "integer" },
+            "estimatedTimeMs": { "type": "integer" }
+          }
+        }
+      }
+    }
+  }
+}

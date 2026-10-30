@@ -17,11 +17,11 @@ export async function openCamera(customOpts: ImagePickerOptions) {
   }
   const res = await launchCameraAsync(opts)
 
-  if (!res || !res.assets) {
-    throw new Error('Camera was closed before taking a photo')
+  if (res.canceled) {
+    return
   }
 
-  const asset = res?.assets[0]
+  const asset = res.assets[0]
 
   return {
     path: asset.uri,

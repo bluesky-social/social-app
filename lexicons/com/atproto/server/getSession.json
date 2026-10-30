@@ -1,0 +1,55 @@
+{
+  "id": "com.atproto.server.getSession",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "handle",
+            "did"
+          ],
+          "properties": {
+            "did": {
+              "type": "string",
+              "format": "did"
+            },
+            "email": {
+              "type": "string"
+            },
+            "active": {
+              "type": "boolean"
+            },
+            "didDoc": {
+              "type": "unknown"
+            },
+            "handle": {
+              "type": "string",
+              "format": "handle"
+            },
+            "status": {
+              "type": "string",
+              "description": "If active=false, this optional field indicates a possible reason for why the account is not active. If active=false and no status is supplied, then the host makes no claim for why the repository is no longer being hosted.",
+              "knownValues": [
+                "takendown",
+                "suspended",
+                "deactivated"
+              ]
+            },
+            "emailConfirmed": {
+              "type": "boolean"
+            },
+            "emailAuthFactor": {
+              "type": "boolean"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Get information about the current auth session. Requires auth."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

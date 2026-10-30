@@ -19,6 +19,10 @@ export function useFeaturedGifsQuery(options?: {enabled?: boolean}) {
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.next,
     enabled: options?.enabled,
+    // Klipy serves time-of-day-sensitive trending; drop cache as soon as the
+    // picker closes so every reopen issues a fresh request instead of showing
+    // stale results while a background refetch runs.
+    gcTime: 0,
   })
 }
 

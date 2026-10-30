@@ -1,0 +1,90 @@
+{
+  "id": "app.bsky.feed.getLikes",
+  "defs": {
+    "like": {
+      "type": "object",
+      "required": [
+        "indexedAt",
+        "createdAt",
+        "actor"
+      ],
+      "properties": {
+        "actor": {
+          "ref": "app.bsky.actor.defs#profileView",
+          "type": "ref"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    },
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "uri",
+            "likes"
+          ],
+          "properties": {
+            "cid": {
+              "type": "string",
+              "format": "cid"
+            },
+            "uri": {
+              "type": "string",
+              "format": "at-uri"
+            },
+            "likes": {
+              "type": "array",
+              "items": {
+                "ref": "#like",
+                "type": "ref"
+              }
+            },
+            "cursor": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "uri"
+        ],
+        "properties": {
+          "cid": {
+            "type": "string",
+            "format": "cid",
+            "description": "CID of the subject record (aka, specific version of record), to filter likes."
+          },
+          "uri": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT-URI of the subject (eg, a post record)."
+          },
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Get like records which reference a subject (by AT-URI and CID)."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

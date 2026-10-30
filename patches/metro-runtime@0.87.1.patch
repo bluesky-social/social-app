@@ -1,0 +1,14 @@
+diff --git a/src/modules/HMRClient.js b/src/modules/HMRClient.js
+index 534ac872bdd4f081c21a63aeb88adf689a3af5c5..5773985c80b89907cad741fdb05b551a97320492 100644
+--- a/src/modules/HMRClient.js
++++ b/src/modules/HMRClient.js
+@@ -3,6 +3,9 @@
+ const EventEmitter = require("./vendor/eventemitter3");
+ const HEARTBEAT_INTERVAL_MS = 20_000;
+ const inject = ({ module: [id, code], sourceURL }) => {
++  if (global.__workletsModuleProxy?.propagateModuleUpdate) {
++    global.__workletsModuleProxy.propagateModuleUpdate(code, sourceURL);
++  }
+   if (global.globalEvalWithSourceUrl) {
+     global.globalEvalWithSourceUrl(code, sourceURL);
+   } else {

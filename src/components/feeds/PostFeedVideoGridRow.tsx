@@ -1,15 +1,22 @@
 import {View} from 'react-native'
-import {AppBskyEmbedVideo} from '@atproto/api'
 
 import {type FeedPostSliceItem} from '#/state/queries/post-feed'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
-import {atoms as a, useGutters} from '#/alf'
+import {atoms as a, useBreakpoints, useGutters} from '#/alf'
 import * as Grid from '#/components/Grid'
 import {
   VideoPostCard,
   VideoPostCardPlaceholder,
 } from '#/components/VideoPostCard'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
+
+/** Keep feed batching, card widths, and placeholders on the same breakpoint. */
+export function useVideoGridColumns() {
+  const {gtMobile} = useBreakpoints()
+  return gtMobile ? 3 : 2
+}
 
 export function PostFeedVideoGridRow({
   items: slices,
@@ -19,9 +26,10 @@ export function PostFeedVideoGridRow({
   sourceContext: VideoFeedSourceContext
 }) {
   const ax = useAnalytics()
+  const columns = useVideoGridColumns()
   const gutters = useGutters(['base', 'base', 0, 'base'])
   const posts = slices
-    .filter(slice => AppBskyEmbedVideo.isView(slice.post.embed))
+    .filter(slice => bsky.isType(app.bsky.embed.video.view, slice.post.embed))
     .map(slice => ({
       post: slice.post,
       moderation: slice.moderation,
@@ -38,7 +46,7 @@ export function PostFeedVideoGridRow({
       <View style={[a.flex_row, a.gap_sm]}>
         <Grid.Row gap={a.gap_sm.gap}>
           {posts.map(post => (
-            <Grid.Col key={post.post.uri} width={1 / 2}>
+            <Grid.Col key={post.post.uri} width={1 / columns}>
               <VideoPostCard
                 post={post.post}
                 sourceContext={sourceContext}
@@ -56,12 +64,14 @@ export function PostFeedVideoGridRow({
 }
 
 export function PostFeedVideoGridRowPlaceholder() {
+  const columns = useVideoGridColumns()
   const gutters = useGutters(['base', 'base', 0, 'base'])
   return (
     <View style={[gutters]}>
       <View style={[a.flex_row, a.gap_sm]}>
-        <VideoPostCardPlaceholder />
-        <VideoPostCardPlaceholder />
+        {Array.from({length: columns}, (_, index) => (
+          <VideoPostCardPlaceholder key={index} />
+        ))}
       </View>
     </View>
   )

@@ -1,8 +1,6 @@
 import {useReducer} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
 import {useCleanError} from '#/lib/hooks/useCleanError'
@@ -56,7 +54,7 @@ function reducer(state: State, action: Action): State {
 
 export function Enable() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const cleanError = useCleanError()
   const {gtPhone} = useBreakpoints()
   const {mutateAsync: manageEmail2FA} = useManageEmail2FA()
@@ -81,7 +79,7 @@ export function Enable() {
       const {clean} = cleanError(e)
       dispatch({
         type: 'setError',
-        error: clean || _(msg`Failed to update email 2FA settings`),
+        error: clean || l`Failed to update email 2FA settings`,
       })
     }
   }
@@ -97,12 +95,10 @@ export function Enable() {
           <Trans>Require an email code to sign in to your account.</Trans>
         </Text>
       </View>
-
       {state.error && <Admonition type="error">{state.error}</Admonition>}
-
       <View style={[a.gap_sm, gtPhone && [a.flex_row_reverse]]}>
         <Button
-          label={_(msg`Enable`)}
+          label={l`Enable`}
           size="large"
           variant="solid"
           color="primary"
@@ -123,7 +119,7 @@ export function Enable() {
           />
         </Button>
         <Button
-          label={_(msg`Cancel`)}
+          label={l`Cancel`}
           size="large"
           variant="solid"
           color="secondary"

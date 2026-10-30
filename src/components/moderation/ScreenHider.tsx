@@ -5,14 +5,13 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {type ModerationUI} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {type ModerationUI} from '@bsky/sdk/moderation'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
+import {getHomeNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -38,7 +37,7 @@ export function ScreenHider({
   containerStyle?: StyleProp<ViewStyle>
 }>) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [override, setOverride] = useState(false)
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
@@ -131,15 +130,13 @@ export function ScreenHider({
                 control.open()
               }}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Learn more about this warning`)}
+              accessibilityLabel={l`Learn more about this warning`}
               accessibilityHint="">
               <Text
                 style={[
                   a.text_lg,
                   a.leading_snug,
-                  {
-                    color: t.palette.primary_500,
-                  },
+                  t.atoms.text_link,
                   web({
                     cursor: 'pointer',
                   }),
@@ -158,12 +155,14 @@ export function ScreenHider({
           color="primary"
           size="large"
           style={[a.rounded_full]}
-          label={_(msg`Go back`)}
+          label={l`Go back`}
           onPress={() => {
             if (navigation.canGoBack()) {
               navigation.goBack()
             } else {
-              navigation.navigate('Home')
+              navigation.dispatch(
+                getHomeNavigationAction(navigation.getState(), 'navigate'),
+              )
             }
           }}>
           <ButtonText>
@@ -176,7 +175,7 @@ export function ScreenHider({
             color="secondary"
             size="large"
             style={[a.rounded_full]}
-            label={_(msg`Show anyway`)}
+            label={l`Show anyway`}
             onPress={() => setOverride(v => !v)}>
             <ButtonText>
               <Trans>Show anyway</Trans>

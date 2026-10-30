@@ -1,8 +1,9 @@
 import {Pressable} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {StackActions, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {getMessagesNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
@@ -34,8 +35,13 @@ export function ChatEnded({
 
   const {mutate: leaveConvo} = useLeaveConvo(convo.view.id, {
     onSuccess: () => {
-      // Settings > Chat > Chat list
-      navigation.dispatch(StackActions.pop(2))
+      navigation.dispatch(
+        getMessagesNavigationAction(
+          {animation: 'pop'},
+          navigation.getState(),
+          'replace',
+        ),
+      )
     },
     onError: e => {
       logger.error('Failed to leave group chat', {message: e})

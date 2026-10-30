@@ -1,0 +1,17 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.unspecced.getAgeAssuranceState",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Returns the current state of the age assurance process for an account. This is used to check if the user has completed age assurance or if further action is required.",
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "ref",
+          "ref": "app.bsky.unspecced.defs#ageAssuranceState"
+        }
+      }
+    }
+  }
+}

@@ -5,16 +5,22 @@
 !**/*.jsx
 !**/*.ts
 !**/*.tsx
+!**/*.mjs
+!**/*.cjs
 !*/
 
 !**/*.css
+
+!**/pnpm-workspace.yaml
 
 # More specific ignores go below.
 .expo
 android
 ios
 src/locale/locales
+src/lexicons
 lib/react-compiler-runtime
 bskyweb/static
 coverage
 web-build
+dist

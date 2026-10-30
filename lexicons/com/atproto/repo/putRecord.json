@@ -1,0 +1,98 @@
+{
+  "id": "com.atproto.repo.putRecord",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "nullable": [
+            "swapRecord"
+          ],
+          "required": [
+            "repo",
+            "collection",
+            "rkey",
+            "record"
+          ],
+          "properties": {
+            "repo": {
+              "type": "string",
+              "format": "at-identifier",
+              "description": "The handle or DID of the repo (aka, current account)."
+            },
+            "rkey": {
+              "type": "string",
+              "format": "record-key",
+              "maxLength": 512,
+              "description": "The Record Key."
+            },
+            "record": {
+              "type": "unknown",
+              "description": "The record to write."
+            },
+            "validate": {
+              "type": "boolean",
+              "description": "Can be set to 'false' to skip Lexicon schema validation of record data, 'true' to require it, or leave unset to validate only for known Lexicons."
+            },
+            "collection": {
+              "type": "string",
+              "format": "nsid",
+              "description": "The NSID of the record collection."
+            },
+            "swapCommit": {
+              "type": "string",
+              "format": "cid",
+              "description": "Compare and swap with the previous commit by CID."
+            },
+            "swapRecord": {
+              "type": "string",
+              "format": "cid",
+              "description": "Compare and swap with the previous record by CID. WARNING: nullable and optional field; may cause problems with golang implementation"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "errors": [
+        {
+          "name": "InvalidSwap"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "uri",
+            "cid"
+          ],
+          "properties": {
+            "cid": {
+              "type": "string",
+              "format": "cid"
+            },
+            "uri": {
+              "type": "string",
+              "format": "at-uri"
+            },
+            "commit": {
+              "ref": "com.atproto.repo.defs#commitMeta",
+              "type": "ref"
+            },
+            "validationStatus": {
+              "type": "string",
+              "knownValues": [
+                "valid",
+                "unknown"
+              ]
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Write a repository record, creating or updating it as needed. Requires auth, implemented by PDS."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

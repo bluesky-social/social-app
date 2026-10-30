@@ -1,46 +1,56 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
+import {type $Typed} from '@atproto/lex'
+import {AtUri} from '@atproto/syntax'
 import {
-  type $Typed,
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AtUri,
+  mergeModUIResults,
   moderatePost,
-  RichText as RichTextAPI,
-} from '@atproto/api'
+  moderateViewExternal,
+} from '@bsky/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {getEmbedCreator} from '#/lib/at-card'
 import {makeProfileLink} from '#/lib/routes/links'
+import {getChatInviteCodeFromUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {Link} from '#/view/com/util/Link'
 import {PostMeta} from '#/view/com/util/PostMeta'
+import {
+  POST_NUMBER_INLINE_OFFSET,
+  ThreadItemPostNumber,
+  useHasThreadItemPostNumber,
+} from '#/screens/PostThread/components/ThreadItemPostNumber'
 import {atoms as a, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {GalleryBleed} from '#/components/images/Gallery'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
+import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
+import {AtCard} from '#/components/Post/Embed/AtCard'
+import {getAtCardProvider} from '#/components/Post/Embed/AtCard/providers'
+import {StandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed'
+import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {RichText} from '#/components/RichText'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {
   type Embed as TEmbed,
   type EmbedType,
   parseEmbed,
 } from '#/types/bsky/post'
+import {ChatInviteEmbed} from './ChatInviteEmbed'
 import {ExternalEmbed} from './ExternalEmbed'
 import {ModeratedFeedEmbed} from './FeedEmbed'
 import {ImageEmbed} from './ImageEmbed'
 import {ModeratedListEmbed} from './ListEmbed'
 import {PostPlaceholder as PostPlaceholderText} from './PostPlaceholder'
-import {
-  type CommonProps,
-  type EmbedProps,
-  type PostEmbedViewContext,
-} from './types'
+import {type CommonProps, type EmbedProps, PostEmbedViewContext} from './types'
 import {VideoEmbed} from './VideoEmbed'
 
 export {PostEmbedViewContext} from './types'
@@ -50,6 +60,7 @@ export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
 
   switch (embed.type) {
     case 'images':
+    case 'gallery':
     case 'link':
     case 'video': {
       return <MediaEmbed embed={embed} {...rest} />
@@ -66,7 +77,11 @@ export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
     }
     case 'post_with_media': {
       return (
-        <View style={rest.style}>
+        <View
+          style={[
+            rest.style,
+            rest.viewContext === PostEmbedViewContext.ChatMessage && a.gap_sm,
+          ]}>
           <MediaEmbed embed={embed.media} {...rest} />
           <RecordEmbed embed={embed.view} {...rest} />
         </View>
@@ -85,7 +100,8 @@ function MediaEmbed({
   embed: TEmbed
 }) {
   switch (embed.type) {
-    case 'images': {
+    case 'images':
+    case 'gallery': {
       return (
         <ContentHider
           modui={rest.moderation?.ui('contentMedia')}
@@ -95,6 +111,31 @@ function MediaEmbed({
       )
     }
     case 'link': {
+      const atProvider = getAtCardProvider(embed.view.external.uri)
+      if (atProvider || isStandardSiteEmbed(embed.view.external)) {
+        return (
+          <ExternalCardEmbed
+            embed={embed}
+            Card={atProvider ? AtCard : StandardSiteEmbed}
+            {...rest}
+          />
+        )
+      }
+      const chatInviteCode = getChatInviteCodeFromUrl(embed.view.external.uri)
+      if (chatInviteCode) {
+        return (
+          <ContentHider
+            modui={rest.moderation?.ui('contentMedia')}
+            activeStyle={[a.mt_sm]}>
+            <ChatInviteEmbed
+              code={chatInviteCode}
+              link={embed.view.external}
+              onOpen={rest.onOpen}
+              style={rest.style}
+            />
+          </ContentHider>
+        )
+      }
       return (
         <ContentHider
           modui={rest.moderation?.ui('contentMedia')}
@@ -102,6 +143,7 @@ function MediaEmbed({
           <ExternalEmbed
             link={embed.view.external}
             onOpen={rest.onOpen}
+            post={rest.post}
             style={[a.mt_sm, rest.style]}
           />
         </ContentHider>
@@ -112,7 +154,7 @@ function MediaEmbed({
         <ContentHider
           modui={rest.moderation?.ui('contentMedia')}
           activeStyle={[a.mt_sm]}>
-          <VideoEmbed embed={embed.view} />
+          <VideoEmbed embed={embed.view} post={rest.post} />
         </ContentHider>
       )
     }
@@ -120,6 +162,48 @@ function MediaEmbed({
       return null
     }
   }
+}
+
+/*
+ * Renders rich external cards (AtCard, StandardSiteEmbed), respecting any
+ * moderation labels attached to the `viewExternal` itself. The SDK's
+ * `moderatePost` only covers post-level labels, so the external view's labels
+ * produce their own decision, merged into the card's `ContentHider` alongside
+ * the post-level media moderation.
+ */
+function ExternalCardEmbed({
+  embed,
+  Card,
+  ...rest
+}: CommonProps & {
+  embed: EmbedType<'link'>
+  Card: typeof AtCard | typeof StandardSiteEmbed
+}) {
+  const postModerationDecision = rest.moderation
+  const moderationOpts = useModerationOpts()
+  const external = embed.view.external
+
+  /*
+   * The card is both the "content" and the "media" of the embed, so merge
+   * the two contexts: label defs with `blurs: content` act on `contentView`,
+   * while defs with `blurs: media` act on `contentMedia`.
+   */
+  const moduis = [postModerationDecision?.ui('contentMedia')]
+  if (moderationOpts && external.labels?.length) {
+    const decision = moderateViewExternal(external, moderationOpts)
+    moduis.push(decision.ui('contentView'), decision.ui('contentMedia'))
+  }
+
+  return (
+    <ContentHider modui={mergeModUIResults(...moduis)} activeStyle={[a.mt_sm]}>
+      <Card
+        view={external}
+        authorDid={getEmbedCreator(rest.post?.record, external.uri)}
+        onEmbedInteractionCallback={rest.onOpen}
+        style={[a.mt_sm, rest.style]}
+      />
+    </ContentHider>
+  )
 }
 
 function RecordEmbed({
@@ -231,7 +315,7 @@ export function QuoteEmbed({
   linkDisabled?: boolean
 }) {
   const moderationOpts = useModerationOpts()
-  const quote = useMemo<$Typed<AppBskyFeedDefs.PostView>>(
+  const quote = useMemo<$Typed<app.bsky.feed.defs.PostView>>(
     () => ({
       ...embed.view,
       $type: 'app.bsky.feed.defs#postView',
@@ -249,15 +333,11 @@ export function QuoteEmbed({
   const itemUrip = new AtUri(quote.uri)
   const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
   const itemTitle = `Post by ${quote.author.handle}`
+  const postNumbering = embed.view
+  const showPostNumber = useHasThreadItemPostNumber(embed.view)
 
   const richText = useMemo(() => {
-    if (
-      !bsky.dangerousIsType<AppBskyFeedPost.Record>(
-        quote.record,
-        AppBskyFeedPost.isRecord,
-      )
-    )
-      return undefined
+    if (!bsky.isType(app.bsky.feed.post, quote.record)) return undefined
     const {text, facets} = quote.record
     return text.trim()
       ? new RichTextAPI({text: text, facets: facets})
@@ -281,7 +361,7 @@ export function QuoteEmbed({
   } = useInteractionState()
 
   const contents = (
-    <>
+    <ReportDialogMetadataContext.Provider key={quote.uri}>
       <PostMeta
         author={quote.author}
         moderation={moderation}
@@ -291,16 +371,28 @@ export function QuoteEmbed({
         linkDisabled
       />
       {moderation ? (
-        <PostAlerts modui={moderation.ui('contentView')} style={[a.py_xs]} />
+        <PostAlerts
+          post={quote}
+          modui={moderation.ui('contentView')}
+          style={[a.py_xs]}
+        />
       ) : null}
-      {richText ? (
+      {richText?.text ? (
         <RichText
           value={richText}
           style={a.text_md}
           numberOfLines={20}
           disableLinks
+          suffixOffset={POST_NUMBER_INLINE_OFFSET}
+          suffix={
+            showPostNumber ? (
+              <ThreadItemPostNumber value={postNumbering} />
+            ) : undefined
+          }
         />
-      ) : null}
+      ) : (
+        <ThreadItemPostNumber inline={false} value={postNumbering} />
+      )}
       {quote.embed && (
         <Embed
           embed={quote.embed}
@@ -311,15 +403,18 @@ export function QuoteEmbed({
           allowNestedQuotes={
             parentIsWithinQuote ? false : parentAllowNestedQuotes
           }
+          // The photo embed belongs to the quoted post, so attribute its
+          // analytics to the quoted post rather than the parent.
+          post={quote}
         />
       )}
-    </>
+    </ReportDialogMetadataContext.Provider>
   )
 
   return (
     <GalleryBleed>
       <View
-        style={[a.mt_sm]}
+        style={[viewContext !== PostEmbedViewContext.ChatMessage && a.mt_sm]}
         onPointerEnter={linkDisabled ? undefined : onPointerEnter}
         onPointerLeave={linkDisabled ? undefined : onPointerLeave}>
         <ContentHider

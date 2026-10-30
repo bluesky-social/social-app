@@ -150,6 +150,7 @@ export function LiveNowBetaDialog() {
                       'Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.',
                   }),
                 )}
+                useAppleWebpCodec
               />
             </View>
           </View>

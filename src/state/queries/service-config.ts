@@ -1,7 +1,8 @@
 import {useQuery} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 type ServiceConfig = {
   checkEmailConfirmed: boolean
@@ -12,21 +13,32 @@ type ServiceConfig = {
   }[]
 }
 
+/**
+ * Module scope because React Compiler cannot lower a `??` inside a `try`, and
+ * `data` only exists once the request in that `try` resolves.
+ */
+function toServiceConfig(data: {
+  checkEmailConfirmed?: boolean
+  liveNow?: ServiceConfig['liveNow']
+}): ServiceConfig {
+  return {
+    checkEmailConfirmed: Boolean(data.checkEmailConfirmed),
+    // @ts-expect-error not included in the lexicon atm
+    topicsEnabled: Boolean(data.topicsEnabled),
+    liveNow: data.liveNow ?? [],
+  }
+}
+
 export function useServiceConfigQuery() {
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useQuery<ServiceConfig>({
     refetchOnWindowFocus: true,
     staleTime: STALE.MINUTES.FIVE,
     queryKey: ['service-config'],
     queryFn: async () => {
       try {
-        const {data} = await agent.api.app.bsky.unspecced.getConfig()
-        return {
-          checkEmailConfirmed: Boolean(data.checkEmailConfirmed),
-          // @ts-expect-error not included in types atm
-          topicsEnabled: Boolean(data.topicsEnabled),
-          liveNow: data.liveNow ?? [],
-        }
+        const data = await client.call(app.bsky.unspecced.getConfig)
+        return toServiceConfig(data)
       } catch (e) {
         return {
           checkEmailConfirmed: false,

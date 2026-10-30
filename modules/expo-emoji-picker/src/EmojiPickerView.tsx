@@ -1,5 +1,4 @@
 import {requireNativeView} from 'expo'
-import type * as React from 'react'
 
 import {
   type EmojiPickerNativeViewProps,

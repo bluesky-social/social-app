@@ -83,6 +83,12 @@ export type Metadata = {
   }
 
   /**
+   * Passed through to Sentry as a custom fingerprint. Include
+   * `{{ default }}` to preserve Sentry's default grouping and add dimensions.
+   */
+  fingerprint?: string[]
+
+  /**
    * Any additional data, passed through to Sentry as `extra` param on
    * exceptions, or the `data` param on breadcrumbs.
    */

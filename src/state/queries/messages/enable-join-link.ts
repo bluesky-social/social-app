@@ -1,9 +1,10 @@
-import {ChatBskyConvoDefs, type ChatBskyGroupEnableJoinLink} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {invalidateJoinLinkPreviewsForCode} from '#/state/queries/join-links'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {
   rollbackConvoOptimistic,
   updateConvoOptimistic,
@@ -15,26 +16,25 @@ export function useEnableJoinLink(
     onSuccess,
     onError,
   }: {
-    onSuccess?: (data: ChatBskyGroupEnableJoinLink.OutputSchema) => void
+    onSuccess?: (data: chat.bsky.group.enableJoinLink.$OutputBody) => void
     onError?: (error: Error) => void
   },
 ) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = useChatClient()
 
   return useMutation({
     mutationFn: async () => {
       if (!convoId) throw new Error('No convoId provided')
-      const {data} = await agent.chat.bsky.group.enableJoinLink(
-        {convoId},
-        {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-      )
-      return data
+      return await client.call(chat.bsky.group.enableJoinLink, {convoId})
     },
     onMutate: () => {
       if (!convoId) return
       return updateConvoOptimistic(queryClient, convoId, prev => {
-        if (!ChatBskyConvoDefs.isGroupConvo(prev.kind) || !prev.kind.joinLink) {
+        if (
+          !bsky.isType(chat.bsky.convo.defs.groupConvo, prev.kind) ||
+          !prev.kind.joinLink
+        ) {
           return undefined
         }
         return {
@@ -49,13 +49,15 @@ export function useEnableJoinLink(
     onSuccess: data => {
       if (convoId) {
         updateConvoOptimistic(queryClient, convoId, prev => {
-          if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return undefined
+          if (!bsky.isType(chat.bsky.convo.defs.groupConvo, prev.kind))
+            return undefined
           return {
             ...prev,
             kind: {...prev.kind, joinLink: data.joinLink},
           }
         })
       }
+      void invalidateJoinLinkPreviewsForCode(queryClient, data.joinLink.code)
       onSuccess?.(data)
     },
     onError: (e, _variables, context) => {

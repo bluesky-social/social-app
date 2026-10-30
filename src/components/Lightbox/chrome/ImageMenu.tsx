@@ -1,15 +1,20 @@
-import {useRef, useState} from 'react'
-import {Modal, Pressable, StyleSheet, View} from 'react-native'
+import {useEffect, useRef, useState} from 'react'
+import {
+  Modal,
+  Pressable,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import Animated, {
   interpolate,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
 } from 'react-native-reanimated'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {scheduleOnRN} from 'react-native-worklets'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
 import {ArrowShareRight_Stroke2_Corner2_Rounded as ShareIcon} from '#/components/icons/ArrowShareRight'
@@ -17,6 +22,7 @@ import {type Props as IconProps} from '#/components/icons/common'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsIcon} from '#/components/icons/DotGrid'
 import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
 import {Text} from '#/components/Typography'
+import {IS_IPAD} from '#/env'
 import {CircleChromeButton} from './CircleChromeButton'
 
 type Props = {
@@ -26,7 +32,6 @@ type Props = {
 
 type Anchor = {x: number; y: number; width: number; height: number}
 
-const MENU_WIDTH = 160
 const GAP = 6
 const CARD_BG = '#000000'
 const CARD_BORDER = '#232e3e'
@@ -36,11 +41,19 @@ const SPRING_IN = {damping: 18, mass: 0.6, stiffness: 240}
 const TIMING_OUT = {duration: 150}
 
 export function ImageMenu({onPressShare, onPressSave}: Props) {
-  const {_} = useLingui()
-  const triggerRef = useRef<View>(null)
+  const {t: l} = useLingui()
+  const triggerRef = useRef<React.ComponentRef<typeof View>>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [anchor, setAnchor] = useState<Anchor | null>(null)
+  const {width: windowWidth, height: windowHeight} = useWindowDimensions()
   const progress = useSharedValue(0)
+
+  useEffect(() => {
+    if (!isMounted) return
+    triggerRef.current?.measureInWindow((x, y, width, height) => {
+      setAnchor({x, y, width, height})
+    })
+  }, [isMounted, windowWidth, windowHeight])
 
   const open = () => {
     triggerRef.current?.measureInWindow((x, y, width, height) => {
@@ -54,7 +67,7 @@ export function ImageMenu({onPressShare, onPressSave}: Props) {
     progress.set(
       withTiming(0, TIMING_OUT, finished => {
         if (finished) {
-          runOnJS(setIsMounted)(false)
+          scheduleOnRN(setIsMounted, false)
         }
       }),
     )
@@ -71,7 +84,7 @@ export function ImageMenu({onPressShare, onPressSave}: Props) {
         <CircleChromeButton
           icon={DotsIcon}
           iconStyle={{transform: [{rotate: '90deg'}]}}
-          label={_(msg`Image options`)}
+          label={l`Image options`}
           onPress={open}
         />
       </View>
@@ -80,24 +93,34 @@ export function ImageMenu({onPressShare, onPressSave}: Props) {
         visible={isMounted}
         animationType="none"
         onRequestClose={close}
+        supportedOrientations={
+          IS_IPAD
+            ? [
+                'portrait',
+                'portrait-upside-down',
+                'landscape-left',
+                'landscape-right',
+              ]
+            : ['portrait', 'landscape']
+        }
         statusBarTranslucent>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={_(msg`Close menu`)}
+          accessibilityLabel={l`Close menu`}
           accessibilityHint=""
-          style={StyleSheet.absoluteFill}
+          style={[a.absolute, a.inset_0]}
           onPress={close}
         />
         {anchor && (
           <MenuCard anchor={anchor} progress={progress}>
             <MenuItem
               icon={ShareIcon}
-              label={_(msg`Share image`)}
+              label={l`Share image`}
               onPress={() => runAction(onPressShare)}
             />
             <MenuItem
               icon={DownloadIcon}
-              label={_(msg`Save image`)}
+              label={l`Save image`}
               onPress={() => runAction(onPressSave)}
             />
           </MenuCard>
@@ -125,6 +148,7 @@ function MenuCard({
     <Animated.View
       style={[
         a.absolute,
+        a.self_start,
         styles.card,
         {
           top: anchor.y + anchor.height + GAP,
@@ -162,7 +186,6 @@ function MenuItem({
 
 const styles = StyleSheet.create({
   card: {
-    width: MENU_WIDTH,
     padding: 8,
     borderRadius: 16,
     borderWidth: 0.5,
@@ -186,7 +209,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
   },
   itemText: {
-    flex: 1,
     fontSize: 15,
     fontWeight: '500',
     lineHeight: 19.5,

@@ -1,15 +1,13 @@
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {
-  Gesture,
   GestureDetector,
   type NativeGesture,
+  usePanGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
   clamp,
   interpolate,
-  runOnJS,
-  runOnUI,
   type SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
@@ -20,12 +18,12 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
+import {scheduleOnRN, scheduleOnUI} from 'react-native-worklets'
 import {useEventListener} from 'expo'
 import {type VideoPlayer} from 'expo-video'
 
-import {tokens} from '#/alf'
-import {atoms as a} from '#/alf'
-import {formatTime} from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/utils'
+import {formatTime} from '#/lib/media/video/formatTime'
+import {atoms as a, tokens} from '#/alf'
 import {Text} from '#/components/Typography'
 
 // magic number that is roughly the min height of the write reply button
@@ -67,7 +65,7 @@ export function Scrubber({
     () => Math.round(seekProgressSV.get()),
     (progress, prevProgress) => {
       if (progress !== prevProgress) {
-        runOnJS(setCurrentSeekTime)(progress)
+        scheduleOnRN(setCurrentSeekTime, progress)
       }
     },
   )
@@ -77,58 +75,48 @@ export function Scrubber({
       player?.seekBy(time)
 
       setTimeout(() => {
-        runOnUI(() => {
+        scheduleOnUI(() => {
           'worklet'
           isSeekingSV.set(false)
           seekingAnimationSV.set(withTiming(0, {duration: 500}))
-        })()
+        })
       }, 50)
     },
     [player, isSeekingSV, seekingAnimationSV],
   )
 
-  const scrubPanGesture = useMemo(() => {
-    return Gesture.Pan()
-      .blocksExternalGesture(scrollGesture)
-      .activeOffsetX([-10, 10])
-      .failOffsetY([-10, 10])
-      .onStart(() => {
-        'worklet'
-        seekProgressSV.set(currentTimeSV.get())
-        isSeekingSV.set(true)
-        seekingAnimationSV.set(withTiming(1, {duration: 500}))
-      })
-      .onUpdate(evt => {
-        'worklet'
-        const progress = evt.x / screenWidth
-        seekProgressSV.set(
-          clamp(progress * durationSV.get(), 0, durationSV.get()),
-        )
-      })
-      .onEnd(evt => {
-        'worklet'
-        isSeekingSV.get()
+  const scrubPanGesture = usePanGesture({
+    block: scrollGesture,
+    activeOffsetX: [-10, 10],
+    failOffsetY: [-10, 10],
+    onActivate: () => {
+      'worklet'
+      seekProgressSV.set(currentTimeSV.get())
+      isSeekingSV.set(true)
+      seekingAnimationSV.set(withTiming(1, {duration: 500}))
+    },
+    onUpdate: evt => {
+      'worklet'
+      const progress = evt.x / screenWidth
+      seekProgressSV.set(
+        clamp(progress * durationSV.get(), 0, durationSV.get()),
+      )
+    },
+    onDeactivate: evt => {
+      'worklet'
+      isSeekingSV.get()
 
-        const progress = evt.x / screenWidth
-        const newTime = clamp(progress * durationSV.get(), 0, durationSV.get())
+      const progress = evt.x / screenWidth
+      const newTime = clamp(progress * durationSV.get(), 0, durationSV.get())
 
-        // optimisically set the progress bar
-        seekProgressSV.set(newTime)
+      // optimisically set the progress bar
+      seekProgressSV.set(newTime)
 
-        // it's seek by, so offset by the current time
-        // seekBy sets isSeekingSV back to false, so no need to do that here
-        runOnJS(seekBy)(newTime - currentTimeSV.get())
-      })
-  }, [
-    scrollGesture,
-    seekingAnimationSV,
-    seekBy,
-    screenWidth,
-    currentTimeSV,
-    durationSV,
-    isSeekingSV,
-    seekProgressSV,
-  ])
+      // it's seek by, so offset by the current time
+      // seekBy sets isSeekingSV back to false, so no need to do that here
+      scheduleOnRN(seekBy, newTime - currentTimeSV.get())
+    },
+  })
 
   const timeStyle = useAnimatedStyle(() => {
     return {
@@ -254,7 +242,7 @@ function PlayerListener({
     if (duration !== 0) {
       setDuration(Math.round(duration))
     }
-    runOnUI(updateTime)(evt.currentTime, duration)
+    scheduleOnUI(updateTime, evt.currentTime, duration)
   })
 
   return null

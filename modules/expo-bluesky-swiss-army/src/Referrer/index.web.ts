@@ -1,13 +1,21 @@
 import {Platform} from 'react-native'
 
 import {NotImplementedError} from '../NotImplemented'
-import {GooglePlayReferrerInfo, ReferrerInfo} from './types'
+import {type GooglePlayReferrerInfo, type ReferrerInfo} from './types'
 
 export function getGooglePlayReferrerInfoAsync(): Promise<GooglePlayReferrerInfo> {
   throw new NotImplementedError()
 }
 
-export function getReferrerInfo(): ReferrerInfo | null {
+/*
+ * Promise-returning for parity with Android, whose native referrer API only
+ * exposes a promise.
+ */
+export function getReferrerInfo(): Promise<ReferrerInfo | null> {
+  return Promise.resolve(getReferrerInfoSync())
+}
+
+function getReferrerInfoSync(): ReferrerInfo | null {
   if (
     Platform.OS === 'web' &&
     // for ssr

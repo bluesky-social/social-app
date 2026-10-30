@@ -1,13 +1,10 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {
-  type AppBskyActorDefs,
-  type AppBskyDraftDefs,
-  type AppBskyFeedPostgate,
-  AppBskyRichtextFacet,
-  RichText,
-} from '@atproto/api'
+import {type UriString} from '@atproto/lex'
+import {type AtUriString, toDatetimeString} from '@atproto/syntax'
+import {RichText} from '@bsky/sdk/richtext'
 import {nanoid} from 'nanoid/non-secure'
 
+import {type VideoTelemetry} from '#/lib/media/video/telemetry'
 import {type SelfLabel} from '#/lib/moderation'
 import {insertMentionAt} from '#/lib/strings/mention-manip'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
@@ -16,6 +13,7 @@ import {
   postUriToRelativePath,
   toBskyAppUrl,
 } from '#/lib/strings/url-helpers'
+import {logger} from '#/logger'
 import {type ComposerImage, createInitialImages} from '#/state/gallery'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {threadgateRecordToAllowUISetting} from '#/state/queries/threadgate'
@@ -26,6 +24,8 @@ import {
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
 import {type Gif} from '#/features/gifPicker/types'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {
   createVideoState,
   type VideoAction,
@@ -35,6 +35,11 @@ import {
 
 type ImagesMedia = {
   type: 'images'
+  images: ComposerImage[]
+}
+
+type GalleryMedia = {
+  type: 'gallery'
   images: ComposerImage[]
 }
 
@@ -51,7 +56,12 @@ type GifMedia = {
 
 type Link = {
   type: 'link'
-  uri: string
+  /*
+   * A URL the user typed or pasted, validated by the link resolver rather than
+   * at construction, so it carries lex's `uri` brand for the record and view
+   * slots it flows into.
+   */
+  uri: UriString
 }
 
 // This structure doesn't exactly correspond to the data model.
@@ -59,7 +69,7 @@ type Link = {
 export type EmbedDraft = {
   // We'll always submit quote and actual media (images, video, gifs) chosen by the user.
   quote: Link | undefined
-  media: ImagesMedia | VideoMedia | GifMedia | undefined
+  media: ImagesMedia | GalleryMedia | VideoMedia | GifMedia | undefined
   // This field may end up ignored if we have more important things to display than a link card:
   link: Link | undefined
 }
@@ -82,10 +92,11 @@ export type PostAction =
       type: 'embed_add_video'
       asset: ImagePickerAsset
       abortController: AbortController
+      telemetry: VideoTelemetry
     }
   | {type: 'embed_remove_video'}
   | {type: 'embed_update_video'; videoAction: VideoAction}
-  | {type: 'embed_add_uri'; uri: string}
+  | {type: 'embed_add_uri'; uri: UriString}
   | {type: 'embed_remove_quote'}
   | {type: 'embed_remove_link'}
   | {type: 'embed_add_gif'; gif: Gif}
@@ -94,7 +105,7 @@ export type PostAction =
 
 export type ThreadDraft = {
   posts: PostDraft[]
-  postgate: AppBskyFeedPostgate.Record
+  postgate: app.bsky.feed.postgate.Main
   threadgate: ThreadgateAllowUISetting[]
 }
 
@@ -113,7 +124,7 @@ export type ComposerState = {
 }
 
 export type ComposerAction =
-  | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
+  | {type: 'update_postgate'; postgate: app.bsky.feed.postgate.Main}
   | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
   | {
       type: 'update_post'
@@ -135,8 +146,8 @@ export type ComposerAction =
       type: 'restore_from_draft'
       draftId: string
       posts: PostDraft[]
-      threadgateAllow: AppBskyDraftDefs.Draft['threadgateAllow']
-      postgateEmbeddingRules: AppBskyDraftDefs.Draft['postgateEmbeddingRules']
+      threadgateAllow: app.bsky.draft.defs.Draft['threadgateAllow']
+      postgateEmbeddingRules: app.bsky.draft.defs.Draft['postgateEmbeddingRules']
 
       /** Map of localRefPath -> loaded media path/URL */
       loadedMedia: Map<string, string>
@@ -146,15 +157,38 @@ export type ComposerAction =
   | {
       type: 'clear'
       initInteractionSettings:
-        | AppBskyActorDefs.PostInteractionSettingsPref
-        | undefined
+        app.bsky.actor.defs.PostInteractionSettingsPref | undefined
     }
   | {
       type: 'mark_saved'
       draftId: string
     }
 
-export const MAX_IMAGES = 4
+/**
+ * Threshold for picking between embed variants. <= this count uses the
+ * legacy `app.bsky.embed.images` shape; > this count promotes to
+ * `app.bsky.embed.gallery`. Named to flag that if/when we deprecate the
+ * legacy images embed entirely, this constant (and the variant split it
+ * gates) should go away.
+ */
+export const LEGACY_IMAGES_EMBED_MAX = 4
+export const MAX_GALLERY_IMAGES = 10
+
+/**
+ * Picks the embed variant for a set of images. <=4 lands in the legacy
+ * `app.bsky.embed.images` shape; >4 promotes to `app.bsky.embed.gallery`.
+ * Anything beyond the gallery cap is dropped by the hard slice; callers
+ * should already have enforced the cap upstream (picker, paste, etc),
+ * and the reducer logs a warning when the cap is exceeded so the UI
+ * layer can surface a toast.
+ */
+function imagesToMediaVariant(
+  images: ComposerImage[],
+): ImagesMedia | GalleryMedia {
+  return images.length <= LEGACY_IMAGES_EMBED_MAX
+    ? {type: 'images', images: images.slice(0, LEGACY_IMAGES_EMBED_MAX)}
+    : {type: 'gallery', images: images.slice(0, MAX_GALLERY_IMAGES)}
+}
 
 export function composerReducer(
   state: ComposerState,
@@ -219,6 +253,8 @@ export function composerReducer(
       return {
         ...state,
         isDirty: true,
+        activePostIndex: activePostIndex + 1,
+        mutableNeedsFocusActive: true,
         thread: {
           ...state.thread,
           posts: nextPosts,
@@ -290,8 +326,8 @@ export function composerReducer(
           }),
           threadgate: threadgateRecordToAllowUISetting({
             $type: 'app.bsky.feed.threadgate',
-            post: '',
-            createdAt: new Date().toString(),
+            post: '' as AtUriString,
+            createdAt: toDatetimeString(new Date()),
             allow: threadgateAllow,
           }),
         },
@@ -337,16 +373,28 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
       }
       const prevMedia = state.embed.media
       let nextMedia = prevMedia
+      const prevCount =
+        prevMedia?.type === 'images' || prevMedia?.type === 'gallery'
+          ? prevMedia.images.length
+          : 0
+      const incomingCount = prevCount + action.images.length
+      if (incomingCount > MAX_GALLERY_IMAGES) {
+        // Defense in depth: callers (applyGalleryCap in Composer) should have
+        // already trimmed and surfaced a toast. The hard slice in
+        // imagesToMediaVariant still drops the excess so the cap holds.
+        logger.warn('composer: image add exceeds MAX_GALLERY_IMAGES', {
+          prevCount,
+          incomingCount,
+          dropped: incomingCount - MAX_GALLERY_IMAGES,
+        })
+      }
       if (!prevMedia) {
-        nextMedia = {
-          type: 'images',
-          images: action.images.slice(0, MAX_IMAGES),
-        }
-      } else if (prevMedia.type === 'images') {
-        nextMedia = {
-          ...prevMedia,
-          images: [...prevMedia.images, ...action.images].slice(0, MAX_IMAGES),
-        }
+        nextMedia = imagesToMediaVariant(action.images)
+      } else if (prevMedia.type === 'images' || prevMedia.type === 'gallery') {
+        nextMedia = imagesToMediaVariant([
+          ...prevMedia.images,
+          ...action.images,
+        ])
       }
       return {
         ...state,
@@ -358,7 +406,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
     }
     case 'embed_update_image': {
       const prevMedia = state.embed.media
-      if (prevMedia?.type === 'images') {
+      if (prevMedia?.type === 'images' || prevMedia?.type === 'gallery') {
         const updatedImage = action.image
         const nextMedia = {
           ...prevMedia,
@@ -382,19 +430,22 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
     case 'embed_remove_image': {
       const prevMedia = state.embed.media
       let nextLabels = state.labels
-      if (prevMedia?.type === 'images') {
+      if (prevMedia?.type === 'images' || prevMedia?.type === 'gallery') {
         const removedImage = action.image
-        let nextMedia: ImagesMedia | undefined = {
-          ...prevMedia,
-          images: prevMedia.images.filter(img => {
-            return img.source.id !== removedImage.source.id
-          }),
-        }
-        if (nextMedia.images.length === 0) {
+        const remainingImages = prevMedia.images.filter(img => {
+          return img.source.id !== removedImage.source.id
+        })
+        let nextMedia: ImagesMedia | GalleryMedia | undefined
+        if (remainingImages.length === 0) {
           nextMedia = undefined
           if (!state.embed.link) {
             nextLabels = []
           }
+        } else {
+          // Re-pick the variant so a gallery that shrinks to <=4 demotes
+          // back to the legacy `app.bsky.embed.images` shape - keeps old
+          // clients rendering it when possible.
+          nextMedia = imagesToMediaVariant(remainingImages)
         }
         return {
           ...state,
@@ -413,7 +464,11 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
       if (!prevMedia) {
         nextMedia = {
           type: 'video',
-          video: createVideoState(action.asset, action.abortController),
+          video: createVideoState(
+            action.asset,
+            action.abortController,
+            action.telemetry,
+          ),
         }
       }
       return {
@@ -578,15 +633,11 @@ export function createComposerState({
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
   initInteractionSettings:
-    | AppBskyActorDefs.PostInteractionSettingsPref
-    | undefined
+    app.bsky.actor.defs.PostInteractionSettingsPref | undefined
 }): ComposerState {
-  let media: ImagesMedia | undefined
+  let media: ImagesMedia | GalleryMedia | undefined
   if (initImageUris?.length) {
-    media = {
-      type: 'images',
-      images: createInitialImages(initImageUris),
-    }
+    media = imagesToMediaVariant(createInitialImages(initImageUris))
   }
   let quote: Link | undefined
   if (initQuoteUri) {
@@ -595,7 +646,7 @@ export function createComposerState({
     if (path) {
       quote = {
         type: 'link',
-        uri: toBskyAppUrl(path),
+        uri: toBskyAppUrl(path) as UriString,
       }
     }
   }
@@ -629,7 +680,7 @@ export function createComposerState({
     if (initRichText.facets) {
       for (const facet of initRichText.facets) {
         for (const feature of facet.features) {
-          if (AppBskyRichtextFacet.isLink(feature)) {
+          if (bsky.isType(app.bsky.richtext.facet.link, feature)) {
             if (isBskyPostUrl(feature.uri)) {
               detectedPostUris.set(feature.uri, {facet, rt: initRichText})
             } else {
@@ -649,7 +700,7 @@ export function createComposerState({
     if (suggestedExtUri) {
       link = {
         type: 'link',
-        uri: suggestedExtUri,
+        uri: suggestedExtUri as UriString,
       }
     }
     const suggestedPostUri = suggestLinkCardUri(
@@ -666,7 +717,7 @@ export function createComposerState({
       if (!quote) {
         quote = {
           type: 'link',
-          uri: suggestedPostUri,
+          uri: suggestedPostUri as UriString,
         }
       }
     }
@@ -699,8 +750,8 @@ export function createComposerState({
       }),
       threadgate: threadgateRecordToAllowUISetting({
         $type: 'app.bsky.feed.threadgate',
-        post: '',
-        createdAt: new Date().toString(),
+        post: '' as AtUriString,
+        createdAt: toDatetimeString(new Date()),
         allow: initInteractionSettings?.threadgateAllowRules,
       }),
     },

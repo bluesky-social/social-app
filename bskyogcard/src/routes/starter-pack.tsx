@@ -19,6 +19,7 @@ import {
   hideAvatarLabels,
   originVerifyMiddleware,
 } from './util.js'
+import * as bsky from '../types/bsky/index.js'
 
 export default function (ctx: AppContext, app: Express) {
   return app.get(
@@ -29,9 +30,9 @@ export default function (ctx: AppContext, app: Express) {
       const uri = AtUri.make(actor, 'app.bsky.graph.starterpack', rkey)
       let starterPack: AppBskyGraphDefs.StarterPackView
       try {
-        const result = await ctx.appviewAgent.api.app.bsky.graph.getStarterPack(
-          {starterPack: uri.toString()},
-        )
+        const result = await ctx.appviewAgent.app.bsky.graph.getStarterPack({
+          starterPack: uri.toString(),
+        })
         starterPack = result.data.starterPack
       } catch (err) {
         httpLogger.warn(
@@ -41,7 +42,7 @@ export default function (ctx: AppContext, app: Express) {
         return res.status(404).end('not found')
       }
       const imageEntries = await Promise.all(
-        [starterPack.creator]
+        ([starterPack.creator] as Array<bsky.profile.AnyProfileView>)
           .concat((starterPack.listItemsSample ?? []).map(li => li.subject))
           // has avatar
           .filter(p => p.avatar)

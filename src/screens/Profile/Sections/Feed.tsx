@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
-import {findNodeHandle, View} from 'react-native'
+import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -11,12 +11,13 @@ import {
   RQKEY as FEED_RQKEY,
 } from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {PostFeed} from '#/view/com/posts/PostFeed'
+import {PostFeed, type PostFeedRef} from '#/view/com/posts/PostFeed'
 import {
   EmptyState,
   type EmptyStateButtonProps,
 } from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
+import {findListNativeTag} from '#/view/com/util/listNativeTag'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
 import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
@@ -35,6 +36,7 @@ interface FeedSectionProps {
   emptyStateMessage?: string
   emptyStateButton?: EmptyStateButtonProps
   emptyStateIcon?: React.ComponentType<any> | React.ReactElement
+  postFeedRef?: React.Ref<PostFeedRef>
 }
 
 export function ProfileFeedSection({
@@ -48,6 +50,7 @@ export function ProfileFeedSection({
   emptyStateMessage,
   emptyStateButton,
   emptyStateIcon,
+  postFeedRef,
 }: FeedSectionProps) {
   const {_} = useLingui()
   const queryClient = useQueryClient()
@@ -87,7 +90,7 @@ export function ProfileFeedSection({
 
   useEffect(() => {
     if (IS_IOS && isFocused && scrollElRef.current) {
-      const nativeTag = findNodeHandle(scrollElRef.current)
+      const nativeTag = findListNativeTag(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
   }, [isFocused, scrollElRef, setScrollViewTag])
@@ -110,6 +113,7 @@ export function ProfileFeedSection({
           shouldUseAdjustedNumToRender ? adjustedInitialNumToRender : undefined
         }
         isVideoFeed={isVideoFeed}
+        ref={postFeedRef}
       />
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn

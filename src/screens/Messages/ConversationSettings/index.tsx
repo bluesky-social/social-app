@@ -1,24 +1,24 @@
-import {useState} from 'react'
-import {View} from 'react-native'
-import {
-  ChatBskyActorDefs,
-  ChatBskyConvoDefs,
-  type ModerationOpts,
-} from '@atproto/api'
+import {useEffect, useState} from 'react'
+import {Pressable, View} from 'react-native'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {HITSLOP_10} from '#/lib/constants'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
+import {useCallOnce} from '#/lib/once'
+import {getMessagesNavigationAction} from '#/lib/routes/navigation'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
   type NavigationProp,
 } from '#/lib/routes/types'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
-import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
-import {ConvoStatus} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {useEditGroupChatName} from '#/state/queries/messages/edit-group-chat-name'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {useListConvoMembersQuery} from '#/state/queries/messages/list-convo-members'
@@ -27,13 +27,16 @@ import {useLockConvo} from '#/state/queries/messages/lock-conversation'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
 import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, type ButtonColor, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {AfterReportConversationDialog} from '#/components/dms/AfterReportConversationDialog'
+import {ReportConversationDialog} from '#/components/dms/ReportConversationDialog'
 import {
   type ConvoWithDetails,
   type GroupConvoMember,
+  parseConvoView,
 } from '#/components/dms/util'
 import {Error} from '#/components/Error'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon} from '#/components/icons/ArrowBoxLeft'
@@ -51,12 +54,20 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
+import {chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {InviteLinkDialog} from '../components/InviteLinkDialog'
 import {AddMembersLink} from './AddMembersLink'
 import {Member, MemberPlaceholder} from './Member'
 import {MembersAndRequests} from './MembersAndRequests'
-import {EditNamePrompt, LeaveChatPrompt, LockChatPrompt} from './prompts'
+import {
+  EditNamePrompt,
+  LeaveAndLockChatPrompt,
+  LeaveChatPrompt,
+  LockChatPrompt,
+} from './prompts'
 
 type Item =
   | {type: 'MEMBERS_AND_REQUESTS'; key: string}
@@ -78,46 +89,57 @@ type Props = NativeStackScreenProps<
 >
 
 export function MessagesConversationSettingsScreen({route}: Props) {
-  const {gtTablet} = useBreakpoints()
+  const navigation = useNavigation<NavigationProp>()
 
   const convoId = route.params.conversation
 
   return (
     <Layout.Screen>
       <Layout.Header.Outer>
-        <Layout.Header.BackButton />
-        <Layout.Header.Content align={gtTablet ? 'left' : 'platform'}>
+        <Layout.Header.BackButton
+          onPress={evt => {
+            if (IS_WEB && !navigation.canGoBack()) {
+              evt.preventDefault()
+              navigation.navigate('MessagesConversation', {
+                conversation: convoId,
+              })
+            }
+          }}
+        />
+        <Layout.Header.Content>
           <Layout.Header.TitleText>
             <Trans>Group chat settings</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      <ConvoProvider key={convoId} convoId={convoId}>
-        <SettingsInner />
-      </ConvoProvider>
+      <SettingsInner convoId={convoId} />
     </Layout.Screen>
   )
 }
 
-function SettingsInner() {
+function SettingsInner({convoId}: {convoId: string}) {
   const {t: l} = useLingui()
-  const convoState = useConvo()
   const navigation = useNavigation<NavigationProp>()
   const moderationOpts = useModerationOpts()
+  const {currentAccount} = useSession()
+  const {data: convoData, error, refetch} = useConvoQuery({convoId})
 
-  if (convoState.status === ConvoStatus.Error) {
+  const convo = convoData
+    ? parseConvoView(convoData, currentAccount?.did)
+    : null
+
+  if (error) {
     return (
       <Error
         title={l`Something went wrong`}
         message={l`We couldn’t load this conversation’s settings`}
-        onRetry={() => convoState.error.retry()}
-        sideBorders={false}
+        onRetry={() => refetch()}
       />
     )
   }
 
-  if (!convoState.convo || !moderationOpts) {
+  if (!convo || !moderationOpts) {
     return (
       <View style={[a.flex_1, a.align_center, a.justify_center]}>
         <Loader size="xl" />
@@ -125,7 +147,7 @@ function SettingsInner() {
     )
   }
 
-  if (convoState.convo.kind !== 'group') {
+  if (convo.kind !== 'group') {
     return (
       <Error
         title={l`Wrong kind of conversation`}
@@ -134,20 +156,20 @@ function SettingsInner() {
           if (navigation.canGoBack()) {
             navigation.goBack()
           } else {
-            navigation.replace('Messages', {animation: 'pop'})
+            navigation.dispatch(
+              getMessagesNavigationAction(
+                {animation: 'pop'},
+                navigation.getState(),
+                'replace',
+              ),
+            )
           }
         }}
       />
     )
   }
 
-  return (
-    <GroupSettings
-      convo={convoState.convo}
-      moderationOpts={moderationOpts}
-      isReady={isConvoActive(convoState)}
-    />
-  )
+  return <GroupSettings convo={convo} moderationOpts={moderationOpts} />
 }
 
 function keyExtractor(item: Item) {
@@ -155,26 +177,21 @@ function keyExtractor(item: Item) {
 }
 
 function isGroupMember(
-  member: ChatBskyActorDefs.ProfileViewBasic,
+  member: chat.bsky.actor.defs.ProfileViewBasic,
 ): member is GroupConvoMember {
   // Kind is missing when the account has been deleted.
   return (
     member.kind === undefined ||
-    bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
-      member.kind,
-      ChatBskyActorDefs.isGroupConvoMember,
-    )
+    bsky.isType(chat.bsky.actor.defs.groupConvoMember, member.kind)
   )
 }
 
 function GroupSettings({
   convo,
   moderationOpts,
-  isReady,
 }: {
   convo: Extract<ConvoWithDetails, {kind: 'group'}>
   moderationOpts: ModerationOpts
-  isReady: boolean
 }) {
   const [isPTRing, setIsPTRing] = useState(false)
 
@@ -209,6 +226,12 @@ function GroupSettings({
     const bIsSelf = b.did === currentAccount?.did
     if (aIsOwner !== bIsOwner) return aIsOwner ? -1 : 1
     if (aIsSelf !== bIsSelf) return aIsSelf ? -1 : 1
+    // Surface blocked members to the owner so they can be removed.
+    if (isOwner) {
+      const aBlocked = !!isBlockedOrBlocking(a)
+      const bBlocked = !!isBlockedOrBlocking(b)
+      if (aBlocked !== bBlocked) return aBlocked ? -1 : 1
+    }
     return 0
   })
 
@@ -217,19 +240,17 @@ function GroupSettings({
       type: 'MEMBERS_AND_REQUESTS',
       key: 'members-and-requests',
     },
-    ...(isOwner
+    ...(isOwner && convo.details.lockStatus === 'unlocked'
       ? [{type: 'ADD_MEMBERS_LINK', key: 'add-members-link'} as const]
       : []),
   ]
   items.push(
-    ...groupMembers.map(
-      (profile): Item => ({
-        type: 'CHAT_MEMBER',
-        key: profile.did,
-        profile,
-        status: primaryMember?.did === profile.did ? 'owner' : 'standard',
-      }),
-    ),
+    ...groupMembers.map((profile): Item => ({
+      type: 'CHAT_MEMBER',
+      key: profile.did,
+      profile,
+      status: primaryMember?.did === profile.did ? 'owner' : 'standard',
+    })),
   )
   const placeholderCount = Math.max(
     0,
@@ -247,14 +268,14 @@ function GroupSettings({
       case 'MEMBERS_AND_REQUESTS':
         return (
           <MembersAndRequests
-            memberCount={convo.details.memberCount}
+            convo={convo}
             requestCount={requestCount}
             hasMoreRequests={!!hasMoreRequests}
             isOwner={isOwner}
           />
         )
       case 'ADD_MEMBERS_LINK':
-        return <AddMembersLink convo={convo} disabled={!isReady} />
+        return <AddMembersLink convo={convo} />
       case 'CHAT_MEMBER':
         return (
           <Member
@@ -295,7 +316,6 @@ function GroupSettings({
           convo={convo}
           isOwner={isOwner}
           moderationOpts={moderationOpts}
-          isReady={isReady}
         />
       }
       renderItem={renderItem}
@@ -311,32 +331,45 @@ function SettingsHeader({
   convo,
   isOwner,
   moderationOpts,
-  isReady,
 }: {
   convo: Extract<ConvoWithDetails, {kind: 'group'}>
   isOwner: boolean
   moderationOpts: ModerationOpts
-  isReady: boolean
 }) {
   const t = useTheme()
   const {i18n, t: l} = useLingui()
+  const ax = useAnalytics()
 
   const navigation = useNavigation<NavigationProp>()
 
+  const convoId = convo.view.id
+
   const groupName = convo.details.name
   const [newGroupName, setNewGroupName] = useState(groupName)
+
+  const openEditNamePrompt = () => {
+    setNewGroupName(groupName)
+    editNamePrompt.open()
+  }
 
   const lockStatus = convo.details.lockStatus
 
   const {joinLink} = convo.details
   const isJoinLinkEnabled = isOwner || joinLink?.enabledStatus === 'enabled'
 
-  // TODO Enable this once the feature is working end-to-end. -dsb
-  const isReportLinkEnabled = false
+  const reportSubjectDid = convo.primaryMember?.did
+
+  const logViewOnce = useCallOnce()
+  useEffect(() => {
+    logViewOnce(() => {
+      ax.metric('groupchat:settings:view', {convoId, isOwner})
+    })
+  }, [ax, convoId, isOwner, logViewOnce])
 
   const {mutate: editGroupName, isPending: isEditingName} =
-    useEditGroupChatName(convo.view.id, {
+    useEditGroupChatName(convoId, {
       onSuccess: () => {
+        ax.metric('groupchat:owner:editName', {convoId})
         Toast.show(l({message: 'Group chat name updated', context: 'toast'}))
       },
       onError: e => {
@@ -346,11 +379,13 @@ function SettingsHeader({
       },
     })
 
-  const {mutate: muteConvo, isPending: isMuting} = useMuteConvo(convo.view.id, {
+  const {mutate: muteConvo, isPending: isMuting} = useMuteConvo(convoId, {
     onSuccess: data => {
       if (data.convo.muted) {
+        ax.metric('groupchat:mute', {convoId})
         Toast.show(l({message: 'Group chat muted', context: 'toast'}))
       } else {
+        ax.metric('groupchat:unmute', {convoId})
         Toast.show(l({message: 'Group chat unmuted', context: 'toast'}))
       }
     },
@@ -360,77 +395,94 @@ function SettingsHeader({
     },
   })
 
-  const {mutate: leaveConvo, isPending: isLeaving} = useLeaveConvo(
-    convo.view.id,
-    {
-      onSuccess: () => {
-        navigation.replace('Messages', {animation: 'pop'})
-      },
-      onError: e => {
-        logger.error('Failed to leave group chat', {message: e})
-        Toast.show(
-          l({message: 'Failed to leave group chat', context: 'toast'}),
-          {type: 'error'},
-        )
-      },
+  const {mutate: leaveConvo, isPending: isLeaving} = useLeaveConvo(convoId, {
+    onSuccess: () => {
+      ax.metric('groupchat:leave', {convoId, isOwner})
+      navigation.dispatch(
+        getMessagesNavigationAction(
+          {animation: 'pop'},
+          navigation.getState(),
+          'replace',
+        ),
+      )
     },
-  )
+    onError: e => {
+      logger.error('Failed to leave group chat', {message: e})
+      Toast.show(l({message: 'Failed to leave group chat', context: 'toast'}), {
+        type: 'error',
+      })
+    },
+  })
 
-  const {mutate: lockConvo, isPending: isLocking} = useLockConvo(
-    convo.view.id,
-    {
-      onSuccess: data => {
-        if (!ChatBskyConvoDefs.isGroupConvo(data.convo.kind)) return
-        if (data.convo.kind.lockStatus === 'locked') {
-          Toast.show(l({message: 'Group chat locked', context: 'toast'}))
-        } else {
-          Toast.show(l({message: 'Group chat unlocked', context: 'toast'}))
-        }
-      },
-      onError: (e, {lock}) => {
-        if (lock) {
-          logger.error('Failed to lock group chat', {message: e})
-          Toast.show(l`Failed to lock group chat`, {type: 'error'})
-        } else {
-          logger.error('Failed to unlock group chat', {message: e})
-          Toast.show(l`Failed to unlock group chat`, {type: 'error'})
-        }
-      },
+  const {
+    mutate: lockConvo,
+    mutateAsync: lockConvoAsync,
+    isPending: isLocking,
+  } = useLockConvo(convoId, {
+    onSuccess: (data, {silent}) => {
+      if (!bsky.isType(chat.bsky.convo.defs.groupConvo, data.convo.kind)) return
+      if (silent) return
+      if (data.convo.kind.lockStatus === 'locked') {
+        ax.metric('groupchat:owner:lock', {convoId})
+        Toast.show(l({message: 'Group chat locked', context: 'toast'}))
+      } else {
+        ax.metric('groupchat:owner:unlock', {convoId})
+        Toast.show(l({message: 'Group chat unlocked', context: 'toast'}))
+      }
     },
-  )
+    onError: (e, {lock}) => {
+      if (lock) {
+        logger.error('Failed to lock group chat', {message: e})
+        Toast.show(l`Failed to lock group chat`, {type: 'error'})
+      } else if (
+        matchXrpcError(e, chat.bsky.convo.unlockConvo) ===
+        'ConvoLockedByModeration'
+      ) {
+        Toast.show(l`This chat is locked by a moderation action`, {
+          type: 'error',
+        })
+      } else {
+        logger.error('Failed to unlock group chat', {message: e})
+        Toast.show(l`Failed to unlock group chat`, {type: 'error'})
+      }
+    },
+  })
+
+  const leaveAndLockConvo = async () => {
+    try {
+      if (lockStatus === 'unlocked') {
+        await lockConvoAsync({lock: true, silent: true})
+      }
+    } catch {
+      // Handled by onError in useLockConvo
+      return
+    }
+    // Owners can only leave a locked chat
+    leaveConvo()
+  }
 
   const inviteLinkDialog = Dialog.useDialogControl()
   const editNamePrompt = Prompt.usePromptControl()
   const lockChatPrompt = Prompt.usePromptControl()
   const leaveChatPrompt = Prompt.usePromptControl()
-
-  const handleToggleMute = () => {
-    muteConvo({mute: !convo.view.muted})
-  }
-
-  // TODO Need to implement this when the backend is ready. -dsb
-  const handleReportChat = () => {}
-
-  const handlePromptName = () => {
-    setNewGroupName(groupName)
-    editNamePrompt.open()
-  }
-
-  const handleEditName = () => {
-    editGroupName({name: newGroupName})
-  }
-
-  const handleConfirmLock = () => {
-    lockConvo({lock: true})
-  }
-
-  const handleUnlock = () => {
-    lockConvo({lock: false})
-  }
+  const leaveAndLockChatPrompt = Prompt.usePromptControl()
+  const reportControl = Prompt.usePromptControl()
+  const deleteControl = Prompt.usePromptControl()
 
   const createdAt = new Date(convo.details.createdAt)
 
-  const canLockGroupChat = isOwner && lockStatus !== 'locked-permanently'
+  // A lock forced by a moderation action cannot be undone by the owner.
+  const canLockGroupChat =
+    isOwner &&
+    lockStatus !== 'locked-permanently' &&
+    !convo.details.lockStatusModerationOverride
+
+  const groupNameComponent = (
+    <Text
+      style={[a.text_2xl, a.font_bold, a.text_center, a.pt_lg, t.atoms.text]}>
+      {groupName}
+    </Text>
+  )
 
   return (
     <>
@@ -439,16 +491,17 @@ function SettingsHeader({
         <View style={[a.align_center, a.justify_center]}>
           <AvatarBubbles profiles={convo.members} />
         </View>
-        <Text
-          style={[
-            a.text_2xl,
-            a.font_bold,
-            a.text_center,
-            a.pt_lg,
-            t.atoms.text,
-          ]}>
-          {groupName}
-        </Text>
+        {isOwner ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityHint={l`Edit this group chat’s name`}
+            hitSlop={HITSLOP_10}
+            onPress={openEditNamePrompt}>
+            {groupNameComponent}
+          </Pressable>
+        ) : (
+          groupNameComponent
+        )}
         <Text
           style={[
             a.text_sm,
@@ -473,10 +526,11 @@ function SettingsHeader({
             a.justify_center,
             a.gap_2xl,
             a.pt_2xl,
+            a.flex_wrap,
           ]}>
           <SettingsButton
             color={convo.view.muted ? 'negative_subtle' : 'secondary'}
-            disabled={!isReady || isMuting}
+            disabled={isMuting || lockStatus !== 'unlocked'}
             icon={convo.view.muted ? BellOffIcon : BellIcon}
             label={
               convo.view.muted
@@ -484,20 +538,20 @@ function SettingsHeader({
                 : l`Mute this group chat`
             }
             text={convo.view.muted ? l`Muted` : l`Mute`}
-            onPress={handleToggleMute}
+            onPress={() => muteConvo({mute: !convo.view.muted})}
           />
           {isOwner ? (
             <SettingsButton
-              disabled={!isReady || isEditingName}
+              disabled={isEditingName || lockStatus !== 'unlocked'}
               icon={EditIcon}
               label={l`Edit this group chat’s name`}
               text={l`Edit name`}
-              onPress={handlePromptName}
+              onPress={openEditNamePrompt}
             />
           ) : null}
           {isJoinLinkEnabled ? (
             <SettingsButton
-              disabled={!isReady || lockStatus !== 'unlocked'}
+              disabled={lockStatus !== 'unlocked'}
               icon={ChainLinkIcon}
               label={
                 isOwner
@@ -511,7 +565,7 @@ function SettingsHeader({
           {canLockGroupChat ? (
             <SettingsButton
               color={lockStatus === 'locked' ? 'negative_subtle' : 'secondary'}
-              disabled={!isReady || isLocking}
+              disabled={isLocking}
               icon={LockIcon}
               label={
                 lockStatus === 'locked'
@@ -520,35 +574,36 @@ function SettingsHeader({
               }
               text={lockStatus === 'locked' ? l`Locked` : l`Lock`}
               onPress={
-                lockStatus === 'locked' ? handleUnlock : lockChatPrompt.open
+                lockStatus === 'locked'
+                  ? () => lockConvo({lock: false})
+                  : lockChatPrompt.open
               }
             />
           ) : null}
-          {!isOwner && isReportLinkEnabled && (
+          {!isOwner && reportSubjectDid ? (
             <SettingsButton
-              disabled={!isReady}
               icon={FlagIcon}
               label={l`Report this group chat`}
               text={l`Report`}
-              onPress={handleReportChat}
+              onPress={reportControl.open}
             />
-          )}
-          {!isOwner && (
-            <SettingsButton
-              disabled={!isReady || isLeaving}
-              icon={ArrowBoxLeftIcon}
-              label={l`Leave this group chat`}
-              text={l`Leave`}
-              onPress={leaveChatPrompt.open}
-            />
-          )}
+          ) : null}
+          <SettingsButton
+            disabled={isLeaving || (isOwner && isLocking)}
+            icon={ArrowBoxLeftIcon}
+            label={l`Leave this group chat`}
+            text={l`Leave`}
+            onPress={
+              isOwner ? leaveAndLockChatPrompt.open : leaveChatPrompt.open
+            }
+          />
         </View>
       </View>
       <EditNamePrompt
         control={editNamePrompt}
         value={newGroupName}
         onChangeText={setNewGroupName}
-        onConfirm={handleEditName}
+        onConfirm={() => editGroupName({name: newGroupName})}
       />
       {convo.primaryMember && (
         <InviteLinkDialog
@@ -559,12 +614,40 @@ function SettingsHeader({
           moderationOpts={moderationOpts}
         />
       )}
-      <LockChatPrompt control={lockChatPrompt} onConfirm={handleConfirmLock} />
+      <LockChatPrompt
+        control={lockChatPrompt}
+        onConfirm={() => lockConvo({lock: true})}
+      />
       <LeaveChatPrompt
         control={leaveChatPrompt}
         groupName={groupName}
         onConfirm={leaveConvo}
       />
+      <LeaveAndLockChatPrompt
+        control={leaveAndLockChatPrompt}
+        groupName={groupName}
+        onConfirm={() => {
+          void leaveAndLockConvo()
+        }}
+      />
+      {reportSubjectDid ? (
+        <>
+          <ReportConversationDialog
+            control={reportControl}
+            convoId={convo.view.id}
+            did={reportSubjectDid}
+            onAfterSubmit={deleteControl.open}
+          />
+          <AfterReportConversationDialog
+            control={deleteControl}
+            currentScreen="conversation"
+            params={{
+              convoId: convo.view.id,
+              did: reportSubjectDid,
+            }}
+          />
+        </>
+      ) : null}
     </>
   )
 }
@@ -605,6 +688,7 @@ function SettingsButton({
       </Button>
       <Text
         numberOfLines={1}
+        maxFontSizeMultiplier={2.5}
         style={[
           a.text_xs,
           a.font_medium,

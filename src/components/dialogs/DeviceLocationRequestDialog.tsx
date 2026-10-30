@@ -5,7 +5,8 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
-import {isNetworkError, useCleanError} from '#/lib/hooks/useCleanError'
+import {useCleanError} from '#/lib/hooks/useCleanError'
+import {isNetworkError} from '#/lib/network-error'
 import {logger} from '#/logger'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -38,7 +39,7 @@ export function DeviceLocationRequestDialog({
       <Dialog.Handle />
 
       <Dialog.ScrollableInner
-        label={_(msg`Confirm your location`)}
+        label={_(msg`Update your location`)}
         style={[web({maxWidth: 380})]}>
         <DeviceLocationRequestDialogInner
           onLocationAcquired={onLocationAcquired}
@@ -95,22 +96,21 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
           safeMessage: e.message,
         })
       }
-    } finally {
-      setIsRequesting(false)
     }
+    setIsRequesting(false)
   }
 
   return (
     <View style={[a.gap_md]}>
       <Text style={[a.text_xl, a.font_bold]}>
-        <Trans>Confirm your location</Trans>
+        <Trans>Update your location</Trans>
       </Text>
       <View style={[a.gap_sm, a.pb_xs]}>
         <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
           <Trans>
-            Tap below to allow Bluesky to access your GPS location. We will then
-            use that data to more accurately determine the content and features
-            available in your region.
+            Tap below to allow Bluesky to access your approximate location via
+            GPS. We will then use that data to more accurately determine the
+            content and features available in your region.
           </Trans>
         </Text>
       </View>

@@ -1,12 +1,7 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  type AppBskyLabelerDefs,
-  moderateProfile,
-  type ModerationOpts,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
+import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -25,6 +20,7 @@ import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {type DialogOuterProps, useDialogControl} from '#/components/Dialog'
+import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as Heart,
@@ -36,6 +32,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
+import {type app} from '#/lexicons'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
@@ -43,8 +40,8 @@ import {ProfileHeaderMetrics} from './Metrics'
 import {ProfileHeaderShell} from './Shell'
 
 interface Props {
-  profile: AppBskyActorDefs.ProfileViewDetailed
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
+  labeler: app.bsky.labeler.defs.LabelerViewDetailed
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
@@ -59,13 +56,13 @@ let ProfileHeaderLabeler = ({
   hideBackButton = false,
   isPlaceholderProfile,
 }: Props): React.ReactNode => {
-  const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
+  const profile: Shadow<app.bsky.actor.defs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const t = useTheme()
   const ax = useAnalytics()
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const isSelf = currentAccount?.did === profile.did
 
   const moderation = useMemo(
@@ -83,7 +80,7 @@ let ProfileHeaderLabeler = ({
       return
     }
     try {
-      playHaptic()
+      haptics.tap()
 
       if (likeUri) {
         await unlikeMod({uri: likeUri})
@@ -103,7 +100,7 @@ let ProfileHeaderLabeler = ({
       )
       ax.logger.error(`Failed to toggle labeler like`, {message: e.message})
     }
-  }, [ax, labeler, playHaptic, likeUri, unlikeMod, likeMod, _])
+  }, [ax, labeler, haptics, likeUri, unlikeMod, likeMod, _])
 
   return (
     <ProfileHeaderShell
@@ -135,6 +132,7 @@ let ProfileHeaderLabeler = ({
                   value={descriptionRT}
                   enableTags
                   authorHandle={profile.handle}
+                  shouldProxyLinks={true}
                 />
               </View>
             ) : undefined}
@@ -233,16 +231,16 @@ export function HeaderLabelerButtons({
   profile,
   minimal = false,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: Shadow<app.bsky.actor.defs.ProfileViewDetailed>
   /** disable the subscribe button */
   minimal?: boolean
 }) {
   const t = useTheme()
   const ax = useAnalytics()
   const {_} = useLingui()
-  const {currentAccount} = useSession()
+  const {currentAccount, hasSession} = useSession()
   const requireAuth = useRequireAuth()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const editProfileControl = useDialogControl()
   const {data: preferences} = usePreferencesQuery()
   const {
@@ -260,8 +258,11 @@ export function HeaderLabelerButtons({
 
   const onPressSubscribe = () =>
     requireAuth(async (): Promise<void> => {
-      playHaptic()
+      haptics.confirm()
       const subscribe = !isSubscribed
+      const subscribeMetric = subscribe
+        ? 'moderation:subscribedToLabeler'
+        : 'moderation:unsubscribedFromLabeler'
 
       try {
         await toggleSubscription({
@@ -269,12 +270,7 @@ export function HeaderLabelerButtons({
           subscribe,
         })
 
-        ax.metric(
-          subscribe
-            ? 'moderation:subscribedToLabeler'
-            : 'moderation:unsubscribedFromLabeler',
-          {},
-        )
+        ax.metric(subscribeMetric, {})
       } catch (e: any) {
         reset()
         if (e.message === 'MAX_LABELERS') {
@@ -286,13 +282,21 @@ export function HeaderLabelerButtons({
     })
   return (
     <>
+      {hasSession &&
+        !isMe &&
+        !profile.viewer?.blockedBy &&
+        !profile.viewer?.blocking && <MessageProfileButton profile={profile} />}
+
       {isMe ? (
         <>
           <Button
             testID="profileHeaderEditProfileButton"
             size="small"
             color="secondary"
-            onPress={editProfileControl.open}
+            onPress={() => {
+              haptics.tap()
+              editProfileControl.open()
+            }}
             label={_(msg`Edit profile`)}
             style={a.rounded_full}>
             <ButtonText>

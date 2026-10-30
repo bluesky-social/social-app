@@ -1,0 +1,81 @@
+{
+  "id": "app.bsky.feed.threadgate",
+  "defs": {
+    "main": {
+      "key": "tid",
+      "type": "record",
+      "record": {
+        "type": "object",
+        "required": [
+          "post",
+          "createdAt"
+        ],
+        "properties": {
+          "post": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "Reference (AT-URI) to the post record."
+          },
+          "allow": {
+            "type": "array",
+            "items": {
+              "refs": [
+                "#mentionRule",
+                "#followerRule",
+                "#followingRule",
+                "#listRule"
+              ],
+              "type": "union"
+            },
+            "maxLength": 5,
+            "description": "List of rules defining who can reply to this post. If value is an empty array, no one can reply. If value is undefined, anyone can reply."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "hiddenReplies": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "at-uri"
+            },
+            "maxLength": 300,
+            "description": "List of hidden reply URIs."
+          }
+        }
+      },
+      "description": "Record defining interaction gating rules for a thread (aka, reply controls). The record key (rkey) of the threadgate record must match the record key of the thread's root post, and that record must be in the same repository."
+    },
+    "listRule": {
+      "type": "object",
+      "required": [
+        "list"
+      ],
+      "properties": {
+        "list": {
+          "type": "string",
+          "format": "at-uri"
+        }
+      },
+      "description": "Allow replies from actors on a list."
+    },
+    "mentionRule": {
+      "type": "object",
+      "properties": {},
+      "description": "Allow replies from actors mentioned in your post."
+    },
+    "followerRule": {
+      "type": "object",
+      "properties": {},
+      "description": "Allow replies from actors who follow you."
+    },
+    "followingRule": {
+      "type": "object",
+      "properties": {},
+      "description": "Allow replies from actors you follow."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

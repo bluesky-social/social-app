@@ -45,9 +45,9 @@ export function useFullVerificationState({
       verifications.length > 0
     const hasIssuedVerification = Boolean(
       viewerState &&
-        viewerState.role === 'verifier' &&
-        profileState.role === 'default' &&
-        verifications.find(v => v.issuer === currentAccount?.did),
+      viewerState.role === 'verifier' &&
+      profileState.role === 'default' &&
+      verifications.find(v => v.issuer === currentAccount?.did),
     )
 
     return {

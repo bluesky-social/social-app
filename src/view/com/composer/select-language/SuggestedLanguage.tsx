@@ -1,11 +1,11 @@
-import {useEffect, useMemo, useRef, useState} from 'react'
+import {useEffect, useEffectEvent, useMemo, useRef, useState} from 'react'
 import {Platform, Text as RNText, View} from 'react-native'
-import {RichText} from '@atproto/api'
 import {parseLanguageString} from '@atproto/syntax'
 import {
   guessLanguageAsync,
   type LanguageResult,
 } from '@bsky.app/expo-guess-language'
+import {RichText} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
 
@@ -142,12 +142,11 @@ export function SuggestedLanguage({
     // clear
     setSuggLang(undefined)
   }
-  const onDecline = () => {
-    if (suggLang) {
-      declinedSuggLangsRef.current.push(suggLang)
-      // clear
-      setSuggLang(undefined)
-    }
+  const onDecline = (language: string) => {
+    declinedSuggLangsRef.current.push(language)
+    // clear
+    setSuggLang(undefined)
+    setHasInteracted(true)
   }
 
   /**
@@ -249,17 +248,9 @@ export function SuggestedLanguage({
   }, [text, hasInteracted, detectLanguage, ax])
 
   /*
-   * This is intentionally computed based on a ref. Since we set and clear
-   * `suggLang` this derivation is safe, but be aware of it
-   * when making changes.
-   */
-  const hasDeclined = suggLang
-    ? // eslint-disable-next-line react-hooks/refs
-      declinedSuggLangsRef.current.includes(suggLang)
-    : false
-
-  /*
    * We've detected a language, and the user hasn't already selected it.
+   * Note: suggLang is only set if it's not in declinedSuggLangsRef (checked
+   * in detectLanguage), so we don't need to filter it here.
    */
   const hasLanguageSuggestion = suggLang && !currentLanguages.includes(suggLang)
 
@@ -272,30 +263,29 @@ export function SuggestedLanguage({
     .filter(Boolean)
     .map(lang => parseLanguageString(lang)?.language)
     .filter(Boolean) as string[]
+  const [replyToLanguage] = replyToLanguages
   const hasSuggestedReplyLanguage =
     !hasInteracted &&
     !suggLang &&
-    replyToLanguages.length &&
-    !replyToLanguages.some(l => currentLanguages.includes(l))
+    replyToLanguage &&
+    !currentLanguages.includes(replyToLanguage)
 
-  if (hasDeclined) {
-    return null
-  } else if (hasLanguageSuggestion) {
+  if (hasLanguageSuggestion) {
     return (
       <GuessedLanguage
         language={suggLang}
         metadata={{currentTargetLanguages: currentLanguages, rawText: text}}
         onAccept={onAccept}
-        onDecline={onDecline}
+        onDecline={() => onDecline(suggLang)}
       />
     )
   } else if (hasSuggestedReplyLanguage) {
     return (
       <ReplyLanguageNudge
-        language={replyToLanguages[0]}
+        language={replyToLanguage}
         metadata={{currentTargetLanguages: currentLanguages}}
         onAccept={onAccept}
-        onDecline={onDecline}
+        onDecline={() => onDecline(replyToLanguage)}
       />
     )
   } else {
@@ -342,15 +332,18 @@ function GuessedLanguage({
     onDeclineOuter()
   }
 
-  const metaRef = useNonReactiveObject(metadata)
-  useEffect(() => {
+  const logSuggestion = useEffectEvent(() => {
     ax.metric('composer:language:suggestLanguage', {
       os: Platform.OS,
       suggestedLanguage: language,
-      currentTargetLanguages: metaRef.current.currentTargetLanguages,
+      currentTargetLanguages: metadata.currentTargetLanguages,
       textLength: sanitizeTextForDetection(metadata.rawText).length,
     })
-  }, [ax, language])
+  })
+
+  useEffect(() => {
+    logSuggestion()
+  }, [language])
 
   return (
     <LanguageSuggestionButton

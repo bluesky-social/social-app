@@ -1,0 +1,63 @@
+diff --git a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
+index 8f55121..8bbb6cf 100644
+--- a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
++++ b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
+@@ -381,6 +381,10 @@ - (void)updateLayoutMetrics:(const LayoutMetrics &)layoutMetrics
+     _previousContentSize = _backedTextInputView.contentSize;
+     static_cast<const TextInputEventEmitter &>(*_eventEmitter).onContentSizeChange([self _textInputMetrics]);
+   }
++
++  if (layoutMetrics.frame.size.height > oldLayoutMetrics.frame.size.height) {
++    [self _scrollCaretIntoEnclosingScrollView];
++  }
+ }
+ 
+ - (void)prepareForRecycle
+@@ -843,6 +847,47 @@ - (void)scrollCursorIntoView
+   }
+ }
+ 
++/*
++ * A multiline input grows one commit after UIKit has inserted the newline. UIKit reveals the caret
++ * synchronously inside the text change and never again when the frame changes. While scrolling is
++ * disabled the text container tracks the frame, so at that moment the new line has no layout yet and
++ * UIKit reveals the previous line instead; the new line then sits under the keyboard until the next
++ * keystroke. Reveal it here, right after the taller frame has been applied, so growth and scroll land
++ * in the same frame.
++ */
++- (void)_scrollCaretIntoEnclosingScrollView
++{
++  if (![_backedTextInputView isKindOfClass:[UITextView class]] || !_backedTextInputView.isFirstResponder) {
++    return;
++  }
++
++  UIScrollView *enclosingScrollView = nil;
++  for (UIView *view = self.superview; view != nil; view = view.superview) {
++    if ([view isKindOfClass:[UIScrollView class]]) {
++      enclosingScrollView = (UIScrollView *)view;
++      break;
++    }
++  }
++  if (enclosingScrollView == nil) {
++    return;
++  }
++
++  UITextRange *selectedTextRange = _backedTextInputView.selectedTextRange;
++  if (selectedTextRange == nil) {
++    return;
++  }
++
++  [_backedTextInputView layoutIfNeeded];
++  CGRect caretRect = [_backedTextInputView caretRectForPosition:selectedTextRange.end];
++  if (CGRectIsNull(caretRect) || CGRectIsInfinite(caretRect) || CGRectGetMaxY(caretRect) <= 0) {
++    return;
++  }
++
++  CGRect caretRectInScrollView = [_backedTextInputView convertRect:caretRect toView:enclosingScrollView];
++  // Keep the same breathing room UIKit adds when it reveals the caret itself.
++  [enclosingScrollView scrollRectToVisible:CGRectInset(caretRectInScrollView, 0, -4) animated:NO];
++}
++
+ - (void)_setMultiline:(BOOL)multiline
+ {
+   [_backedTextInputView removeFromSuperview];

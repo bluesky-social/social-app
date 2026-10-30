@@ -1,12 +1,11 @@
-import type AtpAgent from '@atproto/api'
-import {
-  type AppBskyActorDefs,
-  type ChatBskyActorDeclaration,
-} from '@atproto/api'
+import {type Client} from '@atproto/lex'
+import {type DidString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {useAgent, useSession} from '#/state/session'
+import {usePdsClient, useSession} from '#/state/session'
+import {resolveAllowGroupInvites} from '#/components/dms/util'
+import {type app, chat, com} from '#/lexicons'
 import {RQKEY as PROFILE_RKEY} from '../profile'
 
 export function useUpdateActorDeclaration({
@@ -18,7 +17,7 @@ export function useUpdateActorDeclaration({
 }) {
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
 
   return useMutation({
     mutationFn: async (update: {
@@ -27,23 +26,27 @@ export function useUpdateActorDeclaration({
     }) => {
       if (!currentAccount) throw new Error('Not signed in')
       const current =
-        queryClient.getQueryData<AppBskyActorDefs.ProfileViewDetailed>(
+        queryClient.getQueryData<app.bsky.actor.defs.ProfileViewDetailed>(
           PROFILE_RKEY(currentAccount.did),
         )
       const allowIncoming =
         update.allowIncoming ??
         current?.associated?.chat?.allowIncoming ??
         'following'
-      const allowGroupInvites =
-        update.allowGroupInvites ?? current?.associated?.chat?.allowGroupInvites
-      const result = await agent.com.atproto.repo.putRecord({
+      const allowGroupInvites = resolveAllowGroupInvites({
+        allowIncoming,
+        allowGroupInvites:
+          update.allowGroupInvites ??
+          current?.associated?.chat?.allowGroupInvites,
+      })
+      const result = await pdsClient.call(com.atproto.repo.putRecord, {
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',
         record: {
           $type: 'chat.bsky.actor.declaration',
           allowIncoming,
-          ...(allowGroupInvites && {allowGroupInvites}),
+          allowGroupInvites,
         },
       })
       return result
@@ -52,19 +55,31 @@ export function useUpdateActorDeclaration({
       if (!currentAccount) return
       queryClient.setQueryData(
         PROFILE_RKEY(currentAccount?.did),
-        (old?: AppBskyActorDefs.ProfileViewDetailed) => {
+        (old?: app.bsky.actor.defs.ProfileViewDetailed) => {
           if (!old) return old
+          const allowIncoming =
+            update.allowIncoming ??
+            old.associated?.chat?.allowIncoming ??
+            'following'
+          // resolve the same concrete value the server will receive, so
+          // optimistic cache and persisted record stay aligned
+          const allowGroupInvites = resolveAllowGroupInvites({
+            allowIncoming,
+            allowGroupInvites:
+              update.allowGroupInvites ??
+              old.associated?.chat?.allowGroupInvites,
+          })
           return {
             ...old,
             associated: {
               ...old.associated,
               chat: {
-                allowIncoming: 'following',
                 ...old.associated?.chat,
-                ...update,
+                allowIncoming,
+                allowGroupInvites,
               },
             },
-          } satisfies AppBskyActorDefs.ProfileViewDetailed
+          } satisfies app.bsky.actor.defs.ProfileViewDetailed
         },
       )
     },
@@ -84,12 +99,12 @@ export function useUpdateActorDeclaration({
 // for use in the settings screen for testing
 export function useDeleteActorDeclaration() {
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
 
   return useMutation({
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not signed in')
-      const result = await agent.api.com.atproto.repo.deleteRecord({
+      const result = await pdsClient.call(com.atproto.repo.deleteRecord, {
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',
@@ -100,19 +115,15 @@ export function useDeleteActorDeclaration() {
 }
 
 export async function fetchActorDeclarationRecord({
-  agent,
+  client,
   did,
 }: {
-  agent: AtpAgent
+  client: Client
   did?: string
 }) {
   if (!did) return
-  const res = await agent.com.atproto.repo
-    .getRecord({
-      repo: did,
-      collection: 'chat.bsky.actor.declaration',
-      rkey: 'self',
-    })
+  const res = await client
+    .get(chat.bsky.actor.declaration, {repo: did as DidString, rkey: 'self'})
     .catch(_e => undefined)
-  return res?.data.value as ChatBskyActorDeclaration.Main
+  return res?.value
 }

@@ -1,21 +1,23 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {
   Image as RNImage,
+  type ImageStyle,
   Pressable,
   type StyleProp,
   StyleSheet,
+  Text as RNText,
   View,
   type ViewStyle,
 } from 'react-native'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
 import {Image as ExpoImage} from 'expo-image'
-import {type ModerationUI} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {type ModerationUI} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {
   useCameraPermission,
@@ -76,6 +78,7 @@ interface UserAvatarProps extends BaseUserAvatarProps {
   noBorder?: boolean
   onLoad?: () => void
   style?: StyleProp<ViewStyle>
+  extraAviStyle?: ImageStyle
 }
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
@@ -87,6 +90,7 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   profile: bsky.profile.AnyProfileView
   disableHoverCard?: boolean
   disableNavigation?: boolean
+  disableLink?: boolean
   onBeforePress?: () => void
 }
 
@@ -224,6 +228,7 @@ let UserAvatar = ({
   live,
   hideLiveBadge,
   noBorder,
+  extraAviStyle,
 }: UserAvatarProps): React.ReactNode => {
   const t = useTheme()
   const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
@@ -241,8 +246,9 @@ let UserAvatar = ({
       height: size,
       borderRadius,
       backgroundColor: t.palette.contrast_25,
+      ...extraAviStyle,
     }
-  }, [finalShape, size, t])
+  }, [finalShape, size, t, extraAviStyle])
 
   const borderStyle = useMemo(() => {
     return [
@@ -266,13 +272,27 @@ let UserAvatar = ({
           a.right_0,
           a.bottom_0,
           a.rounded_full,
-          {backgroundColor: t.palette.white},
+          {width: 16, height: 16},
+          a.align_center,
+          a.justify_center,
+          {backgroundColor: t.palette.pink},
+          {transform: [{scale: size / 42}]},
         ]}>
-        <FontAwesomeIcon
-          icon="exclamation-circle"
-          style={{color: t.palette.negative_400}}
-          size={Math.floor(size / 3)}
-        />
+        <RNText
+          style={[
+            a.text_sm,
+            a.font_bold,
+            a.text_center,
+            {
+              color: t.palette.white,
+              includeFontPadding: false,
+              textAlignVertical: 'center',
+            },
+          ]}
+          minimumFontScale={1}
+          maxFontSizeMultiplier={1}>
+          !
+        </RNText>
       </View>
     )
   }, [moderation?.alert, size, t])
@@ -288,7 +308,7 @@ let UserAvatar = ({
   }, [size, style])
 
   return avatar &&
-    !((moderation?.blur && IS_ANDROID) /* android crashes with blur */) ? (
+    !(moderation?.blur && IS_ANDROID /* android crashes with blur */) ? (
     <View style={containerStyle}>
       {usePlainRNImage ? (
         <RNImage
@@ -312,6 +332,7 @@ let UserAvatar = ({
           }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
           onLoad={onLoad}
+          useAppleWebpCodec
         />
       )}
       {!noBorder && <MediaInsetBorder style={borderStyle} />}
@@ -371,13 +392,14 @@ let EditableUserAvatar = ({
       return
     }
 
-    onSelectNewAvatar(
-      await compressIfNeeded(
-        await openCamera({
-          aspect: [1, 1],
-        }),
-      ),
-    )
+    const image = await openCamera({
+      aspect: [1, 1],
+    })
+    if (!image) {
+      return
+    }
+
+    onSelectNewAvatar(await compressIfNeeded(image, IMAGE_SIZE_CONFIG_2K_1MB))
   }, [onSelectNewAvatar, requestCameraAccessIfNeeded])
 
   const onOpenLibrary = useCallback(async () => {
@@ -404,6 +426,7 @@ let EditableUserAvatar = ({
               shape: circular ? 'circle' : 'rectangle',
               aspectRatio: 1,
             }),
+            IMAGE_SIZE_CONFIG_2K_1MB,
           ),
         )
       } else {
@@ -430,7 +453,7 @@ let EditableUserAvatar = ({
 
   const onChangeEditImage = useCallback(
     async (image: ComposerImage) => {
-      const compressed = await compressImage(image)
+      const compressed = await compressImage(image, IMAGE_SIZE_CONFIG_2K_1MB)
       onSelectNewAvatar(compressed)
     },
     [onSelectNewAvatar],
@@ -529,6 +552,7 @@ let PreviewableUserAvatar = ({
   profile,
   disableHoverCard,
   disableNavigation,
+  disableLink,
   onBeforePress,
   live,
   ...props
@@ -538,18 +562,18 @@ let PreviewableUserAvatar = ({
   const queryClient = useQueryClient()
   const status = useActorStatus(profile)
   const liveControl = useDialogControl()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
 
   const onPress = useCallback(() => {
     onBeforePress?.()
     unstableCacheProfileView(queryClient, profile)
   }, [profile, queryClient, onBeforePress])
 
-  const onOpenLiveStatus = useCallback(() => {
-    playHaptic('Light')
+  const onOpenLiveStatus = () => {
+    haptics.tap()
     ax.metric('live:card:open', {subject: profile.did, from: 'post'})
     liveControl.open()
-  }, [liveControl, playHaptic, profile.did])
+  }
 
   const avatarEl = (
     <UserAvatar
@@ -589,6 +613,8 @@ let PreviewableUserAvatar = ({
             embed={status.embed}
           />
         </>
+      ) : disableLink ? (
+        avatarEl
       ) : (
         <Link
           label={_(

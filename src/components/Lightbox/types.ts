@@ -6,7 +6,6 @@
  *
  */
 
-import {type Component} from 'react'
 import {type TransformsStyle} from 'react-native'
 import {
   type AnimatedRef,
@@ -29,7 +28,12 @@ export type ImageSource = {
   thumbUri: string
   thumbDimensions: Dimensions | null
   thumbRect: MeasuredDimensions | null
-  thumbRef?: AnimatedRef<Component> | null
+  /**
+   * The thumbnail's container, which the lightbox animates from and back to,
+   * and hides while it's showing this image. Must be an Animated component:
+   * Reanimated only syncs setNativeProps changes back to React for those.
+   */
+  thumbRef?: AnimatedRef | null
   thumbBorderRadius?: number
   alt?: string
   type: 'image' | 'circle-avi' | 'rect-avi'

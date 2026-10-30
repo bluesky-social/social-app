@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
-import {Pressable, View} from 'react-native'
+import {View} from 'react-native'
 import * as VideoThumbnails from 'expo-video-thumbnails'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -15,6 +15,7 @@ import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsIcon} from '#/components/icons
 import {CloseQuote_Stroke2_Corner0_Rounded as CloseQuoteIcon} from '#/components/icons/Quote'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as MediaPreview from '#/components/MediaPreview'
+import {Pressable} from '#/components/Pressable'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
@@ -286,9 +287,10 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
       if (post.images && post.images.length > 0) {
         const loaded: LoadedImage[] = []
         for (const image of post.images) {
+          const alt = image.altText || ''
           try {
             const url = await storage.loadMediaFromLocal(image.localPath)
-            loaded.push({url, alt: image.altText || ''})
+            loaded.push({url, alt})
           } catch (e) {
             // Image doesn't exist locally, skip it
           }
@@ -326,9 +328,15 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
   }
 
   return (
-    <MediaPreview.Outer>
+    <View style={[a.flex_row, a.flex_wrap, {marginLeft: -4, marginRight: -4}]}>
       {loadedImages.map((image, i) => (
-        <MediaPreview.ImageItem key={i} thumbnail={image.url} alt={image.alt} />
+        <View key={i} style={[a.p_2xs, {width: '20%'}]}>
+          <MediaPreview.ImageItem
+            thumbnail={image.url}
+            alt={image.alt}
+            maxWidth={999}
+          />
+        </View>
       ))}
       {post.gif && (
         <MediaPreview.GifItem thumbnail={post.gif.url} alt={post.gif.alt} />
@@ -339,6 +347,6 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
           alt={post.video.altText}
         />
       )}
-    </MediaPreview.Outer>
+    </View>
   )
 }

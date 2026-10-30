@@ -1,9 +1,17 @@
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef} from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
-import {withSpring} from 'react-native-reanimated'
+import {
+  Reanimated3DefaultSpringConfig,
+  withSpring,
+} from 'react-native-reanimated'
+import {useLingui} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {PROD_DEFAULT_FEED} from '#/lib/constants'
+import {
+  DISCOVER_FEED_URI,
+  PROD_DEFAULT_FEED,
+  TIMELINE_SAVED_FEED,
+} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOTAUpdates} from '#/lib/hooks/useOTAUpdates'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
@@ -12,6 +20,7 @@ import {
   type HomeTabNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
+import {getLocalizedFeedName} from '#/lib/strings/feed-names'
 import {emitSoftReset} from '#/state/events'
 import {
   type SavedFeedSourceInfo,
@@ -21,7 +30,6 @@ import {type FeedDescriptor, type FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
-import {useMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {FeedPage} from '#/view/com/feeds/FeedPage'
@@ -34,6 +42,10 @@ import {
 import {CustomFeedEmptyState} from '#/view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from '#/view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from '#/view/com/posts/FollowingEndOfFeed'
+import {
+  HomeHeaderModeProvider,
+  useHomeHeaderMode,
+} from '#/view/com/util/MainScrollProvider'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import * as Layout from '#/components/Layout'
 import {useAnalytics} from '#/analytics'
@@ -81,11 +93,13 @@ export function HomeScreen(props: Props) {
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
       <Layout.Screen testID="HomeScreen" noInsetTop={IS_LIQUID_GLASS}>
-        <HomeScreenReady
-          {...props}
-          preferences={preferences}
-          pinnedFeedInfos={pinnedFeedInfos}
-        />
+        <HomeHeaderModeProvider>
+          <HomeScreenReady
+            {...props}
+            preferences={preferences}
+            pinnedFeedInfos={pinnedFeedInfos}
+          />
+        </HomeHeaderModeProvider>
       </Layout.Screen>
     )
   } else {
@@ -106,6 +120,7 @@ function HomeScreenReady({
   preferences: UsePreferencesQueryResponse
   pinnedFeedInfos: SavedFeedSourceInfo[]
 }) {
+  const {i18n} = useLingui()
   const ax = useAnalytics()
   const allFeeds = useMemo(
     () => pinnedFeedInfos.map(f => f.feedDescriptor),
@@ -117,13 +132,14 @@ function HomeScreenReady({
   const maybeFoundIndex = allFeeds.indexOf(maybeRawSelectedFeed)
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const maybeSelectedFeed: FeedDescriptor | undefined = allFeeds[selectedIndex]
+  const selectedFeedInfo = pinnedFeedInfos[selectedIndex]
   const requestNotificationsPermission = useRequestNotificationsPermission()
 
-  useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
+  useSetTitle(selectedFeedInfo && getLocalizedFeedName(selectedFeedInfo, i18n))
   useOTAUpdates()
 
   useEffect(() => {
-    requestNotificationsPermission('Home')
+    void requestNotificationsPermission('Home')
   }, [requestNotificationsPermission])
 
   const pagerRef = useRef<PagerRef>(null)
@@ -139,10 +155,15 @@ function HomeScreenReady({
   }, [selectedIndex])
 
   const {hasSession} = useSession()
-  const {headerMode} = useMinimalShellMode()
+  const headerMode = useHomeHeaderMode()
   const showHeader = useCallback(() => {
     'worklet'
-    headerMode.set(() => withSpring(0, {overshootClamping: true}))
+    headerMode.set(
+      withSpring(0, {
+        ...Reanimated3DefaultSpringConfig,
+        overshootClamping: true,
+      }),
+    )
   }, [headerMode])
 
   useFocusEffect(
@@ -210,8 +231,13 @@ function HomeScreenReady({
             {...props}
             testID="homeScreenFeedTabs"
             onPressSelected={onPressSelected}
-            // @ts-ignore
-            feeds={[{displayName: 'Following'}, {displayName: 'Discover'}]}
+            feeds={[
+              {
+                displayName: 'Following',
+                uri: TIMELINE_SAVED_FEED.value,
+              },
+              {displayName: 'Discover', uri: DISCOVER_FEED_URI},
+            ]}
           />
         )
       }

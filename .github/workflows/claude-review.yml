@@ -1,0 +1,82 @@
+name: claude-review
+
+# Automatic Claude review on PR creation/update, via Agent Gateway.
+# Self-contained: this uses upstream claude-code-action with a patched
+# Bun runtime rather than the org reusable workflows in
+# bluesky-social/.github (which a public repo cannot call, and whose
+# customizations added no value over upstream).
+#
+# Review guidance lives in .github/claude-review-prompt.md.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
+  # Required for claude-code-action's GitHub App token exchange.
+  id-token: write
+
+jobs:
+  review:
+    # Internal PRs only. This repo is public: fork PRs are the bulk of
+    # community traffic and MUST NOT trigger reviews (no gateway spend on
+    # unvetted code). Branch PRs can only be
+    # created by people with write access, i.e. org members.
+    # Bot-authored PRs (dependabot, changesets) are also skipped.
+    if: >
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.type != 'Bot'
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    concurrency:
+      group: claude-review-${{ github.repository }}-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+
+    steps:
+      # Temporary until fixed runner images roll out:
+      # https://github.com/actions/runner-images/issues/15018
+      - name: Update Ubuntu CA certificates
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --only-upgrade --no-install-recommends -y ca-certificates
+
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+
+      # Override the action's Bun 1.3.14 for the CA distrust and Brotli fixes.
+      - name: Set up patched Bun
+        id: setup-bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.4
+          no-cache: true
+
+      - name: 🤖 Claude review
+        uses: anthropics/claude-code-action@1d6de8cb0c237e7c15e9e1bdf973826ebae490cc # v1.0.248
+        env:
+          ANTHROPIC_BASE_URL: https://agentgateway.k1.prod.bsky.dev
+        with:
+          path_to_bun_executable: ${{ steps.setup-bun.outputs.bun-path }}
+          # Agent Gateway service keys use Authorization: Bearer, the wire
+          # shape emitted by the action's OAuth-token input.
+          claude_code_oauth_token: ${{ secrets.AGENT_GATEWAY_CLAUDE_GH_REVIEW_KEY }}
+          additional_permissions: |
+            actions: read
+          track_progress: true
+          claude_args: |
+            --model claude-opus-5-5:api
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,mcp__github_ci__get_ci_status,mcp__github_ci__download_job_log,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            Read .github/claude-review-prompt.md in the checked-out repo
+            and review this pull request following its guidance.

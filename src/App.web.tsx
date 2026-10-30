@@ -1,12 +1,11 @@
 import '#/logger/sentry/setup' // must be near top
-import '#/view/icons'
 import './style.css'
 
 import {Fragment, useEffect, useState} from 'react'
 import {KeyboardProvider as KeyboardControllerProvider} from 'react-native-keyboard-controller'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
+import {BackgroundNotificationPreferencesProvider} from '@bsky.app/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {useLingui} from '@lingui/react/macro'
-import * as Sentry from '@sentry/react-native'
 
 import {Provider as HotkeysProvider} from '#/lib/hotkeys'
 import {QueryProvider} from '#/lib/react-query'
@@ -14,6 +13,8 @@ import {ThemeProvider} from '#/lib/ThemeContext'
 import {Provider as TranslateOnDeviceProvider} from '#/lib/translation'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
+import {Sentry} from '#/logger/sentry/lib'
+import {identifyDevice} from '#/logger/sentry/user'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {
   prefetchAppConfig,
@@ -25,9 +26,9 @@ import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {MessagesProvider} from '#/state/messages'
-import {Provider as ModalStateProvider} from '#/state/modals'
 import {init as initPersistedState} from '#/state/persisted'
 import {Provider as PrefsStateProvider} from '#/state/preferences'
+import {BetaUserStorageSync} from '#/state/preferences/beta-user-sync'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
 import {Provider as UnreadNotifsProvider} from '#/state/queries/notifications/unread'
@@ -41,17 +42,17 @@ import {
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
+import {Provider as LandingProvider} from '#/state/shell/landing'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as OnboardingProvider} from '#/state/shell/onboarding'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
-import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {Shell} from '#/view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
-import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
+import {useLandingEntry} from '#/components/hooks/useLandingEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as LightboxStateProvider} from '#/components/Lightbox/state'
 import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
@@ -70,14 +71,17 @@ import {
   features,
   setupDeviceId,
 } from '#/analytics'
+import {getDeviceId} from '#/analytics/identifiers'
+import {useSessionActivity} from '#/analytics/useSessionActivity'
 import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,
 } from '#/features/liveEvents/context'
 import * as Geo from '#/geolocation'
 import {Splash} from '#/Splash'
-import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
+
+void identifyDevice(getDeviceId(), setupDeviceId)
 
 /**
  * Begin geolocation ASAP
@@ -93,7 +97,7 @@ function InnerApp() {
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {t: l} = useLingui()
-  const hasCheckedReferrer = useStarterPackEntry()
+  const hasCheckedLanding = useLandingEntry()
 
   // init
   useEffect(() => {
@@ -105,10 +109,9 @@ function InnerApp() {
           await features.init
         }
       } catch (e) {
-        logger.error('session: resumeSession failed', {message: e})
-      } finally {
-        setIsReady(true)
+        logger.warn('session: resumeSession failed', {message: e})
       }
+      setIsReady(true)
     }
     const account = readLastActiveAccount()
     void onLaunch(account)
@@ -126,7 +129,7 @@ function InnerApp() {
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
         <ContextMenuProvider>
-          <Splash isReady={isReady && hasCheckedReferrer}>
+          <Splash isReady={isReady && hasCheckedLanding}>
             <VideoVolumeProvider>
               <ActiveVideoProvider>
                 <Fragment
@@ -134,6 +137,7 @@ function InnerApp() {
                   key={currentAccount?.did}>
                   <AnalyticsFeaturesContext>
                     <QueryProvider currentDid={currentAccount?.did}>
+                      <BetaUserStorageSync />
                       <PolicyUpdateOverlayProvider>
                         <LiveEventsProvider>
                           <AgeAssuranceV2Provider>
@@ -158,7 +162,6 @@ function InnerApp() {
                                                               <TranslateOnDeviceProvider>
                                                                 <HotkeysProvider>
                                                                   <Shell />
-                                                                  <ToastOutlet />
                                                                 </HotkeysProvider>
                                                               </TranslateOnDeviceProvider>
                                                             </IntentDialogProvider>
@@ -184,6 +187,7 @@ function InnerApp() {
                     </QueryProvider>
                   </AnalyticsFeaturesContext>
                 </Fragment>
+                <ToastOutlet />
               </ActiveVideoProvider>
             </VideoVolumeProvider>
           </Splash>
@@ -194,6 +198,7 @@ function InnerApp() {
 }
 
 function App() {
+  useSessionActivity()
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
@@ -221,17 +226,15 @@ function App() {
                   <PrefsStateProvider>
                     <I18nProvider>
                       <ShellStateProvider>
-                        <ModalStateProvider>
-                          <DialogStateProvider>
-                            <LightboxStateProvider>
-                              <PortalProvider>
-                                <StarterPackProvider>
-                                  <InnerApp />
-                                </StarterPackProvider>
-                              </PortalProvider>
-                            </LightboxStateProvider>
-                          </DialogStateProvider>
-                        </ModalStateProvider>
+                        <DialogStateProvider>
+                          <LightboxStateProvider>
+                            <PortalProvider>
+                              <LandingProvider>
+                                <InnerApp />
+                              </LandingProvider>
+                            </PortalProvider>
+                          </LightboxStateProvider>
+                        </DialogStateProvider>
                       </ShellStateProvider>
                     </I18nProvider>
                   </PrefsStateProvider>

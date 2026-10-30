@@ -16,7 +16,9 @@ import {TabBar} from './TabBar'
 export interface PagerWithHeaderChildParams {
   headerHeight: number
   isFocused: boolean
-  scrollElRef: React.MutableRefObject<ListMethods | ScrollView | null>
+  scrollElRef: React.MutableRefObject<
+    ListMethods | React.ComponentRef<typeof ScrollView> | null
+  >
 }
 
 export interface PagerWithHeaderProps {
@@ -29,11 +31,14 @@ export interface PagerWithHeaderProps {
   renderHeader?: ({
     setMinimumHeight,
   }: {
-    setMinimumHeight: () => void
+    setMinimumHeight: (height: number) => void
   }) => JSX.Element
   initialPage?: number
   onPageSelected?: (index: number) => void
   onCurrentPageSelected?: (index: number) => void
+  allowHeaderOverScroll?: boolean // Ignored on web.
+  /** Native-only vertical room for horizontally clipped headers. */
+  headerOverflowInset?: number
 }
 export const PagerWithHeader = forwardRef<PagerRef, PagerWithHeaderProps>(
   function PageWithHeaderImpl(
@@ -49,7 +54,7 @@ export const PagerWithHeader = forwardRef<PagerRef, PagerWithHeaderProps>(
     }: PagerWithHeaderProps,
     ref,
   ) {
-    const [currentPage, setCurrentPage] = useState(0)
+    const [currentPage, setCurrentPage] = useState(initialPage ?? 0)
 
     const renderTabBar = useCallback(
       (props: RenderTabBarFnProps) => {
@@ -127,7 +132,7 @@ let PagerTabBar = ({
   renderHeader?: ({
     setMinimumHeight,
   }: {
-    setMinimumHeight: () => void
+    setMinimumHeight: (height: number) => void
   }) => JSX.Element
   isHeaderReady: boolean
   onCurrentPageSelected?: (index: number) => void
@@ -179,7 +184,7 @@ function PagerItem({
     headerHeight: 0,
     isFocused,
     scrollElRef: scrollElRef as React.MutableRefObject<
-      ListMethods | ScrollView | null
+      ListMethods | React.ComponentRef<typeof ScrollView> | null
     >,
   })
 }

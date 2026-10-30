@@ -1,14 +1,13 @@
-import {cloneElement, Fragment, isValidElement, useMemo} from 'react'
+import {cloneElement, Fragment, isValidElement, useMemo, useRef} from 'react'
 import {
+  type GestureResponderEvent,
   Pressable,
   type StyleProp,
   type TextStyle,
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -21,16 +20,23 @@ import {
   useMenuContext,
   useMenuItemContext,
 } from '#/components/Menu/context'
+import {getMenuSourceViewTag} from '#/components/Menu/sourceViewTag'
 import {
   type ContextType,
   type GroupProps,
   type ItemIconProps,
   type ItemProps,
   type ItemTextProps,
+  type OuterProps,
   type TriggerProps,
 } from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID, IS_IOS, IS_NATIVE} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_IPAD, IS_LIQUID_GLASS, IS_NATIVE} from '#/env'
+
+// iOS 26's floaty sheet presentation subtracts the bottom safe-area inset from
+// the requested detent, which eats the visible bottom padding of short (e.g.
+// single-item) menus. Flooring the native sheet height restores that padding.
+const IOS_MENU_MIN_HEIGHT = 128
 
 export {
   type DialogControlProps as MenuControlProps,
@@ -63,12 +69,23 @@ export function Trigger({
   hint,
 }: TriggerProps) {
   const context = useMenuContext()
+  const triggerRef = useRef<React.ComponentRef<typeof View>>(null)
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
     onIn: onPressIn,
     onOut: onPressOut,
   } = useInteractionState()
+
+  const onPress = (event?: GestureResponderEvent) => {
+    if (!IS_IOS) {
+      context.control.open(event)
+      return
+    }
+
+    const sourceViewTag = getMenuSourceViewTag(triggerRef.current, event)
+    context.control.open({sourceViewTag})
+  }
 
   return children({
     IS_NATIVE: true,
@@ -79,8 +96,8 @@ export function Trigger({
       pressed,
     },
     props: {
-      ref: null,
-      onPress: context.control.open,
+      ref: triggerRef,
+      onPress,
       onFocus,
       onBlur,
       onPressIn,
@@ -95,21 +112,24 @@ export function Trigger({
 export function Outer({
   children,
   showCancel,
-}: React.PropsWithChildren<{
-  showCancel?: boolean
-  style?: StyleProp<ViewStyle>
-}>) {
+  popover = 'adaptive',
+}: OuterProps) {
   const context = useMenuContext()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Dialog.Outer
       control={context.control}
-      nativeOptions={{preventExpansion: true}}>
+      nativeOptions={{
+        popover: IS_IOS ? popover : 'never',
+        preventExpansion: true,
+        minHeight: IS_IOS ? IOS_MENU_MIN_HEIGHT : undefined,
+        ...(IS_IPAD && IS_LIQUID_GLASS ? {backgroundColor: 'transparent'} : {}),
+      }}>
       <Dialog.Handle />
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>
-        <Dialog.ScrollableInner label={_(msg`Menu`)}>
+        <Dialog.ScrollableInner label={l`Menu`}>
           <View style={[a.gap_lg]}>
             {children}
             {IS_NATIVE && showCancel && <Cancel />}
@@ -352,12 +372,12 @@ export function Group({children, style}: GroupProps) {
 }
 
 function Cancel() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const context = useMenuContext()
 
   return (
     <Button
-      label={_(msg`Close this dialog`)}
+      label={l`Close this dialog`}
       size="small"
       variant="ghost"
       color="secondary"

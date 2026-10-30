@@ -1,0 +1,48 @@
+{
+  "id": "chat.bsky.convo.sendMessage",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "convoId",
+            "message"
+          ],
+          "properties": {
+            "convoId": {
+              "type": "string"
+            },
+            "message": {
+              "ref": "chat.bsky.convo.defs#messageInput",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "errors": [
+        {
+          "name": "ConvoLocked"
+        },
+        {
+          "name": "InvalidConvo"
+        },
+        {
+          "name": "ReplyTargetNotFound"
+        }
+      ],
+      "output": {
+        "schema": {
+          "ref": "chat.bsky.convo.defs#messageView",
+          "type": "ref"
+        },
+        "encoding": "application/json"
+      },
+      "description": "Sends a message to a conversation."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

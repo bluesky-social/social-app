@@ -1,0 +1,192 @@
+{
+  "id": "chat.bsky.group.defs",
+  "defs": {
+    "joinRule": {
+      "type": "string",
+      "knownValues": [
+        "anyone",
+        "followedByOwner"
+      ]
+    },
+    "joinLinkView": {
+      "type": "object",
+      "required": [
+        "code",
+        "enabledStatus",
+        "requireApproval",
+        "joinRule",
+        "createdAt"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "joinRule": {
+          "ref": "#joinRule",
+          "type": "ref"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "enabledStatus": {
+          "ref": "#linkEnabledStatus",
+          "type": "ref"
+        },
+        "requireApproval": {
+          "type": "boolean"
+        }
+      },
+      "description": "Join link view to be used within a group view, so the convo is surrounding, not specified inside this view."
+    },
+    "joinRequestView": {
+      "type": "object",
+      "required": [
+        "convoId",
+        "requestedBy",
+        "requestedAt"
+      ],
+      "properties": {
+        "convoId": {
+          "type": "string"
+        },
+        "requestedAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "requestedBy": {
+          "ref": "chat.bsky.actor.defs#profileViewBasic",
+          "type": "ref"
+        }
+      },
+      "description": "A join request from the perspective of the group owner."
+    },
+    "linkEnabledStatus": {
+      "type": "string",
+      "knownValues": [
+        "enabled",
+        "disabled"
+      ]
+    },
+    "joinLinkPreviewView": {
+      "type": "object",
+      "required": [
+        "convoId",
+        "code",
+        "name",
+        "owner",
+        "memberCount",
+        "memberLimit",
+        "requireApproval",
+        "joinRule"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "convo": {
+          "ref": "chat.bsky.convo.defs#convoView",
+          "type": "ref",
+          "description": "Present only if the request is authenticated and the user is a member of the group."
+        },
+        "owner": {
+          "ref": "chat.bsky.actor.defs#profileViewBasic",
+          "type": "ref"
+        },
+        "viewer": {
+          "ref": "#joinLinkViewerState",
+          "type": "ref"
+        },
+        "convoId": {
+          "type": "string"
+        },
+        "joinRule": {
+          "ref": "#joinRule",
+          "type": "ref"
+        },
+        "memberCount": {
+          "type": "integer"
+        },
+        "memberLimit": {
+          "type": "integer"
+        },
+        "requireApproval": {
+          "type": "boolean"
+        }
+      },
+      "description": "Preview that can be shown in feeds, including to unauthenticated viewers."
+    },
+    "joinLinkViewerState": {
+      "type": "object",
+      "properties": {
+        "requestedAt": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    },
+    "joinRequestConvoView": {
+      "type": "object",
+      "required": [
+        "convoId",
+        "name",
+        "owner",
+        "memberCount",
+        "memberLimit",
+        "viewer"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "owner": {
+          "ref": "chat.bsky.actor.defs#profileViewBasic",
+          "type": "ref"
+        },
+        "viewer": {
+          "ref": "#joinLinkViewerState",
+          "type": "ref"
+        },
+        "convoId": {
+          "type": "string"
+        },
+        "memberCount": {
+          "type": "integer"
+        },
+        "memberLimit": {
+          "type": "integer"
+        }
+      },
+      "description": "A join request from the perspective of the requester, including enough group context to render the request in a list (e.g. group name, owner, member count)."
+    },
+    "invalidJoinLinkPreviewView": {
+      "type": "object",
+      "required": [
+        "code"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        }
+      },
+      "description": "Preview for a join link code that does not map to an existing link. Carries only the code so clients can correlate with the input and render an invalid state."
+    },
+    "disabledJoinLinkPreviewView": {
+      "type": "object",
+      "required": [
+        "code"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        }
+      },
+      "description": "Preview for a disabled join link. Carries only the code so clients can correlate with the input and render a disabled state."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

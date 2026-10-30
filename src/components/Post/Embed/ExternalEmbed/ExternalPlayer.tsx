@@ -8,14 +8,13 @@ import {
 } from 'react-native'
 import Animated, {
   measure,
-  runOnJS,
   useAnimatedRef,
   useFrameCallback,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {WebView} from 'react-native-webview'
+import {scheduleOnRN} from 'react-native-worklets'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -23,6 +22,7 @@ import {useNavigation} from '@react-navigation/native'
 import {type NavigationProp} from '#/lib/routes/types'
 import {
   type EmbedPlayerParams,
+  getEmbedPlayerMediaType,
   getPlayerAspect,
 } from '#/lib/strings/embed-player'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
@@ -33,7 +33,9 @@ import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
 import {KeepAwake} from '#/components/KeepAwake'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 
 interface ShouldStartLoadRequest {
   url: string
@@ -121,9 +123,11 @@ function Player({
 export function ExternalPlayer({
   link,
   params,
+  post,
 }: {
-  link: AppBskyEmbedExternal.ViewExternal
+  link: app.bsky.embed.external.ViewExternal
   params: EmbedPlayerParams
+  post?: app.bsky.feed.defs.PostView
 }) {
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
@@ -131,9 +135,30 @@ export function ExternalPlayer({
   const windowDims = useWindowDimensions()
   const externalEmbedsPrefs = useExternalEmbedsPrefs()
   const consentDialogControl = useDialogControl()
+  const ax = useAnalytics()
 
   const [isPlayerActive, setIsPlayerActive] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+
+  const activatePlayer = useCallback(() => {
+    if (!isPlayerActive) {
+      ax.metric('externalEmbed:playerActivated', {
+        postUri: post?.uri,
+        postAuthorDid: post?.author.did,
+        source: params.source,
+        playerType: params.type,
+        mediaType: getEmbedPlayerMediaType(params.type),
+      })
+    }
+    setIsPlayerActive(true)
+  }, [
+    ax,
+    isPlayerActive,
+    params.source,
+    params.type,
+    post?.author.did,
+    post?.uri,
+  ])
 
   const aspect = useMemo(() => {
     return getPlayerAspect({
@@ -141,7 +166,7 @@ export function ExternalPlayer({
       width: windowDims.width,
       hasThumb: !!link.thumb,
     })
-  }, [params.type, windowDims.width, link.thumb])
+  }, [params.type, windowDims.width, windowDims.height, link.thumb])
 
   const viewRef = useAnimatedRef()
   const frameCallback = useFrameCallback(() => {
@@ -164,7 +189,7 @@ export function ExternalPlayer({
     const isVisible = top <= realWinHeight - insets.bottom && bot >= insets.top
 
     if (!isVisible) {
-      runOnJS(setIsPlayerActive)(false)
+      scheduleOnRN(setIsPlayerActive, false)
     }
   }, false) // False here disables autostarting the callback
 
@@ -202,14 +227,14 @@ export function ExternalPlayer({
         return
       }
 
-      setIsPlayerActive(true)
+      activatePlayer()
     },
-    [externalEmbedsPrefs, consentDialogControl, params.source],
+    [externalEmbedsPrefs, consentDialogControl, params.source, activatePlayer],
   )
 
   const onAcceptConsent = useCallback(() => {
-    setIsPlayerActive(true)
-  }, [])
+    activatePlayer()
+  }, [activatePlayer])
 
   return (
     <>

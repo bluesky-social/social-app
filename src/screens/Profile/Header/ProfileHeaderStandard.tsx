@@ -1,19 +1,17 @@
 import {memo, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
-  type AppBskyActorDefs,
   moderateProfile,
   type ModerationDecision,
   type ModerationOpts,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
+} from '@bsky/sdk/moderation'
+import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {type Shadow, useProfileShadow} from '#/state/cache/profile-shadow'
 import {
@@ -22,25 +20,29 @@ import {
 } from '#/state/queries/profile'
 import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
-import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, platform} from '#/alf'
 import {SubscribeProfileButton} from '#/components/activity-notifications/SubscribeProfileButton'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
+import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRight} from '#/components/icons/ArrowShareRight'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {
   KnownFollowers,
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
-import {ProfileBadges} from '#/components/ProfileBadges'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
-import {Text} from '#/components/Typography'
-import {IS_IOS} from '#/env'
+import {useAnalytics} from '#/analytics'
+import {IS_IOS, IS_NATIVE} from '#/env'
+import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
-import {GermButton} from '../components/GermButton'
+import {ProfileHeaderLinks} from '#/features/profileLinks'
+import {type app} from '#/lexicons'
+import {GermButton, isGermButtonShown} from '../components/GermButton'
+import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
@@ -48,7 +50,7 @@ import {ProfileHeaderShell} from './Shell'
 import {ProfileHeaderSuggestedFollows} from './SuggestedFollows'
 
 interface Props {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
@@ -62,10 +64,8 @@ let ProfileHeaderStandard = ({
   hideBackButton = false,
   isPlaceholderProfile,
 }: Props): React.ReactNode => {
-  const t = useTheme()
-  const {gtMobile} = useBreakpoints()
   const profile =
-    useProfileShadow<AppBskyActorDefs.ProfileViewDetailed>(profileUnshadowed)
+    useProfileShadow<app.bsky.actor.defs.ProfileViewDetailed>(profileUnshadowed)
   const {currentAccount} = useSession()
   const {_} = useLingui()
   const moderation = useMemo(
@@ -135,26 +135,10 @@ let ProfileHeaderStandard = ({
           </View>
           <View
             style={[a.flex_col, a.gap_xs, a.pb_sm, live ? a.pt_sm : a.pt_2xs]}>
-            <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
-              <Text
-                emoji
-                testID="profileHeaderDisplayName"
-                style={[
-                  t.atoms.text,
-                  gtMobile ? a.text_4xl : a.text_3xl,
-                  a.self_start,
-                  a.font_bold,
-                  a.leading_tight,
-                ]}>
-                {sanitizeDisplayName(
-                  profile.displayName || sanitizeHandle(profile.handle),
-                  moderation.ui('displayName'),
-                )}
-                <View style={[a.pl_xs, {marginTop: platform({ios: 2})}]}>
-                  <ProfileBadges profile={profile} size="lg" interactive />
-                </View>
-              </Text>
-            </View>
+            <ProfileHeaderDisplayName
+              profile={profile}
+              moderation={moderation}
+            />
             <ProfileHeaderHandle profile={profile} />
           </View>
           {!isPlaceholderProfile && !isBlockedUser && (
@@ -166,17 +150,31 @@ let ProfileHeaderStandard = ({
                     testID="profileHeaderDescription"
                     style={[a.text_md]}
                     numberOfLines={15}
-                    selectable
+                    selectable={platform({android: false, default: true})}
                     value={descriptionRT}
                     enableTags
                     authorHandle={profile.handle}
+                    shouldProxyLinks={true}
                   />
                 </View>
               ) : undefined}
 
-              {profile.associated?.germ && (
-                <GermButton germ={profile.associated.germ} profile={profile} />
-              )}
+              <ProfileHeaderLinks
+                profile={profile}
+                hidden={!!moderation.ui('profileView').blur}
+                germButton={
+                  isGermButtonShown(
+                    profile.associated?.germ,
+                    profile,
+                    currentAccount?.did,
+                  ) ? (
+                    <GermButton
+                      germ={profile.associated.germ}
+                      profile={profile}
+                    />
+                  ) : undefined
+                }
+              />
 
               {!isMe &&
                 !isBlockedUser &&
@@ -230,7 +228,7 @@ export function HeaderStandardButtons({
   onUnfollow,
   minimal,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: Shadow<app.bsky.actor.defs.ProfileViewDetailed>
   moderation: ModerationDecision
   moderationOpts: ModerationOpts
   onFollow?: () => void
@@ -238,8 +236,9 @@ export function HeaderStandardButtons({
   minimal?: boolean
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {hasSession, currentAccount} = useSession()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const requireAuth = useRequireAuth()
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
@@ -247,20 +246,24 @@ export function HeaderStandardButtons({
   )
   const [, queueUnblock] = useProfileBlockMutationQueue(profile)
   const editProfileControl = useDialogControl()
+  const inviteFriendsControl = useDialogControl()
   const unblockPromptControl = Prompt.usePromptControl()
 
   const isMe = currentAccount?.did === profile.did
 
   const onPressFollow = () => {
-    playHaptic()
+    haptics.confirm()
+    const displayNameOrHandle = profile.displayName || profile.handle
     requireAuth(async () => {
       try {
         await queueFollow()
-        onFollow?.()
+        if (onFollow) {
+          onFollow()
+        }
         Toast.show(
           _(
             msg`Following ${sanitizeDisplayName(
-              profile.displayName || profile.handle,
+              displayNameOrHandle,
               moderation.ui('displayName'),
             )}`,
           ),
@@ -278,15 +281,18 @@ export function HeaderStandardButtons({
   }
 
   const onPressUnfollow = () => {
-    playHaptic()
+    haptics.confirm()
+    const displayNameOrHandle = profile.displayName || profile.handle
     requireAuth(async () => {
       try {
         await queueUnfollow()
-        onUnfollow?.()
+        if (onUnfollow) {
+          onUnfollow()
+        }
         Toast.show(
           _(
             msg`No longer following ${sanitizeDisplayName(
-              profile.displayName || profile.handle,
+              displayNameOrHandle,
               moderation.ui('displayName'),
             )}`,
           ),
@@ -339,7 +345,7 @@ export function HeaderStandardButtons({
             size="small"
             color="secondary"
             onPress={() => {
-              playHaptic('Light')
+              haptics.tap()
               editProfileControl.open()
             }}
             label={_(msg`Edit profile`)}>
@@ -347,7 +353,29 @@ export function HeaderStandardButtons({
               <Trans>Edit Profile</Trans>
             </ButtonText>
           </Button>
+          {/* Invite friends is a native-only share sheet (the dialog is a
+              no-op on web), so gate the entry point to avoid a dead button. */}
+          {IS_NATIVE && (
+            <Button
+              testID="profileHeaderShareButton"
+              size="small"
+              color="secondary"
+              shape="round"
+              // expand the 33pt button toward a 44pt touch target, capped
+              // horizontally at half the 4pt row gap so the target cannot
+              // overlap the neighboring buttons' own targets
+              hitSlop={{top: 6, bottom: 6, left: 2, right: 2}}
+              onPress={() => {
+                haptics.tap()
+                ax.metric('invite:dialog:open', {logContext: 'ProfileHeader'})
+                inviteFriendsControl.open()
+              }}
+              label={_(msg`Invite friends`)}>
+              <ButtonIcon icon={ArrowShareRight} />
+            </Button>
+          )}
           <EditProfileDialog profile={profile} control={editProfileControl} />
+          {IS_NATIVE && <InviteFriendsDialog control={inviteFriendsControl} />}
         </>
       ) : profile.viewer?.blocking ? (
         profile.viewer?.blockingByList ? null : (

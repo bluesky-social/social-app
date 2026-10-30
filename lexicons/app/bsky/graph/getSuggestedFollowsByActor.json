@@ -1,0 +1,54 @@
+{
+  "id": "app.bsky.graph.getSuggestedFollowsByActor",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "suggestions"
+          ],
+          "properties": {
+            "recId": {
+              "type": "integer",
+              "description": "DEPRECATED: use recIdStr instead."
+            },
+            "recIdStr": {
+              "type": "string",
+              "description": "Snowflake for this recommendation, use when submitting recommendation events."
+            },
+            "isFallback": {
+              "type": "boolean",
+              "default": false,
+              "description": "DEPRECATED, unused. Previously: if true, response has fallen-back to generic results, and is not scoped using relativeToDid"
+            },
+            "suggestions": {
+              "type": "array",
+              "items": {
+                "ref": "app.bsky.actor.defs#profileView",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "actor"
+        ],
+        "properties": {
+          "actor": {
+            "type": "string",
+            "format": "at-identifier"
+          }
+        }
+      },
+      "description": "Enumerates follows similar to a given account (actor). Expected use is to recommend additional accounts immediately after following one account."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

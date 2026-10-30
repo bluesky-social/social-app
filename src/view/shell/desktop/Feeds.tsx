@@ -1,10 +1,11 @@
 import {Pressable, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {getCurrentRoute} from '#/lib/routes/helpers'
+import {getHomeNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
+import {getLocalizedFeedName} from '#/lib/strings/feed-names'
 import {emitSoftReset} from '#/state/events'
 import {
   type SavedFeedSourceInfo,
@@ -22,7 +23,7 @@ import {useAnalytics} from '#/analytics'
 
 export function DesktopFeeds() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {data: pinnedFeedInfos, error, isLoading} = usePinnedFeedsInfos()
   const selectedFeed = useSelectedFeed()
@@ -92,7 +93,9 @@ export function DesktopFeeds() {
                 feedDescriptor: feed,
               })
               setSelectedFeed(feed)
-              navigation.navigate('Home')
+              navigation.dispatch(
+                getHomeNavigationAction(navigation.getState(), 'navigate'),
+              )
               if (route.name === 'Home' && feed === selectedFeed) {
                 emitSoftReset()
               }
@@ -100,10 +103,9 @@ export function DesktopFeeds() {
           />
         )
       })}
-
       <Link
         to="/feeds"
-        label={_(msg`More feeds`)}
+        label={l`More feeds`}
         style={[
           a.flex_row,
           a.align_center,
@@ -150,7 +152,7 @@ export function DesktopFeeds() {
                       : t.atoms.text_contrast_medium,
                 ]}
                 numberOfLines={1}>
-                {_(msg`More feeds`)}
+                {l`More feeds`}
               </Text>
             </>
           )
@@ -170,19 +172,20 @@ function FeedItem({
   onPress: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l, i18n} = useLingui()
   const {
     state: hovered,
     onIn: onHoverIn,
     onOut: onHoverOut,
   } = useInteractionState()
   const isFollowing = feedInfo.feedDescriptor === 'following'
+  const displayName = getLocalizedFeedName(feedInfo, i18n)
 
   return (
     <Pressable
       accessibilityRole="link"
-      accessibilityLabel={feedInfo.displayName}
-      accessibilityHint={_(msg`Opens ${feedInfo.displayName} feed`)}
+      accessibilityLabel={displayName}
+      accessibilityHint={l`Opens ${displayName} feed`}
       onPress={onPress}
       onHoverIn={onHoverIn}
       onHoverOut={onHoverOut}
@@ -231,7 +234,7 @@ function FeedItem({
               : t.atoms.text_contrast_medium,
         ]}
         numberOfLines={1}>
-        {feedInfo.displayName}
+        {displayName}
       </Text>
     </Pressable>
   )

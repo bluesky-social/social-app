@@ -1,0 +1,37 @@
+{
+  "id": "app.bsky.video.getJobStatus",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "jobStatus"
+          ],
+          "properties": {
+            "jobStatus": {
+              "ref": "app.bsky.video.defs#jobStatus",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "jobId"
+        ],
+        "properties": {
+          "jobId": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Get status details for a video processing job."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

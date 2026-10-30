@@ -14,7 +14,6 @@ export {
 export {
   useEnableMinimalShellMode,
   useEnableMinimalShellModeForScreen,
-  useMinimalShellMode,
 } from './minimal-mode'
 export {useOnboardingDispatch, useOnboardingState} from './onboarding'
 export {useTickEveryMinute} from './tick-every-minute'

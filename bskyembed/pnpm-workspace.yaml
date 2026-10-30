@@ -1,0 +1,7 @@
+allowBuilds:
+  core-js: false
+  unrs-resolver: false
+minimumReleaseAgeExclude:
+  - '@atproto/*'
+  - '@atproto-labs/*'
+  - '@bsky/*'

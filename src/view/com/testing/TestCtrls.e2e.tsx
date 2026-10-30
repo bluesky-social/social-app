@@ -1,12 +1,12 @@
-import {useState} from 'react'
-import {LogBox, Pressable, TextInput, View} from 'react-native'
+import {LogBox, Pressable, View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {E2E_APPVIEW_DID} from '../../../../dev-env/constants'
 import {BLUESKY_PROXY_HEADER} from '#/lib/constants'
-import {useAgent, useSessionApi} from '#/state/session'
+import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useOnboardingDispatch} from '#/state/shell/onboarding'
-import {navigate} from '../../../Navigation'
+import {navigate, resetToTab} from '#/Navigation'
 
 LogBox.ignoreAllLogs()
 
@@ -18,8 +18,9 @@ LogBox.ignoreAllLogs()
 
 const BTN = {height: 1, width: 1, backgroundColor: 'red'}
 
+BLUESKY_PROXY_HEADER.set(`${E2E_APPVIEW_DID}#bsky_appview`)
+
 export function TestCtrls() {
-  const agent = useAgent()
   const queryClient = useQueryClient()
   const {logoutEveryAccount, login} = useSessionApi()
   const onboardingDispatch = useOnboardingDispatch()
@@ -48,24 +49,8 @@ export function TestCtrls() {
     )
     setShowLoggedOut(false)
   }
-  const [proxyHeader, setProxyHeader] = useState('')
   return (
     <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>
-      <TextInput
-        accessibilityLabel="Text input field"
-        accessibilityHint="Enter proxy header"
-        testID="e2eProxyHeaderInput"
-        onChangeText={val => setProxyHeader(val as any)}
-        autoComplete="off"
-        autoCorrect={false}
-        autoCapitalize="none"
-        onSubmitEditing={() => {
-          const header = `${proxyHeader}#bsky_appview`
-          BLUESKY_PROXY_HEADER.set(header)
-          agent.configureProxy(header as any)
-        }}
-        style={BTN}
-      />
       <Pressable
         testID="e2eSignInAlice"
         onPress={onPressSignInAlice}
@@ -86,37 +71,37 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eGotoHome"
-        onPress={() => navigate('Home')}
+        onPress={() => resetToTab('Home')}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eGotoSettings"
-        onPress={() => navigate('Settings')}
+        onPress={() => navigate({name: 'Settings', params: undefined})}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eGotoModeration"
-        onPress={() => navigate('Moderation')}
+        onPress={() => navigate({name: 'Moderation', params: undefined})}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eGotoLists"
-        onPress={() => navigate('Lists')}
+        onPress={() => navigate({name: 'Lists', params: undefined})}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eGotoFeeds"
-        onPress={() => navigate('Feeds')}
+        onPress={() => navigate({name: 'Feeds', params: undefined})}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="storybookBtn"
-        onPress={() => navigate('Debug')}
+        onPress={() => navigate({name: 'Debug', params: undefined})}
         accessibilityRole="button"
         style={BTN}
       />

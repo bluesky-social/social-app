@@ -1,0 +1,41 @@
+{
+  "id": "tools.ozone.server.getCapabilities",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "notifications": {
+              "ref": "#notificationConfig",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      }
+    },
+    "notificationConfig": {
+      "type": "object",
+      "required": [
+        "channels"
+      ],
+      "properties": {
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "knownValues": [
+              "inApp",
+              "push"
+            ]
+          },
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

@@ -1,0 +1,251 @@
+{
+  "id": "app.bsky.feed.searchPostsV2",
+  "defs": {
+    "main": {
+      "type": "query",
+      "errors": [
+        {
+          "name": "BadQueryString"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "posts"
+          ],
+          "properties": {
+            "posts": {
+              "type": "array",
+              "items": {
+                "ref": "app.bsky.feed.defs#postView",
+                "type": "ref"
+              },
+              "description": "Hydrated views of matching posts."
+            },
+            "cursor": {
+              "type": "string",
+              "description": "Cursor for the next page of results."
+            },
+            "hitsTotal": {
+              "type": "integer",
+              "description": "Estimated total number of matching hits. May be rounded or truncated."
+            },
+            "detectedQueryLanguages": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "knownValues": [
+                  "ja",
+                  "zh",
+                  "ko",
+                  "th",
+                  "ar"
+                ]
+              },
+              "description": "Query languages detected for CJK, Thai, or Arabic text. Empty or omitted for other scripts."
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [],
+        "properties": {
+          "sort": {
+            "type": "string",
+            "description": "Ranking order for results. 'recent' sorts by recency; 'top' uses search ranking.",
+            "knownValues": [
+              "recent",
+              "top"
+            ]
+          },
+          "urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Include posts that link to any of these URLs."
+          },
+          "limit": {
+            "type": "integer",
+            "default": 25,
+            "maximum": 100,
+            "minimum": 1,
+            "description": "Maximum number of results to return."
+          },
+          "query": {
+            "type": "string",
+            "description": "Search query string. A query or at least one filter is required."
+          },
+          "since": {
+            "type": "string",
+            "description": "Include posts indexed at or after this timestamp. Can be a datetime, or just an ISO date (YYYY-MM-DD)."
+          },
+          "until": {
+            "type": "string",
+            "description": "Include posts indexed before this timestamp. Defaults to the current time. Can be a datetime, or just an ISO date (YYYY-MM-DD)."
+          },
+          "cursor": {
+            "type": "string",
+            "description": "Optional pagination cursor."
+          },
+          "allTime": {
+            "type": "boolean",
+            "description": "Search the full index instead of the recent-post window."
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "at-identifier"
+            },
+            "description": "Include posts by any of these authors. Handles are resolved to DIDs before searching."
+          },
+          "domains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Include posts that link to any of these domains."
+          },
+          "hasMedia": {
+            "type": "boolean",
+            "description": "Include only posts with media."
+          },
+          "hasVideo": {
+            "type": "boolean",
+            "description": "Include only posts with video."
+          },
+          "hashtags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 640,
+              "maxGraphemes": 64
+            },
+            "description": "Include posts tagged with any of these hashtags. Do not include the hash (#) prefix."
+          },
+          "mentions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "at-identifier"
+            },
+            "description": "Include posts that mention any of these accounts. Handles are resolved to DIDs before searching."
+          },
+          "following": {
+            "type": "boolean",
+            "description": "Include only posts from accounts followed by the viewer."
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "language"
+            },
+            "description": "Include posts whose language matches any of these language codes."
+          },
+          "excludeUrls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Exclude posts that link to any of these URLs."
+          },
+          "repliesOnly": {
+            "type": "boolean",
+            "description": "Include only replies. Mutually exclusive with excludeReplies."
+          },
+          "queryLanguage": {
+            "type": "string",
+            "description": "Language analyzer hint for the query text. If unset, the server auto-detects when possible.",
+            "knownValues": [
+              "ja",
+              "zh",
+              "ko",
+              "th",
+              "ar"
+            ]
+          },
+          "threadRootUri": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "Include only posts in the thread rooted at this post URI."
+          },
+          "embeddedAtUris": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "at-uri"
+            },
+            "description": "Include posts that embed any of these AT URIs."
+          },
+          "excludeAuthors": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "at-identifier"
+            },
+            "description": "Exclude posts by any of these authors. Handles are resolved to DIDs before searching."
+          },
+          "excludeDomains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Exclude posts that link to any of these domains."
+          },
+          "excludeReplies": {
+            "type": "boolean",
+            "description": "Exclude replies from results. Mutually exclusive with repliesOnly."
+          },
+          "replyParentUri": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "Include only direct replies to this parent post URI."
+          },
+          "excludeHashtags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 640,
+              "maxGraphemes": 64
+            },
+            "description": "Exclude posts tagged with any of these hashtags. Do not include the hash (#) prefix."
+          },
+          "excludeMentions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "at-identifier"
+            },
+            "description": "Exclude posts that mention any of these accounts. Handles are resolved to DIDs before searching."
+          },
+          "excludeLanguages": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "language"
+            },
+            "description": "Exclude posts whose language matches any of these language codes."
+          },
+          "excludeEmbeddedAtUris": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "at-uri"
+            },
+            "description": "Exclude posts that embed any of these AT URIs."
+          }
+        }
+      },
+      "description": "Find posts matching a search query or filters, returning search hits for matching post records."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

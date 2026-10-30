@@ -1,0 +1,91 @@
+{
+  "id": "app.bsky.embed.getEmbedExternalView",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "refs": [
+                "app.bsky.embed.external#viewArticle",
+                "app.bsky.embed.external#viewArticlePublication",
+                "app.bsky.embed.external#viewGallery",
+                "app.bsky.embed.external#viewLivestream"
+              ],
+              "type": "union",
+              "description": "Preferred to #view. Hydrated data of the embed. Present only when validation passed and the records supply enough information to populate the required fields."
+            },
+            "view": {
+              "ref": "app.bsky.embed.external#view",
+              "type": "ref",
+              "description": "Legacy hydrated view of the embed, returned for Standard.site records only. Present only when validation passed and the records supply enough information to populate the required `viewExternal` fields."
+            },
+            "associatedRefs": {
+              "type": "array",
+              "items": {
+                "ref": "com.atproto.repo.strongRef",
+                "type": "ref"
+              },
+              "description": "StrongRefs (URI+CID) of the Atmosphere records selected for persistence in a post, suitable for embedding into its external.associatedRefs: the canonical record, plus only the additional records the service chooses to persist for its collection. This can be a subset of the records used to render `data`, which may also draw on other hydrated records such as recommendations, subscriptions, or favorites. Present only when validation passed. Index-aligned with `associatedRecords`."
+            },
+            "associatedRecords": {
+              "type": "array",
+              "items": {
+                "type": "unknown",
+                "description": "The raw record data of the Atmosphere records selected for persistence, index-aligned with `associatedRefs`. Returned for convenience, to avoid the client separately fetching them. Present only when validation passed."
+              }
+            },
+            "unverifiedAssociatedRefs": {
+              "type": "array",
+              "items": {
+                "ref": "com.atproto.repo.strongRef",
+                "type": "ref"
+              },
+              "description": "StrongRefs (URI+CID) of the same persistence-selected Atmosphere records (the canonical record plus chosen additional records) when validation of the requested `url` failed. These must not be written to a post. Index-aligned with `unverifiedAssociatedRecords`."
+            },
+            "unverifiedAssociatedRecords": {
+              "type": "array",
+              "items": {
+                "type": "unknown",
+                "description": "The raw record data of the persistence-selected Atmosphere records, index-aligned with `unverifiedAssociatedRefs`. Present only when validation failed."
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The canonical web URL the embed represents (typically the URL the user pasted into the composer). Used as the returned view's `uri`, and validated against the resolved records."
+          },
+          "uris": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "at-uri"
+            },
+            "maxLength": 4,
+            "description": "Legacy input for Standard.site callers, ignored when `canonicalUri` is provided. A single record is selected from it: the first site.standard.document URI, otherwise the first site.standard.publication URI. Other entries are ignored; a document's publication is discovered from the document itself."
+          },
+          "canonicalUri": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "The canonical AT URI of the atproto record found on the webpage. When provided, takes precedence over `uris`, which is then ignored."
+          }
+        }
+      },
+      "description": "Resolve one AT-URI record into the data needed to render an enhanced external embed. The records are validated against the requested `url` before any view is built. When validation passes, returns `data`, `associatedRefs` (strongRefs to embed into a post's external.associatedRefs) and the raw `associatedRecords`, plus a legacy `view` for Standard.site records only. When validation fails, only `unverifiedAssociatedRefs` and `unverifiedAssociatedRecords` are returned and no view or data is built. The response is empty (`{}`) when no record URI was usable or the record could not be resolved; clients should fall back to their own link-card rendering in that case and skip writing strongRefs to the post."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

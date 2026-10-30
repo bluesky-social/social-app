@@ -1,6 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -16,6 +15,7 @@ import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -36,7 +36,7 @@ export function ModerationBlockedAccounts({}: Props) {
     fetchNextPage,
     isFetchingNextPage,
   } = useMyBlockedAccountsQuery()
-  const isEmpty = !isFetching && !data?.pages[0]?.blocks.length
+  const isEmpty = !isFetching && !data?.pages.some(page => page.blocks.length)
   const profiles = useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.blocks)
@@ -68,7 +68,7 @@ export function ModerationBlockedAccounts({}: Props) {
     item,
     index,
   }: {
-    item: ActorDefs.ProfileView
+    item: app.bsky.actor.defs.ProfileView
     index: number
   }) => {
     if (!moderationOpts) return null
@@ -87,52 +87,50 @@ export function ModerationBlockedAccounts({}: Props) {
 
   return (
     <Layout.Screen testID="blockedAccountsScreen">
-      <Layout.Center>
-        <Layout.Header.Outer>
-          <Layout.Header.BackButton />
-          <Layout.Header.Content>
-            <Layout.Header.TitleText>
-              <Trans>Blocked Accounts</Trans>
-            </Layout.Header.TitleText>
-          </Layout.Header.Content>
-          <Layout.Header.Slot />
-        </Layout.Header.Outer>
-        {isEmpty ? (
-          <View>
-            <Info style={[a.border_b]} />
-            {isError ? (
-              <ErrorScreen
-                title="Oops!"
-                message={cleanError(error)}
-                onPressTryAgain={refetch}
-              />
-            ) : (
-              <Empty />
-            )}
-          </View>
-        ) : (
-          <List
-            data={profiles}
-            keyExtractor={(item: ActorDefs.ProfileView) => item.did}
-            refreshing={isPTRing}
-            onRefresh={onRefresh}
-            onEndReached={onEndReached}
-            renderItem={renderItem}
-            initialNumToRender={15}
-            // FIXME(dan)
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Blocked Accounts</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
+      {isEmpty ? (
+        <Layout.Center>
+          <Info style={[a.border_b]} />
+          {isError ? (
+            <ErrorScreen
+              title="Oops!"
+              message={cleanError(error)}
+              onPressTryAgain={refetch}
+            />
+          ) : (
+            <Empty />
+          )}
+        </Layout.Center>
+      ) : (
+        <List
+          data={profiles}
+          keyExtractor={(item: app.bsky.actor.defs.ProfileView) => item.did}
+          refreshing={isPTRing}
+          onRefresh={onRefresh}
+          onEndReached={onEndReached}
+          renderItem={renderItem}
+          initialNumToRender={15}
+          // FIXME(dan)
 
-            ListHeaderComponent={Info}
-            ListFooterComponent={
-              <ListFooter
-                isFetchingNextPage={isFetchingNextPage}
-                hasNextPage={hasNextPage}
-                error={cleanError(error)}
-                onRetry={fetchNextPage}
-              />
-            }
-          />
-        )}
-      </Layout.Center>
+          ListHeaderComponent={Info}
+          ListFooterComponent={
+            <ListFooter
+              isFetchingNextPage={isFetchingNextPage}
+              hasNextPage={hasNextPage}
+              error={cleanError(error)}
+              onRetry={fetchNextPage}
+            />
+          }
+        />
+      )}
     </Layout.Screen>
   )
 }

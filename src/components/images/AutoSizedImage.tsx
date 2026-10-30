@@ -1,11 +1,10 @@
-import {useMemo, useRef} from 'react'
+import {useEffect, useMemo, useRef} from 'react'
 import {type DimensionValue, Pressable, View} from 'react-native'
 import Animated, {
   type AnimatedRef,
   useAnimatedRef,
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -18,16 +17,23 @@ import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/compone
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 
 export function ConstrainedImage({
   aspectRatio,
   fullBleed,
   children,
   minMobileAspectRatio,
+  showPlaceholder = true,
 }: {
   aspectRatio: number
   fullBleed?: boolean
   minMobileAspectRatio?: number
+  /**
+   * Whether to fill the box with a placeholder colour behind `children`.
+   * Turn this off if the children paint their own.
+   */
+  showPlaceholder?: boolean
   children: React.ReactNode
 }) {
   const t = useTheme()
@@ -51,7 +57,7 @@ export function ConstrainedImage({
               a.h_full,
               a.rounded_md,
               a.overflow_hidden,
-              t.atoms.bg_contrast_25,
+              showPlaceholder && t.atoms.bg_contrast_25,
               fullBleed ? a.w_full : {aspectRatio},
             ]}>
             {children}
@@ -65,26 +71,35 @@ export function ConstrainedImage({
 export function AutoSizedImage({
   image,
   crop = 'constrained',
-  hideBadge,
   onPress,
   onLongPress,
   onPressIn,
+  onContainerRef,
+  onDimsChange,
 }: {
-  image: AppBskyEmbedImages.ViewImage
+  image: app.bsky.embed.images.ViewImage
   crop?: 'none' | 'square' | 'constrained'
-  hideBadge?: boolean
   onPress?: (
     containerRef: AnimatedRef<any>,
     fetchedDims: Dimensions | null,
   ) => void
   onLongPress?: () => void
   onPressIn?: () => void
+  /** Fires once with the internal container ref so a parent can drive its
+   *  own lightbox-return animation without waiting for an `onPress`. */
+  onContainerRef?: (ref: AnimatedRef<any>) => void
+  /** Fires when the underlying image reports its natural dimensions. */
+  onDimsChange?: (dims: Dimensions) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const largeAlt = useLargeAltBadgeEnabled()
   const containerRef = useAnimatedRef()
   const fetchedDimsRef = useRef<{width: number; height: number} | null>(null)
+
+  useEffect(() => {
+    onContainerRef?.(containerRef)
+  }, [containerRef, onContainerRef])
 
   let aspectRatio: number | undefined
   const dims = image.aspectRatio
@@ -110,8 +125,15 @@ export function AutoSizedImage({
   const isContain = aspectRatio === undefined
   const hasAlt = !!image.alt
 
+  /*
+   * The placeholder colour goes on the ref'd view rather than the boxes around
+   * it, so that the lightbox hiding the thumbnail hides the placeholder too.
+   */
   const contents = (
-    <Animated.View ref={containerRef} collapsable={false} style={{flex: 1}}>
+    <Animated.View
+      ref={containerRef}
+      collapsable={false}
+      style={[{flex: 1}, t.atoms.bg_contrast_25]}>
       <Image
         contentFit={isContain ? 'contain' : 'cover'}
         style={[a.w_full, a.h_full]}
@@ -122,17 +144,20 @@ export function AutoSizedImage({
         accessibilityHint=""
         onLoad={e => {
           if (!isContain) {
-            fetchedDimsRef.current = {
+            const dims = {
               width: e.source.width,
               height: e.source.height,
             }
+            fetchedDimsRef.current = dims
+            onDimsChange?.(dims)
           }
         }}
         loading="lazy"
+        useAppleWebpCodec
       />
       <MediaInsetBorder />
 
-      {(hasAlt || isCropped) && !hideBadge ? (
+      {hasAlt || isCropped ? (
         <View
           accessible={false}
           style={[
@@ -151,8 +176,10 @@ export function AutoSizedImage({
           ]}>
           {isCropped && (
             <View
+              accessible={false}
               style={[
-                a.rounded_xs,
+                a.rounded_sm,
+                a.p_xs,
                 t.atoms.bg_contrast_25,
                 {
                   padding: 3,
@@ -172,17 +199,18 @@ export function AutoSizedImage({
           )}
           {hasAlt && (
             <View
+              accessible={false}
               style={[
                 a.justify_center,
-                a.rounded_xs,
+                a.rounded_sm,
+                a.p_xs,
                 t.atoms.bg_contrast_25,
                 {
-                  padding: 3,
                   opacity: 0.8,
                 },
                 largeAlt && [
                   {
-                    padding: 5,
+                    padding: 6,
                   },
                 ],
               ]}>
@@ -214,7 +242,6 @@ export function AutoSizedImage({
           a.w_full,
           a.rounded_md,
           a.overflow_hidden,
-          t.atoms.bg_contrast_25,
           {aspectRatio: max ?? 1},
           web([
             a.transition_transform,
@@ -229,7 +256,8 @@ export function AutoSizedImage({
     return (
       <ConstrainedImage
         fullBleed={crop === 'square'}
-        aspectRatio={constrained ?? 1}>
+        aspectRatio={constrained ?? 1}
+        showPlaceholder={false}>
         <Pressable
           onPress={() => onPress?.(containerRef, fetchedDimsRef.current)}
           onLongPress={onLongPress}

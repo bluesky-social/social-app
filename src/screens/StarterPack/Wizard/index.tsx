@@ -3,20 +3,12 @@ import {Keyboard, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
-import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  AtUri,
-  type ModerationOpts,
-} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Plural, Trans} from '@lingui/react/macro'
+import {AtUri} from '@atproto/syntax'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {
   type CommonNavigatorParams,
@@ -58,6 +50,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {Provider} from './State'
 
@@ -75,7 +68,7 @@ export function Wizard({
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   // Use targetDid if provided (from dialog), otherwise use current account
   const profileDid = targetDid || currentAccount!.did
@@ -113,7 +106,7 @@ export function Wizard({
             isLoadingStarterPack || isLoadingProfiles || isLoadingProfile
           }
           isError={isErrorStarterPack || isErrorProfiles || isErrorProfile}
-          errorMessage={_(msg`That starter pack could not be found.`)}
+          errorMessage={l`That Starter Pack could not be found.`}
         />
       </Layout.Screen>
     )
@@ -123,7 +116,7 @@ export function Wizard({
         <ListMaybePlaceholder
           isLoading={false}
           isError={true}
-          errorMessage={_(msg`That starter pack could not be found.`)}
+          errorMessage={l`That Starter Pack could not be found.`}
         />
       </Layout.Screen>
     )
@@ -159,16 +152,22 @@ function WizardInner({
   fromDialog,
   onSuccess,
 }: {
-  currentStarterPack?: AppBskyGraphDefs.StarterPackView
-  currentListItems?: AppBskyGraphDefs.ListItemView[]
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  currentStarterPack?: app.bsky.graph.defs.StarterPackView
+  currentListItems?: app.bsky.graph.defs.ListItemView[]
+  profile: app.bsky.actor.defs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   fromDialog?: boolean
   onSuccess?: () => void
 }) {
-  const navigation = useNavigation<NavigationProp>()
+  const navigation =
+    useNavigation<
+      NavigationProp<
+        CommonNavigatorParams,
+        'StarterPackEdit' | 'StarterPackWizard'
+      >
+    >()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [state, dispatch] = useWizardState()
   const {currentAccount} = useSession()
 
@@ -186,7 +185,7 @@ function WizardInner({
 
   const getDefaultName = () => {
     const displayName = createSanitizedDisplayName(currentProfile!, true)
-    return _(msg`${displayName}'s Starter Pack`).slice(0, 50)
+    return l`${displayName}’s Starter Pack`.slice(0, 50)
   }
 
   const wizardUiStrings: Record<
@@ -194,16 +193,16 @@ function WizardInner({
     {header: string; nextBtn: string; subtitle?: string}
   > = {
     Details: {
-      header: _(msg`Starter Pack`),
-      nextBtn: _(msg`Next`),
+      header: l`Starter Pack`,
+      nextBtn: l`Next`,
     },
     Profiles: {
-      header: _(msg`Choose People`),
-      nextBtn: _(msg`Next`),
+      header: l`Choose People`,
+      nextBtn: l`Next`,
     },
     Feeds: {
-      header: _(msg`Choose Feeds`),
-      nextBtn: state.feeds.length === 0 ? _(msg`Skip`) : _(msg`Finish`),
+      header: l`Choose Feeds`,
+      nextBtn: state.feeds.length === 0 ? l`Skip` : l`Finish`,
     },
   }
   const currUiStrings = wizardUiStrings[state.currentStep]
@@ -216,7 +215,7 @@ function WizardInner({
       profilesCount: state.profiles.length,
       feedsCount: state.feeds.length,
     })
-    Image.prefetch([getStarterPackOgCard(currentProfile!.did, rkey)])
+    void Image.prefetch([getStarterPackOgCard(currentProfile!.did, rkey)])
     dispatch({type: 'SetProcessing', processing: false})
 
     if (fromDialog) {
@@ -245,9 +244,9 @@ function WizardInner({
   const {mutate: createStarterPack} = useCreateStarterPackMutation({
     onSuccess: onSuccessCreate,
     onError: e => {
-      logger.error('Failed to create starter pack', {safeMessage: e})
+      logger.error('Failed to create Starter Pack', {safeMessage: e})
       dispatch({type: 'SetProcessing', processing: false})
-      Toast.show(_(msg`Failed to create starter pack`), {
+      Toast.show(l`Failed to create Starter Pack`, {
         type: 'error',
       })
     },
@@ -255,15 +254,15 @@ function WizardInner({
   const {mutate: editStarterPack} = useEditStarterPackMutation({
     onSuccess: onSuccessEdit,
     onError: e => {
-      logger.error('Failed to edit starter pack', {safeMessage: e})
+      logger.error('Failed to edit Starter Pack', {safeMessage: e})
       dispatch({type: 'SetProcessing', processing: false})
-      Toast.show(_(msg`Failed to create starter pack`), {
+      Toast.show(l`Failed to create Starter Pack`, {
         type: 'error',
       })
     },
   })
 
-  const submit = async () => {
+  const submit = () => {
     dispatch({type: 'SetProcessing', processing: true})
     if (currentStarterPack && currentListItems) {
       editStarterPack({
@@ -312,8 +311,8 @@ function WizardInner({
     <Layout.Center style={[a.flex_1]}>
       <Layout.Header.Outer>
         <Layout.Header.BackButton
-          label={_(msg`Back`)}
-          accessibilityHint={_(msg`Returns to the previous step`)}
+          label={l`Back`}
+          accessibilityHint={l`Returns to the previous step`}
           onPress={evt => {
             if (state.currentStep !== 'Details') {
               evt.preventDefault()
@@ -328,7 +327,7 @@ function WizardInner({
         </Layout.Header.Content>
         {isEditEnabled ? (
           <Button
-            label={_(msg`Edit`)}
+            label={l`Edit`}
             color="secondary"
             size="small"
             onPress={editDialogControl.open}>
@@ -340,17 +339,24 @@ function WizardInner({
           <Layout.Header.Slot />
         )}
       </Layout.Header.Outer>
-
       <Container>
         {state.currentStep === 'Details' ? (
           <StepDetails />
         ) : state.currentStep === 'Profiles' ? (
-          <StepProfiles moderationOpts={moderationOpts} />
+          <StepProfiles
+            moderationOpts={moderationOpts}
+            optedOutDids={
+              new Set(
+                currentListItems
+                  ?.filter(item => item.subjectOptedOut)
+                  .map(item => item.subject.did),
+              )
+            }
+          />
         ) : state.currentStep === 'Feeds' ? (
           <StepFeeds moderationOpts={moderationOpts} />
         ) : null}
       </Container>
-
       {state.currentStep !== 'Details' && (
         <Footer onNext={onNext} nextBtnText={currUiStrings.nextBtn} />
       )}
@@ -366,7 +372,7 @@ function WizardInner({
 }
 
 function Container({children}: {children: React.ReactNode}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [state, dispatch] = useWizardState()
 
   if (state.currentStep === 'Profiles' || state.currentStep === 'Feeds') {
@@ -381,7 +387,7 @@ function Container({children}: {children: React.ReactNode}) {
       {state.currentStep === 'Details' && (
         <>
           <Button
-            label={_(msg`Next`)}
+            label={l`Next`}
             variant="solid"
             color="primary"
             size="large"
@@ -441,7 +447,7 @@ function Footer({
         <View style={[a.absolute, {right: 14, top: 31}]}>
           <Text style={[a.font_semi_bold]}>
             {items.length}/
-            {state.currentStep === 'Profiles' ? STARTER_PACK_MAX_SIZE : 3}
+            {state.currentStep === 'Profiles' ? state.profileLimit : 3}
           </Text>
         </View>
       )}
@@ -485,7 +491,7 @@ function Footer({
                     <Text style={[a.font_semi_bold, textStyles]} emoji>
                       {getName(items[0])}{' '}
                     </Text>
-                    right now! Add more people to your starter pack by searching
+                    right now! Add more people to your Starter Pack by searching
                     above.
                   </Trans>
                 )
@@ -497,7 +503,7 @@ function Footer({
                     <Text style={[a.font_semi_bold, textStyles]} emoji>
                       {getName(items[1] /* [0] is self, skip it */)}{' '}
                     </Text>
-                    are included in your starter pack
+                    are included in your Starter Pack
                   </Trans>
                 ) : (
                   <Trans>
@@ -509,7 +515,7 @@ function Footer({
                     <Text style={[a.font_semi_bold, textStyles]} emoji>
                       {getName(items[1] /* [0] is self, skip it */)}{' '}
                     </Text>
-                    are included in your starter pack
+                    are included in your Starter Pack
                   </Trans>
                 )
               ) : items.length > 2 ? (
@@ -526,7 +532,7 @@ function Footer({
                     one="# other"
                     other="# others"
                   />{' '}
-                  are included in your starter pack
+                  are included in your Starter Pack
                 </Trans>
               ) : null /* Should not happen. */
             }
@@ -535,7 +541,7 @@ function Footer({
           items.length === 0 ? (
             <View style={[a.gap_sm]}>
               <Text style={[a.font_semi_bold, a.text_center, textStyles]}>
-                <Trans>Add some feeds to your starter pack!</Trans>
+                <Trans>Add some feeds to your Starter Pack!</Trans>
               </Text>
               <Text style={[a.text_center, textStyles]}>
                 <Trans>
@@ -551,7 +557,7 @@ function Footer({
                     <Text style={[a.font_semi_bold, textStyles]} emoji>
                       {getName(items[0])}
                     </Text>{' '}
-                    is included in your starter pack
+                    is included in your Starter Pack
                   </Trans>
                 ) : items.length === 2 ? (
                   <Trans>
@@ -563,7 +569,7 @@ function Footer({
                     <Text style={[a.font_semi_bold, textStyles]} emoji>
                       {getName(items[1])}{' '}
                     </Text>
-                    are included in your starter pack
+                    are included in your Starter Pack
                   </Trans>
                 ) : items.length > 2 ? (
                   <Trans context="feeds">
@@ -579,7 +585,7 @@ function Footer({
                       one="# other"
                       other="# others"
                     />{' '}
-                    are included in your starter pack
+                    are included in your Starter Pack
                   </Trans>
                 ) : null /* Should not happen. */
               }
@@ -625,7 +631,7 @@ function Footer({
 }
 
 function getName(
-  item: bsky.profile.AnyProfileView | AppBskyFeedDefs.GeneratorView,
+  item: bsky.profile.AnyProfileView | app.bsky.feed.defs.GeneratorView,
 ) {
   if (typeof item.displayName === 'string') {
     return enforceLen(sanitizeDisplayName(item.displayName), 28, true)

@@ -1,5 +1,4 @@
 import {
-  Children,
   createContext,
   useCallback,
   useContext,
@@ -8,26 +7,32 @@ import {
   useRef,
   useState,
 } from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 import Animated, {Easing, ZoomIn} from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
-import {atoms as a, select, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {useOnGesture} from '#/components/hooks/useOnGesture'
 import {createPortalGroup, Portal as RootPortal} from '#/components/Portal'
 import {
   ARROW_HALF_SIZE,
   ARROW_SIZE,
   BUBBLE_MAX_WIDTH,
+  getTooltipStyle,
   MIN_EDGE_SPACE,
+  type TooltipColor,
 } from '#/components/Tooltip/const'
 import {Text} from '#/components/Typography'
 
 const TooltipPortal = createPortalGroup()
-const TooltipProviderContext =
-  createContext<React.RefObject<View | null> | null>(null)
+const TooltipProviderContext = createContext<React.RefObject<React.ComponentRef<
+  typeof View
+> | null> | null>(null)
 
 /**
  * Provider for Tooltip component. Only needed when you need to position the tooltip relative to a container,
@@ -36,7 +41,7 @@ const TooltipProviderContext =
  * Only really necessary on iOS but can work on Android.
  */
 export function SheetCompatProvider({children}: {children: React.ReactNode}) {
-  const ref = useRef<View | null>(null)
+  const ref = useRef<React.ComponentRef<typeof View> | null>(null)
   return (
     <GlobalGestureEventsProvider style={[a.flex_1]}>
       <TooltipPortal.Provider>
@@ -56,10 +61,10 @@ SheetCompatProvider.displayName = 'TooltipSheetCompatProvider'
  * These are native specific values, not shared with web
  */
 const ARROW_VISUAL_OFFSET = ARROW_SIZE / 1.25 // vibes-based, slightly off the target
-const BUBBLE_SHADOW_OFFSET = ARROW_SIZE / 3 // vibes-based, provide more shadow beneath tip
 
 type TooltipContextType = {
   position: 'top' | 'bottom'
+  color: TooltipColor
   visible: boolean
   onVisibleChange: (visible: boolean) => void
 }
@@ -79,6 +84,7 @@ type TargetContextType = {
 
 const TooltipContext = createContext<TooltipContextType>({
   position: 'bottom',
+  color: 'default',
   visible: false,
   onVisibleChange: () => {},
 })
@@ -94,11 +100,13 @@ TargetContext.displayName = 'TargetContext'
 export function Outer({
   children,
   position = 'bottom',
+  color = 'default',
   visible: requestVisible,
   onVisibleChange,
 }: {
   children: React.ReactNode
   position?: 'top' | 'bottom'
+  color?: TooltipColor
   visible: boolean
   onVisibleChange: (visible: boolean) => void
 }) {
@@ -126,8 +134,8 @@ export function Outer({
   }
 
   const ctx = useMemo(
-    () => ({position, visible, onVisibleChange}),
-    [position, visible, onVisibleChange],
+    () => ({position, color, visible, onVisibleChange}),
+    [position, color, visible, onVisibleChange],
   )
   const targetCtx = useMemo(
     () => ({
@@ -149,13 +157,14 @@ export function Outer({
 
 export function Target({children}: {children: React.ReactNode}) {
   const {shouldMeasure, setTargetMeasurements} = useContext(TargetContext)
-  const [hasLayedOut, setHasLayedOut] = useState(false)
-  const targetRef = useRef<View>(null)
+  const [hasLaidOut, setHasLaidOut] = useState(false)
+  const targetRef = useRef<React.ComponentRef<typeof View>>(null)
   const containerRef = useContext(TooltipProviderContext)
   const keyboardIsOpen = useIsKeyboardVisible()
+  const {width, height} = useSafeAreaFrame()
 
   useEffect(() => {
-    if (!shouldMeasure || !hasLayedOut) return
+    if (!shouldMeasure || !hasLaidOut) return
     /*
      * Once opened, measure the dimensions and position of the target
      */
@@ -179,16 +188,18 @@ export function Target({children}: {children: React.ReactNode}) {
   }, [
     shouldMeasure,
     setTargetMeasurements,
-    hasLayedOut,
+    hasLaidOut,
     containerRef,
     keyboardIsOpen,
+    width,
+    height,
   ])
 
   return (
     <View
       collapsable={false}
       ref={targetRef}
-      onLayout={() => setHasLayedOut(true)}>
+      onLayout={() => setHasLaidOut(true)}>
       {children}
     </View>
   )
@@ -201,7 +212,7 @@ export function Content({
   children: React.ReactNode
   label: string
 }) {
-  const {position, visible, onVisibleChange} = useContext(TooltipContext)
+  const {position, color, visible, onVisibleChange} = useContext(TooltipContext)
   const {targetMeasurements} = useContext(TargetContext)
   const isWithinProvider = !!useContext(TooltipProviderContext)
   const requestClose = useCallback(() => {
@@ -217,8 +228,9 @@ export function Content({
       <Bubble
         label={label}
         position={position}
+        color={color}
         /*
-         * Gotta pass these in here. Inside the Bubble, we're Potal-ed outside
+         * Gotta pass these in here. Inside the Bubble, we're Portal-ed outside
          * the context providers.
          */
         targetMeasurements={targetMeasurements}
@@ -233,12 +245,14 @@ function Bubble({
   children,
   label,
   position,
+  color,
   requestClose,
   targetMeasurements,
 }: {
   children: React.ReactNode
   label: string
   position: TooltipContextType['position']
+  color: TooltipColor
   requestClose: () => void
   targetMeasurements: Exclude<
     TargetContextType['targetMeasurements'],
@@ -246,8 +260,9 @@ function Bubble({
   >
 }) {
   const t = useTheme()
+  const style = getTooltipStyle(t, color)
   const insets = useSafeAreaInsets()
-  const dimensions = useWindowDimensions()
+  const dimensions = useSafeAreaFrame()
   const [bubbleMeasurements, setBubbleMeasurements] = useState<
     | {
         width: number
@@ -383,21 +398,19 @@ function Bubble({
       ]}>
       <Animated.View
         entering={ZoomIn.easing(Easing.out(Easing.exp))}
-        style={{transformOrigin: oppposite(position)}}>
+        style={{transformOrigin: opposite(position)}}>
         <View
           style={[
             a.absolute,
             a.top_0,
             a.z_10,
-            t.atoms.bg,
-            select(t.name, {
-              light: t.atoms.bg,
-              dark: t.atoms.bg_contrast_100,
-              dim: t.atoms.bg_contrast_100,
-            }),
             {
+              backgroundColor: style.surface,
               borderTopLeftRadius: a.rounded_2xs.borderRadius,
               borderBottomRightRadius: a.rounded_2xs.borderRadius,
+              borderColor: style.border.color,
+              borderTopWidth: style.border.width,
+              borderLeftWidth: style.border.width,
               width: ARROW_SIZE,
               height: ARROW_SIZE,
               transform: [{rotate: '45deg'}],
@@ -410,27 +423,19 @@ function Bubble({
           style={[
             a.px_md,
             a.py_sm,
-            a.rounded_sm,
-            select(t.name, {
-              light: t.atoms.bg,
-              dark: t.atoms.bg_contrast_100,
-              dim: t.atoms.bg_contrast_100,
-            }),
-            t.atoms.shadow_md,
+            a.rounded_md,
+            t.atoms.shadow_xs,
             {
-              shadowOpacity: 0.2,
-              shadowOffset: {
-                width: 0,
-                height:
-                  BUBBLE_SHADOW_OFFSET *
-                  (coords.computedPosition === 'bottom' ? -1 : 1),
-              },
+              backgroundColor: style.surface,
+              borderColor: style.border.color,
+              borderWidth: style.border.width,
             },
           ]}
           onLayout={e => {
-            setBubbleMeasurements({
-              width: e.nativeEvent.layout.width,
-              height: e.nativeEvent.layout.height,
+            const {width, height} = e.nativeEvent.layout
+            setBubbleMeasurements(prev => {
+              if (prev?.width === width && prev.height === height) return prev
+              return {width, height}
             })
           }}>
           {children}
@@ -440,7 +445,7 @@ function Bubble({
   )
 }
 
-function oppposite(position: 'top' | 'bottom') {
+function opposite(position: 'top' | 'bottom') {
   switch (position) {
     case 'top':
       return 'center bottom'
@@ -451,16 +456,23 @@ function oppposite(position: 'top' | 'bottom') {
   }
 }
 
-export function TextBubble({children}: {children: React.ReactNode}) {
-  const c = Children.toArray(children)
+export function BubbleText({
+  children,
+  label,
+}: {
+  children: React.ReactNode
+  label: string
+}) {
+  const t = useTheme()
+  const {color} = useContext(TooltipContext)
+  const style = getTooltipStyle(t, color)
+  // eslint-disable-next-line bsky-internal/avoid-unwrapped-text
   return (
-    <Content label={c.join(' ')}>
+    <Content label={label}>
       <View style={[a.gap_xs]}>
-        {c.map((child, i) => (
-          <Text key={i} style={[a.text_sm, a.leading_snug]}>
-            {child}
-          </Text>
-        ))}
+        <Text style={[a.text_sm, a.leading_snug, {color: style.text}]}>
+          {children}
+        </Text>
       </View>
     </Content>
   )

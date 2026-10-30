@@ -40,9 +40,7 @@ export interface Follow10ProgressGuide extends BaseProgressGuide {
 }
 
 export type ProgressGuide =
-  | Like10AndFollow7ProgressGuide
-  | Follow10ProgressGuide
-  | undefined
+  Like10AndFollow7ProgressGuide | Follow10ProgressGuide | undefined
 
 const ProgressGuideContext = createContext<ProgressGuide>(undefined)
 ProgressGuideContext.displayName = 'ProgressGuideContext'

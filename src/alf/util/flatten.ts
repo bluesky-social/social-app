@@ -1,6 +1,19 @@
-import {type DimensionValue, StyleSheet} from 'react-native'
+import {type DimensionValue, type StyleProp, StyleSheet} from 'react-native'
 
-export const flatten = StyleSheet.flatten
+export function flatten<T>(
+  style?: StyleProp<T>,
+): T extends (infer U)[] ? U : T {
+  return (StyleSheet.flatten(
+    style as unknown as Parameters<typeof StyleSheet.flatten>[0],
+  ) ?? {}) as T extends (infer U)[] ? U : T
+}
+
+/** Flatten React Native styles passed directly to a web-only DOM component. */
+export function flattenToCSS(style: unknown): React.CSSProperties {
+  return (StyleSheet.flatten(
+    style as Parameters<typeof StyleSheet.flatten>[0],
+  ) ?? {}) as React.CSSProperties
+}
 
 /**
  * Coerce a style value to a number. Padding values are typed as
@@ -28,7 +41,7 @@ interface PaddingStyle {
  * non-numeric `DimensionValue` (e.g. percentages) is treated as 0.
  */
 export function extractPadding(style: PaddingStyle | PaddingStyle[]) {
-  const s = flatten(style as any) ?? {}
+  const s = flatten(style)
   const base = num(s.padding)
   return {
     paddingTop: num(s.paddingTop) || num(s.paddingVertical) || base,

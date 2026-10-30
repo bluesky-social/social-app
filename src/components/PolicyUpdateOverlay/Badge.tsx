@@ -22,7 +22,7 @@ export function Badge() {
             backgroundColor: t.palette.primary_25,
           },
         ]}>
-        <Logo fill={t.palette.primary_600} width={14} />
+        <Logo allowVariants={false} fill={t.palette.primary_600} width={14} />
         <Text
           style={[
             a.font_semi_bold,

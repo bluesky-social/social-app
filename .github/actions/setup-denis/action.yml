@@ -1,0 +1,50 @@
+---
+name: Setup denis CLI
+description: >
+  Download and verify the denis OTA publish binary from the (private)
+  bluesky-social/tango releases and put it on PATH. Uses a short-lived GitHub
+  App token scoped to contents:read on tango, since the default GITHUB_TOKEN
+  cannot read a private repo's releases.
+
+inputs:
+  release-tag:
+    description: denis release tag in bluesky-social/tango to download
+    required: true
+  app-id:
+    description: GitHub App ID for the token used to read tango releases
+    required: true
+  private-key:
+    description: GitHub App private key
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: 🔑 Mint tango read token
+      id: tango-token
+      uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+      with:
+        app-id: ${{ inputs.app-id }}
+        private-key: ${{ inputs.private-key }}
+        repositories: tango
+        permission-contents: read
+
+    - name: ⬇️ Download and verify denis binary
+      shell: bash
+      env:
+        GH_TOKEN: ${{ steps.tango-token.outputs.token }}
+        RELEASE_TAG: ${{ inputs.release-tag }}
+      run: |
+        BIN_DIR="$RUNNER_TEMP/denis-bin"
+        mkdir -p "$BIN_DIR"
+        cd "$BIN_DIR"
+        gh release download "$RELEASE_TAG" \
+          --repo bluesky-social/tango \
+          --pattern denis-linux-amd64 \
+          --pattern denis-linux-amd64.sha256 \
+          --clobber
+        # Verify before making it executable / putting it on PATH.
+        sha256sum -c denis-linux-amd64.sha256
+        mv denis-linux-amd64 denis
+        chmod +x denis
+        echo "$BIN_DIR" >> "$GITHUB_PATH"

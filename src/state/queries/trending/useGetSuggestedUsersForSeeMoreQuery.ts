@@ -1,7 +1,3 @@
-import {
-  type AppBskyActorDefs,
-  type AppBskyUnspeccedGetSuggestedUsersForSeeMore,
-} from '@atproto/api'
 import {type QueryClient, useQuery} from '@tanstack/react-query'
 
 import {
@@ -12,7 +8,8 @@ import {logger} from '#/logger'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 export type QueryProps = {
   category?: string | null
@@ -28,7 +25,7 @@ export const createGetSuggestedUsersForSeeMoreQueryKey = (props: {
 }) => [getSuggestedUsersForSeeMoreQueryKeyRoot, props.category, props.limit]
 
 export function useGetSuggestedUsersForSeeMoreQuery(props: QueryProps = {}) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   const {data: preferences} = usePreferencesQuery()
 
   return useQuery({
@@ -42,7 +39,8 @@ export function useGetSuggestedUsersForSeeMoreQuery(props: QueryProps = {}) {
       const contentLangs = getContentLanguages().join(',')
       const userInterests = aggregateUserInterests(preferences)
 
-      const {data} = await agent.app.bsky.unspecced.getSuggestedUsersForSeeMore(
+      const data = await client.call(
+        app.bsky.unspecced.getSuggestedUsersForSeeMore,
         {
           category: props.category ?? undefined,
           limit: props.limit || 50,
@@ -66,9 +64,9 @@ export function useGetSuggestedUsersForSeeMoreQuery(props: QueryProps = {}) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<app.bsky.actor.defs.ProfileView, void> {
   const responses =
-    queryClient.getQueriesData<AppBskyUnspeccedGetSuggestedUsersForSeeMore.OutputSchema>(
+    queryClient.getQueriesData<app.bsky.unspecced.getSuggestedUsersForSeeMore.$OutputBody>(
       {
         queryKey: [getSuggestedUsersForSeeMoreQueryKeyRoot],
       },

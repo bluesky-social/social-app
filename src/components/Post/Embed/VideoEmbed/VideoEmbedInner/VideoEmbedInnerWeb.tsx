@@ -1,14 +1,36 @@
-import {useCallback, useEffect, useId, useRef, useState} from 'react'
+import {
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useId,
+  useRef,
+  useState,
+} from 'react'
 import {View} from 'react-native'
-import {type AppBskyEmbedVideo} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {hasPlaybackStarted} from '#/lib/media/video/analytics'
 import {atoms as a} from '#/alf'
+import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
+import {useFullscreen} from '#/components/hooks/useFullscreen'
+import {useReportDialogMetadataContext} from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
 import * as BandwidthEstimate from './bandwidth-estimate'
+import {loadHls} from './loadHls'
+import {
+  HLSFatalError,
+  HLSUnsupportedError,
+  type VideoEmbedInnerWebProps,
+  VideoNotFoundError,
+} from './VideoEmbedInnerWeb.shared'
 import {Controls} from './web-controls/VideoControls'
+
+export {
+  HLSFatalError,
+  HLSUnsupportedError,
+  VideoNotFoundError,
+} from './VideoEmbedInnerWeb.shared'
 
 export function VideoEmbedInnerWeb({
   embed,
@@ -16,20 +38,22 @@ export function VideoEmbedInnerWeb({
   setActive,
   onScreen,
   lastKnownTime,
-}: {
-  embed: AppBskyEmbedVideo.View
-  active: boolean
-  setActive: () => void
-  onScreen: boolean
-  lastKnownTime: React.RefObject<number | undefined>
-}) {
+  onPlaybackStart,
+  onPlaybackProgress,
+  onPlaybackStateChange,
+  onPlaybackEnd,
+}: VideoEmbedInnerWebProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
   const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false)
   const [hlsLoading, setHlsLoading] = useState(false)
   const figId = useId()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
+  const [isFullscreen] = useFullscreen(containerRef)
+  const isGif = embed.presentation === 'gif'
+  const reportDialogMetadata = useReportDialogMetadataContext()
+  const playbackStartTrackedRef = useRef(false)
 
   // send error up to error boundary
   const [error, setError] = useState<Error | null>(null)
@@ -54,7 +78,7 @@ export function VideoEmbedInnerWeb({
   return (
     <View
       style={[a.flex_1, a.rounded_md, a.overflow_hidden]}
-      accessibilityLabel={_(msg`Embedded video player`)}
+      accessibilityLabel={l`Embedded video player`}
       accessibilityHint="">
       <div ref={containerRef} style={{height: '100%', width: '100%'}}>
         <figure style={{margin: 0, position: 'absolute', inset: 0}}>
@@ -67,8 +91,34 @@ export function VideoEmbedInnerWeb({
             muted={embed.presentation === 'gif' || !focused}
             aria-labelledby={embed.alt ? figId : undefined}
             onTimeUpdate={e => {
-              lastKnownTime.current = e.currentTarget.currentTime
+              const currentTime = e.currentTarget.currentTime
+              lastKnownTime.current = currentTime
+              onPlaybackProgress(currentTime)
+              if (
+                !playbackStartTrackedRef.current &&
+                hasPlaybackStarted(currentTime)
+              ) {
+                playbackStartTrackedRef.current = true
+                onPlaybackStart(!focused)
+              }
+              if (
+                !isGif &&
+                reportDialogMetadata &&
+                Number.isFinite(currentTime) &&
+                currentTime >= 0
+              ) {
+                reportDialogMetadata.current.videoTimestampSeconds = currentTime
+              }
             }}
+            onPlaying={() => onPlaybackStateChange('playing')}
+            onPause={() => onPlaybackStateChange('paused')}
+            onWaiting={() => onPlaybackStateChange('buffering')}
+            onCanPlay={() => {
+              if (!videoRef.current?.paused) {
+                onPlaybackStateChange('playing')
+              }
+            }}
+            onEnded={onPlaybackEnd}
             loop={loop}
           />
           {embed.alt && (
@@ -77,6 +127,9 @@ export function VideoEmbedInnerWeb({
             </figcaption>
           )}
         </figure>
+        {!isFullscreen && !isGif && embed.alt && (
+          <AltBadgeWithDialog text={embed.alt} position="top-right" />
+        )}
         <Controls
           videoRef={videoRef}
           hlsRef={hlsRef}
@@ -88,7 +141,7 @@ export function VideoEmbedInnerWeb({
           onScreen={onScreen}
           fullscreenRef={containerRef}
           hasSubtitleTrack={hasSubtitleTrack}
-          isGif={embed.presentation === 'gif'}
+          isGif={isGif}
           altText={embed.alt}
           updateCuePositions={updateCuePositions}
         />
@@ -97,27 +150,33 @@ export function VideoEmbedInnerWeb({
   )
 }
 
-export class HLSUnsupportedError extends Error {
-  constructor() {
-    super('HLS is not supported')
+// Bluesky serves HLS as MPEG-TS with H.264 + AAC. `Hls.isSupported()` is loose
+// (true if MSE supports *any* of {H.264, AV1, VP9} OR *any* of {AAC, FLAC}),
+// so on Linux boxes missing H.264 (e.g. no ubuntu-restricted-extras, sandboxed
+// Firefox snap) it returns true and playback fails later on segment append.
+// Use Baseline 3.0 to match hls.js's own probe - it's the most universal H.264
+// profile, so if it isn't supported, no H.264 is.
+// Mirror hls.js's `getMediaSource` lookup (ManagedMediaSource on modern iOS,
+// then MediaSource, then WebKitMediaSource) so we probe the same constructor
+// it will actually use for playback.
+function canPlayBskyVideoCodecs(): boolean {
+  if (typeof self === 'undefined') return false
+  const globalSelf = self as typeof self & {
+    ManagedMediaSource?: typeof MediaSource
+    WebKitMediaSource?: typeof MediaSource
   }
-}
-
-export class VideoNotFoundError extends Error {
-  constructor() {
-    super('Video not found')
+  const mediaSource =
+    globalSelf.ManagedMediaSource ||
+    globalSelf.MediaSource ||
+    globalSelf.WebKitMediaSource
+  if (!mediaSource || typeof mediaSource.isTypeSupported !== 'function') {
+    return false
   }
+  return (
+    mediaSource.isTypeSupported('video/mp4; codecs="avc1.42E01E"') &&
+    mediaSource.isTypeSupported('audio/mp4; codecs="mp4a.40.2"')
+  )
 }
-
-type CachedPromise<T> = Promise<T> & {value: undefined | T}
-const promiseForHls = import(
-  // @ts-ignore
-  'hls.js/dist/hls.min'
-).then(mod => mod.default) as CachedPromise<typeof HlsTypes.default>
-promiseForHls.value = undefined
-promiseForHls.then(Hls => {
-  promiseForHls.value = Hls
-})
 
 function useHLS({
   playlist,
@@ -132,18 +191,30 @@ function useHLS({
   videoRef: React.RefObject<HTMLVideoElement | null>
   setHlsLoading: (v: boolean) => void
 }) {
-  const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(
-    () => promiseForHls.value,
-  )
+  const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(undefined)
   useEffect(() => {
-    if (!Hls) {
-      setHlsLoading(true)
-      promiseForHls.then(loadedHls => {
+    let cancelled = false
+    setHlsLoading(true)
+    void loadHls().then(
+      loadedHls => {
+        if (cancelled) return
         setHls(() => loadedHls)
         setHlsLoading(false)
-      })
+      },
+      error => {
+        if (cancelled) return
+        setHlsLoading(false)
+        setError(
+          error instanceof Error
+            ? error
+            : new Error('Failed to load video player', {cause: error}),
+        )
+      },
+    )
+    return () => {
+      cancelled = true
     }
-  }, [Hls, setHlsLoading])
+  }, [setError, setHlsLoading])
 
   const hlsRef = useRef<HlsTypes.default | undefined>(undefined)
   const controlsVisibleRef = useRef(false)
@@ -211,10 +282,18 @@ function useHLS({
             continue
           }
 
+          // Flush both video and audio buffers to keep them in sync.
+          // Flushing only video leaves stale audio data that can desync,
+          // particularly on Firefox.
           hls.trigger(Hls.Events.BUFFER_FLUSHING, {
             startOffset: lowQualFrag.start,
             endOffset: lowQualFrag.end,
             type: 'video',
+          })
+          hls.trigger(Hls.Events.BUFFER_FLUSHING, {
+            startOffset: lowQualFrag.start,
+            endOffset: lowQualFrag.end,
+            type: 'audio',
           })
 
           flushed.push(lowQualFrag)
@@ -225,10 +304,18 @@ function useHLS({
     },
   )
 
+  /*
+   * The hls handler below must call the latest `updateCuePositions` without the
+   * effect tearing down and re-attaching every time its identity changes.
+   */
+  const onSubtitleFragProcessed = useEffectEvent(() => {
+    updateCuePositions()
+  })
+
   useEffect(() => {
     if (!videoRef.current) return
     if (!Hls) return
-    if (!Hls.isSupported()) {
+    if (!Hls.isSupported() || !canPlayBskyVideoCodecs()) {
       throw new HLSUnsupportedError()
     }
 
@@ -263,7 +350,7 @@ function useHLS({
     })
 
     hls.on(Hls.Events.SUBTITLE_FRAG_PROCESSED, () => {
-      updateCuePositions()
+      onSubtitleFragProcessed()
     })
 
     hls.on(Hls.Events.FRAG_BUFFERED, (_event, {frag}) => {
@@ -275,12 +362,58 @@ function useHLS({
     hls.on(Hls.Events.ERROR, (_event, data) => {
       if (data.fatal) {
         if (
-          data.details === 'manifestLoadError' &&
+          (data.details as string) === 'manifestLoadError' &&
           data.response?.code === 404
         ) {
           setError(new VideoNotFoundError())
         } else {
-          setError(data.error)
+          const video = videoRef.current
+          const mediaError = video?.error
+          setError(
+            new HLSFatalError({
+              detail: data.details,
+              type: data.type,
+              cause: data.error,
+              diagnostics: {
+                hlsError: {
+                  detail: data.details,
+                  type: data.type,
+                  sourceBufferName: data.sourceBufferName,
+                  parent: data.parent,
+                  reason: data.reason,
+                  errorName: data.error.name,
+                  errorCode: (data.error as DOMException).code,
+                },
+                fragment: data.frag
+                  ? {
+                      sn: data.frag.sn,
+                      level: data.frag.level,
+                      type: data.frag.type,
+                      start: data.frag.start,
+                      duration: data.frag.duration,
+                      cc: data.frag.cc,
+                    }
+                  : undefined,
+                media: video
+                  ? {
+                      errorCode: mediaError?.code,
+                      errorMessage: mediaError?.message,
+                      readyState: video.readyState,
+                      networkState: video.networkState,
+                      currentTime: video.currentTime,
+                      paused: video.paused,
+                      ended: video.ended,
+                      seeking: video.seeking,
+                    }
+                  : undefined,
+                lifecycle: {
+                  documentVisibility: document.visibilityState,
+                  hlsIsCurrent: hlsRef.current === hls,
+                },
+                playlist,
+              },
+            }),
+          )
         }
       } else {
         console.error(data.error)
@@ -314,6 +447,11 @@ function useHLS({
         startOffset: lowQualFrag.start,
         endOffset: lowQualFrag.end,
         type: 'video',
+      })
+      hls.trigger(Hls.Events.BUFFER_FLUSHING, {
+        startOffset: lowQualFrag.start,
+        endOffset: lowQualFrag.end,
+        type: 'audio',
       })
       setLowQualityFragments([])
     }

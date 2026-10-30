@@ -1,28 +1,30 @@
-import {
-  type $Typed,
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  type ChatBskyConvoDefs,
-} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
 
 import type * as Dialog from '#/components/Dialog'
+import {type app, type chat} from '#/lexicons'
 
-export type ReportSubjectConvo = {
+export type ReportSubjectConvoMessage = {
   view: 'convo' | 'message'
   convoId: string
-  message: ChatBskyConvoDefs.MessageView
+  message: chat.bsky.convo.defs.MessageView
+}
+
+export type ReportSubjectConvo = {
+  convoId: string
+  did: string
 }
 
 export type ReportSubject =
-  | $Typed<AppBskyActorDefs.ProfileViewBasic>
-  | $Typed<AppBskyActorDefs.ProfileView>
-  | $Typed<AppBskyActorDefs.ProfileViewDetailed>
-  | $Typed<AppBskyActorDefs.StatusView>
-  | $Typed<AppBskyGraphDefs.ListView>
-  | $Typed<AppBskyFeedDefs.GeneratorView>
-  | $Typed<AppBskyGraphDefs.StarterPackView>
-  | $Typed<AppBskyFeedDefs.PostView>
+  | $Typed<app.bsky.actor.defs.ProfileViewBasic>
+  | $Typed<app.bsky.actor.defs.ProfileView>
+  | $Typed<app.bsky.actor.defs.ProfileViewDetailed>
+  | $Typed<app.bsky.actor.defs.StatusView>
+  | $Typed<app.bsky.graph.defs.ListView>
+  | $Typed<app.bsky.feed.defs.GeneratorView>
+  | $Typed<app.bsky.graph.defs.StarterPackView>
+  | $Typed<app.bsky.feed.defs.PostView>
+  | $Typed<app.bsky.actor.defs.ProfileLinkView>
+  | ReportSubjectConvoMessage
   | ReportSubjectConvo
 
 export type ParsedReportSubject =
@@ -64,12 +66,21 @@ export type ParsedReportSubject =
       nsid: string
     }
   | {
+      type: 'profileLink'
+      uri: string
+      cid: string
+      nsid: string
+    }
+  | {
       type: 'account'
       did: string
       nsid: string
     }
   | ({
       type: 'convoMessage'
+    } & ReportSubjectConvoMessage)
+  | ({
+      type: 'convo'
     } & ReportSubjectConvo)
 
 export type ReportDialogProps = {
@@ -79,4 +90,8 @@ export type ReportDialogProps = {
    * Called if the report was successfully submitted.
    */
   onAfterSubmit?: () => void
+  /**
+   * Called after the dialog finishes closing.
+   */
+  onClose?: () => void
 }

@@ -161,6 +161,75 @@ describe('MetricsClient', () => {
     expect(requestCount).toBe(2) // No additional requests
   })
 
+  it('backs off instead of retrying every flush when the endpoint is unreachable', async () => {
+    let requestCount = 0
+
+    fetchMock.mockImplementation(() => {
+      requestCount++
+      return Promise.resolve({
+        ok: false,
+        status: 500,
+        text: () => Promise.resolve('Internal Server Error'),
+      })
+    })
+
+    const client = new MetricsClient<TestEvents>()
+    client.track('click', {button: 'first'})
+
+    await jest.advanceTimersByTimeAsync(10_000)
+    expect(requestCount).toBe(1)
+
+    // No further requests go out during the backoff, even though the flush
+    // interval keeps firing and events keep arriving.
+    client.track('click', {button: 'during-backoff'})
+    await jest.advanceTimersByTimeAsync(25_000)
+    expect(requestCount).toBe(1)
+
+    // Backoff expires, and a single further attempt is made.
+    await jest.advanceTimersByTimeAsync(15_000)
+    expect(requestCount).toBe(2)
+
+    // That one fails too, so the backoff doubles.
+    client.track('click', {button: 'after-second-failure'})
+    await jest.advanceTimersByTimeAsync(40_000)
+    expect(requestCount).toBe(2)
+  })
+
+  it('caps the failed queue at maxBatchSize', async () => {
+    fetchMock.mockImplementation(() =>
+      Promise.resolve({
+        ok: false,
+        status: 500,
+        text: () => Promise.resolve('Internal Server Error'),
+      }),
+    )
+
+    const client = new MetricsClient<TestEvents>()
+    client.maxBatchSize = 5
+
+    // Exceeding maxBatchSize flushes all six events as one failing batch.
+    for (let i = 0; i < 6; i++) {
+      client.track('click', {button: `btn-${i}`})
+    }
+    await jest.advanceTimersByTimeAsync(0)
+
+    let retried: {payload: {button: string}}[] = []
+    fetchMock.mockImplementation((_url: string, options: {body: string}) => {
+      retried = (
+        JSON.parse(options.body) as {events: {payload: {button: string}}[]}
+      ).events
+      return Promise.resolve({ok: true, status: 200})
+    })
+
+    appStateCallback('active')
+    await jest.advanceTimersByTimeAsync(0)
+
+    // The oldest event was dropped rather than buffered indefinitely.
+    expect(retried).toHaveLength(5)
+    expect(retried[0].payload.button).toBe('btn-1')
+    expect(retried[4].payload.button).toBe('btn-5')
+  })
+
   it('flushes when app goes to background', async () => {
     const client = new MetricsClient<TestEvents>()
     client.track('click', {button: 'submit'})

@@ -1,10 +1,8 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {AppBskyGraphStarterpack, AtUri} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Plural, Trans} from '@lingui/react/macro'
+import {AtUri} from '@atproto/syntax'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -13,12 +11,13 @@ import {precacheResolvedUri} from '#/state/queries/resolve-uri'
 import {precacheStarterPack} from '#/state/queries/starter-packs'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
-import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
+import {StarterPackMultiPathLarge as StarterPackIcon} from '#/components/icons/StarterPack'
 import {
   Link as BaseLink,
   type LinkProps as BaseLinkProps,
 } from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function Default({
@@ -58,16 +57,12 @@ export function Card({
 }) {
   const {record, creator, joinedAllTimeCount} = starterPack
 
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
+  const isOwnStarterPack = creator?.did === currentAccount?.did
 
-  if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      record,
-      AppBskyGraphStarterpack.isRecord,
-    )
-  ) {
+  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
     return null
   }
 
@@ -86,9 +81,9 @@ export function Card({
             emoji
             style={[a.leading_snug, t.atoms.text_contrast_medium]}
             numberOfLines={1}>
-            {creator?.did === currentAccount?.did
-              ? _(msg`Starter pack by you`)
-              : _(msg`Starter pack by ${sanitizeHandle(creator.handle, '@')}`)}
+            {isOwnStarterPack
+              ? l`Starter Pack by you`
+              : l`Starter Pack by ${sanitizeHandle(creator.handle, '@')}`}
           </Text>
         </View>
       </View>
@@ -99,7 +94,7 @@ export function Card({
       ) : null}
       {!!joinedAllTimeCount && joinedAllTimeCount >= 50 && (
         <Text style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
-          <Trans comment="Number of users (always at least 50) who have joined Bluesky using a specific starter pack">
+          <Trans comment="Number of users (always at least 50) who have joined Bluesky using a specific Starter Pack">
             <Plural value={joinedAllTimeCount} other="# users have" /> joined!
           </Trans>
         </Text>
@@ -113,7 +108,7 @@ export function useStarterPackLink({
 }: {
   view: bsky.starterPack.AnyStarterPackView
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const qc = useQueryClient()
   const {rkey, handleOrDid} = useMemo(() => {
     const rkey = new AtUri(view.uri).rkey
@@ -127,12 +122,9 @@ export function useStarterPackLink({
 
   return {
     to: `/starter-pack/${handleOrDid}/${rkey}`,
-    label: bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      view.record,
-      AppBskyGraphStarterpack.isRecord,
-    )
-      ? _(msg`Navigate to ${view.record.name}`)
-      : _(msg`Navigate to starter pack`),
+    label: bsky.isType(app.bsky.graph.starterpack, view.record)
+      ? l`Navigate to ${view.record.name}`
+      : l`Navigate to Starter Pack`,
     precache,
   }
 }
@@ -145,7 +137,7 @@ export function Link({
   onPress?: () => void
   children: BaseLinkProps['children']
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const {record} = starterPack
   const {rkey, handleOrDid} = useMemo(() => {
@@ -154,19 +146,14 @@ export function Link({
     return {rkey, handleOrDid: creator.handle || creator.did}
   }, [starterPack])
 
-  if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      record,
-      AppBskyGraphStarterpack.isRecord,
-    )
-  ) {
+  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
     return null
   }
 
   return (
     <BaseLink
       to={`/starter-pack/${handleOrDid}/${rkey}`}
-      label={_(msg`Navigate to ${record.name}`)}
+      label={l`Navigate to ${record.name}`}
       onPress={() => {
         precacheResolvedUri(
           queryClient,

@@ -11,26 +11,28 @@ import {
 } from 'react'
 import {
   BackHandler,
+  Dimensions,
   Keyboard,
   type LayoutChangeEvent,
   Pressable,
+  type ScaledSize,
   type StyleProp,
   useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native'
 import {
-  Gesture,
   GestureDetector,
-  type GestureStateChangeEvent,
-  type GestureUpdateEvent,
-  type PanGestureHandlerEventPayload,
+  type PanGestureActiveEvent,
+  useCompetingGestures,
+  useExclusiveGestures,
+  usePanGesture,
+  useTapGesture,
 } from 'react-native-gesture-handler'
 import {KeyboardEvents} from 'react-native-keyboard-controller'
 import Animated, {
   clamp,
   interpolate,
-  runOnJS,
   type SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
@@ -44,6 +46,7 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
 import {captureRef} from 'react-native-view-shot'
+import {scheduleOnRN} from 'react-native-worklets'
 import {Image, type ImageErrorEventData} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -75,7 +78,7 @@ import {
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID, IS_IOS} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_IPAD} from '#/env'
 import {Backdrop} from './Backdrop'
 
 export {
@@ -89,14 +92,12 @@ const SPRING_IN: WithSpringConfig = {
   mass: 0.75,
   damping: 300,
   stiffness: 1200,
-  restDisplacementThreshold: 0.01,
 }
 
 const SPRING_OUT: WithSpringConfig = {
   mass: IS_IOS ? 1.25 : 0.75,
   damping: 150,
   stiffness: 1000,
-  restDisplacementThreshold: 0.01,
 }
 
 /**
@@ -112,7 +113,7 @@ export function Provider({children}: {children: React.ReactNode}) {
 }
 
 export function Root({children}: {children: React.ReactNode}) {
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const [mode, setMode] = useState<'full' | 'auxiliary-only'>('full')
   const [measurement, setMeasurement] = useState<Measurement | null>(null)
   const returnLocationSV = useSharedValue<{x: number; y: number} | null>(null)
@@ -132,7 +133,7 @@ export function Root({children}: {children: React.ReactNode}) {
   const onHoverableTouchUp = useCallback((id: string) => {
     const hoverable = hoverables.current.get(id)
     if (!hoverable) {
-      logger.warn(`No such hoverable with id ${id}`)
+      logger.warn(`No such hoverable`, {id})
       return
     }
     hoverable.onTouchUp()
@@ -168,7 +169,7 @@ export function Root({children}: {children: React.ReactNode}) {
                 // note: return location has to be reset on open,
                 // rather than on close, otherwise there's a flicker
                 // where the reanimated update is faster than the react render
-                runOnJS(onCompletedClose)()
+                scheduleOnRN(onCompletedClose)
               }
             }),
           )
@@ -200,7 +201,7 @@ export function Root({children}: {children: React.ReactNode}) {
         onTouchUpMenuItem: onHoverableTouchUp,
         hoveredMenuItem,
         setHoveredMenuItem: item => {
-          if (item) playHaptic('Light')
+          if (item) haptics.selection()
           setHoveredMenuItem(item)
         },
       }) satisfies ContextType,
@@ -216,7 +217,7 @@ export function Root({children}: {children: React.ReactNode}) {
       onHoverableTouchUp,
       hoveredMenuItem,
       setHoveredMenuItem,
-      playHaptic,
+      haptics,
       mode,
     ],
   )
@@ -232,6 +233,22 @@ export function Root({children}: {children: React.ReactNode}) {
     }
   }, [context])
 
+  useEffect(() => {
+    if (!IS_IPAD || !context.isOpen) return
+
+    // The captured preview and hit targets belong to the pre-resize layout.
+    const {width, height} = Dimensions.get('window')
+    const subscription = Dimensions.addEventListener(
+      'change',
+      ({window}: {window: ScaledSize}) => {
+        if (window.width !== width || window.height !== height) {
+          context.close()
+        }
+      },
+    )
+    return () => subscription.remove()
+  }, [context])
+
   return <Context.Provider value={context}>{children}</Context.Provider>
 }
 
@@ -241,11 +258,12 @@ export function Trigger({
   contentLabel,
   style,
   onTap,
+  swipeGesture,
 }: TriggerProps) {
   const context = useContextMenuContext()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const insets = useSafeAreaInsets()
-  const ref = useRef<View>(null)
+  const ref = useRef<React.ComponentRef<typeof View>>(null)
   const isFocused = useIsFocused()
   const [image, setImage] = useState<string | null>(null)
   const [pendingMeasurement, setPendingMeasurement] = useState<{
@@ -255,7 +273,7 @@ export function Trigger({
 
   const open = useNonReactiveCallback(
     async (mode: 'full' | 'auxiliary-only') => {
-      playHaptic()
+      haptics.longPress()
       const [measurement, capture] = await Promise.all([
         measureView(ref.current, insets),
         captureRef(ref, {result: 'data-uri'}).catch(err => {
@@ -300,24 +318,19 @@ export function Trigger({
     }
   }, [context, insets])
 
-  const tapGesture = useMemo(() => {
-    const gesture = Gesture.Tap()
-      .numberOfTaps(1)
-      .cancelsTouchesInView(false)
-      .runOnJS(true)
-    if (onTap) {
-      gesture.onEnd(() => void onTap())
-    }
-    return gesture
-  }, [onTap])
+  const tapGesture = useTapGesture({
+    numberOfTaps: 1,
+    cancelsTouchesInView: false,
+    runOnJS: true,
+    onDeactivate: onTap ? () => void onTap() : undefined,
+  })
 
-  const doubleTapGesture = useMemo(() => {
-    return Gesture.Tap()
-      .numberOfTaps(2)
-      .hitSlop(HITSLOP_10)
-      .onEnd(() => void open('auxiliary-only'))
-      .runOnJS(true)
-  }, [open])
+  const doubleTapGesture = useTapGesture({
+    numberOfTaps: 2,
+    hitSlop: HITSLOP_10,
+    runOnJS: true,
+    onDeactivate: () => void open('auxiliary-only'),
+  })
 
   const {
     hoverablesSV,
@@ -332,42 +345,51 @@ export function Trigger({
     () => hoveredItemSV.get(),
     (hovered, prev) => {
       if (hovered !== prev) {
-        runOnJS(setHoveredMenuItem)(hovered)
+        scheduleOnRN(setHoveredMenuItem, hovered)
       }
     },
   )
 
-  const pressAndHoldGesture = useMemo(() => {
-    return Gesture.Pan()
-      .activateAfterLongPress(500)
-      .cancelsTouchesInView(false)
-      .averageTouches(true)
-      .onStart(() => {
-        'worklet'
-        runOnJS(open)('full')
-      })
-      .onUpdate(evt => {
-        'worklet'
-        const item = getHoveredHoverable(evt, hoverablesSV, translationSV)
-        hoveredItemSV.set(item)
-      })
-      .onEnd(() => {
-        'worklet'
-        // don't recalculate hovered item - if they haven't moved their finger from
-        // the initial press, it's jarring to then select the item underneath
-        // as the menu may have slid into place beneath their finger
-        const item = hoveredItemSV.get()
-        if (item) {
-          runOnJS(onTouchUpMenuItem)(item)
-        }
-      })
-  }, [open, hoverablesSV, onTouchUpMenuItem, hoveredItemSV, translationSV])
+  const pressAndHoldGesture = usePanGesture({
+    activateAfterLongPress: 500,
+    cancelsTouchesInView: false,
+    averageTouches: true,
+    onActivate: () => {
+      'worklet'
+      scheduleOnRN(open, 'full')
+    },
+    onUpdate: evt => {
+      'worklet'
+      const item = getHoveredHoverable(evt, hoverablesSV, translationSV)
+      hoveredItemSV.set(item)
+    },
+    onDeactivate: () => {
+      'worklet'
+      // don't recalculate hovered item - if they haven't moved their finger from
+      // the initial press, it's jarring to then select the item underneath
+      // as the menu may have slid into place beneath their finger
+      const item = hoveredItemSV.get()
+      if (item) {
+        scheduleOnRN(onTouchUpMenuItem, item)
+      }
+    },
+  })
 
   // Order matters here: doubleTapGesture must come before tapGesture.
-  const composedGestures = Gesture.Exclusive(
+  const tapAndHoldGestures = useExclusiveGestures(
     doubleTapGesture,
     tapGesture,
     pressAndHoldGesture,
+  )
+
+  // An optional swipe gesture (e.g. swipe-to-reply) races against the tap/hold
+  // group: whichever activates first wins and cancels the rest, so they're
+  // mutually exclusive. Competing (not Exclusive) avoids a held-but-not-yet-moved
+  // swipe Pan blocking the long-press from firing.
+  const composedGestures = useCompetingGestures(
+    ...(swipeGesture
+      ? [swipeGesture, tapAndHoldGestures]
+      : [tapAndHoldGestures]),
   )
 
   const measurement = context.measurement || pendingMeasurement?.measurement
@@ -499,6 +521,7 @@ function TriggerClone({
         accessibilityLabel={label}
         accessibilityHint={_(msg`The subject of the context menu`)}
         accessibilityIgnoresInvertColors={false}
+        cachePolicy="none"
       />
     </Animated.View>
   )
@@ -522,7 +545,7 @@ export function AuxiliaryView({
       transform: [
         {
           translateY:
-            (ensureOnScreenTranslationSV.get() || translationSV.get()) *
+            Math.max(ensureOnScreenTranslationSV.get(), translationSV.get()) *
             animationSV.get(),
         },
         {scale: interpolate(animationSV.get(), [0, 1], [0.2, 1])},
@@ -536,21 +559,17 @@ export function AuxiliaryView({
   const onLayout = useCallback(() => {
     if (!measurement) return
 
-    let translation = 0
-
     // vibes based, just assuming it'll fit within this space. revisit if we use
     // AuxiliaryView for something tall
     const TOP_INSET = topInset + 80
 
     const distanceMessageFromTop = measurement.y - TOP_INSET
-    if (distanceMessageFromTop < 0) {
-      translation = -distanceMessageFromTop
-    }
+    const minimumTranslation = -distanceMessageFromTop
 
     // normally, the context menu is responsible for measuring itself and moving everything into the right place
     // however, in auxiliary-only mode, that doesn't happen, so we need to do it ourselves here
     if (mode === 'auxiliary-only') {
-      translationSV.set(translation)
+      translationSV.set(Math.max(minimumTranslation, 0))
       ensureOnScreenTranslationSV.set(0)
     }
     // however, we also need to make sure that for super tall triggers, we don't go off the screen
@@ -559,7 +578,7 @@ export function AuxiliaryView({
     // we'll just have to live with it for now, fixing it would be possible but be a large complexity
     // increase for an edge case
     else {
-      ensureOnScreenTranslationSV.set(translation)
+      ensureOnScreenTranslationSV.set(minimumTranslation)
     }
   }, [mode, measurement, translationSV, topInset, ensureOnScreenTranslationSV])
 
@@ -605,6 +624,8 @@ export function Outer({
   label?: string
   style?: StyleProp<ViewStyle>
   align?: 'left' | 'right'
+  /** Web only. Native restores focus differently. */
+  onCloseAutoFocus?: (event: Event) => void
 }) {
   const t = useTheme()
   const context = useContextMenuContext()
@@ -766,7 +787,7 @@ export function Item({
 }: ItemProps) {
   const t = useTheme()
   const context = useContextMenuContext()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
@@ -839,7 +860,7 @@ export function Item({
       onPressIn={e => {
         onPressIn()
         rest.onPressIn?.(e)
-        playHaptic('Light')
+        haptics.selection()
       }}
       onPressOut={e => {
         onPressOut()
@@ -849,10 +870,11 @@ export function Item({
         !unstyled && [
           a.flex_row,
           a.align_center,
-          a.px_2xl,
+          a.px_lg,
+          a.gap_sm,
           a.rounded_md,
           t.atoms.bg_contrast_25,
-          {gap: 6, minHeight: 44, paddingVertical: 10},
+          {minHeight: 44, paddingVertical: 10},
           (focused || pressed || context.hoveredMenuItem === id) &&
             !rest.disabled &&
             t.atoms.bg_contrast_50,
@@ -881,8 +903,7 @@ export function ItemText({children, style}: ItemTextProps) {
       style={[
         a.flex_1,
         a.text_md,
-        a.font_semi_bold,
-        t.atoms.text_contrast_high,
+        a.font_medium,
         style,
         destructive && {color: t.palette.negative_500},
         disabled && t.atoms.text_contrast_low,
@@ -897,13 +918,13 @@ export function ItemIcon({icon: Comp}: ItemIconProps) {
   const {disabled, destructive} = useContextMenuItemContext()
   return (
     <Comp
-      size="lg"
+      size="md"
       fill={
         disabled
           ? t.atoms.text_contrast_low.color
           : destructive
             ? t.palette.negative_500
-            : t.atoms.text_contrast_medium.color
+            : t.atoms.text.color
       }
     />
   )
@@ -961,7 +982,10 @@ export function Divider() {
   )
 }
 
-function measureView(view: View | null, insets: EdgeInsets) {
+function measureView(
+  view: React.ComponentRef<typeof View> | null,
+  insets: EdgeInsets,
+) {
   if (!view) return Promise.resolve(null)
   return new Promise<Measurement>(resolve => {
     view?.measureInWindow((x, y, width, height) =>
@@ -981,9 +1005,7 @@ function measureView(view: View | null, insets: EdgeInsets) {
 }
 
 function getHoveredHoverable(
-  evt:
-    | GestureStateChangeEvent<PanGestureHandlerEventPayload>
-    | GestureUpdateEvent<PanGestureHandlerEventPayload>,
+  evt: PanGestureActiveEvent,
   hoverables: SharedValue<Record<string, {id: string; rect: Measurement}>>,
   translation: SharedValue<number>,
 ) {

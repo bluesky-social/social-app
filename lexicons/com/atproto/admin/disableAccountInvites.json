@@ -1,0 +1,30 @@
+{
+  "id": "com.atproto.admin.disableAccountInvites",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "account"
+          ],
+          "properties": {
+            "note": {
+              "type": "string",
+              "description": "Optional reason for disabled invites."
+            },
+            "account": {
+              "type": "string",
+              "format": "did"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Disable an account from receiving new invite codes, but does not invalidate existing codes."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

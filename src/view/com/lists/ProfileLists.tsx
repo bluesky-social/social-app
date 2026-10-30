@@ -6,7 +6,6 @@ import {
   useState,
 } from 'react'
 import {
-  findNodeHandle,
   type ListRenderItemInfo,
   type StyleProp,
   useWindowDimensions,
@@ -26,9 +25,10 @@ import {useSession} from '#/state/session'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListRef} from '#/view/com/util/List'
-import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {findListNativeTag} from '#/view/com/util/listNativeTag'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
+import {FeedCardListSkeleton} from '#/components/FeedCardSkeleton'
 import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import * as ListCard from '#/components/ListCard'
 import {ListFooter} from '#/components/Lists'
@@ -79,7 +79,7 @@ export function ProfileLists({
     error,
     refetch,
   } = useProfileListsQuery(did, opts)
-  const isEmpty = !isPending && !data?.pages[0]?.lists.length
+  const isEmpty = !isPending && !data?.pages.some(page => page.lists.length)
   const {data: preferences} = usePreferencesQuery()
   const navigation = useNavigation()
   const {currentAccount} = useSession()
@@ -187,7 +187,7 @@ export function ProfileLists({
           />
         )
       } else if (item === LOADING) {
-        return <FeedLoadingPlaceholder />
+        return <FeedCardListSkeleton />
       }
       if (preferences) {
         return (
@@ -218,7 +218,7 @@ export function ProfileLists({
 
   useEffect(() => {
     if (IS_IOS && enabled && scrollElRef.current) {
-      const nativeTag = findNodeHandle(scrollElRef.current)
+      const nativeTag = findListNativeTag(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
   }, [enabled, scrollElRef, setScrollViewTag])

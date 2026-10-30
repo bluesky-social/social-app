@@ -14,6 +14,6 @@ export function Content() {
   return null
 }
 
-export function TextBubble() {
+export function BubbleText() {
   return null
 }

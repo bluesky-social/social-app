@@ -1,20 +1,24 @@
-FROM node:24.15.0-alpine3.22 AS build
+FROM node:24.22-alpine3.23 AS build
 
 # Move files into the image and install
 WORKDIR /app
 
-COPY ./bskylink/package.json ./
-COPY ./bskylink/yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN corepack enable
 
-COPY ./bskylink ./
+COPY ./bskylink/package.json ./
+COPY ./bskylink/pnpm-lock.yaml ./bskylink/pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile
+
+COPY ./bskylink/tsconfig.json ./
+COPY ./bskylink/src ./src
+COPY ./bskylink/locales ./locales
 
 # build then prune dev deps
-RUN yarn build
-RUN yarn install --production --ignore-scripts --prefer-offline
+RUN pnpm build
+RUN pnpm install --prod --frozen-lockfile --ignore-scripts --prefer-offline
 
 # Uses assets from build stage to reduce build size
-FROM node:24.15.0-alpine3.22
+FROM node:24.22-alpine3.23
 
 RUN apk add --update dumb-init
 
@@ -26,9 +30,11 @@ COPY --from=build /app /app
 RUN mkdir /app/data && chown node /app/data
 
 VOLUME /app/data
-EXPOSE 3000
+EXPOSE 3000 9090
 ENV LINK_PORT=3000
+ENV LINK_METRICS_PORT=9090
 ENV NODE_ENV=production
+ENV NODE_OPTIONS="--import=@atproto-labs/fetch-node/emudhra-preload"
 
 # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#non-root-user
 USER node

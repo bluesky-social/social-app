@@ -4,13 +4,13 @@ Install dependencies:
 
 ```bash
 cd bskyembed
-yarn
+pnpm
 ```
 
 Run the dev server:
 
 ```bash
-yarn dev
+pnpm dev
 ```
 
 You can see the embed homepage at http://localhost:5173
@@ -20,7 +20,7 @@ You can see the embed homepage at http://localhost:5173
 In another terminal window, run the snippet dev script:
 
 ```bash
-yarn dev-snippet
+pnpm dev-snippet
 ```
 
 You can then see the testbed page at http://localhost:5173/test

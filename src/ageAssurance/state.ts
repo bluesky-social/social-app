@@ -1,25 +1,34 @@
 import {useEffect, useMemo, useState} from 'react'
-import {computeAgeAssuranceRegionAccess} from '@atproto/api'
+import type * as AgeRange from 'expo-age-range'
+import {computeAgeAssuranceRegionAccess} from '@bsky/sdk/utils'
 
 import {getAge} from '#/lib/strings/time'
 import {useSession} from '#/state/session'
 import {
-  type AgeAssuranceData,
   getConfigFromCache,
+  getDeviceSignalsFromCacheForRegion,
   getOtherRequiredDataFromCache,
   getServerStateFromCache,
-  useAgeAssuranceDataContext,
+  type OtherRequiredDataStatus,
+  useAgeAssuranceServerDataContext,
 } from '#/ageAssurance/data'
 import {logger} from '#/ageAssurance/logger'
 import {
   AgeAssuranceAccess,
+  type AgeAssuranceMetadata,
   type AgeAssuranceState,
   AgeAssuranceStatus,
   parseAccessFromString,
   parseStatusFromString,
 } from '#/ageAssurance/types'
-import {getAgeAssuranceRegionConfigWithFallback} from '#/ageAssurance/util'
+import {
+  computeAgeAssuranceFlags,
+  getAgeAssuranceDataFromDeviceSignals,
+  getAgeAssuranceRegionConfigForGeolocation,
+  getAgeAssuranceRegionConfigWithFallback,
+} from '#/ageAssurance/util'
 import {type Geolocation, useGeolocation} from '#/geolocation'
+import {type app} from '#/lexicons'
 import {device} from '#/storage'
 
 /**
@@ -29,16 +38,20 @@ import {device} from '#/storage'
  */
 export function computeAgeAssuranceState({
   hasSession,
-  config,
   geolocation,
+  config,
   state,
-  data,
+  metadata,
+  otherRequiredDataStatus,
+  deviceSignals,
 }: {
   hasSession: boolean
-  config: AgeAssuranceData['config']
   geolocation: Geolocation
-  state: AgeAssuranceData['state']
-  data: AgeAssuranceData['data']
+  config?: app.bsky.ageassurance.defs.Config
+  state?: app.bsky.ageassurance.defs.State
+  metadata?: AgeAssuranceMetadata
+  otherRequiredDataStatus: OtherRequiredDataStatus
+  deviceSignals?: AgeRange.AgeRangeResponse
 }) {
   /**
    * This is where we control logged-out moderation prefs. It's all
@@ -83,12 +96,32 @@ export function computeAgeAssuranceState({
     }
   }
 
+  if (otherRequiredDataStatus === 'error') {
+    return {
+      status: AgeAssuranceStatus.Unknown,
+      access: AgeAssuranceAccess.None,
+      error: 'account-data' as const,
+    }
+  }
+
   /*
    * Otherwise, we need to compute the access based on the latest data. For
    * accounts with an accurate birthdate, our default fallback rules should
    * ensure correct access.
+   *
+   * In regions that permit on-device verification, the OS-provided age range
+   * is treated as an assured age and fed into the rule engine, where it
+   * matches `IfAssuredOverAge`/`IfAssuredUnderAge` rules.
    */
-  const result = computeAgeAssuranceRegionAccess(region, data)
+  const {assuredAge} = getAgeAssuranceDataFromDeviceSignals(
+    region,
+    deviceSignals,
+  )
+  const result = computeAgeAssuranceRegionAccess(region, {
+    accountCreatedAt: metadata?.accountCreatedAt,
+    declaredAge: metadata?.declaredAge,
+    assuredAge,
+  })
   const computed = {
     lastInitiatedAt: state?.lastInitiatedAt,
     // prefer server state
@@ -100,10 +133,10 @@ export function computeAgeAssuranceState({
       ? parseAccessFromString(result.access)
       : AgeAssuranceAccess.Full,
   }
-  logger.debug('debug useAgeAssuranceState', {
+  logger.debug('computeAgeAssuranceState', {
     region,
     state,
-    data,
+    metadata,
     computed,
   })
   return computed
@@ -113,38 +146,68 @@ export function computeAgeAssuranceState({
  * This is a last-ditch helper for out-of-band reads of the AA state, such as
  * during account creation. Don't use it for anything else.
  */
-export function getAndComputeAgeAssuranceState({did}: {did: string}) {
+export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
   const config = getConfigFromCache()
   const state = getServerStateFromCache({did})
-  const data = getOtherRequiredDataFromCache({did})
+  const requiredData = getOtherRequiredDataFromCache({did})
   const geolocation = device.get(['mergedGeolocation'])
 
-  if (!geolocation || !config || !state || !data) {
+  if (!geolocation || !config || !state || !requiredData) {
     return {
-      status: AgeAssuranceStatus.Unknown,
-      access: AgeAssuranceAccess.Safe,
+      state: {
+        status: AgeAssuranceStatus.Unknown,
+        access: AgeAssuranceAccess.Safe,
+      },
     }
   }
 
-  return computeAgeAssuranceState({
+  const region = getAgeAssuranceRegionConfigWithFallback(config, geolocation)
+  /*
+   * Device signals are keyed off the matched config region (no fallback): if
+   * geolocation matches no AA region there's no device grant to read, so we
+   * skip the lookup rather than keying off FALLBACK_REGION_CONFIG. This keeps
+   * the read key symmetric with the write (see `setDeviceSignalsForRegion`).
+   */
+  const deviceRegion = getAgeAssuranceRegionConfigForGeolocation(
+    config,
+    geolocation,
+  )
+  const deviceSignals = deviceRegion
+    ? getDeviceSignalsFromCacheForRegion({did, region: deviceRegion})
+    : undefined
+  const metadata: AgeAssuranceMetadata = {
+    accountCreatedAt: state.metadata?.accountCreatedAt,
+    declaredAge: requiredData?.birthdate
+      ? getAge(new Date(requiredData.birthdate))
+      : undefined,
+    birthdate: requiredData?.birthdate,
+  }
+  const computed = computeAgeAssuranceState({
     hasSession: true,
     config,
     geolocation,
     state: state.state,
-    data: {
-      accountCreatedAt: state.metadata?.accountCreatedAt,
-      declaredAge: data?.birthdate
-        ? getAge(new Date(data.birthdate))
-        : undefined,
-      birthdate: data?.birthdate,
-    },
+    metadata,
+    otherRequiredDataStatus: 'success',
+    deviceSignals,
   })
+
+  return {
+    state: computed,
+    flags: computeAgeAssuranceFlags({
+      state: computed,
+      regionConfig: region,
+      metadata,
+      deviceSignals,
+    }),
+  }
 }
 
 export function useAgeAssuranceState(): AgeAssuranceState {
   const {hasSession} = useSession()
   const geolocation = useGeolocation()
-  const {config, state, data} = useAgeAssuranceDataContext()
+  const {config, state, metadata, otherRequiredDataStatus, deviceSignals} =
+    useAgeAssuranceServerDataContext()
 
   return useMemo(
     () =>
@@ -153,9 +216,19 @@ export function useAgeAssuranceState(): AgeAssuranceState {
         config,
         geolocation,
         state,
-        data,
+        metadata,
+        otherRequiredDataStatus,
+        deviceSignals,
       }),
-    [hasSession, geolocation, config, state, data],
+    [
+      hasSession,
+      geolocation,
+      config,
+      state,
+      metadata,
+      otherRequiredDataStatus,
+      deviceSignals,
+    ],
   )
 }
 
