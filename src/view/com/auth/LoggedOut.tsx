@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -63,6 +64,11 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
     useState<ScreenState>(initialScreenState)
   const {clearRequestedAccount} = useLoggedOutViewControls()
   const setActiveLanding = useSetActiveLanding()
+
+  // Logged-out launches never mount a feed, so this is their first content
+  useEffect(() => {
+    PlatformInfo.reportFullyDrawn()
+  }, [])
 
   const queryClient = useQueryClient()
   const {accounts} = useSession()
