@@ -12,8 +12,7 @@ import {SETTLE_AT_TOP_LIMIT, type SettleAtTopHandlers} from './useSettleAtTop'
 
 /**
  * What the list reports on the JS thread: what {@link SettleAtTopHandlers}
- * need, and when it reaches its top, which reads the posts staged above the
- * reader (see `usePostFeedPrepend`).
+ * need, and when it reaches its top.
  */
 export type ListScrollReports = SettleAtTopHandlers & {
   /** A scroll event found the list at the top where the last one didn't. */
