@@ -18,6 +18,7 @@ import {Admonitions} from './Admonitions'
 import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
 import {Dialogs} from './Dialogs'
+import {Embeds} from './Embeds'
 import {Forms} from './Forms'
 import {Haptics} from './Haptics'
 import {Icons} from './Icons'
@@ -132,6 +133,7 @@ export default function Storybook() {
             <Buttons />
             <NewPostsPill />
             <Notifications />
+            <Embeds />
             <Forms />
             <Typography />
             <ProfileBadges />
