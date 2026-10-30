@@ -1,5 +1,6 @@
 import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
+import type * as ReactNavigation from '@react-navigation/native'
 import {fireEvent, render, renderHook} from '@testing-library/react-native'
 
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
@@ -7,14 +8,18 @@ import {buildStateObject} from '#/lib/routes/helpers'
 import {type State} from '#/lib/routes/types'
 import {DrawerContent} from './Drawer'
 
-const mockNavigate = jest.fn()
+const mockDispatch = jest.fn()
 const mockSetDrawerOpen = jest.fn()
 const mockMetric = jest.fn()
 let mockHasSession = true
 let mockNavigationState: State
 
 jest.mock('@react-navigation/native', () => ({
-  useNavigation: () => ({navigate: mockNavigate}),
+  ...jest.requireActual<typeof ReactNavigation>('@react-navigation/native'),
+  useNavigation: () => ({
+    dispatch: mockDispatch,
+    getState: () => mockNavigationState,
+  }),
   useNavigationState: (selector: (state: State) => unknown) =>
     selector(mockNavigationState),
 }))
@@ -36,8 +41,17 @@ jest.mock('#/state/queries/notifications/unread', () => ({
 jest.mock('#/state/queries/profile', () => ({
   useProfileQuery: () => ({data: undefined}),
 }))
+jest.mock('#/state/queries/moderation-inbox', () => ({
+  useModerationInboxUnreadCountQuery: () => ({data: undefined}),
+}))
 jest.mock('#/analytics', () => ({
-  useAnalytics: () => ({metric: mockMetric}),
+  useAnalytics: () => ({
+    metric: mockMetric,
+    features: {
+      enabled: () => false,
+      ModerationInboxEnable: 'ModerationInboxEnable',
+    },
+  }),
 }))
 jest.mock('#/alf', () => ({
   atoms: new Proxy(
@@ -139,7 +153,12 @@ describe('Atmosphere drawer navigation', () => {
     expect(screen.getByText('🌎')).toBeTruthy()
     fireEvent.press(screen.getByRole('tab', {name: 'Atmosphere'}))
 
-    expect(mockNavigate).toHaveBeenCalledWith('Atmosphere')
+    expect(mockDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'NAVIGATE',
+        payload: expect.objectContaining({name: 'AtmosphereTab'}),
+      }),
+    )
     expect(mockSetDrawerOpen).toHaveBeenCalledWith(false)
     expect(mockMetric).toHaveBeenCalledWith('nav:click', {
       item: 'atmosphere',
@@ -148,10 +167,8 @@ describe('Atmosphere drawer navigation', () => {
     expect(screen.queryByRole('tab', {name: 'Activity'})).toBeNull()
   })
 
-  it('highlights Atmosphere when its common screen is active in a native stack', () => {
-    mockNavigationState = buildStateObject('SearchTab', 'Atmosphere', {}, [
-      {name: 'Search'},
-    ])
+  it('highlights Atmosphere when its native tab is active', () => {
+    mockNavigationState = buildStateObject('AtmosphereTab', 'Atmosphere', {})
 
     const {result} = renderHook(() => useNavigationTabState())
     expect(result.current.isAtAtmosphere).toBe(true)

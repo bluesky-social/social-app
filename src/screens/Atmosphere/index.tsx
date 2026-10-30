@@ -21,6 +21,7 @@ import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
 import {RawActivityList} from './components/RawActivityList'
 import {TimelineRow} from './components/TimelineRow'
+import {AtmosphereExploreTab} from './ExploreTab'
 import {buildActivityListItems} from './model'
 import {buildActivityPresentationListItems} from './presentation'
 import {useAtmosphereQuery} from './query'
@@ -38,7 +39,7 @@ export function AtmosphereScreen({}: Props) {
   const sections = [
     {title: l`Activity`, component: <AtmosphereList />},
     {title: l`Raw`, component: <RawActivityList />},
-    {title: l`Explore`, component: <AtmosphereExplore />},
+    {title: l`Explore`, component: <AtmosphereExploreTab />},
   ]
 
   return (
@@ -91,18 +92,6 @@ export function AtmosphereScreen({}: Props) {
         ))}
       </Pager>
     </Layout.Screen>
-  )
-}
-
-function AtmosphereExplore() {
-  return (
-    <View
-      testID="atmosphereExplore"
-      style={[a.flex_1, a.align_center, a.justify_center]}>
-      <Text emoji style={a.text_md}>
-        (╯°□°)╯︵ ┻━┻
-      </Text>
-    </View>
   )
 }
 

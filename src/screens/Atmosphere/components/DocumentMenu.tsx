@@ -70,7 +70,10 @@ export function DocumentMenu({
               disabled={!author}
               onPress={() => {
                 if (author) {
-                  void navigate('Profile', {name: author.handle})
+                  void navigate({
+                    name: 'Profile',
+                    params: {name: author.handle},
+                  })
                 }
               }}>
               <Menu.ItemText>{l`View author`}</Menu.ItemText>

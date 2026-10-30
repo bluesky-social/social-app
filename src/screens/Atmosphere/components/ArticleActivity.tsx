@@ -16,8 +16,8 @@ import {atoms as a, useTheme} from '#/alf'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as RecommendIcon} from '#/components/icons/Heart2'
 import {PageText_Stroke2_Corner0_Rounded as ArticleIcon} from '#/components/icons/PageText'
 import {matchStandardSitePublisherByViewHints} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
+import {ActivityArticleCard} from './ActivityArticleCard'
 import {ActivityActorLine, ActivityFootnote} from './ActivityPrimitives'
-import {ArticleCard} from './ArticleCard'
 import {DocumentMenuPlaceholder} from './DocumentMenu'
 import {ShareSnippets} from './ShareSnippets'
 
@@ -69,7 +69,7 @@ function ArticleActivity({
   return (
     <View testID={testID} style={[a.px_xl]}>
       {isCard && view ? (
-        <ArticleCard
+        <ActivityArticleCard
           item={item}
           computedItemView={computedItemView}
           view={view}
@@ -99,7 +99,7 @@ function ArticleActivity({
               />
             ) : null}
           </View>
-        </ArticleCard>
+        </ActivityArticleCard>
       ) : (
         <ActivityFootnote
           title={title}

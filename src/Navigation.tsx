@@ -191,7 +191,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="Atmosphere"
         getComponent={() => AtmosphereScreen}
-        options={{title: title(msg`Atmosphere`)}}
+        options={{title: title(msg`Atmosphere`), requireAuth: true}}
       />
       <Stack.Screen
         name="Lists"

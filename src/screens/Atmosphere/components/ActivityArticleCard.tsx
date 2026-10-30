@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react/macro'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {getFirstActivity} from '#/screens/Atmosphere/relationships'
 import {atoms as a, useTheme, web} from '#/alf'
-import {BookmarkFilled} from '#/components/icons/Bookmark'
+import {Bookmark_Filled_Corner0_Rounded as BookmarkFilled} from '#/components/icons/Bookmark'
 import {InlineLinkText, Link} from '#/components/Link'
 import {matchStandardSitePublisherByViewHints} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import {Text} from '#/components/Typography'
@@ -15,7 +15,7 @@ import {ActivityComputedView, ActivityPresentationItem} from '../presentation'
 import {ActivityCard, ActivityTimestamp} from './ActivityPrimitives'
 import {DocumentMenuPlaceholder} from './DocumentMenu'
 
-export function ArticleCard({
+export function ActivityArticleCard({
   item,
   view,
   timestamp,

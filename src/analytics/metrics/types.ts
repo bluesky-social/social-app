@@ -178,7 +178,6 @@ export type Events = {
       | 'atmosphere'
       | 'chat'
       | 'notifications'
-      | 'atmosphere'
       | 'profile'
       | 'feeds'
       | 'lists'

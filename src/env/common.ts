@@ -78,17 +78,17 @@ export const CHAT_PROXY_DID: DidString =
   process.env.EXPO_PUBLIC_CHAT_PROXY_DID || 'did:web:api.bsky.chat'
 
 /**
- * The DID of the moderation service to proxy requests to.
- */
-export const MOD_PROXY_DID: DidString | undefined =
-  process.env.EXPO_PUBLIC_MOD_PROXY_DID
-
-/**
  * Direct appview-sandbox URL for local development. When unset, requests are
  * proxied through the account's PDS to the deployed sandbox service.
  */
 export const APPVIEW_SANDBOX_URL: string | undefined =
   process.env.EXPO_PUBLIC_APPVIEW_SANDBOX_URL || undefined
+
+/**
+ * The DID of the moderation service to proxy requests to.
+ */
+export const MOD_PROXY_DID: DidString | undefined =
+  process.env.EXPO_PUBLIC_MOD_PROXY_DID
 
 /**
  * Metrics API host

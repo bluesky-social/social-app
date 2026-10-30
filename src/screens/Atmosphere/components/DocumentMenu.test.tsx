@@ -127,7 +127,10 @@ describe('Atmosphere document menu', () => {
     expect(mockNavigate).not.toHaveBeenCalled()
     expect(mockReport).not.toHaveBeenCalled()
     fireEvent.press(screen.getByRole('menuitem', {name: 'View author'}))
-    expect(mockNavigate).toHaveBeenCalledWith('Profile', {name: author.handle})
+    expect(mockNavigate).toHaveBeenCalledWith({
+      name: 'Profile',
+      params: {name: author.handle},
+    })
     fireEvent.press(screen.getByRole('menuitem', {name: 'Report this'}))
     expect(mockReport).toHaveBeenCalledWith({
       subject: {...author, $type: 'app.bsky.actor.defs#profileViewBasic'},
@@ -165,7 +168,10 @@ describe('Atmosphere document menu', () => {
     fireEvent.press(screen.getByRole('menuitem', {name: 'View publication'}))
     expect(mockOpenLink).not.toHaveBeenCalled()
     fireEvent.press(screen.getByRole('menuitem', {name: 'View author'}))
-    expect(mockNavigate).toHaveBeenCalledWith('Profile', {name: author.handle})
+    expect(mockNavigate).toHaveBeenCalledWith({
+      name: 'Profile',
+      params: {name: author.handle},
+    })
     fireEvent.press(screen.getByRole('menuitem', {name: 'Report this'}))
     expect(mockReport).toHaveBeenCalledWith({
       subject: {...author, $type: 'app.bsky.actor.defs#profileViewBasic'},

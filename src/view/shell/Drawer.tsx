@@ -9,8 +9,11 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
-import {type NavigationState} from '@react-navigation/native'
-import {StackActions, useNavigation} from '@react-navigation/native'
+import {
+  type NavigationState,
+  StackActions,
+  useNavigation,
+} from '@react-navigation/native'
 
 import {
   FEEDBACK_FORM_URL,
@@ -38,7 +41,6 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {useLogoVariant} from '#/view/icons/useLogoVariant'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {atoms as a, tokens, useTheme, web} from '#/alf'
-import {BetaTag} from '#/components/BetaTag'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
@@ -52,7 +54,6 @@ import {
   Bookmark_Stroke2_Corner0_Rounded as BookmarkIcon,
 } from '#/components/icons/Bookmark'
 import {BulletList_Stroke2_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
-import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Earth'
 import {
   Hashtag_Filled_Corner0_Rounded as HashtagFilledIcon,
   Hashtag_Stroke2_Corner0_Rounded as HashtagIcon,
@@ -222,9 +223,6 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   } = useNavigationTabState()
   const {hasSession, currentAccount} = useSession()
   const inviteFriendsControl = useDialogControl()
-  const isAtmosphereExploreEnabled = ax.features.enabled(
-    ax.features.AtmosphereScreenEnable,
-  )
 
   // events
   // =
@@ -413,12 +411,10 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
               isActive={isAtNotifications}
               onPress={onPressNotifications}
             />
-            {isAtmosphereExploreEnabled && (
-              <AtmosphereMenuItem
-                isActive={isAtAtmosphere}
-                onPress={onPressAtmosphere}
-              />
-            )}
+            <AtmosphereMenuItem
+              isActive={isAtAtmosphere}
+              onPress={onPressAtmosphere}
+            />
             <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
             <ListsMenuItem onPress={onPressLists} />
             <BookmarksMenuItem
@@ -514,7 +510,6 @@ interface MenuItemProps extends ComponentProps<typeof PressableScale> {
   label: string
   count?: string
   bold?: boolean
-  beta?: boolean
 }
 
 let SearchMenuItem = ({
@@ -542,27 +537,6 @@ let SearchMenuItem = ({
   )
 }
 SearchMenuItem = memo(SearchMenuItem)
-
-function AtmosphereMenuItem({
-  isActive,
-  onPress,
-}: {
-  isActive: boolean
-  onPress: () => void
-}) {
-  const {t: l} = useLingui()
-  const t = useTheme()
-
-  return (
-    <MenuItem
-      icon={<EarthIcon style={[t.atoms.text]} width={iconWidth} />}
-      label={l`Atmosphere`}
-      beta
-      bold={isActive}
-      onPress={onPress}
-    />
-  )
-}
 
 let HomeMenuItem = ({
   isActive,
@@ -651,6 +625,34 @@ let NotificationsMenuItem = ({
   )
 }
 NotificationsMenuItem = memo(NotificationsMenuItem)
+
+function AtmosphereMenuItem({
+  isActive,
+  onPress,
+}: {
+  isActive: boolean
+  onPress: () => void
+}) {
+  const {t: l} = useLingui()
+  return (
+    <MenuItem
+      icon={
+        <Text
+          emoji
+          style={[
+            a.text_2xl,
+            a.leading_tight,
+            {width: iconWidth, textAlign: 'center'},
+          ]}>
+          🌎
+        </Text>
+      }
+      label={l`Atmosphere`}
+      bold={isActive}
+      onPress={onPress}
+    />
+  )
+}
 
 let FeedsMenuItem = ({
   isActive,
@@ -783,19 +785,17 @@ function MenuItem({
   label,
   count,
   bold,
-  beta,
   onPress,
   accessibilityHint,
 }: MenuItemProps) {
   const t = useTheme()
-  const {t: l} = useLingui()
   return (
     <Button
       testID={`menuItemButton-${label}`}
       onPress={onPress}
       accessibilityRole="tab"
       accessibilityHint={accessibilityHint}
-      label={beta ? l`${label}, Beta` : label}>
+      label={label}>
       {({hovered, pressed}) => (
         <View
           style={[
@@ -855,7 +855,6 @@ function MenuItem({
               numberOfLines={1}>
               {label}
             </Text>
-            {beta && <BetaTag />}
           </View>
         </View>
       )}

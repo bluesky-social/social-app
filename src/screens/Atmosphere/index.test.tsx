@@ -80,6 +80,12 @@ jest.mock('#/alf', () => ({
   }),
 }))
 jest.mock('./components/ShareSnippets', () => ({ShareSnippets: () => null}))
+jest.mock('./ExploreTab', () => {
+  const {View} = jest.requireActual('react-native')
+  return {
+    AtmosphereExploreTab: () => <View testID="atmosphereExploreTab" />,
+  }
+})
 jest.mock('#/components/images/Gallery', () => ({
   Gallery: () => null,
   GalleryBleed: ({children}: React.PropsWithChildren) => <>{children}</>,
@@ -400,14 +406,14 @@ describe('AtmosphereScreen', () => {
       screen.getByRole('tab', {name: 'Activity'}).props.accessibilityState,
     ).toEqual({selected: true})
     expect(screen.getByTestId('atmosphereList')).toBeTruthy()
-    expect(screen.queryByTestId('atmosphereExplore')).toBeNull()
+    expect(screen.queryByTestId('atmosphereExploreTab')).toBeNull()
 
     fireEvent.press(screen.getByRole('tab', {name: 'Explore'}))
 
     expect(
       screen.getByRole('tab', {name: 'Explore'}).props.accessibilityState,
     ).toEqual({selected: true})
-    expect(screen.getByText('(╯°□°)╯︵ ┻━┻')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereExploreTab')).toBeTruthy()
     expect(screen.queryByTestId('atmosphereList')).toBeNull()
   })
 

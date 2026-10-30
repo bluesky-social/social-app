@@ -5,9 +5,9 @@ import {I18nProvider} from '@lingui/react'
 import {fireEvent, render, within} from '@testing-library/react-native'
 
 import {formatCount} from '#/view/com/util/numeric/format'
+import {Mark as BlueskyIcon} from '#/components/icons/brands/Mark'
 import {Heart2_Stroke2_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
-import {Mark as BlueskyIcon} from '#/components/icons/Logo'
-import {Reply as ReplyIcon} from '#/components/icons/Reply'
+import {Reply_Stroke2_Corner0_Rounded as ReplyIcon} from '#/components/icons/Reply'
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {
   createActivity,

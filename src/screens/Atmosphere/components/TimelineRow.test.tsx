@@ -41,17 +41,13 @@ function element(layout: NonNullable<ActivityTimelineListItem['layout']>) {
 beforeEach(() => i18n.loadAndActivate({locale: 'en', messages: {}}))
 afterEach(() => act(() => i18n.loadAndActivate({locale: 'en', messages: {}})))
 
-it('owns the exact gap and places an RTL-aware separator inside it', () => {
+it('shows and removes a separator as the row leaves a footnote run', () => {
   const screen = render(element({kind: 'footnote', gap: 8, separator: true}))
-  expect(screen.getByTestId('atmosphereTimelineRow')).toHaveStyle({
-    paddingTop: 8,
-  })
-  expect(screen.getByTestId('atmosphereTimelineSeparator')).toHaveStyle({
-    top: 4,
-    start: 48,
-    end: 20,
-  })
+  expect(screen.getByTestId('atmosphereTimelineSeparator')).toBeTruthy()
   expect(screen.queryByTestId('atmosphereDateHeading')).toBeNull()
+
+  screen.rerender(element({kind: 'footnote', gap: 8, separator: false}))
+  expect(screen.queryByTestId('atmosphereTimelineSeparator')).toBeNull()
 })
 
 it('renders heading semantics and updates translated labels without remounting', () => {

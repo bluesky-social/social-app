@@ -26,7 +26,7 @@ import {
 import {useTheme} from '#/alf'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ShareIcon} from '#/components/icons/ArrowOutOfBox'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
-import {BookmarkFilled as SubscribeIcon} from '#/components/icons/Bookmark'
+import {Bookmark_Filled_Corner0_Rounded as SubscribeIcon} from '#/components/icons/Bookmark'
 import {type Props as IconProps} from '#/components/icons/common'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as RecommendIcon} from '#/components/icons/Heart2'
 import {Image_Stroke2_Corner2_Rounded as PhotoIcon} from '#/components/icons/Image'

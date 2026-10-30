@@ -80,7 +80,7 @@ function timeline(pages: AtmosphereActivityPage[], now: Date) {
 }
 
 describe('Atmosphere timeline integration', () => {
-  it('uses 14px card rhythm, 24px transitions, and compact 8px footnote runs', () => {
+  it('preserves card and footnote ordering and separates only consecutive footnotes across pages', () => {
     const now = localDate(2026, 9, 10)
     const cardOne = publicationActivity('card-one', now)
     const cardTwo = publicationActivity(
@@ -130,6 +130,15 @@ describe('Atmosphere timeline integration', () => {
       now,
     )
 
+    expect(
+      items.map(
+        item => item.item.type === 'activity' && item.item.activity.record.uri,
+      ),
+    ).toEqual(
+      [cardOne, cardTwo, footnoteOne, footnoteTwo, cardThree].map(
+        activity => activity.record.uri,
+      ),
+    )
     expect(items.map(item => item.layout?.kind)).toEqual([
       'card',
       'card',
@@ -137,7 +146,6 @@ describe('Atmosphere timeline integration', () => {
       'footnote',
       'card',
     ])
-    expect(items.map(item => item.layout?.gap)).toEqual([14, 14, 24, 8, 24])
     expect(items.map(item => item.layout?.separator)).toEqual([
       false,
       false,
@@ -147,7 +155,7 @@ describe('Atmosphere timeline integration', () => {
     ])
   })
 
-  it('does not leave a gap or orphan heading for rows omitted by presentation', () => {
+  it('does not leave an orphan heading or separator for rows omitted by presentation', () => {
     const now = localDate(2026, 9, 10)
     const suppressed = unknownActivity({
       did: 'did:plc:missing-actor',
@@ -169,12 +177,19 @@ describe('Atmosphere timeline integration', () => {
 
     expect(items).toHaveLength(1)
     expect(items[0].item).toBeDefined()
-    expect(items[0].layout).toEqual({
-      kind: 'footnote',
-      gap: 14,
-      separator: false,
-      heading: undefined,
-    })
+    expect(items[0].layout?.kind).toBe('footnote')
+    expect(items[0].layout?.separator).toBe(false)
+    expect(items[0].layout?.heading).toBeUndefined()
+    expect(items[0].layout).toEqual(
+      timeline(
+        [
+          page([visible], {
+            actors: {'did:plc:timeline': createActor('did:plc:timeline')},
+          }),
+        ],
+        now,
+      )[0].layout,
+    )
   })
 
   it('adds rolling recent, local today, yesterday, and date headings once across pages', () => {

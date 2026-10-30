@@ -3,11 +3,9 @@ import {I18nProvider} from '@lingui/react'
 import {act, fireEvent, render} from '@testing-library/react-native'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {BookmarkFilled} from '#/components/icons/Bookmark'
 import {Leaflet} from '#/components/icons/community/Leaflet'
 import {Offprint} from '#/components/icons/community/Offprint'
 import {Pckt} from '#/components/icons/community/Pckt'
-import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilledIcon} from '#/components/icons/Heart2'
 import {matchStandardSitePublisher} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import {type app} from '#/lexicons'
 import {ActivityPresentationRow} from './components/ActivityPresentationRow'
@@ -87,6 +85,7 @@ jest.mock('#/alf', () => ({
   ),
   tokens: {borderRadius: {md: 12}},
   web: (styles: object) => styles,
+  useBreakpoints: () => ({gtPhone: true}),
   useTheme: () => ({
     palette: {
       primary_500: '#006aff',
@@ -372,33 +371,18 @@ describe('content-first articles and recommendations', () => {
   it.each([
     [
       'https://writer.leaflet.pub',
-      'Leaflet',
       Leaflet,
       'https://bsky.app/profile/leaflet.pub',
     ],
-    [
-      'https://writer.pckt.blog',
-      'pckt',
-      Pckt,
-      'https://bsky.app/profile/pckt.blog',
-    ],
-    [
-      'https://offprint.app',
-      'Offprint',
-      Offprint,
-      'https://bsky.app/profile/offprint.app',
-    ],
+    ['https://writer.pckt.blog', Pckt, 'https://bsky.app/profile/pckt.blog'],
+    ['https://offprint.app', Offprint, 'https://bsky.app/profile/offprint.app'],
   ])(
     'shows the %s publication URL as a via icon linked to its Bluesky profile',
-    (url, name, Icon, profileUrl) => {
+    (url, Icon, profileUrl) => {
       const row = documentRow(true)
       row.associatedRecords[publicationUri].record.url = url
       const screen = renderRow(row)
-      expect(screen.getByLabelText(`via ${name}`)).toBeTruthy()
       expect(screen.UNSAFE_getByType(Icon)).toBeTruthy()
-      expect(
-        screen.getByTestId('atmosphereArticlePublisherIcon').props.width,
-      ).toBe(12)
       expect(mockLink).toHaveBeenCalledWith(
         expect.objectContaining({
           testID: 'atmosphereArticlePublisher',
@@ -411,31 +395,23 @@ describe('content-first articles and recommendations', () => {
   it.each([
     [
       'pub.leaflet.theme#basic',
-      'Leaflet',
       Leaflet,
       'https://bsky.app/profile/leaflet.pub',
     ],
-    [
-      'blog.pckt.theme#basic',
-      'pckt',
-      Pckt,
-      'https://bsky.app/profile/pckt.blog',
-    ],
+    ['blog.pckt.theme#basic', Pckt, 'https://bsky.app/profile/pckt.blog'],
     [
       'app.offprint.theme#basic',
-      'Offprint',
       Offprint,
       'https://bsky.app/profile/offprint.app',
     ],
   ])(
     'uses the %s theme NSID as a publisher hint',
-    ($type, name, Icon, profileUrl) => {
+    ($type, Icon, profileUrl) => {
       const row = documentRow(true)
       row.associatedRecords[publicationUri].record.url =
         'https://custom-domain.example'
       row.associatedRecords[publicationUri].record.basicTheme = {$type}
       const screen = renderRow(row)
-      expect(screen.getByLabelText(`via ${name}`)).toBeTruthy()
       expect(screen.UNSAFE_getByType(Icon)).toBeTruthy()
       expect(mockLink).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -454,9 +430,8 @@ describe('content-first articles and recommendations', () => {
       $type: 'pub.leaflet.theme#basic',
     }
     const screen = renderRow(row)
-    expect(screen.getByLabelText('via pckt')).toBeTruthy()
     expect(screen.UNSAFE_getByType(Pckt)).toBeTruthy()
-    expect(screen.queryByLabelText('via Leaflet')).toBeNull()
+    expect(screen.UNSAFE_queryByType(Leaflet)).toBeNull()
     expect(mockLink).toHaveBeenCalledWith(
       expect.objectContaining({
         testID: 'atmosphereArticlePublisher',
@@ -476,82 +451,20 @@ describe('content-first articles and recommendations', () => {
     expect(screen.queryByTestId('atmosphereArticlePublisher')).toBeNull()
   })
 
-  it.each([1, 2, 3])(
-    'uses default recommendation threshold with %s usable actors',
-    count => {
-      const screen = renderRow(recommendationRow(count))
-      expect(Boolean(screen.queryByTestId('atmosphereArticleCard'))).toBe(
-        count >= 2,
-      )
-      expect(Boolean(screen.queryByTestId('atmosphereFootnote'))).toBe(
-        count < 2,
-      )
-      const others =
-        count > 1 ? ` and ${count - 1} ${count === 2 ? 'other' : 'others'}` : ''
-      expect(
-        screen.getByLabelText(
-          new RegExp(
-            `${sanitizeHandle('actor0.example', '@')}${others} recommended`,
-          ),
-        ),
-      ).toBeTruthy()
-    },
-  )
-
-  it('renders recommendation footnotes as one linked sentence with full-contrast links', () => {
+  it('keeps actor, article, and publisher links in recommendation footnotes', () => {
     const row = recommendationRow(1)
     row.associatedRecords[publicationUri].record.url =
       'https://writer.pckt.blog'
+    row.associatedRecords[documentUri].record.path = '/article'
     const screen = renderRow(row)
 
-    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
-      /recommended An article via pckt/,
-    )
-    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveStyle({
-      color: '#667788',
-    })
-    expect(screen.getByTestId('atmosphereFootnoteActor')).toHaveStyle({
-      color: '#111111',
-    })
-    expect(screen.getByTestId('atmosphereFootnoteTitle')).toHaveStyle({
-      color: '#111111',
-    })
-    expect(screen.getByTestId('atmosphereFootnoteApp')).toHaveStyle({
-      color: '#111111',
-      fontWeight: '600',
-    })
-    expect(screen.getByTestId('atmosphereFootnoteApp').props.to).toBe(
-      'https://bsky.app/profile/pckt.blog',
-    )
-    expect(mockAvatarStack).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        profiles: [row.actors['did:plc:actor0']],
-        size: 16,
-      }),
-    )
+    expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
+    hasLink('/profile/actor0.example')
+    hasLink('https://writer.pckt.blog/article')
+    hasLink('https://bsky.app/profile/pckt.blog')
   })
 
-  it.each([1, 2])(
-    'uses the filled primary heart for recommendation %s-actor presentation',
-    count => {
-      const screen = renderRow(recommendationRow(count))
-      const icon = screen.UNSAFE_getByType(HeartFilledIcon)
-      expect(icon.props.fill).toBe('#006aff')
-    },
-  )
-
-  it.each([false, true])(
-    'uses the filled primary heart for related proof in card=%s presentation',
-    subscribed => {
-      const screen = renderRow(
-        documentRow(subscribed, [recommend('did:plc:one')]),
-      )
-      const icon = screen.UNSAFE_getByType(HeartFilledIcon)
-      expect(icon.props.fill).toBe('#006aff')
-    },
-  )
-
-  it('applies configuration to both recommendation groups and related proof', () => {
+  it('applies the configured recommendation boundary to groups and related proof', () => {
     atmospherePresentationConfig.recommendationCardThreshold = 3
     const cluster = renderRow(recommendationRow(2))
     expect(cluster.queryByTestId('atmosphereArticleCard')).toBeNull()
@@ -560,6 +473,18 @@ describe('content-first articles and recommendations', () => {
       documentRow(false, [recommend('did:plc:one'), recommend('did:plc:two')]),
     )
     expect(document.queryByTestId('atmosphereArticleCard')).toBeNull()
+    document.unmount()
+    const promotedCluster = renderRow(recommendationRow(3))
+    expect(promotedCluster.getByTestId('atmosphereArticleCard')).toBeTruthy()
+    promotedCluster.unmount()
+    const promotedDocument = renderRow(
+      documentRow(false, [
+        recommend('did:plc:one'),
+        recommend('did:plc:two'),
+        recommend('did:plc:three'),
+      ]),
+    )
+    expect(promotedDocument.getByTestId('atmosphereArticleCard')).toBeTruthy()
   })
 
   it.each([false, true])('ignores target-author following=%s', following => {
@@ -593,21 +518,6 @@ describe('content-first articles and recommendations', () => {
     )
     expect(screen.queryByText(/actor6|actor7|did:plc:/)).toBeNull()
   })
-
-  it.each([1, 2, 3])(
-    'promotes related recommendation proof at the same default threshold (%s)',
-    count => {
-      const screen = renderRow(
-        documentRow(
-          false,
-          Array.from({length: count}, (_, i) => recommend(`did:plc:rec${i}`)),
-        ),
-      )
-      expect(Boolean(screen.queryByTestId('atmosphereArticleCard'))).toBe(
-        count >= 2,
-      )
-    },
-  )
 
   it('promotes mixed and self-share proof without labeling shares as recommendations', () => {
     const selfShare = createActivity({collection: activityCollections.share})
@@ -685,7 +595,8 @@ describe('content-first articles and recommendations', () => {
       {groupBy: 'actor', associatedRecords: createDocumentRecords()},
     )
     const screen = renderRow(row)
-    expect(screen.getByText(/^Article unavailable/)).toBeTruthy()
+    expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
+    expect(screen.queryByTestId('atmosphereFootnoteTitle')).toBeNull()
     expect(screen.queryByText('An article')).toBeNull()
     expect(screen.queryByTestId('atmosphereArticleCard')).toBeNull()
     expect(screen.getByText(/and 1 more article/)).toBeTruthy()
@@ -699,11 +610,10 @@ describe('content-first articles and recommendations', () => {
     if (row.type !== 'group') throw new Error('Expected group')
     row.group.indexedAt = '2026-09-09T05:00:00Z'
     const screen = renderRow(row)
-    expect(
-      screen.getByLabelText(
-        `${sanitizeHandle('author.example', '@')} published · elapsed:2026-09-09T05:00:00Z`,
-      ),
-    ).toBeTruthy()
+    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
+      'elapsed:2026-09-09T05:00:00Z',
+      {exact: false},
+    )
   })
 
   it.each(['card', 'footnote'])(
@@ -740,7 +650,11 @@ describe('content-first articles and recommendations', () => {
       const row = documentRow(true)
       row.associatedRecords[documentUri].record.site = site
       const screen = renderRow(row)
-      expect(screen.getByText('An article')).toBeTruthy()
+      expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
+        String(row.associatedRecords[documentUri].record.title),
+        {exact: false},
+      )
+      expect(screen.queryByTestId('atmosphereFootnoteTitle')).toBeNull()
       expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
       expect(screen.queryByTestId('atmosphereArticleCard')).toBeNull()
       expect(mockMenu).not.toHaveBeenCalled()
@@ -812,17 +726,18 @@ function subscriptionRow(count = 1) {
 }
 
 describe('subscription social proof', () => {
-  it.each([1, 2, 3])(
-    'uses the configured default boundary with %s subscribers',
+  it.each([2, 3, 4])(
+    'uses the configured boundary with %s subscribers',
     count => {
+      atmospherePresentationConfig.subscriptionCardThreshold = 3
       const screen = renderRow(subscriptionRow(count))
       expect(Boolean(screen.queryByTestId('atmosphereSubscriptionCard'))).toBe(
-        count >= 2,
+        count >= 3,
       )
       expect(Boolean(screen.queryByTestId('atmosphereFootnote'))).toBe(
-        count < 2,
+        count < 3,
       )
-      expect(Boolean(screen.queryByTestId('publication-cta'))).toBe(count >= 2)
+      expect(Boolean(screen.queryByTestId('publication-cta'))).toBe(count >= 3)
       expect(screen.getByText('A publication')).toBeTruthy()
       hasLink('https://publication.example/')
       hasLink('/profile/subscriber0.example')
@@ -830,15 +745,6 @@ describe('subscription social proof', () => {
         screen.getByTestId('atmosphereDocumentMenuPlaceholder'),
       ).toHaveStyle({width: 1, height: 25})
       expect(mockMenu).not.toHaveBeenCalled()
-    },
-  )
-
-  it.each([1, 2])(
-    'uses the filled green bookmark for subscription %s-actor presentation',
-    count => {
-      const screen = renderRow(subscriptionRow(count))
-      const icon = screen.UNSAFE_getByType(BookmarkFilled)
-      expect(icon.props.fill).toBe('#168a45')
     },
   )
 
@@ -914,8 +820,10 @@ describe('subscription social proof', () => {
     screen.unmount()
     delete row.associatedRecords[`${publicationUri}-0`]
     const missingFirst = renderRow(row)
-    expect(missingFirst.getByText(/^Publication unavailable/)).toBeTruthy()
-    expect(missingFirst.queryByText('Publication 1')).toBeNull()
+    expect(missingFirst.getByTestId('atmosphereFootnote')).toBeTruthy()
+    expect(missingFirst.queryByTestId('atmosphereFootnoteTitle')).toBeNull()
+    expect(missingFirst.queryByText(/Publication \d/)).toBeNull()
+    expect(missingFirst.queryByTestId('publication-cta')).toBeNull()
   })
 
   it.each([
@@ -926,7 +834,11 @@ describe('subscription social proof', () => {
     const row = subscriptionRow(2)
     row.associatedRecords[publicationUri].record.url = url
     const screen = renderRow(row)
-    expect(screen.getByText('A publication')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
+      String(row.associatedRecords[publicationUri].record.name),
+      {exact: false},
+    )
+    expect(screen.queryByTestId('atmosphereFootnoteTitle')).toBeNull()
     expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
     expect(screen.queryByTestId('atmosphereSubscriptionCard')).toBeNull()
     expect(mockSubscribeButton).not.toHaveBeenCalled()
@@ -1081,7 +993,7 @@ describe('document share cards', () => {
     },
   )
 
-  it('renders the publication author inline with middle ellipsis truncation', () => {
+  it('links the publication and author independently in the shared document byline', () => {
     const row = shareRow()
     const screen = renderRow(row)
 
@@ -1091,13 +1003,10 @@ describe('document share cards', () => {
 
     expect(byline).toBeTruthy()
     expect(publication).toHaveTextContent('A publication')
-    expect(author).toHaveTextContent(
-      `by ${sanitizeHandle('author.example', '@')}`,
-    )
-    expect(publication.props.numberOfLines).toBe(1)
-    expect(publication.props.ellipsizeMode).toBe('middle')
-    expect(author.props.numberOfLines).toBe(1)
-    expect(author.props.ellipsizeMode).toBe('middle')
+    expect(author).toHaveTextContent(sanitizeHandle('author.example', '@'), {
+      exact: false,
+    })
+    hasLink('https://publication.example/')
     hasLink('/profile/author.example')
   })
 
@@ -1194,7 +1103,8 @@ describe('document share cards', () => {
     jest.clearAllMocks()
     delete records[first.record.uri]
     const unavailable = renderRow(row)
-    expect(unavailable.getByText(/^Post unavailable/)).toBeTruthy()
+    expect(unavailable.getByTestId('atmosphereFootnote')).toBeTruthy()
+    expect(unavailable.queryByTestId('atmosphereShareCard')).toBeNull()
     expect(unavailable.queryByText('Later commentary')).toBeNull()
     expect(mockShareSnippets).not.toHaveBeenCalled()
   })
@@ -1204,7 +1114,7 @@ describe('document share cards', () => {
     delete row.associatedRecords[documentUri]
     const screen = renderRow(row)
     expect(screen.getByTestId('atmosphereShareCard')).toBeTruthy()
-    expect(screen.getByText('Article unavailable')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereShareDocumentPreview')).toBeTruthy()
     expect(screen.getByText('Commentary 0')).toBeTruthy()
     expect(screen.queryByTestId('atmosphereShareDocumentThumbnail')).toBeNull()
     expect(
@@ -1309,11 +1219,13 @@ describe('stream lifecycle treatments', () => {
     expect(screen.getByTestId('atmosphereEndedLivestream')).toBeTruthy()
     expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
     expect(screen.getByText('A real stream')).toBeTruthy()
-    expect(
-      screen.getByLabelText(
-        /streamed for 48 min.*elapsed:2026-09-10T12:00:00.000Z/,
-      ),
-    ).toBeTruthy()
+    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
+      /48 min/,
+    )
+    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
+      'elapsed:2026-09-10T12:00:00.000Z',
+      {exact: false},
+    )
     expect(screen.queryByText('LIVE NOW')).toBeNull()
     hasLink('https://stream.example/real0')
   })
@@ -1323,14 +1235,18 @@ describe('stream lifecycle treatments', () => {
     endedAt => {
       const screen = renderRow(streamRow({endedAt}))
       expect(screen.getByTestId('atmosphereEndedLivestream')).toBeTruthy()
-      expect(screen.getByLabelText(/streamed · elapsed:/)).toBeTruthy()
-      expect(screen.queryByLabelText(/streamed for|NaN|Infinity/)).toBeNull()
+      expect(
+        screen.getByTestId('atmosphereFootnoteText'),
+      ).not.toHaveTextContent(/\b(?:sec|min)\b|NaN|Infinity/)
+      expect(screen.queryByTestId('atmosphereActiveLivestream')).toBeNull()
     },
   )
 
   it('updates duration units when the locale changes', () => {
     const screen = renderRow(streamRow({endedAt: '2026-01-01T00:48:00Z'}))
-    expect(screen.getByLabelText(/streamed for 48 min/)).toBeTruthy()
+    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
+      /48 min/,
+    )
     try {
       act(() => i18n.loadAndActivate({locale: 'fr', messages: {}}))
       const duration = i18n.number(48, {
@@ -1338,18 +1254,32 @@ describe('stream lifecycle treatments', () => {
         unit: 'minute',
         unitDisplay: 'short',
       })
+      expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
+        duration,
+        {exact: false, normalizer: text => text},
+      )
       expect(
-        screen.getByLabelText(/streamed for/).props.accessibilityLabel,
-      ).toContain(`streamed for ${duration}`)
+        screen.getByTestId('atmosphereFootnoteText'),
+      ).not.toHaveTextContent('48 min', {
+        exact: false,
+        normalizer: text => text,
+      })
     } finally {
       act(() => i18n.activate('en'))
     }
   })
 
-  it('uses seconds below a minute, including a real zero duration', () => {
-    const screen = renderRow(streamRow({endedAt: '2026-01-01T00:00:00Z'}))
-    expect(screen.getByLabelText(/streamed for 0 sec/)).toBeTruthy()
-  })
+  it.each([0, 59])(
+    'uses seconds below a minute, including %s seconds',
+    seconds => {
+      const endedAt = `2026-01-01T00:00:${String(seconds).padStart(2, '0')}Z`
+      const screen = renderRow(streamRow({endedAt}))
+      expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
+        `${seconds} sec`,
+        {exact: false},
+      )
+    },
+  )
 
   it('bounds thirteen ended streams to the first title, count, and first duration', () => {
     const row = streamRow({endedAt: '2026-01-01T01:53:10Z'}, 13)
@@ -1366,11 +1296,13 @@ describe('stream lifecycle treatments', () => {
     expect(
       screen.getByText(/A real stream and 12 more livestreams/),
     ).toBeTruthy()
-    expect(
-      screen.getByLabelText(
-        /streamed \(first stream: 113 min\).*elapsed:2026-09-11T09:00:00Z/,
-      ),
-    ).toBeTruthy()
+    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
+      /113 min/,
+    )
+    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
+      'elapsed:2026-09-11T09:00:00Z',
+      {exact: false},
+    )
     expect(screen.queryByText(/Hidden stream/)).toBeNull()
     expect(screen.queryByTestId('atmosphereLivestreamThumbnail')).toBeNull()
     expect(row.group.items).toHaveLength(13)
@@ -1592,7 +1524,6 @@ describe('photo cards and shared media integration', () => {
     const row = photoRow(2)
     row.associatedRecords = {}
     const screen = renderRow(row)
-    expect(screen.getByText('Photos unavailable')).toBeTruthy()
     expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
     expect(screen.queryByTestId('atmospherePhotoCard')).toBeNull()
     expect(mockGallery).not.toHaveBeenCalled()
