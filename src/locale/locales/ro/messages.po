@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-29 14:17\n"
+"PO-Revision-Date: 2026-10-30 14:59\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -518,12 +518,12 @@ msgid "{count, plural, one {# chat update} other {# chat updates}}"
 msgstr "{count, plural, one {o actualizare de grup} few {# actualizări de grup} other {# de actualizări de grup}}"
 
 #. Number of people you follow who also follow this account
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:352
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:353
 msgid "{count, plural, one {# mutual follower} other {# mutual followers}}"
 msgstr "{count, plural, one {un urmăritor comun} few {# urmăritori comuni} other {# de urmăritori comuni}}"
 
 #. Short form of “mutual followers”: the number of people you follow who also follow this account
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:359
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:360
 msgid "{count, plural, one {# mutual} other {# mutuals}}"
 msgstr "{count, plural, one {# în comun} few {# în comun} other {# în comun}}"
 
@@ -1279,7 +1279,7 @@ msgstr "⚠Identificator invalid"
 msgid "24 hours"
 msgstr "24 de ore"
 
-#: src/screens/Login/LoginForm.tsx:419
+#: src/screens/Login/LoginForm.tsx:421
 msgid "2FA Confirmation"
 msgstr "Confirmare 2FA"
 
@@ -1579,12 +1579,6 @@ msgid "Active index {0} (from {1}), {2} user navigation events"
 msgstr "Index activ {0} (din {1}), {2} evenimente de navigare ale utilizatorului"
 
 #: src/screens/Atmosphere/index.tsx:43
-msgid "Activity"
-msgstr "Activitate"
-
-#. Tab label in Notifications that shows new posts from accounts you get activity notifications for. Space is tight, so keep it as short as possible.
-#: src/screens/Notifications/index.tsx:159
-msgctxt "notifications tab"
 msgid "Activity"
 msgstr "Activitate"
 
@@ -2062,7 +2056,7 @@ msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} char
 msgstr "Textul alternativ va fi trunchiat. {MAX_ALT_TEXT, plural, other {Limită: {0} caractere.}}"
 
 #. placeholder {0}: currentAccount?.email || '(no email)'
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:100
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:102
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr "Un e-mail a fost trimis la {0}. Acesta include un cod de confirmare pe care îl puteți introduce mai jos."
 
@@ -2185,7 +2179,7 @@ msgstr "A apărut o problemă la pornirea conversației de grup, vă rugăm să 
 #: src/components/hooks/useFollowMethods.ts:52
 #: src/components/ProfileCard.tsx:510
 #: src/components/ProfileCard.tsx:535
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:217
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:218
 #: src/view/com/notifications/NotificationFeedItem.tsx:823
 #: src/view/com/notifications/NotificationFeedItem.tsx:844
 msgid "An issue occurred, please try again."
@@ -2419,7 +2413,7 @@ msgstr "Arhivat de la {0}"
 msgid "Archived post"
 msgstr "Postare arhivată"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:327
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:329
 msgid "Are you really, really sure?"
 msgstr "Sunteți foarte, foarte sigur?"
 
@@ -2524,7 +2518,7 @@ msgstr "Atribuiți subiectul pentru algoritm"
 msgid "At least 8 characters"
 msgstr "Cel puțin 8 caractere"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:338
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:340
 msgid "AT Protocol FAQ"
 msgstr "Întrebări frecvente despre Protocolul AT"
 
@@ -2597,8 +2591,8 @@ msgstr "În așteptarea examinării"
 #: src/screens/Login/ChooseAccountForm.tsx:99
 #: src/screens/Login/ForgotPasswordForm.tsx:123
 #: src/screens/Login/ForgotPasswordForm.tsx:128
-#: src/screens/Login/LoginForm.tsx:486
-#: src/screens/Login/LoginForm.tsx:491
+#: src/screens/Login/LoginForm.tsx:488
+#: src/screens/Login/LoginForm.tsx:493
 #: src/screens/Login/SetNewPasswordForm.tsx:136
 #: src/screens/Login/SetNewPasswordForm.tsx:142
 #: src/screens/Messages/components/ChatDisabled.tsx:161
@@ -2676,7 +2670,7 @@ msgstr "Înainte de a primi notificări despre postările noi de la {name}, treb
 #: src/screens/Messages/ChatList.tsx:543
 #: src/screens/Messages/Conversation.tsx:207
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:285
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:286
 msgid "Before you can message another user, you must first verify your email."
 msgstr "Înainte de a putea trimite mesaje unui alt utilizator, trebuie mai întâi să vă verificați adresa de e-mail."
 
@@ -3274,7 +3268,7 @@ msgstr "Schimbați limba aplicației"
 msgid "Change Handle"
 msgstr "Modificare identificator"
 
-#: src/screens/Login/LoginForm.tsx:580
+#: src/screens/Login/LoginForm.tsx:582
 msgid "Change hosting provider"
 msgstr "Schimbați furnizorul de găzduire"
 
@@ -3449,7 +3443,7 @@ msgstr "Conversație dezamuțită"
 msgid "Chats"
 msgstr "Conversații"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:239
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:241
 msgid "Check <0>{currentEmail}</0> for an email with the confirmation code to enter below:"
 msgstr "Verificați <0>{currentEmail}</0> pentru un e-mail cu codul de confirmare pentru a-l introduce mai jos:"
 
@@ -3469,10 +3463,6 @@ msgstr "Verificare actualizări"
 #: src/screens/SignupQueued.tsx:89
 msgid "Check my status"
 msgstr "Verificați-mi statusul"
-
-#: src/screens/Login/LoginForm.tsx:438
-msgid "Check your email for a sign in code and enter it here."
-msgstr "Verificați-vă adresa de e-mail pentru un cod de conectare și introduceți-l aici."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:160
 msgid "Child safety"
@@ -3629,12 +3619,12 @@ msgstr "Faceți clic aici pentru a vă șterge contul"
 msgid "Click here to log out"
 msgstr "Faceți clic aici pentru a vă deconecta"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:269
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:278
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:271
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:280
 msgid "Click here to resend the email"
 msgstr "Faceți clic aici pentru a retrimite e-mailul"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:388
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:386
 msgid "Click here to restart the verification process."
 msgstr "Faceți clic aici pentru a reporni procesul de verificare."
 
@@ -3878,15 +3868,15 @@ msgstr "Configurat în <0>setările de moderare</0>."
 
 #: src/components/Prompt.tsx:211
 #: src/components/Prompt.tsx:214
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:185
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:188
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:187
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:190
 msgid "Confirm"
 msgstr "Confirmare"
 
-#: src/components/dialogs/EmailDialog/components/TokenField.tsx:81
+#: src/components/dialogs/EmailDialog/components/TokenField.tsx:71
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:196
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:250
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:151
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:252
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:153
 msgid "Confirmation code"
 msgstr "Cod de confirmare"
 
@@ -3894,12 +3884,12 @@ msgstr "Cod de confirmare"
 msgid "Connecting to service..."
 msgstr "Se conectează la serviciu..."
 
-#: src/screens/Login/LoginForm.tsx:517
+#: src/screens/Login/LoginForm.tsx:519
 msgid "Connecting to service…"
 msgstr "Se conectează la serviciu…"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:142
-#: src/screens/Login/LoginForm.tsx:523
+#: src/screens/Login/LoginForm.tsx:525
 msgid "Connecting…"
 msgstr "Se conectează…"
 
@@ -4595,8 +4585,8 @@ msgstr "Ștergere"
 msgid "Delete account"
 msgstr "Ștergere cont"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:189
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:236
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:191
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:238
 msgid "Delete account “{currentHandle}”"
 msgstr "Ștergeți contul „{currentHandle}”"
 
@@ -4647,7 +4637,7 @@ msgstr "Ștergere mesaj"
 msgid "Delete message for me"
 msgstr "Ștergere mesaj pentru mine"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:309
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:311
 msgid "Delete my account"
 msgstr "Șterge-mi contul"
 
@@ -4779,7 +4769,7 @@ msgid "Disable"
 msgstr "Dezactivare"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:231
-#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:240
+#: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:238
 msgid "Disable 2FA"
 msgstr "Dezactivați A2F"
 
@@ -4791,7 +4781,7 @@ msgstr "Dezactivare subtitrări"
 msgid "Disable email 2FA"
 msgstr "Dezactivați e-mailul A2F"
 
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:96
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:98
 msgid "Disable Email 2FA"
 msgstr "Dezactivare A2F prin e-mail"
 
@@ -4952,11 +4942,11 @@ msgstr "Nu include nuditate."
 msgid "Domain verified!"
 msgstr "Domeniu verificat!"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:385
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:383
 msgid "Don't have a code or need a new one? <0>Click here.</0>"
 msgstr "Nu aveți un cod sau aveți nevoie de unul nou? <0>Faceți clic aici.</0>"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:275
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:277
 msgid "Don’t see a code? <0>Click here to resend.</0>"
 msgstr "Nu vedeți un cod? <0>Faceți clic aici pentru a-l retrimite.</0>"
 
@@ -5116,7 +5106,7 @@ msgstr "de ex. Cei mai buni creatori."
 msgid "e.g. Users that repeatedly reply with ads."
 msgstr "de ex. Utilizatori care răspund în mod repetat cu reclame."
 
-#: src/screens/Notifications/components/PageList.tsx:575
+#: src/screens/Notifications/components/PageList.tsx:577
 msgctxt "Notifications section header"
 msgid "Earlier"
 msgstr "Mai devreme"
@@ -5276,7 +5266,7 @@ msgstr "Fie creatorul acestei liste v-a blocat sau dvs. ați blocat creatorul."
 msgid "Email"
 msgstr "E-mail"
 
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:67
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:69
 msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr "A2F prin e-mail dezactivată"
@@ -5297,7 +5287,7 @@ msgstr "E-mailul a fost retrimis"
 msgid "Email sent!"
 msgstr "E-mailul a fost trimis!"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:266
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:268
 msgid "Email sent! <0>Click here to resend.</0>"
 msgstr "E-mailul a fost trimis! <0>Faceți clic aici pentru a-l retrimite.</0>"
 
@@ -5448,6 +5438,10 @@ msgstr "Intrați în modul Ecran complet"
 msgid "Enter the 6-digit code sent to {prettyNumber}"
 msgstr "Introduceți codul de 6 cifre trimis către {prettyNumber}"
 
+#: src/screens/Login/LoginForm.tsx:437
+msgid "Enter the code from your email or authenticator app"
+msgstr "Introduceți codul din adresa de e-mail sau din aplicația de autentificare"
+
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:382
 msgid "Enter the domain you want to use"
 msgstr "Introduceți domeniul pe care doriți să-l utilizați"
@@ -5456,7 +5450,11 @@ msgstr "Introduceți domeniul pe care doriți să-l utilizați"
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "Introduceți e-mailul pe care l-ați folosit pentru a vă crea contul. Vă vom trimite un „cod de resetare” pentru a putea seta o parolă nouă."
 
-#: src/screens/Login/LoginForm.tsx:331
+#: src/screens/Login/LoginForm.tsx:440
+msgid "Enter the sign in code from your email or authenticator app."
+msgstr "Introduceți codul de conectare din e-mail sau din aplicația de autentificare."
+
+#: src/screens/Login/LoginForm.tsx:333
 msgid "Enter the username or email address you used when you created your account"
 msgstr "Introduceți numele de utilizator sau adresa de e-mail pe care le-ați folosit când ați creat contul"
 
@@ -5469,8 +5467,8 @@ msgstr "Introduceți-vă data nașterii"
 msgid "Enter your email address"
 msgstr "Introduceți-vă adresa de e-mail"
 
-#: src/screens/Login/LoginForm.tsx:379
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:295
+#: src/screens/Login/LoginForm.tsx:381
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:297
 msgid "Enter your password"
 msgstr "Introduceți-vă parola"
 
@@ -5739,7 +5737,7 @@ msgstr "Nu s-a reușit crearea parolei de aplicație. Încercați din nou."
 
 #: src/components/dms/MessageProfileButton.tsx:38
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:66
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:275
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:276
 msgid "Failed to create conversation"
 msgstr "Crearea conversației a eșuat"
 
@@ -6241,8 +6239,8 @@ msgstr "Găsire și invitare prieteni"
 msgid "Find Contacts"
 msgstr "Găsire contacte"
 
-#: src/screens/Notifications/components/PageList.tsx:631
-#: src/screens/Notifications/components/PageList.tsx:636
+#: src/screens/Notifications/components/PageList.tsx:633
+#: src/screens/Notifications/components/PageList.tsx:638
 msgid "Find friends"
 msgstr "Găsiți prieteni"
 
@@ -6267,7 +6265,7 @@ msgstr "Găsiți persoane pe care le cunoașteți"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Găsiți postări, utilizatori și fluxuri pe Bluesky"
 
-#: src/screens/Notifications/components/PageList.tsx:625
+#: src/screens/Notifications/components/PageList.tsx:627
 msgid "Find some friends to start getting notifications!"
 msgstr "Găsiți câțiva prieteni pentru a începe să primiți notificări!"
 
@@ -6331,7 +6329,7 @@ msgstr "Focalizat de {focusCount} ori"
 #: src/components/ProfileHoverCard/index.web.tsx:503
 #: src/components/ProfileHoverCard/index.web.tsx:514
 #: src/screens/Messages/ConversationSettings/Member.tsx:170
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:232
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:233
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:430
 #: src/screens/VideoFeed/index.tsx:1060
@@ -6390,7 +6388,7 @@ msgstr "Urmăriți toate conturile"
 #. User is not following this account, click to follow back
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:547
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:228
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:229
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:155
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:428
 #: src/view/com/notifications/NotificationFeedItem.tsx:886
@@ -6456,7 +6454,7 @@ msgstr "Urmăritori pe care îi știți"
 #: src/components/ProfileCard.tsx:542
 #: src/components/ProfileHoverCard/index.web.tsx:502
 #: src/components/ProfileHoverCard/index.web.tsx:513
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:223
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:224
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:426
 #: src/screens/VideoFeed/index.tsx:1058
@@ -6489,7 +6487,7 @@ msgstr "Urmăriți pe {displayName}"
 msgid "Following {handle}"
 msgstr "Urmăriți pe {handle}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:213
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:214
 msgid "Following {name}"
 msgstr "Urmăresc pe {name}"
 
@@ -6534,7 +6532,7 @@ msgstr "Pentru mai multe informații despre procesul nostru de contestații și 
 msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
 msgstr "Pentru conturile de organizație, utilizați data nașterii persoanei responsabile pentru cont."
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:192
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:194
 msgid "For security reasons, we’ll need to send a confirmation code to your email address <0>{currentEmail}</0>."
 msgstr "Din motive de securitate, va trebui să trimitem un cod de confirmare la adresa dvs. de e-mail <0>{currentEmail}</0>."
 
@@ -6567,8 +6565,8 @@ msgstr "Uitați de zgomot"
 msgid "Forgot Password"
 msgstr "Am uitat parola"
 
-#: src/screens/Login/LoginForm.tsx:404
-#: src/screens/Login/LoginForm.tsx:411
+#: src/screens/Login/LoginForm.tsx:406
+#: src/screens/Login/LoginForm.tsx:413
 msgid "Forgot password?"
 msgstr "Ați uitat parola?"
 
@@ -6842,7 +6840,7 @@ msgid "Go to {firstAuthorName}'s profile"
 msgstr "Mergeți la profilul lui {firstAuthorName}"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:78
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:644
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:645
 #: src/screens/Notifications/components/NotificationItem/Item/text.tsx:113
 msgid "Go to {name}’s profile"
 msgstr "Mergeți la profilul utilizatorului {name}"
@@ -7285,16 +7283,16 @@ msgstr "Gazdă:"
 #: src/components/dialogs/ServerInput.tsx:138
 #: src/screens/Login/components/HostingProviderDialog.tsx:159
 #: src/screens/Login/ForgotPasswordForm.tsx:84
-#: src/screens/Login/LoginForm.tsx:595
+#: src/screens/Login/LoginForm.tsx:597
 msgid "Hosting provider"
 msgstr "Furnizor de găzduire"
 
 #. placeholder {0}: toNiceHostingUrl(state.pdsUrl)
-#: src/screens/Login/LoginForm.tsx:591
+#: src/screens/Login/LoginForm.tsx:593
 msgid "Hosting provider: {0}"
 msgstr "Furnizor de găzduire: {0}"
 
-#: src/screens/Login/LoginForm.tsx:593
+#: src/screens/Login/LoginForm.tsx:595
 msgid "Hosting provider: Bluesky"
 msgstr "Furnizor de găzduire: Bluesky"
 
@@ -7319,8 +7317,8 @@ msgstr "Trafic de persoane"
 msgid "I consent to Bluesky using my contacts for mutual friend discovery and to retain hashed data for matching until I opt out."
 msgstr "Sunt de acord ca Bluesky să folosească contactele mele pentru descoperirea reciprocă a prietenilor și să mențină datele hashed (criptate) pentru potrivire până când voi renunța la această opțiune."
 
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:140
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:143
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:142
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:145
 msgid "I have a code"
 msgstr "Am un cod"
 
@@ -7589,7 +7587,7 @@ msgstr "Includeți postările create până la această dată"
 msgid "Include video timestamp ({videoTimestamp})"
 msgstr "Includeți marcajul temporal al videoclipului ({videoTimestamp})"
 
-#: src/screens/Login/LoginForm.tsx:158
+#: src/screens/Login/LoginForm.tsx:160
 msgid "Incorrect username or password"
 msgstr "Nume de utilizator sau parolă incorecte"
 
@@ -7600,10 +7598,6 @@ msgstr "Incrementare contor"
 #: src/screens/Login/SetNewPasswordForm.tsx:128
 msgid "Input new password"
 msgstr "Introduceți parola nouă"
-
-#: src/screens/Login/LoginForm.tsx:435
-msgid "Input the code which has been emailed to you"
-msgstr "Introduceți codul care v-a fost trimis prin e-mail"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:137
 msgid "Interaction limited"
@@ -7649,8 +7643,8 @@ msgstr "Vă prezentăm conversațiile de grup"
 msgid "Introducing saved posts AKA bookmarks"
 msgstr "Vă prezentăm salvarea postărilor adică marcaje"
 
-#: src/screens/Login/LoginForm.tsx:149
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:78
+#: src/screens/Login/LoginForm.tsx:151
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:80
 msgid "Invalid 2FA confirmation code."
 msgstr "Cod de confirmare A2F invalid."
 
@@ -8481,7 +8475,7 @@ msgstr "Se încarcă setările de interacțiune pentru postări..."
 msgid "Loading..."
 msgstr "Se Încarcă..."
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:557
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:558
 msgid "Loads more people into this list"
 msgstr "Încarcă mai multe persoane în această listă"
 
@@ -9096,7 +9090,7 @@ msgstr "Navigați la pachetul de pornire"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:148
 #: src/screens/Login/ForgotPasswordForm.tsx:173
-#: src/screens/Login/LoginForm.tsx:530
+#: src/screens/Login/LoginForm.tsx:532
 msgid "Navigates to the next screen"
 msgstr "Navighează la următorul ecran"
 
@@ -9298,7 +9292,7 @@ msgstr "Răspuns nou de la <0/>"
 msgid "New Starter Pack"
 msgstr "Pachet de pornire nou"
 
-#: src/screens/Login/LoginForm.tsx:544
+#: src/screens/Login/LoginForm.tsx:546
 msgid "New to Bluesky? <0>Sign up</0>"
 msgstr "Sunteți nou pe Bluesky? <0>Înscrieți-vă</0>"
 
@@ -9406,7 +9400,7 @@ msgstr "Fără expirare setată"
 msgid "No feeds found. Try searching for something else."
 msgstr "Nu s-au găsit fluxuri. Încercați să căutați altceva."
 
-#: src/screens/Notifications/components/PageList.tsx:665
+#: src/screens/Notifications/components/PageList.tsx:667
 msgid "No followers to show yet"
 msgstr "Niciun urmăritor de afișat încă"
 
@@ -9453,7 +9447,7 @@ msgstr "Nicio listă"
 msgid "No longer following {0}"
 msgstr "Nu mai urmăriți pe {0}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:210
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:211
 msgid "No longer following {name}"
 msgstr "Nu mai urmăriți pe {name}"
 
@@ -9478,12 +9472,12 @@ msgstr "Gata cu algoritmii plini cu informații inutile. Găsiți fluxuri care f
 msgid "No name"
 msgstr "Niciun nume"
 
-#: src/screens/Notifications/components/PageList.tsx:662
+#: src/screens/Notifications/components/PageList.tsx:664
 msgid "No notifications from people you follow yet"
 msgstr "Nicio notificare de la persoanele pe care le urmăriți încă"
 
-#: src/screens/Notifications/components/PageList.tsx:614
-#: src/screens/Notifications/components/PageList.tsx:659
+#: src/screens/Notifications/components/PageList.tsx:616
+#: src/screens/Notifications/components/PageList.tsx:661
 msgid "No notifications yet"
 msgstr "Nu există notificări încă"
 
@@ -9547,7 +9541,7 @@ msgstr "Încă nu există citate"
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "Încă nu există GIF-uri recente. Alegeți unul pentru a-l vedea aici."
 
-#: src/screens/Notifications/components/PageList.tsx:668
+#: src/screens/Notifications/components/PageList.tsx:670
 msgid "No replies to show yet"
 msgstr "Niciun răspuns de afișat încă"
 
@@ -10153,7 +10147,7 @@ msgstr "Deschide fluxul {displayName}"
 msgid "Opens a dialog to add a content warning to your post"
 msgstr "Deschide un dialog pentru a adăuga un avertisment de conținut postării dvs."
 
-#: src/screens/Login/LoginForm.tsx:581
+#: src/screens/Login/LoginForm.tsx:583
 msgid "Opens a dialog to change the hosting provider you sign in to"
 msgstr "Deschide o fereastră de dialog pentru a schimba furnizorul de găzduire la care vă conectați"
 
@@ -10413,11 +10407,11 @@ msgstr "Pagina nu a fost găsită"
 msgid "Party GIFs"
 msgstr "GIF-uri de petrecere"
 
-#: src/screens/Login/LoginForm.tsx:359
-#: src/screens/Login/LoginForm.tsx:365
+#: src/screens/Login/LoginForm.tsx:361
+#: src/screens/Login/LoginForm.tsx:367
 #: src/screens/Settings/AccountSettings.tsx:124
 #: src/screens/Settings/AccountSettings.tsx:128
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:290
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:292
 #: src/screens/Signup/StepInfo/index.tsx:272
 msgid "Password"
 msgstr "Parolă"
@@ -10729,11 +10723,11 @@ msgstr "Vă rugăm să introduceți codul de invitație."
 msgid "Please enter your new email address."
 msgstr "Vă rugăm să introduceți noua adresă de e-mail."
 
-#: src/screens/Login/LoginForm.tsx:190
+#: src/screens/Login/LoginForm.tsx:192
 msgid "Please enter your password"
 msgstr "Vă rugăm să vă introduceți parola"
 
-#: src/screens/Login/LoginForm.tsx:184
+#: src/screens/Login/LoginForm.tsx:186
 msgid "Please enter your username"
 msgstr "Vă rugăm să vă introduceți numele de utilizator"
 
@@ -10848,6 +10842,12 @@ msgstr "Postați o fotografie"
 #: src/view/screens/Profile.tsx:570
 msgid "Post a video"
 msgstr "Postați un videoclip"
+
+#. Tab label in Notifications that shows new posts from accounts you get activity notifications for. Space is tight, so keep it as short as possible.
+#: src/screens/Notifications/index.tsx:159
+msgctxt "notifications tab"
+msgid "Post alerts"
+msgstr "Alerte postări"
 
 #: src/view/com/composer/Composer.tsx:1909
 msgctxt "action"
@@ -12061,8 +12061,8 @@ msgstr "Retrimitere cod"
 msgid "Resend code in <0>00:{0}</0>"
 msgstr "Retrimitere cod în <0>00:{0}</0>"
 
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:173
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:176
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:175
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:178
 msgid "Resend email"
 msgstr "Retrimitere e-mail"
 
@@ -12092,7 +12092,7 @@ msgstr "Resetare stare înregistrare"
 msgid "Reset password"
 msgstr "Resetați parola"
 
-#: src/screens/Login/LoginForm.tsx:405
+#: src/screens/Login/LoginForm.tsx:407
 msgid "Reset your password by sending a code to your email"
 msgstr "Resetați-vă parola prin trimiterea unui cod la adresa dvs. de e-mail"
 
@@ -12118,7 +12118,7 @@ msgstr "Postare restabilită"
 msgid "Resync contacts"
 msgstr "Resincronizați contactele"
 
-#: src/screens/Login/LoginForm.tsx:507
+#: src/screens/Login/LoginForm.tsx:509
 msgid "Retries signing in"
 msgstr "Reîncearcă conectarea"
 
@@ -12137,8 +12137,8 @@ msgstr "Reîncearcă ultima acțiune, care a eșuat"
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:56
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:59
 #: src/components/StarterPack/ProfileStarterPacks.tsx:371
-#: src/screens/Login/LoginForm.tsx:506
-#: src/screens/Login/LoginForm.tsx:512
+#: src/screens/Login/LoginForm.tsx:508
+#: src/screens/Login/LoginForm.tsx:514
 #: src/screens/Messages/ChatList.tsx:429
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:211
@@ -12325,7 +12325,7 @@ msgid "Saved to your feeds"
 msgstr "Salvat în fluxurile dvs."
 
 #: src/components/dialogs/NewskieDialog/index.tsx:119
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:294
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:295
 #: src/view/com/notifications/NotificationFeedItem.tsx:933
 #: src/view/com/notifications/NotificationFeedItem.tsx:941
 msgid "Say hello!"
@@ -12757,7 +12757,7 @@ msgstr "Trimitere cod"
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:172
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:179
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:311
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:205
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:207
 msgid "Send email"
 msgstr "Trimitere e-mail"
 
@@ -12794,8 +12794,8 @@ msgid "Send the message from your phone"
 msgstr "Trimiteți mesajul de pe telefonul dvs."
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:304
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:127
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:130
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:129
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:132
 msgid "Send verification email"
 msgstr "Trimitere e-mail de verificare"
 
@@ -12849,11 +12849,11 @@ msgstr "Stabiliți cine poate răspunde la postarea dvs."
 msgid "Set your birthdate below and we'll get you back to posting and exploring in no time!"
 msgstr "Stabiliți data nașterii mai jos și vă veți întoarce la creat postări și explorat în cel mai scurt timp!"
 
-#: src/screens/Login/LoginForm.tsx:346
+#: src/screens/Login/LoginForm.tsx:348
 msgid "set your hosting provider manually"
 msgstr "setați manual furnizorul de găzduire"
 
-#: src/screens/Login/LoginForm.tsx:461
+#: src/screens/Login/LoginForm.tsx:463
 msgid "Set your hosting provider manually"
 msgstr "Setați manual furnizorul de găzduire"
 
@@ -13128,8 +13128,8 @@ msgid "Show lists of users to select from"
 msgstr "Afișați liste de utilizatori din care puteți selecta"
 
 #: src/components/Post/ShowMoreTextButton.tsx:59
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:556
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:582
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:557
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:583
 msgid "Show more"
 msgstr "Afișați mai multe"
 
@@ -13227,9 +13227,9 @@ msgstr "Afișează conținutul"
 #: src/screens/Hashtag.tsx:233
 #: src/screens/Login/index.tsx:143
 #: src/screens/Login/index.tsx:165
-#: src/screens/Login/LoginForm.tsx:269
-#: src/screens/Login/LoginForm.tsx:529
-#: src/screens/Login/LoginForm.tsx:535
+#: src/screens/Login/LoginForm.tsx:271
+#: src/screens/Login/LoginForm.tsx:531
+#: src/screens/Login/LoginForm.tsx:537
 #: src/screens/Messages/JoinRequest.tsx:294
 #: src/screens/Messages/JoinRequest.tsx:300
 #: src/screens/Search/SearchResults.tsx:399
@@ -13307,7 +13307,7 @@ msgstr "Deconectare"
 msgid "Sign out?"
 msgstr "Deconectare?"
 
-#: src/screens/Login/LoginForm.tsx:547
+#: src/screens/Login/LoginForm.tsx:549
 msgid "Sign up"
 msgstr "Înscrieți-vă"
 
@@ -13603,7 +13603,7 @@ msgstr "Pachet de pornire „{starterPackName}”"
 msgid "Starter Pack by {0}"
 msgstr "Pachet de pornire de {0}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:444
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:445
 msgid "Starter pack by {handle}"
 msgstr "Pachet de pornire de {handle}"
 
@@ -14030,7 +14030,7 @@ msgstr "Spuneți-ne un pic mai mult"
 msgid "Tell us why you believe this decision was a mistake. We will review your appeal along with the original content."
 msgstr "Spuneți-ne de ce credeți că această decizie a fost o greșeală. Vă vom revizui contestația împreună cu conținutul original."
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:220
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:222
 msgid "Temporarily deactivate your account"
 msgstr "Dezactivați temporar contul dvs."
 
@@ -14354,7 +14354,7 @@ msgstr "A apărut o problemă la contactarea serverului"
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "A apărut o problemă la contactarea serverului, vă rugăm să vă verificați conexiunea la internet și încercați din nou."
 
-#: src/screens/Notifications/components/PageList.tsx:362
+#: src/screens/Notifications/components/PageList.tsx:363
 #: src/view/com/notifications/NotificationFeed.tsx:137
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "A apărut o problemă la preluarea notificărilor. Atingeți aici pentru a încerca din nou."
@@ -14872,7 +14872,7 @@ msgstr "Acest lucru va crea o listă nouă cu același nume, descriere, și memb
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr "Aceasta va șterge „{0}” din cuvintele dvs. amuțite. Îl puteți adăuga oricând înapoi mai târziu."
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:330
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:332
 msgid "This will irreversibly delete your Bluesky account <0>{currentHandle}</0> and all associated data. Note that this will affect any other <1>AT Protocol</1> services you use with this account."
 msgstr "Această acțiune va șterge ireversibil contul dvs. Bluesky <0>{currentHandle}</0> și toate datele asociate. Rețineți că acest lucru va afecta orice alte servicii pe <1>Protocolul AT</1> pe care le utilizați cu acest cont."
 
@@ -14934,7 +14934,7 @@ msgstr "Titlu (maxim 100 de caractere)"
 msgid "Title (optional)"
 msgstr "Titlu (opțional)"
 
-#: src/screens/Settings/components/DisableEmail2FADialog.tsx:106
+#: src/screens/Settings/components/DisableEmail2FADialog.tsx:108
 msgid "To disable the email 2FA method, please verify your access to the email address."
 msgstr "Pentru a dezactiva metoda A2F prin e-mail, vă rugăm să verificați accesul la adresa de e-mail."
 
@@ -14952,7 +14952,7 @@ msgstr "Pentru a vă deconecta, faceți <0>clic aici</0>. Sau dacă preferați, 
 msgid "Today"
 msgstr "Astăzi"
 
-#: src/screens/Notifications/components/PageList.tsx:574
+#: src/screens/Notifications/components/PageList.tsx:576
 msgctxt "Notifications section header"
 msgid "Today"
 msgstr "Astăzi"
@@ -15156,7 +15156,7 @@ msgstr "Nu vă putem contacta serviciul. Verificați conexiunea la internet și 
 
 #: src/screens/Login/ForgotPasswordForm.tsx:70
 #: src/screens/Login/index.tsx:100
-#: src/screens/Login/LoginForm.tsx:162
+#: src/screens/Login/LoginForm.tsx:164
 #: src/screens/Login/SetNewPasswordForm.tsx:82
 #: src/screens/Signup/index.tsx:89
 msgid "Unable to contact your service. Please check your Internet connection."
@@ -15499,7 +15499,7 @@ msgid "Update {0} in Lists"
 msgstr "Actualizare {0} în liste"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:293
-#: src/components/dialogs/EmailDialog/screens/Update.tsx:305
+#: src/components/dialogs/EmailDialog/screens/Update.tsx:304
 #: src/screens/Settings/AccountSettings.tsx:110
 #: src/screens/Settings/AccountSettings.tsx:118
 msgid "Update email"
@@ -15697,11 +15697,11 @@ msgstr "Nume de utilizator disponibil"
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
 msgstr "Numele de utilizator trebuie să conțină doar litere (a-z), cifre și cratime"
 
-#: src/screens/Login/LoginForm.tsx:300
+#: src/screens/Login/LoginForm.tsx:302
 msgid "Username or email"
 msgstr "Nume utilizator sau e-mail"
 
-#: src/screens/Login/LoginForm.tsx:310
+#: src/screens/Login/LoginForm.tsx:312
 msgid "Username or email address"
 msgstr "Numele de utilizator sau adresa de e-mail"
 
@@ -15754,7 +15754,7 @@ msgstr "Verificați din nou"
 #. Button text and accessibility label for action to verify the user's email address using the code entered
 #. Button text and accessibility label for action to verify the user's email address using the code entered
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:357
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:372
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:370
 msgctxt "action"
 msgid "Verify code"
 msgstr "Verificați codul"
@@ -15827,7 +15827,7 @@ msgid "Version {0}"
 msgstr "Versiune {0}"
 
 #. When someone followed you through a starter pack, e.g. “via starter pack [icon] Science Pack”
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:391
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:392
 msgid "via starter pack <0/> <1>{name}</1>"
 msgstr "prin pachetul de pornire <0/> <1>{name}</1>"
 
@@ -16179,7 +16179,7 @@ msgstr "Nu ne-am putut conecta la serviciul care oferă acest flux personalizat.
 msgid "We could not find this list. It was probably deleted."
 msgstr "Nu am putut găsi această listă. Probabil că a fost ștearsă."
 
-#: src/screens/Login/LoginForm.tsx:342
+#: src/screens/Login/LoginForm.tsx:344
 msgid "We couldn't find an account with that username. Please check that you've typed it correctly, or <0>set your hosting provider manually</0>."
 msgstr "Nu am putut găsi niciun cont cu acel nume de utilizator. Vă rugăm să verificați dacă l-ați introdus corect sau <0>să setați manual furnizorul de găzduire</0>."
 
@@ -16211,7 +16211,7 @@ msgstr "Nu v-am putut încărca setările contului. Verificați-vă conexiunea l
 msgid "We couldn’t reach this link. Check it, or save anyway."
 msgstr "Nu am putut accesa acest link. Verificați-l sau salvați oricum."
 
-#: src/screens/Login/LoginForm.tsx:457
+#: src/screens/Login/LoginForm.tsx:459
 msgid "We couldn’t verify your hosting provider. Check your internet connection, or <0>set your hosting provider manually</0>."
 msgstr "Nu am putut verifica furnizorul de găzduire. Verificați conexiunea la internet sau <0>setați manual furnizorul de găzduire</0>."
 
@@ -16618,7 +16618,7 @@ msgstr "GIF-uri de confirmare"
 msgid "Yes, deactivate"
 msgstr "Da, dezactivare"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:348
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:350
 msgid "Yes, delete my account"
 msgstr "Da, ștergeți-mi contul"
 
@@ -16717,7 +16717,7 @@ msgstr "Sunteți verificat. Veți pierde starea de verificare dacă vă schimba�
 msgid "You can adjust your interests at any time from \"Content and media\" settings."
 msgstr "Vă puteți ajusta interesele în orice moment din setările „Conținut și media”."
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:217
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:219
 msgid "You can also <0>temporarily deactivate</0> your account instead. Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "De asemenea, puteți să vă <0>dezactivați temporar</0> contul. Profilul, postările, fluxurile și listele dvs. nu vor mai fi vizibile pentru alți utilizatori Bluesky. Vă puteți reactiva contul în orice moment, conectându-vă."
 
@@ -17223,7 +17223,7 @@ msgstr "Contul dvs. nu poate trimite rapoarte cât timp este suspendat."
 msgid "Your account credentials were revoked"
 msgstr "Acreditările contului dvs. au fost revocate"
 
-#: src/screens/Settings/components/DeleteAccountDialog.tsx:133
+#: src/screens/Settings/components/DeleteAccountDialog.tsx:135
 msgid "Your account has been deleted, see ya! ✌️"
 msgstr "Contul dvs. a fost șters, pe curând! ✌️"
 
