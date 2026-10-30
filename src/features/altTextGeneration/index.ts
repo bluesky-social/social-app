@@ -9,6 +9,7 @@ import {createQueryKey} from '#/state/queries/util'
 import {useAnalytics} from '#/analytics'
 import {device, useStorage} from '#/storage'
 import {generateAltText, getSupportedLanguage} from './model'
+import {isGeneratedAltText} from './utils'
 
 /**
  * The user's opt-in, as stored: `undefined` until they first touch the
@@ -55,11 +56,12 @@ export function useIsAltTextGenerationEnabled() {
 }
 
 /**
- * Starts generating alt text for a composer image as soon as it's added, if
- * the user has opted in and the image has none yet. Generation is abandoned
- * if the user writes their own alt text first, or the image is removed, and
- * restarts if the post language changes before it finishes. Returns whether
- * generation is in progress.
+ * Suggests alt text for a composer image as soon as it's added, if the user
+ * has opted in and the image has none yet. The suggestion is written in the
+ * post's language, and is regenerated if the post language changes, as long as
+ * the user hasn't edited it. Once the user writes their own alt text or clears
+ * a suggestion, the image is theirs and nothing is generated for it again.
+ * Returns whether generation is in progress.
  */
 export function useGeneratedAltText({
   image,
@@ -67,49 +69,77 @@ export function useGeneratedAltText({
   onGenerated,
 }: {
   image: ComposerImage
-  /**
-   * Alt text is part of the post, so it's written in the post's language where
-   * the model supports it, falling back to the app language.
-   */
+  /** The languages selected in the composer, most preferred first. */
   postLanguages: string[]
   onGenerated: (alt: string) => void
 }) {
+  const ax = useAnalytics()
   const isEnabled = useIsAltTextGenerationEnabled()
-  const {appLanguage} = useLanguagePrefs()
-  const languages = [...postLanguages, appLanguage].join(',')
   const [isGenerating, setIsGenerating] = useState(false)
-  /*
-   * Images that have had alt text at some point, whether generated or written
-   * by the user. If the user later clears it, that's deliberate, so don't
-   * generate again.
-   */
-  const hadAltText = useRef(new Set<string>())
+  /** Set once the user writes their own alt text or clears a suggestion. */
+  const isOwnedByUser = useRef(false)
+  /** The post languages the current suggestion was generated for. */
+  const generatedFor = useRef<string | undefined>(undefined)
   const uri = toFileUri((image.transformed ?? image.source).path)
-  const hasAltText = image.alt.length > 0
+  const languages = postLanguages.join(',')
+  const isSuggestion = isGeneratedAltText(image)
+  const hasOwnAltText = image.alt.length > 0 && !isSuggestion
+  const hasClearedSuggestion = !image.alt && !!image.generatedAlt
 
-  const onSuccess = useEffectEvent((alt: string) => {
-    if (alt) onGenerated(alt)
+  const onSuccess = useEffectEvent(
+    (
+      result: Awaited<ReturnType<typeof generateAltText>>,
+      requestedFor: string,
+      durationMs: number,
+    ) => {
+      if (result?.altText) {
+        generatedFor.current = requestedFor
+        onGenerated(result.altText)
+      }
+      ax.metric('altTextGeneration:result', {
+        outcome: !result
+          ? 'unsupportedLanguage'
+          : result.altText
+            ? 'generated'
+            : 'empty',
+        durationMs,
+        language: result?.language,
+      })
+    },
+  )
+
+  const onError = useEffectEvent((e: unknown, durationMs: number) => {
+    logger.warn('alt text generation failed', {safeMessage: e})
+    ax.metric('altTextGeneration:result', {
+      outcome: 'failed',
+      durationMs,
+      errorCode: getErrorCode(e),
+    })
   })
 
   useEffect(() => {
-    if (!uri) return
-    if (hasAltText) {
-      hadAltText.current.add(uri)
+    if (hasOwnAltText || hasClearedSuggestion) {
+      isOwnedByUser.current = true
       return
     }
-    if (!isEnabled || hadAltText.current.has(uri)) return
+    if (!isEnabled || !uri || isOwnedByUser.current) return
+    if (isSuggestion && generatedFor.current === languages) return
 
     const controller = new AbortController()
+    const startedAt = Date.now()
     setIsGenerating(true)
     generateAltText({
       uri,
       languages: languages.split(','),
       signal: controller.signal,
     })
-      .then(onSuccess)
+      .then(result => {
+        if (controller.signal.aborted) return
+        onSuccess(result, languages, Date.now() - startedAt)
+      })
       .catch(e => {
         if (controller.signal.aborted) return
-        logger.warn('alt text generation failed', {safeMessage: e})
+        onError(e, Date.now() - startedAt)
       })
       .finally(() => {
         if (!controller.signal.aborted) setIsGenerating(false)
@@ -118,9 +148,27 @@ export function useGeneratedAltText({
       controller.abort()
       setIsGenerating(false)
     }
-  }, [uri, hasAltText, isEnabled, languages])
+  }, [
+    uri,
+    languages,
+    isEnabled,
+    isSuggestion,
+    hasOwnAltText,
+    hasClearedSuggestion,
+  ])
 
   return isGenerating
+}
+
+/**
+ * expo-ai rejects with `LanguageModelError`s, which carry a `code` such as
+ * `ERR_MODEL_REFUSAL`. Read it structurally so web doesn't import expo-ai.
+ */
+function getErrorCode(e: unknown) {
+  if (e && typeof e === 'object' && 'code' in e && typeof e.code === 'string') {
+    return e.code
+  }
+  return undefined
 }
 
 /**

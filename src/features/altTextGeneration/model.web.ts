@@ -11,7 +11,7 @@ export function generateAltText(_: {
   uri: string
   languages: string[]
   signal: AbortSignal
-}): Promise<string> {
+}): Promise<{altText: string; language: string} | undefined> {
   return Promise.reject(
     new Error('Alt text generation is not supported on web'),
   )

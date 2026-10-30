@@ -143,6 +143,7 @@ import {
   IS_WEB,
   IS_WEB_SAFARI,
 } from '#/env'
+import {getGeneratedAltTextOutcomes} from '#/features/altTextGeneration/utils'
 import {type Gif} from '#/features/gifPicker/types'
 import {app, chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -1160,6 +1161,15 @@ export const ComposePost = ({
             langs: fromPostLanguages(currentLanguages),
             logContext: 'Composer',
           })
+          if (
+            post.embed.media?.type === 'images' ||
+            post.embed.media?.type === 'gallery'
+          ) {
+            const outcomes = getGeneratedAltTextOutcomes(
+              post.embed.media.images,
+            )
+            if (outcomes) ax.metric('altTextGeneration:post', outcomes)
+          }
           index++
         }
       }

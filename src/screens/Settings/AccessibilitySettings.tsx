@@ -21,6 +21,7 @@ import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/comp
 import {Haptic_Stroke2_Corner2_Rounded as HapticIcon} from '#/components/icons/Haptic'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {
   useAltTextGenerationPref,
@@ -33,6 +34,7 @@ type Props = NativeStackScreenProps<
 >
 export function AccessibilitySettingsScreen({}: Props) {
   const t = useTheme()
+  const ax = useAnalytics()
   const {t: l} = useLingui()
 
   const requireAltTextEnabled = useRequireAltTextEnabled()
@@ -90,7 +92,10 @@ export function AccessibilitySettingsScreen({}: Props) {
                 name="alt_text_generation"
                 label={l`Suggest alt text for images`}
                 value={altTextGenerationEnabled === true}
-                onChange={value => setAltTextGenerationEnabled(value)}
+                onChange={value => {
+                  setAltTextGenerationEnabled(value)
+                  ax.metric('altTextGeneration:toggle', {enabled: value})
+                }}
                 style={[a.w_full]}>
                 <View style={[a.flex_1, a.gap_2xs]}>
                   <View

@@ -1889,4 +1889,30 @@ export type Events = {
     betaFeatureKeys: string[]
     feedbackLength: number
   }
+
+  /*
+   * On-device alt text generation (experimental)
+   */
+
+  // user toggled the setting in Accessibility settings
+  'altTextGeneration:toggle': {
+    enabled: boolean
+  }
+  // generation for a composer image finished; not fired if it was abandoned
+  // because the user wrote their own alt text or removed the image
+  'altTextGeneration:result': {
+    outcome: 'generated' | 'empty' | 'unsupportedLanguage' | 'failed'
+    durationMs: number
+    /** BCP 47 code the alt text was written in */
+    language?: string
+    /** expo-ai error code, for failures */
+    errorCode?: string
+  }
+  // a post was published with at least one suggested alt text; counts how
+  // many of those suggestions were kept as-is, edited, or cleared
+  'altTextGeneration:post': {
+    kept: number
+    edited: number
+    cleared: number
+  }
 }

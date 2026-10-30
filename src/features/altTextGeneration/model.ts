@@ -37,8 +37,8 @@ let queue: Promise<unknown> = Promise.resolve()
  * Drafts alt text for a local image using the on-device model, with Apple
  * Vision OCR available as a tool so that text in the image is quoted
  * accurately. Writes in the first of `languages` the model supports, and
- * resolves to an empty string if it supports none of them. Rejects if the
- * model is unavailable, refuses, or `signal` aborts.
+ * resolves to `undefined` if it supports none of them. Rejects if the model
+ * is unavailable, refuses, or `signal` aborts.
  */
 export function generateAltText({
   uri,
@@ -47,13 +47,13 @@ export function generateAltText({
 }: {
   /** A `file://` URL. */
   uri: string
-  /** BCP 47 codes, most preferred first. */
+  /** BCP 47 codes of the post's languages, most preferred first. */
   languages: string[]
   signal: AbortSignal
-}): Promise<string> {
+}): Promise<{altText: string; language: string} | undefined> {
   const run = queue.then(async () => {
     const language = await getSupportedLanguage(languages)
-    if (!language) return ''
+    if (!language) return undefined
     const result = await generateAsync(
       'Write alt text for the attached image.',
       {
@@ -67,7 +67,7 @@ export function generateAltText({
         timeoutMs: 60_000,
       },
     )
-    return cleanAltText(result.value)
+    return {altText: cleanAltText(result.value), language}
   })
   queue = run.catch(() => {})
   return run
