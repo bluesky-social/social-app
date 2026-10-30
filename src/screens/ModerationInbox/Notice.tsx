@@ -357,12 +357,56 @@ function AppealDialog({
   data: tools.ozone.inbox.getActionedSubject.$OutputBody
   appealedAction: tools.ozone.inbox.defs.ActionView | undefined
 }) {
+  const appeal = useAppealModerationInboxSubjectMutation(data.src)
+  const submittingRef = useRef(false)
+
+  return (
+    <Dialog.Outer
+      control={control}
+      onClose={() => {
+        appeal.reset()
+        submittingRef.current = false
+      }}
+      nativeOptions={{preventDismiss: appeal.isPending}}
+      webOptions={{
+        onBackgroundPress: () => {
+          if (!submittingRef.current) control.close()
+        },
+      }}>
+      <Dialog.Handle />
+      <AppealDialogInner
+        control={control}
+        data={data}
+        appealedAction={appealedAction}
+        appeal={appeal}
+        submittingRef={submittingRef}
+      />
+    </Dialog.Outer>
+  )
+}
+
+/**
+ * Owns the appeal reason. It has to live inside `Dialog.Outer`: the sheet's
+ * portal forwards its children from an effect, so state held above it reaches
+ * the controlled input a commit late and makes typing jumpy.
+ */
+function AppealDialogInner({
+  control,
+  data,
+  appealedAction,
+  appeal,
+  submittingRef,
+}: {
+  control: Dialog.DialogControlProps
+  data: tools.ozone.inbox.getActionedSubject.$OutputBody
+  appealedAction: tools.ozone.inbox.defs.ActionView | undefined
+  appeal: ReturnType<typeof useAppealModerationInboxSubjectMutation>
+  submittingRef: React.RefObject<boolean>
+}) {
   const t = useTheme()
   const {i18n, t: l} = useLingui()
   const ax = useAnalytics()
   const [details, setDetails] = useState('')
-  const submitting = useRef(false)
-  const appeal = useAppealModerationInboxSubjectMutation(data.src)
   const invalidateInbox = useModerationInboxCacheMutation()
   const errorCode = matchXrpcError(
     appeal.error,
@@ -397,8 +441,8 @@ function AppealDialog({
     !!errorCode
 
   const onSubmit = async () => {
-    if (submitting.current || isSubmitDisabled) return
-    submitting.current = true
+    if (submittingRef.current || isSubmitDisabled) return
+    submittingRef.current = true
     try {
       const updatedSubject = await appeal.mutateAsync({
         subject: data.subject,
@@ -419,7 +463,7 @@ function AppealDialog({
       })
     } catch {
       // The mutation reports unexpected errors; the dialog keeps the reason.
-      submitting.current = false
+      submittingRef.current = false
     }
   }
   const counterAccessibilityLabel = l`${detailsLength} of ${MAX_REPORT_REASON_GRAPHEME_LENGTH} characters used`
@@ -455,90 +499,75 @@ function AppealDialog({
   )
 
   return (
-    <Dialog.Outer
-      control={control}
-      onClose={() => {
-        appeal.reset()
-        setDetails('')
-        submitting.current = false
-      }}
-      nativeOptions={{preventDismiss: appeal.isPending}}
-      webOptions={{
-        onBackgroundPress: () => {
-          if (!submitting.current) control.close()
-        },
-      }}>
-      <Dialog.Handle />
-      <Dialog.ScrollableInner
-        label={l`Appeal this decision`}
-        contentContainerStyle={[a.px_0, a.pt_0]}
-        header={
-          <Dialog.Header renderLeft={cancelButton} renderRight={submitButton}>
-            <Dialog.HeaderText>
-              <Trans>Appeal</Trans>
-            </Dialog.HeaderText>
-          </Dialog.Header>
-        }>
-        <View style={[a.p_lg, a.gap_lg]}>
-          <Text style={[a.text_md]}>
-            <Trans>
-              Tell us why you believe this decision was a mistake. We will
-              review your appeal along with the original content.
-            </Trans>
-          </Text>
+    <Dialog.ScrollableInner
+      label={l`Appeal this decision`}
+      contentContainerStyle={[a.px_0, a.pt_0]}
+      header={
+        <Dialog.Header renderLeft={cancelButton} renderRight={submitButton}>
+          <Dialog.HeaderText>
+            <Trans>Appeal</Trans>
+          </Dialog.HeaderText>
+        </Dialog.Header>
+      }>
+      <View style={[a.p_lg, a.gap_lg]}>
+        <Text style={[a.text_md]}>
+          <Trans>
+            Tell us why you believe this decision was a mistake. We will review
+            your appeal along with the original content.
+          </Trans>
+        </Text>
 
-          {appeal.isError ? (
-            <Admonition type="error">{errorMessage}</Admonition>
-          ) : null}
-          {errorCode ? (
-            <Button
-              label={l`Reload notice`}
-              size="small"
-              color="secondary"
-              onPress={() =>
-                control.close(() => {
-                  void invalidateInbox()
-                })
-              }>
-              <ButtonText>
-                <Trans>Reload notice</Trans>
-              </ButtonText>
-            </Button>
-          ) : null}
-          <View style={[a.gap_2xs]}>
-            <View style={[a.flex_row, a.align_center, a.justify_between]}>
-              <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
-                <Trans>Reason for appeal</Trans>
-              </Text>
-              <Text
-                accessibilityLabel={counterAccessibilityLabel}
-                accessibilityHint=""
-                style={[
-                  a.text_sm,
-                  isOverLimit
-                    ? {color: t.palette.negative_500}
-                    : t.atoms.text_contrast_medium,
-                  {fontVariant: ['tabular-nums']},
-                ]}>
-                {i18n.number(detailsLength)}/
-                {i18n.number(MAX_REPORT_REASON_GRAPHEME_LENGTH)}
-              </Text>
-            </View>
-            <Dialog.Input
-              testID="moderationInboxAppealInput"
-              label={l`Reason for appeal`}
-              value={details}
-              onChangeText={setDetails}
-              editable={!appeal.isPending}
-              autoFocus
-              multiline
-              numberOfLines={3}
-              isInvalid={isOverLimit}
-              maxLength={MAX_REPORT_REASON_GRAPHEME_LENGTH * 10}
-            />
+        {appeal.isError ? (
+          <Admonition type="error">{errorMessage}</Admonition>
+        ) : null}
+        {errorCode ? (
+          <Button
+            label={l`Reload notice`}
+            size="small"
+            color="secondary"
+            onPress={() =>
+              control.close(() => {
+                void invalidateInbox()
+              })
+            }>
+            <ButtonText>
+              <Trans>Reload notice</Trans>
+            </ButtonText>
+          </Button>
+        ) : null}
+        <View style={[a.gap_2xs]}>
+          <View style={[a.flex_row, a.align_center, a.justify_between]}>
+            <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
+              <Trans>Reason for appeal</Trans>
+            </Text>
+            <Text
+              accessibilityLabel={counterAccessibilityLabel}
+              accessibilityHint=""
+              style={[
+                a.text_sm,
+                isOverLimit
+                  ? {color: t.palette.negative_500}
+                  : t.atoms.text_contrast_medium,
+                {fontVariant: ['tabular-nums']},
+              ]}>
+              {i18n.number(detailsLength)}/
+              {i18n.number(MAX_REPORT_REASON_GRAPHEME_LENGTH)}
+            </Text>
           </View>
+          <Dialog.Input
+            testID="moderationInboxAppealInput"
+            label={l`Reason for appeal`}
+            value={details}
+            onChangeText={setDetails}
+            editable={!appeal.isPending}
+            autoFocus
+            multiline
+            numberOfLines={3}
+            isInvalid={isOverLimit}
+            maxLength={MAX_REPORT_REASON_GRAPHEME_LENGTH * 10}
+          />
         </View>
-      </Dialog.ScrollableInner>
-    </Dialog.Outer>
+      </View>
+    </Dialog.ScrollableInner>
   )
 }
