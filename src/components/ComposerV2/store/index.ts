@@ -159,11 +159,11 @@ export function createThreadStore({
    */
   const publishableVideos = new WeakMap<BlobRef, VideoTelemetry>()
   /**
-   * Compression results by media ID. An item's source never changes (a
-   * replacement is a new item with a new ID) and caption or alt text edits do
-   * not affect compression, so the ID identifies a result. An entry is removed
-   * when the item is removed, a processed blob supersedes it, the item fails
-   * for good, or the store is destroyed.
+   * Compression results by media ID, for videos only. A video's source never
+   * changes (a replacement is a new item with a new ID) and caption or alt
+   * text edits do not affect compression, so the ID identifies a result. An
+   * entry is removed when the item is removed, a processed blob supersedes it,
+   * the item fails for good, or the store is destroyed.
    */
   const compressionCache = new Map<string, CompressionEntry>()
   /** The latest attempt's uploadId per video, linking restarts to it. */
@@ -425,6 +425,81 @@ export function createThreadStore({
       s.isDirty = true
       return s
     })
+  }
+
+  /**
+   * Swaps an image's current source for an editor's output, for example a
+   * crop. The first replace keeps the previous source as `original`, so later
+   * edits crop from it and replace only the edited result; with `undefined`,
+   * the item returns to `original` and drops it. Alt text, id, and position
+   * stay. Every current-source field is overwritten, so values the new source
+   * omits become unknown and the worker resolves them again.
+   *
+   * The upload restarts from the new source: the running task is cancelled
+   * (its late results are discarded by the task-identity guard), and any
+   * prepared output or uploaded blob is dropped so a publish cannot use bytes
+   * from before the edit.
+   *
+   * Returns `{supersededUri}` when an earlier edited source was discarded,
+   * for the caller to clean up; the store never deletes or revokes it, nor the
+   * original. Returns `undefined` when the item is not a live image. Replacing
+   * with the current URI, or resetting an unedited item, changes nothing.
+   * Passing the original's own URI is a reset.
+   */
+  function replaceImageSource(
+    postId: string,
+    mediaId: string,
+    source: types.PostMediaImageSource | undefined,
+  ): {supersededUri?: string} | undefined {
+    if (destroyed) return undefined
+    const post = state.posts[postId]
+    if (!post) return undefined
+    const items = getMediaItems({media: post.attachments.media})
+    const item = items.find(m => m.id === mediaId)
+    if (!item || item.kind !== 'image') return undefined
+
+    /* Handing back the original's own URI is a reset, not a second edit. */
+    const reset = !source || source.uri === item.original?.uri
+    const next = reset ? item.original : source
+    if (!next || next.uri === item.uri) return {}
+
+    /* With an original kept, the current source is an edited result. */
+    const supersededUri = item.original ? item.uri : undefined
+    const original = reset
+      ? undefined
+      : (item.original ?? {
+          uri: item.uri,
+          width: item.width,
+          height: item.height,
+          mimeType: item.mimeType,
+          fileSize: item.fileSize,
+        })
+    const replaced: types.PostMediaImage = {
+      kind: 'image',
+      id: item.id,
+      postId: item.postId,
+      uri: next.uri,
+      width: next.width,
+      height: next.height,
+      altText: item.altText,
+      mimeType: next.mimeType,
+      fileSize: next.fileSize,
+      original,
+      localRefPath: item.localRefPath,
+      upload: {state: 'pending'},
+    }
+
+    cancelUploadTask(mediaId)
+    mutateState(s => {
+      s.posts[postId] = replacePostMediaItems(
+        post,
+        items.map(m => (m.id === mediaId ? replaced : m)),
+      )
+      s.isDirty = true
+      return s
+    })
+    startMediaUpload(postId, mediaId)
+    return {supersededUri}
   }
 
   /**
@@ -940,8 +1015,10 @@ export function createThreadStore({
   /**
    * Store the local compression result as `item.prepared` without replacing
    * the original media source. The planner prefers these dimensions when
-   * building the embed. This does not mark the upload complete; the uploaded
-   * blob is recorded separately through upload status.
+   * building the embed. Image dimensions are the compressor's output; video
+   * `width`, `height`, and `aspectRatio` are the source's (see `PreparedVideo`).
+   * This does not mark the upload complete; the uploaded blob is recorded
+   * separately through upload status.
    */
   function applyMediaCompressionResult(
     postId: string,
@@ -974,10 +1051,10 @@ export function createThreadStore({
   }
 
   /**
-   * Record the source metadata a worker prepared. Items never change source,
-   * so this only fills values the item did not know (a replaced source is a
-   * new item) and publishes nothing when there is nothing new. Background
-   * preparation does not dirty drafts.
+   * Record the source metadata a worker prepared. It only fills values the
+   * current source did not know (`replaceImageSource` resets them with the
+   * source it swaps in) and publishes nothing when there is nothing new.
+   * Background preparation does not dirty drafts.
    */
   function applyMediaSourceMetadata(
     postId: string,
@@ -1345,6 +1422,7 @@ export function createThreadStore({
       removeMedia,
       removeMediaAttachment,
       updateMediaAltText,
+      replaceImageSource,
       setVideoCaptions,
       retryMediaUpload,
       retryAllFailedUploads,

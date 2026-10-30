@@ -25,6 +25,7 @@ import {
   type ThreadState,
   type ThreadStoreInitialState,
 } from '#/components/ComposerV2/store/types'
+import {type UploadWorkerOverrides} from '#/components/ComposerV2/store/uploads'
 import {buildThreadState} from '#/components/ComposerV2/store/utils/buildThreadState'
 import {app, chat} from '#/lexicons'
 
@@ -1018,6 +1019,59 @@ describe('ComposerV2 no-write planner', () => {
     expect(record.embed?.$type).toBe('app.bsky.embed.video')
   })
 
+  describe('video aspect ratio', () => {
+    /** An uploaded video with the given source dimensions and no `prepared`. */
+    async function planVideo(dimensions: {width?: number; height?: number}) {
+      const state = snapshot({
+        posts: [
+          {
+            attachments: {
+              media: {
+                kind: 'video',
+                item: {
+                  uri: 'file:///video.mp4',
+                  mimeType: 'video/mp4',
+                  ...dimensions,
+                },
+              },
+            },
+          },
+        ],
+      })
+      const media = state.posts[Object.keys(state.posts)[0]].attachments.media!
+      if (media.state !== 'resolved' || media.kind !== 'video') {
+        throw new Error('expected a resolved video')
+      }
+      media.item.upload = {state: 'uploaded', blob: blob('video/mp4')}
+      return plan(state)
+    }
+
+    test('rounds fractional dimensions to lexicon integers', async () => {
+      const result = await planVideo({width: 1079.6, height: 1919.4})
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.posts[0].record.embed).toMatchObject({
+        $type: 'app.bsky.embed.video',
+        aspectRatio: {width: 1080, height: 1919},
+      })
+    })
+
+    test('omits the aspect ratio, and still plans, when a side rounds to zero', async () => {
+      for (const dimensions of [
+        {width: 0.4, height: 1080},
+        {width: 1920, height: 0},
+        {width: undefined, height: undefined},
+      ]) {
+        const result = await planVideo(dimensions)
+        expect(result.ok).toBe(true)
+        if (!result.ok) return
+        const embed = result.posts[0].record.embed
+        expect(embed?.$type).toBe('app.bsky.embed.video')
+        expect(embed).not.toHaveProperty('aspectRatio')
+      }
+    })
+  })
+
   test('preserves gate semantics, sharing each post key across collections', async () => {
     const state = snapshot({
       threadgateAllowRules: [],
@@ -1305,6 +1359,76 @@ describe('ComposerV2 no-write planner', () => {
         expect(retried.posts[0].record.embed?.$type).toBe(
           'app.bsky.embed.images',
         )
+      }
+      store.destroy()
+    })
+
+    test('a replaced image source is not published until its new upload finishes, at the new dimensions', async () => {
+      const attempts: Array<
+        Parameters<NonNullable<UploadWorkerOverrides['startImageUpload']>>[0]
+      > = []
+      let i = 0
+      const store = createThreadStore({
+        ...testUploadRuntime,
+        resolvers: {} as never,
+        __createId: () => `store-post-${++i}`,
+        __uploadWorkers: {
+          startImageUpload: opts => {
+            attempts.push(opts)
+            return {cancel() {}}
+          },
+        },
+      })
+      const postId = Object.keys(store.getState().posts)[0]
+      store.actions.addMedia(postId, [
+        {kind: 'image', uri: 'file:///full.jpg', width: 100, height: 80},
+      ])
+      const mediaId = attempts[0].mediaId
+      attempts[0].setMediaCompressionResult?.(postId, mediaId, {
+        kind: 'image',
+        uri: 'file:///full-compressed.jpg',
+        width: 100,
+        height: 80,
+        mimeType: 'image/jpeg',
+        aspectRatio: {width: 100, height: 80},
+      })
+      store.internalActions.setUploadStatus(postId, mediaId, {
+        state: 'uploaded',
+        blob: blob('image/jpeg'),
+      })
+      expect((await plan(store.getState())).ok).toBe(true)
+
+      store.actions.replaceImageSource(postId, mediaId, {
+        uri: 'file:///crop.jpg',
+        width: 50,
+        height: 40,
+      })
+      /* The old blob and prepared size are gone, so nothing stale is planned. */
+      expect(await plan(store.getState())).toEqual({
+        ok: false,
+        errors: [expect.objectContaining({code: 'attachment-not-ready'})],
+      })
+
+      attempts[1].setMediaCompressionResult?.(postId, mediaId, {
+        kind: 'image',
+        uri: 'file:///crop-compressed.jpg',
+        width: 48,
+        height: 38,
+        mimeType: 'image/jpeg',
+        aspectRatio: {width: 48, height: 38},
+      })
+      store.internalActions.setUploadStatus(postId, mediaId, {
+        state: 'uploaded',
+        blob: blob('image/jpeg'),
+      })
+      const result = await plan(store.getState())
+      expect(result.ok).toBe(true)
+      if (result.ok) {
+        const embed = result.posts[0].record.embed
+        expect(embed?.$type).toBe('app.bsky.embed.images')
+        expect(
+          (embed as app.bsky.embed.images.Main).images[0].aspectRatio,
+        ).toEqual({width: 48, height: 38})
       }
       store.destroy()
     })

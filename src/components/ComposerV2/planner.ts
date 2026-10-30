@@ -840,19 +840,14 @@ function videoRecord({
       mediaId: item.id,
     })
   }
-  const dimensions = item.prepared ?? {
-    width: item.width,
-    height: item.height,
-  }
-  if (!validDimensions(dimensions)) {
-    throw failure({
-      code: 'invalid-record',
-      message: 'Video dimensions are invalid',
-      postIndex: context.postIndex,
-      postId: context.postId,
-      mediaId: item.id,
-    })
-  }
+  /*
+   * Same as the existing composer: lexicon integers, and a ratio that rounds
+   * to zero is left off rather than failing the post.
+   */
+  const source = item.prepared ?? item
+  const width = Math.round(source.width ?? NaN)
+  const height = Math.round(source.height ?? NaN)
+  const aspectRatio = width > 0 && height > 0 ? {width, height} : undefined
   const captions = item.captions.map(caption => {
     const uploaded = item.captionBlobs.find(
       value => value.lang === caption.lang,
@@ -873,7 +868,7 @@ function videoRecord({
     video: item.upload.blob,
     ...(item.altText ? {alt: item.altText} : {}),
     ...(captions.length ? {captions} : {}),
-    aspectRatio: {width: dimensions.width, height: dimensions.height},
+    ...(aspectRatio ? {aspectRatio} : {}),
     presentation: item.mimeType === 'image/gif' ? 'gif' : 'default',
   }
 }

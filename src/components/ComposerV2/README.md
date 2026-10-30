@@ -308,9 +308,14 @@ when necessary, and allows the worker to reuse the video and unchanged captions.
 The store adopts the processed video blob onto the item before captions begin,
 without marking the upload complete, so editing captions while they upload
 restarts from that blob instead of compressing and uploading the video again.
-`prepared` is display and planning metadata for the compressed output, not what
-a retry reuses; it carries no multipart controllers or web buffers (see below
-for retry reuse).
+`prepared` is display and planning metadata, not what a retry reuses; it carries
+no multipart controllers or web buffers (see below for retry reuse). For a video,
+`uri`, `size`, and `mimeType` describe the compressed output, but `width`,
+`height`, and `aspectRatio` are the source's display dimensions: the shared
+`CompressedVideo` contract carries no output dimensions. That is sound for the
+aspect ratio because compression preserves it up to even-pixel rounding, which is
+under 1% for realistic sizes. The planner rounds them to integers and omits the
+embed's `aspectRatio` if either rounds to zero, as the existing composer does.
 
 **Video telemetry** reuses `createVideoTelemetry` and emits the existing
 composer's `video:upload:*` funnel with the same meanings, so V1 and V2 data
@@ -420,15 +425,43 @@ GIF path. Other platforms and sources are read directly.
 The prepared values reach the store through `setMediaSourceMetadata` before
 source validation, whose source-versus-output rules are unchanged. The store
 only fills fields the item did not know, publishes nothing when nothing is
-new, and does not mark the composition dirty. Items never change source, so a retry, caption restart, or
-reorder reuses the metadata; a replacement is a new item with its own
-preparation, and a late result for a removed item or superseded attempt is
-dropped by the task-identity guard.
+new, and does not mark the composition dirty. Items never change source except
+through the explicit `replaceImageSource` action (below), so a retry, caption
+restart, or reorder reuses the metadata; any other replacement is a new item
+with its own preparation, and a late result for a removed item or superseded
+attempt is dropped by the task-identity guard.
+
+#### Replacing an image source
+
+`replaceImageSource(postId, mediaId, source)` swaps an image's current source
+for an editor's output, such as a crop. Crop rectangles and editor state live
+outside the store; an editor crops from `item.original ?? item`.
+
+- The first replace keeps the previous source on the item as `original`
+  (`PostMediaImageSource`). Later replaces overwrite only the current source
+  and leave `original` alone, so every edit starts from the unedited image.
+  `replaceImageSource(postId, mediaId, undefined)` resets: the item returns to
+  `original`, which is then dropped. Passing the original's own URI is a reset.
+- Every current-source field is overwritten and any the new source omits
+  becomes unknown, so the worker resolves it again. Alt text, id, position,
+  and `localRefPath` are untouched. `localRefPath` still names the original
+  file; what it means after an edit is for the draft-persistence work.
+- The running task is cancelled and its late results are dropped by the
+  task-identity guard. `prepared` and any uploaded blob are cleared, the upload
+  returns to `pending`, and a new attempt starts, so a publish never uses bytes
+  from before the edit. The composition becomes dirty.
+- It returns `{supersededUri}` when an earlier edited source was discarded,
+  `{}` when nothing changed (same URI, or resetting an unedited item), and
+  `undefined` when the item is not a live image. The store never deletes or
+  revokes `supersededUri` or `original`; the caller that created an edited file
+  or object URL owns its cleanup.
+- Drafts do not store `original` yet. A restored image arrives as a single
+  source with no `original`, so editing it crops the already-edited file.
 
 The compressed output is retained separately, as a private runtime map in the
 store keyed by media ID, never in `ThreadState`. Only a completed compression
 that passed output validation is retained, with everything the uploader needs:
-URI, MIME type, size, passthrough reason, and web `bytes`. Because an item's
+URI, MIME type, size, passthrough reason, and web `bytes`. Because a video's
 source never changes and captions or alt text do not affect compression, the ID
 identifies the result. A retry after an upload failure leases it and uploads it
 without copying, probing, or compressing. Native output is first checked with

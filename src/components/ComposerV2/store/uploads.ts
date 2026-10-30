@@ -154,7 +154,8 @@ type BaseOptions = UploadRuntime & {
   /**
    * Called after local compression, before the upload starts. Records the
    * compressed output alongside the original source; it does not mark the
-   * upload complete.
+   * upload complete. A video's dimensions are the source's, not the output's
+   * (see `PreparedVideo`).
    */
   setMediaCompressionResult?: (
     postId: string,
@@ -483,6 +484,7 @@ async function runVideoUpload({
           uri: compressed.uri,
           size: compressed.size,
           mimeType: compressed.mimeType,
+          /* Source display dimensions; the CompressedVideo contract has none. */
           width: asset.width,
           height: asset.height,
           aspectRatio: {width: asset.width, height: asset.height},

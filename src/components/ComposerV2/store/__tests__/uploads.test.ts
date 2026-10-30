@@ -314,6 +314,31 @@ describe('ComposerV2 real media workers', () => {
       expect(statuses.at(-1)).toMatchObject({state: 'uploaded'})
     })
 
+    test('records source dimensions, not compressor output dimensions, as prepared', async () => {
+      const {prepared} = await runVideo({
+        media: {...completeSource, width: 3840, height: 2160},
+        /* Native compressors report output dimensions the contract omits. */
+        compressed: {
+          uri: 'file:///compressed.mp4',
+          size: 100,
+          mimeType: 'video/mp4',
+          width: 1920,
+          height: 1080,
+        } as CompressedVideo,
+      })
+
+      expect(prepared).toHaveBeenCalledWith(
+        'post-1',
+        'video-1',
+        expect.objectContaining({
+          uri: 'file:///compressed.mp4',
+          width: 3840,
+          height: 2160,
+          aspectRatio: {width: 3840, height: 2160},
+        }),
+      )
+    })
+
     test('native: transcodes a source format outside the upload allowlist', async () => {
       const {statuses, compressVideo, uploadVideo} = await runVideo({
         media: {

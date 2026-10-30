@@ -65,8 +65,11 @@ export type PreparedImage = {
 }
 
 /**
- * Display and planning metadata for a video's compressed output (the planner
- * prefers these dimensions). It is not the reusable result: retries read the
+ * Display and planning metadata for a video upload (the planner prefers it over
+ * the item's source fields). `uri`, `size`, and `mimeType` describe the
+ * compressed output; `width`, `height`, and `aspectRatio` are the source's
+ * display dimensions, because the shared `CompressedVideo` contract carries
+ * no output dimensions. It is not the reusable result: retries read the
  * store's private compression cache, which also holds the web `bytes` and
  * passthrough reason this type omits so published state stays small.
  */
@@ -93,11 +96,28 @@ export type ResolvedSourceMetadata = {
   fileSize?: number
 }
 
+/**
+ * The readable source fields of an image: what the worker compresses and what
+ * `replaceImageSource` swaps in. Unknown values are left out, not guessed.
+ */
+export type PostMediaImageSource = {
+  /** Native file URI, or a web data/object URL. */
+  uri: string
+  width?: number
+  height?: number
+  mimeType?: string
+  /** Source byte size, when known. */
+  fileSize?: number
+}
+
 export type PostMediaImage = {
   kind: 'image'
   id: string
   postId: string
-  /** Native file URI, or a web data/object URL. */
+  /**
+   * The current source: what the worker compresses and previews show. It
+   * changes only through `replaceImageSource`.
+   */
   uri: string
   /** Unknown source dimensions are resolved by the worker before compression. */
   width?: number
@@ -107,6 +127,13 @@ export type PostMediaImage = {
   mimeType?: string
   /** Source byte size, when known. */
   fileSize?: number
+  /**
+   * The source the item had before its first `replaceImageSource`, kept so an
+   * editor can crop from it again or reset. Absent until an edit; never
+   * replaced by later edits and cleared by a reset. Crop state itself lives
+   * outside the store.
+   */
+  original?: PostMediaImageSource
   /** Durable draft path, reused when saving restored media. */
   localRefPath?: string
   /** Output of the post image compressor; the source fields remain unchanged. */
@@ -137,8 +164,9 @@ export type PostMediaVideo = {
   /** Uploaded caption refs are kept separate from editable caption contents. */
   captionBlobs: UploadedCaption[]
   /**
-   * Planning metadata for the compressed output, kept apart from the source
-   * fields above. Not what a retry reuses; see `PreparedVideo`.
+   * Planning metadata for the upload, kept apart from the source fields above.
+   * Its dimensions are the source's, not the compressed output's. Not what a
+   * retry reuses; see `PreparedVideo`.
    */
   prepared?: PreparedVideo
   /** A completed video is retained when a later caption upload fails. */
