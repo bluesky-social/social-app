@@ -19,26 +19,28 @@ import {
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {type ParentPost} from '#/state/queries/notifications/grouped/types'
 import {useSession} from '#/state/session'
-import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {ArrowCornerDownRight_Stroke2_Corner2_Rounded as ArrowCornerDownRight} from '#/components/icons/Arrow'
 import {type Props as SVGIconProps} from '#/components/icons/common'
-import {Link, WebOnlyInlineLinkText} from '#/components/Link'
+import {WebOnlyInlineLinkText} from '#/components/Link'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
+import {RecordEmbed} from '#/components/Post/Embed'
+import {
+  CompactMedia,
+  getEmbedThumbnails,
+} from '#/components/Post/Embed/CompactMedia'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostControls} from '#/components/PostControls'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
-import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import {makePostLink} from '../links'
-import {Card, FeedCard, getPostThumbnails, InlineImages} from './media'
+import {FeedCard} from './media'
+import {getRowBorderColor, useItemContext} from './Root'
 import {Strong, useDisplayName} from './text'
 
 type PostView = app.bsky.feed.defs.PostView
@@ -369,7 +371,7 @@ function getEmbedPreviewKind(
   if (bsky.isType(app.bsky.embed.external.view, embed)) {
     return 'media'
   }
-  return getPostThumbnails(embed).length > 0 ? 'media' : undefined
+  return getEmbedThumbnails(embed).length > 0 ? 'media' : undefined
 }
 
 /**
@@ -389,23 +391,48 @@ function hasRecordCard(embed: app.bsky.embed.record.View) {
 }
 
 /**
- * The card for a record embed: a quoted post, or a feed that was shared.
- * Without it a post that shares a feed reads like a plain reply to whoever
- * made the feed. Other records, like lists, render nothing.
+ * The card for a record embed: a quoted post as a compact quote, or a feed
+ * that was shared. Without it a post that shares a feed reads like a plain
+ * reply to whoever made the feed. Other records, like lists, render nothing.
  */
-function RecordPreview({embed}: {embed: app.bsky.embed.record.View}) {
+export function RecordPreview({
+  embed,
+  isMuted = false,
+}: {
+  embed: app.bsky.embed.record.View
+  /**
+   * Mutes a quoted post's text, as for a preview of the post.
+   */
+  isMuted?: boolean
+}) {
+  const t = useTheme()
+  const {isRead} = useItemContext()
   const parsed = bsky.post.parseEmbedRecordView(embed)
 
+  if (!hasRecordCard(embed)) return null
   if (parsed.type === 'feed') {
     return <FeedCard generator={parsed.view} />
   }
-  return <QuoteCard embed={embed} />
+  return (
+    /*
+     * Quotes and their placeholders bring their own top margin, for the text
+     * above them in a post. The row already spaces them.
+     */
+    <View style={{marginTop: -tokens.space.sm}}>
+      <RecordEmbed
+        embed={parsed}
+        quotePresentation="compact"
+        isQuoteTextMuted={isMuted}
+        style={{borderColor: getRowBorderColor(t, !isRead)}}
+      />
+    </View>
+  )
 }
 
 /**
  * A compact stand-in for the full post embed: thumbnails for media, the
- * usual external embed for links, a card for quoted posts and shared feeds,
- * and nothing for lists and the like.
+ * usual external embed for links, a compact quote for quoted posts, a card
+ * for shared feeds, and nothing for lists and the like.
  */
 function EmbedPreview({
   embed,
@@ -438,200 +465,11 @@ function EmbedPreview({
     )
   }
   return (
-    <InlineImages
+    <CompactMedia
       embed={embed}
       size={80}
       blurred={moderation?.ui('contentMedia').blur ?? false}
     />
-  )
-}
-
-/**
- * Compact preview of a quoted post: author, time and the start of its text.
- * Pressing it opens the quoted post. Blocked, deleted and detached quotes
- * collapse to a short muted line, and other record embeds render nothing.
- */
-export function QuoteCard({
-  embed,
-  numberOfLines = 2,
-  isMuted = false,
-}: {
-  embed: app.bsky.embed.record.View
-  /**
-   * How many lines of the quoted post's text to show.
-   */
-  numberOfLines?: number
-  /**
-   * Mutes the quoted post's text, as for a preview of the post.
-   */
-  isMuted?: boolean
-}) {
-  const t = useTheme()
-  const {currentAccount} = useSession()
-  const parsed = bsky.post.parseEmbedRecordView(embed)
-
-  let placeholder: React.ReactNode = null
-  switch (parsed.type) {
-    case 'post':
-      return (
-        <QuoteCardPost
-          view={parsed.view}
-          numberOfLines={numberOfLines}
-          isMuted={isMuted}
-        />
-      )
-    case 'post_blocked':
-      placeholder = <Trans>Blocked post</Trans>
-      break
-    case 'post_not_found':
-      placeholder = <Trans>Deleted post</Trans>
-      break
-    case 'post_detached': {
-      const isViewerOwner = currentAccount?.did
-        ? parsed.view.uri.includes(currentAccount.did)
-        : false
-      placeholder = isViewerOwner ? (
-        <Trans>Removed by you</Trans>
-      ) : (
-        <Trans>Removed by author</Trans>
-      )
-      break
-    }
-    default:
-      return null
-  }
-
-  return (
-    <Card>
-      <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
-        {placeholder}
-      </Text>
-    </Card>
-  )
-}
-
-function QuoteCardPost({
-  view,
-  numberOfLines,
-  isMuted,
-}: {
-  view: app.bsky.embed.record.ViewRecord
-  numberOfLines: number
-  isMuted: boolean
-}) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const moderationOpts = useModerationOpts()
-  const name = useDisplayName(view.author)
-  const quote: PostView = {
-    ...view,
-    $type: 'app.bsky.feed.defs#postView',
-    record: view.value,
-    embed: view.embeds?.[0],
-  }
-  const moderation = moderationOpts
-    ? moderatePost(quote, moderationOpts)
-    : undefined
-  const href = makePostLink(view)
-  const quotedRecord = bsky.isType(app.bsky.feed.post, view.value)
-    ? view.value
-    : undefined
-
-  return (
-    <ContentHider modui={moderation?.ui('contentList')}>
-      <Link
-        to={href}
-        label={l`Post by ${name}`}
-        style={[a.flex_col, a.align_stretch, a.rounded_md]}>
-        {({hovered, pressed}) => (
-          <Card style={[a.gap_xs]}>
-            <SubtleHover
-              hover={hovered || pressed}
-              native
-              style={[a.rounded_md, a.curve_continuous]}
-            />
-            <View style={[a.flex_row, a.align_center, a.gap_xs, {height: 20}]}>
-              <UserAvatar
-                size={20}
-                avatar={view.author.avatar}
-                moderation={moderation?.ui('avatar')}
-                type={view.author.associated?.labeler ? 'labeler' : 'user'}
-              />
-              <Text
-                emoji
-                numberOfLines={1}
-                style={[
-                  a.flex_shrink,
-                  a.text_md,
-                  a.leading_snug,
-                  a.font_semi_bold,
-                  t.atoms.text,
-                ]}>
-                {forceLTR(name)}
-              </Text>
-              <Text
-                emoji
-                numberOfLines={1}
-                style={[
-                  a.text_md,
-                  a.leading_snug,
-                  t.atoms.text_contrast_medium,
-                  {flexShrink: 10},
-                ]}>
-                {sanitizeHandle(view.author.handle, '@')}
-              </Text>
-              <Text
-                accessible={false}
-                style={[
-                  a.text_md,
-                  a.leading_snug,
-                  t.atoms.text_contrast_medium,
-                ]}>
-                &middot;
-              </Text>
-              <TimeElapsed timestamp={view.indexedAt}>
-                {({timeElapsed}) => (
-                  <Text
-                    style={[
-                      a.flex_shrink_0,
-                      a.text_md,
-                      a.leading_snug,
-                      t.atoms.text_contrast_medium,
-                    ]}>
-                    {timeElapsed}
-                  </Text>
-                )}
-              </TimeElapsed>
-            </View>
-            {quotedRecord?.text.trim() ? (
-              <RichText
-                value={
-                  new RichTextAPI({
-                    text: quotedRecord.text,
-                    facets: quotedRecord.facets,
-                  })
-                }
-                authorHandle={view.author.handle}
-                // The whole card is already a link
-                disableLinks
-                numberOfLines={numberOfLines}
-                style={[
-                  a.text_md,
-                  a.leading_snug,
-                  isMuted ? t.atoms.text_contrast_medium : t.atoms.text,
-                ]}
-              />
-            ) : (
-              <InlineImages
-                embed={quote.embed}
-                size={60}
-                blurred={moderation?.ui('contentMedia').blur ?? false}
-              />
-            )}
-          </Card>
-        )}
-      </Link>
-    </ContentHider>
   )
 }
 

@@ -374,7 +374,7 @@ function AvatarRowSkeleton({
 }
 
 /**
- * Stands in for a trailing `Item.InlineImages`.
+ * Stands in for a trailing `CompactMedia`.
  */
 function ThumbnailSkeleton() {
   const t = useTheme()
