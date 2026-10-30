@@ -5,13 +5,16 @@ import {createEmbedViewRecordFromPost} from '#/state/queries/postgate/util'
 import {useResolveLinkQuery} from '#/state/queries/resolve-link'
 import {atoms as a, useTheme} from '#/alf'
 import {QuoteEmbed} from '#/components/Post/Embed'
+import {type CommonProps} from '#/components/Post/Embed/types'
 
 export function LazyQuoteEmbed({
   uri,
   linkDisabled,
+  quotePresentation,
 }: {
   uri: string
   linkDisabled?: boolean
+  quotePresentation?: CommonProps['quotePresentation']
 }) {
   const t = useTheme()
   const {data} = useResolveLinkQuery(uri)
@@ -28,6 +31,7 @@ export function LazyQuoteEmbed({
         view,
       }}
       linkDisabled={linkDisabled}
+      quotePresentation={quotePresentation}
     />
   ) : (
     <View

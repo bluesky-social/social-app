@@ -17,6 +17,18 @@ export type CommonProps = {
   isWithinQuote?: boolean
   allowNestedQuotes?: boolean
   /**
+   * How a quoted post is laid out. `compact` shows its images, video or GIF
+   * as a small square beside its text, and its link as a compact card.
+   * Defaults to `compact` beside the post's own media (a record with media),
+   * and `default` otherwise.
+   */
+  quotePresentation?: 'default' | 'compact'
+  /**
+   * Mutes a quoted post's text, for a quote that previews a post rather than
+   * showing it in full.
+   */
+  isQuoteTextMuted?: boolean
+  /**
    * The post that contains this embed. Used for analytics on photo embed
    * events (post:photoEmbed:*). When the embed has no owning post (e.g.
    * composer previews), leave this undefined and no events will be emitted.
