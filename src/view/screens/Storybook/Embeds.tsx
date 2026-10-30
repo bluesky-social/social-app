@@ -88,7 +88,7 @@ export function Embeds() {
 
       <Section
         title="Compact media"
-        description="The square a compact quote shows, also used by Notifications v2 at both sizes.">
+        description="The square a compact quote shows at 120, which Notifications v2 also uses at 80 in place of a post's text and at 60 trailing a row.">
         {(
           [
             ['One image', MEDIA.oneImage],
@@ -103,8 +103,9 @@ export function Embeds() {
         ).map(([title, embed]) => (
           <Case key={title} title={title}>
             <View style={[a.flex_row, a.align_start, a.gap_md]}>
-              <CompactMedia embed={embed} size={60} />
+              <CompactMedia embed={embed} size={120} />
               <CompactMedia embed={embed} size={80} />
+              <CompactMedia embed={embed} size={60} />
               <CompactMedia embed={embed} size={60} blurred />
             </View>
           </Case>

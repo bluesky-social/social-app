@@ -262,7 +262,7 @@ function recordWithMedia(
 const FUNGUS_TEXT =
   'The largest known organism on Earth by area is a fungus (a honey mushroom in Oregon)'
 const LONG_TEXT =
-  'Spent the whole weekend repotting every plant in the apartment. The monstera finally got a pot big enough for its roots, the pothos got split into three, and I learned that the fiddle leaf fig does not, in fact, enjoy being moved. Next weekend: shelves.'
+  'Spent the whole weekend repotting every plant in the apartment. The monstera finally got a pot big enough for its roots, the pothos got split into three, and I learned that the fiddle leaf fig does not, in fact, enjoy being moved. Next weekend: shelves, which means finally deciding whether the living room wall can take a proper bracket or whether I give up and buy a freestanding unit. The landlord says brackets are fine as long as I fill the holes when I move out, which sounds like a problem for future me. Future me has a lot of problems.'
 
 const nestedQuote = quoteOf({
   author: AUTHORS.marcus,

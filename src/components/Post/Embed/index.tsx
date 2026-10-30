@@ -334,7 +334,7 @@ export function PostDetachedEmbed({
 /**
  * Lines of text in a compact quote, about as tall as its media square.
  */
-const COMPACT_QUOTE_LINES = 3
+const COMPACT_QUOTE_LINES = 6
 
 /*
  * Nests parent `Embed` component and therefore must live in this file to avoid
@@ -545,7 +545,9 @@ function CompactQuoteBody({
    * the text, behind the usual warning, and appears there once revealed.
    */
   const isMediaHidden = Boolean(mediaModui?.blurs[0])
-  const square = hasThumbnails && <CompactMedia embed={quote.embed} size={60} />
+  const square = hasThumbnails && (
+    <CompactMedia embed={quote.embed} size={120} />
+  )
 
   return (
     <>
