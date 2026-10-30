@@ -6,21 +6,22 @@ import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {atoms as a, useTheme} from '#/alf'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {Link} from '#/components/Link'
+import {getEmbedThumbnails} from '#/components/Post/Embed/CompactMedia'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import {getPostThumbnails} from './media'
-import {QuoteCard} from './post'
+import {RecordPreview} from './post'
 import {SecondaryText} from './text'
 
 /**
  * A short preview of a post's rich text, muted and ellipsized.
  *
- * Posts without text render nothing if they have images or video, since rows
- * show those as a trailing `Item.InlineImages`. One that only quotes another
- * post shows the quoted post instead. Otherwise this says what the post
- * contains, e.g. "Link to nytimes.com".
+ * Posts without text render nothing if they have images, video or a GIF,
+ * since rows show those as a trailing `CompactMedia`. One that only quotes
+ * another post or shares a feed shows that instead, as a compact quote or a
+ * feed card. Otherwise this says what the post contains, e.g. "Link to
+ * nytimes.com".
  */
 export function PostPreview({
   post,
@@ -52,13 +53,13 @@ export function PostPreview({
     )
   }
 
-  if (getPostThumbnails(post.embed).length > 0) return null
+  if (getEmbedThumbnails(post.embed).length > 0) return null
 
   const embed = getTextlessEmbed(post.embed)
   if (!embed) return null
 
   if (embed.type === 'quote') {
-    return <QuoteCard embed={embed.record} numberOfLines={4} isMuted />
+    return <RecordPreview embed={embed.record} isMuted />
   }
 
   const domain = embed.domain
