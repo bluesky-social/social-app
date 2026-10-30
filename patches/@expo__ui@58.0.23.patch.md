@@ -22,7 +22,9 @@ https://github.com/expo/expo/pull/52574:
   instead of the original `DropdownMenu`.
 - `DropdownMenuItem`: in a group, it's an Expressive `DropdownMenuItem`, shaped
   by `MenuDefaults.itemShape(index, count)` from its position among the group's
-  items, so labels, dividers and conditional items in JS don't throw it off. Its
+  items, so labels, dividers and conditional items in JS don't throw it off. A
+  submenu's trigger item sits inside its `DropdownMenu`, so it takes that menu's
+  place in the group. Its
   `selected` prop and `SelectedLeadingIcon` slot render a
   `SelectableDropdownMenuItem` (tinted highlight and leading check).
 
