@@ -23,7 +23,7 @@ import * as Dialog from '#/components/Dialog'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Pencil_Stroke2_Corner0_Rounded as PencilIcon} from '#/components/icons/Pencil'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
-import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
+import {Sparkles_Filled_Corner0_Rounded as SparklesIcon} from '#/components/icons/Sparkles'
 import {TimesLarge_Stroke2_Corner0_Rounded as TimesIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
@@ -240,7 +240,7 @@ const GalleryItem = ({
            */
           <Loader width={10} style={{color: t.palette.white}} />
         ) : isGeneratedAltText(image) ? (
-          <SparkleIcon width={10} style={{color: t.palette.white}} />
+          <SparklesIcon width={10} style={{color: t.palette.white}} />
         ) : image.alt.length !== 0 ? (
           <CheckIcon width={10} style={{color: t.palette.white}} />
         ) : (

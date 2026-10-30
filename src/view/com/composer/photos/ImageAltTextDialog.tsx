@@ -13,7 +13,7 @@ import * as Dialog from '#/components/Dialog'
 import {type DialogControlProps} from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
+import {Sparkles_Filled_Corner0_Rounded as SparklesIcon} from '#/components/icons/Sparkles'
 import {TimesLarge_Stroke2_Corner0_Rounded as TimesIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -160,7 +160,7 @@ const ImageAltTextInner = ({
             </View>
           ) : isSuggestion ? (
             <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-              <SparkleIcon size="sm" fill={t.palette.primary_500} />
+              <SparklesIcon size="sm" fill={t.palette.primary_500} />
               <Text
                 style={[
                   a.flex_1,
