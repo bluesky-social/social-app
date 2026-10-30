@@ -7,6 +7,9 @@
     "name": "ScrollForwarderViewSpec",
     "type": "all",
     "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "app.bsky.scrollforwarder"
+    },
     "ios": {
       "componentProvider": {
         "ScrollForwarderView": "ScrollForwarderView"
