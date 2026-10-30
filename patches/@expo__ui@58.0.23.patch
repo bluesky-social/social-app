@@ -1,116 +1,77 @@
 diff --git a/android/src/main/java/expo/modules/ui/ExpoUIModule.kt b/android/src/main/java/expo/modules/ui/ExpoUIModule.kt
-index c33aff8..7e9bfa2 100644
+index c33aff8..d5b5142 100644
 --- a/android/src/main/java/expo/modules/ui/ExpoUIModule.kt
 +++ b/android/src/main/java/expo/modules/ui/ExpoUIModule.kt
-@@ -33,6 +33,8 @@ import expo.modules.ui.graphics.ImageLoader
+@@ -33,6 +33,10 @@ import expo.modules.ui.graphics.ImageLoader
  import expo.modules.ui.icon.IconView
  import expo.modules.ui.image.ImageView
  import expo.modules.ui.menu.DropdownMenuContent
 +import expo.modules.ui.menu.DropdownMenuGroupContent
 +import expo.modules.ui.menu.DropdownMenuGroupProps
++import expo.modules.ui.menu.DropdownMenuPopupContent
++import expo.modules.ui.menu.DropdownMenuPopupProps
  import expo.modules.ui.menu.DropdownMenuProps
  import expo.modules.ui.menu.DropdownMenuItemContent
  import expo.modules.ui.menu.DropdownMenuItemProps
-@@ -451,6 +453,12 @@ class ExpoUIModule : Module() {
+@@ -53,6 +57,8 @@ import expo.modules.ui.menu.ExposedDropdownMenuBoxContent
+ import expo.modules.ui.menu.ExposedDropdownMenuBoxProps
+ import expo.modules.ui.menu.ExposedDropdownMenuContent
+ import expo.modules.ui.menu.ExposedDropdownMenuProps
++import expo.modules.ui.menu.SelectableDropdownMenuItemContent
++import expo.modules.ui.menu.SelectableDropdownMenuItemProps
+ import kotlinx.coroutines.launch
+ import okhttp3.OkHttpClient
+ 
+@@ -443,6 +449,20 @@ class ExpoUIModule : Module() {
        }
      }
  
++    ExpoUIView<DropdownMenuPopupProps>("DropdownMenuPopupView") {
++      val onDismissRequest by Event<Unit>()
++
++      Content { props ->
++        DropdownMenuPopupContent(props) { onDismissRequest(Unit) }
++      }
++    }
++
 +    ExpoUIView<DropdownMenuGroupProps>("DropdownMenuGroupView") {
 +      Content { props ->
 +        DropdownMenuGroupContent(props)
 +      }
 +    }
 +
-     ExpoUIView<LoadingIndicatorProps>("LoadingIndicatorView") {
-       Content { props ->
-         LoadingIndicatorContent(props)
-diff --git a/android/src/main/java/expo/modules/ui/menu/DropdownMenu.kt b/android/src/main/java/expo/modules/ui/menu/DropdownMenu.kt
-index 292a3a8..7beb0bd 100644
---- a/android/src/main/java/expo/modules/ui/menu/DropdownMenu.kt
-+++ b/android/src/main/java/expo/modules/ui/menu/DropdownMenu.kt
-@@ -1,12 +1,19 @@
- package expo.modules.ui.menu
+     ExpoUIView<DropdownMenuItemProps>("DropdownMenuItemView") {
+       val onItemPressed by Event<Unit>()
  
- import androidx.compose.foundation.layout.Box
-+import androidx.compose.foundation.layout.Spacer
-+import androidx.compose.foundation.layout.height
-+import androidx.compose.foundation.layout.padding
- import androidx.compose.foundation.shape.RoundedCornerShape
- import androidx.compose.material3.DropdownMenu
-+import androidx.compose.material3.DropdownMenuPopup
-+import androidx.compose.material3.MenuAnchorPosition
- import androidx.compose.material3.MenuDefaults
- import androidx.compose.runtime.Composable
-+import androidx.compose.ui.Modifier
- import androidx.compose.ui.unit.dp
- import androidx.compose.ui.window.PopupProperties
-+import androidx.core.view.size
- import expo.modules.kotlin.views.FunctionalComposableScope
- import expo.modules.ui.UIComposableScope
- import expo.modules.ui.ModifierRegistry
-@@ -20,16 +27,46 @@ fun FunctionalComposableScope.DropdownMenuContent(
-   onDismissRequest: () -> Unit
- ) {
-   val itemsSlotView = findChildSlotView(view, "items")
-+  // Menus of `DropdownMenuGroup`s are Material 3 Expressive menus, which have their own popup.
-+  val isGrouped = itemsSlotView != null && (0..<itemsSlotView.size).any { isMenuGroup(itemsSlotView.getChildAt(it)) }
+@@ -451,6 +471,14 @@ class ExpoUIModule : Module() {
+       }
+     }
  
-   Box(modifier = ModifierRegistry.applyModifiers(props.modifiers, appContext, composableScope, globalEventDispatcher)) {
-     // Trigger - non-items children
-     Children(UIComposableScope(), filter = { !isSlotView(it) })
- 
-+    if (itemsSlotView != null && isGrouped) {
-+      // A menu in a group is a submenu, which opens beside its trigger item, like Compose's cascading menus.
-+      val isSubmenu = isMenuGroup(view.parent)
-+      DropdownMenuPopup(
-+        expanded = props.expanded,
-+        onDismissRequest = onDismissRequest,
-+        popupPositionProvider = MenuDefaults.rememberDropdownMenuPopupPositionProvider(
-+          if (isSubmenu) MenuAnchorPosition.End else MenuAnchorPosition.Below
-+        ),
-+        // Padded on both sides, so the gap faces the trigger whichever way the menu opens.
-+        modifier = if (isSubmenu) Modifier else Modifier.padding(vertical = (props.anchorGap ?: 0f).dp),
-+        properties = PopupProperties(
-+          focusable = props.properties.focusable,
-+          dismissOnBackPress = props.properties.dismissOnBackPress,
-+          dismissOnClickOutside = props.properties.dismissOnClickOutside,
-+          clippingEnabled = props.properties.clippingEnabled
-+        )
-+      ) {
-+        val scope = UIComposableScope(columnScope = this)
-+        for (index in 0..<itemsSlotView.size) {
-+          if (index > 0) {
-+            Spacer(Modifier.height(MenuDefaults.GroupSpacing))
-+          }
-+          itemsSlotView.Child(scope, index)
-+        }
++    ExpoUIView<SelectableDropdownMenuItemProps>("SelectableDropdownMenuItemView") {
++      val onItemPressed by Event<Unit>()
++
++      Content { props ->
++        SelectableDropdownMenuItemContent(props) { onItemPressed(Unit) }
 +      }
 +    }
 +
-     DropdownMenu(
-       containerColor = props.color?.composeOrNull ?: MenuDefaults.containerColor,
-       shape = props.cornerRadius?.let { RoundedCornerShape(it.dp) } ?: MenuDefaults.shape,
-       shadowElevation = props.shadowElevation?.dp ?: MenuDefaults.ShadowElevation,
--      expanded = props.expanded,
-+      expanded = props.expanded && !isGrouped,
-       onDismissRequest = onDismissRequest,
-       properties = PopupProperties(
-         focusable = props.properties.focusable,
+     ExpoUIView<LoadingIndicatorProps>("LoadingIndicatorView") {
+       Content { props ->
+         LoadingIndicatorContent(props)
 diff --git a/android/src/main/java/expo/modules/ui/menu/DropdownMenuGroup.kt b/android/src/main/java/expo/modules/ui/menu/DropdownMenuGroup.kt
 new file mode 100644
-index 0000000..835d78f
+index 0000000..e6e2857
 --- /dev/null
 +++ b/android/src/main/java/expo/modules/ui/menu/DropdownMenuGroup.kt
-@@ -0,0 +1,41 @@
+@@ -0,0 +1,36 @@
 +package expo.modules.ui.menu
 +
 +import android.graphics.Color
-+import android.view.ViewGroup
 +import androidx.compose.material3.DropdownMenuGroup
 +import androidx.compose.material3.MenuDefaults
 +import androidx.compose.runtime.Composable
++import androidx.compose.ui.unit.dp
 +import expo.modules.kotlin.views.ComposeProps
-+import expo.modules.kotlin.views.ExpoComposeView
 +import expo.modules.kotlin.views.FunctionalComposableScope
 +import expo.modules.kotlin.views.OptimizedComposeProps
 +import expo.modules.ui.ModifierList
@@ -120,53 +81,30 @@ index 0000000..835d78f
 +
 +@OptimizedComposeProps
 +data class DropdownMenuGroupProps(
-+  val color: Color? = null,
++  val shapes: MenuShapePosition? = null,
++  val containerColor: Color? = null,
++  val tonalElevation: Float? = null,
++  val shadowElevation: Float? = null,
 +  val modifiers: ModifierList = emptyList()
 +) : ComposeProps
 +
-+internal fun isMenuGroup(view: Any?): Boolean {
-+  return (view as? ExpoComposeView<*>)?.props is DropdownMenuGroupProps
-+}
-+
 +@Composable
 +fun FunctionalComposableScope.DropdownMenuGroupContent(props: DropdownMenuGroupProps) {
-+  // Shaped by its position among the menu's groups, like `SegmentedButton` in its row.
-+  val parent = view.parent as? ViewGroup
-+  val index = parent?.indexOfChild(view) ?: 0
-+  val count = parent?.childCount ?: 1
-+
 +  DropdownMenuGroup(
-+    shapes = MenuDefaults.groupShape(index = index, count = count),
++    shapes = props.shapes?.let { MenuDefaults.groupShape(index = it.index, count = it.count) } ?: MenuDefaults.groupShapes(),
 +    modifier = ModifierRegistry.applyModifiers(props.modifiers, appContext, composableScope, globalEventDispatcher),
-+    containerColor = props.color.composeOrNull ?: MenuDefaults.groupStandardContainerColor
++    containerColor = props.containerColor.composeOrNull ?: MenuDefaults.groupStandardContainerColor,
++    tonalElevation = props.tonalElevation?.dp ?: MenuDefaults.TonalElevation,
++    shadowElevation = props.shadowElevation?.dp ?: MenuDefaults.ShadowElevation
 +  ) {
 +    Children(UIComposableScope(columnScope = this))
 +  }
 +}
 diff --git a/android/src/main/java/expo/modules/ui/menu/DropdownMenuItem.kt b/android/src/main/java/expo/modules/ui/menu/DropdownMenuItem.kt
-index e4654ea..e10e358 100644
+index e4654ea..f31736f 100644
 --- a/android/src/main/java/expo/modules/ui/menu/DropdownMenuItem.kt
 +++ b/android/src/main/java/expo/modules/ui/menu/DropdownMenuItem.kt
-@@ -1,19 +1,26 @@
- package expo.modules.ui.menu
- 
- import android.graphics.Color
-+import android.view.View
-+import android.view.ViewGroup
- import androidx.compose.material3.DropdownMenuItem
- import androidx.compose.material3.MenuDefaults
-+import androidx.compose.material3.SelectableDropdownMenuItem
- import androidx.compose.runtime.Composable
-+import androidx.compose.ui.graphics.Color as ComposeColor
-+import androidx.core.view.size
- import expo.modules.kotlin.records.Field
- import expo.modules.kotlin.records.Record
- import expo.modules.kotlin.types.OptimizedRecord
- import expo.modules.kotlin.views.ComposeProps
-+import expo.modules.kotlin.views.ExpoComposeView
- import expo.modules.ui.UIComposableScope
- import expo.modules.kotlin.views.FunctionalComposableScope
- import expo.modules.ui.ModifierList
+@@ -14,6 +14,7 @@ import expo.modules.ui.ModifierList
  import expo.modules.ui.ModifierRegistry
  import expo.modules.ui.composeOrNull
  import expo.modules.ui.findChildSlotView
@@ -174,108 +112,216 @@ index e4654ea..e10e358 100644
  import expo.modules.kotlin.views.OptimizedComposeProps
  
  @OptimizedRecord
-@@ -34,10 +41,23 @@ class DropdownMenuItemColors : Record {
+@@ -34,6 +35,7 @@ class DropdownMenuItemColors : Record {
  @OptimizedComposeProps
  data class DropdownMenuItemProps(
    val enabled: Boolean = true,
-+  val selected: Boolean? = null,
++  val shape: MenuShapePosition? = null,
    val elementColors: DropdownMenuItemColors = DropdownMenuItemColors(),
    val modifiers: ModifierList = emptyList()
  ) : ComposeProps
- 
-+internal fun isMenuItem(view: Any?): Boolean {
-+  return (view as? ExpoComposeView<*>)?.props is DropdownMenuItemProps
-+}
-+
-+/**
-+ * A submenu is a `DropdownMenu` whose trigger is a `DropdownMenuItem`. In a group, it takes the
-+ * place of an item.
-+ */
-+private fun isSubmenu(view: Any?): Boolean {
-+  return (view as? ExpoComposeView<*>)?.props is DropdownMenuProps
-+}
-+
- @Composable
- fun FunctionalComposableScope.DropdownMenuItemContent(
-   props: DropdownMenuItemProps,
-@@ -46,10 +66,66 @@ fun FunctionalComposableScope.DropdownMenuItemContent(
+@@ -46,22 +48,39 @@ fun FunctionalComposableScope.DropdownMenuItemContent(
    val textSlotView = findChildSlotView(view, "text")
    val leadingSlotView = findChildSlotView(view, "leadingIcon")
    val trailingSlotView = findChildSlotView(view, "trailingIcon")
-+  val selectedLeadingSlotView = findChildSlotView(view, "selectedLeadingIcon")
++  val supportingTextSlotView = findChildSlotView(view, "supportingText")
  
    val colors = props.elementColors
    val defaultColors = MenuDefaults.itemColors()
- 
-+  // In a `DropdownMenuGroup`, the item is a Material 3 Expressive item, shaped by its position among the group's items.
-+  // A submenu's trigger item sits in its `DropdownMenu`, which is the group's child, so it takes that menu's position.
-+  val groupChild: View = (view.parent as? View)?.takeIf { isSubmenu(it) } ?: view
-+  val group = groupChild.parent as? ViewGroup
-+  if (group != null && isMenuGroup(group)) {
-+    val items = (0..<group.size).map { group.getChildAt(it) }.filter { isMenuItem(it) || isSubmenu(it) }
-+    val text: @Composable () -> Unit = { textSlotView?.renderSlot() }
-+    val leadingIcon = leadingSlotView?.let { slot -> @Composable { slot.renderSlot() } }
-+    val trailingContent = trailingSlotView?.let { slot -> @Composable { slot.renderSlot() } }
-+    val modifier = ModifierRegistry.applyModifiers(props.modifiers, appContext, composableScope, globalEventDispatcher)
-+    val shapes = MenuDefaults.itemShape(index = items.indexOf(groupChild), count = items.size)
-+    val selected = props.selected
++  val itemColors = MenuDefaults.itemColors(
++    textColor = colors.textColor.composeOrNull ?: defaultColors.textColor,
++    leadingIconColor = colors.leadingIconColor.composeOrNull ?: defaultColors.leadingIconColor,
++    trailingIconColor = colors.trailingIconColor.composeOrNull ?: defaultColors.trailingIconColor,
++    disabledTextColor = colors.disabledTextColor.composeOrNull ?: defaultColors.disabledTextColor,
++    disabledLeadingIconColor = colors.disabledLeadingIconColor.composeOrNull ?: defaultColors.disabledLeadingIconColor,
++    disabledTrailingIconColor = colors.disabledTrailingIconColor.composeOrNull ?: defaultColors.disabledTrailingIconColor
++  )
 +
-+    if (selected != null) {
-+      SelectableDropdownMenuItem(
-+        selected = selected,
-+        onClick = { onItemPressed() },
-+        text = text,
-+        shapes = shapes,
-+        modifier = modifier,
-+        leadingIcon = leadingIcon,
-+        selectedLeadingIcon = selectedLeadingSlotView?.let { slot -> @Composable { slot.renderSlot() } },
-+        trailingContent = trailingContent,
-+        enabled = props.enabled,
-+        colors = MenuDefaults.selectableItemColors(
-+          textColor = colors.textColor.composeOrNull ?: ComposeColor.Unspecified,
-+          leadingIconColor = colors.leadingIconColor.composeOrNull ?: ComposeColor.Unspecified,
-+          trailingContentColor = colors.trailingIconColor.composeOrNull ?: ComposeColor.Unspecified,
-+          disabledTextColor = colors.disabledTextColor.composeOrNull ?: ComposeColor.Unspecified,
-+          disabledLeadingIconColor = colors.disabledLeadingIconColor.composeOrNull ?: ComposeColor.Unspecified,
-+          disabledTrailingContentColor = colors.disabledTrailingIconColor.composeOrNull ?: ComposeColor.Unspecified
-+        )
-+      )
-+    } else {
-+      DropdownMenuItem(
-+        onClick = { onItemPressed() },
-+        text = text,
-+        shape = shapes.shape,
-+        modifier = modifier,
-+        leadingIcon = leadingIcon,
-+        trailingContent = trailingContent,
-+        enabled = props.enabled,
-+        colors = MenuDefaults.itemColors(
-+          textColor = colors.textColor.composeOrNull ?: defaultColors.textColor,
-+          leadingIconColor = colors.leadingIconColor.composeOrNull ?: defaultColors.leadingIconColor,
-+          trailingIconColor = colors.trailingIconColor.composeOrNull ?: defaultColors.trailingIconColor,
-+          disabledTextColor = colors.disabledTextColor.composeOrNull ?: defaultColors.disabledTextColor,
-+          disabledLeadingIconColor = colors.disabledLeadingIconColor.composeOrNull ?: defaultColors.disabledLeadingIconColor,
-+          disabledTrailingIconColor = colors.disabledTrailingIconColor.composeOrNull ?: defaultColors.disabledTrailingIconColor
-+        )
-+      )
-+    }
++  if (props.shape != null) {
++    DropdownMenuItem(
++      onClick = { onItemPressed() },
++      text = { textSlotView?.renderSlot() },
++      shape = MenuDefaults.itemShape(index = props.shape.index, count = props.shape.count).shape,
++      modifier = ModifierRegistry.applyModifiers(props.modifiers, appContext, composableScope, globalEventDispatcher),
++      leadingIcon = leadingSlotView?.let { { it.renderSlot() } },
++      trailingContent = trailingSlotView?.let { { it.renderSlot() } },
++      supportingText = supportingTextSlotView?.let { { it.renderSlot() } },
++      enabled = props.enabled,
++      colors = itemColors
++    )
 +    return
 +  }
-+
+ 
    DropdownMenuItem(
      text = { textSlotView?.let { with(UIComposableScope()) { with(it) { Content() } } } ?: Unit },
      enabled = props.enabled,
+     modifier = ModifierRegistry.applyModifiers(props.modifiers, appContext, composableScope, globalEventDispatcher),
+-    colors = MenuDefaults.itemColors(
+-      textColor = colors.textColor.composeOrNull ?: defaultColors.textColor,
+-      leadingIconColor = colors.leadingIconColor.composeOrNull ?: defaultColors.leadingIconColor,
+-      trailingIconColor = colors.trailingIconColor.composeOrNull ?: defaultColors.trailingIconColor,
+-      disabledTextColor = colors.disabledTextColor.composeOrNull ?: defaultColors.disabledTextColor,
+-      disabledLeadingIconColor = colors.disabledLeadingIconColor.composeOrNull ?: defaultColors.disabledLeadingIconColor,
+-      disabledTrailingIconColor = colors.disabledTrailingIconColor.composeOrNull ?: defaultColors.disabledTrailingIconColor
+-    ),
++    colors = itemColors,
+     leadingIcon = leadingSlotView?.let {
+       { with(UIComposableScope()) { with(it) { Content() } } }
+     },
+diff --git a/android/src/main/java/expo/modules/ui/menu/DropdownMenuPopup.kt b/android/src/main/java/expo/modules/ui/menu/DropdownMenuPopup.kt
+new file mode 100644
+index 0000000..b5f4f92
+--- /dev/null
++++ b/android/src/main/java/expo/modules/ui/menu/DropdownMenuPopup.kt
+@@ -0,0 +1,28 @@
++package expo.modules.ui.menu
++
++import androidx.compose.material3.DropdownMenuPopup
++import androidx.compose.runtime.Composable
++import androidx.compose.ui.window.PopupProperties
++import expo.modules.kotlin.views.FunctionalComposableScope
++import expo.modules.ui.UIComposableScope
++import expo.modules.ui.ModifierRegistry
++
++@Composable
++fun FunctionalComposableScope.DropdownMenuPopupContent(
++  props: DropdownMenuPopupProps,
++  onDismissRequest: () -> Unit
++) {
++  DropdownMenuPopup(
++    expanded = props.expanded,
++    onDismissRequest = onDismissRequest,
++    modifier = ModifierRegistry.applyModifiers(props.modifiers, appContext, composableScope, globalEventDispatcher),
++    properties = PopupProperties(
++      focusable = props.properties.focusable,
++      dismissOnBackPress = props.properties.dismissOnBackPress,
++      dismissOnClickOutside = props.properties.dismissOnClickOutside,
++      clippingEnabled = props.properties.clippingEnabled
++    )
++  ) {
++    Children(UIComposableScope(columnScope = this))
++  }
++}
 diff --git a/android/src/main/java/expo/modules/ui/menu/DropdownMenuRecords.kt b/android/src/main/java/expo/modules/ui/menu/DropdownMenuRecords.kt
-index f08ba78..e572b97 100644
+index f08ba78..f23a527 100644
 --- a/android/src/main/java/expo/modules/ui/menu/DropdownMenuRecords.kt
 +++ b/android/src/main/java/expo/modules/ui/menu/DropdownMenuRecords.kt
-@@ -30,5 +30,6 @@ data class DropdownMenuProps(
-   val cornerRadius: Float? = null,
-   val modifiers: ModifierList = emptyList(),
+@@ -32,3 +32,16 @@ data class DropdownMenuProps(
    val shadowElevation: Float? = null,
-+  val anchorGap: Float? = null,
    val properties: ExpoPopupProperties = ExpoPopupProperties()
  ) : ComposeProps
++
++@OptimizedRecord
++data class MenuShapePosition(
++  @Field val index: Int = 0,
++  @Field val count: Int = 1
++) : Record
++
++@OptimizedComposeProps
++data class DropdownMenuPopupProps(
++  val expanded: Boolean = false,
++  val modifiers: ModifierList = emptyList(),
++  val properties: ExpoPopupProperties = ExpoPopupProperties()
++) : ComposeProps
+diff --git a/android/src/main/java/expo/modules/ui/menu/SelectableDropdownMenuItem.kt b/android/src/main/java/expo/modules/ui/menu/SelectableDropdownMenuItem.kt
+new file mode 100644
+index 0000000..2a20086
+--- /dev/null
++++ b/android/src/main/java/expo/modules/ui/menu/SelectableDropdownMenuItem.kt
+@@ -0,0 +1,93 @@
++package expo.modules.ui.menu
++
++import android.graphics.Color
++import androidx.compose.material3.MenuDefaults
++import androidx.compose.material3.SelectableDropdownMenuItem
++import androidx.compose.runtime.Composable
++import expo.modules.kotlin.records.Field
++import expo.modules.kotlin.records.Record
++import expo.modules.kotlin.types.OptimizedRecord
++import expo.modules.kotlin.views.ComposeProps
++import expo.modules.kotlin.views.FunctionalComposableScope
++import expo.modules.kotlin.views.OptimizedComposeProps
++import expo.modules.ui.ModifierList
++import expo.modules.ui.ModifierRegistry
++import expo.modules.ui.compose
++import expo.modules.ui.findChildSlotView
++import expo.modules.ui.renderSlot
++
++@OptimizedRecord
++class SelectableDropdownMenuItemColors : Record {
++  @Field val textColor: Color? = null
++
++  @Field val containerColor: Color? = null
++
++  @Field val leadingIconColor: Color? = null
++
++  @Field val trailingContentColor: Color? = null
++
++  @Field val disabledTextColor: Color? = null
++
++  @Field val disabledContainerColor: Color? = null
++
++  @Field val disabledLeadingIconColor: Color? = null
++
++  @Field val disabledTrailingContentColor: Color? = null
++
++  @Field val selectedTextColor: Color? = null
++
++  @Field val selectedContainerColor: Color? = null
++
++  @Field val selectedLeadingIconColor: Color? = null
++
++  @Field val selectedTrailingContentColor: Color? = null
++}
++
++@OptimizedComposeProps
++data class SelectableDropdownMenuItemProps(
++  val selected: Boolean = false,
++  val shapes: MenuShapePosition? = null,
++  val enabled: Boolean = true,
++  val colors: SelectableDropdownMenuItemColors = SelectableDropdownMenuItemColors(),
++  val modifiers: ModifierList = emptyList()
++) : ComposeProps
++
++@Composable
++fun FunctionalComposableScope.SelectableDropdownMenuItemContent(
++  props: SelectableDropdownMenuItemProps,
++  onItemPressed: () -> Unit
++) {
++  val textSlotView = findChildSlotView(view, "text")
++  val leadingSlotView = findChildSlotView(view, "leadingIcon")
++  val selectedLeadingSlotView = findChildSlotView(view, "selectedLeadingIcon")
++  val trailingSlotView = findChildSlotView(view, "trailingContent")
++  val supportingTextSlotView = findChildSlotView(view, "supportingText")
++  val colors = props.colors
++
++  SelectableDropdownMenuItem(
++    selected = props.selected,
++    onClick = { onItemPressed() },
++    text = { textSlotView?.renderSlot() },
++    shapes = props.shapes?.let { MenuDefaults.itemShape(index = it.index, count = it.count) } ?: MenuDefaults.itemShapes(),
++    modifier = ModifierRegistry.applyModifiers(props.modifiers, appContext, composableScope, globalEventDispatcher),
++    leadingIcon = leadingSlotView?.let { { it.renderSlot() } },
++    selectedLeadingIcon = selectedLeadingSlotView?.let { { it.renderSlot() } },
++    trailingContent = trailingSlotView?.let { { it.renderSlot() } },
++    supportingText = supportingTextSlotView?.let { { it.renderSlot() } },
++    enabled = props.enabled,
++    colors = MenuDefaults.selectableItemColors(
++      textColor = colors.textColor.compose,
++      containerColor = colors.containerColor.compose,
++      leadingIconColor = colors.leadingIconColor.compose,
++      trailingContentColor = colors.trailingContentColor.compose,
++      disabledTextColor = colors.disabledTextColor.compose,
++      disabledContainerColor = colors.disabledContainerColor.compose,
++      disabledLeadingIconColor = colors.disabledLeadingIconColor.compose,
++      disabledTrailingContentColor = colors.disabledTrailingContentColor.compose,
++      selectedTextColor = colors.selectedTextColor.compose,
++      selectedContainerColor = colors.selectedContainerColor.compose,
++      selectedLeadingIconColor = colors.selectedLeadingIconColor.compose,
++      selectedTrailingContentColor = colors.selectedTrailingContentColor.compose
++    )
++  )
++}
 diff --git a/build/jetpack-compose/Button/index.d.ts b/build/jetpack-compose/Button/index.d.ts
 index 57dab89..0af1a62 100644
 --- a/build/jetpack-compose/Button/index.d.ts
@@ -294,32 +340,40 @@ index 57dab89..0af1a62 100644
       * Whether the button is enabled for user interaction.
       * @default true
 diff --git a/build/jetpack-compose/DropdownMenu/DropdownMenuItem.d.ts b/build/jetpack-compose/DropdownMenu/DropdownMenuItem.d.ts
-index 39c7370..d1275e8 100644
+index 39c7370..2ea9635 100644
 --- a/build/jetpack-compose/DropdownMenu/DropdownMenuItem.d.ts
 +++ b/build/jetpack-compose/DropdownMenu/DropdownMenuItem.d.ts
-@@ -22,6 +22,11 @@ export interface DropdownMenuItemProps {
+@@ -1,5 +1,6 @@
+ import type { ColorValue } from 'react-native';
+ import type { ModifierConfig } from '../../types';
++import type { MenuShapePosition } from './index';
+ /**
+  * Color overrides for the `DropdownMenuItem` component.
+  */
+@@ -22,6 +23,12 @@ export interface DropdownMenuItemProps {
       * @default true
       */
      enabled?: boolean;
 +    /**
-+     * Makes the item selectable, e.g. for a choice of options. A selected item is highlighted and
-+     * shows its `SelectedLeadingIcon`. Only applies to items in a `DropdownMenuGroup`.
++     * The position of the item in its `DropdownMenuGroup`, which sets its shape through Compose's
++     * `MenuDefaults.itemShape(index, count).shape`. When set, the item is a Material 3 Expressive
++     * menu item and can show `SupportingText`.
 +     */
-+    selected?: boolean;
++    shape?: MenuShapePosition;
      /**
       * Color overrides for the menu item.
       */
-@@ -63,5 +68,8 @@ declare namespace DropdownMenuItemComponent {
+@@ -63,5 +70,8 @@ declare namespace DropdownMenuItemComponent {
      var TrailingIcon: (props: {
          children: React.ReactNode;
      }) => import("react").JSX.Element;
-+    var SelectedLeadingIcon: (props: {
++    var SupportingText: (props: {
 +        children: React.ReactNode;
 +    }) => import("react").JSX.Element;
  }
  export { DropdownMenuItemComponent as DropdownMenuItem };
 diff --git a/build/jetpack-compose/DropdownMenu/DropdownMenuItem.js b/build/jetpack-compose/DropdownMenu/DropdownMenuItem.js
-index dca9f2f..1f80ade 100644
+index dca9f2f..3dcb959 100644
 --- a/build/jetpack-compose/DropdownMenu/DropdownMenuItem.js
 +++ b/build/jetpack-compose/DropdownMenu/DropdownMenuItem.js
 @@ -25,6 +25,17 @@ const DropdownMenuItemNativeView = requireNativeView('ExpoUI', 'DropdownMenuItem
@@ -327,13 +381,13 @@ index dca9f2f..1f80ade 100644
      });
  }
 +/**
-+ * A leading icon slot for a selected `DropdownMenuItem`, e.g. a checkmark. Replaces the
-+ * `LeadingIcon` while the item is selected.
++ * A supporting text slot for `DropdownMenuItem`, shown below the text.
++ * Only applies to an item with a `shape`.
 + *
 + * @platform android
-+ */ function SelectedLeadingIcon(props) {
++ */ function SupportingText(props) {
 +    return /*#__PURE__*/ _jsx(SlotNativeView, {
-+        slotName: "selectedLeadingIcon",
++        slotName: "supportingText",
 +        children: props.children
 +    });
 +}
@@ -344,77 +398,368 @@ index dca9f2f..1f80ade 100644
  DropdownMenuItemComponent.Text = TextSlot;
  DropdownMenuItemComponent.LeadingIcon = LeadingIcon;
  DropdownMenuItemComponent.TrailingIcon = TrailingIcon;
-+DropdownMenuItemComponent.SelectedLeadingIcon = SelectedLeadingIcon;
++DropdownMenuItemComponent.SupportingText = SupportingText;
  export { DropdownMenuItemComponent as DropdownMenuItem };
  
  //# sourceMappingURL=DropdownMenuItem.js.map
+diff --git a/build/jetpack-compose/DropdownMenu/SelectableDropdownMenuItem.d.ts b/build/jetpack-compose/DropdownMenu/SelectableDropdownMenuItem.d.ts
+new file mode 100644
+index 0000000..4ab736e
+--- /dev/null
++++ b/build/jetpack-compose/DropdownMenu/SelectableDropdownMenuItem.d.ts
+@@ -0,0 +1,121 @@
++import type { ColorValue } from 'react-native';
++import type { ModifierConfig } from '../../types';
++import type { MenuShapePosition } from './index';
++/**
++ * Color overrides for the `SelectableDropdownMenuItem` component. Each color defaults to the
++ * value of Compose's `MenuDefaults.selectableItemColors()`.
++ */
++export type SelectableDropdownMenuItemColors = {
++    textColor?: ColorValue;
++    containerColor?: ColorValue;
++    leadingIconColor?: ColorValue;
++    trailingContentColor?: ColorValue;
++    disabledTextColor?: ColorValue;
++    disabledContainerColor?: ColorValue;
++    disabledLeadingIconColor?: ColorValue;
++    disabledTrailingContentColor?: ColorValue;
++    selectedTextColor?: ColorValue;
++    selectedContainerColor?: ColorValue;
++    selectedLeadingIconColor?: ColorValue;
++    selectedTrailingContentColor?: ColorValue;
++};
++/**
++ * Props of the `SelectableDropdownMenuItem` component.
++ */
++export interface SelectableDropdownMenuItemProps {
++    /**
++     * Whether the item is selected.
++     */
++    selected: boolean;
++    /**
++     * Callback that is called when the item is clicked.
++     */
++    onClick?: () => void;
++    /**
++     * The position of the item in its `DropdownMenuGroup`, which sets its shape through Compose's
++     * `MenuDefaults.itemShape(index, count)`. Defaults to `MenuDefaults.itemShapes()`, the shape of a
++     * single item.
++     */
++    shapes?: MenuShapePosition;
++    /**
++     * Whether the item is enabled.
++     * @default true
++     */
++    enabled?: boolean;
++    /**
++     * Color overrides for the item.
++     */
++    colors?: SelectableDropdownMenuItemColors;
++    /**
++     * Modifiers for the component.
++     */
++    modifiers?: ModifierConfig[];
++    /**
++     * Slot children for the text, the icons, and the supporting text.
++     */
++    children?: React.ReactNode;
++}
++/**
++ * A text slot for `SelectableDropdownMenuItem`.
++ *
++ * @platform android
++ */
++declare function TextSlot(props: {
++    children: React.ReactNode;
++}): import("react").JSX.Element;
++/**
++ * A leading icon slot for `SelectableDropdownMenuItem`, shown while the item is not selected.
++ *
++ * @platform android
++ */
++declare function LeadingIcon(props: {
++    children: React.ReactNode;
++}): import("react").JSX.Element;
++/**
++ * A leading icon slot for `SelectableDropdownMenuItem`, shown while the item is selected.
++ *
++ * @platform android
++ */
++declare function SelectedLeadingIcon(props: {
++    children: React.ReactNode;
++}): import("react").JSX.Element;
++/**
++ * A trailing content slot for `SelectableDropdownMenuItem`, shown after the text.
++ *
++ * @platform android
++ */
++declare function TrailingContent(props: {
++    children: React.ReactNode;
++}): import("react").JSX.Element;
++/**
++ * A supporting text slot for `SelectableDropdownMenuItem`, shown below the text.
++ *
++ * @platform android
++ */
++declare function SupportingText(props: {
++    children: React.ReactNode;
++}): import("react").JSX.Element;
++/**
++ * A Material 3 Expressive menu item that wraps Compose's `SelectableDropdownMenuItem`. Use it for
++ * a choice of one option. A selected item gets a highlighted container and shows its
++ * `SelectedLeadingIcon`.
++ *
++ * @platform android
++ */
++export declare function SelectableDropdownMenuItem(props: SelectableDropdownMenuItemProps): import("react").JSX.Element;
++export declare namespace SelectableDropdownMenuItem {
++    var Text: typeof TextSlot;
++    var LeadingIcon: (props: {
++        children: React.ReactNode;
++    }) => import("react").JSX.Element;
++    var SelectedLeadingIcon: (props: {
++        children: React.ReactNode;
++    }) => import("react").JSX.Element;
++    var TrailingContent: (props: {
++        children: React.ReactNode;
++    }) => import("react").JSX.Element;
++    var SupportingText: (props: {
++        children: React.ReactNode;
++    }) => import("react").JSX.Element;
++}
++export {};
+diff --git a/build/jetpack-compose/DropdownMenu/SelectableDropdownMenuItem.js b/build/jetpack-compose/DropdownMenu/SelectableDropdownMenuItem.js
+new file mode 100644
+index 0000000..542c950
+--- /dev/null
++++ b/build/jetpack-compose/DropdownMenu/SelectableDropdownMenuItem.js
+@@ -0,0 +1,79 @@
++import { jsx as _jsx } from "react/jsx-runtime";
++import { requireNativeView } from 'expo';
++import { createViewModifierEventListener } from '../modifiers/utils';
++const SlotNativeView = requireNativeView('ExpoUI', 'SlotView');
++const SelectableDropdownMenuItemNativeView = requireNativeView('ExpoUI', 'SelectableDropdownMenuItemView');
++/**
++ * A text slot for `SelectableDropdownMenuItem`.
++ *
++ * @platform android
++ */ function TextSlot(props) {
++    return /*#__PURE__*/ _jsx(SlotNativeView, {
++        slotName: "text",
++        children: props.children
++    });
++}
++/**
++ * A leading icon slot for `SelectableDropdownMenuItem`, shown while the item is not selected.
++ *
++ * @platform android
++ */ function LeadingIcon(props) {
++    return /*#__PURE__*/ _jsx(SlotNativeView, {
++        slotName: "leadingIcon",
++        children: props.children
++    });
++}
++/**
++ * A leading icon slot for `SelectableDropdownMenuItem`, shown while the item is selected.
++ *
++ * @platform android
++ */ function SelectedLeadingIcon(props) {
++    return /*#__PURE__*/ _jsx(SlotNativeView, {
++        slotName: "selectedLeadingIcon",
++        children: props.children
++    });
++}
++/**
++ * A trailing content slot for `SelectableDropdownMenuItem`, shown after the text.
++ *
++ * @platform android
++ */ function TrailingContent(props) {
++    return /*#__PURE__*/ _jsx(SlotNativeView, {
++        slotName: "trailingContent",
++        children: props.children
++    });
++}
++/**
++ * A supporting text slot for `SelectableDropdownMenuItem`, shown below the text.
++ *
++ * @platform android
++ */ function SupportingText(props) {
++    return /*#__PURE__*/ _jsx(SlotNativeView, {
++        slotName: "supportingText",
++        children: props.children
++    });
++}
++/**
++ * A Material 3 Expressive menu item that wraps Compose's `SelectableDropdownMenuItem`. Use it for
++ * a choice of one option. A selected item gets a highlighted container and shows its
++ * `SelectedLeadingIcon`.
++ *
++ * @platform android
++ */ export function SelectableDropdownMenuItem(props) {
++    const { onClick, modifiers, children, ...restProps } = props;
++    return /*#__PURE__*/ _jsx(SelectableDropdownMenuItemNativeView, {
++        ...restProps,
++        modifiers: modifiers,
++        ...modifiers ? createViewModifierEventListener(modifiers) : undefined,
++        enabled: props.enabled ?? true,
++        onItemPressed: onClick ? ()=>onClick() : undefined,
++        children: children
++    });
++}
++SelectableDropdownMenuItem.Text = TextSlot;
++SelectableDropdownMenuItem.LeadingIcon = LeadingIcon;
++SelectableDropdownMenuItem.SelectedLeadingIcon = SelectedLeadingIcon;
++SelectableDropdownMenuItem.TrailingContent = TrailingContent;
++SelectableDropdownMenuItem.SupportingText = SupportingText;
++
++//# sourceMappingURL=SelectableDropdownMenuItem.js.map
 diff --git a/build/jetpack-compose/DropdownMenu/index.d.ts b/build/jetpack-compose/DropdownMenu/index.d.ts
-index 2f5ea5e..b058725 100644
+index 2f5ea5e..000ef7d 100644
 --- a/build/jetpack-compose/DropdownMenu/index.d.ts
 +++ b/build/jetpack-compose/DropdownMenu/index.d.ts
-@@ -37,6 +37,12 @@ export interface DropdownMenuProps {
-      * @platform android
+@@ -52,6 +52,79 @@ export interface DropdownMenuProps {
       */
-     shadowElevation?: number;
+     modifiers?: ModifierConfig[];
+ }
++/**
++ * The position of a group in a `DropdownMenuPopup`, or of an item in a group.
++ * Compose's `MenuDefaults.groupShape(index, count)` and `MenuDefaults.itemShape(index, count)` use
++ * it to round the outer corners of the first and last element.
++ */
++export type MenuShapePosition = {
 +    /**
-+     * Space in dp between a menu of `DropdownMenuGroup`s and its trigger.
-+     *
-+     * @platform android
++     * The index of the group in the menu, or of the item in its group.
 +     */
-+    anchorGap?: number;
-     /**
-      * Properties for the popup window of the dropdown menu.
-      *
-@@ -77,6 +83,34 @@ export declare namespace Trigger {
- export declare function Preview(props: {
-     children: ReactNode;
- }): import("react").JSX.Element;
++    index: number;
++    /**
++     * The number of groups in the menu, or of items in the group.
++     */
++    count: number;
++};
++/**
++ * Props of the `DropdownMenuPopup` component.
++ */
++export interface DropdownMenuPopupProps {
++    /**
++     * The contents of the menu, typically `DropdownMenuGroup` components.
++     */
++    children: ReactNode;
++    /**
++     * Whether the menu is expanded (visible).
++     */
++    expanded?: boolean;
++    /**
++     * Callback fired when the menu requests to be dismissed (e.g. tapping outside).
++     * Must be provided when `expanded` is `true` to allow the menu to close.
++     */
++    onDismissRequest?: () => void;
++    /**
++     * Properties for the popup window of the menu.
++     */
++    properties?: PopupProperties;
++    /**
++     * Modifiers for the contents of the menu.
++     */
++    modifiers?: ModifierConfig[];
++}
 +/**
 + * Props of the `DropdownMenuGroup` component.
 + */
 +export interface DropdownMenuGroupProps {
 +    /**
-+     * The contents of the group, typically `DropdownMenuItem` components.
++     * The contents of the group, typically `DropdownMenuItem` or `SelectableDropdownMenuItem`
++     * components.
 +     */
 +    children: ReactNode;
 +    /**
-+     * The container color of the group. Defaults to Material3's
-+     * `MenuDefaults.groupStandardContainerColor`.
++     * The position of the group in the menu, which sets its shape through Compose's
++     * `MenuDefaults.groupShape(index, count)`. Defaults to `MenuDefaults.groupShapes()`, the shape
++     * of a single group.
 +     */
-+    color?: ColorValue;
++    shapes?: MenuShapePosition;
++    /**
++     * The container color of the group. Defaults to `MenuDefaults.groupStandardContainerColor`.
++     */
++    containerColor?: ColorValue;
++    /**
++     * Tonal elevation of the group in dp. Defaults to `MenuDefaults.TonalElevation`.
++     */
++    tonalElevation?: number;
++    /**
++     * Shadow elevation of the group in dp. Defaults to `MenuDefaults.ShadowElevation`.
++     */
++    shadowElevation?: number;
 +    /**
 +     * Modifiers for the component.
 +     */
 +    modifiers?: ModifierConfig[];
 +}
+ /**
+  * Container for items displayed in the dropdown menu.
+  * Children should be `DropdownMenuItem` components or other native views.
+@@ -84,5 +157,23 @@ declare namespace DropdownMenu {
+     var Items: typeof import(".").Items;
+ }
+ export { DropdownMenu };
 +/**
-+ * A Material 3 Expressive group of menu items. When `DropdownMenu.Items` contains groups, the
-+ * dropdown menu renders as a Material 3 Expressive menu: each group is a rounded container, shaped
-+ * by its position among the groups, and the `DropdownMenuItem`s in it are shaped by their position
-+ * in the group and can be selectable. The menu's `color`, `cornerRadius` and `shadowElevation`
-+ * don't apply to a grouped menu.
++ * A Material 3 Expressive menu that wraps Compose's `DropdownMenuPopup`. The menu is anchored to
++ * its parent, so put it in a `Box` next to the component that opens it. Unlike `DropdownMenu`, it
++ * has no container. Put `DropdownMenuGroup` components in it, and put a `Spacer` between the
++ * groups.
++ *
++ * @platform android
++ */
++export declare function DropdownMenuPopup(props: DropdownMenuPopupProps): import("react").JSX.Element;
++/**
++ * A group of menu items that wraps Compose's `DropdownMenuGroup`. Use it in a
++ * `DropdownMenuPopup`.
 + *
 + * @platform android
 + */
 +export declare function DropdownMenuGroup(props: DropdownMenuGroupProps): import("react").JSX.Element;
- declare function DropdownMenu(props: DropdownMenuProps): import("react").JSX.Element;
- declare namespace DropdownMenu {
-     var Trigger: typeof import(".").Trigger;
+ export { DropdownMenuItem } from './DropdownMenuItem';
++export { SelectableDropdownMenuItem } from './SelectableDropdownMenuItem';
++export type { SelectableDropdownMenuItemProps, SelectableDropdownMenuItemColors, } from './SelectableDropdownMenuItem';
+ export type { PopupProperties };
 diff --git a/build/jetpack-compose/DropdownMenu/index.js b/build/jetpack-compose/DropdownMenu/index.js
-index 12c6592..c0597ef 100644
+index 12c6592..57c23b9 100644
 --- a/build/jetpack-compose/DropdownMenu/index.js
 +++ b/build/jetpack-compose/DropdownMenu/index.js
-@@ -31,6 +31,23 @@ Trigger.tag = 'Trigger';
-  */ export function Preview(props) {
-     return /*#__PURE__*/ _jsx(_Fragment, {});
- }
+@@ -3,6 +3,8 @@ import { requireNativeView } from 'expo';
+ import { PresentedContent } from '../../PresentedContentContext';
+ import { createViewModifierEventListener } from '../modifiers/utils';
+ const MenuNativeView = requireNativeView('ExpoUI', 'DropdownMenuView');
++const MenuPopupNativeView = requireNativeView('ExpoUI', 'DropdownMenuPopupView');
 +const MenuGroupNativeView = requireNativeView('ExpoUI', 'DropdownMenuGroupView');
+ // TODO: Extract into separate SlotView similar to swift-ui
+ const SlotNativeView = requireNativeView('ExpoUI', 'SlotView');
+ /**
+@@ -45,6 +47,38 @@ DropdownMenu.Trigger = Trigger;
+ DropdownMenu.Preview = Preview;
+ DropdownMenu.Items = Items;
+ export { DropdownMenu };
 +/**
-+ * A Material 3 Expressive group of menu items. When `DropdownMenu.Items` contains groups, the
-+ * dropdown menu renders as a Material 3 Expressive menu: each group is a rounded container, shaped
-+ * by its position among the groups, and the `DropdownMenuItem`s in it are shaped by their position
-+ * in the group and can be selectable. The menu's `color`, `cornerRadius` and `shadowElevation`
-+ * don't apply to a grouped menu.
++ * A Material 3 Expressive menu that wraps Compose's `DropdownMenuPopup`. The menu is anchored to
++ * its parent, so put it in a `Box` next to the component that opens it. Unlike `DropdownMenu`, it
++ * has no container. Put `DropdownMenuGroup` components in it, and put a `Spacer` between the
++ * groups.
++ *
++ * @platform android
++ */ export function DropdownMenuPopup(props) {
++    const { modifiers, children, ...restProps } = props;
++    return /*#__PURE__*/ _jsx(MenuPopupNativeView, {
++        modifiers: modifiers,
++        ...modifiers ? createViewModifierEventListener(modifiers) : undefined,
++        ...restProps,
++        children: /*#__PURE__*/ _jsx(PresentedContent, {
++            children: children
++        })
++    });
++}
++/**
++ * A group of menu items that wraps Compose's `DropdownMenuGroup`. Use it in a
++ * `DropdownMenuPopup`.
 + *
 + * @platform android
 + */ export function DropdownMenuGroup(props) {
@@ -425,9 +770,10 @@ index 12c6592..c0597ef 100644
 +        ...restProps
 +    });
 +}
- function DropdownMenu(props) {
-     const { modifiers, ...restProps } = props;
-     return /*#__PURE__*/ _jsx(MenuNativeView, {
+ export { DropdownMenuItem } from './DropdownMenuItem';
++export { SelectableDropdownMenuItem } from './SelectableDropdownMenuItem';
+ 
+ //# sourceMappingURL=index.js.map
 diff --git a/src/jetpack-compose/Button/index.tsx b/src/jetpack-compose/Button/index.tsx
 index d24bbd1..ccef7e3 100644
 --- a/src/jetpack-compose/Button/index.tsx
@@ -446,28 +792,157 @@ index d24bbd1..ccef7e3 100644
     * Whether the button is enabled for user interaction.
     * @default true
 diff --git a/src/jetpack-compose/DropdownMenu/DropdownMenuItem.tsx b/src/jetpack-compose/DropdownMenu/DropdownMenuItem.tsx
-index 813f366..998390c 100644
+index 813f366..ddd8f3c 100644
 --- a/src/jetpack-compose/DropdownMenu/DropdownMenuItem.tsx
 +++ b/src/jetpack-compose/DropdownMenu/DropdownMenuItem.tsx
-@@ -37,6 +37,11 @@ export interface DropdownMenuItemProps {
+@@ -3,6 +3,7 @@ import type { ColorValue } from 'react-native';
+ 
+ import type { ModifierConfig, ViewEvent } from '../../types';
+ import { createViewModifierEventListener } from '../modifiers/utils';
++import type { MenuShapePosition } from './index';
+ 
+ type SlotNativeViewProps = {
+   slotName: string;
+@@ -37,6 +38,12 @@ export interface DropdownMenuItemProps {
     * @default true
     */
    enabled?: boolean;
 +  /**
-+   * Makes the item selectable, e.g. for a choice of options. A selected item is highlighted and
-+   * shows its `SelectedLeadingIcon`. Only applies to items in a `DropdownMenuGroup`.
++   * The position of the item in its `DropdownMenuGroup`, which sets its shape through Compose's
++   * `MenuDefaults.itemShape(index, count).shape`. When set, the item is a Material 3 Expressive
++   * menu item and can show `SupportingText`.
 +   */
-+  selected?: boolean;
++  shape?: MenuShapePosition;
    /**
     * Color overrides for the menu item.
     */
-@@ -81,6 +86,16 @@ function TrailingIcon(props: { children: React.ReactNode }) {
+@@ -81,6 +88,16 @@ function TrailingIcon(props: { children: React.ReactNode }) {
    return <SlotNativeView slotName="trailingIcon">{props.children}</SlotNativeView>;
  }
  
 +/**
-+ * A leading icon slot for a selected `DropdownMenuItem`, e.g. a checkmark. Replaces the
-+ * `LeadingIcon` while the item is selected.
++ * A supporting text slot for `DropdownMenuItem`, shown below the text.
++ * Only applies to an item with a `shape`.
++ *
++ * @platform android
++ */
++function SupportingText(props: { children: React.ReactNode }) {
++  return <SlotNativeView slotName="supportingText">{props.children}</SlotNativeView>;
++}
++
+ /**
+  * A text slot for `DropdownMenuItem`.
+  * Wrap text content to display as the menu item label.
+@@ -114,5 +131,6 @@ function DropdownMenuItemComponent(props: DropdownMenuItemProps) {
+ DropdownMenuItemComponent.Text = TextSlot;
+ DropdownMenuItemComponent.LeadingIcon = LeadingIcon;
+ DropdownMenuItemComponent.TrailingIcon = TrailingIcon;
++DropdownMenuItemComponent.SupportingText = SupportingText;
+ 
+ export { DropdownMenuItemComponent as DropdownMenuItem };
+diff --git a/src/jetpack-compose/DropdownMenu/SelectableDropdownMenuItem.tsx b/src/jetpack-compose/DropdownMenu/SelectableDropdownMenuItem.tsx
+new file mode 100644
+index 0000000..2f8fdab
+--- /dev/null
++++ b/src/jetpack-compose/DropdownMenu/SelectableDropdownMenuItem.tsx
+@@ -0,0 +1,148 @@
++import { requireNativeView } from 'expo';
++import type { ColorValue } from 'react-native';
++
++import type { ModifierConfig, ViewEvent } from '../../types';
++import { createViewModifierEventListener } from '../modifiers/utils';
++import type { MenuShapePosition } from './index';
++
++const SlotNativeView: React.ComponentType<{
++  slotName: string;
++  children: React.ReactNode;
++}> = requireNativeView('ExpoUI', 'SlotView');
++
++/**
++ * Color overrides for the `SelectableDropdownMenuItem` component. Each color defaults to the
++ * value of Compose's `MenuDefaults.selectableItemColors()`.
++ */
++export type SelectableDropdownMenuItemColors = {
++  textColor?: ColorValue;
++  containerColor?: ColorValue;
++  leadingIconColor?: ColorValue;
++  trailingContentColor?: ColorValue;
++  disabledTextColor?: ColorValue;
++  disabledContainerColor?: ColorValue;
++  disabledLeadingIconColor?: ColorValue;
++  disabledTrailingContentColor?: ColorValue;
++  selectedTextColor?: ColorValue;
++  selectedContainerColor?: ColorValue;
++  selectedLeadingIconColor?: ColorValue;
++  selectedTrailingContentColor?: ColorValue;
++};
++
++/**
++ * Props of the `SelectableDropdownMenuItem` component.
++ */
++export interface SelectableDropdownMenuItemProps {
++  /**
++   * Whether the item is selected.
++   */
++  selected: boolean;
++  /**
++   * Callback that is called when the item is clicked.
++   */
++  onClick?: () => void;
++  /**
++   * The position of the item in its `DropdownMenuGroup`, which sets its shape through Compose's
++   * `MenuDefaults.itemShape(index, count)`. Defaults to `MenuDefaults.itemShapes()`, the shape of a
++   * single item.
++   */
++  shapes?: MenuShapePosition;
++  /**
++   * Whether the item is enabled.
++   * @default true
++   */
++  enabled?: boolean;
++  /**
++   * Color overrides for the item.
++   */
++  colors?: SelectableDropdownMenuItemColors;
++  /**
++   * Modifiers for the component.
++   */
++  modifiers?: ModifierConfig[];
++  /**
++   * Slot children for the text, the icons, and the supporting text.
++   */
++  children?: React.ReactNode;
++}
++
++type NativeSelectableDropdownMenuItemProps = Omit<
++  SelectableDropdownMenuItemProps,
++  'onClick' | 'children'
++> &
++  ViewEvent<'onItemPressed', void> & { children?: React.ReactNode };
++
++const SelectableDropdownMenuItemNativeView: React.ComponentType<NativeSelectableDropdownMenuItemProps> =
++  requireNativeView('ExpoUI', 'SelectableDropdownMenuItemView');
++
++/**
++ * A text slot for `SelectableDropdownMenuItem`.
++ *
++ * @platform android
++ */
++function TextSlot(props: { children: React.ReactNode }) {
++  return <SlotNativeView slotName="text">{props.children}</SlotNativeView>;
++}
++
++/**
++ * A leading icon slot for `SelectableDropdownMenuItem`, shown while the item is not selected.
++ *
++ * @platform android
++ */
++function LeadingIcon(props: { children: React.ReactNode }) {
++  return <SlotNativeView slotName="leadingIcon">{props.children}</SlotNativeView>;
++}
++
++/**
++ * A leading icon slot for `SelectableDropdownMenuItem`, shown while the item is selected.
 + *
 + * @platform android
 + */
@@ -475,60 +950,161 @@ index 813f366..998390c 100644
 +  return <SlotNativeView slotName="selectedLeadingIcon">{props.children}</SlotNativeView>;
 +}
 +
- /**
-  * A text slot for `DropdownMenuItem`.
-  * Wrap text content to display as the menu item label.
-@@ -114,5 +129,6 @@ function DropdownMenuItemComponent(props: DropdownMenuItemProps) {
- DropdownMenuItemComponent.Text = TextSlot;
- DropdownMenuItemComponent.LeadingIcon = LeadingIcon;
- DropdownMenuItemComponent.TrailingIcon = TrailingIcon;
-+DropdownMenuItemComponent.SelectedLeadingIcon = SelectedLeadingIcon;
- 
- export { DropdownMenuItemComponent as DropdownMenuItem };
++/**
++ * A trailing content slot for `SelectableDropdownMenuItem`, shown after the text.
++ *
++ * @platform android
++ */
++function TrailingContent(props: { children: React.ReactNode }) {
++  return <SlotNativeView slotName="trailingContent">{props.children}</SlotNativeView>;
++}
++
++/**
++ * A supporting text slot for `SelectableDropdownMenuItem`, shown below the text.
++ *
++ * @platform android
++ */
++function SupportingText(props: { children: React.ReactNode }) {
++  return <SlotNativeView slotName="supportingText">{props.children}</SlotNativeView>;
++}
++
++/**
++ * A Material 3 Expressive menu item that wraps Compose's `SelectableDropdownMenuItem`. Use it for
++ * a choice of one option. A selected item gets a highlighted container and shows its
++ * `SelectedLeadingIcon`.
++ *
++ * @platform android
++ */
++export function SelectableDropdownMenuItem(props: SelectableDropdownMenuItemProps) {
++  const { onClick, modifiers, children, ...restProps } = props;
++  return (
++    <SelectableDropdownMenuItemNativeView
++      {...restProps}
++      modifiers={modifiers}
++      {...(modifiers ? createViewModifierEventListener(modifiers) : undefined)}
++      enabled={props.enabled ?? true}
++      onItemPressed={onClick ? () => onClick() : undefined}>
++      {children}
++    </SelectableDropdownMenuItemNativeView>
++  );
++}
++
++SelectableDropdownMenuItem.Text = TextSlot;
++SelectableDropdownMenuItem.LeadingIcon = LeadingIcon;
++SelectableDropdownMenuItem.SelectedLeadingIcon = SelectedLeadingIcon;
++SelectableDropdownMenuItem.TrailingContent = TrailingContent;
++SelectableDropdownMenuItem.SupportingText = SupportingText;
 diff --git a/src/jetpack-compose/DropdownMenu/index.tsx b/src/jetpack-compose/DropdownMenu/index.tsx
-index 4bb0cae..4ae0260 100644
+index 4bb0cae..bb06231 100644
 --- a/src/jetpack-compose/DropdownMenu/index.tsx
 +++ b/src/jetpack-compose/DropdownMenu/index.tsx
-@@ -59,6 +59,13 @@ export interface DropdownMenuProps {
-    */
-   shadowElevation?: number;
+@@ -11,6 +11,16 @@ const MenuNativeView: React.ComponentType<NativeMenuProps> = requireNativeView(
+   'DropdownMenuView'
+ );
  
-+  /**
-+   * Space in dp between a menu of `DropdownMenuGroup`s and its trigger.
-+   *
-+   * @platform android
-+   */
-+  anchorGap?: number;
++const MenuPopupNativeView: React.ComponentType<NativeMenuPopupProps> = requireNativeView(
++  'ExpoUI',
++  'DropdownMenuPopupView'
++);
 +
-   /**
-    * Properties for the popup window of the dropdown menu.
-    *
-@@ -83,6 +90,7 @@ type NativeMenuProps = {
-   color?: ColorValue;
-   cornerRadius?: number;
-   shadowElevation?: number;
-+  anchorGap?: number;
-   properties?: PopupProperties;
-   style?: StyleProp<ViewStyle>;
-   modifiers?: ModifierConfig[];
-@@ -118,6 +126,52 @@ export function Preview(props: { children: ReactNode }) {
-   return <></>;
- }
++const MenuGroupNativeView: React.ComponentType<DropdownMenuGroupProps> = requireNativeView(
++  'ExpoUI',
++  'DropdownMenuGroupView'
++);
++
+ // TODO: Extract into separate SlotView similar to swift-ui
+ const SlotNativeView: React.ComponentType<{
+   slotName: string;
+@@ -89,6 +99,99 @@ type NativeMenuProps = {
+   children?: ReactNode;
+ };
  
++/**
++ * The position of a group in a `DropdownMenuPopup`, or of an item in a group.
++ * Compose's `MenuDefaults.groupShape(index, count)` and `MenuDefaults.itemShape(index, count)` use
++ * it to round the outer corners of the first and last element.
++ */
++export type MenuShapePosition = {
++  /**
++   * The index of the group in the menu, or of the item in its group.
++   */
++  index: number;
++  /**
++   * The number of groups in the menu, or of items in the group.
++   */
++  count: number;
++};
++
++/**
++ * Props of the `DropdownMenuPopup` component.
++ */
++export interface DropdownMenuPopupProps {
++  /**
++   * The contents of the menu, typically `DropdownMenuGroup` components.
++   */
++  children: ReactNode;
++
++  /**
++   * Whether the menu is expanded (visible).
++   */
++  expanded?: boolean;
++
++  /**
++   * Callback fired when the menu requests to be dismissed (e.g. tapping outside).
++   * Must be provided when `expanded` is `true` to allow the menu to close.
++   */
++  onDismissRequest?: () => void;
++
++  /**
++   * Properties for the popup window of the menu.
++   */
++  properties?: PopupProperties;
++
++  /**
++   * Modifiers for the contents of the menu.
++   */
++  modifiers?: ModifierConfig[];
++}
++
++type NativeMenuPopupProps = {
++  expanded?: boolean;
++  onDismissRequest?: () => void;
++  properties?: PopupProperties;
++  modifiers?: ModifierConfig[];
++  children?: ReactNode;
++};
++
 +/**
 + * Props of the `DropdownMenuGroup` component.
 + */
 +export interface DropdownMenuGroupProps {
 +  /**
-+   * The contents of the group, typically `DropdownMenuItem` components.
++   * The contents of the group, typically `DropdownMenuItem` or `SelectableDropdownMenuItem`
++   * components.
 +   */
 +  children: ReactNode;
 +
 +  /**
-+   * The container color of the group. Defaults to Material3's
-+   * `MenuDefaults.groupStandardContainerColor`.
++   * The position of the group in the menu, which sets its shape through Compose's
++   * `MenuDefaults.groupShape(index, count)`. Defaults to `MenuDefaults.groupShapes()`, the shape
++   * of a single group.
 +   */
-+  color?: ColorValue;
++  shapes?: MenuShapePosition;
++
++  /**
++   * The container color of the group. Defaults to `MenuDefaults.groupStandardContainerColor`.
++   */
++  containerColor?: ColorValue;
++
++  /**
++   * Tonal elevation of the group in dp. Defaults to `MenuDefaults.TonalElevation`.
++   */
++  tonalElevation?: number;
++
++  /**
++   * Shadow elevation of the group in dp. Defaults to `MenuDefaults.ShadowElevation`.
++   */
++  shadowElevation?: number;
 +
 +  /**
 +   * Modifiers for the component.
@@ -536,17 +1112,38 @@ index 4bb0cae..4ae0260 100644
 +  modifiers?: ModifierConfig[];
 +}
 +
-+const MenuGroupNativeView: React.ComponentType<DropdownMenuGroupProps> = requireNativeView(
-+  'ExpoUI',
-+  'DropdownMenuGroupView'
-+);
+ /**
+  * Container for items displayed in the dropdown menu.
+  * Children should be `DropdownMenuItem` components or other native views.
+@@ -136,7 +239,51 @@ DropdownMenu.Preview = Preview;
+ DropdownMenu.Items = Items;
+ 
+ export { DropdownMenu };
 +
 +/**
-+ * A Material 3 Expressive group of menu items. When `DropdownMenu.Items` contains groups, the
-+ * dropdown menu renders as a Material 3 Expressive menu: each group is a rounded container, shaped
-+ * by its position among the groups, and the `DropdownMenuItem`s in it are shaped by their position
-+ * in the group and can be selectable. The menu's `color`, `cornerRadius` and `shadowElevation`
-+ * don't apply to a grouped menu.
++ * A Material 3 Expressive menu that wraps Compose's `DropdownMenuPopup`. The menu is anchored to
++ * its parent, so put it in a `Box` next to the component that opens it. Unlike `DropdownMenu`, it
++ * has no container. Put `DropdownMenuGroup` components in it, and put a `Spacer` between the
++ * groups.
++ *
++ * @platform android
++ */
++export function DropdownMenuPopup(props: DropdownMenuPopupProps) {
++  const { modifiers, children, ...restProps } = props;
++  return (
++    <MenuPopupNativeView
++      modifiers={modifiers}
++      {...(modifiers ? createViewModifierEventListener(modifiers) : undefined)}
++      {...restProps}>
++      {/* The menu is a popup in its own window. The anchor stays in the React Native surface. */}
++      <PresentedContent>{children}</PresentedContent>
++    </MenuPopupNativeView>
++  );
++}
++
++/**
++ * A group of menu items that wraps Compose's `DropdownMenuGroup`. Use it in a
++ * `DropdownMenuPopup`.
 + *
 + * @platform android
 + */
@@ -561,6 +1158,12 @@ index 4bb0cae..4ae0260 100644
 +  );
 +}
 +
- function DropdownMenu(props: DropdownMenuProps) {
-   const { modifiers, ...restProps } = props;
-   return (
+ export { DropdownMenuItem } from './DropdownMenuItem';
++export { SelectableDropdownMenuItem } from './SelectableDropdownMenuItem';
++export type {
++  SelectableDropdownMenuItemProps,
++  SelectableDropdownMenuItemColors,
++} from './SelectableDropdownMenuItem';
+ 
+ // Re-exported so the docs generator includes PopupProperties on the DropdownMenu API page.
+ export type { PopupProperties };

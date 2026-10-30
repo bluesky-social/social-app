@@ -1,14 +1,16 @@
-import {useImperativeHandle, useState} from 'react'
+import {useContext, useImperativeHandle, useState} from 'react'
 import {type TextStyle} from 'react-native'
 import {nativeNanoSymbol} from 'react-native-nano-icons/symbols'
 import {
-  DropdownMenu,
+  Box,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuPopup,
   HorizontalDivider,
   Host,
   Icon,
   RNHostView,
+  SelectableDropdownMenuItem,
   Text,
   type TextProps,
 } from '@expo/ui/jetpack-compose'
@@ -24,7 +26,10 @@ import {useMaterialTheme} from '#/alf/material'
 import {normalizeTextStyles} from '#/alf/typography'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {type NanoGlyphName} from '#/components/icons/glyphMaps'
-import {useMenuContext} from '#/components/Menu/context'
+import {
+  InlineItemPositionContext,
+  useMenuContext,
+} from '#/components/Menu/context'
 import {
   type InlineItemProps,
   type InlineRootProps,
@@ -59,7 +64,10 @@ const CHECK_SIZE = 16
 /** Keeps menus of short items from looking cramped. */
 const MIN_WIDTH = 200
 
-/** Space between the menu and its trigger. */
+/**
+ * Space between the menu and its trigger. It pads the popup on both ends, so
+ * the gap is on the trigger's side whether the menu opens below or above.
+ */
 const ANCHOR_GAP = 4
 
 /**
@@ -83,8 +91,9 @@ function useComposeTextStyle(styles: TextStyle[]) {
 }
 
 /**
- * Anchors a Material `DropdownMenu` to the trigger, which opens it through
- * `control.open()` like it would open the bottom sheet.
+ * Anchors a Material 3 Expressive menu to the trigger, which opens it through
+ * `control.open()` like it would open the bottom sheet. The menu is one group,
+ * with its sections divided inside it.
  */
 export function InlineRoot({control, trigger, children}: InlineRootProps) {
   const materialTheme = useMaterialTheme()
@@ -106,18 +115,16 @@ export function InlineRoot({control, trigger, children}: InlineRootProps) {
 
   return (
     <Host matchContents {...materialTheme}>
-      <DropdownMenu
-        expanded={expanded}
-        onDismissRequest={() => setExpanded(false)}
-        anchorGap={ANCHOR_GAP}
-        properties={POPUP_PROPERTIES}>
-        <DropdownMenu.Trigger>
-          <RNHostView matchContents>{trigger}</RNHostView>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Items>
+      <Box>
+        <RNHostView matchContents>{trigger}</RNHostView>
+        <DropdownMenuPopup
+          expanded={expanded}
+          onDismissRequest={() => setExpanded(false)}
+          properties={POPUP_PROPERTIES}
+          modifiers={[padding(0, ANCHOR_GAP, 0, ANCHOR_GAP)]}>
           <DropdownMenuGroup>{children}</DropdownMenuGroup>
-        </DropdownMenu.Items>
-      </DropdownMenu>
+        </DropdownMenuPopup>
+      </Box>
     </Host>
   )
 }
@@ -160,49 +167,82 @@ export function InlineItem({
 }: InlineItemProps) {
   const t = useTheme()
   const {control} = useMenuContext()
+  const position = useContext(InlineItemPositionContext)
   const textStyle = useComposeTextStyle([a.text_md, a.font_medium])
   const icon = drawable(glyph)
+  const destructiveColor = destructive ? t.palette.negative_500 : undefined
+
+  const modifiers = [
+    // Also sets the menu's min width, which is its widest item's.
+    defaultMinSize({minWidth: MIN_WIDTH}),
+    ...(testID ? [testIDModifier(testID)] : []),
+  ]
+  const onClick = () => {
+    control.close()
+    onPress()
+  }
+  const text = <Text style={textStyle}>{title}</Text>
+  /*
+   * Keeps the longest item's text off its icon. The `size` prop would apply
+   * before the padding and squeeze the glyph, so size it after.
+   */
+  const trailingIcon = icon && (
+    <Icon
+      source={icon}
+      modifiers={[padding(ICON_GAP, 0, 0, 0), size(ICON_SIZE, ICON_SIZE)]}
+    />
+  )
+
+  if (selected !== undefined) {
+    return (
+      <SelectableDropdownMenuItem
+        selected={selected}
+        shapes={position}
+        enabled={!disabled}
+        colors={{
+          textColor: destructiveColor,
+          trailingContentColor: destructiveColor,
+          selectedTextColor: destructiveColor,
+          selectedTrailingContentColor: destructiveColor,
+        }}
+        modifiers={modifiers}
+        onClick={onClick}>
+        <SelectableDropdownMenuItem.Text>
+          {text}
+        </SelectableDropdownMenuItem.Text>
+        {trailingIcon && (
+          <SelectableDropdownMenuItem.TrailingContent>
+            {trailingIcon}
+          </SelectableDropdownMenuItem.TrailingContent>
+        )}
+        {CHECK && (
+          <SelectableDropdownMenuItem.SelectedLeadingIcon>
+            <Icon
+              source={CHECK}
+              size={CHECK_SIZE}
+              tint={t.palette.primary_500}
+            />
+          </SelectableDropdownMenuItem.SelectedLeadingIcon>
+        )}
+      </SelectableDropdownMenuItem>
+    )
+  }
 
   return (
     <DropdownMenuItem
+      shape={position}
       enabled={!disabled}
-      elementColors={
-        destructive
-          ? {
-              textColor: t.palette.negative_500,
-              trailingIconColor: t.palette.negative_500,
-            }
-          : undefined
-      }
-      selected={selected}
-      modifiers={[
-        // Also sets the menu's min width, which is its widest item's.
-        defaultMinSize({minWidth: MIN_WIDTH}),
-        ...(testID ? [testIDModifier(testID)] : []),
-      ]}
-      onClick={() => {
-        control.close()
-        onPress()
-      }}>
-      <DropdownMenuItem.Text>
-        <Text style={textStyle}>{title}</Text>
-      </DropdownMenuItem.Text>
-      {icon && (
+      elementColors={{
+        textColor: destructiveColor,
+        trailingIconColor: destructiveColor,
+      }}
+      modifiers={modifiers}
+      onClick={onClick}>
+      <DropdownMenuItem.Text>{text}</DropdownMenuItem.Text>
+      {trailingIcon && (
         <DropdownMenuItem.TrailingIcon>
-          {/*
-           * Keeps the longest item's text off its icon. The `size` prop would
-           * apply before the padding and squeeze the glyph, so size it after.
-           */}
-          <Icon
-            source={icon}
-            modifiers={[padding(ICON_GAP, 0, 0, 0), size(ICON_SIZE, ICON_SIZE)]}
-          />
+          {trailingIcon}
         </DropdownMenuItem.TrailingIcon>
-      )}
-      {CHECK && (
-        <DropdownMenuItem.SelectedLeadingIcon>
-          <Icon source={CHECK} size={CHECK_SIZE} tint={t.palette.primary_500} />
-        </DropdownMenuItem.SelectedLeadingIcon>
       )}
     </DropdownMenuItem>
   )
