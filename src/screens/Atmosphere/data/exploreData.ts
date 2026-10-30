@@ -169,12 +169,19 @@ export function getAtmospherePublications(
   )
 }
 
+/**
+ * Returns the valid apps, optionally limited to a raw backend `category`.
+ * Omit `category` for all apps, including those with a missing or unknown
+ * category.
+ */
 export function getAtmosphereApps(
   data: AtmosphereData,
+  category?: string,
 ): AtmosphereAppCardData[] {
   return dedupeById(
     data.apps.flatMap(app => {
       if (!app.id || !app.title || !app.url) return []
+      if (category !== undefined && app.category !== category) return []
 
       return [
         {

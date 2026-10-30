@@ -1,3 +1,4 @@
+import {type RefreshControlProps} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/exploreResponse'
@@ -104,6 +105,7 @@ function setQuery(
     data: undefined,
     isError: false,
     isPending: false,
+    isRefetching: false,
     refetch,
     ...result,
   } as never)
@@ -266,6 +268,21 @@ describe('AtmosphereExploreTab', () => {
       screen.getByText('Could not load Atmosphere content. Please try again.'),
     ).toBeTruthy()
     fireEvent.press(screen.getByTestId('retry'))
+    expect(refetch).toHaveBeenCalledTimes(1)
+  })
+
+  it.each([
+    ['loading', {isPending: true}],
+    ['error', {isError: true}],
+    ['loaded', {data}],
+  ])('wires pull-to-refresh to the query while %s', (_name, result) => {
+    setQuery({...result, isRefetching: true})
+    render(<AtmosphereExploreTab />)
+
+    const {refreshControl} = screen.getByTestId('atmosphereExploreTab')
+      .props as {refreshControl: React.ReactElement<RefreshControlProps>}
+    expect(refreshControl.props.refreshing).toBe(true)
+    void refreshControl.props.onRefresh?.()
     expect(refetch).toHaveBeenCalledTimes(1)
   })
 })

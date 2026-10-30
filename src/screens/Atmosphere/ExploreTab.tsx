@@ -1,4 +1,4 @@
-import {View} from 'react-native'
+import {RefreshControl, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
@@ -11,7 +11,7 @@ import {
   getAtmospherePublications,
 } from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {AnnouncementBanner} from './components/AnnouncementBanner'
@@ -24,8 +24,19 @@ import {FeaturedPhotos} from './components/FeaturedPhotos'
 import {FeaturedPublications} from './components/FeaturedPublications'
 
 export function AtmosphereExploreTab() {
+  const t = useTheme()
   const {t: l} = useLingui()
-  const {data, isError, isPending, refetch} = useAtmosphereExploreQuery()
+  const {data, isError, isPending, isRefetching, refetch} =
+    useAtmosphereExploreQuery()
+
+  const refreshControl = (
+    <RefreshControl
+      refreshing={isRefetching}
+      onRefresh={() => void refetch()}
+      tintColor={t.atoms.text.color}
+      titleColor={t.atoms.text.color}
+    />
+  )
 
   const errorMessage = (
     <ErrorMessage
@@ -38,6 +49,8 @@ export function AtmosphereExploreTab() {
     return (
       <Layout.Content
         testID="atmosphereExploreTab"
+        alwaysBounceVertical
+        refreshControl={refreshControl}
         contentContainerStyle={[a.pb_xl]}>
         {isPending ? (
           <View
@@ -61,6 +74,8 @@ export function AtmosphereExploreTab() {
   return (
     <Layout.Content
       testID="atmosphereExploreTab"
+      alwaysBounceVertical
+      refreshControl={refreshControl}
       contentContainerStyle={[a.pb_xl]}>
       <ExploreGalleryBleed>
         <View style={[a.gap_lg, a.px_lg, a.py_lg]}>

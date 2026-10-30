@@ -9,6 +9,7 @@ import {BetaTag} from '#/components/BetaTag'
 import * as Layout from '#/components/Layout'
 import {useAnalytics} from '#/analytics'
 import {AtmosphereActivityTab} from './ActivityTab'
+import {AtmosphereAppsTab} from './AppsTab'
 import {AtmosphereExploreTab} from './ExploreTab'
 
 export function AtmosphereScreen() {
@@ -40,11 +41,12 @@ export function AtmosphereScreen() {
         testID="atmospherePager"
         renderTabBar={props => (
           <Layout.Center style={[a.z_10, web([a.sticky, {top: 0}])]}>
-            <TabBar {...props} items={[l`Activity`, l`Explore`]} />
+            <TabBar {...props} items={[l`Activity`, l`Explore`, l`Apps`]} />
           </Layout.Center>
         )}>
         <AtmosphereActivityTab />
         <AtmosphereExploreTab />
+        <AtmosphereAppsTab />
       </Pager>
     </Layout.Screen>
   )

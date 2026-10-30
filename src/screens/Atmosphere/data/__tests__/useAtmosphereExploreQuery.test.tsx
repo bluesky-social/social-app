@@ -1,6 +1,11 @@
 import {type PropsWithChildren} from 'react'
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
-import {renderHook, waitFor} from '@testing-library/react-native'
+import {
+  focusManager,
+  onlineManager,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+import {act, renderHook, waitFor} from '@testing-library/react-native'
 
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useAppviewClient} from '#/state/session'
@@ -29,10 +34,12 @@ function setLanguages(contentLanguages: string[]) {
     .mockReturnValue({contentLanguages} as ReturnType<typeof useLanguagePrefs>)
 }
 
-function setup(did: string | undefined = 'did:plc:viewer') {
-  const queryClient = new QueryClient({
+function setup(
+  did: string | undefined = 'did:plc:viewer',
+  queryClient = new QueryClient({
     defaultOptions: {queries: {gcTime: Infinity, retry: false}},
-  })
+  }),
+) {
   const client = {did, call: jest.fn()}
   jest.mocked(useAppviewClient).mockReturnValue(client as never)
   setLanguages(['en'])
@@ -217,5 +224,119 @@ describe('useAtmosphereExploreQuery', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data).toBe(data)
     expect(client.call).toHaveBeenCalledTimes(3)
+  })
+
+  describe('shared memory cache', () => {
+    const refreshed = {
+      ...data,
+      apps: [{id: 'a', title: 'A', url: 'https://a.test'}],
+    }
+
+    /*
+     * The shared setup() overrides gcTime and retry by default, which would
+     * hide this hook's own options, so these tests use library defaults.
+     */
+    function setupDefaults() {
+      return setup('did:plc:viewer', new QueryClient())
+    }
+
+    /*
+     * Notifications and the failed-refetch retry delay both run on timers, so
+     * advance past them instead of waiting in real time.
+     */
+    async function refetchAndFlush(refetch: () => Promise<unknown>) {
+      await act(async () => {
+        const refetching = refetch()
+        await jest.advanceTimersByTimeAsync(5000)
+        await refetching
+      })
+    }
+
+    beforeEach(() => {
+      jest.useFakeTimers()
+    })
+
+    afterEach(() => {
+      jest.useRealTimers()
+      focusManager.setFocused(undefined)
+      onlineManager.setOnline(true)
+    })
+
+    it('coalesces concurrent consumers into one request', async () => {
+      const {client, wrapper} = setupDefaults()
+      client.call.mockResolvedValue(data)
+
+      const {result} = renderHook(
+        () => [useAtmosphereExploreQuery(), useAtmosphereExploreQuery()],
+        {wrapper},
+      )
+      await waitFor(() => expect(result.current[0].isSuccess).toBe(true))
+
+      expect(client.call).toHaveBeenCalledTimes(1)
+      expect(result.current[1].data).toBe(data)
+    })
+
+    it('reuses a cached response on remount long after the stale and gc windows', async () => {
+      const {client, wrapper} = setupDefaults()
+      client.call.mockResolvedValue(data)
+
+      const first = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
+      await waitFor(() => expect(first.result.current.isSuccess).toBe(true))
+      first.unmount()
+
+      act(() => {
+        jest.advanceTimersByTime(24 * 60 * 60 * 1000)
+      })
+
+      const second = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
+      expect(second.result.current.data).toBe(data)
+      expect(second.result.current.isFetching).toBe(false)
+      expect(client.call).toHaveBeenCalledTimes(1)
+    })
+
+    it('does not refetch on focus or reconnect', async () => {
+      const {client, wrapper} = setupDefaults()
+      client.call.mockResolvedValue(data)
+
+      const {result} = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
+      await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+      /*
+       * The client reacts to focus and reconnect asynchronously, so flush
+       * microtasks before asserting that nothing was requested.
+       */
+      await act(async () => {
+        await jest.advanceTimersByTimeAsync(60 * 60 * 1000)
+        focusManager.setFocused(false)
+        focusManager.setFocused(true)
+        onlineManager.setOnline(false)
+        onlineManager.setOnline(true)
+        await jest.advanceTimersByTimeAsync(0)
+      })
+
+      expect(result.current.isFetching).toBe(false)
+      expect(client.call).toHaveBeenCalledTimes(1)
+    })
+
+    it('updates every consumer on an explicit refetch and keeps data when it fails', async () => {
+      const {client, wrapper} = setupDefaults()
+      client.call.mockResolvedValueOnce(data).mockResolvedValueOnce(refreshed)
+
+      const {result} = renderHook(
+        () => [useAtmosphereExploreQuery(), useAtmosphereExploreQuery()],
+        {wrapper},
+      )
+      await waitFor(() => expect(result.current[0].isSuccess).toBe(true))
+
+      await refetchAndFlush(result.current[0].refetch)
+      expect(result.current[0].data).toEqual(refreshed)
+      expect(result.current[1].data).toEqual(refreshed)
+
+      client.call.mockRejectedValue(new Error('offline'))
+      await refetchAndFlush(result.current[1].refetch)
+      expect(result.current[0].isError).toBe(true)
+      expect(result.current[0].data).toEqual(refreshed)
+      expect(result.current[1].data).toEqual(refreshed)
+    })
   })
 })

@@ -474,6 +474,52 @@ describe('Atmosphere Explore response fixtures', () => {
     })
   })
 
+  describe('getAtmosphereApps categories', () => {
+    const url = 'https://example.com/app'
+    const data = {
+      ...emptyData,
+      apps: [
+        {id: 'writing', title: 'Writing', url, category: 'writing'},
+        {id: 'photo', title: 'Photo', url, category: 'photography'},
+        {id: 'video', title: 'Video', url, category: 'video'},
+        {id: 'feeds', title: 'Feeds', url, category: 'feeds'},
+        {id: 'games', title: 'Games', url, category: 'games'},
+        {id: 'unknown', title: 'Unknown', url, category: 'new-category'},
+        {id: 'missing', title: 'Missing', url},
+        {id: 'invalid', title: '', url, category: 'writing'},
+        {id: 'writing', title: 'Duplicate', url, category: 'writing'},
+      ],
+    } satisfies AtmosphereData
+
+    it('returns every valid app, including unknown and missing categories, without a category', () => {
+      expect(getAtmosphereApps(data).map(app => app.id)).toEqual([
+        'writing',
+        'photo',
+        'video',
+        'feeds',
+        'games',
+        'unknown',
+        'missing',
+      ])
+    })
+
+    it.each([
+      ['writing', ['writing']],
+      ['photography', ['photo']],
+      ['video', ['video']],
+      ['feeds', ['feeds']],
+      ['games', ['games']],
+      ['empty', []],
+    ])(
+      'filters raw category %s, still validating and deduping',
+      (category, ids) => {
+        expect(getAtmosphereApps(data, category).map(app => app.id)).toEqual(
+          ids,
+        )
+      },
+    )
+  })
+
   it('adapts the active and ended local livestream previews', () => {
     const previewData = parseData({
       ...emptyData,
