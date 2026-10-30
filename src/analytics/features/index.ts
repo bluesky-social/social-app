@@ -142,6 +142,26 @@ export function getFeatureDescription(feature: Features, i18n: I18n) {
           }),
         ),
       }
+    case Features.ComposerAltTextGenerationEnable:
+      // expo-ai is only linked on iOS, see `expo.autolinking` in package.json
+      if (!env.IS_IOS) return null
+      return {
+        key: feature,
+        name: i18n._(
+          msg({
+            message: 'Alt text suggestions',
+            comment: 'Name for a feature flag',
+          }),
+        ),
+        description: i18n._(
+          msg({
+            message:
+              'Get suggested alt text for images as soon as you add them to a post. Suggestions are generated entirely on your device by its built-in model, without sending your images anywhere. Turn it on in Accessibility settings, on supported devices.',
+            comment:
+              'Description of a feature flag (Alt text suggestions). "Accessibility settings" refers to the Accessibility screen in the app’s settings.',
+          }),
+        ),
+      }
     case Features.ModerationInboxEnable:
       return {
         key: feature,

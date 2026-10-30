@@ -15,6 +15,7 @@ export enum Features {
   LiveNowBetaDisable = 'live_now_beta:disable',
   GroupChatsDisable = 'group_chats:disable',
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
+  ComposerAltTextGenerationEnable = 'composer:alt_text_generation:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
   PostFeedKnownLikersEnable = 'post_feed:known_likers:enable',
   PostThreadKnownLikersEnable = 'post_thread:known_likers:enable',
