@@ -93,7 +93,7 @@ export function VideoEmbedInnerWeb({
             onTimeUpdate={e => {
               const currentTime = e.currentTarget.currentTime
               lastKnownTime.current = currentTime
-              onPlaybackProgress(currentTime)
+              onPlaybackProgress(currentTime, e.currentTarget.duration)
               if (
                 !playbackStartTrackedRef.current &&
                 hasPlaybackStarted(currentTime)

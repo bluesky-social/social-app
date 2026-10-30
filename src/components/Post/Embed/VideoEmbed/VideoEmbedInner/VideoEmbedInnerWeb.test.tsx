@@ -1,6 +1,6 @@
 import {Component} from 'react'
 import {Text} from 'react-native'
-import {act, render} from '@testing-library/react-native'
+import {act, fireEvent, render} from '@testing-library/react-native'
 
 import {loadHls} from './loadHls'
 import {VideoEmbedInnerWeb} from './VideoEmbedInnerWeb'
@@ -49,7 +49,16 @@ class Boundary extends Component<
   }
 }
 
-function Player({attempt = 0}: {attempt?: number}) {
+function Player({
+  attempt = 0,
+  onPlaybackProgress = () => {},
+}: {
+  attempt?: number
+  onPlaybackProgress?: (
+    progressSeconds: number,
+    durationSeconds: number,
+  ) => void
+}) {
   return (
     <Boundary key={attempt}>
       <VideoEmbedInnerWeb
@@ -64,7 +73,7 @@ function Player({attempt = 0}: {attempt?: number}) {
         onScreen
         lastKnownTime={{current: undefined}}
         onPlaybackStart={() => {}}
-        onPlaybackProgress={() => {}}
+        onPlaybackProgress={onPlaybackProgress}
         onPlaybackStateChange={() => {}}
         onPlaybackEnd={() => {}}
       />
@@ -122,4 +131,16 @@ it('handles a pending import rejection after unmount without an unhandled reject
     await Promise.resolve()
   })
   expect(loadHls).toHaveBeenCalledTimes(1)
+})
+
+it('reports the media element length with playback progress', () => {
+  jest.mocked(loadHls).mockReturnValueOnce(new Promise(() => {}))
+  const onPlaybackProgress = jest.fn()
+  const view = render(<Player onPlaybackProgress={onPlaybackProgress} />)
+  // A DOM host element, which the typings only accept as a component.
+  const video = view.UNSAFE_getByType('video' as unknown as React.ComponentType)
+  fireEvent(video, 'timeUpdate', {
+    currentTarget: {currentTime: 1.5, duration: 42.25},
+  })
+  expect(onPlaybackProgress).toHaveBeenCalledWith(1.5, 42.25)
 })

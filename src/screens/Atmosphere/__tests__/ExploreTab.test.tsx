@@ -38,6 +38,7 @@ const mockFeedback: Partial<
 jest.mock('#/state/session', () => ({
   useSession: () => ({hasSession: mockHasSession}),
   useAppviewClient: () => mockClient,
+  useIsCurrentAppviewClient: () => () => mockHasSession,
 }))
 jest.mock('#/view/com/posts/PostFeed', () => ({getItemsForFeedback: () => []}))
 jest.mock('#/state/queries/feed', () => ({isFeedSourceFeedInfo: () => false}))
