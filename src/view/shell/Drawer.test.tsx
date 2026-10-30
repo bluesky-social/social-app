@@ -150,8 +150,7 @@ describe('Atmosphere drawer navigation', () => {
   it('opens Atmosphere and closes the drawer from its labeled entry', () => {
     const screen = renderDrawer()
 
-    expect(screen.getByText('🌎')).toBeTruthy()
-    fireEvent.press(screen.getByRole('tab', {name: 'Atmosphere'}))
+    fireEvent.press(screen.getByRole('tab', {name: 'Atmosphere, Beta'}))
 
     expect(mockDispatch).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -182,6 +181,6 @@ describe('Atmosphere drawer navigation', () => {
     mockHasSession = false
     const screen = renderDrawer()
 
-    expect(screen.queryByRole('tab', {name: 'Atmosphere'})).toBeNull()
+    expect(screen.queryByRole('tab', {name: 'Atmosphere, Beta'})).toBeNull()
   })
 })

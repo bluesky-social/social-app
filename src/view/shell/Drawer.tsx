@@ -41,6 +41,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {useLogoVariant} from '#/view/icons/useLogoVariant'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {atoms as a, tokens, useTheme, web} from '#/alf'
+import {BetaTag} from '#/components/BetaTag'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
@@ -54,6 +55,7 @@ import {
   Bookmark_Stroke2_Corner0_Rounded as BookmarkIcon,
 } from '#/components/icons/Bookmark'
 import {BulletList_Stroke2_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
+import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Earth'
 import {
   Hashtag_Filled_Corner0_Rounded as HashtagFilledIcon,
   Hashtag_Stroke2_Corner0_Rounded as HashtagIcon,
@@ -510,6 +512,7 @@ interface MenuItemProps extends ComponentProps<typeof PressableScale> {
   label: string
   count?: string
   bold?: boolean
+  beta?: boolean
 }
 
 let SearchMenuItem = ({
@@ -634,20 +637,12 @@ function AtmosphereMenuItem({
   onPress: () => void
 }) {
   const {t: l} = useLingui()
+  const t = useTheme()
   return (
     <MenuItem
-      icon={
-        <Text
-          emoji
-          style={[
-            a.text_2xl,
-            a.leading_tight,
-            {width: iconWidth, textAlign: 'center'},
-          ]}>
-          🌎
-        </Text>
-      }
+      icon={<EarthIcon width={iconWidth} style={[t.atoms.text]} />}
       label={l`Atmosphere`}
+      beta
       bold={isActive}
       onPress={onPress}
     />
@@ -781,6 +776,7 @@ let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
 SettingsMenuItem = memo(SettingsMenuItem)
 
 function MenuItem({
+  beta,
   icon,
   label,
   count,
@@ -789,13 +785,15 @@ function MenuItem({
   accessibilityHint,
 }: MenuItemProps) {
   const t = useTheme()
+  const {t: l} = useLingui()
+  const accessibilityLabel = beta ? l`${label}, Beta` : label
   return (
     <Button
       testID={`menuItemButton-${label}`}
       onPress={onPress}
       accessibilityRole="tab"
       accessibilityHint={accessibilityHint}
-      label={label}>
+      label={accessibilityLabel}>
       {({hovered, pressed}) => (
         <View
           style={[
@@ -855,6 +853,7 @@ function MenuItem({
               numberOfLines={1}>
               {label}
             </Text>
+            {beta && <BetaTag />}
           </View>
         </View>
       )}

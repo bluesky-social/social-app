@@ -52,6 +52,7 @@ import {
   useTheme,
   web,
 } from '#/alf'
+import {BetaTag} from '#/components/BetaTag'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/Arrow'
@@ -69,6 +70,7 @@ import {
 } from '#/components/icons/BulletList'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
+import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Earth'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {
   Hashtag_Filled_Corner0_Rounded as HashtagFilledIcon,
@@ -127,17 +129,6 @@ const NAV_ITEM_TO_TAB: Partial<
   lists: 'Lists',
   saved: 'Bookmarks',
   settings: 'Settings',
-}
-
-function AtmosphereGlobeIcon(_: SVGIconProps) {
-  return (
-    <Text
-      emoji
-      aria-hidden={true}
-      style={{fontSize: 24, lineHeight: 24, width: 24, textAlign: 'center'}}>
-      🌎
-    </Text>
-  )
 }
 
 export const LEFT_NAV_STANDARD_WIDTH = 240
@@ -432,6 +423,7 @@ function SwitchMenuItemAvatar({
 }
 
 interface NavItemProps {
+  beta?: boolean
   count?: string
   exactMatch?: boolean
   hasNew?: boolean
@@ -446,6 +438,7 @@ interface NavItemProps {
   onNavigateTab?: (tab: SidebarTab) => void
 }
 function NavItem({
+  beta,
   count,
   exactMatch = false,
   hasNew,
@@ -458,6 +451,7 @@ function NavItem({
 }: NavItemProps) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const accessibilityLabel = beta ? l`${label}, Beta` : label
   const ax = useAnalytics()
   const {currentAccount} = useSession()
 
@@ -527,7 +521,7 @@ function NavItem({
       href={href}
       dataSet={{noUnderline: 1}}
       role="link"
-      accessibilityLabel={label}
+      accessibilityLabel={accessibilityLabel}
       accessibilityState={IS_NATIVE ? {selected: isSelected} : undefined}
       accessibilityHint="">
       <View
@@ -600,6 +594,7 @@ function NavItem({
           <Text style={[a.text_xl, isSelected ? a.font_bold : a.font_normal]}>
             {label}
           </Text>
+          {beta && <BetaTag />}
         </View>
       )}
     </PressableWithHover>
@@ -766,9 +761,10 @@ export function DesktopLeftNav({
             onNavigateTab={onNavigateTab}
             exactMatch
             minimal={leftNavMinimal}
+            beta
             icons={{
-              inactive: AtmosphereGlobeIcon,
-              active: AtmosphereGlobeIcon,
+              inactive: EarthIcon,
+              active: EarthIcon,
             }}
           />
           <NavItem
