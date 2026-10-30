@@ -94,6 +94,7 @@ describe('upload worker dependency wiring', () => {
       getImageDimensions: getImageDim,
       compressImage,
       uploadBlob,
+      limitImageCompression: expect.any(Function),
     })
     expect(video).toMatchObject({
       getVideoMetadata,
@@ -107,6 +108,13 @@ describe('upload worker dependency wiring', () => {
       createVideoServiceClient: createTokenlessVideoServiceClient,
     })
     expect(video.sleep).toEqual(expect.any(Function))
+  })
+
+  test('every store shares one image compression limiter', () => {
+    const first = captureWorkerOptions().image
+    const second = captureWorkerOptions().image
+
+    expect(first.limitImageCompression).toBe(second.limitImageCompression)
   })
 
   test("video workers report to the session's analytics", () => {

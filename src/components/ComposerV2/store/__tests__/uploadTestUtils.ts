@@ -2,6 +2,7 @@ import {type BlobRef, type Client} from '@atproto/lex'
 import {jest} from '@jest/globals'
 import {type I18n} from '@lingui/core'
 
+import {AbortError} from '#/lib/async/cancelable'
 import {type VideoTelemetry} from '#/lib/media/video/telemetry'
 import {type UploadStatus} from '#/components/ComposerV2/store/types'
 import {
@@ -151,6 +152,15 @@ function unexpected(name: string) {
   }) as never
 }
 
+/**
+ * Unbounded stand-in for the compression limiter that keeps the real
+ * already-aborted contract. Tests of the cap pass a real
+ * `createConcurrencyLimit` instead; never the production singleton.
+ */
+const unboundedImageCompression: ImageUploadDependencies['limitImageCompression'] =
+  ({task, signal}) =>
+    signal.aborted ? Promise.reject(new AbortError()) : task()
+
 /** Complete image-worker fakes; pass the dependencies a test exercises. */
 export function fakeImageDependencies(
   overrides: Partial<ImageUploadDependencies> = {},
@@ -159,6 +169,7 @@ export function fakeImageDependencies(
     getImageDimensions: unexpected('getImageDimensions'),
     compressImage: unexpected('compressImage'),
     uploadBlob: unexpected('uploadBlob'),
+    limitImageCompression: unboundedImageCompression,
     ...overrides,
   }
 }

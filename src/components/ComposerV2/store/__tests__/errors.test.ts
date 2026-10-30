@@ -326,8 +326,8 @@ describe('session error reporting', () => {
         }),
       })
       store.actions.addMedia(Object.keys(store.getState().posts)[0], [image])
-      await Promise.resolve()
-      await Promise.resolve()
+      /* The compression limiter adds a few microtask turns before the failure. */
+      for (let i = 0; i < 10; i++) await Promise.resolve()
       expect(uploadBlob).not.toHaveBeenCalled()
       expect(onError).toHaveBeenCalledTimes(cancelled ? 0 : 1)
       if (!cancelled) expect(onError.mock.calls[0][1]).toBe(cause)

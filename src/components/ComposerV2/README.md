@@ -292,6 +292,22 @@ compression policy. The store imports the UI-free compressor from
 `#/lib/media/image/compress`, not `#/state/gallery`, so importing the store stays
 usable in tests without mounting UI or faking native `Platform.Version`.
 
+**Image compression cap:** at most one image goes through the memory-heavy
+phase at a time, across posts, retries, replacements, and overlapping stores.
+The phase is the dimension read (when the source lacks dimensions) plus
+`compressImage`, guarded by one module-level
+`createConcurrencyLimit({max: 1})` in `store/uploadDependencies.ts` and passed
+to the worker as the required `limitImageCompression` dependency. Only image
+compression uses it; video and network uploads are unaffected, and the upload
+runs after the slot is released. Items waiting for the slot still report
+`compressing`; there is no separate queued state. Cancelling a queued attempt
+removes it and its compressor never runs. Cancelling a running one is still
+logical, so it keeps the slot until its compression settles, and its late
+result is ignored (releasing that output is not handled here). This lowers
+concurrent peak memory but does not stop a single oversized image from
+running out of it. Tests pass a real limiter instance through
+`fakeImageDependencies` and never use the production singleton.
+
 **Video:** validate metadata, duration, dimensions, MIME, and account limits;
 reuse the production compressor and `uploadVideo()` wrapper around
 `uploadVideoMultipart()`, not the legacy component reducer. Preserve service-auth

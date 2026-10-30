@@ -31,6 +31,7 @@ import {
   type UploadedCaption,
   type UploadStatus,
 } from './types'
+import {type createConcurrencyLimit} from './utils/createConcurrencyLimit'
 
 /** Runtime handle owned by the store, never published in ThreadState. */
 export type UploadTask = {
@@ -105,6 +106,14 @@ export type ImageUploadDependencies = {
   getImageDimensions: GetImageDimensions
   compressImage: (typeof import('#/lib/media/image/compress'))['compressImage']
   uploadBlob: UploadBlob
+  /**
+   * Gates the memory-heavy phase: the dimension read and compression. A task
+   * queued when its signal aborts never runs; a running one keeps its slot
+   * until it settles, since neither step can be aborted. Upload runs outside
+   * it. Production shares one instance across stores; see
+   * `uploadDependencies.ts`.
+   */
+  limitImageCompression: ReturnType<typeof createConcurrencyLimit>
 }
 
 /** Implementations the video worker calls, including caption blob uploads. */
@@ -261,6 +270,7 @@ async function runImageUpload({
     getImageDimensions,
     compressImage,
     uploadBlob,
+    limitImageCompression,
   } = opts
   try {
     report({...opts, status: {state: 'uploading', phase: 'compressing'}})
@@ -268,40 +278,49 @@ async function runImageUpload({
     /*
      * Neither the dimension read nor compressImage has a cancellation hook.
      * Cancellation is therefore logical here: late results are ignored and no
-     * later step starts after abort.
+     * later step starts after abort. The limiter keeps a canceled running
+     * attempt's slot until its work settles, so it still counts against the
+     * cap. The upload below runs outside the slot.
      */
-    const {source, metadata} = await prepareImageSource({
-      media,
-      getImageDimensions,
+    const compressed = await limitImageCompression({
+      signal,
+      task: async () => {
+        const {source, metadata} = await prepareImageSource({
+          media,
+          getImageDimensions,
+        })
+        throwIfAborted({signal})
+        opts.setMediaSourceMetadata?.(opts.postId, opts.mediaId, metadata)
+        if (!validDimensions(source)) {
+          throw new ValidationError('invalid-image-dimensions')
+        }
+        const image: ComposerImage = {
+          alt: media.altText,
+          source: {
+            id: media.id,
+            path: source.uri,
+            width: source.width,
+            height: source.height,
+            /* compressImage always re-encodes and does not read the source type. */
+            mime: source.mimeType ?? 'image/jpeg',
+          },
+        }
+        const output = await compressImage({image, ...IMAGE_SIZE_CONFIG_POSTS})
+        throwIfAborted({signal})
+        const prepared = {
+          kind: 'image' as const,
+          uri: output.path,
+          width: output.width,
+          height: output.height,
+          mimeType: output.mime,
+          aspectRatio: {width: output.width, height: output.height},
+          size: output.size,
+        }
+        opts.setMediaCompressionResult?.(opts.postId, opts.mediaId, prepared)
+        return output
+      },
     })
     throwIfAborted({signal})
-    opts.setMediaSourceMetadata?.(opts.postId, opts.mediaId, metadata)
-    if (!validDimensions(source)) {
-      throw new ValidationError('invalid-image-dimensions')
-    }
-    const image: ComposerImage = {
-      alt: media.altText,
-      source: {
-        id: media.id,
-        path: source.uri,
-        width: source.width,
-        height: source.height,
-        /* compressImage always re-encodes and does not read the source type. */
-        mime: source.mimeType ?? 'image/jpeg',
-      },
-    }
-    const compressed = await compressImage({image, ...IMAGE_SIZE_CONFIG_POSTS})
-    throwIfAborted({signal})
-    const prepared = {
-      kind: 'image' as const,
-      uri: compressed.path,
-      width: compressed.width,
-      height: compressed.height,
-      mimeType: compressed.mime,
-      aspectRatio: {width: compressed.width, height: compressed.height},
-      size: compressed.size,
-    }
-    opts.setMediaCompressionResult?.(opts.postId, opts.mediaId, prepared)
     report({...opts, status: {state: 'uploading', phase: 'uploading'}})
     const result = await uploadBlob(pdsClient, compressed.path, compressed.mime)
     throwIfAborted({signal})

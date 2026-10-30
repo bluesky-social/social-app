@@ -9,10 +9,19 @@ import {uploadVideo} from '#/lib/media/video/upload'
 import {createTokenlessVideoServiceClient} from '#/lib/media/video/util'
 import {getVideoMetadata} from '#/view/com/composer/videos/metadata'
 import {copyVideoToCache} from '#/components/ComposerV2/store/utils/copyVideoToCache'
+import {createConcurrencyLimit} from '#/components/ComposerV2/store/utils/createConcurrencyLimit'
 import {
   type ImageUploadDependencies,
   type VideoUploadDependencies,
 } from './uploads'
+
+/*
+ * One module-level limiter, so the cap holds across posts, retries, and
+ * overlapping stores, including a replaced store whose old compression is
+ * still running. Max 1 is a conservative way to reduce peak memory without
+ * device heuristics. Video compression does not use it.
+ */
+const limitImageCompression = createConcurrencyLimit({max: 1})
 
 /*
  * Production implementations createThreadStore hands the upload workers.
@@ -23,6 +32,7 @@ export const imageUploadDependencies: ImageUploadDependencies = {
   getImageDimensions: getImageDim,
   compressImage,
   uploadBlob,
+  limitImageCompression,
 }
 
 export const videoUploadDependencies: VideoUploadDependencies = {
