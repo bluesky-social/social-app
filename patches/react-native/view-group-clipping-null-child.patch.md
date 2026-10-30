@@ -13,7 +13,7 @@ listeners, animation-end callbacks, Fabric mounting on the UI thread), which com
 variant throws `IllegalStateException` and escapes as a fatal crash. A null entry means the
 view is already detached, so we skip it and count it as clipped to keep index math aligned.
 
-Not fixed upstream as of 0.88.0 (identical `checkNotNull`, October 2026); the sibling fix
+Not fixed upstream as of 0.88.1 (identical `checkNotNull`, October 2026); the sibling fix
 attempt facebook/react-native#57365 for the same bookkeeping corruption (different stack)
 was abandoned. Re-check when bumping React Native.
 
