@@ -12,10 +12,28 @@ import (
 	"testing/fstest"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/credentials"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/labstack/echo/v4"
 )
 
-// fakeS3 serves files like the public statics bucket, where a missing key is a 403.
+const testBucket = "statics"
+
+// newTestS3Client returns a client for the bucket served at url, without
+// retries so each failure is visible.
+func newTestS3Client(url string) *s3.Client {
+	return s3.New(s3.Options{
+		Region:       "us-east-2",
+		BaseEndpoint: aws.String(url),
+		UsePathStyle: true,
+		Credentials:  credentials.NewStaticCredentialsProvider("id", "secret", ""),
+		Retryer:      aws.NopRetryer{},
+	})
+}
+
+// fakeS3 serves testBucket like S3 does to a caller allowed to list it, so a
+// missing key is a 404. Paths are recorded without the bucket.
 type fakeS3 struct {
 	mu       sync.Mutex
 	files    map[string]string
@@ -25,18 +43,19 @@ type fakeS3 struct {
 	release  chan struct{}
 }
 
-func newFakeS3(t *testing.T, files map[string]string) (*fakeS3, string) {
+func newFakeS3(t *testing.T, files map[string]string) (*fakeS3, *s3.Client) {
 	t.Helper()
 	f := &fakeS3{files: files, gets: map[string]int{}}
 	srv := httptest.NewServer(f)
 	t.Cleanup(srv.Close)
-	return f, srv.URL + "/v1"
+	return f, newTestS3Client(srv.URL)
 }
 
 func (f *fakeS3) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	key := strings.TrimPrefix(r.URL.Path, "/"+testBucket)
 	f.mu.Lock()
-	f.gets[r.URL.Path]++
-	body, ok := f.files[r.URL.Path]
+	f.gets[key]++
+	body, ok := f.files[key]
 	status, release := f.status, f.release
 	if f.failNext > 0 {
 		f.failNext--
@@ -51,7 +70,8 @@ func (f *fakeS3) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case status != 0:
 		w.WriteHeader(status)
 	case !ok:
-		w.WriteHeader(http.StatusForbidden)
+		w.WriteHeader(http.StatusNotFound)
+		io.WriteString(w, `<Error><Code>NoSuchKey</Code><Message>The specified key does not exist.</Message></Error>`)
 	default:
 		io.WriteString(w, body)
 	}
@@ -70,8 +90,8 @@ func (f *fakeS3) getsOf(path string) int {
 }
 
 func TestRemoteFSServesFromMemory(t *testing.T) {
-	s3, baseURL := newFakeS3(t, map[string]string{"/v1/_expo/app.js": "console.log(1)"})
-	remote := newRemoteFS(baseURL)
+	s3, client := newFakeS3(t, map[string]string{"/v1/_expo/app.js": "console.log(1)"})
+	remote := newRemoteFS(client, testBucket, "v1")
 
 	for range 2 {
 		b, err := fs.ReadFile(remote, "_expo/app.js")
@@ -88,10 +108,10 @@ func TestRemoteFSServesFromMemory(t *testing.T) {
 }
 
 func TestRemoteFSCoalescesConcurrentOpens(t *testing.T) {
-	s3, baseURL := newFakeS3(t, map[string]string{"/v1/_expo/app.js": "console.log(1)"})
+	s3, client := newFakeS3(t, map[string]string{"/v1/_expo/app.js": "console.log(1)"})
 	release := make(chan struct{})
 	s3.update(func(f *fakeS3) { f.release = release })
-	remote := newRemoteFS(baseURL)
+	remote := newRemoteFS(client, testBucket, "v1")
 
 	const n = 10
 	errs := make(chan error, n)
@@ -126,19 +146,27 @@ func TestRemoteFSCoalescesConcurrentOpens(t *testing.T) {
 }
 
 func TestRemoteFSMissingFile(t *testing.T) {
-	for _, status := range []int{http.StatusForbidden, http.StatusNotFound} {
-		s3, baseURL := newFakeS3(t, map[string]string{})
-		s3.update(func(f *fakeS3) { f.status = status })
-		_, err := newRemoteFS(baseURL).Open("_expo/app.js")
-		if !errors.Is(err, fs.ErrNotExist) {
-			t.Errorf("status %d: got %v, want fs.ErrNotExist", status, err)
-		}
+	_, client := newFakeS3(t, map[string]string{})
+	_, err := newRemoteFS(client, testBucket, "v1").Open("_expo/app.js")
+	if !errors.Is(err, fs.ErrNotExist) {
+		t.Errorf("got %v, want fs.ErrNotExist", err)
+	}
+}
+
+// A 403 is a permission problem, which must be a 500, never a 404 the CDN
+// could cache.
+func TestRemoteFSForbidden(t *testing.T) {
+	s3, client := newFakeS3(t, map[string]string{})
+	s3.update(func(f *fakeS3) { f.status = http.StatusForbidden })
+	_, err := newRemoteFS(client, testBucket, "v1").Open("_expo/app.js")
+	if err == nil || errors.Is(err, fs.ErrNotExist) || errors.Is(err, fs.ErrPermission) {
+		t.Fatalf("got %v, want an upstream error", err)
 	}
 }
 
 func TestRemoteFSRetriesFailures(t *testing.T) {
-	s3, baseURL := newFakeS3(t, map[string]string{})
-	remote := newRemoteFS(baseURL)
+	s3, client := newFakeS3(t, map[string]string{})
+	remote := newRemoteFS(client, testBucket, "v1")
 
 	s3.update(func(f *fakeS3) { f.status = http.StatusInternalServerError })
 	_, err := remote.Open("_expo/app.js")
@@ -167,7 +195,7 @@ func TestRemoteFSRetriesFailures(t *testing.T) {
 func TestRemoteFSUnreachable(t *testing.T) {
 	srv := httptest.NewServer(http.NotFoundHandler())
 	srv.Close()
-	_, err := newRemoteFS(srv.URL).Open("_expo/app.js")
+	_, err := newRemoteFS(newTestS3Client(srv.URL), testBucket, "v1").Open("_expo/app.js")
 	if err == nil || errors.Is(err, fs.ErrNotExist) || errors.Is(err, fs.ErrPermission) {
 		t.Fatalf("got %v, want an upstream error", err)
 	}
@@ -219,11 +247,11 @@ func TestOverlayFSRouting(t *testing.T) {
 }
 
 func TestRemoteStaticFileServer(t *testing.T) {
-	s3, baseURL := newFakeS3(t, map[string]string{
+	s3, client := newFakeS3(t, map[string]string{
 		"/v1/_expo/static/js/app.js": "console.log(1)",
 		"/v1/assets/logo.png":        "png",
 	})
-	_, static := remoteAppFS(baseURL)
+	_, static := remoteAppFS(client, testBucket, "v1")
 	fsys, err := fs.Sub(static, "static")
 	if err != nil {
 		t.Fatal(err)
@@ -277,8 +305,8 @@ func TestRemoteStaticFileServer(t *testing.T) {
 }
 
 func TestRemoteHomeNeedsFragments(t *testing.T) {
-	s3, baseURL := newFakeS3(t, map[string]string{})
-	templates, _ := remoteAppFS(baseURL)
+	s3, client := newFakeS3(t, map[string]string{})
+	templates, _ := remoteAppFS(client, testBucket, "v1")
 	e := echo.New()
 	e.HideBanner = true
 	e.Logger.SetOutput(io.Discard)

@@ -2,26 +2,28 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"io"
 	"io/fs"
 	"net/http"
-	"net/url"
 	"path"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/bluesky-social/social-app/bskyweb"
 	"golang.org/x/sync/singleflight"
 )
 
 // remoteAppFS returns the template and static file systems for remote mode.
-// The files that change with every web build come from the app version's
-// folder at baseURL, and everything else from the binary.
-func remoteAppFS(baseURL string) (templates fs.FS, static fs.FS) {
-	remote := newRemoteFS(baseURL)
+// The files that change with every web build come from the version's folder
+// in the bucket, and everything else from the binary.
+func remoteAppFS(client *s3.Client, bucket, version string) (templates fs.FS, static fs.FS) {
+	remote := newRemoteFS(client, bucket, version)
 	templates = &overlayFS{
 		base:   bskyweb.TemplateFS,
 		remote: remote,
@@ -58,24 +60,26 @@ func (o *overlayFS) Open(name string) (fs.File, error) {
 	return o.base.Open(name)
 }
 
-// remoteFS is a read-only fs.FS over the files under baseURL. Each file is
+// remoteFS is a read-only fs.FS over the files under prefix/ in bucket. Each file is
 // downloaded at most once and then served from memory. Concurrent opens of
 // the same file share one download. Failed downloads and missing files aren't
 // kept, so the next open tries again. Directories are reported as missing.
 type remoteFS struct {
-	baseURL string
-	client  *http.Client
-	group   singleflight.Group
+	client *s3.Client
+	bucket string
+	prefix string
+	group  singleflight.Group
 
 	mu    sync.RWMutex
 	files map[string][]byte
 }
 
-func newRemoteFS(baseURL string) *remoteFS {
+func newRemoteFS(client *s3.Client, bucket, prefix string) *remoteFS {
 	return &remoteFS{
-		baseURL: strings.TrimSuffix(baseURL, "/"),
-		client:  &http.Client{Timeout: 30 * time.Second},
-		files:   make(map[string][]byte),
+		client: client,
+		bucket: bucket,
+		prefix: prefix,
+		files:  make(map[string][]byte),
 	}
 }
 
@@ -132,27 +136,30 @@ func (r *remoteFS) load(name string) ([]byte, error) {
 // fs.ErrPermission (e.g. a connect EACCES), which the file server would answer
 // with a 404 or 403 instead of a 500.
 func (r *remoteFS) download(name string) ([]byte, error) {
-	u := r.baseURL + "/" + (&url.URL{Path: name}).EscapedPath()
-	resp, err := r.client.Get(u)
-	if err != nil {
-		return nil, fmt.Errorf("downloading %s: %v", u, err)
-	}
-	defer resp.Body.Close()
+	key := r.prefix + "/" + name
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 
-	switch resp.StatusCode {
-	case http.StatusOK:
-		data, err := io.ReadAll(resp.Body)
-		if err != nil {
-			return nil, fmt.Errorf("downloading %s: %v", u, err)
+	out, err := r.client.GetObject(ctx, &s3.GetObjectInput{
+		Bucket: aws.String(r.bucket),
+		Key:    aws.String(key),
+	})
+	if err != nil {
+		// S3 answers a missing key with 404 only to callers allowed to list
+		// the bucket; otherwise it's a 403, an error here.
+		var resp interface{ HTTPStatusCode() int }
+		if errors.As(err, &resp) && resp.HTTPStatusCode() == http.StatusNotFound {
+			return nil, fs.ErrNotExist
 		}
-		return data, nil
-	// The bucket allows anonymous GetObject but not ListBucket, so S3 answers
-	// a missing key with 403 instead of 404.
-	case http.StatusForbidden, http.StatusNotFound:
-		return nil, fs.ErrNotExist
-	default:
-		return nil, fmt.Errorf("downloading %s: unexpected status %s", u, resp.Status)
+		return nil, fmt.Errorf("downloading s3://%s/%s: %v", r.bucket, key, err)
 	}
+	defer out.Body.Close()
+
+	data, err := io.ReadAll(out.Body)
+	if err != nil {
+		return nil, fmt.Errorf("downloading s3://%s/%s: %v", r.bucket, key, err)
+	}
+	return data, nil
 }
 
 // memFile is an open remoteFS file. http.FileServer needs it to support Seek.
