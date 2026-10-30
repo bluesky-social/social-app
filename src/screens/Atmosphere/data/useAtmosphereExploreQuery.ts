@@ -1,7 +1,7 @@
 import {useQuery} from '@tanstack/react-query'
 
 import {useLanguagePrefs} from '#/state/preferences/languages'
-import {STALE} from '#/state/queries'
+import {GCTIME, STALE} from '#/state/queries'
 import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
@@ -18,7 +18,14 @@ export function useAtmosphereExploreQuery() {
       did: client.did,
       acceptLanguage,
     }),
-    staleTime: STALE.MINUTES.FIVE,
+    /*
+     * Memory-only and shared by the Explore and Apps tabs. Only an explicit
+     * refetch (pull-to-refresh or error retry) replaces a successful response.
+     */
+    staleTime: STALE.INFINITY,
+    gcTime: GCTIME.INFINITY,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     retry: 1,
     queryFn: ({signal}) =>
       client.call(
