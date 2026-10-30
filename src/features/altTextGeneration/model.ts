@@ -1,8 +1,8 @@
 import {generateAsync, getAvailabilityAsync} from 'expo-ai'
 import {Tools} from 'expo-ai/apple'
 
-import {MAX_ALT_TEXT} from '#/lib/constants'
-import {enforceLen} from '#/lib/strings/helpers'
+import {codeToLanguageName} from '#/locale/helpers'
+import {cleanAltText} from './utils'
 
 /**
  * The model has to be able to see the image itself. Feature detection rather
@@ -67,7 +67,7 @@ export function generateAltText({
         timeoutMs: 60_000,
       },
     )
-    return {altText: cleanAltText(result.value), language}
+    return {altText: cleanAltText(result.value, language), language}
   })
   queue = run.catch(() => {})
   return run
@@ -80,11 +80,7 @@ function getInstructions(language: string) {
     'If the image contains text, use the OCR tool to read it and include the important text word for word.',
     'Do not start with "Image of" or "Picture of". Do not guess who people are or speculate beyond what is visible.',
     'Respond with only the alt text, without any preamble, quotes or formatting.',
-    `Write the alt text in the language with the BCP 47 code "${language}".`,
+    // Named rather than given as a code, which the model tends to echo back
+    `Write the alt text in ${codeToLanguageName(language, 'en')}.`,
   ].join('\n')
-}
-
-function cleanAltText(text: string) {
-  const trimmed = text.trim().replace(/^["“]([\s\S]*)["”]$/, '$1')
-  return enforceLen(trimmed, MAX_ALT_TEXT, true)
 }

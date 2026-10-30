@@ -1,5 +1,9 @@
 import {type ComposerImage} from '#/state/gallery'
-import {getGeneratedAltTextOutcomes, isGeneratedAltText} from './utils'
+import {
+  cleanAltText,
+  getGeneratedAltTextOutcomes,
+  isGeneratedAltText,
+} from './utils'
 
 function createImage(alt: string, generatedAlt?: string): ComposerImage {
   return {
@@ -46,5 +50,39 @@ describe('getGeneratedAltTextOutcomes', () => {
         createImage('My own alt text'),
       ]),
     ).toEqual({kept: 1, edited: 1, cleared: 1})
+  })
+})
+
+describe('cleanAltText', () => {
+  it('strips an echoed language code or label', () => {
+    expect(cleanAltText('en: A dog on a beach.', 'en')).toBe(
+      'A dog on a beach.',
+    )
+    expect(cleanAltText('[en] A dog on a beach.', 'en')).toBe(
+      'A dog on a beach.',
+    )
+    expect(cleanAltText('PT-BR: Um cão na praia.', 'pt-BR')).toBe(
+      'Um cão na praia.',
+    )
+    expect(cleanAltText('Alt text: A dog on a beach.', 'en')).toBe(
+      'A dog on a beach.',
+    )
+  })
+
+  it('strips surrounding quotes', () => {
+    expect(cleanAltText('"A dog on a beach."', 'en')).toBe('A dog on a beach.')
+    expect(cleanAltText('en: “A dog on a beach.”', 'en')).toBe(
+      'A dog on a beach.',
+    )
+  })
+
+  it('leaves text that only starts like a label alone', () => {
+    expect(cleanAltText('Entrance to a station.', 'en')).toBe(
+      'Entrance to a station.',
+    )
+    expect(cleanAltText('Alternative rock band on stage.', 'en')).toBe(
+      'Alternative rock band on stage.',
+    )
+    expect(cleanAltText('En-suite bathroom.', 'en')).toBe('En-suite bathroom.')
   })
 })
