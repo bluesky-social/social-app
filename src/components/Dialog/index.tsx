@@ -1,7 +1,6 @@
 import {
   forwardRef,
   useCallback,
-  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -41,6 +40,7 @@ import {type BottomSheetNativeComponent} from '@bsky.app/bottom-sheet/src/Bottom
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {mergeRefs} from '#/lib/merge-refs'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
@@ -57,8 +57,10 @@ import {
 } from '#/alf'
 import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {Context, useDialogContext} from '#/components/Dialog/context'
-import {getMeasuredDialogContentHeight} from '#/components/Dialog/sheetSizing'
-import {getDialogSourceViewTag} from '#/components/Dialog/sourceViewTag'
+import {
+  getDialogSourceViewTag,
+  getNativeViewTag,
+} from '#/components/Dialog/sourceViewTag'
 import {
   type DialogControlProps,
   type DialogInnerProps,
@@ -103,16 +105,17 @@ export function Outer({
   const [snapPoint, setSnapPoint] = useState<BottomSheetSnapPoint>(
     BottomSheetSnapPoint.Partial,
   )
-  const [desiredContentHeight, setDesiredContentHeight] = useState<number>()
+  const [contentScrollViewTag, setContentScrollViewTag] = useState<number>()
   /*
-   * On iOS, `ScrollableInner` reports its content height to size the sheet,
-   * so its ScrollView can be capped at the presented height and scroll when
-   * the content is taller than the sheet. Sizing the sheet from the laid-out
-   * content instead means the content can't be capped, because the cap would
-   * change the height it reports (APP-3704). Full-height sheets are always at
-   * the large detent, so they don't need to report anything.
+   * On iOS, `ScrollableInner` hands its ScrollView to the sheet, which then
+   * measures the content's natural height from the ScrollView's content size.
+   * That doesn't depend on the ScrollView's frame, so the content can be capped
+   * at the presented height and the ScrollView scrolls when the content is
+   * taller than the sheet (APP-3704). Full-height sheets are always at the
+   * large detent, so they don't need it.
    */
-  const shouldMeasureContentHeight = IS_IOS && !nativeOptions?.fullHeight
+  const measuredScrollViewTag =
+    IS_IOS && !nativeOptions?.fullHeight ? contentScrollViewTag : undefined
 
   /*
    * Only user dismissal paths are blocked natively; the imperative `close`
@@ -143,7 +146,6 @@ export function Outer({
           options,
         }),
       )
-      setDesiredContentHeight(undefined)
       /*
        * A full-height sheet only has the large detent, so it always opens at
        * Full. Set that before the content mounts rather than waiting for
@@ -169,7 +171,6 @@ export function Outer({
       nativeOptions?.popover,
       nativeOptions?.sourceViewTag,
       nativeOptions?.fullHeight,
-      setDesiredContentHeight,
     ],
   )
 
@@ -187,16 +188,9 @@ export function Outer({
     // This removes the dialog from our list of stored dialogs. Not super necessary on iOS, but on Android this
     // tells us that we need to toggle the accessibility overlay setting
     setDialogIsOpen(control.id, false)
-    setDesiredContentHeight(undefined)
     callQueuedCallbacks()
     onClose?.()
-  }, [
-    callQueuedCallbacks,
-    control.id,
-    onClose,
-    setDialogIsOpen,
-    setDesiredContentHeight,
-  ])
+  }, [callQueuedCallbacks, control.id, onClose, setDialogIsOpen])
 
   const onSnapPointChange = (e: BottomSheetSnapPointChangeEvent) => {
     const {snapPoint} = e.nativeEvent
@@ -246,7 +240,7 @@ export function Outer({
 
   /*
    * Full-height and max-height sheets and popovers fill their presentation.
-   * Content that reports its height is only capped at it (see
+   * Content measured through its ScrollView is only capped at it (see
    * `BottomSheetNativeComponentInner`), and its ScrollView shrinks by default.
    */
   const isHeightConstrained =
@@ -258,7 +252,7 @@ export function Outer({
     (presentation?.isPopover === true ||
       nativeOptions?.fullHeight === true ||
       nativeOptions?.maxHeight != null ||
-      (shouldMeasureContentHeight && desiredContentHeight != null))
+      measuredScrollViewTag != null)
       ? Math.min(
           nativeOptions?.maxHeight ?? presentation.height,
           presentation.height,
@@ -278,8 +272,7 @@ export function Outer({
       setDisableDrag,
       isWithinDialog: true,
       isHeightConstrained,
-      shouldMeasureContentHeight,
-      setDesiredContentHeight,
+      setContentScrollViewTag,
     }),
     [
       close,
@@ -289,8 +282,7 @@ export function Outer({
       shouldPreventDismiss,
       setDisableDrag,
       isHeightConstrained,
-      shouldMeasureContentHeight,
-      setDesiredContentHeight,
+      setContentScrollViewTag,
       presentation?.isPopover,
       nativeOptions?.popover,
     ],
@@ -309,9 +301,7 @@ export function Outer({
       onSnapPointChange={onSnapPointChange}
       onStateChange={onStateChange}
       onPresentationSizeChange={onPresentationSizeChange}
-      desiredContentHeight={
-        shouldMeasureContentHeight ? desiredContentHeight : undefined
-      }
+      contentScrollViewTag={measuredScrollViewTag}
       disableDrag={disableDrag}>
       <SafeAreaInsetsContext.Provider
         value={presentation?.safeAreaInsets ?? safeAreaInsets}>
@@ -378,36 +368,14 @@ export function ScrollableInner({
     disableDrag,
     setDisableDrag,
     isHeightConstrained,
-    shouldMeasureContentHeight,
     isNativePopover,
-    setDesiredContentHeight,
+    setContentScrollViewTag,
   } = useDialogContext()
   const isAtMaxSnapPoint =
     nativeSnapPoint === BottomSheetSnapPoint.Full || isNativePopover
   const insets = useSafeAreaInsets()
   const [keyboardHeight, setKeyboardHeight] = useState(() =>
     IS_ANDROID ? (Keyboard.metrics()?.height ?? 0) : 0,
-  )
-  const contentHeight = useRef(0)
-  const footerHeight = useRef(0)
-
-  const updateDesiredContentHeight = () => {
-    setDesiredContentHeight(
-      getMeasuredDialogContentHeight({
-        shouldMeasureContentHeight,
-        contentHeight: contentHeight.current,
-        footerHeight: footerHeight.current,
-      }),
-    )
-  }
-
-  useEffect(
-    () => () => {
-      if (shouldMeasureContentHeight) {
-        setDesiredContentHeight(undefined)
-      }
-    },
-    [setDesiredContentHeight, shouldMeasureContentHeight],
   )
 
   const keyboardEventHandler = useCallback((e: KeyboardEvent) => {
@@ -443,7 +411,13 @@ export function ScrollableInner({
           }),
           contentContainerStyle,
         ]}
-        ref={ref}
+        ref={mergeRefs([
+          ref,
+          (node: React.ComponentRef<typeof ScrollView> | null) => {
+            setContentScrollViewTag(getNativeViewTag(node))
+            return () => setContentScrollViewTag(undefined)
+          },
+        ])}
         showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
         contentInsetAdjustmentBehavior={
           isAtMaxSnapPoint ? 'automatic' : 'never'
@@ -458,10 +432,6 @@ export function ScrollableInner({
         onScroll={android(onScroll)}
         onScrollEndDrag={android(onScroll)}
         onMomentumScrollEnd={android(onScroll)}
-        onContentSizeChange={(_, height) => {
-          contentHeight.current = height
-          updateDesiredContentHeight()
-        }}
         keyboardShouldPersistTaps="handled"
         // TODO: figure out why this positions the header absolutely (rather than stickily)
         // on Android. fine to disable for now, because we don't have any
@@ -470,15 +440,7 @@ export function ScrollableInner({
         {header}
         {children}
       </ScrollView>
-      {footer != null && (
-        <View
-          onLayout={e => {
-            footerHeight.current = e.nativeEvent.layout.height
-            updateDesiredContentHeight()
-          }}>
-          {footer}
-        </View>
-      )}
+      {footer}
     </>
   )
 }

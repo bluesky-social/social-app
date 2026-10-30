@@ -17,7 +17,7 @@ import {BottomSheetOutlet, BottomSheetProvider} from './BottomSheetPortal'
 
 type NativeViewProps = Pick<
   BottomSheetViewProps,
-  'popover' | 'desiredContentHeight' | 'onPresentationSizeChange'
+  'popover' | 'contentScrollViewTag' | 'onPresentationSizeChange'
 > & {
   children: React.ReactElement<{
     style: StyleProp<ViewStyle>
@@ -95,7 +95,7 @@ it.each(['always', 'adaptive', 'never'] as const)(
       cornerRadius: 12,
       maxHeight: 240,
       popover,
-      desiredContentHeight: 400,
+      contentScrollViewTag: 42,
     })
 
     const nativeProps = lastNativeProps()
@@ -109,7 +109,7 @@ it.each(['always', 'adaptive', 'never'] as const)(
       right: 0,
     })
     expect(nativeProps).not.toHaveProperty('popover')
-    expect(nativeProps).not.toHaveProperty('desiredContentHeight')
+    expect(nativeProps).not.toHaveProperty('contentScrollViewTag')
     expect(contentStyle).toMatchObject({
       flex: 1,
       backgroundColor,
@@ -174,11 +174,11 @@ it.each(['always', 'adaptive', 'never', undefined] as const)(
   'forwards iPhone %s presentation and constrains measured content to the native height',
   popover => {
     jest.replaceProperty(Platform, 'OS', 'ios')
-    renderOpenSheet({popover, desiredContentHeight: 400})
+    renderOpenSheet({popover, contentScrollViewTag: 42})
 
     const nativeProps = lastNativeProps()
     expect(nativeProps.popover).toBe(popover ?? 'never')
-    expect(nativeProps.desiredContentHeight).toBe(400)
+    expect(nativeProps.contentScrollViewTag).toBe(42)
 
     act(() =>
       nativeProps.onPresentationSizeChange?.({
@@ -206,7 +206,7 @@ it.each(['always', 'adaptive', 'never', undefined] as const)(
   },
 )
 
-it('leaves iPhone sheet content unconstrained when it does not report a height', () => {
+it('leaves iPhone sheet content unconstrained without a measured scroll view', () => {
   jest.replaceProperty(Platform, 'OS', 'ios')
   renderOpenSheet({})
 
