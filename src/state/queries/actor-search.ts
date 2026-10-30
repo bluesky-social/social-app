@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAppviewClient} from '#/state/session'
+import {useAppviewClient, useSession} from '#/state/session'
 import {app} from '#/lexicons'
 
 export const RQKEY_ROOT = 'actor-search'
@@ -29,6 +29,7 @@ export function useActorSearch({
   limit?: number
 }) {
   const client = useAppviewClient()
+  const {hasSession} = useSession()
   return useInfiniteQuery<
     app.bsky.actor.searchActors.$OutputBody,
     Error,
@@ -47,7 +48,7 @@ export function useActorSearch({
     },
     enabled: enabled && !!query,
     initialPageParam: undefined,
-    getNextPageParam: lastPage => lastPage.cursor,
+    getNextPageParam: lastPage => (hasSession ? lastPage.cursor : undefined),
     placeholderData: maintainData ? keepPreviousData : undefined,
     select,
   })
