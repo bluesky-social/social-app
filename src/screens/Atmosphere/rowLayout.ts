@@ -1,6 +1,9 @@
+import {AtUri} from '@atproto/syntax'
+
 import {
-  createDocumentExternalView,
-  createPublicationExternalView,
+  getActivityPostView,
+  getArticleExternalView,
+  getPublicationExternalView,
 } from '#/screens/Atmosphere/externalViews'
 import {getGrainPhotos} from '#/screens/Atmosphere/photos'
 import {
@@ -14,15 +17,17 @@ import {
   getSharePostHref,
 } from '#/screens/Atmosphere/relationships'
 import {getActivityPresentationKind} from '#/screens/Atmosphere/socialProof'
-import {getLivestreamStatus} from '#/screens/Atmosphere/streams'
+import {
+  getLivestreamStatus,
+  getLivestreamUrl,
+} from '#/screens/Atmosphere/streams'
 import {
   type ActivityActor,
   activityCollections,
   type ActivityItem,
-  isLivestreamRecord,
-  isShareRecord,
-  isSubscriptionRecord,
 } from '#/screens/Atmosphere/types'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export type ActivityRowKind = 'card' | 'footnote'
 
@@ -40,36 +45,31 @@ export function getActivityRowKind(
     case activityCollections.document:
     case activityCollections.recommendation:
       return getActivityPresentationKind(props) === 'card' &&
-        createDocumentExternalView({
-          uri: getArticleActivityUri(item),
-          ...item,
-        })?.title.trim()
+        getArticleActivityUri(item) &&
+        getArticleExternalView(first)?.title.trim()
         ? 'card'
         : 'footnote'
     case activityCollections.subscription:
       return getActivityPresentationKind(props) === 'card' &&
-        createPublicationExternalView({
-          uri: getSubscriptionActivityUri(item),
-          ...item,
-        })?.title.trim()
+        getSubscriptionActivityUri(item) &&
+        getPublicationExternalView(first)?.title.trim()
         ? 'card'
         : 'footnote'
     case activityCollections.share:
       return getShareActivities(item).length > 0 ? 'card' : 'footnote'
-    case activityCollections.grainPhoto:
+    case activityCollections.grainGallery:
+    case activityCollections.grainFavorite:
       return getGrainPhotos(item).length > 0 ? 'card' : 'footnote'
-    case activityCollections.livestream: {
-      const record = item.associatedRecords[first.record.uri]?.record
+    case activityCollections.livestream:
       return !(item.type === 'group' && item.group.groupBy === 'actor') &&
-        isLivestreamRecord(record) &&
-        getLivestreamStatus(record) === 'active'
+        bsky.isType(app.bsky.embed.external.viewLivestream, first.view) &&
+        getLivestreamStatus(first.view) === 'active' &&
+        getLivestreamUrl(first.view)
         ? 'card'
         : 'footnote'
-    }
     case activityCollections.publication:
       return (item.type === 'group' ? item.group.items : [first]).some(
-        activity =>
-          createPublicationExternalView({uri: activity.record.uri, ...item}),
+        activity => getPublicationExternalView(activity)?.title.trim(),
       )
         ? 'card'
         : 'footnote'
@@ -78,34 +78,47 @@ export function getActivityRowKind(
   }
 }
 
-/** Only interaction subject groups override the first child's document target. */
+/** A subject group cannot replace the first child's pinned hydrated target. */
 export function getArticleActivityUri(item: ActivityPresentationItem) {
   const first = getFirstActivity(item)
   if (!first) return undefined
-  const collection =
-    item.type === 'group' ? item.group.collection : first.collection
+  const target = getActivityDocumentUri(first)
   return item.type === 'group' &&
     item.group.groupBy === 'subject' &&
-    (collection === activityCollections.recommendation ||
-      collection === activityCollections.share)
-    ? (item.group.subject ??
-        getActivityDocumentUri(first, item.associatedRecords))
-    : getActivityDocumentUri(first, item.associatedRecords)
-}
-
-/** Uses the API subject for a subscription cluster, otherwise the first record. */
-export function getSubscriptionActivityUri(item: ActivityPresentationItem) {
-  const first = getFirstActivity(item)
-  const record = first
-    ? item.associatedRecords[first.record.uri]?.record
-    : undefined
-  const target = isSubscriptionRecord(record) ? record.publication : undefined
-  return item.type === 'group' && item.group.groupBy === 'subject'
-    ? (item.group.subject ?? target)
+    (item.group.collection === activityCollections.recommendation ||
+      item.group.collection === activityCollections.share) &&
+    item.group.subject &&
+    item.group.subject !== target
+    ? undefined
     : target
 }
 
-/** Shared by share rendering and adjacency classification so their fallbacks agree. */
+/** Uses the publication reference carried by this subscription's hydrated view. */
+export function getSubscriptionActivityUri(item: ActivityPresentationItem) {
+  const first = getFirstActivity(item)
+  if (!first) return undefined
+  const refs = getPublicationExternalView(first)?.associatedRefs ?? []
+  const target = refs.find(ref => {
+    try {
+      const uri = new AtUri(ref.uri)
+      return (
+        uri.host.startsWith('did:') &&
+        uri.collection === activityCollections.publication &&
+        Boolean(uri.rkey)
+      )
+    } catch {
+      return false
+    }
+  })?.uri
+  return item.type === 'group' &&
+    item.group.groupBy === 'subject' &&
+    item.group.subject &&
+    item.group.subject !== target
+    ? undefined
+    : target
+}
+
+/** Shared by share rendering and adjacency classification so fallbacks agree. */
 export function getShareActivities(item: ActivityPresentationItem) {
   const first = getFirstActivity(item)
   const documentUri = getArticleActivityUri(item)
@@ -118,12 +131,13 @@ export function getShareActivities(item: ActivityPresentationItem) {
   const seen = new Set<string>()
   for (const activity of candidates) {
     const actor = getActivityActor(activity, item.actors)
+    const post = getActivityPostView(activity)
     if (
       !actor ||
-      !isShareRecord(item.associatedRecords[activity.record.uri]?.record) ||
+      !post ||
+      !bsky.matches(app.bsky.feed.post, post.record) ||
       !getSharePostHref(activity, actor) ||
-      getActivityDocumentUri(activity, item.associatedRecords) !==
-        documentUri ||
+      getActivityDocumentUri(activity) !== documentUri ||
       seen.has(activity.record.uri)
     )
       continue

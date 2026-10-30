@@ -1,16 +1,23 @@
 import {describe, expect, it} from '@jest/globals'
 
 import {type ActivityGroupRowItem, type ActivityRowItem} from './model'
-import {buildActivityPresentationListItems} from './presentation'
-import {activityCollections} from './types'
+import {
+  buildActivityPresentationListItems,
+  getRecordActor,
+} from './presentation'
+import {
+  type ActivityActor,
+  activityCollections,
+  type ActivityItem,
+} from './types'
 
 function activity(
-  uri: string,
-  collection: string = activityCollections.document,
+  uri: ActivityItem['record']['uri'],
+  collection: ActivityItem['collection'] = activityCollections.document,
   subscribed = false,
-) {
+): ActivityItem {
   return {
-    $type: 'eric.bsky.atmosphere.getActivity#item' as const,
+    $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityItem' as const,
     record: {
       uri,
       cid: `cid-${uri.split('/').at(-1)}`,
@@ -21,7 +28,10 @@ function activity(
   }
 }
 
-function actor(did: string, handle: string) {
+function actor(
+  did: ActivityActor['did'],
+  handle: ActivityActor['handle'],
+): ActivityActor {
   return {
     did,
     handle,
@@ -42,36 +52,35 @@ describe('Atmosphere presentation', () => {
       type: 'group',
       key: 'subject-group',
       group: {
-        $type: 'eric.bsky.atmosphere.getActivity#group',
+        $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup',
         id: 'subject-group',
         groupBy: 'subject',
-        collection: activityCollections.grainPhoto,
+        collection: activityCollections.grainFavorite,
         indexedAt: '2026-09-09T00:00:00.000Z',
-        subject: 'at://did:plc:subject/social.grain.photo/subject',
+        subject: 'at://did:plc:subject/social.grain.gallery/subject',
         items: [
           activity(
-            'at://did:plc:alice/social.grain.photo/1',
-            activityCollections.grainPhoto,
+            'at://did:plc:alice/social.grain.favorite/1',
+            activityCollections.grainFavorite,
           ),
           activity(
-            'at://did:plc:ghost/social.grain.photo/2',
-            activityCollections.grainPhoto,
+            'at://did:plc:ghost/social.grain.favorite/2',
+            activityCollections.grainFavorite,
           ),
           activity(
-            'at://did:plc:bob/social.grain.photo/3',
-            activityCollections.grainPhoto,
+            'at://did:plc:bob/social.grain.favorite/3',
+            activityCollections.grainFavorite,
           ),
           activity(
-            'at://did:plc:alice/social.grain.photo/4',
-            activityCollections.grainPhoto,
+            'at://did:plc:alice/social.grain.favorite/4',
+            activityCollections.grainFavorite,
           ),
           activity(
-            'at://did:plc:bad/social.grain.photo/5',
-            activityCollections.grainPhoto,
+            'at://did:plc:bad/social.grain.favorite/5',
+            activityCollections.grainFavorite,
           ),
         ],
       },
-      associatedRecords: {},
       actors: {
         'did:plc:alice': alice,
         'did:plc:bob': bob,
@@ -93,7 +102,6 @@ describe('Atmosphere presentation', () => {
       type: 'activity',
       key: documentUri,
       activity: activity(documentUri, activityCollections.document, true),
-      associatedRecords: {},
       actors: {'did:plc:author': documentActor},
     }
     const recommendationUri =
@@ -102,7 +110,6 @@ describe('Atmosphere presentation', () => {
       type: 'activity',
       key: recommendationUri,
       activity: activity(recommendationUri, activityCollections.recommendation),
-      associatedRecords: {},
       actors: {
         'did:plc:recommender': actor('did:plc:recommender', 'recommender.test'),
       },
@@ -127,7 +134,7 @@ describe('Atmosphere presentation', () => {
       type: 'group',
       key: subscribed.join('-'),
       group: {
-        $type: 'eric.bsky.atmosphere.getActivity#group',
+        $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup',
         id: subscribed.join('-'),
         groupBy: 'actor',
         collection: activityCollections.document,
@@ -141,7 +148,6 @@ describe('Atmosphere presentation', () => {
           ),
         ),
       },
-      associatedRecords: {},
       actors: {'did:plc:author': author},
     })
 
@@ -161,14 +167,13 @@ describe('Atmosphere presentation', () => {
       type: 'activity',
       key: 'standalone',
       activity: activity('at://did:plc:ghost/site.standard.document/1'),
-      associatedRecords: {},
       actors: {},
     }
     const group: ActivityGroupRowItem = {
       type: 'group',
       key: 'group',
       group: {
-        $type: 'eric.bsky.atmosphere.getActivity#group',
+        $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup',
         id: 'group',
         groupBy: 'actor',
         collection: activityCollections.document,
@@ -179,7 +184,6 @@ describe('Atmosphere presentation', () => {
           activity('at://did:plc:bad/site.standard.document/2'),
         ],
       },
-      associatedRecords: {},
       actors: {'did:plc:bad': actor('did:plc:bad', 'handle.invalid')},
     }
 
@@ -189,5 +193,57 @@ describe('Atmosphere presentation', () => {
     expect(buildActivityPresentationListItems([group])).toEqual([
       {item: {type: 'empty', key: 'empty'}, computedItemView: undefined},
     ])
+  })
+  it('passes overflow through before and between visible activities without inventing computed data', () => {
+    const overflow = {
+      type: 'overflow' as const,
+      key: 'overflow:0:0',
+      overflow: {
+        count: 3,
+        collection: activityCollections.document,
+        associatedProfiles: [],
+      },
+    }
+    const row: ActivityRowItem = {
+      type: 'activity',
+      key: 'article',
+      activity: activity('at://did:plc:author/site.standard.document/article'),
+      actors: {'did:plc:author': actor('did:plc:author', 'author.test')},
+    }
+    const result = buildActivityPresentationListItems([
+      overflow,
+      row,
+      {...overflow, key: 'overflow:0:2'},
+    ])
+    expect(result).toHaveLength(3)
+    expect(result[0]).toEqual({item: overflow, computedItemView: undefined})
+    expect(result[1].item).toBe(row)
+    expect(result[2].computedItemView).toBeUndefined()
+  })
+
+  it('does not resolve handle authorities, missing profiles, or mismatched profile index keys', () => {
+    const author = actor('did:plc:author', 'author.test')
+    const actors = {'did:plc:author': author, 'did:plc:wrong': author}
+    expect(
+      getRecordActor(
+        'at://did:plc:author/site.standard.document/article',
+        actors,
+      ),
+    ).toBe(author)
+    expect(
+      getRecordActor(
+        'at://did:plc:missing/site.standard.document/article',
+        actors,
+      ),
+    ).toBeUndefined()
+    expect(
+      getRecordActor(
+        'at://did:plc:wrong/site.standard.document/article',
+        actors,
+      ),
+    ).toBeUndefined()
+    expect(
+      getRecordActor('at://author.test/site.standard.document/article', actors),
+    ).toBeUndefined()
   })
 })

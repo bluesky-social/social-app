@@ -781,19 +781,6 @@ export function useAppviewClient(): Client {
 }
 
 /**
- * Authenticated client for appview-sandbox APIs. Logged-out calls throw
- * `NotAuthenticatedError`; use {@link useMaybeAppviewSandboxClient} when the
- * caller must branch on authentication.
- */
-export function useAppviewSandboxClient(): Client {
-  const bundle = useContext(BundleContext)
-  if (!bundle) {
-    throw Error('useAppviewSandboxClient() must be below <SessionProvider>.')
-  }
-  return bundle.appviewSandboxClient
-}
-
-/**
  * Client for account-host requests. It shares the active session's auth
  * lifecycle but sets no proxy or labeler headers, so calls target the PDS.
  * Logged out, calls throw `NotAuthenticatedError` before network I/O. Use
@@ -817,14 +804,6 @@ export function useChatClient(): Client {
     throw Error('useChatClient() must be below <SessionProvider>.')
   }
   return bundle.chatClient
-}
-
-/**
- * Appview-sandbox client for the active session, or `null` when logged out.
- */
-export function useMaybeAppviewSandboxClient(): Client | null {
-  const bundle = useContext(BundleContext)
-  return bundle?.session ? bundle.appviewSandboxClient : null
 }
 
 /**

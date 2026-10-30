@@ -12,7 +12,6 @@ import {AvatarStack} from '#/components/AvatarStack'
 import {type Props as IconProps} from '#/components/icons/common'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import type * as bsky from '#/types/bsky'
 
 export function ActivityCard({children}: {children: React.ReactNode}) {
   const t = useTheme()
@@ -74,10 +73,7 @@ export function ActivityActorLine({
     <View style={[a.flex_shrink, a.flex_row, a.align_center, a.gap_sm]}>
       {Icon ? <Icon size="sm" fill={iconColor} /> : null}
       {showAvatars ? (
-        <AvatarStack
-          profiles={actors.slice(0, 5) as bsky.profile.AnyProfileView[]}
-          size={16}
-        />
+        <AvatarStack profiles={actors.slice(0, 5)} size={16} />
       ) : null}
       <Text
         testID={testID}
@@ -178,7 +174,9 @@ export function ActivityFootnote({
           {title}
         </InlineLinkText>
       ) : (
-        title
+        <Text emoji style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
+          {title}
+        </Text>
       )}
       {suffix ? ` ${suffix}` : ''}
       {app ? (
@@ -208,10 +206,7 @@ export function ActivityFootnote({
       </View>
       {primary ? (
         <View style={{paddingTop: 2}}>
-          <AvatarStack
-            profiles={actors.slice(0, 5) as bsky.profile.AnyProfileView[]}
-            size={16}
-          />
+          <AvatarStack profiles={actors.slice(0, 5)} size={16} />
         </View>
       ) : null}
       <View style={[a.flex_1, a.gap_xs, {minWidth: 0}]}>

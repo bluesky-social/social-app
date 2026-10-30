@@ -1,3 +1,5 @@
+import {type l} from '@atproto/lex'
+
 import {
   getActivityDocumentUri,
   getFirstActivity,
@@ -7,14 +9,20 @@ import {
 import {
   createActivity,
   createActor,
-  createRecord,
+  createArticleView,
+  createPostView,
   createRow,
   createShareRecord,
   documentUri,
   publicationUri,
   recordCid,
 } from '#/screens/Atmosphere/testFixtures'
-import {activityCollections, isShareRecord} from '#/screens/Atmosphere/types'
+import {
+  activityCollections,
+  type ActivityItem,
+} from '#/screens/Atmosphere/types'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 // The global CID mock cannot validate real strong-reference CIDs.
 jest.unmock('multiformats/cid')
@@ -35,7 +43,7 @@ describe('Atmosphere share relationships', () => {
     wrapped => {
       const record = createShareRecord(documentUri, wrapped)
       expect(getShareDocumentUri(record)).toBe(documentUri)
-      expect(isShareRecord(record)).toBe(true)
+      expect(bsky.matches(app.bsky.feed.post, record)).toBe(true)
     },
   )
 
@@ -112,7 +120,7 @@ describe('Atmosphere share relationships', () => {
     ).toBeUndefined()
   })
 
-  it('validates raw excerpt fields and facets without requiring a hydrated post', () => {
+  it('uses the generated post schema for supplied excerpt fields and facets', () => {
     const facets = [
       {
         index: {byteStart: 0, byteEnd: 4},
@@ -122,13 +130,19 @@ describe('Atmosphere share relationships', () => {
       },
     ]
     const record = {...createShareRecord(), facets}
-    expect(isShareRecord(record)).toBe(true)
+    expect(bsky.matches(app.bsky.feed.post, record)).toBe(true)
     expect(record.facets).toBe(facets)
-    expect(isShareRecord({...record, text: ''})).toBe(true)
-    expect(isShareRecord({...record, text: 12})).toBe(false)
-    expect(isShareRecord({...record, createdAt: undefined})).toBe(false)
-    expect(isShareRecord({...record, facets: [null]})).toBe(false)
-    expect(isShareRecord({...record, facets: 'not an array'})).toBe(false)
+    expect(bsky.matches(app.bsky.feed.post, {...record, text: ''})).toBe(true)
+    expect(bsky.matches(app.bsky.feed.post, {...record, text: 12})).toBe(false)
+    expect(
+      bsky.matches(app.bsky.feed.post, {...record, createdAt: undefined}),
+    ).toBe(false)
+    expect(bsky.matches(app.bsky.feed.post, {...record, facets: [null]})).toBe(
+      false,
+    )
+    expect(
+      bsky.matches(app.bsky.feed.post, {...record, facets: 'not an array'}),
+    ).toBe(false)
   })
 
   it('builds the real sharing actor’s thread link independently of the article target', () => {
@@ -154,26 +168,36 @@ describe('Atmosphere share relationships', () => {
     'does not build a thread from invalid source %s',
     uri => {
       const share = createActivity({collection: activityCollections.share})
-      share.record.uri = uri
+      share.record.uri = uri as ActivityItem['record']['uri']
       expect(getSharePostHref(share, createActor())).toBeUndefined()
     },
   )
 
   it('dispatches from the supplied collection and retains the first group child', () => {
-    const share = createActivity({collection: activityCollections.share})
-    const record = createRecord(share.record.uri, createShareRecord())
-    expect(getActivityDocumentUri(share, {[record.uri]: record})).toBe(
-      documentUri,
-    )
+    const share = createActivity({
+      collection: activityCollections.share,
+      view: createPostView(),
+    })
+    expect(getActivityDocumentUri(share)).toBe(documentUri)
     expect(
-      getActivityDocumentUri(
-        {...share, collection: 'example.other.record'},
-        {[record.uri]: record},
-      ),
+      getActivityDocumentUri({...share, collection: 'example.other.record'}),
     ).toBeUndefined()
     const later = createActivity({rkey: 'later'})
     const row = createRow([share, later], {groupBy: 'actor'})
     expect(getFirstActivity(row)).toBe(share)
     expect(getFirstActivity(createRow([later]))).toBe(later)
+  })
+  it('resolves recommendation targets from hydrated refs and never substitutes missing views', () => {
+    const recommendation = createActivity({
+      collection: activityCollections.recommendation,
+      view: createArticleView(),
+    })
+    expect(getActivityDocumentUri(recommendation)).toBe(documentUri)
+    recommendation.view = createArticleView({
+      associatedRefs: [{uri: publicationUri, cid: recordCid}],
+    })
+    expect(getActivityDocumentUri(recommendation)).toBeUndefined()
+    recommendation.view = {$type: 'example.future#view' as l.Unknown$Type}
+    expect(getActivityDocumentUri(recommendation)).toBeUndefined()
   })
 })

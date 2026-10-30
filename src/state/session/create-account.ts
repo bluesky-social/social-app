@@ -78,7 +78,7 @@ export async function createSessionBundleAndCreateAccount(
     {...hooks, service},
   )
 
-  bundle = buildBundle(session, undefined, hooks.fetch)
+  bundle = buildBundle(session)
   registerBundleKillSwitch(bundle, hooks.kill)
   // Seed the hook and the deferred writes with refresh-stable account fields.
   const earlyAccount = snapshotNewAccount(session, email)

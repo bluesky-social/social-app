@@ -1,5 +1,9 @@
 import {atmospherePresentationConfig} from '#/screens/Atmosphere/config'
 import {
+  getActivityPostView,
+  getArticleExternalView,
+} from '#/screens/Atmosphere/externalViews'
+import {
   type ActivityPresentationProps,
   getActivityActor,
 } from '#/screens/Atmosphere/presentation'
@@ -14,22 +18,14 @@ import {
   type ActivityActors,
   activityCollections,
   type ActivityItem,
-  type AssociatedRecords,
-  isDocumentRecord,
-  isLivestreamRecord,
-  isShareRecord,
 } from '#/screens/Atmosphere/types'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
-/** Separate proof categories, retaining original activity and actor references. */
+/** Keeps separate proof categories and the original activity/profile references. */
 export function getDocumentSocialProof(
   document: ActivityItem,
-  {
-    associatedRecords,
-    actors,
-  }: {
-    associatedRecords: AssociatedRecords
-    actors: ActivityActors
-  },
+  {actors}: {actors: ActivityActors},
 ) {
   const recommenders: ActivityActor[] = []
   const shares: {activity: ActivityItem; actor: ActivityActor}[] = []
@@ -38,38 +34,39 @@ export function getDocumentSocialProof(
 
   if (document.collection === activityCollections.document) {
     for (const activity of document.relatedActivity ?? []) {
+      const view = getArticleExternalView(activity)
       if (
-        getActivityDocumentUri(activity, associatedRecords) !==
-        document.record.uri
-      ) {
+        getActivityDocumentUri(activity) !== document.record.uri ||
+        !view?.associatedRefs?.some(
+          ref =>
+            ref.uri === document.record.uri && ref.cid === document.record.cid,
+        )
+      )
         continue
-      }
       const actor = getActivityActor(activity, actors)
       if (!actor) continue
-
       if (activity.collection === activityCollections.recommendation) {
         if (recommenderDids.has(actor.did)) continue
         recommenderDids.add(actor.did)
         recommenders.push(actor)
-      } else if (
-        activity.collection === activityCollections.share &&
-        isShareRecord(associatedRecords[activity.record.uri]?.record) &&
-        getSharePostHref(activity, actor)
-      ) {
-        if (sharerDids.has(actor.did)) continue
+      } else if (activity.collection === activityCollections.share) {
+        const post = getActivityPostView(activity)
+        if (
+          !post ||
+          !bsky.matches(app.bsky.feed.post, post.record) ||
+          !getSharePostHref(activity, actor) ||
+          sharerDids.has(actor.did)
+        )
+          continue
         sharerDids.add(actor.did)
         shares.push({activity, actor})
       }
     }
   }
-
   return {recommenders, shares}
 }
 
-/**
- * Signal-level presentation only. Renderers still resolve usable content and
- * links before laying out a card; no expanded views are cached on the item.
- */
+/** Signal-level presentation; renderers still resolve usable content and links. */
 export function getActivityPresentationKind(
   {item, computedItemView}: ActivityPresentationProps,
   config = atmospherePresentationConfig,
@@ -79,12 +76,9 @@ export function getActivityPresentationKind(
   const first = getFirstActivity(item)
   if (!first || computedItemView.actors.length === 0) return 'footnote'
   const isActorGroup = item.type === 'group' && item.group.groupBy === 'actor'
-
   switch (collection) {
     case activityCollections.document: {
-      if (!isDocumentRecord(item.associatedRecords[first.record.uri]?.record)) {
-        return 'footnote'
-      }
+      if (!getArticleExternalView(first)) return 'footnote'
       const {recommenders, shares} = getDocumentSocialProof(first, item)
       return computedItemView.subscriptionState === 'all' ||
         recommenders.length >= config.recommendationCardThreshold ||
@@ -103,16 +97,15 @@ export function getActivityPresentationKind(
         ? 'card'
         : 'footnote'
     case activityCollections.share:
-    case activityCollections.grainPhoto:
+    case activityCollections.grainGallery:
+    case activityCollections.grainFavorite:
       return 'card'
-    case activityCollections.livestream: {
-      if (isActorGroup) return 'footnote'
-      const record = item.associatedRecords[first.record.uri]?.record
-      return isLivestreamRecord(record) &&
-        getLivestreamStatus(record) === 'active'
+    case activityCollections.livestream:
+      return !isActorGroup &&
+        bsky.isType(app.bsky.embed.external.viewLivestream, first.view) &&
+        getLivestreamStatus(first.view) === 'active'
         ? 'card'
         : 'footnote'
-    }
     default:
       return 'footnote'
   }

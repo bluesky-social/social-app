@@ -41,10 +41,6 @@ export function buildActivityPresentationListItems(
     return [{item: {type: 'empty', key: 'empty'}, computedItemView: undefined}]
   }
 
-  if (!isPresentationItem(firstItem)) {
-    return [{item: firstItem, computedItemView: undefined}]
-  }
-
   const presentationItems: ActivityPresentationListItem[] = []
   for (const item of items) {
     if (!isPresentationItem(item)) {
@@ -103,14 +99,14 @@ export function getActivityActor(
   return getRecordActor(activity.record.uri, actors)
 }
 
-/** Resolves a record's owner without inventing an identity for missing sidecars. */
+/** Resolves a record's owner without inventing a missing profile. */
 export function getRecordActor(
   uri: string | undefined,
   actors: ActivityActors,
 ): ActivityActor | undefined {
   const did = tryGetAuthorityDid(uri)
   const actor = did ? actors[did] : undefined
-  return isUsableActivityActor(actor) ? actor : undefined
+  return isUsableActivityActor(actor) && actor.did === did ? actor : undefined
 }
 
 function resolveActivityActors(
@@ -118,7 +114,7 @@ function resolveActivityActors(
 ): ActivityActor[] {
   return getCandidateActorDids(item).flatMap(did => {
     const actor = item.actors[did]
-    return isUsableActivityActor(actor) ? [actor] : []
+    return isUsableActivityActor(actor) && actor.did === did ? [actor] : []
   })
 }
 
@@ -144,7 +140,8 @@ function tryGetAuthorityDid(uri: string | undefined): string | undefined {
   if (!uri) return undefined
 
   try {
-    return new AtUri(uri).host
+    const did = new AtUri(uri).host
+    return isDid(did) ? did : undefined
   } catch {
     return undefined
   }

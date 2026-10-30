@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
-import {createDocumentExternalView} from '#/screens/Atmosphere/externalViews'
+import {getArticleExternalView} from '#/screens/Atmosphere/externalViews'
 import {getRecordActor} from '#/screens/Atmosphere/presentation'
 import {getFirstActivity} from '#/screens/Atmosphere/relationships'
 import {type ActivityRendererProps} from '#/screens/Atmosphere/renderers'
@@ -11,11 +11,13 @@ import {
   getActivityPresentationKind,
   getDocumentSocialProof,
 } from '#/screens/Atmosphere/socialProof'
-import {isDocumentRecord} from '#/screens/Atmosphere/types'
 import {atoms as a, useTheme} from '#/alf'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as RecommendIcon} from '#/components/icons/Heart2'
 import {PageText_Stroke2_Corner0_Rounded as ArticleIcon} from '#/components/icons/PageText'
+import {InlineLinkText} from '#/components/Link'
 import {matchStandardSitePublisherByViewHints} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {ActivityArticleCard} from './ActivityArticleCard'
 import {ActivityActorLine, ActivityFootnote} from './ActivityPrimitives'
 import {DocumentMenuPlaceholder} from './DocumentMenu'
@@ -41,13 +43,12 @@ function ArticleActivity({
   if (!first || computedItemView.actors.length === 0) return null
   const actorGroup = item.type === 'group' && item.group.groupBy === 'actor'
   const documentUri = getArticleActivityUri(item)
-  const record = documentUri
-    ? item.associatedRecords[documentUri]?.record
-    : undefined
-  const view = createDocumentExternalView({uri: documentUri, ...item})
+  const view = getArticleExternalView(first)
   const title =
     view?.title.trim() ||
-    (isDocumentRecord(record) ? record.title.trim() : '') ||
+    (bsky.isType(app.bsky.embed.external.viewArticle, first.view)
+      ? first.view.title.trim()
+      : '') ||
     l`Article unavailable`
   const author = getRecordActor(documentUri, item.actors)
   const timestamp =
@@ -94,7 +95,6 @@ function ArticleActivity({
             {!recommendation && shares.length > 0 ? (
               <ShareSnippets
                 shares={shares}
-                associatedRecords={item.associatedRecords}
                 hideActorMetadataForDid={author?.did}
               />
             ) : null}
@@ -115,6 +115,14 @@ function ArticleActivity({
           suffix={suffix}
           thumb={view?.thumb}
           menu={<DocumentMenuPlaceholder />}>
+          {view?.source ? (
+            <InlineLinkText
+              to={view.source.uri}
+              label={view.source.title || view.source.uri}
+              style={[a.text_xs, t.atoms.text_contrast_medium]}>
+              {view.source.title || view.source.uri}
+            </InlineLinkText>
+          ) : null}
           {!recommendation && recommenders.length > 0 ? (
             <ActivityActorLine
               testID="atmosphereArticleRecommendations"

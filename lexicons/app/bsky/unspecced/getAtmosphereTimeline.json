@@ -1,0 +1,104 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.unspecced.getAtmosphereTimeline",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get the authenticated viewer's Atmosphere activity timeline. Grouping and related activity are limited to the returned page.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "cursor": { "type": "string" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["feed"],
+          "properties": {
+            "cursor": { "type": "string" },
+            "feed": {
+              "type": "array",
+              "items": {
+                "type": "union",
+                "refs": ["#activityItem", "#activityItemOverflow", "#activityGroup"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "activityRecord": {
+      "type": "object",
+      "required": ["uri", "cid", "indexedAt"],
+      "properties": {
+        "uri": { "type": "string", "format": "at-uri" },
+        "cid": { "type": "string", "format": "cid" },
+        "indexedAt": { "type": "string", "format": "datetime" }
+      }
+    },
+    "viewerState": {
+      "type": "object",
+      "required": ["subscribed"],
+      "properties": {
+        "subscribed": { "type": "boolean" }
+      }
+    },
+    "activityItem": {
+      "type": "object",
+      "required": ["record", "collection", "viewerState"],
+      "properties": {
+        "record": { "type": "ref", "ref": "#activityRecord" },
+        "collection": { "type": "string", "format": "nsid" },
+        "viewerState": { "type": "ref", "ref": "#viewerState" },
+        "view": {
+          "type": "union",
+          "refs": [
+            "app.bsky.embed.external#viewArticle",
+            "app.bsky.embed.external#viewArticlePublication",
+            "app.bsky.embed.external#viewGallery",
+            "app.bsky.embed.external#viewLivestream",
+            "app.bsky.feed.defs#postView"
+          ]
+        },
+        "relatedActivity": {
+          "type": "array",
+          "description": "Recommendations and shares attached to this article. Attached activities do not themselves contain related activity.",
+          "items": { "type": "ref", "ref": "#activityItem" }
+        }
+      }
+    },
+    "activityItemOverflow": {
+      "type": "object",
+      "description": "Distinct additional activities omitted from this page for an author and collection, without hydrating the omitted records.",
+      "required": ["count", "collection", "associatedProfiles"],
+      "properties": {
+        "count": { "type": "integer", "minimum": 1 },
+        "collection": { "type": "string", "format": "nsid" },
+        "associatedProfiles": {
+          "type": "array",
+          "items": { "type": "ref", "ref": "app.bsky.actor.defs#profileViewBasic" }
+        }
+      }
+    },
+    "activityGroup": {
+      "type": "object",
+      "description": "Two or more activities of the same collection, within a fixed window anchored at the newest member. The group occupies the newest member's position.",
+      "required": ["id", "groupBy", "collection", "indexedAt", "items"],
+      "properties": {
+        "id": { "type": "string" },
+        "groupBy": { "type": "string", "knownValues": ["subject", "actor"] },
+        "collection": { "type": "string", "format": "nsid" },
+        "indexedAt": { "type": "string", "format": "datetime" },
+        "items": {
+          "type": "array",
+          "minLength": 2,
+          "items": { "type": "ref", "ref": "#activityItem" }
+        },
+        "subject": { "type": "string", "format": "at-uri" },
+        "actor": { "type": "string", "format": "did" }
+      }
+    }
+  }
+}

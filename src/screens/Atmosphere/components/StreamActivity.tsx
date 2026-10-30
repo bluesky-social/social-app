@@ -11,11 +11,12 @@ import {
   getLivestreamStatus,
   getLivestreamUrl,
 } from '#/screens/Atmosphere/streams'
-import {isLivestreamRecord} from '#/screens/Atmosphere/types'
 import {atoms as a, useTheme} from '#/alf'
 import {StreamingLive_Stroke2_Corner0_Rounded as StreamIcon} from '#/components/icons/StreamingLive'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {
   ActivityActorLine,
   ActivityCard,
@@ -31,8 +32,9 @@ export function LivestreamActivityRenderer({
   const {t: l, i18n} = useLingui()
   const first = getFirstActivity(item)
   if (!first) return null
-  const raw = item.associatedRecords[first.record.uri]?.record
-  const record = isLivestreamRecord(raw) ? raw : undefined
+  const record = bsky.isType(app.bsky.embed.external.viewLivestream, first.view)
+    ? first.view
+    : undefined
   const status = record ? getLivestreamStatus(record) : undefined
   const isActorGroup = item.type === 'group' && item.group.groupBy === 'actor'
   const actor = getActivityActor(first, item.actors)
@@ -63,12 +65,8 @@ export function LivestreamActivityRenderer({
       : l`streamed for ${duration}`
     : l`streamed`
   const footnoteAction =
-    status === 'ended' ? endedAction : l`started a livestream`
-  const thumb =
-    first.view?.$type === 'eric.bsky.atmosphere.getActivity#livestreamView' &&
-    first.view.thumb?.trim()
-      ? first.view.thumb
-      : undefined
+    status === 'active' ? l`started a livestream` : endedAction
+  const thumb = record?.image?.trim() || undefined
 
   const titleContent = (
     <Text
@@ -93,7 +91,7 @@ export function LivestreamActivityRenderer({
 
   return (
     <View testID={testID} style={a.px_xl}>
-      {status === 'active' && !isActorGroup ? (
+      {status === 'active' && !isActorGroup && href ? (
         <View testID="atmosphereActiveLivestream" style={a.gap_sm}>
           <View style={[a.flex_row, a.flex_wrap, a.align_center, a.gap_sm]}>
             <View

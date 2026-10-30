@@ -2,13 +2,11 @@ import {type Agent, type Client} from '@atproto/lex'
 import {type PasswordSession} from '@atproto/lex-password-session'
 
 import {
-  APPVIEW_SANDBOX_PROXY_SERVICE,
   BLUESKY_PROXY_HEADER,
   CHAT_PROXY_SERVICE,
   PUBLIC_BSKY_SERVICE,
 } from '#/lib/constants'
 import {createLexClient} from '#/lib/lexClient'
-import {APPVIEW_SANDBOX_URL} from '#/env'
 import {networkAwareFetch} from './network'
 
 /**
@@ -68,45 +66,6 @@ export function buildChatClient(agent: Agent): Client {
   return createLexClient(agent, {
     service: CHAT_PROXY_SERVICE,
     includeDeviceSessionHeaders: true,
-  })
-}
-
-/**
- * Build the signed-in appview-sandbox {@link Client}.
- *
- * By default, requests retain the active session and are proxied by the PDS to
- * {@link APPVIEW_SANDBOX_PROXY_SERVICE}. This is the path used by OTA builds,
- * so CI needs no sandbox-specific environment.
- *
- * When {@link APPVIEW_SANDBOX_URL} is set, requests go directly to that origin.
- * The local sandbox runs in development mode and accepts the account DID as its
- * authorization value, avoiding service-auth setup for local iteration. This
- * direct client deliberately carries no session token.
- */
-export function buildAppviewSandboxClient(
-  agent: Agent,
-  {
-    directUrl = APPVIEW_SANDBOX_URL,
-    fetch = networkAwareFetch,
-  }: {
-    directUrl?: string
-    fetch?: typeof globalThis.fetch
-  } = {},
-): Client {
-  if (directUrl) {
-    if (!agent.did) {
-      throw new NotAuthenticatedError('the appview-sandbox client')
-    }
-    return createLexClient({
-      did: agent.did,
-      service: directUrl,
-      headers: {authorization: agent.did},
-      fetch,
-    })
-  }
-
-  return createLexClient(agent, {
-    service: APPVIEW_SANDBOX_PROXY_SERVICE,
   })
 }
 

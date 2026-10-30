@@ -1,55 +1,40 @@
-import {type LivestreamRecord} from '#/screens/Atmosphere/types'
+import {type app} from '#/lexicons'
 
-/**
- * Applies the accepted prototype lifecycle rule: only an explicit endedAt
- * value marks a stream as ended. TODO: Confirm Streamplace endedAt/duration
- * semantics and stale no-end handling with the backend. No-end records may
- * appear live indefinitely; this is accepted for the prototype.
- */
+/** The served active flag is authoritative, including unfinished inactive streams. */
 export function getLivestreamStatus(
-  record: LivestreamRecord,
+  view: app.bsky.embed.external.ViewLivestream,
 ): 'active' | 'ended' {
-  return record.endedAt !== undefined ? 'ended' : 'active'
+  return view.active ? 'active' : 'ended'
 }
 
-/**
- * Returns whole elapsed seconds from the raw stream lifecycle timestamps.
- * Activity indexedAt is intentionally not used here.
- */
+/** Elapsed whole seconds from the actual start, or creation when no start exists. */
 export function getLivestreamDurationSeconds(
-  record: LivestreamRecord,
+  view: app.bsky.embed.external.ViewLivestream,
 ): number | undefined {
-  if (record.endedAt === undefined) return undefined
-
-  const createdAt = Date.parse(record.createdAt)
-  const endedAt = Date.parse(record.endedAt)
-  if (!Number.isFinite(createdAt) || !Number.isFinite(endedAt)) {
-    return undefined
-  }
-
-  const seconds = (endedAt - createdAt) / 1000
+  const start = view.startedAt ?? view.createdAt
+  if (!view.endedAt || !start) return undefined
+  const startedAt = Date.parse(start)
+  const endedAt = Date.parse(view.endedAt)
+  if (!Number.isFinite(startedAt) || !Number.isFinite(endedAt)) return undefined
+  const seconds = (endedAt - startedAt) / 1000
   return Number.isFinite(seconds) && seconds >= 0
     ? Math.floor(seconds)
     : undefined
 }
 
-/**
- * Returns only a real, credential-free HTTP(S) stream URL from the raw record.
- */
-export function getLivestreamUrl(record: LivestreamRecord): string | undefined {
-  const value = record.url?.trim()
-  if (!value || !/^https?:\/\//i.test(value)) return undefined
-
+/** Returns only the supplied credential-free HTTP(S) stream link. */
+export function getLivestreamUrl(
+  view: app.bsky.embed.external.ViewLivestream,
+): string | undefined {
+  const value = view.uri.trim()
+  if (!/^https?:\/\//i.test(value)) return undefined
   try {
     const url = new URL(value)
-    if (
-      (url.protocol !== 'http:' && url.protocol !== 'https:') ||
-      url.username ||
-      url.password
-    ) {
-      return undefined
-    }
-    return value
+    return (url.protocol === 'http:' || url.protocol === 'https:') &&
+      !url.username &&
+      !url.password
+      ? value
+      : undefined
   } catch {
     return undefined
   }

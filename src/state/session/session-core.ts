@@ -12,7 +12,6 @@ import {prefetchAgeAssuranceServerData} from '#/ageAssurance/data'
 import {features} from '#/analytics'
 import {
   buildAppviewClient,
-  buildAppviewSandboxClient,
   buildChatClient,
   buildPdsClient,
   getPublicAppviewClient,
@@ -58,7 +57,6 @@ function deriveServiceUrl(session: PasswordSession | null): URL {
 export type SessionBundle = {
   session: PasswordSession
   appviewClient: Client
-  appviewSandboxClient: Client
   pdsClient: Client
   chatClient: Client
   readonly service: URL
@@ -97,7 +95,6 @@ export function registerBundleKillSwitch(
 export function buildBundle(
   session: PasswordSession,
   storedPdsUrl?: string,
-  appviewSandboxFetch: typeof globalThis.fetch = networkAwareFetch,
 ): SessionBundle {
   /*
    * The stored url is persisted data and may be malformed (legacy writes,
@@ -112,9 +109,6 @@ export function buildBundle(
   return {
     session,
     appviewClient: buildAppviewClient(agent),
-    appviewSandboxClient: buildAppviewSandboxClient(agent, {
-      fetch: appviewSandboxFetch,
-    }),
     pdsClient: buildPdsClient(agent),
     chatClient: buildChatClient(agent),
     get service() {
@@ -208,7 +202,6 @@ export function makeSessionHooks({
 export type PublicSessionBundle = {
   session: null
   appviewClient: Client
-  appviewSandboxClient: Client
   pdsClient: Client
   chatClient: Client
   readonly service: URL
@@ -233,7 +226,6 @@ export function createPublicSessionBundle(): PublicSessionBundle {
   return {
     session: null,
     appviewClient: getPublicAppviewClient(),
-    appviewSandboxClient: getUnauthenticatedThrowingClient(),
     pdsClient: getUnauthenticatedThrowingClient(),
     chatClient: getUnauthenticatedThrowingClient(),
     service: new URL(PUBLIC_BSKY_SERVICE),
@@ -318,7 +310,7 @@ export async function createSessionBundleAndResume(
     session = new PasswordSession(sessionData, hooks)
   }
 
-  bundle = buildBundle(session, storedAccount.pdsUrl, hooks.fetch)
+  bundle = buildBundle(session, storedAccount.pdsUrl)
   registerBundleKillSwitch(bundle, hooks.kill)
   // The returned account is captured again after asynchronous preparation.
   const earlyAccount =
@@ -383,7 +375,7 @@ export async function createSessionBundleAndLogin(
     allowTakendown: true,
   })
 
-  bundle = buildBundle(session, undefined, hooks.fetch)
+  bundle = buildBundle(session)
   registerBundleKillSwitch(bundle, hooks.kill)
   // Seed the hook's did before it is armed.
   const earlyAccount = sessionDataToSessionAccountOrThrow(session)
@@ -428,7 +420,7 @@ export function createSessionBundleFromStoredAccount(
     sessionAccountToSessionData(storedAccount),
     hooks,
   )
-  bundle = buildBundle(session, storedAccount.pdsUrl, hooks.fetch)
+  bundle = buildBundle(session, storedAccount.pdsUrl)
   registerBundleKillSwitch(bundle, hooks.kill)
   configureModerationForAccount(bundle, storedAccount)
 

@@ -1,114 +1,81 @@
+import {createAtmosphereDebugItem, hasAtmosphereDebugParam} from './debug'
 import {
   createActivity,
   createActor,
-  createDocumentRecords,
-  createRecord,
+  createArticleView,
+  createPostView,
   createRow,
-  createShareRecord,
-  documentUri,
-  publicationUri,
-} from '#/screens/Atmosphere/testFixtures'
-import {activityCollections} from '#/screens/Atmosphere/types'
-import {createAtmosphereDebugItem, hasAtmosphereDebugParam} from './debug'
-
-// The global CID mock cannot validate real strong-reference CIDs.
-jest.unmock('multiformats/cid')
+} from './testFixtures'
+import {activityCollections} from './types'
 
 describe('Atmosphere debug mode', () => {
-  it.each([false, true])(
-    'follows standalone shares to documents and publications without cloning objects (recordWithMedia=%s)',
-    wrapped => {
-      const activity = createActivity({
-        collection: activityCollections.share,
-        did: 'did:plc:sharer',
-      })
-      const records = createDocumentRecords()
-      records[activity.record.uri] = createRecord(
-        activity.record.uri,
-        createShareRecord(documentUri, wrapped),
-      )
-      const irrelevantUri =
-        'at://did:plc:irrelevant/site.standard.document/other'
-      records[irrelevantUri] = createRecord(irrelevantUri, {
-        ...records[documentUri].record,
-      })
-      const actors = Object.fromEntries(
-        ['sharer', 'author', 'publisher', 'irrelevant', 'quoted'].map(name => {
-          const actor = createActor(`did:plc:${name}`)
-          return [actor.did, actor]
-        }),
-      )
-      const item = createRow([activity], {associatedRecords: records, actors})
-      const result = createAtmosphereDebugItem(item)
-      expect(Object.keys(result.associatedRecords)).toEqual([
-        activity.record.uri,
-        documentUri,
-        publicationUri,
-      ])
-      expect(Object.keys(result.actors)).toEqual([
-        'did:plc:sharer',
-        'did:plc:author',
-        'did:plc:publisher',
-      ])
-      expect(result.associatedRecords).not.toBe(records)
-      expect(result.actors).not.toBe(actors)
-      for (const [uri, record] of Object.entries(result.associatedRecords))
-        expect(record).toBe(records[uri])
-      for (const [did, actor] of Object.entries(result.actors))
-        expect(actor).toBe(actors[did])
-      if (result.type !== 'activity')
-        throw new Error('Expected a standalone item')
-      expect(result.activity).toBe(activity)
-    },
-  )
+  it('keeps the actual hydrated post and reachable profile objects, excluding unrelated page profiles', () => {
+    const post = createPostView()
+    const activity = createActivity({
+      collection: activityCollections.share,
+      did: 'did:plc:sharer',
+      view: post,
+    })
+    const actors = Object.fromEntries(
+      ['sharer', 'author', 'unrelated'].map(name => {
+        const actor = createActor(`did:plc:${name}`)
+        return [actor.did, actor]
+      }),
+    )
+    const item = createRow([activity], {actors})
+    const result = createAtmosphereDebugItem(item)
+    if (result.type !== 'activity') throw new Error('Expected activity')
+    expect(result.activity).toBe(activity)
+    expect(result.activity.view).toBe(post)
+    expect(Object.keys(result.actors)).toEqual([
+      'did:plc:sharer',
+      'did:plc:author',
+    ])
+    expect(result.actors).not.toBe(actors)
+    expect(result.actors['did:plc:sharer']).toBe(actors['did:plc:sharer'])
+    expect(result.actors['did:plc:author']).toBe(actors['did:plc:author'])
+  })
 
-  it('preserves grouped documents and mixed children while excluding quoted and unrelated records', () => {
+  it('preserves server groups, mixed related activities, publisher views and original profile references', () => {
     const recommendation = createActivity({
       collection: activityCollections.recommendation,
       did: 'did:plc:recommender',
+      view: createArticleView(),
     })
     const share = createActivity({
       collection: activityCollections.share,
       did: 'did:plc:sharer',
+      view: createPostView(),
     })
-    const parent = createActivity({relatedActivity: [recommendation, share]})
-    const second = createActivity({rkey: 'second'})
-    const records = createDocumentRecords()
-    records[second.record.uri] = createRecord(second.record.uri, {
-      ...records[documentUri].record,
-    })
-    records[recommendation.record.uri] = createRecord(
-      recommendation.record.uri,
-      {document: documentUri, createdAt: recommendation.record.indexedAt},
+    const root = createActivity({relatedActivity: [recommendation, share]})
+    const actors = Object.fromEntries(
+      ['author', 'publisher', 'recommender', 'sharer', 'unrelated'].map(
+        name => {
+          const actor = createActor(`did:plc:${name}`)
+          return [actor.did, actor]
+        },
+      ),
     )
-    records[share.record.uri] = createRecord(
-      share.record.uri,
-      createShareRecord(documentUri, true),
-    )
-    const quotedUri = 'at://did:plc:quoted/app.bsky.feed.post/quote'
-    records[quotedUri] = createRecord(quotedUri, {
-      text: 'A quote, not an external target',
-    })
-    const item = createRow([parent, second], {
+    const item = createRow([root, createActivity({rkey: 'second'})], {
       groupBy: 'actor',
-      associatedRecords: records,
+      actors,
     })
     const result = createAtmosphereDebugItem(item)
     if (item.type !== 'group' || result.type !== 'group')
-      throw new Error('Expected a group')
+      throw new Error('Expected group')
     expect(result.group).toBe(item.group)
-    expect(result.group.items[0].relatedActivity).toBe(parent.relatedActivity)
-    expect(Object.keys(result.associatedRecords)).toEqual(
+    expect(result.group.items[0].relatedActivity).toBe(root.relatedActivity)
+    expect(Object.keys(result.actors)).toEqual(
       expect.arrayContaining([
-        documentUri,
-        publicationUri,
-        recommendation.record.uri,
-        share.record.uri,
-        second.record.uri,
+        'did:plc:author',
+        'did:plc:publisher',
+        'did:plc:recommender',
+        'did:plc:sharer',
       ]),
     )
-    expect(result.associatedRecords[quotedUri]).toBeUndefined()
-    expect(Object.keys(result.associatedRecords)).toHaveLength(5)
+    expect(result.actors['did:plc:unrelated']).toBeUndefined()
+    for (const [did, actor] of Object.entries(result.actors))
+      expect(actor).toBe(actors[did])
   })
 
   it('requires the debug URL parameter', () => {

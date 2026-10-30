@@ -4,9 +4,11 @@ import {type AnimatedRef} from 'react-native-reanimated'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
+import {isSafeWebUrl} from '#/screens/Atmosphere/externalViews'
 import {getGrainPhotos} from '#/screens/Atmosphere/photos'
 import {getFirstActivity} from '#/screens/Atmosphere/relationships'
 import {type ActivityRendererProps} from '#/screens/Atmosphere/renderers'
+import {activityCollections} from '#/screens/Atmosphere/types'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Grain} from '#/components/icons/community/Grain'
 import {Image_Stroke2_Corner2_Rounded as PhotoIcon} from '#/components/icons/Image'
@@ -14,17 +16,18 @@ import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {Gallery, GalleryBleed} from '#/components/images/Gallery'
 import {useLightboxControls} from '#/components/Lightbox/state'
 import {type Dimensions} from '#/components/Lightbox/types'
-import {Link} from '#/components/Link'
+import {InlineLinkText, Link} from '#/components/Link'
 import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {Text} from '#/components/Typography'
-import {type app} from '#/lexicons'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {
   ActivityActorLine,
   ActivityCard,
   ActivityFootnote,
 } from './ActivityPrimitives'
 
-export function GrainPhotoActivityRenderer({
+export function GrainGalleryActivityRenderer({
   item,
   computedItemView,
   testID,
@@ -34,13 +37,22 @@ export function GrainPhotoActivityRenderer({
   const first = getFirstActivity(item)
   if (!first) return null
   const images = getGrainPhotos(item)
+  const gallery = bsky.isType(app.bsky.embed.external.viewGallery, first.view)
+    ? first.view
+    : undefined
+  const href = gallery && isSafeWebUrl(gallery.uri) ? gallery.uri : undefined
+  const title = gallery?.title.trim() || l`Gallery`
+  const favorite = first.collection === activityCollections.grainFavorite
   const count = item.type === 'group' ? item.group.items.length : 1
   const timestamp =
     item.type === 'group' ? item.group.indexedAt : first.record.indexedAt
-  const action =
-    count === 1
-      ? l`posted a photo`
-      : l`posted ${plural(count, {one: '# photo', other: '# photos'})}`
+  const action = favorite
+    ? count === 1
+      ? l`favorited a gallery`
+      : l`favorited ${plural(count, {one: '# gallery', other: '# galleries'})}`
+    : count === 1
+      ? l`posted a gallery`
+      : l`posted ${plural(count, {one: '# gallery', other: '# galleries'})}`
   const metadata = (
     <ActivityActorLine
       actors={computedItemView.actors}
@@ -77,13 +89,34 @@ export function GrainPhotoActivityRenderer({
                   </View>
                 </Link>
               </View>
+              {gallery ? (
+                href ? (
+                  <InlineLinkText
+                    to={href}
+                    label={title}
+                    emoji
+                    style={[a.text_lg, a.font_semi_bold]}>
+                    {title}
+                  </InlineLinkText>
+                ) : (
+                  <Text emoji style={[a.text_lg, a.font_semi_bold]}>
+                    {title}
+                  </Text>
+                )
+              ) : null}
+              {gallery?.description.trim() ? (
+                <Text emoji style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                  {gallery.description}
+                </Text>
+              ) : null}
               <PhotoMedia images={images} />
             </View>
           </ActivityCard>
         </View>
       ) : (
         <ActivityFootnote
-          title={count === 1 ? l`Photo unavailable` : l`Photos unavailable`}
+          title={gallery?.title.trim() || l`Gallery unavailable`}
+          to={href}
           icon={PhotoIcon}
           actors={computedItemView.actors}
           action={action}

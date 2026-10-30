@@ -6,26 +6,46 @@ import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {cleanError} from '#/lib/strings/errors'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
-import {
-  type ActivityListItem,
-  buildActivityListItems,
-} from '#/screens/Atmosphere/model'
-import {useAtmosphereRawQuery} from '#/screens/Atmosphere/query'
+import {useAtmosphereQuery} from '#/screens/Atmosphere/query'
 import {atoms as a} from '#/alf'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
-import {RawActivityFootnote} from './RawActivityFootnote'
+import {type app} from '#/lexicons'
+
+type RawListItem =
+  | {
+      type: 'entry'
+      key: string
+      entry: app.bsky.unspecced.getAtmosphereTimeline.$OutputBody['feed'][number]
+    }
+  | {type: 'loading' | 'empty'; key: string}
+  | {type: 'error'; key: string; error: string}
 
 export function RawActivityList() {
   const {t: l} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const [refreshing, setRefreshing] = useState(false)
-  const query = useAtmosphereRawQuery()
+  const query = useAtmosphereQuery()
   const error = query.error ? cleanError(query.error) : undefined
-  const items = buildActivityListItems(query.data, error)
-  const hasRows = items.some(item => item.type === 'activity')
+  const entries: RawListItem[] =
+    query.data?.pages.flatMap((page, pageIndex) =>
+      page.feed.map((entry, index) => ({
+        type: 'entry' as const,
+        key: `raw:${pageIndex}:${index}`,
+        entry,
+      })),
+    ) ?? []
+  const hasRows = entries.length > 0
+  const items: RawListItem[] = hasRows
+    ? entries
+    : error
+      ? [{type: 'error', key: 'error', error}]
+      : query.data
+        ? [{type: 'empty', key: 'empty'}]
+        : [{type: 'loading', key: 'loading'}]
 
   const onRefresh = async () => {
     setRefreshing(true)
@@ -37,7 +57,13 @@ export function RawActivityList() {
   }
   const fetchNextPage = () => query.fetchNextPage({cancelRefetch: false})
   const onEndReached = () => {
-    if (!hasRows || !query.hasNextPage || query.isFetching || query.error)
+    if (
+      !hasRows ||
+      !query.hasNextPage ||
+      query.isFetching ||
+      query.isFetchingNextPage ||
+      query.error
+    )
       return
     void fetchNextPage()
   }
@@ -47,13 +73,15 @@ export function RawActivityList() {
       testID="atmosphereRawList"
       data={items}
       contentContainerStyle={a.pb_2xl}
-      keyExtractor={(item: ActivityListItem) => item.key}
-      renderItem={({item}: {item: ActivityListItem}) => {
+      keyExtractor={(item: RawListItem) => item.key}
+      renderItem={({item}: {item: RawListItem}) => {
         switch (item.type) {
-          case 'activity':
+          case 'entry':
             return (
               <View testID="atmosphereRawRow" style={[a.px_xl, a.py_md]}>
-                <RawActivityFootnote item={item} />
+                <Text testID="atmosphereRawEntry" selectable style={a.text_xs}>
+                  {JSON.stringify(item.entry, null, 2)}
+                </Text>
               </View>
             )
           case 'loading':
@@ -87,8 +115,6 @@ export function RawActivityList() {
                 }}
               />
             )
-          case 'group':
-            return null
         }
       }}
       refreshing={refreshing}

@@ -120,6 +120,7 @@
     "app.bsky.richtext.facet",
     "app.bsky.unspecced.getAtmosphereApps",
     "app.bsky.unspecced.getAtmosphereExploreTab",
+    "app.bsky.unspecced.getAtmosphereTimeline",
     "app.bsky.video.defs",
     "app.bsky.video.getJobStatus",
     "app.bsky.video.getUploadLimits",
@@ -767,6 +768,10 @@
     "app.bsky.unspecced.getAtmosphereExploreTab": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.unspecced.getAtmosphereExploreTab",
       "cid": "bafyreihbh326n4onxitcho3mrbvk5kblz3mexq7i2xjv2g62kvkbye6wzm"
+    },
+    "app.bsky.unspecced.getAtmosphereTimeline": {
+      "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.unspecced.getAtmosphereTimeline",
+      "cid": "bafyreibq6g2kinvd4kcvxrqn7xoydqhcca2fajlqxyckaqfkfljivmd6ni"
     },
     "app.bsky.video.defs": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.video.defs",

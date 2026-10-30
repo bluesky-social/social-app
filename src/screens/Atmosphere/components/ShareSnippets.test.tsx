@@ -9,18 +9,18 @@ import {Mark as BlueskyIcon} from '#/components/icons/brands/Mark'
 import {Heart2_Stroke2_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
 import {Reply_Stroke2_Corner0_Rounded as ReplyIcon} from '#/components/icons/Reply'
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
+import {type app} from '#/lexicons'
+import {getActivityPostView} from '../externalViews'
 import {
   createActivity,
   createActor,
-  createRecord,
+  createPostView,
   createShareRecord,
-  createShareView,
 } from '../testFixtures'
 import {
   type ActivityActor,
   activityCollections,
   type ActivityItem,
-  type ShareRecord,
 } from '../types'
 import {ShareSnippets} from './ShareSnippets'
 
@@ -118,8 +118,10 @@ jest.mock('./ActivityPrimitives', () => {
   }
 })
 
+type ShareRecord = app.bsky.feed.post.Main
+
 type ShareFixture = {
-  activity: ReturnType<typeof createActivity>
+  activity: ActivityItem
   actor: ActivityActor
   record: ShareRecord
 }
@@ -132,6 +134,11 @@ function createShare(index: number, text = `Post ${index}`): ShareFixture {
   })
   const actor = createActor(`did:plc:sharer${index}`)
   const record = {...createShareRecord(), text} as ShareRecord
+  activity.view = createPostView({
+    uri: activity.record.uri,
+    author: actor,
+    record,
+  })
   return {activity, actor, record}
 }
 
@@ -142,19 +149,22 @@ function renderShares(
   hideActorMetadataForDid?: string,
 ) {
   const missing = new Set(missingRecordUris)
-  const associatedRecords = Object.fromEntries(
-    shares
-      .filter(({activity}) => !missing.has(activity.record.uri))
-      .map(({activity, record}) => [
-        activity.record.uri,
-        createRecord(activity.record.uri, record),
-      ]),
-  )
+  for (const {activity, actor, record} of shares) {
+    if (missing.has(activity.record.uri)) {
+      activity.view = undefined
+    } else {
+      activity.view = createPostView({
+        ...getActivityPostView(activity),
+        uri: activity.record.uri,
+        author: actor,
+        record,
+      })
+    }
+  }
   return render(
     <I18nProvider i18n={i18n}>
       <ShareSnippets
         shares={shares.map(({activity, actor}) => ({activity, actor}))}
-        associatedRecords={associatedRecords}
         showActorMetadata={showActorMetadata}
         hideActorMetadataForDid={hideActorMetadataForDid}
       />
@@ -207,9 +217,7 @@ describe('ShareSnippets', () => {
     invalid.activity.record.uri =
       'at://did:plc:other/app.bsky.feed.post/wrong-owner'
     const missing = createShare(2)
-    const malformed = createShare(3)
-    Object.assign(malformed.record, {text: 42})
-    const shares = [empty, invalid, missing, malformed]
+    const shares = [empty, invalid, missing]
     const screen = renderShares(shares, undefined, [
       missing.activity.record.uri,
     ])
@@ -253,7 +261,7 @@ describe('ShareSnippets', () => {
 
   it('renders ordered, themed, localized metrics beneath the post text', () => {
     const share = createShare(0)
-    share.activity.view = createShareView({
+    share.activity.view = createPostView({
       likeCount: 1234,
       repostCount: 56_789,
       replyCount: 0,
@@ -322,7 +330,7 @@ describe('ShareSnippets', () => {
   it('localizes large counts and renders metrics for an empty post', () => {
     i18n.activate('de')
     const share = createShare(0, '   ')
-    share.activity.view = createShareView({
+    share.activity.view = createPostView({
       likeCount: 0,
       repostCount: 12_345,
       replyCount: 9_876_543,
@@ -340,15 +348,19 @@ describe('ShareSnippets', () => {
     )
   })
 
-  it.each([
-    undefined,
-    {$type: 'eric.bsky.atmosphere.getActivity#photoView'},
-    {$type: 'eric.bsky.atmosphere.getActivity#shareView', likeCount: 1},
-  ])('omits metrics for absent, wrong, or malformed views (%j)', view => {
+  it('omits absent counts independently while preserving explicit zero', () => {
     const share = createShare(0)
-    share.activity.view = view as ActivityItem['view']
+    share.activity.view = createPostView({
+      likeCount: undefined,
+      repostCount: undefined,
+      replyCount: 0,
+    })
     const screen = renderShares([share])
-    expect(screen.queryByTestId('atmosphereShareMetrics')).toBeNull()
+    expect(screen.queryByTestId('atmosphereShareLikeMetric')).toBeNull()
+    expect(screen.queryByTestId('atmosphereShareRepostMetric')).toBeNull()
+    expect(screen.getByTestId('atmosphereShareReplyCount')).toHaveTextContent(
+      '0',
+    )
   })
 
   it('keeps quote, facet, and already-prevented thread events independent', () => {
@@ -411,7 +423,7 @@ describe('ShareSnippets', () => {
     expect(mockOpenThread).toHaveBeenCalledTimes(1)
   })
 
-  it('preserves long Unicode text, real UTF-8 facets, and the original sidecar order', () => {
+  it('preserves long Unicode text, real UTF-8 facets, and the original facet order', () => {
     const text = `🌐 café @alice #tag https://example.com\n${'مرحبا '.repeat(50)}`
     const share = createShare(0, text)
     type Facet = NonNullable<ShareRecord['facets']>[number]
@@ -497,3 +509,19 @@ function screenButtonProps(testID: string) {
     }) => void
   }
 }
+
+it('does not invent metrics when no optional post counts are supplied', () => {
+  const share = createShare(0)
+  share.activity.view = createPostView({
+    likeCount: undefined,
+    repostCount: undefined,
+    replyCount: undefined,
+    quoteCount: undefined,
+    bookmarkCount: undefined,
+  })
+  const screen = renderShares([share])
+  expect(screen.queryByTestId('atmosphereShareLikeCount')).toBeNull()
+  expect(screen.queryByTestId('atmosphereShareRepostCount')).toBeNull()
+  expect(screen.queryByTestId('atmosphereShareReplyCount')).toBeNull()
+  expect(screen.getByTestId('atmosphereShareSnippet')).toBeTruthy()
+})

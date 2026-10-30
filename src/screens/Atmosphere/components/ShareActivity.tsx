@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react/macro'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {createDocumentExternalView} from '#/screens/Atmosphere/externalViews'
+import {getArticleExternalView} from '#/screens/Atmosphere/externalViews'
 import {getRecordActor} from '#/screens/Atmosphere/presentation'
 import {getFirstActivity} from '#/screens/Atmosphere/relationships'
 import {type ActivityRendererProps} from '#/screens/Atmosphere/renderers'
@@ -14,11 +14,12 @@ import {
   getArticleActivityUri,
   getShareActivities,
 } from '#/screens/Atmosphere/rowLayout'
-import {type ActivityActor, isDocumentRecord} from '#/screens/Atmosphere/types'
+import {type ActivityActor} from '#/screens/Atmosphere/types'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ShareIcon} from '#/components/icons/ArrowOutOfBox'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 import {
   ActivityActorLine,
   ActivityCard,
@@ -51,14 +52,8 @@ export function ShareActivityRenderer({
     remainingCount > 0
       ? l`and ${plural(remainingCount, {one: '# more post', other: '# more posts'})}`
       : undefined
-  const view = createDocumentExternalView({uri: documentUri, ...item})
-  const record = documentUri
-    ? item.associatedRecords[documentUri]?.record
-    : undefined
-  const title =
-    view?.title.trim() ||
-    (isDocumentRecord(record) ? record.title.trim() : '') ||
-    l`Article unavailable`
+  const view = getArticleExternalView(first)
+  const title = view?.title.trim() || l`Article unavailable`
   const author = getRecordActor(documentUri, item.actors)
   const isMultiple = shares.length > 1
 
@@ -78,11 +73,7 @@ export function ShareActivityRenderer({
               <DocumentMenuPlaceholder />
             </View>
             {!isMultiple ? (
-              <ShareSnippets
-                shares={shares}
-                associatedRecords={item.associatedRecords}
-                showActorMetadata={false}
-              />
+              <ShareSnippets shares={shares} showActorMetadata={false} />
             ) : null}
             <View style={[a.pt_md]}>
               <ShareDocumentPreview
@@ -92,12 +83,7 @@ export function ShareActivityRenderer({
                 author={author}
               />
             </View>
-            {isMultiple ? (
-              <ShareSnippets
-                shares={shares}
-                associatedRecords={item.associatedRecords}
-              />
-            ) : null}
+            {isMultiple ? <ShareSnippets shares={shares} /> : null}
           </ActivityCard>
         </View>
       ) : (
@@ -121,7 +107,7 @@ function ShareDocumentPreview({
   suffix,
   author,
 }: {
-  view: ReturnType<typeof createDocumentExternalView>
+  view?: app.bsky.embed.external.ViewExternal
   title: string
   suffix?: string
   author?: ActivityActor

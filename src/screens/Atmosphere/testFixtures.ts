@@ -1,4 +1,4 @@
-import {AtUri} from '@atproto/syntax'
+import {AtUri, isValidDid} from '@atproto/syntax'
 
 import {
   type ActivityPresentationItem,
@@ -8,11 +8,13 @@ import {
   type ActivityActor,
   type ActivityActors,
   activityCollections,
+  type ActivityGroup,
   type ActivityItem,
   type ActivityView,
-  type AssociatedRecord,
-  type AssociatedRecords,
 } from '#/screens/Atmosphere/types'
+import {type app} from '#/lexicons'
+
+type Typed<T extends {$type?: string}> = T & {$type: NonNullable<T['$type']>}
 
 export const recordCid =
   'bafyreie5sviu7eeu3vf6n3lrlmqef2vdlwmgzd6zpolov56agdxtshdpda'
@@ -20,93 +22,88 @@ export const documentUri = 'at://did:plc:author/site.standard.document/article'
 export const publicationUri =
   'at://did:plc:publisher/site.standard.publication/site'
 
-export function createActivity({
-  collection = activityCollections.document,
-  did = 'did:plc:author',
-  rkey = 'article',
-  subscribed = false,
-  view,
-  relatedActivity,
-}: {
-  collection?: string
-  did?: string
-  rkey?: string
-  subscribed?: boolean
-  view?: ActivityView
-  relatedActivity?: ActivityItem[]
-} = {}): ActivityItem {
-  return {
-    $type: 'eric.bsky.atmosphere.getActivity#item',
-    record: {
-      uri: `at://${did}/${collection}/${rkey}`,
-      cid: recordCid,
-      indexedAt: '2026-09-10T12:00:00.000Z',
-    },
-    collection,
-    viewerState: {subscribed},
-    view,
-    relatedActivity,
-  }
-}
-
-export function createActor(did = 'did:plc:author'): ActivityActor {
+export function createActor(
+  did: ActivityActor['did'] = 'did:plc:author',
+): ActivityActor {
   return {did, handle: `${did.split(':').at(-1)}.example`}
 }
 
-export function createRecord(
-  uri: string,
-  record: AssociatedRecord['record'],
-): AssociatedRecord {
-  return {uri, cid: recordCid, record}
-}
-
-export function createDocumentRecords(): AssociatedRecords {
+export function createPublicationView(
+  overrides: Partial<app.bsky.embed.external.ViewArticlePublication> = {},
+): Typed<app.bsky.embed.external.ViewArticlePublication> {
   return {
-    [documentUri]: createRecord(documentUri, {
-      $type: activityCollections.document,
-      site: publicationUri,
-      title: 'An article',
-      publishedAt: '2026-09-10T11:00:00.000Z',
-    }),
-    [publicationUri]: createRecord(publicationUri, {
-      $type: activityCollections.publication,
-      name: 'A publication',
-      url: 'https://publication.example/',
-    }),
+    $type: 'app.bsky.embed.external#viewArticlePublication',
+    uri: 'https://publication.example/',
+    title: 'A publication',
+    description: 'A publication description',
+    logo: 'https://publication.example/logo.png',
+    associatedRefs: [{uri: publicationUri, cid: recordCid}],
+    associatedProfiles: [createActor('did:plc:publisher')],
+    ...overrides,
   }
 }
 
-export function createShareView({
-  likeCount = 12,
-  replyCount = 34,
-  repostCount = 56,
-  quoteCount = 78,
-  bookmarkCount = 90,
-}: {
-  likeCount?: number
-  replyCount?: number
-  repostCount?: number
-  quoteCount?: number
-  bookmarkCount?: number
-} = {}): Extract<
-  ActivityView,
-  {$type: 'eric.bsky.atmosphere.getActivity#shareView'}
-> {
+export function createArticleView(
+  overrides: Partial<app.bsky.embed.external.ViewArticle> = {},
+): Typed<app.bsky.embed.external.ViewArticle> {
   return {
-    $type: 'eric.bsky.atmosphere.getActivity#shareView',
-    likeCount,
-    replyCount,
-    repostCount,
-    quoteCount,
-    bookmarkCount,
+    $type: 'app.bsky.embed.external#viewArticle',
+    uri: 'https://publication.example/article',
+    title: 'An article',
+    description: 'An article preview',
+    image: 'https://publication.example/article.png',
+    createdAt: '2026-09-10T11:00:00.000Z',
+    publisher: createPublicationView(),
+    associatedRefs: [{uri: documentUri, cid: recordCid}],
+    associatedProfiles: [createActor()],
+    ...overrides,
+  }
+}
+
+export function createGalleryView(
+  overrides: Partial<app.bsky.embed.external.ViewGallery> = {},
+): Typed<app.bsky.embed.external.ViewGallery> {
+  return {
+    $type: 'app.bsky.embed.external#viewGallery',
+    uri: 'https://grain.social/gallery/example',
+    title: 'A gallery',
+    description: 'A gallery description',
+    items: [
+      {
+        $type: 'app.bsky.embed.external#viewGalleryImage',
+        thumbnail: 'https://grain.social/photo-thumb.jpg',
+        fullsize: 'https://grain.social/photo-full.jpg',
+        alt: 'A photo',
+        aspectRatio: {width: 3, height: 2},
+      },
+    ],
+    associatedProfiles: [createActor()],
+    ...overrides,
+  }
+}
+
+export function createLivestreamView(
+  overrides: Partial<app.bsky.embed.external.ViewLivestream> = {},
+): Typed<app.bsky.embed.external.ViewLivestream> {
+  return {
+    $type: 'app.bsky.embed.external#viewLivestream',
+    uri: 'https://stream.place/author',
+    title: 'A livestream',
+    description: 'A livestream description',
+    active: true,
+    image: 'https://stream.place/author/thumb.jpg',
+    createdAt: '2026-09-10T10:00:00.000Z',
+    startedAt: '2026-09-10T11:00:00.000Z',
+    associatedProfiles: [createActor()],
+    ...overrides,
   }
 }
 
 export function createShareRecord(
-  target = documentUri,
+  target: ActivityItem['record']['uri'] = documentUri,
   recordWithMedia = false,
-) {
-  const external = {
+): Typed<app.bsky.feed.post.Main> {
+  const external: Typed<app.bsky.embed.external.Main> = {
     $type: 'app.bsky.embed.external',
     external: {
       uri: 'https://publication.example/article',
@@ -116,7 +113,7 @@ export function createShareRecord(
     },
   }
   return {
-    $type: activityCollections.share,
+    $type: 'app.bsky.feed.post',
     text: 'Some commentary',
     createdAt: '2026-09-10T12:00:00.000Z',
     embed: recordWithMedia
@@ -135,49 +132,109 @@ export function createShareRecord(
   }
 }
 
+export function createPostView(
+  overrides: Partial<app.bsky.feed.defs.PostView> = {},
+): Typed<app.bsky.feed.defs.PostView> {
+  return {
+    $type: 'app.bsky.feed.defs#postView',
+    uri: 'at://did:plc:sharer/app.bsky.feed.post/share',
+    cid: recordCid,
+    author: createActor('did:plc:sharer'),
+    record: createShareRecord(),
+    indexedAt: '2026-09-10T12:00:00.000Z',
+    likeCount: 12,
+    replyCount: 34,
+    repostCount: 56,
+    quoteCount: 78,
+    bookmarkCount: 90,
+    embed: {
+      $type: 'app.bsky.embed.external#view',
+      external: {
+        $type: 'app.bsky.embed.external#viewExternal',
+        uri: 'https://publication.example/article',
+        title: 'An article',
+        description: 'An article preview',
+        associatedRefs: [{uri: documentUri, cid: recordCid}],
+        associatedProfiles: [createActor()],
+      },
+    },
+    ...overrides,
+  }
+}
+
+export function createActivity({
+  collection = activityCollections.document,
+  did = 'did:plc:author',
+  rkey = 'article',
+  subscribed = false,
+  view = collection === activityCollections.document
+    ? createArticleView()
+    : undefined,
+  relatedActivity,
+}: {
+  collection?: ActivityItem['collection']
+  did?: ActivityActor['did']
+  rkey?: string
+  subscribed?: boolean
+  view?: ActivityView
+  relatedActivity?: ActivityItem[]
+} = {}): Typed<ActivityItem> {
+  return {
+    $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityItem',
+    record: {
+      uri: `at://${did}/${collection}/${rkey}`,
+      cid: recordCid,
+      indexedAt: '2026-09-10T12:00:00.000Z',
+    },
+    collection,
+    viewerState: {subscribed},
+    view,
+    relatedActivity,
+  }
+}
+
 export function createRow(
   activities: ActivityItem[],
   {
     groupBy = 'subject',
-    associatedRecords = {},
+    subject = documentUri,
     actors = Object.fromEntries(
       activities.map(activity => {
-        const did = new AtUri(activity.record.uri).host
+        const did = getOwnerDid(activity.record.uri)
         return [did, createActor(did)]
       }),
     ),
   }: {
     groupBy?: 'subject' | 'actor'
-    associatedRecords?: AssociatedRecords
+    subject?: ActivityGroup['subject']
     actors?: ActivityActors
   } = {},
 ): ActivityPresentationItem {
   const first = activities[0]
   return activities.length === 1
-    ? {
-        type: 'activity',
-        key: first.record.uri,
-        activity: first,
-        associatedRecords,
-        actors,
-      }
+    ? {type: 'activity', key: first.record.uri, activity: first, actors}
     : {
         type: 'group',
         key: 'group',
         group: {
-          $type: 'eric.bsky.atmosphere.getActivity#group',
+          $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup',
           id: 'group',
           collection: first.collection,
           groupBy,
           actor:
-            groupBy === 'actor' ? new AtUri(first.record.uri).host : undefined,
-          subject: groupBy === 'subject' ? documentUri : undefined,
+            groupBy === 'actor' ? getOwnerDid(first.record.uri) : undefined,
+          subject: groupBy === 'subject' ? subject : undefined,
           indexedAt: first.record.indexedAt,
           items: activities,
         },
-        associatedRecords,
         actors,
       }
+}
+
+function getOwnerDid(uri: ActivityItem['record']['uri']): ActivityActor['did'] {
+  const did = new AtUri(uri).host
+  if (!isValidDid(did)) throw new Error('Expected a DID-owned activity fixture')
+  return did
 }
 
 export function present(item: ActivityPresentationItem) {

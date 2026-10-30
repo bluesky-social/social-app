@@ -19,7 +19,7 @@ export type ActivityTimelineListItem = ActivityPresentationListItem & {
   }
 }
 
-/** Decorates visible outer rows without changing their keys, groups, or sidecars. */
+/** Decorates visible activities while preserving server groups and overflow. */
 export function buildActivityTimelineItems(
   items: ActivityPresentationListItem[],
   now: Date,

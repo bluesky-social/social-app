@@ -23,25 +23,19 @@ describe('configureModerationForAccount', () => {
     configureGlobalAppLabelers([])
   })
 
-  it('applies cached account labelers to appview, appview-sandbox, and chat', () => {
+  it('applies cached account labelers to appview and chat', () => {
     const appviewClient = {setLabelers: jest.fn()} as unknown as Client
-    const appviewSandboxClient = {
-      setLabelers: jest.fn(),
-    } as unknown as Client
     const chatClient = {setLabelers: jest.fn()} as unknown as Client
     jest
       .mocked(account.get)
       .mockReturnValue(['did:plc:account-labeler', api.moderation.did])
 
     configureModerationForAccount(
-      {appviewClient, appviewSandboxClient, chatClient},
+      {appviewClient, chatClient},
       makeAccount({handle: 'alice.example.com'}),
     )
 
     expect(appviewClient.setLabelers).toHaveBeenCalledWith([
-      'did:plc:account-labeler',
-    ])
-    expect(appviewSandboxClient.setLabelers).toHaveBeenCalledWith([
       'did:plc:account-labeler',
     ])
     expect(chatClient.setLabelers).toHaveBeenCalledWith([

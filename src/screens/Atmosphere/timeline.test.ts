@@ -5,7 +5,7 @@ import {buildActivityPresentationListItems} from './presentation'
 import {
   createActivity,
   createActor,
-  createRecord,
+  createPublicationView,
   createRow,
 } from './testFixtures'
 import {buildActivityTimelineItems} from './timeline'
@@ -13,7 +13,8 @@ import {
   type ActivityActor,
   activityCollections,
   type ActivityFeedEntry,
-  type AssociatedRecords,
+  type ActivityItem,
+  type ActivityOverflow,
   type AtmosphereActivityPage,
 } from './types'
 
@@ -32,7 +33,7 @@ function unknownActivity({
   rkey = 'item',
   indexedAt,
 }: {
-  did?: string
+  did?: ActivityActor['did']
   rkey?: string
   indexedAt: Date
 }) {
@@ -41,7 +42,8 @@ function unknownActivity({
     did,
     rkey,
   })
-  activity.record.indexedAt = indexedAt.toISOString()
+  activity.record.indexedAt =
+    indexedAt.toISOString() as ActivityItem['record']['indexedAt']
   return activity
 }
 
@@ -50,23 +52,52 @@ function publicationActivity(rkey: string, indexedAt: Date) {
     collection: activityCollections.publication,
     did: 'did:plc:publisher',
     rkey,
+    view: createPublicationView(),
   })
-  activity.record.indexedAt = indexedAt.toISOString()
+  activity.record.indexedAt =
+    indexedAt.toISOString() as ActivityItem['record']['indexedAt']
   return activity
 }
 
 function page(
   feed: ActivityFeedEntry[],
   {
-    associatedRecords = {},
     actors = {},
   }: {
-    associatedRecords?: AssociatedRecords
     actors?: Record<string, ActivityActor>
   } = {},
 ): AtmosphereActivityPage {
-  return {feed, associatedRecords, actors}
+  return {feed, actors}
 }
+
+it('passes overflow through without inventing a timestamp, heading, or presentation', () => {
+  const overflow = {
+    $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityItemOverflow',
+    count: 7,
+    collection: activityCollections.grainFavorite,
+    associatedProfiles: [createActor()],
+  } satisfies ActivityOverflow
+  const now = localDate(2026, 9, 11)
+  const first = unknownActivity({rkey: 'before-overflow', indexedAt: now})
+  const second = unknownActivity({rkey: 'after-overflow', indexedAt: now})
+  const items = timeline(
+    [
+      page([first, overflow, second], {
+        actors: {'did:plc:timeline': createActor('did:plc:timeline')},
+      }),
+    ],
+    now,
+  )
+  expect(items.map(item => item.item.type)).toEqual([
+    'activity',
+    'overflow',
+    'activity',
+  ])
+  expect(items[1].item).toEqual(expect.objectContaining({overflow}))
+  expect(items[1].computedItemView).toBeUndefined()
+  expect(items[1].layout).toBeUndefined()
+  expect(items[2].layout?.separator).toBe(false)
+})
 
 function timeline(pages: AtmosphereActivityPage[], now: Date) {
   const listItems = buildActivityListItems({
@@ -99,28 +130,15 @@ describe('Atmosphere timeline integration', () => {
       'card-three',
       new Date(now.getTime() - 4_000),
     )
-    const publicationRecords = [cardOne, cardTwo, cardThree].reduce(
-      (records, activity) => {
-        records[activity.record.uri] = createRecord(activity.record.uri, {
-          $type: activityCollections.publication,
-          name: 'A publication',
-          url: 'https://publication.example/',
-        })
-        return records
-      },
-      {} as AssociatedRecords,
-    )
     const items = timeline(
       [
         page([cardOne, cardTwo, footnoteOne], {
-          associatedRecords: publicationRecords,
           actors: {
             'did:plc:publisher': createActor('did:plc:publisher'),
             'did:plc:timeline': createActor('did:plc:timeline'),
           },
         }),
         page([footnoteTwo, cardThree], {
-          associatedRecords: publicationRecords,
           actors: {
             'did:plc:publisher': createActor('did:plc:publisher'),
             'did:plc:timeline': createActor('did:plc:timeline'),
@@ -246,7 +264,7 @@ describe('Atmosphere timeline integration', () => {
     ).toEqual(['2026-09-11', '2026-09-10', '2026-09-09'])
   })
 
-  it('uses the outer group timestamp and preserves row, view, sidecar, child, and key references', () => {
+  it('uses the outer group timestamp and preserves row, view, child, and key references', () => {
     const now = localDate(2026, 9, 11, 12)
     const first = unknownActivity({
       did: 'did:plc:group-author',
@@ -259,25 +277,31 @@ describe('Atmosphere timeline integration', () => {
       indexedAt: now,
     })
     const actor = createActor('did:plc:group-author')
-    const firstRecord = createRecord(first.record.uri, {marker: 'first'})
-    const secondRecord = createRecord(second.record.uri, {marker: 'second'})
     const sourceGroup = createRow([first, second], {
       groupBy: 'actor',
-      associatedRecords: {
-        [first.record.uri]: firstRecord,
-        [second.record.uri]: secondRecord,
-      },
       actors: {'did:plc:group-author': actor},
     })
     if (sourceGroup.type !== 'group') throw new Error('Expected source group')
-    sourceGroup.group.indexedAt = localDate(2026, 9, 9, 12).toISOString()
+    sourceGroup.group.indexedAt = localDate(
+      2026,
+      9,
+      9,
+      12,
+    ).toISOString() as ActivityItem['record']['indexedAt']
 
     const listItems = buildActivityListItems({
       pages: [
-        page([sourceGroup.group], {
-          associatedRecords: sourceGroup.associatedRecords,
-          actors: sourceGroup.actors,
-        }),
+        page(
+          [
+            {
+              ...sourceGroup.group,
+              $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup',
+            },
+          ],
+          {
+            actors: sourceGroup.actors,
+          },
+        ),
       ],
       pageParams: [undefined],
     })
@@ -293,9 +317,7 @@ describe('Atmosphere timeline integration', () => {
     if (item.item.type !== 'group' || listItems[0].type !== 'group')
       throw new Error('Expected grouped timeline item')
     expect(item.item.key).toBe(listItems[0].key)
-    expect(item.item.associatedRecords).toBe(listItems[0].associatedRecords)
     expect(item.item.actors['did:plc:group-author']).toBe(actor)
-    expect(item.item.associatedRecords[first.record.uri]).toBe(firstRecord)
     expect(item.item.group.items[0]).toBe(first)
     expect(item.item.group.items[1]).toBe(second)
     expect(item.item.group.items).toBe(listItems[0].group.items)
@@ -331,8 +353,24 @@ describe('Atmosphere timeline integration', () => {
 
     const items = timeline(
       [
-        page([firstGroup.group], {actors: firstGroup.actors}),
-        page([secondGroup.group], {actors: secondGroup.actors}),
+        page(
+          [
+            {
+              ...firstGroup.group,
+              $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup',
+            },
+          ],
+          {actors: firstGroup.actors},
+        ),
+        page(
+          [
+            {
+              ...secondGroup.group,
+              $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup',
+            },
+          ],
+          {actors: secondGroup.actors},
+        ),
       ],
       now,
     )

@@ -11,7 +11,7 @@ import {
   DocumentActivityRenderer,
   RecommendationActivityRenderer,
 } from './components/ArticleActivity'
-import {GrainPhotoActivityRenderer} from './components/PhotoActivity'
+import {GrainGalleryActivityRenderer} from './components/PhotoActivity'
 import {ShareActivityRenderer} from './components/ShareActivity'
 import {LivestreamActivityRenderer} from './components/StreamActivity'
 import {SubscriptionActivityRenderer} from './components/SubscriptionActivity'
@@ -42,7 +42,8 @@ export const activityRenderers: Record<
   [activityCollections.recommendation]: RecommendationActivityRenderer,
   [activityCollections.subscription]: SubscriptionActivityRenderer,
   [activityCollections.livestream]: LivestreamActivityRenderer,
-  [activityCollections.grainPhoto]: GrainPhotoActivityRenderer,
+  [activityCollections.grainGallery]: GrainGalleryActivityRenderer,
+  [activityCollections.grainFavorite]: GrainGalleryActivityRenderer,
   [activityCollections.share]: ShareActivityRenderer,
 }
 
@@ -52,7 +53,8 @@ const activityRowTestIDs: Record<KnownActivityCollection, string> = {
   [activityCollections.recommendation]: 'atmosphereRecommendationRow',
   [activityCollections.subscription]: 'atmosphereSubscriptionRow',
   [activityCollections.livestream]: 'atmosphereLivestreamRow',
-  [activityCollections.grainPhoto]: 'atmosphereGrainPhotoRow',
+  [activityCollections.grainGallery]: 'atmosphereGrainGalleryRow',
+  [activityCollections.grainFavorite]: 'atmosphereGrainFavoriteRow',
   [activityCollections.share]: 'atmosphereShareRow',
 }
 

@@ -275,13 +275,6 @@ export const BLUESKY_PROXY_HEADER = {
 export const CHAT_PROXY_SERVICE: Service = `${CHAT_PROXY_DID}#bsky_chat`
 
 /**
- * The deployed appview-sandbox service. The sandbox client uses this as its
- * proxy target unless the local URL environment override is set.
- */
-export const APPVIEW_SANDBOX_PROXY_SERVICE: Service =
-  'did:web:appview-sandbox.k1.prod.bsky.dev#bsky_appviewSandbox'
-
-/**
  * Moderation service, in the `did#service_id` form a lex client's per-call
  * `service` option takes. Passing it emits `atproto-proxy: <this value>` on that
  * one request. The DID defaults to Bluesky's labeler but can be overridden for

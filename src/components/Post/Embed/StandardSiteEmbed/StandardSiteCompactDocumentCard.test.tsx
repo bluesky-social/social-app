@@ -229,8 +229,9 @@ describe('StandardSiteCompactDocumentCard', () => {
     expect(mockOpenLink).toHaveBeenCalledWith('https://brookie.example')
 
     fireEvent.press(result.getByRole('menuitem', {name: 'View author'}))
-    expect(mockNavigate).toHaveBeenCalledWith('Profile', {
-      name: 'author.example',
+    expect(mockNavigate).toHaveBeenCalledWith({
+      name: 'Profile',
+      params: {name: 'author.example'},
     })
 
     fireEvent.press(result.getByRole('menuitem', {name: 'Report this'}))

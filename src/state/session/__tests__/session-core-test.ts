@@ -364,7 +364,7 @@ describe('sessionAccountToSessionData', () => {
 })
 
 describe('createSessionBundleFromStoredAccount', () => {
-  it('builds four clients over one session', async () => {
+  it('shares one session across clients and disables their transport on disposal', async () => {
     const result = createSessionBundleFromStoredAccount(
       makeAccount(),
       jest.fn(),
@@ -373,7 +373,6 @@ describe('createSessionBundleFromStoredAccount', () => {
     /* every client reads its identity straight through the shared session */
     expect(result.bundle.session.session.accessJwt).toBe('access-jwt')
     expect(result.bundle.appviewClient.did).toBe(DID)
-    expect(result.bundle.appviewSandboxClient.did).toBe(DID)
     expect(result.bundle.pdsClient.did).toBe(DID)
     expect(result.bundle.chatClient.did).toBe(DID)
     expect(result.bundle.service.toString()).toBe(`${SERVICE}/`)

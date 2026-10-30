@@ -1,35 +1,28 @@
+import {type l} from '@atproto/lex'
 import {describe, expect, it} from '@jest/globals'
 
-import {type ActivityGroupRowItem, buildActivityListItems} from './model'
+import {buildActivityListItems} from './model'
+import {createActivity, createActor, createRow} from './testFixtures'
 import {activityCollections, type AtmosphereActivityPage} from './types'
-
-const documentUri = 'at://did:plc:author/site.standard.document/one'
-
-function activity(
-  uri: string,
-  subscribed = false,
-  collection = activityCollections.document,
-) {
-  return {
-    $type: 'eric.bsky.atmosphere.getActivity#item' as const,
-    record: {
-      uri,
-      cid: `bafy-${uri.at(-1)}`,
-      indexedAt: '2026-09-03T00:00:00.000Z',
-    },
-    collection,
-    viewerState: {subscribed},
-  }
-}
 
 function page(
   values: Partial<AtmosphereActivityPage> = {},
 ): AtmosphereActivityPage {
+  return {feed: [], actors: {}, ...values}
+}
+
+function group() {
+  const row = createRow(
+    [
+      createActivity({rkey: 'one', subscribed: true}),
+      createActivity({rkey: 'two'}),
+    ],
+    {groupBy: 'actor'},
+  )
+  if (row.type !== 'group') throw new Error('Expected group fixture')
   return {
-    feed: [],
-    associatedRecords: {},
-    actors: {},
-    ...values,
+    ...row.group,
+    $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup' as const,
   }
 }
 
@@ -46,40 +39,93 @@ describe('Atmosphere list model', () => {
     ).toEqual([{type: 'empty', key: 'empty'}])
   })
 
-  it('preserves groups as outer rows with ordered child activity', () => {
-    const secondDocumentUri = 'at://did:plc:author/site.standard.document/two'
-    const items = buildActivityListItems({
+  it('preserves server groups, ordered children, related activity and original references', () => {
+    const grouped = group()
+    const related = [
+      createActivity({collection: activityCollections.recommendation}),
+    ]
+    grouped.items[0].relatedActivity = related
+    const actors = {'did:plc:author': createActor()}
+    const [row] = buildActivityListItems({
+      pages: [page({feed: [grouped], actors})],
+      pageParams: [undefined],
+    })
+    if (row.type !== 'group') throw new Error('Expected group')
+    expect(row.group).toBe(grouped)
+    expect(row.group.items[0].relatedActivity).toBe(related)
+    expect(row.group.items.map(item => item.viewerState.subscribed)).toEqual([
+      true,
+      false,
+    ])
+    expect(row.actors).toBe(actors)
+  })
+
+  it('deduplicates only activity URIs across pages, retaining server groups and every overflow', () => {
+    const grouped = group()
+    const first = createActivity({rkey: 'one'})
+    const overflow = {
+      $type:
+        'app.bsky.unspecced.getAtmosphereTimeline#activityItemOverflow' as const,
+      collection: activityCollections.document,
+      count: 7,
+      associatedProfiles: [createActor()],
+    }
+    const firstActors = {'did:plc:author': createActor()}
+    const secondActors = {
+      'did:plc:author': {...createActor(), displayName: 'Second page'},
+    }
+    const pages = [
+      page({
+        feed: [first, overflow],
+        actors: firstActors,
+        cursor: 'opaque==cursor',
+      }),
+      page({feed: [grouped, first, overflow], actors: secondActors}),
+    ]
+    const rows = buildActivityListItems({
+      pages,
+      pageParams: [undefined, 'opaque==cursor'],
+    })
+    expect(rows.map(row => row.type)).toEqual([
+      'activity',
+      'overflow',
+      'group',
+      'overflow',
+    ])
+    expect(rows.map(row => row.key)).toEqual([
+      first.record.uri,
+      'overflow:0:1',
+      grouped.id,
+      'overflow:1:2',
+    ])
+    if (rows[0].type !== 'activity' || rows[2].type !== 'group')
+      throw new Error('Expected activity and group')
+    expect(rows[0].actors).toBe(firstActors)
+    expect(rows[2].actors).toBe(secondActors)
+    expect(rows[2].group.items).toEqual([grouped.items[1]])
+    expect(grouped.items).toHaveLength(2)
+    expect(pages[0].cursor).toBe('opaque==cursor')
+    expect(rows[1]).toMatchObject({overflow})
+    expect(rows[3]).toMatchObject({overflow})
+  })
+
+  it('omits unknown feed unions and groupBy without claiming their children', () => {
+    const grouped = group()
+    const known = createActivity({rkey: 'one'})
+    const rows = buildActivityListItems({
       pages: [
         page({
           feed: [
-            {
-              $type: 'eric.bsky.atmosphere.getActivity#group',
-              id: 'opaque-group-id',
-              groupBy: 'actor',
-              collection: 'site.standard.document',
-              indexedAt: '2026-09-03T00:00:00.000Z',
-              actor: 'did:plc:author',
-              items: [
-                activity(documentUri, true),
-                activity(secondDocumentUri, false),
-              ],
-            },
+            {$type: 'example.future#entry' as l.Unknown$Type},
+            {...grouped, groupBy: 'future'},
+            known,
           ],
         }),
       ],
       pageParams: [undefined],
     })
-
-    expect(items).toHaveLength(1)
-    const group = items[0] as ActivityGroupRowItem
-    expect(group.type).toBe('group')
-    expect(group.group.items.map(item => item.record.uri)).toEqual([
-      documentUri,
-      secondDocumentUri,
-    ])
-    expect(group.group.items.map(item => item.viewerState.subscribed)).toEqual([
-      true,
-      false,
+    expect(rows).toEqual([
+      {type: 'activity', key: known.record.uri, activity: known, actors: {}},
     ])
   })
 })

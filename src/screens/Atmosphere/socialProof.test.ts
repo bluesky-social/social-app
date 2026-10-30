@@ -6,14 +6,16 @@ import {
 import {
   createActivity,
   createActor,
-  createDocumentRecords,
-  createRecord,
+  createArticleView,
+  createLivestreamView,
+  createPostView,
   createRow,
-  createShareRecord,
   documentUri,
   present,
+  recordCid,
 } from '#/screens/Atmosphere/testFixtures'
 import {
+  type ActivityActor,
   activityCollections,
   type ActivityItem,
 } from '#/screens/Atmosphere/types'
@@ -22,22 +24,8 @@ import {
 jest.unmock('multiformats/cid')
 
 function relatedRow(related: ActivityItem[]) {
-  const associatedRecords = createDocumentRecords()
   const actors = {'did:plc:author': createActor()}
-  for (const activity of related) {
-    associatedRecords[activity.record.uri] = createRecord(
-      activity.record.uri,
-      activity.collection === activityCollections.recommendation
-        ? {
-            $type: activityCollections.recommendation,
-            document: documentUri,
-            createdAt: activity.record.indexedAt,
-          }
-        : createShareRecord(),
-    )
-  }
   return createRow([createActivity({relatedActivity: related})], {
-    associatedRecords,
     actors: {
       ...actors,
       ...createRow(related.length ? related : [createActivity()]).actors,
@@ -45,16 +33,25 @@ function relatedRow(related: ActivityItem[]) {
   })
 }
 
-function recommend(did: string, rkey = 'recommend') {
+function recommend(did: ActivityActor['did'], rkey = 'recommend') {
   return createActivity({
     collection: activityCollections.recommendation,
     did,
     rkey,
+    view: createArticleView(),
   })
 }
 
-function share(did: string, rkey = 'share') {
-  return createActivity({collection: activityCollections.share, did, rkey})
+function share(did: ActivityActor['did'], rkey = 'share') {
+  return createActivity({
+    collection: activityCollections.share,
+    did,
+    rkey,
+    view: createPostView({
+      uri: `at://${did}/${activityCollections.share}/${rkey}`,
+      author: createActor(did),
+    }),
+  })
 }
 
 describe('Atmosphere social-proof rules', () => {
@@ -164,12 +161,8 @@ describe('Atmosphere social-proof rules', () => {
   )
 
   it('promotes subscribed documents and related recommendations using the same threshold', () => {
-    const plain = createRow([createActivity()], {
-      associatedRecords: createDocumentRecords(),
-    })
-    const subscribed = createRow([createActivity({subscribed: true})], {
-      associatedRecords: createDocumentRecords(),
-    })
+    const plain = createRow([createActivity()])
+    const subscribed = createRow([createActivity({subscribed: true})])
     expect(getActivityPresentationKind(present(plain))).toBe('footnote')
     expect(getActivityPresentationKind(present(subscribed))).toBe('card')
     const one = relatedRow([recommend('did:plc:one')])
@@ -224,6 +217,19 @@ describe('Atmosphere social-proof rules', () => {
     expect(getActivityPresentationKind(present(row))).toBe('card')
   })
 
+  it('does not attribute interactions pinned to a different document revision', () => {
+    const recommendation = recommend('did:plc:recommender')
+    const shared = share('did:plc:sharer')
+    const row = relatedRow([recommendation, shared])
+    if (row.type !== 'activity') throw new Error('Expected standalone document')
+    row.activity.record.cid = 'bafyreifutureversion'
+    expect(getDocumentSocialProof(row.activity, row)).toEqual({
+      recommenders: [],
+      shares: [],
+    })
+    expect(getActivityPresentationKind(present(row))).toBe('footnote')
+  })
+
   it('ignores missing, invalid, and unrelated proof without mutating it', () => {
     const missing = recommend('did:plc:missing')
     const badActor = recommend('did:plc:bad')
@@ -248,10 +254,17 @@ describe('Atmosphere social-proof rules', () => {
     const row = relatedRow(children)
     delete row.actors['did:plc:missing']
     row.actors['did:plc:bad'].handle = 'handle.invalid'
-    row.associatedRecords[wrongTarget.record.uri].record.document =
-      `${documentUri}-other`
-    delete row.associatedRecords[noRecord.record.uri]
-    row.associatedRecords[invalidShare.record.uri].record.text = null
+    wrongTarget.view = createArticleView({
+      associatedRefs: [{uri: `${documentUri}-other`, cid: recordCid}],
+    })
+    noRecord.view = undefined
+    invalidShare.view = createPostView({
+      record: {
+        $type: activityCollections.share,
+        text: null,
+        createdAt: invalidShare.record.indexedAt,
+      },
+    })
     if (row.type !== 'activity')
       throw new Error('Expected a standalone document')
     expect(getDocumentSocialProof(row.activity, row)).toEqual({
@@ -266,14 +279,9 @@ describe('Atmosphere social-proof rules', () => {
     const shared = share('did:plc:one')
     const context = relatedRow([shared])
     const first = createActivity({rkey: 'first'})
-    context.associatedRecords[first.record.uri] = createRecord(
-      first.record.uri,
-      {...context.associatedRecords[documentUri].record},
-    )
     const later = createActivity({relatedActivity: [shared]})
     const row = createRow([first, later], {
       groupBy: 'actor',
-      associatedRecords: context.associatedRecords,
       actors: context.actors,
     })
     expect(getActivityPresentationKind(present(row))).toBe('footnote')
@@ -282,7 +290,6 @@ describe('Atmosphere social-proof rules', () => {
         present(
           createRow([later, first], {
             groupBy: 'actor',
-            associatedRecords: context.associatedRecords,
             actors: context.actors,
           }),
         ),
@@ -304,7 +311,8 @@ describe('Atmosphere social-proof rules', () => {
   it('keeps shares and photos as cards, including bounded actor previews and photo galleries', () => {
     for (const collection of [
       activityCollections.share,
-      activityCollections.grainPhoto,
+      activityCollections.grainGallery,
+      activityCollections.grainFavorite,
     ]) {
       const first = createActivity({collection})
       expect(getActivityPresentationKind(present(createRow([first])))).toBe(
@@ -322,32 +330,35 @@ describe('Atmosphere social-proof rules', () => {
     }
   })
 
-  it('uses endedAt for prototype stream state without a freshness heuristic', () => {
-    const stream = createActivity({collection: activityCollections.livestream})
-    const record = createRecord(stream.record.uri, {
-      $type: activityCollections.livestream,
-      createdAt: '2026-01-01T00:00:00.000Z',
-      lastSeenAt: '2026-01-01T00:05:00.000Z',
-      idleTimeoutSeconds: 300,
+  it('uses served active state for stale unfinished streams and keeps actor groups compact', () => {
+    const view = createLivestreamView({createdAt: '2020-01-01T00:00:00.000Z'})
+    const stream = createActivity({
+      collection: activityCollections.livestream,
+      view,
     })
-    const row = createRow([stream], {associatedRecords: {[record.uri]: record}})
+    const row = createRow([stream])
     expect(getActivityPresentationKind(present(row))).toBe('card')
-    record.record.endedAt = '2026-01-01T01:00:00.000Z'
+    view.active = false
     expect(getActivityPresentationKind(present(row))).toBe('footnote')
+    view.active = true
     expect(
       getActivityPresentationKind(
         present(
           createRow(
             [
               stream,
-              createActivity({collection: stream.collection, rkey: 'second'}),
+              createActivity({
+                collection: stream.collection,
+                rkey: 'second',
+                view,
+              }),
             ],
             {groupBy: 'actor'},
           ),
         ),
       ),
     ).toBe('footnote')
-    delete row.associatedRecords[record.uri]
+    stream.view = undefined
     expect(getActivityPresentationKind(present(row))).toBe('footnote')
   })
 

@@ -18,16 +18,11 @@ jest.mock('jwt-decode', () => ({
   },
 }))
 
-import {
-  APPVIEW_SANDBOX_PROXY_SERVICE,
-  BLUESKY_PROXY_HEADER,
-  CHAT_PROXY_SERVICE,
-} from '#/lib/constants'
-import {app, chat, com, eric} from '#/lexicons'
+import {BLUESKY_PROXY_HEADER, CHAT_PROXY_SERVICE} from '#/lib/constants'
+import {app, chat, com} from '#/lexicons'
 import {configureGlobalAppLabelers} from '../additional-moderation-authorities'
 import {
   buildAppviewClient,
-  buildAppviewSandboxClient,
   buildChatClient,
   buildPdsClient,
   getUnauthenticatedThrowingClient,
@@ -304,48 +299,6 @@ describe('buildChatClient', () => {
       .split(',')
       .filter(l => l.includes('did:plc:labeler'))
     expect(entries).toHaveLength(1)
-  })
-})
-
-describe('buildAppviewSandboxClient', () => {
-  let fetchMock: MockFetch
-
-  beforeEach(() => {
-    fetchMock = makeProfileFetch()
-    configureGlobalAppLabelers([])
-  })
-
-  it('is a distinct client from the primary appview client', () => {
-    const session = makeSession(fetchMock)
-    expect(buildAppviewSandboxClient(session)).not.toBe(
-      buildAppviewClient(session),
-    )
-  })
-
-  it('emits the sandbox proxy header exactly once, with the session token', async () => {
-    await buildAppviewSandboxClient(makeSession(fetchMock))
-      .call(eric.bsky.atmosphere.getActivity, {})
-      .catch(() => {})
-
-    const headers = headersFor(fetchMock, 'eric.bsky.atmosphere.getActivity')
-    expect(headers.get('atproto-proxy')).toBe(APPVIEW_SANDBOX_PROXY_SERVICE)
-    expect(headers.get('authorization')).toBe('Bearer access-jwt')
-  })
-
-  it('calls a local sandbox directly with DID development auth', async () => {
-    const client = buildAppviewSandboxClient(makeSession(fetchMock), {
-      directUrl: 'http://localhost:3000',
-      fetch: asFetch(fetchMock),
-    })
-
-    await client.call(eric.bsky.atmosphere.getActivity, {}).catch(() => {})
-
-    expect(urlsOf(fetchMock)).toContain(
-      'http://localhost:3000/xrpc/eric.bsky.atmosphere.getActivity',
-    )
-    const headers = headersFor(fetchMock, 'eric.bsky.atmosphere.getActivity')
-    expect(headers.get('atproto-proxy')).toBeNull()
-    expect(headers.get('authorization')).toBe(DID)
   })
 })
 

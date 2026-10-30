@@ -2,11 +2,11 @@ import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
 import {fireEvent, render} from '@testing-library/react-native'
 
-import {createDocumentExternalView} from '#/screens/Atmosphere/externalViews'
+import {getArticleExternalView} from '#/screens/Atmosphere/externalViews'
 import {
+  createActivity,
   createActor,
-  createDocumentRecords,
-  documentUri,
+  createArticleView,
 } from '#/screens/Atmosphere/testFixtures'
 import {type ActivityActor} from '#/screens/Atmosphere/types'
 import {type app} from '#/lexicons'
@@ -89,11 +89,9 @@ beforeEach(() => {
 })
 
 function view() {
-  const result = createDocumentExternalView({
-    uri: documentUri,
-    associatedRecords: createDocumentRecords(),
-    actors: {},
-  })
+  const result = getArticleExternalView(
+    createActivity({view: createArticleView()}),
+  )
   if (!result) throw new Error('Expected article view')
   return result
 }

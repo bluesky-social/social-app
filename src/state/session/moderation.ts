@@ -14,7 +14,6 @@ import {type SessionAccount} from './types'
 /** The moderation surface of a session bundle. */
 type ModerationSession = {
   appviewClient: Client
-  appviewSandboxClient: Client
   chatClient: Client
 }
 
@@ -49,9 +48,8 @@ export function readLabelers(did: string): string[] | undefined {
  * lex collects the two lists into a `Set` keyed on the suffixed string, so
  * neither dedupes against the other.
  *
- * Appview, appview-sandbox, and chat take subscriptions. The PDS suppresses
- * labelers because repo and identity requests do not hydrate moderated content
- * (see clients.ts).
+ * Appview and chat take subscriptions. The PDS suppresses labelers because
+ * repo and identity requests do not hydrate moderated content (see clients.ts).
  */
 export function applyLabelersToClient(
   client: Client,
@@ -90,7 +88,6 @@ export function configureModerationForAccount(
   const labelerDids = readLabelers(account.did)
   if (labelerDids) {
     applyLabelersToClient(bundle.appviewClient, labelerDids)
-    applyLabelersToClient(bundle.appviewSandboxClient, labelerDids)
     applyLabelersToClient(bundle.chatClient, labelerDids)
   } else {
     // If there are no headers in the storage, we'll not send them on the initial requests.

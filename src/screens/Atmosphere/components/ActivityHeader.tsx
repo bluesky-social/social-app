@@ -9,7 +9,6 @@ import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {Text, type TextProps} from '#/components/Typography'
-import type * as bsky from '#/types/bsky'
 import {ACTIVITY_ROW_AVATAR_SIZE} from '../constants'
 import {type ActivityPresentationProps} from '../presentation'
 import {ActivityInlineLinkText} from './ActivityInlineLinkText'
@@ -68,12 +67,7 @@ export function ActivityRowHeader({
       {({timeElapsed}) => (
         <View style={[a.flex_row, a.align_center, a.gap_md, a.px_xl]}>
           <AvatarStack
-            profiles={
-              actors.slice(
-                0,
-                MAX_ACTIVITY_HEADER_AVATARS,
-              ) as bsky.profile.AnyProfileView[]
-            }
+            profiles={actors.slice(0, MAX_ACTIVITY_HEADER_AVATARS)}
             size={ACTIVITY_ROW_AVATAR_SIZE}
           />
           <View style={[a.flex_1, a.justify_center]}>

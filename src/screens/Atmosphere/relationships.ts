@@ -1,13 +1,12 @@
 import {AtUri} from '@atproto/syntax'
 
 import {makeProfileLink} from '#/lib/routes/links'
+import {getArticleExternalView} from '#/screens/Atmosphere/externalViews'
 import {type ActivityPresentationItem} from '#/screens/Atmosphere/presentation'
 import {
   type ActivityActor,
   activityCollections,
   type ActivityItem,
-  type AssociatedRecords,
-  isRecommendRecord,
 } from '#/screens/Atmosphere/types'
 import {com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -70,22 +69,33 @@ export function getFirstActivity(item: ActivityPresentationItem) {
   return item.type === 'activity' ? item.activity : item.group.items[0]
 }
 
-/** Resolves a document root or interaction target using the supplied collection. */
+/** Resolves only the document reference pinned in this activity's hydrated view. */
 export function getActivityDocumentUri(
   activity: ActivityItem,
-  associatedRecords: AssociatedRecords,
 ): string | undefined {
-  const record = associatedRecords[activity.record.uri]?.record
-  switch (activity.collection) {
-    case activityCollections.document:
-      return activity.record.uri
-    case activityCollections.recommendation:
-      return isRecommendRecord(record) ? record.document : undefined
-    case activityCollections.share:
-      return getShareDocumentUri(record)
-    default:
-      return undefined
+  if (activity.collection === activityCollections.document) {
+    return activity.record.uri
   }
+  if (
+    activity.collection !== activityCollections.recommendation &&
+    activity.collection !== activityCollections.share
+  )
+    return undefined
+
+  for (const ref of getArticleExternalView(activity)?.associatedRefs ?? []) {
+    try {
+      const uri = new AtUri(ref.uri)
+      if (
+        uri.host.startsWith('did:') &&
+        uri.collection === activityCollections.document &&
+        uri.rkey
+      )
+        return ref.uri
+    } catch {
+      continue
+    }
+  }
+  return undefined
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {

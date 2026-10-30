@@ -63,12 +63,7 @@ jest.mock('../create-account', () => ({
 
 import {Provider, useSession, useSessionApi} from '#/state/session'
 import {type SessionApiContext} from '#/state/session/types'
-import {
-  buildAppviewClient,
-  buildAppviewSandboxClient,
-  buildChatClient,
-  buildPdsClient,
-} from '../clients'
+import {buildAppviewClient, buildChatClient, buildPdsClient} from '../clients'
 import {type SessionBundle} from '../session-core'
 import {sessionAccountToSessionData} from '../session-data'
 import {
@@ -95,7 +90,6 @@ function makeBundle(
   return {
     session,
     appviewClient: buildAppviewClient(session),
-    appviewSandboxClient: buildAppviewSandboxClient(session),
     pdsClient: buildPdsClient(session),
     chatClient: buildChatClient(session),
     service: new URL(account.service),

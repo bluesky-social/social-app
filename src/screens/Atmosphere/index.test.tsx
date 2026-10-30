@@ -1,28 +1,27 @@
 import {createContext} from 'react'
-import {type PressableProps} from 'react-native'
+import {type PressableProps, type View as NativeView} from 'react-native'
+import {toDatetimeString} from '@atproto/syntax'
 import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
 import {act, fireEvent, render} from '@testing-library/react-native'
 
-import {sanitizeHandle} from '#/lib/strings/handles'
 import {AtmosphereScreen} from './index'
 import {
   createActivity,
   createActor,
-  createDocumentRecords,
-  createRecord,
-  createShareRecord,
+  createArticleView,
+  createGalleryView,
+  createLivestreamView,
+  createPostView,
+  createPublicationView,
   documentUri,
-  publicationUri,
-  recordCid,
 } from './testFixtures'
 import {type ActivityTimelineListItem} from './timeline'
-import {activityCollections} from './types'
+import {activityCollections, type AtmosphereActivityPage} from './types'
 
 jest.unmock('multiformats/cid')
 
 const mockUseAtmosphereQuery = jest.fn()
-const mockUseAtmosphereRawQuery = jest.fn()
 const mockQueryUpdates = createContext(0)
 let mockQueryRevision = 0
 const mockListFooter = jest.fn((_props: unknown) => null)
@@ -57,10 +56,16 @@ type ListProps = {
   refreshing?: boolean
 }
 
+jest.mock('expo-image', () => {
+  const {View} = jest.requireActual<{View: typeof NativeView}>('react-native')
+  return {Image: (props: object) => <View {...props} />}
+})
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
+  tokens: {borderRadius: {md: 12}},
   utils: {rgbToHex: () => '#000000'},
   web: (styles: object) => styles,
+  useBreakpoints: () => ({gtPhone: true}),
   useTheme: () => ({
     atoms: {
       border_contrast_low: {},
@@ -320,10 +325,6 @@ jest.mock('./query', () => {
       use(mockQueryUpdates)
       return mockUseAtmosphereQuery()
     },
-    useAtmosphereRawQuery: () => {
-      use(mockQueryUpdates)
-      return mockUseAtmosphereRawQuery()
-    },
   }
 })
 
@@ -339,7 +340,6 @@ beforeEach(() => {
   mockStandardSiteEmbed.mockClear()
   mockTimeElapsed.mockClear()
   mockUseAtmosphereQuery.mockReset()
-  mockUseAtmosphereRawQuery.mockReset()
 })
 
 function renderScreen() {
@@ -359,39 +359,6 @@ function screenElement() {
       </I18nProvider>
     </mockQueryUpdates.Provider>
   )
-}
-
-function handleLabel(handle: string) {
-  return sanitizeHandle(handle, '@')
-}
-
-function activity({
-  collection,
-  uri,
-  cid,
-}: {
-  collection: string
-  uri: string
-  cid: string
-}) {
-  return {
-    $type: 'eric.bsky.atmosphere.getActivity#item' as const,
-    record: {
-      uri,
-      cid,
-      indexedAt: '2026-09-03T00:00:00.000Z',
-    },
-    collection,
-    viewerState: {subscribed: true},
-  }
-}
-
-function actor(did: string, handle: string) {
-  return {
-    did,
-    handle,
-    avatar: `https://example.com/${did}.jpg`,
-  }
 }
 
 describe('AtmosphereScreen', () => {
@@ -417,133 +384,77 @@ describe('AtmosphereScreen', () => {
     expect(screen.queryByTestId('atmosphereList')).toBeNull()
   })
 
-  it('shows a blue text-only Beta badge next to the Atmosphere title', () => {
-    mockUseAtmosphereQuery.mockReturnValue(basicQuery())
-    const screen = render(screenElement())
-    const badge = screen.getByTestId('atmosphereBetaBadge')
-
-    expect(screen.getByText('Atmosphere')).toBeTruthy()
-    expect(badge).toHaveTextContent('Beta')
-    expect(badge).toHaveStyle({backgroundColor: '#CCE1FF'})
-    expect(badge.children).toHaveLength(1)
-    expect(screen.getByText('Beta')).toHaveStyle({color: '#0059D6'})
-  })
-
-  it('renders the Atmosphere screen with standalone, grouped, and unknown rows without JSON diagnostics', () => {
-    const groupChildOne = activity({
-      collection: activityCollections.document,
-      uri: 'at://did:plc:group-author/site.standard.document/one',
-      cid: 'bafy-group-one',
-    })
-    const groupChildTwo = activity({
-      collection: activityCollections.document,
-      uri: 'at://did:plc:group-author/site.standard.document/two',
-      cid: 'bafy-group-two',
-    })
+  it('renders hydrated standalone, grouped, and unknown collections without JSON diagnostics', () => {
+    const first = createActivity({did: 'did:plc:group-author', rkey: 'one'})
+    const second = createActivity({did: 'did:plc:group-author', rkey: 'two'})
     const group = {
-      $type: 'eric.bsky.atmosphere.getActivity#group' as const,
+      $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup' as const,
       id: 'opaque-group-id',
       groupBy: 'actor' as const,
       collection: activityCollections.document,
-      indexedAt: '2026-09-03T00:00:00.000Z',
+      indexedAt: first.record.indexedAt,
       actor: 'did:plc:group-author',
-      items: [groupChildOne, groupChildTwo],
-    }
-    const documentActivity = activity({
-      collection: activityCollections.document,
-      uri: 'at://did:plc:author/site.standard.document/three',
-      cid: 'bafy-document',
-    })
-    const publicationActivity = activity({
-      collection: activityCollections.publication,
-      uri: 'at://did:plc:author/site.standard.publication/one',
-      cid: 'bafy-publication',
-    })
-    const recommendationActivity = activity({
-      collection: activityCollections.recommendation,
-      uri: 'at://did:plc:author/site.standard.graph.recommend/one',
-      cid: 'bafy-recommendation',
-    })
-    const subscriptionActivity = activity({
-      collection: activityCollections.subscription,
-      uri: 'at://did:plc:author/site.standard.graph.subscription/one',
-      cid: 'bafy-subscription',
-    })
-    const livestreamActivity = activity({
-      collection: activityCollections.livestream,
-      uri: 'at://did:plc:author/place.stream.livestream/one',
-      cid: 'bafy-livestream',
-    })
-    const grainPhotoActivity = activity({
-      collection: activityCollections.grainPhoto,
-      uri: 'at://did:plc:author/social.grain.photo/one',
-      cid: 'bafy-grain-photo',
-    })
-    const unknownCollectionActivity = activity({
-      collection: 'example.unknown.collection',
-      uri: 'at://did:plc:author/example.unknown.collection/one',
-      cid: 'bafy-unknown',
-    })
-
-    mockUseAtmosphereQuery.mockReturnValue({
-      data: {
-        pages: [
-          {
-            feed: [
-              group,
-              documentActivity,
-              publicationActivity,
-              recommendationActivity,
-              subscriptionActivity,
-              livestreamActivity,
-              grainPhotoActivity,
-              unknownCollectionActivity,
-            ],
-            associatedRecords: {},
-            actors: {
-              'did:plc:author': actor('did:plc:author', 'author.test'),
-              'did:plc:group-author': actor(
-                'did:plc:group-author',
-                'group-author.test',
-              ),
-            },
-          },
-        ],
-        pageParams: [undefined],
-      },
-      error: undefined,
-      isFetchingNextPage: false,
-      hasNextPage: true,
-      fetchNextPage: jest.fn(),
-      refetch: jest.fn(),
-    })
+      items: [first, second],
+    } satisfies AtmosphereActivityPage['feed'][number]
+    const document = createActivity()
+    const query = basicQuery([
+      group,
+      document,
+      createActivity({
+        collection: activityCollections.publication,
+        view: createPublicationView(),
+      }),
+      createActivity({
+        collection: activityCollections.recommendation,
+        view: createArticleView(),
+      }),
+      createActivity({
+        collection: activityCollections.subscription,
+        view: createPublicationView(),
+      }),
+      createActivity({
+        collection: activityCollections.livestream,
+        view: createLivestreamView(),
+      }),
+      createActivity({
+        collection: activityCollections.grainGallery,
+        view: createGalleryView(),
+      }),
+      createActivity({
+        collection: activityCollections.grainFavorite,
+        view: createGalleryView(),
+      }),
+      createActivity({
+        collection: activityCollections.share,
+        view: createPostView(),
+      }),
+      createActivity({collection: 'example.unknown.collection'}),
+    ])
+    query.data.pages[0].actors['did:plc:group-author'] = createActor(
+      'did:plc:group-author',
+    )
+    mockUseAtmosphereQuery.mockReturnValue(query)
 
     const screen = renderScreen()
 
     expect(screen.getByTestId('atmosphereScreen')).toBeTruthy()
-    expect(screen.getByText('Atmosphere')).toBeTruthy()
     expect(screen.getAllByTestId('atmosphereDocumentRow')).toHaveLength(2)
-    expect(screen.getByTestId('atmospherePublicationRow')).toBeTruthy()
-    expect(screen.getByTestId('atmosphereRecommendationRow')).toBeTruthy()
-    expect(screen.getByTestId('atmosphereSubscriptionRow')).toBeTruthy()
-    expect(screen.getByTestId('atmosphereLivestreamRow')).toBeTruthy()
-    expect(screen.getByTestId('atmosphereGrainPhotoRow')).toBeTruthy()
-    expect(screen.getByTestId('atmosphereUnknownRow')).toBeTruthy()
-    expect(screen.queryByTestId('atmosphereDebugButton')).toBeNull()
-    expect(
-      screen
-        .getAllByTestId('atmosphereFootnoteActor')
-        .some(
-          actorNode =>
-            actorNode.props.children === handleLabel('group-author.test'),
-        ),
-    ).toBe(true)
-    expect(
-      screen.getByLabelText(
-        `${handleLabel('author.test')} did something · elapsed:2026-09-03T00:00:00.000Z`,
-      ),
-    ).toBeTruthy()
-    expect(screen.queryByText(JSON.stringify(documentActivity))).toBeNull()
+    for (const row of [
+      'Publication',
+      'Recommendation',
+      'Subscription',
+      'Livestream',
+      'GrainGallery',
+      'GrainFavorite',
+      'Share',
+      'Unknown',
+    ]) {
+      expect(screen.getByTestId(`atmosphere${row}Row`)).toBeTruthy()
+    }
+    expect(mockInlineLinkText).toHaveBeenCalledWith(
+      expect.objectContaining({to: '/profile/group-author.example'}),
+    )
+    expect(screen.queryByText(JSON.stringify(document))).toBeNull()
     expect(screen.queryByText(JSON.stringify(group))).toBeNull()
     expect(mockListFooter).toHaveBeenCalledWith(
       expect.objectContaining({hasNextPage: true, isFetchingNextPage: false}),
@@ -565,7 +476,7 @@ describe('AtmosphereScreen', () => {
 
     mockUseAtmosphereQuery.mockReturnValue({
       data: {
-        pages: [{feed: [], associatedRecords: {}, actors: {}}],
+        pages: [{feed: [], actors: {}}],
         pageParams: [undefined],
       },
       error: undefined,
@@ -580,29 +491,9 @@ describe('AtmosphereScreen', () => {
   })
 
   it('omits actorless successful rows and falls back to the empty state', () => {
-    mockUseAtmosphereQuery.mockReturnValue({
-      data: {
-        pages: [
-          {
-            feed: [
-              activity({
-                collection: activityCollections.document,
-                uri: 'at://did:plc:ghost/site.standard.document/one',
-                cid: 'bafy-ghost',
-              }),
-            ],
-            associatedRecords: {},
-            actors: {},
-          },
-        ],
-        pageParams: [undefined],
-      },
-      error: undefined,
-      isFetchingNextPage: false,
-      hasNextPage: true,
-      fetchNextPage: jest.fn(),
-      refetch: jest.fn(),
-    })
+    const query = basicQuery([createActivity({did: 'did:plc:ghost'})])
+    query.data.pages[0].actors = {}
+    mockUseAtmosphereQuery.mockReturnValue(query)
 
     const screen = renderScreen()
 
@@ -633,27 +524,7 @@ describe('AtmosphereScreen', () => {
     const fetchNextPage = jest.fn().mockResolvedValue(undefined)
 
     mockUseAtmosphereQuery.mockReturnValue({
-      data: {
-        pages: [
-          {
-            feed: [
-              activity({
-                collection: activityCollections.document,
-                uri: 'at://did:plc:author/site.standard.document/one',
-                cid: 'bafy-document',
-              }),
-            ],
-            associatedRecords: {},
-            actors: {
-              'did:plc:author': actor('did:plc:author', 'author.test'),
-            },
-          },
-        ],
-        pageParams: [undefined],
-      },
-      error: undefined,
-      isFetchingNextPage: false,
-      hasNextPage: true,
+      ...basicQuery(),
       fetchNextPage,
       refetch,
     })
@@ -670,116 +541,123 @@ describe('AtmosphereScreen', () => {
     expect(refetch).toHaveBeenCalledTimes(1)
     expect(fetchNextPage).toHaveBeenCalledTimes(1)
   })
+
+  it.each([
+    ...Object.values(activityCollections),
+    'example.unknown.record' as const,
+  ])(
+    'shows server overflow count and profiles for %s without a timestamp',
+    collection => {
+      const profiles = [createActor('did:plc:one'), createActor('did:plc:two')]
+      mockUseAtmosphereQuery.mockReturnValue(
+        basicQuery([
+          {
+            $type:
+              'app.bsky.unspecced.getAtmosphereTimeline#activityItemOverflow',
+            count: 17,
+            collection,
+            associatedProfiles: profiles,
+          },
+        ]),
+      )
+      const screen = renderScreen()
+
+      expect(screen.getByTestId('atmosphereOverflowRow')).toHaveTextContent(
+        /\b17\b/,
+      )
+      for (const profile of profiles) {
+        expect(mockInlineLinkText).toHaveBeenCalledWith(
+          expect.objectContaining({to: `/profile/${profile.handle}`}),
+        )
+      }
+      expect(screen.queryByTestId('atmosphereDateHeading')).toBeNull()
+      expect(screen.queryByTestId('atmosphereEmptyState')).toBeNull()
+      expect(mockTimeElapsed).not.toHaveBeenCalled()
+    },
+  )
+
+  it('paginates an overflow-only page without inventing an activity timestamp', async () => {
+    const query = basicQuery([
+      {
+        $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityItemOverflow',
+        count: 1,
+        collection: activityCollections.grainGallery,
+        associatedProfiles: [createActor('did:plc:author')],
+      },
+    ])
+    mockUseAtmosphereQuery.mockReturnValue(query)
+    const screen = renderScreen()
+    expect(screen.getByTestId('atmosphereOverflowRow')).toBeTruthy()
+    expect(mockListFooter).toHaveBeenCalledWith(
+      expect.objectContaining({hasNextPage: true}),
+    )
+    await act(async () => {
+      await latestListProps?.onEndReached?.()
+    })
+    expect(query.fetchNextPage).toHaveBeenCalledTimes(1)
+    expect(mockTimeElapsed).not.toHaveBeenCalled()
+  })
 })
 
 describe('Raw tab', () => {
-  it('renders each raw root as a footnote without cards, grouping, or related rows', () => {
-    const document = createActivity({
+  it('shows the original feed JSON including groups, overflow, related activity, and actorless entries', () => {
+    const first = createActivity({
       subscribed: true,
       relatedActivity: [
         createActivity({
           collection: activityCollections.recommendation,
           rkey: 'related',
+          view: createArticleView(),
         }),
       ],
     })
-    const recommend = createActivity({
-      collection: activityCollections.recommendation,
-    })
-    const secondRecommend = createActivity({
-      collection: activityCollections.recommendation,
-      rkey: 'second',
-    })
-    const subscription = createActivity({
-      collection: activityCollections.subscription,
-    })
-    const stream = createActivity({collection: activityCollections.livestream})
-    const photo = createActivity({collection: activityCollections.grainPhoto})
-    const share = createActivity({collection: activityCollections.share})
-    const publication = createActivity({
-      collection: activityCollections.publication,
-      did: 'did:plc:publisher',
-      rkey: 'site',
-    })
-    const unknown = createActivity({
+    const second = createActivity({rkey: 'second'})
+    const group = {
+      $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup' as const,
+      id: 'raw-group',
+      groupBy: 'actor' as const,
+      actor: 'did:plc:author',
+      collection: activityCollections.document,
+      indexedAt: first.record.indexedAt,
+      items: [first, second],
+    } satisfies AtmosphereActivityPage['feed'][number]
+    const overflow = {
+      $type:
+        'app.bsky.unspecced.getAtmosphereTimeline#activityItemOverflow' as const,
+      collection: activityCollections.document,
+      count: 17,
+      associatedProfiles: [createActor('did:plc:author')],
+    }
+    const missingActor = createActivity({
       collection: 'example.unknown.record',
       did: 'did:plc:missing',
     })
-    const rawQuery = basicQuery()
-    rawQuery.data.pages[0] = {
-      feed: [
-        document,
-        recommend,
-        secondRecommend,
-        subscription,
-        stream,
-        photo,
-        share,
-        publication,
-        unknown,
-      ],
-      actors: {'did:plc:author': createActor()},
-      associatedRecords: {
-        ...createDocumentRecords(),
-        [recommend.record.uri]: createRecord(recommend.record.uri, {
-          document: documentUri,
-          createdAt: document.record.indexedAt,
-        }),
-        [secondRecommend.record.uri]: createRecord(secondRecommend.record.uri, {
-          document: documentUri,
-          createdAt: document.record.indexedAt,
-        }),
-        [subscription.record.uri]: createRecord(subscription.record.uri, {
-          publication: publicationUri,
-        }),
-        [stream.record.uri]: createRecord(stream.record.uri, {
-          title: 'Live stream',
-          url: 'https://stream.place/author',
-          createdAt: stream.record.indexedAt,
-        }),
-        [photo.record.uri]: createRecord(photo.record.uri, {
-          photo: {ref: recordCid, mimeType: 'image/jpeg'},
-          alt: 'A capybara',
-        }),
-        [share.record.uri]: createRecord(share.record.uri, createShareRecord()),
-      },
-    }
-    mockUseAtmosphereQuery.mockReturnValue(basicQuery())
-    mockUseAtmosphereRawQuery.mockReturnValue(rawQuery)
+    const query = basicQuery([first, group, overflow, missingActor])
+    query.data.pages.push({feed: [first], actors: {}})
+    mockUseAtmosphereQuery.mockReturnValue(query)
     const screen = renderScreen()
-    expect(mockUseAtmosphereRawQuery).not.toHaveBeenCalled()
     fireEvent.press(screen.getByRole('tab', {name: 'Raw'}))
 
     expect(screen.getByTestId('atmosphereRawList')).toBeTruthy()
     expect(screen.queryByTestId('atmosphereList')).toBeNull()
-    expect(screen.getAllByTestId('atmosphereRawRow')).toHaveLength(9)
-    expect(screen.getAllByTestId('atmosphereFootnote')).toHaveLength(9)
-    expect(latestListProps?.data.map(item => item.key)).toEqual(
-      rawQuery.data.pages[0].feed.map(item => item.record.uri),
-    )
-    expect(screen.queryByTestId('atmosphereArticleCard')).toBeNull()
-    expect(screen.queryByTestId('atmosphereSubscriptionCard')).toBeNull()
-    expect(screen.queryByTestId('atmosphereActiveLivestream')).toBeNull()
-    expect(screen.queryByTestId('atmospherePhotoCard')).toBeNull()
-    expect(screen.queryByTestId('atmosphereShareCard')).toBeNull()
-    expect(screen.queryByTestId('atmosphereArticleRecommendations')).toBeNull()
-    expect(screen.queryByTestId('atmosphereFootnoteThumbnail')).toBeNull()
+    expect(screen.getAllByTestId('atmosphereRawRow')).toHaveLength(5)
     expect(
       screen
-        .getAllByTestId('atmosphereFootnoteTitle')
-        .map(node => node.props.to),
-    ).toContain('/profile/author.example/post/article')
+        .getAllByTestId('atmosphereRawEntry')
+        .map(node => JSON.parse(node.props.children)),
+    ).toEqual(query.data.pages.flatMap(page => page.feed))
+    expect(screen.queryByTestId('atmosphereFootnote')).toBeNull()
+    expect(screen.queryByTestId('atmosphereArticleCard')).toBeNull()
+    expect(screen.queryByTestId('atmosphereOverflowRow')).toBeNull()
   })
 
-  it('keeps raw loading, empty, and retry states independent of Activity', () => {
-    const activityQuery = basicQuery()
+  it('uses the shared query for raw loading, retry, and empty states', () => {
     const raw = {
       ...basicQuery(),
       data: undefined,
       error: undefined as Error | undefined,
     }
-    mockUseAtmosphereQuery.mockReturnValue(activityQuery)
-    mockUseAtmosphereRawQuery.mockReturnValue(raw)
+    mockUseAtmosphereQuery.mockReturnValue(raw)
     const screen = renderScreen()
     fireEvent.press(screen.getByRole('tab', {name: 'Raw'}))
     expect(screen.getByTestId('atmosphereRawLoading')).toBeTruthy()
@@ -788,10 +666,9 @@ describe('Raw tab', () => {
     expect(screen.getByTestId('atmosphereRawError')).toBeTruthy()
     fireEvent.press(screen.getByLabelText('Retry loading raw activity'))
     expect(raw.refetch).toHaveBeenCalledTimes(1)
-    expect(activityQuery.refetch).not.toHaveBeenCalled()
     const empty = basicQuery()
     empty.data.pages[0].feed = []
-    mockUseAtmosphereRawQuery.mockReturnValue(empty)
+    mockUseAtmosphereQuery.mockReturnValue(empty)
     screen.rerender(screenElement())
     expect(screen.getByTestId('atmosphereRawEmpty')).toBeTruthy()
   })
@@ -804,8 +681,7 @@ describe('Raw tab', () => {
         isFetching: reason === 'fetching',
         hasNextPage: reason !== 'last-page',
       }
-      mockUseAtmosphereQuery.mockReturnValue(basicQuery())
-      mockUseAtmosphereRawQuery.mockReturnValue(raw)
+      mockUseAtmosphereQuery.mockReturnValue(raw)
       const screen = renderScreen()
       fireEvent.press(screen.getByRole('tab', {name: 'Raw'}))
       act(() => {
@@ -817,8 +693,7 @@ describe('Raw tab', () => {
 
   it('wires raw refresh and pagination and stops automatic pagination after an error', async () => {
     const raw = basicQuery()
-    mockUseAtmosphereQuery.mockReturnValue(basicQuery())
-    mockUseAtmosphereRawQuery.mockReturnValue(raw)
+    mockUseAtmosphereQuery.mockReturnValue(raw)
     const screen = renderScreen()
     fireEvent.press(screen.getByRole('tab', {name: 'Raw'}))
     await act(async () => {
@@ -845,21 +720,17 @@ describe('Raw tab', () => {
   })
 })
 
-function basicQuery() {
+function basicQuery(feed?: AtmosphereActivityPage['feed']) {
   const entry = createActivity()
-  entry.record.indexedAt = new Date(mockNow - 2 * 60 * 60_000).toISOString()
+  entry.record.indexedAt = toDatetimeString(new Date(mockNow - 2 * 60 * 60_000))
+  const page: AtmosphereActivityPage = {
+    feed: feed ?? [entry],
+    actors: {'did:plc:author': createActor('did:plc:author')},
+  }
   return {
-    data: {
-      pages: [
-        {
-          feed: [entry],
-          associatedRecords: {},
-          actors: {'did:plc:author': createActor()},
-        },
-      ],
-      pageParams: [undefined],
-    },
+    data: {pages: [page], pageParams: [undefined]},
     error: undefined as Error | undefined,
+    isFetching: false,
     isFetchingNextPage: false,
     hasNextPage: true,
     fetchNextPage: jest.fn().mockResolvedValue(undefined),
@@ -930,21 +801,15 @@ it('recomputes presentation and spacing after a refresh crosses the recommendati
   const first = createActivity({
     collection: activityCollections.recommendation,
     did: 'did:plc:one',
+    view: createArticleView(),
   })
   const second = createActivity({
     collection: activityCollections.recommendation,
     did: 'did:plc:two',
+    view: createArticleView(),
   })
-  const associatedRecords = createDocumentRecords()
-  for (const activity of [first, second]) {
-    associatedRecords[activity.record.uri] = createRecord(activity.record.uri, {
-      document: documentUri,
-      createdAt: activity.record.indexedAt,
-    })
-  }
   const query = basicQuery()
   const context = {
-    associatedRecords,
     actors: {
       'did:plc:one': createActor('did:plc:one'),
       'did:plc:two': createActor('did:plc:two'),
@@ -969,7 +834,7 @@ it('recomputes presentation and spacing after a refresh crosses the recommendati
           ...context,
           feed: [
             {
-              $type: 'eric.bsky.atmosphere.getActivity#group',
+              $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup',
               id: 'recommendation-cluster',
               collection: activityCollections.recommendation,
               groupBy: 'subject',

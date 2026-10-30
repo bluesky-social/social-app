@@ -1,66 +1,70 @@
+import {type app} from '#/lexicons'
 import {
   getLivestreamDurationSeconds,
   getLivestreamStatus,
   getLivestreamUrl,
 } from './streams'
-import {isLivestreamRecord, type LivestreamRecord} from './types'
-
-function record(overrides: Partial<LivestreamRecord> = {}): LivestreamRecord {
-  return {
-    createdAt: '2026-09-11T10:00:00.000Z',
-    ...overrides,
-  }
-}
+import {createLivestreamView} from './testFixtures'
 
 describe('livestream lifecycle helpers', () => {
-  it.each([record(), record({createdAt: '2020-01-01T00:00:00.000Z'})])(
-    'treats an absent endedAt as active',
-    value => {
-      expect(getLivestreamStatus(value)).toBe('active')
-      expect(getLivestreamDurationSeconds(value)).toBeUndefined()
+  it.each([true, false])(
+    'uses active=%s regardless of absent endedAt or stale creation',
+    active => {
+      const view = createLivestreamView({
+        active,
+        createdAt: '2020-01-01T00:00:00.000Z',
+        endedAt: undefined,
+      })
+      expect(getLivestreamStatus(view)).toBe(active ? 'active' : 'ended')
+      expect(getLivestreamDurationSeconds(view)).toBeUndefined()
     },
   )
 
-  it.each(['', 'not-a-date'])(
-    'treats any present endedAt as ended',
-    endedAt => {
-      const value = record({endedAt})
-      expect(getLivestreamStatus(value)).toBe('ended')
-      expect(getLivestreamDurationSeconds(value)).toBeUndefined()
-    },
-  )
-
-  it('calculates whole seconds from ordered raw lifecycle dates', () => {
+  it('uses the actual startedAt before createdAt and floors whole seconds', () => {
+    const view = createLivestreamView({
+      active: false,
+      endedAt: '2026-09-10T11:01:02.999Z',
+    })
+    expect(getLivestreamDurationSeconds(view)).toBe(62)
+    expect(getLivestreamDurationSeconds({...view, startedAt: undefined})).toBe(
+      3662,
+    )
     expect(
-      getLivestreamDurationSeconds(
-        record({endedAt: '2026-09-11T10:01:02.999Z'}),
-      ),
-    ).toBe(62)
-  })
-
-  it('accepts equal dates and rejects reversed or invalid dates', () => {
-    expect(
-      getLivestreamDurationSeconds(
-        record({endedAt: '2026-09-11T10:00:00.000Z'}),
-      ),
-    ).toBe(0)
-    expect(
-      getLivestreamDurationSeconds(
-        record({
-          createdAt: '2026-09-11T10:01:00.000Z',
-          endedAt: '2026-09-11T10:00:00.000Z',
-        }),
-      ),
+      getLivestreamDurationSeconds({
+        ...view,
+        startedAt: undefined,
+        createdAt: undefined,
+      }),
     ).toBeUndefined()
     expect(
-      getLivestreamDurationSeconds(
-        record({createdAt: 'not-a-date', endedAt: 'also-not-a-date'}),
-      ),
+      getLivestreamDurationSeconds({
+        ...view,
+        startedAt:
+          'invalid' as app.bsky.embed.external.ViewLivestream['startedAt'],
+      }),
     ).toBeUndefined()
   })
 
   it.each([
-    undefined,
+    ['2026-09-10T11:00:00.000Z', 0],
+    ['2026-09-10T10:59:59.000Z', undefined],
+    ['not-a-date', undefined],
+    ['', undefined],
+  ] as const)(
+    'handles endedAt=%s without manufacturing a duration',
+    (endedAt, expected) => {
+      expect(
+        getLivestreamDurationSeconds(
+          createLivestreamView({
+            endedAt:
+              endedAt as app.bsky.embed.external.ViewLivestream['endedAt'],
+          }),
+        ),
+      ).toBe(expected)
+    },
+  )
+
+  it.each([
     '',
     ' javascript:alert(1) ',
     'ftp://stream.example/live',
@@ -69,23 +73,26 @@ describe('livestream lifecycle helpers', () => {
     'https:stream.example/live',
     'https:/stream.example/live',
     '//stream.example/live',
-  ])('rejects an unavailable or unsafe raw URL %s', url => {
-    expect(getLivestreamUrl(record({url}))).toBeUndefined()
+  ])('rejects unsafe supplied URI %s', uri => {
+    expect(
+      getLivestreamUrl(
+        createLivestreamView({
+          uri: uri as app.bsky.embed.external.ViewLivestream['uri'],
+        }),
+      ),
+    ).toBeUndefined()
   })
 
-  it('returns the trimmed original HTTP(S) URL', () => {
-    const value = '  https://stream.example/live?token=abc  '
-    expect(getLivestreamUrl(record({url: value}))).toBe(value.trim())
-  })
-
-  it('rejects malformed optional fields while accepting invalid date strings', () => {
-    expect(isLivestreamRecord(record({endedAt: 'invalid'}))).toBe(true)
-    expect(isLivestreamRecord({...record(), title: 42})).toBe(false)
-    expect(isLivestreamRecord({...record(), url: {}})).toBe(false)
-    expect(isLivestreamRecord({...record(), endedAt: 42})).toBe(false)
-    expect(isLivestreamRecord({...record(), $type: 'social.grain.photo'})).toBe(
-      false,
-    )
-    expect(isLivestreamRecord({title: 'Missing creation time'})).toBe(false)
+  it.each([
+    'https://stream.example/live?token=abc',
+    'http://stream.example/live',
+  ])('returns the trimmed supplied HTTP(S) link %s', uri => {
+    expect(
+      getLivestreamUrl(
+        createLivestreamView({
+          uri: ` ${uri} ` as app.bsky.embed.external.ViewLivestream['uri'],
+        }),
+      ),
+    ).toBe(uri)
   })
 })

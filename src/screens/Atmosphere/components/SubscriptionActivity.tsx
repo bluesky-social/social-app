@@ -6,13 +6,12 @@ import {useLingui} from '@lingui/react/macro'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {createPublicationExternalView} from '#/screens/Atmosphere/externalViews'
+import {getPublicationExternalView} from '#/screens/Atmosphere/externalViews'
 import {getRecordActor} from '#/screens/Atmosphere/presentation'
 import {getFirstActivity} from '#/screens/Atmosphere/relationships'
 import {type ActivityRendererProps} from '#/screens/Atmosphere/renderers'
 import {getSubscriptionActivityUri} from '#/screens/Atmosphere/rowLayout'
 import {getActivityPresentationKind} from '#/screens/Atmosphere/socialProof'
-import {isPublicationRecord} from '#/screens/Atmosphere/types'
 import {atoms as a, useTheme} from '#/alf'
 import {Bookmark_Filled_Corner0_Rounded as SubscribeIcon} from '#/components/icons/Bookmark'
 import {InlineLinkText, Link} from '#/components/Link'
@@ -38,13 +37,8 @@ export function SubscriptionActivityRenderer({
   if (!first || computedItemView.actors.length === 0) return null
   const actorGroup = item.type === 'group' && item.group.groupBy === 'actor'
   const publicationUri = getSubscriptionActivityUri(item)
-  const publication = publicationUri
-    ? item.associatedRecords[publicationUri]?.record
-    : undefined
-  const view = createPublicationExternalView({uri: publicationUri, ...item})
-  const title =
-    (isPublicationRecord(publication) ? publication.name.trim() : '') ||
-    l`Publication unavailable`
+  const view = getPublicationExternalView(first)
+  const title = view?.title.trim() || l`Publication unavailable`
   const author = getRecordActor(publicationUri, item.actors)
   const timestamp =
     item.type === 'activity' ? first.record.indexedAt : item.group.indexedAt
