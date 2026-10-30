@@ -8,7 +8,8 @@ import {MAX_ALT_TEXT} from '#/lib/constants'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import {atoms as a, useTheme, web} from '#/alf'
+import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
+import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -187,22 +188,24 @@ function SubtitleDialogInner({
           </>
         )}
 
-        <View style={web([a.flex_row, a.justify_end])}>
-          <Button
-            label={_(msg`Done`)}
-            size={IS_WEB ? 'small' : 'large'}
-            color="primary"
-            variant="solid"
-            onPress={() => {
-              saveAltText(altText)
-              control.close()
-            }}
-            style={a.mt_lg}
-            disabled={isOverMaxLength}>
-            <ButtonText>
-              <Trans>Done</Trans>
-            </ButtonText>
-          </Button>
+        <View style={[a.mt_lg, web([a.flex_row, a.justify_end])]}>
+          <AltTextCounterWrapper altText={altText}>
+            <Button
+              label={_(msg`Done`)}
+              size={IS_WEB ? 'small' : 'large'}
+              color="primary"
+              variant="solid"
+              onPress={() => {
+                saveAltText(altText)
+                control.close()
+              }}
+              style={[native(a.flex_grow), web(a.self_center)]}
+              disabled={isOverMaxLength}>
+              <ButtonText>
+                <Trans>Done</Trans>
+              </ButtonText>
+            </Button>
+          </AltTextCounterWrapper>
         </View>
       </View>
       <Dialog.Close />
