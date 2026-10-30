@@ -324,8 +324,12 @@ export const QUOTES: {title: string; embed: RecordView}[] = [
     }),
   },
   {
-    title: 'Images without text',
+    title: 'Images without text, shown in full',
     embed: quoteOf({rkey: 'notext', text: '', embed: MEDIA.twoImages}),
+  },
+  {
+    title: 'Video without text, shown in full',
+    embed: quoteOf({rkey: 'videonotext', text: '', embed: MEDIA.video}),
   },
   {
     title: 'Video',
