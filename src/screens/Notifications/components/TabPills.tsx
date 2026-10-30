@@ -570,24 +570,25 @@ function PillIndicator({
   const xOutputRange = layouts.map(layout => layout.x)
   const widthOutputRange = layouts.map(layout => layout.width)
 
-  const geometry = useDerivedValue(() => {
-    const progress = dragProgress.get()
-    return {
-      x: interpolate(progress, inputRange, xOutputRange, 'clamp'),
-      width: interpolate(progress, inputRange, widthOutputRange, 'clamp'),
-    }
-  })
+  /*
+   * Separate primitive values, so each style only updates when its own value
+   * changes (e.g. not the width styles while moving between equal-width pills).
+   */
+  const x = useDerivedValue(() =>
+    interpolate(dragProgress.get(), inputRange, xOutputRange, 'clamp'),
+  )
+  const width = useDerivedValue(() =>
+    interpolate(dragProgress.get(), inputRange, widthOutputRange, 'clamp'),
+  )
 
   const containerStyle = useAnimatedStyle(() => ({
-    transform: [{translateX: geometry.get().x}],
+    transform: [{translateX: x.get()}],
   }))
   const middleStyle = useAnimatedStyle(() => ({
-    transform: [
-      {scaleX: Math.max(0.01, geometry.get().width - height) / middleWidth},
-    ],
+    transform: [{scaleX: Math.max(0.01, width.get() - height) / middleWidth}],
   }))
   const rightCapStyle = useAnimatedStyle(() => ({
-    transform: [{translateX: geometry.get().width - capWidth}],
+    transform: [{translateX: width.get() - capWidth}],
   }))
 
   return (

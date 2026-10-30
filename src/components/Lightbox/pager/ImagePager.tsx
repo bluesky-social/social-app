@@ -79,6 +79,30 @@ const AT_REST: ImagePlacement = {
   borderRadius: 0,
 }
 
+/*
+ * Shared instances for the states that don't change from frame to frame.
+ * Returning the same object from the `transforms` derived value doesn't notify
+ * the image styles, so images that aren't moving (e.g. the inactive ones
+ * during a dismiss swipe) don't update on every frame.
+ */
+const NO_TRANSFORM: Transform = []
+const HIDDEN_TRANSFORMS: LightboxTransforms = {
+  isHidden: true,
+  isResting: false,
+  borderRadius: 0,
+  scaleAndMoveTransform: NO_TRANSFORM,
+  cropFrameTransform: NO_TRANSFORM,
+  cropContentTransform: NO_TRANSFORM,
+}
+const RESTING_TRANSFORMS: LightboxTransforms = {
+  isHidden: false,
+  isResting: true,
+  borderRadius: 0,
+  scaleAndMoveTransform: [{translateX: 0}, {translateY: 0}, {scale: 1}],
+  cropFrameTransform: NO_TRANSFORM,
+  cropContentTransform: NO_TRANSFORM,
+}
+
 const SLOW_SPRING: WithSpringConfig = {
   mass: IS_IOS ? 1.25 : 0.75,
   damping: 300,
@@ -358,14 +382,22 @@ function ImageView({
     }
   })
 
+  /*
+   * Booleans, so the header and footer styles (and the springs they start)
+   * only re-run when visibility flips, not on every dismiss swipe or open
+   * animation frame.
+   */
+  const showChrome = useDerivedValue(
+    () => showControls && dismissSwipeTranslateY.get() === 0,
+  )
+  const isChromeVisible = useDerivedValue(
+    () => showChrome.get() && openProgress.get() === 1,
+  )
   const animatedHeaderStyle = useAnimatedStyle(() => {
-    const show = showControls && dismissSwipeTranslateY.get() === 0
+    const show = showChrome.get()
     return {
       pointerEvents: show ? 'box-none' : 'none',
-      opacity: withClampedSpring(
-        show && openProgress.get() === 1 ? 1 : 0,
-        FAST_SPRING,
-      ),
+      opacity: withClampedSpring(isChromeVisible.get() ? 1 : 0, FAST_SPRING),
       transform: [
         {
           translateY: withClampedSpring(show ? 0 : -30, FAST_SPRING),
@@ -374,14 +406,11 @@ function ImageView({
     }
   })
   const animatedFooterStyle = useAnimatedStyle(() => {
-    const show = showControls && dismissSwipeTranslateY.get() === 0
+    const show = showChrome.get()
     return {
       flexGrow: 1,
       pointerEvents: show ? 'box-none' : 'none',
-      opacity: withClampedSpring(
-        show && openProgress.get() === 1 ? 1 : 0,
-        FAST_SPRING,
-      ),
+      opacity: withClampedSpring(isChromeVisible.get() ? 1 : 0, FAST_SPRING),
       transform: [
         {
           translateY: withClampedSpring(show ? 0 : 30, FAST_SPRING),
@@ -630,14 +659,7 @@ function LightboxImage({
     const openProgressValue = openProgress.get()
 
     if (openProgressValue === 0) {
-      return {
-        isHidden: true,
-        isResting: false,
-        borderRadius: 0,
-        scaleAndMoveTransform: [],
-        cropFrameTransform: [],
-        cropContentTransform: [],
-      }
+      return HIDDEN_TRANSFORMS
     }
 
     /*
@@ -672,18 +694,26 @@ function LightboxImage({
         )
       }
     }
+    const isResting =
+      dismissTransform.translateX === 0 && dismissTransform.translateY === 0
+    if (
+      isResting &&
+      dismissTransform.scale === 1 &&
+      dismissTransform.borderRadius === 0
+    ) {
+      return RESTING_TRANSFORMS
+    }
     return {
       isHidden: false,
-      isResting:
-        dismissTransform.translateX === 0 && dismissTransform.translateY === 0,
+      isResting,
       borderRadius: dismissTransform.borderRadius / dismissTransform.scale,
       scaleAndMoveTransform: [
         {translateX: dismissTransform.translateX},
         {translateY: dismissTransform.translateY},
         {scale: dismissTransform.scale},
       ],
-      cropFrameTransform: [],
-      cropContentTransform: [],
+      cropFrameTransform: NO_TRANSFORM,
+      cropContentTransform: NO_TRANSFORM,
     }
   })
 

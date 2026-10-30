@@ -4,6 +4,7 @@ import Animated, {
   clamp,
   interpolate,
   useAnimatedStyle,
+  useDerivedValue,
   useReducedMotion,
   useSharedValue,
   withSequence,
@@ -129,15 +130,19 @@ export function SwipeToReply({
     transform: [{translateX: transX.get()}],
   }))
 
-  const iconStyle = useAnimatedStyle(() => {
-    const progress = clamp(Math.abs(transX.get()) / ACTIVATION_THRESHOLD, 0, 1)
-    return {
-      opacity: progress,
-      transform: [
-        {scale: iconScale.get() * interpolate(progress, [0, 1], [0.5, 1])},
-      ],
-    }
-  })
+  /*
+   * Derived so the icon stops updating once it's fully shown, instead of on
+   * every pan frame past the threshold.
+   */
+  const progress = useDerivedValue(() =>
+    clamp(Math.abs(transX.get()) / ACTIVATION_THRESHOLD, 0, 1),
+  )
+  const iconStyle = useAnimatedStyle(() => ({
+    opacity: progress.get(),
+    transform: [
+      {scale: iconScale.get() * interpolate(progress.get(), [0, 1], [0.5, 1])},
+    ],
+  }))
 
   return (
     <View style={[a.flex_1, a.relative]}>

@@ -2328,16 +2328,21 @@ function useScrollTracker({
   const scrollViewHeight = useSharedValue(Infinity)
   const contentHeight = useSharedValue(0)
 
-  const hasScrolledToTop = useDerivedValue(() =>
-    withTiming(contentOffset.get() === 0 ? 1 : 0),
-  )
+  /*
+   * The targets are derived separately so the fades only restart when a target
+   * flips, not on every scroll frame (which would drag out the fade and update
+   * the border on every frame of it).
+   */
+  const isAtTop = useDerivedValue(() => (contentOffset.get() === 0 ? 1 : 0))
+  const hasScrolledToTop = useDerivedValue(() => withTiming(isAtTop.get()))
 
+  const isAtBottom = useDerivedValue(() =>
+    contentHeight.get() - contentOffset.get() - 5 <= scrollViewHeight.get()
+      ? 1
+      : 0,
+  )
   const hasScrolledToBottom = useDerivedValue(() =>
-    withTiming(
-      contentHeight.get() - contentOffset.get() - 5 <= scrollViewHeight.get()
-        ? 1
-        : 0,
-    ),
+    withTiming(isAtBottom.get()),
   )
 
   const showHideBottomBorder = useCallback(
