@@ -1,0 +1,59 @@
+diff --git a/build/async-require/buildUrlForBundle.js b/build/async-require/buildUrlForBundle.js
+index 6623dd8cf985edb69b1194664b6f9d97265ae047..0b3c16a941496455d98c66124c306fdfb2c23cd6 100644
+--- a/build/async-require/buildUrlForBundle.js
++++ b/build/async-require/buildUrlForBundle.js
+@@ -3,7 +3,8 @@
+  *
+  * This source code is licensed under the MIT license found in the
+  * LICENSE file in the root directory of this source tree.
+- */ import getDevServer from '../utils/getDevServer';
++ */ import { getBundleUrl } from '../utils/getBundleUrl';
++import getDevServer from '../utils/getDevServer';
+ /**
+  * Given a path and some optional additional query parameters, create the dev server bundle URL.
+  * @param bundlePath like `/foobar`
+@@ -13,8 +14,21 @@
+     if (/^https?:\/\//.test(bundlePath)) {
+         return bundlePath;
+     }
+-    const { url: baseURL } = getDevServer();
++    const baseURL = getBaseUrl();
+     return baseURL ? new URL(bundlePath, baseURL).toString() : `//${bundlePath.replace(/^\/+/, '')}`;
+ }
++/**
++ * Async chunks are emitted next to the entry bundle, so resolve them against the URL the bundle was
++ * served from rather than the page URL. The two differ when the HTML is served from the app origin
++ * while the exported bundle is served from a CDN; resolving against the page would request chunks
++ * from the origin that does not host them. Falls back to the page URL when the bundle was not loaded
++ * from a script tag, such as in server rendering or tests.
++ */ function getBaseUrl() {
++    const bundleUrl = getBundleUrl();
++    if (bundleUrl && /^https?:\/\//.test(bundleUrl)) {
++        return bundleUrl;
++    }
++    return getDevServer().url;
++}
+ 
+ //# sourceMappingURL=buildUrlForBundle.js.map
+diff --git a/build/winter/runtime.native.d.ts b/build/winter/runtime.native.d.ts
+index faf88fc1164c2a9391039f1cb9ed880933e0fe55..ca16524c001cc257dabdb34627d0cfeba73fade2 100644
+--- a/build/winter/runtime.native.d.ts
++++ b/build/winter/runtime.native.d.ts
+@@ -1,2 +1 @@
+ import './setupReactNativeEnvironment';
+-import '../../types';
+diff --git a/package.json b/package.json
+index 5d26234fdf528f06ac49e9c8b06810bc48489ef7..2438ee874fea54de24a9e3ecfabebd9dd6e540fd 100644
+--- a/package.json
++++ b/package.json
+@@ -66,7 +66,9 @@
+     "./src/winter/*.ts",
+     "./build/winter/*.js",
+     "./src/async-require/*.ts",
+-    "./build/async-require/*.js"
++    "./build/async-require/*.js",
++    "./src/utils/getBundleUrl*.ts",
++    "./build/utils/getBundleUrl*.js"
+   ],
+   "main": "build/Expo.js",
+   "module": "build/Expo.js",

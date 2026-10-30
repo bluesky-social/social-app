@@ -1,8 +1,8 @@
 diff --git a/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
-index 2cd279590a30dd2f39e7f93a255106786e870cd5..7c09d9cf73ef5ae8e34969bc6759e4fccba1ce96 100644
+index 5333370ec079d4978d6eeb2a79de7cdb1ddad610..378a8ae9d676522d602f06e245e4d22018a29a0e 100644
 --- a/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
-@@ -158,7 +158,13 @@ - (void)dismissViewController:(UIViewController *)modalViewController
+@@ -162,7 +162,13 @@ - (void)dismissViewController:(UIViewController *)modalViewController
                       animated:(BOOL)animated
                     completion:(void (^)(void))completion
  {
@@ -271,7 +271,7 @@ index 8f55121cd23d27577bab45716d91d6cdad878e41..8bbb6cfea2970fd13b41082767807dfe
  {
    [_backedTextInputView removeFromSuperview];
 diff --git a/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
-index 0912c50fec13f41894b5351c7ff62b40bb8e3fad..376a554317fd355aadb733cf67b09e3f9b30fbc7 100644
+index d44d1e02ca5115d929a6d71516c5c734f2e1b19d..d2b9a33e457fd926d1623130a0ecd8b6a0dfd4bd 100644
 --- a/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
 @@ -885,9 +885,17 @@ static void RCTAddContourEffectToLayer(
