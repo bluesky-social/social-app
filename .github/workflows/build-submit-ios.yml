@@ -248,12 +248,12 @@ jobs:
 
       - name: 📝 Write build summary
         env:
-          REMOTE_BUILD_NUMBER: ${{ steps.get-build-info.outputs.BSKY_IOS_BUILD_NUMBER }}
+          BUILD_NUMBER: ${{ steps.ipa-build-number.outputs.build-number }}
         run: |
           {
             echo "### iOS build number"
             echo
-            echo "\`$REMOTE_BUILD_NUMBER\`"
+            echo "\`$BUILD_NUMBER\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
   submit:
