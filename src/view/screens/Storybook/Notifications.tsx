@@ -117,9 +117,9 @@ export function Notifications() {
 }
 
 /**
- * Someone quoting each of the embed fixtures' quoted posts, then likes and
- * mentions whose own media shows as a square: trailing for likes, in place
- * of the text for mentions.
+ * Someone quoting each of the embed fixtures' quoted posts, then likes of
+ * posts with media or a link, then mentions that are nothing but a video,
+ * which play in full.
  */
 const MEDIA_NOTIFICATIONS: NotificationView[] = [
   ...[...QUOTES, ...QUOTE_PLACEHOLDERS].map(
@@ -134,13 +134,16 @@ const MEDIA_NOTIFICATIONS: NotificationView[] = [
   ),
   ...(
     [
-      ['Quote only', QUOTES[2].embed],
+      ['', QUOTES[2].embed],
       ['Video', MEDIA.video],
       ['GIF (video)', MEDIA.videoGif],
       ['GIF (Tenor link)', MEDIA.tenorGif],
       ['Three images', MEDIA.threeImages],
+      ['Text and a link', MEDIA.link],
+      ['', MEDIA.link],
+      ['', MEDIA.linkWithoutThumbnail],
     ] as const
-  ).map(([title, embed], i): NotificationView => ({
+  ).map(([text, embed], i): NotificationView => ({
     type: 'like',
     id: `story-like-${i}`,
     isRead: false,
@@ -151,7 +154,7 @@ const MEDIA_NOTIFICATIONS: NotificationView[] = [
     post: postWith({
       author: AUTHORS.priya,
       rkey: `story-like-${i}`,
-      text: title === 'Quote only' ? '' : title,
+      text,
       embed,
     }),
   })),
