@@ -29,6 +29,7 @@ import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   fakeAnalytics,
+  fakeUploadAttempt,
   fakeVideoDependencies,
   manualUploadWorkers,
   realUploadWorkers,
@@ -37,6 +38,7 @@ import {
 import {type PostMediaVideo} from '#/components/ComposerV2/store/types'
 import {
   startVideoUpload,
+  type VideoUploadAttempt,
   type VideoUploadDependencies,
 } from '#/components/ComposerV2/store/uploads'
 import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
@@ -425,7 +427,7 @@ describe('compression reuse after an upload failure', () => {
 
   test('a reused output is validated before upload too', async () => {
     const uploadVideo = jest.fn<VideoUploadDependencies['uploadVideo']>()
-    const setUploadStatus = jest.fn()
+    const reportFailure = jest.fn<VideoUploadAttempt['reportFailure']>()
     const release = jest.fn()
     /* Web output is in memory, so no file stat is needed to reuse it. */
     mockIsWeb = true
@@ -433,8 +435,6 @@ describe('compression reuse after an upload failure', () => {
       ...testUploadRuntime,
       ...fakeVideoDependencies({createVideoTelemetry, uploadVideo}),
       metric: jest.fn(),
-      postId: 'post',
-      mediaId: 'media',
       media: {
         kind: 'video',
         id: 'media',
@@ -445,24 +445,23 @@ describe('compression reuse after an upload failure', () => {
         captionBlobs: [],
         upload: {state: 'pending'},
       },
-      setUploadStatus,
-      acquireCompressedVideo: () => ({
-        video: {...compressed, size: Number.MAX_SAFE_INTEGER},
-        invalidate: jest.fn(),
-        release,
+      attempt: fakeUploadAttempt({
+        reportFailure,
+        acquireCompressedVideo: () => ({
+          video: {...compressed, size: Number.MAX_SAFE_INTEGER},
+          invalidate: jest.fn(),
+          release,
+        }),
       }),
     })
     await flush()
 
     expect(uploadVideo).not.toHaveBeenCalled()
-    expect(setUploadStatus).toHaveBeenLastCalledWith(
-      'post',
-      'media',
-      expect.objectContaining({state: 'failed'}),
-      expect.anything(),
-    )
-    expect(setUploadStatus.mock.calls.at(-1)?.[3]).toMatchObject({
-      cause: expect.any(VideoTooLargeError),
+    expect(reportFailure).toHaveBeenLastCalledWith({
+      status: expect.objectContaining({state: 'failed'}),
+      diagnostic: expect.objectContaining({
+        cause: expect.any(VideoTooLargeError),
+      }),
     })
     expect(release).toHaveBeenCalledTimes(1)
   })
@@ -729,29 +728,14 @@ describe('retained result ownership', () => {
     const [mediaId] = store.actions.addMedia(postId, [
       {kind: 'video', uri: source.uri},
     ])!.addedMediaIds
-    const attempt = () => attempts.at(-1) as never as VideoAttempt
-    return {store, postId, mediaId, attempts, attempt}
+    const attempt = () => attempts.at(-1)!.attempt
+    const report = (status: never) => attempts.at(-1)!.report(status)
+    return {store, postId, mediaId, attempts, attempt, report}
   }
-  type VideoAttempt = {
-    postId: string
-    mediaId: string
-    cancel: jest.Mock
-    report: (status: never) => void
-    acquireCompressedVideo: NonNullable<
-      Parameters<typeof startVideoUpload>[0]['acquireCompressedVideo']
-    >
-    retainCompressedVideo: NonNullable<
-      Parameters<typeof startVideoUpload>[0]['retainCompressedVideo']
-    >
-    setVideoTelemetry: NonNullable<
-      Parameters<typeof startVideoUpload>[0]['setVideoTelemetry']
-    >
-  }
-
   function retain(h: ReturnType<typeof manualStore>, release = jest.fn()) {
     const lease = h
       .attempt()
-      .retainCompressedVideo(h.postId, h.mediaId, {video: compressed, release})
+      .retainCompressedVideo({video: compressed, release})
     return {lease: lease!, release}
   }
 
@@ -783,12 +767,12 @@ describe('retained result ownership', () => {
     const release = jest.fn()
 
     expect(
-      stale.retainCompressedVideo(h.postId, h.mediaId, {
+      stale.retainCompressedVideo({
         video: compressed,
         release,
       }),
     ).toBeUndefined()
-    expect(stale.acquireCompressedVideo(h.postId, h.mediaId)).toBeUndefined()
+    expect(stale.acquireCompressedVideo()).toBeUndefined()
     /* Nothing was adopted, so the attempt keeps releasing its own copy. */
     expect(release).not.toHaveBeenCalled()
   })
@@ -796,15 +780,13 @@ describe('retained result ownership', () => {
   test('a later attempt leases the entry; invalidating it retires it for everyone', () => {
     const h = manualStore()
     const {lease, release} = retain(h)
-    h.attempt().report({state: 'failed', retryable: true} as never)
+    h.report({state: 'failed', retryable: true} as never)
     h.store.actions.retryMediaUpload(h.postId, h.mediaId)
 
-    const next = h.attempt().acquireCompressedVideo(h.postId, h.mediaId)
+    const next = h.attempt().acquireCompressedVideo()
     expect(next?.video).toBe(compressed)
     next!.invalidate()
-    expect(h.attempt().acquireCompressedVideo(h.postId, h.mediaId)).toBe(
-      undefined,
-    )
+    expect(h.attempt().acquireCompressedVideo()).toBe(undefined)
     lease.release()
     expect(release).not.toHaveBeenCalled()
     next!.release()
@@ -815,7 +797,7 @@ describe('retained result ownership', () => {
     const h = manualStore()
     const {lease, release} = retain(h)
 
-    h.attempt().setVideoTelemetry(h.postId, h.mediaId, {
+    h.attempt().setVideoTelemetry({
       telemetry: {uploadId: 'u1'} as never,
       blob: videoBlob,
     })
@@ -824,9 +806,7 @@ describe('retained result ownership', () => {
     })[0] as PostMediaVideo
     expect(item.videoBlob).toBe(videoBlob)
     expect(item.upload.state).not.toBe('uploaded')
-    expect(h.attempt().acquireCompressedVideo(h.postId, h.mediaId)).toBe(
-      undefined,
-    )
+    expect(h.attempt().acquireCompressedVideo()).toBe(undefined)
     lease.release()
     expect(release).toHaveBeenCalledTimes(1)
   })
@@ -837,7 +817,7 @@ describe('retained result ownership', () => {
     lease.release()
     expect(release).not.toHaveBeenCalled()
 
-    h.attempt().report({
+    h.report({
       state: 'failed',
       retryable: false,
       error: 'nope',
@@ -850,7 +830,7 @@ describe('retained result ownership', () => {
     const {lease, release} = retain(h)
     lease.release()
 
-    h.attempt().report({
+    h.report({
       state: 'failed',
       retryable: true,
       error: 'network',

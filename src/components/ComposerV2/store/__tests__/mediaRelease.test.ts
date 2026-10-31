@@ -31,6 +31,7 @@ import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   fakeAnalytics,
   fakeImageDependencies,
+  fakeUploadAttempt,
   realUploadWorkers,
   testUploadRuntime,
 } from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
@@ -112,14 +113,17 @@ describe('image outputs', () => {
     const releaseCompressedImage = jest.fn(({uri}: {uri: string}) => {
       released.push(uri)
     })
-    const setMediaCompressionResult = jest.fn()
     const task = startImageUpload({
       ...testUploadRuntime,
-      postId: media.postId,
-      mediaId: media.id,
       media,
-      setUploadStatus: (_p, _m, status) => statuses.push(status.state),
-      setMediaCompressionResult,
+      attempt: fakeUploadAttempt({
+        reportStatus: ({status}) => {
+          statuses.push(status.state)
+        },
+        reportFailure: () => {
+          statuses.push('failed')
+        },
+      }),
       ...fakeImageDependencies({releaseCompressedImage, ...overrides}),
     })
     return {task, statuses, released, releaseCompressedImage}
@@ -197,13 +201,12 @@ describe('image outputs', () => {
     const released: string[] = []
     const task = startImageUpload({
       ...testUploadRuntime,
-      postId: media.postId,
-      mediaId: media.id,
       media,
-      setUploadStatus: () => {},
-      setMediaCompressionResult: () => {
-        throw new Error('store failed')
-      },
+      attempt: fakeUploadAttempt({
+        setCompressionResult: () => {
+          throw new Error('store failed')
+        },
+      }),
       ...fakeImageDependencies({
         compressImage: () => Promise.resolve(output('file:///out.jpg')),
         releaseCompressedImage: ({uri}) => {

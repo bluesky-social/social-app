@@ -14,6 +14,7 @@ import {VideoTooLargeError} from '#/lib/media/video/errors'
 import {type CompressedVideo} from '#/lib/media/video/types'
 import {
   fakeImageDependencies,
+  fakeUploadAttempt,
   fakeVideoDependencies,
 } from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {
@@ -24,6 +25,7 @@ import {
 import {
   startImageUpload,
   startVideoUpload,
+  type VideoUploadAttempt,
   type VideoUploadDependencies,
 } from '#/components/ComposerV2/store/uploads'
 
@@ -138,8 +140,6 @@ async function runVideo({
     }),
   )
   startVideoUpload({
-    postId: 'post-1',
-    mediaId: 'video-1',
     media: video({captions: [], ...media}),
     ...runtime,
     ...fakeVideoDependencies({
@@ -147,12 +147,30 @@ async function runVideo({
       uploadVideo: uploadVideo as never,
       ...dependencies,
     }),
-    setMediaCompressionResult: prepared,
-    setMediaSourceMetadata: sourceMetadata,
-    setUploadStatus: (_post, _media, status) => statuses.push(status),
+    attempt: recordingAttempt({
+      statuses,
+      setCompressionResult: prepared,
+      setSourceMetadata: sourceMetadata,
+    }),
   })
   await settle()
   return {statuses, prepared, sourceMetadata, compressVideo, uploadVideo}
+}
+
+/** An attempt that records every status it is given, failures included. */
+function recordingAttempt({
+  statuses,
+  ...overrides
+}: {statuses: UploadStatus[]} & Partial<VideoUploadAttempt>) {
+  return fakeUploadAttempt({
+    reportStatus: ({status}) => {
+      statuses.push(status)
+    },
+    reportFailure: ({status}) => {
+      statuses.push(status)
+    },
+    ...overrides,
+  })
 }
 
 /** The asset the compressor received. */
@@ -179,13 +197,10 @@ describe('ComposerV2 real media workers', () => {
     const uploadBlob = jest.fn(() => Promise.resolve({blob: blob('image')}))
 
     startImageUpload({
-      postId: 'post-1',
-      mediaId: 'image-1',
       media: image(),
       ...runtime,
       ...fakeImageDependencies({compressImage, uploadBlob}),
-      setMediaCompressionResult: prepared,
-      setUploadStatus: (_post, _media, status) => statuses.push(status),
+      attempt: recordingAttempt({statuses, setCompressionResult: prepared}),
     })
     await settle()
 
@@ -205,13 +220,14 @@ describe('ComposerV2 real media workers', () => {
       'file:///compressed.jpg',
       'image/jpeg',
     )
-    expect(prepared).toHaveBeenCalledWith('post-1', 'image-1', {
-      kind: 'image',
-      width: 400,
-      height: 300,
-      mimeType: 'image/jpeg',
-      aspectRatio: {width: 400, height: 300},
-      size: 123,
+    expect(prepared).toHaveBeenCalledWith({
+      prepared: {
+        width: 400,
+        height: 300,
+        mimeType: 'image/jpeg',
+        aspectRatio: {width: 400, height: 300},
+        size: 123,
+      },
     })
     expect(statuses.at(-1)).toEqual({state: 'uploaded', blob: blob('image')})
   })
@@ -229,15 +245,13 @@ describe('ComposerV2 real media workers', () => {
     const uploadBlob = jest.fn()
     const statuses: UploadStatus[] = []
     const task = startImageUpload({
-      postId: 'post-1',
-      mediaId: 'image-1',
       media: image(),
       ...runtime,
       ...fakeImageDependencies({
         compressImage: compressImage as never,
         uploadBlob: uploadBlob as never,
       }),
-      setUploadStatus: (_post, _media, status) => statuses.push(status),
+      attempt: recordingAttempt({statuses}),
     })
     await settle()
     expect(compressImage).toHaveBeenCalledTimes(1)
@@ -258,8 +272,6 @@ describe('ComposerV2 real media workers', () => {
     const compressVideo = jest.fn()
     const statuses: UploadStatus[] = []
     startVideoUpload({
-      postId: 'post-1',
-      mediaId: 'video-1',
       media: video(),
       ...runtime,
       ...fakeVideoDependencies({
@@ -273,7 +285,7 @@ describe('ComposerV2 real media workers', () => {
           }),
         compressVideo: compressVideo as never,
       }),
-      setUploadStatus: (_post, _media, status) => statuses.push(status),
+      attempt: recordingAttempt({statuses}),
     })
     await settle()
 
@@ -300,11 +312,9 @@ describe('ComposerV2 real media workers', () => {
         uri: 'file:///source.mp4',
         fileSize: VIDEO_MAX_SIZE * 2,
       })
-      expect(prepared).toHaveBeenCalledWith(
-        'post-1',
-        'video-1',
-        expect.objectContaining({size: VIDEO_MAX_SIZE - 1}),
-      )
+      expect(prepared).toHaveBeenCalledWith({
+        prepared: expect.objectContaining({size: VIDEO_MAX_SIZE - 1}),
+      })
       expect(uploadVideo).toHaveBeenCalledWith(
         expect.objectContaining({
           video: expect.objectContaining({uri: 'file:///compressed.mp4'}),
@@ -326,15 +336,13 @@ describe('ComposerV2 real media workers', () => {
         } as CompressedVideo,
       })
 
-      expect(prepared).toHaveBeenCalledWith(
-        'post-1',
-        'video-1',
-        expect.objectContaining({
+      expect(prepared).toHaveBeenCalledWith({
+        prepared: expect.objectContaining({
           width: 3840,
           height: 2160,
           aspectRatio: {width: 3840, height: 2160},
         }),
-      )
+      })
     })
 
     test('native: transcodes a source format outside the upload allowlist', async () => {
@@ -577,12 +585,14 @@ describe('ComposerV2 real media workers', () => {
         fileSize: 1000,
       })
       /* Nothing new: the store keeps the item unchanged. */
-      expect(sourceMetadata).toHaveBeenCalledWith('post-1', 'video-1', {
-        width: 1920,
-        height: 1080,
-        mimeType: 'video/mp4',
-        duration: 1000,
-        fileSize: 1000,
+      expect(sourceMetadata).toHaveBeenCalledWith({
+        metadata: {
+          width: 1920,
+          height: 1080,
+          mimeType: 'video/mp4',
+          duration: 1000,
+          fileSize: 1000,
+        },
       })
       expect(statuses.at(-1)).toMatchObject({state: 'uploaded'})
     })
@@ -596,11 +606,9 @@ describe('ComposerV2 real media workers', () => {
 
       expect(getFileSize).toHaveBeenCalledWith('file:///source.mp4')
       expect(compressedAsset(compressVideo).fileSize).toBe(4321)
-      expect(sourceMetadata).toHaveBeenCalledWith(
-        'post-1',
-        'video-1',
-        expect.objectContaining({fileSize: 4321}),
-      )
+      expect(sourceMetadata).toHaveBeenCalledWith({
+        metadata: expect.objectContaining({fileSize: 4321}),
+      })
     })
 
     test('native: a failed size stat for video still compresses, without a size', async () => {
@@ -646,11 +654,9 @@ describe('ComposerV2 real media workers', () => {
         duration: 2500,
         fileSize: 9000,
       })
-      expect(sourceMetadata).toHaveBeenCalledWith(
-        'post-1',
-        'video-1',
-        expect.objectContaining({duration: 2500, fileSize: 9000}),
-      )
+      expect(sourceMetadata).toHaveBeenCalledWith({
+        metadata: expect.objectContaining({duration: 2500, fileSize: 9000}),
+      })
     })
 
     test('native: an intent video with only dimensions is probed for its type and duration', async () => {
@@ -670,15 +676,13 @@ describe('ComposerV2 real media workers', () => {
       })
 
       expect(getVideoMetadata).toHaveBeenCalledWith('file:///shared', undefined)
-      expect(sourceMetadata).toHaveBeenCalledWith(
-        'post-1',
-        'video-1',
-        expect.objectContaining({
+      expect(sourceMetadata).toHaveBeenCalledWith({
+        metadata: expect.objectContaining({
           mimeType: 'video/mp4',
           duration: 3000,
           fileSize: 5000,
         }),
-      )
+      })
       expect(statuses.at(-1)).toMatchObject({state: 'uploaded'})
     })
 
@@ -712,11 +716,13 @@ describe('ComposerV2 real media workers', () => {
           height: 270,
           fileSize: 2048,
         })
-        expect(sourceMetadata).toHaveBeenCalledWith(
-          'post-1',
-          'video-1',
-          expect.objectContaining({width: 480, height: 270, fileSize: 2048}),
-        )
+        expect(sourceMetadata).toHaveBeenCalledWith({
+          metadata: expect.objectContaining({
+            width: 480,
+            height: 270,
+            fileSize: 2048,
+          }),
+        })
         expect(statuses.at(-1)).toMatchObject({state: 'uploaded'})
       },
     )
@@ -756,12 +762,14 @@ describe('ComposerV2 real media workers', () => {
         duration: 4000,
         fileSize: 7777,
       })
-      expect(sourceMetadata).toHaveBeenCalledWith('post-1', 'video-1', {
-        width: 1280,
-        height: 720,
-        mimeType: 'video/webm',
-        duration: 4000,
-        fileSize: 7777,
+      expect(sourceMetadata).toHaveBeenCalledWith({
+        metadata: {
+          width: 1280,
+          height: 720,
+          mimeType: 'video/webm',
+          duration: 4000,
+          fileSize: 7777,
+        },
       })
     })
 
@@ -886,8 +894,6 @@ describe('ComposerV2 real media workers', () => {
       )
       const uploadBlob = jest.fn(() => Promise.resolve({blob: blob('image')}))
       startImageUpload({
-        postId: 'post-1',
-        mediaId: 'image-1',
         media: image(media),
         ...runtime,
         ...fakeImageDependencies({
@@ -895,8 +901,10 @@ describe('ComposerV2 real media workers', () => {
           uploadBlob,
           ...(getImageDimensions ? {getImageDimensions} : {}),
         }),
-        setMediaSourceMetadata: sourceMetadata,
-        setUploadStatus: (_post, _media, status) => statuses.push(status),
+        attempt: recordingAttempt({
+          statuses,
+          setSourceMetadata: sourceMetadata,
+        }),
       })
       await settle()
       return {statuses, sourceMetadata, compressImage, uploadBlob}
@@ -930,10 +938,12 @@ describe('ComposerV2 real media workers', () => {
             }),
           }),
         )
-        expect(sourceMetadata).toHaveBeenCalledWith('post-1', 'image-1', {
-          width: 900,
-          height: 600,
-          mimeType,
+        expect(sourceMetadata).toHaveBeenCalledWith({
+          metadata: {
+            width: 900,
+            height: 600,
+            mimeType,
+          },
         })
         expect(uploadBlob).toHaveBeenCalledWith(
           pdsClient,
@@ -953,10 +963,12 @@ describe('ComposerV2 real media workers', () => {
       })
 
       expect(compressImage).toHaveBeenCalled()
-      expect(sourceMetadata).toHaveBeenCalledWith('post-1', 'image-1', {
-        width: 1200,
-        height: 800,
-        mimeType: 'image/webp',
+      expect(sourceMetadata).toHaveBeenCalledWith({
+        metadata: {
+          width: 1200,
+          height: 800,
+          mimeType: 'image/webp',
+        },
       })
     })
 
@@ -988,8 +1000,6 @@ describe('ComposerV2 real media workers', () => {
       }),
     )
     startVideoUpload({
-      postId: 'post-1',
-      mediaId: 'video-1',
       media: video(),
       ...runtime,
       ...fakeVideoDependencies({
@@ -1010,7 +1020,7 @@ describe('ComposerV2 real media workers', () => {
         uploadVideo: uploadVideo as never,
         uploadBlob: captionUpload,
       }),
-      setUploadStatus: (_post, _media, status) => statuses.push(status),
+      attempt: recordingAttempt({statuses}),
     })
     await settle()
 
@@ -1051,8 +1061,6 @@ describe('ComposerV2 real media workers', () => {
       ),
     }))
     startVideoUpload({
-      postId: 'post-1',
-      mediaId: 'video-1',
       media: video(),
       ...runtime,
       ...fakeVideoDependencies({
@@ -1079,7 +1087,7 @@ describe('ComposerV2 real media workers', () => {
         createVideoServiceClient: createVideoServiceClient as never,
         sleep: () => Promise.resolve(),
       }),
-      setUploadStatus: (_post, _media, status) => statuses.push(status),
+      attempt: recordingAttempt({statuses}),
     })
     await settle()
 

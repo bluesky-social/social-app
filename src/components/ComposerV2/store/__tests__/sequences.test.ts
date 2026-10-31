@@ -165,25 +165,26 @@ function assertInvariants(state: ThreadState) {
 
 /** Exercise every guarded callback even when the worker ignores cancellation. */
 function lateCallbacks(attempt: Attempt) {
-  const {postId, mediaId} = attempt
   return [
     () => attempt.report({state: 'uploading', progress: 0.9}),
     () =>
       attempt.report({state: 'failed', error: 'late failure', retryable: true}),
     () => attempt.report({state: 'uploaded', blob: blob('late')}),
     () =>
-      attempt.setMediaCompressionResult?.(postId, mediaId, {
-        kind: attempt.media.kind,
-        size: 1,
-        mimeType: 'application/octet-stream',
-        width: 1,
-        height: 1,
-        aspectRatio: {width: 1, height: 1},
+      attempt.attempt.setCompressionResult({
+        prepared: {
+          size: 1,
+          mimeType: 'application/octet-stream',
+          width: 1,
+          height: 1,
+          aspectRatio: {width: 1, height: 1},
+        },
       }),
     () =>
-      attempt.setCaptionBlobs?.(postId, mediaId, [
-        {lang: 'en', blob: blob('late-caption')},
-      ]),
+      'setCaptionBlobs' in attempt.attempt &&
+      attempt.attempt.setCaptionBlobs({
+        captions: [{lang: 'en', blob: blob('late-caption')}],
+      }),
   ]
 }
 

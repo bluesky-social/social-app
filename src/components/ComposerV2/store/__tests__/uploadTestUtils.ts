@@ -5,15 +5,19 @@ import {type I18n} from '@lingui/core'
 import {AbortError} from '#/lib/async/cancelable'
 import {type VideoTelemetry} from '#/lib/media/video/telemetry'
 import {
+  type UploadDiagnostic,
   type UploadRuntime,
   type UploadStatus,
 } from '#/components/ComposerV2/store/types'
 import {
+  type ImageUploadAttempt,
   type ImageUploadDependencies,
   startImageUpload,
   startVideoUpload,
+  type UploadAttempt,
   type UploadTask,
   type UploadWorkerOverrides,
+  type VideoUploadAttempt,
   type VideoUploadDependencies,
 } from '#/components/ComposerV2/store/uploads'
 import {type AnalyticsContextType} from '#/analytics'
@@ -63,6 +67,53 @@ export function noopVideoTelemetry(): VideoTelemetry {
   }
 }
 
+/**
+ * An attempt whose every member is a `jest.fn`, for worker tests that assert
+ * the calls. Pass overrides for members that must return something.
+ */
+export function fakeUploadAttempt(
+  overrides: Partial<VideoUploadAttempt> = {},
+): ImageUploadAttempt & VideoUploadAttempt {
+  return {
+    reportStatus: jest.fn(),
+    reportFailure: jest.fn(),
+    setSourceMetadata: jest.fn(),
+    setCompressionResult: jest.fn(),
+    setCaptionBlobs: jest.fn(),
+    acquireCompressedVideo: jest.fn(() => undefined),
+    retainCompressedVideo: jest.fn(() => undefined),
+    setVideoTelemetry: jest.fn(),
+    ...overrides,
+  }
+}
+
+/**
+ * Sends any status through the matching attempt callback. A failure gets the
+ * diagnostic the store would otherwise need from the worker, defaulting to
+ * `operational` for a retryable failure and `validation` otherwise.
+ */
+export function reportAnyStatus({
+  attempt,
+  status,
+  diagnostic,
+}: {
+  attempt: UploadAttempt
+  status: UploadStatus
+  diagnostic?: UploadDiagnostic
+}) {
+  if (status.state === 'failed') {
+    attempt.reportFailure({
+      status,
+      diagnostic: diagnostic ?? {
+        kind: status.retryable ? 'operational' : 'validation',
+        cause: undefined,
+      },
+    })
+  } else {
+    attempt.reportStatus({status})
+  }
+}
+
 const placeholder = {
   $type: 'blob',
   ref: {$link: 'test-upload'},
@@ -71,17 +122,11 @@ const placeholder = {
 } as unknown as BlobRef
 
 function simulated({
+  attempt,
   steps,
   tickMs,
-  ...opts
 }: {
-  postId: string
-  mediaId: string
-  setUploadStatus: (
-    postId: string,
-    mediaId: string,
-    status: UploadStatus,
-  ) => void
+  attempt: UploadAttempt
   steps: number[]
   tickMs: number
 }): UploadTask {
@@ -91,16 +136,12 @@ function simulated({
   const tick = () => {
     if (cancelled) return
     if (index < steps.length) {
-      opts.setUploadStatus(opts.postId, opts.mediaId, {
-        state: 'uploading',
-        progress: steps[index++],
+      attempt.reportStatus({
+        status: {state: 'uploading', progress: steps[index++]},
       })
       timer = setTimeout(tick, tickMs)
     } else {
-      opts.setUploadStatus(opts.postId, opts.mediaId, {
-        state: 'uploaded',
-        blob: placeholder,
-      })
+      attempt.reportStatus({status: {state: 'uploaded', blob: placeholder}})
     }
   }
   timer = setTimeout(tick, tickMs)
@@ -119,19 +160,28 @@ export function manualUploadWorkers() {
     | Parameters<NonNullable<UploadWorkerOverrides['startVideoUpload']>>[0]
   const attempts: Array<
     Options & {
+      /**
+       * Typed as both kinds so a test can call whichever members its item
+       * has; the store gives an image attempt no video members.
+       */
+      attempt: ImageUploadAttempt & VideoUploadAttempt
+      postId: string
+      mediaId: string
       cancel: jest.Mock
-      report: (status: UploadStatus) => void
+      report: (status: UploadStatus, diagnostic?: UploadDiagnostic) => void
     }
   > = []
   const start = (options: Options) => {
-    const attempt = {
+    const entry = {
       ...options,
       cancel: jest.fn(),
-      report: (status: UploadStatus) =>
-        options.setUploadStatus(options.postId, options.mediaId, status),
+      postId: options.media.postId,
+      mediaId: options.media.id,
+      report: (status: UploadStatus, diagnostic?: UploadDiagnostic) =>
+        reportAnyStatus({attempt: options.attempt, status, diagnostic}),
     }
-    attempts.push(attempt)
-    return {cancel: attempt.cancel}
+    attempts.push(entry as (typeof attempts)[number])
+    return {cancel: entry.cancel}
   }
   const workers: UploadWorkerOverrides = {
     startImageUpload: start,
@@ -141,10 +191,10 @@ export function manualUploadWorkers() {
 }
 
 export const simulatedUploadWorkers: UploadWorkerOverrides = {
-  startImageUpload: opts =>
-    simulated({...opts, steps: [0.25, 0.5, 0.75], tickMs: 100}),
-  startVideoUpload: opts =>
-    simulated({...opts, steps: [0.1, 0.3, 0.5, 0.7, 0.9], tickMs: 200}),
+  startImageUpload: ({attempt}) =>
+    simulated({attempt, steps: [0.25, 0.5, 0.75], tickMs: 100}),
+  startVideoUpload: ({attempt}) =>
+    simulated({attempt, steps: [0.1, 0.3, 0.5, 0.7, 0.9], tickMs: 200}),
 }
 
 /** A dependency the test does not expect the worker to reach. */

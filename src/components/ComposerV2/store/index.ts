@@ -27,9 +27,9 @@ import {
 } from '#/components/ComposerV2/store/uploadDependencies'
 import {
   type CompressedVideoLease,
-  type PreparedOutput,
   startImageUpload,
   startVideoUpload,
+  type UploadAttempt,
   type UploadTask,
   type UploadWorkerOverrides,
 } from '#/components/ComposerV2/store/uploads'
@@ -687,56 +687,41 @@ export function createThreadStore({
       },
     }
     uploadTasks.set(item.id, registered)
-    const callbacks = {
-      postId,
-      mediaId: item.id,
-      pdsClient,
-      pdsUrl,
-      i18n,
-      setUploadStatus: (
-        p: string,
-        m: string,
-        status: types.UploadStatus,
-        diagnostic?: types.UploadDiagnostic,
-      ) => {
-        if (uploadTasks.get(m) === registered)
-          applyUploadStatus(p, m, status, diagnostic)
+    /* Calls from a worker the store has since retired or destroyed are ignored. */
+    const isCurrent = () =>
+      !destroyed && uploadTasks.get(mediaId) === registered
+    const attempt: UploadAttempt = {
+      reportStatus: ({status}) => {
+        if (isCurrent()) applyUploadStatus({postId, mediaId, status})
       },
-      setMediaCompressionResult: (
-        p: string,
-        m: string,
-        output: PreparedOutput,
-      ) => {
-        if (uploadTasks.get(m) === registered)
-          applyMediaCompressionResult(p, m, output)
+      reportFailure: ({status, diagnostic}) => {
+        if (isCurrent())
+          applyUploadFailure({postId, mediaId, status, diagnostic})
       },
-      setMediaSourceMetadata: (
-        p: string,
-        m: string,
-        metadata: types.ResolvedSourceMetadata,
-      ) => {
-        if (uploadTasks.get(m) === registered)
-          applyMediaSourceMetadata(p, m, metadata)
-      },
-      setCaptionBlobs: (
-        p: string,
-        m: string,
-        captions: types.UploadedCaption[],
-      ) => {
-        if (uploadTasks.get(m) === registered) applyCaptionBlobs(p, m, captions)
+      setSourceMetadata: ({metadata}) => {
+        if (isCurrent()) applyMediaSourceMetadata(postId, mediaId, metadata)
       },
     }
+    const runtime = {pdsClient, pdsUrl, i18n}
     try {
       started =
         item.kind === 'image'
           ? (__uploadWorkers?.startImageUpload ?? startImageUpload)({
-              ...callbacks,
+              ...runtime,
               ...imageUploadDependencies,
               media: item,
+              attempt: {
+                ...attempt,
+                setCompressionResult: ({prepared}) => {
+                  if (isCurrent())
+                    applyImageCompressionResult(postId, mediaId, prepared)
+                },
+              },
             })
           : (__uploadWorkers?.startVideoUpload ?? startVideoUpload)({
-              ...callbacks,
+              ...runtime,
               ...videoUploadDependencies,
+              media: item,
               metric: analytics.metric,
               restart: restartReason && {
                 reason: restartReason,
@@ -744,31 +729,40 @@ export function createThreadStore({
               },
               uploadedVideoTelemetry:
                 item.videoBlob && publishableVideos.get(item.videoBlob),
-              acquireCompressedVideo: (p, m) => {
-                if (uploadTasks.get(m) !== registered) return undefined
-                const entry = compressionCache.get(m)
-                return entry && leaseCompression(m, entry)
+              attempt: {
+                ...attempt,
+                setCompressionResult: ({prepared}) => {
+                  if (isCurrent())
+                    applyVideoCompressionResult(postId, mediaId, prepared)
+                },
+                setCaptionBlobs: ({captions}) => {
+                  if (isCurrent()) applyCaptionBlobs(postId, mediaId, captions)
+                },
+                acquireCompressedVideo: () => {
+                  if (!isCurrent()) return undefined
+                  const entry = compressionCache.get(mediaId)
+                  return entry && leaseCompression(mediaId, entry)
+                },
+                retainCompressedVideo: ({video, release}) => {
+                  if (!isCurrent()) return undefined
+                  retireCompression(mediaId)
+                  const entry = {video, release, readers: 0, retired: false}
+                  compressionCache.set(mediaId, entry)
+                  return leaseCompression(mediaId, entry)
+                },
+                setVideoTelemetry: ({telemetry, blob}) => {
+                  if (!isCurrent()) return
+                  videoUploadIds.set(mediaId, telemetry.uploadId)
+                  if (!blob) return
+                  /*
+                   * Register the telemetry before notifying subscribers: one
+                   * may restart this item, and the restart looks it up by blob.
+                   */
+                  publishableVideos.set(blob, telemetry)
+                  retireCompression(mediaId)
+                  applyVideoBlob(postId, mediaId, blob)
+                },
               },
-              retainCompressedVideo: (p, m, {video, release}) => {
-                if (uploadTasks.get(m) !== registered) return undefined
-                retireCompression(m)
-                const entry = {video, release, readers: 0, retired: false}
-                compressionCache.set(m, entry)
-                return leaseCompression(m, entry)
-              },
-              setVideoTelemetry: (p, m, {telemetry, blob}) => {
-                if (uploadTasks.get(m) !== registered) return
-                videoUploadIds.set(m, telemetry.uploadId)
-                if (!blob) return
-                /*
-                 * Register the telemetry before notifying subscribers: one
-                 * may restart this item, and the restart looks it up by blob.
-                 */
-                publishableVideos.set(blob, telemetry)
-                retireCompression(m)
-                applyVideoBlob(p, m, blob)
-              },
-              media: item,
             })
       /*
        * A subscriber notified by that first report may remove the item or
@@ -780,7 +774,7 @@ export function createThreadStore({
        */
       if (cancelled) started.cancel(cancelled)
     } catch (cause) {
-      if (!destroyed && uploadTasks.get(mediaId) === registered) {
+      if (isCurrent()) {
         cancelUploadTask(mediaId)
         reportError(
           {
@@ -909,27 +903,83 @@ export function createThreadStore({
   }
 
   /** Upload progress does not dirty the draft or affect the record attachment. */
-  function applyUploadStatus(
-    postId: string,
-    mediaId: string,
-    status: types.UploadStatus,
-    diagnostic?: types.UploadDiagnostic,
-  ) {
-    const post = state.posts[postId]
-    if (destroyed || !post) return
-    const found = getMediaItems({media: post.attachments.media}).find(
-      item => item.id === mediaId,
-    )
-    if (!found || found.kind === 'gif') return
-    if (status.state === 'failed') {
-      cancelUploadTask(mediaId)
-      /* Nothing can retry a failure that is not retryable. */
-      if (!status.retryable) retireCompression(mediaId)
-    } else if (status.state === 'uploaded') {
+  function applyUploadStatus({
+    postId,
+    mediaId,
+    status,
+  }: {
+    postId: string
+    mediaId: string
+    status: Exclude<types.UploadStatus, {state: 'failed'}>
+  }) {
+    if (!findUploadableItem({postId, mediaId})) return
+    if (status.state === 'uploaded') {
       uploadTasks.delete(mediaId)
       retireCompression(mediaId)
     }
-    const accepted = updateMediaItem({
+    writeUploadStatus({postId, mediaId, status})
+  }
+
+  /** A failure cancels its task and reports the diagnostic the worker classified. */
+  function applyUploadFailure({
+    postId,
+    mediaId,
+    status,
+    diagnostic,
+  }: {
+    postId: string
+    mediaId: string
+    status: Extract<types.UploadStatus, {state: 'failed'}>
+    diagnostic: types.UploadDiagnostic
+  }) {
+    const found = findUploadableItem({postId, mediaId})
+    if (!found) return
+    cancelUploadTask(mediaId)
+    /* Nothing can retry a failure that is not retryable. */
+    if (!status.retryable) retireCompression(mediaId)
+    const accepted = writeUploadStatus({postId, mediaId, status})
+    if (accepted && found.upload.state !== 'failed') {
+      reportError(
+        {
+          source: 'upload',
+          code: status.code ?? 'upload-failed',
+          postId,
+          mediaId,
+          kind: diagnostic.kind,
+          recovery: status.retryable ? 'retry' : 'edit',
+        },
+        diagnostic.cause,
+      )
+    }
+  }
+
+  /** The live image or video item, or undefined once it, its post, or the store is gone. */
+  function findUploadableItem({
+    postId,
+    mediaId,
+  }: {
+    postId: string
+    mediaId: string
+  }) {
+    const post = state.posts[postId]
+    if (destroyed || !post) return undefined
+    const found = getMediaItems({media: post.attachments.media}).find(
+      item => item.id === mediaId,
+    )
+    return found?.kind === 'gif' ? undefined : found
+  }
+
+  /** Publishes the status; false when the item no longer exists. */
+  function writeUploadStatus({
+    postId,
+    mediaId,
+    status,
+  }: {
+    postId: string
+    mediaId: string
+    status: types.UploadStatus
+  }) {
+    return updateMediaItem({
       postId,
       mediaId,
       update: current => {
@@ -949,25 +999,6 @@ export function createThreadStore({
         }
       },
     })
-    if (
-      accepted &&
-      status.state === 'failed' &&
-      found.upload.state !== 'failed'
-    ) {
-      reportError(
-        {
-          source: 'upload',
-          code: status.code ?? 'upload-failed',
-          postId,
-          mediaId,
-          kind:
-            diagnostic?.kind ??
-            (status.retryable ? 'operational' : 'validation'),
-          recovery: status.retryable ? 'retry' : 'edit',
-        },
-        diagnostic?.cause,
-      )
-    }
   }
 
   /**
@@ -987,23 +1018,37 @@ export function createThreadStore({
   /**
    * Store the local compression result as `item.prepared` without replacing
    * the original media source. The planner prefers these dimensions when
-   * building the embed. Image dimensions are the compressor's output; video
-   * `width`, `height`, and `aspectRatio` are the source's (see `PreparedVideo`).
-   * This does not mark the upload complete; the uploaded blob is recorded
+   * building the embed. Image dimensions are the compressor's output. This
+   * does not mark the upload complete; the uploaded blob is recorded
    * separately through upload status.
    */
-  function applyMediaCompressionResult(
+  function applyImageCompressionResult(
     postId: string,
     mediaId: string,
-    output: PreparedOutput,
+    prepared: types.PreparedImage,
   ) {
     updateMediaItem({
       postId,
       mediaId,
       update: current =>
-        current.kind === output.kind
-          ? ({...current, prepared: output} as types.PostMediaItem)
-          : null,
+        current.kind === 'image' ? {...current, prepared} : null,
+    })
+  }
+
+  /**
+   * Like `applyImageCompressionResult`; video `width`, `height`, and
+   * `aspectRatio` are the source's (see `PreparedVideo`).
+   */
+  function applyVideoCompressionResult(
+    postId: string,
+    mediaId: string,
+    prepared: types.PreparedVideo,
+  ) {
+    updateMediaItem({
+      postId,
+      mediaId,
+      update: current =>
+        current.kind === 'video' ? {...current, prepared} : null,
     })
   }
 
@@ -1365,7 +1410,8 @@ export function createThreadStore({
      * must use the upload workers rather than mutating status directly.
      */
     internalActions: {
-      setUploadStatus: applyUploadStatus,
+      applyUploadStatus,
+      applyUploadFailure,
     },
     destroy,
     getState() {

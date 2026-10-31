@@ -211,11 +211,13 @@ start the deferred work.
   after `destroy`). A late result from a superseded attempt is dropped.
 - User edits dirty the content; initialization, worker progress, URI completion,
   and retries do not.
-- `internalActions.setUploadStatus` is a test seam that calls the private
-  `applyUploadStatus` directly. Worker callbacks (`setUploadStatus`,
-  `setMediaSourceMetadata`, `setMediaCompressionResult`, `setCaptionBlobs`,
-  `setVideoTelemetry`) are a different interface: they pass task-identity guards
-  before reaching the private `apply*` writes or the telemetry registry.
+- `internalActions.applyUploadStatus` and `applyUploadFailure` are test seams
+  that call the private writes directly. Workers instead receive one required
+  `UploadAttempt` (see `uploads.ts`), already bound to its item. Its callbacks
+  (`reportStatus`, `reportFailure`, `setSourceMetadata`, `setCompressionResult`,
+  `setCaptionBlobs`, `setVideoTelemetry`, and the compression cache pair) pass a
+  single current-attempt guard before reaching the private `apply*` writes or
+  the telemetry registry.
   `getState`, `subscribe`, `destroy`, `reportError`, `reportPublished`, and
   `reportPublishUncertain` are lifecycle/read/reporting methods, not UI mutation
   shortcuts.
@@ -376,7 +378,7 @@ releases it when the attempt settles, unless a validated pass-through result
 aliases it; then the retained compression entry releases it (below). The item
 keeps its original URI and local ref, so draft data never points at the copy.
 
-Prepared values reach the store through `setMediaSourceMetadata` before source
+Prepared values reach the store through `attempt.setSourceMetadata` before source
 validation. The store only fills fields the item did not know, publishes nothing
 when nothing is new, and does not dirty the composition. Items never change
 source except through `replaceImageSource`, so retries, caption restarts, and

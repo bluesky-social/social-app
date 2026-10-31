@@ -77,7 +77,6 @@ function addImages(store: Store, count = 1) {
 
 function compressionOutput(width: number, height: number) {
   return {
-    kind: 'image' as const,
     width,
     height,
     mimeType: 'image/jpeg',
@@ -229,17 +228,19 @@ describe('replaceImageSource', () => {
     expect(old.cancel).toHaveBeenCalledTimes(1)
     expect(attempts).toHaveLength(2)
     const afterEdit = store.getState()
-    old.setMediaCompressionResult?.(root, id, compressionOutput(400, 300))
-    old.setMediaSourceMetadata?.(root, id, {
-      width: 1,
-      height: 1,
-      mimeType: 'image/png',
+    old.attempt.setCompressionResult({prepared: compressionOutput(400, 300)})
+    old.attempt.setSourceMetadata({
+      metadata: {
+        width: 1,
+        height: 1,
+        mimeType: 'image/png',
+      },
     })
     old.report({state: 'uploaded', blob: blob('old')})
     expect(store.getState()).toBe(afterEdit)
 
     const fresh = attempts[1]
-    fresh.setMediaCompressionResult?.(root, id, compressionOutput(190, 140))
+    fresh.attempt.setCompressionResult({prepared: compressionOutput(190, 140)})
     fresh.report({state: 'uploaded', blob: blob('fresh')})
     expect(images(store)[0]).toMatchObject({
       uri: crop.uri,
@@ -254,11 +255,9 @@ describe('replaceImageSource', () => {
     const store = makeStore(workers)
     const root = rootId(store)
     const [id] = addImages(store)
-    attempts[0].setMediaCompressionResult?.(
-      root,
-      id,
-      compressionOutput(400, 300),
-    )
+    attempts[0].attempt.setCompressionResult({
+      prepared: compressionOutput(400, 300),
+    })
     attempts[0].report({state: 'uploaded', blob: blob('before')})
     expect(images(store)[0]).toMatchObject({upload: {state: 'uploaded'}})
 
@@ -461,11 +460,11 @@ describe('source metadata', () => {
     const {attempts, workers} = manualUploadWorkers()
     const store = makeStore(workers)
     const root = rootId(store)
-    const [id] = store.actions.addMedia(root, [
+    store.actions.addMedia(root, [
       {kind: 'image', uri: original.uri, width: -1, height: 300},
-    ])!.addedMediaIds
+    ])
 
-    attempts[0].setMediaSourceMetadata?.(root, id, {width: 640, height: 480})
+    attempts[0].attempt.setSourceMetadata({metadata: {width: 640, height: 480}})
 
     expect(images(store)[0]).toMatchObject({width: 640, height: 480})
     store.destroy()

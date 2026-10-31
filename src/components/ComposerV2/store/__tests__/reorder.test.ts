@@ -206,7 +206,7 @@ describe('movePost async ownership', () => {
       size: 1,
     } as never
     const uploaded: UploadStatus = {state: 'uploaded', blob}
-    imageOptions.setUploadStatus(imagePostId, mediaItem.id, uploaded)
+    imageOptions.attempt.reportStatus({status: uploaded})
     expect(store.getState().posts[imagePostId].attachments.media).toMatchObject(
       {
         kind: 'images',

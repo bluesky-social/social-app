@@ -363,10 +363,15 @@ describe('initial media and eager uploads', () => {
       postId: id,
       upload: {state: 'pending'},
     })
-    store.internalActions.setUploadStatus(id, media.item.id, {
-      state: 'failed',
-      error: 'network',
-      retryable: true,
+    store.internalActions.applyUploadFailure({
+      postId: id,
+      mediaId: media.item.id,
+      status: {
+        state: 'failed',
+        error: 'network',
+        retryable: true,
+      },
+      diagnostic: {kind: 'operational', cause: undefined},
     })
     const failed = root(store).post.attachments.media
     if (

@@ -15,6 +15,7 @@ import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   manualUploadWorkers,
   realUploadWorkers,
+  reportAnyStatus,
   testUploadRuntime,
 } from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {type ThreadStoreInitialState} from '#/components/ComposerV2/store/types'
@@ -40,18 +41,16 @@ const resolvers = {} as LinkResolvers
 
 /** Reports a terminal failure before returning, as an eager worker may. */
 const syncFailingImageWorker: UploadWorkerOverrides = {
-  startImageUpload: ({postId, mediaId, setUploadStatus}) => {
-    setUploadStatus(
-      postId,
-      mediaId,
-      {
+  startImageUpload: ({attempt}) => {
+    attempt.reportFailure({
+      status: {
         state: 'failed',
         error: 'Rejected',
         code: 'upload-rejected',
         retryable: false,
       },
-      {kind: 'unexpected', cause: new Error('private cause')},
-    )
+      diagnostic: {kind: 'unexpected', cause: new Error('private cause')},
+    })
     return {cancel() {}}
   },
 }
@@ -282,7 +281,7 @@ describe('session error reporting', () => {
         },
         __uploadWorkers: {
           startImageUpload: options => {
-            options.setUploadStatus(options.postId, options.mediaId, failed)
+            reportAnyStatus({attempt: options.attempt, status: failed})
             throw cause
           },
         },

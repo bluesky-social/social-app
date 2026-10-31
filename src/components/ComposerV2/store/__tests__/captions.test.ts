@@ -11,6 +11,7 @@ import {type LinkResolvers} from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   realUploadWorkers,
+  reportAnyStatus,
   testUploadRuntime,
 } from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {
@@ -63,10 +64,10 @@ function makeManualWorkers() {
   const workers: UploadWorkerOverrides = {
     startVideoUpload: opts => {
       const entry = {
-        mediaId: opts.mediaId,
+        mediaId: opts.media.id,
         media: opts.media,
         report: (status: UploadStatus) =>
-          opts.setUploadStatus(opts.postId, opts.mediaId, status),
+          reportAnyStatus({attempt: opts.attempt, status}),
         cancelled: false,
       }
       started.push(entry)

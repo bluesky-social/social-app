@@ -1338,9 +1338,13 @@ describe('ComposerV2 no-write planner', () => {
       const mediaId = media.items[0].id
 
       const inFlight = plan(pendingSnapshot)
-      store.internalActions.setUploadStatus(postId, mediaId, {
-        state: 'uploaded',
-        blob: blob('image/jpeg'),
+      store.internalActions.applyUploadStatus({
+        postId,
+        mediaId,
+        status: {
+          state: 'uploaded',
+          blob: blob('image/jpeg'),
+        },
       })
       const result = await inFlight
       expect(result).toEqual({
@@ -1379,17 +1383,22 @@ describe('ComposerV2 no-write planner', () => {
       store.actions.addMedia(postId, [
         {kind: 'image', uri: 'file:///full.jpg', width: 100, height: 80},
       ])
-      const mediaId = attempts[0].mediaId
-      attempts[0].setMediaCompressionResult?.(postId, mediaId, {
-        kind: 'image',
-        width: 100,
-        height: 80,
-        mimeType: 'image/jpeg',
-        aspectRatio: {width: 100, height: 80},
+      const mediaId = attempts[0].media.id
+      attempts[0].attempt.setCompressionResult({
+        prepared: {
+          width: 100,
+          height: 80,
+          mimeType: 'image/jpeg',
+          aspectRatio: {width: 100, height: 80},
+        },
       })
-      store.internalActions.setUploadStatus(postId, mediaId, {
-        state: 'uploaded',
-        blob: blob('image/jpeg'),
+      store.internalActions.applyUploadStatus({
+        postId,
+        mediaId,
+        status: {
+          state: 'uploaded',
+          blob: blob('image/jpeg'),
+        },
       })
       expect((await plan(store.getState())).ok).toBe(true)
 
@@ -1404,16 +1413,21 @@ describe('ComposerV2 no-write planner', () => {
         error: expect.objectContaining({code: 'attachment-not-ready'}),
       })
 
-      attempts[1].setMediaCompressionResult?.(postId, mediaId, {
-        kind: 'image',
-        width: 48,
-        height: 38,
-        mimeType: 'image/jpeg',
-        aspectRatio: {width: 48, height: 38},
+      attempts[1].attempt.setCompressionResult({
+        prepared: {
+          width: 48,
+          height: 38,
+          mimeType: 'image/jpeg',
+          aspectRatio: {width: 48, height: 38},
+        },
       })
-      store.internalActions.setUploadStatus(postId, mediaId, {
-        state: 'uploaded',
-        blob: blob('image/jpeg'),
+      store.internalActions.applyUploadStatus({
+        postId,
+        mediaId,
+        status: {
+          state: 'uploaded',
+          blob: blob('image/jpeg'),
+        },
       })
       const result = await plan(store.getState())
       expect(result.ok).toBe(true)

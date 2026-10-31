@@ -29,6 +29,7 @@ import {type Gif} from '#/features/gifPicker/types'
 import {
   manualUploadWorkers,
   realUploadWorkers,
+  reportAnyStatus,
   simulatedUploadWorkers,
   testUploadRuntime,
 } from './uploadTestUtils'
@@ -114,10 +115,11 @@ function makeStore() {
 test('keeps the low-level upload status setter on internal actions only', () => {
   const store = makeStore()
 
-  expect('setUploadStatus' in store.actions).toBe(false)
-  expect(typeof store.internalActions.setUploadStatus).toBe('function')
+  expect('applyUploadStatus' in store.actions).toBe(false)
+  expect(typeof store.internalActions.applyUploadStatus).toBe('function')
+  expect(typeof store.internalActions.applyUploadFailure).toBe('function')
   // @ts-expect-error Upload status mutation is not a public composer command.
-  void store.actions.setUploadStatus
+  void store.actions.applyUploadStatus
 
   store.destroy()
 })
@@ -147,9 +149,9 @@ describe('stored upload failures', () => {
       },
       __uploadWorkers: {
         startImageUpload: opts => {
-          started.push(opts.mediaId)
+          started.push(opts.media.id)
           reportStatus = status =>
-            opts.setUploadStatus(opts.postId, opts.mediaId, status)
+            reportAnyStatus({attempt: opts.attempt, status})
           return {cancel() {}}
         },
       },
@@ -637,10 +639,15 @@ describe('retryMediaUpload', () => {
     const {
       addedMediaIds: [imageId],
     } = store.actions.addMedia(root, [imageInput])!
-    store.internalActions.setUploadStatus(root, imageId, {
-      state: 'failed',
-      error: 'boom',
-      retryable: true,
+    store.internalActions.applyUploadFailure({
+      postId: root,
+      mediaId: imageId,
+      status: {
+        state: 'failed',
+        error: 'boom',
+        retryable: true,
+      },
+      diagnostic: {kind: 'operational', cause: undefined},
     })
 
     const get = () => {
@@ -690,15 +697,25 @@ describe('retryAllFailedUploads', () => {
     const {
       addedMediaIds: [videoId],
     } = store.actions.addMedia(second, [videoInput])!
-    store.internalActions.setUploadStatus(root, imageId, {
-      state: 'failed',
-      error: 'image failed',
-      retryable: true,
+    store.internalActions.applyUploadFailure({
+      postId: root,
+      mediaId: imageId,
+      status: {
+        state: 'failed',
+        error: 'image failed',
+        retryable: true,
+      },
+      diagnostic: {kind: 'operational', cause: undefined},
     })
-    store.internalActions.setUploadStatus(second, videoId, {
-      state: 'failed',
-      error: 'video failed',
-      retryable: true,
+    store.internalActions.applyUploadFailure({
+      postId: second,
+      mediaId: videoId,
+      status: {
+        state: 'failed',
+        error: 'video failed',
+        retryable: true,
+      },
+      diagnostic: {kind: 'operational', cause: undefined},
     })
 
     expect(store.actions.retryAllFailedUploads()).toEqual({
@@ -726,25 +743,43 @@ describe('retryAllFailedUploads', () => {
     const {
       addedMediaIds: [activeId],
     } = store.actions.addMedia(third, [videoInput])!
-    store.internalActions.setUploadStatus(root, eligibleId, {
-      state: 'failed',
-      error: 'retryable',
-      retryable: true,
+    store.internalActions.applyUploadFailure({
+      postId: root,
+      mediaId: eligibleId,
+      status: {
+        state: 'failed',
+        error: 'retryable',
+        retryable: true,
+      },
+      diagnostic: {kind: 'operational', cause: undefined},
     })
-    store.internalActions.setUploadStatus(second, terminalId, {
-      state: 'failed',
-      error: 'terminal',
-      retryable: false,
+    store.internalActions.applyUploadFailure({
+      postId: second,
+      mediaId: terminalId,
+      status: {
+        state: 'failed',
+        error: 'terminal',
+        retryable: false,
+      },
+      diagnostic: {kind: 'validation', cause: undefined},
     })
-    store.internalActions.setUploadStatus(third, activeId, {
-      state: 'uploading',
+    store.internalActions.applyUploadStatus({
+      postId: third,
+      mediaId: activeId,
+      status: {
+        state: 'uploading',
+      },
     })
     const {
       addedMediaIds: [successfulId],
     } = store.actions.addMedia(successfulPost, [imageInput])!
-    store.internalActions.setUploadStatus(successfulPost, successfulId, {
-      state: 'uploaded',
-      blob: {} as never,
+    store.internalActions.applyUploadStatus({
+      postId: successfulPost,
+      mediaId: successfulId,
+      status: {
+        state: 'uploaded',
+        blob: {} as never,
+      },
     })
     const gifPost = store.actions.addPost('after', successfulPost)!.addedPostId
     store.actions.addMedia(gifPost, [gifInput])
@@ -781,10 +816,15 @@ describe('retryAllFailedUploads', () => {
     const {
       addedMediaIds: [mediaId],
     } = store.actions.addMedia(root, [imageInput])!
-    store.internalActions.setUploadStatus(root, mediaId, {
-      state: 'failed',
-      error: 'retryable',
-      retryable: true,
+    store.internalActions.applyUploadFailure({
+      postId: root,
+      mediaId,
+      status: {
+        state: 'failed',
+        error: 'retryable',
+        retryable: true,
+      },
+      diagnostic: {kind: 'operational', cause: undefined},
     })
 
     expect(store.actions.retryAllFailedUploads()).toEqual({
@@ -808,15 +848,25 @@ describe('retryAllFailedUploads', () => {
       const {
         addedMediaIds: [secondId],
       } = store.actions.addMedia(second, [imageInput])!
-      store.internalActions.setUploadStatus(root, firstId, {
-        state: 'failed',
-        error: 'first',
-        retryable: true,
+      store.internalActions.applyUploadFailure({
+        postId: root,
+        mediaId: firstId,
+        status: {
+          state: 'failed',
+          error: 'first',
+          retryable: true,
+        },
+        diagnostic: {kind: 'operational', cause: undefined},
       })
-      store.internalActions.setUploadStatus(second, secondId, {
-        state: 'failed',
-        error: 'second',
-        retryable: true,
+      store.internalActions.applyUploadFailure({
+        postId: second,
+        mediaId: secondId,
+        status: {
+          state: 'failed',
+          error: 'second',
+          retryable: true,
+        },
+        diagnostic: {kind: 'operational', cause: undefined},
       })
 
       let handled = false
@@ -826,8 +876,12 @@ describe('retryAllFailedUploads', () => {
         if (first.kind === 'image' && first.upload.state !== 'failed') {
           handled = true
           if (change === 'active') {
-            store.internalActions.setUploadStatus(second, secondId, {
-              state: 'uploading',
+            store.internalActions.applyUploadStatus({
+              postId: second,
+              mediaId: secondId,
+              status: {
+                state: 'uploading',
+              },
             })
           } else {
             store.actions.removeMediaAttachment(second)
@@ -865,15 +919,25 @@ describe('retryAllFailedUploads', () => {
     const {
       addedMediaIds: [secondId],
     } = store.actions.addMedia(second, [imageInput])!
-    store.internalActions.setUploadStatus(root, firstId, {
-      state: 'failed',
-      error: 'first',
-      retryable: true,
+    store.internalActions.applyUploadFailure({
+      postId: root,
+      mediaId: firstId,
+      status: {
+        state: 'failed',
+        error: 'first',
+        retryable: true,
+      },
+      diagnostic: {kind: 'operational', cause: undefined},
     })
-    store.internalActions.setUploadStatus(second, secondId, {
-      state: 'failed',
-      error: 'second',
-      retryable: true,
+    store.internalActions.applyUploadFailure({
+      postId: second,
+      mediaId: secondId,
+      status: {
+        state: 'failed',
+        error: 'second',
+        retryable: true,
+      },
+      diagnostic: {kind: 'operational', cause: undefined},
     })
     store.subscribe(() => store.destroy())
 
@@ -887,11 +951,14 @@ describe('retryAllFailedUploads', () => {
     const starts: string[] = []
     const workers: UploadWorkerOverrides = {
       startImageUpload: opts => {
-        starts.push(opts.mediaId)
-        opts.setUploadStatus(opts.postId, opts.mediaId, {
-          state: 'failed',
-          error: 'still failing',
-          retryable: true,
+        starts.push(opts.media.id)
+        opts.attempt.reportFailure({
+          status: {
+            state: 'failed',
+            error: 'still failing',
+            retryable: true,
+          },
+          diagnostic: {kind: 'operational', cause: undefined},
         })
         return {cancel() {}}
       },
@@ -1027,8 +1094,8 @@ describe('attachment lifecycle', () => {
         __createId: makeIdGenerator(),
         __resolveLink: mockResolveLink,
         __uploadWorkers: {
-          startImageUpload: ({postId, mediaId, setUploadStatus}) => {
-            report = status => setUploadStatus(postId, mediaId, status)
+          startImageUpload: ({attempt}) => {
+            report = status => reportAnyStatus({attempt, status})
             /* Like the real worker, report a phase before returning. */
             report({state: 'uploading', phase: 'compressing'})
             return {cancel}
@@ -1131,10 +1198,15 @@ describe('attachment lifecycle', () => {
     const {
       addedMediaIds: [mediaId],
     } = store.actions.addMedia(root, [imageInput])!
-    store.internalActions.setUploadStatus(root, mediaId, {
-      state: 'failed',
-      error: 'network',
-      retryable: true,
+    store.internalActions.applyUploadFailure({
+      postId: root,
+      mediaId,
+      status: {
+        state: 'failed',
+        error: 'network',
+        retryable: true,
+      },
+      diagnostic: {kind: 'operational', cause: undefined},
     })
     expect(jest.getTimerCount()).toBe(0)
     store.actions.retryMediaUpload(root, mediaId)
