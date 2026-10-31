@@ -142,7 +142,7 @@
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
     "@expo/metro-runtime": "~58.0.15",
-    "@expo/ui": "58.0.23",
+    "@expo/ui": "58.0.26",
     "@floating-ui/dom": "^1.6.3",
     "@floating-ui/react-dom": "^2.0.8",
     "@formatjs/intl-displaynames": "^7.3.9",
