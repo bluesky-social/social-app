@@ -11,6 +11,7 @@ import {type RichText} from '@bsky/sdk/richtext'
 
 import {computeCid} from '#/lib/api/computeCid'
 import {type ResolvedLink} from '#/lib/api/resolve'
+import {withCreator} from '#/lib/at-card'
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {createGIFDescription} from '#/lib/gif-alt-text'
 import {
@@ -1057,13 +1058,16 @@ async function externalRecord({
   }
   return {
     $type: 'app.bsky.embed.external',
-    external: {
-      uri: link.uri as UriString,
-      title: link.title,
-      description: link.description,
-      ...(thumb ? {thumb} : {}),
-      ...(link.associatedRefs ? {associatedRefs: link.associatedRefs} : {}),
-    },
+    external: withCreator(
+      {
+        uri: link.uri as UriString,
+        title: link.title,
+        description: link.description,
+        ...(thumb ? {thumb} : {}),
+        ...(link.associatedRefs ? {associatedRefs: link.associatedRefs} : {}),
+      },
+      link.authorDid,
+    ),
   }
 }
 

@@ -656,6 +656,45 @@ describe('ComposerV2 no-write planner', () => {
     )
   })
 
+  test('adds creator attribution to external cards only for a valid DID', async () => {
+    const external = (authorDid?: string) =>
+      snapshot({
+        posts: [
+          {
+            attachments: {
+              media: {
+                kind: 'external',
+                uri: 'https://example.com/article',
+                title: 'Article',
+                description: 'Description',
+                thumb: undefined,
+                authorDid,
+              },
+            },
+          },
+        ],
+      })
+
+    const valid = await plan(external('did:plc:creator'))
+    expect(valid.ok).toBe(true)
+    if (!valid.ok) return
+    expect(valid.posts[0].record.embed).toMatchObject({
+      external: {creator: 'did:plc:creator'},
+    })
+
+    for (const authorDid of [undefined, 'not-a-did']) {
+      const result = await plan(external(authorDid))
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.posts[0].record.embed).toMatchObject({
+        external: {uri: 'https://example.com/article'},
+      })
+      expect(result.posts[0].record.embed).not.toHaveProperty(
+        'external.creator',
+      )
+    }
+  })
+
   test('preserves custom GIF alt text and falls back to the provider title', async () => {
     const resolveGif = () =>
       Promise.resolve({
