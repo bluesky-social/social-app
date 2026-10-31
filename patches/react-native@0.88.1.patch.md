@@ -1,4 +1,4 @@
-# react-native@0.88.0
+# react-native@0.88.1
 
 **Generated - do not edit the .patch next to this file.** It is built from the
 patches in [`patches/react-native/`](react-native/) by

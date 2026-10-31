@@ -13,5 +13,5 @@ so the check needlessly blocks `OpenCameraBtn`, which calls `createAssetAsync` a
 the permission request was declined. On API 28 and below the insert still fails without the permission, which
 the caller already catches.
 
-Unchanged upstream in 58.0.12. Android-only, and expo-media-library ships a prebuilt Android AAR, so it must stay
+Unchanged upstream in 58.0.13. Android-only, and expo-media-library ships a prebuilt Android AAR, so it must stay
 in `expo.autolinking.android.buildFromSource` for this patch to take effect.

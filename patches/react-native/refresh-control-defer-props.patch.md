@@ -55,4 +55,4 @@ physical device only. Spinner position verified via frame logs; haptic on this v
 device-verified.
 
 Opened issue in RN repo: https://github.com/react/react-native/issues/57843 (still open as of
-October 2026; `RCTPullToRefreshViewComponentView.mm` is unchanged between 0.86.3 and 0.88.0).
+October 2026; `RCTPullToRefreshViewComponentView.mm` is unchanged between 0.86.3 and 0.88.1).
