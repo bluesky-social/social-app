@@ -194,7 +194,7 @@ export function completedJobClient({
   blob: BlobRef
   jobId?: string
 }) {
-  const call = jest.fn(() =>
+  const call = jest.fn((_method: unknown, _params: unknown) =>
     Promise.resolve({jobStatus: {state: 'JOB_STATE_COMPLETED', jobId, blob}}),
   )
   const createClient = () => ({call})

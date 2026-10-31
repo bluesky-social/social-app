@@ -11,7 +11,7 @@ jest.mock('#/lib/api/resolve', () => ({
   EmbeddingDisabledError: class extends Error {},
 }))
 jest.mock('#/components/Toast', () => ({show: jest.fn()}))
-jest.mock('#/lib/haptics', () => ({useHaptics: () => jest.fn()}))
+jest.mock('#/lib/haptics', () => ({useHaptics: () => ({toggle: jest.fn()})}))
 /* Neither inspection view opens a dialog; avoid loading the native sheet. */
 jest.mock('#/components/Dialog', () => ({}))
 jest.mock('#/components/Loader', () => ({Loader: () => null}))

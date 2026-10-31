@@ -252,7 +252,9 @@ describe('pasted and dropped sources through the store', () => {
       Promise.resolve({width: 50, height: 40}),
     )
     const compressImage = jest.fn(() => Promise.resolve(compressed))
-    const uploadBlob = jest.fn(() => new Promise<never>(() => {}))
+    const uploadBlob = jest.fn<ImageUploadDependencies['uploadBlob']>(
+      () => new Promise<never>(() => {}),
+    )
     const store = makeStore({
       image: {getImageDimensions, compressImage, uploadBlob},
     })

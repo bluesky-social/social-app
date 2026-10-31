@@ -243,9 +243,9 @@ describe('web: restored object URLs', () => {
     mockIsWeb = true
     const url = 'blob:https://bsky.app/restored-image'
     const fetchSpy = jest.spyOn(globalThis, 'fetch')
-    const getImageDimensions = jest.fn(() =>
-      Promise.resolve({width: 300, height: 200}),
-    )
+    const getImageDimensions = jest.fn<
+      ImageUploadDependencies['getImageDimensions']
+    >(() => Promise.resolve({width: 300, height: 200}))
     const compressImage = jest.fn<ImageUploadDependencies['compressImage']>(
       () => new Promise(() => {}),
     )
@@ -421,10 +421,12 @@ describe('android: restored draft videos', () => {
   test('a restored GIF uses the copy for dimensions and size, never the video probe', async () => {
     mockIsAndroid = true
     const {copyVideoToCache} = fakeCopy()
-    const getImageDimensions = jest.fn(() =>
-      Promise.resolve({width: 320, height: 240}),
+    const getImageDimensions = jest.fn<
+      VideoUploadDependencies['getImageDimensions']
+    >(() => Promise.resolve({width: 320, height: 240}))
+    const getFileSize = jest.fn<VideoUploadDependencies['getFileSize']>(() =>
+      Promise.resolve(2048),
     )
-    const getFileSize = jest.fn(() => Promise.resolve(2048))
     const compressVideo = jest.fn<VideoUploadDependencies['compressVideo']>(
       () => new Promise(() => {}),
     )
@@ -453,10 +455,12 @@ describe('android: restored draft videos', () => {
 
 describe('ios: restored draft media', () => {
   test('a restored GIF is prepared from the durable URI without the video probe', async () => {
-    const getImageDimensions = jest.fn(() =>
-      Promise.resolve({width: 320, height: 240}),
+    const getImageDimensions = jest.fn<
+      VideoUploadDependencies['getImageDimensions']
+    >(() => Promise.resolve({width: 320, height: 240}))
+    const getFileSize = jest.fn<VideoUploadDependencies['getFileSize']>(() =>
+      Promise.resolve(2048),
     )
-    const getFileSize = jest.fn(() => Promise.resolve(2048))
     const compressVideo = jest.fn<VideoUploadDependencies['compressVideo']>(
       () => new Promise(() => {}),
     )

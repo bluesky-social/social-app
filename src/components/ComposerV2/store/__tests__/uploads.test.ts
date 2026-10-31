@@ -25,6 +25,7 @@ import {
   type UploadStatus,
 } from '#/components/ComposerV2/store/types'
 import {
+  type ImageUploadDependencies,
   startImageUpload,
   startVideoUpload,
   type VideoUploadAttempt,
@@ -128,12 +129,13 @@ async function runVideo({
   const compressVideo = jest.fn<VideoUploadDependencies['compressVideo']>(() =>
     compressError ? Promise.reject(compressError) : Promise.resolve(compressed),
   )
-  const uploadVideo = jest.fn(() =>
-    Promise.resolve({
-      state: 'JOB_STATE_COMPLETED',
-      jobId: 'job-1',
-      blob: blob('video'),
-    }),
+  const uploadVideo = jest.fn(
+    (_args: Parameters<VideoUploadDependencies['uploadVideo']>[0]) =>
+      Promise.resolve({
+        state: 'JOB_STATE_COMPLETED',
+        jobId: 'job-1',
+        blob: blob('video'),
+      }),
   )
   startVideoUpload({
     media: video({captions: [], ...media}),
@@ -182,16 +184,19 @@ describe('ComposerV2 real media workers', () => {
   test('compresses an image before uploading the transformed output', async () => {
     const statuses: UploadStatus[] = []
     const prepared = jest.fn()
-    const compressImage = jest.fn(() =>
-      Promise.resolve({
-        path: 'file:///compressed.jpg',
-        width: 400,
-        height: 300,
-        mime: 'image/jpeg',
-        size: 123,
-      }),
+    const compressImage = jest.fn<ImageUploadDependencies['compressImage']>(
+      () =>
+        Promise.resolve({
+          path: 'file:///compressed.jpg',
+          width: 400,
+          height: 300,
+          mime: 'image/jpeg',
+          size: 123,
+        }),
     )
-    const uploadBlob = jest.fn(() => Promise.resolve({blob: blob('image')}))
+    const uploadBlob = jest.fn<ImageUploadDependencies['uploadBlob']>(() =>
+      Promise.resolve({blob: blob('image')}),
+    )
 
     startImageUpload({
       media: image(),
@@ -417,7 +422,9 @@ describe('ComposerV2 real media workers', () => {
     ])(
       'native: rejects probed %s before compressing a transcodable oversized source',
       async (_case, probed, code) => {
-        const getVideoMetadata = jest.fn(() =>
+        const getVideoMetadata = jest.fn<
+          VideoUploadDependencies['getVideoMetadata']
+        >(() =>
           Promise.resolve({
             uri: 'file:///source.mkv',
             mimeType: 'video/x-matroska',
@@ -595,7 +602,9 @@ describe('ComposerV2 real media workers', () => {
     })
 
     test('native: a missing size uses a file stat, not the probe', async () => {
-      const getFileSize = jest.fn(() => Promise.resolve(4321))
+      const getFileSize = jest.fn<VideoUploadDependencies['getFileSize']>(() =>
+        Promise.resolve(4321),
+      )
       const {sourceMetadata, compressVideo} = await runVideo({
         media: {duration: 1000},
         dependencies: {getFileSize},
@@ -621,7 +630,9 @@ describe('ComposerV2 real media workers', () => {
     })
 
     test('native: probes a URI only for missing metadata and keeps known values', async () => {
-      const getVideoMetadata = jest.fn(() =>
+      const getVideoMetadata = jest.fn<
+        VideoUploadDependencies['getVideoMetadata']
+      >(() =>
         Promise.resolve({
           uri: 'file:///source.mov',
           mimeType: 'video/quicktime',
@@ -657,7 +668,9 @@ describe('ComposerV2 real media workers', () => {
     })
 
     test('native: an intent video with only dimensions is probed for its type and duration', async () => {
-      const getVideoMetadata = jest.fn(() =>
+      const getVideoMetadata = jest.fn<
+        VideoUploadDependencies['getVideoMetadata']
+      >(() =>
         Promise.resolve({
           uri: 'file:///shared',
           mimeType: 'video/mp4',
@@ -689,10 +702,12 @@ describe('ComposerV2 real media workers', () => {
     ])(
       'native: a GIF identified by %s never reaches the video probe',
       async (_case, source) => {
-        const getImageDimensions = jest.fn(() =>
-          Promise.resolve({width: 480, height: 270}),
+        const getImageDimensions = jest.fn<
+          VideoUploadDependencies['getImageDimensions']
+        >(() => Promise.resolve({width: 480, height: 270}))
+        const getFileSize = jest.fn<VideoUploadDependencies['getFileSize']>(
+          () => Promise.resolve(2048),
         )
-        const getFileSize = jest.fn(() => Promise.resolve(2048))
         const {sourceMetadata, compressVideo, statuses} = await runVideo({
           media: {width: undefined, height: undefined, ...source},
           compressed: {
@@ -825,9 +840,9 @@ describe('ComposerV2 real media workers', () => {
 
     test('web: GIF dimensions come from the image loader, size from the File', async () => {
       mockIsWeb = true
-      const getImageDimensions = jest.fn(() =>
-        Promise.resolve({width: 200, height: 100}),
-      )
+      const getImageDimensions = jest.fn<
+        VideoUploadDependencies['getImageDimensions']
+      >(() => Promise.resolve({width: 200, height: 100}))
       const {compressVideo} = await runVideo({
         media: {
           uri: 'blob:gif',
@@ -880,16 +895,19 @@ describe('ComposerV2 real media workers', () => {
     }) {
       const statuses: UploadStatus[] = []
       const sourceMetadata = jest.fn()
-      const compressImage = jest.fn(() =>
-        Promise.resolve({
-          path: 'file:///compressed.jpg',
-          width: 400,
-          height: 300,
-          mime: 'image/jpeg',
-          size: 123,
-        }),
+      const compressImage = jest.fn<ImageUploadDependencies['compressImage']>(
+        () =>
+          Promise.resolve({
+            path: 'file:///compressed.jpg',
+            width: 400,
+            height: 300,
+            mime: 'image/jpeg',
+            size: 123,
+          }),
       )
-      const uploadBlob = jest.fn(() => Promise.resolve({blob: blob('image')}))
+      const uploadBlob = jest.fn<ImageUploadDependencies['uploadBlob']>(() =>
+        Promise.resolve({blob: blob('image')}),
+      )
       startImageUpload({
         media: image(media),
         ...runtime,
@@ -914,9 +932,9 @@ describe('ComposerV2 real media workers', () => {
     ])(
       'resolves missing dimensions for %s and hands the source to compression and upload',
       async (_case, uri, mimeType) => {
-        const getImageDimensions = jest.fn(() =>
-          Promise.resolve({width: 900, height: 600}),
-        )
+        const getImageDimensions = jest.fn<
+          ImageUploadDependencies['getImageDimensions']
+        >(() => Promise.resolve({width: 900, height: 600}))
         const {statuses, sourceMetadata, compressImage, uploadBlob} =
           await runImage({
             media: {uri, width: undefined, height: undefined},
@@ -986,15 +1004,16 @@ describe('ComposerV2 real media workers', () => {
 
   test('handles an immediately completed video and uploads captions separately', async () => {
     const statuses: UploadStatus[] = []
-    const captionUpload = jest.fn(() =>
+    const captionUpload = jest.fn<VideoUploadDependencies['uploadBlob']>(() =>
       Promise.resolve({blob: blob('caption')}),
     )
-    const uploadVideo = jest.fn(() =>
-      Promise.resolve({
-        state: 'JOB_STATE_COMPLETED',
-        jobId: 'job-1',
-        blob: blob('video'),
-      }),
+    const uploadVideo = jest.fn(
+      (_args: Parameters<VideoUploadDependencies['uploadVideo']>[0]) =>
+        Promise.resolve({
+          state: 'JOB_STATE_COMPLETED',
+          jobId: 'job-1',
+          blob: blob('video'),
+        }),
     )
     startVideoUpload({
       media: video(),
