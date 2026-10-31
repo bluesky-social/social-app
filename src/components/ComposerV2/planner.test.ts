@@ -483,14 +483,19 @@ describe('ComposerV2 no-write planner', () => {
   })
 
   test('fails reply resolution when the parent is deleted or unavailable', async () => {
+    const onError = jest.fn<ComposerV2OnError>()
     const missing = await plan(
       snapshot({replyTo: {...replyTarget}, posts: [{text: 'reply'}]}),
       {appviewClient: mockAppview({getPosts: () => ({posts: []})}).client},
+      undefined,
+      onError,
     )
     expect(missing).toEqual({
       ok: false,
-      error: expect.objectContaining({code: 'reply-resolution-failed'}),
+      error: expect.objectContaining({code: 'reply-not-found'}),
     })
+    /* A deleted parent is an expected outcome, not a reported failure. */
+    expect(onError).not.toHaveBeenCalled()
 
     const failing = await plan(
       snapshot({replyTo: {...replyTarget}, posts: [{text: 'reply'}]}),

@@ -65,7 +65,7 @@ export function buildPostMediaItem({
       fileSize: input.fileSize,
       localRefPath: input.localRefPath,
       file: input.file,
-      captions: input.captions?.map(caption => ({...caption})) ?? [],
+      captions: normalizeCaptions({captions: input.captions}),
       captionBlobs: [],
       upload: {state: 'pending'},
     }
@@ -77,4 +77,24 @@ export function buildPostMediaItem({
     gif: input.gif,
     altText: input.altText ?? '',
   }
+}
+
+/*
+ * Inbound captions can't reject a whole draft, so drop the ones that could
+ * never publish correctly: blank languages, and later duplicates of a language.
+ */
+function normalizeCaptions({
+  captions = [],
+}: {
+  captions?: ReadonlyArray<{lang: string; content: string}>
+}) {
+  const seen = new Set<string>()
+  const result: Array<{lang: string; content: string}> = []
+  for (const caption of captions) {
+    const lang = caption.lang.trim()
+    if (!lang || seen.has(lang)) continue
+    seen.add(lang)
+    result.push({lang, content: caption.content})
+  }
+  return result
 }

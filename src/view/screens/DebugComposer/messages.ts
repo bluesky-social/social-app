@@ -68,6 +68,8 @@ export function usePlanErrorHint(): (code: ComposerV2PlanErrorCode) => string {
         return l`A blob upload failed during planning. Check the connection and plan again.`
       case 'reply-resolution-failed':
         return l`The reply parent could not be read from the AppView.`
+      case 'reply-not-found':
+        return l`The post you're replying to has been deleted.`
       case 'rich-text-resolution-failed':
         return l`Mentions or links could not be resolved. Check the text and try again.`
       case 'text-too-long':

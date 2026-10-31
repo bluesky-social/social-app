@@ -49,6 +49,7 @@ export type ComposerV2PlanErrorCode =
   | 'media-failed'
   | 'unsupported-attachment'
   | 'reply-resolution-failed'
+  | 'reply-not-found'
   | 'rich-text-resolution-failed'
   | 'text-too-long'
   | 'media-upload-failed'
@@ -255,6 +256,8 @@ const PLAN_ERROR_REPORTING: Record<
   'media-failed': null,
   'unsupported-attachment': null,
   'reply-resolution-failed': {kind: 'operational', recovery: 'retry'},
+  /* An expected outcome the user sees; not a failure to report. */
+  'reply-not-found': null,
   'rich-text-resolution-failed': {kind: 'operational', recovery: 'retry'},
   'text-too-long': null,
   'media-upload-failed': {kind: 'operational', recovery: 'retry'},
@@ -722,21 +725,11 @@ async function resolveExternalReply({
       message: 'An AppView client is required to resolve a reply root',
     })
   }
+  let data
   try {
-    const data = await dependencies.appviewClient.call(app.bsky.feed.getPosts, {
+    data = await dependencies.appviewClient.call(app.bsky.feed.getPosts, {
       uris: [replyTo.uri as AtUriString],
     })
-    const parentPost = data.posts[0]
-    if (!parentPost) throw new Error('missing')
-    const parentRef = {uri: parentPost.uri, cid: parentPost.cid}
-    let rootRef: com.atproto.repo.strongRef.Main = parentRef
-    if (
-      bsky.isType(app.bsky.feed.post, parentPost.record) &&
-      parentPost.record.reply
-    ) {
-      rootRef = parentPost.record.reply.root
-    }
-    return {root: rootRef, parent: parentRef}
   } catch (cause) {
     throw failure({
       code: 'reply-resolution-failed',
@@ -744,6 +737,22 @@ async function resolveExternalReply({
       cause,
     })
   }
+  const parentPost = data.posts[0]
+  if (!parentPost) {
+    throw failure({
+      code: 'reply-not-found',
+      message: 'The post being replied to no longer exists',
+    })
+  }
+  const parentRef = {uri: parentPost.uri, cid: parentPost.cid}
+  let rootRef: com.atproto.repo.strongRef.Main = parentRef
+  if (
+    bsky.isType(app.bsky.feed.post, parentPost.record) &&
+    parentPost.record.reply
+  ) {
+    rootRef = parentPost.record.reply.root
+  }
+  return {root: rootRef, parent: parentRef}
 }
 
 async function buildEmbed({

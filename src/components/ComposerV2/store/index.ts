@@ -33,6 +33,10 @@ import {
   cloneSerializable,
 } from '#/components/ComposerV2/store/utils/buildThreadState'
 import {
+  type CaptionLanguageError,
+  captionLanguageError,
+} from '#/components/ComposerV2/store/utils/captionLanguageError'
+import {
   type AttachmentSlot,
   classifyUriTarget,
 } from '#/components/ComposerV2/store/utils/classifyUriTarget'
@@ -454,24 +458,30 @@ export function createThreadStore({
    * When the upload already ran (or is running), the task is cancelled and
    * restarted so the eager worker covers the new captions; a completed video
    * blob is reused by the caption-only retry path inside the worker.
+   *
+   * Languages are trimmed. A blank or duplicate language changes nothing and
+   * returns `{ok: false, code}`; every other outcome, including a no-op,
+   * returns `{ok: true}`.
    */
   function setVideoCaptions(
     postId: string,
     mediaId: string,
     captions: ReadonlyArray<{lang: string; content: string}>,
-  ) {
-    if (destroyed) return
+  ): {ok: true} | {ok: false; code: CaptionLanguageError} {
+    if (destroyed) return {ok: true}
     const post = state.posts[postId]
-    if (!post) return
+    if (!post) return {ok: true}
     const item = getMediaItems({media: post.attachments.media}).find(
       m => m.id === mediaId,
     )
-    if (!item || item.kind !== 'video') return
+    if (!item || item.kind !== 'video') return {ok: true}
     const nextCaptions = captions.map(caption => ({
-      lang: caption.lang,
+      lang: caption.lang.trim(),
       content: caption.content,
     }))
-    if (deepEqual(item.captions, nextCaptions)) return
+    const code = captionLanguageError({captions: nextCaptions})
+    if (code) return {ok: false, code}
+    if (deepEqual(item.captions, nextCaptions)) return {ok: true}
 
     const keptBlobs = item.captionBlobs.filter(blob => {
       const previous = item.captions.find(caption => caption.lang === blob.lang)
@@ -491,6 +501,7 @@ export function createThreadStore({
     }
     updateMediaItem({postId, mediaId, dirty: true, update: () => next})
     if (shouldRestart) startMediaUpload(postId, mediaId, 'captions')
+    return {ok: true}
   }
 
   /**

@@ -35,6 +35,7 @@ const ALL_PLAN_ERROR_CODES = Object.keys({
   'media-failed': true,
   'unsupported-attachment': true,
   'reply-resolution-failed': true,
+  'reply-not-found': true,
   'rich-text-resolution-failed': true,
   'text-too-long': true,
   'media-upload-failed': true,

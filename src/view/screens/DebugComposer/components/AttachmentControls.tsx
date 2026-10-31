@@ -24,6 +24,7 @@ import {
   type PostMediaVideo,
   type UploadStatus,
 } from '#/components/ComposerV2/store/types'
+import {captionLanguageError} from '#/components/ComposerV2/store/utils/captionLanguageError'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Loader} from '#/components/Loader'
@@ -646,7 +647,7 @@ function CaptionsDialogInner({
   const [captions, setCaptions] = useState(() =>
     item.captions.map(caption => ({...caption, key: nanoid()})),
   )
-  const hasMissingLang = captions.some(caption => !caption.lang.trim())
+  const languageError = captionLanguageError({captions})
   return (
     <Dialog.ScrollableInner label={l`Edit video captions`}>
       <View style={[a.gap_md]}>
@@ -738,7 +739,7 @@ function CaptionsDialogInner({
             testID="composerV2Tester-caption-save"
             size="small"
             color="primary"
-            disabled={hasMissingLang}
+            disabled={!!languageError}
             onPress={() =>
               control.close(() =>
                 store.actions.setVideoCaptions(
@@ -753,9 +754,14 @@ function CaptionsDialogInner({
             </ButtonText>
           </Button>
         </View>
-        {hasMissingLang && (
+        {languageError === 'missing-caption-language' && (
           <Text style={[a.text_xs, {color: t.palette.negative_500}]}>
             <Trans>Every caption needs a language code before saving.</Trans>
+          </Text>
+        )}
+        {languageError === 'duplicate-caption-language' && (
+          <Text style={[a.text_xs, {color: t.palette.negative_500}]}>
+            <Trans>Each caption needs a different language code.</Trans>
           </Text>
         )}
       </View>

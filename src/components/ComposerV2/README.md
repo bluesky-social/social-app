@@ -333,7 +333,8 @@ keeps blobs only for unchanged language/content, restarts running or completed
 work when necessary, and lets the worker reuse the video and unchanged
 captions. The store adopts the processed video blob onto the item before
 captions begin, without marking the upload complete, so editing captions
-mid-upload restarts from that blob.
+mid-upload restarts from that blob. `setVideoCaptions` trims languages and
+rejects a blank or duplicate one with `{ok: false, code}`, changing nothing.
 
 `prepared` is display and planning metadata, not what a retry reuses. It carries
 no multipart controllers, web buffers, or output URI. For a video, `size` and
@@ -504,7 +505,9 @@ dispatches corrective edit actions, loads/saves/deletes draft files, resolves
 remote views, reads media, or starts uploads; the upload workers prepare every
 source. Runtime IDs, task state, revisions, moderation objects,
 and shell callbacks do not belong in normalized content. Web picker `Blob` input
-is a runtime source convenience, not a persisted draft representation.
+is a runtime source convenience, not a persisted draft representation. Inbound
+video captions are normalized when media is built: languages are trimmed, and
+captions with a blank language or a repeated language (first wins) are dropped.
 
 `composerOptsToInitialState({composerOpts, ...options})`:
 

@@ -197,9 +197,10 @@ describe('web: restored object URLs', () => {
     mockIsWeb = true
     const url = 'blob:https://bsky.app/restored-video'
     const stored = new Blob(['video bytes'], {type: 'video/webm'})
-    const fetchSpy = jest
-      .spyOn(globalThis, 'fetch')
-      .mockResolvedValue({blob: () => Promise.resolve(stored)} as Response)
+    const fetchSpy = jest.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      blob: () => Promise.resolve(stored),
+    } as Response)
     const revokeSpy = jest.spyOn(URL, 'revokeObjectURL')
     const getVideoMetadata = strictVideoMetadata()
     const compressVideo = jest.fn<VideoUploadDependencies['compressVideo']>(

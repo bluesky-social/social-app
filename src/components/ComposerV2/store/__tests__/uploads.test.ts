@@ -234,6 +234,43 @@ describe('ComposerV2 real media workers', () => {
     expect(statuses.at(-1)).toEqual({state: 'uploaded', blob: blob('image')})
   })
 
+  test('an AbortError that is not our cancellation fails the image retryably', async () => {
+    const statuses: UploadStatus[] = []
+    const uploadBlob = jest.fn()
+    startImageUpload({
+      media: image(),
+      ...runtime,
+      ...fakeImageDependencies({
+        compressImage: () =>
+          Promise.reject(
+            Object.assign(new Error('foreign'), {name: 'AbortError'}),
+          ),
+        uploadBlob: uploadBlob as never,
+      }),
+      attempt: recordingAttempt({statuses}),
+    })
+    await flush()
+
+    expect(uploadBlob).not.toHaveBeenCalled()
+    expect(statuses.at(-1)).toMatchObject({
+      state: 'failed',
+      retryable: true,
+    })
+  })
+
+  test('an AbortError that is not our cancellation fails the video retryably', async () => {
+    const {statuses, uploadVideo} = await runVideo({
+      media: completeSource,
+      compressError: Object.assign(new Error('foreign'), {name: 'AbortError'}),
+    })
+
+    expect(uploadVideo).not.toHaveBeenCalled()
+    expect(statuses.at(-1)).toMatchObject({
+      state: 'failed',
+      retryable: true,
+    })
+  })
+
   test('does not begin image upload after cancellation during uncancellable compression', async () => {
     let resolveCompression!: (value: {
       path: string
@@ -788,9 +825,10 @@ describe('ComposerV2 real media workers', () => {
     test('web: a URI-only source is fetched once into a File for the probe', async () => {
       mockIsWeb = true
       const fetched = new Blob(['bytes'], {type: 'video/mp4'})
-      const fetchSpy = jest
-        .spyOn(globalThis, 'fetch')
-        .mockResolvedValue({blob: () => Promise.resolve(fetched)} as Response)
+      const fetchSpy = jest.spyOn(globalThis, 'fetch').mockResolvedValue({
+        ok: true,
+        blob: () => Promise.resolve(fetched),
+      } as Response)
       const getVideoMetadata = jest.fn<
         VideoUploadDependencies['getVideoMetadata']
       >(() =>
@@ -814,6 +852,59 @@ describe('ComposerV2 real media workers', () => {
         expect((probedWith as File).type).toBe('video/mp4')
         /* The compressor reuses the fetched File rather than fetching again. */
         expect(compressedAsset(compressVideo).file).toBe(probedWith)
+      } finally {
+        fetchSpy.mockRestore()
+      }
+    })
+
+    test.each([
+      ['a blob: URI whose fetch rejects', 'blob:revoked', 'reject'],
+      ['a data: URI with a failed response', 'data:video/mp4;base64,AAAA', 404],
+    ] as const)(
+      'web: %s is a permanent unreadable-media failure',
+      async (_case, uri, outcome) => {
+        mockIsWeb = true
+        const fetchSpy = jest
+          .spyOn(globalThis, 'fetch')
+          .mockImplementation(() =>
+            outcome === 'reject'
+              ? Promise.reject(new TypeError('Failed to fetch'))
+              : Promise.resolve({ok: false, status: outcome} as Response),
+          )
+        try {
+          const {statuses, compressVideo, uploadVideo} = await runVideo({
+            media: {uri, duration: undefined},
+          })
+
+          expect(fetchSpy).toHaveBeenCalledWith(uri)
+          expect(compressVideo).not.toHaveBeenCalled()
+          expect(uploadVideo).not.toHaveBeenCalled()
+          expect(statuses.at(-1)).toEqual({
+            state: 'failed',
+            code: 'unreadable-media',
+            retryable: false,
+          })
+        } finally {
+          fetchSpy.mockRestore()
+        }
+      },
+    )
+
+    test('web: a failed remote fetch stays a retryable network error', async () => {
+      mockIsWeb = true
+      const fetchSpy = jest
+        .spyOn(globalThis, 'fetch')
+        .mockRejectedValue(new TypeError('Failed to fetch'))
+      try {
+        const {statuses} = await runVideo({
+          media: {uri: 'https://example.com/a.mp4', duration: undefined},
+        })
+
+        expect(statuses.at(-1)).toMatchObject({
+          state: 'failed',
+          code: 'network',
+          retryable: true,
+        })
       } finally {
         fetchSpy.mockRestore()
       }

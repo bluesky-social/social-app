@@ -459,3 +459,107 @@ describe('setVideoCaptions', () => {
     expect(started).toHaveLength(1)
   })
 })
+
+describe('caption language validation', () => {
+  function makeStore() {
+    const {started, workers} = makeManualWorkers()
+    const store = createThreadStore({
+      defaultLanguages: [],
+      ...testUploadRuntime,
+      resolvers,
+      __createId: makeIdGenerator(),
+      __uploadWorkers: workers,
+      initialState: {posts: [{attachments: {media: {...videoInput}}}]},
+    })
+    return {started, store}
+  }
+
+  test('rejects blank and duplicate languages without changing anything', () => {
+    const {started, store} = makeStore()
+    const {postId, item} = getVideo(store)
+    started[0].report({
+      state: 'uploaded',
+      blob: blob('video'),
+      captionBlobs: [{lang: 'en', blob: blob('caption-en')}],
+    })
+    const before = getVideo(store).item
+    const notified = jest.fn()
+    store.subscribe(notified)
+
+    expect(
+      store.actions.setVideoCaptions(postId, item.id, [
+        {lang: 'en', content: 'ok'},
+        {lang: '  ', content: 'blank'},
+      ]),
+    ).toEqual({ok: false, code: 'missing-caption-language'})
+    expect(
+      store.actions.setVideoCaptions(postId, item.id, [
+        {lang: 'en', content: 'first'},
+        {lang: ' en ', content: 'second'},
+      ]),
+    ).toEqual({ok: false, code: 'duplicate-caption-language'})
+
+    expect(getVideo(store).item).toBe(before)
+    expect(notified).not.toHaveBeenCalled()
+    expect(started).toHaveLength(1)
+    expect(started[0].cancelled).toBe(false)
+    store.destroy()
+  })
+
+  test('accepts valid input and trims languages', () => {
+    const {started, store} = makeStore()
+    const {postId, item} = getVideo(store)
+    started[0].report({state: 'uploaded', blob: blob('video')})
+
+    expect(
+      store.actions.setVideoCaptions(postId, item.id, [
+        {lang: ' en ', content: 'edited'},
+        {lang: 'de', content: 'german'},
+      ]),
+    ).toEqual({ok: true})
+
+    expect(getVideo(store).item.captions).toEqual([
+      {lang: 'en', content: 'edited'},
+      {lang: 'de', content: 'german'},
+    ])
+    expect(started).toHaveLength(2)
+    store.destroy()
+  })
+
+  test('inbound captions drop blank languages and later duplicates', () => {
+    const {workers} = makeManualWorkers()
+    const store = createThreadStore({
+      defaultLanguages: [],
+      ...testUploadRuntime,
+      resolvers,
+      __createId: makeIdGenerator(),
+      __uploadWorkers: workers,
+      initialState: {
+        posts: [
+          {
+            attachments: {
+              media: {
+                kind: 'video',
+                item: {
+                  ...videoInput.item,
+                  captions: [
+                    {lang: ' en ', content: 'first'},
+                    {lang: '', content: 'blank'},
+                    {lang: 'en', content: 'duplicate'},
+                    {lang: 'de', content: 'german'},
+                  ],
+                },
+              },
+            },
+          },
+        ],
+      },
+    })
+
+    expect(getVideo(store).item.captions).toEqual([
+      {lang: 'en', content: 'first'},
+      {lang: 'de', content: 'german'},
+    ])
+    store.destroy()
+  })
+})

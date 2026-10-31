@@ -333,7 +333,7 @@ async function runImageUpload({
     throwIfAborted({signal})
     attempt.reportStatus({status: {state: 'uploaded', blob: result.blob}})
   } catch (error) {
-    if (signal.aborted || isComposerV2Cancellation({cause: error})) return
+    if (signal.aborted) return
     attempt.reportFailure(failureReport({error, mediaKind: 'image'}))
   } finally {
     if (output) {
@@ -473,7 +473,7 @@ async function runVideoUpload({
       status: {state: 'uploaded', blob: videoBlob, captionBlobs},
     })
   } catch (error) {
-    if (signal.aborted || isComposerV2Cancellation({cause: error})) return
+    if (signal.aborted) return
     reportVideoFailure({
       stage: failure.stage,
       error,

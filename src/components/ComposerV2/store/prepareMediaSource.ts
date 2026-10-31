@@ -126,7 +126,7 @@ export async function prepareVideoSource({
    * would otherwise fetch the same URI itself.
    */
   if (IS_WEB && !file && (!mimeType || needsProbe())) {
-    const blob = await fetch(media.uri).then(response => response.blob())
+    const blob = await fetchSourceBlob({uri: media.uri})
     file = toFile({blob, type: mimeType})
     mimeType ??= file.type || undefined
     fileSize ??= file.size
@@ -164,6 +164,24 @@ export async function prepareVideoSource({
       fileSize,
     },
     metadata: {...dimensions, mimeType, duration, fileSize},
+  }
+}
+
+/**
+ * A `blob:` or `data:` URI is local to this page, so a failed read means the
+ * link is dead (a revoked object URL throws a TypeError that would classify as
+ * a retryable network error). Remote URIs can fail transiently and keep the
+ * raw error.
+ */
+async function fetchSourceBlob({uri}: {uri: string}): Promise<Blob> {
+  const isLocal = uri.startsWith('blob:') || uri.startsWith('data:')
+  try {
+    const response = await fetch(uri)
+    if (isLocal && !response.ok) throw new ValidationError('unreadable-media')
+    return await response.blob()
+  } catch (error) {
+    if (isLocal) throw new ValidationError('unreadable-media')
+    throw error
   }
 }
 
