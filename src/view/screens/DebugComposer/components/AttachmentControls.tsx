@@ -2,6 +2,7 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {nanoid} from 'nanoid/non-secure'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {useUploadPhaseLabel} from '#/view/screens/DebugComposer/messages'
@@ -563,8 +564,12 @@ function CaptionsDialogInner({
   const t = useTheme()
   const control = Dialog.useDialogContext()
   const store = useThreadStore()
+  /*
+   * Each draft row carries a stable key. The language field is uncontrolled, so
+   * index keys would leave a removed row's text in the next row's input.
+   */
   const [captions, setCaptions] = useState(() =>
-    item.captions.map(caption => ({...caption})),
+    item.captions.map(caption => ({...caption, key: nanoid()})),
   )
   const hasMissingLang = captions.some(caption => !caption.lang.trim())
   return (
@@ -580,7 +585,7 @@ function CaptionsDialogInner({
           </Trans>
         </Text>
         {captions.map((caption, index) => (
-          <View key={index} style={[a.gap_xs]}>
+          <View key={caption.key} style={[a.gap_xs]}>
             <TextField.Root>
               <Dialog.Input
                 label={l`Caption ${index + 1} language`}
@@ -600,7 +605,15 @@ function CaptionsDialogInner({
               <Dialog.Input
                 label={l`Caption ${index + 1} content`}
                 testID={`composerV2Tester-caption-${index}-content`}
-                defaultValue={caption.content}
+                /*
+                 * Controlled on purpose. With `defaultValue`, React DOM
+                 * rewrites the textarea's text node on every re-render, such
+                 * as the hover state flush that lands when focus leaves the
+                 * language field. Radix FocusScope reads that as a removed
+                 * node and steals focus to the dialog, so the click never
+                 * reaches the textarea. `value` only rewrites on a change.
+                 */
+                value={caption.content}
                 onChangeText={content =>
                   setCaptions(prev =>
                     prev.map((c, i) => (i === index ? {...c, content} : c)),
@@ -634,7 +647,11 @@ function CaptionsDialogInner({
             onPress={() =>
               setCaptions(prev => [
                 ...prev,
-                {lang: '', content: 'WEBVTT\n\n00:00.000 --> 00:02.000\n'},
+                {
+                  key: nanoid(),
+                  lang: '',
+                  content: 'WEBVTT\n\n00:00.000 --> 00:02.000\n',
+                },
               ])
             }>
             <ButtonText>
@@ -649,7 +666,11 @@ function CaptionsDialogInner({
             disabled={hasMissingLang}
             onPress={() =>
               control.close(() =>
-                store.actions.setVideoCaptions(postId, item.id, captions),
+                store.actions.setVideoCaptions(
+                  postId,
+                  item.id,
+                  captions.map(({lang, content}) => ({lang, content})),
+                ),
               )
             }>
             <ButtonText>

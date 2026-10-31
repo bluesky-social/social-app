@@ -16,9 +16,9 @@ Coverage values:
 - `unit`: Jest tests in this repo.
 - `manual iOS`: the iOS simulator smoke of editing, dialogs, no-write planning,
   reset, and scenarios.
-- `manual web`: a Chrome run (2026-10-30) of text/facets, link cards, images,
-  video, the GIF picker, multi-post gates, reply/quote, scenarios, and reset.
-  Caption upload was not confirmed.
+- `manual web`: Chrome runs of text/facets, link cards, images, video, the GIF
+  picker, multi-post gates, reply/quote, scenarios, reset, the caption editor
+  and caption upload, plan summary wording, and the default post language.
 - `none`: not covered. Manual coverage is by area, not per control.
 
 ## Sessions and scenarios
@@ -37,6 +37,7 @@ Coverage values:
 | --------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------ | ---------------------- |
 | Text with grapheme/limit feedback             | `PostCard.tsx`                                       | `-post-{postId}-text`                                                                      | manual iOS, manual web |
 | Languages (up to 3), self labels              | `PostCard.tsx`                                       | `-post-{postId}-langs`, `-post-{postId}-labels`                                            | manual iOS             |
+| Default language on new posts                 | `useTesterSession.ts`                                | none                                                                                       | unit, manual web       |
 | Explicit tags (comma-separated input)         | `PostCard.tsx`, `parseTagsInput.ts`                  | `-post-{postId}-tags`                                                                      | unit, manual iOS       |
 | Add, remove, reorder posts                    | `PostCard.tsx`, `DebugComposer.tsx`                  | `-add-post`, `-post-{postId}-remove`, `-post-{postId}-move-up`, `-post-{postId}-move-down` | unit, manual iOS       |
 | URL attachments (typed facets, attach dialog) | `PostCard.tsx`, `RecordAttachControls.tsx`           | `-post-{postId}-attach-url`, `-attach-url-input`, `-attach-url-resolve`                    | unit, manual web       |
@@ -46,17 +47,19 @@ Coverage values:
 
 ## Media and workers
 
-| Control / feature                                         | File                                          | Test IDs                                                                                                                         | Coverage                  |
-| --------------------------------------------------------- | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
-| Media picker (images up to 10, video)                     | `PostCard.tsx`                                | `-post-{postId}-media-picker`                                                                                                    | manual web                |
-| GIF picker                                                | `PostCard.tsx`                                | `-post-{postId}-gif`                                                                                                             | manual web                |
-| External cards / chat invites via URL resolution          | `AttachmentControls.tsx`                      | `-post-{postId}-external-fields`                                                                                                 | unit, manual web          |
-| Upload phase and progress display                         | `AttachmentControls.tsx`                      | `-post-{postId}-media`, `-media-{mediaId}`                                                                                       | unit (labels), manual web |
-| Retry (per item, all failed) and terminal failure display | `AttachmentControls.tsx`, `DebugComposer.tsx` | `-media-{mediaId}-retry`, `-post-{postId}-media-retry`, `-retry-all`                                                             | unit                      |
-| Alt text editing                                          | `AttachmentControls.tsx`                      | `-media-{mediaId}-alt`, `-alt-input`, `-alt-save`                                                                                | manual iOS                |
-| Video captions editing (`setVideoCaptions`)               | `AttachmentControls.tsx`                      | `-media-{mediaId}-captions`, `-caption-{i}-lang`, `-caption-{i}-content`, `-caption-{i}-remove`, `-caption-add`, `-caption-save` | unit, manual iOS          |
-| Capacity display                                          | `PostCard.tsx`                                | none                                                                                                                             | manual web                |
-| Removal / reset while uploads run                         | store, `useTesterSession.ts`                  | `-media-{mediaId}-remove`, `-reset`                                                                                              | unit                      |
+| Control / feature                                         | File                                          | Test IDs                                                                                                                         | Coverage                     |
+| --------------------------------------------------------- | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| Media picker (images up to 10, video)                     | `PostCard.tsx`                                | `-post-{postId}-media-picker`                                                                                                    | manual web                   |
+| GIF picker                                                | `PostCard.tsx`                                | `-post-{postId}-gif`                                                                                                             | manual web                   |
+| External cards / chat invites via URL resolution          | `AttachmentControls.tsx`                      | `-post-{postId}-external-fields`                                                                                                 | unit, manual web             |
+| Upload phase and progress display                         | `AttachmentControls.tsx`                      | `-post-{postId}-media`, `-media-{mediaId}`                                                                                       | unit (labels), manual web    |
+| Retry (per item, all failed) and terminal failure display | `AttachmentControls.tsx`, `DebugComposer.tsx` | `-media-{mediaId}-retry`, `-post-{postId}-media-retry`, `-retry-all`                                                             | unit                         |
+| Record and media retry (`retryAttachment`)                | `AttachmentControls.tsx`                      | `-post-{postId}-record-retry`, `-post-{postId}-media-retry`                                                                      | unit                         |
+| Unreadable image / GIF failure copy                       | `AttachmentControls.tsx`                      | `-media-{mediaId}`                                                                                                               | unit, manual web             |
+| Alt text editing                                          | `AttachmentControls.tsx`                      | `-media-{mediaId}-alt`, `-alt-input`, `-alt-save`                                                                                | manual iOS                   |
+| Video captions editing (`setVideoCaptions`)               | `AttachmentControls.tsx`                      | `-media-{mediaId}-captions`, `-caption-{i}-lang`, `-caption-{i}-content`, `-caption-{i}-remove`, `-caption-add`, `-caption-save` | unit, manual iOS, manual web |
+| Capacity display                                          | `PostCard.tsx`                                | none                                                                                                                             | manual web                   |
+| Removal / reset while uploads run                         | store, `useTesterSession.ts`                  | `-media-{mediaId}-remove`, `-reset`                                                                                              | unit                         |
 
 ## Gates
 
@@ -71,8 +74,9 @@ Coverage values:
 | -------------------------------------------------------------------- | --------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------------- |
 | No-write plan with busy/success/failure states                       | `PlanSection.tsx`, `usePlanRunner.ts`               | `-plan`, `-plan-result`, `-plan-error`, `-plan-clear`                                  | unit, manual iOS |
 | Redacted structural summary and expandable structure view            | `PlanSection.tsx`, `summarizeComposerV2Plan.ts`     | `-plan-structure-toggle`, `-plan-structure`, `-plan-post-{index}-structure`            | unit, manual iOS |
+| Plan summary line with singular/plural counts                        | `PlanSection.tsx`                                   | `-plan-result`                                                                         | manual web       |
 | Full planned records as selectable JSON                              | `PlanSection.tsx`                                   | `-plan-records`                                                                        | unit             |
-| Static error hints per code                                          | `PlanSection.tsx`, `messages.ts`                    | `-plan-error`                                                                          | unit             |
+| Static error hints per code, including `text-too-long`               | `PlanSection.tsx`, `messages.ts`                    | `-plan-error`                                                                          | unit             |
 | Stale marking after edits; cleared on reset, session, account change | `usePlanRunner.ts`                                  | `-plan-stale`                                                                          | unit             |
 | Empty-post confirmation re-plan                                      | `PlanSection.tsx`, `usePlanRunner.ts`               | `-plan-confirm-skip`                                                                   | unit             |
 | Required-alt-text preflight toggle                                   | `DebugComposer.tsx`, `PlanSection.tsx`              | none                                                                                   | none             |
@@ -88,6 +92,9 @@ Coverage values:
 ## Not covered
 
 - Android UI.
+- Attaching several files to the web picker in one go. The picker's file input
+  has `multiple` set, but Chrome DevTools MCP rejects multi-file uploads, so
+  only single-file selection was exercised by hand.
 - Paste and drag-and-drop media input (adapter and store tests only; no
   composer text input is wired to it).
 - Real publishing: the writer is unit-tested with fake clients, and no run

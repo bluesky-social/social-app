@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
+import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {usePlanErrorHint} from '#/view/screens/DebugComposer/messages'
@@ -179,9 +180,7 @@ export function PlanSection({
       ) : summary.ok ? (
         <View style={[a.gap_xs]} testID="composerV2Tester-plan-result">
           <Text style={[a.text_xs, a.font_bold]}>
-            <Trans>
-              Plan OK: {summary.postCount} posts, {summary.writeCount} writes
-            </Trans>
+            {l`Plan OK: ${plural(summary.postCount, {one: '# post', other: '# posts'})}, ${plural(summary.writeCount, {one: '# write', other: '# writes'})}`}
           </Text>
           {summary.posts.map((post, index) => (
             <Text
