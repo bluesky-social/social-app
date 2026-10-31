@@ -23,6 +23,7 @@ import {
 } from '#/components/ComposerV2/store/types'
 import {
   type ImageUploadDependencies,
+  type UploadAttempt,
   type UploadWorkerOverrides,
 } from '#/components/ComposerV2/store/uploads'
 import {type Gif} from '#/features/gifPicker/types'
@@ -1193,20 +1194,26 @@ describe('attachment lifecycle', () => {
   })
 
   test('failed reports stop the old worker before retrying', () => {
-    const store = makeStore()
+    let reporting: UploadAttempt | undefined
+    const store = createThreadStore({
+      ...testUploadRuntime,
+      resolvers,
+      __createId: makeIdGenerator(),
+      __resolveLink: mockResolveLink,
+      __uploadWorkers: {
+        startImageUpload: options => {
+          reporting = options.attempt
+          return simulatedUploadWorkers.startImageUpload!(options)
+        },
+      },
+    })
     const root = rootId(store)
     const {
       addedMediaIds: [mediaId],
     } = store.actions.addMedia(root, [imageInput])!
-    store.internalActions.applyUploadFailure({
-      postId: root,
-      mediaId,
-      status: {
-        state: 'failed',
-        error: 'network',
-        retryable: true,
-      },
-      diagnostic: {kind: 'operational', cause: undefined},
+    reportAnyStatus({
+      attempt: reporting!,
+      status: {state: 'failed', error: 'network', retryable: true},
     })
     expect(jest.getTimerCount()).toBe(0)
     store.actions.retryMediaUpload(root, mediaId)

@@ -123,6 +123,7 @@ shortening. Explicit tags are independent of hashtag facets.
 | Concern                                                   | Start here                                                                                                              |
 | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | State, commands, ownership, async coordination            | [store/index.ts](store/index.ts), [store/types.ts](store/types.ts), [store/utils/](store/utils/)                        |
+| Upload attempt lifetimes, retained compression, telemetry | [store/mediaUploads.ts](store/mediaUploads.ts), [retained compression](store/utils/createRetainedCompressionCache.ts)   |
 | Real image/video workers and dependency injection         | [store/uploads.ts](store/uploads.ts), [store/uploadDependencies.ts](store/uploadDependencies.ts)                        |
 | Media source preparation and paste/drop inputs            | [store/prepareMediaSource.ts](store/prepareMediaSource.ts), [adapters/pastedMedia.ts](adapters/pastedMedia.ts)          |
 | Composer intents and inbound drafts                       | [adapters/index.ts](adapters/index.ts)                                                                                  |
@@ -212,18 +213,21 @@ start the deferred work.
 - User edits dirty the content; initialization, worker progress, URI completion,
   and retries do not.
 - `internalActions.applyUploadStatus` and `applyUploadFailure` are test seams
-  that call the private writes directly. Workers instead receive one required
-  `UploadAttempt` (see `uploads.ts`), already bound to its item. Its callbacks
+  that call the private writes directly, skipping the upload service's task and
+  compression bookkeeping; they only write state and report errors. Workers
+  instead receive one required `UploadAttempt` (see `uploads.ts`), already bound
+  to its item by the upload service (`store/mediaUploads.ts`). Its callbacks
   (`reportStatus`, `reportFailure`, `setSourceMetadata`, `setCompressionResult`,
   `setCaptionBlobs`, `setVideoTelemetry`, and the compression cache pair) pass a
-  single current-attempt guard before reaching the private `apply*` writes or
-  the telemetry registry.
+  single current-attempt guard there. The service's bookkeeping runs first, and
+  what survives reaches the store as a `MediaUploadUpdate`, which
+  `applyMediaUploadUpdate` routes to the private `apply*` writes.
   `getState`, `subscribe`, `destroy`, `reportError`, `reportPublished`, and
   `reportPublishUncertain` are lifecycle/read/reporting methods, not UI mutation
   shortcuts.
 - Naming inside `createThreadStore`: `set*`, `add*`, `remove*`, `update*`, and
   `retry*` are public actions; `apply*` are private state writes reached from
-  guarded worker callbacks; `replace*` return an updated post copy without
+  `applyMediaUploadUpdate`; `replace*` return an updated post copy without
   touching the store.
 
 ### Attachment and asynchronous ownership
@@ -260,7 +264,7 @@ are valid editing states; publication preflight handles readiness.
 caller without an account must not construct a store. `pdsUrl` is the account
 PDS URL, used for the video service-auth audience; the shared video API calls it
 `dispatchUrl`, and the worker maps it at that call. Analytics carries video
-telemetry. The store hands the workers their production dependencies
+telemetry. The upload service hands the workers their production dependencies
 (`store/uploadDependencies.ts`), and there is no simulated-upload fallback. The
 one test seam is `__uploadWorkers`, which replaces a whole worker; wrap it with
 `realUploadWorkers` (`store/__tests__/uploadTestUtils.ts`) to run a real worker
@@ -320,10 +324,11 @@ failure. Events V2 adds:
   retry reuses the uploaded video's telemetry.
 - `abandoned` carries `reason`: `'removed'` when the user removes the video, its
   attachment, or its post, `'closed'` from `destroy()`.
-- `published` comes from `store.reportPublished({plan})`. The store keeps each
-  uploaded video's telemetry in a `WeakMap` keyed by its blob and matches the
-  blobs the plan embeds, so each video reports once and later edits cannot
-  misattribute a publication. It still works after `destroy()`.
+- `published` comes from `store.reportPublished({plan})`, which passes through
+  to the upload service. The service keeps each uploaded video's telemetry in a
+  `WeakMap` keyed by its blob and matches the blobs the plan embeds, so each
+  video reports once and later edits cannot misattribute a publication. It
+  still works after `destroy()`.
 - `composer:publish:uncertain` comes from `store.reportPublishUncertain({plan,
 cause})`, for a write rejected after dispatch. Those videos stay publishable
   for a later reconciliation.
@@ -410,16 +415,17 @@ the store; an editor crops from `item.original ?? item`.
 
 #### Retained compression output
 
-The compressed video output is retained in a private runtime map in the store
-keyed by media ID, never in `ThreadState`. Only a completed compression that
-passed output validation is kept (URI, MIME type, size, passthrough reason, web
-`bytes`). A retry after an upload failure leases it and uploads without
-copying, probing, or compressing. Native output is first checked with the
-injected `getFileSize`; if the file is gone or its size changed, the entry is
-dropped and the attempt compresses once. The entry is retired when the item or
-its post is removed, the store is destroyed, a non-retryable failure occurs, or
-the processed video blob supersedes it. Cleanup waits for attempts still reading
-the output, so removal never deletes a file a non-abortable step is using.
+The compressed video output is retained in a private runtime cache owned by the
+media upload service (`store/mediaUploads.ts`), keyed by media ID, never in
+`ThreadState`. Only a completed compression that passed output validation is
+kept (URI, MIME type, size, passthrough reason, web `bytes`). A retry after an
+upload failure leases it and uploads without copying, probing, or compressing.
+Native output is first checked with the injected `getFileSize`; if the file is
+gone or its size changed, the entry is dropped and the attempt compresses once.
+The entry is retired when the item or its post is removed, the store is
+destroyed, a non-retryable failure occurs, or the processed video blob
+supersedes it. Cleanup waits for attempts still reading the output, so removal
+never deletes a file a non-abortable step is using.
 
 #### Resource ownership
 
@@ -433,7 +439,7 @@ deterministic and tested through injected release dependencies.
 | Image compression output                               | The image worker                 | Once, after the upload (or a cancelled/failed attempt) settles                                   |
 | Native encoded video output (file)                     | The worker, then retained entry  | By the worker if never retained; otherwise with the entry after its last reader                  |
 | Android readable copy                                  | The attempt, then retained entry | With the attempt, or with the entry when the result aliases it                                   |
-| Video telemetry and `videoUploadIds`                   | The store                        | `videoUploadIds` on removal/teardown; telemetry (`publishableVideos`) outlives removal for plans |
+| Video telemetry and `videoUploadIds`                   | The upload service               | `videoUploadIds` on removal/teardown; telemetry (`publishableVideos`) outlives removal for plans |
 
 - The shared web `getVideoMetadata` returns a new object URL per probe.
   `createScalarVideoMetadata` (wired in `store/uploadDependencies.ts`) returns

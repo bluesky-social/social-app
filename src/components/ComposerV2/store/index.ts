@@ -8,9 +8,7 @@ import {
   resolveLink as importedResolveLink,
   type resolveLink,
 } from '#/lib/api/resolve'
-import {errorClass, type VideoTelemetry} from '#/lib/media/video/telemetry'
 import {
-  type CompressedVideo,
   type VideoAbandonReason,
   type VideoRestartReason,
 } from '#/lib/media/video/types'
@@ -19,20 +17,12 @@ import {
   isComposerV2Cancellation,
   reportComposerV2Error,
 } from '#/components/ComposerV2/errors'
-import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
+import {
+  createMediaUploads,
+  type MediaUploadUpdate,
+} from '#/components/ComposerV2/store/mediaUploads'
 import type * as types from '#/components/ComposerV2/store/types'
-import {
-  imageUploadDependencies,
-  videoUploadDependencies,
-} from '#/components/ComposerV2/store/uploadDependencies'
-import {
-  type CompressedVideoLease,
-  startImageUpload,
-  startVideoUpload,
-  type UploadAttempt,
-  type UploadTask,
-  type UploadWorkerOverrides,
-} from '#/components/ComposerV2/store/uploads'
+import {type UploadWorkerOverrides} from '#/components/ComposerV2/store/uploads'
 import {buildPostMediaItem} from '#/components/ComposerV2/store/utils/buildPostMediaItem'
 import {buildThreadPost} from '#/components/ComposerV2/store/utils/buildThreadPost'
 import {
@@ -50,40 +40,6 @@ import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
 import {parseResolveLinkError} from '#/components/ComposerV2/store/utils/parseResolveLinkError'
 import {validDimensions} from '#/components/ComposerV2/store/utils/validDimensions'
 import {type AnalyticsContextType} from '#/analytics'
-import {app} from '#/lexicons'
-import * as bsky from '#/types/bsky'
-
-/**
- * A completed video compression result kept so a retry can skip compression.
- * It lives outside `ThreadState`, which must not carry web byte buffers.
- */
-type CompressionEntry = {
-  video: CompressedVideo
-  /**
-   * Frees what the entry owns: a readable copy the output aliases, or a native
-   * encoded output file. Absent for caller-owned files and web output.
-   */
-  release?: () => void
-  /** Attempts still reading the output. Cleanup waits for them. */
-  readers: number
-  retired: boolean
-}
-
-/** The uploaded video blob a planned post record embeds, if any. */
-function embeddedVideoBlob({
-  embed,
-}: {
-  embed: ComposerV2Plan['posts'][number]['record']['embed']
-}): BlobRef | undefined {
-  if (bsky.isType(app.bsky.embed.video.main, embed)) return embed.video
-  if (
-    bsky.isType(app.bsky.embed.recordWithMedia.main, embed) &&
-    bsky.isType(app.bsky.embed.video.main, embed.media)
-  ) {
-    return embed.media.video
-  }
-  return undefined
-}
 
 function isRetryableFailedUpload({item}: {item: types.PostMediaItem}): boolean {
   if (item.kind !== 'image' && item.kind !== 'video') return false
@@ -154,26 +110,14 @@ export function createThreadStore({
   }
   const listeners = new Set<() => void>()
 
-  /** Cancellation handles belong to the session, not its published snapshots. */
-  const uploadTasks = new Map<string, UploadTask>()
-  /**
-   * Telemetry for uploaded videos, keyed by their blob, until a write
-   * publishes them. Weak keys drop entries whose blob nothing references.
-   */
-  const publishableVideos = new WeakMap<BlobRef, VideoTelemetry>()
-  /**
-   * Compression results by media ID, for videos only. A video's source never
-   * changes (a replacement is a new item with a new ID) and caption or alt
-   * text edits do not affect compression, so the ID identifies a result. An
-   * entry is removed when the item is removed, a processed blob supersedes it,
-   * the item fails for good, or the store is destroyed.
-   */
-  const compressionCache = new Map<string, CompressionEntry>()
-  /**
-   * The latest attempt's uploadId per video, linking restarts to it. Kept
-   * across retries and caption restarts; cleared on removal and teardown.
-   */
-  const videoUploadIds = new Map<string, string>()
+  const uploads = createMediaUploads({
+    pdsClient,
+    pdsUrl,
+    i18n,
+    metric: analytics.metric,
+    onUpdate: applyMediaUploadUpdate,
+    __uploadWorkers,
+  })
   /** Replacing one attachment slot must not invalidate work in the other. */
   const resolutionRevs = {
     record: createAsyncTaskRev(),
@@ -331,8 +275,7 @@ export function createThreadStore({
       for (const item of getMediaItems({
         media: s.posts[postId].attachments.media,
       })) {
-        cancelUploadTask(item.id, {abandoned: 'removed'})
-        forgetRemovedMedia(item.id)
+        uploads.forget({mediaId: item.id, abandoned: 'removed'})
       }
       resolutionRevs.record.clearFor({key: postId})
       resolutionRevs.media.clearFor({key: postId})
@@ -383,8 +326,7 @@ export function createThreadStore({
       const items = getMediaItems({media: post.attachments.media})
       const next = items.filter(item => item.id !== mediaId)
       if (next.length === items.length) return null
-      cancelUploadTask(mediaId, {abandoned: 'removed'})
-      forgetRemovedMedia(mediaId)
+      uploads.forget({mediaId, abandoned: 'removed'})
       s.posts[postId] = replacePostMediaItems(post, next)
       s.isDirty = true
       return s
@@ -398,8 +340,7 @@ export function createThreadStore({
       if (!post || !post.attachments.media) return null
       resolutionRevs.media.incrementFor({key: postId})
       for (const item of getMediaItems({media: post.attachments.media})) {
-        cancelUploadTask(item.id, {abandoned: 'removed'})
-        forgetRemovedMedia(item.id)
+        uploads.forget({mediaId: item.id, abandoned: 'removed'})
       }
       s.posts[postId] = replacePostMedia(post, undefined)
       s.isDirty = true
@@ -482,7 +423,7 @@ export function createThreadStore({
       upload: {state: 'pending'},
     }
 
-    cancelUploadTask(mediaId)
+    uploads.cancel({mediaId})
     updateMediaItem({postId, mediaId, dirty: true, update: () => replaced})
     startMediaUpload(postId, mediaId)
     return {supersededUri}
@@ -524,7 +465,7 @@ export function createThreadStore({
     })
     const shouldRestart =
       item.upload.state === 'uploading' || item.upload.state === 'uploaded'
-    if (shouldRestart) cancelUploadTask(mediaId)
+    if (shouldRestart) uploads.cancel({mediaId})
     const next: types.PostMediaVideo = {
       ...item,
       captions: nextCaptions,
@@ -618,7 +559,7 @@ export function createThreadStore({
     const item = items.find(m => m.id === mediaId)
     if (!item || !isRetryableFailedUpload({item})) return
 
-    cancelUploadTask(mediaId)
+    uploads.cancel({mediaId})
     const pending = {...item, upload: {state: 'pending' as const}}
     updateMediaItem({postId, mediaId, update: () => pending})
     startMediaUpload(postId, mediaId, 'retry')
@@ -662,7 +603,7 @@ export function createThreadStore({
     mediaId: string,
     restartReason?: VideoRestartReason,
   ) {
-    if (destroyed || uploadTasks.has(mediaId)) return
+    if (destroyed) return
     const post = state.posts[postId]
     if (!post) return
     // Read live state: a subscriber may have edited, removed, or retried this item.
@@ -670,112 +611,40 @@ export function createThreadStore({
       m => m.id === mediaId,
     )
     if (!item || item.kind === 'gif' || item.upload.state !== 'pending') return
+    uploads.start({postId, item, restartReason})
+  }
 
-    /*
-     * Register ownership before invoking a worker. The real workers report
-     * their first phase ('compressing' or 'validating') synchronously, before
-     * their first await and before returning a handle. That report notifies
-     * subscribers, so callbacks must not close over an uninitialised task, and
-     * cancellation can be requested before `started` is assigned.
-     */
-    let started: UploadTask | undefined
-    let cancelled: {abandoned?: VideoAbandonReason} | undefined
-    const registered: UploadTask = {
-      cancel(options = {}) {
-        cancelled = options
-        started?.cancel(options)
-      },
-    }
-    uploadTasks.set(item.id, registered)
-    /* Calls from a worker the store has since retired or destroyed are ignored. */
-    const isCurrent = () =>
-      !destroyed && uploadTasks.get(mediaId) === registered
-    const attempt: UploadAttempt = {
-      reportStatus: ({status}) => {
-        if (isCurrent()) applyUploadStatus({postId, mediaId, status})
-      },
-      reportFailure: ({status, diagnostic}) => {
-        if (isCurrent())
-          applyUploadFailure({postId, mediaId, status, diagnostic})
-      },
-      setSourceMetadata: ({metadata}) => {
-        if (isCurrent()) applyMediaSourceMetadata(postId, mediaId, metadata)
-      },
-    }
-    const runtime = {pdsClient, pdsUrl, i18n}
-    try {
-      started =
-        item.kind === 'image'
-          ? (__uploadWorkers?.startImageUpload ?? startImageUpload)({
-              ...runtime,
-              ...imageUploadDependencies,
-              media: item,
-              attempt: {
-                ...attempt,
-                setCompressionResult: ({prepared}) => {
-                  if (isCurrent())
-                    applyImageCompressionResult(postId, mediaId, prepared)
-                },
-              },
-            })
-          : (__uploadWorkers?.startVideoUpload ?? startVideoUpload)({
-              ...runtime,
-              ...videoUploadDependencies,
-              media: item,
-              metric: analytics.metric,
-              restart: restartReason && {
-                reason: restartReason,
-                previousUploadId: videoUploadIds.get(item.id),
-              },
-              uploadedVideoTelemetry:
-                item.videoBlob && publishableVideos.get(item.videoBlob),
-              attempt: {
-                ...attempt,
-                setCompressionResult: ({prepared}) => {
-                  if (isCurrent())
-                    applyVideoCompressionResult(postId, mediaId, prepared)
-                },
-                setCaptionBlobs: ({captions}) => {
-                  if (isCurrent()) applyCaptionBlobs(postId, mediaId, captions)
-                },
-                acquireCompressedVideo: () => {
-                  if (!isCurrent()) return undefined
-                  const entry = compressionCache.get(mediaId)
-                  return entry && leaseCompression(mediaId, entry)
-                },
-                retainCompressedVideo: ({video, release}) => {
-                  if (!isCurrent()) return undefined
-                  retireCompression(mediaId)
-                  const entry = {video, release, readers: 0, retired: false}
-                  compressionCache.set(mediaId, entry)
-                  return leaseCompression(mediaId, entry)
-                },
-                setVideoTelemetry: ({telemetry, blob}) => {
-                  if (!isCurrent()) return
-                  videoUploadIds.set(mediaId, telemetry.uploadId)
-                  if (!blob) return
-                  /*
-                   * Register the telemetry before notifying subscribers: one
-                   * may restart this item, and the restart looks it up by blob.
-                   */
-                  publishableVideos.set(blob, telemetry)
-                  retireCompression(mediaId)
-                  applyVideoBlob(postId, mediaId, blob)
-                },
-              },
-            })
-      /*
-       * A subscriber notified by that first report may remove the item or
-       * destroy the store, cancelling `registered` while `started` is still
-       * undefined. The ownership guards above already ignore the worker's
-       * later reports, but only its own handle aborts it: without this, an
-       * image would still be uploaded after compression and a video would go
-       * on to compress and upload.
-       */
-      if (cancelled) started.cancel(cancelled)
-    } catch (cause) {
-      if (isCurrent()) {
-        cancelUploadTask(mediaId)
+  /** Routes what a current upload attempt reports into state and error policy. */
+  function applyMediaUploadUpdate(update: MediaUploadUpdate) {
+    const {postId, mediaId} = update
+    switch (update.type) {
+      case 'status':
+        applyUploadStatus({postId, mediaId, status: update.status})
+        break
+      case 'failure':
+        applyUploadFailure({
+          postId,
+          mediaId,
+          status: update.status,
+          diagnostic: update.diagnostic,
+        })
+        break
+      case 'source-metadata':
+        applyMediaSourceMetadata(postId, mediaId, update.metadata)
+        break
+      case 'image-compression-result':
+        applyImageCompressionResult(postId, mediaId, update.prepared)
+        break
+      case 'video-compression-result':
+        applyVideoCompressionResult(postId, mediaId, update.prepared)
+        break
+      case 'caption-blobs':
+        applyCaptionBlobs(postId, mediaId, update.captions)
+        break
+      case 'video-blob':
+        applyVideoBlob(postId, mediaId, update.blob)
+        break
+      case 'start-failed':
         reportError(
           {
             source: 'upload',
@@ -785,121 +654,10 @@ export function createThreadStore({
             kind: 'unexpected',
             recovery: 'none',
           },
-          cause,
+          update.cause,
         )
-      }
-      throw cause
+        break
     }
-  }
-
-  /** Lets an attempt read a retained output; cleanup waits for its release. */
-  function leaseCompression(
-    mediaId: string,
-    entry: CompressionEntry,
-  ): CompressedVideoLease {
-    entry.readers += 1
-    let released = false
-    return {
-      video: entry.video,
-      invalidate() {
-        if (compressionCache.get(mediaId) === entry) retireCompression(mediaId)
-      },
-      release() {
-        if (released) return
-        released = true
-        entry.readers -= 1
-        cleanUpCompression(entry)
-      },
-    }
-  }
-
-  /**
-   * Stops offering a retained result to later attempts. Readers already using
-   * it keep it until they release, so cancelling an attempt never deletes an
-   * output a non-abortable step is still reading.
-   */
-  function retireCompression(mediaId: string) {
-    const entry = compressionCache.get(mediaId)
-    if (!entry) return
-    compressionCache.delete(mediaId)
-    entry.retired = true
-    cleanUpCompression(entry)
-  }
-
-  /**
-   * Drops the per-item video registries for media that left the composition. A
-   * captured plan still reports publication through `publishableVideos`,
-   * which is keyed by blob and deliberately outlives the item.
-   */
-  function forgetRemovedMedia(mediaId: string) {
-    retireCompression(mediaId)
-    videoUploadIds.delete(mediaId)
-  }
-
-  function cleanUpCompression(entry: CompressionEntry) {
-    if (!entry.retired || entry.readers > 0) return
-    const {release} = entry
-    entry.release = undefined
-    try {
-      release?.()
-    } catch {
-      /* A leftover cache file is harmless. */
-    }
-  }
-
-  function cancelUploadTask(
-    mediaId: string,
-    options?: {
-      /** The user gave up on the media; see `UploadTask`. */
-      abandoned?: VideoAbandonReason
-    },
-  ) {
-    const task = uploadTasks.get(mediaId)
-    uploadTasks.delete(mediaId)
-    task?.cancel(options)
-  }
-
-  /**
-   * Report the videos a successful write published, through the telemetry of
-   * the attempt that uploaded each one. Call only after the writer succeeds,
-   * never for an uncertain outcome. Videos are matched by the uploaded blob the
-   * plan embeds, so later edits cannot misattribute them, and each reports
-   * once. Publication already happened, so this works after `destroy` too.
-   */
-  function reportPublished({plan}: {plan: ComposerV2Plan}) {
-    for (const post of plan.posts) {
-      const blob = embeddedVideoBlob({embed: post.record.embed})
-      const telemetry = blob && publishableVideos.get(blob)
-      if (!blob || !telemetry) continue
-      publishableVideos.delete(blob)
-      telemetry.published()
-    }
-  }
-
-  /**
-   * Report a write that was sent but may not have committed. Call only when
-   * the writer rejects after dispatch, not for a precondition failure
-   * (`ComposerV2WritePreconditionError`). The videos stay publishable, since
-   * a later reconciliation may find the posts.
-   */
-  function reportPublishUncertain({
-    plan,
-    cause,
-  }: {
-    plan: ComposerV2Plan
-    cause: unknown
-  }) {
-    const videoUploadIds: string[] = []
-    for (const post of plan.posts) {
-      const blob = embeddedVideoBlob({embed: post.record.embed})
-      const telemetry = blob && publishableVideos.get(blob)
-      if (telemetry) videoUploadIds.push(telemetry.uploadId)
-    }
-    analytics.metric('composer:publish:uncertain', {
-      postCount: plan.posts.length,
-      videoUploadIds,
-      errorClass: errorClass(cause),
-    })
   }
 
   /** Upload progress does not dirty the draft or affect the record attachment. */
@@ -913,14 +671,10 @@ export function createThreadStore({
     status: Exclude<types.UploadStatus, {state: 'failed'}>
   }) {
     if (!findUploadableItem({postId, mediaId})) return
-    if (status.state === 'uploaded') {
-      uploadTasks.delete(mediaId)
-      retireCompression(mediaId)
-    }
     writeUploadStatus({postId, mediaId, status})
   }
 
-  /** A failure cancels its task and reports the diagnostic the worker classified. */
+  /** Reports the diagnostic the worker classified, once per new failure. */
   function applyUploadFailure({
     postId,
     mediaId,
@@ -934,9 +688,6 @@ export function createThreadStore({
   }) {
     const found = findUploadableItem({postId, mediaId})
     if (!found) return
-    cancelUploadTask(mediaId)
-    /* Nothing can retry a failure that is not retryable. */
-    if (!status.retryable) retireCompression(mediaId)
     const accepted = writeUploadStatus({postId, mediaId, status})
     if (accepted && found.upload.state !== 'failed') {
       reportError(
@@ -1321,12 +1072,7 @@ export function createThreadStore({
 
   function teardown(options: {abandoned?: VideoAbandonReason}) {
     destroyed = true
-    for (const task of uploadTasks.values()) task.cancel(options)
-    uploadTasks.clear()
-    for (const mediaId of [...compressionCache.keys()]) {
-      retireCompression(mediaId)
-    }
-    videoUploadIds.clear()
+    uploads.destroy(options)
     resolutionRevs.record.clearAll()
     resolutionRevs.media.clearAll()
     listeners.clear()
@@ -1379,8 +1125,8 @@ export function createThreadStore({
   return {
     /** Share the session's policy with callers; inert after destruction. */
     reportError,
-    reportPublished,
-    reportPublishUncertain,
+    reportPublished: uploads.reportPublished,
+    reportPublishUncertain: uploads.reportPublishUncertain,
     /** User-facing composer commands for editing a thread. */
     actions: {
       setPostText,
