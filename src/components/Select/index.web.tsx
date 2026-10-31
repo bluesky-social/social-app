@@ -3,13 +3,14 @@ import {View} from 'react-native'
 import * as RadixSelect from '@radix-ui/react-select'
 
 import {useA11y} from '#/state/a11y'
-import {atoms as a, flatten, flattenToCSS, useTheme, web} from '#/alf'
+import {atoms as a, flattenToCSS, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
   ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
 } from '#/components/icons/Chevron'
+import {SlotText} from '#/components/Slot'
 import {Text} from '#/components/Typography'
 import {
   type ContentProps,
@@ -297,9 +298,9 @@ export function Item({ref, value, style, children}: ItemProps) {
 export const ItemText = function ItemText({children, style}: ItemTextProps) {
   return (
     <RadixSelect.ItemText asChild>
-      <Text style={flatten([style, web({pointerEvents: 'inherit'})])}>
+      <SlotText rnStyle={[style, web({pointerEvents: 'inherit'})]}>
         {children}
-      </Text>
+      </SlotText>
     </RadixSelect.ItemText>
   )
 }

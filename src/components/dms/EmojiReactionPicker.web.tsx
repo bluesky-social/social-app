@@ -1,13 +1,14 @@
 import {useState} from 'react'
-import {Pressable, View} from 'react-native'
+import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import {useSession} from '#/state/session'
-import {atoms as a, flatten, useTheme} from '#/alf'
+import {atoms as a, flattenToCSS, useTheme} from '#/alf'
 import * as EmojiPicker from '#/components/EmojiPicker'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Menu from '#/components/Menu'
+import {SlotPressable} from '#/components/Slot'
 import {Text} from '#/components/Typography'
 import {type chat} from '#/lexicons'
 import {hasAlreadyReacted, hasReachedReactionLimit} from './util'
@@ -99,7 +100,7 @@ function MenuInner({
                 .filter(Boolean)
                 .join(' ')}
               onSelect={() => handleEmojiSelect(emoji)}
-              style={flatten([
+              style={flattenToCSS([
                 a.flex,
                 a.flex_col,
                 a.rounded_full,
@@ -123,19 +124,19 @@ function MenuInner({
         <DropdownMenu.Item
           asChild
           className="EmojiReactionPicker__PickerButton">
-          <Pressable
+          <SlotPressable
             accessibilityRole="button"
             role="button"
             onPress={() => setExpanded(true)}
-            style={flatten([
+            rnStyle={[
               a.rounded_full,
               {height: 34, width: 34},
               t.atoms.bg_contrast_50,
               a.justify_center,
               a.align_center,
-            ])}>
+            ]}>
             <PlusIcon size="md" style={t.atoms.text_contrast_medium} />
-          </Pressable>
+          </SlotPressable>
         </DropdownMenu.Item>
       </View>
     </Menu.Outer>

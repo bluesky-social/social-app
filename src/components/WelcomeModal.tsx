@@ -7,10 +7,11 @@ import * as FocusScope from '@radix-ui/react-focus-scope'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a, flatten, useBreakpoints, web} from '#/alf'
+import {atoms as a, useBreakpoints, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {type WelcomeModalControl} from '#/components/hooks/useWelcomeModal.shared'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import {SlotView} from '#/components/Slot'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
@@ -79,8 +80,8 @@ export function WelcomeModal({control}: WelcomeModalProps) {
         isExiting ? a.fade_out : a.fade_in,
       ]}>
       <FocusScope.FocusScope asChild loop trapped>
-        <View
-          style={flatten([
+        <SlotView
+          rnStyle={[
             {
               maxWidth: 800,
               maxHeight: 600,
@@ -91,7 +92,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
             a.rounded_lg,
             a.overflow_hidden,
             a.zoom_in,
-          ])}>
+          ]}>
           <ImageBackground
             source={welcomeModalBg}
             style={[a.flex_1, a.justify_center]}
@@ -242,7 +243,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
               )}
             </Button>
           </ImageBackground>
-        </View>
+        </SlotView>
       </FocusScope.FocusScope>
     </View>
   )

@@ -29,7 +29,7 @@ import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {type ListMethods} from '#/view/com/util/List'
-import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Context} from '#/components/Dialog/context'
 import {
@@ -39,6 +39,7 @@ import {
 } from '#/components/Dialog/types'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Portal} from '#/components/Portal'
+import {SlotView} from '#/components/Slot'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/shared'
@@ -217,7 +218,7 @@ export function Inner({
   FocusGuards.useFocusGuards()
   return (
     <FocusScope.FocusScope loop asChild trapped>
-      <View
+      <SlotView
         role="dialog"
         aria-role="dialog"
         aria-label={label}
@@ -226,8 +227,7 @@ export function Inner({
         onClick={stopPropagation}
         onStartShouldSetResponder={_ => true}
         onTouchEnd={stopPropagation}
-        // note: flatten is required for some reason -sfn
-        style={flatten([
+        rnStyle={[
           a.relative,
           a.rounded_md,
           a.w_full,
@@ -243,7 +243,7 @@ export function Inner({
           },
           !reduceMotionEnabled && a.zoom_fade_in,
           style,
-        ])}>
+        ]}>
         <DismissableLayer.DismissableLayer
           onInteractOutside={preventDefault}
           onFocusOutside={preventDefault}
@@ -257,7 +257,7 @@ export function Inner({
           </View>
           {footer}
         </DismissableLayer.DismissableLayer>
-      </View>
+      </SlotView>
     </FocusScope.FocusScope>
   )
 }
