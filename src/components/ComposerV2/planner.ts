@@ -129,7 +129,7 @@ export type ComposerV2Plan = {
 }
 
 export type ComposerV2PlanResult =
-  ComposerV2Plan | {ok: false; errors: ComposerV2PlanError[]}
+  ComposerV2Plan | {ok: false; error: ComposerV2PlanError}
 
 class PlannerFailure extends Error {
   constructor(
@@ -176,26 +176,11 @@ export async function planComposerV2({
   onError?: ComposerV2OnError
 }): Promise<ComposerV2PlanResult> {
   try {
-    if (
-      !snapshot ||
-      typeof snapshot !== 'object' ||
-      !snapshot.posts ||
-      typeof snapshot.posts !== 'object' ||
-      Array.isArray(snapshot.posts) ||
-      !Array.isArray(snapshot.postgateEmbeddingRules) ||
-      (snapshot.threadgateAllowRules !== undefined &&
-        !Array.isArray(snapshot.threadgateAllowRules))
-    ) {
-      throw failure({
-        code: 'invalid-snapshot',
-        message: 'Composition snapshot is invalid',
-      })
-    }
+    validateSnapshot({snapshot, dependencies})
     /* Capture the immutable snapshot's branches once, before the first await.
      * Concurrent store edits publish new snapshots and cannot alter these. */
     const {posts, replyTo, threadgateAllowRules, postgateEmbeddingRules} =
       snapshot
-    validateSnapshot({snapshot, dependencies})
     const allEntries = Object.entries(posts)
     if (allEntries.length === 0) {
       throw failure({
@@ -217,7 +202,7 @@ export async function planComposerV2({
     const externalReply = replyTo
       ? await resolveExternalReply({replyTo, dependencies})
       : undefined
-    const prepared = [] as Array<{
+    const records = [] as Array<{
       postId: string
       postIndex: number
       post: app.bsky.feed.post.Main
@@ -255,14 +240,14 @@ export async function planComposerV2({
         ...(post.tags.length ? {tags: [...post.tags]} : {}),
         ...(embed ? {embed} : {}),
       }
-      prepared.push({postId, postIndex, post: record})
+      records.push({postId, postIndex, post: record})
     }
 
     const plannedPosts: PlannedComposerV2Post[] = []
     const usedKeys = new Set<string>()
     let tid: TID | undefined
     let reply = externalReply
-    for (const [order, entry] of prepared.entries()) {
+    for (const [order, entry] of records.entries()) {
       const createdAt = new Date(now.getTime() + order)
       let rkey: string
       if (dependencies.__createRkey) {
@@ -418,7 +403,7 @@ export async function planComposerV2({
         cause: detail.cause,
       })
     }
-    return {ok: false, errors: [detail]}
+    return {ok: false, error: detail}
   }
 }
 
@@ -535,16 +520,25 @@ function validateSnapshot({
   snapshot: ThreadState
   dependencies: ComposerV2PlannerDependencies
 }) {
+  if (
+    !snapshot ||
+    typeof snapshot !== 'object' ||
+    !snapshot.posts ||
+    typeof snapshot.posts !== 'object' ||
+    Array.isArray(snapshot.posts) ||
+    !Array.isArray(snapshot.postgateEmbeddingRules) ||
+    (snapshot.threadgateAllowRules !== undefined &&
+      !Array.isArray(snapshot.threadgateAllowRules))
+  ) {
+    throw failure({
+      code: 'invalid-snapshot',
+      message: 'Composition snapshot is invalid',
+    })
+  }
   if (!dependencies.did || !dependencies.did.startsWith('did:')) {
     throw failure({
       code: 'missing-dependency',
       message: 'A repository DID is required',
-    })
-  }
-  if (!snapshot || typeof snapshot.posts !== 'object') {
-    throw failure({
-      code: 'invalid-snapshot',
-      message: 'Composition snapshot is invalid',
     })
   }
   for (const [postId, post] of Object.entries(snapshot.posts)) {

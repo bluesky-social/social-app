@@ -134,7 +134,7 @@ shortening. Explicit tags are independent of hashtag facets.
 ## Planning, writing, and errors
 
 `planComposerV2({snapshot, dependencies, preflight, onError})` returns either
-`{ok: true, input, posts, writes}` or `{ok: false, errors}`. It captures one
+`{ok: true, input, posts, writes}` or `{ok: false, error}`. It captures one
 immutable snapshot; it does not wait for pending uploads or incorporate later
 edits/completions. Plan again from a fresh snapshot when necessary.
 

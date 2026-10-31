@@ -42,7 +42,7 @@ function makeSession(
 
 const failedResult: ComposerV2PlanResult = {
   ok: false,
-  errors: [{code: 'empty-composition', message: 'nothing to post'}],
+  error: {code: 'empty-composition', message: 'nothing to post'},
 }
 
 function setup(planImpl?: typeof planComposerV2) {
@@ -80,13 +80,11 @@ describe('usePlanRunner', () => {
     })
     expect(result.current.result?.summary).toEqual({
       ok: false,
-      errors: [
-        {
-          code: 'empty-composition',
-          postIndex: undefined,
-          collection: undefined,
-        },
-      ],
+      error: {
+        code: 'empty-composition',
+        postIndex: undefined,
+        collection: undefined,
+      },
     })
     expect(result.current.isStale).toBe(false)
     initialSession.store.destroy()

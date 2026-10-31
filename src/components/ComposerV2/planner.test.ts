@@ -148,10 +148,10 @@ describe('planner reporting policy', () => {
     )
     expect(result).toEqual({
       ok: false,
-      errors: [{code: 'unexpected-error', message: 'Record planning failed'}],
+      error: {code: 'unexpected-error', message: 'Record planning failed'},
     })
     if (result.ok) throw new Error('expected failure')
-    expect(result.errors[0].cause).toBe(cause)
+    expect(result.error.cause).toBe(cause)
     expect(onError).toHaveBeenCalledTimes(1)
     expect(onError).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -177,7 +177,7 @@ describe('planner reporting policy', () => {
       const result = await plan(state, {resolveReply}, undefined, onError)
       expect(result.ok).toBe(false)
       if (result.ok) throw new Error('expected failure')
-      expect(result.errors[0].cause).toBe(cause)
+      expect(result.error.cause).toBe(cause)
       expect(onError).toHaveBeenCalledTimes(attempt)
       expect(onError).toHaveBeenLastCalledWith(
         expect.objectContaining({
@@ -221,7 +221,7 @@ describe('planner reporting policy', () => {
     const result = await plan(state, {uploadBlob}, undefined, onError)
     expect(uploadBlob).toHaveBeenCalledTimes(1)
     if (result.ok) throw new Error('expected failure')
-    expect(result.errors[0].cause).toBe(cause)
+    expect(result.error.cause).toBe(cause)
     expect(onError).toHaveBeenCalledWith(
       expect.objectContaining({
         postId: 'post-1',
@@ -387,9 +387,10 @@ describe('ComposerV2 no-write planner', () => {
     )
     expect(result).toEqual({
       ok: false,
-      errors: [
-        expect.objectContaining({code: 'invalid-record-key', postIndex: 1}),
-      ],
+      error: expect.objectContaining({
+        code: 'invalid-record-key',
+        postIndex: 1,
+      }),
     })
   })
 
@@ -399,7 +400,7 @@ describe('ComposerV2 no-write planner', () => {
     })
     expect(result).toEqual({
       ok: false,
-      errors: [expect.objectContaining({code: 'invalid-record-key'})],
+      error: expect.objectContaining({code: 'invalid-record-key'}),
     })
   })
 
@@ -484,7 +485,7 @@ describe('ComposerV2 no-write planner', () => {
     )
     expect(missing).toEqual({
       ok: false,
-      errors: [expect.objectContaining({code: 'reply-resolution-failed'})],
+      error: expect.objectContaining({code: 'reply-resolution-failed'}),
     })
 
     const failing = await plan(
@@ -499,7 +500,7 @@ describe('ComposerV2 no-write planner', () => {
     )
     expect(failing).toEqual({
       ok: false,
-      errors: [expect.objectContaining({code: 'reply-resolution-failed'})],
+      error: expect.objectContaining({code: 'reply-resolution-failed'}),
     })
     expect(JSON.stringify(failing)).not.toContain('network down')
   })
@@ -545,7 +546,7 @@ describe('ComposerV2 no-write planner', () => {
     const result = await plan(state)
     expect(result).toEqual({
       ok: false,
-      errors: [expect.objectContaining({code: 'unsupported-attachment'})],
+      error: expect.objectContaining({code: 'unsupported-attachment'}),
     })
   })
 
@@ -709,7 +710,7 @@ describe('ComposerV2 no-write planner', () => {
     const empty = await plan(snapshot({}))
     expect(empty).toEqual({
       ok: false,
-      errors: [expect.objectContaining({code: 'empty-composition'})],
+      error: expect.objectContaining({code: 'empty-composition'}),
     })
 
     const whitespace = await plan(
@@ -717,7 +718,7 @@ describe('ComposerV2 no-write planner', () => {
     )
     expect(whitespace).toEqual({
       ok: false,
-      errors: [expect.objectContaining({code: 'empty-composition'})],
+      error: expect.objectContaining({code: 'empty-composition'}),
     })
   })
 
@@ -745,13 +746,11 @@ describe('ComposerV2 no-write planner', () => {
     const unconfirmed = await plan(state)
     expect(unconfirmed).toEqual({
       ok: false,
-      errors: [
-        expect.objectContaining({
-          code: 'empty-post-requires-confirmation',
-          postIndex: 1,
-          postId: Object.keys(state.posts)[1],
-        }),
-      ],
+      error: expect.objectContaining({
+        code: 'empty-post-requires-confirmation',
+        postIndex: 1,
+        postId: Object.keys(state.posts)[1],
+      }),
     })
 
     const confirmed = await plan(state, {}, {skipEmptyPostsConfirmed: true})
@@ -827,7 +826,7 @@ describe('ComposerV2 no-write planner', () => {
     const result = await plan(pending)
     expect(result).toEqual({
       ok: false,
-      errors: [expect.objectContaining({code: 'attachment-not-ready'})],
+      error: expect.objectContaining({code: 'attachment-not-ready'}),
     })
   })
 
@@ -855,7 +854,7 @@ describe('ComposerV2 no-write planner', () => {
     const withPreference = await plan(missingAlt, {}, {requireAltText: true})
     expect(withPreference).toEqual({
       ok: false,
-      errors: [expect.objectContaining({code: 'missing-alt-text'})],
+      error: expect.objectContaining({code: 'missing-alt-text'}),
     })
 
     const gif = snapshot({
@@ -864,7 +863,7 @@ describe('ComposerV2 no-write planner', () => {
     const gifResult = await plan(gif, {}, {requireAltText: true})
     expect(gifResult).toEqual({
       ok: false,
-      errors: [expect.objectContaining({code: 'missing-alt-text'})],
+      error: expect.objectContaining({code: 'missing-alt-text'}),
     })
 
     const withAlt = snapshot({posts: [{attachments: {media: imageInputs(1)}}]})
@@ -911,7 +910,7 @@ describe('ComposerV2 no-write planner', () => {
     )
     expect(uploaded).toEqual({
       ok: false,
-      errors: [expect.objectContaining({code: 'missing-alt-text'})],
+      error: expect.objectContaining({code: 'missing-alt-text'}),
     })
 
     /* A failed upload reports the failure, not the alt-text preference. */
@@ -926,7 +925,7 @@ describe('ComposerV2 no-write planner', () => {
     )
     expect(failed).toEqual({
       ok: false,
-      errors: [expect.objectContaining({code: 'media-failed'})],
+      error: expect.objectContaining({code: 'media-failed'}),
     })
   })
 
@@ -937,7 +936,7 @@ describe('ComposerV2 no-write planner', () => {
     const overLimit = await plan(snapshot({posts: [{text: '💙'.repeat(301)}]}))
     expect(overLimit).toEqual({
       ok: false,
-      errors: [expect.objectContaining({code: 'invalid-record'})],
+      error: expect.objectContaining({code: 'invalid-record'}),
     })
   })
 
@@ -947,7 +946,7 @@ describe('ComposerV2 no-write planner', () => {
     })
     const tagResult = await plan(tooManyTags)
     expect(tagResult.ok).toBe(false)
-    if (!tagResult.ok) expect(tagResult.errors[0].code).toBe('invalid-record')
+    if (!tagResult.ok) expect(tagResult.error.code).toBe('invalid-record')
 
     const invalidImage = snapshot({
       posts: [{attachments: {media: imageInputs(1)}}],
@@ -960,8 +959,7 @@ describe('ComposerV2 no-write planner', () => {
     }
     const imageResult = await plan(invalidImage)
     expect(imageResult.ok).toBe(false)
-    if (!imageResult.ok)
-      expect(imageResult.errors[0].code).toBe('invalid-record')
+    if (!imageResult.ok) expect(imageResult.error.code).toBe('invalid-record')
   })
 
   test('plans video captions and preserves explicit tags separately from facets', async () => {
@@ -1211,7 +1209,7 @@ describe('ComposerV2 no-write planner', () => {
     const result = await plan(state)
     expect(result.ok).toBe(false)
     if (result.ok) return
-    expect(result.errors[0].code).toBe('media-failed')
+    expect(result.error.code).toBe('media-failed')
     expect(JSON.stringify(result)).not.toContain('private worker detail')
   })
 
@@ -1347,7 +1345,7 @@ describe('ComposerV2 no-write planner', () => {
       const result = await inFlight
       expect(result).toEqual({
         ok: false,
-        errors: [expect.objectContaining({code: 'attachment-not-ready'})],
+        error: expect.objectContaining({code: 'attachment-not-ready'}),
       })
 
       /* Planning again from the new published snapshot succeeds. */
@@ -1403,7 +1401,7 @@ describe('ComposerV2 no-write planner', () => {
       /* The old blob and prepared size are gone, so nothing stale is planned. */
       expect(await plan(store.getState())).toEqual({
         ok: false,
-        errors: [expect.objectContaining({code: 'attachment-not-ready'})],
+        error: expect.objectContaining({code: 'attachment-not-ready'}),
       })
 
       attempts[1].setMediaCompressionResult?.(postId, mediaId, {

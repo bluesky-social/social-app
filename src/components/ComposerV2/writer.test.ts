@@ -70,9 +70,7 @@ async function makeFixture() {
     },
   })
   if (!result.ok) {
-    throw new Error(
-      `Expected successful fixture plan: ${result.errors[0]?.code}`,
-    )
+    throw new Error(`Expected successful fixture plan: ${result.error.code}`)
   }
   return {plan: result, snapshot}
 }
@@ -148,7 +146,10 @@ describe('ComposerV2 thin writer', () => {
   test('rejects unsafe inputs before writing', async () => {
     const {plan} = await makeFixture()
 
-    const unsuccessful = {ok: false, errors: []} as unknown as ComposerV2Plan
+    const unsuccessful = {
+      ok: false,
+      error: {code: 'empty-composition', message: 'nothing to post'},
+    } as unknown as ComposerV2Plan
     const unsuccessfulClient = mockPdsClient(DID)
     await expect(
       writeComposerV2Plan({

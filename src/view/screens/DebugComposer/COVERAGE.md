@@ -155,7 +155,7 @@ Dialogs: `-alt-input`, `-alt-save`, `-caption-{i}-lang|content|remove`,
 (`-post-{postId}-tags` is the inline comma-separated tags input.)
 Gates: `-gates-open`, `-gates-discard-unknown`.
 Plan: `-plan`, `-plan-confirm-skip`, `-plan-clear`, `-plan-stale`,
-`-plan-result`, `-plan-errors`, `-plan-structure-toggle`, `-plan-structure`,
+`-plan-result`, `-plan-error`, `-plan-structure-toggle`, `-plan-structure`,
 `-plan-post-{index}-structure`, `-publish-enable`, `-publish`, `-publish-status`,
 `-publish-uris`.
 Summary: `-summary-toggle`, `-summary-dump`.

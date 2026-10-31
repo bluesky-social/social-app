@@ -57,9 +57,11 @@ describe('summarizeComposerV2Plan', () => {
     const summary = summarizeComposerV2Plan({result})
     expect(summary).toEqual({
       ok: false,
-      errors: [
-        {code: 'unexpected-error', postIndex: undefined, collection: undefined},
-      ],
+      error: {
+        code: 'unexpected-error',
+        postIndex: undefined,
+        collection: undefined,
+      },
     })
     expect(JSON.stringify(summary)).not.toContain('private diagnostic')
   })
@@ -93,7 +95,7 @@ describe('summarizeComposerV2Plan', () => {
     expect(summary.ok).toBe(false)
     expect(JSON.stringify(summary)).not.toContain('private worker detail')
     if (!summary.ok) {
-      expect(summary.errors[0]).toEqual({
+      expect(summary.error).toEqual({
         code: 'media-failed',
         postIndex: 0,
         collection: undefined,

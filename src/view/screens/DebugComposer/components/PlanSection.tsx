@@ -53,9 +53,7 @@ export function PlanSection({
   const needsEmptyPostConfirmation =
     summary !== undefined &&
     !summary.ok &&
-    summary.errors.some(
-      error => error.code === 'empty-post-requires-confirmation',
-    )
+    summary.error.code === 'empty-post-requires-confirmation'
 
   return (
     <View style={[a.gap_sm]}>
@@ -232,25 +230,21 @@ export function PlanSection({
           </Text>
         </View>
       ) : (
-        <View style={[a.gap_xs]} testID="composerV2Tester-plan-errors">
-          {summary.errors.map((error, index) => (
-            <View key={index} style={[a.gap_2xs]}>
-              <Text
-                style={[
-                  a.text_xs,
-                  {fontFamily: 'monospace', color: t.palette.negative_500},
-                ]}>
-                {error.code}
-                {error.postIndex !== undefined
-                  ? ` (post ${error.postIndex + 1})`
-                  : ''}
-                {error.collection ? ` [${error.collection}]` : ''}
-              </Text>
-              <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-                {planErrorHint(error.code)}
-              </Text>
-            </View>
-          ))}
+        <View style={[a.gap_2xs]} testID="composerV2Tester-plan-error">
+          <Text
+            style={[
+              a.text_xs,
+              {fontFamily: 'monospace', color: t.palette.negative_500},
+            ]}>
+            {summary.error.code}
+            {summary.error.postIndex !== undefined
+              ? ` (post ${summary.error.postIndex + 1})`
+              : ''}
+            {summary.error.collection ? ` [${summary.error.collection}]` : ''}
+          </Text>
+          <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+            {planErrorHint(summary.error.code)}
+          </Text>
         </View>
       )}
     </View>

@@ -15,11 +15,11 @@ export function summarizeComposerV2Plan({
   if (!result.ok) {
     return {
       ok: false as const,
-      errors: result.errors.map(({code, postIndex, collection}) => ({
-        code,
-        postIndex,
-        collection,
-      })),
+      error: {
+        code: result.error.code,
+        postIndex: result.error.postIndex,
+        collection: result.error.collection,
+      },
     }
   }
   return {
