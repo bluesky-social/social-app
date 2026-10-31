@@ -1,0 +1,75 @@
+import {type ComposerAdapterErrorCode} from '#/components/ComposerV2/adapters'
+import {type ThreadPlanErrorCode} from '#/components/ComposerV2/planner'
+import {type LinkResolutionFailureCode} from '#/components/ComposerV2/store/linkResolver'
+import {type UploadFailureCode} from '#/components/ComposerV2/store/types'
+
+/** How a reported failure is classified: bad input, a failed operation, or a bug. */
+export type ComposerErrorKind = 'validation' | 'operational' | 'unexpected'
+
+/** What the caller can do next about a reported failure. */
+export type ComposerErrorRecovery = 'retry' | 'edit' | 'reconcile' | 'none'
+
+/** Structural context only: never include text, paths, records, or UI messages. */
+export type ComposerErrorEvent = {
+  kind: ComposerErrorKind
+  recovery: ComposerErrorRecovery
+  postId?: string
+  mediaId?: string
+} & (
+  | {
+      source: 'initialization'
+      code: ComposerAdapterErrorCode | 'initial-state-failed'
+    }
+  | {source: 'upload'; code: UploadFailureCode | 'upload-start-failed'}
+  | {
+      source: 'uri-resolution'
+      code: LinkResolutionFailureCode
+      slot: 'record' | 'media'
+    }
+  | {source: 'planner'; code: ThreadPlanErrorCode}
+  | {
+      source: 'writer'
+      code:
+        | 'write-precondition-failed'
+        | 'apply-writes-failed'
+        | 'apply-writes-rejected'
+      /** Local post identities in the dispatched plan; never full records. */
+      postIds?: readonly string[]
+    }
+)
+
+/**
+ * Optional synchronous session policy. The separate, untrusted cause is for
+ * deliberate caller handling only: do not display, serialize, or log it by
+ * default. Results and source-local failure state remain authoritative.
+ * Register with createThreadStore, then pass store.reportError to operation
+ * callers. It is inert after destruction; supersedable callers must also
+ * guard their own attempt token. Report at one boundary, not again on catch.
+ * Ordinary planner preflight/record validation stays in the returned result.
+ */
+export type ComposerOnError = (
+  event: ComposerErrorEvent,
+  cause?: unknown,
+) => void
+
+/** Reporting is best-effort and must never replace an operation's outcome. */
+export function reportComposerError({
+  onError,
+  event,
+  cause,
+}: {
+  onError: ComposerOnError | undefined
+  event: ComposerErrorEvent
+  cause?: unknown
+}) {
+  try {
+    onError?.(event, cause)
+  } catch {
+    // A reporting failure is not another composer failure.
+  }
+}
+
+/** Intentional cancellation is not an operational failure. */
+export function isComposerCancellation({cause}: {cause: unknown}) {
+  return cause instanceof Error && cause.name === 'AbortError'
+}

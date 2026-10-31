@@ -28,6 +28,8 @@ import {hasWebCodecs} from './videos/metadata'
 
 export type SelectMediaButtonProps = {
   disabled?: boolean
+  /** Override the default test ID when several pickers render on one screen. */
+  testID?: string
   /**
    * If set, this limits the types of assets that can be selected.
    */
@@ -392,6 +394,7 @@ async function processImagePickerAssets(
 
 export function SelectMediaButton({
   disabled,
+  testID = 'openMediaBtn',
   allowedAssetTypes,
   selectedAssetsCount,
   onSelectAssets,
@@ -514,7 +517,7 @@ export function SelectMediaButton({
 
   return (
     <Button
-      testID="openMediaBtn"
+      testID={testID}
       onPress={onPressSelectMedia}
       label={_(
         msg({

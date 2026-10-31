@@ -130,7 +130,7 @@ export async function cropImage(img: ComposerImage): Promise<ComposerImage> {
       alt: img.alt,
       source: source,
       transformed: {
-        path: await moveIfNecessary(cropped.path),
+        path: await moveIfNecessary({from: cropped.path}),
         width: cropped.width,
         height: cropped.height,
         mime: cropped.mime,
@@ -168,7 +168,7 @@ export async function manipulateImage(
     alt: img.alt,
     source: img.source,
     transformed: {
-      path: await moveIfNecessary(result.uri),
+      path: await moveIfNecessary({from: result.uri}),
       width: result.width,
       height: result.height,
       mime: 'image/png',
@@ -222,7 +222,7 @@ async function copyToCache(from: string): Promise<string> {
     return from
   }
 
-  const to = joinPath(cacheDir, nanoid(36))
+  const to = joinPath({base: cacheDir, path: nanoid(36)})
   await makeDirectoryAsync(cacheDir, {intermediates: true})
 
   let normalizedFrom = from
@@ -280,7 +280,9 @@ export async function purgeTemporaryImageFiles() {
   // demand the next time they run.
   await Promise.all(
     SYSTEM_MEDIA_CACHE_DIRS.map(dir =>
-      deleteAsync(joinPath(cacheDirectory!, dir), {idempotent: true}),
+      deleteAsync(joinPath({base: cacheDirectory!, path: dir}), {
+        idempotent: true,
+      }),
     ),
   )
 }
