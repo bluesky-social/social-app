@@ -243,6 +243,8 @@
         ],
         "bsky-internal/use-prefixed-imports": "error",
         "bsky-internal/lingui-msg-rule": "error",
+        "bsky-internal/no-flatten-in-style-prop": "error",
+        "bsky-internal/no-hover-in-flatten": "error",
         "react/display-name": "error",
         "react/jsx-key": "error",
         "react/jsx-no-comment-textnodes": "error",

@@ -9,6 +9,8 @@ const plugin = {
     'avoid-unwrapped-text': require('./avoid-unwrapped-text'),
     'use-prefixed-imports': require('./use-prefixed-imports'),
     'lingui-msg-rule': require('./lingui-msg-rule'),
+    'no-flatten-in-style-prop': require('./no-flatten-in-style-prop'),
+    'no-hover-in-flatten': require('./no-hover-in-flatten'),
   },
 }
 
