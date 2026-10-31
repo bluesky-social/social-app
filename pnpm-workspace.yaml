@@ -55,6 +55,7 @@ patchedDependencies:
   react-native-safe-area-context@5.10.1: patches/react-native-safe-area-context@5.10.1.patch
   react-native-screens@4.30.0: patches/react-native-screens@4.30.0.patch
   'react-native-svg@15.16.0': patches/react-native-svg@15.16.0.patch
+  react-native-web@0.21.4: patches/react-native-web@0.21.4.patch
   react-native@0.88.0: patches/react-native@0.88.0.patch
 minimumReleaseAgeExclude:
   - '@atproto/*'
