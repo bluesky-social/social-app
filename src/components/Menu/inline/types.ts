@@ -5,6 +5,11 @@ export type InlineRootProps = React.PropsWithChildren<{
   control: Dialog.DialogControlProps
   /** The rendered `Menu.Trigger`, hosted as the menu's anchor. */
   trigger: React.ReactElement
+  /**
+   * Called the first time the menu opens. Only iOS uses it: on Android, the
+   * trigger's own `onPress` opens the menu.
+   */
+  onOpen?: () => void
 }>
 
 export type InlineSectionProps = React.PropsWithChildren<{

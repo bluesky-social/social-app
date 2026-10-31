@@ -282,6 +282,30 @@ describe('inline menu', () => {
     expect(control.open).toHaveBeenCalledTimes(1)
   })
 
+  it("runs the trigger's own onPress when the menu opens on iOS", () => {
+    const onPress = jest.fn()
+    renderMenu(
+      <Menu.Root inline>
+        <Menu.Trigger label="Options">
+          {({props}) => (
+            <Pressable
+              {...props}
+              onPress={() => {
+                onPress()
+                props.onPress()
+              }}>
+              <Text>Open</Text>
+            </Pressable>
+          )}
+        </Menu.Trigger>
+        <Menu.Outer />
+      </Menu.Root>,
+    )
+
+    jest.mocked(Inline.InlineRoot).mock.calls.at(-1)?.[0].onOpen?.()
+    expect(onPress).toHaveBeenCalledTimes(1)
+  })
+
   it('falls back to the sheet when Outer is not a direct child', () => {
     function Items() {
       return <Menu.Outer />
