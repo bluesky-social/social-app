@@ -340,6 +340,7 @@ export type MediaAttachmentInput =
 /** Input for one post. Omitted fields default to an empty post. */
 export type ThreadPostInitialState = {
   text?: string
+  /** Missing or empty falls back to the store's `defaultLanguages`. */
   langs?: readonly string[]
   labels?: readonly string[]
   /** Explicit post tags; draft schemas currently cannot persist these. */

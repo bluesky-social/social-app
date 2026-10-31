@@ -73,7 +73,11 @@ function mockAppview(
 
 function snapshot(initial: ThreadStoreInitialState): ThreadState {
   let id = 0
-  return buildThreadState({input: initial, createId: () => `post-${++id}`})
+  return buildThreadState({
+    input: initial,
+    createId: () => `post-${++id}`,
+    defaultLanguages: [],
+  })
 }
 
 function readyImages(state: ThreadState, count = 1) {
@@ -1275,6 +1279,7 @@ describe('ComposerV2 no-write planner', () => {
     function makeStore(initial?: ThreadStoreInitialState) {
       let i = 0
       return createThreadStore({
+        defaultLanguages: [],
         ...testUploadRuntime,
         resolvers: {} as never,
         initialState: initial,
@@ -1285,6 +1290,20 @@ describe('ComposerV2 no-write planner', () => {
         },
       })
     }
+
+    test('the planned record carries the defaulted languages', async () => {
+      const store = createThreadStore({
+        ...testUploadRuntime,
+        resolvers: {} as never,
+        defaultLanguages: ['en', 'de'],
+        initialState: {posts: [{text: 'defaulted'}]},
+      })
+      const result = await plan(store.getState())
+      expect(result.ok).toBe(true)
+      if (!result.ok) return
+      expect(result.posts[0].record.langs).toEqual(['en', 'de'])
+      store.destroy()
+    })
 
     test('a store edit during planning cannot alter the captured snapshot', async () => {
       const store = makeStore({
@@ -1376,6 +1395,7 @@ describe('ComposerV2 no-write planner', () => {
       > = []
       let i = 0
       const store = createThreadStore({
+        defaultLanguages: [],
         ...testUploadRuntime,
         resolvers: {} as never,
         __createId: () => `store-post-${++i}`,

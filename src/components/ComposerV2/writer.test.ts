@@ -51,6 +51,7 @@ async function makeFixture() {
         {text: 'second post', langs: ['fr'], tags: ['explicit-second']},
       ],
     },
+    defaultLanguages: [],
     createId: (() => {
       let id = 0
       return () => `post-${++id}`
@@ -260,6 +261,7 @@ describe('ComposerV2 thin writer', () => {
       )
       const onError = jest.fn<ComposerV2OnError>()
       const store = createThreadStore({
+        defaultLanguages: [],
         ...testUploadRuntime,
         resolvers: {} as LinkResolvers,
         onError,

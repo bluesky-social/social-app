@@ -96,6 +96,7 @@ describe('failed video upload normalization', () => {
   test('retains partial video and caption blobs for an explicit retry', () => {
     const {started, workers} = makeManualWorkers()
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
@@ -171,6 +172,7 @@ test('a real caption retry reuses video and unchanged captions after a partial f
     .mockResolvedValueOnce({blob: editedEnglish})
     .mockResolvedValueOnce({blob: editedGerman})
   const store = createThreadStore({
+    defaultLanguages: [],
     ...testUploadRuntime,
     resolvers,
     __createId: makeIdGenerator(),
@@ -267,6 +269,7 @@ describe('setVideoCaptions', () => {
   test('updates captions, marks dirty, and prunes stale caption blobs', () => {
     const {started, workers} = makeManualWorkers()
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
@@ -308,6 +311,7 @@ describe('setVideoCaptions', () => {
   test('restarts a completed upload and reuses the completed video blob', () => {
     const {started, workers} = makeManualWorkers()
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
@@ -341,6 +345,7 @@ describe('setVideoCaptions', () => {
   test('does not restart a completed upload for separately allocated identical captions', () => {
     const {started, workers} = makeManualWorkers()
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
@@ -372,6 +377,7 @@ describe('setVideoCaptions', () => {
   test('cancels in-flight work before restarting with edited captions', () => {
     const {started, workers} = makeManualWorkers()
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
@@ -396,6 +402,7 @@ describe('setVideoCaptions', () => {
   test('leaves failed uploads alone for an explicit retry', () => {
     const {started, workers} = makeManualWorkers()
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
@@ -419,6 +426,7 @@ describe('setVideoCaptions', () => {
   test('ignores identical captions, non-videos, and destroyed stores', () => {
     const {started, workers} = makeManualWorkers()
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),

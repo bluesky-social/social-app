@@ -32,6 +32,7 @@ function makeSession(
     key,
     scenarioId: 'empty',
     store: createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       onError,

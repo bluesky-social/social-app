@@ -255,6 +255,7 @@ describe('image outputs', () => {
         gate: ReturnType<typeof deferred<PickerImage>>
       }> = []
       const store = createThreadStore({
+        defaultLanguages: [],
         ...testUploadRuntime,
         resolvers,
         __createId: makeIdGenerator(),
@@ -403,6 +404,7 @@ describe('native encoded video outputs', () => {
       VideoUploadDependencies['createVideoTelemetry']
     >(args => createVideoTelemetry(args))
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       analytics,
       resolvers,
@@ -703,6 +705,7 @@ describe('native encoded video outputs', () => {
   test('publication is still reported after the video is removed', async () => {
     const {metric, analytics} = fakeAnalytics()
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       analytics,
       resolvers,

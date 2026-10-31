@@ -12,10 +12,13 @@ import {computePostMediaSelectionsRemaining} from '#/components/ComposerV2/store
 export function buildThreadPost({
   postId,
   createId,
+  defaultLanguages,
   input = {},
 }: {
   postId: string
   createId: () => string
+  /** Used when the input has no languages, or an empty list. */
+  defaultLanguages: readonly string[]
   input?: ThreadPostInitialState
 }): ThreadPost {
   const recordInput = input.attachments?.record
@@ -26,7 +29,7 @@ export function buildThreadPost({
   })
   return {
     text: input.text ?? '',
-    langs: [...(input.langs ?? [])],
+    langs: [...(input.langs?.length ? input.langs : defaultLanguages)],
     labels: [...(input.labels ?? [])],
     tags: [...(input.tags ?? [])],
     attachments: {

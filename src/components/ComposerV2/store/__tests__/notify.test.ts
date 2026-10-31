@@ -23,6 +23,7 @@ function rootId(store: ReturnType<typeof createThreadStore>) {
 describe('subscribe / getState', () => {
   test('listener fires on a real change and getState returns a new reference', () => {
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
@@ -45,6 +46,7 @@ describe('subscribe / getState', () => {
 
   test('listener does not fire on a no-op and state ref is preserved', () => {
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
@@ -61,6 +63,7 @@ describe('subscribe / getState', () => {
 
   test('unsubscribed listeners stop receiving notifications', () => {
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
@@ -78,6 +81,7 @@ describe('subscribe / getState', () => {
 
   test('attachment mutations preserve old snapshots and unrelated post references', () => {
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
@@ -107,6 +111,7 @@ describe('subscribe / getState', () => {
 
   test('language and label setters copy caller arrays and preserve old snapshots', () => {
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
@@ -131,6 +136,7 @@ describe('subscribe / getState', () => {
 
   test('setPostLanguages equal value does not notify or dirty the store', () => {
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
@@ -151,6 +157,7 @@ describe('subscribe / getState', () => {
 
   test('setPostLabels equal value does not notify or dirty the store', () => {
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
@@ -170,7 +177,11 @@ describe('subscribe / getState', () => {
   })
 
   test('empty slot removals preserve the snapshot', () => {
-    const store = createThreadStore({...testUploadRuntime, resolvers})
+    const store = createThreadStore({
+      ...testUploadRuntime,
+      resolvers,
+      defaultLanguages: [],
+    })
     const root = rootId(store)
     const before = store.getState()
     store.actions.removeRecordAttachment(root)
@@ -181,6 +192,7 @@ describe('subscribe / getState', () => {
 
   test('destroy clears subscribers and stops further notifications', () => {
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),

@@ -18,6 +18,7 @@ const resolvers = {} as LinkResolvers
 
 function makeStore() {
   return createThreadStore({
+    defaultLanguages: [],
     ...testUploadRuntime,
     resolvers,
     __createId: makeIdGenerator(),

@@ -44,6 +44,7 @@ const appviewClient = {call: appviewCall} as unknown as Client
 describe('tester record inspection', () => {
   test('shows every generated write, including post contents and gate records', async () => {
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       initialState: {
@@ -125,6 +126,7 @@ describe('tester record inspection', () => {
     const cause = new Error('private resolver path and content')
     const onError = jest.fn()
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       onError,
@@ -189,6 +191,7 @@ describe('tester record inspection', () => {
       },
     }
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: () => 'post-1',

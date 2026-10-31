@@ -68,6 +68,7 @@ const i18n = setupI18n({locale: 'en', messages: {en: {}}})
 
 function makeStore() {
   return createThreadStore({
+    defaultLanguages: [],
     ...testUploadRuntime,
     resolvers: {} as LinkResolvers,
     __createId: () => 'post-1',

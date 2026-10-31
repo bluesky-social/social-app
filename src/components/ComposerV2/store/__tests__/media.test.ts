@@ -105,6 +105,7 @@ afterEach(() => {
 
 function makeStore() {
   return createThreadStore({
+    defaultLanguages: [],
     ...testUploadRuntime,
     resolvers,
     __createId: makeIdGenerator(),
@@ -133,6 +134,7 @@ describe('stored upload failures', () => {
     const started: string[] = []
     let reportStatus: ((status: UploadStatus) => void) | undefined
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
@@ -560,6 +562,7 @@ describe('retryMediaUpload', () => {
       ] satisfies UploadStatus[]) {
         const {attempts, workers} = manualUploadWorkers()
         const store = createThreadStore({
+          defaultLanguages: [],
           ...testUploadRuntime,
           resolvers,
           __createId: makeIdGenerator(),
@@ -589,6 +592,7 @@ describe('retryMediaUpload', () => {
     input => {
       const {attempts, workers} = manualUploadWorkers()
       const store = createThreadStore({
+        defaultLanguages: [],
         ...testUploadRuntime,
         resolvers,
         __createId: makeIdGenerator(),
@@ -964,6 +968,7 @@ describe('retryAllFailedUploads', () => {
       },
     }
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
@@ -1089,6 +1094,7 @@ describe('attachment lifecycle', () => {
       const cancel = jest.fn()
       let report: ((status: UploadStatus) => void) | undefined
       const store = createThreadStore({
+        defaultLanguages: [],
         ...testUploadRuntime,
         resolvers,
         __createId: makeIdGenerator(),
@@ -1129,6 +1135,7 @@ describe('attachment lifecycle', () => {
     )
     const uploadBlob = jest.fn<ImageUploadDependencies['uploadBlob']>()
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
@@ -1195,6 +1202,7 @@ describe('attachment lifecycle', () => {
   test('failed reports stop the old worker before retrying', () => {
     let reporting: UploadAttempt | undefined
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),

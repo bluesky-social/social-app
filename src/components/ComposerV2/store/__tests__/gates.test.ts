@@ -17,6 +17,7 @@ const resolvers = {} as LinkResolvers
 function makeStore(initialState = {}) {
   let id = 0
   return createThreadStore({
+    defaultLanguages: [],
     ...testUploadRuntime,
     resolvers,
     initialState,
@@ -262,6 +263,7 @@ describe('threadgate and postgate state', () => {
       resolveLink = resolve
     })
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       initialState: {

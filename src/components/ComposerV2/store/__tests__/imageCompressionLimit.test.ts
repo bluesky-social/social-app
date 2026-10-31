@@ -115,6 +115,7 @@ function makeStore({
 }) {
   let i = 0
   const store = createThreadStore({
+    defaultLanguages: [],
     ...testUploadRuntime,
     resolvers,
     initialState,

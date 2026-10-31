@@ -78,6 +78,7 @@ function makeStore(initialState: ThreadStoreInitialState) {
     ReturnType<typeof deferred<ResolvedLink>> & {uri: string; settled: boolean}
   > = []
   const store = createThreadStore({
+    defaultLanguages: [],
     ...testUploadRuntime,
     resolvers: {} as LinkResolvers,
     initialState,

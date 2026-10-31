@@ -129,6 +129,7 @@ afterEach(() => {
 function makeStore() {
   let i = 0
   return createThreadStore({
+    defaultLanguages: [],
     ...testUploadRuntime,
     resolvers,
     __createId: () => `id-${++i}`,

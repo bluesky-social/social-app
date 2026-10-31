@@ -104,6 +104,7 @@ afterEach(() => {
 function makeStore(initialState?: ThreadStoreInitialState) {
   let id = 0
   return createThreadStore({
+    defaultLanguages: [],
     ...testUploadRuntime,
     initialState,
     resolvers: {} as LinkResolvers,

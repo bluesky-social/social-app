@@ -23,7 +23,11 @@ import {buildThreadState} from '#/components/ComposerV2/store/utils/buildThreadS
 
 function snapshot(initial: ThreadStoreInitialState): ThreadState {
   let id = 0
-  return buildThreadState({input: initial, createId: () => `post-${++id}`})
+  return buildThreadState({
+    input: initial,
+    createId: () => `post-${++id}`,
+    defaultLanguages: [],
+  })
 }
 
 /* Plain text without mentions never reaches the appview client. */

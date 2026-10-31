@@ -82,6 +82,7 @@ function flush() {
 function makeStore(video: Partial<VideoUploadDependencies> = {}) {
   const {metric, analytics} = fakeAnalytics()
   const store = createThreadStore({
+    defaultLanguages: [],
     ...testUploadRuntime,
     analytics,
     resolvers,

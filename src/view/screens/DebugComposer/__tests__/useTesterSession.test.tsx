@@ -7,6 +7,11 @@ jest.mock('#/lib/api/resolve', () => {
   return {resolveLink: jest.fn(), EmbeddingDisabledError}
 })
 
+/* The real module pulls in analytics, which the logger mock below breaks. */
+jest.mock('#/state/preferences/languages', () => ({
+  useLanguagePrefs: () => ({primaryLanguage: 'pt'}),
+}))
+
 /* Reporting must not send raw scenario failures to the existing logger. */
 const mockLoggerError = jest.fn()
 jest.mock('#/logger', () => ({
@@ -76,6 +81,12 @@ describe('useTesterSession', () => {
     const posts = Object.values(result.current.session.store.getState().posts)
     expect(posts).toHaveLength(1)
     expect(posts[0].text).toBe('')
+  })
+
+  test('defaults new posts to the primary language', () => {
+    const {result} = setup()
+    const [post] = Object.values(result.current.session.store.getState().posts)
+    expect(post.langs).toEqual(['pt'])
   })
 
   test('supplies the account runtime inputs to each store', () => {

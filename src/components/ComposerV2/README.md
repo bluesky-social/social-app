@@ -86,6 +86,7 @@ const store = createThreadStore({
   pdsClient,
   pdsUrl, // currentAccount.pdsUrl ?? currentAccount.service
   analytics, // useAnalytics()
+  defaultLanguages: [primaryLanguage], // useLanguagePrefs()
   initialState: {posts: [{text: 'Hello world'}]},
   onError, // Optional per-session reporting policy.
 })
@@ -98,6 +99,12 @@ if (added) store.actions.setPostText(added.addedPostId, 'Second post')
 // The session owner calls this on replacement or unmount.
 store.destroy()
 ```
+
+`defaultLanguages` is the languages a post gets when it is created without any.
+A post built from initial state (including adapter output) or by `addPost` with
+missing or empty `langs` receives a copy of it; explicit non-empty languages are
+kept. Applying defaults does not mark the store dirty, and `setPostLanguages`
+can still set any value, including `[]`, as an explicit user choice.
 
 Create the store once per session, not on every render. Provide it with
 `ThreadStoreProvider`; use `useThreadState()` for thread-wide subscriptions,

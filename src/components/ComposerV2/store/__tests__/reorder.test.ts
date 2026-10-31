@@ -37,6 +37,7 @@ function makeIdGenerator() {
 
 function makeStore(initialState?: ThreadStoreInitialState) {
   return createThreadStore({
+    defaultLanguages: [],
     ...testUploadRuntime,
     resolvers,
     initialState: initialState ?? {
@@ -148,6 +149,7 @@ describe('movePost async ownership', () => {
     })
 
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       initialState: {

@@ -53,6 +53,7 @@ export function createThreadStore({
   pdsClient,
   pdsUrl,
   analytics,
+  defaultLanguages,
   initialState,
   onError,
   __createId,
@@ -62,6 +63,13 @@ export function createThreadStore({
   resolvers: LinkResolvers
   /** The session's analytics: metrics now, and feature gates as needed. */
   analytics: AnalyticsContextType
+  /**
+   * Languages a post gets when it is created without any: the initial posts
+   * (including adapter output with an empty list) and posts from `addPost`.
+   * The store keeps a copy. `setPostLanguages` can still set any value,
+   * including none.
+   */
+  defaultLanguages: readonly string[]
   initialState?: types.ThreadStoreInitialState
   /** Registered before normalization and eager initialization begin. */
   onError?: ComposerV2OnError
@@ -76,6 +84,7 @@ export function createThreadStore({
   __uploadWorkers?: UploadWorkerOverrides
 }) {
   const id = __createId ?? nanoid
+  const postDefaultLanguages = [...defaultLanguages]
   let destroyed = false
   /**
    * A report raised while `onError` is running is dropped, so a policy
@@ -94,7 +103,11 @@ export function createThreadStore({
   }
   let state: types.ThreadState
   try {
-    state = buildThreadState({input: initialState ?? {}, createId: id})
+    state = buildThreadState({
+      input: initialState ?? {},
+      createId: id,
+      defaultLanguages: postDefaultLanguages,
+    })
   } catch (cause) {
     reportError(
       {
@@ -216,11 +229,19 @@ export function createThreadStore({
       const next: Record<string, types.ThreadPost> = {}
       for (const [k, v] of Object.entries(s.posts)) {
         if (position === 'before' && k === postId) {
-          next[newId] = buildThreadPost({postId: newId, createId: id})
+          next[newId] = buildThreadPost({
+            postId: newId,
+            createId: id,
+            defaultLanguages: postDefaultLanguages,
+          })
         }
         next[k] = v
         if (position === 'after' && k === postId) {
-          next[newId] = buildThreadPost({postId: newId, createId: id})
+          next[newId] = buildThreadPost({
+            postId: newId,
+            createId: id,
+            defaultLanguages: postDefaultLanguages,
+          })
         }
       }
       s.posts = next

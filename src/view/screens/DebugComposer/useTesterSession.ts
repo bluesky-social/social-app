@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from 'react'
 import {nanoid} from 'nanoid/non-secure'
 
 import {type LinkResolvers} from '#/lib/api/resolve'
+import {useLanguagePrefs} from '#/state/preferences/languages'
 import {type TesterScenarioId} from '#/view/screens/DebugComposer/scenarios'
 import {reportInitializationError} from '#/components/ComposerV2/adapters'
 import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
@@ -62,6 +63,11 @@ export function useTesterSession(deps: TesterSessionDeps) {
   const depsRef = useRef(deps)
   depsRef.current = deps
 
+  /* New posts default to the user's primary language, as in the legacy composer. */
+  const {primaryLanguage} = useLanguagePrefs()
+  const primaryLanguageRef = useRef(primaryLanguage)
+  primaryLanguageRef.current = primaryLanguage
+
   const requestRef = useRef(0)
   const [isApplyingScenario, setIsApplyingScenario] = useState(false)
   const [scenarioError, setScenarioError] = useState<
@@ -81,6 +87,7 @@ export function useTesterSession(deps: TesterSessionDeps) {
       pdsClient: current.pdsClient,
       pdsUrl: current.pdsUrl,
       analytics: current.analytics,
+      defaultLanguages: [primaryLanguageRef.current],
       initialState,
       onError: current.onError,
     })

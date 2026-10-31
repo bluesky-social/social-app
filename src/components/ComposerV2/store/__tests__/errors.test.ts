@@ -87,6 +87,7 @@ function setup(onError = jest.fn<ComposerV2OnError>()) {
   const {attempts, workers} = manualUploadWorkers()
   let id = 0
   const store = createThreadStore({
+    defaultLanguages: [],
     ...testUploadRuntime,
     resolvers,
     onError,
@@ -194,6 +195,7 @@ describe('session error reporting', () => {
       throw new Error('listener')
     })
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       onError,
@@ -225,6 +227,7 @@ describe('session error reporting', () => {
     })
     expect(() =>
       createThreadStore({
+        defaultLanguages: [],
         ...testUploadRuntime,
         resolvers,
         onError,
@@ -254,6 +257,7 @@ describe('session error reporting', () => {
     let starts = 0
     expect(() =>
       createThreadStore({
+        defaultLanguages: [],
         ...testUploadRuntime,
         resolvers,
         onError,
@@ -280,6 +284,7 @@ describe('session error reporting', () => {
     const onError = jest.fn<ComposerV2OnError>()
     expect(() =>
       createThreadStore({
+        defaultLanguages: [],
         ...testUploadRuntime,
         resolvers,
         onError,
@@ -302,6 +307,7 @@ describe('session error reporting', () => {
     const cause = new Error('private resolver startup')
     const onError = jest.fn<ComposerV2OnError>()
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       onError,
@@ -338,6 +344,7 @@ describe('session error reporting', () => {
       const onError = jest.fn<ComposerV2OnError>()
       const uploadBlob = jest.fn<ImageUploadDependencies['uploadBlob']>()
       const store = createThreadStore({
+        defaultLanguages: [],
         ...testUploadRuntime,
         resolvers,
         onError,
@@ -364,6 +371,7 @@ describe('session error reporting', () => {
       throw new Error('listener')
     })
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       onError,
@@ -419,6 +427,7 @@ describe('session error reporting', () => {
       const attempt = deferred<ResolvedLink>()
       const onError = jest.fn<ComposerV2OnError>()
       const store = createThreadStore({
+        defaultLanguages: [],
         ...testUploadRuntime,
         resolvers,
         onError,
@@ -452,6 +461,7 @@ describe('session error reporting', () => {
       posts: [{attachments: {media: {kind: 'images', items: [image]}}}],
     }
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       initialState,

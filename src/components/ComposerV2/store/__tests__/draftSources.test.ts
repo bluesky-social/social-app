@@ -153,6 +153,7 @@ async function restore({
   })
   let id = 0
   const store = createThreadStore({
+    defaultLanguages: [],
     ...testUploadRuntime,
     resolvers,
     initialState,

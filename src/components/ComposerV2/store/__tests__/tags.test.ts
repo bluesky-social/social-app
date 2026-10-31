@@ -11,6 +11,7 @@ const resolvers = {} as LinkResolvers
 describe('explicit post tags', () => {
   test('copies edits, marks dirty, and preserves no-op identity', () => {
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: () => 'post-1',

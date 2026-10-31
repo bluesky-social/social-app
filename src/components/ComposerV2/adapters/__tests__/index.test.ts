@@ -310,6 +310,7 @@ describe('composerOptsToInitialState', () => {
     expect(initial.postgateEmbeddingRules).toBe(settings.postgateEmbeddingRules)
 
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       initialState: initial,
       resolvers: {} as never,
@@ -385,6 +386,7 @@ describe('draftToInitialState', () => {
     expect(initial.posts).toHaveLength(2)
 
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       initialState: initial,
       resolvers: {} as never,
@@ -715,6 +717,7 @@ describe('draftToInitialState', () => {
       },
     })
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       initialState: initial,
       resolvers: {} as never,
@@ -741,6 +744,7 @@ describe('draftToInitialState', () => {
       loadedMedia: new Map(),
     })
     const draftStore = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       initialState: draftInitial,
       resolvers: {} as never,

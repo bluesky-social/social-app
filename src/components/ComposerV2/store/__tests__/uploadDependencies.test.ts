@@ -83,6 +83,7 @@ function captureWorkerOptions({
     },
   }
   const store = createThreadStore({
+    defaultLanguages: [],
     ...testUploadRuntime,
     analytics,
     resolvers,

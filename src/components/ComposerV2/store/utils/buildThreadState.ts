@@ -12,14 +12,22 @@ import {buildThreadPost} from '#/components/ComposerV2/store/utils/buildThreadPo
 export function buildThreadState({
   input,
   createId,
+  defaultLanguages,
 }: {
   input: ThreadStoreInitialState
   createId: () => string
+  /** Languages for initial posts that have none; see `createThreadStore`. */
+  defaultLanguages: readonly string[]
 }): ThreadState {
   const posts: ThreadState['posts'] = {}
   for (const postInput of input.posts?.length ? input.posts : [{}]) {
     const postId = createId()
-    posts[postId] = buildThreadPost({postId, createId, input: postInput})
+    posts[postId] = buildThreadPost({
+      postId,
+      createId,
+      defaultLanguages,
+      input: postInput,
+    })
   }
   return {
     posts,

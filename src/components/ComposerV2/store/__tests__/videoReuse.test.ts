@@ -150,6 +150,7 @@ function makeStore(video: Partial<VideoUploadDependencies> = {}) {
       Promise.resolve(completedJob),
     )) as jest.MockedFunction<VideoUploadDependencies['uploadVideo']>
   const store = createThreadStore({
+    defaultLanguages: [],
     ...testUploadRuntime,
     analytics,
     resolvers,
@@ -719,6 +720,7 @@ describe('retained result ownership', () => {
   function manualStore() {
     const {attempts, workers} = manualUploadWorkers()
     const store = createThreadStore({
+      defaultLanguages: [],
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
