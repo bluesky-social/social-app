@@ -347,6 +347,17 @@ module.exports = function (_config) {
               outputDir: './assets/nano-icons/nanoicons',
               fontFamily: `icons-${lane}`,
             })),
+            /*
+             * The same SVGs as native symbols, for UI that can't render a
+             * React component, e.g. `<Menu.Root inline>`. Custom SF Symbols
+             * in the asset catalog on iOS, VectorDrawables on Android. Built
+             * at prebuild, so the output is not committed.
+             */
+            symbolSets: ['ui', 'brands', 'community'].map(lane => ({
+              inputDir: `./assets/icons/${lane}`,
+              outputDir: './assets/nano-icons/symbols',
+              name: `icons-${lane}`,
+            })),
           },
         ],
         [

@@ -21,7 +21,7 @@ export function HeaderDropdown({
   const ax = useAnalytics()
   const {_} = useLingui()
   return (
-    <Menu.Root>
+    <Menu.Root inline>
       <Menu.Trigger label={_(msg`Thread options`)}>
         {({props: {onPress, ...props}}) => (
           <Button

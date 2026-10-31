@@ -12,8 +12,8 @@ appId: xyz.blueskyweb.app
 - tapOn: "Carla's avatar"
 - tapOn:
     id: "profileHeaderDropdownBtn"
-- tapOn:
-    id: "profileHeaderDropdownReportBtn"
+# A native menu row, which may not carry its testID on iOS
+- tapOn: "Report account"
 - tapOn:
     id: "report:category:Misleading"
 - tapOn:

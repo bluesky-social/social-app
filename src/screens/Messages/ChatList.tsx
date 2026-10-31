@@ -647,7 +647,7 @@ function ChatSettingsMenu({
   })
 
   return (
-    <Menu.Root>
+    <Menu.Root inline>
       <Menu.Trigger label={l`Chat options`}>{children}</Menu.Trigger>
       <Menu.Outer>
         <Menu.Group>

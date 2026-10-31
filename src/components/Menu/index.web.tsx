@@ -22,6 +22,7 @@ import {
   type ItemTextProps,
   type OuterProps,
   type RadixPassThroughTriggerProps,
+  type RootProps,
   type TriggerProps,
 } from '#/components/Menu/types'
 import {Portal} from '#/components/Portal'
@@ -52,17 +53,16 @@ export function useMenuControl(): Dialog.DialogControlProps {
   )
 }
 
-export function Root({
-  children,
-  control,
-}: React.PropsWithChildren<{
-  control?: Dialog.DialogControlProps
-}>) {
+/**
+ * `inline` has no effect on web, where menus are always dropdowns.
+ */
+export function Root({children, control}: RootProps) {
   const {_} = useLingui()
   const defaultControl = useMenuControl()
   const context = useMemo<ContextType>(
     () => ({
       control: control || defaultControl,
+      inline: false,
     }),
     [control, defaultControl],
   )

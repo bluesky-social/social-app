@@ -1,5 +1,5 @@
 diff --git a/build/jetpack-compose/Button/index.d.ts b/build/jetpack-compose/Button/index.d.ts
-index 57dab890f29b31b06299bfdd1aec43916b807f72..0af1a6248760f7cea8a7d50314bd689e75de449a 100644
+index 57dab89..0af1a62 100644
 --- a/build/jetpack-compose/Button/index.d.ts
 +++ b/build/jetpack-compose/Button/index.d.ts
 @@ -25,6 +25,12 @@ export interface ButtonProps {
@@ -16,7 +16,7 @@ index 57dab890f29b31b06299bfdd1aec43916b807f72..0af1a6248760f7cea8a7d50314bd689e
       * Whether the button is enabled for user interaction.
       * @default true
 diff --git a/src/jetpack-compose/Button/index.tsx b/src/jetpack-compose/Button/index.tsx
-index d24bbd13052bf21d8c8817568f480a0e53a0f01e..ccef7e31c8603b5bcec88f3f50ea93cefb2c892f 100644
+index d24bbd1..ccef7e3 100644
 --- a/src/jetpack-compose/Button/index.tsx
 +++ b/src/jetpack-compose/Button/index.tsx
 @@ -31,6 +31,12 @@ export interface ButtonProps {
