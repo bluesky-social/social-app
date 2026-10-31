@@ -335,281 +335,113 @@ async function runImageUpload({
   }
 }
 
+/** What the failure handler needs to know about an attempt in flight. */
+type VideoFailureContext = {
+  /** Which phase an error belongs to; undefined once processing finished. */
+  stage?: VideoStage
+  /**
+   * Starts once the source is prepared, since the instance reads source
+   * metadata only when it is created. A caption-only retry starts with the
+   * telemetry of the upload it follows. Failures before it exists report
+   * `prepareFailed` directly.
+   */
+  telemetry?: VideoTelemetry
+}
+
+/**
+ * What an attempt must clean up. Entries are cleared as the store takes them
+ * over or they are released; see `releaseVideoResources`.
+ */
+type VideoResources = {
+  /** The lease on the retained compression result; must not outlive its use. */
+  lease?: CompressedVideoLease
+  /** Deletes the Android readable copy this attempt made. */
+  releaseCopy?: () => void
+  /** Deletes a native encoded output this attempt produced. */
+  releaseOutput?: () => void
+}
+
+/** The attempt's reusable inputs, shared by the compression sub-steps. */
+type ObtainVideoArgs = Pick<
+  VideoOptions,
+  'attempt' | 'media' | 'metric' | 'restart'
+> &
+  Pick<
+    VideoUploadDependencies,
+    | 'getVideoMetadata'
+    | 'getImageDimensions'
+    | 'getFileSize'
+    | 'copyVideoToCache'
+    | 'createVideoTelemetry'
+    | 'compressVideo'
+    | 'releaseCompressedVideo'
+  > & {
+    signal: AbortSignal
+    abandonmentSignal: AbortSignal
+    failure: VideoFailureContext
+  }
+
 async function runVideoUpload({
   signal,
   abandonmentSignal,
   ...opts
 }: VideoOptions & {signal: AbortSignal; abandonmentSignal: AbortSignal}) {
-  const {
-    attempt,
-    media,
-    pdsClient,
-    pdsUrl,
-    i18n,
-    getVideoMetadata,
-    getImageDimensions,
-    getFileSize,
-    copyVideoToCache,
-    createVideoTelemetry,
-    compressVideo,
-    uploadVideo,
-    releaseCompressedVideo,
-    uploadBlob,
-    createVideoServiceClient,
-    sleep,
-    metric,
-  } = opts
+  const {attempt, media, pdsClient, pdsUrl, i18n, uploadBlob, metric} = opts
   let videoBlob: BlobRef | undefined = media.videoBlob
   let captionBlobs = [...media.captionBlobs]
-  let releaseCopy: (() => void) | undefined
-  /**
-   * Deletes a native encoded output this attempt produced. Cleared once the
-   * store's retained entry takes over deleting it.
-   */
-  let releaseOutput: (() => void) | undefined
-  let lease: CompressedVideoLease | undefined
-  /** Idempotent; the lease must not outlive the need for its output. */
-  const releaseLease = () => {
-    try {
-      lease?.release()
-    } catch {
-      /* Cleanup must not fail the upload. */
-    }
-    lease = undefined
+  /* A caption-only retry reuses the uploaded video and its telemetry. */
+  const failure: VideoFailureContext = {
+    telemetry: videoBlob ? opts.uploadedVideoTelemetry : undefined,
   }
-  /*
-   * Telemetry matches the existing composer's funnel. It starts once the
-   * source is prepared, since the instance reads source metadata only when
-   * it is created. A caption-only retry reuses the uploaded video and its
-   * telemetry. The stage decides which failure event an error belongs to;
-   * failures before telemetry exists report `prepareFailed` directly.
-   */
-  let telemetry = videoBlob ? opts.uploadedVideoTelemetry : undefined
-  let stage: VideoStage | undefined
+  let obtained: Awaited<ReturnType<typeof obtainCompressedVideo>> | undefined
   try {
     /* A caption-only retry can safely reuse the completed video result. */
     if (!videoBlob) {
-      attempt.reportStatus({status: {state: 'uploading', phase: 'validating'}})
-      let compressed: CompressedVideo
-      let videoTelemetry: VideoTelemetry
-      /*
-       * Reuse the compression result an earlier attempt retained. Native
-       * output is a file that may have been removed since, so confirm it
-       * still reads; if not, drop the entry and compress once, below.
-       */
-      lease = attempt.acquireCompressedVideo()
-      if (
-        lease &&
-        !(await isOutputReadable({video: lease.video, getFileSize}))
-      ) {
-        lease.invalidate()
-        releaseLease()
-      }
-      throwIfAborted({signal})
-      if (lease) {
-        compressed = lease.video
-        /*
-         * No source preparation: the item already holds the metadata the
-         * first attempt resolved, and no compressor ran, so this attempt
-         * reports no compression or probe events.
-         */
-        videoTelemetry = createVideoTelemetry({
-          asset: videoAssetFromMedia({media}),
-          signal: abandonmentSignal,
-          metric,
-        })
-        telemetry = videoTelemetry
-        attempt.setVideoTelemetry({telemetry: videoTelemetry})
-        videoTelemetry.picked()
-        if (opts.restart) videoTelemetry.restarted(opts.restart)
-        stage = 'upload'
-        videoTelemetry.uploadStarted(compressed.size)
-        validateCompressedVideo({video: compressed})
-      } else {
-        /*
-         * The item keeps its original URI and durable local ref; only this
-         * attempt reads the copy, and a retry makes its own.
-         */
-        let source = media
-        if (needsReadableCopy({media})) {
-          stage = 'copy'
-          const copy = await copyVideoToCache({
-            uri: media.uri,
-            mimeType: media.mimeType,
-          })
-          releaseCopy = copy.release
-          throwIfAborted({signal})
-          source = {...media, uri: copy.uri}
-        }
-        stage = 'metadata'
-        const {asset, metadata} = await prepareVideoSource({
-          media: source,
-          getVideoMetadata,
-          getImageDimensions,
-          getFileSize,
-        })
-        throwIfAborted({signal})
-        attempt.setSourceMetadata({metadata})
-        /*
-         * Telemetry outlives this attempt, so it gets scalars only; the asset
-         * carries the source File, which only the compressor needs.
-         */
-        videoTelemetry = createVideoTelemetry({
-          asset: scalarVideoAsset({asset}),
-          signal: abandonmentSignal,
-          metric,
-        })
-        telemetry = videoTelemetry
-        attempt.setVideoTelemetry({telemetry: videoTelemetry})
-        videoTelemetry.picked()
-        if (opts.restart) videoTelemetry.restarted(opts.restart)
-        stage = 'validate'
-        validateVideoSource({asset})
-
-        attempt.reportStatus({
-          status: {state: 'uploading', phase: 'compressing'},
-        })
-        stage = 'compress'
-        videoTelemetry.compressStarted()
-        compressed = await compressVideo(asset, {
-          signal,
-          /* The compressor probes the source again only for this event. */
-          onProbe: probed => videoTelemetry.probed(probed),
-          onProgress: progress => {
-            if (!signal.aborted) {
-              attempt.reportStatus({
-                status: {
-                  state: 'uploading',
-                  phase: 'compressing',
-                  progress,
-                },
-              })
-            }
-          },
-        })
-        const {uri: outputUri} = compressed
-        if (isNativeEncodedOutput({video: compressed})) {
-          releaseOutput = () =>
-            releaseQuietly(() => releaseCompressedVideo({uri: outputUri}))
-        }
-        throwIfAborted({signal})
-        if (compressed.passthroughReason) {
-          videoTelemetry.compressSkipped({
-            size: compressed.size,
-            mimeType: compressed.mimeType,
-            skipReason: compressed.passthroughReason,
-          })
-        } else {
-          videoTelemetry.compressCompleted({
-            size: compressed.size,
-            mimeType: compressed.mimeType,
-          })
-        }
-
-        /*
-         * The existing composer has no client-side size check here; an
-         * oversized native output fails at upload, so report it there.
-         */
-        stage = 'upload'
-        videoTelemetry.uploadStarted(compressed.size)
-        validateCompressedVideo({video: compressed})
-        attempt.setCompressionResult({
-          prepared: {
-            size: compressed.size,
-            mimeType: compressed.mimeType,
-            /* Source display dimensions; the CompressedVideo contract has none. */
-            width: asset.width,
-            height: asset.height,
-            aspectRatio: {width: asset.width, height: asset.height},
-          },
-        })
-        /*
-         * Only a finished, validated result is retained. A passthrough that
-         * returns the readable copy's URI needs the copy for as long as the
-         * entry lives, so the store takes over releasing it. Likewise the
-         * store deletes a native encoded output with the entry, once its last
-         * reader is done. An encoded output does not alias the copy, which
-         * this attempt still releases below. Whatever the store does not take
-         * over is released in the finally block.
-         */
-        const aliasesCopy = !!releaseCopy && compressed.uri === source.uri
-        lease = attempt.retainCompressedVideo({
-          video: compressed,
-          release: aliasesCopy ? releaseCopy : releaseOutput,
-        })
-        if (lease) {
-          if (aliasesCopy) releaseCopy = undefined
-          else releaseOutput = undefined
-        }
-      }
-
-      attempt.reportStatus({
-        status: {state: 'uploading', phase: 'uploading', progress: 0},
-      })
-      const uploadResult = await uploadVideo({
-        video: compressed,
-        client: pdsClient,
-        dispatchUrl: pdsUrl,
+      obtained = await obtainCompressedVideo({
+        attempt,
+        media,
+        metric,
+        restart: opts.restart,
+        getVideoMetadata: opts.getVideoMetadata,
+        getImageDimensions: opts.getImageDimensions,
+        getFileSize: opts.getFileSize,
+        copyVideoToCache: opts.copyVideoToCache,
+        createVideoTelemetry: opts.createVideoTelemetry,
+        compressVideo: opts.compressVideo,
+        releaseCompressedVideo: opts.releaseCompressedVideo,
         signal,
-        i18n,
-        setProgress: progress => {
-          if (!signal.aborted) {
-            attempt.reportStatus({
-              status: {
-                state: 'uploading',
-                phase: 'uploading',
-                progress,
-              },
-            })
-          }
-        },
+        abandonmentSignal,
+        failure,
       })
-      throwIfAborted({signal})
-      /*
-       * Like the existing composer, an upload that returns an already
-       * finished job still records the processing phase.
-       */
-      videoTelemetry.uploadCompleted(uploadResult.jobId)
-      stage = 'processing'
-      videoTelemetry.processingStarted(uploadResult.jobId)
-      if (uploadResult.state === 'JOB_STATE_FAILED') {
-        throw new VideoJobError(
-          uploadResult.error ?? 'Video failed to process',
-          uploadResult.failureCode,
-        )
-      }
-      if (uploadResult.state === 'JOB_STATE_COMPLETED') {
-        videoBlob = uploadResult.blob
-        if (!videoBlob)
-          throw new VideoJobError('Completed video did not return a blob')
-      } else {
-        if (!uploadResult.jobId)
-          throw new VideoJobError('Video upload did not return a job')
-        videoBlob = await pollVideoJob({
-          jobId: uploadResult.jobId,
-          signal,
-          createVideoServiceClient,
-          sleep,
-          attempt,
-        })
-      }
-      throwIfAborted({signal})
-      videoTelemetry.processingCompleted()
-      stage = undefined
+      videoBlob = await uploadAndProcessVideo({
+        video: obtained.video,
+        telemetry: obtained.telemetry,
+        attempt,
+        signal,
+        failure,
+        pdsClient,
+        pdsUrl,
+        i18n,
+        uploadVideo: opts.uploadVideo,
+        createVideoServiceClient: opts.createVideoServiceClient,
+        sleep: opts.sleep,
+      })
       /*
        * The store adopts the blob here, before captions begin, so a caption
        * edit during their upload restarts from this video instead of
        * compressing and uploading it again. Its subscribers run
        * synchronously and may restart or remove the item, retiring this
-       * attempt, which must then start no more work.
+       * attempt, which must then start no more work. Nothing reads the
+       * compressed output past this point.
        */
-      attempt.setVideoTelemetry({telemetry: videoTelemetry, blob: videoBlob})
-      releaseLease()
+      attempt.setVideoTelemetry({
+        telemetry: obtained.telemetry,
+        blob: videoBlob,
+      })
+      obtained.release()
       throwIfAborted({signal})
     }
 
-    if (!videoBlob)
-      throw new VideoJobError('Video upload did not return a blob')
     attempt.reportStatus({
       status: {
         state: 'uploading',
@@ -617,23 +449,18 @@ async function runVideoUpload({
         progress: captionBlobs.length === media.captions.length ? 1 : undefined,
       },
     })
-    stage = 'captions'
-    for (const caption of media.captions) {
-      if (
-        !caption.lang ||
-        captionBlobs.some(item => item.lang === caption.lang)
-      ) {
-        continue
-      }
-      throwIfAborted({signal})
-      const result = await uploadBlob(
-        pdsClient,
-        new Blob([caption.content], {type: 'text/vtt'}),
-        'text/vtt',
-      )
-      captionBlobs = [...captionBlobs, {lang: caption.lang, blob: result.blob}]
-      attempt.setCaptionBlobs({captions: captionBlobs})
-    }
+    failure.stage = 'captions'
+    captionBlobs = await uploadCaptions({
+      captions: media.captions,
+      uploaded: captionBlobs,
+      pdsClient,
+      uploadBlob,
+      signal,
+      onUploaded: captions => {
+        captionBlobs = captions
+        attempt.setCaptionBlobs({captions})
+      },
+    })
     throwIfAborted({signal})
     attempt.reportStatus({
       status: {state: 'uploaded', blob: videoBlob, captionBlobs},
@@ -641,9 +468,9 @@ async function runVideoUpload({
   } catch (error) {
     if (signal.aborted || isComposerV2Cancellation({cause: error})) return
     reportVideoFailure({
-      stage,
+      stage: failure.stage,
       error,
-      telemetry,
+      telemetry: failure.telemetry,
       media,
       metric,
     })
@@ -660,18 +487,380 @@ async function runVideoUpload({
     /*
      * Runs once the attempt settles, including after cancellation, so the
      * copy outlives compression and upload (a pass-through returns its URI).
-     * A copy the retained result aliases was handed to the store instead; it
-     * is released once the entry is retired and its last reader is done.
      */
-    releaseLease()
-    try {
-      releaseCopy?.()
-    } catch {
-      /* A leftover cache file is harmless; it must not fail the upload. */
-    }
-    /* An output the store never retained (stale, invalid, or unretained). */
-    releaseOutput?.()
+    obtained?.release()
   }
+}
+
+/**
+ * Reuses a retained compression or compresses fresh. `release` is idempotent
+ * and frees the lease, the readable copy, and any output this attempt still
+ * owns. When this throws, everything it acquired is already released.
+ */
+async function obtainCompressedVideo({
+  failure,
+  ...args
+}: ObtainVideoArgs): Promise<{
+  video: CompressedVideo
+  telemetry: VideoTelemetry
+  release: () => void
+}> {
+  const {attempt, media, signal, getFileSize} = args
+  const resources: VideoResources = {}
+  const release = () => releaseVideoResources({resources})
+  try {
+    attempt.reportStatus({status: {state: 'uploading', phase: 'validating'}})
+    /*
+     * Reuse the compression result an earlier attempt retained. Native
+     * output is a file that may have been removed since, so confirm it
+     * still reads; if not, drop the entry and compress once, below.
+     */
+    resources.lease = attempt.acquireCompressedVideo()
+    if (
+      resources.lease &&
+      !(await isOutputReadable({video: resources.lease.video, getFileSize}))
+    ) {
+      resources.lease.invalidate()
+      releaseVideoResources({resources})
+    }
+    throwIfAborted({signal})
+    if (!resources.lease) {
+      const fresh = await compressVideoFresh({...args, failure, resources})
+      return {...fresh, release}
+    }
+    /*
+     * No source preparation: the item already holds the metadata the first
+     * attempt resolved, and no compressor ran, so this attempt reports no
+     * compression or probe events.
+     */
+    const {video} = resources.lease
+    const telemetry = startVideoTelemetry({
+      ...args,
+      asset: videoAssetFromMedia({media}),
+      failure,
+    })
+    failure.stage = 'upload'
+    telemetry.uploadStarted(video.size)
+    validateCompressedVideo({video})
+    return {video, telemetry, release}
+  } catch (error) {
+    release()
+    throw error
+  }
+}
+
+/**
+ * Prepares the source, compresses it, and retains the result for later
+ * attempts. Whatever it acquires is recorded in `resources`.
+ */
+async function compressVideoFresh({
+  failure,
+  resources,
+  ...args
+}: ObtainVideoArgs & {resources: VideoResources}): Promise<{
+  video: CompressedVideo
+  telemetry: VideoTelemetry
+}> {
+  const {
+    attempt,
+    media,
+    signal,
+    getVideoMetadata,
+    getImageDimensions,
+    getFileSize,
+    copyVideoToCache,
+    compressVideo,
+    releaseCompressedVideo,
+  } = args
+  /*
+   * The item keeps its original URI and durable local ref; only this
+   * attempt reads the copy, and a retry makes its own.
+   */
+  let source = media
+  if (needsReadableCopy({media})) {
+    failure.stage = 'copy'
+    const copy = await copyVideoToCache({
+      uri: media.uri,
+      mimeType: media.mimeType,
+    })
+    resources.releaseCopy = copy.release
+    throwIfAborted({signal})
+    source = {...media, uri: copy.uri}
+  }
+  failure.stage = 'metadata'
+  const {asset, metadata} = await prepareVideoSource({
+    media: source,
+    getVideoMetadata,
+    getImageDimensions,
+    getFileSize,
+  })
+  throwIfAborted({signal})
+  attempt.setSourceMetadata({metadata})
+  /*
+   * Telemetry outlives this attempt, so it gets scalars only; the asset
+   * carries the source File, which only the compressor needs.
+   */
+  const telemetry = startVideoTelemetry({
+    ...args,
+    asset: scalarVideoAsset({asset}),
+    failure,
+  })
+  failure.stage = 'validate'
+  validateVideoSource({asset})
+
+  attempt.reportStatus({status: {state: 'uploading', phase: 'compressing'}})
+  failure.stage = 'compress'
+  telemetry.compressStarted()
+  const video = await compressVideo(asset, {
+    signal,
+    /* The compressor probes the source again only for this event. */
+    onProbe: probed => telemetry.probed(probed),
+    onProgress: progress => {
+      if (!signal.aborted) {
+        attempt.reportStatus({
+          status: {state: 'uploading', phase: 'compressing', progress},
+        })
+      }
+    },
+  })
+  const {uri: outputUri} = video
+  if (isNativeEncodedOutput({video})) {
+    resources.releaseOutput = () =>
+      releaseQuietly(() => releaseCompressedVideo({uri: outputUri}))
+  }
+  throwIfAborted({signal})
+  if (video.passthroughReason) {
+    telemetry.compressSkipped({
+      size: video.size,
+      mimeType: video.mimeType,
+      skipReason: video.passthroughReason,
+    })
+  } else {
+    telemetry.compressCompleted({size: video.size, mimeType: video.mimeType})
+  }
+
+  /*
+   * The existing composer has no client-side size check here; an oversized
+   * native output fails at upload, so report it there.
+   */
+  failure.stage = 'upload'
+  telemetry.uploadStarted(video.size)
+  validateCompressedVideo({video})
+  attempt.setCompressionResult({
+    prepared: {
+      size: video.size,
+      mimeType: video.mimeType,
+      /* Source display dimensions; the CompressedVideo contract has none. */
+      width: asset.width,
+      height: asset.height,
+      aspectRatio: {width: asset.width, height: asset.height},
+    },
+  })
+  retainVideoResult({
+    attempt,
+    video,
+    aliasesSource: video.uri === source.uri,
+    resources,
+  })
+  return {video, telemetry}
+}
+
+/**
+ * Creates the attempt's telemetry and records it with the store, then reports
+ * the pick and any restart.
+ */
+function startVideoTelemetry({
+  asset,
+  attempt,
+  createVideoTelemetry,
+  abandonmentSignal,
+  metric,
+  restart,
+  failure,
+}: Pick<
+  ObtainVideoArgs,
+  'attempt' | 'createVideoTelemetry' | 'metric' | 'restart'
+> & {
+  asset: ImagePickerAsset
+  abandonmentSignal: AbortSignal
+  failure: VideoFailureContext
+}) {
+  const telemetry = createVideoTelemetry({
+    asset,
+    signal: abandonmentSignal,
+    metric,
+  })
+  failure.telemetry = telemetry
+  attempt.setVideoTelemetry({telemetry})
+  telemetry.picked()
+  if (restart) telemetry.restarted(restart)
+  return telemetry
+}
+
+/**
+ * Retains a finished, validated result for later attempts, and hands the
+ * store whatever it must clean up with the entry. A pass-through that returns
+ * the readable copy's URI needs the copy for as long as the entry lives, so
+ * the store takes over releasing it. Likewise the store deletes a native
+ * encoded output with the entry, once its last reader is done. An encoded
+ * output does not alias the copy, which this attempt still releases. Whatever
+ * the store does not take over stays in `resources`.
+ */
+function retainVideoResult({
+  attempt,
+  video,
+  aliasesSource,
+  resources,
+}: {
+  attempt: VideoUploadAttempt
+  video: CompressedVideo
+  /** Whether the output is the source URI, which may be the readable copy. */
+  aliasesSource: boolean
+  resources: VideoResources
+}) {
+  const aliasesCopy = !!resources.releaseCopy && aliasesSource
+  const lease = attempt.retainCompressedVideo({
+    video,
+    release: aliasesCopy ? resources.releaseCopy : resources.releaseOutput,
+  })
+  if (!lease) return
+  resources.lease = lease
+  if (aliasesCopy) resources.releaseCopy = undefined
+  else resources.releaseOutput = undefined
+}
+
+/**
+ * Releases everything in `resources`, once. Cleanup must not fail the upload,
+ * and a leftover cache file is harmless.
+ */
+function releaseVideoResources({resources}: {resources: VideoResources}) {
+  const {lease, releaseCopy, releaseOutput} = resources
+  resources.lease = undefined
+  resources.releaseCopy = undefined
+  resources.releaseOutput = undefined
+  try {
+    lease?.release()
+  } catch {
+    /* Cleanup must not fail the upload. */
+  }
+  try {
+    releaseCopy?.()
+  } catch {
+    /* A leftover cache file is harmless. */
+  }
+  /* Already quiet; see `releaseQuietly`. */
+  releaseOutput?.()
+}
+
+/** Uploads compressed bytes and polls the processing job. */
+async function uploadAndProcessVideo({
+  video,
+  telemetry,
+  attempt,
+  signal,
+  failure,
+  pdsClient,
+  pdsUrl,
+  i18n,
+  uploadVideo,
+  createVideoServiceClient,
+  sleep,
+}: Pick<VideoOptions, 'attempt' | 'pdsClient' | 'pdsUrl' | 'i18n'> &
+  Pick<
+    VideoUploadDependencies,
+    'uploadVideo' | 'createVideoServiceClient' | 'sleep'
+  > & {
+    video: CompressedVideo
+    telemetry: VideoTelemetry
+    signal: AbortSignal
+    failure: VideoFailureContext
+  }): Promise<BlobRef> {
+  attempt.reportStatus({
+    status: {state: 'uploading', phase: 'uploading', progress: 0},
+  })
+  const uploadResult = await uploadVideo({
+    video,
+    client: pdsClient,
+    dispatchUrl: pdsUrl,
+    signal,
+    i18n,
+    setProgress: progress => {
+      if (!signal.aborted) {
+        attempt.reportStatus({
+          status: {state: 'uploading', phase: 'uploading', progress},
+        })
+      }
+    },
+  })
+  throwIfAborted({signal})
+  /*
+   * Like the existing composer, an upload that returns an already finished
+   * job still records the processing phase.
+   */
+  telemetry.uploadCompleted(uploadResult.jobId)
+  failure.stage = 'processing'
+  telemetry.processingStarted(uploadResult.jobId)
+  if (uploadResult.state === 'JOB_STATE_FAILED') {
+    throw new VideoJobError(
+      uploadResult.error ?? 'Video failed to process',
+      uploadResult.failureCode,
+    )
+  }
+  let blob: BlobRef | undefined
+  if (uploadResult.state === 'JOB_STATE_COMPLETED') {
+    blob = uploadResult.blob
+    if (!blob) throw new VideoJobError('Completed video did not return a blob')
+  } else {
+    if (!uploadResult.jobId)
+      throw new VideoJobError('Video upload did not return a job')
+    blob = await pollVideoJob({
+      jobId: uploadResult.jobId,
+      signal,
+      createVideoServiceClient,
+      sleep,
+      attempt,
+    })
+  }
+  throwIfAborted({signal})
+  telemetry.processingCompleted()
+  failure.stage = undefined
+  return blob
+}
+
+/**
+ * Uploads caption files, skipping languages already in `uploaded`. Reports
+ * the full list through `onUploaded` after each upload so a failure keeps the
+ * blobs uploaded so far.
+ */
+async function uploadCaptions({
+  captions,
+  uploaded,
+  pdsClient,
+  uploadBlob,
+  signal,
+  onUploaded,
+}: Pick<VideoOptions, 'pdsClient'> &
+  Pick<VideoUploadDependencies, 'uploadBlob'> & {
+    captions: PostMediaVideo['captions']
+    uploaded: UploadedCaption[]
+    signal: AbortSignal
+    onUploaded: (captions: UploadedCaption[]) => void
+  }): Promise<UploadedCaption[]> {
+  let result = uploaded
+  for (const caption of captions) {
+    if (!caption.lang || result.some(item => item.lang === caption.lang)) {
+      continue
+    }
+    throwIfAborted({signal})
+    const {blob} = await uploadBlob(
+      pdsClient,
+      new Blob([caption.content], {type: 'text/vtt'}),
+      'text/vtt',
+    )
+    result = [...result, {lang: caption.lang, blob}]
+    onUploaded(result)
+  }
+  return result
 }
 
 /**
