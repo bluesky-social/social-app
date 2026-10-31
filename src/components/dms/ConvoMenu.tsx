@@ -43,6 +43,7 @@ import * as Menu from '#/components/Menu'
 import {ReportDialog} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
+import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 
 let ConvoMenu = ({
@@ -80,45 +81,59 @@ let ConvoMenu = ({
 
   const reportSubject = getConvoReportSubject(convo, currentAccount?.did)
 
+  const trigger = hideTrigger ? null : (
+    <Menu.Trigger label={l`Chat settings`}>
+      {({props}) => (
+        <View style={[style]}>
+          <Button
+            label={props.accessibilityLabel}
+            {...props}
+            onPress={() => {
+              Keyboard.dismiss()
+              props.onPress()
+            }}
+            size="small"
+            color="secondary"
+            shape="round"
+            variant="ghost"
+            style={[a.bg_transparent]}>
+            <ButtonIcon icon={DotsHorizontalIcon} size="md" />
+          </Button>
+        </View>
+      )}
+    </Menu.Trigger>
+  )
+  const contentProps = {
+    profile,
+    showMarkAsRead,
+    blockInfo,
+    convo,
+    canReport: !!reportSubject,
+    leaveConvoControl,
+    reportControl,
+    blockedByListControl,
+  }
+
   return (
     <>
-      <Menu.Root control={control}>
-        {!hideTrigger && (
-          <View style={[style]}>
-            <Menu.Trigger label={l`Chat settings`}>
-              {({props}) => (
-                <Button
-                  label={props.accessibilityLabel}
-                  {...props}
-                  onPress={() => {
-                    Keyboard.dismiss()
-                    props.onPress()
-                  }}
-                  size="small"
-                  color="secondary"
-                  shape="round"
-                  variant="ghost"
-                  style={[a.bg_transparent]}>
-                  <ButtonIcon icon={DotsHorizontalIcon} size="md" />
-                </Button>
-              )}
-            </Menu.Trigger>
-          </View>
-        )}
-
-        <Menu.Outer>
-          <MenuContent
-            profile={profile}
-            showMarkAsRead={showMarkAsRead}
-            blockInfo={blockInfo}
-            convo={convo}
-            canReport={!!reportSubject}
-            leaveConvoControl={leaveConvoControl}
-            reportControl={reportControl}
-            blockedByListControl={blockedByListControl}
-          />
-        </Menu.Outer>
-      </Menu.Root>
+      {/*
+       * Native menus can only open from their trigger, so the chat list's
+       * long-press menu, which has none, stays a sheet.
+       */}
+      {IS_NATIVE && trigger ? (
+        <InlineConvoMenu
+          control={control}
+          trigger={trigger}
+          {...contentProps}
+        />
+      ) : (
+        <Menu.Root control={control}>
+          {trigger}
+          <Menu.Outer>
+            <MenuContent {...contentProps} />
+          </Menu.Outer>
+        </Menu.Root>
+      )}
       <LeaveConvoPrompt
         control={leaveConvoControl}
         convoId={convo.view.id}
@@ -162,16 +177,7 @@ let ConvoMenu = ({
 }
 ConvoMenu = memo(ConvoMenu)
 
-function MenuContent({
-  convo: initialConvo,
-  profile,
-  canReport,
-  showMarkAsRead,
-  blockInfo,
-  leaveConvoControl,
-  reportControl,
-  blockedByListControl,
-}: {
+type MenuContentProps = {
   convo: ConvoWithDetails
   profile: Shadow<bsky.profile.AnyProfileView>
   canReport: boolean
@@ -183,7 +189,48 @@ function MenuContent({
   leaveConvoControl: Prompt.PromptControlProps
   reportControl: Prompt.PromptControlProps
   blockedByListControl: Prompt.PromptControlProps
+}
+
+/**
+ * An inline menu needs its groups as direct children of `Menu.Outer`, so its
+ * items' hooks run as soon as it mounts. That's fine for the one in the
+ * conversation header.
+ */
+function InlineConvoMenu({
+  control,
+  trigger,
+  ...props
+}: MenuContentProps & {
+  control?: Menu.MenuControlProps
+  trigger: React.ReactElement
 }) {
+  const items = useConvoMenuItems(props)
+  return (
+    <Menu.Root inline control={control}>
+      {trigger}
+      <Menu.Outer>{items}</Menu.Outer>
+    </Menu.Root>
+  )
+}
+
+/**
+ * Sheet menus only mount their content while open, so a chat list row doesn't
+ * fetch its convo until its menu opens.
+ */
+function MenuContent(props: MenuContentProps) {
+  return useConvoMenuItems(props)
+}
+
+function useConvoMenuItems({
+  convo: initialConvo,
+  profile,
+  canReport,
+  showMarkAsRead,
+  blockInfo,
+  leaveConvoControl,
+  reportControl,
+  blockedByListControl,
+}: MenuContentProps) {
   const navigation = useNavigation<NavigationProp>()
   const {t: l} = useLingui()
   const {mutate: markAsRead} = useMarkAsReadMutation()

@@ -121,7 +121,11 @@ export function RejectMenu({
 
   return (
     <>
-      <Menu.Root>
+      {/*
+       * In the conversation, the button stretches across the row, and an
+       * inline menu's trigger is only as wide as its content.
+       */}
+      <Menu.Root inline={currentScreen === 'list'}>
         <Menu.Trigger label={l`Reject chat request`}>
           {({props: triggerProps}) => (
             <Button
