@@ -14,7 +14,6 @@ import {
   startImageUpload,
   startVideoUpload,
   type UploadAttempt,
-  type UploadTask,
   type UploadWorkerOverrides,
   type VideoUploadAttempt,
   type VideoUploadDependencies,
@@ -112,45 +111,6 @@ export function reportAnyStatus({
   }
 }
 
-const placeholder = {
-  $type: 'blob',
-  ref: {$link: 'test-upload'},
-  mimeType: 'application/octet-stream',
-  size: 0,
-} as unknown as BlobRef
-
-function simulated({
-  attempt,
-  steps,
-  tickMs,
-}: {
-  attempt: UploadAttempt
-  steps: number[]
-  tickMs: number
-}): UploadTask {
-  let cancelled = false
-  let timer: ReturnType<typeof setTimeout> | undefined
-  let index = 0
-  const tick = () => {
-    if (cancelled) return
-    if (index < steps.length) {
-      attempt.reportStatus({
-        status: {state: 'uploading', progress: steps[index++]},
-      })
-      timer = setTimeout(tick, tickMs)
-    } else {
-      attempt.reportStatus({status: {state: 'uploaded', blob: placeholder}})
-    }
-  }
-  timer = setTimeout(tick, tickMs)
-  return {
-    cancel() {
-      cancelled = true
-      if (timer) clearTimeout(timer)
-    },
-  }
-}
-
 /** Keeps callbacks callable after cancellation to exercise store-side ownership. */
 export function manualUploadWorkers() {
   type Options =
@@ -185,14 +145,10 @@ export function manualUploadWorkers() {
     startImageUpload: start,
     startVideoUpload: start,
   }
-  return {attempts, workers}
-}
-
-export const simulatedUploadWorkers: UploadWorkerOverrides = {
-  startImageUpload: ({attempt}) =>
-    simulated({attempt, steps: [0.25, 0.5, 0.75], tickMs: 100}),
-  startVideoUpload: ({attempt}) =>
-    simulated({attempt, steps: [0.1, 0.3, 0.5, 0.7, 0.9], tickMs: 200}),
+  /** Attempts the store has not cancelled. */
+  const uncancelled = () =>
+    attempts.filter(attempt => attempt.cancel.mock.calls.length === 0)
+  return {attempts, workers, uncancelled}
 }
 
 /** A dependency the test does not expect the worker to reach. */

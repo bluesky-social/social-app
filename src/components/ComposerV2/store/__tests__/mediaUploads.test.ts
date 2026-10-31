@@ -312,6 +312,16 @@ describe('retained compression', () => {
     expect(release).toHaveBeenCalledTimes(1)
   })
 
+  test('a processed blob retires it, and cleanup waits for the last lease', () => {
+    const release = jest.fn()
+    const {started, lease} = retain({release})
+    started[0].attempt.setVideoTelemetry({telemetry: telemetry('u1'), blob})
+    expect(started[0].attempt.acquireCompressedVideo()).toBeUndefined()
+    expect(release).not.toHaveBeenCalled()
+    lease.release()
+    expect(release).toHaveBeenCalledTimes(1)
+  })
+
   test('a retryable failure keeps it and a final failure retires it', () => {
     const kept = jest.fn()
     const a = retain({release: kept})

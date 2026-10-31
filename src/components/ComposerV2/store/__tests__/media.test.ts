@@ -1,11 +1,4 @@
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  jest,
-  test,
-} from '@jest/globals'
+import {beforeEach, describe, expect, jest, test} from '@jest/globals'
 
 /* Avoid loading the UI module chain through the real link resolver. */
 jest.mock('#/lib/api/resolve', () => {
@@ -23,7 +16,6 @@ import {
 } from '#/components/ComposerV2/store/types'
 import {
   type ImageUploadDependencies,
-  type UploadAttempt,
   type UploadWorkerOverrides,
 } from '#/components/ComposerV2/store/uploads'
 import {type Gif} from '#/features/gifPicker/types'
@@ -31,7 +23,6 @@ import {
   manualUploadWorkers,
   realUploadWorkers,
   reportAnyStatus,
-  simulatedUploadWorkers,
   testUploadRuntime,
 } from './uploadTestUtils'
 
@@ -90,17 +81,14 @@ const gifInput: AddMediaInput = {
 // resolving resolveLink so any addUri-driven resolution doesn't crash and
 // no result ever lands. The promise never settles, which is what we want.
 let mockResolveLink: jest.Mock<typeof resolveLink>
+/** Upload attempts the store started, driven by hand. Fresh per test. */
+let manual: ReturnType<typeof manualUploadWorkers>
 
 beforeEach(() => {
-  jest.useFakeTimers()
   mockResolveLink = jest.fn(
     () => new Promise(() => {}),
   ) as unknown as jest.Mock<typeof resolveLink>
-})
-
-afterEach(() => {
-  jest.clearAllTimers()
-  jest.useRealTimers()
+  manual = manualUploadWorkers()
 })
 
 function makeStore() {
@@ -110,7 +98,7 @@ function makeStore() {
     resolvers,
     __createId: makeIdGenerator(),
     __resolveLink: mockResolveLink,
-    __uploadWorkers: simulatedUploadWorkers,
+    __uploadWorkers: manual.workers,
   })
 }
 
@@ -254,52 +242,14 @@ describe('addMedia', () => {
     expect(store.getState()).toBe(before)
     expect(store.getState().isDirty).toBe(false)
     expect(notify).not.toHaveBeenCalled()
-    expect(jest.getTimerCount()).toBe(0)
-  })
-
-  test('drives an image upload from pending -> uploading -> uploaded', () => {
-    const store = makeStore()
-    const root = rootId(store)
-    const {
-      addedMediaIds: [imageId],
-    } = store.actions.addMedia(root, [imageInput])!
-
-    const get = () => {
-      const m = getMedia(store, root).find(x => x.id === imageId)!
-      if (m.kind !== 'image') throw new Error('expected image')
-      return m.upload
-    }
-
-    expect(get().state).toBe('pending')
-    jest.advanceTimersByTime(100)
-    expect(get().state).toBe('uploading')
-    jest.runAllTimers()
-    expect(get().state).toBe('uploaded')
-  })
-
-  test('drives a video upload through to uploaded', () => {
-    const store = makeStore()
-    const root = rootId(store)
-    const {
-      addedMediaIds: [videoId],
-    } = store.actions.addMedia(root, [videoInput])!
-
-    const get = () => {
-      const m = getMedia(store, root).find(x => x.id === videoId)!
-      if (m.kind !== 'video') throw new Error('expected video')
-      return m.upload
-    }
-
-    expect(get().state).toBe('pending')
-    jest.runAllTimers()
-    expect(get().state).toBe('uploaded')
+    expect(manual.attempts).toHaveLength(0)
   })
 
   test('does not start an upload task for a gif', () => {
     const store = makeStore()
     const root = rootId(store)
     store.actions.addMedia(root, [gifInput])
-    jest.runAllTimers()
+    expect(manual.attempts).toHaveLength(0)
     const media = getMedia(store, root)
     expect(media[0].kind).toBe('gif')
     // Gif media records have no `upload` field.
@@ -321,7 +271,7 @@ describe('addMedia input validation (first item dictates kind, cap by count)', (
     const media = getMedia(store, root)
     expect(media).toHaveLength(10)
     expect(media.every(m => m.kind === 'image')).toBe(true)
-    expect(jest.getTimerCount()).toBe(10)
+    expect(manual.attempts).toHaveLength(10)
   })
 
   test.each([4, 5, 10])('accepts %i images in order', count => {
@@ -535,9 +485,13 @@ describe('removeMedia', () => {
     const {
       addedMediaIds: [imageId],
     } = store.actions.addMedia(root, [imageInput])!
-    jest.advanceTimersByTime(100)
+    const [attempt] = manual.attempts
+    attempt.report({state: 'uploading', progress: 0.25})
     store.actions.removeMedia(root, imageId)
-    expect(() => jest.runAllTimers()).not.toThrow()
+    expect(attempt.cancel).toHaveBeenCalled()
+    const after = store.getState()
+    attempt.report({state: 'uploaded', blob: {} as never})
+    expect(store.getState()).toBe(after)
     expect(getMedia(store, root)).toHaveLength(0)
   })
 
@@ -662,7 +616,8 @@ describe('retryMediaUpload', () => {
 
     store.actions.retryMediaUpload(root, imageId)
     expect(get().state).toBe('pending')
-    jest.runAllTimers()
+    expect(manual.attempts).toHaveLength(2)
+    manual.attempts[1].report({state: 'uploaded', blob: {} as never})
     expect(get().state).toBe('uploaded')
   })
 
@@ -726,9 +681,10 @@ describe('retryAllFailedUploads', () => {
     })
     expect(getUploadState(store, root)).toBe('pending')
     expect(getUploadState(store, second)).toBe('pending')
-    jest.runAllTimers()
-    expect(getUploadState(store, root)).toBe('uploaded')
-    expect(getUploadState(store, second)).toBe('uploaded')
+    expect(manual.attempts.slice(2).map(attempt => attempt.mediaId)).toEqual([
+      imageId,
+      videoId,
+    ])
   })
 
   test('skips terminal, active, successful, GIF, card, and unresolved items', async () => {
@@ -810,7 +766,6 @@ describe('retryAllFailedUploads', () => {
     expect(
       store.getState().posts[unresolvedPost].attachments.media?.state,
     ).toBe('failed')
-    jest.runAllTimers()
     await Promise.resolve()
   })
 
@@ -837,8 +792,7 @@ describe('retryAllFailedUploads', () => {
     expect(store.actions.retryAllFailedUploads()).toEqual({
       retriedMediaIds: [],
     })
-    expect(jest.getTimerCount()).toBe(1)
-    jest.runAllTimers()
+    expect(manual.attempts).toHaveLength(2)
   })
 
   test('does not retry a candidate changed by a synchronous subscriber', () => {
@@ -948,7 +902,10 @@ describe('retryAllFailedUploads', () => {
     expect(store.actions.retryAllFailedUploads()).toEqual({
       retriedMediaIds: [firstId],
     })
-    expect(jest.getTimerCount()).toBe(0)
+    expect(
+      manual.attempts.filter(attempt => attempt.mediaId === secondId),
+    ).toHaveLength(1)
+    expect(manual.uncancelled()).toHaveLength(0)
   })
 
   test('does not repeat an immediate failure in one invocation', () => {
@@ -1049,10 +1006,10 @@ describe('removePost cancels media uploads', () => {
     const a = rootId(store)
     const b = store.actions.addPost('after', a)!.addedPostId
     store.actions.addMedia(b, [imageInput])
-    jest.advanceTimersByTime(100)
+    const [attempt] = manual.attempts
 
     store.actions.removePost(b)
-    expect(() => jest.runAllTimers()).not.toThrow()
+    expect(attempt.cancel).toHaveBeenCalled()
     expect(Object.keys(store.getState().posts)).toEqual([a])
   })
 })
@@ -1076,11 +1033,11 @@ describe('attachment lifecycle', () => {
         else store.destroy()
       })
       store.actions.addMedia(root, [imageInput])
-      expect(jest.getTimerCount()).toBe(
+      expect(manual.uncancelled()).toHaveLength(
         action === 'edit' || action === 'retry' ? 1 : 0,
       )
-      jest.runAllTimers()
       if (action === 'edit' || action === 'retry') {
+        manual.uncancelled()[0].report({state: 'uploaded', blob: {} as never})
         const item = getMedia(store, root)[0]
         expect(item.kind !== 'gif' && item.upload.state).toBe('uploaded')
         if (action === 'edit') expect(item.altText).toBe('alt')
@@ -1172,13 +1129,15 @@ describe('attachment lifecycle', () => {
     const store = makeStore()
     const root = rootId(store)
     store.actions.addMedia(root, [imageInput, imageInput])
-    jest.advanceTimersByTime(100)
     store.actions.removeMediaAttachment(root)
     const after = store.getState()
     expect(after.posts[root].attachments.media).toBeUndefined()
     expect(after.posts[root].imageSelectionsRemaining).toBe(10)
-    expect(jest.getTimerCount()).toBe(0)
-    jest.runAllTimers()
+    expect(manual.attempts).toHaveLength(2)
+    expect(manual.uncancelled()).toHaveLength(0)
+    for (const attempt of manual.attempts) {
+      attempt.report({state: 'uploaded', blob: {} as never})
+    }
     expect(store.getState()).toBe(after)
   })
 
@@ -1188,44 +1147,29 @@ describe('attachment lifecycle', () => {
     const {
       addedMediaIds: [mediaId],
     } = store.actions.addMedia(root, [imageInput])!
-    jest.advanceTimersByTime(100)
     store.destroy()
     const after = store.getState()
     expect(store.actions.addMedia(root, [imageInput])).toBeUndefined()
     store.actions.retryMediaUpload(root, mediaId)
     store.actions.addUri(root, 'https://example.com')
-    expect(jest.getTimerCount()).toBe(0)
+    expect(manual.attempts).toHaveLength(1)
+    expect(manual.attempts[0].cancel).toHaveBeenCalled()
     expect(mockResolveLink).not.toHaveBeenCalled()
     expect(store.getState()).toBe(after)
   })
 
   test('failed reports stop the old worker before retrying', () => {
-    let reporting: UploadAttempt | undefined
-    const store = createThreadStore({
-      defaultLanguages: [],
-      ...testUploadRuntime,
-      resolvers,
-      __createId: makeIdGenerator(),
-      __resolveLink: mockResolveLink,
-      __uploadWorkers: {
-        startImageUpload: options => {
-          reporting = options.attempt
-          return simulatedUploadWorkers.startImageUpload!(options)
-        },
-      },
-    })
+    const store = makeStore()
     const root = rootId(store)
     const {
       addedMediaIds: [mediaId],
     } = store.actions.addMedia(root, [imageInput])!
-    reportAnyStatus({
-      attempt: reporting!,
-      status: {state: 'failed', code: 'network', retryable: true},
-    })
-    expect(jest.getTimerCount()).toBe(0)
+    const [first] = manual.attempts
+    first.report({state: 'failed', code: 'network', retryable: true})
+    expect(first.cancel).toHaveBeenCalled()
     store.actions.retryMediaUpload(root, mediaId)
-    expect(jest.getTimerCount()).toBe(1)
-    jest.runAllTimers()
+    expect(manual.attempts).toHaveLength(2)
+    manual.attempts[1].report({state: 'uploaded', blob: {} as never})
     const item = getMedia(store, root)[0]
     expect(item.kind !== 'gif' && item.upload.state).toBe('uploaded')
   })

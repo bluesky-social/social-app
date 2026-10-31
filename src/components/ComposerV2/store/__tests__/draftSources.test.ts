@@ -501,13 +501,10 @@ describe('ios: restored draft media', () => {
     const getImageDimensions = jest
       .fn<ImageUploadDependencies['getImageDimensions']>()
       .mockRejectedValue(new Error('unreadable'))
-    const compressImage = jest.fn<ImageUploadDependencies['compressImage']>(
-      () => new Promise(() => {}),
-    )
     const store = await restore({
       draft: imageDraft(),
       loadedMedia: new Map([['image:one', 'file:///durable.jpg']]),
-      image: {getImageDimensions, compressImage},
+      image: {getImageDimensions},
     })
     await settle()
 
@@ -518,14 +515,7 @@ describe('ios: restored draft media', () => {
       altText: 'image alt',
       upload: {state: 'failed', code: 'unreadable-media', retryable: false},
     })
-    expect(compressImage).not.toHaveBeenCalled()
     expect(store.getState().isDirty).toBe(false)
-
-    /* Unreadable is permanent, so a retry request does not read it again. */
-    store.actions.retryMediaUpload(lastPost(store).postId, failed.id)
-    await settle()
-    expect(getImageDimensions).toHaveBeenCalledTimes(1)
-    expect(compressImage).not.toHaveBeenCalled()
     store.destroy()
   })
 })

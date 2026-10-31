@@ -12,7 +12,7 @@ import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {type app, type com} from '#/lexicons'
 import {
-  simulatedUploadWorkers,
+  manualUploadWorkers,
   testUploadRuntime,
 } from '../../store/__tests__/uploadTestUtils'
 
@@ -700,7 +700,7 @@ describe('draftToInitialState', () => {
   })
 
   test('feeds each normalized adapter result directly into a clean store snapshot', async () => {
-    jest.useFakeTimers()
+    const {attempts, workers} = manualUploadWorkers()
     const initial = await composerOptsToInitialState({
       composerOpts: {
         quote: {
@@ -725,7 +725,7 @@ describe('draftToInitialState', () => {
         let id = 0
         return () => `id-${++id}`
       })(),
-      __uploadWorkers: simulatedUploadWorkers,
+      __uploadWorkers: workers,
     })
     const post = Object.values(store.getState().posts)[0]
     expect(store.getState().isDirty).toBe(false)
@@ -735,7 +735,7 @@ describe('draftToInitialState', () => {
     })
     expect(post.attachments.record).toMatchObject({kind: 'post'})
     expect(post.attachments.media).toMatchObject({kind: 'images'})
-    expect(jest.getTimerCount()).toBe(1)
+    expect(attempts).toHaveLength(1)
     store.destroy()
 
     const draftInitial = await draftToInitialState({
@@ -755,6 +755,5 @@ describe('draftToInitialState', () => {
     )
     expect(draftStore.getState().isDirty).toBe(false)
     draftStore.destroy()
-    jest.useRealTimers()
   })
 })

@@ -1,11 +1,4 @@
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  jest,
-  test,
-} from '@jest/globals'
+import {beforeEach, describe, expect, jest, test} from '@jest/globals'
 
 /* Avoid loading the UI module chain through the real link resolver. */
 jest.mock('#/lib/api/resolve', () => {
@@ -29,7 +22,7 @@ import {
 } from '#/components/ComposerV2/store/types'
 import {type Gif} from '#/features/gifPicker/types'
 import {type app} from '#/lexicons'
-import {simulatedUploadWorkers, testUploadRuntime} from './uploadTestUtils'
+import {manualUploadWorkers, testUploadRuntime} from './uploadTestUtils'
 
 const POST_URL = 'https://bsky.app/profile/test.bsky.social/post/abc'
 const EXTERNAL_URL = 'https://example.com'
@@ -91,14 +84,12 @@ const externalLink: ResolvedLink = {
 }
 
 let mockResolveLink: jest.Mock<typeof resolveLink>
+/** Upload attempts the store started, driven by hand. Fresh per test. */
+let manual: ReturnType<typeof manualUploadWorkers>
 
 beforeEach(() => {
-  jest.useFakeTimers()
   mockResolveLink = jest.fn<typeof resolveLink>()
-})
-afterEach(() => {
-  jest.clearAllTimers()
-  jest.useRealTimers()
+  manual = manualUploadWorkers()
 })
 
 function makeStore(initialState?: ThreadStoreInitialState) {
@@ -110,7 +101,7 @@ function makeStore(initialState?: ThreadStoreInitialState) {
     resolvers: {} as LinkResolvers,
     __resolveLink: mockResolveLink,
     __createId: () => `id-${++id}`,
-    __uploadWorkers: simulatedUploadWorkers,
+    __uploadWorkers: manual.workers,
   })
 }
 
@@ -158,7 +149,7 @@ describe('normalized initial state', () => {
       expect(store.getState().isDirty).toBe(false)
       expect(store.getState().draftId).toBeUndefined()
       expect(mockResolveLink).not.toHaveBeenCalled()
-      expect(jest.getTimerCount()).toBe(0)
+      expect(manual.attempts).toHaveLength(0)
     },
   )
 
@@ -263,7 +254,7 @@ describe('normalized initial state', () => {
     expect(attachments.record.record).not.toBe(ref)
     expect(attachments.media).toEqual({state: 'resolved', ...cards[0]})
     expect(mockResolveLink).not.toHaveBeenCalled()
-    expect(jest.getTimerCount()).toBe(0)
+    expect(manual.attempts).toHaveLength(0)
   })
 
   test.each(cards)(
@@ -277,7 +268,7 @@ describe('normalized initial state', () => {
         addedMediaIds: [],
       })
       expect(mockResolveLink).not.toHaveBeenCalled()
-      expect(jest.getTimerCount()).toBe(0)
+      expect(manual.attempts).toHaveLength(0)
     },
   )
 })
@@ -300,7 +291,7 @@ describe('initial media and eager uploads', () => {
       expect(post.imageSelectionsRemaining).toBe(10 - count)
       expect(post.videoSelectionsRemaining).toBe(count ? 0 : 1)
       expect(post.gifSelectionsRemaining).toBe(count ? 0 : 1)
-      expect(jest.getTimerCount()).toBe(count)
+      expect(manual.attempts).toHaveLength(count)
       const media = post.attachments.media
       if (count === 0) {
         expect(media).toBeUndefined()
@@ -322,7 +313,9 @@ describe('initial media and eager uploads', () => {
       const notify = jest.fn()
       store.subscribe(notify)
       expect(notify).not.toHaveBeenCalled()
-      jest.runAllTimers()
+      for (const attempt of manual.attempts) {
+        attempt.report({state: 'uploaded', blob: {} as never})
+      }
       const after = root(store).post.attachments.media
       if (after?.state !== 'resolved' || after.kind !== 'images')
         throw new Error('expected images')
@@ -356,7 +349,7 @@ describe('initial media and eager uploads', () => {
     }
     expect(() => makeStore(input)).toThrow(RangeError)
     expect(mockResolveLink).not.toHaveBeenCalled()
-    expect(jest.getTimerCount()).toBe(0)
+    expect(manual.attempts).toHaveLength(0)
   })
 
   test('preserves video local refs, captions and alt text across upload/retry', () => {
@@ -392,7 +385,8 @@ describe('initial media and eager uploads', () => {
     )
       throw new Error('expected failed upload')
     store.actions.retryMediaUpload(id, failed.item.id)
-    jest.runAllTimers()
+    expect(manual.attempts).toHaveLength(2)
+    manual.attempts[1].report({state: 'uploaded', blob: {} as never})
     const after = root(store).post.attachments.media
     if (after?.state !== 'resolved' || after.kind !== 'video')
       throw new Error('expected video')
@@ -418,7 +412,7 @@ describe('initial media and eager uploads', () => {
     expect(media.items[0].id).not.toBe(staleSource.id)
     expect(media.items[0].postId).toBe(id)
     expect(media.items[0].upload).toEqual({state: 'pending'})
-    expect(jest.getTimerCount()).toBe(1)
+    expect(manual.attempts).toHaveLength(1)
   })
 
   test('GIFs have fresh item identity but no upload lifecycle', () => {
@@ -434,7 +428,7 @@ describe('initial media and eager uploads', () => {
       item: {id: 'id-2', postId: id, kind: 'gif', gif, altText: 'Animated'},
     })
     expect(post.imageSelectionsRemaining).toBe(0)
-    expect(jest.getTimerCount()).toBe(0)
+    expect(manual.attempts).toHaveLength(0)
   })
 
   test('assigns every initial item to its own post and cancels removed work', () => {
@@ -454,11 +448,14 @@ describe('initial media and eager uploads', () => {
       throw new Error('expected video')
     expect(second.item.postId).toBe(postIds[1])
     store.actions.removePost(postIds[0])
-    expect(jest.getTimerCount()).toBe(1)
+    expect(manual.attempts).toHaveLength(3)
+    expect(manual.uncancelled()).toHaveLength(1)
     store.destroy()
     const before = store.getState()
-    expect(jest.getTimerCount()).toBe(0)
-    jest.runAllTimers()
+    expect(manual.uncancelled()).toHaveLength(0)
+    for (const attempt of manual.attempts) {
+      attempt.report({state: 'uploaded', blob: {} as never})
+    }
     expect(store.getState()).toBe(before)
   })
 
@@ -474,7 +471,7 @@ describe('initial media and eager uploads', () => {
     )
     first.actions.removeMediaAttachment(root(first).id)
     expect(root(second).post.attachments.media).toBeDefined()
-    expect(jest.getTimerCount()).toBe(1)
+    expect(manual.uncancelled()).toHaveLength(1)
     first.destroy()
     second.destroy()
   })
