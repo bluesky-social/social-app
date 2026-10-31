@@ -10,10 +10,10 @@ jest.mock('#/lib/api/resolve', () => ({
 import {TID} from '@atproto/common-web'
 import {type Client} from '@atproto/lex'
 
-import {summarizeComposerV2Plan} from '#/view/screens/DebugComposer/summarizeComposerV2Plan'
+import {summarizeThreadPlan} from '#/view/screens/DebugComposer/summarizeThreadPlan'
 import {
-  type ComposerV2PlannerDependencies,
-  planComposerV2,
+  type PlannerDependencies,
+  planThread,
 } from '#/components/ComposerV2/planner'
 import {
   type ThreadState,
@@ -31,11 +31,8 @@ function snapshot(initial: ThreadStoreInitialState): ThreadState {
 }
 
 /* Plain text without mentions never reaches the appview client. */
-function plan(
-  state: ThreadState,
-  extra: Partial<ComposerV2PlannerDependencies> = {},
-) {
-  return planComposerV2({
+function plan(state: ThreadState, extra: Partial<PlannerDependencies> = {}) {
+  return planThread({
     snapshot: state,
     dependencies: {
       did: 'did:plc:summary-test',
@@ -48,7 +45,7 @@ function plan(
   })
 }
 
-describe('summarizeComposerV2Plan', () => {
+describe('summarizeThreadPlan', () => {
   test('an unexpected planner failure keeps its private cause out of the summary', async () => {
     const cause = new Error('private diagnostic')
     const result = await plan(snapshot({posts: [{text: 'hello'}]}), {
@@ -58,7 +55,7 @@ describe('summarizeComposerV2Plan', () => {
     })
     expect(result.ok).toBe(false)
 
-    const summary = summarizeComposerV2Plan({result})
+    const summary = summarizeThreadPlan({result})
     expect(summary).toEqual({
       ok: false,
       error: {
@@ -98,7 +95,7 @@ describe('summarizeComposerV2Plan', () => {
     }
     const result = await plan(state)
 
-    const summary = summarizeComposerV2Plan({result})
+    const summary = summarizeThreadPlan({result})
     expect(summary.ok).toBe(false)
     expect(JSON.stringify(summary)).not.toContain('private worker detail')
     if (!summary.ok) {
@@ -116,7 +113,7 @@ describe('summarizeComposerV2Plan', () => {
     const state = snapshot({posts: [{text: 'extremely private words'}]})
     const result = await plan(state)
     expect(result.ok).toBe(true)
-    const summary = summarizeComposerV2Plan({result})
+    const summary = summarizeThreadPlan({result})
     expect(summary.ok).toBe(true)
     expect(JSON.stringify(summary)).not.toContain('extremely private words')
     if (summary.ok) {
@@ -133,7 +130,7 @@ describe('summarizeComposerV2Plan', () => {
     })
     const result = await plan(state)
     expect(result.ok).toBe(true)
-    const summary = summarizeComposerV2Plan({result})
+    const summary = summarizeThreadPlan({result})
     expect(summary.ok).toBe(true)
     if (!summary.ok) return
 

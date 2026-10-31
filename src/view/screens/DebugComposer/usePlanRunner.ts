@@ -2,13 +2,13 @@ import {useEffect, useRef, useState, useSyncExternalStore} from 'react'
 
 import {
   type PlanSummary,
-  summarizeComposerV2Plan,
-} from '#/view/screens/DebugComposer/summarizeComposerV2Plan'
+  summarizeThreadPlan,
+} from '#/view/screens/DebugComposer/summarizeThreadPlan'
 import {type TesterSession} from '#/view/screens/DebugComposer/useTesterSession'
 import {
-  type ComposerV2Plan,
-  type ComposerV2PlannerDependencies,
-  planComposerV2,
+  type PlannerDependencies,
+  planThread,
+  type ThreadPlan,
 } from '#/components/ComposerV2/planner'
 import {type ThreadState} from '#/components/ComposerV2/store/types'
 
@@ -19,9 +19,9 @@ export type PlanRunnerResult = {
   snapshot: ThreadState
   summary: PlanSummary
   /** The exact successful plan, retained for a separate explicit write action. */
-  plan: ComposerV2Plan | undefined
+  plan: ThreadPlan | undefined
   /** Full planned writes for inspection in the tester, never logged. */
-  writes: ComposerV2Plan['writes'] | undefined
+  writes: ThreadPlan['writes'] | undefined
   skipEmptyPostsConfirmed: boolean
 }
 
@@ -35,13 +35,13 @@ export function usePlanRunner({
   session,
   dependencies,
   requireAltText,
-  __plan = planComposerV2,
+  __plan = planThread,
 }: {
   session: TesterSession
-  dependencies: ComposerV2PlannerDependencies
+  dependencies: PlannerDependencies
   requireAltText: boolean
   /** Test seam; production always uses the real planner. */
-  __plan?: typeof planComposerV2
+  __plan?: typeof planThread
 }) {
   const [isPlanning, setIsPlanning] = useState(false)
   const [result, setResult] = useState<PlanRunnerResult | undefined>()
@@ -98,7 +98,7 @@ export function usePlanRunner({
       setResult({
         sessionKey,
         snapshot,
-        summary: summarizeComposerV2Plan({result: planned}),
+        summary: summarizeThreadPlan({result: planned}),
         plan: planned.ok ? planned : undefined,
         writes: planned.ok ? planned.writes : undefined,
         skipEmptyPostsConfirmed,

@@ -17,7 +17,7 @@ import {PostCard} from '#/view/screens/DebugComposer/components/PostCard'
 import {SessionControls} from '#/view/screens/DebugComposer/components/SessionControls'
 import {StateSummary} from '#/view/screens/DebugComposer/components/StateSummary'
 import {StatusBadgeText} from '#/view/screens/DebugComposer/components/StatusBadge'
-import {type PlanSummary} from '#/view/screens/DebugComposer/summarizeComposerV2Plan'
+import {type PlanSummary} from '#/view/screens/DebugComposer/summarizeThreadPlan'
 import {usePlanRunner} from '#/view/screens/DebugComposer/usePlanRunner'
 import {useTesterSession} from '#/view/screens/DebugComposer/useTesterSession'
 import {atoms as a, useTheme} from '#/alf'
@@ -28,25 +28,25 @@ import {
   useThreadState,
   useThreadStore,
 } from '#/components/ComposerV2/hooks'
-import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
+import {type ThreadPlan} from '#/components/ComposerV2/planner'
 import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
 import {
-  ComposerV2WritePreconditionError,
-  ComposerV2WriteRejectedError,
-  writeComposerV2Plan,
+  WritePreconditionError,
+  WriteRejectedError,
+  writeThreadPlan,
 } from '#/components/ComposerV2/writer'
 import {Divider} from '#/components/Divider'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
-type ComposerV2PublishAttempt =
-  | {status: 'writing' | 'uncertain'; plan: ComposerV2Plan}
-  | {status: 'published'; plan: ComposerV2Plan}
-  | {status: 'rejected'; plan: ComposerV2Plan; reason: string}
+type PublishAttempt =
+  | {status: 'writing' | 'uncertain'; plan: ThreadPlan}
+  | {status: 'published'; plan: ThreadPlan}
+  | {status: 'rejected'; plan: ThreadPlan; reason: string}
 
 /**
- * Full ComposerV2 tester behind Settings > Developer options > Debug Composer
- * V2, lazy-loaded by the screen in ./index.tsx. It drives the real
+ * Full composer tester behind Settings > Developer options > Debug Composer,
+ * lazy-loaded by the screen in ./index.tsx. It drives the real
  * store/adapters/workers/planner end to end: sessions are isolated and rebuilt
  * from normalized input, media uploads are real, planning remains no-write,
  * and publishing is a separate explicit action. Nothing entered here is saved
@@ -64,7 +64,7 @@ export default function DebugComposer() {
     return (
       <View style={[a.p_md]}>
         <Admonition.Admonition type="error">
-          Sign in to use the ComposerV2 tester.
+          Sign in to use the debug composer.
         </Admonition.Admonition>
       </View>
     )
@@ -88,25 +88,24 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
     analytics,
   })
   const {session} = sessionApi
-  const [publishAttempt, setPublishAttempt] =
-    useState<ComposerV2PublishAttempt>()
+  const [publishAttempt, setPublishAttempt] = useState<PublishAttempt>()
   const publishStartedRef = useRef(false)
 
-  async function publishPlan(plan: ComposerV2Plan) {
+  async function publishPlan(plan: ThreadPlan) {
     if (publishStartedRef.current) return
     publishStartedRef.current = true
     setPublishAttempt({status: 'writing', plan})
     try {
-      await writeComposerV2Plan({
+      await writeThreadPlan({
         plan,
         pdsClient,
         onError: session.store.reportError,
       })
     } catch (cause) {
       const rejection =
-        cause instanceof ComposerV2WriteRejectedError
+        cause instanceof WriteRejectedError
           ? `The server rejected the write (HTTP ${cause.status})`
-          : cause instanceof ComposerV2WritePreconditionError
+          : cause instanceof WritePreconditionError
             ? `The write was refused before sending (${cause.message})`
             : undefined
       if (rejection) {
@@ -152,7 +151,7 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
 
   return (
     <ThreadStoreProvider store={session.store}>
-      <View style={[a.p_md, a.gap_md]} testID="composerV2Tester">
+      <View style={[a.p_md, a.gap_md]} testID="debugComposer">
         <Admonition.Admonition type="info">
           Tester only. Uploads are real and start on add. Planning never writes.
           Publishing needs opt-in. Nothing is saved as a draft.
@@ -188,7 +187,7 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
   )
 }
 
-function PublishAttemptNotice({attempt}: {attempt: ComposerV2PublishAttempt}) {
+function PublishAttemptNotice({attempt}: {attempt: PublishAttempt}) {
   const t = useTheme()
   const uris = attempt.plan.writes.flatMap(write =>
     write.$type === 'com.atproto.repo.applyWrites#create' && write.rkey
@@ -197,7 +196,7 @@ function PublishAttemptNotice({attempt}: {attempt: ComposerV2PublishAttempt}) {
   )
 
   return (
-    <View testID="composerV2Tester-publish-status">
+    <View testID="debugComposer-publish-status">
       <Admonition.Outer
         type={
           attempt.status === 'uncertain'
@@ -245,7 +244,7 @@ function PublishAttemptNotice({attempt}: {attempt: ComposerV2PublishAttempt}) {
                 t.atoms.bg_contrast_50,
                 {fontFamily: 'monospace'},
               ]}
-              testID="composerV2Tester-publish-uris">
+              testID="debugComposer-publish-uris">
               {uris.join('\n')}
             </Text>
           </Admonition.Content>
@@ -294,7 +293,7 @@ function ThreadSection({
         </Text>
         <Button
           label="Retry all failed uploads"
-          testID="composerV2Tester-retry-all"
+          testID="debugComposer-retry-all"
           size="small"
           color={retryableFailureCount === 0 ? 'secondary' : 'negative_subtle'}
           disabled={retryableFailureCount === 0}
@@ -311,7 +310,7 @@ function ThreadSection({
             t.atoms.border_contrast_low,
             a.gap_2xs,
           ]}
-          testID="composerV2Tester-reply-target">
+          testID="debugComposer-reply-target">
           <Text style={[a.text_xs, a.font_bold]}>
             Replying to @{state.replyTo.author.handle}
           </Text>
@@ -339,7 +338,7 @@ function ThreadSection({
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
         <Button
           label="Append a post to the thread"
-          testID="composerV2Tester-add-post"
+          testID="debugComposer-add-post"
           size="small"
           color="secondary"
           onPress={() => {

@@ -5,9 +5,9 @@ import {insertMentionAt} from '#/lib/strings/mention-manip'
 import {type ComposerOpts} from '#/state/shell/composer'
 import {suggestLinkCardUri} from '#/view/com/composer/text-input/text-input-util'
 import {
-  type ComposerV2OnError,
-  isComposerV2Cancellation,
-  reportComposerV2Error,
+  type ComposerOnError,
+  isComposerCancellation,
+  reportComposerError,
 } from '#/components/ComposerV2/errors'
 import {MAX_IMAGES_PER_POST} from '#/components/ComposerV2/store/const'
 import {
@@ -36,7 +36,10 @@ export type ComposerAdapterErrorCode =
   | 'unsupported-record'
   | 'unsupported-labels'
 
-/** A stable, source-local error for input that cannot be represented by V2. */
+/**
+ * A stable, source-local error for input that cannot be represented by the
+ * composer.
+ */
 export class ComposerAdapterError extends Error {
   constructor(
     readonly code: ComposerAdapterErrorCode,
@@ -54,7 +57,7 @@ export class ComposerAdapterError extends Error {
  */
 export type AdapterOptions = {
   /** Omit when an owning caller reports the initialization rejection instead. */
-  onError?: ComposerV2OnError
+  onError?: ComposerOnError
   /** Defaults used for a new composition; drafts use their own saved values. */
   postInteractionSettings?: app.bsky.actor.defs.PostInteractionSettingsPref
 }
@@ -71,7 +74,7 @@ export type DraftToInitialStateInput = AdapterOptions & {
 }
 
 /**
- * Convert an open-composer intent into the source-independent V2 input.
+ * Convert an open-composer intent into the source-independent composer input.
  *
  * A video intent has no MIME type or duration in the shell contract. The
  * adapter passes the source through and the video worker resolves the missing
@@ -207,14 +210,14 @@ export function reportInitializationError({
   onError,
   cause,
 }: {
-  onError: ComposerV2OnError | undefined
+  onError: ComposerOnError | undefined
   cause: unknown
 }) {
   const adapterError = cause instanceof ComposerAdapterError ? cause : undefined
   const hasCause = adapterError && Object.hasOwn(adapterError, 'cause')
   const diagnostic = hasCause ? adapterError.cause : cause
-  if (isComposerV2Cancellation({cause: diagnostic})) return
-  reportComposerV2Error({
+  if (isComposerCancellation({cause: diagnostic})) return
+  reportComposerError({
     onError,
     event: {
       source: 'initialization',

@@ -28,10 +28,10 @@ const SIMPLE_SCENARIOS: Array<{
   id: Extract<TesterScenarioId, 'empty' | 'text' | 'thread' | 'draft-fixture'>
   testID: string
 }> = [
-  {id: 'empty', testID: 'composerV2Tester-scenario-empty'},
-  {id: 'text', testID: 'composerV2Tester-scenario-text'},
-  {id: 'thread', testID: 'composerV2Tester-scenario-thread'},
-  {id: 'draft-fixture', testID: 'composerV2Tester-scenario-draft-fixture'},
+  {id: 'empty', testID: 'debugComposer-scenario-empty'},
+  {id: 'text', testID: 'debugComposer-scenario-text'},
+  {id: 'thread', testID: 'debugComposer-scenario-thread'},
+  {id: 'draft-fixture', testID: 'debugComposer-scenario-draft-fixture'},
 ]
 
 /**
@@ -148,7 +148,7 @@ export function SessionControls({
         ))}
         <Button
           label={`Start scenario: Mention${session.scenarioId === 'mention' ? ' (selected)' : ''}`}
-          testID="composerV2Tester-scenario-mention"
+          testID="debugComposer-scenario-mention"
           size="small"
           color={session.scenarioId === 'mention' ? 'primary' : 'secondary'}
           disabled={!currentAccount?.handle}
@@ -163,9 +163,9 @@ export function SessionControls({
         </Button>
         <View
           style={[a.flex_row, a.align_center, a.gap_2xs]}
-          testID="composerV2Tester-scenario-media">
+          testID="debugComposer-scenario-media">
           <SelectMediaButton
-            testID="composerV2Tester-scenario-media-picker"
+            testID="debugComposer-scenario-media-picker"
             allowedAssetTypes={undefined}
             selectedAssetsCount={0}
             onSelectAssets={onSelectInitialAssets}
@@ -177,7 +177,7 @@ export function SessionControls({
         <Button
           label="Reset the current session"
           accessibilityHint="Destroys the session and rebuilds it from its original input"
-          testID="composerV2Tester-reset"
+          testID="debugComposer-reset"
           size="small"
           color="negative_subtle"
           onPress={resetSession}>
@@ -187,11 +187,11 @@ export function SessionControls({
 
       <View
         style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}
-        testID="composerV2Tester-scenario-reply-quote">
+        testID="debugComposer-scenario-reply-quote">
         <TextField.Root style={[a.flex_1, {minWidth: 180}]}>
           <TextField.Input
             label="Post URL or at:// URI"
-            testID="composerV2Tester-post-url-input"
+            testID="debugComposer-post-url-input"
             value={url}
             onChangeText={setUrl}
             placeholder="Post URL or at:// URI"
@@ -202,7 +202,7 @@ export function SessionControls({
         </TextField.Root>
         <Button
           label={`Start reply session${session.scenarioId === 'reply' ? ' (selected)' : ''}`}
-          testID="composerV2Tester-post-url-reply"
+          testID="debugComposer-post-url-reply"
           size="small"
           color={session.scenarioId === 'reply' ? 'primary' : 'secondary'}
           disabled={!postReference}
@@ -211,7 +211,7 @@ export function SessionControls({
         </Button>
         <Button
           label={`Start quote session${session.scenarioId === 'quote' ? ' (selected)' : ''}`}
-          testID="composerV2Tester-post-url-quote"
+          testID="debugComposer-post-url-quote"
           size="small"
           color={session.scenarioId === 'quote' ? 'primary' : 'secondary'}
           disabled={!postReference}
@@ -223,7 +223,7 @@ export function SessionControls({
       {scenarioError && (
         <Text
           style={[a.text_xs, {color: t.palette.negative_500}]}
-          testID="composerV2Tester-scenario-error">
+          testID="debugComposer-scenario-error">
           Couldn’t start the “{scenarioLabel(scenarioError.scenarioId)}”
           scenario. Check the input and connection, then try again.
         </Text>

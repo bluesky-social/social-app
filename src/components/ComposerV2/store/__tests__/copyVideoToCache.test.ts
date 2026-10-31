@@ -35,7 +35,7 @@ test('copies to a simple cache name and releases only the copy, once', async () 
   expect(source.uri).toBe(durable)
   expect(source.copy).toHaveBeenCalledWith(destination)
   expect(copy.uri).toBe(destination.uri)
-  expect(copy.uri).toMatch(/^file:\/\/\/cache\/composer-v2-video-[\w-]+\.gif$/)
+  expect(copy.uri).toMatch(/^file:\/\/\/cache\/composer-video-[\w-]+\.gif$/)
 
   copy.release()
   copy.release()
@@ -46,5 +46,5 @@ test('copies to a simple cache name and releases only the copy, once', async () 
 test('omits the extension for an unknown MIME type', async () => {
   mockFiles.length = 0
   const copy = await copyVideoToCache({uri: 'file:///durable'})
-  expect(copy.uri).toMatch(/^file:\/\/\/cache\/composer-v2-video-[\w-]+$/)
+  expect(copy.uri).toMatch(/^file:\/\/\/cache\/composer-video-[\w-]+$/)
 })

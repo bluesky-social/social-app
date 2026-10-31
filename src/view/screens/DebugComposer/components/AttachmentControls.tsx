@@ -46,7 +46,7 @@ export function RecordAttachmentView({postId}: {postId: string}) {
   return (
     <View
       style={[a.pt_sm, a.border_t, a.gap_xs, t.atoms.border_contrast_low]}
-      testID={`composerV2Tester-post-${postId}-record`}>
+      testID={`debugComposer-post-${postId}-record`}>
       <View style={[a.flex_row, a.align_center, a.gap_sm, a.flex_wrap]}>
         <Text style={[a.text_xs, a.font_bold]}>Record</Text>
         {record.state === 'pending' && <Loader size="xs" />}
@@ -66,7 +66,7 @@ export function RecordAttachmentView({postId}: {postId: string}) {
         </StatusBadgeText>
         <Button
           label="Remove record attachment"
-          testID={`composerV2Tester-post-${postId}-remove-record`}
+          testID={`debugComposer-post-${postId}-remove-record`}
           size="tiny"
           color="negative_subtle"
           onPress={() => store.actions.removeRecordAttachment(postId)}>
@@ -81,7 +81,7 @@ export function RecordAttachmentView({postId}: {postId: string}) {
           error={getLinkFailureMessage({code: record.code, i18n})}
           retryable={record.retryable}
           onRetry={() => store.actions.retryAttachment(postId, 'record')}
-          testID={`composerV2Tester-post-${postId}-record-retry`}
+          testID={`debugComposer-post-${postId}-record-retry`}
         />
       )}
     </View>
@@ -110,7 +110,7 @@ export function MediaAttachmentView({
   return (
     <View
       style={[a.pt_sm, a.border_t, a.gap_sm, t.atoms.border_contrast_low]}
-      testID={`composerV2Tester-post-${postId}-media`}>
+      testID={`debugComposer-post-${postId}-media`}>
       <View style={[a.flex_row, a.align_center, a.gap_sm, a.flex_wrap]}>
         <Text style={[a.text_xs, a.font_bold]}>
           {media.state === 'resolved' ? `Media · ${media.kind}` : 'Media'}
@@ -130,7 +130,7 @@ export function MediaAttachmentView({
           )}
         <Button
           label="Remove media attachment"
-          testID={`composerV2Tester-post-${postId}-remove-media`}
+          testID={`debugComposer-post-${postId}-remove-media`}
           size="tiny"
           color="negative_subtle"
           onPress={() => store.actions.removeMediaAttachment(postId)}>
@@ -150,7 +150,7 @@ export function MediaAttachmentView({
           error={getLinkFailureMessage({code: media.code, i18n})}
           retryable={media.retryable}
           onRetry={() => store.actions.retryAttachment(postId, 'media')}
-          testID={`composerV2Tester-post-${postId}-media-retry`}
+          testID={`debugComposer-post-${postId}-media-retry`}
         />
       )}
 
@@ -199,7 +199,7 @@ export function MediaAttachmentView({
             emoji
             selectable
             style={[a.text_xs, {fontFamily: 'monospace'}]}
-            testID={`composerV2Tester-post-${postId}-external-fields`}>
+            testID={`debugComposer-post-${postId}-external-fields`}>
             {JSON.stringify(media, null, 2)}
           </Text>
         </View>
@@ -232,7 +232,7 @@ function ImageItemRow({
   return (
     <View
       style={[a.flex_row, a.flex_wrap, a.gap_sm, a.align_center]}
-      testID={`composerV2Tester-media-${item.id}`}>
+      testID={`debugComposer-media-${item.id}`}>
       <Image
         source={{uri: item.uri}}
         style={[a.rounded_sm, {width: 48, height: 48}]}
@@ -268,14 +268,14 @@ function ImageItemRow({
           }
           retryable={item.upload.state === 'failed' && item.upload.retryable}
           onRetry={() => store.actions.retryMediaUpload(postId, item.id)}
-          testID={`composerV2Tester-media-${item.id}-retry`}
+          testID={`debugComposer-media-${item.id}-retry`}
         />
       </View>
       <View style={[a.gap_xs]}>
         <AltTextDialogButton postId={postId} item={item} />
         <Button
           label={`Remove image ${index + 1}`}
-          testID={`composerV2Tester-media-${item.id}-remove`}
+          testID={`debugComposer-media-${item.id}-remove`}
           size="tiny"
           color="secondary"
           onPress={() => store.actions.removeMedia(postId, item.id)}>
@@ -299,7 +299,7 @@ function VideoItemRow({
   const t = useTheme()
   const store = useThreadStore()
   return (
-    <View style={[a.gap_xs]} testID={`composerV2Tester-media-${item.id}`}>
+    <View style={[a.gap_xs]} testID={`debugComposer-media-${item.id}`}>
       <Text
         selectable
         style={[
@@ -331,14 +331,14 @@ function VideoItemRow({
         }
         retryable={item.upload.state === 'failed' && item.upload.retryable}
         onRetry={() => store.actions.retryMediaUpload(postId, item.id)}
-        testID={`composerV2Tester-media-${item.id}-retry`}
+        testID={`debugComposer-media-${item.id}-retry`}
       />
       <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
         <AltTextDialogButton postId={postId} item={item} />
         <CaptionsDialogButton postId={postId} item={item} />
         <Button
           label="Remove video"
-          testID={`composerV2Tester-media-${item.id}-remove`}
+          testID={`debugComposer-media-${item.id}-remove`}
           size="tiny"
           color="secondary"
           onPress={() => store.actions.removeMedia(postId, item.id)}>
@@ -365,7 +365,7 @@ function GifItemRow({
   return (
     <View
       style={[a.flex_row, a.gap_sm, a.align_center]}
-      testID={`composerV2Tester-media-${item.id}`}>
+      testID={`debugComposer-media-${item.id}`}>
       {!!previewUrl && (
         <Image
           source={{uri: previewUrl}}
@@ -391,7 +391,7 @@ function GifItemRow({
         <AltTextDialogButton postId={postId} item={item} />
         <Button
           label="Remove GIF"
-          testID={`composerV2Tester-media-${item.id}-remove`}
+          testID={`debugComposer-media-${item.id}-remove`}
           size="tiny"
           color="secondary"
           onPress={() => store.actions.removeMedia(postId, item.id)}>
@@ -499,7 +499,7 @@ function AltTextDialogButton({
     <>
       <Button
         label="Edit alt text"
-        testID={`composerV2Tester-media-${item.id}-alt`}
+        testID={`debugComposer-media-${item.id}-alt`}
         size="tiny"
         color="secondary"
         onPress={control.open}>
@@ -532,7 +532,7 @@ function AltTextDialogInner({
         <TextField.Root>
           <Dialog.Input
             label="Alt text"
-            testID="composerV2Tester-alt-input"
+            testID="debugComposer-alt-input"
             defaultValue={item.altText}
             onChangeText={setAltText}
             placeholder="Describe this media"
@@ -543,7 +543,7 @@ function AltTextDialogInner({
         </TextField.Root>
         <Button
           label="Save alt text"
-          testID="composerV2Tester-alt-save"
+          testID="debugComposer-alt-save"
           size="small"
           color="primary"
           onPress={() =>
@@ -574,7 +574,7 @@ function CaptionsDialogButton({
     <>
       <Button
         label="Edit captions"
-        testID={`composerV2Tester-media-${item.id}-captions`}
+        testID={`debugComposer-media-${item.id}-captions`}
         size="tiny"
         color="secondary"
         onPress={control.open}>
@@ -621,7 +621,7 @@ function CaptionsDialogInner({
             <TextField.Root>
               <Dialog.Input
                 label={`Caption ${index + 1} language`}
-                testID={`composerV2Tester-caption-${index}-lang`}
+                testID={`debugComposer-caption-${index}-lang`}
                 defaultValue={caption.lang}
                 onChangeText={lang =>
                   setCaptions(prev =>
@@ -636,7 +636,7 @@ function CaptionsDialogInner({
             <TextField.Root>
               <Dialog.Input
                 label={`Caption ${index + 1} content`}
-                testID={`composerV2Tester-caption-${index}-content`}
+                testID={`debugComposer-caption-${index}-content`}
                 /*
                  * Controlled on purpose. With `defaultValue`, React DOM
                  * rewrites the textarea's text node on every re-render, such
@@ -658,7 +658,7 @@ function CaptionsDialogInner({
             </TextField.Root>
             <Button
               label={`Remove caption ${index + 1}`}
-              testID={`composerV2Tester-caption-${index}-remove`}
+              testID={`debugComposer-caption-${index}-remove`}
               size="tiny"
               color="secondary"
               onPress={() =>
@@ -671,7 +671,7 @@ function CaptionsDialogInner({
         <View style={[a.flex_row, a.gap_sm, a.flex_wrap]}>
           <Button
             label="Add caption"
-            testID="composerV2Tester-caption-add"
+            testID="debugComposer-caption-add"
             size="small"
             color="secondary"
             onPress={() =>
@@ -688,7 +688,7 @@ function CaptionsDialogInner({
           </Button>
           <Button
             label="Save captions"
-            testID="composerV2Tester-caption-save"
+            testID="debugComposer-caption-save"
             size="small"
             color="primary"
             disabled={!!languageError}

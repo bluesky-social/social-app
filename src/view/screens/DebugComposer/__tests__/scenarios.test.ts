@@ -72,7 +72,7 @@ describe('buildScenarioInitialState', () => {
   test('thread provides normalized multi-post data with tags and labels', async () => {
     const state = await buildScenarioInitialState({id: 'thread'})
     expect(state.posts).toHaveLength(3)
-    expect(state.posts![0].tags).toEqual(['composer-v2-tester', 'threads'])
+    expect(state.posts![0].tags).toEqual(['debug-composer', 'threads'])
     expect(state.posts![1].labels).toEqual(['graphic-media'])
     expect(state.posts![1].langs).toEqual(['en', 'de'])
     expect(state.threadgateAllowRules).toEqual([
@@ -90,7 +90,7 @@ describe('buildScenarioInitialState', () => {
       state.threadgateAllowRules!.some(
         rule =>
           (rule as {$type?: string}).$type ===
-          'app.bsky.feed.threadgate#composerV2TesterUnknownRule',
+          'app.bsky.feed.threadgate#debugComposerUnknownRule',
       ),
     ).toBe(true)
     expect(state.postgateEmbeddingRules).toEqual([

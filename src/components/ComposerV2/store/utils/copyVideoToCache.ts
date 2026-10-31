@@ -22,7 +22,7 @@ export async function copyVideoToCache({
   const extension = mimeType ? videoExtension({mimeType}) : undefined
   const copy = new File(
     Paths.cache,
-    `composer-v2-video-${nanoid()}${extension ? `.${extension}` : ''}`,
+    `composer-video-${nanoid()}${extension ? `.${extension}` : ''}`,
   )
   await new File(uri).copy(copy)
   return {

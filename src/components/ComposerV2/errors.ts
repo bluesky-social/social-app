@@ -1,18 +1,18 @@
 import {type ComposerAdapterErrorCode} from '#/components/ComposerV2/adapters'
-import {type ComposerV2PlanErrorCode} from '#/components/ComposerV2/planner'
+import {type ThreadPlanErrorCode} from '#/components/ComposerV2/planner'
 import {type LinkResolutionFailureCode} from '#/components/ComposerV2/store/linkResolver'
 import {type UploadFailureCode} from '#/components/ComposerV2/store/types'
 
 /** How a reported failure is classified: bad input, a failed operation, or a bug. */
-export type ComposerV2ErrorKind = 'validation' | 'operational' | 'unexpected'
+export type ComposerErrorKind = 'validation' | 'operational' | 'unexpected'
 
 /** What the caller can do next about a reported failure. */
-export type ComposerV2ErrorRecovery = 'retry' | 'edit' | 'reconcile' | 'none'
+export type ComposerErrorRecovery = 'retry' | 'edit' | 'reconcile' | 'none'
 
 /** Structural context only: never include text, paths, records, or UI messages. */
-export type ComposerV2ErrorEvent = {
-  kind: ComposerV2ErrorKind
-  recovery: ComposerV2ErrorRecovery
+export type ComposerErrorEvent = {
+  kind: ComposerErrorKind
+  recovery: ComposerErrorRecovery
   postId?: string
   mediaId?: string
 } & (
@@ -26,7 +26,7 @@ export type ComposerV2ErrorEvent = {
       code: LinkResolutionFailureCode
       slot: 'record' | 'media'
     }
-  | {source: 'planner'; code: ComposerV2PlanErrorCode}
+  | {source: 'planner'; code: ThreadPlanErrorCode}
   | {
       source: 'writer'
       code:
@@ -47,19 +47,19 @@ export type ComposerV2ErrorEvent = {
  * guard their own attempt token. Report at one boundary, not again on catch.
  * Ordinary planner preflight/record validation stays in the returned result.
  */
-export type ComposerV2OnError = (
-  event: ComposerV2ErrorEvent,
+export type ComposerOnError = (
+  event: ComposerErrorEvent,
   cause?: unknown,
 ) => void
 
 /** Reporting is best-effort and must never replace an operation's outcome. */
-export function reportComposerV2Error({
+export function reportComposerError({
   onError,
   event,
   cause,
 }: {
-  onError: ComposerV2OnError | undefined
-  event: ComposerV2ErrorEvent
+  onError: ComposerOnError | undefined
+  event: ComposerErrorEvent
   cause?: unknown
 }) {
   try {
@@ -70,6 +70,6 @@ export function reportComposerV2Error({
 }
 
 /** Intentional cancellation is not an operational failure. */
-export function isComposerV2Cancellation({cause}: {cause: unknown}) {
+export function isComposerCancellation({cause}: {cause: unknown}) {
   return cause instanceof Error && cause.name === 'AbortError'
 }

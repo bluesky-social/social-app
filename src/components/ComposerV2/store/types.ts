@@ -1,7 +1,7 @@
 import {type BlobRef, type Client} from '@atproto/lex'
 
 import {type ResolvedLink} from '#/lib/api/resolve'
-import {type ComposerV2ErrorKind} from '#/components/ComposerV2/errors'
+import {type ComposerErrorKind} from '#/components/ComposerV2/errors'
 import {type LinkResolutionFailureCode} from '#/components/ComposerV2/store/linkResolver'
 import {type Gif} from '#/features/gifPicker/types'
 import {type app, type com} from '#/lexicons'
@@ -389,7 +389,7 @@ export type ThreadState = {
 }
 
 /** How an upload status change was classified, kept for error reporting. */
-export type UploadDiagnostic = {kind: ComposerV2ErrorKind; cause: unknown}
+export type UploadDiagnostic = {kind: ComposerErrorKind; cause: unknown}
 
 /** Account-scoped inputs every real upload needs. */
 export type UploadRuntime = {

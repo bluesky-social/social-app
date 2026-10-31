@@ -12,11 +12,11 @@ import {type BlobRef, type Client} from '@atproto/lex'
 import {type AtUriString, isValidTid} from '@atproto/syntax'
 import {CID} from 'multiformats/cid'
 
-import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
+import {type ComposerOnError} from '#/components/ComposerV2/errors'
 import {
-  type ComposerV2PlannerDependencies,
-  type ComposerV2PlannerPreflight,
-  planComposerV2,
+  type PlannerDependencies,
+  type PlannerPreflight,
+  planThread,
 } from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
@@ -111,11 +111,11 @@ function readyImages(state: ThreadState, count = 1) {
 
 function plan(
   state: ThreadState,
-  extra: Partial<ComposerV2PlannerDependencies> = {},
-  preflight?: ComposerV2PlannerPreflight,
-  onError?: ComposerV2OnError,
+  extra: Partial<PlannerDependencies> = {},
+  preflight?: PlannerPreflight,
+  onError?: ComposerOnError,
 ) {
-  return planComposerV2({
+  return planThread({
     snapshot: state,
     dependencies: {
       did: DID,
@@ -135,7 +135,7 @@ describe('planner reporting policy', () => {
     const cause = Object.assign(new Error('private diagnostic'), {
       privatePath: 'private diagnostic',
     })
-    const onError = jest.fn<ComposerV2OnError>(() => {
+    const onError = jest.fn<ComposerOnError>(() => {
       throw new Error('listener')
     })
     const state = snapshot({posts: [{text: 'hello'}]})
@@ -173,9 +173,9 @@ describe('planner reporting policy', () => {
   test('operational failures retain original causes and report once per plan attempt', async () => {
     const cause = new Error('private reply diagnostic')
     const resolveReply = jest.fn<
-      NonNullable<ComposerV2PlannerDependencies['resolveReply']>
+      NonNullable<PlannerDependencies['resolveReply']>
     >(() => Promise.reject(cause))
-    const onError = jest.fn<ComposerV2OnError>()
+    const onError = jest.fn<ComposerOnError>()
     const state = snapshot({posts: [{text: 'reply'}], replyTo: replyTarget})
     for (let attempt = 1; attempt <= 2; attempt++) {
       const result = await plan(state, {resolveReply}, undefined, onError)
@@ -200,10 +200,10 @@ describe('planner reporting policy', () => {
     const cause = Object.assign(new Error('thumbnail diagnostic'), {
       privatePath: 'thumbnail diagnostic',
     })
-    const uploadBlob = jest.fn<
-      NonNullable<ComposerV2PlannerDependencies['uploadBlob']>
-    >(() => Promise.reject(cause))
-    const onError = jest.fn<ComposerV2OnError>()
+    const uploadBlob = jest.fn<NonNullable<PlannerDependencies['uploadBlob']>>(
+      () => Promise.reject(cause),
+    )
+    const onError = jest.fn<ComposerOnError>()
     const state = snapshot({
       posts: [
         {
@@ -238,7 +238,7 @@ describe('planner reporting policy', () => {
   })
 
   test('ordinary preflight, record validation and existing failures never report as new operations', async () => {
-    const onError = jest.fn<ComposerV2OnError>()
+    const onError = jest.fn<ComposerOnError>()
     const empty = snapshot({})
     const missingAlt = snapshot({
       posts: [
@@ -278,7 +278,7 @@ describe('planner reporting policy', () => {
 
   test('cancelled dependency work keeps its result but does not report', async () => {
     const cause = Object.assign(new Error('cancelled'), {name: 'AbortError'})
-    const onError = jest.fn<ComposerV2OnError>()
+    const onError = jest.fn<ComposerOnError>()
     const result = await plan(
       snapshot({posts: [{text: 'reply'}], replyTo: replyTarget}),
       {resolveReply: () => Promise.reject(cause)},
@@ -321,7 +321,7 @@ const replyTarget = {
   author: {} as never,
 }
 
-describe('ComposerV2 no-write planner', () => {
+describe('no-write planner', () => {
   test('plans final order, deterministic keys, CIDs, and parent chaining', async () => {
     const state = snapshot({
       posts: [{text: 'first'}, {text: 'second'}, {text: 'third'}],
@@ -483,7 +483,7 @@ describe('ComposerV2 no-write planner', () => {
   })
 
   test('fails reply resolution when the parent is deleted or unavailable', async () => {
-    const onError = jest.fn<ComposerV2OnError>()
+    const onError = jest.fn<ComposerOnError>()
     const missing = await plan(
       snapshot({replyTo: {...replyTarget}, posts: [{text: 'reply'}]}),
       {appviewClient: mockAppview({getPosts: () => ({posts: []})}).client},
@@ -985,7 +985,7 @@ describe('ComposerV2 no-write planner', () => {
 
   describe('post length limit', () => {
     test('301 graphemes fail with text-too-long on the offending post, unreported', async () => {
-      const onError = jest.fn<ComposerV2OnError>()
+      const onError = jest.fn<ComposerOnError>()
       const result = await plan(
         snapshot({posts: [{text: 'ok'}, {text: 'a'.repeat(301)}]}),
         {},
@@ -1032,7 +1032,7 @@ describe('ComposerV2 no-write planner', () => {
 
     test('fails before any embed upload for the over-length post', async () => {
       const uploadBlob = jest.fn<
-        NonNullable<ComposerV2PlannerDependencies['uploadBlob']>
+        NonNullable<PlannerDependencies['uploadBlob']>
       >(() => Promise.reject(new Error('unreachable')))
       const state = snapshot({
         posts: [
@@ -1258,7 +1258,7 @@ describe('ComposerV2 no-write planner', () => {
         },
       ],
     })
-    const result = await planComposerV2({
+    const result = await planThread({
       snapshot: state,
       dependencies: {
         did: DID,

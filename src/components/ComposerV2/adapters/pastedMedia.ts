@@ -11,8 +11,8 @@ import {IS_WEB} from '#/env'
  * Classification follows the existing composer: videos use the video
  * pipeline, as do GIF files on web (a GIF file is not a provider GIF card).
  * Native treats a pasted GIF as a still image, and data URI video is rejected
- * on native. Returns undefined for content V2 cannot attach. Pass every pasted
- * item to one `addMedia` call so the usual selection limits apply.
+ * on native. Returns undefined for content the composer cannot attach. Pass
+ * every pasted item to one `addMedia` call so the usual selection limits apply.
  */
 export function pastedMediaToInput({
   source,

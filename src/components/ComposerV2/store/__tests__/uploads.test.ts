@@ -180,7 +180,7 @@ function compressedAsset(
   return compressVideo.mock.calls[0][0]
 }
 
-describe('ComposerV2 real media workers', () => {
+describe('real media workers', () => {
   test('compresses an image before uploading the transformed output', async () => {
     const statuses: UploadStatus[] = []
     const prepared = jest.fn()

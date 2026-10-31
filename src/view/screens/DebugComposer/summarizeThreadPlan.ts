@@ -1,17 +1,13 @@
 import {RichText} from '@bsky/sdk/richtext'
 
-import {type ComposerV2PlanResult} from '#/components/ComposerV2/planner'
+import {type ThreadPlanResult} from '#/components/ComposerV2/planner'
 
 /**
  * Summarize a plan result as structural data only (codes, counts, keys, URIs,
  * and embed types), omitting record text and gate rule payloads so it is safe
  * to display or inspect.
  */
-export function summarizeComposerV2Plan({
-  result,
-}: {
-  result: ComposerV2PlanResult
-}) {
+export function summarizeThreadPlan({result}: {result: ThreadPlanResult}) {
   if (!result.ok) {
     return {
       ok: false as const,
@@ -80,4 +76,4 @@ export function summarizeComposerV2Plan({
   }
 }
 
-export type PlanSummary = ReturnType<typeof summarizeComposerV2Plan>
+export type PlanSummary = ReturnType<typeof summarizeThreadPlan>

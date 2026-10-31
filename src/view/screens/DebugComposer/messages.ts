@@ -1,6 +1,6 @@
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
-import {type ComposerV2PlanErrorCode} from '#/components/ComposerV2/planner'
+import {type ThreadPlanErrorCode} from '#/components/ComposerV2/planner'
 
 /*
  * Plain-English copy for the tester. Untranslated on purpose: this is a dev
@@ -37,7 +37,7 @@ export function threadgateSummary(settings: ThreadgateAllowUISetting[]) {
 }
 
 /** Static, actionable guidance per planner error code. */
-export function planErrorHint(code: ComposerV2PlanErrorCode) {
+export function planErrorHint(code: ThreadPlanErrorCode) {
   switch (code) {
     case 'empty-composition':
       return 'Add text, tags, or an attachment to at least one post.'

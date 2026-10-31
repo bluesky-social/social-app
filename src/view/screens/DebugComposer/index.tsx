@@ -17,7 +17,7 @@ export function DebugComposerScreen() {
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
         <Layout.Header.Content>
-          <Layout.Header.TitleText>Composer V2</Layout.Header.TitleText>
+          <Layout.Header.TitleText>Debug Composer</Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
@@ -28,7 +28,7 @@ export function DebugComposerScreen() {
           </Suspense>
         ) : (
           <View style={[a.p_xl]}>
-            <Text>The Composer V2 tester requires developer mode.</Text>
+            <Text>The debug composer requires developer mode.</Text>
           </View>
         )}
       </Layout.Content>

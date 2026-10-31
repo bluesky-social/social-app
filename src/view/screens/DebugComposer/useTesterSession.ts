@@ -5,7 +5,7 @@ import {type LinkResolvers} from '#/lib/api/resolve'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {type TesterScenarioId} from '#/view/screens/DebugComposer/scenarios'
 import {reportInitializationError} from '#/components/ComposerV2/adapters'
-import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
+import {type ComposerOnError} from '#/components/ComposerV2/errors'
 import {type ThreadStore} from '#/components/ComposerV2/hooks'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
@@ -42,7 +42,7 @@ export type TesterSessionDeps = UploadRuntime & {
   accountDid: string | undefined
   resolvers: LinkResolvers
   /** Captured per session, including eager construction failures. No default sink. */
-  onError?: ComposerV2OnError
+  onError?: ComposerOnError
   /** Test seam; production always uses the real store constructor. */
   __createStore?: typeof createThreadStore
 }

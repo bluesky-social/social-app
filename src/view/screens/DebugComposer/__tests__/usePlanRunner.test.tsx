@@ -10,23 +10,23 @@ jest.mock('#/lib/api/resolve', () => {
 import {type LinkResolvers} from '#/lib/api/resolve'
 import {usePlanRunner} from '#/view/screens/DebugComposer/usePlanRunner'
 import {type TesterSession} from '#/view/screens/DebugComposer/useTesterSession'
-import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
+import {type ComposerOnError} from '#/components/ComposerV2/errors'
 import {
-  type ComposerV2Plan,
-  type ComposerV2PlannerDependencies,
-  type ComposerV2PlanResult,
-  planComposerV2,
+  type PlannerDependencies,
+  planThread,
+  type ThreadPlan,
+  type ThreadPlanResult,
 } from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 
 const resolvers = {} as LinkResolvers
-const dependencies: ComposerV2PlannerDependencies = {did: 'did:plc:tester'}
+const dependencies: PlannerDependencies = {did: 'did:plc:tester'}
 
 function makeSession(
   key: string,
   text = '',
-  onError?: ComposerV2OnError,
+  onError?: ComposerOnError,
 ): TesterSession {
   return {
     key,
@@ -41,16 +41,16 @@ function makeSession(
   }
 }
 
-const failedResult: ComposerV2PlanResult = {
+const failedResult: ThreadPlanResult = {
   ok: false,
   error: {code: 'empty-composition', message: 'nothing to post'},
 }
 
-function setup(planImpl?: typeof planComposerV2) {
-  const plan = jest.fn<typeof planComposerV2>(
+function setup(planImpl?: typeof planThread) {
+  const plan = jest.fn<typeof planThread>(
     planImpl ?? (() => Promise.resolve(failedResult)),
   )
-  const onError = jest.fn<ComposerV2OnError>()
+  const onError = jest.fn<ComposerOnError>()
   const initialSession = makeSession('session-1', 'hello world', onError)
   const hook = renderHook(
     ({session}: {session: TesterSession}) =>
@@ -97,7 +97,7 @@ describe('usePlanRunner', () => {
       input: {repo: 'did:plc:tester', writes: [], validate: true},
       posts: [],
       writes: [],
-    } as unknown as ComposerV2Plan
+    } as unknown as ThreadPlan
     const {result, initialSession} = setup(() =>
       Promise.resolve(successfulPlan),
     )
@@ -153,8 +153,8 @@ describe('usePlanRunner', () => {
   })
 
   test('an old async plan never populates a different session', async () => {
-    let resolvePlan!: (value: ComposerV2PlanResult) => void
-    const pending = new Promise<ComposerV2PlanResult>(resolve => {
+    let resolvePlan!: (value: ThreadPlanResult) => void
+    const pending = new Promise<ThreadPlanResult>(resolve => {
       resolvePlan = resolve
     })
     const {result, rerender, initialSession} = setup(() => pending)
@@ -178,8 +178,8 @@ describe('usePlanRunner', () => {
   })
 
   test('clearPlan drops the result and discards in-flight work', async () => {
-    let resolvePlan!: (value: ComposerV2PlanResult) => void
-    const pending = new Promise<ComposerV2PlanResult>(resolve => {
+    let resolvePlan!: (value: ThreadPlanResult) => void
+    const pending = new Promise<ThreadPlanResult>(resolve => {
       resolvePlan = resolve
     })
     const {result, initialSession} = setup(() => pending)
@@ -211,7 +211,7 @@ describe('usePlanRunner', () => {
       const {result, rerender, unmount, initialSession, onError} = setup(
         async args => {
           await pending
-          return planComposerV2({
+          return planThread({
             ...args,
             dependencies: {
               ...args.dependencies,
@@ -246,7 +246,7 @@ describe('usePlanRunner', () => {
     const cause = new Error('private planner diagnostic')
     const {result, initialSession, onError} = setup(async args => {
       await new Promise<void>(resolve => finish.push(resolve))
-      return planComposerV2({
+      return planThread({
         ...args,
         dependencies: {
           ...args.dependencies,

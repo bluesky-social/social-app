@@ -26,7 +26,7 @@ import {VIDEO_MAX_SIZE} from '#/lib/constants'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {createVideoTelemetry} from '#/lib/media/video/telemetry'
 import {type CompressedVideo} from '#/lib/media/video/types'
-import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
+import {type ThreadPlan} from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   completedJobClient,
@@ -49,9 +49,9 @@ import {
 import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
 
 /*
- * Release of resources V2 owns: compressed image outputs and native encoded
- * video outputs. Real workers run with fake platform dependencies; every
- * release is recorded through the injected release dependencies.
+ * Release of resources the composer owns: compressed image outputs and native
+ * encoded video outputs. Real workers run with fake platform dependencies;
+ * every release is recorded through the injected release dependencies.
  */
 
 const resolvers = {} as LinkResolvers
@@ -741,7 +741,7 @@ describe('native encoded video outputs', () => {
           },
         },
       ],
-    } as unknown as ComposerV2Plan
+    } as unknown as ThreadPlan
 
     store.actions.removeMedia(postId, mediaId)
     store.reportPublished({plan})

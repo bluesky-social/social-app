@@ -3,7 +3,7 @@ import {describe, expect, jest, test} from '@jest/globals'
 
 import {type VideoTelemetry} from '#/lib/media/video/telemetry'
 import {type CompressedVideo} from '#/lib/media/video/types'
-import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
+import {type ThreadPlan} from '#/components/ComposerV2/planner'
 import {
   createMediaUploads,
   type MediaUploadUpdate,
@@ -74,7 +74,7 @@ function telemetry(uploadId: string) {
   } as VideoTelemetry & {published: jest.Mock}
 }
 
-function planEmbedding(): ComposerV2Plan {
+function planEmbedding(): ThreadPlan {
   return {
     posts: [
       {
@@ -82,7 +82,7 @@ function planEmbedding(): ComposerV2Plan {
         record: {embed: {$type: 'app.bsky.embed.video', video: blob}},
       },
     ],
-  } as unknown as ComposerV2Plan
+  } as unknown as ThreadPlan
 }
 
 /** Fake workers that record every start and let a test drive the attempt. */

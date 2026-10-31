@@ -126,9 +126,9 @@ describe('tester dialogs under native portalling', () => {
     )
 
     /* The portalled content rendered without a missing-context crash. */
-    const input = screen.getByTestId('composerV2Tester-attach-url-input')
+    const input = screen.getByTestId('debugComposer-attach-url-input')
     fireEvent.changeText(input, 'https://example.com')
-    fireEvent.press(screen.getByTestId('composerV2Tester-attach-url-resolve'))
+    fireEvent.press(screen.getByTestId('debugComposer-attach-url-resolve'))
 
     /*
      * The dialog dispatched into the same store instance owned by the screen

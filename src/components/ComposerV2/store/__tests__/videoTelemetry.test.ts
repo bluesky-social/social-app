@@ -19,7 +19,7 @@ jest.mock('#/lib/api/resolve', () => {
 import {type LinkResolvers} from '#/lib/api/resolve'
 import {createVideoTelemetry} from '#/lib/media/video/telemetry'
 import {type CompressedVideo} from '#/lib/media/video/types'
-import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
+import {type ThreadPlan} from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   completedJobClient,
@@ -128,10 +128,10 @@ function planEmbedding({
 }: {
   postId: string
   embed: unknown
-}): ComposerV2Plan {
+}): ThreadPlan {
   return {
     posts: [{postId, record: {embed}}],
-  } as unknown as ComposerV2Plan
+  } as unknown as ThreadPlan
 }
 
 const fullFunnel = [
@@ -148,7 +148,7 @@ afterEach(() => {
   mockIsAndroid = false
 })
 
-describe('ComposerV2 video telemetry', () => {
+describe('video telemetry', () => {
   test('records the existing composer funnel, ending in publication', async () => {
     const harness = makeStore({
       compressVideo: (_asset, opts) => {

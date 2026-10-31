@@ -1,6 +1,6 @@
-# Composer V2
+# Composer
 
-Composer V2 is a per-session composition store with React as its view layer.
+The composer is a per-session composition store with React as its view layer.
 It handles threads, attachments, eager media uploads, and record planning without
 putting their lifecycles inside UI components. The store, adapters, planner,
 and writer are intended for the production composer, but wiring them into its
@@ -9,7 +9,7 @@ tester.
 
 ## Try it
 
-Open **Settings > Developer options > Debug Composer V2**, or
+Open **Settings > Developer options > Debug Composer**, or
 `/sys/debug-composer` (`bluesky://sys/debug-composer` on native). It requires a
 signed-in account; signed out, it shows a notice instead of creating a store.
 
@@ -46,7 +46,7 @@ Saved draft + media -> draftToInitialState() --+            |
                                                            |
                                                       React hooks
 
-Captured snapshot -> planComposerV2() -> validated plan -> writeComposerV2Plan()
+Captured snapshot -> planThread() -> validated plan -> writeThreadPlan()
                        no record writes                    explicit record write
 ```
 
@@ -142,18 +142,18 @@ shortening. Explicit tags are independent of hashtag facets.
 
 ## Planning, writing, and errors
 
-`planComposerV2({snapshot, dependencies, preflight, onError})` returns either
+`planThread({snapshot, dependencies, preflight, onError})` returns either
 `{ok: true, input, posts, writes}` or `{ok: false, error}`. It captures one
 immutable snapshot; it does not wait for pending uploads or incorporate later
 edits/completions. Plan again from a fresh snapshot when necessary.
 
-`writeComposerV2Plan({plan, pdsClient, onError})` checks the authenticated account
+`writeThreadPlan({plan, pdsClient, onError})` checks the authenticated account
 against `plan.input.repo`, requires `validate: true`, and sends exactly one
 unchanged `applyWrites` request. It returns planned post URIs in thread order.
 It does not rebuild the composition or retry.
 
 **A 4xx refusal committed nothing.** `applyWrites` is atomic, so a 4xx server
-response throws `ComposerV2WriteRejectedError` (with `status` and the original
+response throws `WriteRejectedError` (with `status` and the original
 `cause`) and reports `apply-writes-rejected` / `retry`. The same plan can be
 retried. Do not call `reportPublishUncertain` for it.
 
@@ -166,8 +166,8 @@ but has no reconciliation engine or durable plan storage. Leaving the tester
 loses that in-memory record. Future production integration must also own duplicate
 submission protection, publish state, and AppView propagation. After a write
 resolves, call `store.reportPublished({plan})` so video telemetry records
-publication; for a rejection that is neither a `ComposerV2WritePreconditionError`
-nor a `ComposerV2WriteRejectedError`, call
+publication; for a rejection that is neither a `WritePreconditionError`
+nor a `WriteRejectedError`, call
 `store.reportPublishUncertain({plan, cause})` instead.
 
 Failures remain in attachment/upload state, adapter rejections, or planning and
@@ -184,12 +184,12 @@ are not safe UI text or automatic logging payloads.
 - Production composer UI wiring is deferred to a separate PR. A production tag
   typeahead and external-card suggestions are not planned. The tester's tags
   are a plain comma-separated input.
-- **Temporary media purge:** production wiring must decide when and how V2
-  purges temporary media. `purgeTemporaryImageFiles` (`src/state/gallery.ts`,
-  native only, run on legacy composer close and from Settings) wipes
-  `bsky-composer/`, `ImagePicker/`, and `ImageManipulator/` wholesale, so
-  running it during in-flight V2 uploads deletes their source and output files.
-  V2 never calls it today.
+- **Temporary media purge:** production wiring must decide when and how the
+  composer purges temporary media. `purgeTemporaryImageFiles`
+  (`src/state/gallery.ts`, native only, run on legacy composer close and from
+  Settings) wipes `bsky-composer/`, `ImagePicker/`, and `ImageManipulator/`
+  wholesale, so running it during in-flight uploads deletes their source and
+  output files. The store never calls it today.
 - **Unmeasured memory risks:** check on device before changing code. The image
   compression limiter has no timeout (a timeout would free the slot while native
   work continues, defeating the memory cap), and video compression has no
@@ -262,7 +262,7 @@ can be superseded. Explicit record setters replace the record. Removing selected
 media does not restore an old suggested card. Record and media destinations stay
 independent, even for unclassified URLs that reserve a lane and resolve later.
 
-URI resolution runs through a ComposerV2-independent resolver
+URI resolution runs through a store-independent resolver
 ([store/linkResolver.ts](store/linkResolver.ts)) keyed per post and slot, so
 replacing or removing one slot cancels only its own work. A superseded or
 cancelled request resolves to nothing, so a stale result can neither overwrite
@@ -352,11 +352,11 @@ carries none for the output. The planner rounds them to integers and omits the
 embed's `aspectRatio` if either rounds to zero.
 
 **Video telemetry** reuses `createVideoTelemetry` and the existing composer's
-`video:upload:*` funnel, so V1 and V2 data stay comparable. Each attempt that
-compresses gets its own telemetry and `uploadId`, created after source
-preparation. A retry that reuses a retained compression result is a new attempt
-(`picked`, `restarted`) with no compression events. Cancelled work records no
-failure. Events V2 adds:
+`video:upload:*` funnel, so legacy and new composer data stay comparable.
+Each attempt that compresses gets its own telemetry and `uploadId`, created
+after source preparation. A retry that reuses a retained compression result is
+a new attempt (`picked`, `restarted`) with no compression events. Cancelled
+work records no failure. Events the store adds:
 
 - `prepareFailed`: copying a restored Android video or reading source metadata
   failed. Carries the error class only, since messages can carry local paths.
@@ -472,12 +472,12 @@ never deletes a file a non-abortable step is using.
 
 #### Resource ownership
 
-Each V2-visible resource has one owner and a last reader. Cleanup is
+Each store-visible resource has one owner and a last reader. Cleanup is
 deterministic and tested through injected release dependencies.
 
 | Resource                                               | Owner                            | Released                                                                                         |
 | ------------------------------------------------------ | -------------------------------- | ------------------------------------------------------------------------------------------------ |
-| Source URI/`File`, `original`, `supersededUri`, drafts | The caller or draft storage      | Never by V2                                                                                      |
+| Source URI/`File`, `original`, `supersededUri`, drafts | The caller or draft storage      | Never by the store                                                                               |
 | Web metadata probe URL                                 | The production metadata adapter  | Right after the scalars are extracted (`releaseVideoProbeUri`)                                   |
 | Selected image compression output                      | The image worker                 | Once, after the upload (or a cancelled/failed attempt) settles                                   |
 | Native encoded video output (file)                     | The worker, then retained entry  | By the worker if never retained; otherwise with the entry after its last reader                  |
@@ -592,11 +592,11 @@ invalid, surface the operation's failure rather than silently changing content.
   plan returns full planned records and refs, and nothing automatically logs
   record contents, local paths, captions, credentials, views, or raw exceptions.
   The redacted structural summary is a DebugComposer helper
-  ([`summarizeComposerV2Plan.ts`](../../view/screens/DebugComposer/summarizeComposerV2Plan.ts)),
+  ([`summarizeThreadPlan.ts`](../../view/screens/DebugComposer/summarizeThreadPlan.ts)),
   not part of the planner.
 - The writer requires a successful plan, a matching authenticated DID/repo, and
   `validate: true`. It sends one unchanged request and returns ordered URIs. A
-  4xx refusal throws `ComposerV2WriteRejectedError` (nothing committed, safe to
+  4xx refusal throws `WriteRejectedError` (nothing committed, safe to
   retry). Any other failure after dispatch, including a transport abort,
   rethrows the SDK error exactly and requires reconciliation; there is no
   automatic retry.
@@ -608,7 +608,7 @@ invalid, surface the operation's failure rather than silently changing content.
 
 ### Error reporting and React integration traps
 
-`ComposerV2OnError(event, cause?)` is optional and synchronous. Structural events
+`ComposerOnError(event, cause?)` is optional and synchronous. Structural events
 carry a source, stable code, kind (`validation`, `operational`, `unexpected`),
 local post/media IDs where applicable, and recovery (`retry`, `edit`,
 `reconcile`, `none`). The untrusted diagnostic cause is a separate argument.
@@ -648,7 +648,7 @@ already-loaded draft data into initial state and the upload workers prepare
 restored media. Draft storage loading and production draft UI are not wired.
 Re-audit the draft schema before implementing outbound persistence.
 
-- **Codec:** a UI-free V2 serializer returning draft data and a local-media
+- **Codec:** a UI-free serializer returning draft data and a local-media
   manifest, reusing the authenticated draft endpoints and native/web storage. Do
   not convert to legacy `ComposerState` just to call its save hook. Restore only
   through `draftToInitialState()` and the constructor. Write `embedGallery` for

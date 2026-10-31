@@ -5,7 +5,7 @@ import {
   type VideoAbandonReason,
   type VideoRestartReason,
 } from '#/lib/media/video/types'
-import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
+import {type ThreadPlan} from '#/components/ComposerV2/planner'
 import {
   type PostMediaImage,
   type PostMediaVideo,
@@ -112,15 +112,15 @@ export type MediaUploads = {
    * the plan embeds, so later edits cannot misattribute them, and each
    * reports once. Publication already happened, so this works after `destroy`.
    */
-  reportPublished(args: {plan: ComposerV2Plan}): void
+  reportPublished(args: {plan: ThreadPlan}): void
   /**
    * Reports a write that was sent but may not have committed. Call only when
    * the writer rejects after dispatch, not for a precondition failure
-   * (`ComposerV2WritePreconditionError`) or a 4xx refusal
-   * (`ComposerV2WriteRejectedError`). The videos stay publishable, since
+   * (`WritePreconditionError`) or a 4xx refusal
+   * (`WriteRejectedError`). The videos stay publishable, since
    * a later reconciliation may find the posts.
    */
-  reportPublishUncertain(args: {plan: ComposerV2Plan; cause: unknown}): void
+  reportPublishUncertain(args: {plan: ThreadPlan; cause: unknown}): void
   /**
    * Cancels everything and drops retained state. Idempotent. Publication
    * reporting keeps working.
@@ -132,7 +132,7 @@ export type MediaUploads = {
 function embeddedVideoBlob({
   embed,
 }: {
-  embed: ComposerV2Plan['posts'][number]['record']['embed']
+  embed: ThreadPlan['posts'][number]['record']['embed']
 }): BlobRef | undefined {
   if (bsky.isType(app.bsky.embed.video.main, embed)) return embed.video
   if (
@@ -342,7 +342,7 @@ export function createMediaUploads({
     videoUploadIds.delete(mediaId)
   }
 
-  function reportPublished({plan}: {plan: ComposerV2Plan}) {
+  function reportPublished({plan}: {plan: ThreadPlan}) {
     for (const post of plan.posts) {
       const blob = embeddedVideoBlob({embed: post.record.embed})
       const telemetry = blob && publishableVideos.get(blob)
@@ -356,7 +356,7 @@ export function createMediaUploads({
     plan,
     cause,
   }: {
-    plan: ComposerV2Plan
+    plan: ThreadPlan
     cause: unknown
   }) {
     const uploadIds: string[] = []

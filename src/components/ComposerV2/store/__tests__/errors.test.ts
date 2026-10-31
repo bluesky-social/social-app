@@ -10,7 +10,7 @@ import {
   type LinkResolvers,
   type ResolvedLink,
 } from '#/lib/api/resolve'
-import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
+import {type ComposerOnError} from '#/components/ComposerV2/errors'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   flush,
@@ -75,7 +75,7 @@ function expectNoFunctions(value: unknown, path = 'state') {
   }
 }
 
-function setup(onError = jest.fn<ComposerV2OnError>()) {
+function setup(onError = jest.fn<ComposerOnError>()) {
   const {attempts, workers} = manualUploadWorkers()
   let id = 0
   const store = createThreadStore({
@@ -155,7 +155,7 @@ describe('session error reporting', () => {
   )
 
   test('throwing/reentrant callback cannot interrupt state, cleanup, or later reports', () => {
-    const onError = jest.fn<ComposerV2OnError>((event, cause) => {
+    const onError = jest.fn<ComposerOnError>((event, cause) => {
       store.reportError(event, cause)
       throw new Error('callback failure')
     })
@@ -183,7 +183,7 @@ describe('session error reporting', () => {
   })
 
   test('eager upload failures are observable before construction returns', () => {
-    const onError = jest.fn<ComposerV2OnError>(() => {
+    const onError = jest.fn<ComposerOnError>(() => {
       throw new Error('listener')
     })
     const store = createThreadStore({
@@ -214,7 +214,7 @@ describe('session error reporting', () => {
 
   test('normalization preserves its original rejection, even if reporting throws', () => {
     const cause = new Error('private input diagnostic')
-    const onError = jest.fn<ComposerV2OnError>(() => {
+    const onError = jest.fn<ComposerOnError>(() => {
       throw new Error('listener')
     })
     expect(() =>
@@ -243,7 +243,7 @@ describe('session error reporting', () => {
   test('a throwing eager worker reports once and cleans up earlier workers', () => {
     const cause = new Error('worker startup')
     const cancel = jest.fn()
-    const onError = jest.fn<ComposerV2OnError>(() => {
+    const onError = jest.fn<ComposerOnError>(() => {
       throw new Error('listener')
     })
     let starts = 0
@@ -273,7 +273,7 @@ describe('session error reporting', () => {
 
   test('a worker that throws after its accepted failure does not report the same attempt twice', () => {
     const cause = new Error('worker threw after reporting')
-    const onError = jest.fn<ComposerV2OnError>()
+    const onError = jest.fn<ComposerOnError>()
     expect(() =>
       createThreadStore({
         defaultLanguages: [],
@@ -297,7 +297,7 @@ describe('session error reporting', () => {
 
   test('eager URI initialization reports synchronous resolver failures like rejections', async () => {
     const cause = new Error('private resolver startup')
-    const onError = jest.fn<ComposerV2OnError>()
+    const onError = jest.fn<ComposerOnError>()
     const store = createThreadStore({
       defaultLanguages: [],
       ...testUploadRuntime,
@@ -333,7 +333,7 @@ describe('session error reporting', () => {
       const cause = Object.assign(new Error('private path diagnostic'), {
         name: cancelled ? 'AbortError' : 'Error',
       })
-      const onError = jest.fn<ComposerV2OnError>()
+      const onError = jest.fn<ComposerOnError>()
       const uploadBlob = jest.fn<ImageUploadDependencies['uploadBlob']>()
       const store = createThreadStore({
         defaultLanguages: [],
@@ -358,7 +358,7 @@ describe('session error reporting', () => {
 
   test('URI lanes report independently with identity, safe state and retry actions', async () => {
     const attempts: ReturnType<typeof deferred<ResolvedLink>>[] = []
-    const onError = jest.fn<ComposerV2OnError>(() => {
+    const onError = jest.fn<ComposerOnError>(() => {
       throw new Error('listener')
     })
     const store = createThreadStore({
@@ -416,7 +416,7 @@ describe('session error reporting', () => {
     '%s ignores URI failures',
     async action => {
       const attempt = deferred<ResolvedLink>()
-      const onError = jest.fn<ComposerV2OnError>()
+      const onError = jest.fn<ComposerOnError>()
       const store = createThreadStore({
         defaultLanguages: [],
         ...testUploadRuntime,

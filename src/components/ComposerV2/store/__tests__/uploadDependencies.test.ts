@@ -118,7 +118,7 @@ describe('upload worker dependency wiring', () => {
   test('loading the store does not load the #/state/gallery UI chain', () => {
     jest.isolateModules(() => {
       jest.doMock('#/state/gallery', () => {
-        throw new Error('ComposerV2 store loaded #/state/gallery')
+        throw new Error('Composer store loaded #/state/gallery')
       })
       expect(() => require('#/components/ComposerV2/store')).not.toThrow()
     })

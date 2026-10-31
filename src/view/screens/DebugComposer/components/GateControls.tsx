@@ -106,7 +106,7 @@ export function GateControls() {
         <Button
           label="Edit who can reply and quote"
           accessibilityHint="Opens the post interaction settings dialog"
-          testID="composerV2Tester-gates-open"
+          testID="debugComposer-gates-open"
           size="small"
           color="secondary"
           onPress={openDialog}>
@@ -124,7 +124,7 @@ export function GateControls() {
           </Text>
           <Button
             label="Discard unknown gate rules"
-            testID="composerV2Tester-gates-discard-unknown"
+            testID="debugComposer-gates-discard-unknown"
             size="tiny"
             color="negative_subtle"
             onPress={() => {

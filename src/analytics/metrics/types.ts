@@ -486,7 +486,7 @@ export type Events = {
     fieldErrorsTotal: number
     backgroundCount: number
   }
-  // A Composer V2 write was sent but its outcome is unknown: it may have
+  // A composer write was sent but its outcome is unknown: it may have
   // committed. videoUploadIds joins the videos it carried to their funnels.
   'composer:publish:uncertain': {
     postCount: number

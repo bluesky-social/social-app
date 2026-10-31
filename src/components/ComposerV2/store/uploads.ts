@@ -19,8 +19,8 @@ import {
 import {isNetworkError, shouldRetryError} from '#/lib/strings/errors'
 import {type ComposerImage} from '#/state/gallery'
 import {
-  type ComposerV2ErrorKind,
-  isComposerV2Cancellation,
+  type ComposerErrorKind,
+  isComposerCancellation,
 } from '#/components/ComposerV2/errors'
 import {type AnalyticsContextType} from '#/analytics'
 import {IS_ANDROID, IS_WEB} from '#/env'
@@ -1097,8 +1097,7 @@ async function pollVideoJob({
         },
       })
     } catch (error) {
-      if (signal.aborted || isComposerV2Cancellation({cause: error}))
-        throw error
+      if (signal.aborted || isComposerCancellation({cause: error})) throw error
       if (error instanceof VideoJobError) throw error
       failures += 1
       if (failures >= 5) throw error
@@ -1111,7 +1110,7 @@ async function pollVideoJob({
 export type UploadFailureClassification = {
   code: UploadFailureCode
   retryable: boolean
-  kind: ComposerV2ErrorKind
+  kind: ComposerErrorKind
   /** Server-supplied text the UI may show instead of its own copy. */
   detail?: string
 }

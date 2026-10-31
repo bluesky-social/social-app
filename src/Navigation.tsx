@@ -366,7 +366,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="DebugComposer"
         getComponent={() => DebugComposerScreen}
-        options={{title: title(msg`Composer V2`), requireAuth: true}}
+        options={{title: title(msg`Debug Composer`), requireAuth: true}}
       />
       <Stack.Screen
         name="SharedPreferencesTester"

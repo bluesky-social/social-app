@@ -12,9 +12,9 @@ import {
   type VideoRestartReason,
 } from '#/lib/media/video/types'
 import {
-  type ComposerV2OnError,
-  isComposerV2Cancellation,
-  reportComposerV2Error,
+  type ComposerOnError,
+  isComposerCancellation,
+  reportComposerError,
 } from '#/components/ComposerV2/errors'
 import {
   createLinkResolver,
@@ -76,7 +76,7 @@ export function createThreadStore({
   defaultLanguages: readonly string[]
   initialState?: types.ThreadStoreInitialState
   /** Registered before normalization and eager initialization begin. */
-  onError?: ComposerV2OnError
+  onError?: ComposerOnError
   /** Override id generation; useful for deterministic tests. */
   __createId?: () => string
   /** Override link resolver; useful for deterministic tests. */
@@ -95,12 +95,12 @@ export function createThreadStore({
    * callback that calls back into the store cannot recurse.
    */
   let reporting = false
-  const reportError: ComposerV2OnError = (event, cause) => {
+  const reportError: ComposerOnError = (event, cause) => {
     if (destroyed || reporting) return
-    if (event.source !== 'writer' && isComposerV2Cancellation({cause})) return
+    if (event.source !== 'writer' && isComposerCancellation({cause})) return
     reporting = true
     try {
-      reportComposerV2Error({onError, event, cause})
+      reportComposerError({onError, event, cause})
     } finally {
       reporting = false
     }
@@ -977,7 +977,7 @@ export function createThreadStore({
     ) => {
       if (destroyed) return
       const {code, retryable, cause} = failure
-      if (isComposerV2Cancellation({cause})) return
+      if (isComposerCancellation({cause})) return
       const failed = {
         state: 'failed' as const,
         uri,

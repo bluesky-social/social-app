@@ -23,7 +23,7 @@ jest.mock('#/logger', () => ({
 import {type LinkResolvers} from '#/lib/api/resolve'
 import {useTesterSession} from '#/view/screens/DebugComposer/useTesterSession'
 import {composerOptsToInitialState} from '#/components/ComposerV2/adapters'
-import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
+import {type ComposerOnError} from '#/components/ComposerV2/errors'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 
@@ -49,7 +49,7 @@ const resolvers = {} as LinkResolvers
 
 function setup(
   initialDid = 'did:plc:one',
-  onError = jest.fn<ComposerV2OnError>(),
+  onError = jest.fn<ComposerOnError>(),
 ) {
   const {spy, destroyed} = makeCreateStoreSpy()
   const hook = renderHook(
@@ -231,7 +231,7 @@ describe('useTesterSession', () => {
   })
 
   test('adapter and constructor rejections are each reported at only one boundary', async () => {
-    const onError = jest.fn<ComposerV2OnError>(() => {
+    const onError = jest.fn<ComposerOnError>(() => {
       throw new Error('listener')
     })
     const {result} = setup('did:plc:one', onError)

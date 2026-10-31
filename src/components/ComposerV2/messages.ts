@@ -5,7 +5,7 @@ import {type LinkResolutionFailureCode} from '#/components/ComposerV2/store/link
 import {type UploadFailureCode} from '#/components/ComposerV2/store/types'
 
 /*
- * Localized copy for the failure codes ComposerV2 state holds. State stores
+ * Localized copy for the failure codes composer state holds. State stores
  * codes only; callers turn them into text at the edge, inside or outside
  * React (`useLingui().i18n` in a component). These are plain functions over
  * `msg` descriptors because Lingui's `t` macro is only compiled where the

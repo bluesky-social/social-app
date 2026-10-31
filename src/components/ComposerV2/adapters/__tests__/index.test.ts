@@ -8,7 +8,7 @@ import {
   composerOptsToInitialState,
   draftToInitialState,
 } from '#/components/ComposerV2/adapters'
-import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
+import {type ComposerOnError} from '#/components/ComposerV2/errors'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {type app, type com} from '#/lexicons'
 import {
@@ -60,7 +60,7 @@ afterEach(() => {
 
 describe('initialization reporting', () => {
   test('adapter validation remains a typed rejection even if the callback throws', async () => {
-    const onError = jest.fn<ComposerV2OnError>(() => {
+    const onError = jest.fn<ComposerOnError>(() => {
       throw new Error('listener')
     })
     await expect(
@@ -85,7 +85,7 @@ describe('initialization reporting', () => {
   })
 
   test('draft structural failure is a reported validation rejection', async () => {
-    const onError = jest.fn<ComposerV2OnError>()
+    const onError = jest.fn<ComposerOnError>()
     const error: unknown = await draftToInitialState({
       draftId: 'draft',
       draft: {posts: [draftPost({embedImages: [imageRef('missing-ref')]})]},
@@ -111,7 +111,7 @@ describe('initialization reporting', () => {
         throw cause
       },
     }
-    const onError = jest.fn<ComposerV2OnError>()
+    const onError = jest.fn<ComposerOnError>()
     await expect(composerOptsToInitialState({composerOpts: opts})).rejects.toBe(
       cause,
     )

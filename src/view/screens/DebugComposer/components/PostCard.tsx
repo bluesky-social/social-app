@@ -15,7 +15,7 @@ import {
 import {AttachUrlDialogButton} from '#/view/screens/DebugComposer/components/RecordAttachControls'
 import {StatusBadgeText} from '#/view/screens/DebugComposer/components/StatusBadge'
 import {parseTagsInput} from '#/view/screens/DebugComposer/parseTagsInput'
-import {type PlanSummary} from '#/view/screens/DebugComposer/summarizeComposerV2Plan'
+import {type PlanSummary} from '#/view/screens/DebugComposer/summarizeThreadPlan'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Composer} from '#/components/Composer'
@@ -73,7 +73,7 @@ export function PostCard({
         t.atoms.bg_contrast_25,
         a.gap_sm,
       ]}
-      testID={`composerV2Tester-post-${postId}`}>
+      testID={`debugComposer-post-${postId}`}>
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_xs]}>
         <Text style={[a.font_bold]}>Post {index + 1}</Text>
         <Text
@@ -91,7 +91,7 @@ export function PostCard({
           <Button
             disabled={index === 0}
             label={`Move post ${index + 1} up`}
-            testID={`composerV2Tester-post-${postId}-move-up`}
+            testID={`debugComposer-post-${postId}-move-up`}
             size="tiny"
             color="secondary"
             onPress={() => store.actions.movePost(postId, index - 1)}>
@@ -100,7 +100,7 @@ export function PostCard({
           <Button
             disabled={isLast}
             label={`Move post ${index + 1} down`}
-            testID={`composerV2Tester-post-${postId}-move-down`}
+            testID={`debugComposer-post-${postId}-move-down`}
             size="tiny"
             color="secondary"
             onPress={() => store.actions.movePost(postId, index + 1)}>
@@ -108,7 +108,7 @@ export function PostCard({
           </Button>
           <Button
             label={`Remove post ${index + 1}`}
-            testID={`composerV2Tester-post-${postId}-remove`}
+            testID={`debugComposer-post-${postId}-remove`}
             size="tiny"
             color="negative_subtle"
             onPress={() => store.actions.removePost(postId)}>
@@ -127,7 +127,7 @@ export function PostCard({
         label={`Post ${index + 1} text`}
         placeholder="Write here. Pasting a URL attaches it when committed."
         defaultValue={initialText}
-        testID={`composerV2Tester-post-${postId}-text`}
+        testID={`debugComposer-post-${postId}-text`}
         onChange={text => store.actions.setPostText(postId, text)}
         onFacetCommitted={facet => {
           if (facet.type === 'url') {
@@ -235,7 +235,7 @@ function PostMetaRow({postId, index}: {postId: string; index: number}) {
 
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_xs]}>
         <SelectMediaButton
-          testID={`composerV2Tester-post-${postId}-media-picker`}
+          testID={`debugComposer-post-${postId}-media-picker`}
           disabled={mediaSelectionDisabled}
           allowedAssetTypes={imageCount > 0 ? 'image' : undefined}
           selectedAssetsCount={imageCount}
@@ -244,7 +244,7 @@ function PostMetaRow({postId, index}: {postId: string; index: number}) {
         <Button
           label={`Select a GIF for post ${index + 1}`}
           accessibilityHint="Opens the GIF picker dialog"
-          testID={`composerV2Tester-post-${postId}-gif`}
+          testID={`debugComposer-post-${postId}-gif`}
           size="tiny"
           color="secondary"
           disabled={gifSelectionDisabled}
@@ -254,7 +254,7 @@ function PostMetaRow({postId, index}: {postId: string; index: number}) {
         <Button
           label={`Choose languages for post ${index + 1}`}
           accessibilityHint="Opens the language selection dialog"
-          testID={`composerV2Tester-post-${postId}-langs`}
+          testID={`debugComposer-post-${postId}-langs`}
           size="tiny"
           color="secondary"
           onPress={languageControl.open}>
@@ -263,7 +263,7 @@ function PostMetaRow({postId, index}: {postId: string; index: number}) {
           </ButtonText>
         </Button>
         <LabelsBtn
-          testID={`composerV2Tester-post-${postId}-labels`}
+          testID={`debugComposer-post-${postId}-labels`}
           labels={post.labels as SelfLabel[]}
           onChange={labels => store.actions.setPostLabels(postId, labels)}
         />
@@ -310,7 +310,7 @@ function TagsInput({postId, index}: {postId: string; index: number}) {
     <TextField.Root>
       <TextField.Input
         label={`Explicit tags for post ${index + 1}, comma separated`}
-        testID={`composerV2Tester-post-${postId}-tags`}
+        testID={`debugComposer-post-${postId}-tags`}
         defaultValue={initialTags}
         onChangeText={text =>
           store.actions.setPostTags(postId, parseTagsInput({text}))

@@ -39,12 +39,12 @@ export type TesterScenarioId =
  * unit tests instead. The threadgate list includes an unknown future rule so
  * unknown-rule preservation is visible in the gate controls.
  */
-export const TESTER_DRAFT_FIXTURE_ID = 'composer-v2-tester-fixture'
+export const TESTER_DRAFT_FIXTURE_ID = 'debug-composer-fixture'
 export const TESTER_DRAFT_FIXTURE: app.bsky.draft.defs.Draft = {
   langs: ['en'],
   posts: [
     {
-      text: 'ComposerV2 tester adapter fixture, post one. This composition was normalized through draftToInitialState and is not a saved draft.',
+      text: 'Debug composer adapter fixture, post one. This composition was normalized through draftToInitialState and is not a saved draft.',
       labels: {
         $type: 'com.atproto.label.defs#selfLabels',
         values: [{val: 'graphic-media'}],
@@ -57,7 +57,7 @@ export const TESTER_DRAFT_FIXTURE: app.bsky.draft.defs.Draft = {
   threadgateAllow: [
     {$type: 'app.bsky.feed.threadgate#mentionRule'},
     {
-      $type: 'app.bsky.feed.threadgate#composerV2TesterUnknownRule',
+      $type: 'app.bsky.feed.threadgate#debugComposerUnknownRule',
       note: 'unknown rule preserved by the tester',
     } as never,
   ],
@@ -94,7 +94,7 @@ export async function buildScenarioInitialState(
     case 'text':
       return composerOptsToInitialState({
         composerOpts: {
-          text: 'Testing ComposerV2 with prefilled text and a link card https://bsky.app/about',
+          text: 'Testing the composer with prefilled text and a link card https://bsky.app/about',
         },
       })
     case 'mention':
@@ -107,9 +107,9 @@ export async function buildScenarioInitialState(
       return {
         posts: [
           {
-            text: 'ComposerV2 tester thread, post one with explicit tags.',
+            text: 'Debug composer thread, post one with explicit tags.',
             langs: ['en'],
-            tags: ['composer-v2-tester', 'threads'],
+            tags: ['debug-composer', 'threads'],
           },
           {
             text: 'Post two carries a self label and two languages.',

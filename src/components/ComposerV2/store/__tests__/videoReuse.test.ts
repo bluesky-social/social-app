@@ -25,7 +25,7 @@ import {AbortError} from '#/lib/async/cancelable'
 import {VideoTooLargeError} from '#/lib/media/video/errors'
 import {createVideoTelemetry} from '#/lib/media/video/telemetry'
 import {type CompressedVideo} from '#/lib/media/video/types'
-import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
+import {type ThreadPlan} from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   completedJobClient,
@@ -207,7 +207,7 @@ const failThenComplete = () =>
     .mockResolvedValue(completedJob)
 
 /** A plan whose only post record carries `embed`, as a write would. */
-function planEmbedding({postId}: {postId: string}): ComposerV2Plan {
+function planEmbedding({postId}: {postId: string}): ThreadPlan {
   return {
     posts: [
       {
@@ -215,7 +215,7 @@ function planEmbedding({postId}: {postId: string}): ComposerV2Plan {
         record: {embed: {$type: 'app.bsky.embed.video', video: videoBlob}},
       },
     ],
-  } as unknown as ComposerV2Plan
+  } as unknown as ThreadPlan
 }
 
 afterEach(() => {

@@ -1,11 +1,11 @@
-# ComposerV2 tester - capability coverage
+# Debug composer - capability coverage
 
-Developer tester at Settings > Developer options > Debug Composer V2
+Developer tester at Settings > Developer options > Debug Composer
 (`/sys/debug-composer`). It drives the real store, adapters, workers, and
 planner. Publishing is a separate opt-in action that locks after any attempt
 except a rejected one, and nothing is saved as a draft.
 
-Test IDs share the prefix `composerV2Tester`, omitted below. `{postId}`,
+Test IDs share the prefix `debugComposer`, omitted below. `{postId}`,
 `{mediaId}`, `{index}`, and `{i}` are runtime values. Files are in this
 directory; the control components are in `components/`, except `planner.ts` and
 `writer.ts`, which live in
@@ -76,7 +76,7 @@ redesigned layout or its status indicators.
 | Control / feature                                                    | File                                                | Test IDs                                                                               | Coverage         |
 | -------------------------------------------------------------------- | --------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------------- |
 | No-write plan with busy/success/failure states                       | `PlanSection.tsx`, `usePlanRunner.ts`               | `-plan`, `-plan-result`, `-plan-error`, `-plan-clear`                                  | unit, manual iOS |
-| Redacted structural summary and expandable structure view            | `PlanSection.tsx`, `summarizeComposerV2Plan.ts`     | `-plan-structure-toggle`, `-plan-structure`, `-plan-post-{index}-structure`            | unit, manual iOS |
+| Redacted structural summary and expandable structure view            | `PlanSection.tsx`, `summarizeThreadPlan.ts`     | `-plan-structure-toggle`, `-plan-structure`, `-plan-post-{index}-structure`            | unit, manual iOS |
 | Plan summary line with singular/plural counts                        | `PlanSection.tsx`                                   | `-plan-result`                                                                         | manual web       |
 | Full planned records as expandable, selectable JSON                  | `PlanSection.tsx`                                   | `-plan-records-toggle`, `-plan-records`                                                | unit             |
 | Static error hints per code, including `text-too-long`               | `PlanSection.tsx`, `messages.ts`                    | `-plan-error`                                                                          | unit             |

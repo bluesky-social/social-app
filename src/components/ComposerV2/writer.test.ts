@@ -11,18 +11,15 @@ import {TID} from '@atproto/common-web'
 import {type Client, getMain, XrpcResponseError} from '@atproto/lex'
 
 import {type LinkResolvers} from '#/lib/api/resolve'
-import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
-import {
-  type ComposerV2Plan,
-  planComposerV2,
-} from '#/components/ComposerV2/planner'
+import {type ComposerOnError} from '#/components/ComposerV2/errors'
+import {planThread, type ThreadPlan} from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {buildThreadState} from '#/components/ComposerV2/store/utils/buildThreadState'
 import {
-  ComposerV2WritePreconditionError,
-  ComposerV2WriteRejectedError,
-  writeComposerV2Plan,
+  WritePreconditionError,
+  WriteRejectedError,
+  writeThreadPlan,
 } from '#/components/ComposerV2/writer'
 import {com} from '#/lexicons'
 
@@ -39,7 +36,7 @@ function xrpcResponseError(status: number) {
   )
 }
 
-const DID = 'did:plc:composer-v2-writer'
+const DID = 'did:plc:composer-writer'
 const BLOB_CID = 'bafkreieq5jui4j25lacwomsqgjeswwl3y5zcdrresptwgmfylxo2depppq'
 
 async function makeFixture() {
@@ -74,7 +71,7 @@ async function makeFixture() {
   const appviewClient = {
     call: jest.fn(),
   } as unknown as Client
-  const result = await planComposerV2({
+  const result = await planThread({
     snapshot,
     dependencies: {
       did: DID,
@@ -100,13 +97,13 @@ function mockPdsClient(
   return {pdsClient, call}
 }
 
-describe('ComposerV2 thin writer', () => {
+describe('thin writer', () => {
   test('submits plan unchanged once and returns ordered URIs', async () => {
     const {plan} = await makeFixture()
     const {pdsClient, call} = mockPdsClient(DID)
     const before = JSON.stringify(plan)
 
-    const result = await writeComposerV2Plan({plan, pdsClient})
+    const result = await writeThreadPlan({plan, pdsClient})
 
     expect(call).toHaveBeenCalledTimes(1)
     expect(call.mock.calls[0][0]).toBe(com.atproto.repo.applyWrites)
@@ -143,7 +140,7 @@ describe('ComposerV2 thin writer', () => {
     })
     const {pdsClient, call} = mockPdsClient(DID, () => pendingWrite)
     let settled = false
-    const result = writeComposerV2Plan({plan, pdsClient}).then(value => {
+    const result = writeThreadPlan({plan, pdsClient}).then(value => {
       settled = true
       return value
     })
@@ -164,35 +161,35 @@ describe('ComposerV2 thin writer', () => {
     const unsuccessful = {
       ok: false,
       error: {code: 'empty-composition', message: 'nothing to post'},
-    } as unknown as ComposerV2Plan
+    } as unknown as ThreadPlan
     const unsuccessfulClient = mockPdsClient(DID)
     await expect(
-      writeComposerV2Plan({
+      writeThreadPlan({
         plan: unsuccessful,
         pdsClient: unsuccessfulClient.pdsClient,
       }),
-    ).rejects.toThrow('unsuccessful ComposerV2 plan')
+    ).rejects.toThrow('unsuccessful thread plan')
     expect(unsuccessfulClient.call).not.toHaveBeenCalled()
 
     const missingClient = mockPdsClient(undefined)
     await expect(
-      writeComposerV2Plan({plan, pdsClient: missingClient.pdsClient}),
+      writeThreadPlan({plan, pdsClient: missingClient.pdsClient}),
     ).rejects.toThrow('authenticated PDS account is required')
     expect(missingClient.call).not.toHaveBeenCalled()
 
     const mismatchedClient = mockPdsClient('did:plc:other-account')
     await expect(
-      writeComposerV2Plan({plan, pdsClient: mismatchedClient.pdsClient}),
+      writeThreadPlan({plan, pdsClient: mismatchedClient.pdsClient}),
     ).rejects.toThrow('does not match the authenticated PDS')
     expect(mismatchedClient.call).not.toHaveBeenCalled()
 
     const invalidPlan = {
       ...plan,
       input: {...plan.input, validate: false},
-    } as ComposerV2Plan
+    } as ThreadPlan
     const validationClient = mockPdsClient(DID)
     await expect(
-      writeComposerV2Plan({
+      writeThreadPlan({
         plan: invalidPlan,
         pdsClient: validationClient.pdsClient,
       }),
@@ -201,8 +198,8 @@ describe('ComposerV2 thin writer', () => {
 
     /* Callers rely on the class to know nothing was sent. */
     await expect(
-      writeComposerV2Plan({plan, pdsClient: missingClient.pdsClient}),
-    ).rejects.toBeInstanceOf(ComposerV2WritePreconditionError)
+      writeThreadPlan({plan, pdsClient: missingClient.pdsClient}),
+    ).rejects.toBeInstanceOf(WritePreconditionError)
   })
 
   test.each([
@@ -214,7 +211,7 @@ describe('ComposerV2 thin writer', () => {
     const planBefore = JSON.stringify(plan)
     const snapshotBefore = JSON.stringify(snapshot)
 
-    await expect(writeComposerV2Plan({plan, pdsClient})).rejects.toBe(error)
+    await expect(writeThreadPlan({plan, pdsClient})).rejects.toBe(error)
 
     expect(call).toHaveBeenCalledTimes(1)
     expect(JSON.stringify(plan)).toBe(planBefore)
@@ -227,11 +224,11 @@ describe('ComposerV2 thin writer', () => {
       status: 503,
     })
     const {pdsClient, call} = mockPdsClient(DID, () => Promise.reject(error))
-    const onError = jest.fn<ComposerV2OnError>(() => {
+    const onError = jest.fn<ComposerOnError>(() => {
       throw new Error('listener')
     })
     const before = JSON.stringify(plan)
-    await expect(writeComposerV2Plan({plan, pdsClient, onError})).rejects.toBe(
+    await expect(writeThreadPlan({plan, pdsClient, onError})).rejects.toBe(
       error,
     )
     expect(onError).toHaveBeenCalledTimes(1)
@@ -257,16 +254,16 @@ describe('ComposerV2 thin writer', () => {
       const {plan} = await makeFixture()
       const error = xrpcResponseError(status)
       const {pdsClient, call} = mockPdsClient(DID, () => Promise.reject(error))
-      const onError = jest.fn<ComposerV2OnError>()
+      const onError = jest.fn<ComposerOnError>()
 
-      const thrown = await writeComposerV2Plan({plan, pdsClient, onError}).then(
+      const thrown = await writeThreadPlan({plan, pdsClient, onError}).then(
         () => undefined,
         (cause: unknown) => cause,
       )
 
-      expect(thrown).toBeInstanceOf(ComposerV2WriteRejectedError)
+      expect(thrown).toBeInstanceOf(WriteRejectedError)
       expect(thrown).toMatchObject({
-        name: 'ComposerV2WriteRejectedError',
+        name: 'WriteRejectedError',
         status,
         cause: error,
       })
@@ -289,9 +286,9 @@ describe('ComposerV2 thin writer', () => {
     const {plan} = await makeFixture()
     const error = xrpcResponseError(500)
     const {pdsClient} = mockPdsClient(DID, () => Promise.reject(error))
-    const onError = jest.fn<ComposerV2OnError>()
+    const onError = jest.fn<ComposerOnError>()
 
-    await expect(writeComposerV2Plan({plan, pdsClient, onError})).rejects.toBe(
+    await expect(writeThreadPlan({plan, pdsClient, onError})).rejects.toBe(
       error,
     )
 
@@ -318,14 +315,14 @@ describe('ComposerV2 thin writer', () => {
             reject = rej
           }),
       )
-      const onError = jest.fn<ComposerV2OnError>()
+      const onError = jest.fn<ComposerOnError>()
       const store = createThreadStore({
         defaultLanguages: [],
         ...testUploadRuntime,
         resolvers: {} as LinkResolvers,
         onError,
       })
-      const result = writeComposerV2Plan({
+      const result = writeThreadPlan({
         plan,
         pdsClient,
         onError: store.reportError,
@@ -350,10 +347,10 @@ describe('ComposerV2 thin writer', () => {
       },
       call,
     } as unknown as Client
-    const onError = jest.fn<ComposerV2OnError>(() => {
+    const onError = jest.fn<ComposerOnError>(() => {
       throw new Error('listener')
     })
-    await expect(writeComposerV2Plan({plan, pdsClient, onError})).rejects.toBe(
+    await expect(writeThreadPlan({plan, pdsClient, onError})).rejects.toBe(
       error,
     )
     expect(onError).toHaveBeenCalledTimes(1)
@@ -375,7 +372,7 @@ describe('ComposerV2 thin writer', () => {
     const planBefore = JSON.stringify(plan)
     const snapshotBefore = JSON.stringify(snapshot)
 
-    await writeComposerV2Plan({plan, pdsClient})
+    await writeThreadPlan({plan, pdsClient})
 
     expect(call).toHaveBeenCalledTimes(1)
     expect(JSON.stringify(plan)).toBe(planBefore)

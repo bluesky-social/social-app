@@ -42,7 +42,7 @@ export function AttachUrlDialogButton({
       <Button
         label={`Attach a URL to post ${index + 1}`}
         accessibilityHint="Opens a dialog to attach a link, record, or card"
-        testID={`composerV2Tester-post-${postId}-attach-url`}
+        testID={`debugComposer-post-${postId}-attach-url`}
         size="tiny"
         color="secondary"
         onPress={control.open}>
@@ -102,7 +102,7 @@ function AttachUrlDialogInner({postId}: {postId: string}) {
         <TextField.Root>
           <Dialog.Input
             label="URL to attach"
-            testID="composerV2Tester-attach-url-input"
+            testID="debugComposer-attach-url-input"
             defaultValue=""
             onChangeText={setUrl}
             placeholder="https:// or at://"
@@ -114,7 +114,7 @@ function AttachUrlDialogInner({postId}: {postId: string}) {
         <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
           <Button
             label="Resolve URL into an attachment"
-            testID="composerV2Tester-attach-url-resolve"
+            testID="debugComposer-attach-url-resolve"
             size="small"
             color="primary"
             disabled={!trimmed}
@@ -123,7 +123,7 @@ function AttachUrlDialogInner({postId}: {postId: string}) {
           </Button>
           <Button
             label="Fetch the post and attach it as a record"
-            testID="composerV2Tester-attach-url-fetch-record"
+            testID="debugComposer-attach-url-fetch-record"
             size="small"
             color="secondary"
             disabled={!postReference}

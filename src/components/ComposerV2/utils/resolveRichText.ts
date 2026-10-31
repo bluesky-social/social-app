@@ -10,7 +10,7 @@ import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
  * shorten links, and strip mentions that did not resolve to a DID.
  *
  * This is intentionally UI-free so every write path (the current composer
- * and the ComposerV2 planner) shares one normalization policy.
+ * and the thread planner) shares one normalization policy.
  */
 export async function resolveRichText({
   appviewClient,

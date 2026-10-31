@@ -25,7 +25,7 @@ export function StateSummary() {
         <Text style={[a.text_md, a.font_bold]}>State summary (redacted)</Text>
         <Button
           label={expanded ? 'Collapse state summary' : 'Expand state summary'}
-          testID="composerV2Tester-summary-toggle"
+          testID="debugComposer-summary-toggle"
           size="small"
           color="secondary"
           onPress={() => setExpanded(value => !value)}>
@@ -46,7 +46,7 @@ export function StateSummary() {
             contentContainerStyle={[a.p_md]}>
             <Text
               style={[a.text_xs, {fontFamily: 'monospace'}]}
-              testID="composerV2Tester-summary-dump">
+              testID="debugComposer-summary-dump">
               {JSON.stringify(summarizeThreadState({state}), null, 2)}
             </Text>
           </ScrollView>

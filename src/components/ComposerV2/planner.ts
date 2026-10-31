@@ -15,11 +15,11 @@ import {withCreator} from '#/lib/at-card'
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {createGIFDescription} from '#/lib/gif-alt-text'
 import {
-  type ComposerV2ErrorKind,
-  type ComposerV2ErrorRecovery,
-  type ComposerV2OnError,
-  isComposerV2Cancellation,
-  reportComposerV2Error,
+  type ComposerErrorKind,
+  type ComposerErrorRecovery,
+  type ComposerOnError,
+  isComposerCancellation,
+  reportComposerError,
 } from '#/components/ComposerV2/errors'
 import {MAX_IMAGES_PER_POST} from '#/components/ComposerV2/store/const'
 import {
@@ -39,7 +39,7 @@ import {type Gif} from '#/features/gifPicker/types'
 import {app, chat, com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
-export type ComposerV2PlanErrorCode =
+export type ThreadPlanErrorCode =
   | 'missing-dependency'
   | 'invalid-snapshot'
   | 'empty-composition'
@@ -58,8 +58,8 @@ export type ComposerV2PlanErrorCode =
   | 'invalid-write-input'
   | 'unexpected-error'
 
-export type ComposerV2PlanError = {
-  code: ComposerV2PlanErrorCode
+export type ThreadPlanError = {
+  code: ThreadPlanErrorCode
   message: string
   /** Position of the offending post within the captured snapshot order. */
   postIndex?: number
@@ -75,7 +75,7 @@ export type ComposerV2PlanError = {
  * decisions belong to the composing surface (user preferences, confirmation
  * dialogs), so the planner takes them as explicit inputs.
  */
-export type ComposerV2PlannerPreflight = {
+export type PlannerPreflight = {
   /**
    * Mirrors the user's require-alt-text preference. When true, resolved
    * images, GIFs, and non-failed videos without alt text fail preflight.
@@ -89,7 +89,7 @@ export type ComposerV2PlannerPreflight = {
   skipEmptyPostsConfirmed?: boolean
 }
 
-export type ComposerV2PlannerDependencies = {
+export type PlannerDependencies = {
   /** DID that owns every planned post and gate record. */
   did: string
   /** AppView client used only for authoritative rich-text and reply reads. */
@@ -116,7 +116,7 @@ export type ComposerV2PlannerDependencies = {
   resolveGif?: (gif: Gif) => Promise<Extract<ResolvedLink, {type: 'external'}>>
 }
 
-export type PlannedComposerV2Post = {
+export type PlannedPost = {
   postId: string
   rkey: string
   uri: string
@@ -124,22 +124,21 @@ export type PlannedComposerV2Post = {
   record: app.bsky.feed.post.Main
 }
 
-export type PlannedComposerV2Write =
+export type PlannedWrite =
   com.atproto.repo.applyWrites.$InputBody['writes'][number]
 
-export type ComposerV2Plan = {
+export type ThreadPlan = {
   ok: true
   input: com.atproto.repo.applyWrites.$InputBody
-  posts: PlannedComposerV2Post[]
-  writes: PlannedComposerV2Write[]
+  posts: PlannedPost[]
+  writes: PlannedWrite[]
 }
 
-export type ComposerV2PlanResult =
-  ComposerV2Plan | {ok: false; error: ComposerV2PlanError}
+export type ThreadPlanResult = ThreadPlan | {ok: false; error: ThreadPlanError}
 
 class PlannerFailure extends Error {
   constructor(
-    readonly detail: ComposerV2PlanError,
+    readonly detail: ThreadPlanError,
     cause?: unknown,
   ) {
     super(detail.message, {cause})
@@ -169,18 +168,18 @@ class PlannerFailure extends Error {
  * post has content and is never silently discarded. Required alt text is a
  * caller preference passed through `preflight`, not a lexicon constraint.
  */
-export async function planComposerV2({
+export async function planThread({
   snapshot,
   dependencies,
   preflight,
   onError,
 }: {
   snapshot: ThreadState
-  dependencies: ComposerV2PlannerDependencies
-  preflight?: ComposerV2PlannerPreflight
+  dependencies: PlannerDependencies
+  preflight?: PlannerPreflight
   /** Pass a session/attempt-guarded callback when planning can be superseded. */
-  onError?: ComposerV2OnError
-}): Promise<ComposerV2PlanResult> {
+  onError?: ComposerOnError
+}): Promise<ThreadPlanResult> {
   try {
     validateSnapshot({snapshot, dependencies})
     /* Capture the immutable snapshot's branches once, before the first await.
@@ -220,8 +219,8 @@ export async function planComposerV2({
             error,
           ).detail
     const reporting = PLAN_ERROR_REPORTING[detail.code]
-    if (reporting && !isComposerV2Cancellation({cause: detail.cause})) {
-      reportComposerV2Error({
+    if (reporting && !isComposerCancellation({cause: detail.cause})) {
+      reportComposerError({
         onError,
         event: {
           source: 'planner',
@@ -244,8 +243,8 @@ export async function planComposerV2({
  * is not a new failed attempt.
  */
 const PLAN_ERROR_REPORTING: Record<
-  ComposerV2PlanErrorCode,
-  {kind: ComposerV2ErrorKind; recovery: ComposerV2ErrorRecovery} | null
+  ThreadPlanErrorCode,
+  {kind: ComposerErrorKind; recovery: ComposerErrorRecovery} | null
 > = {
   'missing-dependency': {kind: 'unexpected', recovery: 'none'},
   'invalid-snapshot': {kind: 'unexpected', recovery: 'none'},
@@ -271,7 +270,7 @@ const PLAN_ERROR_REPORTING: Record<
 function resolvePlanTime({
   dependencies,
 }: {
-  dependencies: ComposerV2PlannerDependencies
+  dependencies: PlannerDependencies
 }): Date {
   const now = dependencies.now?.() ?? new Date()
   if (!Number.isFinite(now.getTime())) {
@@ -305,7 +304,7 @@ async function buildPostRecords({
 }: {
   entries: PlanEntry[]
   now: Date
-  dependencies: ComposerV2PlannerDependencies
+  dependencies: PlannerDependencies
 }): Promise<PostRecord[]> {
   const records: PostRecord[] = []
   for (const [order, entry] of entries.entries()) {
@@ -372,10 +371,10 @@ async function assignThreadRefs({
   records: PostRecord[]
   did: string
   now: Date
-  createRkey: ComposerV2PlannerDependencies['__createRkey']
+  createRkey: PlannerDependencies['__createRkey']
   externalReply: app.bsky.feed.post.Main['reply']
-}): Promise<PlannedComposerV2Post[]> {
-  const plannedPosts: PlannedComposerV2Post[] = []
+}): Promise<PlannedPost[]> {
+  const plannedPosts: PlannedPost[] = []
   const usedKeys = new Set<string>()
   let tid: TID | undefined
   let reply = externalReply
@@ -427,15 +426,15 @@ function buildWrites({
   threadgateAllowRules,
   postgateEmbeddingRules,
 }: {
-  posts: PlannedComposerV2Post[]
+  posts: PlannedPost[]
   did: string
   threadgateAllowRules: ThreadState['threadgateAllowRules']
   postgateEmbeddingRules: ThreadState['postgateEmbeddingRules']
 }): {
   input: com.atproto.repo.applyWrites.$InputBody
-  writes: PlannedComposerV2Write[]
+  writes: PlannedWrite[]
 } {
-  const writes: PlannedComposerV2Write[] = []
+  const writes: PlannedWrite[] = []
   for (const [postIndex, planned] of posts.entries()) {
     addValidatedWrite({
       writes,
@@ -524,7 +523,7 @@ function preflightEntries({
   preflight,
 }: {
   allEntries: Array<[string, ThreadPost]>
-  preflight: ComposerV2PlannerPreflight | undefined
+  preflight: PlannerPreflight | undefined
 }): PlanEntry[] {
   const emptyFlags = allEntries.map(([, post]) => isEmptyThreadPost({post}))
   if (emptyFlags.every(Boolean)) {
@@ -623,7 +622,7 @@ function validateSnapshot({
   dependencies,
 }: {
   snapshot: ThreadState
-  dependencies: ComposerV2PlannerDependencies
+  dependencies: PlannerDependencies
 }) {
   if (
     !snapshot ||
@@ -706,7 +705,7 @@ async function resolveExternalReply({
   dependencies,
 }: {
   replyTo: ThreadReplyTarget
-  dependencies: ComposerV2PlannerDependencies
+  dependencies: PlannerDependencies
 }): Promise<NonNullable<app.bsky.feed.post.Main['reply']>> {
   if (dependencies.resolveReply) {
     try {
@@ -764,7 +763,7 @@ async function buildEmbed({
   record: ThreadState['posts'][string]['attachments']['record']
   postIndex: number
   postId: string
-  dependencies: ComposerV2PlannerDependencies
+  dependencies: PlannerDependencies
 }): Promise<PlannedEmbed | undefined> {
   const recordEmbed: $Typed<app.bsky.embed.record.Main> | undefined = record
     ? {
@@ -813,7 +812,7 @@ async function buildMediaEmbed({
   media: MediaAttachment
   postIndex: number
   postId: string
-  dependencies: ComposerV2PlannerDependencies
+  dependencies: PlannerDependencies
 }): Promise<PlannedMediaEmbed> {
   if (media.state !== 'resolved') {
     throw failure({
@@ -1015,7 +1014,7 @@ async function externalRecord({
   link: MediaCardValue | Extract<ResolvedLink, {type: 'external'}>
   postIndex: number
   postId: string
-  dependencies: ComposerV2PlannerDependencies
+  dependencies: PlannerDependencies
 }): Promise<$Typed<app.bsky.embed.external.Main>> {
   let thumb: BlobRef | undefined
   const linkThumb = 'thumb' in link ? link.thumb : undefined
@@ -1086,8 +1085,8 @@ function addValidatedWrite({
   postIndex,
   postId,
 }: {
-  writes: PlannedComposerV2Write[]
-  write: PlannedComposerV2Write
+  writes: PlannedWrite[]
+  write: PlannedWrite
   postIndex: number
   postId: string
 }) {
@@ -1128,7 +1127,7 @@ function failure({
   collection,
   cause,
 }: {
-  code: ComposerV2PlanErrorCode
+  code: ThreadPlanErrorCode
   message: string
   postIndex?: number
   postId?: string

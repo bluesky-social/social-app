@@ -29,7 +29,7 @@ import {MediaAttachmentView} from '#/view/screens/DebugComposer/components/Attac
 import {PlanSection} from '#/view/screens/DebugComposer/components/PlanSection'
 import {usePlanRunner} from '#/view/screens/DebugComposer/usePlanRunner'
 import {ThreadStoreProvider} from '#/components/ComposerV2/hooks'
-import {planComposerV2} from '#/components/ComposerV2/planner'
+import {planThread} from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {type MediaAttachment} from '#/components/ComposerV2/store/types'
@@ -53,7 +53,7 @@ describe('tester record inspection', () => {
         postgateEmbeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
       },
     })
-    const planner = jest.fn<typeof planComposerV2>(planComposerV2)
+    const planner = jest.fn<typeof planThread>(planThread)
     const onPublishPlan = jest.fn()
     const session = {key: 'inspection', scenarioId: 'empty' as const, store}
     function Harness({publishLocked = false}: {publishLocked?: boolean}) {
@@ -81,14 +81,12 @@ describe('tester record inspection', () => {
     )
     try {
       await act(async () => {
-        fireEvent.press(screen.getByTestId('composerV2Tester-plan'))
+        fireEvent.press(screen.getByTestId('debugComposer-plan'))
         await planner.mock.results[0].value
       })
-      expect(screen.queryByTestId('composerV2Tester-plan-records')).toBeNull()
-      fireEvent.press(
-        screen.getByTestId('composerV2Tester-plan-records-toggle'),
-      )
-      const output = screen.getByTestId('composerV2Tester-plan-records')
+      expect(screen.queryByTestId('debugComposer-plan-records')).toBeNull()
+      fireEvent.press(screen.getByTestId('debugComposer-plan-records-toggle'))
+      const output = screen.getByTestId('debugComposer-plan-records')
       const call = planner.mock.results[0]
       if (call.type !== 'return')
         throw new Error('Expected the planner to return')
@@ -107,10 +105,10 @@ describe('tester record inspection', () => {
       expect(output.props.selectable).toBe(true)
       expect(appviewCall).not.toHaveBeenCalled()
       expect(onPublishPlan).not.toHaveBeenCalled()
-      expect(screen.getByTestId('composerV2Tester-publish')).toBeDisabled()
+      expect(screen.getByTestId('debugComposer-publish')).toBeDisabled()
 
-      fireEvent.press(screen.getByTestId('composerV2Tester-publish-enable'))
-      const publishButton = screen.getByTestId('composerV2Tester-publish')
+      fireEvent.press(screen.getByTestId('debugComposer-publish-enable'))
+      const publishButton = screen.getByTestId('debugComposer-publish')
       expect(publishButton).toBeEnabled()
       act(() => {
         store.actions.setPostText(
@@ -118,17 +116,17 @@ describe('tester record inspection', () => {
           'Changed after planning',
         )
       })
-      expect(screen.getByTestId('composerV2Tester-plan-stale')).toBeTruthy()
-      expect(screen.getByTestId('composerV2Tester-publish')).toBeDisabled()
-      fireEvent.press(screen.getByTestId('composerV2Tester-publish'))
+      expect(screen.getByTestId('debugComposer-plan-stale')).toBeTruthy()
+      expect(screen.getByTestId('debugComposer-publish')).toBeDisabled()
+      fireEvent.press(screen.getByTestId('debugComposer-publish'))
       expect(onPublishPlan).not.toHaveBeenCalled()
       await act(async () => {
-        fireEvent.press(screen.getByTestId('composerV2Tester-plan'))
+        fireEvent.press(screen.getByTestId('debugComposer-plan'))
         await planner.mock.results[1].value
       })
       const refreshedPlan = await planner.mock.results[1].value
-      expect(screen.getByTestId('composerV2Tester-publish')).toBeEnabled()
-      fireEvent.press(screen.getByTestId('composerV2Tester-publish'))
+      expect(screen.getByTestId('debugComposer-publish')).toBeEnabled()
+      fireEvent.press(screen.getByTestId('debugComposer-publish'))
       expect(onPublishPlan).toHaveBeenCalledTimes(1)
       expect(onPublishPlan).toHaveBeenCalledWith(refreshedPlan)
 
@@ -137,19 +135,17 @@ describe('tester record inspection', () => {
           <Harness publishLocked />
         </I18nProvider>,
       )
-      expect(screen.getByTestId('composerV2Tester-plan')).toBeDisabled()
-      expect(screen.getByTestId('composerV2Tester-plan-clear')).toBeDisabled()
-      expect(screen.getByTestId('composerV2Tester-publish')).toBeDisabled()
-      expect(
-        screen.getByTestId('composerV2Tester-publish-enable'),
-      ).toBeDisabled()
+      expect(screen.getByTestId('debugComposer-plan')).toBeDisabled()
+      expect(screen.getByTestId('debugComposer-plan-clear')).toBeDisabled()
+      expect(screen.getByTestId('debugComposer-publish')).toBeDisabled()
+      expect(screen.getByTestId('debugComposer-publish-enable')).toBeDisabled()
       rerender(
         <I18nProvider i18n={i18n}>
           <Harness />
         </I18nProvider>,
       )
-      fireEvent.press(screen.getByTestId('composerV2Tester-plan-clear'))
-      expect(screen.queryByTestId('composerV2Tester-plan-records')).toBeNull()
+      fireEvent.press(screen.getByTestId('debugComposer-plan-clear'))
+      expect(screen.queryByTestId('debugComposer-plan-records')).toBeNull()
     } finally {
       unmount()
       store.destroy()
@@ -163,7 +159,7 @@ describe('tester record inspection', () => {
       resolvers,
       initialState: {posts: [{text: 'first'}, {text: ''}, {text: 'third'}]},
     })
-    const planner = jest.fn<typeof planComposerV2>(planComposerV2)
+    const planner = jest.fn<typeof planThread>(planThread)
     const session = {key: 'empty-post', scenarioId: 'thread' as const, store}
     function Harness() {
       const plan = usePlanRunner({
@@ -190,22 +186,18 @@ describe('tester record inspection', () => {
     )
     try {
       await act(async () => {
-        fireEvent.press(screen.getByTestId('composerV2Tester-plan'))
+        fireEvent.press(screen.getByTestId('debugComposer-plan'))
         await planner.mock.results[0].value
       })
-      expect(
-        screen.getByTestId('composerV2Tester-plan-confirm-skip'),
-      ).toBeTruthy()
+      expect(screen.getByTestId('debugComposer-plan-confirm-skip')).toBeTruthy()
       act(() => {
         store.actions.setPostText(
           Object.keys(store.getState().posts)[1],
           'now filled',
         )
       })
-      expect(screen.getByTestId('composerV2Tester-plan-stale')).toBeTruthy()
-      expect(
-        screen.queryByTestId('composerV2Tester-plan-confirm-skip'),
-      ).toBeNull()
+      expect(screen.getByTestId('debugComposer-plan-stale')).toBeTruthy()
+      expect(screen.queryByTestId('debugComposer-plan-confirm-skip')).toBeNull()
     } finally {
       unmount()
       store.destroy()
@@ -296,7 +288,7 @@ describe('tester record inspection', () => {
     )
     try {
       const output = screen.getByTestId(
-        'composerV2Tester-post-post-1-external-fields',
+        'debugComposer-post-post-1-external-fields',
       )
       expect(output.props.children).toEqual([JSON.stringify(media, null, 2)])
       expect(output.props.numberOfLines).toBeUndefined()

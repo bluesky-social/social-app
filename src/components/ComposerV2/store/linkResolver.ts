@@ -1,9 +1,9 @@
 /*
  * Link resolution with supersession and failure classification.
  *
- * This module is deliberately independent of ComposerV2: it knows nothing about
- * posts, slots, or store state, only keyed requests. That keeps it movable to
- * `#/lib` if another surface needs the same behavior.
+ * This module is deliberately independent of the composer store: it knows
+ * nothing about posts, slots, or store state, only keyed requests. That keeps
+ * it movable to `#/lib` if another surface needs the same behavior.
  */
 import {
   EmbeddingDisabledError,

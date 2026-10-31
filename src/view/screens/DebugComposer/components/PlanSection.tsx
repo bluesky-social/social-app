@@ -3,12 +3,12 @@ import {ScrollView, View} from 'react-native'
 
 import {StatusBadgeText} from '#/view/screens/DebugComposer/components/StatusBadge'
 import {planErrorHint} from '#/view/screens/DebugComposer/messages'
-import {type PlanSummary} from '#/view/screens/DebugComposer/summarizeComposerV2Plan'
+import {type PlanSummary} from '#/view/screens/DebugComposer/summarizeThreadPlan'
 import {type usePlanRunner} from '#/view/screens/DebugComposer/usePlanRunner'
 import {atoms as a, useTheme} from '#/alf'
 import * as Admonition from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
-import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
+import {type ThreadPlan} from '#/components/ComposerV2/planner'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
@@ -35,7 +35,7 @@ export function PlanSection({
   accountDid: string | undefined
   publishLocked: boolean
   publishStatus?: 'writing' | 'published' | 'uncertain' | 'rejected'
-  onPublishPlan: (plan: ComposerV2Plan) => void
+  onPublishPlan: (plan: ThreadPlan) => void
 }) {
   const t = useTheme()
   const [showStructure, setShowStructure] = useState(false)
@@ -95,7 +95,7 @@ export function PlanSection({
     <View style={[a.gap_sm]}>
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
         <Text style={[a.text_md, a.font_bold]}>Record plan</Text>
-        <StatusBadgeText tone={planTone} testID="composerV2Tester-plan-status">
+        <StatusBadgeText tone={planTone} testID="debugComposer-plan-status">
           {planStatus}
         </StatusBadgeText>
         {summary?.ok && (
@@ -109,7 +109,7 @@ export function PlanSection({
         <Button
           label="Plan the record set without writing"
           accessibilityHint="Validates and constructs the records locally; nothing is published"
-          testID="composerV2Tester-plan"
+          testID="debugComposer-plan"
           size="small"
           color="primary"
           disabled={plan.isPlanning || publishLocked}
@@ -119,7 +119,7 @@ export function PlanSection({
         {needsEmptyPostConfirmation && !plan.isStale && (
           <Button
             label="Confirm skipping empty posts and plan again"
-            testID="composerV2Tester-plan-confirm-skip"
+            testID="debugComposer-plan-confirm-skip"
             size="small"
             color="secondary"
             disabled={plan.isPlanning || publishLocked}
@@ -130,7 +130,7 @@ export function PlanSection({
         {plan.result && (
           <Button
             label="Clear the plan result"
-            testID="composerV2Tester-plan-clear"
+            testID="debugComposer-plan-clear"
             size="small"
             color="secondary"
             disabled={publishLocked}
@@ -154,7 +154,7 @@ export function PlanSection({
       {plan.isStale && (
         <Text
           style={[a.text_xs, {color: t.palette.negative_500}]}
-          testID="composerV2Tester-plan-stale">
+          testID="debugComposer-plan-stale">
           Stale: the composition changed after this plan was captured.
         </Text>
       )}
@@ -166,7 +166,7 @@ export function PlanSection({
             : 'No plan yet. Planning never publishes anything.'}
         </Text>
       ) : summary.ok ? (
-        <View style={[a.gap_xs]} testID="composerV2Tester-plan-result">
+        <View style={[a.gap_xs]} testID="debugComposer-plan-result">
           <ScrollView
             horizontal
             contentContainerStyle={[a.p_sm]}
@@ -195,7 +195,7 @@ export function PlanSection({
                 ? 'Hide final URIs, reply relationships, and gate associations'
                 : 'Show final URIs, reply relationships, and gate associations'
             }
-            testID="composerV2Tester-plan-structure-toggle"
+            testID="debugComposer-plan-structure-toggle"
             size="tiny"
             color="secondary"
             style={[a.self_start]}
@@ -211,7 +211,7 @@ export function PlanSection({
                 ? 'Hide generated records JSON'
                 : 'Show generated records JSON'
             }
-            testID="composerV2Tester-plan-records-toggle"
+            testID="debugComposer-plan-records-toggle"
             size="tiny"
             color="secondary"
             style={[a.self_start]}
@@ -229,14 +229,14 @@ export function PlanSection({
                 emoji
                 selectable
                 style={[a.text_xs, {fontFamily: 'monospace'}]}
-                testID="composerV2Tester-plan-records">
+                testID="debugComposer-plan-records">
                 {JSON.stringify(plan.result?.writes, null, 2)}
               </Text>
             </ScrollView>
           )}
         </View>
       ) : (
-        <View testID="composerV2Tester-plan-error">
+        <View testID="debugComposer-plan-error">
           <Admonition.Outer
             type={needsEmptyPostConfirmation ? 'warning' : 'error'}>
             <Admonition.Row>
@@ -268,7 +268,7 @@ export function PlanSection({
       )}
 
       <Divider />
-      <View style={[a.gap_sm]} testID="composerV2Tester-publish-controls">
+      <View style={[a.gap_sm]} testID="debugComposer-publish-controls">
         <View style={[a.flex_row, a.align_center, a.gap_sm, a.flex_wrap]}>
           <Text style={[a.text_md, a.font_bold]}>Publish</Text>
           <StatusBadgeText
@@ -292,7 +292,7 @@ export function PlanSection({
           label="Enable publishing controls for this tester"
           value={publishingEnabled}
           disabled={publishLocked}
-          testID="composerV2Tester-publish-enable"
+          testID="debugComposer-publish-enable"
           onChange={setPublishingEnabled}>
           <Toggle.Checkbox />
           <Toggle.LabelText>Enable publishing in this tester</Toggle.LabelText>
@@ -306,7 +306,7 @@ export function PlanSection({
         )}
         <View
           style={[a.flex_row, a.flex_wrap, a.gap_sm]}
-          testID="composerV2Tester-publish-gates">
+          testID="debugComposer-publish-gates">
           {publishChecks.map(check => (
             <Text
               key={check.label}
@@ -326,7 +326,7 @@ export function PlanSection({
         <Button
           label="Publish the exact planned records to your account"
           accessibilityHint="Writes the current plan to the signed-in account. This cannot be undone here."
-          testID="composerV2Tester-publish"
+          testID="debugComposer-publish"
           size="small"
           color={canPublish ? 'negative' : 'secondary'}
           style={[a.self_start]}
@@ -376,14 +376,14 @@ function PlanStructure({summary}: {summary: Extract<PlanSummary, {ok: true}>}) {
         a.border,
         t.atoms.border_contrast_low,
       ]}
-      testID="composerV2Tester-plan-structure">
+      testID="debugComposer-plan-structure">
       {summary.posts.map((post, index) => {
         const gates = summary.gates.filter(gate => gate.postUri === post.uri)
         return (
           <View
             key={post.rkey}
             style={[a.gap_2xs]}
-            testID={`composerV2Tester-plan-post-${index}-structure`}>
+            testID={`debugComposer-plan-post-${index}-structure`}>
             <Text style={[a.text_xs, {fontFamily: 'monospace'}]}>
               [{index}] {post.uri}
             </Text>
