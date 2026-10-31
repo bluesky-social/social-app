@@ -25,7 +25,7 @@ jobs:
   ios:
     name: iOS Maestro E2E
     if: github.repository == 'bluesky-social/social-app'
-    runs-on: macos-26-xlarge
+    runs-on: xcode-27-xlarge
     timeout-minutes: 120
     steps:
       - name: ⬇️ Checkout
@@ -33,10 +33,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: 🛠️ Select Xcode 26.4
+      - name: 🛠️ Select Xcode 27.1
         uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
         with:
-          xcode-version: "26.4"
+          xcode-version: "27.1"
 
       - name: 🧰 Prepare E2E configuration
         run: |
@@ -81,7 +81,7 @@ jobs:
         run: |
           echo "Booting iOS simulator" > artifacts/ios/phase.txt
           device_name="iPhone 17"
-          runtime_name="iOS 26.5"
+          runtime_name="iOS 27.0"
 
           runtime_id=$(xcrun simctl list runtimes available --json | jq -r \
             --arg name "$runtime_name" \

@@ -279,7 +279,7 @@ jobs:
       profile: testflight
       testFlightGroup: "QA Team"
       # OTA rebuilds don't need the xlarge builder used for releases
-      runner: macos-26
+      runner: xcode-27
     # Pass only the secrets the reusable workflow declares, rather than `secrets: inherit`,
     # so this workflow never hands the reusable workflow the entire repo secret store.
     secrets:
