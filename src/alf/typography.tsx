@@ -16,6 +16,11 @@ import {
 } from '#/alf'
 import {IS_IOS, IS_NATIVE} from '#/env'
 
+type NormalizeTextStylesOptions = {
+  fontScale: number
+  fontFamily: Alf['fonts']['family']
+} & Pick<Alf, 'flags'>
+
 /**
  * Ensures that `lineHeight` defaults to a relative value of `1`, or applies
  * other relative leading atoms.
@@ -25,16 +30,37 @@ import {IS_IOS, IS_NATIVE} from '#/env'
  */
 export function normalizeTextStyles(
   styles: StyleProp<TextStyle>,
-  {
-    fontScale,
-    fontFamily,
-  }: {
-    fontScale: number
-    fontFamily: Alf['fonts']['family']
-  } & Pick<Alf, 'flags'>,
+  options: NormalizeTextStylesOptions,
 ) {
-  const s: MutableTextStyle = {...flatten(styles)}
+  return normalizeFlatTextStyle({...flatten(styles)}, options)
+}
 
+/**
+ * Only the props that `normalizeTextStyles` changes. Render them after the
+ * original styles, as `[styles, overrides]`, rather than a flattened copy:
+ * that keeps the original style objects, which on web is what lets RNW render
+ * atoms as CSS classes instead of inline styles.
+ */
+export function getTextStyleOverrides(
+  styles: StyleProp<TextStyle>,
+  options: NormalizeTextStylesOptions,
+) {
+  const flat: MutableTextStyle = {...flatten(styles)}
+  const normalized = normalizeFlatTextStyle({...flat}, options)
+  const keys = new Set([...Object.keys(flat), ...Object.keys(normalized)])
+  const overrides: MutableTextStyle = {}
+  for (const key of keys as Set<keyof MutableTextStyle>) {
+    if (flat[key] !== normalized[key]) {
+      Object.assign(overrides, {[key]: normalized[key]})
+    }
+  }
+  return overrides
+}
+
+function normalizeFlatTextStyle(
+  s: MutableTextStyle,
+  {fontScale, fontFamily}: NormalizeTextStylesOptions,
+) {
   // should always be defined on these components
   s.fontSize = (s.fontSize || atoms.text_md.fontSize) * fontScale
 

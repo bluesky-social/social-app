@@ -1,13 +1,16 @@
+import {StyleSheet, type TextStyle} from 'react-native'
 import {UITextView} from '@bsky.app/react-native-uitextview'
 
 import {logger} from '#/logger'
-import {atoms as a, type TextStyleProp, useAlf, useTheme, web} from '#/alf'
+import {atoms as a, useAlf, useTheme, web} from '#/alf'
 import {
   childHasEmoji,
+  getTextStyleOverrides,
   normalizeTextStyles,
   renderChildrenWithEmoji,
   type TextProps,
 } from '#/alf/typography'
+import {IS_WEB} from '#/env'
 
 export type {TextProps}
 export {Text as Span} from 'react-native'
@@ -28,20 +31,26 @@ export function Text({
 }: TextProps) {
   const {fonts, flags} = useAlf()
   const t = useTheme()
-  const s = normalizeTextStyles(
-    [
-      a.text_sm,
-      t.atoms.text,
-      a.leading_snug,
-      web(numberOfLines === 1 && numberOfLinesClippingFix),
-      style,
-    ],
-    {
-      fontScale: allowFontScaling ? fonts.scaleMultiplier : 1,
-      fontFamily: fonts.family,
-      flags,
-    },
-  )
+  const input = [
+    a.text_sm,
+    t.atoms.text,
+    a.leading_snug,
+    web(numberOfLines === 1 && styles.numberOfLinesClippingFix),
+    style,
+  ]
+  const options = {
+    fontScale: allowFontScaling ? fonts.scaleMultiplier : 1,
+    fontFamily: fonts.family,
+    flags,
+  }
+  /*
+   * On web, keep the original style objects and add only the computed props,
+   * so atoms render as CSS classes rather than one flattened inline style.
+   * Native has no classes, so it keeps the flattened style.
+   */
+  const s = IS_WEB
+    ? [input, internTextStyle(getTextStyleOverrides(input, options))]
+    : normalizeTextStyles(input, options)
 
   if (__DEV__) {
     if (!emoji && childHasEmoji(children)) {
@@ -108,13 +117,35 @@ export function P({style, ...rest}: TextProps) {
  *
  * @see https://github.com/necolas/react-native-web/pull/2836
  */
-const numberOfLinesClippingFix = {
-  overflowY: 'visible',
-  overflowX: 'clip',
-  // mimic browser default behavior of `min-width: 0` on `overflow: hidden`
-  // elements to allow text to shrink smaller than its intrinsic width when
-  // necessary
-  minWidth: 0,
-  // this is neater and supports vertical writing modes, but it's only baseline newly available
-  // overflowInline: 'clip',
-} satisfies React.CSSProperties as TextStyleProp
+const styles = StyleSheet.create({
+  numberOfLinesClippingFix: {
+    overflowY: 'visible',
+    overflowX: 'clip',
+    // mimic browser default behavior of `min-width: 0` on `overflow: hidden`
+    // elements to allow text to shrink smaller than its intrinsic width when
+    // necessary
+    minWidth: 0,
+    // this is neater and supports vertical writing modes, but it's only baseline newly available
+    // overflowInline: 'clip',
+  } satisfies React.CSSProperties as TextStyle,
+})
+
+const MAX_INTERNED_TEXT_STYLES = 500
+const internedTextStyles = new Map<string, TextStyle>()
+
+/**
+ * Text's computed props take few distinct values (one per font size, leading
+ * and family), so each combination is created once and reused, which on web
+ * makes it a CSS class too. Past a cap, e.g. if something animates a font
+ * size, new combinations are returned as-is and render inline.
+ */
+function internTextStyle(style: TextStyle) {
+  const key = JSON.stringify(style)
+  let interned = internedTextStyles.get(key)
+  if (!interned) {
+    if (internedTextStyles.size >= MAX_INTERNED_TEXT_STYLES) return style
+    interned = StyleSheet.create({style}).style
+    internedTextStyles.set(key, interned)
+  }
+  return interned
+}
