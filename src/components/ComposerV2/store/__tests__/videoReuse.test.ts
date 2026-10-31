@@ -28,6 +28,7 @@ import {type CompressedVideo} from '#/lib/media/video/types'
 import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
+  completedJobClient,
   fakeAnalytics,
   fakeUploadAttempt,
   fakeVideoDependencies,
@@ -160,6 +161,7 @@ function makeStore(video: Partial<VideoUploadDependencies> = {}) {
         createVideoTelemetry,
         getVideoMetadata,
         getFileSize: presentFile(),
+        createVideoServiceClient: completedJobClient({blob: videoBlob}),
         ...video,
         compressVideo,
         uploadVideo,
@@ -849,16 +851,7 @@ describe('captions after the video is processed', () => {
     uploadVideo: jest.fn<VideoUploadDependencies['uploadVideo']>(() =>
       Promise.resolve({state: 'JOB_STATE_ENCODING', jobId: 'job-1'} as never),
     ),
-    createVideoServiceClient: (() => ({
-      call: () =>
-        Promise.resolve({
-          jobStatus: {
-            state: 'JOB_STATE_COMPLETED',
-            jobId: 'job-1',
-            blob: videoBlob,
-          },
-        }),
-    })) as never,
+    createVideoServiceClient: completedJobClient({blob: videoBlob}),
     sleep: () => Promise.resolve(),
   })
 

@@ -808,21 +808,21 @@ async function uploadAndProcessVideo({
       uploadResult.failureCode,
     )
   }
-  let blob: BlobRef | undefined
-  if (uploadResult.state === 'JOB_STATE_COMPLETED') {
-    blob = uploadResult.blob
-    if (!blob) throw new VideoJobError('Completed video did not return a blob')
-  } else {
-    if (!uploadResult.jobId)
-      throw new VideoJobError('Video upload did not return a job')
-    blob = await pollVideoJob({
-      jobId: uploadResult.jobId,
-      signal,
-      createVideoServiceClient,
-      sleep,
-      attempt,
-    })
-  }
+  /*
+   * The blob always comes from polling, even when the upload already reports
+   * a completed job. The upload response is untyped JSON, so its blob has
+   * `ref: {$link}` rather than a `BlobRef`; only the lex client decodes a
+   * valid one. The first poll of a finished job returns right away.
+   */
+  if (!uploadResult.jobId)
+    throw new VideoJobError('Video upload did not return a job')
+  const blob = await pollVideoJob({
+    jobId: uploadResult.jobId,
+    signal,
+    createVideoServiceClient,
+    sleep,
+    attempt,
+  })
   throwIfAborted({signal})
   telemetry.processingCompleted()
   failure.stage = undefined

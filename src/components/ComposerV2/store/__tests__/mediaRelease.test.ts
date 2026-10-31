@@ -29,6 +29,7 @@ import {type CompressedVideo} from '#/lib/media/video/types'
 import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
+  completedJobClient,
   fakeAnalytics,
   fakeImageDependencies,
   fakeUploadAttempt,
@@ -420,6 +421,7 @@ describe('native encoded video outputs', () => {
           },
           compressVideo: () => Promise.resolve(encoded),
           uploadVideo: () => Promise.resolve(completed),
+          createVideoServiceClient: completedJobClient({blob: blob('video')}),
           releaseCompressedVideo: ({uri}) => {
             released.push(uri)
           },
@@ -717,6 +719,7 @@ describe('native encoded video outputs', () => {
           getFileSize: () => Promise.resolve(encoded.size),
           compressVideo: () => Promise.resolve(encoded),
           uploadVideo: () => Promise.resolve(completed),
+          createVideoServiceClient: completedJobClient({blob: blob('video')}),
         },
       }),
     })

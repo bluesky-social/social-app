@@ -13,6 +13,7 @@ import {VIDEO_MAX_SIZE} from '#/lib/constants'
 import {VideoTooLargeError} from '#/lib/media/video/errors'
 import {type CompressedVideo} from '#/lib/media/video/types'
 import {
+  completedJobClient,
   fakeImageDependencies,
   fakeUploadAttempt,
   fakeVideoDependencies,
@@ -28,6 +29,7 @@ import {
   type VideoUploadAttempt,
   type VideoUploadDependencies,
 } from '#/components/ComposerV2/store/uploads'
+import {app} from '#/lexicons'
 
 const blob = (name: string) =>
   ({
@@ -142,6 +144,7 @@ async function runVideo({
     ...fakeVideoDependencies({
       compressVideo,
       uploadVideo: uploadVideo as never,
+      createVideoServiceClient: completedJobClient({blob: blob('video')}),
       ...dependencies,
     }),
     attempt: recordingAttempt({
@@ -1016,6 +1019,7 @@ describe('ComposerV2 real media workers', () => {
           }),
         uploadVideo: uploadVideo as never,
         uploadBlob: captionUpload,
+        createVideoServiceClient: completedJobClient({blob: blob('video')}),
       }),
       attempt: recordingAttempt({statuses}),
     })
@@ -1038,6 +1042,52 @@ describe('ComposerV2 real media workers', () => {
       blob: blob('video'),
       captionBlobs: [{lang: 'en', blob: blob('caption')}],
     })
+  })
+
+  test('takes the blob of an immediately completed upload from the job poll, never the raw response', async () => {
+    const statuses: UploadStatus[] = []
+    /* Untyped JSON from the video service: `ref` is `{$link}`, not a CID. */
+    const rawBlob = blob('raw')
+    const polledBlob = blob('polled')
+    const createVideoServiceClient = completedJobClient({blob: polledBlob})
+    startVideoUpload({
+      media: video({captions: []}),
+      ...runtime,
+      ...fakeVideoDependencies({
+        getVideoMetadata: () =>
+          Promise.resolve({
+            uri: 'file:///source.mp4',
+            mimeType: 'video/mp4',
+            width: 1920,
+            height: 1080,
+            duration: 1000,
+          }),
+        compressVideo: () =>
+          Promise.resolve({
+            uri: 'file:///compressed.mp4',
+            size: 100,
+            mimeType: 'video/mp4',
+          }),
+        uploadVideo: (() =>
+          Promise.resolve({
+            state: 'JOB_STATE_COMPLETED',
+            jobId: 'job-1',
+            blob: rawBlob,
+          })) as never,
+        createVideoServiceClient,
+      }),
+      attempt: recordingAttempt({statuses}),
+    })
+    await settle()
+
+    expect(createVideoServiceClient.call).toHaveBeenCalledTimes(1)
+    expect(createVideoServiceClient.call).toHaveBeenCalledWith(
+      app.bsky.video.getJobStatus,
+      {jobId: 'job-1'},
+    )
+    const last = statuses.at(-1)
+    expect(last).toMatchObject({state: 'uploaded'})
+    expect(last?.state === 'uploaded' && last.blob).toBe(polledBlob)
   })
 
   test('polls unfinished video jobs and preserves a completed blob when captions fail', async () => {

@@ -10,6 +10,7 @@ jest.mock('#/lib/api/resolve', () => {
 import {type LinkResolvers} from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
+  completedJobClient,
   realUploadWorkers,
   reportAnyStatus,
   testUploadRuntime,
@@ -195,9 +196,14 @@ test('a real caption retry reuses video and unchanged captions after a partial f
         },
       ],
     },
-    /* Polling is not faked; reaching it fails the upload. */
     __uploadWorkers: realUploadWorkers({
-      video: {getVideoMetadata, compressVideo, uploadVideo, uploadBlob},
+      video: {
+        getVideoMetadata,
+        compressVideo,
+        uploadVideo,
+        uploadBlob,
+        createVideoServiceClient: completedJobClient({blob: videoBlob}),
+      },
     }),
   })
   const waitForUpload = async (state: 'failed' | 'uploaded') => {

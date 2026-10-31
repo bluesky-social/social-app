@@ -226,6 +226,29 @@ export function fakeImageDependencies(
   }
 }
 
+/**
+ * A `createVideoServiceClient` whose `getJobStatus` reports a finished job with
+ * `blob`. The worker takes a video's blob only from polling, so tests that
+ * expect an `uploaded` video need one of these (or a real job poll).
+ */
+export function completedJobClient({
+  blob,
+  jobId = 'job-1',
+}: {
+  blob: BlobRef
+  jobId?: string
+}) {
+  const call = jest.fn(() =>
+    Promise.resolve({jobStatus: {state: 'JOB_STATE_COMPLETED', jobId, blob}}),
+  )
+  const createClient = () => ({call})
+  return Object.assign(createClient, {
+    call,
+  }) as unknown as VideoUploadDependencies['createVideoServiceClient'] & {
+    call: typeof call
+  }
+}
+
 /** Complete video-worker fakes; pass the dependencies a test exercises. */
 export function fakeVideoDependencies(
   overrides: Partial<VideoUploadDependencies> = {},

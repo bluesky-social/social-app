@@ -22,6 +22,7 @@ import {type CompressedVideo} from '#/lib/media/video/types'
 import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
+  completedJobClient,
   fakeAnalytics,
   realUploadWorkers,
   testUploadRuntime,
@@ -98,6 +99,7 @@ function makeStore(video: Partial<VideoUploadDependencies> = {}) {
             jobId: 'job-1',
             blob: videoBlob,
           } as never),
+        createVideoServiceClient: completedJobClient({blob: videoBlob}),
         ...video,
       },
     }),

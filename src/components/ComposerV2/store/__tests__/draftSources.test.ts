@@ -26,7 +26,11 @@ import {
   type VideoUploadDependencies,
 } from '#/components/ComposerV2/store/uploads'
 import {type app} from '#/lexicons'
-import {realUploadWorkers, testUploadRuntime} from './uploadTestUtils'
+import {
+  completedJobClient,
+  realUploadWorkers,
+  testUploadRuntime,
+} from './uploadTestUtils'
 
 /*
  * Restored draft media from the inbound adapter through the store into the real
@@ -342,7 +346,13 @@ describe('android: restored draft videos', () => {
     const store = await restore({
       draft: videoDraft({captions: []}),
       loadedMedia: new Map([['video:video/mp4:one', durable]]),
-      video: {copyVideoToCache, getVideoMetadata, compressVideo, uploadVideo},
+      video: {
+        copyVideoToCache,
+        getVideoMetadata,
+        compressVideo,
+        uploadVideo,
+        createVideoServiceClient: completedJobClient({blob: blob('video')}),
+      },
     })
     await settle()
 
