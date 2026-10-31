@@ -43,9 +43,11 @@ export type GetVideoMetadata = (
 ) => Promise<ProbedVideoMetadata>
 
 /**
- * Image loaders reject when the bytes cannot be decoded, with an `Event` on
- * web and an unspecified value on native, so any rejection means the source is
- * unreadable. Retrying would fail the same way.
+ * The web image loader rejects with an `Event` when the bytes cannot be
+ * decoded. Native `Image.getSize` rejects when the file cannot be read, but
+ * resolves 0x0 for undecodable bytes, which the dimension checks reject
+ * instead. Either way a rejection means the source is unreadable, so retrying
+ * would fail the same way.
  */
 async function readDimensions({
   uri,
