@@ -17,6 +17,7 @@ import {
   fakeImageDependencies,
   fakeUploadAttempt,
   fakeVideoDependencies,
+  flush,
 } from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {
   type PostMediaImage,
@@ -38,10 +39,6 @@ const blob = (name: string) =>
     mimeType: 'image/jpeg',
     size: 1,
   }) as unknown as BlobRef
-
-async function settle() {
-  for (let i = 0; i < 10; i++) await Promise.resolve()
-}
 
 function image(overrides: Partial<PostMediaImage> = {}): PostMediaImage {
   return {
@@ -153,7 +150,7 @@ async function runVideo({
       setSourceMetadata: sourceMetadata,
     }),
   })
-  await settle()
+  await flush()
   return {statuses, prepared, sourceMetadata, compressVideo, uploadVideo}
 }
 
@@ -202,7 +199,7 @@ describe('ComposerV2 real media workers', () => {
       ...fakeImageDependencies({compressImage, uploadBlob}),
       attempt: recordingAttempt({statuses, setCompressionResult: prepared}),
     })
-    await settle()
+    await flush()
 
     expect(compressImage).toHaveBeenCalledWith({
       image: expect.objectContaining({
@@ -253,7 +250,7 @@ describe('ComposerV2 real media workers', () => {
       }),
       attempt: recordingAttempt({statuses}),
     })
-    await settle()
+    await flush()
     expect(compressImage).toHaveBeenCalledTimes(1)
     task.cancel()
     resolveCompression({
@@ -262,7 +259,7 @@ describe('ComposerV2 real media workers', () => {
       height: 1,
       mime: 'image/jpeg',
     })
-    await settle()
+    await flush()
 
     expect(uploadBlob).not.toHaveBeenCalled()
     expect(statuses).toEqual([{state: 'uploading', phase: 'compressing'}])
@@ -287,7 +284,7 @@ describe('ComposerV2 real media workers', () => {
       }),
       attempt: recordingAttempt({statuses}),
     })
-    await settle()
+    await flush()
 
     expect(compressVideo).not.toHaveBeenCalled()
     expect(statuses.at(-1)).toMatchObject({
@@ -906,7 +903,7 @@ describe('ComposerV2 real media workers', () => {
           setSourceMetadata: sourceMetadata,
         }),
       })
-      await settle()
+      await flush()
       return {statuses, sourceMetadata, compressImage, uploadBlob}
     }
 
@@ -1023,7 +1020,7 @@ describe('ComposerV2 real media workers', () => {
       }),
       attempt: recordingAttempt({statuses}),
     })
-    await settle()
+    await flush()
 
     /* The shared video API still calls the account PDS URL `dispatchUrl`. */
     expect(uploadVideo).toHaveBeenCalledWith(
@@ -1078,7 +1075,7 @@ describe('ComposerV2 real media workers', () => {
       }),
       attempt: recordingAttempt({statuses}),
     })
-    await settle()
+    await flush()
 
     expect(createVideoServiceClient.call).toHaveBeenCalledTimes(1)
     expect(createVideoServiceClient.call).toHaveBeenCalledWith(
@@ -1135,7 +1132,7 @@ describe('ComposerV2 real media workers', () => {
       }),
       attempt: recordingAttempt({statuses}),
     })
-    await settle()
+    await flush()
 
     expect(createVideoServiceClient).toHaveBeenCalled()
     expect(statuses.at(-1)).toMatchObject({

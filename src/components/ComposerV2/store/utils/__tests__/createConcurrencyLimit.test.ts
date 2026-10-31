@@ -1,6 +1,7 @@
 import {describe, expect, jest, test} from '@jest/globals'
 
 import {AbortError} from '#/lib/async/cancelable'
+import {flush} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {createConcurrencyLimit} from '#/components/ComposerV2/store/utils/createConcurrencyLimit'
 
 function deferred<T = void>() {
@@ -11,10 +12,6 @@ function deferred<T = void>() {
     reject = rej
   })
   return {promise, resolve, reject}
-}
-
-async function settle() {
-  for (let i = 0; i < 10; i++) await Promise.resolve()
 }
 
 /** A task the test settles by hand, recording when it starts. */
@@ -39,15 +36,15 @@ describe('createConcurrencyLimit', () => {
     const c = manualTask('c', started)
 
     const results = [a, b, c].map(({task}) => limit({task, signal}))
-    await settle()
+    await flush()
     expect(started).toEqual(['a'])
 
     a.resolve('A')
-    await settle()
+    await flush()
     expect(started).toEqual(['a', 'b'])
 
     b.resolve('B')
-    await settle()
+    await flush()
     expect(started).toEqual(['a', 'b', 'c'])
 
     c.resolve('C')
@@ -63,11 +60,11 @@ describe('createConcurrencyLimit', () => {
     void limit({task: a.task, signal})
     void limit({task: b.task, signal})
     void limit({task: c.task, signal})
-    await settle()
+    await flush()
     expect(started).toEqual(['a', 'b'])
 
     b.resolve('B')
-    await settle()
+    await flush()
     expect(started).toEqual(['a', 'b', 'c'])
   })
 
@@ -106,7 +103,7 @@ describe('createConcurrencyLimit', () => {
 
     a.resolve('A')
     await expect(first).resolves.toBe('A')
-    await settle()
+    await flush()
     expect(started).toEqual(['a', 'c'])
 
     c.resolve('C')
@@ -123,16 +120,16 @@ describe('createConcurrencyLimit', () => {
 
     const first = limit({task: a.task, signal: running.signal})
     void limit({task: b.task, signal})
-    await settle()
+    await flush()
 
     running.abort()
-    await settle()
+    await flush()
     expect(started).toEqual(['a'])
 
     /* The task's own result is passed through; the limiter does not cancel it. */
     a.resolve('A')
     await expect(first).resolves.toBe('A')
-    await settle()
+    await flush()
     expect(started).toEqual(['a', 'b'])
   })
 
@@ -148,7 +145,7 @@ describe('createConcurrencyLimit', () => {
     a.reject(new Error('boom'))
 
     await expect(first).rejects.toThrow('boom')
-    await settle()
+    await flush()
     expect(started).toEqual(['a', 'b'])
   })
 

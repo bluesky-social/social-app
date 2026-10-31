@@ -24,6 +24,7 @@ import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   completedJobClient,
   fakeAnalytics,
+  flush,
   realUploadWorkers,
   testUploadRuntime,
 } from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
@@ -69,10 +70,6 @@ function deferred<T>() {
     reject = rej
   })
   return {promise, resolve, reject}
-}
-
-function flush() {
-  return new Promise(resolve => setTimeout(resolve, 0))
 }
 
 /**

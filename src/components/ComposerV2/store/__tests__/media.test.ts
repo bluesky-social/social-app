@@ -20,6 +20,7 @@ import {
 } from '#/components/ComposerV2/store/uploads'
 import {type Gif} from '#/features/gifPicker/types'
 import {
+  flush,
   manualUploadWorkers,
   realUploadWorkers,
   reportAnyStatus,
@@ -747,8 +748,7 @@ describe('retryAllFailedUploads', () => {
     const unresolvedPost = store.actions.addPost('after', cardPost)!.addedPostId
     mockResolveLink.mockRejectedValueOnce(new Error('bad uri'))
     store.actions.addUri(unresolvedPost, 'https://example.com/unresolved')
-    await Promise.resolve()
-    await Promise.resolve()
+    await flush()
 
     const before = store.getState()
     const result = store.actions.retryAllFailedUploads()
@@ -1112,7 +1112,7 @@ describe('attachment lifecycle', () => {
      * first and compression never starts. If it had, it would still run to
      * completion (it has no abort hook) without starting an upload.
      */
-    for (let i = 0; i < 10; i++) await Promise.resolve()
+    await flush()
     expect(compressImage).not.toHaveBeenCalled()
     finishCompression?.({
       path: 'file:///compressed.jpg',
@@ -1121,7 +1121,7 @@ describe('attachment lifecycle', () => {
       mime: 'image/jpeg',
       size: 1,
     })
-    for (let i = 0; i < 10; i++) await Promise.resolve()
+    await flush()
     expect(uploadBlob).not.toHaveBeenCalled()
   })
 

@@ -33,6 +33,7 @@ import {
   fakeAnalytics,
   fakeImageDependencies,
   fakeUploadAttempt,
+  flush,
   realUploadWorkers,
   testUploadRuntime,
 } from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
@@ -71,10 +72,6 @@ function deferred<T = void>() {
     reject = rej
   })
   return {promise, resolve, reject}
-}
-
-function flush() {
-  return new Promise(resolve => setTimeout(resolve, 0))
 }
 
 function makeIdGenerator() {

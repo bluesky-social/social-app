@@ -15,7 +15,7 @@ import {
 import {type ImageUploadDependencies} from '#/components/ComposerV2/store/uploads'
 import {createConcurrencyLimit} from '#/components/ComposerV2/store/utils/createConcurrencyLimit'
 import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
-import {realUploadWorkers, testUploadRuntime} from './uploadTestUtils'
+import {flush, realUploadWorkers, testUploadRuntime} from './uploadTestUtils'
 
 const resolvers = {} as LinkResolvers
 
@@ -27,10 +27,6 @@ function deferred<T = void>() {
     reject = rej
   })
   return {promise, resolve, reject}
-}
-
-async function settle() {
-  for (let i = 0; i < 20; i++) await Promise.resolve()
 }
 
 const blob = (name: string) => ({$type: 'blob', name}) as unknown as BlobRef
@@ -191,14 +187,14 @@ describe('image compression limit', () => {
     })
     const [, second] = postIds(store)
     addImage(store, second, 'file:///d.jpg')
-    await settle()
+    await flush()
     expect(fakes.compressedUris()).toEqual(['file:///a.jpg'])
 
     for (const uri of ['a', 'b', 'c', 'd']) {
       const next = fakes.compressions.find(c => c.uri === `file:///${uri}.jpg`)
       if (!next) throw new Error(`expected ${uri} to have started`)
       next.gate.resolve(compressed(`file:///${uri}-out.jpg`))
-      await settle()
+      await flush()
     }
 
     expect(fakes.compressedUris()).toEqual([
@@ -218,10 +214,10 @@ describe('image compression limit', () => {
     const [root] = postIds(store)
     addImage(store, root, 'file:///a.jpg')
     addImage(store, root, 'file:///b.jpg')
-    await settle()
+    await flush()
 
     fakes.compressions[0].gate.resolve(compressed('file:///a-out.jpg'))
-    await settle()
+    await flush()
 
     expect(fakes.uploads.map(u => u.path)).toEqual(['file:///a-out.jpg'])
     expect(fakes.compressedUris()).toEqual(['file:///a.jpg', 'file:///b.jpg'])
@@ -234,17 +230,17 @@ describe('image compression limit', () => {
     const [root] = postIds(store)
     addImage(store, root, 'file:///a.jpg')
     addImage(store, root, 'file:///b.jpg')
-    await settle()
+    await flush()
     fakes.compressions[0].gate.resolve(compressed('file:///a-out.jpg'))
-    await settle()
+    await flush()
     fakes.compressions[1].gate.resolve(compressed('file:///b-out.jpg'))
-    await settle()
+    await flush()
 
     /* b finishes uploading first. */
     fakes.uploads[1].gate.resolve({blob: blob('b')})
-    await settle()
+    await flush()
     fakes.uploads[0].gate.resolve({blob: blob('a')})
-    await settle()
+    await flush()
 
     expect(
       imagesOf(store, root).map(i => [i.uri, i.upload.state === 'uploaded']),
@@ -263,18 +259,18 @@ describe('image compression limit', () => {
       {kind: 'image', uri: 'file:///pasted-1.jpg'},
       {kind: 'image', uri: 'file:///pasted-2.jpg'},
     ])
-    await settle()
+    await flush()
     expect(fakes.dimensionReads.map(r => r.uri)).toEqual([
       'file:///pasted-1.jpg',
     ])
 
     fakes.dimensionReads[0].gate.resolve(known)
-    await settle()
+    await flush()
     expect(fakes.dimensionReads).toHaveLength(1)
     expect(fakes.compressedUris()).toEqual(['file:///pasted-1.jpg'])
 
     fakes.compressions[0].gate.resolve(compressed('file:///one-out.jpg'))
-    await settle()
+    await flush()
     expect(fakes.dimensionReads.map(r => r.uri)).toEqual([
       'file:///pasted-1.jpg',
       'file:///pasted-2.jpg',
@@ -294,11 +290,11 @@ describe('image compression limit', () => {
       addImage(store, root, 'file:///a.jpg')
       const queued = addImage(store, root, 'file:///b.jpg')
       addImage(store, root, 'file:///c.jpg')
-      await settle()
+      await flush()
 
       store.actions.removeMedia(root, queued)
       fakes.compressions[0].gate.resolve(compressed('file:///a-out.jpg'))
-      await settle()
+      await flush()
 
       expect(fakes.compressedUris()).toEqual(['file:///a.jpg', 'file:///c.jpg'])
       expect(states).not.toContain('failed')
@@ -314,14 +310,14 @@ describe('image compression limit', () => {
       const [root] = postIds(store)
       const running = addImage(store, root, 'file:///a.jpg')
       addImage(store, root, 'file:///b.jpg')
-      await settle()
+      await flush()
 
       store.actions.removeMedia(root, running)
-      await settle()
+      await flush()
       expect(fakes.compressedUris()).toEqual(['file:///a.jpg'])
 
       fakes.compressions[0].gate.resolve(compressed('file:///a-out.jpg'))
-      await settle()
+      await flush()
 
       expect(fakes.compressedUris()).toEqual(['file:///a.jpg', 'file:///b.jpg'])
       expect(fakes.uploads).toHaveLength(0)
@@ -337,15 +333,15 @@ describe('image compression limit', () => {
       const second = makeStore({fakes, limit})
       addImage(first.store, postIds(first.store)[0], 'file:///a.jpg')
       addImage(second.store, postIds(second.store)[0], 'file:///b.jpg')
-      await settle()
+      await flush()
       expect(fakes.compressedUris()).toEqual(['file:///a.jpg'])
 
       first.store.destroy()
-      await settle()
+      await flush()
       expect(fakes.compressedUris()).toEqual(['file:///a.jpg'])
 
       fakes.compressions[0].gate.resolve(compressed('file:///a-out.jpg'))
-      await settle()
+      await flush()
 
       expect(fakes.compressedUris()).toEqual(['file:///a.jpg', 'file:///b.jpg'])
       expect(fakes.uploads).toHaveLength(0)
@@ -366,20 +362,20 @@ describe('image compression limit', () => {
       })
       const [root] = postIds(store)
       const id = addImage(store, root, 'file:///a.jpg')
-      await settle()
+      await flush()
 
       store.actions.replaceImageSource(root, id, crop)
-      await settle()
+      await flush()
       expect(fakes.compressedUris()).toEqual(['file:///a.jpg'])
 
       fakes.compressions[0].gate.resolve(compressed('file:///a-out.jpg'))
-      await settle()
+      await flush()
 
       expect(fakes.compressedUris()).toEqual(['file:///a.jpg', crop.uri])
       expect(imagesOf(store, root)[0].prepared).toBeUndefined()
 
       fakes.compressions[1].gate.resolve(compressed('file:///crop-out.jpg'))
-      await settle()
+      await flush()
       expect(imagesOf(store, root)[0].prepared).toMatchObject({width: 200})
       expect(fakes.uploads.map(u => u.path)).toEqual(['file:///crop-out.jpg'])
       expect(states).not.toContain('failed')
@@ -395,11 +391,11 @@ describe('image compression limit', () => {
       const [root] = postIds(store)
       addImage(store, root, 'file:///a.jpg')
       const queued = addImage(store, root, 'file:///b.jpg')
-      await settle()
+      await flush()
 
       store.actions.replaceImageSource(root, queued, crop)
       fakes.compressions[0].gate.resolve(compressed('file:///a-out.jpg'))
-      await settle()
+      await flush()
 
       expect(fakes.compressedUris()).toEqual(['file:///a.jpg', crop.uri])
       store.destroy()
@@ -412,28 +408,28 @@ describe('image compression limit', () => {
     const [root] = postIds(store)
     const failing = addImage(store, root, 'file:///a.jpg')
     addImage(store, root, 'file:///b.jpg')
-    await settle()
+    await flush()
 
     fakes.compressions[0].gate.reject(new Error('boom'))
-    await settle()
+    await flush()
     expect(fakes.compressedUris()).toEqual(['file:///a.jpg', 'file:///b.jpg'])
 
     const item = imagesOf(store, root).find(i => i.id === failing)!
     expect(item.upload.state).toBe('failed')
     store.actions.retryMediaUpload(root, failing)
-    await settle()
+    await flush()
     /* b still holds the slot, so the retry waits for it. */
     expect(fakes.compressedUris()).toHaveLength(2)
 
     fakes.compressions[1].gate.resolve(compressed('file:///b-out.jpg'))
-    await settle()
+    await flush()
     expect(fakes.compressedUris()).toEqual([
       'file:///a.jpg',
       'file:///b.jpg',
       'file:///a.jpg',
     ])
     fakes.compressions[2].gate.resolve(compressed('file:///a-out.jpg'))
-    await settle()
+    await flush()
     expect(fakes.uploads.map(u => u.path)).toEqual([
       'file:///b-out.jpg',
       'file:///a-out.jpg',

@@ -23,13 +23,9 @@ import {
   type ImageUploadDependencies,
   type VideoUploadDependencies,
 } from '#/components/ComposerV2/store/uploads'
-import {realUploadWorkers, testUploadRuntime} from './uploadTestUtils'
+import {flush, realUploadWorkers, testUploadRuntime} from './uploadTestUtils'
 
 const resolvers = {} as LinkResolvers
-
-async function settle() {
-  for (let i = 0; i < 20; i++) await Promise.resolve()
-}
 
 function deferred<T>() {
   let resolve!: (value: T) => void
@@ -118,7 +114,7 @@ describe('resolved source metadata ownership', () => {
     })
     const root = rootId(store)
     store.actions.addMedia(root, [videoInput])
-    await settle()
+    await flush()
 
     const [failed] = getMedia(store, root)
     expect(failed).toMatchObject({
@@ -127,7 +123,7 @@ describe('resolved source metadata ownership', () => {
       upload: {state: 'failed', retryable: true},
     })
     store.actions.retryMediaUpload(root, failed.id)
-    await settle()
+    await flush()
 
     expect(getVideoMetadata).toHaveBeenCalledTimes(1)
     expect(compressVideo).toHaveBeenCalledTimes(2)
@@ -158,7 +154,7 @@ describe('resolved source metadata ownership', () => {
         ],
       },
     })
-    await settle()
+    await flush()
 
     expect(getMedia(store, rootId(store))[0]).toMatchObject({
       mimeType: 'video/mp4',
@@ -180,7 +176,7 @@ describe('resolved source metadata ownership', () => {
     const after = store.getState()
 
     probe.resolve(probed())
-    await settle()
+    await flush()
 
     expect(store.getState()).toBe(after)
     expect(compressVideo).not.toHaveBeenCalled()
@@ -201,9 +197,9 @@ describe('resolved source metadata ownership', () => {
     store.actions.addMedia(root, [{...videoInput, uri: 'file:///b.mp4'}])
 
     probes[1].resolve(probed({uri: 'file:///b.mp4', duration: 222}))
-    await settle()
+    await flush()
     probes[0].resolve(probed({duration: 111}))
-    await settle()
+    await flush()
 
     const [item] = getMedia(store, root)
     expect(item).toMatchObject({uri: 'file:///b.mp4', duration: 222})
@@ -239,7 +235,7 @@ describe('pasted and dropped sources through the store', () => {
       return input ? [input] : []
     })
     const {addedMediaIds} = store.actions.addMedia(root, inputs)!
-    await settle()
+    await flush()
 
     expect(addedMediaIds).toHaveLength(10)
     const items = getMedia(store, root)
@@ -263,7 +259,7 @@ describe('pasted and dropped sources through the store', () => {
     const root = rootId(store)
     const input = pastedMediaToInput({source: 'file:///tmp/pasted.webp'})!
     store.actions.addMedia(root, [input])
-    await settle()
+    await flush()
 
     expect(getMedia(store, root)[0]).toMatchObject({
       uri: 'file:///tmp/pasted.webp',

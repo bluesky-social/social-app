@@ -28,6 +28,7 @@ import {
 import {type app} from '#/lexicons'
 import {
   completedJobClient,
+  flush,
   realUploadWorkers,
   testUploadRuntime,
 } from './uploadTestUtils'
@@ -47,10 +48,6 @@ const blob = (name: string) =>
     mimeType: 'video/mp4',
     size: 1,
   }) as unknown as BlobRef
-
-async function settle() {
-  for (let i = 0; i < 30; i++) await Promise.resolve()
-}
 
 function deferred<T>() {
   let resolve!: (value: T) => void
@@ -213,7 +210,7 @@ describe('web: restored object URLs', () => {
       loadedMedia: new Map([['video:video/webm:one', url]]),
       video: {getVideoMetadata, compressVideo},
     })
-    await settle()
+    await flush()
 
     expect(fetchSpy).toHaveBeenCalledTimes(1)
     expect(fetchSpy).toHaveBeenCalledWith(url)
@@ -257,7 +254,7 @@ describe('web: restored object URLs', () => {
       loadedMedia: new Map([['image:one', url]]),
       image: {getImageDimensions, compressImage},
     })
-    await settle()
+    await flush()
 
     expect(getImageDimensions).toHaveBeenCalledWith(url)
     expect(compressImage.mock.calls[0][0].image.source).toMatchObject({
@@ -294,7 +291,7 @@ describe('android: restored draft videos', () => {
       loadedMedia: new Map([['video:video/mp4:one', durable]]),
       video: {copyVideoToCache, getVideoMetadata, compressVideo, uploadVideo},
     })
-    await settle()
+    await flush()
 
     expect(copyVideoToCache).toHaveBeenCalledWith({
       uri: durable,
@@ -319,7 +316,7 @@ describe('android: restored draft videos', () => {
     expect(store.getState().isDirty).toBe(false)
 
     store.destroy()
-    await settle()
+    await flush()
     expect(released).toEqual(['file:///cache/copy-1.mp4'])
   })
 
@@ -354,14 +351,14 @@ describe('android: restored draft videos', () => {
         createVideoServiceClient: completedJobClient({blob: blob('video')}),
       },
     })
-    await settle()
+    await flush()
 
     const failed = restoredVideo(store)
     expect(failed.upload).toMatchObject({state: 'failed', retryable: true})
     expect(released).toEqual(['file:///cache/copy-1.mp4'])
 
     store.actions.retryMediaUpload(lastPost(store).postId, failed.id)
-    await settle()
+    await flush()
 
     expect(copyVideoToCache).toHaveBeenCalledTimes(2)
     expect(copyVideoToCache.mock.calls[1][0].uri).toBe(durable)
@@ -392,7 +389,7 @@ describe('android: restored draft videos', () => {
     store.destroy()
 
     copy.resolve({uri: 'file:///cache/late.mp4', release})
-    await settle()
+    await flush()
 
     expect(release).toHaveBeenCalledTimes(1)
     expect(getVideoMetadata).not.toHaveBeenCalled()
@@ -412,11 +409,11 @@ describe('android: restored draft videos', () => {
         uploadVideo: pendingUntilAborted(),
       },
     })
-    await settle()
+    await flush()
     expect(released).toEqual([])
 
     store.actions.removeMediaAttachment(lastPost(store).postId)
-    await settle()
+    await flush()
     expect(released).toEqual(['file:///cache/copy-1.mp4'])
     store.destroy()
   })
@@ -436,7 +433,7 @@ describe('android: restored draft videos', () => {
       loadedMedia: new Map([['video:image/gif:one', 'file:///durable-gif']]),
       video: {copyVideoToCache, getImageDimensions, getFileSize, compressVideo},
     })
-    await settle()
+    await flush()
 
     expect(copyVideoToCache).toHaveBeenCalledWith({
       uri: 'file:///durable-gif',
@@ -469,7 +466,7 @@ describe('ios: restored draft media', () => {
       loadedMedia: new Map([['video:image/gif:one', 'file:///durable-gif']]),
       video: {getImageDimensions, getFileSize, compressVideo},
     })
-    await settle()
+    await flush()
 
     expect(getImageDimensions).toHaveBeenCalledWith('file:///durable-gif')
     expect(getFileSize).toHaveBeenCalledWith('file:///durable-gif')
@@ -488,7 +485,7 @@ describe('ios: restored draft media', () => {
       loadedMedia: new Map([['video:video/mp4:one', 'file:///durable.mp4']]),
       video: {getVideoMetadata, compressVideo: () => new Promise(() => {})},
     })
-    await settle()
+    await flush()
 
     expect(getVideoMetadata).toHaveBeenCalledWith(
       'file:///durable.mp4',
@@ -506,7 +503,7 @@ describe('ios: restored draft media', () => {
       loadedMedia: new Map([['image:one', 'file:///durable.jpg']]),
       image: {getImageDimensions},
     })
-    await settle()
+    await flush()
 
     const failed = restoredImage(store)
     expect(failed).toMatchObject({

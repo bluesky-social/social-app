@@ -18,6 +18,7 @@ import {
   type UploadWorkerOverrides,
 } from '#/components/ComposerV2/store/uploads'
 import {
+  flush,
   manualUploadWorkers,
   realUploadWorkers,
   testUploadRuntime,
@@ -83,10 +84,6 @@ function compressionOutput(width: number, height: number) {
     mimeType: 'image/jpeg',
     aspectRatio: {width, height},
   }
-}
-
-async function settle() {
-  for (let i = 0; i < 20; i++) await Promise.resolve()
 }
 
 describe('replaceImageSource', () => {
@@ -410,7 +407,7 @@ describe('replaceImageSource with the real image worker', () => {
     const root = rootId(store)
     const [id] = addImages(store)
     store.actions.replaceImageSource(root, id, crop)
-    await settle()
+    await flush()
 
     /* The superseded attempt was cancelled before it compressed anything. */
     expect(compressImage).toHaveBeenCalledTimes(1)
@@ -434,11 +431,11 @@ describe('replaceImageSource with the real image worker', () => {
     const {store, getImageDimensions, compressImage} = realWorkerStore()
     const root = rootId(store)
     const [id] = addImages(store)
-    await settle()
+    await flush()
     expect(getImageDimensions).not.toHaveBeenCalled()
 
     store.actions.replaceImageSource(root, id, {uri: crop.uri})
-    await settle()
+    await flush()
 
     expect(getImageDimensions).toHaveBeenCalledWith(crop.uri)
     expect(images(store)[0]).toMatchObject({

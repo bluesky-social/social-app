@@ -22,7 +22,7 @@ import {
 } from '#/components/ComposerV2/store/types'
 import {type Gif} from '#/features/gifPicker/types'
 import {type app} from '#/lexicons'
-import {manualUploadWorkers, testUploadRuntime} from './uploadTestUtils'
+import {flush, manualUploadWorkers, testUploadRuntime} from './uploadTestUtils'
 
 const POST_URL = 'https://bsky.app/profile/test.bsky.social/post/abc'
 const EXTERNAL_URL = 'https://example.com'
@@ -109,15 +109,6 @@ function root(store: ReturnType<typeof makeStore>) {
   const state = store.getState()
   const id = Object.keys(state.posts)[0]
   return {id, post: state.posts[id]}
-}
-
-/**
- * Link results reach the store through the resolver, which adds one microtask
- * hop after the request settles.
- */
-async function flushLinks() {
-  await Promise.resolve()
-  await Promise.resolve()
 }
 
 function deferred() {
@@ -505,7 +496,7 @@ describe('initial URI resolution', () => {
     pendingRecord.resolve(postLink)
     pendingMedia.resolve(externalLink)
     await Promise.all([pendingRecord.promise, pendingMedia.promise])
-    await flushLinks()
+    await flush()
     expect(root(store).post.attachments.record?.state).toBe('resolved')
     expect(root(store).post.attachments.media?.state).toBe('resolved')
     expect(store.getState().isDirty).toBe(false)
@@ -522,13 +513,13 @@ describe('initial URI resolution', () => {
     const store = makeStore({
       posts: [{attachments: {media: {kind: 'uri', uri: EXTERNAL_URL}}}],
     })
-    await flushLinks()
+    await flush()
     const failed = root(store).post.attachments.media
     if (failed?.state !== 'failed') throw new Error('expected failure')
     expect(failed.retryable).toBe(true)
     expect(store.getState().isDirty).toBe(false)
     store.actions.retryAttachment(root(store).id, 'media')
-    await flushLinks()
+    await flush()
     expect(root(store).post.attachments.media?.state).toBe('resolved')
     expect(store.getState().isDirty).toBe(false)
   })
@@ -548,12 +539,12 @@ describe('initial URI resolution', () => {
         },
       ],
     })
-    await flushLinks()
+    await flush()
     const failed = root(store).post.attachments.record
     if (failed?.state !== 'failed') throw new Error('expected failure')
     const media = root(store).post.attachments.media
     store.actions.retryAttachment(root(store).id, 'record')
-    await flushLinks()
+    await flush()
     expect(root(store).post.attachments.record).toMatchObject({
       state: 'resolved',
       kind: 'post',
@@ -571,12 +562,12 @@ describe('initial URI resolution', () => {
       isDirty: true,
       posts: [{attachments: {media: {kind: 'uri', uri: EXTERNAL_URL}}}],
     })
-    await flushLinks()
+    await flush()
     const failed = root(store).post.attachments.media
     if (failed?.state !== 'failed') throw new Error('expected failure')
     expect(store.getState().isDirty).toBe(true)
     store.actions.retryAttachment(root(store).id, 'media')
-    await flushLinks()
+    await flush()
     expect(root(store).post.attachments.media).toMatchObject({
       state: 'resolved',
       kind: 'external',
@@ -589,7 +580,7 @@ describe('initial URI resolution', () => {
     const store = makeStore({
       posts: [{attachments: {record: {kind: 'uri', uri: POST_URL}}}],
     })
-    await flushLinks()
+    await flush()
     expect(root(store).post.attachments.record).toMatchObject({
       state: 'failed',
       code: 'embedding-disabled',
@@ -609,11 +600,11 @@ describe('initial URI resolution', () => {
       ],
     })
     store.actions.addUri(root(store).id, EXTERNAL_URL)
-    await flushLinks()
+    await flush()
     const current = store.getState()
     first.resolve({...externalLink, uri: 'https://old.example'})
     await first.promise
-    await flushLinks()
+    await flush()
     expect(store.getState()).toBe(current)
     expect(current.isDirty).toBe(true)
   })
@@ -632,7 +623,7 @@ describe('initial URI resolution', () => {
       const before = store.getState()
       first.resolve(postLink)
       await first.promise
-      await flushLinks()
+      await flush()
       expect(store.getState()).toBe(before)
     },
   )

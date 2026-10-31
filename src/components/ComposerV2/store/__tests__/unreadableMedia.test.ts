@@ -10,7 +10,7 @@ import {
   type VideoUploadDependencies,
 } from '#/components/ComposerV2/store/uploads'
 import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
-import {realUploadWorkers, testUploadRuntime} from './uploadTestUtils'
+import {flush, realUploadWorkers, testUploadRuntime} from './uploadTestUtils'
 
 /*
  * A source whose dimension read rejects can never upload, so it fails as
@@ -18,10 +18,6 @@ import {realUploadWorkers, testUploadRuntime} from './uploadTestUtils'
  */
 
 const resolvers = {} as LinkResolvers
-
-async function settle() {
-  for (let i = 0; i < 20; i++) await Promise.resolve()
-}
 
 /** The web image loader rejects with a DOM `Event`, never an `Error`. */
 const rejections: [string, () => unknown][] = [
@@ -114,7 +110,7 @@ describe('unreadable media', () => {
             .mockRejectedValue(rejection()),
         })
         store.actions.addMedia(postId, [media])
-        await settle()
+        await flush()
 
         expect(upload()).toEqual({
           state: 'failed',
@@ -143,7 +139,7 @@ describe('unreadable media', () => {
       compressImageError: new Error('out of memory'),
     })
     const {addedMediaIds} = store.actions.addMedia(postId, [sources[0].media])!
-    await settle()
+    await flush()
 
     expect(upload()).toMatchObject({state: 'failed', retryable: true})
     expect(store.actions.retryAllFailedUploads()).toEqual({

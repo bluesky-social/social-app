@@ -32,6 +32,7 @@ import {
   fakeAnalytics,
   fakeUploadAttempt,
   fakeVideoDependencies,
+  flush,
   realUploadWorkers,
   testUploadRuntime,
 } from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
@@ -100,10 +101,6 @@ function deferred<T>() {
     reject = rej
   })
   return {promise, resolve, reject}
-}
-
-function flush() {
-  return new Promise(resolve => setTimeout(resolve, 0))
 }
 
 /** Rejects with AbortError when the attempt is cancelled, like the real one. */

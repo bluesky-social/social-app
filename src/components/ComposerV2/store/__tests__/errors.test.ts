@@ -13,6 +13,7 @@ import {
 import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
+  flush,
   manualUploadWorkers,
   realUploadWorkers,
   reportAnyStatus,
@@ -53,15 +54,6 @@ const syncFailingImageWorker: UploadWorkerOverrides = {
   },
 }
 const recordUri = 'https://bsky.app/profile/example.test/post/abc'
-
-/**
- * Link results reach the store through the resolver, which adds one microtask
- * hop after the request settles.
- */
-async function flushLinks() {
-  await Promise.resolve()
-  await Promise.resolve()
-}
 
 function deferred<T>() {
   let resolve!: (value: T) => void
@@ -318,7 +310,7 @@ describe('session error reporting', () => {
         throw cause
       },
     })
-    await flushLinks()
+    await flush()
     expect(onError).toHaveBeenCalledTimes(1)
     expect(onError).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -353,8 +345,7 @@ describe('session error reporting', () => {
         }),
       })
       store.actions.addMedia(Object.keys(store.getState().posts)[0], [image])
-      /* The compression limiter adds a few microtask turns before the failure. */
-      for (let i = 0; i < 10; i++) await Promise.resolve()
+      await flush()
       expect(uploadBlob).not.toHaveBeenCalled()
       expect(onError).toHaveBeenCalledTimes(cancelled ? 0 : 1)
       if (!cancelled) expect(onError.mock.calls[0][1]).toBe(cause)
@@ -387,7 +378,7 @@ describe('session error reporting', () => {
     const cause = new Error('private resolver diagnostic')
     attempts[0].reject(cause)
     attempts[1].reject(new EmbeddingDisabledError())
-    await flushLinks()
+    await flush()
     expect(onError).toHaveBeenCalledTimes(2)
     expect(onError.mock.calls[0]).toEqual([
       {
@@ -416,7 +407,7 @@ describe('session error reporting', () => {
     store.actions.retryAttachment(postId, 'record')
     expect(attempts).toHaveLength(3)
     attempts[2].reject(cause)
-    await flushLinks()
+    await flush()
     expect(onError).toHaveBeenCalledTimes(3)
     store.destroy()
   })
@@ -450,7 +441,7 @@ describe('session error reporting', () => {
           name: action === 'cancel' ? 'AbortError' : 'Error',
         }),
       )
-      await flushLinks()
+      await flush()
       expect(onError).not.toHaveBeenCalled()
       store.destroy()
     },

@@ -244,3 +244,8 @@ export function realUploadWorkers({
       startVideoUpload({...opts, ...fakeVideoDependencies(video)}),
   }
 }
+
+/** Waits one macrotask so all pending promise work settles. */
+export function flush() {
+  return new Promise<void>(resolve => setTimeout(resolve, 0))
+}

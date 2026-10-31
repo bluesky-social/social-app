@@ -20,7 +20,10 @@ import {
   type resolveLink,
 } from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
-import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
+import {
+  manualUploadWorkers,
+  testUploadRuntime,
+} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {type AddMediaInput} from '#/components/ComposerV2/store/types'
 import {classifyUriTarget} from '#/components/ComposerV2/store/utils/classifyUriTarget'
 import {type Gif} from '#/features/gifPicker/types'
@@ -134,6 +137,8 @@ function makeStore() {
     resolvers,
     __createId: () => `id-${++i}`,
     __resolveLink: mockResolveLink,
+    /* Uploads never progress, so a full flush only settles link work. */
+    __uploadWorkers: manualUploadWorkers().workers,
   })
 }
 
@@ -142,12 +147,11 @@ function rootId(store: ReturnType<typeof createThreadStore>) {
 }
 
 /**
- * Link results reach the store through the resolver, which adds one microtask
- * hop after the request settles.
+ * Settles pending link work. Fake timers are active here, so the shared
+ * macrotask `flush()` would never fire.
  */
-async function flushLinks() {
-  await Promise.resolve()
-  await Promise.resolve()
+function flushLinks() {
+  return jest.advanceTimersByTimeAsync(0)
 }
 
 function deferred() {
