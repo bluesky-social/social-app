@@ -40,7 +40,7 @@ export function RepostButtonMenu({
 
   return hasSession ? (
     <EventStopper onKeyDown={false}>
-      <Menu.Root>
+      <Menu.Root inline>
         <Menu.Trigger label={l`Repost or quote post`}>
           {({props}) => (
             <PostControlButton
