@@ -1,18 +1,25 @@
-import {type DimensionValue, type StyleProp, StyleSheet} from 'react-native'
+import {type DimensionValue, type StyleProp} from 'react-native'
+import {utils} from '@bsky.app/alf'
 
+/**
+ * Merges a style array into one object, for reading values. On web, this skips
+ * precompiled styles such as `hover()`'s (see ALF's `utils.flatten`).
+ *
+ * Render the original style where you can: a flattened copy is a new object,
+ * so on web its atoms lose their CSS classes and render inline.
+ */
 export function flatten<T>(
   style?: StyleProp<T>,
 ): T extends (infer U)[] ? U : T {
-  return (StyleSheet.flatten(
-    style as unknown as Parameters<typeof StyleSheet.flatten>[0],
+  return (utils.flatten(
+    style as unknown as Parameters<typeof utils.flatten>[0],
   ) ?? {}) as T extends (infer U)[] ? U : T
 }
 
 /** Flatten React Native styles passed directly to a web-only DOM component. */
 export function flattenToCSS(style: unknown): React.CSSProperties {
-  return (StyleSheet.flatten(
-    style as Parameters<typeof StyleSheet.flatten>[0],
-  ) ?? {}) as React.CSSProperties
+  return (utils.flatten(style as Parameters<typeof utils.flatten>[0]) ??
+    {}) as React.CSSProperties
 }
 
 /**
