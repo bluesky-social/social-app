@@ -939,14 +939,81 @@ describe('ComposerV2 no-write planner', () => {
     })
   })
 
-  test('validates the 300-grapheme boundary through the generated lexicon', async () => {
-    const atLimit = await plan(snapshot({posts: [{text: '💙'.repeat(300)}]}))
-    expect(atLimit.ok).toBe(true)
+  describe('post length limit', () => {
+    test('301 graphemes fail with text-too-long on the offending post, unreported', async () => {
+      const onError = jest.fn<ComposerV2OnError>()
+      const result = await plan(
+        snapshot({posts: [{text: 'ok'}, {text: 'a'.repeat(301)}]}),
+        {},
+        undefined,
+        onError,
+      )
+      expect(result).toEqual({
+        ok: false,
+        error: expect.objectContaining({
+          code: 'text-too-long',
+          message: 'Post text is too long',
+          postIndex: 1,
+          postId: 'post-2',
+        }),
+      })
+      expect(onError).not.toHaveBeenCalled()
+    })
 
-    const overLimit = await plan(snapshot({posts: [{text: '💙'.repeat(301)}]}))
-    expect(overLimit).toEqual({
-      ok: false,
-      error: expect.objectContaining({code: 'invalid-record'}),
+    test('exactly 300 graphemes plans', async () => {
+      const result = await plan(snapshot({posts: [{text: 'a'.repeat(300)}]}))
+      expect(result.ok).toBe(true)
+    })
+
+    test('multi-grapheme emoji count as one grapheme each', async () => {
+      /* Family and flag sequences are many code points but one grapheme. */
+      const sequences = ['👨‍👩‍👧‍👦', '🇯🇵', '💙']
+      const atLimit = sequences.join('') + '💙'.repeat(297)
+      expect((await plan(snapshot({posts: [{text: atLimit}]}))).ok).toBe(true)
+
+      const overLimit = await plan(snapshot({posts: [{text: atLimit + '💙'}]}))
+      expect(overLimit).toEqual({
+        ok: false,
+        error: expect.objectContaining({code: 'text-too-long', postIndex: 0}),
+      })
+    })
+
+    test('links count by their shortened length, like the legacy composer', async () => {
+      const url = 'https://example.com/' + 'a'.repeat(400)
+      const text = `${url} ${'a'.repeat(200)}`
+      expect(text.length).toBeGreaterThan(300)
+      const result = await plan(snapshot({posts: [{text}]}))
+      expect(result.ok).toBe(true)
+    })
+
+    test('fails before any embed upload for the over-length post', async () => {
+      const uploadBlob = jest.fn<
+        NonNullable<ComposerV2PlannerDependencies['uploadBlob']>
+      >(() => Promise.reject(new Error('unreachable')))
+      const state = snapshot({
+        posts: [
+          {
+            text: 'a'.repeat(301),
+            attachments: {
+              media: {
+                kind: 'external',
+                uri: 'https://example.com',
+                title: '',
+                description: '',
+                thumb: {
+                  source: {path: 'file:///thumb.jpg', mime: 'image/jpeg'},
+                } as never,
+              },
+            },
+          },
+        ],
+      })
+      const result = await plan(state, {uploadBlob})
+      expect(result).toEqual({
+        ok: false,
+        error: expect.objectContaining({code: 'text-too-long'}),
+      })
+      expect(uploadBlob).not.toHaveBeenCalled()
     })
   })
 

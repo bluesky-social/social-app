@@ -38,6 +38,7 @@ const ALL_PLAN_ERROR_CODES = Object.keys({
   'unsupported-attachment': true,
   'reply-resolution-failed': true,
   'rich-text-resolution-failed': true,
+  'text-too-long': true,
   'media-upload-failed': true,
   'invalid-record-key': true,
   'invalid-record': true,
@@ -88,6 +89,9 @@ describe('usePlanErrorHint', () => {
     /* Spot-check exact fallback output for a representative branch. */
     expect(hint('empty-composition')).toBe(
       'Add text, tags, or an attachment to at least one post.',
+    )
+    expect(hint('text-too-long')).toBe(
+      'A post is over the 300 character limit. Shorten it and plan again.',
     )
   })
 })

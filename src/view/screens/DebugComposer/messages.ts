@@ -1,5 +1,6 @@
 import {useLingui} from '@lingui/react/macro'
 
+import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 import {type ComposerV2PlanErrorCode} from '#/components/ComposerV2/planner'
 import {type UploadStatus} from '#/components/ComposerV2/store/types'
@@ -75,6 +76,8 @@ export function usePlanErrorHint(): (code: ComposerV2PlanErrorCode) => string {
         return l`The reply parent could not be read from the AppView.`
       case 'rich-text-resolution-failed':
         return l`Mentions or links could not be resolved. Check the text and try again.`
+      case 'text-too-long':
+        return l`A post is over the ${MAX_GRAPHEME_LENGTH} character limit. Shorten it and plan again.`
       case 'missing-dependency':
         return l`A required client dependency is missing for this account.`
       case 'unsupported-attachment':

@@ -11,6 +11,7 @@ import {type RichText} from '@bsky/sdk/richtext'
 
 import {computeCid} from '#/lib/api/computeCid'
 import {type ResolvedLink} from '#/lib/api/resolve'
+import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {createGIFDescription} from '#/lib/gif-alt-text'
 import {
   type ComposerV2ErrorKind,
@@ -48,6 +49,7 @@ export type ComposerV2PlanErrorCode =
   | 'unsupported-attachment'
   | 'reply-resolution-failed'
   | 'rich-text-resolution-failed'
+  | 'text-too-long'
   | 'media-upload-failed'
   | 'invalid-record-key'
   | 'invalid-record'
@@ -253,6 +255,7 @@ const PLAN_ERROR_REPORTING: Record<
   'unsupported-attachment': null,
   'reply-resolution-failed': {kind: 'operational', recovery: 'retry'},
   'rich-text-resolution-failed': {kind: 'operational', recovery: 'retry'},
+  'text-too-long': null,
   'media-upload-failed': {kind: 'operational', recovery: 'retry'},
   'invalid-record-key': {kind: 'unexpected', recovery: 'none'},
   'invalid-record': null,
@@ -309,6 +312,18 @@ async function buildPostRecords({
       postIndex,
       postId,
     })
+    /*
+     * Checked on the shortened text (legacy parity) and before the embed so a
+     * post that cannot be sent never uploads a card thumbnail.
+     */
+    if (richText.graphemeLength > MAX_GRAPHEME_LENGTH) {
+      throw failure({
+        code: 'text-too-long',
+        message: 'Post text is too long',
+        postIndex,
+        postId,
+      })
+    }
     const embed = await buildEmbed({
       media: post.attachments.media,
       record: post.attachments.record,

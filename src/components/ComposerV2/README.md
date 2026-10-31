@@ -544,8 +544,10 @@ invalid, surface the operation's failure rather than silently changing content.
   policy (normally from preferences), not a lexicon constraint.
 - Text goes through the shared rich-text preparation (authoritative mention
   facets, invalid-mention stripping, newline cleanup, shortened URLs, final
-  grapheme validation). Explicit tags are kept separately and validated against
-  their generated-lexicon limits.
+  grapheme validation). A post over `MAX_GRAPHEME_LENGTH` graphemes after
+  link shortening fails with `text-too-long` (caller-fixable, not reported to
+  `onError`) before any embed work. Explicit tags are kept separately and
+  validated against their generated-lexicon limits.
 - Record keys come from `TID.next`; `__createRkey` is a test-only seam. Keys must
   be valid TIDs, unique within a plan. CIDs and final AT URIs are computed so each
   post replies to its predecessor while retaining the original root. External
