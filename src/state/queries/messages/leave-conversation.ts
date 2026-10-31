@@ -11,7 +11,7 @@ import {
 } from './list-conversation-requests'
 import {RQKEY_ROOT as CONVO_LIST_KEY} from './list-conversations'
 
-const RQKEY_ROOT = 'leave-convo'
+export const RQKEY_ROOT = 'leave-convo'
 export function RQKEY(convoId: string | undefined) {
   return [RQKEY_ROOT, convoId]
 }
@@ -43,7 +43,8 @@ export function useLeaveConvo(
 
       return await client.call(chat.bsky.convo.leaveConvo, {convoId})
     },
-    onMutate: () => {
+    onMutate: async () => {
+      await queryClient.cancelQueries({queryKey: [CONVO_LIST_KEY]})
       const prevConvoListQueries =
         queryClient.getQueriesData<ConvoListQueryData>({
           queryKey: [CONVO_LIST_KEY],
@@ -73,8 +74,6 @@ export function useLeaveConvo(
       return {prevConvoListQueries, prevRequestsQueries}
     },
     onSuccess: data => {
-      void queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
-      void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
       if (convoId) {
         void invalidateJoinLinkPreviewsForConvo(queryClient, convoId)
       }
@@ -92,9 +91,13 @@ export function useLeaveConvo(
           queryClient.setQueryData(queryKey, prevData)
         }
       }
-      void queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
-      void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
       onError?.(error)
+    },
+    onSettled: () => {
+      if (queryClient.isMutating({mutationKey: [RQKEY_ROOT]}) === 1) {
+        void queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
+        void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
+      }
     },
   })
 }

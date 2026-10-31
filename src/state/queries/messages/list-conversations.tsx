@@ -5,12 +5,14 @@ import {
   type QueryClient,
   type QueryKey,
   useInfiniteQuery,
+  useMutationState,
   useQueryClient,
 } from '@tanstack/react-query'
 import throttle from 'lodash.throttle'
 
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useMessagesEventBus} from '#/state/messages/events'
+import {RQKEY_ROOT as LEAVE_CONVO_RQKEY_ROOT} from '#/state/queries/messages/leave-conversation'
 import {invalidateJoinLinkPreviewsForConvo} from '#/state/queries/join-links'
 import {useChatClient, useSession} from '#/state/session'
 import {chat} from '#/lexicons'
@@ -113,8 +115,16 @@ export function useListConvosQuery({
 } = {}) {
   const client = useChatClient()
 
+  const leaveConvoMutationStates = useMutationState({
+    filters: {
+      mutationKey: [LEAVE_CONVO_RQKEY_ROOT],
+      status: 'pending',
+    },
+  })
+
   return useInfiniteQuery({
-    enabled,
+    // Keep the optimistic removal visible until the leave mutation settles.
+    enabled: enabled !== false && leaveConvoMutationStates.length === 0,
     queryKey: RQKEY(status ?? 'all', readState, kind, lockStatus, limit),
     queryFn: async ({pageParam}) => {
       return await client.call(chat.bsky.convo.listConvos, {
