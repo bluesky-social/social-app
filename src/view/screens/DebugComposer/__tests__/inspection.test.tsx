@@ -56,7 +56,7 @@ describe('tester record inspection', () => {
     const planner = jest.fn<typeof planComposerV2>(planComposerV2)
     const onPublishPlan = jest.fn()
     const session = {key: 'inspection', scenarioId: 'empty' as const, store}
-    function Harness() {
+    function Harness({publishAttempted = false}: {publishAttempted?: boolean}) {
       const plan = usePlanRunner({
         session,
         dependencies: {did: 'did:plc:tester', appviewClient},
@@ -69,13 +69,12 @@ describe('tester record inspection', () => {
           requireAltText={false}
           onChangeRequireAltText={() => {}}
           accountDid="did:plc:tester"
-          publishAttempted={false}
-          isPublishing={false}
+          publishAttempted={publishAttempted}
           onPublishPlan={onPublishPlan}
         />
       )
     }
-    const {unmount} = render(
+    const {unmount, rerender} = render(
       <I18nProvider i18n={i18n}>
         <Harness />
       </I18nProvider>,
@@ -85,6 +84,10 @@ describe('tester record inspection', () => {
         fireEvent.press(screen.getByTestId('composerV2Tester-plan'))
         await planner.mock.results[0].value
       })
+      expect(screen.queryByTestId('composerV2Tester-plan-records')).toBeNull()
+      fireEvent.press(
+        screen.getByTestId('composerV2Tester-plan-records-toggle'),
+      )
       const output = screen.getByTestId('composerV2Tester-plan-records')
       const call = planner.mock.results[0]
       if (call.type !== 'return')
@@ -104,18 +107,105 @@ describe('tester record inspection', () => {
       expect(output.props.selectable).toBe(true)
       expect(appviewCall).not.toHaveBeenCalled()
       expect(onPublishPlan).not.toHaveBeenCalled()
-      expect(screen.queryByTestId('composerV2Tester-publish')).toBeNull()
+      expect(screen.getByTestId('composerV2Tester-publish')).toBeDisabled()
 
       fireEvent.press(screen.getByTestId('composerV2Tester-publish-enable'))
       const publishButton = screen.getByTestId('composerV2Tester-publish')
-      expect(publishButton.props.disabled).toBeFalsy()
+      expect(publishButton).toBeEnabled()
+      act(() => {
+        store.actions.setPostText(
+          Object.keys(store.getState().posts)[0],
+          'Changed after planning',
+        )
+      })
+      expect(screen.getByTestId('composerV2Tester-plan-stale')).toBeTruthy()
+      expect(screen.getByTestId('composerV2Tester-publish')).toBeDisabled()
+      fireEvent.press(screen.getByTestId('composerV2Tester-publish'))
       expect(onPublishPlan).not.toHaveBeenCalled()
-      fireEvent.press(publishButton)
+      await act(async () => {
+        fireEvent.press(screen.getByTestId('composerV2Tester-plan'))
+        await planner.mock.results[1].value
+      })
+      const refreshedPlan = await planner.mock.results[1].value
+      expect(screen.getByTestId('composerV2Tester-publish')).toBeEnabled()
+      fireEvent.press(screen.getByTestId('composerV2Tester-publish'))
       expect(onPublishPlan).toHaveBeenCalledTimes(1)
-      expect(onPublishPlan).toHaveBeenCalledWith(planned)
+      expect(onPublishPlan).toHaveBeenCalledWith(refreshedPlan)
 
+      rerender(
+        <I18nProvider i18n={i18n}>
+          <Harness publishAttempted />
+        </I18nProvider>,
+      )
+      expect(screen.getByTestId('composerV2Tester-plan')).toBeDisabled()
+      expect(screen.getByTestId('composerV2Tester-plan-clear')).toBeDisabled()
+      expect(screen.getByTestId('composerV2Tester-publish')).toBeDisabled()
+      expect(
+        screen.getByTestId('composerV2Tester-publish-enable'),
+      ).toBeDisabled()
+      rerender(
+        <I18nProvider i18n={i18n}>
+          <Harness />
+        </I18nProvider>,
+      )
       fireEvent.press(screen.getByTestId('composerV2Tester-plan-clear'))
       expect(screen.queryByTestId('composerV2Tester-plan-records')).toBeNull()
+    } finally {
+      unmount()
+      store.destroy()
+    }
+  })
+
+  test('only offers empty-post confirmation for the unchanged snapshot', async () => {
+    const store = createThreadStore({
+      defaultLanguages: [],
+      ...testUploadRuntime,
+      resolvers,
+      initialState: {posts: [{text: 'first'}, {text: ''}, {text: 'third'}]},
+    })
+    const planner = jest.fn<typeof planComposerV2>(planComposerV2)
+    const session = {key: 'empty-post', scenarioId: 'thread' as const, store}
+    function Harness() {
+      const plan = usePlanRunner({
+        session,
+        dependencies: {did: 'did:plc:tester', appviewClient},
+        requireAltText: false,
+        __plan: planner,
+      })
+      return (
+        <PlanSection
+          plan={plan}
+          requireAltText={false}
+          onChangeRequireAltText={() => {}}
+          accountDid="did:plc:tester"
+          publishAttempted={false}
+          onPublishPlan={() => {}}
+        />
+      )
+    }
+    const {unmount} = render(
+      <I18nProvider i18n={i18n}>
+        <Harness />
+      </I18nProvider>,
+    )
+    try {
+      await act(async () => {
+        fireEvent.press(screen.getByTestId('composerV2Tester-plan'))
+        await planner.mock.results[0].value
+      })
+      expect(
+        screen.getByTestId('composerV2Tester-plan-confirm-skip'),
+      ).toBeTruthy()
+      act(() => {
+        store.actions.setPostText(
+          Object.keys(store.getState().posts)[1],
+          'now filled',
+        )
+      })
+      expect(screen.getByTestId('composerV2Tester-plan-stale')).toBeTruthy()
+      expect(
+        screen.queryByTestId('composerV2Tester-plan-confirm-skip'),
+      ).toBeNull()
     } finally {
       unmount()
       store.destroy()

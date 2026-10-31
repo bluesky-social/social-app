@@ -17,10 +17,12 @@ import {PlanSection} from '#/view/screens/DebugComposer/components/PlanSection'
 import {PostCard} from '#/view/screens/DebugComposer/components/PostCard'
 import {SessionControls} from '#/view/screens/DebugComposer/components/SessionControls'
 import {StateSummary} from '#/view/screens/DebugComposer/components/StateSummary'
+import {StatusBadgeText} from '#/view/screens/DebugComposer/components/StatusBadge'
+import {type PlanSummary} from '#/view/screens/DebugComposer/summarizeComposerV2Plan'
 import {usePlanRunner} from '#/view/screens/DebugComposer/usePlanRunner'
 import {useTesterSession} from '#/view/screens/DebugComposer/useTesterSession'
 import {atoms as a, useTheme} from '#/alf'
-import {Admonition} from '#/components/Admonition'
+import * as Admonition from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import {
   ThreadStoreProvider,
@@ -39,7 +41,7 @@ import {useAnalytics} from '#/analytics'
 
 type ComposerV2PublishAttempt =
   | {status: 'writing' | 'uncertain'; plan: ComposerV2Plan}
-  | {status: 'published'; plan: ComposerV2Plan; uris: string[]}
+  | {status: 'published'; plan: ComposerV2Plan}
 
 /**
  * Full ComposerV2 tester behind Settings > Developer options > Debug Composer
@@ -60,9 +62,9 @@ export default function DebugComposer() {
   if (!currentAccount) {
     return (
       <View style={[a.p_md]}>
-        <Admonition type="error">
+        <Admonition.Admonition type="error">
           <Trans>Sign in to use the ComposerV2 tester.</Trans>
-        </Admonition>
+        </Admonition.Admonition>
       </View>
     )
   }
@@ -93,14 +95,12 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
     if (publishStartedRef.current) return
     publishStartedRef.current = true
     setPublishAttempt({status: 'writing', plan})
-    let uris: string[]
     try {
-      const result = await writeComposerV2Plan({
+      await writeComposerV2Plan({
         plan,
         pdsClient,
         onError: session.store.reportError,
       })
-      uris = result.uris
     } catch (cause) {
       setPublishAttempt({status: 'uncertain', plan})
       /* A refused write sent nothing, so only a dispatched one is uncertain. */
@@ -109,7 +109,7 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
       }
       return
     }
-    setPublishAttempt({status: 'published', plan, uris})
+    setPublishAttempt({status: 'published', plan})
     /* Only a confirmed write publishes; an uncertain one reports nothing. */
     session.store.reportPublished({plan})
   }
@@ -135,23 +135,24 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
     },
   })
 
+  const planError =
+    !plan.isStale && !plan.isPlanning && plan.result && !plan.result.summary.ok
+      ? plan.result.summary.error
+      : undefined
+
   return (
     <ThreadStoreProvider store={session.store}>
       <View style={[a.p_md, a.gap_md]} testID="composerV2Tester">
-        <Admonition type="info">
-          <Trans>
-            Tester only: media uploads are real blob uploads. Planning never
-            publishes records. The optional publisher makes real PDS writes only
-            after explicit opt-in and button press; nothing here is saved as a
-            draft.
-          </Trans>
-        </Admonition>
+        <Admonition.Admonition type="info">
+          Tester only. Uploads are real and start on add. Planning never writes.
+          Publishing needs opt-in. Nothing is saved as a draft.
+        </Admonition.Admonition>
         <SessionControls {...sessionApi} />
         {publishAttempt && <PublishAttemptNotice attempt={publishAttempt} />}
         <Divider />
         {/* Keying by session remounts every uncontrolled input on reset. */}
         <View key={session.key} style={[a.gap_md]}>
-          <ThreadSection />
+          <ThreadSection planError={planError} />
           <Divider />
           <GateControls />
           <Divider />
@@ -161,7 +162,7 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
             onChangeRequireAltText={setRequireAltText}
             accountDid={account.did}
             publishAttempted={publishAttempt !== undefined}
-            isPublishing={publishAttempt?.status === 'writing'}
+            publishStatus={publishAttempt?.status}
             onPublishPlan={plan => {
               void publishPlan(plan)
             }}
@@ -176,48 +177,73 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
 
 function PublishAttemptNotice({attempt}: {attempt: ComposerV2PublishAttempt}) {
   const t = useTheme()
-  const uris =
-    attempt.status === 'published'
-      ? attempt.uris
-      : attempt.plan.posts.map(post => post.uri)
+  const uris = attempt.plan.writes.flatMap(write =>
+    write.$type === 'com.atproto.repo.applyWrites#create' && write.rkey
+      ? [`at://${attempt.plan.input.repo}/${write.collection}/${write.rkey}`]
+      : [],
+  )
 
   return (
-    <View
-      style={[
-        a.gap_2xs,
-        a.p_sm,
-        a.rounded_sm,
-        a.border,
-        t.atoms.border_contrast_low,
-      ]}
-      testID="composerV2Tester-publish-status">
-      <Text style={[a.text_xs, a.font_bold]}>
-        {attempt.status === 'writing' ? (
-          <Trans>Publishing the captured plan…</Trans>
-        ) : attempt.status === 'published' ? (
-          <Trans>The planned records were published.</Trans>
-        ) : (
-          <Trans>
-            The write failed and its outcome may be uncertain. This exact plan
-            is retained; do not retry or replace it until you check these URIs.
-          </Trans>
-        )}
-      </Text>
-      <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-        <Trans>Repository: {attempt.plan.input.repo}</Trans>
-      </Text>
-      <Text
-        selectable
-        style={[a.text_xs, {fontFamily: 'monospace'}]}
-        testID="composerV2Tester-publish-uris">
-        {uris.join('\n')}
-      </Text>
+    <View testID="composerV2Tester-publish-status">
+      <Admonition.Outer
+        type={attempt.status === 'uncertain' ? 'warning' : 'info'}>
+        <Admonition.Row>
+          <Admonition.Icon />
+          <Admonition.Content>
+            <View style={[a.flex_row, a.align_center, a.gap_sm, a.flex_wrap]}>
+              <Text style={[a.font_bold]}>Publish</Text>
+              <StatusBadgeText
+                tone={
+                  attempt.status === 'writing'
+                    ? 'progress'
+                    : attempt.status === 'published'
+                      ? 'positive'
+                      : 'warning'
+                }>
+                {attempt.status}
+              </StatusBadgeText>
+            </View>
+            <Text style={[a.text_sm]}>
+              {attempt.status === 'writing' ? (
+                <Trans>Publishing the captured plan…</Trans>
+              ) : attempt.status === 'published' ? (
+                <Trans>The planned records were published.</Trans>
+              ) : (
+                <Trans>
+                  The write failed and its outcome may be uncertain. This exact
+                  plan is retained; do not retry or replace it until you check
+                  these URIs.
+                </Trans>
+              )}
+            </Text>
+            <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+              <Trans>Repository: {attempt.plan.input.repo}</Trans>
+            </Text>
+            <Text
+              selectable
+              style={[
+                a.text_xs,
+                a.p_sm,
+                a.rounded_sm,
+                t.atoms.bg_contrast_50,
+                {fontFamily: 'monospace'},
+              ]}
+              testID="composerV2Tester-publish-uris">
+              {uris.join('\n')}
+            </Text>
+          </Admonition.Content>
+        </Admonition.Row>
+      </Admonition.Outer>
     </View>
   )
 }
 
 /** The ordered post editors plus thread-level actions. */
-function ThreadSection() {
+function ThreadSection({
+  planError,
+}: {
+  planError?: Extract<PlanSummary, {ok: false}>['error']
+}) {
   const {t: l} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
@@ -239,6 +265,27 @@ function ThreadSection() {
 
   return (
     <View style={[a.gap_md]}>
+      <View
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.justify_between,
+          a.flex_wrap,
+          a.gap_sm,
+        ]}>
+        <Text style={[a.text_md, a.font_bold]}>
+          Thread · {postIds.length} {postIds.length === 1 ? 'post' : 'posts'}
+        </Text>
+        <Button
+          label={l`Retry all failed uploads`}
+          testID="composerV2Tester-retry-all"
+          size="small"
+          color={retryableFailureCount === 0 ? 'secondary' : 'negative_subtle'}
+          disabled={retryableFailureCount === 0}
+          onPress={() => store.actions.retryAllFailedUploads()}>
+          <ButtonText>Retry all failed ({retryableFailureCount})</ButtonText>
+        </Button>
+      </View>
       {state.replyTo && (
         <View
           style={[
@@ -269,6 +316,7 @@ function ThreadSection() {
           postId={postId}
           index={index}
           isLast={index === postIds.length - 1}
+          planError={planError?.postId === postId ? planError : undefined}
         />
       ))}
 
@@ -286,17 +334,6 @@ function ThreadSection() {
           }}>
           <ButtonText>
             <Trans>+ Post</Trans>
-          </ButtonText>
-        </Button>
-        <Button
-          label={l`Retry all failed uploads`}
-          testID="composerV2Tester-retry-all"
-          size="small"
-          color="secondary"
-          disabled={retryableFailureCount === 0}
-          onPress={() => store.actions.retryAllFailedUploads()}>
-          <ButtonText>
-            <Trans>Retry all failed ({retryableFailureCount})</Trans>
           </ButtonText>
         </Button>
       </View>

@@ -1,14 +1,16 @@
 import {useState} from 'react'
-import {View} from 'react-native'
-import {plural} from '@lingui/core/macro'
+import {ScrollView, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {StatusBadgeText} from '#/view/screens/DebugComposer/components/StatusBadge'
 import {usePlanErrorHint} from '#/view/screens/DebugComposer/messages'
 import {type PlanSummary} from '#/view/screens/DebugComposer/summarizeComposerV2Plan'
 import {type usePlanRunner} from '#/view/screens/DebugComposer/usePlanRunner'
 import {atoms as a, useTheme} from '#/alf'
+import * as Admonition from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
+import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -25,7 +27,7 @@ export function PlanSection({
   onChangeRequireAltText,
   accountDid,
   publishAttempted,
-  isPublishing,
+  publishStatus,
   onPublishPlan,
 }: {
   plan: PlanApi
@@ -33,34 +35,79 @@ export function PlanSection({
   onChangeRequireAltText: (value: boolean) => void
   accountDid: string | undefined
   publishAttempted: boolean
-  isPublishing: boolean
+  publishStatus?: 'writing' | 'published' | 'uncertain'
   onPublishPlan: (plan: ComposerV2Plan) => void
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
   const planErrorHint = usePlanErrorHint()
   const [showStructure, setShowStructure] = useState(false)
+  const [showRecords, setShowRecords] = useState(false)
   const [publishingEnabled, setPublishingEnabled] = useState(false)
   const summary = plan.result?.summary
   const successfulPlan = plan.result?.plan
-  const canPublish =
-    publishingEnabled &&
-    !publishAttempted &&
-    !plan.isPlanning &&
-    !plan.isStale &&
-    successfulPlan !== undefined &&
-    successfulPlan.input.repo === accountDid
-
+  const publishChecks = [
+    {label: 'enabled', passed: publishingEnabled},
+    {label: 'not-attempted', passed: !publishAttempted},
+    {label: 'not-planning', passed: !plan.isPlanning},
+    {label: 'not-stale', passed: !plan.isStale},
+    {label: 'plan-ok', passed: successfulPlan !== undefined},
+    {
+      label: 'repo-matches',
+      passed:
+        !!successfulPlan &&
+        !!accountDid &&
+        successfulPlan.input.repo === accountDid,
+    },
+  ]
+  const canPublish = publishChecks.every(check => check.passed)
   const needsEmptyPostConfirmation =
     summary !== undefined &&
     !summary.ok &&
     summary.error.code === 'empty-post-requires-confirmation'
+  const planStatus = publishAttempted
+    ? 'locked'
+    : plan.isPlanning
+      ? 'planning'
+      : !summary
+        ? 'none'
+        : !summary.ok
+          ? plan.isStale
+            ? 'failed · stale'
+            : needsEmptyPostConfirmation
+              ? 'failed · needs-confirm'
+              : 'failed'
+          : plan.isStale
+            ? 'ok · stale'
+            : 'ok'
+  const planTone = publishAttempted
+    ? 'neutral'
+    : plan.isPlanning
+      ? 'progress'
+      : !summary
+        ? 'neutral'
+        : !summary.ok
+          ? needsEmptyPostConfirmation
+            ? 'warning'
+            : 'negative'
+          : plan.isStale
+            ? 'warning'
+            : 'positive'
 
   return (
     <View style={[a.gap_sm]}>
-      <Text style={[a.text_sm, a.font_bold]}>
-        <Trans>No-write record plan</Trans>
-      </Text>
+      <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
+        <Text style={[a.text_md, a.font_bold]}>Record plan</Text>
+        <StatusBadgeText tone={planTone} testID="composerV2Tester-plan-status">
+          {planStatus}
+        </StatusBadgeText>
+        {summary?.ok && (
+          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+            {summary.postCount} {summary.postCount === 1 ? 'post' : 'posts'} ·{' '}
+            {summary.writeCount} {summary.writeCount === 1 ? 'write' : 'writes'}
+          </Text>
+        )}
+      </View>
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
         <Button
           label={l`Plan the record set without writing`}
@@ -74,7 +121,7 @@ export function PlanSection({
             <Trans>Plan records</Trans>
           </ButtonText>
         </Button>
-        {needsEmptyPostConfirmation && (
+        {needsEmptyPostConfirmation && !plan.isStale && (
           <Button
             label={l`Confirm skipping empty posts and plan again`}
             testID="composerV2Tester-plan-confirm-skip"
@@ -115,50 +162,6 @@ export function PlanSection({
         </Toggle.LabelText>
       </Toggle.Item>
 
-      <Toggle.Item
-        name="enablePublishing"
-        type="checkbox"
-        label={l`Enable publishing controls for this tester`}
-        value={publishingEnabled}
-        disabled={publishAttempted}
-        testID="composerV2Tester-publish-enable"
-        onChange={setPublishingEnabled}>
-        <Toggle.Checkbox />
-        <Toggle.LabelText>
-          <Trans>Enable publishing in this tester</Trans>
-        </Toggle.LabelText>
-      </Toggle.Item>
-
-      {publishingEnabled && (
-        <View style={[a.gap_xs]} testID="composerV2Tester-publish-controls">
-          <Text style={[a.text_xs, {color: t.palette.negative_500}]}>
-            <Trans>
-              Publishing creates real records on the signed-in account. This
-              action writes the exact plan shown here; planning alone never
-              publishes.
-            </Trans>
-          </Text>
-          <Button
-            label={l`Publish the exact planned records to your account`}
-            accessibilityHint={l`Writes the current plan to the signed-in account. This cannot be undone here.`}
-            testID="composerV2Tester-publish"
-            size="small"
-            color="primary"
-            disabled={!canPublish || isPublishing}
-            onPress={() => {
-              if (canPublish && successfulPlan) onPublishPlan(successfulPlan)
-            }}>
-            <ButtonText>
-              {isPublishing ? (
-                <Trans>Publishing…</Trans>
-              ) : (
-                <Trans>Publish planned records</Trans>
-              )}
-            </ButtonText>
-          </Button>
-        </View>
-      )}
-
       {plan.isStale && (
         <Text
           style={[a.text_xs, {color: t.palette.negative_500}]}
@@ -179,24 +182,28 @@ export function PlanSection({
         </Text>
       ) : summary.ok ? (
         <View style={[a.gap_xs]} testID="composerV2Tester-plan-result">
-          <Text style={[a.text_xs, a.font_bold]}>
-            {l`Plan OK: ${plural(summary.postCount, {one: '# post', other: '# posts'})}, ${plural(summary.writeCount, {one: '# write', other: '# writes'})}`}
-          </Text>
-          {summary.posts.map((post, index) => (
-            <Text
-              key={post.rkey}
-              style={[a.text_xs, {fontFamily: 'monospace'}]}
-              numberOfLines={2}>
-              [{index}] rkey={post.rkey} embed={post.embedType ?? 'none'} reply=
-              {post.hasReply ? 'yes' : 'no'} tags={post.tagCount} graphemes=
-              {post.textGraphemes}
-            </Text>
-          ))}
-          <Text style={[a.text_xs, {fontFamily: 'monospace'}]}>
-            {Object.entries(summary.writesByCollection)
-              .map(([collection, count]) => `${collection}: ${count}`)
-              .join('\n')}
-          </Text>
+          <ScrollView
+            horizontal
+            contentContainerStyle={[a.p_sm]}
+            style={[a.rounded_sm, t.atoms.bg_contrast_50]}>
+            <View style={[a.gap_2xs]}>
+              {summary.posts.map((post, index) => (
+                <Text
+                  key={post.rkey}
+                  style={[a.text_xs, {fontFamily: 'monospace'}]}>
+                  [{index}] rkey={post.rkey} embed={post.embedType ?? 'none'}{' '}
+                  reply=
+                  {post.hasReply ? 'yes' : 'no'} tags={post.tagCount} graphemes=
+                  {post.textGraphemes}
+                </Text>
+              ))}
+              <Text style={[a.text_xs, {fontFamily: 'monospace'}]}>
+                {Object.entries(summary.writesByCollection)
+                  .map(([collection, count]) => `${collection}: ${count}`)
+                  .join(' · ')}
+              </Text>
+            </View>
+          </ScrollView>
           <Button
             label={
               showStructure
@@ -217,35 +224,147 @@ export function PlanSection({
             </ButtonText>
           </Button>
           {showStructure && <PlanStructure summary={summary} />}
-          <Text style={[a.text_xs, a.font_bold]}>
-            <Trans>Generated records (applyWrites)</Trans>
-          </Text>
-          <Text
-            emoji
-            selectable
-            style={[a.text_xs, {fontFamily: 'monospace'}]}
-            testID="composerV2Tester-plan-records">
-            {JSON.stringify(plan.result?.writes, null, 2)}
-          </Text>
+          <Button
+            label={
+              showRecords
+                ? 'Hide generated records JSON'
+                : 'Show generated records JSON'
+            }
+            testID="composerV2Tester-plan-records-toggle"
+            size="tiny"
+            color="secondary"
+            style={[a.self_start]}
+            onPress={() => setShowRecords(value => !value)}>
+            <ButtonText>
+              {showRecords ? 'Hide records JSON' : 'Show records JSON'}
+            </ButtonText>
+          </Button>
+          {showRecords && (
+            <ScrollView
+              horizontal
+              contentContainerStyle={[a.p_sm]}
+              style={[a.rounded_sm, t.atoms.bg_contrast_50]}>
+              <Text
+                emoji
+                selectable
+                style={[a.text_xs, {fontFamily: 'monospace'}]}
+                testID="composerV2Tester-plan-records">
+                {JSON.stringify(plan.result?.writes, null, 2)}
+              </Text>
+            </ScrollView>
+          )}
         </View>
       ) : (
-        <View style={[a.gap_2xs]} testID="composerV2Tester-plan-error">
-          <Text
-            style={[
-              a.text_xs,
-              {fontFamily: 'monospace', color: t.palette.negative_500},
-            ]}>
-            {summary.error.code}
-            {summary.error.postIndex !== undefined
-              ? ` (post ${summary.error.postIndex + 1})`
-              : ''}
-            {summary.error.collection ? ` [${summary.error.collection}]` : ''}
-          </Text>
-          <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-            {planErrorHint(summary.error.code)}
-          </Text>
+        <View testID="composerV2Tester-plan-error">
+          <Admonition.Outer
+            type={needsEmptyPostConfirmation ? 'warning' : 'error'}>
+            <Admonition.Row>
+              <Admonition.Icon />
+              <Admonition.Content>
+                <Text
+                  style={[
+                    a.text_xs,
+                    {fontFamily: 'monospace', color: t.palette.negative_500},
+                  ]}>
+                  {summary.error.code}
+                  {summary.error.postIndex !== undefined
+                    ? ` (post ${summary.error.postIndex + 1})`
+                    : ''}
+                  {summary.error.mediaId
+                    ? ` · media ${summary.error.mediaId}`
+                    : ''}
+                  {summary.error.collection
+                    ? ` [${summary.error.collection}]`
+                    : ''}
+                </Text>
+                <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                  {planErrorHint(summary.error.code)}
+                </Text>
+              </Admonition.Content>
+            </Admonition.Row>
+          </Admonition.Outer>
         </View>
       )}
+
+      <Divider />
+      <View style={[a.gap_sm]} testID="composerV2Tester-publish-controls">
+        <View style={[a.flex_row, a.align_center, a.gap_sm, a.flex_wrap]}>
+          <Text style={[a.text_md, a.font_bold]}>Publish</Text>
+          <StatusBadgeText
+            tone={
+              publishStatus === 'writing'
+                ? 'progress'
+                : publishStatus === 'published'
+                  ? 'positive'
+                  : publishStatus === 'uncertain'
+                    ? 'warning'
+                    : 'neutral'
+            }>
+            {publishStatus ?? 'not-attempted'}
+          </StatusBadgeText>
+        </View>
+        <Toggle.Item
+          name="enablePublishing"
+          type="checkbox"
+          label={l`Enable publishing controls for this tester`}
+          value={publishingEnabled}
+          disabled={publishAttempted}
+          testID="composerV2Tester-publish-enable"
+          onChange={setPublishingEnabled}>
+          <Toggle.Checkbox />
+          <Toggle.LabelText>
+            <Trans>Enable publishing in this tester</Trans>
+          </Toggle.LabelText>
+        </Toggle.Item>
+        {publishingEnabled && !publishAttempted && (
+          <Admonition.Admonition type="error">
+            Publishing creates real records on{' '}
+            {accountDid ?? 'the signed-in account'}. One attempt per visit. This
+            writes the exact plan shown here.
+          </Admonition.Admonition>
+        )}
+        <View
+          style={[a.flex_row, a.flex_wrap, a.gap_sm]}
+          testID="composerV2Tester-publish-gates">
+          {publishChecks.map(check => (
+            <Text
+              key={check.label}
+              style={[
+                a.text_xs,
+                {
+                  fontFamily: 'monospace',
+                  color: check.passed
+                    ? t.palette.positive_700
+                    : t.palette.negative_700,
+                },
+              ]}>
+              {check.passed ? '✓' : '✗'} {check.label}
+            </Text>
+          ))}
+        </View>
+        <Button
+          label={l`Publish the exact planned records to your account`}
+          accessibilityHint={l`Writes the current plan to the signed-in account. This cannot be undone here.`}
+          testID="composerV2Tester-publish"
+          size="small"
+          color={canPublish ? 'negative' : 'secondary'}
+          style={[a.self_start]}
+          disabled={!canPublish}
+          onPress={() => {
+            if (canPublish && successfulPlan) onPublishPlan(successfulPlan)
+          }}>
+          <ButtonText>
+            {publishStatus === 'writing'
+              ? 'Publishing…'
+              : 'Publish planned records'}
+          </ButtonText>
+        </Button>
+        {publishAttempted && (
+          <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+            Locked until you leave this screen. Reset doesn’t unlock.
+          </Text>
+        )}
+      </View>
     </View>
   )
 }

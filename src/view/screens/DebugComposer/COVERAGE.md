@@ -21,6 +21,9 @@ Coverage values:
   and caption upload, plan summary wording, and the default post language.
 - `none`: not covered. Manual coverage is by area, not per control.
 
+Manual coverage below predates the tester redesign; it does not verify the
+redesigned layout or its status indicators.
+
 ## Sessions and scenarios
 
 | Control / feature                                                       | File                                         | Test IDs                                                                                                | Coverage                     |
@@ -52,7 +55,7 @@ Coverage values:
 | Media picker (images up to 10, video)                     | `PostCard.tsx`                                | `-post-{postId}-media-picker`                                                                                                    | manual web                   |
 | GIF picker                                                | `PostCard.tsx`                                | `-post-{postId}-gif`                                                                                                             | manual web                   |
 | External cards / chat invites via URL resolution          | `AttachmentControls.tsx`                      | `-post-{postId}-external-fields`                                                                                                 | unit, manual web             |
-| Upload phase and progress display                         | `AttachmentControls.tsx`                      | `-post-{postId}-media`, `-media-{mediaId}`                                                                                       | unit (labels), manual web    |
+| Upload phase and progress display                         | `AttachmentControls.tsx`                      | `-post-{postId}-media`, `-media-{mediaId}`                                                                                       | manual web                   |
 | Retry (per item, all failed) and terminal failure display | `AttachmentControls.tsx`, `DebugComposer.tsx` | `-media-{mediaId}-retry`, `-post-{postId}-media-retry`, `-retry-all`                                                             | unit                         |
 | Record and media retry (`retryAttachment`)                | `AttachmentControls.tsx`                      | `-post-{postId}-record-retry`, `-post-{postId}-media-retry`                                                                      | unit                         |
 | Unreadable image / GIF failure copy                       | `AttachmentControls.tsx`                      | `-media-{mediaId}`                                                                                                               | unit, manual web             |
@@ -75,12 +78,12 @@ Coverage values:
 | No-write plan with busy/success/failure states                       | `PlanSection.tsx`, `usePlanRunner.ts`               | `-plan`, `-plan-result`, `-plan-error`, `-plan-clear`                                  | unit, manual iOS |
 | Redacted structural summary and expandable structure view            | `PlanSection.tsx`, `summarizeComposerV2Plan.ts`     | `-plan-structure-toggle`, `-plan-structure`, `-plan-post-{index}-structure`            | unit, manual iOS |
 | Plan summary line with singular/plural counts                        | `PlanSection.tsx`                                   | `-plan-result`                                                                         | manual web       |
-| Full planned records as selectable JSON                              | `PlanSection.tsx`                                   | `-plan-records`                                                                        | unit             |
+| Full planned records as expandable, selectable JSON                  | `PlanSection.tsx`                                   | `-plan-records-toggle`, `-plan-records`                                                | unit             |
 | Static error hints per code, including `text-too-long`               | `PlanSection.tsx`, `messages.ts`                    | `-plan-error`                                                                          | unit             |
 | Stale marking after edits; cleared on reset, session, account change | `usePlanRunner.ts`                                  | `-plan-stale`                                                                          | unit             |
 | Empty-post confirmation re-plan                                      | `PlanSection.tsx`, `usePlanRunner.ts`               | `-plan-confirm-skip`                                                                   | unit             |
 | Required-alt-text preflight toggle                                   | `DebugComposer.tsx`, `PlanSection.tsx`              | none                                                                                   | none             |
-| Publish checkbox, one-shot publish, retained plan, planned URIs      | `DebugComposer.tsx`, `PlanSection.tsx`, `writer.ts` | `-publish-controls`, `-publish-enable`, `-publish`, `-publish-status`, `-publish-uris` | unit             |
+| Publish checkbox, one-shot publish, retained plan, planned URIs      | `DebugComposer.tsx`, `PlanSection.tsx`, `writer.ts` | `-publish-controls`, `-publish-enable`, `-publish-gates`, `-publish`, `-publish-status`, `-publish-uris` | unit |
 
 ## Diagnostics
 

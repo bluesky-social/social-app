@@ -4,7 +4,6 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {type SelfLabel} from '#/lib/moderation'
-import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
 import {
   SelectMediaButton,
@@ -15,7 +14,9 @@ import {
   RecordAttachmentView,
 } from '#/view/screens/DebugComposer/components/AttachmentControls'
 import {AttachUrlDialogButton} from '#/view/screens/DebugComposer/components/RecordAttachControls'
+import {StatusBadgeText} from '#/view/screens/DebugComposer/components/StatusBadge'
 import {parseTagsInput} from '#/view/screens/DebugComposer/parseTagsInput'
+import {type PlanSummary} from '#/view/screens/DebugComposer/summarizeComposerV2Plan'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Composer} from '#/components/Composer'
@@ -42,10 +43,12 @@ export function PostCard({
   postId,
   index,
   isLast,
+  planError,
 }: {
   postId: string
   index: number
   isLast: boolean
+  planError?: Extract<PlanSummary, {ok: false}>['error']
 }) {
   const post = useThreadPost(postId)
   const store = useThreadStore()
@@ -69,13 +72,23 @@ export function PostCard({
         a.rounded_md,
         a.border,
         t.atoms.border_contrast_low,
+        planError && {borderColor: t.palette.negative_500},
         t.atoms.bg_contrast_25,
         a.gap_sm,
       ]}
       testID={`composerV2Tester-post-${postId}`}>
-      <View style={[a.flex_row, a.justify_between, a.align_center]}>
-        <Text style={[a.text_xs, {fontFamily: 'monospace'}]}>
-          [{index}] {postId}
+      <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_xs]}>
+        <Text style={[a.font_bold]}>Post {index + 1}</Text>
+        <Text
+          selectable
+          numberOfLines={1}
+          style={[
+            a.flex_1,
+            a.text_xs,
+            t.atoms.text_contrast_medium,
+            {fontFamily: 'monospace', minWidth: 80},
+          ]}>
+          {postId}
         </Text>
         <View style={[a.flex_row, a.gap_xs]}>
           <Button
@@ -104,7 +117,7 @@ export function PostCard({
             label={l`Remove post ${index + 1}`}
             testID={`composerV2Tester-post-${postId}-remove`}
             size="tiny"
-            color="secondary"
+            color="negative_subtle"
             onPress={() => store.actions.removePost(postId)}>
             <ButtonText>
               <Trans>Remove</Trans>
@@ -112,6 +125,12 @@ export function PostCard({
           </Button>
         </View>
       </View>
+
+      {planError && (
+        <View style={[a.self_start]}>
+          <StatusBadgeText tone="negative">{`plan error · ${planError.code}`}</StatusBadgeText>
+        </View>
+      )}
 
       <Composer
         label={l`Post ${index + 1} text`}
@@ -128,7 +147,12 @@ export function PostCard({
 
       <PostMetaRow postId={postId} index={index} />
       <RecordAttachmentView postId={postId} />
-      <MediaAttachmentView postId={postId} />
+      <MediaAttachmentView
+        postId={postId}
+        planErrorMediaId={
+          planError?.code === 'missing-alt-text' ? planError.mediaId : undefined
+        }
+      />
     </View>
   )
 }
@@ -195,16 +219,27 @@ function PostMetaRow({postId, index}: {postId: string; index: number}) {
   return (
     <View style={[a.gap_sm]}>
       <View style={[a.flex_row, a.align_center, a.gap_sm, a.flex_wrap]}>
-        <Text style={[a.text_xs, {fontFamily: 'monospace'}]}>
-          {shortenedGraphemeLength}/{MAX_GRAPHEME_LENGTH}
+        <Text
+          style={[
+            a.text_xs,
+            t.atoms.text_contrast_medium,
+            {fontFamily: 'monospace'},
+            shortenedGraphemeLength > MAX_GRAPHEME_LENGTH && {
+              color: t.palette.negative_500,
+            },
+          ]}>
+          chars {shortenedGraphemeLength}/{MAX_GRAPHEME_LENGTH}
         </Text>
-        <CharProgress count={shortenedGraphemeLength} size={20} />
-        <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-          <Trans>
-            Capacity: {post.imageSelectionsRemaining} images ·{' '}
-            {post.videoSelectionsRemaining} video ·{' '}
-            {post.gifSelectionsRemaining} GIF
-          </Trans>
+        <Text
+          style={[
+            a.text_xs,
+            t.atoms.text_contrast_medium,
+            {fontFamily: 'monospace'},
+          ]}>
+          langs {post.langs.length ? post.langs.join(', ') : 'none'} · labels{' '}
+          {post.labels.length ? post.labels.join(', ') : 'none'} · capacity img{' '}
+          {post.imageSelectionsRemaining} vid {post.videoSelectionsRemaining}{' '}
+          gif {post.gifSelectionsRemaining}
         </Text>
       </View>
 

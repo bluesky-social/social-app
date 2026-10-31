@@ -64,6 +64,8 @@ describe('summarizeComposerV2Plan', () => {
       error: {
         code: 'unexpected-error',
         postIndex: undefined,
+        postId: undefined,
+        mediaId: undefined,
         collection: undefined,
       },
     })
@@ -103,6 +105,8 @@ describe('summarizeComposerV2Plan', () => {
       expect(summary.error).toEqual({
         code: 'media-failed',
         postIndex: 0,
+        postId,
+        mediaId: media.items[0].id,
         collection: undefined,
       })
     }

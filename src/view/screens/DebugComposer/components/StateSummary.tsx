@@ -24,13 +24,13 @@ export function StateSummary() {
   return (
     <View style={[a.gap_sm]}>
       <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-        <Text style={[a.text_sm, a.font_bold]}>
+        <Text style={[a.text_md, a.font_bold]}>
           <Trans>State summary (redacted)</Trans>
         </Text>
         <Button
           label={expanded ? l`Collapse state summary` : l`Expand state summary`}
           testID="composerV2Tester-summary-toggle"
-          size="tiny"
+          size="small"
           color="secondary"
           onPress={() => setExpanded(value => !value)}>
           <ButtonText>

@@ -91,10 +91,21 @@ export function GateControls() {
 
   return (
     <View style={[a.gap_sm]}>
-      <Text style={[a.text_sm, a.font_bold]}>
-        <Trans>Interaction gates</Trans>
-      </Text>
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
+        <Text style={[a.text_md, a.font_bold]}>
+          <Trans>Interaction gates</Trans>
+        </Text>
+        <Text
+          style={[
+            a.text_sm,
+            t.atoms.text_contrast_medium,
+            a.flex_1,
+            {minWidth: 180},
+          ]}>
+          {summary} · quotes: {postgate.quotesEnabled ? 'allowed' : 'disabled'}{' '}
+          · unknown:{' '}
+          {threadgate.unknownRules.length + postgate.unknownRules.length}
+        </Text>
         <Button
           label={l`Edit who can reply and quote`}
           accessibilityHint={l`Opens the post interaction settings dialog`}
@@ -106,15 +117,6 @@ export function GateControls() {
             <Trans>Reply & quote settings</Trans>
           </ButtonText>
         </Button>
-        <Text style={[a.text_xs, t.atoms.text_contrast_medium, a.flex_1]}>
-          {summary}
-          {' · '}
-          {postgate.quotesEnabled ? (
-            <Trans>quotes allowed</Trans>
-          ) : (
-            <Trans>quotes disabled</Trans>
-          )}
-        </Text>
       </View>
 
       {(threadgate.unknownRules.length > 0 ||

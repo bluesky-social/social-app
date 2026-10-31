@@ -4,10 +4,8 @@ import {I18nProvider} from '@lingui/react'
 import {renderHook} from '@testing-library/react-native'
 
 import {
-  type UploadPhase,
   usePlanErrorHint,
   useThreadgateSummary,
-  useUploadPhaseLabel,
 } from '#/view/screens/DebugComposer/messages'
 import {type ComposerV2PlanErrorCode} from '#/components/ComposerV2/planner'
 
@@ -45,15 +43,6 @@ const ALL_PLAN_ERROR_CODES = Object.keys({
   'invalid-write-input': true,
   'unexpected-error': true,
 } satisfies Record<ComposerV2PlanErrorCode, true>) as ComposerV2PlanErrorCode[]
-
-/** Typecheck-enforced exhaustive list of upload phases. */
-const ALL_UPLOAD_PHASES = Object.keys({
-  validating: true,
-  compressing: true,
-  uploading: true,
-  processing: true,
-  captions: true,
-} satisfies Record<UploadPhase, true>) as UploadPhase[]
 
 describe('useThreadgateSummary', () => {
   test('renders a translated, non-empty summary for every settings shape', () => {
@@ -93,19 +82,5 @@ describe('usePlanErrorHint', () => {
     expect(hint('text-too-long')).toBe(
       'A post is over the 300 character limit. Shorten it and plan again.',
     )
-  })
-})
-
-describe('useUploadPhaseLabel', () => {
-  test('renders a translated, non-empty label for every upload phase', () => {
-    const {result} = renderHook(() => useUploadPhaseLabel(), {wrapper})
-    const label = result.current
-
-    for (const phase of ALL_UPLOAD_PHASES) {
-      const text = label(phase)
-      expect(typeof text).toBe('string')
-      expect(text.length).toBeGreaterThan(0)
-    }
-    expect(label('captions')).toBe('Uploading captions')
   })
 })

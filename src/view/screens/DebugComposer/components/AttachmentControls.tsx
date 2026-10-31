@@ -5,7 +5,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {nanoid} from 'nanoid/non-secure'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
-import {useUploadPhaseLabel} from '#/view/screens/DebugComposer/messages'
+import {StatusBadgeText} from '#/view/screens/DebugComposer/components/StatusBadge'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {
@@ -44,27 +44,30 @@ export function RecordAttachmentView({postId}: {postId: string}) {
 
   return (
     <View
-      style={[
-        a.p_sm,
-        a.rounded_sm,
-        a.border,
-        a.gap_xs,
-        t.atoms.border_contrast_low,
-      ]}
+      style={[a.pt_sm, a.border_t, a.gap_xs, t.atoms.border_contrast_low]}
       testID={`composerV2Tester-post-${postId}-record`}>
       <View style={[a.flex_row, a.align_center, a.gap_sm, a.flex_wrap]}>
-        <Text style={[a.text_xs, a.font_bold]}>
-          <Trans>Record attachment</Trans>
-        </Text>
+        <Text style={[a.text_xs, a.font_bold]}>Record</Text>
         {record.state === 'pending' && <Loader size="xs" />}
-        <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-          {record.state === 'resolved' ? record.kind : record.state}
-        </Text>
+        <StatusBadgeText
+          tone={
+            record.state === 'resolved'
+              ? 'positive'
+              : record.state === 'failed'
+                ? 'negative'
+                : 'progress'
+          }>
+          {record.state === 'resolved'
+            ? `resolved · ${record.kind}`
+            : record.state === 'failed'
+              ? `failed · ${record.code} · ${record.retryable ? 'retryable' : 'permanent'}`
+              : 'pending'}
+        </StatusBadgeText>
         <Button
           label={l`Remove record attachment`}
           testID={`composerV2Tester-post-${postId}-remove-record`}
           size="tiny"
-          color="secondary"
+          color="negative_subtle"
           onPress={() => store.actions.removeRecordAttachment(postId)}>
           <ButtonText>
             <Trans>Remove</Trans>
@@ -91,7 +94,13 @@ export function RecordAttachmentView({postId}: {postId: string}) {
  * per-item upload status and controls, video with captions, GIFs, and
  * external/chat cards. All upload work shown here is real.
  */
-export function MediaAttachmentView({postId}: {postId: string}) {
+export function MediaAttachmentView({
+  postId,
+  planErrorMediaId,
+}: {
+  postId: string
+  planErrorMediaId?: string
+}) {
   const {t: l, i18n} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
@@ -101,27 +110,30 @@ export function MediaAttachmentView({postId}: {postId: string}) {
 
   return (
     <View
-      style={[
-        a.p_sm,
-        a.rounded_sm,
-        a.border,
-        a.gap_sm,
-        t.atoms.border_contrast_low,
-      ]}
+      style={[a.pt_sm, a.border_t, a.gap_sm, t.atoms.border_contrast_low]}
       testID={`composerV2Tester-post-${postId}-media`}>
       <View style={[a.flex_row, a.align_center, a.gap_sm, a.flex_wrap]}>
         <Text style={[a.text_xs, a.font_bold]}>
-          <Trans>Media attachment</Trans>
+          {media.state === 'resolved' ? `Media · ${media.kind}` : 'Media'}
         </Text>
         {media.state === 'pending' && <Loader size="xs" />}
-        <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-          {media.state === 'resolved' ? media.kind : media.state}
-        </Text>
+        {media.state !== 'resolved' && (
+          <StatusBadgeText
+            tone={media.state === 'failed' ? 'negative' : 'progress'}>
+            {media.state === 'failed'
+              ? `failed · ${media.code} · ${media.retryable ? 'retryable' : 'permanent'}`
+              : 'pending'}
+          </StatusBadgeText>
+        )}
+        {media.state === 'resolved' &&
+          (media.kind === 'external' || media.kind === 'chat-invite') && (
+            <StatusBadgeText tone="positive">resolved</StatusBadgeText>
+          )}
         <Button
           label={l`Remove media attachment`}
           testID={`composerV2Tester-post-${postId}-remove-media`}
           size="tiny"
-          color="secondary"
+          color="negative_subtle"
           onPress={() => store.actions.removeMediaAttachment(postId)}>
           <ButtonText>
             <Trans>Remove all</Trans>
@@ -153,15 +165,24 @@ export function MediaAttachmentView({postId}: {postId: string}) {
               postId={postId}
               item={item}
               index={index}
+              hasPlanError={item.id === planErrorMediaId}
             />
           ))}
         </View>
       )}
       {media.state === 'resolved' && media.kind === 'video' && (
-        <VideoItemRow postId={postId} item={media.item} />
+        <VideoItemRow
+          postId={postId}
+          item={media.item}
+          hasPlanError={media.item.id === planErrorMediaId}
+        />
       )}
       {media.state === 'resolved' && media.kind === 'gif' && (
-        <GifItemRow postId={postId} item={media.item} />
+        <GifItemRow
+          postId={postId}
+          item={media.item}
+          hasPlanError={media.item.id === planErrorMediaId}
+        />
       )}
       {media.state === 'resolved' && media.kind === 'external' && (
         <View style={[a.gap_xs]}>
@@ -201,17 +222,19 @@ function ImageItemRow({
   postId,
   item,
   index,
+  hasPlanError,
 }: {
   postId: string
   item: PostMediaImage
   index: number
+  hasPlanError: boolean
 }) {
   const {t: l, i18n} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
   return (
     <View
-      style={[a.flex_row, a.gap_sm, a.align_center]}
+      style={[a.flex_row, a.flex_wrap, a.gap_sm, a.align_center]}
       testID={`composerV2Tester-media-${item.id}`}>
       <Image
         source={{uri: item.uri}}
@@ -221,8 +244,23 @@ function ImageItemRow({
         accessibilityIgnoresInvertColors
       />
       <View style={[a.flex_1, a.gap_2xs]}>
+        <Text
+          selectable
+          style={[
+            a.text_xs,
+            t.atoms.text_contrast_medium,
+            {fontFamily: 'monospace'},
+          ]}>
+          {item.id}
+        </Text>
         <UploadStatusLine upload={item.upload} />
-        <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+        <Text
+          style={[
+            a.text_xs,
+            hasPlanError
+              ? {color: t.palette.negative_500}
+              : t.atoms.text_contrast_medium,
+          ]}>
           {item.altText ? (
             <Trans>Alt text added</Trans>
           ) : (
@@ -257,14 +295,37 @@ function ImageItemRow({
   )
 }
 
-function VideoItemRow({postId, item}: {postId: string; item: PostMediaVideo}) {
+function VideoItemRow({
+  postId,
+  item,
+  hasPlanError,
+}: {
+  postId: string
+  item: PostMediaVideo
+  hasPlanError: boolean
+}) {
   const {t: l, i18n} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
   return (
     <View style={[a.gap_xs]} testID={`composerV2Tester-media-${item.id}`}>
+      <Text
+        selectable
+        style={[
+          a.text_xs,
+          t.atoms.text_contrast_medium,
+          {fontFamily: 'monospace'},
+        ]}>
+        {item.id}
+      </Text>
       <UploadStatusLine upload={item.upload} />
-      <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+      <Text
+        style={[
+          a.text_xs,
+          hasPlanError
+            ? {color: t.palette.negative_500}
+            : t.atoms.text_contrast_medium,
+        ]}>
         {item.altText ? (
           <Trans>Alt text added</Trans>
         ) : (
@@ -303,7 +364,15 @@ function VideoItemRow({postId, item}: {postId: string; item: PostMediaVideo}) {
   )
 }
 
-function GifItemRow({postId, item}: {postId: string; item: PostMediaGif}) {
+function GifItemRow({
+  postId,
+  item,
+  hasPlanError,
+}: {
+  postId: string
+  item: PostMediaGif
+  hasPlanError: boolean
+}) {
   const {t: l} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
@@ -326,7 +395,13 @@ function GifItemRow({postId, item}: {postId: string; item: PostMediaGif}) {
         <Text style={[a.text_xs]}>
           <Trans>GIF (no upload required)</Trans>
         </Text>
-        <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+        <Text
+          style={[
+            a.text_xs,
+            hasPlanError
+              ? {color: t.palette.negative_500}
+              : t.atoms.text_contrast_medium,
+          ]}>
           {item.altText ? (
             <Trans>Alt text added</Trans>
           ) : (
@@ -353,27 +428,24 @@ function GifItemRow({postId, item}: {postId: string; item: PostMediaGif}) {
 
 /** Live phase/progress line for one real upload worker. */
 function UploadStatusLine({upload}: {upload: UploadStatus}) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const phaseLabel = useUploadPhaseLabel()
   let label: string
   switch (upload.state) {
     case 'pending':
-      label = l`Upload queued`
+      label = 'pending'
       break
     case 'uploading': {
-      const phase = upload.phase ? phaseLabel(upload.phase) : l`Working`
+      const phase = upload.phase ?? 'working'
       label =
         upload.progress !== undefined
-          ? `${phase} · ${Math.round(upload.progress * 100)}%`
-          : phase
+          ? `uploading · ${phase} · ${Math.round(upload.progress * 100)}%`
+          : `uploading · ${phase}`
       break
     }
     case 'uploaded':
-      label = l`Uploaded`
+      label = 'uploaded'
       break
     case 'failed':
-      label = upload.retryable ? l`Failed (retryable)` : l`Failed (permanent)`
+      label = `failed · ${upload.code} · ${upload.retryable ? 'retryable' : 'permanent'}`
       break
   }
   return (
@@ -381,15 +453,18 @@ function UploadStatusLine({upload}: {upload: UploadStatus}) {
       {(upload.state === 'pending' || upload.state === 'uploading') && (
         <Loader size="xs" />
       )}
-      <Text
-        style={[
-          a.text_xs,
+      <StatusBadgeText
+        tone={
           upload.state === 'failed'
-            ? {color: t.palette.negative_500}
-            : t.atoms.text_contrast_medium,
-        ]}>
+            ? 'negative'
+            : upload.state === 'uploaded'
+              ? 'positive'
+              : upload.state === 'uploading'
+                ? 'progress'
+                : 'neutral'
+        }>
         {label}
-      </Text>
+      </StatusBadgeText>
     </View>
   )
 }
@@ -419,7 +494,7 @@ function FailureRow({
           label={l`Retry`}
           testID={testID}
           size="tiny"
-          color="secondary"
+          color="negative"
           onPress={onRetry}>
           <ButtonText>
             <Trans>Retry</Trans>

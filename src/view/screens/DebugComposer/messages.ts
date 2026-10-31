@@ -3,7 +3,6 @@ import {useLingui} from '@lingui/react/macro'
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 import {type ComposerV2PlanErrorCode} from '#/components/ComposerV2/planner'
-import {type UploadStatus} from '#/components/ComposerV2/store/types'
 
 /*
  * Translated-string helpers for the tester.
@@ -16,11 +15,6 @@ import {type UploadStatus} from '#/components/ComposerV2/store/types'
  * which keeps every branch compiled. Regression-tested against a real Lingui
  * runtime in __tests__/messages.test.tsx.
  */
-
-/** Upload worker phase, as displayed by the media status line. */
-export type UploadPhase = NonNullable<
-  Extract<UploadStatus, {state: 'uploading'}>['phase']
->
 
 /** Short reply-gate summary for the current threadgate settings. */
 export function useThreadgateSummary(): (
@@ -89,25 +83,6 @@ export function usePlanErrorHint(): (code: ComposerV2PlanErrorCode) => string {
         return l`The generated records failed validation. This is a bug worth reporting.`
       case 'unexpected-error':
         return l`Planning failed unexpectedly. Try again.`
-    }
-  }
-}
-
-/** Label for one live upload worker phase. */
-export function useUploadPhaseLabel(): (phase: UploadPhase) => string {
-  const {t: l} = useLingui()
-  return phase => {
-    switch (phase) {
-      case 'validating':
-        return l`Validating`
-      case 'compressing':
-        return l`Compressing`
-      case 'uploading':
-        return l`Uploading`
-      case 'processing':
-        return l`Processing`
-      case 'captions':
-        return l`Uploading captions`
     }
   }
 }

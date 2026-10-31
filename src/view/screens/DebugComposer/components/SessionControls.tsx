@@ -8,6 +8,7 @@ import {
   SelectMediaButton,
   type SelectMediaButtonProps,
 } from '#/view/com/composer/SelectMediaButton'
+import {StatusBadgeText} from '#/view/screens/DebugComposer/components/StatusBadge'
 import {normalizePostReference} from '#/view/screens/DebugComposer/postUrl'
 import {
   buildScenarioInitialState,
@@ -16,7 +17,7 @@ import {
 import {type useTesterSession} from '#/view/screens/DebugComposer/useTesterSession'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import * as Dialog from '#/components/Dialog'
+import {useThreadState} from '#/components/ComposerV2/hooks'
 import * as TextField from '#/components/forms/TextField'
 import {Loader} from '#/components/Loader'
 import * as toast from '#/components/Toast'
@@ -49,7 +50,18 @@ export function SessionControls({
   const {t: l} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
-  const replyQuoteControl = Dialog.useDialogControl()
+  const state = useThreadState()
+  const getPost = useGetPost()
+  const [url, setUrl] = useState('')
+  const postReference = normalizePostReference({reference: url})
+
+  const startReplyOrQuote = (id: 'reply' | 'quote') => {
+    if (!postReference) return
+    void applyScenario(id, async () => {
+      const post = await getPost({uri: postReference})
+      return buildScenarioInitialState({id, post})
+    })
+  }
 
   const scenarioLabel = (id: TesterScenarioId): string => {
     switch (id) {
@@ -89,14 +101,33 @@ export function SessionControls({
   return (
     <View style={[a.gap_sm]}>
       <View style={[a.flex_row, a.align_center, a.gap_sm, a.flex_wrap]}>
-        <Text style={[a.text_sm, a.font_bold]}>
-          <Trans>Session</Trans>
-        </Text>
-        <Text style={[a.text_xs, {fontFamily: 'monospace'}]}>
+        <Text style={[a.text_md, a.font_bold]}>Session</Text>
+        <StatusBadgeText>{session.scenarioId}</StatusBadgeText>
+        <StatusBadgeText
+          tone={
+            isApplyingScenario
+              ? 'progress'
+              : scenarioError
+                ? 'negative'
+                : 'positive'
+          }>
+          {isApplyingScenario
+            ? 'building'
+            : scenarioError
+              ? 'scenario-error'
+              : 'ready'}
+        </StatusBadgeText>
+        {state.isDirty && (
+          <StatusBadgeText tone="warning">edited</StatusBadgeText>
+        )}
+        <Text
+          selectable
+          style={[
+            a.text_xs,
+            t.atoms.text_contrast_medium,
+            {fontFamily: 'monospace'},
+          ]}>
           {session.key}
-        </Text>
-        <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-          {scenarioLabel(session.scenarioId)}
         </Text>
         {isApplyingScenario && <Loader size="xs" />}
       </View>
@@ -105,10 +136,10 @@ export function SessionControls({
         {SIMPLE_SCENARIOS.map(scenario => (
           <Button
             key={scenario.id}
-            label={l`Start scenario: ${scenarioLabel(scenario.id)}`}
+            label={`Start scenario: ${scenarioLabel(scenario.id)}${session.scenarioId === scenario.id ? ' (selected)' : ''}`}
             testID={scenario.testID}
-            size="tiny"
-            color="secondary"
+            size="small"
+            color={session.scenarioId === scenario.id ? 'primary' : 'secondary'}
             onPress={() =>
               void applyScenario(scenario.id, () =>
                 buildScenarioInitialState({id: scenario.id}),
@@ -118,10 +149,10 @@ export function SessionControls({
           </Button>
         ))}
         <Button
-          label={l`Start scenario: Mention`}
+          label={`Start scenario: Mention${session.scenarioId === 'mention' ? ' (selected)' : ''}`}
           testID="composerV2Tester-scenario-mention"
-          size="tiny"
-          color="secondary"
+          size="small"
+          color={session.scenarioId === 'mention' ? 'primary' : 'secondary'}
           disabled={!currentAccount?.handle}
           onPress={() => {
             const handle = currentAccount?.handle
@@ -132,17 +163,6 @@ export function SessionControls({
           }}>
           <ButtonText>
             <Trans>Mention</Trans>
-          </ButtonText>
-        </Button>
-        <Button
-          label={l`Start a reply or quote scenario from a post URL`}
-          accessibilityHint={l`Opens a dialog asking for a real post URL`}
-          testID="composerV2Tester-scenario-reply-quote"
-          size="tiny"
-          color="secondary"
-          onPress={replyQuoteControl.open}>
-          <ButtonText>
-            <Trans>Reply / Quote…</Trans>
           </ButtonText>
         </Button>
         <View
@@ -162,12 +182,47 @@ export function SessionControls({
           label={l`Reset the current session`}
           accessibilityHint={l`Destroys the session and rebuilds it from its original input`}
           testID="composerV2Tester-reset"
-          size="tiny"
+          size="small"
           color="negative_subtle"
           onPress={resetSession}>
           <ButtonText>
             <Trans>Reset</Trans>
           </ButtonText>
+        </Button>
+      </View>
+
+      <View
+        style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}
+        testID="composerV2Tester-scenario-reply-quote">
+        <TextField.Root style={[a.flex_1, {minWidth: 180}]}>
+          <TextField.Input
+            label="Post URL or at:// URI"
+            testID="composerV2Tester-post-url-input"
+            value={url}
+            onChangeText={setUrl}
+            placeholder="Post URL or at:// URI"
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="url"
+          />
+        </TextField.Root>
+        <Button
+          label={`Start reply session${session.scenarioId === 'reply' ? ' (selected)' : ''}`}
+          testID="composerV2Tester-post-url-reply"
+          size="small"
+          color={session.scenarioId === 'reply' ? 'primary' : 'secondary'}
+          disabled={!postReference}
+          onPress={() => startReplyOrQuote('reply')}>
+          <ButtonText>Reply</ButtonText>
+        </Button>
+        <Button
+          label={`Start quote session${session.scenarioId === 'quote' ? ' (selected)' : ''}`}
+          testID="composerV2Tester-post-url-quote"
+          size="small"
+          color={session.scenarioId === 'quote' ? 'primary' : 'secondary'}
+          disabled={!postReference}
+          onPress={() => startReplyOrQuote('quote')}>
+          <ButtonText>Quote</ButtonText>
         </Button>
       </View>
 
@@ -181,91 +236,6 @@ export function SessionControls({
           </Trans>
         </Text>
       )}
-
-      <Dialog.Outer control={replyQuoteControl}>
-        <Dialog.Handle />
-        <ReplyQuoteDialogInner applyScenario={applyScenario} />
-      </Dialog.Outer>
     </View>
-  )
-}
-
-/**
- * Asks for a real post URL, fetches the post, and starts a reply or quote
- * session from the fetched view - refs and previews are never fabricated.
- */
-function ReplyQuoteDialogInner({
-  applyScenario,
-}: {
-  applyScenario: SessionApi['applyScenario']
-}) {
-  const {t: l} = useLingui()
-  const t = useTheme()
-  const control = Dialog.useDialogContext()
-  const getPost = useGetPost()
-  const [url, setUrl] = useState('')
-  const postReference = normalizePostReference({reference: url})
-
-  const start = (id: 'reply' | 'quote') => {
-    if (!postReference) return
-    control.close(() => {
-      void applyScenario(id, async () => {
-        const post = await getPost({uri: postReference})
-        return buildScenarioInitialState({id, post})
-      })
-    })
-  }
-
-  return (
-    <Dialog.ScrollableInner label={l`Start a reply or quote session`}>
-      <View style={[a.gap_md]}>
-        <Text style={[a.text_lg, a.font_bold]}>
-          <Trans>Reply or quote a real post</Trans>
-        </Text>
-        <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-          <Trans>
-            Paste a bsky.app post URL or at:// URI. The post is fetched from the
-            AppView so the session uses its real reference and preview.
-          </Trans>
-        </Text>
-        <TextField.Root>
-          <Dialog.Input
-            label={l`Post URL`}
-            testID="composerV2Tester-post-url-input"
-            defaultValue=""
-            onChangeText={setUrl}
-            placeholder={l`https://bsky.app/profile/…/post/…`}
-            autoCapitalize="none"
-            autoCorrect={false}
-            keyboardType="url"
-          />
-        </TextField.Root>
-        <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
-          <Button
-            label={l`Start a reply session for this post`}
-            testID="composerV2Tester-post-url-reply"
-            size="small"
-            color="primary"
-            disabled={!postReference}
-            onPress={() => start('reply')}>
-            <ButtonText>
-              <Trans>Start reply</Trans>
-            </ButtonText>
-          </Button>
-          <Button
-            label={l`Start a quote session for this post`}
-            testID="composerV2Tester-post-url-quote"
-            size="small"
-            color="secondary"
-            disabled={!postReference}
-            onPress={() => start('quote')}>
-            <ButtonText>
-              <Trans>Start quote</Trans>
-            </ButtonText>
-          </Button>
-        </View>
-      </View>
-      <Dialog.Close />
-    </Dialog.ScrollableInner>
   )
 }

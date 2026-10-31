@@ -18,6 +18,8 @@ export function summarizeComposerV2Plan({
       error: {
         code: result.error.code,
         postIndex: result.error.postIndex,
+        postId: result.error.postId,
+        mediaId: result.error.mediaId,
         collection: result.error.collection,
       },
     }
