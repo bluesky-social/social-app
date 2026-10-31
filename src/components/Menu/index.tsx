@@ -25,6 +25,7 @@ import {type NanoGlyphName} from '#/components/icons/glyphMaps'
 import {type IconWithSvgMeta} from '#/components/icons/TEMPLATE'
 import {
   Context,
+  InlineItemPositionContext,
   ItemContext,
   useMenuContext,
   useMenuItemContext,
@@ -219,14 +220,15 @@ export function Outer({
 /**
  * Splits the items into native sections: each `Group`, with the `LabelText`
  * above it as its title, and each run of loose items between groups and
- * `Divider`s.
+ * `Divider`s. Each item gets its position in the whole menu, which Android
+ * shapes it by.
  */
 function InlineOuter({children}: {children: React.ReactNode}) {
   const {i18n} = useLingui()
   const sections: {
     key: React.Key | null
     title?: string
-    items: React.ReactNode
+    items: React.ReactNode[]
   }[] = []
   let title: string | undefined
   let looseItems: React.ReactNode[] | undefined
@@ -239,7 +241,11 @@ function InlineOuter({children}: {children: React.ReactNode}) {
         continue
       }
       if (child.type === Group) {
-        sections.push({key: child.key, title, items: child.props.children})
+        sections.push({
+          key: child.key,
+          title,
+          items: flattenReactChildren(child.props.children),
+        })
         title = undefined
         looseItems = undefined
         continue
@@ -261,9 +267,22 @@ function InlineOuter({children}: {children: React.ReactNode}) {
     looseItems.push(child)
   }
 
+  const starts: number[] = []
+  let count = 0
+  for (const section of sections) {
+    starts.push(count)
+    count += section.items.length
+  }
+
   return sections.map((section, i) => (
     <InlineSection key={section.key ?? i} title={section.title} divider={i > 0}>
-      {section.items}
+      {section.items.map((item, j) => (
+        <InlineItemPositionContext.Provider
+          key={isValidElement(item) ? item.key : j}
+          value={{index: starts[i] + j, count}}>
+          {item}
+        </InlineItemPositionContext.Provider>
+      ))}
     </InlineSection>
   ))
 }

@@ -1,3 +1,4 @@
+import {useContext} from 'react'
 import {Pressable, Text, View} from 'react-native'
 import {setupI18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
@@ -6,7 +7,9 @@ import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import * as Dialog from '#/components/Dialog'
 import * as Menu from '#/components/Menu'
+import {InlineItemPositionContext} from '#/components/Menu/context'
 import * as Inline from '#/components/Menu/inline'
+import {type InlineItemPosition} from '#/components/Menu/inline/types'
 import * as env from '#/env'
 
 jest.mock('#/env', () => ({
@@ -206,6 +209,52 @@ describe('inline menu', () => {
       'Before divider',
       'After divider',
     ])
+  })
+
+  it('numbers the items across all sections', () => {
+    const positions: Record<string, InlineItemPosition> = {}
+    jest.mocked(Inline.InlineItem).mockImplementation(function Item({title}) {
+      positions[title] = useContext(InlineItemPositionContext)
+      return <View />
+    })
+
+    renderMenu(
+      <Menu.Root inline>
+        {trigger()}
+        <Menu.Outer>
+          <Menu.Item label="A" onPress={() => {}}>
+            <Menu.ItemText>A</Menu.ItemText>
+          </Menu.Item>
+          {false && (
+            <Menu.Item label="Hidden" onPress={() => {}}>
+              <Menu.ItemText>Hidden</Menu.ItemText>
+            </Menu.Item>
+          )}
+          <Menu.LabelText>Label</Menu.LabelText>
+          <Menu.Group>
+            <Menu.Item label="B" onPress={() => {}}>
+              <Menu.ItemText>B</Menu.ItemText>
+            </Menu.Item>
+            {null}
+            <Menu.Item label="C" onPress={() => {}}>
+              <Menu.ItemText>C</Menu.ItemText>
+            </Menu.Item>
+          </Menu.Group>
+          <Menu.Divider />
+          <Menu.Item label="D" onPress={() => {}}>
+            <Menu.ItemText>D</Menu.ItemText>
+          </Menu.Item>
+        </Menu.Outer>
+      </Menu.Root>,
+    )
+    jest.mocked(Inline.InlineItem).mockImplementation(() => <View />)
+
+    expect(positions).toEqual({
+      A: {index: 0, count: 4},
+      B: {index: 1, count: 4},
+      C: {index: 2, count: 4},
+      D: {index: 3, count: 4},
+    })
   })
 
   it('opens from the trigger on Android only', () => {

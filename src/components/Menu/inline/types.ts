@@ -17,6 +17,16 @@ export type InlineSectionProps = React.PropsWithChildren<{
   divider?: boolean
 }>
 
+/**
+ * An item's place among all the items of an inline menu. Counts each element
+ * in a `Menu.Outer` or `Menu.Group` as one item, so an item inside a custom
+ * component that renders several, or none, throws the count off.
+ */
+export type InlineItemPosition = {
+  index: number
+  count: number
+}
+
 export type InlineItemProps = {
   title: string
   /** The glyph, and so native symbol, of the item's `Menu.ItemIcon`. */
