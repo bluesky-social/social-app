@@ -1,8 +1,13 @@
 import {describe, expect, jest, test} from '@jest/globals'
+import {i18n} from '@lingui/core'
 
 /* Avoid loading the UI module chain through the real link resolver. */
 jest.mock('#/lib/api/resolve', () => ({
   resolveLink: jest.fn(),
+}))
+
+jest.mock('#/lib/media/video/upload', () => ({
+  uploadVideo: jest.fn(),
 }))
 
 import {type LinkResolvers} from '#/lib/api/resolve'
@@ -108,12 +113,28 @@ describe('upload worker dependency wiring', () => {
       copyVideoToCache,
       createVideoTelemetry,
       compressVideo,
-      uploadVideo,
+      /* Wraps the shared helper; see the i18n binding test below. */
+      uploadVideo: expect.any(Function),
       releaseCompressedVideo,
       uploadBlob,
       createVideoServiceClient: createTokenlessVideoServiceClient,
     })
     expect(video.sleep).toEqual(expect.any(Function))
+  })
+
+  test('production uploadVideo binds the global i18n for the shared helper', async () => {
+    const {video} = captureWorkerOptions()
+    const args = {
+      video: {} as never,
+      client: {} as never,
+      dispatchUrl: 'https://pds.example.test',
+      setProgress: () => {},
+      signal: new AbortController().signal,
+    }
+
+    await video.uploadVideo(args)
+
+    expect(uploadVideo).toHaveBeenCalledWith({...args, i18n})
   })
 
   test('every store shares one image compression limiter', () => {

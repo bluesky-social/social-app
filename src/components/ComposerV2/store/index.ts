@@ -52,7 +52,6 @@ export function createThreadStore({
   resolvers,
   pdsClient,
   pdsUrl,
-  i18n,
   analytics,
   initialState,
   onError,
@@ -113,7 +112,6 @@ export function createThreadStore({
   const uploads = createMediaUploads({
     pdsClient,
     pdsUrl,
-    i18n,
     metric: analytics.metric,
     onUpdate: applyMediaUploadUpdate,
     __uploadWorkers,
@@ -691,7 +689,7 @@ export function createThreadStore({
       reportError(
         {
           source: 'upload',
-          code: status.code ?? 'upload-failed',
+          code: status.code,
           postId,
           mediaId,
           kind: diagnostic.kind,
@@ -952,10 +950,6 @@ export function createThreadStore({
         state: 'failed' as const,
         uri,
         // The UI localizes this stable code; raw diagnostics never enter state.
-        error:
-          code === 'embedding-disabled'
-            ? 'Embedding disabled'
-            : 'Link resolution failed',
         code,
         retryable,
       }

@@ -377,7 +377,7 @@ describe('initial media and eager uploads', () => {
       mediaId: media.item.id,
       status: {
         state: 'failed',
-        error: 'network',
+        code: 'network',
         retryable: true,
       },
       diagnostic: {kind: 'operational', cause: undefined},
@@ -405,7 +405,7 @@ describe('initial media and eager uploads', () => {
       ...image,
       id: 'old-item',
       postId: 'old-post',
-      upload: {state: 'failed', error: 'old failure', retryable: true},
+      upload: {state: 'failed', code: 'network', retryable: true},
     }
     const store = makeStore({
       posts: [{attachments: {media: {kind: 'images', items: [staleSource]}}}],

@@ -258,7 +258,7 @@ describe('planner reporting policy', () => {
     media.items[0].upload = {
       state: 'failed',
       retryable: false,
-      error: 'Safe error',
+      code: 'video-rejected',
     }
     for (const state of [
       empty,
@@ -876,7 +876,12 @@ describe('ComposerV2 no-write planner', () => {
     const video = (
       upload:
         | {state: 'uploaded'; blob: BlobRef}
-        | {state: 'failed'; error: string; retryable: false},
+        | {
+            state: 'failed'
+            code: 'video-upload-limit'
+            detail: string
+            retryable: false
+          },
     ) => {
       const state = snapshot({
         posts: [
@@ -917,7 +922,8 @@ describe('ComposerV2 no-write planner', () => {
     const failed = await plan(
       video({
         state: 'failed',
-        error: 'private worker detail',
+        code: 'video-upload-limit',
+        detail: 'private worker detail',
         retryable: false,
       }),
       {},
@@ -1203,7 +1209,8 @@ describe('ComposerV2 no-write planner', () => {
     if (media.state !== 'resolved' || media.kind !== 'images') return
     media.items[0].upload = {
       state: 'failed',
-      error: 'private worker detail',
+      code: 'video-upload-limit',
+      detail: 'private worker detail',
       retryable: false,
     }
     const result = await plan(state)

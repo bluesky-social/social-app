@@ -107,8 +107,7 @@ describe('failed video upload normalization', () => {
 
     started[0].report({
       state: 'failed',
-      error: 'caption upload failed',
-      code: 'caption-upload-failed',
+      code: 'network',
       retryable: true,
       blob: videoBlob,
       captionBlobs,
@@ -119,8 +118,7 @@ describe('failed video upload normalization', () => {
       throw new Error('expected retryable failed upload')
     }
     expect(failed.upload).toMatchObject({
-      error: 'caption upload failed',
-      code: 'caption-upload-failed',
+      code: 'network',
       retryable: true,
     })
     expect(failed.videoBlob).toBe(videoBlob)
@@ -195,7 +193,6 @@ test('a real caption retry reuses video and unchanged captions after a partial f
         },
       ],
     },
-    i18n: {_: () => 'Upload failed'} as never,
     /* Polling is not faked; reaching it fails the upload. */
     __uploadWorkers: realUploadWorkers({
       video: {getVideoMetadata, compressVideo, uploadVideo, uploadBlob},
@@ -406,7 +403,7 @@ describe('setVideoCaptions', () => {
       initialState: {posts: [{attachments: {media: {...videoInput}}}]},
     })
     const {postId, item} = getVideo(store)
-    started[0].report({state: 'failed', error: 'network', retryable: true})
+    started[0].report({state: 'failed', code: 'network', retryable: true})
 
     store.actions.setVideoCaptions(postId, item.id, [
       {lang: 'en', content: 'edited after failure'},

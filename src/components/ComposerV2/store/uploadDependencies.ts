@@ -1,3 +1,5 @@
+import {i18n} from '@lingui/core'
+
 import {uploadBlob} from '#/lib/api/upload-blob'
 import {AbortError} from '#/lib/async/cancelable'
 import {compressImage} from '#/lib/media/image/compress'
@@ -5,7 +7,7 @@ import {getImageDim} from '#/lib/media/manip'
 import {getUriSize} from '#/lib/media/uriSize'
 import {compressVideo} from '#/lib/media/video/compress'
 import {createVideoTelemetry} from '#/lib/media/video/telemetry'
-import {uploadVideo} from '#/lib/media/video/upload'
+import {uploadVideo as uploadVideoShared} from '#/lib/media/video/upload'
 import {createTokenlessVideoServiceClient} from '#/lib/media/video/util'
 import {getVideoMetadata} from '#/view/com/composer/videos/metadata'
 import {copyVideoToCache} from '#/components/ComposerV2/store/utils/copyVideoToCache'
@@ -53,7 +55,7 @@ export const videoUploadDependencies: VideoUploadDependencies = {
   copyVideoToCache,
   createVideoTelemetry,
   compressVideo,
-  uploadVideo,
+  uploadVideo: args => uploadVideoShared({...args, i18n}),
   releaseCompressedVideo,
   uploadBlob,
   createVideoServiceClient: createTokenlessVideoServiceClient,

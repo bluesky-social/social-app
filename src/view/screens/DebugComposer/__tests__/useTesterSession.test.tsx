@@ -85,7 +85,6 @@ describe('useTesterSession', () => {
         resolvers,
         pdsClient: testUploadRuntime.pdsClient,
         pdsUrl: testUploadRuntime.pdsUrl,
-        i18n: testUploadRuntime.i18n,
       }),
     )
   })

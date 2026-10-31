@@ -1,6 +1,7 @@
 import {type ComposerAdapterErrorCode} from '#/components/ComposerV2/adapters'
 import {type ComposerV2PlanErrorCode} from '#/components/ComposerV2/planner'
 import {type LinkResolutionFailureCode} from '#/components/ComposerV2/store/linkResolver'
+import {type UploadFailureCode} from '#/components/ComposerV2/store/types'
 
 /** How a reported failure is classified: bad input, a failed operation, or a bug. */
 export type ComposerV2ErrorKind = 'validation' | 'operational' | 'unexpected'
@@ -16,7 +17,7 @@ export type ComposerV2ErrorEvent = {
       source: 'initialization'
       code: ComposerAdapterErrorCode | 'initial-state-failed'
     }
-  | {source: 'upload'; code: string}
+  | {source: 'upload'; code: UploadFailureCode | 'upload-start-failed'}
   | {
       source: 'uri-resolution'
       code: LinkResolutionFailureCode

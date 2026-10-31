@@ -1,7 +1,5 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {type BlobRef} from '@atproto/lex'
-import {type I18n} from '@lingui/core'
-import {msg} from '@lingui/core/macro'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {
@@ -20,7 +18,10 @@ import {
 } from '#/lib/media/video/types'
 import {isNetworkError, shouldRetryError} from '#/lib/strings/errors'
 import {type ComposerImage} from '#/state/gallery'
-import {isComposerV2Cancellation} from '#/components/ComposerV2/errors'
+import {
+  type ComposerV2ErrorKind,
+  isComposerV2Cancellation,
+} from '#/components/ComposerV2/errors'
 import {type AnalyticsContextType} from '#/analytics'
 import {IS_ANDROID, IS_WEB} from '#/env'
 import {app} from '#/lexicons'
@@ -37,6 +38,7 @@ import {
   type ResolvedSourceMetadata,
   type UploadDiagnostic,
   type UploadedCaption,
+  type UploadFailureCode,
   type UploadRuntime,
   type UploadStatus,
 } from './types'
@@ -173,7 +175,16 @@ export type VideoUploadDependencies = {
    */
   copyVideoToCache: (typeof import('./utils/copyVideoToCache'))['copyVideoToCache']
   compressVideo: (typeof import('#/lib/media/video/compress'))['compressVideo']
-  uploadVideo: (typeof import('#/lib/media/video/upload'))['uploadVideo']
+  /**
+   * The shared helper without its `i18n` argument; production binds the
+   * global instance in `uploadDependencies.ts`, so state stays free of copy.
+   */
+  uploadVideo: (
+    args: Omit<
+      Parameters<(typeof import('#/lib/media/video/upload'))['uploadVideo']>[0],
+      'i18n'
+    >,
+  ) => ReturnType<(typeof import('#/lib/media/video/upload'))['uploadVideo']>
   /**
    * Deletes a native encoded compression output. The worker calls it only for
    * output it produced (no pass-through reason, no web `bytes`), never for
@@ -256,7 +267,6 @@ async function runImageUpload({
     attempt,
     media,
     pdsClient,
-    i18n,
     getImageDimensions,
     compressImage,
     uploadBlob,
@@ -323,10 +333,7 @@ async function runImageUpload({
     attempt.reportStatus({status: {state: 'uploaded', blob: result.blob}})
   } catch (error) {
     if (signal.aborted || isComposerV2Cancellation({cause: error})) return
-    attempt.reportFailure({
-      status: failureStatus({error, i18n, kind: 'image'}),
-      diagnostic: failureDiagnostic({cause: error}),
-    })
+    attempt.reportFailure(failureReport({error, mediaKind: 'image'}))
   } finally {
     if (output) {
       const {path} = output
@@ -386,7 +393,7 @@ async function runVideoUpload({
   abandonmentSignal,
   ...opts
 }: VideoOptions & {signal: AbortSignal; abandonmentSignal: AbortSignal}) {
-  const {attempt, media, pdsClient, pdsUrl, i18n, uploadBlob, metric} = opts
+  const {attempt, media, pdsClient, pdsUrl, uploadBlob, metric} = opts
   let videoBlob: BlobRef | undefined = media.videoBlob
   let captionBlobs = [...media.captionBlobs]
   /* A caption-only retry reuses the uploaded video and its telemetry. */
@@ -421,7 +428,6 @@ async function runVideoUpload({
         failure,
         pdsClient,
         pdsUrl,
-        i18n,
         uploadVideo: opts.uploadVideo,
         createVideoServiceClient: opts.createVideoServiceClient,
         sleep: opts.sleep,
@@ -474,15 +480,12 @@ async function runVideoUpload({
       media,
       metric,
     })
-    const failed = failureStatus({error, i18n, kind: 'video'})
+    const report = failureReport({error, mediaKind: 'video'})
     if (videoBlob) {
-      failed.blob = videoBlob
-      failed.captionBlobs = captionBlobs
+      report.status.blob = videoBlob
+      report.status.captionBlobs = captionBlobs
     }
-    attempt.reportFailure({
-      status: failed,
-      diagnostic: failureDiagnostic({cause: error}),
-    })
+    attempt.reportFailure(report)
   } finally {
     /*
      * Runs once the attempt settles, including after cancellation, so the
@@ -761,11 +764,10 @@ async function uploadAndProcessVideo({
   failure,
   pdsClient,
   pdsUrl,
-  i18n,
   uploadVideo,
   createVideoServiceClient,
   sleep,
-}: Pick<VideoOptions, 'attempt' | 'pdsClient' | 'pdsUrl' | 'i18n'> &
+}: Pick<VideoOptions, 'attempt' | 'pdsClient' | 'pdsUrl'> &
   Pick<
     VideoUploadDependencies,
     'uploadVideo' | 'createVideoServiceClient' | 'sleep'
@@ -783,7 +785,6 @@ async function uploadAndProcessVideo({
     client: pdsClient,
     dispatchUrl: pdsUrl,
     signal,
-    i18n,
     setProgress: progress => {
       if (!signal.aborted) {
         attempt.reportStatus({
@@ -1105,84 +1106,90 @@ async function pollVideoJob({
   }
 }
 
-function failureDiagnostic({cause}: {cause: unknown}): UploadDiagnostic {
-  const kind =
-    cause instanceof ValidationError || cause instanceof VideoTooLargeError
-      ? 'validation'
-      : cause instanceof UploadLimitError ||
-          cause instanceof VideoJobError ||
-          isNetworkError(cause) ||
-          shouldRetryError(cause)
-        ? 'operational'
-        : 'unexpected'
-  return {kind, cause}
+/** The one classification of an upload failure: state, diagnostic, and copy all derive from it. */
+export type UploadFailureClassification = {
+  code: UploadFailureCode
+  retryable: boolean
+  kind: ComposerV2ErrorKind
+  /** Server-supplied text the UI may show instead of its own copy. */
+  detail?: string
 }
 
-function failureStatus({
+/**
+ * Classifies a worker error once. Order matters: input validation, then the
+ * shared limit errors, then a rejected video job, then transport failures,
+ * then what is specific to the kind of media.
+ */
+export function classifyUploadError({
   error,
-  i18n,
-  kind,
+  mediaKind,
 }: {
   error: unknown
-  i18n: I18n
-  kind: 'image' | 'video'
-}): Extract<UploadStatus, {state: 'failed'}> {
-  const validation = error instanceof ValidationError
-  const retryable =
-    !validation &&
-    !(error instanceof UploadLimitError) &&
-    !(error instanceof VideoTooLargeError)
-  let message: string
-  if (validation) {
-    message = validationMessage({code: error.code, i18n})
-  } else if (error instanceof VideoTooLargeError) {
-    message = i18n._(
-      msg`The selected video is too large. Please try again with a smaller file.`,
-    )
-  } else if (error instanceof UploadLimitError) {
-    message = error.message
-  } else if (isNetworkError(error) || shouldRetryError(error)) {
-    message = i18n._(
-      msg`An upload failed. Please check your internet connection and try again.`,
-    )
-  } else if (kind === 'image') {
-    message = i18n._(msg`The image could not be processed or uploaded.`)
-  } else if (
+  mediaKind: 'image' | 'video'
+}): UploadFailureClassification {
+  if (error instanceof ValidationError) {
+    return {code: error.code, retryable: false, kind: 'validation'}
+  }
+  if (error instanceof VideoTooLargeError) {
+    return {code: 'video-too-large', retryable: false, kind: 'validation'}
+  }
+  if (error instanceof UploadLimitError) {
+    return {
+      code: 'video-upload-limit',
+      retryable: false,
+      kind: 'operational',
+      detail: error.message,
+    }
+  }
+  /*
+   * A rejected job is never retryable, even when the server's message happens
+   * to look like a network error.
+   */
+  if (
     error instanceof VideoJobError &&
     error.failureCode === 'validation_failure'
   ) {
-    message = i18n._(msg`The selected video could not be processed.`)
-  } else {
-    message = i18n._(msg`The video could not be processed or uploaded.`)
+    return {code: 'video-rejected', retryable: false, kind: 'operational'}
   }
-  return {
-    state: 'failed' as const,
-    error: message,
-    code: validation
-      ? error.code
-      : error instanceof VideoJobError
-        ? error.failureCode
-        : undefined,
-    retryable:
-      error instanceof VideoJobError &&
-      error.failureCode === 'validation_failure'
-        ? false
-        : retryable,
+  if (isNetworkError(error) || shouldRetryError(error)) {
+    return {code: 'network', retryable: true, kind: 'operational'}
   }
+  if (mediaKind === 'image') {
+    return {code: 'image-failed', retryable: true, kind: 'unexpected'}
+  }
+  if (error instanceof VideoJobError) {
+    return {
+      code: 'video-processing-failed',
+      retryable: true,
+      kind: 'operational',
+    }
+  }
+  return {code: 'video-failed', retryable: true, kind: 'unexpected'}
 }
 
-function validationMessage({code, i18n}: {code: string; i18n: I18n}) {
-  switch (code) {
-    case 'video-too-long':
-      return i18n._(msg`The selected video is too long.`)
-    case 'unsupported-video-format':
-      return i18n._(msg`The selected video uses an unsupported format.`)
-    case 'invalid-video-dimensions':
-      return i18n._(msg`The selected video has invalid dimensions.`)
-    case 'invalid-image-dimensions':
-      return i18n._(msg`The selected image has invalid dimensions.`)
-    default:
-      return i18n._(msg`The selected media is not valid.`)
+/** What a worker hands `attempt.reportFailure`, from one classification. */
+function failureReport({
+  error,
+  mediaKind,
+}: {
+  error: unknown
+  mediaKind: 'image' | 'video'
+}): {
+  status: Extract<UploadStatus, {state: 'failed'}>
+  diagnostic: UploadDiagnostic
+} {
+  const {code, retryable, kind, detail} = classifyUploadError({
+    error,
+    mediaKind,
+  })
+  return {
+    status: {
+      state: 'failed',
+      code,
+      retryable,
+      ...(detail !== undefined && {detail}),
+    },
+    diagnostic: {kind, cause: error},
   }
 }
 
@@ -1190,14 +1197,24 @@ function throwIfAborted({signal}: {signal: AbortSignal}) {
   if (signal.aborted) throw new AbortError()
 }
 
-class ValidationError extends Error {
-  constructor(public code: string) {
+/** Source validation failure; exported for the classification test. */
+export class ValidationError extends Error {
+  constructor(
+    public code: Extract<
+      UploadFailureCode,
+      | 'invalid-image-dimensions'
+      | 'unsupported-video-format'
+      | 'invalid-video-dimensions'
+      | 'video-too-long'
+    >,
+  ) {
     super(code)
     this.name = 'ValidationError'
   }
 }
 
-class VideoJobError extends Error {
+/** The video service reported a failed or unusable job; exported for the classification test. */
+export class VideoJobError extends Error {
   constructor(
     public message: string,
     public failureCode?: string,

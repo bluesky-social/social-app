@@ -80,7 +80,6 @@ export function useTesterSession(deps: TesterSessionDeps) {
       resolvers: current.resolvers,
       pdsClient: current.pdsClient,
       pdsUrl: current.pdsUrl,
-      i18n: current.i18n,
       analytics: current.analytics,
       initialState,
       onError: current.onError,

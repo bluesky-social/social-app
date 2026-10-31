@@ -13,6 +13,10 @@ import {
   useThreadStore,
 } from '#/components/ComposerV2/hooks'
 import {
+  getLinkFailureMessage,
+  getUploadFailureMessage,
+} from '#/components/ComposerV2/messages'
+import {
   type PostMediaGif,
   type PostMediaImage,
   type PostMediaItem,
@@ -30,7 +34,7 @@ import {Text} from '#/components/Typography'
  * the real record URI, which is a genuine ref rather than diagnostic leakage.
  */
 export function RecordAttachmentView({postId}: {postId: string}) {
-  const {t: l} = useLingui()
+  const {t: l, i18n} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
   const post = useThreadPost(postId)
@@ -71,11 +75,7 @@ export function RecordAttachmentView({postId}: {postId: string}) {
       </Text>
       {record.state === 'failed' && (
         <FailureRow
-          error={
-            record.code === 'embedding-disabled'
-              ? l`This post does not allow embedding.`
-              : l`The link could not be resolved. Please try again.`
-          }
+          error={getLinkFailureMessage({code: record.code, i18n})}
           retryable={record.retryable}
           onRetry={() => store.actions.retryAttachment(postId, 'record')}
           testID={`composerV2Tester-post-${postId}-record-retry`}
@@ -91,7 +91,7 @@ export function RecordAttachmentView({postId}: {postId: string}) {
  * external/chat cards. All upload work shown here is real.
  */
 export function MediaAttachmentView({postId}: {postId: string}) {
-  const {t: l} = useLingui()
+  const {t: l, i18n} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
   const post = useThreadPost(postId)
@@ -137,11 +137,7 @@ export function MediaAttachmentView({postId}: {postId: string}) {
       )}
       {media.state === 'failed' && (
         <FailureRow
-          error={
-            media.code === 'embedding-disabled'
-              ? l`This post does not allow embedding.`
-              : l`The link could not be resolved. Please try again.`
-          }
+          error={getLinkFailureMessage({code: media.code, i18n})}
           retryable={media.retryable}
           onRetry={() => store.actions.retryAttachment(postId, 'media')}
           testID={`composerV2Tester-post-${postId}-media-retry`}
@@ -209,7 +205,7 @@ function ImageItemRow({
   item: PostMediaImage
   index: number
 }) {
-  const {t: l} = useLingui()
+  const {t: l, i18n} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
   return (
@@ -233,7 +229,11 @@ function ImageItemRow({
           )}
         </Text>
         <FailureRow
-          error={item.upload.state === 'failed' ? item.upload.error : undefined}
+          error={
+            item.upload.state === 'failed'
+              ? getUploadFailureMessage({failure: item.upload, i18n})
+              : undefined
+          }
           retryable={item.upload.state === 'failed' && item.upload.retryable}
           onRetry={() => store.actions.retryMediaUpload(postId, item.id)}
           testID={`composerV2Tester-media-${item.id}-retry`}
@@ -257,7 +257,7 @@ function ImageItemRow({
 }
 
 function VideoItemRow({postId, item}: {postId: string; item: PostMediaVideo}) {
-  const {t: l} = useLingui()
+  const {t: l, i18n} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
   return (
@@ -275,7 +275,11 @@ function VideoItemRow({postId, item}: {postId: string; item: PostMediaVideo}) {
         <Trans>Uploaded captions: {item.captionBlobs.length}</Trans>
       </Text>
       <FailureRow
-        error={item.upload.state === 'failed' ? item.upload.error : undefined}
+        error={
+          item.upload.state === 'failed'
+            ? getUploadFailureMessage({failure: item.upload, i18n})
+            : undefined
+        }
         retryable={item.upload.state === 'failed' && item.upload.retryable}
         onRetry={() => store.actions.retryMediaUpload(postId, item.id)}
         testID={`composerV2Tester-media-${item.id}-retry`}

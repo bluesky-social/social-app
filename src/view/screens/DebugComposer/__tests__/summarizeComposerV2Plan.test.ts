@@ -86,7 +86,8 @@ describe('summarizeComposerV2Plan', () => {
     }
     media.items[0].upload = {
       state: 'failed',
-      error: 'private worker detail',
+      code: 'video-upload-limit',
+      detail: 'private worker detail',
       retryable: false,
     }
     const result = await plan(state)

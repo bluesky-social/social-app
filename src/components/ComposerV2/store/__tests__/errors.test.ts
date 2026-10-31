@@ -33,8 +33,7 @@ const image = {
 }
 const failed = {
   state: 'failed' as const,
-  error: 'Safe failure',
-  code: 'test-failure',
+  code: 'network' as const,
   retryable: true,
 }
 const resolvers = {} as LinkResolvers
@@ -45,8 +44,7 @@ const syncFailingImageWorker: UploadWorkerOverrides = {
     attempt.reportFailure({
       status: {
         state: 'failed',
-        error: 'Rejected',
-        code: 'upload-rejected',
+        code: 'video-rejected',
         retryable: false,
       },
       diagnostic: {kind: 'unexpected', cause: new Error('private cause')},
@@ -118,7 +116,7 @@ describe('session error reporting', () => {
       {
         source: 'upload',
         kind: 'operational',
-        code: 'test-failure',
+        code: 'network',
         recovery: 'retry',
         postId,
         mediaId,
@@ -207,7 +205,7 @@ describe('session error reporting', () => {
     expect(onError).toHaveBeenCalledTimes(1)
     expect(onError.mock.calls[0][0]).toMatchObject({
       source: 'upload',
-      code: 'upload-rejected',
+      code: 'video-rejected',
       kind: 'unexpected',
       recovery: 'edit',
     })
@@ -297,7 +295,7 @@ describe('session error reporting', () => {
       }),
     ).toThrow(cause)
     expect(onError).toHaveBeenCalledTimes(1)
-    expect(onError.mock.calls[0][0].code).toBe('test-failure')
+    expect(onError.mock.calls[0][0].code).toBe('network')
   })
 
   test('eager URI initialization reports synchronous resolver failures like rejections', async () => {
@@ -343,7 +341,6 @@ describe('session error reporting', () => {
         ...testUploadRuntime,
         resolvers,
         onError,
-        i18n: {_: () => 'Safe localized failure'} as never,
         __uploadWorkers: realUploadWorkers({
           image: {compressImage: () => Promise.reject(cause), uploadBlob},
         }),

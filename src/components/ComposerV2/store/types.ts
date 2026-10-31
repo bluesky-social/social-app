@@ -1,5 +1,4 @@
 import {type BlobRef, type Client} from '@atproto/lex'
-import {type I18n} from '@lingui/core'
 
 import {type ResolvedLink} from '#/lib/api/resolve'
 import {type ComposerV2ErrorKind} from '#/components/ComposerV2/errors'
@@ -10,6 +9,23 @@ import {type app, type com} from '#/lexicons'
 /** A real media worker phase. Compression has no percentage on native images. */
 export type UploadPhase =
   'validating' | 'compressing' | 'uploading' | 'processing' | 'captions'
+
+/**
+ * Why an upload failed. State holds only this stable code; the UI turns it
+ * into copy with `getUploadFailureMessage`.
+ */
+export type UploadFailureCode =
+  | 'invalid-image-dimensions'
+  | 'unsupported-video-format'
+  | 'invalid-video-dimensions'
+  | 'video-too-long'
+  | 'video-too-large'
+  | 'video-upload-limit'
+  | 'video-rejected'
+  | 'video-processing-failed'
+  | 'network'
+  | 'image-failed'
+  | 'video-failed'
 
 /** Upload progress and outcome of one media item; plain data. */
 export type UploadStatus =
@@ -26,9 +42,10 @@ export type UploadStatus =
     }
   | {
       state: 'failed'
-      error: string
-      code?: string
+      code: UploadFailureCode
       retryable: boolean
+      /** Server-supplied text for the code, when it has any. */
+      detail?: string
       blob?: BlobRef
       captionBlobs?: UploadedCaption[]
     }
@@ -174,8 +191,7 @@ export type AttachmentResolution =
   | {
       state: 'failed'
       uri: string
-      /** Safe fallback; UI localizes code instead of rendering exception text. */
-      error: string
+      /** The UI localizes this code instead of rendering exception text. */
       code: LinkResolutionFailureCode
       /** Whether `retryAttachment` may re-resolve this slot. */
       retryable: boolean
@@ -381,5 +397,4 @@ export type UploadRuntime = {
    * `com.atproto.repo.uploadBlob` from it; the lex client does not expose it.
    */
   pdsUrl: string
-  i18n: I18n
 }

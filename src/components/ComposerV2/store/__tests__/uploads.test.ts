@@ -37,8 +37,6 @@ const blob = (name: string) =>
     size: 1,
   }) as unknown as BlobRef
 
-const i18n = {_: (message: unknown) => String(message)} as never
-
 async function settle() {
   for (let i = 0; i < 10; i++) await Promise.resolve()
 }
@@ -98,7 +96,6 @@ const pdsClient = {} as Client
 const runtime = {
   pdsClient,
   pdsUrl: 'https://pds.example',
-  i18n,
   metric: jest.fn(),
 }
 
@@ -408,7 +405,7 @@ describe('ComposerV2 real media workers', () => {
       expect(uploadVideo).not.toHaveBeenCalled()
       expect(statuses.at(-1)).toMatchObject({
         state: 'failed',
-        code: undefined,
+        code: 'video-too-large',
         retryable: false,
       })
     })
@@ -1029,7 +1026,6 @@ describe('ComposerV2 real media workers', () => {
       expect.objectContaining({
         client: pdsClient,
         dispatchUrl: 'https://pds.example',
-        i18n,
       }),
     )
     expect(captionUpload).toHaveBeenCalledWith(

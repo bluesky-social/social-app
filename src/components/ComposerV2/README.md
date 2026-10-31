@@ -76,7 +76,7 @@ rather than silently broadening permissions when editing known rules.
 
 Use the [types](store/types.ts) and [store implementation](store/index.ts) as the
 API reference. A session owner supplies clients, the account PDS URL,
-localization, analytics, and optional normalized initial content:
+analytics, and optional normalized initial content:
 
 ```ts
 import {createThreadStore} from '#/components/ComposerV2/store'
@@ -85,7 +85,6 @@ const store = createThreadStore({
   resolvers: {appviewClient, chatClient},
   pdsClient,
   pdsUrl, // currentAccount.pdsUrl ?? currentAccount.service
-  i18n,
   analytics, // useAnalytics()
   initialState: {posts: [{text: 'Hello world'}]},
   onError, // Optional per-session reporting policy.
@@ -262,9 +261,22 @@ do nothing unless the target is currently a retryable failure. Allowed retry is
 not automatic retry. Empty or overlength text and pending or failed attachments
 are valid editing states; publication preflight handles readiness.
 
+State holds failure codes, never localized strings, so the store and workers
+take no `i18n`. A failed `UploadStatus` carries an `UploadFailureCode`,
+`retryable`, and an optional server-supplied `detail`; a failed
+`AttachmentResolution` carries a `LinkResolutionFailureCode` and `retryable`.
+Each upload error is classified once, by `classifyUploadError` in
+`store/uploads.ts`, which also supplies the diagnostic `kind`. Callers localize
+at the edge with `getUploadFailureMessage({failure, i18n})` and
+`getLinkFailureMessage({code, i18n})` (`messages.ts`). They are plain functions,
+so they work inside and outside React; components pass `useLingui().i18n`.
+Planner error codes are not localized here. The production `uploadVideo`
+dependency binds the global Lingui `i18n` for the shared helper's fallback
+copy.
+
 ### Media workers and platform boundaries
 
-`pdsClient`, `pdsUrl`, `i18n`, and `analytics` are required store options, so a
+`pdsClient`, `pdsUrl`, and `analytics` are required store options, so a
 caller without an account must not construct a store. `pdsUrl` is the account
 PDS URL, used for the video service-auth audience; the shared video API calls it
 `dispatchUrl`, and the worker maps it at that call. Analytics carries video

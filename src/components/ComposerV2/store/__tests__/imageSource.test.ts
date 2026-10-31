@@ -275,7 +275,7 @@ describe('replaceImageSource', () => {
     const store = makeStore(workers)
     const root = rootId(store)
     const [id] = addImages(store)
-    attempts[0].report({state: 'failed', error: 'boom', retryable: true})
+    attempts[0].report({state: 'failed', code: 'network', retryable: true})
     const failed = images(store)[0].upload
     if (failed.state !== 'failed' || !failed.retryable) {
       throw new Error('expected a retryable failure')

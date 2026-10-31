@@ -146,7 +146,6 @@ function embeddedVideoBlob({
 export function createMediaUploads({
   pdsClient,
   pdsUrl,
-  i18n,
   metric,
   onUpdate,
   __uploadWorkers,
@@ -239,7 +238,7 @@ export function createMediaUploads({
         }
       },
     }
-    const runtime = {pdsClient, pdsUrl, i18n}
+    const runtime = {pdsClient, pdsUrl}
     try {
       started =
         item.kind === 'image'

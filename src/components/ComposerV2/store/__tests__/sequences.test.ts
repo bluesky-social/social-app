@@ -167,8 +167,7 @@ function assertInvariants(state: ThreadState) {
 function lateCallbacks(attempt: Attempt) {
   return [
     () => attempt.report({state: 'uploading', progress: 0.9}),
-    () =>
-      attempt.report({state: 'failed', error: 'late failure', retryable: true}),
+    () => attempt.report({state: 'failed', code: 'network', retryable: true}),
     () => attempt.report({state: 'uploaded', blob: blob('late')}),
     () =>
       attempt.attempt.setCompressionResult({
@@ -217,7 +216,7 @@ describe.each([image, video])('stale $kind worker ownership', input => {
     const {postId, mediaId} = old
     old.report({state: 'uploading', progress: 0.2})
     if (transition === 'retry' || transition === 'bulk-retry') {
-      old.report({state: 'failed', error: 'retry me', retryable: true})
+      old.report({state: 'failed', code: 'network', retryable: true})
       if (transition === 'retry')
         store.actions.retryMediaUpload(postId, mediaId)
       else store.actions.retryAllFailedUploads()
@@ -346,7 +345,7 @@ test.each([7, 42, 2025, 0xc0ffee])(
         for (const attempt of attempts)
           attempt.report({
             state: 'failed',
-            error: 'initial failure',
+            code: 'network',
             retryable: true,
           })
         expect(store.getState().isDirty).toBe(false)
@@ -497,7 +496,7 @@ test.each([7, 42, 2025, 0xc0ffee])(
               else if (event === 1)
                 attempt.report({
                   state: 'failed',
-                  error: 'controlled failure',
+                  code: 'network',
                   retryable: !!choose(2),
                 })
               else

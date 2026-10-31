@@ -119,11 +119,11 @@ function makeUploads({
 
 const uploading = {state: 'uploading', progress: 0.5} as const
 const retryableFailure = {
-  status: {state: 'failed', error: 'network', retryable: true},
+  status: {state: 'failed', code: 'network', retryable: true},
   diagnostic: {kind: 'operational', cause: undefined},
 } as const
 const finalFailure = {
-  status: {state: 'failed', error: 'bad', retryable: false},
+  status: {state: 'failed', code: 'video-rejected', retryable: false},
   diagnostic: {kind: 'validation', cause: undefined},
 } as const
 

@@ -164,8 +164,7 @@ describe('stored upload failures', () => {
 
     const failure: UploadStatus = {
       state: 'failed',
-      error: 'network failure',
-      code: 'upload-failed',
+      code: 'network',
       retryable,
     }
     reportStatus!(failure)
@@ -176,8 +175,7 @@ describe('stored upload failures', () => {
     }
     expect(stored.upload).toMatchObject({
       state: 'failed',
-      error: 'network failure',
-      code: 'upload-failed',
+      code: 'network',
       retryable,
     })
     expect(store.getState().isDirty).toBe(false)
@@ -602,7 +600,7 @@ describe('retryMediaUpload', () => {
       } = store.actions.addMedia(postId, [input])!
       attempts[0].report({
         state: 'failed',
-        error: 'first failure',
+        code: 'network',
         retryable: true,
       })
       // Editing the item does not supersede its failed upload.
@@ -620,7 +618,7 @@ describe('retryMediaUpload', () => {
 
       attempts[1].report({
         state: 'failed',
-        error: 'second failure',
+        code: 'network',
         retryable: true,
       })
       store.actions.retryMediaUpload(postId, mediaId)
@@ -645,7 +643,7 @@ describe('retryMediaUpload', () => {
       mediaId: imageId,
       status: {
         state: 'failed',
-        error: 'boom',
+        code: 'network',
         retryable: true,
       },
       diagnostic: {kind: 'operational', cause: undefined},
@@ -703,7 +701,7 @@ describe('retryAllFailedUploads', () => {
       mediaId: imageId,
       status: {
         state: 'failed',
-        error: 'image failed',
+        code: 'network',
         retryable: true,
       },
       diagnostic: {kind: 'operational', cause: undefined},
@@ -713,7 +711,7 @@ describe('retryAllFailedUploads', () => {
       mediaId: videoId,
       status: {
         state: 'failed',
-        error: 'video failed',
+        code: 'network',
         retryable: true,
       },
       diagnostic: {kind: 'operational', cause: undefined},
@@ -749,7 +747,7 @@ describe('retryAllFailedUploads', () => {
       mediaId: eligibleId,
       status: {
         state: 'failed',
-        error: 'retryable',
+        code: 'network',
         retryable: true,
       },
       diagnostic: {kind: 'operational', cause: undefined},
@@ -759,7 +757,7 @@ describe('retryAllFailedUploads', () => {
       mediaId: terminalId,
       status: {
         state: 'failed',
-        error: 'terminal',
+        code: 'video-rejected',
         retryable: false,
       },
       diagnostic: {kind: 'validation', cause: undefined},
@@ -823,7 +821,7 @@ describe('retryAllFailedUploads', () => {
       mediaId,
       status: {
         state: 'failed',
-        error: 'retryable',
+        code: 'network',
         retryable: true,
       },
       diagnostic: {kind: 'operational', cause: undefined},
@@ -855,7 +853,7 @@ describe('retryAllFailedUploads', () => {
         mediaId: firstId,
         status: {
           state: 'failed',
-          error: 'first',
+          code: 'network',
           retryable: true,
         },
         diagnostic: {kind: 'operational', cause: undefined},
@@ -865,7 +863,7 @@ describe('retryAllFailedUploads', () => {
         mediaId: secondId,
         status: {
           state: 'failed',
-          error: 'second',
+          code: 'network',
           retryable: true,
         },
         diagnostic: {kind: 'operational', cause: undefined},
@@ -926,7 +924,7 @@ describe('retryAllFailedUploads', () => {
       mediaId: firstId,
       status: {
         state: 'failed',
-        error: 'first',
+        code: 'network',
         retryable: true,
       },
       diagnostic: {kind: 'operational', cause: undefined},
@@ -936,7 +934,7 @@ describe('retryAllFailedUploads', () => {
       mediaId: secondId,
       status: {
         state: 'failed',
-        error: 'second',
+        code: 'network',
         retryable: true,
       },
       diagnostic: {kind: 'operational', cause: undefined},
@@ -957,7 +955,7 @@ describe('retryAllFailedUploads', () => {
         opts.attempt.reportFailure({
           status: {
             state: 'failed',
-            error: 'still failing',
+            code: 'network',
             retryable: true,
           },
           diagnostic: {kind: 'operational', cause: undefined},
@@ -1214,7 +1212,7 @@ describe('attachment lifecycle', () => {
     } = store.actions.addMedia(root, [imageInput])!
     reportAnyStatus({
       attempt: reporting!,
-      status: {state: 'failed', error: 'network', retryable: true},
+      status: {state: 'failed', code: 'network', retryable: true},
     })
     expect(jest.getTimerCount()).toBe(0)
     store.actions.retryMediaUpload(root, mediaId)

@@ -1,6 +1,5 @@
 import {type BlobRef, type Client} from '@atproto/lex'
 import {jest} from '@jest/globals'
-import {type I18n} from '@lingui/core'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {type VideoTelemetry} from '#/lib/media/video/telemetry'
@@ -38,7 +37,6 @@ export const testUploadRuntime: UploadRuntime & {
 } = {
   pdsClient: {} as Client,
   pdsUrl: 'https://pds.example.test',
-  i18n: {_: (message: unknown) => String(message)} as unknown as I18n,
   analytics: fakeAnalytics().analytics,
 }
 

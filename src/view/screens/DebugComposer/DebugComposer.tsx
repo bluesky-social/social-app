@@ -73,7 +73,6 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
   const appviewClient = useAppviewClient()
   const chatClient = useChatClient()
   const pdsClient = usePdsClient()
-  const {i18n} = useLingui()
   const analytics = useAnalytics()
   const requireAltTextPreference = useRequireAltTextEnabled()
   const pdsUrl = account.pdsUrl ?? account.service
@@ -83,7 +82,6 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
     resolvers: {appviewClient, chatClient},
     pdsClient,
     pdsUrl,
-    i18n,
     analytics,
   })
   const {session} = sessionApi

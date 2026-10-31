@@ -385,7 +385,6 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
     const failed = store.getState().posts[root].attachments[slot]
     if (failed?.state !== 'failed') throw new Error('expected failed')
     expect(failed.code).toBe('unknown')
-    expect(failed.error).toBe('Link resolution failed')
     expect(failed.retryable).toBe(true)
     expect(store.getState().posts[root].imageSelectionsRemaining).toBe(
       slot === 'media' ? 0 : 10,
