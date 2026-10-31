@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate'
@@ -10,7 +9,7 @@ import {
   splitPostgateEmbeddingRules,
   splitThreadgateAllowRules,
 } from '#/view/screens/DebugComposer/gateRules'
-import {useThreadgateSummary} from '#/view/screens/DebugComposer/messages'
+import {threadgateSummary} from '#/view/screens/DebugComposer/messages'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useThreadState, useThreadStore} from '#/components/ComposerV2/hooks'
@@ -26,12 +25,10 @@ import {type app} from '#/lexicons'
  * discard control, so editing known settings never silently changes them.
  */
 export function GateControls() {
-  const {t: l} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
   const state = useThreadState()
   const control = Dialog.useDialogControl()
-  const threadgateSummary = useThreadgateSummary()
 
   const threadgate = splitThreadgateAllowRules({
     rules: state.threadgateAllowRules,
@@ -39,6 +36,9 @@ export function GateControls() {
   const postgate = splitPostgateEmbeddingRules({
     rules: state.postgateEmbeddingRules,
   })
+
+  const unknownRuleCount =
+    threadgate.unknownRules.length + postgate.unknownRules.length
 
   const buildDraftPostgate = () =>
     createPostgateRecord({
@@ -92,9 +92,7 @@ export function GateControls() {
   return (
     <View style={[a.gap_sm]}>
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
-        <Text style={[a.text_md, a.font_bold]}>
-          <Trans>Interaction gates</Trans>
-        </Text>
+        <Text style={[a.text_md, a.font_bold]}>Interaction gates</Text>
         <Text
           style={[
             a.text_sm,
@@ -103,36 +101,29 @@ export function GateControls() {
             {minWidth: 180},
           ]}>
           {summary} · quotes: {postgate.quotesEnabled ? 'allowed' : 'disabled'}{' '}
-          · unknown:{' '}
-          {threadgate.unknownRules.length + postgate.unknownRules.length}
+          · unknown: {unknownRuleCount}
         </Text>
         <Button
-          label={l`Edit who can reply and quote`}
-          accessibilityHint={l`Opens the post interaction settings dialog`}
+          label="Edit who can reply and quote"
+          accessibilityHint="Opens the post interaction settings dialog"
           testID="composerV2Tester-gates-open"
           size="small"
           color="secondary"
           onPress={openDialog}>
-          <ButtonText>
-            <Trans>Reply & quote settings</Trans>
-          </ButtonText>
+          <ButtonText>Reply & quote settings</ButtonText>
         </Button>
       </View>
 
-      {(threadgate.unknownRules.length > 0 ||
-        postgate.unknownRules.length > 0) && (
+      {unknownRuleCount > 0 && (
         <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
           <Text style={[a.text_xs, t.atoms.text_contrast_medium, a.flex_1]}>
-            <Plural
-              value={
-                threadgate.unknownRules.length + postgate.unknownRules.length
-              }
-              one="# unknown gate rule is preserved on edits. While unknown reply rules exist, “Anyone” cannot broaden replies."
-              other="# unknown gate rules are preserved on edits. While unknown reply rules exist, “Anyone” cannot broaden replies."
-            />
+            {unknownRuleCount} unknown gate{' '}
+            {unknownRuleCount === 1 ? 'rule is' : 'rules are'} preserved on
+            edits. While unknown reply rules exist, “Anyone” cannot broaden
+            replies.
           </Text>
           <Button
-            label={l`Discard unknown gate rules`}
+            label="Discard unknown gate rules"
             testID="composerV2Tester-gates-discard-unknown"
             size="tiny"
             color="negative_subtle"
@@ -154,9 +145,7 @@ export function GateControls() {
                 )
               }
             }}>
-            <ButtonText>
-              <Trans>Discard unknown rules</Trans>
-            </ButtonText>
+            <ButtonText>Discard unknown rules</ButtonText>
           </Button>
         </View>
       )}

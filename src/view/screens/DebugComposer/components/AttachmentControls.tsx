@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {useLingui} from '@lingui/react/macro'
 import {nanoid} from 'nanoid/non-secure'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
@@ -36,7 +36,7 @@ import {Text} from '#/components/Typography'
  * the real record URI, which is a genuine ref rather than diagnostic leakage.
  */
 export function RecordAttachmentView({postId}: {postId: string}) {
-  const {t: l, i18n} = useLingui()
+  const {i18n} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
   const post = useThreadPost(postId)
@@ -65,14 +65,12 @@ export function RecordAttachmentView({postId}: {postId: string}) {
               : 'pending'}
         </StatusBadgeText>
         <Button
-          label={l`Remove record attachment`}
+          label="Remove record attachment"
           testID={`composerV2Tester-post-${postId}-remove-record`}
           size="tiny"
           color="negative_subtle"
           onPress={() => store.actions.removeRecordAttachment(postId)}>
-          <ButtonText>
-            <Trans>Remove</Trans>
-          </ButtonText>
+          <ButtonText>Remove</ButtonText>
         </Button>
       </View>
       <Text style={[a.text_xs, t.atoms.text_contrast_medium]} numberOfLines={1}>
@@ -102,7 +100,7 @@ export function MediaAttachmentView({
   postId: string
   planErrorMediaId?: string
 }) {
-  const {t: l, i18n} = useLingui()
+  const {i18n} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
   const post = useThreadPost(postId)
@@ -131,14 +129,12 @@ export function MediaAttachmentView({
             <StatusBadgeText tone="positive">resolved</StatusBadgeText>
           )}
         <Button
-          label={l`Remove media attachment`}
+          label="Remove media attachment"
           testID={`composerV2Tester-post-${postId}-remove-media`}
           size="tiny"
           color="negative_subtle"
           onPress={() => store.actions.removeMediaAttachment(postId)}>
-          <ButtonText>
-            <Trans>Remove all</Trans>
-          </ButtonText>
+          <ButtonText>Remove all</ButtonText>
         </Button>
       </View>
 
@@ -194,7 +190,7 @@ export function MediaAttachmentView({
               }}
               style={[a.rounded_sm, {width: 120, height: 80}]}
               contentFit="contain"
-              accessibilityLabel={l`External embed thumbnail`}
+              accessibilityLabel="External embed thumbnail"
               accessibilityHint=""
               accessibilityIgnoresInvertColors
             />
@@ -230,7 +226,7 @@ function ImageItemRow({
   index: number
   hasPlanError: boolean
 }) {
-  const {t: l, i18n} = useLingui()
+  const {i18n} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
   return (
@@ -240,7 +236,7 @@ function ImageItemRow({
       <Image
         source={{uri: item.uri}}
         style={[a.rounded_sm, {width: 48, height: 48}]}
-        accessibilityLabel={l`Image ${index + 1} preview`}
+        accessibilityLabel={`Image ${index + 1} preview`}
         accessibilityHint=""
         accessibilityIgnoresInvertColors
       />
@@ -262,11 +258,7 @@ function ImageItemRow({
               ? {color: t.palette.negative_500}
               : t.atoms.text_contrast_medium,
           ]}>
-          {item.altText ? (
-            <Trans>Alt text added</Trans>
-          ) : (
-            <Trans>No alt text</Trans>
-          )}
+          {item.altText ? 'Alt text added' : 'No alt text'}
         </Text>
         <FailureRow
           error={
@@ -282,14 +274,12 @@ function ImageItemRow({
       <View style={[a.gap_xs]}>
         <AltTextDialogButton postId={postId} item={item} />
         <Button
-          label={l`Remove image ${index + 1}`}
+          label={`Remove image ${index + 1}`}
           testID={`composerV2Tester-media-${item.id}-remove`}
           size="tiny"
           color="secondary"
           onPress={() => store.actions.removeMedia(postId, item.id)}>
-          <ButtonText>
-            <Trans>Remove</Trans>
-          </ButtonText>
+          <ButtonText>Remove</ButtonText>
         </Button>
       </View>
     </View>
@@ -305,7 +295,7 @@ function VideoItemRow({
   item: PostMediaVideo
   hasPlanError: boolean
 }) {
-  const {t: l, i18n} = useLingui()
+  const {i18n} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
   return (
@@ -327,15 +317,11 @@ function VideoItemRow({
             ? {color: t.palette.negative_500}
             : t.atoms.text_contrast_medium,
         ]}>
-        {item.altText ? (
-          <Trans>Alt text added</Trans>
-        ) : (
-          <Trans>No alt text</Trans>
-        )}
+        {item.altText ? 'Alt text added' : 'No alt text'}
         {' · '}
-        <Trans>Captions: {item.captions.length}</Trans>
+        Captions: {item.captions.length}
         {' · '}
-        <Trans>Uploaded captions: {item.captionBlobs.length}</Trans>
+        Uploaded captions: {item.captionBlobs.length}
       </Text>
       <FailureRow
         error={
@@ -351,14 +337,12 @@ function VideoItemRow({
         <AltTextDialogButton postId={postId} item={item} />
         <CaptionsDialogButton postId={postId} item={item} />
         <Button
-          label={l`Remove video`}
+          label="Remove video"
           testID={`composerV2Tester-media-${item.id}-remove`}
           size="tiny"
           color="secondary"
           onPress={() => store.actions.removeMedia(postId, item.id)}>
-          <ButtonText>
-            <Trans>Remove</Trans>
-          </ButtonText>
+          <ButtonText>Remove</ButtonText>
         </Button>
       </View>
     </View>
@@ -374,7 +358,6 @@ function GifItemRow({
   item: PostMediaGif
   hasPlanError: boolean
 }) {
-  const {t: l} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
   const previewUrl =
@@ -387,15 +370,13 @@ function GifItemRow({
         <Image
           source={{uri: previewUrl}}
           style={[a.rounded_sm, {width: 48, height: 48}]}
-          accessibilityLabel={l`GIF preview`}
+          accessibilityLabel="GIF preview"
           accessibilityHint=""
           accessibilityIgnoresInvertColors
         />
       )}
       <View style={[a.flex_1, a.gap_2xs]}>
-        <Text style={[a.text_xs]}>
-          <Trans>GIF (no upload required)</Trans>
-        </Text>
+        <Text style={[a.text_xs]}>GIF (no upload required)</Text>
         <Text
           style={[
             a.text_xs,
@@ -403,24 +384,18 @@ function GifItemRow({
               ? {color: t.palette.negative_500}
               : t.atoms.text_contrast_medium,
           ]}>
-          {item.altText ? (
-            <Trans>Alt text added</Trans>
-          ) : (
-            <Trans>No alt text</Trans>
-          )}
+          {item.altText ? 'Alt text added' : 'No alt text'}
         </Text>
       </View>
       <View style={[a.gap_xs]}>
         <AltTextDialogButton postId={postId} item={item} />
         <Button
-          label={l`Remove GIF`}
+          label="Remove GIF"
           testID={`composerV2Tester-media-${item.id}-remove`}
           size="tiny"
           color="secondary"
           onPress={() => store.actions.removeMedia(postId, item.id)}>
-          <ButtonText>
-            <Trans>Remove</Trans>
-          </ButtonText>
+          <ButtonText>Remove</ButtonText>
         </Button>
       </View>
     </View>
@@ -482,7 +457,6 @@ function FailureRow({
   onRetry: () => void
   testID: string
 }) {
-  const {t: l} = useLingui()
   const t = useTheme()
   if (!error) return null
   return (
@@ -492,14 +466,12 @@ function FailureRow({
       </Text>
       {retryable && (
         <Button
-          label={l`Retry`}
+          label="Retry"
           testID={testID}
           size="tiny"
           color="negative"
           onPress={onRetry}>
-          <ButtonText>
-            <Trans>Retry</Trans>
-          </ButtonText>
+          <ButtonText>Retry</ButtonText>
         </Button>
       )}
     </View>
@@ -514,7 +486,6 @@ function AltTextDialogButton({
   postId: string
   item: PostMediaItem
 }) {
-  const {t: l} = useLingui()
   const control = Dialog.useDialogControl()
   /*
    * Native dialogs portal their children to the app shell's bottom-sheet
@@ -527,14 +498,12 @@ function AltTextDialogButton({
   return (
     <>
       <Button
-        label={l`Edit alt text`}
+        label="Edit alt text"
         testID={`composerV2Tester-media-${item.id}-alt`}
         size="tiny"
         color="secondary"
         onPress={control.open}>
-        <ButtonText>
-          <Trans>Alt</Trans>
-        </ButtonText>
+        <ButtonText>Alt</ButtonText>
       </Button>
       <Dialog.Outer control={control}>
         <Dialog.Handle />
@@ -553,30 +522,27 @@ function AltTextDialogInner({
   postId: string
   item: PostMediaItem
 }) {
-  const {t: l} = useLingui()
   const control = Dialog.useDialogContext()
   const store = useThreadStore()
   const [altText, setAltText] = useState(item.altText)
   return (
-    <Dialog.ScrollableInner label={l`Edit alt text`}>
+    <Dialog.ScrollableInner label="Edit alt text">
       <View style={[a.gap_md]}>
-        <Text style={[a.text_lg, a.font_bold]}>
-          <Trans>Alt text</Trans>
-        </Text>
+        <Text style={[a.text_lg, a.font_bold]}>Alt text</Text>
         <TextField.Root>
           <Dialog.Input
-            label={l`Alt text`}
+            label="Alt text"
             testID="composerV2Tester-alt-input"
             defaultValue={item.altText}
             onChangeText={setAltText}
-            placeholder={l`Describe this media`}
+            placeholder="Describe this media"
             maxLength={MAX_ALT_TEXT * 10}
             multiline
             style={{maxHeight: 300}}
           />
         </TextField.Root>
         <Button
-          label={l`Save alt text`}
+          label="Save alt text"
           testID="composerV2Tester-alt-save"
           size="small"
           color="primary"
@@ -585,9 +551,7 @@ function AltTextDialogInner({
               store.actions.updateMediaAltText(postId, item.id, altText),
             )
           }>
-          <ButtonText>
-            <Trans>Save</Trans>
-          </ButtonText>
+          <ButtonText>Save</ButtonText>
         </Button>
       </View>
       <Dialog.Close />
@@ -603,21 +567,18 @@ function CaptionsDialogButton({
   postId: string
   item: PostMediaVideo
 }) {
-  const {t: l} = useLingui()
   const control = Dialog.useDialogControl()
   /* Same portal/context bridge as AltTextDialogButton above. */
   const store = useThreadStore()
   return (
     <>
       <Button
-        label={l`Edit captions`}
+        label="Edit captions"
         testID={`composerV2Tester-media-${item.id}-captions`}
         size="tiny"
         color="secondary"
         onPress={control.open}>
-        <ButtonText>
-          <Trans>Captions</Trans>
-        </ButtonText>
+        <ButtonText>Captions</ButtonText>
       </Button>
       <Dialog.Outer control={control}>
         <Dialog.Handle />
@@ -636,7 +597,6 @@ function CaptionsDialogInner({
   postId: string
   item: PostMediaVideo
 }) {
-  const {t: l} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogContext()
   const store = useThreadStore()
@@ -649,22 +609,18 @@ function CaptionsDialogInner({
   )
   const languageError = captionLanguageError({captions})
   return (
-    <Dialog.ScrollableInner label={l`Edit video captions`}>
+    <Dialog.ScrollableInner label="Edit video captions">
       <View style={[a.gap_md]}>
-        <Text style={[a.text_lg, a.font_bold]}>
-          <Trans>Captions</Trans>
-        </Text>
+        <Text style={[a.text_lg, a.font_bold]}>Captions</Text>
         <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-          <Trans>
-            Changing captions restarts the caption upload. A completed video
-            upload is reused.
-          </Trans>
+          Changing captions restarts the caption upload. A completed video
+          upload is reused.
         </Text>
         {captions.map((caption, index) => (
           <View key={caption.key} style={[a.gap_xs]}>
             <TextField.Root>
               <Dialog.Input
-                label={l`Caption ${index + 1} language`}
+                label={`Caption ${index + 1} language`}
                 testID={`composerV2Tester-caption-${index}-lang`}
                 defaultValue={caption.lang}
                 onChangeText={lang =>
@@ -672,14 +628,14 @@ function CaptionsDialogInner({
                     prev.map((c, i) => (i === index ? {...c, lang} : c)),
                   )
                 }
-                placeholder={l`Language code, e.g. en`}
+                placeholder="Language code, e.g. en"
                 autoCapitalize="none"
                 autoCorrect={false}
               />
             </TextField.Root>
             <TextField.Root>
               <Dialog.Input
-                label={l`Caption ${index + 1} content`}
+                label={`Caption ${index + 1} content`}
                 testID={`composerV2Tester-caption-${index}-content`}
                 /*
                  * Controlled on purpose. With `defaultValue`, React DOM
@@ -695,28 +651,26 @@ function CaptionsDialogInner({
                     prev.map((c, i) => (i === index ? {...c, content} : c)),
                   )
                 }
-                placeholder={l`WEBVTT caption content`}
+                placeholder="WEBVTT caption content"
                 multiline
                 style={{maxHeight: 160}}
               />
             </TextField.Root>
             <Button
-              label={l`Remove caption ${index + 1}`}
+              label={`Remove caption ${index + 1}`}
               testID={`composerV2Tester-caption-${index}-remove`}
               size="tiny"
               color="secondary"
               onPress={() =>
                 setCaptions(prev => prev.filter((_c, i) => i !== index))
               }>
-              <ButtonText>
-                <Trans>Remove caption</Trans>
-              </ButtonText>
+              <ButtonText>Remove caption</ButtonText>
             </Button>
           </View>
         ))}
         <View style={[a.flex_row, a.gap_sm, a.flex_wrap]}>
           <Button
-            label={l`Add caption`}
+            label="Add caption"
             testID="composerV2Tester-caption-add"
             size="small"
             color="secondary"
@@ -730,12 +684,10 @@ function CaptionsDialogInner({
                 },
               ])
             }>
-            <ButtonText>
-              <Trans>Add caption</Trans>
-            </ButtonText>
+            <ButtonText>Add caption</ButtonText>
           </Button>
           <Button
-            label={l`Save captions`}
+            label="Save captions"
             testID="composerV2Tester-caption-save"
             size="small"
             color="primary"
@@ -749,19 +701,17 @@ function CaptionsDialogInner({
                 ),
               )
             }>
-            <ButtonText>
-              <Trans>Save</Trans>
-            </ButtonText>
+            <ButtonText>Save</ButtonText>
           </Button>
         </View>
         {languageError === 'missing-caption-language' && (
           <Text style={[a.text_xs, {color: t.palette.negative_500}]}>
-            <Trans>Every caption needs a language code before saving.</Trans>
+            Every caption needs a language code before saving.
           </Text>
         )}
         {languageError === 'duplicate-caption-language' && (
           <Text style={[a.text_xs, {color: t.palette.negative_500}]}>
-            <Trans>Each caption needs a different language code.</Trans>
+            Each caption needs a different language code.
           </Text>
         )}
       </View>

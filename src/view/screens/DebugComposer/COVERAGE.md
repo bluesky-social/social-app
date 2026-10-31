@@ -90,7 +90,7 @@ redesigned layout or its status indicators.
 | Control / feature                                        | File               | Test IDs                           | Coverage |
 | -------------------------------------------------------- | ------------------ | ---------------------------------- | -------- |
 | Redacted state summary                                   | `StateSummary.tsx` | `-summary-toggle`, `-summary-dump` | none     |
-| Translated strings through compiled Lingui message hooks | `messages.ts`      | none                               | unit     |
+| Gate summary and plan error hint copy                    | `messages.ts`      | none                               | none     |
 
 ## Not covered
 

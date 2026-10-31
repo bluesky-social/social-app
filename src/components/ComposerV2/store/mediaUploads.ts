@@ -358,15 +358,15 @@ export function createMediaUploads({
     plan: ComposerV2Plan
     cause: unknown
   }) {
-    const videoUploadIds: string[] = []
+    const uploadIds: string[] = []
     for (const post of plan.posts) {
       const blob = embeddedVideoBlob({embed: post.record.embed})
       const telemetry = blob && publishableVideos.get(blob)
-      if (telemetry) videoUploadIds.push(telemetry.uploadId)
+      if (telemetry) uploadIds.push(telemetry.uploadId)
     }
     metric('composer:publish:uncertain', {
       postCount: plan.posts.length,
-      videoUploadIds,
+      videoUploadIds: uploadIds,
       errorClass: errorClass(cause),
     })
   }

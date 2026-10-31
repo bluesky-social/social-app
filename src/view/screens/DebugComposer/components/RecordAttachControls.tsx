@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useGetPost} from '#/state/queries/post'
 import {normalizePostReference} from '#/view/screens/DebugComposer/postUrl'
@@ -29,7 +28,6 @@ export function AttachUrlDialogButton({
   postId: string
   index: number
 }) {
-  const {t: l} = useLingui()
   const control = Dialog.useDialogControl()
   /*
    * Native dialogs portal their children to the app shell's bottom-sheet
@@ -42,15 +40,13 @@ export function AttachUrlDialogButton({
   return (
     <>
       <Button
-        label={l`Attach a URL to post ${index + 1}`}
-        accessibilityHint={l`Opens a dialog to attach a link, record, or card`}
+        label={`Attach a URL to post ${index + 1}`}
+        accessibilityHint="Opens a dialog to attach a link, record, or card"
         testID={`composerV2Tester-post-${postId}-attach-url`}
         size="tiny"
         color="secondary"
         onPress={control.open}>
-        <ButtonText>
-          <Trans>Attach URL</Trans>
-        </ButtonText>
+        <ButtonText>Attach URL</ButtonText>
       </Button>
       <Dialog.Outer control={control}>
         <Dialog.Handle />
@@ -63,7 +59,6 @@ export function AttachUrlDialogButton({
 }
 
 function AttachUrlDialogInner({postId}: {postId: string}) {
-  const {t: l} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogContext()
   const store = useThreadStore()
@@ -90,31 +85,27 @@ function AttachUrlDialogInner({postId}: {postId: string}) {
             view: post,
           })
         } catch {
-          toast.show(l`Could not fetch that post.`, {type: 'error'})
+          toast.show('Could not fetch that post.', {type: 'error'})
         }
       })()
     })
   }
 
   return (
-    <Dialog.ScrollableInner label={l`Attach a URL`}>
+    <Dialog.ScrollableInner label="Attach a URL">
       <View style={[a.gap_md]}>
-        <Text style={[a.text_lg, a.font_bold]}>
-          <Trans>Attach URL</Trans>
-        </Text>
+        <Text style={[a.text_lg, a.font_bold]}>Attach URL</Text>
         <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-          <Trans>
-            Post, feed, list, and starter pack URLs use the record slot; other
-            URLs become external cards in the media slot.
-          </Trans>
+          Post, feed, list, and starter pack URLs use the record slot; other
+          URLs become external cards in the media slot.
         </Text>
         <TextField.Root>
           <Dialog.Input
-            label={l`URL to attach`}
+            label="URL to attach"
             testID="composerV2Tester-attach-url-input"
             defaultValue=""
             onChangeText={setUrl}
-            placeholder={l`https:// or at://`}
+            placeholder="https:// or at://"
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="url"
@@ -122,26 +113,22 @@ function AttachUrlDialogInner({postId}: {postId: string}) {
         </TextField.Root>
         <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
           <Button
-            label={l`Resolve URL into an attachment`}
+            label="Resolve URL into an attachment"
             testID="composerV2Tester-attach-url-resolve"
             size="small"
             color="primary"
             disabled={!trimmed}
             onPress={onResolveUri}>
-            <ButtonText>
-              <Trans>Resolve URL</Trans>
-            </ButtonText>
+            <ButtonText>Resolve URL</ButtonText>
           </Button>
           <Button
-            label={l`Fetch the post and attach it as a record`}
+            label="Fetch the post and attach it as a record"
             testID="composerV2Tester-attach-url-fetch-record"
             size="small"
             color="secondary"
             disabled={!postReference}
             onPress={onFetchRecord}>
-            <ButtonText>
-              <Trans>Fetch & attach record</Trans>
-            </ButtonText>
+            <ButtonText>Fetch & attach record</ButtonText>
           </Button>
         </View>
       </View>

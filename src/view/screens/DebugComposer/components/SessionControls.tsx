@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useGetPost} from '#/state/queries/post'
 import {useSession} from '#/state/session'
@@ -47,7 +46,6 @@ export function SessionControls({
   applyScenario,
   resetSession,
 }: SessionApi) {
-  const {t: l} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
   const state = useThreadState()
@@ -66,21 +64,21 @@ export function SessionControls({
   const scenarioLabel = (id: TesterScenarioId): string => {
     switch (id) {
       case 'empty':
-        return l`Empty`
+        return 'Empty'
       case 'text':
-        return l`Text & link`
+        return 'Text & link'
       case 'mention':
-        return l`Mention`
+        return 'Mention'
       case 'thread':
-        return l`Multi-post`
+        return 'Multi-post'
       case 'draft-fixture':
-        return l`Adapter fixture`
+        return 'Adapter fixture'
       case 'reply':
-        return l`Reply`
+        return 'Reply'
       case 'quote':
-        return l`Quote`
+        return 'Quote'
       case 'media':
-        return l`Initial media`
+        return 'Initial media'
     }
   }
 
@@ -161,9 +159,7 @@ export function SessionControls({
               buildScenarioInitialState({id: 'mention', handle}),
             )
           }}>
-          <ButtonText>
-            <Trans>Mention</Trans>
-          </ButtonText>
+          <ButtonText>Mention</ButtonText>
         </Button>
         <View
           style={[a.flex_row, a.align_center, a.gap_2xs]}
@@ -175,19 +171,17 @@ export function SessionControls({
             onSelectAssets={onSelectInitialAssets}
           />
           <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-            <Trans>Initial media</Trans>
+            Initial media
           </Text>
         </View>
         <Button
-          label={l`Reset the current session`}
-          accessibilityHint={l`Destroys the session and rebuilds it from its original input`}
+          label="Reset the current session"
+          accessibilityHint="Destroys the session and rebuilds it from its original input"
           testID="composerV2Tester-reset"
           size="small"
           color="negative_subtle"
           onPress={resetSession}>
-          <ButtonText>
-            <Trans>Reset</Trans>
-          </ButtonText>
+          <ButtonText>Reset</ButtonText>
         </Button>
       </View>
 
@@ -230,10 +224,8 @@ export function SessionControls({
         <Text
           style={[a.text_xs, {color: t.palette.negative_500}]}
           testID="composerV2Tester-scenario-error">
-          <Trans>
-            Couldn’t start the “{scenarioLabel(scenarioError.scenarioId)}”
-            scenario. Check the input and connection, then try again.
-          </Trans>
+          Couldn’t start the “{scenarioLabel(scenarioError.scenarioId)}”
+          scenario. Check the input and connection, then try again.
         </Text>
       )}
     </View>

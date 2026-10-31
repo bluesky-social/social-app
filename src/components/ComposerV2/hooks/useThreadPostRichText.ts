@@ -1,4 +1,3 @@
-import {useMemo} from 'react'
 import {RichText} from '@bsky/sdk/richtext'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
@@ -19,12 +18,10 @@ export function useThreadPostRichText(postId: string): {
 } {
   const post = useThreadPost(postId)
   const text = post?.text ?? ''
-  return useMemo(() => {
-    const richtext = new RichText({text})
-    richtext.detectFacetsWithoutResolution()
-    return {
-      richtext,
-      shortenedGraphemeLength: shortenLinks(richtext).graphemeLength,
-    }
-  }, [text])
+  const richtext = new RichText({text})
+  richtext.detectFacetsWithoutResolution()
+  return {
+    richtext,
+    shortenedGraphemeLength: shortenLinks(richtext).graphemeLength,
+  }
 }

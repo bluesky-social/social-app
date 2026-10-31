@@ -1,6 +1,5 @@
 import {useRef, useState} from 'react'
 import {View} from 'react-native'
-import {Trans, useLingui} from '@lingui/react/macro'
 
 import {resolveGif} from '#/lib/api/resolve'
 import {uploadBlob} from '#/lib/api/upload-blob'
@@ -65,7 +64,7 @@ export default function DebugComposer() {
     return (
       <View style={[a.p_md]}>
         <Admonition.Admonition type="error">
-          <Trans>Sign in to use the ComposerV2 tester.</Trans>
+          Sign in to use the ComposerV2 tester.
         </Admonition.Admonition>
       </View>
     )
@@ -223,25 +222,16 @@ function PublishAttemptNotice({attempt}: {attempt: ComposerV2PublishAttempt}) {
               </StatusBadgeText>
             </View>
             <Text style={[a.text_sm]}>
-              {attempt.status === 'writing' ? (
-                <Trans>Publishing the captured plan…</Trans>
-              ) : attempt.status === 'published' ? (
-                <Trans>The planned records were published.</Trans>
-              ) : attempt.status === 'rejected' ? (
-                <Trans>
-                  The server rejected the write (HTTP {attempt.httpStatus});
-                  nothing was published.
-                </Trans>
-              ) : (
-                <Trans>
-                  The write failed and its outcome may be uncertain. This exact
-                  plan is retained; do not retry or replace it until you check
-                  these URIs.
-                </Trans>
-              )}
+              {attempt.status === 'writing'
+                ? 'Publishing the captured plan…'
+                : attempt.status === 'published'
+                  ? 'The planned records were published.'
+                  : attempt.status === 'rejected'
+                    ? `The server rejected the write (HTTP ${attempt.httpStatus}); nothing was published.`
+                    : 'The write failed and its outcome may be uncertain. This exact plan is retained; do not retry or replace it until you check these URIs.'}
             </Text>
             <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-              <Trans>Repository: {attempt.plan.input.repo}</Trans>
+              Repository: {attempt.plan.input.repo}
             </Text>
             <Text
               selectable
@@ -268,7 +258,6 @@ function ThreadSection({
 }: {
   planError?: Extract<PlanSummary, {ok: false}>['error']
 }) {
-  const {t: l} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
   const state = useThreadState()
@@ -301,7 +290,7 @@ function ThreadSection({
           Thread · {postIds.length} {postIds.length === 1 ? 'post' : 'posts'}
         </Text>
         <Button
-          label={l`Retry all failed uploads`}
+          label="Retry all failed uploads"
           testID="composerV2Tester-retry-all"
           size="small"
           color={retryableFailureCount === 0 ? 'secondary' : 'negative_subtle'}
@@ -321,7 +310,7 @@ function ThreadSection({
           ]}
           testID="composerV2Tester-reply-target">
           <Text style={[a.text_xs, a.font_bold]}>
-            <Trans>Replying to @{state.replyTo.author.handle}</Trans>
+            Replying to @{state.replyTo.author.handle}
           </Text>
           <Text emoji style={[a.text_xs]} numberOfLines={2}>
             {state.replyTo.text}
@@ -346,7 +335,7 @@ function ThreadSection({
 
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
         <Button
-          label={l`Append a post to the thread`}
+          label="Append a post to the thread"
           testID="composerV2Tester-add-post"
           size="small"
           color="secondary"
@@ -356,9 +345,7 @@ function ThreadSection({
             const lastId = ids[ids.length - 1]
             if (lastId) store.actions.addPost('after', lastId)
           }}>
-          <ButtonText>
-            <Trans>+ Post</Trans>
-          </ButtonText>
+          <ButtonText>+ Post</ButtonText>
         </Button>
       </View>
     </View>

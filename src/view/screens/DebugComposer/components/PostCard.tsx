@@ -1,6 +1,5 @@
-import {useMemo} from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
-import {Trans, useLingui} from '@lingui/react/macro'
 
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {type SelfLabel} from '#/lib/moderation'
@@ -52,7 +51,6 @@ export function PostCard({
 }) {
   const post = useThreadPost(postId)
   const store = useThreadStore()
-  const {t: l} = useLingui()
   const t = useTheme()
 
   /*
@@ -60,8 +58,7 @@ export function PostCard({
    * (sessions remount this card via the session key) and every change is
    * mirrored back into the store.
    */
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const initialText = useMemo(() => post?.text ?? '', [])
+  const [initialText] = useState(() => post?.text ?? '')
 
   if (!post) return null
 
@@ -93,35 +90,29 @@ export function PostCard({
         <View style={[a.flex_row, a.gap_xs]}>
           <Button
             disabled={index === 0}
-            label={l`Move post ${index + 1} up`}
+            label={`Move post ${index + 1} up`}
             testID={`composerV2Tester-post-${postId}-move-up`}
             size="tiny"
             color="secondary"
             onPress={() => store.actions.movePost(postId, index - 1)}>
-            <ButtonText>
-              <Trans>Up</Trans>
-            </ButtonText>
+            <ButtonText>Up</ButtonText>
           </Button>
           <Button
             disabled={isLast}
-            label={l`Move post ${index + 1} down`}
+            label={`Move post ${index + 1} down`}
             testID={`composerV2Tester-post-${postId}-move-down`}
             size="tiny"
             color="secondary"
             onPress={() => store.actions.movePost(postId, index + 1)}>
-            <ButtonText>
-              <Trans>Down</Trans>
-            </ButtonText>
+            <ButtonText>Down</ButtonText>
           </Button>
           <Button
-            label={l`Remove post ${index + 1}`}
+            label={`Remove post ${index + 1}`}
             testID={`composerV2Tester-post-${postId}-remove`}
             size="tiny"
             color="negative_subtle"
             onPress={() => store.actions.removePost(postId)}>
-            <ButtonText>
-              <Trans>Remove</Trans>
-            </ButtonText>
+            <ButtonText>Remove</ButtonText>
           </Button>
         </View>
       </View>
@@ -133,8 +124,8 @@ export function PostCard({
       )}
 
       <Composer
-        label={l`Post ${index + 1} text`}
-        placeholder={l`Write here. Pasting a URL attaches it when committed.`}
+        label={`Post ${index + 1} text`}
+        placeholder="Write here. Pasting a URL attaches it when committed."
         defaultValue={initialText}
         testID={`composerV2Tester-post-${postId}-text`}
         onChange={text => store.actions.setPostText(postId, text)}
@@ -159,7 +150,6 @@ export function PostCard({
 
 /** Grapheme feedback plus the per-post editing controls. */
 function PostMetaRow({postId, index}: {postId: string; index: number}) {
-  const {t: l} = useLingui()
   const t = useTheme()
   const store = useThreadStore()
   const post = useThreadPost(postId)
@@ -252,30 +242,24 @@ function PostMetaRow({postId, index}: {postId: string; index: number}) {
           onSelectAssets={onSelectAssets}
         />
         <Button
-          label={l`Select a GIF for post ${index + 1}`}
-          accessibilityHint={l`Opens the GIF picker dialog`}
+          label={`Select a GIF for post ${index + 1}`}
+          accessibilityHint="Opens the GIF picker dialog"
           testID={`composerV2Tester-post-${postId}-gif`}
           size="tiny"
           color="secondary"
           disabled={gifSelectionDisabled}
           onPress={gifControl.open}>
-          <ButtonText>
-            <Trans>GIF</Trans>
-          </ButtonText>
+          <ButtonText>GIF</ButtonText>
         </Button>
         <Button
-          label={l`Choose languages for post ${index + 1}`}
-          accessibilityHint={l`Opens the language selection dialog`}
+          label={`Choose languages for post ${index + 1}`}
+          accessibilityHint="Opens the language selection dialog"
           testID={`composerV2Tester-post-${postId}-langs`}
           size="tiny"
           color="secondary"
           onPress={languageControl.open}>
           <ButtonText>
-            {post.langs.length > 0 ? (
-              post.langs.join(', ')
-            ) : (
-              <Trans>Langs</Trans>
-            )}
+            {post.langs.length > 0 ? post.langs.join(', ') : 'Langs'}
           </ButtonText>
         </Button>
         <LabelsBtn
@@ -290,8 +274,8 @@ function PostMetaRow({postId, index}: {postId: string; index: number}) {
 
       <LanguageSelectDialog
         control={languageControl}
-        titleText={<Trans>Choose post languages</Trans>}
-        subtitleText={<Trans>Select up to 3 languages used in this post</Trans>}
+        titleText="Choose post languages"
+        subtitleText="Select up to 3 languages used in this post"
         currentLanguages={post.langs}
         maxLanguages={3}
         onSelectLanguages={languages =>
@@ -314,26 +298,24 @@ function PostMetaRow({postId, index}: {postId: string; index: number}) {
  * split at commas into setPostTags on every change.
  */
 function TagsInput({postId, index}: {postId: string; index: number}) {
-  const {t: l} = useLingui()
   const store = useThreadStore()
   const post = useThreadPost(postId)
   /*
    * Uncontrolled, like the post text: the initial value is read once on
    * mount and sessions remount this card via the session key.
    */
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const initialTags = useMemo(() => (post?.tags ?? []).join(', '), [])
+  const [initialTags] = useState(() => (post?.tags ?? []).join(', '))
   if (!post) return null
   return (
     <TextField.Root>
       <TextField.Input
-        label={l`Explicit tags for post ${index + 1}, comma separated`}
+        label={`Explicit tags for post ${index + 1}, comma separated`}
         testID={`composerV2Tester-post-${postId}-tags`}
         defaultValue={initialTags}
         onChangeText={text =>
           store.actions.setPostTags(postId, parseTagsInput({text}))
         }
-        placeholder={l`Tags, comma separated`}
+        placeholder="Tags, comma separated"
         autoCapitalize="none"
         autoCorrect={false}
       />

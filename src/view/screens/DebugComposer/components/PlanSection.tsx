@@ -1,9 +1,8 @@
 import {useState} from 'react'
 import {ScrollView, View} from 'react-native'
-import {Trans, useLingui} from '@lingui/react/macro'
 
 import {StatusBadgeText} from '#/view/screens/DebugComposer/components/StatusBadge'
-import {usePlanErrorHint} from '#/view/screens/DebugComposer/messages'
+import {planErrorHint} from '#/view/screens/DebugComposer/messages'
 import {type PlanSummary} from '#/view/screens/DebugComposer/summarizeComposerV2Plan'
 import {type usePlanRunner} from '#/view/screens/DebugComposer/usePlanRunner'
 import {atoms as a, useTheme} from '#/alf'
@@ -38,9 +37,7 @@ export function PlanSection({
   publishStatus?: 'writing' | 'published' | 'uncertain' | 'rejected'
   onPublishPlan: (plan: ComposerV2Plan) => void
 }) {
-  const {t: l} = useLingui()
   const t = useTheme()
-  const planErrorHint = usePlanErrorHint()
   const [showStructure, setShowStructure] = useState(false)
   const [showRecords, setShowRecords] = useState(false)
   const [publishingEnabled, setPublishingEnabled] = useState(false)
@@ -110,41 +107,35 @@ export function PlanSection({
       </View>
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
         <Button
-          label={l`Plan the record set without writing`}
-          accessibilityHint={l`Validates and constructs the records locally; nothing is published`}
+          label="Plan the record set without writing"
+          accessibilityHint="Validates and constructs the records locally; nothing is published"
           testID="composerV2Tester-plan"
           size="small"
           color="primary"
           disabled={plan.isPlanning || publishAttempted}
           onPress={() => void plan.runPlan()}>
-          <ButtonText>
-            <Trans>Plan records</Trans>
-          </ButtonText>
+          <ButtonText>Plan records</ButtonText>
         </Button>
         {needsEmptyPostConfirmation && !plan.isStale && (
           <Button
-            label={l`Confirm skipping empty posts and plan again`}
+            label="Confirm skipping empty posts and plan again"
             testID="composerV2Tester-plan-confirm-skip"
             size="small"
             color="secondary"
             disabled={plan.isPlanning || publishAttempted}
             onPress={() => void plan.runPlan({skipEmptyPostsConfirmed: true})}>
-            <ButtonText>
-              <Trans>Skip empty posts & re-plan</Trans>
-            </ButtonText>
+            <ButtonText>Skip empty posts & re-plan</ButtonText>
           </Button>
         )}
         {plan.result && (
           <Button
-            label={l`Clear the plan result`}
+            label="Clear the plan result"
             testID="composerV2Tester-plan-clear"
             size="small"
             color="secondary"
             disabled={publishAttempted}
             onPress={plan.clearPlan}>
-            <ButtonText>
-              <Trans>Clear</Trans>
-            </ButtonText>
+            <ButtonText>Clear</ButtonText>
           </Button>
         )}
         {plan.isPlanning && <Loader size="sm" />}
@@ -153,32 +144,26 @@ export function PlanSection({
       <Toggle.Item
         name="requireAltText"
         type="checkbox"
-        label={l`Require alt text during planning preflight`}
+        label="Require alt text during planning preflight"
         value={requireAltText}
         onChange={onChangeRequireAltText}>
         <Toggle.Checkbox />
-        <Toggle.LabelText>
-          <Trans>Require alt text preflight</Trans>
-        </Toggle.LabelText>
+        <Toggle.LabelText>Require alt text preflight</Toggle.LabelText>
       </Toggle.Item>
 
       {plan.isStale && (
         <Text
           style={[a.text_xs, {color: t.palette.negative_500}]}
           testID="composerV2Tester-plan-stale">
-          <Trans>
-            Stale: the composition changed after this plan was captured.
-          </Trans>
+          Stale: the composition changed after this plan was captured.
         </Text>
       )}
 
       {summary === undefined ? (
         <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-          {plan.isPlanning ? (
-            <Trans>Planning…</Trans>
-          ) : (
-            <Trans>No plan yet. Planning never publishes anything.</Trans>
-          )}
+          {plan.isPlanning
+            ? 'Planning…'
+            : 'No plan yet. Planning never publishes anything.'}
         </Text>
       ) : summary.ok ? (
         <View style={[a.gap_xs]} testID="composerV2Tester-plan-result">
@@ -207,8 +192,8 @@ export function PlanSection({
           <Button
             label={
               showStructure
-                ? l`Hide final URIs, reply relationships, and gate associations`
-                : l`Show final URIs, reply relationships, and gate associations`
+                ? 'Hide final URIs, reply relationships, and gate associations'
+                : 'Show final URIs, reply relationships, and gate associations'
             }
             testID="composerV2Tester-plan-structure-toggle"
             size="tiny"
@@ -216,11 +201,7 @@ export function PlanSection({
             style={[a.self_start]}
             onPress={() => setShowStructure(current => !current)}>
             <ButtonText>
-              {showStructure ? (
-                <Trans>Hide structure</Trans>
-              ) : (
-                <Trans>Show structure</Trans>
-              )}
+              {showStructure ? 'Hide structure' : 'Show structure'}
             </ButtonText>
           </Button>
           {showStructure && <PlanStructure summary={summary} />}
@@ -308,15 +289,13 @@ export function PlanSection({
         <Toggle.Item
           name="enablePublishing"
           type="checkbox"
-          label={l`Enable publishing controls for this tester`}
+          label="Enable publishing controls for this tester"
           value={publishingEnabled}
           disabled={publishAttempted}
           testID="composerV2Tester-publish-enable"
           onChange={setPublishingEnabled}>
           <Toggle.Checkbox />
-          <Toggle.LabelText>
-            <Trans>Enable publishing in this tester</Trans>
-          </Toggle.LabelText>
+          <Toggle.LabelText>Enable publishing in this tester</Toggle.LabelText>
         </Toggle.Item>
         {publishingEnabled && !publishAttempted && (
           <Admonition.Admonition type="error">
@@ -345,8 +324,8 @@ export function PlanSection({
           ))}
         </View>
         <Button
-          label={l`Publish the exact planned records to your account`}
-          accessibilityHint={l`Writes the current plan to the signed-in account. This cannot be undone here.`}
+          label="Publish the exact planned records to your account"
+          accessibilityHint="Writes the current plan to the signed-in account. This cannot be undone here."
           testID="composerV2Tester-publish"
           size="small"
           color={canPublish ? 'negative' : 'secondary'}

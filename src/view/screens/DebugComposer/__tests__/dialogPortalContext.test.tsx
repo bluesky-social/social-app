@@ -1,6 +1,4 @@
 import {describe, expect, jest, test} from '@jest/globals'
-import {setupI18n} from '@lingui/core'
-import {I18nProvider} from '@lingui/react'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 jest.mock('#/lib/api/resolve', () => ({resolveLink: jest.fn()}))
@@ -64,8 +62,6 @@ type PortalGroup = {
   Portal: React.ComponentType<{children: React.ReactNode}>
 }
 
-const i18n = setupI18n({locale: 'en', messages: {en: {}}})
-
 function makeStore() {
   return createThreadStore({
     defaultLanguages: [],
@@ -84,14 +80,12 @@ function Harness({
   children: React.ReactNode
 }) {
   return (
-    <I18nProvider i18n={i18n}>
-      <portal.Provider>
-        {/* The screen subtree owns the store... */}
-        <ThreadStoreProvider store={store}>{children}</ThreadStoreProvider>
-        {/* ...while dialog content mounts here, outside it, like the shell. */}
-        <portal.Outlet />
-      </portal.Provider>
-    </I18nProvider>
+    <portal.Provider>
+      {/* The screen subtree owns the store... */}
+      <ThreadStoreProvider store={store}>{children}</ThreadStoreProvider>
+      {/* ...while dialog content mounts here, outside it, like the shell. */}
+      <portal.Outlet />
+    </portal.Provider>
   )
 }
 

@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {ScrollView, View} from 'react-native'
-import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -16,7 +15,6 @@ import {Text} from '#/components/Typography'
  * edit and preview controls.
  */
 export function StateSummary() {
-  const {t: l} = useLingui()
   const t = useTheme()
   const state = useThreadState()
   const [expanded, setExpanded] = useState(false)
@@ -24,18 +22,14 @@ export function StateSummary() {
   return (
     <View style={[a.gap_sm]}>
       <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-        <Text style={[a.text_md, a.font_bold]}>
-          <Trans>State summary (redacted)</Trans>
-        </Text>
+        <Text style={[a.text_md, a.font_bold]}>State summary (redacted)</Text>
         <Button
-          label={expanded ? l`Collapse state summary` : l`Expand state summary`}
+          label={expanded ? 'Collapse state summary' : 'Expand state summary'}
           testID="composerV2Tester-summary-toggle"
           size="small"
           color="secondary"
           onPress={() => setExpanded(value => !value)}>
-          <ButtonText>
-            {expanded ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
-          </ButtonText>
+          <ButtonText>{expanded ? 'Hide' : 'Show'}</ButtonText>
         </Button>
       </View>
       {expanded && (

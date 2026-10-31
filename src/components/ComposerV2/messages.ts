@@ -8,8 +8,9 @@ import {type UploadFailureCode} from '#/components/ComposerV2/store/types'
  * Localized copy for the failure codes ComposerV2 state holds. State stores
  * codes only; callers turn them into text at the edge, inside or outside
  * React (`useLingui().i18n` in a component). These are plain functions over
- * `msg` descriptors because Lingui's `t` macro alias cannot be passed into
- * another function; see `DebugComposer/messages.ts`.
+ * `msg` descriptors because Lingui's `t` macro is only compiled where the
+ * `useLingui()` binding is lexically in scope. Passing the alias into another
+ * function leaves the tagged templates uncompiled and they render empty.
  */
 
 /** User-facing copy for a failed upload; `detail` is the server's own text, if any. */

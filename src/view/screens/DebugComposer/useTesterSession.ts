@@ -27,7 +27,7 @@ export type TesterSession = {
 }
 
 /**
- * Typed scenario-build failure. The tester renders a static localized
+ * Typed scenario-build failure. The tester renders a static
  * message from this shape; raw resolver/adapter exception text never reaches
  * the UI. Diagnostics are available only to the optional session policy.
  */

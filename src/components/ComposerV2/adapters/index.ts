@@ -9,6 +9,7 @@ import {
   isComposerV2Cancellation,
   reportComposerV2Error,
 } from '#/components/ComposerV2/errors'
+import {MAX_IMAGES_PER_POST} from '#/components/ComposerV2/store/const'
 import {
   type MediaAttachmentInput,
   type PostMediaImageInput,
@@ -104,7 +105,7 @@ function normalizeComposerOpts({
       'Composer intent contains both images and video',
     )
   }
-  if (imageUris && imageUris.length > 10) {
+  if (imageUris && imageUris.length > MAX_IMAGES_PER_POST) {
     throw new ComposerAdapterError(
       'oversized-images',
       'Composer intent contains too many images',
@@ -268,7 +269,7 @@ function draftPostToInitialState({
       'Draft contains more than one video',
     )
   }
-  if (images.length > 10) {
+  if (images.length > MAX_IMAGES_PER_POST) {
     throw new ComposerAdapterError(
       'oversized-images',
       'Draft contains too many images',
