@@ -176,6 +176,17 @@ are not safe UI text or automatic logging payloads.
 - Production composer UI wiring is deferred to a separate PR. A production tag
   typeahead and external-card suggestions are not planned. The tester's tags
   are a plain comma-separated input.
+- **Temporary media purge:** production wiring must decide when and how V2
+  purges temporary media. `purgeTemporaryImageFiles` (`src/state/gallery.ts`,
+  native only, run on legacy composer close and from Settings) wipes
+  `bsky-composer/`, `ImagePicker/`, and `ImageManipulator/` wholesale, so
+  running it during in-flight V2 uploads deletes their source and output files.
+  V2 never calls it today.
+- **Unmeasured memory risks:** check on device before changing code. The image
+  compression limiter has no timeout (a timeout would free the slot while native
+  work continues, defeating the memory cap), and video compression has no
+  concurrency cap. Try a thread with 3–4 videos on Android and web while
+  watching memory and codec failures.
 
 ---
 
@@ -459,7 +470,7 @@ deterministic and tested through injected release dependencies.
 | ------------------------------------------------------ | -------------------------------- | ------------------------------------------------------------------------------------------------ |
 | Source URI/`File`, `original`, `supersededUri`, drafts | The caller or draft storage      | Never by V2                                                                                      |
 | Web metadata probe URL                                 | The production metadata adapter  | Right after the scalars are extracted (`releaseVideoProbeUri`)                                   |
-| Image compression output                               | The image worker                 | Once, after the upload (or a cancelled/failed attempt) settles                                   |
+| Selected image compression output                      | The image worker                 | Once, after the upload (or a cancelled/failed attempt) settles                                   |
 | Native encoded video output (file)                     | The worker, then retained entry  | By the worker if never retained; otherwise with the entry after its last reader                  |
 | Android readable copy                                  | The attempt, then retained entry | With the attempt, or with the entry when the result aliases it                                   |
 | Video telemetry and `videoUploadIds`                   | The upload service               | `videoUploadIds` on removal/teardown; telemetry (`publishableVideos`) outlives removal for plans |
@@ -468,10 +479,16 @@ deterministic and tested through injected release dependencies.
   `createScalarVideoMetadata` (wired in `store/uploadDependencies.ts`) returns
   only scalars and revokes that URL; native returns the source URI, which is
   never released.
-- `compressImage` always writes a new file (native) or object URL (web). The
-  worker calls the required `releaseCompressedImage({uri})` dependency once,
-  after its last reader settles, including for a late result of a cancelled
-  attempt. Native deletes the file with `safeDeleteAsync`; web revokes the URL.
+- `compressImage` always writes a new file (native) or object URL (web) for the
+  output it selects. The worker calls the required
+  `releaseCompressedImage({uri})` dependency once for that output, after its
+  last reader settles, including for a late result of a cancelled attempt.
+  Native deletes the file with `safeDeleteAsync`; web revokes the URL.
+- Intermediate quality/size passes inside the shared `compressImage` are not
+  covered. On web their render and output object URLs leak until page unload;
+  on native their files are removed only by the legacy purge
+  (`purgeTemporaryImageFiles`). Fixing this in shared code is tracked in
+  [APP-3226](https://linear.app/blueskyweb/issue/APP-3226/release-shared-media-compression-scratch-resources-and-avoid).
 - Only a video result with no `passthroughReason` and no `bytes` is a new file.
   Pass-through, GIF, and web output alias the source, the Android copy, or
   memory, and are never deleted (`releaseCompressedVideo` is a no-op on web).
