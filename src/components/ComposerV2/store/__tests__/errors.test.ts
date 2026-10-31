@@ -56,6 +56,15 @@ const syncFailingImageWorker: UploadWorkerOverrides = {
 }
 const recordUri = 'https://bsky.app/profile/example.test/post/abc'
 
+/**
+ * Link results reach the store through the resolver, which adds one microtask
+ * hop after the request settles.
+ */
+async function flushLinks() {
+  await Promise.resolve()
+  await Promise.resolve()
+}
+
 function deferred<T>() {
   let resolve!: (value: T) => void
   let reject!: (cause: unknown) => void
@@ -291,7 +300,7 @@ describe('session error reporting', () => {
     expect(onError.mock.calls[0][0].code).toBe('test-failure')
   })
 
-  test('eager URI initialization uses the construction callback for synchronous resolver failures', () => {
+  test('eager URI initialization reports synchronous resolver failures like rejections', async () => {
     const cause = new Error('private resolver startup')
     const onError = jest.fn<ComposerV2OnError>()
     const store = createThreadStore({
@@ -305,12 +314,15 @@ describe('session error reporting', () => {
         throw cause
       },
     })
+    await flushLinks()
     expect(onError).toHaveBeenCalledTimes(1)
     expect(onError).toHaveBeenCalledWith(
       expect.objectContaining({
         source: 'uri-resolution',
         slot: 'record',
-        kind: 'unexpected',
+        code: 'unknown',
+        kind: 'operational',
+        recovery: 'retry',
       }),
       cause,
     )
@@ -370,7 +382,7 @@ describe('session error reporting', () => {
     const cause = new Error('private resolver diagnostic')
     attempts[0].reject(cause)
     attempts[1].reject(new EmbeddingDisabledError())
-    await Promise.resolve()
+    await flushLinks()
     expect(onError).toHaveBeenCalledTimes(2)
     expect(onError.mock.calls[0]).toEqual([
       {
@@ -399,7 +411,7 @@ describe('session error reporting', () => {
     store.actions.retryAttachment(postId, 'record')
     expect(attempts).toHaveLength(3)
     attempts[2].reject(cause)
-    await Promise.resolve()
+    await flushLinks()
     expect(onError).toHaveBeenCalledTimes(3)
     store.destroy()
   })
@@ -432,7 +444,7 @@ describe('session error reporting', () => {
           name: action === 'cancel' ? 'AbortError' : 'Error',
         }),
       )
-      await Promise.resolve()
+      await flushLinks()
       expect(onError).not.toHaveBeenCalled()
       store.destroy()
     },

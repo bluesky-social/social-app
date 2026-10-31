@@ -3,6 +3,7 @@ import {type I18n} from '@lingui/core'
 
 import {type ResolvedLink} from '#/lib/api/resolve'
 import {type ComposerV2ErrorKind} from '#/components/ComposerV2/errors'
+import {type LinkResolutionFailureCode} from '#/components/ComposerV2/store/linkResolver'
 import {type Gif} from '#/features/gifPicker/types'
 import {type app, type com} from '#/lexicons'
 
@@ -166,9 +167,6 @@ export type PostMediaGif = {
 
 /** Individually editable media items with stable upload ownership. */
 export type PostMediaItem = PostMediaImage | PostMediaVideo | PostMediaGif
-
-/** Embedding-disabled is permanent; unknown failures can be retried. */
-export type LinkResolutionFailureCode = 'embedding-disabled' | 'unknown'
 
 /** Pending and failed URI candidates reserve their target attachment slot. */
 export type AttachmentResolution =

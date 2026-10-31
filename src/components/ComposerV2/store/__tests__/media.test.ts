@@ -790,6 +790,7 @@ describe('retryAllFailedUploads', () => {
     mockResolveLink.mockRejectedValueOnce(new Error('bad uri'))
     store.actions.addUri(unresolvedPost, 'https://example.com/unresolved')
     await Promise.resolve()
+    await Promise.resolve()
 
     const before = store.getState()
     const result = store.actions.retryAllFailedUploads()

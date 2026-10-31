@@ -5,7 +5,6 @@ import {nanoid} from 'nanoid/non-secure'
 import {
   type LinkResolvers,
   type ResolvedLink,
-  resolveLink as importedResolveLink,
   type resolveLink,
 } from '#/lib/api/resolve'
 import {
@@ -17,6 +16,10 @@ import {
   isComposerV2Cancellation,
   reportComposerV2Error,
 } from '#/components/ComposerV2/errors'
+import {
+  createLinkResolver,
+  type LinkResolution,
+} from '#/components/ComposerV2/store/linkResolver'
 import {
   createMediaUploads,
   type MediaUploadUpdate,
@@ -34,10 +37,8 @@ import {
   classifyUriTarget,
 } from '#/components/ComposerV2/store/utils/classifyUriTarget'
 import {computePostMediaSelectionsRemaining} from '#/components/ComposerV2/store/utils/computePostMediaSelectionsRemaining'
-import {createAsyncTaskRev} from '#/components/ComposerV2/store/utils/createAsyncTaskRev'
 import {filterMediaInputs} from '#/components/ComposerV2/store/utils/filterMediaInputs'
 import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
-import {parseResolveLinkError} from '#/components/ComposerV2/store/utils/parseResolveLinkError'
 import {validDimensions} from '#/components/ComposerV2/store/utils/validDimensions'
 import {type AnalyticsContextType} from '#/analytics'
 
@@ -76,7 +77,6 @@ export function createThreadStore({
   __uploadWorkers?: UploadWorkerOverrides
 }) {
   const id = __createId ?? nanoid
-  const resolve = __resolveLink ?? importedResolveLink
   let destroyed = false
   /**
    * A report raised while `onError` is running is dropped, so a policy
@@ -118,11 +118,9 @@ export function createThreadStore({
     onUpdate: applyMediaUploadUpdate,
     __uploadWorkers,
   })
-  /** Replacing one attachment slot must not invalidate work in the other. */
-  const resolutionRevs = {
-    record: createAsyncTaskRev(),
-    media: createAsyncTaskRev(),
-  }
+  const linkResolver = createLinkResolver({resolvers, resolve: __resolveLink})
+  /** One resolver key per post and slot, so slots never supersede each other. */
+  const linkKey = (postId: string, slot: AttachmentSlot) => `${slot}:${postId}`
 
   /**
    * Actions replace touched posts and mutate only this shallow working copy.
@@ -277,8 +275,8 @@ export function createThreadStore({
       })) {
         uploads.forget({mediaId: item.id, abandoned: 'removed'})
       }
-      resolutionRevs.record.clearFor({key: postId})
-      resolutionRevs.media.clearFor({key: postId})
+      linkResolver.cancel({key: linkKey(postId, 'record')})
+      linkResolver.cancel({key: linkKey(postId, 'media')})
       delete s.posts[postId]
       s.isDirty = true
       return s
@@ -305,7 +303,7 @@ export function createThreadStore({
       buildPostMediaItem({input, id: id(), postId}),
     )
 
-    resolutionRevs.media.incrementFor({key: postId})
+    linkResolver.cancel({key: linkKey(postId, 'media')})
     mutateState(s => {
       s.posts[postId] = replacePostMediaItems(post, [
         ...getMediaItems({media: post.attachments.media}),
@@ -338,7 +336,7 @@ export function createThreadStore({
     mutateState(s => {
       const post = s.posts[postId]
       if (!post || !post.attachments.media) return null
-      resolutionRevs.media.incrementFor({key: postId})
+      linkResolver.cancel({key: linkKey(postId, 'media')})
       for (const item of getMediaItems({media: post.attachments.media})) {
         uploads.forget({mediaId: item.id, abandoned: 'removed'})
       }
@@ -861,7 +859,7 @@ export function createThreadStore({
   /**
    * Re-resolve a failed link with the same URI. Only a live, retryable failed
    * slot qualifies. Stale results are dropped before they apply, so a failed
-   * slot in live state always belongs to the latest revision. Like the
+   * slot in live state always belongs to the latest request. Like the
    * original failure, it does not dirty the draft.
    */
   function retryAttachment(postId: string, slot: AttachmentSlot) {
@@ -870,7 +868,7 @@ export function createThreadStore({
     const current = post?.attachments[slot]
     if (!post || current?.state !== 'failed' || !current.retryable) return
     const {uri} = current
-    const rev = resolutionRevs[slot].incrementFor({key: postId})
+    const resolution = linkResolver.resolve({key: linkKey(postId, slot), uri})
     mutateState(s => {
       const currentPost = s.posts[postId]
       if (!currentPost) return null
@@ -880,7 +878,7 @@ export function createThreadStore({
           : replacePostMedia(currentPost, {state: 'pending', uri})
       return s
     })
-    resolveAttachmentUri({postId, target: slot, uri, rev})
+    applyResolution({postId, target: slot, uri, resolution})
   }
 
   /**
@@ -892,7 +890,7 @@ export function createThreadStore({
     const target = classifyUriTarget({uri})
     const post = state.posts[postId]
     if (!post || post.attachments[target]?.state === 'resolved') return
-    const rev = resolutionRevs[target].incrementFor({key: postId})
+    const resolution = linkResolver.resolve({key: linkKey(postId, target), uri})
     mutateState(s => {
       const currentPost = s.posts[postId]
       if (
@@ -912,34 +910,45 @@ export function createThreadStore({
       s.isDirty = true
       return s
     })
-    resolveAttachmentUri({postId, target, uri, rev})
+    applyResolution({postId, target, uri, resolution})
   }
 
   /**
-   * Resolve one reserved destination. Completion handlers close over this
-   * attempt's destination, revision, post, and URI so stale work can never be
-   * redirected into the other attachment slot.
+   * Apply one reserved destination's resolution. The resolver drops results
+   * that were superseded or cancelled, and this attempt's destination, post,
+   * and URI are closed over so a result can never be redirected into the other
+   * attachment slot.
+   *
+   * The store also re-checks that the live slot is still pending for this
+   * request's URI. The resolver's promise settles one microtask before
+   * the store applies it, so a synchronous action in between (a subscriber
+   * removing or replacing the attachment) can change the slot after the
+   * resolver already vouched for the result.
    */
-  function resolveAttachmentUri({
+  function applyResolution({
     postId,
     target,
     uri,
-    rev,
+    resolution,
   }: {
     postId: string
     target: AttachmentSlot
     uri: string
-    rev: number
+    resolution: Promise<LinkResolution | undefined>
   }) {
-    if (destroyed || !resolutionRevs[target].isCurrentFor({key: postId, rev}))
-      return
+    const isStillPending = (post: types.ThreadPost | undefined) => {
+      const live = post?.attachments[target]
+      return live?.state === 'pending' && live.uri === uri
+    }
 
-    const applyFailed = (err: unknown, unexpected = false) => {
-      if (destroyed || !resolutionRevs[target].isCurrentFor({key: postId, rev}))
-        return
-      if (isComposerV2Cancellation({cause: err})) return
-      const {code, isRetryable} = parseResolveLinkError({error: err})
-      const failure = {
+    const applyFailed = (
+      failure: Extract<LinkResolution, {ok: false}>,
+      unexpected = false,
+    ) => {
+      if (destroyed) return
+      const {code, retryable, cause} = failure
+      if (isComposerV2Cancellation({cause})) return
+      const failed = {
         state: 'failed' as const,
         uri,
         // The UI localizes this stable code; raw diagnostics never enter state.
@@ -948,16 +957,16 @@ export function createThreadStore({
             ? 'Embedding disabled'
             : 'Link resolution failed',
         code,
-        retryable: isRetryable,
+        retryable,
       }
       let accepted = false
       mutateState(s => {
         const post = s.posts[postId]
-        if (!post) return null
+        if (!post || !isStillPending(post)) return null
         s.posts[postId] =
           target === 'record'
-            ? replaceRecordAttachment(post, failure)
-            : replacePostMedia(post, failure)
+            ? replaceRecordAttachment(post, failed)
+            : replacePostMedia(post, failed)
         accepted = true
         return s
       })
@@ -970,29 +979,32 @@ export function createThreadStore({
           postId,
           kind: unexpected
             ? 'unexpected'
-            : isRetryable
+            : retryable
               ? 'operational'
               : 'validation',
-          recovery: isRetryable ? 'retry' : 'edit',
+          recovery: retryable ? 'retry' : 'edit',
         },
-        err,
+        cause,
       )
     }
 
     const applyResolved = (link: ResolvedLink) => {
-      if (
-        destroyed ||
-        !resolutionRevs[target].isCurrentFor({key: postId, rev})
-      ) {
-        return
-      }
+      if (destroyed) return
       if ((link.type === 'record') !== (target === 'record')) {
-        applyFailed(new Error('Unexpected attachment type'), true)
+        applyFailed(
+          {
+            ok: false,
+            code: 'unknown',
+            retryable: true,
+            cause: new Error('Unexpected attachment type'),
+          },
+          true,
+        )
         return
       }
       mutateState(s => {
         const post = s.posts[postId]
-        if (!post) return null
+        if (!post || !isStillPending(post)) return null
         if (link.type === 'record') {
           const {type: _type, ...record} = link
           s.posts[postId] = replaceRecordAttachment(post, {
@@ -1018,11 +1030,11 @@ export function createThreadStore({
       })
     }
 
-    try {
-      resolve(resolvers, uri).then(applyResolved, applyFailed)
-    } catch (cause) {
-      applyFailed(cause, true)
-    }
+    void resolution.then(result => {
+      if (!result) return
+      if (result.ok) applyResolved(result.link)
+      else applyFailed(result)
+    })
   }
 
   /** Direct insertion of a known record replaces only the record slot. */
@@ -1031,7 +1043,7 @@ export function createThreadStore({
     value: types.RecordAttachmentValue,
   ) {
     if (destroyed || !state.posts[postId]) return
-    resolutionRevs.record.incrementFor({key: postId})
+    linkResolver.cancel({key: linkKey(postId, 'record')})
     mutateState(s => {
       s.posts[postId] = replaceRecordAttachment(s.posts[postId], {
         state: 'resolved',
@@ -1046,7 +1058,7 @@ export function createThreadStore({
     mutateState(s => {
       const post = s.posts[postId]
       if (!post || !post.attachments.record) return null
-      resolutionRevs.record.incrementFor({key: postId})
+      linkResolver.cancel({key: linkKey(postId, 'record')})
       s.posts[postId] = replaceRecordAttachment(post, undefined)
       s.isDirty = true
       return s
@@ -1073,8 +1085,7 @@ export function createThreadStore({
   function teardown(options: {abandoned?: VideoAbandonReason}) {
     destroyed = true
     uploads.destroy(options)
-    resolutionRevs.record.clearAll()
-    resolutionRevs.media.clearAll()
+    linkResolver.destroy()
     listeners.clear()
   }
 
@@ -1093,12 +1104,14 @@ export function createThreadStore({
       for (const slot of ['record', 'media'] as const) {
         const attachment = post.attachments[slot]
         if (attachment?.state === 'pending') {
-          const rev = resolutionRevs[slot].incrementFor({key: postId})
-          resolveAttachmentUri({
+          applyResolution({
             postId,
             target: slot,
             uri: attachment.uri,
-            rev,
+            resolution: linkResolver.resolve({
+              key: linkKey(postId, slot),
+              uri: attachment.uri,
+            }),
           })
         }
       }

@@ -1,6 +1,6 @@
 import {type ComposerAdapterErrorCode} from '#/components/ComposerV2/adapters'
 import {type ComposerV2PlanErrorCode} from '#/components/ComposerV2/planner'
-import {type LinkResolutionFailureCode} from '#/components/ComposerV2/store/types'
+import {type LinkResolutionFailureCode} from '#/components/ComposerV2/store/linkResolver'
 
 /** How a reported failure is classified: bad input, a failed operation, or a bug. */
 export type ComposerV2ErrorKind = 'validation' | 'operational' | 'unexpected'

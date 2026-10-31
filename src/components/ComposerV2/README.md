@@ -237,9 +237,13 @@ can be superseded. Explicit record setters replace the record. Removing selected
 media does not restore an old suggested card. Record and media destinations stay
 independent, even for unclassified URLs that reserve a lane and resolve later.
 
-URI resolution keeps separate per-post revisions for the record and media slots,
-so replacing or removing one slot invalidates only its own work. A stale result
-must neither overwrite current data nor resurrect a removed attachment.
+URI resolution runs through a ComposerV2-independent resolver
+([store/linkResolver.ts](store/linkResolver.ts)) keyed per post and slot, so
+replacing or removing one slot cancels only its own work. A superseded or
+cancelled request resolves to nothing, so a stale result can neither overwrite
+current data nor resurrect a removed attachment. The resolver also classifies
+failures (permanent `embedding-disabled` versus retryable `unknown`); a
+synchronous resolver throw is treated like a rejection.
 
 Upload tasks are keyed by stable media ID, and the registered task object's
 identity is the stale-callback token. Register it before invoking a worker,

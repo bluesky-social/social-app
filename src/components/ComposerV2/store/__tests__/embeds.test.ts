@@ -140,6 +140,15 @@ function rootId(store: ReturnType<typeof createThreadStore>) {
   return Object.keys(store.getState().posts)[0]
 }
 
+/**
+ * Link results reach the store through the resolver, which adds one microtask
+ * hop after the request settles.
+ */
+async function flushLinks() {
+  await Promise.resolve()
+  await Promise.resolve()
+}
+
 function deferred() {
   let resolve!: (value: ResolvedLink) => void
   let reject!: (err: unknown) => void
@@ -190,6 +199,7 @@ describe('record and media routing', () => {
       ).toHaveLength(1)
       d.resolve(link)
       await d.promise
+      await flushLinks()
       expect(store.getState().posts[root].attachments.record).toEqual({
         state: 'resolved',
         kind: link.kind,
@@ -217,7 +227,7 @@ describe('record and media routing', () => {
         uri,
       })
       expect(store.getState().posts[root].imageSelectionsRemaining).toBe(0)
-      await Promise.resolve()
+      await flushLinks()
       const {type: kind, ...value} = link
       expect(store.getState().posts[root].attachments.media).toEqual({
         state: 'resolved',
@@ -247,6 +257,7 @@ describe('record and media routing', () => {
 
     mediaPending.resolve(externalLink)
     await mediaPending.promise
+    await flushLinks()
     expect(store.getState().posts[root].attachments.record).toEqual({
       state: 'pending',
       uri: POST_URL,
@@ -258,6 +269,7 @@ describe('record and media routing', () => {
 
     recordPending.resolve(postLink)
     await recordPending.promise
+    await flushLinks()
     expect(store.getState().posts[root].attachments.record).toMatchObject({
       state: 'resolved',
       kind: 'post',
@@ -273,13 +285,13 @@ describe.each(records)('$link.kind coexists with media', ({uri, link}) => {
       const root = rootId(store)
       if (recordFirst) {
         store.actions.addUri(root, uri)
-        await Promise.resolve()
+        await flushLinks()
       }
       expect(store.actions.addMedia(root, [input])?.addedMediaIds).toHaveLength(
         1,
       )
       if (!recordFirst) store.actions.addUri(root, uri)
-      await Promise.resolve()
+      await flushLinks()
       const {record, media} = store.getState().posts[root].attachments
       expect(record).toMatchObject({state: 'resolved', kind: link.kind})
       expect(media).toMatchObject({
@@ -304,7 +316,7 @@ describe.each(records)('$link.kind coexists with media', ({uri, link}) => {
       const uris = recordFirst ? [uri, card.uri] : [card.uri, uri]
       for (const url of uris) {
         store.actions.addUri(root, url)
-        await Promise.resolve()
+        await flushLinks()
       }
       const {record, media} = store.getState().posts[root].attachments
       expect(record).toMatchObject({state: 'resolved', kind: link.kind})
@@ -323,7 +335,7 @@ describe('slot collisions', () => {
       const store = makeStore()
       const root = rootId(store)
       store.actions.addUri(root, uri)
-      await Promise.resolve()
+      await flushLinks()
       const before = store.getState()
       for (const candidate of records) store.actions.addUri(root, candidate.uri)
       expect(store.getState()).toBe(before)
@@ -338,7 +350,7 @@ describe('slot collisions', () => {
       const store = makeStore()
       const root = rootId(store)
       store.actions.addUri(root, uri)
-      await Promise.resolve()
+      await flushLinks()
       const before = store.getState()
       for (const input of uploads)
         expect(store.actions.addMedia(root, [input])).toEqual({
@@ -369,7 +381,7 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
     const store = makeStore()
     const root = rootId(store)
     store.actions.addUri(root, uri)
-    await Promise.resolve()
+    await flushLinks()
     const failed = store.getState().posts[root].attachments[slot]
     if (failed?.state !== 'failed') throw new Error('expected failed')
     expect(failed.code).toBe('unknown')
@@ -390,7 +402,7 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
     })
     expect(store.getState().isDirty).toBe(dirtyBefore)
     expect(mockResolveLink).toHaveBeenLastCalledWith(expect.anything(), uri)
-    await Promise.resolve()
+    await flushLinks()
     expect(store.getState().posts[root].attachments[slot]?.state).toBe(
       'resolved',
     )
@@ -409,10 +421,12 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
       store.actions.addUri(root, `${uri}?new`)
       second.resolve(link)
       await second.promise
+      await flushLinks()
       const before = store.getState()
       if (oldFails) first.reject(new Error('old failure'))
       else first.resolve(link)
       await first.promise.catch(() => {})
+      await flushLinks()
       expect(store.getState()).toBe(before)
     }
   })
@@ -424,13 +438,13 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
     const store = makeStore()
     const root = rootId(store)
     store.actions.addUri(root, uri)
-    await Promise.resolve()
+    await flushLinks()
 
     store.actions.addUri(root, `${uri}?new`)
     expect(mockResolveLink).toHaveBeenCalledTimes(2)
     store.actions.retryAttachment(root, slot)
     expect(mockResolveLink).toHaveBeenCalledTimes(2)
-    await Promise.resolve()
+    await flushLinks()
     expect(store.getState().posts[root].attachments[slot]).toMatchObject({
       state: 'resolved',
       kind: slot === 'record' ? link.kind : link.type,
@@ -447,11 +461,12 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
     const store = makeStore()
     const root = rootId(store)
     store.actions.addUri(root, uri)
-    await Promise.resolve()
+    await flushLinks()
     store.actions.retryAttachment(root, slot)
     store.actions.addUri(root, `${uri}?new`)
     retried.resolve(link)
     await retried.promise
+    await flushLinks()
     expect(store.getState().posts[root].attachments[slot]).toEqual({
       state: 'pending',
       uri: `${uri}?new`,
@@ -469,6 +484,7 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
     expect(mockResolveLink).toHaveBeenCalledTimes(1)
     d.resolve(link)
     await d.promise
+    await flushLinks()
     const resolved = store.getState()
     store.actions.retryAttachment(root, slot)
     expect(store.getState()).toBe(resolved)
@@ -485,8 +501,59 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
     const before = store.getState()
     d.resolve(link)
     await d.promise
+    await flushLinks()
     expect(store.getState()).toBe(before)
     expect(before.posts[root].attachments[slot]).toBeUndefined()
+  })
+
+  /*
+   * The callback is queued after the resolver's own continuation but before
+   * the store's, so it runs after the resolver settled and before the store
+   * applies the result.
+   */
+  async function settleThenRunBeforeApply(
+    first: ReturnType<typeof deferred>,
+    action: () => void,
+  ) {
+    first.resolve(link)
+    void Promise.resolve().then(action)
+    await flushLinks()
+  }
+
+  test('a removal between resolver settle and store apply is not undone', async () => {
+    const first = deferred()
+    mockResolveLink.mockReturnValue(first.promise)
+    const store = makeStore()
+    const root = rootId(store)
+    store.actions.addUri(root, uri)
+    await settleThenRunBeforeApply(first, () => removeSlot(store, root, slot))
+    expect(store.getState().posts[root].attachments[slot]).toBeUndefined()
+  })
+
+  test('a replacement between resolver settle and store apply is not overwritten', async () => {
+    const otherUri = slot === 'record' ? FEED_URL : INVITE_URL
+    const otherLink = slot === 'record' ? feedLink : chatInviteLink
+    const first = deferred()
+    const second = deferred()
+    mockResolveLink
+      .mockReturnValueOnce(first.promise)
+      .mockReturnValueOnce(second.promise)
+    const store = makeStore()
+    const root = rootId(store)
+    store.actions.addUri(root, uri)
+    await settleThenRunBeforeApply(first, () =>
+      store.actions.addUri(root, otherUri),
+    )
+    expect(store.getState().posts[root].attachments[slot]).toEqual({
+      state: 'pending',
+      uri: otherUri,
+    })
+    second.resolve(otherLink)
+    await flushLinks()
+    expect(store.getState().posts[root].attachments[slot]).toMatchObject({
+      state: 'resolved',
+      kind: slot === 'record' ? 'feed' : 'chat-invite',
+    })
   })
 
   test('removing the other slot does not cancel this resolution', async () => {
@@ -498,7 +565,7 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
     store.actions.addUri(root, POST_URL)
     store.actions.addUri(root, EXTERNAL_URL)
     removeSlot(store, root, slot === 'record' ? 'media' : 'record')
-    await Promise.resolve()
+    await flushLinks()
     expect(store.getState().posts[root].attachments[slot]?.state).toBe(
       'resolved',
     )
@@ -509,7 +576,7 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
     const store = makeStore()
     const root = rootId(store)
     store.actions.addUri(root, uri)
-    await Promise.resolve()
+    await flushLinks()
     removeSlot(store, root, slot)
     const before = store.getState()
     store.actions.retryAttachment(root, slot)
@@ -528,7 +595,7 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
     const other = slot === 'record' ? 'media' : 'record'
     const previous = store.getState().posts[root].attachments[other]
     store.actions.addUri(root, uri)
-    await Promise.resolve()
+    await flushLinks()
     expect(store.getState().posts[root].attachments[slot]?.state).toBe('failed')
     expect(store.getState().posts[root].attachments[other]).toBe(previous)
   })
@@ -545,6 +612,7 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
       const before = store.getState()
       d.resolve(link)
       await d.promise
+      await flushLinks()
       expect(store.getState()).toBe(before)
     }
   })
@@ -569,6 +637,7 @@ describe('direct record insertion', () => {
     expect(before.posts[root].attachments.media).toBe(media)
     d.resolve(feedLink)
     await d.promise
+    await flushLinks()
     expect(store.getState()).toBe(before)
   })
 
@@ -590,7 +659,7 @@ describe('direct record insertion', () => {
     const store = makeStore()
     const root = rootId(store)
     store.actions.addUri(root, POST_URL)
-    await Promise.resolve()
+    await flushLinks()
     const failed = store.getState().posts[root].attachments.record
     expect(failed).toMatchObject({state: 'failed', code: 'embedding-disabled'})
     if (failed?.state !== 'failed') throw new Error('expected failed')
@@ -606,7 +675,7 @@ describe('direct record insertion', () => {
     const store = makeStore()
     const root = rootId(store)
     store.actions.addUri(root, POST_URL)
-    await Promise.resolve()
+    await flushLinks()
     store.destroy()
     store.actions.retryAttachment(root, 'record')
     expect(mockResolveLink).toHaveBeenCalledTimes(1)
