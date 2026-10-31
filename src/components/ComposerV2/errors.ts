@@ -6,10 +6,13 @@ import {type UploadFailureCode} from '#/components/ComposerV2/store/types'
 /** How a reported failure is classified: bad input, a failed operation, or a bug. */
 export type ComposerV2ErrorKind = 'validation' | 'operational' | 'unexpected'
 
+/** What the caller can do next about a reported failure. */
+export type ComposerV2ErrorRecovery = 'retry' | 'edit' | 'reconcile' | 'none'
+
 /** Structural context only: never include text, paths, records, or UI messages. */
 export type ComposerV2ErrorEvent = {
   kind: ComposerV2ErrorKind
-  recovery: 'retry' | 'edit' | 'reconcile' | 'none'
+  recovery: ComposerV2ErrorRecovery
   postId?: string
   mediaId?: string
 } & (

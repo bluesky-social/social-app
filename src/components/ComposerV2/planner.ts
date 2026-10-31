@@ -13,6 +13,8 @@ import {computeCid} from '#/lib/api/computeCid'
 import {type ResolvedLink} from '#/lib/api/resolve'
 import {createGIFDescription} from '#/lib/gif-alt-text'
 import {
+  type ComposerV2ErrorKind,
+  type ComposerV2ErrorRecovery,
   type ComposerV2OnError,
   isComposerV2Cancellation,
   reportComposerV2Error,
@@ -181,190 +183,29 @@ export async function planComposerV2({
      * Concurrent store edits publish new snapshots and cannot alter these. */
     const {posts, replyTo, threadgateAllowRules, postgateEmbeddingRules} =
       snapshot
-    const allEntries = Object.entries(posts)
-    if (allEntries.length === 0) {
-      throw failure({
-        code: 'invalid-snapshot',
-        message: 'Composition has no posts',
-      })
-    }
-
-    const acceptedEntries = preflightEntries({allEntries, preflight})
-
-    const now = dependencies.now?.() ?? new Date()
-    if (!Number.isFinite(now.getTime())) {
-      throw failure({
-        code: 'invalid-snapshot',
-        message: 'Composition time is invalid',
-      })
-    }
-
+    const entries = preflightEntries({
+      allEntries: Object.entries(posts),
+      preflight,
+    })
+    const now = resolvePlanTime({dependencies})
     const externalReply = replyTo
       ? await resolveExternalReply({replyTo, dependencies})
       : undefined
-    const records = [] as Array<{
-      postId: string
-      postIndex: number
-      post: app.bsky.feed.post.Main
-    }>
 
-    for (const [order, entry] of acceptedEntries.entries()) {
-      const {postId, postIndex, post} = entry
-      const richText = await normalizeRichText({
-        text: post.text,
-        appviewClient: dependencies.appviewClient,
-        postIndex,
-        postId,
-      })
-      const embed = await buildEmbed({
-        media: post.attachments.media,
-        record: post.attachments.record,
-        postIndex,
-        postId,
-        dependencies,
-      })
-      const labels = post.labels.length
-        ? {
-            $type: 'com.atproto.label.defs#selfLabels' as const,
-            values: post.labels.map(val => ({val})),
-          }
-        : undefined
-
-      const record: app.bsky.feed.post.Main = {
-        $type: 'app.bsky.feed.post',
-        createdAt: toDatetimeString(new Date(now.getTime() + order)),
-        text: richText.text,
-        ...(richText.facets ? {facets: richText.facets} : {}),
-        ...(post.langs.length ? {langs: post.langs.slice(0, 3)} : {}),
-        ...(labels ? {labels} : {}),
-        ...(post.tags.length ? {tags: [...post.tags]} : {}),
-        ...(embed ? {embed} : {}),
-      }
-      records.push({postId, postIndex, post: record})
-    }
-
-    const plannedPosts: PlannedComposerV2Post[] = []
-    const usedKeys = new Set<string>()
-    let tid: TID | undefined
-    let reply = externalReply
-    for (const [order, entry] of records.entries()) {
-      const createdAt = new Date(now.getTime() + order)
-      let rkey: string
-      if (dependencies.__createRkey) {
-        rkey = dependencies.__createRkey(order, createdAt)
-      } else {
-        tid = TID.next(tid)
-        rkey = tid.toString()
-      }
-      if (!isValidTid(rkey)) {
-        throw failure({
-          code: 'invalid-record-key',
-          message: 'Post record key is not a valid TID',
-          postIndex: entry.postIndex,
-          postId: entry.postId,
-        })
-      }
-      if (usedKeys.has(rkey)) {
-        throw failure({
-          code: 'invalid-record-key',
-          message: 'Post record keys must be unique within a plan',
-          postIndex: entry.postIndex,
-          postId: entry.postId,
-        })
-      }
-      usedKeys.add(rkey)
-      const uri =
-        `at://${dependencies.did}/app.bsky.feed.post/${rkey}` as AtUriString
-      const record: app.bsky.feed.post.Main = reply
-        ? {...entry.post, reply}
-        : entry.post
-      const cid = await computeCid(record)
-      plannedPosts.push({
-        postId: entry.postId,
-        rkey,
-        uri,
-        cid,
-        record,
-      })
-      // The next post replies to this one, keeping the original thread root.
-      const ref = {uri, cid}
-      reply = {root: reply?.root ?? ref, parent: ref}
-    }
-
-    const writes: PlannedComposerV2Write[] = []
-    for (const [postIndex, planned] of plannedPosts.entries()) {
-      addValidatedWrite({
-        writes,
-        write: {
-          $type: 'com.atproto.repo.applyWrites#create',
-          collection: 'app.bsky.feed.post',
-          rkey: planned.rkey,
-          value: planned.record,
-        },
-        postIndex,
-        postId: planned.postId,
-      })
-
-      /* Gate records intentionally reuse their post's record key in another
-       * collection; only post keys must be unique among themselves. */
-      if (postIndex === 0 && threadgateAllowRules !== undefined) {
-        const value: app.bsky.feed.threadgate.Main = {
-          $type: 'app.bsky.feed.threadgate',
-          post: planned.uri as AtUriString,
-          createdAt: planned.record.createdAt,
-          allow: threadgateAllowRules.map(rule =>
-            cloneSerializable({value: rule}),
-          ),
-        }
-        addValidatedWrite({
-          writes,
-          write: {
-            $type: 'com.atproto.repo.applyWrites#create',
-            collection: 'app.bsky.feed.threadgate',
-            rkey: planned.rkey,
-            value,
-          },
-          postIndex,
-          postId: planned.postId,
-        })
-      }
-
-      if (postgateEmbeddingRules.length > 0) {
-        const value: app.bsky.feed.postgate.Main = {
-          $type: 'app.bsky.feed.postgate',
-          post: planned.uri as AtUriString,
-          createdAt: planned.record.createdAt,
-          embeddingRules: postgateEmbeddingRules.map(rule =>
-            cloneSerializable({value: rule}),
-          ),
-        }
-        addValidatedWrite({
-          writes,
-          write: {
-            $type: 'com.atproto.repo.applyWrites#create',
-            collection: 'app.bsky.feed.postgate',
-            rkey: planned.rkey,
-            value,
-          },
-          postIndex,
-          postId: planned.postId,
-        })
-      }
-    }
-
-    const input: com.atproto.repo.applyWrites.$InputBody = {
-      repo: dependencies.did as DidString,
-      writes,
-      validate: true,
-    }
-    const inputValidation =
-      com.atproto.repo.applyWrites.main.input.schema.$safeParse(input)
-    if (!inputValidation.success) {
-      throw failure({
-        code: 'invalid-write-input',
-        message: 'Generated write input failed validation',
-      })
-    }
+    const records = await buildPostRecords({entries, now, dependencies})
+    const plannedPosts = await assignThreadRefs({
+      records,
+      did: dependencies.did,
+      now,
+      createRkey: dependencies.__createRkey,
+      externalReply,
+    })
+    const {input, writes} = buildWrites({
+      posts: plannedPosts,
+      did: dependencies.did,
+      threadgateAllowRules,
+      postgateEmbeddingRules,
+    })
     return {ok: true, input, posts: plannedPosts, writes}
   } catch (error) {
     const detail =
@@ -374,22 +215,8 @@ export async function planComposerV2({
             {code: 'unexpected-error', message: 'Record planning failed'},
             error,
           ).detail
-    const operational =
-      detail.code === 'reply-resolution-failed' ||
-      detail.code === 'rich-text-resolution-failed' ||
-      detail.code === 'media-upload-failed'
-    const unexpected =
-      detail.code === 'unexpected-error' ||
-      detail.code === 'missing-dependency' ||
-      detail.code === 'invalid-snapshot' ||
-      detail.code === 'invalid-record-key' ||
-      detail.code === 'invalid-write-input'
-    /* Preflight, record validation and existing store failures stay local.
-     * Reading a failed upload in a snapshot is not a new failed attempt. */
-    if (
-      (operational || unexpected) &&
-      !isComposerV2Cancellation({cause: detail.cause})
-    ) {
+    const reporting = PLAN_ERROR_REPORTING[detail.code]
+    if (reporting && !isComposerV2Cancellation({cause: detail.cause})) {
       reportComposerV2Error({
         onError,
         event: {
@@ -397,14 +224,273 @@ export async function planComposerV2({
           code: detail.code,
           postId: detail.postId,
           mediaId: detail.mediaId,
-          kind: operational ? 'operational' : 'unexpected',
-          recovery: operational ? 'retry' : 'none',
+          ...reporting,
         },
         cause: detail.cause,
       })
     }
     return {ok: false, error: detail}
   }
+}
+
+/**
+ * How each planner failure is reported. null: preflight/validation failures
+ * the caller fixes; never sent to onError. Preflight, record validation and
+ * existing store failures stay local: reading a failed upload in a snapshot
+ * is not a new failed attempt.
+ */
+const PLAN_ERROR_REPORTING: Record<
+  ComposerV2PlanErrorCode,
+  {kind: ComposerV2ErrorKind; recovery: ComposerV2ErrorRecovery} | null
+> = {
+  'missing-dependency': {kind: 'unexpected', recovery: 'none'},
+  'invalid-snapshot': {kind: 'unexpected', recovery: 'none'},
+  'empty-composition': null,
+  'empty-post-requires-confirmation': null,
+  'missing-alt-text': null,
+  'attachment-not-ready': null,
+  'media-failed': null,
+  'unsupported-attachment': null,
+  'reply-resolution-failed': {kind: 'operational', recovery: 'retry'},
+  'rich-text-resolution-failed': {kind: 'operational', recovery: 'retry'},
+  'media-upload-failed': {kind: 'operational', recovery: 'retry'},
+  'invalid-record-key': {kind: 'unexpected', recovery: 'none'},
+  'invalid-record': null,
+  'invalid-write-input': {kind: 'unexpected', recovery: 'none'},
+  'unexpected-error': {kind: 'unexpected', recovery: 'none'},
+}
+
+/** The planner's single clock read, captured once per plan. */
+function resolvePlanTime({
+  dependencies,
+}: {
+  dependencies: ComposerV2PlannerDependencies
+}): Date {
+  const now = dependencies.now?.() ?? new Date()
+  if (!Number.isFinite(now.getTime())) {
+    throw failure({
+      code: 'invalid-snapshot',
+      message: 'Composition time is invalid',
+    })
+  }
+  return now
+}
+
+type PlanEntry = {postId: string; postIndex: number; post: ThreadPost}
+
+type PostRecord = {
+  postId: string
+  postIndex: number
+  /** Unsigned: no reply ref yet, since refs depend on record keys and CIDs. */
+  record: app.bsky.feed.post.Main
+}
+
+/**
+ * Per accepted post, normalize rich text and build embeds, labels, langs and
+ * tags into an unsigned post record. Async: performs the rich-text reads and
+ * media/GIF/card uploads. Reply resolution happens earlier in the pipeline so
+ * its errors come first.
+ */
+async function buildPostRecords({
+  entries,
+  now,
+  dependencies,
+}: {
+  entries: PlanEntry[]
+  now: Date
+  dependencies: ComposerV2PlannerDependencies
+}): Promise<PostRecord[]> {
+  const records: PostRecord[] = []
+  for (const [order, entry] of entries.entries()) {
+    const {postId, postIndex, post} = entry
+    const richText = await normalizeRichText({
+      text: post.text,
+      appviewClient: dependencies.appviewClient,
+      postIndex,
+      postId,
+    })
+    const embed = await buildEmbed({
+      media: post.attachments.media,
+      record: post.attachments.record,
+      postIndex,
+      postId,
+      dependencies,
+    })
+    const labels = post.labels.length
+      ? {
+          $type: 'com.atproto.label.defs#selfLabels' as const,
+          values: post.labels.map(val => ({val})),
+        }
+      : undefined
+
+    const record: app.bsky.feed.post.Main = {
+      $type: 'app.bsky.feed.post',
+      createdAt: toDatetimeString(new Date(now.getTime() + order)),
+      text: richText.text,
+      ...(richText.facets ? {facets: richText.facets} : {}),
+      ...(post.langs.length ? {langs: post.langs.slice(0, 3)} : {}),
+      ...(labels ? {labels} : {}),
+      ...(post.tags.length ? {tags: [...post.tags]} : {}),
+      ...(embed ? {embed} : {}),
+    }
+    records.push({postId, postIndex, record})
+  }
+  return records
+}
+
+/**
+ * Assign record keys, URIs and CIDs, and chain the reply refs: the first post
+ * replies to the external parent (if any) and each later post replies to the
+ * previous one while keeping the original thread root.
+ */
+async function assignThreadRefs({
+  records,
+  did,
+  now,
+  createRkey,
+  externalReply,
+}: {
+  records: PostRecord[]
+  did: string
+  now: Date
+  createRkey: ComposerV2PlannerDependencies['__createRkey']
+  externalReply: app.bsky.feed.post.Main['reply']
+}): Promise<PlannedComposerV2Post[]> {
+  const plannedPosts: PlannedComposerV2Post[] = []
+  const usedKeys = new Set<string>()
+  let tid: TID | undefined
+  let reply = externalReply
+  for (const [order, entry] of records.entries()) {
+    const createdAt = new Date(now.getTime() + order)
+    let rkey: string
+    if (createRkey) {
+      rkey = createRkey(order, createdAt)
+    } else {
+      tid = TID.next(tid)
+      rkey = tid.toString()
+    }
+    if (!isValidTid(rkey)) {
+      throw failure({
+        code: 'invalid-record-key',
+        message: 'Post record key is not a valid TID',
+        postIndex: entry.postIndex,
+        postId: entry.postId,
+      })
+    }
+    if (usedKeys.has(rkey)) {
+      throw failure({
+        code: 'invalid-record-key',
+        message: 'Post record keys must be unique within a plan',
+        postIndex: entry.postIndex,
+        postId: entry.postId,
+      })
+    }
+    usedKeys.add(rkey)
+    const uri = `at://${did}/app.bsky.feed.post/${rkey}` as AtUriString
+    const record: app.bsky.feed.post.Main = reply
+      ? {...entry.record, reply}
+      : entry.record
+    const cid = await computeCid(record)
+    plannedPosts.push({postId: entry.postId, rkey, uri, cid, record})
+    const ref = {uri, cid}
+    reply = {root: reply?.root ?? ref, parent: ref}
+  }
+  return plannedPosts
+}
+
+/**
+ * Build the post, threadgate and postgate creates in write order, validating
+ * every record and the final applyWrites input.
+ */
+function buildWrites({
+  posts,
+  did,
+  threadgateAllowRules,
+  postgateEmbeddingRules,
+}: {
+  posts: PlannedComposerV2Post[]
+  did: string
+  threadgateAllowRules: ThreadState['threadgateAllowRules']
+  postgateEmbeddingRules: ThreadState['postgateEmbeddingRules']
+}): {
+  input: com.atproto.repo.applyWrites.$InputBody
+  writes: PlannedComposerV2Write[]
+} {
+  const writes: PlannedComposerV2Write[] = []
+  for (const [postIndex, planned] of posts.entries()) {
+    addValidatedWrite({
+      writes,
+      write: {
+        $type: 'com.atproto.repo.applyWrites#create',
+        collection: 'app.bsky.feed.post',
+        rkey: planned.rkey,
+        value: planned.record,
+      },
+      postIndex,
+      postId: planned.postId,
+    })
+
+    /* Gate records intentionally reuse their post's record key in another
+     * collection; only post keys must be unique among themselves. */
+    if (postIndex === 0 && threadgateAllowRules !== undefined) {
+      const value: app.bsky.feed.threadgate.Main = {
+        $type: 'app.bsky.feed.threadgate',
+        post: planned.uri as AtUriString,
+        createdAt: planned.record.createdAt,
+        allow: threadgateAllowRules.map(rule =>
+          cloneSerializable({value: rule}),
+        ),
+      }
+      addValidatedWrite({
+        writes,
+        write: {
+          $type: 'com.atproto.repo.applyWrites#create',
+          collection: 'app.bsky.feed.threadgate',
+          rkey: planned.rkey,
+          value,
+        },
+        postIndex,
+        postId: planned.postId,
+      })
+    }
+
+    if (postgateEmbeddingRules.length > 0) {
+      const value: app.bsky.feed.postgate.Main = {
+        $type: 'app.bsky.feed.postgate',
+        post: planned.uri as AtUriString,
+        createdAt: planned.record.createdAt,
+        embeddingRules: postgateEmbeddingRules.map(rule =>
+          cloneSerializable({value: rule}),
+        ),
+      }
+      addValidatedWrite({
+        writes,
+        write: {
+          $type: 'com.atproto.repo.applyWrites#create',
+          collection: 'app.bsky.feed.postgate',
+          rkey: planned.rkey,
+          value,
+        },
+        postIndex,
+        postId: planned.postId,
+      })
+    }
+  }
+
+  const input: com.atproto.repo.applyWrites.$InputBody = {
+    repo: did as DidString,
+    writes,
+    validate: true,
+  }
+  const inputValidation =
+    com.atproto.repo.applyWrites.main.input.schema.$safeParse(input)
+  if (!inputValidation.success) {
+    throw failure({
+      code: 'invalid-write-input',
+      message: 'Generated write input failed validation',
+    })
+  }
+  return {input, writes}
 }
 
 /**
@@ -420,7 +506,7 @@ function preflightEntries({
 }: {
   allEntries: Array<[string, ThreadPost]>
   preflight: ComposerV2PlannerPreflight | undefined
-}): Array<{postId: string; postIndex: number; post: ThreadPost}> {
+}): PlanEntry[] {
   const emptyFlags = allEntries.map(([, post]) => isEmptyThreadPost({post}))
   if (emptyFlags.every(Boolean)) {
     throw failure({
@@ -539,6 +625,12 @@ function validateSnapshot({
     throw failure({
       code: 'missing-dependency',
       message: 'A repository DID is required',
+    })
+  }
+  if (Object.keys(snapshot.posts).length === 0) {
+    throw failure({
+      code: 'invalid-snapshot',
+      message: 'Composition has no posts',
     })
   }
   for (const [postId, post] of Object.entries(snapshot.posts)) {
