@@ -1,0 +1,41 @@
+{
+  "project_info": {
+    "project_id": "blueskyweb-example",
+    "project_number": "100000000000",
+    "firebase_url": "https://blueskyweb-example.firebaseio.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123456789000:android:f1bf012572b04063",
+        "android_client_info": {
+          "package_name": "xyz.blueskyweb.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123456789000.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "123456789000"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
