@@ -56,7 +56,7 @@ describe('tester record inspection', () => {
     const planner = jest.fn<typeof planComposerV2>(planComposerV2)
     const onPublishPlan = jest.fn()
     const session = {key: 'inspection', scenarioId: 'empty' as const, store}
-    function Harness({publishAttempted = false}: {publishAttempted?: boolean}) {
+    function Harness({publishLocked = false}: {publishLocked?: boolean}) {
       const plan = usePlanRunner({
         session,
         dependencies: {did: 'did:plc:tester', appviewClient},
@@ -69,7 +69,7 @@ describe('tester record inspection', () => {
           requireAltText={false}
           onChangeRequireAltText={() => {}}
           accountDid="did:plc:tester"
-          publishAttempted={publishAttempted}
+          publishLocked={publishLocked}
           onPublishPlan={onPublishPlan}
         />
       )
@@ -134,7 +134,7 @@ describe('tester record inspection', () => {
 
       rerender(
         <I18nProvider i18n={i18n}>
-          <Harness publishAttempted />
+          <Harness publishLocked />
         </I18nProvider>,
       )
       expect(screen.getByTestId('composerV2Tester-plan')).toBeDisabled()
@@ -178,7 +178,7 @@ describe('tester record inspection', () => {
           requireAltText={false}
           onChangeRequireAltText={() => {}}
           accountDid="did:plc:tester"
-          publishAttempted={false}
+          publishLocked={false}
           onPublishPlan={() => {}}
         />
       )

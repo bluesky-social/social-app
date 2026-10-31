@@ -42,7 +42,7 @@ import {useAnalytics} from '#/analytics'
 type ComposerV2PublishAttempt =
   | {status: 'writing' | 'uncertain'; plan: ComposerV2Plan}
   | {status: 'published'; plan: ComposerV2Plan}
-  | {status: 'rejected'; plan: ComposerV2Plan; httpStatus: number}
+  | {status: 'rejected'; plan: ComposerV2Plan; reason: string}
 
 /**
  * Full ComposerV2 tester behind Settings > Developer options > Debug Composer
@@ -103,20 +103,20 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
         onError: session.store.reportError,
       })
     } catch (cause) {
-      /* A 4xx refusal committed nothing, so it is a definite failure. */
-      if (cause instanceof ComposerV2WriteRejectedError) {
-        setPublishAttempt({
-          status: 'rejected',
-          plan,
-          httpStatus: cause.status,
-        })
+      const rejection =
+        cause instanceof ComposerV2WriteRejectedError
+          ? `The server rejected the write (HTTP ${cause.status})`
+          : cause instanceof ComposerV2WritePreconditionError
+            ? `The write was refused before sending (${cause.message})`
+            : undefined
+      if (rejection) {
+        /* Nothing was written, so unlock and allow the same plan again. */
+        publishStartedRef.current = false
+        setPublishAttempt({status: 'rejected', plan, reason: rejection})
         return
       }
       setPublishAttempt({status: 'uncertain', plan})
-      /* A refused write sent nothing, so only a dispatched one is uncertain. */
-      if (!(cause instanceof ComposerV2WritePreconditionError)) {
-        session.store.reportPublishUncertain({plan, cause})
-      }
+      session.store.reportPublishUncertain({plan, cause})
       return
     }
     setPublishAttempt({status: 'published', plan})
@@ -171,7 +171,10 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
             requireAltText={requireAltText}
             onChangeRequireAltText={setRequireAltText}
             accountDid={account.did}
-            publishAttempted={publishAttempt !== undefined}
+            publishLocked={
+              publishAttempt !== undefined &&
+              publishAttempt.status !== 'rejected'
+            }
             publishStatus={publishAttempt?.status}
             onPublishPlan={plan => {
               void publishPlan(plan)
@@ -227,7 +230,7 @@ function PublishAttemptNotice({attempt}: {attempt: ComposerV2PublishAttempt}) {
                 : attempt.status === 'published'
                   ? 'The planned records were published.'
                   : attempt.status === 'rejected'
-                    ? `The server rejected the write (HTTP ${attempt.httpStatus}); nothing was published.`
+                    ? `${attempt.reason}; nothing was published. You can publish again.`
                     : 'The write failed and its outcome may be uncertain. This exact plan is retained; do not retry or replace it until you check these URIs.'}
             </Text>
             <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>

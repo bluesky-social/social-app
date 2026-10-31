@@ -2,8 +2,8 @@
 
 Developer tester at Settings > Developer options > Debug Composer V2
 (`/sys/debug-composer`). It drives the real store, adapters, workers, and
-planner. Publishing is a separate opt-in, one-shot action, and nothing is saved
-as a draft.
+planner. Publishing is a separate opt-in action that locks after any attempt
+except a rejected one, and nothing is saved as a draft.
 
 Test IDs share the prefix `composerV2Tester`, omitted below. `{postId}`,
 `{mediaId}`, `{index}`, and `{i}` are runtime values. Files are in this
@@ -83,7 +83,7 @@ redesigned layout or its status indicators.
 | Stale marking after edits; cleared on reset, session, account change | `usePlanRunner.ts`                                  | `-plan-stale`                                                                          | unit             |
 | Empty-post confirmation re-plan                                      | `PlanSection.tsx`, `usePlanRunner.ts`               | `-plan-confirm-skip`                                                                   | unit             |
 | Required-alt-text preflight toggle                                   | `DebugComposer.tsx`, `PlanSection.tsx`              | none                                                                                   | none             |
-| Publish checkbox, one-shot publish, retained plan, planned URIs      | `DebugComposer.tsx`, `PlanSection.tsx`, `writer.ts` | `-publish-controls`, `-publish-enable`, `-publish-gates`, `-publish`, `-publish-status`, `-publish-uris` | unit |
+| Publish checkbox, publish lock (rejections unlock), retained plan, planned URIs | `DebugComposer.tsx`, `PlanSection.tsx`, `writer.ts` | `-publish-controls`, `-publish-enable`, `-publish-gates`, `-publish`, `-publish-status`, `-publish-uris` | unit |
 
 ## Diagnostics
 

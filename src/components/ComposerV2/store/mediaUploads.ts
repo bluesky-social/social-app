@@ -116,7 +116,8 @@ export type MediaUploads = {
   /**
    * Reports a write that was sent but may not have committed. Call only when
    * the writer rejects after dispatch, not for a precondition failure
-   * (`ComposerV2WritePreconditionError`). The videos stay publishable, since
+   * (`ComposerV2WritePreconditionError`) or a 4xx refusal
+   * (`ComposerV2WriteRejectedError`). The videos stay publishable, since
    * a later reconciliation may find the posts.
    */
   reportPublishUncertain(args: {plan: ComposerV2Plan; cause: unknown}): void

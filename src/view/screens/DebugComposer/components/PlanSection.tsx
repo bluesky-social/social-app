@@ -25,7 +25,7 @@ export function PlanSection({
   requireAltText,
   onChangeRequireAltText,
   accountDid,
-  publishAttempted,
+  publishLocked,
   publishStatus,
   onPublishPlan,
 }: {
@@ -33,7 +33,7 @@ export function PlanSection({
   requireAltText: boolean
   onChangeRequireAltText: (value: boolean) => void
   accountDid: string | undefined
-  publishAttempted: boolean
+  publishLocked: boolean
   publishStatus?: 'writing' | 'published' | 'uncertain' | 'rejected'
   onPublishPlan: (plan: ComposerV2Plan) => void
 }) {
@@ -45,7 +45,7 @@ export function PlanSection({
   const successfulPlan = plan.result?.plan
   const publishChecks = [
     {label: 'enabled', passed: publishingEnabled},
-    {label: 'not-attempted', passed: !publishAttempted},
+    {label: 'not-locked', passed: !publishLocked},
     {label: 'not-planning', passed: !plan.isPlanning},
     {label: 'not-stale', passed: !plan.isStale},
     {label: 'plan-ok', passed: successfulPlan !== undefined},
@@ -62,7 +62,7 @@ export function PlanSection({
     summary !== undefined &&
     !summary.ok &&
     summary.error.code === 'empty-post-requires-confirmation'
-  const planStatus = publishAttempted
+  const planStatus = publishLocked
     ? 'locked'
     : plan.isPlanning
       ? 'planning'
@@ -77,7 +77,7 @@ export function PlanSection({
           : plan.isStale
             ? 'ok · stale'
             : 'ok'
-  const planTone = publishAttempted
+  const planTone = publishLocked
     ? 'neutral'
     : plan.isPlanning
       ? 'progress'
@@ -112,7 +112,7 @@ export function PlanSection({
           testID="composerV2Tester-plan"
           size="small"
           color="primary"
-          disabled={plan.isPlanning || publishAttempted}
+          disabled={plan.isPlanning || publishLocked}
           onPress={() => void plan.runPlan()}>
           <ButtonText>Plan records</ButtonText>
         </Button>
@@ -122,7 +122,7 @@ export function PlanSection({
             testID="composerV2Tester-plan-confirm-skip"
             size="small"
             color="secondary"
-            disabled={plan.isPlanning || publishAttempted}
+            disabled={plan.isPlanning || publishLocked}
             onPress={() => void plan.runPlan({skipEmptyPostsConfirmed: true})}>
             <ButtonText>Skip empty posts & re-plan</ButtonText>
           </Button>
@@ -133,7 +133,7 @@ export function PlanSection({
             testID="composerV2Tester-plan-clear"
             size="small"
             color="secondary"
-            disabled={publishAttempted}
+            disabled={publishLocked}
             onPress={plan.clearPlan}>
             <ButtonText>Clear</ButtonText>
           </Button>
@@ -291,17 +291,17 @@ export function PlanSection({
           type="checkbox"
           label="Enable publishing controls for this tester"
           value={publishingEnabled}
-          disabled={publishAttempted}
+          disabled={publishLocked}
           testID="composerV2Tester-publish-enable"
           onChange={setPublishingEnabled}>
           <Toggle.Checkbox />
           <Toggle.LabelText>Enable publishing in this tester</Toggle.LabelText>
         </Toggle.Item>
-        {publishingEnabled && !publishAttempted && (
+        {publishingEnabled && !publishLocked && (
           <Admonition.Admonition type="error">
             Publishing creates real records on{' '}
-            {accountDid ?? 'the signed-in account'}. One attempt per visit. This
-            writes the exact plan shown here.
+            {accountDid ?? 'the signed-in account'}. Only a rejected attempt can
+            be retried this visit. This writes the exact plan shown here.
           </Admonition.Admonition>
         )}
         <View
@@ -340,7 +340,7 @@ export function PlanSection({
               : 'Publish planned records'}
           </ButtonText>
         </Button>
-        {publishAttempted && (
+        {publishLocked && (
           <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
             Locked until you leave this screen. Reset doesn’t unlock.
           </Text>
