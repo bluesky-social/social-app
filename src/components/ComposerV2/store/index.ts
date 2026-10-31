@@ -412,19 +412,11 @@ export function createThreadStore({
     mediaId: string,
     altText: string,
   ) {
-    mutateState(s => {
-      const post = s.posts[postId]
-      if (!post) return null
-      let changed = false
-      const items = getMediaItems({media: post.attachments.media}).map(item => {
-        if (item.id !== mediaId || item.altText === altText) return item
-        changed = true
-        return {...item, altText}
-      })
-      if (!changed) return null
-      s.posts[postId] = replacePostMediaItems(post, items)
-      s.isDirty = true
-      return s
+    updateMediaItem({
+      postId,
+      mediaId,
+      dirty: true,
+      update: item => (item.altText === altText ? null : {...item, altText}),
     })
   }
 
@@ -491,14 +483,7 @@ export function createThreadStore({
     }
 
     cancelUploadTask(mediaId)
-    mutateState(s => {
-      s.posts[postId] = replacePostMediaItems(
-        post,
-        items.map(m => (m.id === mediaId ? replaced : m)),
-      )
-      s.isDirty = true
-      return s
-    })
+    updateMediaItem({postId, mediaId, dirty: true, update: () => replaced})
     startMediaUpload(postId, mediaId)
     return {supersededUri}
   }
@@ -546,19 +531,45 @@ export function createThreadStore({
       captionBlobs: keptBlobs,
       upload: shouldRestart ? {state: 'pending'} : item.upload,
     }
+    updateMediaItem({postId, mediaId, dirty: true, update: () => next})
+    if (shouldRestart) startMediaUpload(postId, mediaId, 'captions')
+  }
+
+  /**
+   * Replace one live media item. Reads the item inside mutateState, so callers
+   * never act on a stale lookup. Publishes nothing when the post or item is
+   * gone or `update` returns null. Returns whether a change was published.
+   */
+  function updateMediaItem({
+    postId,
+    mediaId,
+    dirty = false,
+    update,
+  }: {
+    postId: string
+    mediaId: string
+    /** Mark the draft dirty (user edits); background progress passes false. */
+    dirty?: boolean
+    update: (item: types.PostMediaItem) => types.PostMediaItem | null
+  }): boolean {
+    let published = false
     mutateState(s => {
-      const currentPost = s.posts[postId]
-      if (!currentPost) return null
-      const items = getMediaItems({media: currentPost.attachments.media})
-      if (!items.some(m => m.id === mediaId)) return null
+      const post = s.posts[postId]
+      if (!post) return null
+      const items = getMediaItems({media: post.attachments.media})
+      const current = items.find(item => item.id === mediaId)
+      if (!current) return null
+      const next = update(current)
+      if (!next) return null
       s.posts[postId] = replacePostMediaItems(
-        currentPost,
-        items.map(m => (m.id === mediaId ? next : m)),
+        post,
+        items.map(item => (item.id === mediaId ? next : item)),
       )
-      s.isDirty = true
+      if (dirty) s.isDirty = true
+      published = true
       return s
     })
-    if (shouldRestart) startMediaUpload(postId, mediaId, 'captions')
+    return published
   }
 
   /** Regroup only selected items; record identity is unaffected. */
@@ -609,13 +620,7 @@ export function createThreadStore({
 
     cancelUploadTask(mediaId)
     const pending = {...item, upload: {state: 'pending' as const}}
-    mutateState(s => {
-      s.posts[postId] = replacePostMediaItems(
-        post,
-        items.map(m => (m.id === mediaId ? pending : m)),
-      )
-      return s
-    })
+    updateMediaItem({postId, mediaId, update: () => pending})
     startMediaUpload(postId, mediaId, 'retry')
   }
 
@@ -946,33 +951,25 @@ export function createThreadStore({
               },
             }
         : input
-    let accepted = false
-    mutateState(s => {
-      const currentPost = s.posts[postId]
-      if (!currentPost) return null
-      const currentItems = getMediaItems({media: currentPost.attachments.media})
-      const current = currentItems.find(item => item.id === mediaId)
-      if (!current || current.kind === 'gif') return null
-      const next =
-        current.kind === 'video'
-          ? {
-              ...current,
-              videoBlob:
-                input.state === 'uploaded' || input.state === 'failed'
-                  ? (input.blob ?? current.videoBlob)
-                  : current.videoBlob,
-              captionBlobs:
-                input.state === 'uploaded' || input.state === 'failed'
-                  ? (input.captionBlobs ?? current.captionBlobs)
-                  : current.captionBlobs,
-              upload: status,
-            }
-          : {...current, upload: status}
-      s.posts[postId] = replacePostMediaItems(currentPost, [
-        ...currentItems.map(item => (item.id === mediaId ? next : item)),
-      ])
-      accepted = true
-      return s
+    const accepted = updateMediaItem({
+      postId,
+      mediaId,
+      update: current => {
+        if (current.kind === 'gif') return null
+        if (current.kind === 'image') return {...current, upload: status}
+        return {
+          ...current,
+          videoBlob:
+            input.state === 'uploaded' || input.state === 'failed'
+              ? (input.blob ?? current.videoBlob)
+              : current.videoBlob,
+          captionBlobs:
+            input.state === 'uploaded' || input.state === 'failed'
+              ? (input.captionBlobs ?? current.captionBlobs)
+              : current.captionBlobs,
+          upload: status,
+        }
+      },
     })
     if (
       accepted &&
@@ -1001,19 +998,11 @@ export function createThreadStore({
    * worker reports completion, after captions.
    */
   function applyVideoBlob(postId: string, mediaId: string, blob: BlobRef) {
-    mutateState(s => {
-      const post = s.posts[postId]
-      if (!post) return null
-      const items = getMediaItems({media: post.attachments.media})
-      const current = items.find(item => item.id === mediaId)
-      if (!current || current.kind !== 'video') return null
-      s.posts[postId] = replacePostMediaItems(
-        post,
-        items.map(item =>
-          item.id === mediaId ? {...current, videoBlob: blob} : item,
-        ),
-      )
-      return s
+    updateMediaItem({
+      postId,
+      mediaId,
+      update: current =>
+        current.kind === 'video' ? {...current, videoBlob: blob} : null,
     })
   }
 
@@ -1030,28 +1019,13 @@ export function createThreadStore({
     mediaId: string,
     output: PreparedOutput,
   ) {
-    const post = state.posts[postId]
-    if (!post) return
-    const items = getMediaItems({media: post.attachments.media})
-    const found = items.find(item => item.id === mediaId)
-    if (!found || found.kind !== output.kind) return
-    mutateState(s => {
-      const current = getMediaItems({
-        media: s.posts[postId]?.attachments.media,
-      }).find(item => item.id === mediaId)
-      if (!current || current.kind !== output.kind) return null
-      const next = {
-        ...current,
-        prepared: output,
-      } as types.PostMediaItem
-      const currentItems = getMediaItems({
-        media: s.posts[postId].attachments.media,
-      })
-      s.posts[postId] = replacePostMediaItems(
-        s.posts[postId],
-        currentItems.map(item => (item.id === mediaId ? next : item)),
-      )
-      return s
+    updateMediaItem({
+      postId,
+      mediaId,
+      update: current =>
+        current.kind === output.kind
+          ? ({...current, prepared: output} as types.PostMediaItem)
+          : null,
     })
   }
 
@@ -1066,36 +1040,32 @@ export function createThreadStore({
     mediaId: string,
     metadata: types.ResolvedSourceMetadata,
   ) {
-    mutateState(s => {
-      const post = s.posts[postId]
-      if (!post) return null
-      const items = getMediaItems({media: post.attachments.media})
-      const current = items.find(item => item.id === mediaId)
-      if (!current || current.kind === 'gif') return null
-      const next = {...current}
-      if (!validDimensions(current) && validDimensions(metadata)) {
-        next.width = metadata.width
-        next.height = metadata.height
-      }
-      next.mimeType ??= metadata.mimeType
-      next.fileSize ??= metadata.fileSize
-      if (next.kind === 'video') next.duration ??= metadata.duration
-      if (
-        next.width === current.width &&
-        next.height === current.height &&
-        next.mimeType === current.mimeType &&
-        next.fileSize === current.fileSize &&
-        (next.kind !== 'video' ||
-          current.kind !== 'video' ||
-          next.duration === current.duration)
-      ) {
-        return null
-      }
-      s.posts[postId] = replacePostMediaItems(
-        post,
-        items.map(item => (item.id === mediaId ? next : item)),
-      )
-      return s
+    updateMediaItem({
+      postId,
+      mediaId,
+      update: current => {
+        if (current.kind === 'gif') return null
+        const next = {...current}
+        if (!validDimensions(current) && validDimensions(metadata)) {
+          next.width = metadata.width
+          next.height = metadata.height
+        }
+        next.mimeType ??= metadata.mimeType
+        next.fileSize ??= metadata.fileSize
+        if (next.kind === 'video') next.duration ??= metadata.duration
+        if (
+          next.width === current.width &&
+          next.height === current.height &&
+          next.mimeType === current.mimeType &&
+          next.fileSize === current.fileSize &&
+          (next.kind !== 'video' ||
+            current.kind !== 'video' ||
+            next.duration === current.duration)
+        ) {
+          return null
+        }
+        return next
+      },
     })
   }
 
@@ -1104,31 +1074,13 @@ export function createThreadStore({
     mediaId: string,
     captions: types.UploadedCaption[],
   ) {
-    const post = state.posts[postId]
-    if (!post) return
-    const items = getMediaItems({media: post.attachments.media})
-    const found = items.find(item => item.id === mediaId)
-    if (!found || found.kind !== 'video') return
-    mutateState(s => {
-      const current = getMediaItems({
-        media: s.posts[postId]?.attachments.media,
-      }).find(item => item.id === mediaId)
-      if (!current || current.kind !== 'video') return null
-      const currentItems = getMediaItems({
-        media: s.posts[postId].attachments.media,
-      })
-      s.posts[postId] = replacePostMediaItems(
-        s.posts[postId],
-        currentItems.map(item =>
-          item.id === mediaId
-            ? {
-                ...current,
-                captionBlobs: captions.map(caption => ({...caption})),
-              }
-            : item,
-        ),
-      )
-      return s
+    updateMediaItem({
+      postId,
+      mediaId,
+      update: current =>
+        current.kind === 'video'
+          ? {...current, captionBlobs: captions.map(caption => ({...caption}))}
+          : null,
     })
   }
 
