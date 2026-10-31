@@ -29,7 +29,10 @@ export type ComposerV2ErrorEvent = {
   | {source: 'planner'; code: ComposerV2PlanErrorCode}
   | {
       source: 'writer'
-      code: 'write-precondition-failed' | 'apply-writes-failed'
+      code:
+        | 'write-precondition-failed'
+        | 'apply-writes-failed'
+        | 'apply-writes-rejected'
       /** Local post identities in the dispatched plan; never full records. */
       postIds?: readonly string[]
     }

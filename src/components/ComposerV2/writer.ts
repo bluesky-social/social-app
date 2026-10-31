@@ -1,5 +1,6 @@
 import {type Client} from '@atproto/lex'
 
+import {getErrorStatus} from '#/lib/xrpc-error'
 import {
   type ComposerV2OnError,
   reportComposerV2Error,
@@ -19,13 +20,30 @@ export class ComposerV2WritePreconditionError extends Error {
 }
 
 /**
+ * The server refused the write with a 4xx response, so nothing was written and
+ * the same plan can be retried. `cause` is the original SDK error. Every other
+ * post-dispatch failure may have committed and rethrows its raw cause.
+ */
+export class ComposerV2WriteRejectedError extends Error {
+  readonly status: number
+
+  constructor(status: number, cause: unknown) {
+    super(`The server rejected the ComposerV2 write (HTTP ${status})`, {cause})
+    this.name = 'ComposerV2WriteRejectedError'
+    this.status = status
+  }
+}
+
+/**
  * Publish one successful ComposerV2 plan through its authenticated PDS client.
  * Planning remains no-write; call this only from an explicit publish action.
  * DebugComposer is the current caller; production composer UI wiring is
  * deferred to a separate PR. Callers must serialize or disable
- * duplicate submissions. If a transport failure leaves the outcome ambiguous,
- * retain this exact plan for reconciliation and do not blindly retry or create
- * a new plan with different record keys. This function never retries writes.
+ * duplicate submissions. A 4xx refusal throws ComposerV2WriteRejectedError and
+ * committed nothing. Any other failure (transport, abort, 5xx) leaves the
+ * outcome ambiguous: retain this exact plan for reconciliation and do not
+ * blindly retry or create a new plan with different record keys. This function
+ * never retries writes.
  */
 export async function writeComposerV2Plan({
   plan,
@@ -76,7 +94,23 @@ export async function writeComposerV2Plan({
   try {
     await pdsClient.call(com.atproto.repo.applyWrites, plan.input)
   } catch (cause) {
-    /* Any rejection after dispatch may have committed, including transport
+    /* applyWrites is atomic, so a 4xx response means nothing was written. */
+    const status = getErrorStatus(cause)
+    if (status !== undefined && status >= 400 && status < 500) {
+      reportComposerV2Error({
+        onError,
+        event: {
+          source: 'writer',
+          code: 'apply-writes-rejected',
+          postIds: plan.posts.map(post => post.postId),
+          kind: 'operational',
+          recovery: 'retry',
+        },
+        cause,
+      })
+      throw new ComposerV2WriteRejectedError(status, cause)
+    }
+    /* Anything else after dispatch may have committed, including transport
      * aborts. Preserve the SDK error and exact plan for caller reconciliation. */
     reportComposerV2Error({
       onError,

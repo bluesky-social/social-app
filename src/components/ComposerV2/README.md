@@ -152,15 +152,23 @@ against `plan.input.repo`, requires `validate: true`, and sends exactly one
 unchanged `applyWrites` request. It returns planned post URIs in thread order.
 It does not rebuild the composition or retry.
 
-**A rejected write may already have committed.** Retain the exact plan and
+**A 4xx refusal committed nothing.** `applyWrites` is atomic, so a 4xx server
+response throws `ComposerV2WriteRejectedError` (with `status` and the original
+`cause`) and reports `apply-writes-rejected` / `retry`. The same plan can be
+retried. Do not call `reportPublishUncertain` for it.
+
+**Any other rejection may already have committed**, including transport
+failures, aborts, timeouts, and 5xx responses. The writer rethrows the raw SDK
+error and reports `apply-writes-failed` / `reconcile`. Retain the exact plan and
 reconcile its URIs; do not automatically replan with new keys or retry. The
 tester retains the attempted plan in memory, including across scenario changes,
 but has no reconciliation engine or durable plan storage. Leaving the tester
 loses that in-memory record. Future production integration must also own duplicate
 submission protection, publish state, and AppView propagation. After a write
 resolves, call `store.reportPublished({plan})` so video telemetry records
-publication; for a rejection that is not a `ComposerV2WritePreconditionError`,
-call `store.reportPublishUncertain({plan, cause})` instead.
+publication; for a rejection that is neither a `ComposerV2WritePreconditionError`
+nor a `ComposerV2WriteRejectedError`, call
+`store.reportPublishUncertain({plan, cause})` instead.
 
 Failures remain in attachment/upload state, adapter rejections, or planning and
 writing outcomes. Optional `onError(event, cause?)` adds one per-session reporting
@@ -365,7 +373,7 @@ failure. Events V2 adds:
   video reports once and later edits cannot misattribute a publication. It
   still works after `destroy()`.
 - `composer:publish:uncertain` comes from `store.reportPublishUncertain({plan,
-cause})`, for a write rejected after dispatch. Those videos stay publishable
+cause})`, for a write that failed after dispatch and may have committed. Those videos stay publishable
   for a later reconciliation.
 
 ### Media sources and worker preparation
@@ -587,9 +595,11 @@ invalid, surface the operation's failure rather than silently changing content.
   ([`summarizeComposerV2Plan.ts`](../../view/screens/DebugComposer/summarizeComposerV2Plan.ts)),
   not part of the planner.
 - The writer requires a successful plan, a matching authenticated DID/repo, and
-  `validate: true`. It sends one unchanged request and returns ordered URIs. SDK
-  failures are preserved exactly. Any rejection after dispatch, including a
-  transport abort, requires reconciliation; there is no automatic retry.
+  `validate: true`. It sends one unchanged request and returns ordered URIs. A
+  4xx refusal throws `ComposerV2WriteRejectedError` (nothing committed, safe to
+  retry). Any other failure after dispatch, including a transport abort,
+  rethrows the SDK error exactly and requires reconciliation; there is no
+  automatic retry.
 - Publishing is always an explicit caller operation, never a side effect of
   editing, planning, or saving a draft.
 - Planner no-write tests run at the real dependency boundary, not against a mock

@@ -8,7 +8,7 @@ jest.mock('#/lib/api/resolve', () => ({
 }))
 
 import {TID} from '@atproto/common-web'
-import {type Client} from '@atproto/lex'
+import {type Client, getMain, XrpcResponseError} from '@atproto/lex'
 
 import {type LinkResolvers} from '#/lib/api/resolve'
 import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
@@ -21,9 +21,23 @@ import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadT
 import {buildThreadState} from '#/components/ComposerV2/store/utils/buildThreadState'
 import {
   ComposerV2WritePreconditionError,
+  ComposerV2WriteRejectedError,
   writeComposerV2Plan,
 } from '#/components/ComposerV2/writer'
 import {com} from '#/lexicons'
+
+/** A genuine server response error, as the lex client throws for non-2xx. */
+function xrpcResponseError(status: number) {
+  const body = {error: 'InvalidRequest', message: 'private server detail'}
+  return new XrpcResponseError(
+    getMain(com.atproto.repo.applyWrites),
+    new Response(JSON.stringify(body), {
+      status,
+      headers: {'content-type': 'application/json'},
+    }),
+    {encoding: 'application/json', body},
+  )
+}
 
 const DID = 'did:plc:composer-v2-writer'
 const BLOB_CID = 'bafkreieq5jui4j25lacwomsqgjeswwl3y5zcdrresptwgmfylxo2depppq'
@@ -193,13 +207,7 @@ describe('ComposerV2 thin writer', () => {
 
   test.each([
     ['network', new Error('connection lost')],
-    [
-      'XRPC',
-      Object.assign(new Error('AuthenticationRequired'), {
-        status: 401,
-        error: 'AuthenticationRequired',
-      }),
-    ],
+    ['XRPC 5xx', xrpcResponseError(502)],
   ])('propagates %s errors once without mutation', async (_kind, error) => {
     const {plan, snapshot} = await makeFixture()
     const {pdsClient, call} = mockPdsClient(DID, () => Promise.reject(error))
@@ -241,6 +249,57 @@ describe('ComposerV2 thin writer', () => {
     expect(call.mock.calls[0][1]).toBe(plan.input)
     expect(plan.input.validate).toBe(true)
     expect(JSON.stringify(plan)).toBe(before)
+  })
+
+  test.each([400, 401, 429])(
+    'a %s server refusal is a definite, retryable failure',
+    async status => {
+      const {plan} = await makeFixture()
+      const error = xrpcResponseError(status)
+      const {pdsClient, call} = mockPdsClient(DID, () => Promise.reject(error))
+      const onError = jest.fn<ComposerV2OnError>()
+
+      const thrown = await writeComposerV2Plan({plan, pdsClient, onError}).then(
+        () => undefined,
+        (cause: unknown) => cause,
+      )
+
+      expect(thrown).toBeInstanceOf(ComposerV2WriteRejectedError)
+      expect(thrown).toMatchObject({
+        name: 'ComposerV2WriteRejectedError',
+        status,
+        cause: error,
+      })
+      expect(onError).toHaveBeenCalledTimes(1)
+      expect(onError).toHaveBeenCalledWith(
+        {
+          source: 'writer',
+          code: 'apply-writes-rejected',
+          postIds: plan.posts.map(post => post.postId),
+          kind: 'operational',
+          recovery: 'retry',
+        },
+        error,
+      )
+      expect(call).toHaveBeenCalledTimes(1)
+    },
+  )
+
+  test('a 5xx server response stays uncertain and rethrows the raw error', async () => {
+    const {plan} = await makeFixture()
+    const error = xrpcResponseError(500)
+    const {pdsClient} = mockPdsClient(DID, () => Promise.reject(error))
+    const onError = jest.fn<ComposerV2OnError>()
+
+    await expect(writeComposerV2Plan({plan, pdsClient, onError})).rejects.toBe(
+      error,
+    )
+
+    expect(onError).toHaveBeenCalledTimes(1)
+    expect(onError.mock.calls[0][0]).toMatchObject({
+      code: 'apply-writes-failed',
+      recovery: 'reconcile',
+    })
   })
 
   test.each([false, true])(

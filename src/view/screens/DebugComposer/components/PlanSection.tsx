@@ -35,7 +35,7 @@ export function PlanSection({
   onChangeRequireAltText: (value: boolean) => void
   accountDid: string | undefined
   publishAttempted: boolean
-  publishStatus?: 'writing' | 'published' | 'uncertain'
+  publishStatus?: 'writing' | 'published' | 'uncertain' | 'rejected'
   onPublishPlan: (plan: ComposerV2Plan) => void
 }) {
   const {t: l} = useLingui()
@@ -298,7 +298,9 @@ export function PlanSection({
                   ? 'positive'
                   : publishStatus === 'uncertain'
                     ? 'warning'
-                    : 'neutral'
+                    : publishStatus === 'rejected'
+                      ? 'negative'
+                      : 'neutral'
             }>
             {publishStatus ?? 'not-attempted'}
           </StatusBadgeText>

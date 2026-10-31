@@ -33,6 +33,7 @@ import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
 import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
 import {
   ComposerV2WritePreconditionError,
+  ComposerV2WriteRejectedError,
   writeComposerV2Plan,
 } from '#/components/ComposerV2/writer'
 import {Divider} from '#/components/Divider'
@@ -42,6 +43,7 @@ import {useAnalytics} from '#/analytics'
 type ComposerV2PublishAttempt =
   | {status: 'writing' | 'uncertain'; plan: ComposerV2Plan}
   | {status: 'published'; plan: ComposerV2Plan}
+  | {status: 'rejected'; plan: ComposerV2Plan; httpStatus: number}
 
 /**
  * Full ComposerV2 tester behind Settings > Developer options > Debug Composer
@@ -102,6 +104,15 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
         onError: session.store.reportError,
       })
     } catch (cause) {
+      /* A 4xx refusal committed nothing, so it is a definite failure. */
+      if (cause instanceof ComposerV2WriteRejectedError) {
+        setPublishAttempt({
+          status: 'rejected',
+          plan,
+          httpStatus: cause.status,
+        })
+        return
+      }
       setPublishAttempt({status: 'uncertain', plan})
       /* A refused write sent nothing, so only a dispatched one is uncertain. */
       if (!(cause instanceof ComposerV2WritePreconditionError)) {
@@ -186,7 +197,13 @@ function PublishAttemptNotice({attempt}: {attempt: ComposerV2PublishAttempt}) {
   return (
     <View testID="composerV2Tester-publish-status">
       <Admonition.Outer
-        type={attempt.status === 'uncertain' ? 'warning' : 'info'}>
+        type={
+          attempt.status === 'uncertain'
+            ? 'warning'
+            : attempt.status === 'rejected'
+              ? 'error'
+              : 'info'
+        }>
         <Admonition.Row>
           <Admonition.Icon />
           <Admonition.Content>
@@ -198,7 +215,9 @@ function PublishAttemptNotice({attempt}: {attempt: ComposerV2PublishAttempt}) {
                     ? 'progress'
                     : attempt.status === 'published'
                       ? 'positive'
-                      : 'warning'
+                      : attempt.status === 'rejected'
+                        ? 'negative'
+                        : 'warning'
                 }>
                 {attempt.status}
               </StatusBadgeText>
@@ -208,6 +227,11 @@ function PublishAttemptNotice({attempt}: {attempt: ComposerV2PublishAttempt}) {
                 <Trans>Publishing the captured plan…</Trans>
               ) : attempt.status === 'published' ? (
                 <Trans>The planned records were published.</Trans>
+              ) : attempt.status === 'rejected' ? (
+                <Trans>
+                  The server rejected the write (HTTP {attempt.httpStatus});
+                  nothing was published.
+                </Trans>
               ) : (
                 <Trans>
                   The write failed and its outcome may be uncertain. This exact
