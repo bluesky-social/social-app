@@ -111,7 +111,7 @@ export function summarizeThreadState({state}: {state: ThreadState}) {
                 ? {phase: item.upload.phase, progress: item.upload.progress}
                 : {}),
               ...(item.upload.state === 'failed'
-                ? {retryable: item.upload.retryable !== false}
+                ? {retryable: item.upload.retryable}
                 : {}),
             }
           : {}),

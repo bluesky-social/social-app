@@ -271,7 +271,7 @@ describe('replaceImageSource', () => {
     store.destroy()
   })
 
-  test('editing after a failure restarts and leaves the old retry inert', () => {
+  test('editing after a failure restarts and leaves a retry of the old failure inert', () => {
     const {attempts, workers} = manualUploadWorkers()
     const store = makeStore(workers)
     const root = rootId(store)
@@ -284,7 +284,7 @@ describe('replaceImageSource', () => {
 
     store.actions.replaceImageSource(root, id, crop)
     expect(attempts).toHaveLength(2)
-    failed.retry()
+    store.actions.retryMediaUpload(root, id)
 
     expect(attempts).toHaveLength(2)
     expect(images(store)[0].upload).toEqual({state: 'pending'})

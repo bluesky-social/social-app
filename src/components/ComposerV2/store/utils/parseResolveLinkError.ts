@@ -6,8 +6,8 @@ export type ParsedResolveLinkError = {
   /**
    * Whether the failure is worth retrying. Today only EmbeddingDisabledError
    * is permanent (the post's author has forbidden quoting); anything else
-   * is a transient or unknown failure and the caller should attach a
-   * `retry()` to the failed state.
+   * is a transient or unknown failure and the caller should mark the failed
+   * state retryable.
    */
   isRetryable: boolean
 }

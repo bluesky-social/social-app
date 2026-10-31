@@ -2,7 +2,7 @@ import {useLingui} from '@lingui/react/macro'
 
 import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 import {type ComposerV2PlanErrorCode} from '#/components/ComposerV2/planner'
-import {type PostMediaUploadStatus} from '#/components/ComposerV2/store/types'
+import {type UploadStatus} from '#/components/ComposerV2/store/types'
 
 /*
  * Translated-string helpers for the tester.
@@ -18,7 +18,7 @@ import {type PostMediaUploadStatus} from '#/components/ComposerV2/store/types'
 
 /** Upload worker phase, as displayed by the media status line. */
 export type UploadPhase = NonNullable<
-  Extract<PostMediaUploadStatus, {state: 'uploading'}>['phase']
+  Extract<UploadStatus, {state: 'uploading'}>['phase']
 >
 
 /** Short reply-gate summary for the current threadgate settings. */

@@ -362,7 +362,7 @@ describe('slot collisions', () => {
 })
 
 describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
-  test('retryable failure carries a bound retry and reserves the slot', async () => {
+  test('retryable failure reserves the slot and retryAttachment re-resolves it', async () => {
     mockResolveLink
       .mockRejectedValueOnce(new Error('network down'))
       .mockResolvedValueOnce(link)
@@ -374,7 +374,7 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
     if (failed?.state !== 'failed') throw new Error('expected failed')
     expect(failed.code).toBe('unknown')
     expect(failed.error).toBe('Link resolution failed')
-    expect(failed.retry).toEqual(expect.any(Function))
+    expect(failed.retryable).toBe(true)
     expect(store.getState().posts[root].imageSelectionsRemaining).toBe(
       slot === 'media' ? 0 : 10,
     )
@@ -382,10 +382,14 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
       expect(store.actions.addMedia(root, [uploads[0]])).toEqual({
         addedMediaIds: [],
       })
-    failed.retry?.()
-    expect(store.getState().posts[root].attachments[slot]?.state).toBe(
-      'pending',
-    )
+    const dirtyBefore = store.getState().isDirty
+    store.actions.retryAttachment(root, slot)
+    expect(store.getState().posts[root].attachments[slot]).toMatchObject({
+      state: 'pending',
+      uri,
+    })
+    expect(store.getState().isDirty).toBe(dirtyBefore)
+    expect(mockResolveLink).toHaveBeenLastCalledWith(expect.anything(), uri)
     await Promise.resolve()
     expect(store.getState().posts[root].attachments[slot]?.state).toBe(
       'resolved',
@@ -413,7 +417,7 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
     }
   })
 
-  test('a stale retry cannot replace a newer candidate', async () => {
+  test('retryAttachment ignores a slot superseded by a newer candidate', async () => {
     mockResolveLink
       .mockRejectedValueOnce(new Error('network down'))
       .mockResolvedValueOnce(link)
@@ -421,18 +425,54 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
     const root = rootId(store)
     store.actions.addUri(root, uri)
     await Promise.resolve()
-    const failed = store.getState().posts[root].attachments[slot]
-    if (failed?.state !== 'failed') throw new Error('expected failed')
 
     store.actions.addUri(root, `${uri}?new`)
     expect(mockResolveLink).toHaveBeenCalledTimes(2)
-    failed.retry?.()
+    store.actions.retryAttachment(root, slot)
     expect(mockResolveLink).toHaveBeenCalledTimes(2)
     await Promise.resolve()
     expect(store.getState().posts[root].attachments[slot]).toMatchObject({
       state: 'resolved',
       kind: slot === 'record' ? link.kind : link.type,
     })
+  })
+
+  test('a late result from a retried attempt cannot replace a newer candidate', async () => {
+    const retried = deferred()
+    const newer = deferred()
+    mockResolveLink
+      .mockRejectedValueOnce(new Error('network down'))
+      .mockReturnValueOnce(retried.promise)
+      .mockReturnValueOnce(newer.promise)
+    const store = makeStore()
+    const root = rootId(store)
+    store.actions.addUri(root, uri)
+    await Promise.resolve()
+    store.actions.retryAttachment(root, slot)
+    store.actions.addUri(root, `${uri}?new`)
+    retried.resolve(link)
+    await retried.promise
+    expect(store.getState().posts[root].attachments[slot]).toEqual({
+      state: 'pending',
+      uri: `${uri}?new`,
+    })
+  })
+
+  test('retryAttachment does nothing unless the slot is failed', async () => {
+    const d = deferred()
+    mockResolveLink.mockReturnValue(d.promise)
+    const store = makeStore()
+    const root = rootId(store)
+    store.actions.retryAttachment(root, slot)
+    store.actions.addUri(root, uri)
+    store.actions.retryAttachment(root, slot)
+    expect(mockResolveLink).toHaveBeenCalledTimes(1)
+    d.resolve(link)
+    await d.promise
+    const resolved = store.getState()
+    store.actions.retryAttachment(root, slot)
+    expect(store.getState()).toBe(resolved)
+    expect(mockResolveLink).toHaveBeenCalledTimes(1)
   })
 
   test('removal prevents a stale response from reviving the attachment', async () => {
@@ -464,17 +504,15 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
     )
   })
 
-  test('a retry retained from removed state cannot restore it', async () => {
+  test('retryAttachment cannot restore a removed attachment', async () => {
     mockResolveLink.mockRejectedValue(new Error('network down'))
     const store = makeStore()
     const root = rootId(store)
     store.actions.addUri(root, uri)
     await Promise.resolve()
-    const failed = store.getState().posts[root].attachments[slot]
-    if (failed?.state !== 'failed') throw new Error('expected failed')
     removeSlot(store, root, slot)
     const before = store.getState()
-    failed.retry?.()
+    store.actions.retryAttachment(root, slot)
     expect(store.getState()).toBe(before)
     expect(mockResolveLink).toHaveBeenCalledTimes(1)
   })
@@ -556,6 +594,21 @@ describe('direct record insertion', () => {
     const failed = store.getState().posts[root].attachments.record
     expect(failed).toMatchObject({state: 'failed', code: 'embedding-disabled'})
     if (failed?.state !== 'failed') throw new Error('expected failed')
-    expect(failed.retry).toBeUndefined()
+    expect(failed.retryable).toBe(false)
+    const before = store.getState()
+    store.actions.retryAttachment(root, 'record')
+    expect(store.getState()).toBe(before)
+    expect(mockResolveLink).toHaveBeenCalledTimes(1)
+  })
+
+  test('retryAttachment does nothing after destroy', async () => {
+    mockResolveLink.mockRejectedValue(new Error('network down'))
+    const store = makeStore()
+    const root = rootId(store)
+    store.actions.addUri(root, POST_URL)
+    await Promise.resolve()
+    store.destroy()
+    store.actions.retryAttachment(root, 'record')
+    expect(mockResolveLink).toHaveBeenCalledTimes(1)
   })
 })

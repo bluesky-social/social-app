@@ -876,7 +876,7 @@ describe('ComposerV2 no-write planner', () => {
     const video = (
       upload:
         | {state: 'uploaded'; blob: BlobRef}
-        | {state: 'failed'; error: string; retryable: false; retry?: never},
+        | {state: 'failed'; error: string; retryable: false},
     ) => {
       const state = snapshot({
         posts: [

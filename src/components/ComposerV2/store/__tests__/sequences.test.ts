@@ -147,12 +147,7 @@ function assertInvariants(state: ThreadState) {
       ids.add(item.id)
       expect(item.postId).toBe(postId)
       if (item.kind !== 'gif' && item.upload.state === 'failed') {
-        if (item.upload.retryable)
-          expect(item.upload.retry).toEqual(expect.any(Function))
-        else {
-          expect(item.upload.retryable).toBe(false)
-          expect(Object.hasOwn(item.upload, 'retry')).toBe(false)
-        }
+        expect(typeof item.upload.retryable).toBe('boolean')
       }
       if (item.kind === 'video') {
         expect(
@@ -173,7 +168,8 @@ function lateCallbacks(attempt: Attempt) {
   const {postId, mediaId} = attempt
   return [
     () => attempt.report({state: 'uploading', progress: 0.9}),
-    () => attempt.report({state: 'failed', error: 'late failure'}),
+    () =>
+      attempt.report({state: 'failed', error: 'late failure', retryable: true}),
     () => attempt.report({state: 'uploaded', blob: blob('late')}),
     () =>
       attempt.setMediaCompressionResult?.(postId, mediaId, {
@@ -220,7 +216,7 @@ describe.each([image, video])('stale $kind worker ownership', input => {
     const {postId, mediaId} = old
     old.report({state: 'uploading', progress: 0.2})
     if (transition === 'retry' || transition === 'bulk-retry') {
-      old.report({state: 'failed', error: 'retry me'})
+      old.report({state: 'failed', error: 'retry me', retryable: true})
       if (transition === 'retry')
         store.actions.retryMediaUpload(postId, mediaId)
       else store.actions.retryAllFailedUploads()
@@ -347,7 +343,11 @@ test.each([7, 42, 2025, 0xc0ffee])(
       // Begin clean: retry and worker events must not turn hydration into an edit.
       await step('fail initial workers', () => {
         for (const attempt of attempts)
-          attempt.report({state: 'failed', error: 'initial failure'})
+          attempt.report({
+            state: 'failed',
+            error: 'initial failure',
+            retryable: true,
+          })
         expect(store.getState().isDirty).toBe(false)
       })
       await step('bulk retry twice', () => {

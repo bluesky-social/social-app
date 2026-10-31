@@ -232,7 +232,7 @@ function ThreadSection() {
       if (
         item.kind !== 'gif' &&
         item.upload.state === 'failed' &&
-        item.upload.retryable !== false
+        item.upload.retryable
       ) {
         retryableFailureCount += 1
       }

@@ -10,7 +10,7 @@ import {type app, type com} from '#/lexicons'
 export type UploadPhase =
   'validating' | 'compressing' | 'uploading' | 'processing' | 'captions'
 
-/** Status reported by an upload worker. The store attaches retry behavior. */
+/** Upload progress and outcome of one media item; plain data. */
 export type UploadStatus =
   | {state: 'pending'}
   | {
@@ -27,33 +27,10 @@ export type UploadStatus =
       state: 'failed'
       error: string
       code?: string
-      retryable?: boolean
+      retryable: boolean
       blob?: BlobRef
       captionBlobs?: UploadedCaption[]
     }
-
-type FailedPostMediaUploadStatus = {
-  state: 'failed'
-  error: string
-  code?: string
-  blob?: BlobRef
-  captionBlobs?: UploadedCaption[]
-} & ({retryable: true; retry: () => void} | {retryable: false; retry?: never})
-
-/** Runtime retry functions must be reattached when hydrating serialized data. */
-export type PostMediaUploadStatus =
-  | {state: 'pending'}
-  | {
-      state: 'uploading'
-      phase?: UploadPhase
-      progress?: number
-    }
-  | {
-      state: 'uploaded'
-      blob: BlobRef
-      captionBlobs?: UploadedCaption[]
-    }
-  | FailedPostMediaUploadStatus
 
 export type UploadedCaption = {lang: string; blob: BlobRef}
 
@@ -143,7 +120,7 @@ export type PostMediaImage = {
   localRefPath?: string
   /** Output of the post image compressor; the source fields remain unchanged. */
   prepared?: PreparedImage
-  upload: PostMediaUploadStatus
+  upload: UploadStatus
 }
 
 export type PostMediaVideo = {
@@ -176,7 +153,7 @@ export type PostMediaVideo = {
   prepared?: PreparedVideo
   /** A completed video is retained when a later caption upload fails. */
   videoBlob?: BlobRef
-  upload: PostMediaUploadStatus
+  upload: UploadStatus
 }
 
 export type PostMediaGif = {
@@ -202,8 +179,8 @@ export type AttachmentResolution =
       /** Safe fallback; UI localizes code instead of rendering exception text. */
       error: string
       code: LinkResolutionFailureCode
-      /** Omitted for permanent failures; not serializable. */
-      retry?: () => void
+      /** Whether `retryAttachment` may re-resolve this slot. */
+      retryable: boolean
     }
 
 /** A quote is a post-kind record, sharing this slot with other record kinds. */

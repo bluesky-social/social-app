@@ -205,6 +205,10 @@ start the deferred work.
   image/video failures in thread order and rechecks live eligibility before
   retrying. Neither individual nor bulk retry restarts pending, active,
   completed, terminal, removed, or destroyed work.
+- `retryAttachment(postId, slot)` takes `'record'` or `'media'`. It re-resolves
+  the slot's same URI only while that slot is a live, retryable failure (for
+  example, never after `embedding-disabled`, for a slot in any other state, or
+  after `destroy`). A late result from a superseded attempt is dropped.
 - User edits dirty the content; initialization, worker progress, URI completion,
   and retries do not.
 - `internalActions.setUploadStatus` is a test seam that calls the private
@@ -240,19 +244,13 @@ tasks, invalidates resolution, clears subscribers, and disables session
 reporting. Caller-owned planning and scenario promises need their own
 attempt/session guards; destruction does not abort external operations.
 
-Worker-reported `UploadStatus` failures take `retryable?: boolean` (omitted
-means retryable). Stored `PostMediaUploadStatus` failures are explicit variants:
-
-```ts
-// Combined with error/code and any retained video/caption blob data.
-type FailedUploadRetry =
-  | {state: 'failed'; retryable: true; retry: () => void}
-  | {state: 'failed'; retryable: false; retry?: never}
-```
-
-Normalize this at the store boundary without a cast. Allowed retry is not
-automatic retry. Empty or overlength text and pending or failed attachments are
-valid editing states; publication preflight handles readiness.
+Published state is plain data, with no functions. A failed `UploadStatus` or
+failed `AttachmentResolution` carries a required `retryable: boolean`. Upload
+workers must always set it. Retrying goes through the store actions
+`retryMediaUpload(postId, mediaId)` and `retryAttachment(postId, slot)`, which
+do nothing unless the target is currently a retryable failure. Allowed retry is
+not automatic retry. Empty or overlength text and pending or failed attachments
+are valid editing states; publication preflight handles readiness.
 
 ### Media workers and platform boundaries
 
@@ -456,7 +454,7 @@ deterministic and tested through injected release dependencies.
 Both adapters return `ThreadStoreInitialState`. Neither constructs a store,
 dispatches corrective edit actions, loads/saves/deletes draft files, resolves
 remote views, reads media, or starts uploads; the upload workers prepare every
-source. Runtime IDs, retry functions, task state, revisions, moderation objects,
+source. Runtime IDs, task state, revisions, moderation objects,
 and shell callbacks do not belong in normalized content. Web picker `Blob` input
 is a runtime source convenience, not a persisted draft representation.
 

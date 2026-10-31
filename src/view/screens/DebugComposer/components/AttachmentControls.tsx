@@ -16,8 +16,8 @@ import {
   type PostMediaGif,
   type PostMediaImage,
   type PostMediaItem,
-  type PostMediaUploadStatus,
   type PostMediaVideo,
+  type UploadStatus,
 } from '#/components/ComposerV2/store/types'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -76,8 +76,8 @@ export function RecordAttachmentView({postId}: {postId: string}) {
               ? l`This post does not allow embedding.`
               : l`The link could not be resolved. Please try again.`
           }
-          retryable={!!record.retry}
-          onRetry={record.retry}
+          retryable={record.retryable}
+          onRetry={() => store.actions.retryAttachment(postId, 'record')}
           testID={`composerV2Tester-post-${postId}-record-retry`}
         />
       )}
@@ -142,8 +142,8 @@ export function MediaAttachmentView({postId}: {postId: string}) {
               ? l`This post does not allow embedding.`
               : l`The link could not be resolved. Please try again.`
           }
-          retryable={!!media.retry}
-          onRetry={media.retry}
+          retryable={media.retryable}
+          onRetry={() => store.actions.retryAttachment(postId, 'media')}
           testID={`composerV2Tester-post-${postId}-media-retry`}
         />
       )}
@@ -234,9 +234,7 @@ function ImageItemRow({
         </Text>
         <FailureRow
           error={item.upload.state === 'failed' ? item.upload.error : undefined}
-          retryable={
-            item.upload.state === 'failed' && item.upload.retryable !== false
-          }
+          retryable={item.upload.state === 'failed' && item.upload.retryable}
           onRetry={() => store.actions.retryMediaUpload(postId, item.id)}
           testID={`composerV2Tester-media-${item.id}-retry`}
         />
@@ -278,9 +276,7 @@ function VideoItemRow({postId, item}: {postId: string; item: PostMediaVideo}) {
       </Text>
       <FailureRow
         error={item.upload.state === 'failed' ? item.upload.error : undefined}
-        retryable={
-          item.upload.state === 'failed' && item.upload.retryable !== false
-        }
+        retryable={item.upload.state === 'failed' && item.upload.retryable}
         onRetry={() => store.actions.retryMediaUpload(postId, item.id)}
         testID={`composerV2Tester-media-${item.id}-retry`}
       />
@@ -351,7 +347,7 @@ function GifItemRow({postId, item}: {postId: string; item: PostMediaGif}) {
 }
 
 /** Live phase/progress line for one real upload worker. */
-function UploadStatusLine({upload}: {upload: PostMediaUploadStatus}) {
+function UploadStatusLine({upload}: {upload: UploadStatus}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const phaseLabel = useUploadPhaseLabel()
@@ -372,10 +368,7 @@ function UploadStatusLine({upload}: {upload: PostMediaUploadStatus}) {
       label = l`Uploaded`
       break
     case 'failed':
-      label =
-        upload.retryable === false
-          ? l`Failed (permanent)`
-          : l`Failed (retryable)`
+      label = upload.retryable ? l`Failed (retryable)` : l`Failed (permanent)`
       break
   }
   return (
@@ -405,7 +398,7 @@ function FailureRow({
 }: {
   error: string | undefined
   retryable: boolean
-  onRetry: (() => void) | undefined
+  onRetry: () => void
   testID: string
 }) {
   const {t: l} = useLingui()
@@ -416,7 +409,7 @@ function FailureRow({
       <Text style={[a.text_xs, a.flex_1, {color: t.palette.negative_500}]}>
         {error}
       </Text>
-      {retryable && onRetry && (
+      {retryable && (
         <Button
           label={l`Retry`}
           testID={testID}

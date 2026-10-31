@@ -19,7 +19,6 @@ import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   type AddMediaInput,
   type PostMediaItem,
-  type PostMediaUploadStatus,
   type UploadStatus,
 } from '#/components/ComposerV2/store/types'
 import {
@@ -85,45 +84,6 @@ const gifInput: AddMediaInput = {
   gif: {url: 'https://example.com/g.gif'} as Gif,
 }
 
-test('stored upload failure types require a retry only when retryable', () => {
-  const retry = jest.fn()
-  const retryable: PostMediaUploadStatus = {
-    state: 'failed',
-    error: 'retryable',
-    retryable: true,
-    retry,
-  }
-  const terminal: PostMediaUploadStatus = {
-    state: 'failed',
-    error: 'terminal',
-    retryable: false,
-  }
-  const retryIfAllowed = (status: PostMediaUploadStatus) => {
-    if (status.state === 'failed' && status.retryable === true) {
-      status.retry()
-    }
-  }
-  // @ts-expect-error retryable failures require a retry callback
-  const retryableWithoutRetry: PostMediaUploadStatus = {
-    state: 'failed',
-    error: 'retryable',
-    retryable: true,
-  }
-  const terminalWithRetry: PostMediaUploadStatus = {
-    state: 'failed',
-    error: 'terminal',
-    retryable: false,
-    // @ts-expect-error terminal failures cannot carry a retry callback
-    retry,
-  }
-
-  retryIfAllowed(retryable)
-  retryIfAllowed(terminal)
-  expect(retry).toHaveBeenCalledTimes(1)
-  expect(retryableWithoutRetry).toMatchObject({retryable: true})
-  expect(terminalWithRetry).toMatchObject({retryable: false})
-})
-
 // Embed-routing tests live in embeds.test.ts; here we just need a never-
 // resolving resolveLink so any addUri-driven resolution doesn't crash and
 // no result ever lands. The promise never settles, which is what we want.
@@ -162,12 +122,11 @@ test('keeps the low-level upload status setter on internal actions only', () => 
   store.destroy()
 })
 
-describe('stored upload failure normalization', () => {
+describe('stored upload failures', () => {
   test.each([
-    {label: 'omitted', retryable: undefined},
     {label: 'true', retryable: true},
     {label: 'false', retryable: false},
-  ])('normalizes a worker failure with retryable $label', ({retryable}) => {
+  ])('stores a worker failure with retryable $label', ({retryable}) => {
     const started: string[] = []
     let reportStatus: ((status: UploadStatus) => void) | undefined
     const store = createThreadStore({
@@ -204,7 +163,7 @@ describe('stored upload failure normalization', () => {
       state: 'failed',
       error: 'network failure',
       code: 'upload-failed',
-      ...(retryable === undefined ? {} : {retryable}),
+      retryable,
     }
     reportStatus!(failure)
 
@@ -216,15 +175,12 @@ describe('stored upload failure normalization', () => {
       state: 'failed',
       error: 'network failure',
       code: 'upload-failed',
-      retryable: retryable !== false,
+      retryable,
     })
     expect(store.getState().isDirty).toBe(false)
     expect(started).toEqual([item.id])
 
-    if (stored.upload.retryable === false) {
-      expect(Object.prototype.hasOwnProperty.call(stored.upload, 'retry')).toBe(
-        false,
-      )
+    if (!stored.upload.retryable) {
       const failedState = store.getState()
       store.actions.retryMediaUpload(postId, item.id)
       expect(store.getState()).toBe(failedState)
@@ -233,8 +189,7 @@ describe('stored upload failure normalization', () => {
       })
       expect(started).toEqual([item.id])
     } else {
-      expect(typeof stored.upload.retry).toBe('function')
-      stored.upload.retry()
+      store.actions.retryMediaUpload(postId, item.id)
       expect(getUploadState(store, postId)).toBe('pending')
       expect(started).toEqual([item.id, item.id])
       expect(store.getState().isDirty).toBe(false)
@@ -629,7 +584,7 @@ describe('retryMediaUpload', () => {
   )
 
   test.each([imageInput, videoInput])(
-    'binds the $kind retry to its failure, not a later attempt',
+    'retryMediaUpload only restarts a current retryable $kind failure',
     input => {
       const {attempts, workers} = manualUploadWorkers()
       const store = createThreadStore({
@@ -642,45 +597,34 @@ describe('retryMediaUpload', () => {
       const {
         addedMediaIds: [mediaId],
       } = store.actions.addMedia(postId, [input])!
-      const retry = () => {
-        const item = getMedia(store, postId)[0]
-        if (
-          item.kind === 'gif' ||
-          item.upload.state !== 'failed' ||
-          !item.upload.retryable
-        ) {
-          throw new Error('expected retryable failure')
-        }
-        return item.upload.retry
-      }
-      attempts[0].report({state: 'failed', error: 'first failure'})
-      const firstRetry = retry()
+      attempts[0].report({
+        state: 'failed',
+        error: 'first failure',
+        retryable: true,
+      })
       // Editing the item does not supersede its failed upload.
       store.actions.updateMediaAltText(postId, mediaId, 'edited alt')
-      firstRetry()
+      store.actions.retryMediaUpload(postId, mediaId)
       expect(attempts).toHaveLength(2)
       const pending = store.getState()
-      firstRetry()
       store.actions.retryMediaUpload(postId, mediaId)
       expect(store.getState()).toBe(pending)
       attempts[1].report({state: 'uploading', progress: 0.5})
       const uploading = store.getState()
-      firstRetry()
+      store.actions.retryMediaUpload(postId, mediaId)
       expect(store.getState()).toBe(uploading)
       expect(attempts[1].cancel).not.toHaveBeenCalled()
 
-      attempts[1].report({state: 'failed', error: 'second failure'})
-      const secondRetry = retry()
-      const failed = store.getState()
-      firstRetry()
-      expect(store.getState()).toBe(failed)
-      expect(attempts).toHaveLength(2)
-      secondRetry()
+      attempts[1].report({
+        state: 'failed',
+        error: 'second failure',
+        retryable: true,
+      })
+      store.actions.retryMediaUpload(postId, mediaId)
       expect(attempts).toHaveLength(3)
       attempts[2].report({state: 'uploaded', blob: {} as never})
       const uploaded = store.getState()
-      firstRetry()
-      secondRetry()
+      store.actions.retryMediaUpload(postId, mediaId)
       expect(store.getState()).toBe(uploaded)
       expect(attempts).toHaveLength(3)
       store.destroy()
@@ -696,6 +640,7 @@ describe('retryMediaUpload', () => {
     store.internalActions.setUploadStatus(root, imageId, {
       state: 'failed',
       error: 'boom',
+      retryable: true,
     })
 
     const get = () => {
@@ -706,34 +651,6 @@ describe('retryMediaUpload', () => {
     expect(get().state).toBe('failed')
 
     store.actions.retryMediaUpload(root, imageId)
-    expect(get().state).toBe('pending')
-    jest.runAllTimers()
-    expect(get().state).toBe('uploaded')
-  })
-
-  test('failed status carries a bound retry() method that restarts the upload', () => {
-    const store = makeStore()
-    const root = rootId(store)
-    const {
-      addedMediaIds: [imageId],
-    } = store.actions.addMedia(root, [imageInput])!
-    store.internalActions.setUploadStatus(root, imageId, {
-      state: 'failed',
-      error: 'network',
-    })
-
-    const get = () => {
-      const m = getMedia(store, root).find(x => x.id === imageId)!
-      if (m.kind !== 'image') throw new Error('expected image')
-      return m.upload
-    }
-    const failed = get()
-    if (failed.state !== 'failed' || failed.retryable !== true) {
-      throw new Error('expected retryable failed upload')
-    }
-    expect(typeof failed.retry).toBe('function')
-
-    failed.retry()
     expect(get().state).toBe('pending')
     jest.runAllTimers()
     expect(get().state).toBe('uploaded')
@@ -776,10 +693,12 @@ describe('retryAllFailedUploads', () => {
     store.internalActions.setUploadStatus(root, imageId, {
       state: 'failed',
       error: 'image failed',
+      retryable: true,
     })
     store.internalActions.setUploadStatus(second, videoId, {
       state: 'failed',
       error: 'video failed',
+      retryable: true,
     })
 
     expect(store.actions.retryAllFailedUploads()).toEqual({
@@ -810,6 +729,7 @@ describe('retryAllFailedUploads', () => {
     store.internalActions.setUploadStatus(root, eligibleId, {
       state: 'failed',
       error: 'retryable',
+      retryable: true,
     })
     store.internalActions.setUploadStatus(second, terminalId, {
       state: 'failed',
@@ -864,6 +784,7 @@ describe('retryAllFailedUploads', () => {
     store.internalActions.setUploadStatus(root, mediaId, {
       state: 'failed',
       error: 'retryable',
+      retryable: true,
     })
 
     expect(store.actions.retryAllFailedUploads()).toEqual({
@@ -890,10 +811,12 @@ describe('retryAllFailedUploads', () => {
       store.internalActions.setUploadStatus(root, firstId, {
         state: 'failed',
         error: 'first',
+        retryable: true,
       })
       store.internalActions.setUploadStatus(second, secondId, {
         state: 'failed',
         error: 'second',
+        retryable: true,
       })
 
       let handled = false
@@ -945,10 +868,12 @@ describe('retryAllFailedUploads', () => {
     store.internalActions.setUploadStatus(root, firstId, {
       state: 'failed',
       error: 'first',
+      retryable: true,
     })
     store.internalActions.setUploadStatus(second, secondId, {
       state: 'failed',
       error: 'second',
+      retryable: true,
     })
     store.subscribe(() => store.destroy())
 
@@ -966,6 +891,7 @@ describe('retryAllFailedUploads', () => {
         opts.setUploadStatus(opts.postId, opts.mediaId, {
           state: 'failed',
           error: 'still failing',
+          retryable: true,
         })
         return {cancel() {}}
       },
@@ -1208,6 +1134,7 @@ describe('attachment lifecycle', () => {
     store.internalActions.setUploadStatus(root, mediaId, {
       state: 'failed',
       error: 'network',
+      retryable: true,
     })
     expect(jest.getTimerCount()).toBe(0)
     store.actions.retryMediaUpload(root, mediaId)

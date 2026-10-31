@@ -108,6 +108,7 @@ describe('failed video upload normalization', () => {
       state: 'failed',
       error: 'caption upload failed',
       code: 'caption-upload-failed',
+      retryable: true,
       blob: videoBlob,
       captionBlobs,
     })
@@ -125,7 +126,7 @@ describe('failed video upload normalization', () => {
     expect(failed.captionBlobs).toEqual(captionBlobs)
     expect(store.getState().isDirty).toBe(false)
 
-    failed.upload.retry()
+    store.actions.retryMediaUpload(getVideo(store).postId, failed.id)
     expect(started).toHaveLength(2)
     expect(started[1].media.videoBlob).toBe(videoBlob)
     expect(started[1].media.captionBlobs).toEqual(captionBlobs)
@@ -231,7 +232,7 @@ test('a real caption retry reuses video and unchanged captions after a partial f
     expect(uploadBlob).toHaveBeenCalledTimes(3)
     if (failed.upload.state !== 'failed' || !failed.upload.retryable)
       throw new Error('expected retryable failure')
-    failed.upload.retry()
+    store.actions.retryMediaUpload(postId, failed.id)
     await waitForUpload('uploaded')
 
     const completed = getVideo(store).item

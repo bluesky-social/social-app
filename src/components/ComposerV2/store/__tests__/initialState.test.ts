@@ -366,6 +366,7 @@ describe('initial media and eager uploads', () => {
     store.internalActions.setUploadStatus(id, media.item.id, {
       state: 'failed',
       error: 'network',
+      retryable: true,
     })
     const failed = root(store).post.attachments.media
     if (
@@ -375,7 +376,7 @@ describe('initial media and eager uploads', () => {
       failed.item.upload.retryable !== true
     )
       throw new Error('expected failed upload')
-    failed.item.upload.retry()
+    store.actions.retryMediaUpload(id, failed.item.id)
     jest.runAllTimers()
     const after = root(store).post.attachments.media
     if (after?.state !== 'resolved' || after.kind !== 'video')
@@ -385,12 +386,12 @@ describe('initial media and eager uploads', () => {
     expect(store.getState().isDirty).toBe(false)
   })
 
-  test('never imports item identity, upload status, or retry callbacks from a source object', () => {
+  test('never imports item identity or upload status from a source object', () => {
     const staleSource = {
       ...image,
       id: 'old-item',
       postId: 'old-post',
-      upload: {state: 'failed', error: 'old failure', retry: jest.fn()},
+      upload: {state: 'failed', error: 'old failure', retryable: true},
     }
     const store = makeStore({
       posts: [{attachments: {media: {kind: 'images', items: [staleSource]}}}],
@@ -402,7 +403,6 @@ describe('initial media and eager uploads', () => {
     expect(media.items[0].id).not.toBe(staleSource.id)
     expect(media.items[0].postId).toBe(id)
     expect(media.items[0].upload).toEqual({state: 'pending'})
-    expect(staleSource.upload.retry).not.toHaveBeenCalled()
     expect(jest.getTimerCount()).toBe(1)
   })
 
@@ -512,9 +512,9 @@ describe('initial URI resolution', () => {
     await Promise.resolve()
     const failed = root(store).post.attachments.media
     if (failed?.state !== 'failed') throw new Error('expected failure')
-    expect(failed.retry).toEqual(expect.any(Function))
+    expect(failed.retryable).toBe(true)
     expect(store.getState().isDirty).toBe(false)
-    failed.retry?.()
+    store.actions.retryAttachment(root(store).id, 'media')
     await Promise.resolve()
     expect(root(store).post.attachments.media?.state).toBe('resolved')
     expect(store.getState().isDirty).toBe(false)
@@ -539,7 +539,7 @@ describe('initial URI resolution', () => {
     const failed = root(store).post.attachments.record
     if (failed?.state !== 'failed') throw new Error('expected failure')
     const media = root(store).post.attachments.media
-    failed.retry?.()
+    store.actions.retryAttachment(root(store).id, 'record')
     await Promise.resolve()
     expect(root(store).post.attachments.record).toMatchObject({
       state: 'resolved',
@@ -562,7 +562,7 @@ describe('initial URI resolution', () => {
     const failed = root(store).post.attachments.media
     if (failed?.state !== 'failed') throw new Error('expected failure')
     expect(store.getState().isDirty).toBe(true)
-    failed.retry?.()
+    store.actions.retryAttachment(root(store).id, 'media')
     await Promise.resolve()
     expect(root(store).post.attachments.media).toMatchObject({
       state: 'resolved',
@@ -580,7 +580,7 @@ describe('initial URI resolution', () => {
     expect(root(store).post.attachments.record).toMatchObject({
       state: 'failed',
       code: 'embedding-disabled',
-      retry: undefined,
+      retryable: false,
     })
     expect(store.getState().isDirty).toBe(false)
   })

@@ -34,6 +34,7 @@ const failed = {
   state: 'failed' as const,
   error: 'Safe failure',
   code: 'test-failure',
+  retryable: true,
 }
 const resolvers = {} as LinkResolvers
 
@@ -66,6 +67,16 @@ function deferred<T>() {
   return {promise, resolve, reject}
 }
 
+/** Published state must be plain data, so no function may appear anywhere. */
+function expectNoFunctions(value: unknown, path = 'state') {
+  if (typeof value === 'function') throw new Error(`function at ${path}`)
+  if (value && typeof value === 'object') {
+    for (const [key, child] of Object.entries(value)) {
+      expectNoFunctions(child, `${path}.${key}`)
+    }
+  }
+}
+
 function setup(onError = jest.fn<ComposerV2OnError>()) {
   const {attempts, workers} = manualUploadWorkers()
   let id = 0
@@ -93,7 +104,7 @@ describe('session error reporting', () => {
     const item = items()[0]
     if (item.kind === 'gif' || item.upload.state !== 'failed')
       throw new Error('expected failure')
-    const originalRetry = item.upload.retry!
+    expectNoFunctions(store.getState())
     expect(onError).toHaveBeenCalledTimes(1)
     expect(onError).toHaveBeenLastCalledWith(
       {
@@ -115,7 +126,8 @@ describe('session error reporting', () => {
     attempts[0].report(failed)
     expect(onError).toHaveBeenCalledTimes(1)
     attempts[1].report({...failed, retryable: false})
-    originalRetry()
+    expectNoFunctions(store.getState())
+    store.actions.retryMediaUpload(postId, mediaId)
     expect(attempts).toHaveLength(2)
     expect(onError).toHaveBeenCalledTimes(2)
     expect(onError).toHaveBeenLastCalledWith(
@@ -338,7 +350,7 @@ describe('session error reporting', () => {
     }
   })
 
-  test('URI lanes report independently with identity, safe state and bound retries', async () => {
+  test('URI lanes report independently with identity, safe state and retry actions', async () => {
     const attempts: ReturnType<typeof deferred<ResolvedLink>>[] = []
     const onError = jest.fn<ComposerV2OnError>(() => {
       throw new Error('listener')
@@ -383,8 +395,9 @@ describe('session error reporting', () => {
     )
     const record = store.getState().posts[postId].attachments.record
     if (record?.state !== 'failed') throw new Error('expected failed URI')
-    record.retry?.()
-    record.retry?.()
+    expectNoFunctions(store.getState())
+    store.actions.retryAttachment(postId, 'record')
+    store.actions.retryAttachment(postId, 'record')
     expect(attempts).toHaveLength(3)
     attempts[2].reject(cause)
     await Promise.resolve()

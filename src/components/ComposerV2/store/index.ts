@@ -87,7 +87,7 @@ function embeddedVideoBlob({
 
 function isRetryableFailedUpload({item}: {item: types.PostMediaItem}): boolean {
   if (item.kind !== 'image' && item.kind !== 'video') return false
-  return item.upload.state === 'failed' && item.upload.retryable === true
+  return item.upload.state === 'failed' && item.upload.retryable
 }
 
 /** One isolated thread composition session, independent of React. */
@@ -912,7 +912,7 @@ export function createThreadStore({
   function applyUploadStatus(
     postId: string,
     mediaId: string,
-    input: types.UploadStatus,
+    status: types.UploadStatus,
     diagnostic?: types.UploadDiagnostic,
   ) {
     const post = state.posts[postId]
@@ -921,36 +921,14 @@ export function createThreadStore({
       item => item.id === mediaId,
     )
     if (!found || found.kind === 'gif') return
-    if (input.state === 'failed') {
+    if (status.state === 'failed') {
       cancelUploadTask(mediaId)
       /* Nothing can retry a failure that is not retryable. */
-      if (input.retryable === false) retireCompression(mediaId)
-    } else if (input.state === 'uploaded') {
+      if (!status.retryable) retireCompression(mediaId)
+    } else if (status.state === 'uploaded') {
       uploadTasks.delete(mediaId)
       retireCompression(mediaId)
     }
-    const status: types.PostMediaUploadStatus =
-      input.state === 'failed'
-        ? input.retryable === false
-          ? {...input, retryable: false}
-          : {
-              ...input,
-              retryable: true,
-              retry: () => {
-                const current = getMediaItems({
-                  media: state.posts[postId]?.attachments.media,
-                }).find(item => item.id === mediaId)
-                // A retained retry belongs to this failure, not a later attempt.
-                if (
-                  current &&
-                  current.kind !== 'gif' &&
-                  current.upload === status
-                ) {
-                  retryMediaUpload(postId, mediaId)
-                }
-              },
-            }
-        : input
     const accepted = updateMediaItem({
       postId,
       mediaId,
@@ -960,12 +938,12 @@ export function createThreadStore({
         return {
           ...current,
           videoBlob:
-            input.state === 'uploaded' || input.state === 'failed'
-              ? (input.blob ?? current.videoBlob)
+            status.state === 'uploaded' || status.state === 'failed'
+              ? (status.blob ?? current.videoBlob)
               : current.videoBlob,
           captionBlobs:
-            input.state === 'uploaded' || input.state === 'failed'
-              ? (input.captionBlobs ?? current.captionBlobs)
+            status.state === 'uploaded' || status.state === 'failed'
+              ? (status.captionBlobs ?? current.captionBlobs)
               : current.captionBlobs,
           upload: status,
         }
@@ -973,19 +951,19 @@ export function createThreadStore({
     })
     if (
       accepted &&
-      input.state === 'failed' &&
+      status.state === 'failed' &&
       found.upload.state !== 'failed'
     ) {
       reportError(
         {
           source: 'upload',
-          code: input.code ?? 'upload-failed',
+          code: status.code ?? 'upload-failed',
           postId,
           mediaId,
           kind:
             diagnostic?.kind ??
-            (input.retryable === false ? 'validation' : 'operational'),
-          recovery: input.retryable === false ? 'edit' : 'retry',
+            (status.retryable ? 'operational' : 'validation'),
+          recovery: status.retryable ? 'retry' : 'edit',
         },
         diagnostic?.cause,
       )
@@ -1085,6 +1063,31 @@ export function createThreadStore({
   }
 
   /**
+   * Re-resolve a failed link with the same URI. Only a live, retryable failed
+   * slot qualifies. Stale results are dropped before they apply, so a failed
+   * slot in live state always belongs to the latest revision. Like the
+   * original failure, it does not dirty the draft.
+   */
+  function retryAttachment(postId: string, slot: AttachmentSlot) {
+    if (destroyed) return
+    const post = state.posts[postId]
+    const current = post?.attachments[slot]
+    if (!post || current?.state !== 'failed' || !current.retryable) return
+    const {uri} = current
+    const rev = resolutionRevs[slot].incrementFor({key: postId})
+    mutateState(s => {
+      const currentPost = s.posts[postId]
+      if (!currentPost) return null
+      s.posts[postId] =
+        slot === 'record'
+          ? replaceRecordAttachment(currentPost, {state: 'pending', uri})
+          : replacePostMedia(currentPost, {state: 'pending', uri})
+      return s
+    })
+    resolveAttachmentUri({postId, target: slot, uri, rev})
+  }
+
+  /**
    * Reserve the record or media slot before resolving a URL. Settled values
    * block new candidates; pending/failed candidates can be superseded.
    */
@@ -1117,9 +1120,9 @@ export function createThreadStore({
   }
 
   /**
-   * Resolve one reserved destination. Completion and retry handlers close over
-   * this attempt's destination, revision, post, and URI so stale work can
-   * never be redirected into the other attachment slot.
+   * Resolve one reserved destination. Completion handlers close over this
+   * attempt's destination, revision, post, and URI so stale work can never be
+   * redirected into the other attachment slot.
    */
   function resolveAttachmentUri({
     postId,
@@ -1140,37 +1143,6 @@ export function createThreadStore({
         return
       if (isComposerV2Cancellation({cause: err})) return
       const {code, isRetryable} = parseResolveLinkError({error: err})
-      const retry = isRetryable
-        ? () => {
-            if (
-              destroyed ||
-              !resolutionRevs[target].isCurrentFor({key: postId, rev})
-            ) {
-              return
-            }
-            const retryRev = resolutionRevs[target].incrementFor({key: postId})
-            mutateState(retryState => {
-              const currentPost = retryState.posts[postId]
-              if (!currentPost) return null
-              if (target === 'record') {
-                retryState.posts[postId] = replaceRecordAttachment(
-                  currentPost,
-                  {
-                    state: 'pending',
-                    uri,
-                  },
-                )
-              } else {
-                retryState.posts[postId] = replacePostMedia(currentPost, {
-                  state: 'pending',
-                  uri,
-                })
-              }
-              return retryState
-            })
-            resolveAttachmentUri({postId, target, uri, rev: retryRev})
-          }
-        : undefined
       const failure = {
         state: 'failed' as const,
         uri,
@@ -1180,7 +1152,7 @@ export function createThreadStore({
             ? 'Embedding disabled'
             : 'Link resolution failed',
         code,
-        retry,
+        retryable: isRetryable,
       }
       let accepted = false
       mutateState(s => {
@@ -1383,6 +1355,7 @@ export function createThreadStore({
       setVideoCaptions,
       retryMediaUpload,
       retryAllFailedUploads,
+      retryAttachment,
       addUri,
       setRecordAttachment,
       removeRecordAttachment,
