@@ -14,6 +14,7 @@ import {
   Pressable,
   type PressableProps,
   type StyleProp,
+  StyleSheet,
   type TargetedEvent,
   type TextProps,
   type TextStyle,
@@ -133,6 +134,51 @@ Context.displayName = 'ButtonContext'
 export function useButtonContext() {
   return useContext(Context)
 }
+
+/*
+ * Created rather than inline, so that on web they render as atomic classes and
+ * callers can override them with atoms such as `a.pl_sm`. Inline styles beat
+ * every class, so an inline `paddingHorizontal` would win over a caller's
+ * `paddingLeft` atom.
+ */
+const sizeStyles = StyleSheet.create({
+  default_large: {paddingVertical: 12, paddingHorizontal: 24, gap: 6},
+  default_medium: {paddingVertical: 9, paddingHorizontal: 28, gap: 5},
+  default_small: {paddingVertical: 8, paddingHorizontal: 14, gap: 5},
+  default_tiny: {paddingVertical: 5, paddingHorizontal: 10, gap: 3},
+  rectangular_large: {
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 10,
+    gap: 3,
+  },
+  rectangular_medium: {
+    paddingVertical: 9,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    gap: 3,
+  },
+  rectangular_small: {
+    paddingVertical: 8,
+    paddingHorizontal: 13,
+    borderRadius: 8,
+    gap: 3,
+  },
+  rectangular_tiny: {
+    paddingVertical: 5,
+    paddingHorizontal: 9,
+    borderRadius: 6,
+    gap: 2,
+  },
+  /*
+   * Round and square buttons: these match the actual rendered size on screen,
+   * based on Chrome's web inspector
+   */
+  icon_large: {height: 44, width: 44},
+  icon_medium: {height: 33, width: 33},
+  icon_tiny: {height: 25, width: 25},
+  square_tiny: {borderRadius: 6},
+})
 
 export const Button = forwardRef<React.ComponentRef<typeof View>, ButtonProps>(
   (
@@ -456,98 +502,38 @@ export const Button = forwardRef<React.ComponentRef<typeof View>, ButtonProps>(
 
       if (shape === 'default') {
         if (size === 'large') {
-          baseStyles.push(a.rounded_full, {
-            paddingVertical: 12,
-            paddingHorizontal: 24,
-            gap: 6,
-          })
+          baseStyles.push(a.rounded_full, sizeStyles.default_large)
         } else if (size === 'medium') {
-          baseStyles.push(a.rounded_full, {
-            paddingVertical: 9,
-            paddingHorizontal: 28,
-            gap: 5,
-          })
+          baseStyles.push(a.rounded_full, sizeStyles.default_medium)
         } else if (size === 'small') {
-          baseStyles.push(a.rounded_full, {
-            paddingVertical: 8,
-            paddingHorizontal: 14,
-            gap: 5,
-          })
+          baseStyles.push(a.rounded_full, sizeStyles.default_small)
         } else if (size === 'tiny') {
-          baseStyles.push(a.rounded_full, {
-            paddingVertical: 5,
-            paddingHorizontal: 10,
-            gap: 3,
-          })
+          baseStyles.push(a.rounded_full, sizeStyles.default_tiny)
         }
       } else if (shape === 'rectangular') {
         if (size === 'large') {
-          baseStyles.push({
-            paddingVertical: 12,
-            paddingHorizontal: 25,
-            borderRadius: 10,
-            gap: 3,
-          })
+          baseStyles.push(sizeStyles.rectangular_large)
         } else if (size === 'medium') {
-          baseStyles.push({
-            paddingVertical: 9,
-            paddingHorizontal: 16,
-            borderRadius: 8,
-            gap: 3,
-          })
+          baseStyles.push(sizeStyles.rectangular_medium)
         } else if (size === 'small') {
-          baseStyles.push({
-            paddingVertical: 8,
-            paddingHorizontal: 13,
-            borderRadius: 8,
-            gap: 3,
-          })
+          baseStyles.push(sizeStyles.rectangular_small)
         } else if (size === 'tiny') {
-          baseStyles.push({
-            paddingVertical: 5,
-            paddingHorizontal: 9,
-            borderRadius: 6,
-            gap: 2,
-          })
+          baseStyles.push(sizeStyles.rectangular_tiny)
         }
       } else if (shape === 'round' || shape === 'square') {
-        /*
-         * These sizes match the actual rendered size on screen, based on
-         * Chrome's web inspector
-         */
         if (size === 'large') {
-          if (shape === 'round') {
-            baseStyles.push({height: 44, width: 44})
-          } else {
-            baseStyles.push({height: 44, width: 44})
-          }
-        } else if (size === 'medium') {
-          if (shape === 'round') {
-            baseStyles.push({height: 33, width: 33})
-          } else {
-            baseStyles.push({height: 33, width: 33})
-          }
-        } else if (size === 'small') {
-          if (shape === 'round') {
-            baseStyles.push({height: 33, width: 33})
-          } else {
-            baseStyles.push({height: 33, width: 33})
-          }
+          baseStyles.push(sizeStyles.icon_large)
+        } else if (size === 'medium' || size === 'small') {
+          baseStyles.push(sizeStyles.icon_medium)
         } else if (size === 'tiny') {
-          if (shape === 'round') {
-            baseStyles.push({height: 25, width: 25})
-          } else {
-            baseStyles.push({height: 25, width: 25})
-          }
+          baseStyles.push(sizeStyles.icon_tiny)
         }
 
         if (shape === 'round') {
           baseStyles.push(a.rounded_full)
         } else if (shape === 'square') {
           if (size === 'tiny') {
-            baseStyles.push({
-              borderRadius: 6,
-            })
+            baseStyles.push(sizeStyles.square_tiny)
           } else {
             baseStyles.push(a.rounded_sm)
           }
