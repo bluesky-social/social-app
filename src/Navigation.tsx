@@ -9,6 +9,7 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import {
+  CommonActions,
   createNavigationContainerRef,
   DarkTheme,
   DefaultTheme,
@@ -25,10 +26,12 @@ import {
   type ChatNotificationPayload,
   getNotificationPayload,
   isChatNotificationPayload,
+  isModerationNotificationPayload,
   notificationToURL,
   storePayloadForAccountSwitch,
 } from '#/lib/hooks/useNotificationHandler'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
+import {moderationPushDestination} from '#/lib/notifications/moderation'
 import {useCallOnce} from '#/lib/once'
 import {getCurrentRoute, getTabState, TabState} from '#/lib/routes/helpers'
 import {getNavigationActionFromPath, LINKING} from '#/lib/routes/linking'
@@ -951,7 +954,10 @@ const FlatNavigator = ({
 let didHandlePushNotificationEntry = false
 
 /** Wrap components that need access to the navigation context. */
-function RoutesContainer({children}: React.PropsWithChildren<{}>) {
+function RoutesContainer({
+  children,
+  restricted = false,
+}: React.PropsWithChildren<{restricted?: boolean}>) {
   const ax = useAnalytics()
   // eslint-disable-next-line react-compiler/react-compiler
   const notyLogger = ax.logger.useChild(ax.logger.Context.Notifications)
@@ -1020,10 +1026,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
     const notificationResponse = Notifications.getLastNotificationResponse()
 
     if (notificationResponse) {
-      notyLogger.debug(`handlePushNotificationEntry: response`, {
-        response: notificationResponse,
-      })
-
       // Clear the last notification response to ensure it's not used again
       try {
         Notifications.clearLastNotificationResponse()
@@ -1036,13 +1038,29 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
       const payload = getNotificationPayload(notificationResponse.notification)
 
+      if (payload && !isModerationNotificationPayload(payload)) {
+        notyLogger.debug(`handlePushNotificationEntry: response`, {
+          response: notificationResponse,
+        })
+      }
+
       if (payload) {
         ax.metric('notifications:openApp', {
           reason: payload.reason,
           causedBoot: true,
         })
 
-        if (isChatNotificationPayload(payload)) {
+        if (isModerationNotificationPayload(payload)) {
+          if (payload.recipientDid !== currentAccount?.did) {
+            storePayloadForAccountSwitch(payload)
+            closeAllActiveElements()
+            const account = accounts.find(a => a.did === payload.recipientDid)
+            if (account) void onPressSwitchAccount(account, 'Notification')
+            else setShowLoggedOut(true)
+          } else {
+            void navigate(moderationPushDestination(payload))
+          }
+        } else if (isChatNotificationPayload(payload)) {
           handleChatNotification(payload)
         } else {
           const path = notificationToURL(payload)
@@ -1108,7 +1126,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   return (
     <NavigationContainer
       ref={navigationRef}
-      linking={LINKING}
+      linking={restricted ? undefined : LINKING}
       theme={theme}
       onStateChange={() => {
         const currentScreen = getCurrentRouteName()
@@ -1147,12 +1165,15 @@ function getCurrentRouteName() {
  */
 
 function navigate(destination: CommonNavigationDestination) {
-  return dispatchNavigationAction(
-    getCommonNavigationAction(
-      destination,
-      navigationRef.isReady() ? navigationRef.getRootState() : undefined,
-    ),
-  )
+  const state = navigationRef.isReady()
+    ? navigationRef.getRootState()
+    : undefined
+  if (state?.routeNames.includes(destination.name)) {
+    return dispatchNavigationAction(
+      CommonActions.navigate(destination.name, destination.params),
+    )
+  }
+  return dispatchNavigationAction(getCommonNavigationAction(destination, state))
 }
 
 /** Reuse the container's linking rules for notification URLs. */
