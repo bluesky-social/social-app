@@ -18,6 +18,7 @@ export type UploadFailureCode =
   | 'invalid-image-dimensions'
   | 'unsupported-video-format'
   | 'invalid-video-dimensions'
+  | 'unreadable-media'
   | 'video-too-long'
   | 'video-too-large'
   | 'video-upload-limit'

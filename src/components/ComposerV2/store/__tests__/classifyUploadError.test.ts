@@ -5,9 +5,9 @@ import {UploadLimitError, VideoTooLargeError} from '#/lib/media/video/errors'
 import {
   classifyUploadError,
   type UploadFailureClassification,
-  ValidationError,
   VideoJobError,
 } from '#/components/ComposerV2/store/uploads'
+import {ValidationError} from '#/components/ComposerV2/store/validationError'
 
 const networkError = new TypeError('Network request failed')
 const retryableXrpcError = Object.assign(Object.create(XrpcError.prototype), {
@@ -30,6 +30,11 @@ describe('classifyUploadError', () => {
         mediaKind: 'image',
       },
       {code: 'invalid-image-dimensions', ...validation},
+    ],
+    [
+      'unreadable media',
+      {error: new ValidationError('unreadable-media'), mediaKind: 'image'},
+      {code: 'unreadable-media', ...validation},
     ],
     [
       'unsupported video format',

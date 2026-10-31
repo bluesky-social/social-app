@@ -487,11 +487,10 @@ describe('ios: restored draft media', () => {
     store.destroy()
   })
 
-  test('an image metadata failure is a retryable upload failure, not a dropped image', async () => {
+  test('an image metadata failure is a permanent upload failure, not a dropped image', async () => {
     const getImageDimensions = jest
       .fn<ImageUploadDependencies['getImageDimensions']>()
-      .mockRejectedValueOnce(new Error('unreadable'))
-      .mockResolvedValue({width: 30, height: 20})
+      .mockRejectedValue(new Error('unreadable'))
     const compressImage = jest.fn<ImageUploadDependencies['compressImage']>(
       () => new Promise(() => {}),
     )
@@ -507,19 +506,16 @@ describe('ios: restored draft media', () => {
       uri: 'file:///durable.jpg',
       localRefPath: 'image:one',
       altText: 'image alt',
-      upload: {state: 'failed', retryable: true},
+      upload: {state: 'failed', code: 'unreadable-media', retryable: false},
     })
     expect(compressImage).not.toHaveBeenCalled()
     expect(store.getState().isDirty).toBe(false)
 
+    /* Unreadable is permanent, so a retry request does not read it again. */
     store.actions.retryMediaUpload(lastPost(store).postId, failed.id)
     await settle()
-    expect(getImageDimensions).toHaveBeenCalledTimes(2)
-    expect(compressImage.mock.calls[0][0].image.source).toMatchObject({
-      path: 'file:///durable.jpg',
-      width: 30,
-      height: 20,
-    })
+    expect(getImageDimensions).toHaveBeenCalledTimes(1)
+    expect(compressImage).not.toHaveBeenCalled()
     store.destroy()
   })
 })

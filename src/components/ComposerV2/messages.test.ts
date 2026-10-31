@@ -17,6 +17,7 @@ const i18n = setupI18n({locale: 'en', messages: {en: {}}})
 /** Typecheck-enforced exhaustive upload codes, with today's English copy. */
 const UPLOAD_COPY = {
   'invalid-image-dimensions': 'The selected image has invalid dimensions.',
+  'unreadable-media': 'The selected file could not be read.',
   'unsupported-video-format': 'The selected video uses an unsupported format.',
   'invalid-video-dimensions': 'The selected video has invalid dimensions.',
   'video-too-long': 'The selected video is too long.',

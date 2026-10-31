@@ -23,6 +23,8 @@ export function getUploadFailureMessage({
   switch (failure.code) {
     case 'invalid-image-dimensions':
       return i18n._(msg`The selected image has invalid dimensions.`)
+    case 'unreadable-media':
+      return i18n._(msg`The selected file could not be read.`)
     case 'unsupported-video-format':
       return i18n._(msg`The selected video uses an unsupported format.`)
     case 'invalid-video-dimensions':

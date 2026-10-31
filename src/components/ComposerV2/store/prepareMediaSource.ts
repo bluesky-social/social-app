@@ -9,6 +9,7 @@ import {
   type ResolvedSourceMetadata,
 } from './types'
 import {validDimensions} from './utils/validDimensions'
+import {ValidationError} from './validationError'
 
 /*
  * Media source preparation for the upload workers. Known item metadata is used
@@ -41,6 +42,25 @@ export type GetVideoMetadata = (
   fallbackMimeType?: string,
 ) => Promise<ProbedVideoMetadata>
 
+/**
+ * Image loaders reject when the bytes cannot be decoded, with an `Event` on
+ * web and an unspecified value on native, so any rejection means the source is
+ * unreadable. Retrying would fail the same way.
+ */
+async function readDimensions({
+  uri,
+  getImageDimensions,
+}: {
+  uri: string
+  getImageDimensions: GetImageDimensions
+}) {
+  try {
+    return await getImageDimensions(uri)
+  } catch {
+    throw new ValidationError('unreadable-media')
+  }
+}
+
 /** Resolve image dimensions and MIME type without re-reading known values. */
 export async function prepareImageSource({
   media,
@@ -56,7 +76,8 @@ export async function prepareImageSource({
   let dimensions = validDimensions(media)
     ? {width: media.width, height: media.height}
     : undefined
-  if (!dimensions) dimensions = await getImageDimensions(media.uri)
+  if (!dimensions)
+    dimensions = await readDimensions({uri: media.uri, getImageDimensions})
   return {
     source: {uri: media.uri, ...dimensions, mimeType},
     metadata: {...dimensions, mimeType},
@@ -110,7 +131,7 @@ export async function prepareVideoSource({
   }
 
   if (mimeType === 'image/gif') {
-    dimensions ??= await getImageDimensions(media.uri)
+    dimensions ??= await readDimensions({uri: media.uri, getImageDimensions})
     if (!IS_WEB && fileSize == null) fileSize = await getFileSize(media.uri)
   } else if (needsProbe()) {
     const probed = IS_WEB

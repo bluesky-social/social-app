@@ -44,6 +44,7 @@ import {
 } from './types'
 import {type createConcurrencyLimit} from './utils/createConcurrencyLimit'
 import {validDimensions} from './utils/validDimensions'
+import {ValidationError} from './validationError'
 
 /** Runtime handle owned by the store, never published in ThreadState. */
 export type UploadTask = {
@@ -1195,22 +1196,6 @@ function failureReport({
 
 function throwIfAborted({signal}: {signal: AbortSignal}) {
   if (signal.aborted) throw new AbortError()
-}
-
-/** Source validation failure; exported for the classification test. */
-export class ValidationError extends Error {
-  constructor(
-    public code: Extract<
-      UploadFailureCode,
-      | 'invalid-image-dimensions'
-      | 'unsupported-video-format'
-      | 'invalid-video-dimensions'
-      | 'video-too-long'
-    >,
-  ) {
-    super(code)
-    this.name = 'ValidationError'
-  }
 }
 
 /** The video service reported a failed or unusable job; exported for the classification test. */
