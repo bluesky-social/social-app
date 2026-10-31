@@ -2,6 +2,7 @@ import {useImperativeHandle} from 'react'
 import {nativeNanoSymbol} from 'react-native-nano-icons/symbols'
 import {
   Button,
+  Group,
   Host,
   Image,
   Label,
@@ -16,6 +17,7 @@ import {
   disabled as disabledModifier,
   menuIndicator,
   menuStyle,
+  onAppear,
 } from '@expo/ui/swift-ui/modifiers'
 
 import {useTheme} from '#/alf'
@@ -30,7 +32,12 @@ import {IS_DEV} from '#/env'
  * Hosts the trigger as the label of a SwiftUI `Menu`, which opens the menu
  * itself when the label is tapped.
  */
-export function InlineRoot({control, trigger, children}: InlineRootProps) {
+export function InlineRoot({
+  control,
+  trigger,
+  onOpen,
+  children,
+}: InlineRootProps) {
   const t = useTheme()
 
   useImperativeHandle(
@@ -64,7 +71,13 @@ export function InlineRoot({control, trigger, children}: InlineRootProps) {
           buttonStyle('plain'),
           menuIndicator('hidden'),
         ]}>
-        {children}
+        {/*
+         * SwiftUI builds the menu's content the first time the menu opens and
+         * keeps it, so this only runs on the first open. Nothing in SwiftUI
+         * reports later opens: a tap gesture never fires, and re-keying the
+         * content makes it appear again straight away, in a loop.
+         */}
+        <Group modifiers={[onAppear(() => onOpen?.())]}>{children}</Group>
       </Menu>
     </Host>
   )

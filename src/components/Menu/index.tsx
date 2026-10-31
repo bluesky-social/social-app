@@ -3,6 +3,7 @@ import {
   Fragment,
   isValidElement,
   useContext,
+  useEffect,
   useMemo,
   useRef,
 } from 'react'
@@ -67,12 +68,14 @@ export {useMenuContext}
 
 export function Root({children, control, inline = false}: RootProps) {
   const defaultControl = Dialog.useDialogControl()
+  const inlineTriggerOnPress = useRef<() => void>(undefined)
   const inlineParts = inline ? getInlineParts(children) : undefined
   const isInline = inlineParts !== undefined
   const context = useMemo<ContextType>(
     () => ({
       control: control || defaultControl,
       inline: isInline,
+      inlineTriggerOnPress,
     }),
     [control, defaultControl, isInline],
   )
@@ -81,7 +84,10 @@ export function Root({children, control, inline = false}: RootProps) {
     <Context.Provider value={context}>
       {inlineParts ? (
         <>
-          <InlineRoot control={context.control} trigger={inlineParts.trigger}>
+          <InlineRoot
+            control={context.control}
+            trigger={inlineParts.trigger}
+            onOpen={() => inlineTriggerOnPress.current?.()}>
             {inlineParts.outer}
           </InlineRoot>
           {inlineParts.rest}
@@ -160,7 +166,7 @@ export function Trigger({
     context.control.open({sourceViewTag})
   }
 
-  return children({
+  const trigger = children({
     IS_NATIVE: true,
     control: context.control,
     state: {
@@ -180,6 +186,22 @@ export function Trigger({
       accessibilityRole: role,
     },
   })
+
+  /*
+   * Consumers often wrap `props.onPress` to log or prefetch. On iOS, an inline
+   * trigger never gets the tap, so hand that wrapper to the menu, which calls
+   * it the first time it opens.
+   */
+  const triggerOnPress = isValidElement<{onPress?: () => void}>(trigger)
+    ? trigger.props.onPress
+    : undefined
+  useEffect(() => {
+    if (context.inline && IS_IOS && context.inlineTriggerOnPress) {
+      context.inlineTriggerOnPress.current = triggerOnPress
+    }
+  })
+
+  return trigger
 }
 
 export function Outer({

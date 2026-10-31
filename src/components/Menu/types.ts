@@ -18,6 +18,12 @@ export type ContextType = {
    * `RootProps['inline']`. Always `false` on web.
    */
   inline: boolean
+  /**
+   * On iOS, the native menu takes the tap on an inline trigger, so the
+   * trigger's own `onPress` never runs. `Trigger` keeps it here, and the menu
+   * calls it the first time it opens.
+   */
+  inlineTriggerOnPress?: React.RefObject<(() => void) | undefined>
 }
 
 export type RootProps = React.PropsWithChildren<{
