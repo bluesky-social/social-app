@@ -1,4 +1,11 @@
 import {createContext, useContext, useMemo, useState} from 'react'
+import {
+  type AppBskyActorDefs,
+  type AppBskyFeedDefs,
+  type AppBskyRichtextFacet,
+  type AppBskyUnspeccedGetPostThreadV2,
+  type ModerationDecision,
+} from '@atproto/api'
 import {type ModerationDecision} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -19,6 +26,7 @@ export interface ComposerOptsPostRef {
   uri: string
   cid: string
   text: string
+  facets?: AppBskyRichtextFacet.Main[]
   langs?: string[]
   author: app.bsky.actor.defs.ProfileViewBasic
   embed?: app.bsky.feed.defs.PostView['embed']
