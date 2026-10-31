@@ -35,7 +35,7 @@ allowBuilds:
   'unrs-resolver': true
 patchedDependencies:
   '@expo/cli@58.1.15': patches/@expo__cli@58.1.15.patch
-  '@expo/ui@58.0.23': patches/@expo__ui@58.0.23.patch
+  '@expo/ui@58.0.26': patches/@expo__ui@58.0.26.patch
   '@formatjs/bigdecimal@0.2.5': patches/@formatjs__bigdecimal@0.2.5.patch
   '@sentry/expo-upload-sourcemaps@8.26.0': patches/@sentry__expo-upload-sourcemaps@8.26.0.patch
   'expo-image@58.0.17': patches/expo-image@58.0.17.patch
@@ -61,3 +61,4 @@ minimumReleaseAgeExclude:
   - '@bsky.app/*'
   - '@bsky/*'
   - react-native-nano-icons@1.0.1
+  - '@expo/ui@58.0.26'

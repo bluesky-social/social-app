@@ -1,0 +1,34 @@
+diff --git a/build/jetpack-compose/Button/index.d.ts b/build/jetpack-compose/Button/index.d.ts
+index 57dab89..0af1a62 100644
+--- a/build/jetpack-compose/Button/index.d.ts
++++ b/build/jetpack-compose/Button/index.d.ts
+@@ -25,6 +25,12 @@ export interface ButtonProps {
+      * Callback that is called when the button is clicked.
+      */
+     onClick?: () => void;
++    /**
++     * A URL to open when the button is pressed, such as a deep link into the app. Only used by
++     * widgets and custom notifications from `expo-widgets`, where it replaces `onClick`.
++     * @platform android
++     */
++    url?: string;
+     /**
+      * Whether the button is enabled for user interaction.
+      * @default true
+diff --git a/src/jetpack-compose/Button/index.tsx b/src/jetpack-compose/Button/index.tsx
+index d24bbd1..ccef7e3 100644
+--- a/src/jetpack-compose/Button/index.tsx
++++ b/src/jetpack-compose/Button/index.tsx
+@@ -31,6 +31,12 @@ export interface ButtonProps {
+    * Callback that is called when the button is clicked.
+    */
+   onClick?: () => void;
++  /**
++   * A URL to open when the button is pressed, such as a deep link into the app. Only used by
++   * widgets and custom notifications from `expo-widgets`, where it replaces `onClick`.
++   * @platform android
++   */
++  url?: string;
+   /**
+    * Whether the button is enabled for user interaction.
+    * @default true
