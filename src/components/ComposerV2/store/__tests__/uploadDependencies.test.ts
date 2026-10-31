@@ -1,4 +1,4 @@
-import {describe, expect, jest, test} from '@jest/globals'
+import {afterEach, describe, expect, jest, test} from '@jest/globals'
 import {i18n} from '@lingui/core'
 
 /* Avoid loading the UI module chain through the real link resolver. */
@@ -12,6 +12,7 @@ jest.mock('#/lib/media/video/upload', () => ({
 
 import {type LinkResolvers} from '#/lib/api/resolve'
 import {uploadBlob} from '#/lib/api/upload-blob'
+import {AbortError} from '#/lib/async/cancelable'
 import {compressImage} from '#/lib/media/image/compress'
 import {getImageDim} from '#/lib/media/manip'
 import {getUriSize} from '#/lib/media/uriSize'
@@ -25,6 +26,7 @@ import {
   testUploadRuntime,
 } from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {type ThreadStoreInitialState} from '#/components/ComposerV2/store/types'
+import {abortableSleep} from '#/components/ComposerV2/store/uploadDependencies'
 import {
   type ImageUploadDependencies,
   type UploadWorkerOverrides,
@@ -169,5 +171,36 @@ describe('upload worker dependency wiring', () => {
       })
       expect(() => require('#/components/ComposerV2/store')).not.toThrow()
     })
+  })
+})
+
+describe('abortableSleep', () => {
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
+  test('detaches its abort listener when it resolves', async () => {
+    jest.useFakeTimers()
+    const {signal} = new AbortController()
+    const add = jest.spyOn(signal, 'addEventListener')
+    const remove = jest.spyOn(signal, 'removeEventListener')
+
+    const sleep = abortableSleep({ms: 1000, signal})
+    jest.advanceTimersByTime(1000)
+    await sleep
+
+    const [[, listener]] = add.mock.calls
+    expect(remove).toHaveBeenCalledWith('abort', listener)
+  })
+
+  test('an abort rejects with AbortError and clears the timer', async () => {
+    jest.useFakeTimers()
+    const controller = new AbortController()
+
+    const sleep = abortableSleep({ms: 1000, signal: controller.signal})
+    controller.abort()
+
+    await expect(sleep).rejects.toBeInstanceOf(AbortError)
+    expect(jest.getTimerCount()).toBe(0)
   })
 })

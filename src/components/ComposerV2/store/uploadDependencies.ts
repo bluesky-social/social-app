@@ -62,20 +62,31 @@ export const videoUploadDependencies: VideoUploadDependencies = {
   sleep: abortableSleep,
 }
 
-function abortableSleep({ms, signal}: {ms: number; signal: AbortSignal}) {
+/**
+ * Sleeps for `ms`, rejecting with `AbortError` if `signal` aborts first.
+ * Exported for its test.
+ */
+export function abortableSleep({
+  ms,
+  signal,
+}: {
+  ms: number
+  signal: AbortSignal
+}) {
   return new Promise<void>((resolve, reject) => {
     if (signal.aborted) {
       reject(new AbortError())
       return
     }
-    const timer = setTimeout(resolve, ms)
-    signal.addEventListener(
-      'abort',
-      () => {
-        clearTimeout(timer)
-        reject(new AbortError())
-      },
-      {once: true},
-    )
+    const onAbort = () => {
+      clearTimeout(timer)
+      reject(new AbortError())
+    }
+    /* Polling reuses one signal, so detach on resolve to avoid piling up listeners. */
+    const timer = setTimeout(() => {
+      signal.removeEventListener('abort', onAbort)
+      resolve()
+    }, ms)
+    signal.addEventListener('abort', onAbort, {once: true})
   })
 }
