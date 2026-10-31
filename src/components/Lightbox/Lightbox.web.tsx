@@ -10,7 +10,7 @@ import {saveImageToMediaLibrary} from '#/lib/media/manip'
 import {useA11y} from '#/state/a11y'
 import {
   atoms as a,
-  flatten,
+  flattenToCSS,
   ThemeProvider,
   useBreakpoints,
   useTheme,
@@ -398,7 +398,7 @@ function LightboxGalleryItem({
       image = (
         <img
           src={source}
-          style={flatten([
+          style={flattenToCSS([
             styles.avi,
             {
               borderRadius:
