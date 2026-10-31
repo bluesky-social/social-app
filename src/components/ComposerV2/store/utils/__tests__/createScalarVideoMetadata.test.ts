@@ -20,11 +20,15 @@ jest.mock('#/lib/media/manip', () => ({
 
 import {videoUploadDependencies} from '#/components/ComposerV2/store/uploadDependencies'
 import {createScalarVideoMetadata} from '#/components/ComposerV2/store/utils/createScalarVideoMetadata'
-import {releaseCompressedImage} from '#/components/ComposerV2/store/utils/releaseCompressedImage'
-import {releaseCompressedImage as releaseCompressedImageWeb} from '#/components/ComposerV2/store/utils/releaseCompressedImage.web'
-import {releaseCompressedVideo} from '#/components/ComposerV2/store/utils/releaseCompressedVideo'
-import {releaseCompressedVideo as releaseCompressedVideoWeb} from '#/components/ComposerV2/store/utils/releaseCompressedVideo.web'
-import {releaseVideoProbeUri as releaseVideoProbeUriWeb} from '#/components/ComposerV2/store/utils/releaseVideoProbeUri.web'
+import {
+  releaseCompressedImage,
+  releaseCompressedVideo,
+} from '#/components/ComposerV2/store/utils/mediaRelease'
+import {
+  releaseCompressedImage as releaseCompressedImageWeb,
+  releaseCompressedVideo as releaseCompressedVideoWeb,
+  releaseVideoProbeUri as releaseVideoProbeUriWeb,
+} from '#/components/ComposerV2/store/utils/mediaRelease.web'
 
 const probed: ImagePickerAsset = {
   uri: 'blob:helper-created',

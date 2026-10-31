@@ -18,6 +18,7 @@ import {
   type ThreadStoreInitialState,
 } from '#/components/ComposerV2/store/types'
 import {classifyUriTarget} from '#/components/ComposerV2/store/utils/classifyUriTarget'
+import {validDimensions} from '#/components/ComposerV2/store/utils/validDimensions'
 import {type Gif} from '#/features/gifPicker/types'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -634,20 +635,6 @@ function parseVideoMimeType({localRefPath}: {localRefPath: string}): string {
   const parts = localRefPath.split(':')
   if (parts.length >= 3 && parts[1].includes('/')) return parts[1]
   return 'video/mp4'
-}
-
-function validDimensions(value: {
-  width?: number
-  height?: number
-}): value is {width: number; height: number} {
-  return (
-    typeof value.width === 'number' &&
-    Number.isFinite(value.width) &&
-    value.width > 0 &&
-    typeof value.height === 'number' &&
-    Number.isFinite(value.height) &&
-    value.height > 0
-  )
 }
 
 function cloneWithoutModeration<T>({value}: {value: T}): T {

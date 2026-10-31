@@ -11,9 +11,11 @@ import {getVideoMetadata} from '#/view/com/composer/videos/metadata'
 import {copyVideoToCache} from '#/components/ComposerV2/store/utils/copyVideoToCache'
 import {createConcurrencyLimit} from '#/components/ComposerV2/store/utils/createConcurrencyLimit'
 import {createScalarVideoMetadata} from '#/components/ComposerV2/store/utils/createScalarVideoMetadata'
-import {releaseCompressedImage} from '#/components/ComposerV2/store/utils/releaseCompressedImage'
-import {releaseCompressedVideo} from '#/components/ComposerV2/store/utils/releaseCompressedVideo'
-import {releaseVideoProbeUri} from '#/components/ComposerV2/store/utils/releaseVideoProbeUri'
+import {
+  releaseCompressedImage,
+  releaseCompressedVideo,
+  releaseVideoProbeUri,
+} from '#/components/ComposerV2/store/utils/mediaRelease'
 import {
   type ImageUploadDependencies,
   type VideoUploadDependencies,

@@ -1,6 +1,8 @@
-import {type BlobRef} from '@atproto/lex'
+import {type BlobRef, type Client} from '@atproto/lex'
+import {type I18n} from '@lingui/core'
 
 import {type ResolvedLink} from '#/lib/api/resolve'
+import {type ComposerV2ErrorKind} from '#/components/ComposerV2/errors'
 import {type Gif} from '#/features/gifPicker/types'
 import {type app, type com} from '#/lexicons'
 
@@ -258,11 +260,6 @@ export type PostgateEmbeddingRule = NonNullable<
   app.bsky.feed.postgate.Main['embeddingRules']
 >[number]
 
-/** Serializable shared postgate configuration for a composition. */
-export type PostgateConfigurationInput = {
-  embeddingRules?: readonly PostgateEmbeddingRule[]
-}
-
 /** Serializable preview data for the post this thread is replying to. */
 export type ThreadReplyTarget = {
   uri: string
@@ -396,4 +393,18 @@ export type ThreadState = {
   draftId: string | undefined
   /** Whether a user edit has changed the initial or loaded draft state. */
   isDirty: boolean
+}
+
+/** How an upload status change was classified, kept for error reporting. */
+export type UploadDiagnostic = {kind: ComposerV2ErrorKind; cause: unknown}
+
+/** Account-scoped inputs every real upload needs. */
+export type UploadRuntime = {
+  pdsClient: Client
+  /**
+   * The account's PDS URL. Video uploads derive the service-auth audience for
+   * `com.atproto.repo.uploadBlob` from it; the lex client does not expose it.
+   */
+  pdsUrl: string
+  i18n: I18n
 }

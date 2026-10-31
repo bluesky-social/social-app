@@ -7,8 +7,10 @@ import {reportInitializationError} from '#/components/ComposerV2/adapters'
 import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {type ThreadStore} from '#/components/ComposerV2/hooks'
 import {createThreadStore} from '#/components/ComposerV2/store'
-import {type ThreadStoreInitialState} from '#/components/ComposerV2/store/types'
-import {type UploadRuntime} from '#/components/ComposerV2/store/uploads'
+import {
+  type ThreadStoreInitialState,
+  type UploadRuntime,
+} from '#/components/ComposerV2/store/types'
 import {type AnalyticsContextType} from '#/analytics'
 
 /** One isolated tester session wrapping one store instance. */

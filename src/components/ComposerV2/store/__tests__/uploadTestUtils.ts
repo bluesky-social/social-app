@@ -4,12 +4,14 @@ import {type I18n} from '@lingui/core'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {type VideoTelemetry} from '#/lib/media/video/telemetry'
-import {type UploadStatus} from '#/components/ComposerV2/store/types'
+import {
+  type UploadRuntime,
+  type UploadStatus,
+} from '#/components/ComposerV2/store/types'
 import {
   type ImageUploadDependencies,
   startImageUpload,
   startVideoUpload,
-  type UploadRuntime,
   type UploadTask,
   type UploadWorkerOverrides,
   type VideoUploadDependencies,

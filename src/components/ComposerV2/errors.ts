@@ -2,9 +2,12 @@ import {type ComposerAdapterErrorCode} from '#/components/ComposerV2/adapters'
 import {type ComposerV2PlanErrorCode} from '#/components/ComposerV2/planner'
 import {type LinkResolutionFailureCode} from '#/components/ComposerV2/store/types'
 
+/** How a reported failure is classified: bad input, a failed operation, or a bug. */
+export type ComposerV2ErrorKind = 'validation' | 'operational' | 'unexpected'
+
 /** Structural context only: never include text, paths, records, or UI messages. */
 export type ComposerV2ErrorEvent = {
-  kind: 'validation' | 'operational' | 'unexpected'
+  kind: ComposerV2ErrorKind
   recovery: 'retry' | 'edit' | 'reconcile' | 'none'
   postId?: string
   mediaId?: string

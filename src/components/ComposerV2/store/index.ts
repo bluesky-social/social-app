@@ -30,7 +30,6 @@ import {
   type PreparedOutput,
   startImageUpload,
   startVideoUpload,
-  type UploadRuntime,
   type UploadTask,
   type UploadWorkerOverrides,
 } from '#/components/ComposerV2/store/uploads'
@@ -49,6 +48,7 @@ import {createAsyncTaskRev} from '#/components/ComposerV2/store/utils/createAsyn
 import {filterMediaInputs} from '#/components/ComposerV2/store/utils/filterMediaInputs'
 import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
 import {parseResolveLinkError} from '#/components/ComposerV2/store/utils/parseResolveLinkError'
+import {validDimensions} from '#/components/ComposerV2/store/utils/validDimensions'
 import {type AnalyticsContextType} from '#/analytics'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -67,10 +67,6 @@ type CompressionEntry = {
   /** Attempts still reading the output. Cleanup waits for them. */
   readers: number
   retired: boolean
-}
-
-function hasDimensions(value: {width?: number; height?: number}) {
-  return Boolean(value.width && value.height)
 }
 
 /** The uploaded video blob a planned post record embeds, if any. */
@@ -106,7 +102,7 @@ export function createThreadStore({
   __createId,
   __resolveLink,
   __uploadWorkers,
-}: UploadRuntime & {
+}: types.UploadRuntime & {
   resolvers: LinkResolvers
   /** The session's analytics: metrics now, and feature gates as needed. */
   analytics: AnalyticsContextType
@@ -126,6 +122,10 @@ export function createThreadStore({
   const id = __createId ?? nanoid
   const resolve = __resolveLink ?? importedResolveLink
   let destroyed = false
+  /**
+   * A report raised while `onError` is running is dropped, so a policy
+   * callback that calls back into the store cannot recurse.
+   */
   let reporting = false
   const reportError: ComposerV2OnError = (event, cause) => {
     if (destroyed || reporting) return
@@ -207,6 +207,7 @@ export function createThreadStore({
     mutateState(s => {
       const post = s.posts[postId]
       if (!post) return null
+      if (deepEqual(post.langs, languages)) return null
       s.posts[postId] = {...post, langs: [...languages]}
       s.isDirty = true
       return s
@@ -217,6 +218,7 @@ export function createThreadStore({
     mutateState(s => {
       const post = s.posts[postId]
       if (!post) return null
+      if (deepEqual(post.labels, labels)) return null
       s.posts[postId] = {...post, labels: [...labels]}
       s.isDirty = true
       return s
@@ -249,11 +251,10 @@ export function createThreadStore({
     })
   }
 
-  function setPostgateConfiguration(
-    configuration: types.PostgateConfigurationInput,
+  function setPostgateEmbeddingRules(
+    embeddingRules: readonly types.PostgateEmbeddingRule[],
   ) {
     mutateState(s => {
-      const embeddingRules = configuration.embeddingRules ?? []
       if (deepEqual(s.postgateEmbeddingRules, embeddingRules)) return null
       s.postgateEmbeddingRules = embeddingRules.map(rule =>
         cloneSerializable({value: rule}),
@@ -261,12 +262,6 @@ export function createThreadStore({
       s.isDirty = true
       return s
     })
-  }
-
-  function setPostgateEmbeddingRules(
-    embeddingRules: readonly types.PostgateEmbeddingRule[],
-  ) {
-    setPostgateConfiguration({embeddingRules})
   }
 
   /** Adds a post and returns its ID only when the insertion succeeds. */
@@ -697,10 +692,7 @@ export function createThreadStore({
         p: string,
         m: string,
         status: types.UploadStatus,
-        diagnostic?: {
-          kind: 'validation' | 'operational' | 'unexpected'
-          cause: unknown
-        },
+        diagnostic?: types.UploadDiagnostic,
       ) => {
         if (uploadTasks.get(m) === registered)
           applyUploadStatus(p, m, status, diagnostic)
@@ -916,10 +908,7 @@ export function createThreadStore({
     postId: string,
     mediaId: string,
     input: types.UploadStatus,
-    diagnostic?: {
-      kind: 'validation' | 'operational' | 'unexpected'
-      cause: unknown
-    },
+    diagnostic?: types.UploadDiagnostic,
   ) {
     const post = state.posts[postId]
     if (destroyed || !post) return
@@ -1084,7 +1073,7 @@ export function createThreadStore({
       const current = items.find(item => item.id === mediaId)
       if (!current || current.kind === 'gif') return null
       const next = {...current}
-      if (!hasDimensions(current) && hasDimensions(metadata)) {
+      if (!validDimensions(current) && validDimensions(metadata)) {
         next.width = metadata.width
         next.height = metadata.height
       }
@@ -1430,7 +1419,6 @@ export function createThreadStore({
       setPostLabels,
       setPostTags,
       setThreadgateAllowRules,
-      setPostgateConfiguration,
       setPostgateEmbeddingRules,
       addPost,
       movePost,

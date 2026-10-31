@@ -1,5 +1,5 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {type BlobRef, type Client} from '@atproto/lex'
+import {type BlobRef} from '@atproto/lex'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
@@ -20,6 +20,7 @@ import {
 } from '#/lib/media/video/types'
 import {isNetworkError, shouldRetryError} from '#/lib/strings/errors'
 import {type ComposerImage} from '#/state/gallery'
+import {isComposerV2Cancellation} from '#/components/ComposerV2/errors'
 import {type AnalyticsContextType} from '#/analytics'
 import {IS_ANDROID, IS_WEB} from '#/env'
 import {app} from '#/lexicons'
@@ -32,10 +33,13 @@ import {
   type PostMediaImage,
   type PostMediaVideo,
   type ResolvedSourceMetadata,
+  type UploadDiagnostic,
   type UploadedCaption,
+  type UploadRuntime,
   type UploadStatus,
 } from './types'
 import {type createConcurrencyLimit} from './utils/createConcurrencyLimit'
+import {validDimensions} from './utils/validDimensions'
 
 /** Runtime handle owned by the store, never published in ThreadState. */
 export type UploadTask = {
@@ -58,10 +62,7 @@ type SetStatus = (
   postId: string,
   mediaId: string,
   status: UploadStatus,
-  diagnostic?: {
-    kind: 'validation' | 'operational' | 'unexpected'
-    cause: unknown
-  },
+  diagnostic?: UploadDiagnostic,
 ) => void
 
 export type PreparedOutput =
@@ -81,17 +82,6 @@ export type PreparedOutput =
       height: number
       aspectRatio: {width: number; height: number}
     }
-
-/** Account-scoped inputs every real upload needs. */
-export type UploadRuntime = {
-  pdsClient: Client
-  /**
-   * The account's PDS URL. Video uploads derive the service-auth audience for
-   * `com.atproto.repo.uploadBlob` from it; the lex client does not expose it.
-   */
-  pdsUrl: string
-  i18n: I18n
-}
 
 /*
  * Workers call these implementations directly. createThreadStore supplies the
@@ -350,7 +340,7 @@ async function runImageUpload({
     throwIfAborted({signal})
     report({...opts, status: {state: 'uploaded', blob: result.blob}})
   } catch (error) {
-    if (isAborted({error, signal})) return
+    if (signal.aborted || isComposerV2Cancellation({cause: error})) return
     reportFailure({
       ...opts,
       status: failureStatus({error, i18n, kind: 'image'}),
@@ -672,7 +662,7 @@ async function runVideoUpload({
       status: {state: 'uploaded', blob: videoBlob, captionBlobs},
     })
   } catch (error) {
-    if (isAborted({error, signal})) return
+    if (signal.aborted || isComposerV2Cancellation({cause: error})) return
     reportVideoFailure({
       stage,
       error,
@@ -798,19 +788,6 @@ function needsReadableCopy({media}: {media: PostMediaVideo}) {
   return IS_ANDROID && !!media.localRefPath
 }
 
-/**
- * Checks the source before compression. Upload-output limits (format and
- * `VIDEO_MAX_SIZE`) only apply here where compression cannot change the
- * source; otherwise they are enforced on the compressed output.
- *
- * - Native transcodes any non-GIF video to an acceptable format and compresses
- *   large sources, so only the source kind is checked.
- * - Web may pass the source through unchanged (small files, no WebCodecs, or
- *   compression failure), so the upload MIME allowlist still applies. The web
- *   compressor enforces the size limit on its pass-through output itself.
- * - GIFs are never compressed on either platform, so their source size is
- *   the output size.
- */
 /** Where a video attempt was when it failed, for its telemetry event. */
 type VideoStage =
   | 'copy'
@@ -877,6 +854,19 @@ function videoValidationFailure({
   return undefined
 }
 
+/**
+ * Checks the source before compression. Upload-output limits (format and
+ * `VIDEO_MAX_SIZE`) only apply here where compression cannot change the
+ * source; otherwise they are enforced on the compressed output.
+ *
+ * - Native transcodes any non-GIF video to an acceptable format and compresses
+ *   large sources, so only the source kind is checked.
+ * - Web may pass the source through unchanged (small files, no WebCodecs, or
+ *   compression failure), so the upload MIME allowlist still applies. The web
+ *   compressor enforces the size limit on its pass-through output itself.
+ * - GIFs are never compressed on either platform, so their source size is
+ *   the output size.
+ */
 function validateVideoSource({asset}: {asset: ImagePickerAsset}) {
   const {mimeType} = asset
   const isGif = mimeType === 'image/gif'
@@ -936,19 +926,14 @@ async function pollVideoJob({
         },
       })
     } catch (error) {
-      if (isAborted({error, signal})) throw error
+      if (signal.aborted || isComposerV2Cancellation({cause: error}))
+        throw error
       if (error instanceof VideoJobError) throw error
       failures += 1
       if (failures >= 5) throw error
     }
     await sleep({ms: VIDEO_JOB_POLL_INTERVAL_MS, signal})
   }
-}
-
-function validDimensions({width, height}: {width: number; height: number}) {
-  return (
-    Number.isFinite(width) && Number.isFinite(height) && width > 0 && height > 0
-  )
 }
 
 function report({
@@ -1051,14 +1036,6 @@ function validationMessage({code, i18n}: {code: string; i18n: I18n}) {
     default:
       return i18n._(msg`The selected media is not valid.`)
   }
-}
-
-function isAborted({error, signal}: {error: unknown; signal: AbortSignal}) {
-  return (
-    signal.aborted ||
-    error instanceof AbortError ||
-    (error instanceof Error && error.name === 'AbortError')
-  )
 }
 
 function throwIfAborted({signal}: {signal: AbortSignal}) {

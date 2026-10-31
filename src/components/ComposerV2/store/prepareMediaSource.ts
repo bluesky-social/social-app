@@ -8,6 +8,7 @@ import {
   type PostMediaVideo,
   type ResolvedSourceMetadata,
 } from './types'
+import {validDimensions} from './utils/validDimensions'
 
 /*
  * Media source preparation for the upload workers. Known item metadata is used
@@ -52,7 +53,9 @@ export async function prepareImageSource({
   metadata: ResolvedSourceMetadata
 }> {
   const mimeType = media.mimeType ?? dataUriMimeType({uri: media.uri})
-  let dimensions = knownDimensions({media})
+  let dimensions = validDimensions(media)
+    ? {width: media.width, height: media.height}
+    : undefined
   if (!dimensions) dimensions = await getImageDimensions(media.uri)
   return {
     source: {uri: media.uri, ...dimensions, mimeType},
@@ -85,7 +88,9 @@ export async function prepareVideoSource({
     (file?.type || undefined) ??
     dataUriMimeType({uri: media.uri}) ??
     extensionMimeType({uri: media.uri})
-  let dimensions = knownDimensions({media})
+  let dimensions = validDimensions(media)
+    ? {width: media.width, height: media.height}
+    : undefined
   let duration = media.duration
   let fileSize = media.fileSize ?? file?.size
 
@@ -112,7 +117,9 @@ export async function prepareVideoSource({
       ? await getVideoMetadata(file!, mimeType)
       : await getVideoMetadata(media.uri, mimeType)
     mimeType ??= probed.mimeType ?? undefined
-    dimensions ??= knownDimensions({media: probed})
+    if (!dimensions && validDimensions(probed)) {
+      dimensions = {width: probed.width, height: probed.height}
+    }
     duration ??= probed.duration ?? undefined
     fileSize ??= probed.fileSize
   } else if (!IS_WEB && fileSize == null) {
@@ -135,26 +142,6 @@ export async function prepareVideoSource({
     },
     metadata: {...dimensions, mimeType, duration, fileSize},
   }
-}
-
-/** Valid positive dimensions, or undefined when either is unknown. */
-function knownDimensions({
-  media,
-}: {
-  media: {width?: number | null; height?: number | null}
-}): {width: number; height: number} | undefined {
-  const {width, height} = media
-  if (
-    typeof width === 'number' &&
-    typeof height === 'number' &&
-    Number.isFinite(width) &&
-    Number.isFinite(height) &&
-    width > 0 &&
-    height > 0
-  ) {
-    return {width, height}
-  }
-  return undefined
 }
 
 function dataUriMimeType({uri}: {uri: string}) {

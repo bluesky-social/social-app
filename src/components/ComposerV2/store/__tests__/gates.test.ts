@@ -185,9 +185,7 @@ describe('threadgate and postgate state', () => {
     expect(store.getState()).toBe(afterThreadgate)
 
     const postgateRules = [unknownPostgateRule()] as PostgateEmbeddingRule[]
-    store.actions.setPostgateConfiguration({
-      embeddingRules: postgateRules,
-    })
+    store.actions.setPostgateEmbeddingRules(postgateRules)
     const afterPostgate = store.getState()
     expect(notify).toHaveBeenCalledTimes(2)
     expect(afterPostgate.posts[root]).toBe(before.posts[root])
@@ -198,9 +196,7 @@ describe('threadgate and postgate state', () => {
     expect(
       opaqueRule(afterPostgate.postgateEmbeddingRules[0]).nested.enabled,
     ).toBe(true)
-    store.actions.setPostgateConfiguration({
-      embeddingRules: [unknownPostgateRule()],
-    })
+    store.actions.setPostgateEmbeddingRules([unknownPostgateRule()])
     expect(notify).toHaveBeenCalledTimes(2)
     expect(store.getState()).toBe(afterPostgate)
 

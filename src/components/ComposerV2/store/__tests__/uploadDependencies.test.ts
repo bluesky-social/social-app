@@ -26,8 +26,10 @@ import {
   type VideoUploadDependencies,
 } from '#/components/ComposerV2/store/uploads'
 import {copyVideoToCache} from '#/components/ComposerV2/store/utils/copyVideoToCache'
-import {releaseCompressedImage} from '#/components/ComposerV2/store/utils/releaseCompressedImage'
-import {releaseCompressedVideo} from '#/components/ComposerV2/store/utils/releaseCompressedVideo'
+import {
+  releaseCompressedImage,
+  releaseCompressedVideo,
+} from '#/components/ComposerV2/store/utils/mediaRelease'
 
 const resolvers = {} as LinkResolvers
 

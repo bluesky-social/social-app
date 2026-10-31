@@ -129,6 +129,46 @@ describe('subscribe / getState', () => {
     store.destroy()
   })
 
+  test('setPostLanguages equal value does not notify or dirty the store', () => {
+    const store = createThreadStore({
+      ...testUploadRuntime,
+      resolvers,
+      __createId: makeIdGenerator(),
+      initialState: {posts: [{langs: ['en'], labels: ['sexual']}]},
+    })
+    const root = rootId(store)
+    const before = store.getState()
+    const notify = jest.fn()
+    store.subscribe(notify)
+
+    store.actions.setPostLanguages(root, ['en'])
+
+    expect(notify).not.toHaveBeenCalled()
+    expect(store.getState()).toBe(before)
+    expect(store.getState().isDirty).toBe(false)
+    store.destroy()
+  })
+
+  test('setPostLabels equal value does not notify or dirty the store', () => {
+    const store = createThreadStore({
+      ...testUploadRuntime,
+      resolvers,
+      __createId: makeIdGenerator(),
+      initialState: {posts: [{langs: ['en'], labels: ['sexual']}]},
+    })
+    const root = rootId(store)
+    const before = store.getState()
+    const notify = jest.fn()
+    store.subscribe(notify)
+
+    store.actions.setPostLabels(root, ['sexual'])
+
+    expect(notify).not.toHaveBeenCalled()
+    expect(store.getState()).toBe(before)
+    expect(store.getState().isDirty).toBe(false)
+    store.destroy()
+  })
+
   test('empty slot removals preserve the snapshot', () => {
     const store = createThreadStore({...testUploadRuntime, resolvers})
     const root = rootId(store)

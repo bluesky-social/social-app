@@ -455,3 +455,19 @@ describe('replaceImageSource with the real image worker', () => {
     store.destroy()
   })
 })
+
+describe('source metadata', () => {
+  test('valid worker metadata fills a known-but-invalid size', () => {
+    const {attempts, workers} = manualUploadWorkers()
+    const store = makeStore(workers)
+    const root = rootId(store)
+    const [id] = store.actions.addMedia(root, [
+      {kind: 'image', uri: original.uri, width: -1, height: 300},
+    ])!.addedMediaIds
+
+    attempts[0].setMediaSourceMetadata?.(root, id, {width: 640, height: 480})
+
+    expect(images(store)[0]).toMatchObject({width: 640, height: 480})
+    store.destroy()
+  })
+})

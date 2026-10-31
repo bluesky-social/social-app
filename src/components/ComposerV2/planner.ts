@@ -29,6 +29,7 @@ import {
   type ThreadState,
 } from '#/components/ComposerV2/store/types'
 import {cloneSerializable} from '#/components/ComposerV2/store/utils/buildThreadState'
+import {validDimensions} from '#/components/ComposerV2/store/utils/validDimensions'
 import {resolveRichText} from '#/components/ComposerV2/utils/resolveRichText'
 import {type Gif} from '#/features/gifPicker/types'
 import {app, chat, com} from '#/lexicons'
@@ -963,22 +964,6 @@ async function externalRecord({
       ...(link.associatedRefs ? {associatedRefs: link.associatedRefs} : {}),
     },
   }
-}
-
-/** Source dimensions may still be unknown if preparation has not run. */
-function validDimensions(value: {
-  width?: number
-  height?: number
-}): value is {width: number; height: number} {
-  const {width, height} = value
-  return (
-    typeof width === 'number' &&
-    typeof height === 'number' &&
-    Number.isFinite(width) &&
-    Number.isFinite(height) &&
-    width > 0 &&
-    height > 0
-  )
 }
 
 function addValidatedWrite({
