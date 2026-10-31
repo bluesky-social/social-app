@@ -100,8 +100,9 @@ export function MemberMenu({
       openChat(prefetchedAvailability)
     } else {
       /*
-       * The trigger prefetches this, but on iOS the native menu takes the
-       * tap, so the trigger's onPress never runs.
+       * The trigger prefetches this, but on iOS its onPress only runs when
+       * the menu first opens, and the badge trigger's never does, since its
+       * onPress is nested in `pressableProps`.
        */
       void fetchAvailability().then(({data}) => openChat(data))
     }
