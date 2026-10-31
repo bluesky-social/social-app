@@ -1,54 +1,55 @@
 # Composer
 
-The composer is a per-session composition store with React as its view layer.
-It handles threads, attachments, eager media uploads, and record planning without
-putting their lifecycles inside UI components. The store, adapters, planner,
-and writer are intended for the production composer, but wiring them into its
-UI is deferred to a separate PR; the current integration is the developer
-tester.
+## TL;DR
 
-## Try it
+- **What it is:** the next composer's engine. A per-session store holds a thread
+  of posts, their attachments, and interaction settings, and runs media uploads
+  and link resolution in the background. React is only the view layer.
+- **How a post gets out:** edit the store, take a snapshot, `planThread()` turns
+  it into validated records without writing anything, then `writeThreadPlan()`
+  sends that exact plan as one `applyWrites` call.
+- **Uploads are eager:** media starts processing and uploading as soon as it is
+  added, so publishing usually just writes records.
+- **Status:** the store, adapters, planner, and writer are built and covered by
+  unit tests; manual checks so far cover the iOS simulator and Chrome, not
+  Android. They are not yet wired into the production composer UI or draft
+  saving. Today the only UI is the developer tester (**Settings > Developer
+  options > Debug Composer**).
+- **The one rule to remember:** a failed write may still have committed,
+  unless it was refused before sending or with a 4xx. Keep the exact plan and
+  reconcile; never blindly retry with new record keys.
 
-Open **Settings > Developer options > Debug Composer**, or
-`/sys/debug-composer` (`bluesky://sys/debug-composer` on native). It requires a
-signed-in account; signed out, it shows a notice instead of creating a store.
-
-The tester supports initialization scenarios, post editing/reordering, up to ten
-images, video/captions, GIFs, record and URL attachments, languages, labels,
-explicit tags, interaction settings, upload retries, and record inspection.
-
-**This is not a sandbox account or a fake uploader:**
-
-- Selecting or restoring media starts real processing and blob uploads.
-- **Plan records** constructs and validates records without publishing them.
-  Planning can perform reads and upload card/GIF thumbnails.
-- Publishing is separate: an opt-in checkbox and explicit button send the exact
-  plan to the PDS. The tester permits one write attempt per mount.
-- Full generated records and external-preview fields are intentionally visible
-  in the tester, but are not automatically logged. The state summary is redacted.
-- Nothing entered here is saved as a draft. The draft scenario exercises only
-  the inbound adapter.
-
-See [tester coverage](../../view/screens/DebugComposer/COVERAGE.md) for controls,
-test IDs, and what has been verified by hand. Unit-test coverage is not proof of
-live UI behavior.
-
-## Mental model
+## Architecture
 
 ```text
-ComposerOpts -> composerOptsToInitialState() --+
-                                              +-> ThreadStoreInitialState
-Saved draft + media -> draftToInitialState() --+            |
-                                                           v
-                                                    createThreadStore()
-                                                           |
-                                            actions / snapshots / subscriptions
-                                                           |
-                                                      React hooks
-
-Captured snapshot -> planThread() -> validated plan -> writeThreadPlan()
-                       no record writes                    explicit record write
+ Inputs                         Session (one per open composition)
+ ------                         ----------------------------------
+ ComposerOpts ---+
+                 +- adapters -> createThreadStore() -> React hooks -> UI
+ Saved draft ----+                   |    ^
+                                     |    | status, blobs, metadata
+ Picker / paste -- addMedia() ------>|    |
+                                     +-> upload service -> image/video workers
+                                     +-> link resolver  -> record/card lookups
+                                     |
+                                     v
+                snapshot -> planThread() -> ThreadPlan -> writeThreadPlan()
+                            (no record writes)            (one applyWrites)
 ```
+
+| Piece               | Job                                                                                                                       | Code                                                               |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Adapters            | Turn composer intents, saved drafts, and pasted media into store input. Synchronous; no I/O (rejections go to `onError`). | [adapters/](adapters/)                                             |
+| Store               | Owns the composition, exposes `actions`, publishes immutable snapshots.                                                   | [store/index.ts](store/index.ts), [store/types.ts](store/types.ts) |
+| Upload service      | One attempt per media item: ownership, retries, retained compression, telemetry.                                          | [store/mediaUploads.ts](store/mediaUploads.ts)                     |
+| Workers             | Prepare, compress, and upload images and video using the app's existing media code.                                       | [store/uploads.ts](store/uploads.ts)                               |
+| Link resolver       | Resolves URLs into quote records or link cards, per post and slot, cancelling superseded lookups.                         | [store/linkResolver.ts](store/linkResolver.ts)                     |
+| Hooks               | React subscriptions and live rich-text feedback.                                                                          | [hooks/](hooks/)                                                   |
+| Planner             | Snapshot to validated records: preflight, embeds, reply chain, gates.                                                     | [planner.ts](planner.ts)                                           |
+| Writer              | Sends a successful plan once and classifies the failure.                                                                  | [writer.ts](writer.ts)                                             |
+| Errors and messages | Optional per-session diagnostics; failure codes localized at the UI edge.                                                 | [errors.ts](errors.ts), [messages.ts](messages.ts)                 |
+
+## Data model
 
 There is one store per open composition. Posts have stable IDs, and their order
 is the insertion order of `state.posts`. Reordering changes that order, not the
@@ -61,22 +62,23 @@ Each post has plain text, languages, self-labels, explicit tags, and two slots:
 | `attachments.record` | One quoted post, feed, list, or starter pack                |
 | `attachments.media`  | One images group, video, GIF, external card, or chat invite |
 
-Both slots can coexist. The planner combines them into `recordWithMedia`; the
-store never uses submit-time priority to discard competing attachments. One to
-four images publish as `app.bsky.embed.images`; five to ten publish as
-`app.bsky.embed.gallery`. Ten is the product limit, regardless of larger schema
-ceilings. A reply target is separate from both attachment slots.
+Both slots can coexist; the planner combines them into `recordWithMedia`. One to
+four images publish as `app.bsky.embed.images`, five to ten as
+`app.bsky.embed.gallery`. A reply target is separate from both slots.
 
 Threadgate and postgate settings are shared across the composition.
 `threadgateAllowRules: undefined` means everybody can reply; `[]` means nobody.
-Empty postgate embedding rules allow quoting. Preserve unknown typed rules,
-rather than silently broadening permissions when editing known rules.
+Empty postgate embedding rules allow quoting. Unknown rule types are preserved
+so editing never silently broadens permissions.
 
-## Working with the store
+Rich text is derived, not stored. Hooks give fast regex-only feedback; the
+planner runs the shared [`resolveRichText`](utils/resolveRichText.ts) for
+authoritative facets, mentions, and link shortening.
 
-Use the [types](store/types.ts) and [store implementation](store/index.ts) as the
-API reference. A session owner supplies clients, the account PDS URL,
-analytics, and optional normalized initial content:
+## Using the store
+
+A session owner supplies clients, the account PDS URL, analytics, default
+languages, and optional initial content:
 
 ```ts
 import {createThreadStore} from '#/components/ComposerV2/store'
@@ -100,31 +102,70 @@ if (added) store.actions.setPostText(added.addedPostId, 'Second post')
 store.destroy()
 ```
 
-`defaultLanguages` is the languages a post gets when it is created without any.
-A post built from initial state (including adapter output) or by `addPost` with
-missing or empty `langs` receives a copy of it; explicit non-empty languages are
-kept. Applying defaults does not mark the store dirty, and `setPostLanguages`
-can still set any value, including `[]`, as an explicit user choice.
+- Create the store once per session, not per render, and provide it with
+  `ThreadStoreProvider`. Read with `useThreadState()`, `useThreadPost(postId)`,
+  and `useThreadStore()`. The provider does not own the store's lifecycle.
+- Edit only through `actions`. Snapshots are read-only. Focus, dialogs,
+  callbacks, and publish state live outside the store.
+- `defaultLanguages` fills any post created without languages; an explicit
+  `setPostLanguages(postId, [])` is still allowed.
+- [The tester session hook](../../view/screens/DebugComposer/useTesterSession.ts)
+  is the working integration example.
 
-Create the store once per session, not on every render. Provide it with
-`ThreadStoreProvider`; use `useThreadState()` for thread-wide subscriptions,
-`useThreadPost(postId)` for a post, and `useThreadStore()` for commands.
-The provider distributes the store; it does not own its lifecycle.
-[The tester session hook](../../view/screens/DebugComposer/useTesterSession.ts)
-is the integration example.
+## Publishing
 
-Use `actions` to edit. Treat published snapshots as read-only and keep focus,
-dialog state, callbacks, and publish state outside the store. `internalActions`
-is a test seam, not an alternative UI API. Native text inputs use `defaultValue`
-and mirror changes into the store; session replacement remounts them by key.
+`planThread({snapshot, dependencies, preflight, onError})` returns
+`{ok: true, input, posts, writes}` or `{ok: false, error}`. It plans one
+immutable snapshot, does not wait for pending uploads, and writes no records
+(it may upload card/GIF thumbnails). Plan again after edits.
 
-Rich text is derived, not stored. `useThreadPostRichText()` provides regex-only
-facet detection and a URL-shortened grapheme count for responsive feedback.
-The planner uses the shared [`resolveRichText`](utils/resolveRichText.ts) path
-for authoritative facets, mention resolution, newline normalization, and URL
-shortening. Explicit tags are independent of hashtag facets.
+`writeThreadPlan({plan, pdsClient, onError})` checks the plan's repo against the
+signed-in account and sends it unchanged as one `applyWrites`:
 
-## Where to make changes
+| Outcome                               | Meaning                    | Caller does                                              |
+| ------------------------------------- | -------------------------- | -------------------------------------------------------- |
+| Resolves with URIs                    | Published                  | `store.reportPublished({plan})`                          |
+| `WritePreconditionError`              | Nothing was sent           | Fix the plan or session                                  |
+| `WriteRejectedError` (4xx)            | Nothing was committed      | May retry the same plan                                  |
+| Anything else (transport, abort, 5xx) | May or may not have posted | Keep the exact plan, reconcile, `reportPublishUncertain` |
+
+## Try it
+
+Open **Settings > Developer options > Debug Composer**, or
+`/sys/debug-composer` (`bluesky://sys/debug-composer` on native). It needs
+developer mode (or a dev build) and a signed-in account.
+
+It is not a sandbox: media uploads are real, **Plan records** builds and
+validates records without publishing, and publishing is a separate opt-in
+button that writes to your account. Nothing is saved as a draft. See
+[tester coverage](../../view/screens/DebugComposer/COVERAGE.md) for controls,
+test IDs, and what has been verified by hand.
+
+## Open work
+
+- **Production UI:** not wired into the app's composer yet. Tag typeahead and
+  external-card suggestions are not planned; the tester's tags are a plain
+  comma-separated input.
+- **Drafts:** restoring a draft into the store works; saving one does not. See
+  [Deferred draft design](#deferred-draft-design).
+- **Temporary media purge:** `purgeTemporaryImageFiles` (`src/state/gallery.ts`,
+  native only, run on legacy composer close and from Settings) wipes
+  `bsky-composer/`, `ImagePicker/`, and `ImageManipulator/` wholesale. Running
+  it during uploads deletes their files, so production wiring must decide when
+  the composer purges. The store never calls it.
+- **Unmeasured memory risks:** image compression is serialized but has no
+  timeout (a timeout would free the slot while native work continues), and video
+  compression has no concurrency cap. Check a thread with 3–4 videos on Android
+  and web before changing either.
+
+---
+
+## Reference
+
+Detailed contracts behind the code, mainly for agents and anyone changing the
+internals. Read the section for the area you are touching.
+
+### Where to make changes
 
 | Concern                                                   | Start here                                                                                                              |
 | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
@@ -140,68 +181,21 @@ shortening. Explicit tags are independent of hashtag facets.
 | Per-session diagnostic contract                           | [errors.ts](errors.ts)                                                                                                  |
 | Developer controls and session/attempt lifetime           | [tester](../../view/screens/DebugComposer/DebugComposer.tsx), [debug route](../../view/screens/DebugComposer/index.tsx) |
 
-## Planning, writing, and errors
+### Writing and reconciliation
 
-`planThread({snapshot, dependencies, preflight, onError})` returns either
-`{ok: true, input, posts, writes}` or `{ok: false, error}`. It captures one
-immutable snapshot; it does not wait for pending uploads or incorporate later
-edits/completions. Plan again from a fresh snapshot when necessary.
-
-`writeThreadPlan({plan, pdsClient, onError})` checks the authenticated account
-against `plan.input.repo`, requires `validate: true`, and sends exactly one
-unchanged `applyWrites` request. It returns planned post URIs in thread order.
-It does not rebuild the composition or retry.
-
-**A 4xx refusal committed nothing.** `applyWrites` is atomic, so a 4xx server
-response throws `WriteRejectedError` (with `status` and the original
-`cause`) and reports `apply-writes-rejected` / `retry`. The same plan can be
-retried. Do not call `reportPublishUncertain` for it.
-
-**Any other rejection may already have committed**, including transport
-failures, aborts, timeouts, and 5xx responses. The writer rethrows the raw SDK
-error and reports `apply-writes-failed` / `reconcile`. Retain the exact plan and
-reconcile its URIs; do not automatically replan with new keys or retry. The
-tester retains the attempted plan in memory, including across scenario changes,
-but has no reconciliation engine or durable plan storage. Leaving the tester
-loses that in-memory record. Future production integration must also own duplicate
-submission protection, publish state, and AppView propagation. After a write
-resolves, call `store.reportPublished({plan})` so video telemetry records
-publication; for a rejection that is neither a `WritePreconditionError`
-nor a `WriteRejectedError`, call
-`store.reportPublishUncertain({plan, cause})` instead.
-
-Failures remain in attachment/upload state, adapter rejections, or planning and
-writing outcomes. Optional `onError(event, cause?)` adds one per-session reporting
-policy, not a global toast or event bus. Pass `store.reportError` to operation
-callers, with an attempt guard when work can be superseded. Diagnostic causes
-are not safe UI text or automatic logging payloads.
-
-## Follow-ups, not part of this composer PR
-
-- **Draft save/restore:** inbound hydration exists; outbound serialization,
-  persistence, cleanup, and tester Save/Open controls are deferred. The design
-  is under [Deferred draft design](#deferred-draft-design).
-- Production composer UI wiring is deferred to a separate PR. A production tag
-  typeahead and external-card suggestions are not planned. The tester's tags
-  are a plain comma-separated input.
-- **Temporary media purge:** production wiring must decide when and how the
-  composer purges temporary media. `purgeTemporaryImageFiles`
-  (`src/state/gallery.ts`, native only, run on legacy composer close and from
-  Settings) wipes `bsky-composer/`, `ImagePicker/`, and `ImageManipulator/`
-  wholesale, so running it during in-flight uploads deletes their source and
-  output files. The store never calls it today.
-- **Unmeasured memory risks:** check on device before changing code. The image
-  compression limiter has no timeout (a timeout would free the slot while native
-  work continues, defeating the memory cap), and video compression has no
-  concurrency cap. Try a thread with 3–4 videos on Android and web while
-  watching memory and codec failures.
-
----
-
-## Reference
-
-Constraints and contracts behind the code above. They are not authorization to
-start the deferred work.
+- The writer requires `validate: true` and never rebuilds the composition or
+  retries. A 4xx throws `WriteRejectedError` (with `status` and the original
+  `cause`) and reports `apply-writes-rejected` / `retry`.
+- Any other failure after dispatch rethrows the raw SDK error and reports
+  `apply-writes-failed` / `reconcile`. Retain the exact plan and reconcile its
+  URIs; do not replan with new keys or retry automatically.
+- The tester keeps the attempted plan in memory only; it has no reconciliation
+  engine or durable plan storage. Production integration must own duplicate
+  submission protection, publish state, and AppView propagation.
+- Failures live in attachment/upload state, adapter rejections, and plan/write
+  results. `onError(event, cause?)` adds one per-session reporting policy, not a
+  global toast or event bus. Diagnostic causes are not safe UI text or logging
+  payloads.
 
 ### State ownership and action contracts
 
@@ -372,9 +366,10 @@ work records no failure. Events the store adds:
   `WeakMap` keyed by its blob and matches the blobs the plan embeds, so each
   video reports once and later edits cannot misattribute a publication. It
   still works after `destroy()`.
-- `composer:publish:uncertain` comes from `store.reportPublishUncertain({plan,
-cause})`, for a write that failed after dispatch and may have committed. Those videos stay publishable
-  for a later reconciliation.
+- `composer:publish:uncertain` comes from
+  `store.reportPublishUncertain({plan, cause})`, for a write that failed after
+  dispatch and may have committed. Those videos stay publishable for a later
+  reconciliation.
 
 ### Media sources and worker preparation
 
@@ -633,11 +628,15 @@ local post/media IDs where applicable, and recovery (`retry`, `edit`,
   scenario/plan work. Deferred scenario stores must be destroyed, not orphaned.
 - Native dialogs can portal into a separate root outside the screen provider.
   Store-reading dialog content must re-provide its owning `ThreadStore` inside
-  `Dialog.Outer` (`src/view/screens/DebugComposer/__tests__/dialogPortalContext.test.tsx`
-  covers this). The shared gate
-  dialog stays mounted so its control is attached before the first open.
-- Keep Lingui macros at compilable call sites. Passing a tagged-template macro
-  binding into an ordinary helper breaks the text; use the tested message hooks.
+  `Dialog.Outer` (covered by
+  `src/view/screens/DebugComposer/__tests__/dialogPortalContext.test.tsx`). The
+  shared gate dialog stays mounted so its control is attached before the first
+  open.
+- Text inputs use `defaultValue` and mirror changes into the store; replacing
+  the session remounts them by key. `internalActions` is a test seam, not a UI
+  API.
+- Pass `i18n` (from `useLingui()`) to the message helpers. Passing a Lingui
+  tagged-template macro binding into an ordinary helper breaks the text.
 - Synthetic draft fixtures must not contain network-bearing GIF/card URLs that
   real workers could fetch. Use local test doubles for those cases.
 
