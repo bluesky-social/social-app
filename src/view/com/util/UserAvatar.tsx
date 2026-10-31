@@ -461,7 +461,7 @@ let EditableUserAvatar = ({
 
   return (
     <>
-      <Menu.Root>
+      <Menu.Root inline>
         <Menu.Trigger label={_(msg`Edit avatar`)}>
           {({props}) => (
             <Pressable {...props} testID="changeAvatarBtn">

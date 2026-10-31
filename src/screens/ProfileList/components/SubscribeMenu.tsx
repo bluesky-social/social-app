@@ -59,7 +59,7 @@ export function SubscribeMenu({list}: {list: app.bsky.graph.defs.ListView}) {
 
   return (
     <>
-      <Menu.Root>
+      <Menu.Root inline>
         <Menu.Trigger label={_(msg`Subscribe to this list`)}>
           {({props}) => (
             <Button

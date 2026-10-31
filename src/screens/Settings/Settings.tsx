@@ -672,7 +672,7 @@ function AccountRow({
         {pendingDid === account.did && <SettingsList.ItemIcon icon={Loader} />}
       </SettingsList.PressableItem>
       {!pendingDid && (
-        <Menu.Root>
+        <Menu.Root inline>
           <Menu.Trigger label={l`Account options`}>
             {({props, state}) => (
               <Pressable
