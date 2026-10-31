@@ -22,9 +22,10 @@ import {
   type ViewStyle,
 } from 'react-native'
 
-import {atoms as a, flatten, select, useTheme} from '#/alf'
+import {atoms as a, flatten, hover, internStyle, select, useTheme} from '#/alf'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 
 /**
  * The `Button` component, and some extensions of it like `Link` are intended
@@ -220,6 +221,21 @@ export const Button = forwardRef<React.ComponentRef<typeof View>, ButtonProps>(
       focused: false,
     })
 
+    /*
+     * On web, the hover background comes from CSS `:hover` rules (see
+     * `hover()`) instead of hover state, so hovering doesn't re-render the
+     * button. Fall back to state when something else needs it: a render
+     * function child reads `hovered`, a custom `hoverStyle` can hold any
+     * props, and an inline colour from `style` would beat the CSS rule.
+     */
+    const flatStyle = IS_WEB ? flatten(style) : undefined
+    const cssHover =
+      IS_WEB &&
+      typeof children !== 'function' &&
+      !hoverStyleProp &&
+      flatStyle?.backgroundColor == null &&
+      flatStyle?.borderColor == null
+
     const onPressIn = useCallback(
       (e: GestureResponderEvent) => {
         setState(s => ({
@@ -242,23 +258,27 @@ export const Button = forwardRef<React.ComponentRef<typeof View>, ButtonProps>(
     )
     const onHoverIn = useCallback(
       (e: MouseEvent) => {
-        setState(s => ({
-          ...s,
-          hovered: true,
-        }))
+        if (!cssHover) {
+          setState(s => ({
+            ...s,
+            hovered: true,
+          }))
+        }
         onHoverInOuter?.(e)
       },
-      [setState, onHoverInOuter],
+      [setState, onHoverInOuter, cssHover],
     )
     const onHoverOut = useCallback(
       (e: MouseEvent) => {
-        setState(s => ({
-          ...s,
-          hovered: false,
-        }))
+        if (!cssHover) {
+          setState(s => ({
+            ...s,
+            hovered: false,
+          }))
+        }
         onHoverOutOuter?.(e)
       },
-      [setState, onHoverOutOuter],
+      [setState, onHoverOutOuter, cssHover],
     )
     const onFocus = useCallback(
       (e: NativeSyntheticEvent<TargetedEvent>) => {
@@ -281,7 +301,7 @@ export const Button = forwardRef<React.ComponentRef<typeof View>, ButtonProps>(
       [setState, onBlurOuter],
     )
 
-    const {baseStyles, hoverStyles} = useMemo(() => {
+    const {baseStyles, hoverStyles, hoverClasses} = useMemo(() => {
       const baseStyles: ViewStyle[] = []
       const hoverStyles: ViewStyle[] = []
 
@@ -378,7 +398,7 @@ export const Button = forwardRef<React.ComponentRef<typeof View>, ButtonProps>(
               baseStyles.push(a.border, {
                 borderColor: t.palette.primary_500,
               })
-              hoverStyles.push(a.border, {
+              hoverStyles.push({
                 backgroundColor: t.palette.primary_50,
               })
             } else {
@@ -452,7 +472,7 @@ export const Button = forwardRef<React.ComponentRef<typeof View>, ButtonProps>(
               baseStyles.push(a.border, {
                 borderColor: t.palette.negative_500,
               })
-              hoverStyles.push(a.border, {
+              hoverStyles.push({
                 backgroundColor: t.palette.negative_50,
               })
             } else {
@@ -478,7 +498,7 @@ export const Button = forwardRef<React.ComponentRef<typeof View>, ButtonProps>(
               baseStyles.push(a.border, {
                 borderColor: t.palette.negative_500,
               })
-              hoverStyles.push(a.border, {
+              hoverStyles.push({
                 backgroundColor: t.palette.negative_50,
               })
             } else {
@@ -541,8 +561,12 @@ export const Button = forwardRef<React.ComponentRef<typeof View>, ButtonProps>(
       }
 
       return {
-        baseStyles,
+        // Created, so that on web they're classes `hoverClasses` can override
+        baseStyles: IS_WEB ? baseStyles.map(internStyle) : baseStyles,
         hoverStyles,
+        hoverClasses: IS_WEB
+          ? hoverStyles.map(hoverStyle => hover(hoverStyle))
+          : [],
       }
     }, [t, variant, color, size, shape, disabled])
 
@@ -579,9 +603,11 @@ export const Button = forwardRef<React.ComponentRef<typeof View>, ButtonProps>(
           a.curve_continuous,
           baseStyles,
           style,
-          ...(state.hovered || state.pressed
-            ? [hoverStyles, hoverStyleProp]
-            : []),
+          ...(cssHover
+            ? [hoverClasses, state.pressed && hoverStyles]
+            : state.hovered || state.pressed
+              ? [hoverStyles, hoverStyleProp]
+              : []),
         ]}
         onPressIn={onPressIn}
         onPressOut={onPressOut}
