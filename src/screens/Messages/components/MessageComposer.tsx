@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react'
-import {Pressable, View} from 'react-native'
+import {type LayoutChangeEvent, Pressable, View} from 'react-native'
 import {
   useKeyboardHandler,
   useReanimatedKeyboardAnimation,
@@ -55,10 +55,11 @@ export function MessageComposer({
 }: {
   textInputId?: string
   /**
-   * Called synchronously when a send is accepted, before the input clears and
-   * the composer shrinks back down.
+   * Called synchronously when a send is accepted, just before the input
+   * clears, with how much shorter the composer is about to get (0 if it can't
+   * tell yet, e.g. it's never been laid out with a single line).
    */
-  onWillSendMessage?: () => void
+  onWillSendMessage?: (composerShrink: number) => void
   onSendMessage: (
     message: string,
     embed?: MessageEmbedState,
@@ -121,6 +122,25 @@ export function MessageComposer({
    */
   const isSubmittingRef = useRef(false)
 
+  /*
+   * The composer's height now, and its smallest height with nothing attached
+   * - one line, which is what it shrinks back to after a send.
+   */
+  const heights = useRef<{current: number; collapsed: number | null}>({
+    current: 0,
+    collapsed: null,
+  })
+  const onLayout = (event: LayoutChangeEvent) => {
+    const height = event.nativeEvent.layout.height
+    heights.current.current = height
+    if (!messageEmbed && !replyTo) {
+      heights.current.collapsed = Math.min(
+        heights.current.collapsed ?? height,
+        height,
+      )
+    }
+  }
+
   const onSubmit = (
     message: string,
     embed: MessageEmbedState | undefined,
@@ -139,7 +159,10 @@ export function MessageComposer({
     }
 
     isSubmittingRef.current = true
-    onWillSendMessage?.()
+    const {current, collapsed} = heights.current
+    onWillSendMessage?.(
+      collapsed === null ? 0 : Math.max(0, current - collapsed),
+    )
     clearDraft()
     haptics.confirm()
     setEmbed(undefined)
@@ -209,6 +232,7 @@ export function MessageComposer({
     <ComposerContainer>
       <View
         collapsable={false}
+        onLayout={onLayout}
         ref={native(
           (node: React.ComponentRef<typeof View>) =>
             void composerInternalApiRef.current?.setAutocompleteAnchor(node),
