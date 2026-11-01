@@ -24,11 +24,12 @@ type ReadState = 'fixture' | 'unread' | 'read'
 /**
  * Every Notifications v2 row kind, rendered from the grouped notifications
  * fixtures, then the follow fixtures as the Followers tab shows them. The
- * layout switch is the `notifications_v2:classic_layout:enable` gate.
+ * layout switch compares the classic rows the app uses with the original
+ * Notifications v2 design.
  */
 export function Notifications() {
   const [readState, setReadState] = useState<ReadState>('fixture')
-  const [layout, setLayout] = useState<RowLayout>('default')
+  const [layout, setLayout] = useState<RowLayout>('classic')
 
   return (
     <View style={[a.gap_md]}>
@@ -46,7 +47,7 @@ export function Notifications() {
         ))}
       </View>
       <View style={[a.flex_row, a.gap_sm]}>
-        {(['default', 'classic'] as const).map(value => (
+        {(['classic', 'default'] as const).map(value => (
           <Button
             key={value}
             label={`${value} layout`}

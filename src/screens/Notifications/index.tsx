@@ -39,7 +39,6 @@ import {
   useHomeHeaderMode,
 } from '#/view/com/util/MainScrollProvider'
 import {NotificationsScreen as LegacyNotificationsScreen} from '#/view/screens/Notifications'
-import {RowLayoutProvider} from '#/screens/Notifications/components/NotificationItem'
 import {PageList} from '#/screens/Notifications/components/PageList'
 import * as Pager from '#/screens/Notifications/components/PagerView'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
@@ -87,32 +86,22 @@ export function NotificationsScreen(props: Props) {
 export function NewNotificationsScreen({}: Props) {
   const {t: l} = useLingui()
   const t = useTheme()
-  const ax = useAnalytics()
   const {openComposer} = useOpenComposer()
-  const layout = ax.features.enabled(
-    ax.features.NotificationsV2ClassicLayoutEnable,
-  )
-    ? 'classic'
-    : 'default'
 
   return (
-    <RowLayoutProvider value={layout}>
-      <Layout.Screen
-        testID="newNotificationsScreen"
-        noInsetTop={IS_LIQUID_GLASS}>
-        <HomeHeaderModeProvider>
-          <NewNotificationsScreenInner />
-        </HomeHeaderModeProvider>
-        <FAB
-          testID="composeFAB"
-          onPress={() => openComposer({logContext: 'Fab'})}
-          icon={<EditBigIcon size="lg" fill={t.palette.white} />}
-          accessibilityRole="button"
-          accessibilityLabel={l({message: 'New post', context: 'action'})}
-          accessibilityHint=""
-        />
-      </Layout.Screen>
-    </RowLayoutProvider>
+    <Layout.Screen testID="newNotificationsScreen" noInsetTop={IS_LIQUID_GLASS}>
+      <HomeHeaderModeProvider>
+        <NewNotificationsScreenInner />
+      </HomeHeaderModeProvider>
+      <FAB
+        testID="composeFAB"
+        onPress={() => openComposer({logContext: 'Fab'})}
+        icon={<EditBigIcon size="lg" fill={t.palette.white} />}
+        accessibilityRole="button"
+        accessibilityLabel={l({message: 'New post', context: 'action'})}
+        accessibilityHint=""
+      />
+    </Layout.Screen>
   )
 }
 

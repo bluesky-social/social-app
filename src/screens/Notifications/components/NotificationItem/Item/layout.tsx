@@ -4,18 +4,17 @@ import {type StyleProp, type ViewStyle} from 'react-native'
 import {atoms as a, tokens} from '#/alf'
 
 /**
- * Which design the notification rows use. `default` is the original
- * Notifications v2 design. `classic` is the conservative one, behind the
- * `notifications_v2:classic_layout:enable` gate: v1-style icons in the left
- * column of reaction rows, and the gutters, left column and quote cards of a
- * post in a feed.
+ * Which design the notification rows use. `classic` is the one the app uses:
+ * v1-style icons in the left column of reaction rows, and the gutters, left
+ * column and quote cards of a post in a feed. `default` is the original
+ * Notifications v2 design, with a badged avatar on every row.
  */
 export type RowLayout = 'default' | 'classic'
 
-const RowLayoutContext = createContext<RowLayout>('default')
+const RowLayoutContext = createContext<RowLayout>('classic')
 
 /**
- * Sets the layout for every row beneath it.
+ * Sets the layout for every row beneath it. Rows are `classic` without one.
  */
 export const RowLayoutProvider = RowLayoutContext.Provider
 
