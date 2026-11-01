@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react'
-import {type ColorValue, Dimensions, View} from 'react-native'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+import {type ColorValue, View} from 'react-native'
+import {GestureDetector, usePanGesture} from 'react-native-gesture-handler'
 import Animated, {
   clamp,
   interpolate,
@@ -19,7 +19,6 @@ import {useHaptics} from '#/lib/haptics'
 import {atoms as a} from '#/alf'
 import {type GestureActions} from './GestureActionView.shared'
 
-const MAX_WIDTH = Dimensions.get('screen').width
 const ICON_SIZE = 32
 
 export function GestureActionView({
@@ -42,13 +41,14 @@ export function GestureActionView({
     'leftFirst' | 'leftSecond' | 'rightFirst' | 'rightSecond' | null
   >(null)
 
-  const haptic = useHaptics()
+  const {threshold: playThresholdHaptic} = useHaptics()
   const isReducedMotion = useReducedMotion()
 
   const transX = useSharedValue(0)
+  const containerWidth = useSharedValue(0)
   const clampedTransX = useDerivedValue(() => {
-    const min = actions.leftFirst ? -MAX_WIDTH : 0
-    const max = actions.rightFirst ? MAX_WIDTH : 0
+    const min = actions.leftFirst ? -containerWidth.get() : 0
+    const max = actions.rightFirst ? containerWidth.get() : 0
     return clamp(transX.get(), min, max)
   })
 
@@ -106,17 +106,17 @@ export function GestureActionView({
   // Absurdly high value so it doesn't interfere with the pan gestures above (i.e., scroll)
   // reanimated doesn't offer great support for disabling y/x axes :/
   const effectivelyDisabledOffset = 200
-  const panGesture = Gesture.Pan()
-    .activeOffsetX([
+  const panGesture = usePanGesture({
+    activeOffsetX: [
       actions.leftFirst ? -10 : -effectivelyDisabledOffset,
       actions.rightFirst ? 10 : effectivelyDisabledOffset,
-    ])
-    .activeOffsetY([-effectivelyDisabledOffset, effectivelyDisabledOffset])
-    .onStart(() => {
+    ],
+    failOffsetY: [-10, 10],
+    onActivate: () => {
       'worklet'
       isActive.set(true)
-    })
-    .onChange(e => {
+    },
+    onUpdate: e => {
       'worklet'
       transX.set(e.translationX)
 
@@ -128,7 +128,7 @@ export function GestureActionView({
             !hitSecond.get()
           ) {
             runPopAnimation()
-            scheduleOnRN(haptic)
+            scheduleOnRN(playThresholdHaptic)
             hitSecond.set(true)
           } else if (
             hitSecond.get() &&
@@ -145,7 +145,7 @@ export function GestureActionView({
             !hitFirst.get()
           ) {
             runPopAnimation()
-            scheduleOnRN(haptic)
+            scheduleOnRN(playThresholdHaptic)
             hitFirst.set(true)
           } else if (
             hitFirst.get() &&
@@ -162,7 +162,7 @@ export function GestureActionView({
             !hitSecond.get()
           ) {
             runPopAnimation()
-            scheduleOnRN(haptic)
+            scheduleOnRN(playThresholdHaptic)
             hitSecond.set(true)
           } else if (
             hitSecond.get() &&
@@ -179,7 +179,7 @@ export function GestureActionView({
             !hitFirst.get()
           ) {
             runPopAnimation()
-            scheduleOnRN(haptic)
+            scheduleOnRN(playThresholdHaptic)
             hitFirst.set(true)
           } else if (
             hitFirst.get() &&
@@ -189,8 +189,8 @@ export function GestureActionView({
           }
         }
       }
-    })
-    .onEnd(e => {
+    },
+    onDeactivate: e => {
       'worklet'
       if (e.translationX < 0) {
         if (hitSecond.get() && actions.leftSecond) {
@@ -209,9 +209,8 @@ export function GestureActionView({
       hitFirst.set(false)
       hitSecond.set(false)
       isActive.set(false)
-    })
-
-  const composedGesture = Gesture.Simultaneous(panGesture)
+    },
+  })
 
   const animatedSliderStyle = useAnimatedStyle(() => {
     return {
@@ -286,8 +285,8 @@ export function GestureActionView({
   })
 
   return (
-    <GestureDetector gesture={composedGesture}>
-      <View>
+    <GestureDetector gesture={panGesture}>
+      <View onLayout={evt => containerWidth.set(evt.nativeEvent.layout.width)}>
         <Animated.View style={[a.absolute, a.inset_0, animatedBackgroundStyle]}>
           <View
             style={{

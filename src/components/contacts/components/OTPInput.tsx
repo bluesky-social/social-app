@@ -58,7 +58,12 @@ export function OTPInput({
       style={[a.w_full, a.relative]}
       onPress={() => {
         innerRef.current?.focus()
-        innerRef.current?.clear()
+        /*
+         * Clear through state, not the input's imperative `clear()`: the digit
+         * row above renders from `value`, so a native-only clear would leave
+         * stale digits on screen.
+         */
+        onChange('')
       }}>
       <View style={[a.w_full, a.flex_row, a.gap_sm]}>
         {[...value.padEnd(numberOfDigits, ' ')].map((digit, index) => {

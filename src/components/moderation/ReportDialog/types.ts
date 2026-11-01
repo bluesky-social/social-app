@@ -23,6 +23,7 @@ export type ReportSubject =
   | $Typed<app.bsky.feed.defs.GeneratorView>
   | $Typed<app.bsky.graph.defs.StarterPackView>
   | $Typed<app.bsky.feed.defs.PostView>
+  | $Typed<app.bsky.actor.defs.ProfileLinkView>
   | ReportSubjectConvoMessage
   | ReportSubjectConvo
 
@@ -60,6 +61,12 @@ export type ParsedReportSubject =
     }
   | {
       type: 'starterPack'
+      uri: string
+      cid: string
+      nsid: string
+    }
+  | {
+      type: 'profileLink'
       uri: string
       cid: string
       nsid: string

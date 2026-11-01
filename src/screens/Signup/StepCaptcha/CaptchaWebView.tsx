@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef} from 'react'
+import {useMemo, useRef} from 'react'
 import {WebView, type WebViewNavigation} from 'react-native-webview'
 import {type ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes'
 
@@ -15,8 +15,6 @@ const ALLOWED_HOSTS = [
   'api2.hcaptcha.com',
 ]
 
-const MIN_DELAY = 3_500
-
 function safeHost(url: string): string {
   try {
     return new URL(url).host
@@ -29,22 +27,10 @@ export function CaptchaWebView({
   url,
   stateParam,
   state,
-  onComplete,
   onSuccess,
   onError,
   onBlockedLoad,
 }: CaptchaWebViewProps) {
-  const startedAt = useRef(Date.now())
-  const successTo = useRef<NodeJS.Timeout>(undefined)
-
-  useEffect(() => {
-    return () => {
-      if (successTo.current) {
-        clearTimeout(successTo.current)
-      }
-    }
-  }, [])
-
   const redirectHost = useMemo(() => {
     if (!state?.serviceUrl) return 'bsky.app'
 
@@ -87,18 +73,13 @@ export function CaptchaWebView({
       return
     }
 
-    // We want to delay the completion of this screen ever so slightly so that it doesn't appear to be a glitch if it completes too fast
+    /*
+     * Report success synchronously. The parent swaps this view for a spinner
+     * as soon as it hears about it, so anything deferred from in here (e.g. a
+     * timer) would be torn down with the view before it could fire.
+     */
     wasSuccessful.current = true
-    onComplete()
-    const now = Date.now()
-    const timeTaken = now - startedAt.current
-    if (timeTaken < MIN_DELAY) {
-      successTo.current = setTimeout(() => {
-        onSuccess(code)
-      }, MIN_DELAY - timeTaken)
-    } else {
-      onSuccess(code)
-    }
+    onSuccess(code)
   }
 
   return (

@@ -6,6 +6,7 @@ import {
   findPostNumberingInQueryData as findPostNumberingInExploreFeedPreviewsQueryData,
 } from '#/state/queries/explore-feed-previews'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/queries/notifications/feed'
+import {findAllPostsInQueryData as findAllPostsInGroupedNotifsQueryData} from '#/state/queries/notifications/grouped'
 import {
   findAllPostsInQueryData as findAllPostsInFeedQueryData,
   findPostNumberingInQueryData as findPostNumberingInFeedQueryData,
@@ -29,6 +30,9 @@ jest.mock('#/state/queries/explore-feed-previews', () => ({
 jest.mock('#/state/queries/notifications/feed', () => ({
   findAllPostsInQueryData: jest.fn(),
 }))
+jest.mock('#/state/queries/notifications/grouped', () => ({
+  findAllPostsInQueryData: jest.fn(),
+}))
 jest.mock('#/state/queries/post-feed', () => ({
   findAllPostsInQueryData: jest.fn(),
   findPostNumberingInQueryData: jest.fn(),
@@ -47,6 +51,7 @@ const finders = [
   findAllPostsInBookmarksQueryData,
   findAllPostsInExploreFeedPreviewsQueryData,
   findAllPostsInNotifsQueryData,
+  findAllPostsInGroupedNotifsQueryData,
   findAllPostsInFeedQueryData,
   findAllPostsInQuoteQueryData,
   findAllPostsInSearchQueryData,

@@ -11,6 +11,7 @@ import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransfo
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
+import {useHomeBadge} from '#/state/home-badge'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -45,6 +46,7 @@ import {
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
+import {isFollowingV2HomeDotEnabled} from '#/features/followingV2/eligibility'
 import {styles} from './BottomBarStyles'
 
 type NavItemValue = 'home' | 'search' | 'chat' | 'notifications' | 'profile'
@@ -64,6 +66,8 @@ export function BottomBarWeb() {
 
   const unreadMessageCount = useUnreadMessageCount()
   const notificationCountStr = useUnreadNotifications()
+  const hasHomeBadge = useHomeBadge()
+  const ax = useAnalytics()
   const aa = useAgeAssurance()
   const isLabeler = profile?.associated?.labeler
 
@@ -100,7 +104,11 @@ export function BottomBarWeb() {
         onLayout={event => footerHeight.set(event.nativeEvent.layout.height)}>
         {hasSession ? (
           <>
-            <NavItem routeName="Home" href="/" navItem="home">
+            <NavItem
+              routeName="Home"
+              href="/"
+              navItem="home"
+              hasNew={hasHomeBadge && isFollowingV2HomeDotEnabled(ax)}>
               {({isActive}) => {
                 const Icon = isActive ? HomeFilled : Home
                 return (

@@ -3,19 +3,23 @@ import {
   copyAsync,
   deleteAsync,
   makeDirectoryAsync,
-  moveAsync,
 } from 'expo-file-system/legacy'
 import {type ImageManipulatorContext, SaveFormat} from 'expo-image-manipulator'
 import {nanoid} from 'nanoid/non-secure'
 
+import {
+  getImageCacheDirectory,
+  joinPath,
+  moveIfNecessary,
+} from '#/lib/media/image/cache'
 import {renderImage} from '#/lib/media/image-manipulator'
 import {getImageDim} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
-import {type PickerImage} from '#/lib/media/picker.shared'
-import {getDataUriSize} from '#/lib/media/util'
 import {isCancelledError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {IS_NATIVE, IS_WEB} from '#/env'
+
+export {compressImage} from '#/lib/media/image/compress'
 
 export type ImageTransformation = {
   crop?: Parameters<ImageManipulatorContext['crop']>[0]
@@ -49,16 +53,6 @@ type ComposerImageWithTransformation = ComposerImageBase & {
 
 export type ComposerImage =
   ComposerImageWithoutTransformation | ComposerImageWithTransformation
-
-let _imageCacheDirectory: string
-
-function getImageCacheDirectory(): string | null {
-  if (IS_NATIVE) {
-    return (_imageCacheDirectory ??= joinPath(cacheDirectory!, 'bsky-composer'))
-  }
-
-  return null
-}
 
 export async function createComposerImage(
   raw: ImageMeta,
@@ -193,98 +187,6 @@ export function resetImageManipulation(
   return img
 }
 
-export async function compressImage(
-  img: ComposerImage,
-  {maxDimension, maxSize}: {maxDimension: number; maxSize: number},
-): Promise<PickerImage> {
-  const source = img.transformed || img.source
-
-  let attempts = 0
-  // Seeded from `maxDimension` but shrunk per attempt below, so keep the
-  // passed-in value pristine.
-  let currentDimension = maxDimension
-  const maxBytes = maxSize
-
-  let minQualityPercentage = 0
-  let maxQualityPercentage = 101 // exclusive
-  let newDataUri
-
-  while (maxQualityPercentage - minQualityPercentage > 1) {
-    if (attempts >= 4) break
-
-    const [w, h] = containImageRes(
-      source.width,
-      source.height,
-      currentDimension,
-    )
-    const qualityPercentage = Math.round(
-      (maxQualityPercentage + minQualityPercentage) / 2,
-    )
-
-    /*
-     * In the event the image doesn't compress well, we want to avoid
-     * unecessary iterations. In this case, binary search will check 51, 26,
-     * 13(rounded). We don't want to go below 25, so if we've halved to 13,
-     * reset the loop and reduce the image dimensions instead.
-     */
-    if (qualityPercentage <= 13) {
-      minQualityPercentage = 0
-      maxQualityPercentage = 101
-      attempts++
-      // max.width → 0.8× → 0.64× → 0.512× → ~0.41×
-      // e.g. 4000px → 3200px → 2560px → 2048px → ~1638px
-      currentDimension = Math.floor(currentDimension * 0.8)
-      continue
-    }
-
-    const res = await renderImage(
-      source.path,
-      context => context.resize({width: w, height: h}),
-      {
-        compress: qualityPercentage / 100,
-        format: SaveFormat.JPEG,
-        base64: true,
-      },
-    )
-
-    const base64 = res.base64
-    const size = base64 ? getDataUriSize(base64) : 0
-    if (base64 && size <= maxBytes) {
-      minQualityPercentage = qualityPercentage
-      newDataUri = {
-        path: await moveIfNecessary(res.uri),
-        width: res.width,
-        height: res.height,
-        mime: 'image/jpeg',
-        size,
-      }
-    } else {
-      maxQualityPercentage = qualityPercentage
-    }
-  }
-
-  if (newDataUri) {
-    return newDataUri
-  }
-
-  throw new Error(`Unable to compress image`)
-}
-
-async function moveIfNecessary(from: string) {
-  const cacheDir = IS_NATIVE && getImageCacheDirectory()
-
-  if (cacheDir && !from.startsWith(cacheDir)) {
-    const to = joinPath(cacheDir, nanoid(36))
-
-    await makeDirectoryAsync(cacheDir, {intermediates: true})
-    await moveAsync({from, to})
-
-    return to
-  }
-
-  return from
-}
-
 /**
  * Copy a file from a potentially temporary location to our cache directory.
  * This ensures picker files are available for draft saving even if the original
@@ -381,32 +283,4 @@ export async function purgeTemporaryImageFiles() {
       deleteAsync(joinPath(cacheDirectory!, dir), {idempotent: true}),
     ),
   )
-}
-
-function joinPath(a: string, b: string) {
-  if (a.endsWith('/')) {
-    if (b.startsWith('/')) {
-      return a.slice(0, -1) + b
-    }
-    return a + b
-  } else if (b.startsWith('/')) {
-    return a + b
-  }
-  return a + '/' + b
-}
-
-function containImageRes(
-  w: number,
-  h: number,
-  max: number,
-): [width: number, height: number] {
-  let scale = 1
-
-  if (w > max || h > max) {
-    scale = w > h ? max / w : max / h
-    w = Math.floor(w * scale)
-    h = Math.floor(h * scale)
-  }
-
-  return [w, h]
 }

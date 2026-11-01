@@ -109,43 +109,41 @@ export function ModerationMutedAccounts({}: Props) {
         </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      <Layout.Center>
-        {isEmpty ? (
-          <View>
-            <Info style={[a.border_b]} />
-            {isError ? (
-              <ErrorScreen
-                title="Oops!"
-                message={cleanError(error)}
-                onPressTryAgain={refetch}
-              />
-            ) : (
-              <Empty />
-            )}
-          </View>
-        ) : (
-          <List
-            data={profiles}
-            keyExtractor={item => item.did}
-            refreshing={isPTRing}
-            onRefresh={onRefresh}
-            onEndReached={onEndReached}
-            renderItem={renderItem}
-            initialNumToRender={15}
-            // FIXME(dan)
+      {isEmpty ? (
+        <Layout.Center>
+          <Info style={[a.border_b]} />
+          {isError ? (
+            <ErrorScreen
+              title="Oops!"
+              message={cleanError(error)}
+              onPressTryAgain={refetch}
+            />
+          ) : (
+            <Empty />
+          )}
+        </Layout.Center>
+      ) : (
+        <List
+          data={profiles}
+          keyExtractor={item => item.did}
+          refreshing={isPTRing}
+          onRefresh={onRefresh}
+          onEndReached={onEndReached}
+          renderItem={renderItem}
+          initialNumToRender={15}
+          // FIXME(dan)
 
-            ListHeaderComponent={Info}
-            ListFooterComponent={
-              <ListFooter
-                isFetchingNextPage={isFetchingNextPage}
-                hasNextPage={hasNextPage}
-                error={cleanError(error)}
-                onRetry={fetchNextPage}
-              />
-            }
-          />
-        )}
-      </Layout.Center>
+          ListHeaderComponent={Info}
+          ListFooterComponent={
+            <ListFooter
+              isFetchingNextPage={isFetchingNextPage}
+              hasNextPage={hasNextPage}
+              error={cleanError(error)}
+              onRetry={fetchNextPage}
+            />
+          }
+        />
+      )}
     </Layout.Screen>
   )
 }

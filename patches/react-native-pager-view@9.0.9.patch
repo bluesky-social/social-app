@@ -1,0 +1,279 @@
+diff --git a/android/src/main/java/com/reactnativepagerview/ComposePagerView.kt b/android/src/main/java/com/reactnativepagerview/ComposePagerView.kt
+index 814b7df..0426f52 100644
+--- a/android/src/main/java/com/reactnativepagerview/ComposePagerView.kt
++++ b/android/src/main/java/com/reactnativepagerview/ComposePagerView.kt
+@@ -33,6 +33,10 @@ import androidx.lifecycle.LifecycleOwner
+ import androidx.lifecycle.LifecycleRegistry
+ import androidx.lifecycle.findViewTreeLifecycleOwner
+ import androidx.lifecycle.setViewTreeLifecycleOwner
++import androidx.savedstate.SavedStateRegistry
++import androidx.savedstate.SavedStateRegistryController
++import androidx.savedstate.SavedStateRegistryOwner
++import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+ import com.facebook.react.bridge.ReactContext
+ import com.facebook.react.uimanager.UIManagerHelper
+ import com.facebook.react.uimanager.events.NativeGestureUtil
+@@ -99,6 +103,13 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
+       // resolves it instead of walking up to the ambient (and repeatedly
+       // destroyed) Fragment view-tree Lifecycle - see the field comment above.
+       setViewTreeLifecycleOwner(composeLifecycleOwner)
++      // Same for saved state. Compose would otherwise store the pager's
++      // rememberSaveable state (current page, page view state) in the host
++      // Fragment's SavedStateRegistry under a key derived from this view's
++      // id. It has none, so every pager shares one key and a remounted pager
++      // restores the previous pager's page instead of using initialPage.
++      // React owns the pager state, so the owner's registry is never saved.
++      setViewTreeSavedStateRegistryOwner(composeLifecycleOwner)
+       setViewCompositionStrategy(
+         ViewCompositionStrategy.DisposeOnLifecycleDestroyed(composeLifecycleOwner)
+       )
+@@ -687,18 +698,29 @@ class ComposePagerView(context: Context) : FrameLayout(context) {
+ // A stable Lifecycle that follows the currently attached host through
+ // CREATED/STARTED/RESUMED, but only moves to DESTROYED when destroy() is
+ // called explicitly. This lets it survive react-native-screens replacing the
+-// ambient Fragment view-tree owner (see the field comment above).
+-internal class ComposeViewLifecycleOwner : LifecycleOwner, LifecycleEventObserver {
+-  private val registry = LifecycleRegistry(this).apply {
+-    currentState = Lifecycle.State.CREATED
+-  }
++// ambient Fragment view-tree owner (see the field comment above). It also
++// provides an empty SavedStateRegistry that is never saved, so nothing in the
++// composition is persisted or restored.
++internal class ComposeViewLifecycleOwner :
++  LifecycleOwner, SavedStateRegistryOwner, LifecycleEventObserver {
++  private val registry = LifecycleRegistry(this)
++  private val savedStateController = SavedStateRegistryController.create(this)
+   private var hostLifecycle: Lifecycle? = null
+   private var isAttached = false
+   private var isDestroyed = false
+ 
++  init {
++    // Must run while the Lifecycle is still INITIALIZED.
++    savedStateController.performRestore(null)
++    registry.currentState = Lifecycle.State.CREATED
++  }
++
+   override val lifecycle: Lifecycle
+     get() = registry
+ 
++  override val savedStateRegistry: SavedStateRegistry
++    get() = savedStateController.savedStateRegistry
++
+   fun attach(lifecycle: Lifecycle?) {
+     if (isDestroyed) {
+       return
+diff --git a/ios/PagerGestureObserver.swift b/ios/PagerGestureObserver.swift
+new file mode 100644
+index 0000000..956a1af
+--- /dev/null
++++ b/ios/PagerGestureObserver.swift
+@@ -0,0 +1,153 @@
++import ObjectiveC
++import UIKit
++
++/**
++ Keeps the pager's pan from swallowing the navigation controller's back gesture.
++
++ react-native-screens' full-screen swipe (its own pan recognizer before iOS 26,
++ the system `interactiveContentPopGestureRecognizer` from iOS 26) spans the whole
++ screen, so a pager on top of it takes every horizontal drag
++ (callstack/react-native-pager-view#1050). The 6.x UIKit pager solved this in a
++ gesture delegate; the SwiftUI pager has none. Allowing the two to recognize
++ simultaneously does not help, UIKit still hands the touch to the scroll view,
++ so the pan has to be refused before it begins. That answer belongs to
++ `gestureRecognizerShouldBegin`, which the pan asks its delegate, and UIKit
++ insists that delegate is the scroll view itself. Hence the runtime subclass,
++ the same trick `disableSafeArea()` uses in `Extensions.swift`.
++
++ Only the first page of a horizontal pager yields, and only while there is
++ somewhere to go back to; there a back-swipe has nothing to scroll to anyway.
++ Every other drag reaches the original implementation untouched.
++
++ iOS 26 adds a private `UIScrollViewPagingSwipeGestureRecognizer` to paging
++ scroll views that flips a page on a quick flick even when the pan never
++ begins, and it asks the same delegate method. It has to be refused too, or
++ only slow drags reach the back gesture.
++ */
++final class PagerGestureObserver: NSObject {
++  var currentPage = 0
++  var layoutDirection: PagerLayoutDirection = .ltr
++  var orientation: UICollectionView.ScrollDirection = .horizontal
++
++  private weak var collectionView: UICollectionView?
++
++  func attach(to collectionView: UICollectionView) {
++    guard self.collectionView !== collectionView else { return }
++
++    self.collectionView = collectionView
++    objc_setAssociatedObject(
++      collectionView,
++      &PagerGestureObserver.associationKey,
++      self,
++      .OBJC_ASSOCIATION_RETAIN_NONATOMIC
++    )
++    PagerGestureObserver.installGestureArbitration(on: collectionView)
++  }
++
++  fileprivate func yieldsToBackGesture(in scrollView: UIScrollView) -> Bool {
++    guard orientation == .horizontal, currentPage == 0, canNavigateBack(from: scrollView) else {
++      return false
++    }
++
++    // The pan keeps tracking the touch even after it was refused, so it still
++    // tells the direction when the paging swipe recognizer asks later in the
++    // same touch sequence. Fall back to the translation when the velocity has
++    // not been sampled yet.
++    let pan = scrollView.panGestureRecognizer
++    var dx = pan.velocity(in: scrollView).x
++    if dx == 0 {
++      dx = pan.translation(in: scrollView).x
++    }
++
++    return layoutDirection == .ltr ? dx > 0 : dx < 0
++  }
++
++  fileprivate static func isPagingRecognizer(
++    _ gestureRecognizer: UIGestureRecognizer,
++    of scrollView: UIScrollView
++  ) -> Bool {
++    if gestureRecognizer === scrollView.panGestureRecognizer {
++      return true
++    }
++    return NSStringFromClass(type(of: gestureRecognizer)) == pagingSwipeRecognizerClassName
++  }
++
++  /// Walks the responder chain because the pod does not import React's `UIView`
++  /// category, so `reactViewController()` is unavailable here.
++  private func canNavigateBack(from view: UIView) -> Bool {
++    var responder: UIResponder? = view.next
++
++    while let current = responder {
++      if let navigationController = current as? UINavigationController {
++        return navigationController.viewControllers.count > 1
++      }
++
++      responder = current.next
++    }
++
++    return false
++  }
++}
++
++private extension PagerGestureObserver {
++  static var associationKey: UInt8 = 0
++  static let subclassSuffix = "_PagerBackGesture"
++  static let pagingSwipeRecognizerClassName = "UIScrollViewPagingSwipeGestureRecognizer"
++
++  static func installGestureArbitration(on collectionView: UICollectionView) {
++    guard let currentClass = object_getClass(collectionView) else { return }
++
++    let currentName = String(cString: class_getName(currentClass))
++
++    // Already wearing the subclass, e.g. after a recycle.
++    guard !currentName.hasSuffix(subclassSuffix) else { return }
++
++    let subclassName = currentName.appending(subclassSuffix)
++
++    if let existing = NSClassFromString(subclassName) {
++      object_setClass(collectionView, existing)
++      return
++    }
++
++    let selector = #selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:))
++
++    guard
++      let subclassNameUtf8 = (subclassName as NSString).utf8String,
++      let subclass = objc_allocateClassPair(currentClass, subclassNameUtf8, 0),
++      let method = class_getInstanceMethod(currentClass, selector)
++    else { return }
++
++    typealias Implementation = @convention(c) (AnyObject, Selector, UIGestureRecognizer) -> Bool
++
++    let superImplementation = unsafeBitCast(
++      method_getImplementation(method),
++      to: Implementation.self
++    )
++
++    let override: @convention(block) (AnyObject, UIGestureRecognizer) -> Bool = {
++      object, gestureRecognizer in
++      if
++        let scrollView = object as? UIScrollView,
++        PagerGestureObserver.isPagingRecognizer(gestureRecognizer, of: scrollView),
++        let observer = objc_getAssociatedObject(
++          scrollView, &PagerGestureObserver.associationKey
++        ) as? PagerGestureObserver,
++        observer.yieldsToBackGesture(in: scrollView)
++      {
++        return false
++      }
++
++      return superImplementation(object, selector, gestureRecognizer)
++    }
++
++    class_addMethod(
++      subclass,
++      selector,
++      imp_implementationWithBlock(override),
++      method_getTypeEncoding(method)
++    )
++
++    objc_registerClassPair(subclass)
++    object_setClass(collectionView, subclass)
++  }
++}
+diff --git a/ios/PagerView.swift b/ios/PagerView.swift
+index e0283a3..9e286ab 100644
+--- a/ios/PagerView.swift
++++ b/ios/PagerView.swift
+@@ -7,6 +7,7 @@ import SwiftUI
+ struct PagerView: View {
+   @ObservedObject var props: PagerViewProps
+   @State private var scrollDelegate = PagerScrollDelegate()
++  @State private var gestureObserver = PagerGestureObserver()
+   @State private var didEmitInitialPageSelection = false
+   weak var delegate: PagerViewProviderDelegate?
+ 
+@@ -57,17 +58,13 @@ struct PagerView: View {
+         collectionView.showsVerticalScrollIndicator = false
+         collectionView.showsHorizontalScrollIndicator = false
+ 
+-        if #available(iOS 26.0, *) {
+-          // The top edge effect can obscure pages beneath transparent headers.
++        // The vertical pager rotates this horizontal scroll view by 90 degrees.
++        // Native edge effects would rotate with it and cover the page sideways.
++        if isVertical, #available(iOS 26.0, *) {
+           collectionView.topEdgeEffect.isHidden = true
+-
+-          // The vertical pager rotates this horizontal scroll view by 90 degrees.
+-          // Native edge effects would rotate with it and cover the page sideways.
+-          if isVertical {
+-            collectionView.bottomEdgeEffect.isHidden = true
+-            collectionView.leftEdgeEffect.isHidden = true
+-            collectionView.rightEdgeEffect.isHidden = true
+-          }
++          collectionView.bottomEdgeEffect.isHidden = true
++          collectionView.leftEdgeEffect.isHidden = true
++          collectionView.rightEdgeEffect.isHidden = true
+         }
+ 
+         if scrollDelegate.originalDelegate == nil {
+@@ -77,6 +74,11 @@ struct PagerView: View {
+           scrollDelegate.orientation = .horizontal
+           collectionView.delegate = scrollDelegate
+         }
++
++        gestureObserver.attach(to: collectionView)
++        gestureObserver.currentPage = props.currentPage
++        gestureObserver.layoutDirection = props.layoutDirection
++        gestureObserver.orientation = props.orientation
+       }
+     }
+     // GeometryReader is the root since the vertical layout; without this it
+@@ -104,6 +106,7 @@ struct PagerView: View {
+       }
+     }
+     .onChange(of: props.currentPage) { newValue in
++      gestureObserver.currentPage = newValue
+       delegate?.onPageSelected(position: newValue)
+     }
+     .onChange(of: props.scrollEnabled) { newValue in

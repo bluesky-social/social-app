@@ -8,6 +8,7 @@ import Animated, {
   useAnimatedProps,
   useAnimatedReaction,
   useAnimatedStyle,
+  useDerivedValue,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {scheduleOnRN} from 'react-native-worklets'
@@ -21,6 +22,7 @@ import {RQKEY_ROOT as LIST_RQKEY_ROOT} from '#/state/queries/profile-lists'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {atoms as a} from '#/alf'
 import {IS_IOS} from '#/env'
+import {PROFILE_BANNER_HEIGHT} from './layout'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
@@ -95,14 +97,23 @@ function GrowableBannerInner({
   const isFetching = useIsProfileFetching()
   const animateSpinner = useShouldAnimateSpinner({isFetching, scrollY})
 
+  /*
+   * The transforms are derived so their styles only update while the values
+   * change (mostly while overscrolling), not on every scroll frame.
+   */
+  const scale = useDerivedValue(() =>
+    interpolate(scrollY.get(), [-150, 0], [2, 1], {
+      extrapolateRight: Extrapolation.CLAMP,
+    }),
+  )
+  const backButtonTranslateY = useDerivedValue(() =>
+    interpolate(scrollY.get(), [-150, 10], [-150, 10], {
+      extrapolateRight: Extrapolation.CLAMP,
+    }),
+  )
+
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        scale: interpolate(scrollY.get(), [-150, 0], [2, 1], {
-          extrapolateRight: Extrapolation.CLAMP,
-        }),
-      },
-    ],
+    transform: [{scale: scale.get()}],
   }))
 
   const animatedBlurViewProps = useAnimatedProps(() => {
@@ -118,8 +129,17 @@ function GrowableBannerInner({
 
   const animatedSpinnerStyle = useAnimatedStyle(() => {
     const scrollYValue = scrollY.get()
+    /*
+     * Return the same style while the header isn't overscrolled, so Reanimated
+     * skips the update. Otherwise every scroll frame commits this hidden view,
+     * and Yoga never cleans the dirty flags of a `display: none` subtree, so
+     * each commit re-runs layout over the whole tree.
+     */
+    if (scrollYValue >= 0) {
+      return {display: 'none'}
+    }
     return {
-      display: scrollYValue < 0 ? 'flex' : 'none',
+      display: 'flex',
       opacity: interpolate(
         scrollYValue,
         [-60, -15],
@@ -134,13 +154,7 @@ function GrowableBannerInner({
   })
 
   const animatedBackButtonStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateY: interpolate(scrollY.get(), [-150, 10], [-150, 10], {
-          extrapolateRight: Extrapolation.CLAMP,
-        }),
-      },
-    ],
+    transform: [{translateY: backButtonTranslateY.get()}],
   }))
 
   return (
@@ -149,7 +163,7 @@ function GrowableBannerInner({
         style={[
           a.absolute,
           {left: 0, right: 0, bottom: 0},
-          {height: 150},
+          {height: PROFILE_BANNER_HEIGHT},
           {transformOrigin: 'bottom'},
           animatedStyle,
         ]}>

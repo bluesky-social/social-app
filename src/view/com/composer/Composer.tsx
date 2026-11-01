@@ -29,7 +29,6 @@ import Animated, {
   FadeOut,
   interpolateColor,
   LayoutAnimationConfig,
-  LinearTransition,
   scrollTo,
   useAnimatedRef,
   useAnimatedScrollHandler,
@@ -46,6 +45,7 @@ import * as FileSystem from 'expo-file-system'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {type Client, type UriString} from '@atproto/lex'
 import {AtUri, type AtUriString} from '@atproto/syntax'
+import {BottomSheetPortalProvider} from '@bsky.app/bottom-sheet'
 import {type RichText} from '@bsky/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -137,6 +137,7 @@ import {useAnalytics} from '#/analytics'
 import {
   IS_ANDROID,
   IS_IOS,
+  IS_IPAD,
   IS_LIQUID_GLASS,
   IS_NATIVE,
   IS_WEB,
@@ -145,7 +146,6 @@ import {
 import {type Gif} from '#/features/gifPicker/types'
 import {app, chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
   draftToComposerPosts,
   extractLocalRefs,
@@ -308,11 +308,10 @@ export const ComposePost = ({
   >(null)
 
   /**
-   * A temporary local reference to a language suggestion that the user has
-   * accepted. This overrides the global post language preference, but is not
-   * stored permanently.
+   * A manual selection or accepted suggestion applies only to this composer
+   * session, without changing the primary language preference.
    */
-  const [acceptedLanguageSuggestion, setAcceptedLanguageSuggestion] = useState<
+  const [selectedPostLanguage, setSelectedPostLanguage] = useState<
     string | null
   >(null)
 
@@ -324,24 +323,23 @@ export const ComposePost = ({
   )
 
   /**
-   * The currently selected languages of the post. Prefer local temporary
-   * language suggestion over global lang prefs, if available.
+   * Default to the primary language, ignoring the legacy sticky post language
+   * preference. Manual selections and accepted suggestions apply locally.
    */
   const currentLanguages = useMemo(
     () =>
-      acceptedLanguageSuggestion
-        ? [acceptedLanguageSuggestion]
-        : toPostLanguages(langPrefs.postLanguage),
-    [acceptedLanguageSuggestion, langPrefs.postLanguage],
+      selectedPostLanguage
+        ? toPostLanguages(selectedPostLanguage)
+        : [langPrefs.primaryLanguage],
+    [selectedPostLanguage, langPrefs.primaryLanguage],
   )
 
   /**
    * When the user selects a language from the composer language selector,
-   * clear any temporary language suggestions they may have selected
-   * previously, and any we might try to suggest to them.
+   * override the current selection and clear reply language suggestions.
    */
-  const onSelectLanguage = () => {
-    setAcceptedLanguageSuggestion(null)
+  const onSelectLanguage = (language: string) => {
+    setSelectedPostLanguage(language)
     setReplyToLanguages([])
   }
 
@@ -875,7 +873,7 @@ export const ComposePost = ({
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
     () => ({
-      paddingTop: IS_ANDROID ? insets.top : 0,
+      paddingTop: IS_ANDROID || IS_IPAD ? insets.top : 0,
       paddingBottom: insets.bottom,
     }),
     [insets.top, insets.bottom],
@@ -1209,7 +1207,7 @@ export const ComposePost = ({
         originalLocalRefs: composerState.originalLocalRefs,
       })
     }
-    setLangPrefs.savePostLanguageToHistory()
+    setLangPrefs.savePostLanguageToHistory(fromPostLanguages(currentLanguages))
     if (initQuote) {
       // We want to wait for the quote count to update before we call `onPost`, which will refetch data
       void whenAppViewReady(client, initQuote.uri, res => {
@@ -1384,7 +1382,7 @@ export const ComposePost = ({
         text={activePost.richtext.text}
         replyToLanguages={replyToLanguages}
         currentLanguages={currentLanguages}
-        onAcceptSuggestedLanguage={setAcceptedLanguageSuggestion}
+        onAcceptSuggestedLanguage={setSelectedPostLanguage}
         onNudge={onLanguageNudge}
       />
       <ComposerPills
@@ -1423,6 +1421,7 @@ export const ComposePost = ({
         testID="composePostView"
         behavior={IS_IOS ? 'padding' : 'height'}
         keyboardVerticalOffset={keyboardVerticalOffset}
+        automaticOffset={IS_IPAD}
         style={a.flex_1}>
         <View
           style={[a.flex_1, viewStyles]}
@@ -1461,7 +1460,6 @@ export const ComposePost = ({
 
           <Animated.ScrollView
             ref={scrollViewRef}
-            layout={native(LinearTransition)}
             onScroll={scrollHandler}
             contentContainerStyle={a.flex_grow}
             style={[
@@ -1827,9 +1825,7 @@ function ComposerTopBar({
   const {t: l} = useLingui()
 
   return (
-    <Animated.View
-      style={topBarAnimatedStyle}
-      layout={native(LinearTransition)}>
+    <Animated.View style={topBarAnimatedStyle}>
       <View
         style={[
           a.flex_row,
@@ -2141,7 +2137,7 @@ function ComposerFooter({
   ) => void | Promise<void>
   onAddPost: () => void
   currentLanguages: string[]
-  onSelectLanguage?: (language: string) => void
+  onSelectLanguage: (language: string) => void
   languageNudgeAt: number
   openGallery?: boolean
   textInputRef: React.RefObject<TextInputRef | null>
@@ -2455,6 +2451,9 @@ function useKeyboardVerticalOffset() {
   // the keyboardavoidingview has bottom padding to avoid being obscured by the safe area when keyboard is closed.
   // however, this leads to a gap when the keyboard is open. we account for that by subtracting the bottom inset when open.
   let keyboardVerticalOffset = insets.bottom * -1
+
+  // iPad sheets measure their own position via automaticOffset.
+  if (IS_IPAD) return keyboardVerticalOffset
 
   // iOS requires a bit of extra offset to account for the native sheet not being at the top of the screen
   if (IS_IOS) {

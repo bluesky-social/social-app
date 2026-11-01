@@ -12,7 +12,11 @@ import {
 } from '#/state/preferences/languages'
 import {app} from '#/lexicons'
 import {type FeedAPI, type FeedAPIResponse} from './types'
-import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
+import {
+  createBskyFeedHeaders,
+  createBskyTopicsHeader,
+  isBlueskyOwnedFeed,
+} from './utils'
 
 type GetCustomFeedParams = XrpcRequestParams<typeof app.bsky.feed.getFeed.main>
 
@@ -43,7 +47,12 @@ export class CustomFeedAPI implements FeedAPI {
         ...this.params,
         limit: 1,
       },
-      {headers: {'Accept-Language': contentLangs}},
+      {
+        headers: {
+          ...createBskyFeedHeaders(this.params.feed),
+          'Accept-Language': contentLangs,
+        },
+      },
     )
     return data.feed[0]
   }
@@ -51,9 +60,11 @@ export class CustomFeedAPI implements FeedAPI {
   async fetch({
     cursor,
     limit,
+    signal,
   }: {
     cursor: string | undefined
     limit: number
+    signal?: AbortSignal
   }): Promise<FeedAPIResponse> {
     const contentLangs = getContentLanguages().join(',')
     const isBlueskyOwned = isBlueskyOwnedFeed(this.params.feed)
@@ -73,7 +84,9 @@ export class CustomFeedAPI implements FeedAPI {
             limit,
           },
           {
+            signal,
             headers: {
+              ...createBskyFeedHeaders(this.params.feed),
               ...(isBlueskyOwned
                 ? createBskyTopicsHeader(this.userInterests)
                 : {}),
@@ -81,7 +94,7 @@ export class CustomFeedAPI implements FeedAPI {
             },
           },
         )
-      : await loggedOutFetch({...this.params, cursor, limit})
+      : await loggedOutFetch({...this.params, cursor, limit}, signal)
 
     if (!data) {
       return {
@@ -120,9 +133,10 @@ let loggedOutAppviewClient: Client | undefined
  * own failure handling and should not move the app-wide network signal.
  */
 function getLoggedOutAppviewClient(): Client {
-  return (loggedOutAppviewClient ??= createLexClient({
-    service: PUBLIC_APPVIEW,
-  }))
+  return (loggedOutAppviewClient ??= createLexClient(
+    {service: PUBLIC_APPVIEW},
+    {includeDeviceSessionHeaders: true},
+  ))
 }
 
 /*
@@ -144,16 +158,17 @@ function getLoggedOutAppviewClient(): Client {
  */
 async function loggedOutFetch(
   params: GetCustomFeedParams,
+  signal?: AbortSignal,
 ): Promise<app.bsky.feed.getFeed.$OutputBody | null> {
   const contentLangs = getAppLanguageAsContentLanguage()
 
-  let data = await getFeedOrNull(params, contentLangs)
+  let data = await getFeedOrNull(params, contentLangs, signal)
   if (data?.feed?.length) {
     return data
   }
 
   // no data, try again with language headers removed
-  data = await getFeedOrNull(params, '')
+  data = await getFeedOrNull(params, '', signal)
   return data
 }
 
@@ -168,12 +183,19 @@ async function loggedOutFetch(
 async function getFeedOrNull(
   params: GetCustomFeedParams,
   contentLangs: string,
+  signal?: AbortSignal,
 ): Promise<app.bsky.feed.getFeed.$OutputBody | null> {
   try {
     return await getLoggedOutAppviewClient().call(
       app.bsky.feed.getFeed,
       params,
-      {headers: {'Accept-Language': contentLangs}},
+      {
+        signal,
+        headers: {
+          ...createBskyFeedHeaders(params.feed),
+          'Accept-Language': contentLangs,
+        },
+      },
     )
   } catch (e) {
     if (e instanceof XrpcResponseError) {

@@ -98,8 +98,10 @@ looks roughly like this:
 
 This provides the "Content" functionality for a screen. This component is
 actually an `Animated.ScrollView`, and accepts props for that component. It
-provides a little default styling as well. On web, it also _centers the content
-inside our center content column of 600px_.
+provides a little default styling as well. On web and wide native windows,
+it _centers the content inside our center content column of 600px_. The scroll
+view itself stays full width so gestures in the surrounding whitespace scroll
+the content too.
 
 > [!NOTE]
 > What about flatlists or pagers? Those components are not colocated here (yet).
@@ -141,6 +143,9 @@ screen for an example.
 ### `Layout.Center`
 
 This component behaves like our old `CenteredView` component.
+
+Use it for non-scrolling content. `Layout.Content` and `List` center their own
+contents; wrapping either in `Layout.Center` also constrains its scrollable area.
 
 ### `Layout.SCROLLBAR_OFFSET` and `Layout.SCROLLBAR_OFFSET_POSITIVE`
 

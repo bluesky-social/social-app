@@ -8,10 +8,12 @@ import {type app} from '#/lexicons'
  * Handles deduplication so the same post URI is only tracked once per mount.
  *
  * @param logContext - The context where the post is being viewed
+ * @param quoteSort - The selected quotes tab, when tracking quote impressions
  * @returns A callback that accepts a post and logs the view event
  */
 export function usePostViewTracking(
   logContext: Metrics['post:view']['logContext'],
+  quoteSort?: Metrics['post:view']['quoteSort'],
 ) {
   const ax = useAnalytics()
   const seenUrisRef = useRef(new Set<string>())
@@ -26,9 +28,10 @@ export function usePostViewTracking(
         authorDid: post.author.did,
         isReply: !!post.record.reply,
         logContext,
+        ...(quoteSort ? {quoteSort} : {}),
       })
     },
-    [ax, logContext],
+    [ax, logContext, quoteSort],
   )
 
   return trackPostView

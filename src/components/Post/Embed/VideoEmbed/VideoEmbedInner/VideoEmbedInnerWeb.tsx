@@ -17,6 +17,7 @@ import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {useReportDialogMetadataContext} from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
 import * as BandwidthEstimate from './bandwidth-estimate'
+import {loadHls} from './loadHls'
 import {
   HLSFatalError,
   HLSUnsupportedError,
@@ -38,6 +39,9 @@ export function VideoEmbedInnerWeb({
   onScreen,
   lastKnownTime,
   onPlaybackStart,
+  onPlaybackProgress,
+  onPlaybackStateChange,
+  onPlaybackEnd,
 }: VideoEmbedInnerWebProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -89,6 +93,7 @@ export function VideoEmbedInnerWeb({
             onTimeUpdate={e => {
               const currentTime = e.currentTarget.currentTime
               lastKnownTime.current = currentTime
+              onPlaybackProgress(currentTime)
               if (
                 !playbackStartTrackedRef.current &&
                 hasPlaybackStarted(currentTime)
@@ -105,6 +110,15 @@ export function VideoEmbedInnerWeb({
                 reportDialogMetadata.current.videoTimestampSeconds = currentTime
               }
             }}
+            onPlaying={() => onPlaybackStateChange('playing')}
+            onPause={() => onPlaybackStateChange('paused')}
+            onWaiting={() => onPlaybackStateChange('buffering')}
+            onCanPlay={() => {
+              if (!videoRef.current?.paused) {
+                onPlaybackStateChange('playing')
+              }
+            }}
+            onEnded={onPlaybackEnd}
             loop={loop}
           />
           {embed.alt && (
@@ -164,17 +178,6 @@ function canPlayBskyVideoCodecs(): boolean {
   )
 }
 
-type CachedPromise<T> = Promise<T> & {value: undefined | T}
-const promiseForHls = import(
-  // @ts-expect-error
-  'hls.js/dist/hls.min'
-  // oxlint-disable-next-line typescript/no-unsafe-member-access
-).then(mod => mod.default) as CachedPromise<typeof HlsTypes.default>
-promiseForHls.value = undefined
-void promiseForHls.then(Hls => {
-  promiseForHls.value = Hls
-})
-
 function useHLS({
   playlist,
   setHasSubtitleTrack,
@@ -188,18 +191,30 @@ function useHLS({
   videoRef: React.RefObject<HTMLVideoElement | null>
   setHlsLoading: (v: boolean) => void
 }) {
-  const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(
-    () => promiseForHls.value,
-  )
+  const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(undefined)
   useEffect(() => {
-    if (!Hls) {
-      setHlsLoading(true)
-      void promiseForHls.then(loadedHls => {
+    let cancelled = false
+    setHlsLoading(true)
+    void loadHls().then(
+      loadedHls => {
+        if (cancelled) return
         setHls(() => loadedHls)
         setHlsLoading(false)
-      })
+      },
+      error => {
+        if (cancelled) return
+        setHlsLoading(false)
+        setError(
+          error instanceof Error
+            ? error
+            : new Error('Failed to load video player', {cause: error}),
+        )
+      },
+    )
+    return () => {
+      cancelled = true
     }
-  }, [Hls, setHlsLoading])
+  }, [setError, setHlsLoading])
 
   const hlsRef = useRef<HlsTypes.default | undefined>(undefined)
   const controlsVisibleRef = useRef(false)
@@ -267,10 +282,18 @@ function useHLS({
             continue
           }
 
+          // Flush both video and audio buffers to keep them in sync.
+          // Flushing only video leaves stale audio data that can desync,
+          // particularly on Firefox.
           hls.trigger(Hls.Events.BUFFER_FLUSHING, {
             startOffset: lowQualFrag.start,
             endOffset: lowQualFrag.end,
             type: 'video',
+          })
+          hls.trigger(Hls.Events.BUFFER_FLUSHING, {
+            startOffset: lowQualFrag.start,
+            endOffset: lowQualFrag.end,
+            type: 'audio',
           })
 
           flushed.push(lowQualFrag)
@@ -424,6 +447,11 @@ function useHLS({
         startOffset: lowQualFrag.start,
         endOffset: lowQualFrag.end,
         type: 'video',
+      })
+      hls.trigger(Hls.Events.BUFFER_FLUSHING, {
+        startOffset: lowQualFrag.start,
+        endOffset: lowQualFrag.end,
+        type: 'audio',
       })
       setLowQualityFragments([])
     }

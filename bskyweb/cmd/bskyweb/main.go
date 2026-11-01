@@ -33,6 +33,24 @@ func run(args []string) {
 			Usage:  "run the server",
 			Action: serve,
 			Flags: []cli.Flag{
+				&cli.BoolFlag{
+					Name:    "feature-gate-bootstrap",
+					Usage:   "Embed a cached feature-gate fallback in app HTML",
+					Value:   true,
+					EnvVars: []string{"FEATURE_GATE_BOOTSTRAP"},
+				},
+				&cli.StringFlag{
+					Name:    "growthbook-api-host",
+					Usage:   "GrowthBook API host, matching the web bundle",
+					Value:   "https://events.bsky.app/gb",
+					EnvVars: []string{"GROWTHBOOK_API_HOST", "EXPO_PUBLIC_GROWTHBOOK_API_HOST"},
+				},
+				&cli.StringFlag{
+					Name:    "growthbook-client-key",
+					Usage:   "Public GrowthBook SDK key, matching the web bundle",
+					Value:   "sdk-7gkUkGy9wguUjyFe",
+					EnvVars: []string{"GROWTHBOOK_CLIENT_KEY", "EXPO_PUBLIC_GROWTHBOOK_CLIENT_KEY"},
+				},
 				&cli.StringFlag{
 					Name:  "appview-host",
 					Usage: "scheme, hostname, and port of PDS instance",
@@ -106,6 +124,27 @@ func run(args []string) {
 					Required: false,
 					Value:    "",
 					EnvVars:  []string{"STATIC_CDN_HOST"},
+				},
+				&cli.StringFlag{
+					Name:     "bsky-app-version",
+					Usage:    "commit SHA of the web app build to serve from the statics bucket. Empty serves the build embedded in the binary",
+					Required: false,
+					Value:    "",
+					EnvVars:  []string{"BSKY_APP_VERSION"},
+				},
+				&cli.StringFlag{
+					Name:     "bsky-app-statics-bucket",
+					Usage:    "S3 bucket with the web app builds, used when bsky-app-version is set",
+					Required: false,
+					Value:    "bsky-app-web-statics-prod",
+					EnvVars:  []string{"BSKY_APP_STATICS_BUCKET"},
+				},
+				&cli.StringFlag{
+					Name:     "bsky-app-statics-region",
+					Usage:    "AWS region of the web app statics bucket",
+					Required: false,
+					Value:    "us-east-2",
+					EnvVars:  []string{"BSKY_APP_STATICS_REGION"},
 				},
 				&cli.BoolFlag{
 					Name:     "bsky-canonical-instance",

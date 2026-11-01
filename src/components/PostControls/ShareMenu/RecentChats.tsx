@@ -44,7 +44,7 @@ export function RecentChats({
   const onSelectChat = (convoId: string) => {
     onBeforePress?.()
     control.close(() => {
-      ax.metric('share:press:recentDm', {})
+      ax.metric('share:press:recentDm', {uri: postUri})
       navigation.navigate('MessagesConversation', {
         conversation: convoId,
         embed: postUri,

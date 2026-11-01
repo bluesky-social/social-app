@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.description    = 'A bottom sheet for use in Bluesky'
   s.author         = ''
   s.homepage       = 'https://github.com/bluesky-social/social-app'
-  s.platforms      = { :ios => '15.0', :tvos => '15.0' }
+  s.platforms      = { :ios => '16.4', :tvos => '15.0' }
   s.source         = { git: '' }
   s.static_framework = true
 

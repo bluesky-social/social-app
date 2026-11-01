@@ -1,5 +1,5 @@
 import {type Client} from '@atproto/lex'
-import {type DidString, type NsidString} from '@atproto/syntax'
+import {type NsidString} from '@atproto/syntax'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
@@ -46,7 +46,7 @@ export async function getServiceAuthToken({
     resolvedAud = pdsAud
   }
   const {token} = await client.call(com.atproto.server.getServiceAuth, {
-    aud: resolvedAud as DidString,
+    aud: resolvedAud,
     lxm,
     exp: exp === undefined ? undefined : toIntegerExp(exp),
   })

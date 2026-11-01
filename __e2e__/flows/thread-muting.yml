@@ -178,7 +178,7 @@ appId: xyz.blueskyweb.app
     id: "bottomBarNotificationsBtn"
 - swipe:
     from:
-      id: "notifsFeed"
+      id: "notificationsList-all"
     direction: DOWN
 - assertVisible: ".*Reply 1.*"
 - assertNotVisible: ".*Reply 2.*"

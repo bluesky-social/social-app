@@ -11,20 +11,23 @@ import {
 } from 'react'
 import {
   BackHandler,
+  Dimensions,
   Keyboard,
   type LayoutChangeEvent,
   Pressable,
+  type ScaledSize,
   type StyleProp,
   useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native'
 import {
-  Gesture,
   GestureDetector,
-  type GestureStateChangeEvent,
-  type GestureUpdateEvent,
-  type PanGestureHandlerEventPayload,
+  type PanGestureActiveEvent,
+  useCompetingGestures,
+  useExclusiveGestures,
+  usePanGesture,
+  useTapGesture,
 } from 'react-native-gesture-handler'
 import {KeyboardEvents} from 'react-native-keyboard-controller'
 import Animated, {
@@ -75,7 +78,7 @@ import {
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID, IS_IOS} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_IPAD} from '#/env'
 import {Backdrop} from './Backdrop'
 
 export {
@@ -110,7 +113,7 @@ export function Provider({children}: {children: React.ReactNode}) {
 }
 
 export function Root({children}: {children: React.ReactNode}) {
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const [mode, setMode] = useState<'full' | 'auxiliary-only'>('full')
   const [measurement, setMeasurement] = useState<Measurement | null>(null)
   const returnLocationSV = useSharedValue<{x: number; y: number} | null>(null)
@@ -198,7 +201,7 @@ export function Root({children}: {children: React.ReactNode}) {
         onTouchUpMenuItem: onHoverableTouchUp,
         hoveredMenuItem,
         setHoveredMenuItem: item => {
-          if (item) playHaptic('Light')
+          if (item) haptics.selection()
           setHoveredMenuItem(item)
         },
       }) satisfies ContextType,
@@ -214,7 +217,7 @@ export function Root({children}: {children: React.ReactNode}) {
       onHoverableTouchUp,
       hoveredMenuItem,
       setHoveredMenuItem,
-      playHaptic,
+      haptics,
       mode,
     ],
   )
@@ -230,6 +233,22 @@ export function Root({children}: {children: React.ReactNode}) {
     }
   }, [context])
 
+  useEffect(() => {
+    if (!IS_IPAD || !context.isOpen) return
+
+    // The captured preview and hit targets belong to the pre-resize layout.
+    const {width, height} = Dimensions.get('window')
+    const subscription = Dimensions.addEventListener(
+      'change',
+      ({window}: {window: ScaledSize}) => {
+        if (window.width !== width || window.height !== height) {
+          context.close()
+        }
+      },
+    )
+    return () => subscription.remove()
+  }, [context])
+
   return <Context.Provider value={context}>{children}</Context.Provider>
 }
 
@@ -242,7 +261,7 @@ export function Trigger({
   swipeGesture,
 }: TriggerProps) {
   const context = useContextMenuContext()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const insets = useSafeAreaInsets()
   const ref = useRef<React.ComponentRef<typeof View>>(null)
   const isFocused = useIsFocused()
@@ -254,7 +273,7 @@ export function Trigger({
 
   const open = useNonReactiveCallback(
     async (mode: 'full' | 'auxiliary-only') => {
-      playHaptic()
+      haptics.longPress()
       const [measurement, capture] = await Promise.all([
         measureView(ref.current, insets),
         captureRef(ref, {result: 'data-uri'}).catch(err => {
@@ -299,24 +318,19 @@ export function Trigger({
     }
   }, [context, insets])
 
-  const tapGesture = useMemo(() => {
-    const gesture = Gesture.Tap()
-      .numberOfTaps(1)
-      .cancelsTouchesInView(false)
-      .runOnJS(true)
-    if (onTap) {
-      gesture.onEnd(() => void onTap())
-    }
-    return gesture
-  }, [onTap])
+  const tapGesture = useTapGesture({
+    numberOfTaps: 1,
+    cancelsTouchesInView: false,
+    runOnJS: true,
+    onDeactivate: onTap ? () => void onTap() : undefined,
+  })
 
-  const doubleTapGesture = useMemo(() => {
-    return Gesture.Tap()
-      .numberOfTaps(2)
-      .hitSlop(HITSLOP_10)
-      .onEnd(() => void open('auxiliary-only'))
-      .runOnJS(true)
-  }, [open])
+  const doubleTapGesture = useTapGesture({
+    numberOfTaps: 2,
+    hitSlop: HITSLOP_10,
+    runOnJS: true,
+    onDeactivate: () => void open('auxiliary-only'),
+  })
 
   const {
     hoverablesSV,
@@ -336,34 +350,33 @@ export function Trigger({
     },
   )
 
-  const pressAndHoldGesture = useMemo(() => {
-    return Gesture.Pan()
-      .activateAfterLongPress(500)
-      .cancelsTouchesInView(false)
-      .averageTouches(true)
-      .onStart(() => {
-        'worklet'
-        scheduleOnRN(open, 'full')
-      })
-      .onUpdate(evt => {
-        'worklet'
-        const item = getHoveredHoverable(evt, hoverablesSV, translationSV)
-        hoveredItemSV.set(item)
-      })
-      .onEnd(() => {
-        'worklet'
-        // don't recalculate hovered item - if they haven't moved their finger from
-        // the initial press, it's jarring to then select the item underneath
-        // as the menu may have slid into place beneath their finger
-        const item = hoveredItemSV.get()
-        if (item) {
-          scheduleOnRN(onTouchUpMenuItem, item)
-        }
-      })
-  }, [open, hoverablesSV, onTouchUpMenuItem, hoveredItemSV, translationSV])
+  const pressAndHoldGesture = usePanGesture({
+    activateAfterLongPress: 500,
+    cancelsTouchesInView: false,
+    averageTouches: true,
+    onActivate: () => {
+      'worklet'
+      scheduleOnRN(open, 'full')
+    },
+    onUpdate: evt => {
+      'worklet'
+      const item = getHoveredHoverable(evt, hoverablesSV, translationSV)
+      hoveredItemSV.set(item)
+    },
+    onDeactivate: () => {
+      'worklet'
+      // don't recalculate hovered item - if they haven't moved their finger from
+      // the initial press, it's jarring to then select the item underneath
+      // as the menu may have slid into place beneath their finger
+      const item = hoveredItemSV.get()
+      if (item) {
+        scheduleOnRN(onTouchUpMenuItem, item)
+      }
+    },
+  })
 
   // Order matters here: doubleTapGesture must come before tapGesture.
-  const tapAndHoldGestures = Gesture.Exclusive(
+  const tapAndHoldGestures = useExclusiveGestures(
     doubleTapGesture,
     tapGesture,
     pressAndHoldGesture,
@@ -371,11 +384,13 @@ export function Trigger({
 
   // An optional swipe gesture (e.g. swipe-to-reply) races against the tap/hold
   // group: whichever activates first wins and cancels the rest, so they're
-  // mutually exclusive. Race (not Exclusive) avoids a held-but-not-yet-moved
+  // mutually exclusive. Competing (not Exclusive) avoids a held-but-not-yet-moved
   // swipe Pan blocking the long-press from firing.
-  const composedGestures = swipeGesture
-    ? Gesture.Race(swipeGesture, tapAndHoldGestures)
-    : tapAndHoldGestures
+  const composedGestures = useCompetingGestures(
+    ...(swipeGesture
+      ? [swipeGesture, tapAndHoldGestures]
+      : [tapAndHoldGestures]),
+  )
 
   const measurement = context.measurement || pendingMeasurement?.measurement
 
@@ -772,7 +787,7 @@ export function Item({
 }: ItemProps) {
   const t = useTheme()
   const context = useContextMenuContext()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
@@ -845,7 +860,7 @@ export function Item({
       onPressIn={e => {
         onPressIn()
         rest.onPressIn?.(e)
-        playHaptic('Light')
+        haptics.selection()
       }}
       onPressOut={e => {
         onPressOut()
@@ -990,9 +1005,7 @@ function measureView(
 }
 
 function getHoveredHoverable(
-  evt:
-    | GestureStateChangeEvent<PanGestureHandlerEventPayload>
-    | GestureUpdateEvent<PanGestureHandlerEventPayload>,
+  evt: PanGestureActiveEvent,
   hoverables: SharedValue<Record<string, {id: string; rect: Measurement}>>,
   translation: SharedValue<number>,
 ) {

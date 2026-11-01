@@ -1,0 +1,68 @@
+{
+  "id": "tools.ozone.inbox.getUnreadCount",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "unreadCounts"
+          ],
+          "properties": {
+            "unreadCounts": {
+              "ref": "#unreadCounts",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "Account to preview. Only Ozone staff can read another account; this does not change its read state."
+          },
+          "section": {
+            "type": "string",
+            "knownValues": [
+              "reports",
+              "subjects",
+              "accountStatus"
+            ]
+          }
+        }
+      }
+    },
+    "unreadCounts": {
+      "type": "object",
+      "required": [
+        "total"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reports": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "subjects": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "accountStatus": {
+          "type": "integer",
+          "maximum": 1,
+          "minimum": 0
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

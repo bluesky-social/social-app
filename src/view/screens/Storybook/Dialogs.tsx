@@ -1,5 +1,6 @@
 import {useRef, useState} from 'react'
 import {View} from 'react-native'
+import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
 
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {atoms as a} from '#/alf'
@@ -8,7 +9,6 @@ import * as Dialog from '#/components/Dialog'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {H3, P, Text} from '#/components/Typography'
-import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
 
 export function Dialogs() {
   const scrollable = Dialog.useDialogControl()

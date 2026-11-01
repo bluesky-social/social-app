@@ -13,29 +13,32 @@ import {CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon} from '#/components/icon
 import {Repost_Stroke2_Corner3_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {Text} from '#/components/Typography'
+import {IS_IPAD} from '#/env'
 import {
   PostControlButton,
   PostControlButtonIcon,
   PostControlButtonText,
 } from './PostControlButton'
+import {RepostButtonMenu, type RepostButtonProps} from './RepostButtonMenu'
 
-interface Props {
-  isReposted: boolean
-  repostCount?: number
-  onRepost: () => void
-  onQuote: () => void
-  big?: boolean
-  embeddingDisabled: boolean
-}
+let RepostButton = (props: RepostButtonProps): React.ReactNode =>
+  IS_IPAD ? (
+    <RepostButtonMenu {...props} longPressToQuote />
+  ) : (
+    <RepostButtonDialog {...props} />
+  )
 
-let RepostButton = ({
+RepostButton = memo(RepostButton)
+export {RepostButton}
+
+function RepostButtonDialog({
   isReposted,
   repostCount,
   onRepost,
   onQuote,
   big,
   embeddingDisabled,
-}: Props): React.ReactNode => {
+}: RepostButtonProps): React.ReactNode {
   const t = useTheme()
   const {_} = useLingui()
   const requireAuth = useRequireAuth()
@@ -106,8 +109,6 @@ let RepostButton = ({
     </>
   )
 }
-RepostButton = memo(RepostButton)
-export {RepostButton}
 
 let RepostButtonDialogInner = ({
   isReposted,
@@ -122,23 +123,23 @@ let RepostButtonDialogInner = ({
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const control = Dialog.useDialogContext()
 
   const onPressRepost = useCallback(() => {
-    if (!isReposted) playHaptic()
+    if (!isReposted) haptics.confirm()
 
     control.close(() => {
       onRepost()
     })
-  }, [control, isReposted, onRepost, playHaptic])
+  }, [control, isReposted, onRepost, haptics])
 
   const onPressQuote = useCallback(() => {
-    playHaptic()
+    haptics.confirm()
     control.close(() => {
       onQuote()
     })
-  }, [control, onQuote, playHaptic])
+  }, [control, onQuote, haptics])
 
   const onPressClose = useCallback(() => control.close(), [control])
 

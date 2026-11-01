@@ -31,7 +31,7 @@ export function useSuggestedStarterPacksQuery({
     staleTime: STALE.MINUTES.THREE,
     queryKey: createSuggestedStarterPacksQueryKey(overrideInterests),
     queryFn: async () => {
-      return await client.call(
+      const data = await client.call(
         app.bsky.unspecced.getSuggestedStarterPacks,
         {},
         {
@@ -45,6 +45,8 @@ export function useSuggestedStarterPacksQuery({
           },
         },
       )
+
+      return {...data, recId: data.recIdStr}
     },
   })
 }

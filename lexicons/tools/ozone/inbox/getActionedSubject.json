@@ -1,0 +1,53 @@
+{
+  "id": "tools.ozone.inbox.getActionedSubject",
+  "defs": {
+    "main": {
+      "type": "query",
+      "errors": [
+        {
+          "name": "NotFound",
+          "description": "No subject was found, or the authenticated account does not own the subject."
+        }
+      ],
+      "output": {
+        "schema": {
+          "ref": "tools.ozone.inbox.defs#subjectViewDetail",
+          "type": "ref"
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "subject"
+        ],
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "Account to preview. Defaults to the authenticated account; another account requires an active moderator, triage, or admin credential."
+          },
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1,
+            "description": "Maximum number of actions to return."
+          },
+          "cursor": {
+            "type": "string",
+            "description": "Opaque cursor for the next page of this subject's action history."
+          },
+          "subject": {
+            "type": "string",
+            "format": "uri",
+            "description": "DID or AT-URI of the subject to retrieve."
+          }
+        }
+      },
+      "description": "Get a subject belonging to the authenticated account, including its moderation action history from this moderation service."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

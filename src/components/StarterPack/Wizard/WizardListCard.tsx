@@ -7,7 +7,7 @@ import {
 } from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE} from '#/lib/constants'
+import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useSession} from '#/state/session'
@@ -147,7 +147,7 @@ export function WizardProfileCard({
   const disabled =
     subjectOptedOut ||
     isTarget ||
-    (!included && state.profiles.length >= STARTER_PACK_MAX_SIZE)
+    (!included && state.profiles.length >= state.profileLimit)
   const moderationUi = moderateProfile(profile, moderationOpts).ui('avatar')
   const displayName = profile.displayName
     ? sanitizeDisplayName(profile.displayName)

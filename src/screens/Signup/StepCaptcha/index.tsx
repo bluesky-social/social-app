@@ -232,7 +232,6 @@ function StepCaptchaInner({
               url={url}
               stateParam={stateParam}
               state={state}
-              onComplete={() => setCompleted(true)}
               onSuccess={onSuccess}
               onError={onError}
               onSlow={onSlow}
@@ -242,7 +241,7 @@ function StepCaptchaInner({
             <ActivityIndicator size="large" />
           )}
         </View>
-        {state.error && <Admonition type="error">{state.error}</Admonition>}
+        {!!state.error && <Admonition type="error">{state.error}</Admonition>}
       </View>
       <BackNextButtons
         hideNext

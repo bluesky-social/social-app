@@ -218,12 +218,9 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
             <TextField.Input
               label={l`New email address`}
               placeholder={l`alice@example.com`}
-              defaultValue={state.email}
-              onChangeText={
-                state.mutationStatus === 'success'
-                  ? undefined
-                  : handleEmailChange
-              }
+              value={state.email}
+              editable={state.mutationStatus !== 'success'}
+              onChangeText={handleEmailChange}
               keyboardType="email-address"
               autoComplete="email"
               autoCapitalize="none"
@@ -300,8 +297,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
           onPress={handleUpdateEmail}
           disabled={
             !state.email ||
-            (state.step === 'token' &&
-              (!state.token || state.token.length !== 11)) ||
+            (state.step === 'token' && !isValidCode(state.token)) ||
             state.mutationStatus === 'pending'
           }>
           <ButtonText>

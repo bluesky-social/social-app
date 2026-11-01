@@ -16,7 +16,7 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon} from '#/components/icons/Arrow'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
 import {StandardSite} from '#/components/icons/community/StandardSite'
-import {Link} from '#/components/Link'
+import {Link, type LinkProps} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {matchStandardSitePublisher} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import {StandardSiteMetaRow} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow'
@@ -44,7 +44,7 @@ export const StandardSiteEmbed = ({
   const ax = useAnalytics()
   const {t: l, i18n} = useLingui()
   const t = useTheme()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const niceUrl = toNiceDomain(view.uri)
   const imageUri = view.thumb
   const hasMedia = Boolean(imageUri)
@@ -76,21 +76,21 @@ export const StandardSiteEmbed = ({
     onOut: onInteractOut,
   } = useInteractionState()
   const onPress = () => {
-    playHaptic('Light')
+    haptics.tap()
     onEmbedInteractionCallback?.()
     ax.metric('embed:standardSite:article:press', {url: view.uri})
   }
   const onLongPress = IS_NATIVE
     ? () => {
         if (view.uri) {
-          playHaptic('Heavy')
+          haptics.longPress()
           void shareUrl(view.uri)
           ax.metric('embed:standardSite:article:longPress', {url: view.uri})
         }
       }
     : undefined
   const onPressPublication = () => {
-    playHaptic('Light')
+    haptics.tap()
     onEmbedInteractionCallback?.()
     ax.metric('embed:standardSite:publication:press', {
       url: view.source?.uri || '',
@@ -99,7 +99,7 @@ export const StandardSiteEmbed = ({
   const onLongPressPublication = IS_NATIVE
     ? () => {
         if (view.source?.uri) {
-          playHaptic('Heavy')
+          haptics.longPress()
           void shareUrl(view.source.uri)
           ax.metric('embed:standardSite:publication:longPress', {
             url: view.source.uri,
@@ -299,7 +299,9 @@ export function PublicationCard({
   onLongPress,
   themeColors,
   style,
+  linkProps,
   onEmbedInteractionCallback,
+  hideSubscribe,
 }: ssTypes.CommonProps &
   ssTypes.PreviewProps &
   ssTypes.PublicApiProps & {
@@ -307,6 +309,13 @@ export function PublicationCard({
     onLongPress?: () => void
     themeColors: ssTypes.ThemeColors
     style?: StyleProp<ViewStyle>
+    /**
+     * Focus plumbing for hosts such as carousels. The ref applies to the
+     * primary link only; the subscribe link receives just `tabIndex` and
+     * `onFocus`.
+     */
+    linkProps?: Pick<LinkProps, 'ref' | 'tabIndex' | 'onFocus'>
+    hideSubscribe?: boolean
   }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -318,6 +327,12 @@ export function PublicationCard({
   } = useInteractionState()
 
   if (!view.source) return null
+
+  /* The primary link alone takes the ref; it is the host's focus target. */
+  const subscribeLinkProps = linkProps && {
+    tabIndex: linkProps.tabIndex,
+    onFocus: linkProps.onFocus,
+  }
 
   return (
     <View
@@ -344,7 +359,12 @@ export function PublicationCard({
           onMouseEnter: onInteract,
           onMouseLeave: onInteractOut,
         })}
-        onFocus={onInteract}
+        ref={linkProps?.ref}
+        tabIndex={linkProps?.tabIndex}
+        onFocus={e => {
+          onInteract()
+          linkProps?.onFocus?.(e)
+        }}
         onBlur={onInteractOut}
         style={[a.absolute, a.inset_0]}>
         <></>
@@ -352,7 +372,6 @@ export function PublicationCard({
 
       <View
         style={[
-          a.flex_1,
           a.align_center,
           a.justify_between,
           a.gap_md,
@@ -393,18 +412,19 @@ export function PublicationCard({
           </View>
         </View>
 
-        {gtPhone && (
+        {gtPhone && !hideSubscribe && (
           <SubscribeButton
             preview={preview}
             view={view}
             style={[!gtPhone && [a.w_full, a.justify_center]]}
+            linkProps={subscribeLinkProps}
             onEmbedInteractionCallback={onEmbedInteractionCallback}
           />
         )}
       </View>
 
-      <View style={[a.pointer_events_none]}>
-        {view.description && (
+      <View style={[a.flex_1, a.pointer_events_none]}>
+        {!!view.description && (
           <View style={[a.pt_sm]}>
             <Text emoji style={[a.text_sm, a.leading_snug]} numberOfLines={3}>
               {view.description}
@@ -418,6 +438,7 @@ export function PublicationCard({
               preview={preview}
               view={view}
               style={[!gtPhone && [a.w_full, a.justify_center]]}
+              linkProps={subscribeLinkProps}
               onEmbedInteractionCallback={onEmbedInteractionCallback}
             />
           </View>
@@ -431,15 +452,17 @@ export function SubscribeButton({
   preview,
   view,
   style,
+  linkProps,
   onEmbedInteractionCallback,
 }: ssTypes.CommonProps &
   ssTypes.PreviewProps &
   ssTypes.PublicApiProps & {
     style?: StyleProp<ViewStyle>
+    linkProps?: Pick<LinkProps, 'tabIndex' | 'onFocus'>
   }) {
   const ax = useAnalytics()
   const {t: l} = useLingui()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
 
   const highlightedPublisher = matchStandardSitePublisher(view)
   const cta = highlightedPublisher
@@ -478,7 +501,7 @@ export function SubscribeButton({
       : l`View publication`
 
   const onPress = () => {
-    playHaptic('Light')
+    haptics.tap()
     onEmbedInteractionCallback?.()
     if (highlightedPublisher) {
       ax.metric('embed:standardSite:subscribe:press', {
@@ -494,7 +517,7 @@ export function SubscribeButton({
   const onLongPress = IS_NATIVE
     ? () => {
         if (view.source?.uri) {
-          playHaptic('Heavy')
+          haptics.longPress()
           void shareUrl(view.source.uri)
           if (highlightedPublisher) {
             ax.metric('embed:standardSite:subscribe:longPress', {
@@ -516,6 +539,8 @@ export function SubscribeButton({
       label={label}
       size="small"
       color="secondary_inverted"
+      tabIndex={linkProps?.tabIndex}
+      onFocus={linkProps?.onFocus}
       style={[
         style,
         a.gap_sm,

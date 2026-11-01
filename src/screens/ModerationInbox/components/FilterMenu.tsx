@@ -5,18 +5,22 @@ import {atoms as a, useTheme} from '#/alf'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 type ReportFilter = 'all' | 'pending' | 'resolved' | 'unread'
 
 export function FilterMenu({
+  tab,
   filter,
   setFilter,
 }: {
+  tab: 'reports' | 'account'
   filter: ReportFilter
   setFilter: React.Dispatch<React.SetStateAction<ReportFilter>>
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const ax = useAnalytics()
 
   const labels: Record<ReportFilter, string> = {
     all: l({context: 'moderation-report-filter', message: 'All'}),
@@ -54,7 +58,13 @@ export function FilterMenu({
             <Menu.Item
               key={option.value}
               label={option.label}
-              onPress={() => setFilter(option.value)}>
+              onPress={() => {
+                ax.metric('moderation:inbox:filter', {
+                  tab,
+                  filter: option.value,
+                })
+                setFilter(option.value)
+              }}>
               <Menu.ItemText>{option.label}</Menu.ItemText>
               <Menu.ItemRadio selected={filter === option.value} />
             </Menu.Item>

@@ -10,6 +10,7 @@ import {useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import * as Select from '#/components/Select'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -18,28 +19,27 @@ const MAX_FEEDBACK_LENGTH = 300
 
 export function BetaFeaturesFeedbackDialog({
   control,
-  betaFeatureKeys,
+  betaFeatures,
 }: {
   control: Dialog.DialogControlProps
   /**
-   * The keys of the beta feature gates that are currently active for this user,
-   * attached to the feedback report for context.
+   * The current beta features, with the localized names shown in settings.
    */
-  betaFeatureKeys: string[]
+  betaFeatures: {key: string; name: string}[]
 }) {
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
-      <BetaFeaturesFeedbackDialogInner betaFeatureKeys={betaFeatureKeys} />
+      <BetaFeaturesFeedbackDialogInner betaFeatures={betaFeatures} />
       <Dialog.Close />
     </Dialog.Outer>
   )
 }
 
 function BetaFeaturesFeedbackDialogInner({
-  betaFeatureKeys,
+  betaFeatures,
 }: {
-  betaFeatureKeys: string[]
+  betaFeatures: {key: string; name: string}[]
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -48,9 +48,14 @@ function BetaFeaturesFeedbackDialogInner({
   const control = Dialog.useDialogContext()
 
   const [feedback, setFeedback] = useState('')
+  const [selectedKey, setSelectedKey] = useState('')
+  const selectedFeatureKey =
+    betaFeatures.length === 1
+      ? betaFeatures[0].key
+      : betaFeatures.find(feature => feature.key === selectedKey)?.key
 
   const {mutate: onSubmit, isPending} = useMutation({
-    mutationFn: () => {
+    mutationFn: (betaFeatureKey: string) => {
       /*
        * `captureFeedback` is a no-op when the Sentry client is disabled (e.g. in
        * dev, where `init` sets `enabled: false`). It returns synchronously
@@ -63,17 +68,18 @@ function BetaFeaturesFeedbackDialogInner({
       }
       Sentry.captureFeedback(
         {name: currentAccount?.handle, message: feedback.trim()},
-        {captureContext: {contexts: {betaFeatures: {keys: betaFeatureKeys}}}},
+        {captureContext: {contexts: {betaFeatures: {keys: [betaFeatureKey]}}}},
       )
       return Promise.resolve()
     },
-    onSuccess: () => {
+    onSuccess: (_data, betaFeatureKey) => {
       ax.metric('betaFeatures:feedback:submit', {
-        betaFeatureKeys,
+        betaFeatureKeys: [betaFeatureKey],
         feedbackLength: feedback.trim().length,
       })
       control.close(() => {
         setFeedback('')
+        setSelectedKey('')
         Toast.show(l`Thanks for your feedback!`)
       })
     },
@@ -86,7 +92,8 @@ function BetaFeaturesFeedbackDialogInner({
   })
 
   const remaining = MAX_FEEDBACK_LENGTH - feedback.length
-  const canSubmit = feedback.trim().length > 0 && !isPending
+  const canSubmit =
+    !!selectedFeatureKey && feedback.trim().length > 0 && !isPending
 
   return (
     <Dialog.ScrollableInner
@@ -101,6 +108,30 @@ function BetaFeaturesFeedbackDialogInner({
             {l`We’d love to hear about your experience testing beta features!`}
           </Text>
         </View>
+        {betaFeatures.length > 1 && (
+          <Select.Root
+            value={selectedFeatureKey ?? ''}
+            onValueChange={setSelectedKey}
+            disabled={isPending}>
+            <Select.Trigger label={l`Select a beta feature`}>
+              <Select.ValueText placeholder={l`Select a beta feature`} />
+              <Select.Icon />
+            </Select.Trigger>
+            <Select.Content
+              label={l`Select a beta feature`}
+              items={betaFeatures.map(feature => ({
+                value: feature.key,
+                label: feature.name,
+              }))}
+              renderItem={({label, value}) => (
+                <Select.Item value={value} label={label}>
+                  <Select.ItemIndicator />
+                  <Select.ItemText>{label}</Select.ItemText>
+                </Select.Item>
+              )}
+            />
+          </Select.Root>
+        )}
         <View style={[a.gap_xs]}>
           <Text
             accessibilityLabel={plural(remaining, {
@@ -134,7 +165,9 @@ function BetaFeaturesFeedbackDialogInner({
             size="large"
             color="primary"
             disabled={!canSubmit}
-            onPress={() => onSubmit()}>
+            onPress={() => {
+              if (selectedFeatureKey) onSubmit(selectedFeatureKey)
+            }}>
             <ButtonText>
               <Trans>Submit feedback</Trans>
             </ButtonText>
@@ -146,6 +179,7 @@ function BetaFeaturesFeedbackDialogInner({
             onPress={() =>
               control.close(() => {
                 setFeedback('')
+                setSelectedKey('')
               })
             }>
             <ButtonText>

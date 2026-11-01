@@ -1,0 +1,151 @@
+{
+  "id": "tools.ozone.inbox.listReports",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "reports"
+          ],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "reports": {
+              "type": "array",
+              "items": {
+                "ref": "#reportView",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "Account to preview. Defaults to the authenticated account; another account requires an active moderator, triage, or admin credential."
+          },
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string",
+            "description": "An opaque cursor for pagination."
+          },
+          "filter": {
+            "enum": [
+              "all",
+              "pending",
+              "resolved",
+              "unread"
+            ],
+            "type": "string",
+            "default": "all",
+            "description": "Filter report activity. unread includes reports whose updatedAt is after the reports section's seenAt watermark."
+          },
+          "sortField": {
+            "enum": [
+              "createdAt",
+              "updatedAt"
+            ],
+            "type": "string",
+            "default": "updatedAt"
+          },
+          "sortDirection": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "type": "string",
+            "default": "desc"
+          }
+        }
+      },
+      "description": "List moderation reports submitted by the authenticated account to this moderation service."
+    },
+    "reportView": {
+      "type": "object",
+      "required": [
+        "src",
+        "id",
+        "isRead",
+        "reasonType",
+        "subject",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Report ID (report table ID), used by getReport and Ozone's report detail page."
+        },
+        "src": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of the moderation service that received the report."
+        },
+        "scope": {
+          "type": "string",
+          "knownValues": [
+            "network",
+            "app",
+            "labelOnly"
+          ]
+        },
+        "isRead": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 20000,
+          "maxGraphemes": 2000
+        },
+        "status": {
+          "type": "string",
+          "knownValues": [
+            "pending",
+            "resolved"
+          ]
+        },
+        "subject": {
+          "refs": [
+            "com.atproto.admin.defs#repoRef",
+            "com.atproto.repo.strongRef",
+            "chat.bsky.convo.defs#messageRef",
+            "chat.bsky.convo.defs#convoRef"
+          ],
+          "type": "union"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "reasonType": {
+          "type": "string",
+          "description": "The exact fully-qualified reason NSID submitted with and stored on the report."
+        },
+        "lastActionTaken": {
+          "type": "string",
+          "description": "Public action associated with this report's transition to resolved. See the public action vocabulary table."
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

@@ -1,3 +1,4 @@
+import {chunkArray} from '@atproto/common-web'
 import {type Client} from '@atproto/lex'
 import {type AtUriString, toDatetimeString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
@@ -36,10 +37,14 @@ export const createStarterPackList = async ({
     purpose: 'app.bsky.graph.defs#referencelist',
   })
   if (!list) throw new Error('List creation failed')
-  await client.call(com.atproto.repo.applyWrites, {
-    repo: client.assertDid,
-    writes: profiles.map(p => createListItem({did: p.did, listUri: list.uri})),
-  })
+  for (const profilesChunk of chunkArray(profiles, 200)) {
+    await client.call(com.atproto.repo.applyWrites, {
+      repo: client.assertDid,
+      writes: profilesChunk.map(p =>
+        createListItem({did: p.did, listUri: list.uri}),
+      ),
+    })
+  }
 
   return list
 }

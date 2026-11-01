@@ -2,7 +2,8 @@ import {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, ScrollView, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {FocusGuards, FocusScope} from 'radix-ui/internal'
+import * as FocusGuards from '@radix-ui/react-focus-guards'
+import * as FocusScope from '@radix-ui/react-focus-scope'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {saveImageToMediaLibrary} from '#/lib/media/manip'
@@ -51,6 +52,7 @@ export function Lightbox() {
           key={activeLightbox.id}
           imgs={imgs}
           initialIndex={initialIndex}
+          onIndexChange={activeLightbox.onIndexChange}
           onClose={closeLightbox}
         />
       </LightboxContainer>
@@ -91,10 +93,12 @@ function LightboxContainer({
 function LightboxGallery({
   imgs,
   initialIndex = 0,
+  onIndexChange,
   onClose,
 }: {
   imgs: ImageSource[]
   initialIndex: number
+  onIndexChange?: (index: number) => void
   onClose: () => void
 }) {
   const t = useTheme()
@@ -111,13 +115,15 @@ function LightboxGallery({
   const onPressLeft = useCallback(() => {
     if (canGoLeft) {
       setIndex(index - 1)
+      onIndexChange?.(index - 1)
     }
-  }, [index, canGoLeft])
+  }, [index, canGoLeft, onIndexChange])
   const onPressRight = useCallback(() => {
     if (canGoRight) {
       setIndex(index + 1)
+      onIndexChange?.(index + 1)
     }
-  }, [index, canGoRight])
+  }, [index, canGoRight, onIndexChange])
 
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {

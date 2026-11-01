@@ -9,6 +9,11 @@ export type VideoFeedSourceContext =
       uri: string
       sourceInterstitial: 'discover' | 'explore' | 'none'
       initialPostUri?: string
+      /**
+       * Opened from the Following v2 fork of Home, which caches its feeds
+       * under its own query key.
+       */
+      followingV2?: boolean
     }
   | {
       type: 'author'

@@ -10,9 +10,11 @@ export interface FeedAPI {
   fetch({
     cursor,
     limit,
+    signal,
   }: {
     cursor: string | undefined
     limit: number
+    signal?: AbortSignal
   }): Promise<FeedAPIResponse>
 }
 

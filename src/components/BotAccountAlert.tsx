@@ -5,7 +5,7 @@ import {useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {Bot_Filled as RobotIcon} from '#/components/icons/Bot'
+import {Bot_Filled_Corner0_Rounded as RobotIcon} from '#/components/icons/Bot'
 import {Text} from '#/components/Typography'
 import {navigate} from '#/Navigation'
 import type * as bsky from '#/types/bsky'
@@ -62,7 +62,7 @@ export function BotAccountAlert({
               label={l`Open settings`}
               onPress={() => {
                 control.close(() => {
-                  navigate('AutomationLabelSettings')
+                  navigate({name: 'AutomationLabelSettings', params: undefined})
                 })
               }}
               color="secondary"

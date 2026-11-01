@@ -7,9 +7,9 @@ import {
   View,
 } from 'react-native'
 import {
-  Gesture,
   GestureDetector,
   type NativeGesture,
+  useNativeGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
   useAnimatedStyle,
@@ -40,15 +40,20 @@ import {
 } from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {getCurrentState, useOnAppStateChange} from '#/lib/appState'
 import {HITSLOP_20} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {hasPlaybackStarted} from '#/lib/media/video/analytics'
+import {
+  createPlaybackDurationTracker,
+  hasPlaybackStarted,
+} from '#/lib/media/video/analytics'
 import {
   createPlaybackTelemetry,
   type PlaybackTelemetry,
 } from '#/lib/media/video/playbackTelemetry'
+import {getHomeNavigationAction} from '#/lib/routes/navigation'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
@@ -101,6 +106,7 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID} from '#/env'
+import {usePostFeedQuery as useFollowingV2PostFeedQuery} from '#/features/followingV2/home/queries/postFeed'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
@@ -148,7 +154,11 @@ export function VideoFeed({}: NativeStackScreenProps<
 
   return (
     <ThemeProvider theme="dark">
-      <Layout.Screen minimalShell noInsetTop style={{backgroundColor: 'black'}}>
+      <Layout.Screen
+        minimalShell
+        fullBleed
+        noInsetTop
+        style={{backgroundColor: 'black'}}>
         <KeepAwake />
         <View
           style={[
@@ -200,13 +210,24 @@ function Feed() {
   const feedUri = params.type === 'feedgen' ? params.uri : undefined
   const {data: feedInfo} = useFeedInfo(feedUri)
   const feedFeedback = useFeedFeedback(feedInfo ?? undefined, hasSession)
+  const feedParams =
+    params.type === 'feedgen' && params.sourceInterstitial !== 'none'
+      ? {feedCacheKey: params.sourceInterstitial}
+      : undefined
+  /*
+   * Opened from the Following v2 fork of Home, the grid's pages are under the
+   * fork's query key, so read them from there to keep the starting post and
+   * the pages already loaded.
+   */
+  const isFollowingV2 = params.type === 'feedgen' && params.followingV2 === true
+  const legacyQuery = usePostFeedQuery(feedDesc, feedParams, {
+    enabled: !isFollowingV2,
+  })
+  const followingV2Query = useFollowingV2PostFeedQuery(feedDesc, feedParams, {
+    enabled: isFollowingV2,
+  })
   const {data, error, hasNextPage, isFetchingNextPage, fetchNextPage} =
-    usePostFeedQuery(
-      feedDesc,
-      params.type === 'feedgen' && params.sourceInterstitial !== 'none'
-        ? {feedCacheKey: params.sourceInterstitial}
-        : undefined,
-    )
+    isFollowingV2 ? followingV2Query : legacyQuery
 
   const videos = useMemo(() => {
     let vids =
@@ -258,7 +279,7 @@ function Feed() {
 
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  const scrollGesture = useMemo(() => Gesture.Native(), [])
+  const scrollGesture = useNativeGesture()
 
   const renderItem: ListRenderItem<VideoItem> = useCallback(
     ({item, index}) => {
@@ -430,6 +451,7 @@ function Feed() {
     <FeedFeedbackProvider value={feedFeedback}>
       <GestureDetector gesture={scrollGesture}>
         <List
+          disableTabletLayout
           data={videos}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
@@ -618,10 +640,44 @@ function VideoItemInner({
     ReportDialogMetadataContext.useReportDialogMetadataContext()
   const ax = useAnalytics()
   const playbackStartTrackedRef = useRef(false)
+  const [durationTracker] = useState(() => {
+    const tracker = createPlaybackDurationTracker({
+      enabled: embed.presentation !== 'gif',
+      onSegment: segment => {
+        ax.metric('video:playback:duration', {
+          ...segment,
+          postUri: post.uri,
+          postAuthorDid: post.author.did,
+          context: 'immersiveFeed',
+          presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+        })
+      },
+    })
+    tracker.setForeground(getCurrentState() === 'active')
+    return tracker
+  })
 
-  usePlaybackTelemetry({player, active, playlist: embed.playlist})
+  useOnAppStateChange(state => {
+    durationTracker.setForeground(state === 'active')
+  })
+
+  useEffect(() => {
+    durationTracker.setActive(active)
+  }, [active, durationTracker])
+
+  useEffect(() => {
+    return () => durationTracker.flush('unmounted')
+  }, [durationTracker])
+
+  usePlaybackTelemetry({
+    player,
+    active,
+    playlist: embed.playlist,
+    presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+  })
 
   useEventListener(player, 'timeUpdate', evt => {
+    durationTracker.observeProgress(evt.currentTime)
     if (IS_ANDROID && !isReady && evt.currentTime >= 0.05) {
       setIsReady(true)
     }
@@ -654,6 +710,14 @@ function VideoItemInner({
     }
   })
 
+  useEventListener(player, 'playingChange', evt => {
+    durationTracker.setPlaying(evt.isPlaying)
+  })
+
+  useEventListener(player, 'statusChange', evt => {
+    if (evt.status === 'error') durationTracker.flush('error')
+  })
+
   return (
     <VideoView
       accessible={false}
@@ -684,10 +748,12 @@ function usePlaybackTelemetry({
   player,
   active,
   playlist,
+  presentation,
 }: {
   player: VideoPlayer
   active: boolean
   playlist: string
+  presentation: 'video' | 'gif'
 }) {
   const ax = useAnalytics()
   const telemetryRef = useRef<PlaybackTelemetry | null>(null)
@@ -697,7 +763,7 @@ function usePlaybackTelemetry({
     if (telemetryRef.current == null) {
       telemetryRef.current = createPlaybackTelemetry({
         surface: 'immersiveFeed',
-        presentation: 'video',
+        presentation,
       })
     }
     const telemetry = telemetryRef.current
@@ -709,7 +775,7 @@ function usePlaybackTelemetry({
     return () => {
       telemetry.deactivated()
     }
-  }, [active, player])
+  }, [active, player, presentation])
 
   useEventListener(player, 'statusChange', evt => {
     if (evt.status === 'readyToPlay') {
@@ -724,7 +790,7 @@ function usePlaybackTelemetry({
       if (active) {
         ax.metric('video:playback:failed', {
           surface: 'immersiveFeed',
-          presentation: 'video',
+          presentation,
           errorClass: 'PlayerError',
           errorMessage: message.slice(0, 256),
           playlist,
@@ -1171,7 +1237,7 @@ function PlayPauseTapArea({
 }) {
   const {t: l} = useLingui()
   const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   // TODO: implement viaRepost -sfn
   const [queueLike] = usePostLikeMutationQueue(
     post,
@@ -1211,7 +1277,7 @@ function PlayPauseTapArea({
     if (doubleTapRef.current) {
       clearTimeout(doubleTapRef.current)
       doubleTapRef.current = null
-      playHaptic('Light')
+      haptics.tap()
       void queueLike()
       sendInteraction({
         item: post.uri,
@@ -1287,7 +1353,9 @@ function EndMessage() {
           if (navigation.canGoBack()) {
             navigation.goBack()
           } else {
-            navigation.navigate('Home')
+            navigation.dispatch(
+              getHomeNavigationAction(navigation.getState(), 'navigate'),
+            )
           }
         }}
         variant="solid"

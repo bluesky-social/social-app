@@ -116,6 +116,7 @@ function ProfileHeaderReady({
             profile={profile}
             moderation={moderation.ui('avatar')}
             disableHoverCard={moderation.blocked}
+            disableLink
           />
           <View style={[a.flex_1]}>
             <View style={[a.flex_row, a.align_center, a.flex_1, web(a.mb_2xs)]}>

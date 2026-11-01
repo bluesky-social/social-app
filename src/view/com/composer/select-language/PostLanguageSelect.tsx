@@ -14,9 +14,7 @@ import {LANG_DROPDOWN_HITSLOP} from '#/lib/constants'
 import {codeToLanguageName} from '#/locale/helpers'
 import {
   fromPostLanguages,
-  toPostLanguages,
   useLanguagePrefs,
-  useLanguagePrefsApi,
 } from '#/state/preferences/languages'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, type ButtonProps} from '#/components/Button'
@@ -34,7 +32,7 @@ export function PostLanguageSelect({
   nudgeAt = 0,
 }: {
   currentLanguages?: string[]
-  onSelectLanguage?: (language: string) => void
+  onSelectLanguage: (language: string) => void
   /**
    * Timestamp (ms) of the last honored language-detection nudge. Each
    * time this changes, the button flashes a transient hint and fades.
@@ -46,32 +44,33 @@ export function PostLanguageSelect({
 }) {
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
-  const setLangPrefs = useLanguagePrefsApi()
   const languageDialogControl = Dialog.useDialogControl()
 
   const dedupedHistory = Array.from(
-    new Set([...langPrefs.postLanguageHistory, langPrefs.postLanguage]),
+    new Set([...langPrefs.postLanguageHistory, langPrefs.primaryLanguage]),
   )
 
-  const currentLanguages =
-    currentLanguagesProp ?? toPostLanguages(langPrefs.postLanguage)
+  const currentLanguages = currentLanguagesProp ?? [langPrefs.primaryLanguage]
 
   const onSelectLanguages = (languages: string[]) => {
     let langsString = languages.join(',')
     if (!langsString) {
       langsString = langPrefs.primaryLanguage
     }
-    setLangPrefs.setPostLanguage(langsString)
-    onSelectLanguage?.(langsString)
+    onSelectLanguage(langsString)
   }
 
   if (
     dedupedHistory.length === 1 &&
-    dedupedHistory[0] === langPrefs.postLanguage
+    dedupedHistory[0] === langPrefs.primaryLanguage
   ) {
     return (
       <>
-        <LanguageBtn onPress={languageDialogControl.open} nudgeAt={nudgeAt} />
+        <LanguageBtn
+          currentLanguages={currentLanguages}
+          onPress={languageDialogControl.open}
+          nudgeAt={nudgeAt}
+        />
         <LanguageSelectDialog
           titleText={<Trans>Choose post languages</Trans>}
           subtitleText={
@@ -109,10 +108,7 @@ export function PostLanguageSelect({
                 <Menu.Item
                   key={historyItem}
                   label={_(msg`Select ${langName}`)}
-                  onPress={() => {
-                    setLangPrefs.setPostLanguage(historyItem)
-                    onSelectLanguage?.(historyItem)
-                  }}>
+                  onPress={() => onSelectLanguage(historyItem)}>
                   <Menu.ItemText>{langName}</Menu.ItemText>
                   <Menu.ItemRadio
                     selected={
@@ -163,8 +159,7 @@ function LanguageBtn({
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
 
-  const postLanguagesPref = toPostLanguages(langPrefs.postLanguage)
-  const currentLanguages = currentLanguagesProp ?? postLanguagesPref
+  const currentLanguages = currentLanguagesProp ?? [langPrefs.primaryLanguage]
 
   /*
    * Stays at 0 when idle; each nudge runs two pulses with a faster

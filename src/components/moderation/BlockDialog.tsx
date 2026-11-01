@@ -1,5 +1,6 @@
 import {useState} from 'react'
-import {View} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -14,12 +15,13 @@ import {
 } from '#/state/queries/messages/list-mutual-groups'
 import {useRemoveFromGroupChat} from '#/state/queries/messages/remove-from-group'
 import {useSession} from '#/state/session'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import {atoms as a, platform, useBreakpoints, useTheme, web} from '#/alf'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {type DialogControlProps} from '#/components/Dialog'
 import {parseConvoView} from '#/components/dms/util'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -28,11 +30,27 @@ import {type AnyProfileView} from '#/types/bsky/profile'
 
 type Item = chat.bsky.convo.defs.ConvoView
 
+/**
+ * How many mutual group chats to show in the block dialog itself. The rest
+ * are behind a "See more" button that opens the full list.
+ */
+const MAX_PREVIEW_GROUP_CHATS = 3
+
 type BlockDialogProps = {
   control: DialogControlProps
   profile: Shadow<AnyProfileView>
   onBlock: () => Promise<void>
   currentConvoId?: string
+}
+
+/**
+ * Props shared by every mutual group chat row, wherever it's rendered.
+ */
+type MutualGroupChatRowProps = {
+  profileDid: string
+  currentConvoId?: string
+  onOptimisticallyRemoveConvo: (convoId: string) => void
+  onRestoreConvo: (convoId: string) => void
 }
 
 export function BlockDialog({
@@ -42,17 +60,14 @@ export function BlockDialog({
   currentConvoId,
 }: BlockDialogProps) {
   return (
-    <Dialog.Outer control={control}>
-      <View style={[a.relative]}>
-        <Dialog.Handle />
-        <BlockDialogInner
-          control={control}
-          profile={profile}
-          onBlock={onBlock}
-          currentConvoId={currentConvoId}
-        />
-        <Dialog.Close />
-      </View>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
+      <Dialog.Handle />
+      <BlockDialogInner
+        control={control}
+        profile={profile}
+        onBlock={onBlock}
+        currentConvoId={currentConvoId}
+      />
     </Dialog.Outer>
   )
 }
@@ -70,9 +85,7 @@ function BlockDialogInner({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-
-  const [headerHeight, setHeaderHeight] = useState(0)
-  const [footerHeight, setFooterHeight] = useState(0)
+  const mutualGroupChatsControl = Dialog.useDialogControl()
 
   /*
    * Optimistically hide convos the viewer has left or removed the profile
@@ -82,19 +95,23 @@ function BlockDialogInner({
   const [removedConvoIds, setRemovedConvoIds] = useState<Set<string>>(
     () => new Set(),
   )
-  const onOptimisticallyRemoveConvo = (convoId: string) => {
-    setRemovedConvoIds(prev => {
-      const next = new Set(prev)
-      next.add(convoId)
-      return next
-    })
-  }
-  const onRestoreConvo = (convoId: string) => {
-    setRemovedConvoIds(prev => {
-      const next = new Set(prev)
-      next.delete(convoId)
-      return next
-    })
+  const rowProps: MutualGroupChatRowProps = {
+    profileDid: profile.did,
+    currentConvoId,
+    onOptimisticallyRemoveConvo: (convoId: string) => {
+      setRemovedConvoIds(prev => {
+        const next = new Set(prev)
+        next.add(convoId)
+        return next
+      })
+    },
+    onRestoreConvo: (convoId: string) => {
+      setRemovedConvoIds(prev => {
+        const next = new Set(prev)
+        next.delete(convoId)
+        return next
+      })
+    },
   }
 
   const {data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage} =
@@ -105,7 +122,8 @@ function BlockDialogInner({
   const items: Item[] = (data?.pages.flatMap(page => page.convos) ?? []).filter(
     item => !removedConvoIds.has(item.id),
   )
-  const hasMutualGroupChats = items.length > 0
+  const previewItems = items.slice(0, MAX_PREVIEW_GROUP_CHATS)
+  const hiddenCount = items.length - previewItems.length
 
   const onEndReached = async () => {
     if (isFetchingNextPage || !hasNextPage) return
@@ -116,111 +134,224 @@ function BlockDialogInner({
     }
   }
 
-  const renderItems = ({item}: {item: Item}) => {
-    return (
-      <MutualGroupChat
-        view={item}
-        profileDid={profile.did}
-        currentConvoId={currentConvoId}
-        onOptimisticallyRemoveConvo={onOptimisticallyRemoveConvo}
-        onRestoreConvo={onRestoreConvo}
+  return (
+    <>
+      <Dialog.ScrollableInner
+        label={profile.viewer?.blocking ? l`Unblock` : l`Block`}
+        style={web({maxWidth: 420})}>
+        <View style={[a.gap_sm]}>
+          <Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>
+            {profile.viewer?.blocking ? (
+              <Trans>Unblock account?</Trans>
+            ) : (
+              <Trans>Block account?</Trans>
+            )}
+          </Text>
+          <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+            {profile.viewer?.blocking ? (
+              <Trans>
+                The account will be able to interact with you after unblocking.
+              </Trans>
+            ) : profile.associated?.labeler ? (
+              <Trans>
+                Blocking will not prevent labels from being applied on your
+                account, but it will stop this account from replying in your
+                threads or interacting with you.
+              </Trans>
+            ) : (
+              <Trans>
+                Blocked accounts cannot reply in your threads, mention you, or
+                otherwise interact with you.
+              </Trans>
+            )}
+          </Text>
+        </View>
+
+        {previewItems.length > 0 && (
+          <View style={[a.pt_xl, a.gap_sm]}>
+            <Text
+              style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_high]}>
+              <Trans>Mutual group chats</Trans>
+            </Text>
+            <View
+              style={[
+                a.border,
+                a.rounded_md,
+                a.overflow_hidden,
+                t.atoms.border_contrast_low,
+              ]}>
+              {previewItems.map((item, index) => (
+                <MutualGroupChat
+                  key={item.id}
+                  view={item}
+                  {...rowProps}
+                  style={[
+                    a.p_md,
+                    index > 0 && [a.border_t, t.atoms.border_contrast_low],
+                  ]}
+                />
+              ))}
+              {(hiddenCount > 0 || hasNextPage) && (
+                <SeeMoreButton
+                  label={
+                    hasNextPage
+                      ? l`See more`
+                      : plural(hiddenCount, {
+                          one: 'See # more',
+                          other: 'See # more',
+                        })
+                  }
+                  onPress={() => mutualGroupChatsControl.open()}
+                />
+              )}
+            </View>
+          </View>
+        )}
+
+        <View style={[a.pt_2xl, a.gap_sm]}>
+          <Button
+            disabled={isLoading}
+            color={profile.viewer?.blocking ? undefined : 'negative'}
+            size="large"
+            label={profile.viewer?.blocking ? l`Unblock` : l`Block`}
+            onPress={() => control.close(() => void onBlock())}>
+            <ButtonText>
+              {profile.viewer?.blocking ? (
+                <Trans>Unblock</Trans>
+              ) : (
+                <Trans>Block</Trans>
+              )}
+            </ButtonText>
+            {isLoading ? <ButtonIcon icon={Loader} /> : null}
+          </Button>
+          <Button
+            color="secondary"
+            size="large"
+            label={l`Close dialog`}
+            onPress={() => control.close()}>
+            <ButtonText>
+              <Trans>Cancel</Trans>
+            </ButtonText>
+          </Button>
+        </View>
+        <Dialog.Close />
+      </Dialog.ScrollableInner>
+
+      <MutualGroupChatsDialog
+        control={mutualGroupChatsControl}
+        items={items}
+        rowProps={rowProps}
+        isFetchingNextPage={isFetchingNextPage}
+        onEndReached={() => void onEndReached()}
       />
-    )
-  }
+    </>
+  )
+}
+
+function SeeMoreButton({label, onPress}: {label: string; onPress: () => void}) {
+  const t = useTheme()
+  return (
+    <Button
+      label={label}
+      onPress={onPress}
+      style={[a.w_full, a.border_t, t.atoms.border_contrast_low]}>
+      {({hovered, pressed}) => (
+        <View
+          style={[
+            a.flex_1,
+            a.align_center,
+            a.p_md,
+            (hovered || pressed) && t.atoms.bg_contrast_25,
+          ]}>
+          <Text
+            style={[a.text_md, a.font_medium, {color: t.palette.primary_500}]}>
+            {label}
+          </Text>
+        </View>
+      )}
+    </Button>
+  )
+}
+
+/**
+ * Every mutual group chat, opened from the block dialog when there are more
+ * than fit in its preview.
+ */
+function MutualGroupChatsDialog({
+  control,
+  ...props
+}: {
+  control: DialogControlProps
+  items: Item[]
+  rowProps: MutualGroupChatRowProps
+  isFetchingNextPage: boolean
+  onEndReached: () => void
+}) {
+  return (
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
+      <Dialog.Handle />
+      <MutualGroupChatsList {...props} />
+    </Dialog.Outer>
+  )
+}
+
+function MutualGroupChatsList({
+  items,
+  rowProps,
+  isFetchingNextPage,
+  onEndReached,
+}: {
+  items: Item[]
+  rowProps: MutualGroupChatRowProps
+  isFetchingNextPage: boolean
+  onEndReached: () => void
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const {gtMobile} = useBreakpoints()
+  const {close} = Dialog.useDialogContext()
 
   const listHeader = (
     <View
-      style={[t.atoms.bg]}
-      onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}>
-      <View
-        style={[
-          hasMutualGroupChats && native([a.pt_2xl, a.px_2xl]),
-          a.pb_lg,
-          a.gap_sm,
-        ]}>
-        <Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>
-          {profile.viewer?.blocking ? (
-            <Trans>Unblock account?</Trans>
-          ) : (
-            <Trans>Block account?</Trans>
-          )}
-        </Text>
-        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-          {profile.viewer?.blocking ? (
-            <Trans>
-              The account will be able to interact with you after unblocking.
-            </Trans>
-          ) : profile.associated?.labeler ? (
-            <Trans>
-              Blocking will not prevent labels from being applied on your
-              account, but it will stop this account from replying in your
-              threads or interacting with you.
-            </Trans>
-          ) : (
-            <Trans>
-              Blocked accounts cannot reply in your threads, mention you, or
-              otherwise interact with you.
-            </Trans>
-          )}
-        </Text>
-      </View>
-      {hasMutualGroupChats ? (
-        <View style={[web(a.pt_sm), native(a.px_2xl), a.pb_xs, t.atoms.bg]}>
-          <Text
-            style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_high]}>
-            <Trans>Mutual group chats</Trans>
-          </Text>
-        </View>
-      ) : null}
-    </View>
-  )
-
-  const footer = (
-    <View style={[a.w_full, a.gap_sm, a.justify_end]}>
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.justify_between,
+        a.pb_lg,
+        t.atoms.bg,
+        gtMobile ? a.pt_2xl : a.pt_xl,
+      ]}>
+      <Text style={[a.text_lg, a.font_semi_bold]}>
+        <Trans>Mutual group chats</Trans>
+      </Text>
       <Button
-        disabled={isLoading}
-        color={profile.viewer?.blocking ? undefined : 'negative'}
-        size="large"
-        label={profile.viewer?.blocking ? l`Unblock` : l`Block`}
-        onPress={() => control.close(() => void onBlock())}>
-        <ButtonText>
-          {profile.viewer?.blocking ? (
-            <Trans>Unblock</Trans>
-          ) : (
-            <Trans>Block</Trans>
-          )}
-        </ButtonText>
-        {isLoading ? <ButtonIcon icon={Loader} /> : null}
-      </Button>
-      <Button
+        label={l`Close`}
+        onPress={() => close()}
         color="secondary"
-        size="large"
-        label={l`Close dialog`}
-        onPress={() => control.close()}>
-        <ButtonText>
-          <Trans>Cancel</Trans>
-        </ButtonText>
+        size="small"
+        shape="round"
+        style={{margin: -8}}>
+        <ButtonIcon icon={XIcon} />
       </Button>
     </View>
   )
-
-  if (isLoading || !hasMutualGroupChats) {
-    return (
-      <Dialog.ScrollableInner
-        label={profile.viewer?.blocking ? l`Unblock` : l`Block`}
-        style={[web([{maxWidth: 420}])]}>
-        {listHeader}
-        {footer}
-      </Dialog.ScrollableInner>
-    )
-  }
 
   return (
     <Dialog.InnerFlatList
       data={items}
-      renderItem={renderItems}
+      renderItem={({item, index}: {item: Item; index: number}) => (
+        <MutualGroupChat
+          view={item}
+          {...rowProps}
+          style={[
+            a.py_md,
+            index > 0 && [a.border_t, t.atoms.border_contrast_low],
+          ]}
+        />
+      )}
+      keyExtractor={(item: Item) => item.id}
       ListHeaderComponent={listHeader}
-      stickyHeaderIndices={[0]}
+      stickyHeaderIndices={web([0])}
       ListFooterComponent={
         isFetchingNextPage ? (
           <View style={[a.py_lg, a.align_center, a.justify_center]}>
@@ -228,18 +359,14 @@ function BlockDialogInner({
           </View>
         ) : undefined
       }
-      footer={
-        <Dialog.FlatListFooter
-          onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}>
-          {footer}
-        </Dialog.FlatListFooter>
-      }
-      contentContainerStyle={[a.gap_0, {paddingBottom: footerHeight}]}
-      scrollIndicatorInsets={{top: headerHeight, bottom: footerHeight}}
-      onEndReached={() => void onEndReached()}
+      onEndReached={onEndReached}
       onEndReachedThreshold={0.5}
-      style={[web([{height: '100vh', maxHeight: 600}])]}
-      webInnerStyle={[{maxWidth: 420}]}
+      webInnerContentContainerStyle={[a.py_0]}
+      webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
+      style={platform({
+        web: [a.px_2xl, a.pb_md],
+        native: [a.px_2xl, a.pt_lg],
+      })}
     />
   )
 }
@@ -250,12 +377,10 @@ function MutualGroupChat({
   currentConvoId,
   onOptimisticallyRemoveConvo,
   onRestoreConvo,
-}: {
+  style,
+}: MutualGroupChatRowProps & {
   view: chat.bsky.convo.defs.ConvoView
-  profileDid: string
-  currentConvoId?: string
-  onOptimisticallyRemoveConvo: (convoId: string) => void
-  onRestoreConvo: (convoId: string) => void
+  style?: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -331,14 +456,7 @@ function MutualGroupChat({
 
   return (
     <View
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.gap_sm,
-        a.justify_between,
-        a.py_sm,
-        native(a.px_2xl),
-      ]}>
+      style={[a.flex_row, a.align_center, a.gap_sm, a.justify_between, style]}>
       <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
         <AvatarBubbles profiles={convo.members} size={40} />
         <View style={[a.flex_1]}>

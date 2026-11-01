@@ -1,0 +1,106 @@
+name: publish-web-statics
+
+# Builds the web app and publishes its statics to S3 under <commit SHA>/, so
+# bskyweb can serve them by setting BSKY_APP_VERSION to that SHA. Publishing
+# doesn't deploy anything.
+on:
+  workflow_dispatch:
+    inputs:
+      sourceRef:
+        type: string
+        description: Commit SHA to build instead of the branch's latest commit (optional)
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: github.repository == 'bluesky-social/social-app'
+    runs-on: ubuntu-latest
+    # id-token: write lets this job mint an OIDC token to assume the publish role
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      # Temporary until fixed runner images roll out:
+      # https://github.com/actions/runner-images/issues/15018
+      - name: Update Ubuntu CA certificates
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --only-upgrade --no-install-recommends -y ca-certificates
+
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.sourceRef || github.sha }}
+          persist-credentials: false
+
+      - name: Resolve build source
+        id: source
+        run: |
+          echo "Building source: $(git rev-parse HEAD)"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "version=$(jq -r '.version' package.json)" >> "$GITHUB_OUTPUT"
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - name: 🔧 Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
+          cache: pnpm
+
+      - name: ⚙️ Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔤 Compile translations
+        uses: $/.github/actions/compile-i18n
+
+      # Same values the bskyweb image build writes (see Dockerfile), so the
+      # published statics match what that image would embed
+      - name: ✏️ Write environment variables
+        env:
+          SHA: ${{ steps.source.outputs.sha }}
+          VERSION: ${{ steps.source.outputs.version }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: |
+          {
+            echo "EXPO_PUBLIC_ENV=production"
+            echo "EXPO_PUBLIC_RELEASE_VERSION=$VERSION"
+            echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$SHA"
+            echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")"
+            echo "EXPO_PUBLIC_SENTRY_DSN=$SENTRY_DSN"
+          } > .env
+
+      # post-web-build.js writes the statics into bskyweb/static/ and the
+      # template fragments into bskyweb/templates/, and uploads source maps
+      - name: 🏗️ Build web
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_RELEASE: xyz.blueskyweb.app@${{ steps.source.outputs.version }}
+          SENTRY_DIST: ${{ steps.source.outputs.sha }}
+        run: pnpm build-web
+
+      - name: ☁️ Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::007404326489:role/social-app-web-statics-ci-publish
+          aws-region: us-east-2
+
+      # --no-overwrite (AWS CLI 2.33+) skips files that already exist, and the
+      # bucket rejects overwrites anyway, so re-running completes a publish
+      # that failed halfway. The fragments go last, so a folder that has them
+      # is complete.
+      - name: 🚀 Publish to S3
+        env:
+          DEST: s3://bsky-app-web-statics-prod/${{ steps.source.outputs.sha }}
+        run: |
+          aws s3 cp bskyweb/static/_expo "$DEST/_expo" --recursive --no-overwrite --only-show-errors
+          aws s3 cp bskyweb/static/assets "$DEST/assets" --recursive --no-overwrite --only-show-errors
+          aws s3 cp bskyweb/templates/scripts.html "$DEST/scripts.html" --no-overwrite --only-show-errors
+          aws s3 cp bskyweb/templates/fonts.html "$DEST/fonts.html" --no-overwrite --only-show-errors
+          echo "Published $DEST"

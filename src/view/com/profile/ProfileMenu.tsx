@@ -5,7 +5,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
-import {shareText, shareUrl} from '#/lib/sharing'
+import {shareUrl, simpleShareText} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {type Shadow} from '#/state/cache/types'
 import {
@@ -61,6 +61,10 @@ import {useActorStatus, useLiveNowConfig} from '#/features/liveNow'
 import {EditLiveDialog} from '#/features/liveNow/components/EditLiveDialog'
 import {GoLiveDialog} from '#/features/liveNow/components/GoLiveDialog'
 import {GoLiveDisabledDialog} from '#/features/liveNow/components/GoLiveDisabledDialog'
+import {
+  ReportLinkDialog,
+  useReportableProfileLinks,
+} from '#/features/profileLinks'
 import {type app} from '#/lexicons'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 
@@ -100,6 +104,8 @@ let ProfileMenu = ({
   const goLiveDisabledDialogControl = useDialogControl()
   const addToStarterPacksDialogControl = useDialogControl()
   const addToListsDialogControl = useDialogControl()
+  const reportLinkDialogControl = useDialogControl()
+  const reportableLinks = useReportableProfileLinks(profile)
 
   const showLoggedOutWarning = useMemo(() => {
     return (
@@ -256,11 +262,11 @@ let ProfileMenu = ({
   }, [reportDialogControl])
 
   const onPressShareATUri = useCallback(() => {
-    void shareText(`at://${profile.did}`)
+    void simpleShareText(`at://${profile.did}`)
   }, [profile.did])
 
   const onPressShareDID = useCallback(() => {
-    void shareText(profile.did)
+    void simpleShareText(profile.did)
   }, [profile.did])
 
   const onPressSearch = useCallback(() => {
@@ -520,6 +526,17 @@ let ProfileMenu = ({
                       </Menu.ItemText>
                       <Menu.ItemIcon icon={FlagIcon} />
                     </Menu.Item>
+                    {reportableLinks.length > 0 && (
+                      <Menu.Item
+                        testID="profileHeaderDropdownReportLinkBtn"
+                        label={l`Report a link`}
+                        onPress={() => reportLinkDialogControl.open()}>
+                        <Menu.ItemText>
+                          <Trans>Report a link</Trans>
+                        </Menu.ItemText>
+                        <Menu.ItemIcon icon={FlagIcon} />
+                      </Menu.Item>
+                    )}
                   </>
                 )}
               </Menu.Group>
@@ -569,6 +586,12 @@ let ProfileMenu = ({
           $type: 'app.bsky.actor.defs#profileViewDetailed',
         }}
       />
+      {reportableLinks.length > 0 && (
+        <ReportLinkDialog
+          control={reportLinkDialogControl}
+          links={reportableLinks}
+        />
+      )}
       <BlockDialog
         control={blockPromptControl}
         profile={profile}

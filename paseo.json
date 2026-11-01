@@ -1,0 +1,14 @@
+{
+  "worktree": {
+    "setup": [
+      "pnpm install --frozen-lockfile",
+      "cp google-services.json.example google-services.json"
+    ]
+  },
+  "scripts": {
+    "web": {
+      "type": "service",
+      "command": "pnpm web --port $PASEO_PORT"
+    }
+  }
+}

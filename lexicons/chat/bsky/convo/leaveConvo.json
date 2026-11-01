@@ -22,6 +22,10 @@
           "name": "InvalidConvo"
         },
         {
+          "name": "AlreadyLeftConvo",
+          "description": "The user has already left the conversation and is not back in (a direct conversation can be restarted by a new message, which allows leaving again)."
+        },
+        {
           "name": "OwnerCannotLeave",
           "description": "The owner of a group conversation cannot leave before locking the group."
         }

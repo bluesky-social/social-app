@@ -77,7 +77,8 @@ export function useSubmitReportMutation() {
         case 'post':
         case 'list':
         case 'feed':
-        case 'starterPack': {
+        case 'starterPack':
+        case 'profileLink': {
           report = {
             reasonType,
             reason: state.details,
@@ -143,9 +144,17 @@ export function useSubmitReportMutation() {
         /*
          * Reports go to the labeler the user selected rather than Bluesky's, so
          * the proxy target is built per call from that labeler's creator did.
+         *
+         * We never read the response, so skip parsing and validating it. Some
+         * third-party labelers return report ids outside JS's safe integer
+         * range, which the lex client rejects even though the report was
+         * accepted. Both options are needed: strict parsing and schema
+         * validation each reject the id on their own.
          */
         await client.call(com.atproto.moderation.createReport, report, {
           service: `${labeler.creator.did}#atproto_labeler`,
+          validateResponse: false,
+          strictResponseProcessing: false,
         })
       }
     },

@@ -7,6 +7,30 @@
 
 You're all set!
 
+### Web browser support
+
+The production Browserslist policy in `package.json` sets fixed minimums:
+
+| Browser | Minimum version |
+| --- | --- |
+| Chrome (desktop and Android), Edge | 97 |
+| Firefox (desktop and Android) | 104 |
+| Safari (macOS and iOS) | 15.4 |
+| Samsung Internet | 18 |
+
+Run `pnpm build-web` and then `pnpm check-web-browser-support` to check every
+Metro JavaScript chunk against these targets. The existing PR bundle-analyzer
+job runs the check after its web export, without building a second bundle.
+`es-check` reports unsupported syntax and recognized built-ins, including the
+affected chunk and browser version. It ignores `Uint8Array.fromBase64` and
+`Uint8Array.prototype.toBase64` because `@atproto/lex-data` guards those
+native fast paths and provides ponyfill fallbacks. This exception also means
+the check will not catch a future unguarded use of those two APIs.
+
+This is a static JavaScript check, not a guarantee about CSS, unrecognized Web
+APIs, or behavior at runtime. Smoke-test the minimum browser versions before
+calling them fully supported.
+
 ## iOS/Android Build
 
 ### Native Environment Setup
@@ -165,6 +189,7 @@ See [testing.md](./testing.md).
 
 - TextEncoder / TextDecoder
 - Array#findLast (on web)
+- Array#findLastIndex (on web)
 - setImmediate (on web)
 
 ### Sentry sourcemaps

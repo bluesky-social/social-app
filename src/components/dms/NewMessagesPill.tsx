@@ -25,7 +25,7 @@ export function NewMessagesPill({
   onPress: () => void
 }) {
   const t = useTheme()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const {bottom: bottomInset} = useSafeAreaInsets()
 
   const scale = useSharedValue(1)
@@ -41,9 +41,9 @@ export function NewMessagesPill({
   }, [scale])
 
   const onPress = useCallback(() => {
-    scheduleOnRN(playHaptic)
+    scheduleOnRN(haptics.tap)
     onPressInner?.()
-  }, [onPressInner, playHaptic])
+  }, [onPressInner, haptics])
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{scale: scale.get()}],

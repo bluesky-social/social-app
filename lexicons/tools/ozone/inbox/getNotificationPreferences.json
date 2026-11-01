@@ -1,0 +1,36 @@
+{
+  "id": "tools.ozone.inbox.getNotificationPreferences",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "preferences"
+          ],
+          "properties": {
+            "preferences": {
+              "ref": "tools.ozone.inbox.defs#notificationPreferences",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "Account to preview. Only Ozone staff can read another account; this does not change its read state."
+          }
+        }
+      },
+      "description": "Get moderation push notification preferences for report outcomes, account actions, and labeling. Returns all three categories, defaulting to enabled for an account without saved preferences."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

@@ -230,7 +230,8 @@
               "Toast.Action",
               "AgeAssuranceAdmonition",
               "Span",
-              "StackedButton"
+              "StackedButton",
+              "Strong"
             ],
             "impliedTextProps": [],
             "suggestedTextWrappers": {
@@ -326,6 +327,10 @@
                   "default"
                 ],
                 "message": "React is already in the global type namespace. Use named imports for runtime modules."
+              },
+              {
+                "name": "@sentry/react-native",
+                "message": "Import {Sentry} from '#/logger/sentry/lib' instead. Importing @sentry/react-native directly (especially as `import * as Sentry`) defeats Metro tree-shaking and pulls ~180KB of dead weight into the web bundle."
               }
             ]
           }
@@ -385,6 +390,47 @@
     },
     {
       "files": [
+        "src/**/*.{ts,tsx,mts,cts}"
+      ],
+      "excludeFiles": [
+        "src/components/Gallery/**",
+        "src/components/images/Gallery/**",
+        "src/screens/Atmosphere/components/ExploreGallery.tsx",
+        "src/view/screens/Storybook/Storybook.tsx"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "react",
+                "importNames": [
+                  "React",
+                  "default"
+                ],
+                "message": "React is already in the global type namespace. Use named imports for runtime modules."
+              },
+              {
+                "name": "@sentry/react-native",
+                "message": "Import {Sentry} from '#/logger/sentry/lib' instead. Importing @sentry/react-native directly (especially as `import * as Sentry`) defeats Metro tree-shaking and pulls ~180KB of dead weight into the web bundle."
+              }
+            ],
+            "patterns": [
+              {
+                "group": [
+                  "#/components/Gallery",
+                  "#/components/Gallery/**"
+                ],
+                "message": "Use a configured gallery module such as '#/components/images/Gallery'; the base primitive is reserved for gallery implementations and their showcases."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
         "bskylink/**/*.{js,jsx,ts,tsx}",
         "bskyogcard/**/*.{js,jsx,ts,tsx}",
         "dev-env/**/*.{js,jsx,ts,tsx}"
@@ -400,6 +446,15 @@
       ],
       "env": {
         "jest": true
+      }
+    },
+    {
+      "files": [
+        "src/logger/sentry/**/*.ts",
+        "src/logger/__tests__/logger.test.ts"
+      ],
+      "rules": {
+        "no-restricted-imports": "off"
       }
     }
   ]

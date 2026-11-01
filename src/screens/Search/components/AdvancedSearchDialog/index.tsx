@@ -246,7 +246,7 @@ function DialogInner({
           </TextField.LabelText>
           <ClearableInput
             label={l`Search query`}
-            defaultValue={query}
+            value={query}
             placeholder={l({
               message: 'cats dogs',
               comment:
@@ -264,7 +264,7 @@ function DialogInner({
             </TextField.LabelText>
             <ClearableInput
               label={l`None of these words`}
-              defaultValue={negatedWords}
+              value={negatedWords}
               placeholder={l({
                 message: 'cows pigs',
                 comment:
@@ -281,7 +281,7 @@ function DialogInner({
             </TextField.LabelText>
             <ClearableInput
               label={l`This exact phrase`}
-              defaultValue={exactPhrase}
+              value={exactPhrase}
               placeholder={l({
                 message: 'what’s up',
                 comment: 'Advanced search: Example of an “exact phrase” search',

@@ -1,12 +1,12 @@
 {
   "cli": {
-    "version": ">=18",
+    "version": ">=25",
     "promptToConfigurePushNotifications": false,
     "appVersionSource": "remote"
   },
   "build": {
     "base": {
-      "node": "24.19.0"
+      "node": "24.22.1"
     },
     "development": {
       "extends": "base",
@@ -19,6 +19,12 @@
       },
       "env": {
         "EXPO_PUBLIC_ENV": "production"
+      }
+    },
+    "development-simulator": {
+      "extends": "development",
+      "env": {
+        "DISABLE_UPDATES": "1"
       }
     },
     "e2e": {

@@ -1,0 +1,63 @@
+import {type app} from '#/lexicons'
+
+/**
+ * Which feed a page continues from, for feed APIs that switch between several.
+ * Only Home uses it, for its Following-to-Discover fallback (see
+ * `HomeFeedAPI`).
+ */
+export type FeedSource = 'discover'
+
+export interface FeedAPIResponse {
+  cursor?: string
+  /**
+   * The server's cursor for the newest boundary of this response, from
+   * `getTimeline`. Absent from other feeds, and from appviews that predate it.
+   */
+  startCursor?: string
+  /** The source the next page continues from. */
+  source?: FeedSource
+  feed: app.bsky.feed.defs.FeedViewPost[]
+}
+
+/**
+ * Feed APIs hold no state between pages: everything a fetch needs is in its
+ * arguments, so a fresh instance can fetch any page.
+ */
+export interface FeedAPI {
+  /** The feed's newest post, if it has one. */
+  peekLatest(opts?: {
+    source?: FeedSource
+  }): Promise<app.bsky.feed.defs.FeedViewPost | undefined>
+  fetch({
+    cursor,
+    since,
+    source,
+    limit,
+    signal,
+  }: {
+    cursor: string | undefined
+    /**
+     * An exclusive lower bound, as a `startCursor` the server returned, for the
+     * posts newer than it. Only Following supports it; other feeds ignore it.
+     */
+    since?: string
+    source?: FeedSource
+    limit: number
+    signal?: AbortSignal
+  }): Promise<FeedAPIResponse>
+}
+
+export interface ReasonFeedSource {
+  $type: 'reasonFeedSource'
+  uri: string
+  href: string
+}
+
+export function isReasonFeedSource(v: unknown): v is ReasonFeedSource {
+  return (
+    !!v &&
+    typeof v === 'object' &&
+    '$type' in v &&
+    v.$type === 'reasonFeedSource'
+  )
+}

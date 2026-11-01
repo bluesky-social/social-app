@@ -125,7 +125,7 @@ export function InviteFriendsDialogInner({
     try {
       await setStringAsync(canonicalShareUrl)
       ax.metric('invite:action:copy', {})
-      Toast.show(l`Invite link copied`)
+      Toast.show(l`Profile link copied`)
     } catch (err) {
       logger.error('InviteFriendsDialog: copy failed', {safeMessage: err})
       Toast.show(l`Failed to copy link`, {type: 'error'})

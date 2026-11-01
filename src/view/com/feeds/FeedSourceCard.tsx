@@ -12,9 +12,9 @@ import {
   hydrateList,
   useFeedSourceInfoQuery,
 } from '#/state/queries/feed'
-import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
+import {FeedCardSkeleton} from '#/components/FeedCardSkeleton'
 import {Link} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
@@ -116,7 +116,7 @@ export function FeedSourceCardLoaded({
     }
 
     return (
-      <FeedLoadingPlaceholder
+      <FeedCardSkeleton
         style={[
           t.atoms.border_contrast_low,
           !(showMinimalPlaceholder || hideTopBorder) && a.border_t,
@@ -124,7 +124,7 @@ export function FeedSourceCardLoaded({
           style,
         ]}
         showTopBorder={false}
-        showLowerPlaceholder={!showMinimalPlaceholder}
+        showDescription={!showMinimalPlaceholder}
       />
     )
   }

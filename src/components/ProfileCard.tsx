@@ -22,7 +22,6 @@ import {useSession} from '#/state/session'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {
   atoms as a,
-  platform,
   type TextStyleProp,
   useTheme,
   type ViewStyleProp,
@@ -160,6 +159,7 @@ export function Avatar({
   moderationOpts,
   onPress,
   disabledPreview,
+  disableLink,
   liveOverride,
   size = 40,
 }: {
@@ -167,6 +167,7 @@ export function Avatar({
   moderationOpts: ModerationOpts
   onPress?: () => void
   disabledPreview?: boolean
+  disableLink?: boolean
   liveOverride?: boolean
   size?: number
 }) {
@@ -188,6 +189,7 @@ export function Avatar({
       profile={profile}
       moderation={moderation.ui('avatar')}
       onBeforePress={onPress}
+      disableLink={disableLink}
       live={liveOverride ?? live}
     />
   )
@@ -263,11 +265,7 @@ function InlineNameAndHandle({
       <ProfileBadges
         profile={profile}
         size="md"
-        style={[
-          a.pl_2xs,
-          a.self_center,
-          {marginTop: platform({default: 0, android: -1})},
-        ]}
+        style={[a.pl_2xs, a.self_center]}
       />
       <Text
         emoji

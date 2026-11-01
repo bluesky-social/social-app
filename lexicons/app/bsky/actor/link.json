@@ -1,0 +1,53 @@
+{
+  "id": "app.bsky.actor.link",
+  "defs": {
+    "main": {
+      "key": "tid",
+      "type": "record",
+      "record": {
+        "type": "object",
+        "required": [
+          "url",
+          "createdAt"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The link destination, an https URL."
+          },
+          "icon": {
+            "type": "blob",
+            "accept": [
+              "image/png",
+              "image/jpeg",
+              "image/webp"
+            ],
+            "maxSize": 100000,
+            "description": "The destination site's icon, uploaded when the link is saved."
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 320,
+            "description": "Optional label for the link. Clients can fall back to the destination's domain.",
+            "maxGraphemes": 40
+          },
+          "labels": {
+            "refs": [
+              "com.atproto.label.defs#selfLabels"
+            ],
+            "type": "union",
+            "description": "Self-label values for this link."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      },
+      "description": "A link shown on the account's profile. The profile record's links field sets which links are shown, and in what order."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

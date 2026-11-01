@@ -2,7 +2,6 @@ import {type Geolocation} from '#/geolocation'
 
 export type BaseMetadata = {
   deviceId: string
-  sessionId: string
   platform: string
   appVersion: string
   bundleIdentifier: string
@@ -24,9 +23,15 @@ export type PreferencesMetadata = {
   contentLanguages: string[]
 }
 
+export type PostQuotesMetadata = {
+  uri: string
+  quoteSort: 'top' | 'latest'
+}
+
 export type MergeableMetadata = {
   session?: SessionMetadata
   preferences?: PreferencesMetadata
+  postQuotes?: PostQuotesMetadata
   /**
    * Navigation metadata is not actually available on this object, instead it's
    * merged in at time-of-log/metric. See `#/analytics/metadata.ts` for details.
@@ -38,6 +43,11 @@ export type Metadata = {
   base: BaseMetadata
   geolocation: GeolocationMetadata
 } & MergeableMetadata
+
+/** Session IDs are only added when a metric is queued, never held in context. */
+export type MetricMetadata = Omit<Partial<Metadata>, 'base'> & {
+  base: Partial<BaseMetadata> & {deviceId: string; sessionId: string}
+}
 
 /*
  * Navigation metadata is handle out-of-band from React, since we don't want to
@@ -70,7 +80,6 @@ export function getMetadataForLogger({
 }: Metadata): Record<string, unknown> {
   return {
     deviceId: base.deviceId,
-    sessionId: base.sessionId,
     platform: base.platform,
     appVersion: base.appVersion,
     countryCode: geolocation.countryCode,
