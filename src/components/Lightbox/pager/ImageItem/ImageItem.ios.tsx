@@ -67,9 +67,6 @@ type Props = {
   transforms: Readonly<SharedValue<LightboxTransforms>>
 }
 
-/**
- * Each page has its own provider, so its scroll view gets its own edge effect.
- */
 function ImageItem(props: Props) {
   return (
     <ScrollEdgeEffectProvider>
@@ -290,12 +287,7 @@ const ImageItemContent = ({
         </Animated.ScrollView>
       </GestureDetector>
       {IS_LIQUID_GLASS && (
-        /*
-         * Invisible, status bar sized. Its only job is to tell this scroll
-         * view that something sits over its top edge, so it draws the soft
-         * edge effect behind the status bar. Tracks the status bar, which
-         * stays hidden while zoomed even if a tap brings the controls back.
-         */
+        // the status bar stays hidden while zoomed, even if a tap shows the controls
         <ScrollEdgeEffect
           edge="top"
           effect={showControls && !scaled ? 'soft' : 'hidden'}
