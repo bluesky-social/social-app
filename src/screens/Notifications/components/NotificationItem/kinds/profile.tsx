@@ -191,7 +191,6 @@ export function FollowBackNotification({
           : l`${name} followed you back`
       }
       onBeforePress={cacheProfile}
-      style={a.align_center}
       testID={`notification-followBack-${notification.id}`}>
       <Item.Icon glyph="follow" />
       <Item.Content style={a.gap_2xs}>
@@ -228,7 +227,6 @@ export function VerifiedNotification({
       isRead={notification.isRead}
       label={l`${name} verified you`}
       onBeforePress={cacheProfile}
-      style={a.align_center}
       testID={`notification-verified-${notification.id}`}>
       <Item.Icon glyph="verified" />
       <Item.Content>
@@ -264,7 +262,6 @@ export function UnverifiedNotification({
       isRead={notification.isRead}
       label={l`${name} removed their verification from your account`}
       onBeforePress={cacheProfile}
-      style={a.align_center}
       testID={`notification-unverified-${notification.id}`}>
       <Item.Icon glyph="unverified" />
       <Item.Content>
@@ -338,7 +335,6 @@ export function ContactMatchNotification({
       // Lets screen readers reach the follow button
       accessible={false}
       onBeforePress={cacheProfile}
-      style={a.align_center}
       testID={`notification-contactMatch-${notification.id}`}>
       <Item.Icon glyph="contacts" />
       <Item.Content>
