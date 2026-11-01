@@ -36,6 +36,7 @@ import {
 } from '@bsky.app/expo-scroll-edge-effect'
 
 import {mergeRefs} from '#/lib/merge-refs'
+import {atoms as a} from '#/alf'
 import {IS_LIQUID_GLASS} from '#/env'
 import {
   type Dimensions as ImageDimensions,
@@ -299,7 +300,7 @@ const ImageItemContent = ({
           edge="top"
           effect={showControls && !scaled ? 'soft' : 'hidden'}
           pointerEvents="none"
-          style={[styles.statusBarEdgeEffect, {height: topInset}]}
+          style={[a.absolute, a.inset_0, {height: topInset}]}
         />
       )}
     </>
@@ -316,12 +317,6 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-  },
-  statusBarEdgeEffect: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
   },
 })
 
