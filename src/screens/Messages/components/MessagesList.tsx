@@ -13,8 +13,11 @@ import {
   KeyboardGestureArea,
 } from 'react-native-keyboard-controller'
 import Animated, {
+  type AnimatedRef,
   type ScrollEvent,
+  scrollTo,
   type SharedValue,
+  useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
   useReducedMotion,
@@ -22,7 +25,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {scheduleOnRN} from 'react-native-worklets'
+import {scheduleOnRN, scheduleOnUI} from 'react-native-worklets'
 import {type $Typed} from '@atproto/lex'
 import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
 import {RichText} from '@bsky/sdk/richtext'
@@ -202,12 +205,21 @@ export function MessagesList({
   const inputHeightUI = useSharedValue(0)
   const [inputHeightJS, setInputHeightJS] = useState(0)
 
+  const onInputLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      const inputHeight = event.nativeEvent.layout.height
+      inputHeightUI.set(inputHeight)
+      setInputHeightJS(inputHeight)
+    },
+    [inputHeightUI],
+  )
+
   /*
    * -- Sending
    *
    * A send should take the reader to their message in one motion, whatever
    * they were doing. The composer clears (and a multi-line one shrinks back to
-   * one line) about a frame before the message is appended and laid out, so
+   * one line) a few frames before the message is appended and laid out, so
    * until then the list is held still:
    *
    * - KeyboardChatScrollView is frozen, or it would shift the list down to
@@ -217,7 +229,8 @@ export function MessagesList({
    *   offset, which drops the list just the same.
    *
    * Once our pending message has laid out, the inset catches up and a single
-   * scroll takes the list to the end (see onPendingMessageLayout).
+   * scroll takes the list to the end (see releaseSendHold). Nothing scrolls
+   * the list while the user's finger is on it.
    */
 
   /**
@@ -227,46 +240,59 @@ export function MessagesList({
    * can't consume it or yank a scrolled-up reader down.
    */
   const pendingSendScroll = useRef(false)
-  const sendScrollFreeze = useSharedValue(false)
-  const sendHoldsInset = useRef(false)
-  /** The composer height the held inset will catch up to. */
-  const deferredInputHeight = useRef<number | null>(null)
   const sendScrollTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
+  useEffect(() => () => clearTimeout(sendScrollTimer.current), [])
+  const sendScrollFreeze = useSharedValue(false)
+  /** The composer height the list's bottom inset is held at, or 0. */
+  const heldInputHeight = useSharedValue(0)
+  const isDragging = useSharedValue(false)
+  const chatScrollRef = useAnimatedRef<Animated.ScrollView>()
 
-  /** Lets the held inset catch up. Returns whether it changed. */
-  const releaseSendInset = useCallback(() => {
-    sendHoldsInset.current = false
-    const deferred = deferredInputHeight.current
-    deferredInputHeight.current = null
-    if (deferred === null) return false
-    inputHeightUI.set(deferred)
-    return true
-  }, [inputHeightUI])
+  /**
+   * Lets the held inset catch up, then scrolls to the end or lifts the
+   * freeze. If the inset shrinks, both wait for it to reach the native view:
+   * a scroll's target is clamped to the content's extent when it's issued,
+   * and an unfrozen KeyboardChatScrollView would shift the list to follow the
+   * inset. Hence the UI thread - a JS frame doesn't line up with the one that
+   * applies the inset.
+   */
+  const releaseSendHold = useCallback(
+    (scroll: boolean, animated: boolean) => {
+      'worklet'
+      const insetShrinks = heldInputHeight.get() > inputHeightUI.get()
+      heldInputHeight.set(0)
+      const next = () => {
+        if (!scroll) {
+          sendScrollFreeze.set(false)
+        } else if (!isDragging.get()) {
+          scrollTo(chatScrollRef, 0, SATURATING_SCROLL_OFFSET, animated)
+        }
+      }
+      if (insetShrinks) {
+        requestAnimationFrame(() => requestAnimationFrame(next))
+      } else {
+        next()
+      }
+    },
+    [
+      heldInputHeight,
+      inputHeightUI,
+      sendScrollFreeze,
+      isDragging,
+      chatScrollRef,
+    ],
+  )
 
-  /** Stops holding the list still, without giving up on the scroll. */
-  const releaseSendHold = useCallback(() => {
-    releaseSendInset()
-    sendScrollFreeze.set(false)
-  }, [releaseSendInset, sendScrollFreeze])
+  const disarmSendScroll = useCallback(() => {
+    clearTimeout(sendScrollTimer.current)
+    pendingSendScroll.current = false
+  }, [])
 
   /** Abandons an in-flight send scroll and hands layout back. */
   const cancelSendScroll = useCallback(() => {
-    clearTimeout(sendScrollTimer.current)
-    pendingSendScroll.current = false
-    releaseSendHold()
-  }, [releaseSendHold])
-  useEffect(() => () => clearTimeout(sendScrollTimer.current), [])
-
-  const onInputLayout = (event: LayoutChangeEvent) => {
-    const inputHeight = event.nativeEvent.layout.height
-    setInputHeightJS(inputHeight)
-    if (sendHoldsInset.current && inputHeight < inputHeightUI.get()) {
-      deferredInputHeight.current = inputHeight
-      return
-    }
-    deferredInputHeight.current = null
-    inputHeightUI.set(inputHeight)
-  }
+    disarmSendScroll()
+    scheduleOnUI(releaseSendHold, false, false)
+  }, [disarmSendScroll, releaseSendHold])
 
   /**
    * We need to keep track of when the scroll offset is at the bottom of the list
@@ -363,17 +389,12 @@ export function MessagesList({
    * fits comfortably in int32. (APP-2223)
    */
   const reduceMotion = useReducedMotion()
-  const scrollSendToBottom = () => {
-    flatListRef.current?.scrollToOffset({
-      offset: SATURATING_SCROLL_OFFSET,
-      animated: !reduceMotion,
-    })
-  }
 
   /** Called as a send is accepted, before the composer clears. */
   const onWillSendMessage = () => {
     pendingSendScroll.current = true
-    sendHoldsInset.current = true
+    // Max, in case an earlier send is still holding a taller composer
+    heldInputHeight.set(Math.max(heldInputHeight.get(), inputHeightUI.get()))
     sendScrollFreeze.set(true)
     /*
      * Don't hold the list still for long if the message is slow to land. The
@@ -381,7 +402,9 @@ export function MessagesList({
      * second to lay out, and only our own sends append pending rows.
      */
     clearTimeout(sendScrollTimer.current)
-    sendScrollTimer.current = setTimeout(releaseSendHold, SEND_HOLD_TIMEOUT_MS)
+    sendScrollTimer.current = setTimeout(() => {
+      scheduleOnUI(releaseSendHold, false, false)
+    }, SEND_HOLD_TIMEOUT_MS)
 
     /*
      * From more than a screen up, jump to the end straight away. The list only
@@ -407,18 +430,18 @@ export function MessagesList({
    */
   const onPendingMessageLayout = () => {
     if (!pendingSendScroll.current) return
-    pendingSendScroll.current = false
-    const insetChanged = releaseSendInset()
-    /*
-     * The scroll's target is clamped to the content's extent when it's
-     * issued, so a shrinking inset has to land first.
-     */
-    if (insetChanged) {
-      requestAnimationFrame(scrollSendToBottom)
-    } else {
-      scrollSendToBottom()
+    disarmSendScroll()
+    if (IS_WEB) {
+      // No KeyboardChatScrollView or held inset on web
+      sendScrollFreeze.set(false)
+      heldInputHeight.set(0)
+      flatListRef.current?.scrollToOffset({
+        offset: SATURATING_SCROLL_OFFSET,
+        animated: !reduceMotion,
+      })
+      return
     }
-    clearTimeout(sendScrollTimer.current)
+    scheduleOnUI(releaseSendHold, true, !reduceMotion)
     sendScrollTimer.current = setTimeout(() => {
       sendScrollFreeze.set(false)
     }, SEND_SCROLL_SETTLE_MS)
@@ -475,11 +498,11 @@ export function MessagesList({
     }
 
     /*
-     * Subsequent: auto-scroll only if user is at the bottom. While a send
-     * holds the list, onPendingMessageLayout scrolls it - a second animated
-     * scroll here would restart that one.
+     * Subsequent: auto-scroll only if user is at the bottom, and not while
+     * their finger is on the list. While a send holds the list, it's scrolled
+     * by releaseSendHold - a second animated scroll here would restart that.
      */
-    if (isAtBottom.get() && !sendScrollFreeze.get()) {
+    if (isAtBottom.get() && !sendScrollFreeze.get() && !isDragging.get()) {
       /*
        * If the size of the content is changing by more than the height of the
        * screen, then we don't want to scroll further than the start of all the
@@ -556,8 +579,15 @@ export function MessagesList({
   /** A drag takes over from any send scroll that hasn't run yet. */
   const onBeginDrag = () => {
     'worklet'
-    sendScrollFreeze.set(false)
-    scheduleOnRN(cancelSendScroll)
+    isDragging.set(true)
+    if (sendScrollFreeze.get()) {
+      releaseSendHold(false, false)
+    }
+    scheduleOnRN(disarmSendScroll)
+  }
+  const onEndDrag = () => {
+    'worklet'
+    isDragging.set(false)
   }
 
   // -- Keyboard animation handling
@@ -801,11 +831,13 @@ export function MessagesList({
     (props: ScrollViewProps) => (
       <ChatScrollComponent
         {...props}
+        scrollRef={chatScrollRef}
         inputHeight={inputHeightUI}
+        heldInputHeight={heldInputHeight}
         freeze={sendScrollFreeze}
       />
     ),
-    [inputHeightUI, sendScrollFreeze],
+    [chatScrollRef, inputHeightUI, heldInputHeight, sendScrollFreeze],
   )
 
   const animatedListStyle = useAnimatedStyle(() => ({
@@ -829,7 +861,10 @@ export function MessagesList({
             style={[a.flex_1]}>
             {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
             <Animated.View style={[a.flex_1, animatedListStyle]}>
-              <ScrollProvider onScroll={onScroll} onBeginDrag={onBeginDrag}>
+              <ScrollProvider
+                onScroll={onScroll}
+                onBeginDrag={onBeginDrag}
+                onEndDrag={onEndDrag}>
                 <List
                   ref={flatListRef}
                   data={renderItems}
@@ -984,12 +1019,17 @@ function Composer({
 /** Note: native only */
 function ChatScrollComponent({
   ref,
+  scrollRef,
   inputHeight,
+  heldInputHeight,
   freeze,
   ...props
 }: ScrollViewProps & {
   ref?: React.RefObject<KeyboardChatScrollViewProps>
+  scrollRef: AnimatedRef<Animated.ScrollView>
   inputHeight: SharedValue<number>
+  /** While a send holds the list, the inset doesn't shrink below this. */
+  heldInputHeight: SharedValue<number>
   freeze: SharedValue<boolean>
 }) {
   const scrollEdgeRef = useScrollEdgeEffectRef()
@@ -1009,12 +1049,12 @@ function ChatScrollComponent({
   })
 
   const extraContentPadding = useDerivedValue(
-    () => inputHeight.get() + inputOffset,
+    () => Math.max(inputHeight.get(), heldInputHeight.get()) + inputOffset,
   )
 
   return (
     <KeyboardChatScrollView
-      ref={mergeRefs([scrollEdgeRef, ref])}
+      ref={mergeRefs([scrollEdgeRef, ref, scrollRef])}
       automaticallyAdjustContentInsets={false}
       keyboardDismissMode="interactive"
       keyboardLiftBehavior="always"
