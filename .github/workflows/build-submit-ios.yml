@@ -219,13 +219,15 @@ jobs:
       # remote counter, which a --local build does not advance, so it can be off by one —
       # using it here would make distribute_only poll for a nonexistent build.
       # PlistBuddy is macOS-only, which is why this stays in the build job.
+      # unzip's `*` also matches `/`, so a Payload/*.app/Info.plist pattern would
+      # pull in the App Clip's Info.plist too; match the main app's entry exactly.
       - name: 🔢 Read build number from IPA
         id: ipa-build-number
         run: |
           plist_dir="$(mktemp -d)"
-          unzip -o -q "$BUILD_DIR/Bluesky.ipa" 'Payload/*.app/Info.plist' -d "$plist_dir"
-          plist="$(find "$plist_dir" -name Info.plist -print -quit)"
-          build_number="$(/usr/libexec/PlistBuddy -c 'Print CFBundleVersion' "$plist")"
+          plist_entry="$(unzip -Z1 "$BUILD_DIR/Bluesky.ipa" | grep -E '^Payload/[^/]+\.app/Info\.plist$')"
+          unzip -o -q "$BUILD_DIR/Bluesky.ipa" "$plist_entry" -d "$plist_dir"
+          build_number="$(/usr/libexec/PlistBuddy -c 'Print CFBundleVersion' "$plist_dir/$plist_entry")"
           rm -rf "$plist_dir"
           if [ -z "$build_number" ]; then
             echo "ERROR: could not read CFBundleVersion from IPA"
@@ -233,6 +235,39 @@ jobs:
           fi
           echo "IPA build number: $build_number"
           echo "build-number=$build_number" >> "$GITHUB_OUTPUT"
+
+      # Save the JS bundle and update ID this build embeds. OTAs for this build
+      # are compiled and diffed against them, since the embedded update is what
+      # most clients are running. Only testflight and production builds have
+      # updates enabled. A failure here must not block the build: OTAs then fall
+      # back to full downloads.
+      - name: 📦 Extract embedded bundle
+        id: embedded-bundle
+        if: ${{ contains(fromJSON('["testflight", "production"]'), inputs.profile || 'testflight') }}
+        continue-on-error: true
+        env:
+          PLATFORM: ios
+          OUT_DIR: ${{ runner.temp }}/embedded-bundle
+          BUILD_NUMBER: ${{ steps.ipa-build-number.outputs.build-number }}
+          PROFILE: ${{ inputs.profile || 'testflight' }}
+          COMMIT: ${{ steps.source.outputs.sha }}
+        run: |
+          ARCHIVE="$BUILD_DIR/Bluesky.ipa" bash scripts/extractEmbeddedBundle.sh
+          if [ -f "$OUT_DIR/embedded.json" ]; then
+            echo "extracted=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Read by .github/actions/fetch-embedded-bundle. 90 days is the maximum
+      # retention for a public repo.
+      - name: 💾 Upload embedded bundle
+        if: ${{ steps.embedded-bundle.outputs.extracted == 'true' }}
+        continue-on-error: true
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: embedded-bundle-ios-${{ steps.ipa-build-number.outputs.build-number }}
+          path: ${{ runner.temp }}/embedded-bundle
+          retention-days: 90
+          if-no-files-found: error
 
       # Hand the IPA and dSYM off to the submit job. Retention is deliberately short since
       # this artifact only exists to bridge the two jobs within a single run.
