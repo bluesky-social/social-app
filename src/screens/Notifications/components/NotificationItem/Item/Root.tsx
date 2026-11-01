@@ -138,7 +138,7 @@ export function Root({
   children: React.ReactNode
 }) {
   const backgroundColor = useRowBackgroundColor(isRead)
-  const {hover, hoverProps, setSuppressed} = useRowHover()
+  const {suppressed, hoverProps, setSuppressed} = useRowHover()
   const {onPress: followLink} = useLink({to: href, displayText: ''})
 
   return (
@@ -176,7 +176,7 @@ export function Root({
               {gap: ROW_GAP, paddingLeft: ROW_PADDING_START, backgroundColor},
               style,
             ]}>
-            <SubtleHover hover={hover} />
+            <SubtleHover disabled={suppressed} />
             {children}
           </Pressable>
         </WebAuxClickWrapper>
