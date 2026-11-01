@@ -20,7 +20,6 @@ export interface RepostButtonProps {
   onQuote: () => void
   big?: boolean
   embeddingDisabled: boolean
-  longPressToQuote?: boolean
 }
 
 export function RepostButtonMenu({
@@ -30,7 +29,6 @@ export function RepostButtonMenu({
   onQuote,
   big,
   embeddingDisabled,
-  longPressToQuote = false,
 }: RepostButtonProps): React.ReactNode {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -49,19 +47,7 @@ export function RepostButtonMenu({
               activeColor={t.palette.positive_500}
               label={props.accessibilityLabel}
               big={big}
-              {...props}
-              onLongPress={
-                longPressToQuote
-                  ? () =>
-                      requireAuth(() => {
-                        if (embeddingDisabled) {
-                          props.onPress()
-                        } else {
-                          onQuote()
-                        }
-                      })
-                  : undefined
-              }>
+              {...props}>
               <PostControlButtonIcon icon={RepostIcon} />
               {typeof repostCount !== 'undefined' && repostCount > 0 && (
                 <PostControlButtonText testID="repostCount">

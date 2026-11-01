@@ -11,11 +11,7 @@ jest.mock('#/components/PostControls/RepostButtonMenu', () => {
   const {View} = require('react-native')
 
   return {
-    RepostButtonMenu: ({longPressToQuote}: {longPressToQuote?: boolean}) => (
-      <View
-        testID={longPressToQuote ? 'ipad-repost-menu' : 'web-repost-menu'}
-      />
-    ),
+    RepostButtonMenu: () => <View testID="ipad-repost-menu" />,
   }
 })
 jest.mock('#/components/Dialog', () => {
