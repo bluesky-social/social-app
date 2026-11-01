@@ -44,6 +44,7 @@ const initialTransform = createTransform()
 
 type Props = {
   imageSrc: ImageSource
+  isActive: boolean
   onRequestClose: () => void
   onTap: () => void
   onZoom: (isZoomed: boolean) => void

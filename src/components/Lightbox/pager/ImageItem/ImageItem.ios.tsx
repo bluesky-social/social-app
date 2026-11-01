@@ -26,7 +26,9 @@ import Animated, {
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {scheduleOnRN} from 'react-native-worklets'
 import {Image} from 'expo-image'
+import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
 
+import {mergeRefs} from '#/lib/merge-refs'
 import {
   type Dimensions as ImageDimensions,
   type ImageSource,
@@ -38,6 +40,7 @@ const MIN_SCREEN_ZOOM = 2
 
 type Props = {
   imageSrc: ImageSource
+  isActive: boolean
   onRequestClose: () => void
   onTap: () => void
   onZoom: (scaled: boolean) => void
@@ -58,6 +61,7 @@ type Props = {
 
 const ImageItem = ({
   imageSrc,
+  isActive,
   onTap,
   onZoom,
   onLoad,
@@ -69,6 +73,9 @@ const ImageItem = ({
   transforms,
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
+  // The provider only tracks one scroll view, so only the visible page's
+  // should register.
+  const scrollEdgeRef = useScrollEdgeEffectRef()
   const [scaled, setScaled] = useState(false)
   const isDragging = useSharedValue(false)
   const screenSizeDelayedForJSThreadOnly = useSafeAreaFrame()
@@ -221,7 +228,7 @@ const ImageItem = ({
   return (
     <GestureDetector gesture={composedGesture}>
       <Animated.ScrollView
-        ref={scrollViewRef}
+        ref={mergeRefs([scrollViewRef, isActive ? scrollEdgeRef : undefined])}
         pinchGestureEnabled
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
