@@ -13,7 +13,7 @@ permissions: {}
 
 jobs:
   review:
-    uses: bluesky-social/.github/.github/workflows/claude-review.yml@v1
+    uses: bluesky-social/.github/.github/workflows/claude-review.yml@a3e052de61c5f04144a821e2e80f2b3a00c93d15 # v1.0.0
     permissions:
       contents: read
       pull-requests: write
