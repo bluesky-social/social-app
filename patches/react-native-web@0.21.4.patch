@@ -1,69 +1,57 @@
 diff --git a/dist/cjs/exports/Pressable/index.js b/dist/cjs/exports/Pressable/index.js
-index 9736a6921921b6f754a9508de63ff4cf5bb835d1..477e8decbadb7be268ef18856b0059db74ab962b 100644
+index 9736a6921921b6f754a9508de63ff4cf5bb835d1..b77e57c3bb384b347270459a8102db0605da5981 100644
 --- a/dist/cjs/exports/Pressable/index.js
 +++ b/dist/cjs/exports/Pressable/index.js
-@@ -59,6 +59,10 @@ function Pressable(props, forwardedRef) {
-   var _useForceableState3 = useForceableState(testOnly_pressed === true),
+@@ -50,13 +50,14 @@ function Pressable(props, forwardedRef) {
+     testOnly_hovered = props.testOnly_hovered,
+     testOnly_pressed = props.testOnly_pressed,
+     rest = (0, _objectWithoutPropertiesLoose2.default)(props, _excluded);
+-  var _useForceableState = useForceableState(testOnly_hovered === true),
++  var readsState = typeof style === 'function' || typeof children === 'function';
++  var _useForceableState = useForceableState(testOnly_hovered === true, readsState),
+     hovered = _useForceableState[0],
+     setHovered = _useForceableState[1];
+-  var _useForceableState2 = useForceableState(false),
++  var _useForceableState2 = useForceableState(false, readsState),
+     focused = _useForceableState2[0],
+     setFocused = _useForceableState2[1];
+-  var _useForceableState3 = useForceableState(testOnly_pressed === true),
++  var _useForceableState3 = useForceableState(testOnly_pressed === true, readsState),
      pressed = _useForceableState3[0],
      setPressed = _useForceableState3[1];
-+  // Only keep interaction state when something can read it: a function
-+  // `style` or `children`. Otherwise every hover, focus and press re-renders
-+  // the Pressable for nothing.
-+  var readsState = typeof style === 'function' || typeof children === 'function';
    var hostRef = (0, _react.useRef)(null);
-   var setRef = (0, _useMergeRefs.default)(forwardedRef, hostRef);
-   var pressConfig = (0, _react.useMemo)(() => ({
-@@ -68,18 +72,18 @@ function Pressable(props, forwardedRef) {
-     disabled,
-     onLongPress,
-     onPress,
--    onPressChange: setPressed,
-+    onPressChange: readsState ? setPressed : undefined,
-     onPressStart: onPressIn,
-     onPressMove,
-     onPressEnd: onPressOut
--  }), [delayLongPress, delayPressIn, delayPressOut, disabled, onLongPress, onPress, onPressIn, onPressMove, onPressOut, setPressed]);
-+  }), [delayLongPress, delayPressIn, delayPressOut, disabled, onLongPress, onPress, onPressIn, onPressMove, onPressOut, readsState, setPressed]);
-   var pressEventHandlers = (0, _usePressEvents.default)(hostRef, pressConfig);
-   var onContextMenuPress = pressEventHandlers.onContextMenu,
-     onKeyDownPress = pressEventHandlers.onKeyDown;
-   (0, _useHover.default)(hostRef, {
-     contain: true,
-     disabled,
--    onHoverChange: setHovered,
-+    onHoverChange: readsState ? setHovered : undefined,
-     onHoverStart: onHoverIn,
-     onHoverEnd: onHoverOut
-   });
-@@ -90,20 +94,24 @@ function Pressable(props, forwardedRef) {
-   };
-   var blurHandler = React.useCallback(e => {
-     if (e.nativeEvent.target === hostRef.current) {
--      setFocused(false);
+@@ -137,11 +138,26 @@ function Pressable(props, forwardedRef) {
+     tabIndex: _tabIndex
+   }), typeof children === 'function' ? children(interactionState) : children);
+ }
+-function useForceableState(forced) {
+-  var _useState = (0, _react.useState)(false),
+-    bool = _useState[0],
+-    setBool = _useState[1];
+-  return [bool || forced, setBool];
++/**
++ * Interaction state lives in a ref, so it's always current, but setting it only
++ * re-renders when something can read it: a function `style` or `children`.
++ * Otherwise every hover, focus and press re-rendered the Pressable for nothing.
++ * A render for any other reason (e.g. `style` becoming a function) still reads
++ * the current value.
++ */
++function useForceableState(forced, readsState) {
++  var ref = (0, _react.useRef)(false);
++  var _React$useReducer = React.useReducer(x => x + 1, 0),
++    forceUpdate = _React$useReducer[1];
++  var set = React.useCallback(value => {
++    if (ref.current !== value) {
++      ref.current = value;
 +      if (readsState) {
-+        setFocused(false);
++        forceUpdate();
 +      }
-       if (onBlur != null) {
-         onBlur(e);
-       }
-     }
--  }, [hostRef, setFocused, onBlur]);
-+  }, [hostRef, readsState, setFocused, onBlur]);
-   var focusHandler = React.useCallback(e => {
-     if (e.nativeEvent.target === hostRef.current) {
--      setFocused(true);
-+      if (readsState) {
-+        setFocused(true);
-+      }
-       if (onFocus != null) {
-         onFocus(e);
-       }
-     }
--  }, [hostRef, setFocused, onFocus]);
-+  }, [hostRef, readsState, setFocused, onFocus]);
-   var contextMenuHandler = React.useCallback(e => {
-     if (onContextMenuPress != null) {
-       onContextMenuPress(e);
++    }
++  }, [readsState]);
++  return [ref.current || forced, set];
+ }
+ var styles = _StyleSheet.default.create({
+   active: {
 diff --git a/dist/cjs/exports/StyleSheet/index.js b/dist/cjs/exports/StyleSheet/index.js
 index eedf49039dce440eb60bb4eefbc5c4c8be952f30..d299d92ba4b7d0b7f984d357369542a717486702 100644
 --- a/dist/cjs/exports/StyleSheet/index.js
@@ -82,71 +70,68 @@ index eedf49039dce440eb60bb4eefbc5c4c8be952f30..d299d92ba4b7d0b7f984d357369542a7
      }
    })(styles);
 diff --git a/dist/exports/Pressable/index.js b/dist/exports/Pressable/index.js
-index d3148da48808306b3e4d88f6b0a8e44cc6fe6b1d..04ea7ac26ae887b4f486712e13630c7af1505ac8 100644
+index d3148da48808306b3e4d88f6b0a8e44cc6fe6b1d..dfb073b4c665e2e381d8d185c9c75c648fce59d8 100644
 --- a/dist/exports/Pressable/index.js
 +++ b/dist/exports/Pressable/index.js
-@@ -54,6 +54,10 @@ function Pressable(props, forwardedRef) {
-   var _useForceableState3 = useForceableState(testOnly_pressed === true),
+@@ -13,7 +13,7 @@ import _extends from "@babel/runtime/helpers/extends";
+ import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/objectWithoutPropertiesLoose";
+ var _excluded = ["children", "delayLongPress", "delayPressIn", "delayPressOut", "disabled", "onBlur", "onContextMenu", "onFocus", "onHoverIn", "onHoverOut", "onKeyDown", "onLongPress", "onPress", "onPressMove", "onPressIn", "onPressOut", "style", "tabIndex", "testOnly_hovered", "testOnly_pressed"];
+ import * as React from 'react';
+-import { forwardRef, memo, useMemo, useState, useRef } from 'react';
++import { forwardRef, memo, useMemo, useRef } from 'react';
+ import useMergeRefs from '../../modules/useMergeRefs';
+ import useHover from '../../modules/useHover';
+ import usePressEvents from '../../modules/usePressEvents';
+@@ -45,13 +45,14 @@ function Pressable(props, forwardedRef) {
+     testOnly_hovered = props.testOnly_hovered,
+     testOnly_pressed = props.testOnly_pressed,
+     rest = _objectWithoutPropertiesLoose(props, _excluded);
+-  var _useForceableState = useForceableState(testOnly_hovered === true),
++  var readsState = typeof style === 'function' || typeof children === 'function';
++  var _useForceableState = useForceableState(testOnly_hovered === true, readsState),
+     hovered = _useForceableState[0],
+     setHovered = _useForceableState[1];
+-  var _useForceableState2 = useForceableState(false),
++  var _useForceableState2 = useForceableState(false, readsState),
+     focused = _useForceableState2[0],
+     setFocused = _useForceableState2[1];
+-  var _useForceableState3 = useForceableState(testOnly_pressed === true),
++  var _useForceableState3 = useForceableState(testOnly_pressed === true, readsState),
      pressed = _useForceableState3[0],
      setPressed = _useForceableState3[1];
-+  // Only keep interaction state when something can read it: a function
-+  // `style` or `children`. Otherwise every hover, focus and press re-renders
-+  // the Pressable for nothing.
-+  var readsState = typeof style === 'function' || typeof children === 'function';
    var hostRef = useRef(null);
-   var setRef = useMergeRefs(forwardedRef, hostRef);
-   var pressConfig = useMemo(() => ({
-@@ -63,18 +67,18 @@ function Pressable(props, forwardedRef) {
-     disabled,
-     onLongPress,
-     onPress,
--    onPressChange: setPressed,
-+    onPressChange: readsState ? setPressed : undefined,
-     onPressStart: onPressIn,
-     onPressMove,
-     onPressEnd: onPressOut
--  }), [delayLongPress, delayPressIn, delayPressOut, disabled, onLongPress, onPress, onPressIn, onPressMove, onPressOut, setPressed]);
-+  }), [delayLongPress, delayPressIn, delayPressOut, disabled, onLongPress, onPress, onPressIn, onPressMove, onPressOut, readsState, setPressed]);
-   var pressEventHandlers = usePressEvents(hostRef, pressConfig);
-   var onContextMenuPress = pressEventHandlers.onContextMenu,
-     onKeyDownPress = pressEventHandlers.onKeyDown;
-   useHover(hostRef, {
-     contain: true,
-     disabled,
--    onHoverChange: setHovered,
-+    onHoverChange: readsState ? setHovered : undefined,
-     onHoverStart: onHoverIn,
-     onHoverEnd: onHoverOut
-   });
-@@ -85,20 +89,24 @@ function Pressable(props, forwardedRef) {
-   };
-   var blurHandler = React.useCallback(e => {
-     if (e.nativeEvent.target === hostRef.current) {
--      setFocused(false);
+@@ -132,11 +133,26 @@ function Pressable(props, forwardedRef) {
+     tabIndex: _tabIndex
+   }), typeof children === 'function' ? children(interactionState) : children);
+ }
+-function useForceableState(forced) {
+-  var _useState = useState(false),
+-    bool = _useState[0],
+-    setBool = _useState[1];
+-  return [bool || forced, setBool];
++/**
++ * Interaction state lives in a ref, so it's always current, but setting it only
++ * re-renders when something can read it: a function `style` or `children`.
++ * Otherwise every hover, focus and press re-rendered the Pressable for nothing.
++ * A render for any other reason (e.g. `style` becoming a function) still reads
++ * the current value.
++ */
++function useForceableState(forced, readsState) {
++  var ref = useRef(false);
++  var _React$useReducer = React.useReducer(x => x + 1, 0),
++    forceUpdate = _React$useReducer[1];
++  var set = React.useCallback(value => {
++    if (ref.current !== value) {
++      ref.current = value;
 +      if (readsState) {
-+        setFocused(false);
++        forceUpdate();
 +      }
-       if (onBlur != null) {
-         onBlur(e);
-       }
-     }
--  }, [hostRef, setFocused, onBlur]);
-+  }, [hostRef, readsState, setFocused, onBlur]);
-   var focusHandler = React.useCallback(e => {
-     if (e.nativeEvent.target === hostRef.current) {
--      setFocused(true);
-+      if (readsState) {
-+        setFocused(true);
-+      }
-       if (onFocus != null) {
-         onFocus(e);
-       }
-     }
--  }, [hostRef, setFocused, onFocus]);
-+  }, [hostRef, readsState, setFocused, onFocus]);
-   var contextMenuHandler = React.useCallback(e => {
-     if (onContextMenuPress != null) {
-       onContextMenuPress(e);
++    }
++  }, [readsState]);
++  return [ref.current || forced, set];
+ }
+ var styles = StyleSheet.create({
+   active: {
 diff --git a/dist/exports/StyleSheet/index.js b/dist/exports/StyleSheet/index.js
 index 891994c511839216d523e68786daea85261539fb..ee534c9e7eb07da3e2c057c1ca57309c27d29d81 100644
 --- a/dist/exports/StyleSheet/index.js
@@ -165,81 +150,74 @@ index 891994c511839216d523e68786daea85261539fb..ee534c9e7eb07da3e2c057c1ca57309c
      }
    })(styles);
 diff --git a/src/exports/Pressable/index.js b/src/exports/Pressable/index.js
-index 28118ddcd0ccbd5f2e379144dac7e8a4caa95384..b639184d85b18d228042b4fbeb6f49dc9b987686 100644
+index 28118ddcd0ccbd5f2e379144dac7e8a4caa95384..d51caee3f871b440ce9c98ce0874a0a582e1b518 100644
 --- a/src/exports/Pressable/index.js
 +++ b/src/exports/Pressable/index.js
-@@ -96,6 +96,11 @@ function Pressable(props: Props, forwardedRef): React.Node {
-   const [hovered, setHovered] = useForceableState(testOnly_hovered === true);
-   const [focused, setFocused] = useForceableState(false);
-   const [pressed, setPressed] = useForceableState(testOnly_pressed === true);
-+  // Only keep interaction state when something can read it: a function
-+  // `style` or `children`. Otherwise every hover, focus and press re-renders
-+  // the Pressable for nothing.
+@@ -14,7 +14,7 @@ import type { PressResponderConfig } from '../../modules/usePressEvents/PressRes
+ import type { ViewProps } from '../View';
+ 
+ import * as React from 'react';
+-import { forwardRef, memo, useMemo, useState, useRef } from 'react';
++import { forwardRef, memo, useMemo, useRef } from 'react';
+ import useMergeRefs from '../../modules/useMergeRefs';
+ import useHover from '../../modules/useHover';
+ import usePressEvents from '../../modules/usePressEvents';
+@@ -93,9 +93,17 @@ function Pressable(props: Props, forwardedRef): React.Node {
+     ...rest
+   } = props;
+ 
+-  const [hovered, setHovered] = useForceableState(testOnly_hovered === true);
+-  const [focused, setFocused] = useForceableState(false);
+-  const [pressed, setPressed] = useForceableState(testOnly_pressed === true);
 +  const readsState =
 +    typeof style === 'function' || typeof children === 'function';
++  const [hovered, setHovered] = useForceableState(
++    testOnly_hovered === true,
++    readsState
++  );
++  const [focused, setFocused] = useForceableState(false, readsState);
++  const [pressed, setPressed] = useForceableState(
++    testOnly_pressed === true,
++    readsState
++  );
  
    const hostRef = useRef(null);
    const setRef = useMergeRefs(forwardedRef, hostRef);
-@@ -108,7 +113,7 @@ function Pressable(props: Props, forwardedRef): React.Node {
-       disabled,
-       onLongPress,
-       onPress,
--      onPressChange: setPressed,
-+      onPressChange: readsState ? setPressed : undefined,
-       onPressStart: onPressIn,
-       onPressMove,
-       onPressEnd: onPressOut
-@@ -123,6 +128,7 @@ function Pressable(props: Props, forwardedRef): React.Node {
-       onPressIn,
-       onPressMove,
-       onPressOut,
-+      readsState,
-       setPressed
-     ]
+@@ -218,9 +226,31 @@ function Pressable(props: Props, forwardedRef): React.Node {
    );
-@@ -135,7 +141,7 @@ function Pressable(props: Props, forwardedRef): React.Node {
-   useHover(hostRef, {
-     contain: true,
-     disabled,
--    onHoverChange: setHovered,
-+    onHoverChange: readsState ? setHovered : undefined,
-     onHoverStart: onHoverIn,
-     onHoverEnd: onHoverOut
-   });
-@@ -145,25 +151,29 @@ function Pressable(props: Props, forwardedRef): React.Node {
-   const blurHandler = React.useCallback(
-     (e) => {
-       if (e.nativeEvent.target === hostRef.current) {
--        setFocused(false);
-+        if (readsState) {
-+          setFocused(false);
-+        }
-         if (onBlur != null) {
-           onBlur(e);
-         }
-       }
-     },
--    [hostRef, setFocused, onBlur]
-+    [hostRef, readsState, setFocused, onBlur]
-   );
+ }
  
-   const focusHandler = React.useCallback(
-     (e) => {
-       if (e.nativeEvent.target === hostRef.current) {
--        setFocused(true);
+-function useForceableState(forced: boolean): [boolean, (boolean) => void] {
+-  const [bool, setBool] = useState(false);
+-  return [bool || forced, setBool];
++/**
++ * Interaction state lives in a ref, so it's always current, but setting it only
++ * re-renders when something can read it: a function `style` or `children`.
++ * Otherwise every hover, focus and press re-rendered the Pressable for nothing.
++ * A render for any other reason (e.g. `style` becoming a function) still reads
++ * the current value.
++ */
++function useForceableState(
++  forced: boolean,
++  readsState: boolean
++): [boolean, (boolean) => void] {
++  const ref = useRef(false);
++  const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
++  const set = React.useCallback(
++    (value: boolean) => {
++      if (ref.current !== value) {
++        ref.current = value;
 +        if (readsState) {
-+          setFocused(true);
++          forceUpdate();
 +        }
-         if (onFocus != null) {
-           onFocus(e);
-         }
-       }
-     },
--    [hostRef, setFocused, onFocus]
-+    [hostRef, readsState, setFocused, onFocus]
-   );
++      }
++    },
++    [readsState]
++  );
++  return [ref.current || forced, set];
+ }
  
-   const contextMenuHandler = React.useCallback(
+ const styles = StyleSheet.create({
 diff --git a/src/exports/StyleSheet/index.js b/src/exports/StyleSheet/index.js
 index a13393665b8ef9e28a46f19f2aea9edf0bd53bdd..62061fc9d2df04c05dce94310d32d83197405f5f 100644
 --- a/src/exports/StyleSheet/index.js
