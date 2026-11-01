@@ -1,6 +1,7 @@
-import {memo, useEffect, useMemo} from 'react'
+import {memo, useEffect, useMemo, useState} from 'react'
 import {
   type GestureResponderEvent,
+  type LayoutChangeEvent,
   Pressable,
   type StyleProp,
   type TextStyle,
@@ -10,6 +11,7 @@ import {
 import Animated, {
   type AnimatedStyle,
   FadeIn,
+  FadeInDown,
   FadeOut,
   interpolateColor,
   LayoutAnimationConfig,
@@ -71,6 +73,17 @@ const BORDER_RADIUS = 20
 const SQUARED_BORDER_RADIUS = 4
 const DISPLAY_NAME_INSET = 20
 
+/**
+ * Only messages that arrive while the chat is open animate in. Older rows
+ * mount when the chat opens or history loads, and shouldn't play an entrance.
+ */
+const FRESH_MESSAGE_WINDOW_MS = 3_000
+/**
+ * New messages rise from the composer side. Reanimated names entering presets
+ * after the side they start from, so this is `FadeInDown`, not `FadeInUp`.
+ */
+const MESSAGE_ENTERING = FadeInDown.duration(220)
+
 export type MessageItemNeighbor =
   | chat.bsky.convo.defs.MessageView
   | chat.bsky.convo.defs.DeletedMessageView
@@ -130,12 +143,14 @@ let MessageItem = ({
   prevMessage,
   nextMessage,
   relatedProfiles,
+  onLayout,
 }: {
   item: ConvoItem & {type: 'message' | 'pending-message'}
   isGroupChat?: boolean
   prevMessage: MessageItemNeighbor
   nextMessage: MessageItemNeighbor
   relatedProfiles: Map<string, chat.bsky.actor.defs.ProfileViewBasic>
+  onLayout?: (event: LayoutChangeEvent) => void
 }): React.ReactNode => {
   const t = useTheme()
   const {currentAccount} = useSession()
@@ -171,6 +186,17 @@ let MessageItem = ({
     : undefined
 
   const isPending = item.type === 'pending-message'
+
+  /*
+   * Read once, since `entering` only applies on mount (and a pending message's
+   * sentAt is regenerated on every render). The absolute value means a device
+   * clock that's ahead of the server just skips the animation.
+   */
+  const [isFresh] = useState(
+    () =>
+      Math.abs(Date.now() - new Date(message.sentAt).getTime()) <
+      FRESH_MESSAGE_WINDOW_MS,
+  )
 
   const displayName = profile ? createSanitizedDisplayName(profile) : null
 
@@ -477,7 +503,9 @@ let MessageItem = ({
   return (
     <>
       {hasLargeGapFromPrev && <DateDivider date={message.sentAt} />}
-      <View
+      <Animated.View
+        entering={isFresh ? MESSAGE_ENTERING : undefined}
+        onLayout={onLayout}
         style={[
           messageInset,
           isFirstInCluster ? a.mt_md : {marginTop: CLUSTERED_MESSAGE_GAP},
@@ -617,7 +645,7 @@ let MessageItem = ({
             style={[isFromSelf ? a.text_right : a.text_left]}
           />
         )}
-      </View>
+      </Animated.View>
     </>
   )
 }
