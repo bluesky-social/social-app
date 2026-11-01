@@ -10,7 +10,6 @@ import {type NotificationView} from '#/state/queries/notifications/grouped/types
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {NotificationFollowSmall_Filled_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Notification'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
@@ -45,10 +44,9 @@ export function getFollowers(notification: FollowerNotificationView) {
  */
 export function FollowedYouHeader() {
   const {t: l} = useLingui()
-  const gutters = Item.useHeaderGutterStyle()
 
   return (
-    <View style={[gutters, a.py_md]}>
+    <View style={[a.pr_lg, a.py_md, {paddingLeft: Item.ROW_PADDING_START}]}>
       <Text accessibilityRole="header" style={[a.text_md, a.font_bold]}>
         {l({
           message: 'Followed you',
@@ -82,7 +80,6 @@ export function FollowerNotification({
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const isClassic = Item.useIsClassicLayout()
   const queryClient = useQueryClient()
   const name = Item.useDisplayName(profile)
 
@@ -123,14 +120,7 @@ export function FollowerNotification({
       onBeforePress={() => unstableCacheProfileView(queryClient, profile)}
       style={[a.align_center, a.py_sm]}
       testID={`notification-${notification.type}-${notification.id}`}>
-      {isClassic ? (
-        // People, not reactions: they keep their avatar, without a badge
-        <Item.Avatar profile={profile} />
-      ) : gtMobile ? (
-        <Item.Avatar profile={profile} icon={PersonPlusIcon} tone="follow" />
-      ) : (
-        <PlainAvatar profile={profile} />
-      )}
+      <PlainAvatar profile={profile} />
       <Item.Content
         // The avatar stack is taller than a line of text, so give it room
         style={showSocialProof ? a.gap_2xs : a.gap_0}>
@@ -162,8 +152,8 @@ export function FollowerNotification({
 }
 
 /**
- * The bare avatar the designs use on mobile, where the rows drop the follow
- * badge that `Item.Avatar` makes room for.
+ * The person's avatar, without a badge: the Followers tab lists people rather
+ * than reactions.
  */
 function PlainAvatar({profile}: {profile: bsky.profile.AnyProfileView}) {
   const moderationOpts = useModerationOpts()

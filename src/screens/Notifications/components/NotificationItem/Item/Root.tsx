@@ -10,11 +10,22 @@ import {
 } from 'react-native'
 
 import {WebAuxClickWrapper} from '#/view/com/util/WebAuxClickWrapper'
-import {atoms as a, select, type Theme, useTheme} from '#/alf'
+import {atoms as a, select, type Theme, tokens, useTheme} from '#/alf'
 import {useLink} from '#/components/Link'
 import {SubtleHover} from '#/components/SubtleHover'
 import {SuppressHoverContext, useRowHover} from './hover'
-import {useIsClassicLayout, useRowGutterStyle} from './layout'
+
+/**
+ * A row's padding before the avatar, which lines the avatar up with a feed
+ * post's. Section headers use it too, to line up with the avatars.
+ */
+export const ROW_PADDING_START = 18
+
+/**
+ * The space between a row's avatar and its content. It's a little wider than
+ * a feed post's, as the badge hangs into it.
+ */
+export const ROW_GAP = tokens.space.md
 
 type ItemContextValue = {
   isRead: boolean
@@ -127,7 +138,6 @@ export function Root({
   children: React.ReactNode
 }) {
   const backgroundColor = useRowBackgroundColor(isRead)
-  const gutters = useRowGutterStyle()
   const {hover, hoverProps, setSuppressed} = useRowHover()
   const {onPress: followLink} = useLink({to: href, displayText: ''})
 
@@ -156,14 +166,14 @@ export function Root({
             style={[
               a.flex_row,
               a.align_start,
-              gutters,
               /*
                * As a button it's a `<button>` on web, which a block parent
                * shrinks to fit its content rather than stretching
                */
               a.w_full,
+              a.pr_lg,
               a.py_md,
-              {backgroundColor},
+              {gap: ROW_GAP, paddingLeft: ROW_PADDING_START, backgroundColor},
               style,
             ]}>
             <SubtleHover hover={hover} />
@@ -199,12 +209,5 @@ export function Trailing({
   style?: StyleProp<ViewStyle>
   children: React.ReactNode
 }) {
-  // The classic layout's row has no gap, as its left column has its own space
-  const isClassic = useIsClassicLayout()
-
-  return (
-    <View style={[a.flex_shrink_0, isClassic && a.ml_lg, style]}>
-      {children}
-    </View>
-  )
+  return <View style={[a.flex_shrink_0, style]}>{children}</View>
 }

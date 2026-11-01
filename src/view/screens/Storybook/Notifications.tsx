@@ -12,8 +12,6 @@ import {
   getFollowers,
   isFollowerNotification,
   NotificationItem,
-  type RowLayout,
-  RowLayoutProvider,
 } from '#/screens/Notifications/components/NotificationItem'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -23,13 +21,14 @@ type ReadState = 'fixture' | 'unread' | 'read'
 
 /**
  * Every Notifications v2 row kind, rendered from the grouped notifications
- * fixtures, then the follow fixtures as the Followers tab shows them. The
- * layout switch compares the classic rows the app uses with the original
- * Notifications v2 design.
+ * fixtures, then the follow fixtures as the Followers tab shows them.
  */
 export function Notifications() {
+  const t = useTheme()
   const [readState, setReadState] = useState<ReadState>('fixture')
-  const [layout, setLayout] = useState<RowLayout>('classic')
+  const [{notifications}] = useState(() =>
+    hydratePage(createGroupedNotificationsFixture(), {viewerDid: VIEWER_DID}),
+  )
 
   return (
     <View style={[a.gap_md]}>
@@ -46,33 +45,6 @@ export function Notifications() {
           </Button>
         ))}
       </View>
-      <View style={[a.flex_row, a.gap_sm]}>
-        {(['classic', 'default'] as const).map(value => (
-          <Button
-            key={value}
-            label={`${value} layout`}
-            size="small"
-            color={layout === value ? 'primary' : 'secondary'}
-            onPress={() => setLayout(value)}>
-            <ButtonText>{`${value} layout`}</ButtonText>
-          </Button>
-        ))}
-      </View>
-      <RowLayoutProvider value={layout}>
-        <NotificationsList readState={readState} />
-      </RowLayoutProvider>
-    </View>
-  )
-}
-
-function NotificationsList({readState}: {readState: ReadState}) {
-  const t = useTheme()
-  const [{notifications}] = useState(() =>
-    hydratePage(createGroupedNotificationsFixture(), {viewerDid: VIEWER_DID}),
-  )
-
-  return (
-    <View style={[a.gap_md]}>
       <View
         style={[
           a.border,

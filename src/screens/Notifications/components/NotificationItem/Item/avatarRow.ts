@@ -93,9 +93,8 @@ export function fitAvatarCount({
 
 /**
  * Which actors an avatar row lists, and how many people they stand for. The
- * primary actor comes first, and normally has an avatar in the row's left
- * column, so the row leaves them out. Where they don't have one, as in the
- * classic layout, `showsPrimary` includes them.
+ * primary actor comes first. `showsPrimary` includes them, for rows where
+ * they don't have an avatar in the left column.
  */
 export function getAvatarRowActors<T>({
   actors,

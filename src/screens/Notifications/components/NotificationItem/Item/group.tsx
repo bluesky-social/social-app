@@ -46,7 +46,6 @@ import {
   TOGGLE_PADDING,
 } from './avatarRow'
 import {Expandable} from './Expandable'
-import {useIsClassicLayout} from './layout'
 import {ActorList, ShowMoreActorsButton} from './profile'
 import {Root, useRowBackgroundColor} from './Root'
 import {useDisplayName} from './text'
@@ -146,10 +145,9 @@ type GroupContextValue = NotificationGroup & {
   expansion?: GroupExpansion
   /**
    * Whether `AvatarRow` includes the primary actor. They do when they have no
-   * avatar of their own, as in the classic layout, where a like or repost has
-   * an icon in the left column.
+   * avatar of their own, as a like or repost has an icon in the left column.
    */
-  showsPrimary?: boolean
+  showsPrimary: boolean
 }
 
 /**
@@ -209,14 +207,12 @@ export function GroupRoot({
    */
   children: React.ReactNode
 }) {
-  const isClassic = useIsClassicLayout()
   const group = getNotificationGroup(notification)
   /*
-   * Activity keeps its avatar in the classic layout, so there's no one to add.
-   * Every other kind's `Item.Avatar` is an icon there, so this has to agree
-   * with the rule in `Item.Avatar` for which badges become icons.
+   * A post alert has the author's `Item.Avatar`, so there's no one to add.
+   * Every other kind has an `Item.Icon` in the left column.
    */
-  const showsPrimary = isClassic && notification.type !== 'subscribedPost'
+  const showsPrimary = notification.type !== 'subscribedPost'
 
   if (group.count < 2 || isNamedPair(group)) {
     return (
@@ -403,15 +399,13 @@ function GroupActorList({
 }
 
 /**
- * Small avatars of the other people in a `GroupRoot`, i.e. the "24 others"
- * in "**alice** and **24 others** liked your post". Sits above the primary
- * sentence and leaves out the primary actor, who already has `Item.Avatar`.
- * Renders nothing in a row about one person.
- *
- * In the classic layout a like, repost or follow has an icon in the left
- * column rather than an avatar, so the row includes the primary actor, even
- * if they are the only one. Rows that aren't in a `GroupRoot` pass their
- * `actor` for that. Without the classic layout, those render nothing.
+ * Small avatars of the people in a row, above the primary sentence: "alice"
+ * and the "24 others" in "**alice** and **24 others** liked your post". A
+ * like, repost or follow has an `Item.Icon` in the left column rather than an
+ * avatar, so the row includes the primary actor, even if they are the only
+ * one. Rows that aren't in a `GroupRoot` pass their `actor` for that. A post
+ * alert leaves the author out, as they already have `Item.Avatar`, and so
+ * renders nothing when it's about one person.
  *
  * Shows as many avatars as fit the row's width, each linking to its profile.
  * Then, if the group expands, a "+N" count of everyone else and a chevron
@@ -421,7 +415,6 @@ function GroupActorList({
  */
 export function AvatarRow({actor}: {actor?: ProfileView}) {
   const {i18n} = useLingui()
-  const isClassic = useIsClassicLayout()
   const moderationOpts = useModerationOpts()
   const group = useContext(GroupContext)
   const rowRef = useRef<React.ComponentRef<typeof View>>(null)
@@ -438,7 +431,7 @@ export function AvatarRow({actor}: {actor?: ProfileView}) {
     if (rect) setWidth(rect.width)
   }, [])
 
-  const showsPrimary = group ? !!group.showsPrimary : isClassic && !!actor
+  const showsPrimary = group ? group.showsPrimary : true
   const actors = group ? group.actors : actor ? [actor] : []
   const total = group ? group.count : 1
   if (actors.length === 0 || (!showsPrimary && total < 2)) return null

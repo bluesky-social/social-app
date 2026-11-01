@@ -26,12 +26,6 @@ import {
 } from './kinds/profile'
 
 export {
-  type RowLayout,
-  RowLayoutProvider,
-  useHeaderGutterStyle,
-  useIsClassicLayout,
-} from './Item/layout'
-export {
   FollowedYouHeader,
   FollowerNotification,
   type FollowerNotificationView,

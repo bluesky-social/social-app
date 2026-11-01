@@ -1,4 +1,4 @@
-import {type StyleProp, type TextStyle, View} from 'react-native'
+import {type StyleProp, type TextStyle} from 'react-native'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -10,7 +10,6 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import {useIsClassicLayout} from './layout'
 import {getPostThumbnails} from './media'
 import {QuoteCard} from './post'
 import {SecondaryText} from './text'
@@ -36,7 +35,6 @@ export function PostPreview({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const isClassic = useIsClassicLayout()
   const record = bsky.isType(app.bsky.feed.post, post.record)
     ? post.record
     : undefined
@@ -60,12 +58,7 @@ export function PostPreview({
   if (!embed) return null
 
   if (embed.type === 'quote') {
-    return (
-      // A quote in a post has 8px above it, so the classic card has too
-      <View style={isClassic && a.mt_xs}>
-        <QuoteCard embed={embed.record} numberOfLines={4} isMuted />
-      </View>
-    )
+    return <QuoteCard embed={embed.record} numberOfLines={4} isMuted />
   }
 
   const domain = embed.domain

@@ -17,25 +17,18 @@ import {
 } from '#/components/icons/Repost'
 import * as Skele from '#/components/Skeleton'
 import type * as bsky from '#/types/bsky'
-import {
-  CLASSIC_AVATAR_GAP,
-  CLASSIC_AVATAR_INSET,
-  CLASSIC_AVATAR_SIZE,
-  CLASSIC_LEAD_WIDTH,
-  useIsClassicLayout,
-} from './layout'
 import {useItemBackgroundColor} from './Root'
 
 /**
  * The colour family of a notification's icon badge.
  */
-export type BadgeTone =
-  'like' | 'repost' | 'follow' | 'conversation' | 'activity' | 'neutral'
+export type BadgeTone = 'conversation' | 'activity'
 
 /**
- * The v1-style icon that stands in for the avatar in the classic layout.
+ * The v1-style icon that a reaction row has in its left column instead of an
+ * avatar.
  */
-export type ClassicGlyph =
+export type Glyph =
   | 'like'
   | 'repost'
   | 'likeViaRepost'
@@ -54,7 +47,7 @@ const ACTIVITY_ORANGE = '#F26022'
 
 /**
  * Reply, quote and mention badges use a purple that isn't in the ALF palette
- * yet, which sets them apart from repost green and follow blue.
+ * yet.
  */
 const CONVERSATION_PURPLE = '#8679FC'
 
@@ -89,79 +82,33 @@ const BADGE_POSITION = {
 }
 
 /**
- * The leading element of a row. By default it is the primary actor's avatar,
- * with an icon badge overlapping its bottom-end corner that says what kind of
- * notification this is. Omit `icon` for an unbadged avatar.
- *
- * In the classic layout, a badge for a like, repost, follow or similar turns
- * into a v1-style icon, right-aligned in the left column where the avatar
- * would be, and the row shows its people in `Item.AvatarRow` instead. Replies,
- * quotes, mentions and activity keep their avatar and badge, and so does an
- * avatar without a badge. `glyph` says which icon, and defaults from `tone`
- * for likes, reposts and follows.
+ * The author's avatar, for a row about their post (a reply, quote, mention or
+ * post alert), with an icon badge overlapping its bottom-end corner that says
+ * what kind of notification this is. Reactions have an `Icon` instead.
  */
-export function Avatar(props: {
-  profile: bsky.profile.AnyProfileView
-  icon?: React.ComponentType<SVGIconProps>
-  tone?: BadgeTone
-  glyph?: ClassicGlyph
-}) {
-  const isClassic = useIsClassicLayout()
-  if (!isClassic) return <DefaultAvatar {...props} />
-
-  const glyph = getClassicGlyph(props)
-  return glyph ? (
-    <ClassicGlyphColumn glyph={glyph} />
-  ) : (
-    <ClassicAvatar {...props} />
-  )
-}
-
-/**
- * Which icon the classic layout shows for an avatar, if it shows one.
- */
-function getClassicGlyph({
-  icon,
-  tone = 'follow',
-  glyph,
-}: {
-  icon?: React.ComponentType<SVGIconProps>
-  tone?: BadgeTone
-  glyph?: ClassicGlyph
-}): ClassicGlyph | undefined {
-  if (glyph) return glyph
-  if (!icon) return undefined
-  switch (tone) {
-    case 'like':
-    case 'repost':
-    case 'follow':
-      return tone
-    default:
-      return undefined
-  }
-}
-
-function DefaultAvatar({
+export function Avatar({
   profile,
   icon: Icon,
-  tone = 'follow',
+  tone,
 }: {
   profile: bsky.profile.AnyProfileView
-  icon?: React.ComponentType<SVGIconProps>
-  tone?: BadgeTone
+  icon: React.ComponentType<SVGIconProps>
+  tone: BadgeTone
 }) {
+  const t = useTheme()
+  const ringColor = useItemBackgroundColor()
   const moderationOpts = useModerationOpts()
   const moderation = moderationOpts
     ? moderateProfile(profile, moderationOpts)
     : undefined
 
+  const badgeColor = {
+    conversation: CONVERSATION_PURPLE,
+    activity: ACTIVITY_ORANGE,
+  }[tone]
+
   return (
-    <View
-      style={[
-        SLOT_SIZE,
-        // Without a badge, the avatar sits vertically centred in its slot
-        !Icon && a.justify_center,
-      ]}>
+    <View style={SLOT_SIZE}>
       <PreviewableUserAvatar
         size={AVATAR_SIZE}
         profile={profile}
@@ -170,139 +117,50 @@ function DefaultAvatar({
         // It would cover the badge. The red ring still says they're live
         hideLiveBadge
       />
-      {Icon && <Badge icon={Icon} tone={tone} style={BADGE_POSITION} />}
-    </View>
-  )
-}
-
-/**
- * The icon badge on an avatar. The ring around it is a padded circle behind
- * it rather than a border on it. A view's background is drawn under its border
- * too, so it would show through the anti-aliased edge of the ring.
- */
-function Badge({
-  icon: Icon,
-  tone,
-  style,
-}: {
-  icon: React.ComponentType<SVGIconProps>
-  tone: BadgeTone
-  /**
-   * Where the badge sits, as `end` and `bottom` offsets.
-   */
-  style: {end: number; bottom: number}
-}) {
-  const t = useTheme()
-  const ringColor = useItemBackgroundColor()
-
-  const badgeColor = {
-    like: t.palette.pink,
-    repost: t.palette.positive_500,
-    follow: t.palette.primary_500,
-    conversation: CONVERSATION_PURPLE,
-    activity: ACTIVITY_ORANGE,
-    neutral: t.palette.contrast_500,
-  }[tone]
-
-  return (
-    <View
-      style={[
-        a.absolute,
-        a.rounded_full,
-        {padding: BADGE_RING, backgroundColor: ringColor},
-        style,
-      ]}>
+      {/*
+       * The ring is a padded circle behind the badge rather than a border on
+       * it. A view's background is drawn under its border too, so it would
+       * show through the anti-aliased edge of the ring.
+       */}
       <View
         style={[
+          a.absolute,
           a.rounded_full,
-          a.align_center,
-          a.justify_center,
-          {
-            width: BADGE_SIZE,
-            height: BADGE_SIZE,
-            backgroundColor: badgeColor,
-          },
+          BADGE_POSITION,
+          {padding: BADGE_RING, backgroundColor: ringColor},
         ]}>
-        <Icon size="xs" fill={t.palette.white} />
+        <View
+          style={[
+            a.rounded_full,
+            a.align_center,
+            a.justify_center,
+            {
+              width: BADGE_SIZE,
+              height: BADGE_SIZE,
+              backgroundColor: badgeColor,
+            },
+          ]}>
+          <Icon size="xs" fill={t.palette.white} />
+        </View>
       </View>
     </View>
   )
 }
 
 /**
- * How far the badge overlaps past the avatar's bottom-end corner in the
- * classic layout, which keeps it clear of the text beside it.
+ * The left column of a like, repost, follow and the like, as in v1: an icon
+ * saying what happened, where the avatar would be, right-aligned to its end
+ * edge. The people are in the row's `Item.AvatarRow` instead.
  */
-const CLASSIC_BADGE_OVERHANG = 4
-
-/**
- * The classic layout's avatar: in the left column of a post in a feed, so
- * that it lines up with the avatars of the posts around it.
- */
-function ClassicAvatar({
-  profile,
-  icon: Icon,
-  tone = 'follow',
-}: {
-  profile: bsky.profile.AnyProfileView
-  icon?: React.ComponentType<SVGIconProps>
-  tone?: BadgeTone
-}) {
-  const moderationOpts = useModerationOpts()
-  const moderation = moderationOpts
-    ? moderateProfile(profile, moderationOpts)
-    : undefined
-
+export function Icon({glyph}: {glyph: Glyph}) {
   return (
-    <View
-      style={[
-        // So the avatar's link wraps the avatar rather than the whole column
-        a.align_start,
-        {
-          width: CLASSIC_LEAD_WIDTH,
-          paddingLeft: CLASSIC_AVATAR_INSET,
-          height: CLASSIC_AVATAR_SIZE + (Icon ? CLASSIC_BADGE_OVERHANG : 0),
-        },
-      ]}>
-      <PreviewableUserAvatar
-        size={CLASSIC_AVATAR_SIZE}
-        profile={profile}
-        moderation={moderation?.ui('avatar')}
-        type={profile.associated?.labeler ? 'labeler' : 'user'}
-        // It would cover the badge. The red ring still says they're live
-        hideLiveBadge
-      />
-      {Icon && (
-        <Badge
-          icon={Icon}
-          tone={tone}
-          style={{
-            end: CLASSIC_AVATAR_GAP - CLASSIC_BADGE_OVERHANG,
-            bottom: 0,
-          }}
-        />
-      )}
+    <View style={[a.align_end, {width: AVATAR_SIZE}]}>
+      <GlyphIcon glyph={glyph} />
     </View>
   )
 }
 
-/**
- * The classic layout's left column for a like, repost, follow and the like:
- * a v1-style icon, right-aligned to where a post's avatar ends.
- */
-function ClassicGlyphColumn({glyph}: {glyph: ClassicGlyph}) {
-  return (
-    <View
-      style={[
-        a.align_end,
-        {width: CLASSIC_LEAD_WIDTH, paddingRight: CLASSIC_AVATAR_GAP},
-      ]}>
-      <ClassicGlyphIcon glyph={glyph} />
-    </View>
-  )
-}
-
-function ClassicGlyphIcon({glyph}: {glyph: ClassicGlyph}) {
+function GlyphIcon({glyph}: {glyph: Glyph}) {
   const t = useTheme()
 
   switch (glyph) {
@@ -329,62 +187,9 @@ function ClassicGlyphIcon({glyph}: {glyph: ClassicGlyph}) {
 
 /**
  * Stands in for a badged `Avatar` while the row loads, in the same slot, with
- * a faint circle where the badge goes. In the classic layout, `variant="icon"`
- * stands in for the icon that a like, repost or follow has instead, and
- * `variant="plain"` for an avatar without a badge.
+ * a faint circle where the badge goes.
  */
-export function AvatarSkeleton({
-  variant = 'avatar',
-}: {
-  variant?: 'avatar' | 'icon' | 'plain'
-}) {
-  const isClassic = useIsClassicLayout()
-  if (!isClassic) return <DefaultAvatarSkeleton />
-  if (variant === 'icon') {
-    return (
-      <View
-        style={[
-          a.align_end,
-          {width: CLASSIC_LEAD_WIDTH, paddingRight: CLASSIC_AVATAR_GAP},
-        ]}>
-        <Skele.Circle size={28} />
-      </View>
-    )
-  }
-  return <ClassicAvatarSkeleton isBadged={variant === 'avatar'} />
-}
-
-function ClassicAvatarSkeleton({isBadged}: {isBadged: boolean}) {
-  const ringColor = useItemBackgroundColor()
-
-  return (
-    <View
-      style={{
-        width: CLASSIC_LEAD_WIDTH,
-        paddingLeft: CLASSIC_AVATAR_INSET,
-        height: CLASSIC_AVATAR_SIZE + (isBadged ? CLASSIC_BADGE_OVERHANG : 0),
-      }}>
-      <Skele.Circle size={CLASSIC_AVATAR_SIZE} />
-      {isBadged && (
-        <View
-          style={[
-            a.absolute,
-            a.rounded_full,
-            {
-              end: CLASSIC_AVATAR_GAP - CLASSIC_BADGE_OVERHANG,
-              bottom: 0,
-              padding: BADGE_RING,
-              backgroundColor: ringColor,
-            },
-          ]}>
-          <Skele.Circle blend size={BADGE_SIZE} />
-        </View>
-      )}
-    </View>
-  )
-}
-
-function DefaultAvatarSkeleton() {
+export function AvatarSkeleton() {
   const ringColor = useItemBackgroundColor()
 
   return (
@@ -399,6 +204,17 @@ function DefaultAvatarSkeleton() {
         ]}>
         <Skele.Circle blend size={BADGE_SIZE} />
       </View>
+    </View>
+  )
+}
+
+/**
+ * Stands in for an `Icon` while the row loads.
+ */
+export function IconSkeleton() {
+  return (
+    <View style={[a.align_end, {width: AVATAR_SIZE}]}>
+      <Skele.Circle size={28} />
     </View>
   )
 }

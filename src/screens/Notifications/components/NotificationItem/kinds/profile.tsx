@@ -9,11 +9,6 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
-import {
-  NotificationFollowSmall_Filled_Corner0_Rounded as PersonPlusIcon,
-  NotificationStarterPackSmall_Filled_Corner0_Rounded as StarterPackIcon,
-  NotificationVerifiedSmall_Filled_Corner0_Rounded as CheckIcon,
-} from '#/components/icons/Notification'
 import type * as bsky from '#/types/bsky'
 import * as Item from '../Item'
 import {type NotificationOf} from '../types'
@@ -64,7 +59,7 @@ function SingleFollowNotification({
       accessible={false}
       onBeforePress={cacheProfile}
       testID={`notification-follow-${notification.id}`}>
-      <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
+      <Item.Icon glyph="follow" />
       <Item.Content>
         <Item.AvatarRow actor={actor} />
         <View style={[a.gap_xs]}>
@@ -144,7 +139,7 @@ function GroupedFollowNotification({
         }
       }}
       testID={`notification-follow-${notification.id}`}>
-      <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
+      <Item.Icon glyph="follow" />
       <Item.Content>
         <Item.AvatarRow />
         <Item.PrimaryText>
@@ -198,7 +193,7 @@ export function FollowBackNotification({
       onBeforePress={cacheProfile}
       style={a.align_center}
       testID={`notification-followBack-${notification.id}`}>
-      <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
+      <Item.Icon glyph="follow" />
       <Item.Content style={a.gap_2xs}>
         <Item.AvatarRow actor={actor} />
         <Item.PrimaryText>
@@ -235,12 +230,7 @@ export function VerifiedNotification({
       onBeforePress={cacheProfile}
       style={a.align_center}
       testID={`notification-verified-${notification.id}`}>
-      <Item.Avatar
-        profile={actor}
-        icon={CheckIcon}
-        tone="follow"
-        glyph="verified"
-      />
+      <Item.Icon glyph="verified" />
       <Item.Content>
         <Item.AvatarRow actor={actor} />
         <Item.PrimaryText>
@@ -276,12 +266,7 @@ export function UnverifiedNotification({
       onBeforePress={cacheProfile}
       style={a.align_center}
       testID={`notification-unverified-${notification.id}`}>
-      <Item.Avatar
-        profile={actor}
-        icon={CheckIcon}
-        tone="neutral"
-        glyph="unverified"
-      />
+      <Item.Icon glyph="unverified" />
       <Item.Content>
         <Item.AvatarRow actor={actor} />
         <Item.PrimaryText>
@@ -316,12 +301,7 @@ export function StarterPackJoinedNotification({
       accessible={false}
       onBeforePress={cacheProfile}
       testID={`notification-starterPackJoined-${notification.id}`}>
-      <Item.Avatar
-        profile={actor}
-        icon={StarterPackIcon}
-        tone="follow"
-        glyph="starterPack"
-      />
+      <Item.Icon glyph="starterPack" />
       <Item.Content style={a.gap_sm}>
         <Item.AvatarRow actor={actor} />
         <View style={[a.flex_row, a.align_start, a.gap_2xl]}>
@@ -360,7 +340,7 @@ export function ContactMatchNotification({
       onBeforePress={cacheProfile}
       style={a.align_center}
       testID={`notification-contactMatch-${notification.id}`}>
-      <Item.Avatar profile={actor} glyph="contacts" />
+      <Item.Icon glyph="contacts" />
       <Item.Content>
         <Item.AvatarRow actor={actor} />
         <Item.HeadlineWithButton

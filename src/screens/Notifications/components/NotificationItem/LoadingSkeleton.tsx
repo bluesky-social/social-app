@@ -8,7 +8,7 @@ import {
 
 import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {SHOW_ROW_BORDERS} from '#/screens/Notifications/rowBorders'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {PostControlsSkeleton} from '#/components/PostControls'
 import * as Skele from '#/components/Skeleton'
 import * as Item from './Item'
@@ -16,10 +16,11 @@ import * as Item from './Item'
 /**
  * A kind of skeleton row, after the notifications it stands in for: `group`
  * for a like or repost from several people, `reaction` for one from a single
- * person or a new post on the Post alerts tab, `follow`, `reply` (with its
- * "replied to" line), and `mention` for mentions and quotes.
+ * person, `alert` for a new post on the Post alerts tab, `follow`, `reply`
+ * (with its "replied to" line), and `mention` for mentions and quotes.
  */
-type SkeletonKind = 'group' | 'reaction' | 'follow' | 'reply' | 'mention'
+type SkeletonKind =
+  'group' | 'reaction' | 'alert' | 'follow' | 'reply' | 'mention'
 
 /**
  * A believable stretch of a feed with every kind of notification in it,
@@ -47,7 +48,7 @@ const TAB_KINDS: Record<
   all: MIXED_KINDS,
   'people-i-follow': MIXED_KINDS,
   conversations: ['reply', 'reply', 'mention'],
-  activity: ['reaction'],
+  activity: ['alert'],
 }
 
 /**
@@ -93,12 +94,7 @@ export function LoadingSkeleton({feed}: {feed: GroupedNotificationsFeed}) {
           i > 0 &&
             SHOW_ROW_BORDERS && [a.border_t, t.atoms.border_contrast_low],
         ]}>
-        <RowSkeleton
-          kind={kind}
-          index={index}
-          // Activity keeps its avatar in the classic layout
-          isActivity={feed === 'activity'}
-        />
+        <RowSkeleton kind={kind} index={index} />
       </View>,
     )
   }
@@ -118,13 +114,13 @@ export function LoadingSkeleton({feed}: {feed: GroupedNotificationsFeed}) {
  */
 function TodayHeaderSkeleton() {
   const t = useTheme()
-  const gutters = Item.useHeaderGutterStyle()
 
   return (
     <View
       style={[
-        gutters,
+        a.pr_lg,
         a.py_sm,
+        {paddingLeft: Item.ROW_PADDING_START},
         SHOW_ROW_BORDERS && [a.border_b, t.atoms.border_contrast_low],
       ]}>
       <Skele.Text style={[a.text_md, a.font_bold, {width: 48}]} />
@@ -135,20 +131,14 @@ function TodayHeaderSkeleton() {
 /**
  * Picks the skeleton row for `kind`.
  */
-function RowSkeleton({
-  kind,
-  index,
-  isActivity,
-}: {
-  kind: SkeletonKind
-  index: number
-  isActivity: boolean
-}) {
+function RowSkeleton({kind, index}: {kind: SkeletonKind; index: number}) {
   switch (kind) {
     case 'group':
       return <GroupSkeleton index={index} />
     case 'reaction':
-      return <ReactionSkeleton index={index} isActivity={isActivity} />
+      return <ReactionSkeleton index={index} isAlert={false} />
+    case 'alert':
+      return <ReactionSkeleton index={index} isAlert />
     case 'follow':
       return <FollowSkeleton index={index} />
     case 'reply':
@@ -167,7 +157,7 @@ function GroupSkeleton({index}: {index: number}) {
 
   return (
     <Row>
-      <Item.AvatarSkeleton variant="icon" />
+      <Item.IconSkeleton />
       <Item.Content>
         <AvatarRowSkeleton count={even ? 4 : 2} overflow={even} />
         <Lines style={a.text_md} widths={even ? ['100%', '30%'] : ['85%']} />
@@ -183,22 +173,17 @@ function GroupSkeleton({index}: {index: number}) {
 }
 
 /**
- * Stands in for a like or repost from one person, or a new post on the
- * Post alerts tab, sometimes of a post with images.
+ * Stands in for a like or repost from one person, or with `isAlert`, a new
+ * post on the Post alerts tab, sometimes of a post with images.
  */
-function ReactionSkeleton({
-  index,
-  isActivity,
-}: {
-  index: number
-  isActivity: boolean
-}) {
+function ReactionSkeleton({index, isAlert}: {index: number; isAlert: boolean}) {
   const even = index % 2 === 0
 
   return (
     <Row>
-      <Item.AvatarSkeleton variant={isActivity ? 'avatar' : 'icon'} />
+      {isAlert ? <Item.AvatarSkeleton /> : <Item.IconSkeleton />}
       <Item.Content>
+        {!isAlert && <AvatarRowSkeleton count={1} overflow={false} />}
         <Lines style={a.text_md} widths={[even ? '75%' : '65%']} />
         <Lines
           blend
@@ -225,8 +210,9 @@ function FollowSkeleton({index}: {index: number}) {
 
   return (
     <Row>
-      <Item.AvatarSkeleton variant="icon" />
+      <Item.IconSkeleton />
       <Item.Content>
+        <AvatarRowSkeleton count={1} overflow={false} />
         <Item.HeadlineWithButton button={<FollowButtonSkeleton />}>
           <Lines style={a.text_md} widths={[even ? '60%' : '50%']} />
         </Item.HeadlineWithButton>
@@ -277,17 +263,14 @@ function PostSkeleton({index, isReply}: {index: number; isReply: boolean}) {
  * The Followers tab's skeleton: its header, then a list of people.
  */
 function FollowersSkeleton() {
-  const {gtMobile} = useBreakpoints()
-  const gutters = Item.useHeaderGutterStyle()
-
   return (
     <>
       {/* Matches `FollowedYouHeader` */}
-      <View style={[gutters, a.py_md]}>
+      <View style={[a.pr_lg, a.py_md, {paddingLeft: Item.ROW_PADDING_START}]}>
         <Skele.Text style={[a.text_md, {width: 96}]} />
       </View>
       {Array.from({length: FOLLOWER_ROW_COUNT}, (_, index) => (
-        <FollowerSkeleton key={index} index={index} isBadged={gtMobile} />
+        <FollowerSkeleton key={index} index={index} />
       ))}
     </>
   )
@@ -297,30 +280,13 @@ function FollowersSkeleton() {
  * Stands in for a `FollowerNotification`: a compact profile row with a
  * follow button.
  */
-function FollowerSkeleton({
-  index,
-  isBadged,
-}: {
-  index: number
-  /**
-   * Whether the avatar has room for a badge, which the rows only have on
-   * larger screens.
-   */
-  isBadged: boolean
-}) {
+function FollowerSkeleton({index}: {index: number}) {
   const even = index % 2 === 0
-  const isClassic = Item.useIsClassicLayout()
 
   return (
     <Row style={[a.align_center, a.py_sm]}>
-      {isClassic ? (
-        <Item.AvatarSkeleton variant="plain" />
-      ) : isBadged ? (
-        <Item.AvatarSkeleton />
-      ) : (
-        // The same size as `Item.Avatar`, without its slot
-        <Skele.Circle size={Item.AVATAR_SIZE} />
-      )}
+      {/* The same size as `Item.Avatar`, without its slot */}
+      <Skele.Circle size={Item.AVATAR_SIZE} />
       <Item.Content style={[a.gap_0]}>
         <Lines style={a.text_md} widths={[even ? '40%' : '55%']} />
         <Lines blend style={a.text_sm} widths={[even ? '50%' : '35%']} />
@@ -342,10 +308,16 @@ function Row({
   style?: StyleProp<ViewStyle>
   children: React.ReactNode
 }) {
-  const gutters = Item.useRowGutterStyle()
-
   return (
-    <View style={[a.flex_row, a.align_start, gutters, a.py_md, style]}>
+    <View
+      style={[
+        a.flex_row,
+        a.align_start,
+        a.pr_lg,
+        a.py_md,
+        {gap: Item.ROW_GAP, paddingLeft: Item.ROW_PADDING_START},
+        style,
+      ]}>
       {children}
     </View>
   )
