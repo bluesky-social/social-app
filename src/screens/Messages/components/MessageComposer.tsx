@@ -46,6 +46,7 @@ const MIN_HEIGHT = 40
 
 export function MessageComposer({
   textInputId,
+  onWillSendMessage,
   onSendMessage,
   messageEmbed,
   setEmbed,
@@ -53,6 +54,11 @@ export function MessageComposer({
   loading = false,
 }: {
   textInputId?: string
+  /**
+   * Called synchronously when a send is accepted, before the input clears and
+   * the composer shrinks back down.
+   */
+  onWillSendMessage?: () => void
   onSendMessage: (
     message: string,
     embed?: MessageEmbedState,
@@ -133,6 +139,7 @@ export function MessageComposer({
     }
 
     isSubmittingRef.current = true
+    onWillSendMessage?.()
     clearDraft()
     haptics.confirm()
     setEmbed(undefined)
