@@ -48,3 +48,16 @@ runs:
         mv denis-linux-amd64 denis
         chmod +x denis
         echo "$BIN_DIR" >> "$GITHUB_PATH"
+
+    # denis publish shells out to bsdiff to build patches for OTA bundles, and
+    # skips patches when it's missing. So a failed install only costs patches
+    # and must never block a publish.
+    - name: 🧩 Install bsdiff
+      shell: bash
+      run: |
+        if command -v bsdiff > /dev/null; then
+          exit 0
+        fi
+        sudo apt-get install -y -qq --no-install-recommends bsdiff ||
+          { sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends bsdiff; } ||
+          echo "::warning::Could not install bsdiff, so denis will publish this OTA without patches."
