@@ -287,10 +287,9 @@ const ImageItemContent = ({
         </Animated.ScrollView>
       </GestureDetector>
       {IS_LIQUID_GLASS && (
-        // the status bar stays hidden while zoomed, even if a tap shows the controls
         <ScrollEdgeEffect
           edge="top"
-          effect={showControls && !scaled ? 'soft' : 'hidden'}
+          effect={showControls ? 'soft' : 'hidden'}
           pointerEvents="none"
           style={[a.absolute, a.inset_0, {height: topInset}]}
         />
