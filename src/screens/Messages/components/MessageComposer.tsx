@@ -159,9 +159,17 @@ export function MessageComposer({
     }
 
     isSubmittingRef.current = true
+    /*
+     * Only predict a text-only shrink. Clearing the text is near-instant, but
+     * a reply or embed preview goes away with a re-render that lands a few
+     * frames later - predicting that would move the list ahead of the
+     * composer, so let the list follow its real layout instead.
+     */
     const {current, collapsed} = heights.current
     onWillSendMessage?.(
-      collapsed === null ? 0 : Math.max(0, current - collapsed),
+      collapsed === null || embed || replyTo
+        ? 0
+        : Math.max(0, current - collapsed),
     )
     clearDraft()
     haptics.confirm()
