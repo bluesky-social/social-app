@@ -150,8 +150,6 @@ function PostInner({
     outerOnBeforePress?.()
   }, [queryClient, post.author, outerOnBeforePress])
 
-  const [hover, setHover] = useState(false)
-
   return (
     <GalleryBleed>
       <Link
@@ -162,14 +160,8 @@ function PostInner({
           !hideTopBorder && a.border_t,
           style,
         ]}
-        onBeforePress={onBeforePress}
-        onPointerEnter={() => {
-          setHover(true)
-        }}
-        onPointerLeave={() => {
-          setHover(false)
-        }}>
-        <SubtleHover hover={hover} />
+        onBeforePress={onBeforePress}>
+        <SubtleHover />
         {showReplyLine && (
           <View
             style={[

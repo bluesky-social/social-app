@@ -176,8 +176,6 @@ let FeedItemInner = ({
   const t = useTheme()
   const {currentAccount} = useSession()
 
-  const [hover, setHover] = useState(false)
-
   const [href] = useMemo(() => {
     const urip = new AtUri(post.uri)
     return [makeProfileLink(post.author, 'post', urip.rkey), urip.rkey]
@@ -346,14 +344,8 @@ let FeedItemInner = ({
         noFeedback
         accessible={false}
         onBeforePress={onBeforePress}
-        dataSet={{feedContext}}
-        onPointerEnter={() => {
-          setHover(true)
-        }}
-        onPointerLeave={() => {
-          setHover(false)
-        }}>
-        <SubtleHover hover={hover} />
+        dataSet={{feedContext}}>
+        <SubtleHover />
         <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
           <View style={{width: 42}}>
             {isThreadChild && (
