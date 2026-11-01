@@ -14,7 +14,6 @@ import {
 
 type Props = {
   imageSrc: ImageSource
-  isActive: boolean
   onRequestClose: () => void
   onTap: () => void
   onZoom: (scaled: boolean) => void

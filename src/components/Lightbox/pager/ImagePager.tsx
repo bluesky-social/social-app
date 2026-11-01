@@ -32,15 +32,10 @@ import Animated, {
   withSpring,
   type WithSpringConfig,
 } from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {scheduleOnRN, scheduleOnUI} from 'react-native-worklets'
 import {Image} from 'expo-image'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
-import {
-  ScrollEdgeEffect,
-  ScrollEdgeEffectProvider,
-} from '@bsky.app/expo-scroll-edge-effect'
 
 import {type Dimensions} from '#/lib/media/types'
 import {useTheme} from '#/alf'
@@ -48,7 +43,7 @@ import {setSystemUITheme} from '#/alf/util/systemUI'
 import {measureThumb} from '#/components/Lightbox/measureThumb'
 import {type Lightbox} from '#/components/Lightbox/state'
 import {useAnalytics} from '#/analytics'
-import {IS_IOS, IS_IPAD, IS_LIQUID_GLASS} from '#/env'
+import {IS_IOS, IS_IPAD} from '#/env'
 import {Footer} from '../chrome/Footer'
 import {Header} from '../chrome/Header'
 import {
@@ -251,21 +246,19 @@ export default function ImageViewRoot({
           )
         }}>
         {activeLightbox && (
-          <ScrollEdgeEffectProvider>
-            <ImageView
-              key={activeLightbox.id + '-' + orientation}
-              lightbox={activeLightbox}
-              imageIndex={imageIndex}
-              setImageIndex={setImageIndex}
-              orientation={orientation}
-              onRequestClose={onRequestClose}
-              onPressSave={onPressSave}
-              onPressShare={onPressShare}
-              safeAreaRef={ref}
-              openProgress={openProgress}
-              thumbRects={thumbRects}
-            />
-          </ScrollEdgeEffectProvider>
+          <ImageView
+            key={activeLightbox.id + '-' + orientation}
+            lightbox={activeLightbox}
+            imageIndex={imageIndex}
+            setImageIndex={setImageIndex}
+            orientation={orientation}
+            onRequestClose={onRequestClose}
+            onPressSave={onPressSave}
+            onPressShare={onPressShare}
+            safeAreaRef={ref}
+            openProgress={openProgress}
+            thumbRects={thumbRects}
+          />
         )}
       </Animated.View>
     </View>
@@ -300,7 +293,6 @@ function ImageView({
   // current index, so the pager re-opens on the same image.
   const [initialImageIndex] = useState(imageIndex)
   const ax = useAnalytics()
-  const {top: topInset} = useSafeAreaInsets()
   const isAnimated = useMemo(() => canAnimate(lightbox), [lightbox])
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
@@ -534,19 +526,6 @@ function ImageView({
         ))}
       </PagerView>
       <View style={styles.controls} pointerEvents="box-none">
-        {IS_LIQUID_GLASS && (
-          /*
-           * Invisible, status bar sized. Its only job is to tell the active
-           * image's scroll view that something sits over its top edge, so it
-           * draws the soft edge effect behind the status bar.
-           */
-          <ScrollEdgeEffect
-            edge="top"
-            effect={showControls ? 'soft' : 'hidden'}
-            pointerEvents="none"
-            style={[styles.statusBarEdgeEffect, {height: topInset}]}
-          />
-        )}
         <Animated.View
           style={animatedHeaderStyle}
           pointerEvents="box-none"
@@ -743,7 +722,6 @@ function LightboxImage({
   return (
     <ImageItem
       imageSrc={imageSrc}
-      isActive={isActive}
       onTap={onTap}
       onZoom={onZoom}
       onRequestClose={onRequestClose}
@@ -791,12 +769,6 @@ const styles = StyleSheet.create({
     gap: 20,
     zIndex: 1,
     pointerEvents: 'box-none',
-  },
-  statusBarEdgeEffect: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
   },
   pager: {
     flex: 1,

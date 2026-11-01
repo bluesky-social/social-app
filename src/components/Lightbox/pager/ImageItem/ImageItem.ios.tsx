@@ -23,12 +23,20 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import {useSafeAreaFrame} from 'react-native-safe-area-context'
+import {
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 import {scheduleOnRN} from 'react-native-worklets'
 import {Image} from 'expo-image'
-import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
+import {
+  ScrollEdgeEffect,
+  ScrollEdgeEffectProvider,
+  useScrollEdgeEffectRef,
+} from '@bsky.app/expo-scroll-edge-effect'
 
 import {mergeRefs} from '#/lib/merge-refs'
+import {IS_LIQUID_GLASS} from '#/env'
 import {
   type Dimensions as ImageDimensions,
   type ImageSource,
@@ -40,7 +48,6 @@ const MIN_SCREEN_ZOOM = 2
 
 type Props = {
   imageSrc: ImageSource
-  isActive: boolean
   onRequestClose: () => void
   onTap: () => void
   onZoom: (scaled: boolean) => void
@@ -59,9 +66,19 @@ type Props = {
   transforms: Readonly<SharedValue<LightboxTransforms>>
 }
 
-const ImageItem = ({
+/**
+ * Each page has its own provider, so its scroll view gets its own edge effect.
+ */
+function ImageItem(props: Props) {
+  return (
+    <ScrollEdgeEffectProvider>
+      <ImageItemContent {...props} />
+    </ScrollEdgeEffectProvider>
+  )
+}
+
+const ImageItemContent = ({
   imageSrc,
-  isActive,
   onTap,
   onZoom,
   onLoad,
@@ -73,9 +90,8 @@ const ImageItem = ({
   transforms,
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
-  // The provider only tracks one scroll view, so only the visible page's
-  // should register.
   const scrollEdgeRef = useScrollEdgeEffectRef()
+  const {top: topInset} = useSafeAreaInsets()
   const [scaled, setScaled] = useState(false)
   const isDragging = useSharedValue(false)
   const screenSizeDelayedForJSThreadOnly = useSafeAreaFrame()
@@ -226,47 +242,67 @@ const ImageItem = ({
   }))
 
   return (
-    <GestureDetector gesture={composedGesture}>
-      <Animated.ScrollView
-        ref={mergeRefs([scrollViewRef, isActive ? scrollEdgeRef : undefined])}
-        pinchGestureEnabled
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        maximumZoomScale={maxZoomScale}
-        onScroll={scrollHandler}
-        style={containerStyle}
-        animatedProps={scrollViewProps}
-        centerContent>
-        {showLoader && (
-          <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-        )}
-        <Animated.View style={[imageCropStyle, imageLayoutStyle]}>
-          <Animated.View style={[imageStyle, imageLayoutStyle]}>
-            <Image
-              contentFit="contain"
-              source={{uri: imageSrc.uri}}
-              placeholderContentFit="contain"
-              placeholder={{uri: imageSrc.thumbUri}}
-              style={{flex: 1, borderRadius}}
-              accessibilityLabel={imageSrc.alt}
-              accessibilityHint=""
-              enableLiveTextInteraction={showControls && !scaled}
-              accessibilityIgnoresInvertColors
-              onLoad={
-                hasLoaded
-                  ? undefined
-                  : e => {
-                      setHasLoaded(true)
-                      onLoad({width: e.source.width, height: e.source.height})
-                    }
-              }
-              cachePolicy="memory"
-              useAppleWebpCodec
+    <>
+      <GestureDetector gesture={composedGesture}>
+        <Animated.ScrollView
+          ref={mergeRefs([scrollViewRef, scrollEdgeRef])}
+          pinchGestureEnabled
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          maximumZoomScale={maxZoomScale}
+          onScroll={scrollHandler}
+          style={containerStyle}
+          animatedProps={scrollViewProps}
+          centerContent>
+          {showLoader && (
+            <ActivityIndicator
+              size="small"
+              color="#FFF"
+              style={styles.loading}
             />
+          )}
+          <Animated.View style={[imageCropStyle, imageLayoutStyle]}>
+            <Animated.View style={[imageStyle, imageLayoutStyle]}>
+              <Image
+                contentFit="contain"
+                source={{uri: imageSrc.uri}}
+                placeholderContentFit="contain"
+                placeholder={{uri: imageSrc.thumbUri}}
+                style={{flex: 1, borderRadius}}
+                accessibilityLabel={imageSrc.alt}
+                accessibilityHint=""
+                enableLiveTextInteraction={showControls && !scaled}
+                accessibilityIgnoresInvertColors
+                onLoad={
+                  hasLoaded
+                    ? undefined
+                    : e => {
+                        setHasLoaded(true)
+                        onLoad({width: e.source.width, height: e.source.height})
+                      }
+                }
+                cachePolicy="memory"
+                useAppleWebpCodec
+              />
+            </Animated.View>
           </Animated.View>
-        </Animated.View>
-      </Animated.ScrollView>
-    </GestureDetector>
+        </Animated.ScrollView>
+      </GestureDetector>
+      {IS_LIQUID_GLASS && (
+        /*
+         * Invisible, status bar sized. Its only job is to tell this scroll
+         * view that something sits over its top edge, so it draws the soft
+         * edge effect behind the status bar. Tracks the status bar, which
+         * stays hidden while zoomed even if a tap brings the controls back.
+         */
+        <ScrollEdgeEffect
+          edge="top"
+          effect={showControls && !scaled ? 'soft' : 'hidden'}
+          pointerEvents="none"
+          style={[styles.statusBarEdgeEffect, {height: topInset}]}
+        />
+      )}
+    </>
   )
 }
 
@@ -280,6 +316,12 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
+  },
+  statusBarEdgeEffect: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
   },
 })
 
