@@ -9,8 +9,12 @@ import {VerifiedCheck} from '#/components/icons/brands/VerifiedCheck'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Contacts_Filled_Corner2_Rounded as ContactsIcon} from '#/components/icons/Contacts'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
+import {LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon} from '#/components/icons/LikeRepost'
 import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
-import {Repost_Stroke2_Corner3_Rounded as RepostIcon} from '#/components/icons/Repost'
+import {
+  Repost_Stroke2_Corner3_Rounded as RepostIcon,
+  RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon,
+} from '#/components/icons/Repost'
 import * as Skele from '#/components/Skeleton'
 import type * as bsky from '#/types/bsky'
 import {
@@ -34,6 +38,8 @@ export type BadgeTone =
 export type ClassicGlyph =
   | 'like'
   | 'repost'
+  | 'likeViaRepost'
+  | 'repostViaRepost'
   | 'follow'
   | 'verified'
   | 'unverified'
@@ -304,6 +310,10 @@ function ClassicGlyphIcon({glyph}: {glyph: ClassicGlyph}) {
       return <HeartIcon size="xl" fill={t.palette.pink} />
     case 'repost':
       return <RepostIcon size="xl" fill={t.palette.positive_500} />
+    case 'likeViaRepost':
+      return <LikeRepostIcon size="xl" fill={t.palette.pink} />
+    case 'repostViaRepost':
+      return <RepostRepostIcon size="xl" fill={t.palette.positive_500} />
     case 'follow':
       return <PersonPlusIcon size="xl" fill={t.palette.primary_500} />
     case 'verified':

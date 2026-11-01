@@ -25,6 +25,7 @@ function PostReactionRow({
   notification,
   icon,
   tone,
+  glyph,
   label,
   children,
 }: {
@@ -33,6 +34,10 @@ function PostReactionRow({
   >
   icon: React.ComponentType<SVGIconProps>
   tone: Item.BadgeTone
+  /**
+   * The classic layout's icon, if it isn't the one `tone` implies.
+   */
+  glyph?: Item.ClassicGlyph
   /**
    * Plain-text version of the primary sentence, for screen readers.
    */
@@ -52,7 +57,7 @@ function PostReactionRow({
       href={makePostLink(post)}
       label={label}
       testID={`notification-${notification.type}-${notification.id}`}>
-      <Item.Avatar profile={actors[0]} icon={icon} tone={tone} />
+      <Item.Avatar profile={actors[0]} icon={icon} tone={tone} glyph={glyph} />
       <Item.Content>
         <Item.AvatarRow />
         {children}
@@ -192,6 +197,7 @@ export function LikeViaRepostNotification({
       notification={notification}
       icon={HeartIcon}
       tone="like"
+      glyph="likeViaRepost"
       label={
         second
           ? l`${name} and ${secondName} liked your repost`
@@ -244,6 +250,7 @@ export function RepostViaRepostNotification({
       notification={notification}
       icon={RepostIcon}
       tone="repost"
+      glyph="repostViaRepost"
       label={
         second
           ? l`${name} and ${secondName} reposted your repost`
@@ -287,6 +294,7 @@ function MultiPostRow({
   notification,
   icon,
   tone,
+  glyph,
   label,
   viewAllLabel,
   children,
@@ -299,6 +307,10 @@ function MultiPostRow({
   >
   icon: React.ComponentType<SVGIconProps>
   tone: Item.BadgeTone
+  /**
+   * The classic layout's icon, if it isn't the one `tone` implies.
+   */
+  glyph?: Item.ClassicGlyph
   /**
    * Plain-text version of the primary sentence, for screen readers.
    */
@@ -324,7 +336,7 @@ function MultiPostRow({
       isRead={notification.isRead}
       label={label}
       testID={`notification-${notification.type}-${notification.id}`}>
-      <Item.Avatar profile={actor} icon={icon} tone={tone} />
+      <Item.Avatar profile={actor} icon={icon} tone={tone} glyph={glyph} />
       <Item.Content>
         <Item.AvatarRow actor={actor} />
         {children}
@@ -427,6 +439,7 @@ export function MultiPostLikeViaRepostNotification({
       notification={notification}
       icon={HeartIcon}
       tone="like"
+      glyph="likeViaRepost"
       label={l`${name} liked ${count} of your ${plural(count, {
         one: 'repost',
         other: 'reposts',
@@ -460,6 +473,7 @@ export function MultiPostRepostViaRepostNotification({
       notification={notification}
       icon={RepostIcon}
       tone="repost"
+      glyph="repostViaRepost"
       label={l`${name} reposted ${count} of your ${plural(count, {
         one: 'repost',
         other: 'reposts',
