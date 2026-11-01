@@ -21,3 +21,18 @@ compiled ones it:
 
 The patch passes compiled objects straight to `localizeStyle`, the same path
 `StyleSheet.create` styles take.
+
+## Pressable: only keep interaction state that something can read
+
+Not reported upstream yet.
+
+RNW's `Pressable` stores `hovered`, `focused` and `pressed` in state and
+updates them on every hover, focus and press. Only a function `style` or
+`children` can read that state, though. Otherwise each change re-rendered the
+`Pressable` and its `View` for nothing. That covers every feed row (the legacy
+`Link` renders a `Pressable`) and every `Button` that gets its hover from CSS.
+
+The patch skips the state updates unless `style` or `children` is a function.
+The `onHoverIn`/`onHoverOut`/`onPressIn`/`onFocus`/… callbacks still fire as
+before. Measured with a React commit hook on a dev build, hovering a feed row
+or a CSS-hover `Button` went from a commit per enter/leave to no commits.
