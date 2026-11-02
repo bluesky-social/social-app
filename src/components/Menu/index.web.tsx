@@ -1,13 +1,22 @@
-import {forwardRef, useCallback, useId, useMemo, useState} from 'react'
+import {
+  forwardRef,
+  isValidElement,
+  useCallback,
+  useId,
+  useMemo,
+  useState,
+} from 'react'
 import {Pressable, type StyleProp, type TextStyle, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import flattenReactChildren from 'react-keyed-flatten-children'
 
 import {useA11y} from '#/state/a11y'
-import {atoms as a, flatten, flattenToCSS, useTheme, web} from '#/alf'
+import {atoms as a, flatten, flattenToCSS, useTheme, utils, web} from '#/alf'
 import type * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {Check_Stroke3_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {
   Context,
   ItemContext,
@@ -191,12 +200,22 @@ export function Outer({children, style, onCloseAutoFocus}: OuterProps) {
         className="dropdown-menu-transform-origin dropdown-menu-constrain-size">
         <View
           style={[
-            a.rounded_sm,
-            a.p_xs,
-            a.border,
+            /*
+             * The first and last items' outer corners are concentric with
+             * these: the radius minus the padding. See `[data-menu-item]` in
+             * `src/style.css`.
+             */
+            a.rounded_lg,
+            a.p_sm,
             t.name === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
-            t.atoms.shadow_md,
             t.atoms.border_contrast_low,
+            {borderWidth: 0.5, minWidth: 160},
+            web({
+              boxShadow: `0 16px 24px 0 ${utils.alpha(
+                t.palette.black,
+                t.scheme === 'light' ? 0.08 : 0.4,
+              )}`,
+            }),
             a.overflow_auto,
             !reduceMotionEnabled && a.zoom_fade_in,
             style,
@@ -234,9 +253,12 @@ export function Item({
     onOut: onMouseLeave,
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const disabled = Boolean(rest.disabled)
+  const {selected, content} = arrangeItemContent(children)
+  const highlighted = (hovered || focused) && !disabled
 
   return (
-    <DropdownMenu.Item asChild>
+    <DropdownMenu.Item asChild disabled={disabled}>
       <Pressable
         {...rest}
         className="radix-dropdown-item"
@@ -259,44 +281,75 @@ export function Item({
         style={flatten([
           a.flex_row,
           a.align_center,
-          a.gap_lg,
-          a.py_sm,
-          a.rounded_xs,
+          a.gap_sm,
+          a.px_md,
+          a.py_md,
           a.overflow_hidden,
-          {minHeight: 32, paddingHorizontal: 10},
+          {minHeight: 44},
           web({outline: 0}),
-          (hovered || focused) &&
-            !rest.disabled && [
-              web({outline: '0 !important'}),
-              t.name === 'light'
-                ? t.atoms.bg_contrast_25
-                : t.atoms.bg_contrast_50,
-            ],
+          selected && {backgroundColor: t.palette.primary_50},
+          highlighted && [
+            web({outline: '0 !important'}),
+            selected
+              ? {backgroundColor: t.palette.primary_100}
+              : t.name === 'light'
+                ? t.atoms.bg_contrast_50
+                : t.atoms.bg_contrast_100,
+          ],
           style,
         ])}
         {...web({
           onMouseEnter,
           onMouseLeave,
         })}>
-        <ItemContext.Provider
-          value={{disabled: Boolean(rest.disabled), destructive}}>
-          {children}
+        <ItemContext.Provider value={{disabled, destructive, selected}}>
+          {content}
         </ItemContext.Provider>
       </Pressable>
     </DropdownMenu.Item>
   )
 }
 
+/**
+ * Puts an item's icons on the leading side, whatever order they're written
+ * in, like Android's menus. A radio item leads with its check instead, and its
+ * icons trail.
+ */
+function arrangeItemContent(children: React.ReactNode) {
+  let radio: React.ReactElement<{selected: boolean}> | undefined
+  const icons: React.ReactNode[] = []
+  const rest: React.ReactNode[] = []
+  for (const child of flattenReactChildren(children)) {
+    if (isValidElement(child) && child.type === ItemIcon) {
+      icons.push(child)
+    } else if (
+      isValidElement<{selected: boolean}>(child) &&
+      child.type === ItemRadio
+    ) {
+      radio = child
+    } else {
+      rest.push(child)
+    }
+  }
+  return {
+    selected: radio?.props.selected,
+    content: radio ? [radio, ...rest, ...icons] : [...icons, ...rest],
+  }
+}
+
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
-  const {disabled, destructive} = useMenuItemContext()
+  const {disabled, destructive, selected} = useMenuItemContext()
   return (
     <Text
       style={[
         a.flex_1,
-        a.font_semi_bold,
-        t.atoms.text_contrast_high,
+        a.text_md,
+        a.font_medium,
+        a.leading_snug,
+        t.atoms.text,
         style,
+        selected && {color: t.palette.primary_500},
         destructive && {color: t.palette.negative_500},
         disabled && t.atoms.text_contrast_low,
       ]}>
@@ -305,65 +358,47 @@ export function ItemText({children, style}: ItemTextProps) {
   )
 }
 
-export function ItemIcon({icon: Comp, position = 'left', fill}: ItemIconProps) {
+/**
+ * `position` has no effect: icons always lead, or trail in radio items.
+ */
+export function ItemIcon({icon: Comp, fill}: ItemIconProps) {
   const t = useTheme()
-  const {disabled, destructive} = useMenuItemContext()
+  const {disabled, destructive, selected} = useMenuItemContext()
   return (
-    <View
-      style={[
-        position === 'left' && {
-          marginLeft: -2,
-        },
-        position === 'right' && {
-          marginRight: -2,
-          marginLeft: 12,
-        },
-      ]}>
-      <Comp
-        size="md"
-        fill={
-          fill
-            ? fill({disabled})
-            : disabled
-              ? t.atoms.text_contrast_low.color
-              : destructive
-                ? t.palette.negative_500
-                : t.atoms.text_contrast_medium.color
-        }
-      />
-    </View>
+    <Comp
+      size="md"
+      fill={
+        fill
+          ? fill({disabled})
+          : disabled
+            ? t.atoms.text_contrast_low.color
+            : destructive
+              ? t.palette.negative_500
+              : selected
+                ? t.palette.primary_500
+                : t.atoms.text.color
+      }
+    />
   )
 }
 
+/**
+ * The selected item's check. Every radio item keeps the space for it, so
+ * labels don't move when the selection changes. `Item` puts it first.
+ */
 export function ItemRadio({selected}: {selected: boolean}) {
   const t = useTheme()
+  const {disabled} = useMenuItemContext()
   return (
-    <View
-      style={[
-        a.justify_center,
-        a.align_center,
-        a.rounded_full,
-        t.atoms.border_contrast_high,
-        {
-          borderWidth: 1,
-          height: 20,
-          width: 20,
-        },
-      ]}>
-      {selected ? (
-        <View
-          style={[
-            a.absolute,
-            a.rounded_full,
-            {height: 14, width: 14},
-            selected
-              ? {
-                  backgroundColor: t.palette.primary_500,
-                }
-              : {},
-          ]}
+    <View style={{height: 16, width: 16}}>
+      {selected && (
+        <Check
+          size="sm"
+          fill={
+            disabled ? t.atoms.text_contrast_low.color : t.palette.primary_500
+          }
         />
-      ) : null}
+      )}
     </View>
   )
 }
@@ -379,11 +414,13 @@ export function LabelText({
   return (
     <Text
       style={[
+        a.px_sm,
+        // With the 17px line, a 32px row.
+        {paddingVertical: 7.5},
+        a.text_sm,
         a.font_semi_bold,
-        a.p_sm,
-        t.atoms.text_contrast_low,
         a.leading_snug,
-        {paddingHorizontal: 10},
+        t.atoms.text,
         style,
       ]}>
       {children}
@@ -400,7 +437,6 @@ export function Divider() {
   return (
     <DropdownMenu.Separator
       style={flattenToCSS([
-        a.my_xs,
         t.atoms.bg_contrast_100,
         a.flex_shrink_0,
         {height: 1},
