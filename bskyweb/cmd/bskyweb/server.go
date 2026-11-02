@@ -297,11 +297,7 @@ func serve(cctx *cli.Context) error {
 	}
 
 	// default to permissive, but Disallow all if flag set
-	if robotsDisallowAll {
-		e.GET("/robots.txt", robotsDisallowAllHandler(staticRoot))
-	} else {
-		e.GET("/robots.txt", echo.WrapHandler(staticHandler))
-	}
+	e.GET("/robots.txt", robotsHandler(staticRoot, robotsDisallowAll))
 
 	e.GET("/iframe/*", echo.WrapHandler(staticHandler))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)), func(next echo.HandlerFunc) echo.HandlerFunc {
@@ -1109,10 +1105,10 @@ func (srv *Server) serveSitemapRequest(c echo.Context, url, sitemapType string) 
 	return nil
 }
 
-// robotsDisallowAllHandler serves robots-disallow-all.txt from the same file
-// system as every other static file. A path on disk only exists in debug mode:
-// the image ships the binary alone, with static files embedded or fetched
-// remotely.
-func robotsDisallowAllHandler(staticRoot fs.FS) echo.HandlerFunc {
-	return echo.StaticFileHandler("robots-disallow-all.txt", staticRoot)
+func robotsHandler(staticRoot fs.FS, disallowAll bool) echo.HandlerFunc {
+	filename := "robots.txt"
+	if disallowAll {
+		filename = "robots-disallow-all.txt"
+	}
+	return echo.StaticFileHandler(filename, staticRoot)
 }
