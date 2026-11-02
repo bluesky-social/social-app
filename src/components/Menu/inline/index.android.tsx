@@ -146,7 +146,7 @@ export function InlineSection({title, divider, children}: InlineSectionProps) {
       {title && (
         <Text
           style={labelStyle}
-          color={t.atoms.text_contrast_medium.color}
+          color={t.atoms.text.color}
           modifiers={[padding(12, 8, 12, 4)]}>
           {title}
         </Text>
@@ -158,9 +158,9 @@ export function InlineSection({title, divider, children}: InlineSectionProps) {
 
 /**
  * A menu row, with its icon on the leading side. Radio items are selectable
- * items, which show a leading check and a highlight when selected. Their
- * leading slot is always there, so the text doesn't move when the check
- * appears, and a radio item's icon goes on the trailing side.
+ * items: when selected, they get a tinted pill, a primary-coloured label and a
+ * leading check. Their leading slot is always there, so the text doesn't move
+ * when the check appears, and a radio item's icon goes on the trailing side.
  */
 export function InlineItem({
   title,
@@ -199,8 +199,9 @@ export function InlineItem({
         colors={{
           textColor: destructiveColor,
           trailingContentColor: destructiveColor ?? t.atoms.text.color,
-          selectedTextColor: destructiveColor,
-          selectedTrailingContentColor: destructiveColor ?? t.atoms.text.color,
+          selectedTextColor: destructiveColor ?? t.palette.primary_500,
+          selectedTrailingContentColor:
+            destructiveColor ?? t.palette.primary_500,
         }}
         modifiers={modifiers}
         onClick={onClick}>
