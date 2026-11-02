@@ -1553,6 +1553,11 @@ export type Events = {
      * The profile the link is on, not the viewer.
      */
     profileDid: string
+    /**
+     * The link's `app.bsky.actor.link` record, which tells apart two links to
+     * the same site. Editing a link keeps its record.
+     */
+    linkUri: string | undefined
     domain: string
     /**
      * Name of the recognized support provider, if the link is a support link.
@@ -1583,10 +1588,12 @@ export type Events = {
    * Logged on save, one event per link actually added or removed.
    */
   'profile:links:add': {
+    linkUri: string | undefined
     domain: string
     supportProvider: string | undefined
   }
   'profile:links:remove': {
+    linkUri: string | undefined
     domain: string
     supportProvider: string | undefined
   }
@@ -1595,8 +1602,10 @@ export type Events = {
    */
   'profile:links:preview': {
     profileDid: string
+    linkUri: string | undefined
     domain: string
     supportProvider: string | undefined
+    isOwnProfile: boolean
   }
   /**
    * A link couldn't be added, e.g. because its site is blocked.
