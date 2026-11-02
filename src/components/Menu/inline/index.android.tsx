@@ -25,7 +25,7 @@ import {
 import {atoms as a, useAlf, useTheme} from '#/alf'
 import {useMaterialTheme} from '#/alf/material'
 import {normalizeTextStyles} from '#/alf/typography'
-import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {Check_Stroke3_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {type NanoGlyphName} from '#/components/icons/glyphMaps'
 import {
   InlineItemPositionContext,
