@@ -8,9 +8,8 @@ on:
     inputs:
       sourceRef:
         type: string
-        description: Commit SHA to build instead of the branch's latest commit (optional)
-        required: false
-        default: ''
+        description: Commit SHA, branch, or tag to build
+        required: true
 
 permissions:
   contents: read
@@ -35,7 +34,7 @@ jobs:
       - name: ⬇️ Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ inputs.sourceRef || github.sha }}
+          ref: ${{ inputs.sourceRef }}
           persist-credentials: false
 
       - name: Resolve build source
