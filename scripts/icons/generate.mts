@@ -3,7 +3,7 @@
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 
-import {applyIconSet, buildIconSet} from './lib.mts'
+import {applyIconSet, applyNanoFonts, buildIconSet} from './lib.mts'
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const check = process.argv.includes('--check')
@@ -13,7 +13,10 @@ const outputRoot = path.join(repoRoot, 'src/components/icons')
 
 try {
   const result = await buildIconSet({outputRoot, scanRoot: path.join(repoRoot, 'src'), sourceRoot})
-  const differences = await applyIconSet({check, outputRoot, result, sourceRoot})
+  const differences = [
+    ...(await applyIconSet({check, outputRoot, result, sourceRoot})),
+    ...(await applyNanoFonts({check, repoRoot})),
+  ]
   if (check && differences.length > 0) {
     console.error(`Icon codegen is stale. Run pnpm icons:generate:\n${differences.map(file => `- ${file}`).join('\n')}`)
     process.exitCode = 1
@@ -23,6 +26,11 @@ try {
     if (result.warnings.length > 0) {
       console.warn(
         `${result.warnings.length} icons use a non-standard viewBox:\n${result.warnings.map(warning => `- ${warning}`).join('\n')}`,
+      )
+    }
+    if (result.temporaryIcons.length > 0) {
+      console.log(
+        `${result.temporaryIcons.length} temporary SVG-only icons are excluded from the fonts; move each source from assets/icons/tmp/<lane>/ to assets/icons/<lane>/ and run pnpm icons:generate before a native release:\n${result.temporaryIcons.map(file => `- ${file}`).join('\n')}`,
       )
     }
     console.log(`${result.deprecatedImports.length} deprecated imports remain`)

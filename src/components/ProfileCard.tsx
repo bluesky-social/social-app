@@ -22,7 +22,6 @@ import {useSession} from '#/state/session'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {
   atoms as a,
-  platform,
   type TextStyleProp,
   useTheme,
   type ViewStyleProp,
@@ -266,11 +265,7 @@ function InlineNameAndHandle({
       <ProfileBadges
         profile={profile}
         size="md"
-        style={[
-          a.pl_2xs,
-          a.self_center,
-          {marginTop: platform({default: 0, android: -1})},
-        ]}
+        style={[a.pl_2xs, a.self_center]}
       />
       <Text
         emoji

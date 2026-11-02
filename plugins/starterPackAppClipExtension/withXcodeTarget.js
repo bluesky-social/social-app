@@ -1,4 +1,4 @@
-const {withXcodeProject} = require('expo/config-plugins')
+const {IOSConfig, withXcodeProject} = require('expo/config-plugins')
 
 const BUILD_PHASE_FILES = ['AppDelegate.swift', 'ViewController.swift']
 
@@ -25,13 +25,21 @@ const withXcodeTarget = (config, {targetName}) => {
       '"AppClips"',
     )
 
-    const pbxGroup = pbxProject.addPbxGroup([
-      'AppDelegate.swift',
-      'ViewController.swift',
-      'Images.xcassets',
-      `${targetName}.entitlements`,
-      'Info.plist',
-    ])
+    /*
+     * The group needs a name. Other plugins (e.g. expo-widgets) find the main
+     * group by looking for one with neither a name nor a path, and an unnamed
+     * group also leaves an undefined `_comment` entry that they trip over.
+     */
+    const pbxGroup = pbxProject.addPbxGroup(
+      [
+        'AppDelegate.swift',
+        'ViewController.swift',
+        'Images.xcassets',
+        `${targetName}.entitlements`,
+        'Info.plist',
+      ],
+      targetName,
+    )
 
     pbxProject.addFile(`${targetName}/Info.plist`, pbxGroup.uuid)
     const configurations = pbxProject.pbxXCBuildConfigurationSection()
@@ -54,7 +62,11 @@ const withXcodeTarget = (config, {targetName}) => {
           buildSettingsObj.PRODUCT_BUNDLE_IDENTIFIER = `"${config.ios?.bundleIdentifier}.AppClip"`
           buildSettingsObj.SWIFT_EMIT_LOC_STRINGS = 'YES'
           buildSettingsObj.SWIFT_VERSION = '5.0'
-          buildSettingsObj.TARGETED_DEVICE_FAMILY = `"1"`
+          // App Clips must support exactly the same device families as their parent.
+          buildSettingsObj.TARGETED_DEVICE_FAMILY =
+            IOSConfig.DeviceFamily.formatDeviceFamilies(
+              IOSConfig.DeviceFamily.getDeviceFamilies(config),
+            )
           buildSettingsObj.DEVELOPMENT_TEAM = 'B3LX46C5HS'
           buildSettingsObj.IPHONEOS_DEPLOYMENT_TARGET = '16.4'
           buildSettingsObj.ASSETCATALOG_COMPILER_APPICON_NAME = 'AppIcon'

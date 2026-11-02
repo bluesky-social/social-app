@@ -6,7 +6,7 @@ import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useAppState} from '#/lib/appState'
 import {
-  type AllNavigatorParams,
+  type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {
@@ -43,7 +43,10 @@ import {SettingPreview} from './components/SettingPreview'
 
 const RQKEY = ['notification-permissions']
 
-type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationSettings'>
+type Props = NativeStackScreenProps<
+  CommonNavigatorParams,
+  'NotificationSettings'
+>
 export function NotificationSettingsScreen({}: Props) {
   const {t: l} = useLingui()
   const queryClient = useQueryClient()

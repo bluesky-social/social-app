@@ -64,6 +64,9 @@ function Player({attempt = 0}: {attempt?: number}) {
         onScreen
         lastKnownTime={{current: undefined}}
         onPlaybackStart={() => {}}
+        onPlaybackProgress={() => {}}
+        onPlaybackStateChange={() => {}}
+        onPlaybackEnd={() => {}}
       />
     </Boundary>
   )

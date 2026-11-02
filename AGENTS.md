@@ -8,8 +8,8 @@ Bluesky Social is a cross-platform social media application built with React Nat
 
 **Tech Stack:**
 
-- React 19.2
-- React Native 0.86 with Expo 57
+- React 19.3
+- React Native 0.88 with Expo 58
 - TypeScript 7
 - React Navigation 7 for routing
 - TanStack Query (React Query) for data fetching
@@ -328,6 +328,11 @@ a physical device via the haptics section of the Storybook.
 
 All user-facing strings must be wrapped for translation using Lingui. Include `comment` and/or `context` props when necessary to avoid ambiguity, e.g., “Post” as a noun vs a verb.
 
+Do not mark debug-only strings as translatable. This includes anything only
+developers or internal testers see: debug menus, dev-only screens, logs, and all
+strings in Storybook (`src/view/screens/Storybook`). Use plain string literals
+there.
+
 Prefer using `t` via `import {useLingui} '@lingui/react/macro'` vs `_` via `import {useLingui} from '@lingui/react'`. Alias `t` to `l` to avoid collisions with `const t = useTheme()`. Refactor existing uses of ``_(msg`foo`)`` to use `` l`foo` ``.
 
 Prefer Unicode punctuation over keyboard punctuation, e.g., `“quote”` over `"quote"`. Prefer en dashes preceded by a non-breaking space over em dashes, e.g., `one – two` over `one—two`.
@@ -564,6 +569,14 @@ Only use `useMemo`/`useCallback` when you have a specific reason, such as:
 
 - The value is immediately used in an effect's dependency array
 - You're passing a callback to a non-React library that needs referential stability
+
+### Patching react-native
+
+`patches/react-native@<version>.patch` is generated - don't edit it or use
+`pnpm patch react-native` directly. Each change lives in `patches/react-native/`
+as its own patch against pristine react-native, with a `.patch.md` explaining
+it. After adding or changing one, run `pnpm patch:react-native` to rebuild the
+combined patch. See `patches/react-native/README.md`.
 
 ## Best Practices
 

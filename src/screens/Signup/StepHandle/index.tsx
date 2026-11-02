@@ -190,10 +190,18 @@ export function StepHandle() {
               </TextField.GhostText>
             )}
             {isHandleAvailable?.available && (
-              <CheckIcon
+              /*
+               * Nano glyph icons are hidden from the accessibility tree, so
+               * the testID has to live on a wrapper for e2e flows to find it.
+               */
+              <View
                 testID="handleAvailableCheck"
-                style={[{color: t.palette.positive_500}, a.z_20]}
-              />
+                accessible
+                accessibilityLabel={_(msg`Username is available`)}
+                accessibilityHint=""
+                style={a.z_20}>
+                <CheckIcon style={{color: t.palette.positive_500}} />
+              </View>
             )}
           </TextField.Root>
         </View>

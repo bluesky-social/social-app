@@ -64,8 +64,8 @@ pnpm intl:release
 ```
 
 ### 6. Run the GitHub actions
-You'll need to run two separate actions: one to deploy the iOS/Android OTA
-itself, and one to build the web Docker container.
+You'll need to run two separate workflows: one to deploy the iOS/Android OTA
+itself, and one to build and publish the web frontend.
 
 **For the iOS/Android OTA,** head to [Actions > Bundle and Deploy EAS
 Update](https://github.com/bluesky-social/social-app/actions/workflows/bundle-deploy-eas-update.yml)
@@ -88,19 +88,16 @@ and run the action.
 >   version and build numbers you entered will not match any clients in the
 >   wild, so none will be able to receive the update.
 
-**For web,** head to [Actions >
-build-and-push-bskyweb-aws](https://github.com/bluesky-social/social-app/actions/workflows/build-and-push-bskyweb-aws.yaml)
-and run the action.
-
-| Steps |     |
-| ----- | --- |
-| Select your OTA branch `1.x.0-ota-x` and click "Run workflow" | ![workflow](./img/web_action.png) |
+**For web,** in the **social-app repository**, run the
+[publish-web-statics GitHub Actions workflow](https://github.com/bluesky-social/social-app/actions/workflows/publish-web-statics.yml)
+with **"Use workflow from" set to `main`** and **`sha` set to the latest
+commit SHA on your OTA branch `1.x.0-ota-x`**.
 
 ### 7. Deploy web
 
-Once the web Docker container build finishes, go to your `1.x.0-ota-x` branch,
-copy the most recent commit hash. Post this hash in `#ops-deploys` and request
-someone with web deploy access deploy the built container.
+After the workflow succeeds, open a PR in the **deploy repository** updating
+**`BSKY_APP_VERSION` in `apps/bapp/values.yaml`** to the same commit SHA used in
+`sha`. Post this hash in `#ops-deploys`, and merge the PR to deploy the frontend.
 
 ### 8. Confirm successful deployment
 

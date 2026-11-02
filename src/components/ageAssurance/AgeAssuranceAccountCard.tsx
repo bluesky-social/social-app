@@ -254,7 +254,7 @@ function RegionNotice() {
                   {...createStaticClick(() => {
                     locationControl.open()
                   })}>
-                  Tap here to update your location with GPS.
+                  Tap here to update your approximate location via GPS.
                 </InlineLinkText>
               </Trans>
             </Text>

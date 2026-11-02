@@ -162,13 +162,7 @@ function AccountItem({
                   profile?.displayName || profile?.handle || account.handle,
                 )}
               </Text>
-              {profile && (
-                <ProfileBadges
-                  profile={profile}
-                  size="sm"
-                  style={[{marginTop: -2}]}
-                />
-              )}
+              {profile && <ProfileBadges profile={profile} size="sm" />}
             </View>
             <Text
               style={[

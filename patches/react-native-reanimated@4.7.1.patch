@@ -1,0 +1,107 @@
+diff --git a/android/src/main/cpp/reanimated/android/NativeProxy.cpp b/android/src/main/cpp/reanimated/android/NativeProxy.cpp
+index c9e9b874376b9ae85be98362cf18ddfa57cc4563..81dc2be5998c74df26152e0cc5bfd88ff079766a 100644
+--- a/android/src/main/cpp/reanimated/android/NativeProxy.cpp
++++ b/android/src/main/cpp/reanimated/android/NativeProxy.cpp
+@@ -30,6 +30,12 @@ NativeProxy::NativeProxy(
+     const std::shared_ptr<WorkletRuntime> &uiRuntime,
+     const std::shared_ptr<UIScheduler> &uiScheduler)
+     : javaPart_(jni::make_global(jThis)),
++      strongThis_(
++          this,
++          [](NativeProxy *self) {
++            // The Java part can destroy `self` as soon as it is released, so move it out first.
++            const auto javaPart = std::move(self->javaPart_);
++          }),
+       rnRuntime_(rnRuntime),
+       uiRuntime_(uiRuntime),
+       reanimatedModuleProxy_(std::make_shared<ReanimatedModuleProxy>(
+@@ -180,11 +186,6 @@ void NativeProxy::registerEventHandler() {
+ }
+ 
+ void NativeProxy::maybeFlushUIUpdatesQueue() {
+-  // Module might be already destroyed.
+-  if (!javaPart_) {
+-    return;
+-  }
+-
+   static const auto method = getJniMethod<void()>("maybeFlushUIUpdatesQueue");
+   method(javaPart_.get());
+ }
+@@ -426,7 +427,8 @@ void NativeProxy::invalidateCpp() {
+   // the pointer and it will be too late after it
+   reanimatedModuleProxy_->cleanupSensors();
+   reanimatedModuleProxy_.reset();
+-  javaPart_ = nullptr;
++  // Releases `javaPart_`, but only after the calls in flight on other threads return.
++  strongThis_.reset();
+ }
+ 
+ } // namespace reanimated
+diff --git a/android/src/main/cpp/reanimated/android/NativeProxy.h b/android/src/main/cpp/reanimated/android/NativeProxy.h
+index 8448ad3fa53872d81a765cb8f3428fbf25b2b1da..0382abbdd19fa72a80f28d95616c0476831869a3 100644
+--- a/android/src/main/cpp/reanimated/android/NativeProxy.h
++++ b/android/src/main/cpp/reanimated/android/NativeProxy.h
+@@ -3,6 +3,7 @@
+ #include <ReactCommon/CallInvokerHolder.h>
+ #include <fbjni/fbjni.h>
+ #include <jsi/jsi.h>
++#include <react/debug/react_native_assert.h>
+ #include <react/fabric/JFabricUIManager.h>
+ #include <react/jni/WritableNativeMap.h>
+ #include <react/renderer/scheduler/Scheduler.h>
+@@ -20,7 +21,7 @@ namespace reanimated {
+ using namespace facebook;
+ using namespace facebook::jni;
+ 
+-class NativeProxy : public jni::HybridClass<NativeProxy>, std::enable_shared_from_this<NativeProxy> {
++class NativeProxy : public jni::HybridClass<NativeProxy>, public std::enable_shared_from_this<NativeProxy> {
+  public:
+   static auto constexpr kJavaDescriptor = "Lcom/swmansion/reanimated/NativeProxy;";
+   static jni::local_ref<jhybriddata> initHybrid(
+@@ -36,6 +37,13 @@ class NativeProxy : public jni::HybridClass<NativeProxy>, std::enable_shared_fro
+  private:
+   friend HybridBase;
+   jni::global_ref<NativeProxy::javaobject> javaPart_;
++  /// The reference behind `weak_from_this()`. It does not own this object, the Java part does.
++  /// It guards `javaPart_` instead: `invalidateCpp()` drops it, and `javaPart_` is released once
++  /// the functions returned by `bindThis` that are running at that moment return. The UI runtime
++  /// keeps those functions, so they can be called during and after `invalidateCpp()`.
++  /// Declared after `javaPart_`, which its deleter releases, and before `reanimatedModuleProxy_`,
++  /// whose initializer calls `bindThis`.
++  std::shared_ptr<NativeProxy> strongThis_;
+   jsi::Runtime *rnRuntime_;
+   std::shared_ptr<worklets::WorkletRuntime> uiRuntime_;
+   std::shared_ptr<ReanimatedModuleProxy> reanimatedModuleProxy_;
+@@ -92,18 +100,26 @@ class NativeProxy : public jni::HybridClass<NativeProxy>, std::enable_shared_fro
+   std::shared_ptr<css::CSSPlatformTransitionBackend> makePlatformTransitionBackend();
+ 
+   /***
+-   * Wraps a method of `NativeProxy` in a function object capturing `this`
++   * Wraps a method of `NativeProxy` in a function object holding a weak
++   * reference to `this`
+    * @tparam TReturn return type of passed method
+    * @tparam TParams parameter types of passed method
+    * @param methodPtr pointer to method to be wrapped
+-   * @return a function object with the same signature as the method, calling
+-   * that method on `this`
++   * @return a function object with the same signature as the method. It calls
++   * that method on `this` while `javaPart_` is held, and returns a default
++   * value after `javaPart_` is released
+    */
+   template <class TReturn, class... TParams>
+   std::function<TReturn(TParams...)> bindThis(TReturn (NativeProxy::*methodPtr)(TParams...)) {
+-    // It's probably safe to pass `this` as reference here...
+-    return [this, methodPtr](TParams &&...args) {
+-      return (this->*methodPtr)(std::forward<TParams>(args)...);
++    auto weakThis = weak_from_this();
++    // Otherwise the function would never call the method.
++    react_native_assert(!weakThis.expired() && "`bindThis` called before `strongThis_` is initialized");
++    return [weakThis = std::move(weakThis), methodPtr](TParams &&...args) -> TReturn {
++      const auto strongThis = weakThis.lock();
++      if (!strongThis) {
++        return TReturn();
++      }
++      return (strongThis.get()->*methodPtr)(std::forward<TParams>(args)...);
+     };
+   }
+ 

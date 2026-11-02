@@ -16,7 +16,6 @@ export type CaptchaWebViewProps = {
   url: string
   stateParam: string
   state?: SignupState
-  onComplete: () => void
   onSuccess: (code: string) => void
   onError: (error: CaptchaError) => void
   /** The user is still working on the challenge after a grace period. */

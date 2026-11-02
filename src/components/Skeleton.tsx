@@ -28,7 +28,10 @@ export function Text({blend, style}: TextStyleProp & SkeletonProps) {
   )
   return (
     <View
-      style={[a.flex_1, {maxWidth: width, paddingVertical: lineHeight * 0.15}]}>
+      style={[
+        a.flex_grow,
+        {maxWidth: width, paddingVertical: lineHeight * 0.15},
+      ]}>
       <View
         style={[
           a.rounded_md,
@@ -92,11 +95,29 @@ export function Pill({
   )
 }
 
+/**
+ * A rounded rectangle, for images and square avatars. Give it a size, and a
+ * radius if the real thing isn't `a.rounded_md`.
+ */
+export function Block({blend, style}: ViewStyleProp & SkeletonProps) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.rounded_md,
+        t.atoms.bg_contrast_50,
+        {opacity: blend ? 0.6 : 1},
+        style,
+      ]}
+    />
+  )
+}
+
 export function Col({
   children,
   style,
 }: ViewStyleProp & {children?: React.ReactNode}) {
-  return <View style={[a.flex_1, style]}>{children}</View>
+  return <View style={[a.flex_grow, style]}>{children}</View>
 }
 
 export function Row({

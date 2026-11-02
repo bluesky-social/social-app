@@ -8,6 +8,7 @@ import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {GalleryStorybook} from '#/components/Gallery/Storybook'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {
   useDeviceGeolocationApi,
@@ -23,9 +24,12 @@ import {Icons} from './Icons'
 import {Links} from './Links'
 import {Menus} from './Menus'
 import {NewPostsPill} from './NewPostsPill'
+import {Notifications} from './Notifications'
+import {ProfileBadges} from './ProfileBadges'
 import {Settings} from './Settings'
 import {Shadows} from './Shadows'
 import {Spacing} from './Spacing'
+import {Splash} from './Splash'
 import {Theming} from './Theming'
 import {Toasts} from './Toasts'
 import {Tooltips} from './Tooltips'
@@ -122,12 +126,15 @@ export default function Storybook() {
               <Theming />
             </ThemeProvider>
 
+            <Splash />
             <Haptics />
             <Toasts />
             <Buttons />
             <NewPostsPill />
+            <Notifications />
             <Forms />
             <Typography />
+            <ProfileBadges />
             <Spacing />
             <Shadows />
             <Icons />
@@ -139,6 +146,7 @@ export default function Storybook() {
             <Dialogs />
             <Admonitions />
             <Settings />
+            <GalleryStorybook />
 
             <Button
               color="primary"

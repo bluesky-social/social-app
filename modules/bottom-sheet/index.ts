@@ -1,5 +1,7 @@
 import {BottomSheet} from './src/BottomSheet'
 import {
+  type BottomSheetPopoverMode,
+  type BottomSheetPresentationSizeChangeEvent,
   BottomSheetSnapPoint,
   type BottomSheetState,
   type BottomSheetViewProps,
@@ -15,7 +17,9 @@ export {
   BottomSheet,
   BottomSheetNativeComponent,
   BottomSheetOutlet,
+  type BottomSheetPopoverMode,
   BottomSheetPortalProvider,
+  type BottomSheetPresentationSizeChangeEvent,
   BottomSheetProvider,
   BottomSheetSnapPoint,
   type BottomSheetState,

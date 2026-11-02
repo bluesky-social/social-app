@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 
-import {DAY, SECOND} from '@atproto/common'
+import {HOUR, SECOND} from '@atproto/common'
 import {type Express} from 'express'
 
 import {type AppContext} from '../context.js'
@@ -14,6 +14,13 @@ const INTERNAL_IP_REGEX = new RegExp(
   '(^127.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$)|(^10.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$)|(^172.1[6-9]{1}[0-9]{0,1}.[0-9]{1,3}.[0-9]{1,3}$)|(^172.2[0-9]{1}[0-9]{0,1}.[0-9]{1,3}.[0-9]{1,3}$)|(^172.3[0-1]{1}[0-9]{0,1}.[0-9]{1,3}.[0-9]{1,3}$)|(^192.168.[0-9]{1,3}.[0-9]{1,3}$)|^localhost',
   'i',
 )
+
+/**
+ * Only plain string query params are tracked, since repeated or nested params
+ * parse to arrays or objects.
+ */
+const queryString = (value: unknown) =>
+  typeof value === 'string' ? value : undefined
 
 export default function (ctx: AppContext, app: Express) {
   return app.get(
@@ -43,8 +50,11 @@ export default function (ctx: AppContext, app: Express) {
         return res.status(302).end()
       }
 
-      // Default to a max age header
-      res.setHeader('Cache-Control', `max-age=${(7 * DAY) / SECOND}`)
+      /*
+       * A cached response bypasses rules added after it was cached, so only
+       * explicitly whitelisted links get a (short) max age.
+       */
+      res.setHeader('Cache-Control', 'no-store')
       res.status(200)
       res.type('html')
 
@@ -59,6 +69,7 @@ export default function (ctx: AppContext, app: Express) {
           switch (rule.action) {
             case 'whitelist':
               redirectLogger.info({rule}, 'Whitelist rule matched')
+              res.setHeader('Cache-Control', `max-age=${HOUR / SECOND}`)
               whitelisted = 'yes'
               break
             case 'block':
@@ -101,11 +112,11 @@ export default function (ctx: AppContext, app: Express) {
         whitelisted,
         blocked,
         warned,
-        utm_source: req.query.utm_source?.toString(),
-        utm_medium: req.query.utm_medium?.toString(),
-        utm_campaign: req.query.utm_campaign?.toString(),
-        utm_content: req.query.utm_content?.toString(),
-        utm_term: req.query.utm_term?.toString(),
+        utm_source: queryString(req.query.utm_source),
+        utm_medium: queryString(req.query.utm_medium),
+        utm_campaign: queryString(req.query.utm_campaign),
+        utm_content: queryString(req.query.utm_content),
+        utm_term: queryString(req.query.utm_term),
       })
 
       return res.end(html)

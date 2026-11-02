@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useRef} from 'react'
 import {type ScrollView, StyleSheet, View} from 'react-native'
 import {type SharedValue} from 'react-native-reanimated'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -11,6 +12,8 @@ export interface TabBarProps {
   testID?: string
   selectedPage: number
   items: string[]
+  /** Unread status by tab index. */
+  unread?: boolean[]
   align?: 'center' | 'left'
   indicatorColor?: string
   backgroundColor?: string
@@ -35,11 +38,13 @@ export function TabBar({
   testID,
   selectedPage,
   items,
+  unread,
   align = 'center',
   onSelect,
   onPressSelected,
 }: TabBarProps) {
   const t = useTheme()
+  const {t: l} = useLingui()
   const scrollElRef = useRef<React.ComponentRef<typeof ScrollView>>(null)
   const itemRefs = useRef<Array<Element>>([])
   const {gtMobile} = useBreakpoints()
@@ -124,28 +129,48 @@ export function TabBar({
               style={[styles.item, align === 'left' && leftAlignedStyles.item]}
               hoverStyle={t.atoms.bg_contrast_25}
               onPress={() => onPressItem(i)}
+              accessibilityLabel={unread?.[i] ? l`${item}, unread` : undefined}
+              accessibilityHint=""
               accessibilityRole="tab">
               <View style={styles.itemInner}>
-                <Text
-                  emoji
-                  testID={testID ? `${testID}-${item}` : undefined}
-                  style={[
-                    styles.itemText,
-                    selected ? t.atoms.text : t.atoms.text_contrast_medium,
-                    a.text_md,
-                    a.font_semi_bold,
-                    {lineHeight: 20},
-                  ]}>
-                  {item}
-                  <View
+                <View
+                  style={unread?.[i] !== undefined && {paddingHorizontal: 12}}>
+                  <Text
+                    emoji
+                    testID={testID ? `${testID}-${item}` : undefined}
                     style={[
-                      styles.itemIndicator,
-                      selected && {
+                      styles.itemText,
+                      selected ? t.atoms.text : t.atoms.text_contrast_medium,
+                      a.text_md,
+                      a.font_semi_bold,
+                      {lineHeight: 20},
+                    ]}>
+                    {item}
+                    <View
+                      style={[
+                        styles.itemIndicator,
+                        selected && {
+                          backgroundColor: t.palette.primary_500,
+                        },
+                      ]}
+                    />
+                  </Text>
+                  {unread?.[i] && (
+                    <View
+                      aria-hidden
+                      testID={testID ? `${testID}-unread-${i}` : undefined}
+                      style={{
+                        position: 'absolute',
+                        top: 2,
+                        right: 0,
+                        width: 8,
+                        height: 8,
+                        borderRadius: 4,
                         backgroundColor: t.palette.primary_500,
-                      },
-                    ]}
-                  />
-                </Text>
+                      }}
+                    />
+                  )}
+                </View>
               </View>
             </PressableWithHover>
           )

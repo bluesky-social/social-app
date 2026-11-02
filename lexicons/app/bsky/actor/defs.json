@@ -503,6 +503,47 @@
       ],
       "maxGraphemes": 64
     },
+    "profileLinkView": {
+      "type": "object",
+      "required": [
+        "uri",
+        "cid",
+        "url"
+      ],
+      "properties": {
+        "cid": {
+          "type": "string",
+          "format": "cid"
+        },
+        "uri": {
+          "type": "string",
+          "format": "at-uri",
+          "description": "The app.bsky.actor.link record, e.g. for reporting the link."
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "The link destination."
+        },
+        "icon": {
+          "type": "string",
+          "format": "uri",
+          "description": "Image URL for the destination site's icon."
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 320,
+          "maxGraphemes": 40
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "ref": "com.atproto.label.defs#label",
+            "type": "ref"
+          }
+        }
+      }
+    },
     "adultContentPref": {
       "type": "object",
       "required": [
@@ -790,6 +831,14 @@
         "debug": {
           "type": "unknown",
           "description": "Debug information for internal development"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "ref": "#profileLinkView",
+            "type": "ref"
+          },
+          "description": "The profile's links, in display order. Links that were taken down or don't resolve are left out."
         },
         "avatar": {
           "type": "string",

@@ -6,6 +6,7 @@ import {type ThemeName} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {getMessagesNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {
   atoms as a,
@@ -75,16 +76,9 @@ export function GroupChatsAnnouncement() {
 
   const onPressStartGroupChat = useCallback(() => {
     control.close(() => {
-      if (IS_WEB) {
-        navigation.navigate('Messages', {pushToNewGroupChat: true})
-      } else {
-        // On native, Messages is nested inside MessagesTab.
-        // @ts-expect-error nested navigators aren't typed -sfn
-        navigation.navigate('MessagesTab', {
-          screen: 'Messages',
-          params: {pushToNewGroupChat: true},
-        })
-      }
+      navigation.dispatch(
+        getMessagesNavigationAction({pushToNewGroupChat: true}),
+      )
     })
   }, [control, navigation])
 

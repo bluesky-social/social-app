@@ -37,7 +37,9 @@ export class AppContext {
     const appviewAgent = new AtpAgent({service: cfg.service.appviewUrl})
     const chatAgent = new AtpAgent({service: cfg.service.chatUrl})
     const fontDirectory = path.join(__DIRNAME, 'assets', 'fonts')
-    const fontFiles = readdirSync(fontDirectory)
+    const fontFiles = readdirSync(fontDirectory).filter(file =>
+      file.endsWith('.ttf'),
+    )
     const fonts = fontFiles.map(file => {
       return {
         name: getName(file),

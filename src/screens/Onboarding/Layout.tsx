@@ -78,7 +78,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
   const {t: l} = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
-  const {gtMobile} = useBreakpoints()
+  const {gtPhone, gtMobile} = useBreakpoints()
   const {height: windowHeight} = useWindowDimensions()
   const onboardDispatch = useOnboardingDispatch()
   const {state, dispatch} = useOnboardingInternalState()
@@ -149,7 +149,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               a.align_center,
               a.flex_row,
               a.justify_between,
-              web({maxWidth: ONBOARDING_COL_WIDTH}),
+              (IS_WEB || gtPhone) && {maxWidth: ONBOARDING_COL_WIDTH},
               web(a.pointer_events_box_none),
             ]}>
             <HeaderSlot>
@@ -225,7 +225,11 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         centerContent={gtMobile}>
         <View
           style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
-          <View style={[a.flex_1, web({maxWidth: ONBOARDING_COL_WIDTH})]}>
+          <View
+            style={[
+              a.flex_1,
+              (IS_WEB || gtPhone) && {maxWidth: ONBOARDING_COL_WIDTH},
+            ]}>
             <View style={[a.w_full, a.py_md]}>
               <ScrollVisibilityContext.Provider value={scrollVisibilityContext}>
                 {children}

@@ -1,5 +1,6 @@
 import {useState} from 'react'
-import {Image as RNImage, ScrollView, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
+import {Asset} from 'expo-asset'
 import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, ThemeProvider, useAlf, useTheme} from '#/alf'
@@ -11,23 +12,21 @@ import {
 } from '#/components/NewPostsPill'
 import {Text} from '#/components/Typography'
 
+// `Image.resolveAssetSource` doesn't exist on web, so resolve through expo-asset.
 const avatars: NewPostsPillAuthor[] = [
   {
     did: 'storybook:one',
-    avatar: RNImage.resolveAssetSource(require('../../../../assets/kawaii.png'))
-      ?.uri,
+    avatar: Asset.fromModule(require('../../../../assets/kawaii.png')).uri,
   },
   {
     did: 'storybook:two',
-    avatar: RNImage.resolveAssetSource(
+    avatar: Asset.fromModule(
       require('../../../../assets/icons/community/germ_logo.webp'),
-    )?.uri,
+    ).uri,
   },
   {
     did: 'storybook:three',
-    avatar: RNImage.resolveAssetSource(
-      require('../../../../assets/kawaii_smol.png'),
-    )?.uri,
+    avatar: Asset.fromModule(require('../../../../assets/kawaii_smol.png')).uri,
   },
 ]
 
