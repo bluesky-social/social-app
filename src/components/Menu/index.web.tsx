@@ -261,7 +261,8 @@ export function Item({
     <DropdownMenu.Item asChild disabled={disabled}>
       <Pressable
         {...rest}
-        className="radix-dropdown-item"
+        // For the item shapes in style.css
+        dataSet={{menuItem: ''}}
         accessibilityHint=""
         accessibilityLabel={label}
         onPress={e => {

@@ -148,6 +148,23 @@ input:focus {
   outline: none;
 }
 
+/* Menu component (web). Items have small corners, except the outer corners
+   of the menu's first and last items, which are concentric with the menu's:
+   its 16px radius minus its 8px padding. Groups don't wrap their items on
+   web, so the items are siblings, and this counts them across the whole menu,
+   including items rendered by custom components and not hidden ones. */
+[data-menu-item] {
+  border-radius: 4px;
+}
+[data-menu-item]:nth-child(1 of [data-menu-item]) {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+[data-menu-item]:nth-last-child(1 of [data-menu-item]) {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
 /* Spinner component */
 @keyframes rotate {
   0% {
