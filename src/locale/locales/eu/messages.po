@@ -8,7 +8,7 @@ msgstr ""
 "Language: eu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-30 14:58\n"
+"PO-Revision-Date: 2026-11-02 19:30\n"
 "Last-Translator: \n"
 "Language-Team: Basque\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -265,13 +265,13 @@ msgid "{0} <0>in <1>text & tags</1></0>"
 msgstr "{0} <0> <1>testu eta etiketetan</1></0>"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:44
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:45
 msgid "{0} added to chat"
 msgstr "{0} txatera gehitu da"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:46
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:47
 msgid "{0} and {1} added to chat"
 msgstr "{0} eta {1} txatera gehitu dira"
 
@@ -392,7 +392,7 @@ msgstr "{0}, "
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:49
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:50
 msgid "{0}, {1} and {memberCount, plural, one {# other} other {# others}} added to chat"
 msgstr "{0}, {1} eta {memberCount, plural, one {beste #} other {beste #}} txatera gehitu dira"
 
@@ -539,7 +539,7 @@ msgstr "{count, plural, one {eskaera #} other {# eskaera}}"
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {Elementu bat} other {# elementu}} irakurri gabe"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:333
+#: src/features/profileLinks/components/ProfileLinks.tsx:339
 msgid "{count, plural, one {Show # more link} other {Show # more links}}"
 msgstr "{count, plural, one {Erakutsi esteka # gehiago} other {Erakutsi # esteka gehiago}}"
 
@@ -764,8 +764,8 @@ msgstr "Duela {formatted}"
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr "{formattedPostCount} {postCount, plural, one {post} other {post}}"
 
-#: src/components/dms/components/GroupChatProfileCard.tsx:62
-#: src/components/dms/InitiateChatFlow.tsx:1158
+#: src/components/dms/components/GroupChatProfileCard.tsx:35
+#: src/components/dms/InitiateChatFlow.tsx:1146
 msgid "{handle} can’t be added"
 msgstr "{handle} ezin da gehitu"
 
@@ -786,7 +786,7 @@ msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesStrin
 msgstr "{hours, plural, one {ordu {minutesString} #} other {# ordu {minutesString}}}"
 
 #: src/features/liveNow/utils.ts:44
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:69
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
 msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {ordu #} other {# ordu}}"
 
@@ -799,7 +799,7 @@ msgstr "{count}-tik {index}"
 #: src/view/com/pager/TabBar.tsx:452
 #: src/view/com/pager/TabBar.web.tsx:132
 msgid "{item}, unread"
-msgstr ""
+msgstr "{item}, irakurri gabe"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/RequestStatus.tsx:69
@@ -829,11 +829,11 @@ msgstr "{label}. {description}"
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
 msgstr "{MAX_ALT_TEXT, plural, other {Aukerazko testuak # karaktere baino gutxiago izan behar ditu.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:448
+#: src/screens/Profile/Header/EditProfileDialog.tsx:452
 msgid "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DESCRIPTION, plural, other {Azalpena luzeegia da. Gehienezko karaktere kopurua # da.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:397
+#: src/screens/Profile/Header/EditProfileDialog.tsx:401
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DISPLAY_NAME, plural, other {Bistaratzeko izena luzeegia da. Gehienezko karaktere kopurua # da.}}"
 
@@ -976,11 +976,11 @@ msgstr "{notificationCount, plural, one {Elementu bat} other {# elementu}} iraku
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
 msgstr "{numMatches, plural, one {Kontaktu # aurkitua} other {# kontaktu aurkituta}}"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:77
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
 msgid "{policyLabel} – {duration}"
 msgstr "{policyLabel}  – {duration}"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:83
 msgid "{policyLabel} – {duration}, now expired"
 msgstr "{policyLabel}  – {duration}, orain iraungita"
 
@@ -1261,7 +1261,7 @@ msgstr "<0>Hasi saioa</0><1> edo </1><2>sortu kontu bat</2><3> </3><4>Bluesky-n 
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:251
 msgid "<0>Tap here to update your approximate location via GPS.</0>"
-msgstr ""
+msgstr "<0>Sakatu hemen zure gutxi gorabeherako kokapena GPS bidez eguneratzeko.</0>"
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #: src/screens/StarterPack/Wizard/index.tsx:500
@@ -1307,25 +1307,30 @@ msgstr "Edozein edukiren zerrenda horizontala. Elementu bakoitzak bere zabalera 
 msgid "A kawaii scene"
 msgstr "Kawaii eszena bat"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:78
 msgid "A label was added to your account"
 msgstr "Etiketa bat gehitu zaio zure kontuari"
 
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:63
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:81
 msgid "A label was added to your content"
 msgstr "Etiketa bat gehitu zaio zure edukiari"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:56
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:62
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:80
 msgid "A label was added to your post"
 msgstr "Etiketa bat gehitu zaio zure postari"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:97
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:104
 msgid "A label was removed from your account"
 msgstr "Etiketa bat kendu zaio zure kontuari"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:98
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
+msgid "A label was removed from your content"
+msgstr ""
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:106
 msgid "A label was removed from your post"
 msgstr "Etiketa bat kendu zaio zure postari"
 
@@ -1715,9 +1720,9 @@ msgstr "Gehitu esteka"
 msgid "Add media to post"
 msgstr "Gehitu multimedia postari"
 
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:72
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:106
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:125
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:73
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:107
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:126
 msgid "Add members"
 msgstr "Gehitu kideak"
 
@@ -1739,8 +1744,8 @@ msgstr "Gehitu mutututako hitza aukeratutako ezarpenekin"
 msgid "Add muted words and tags"
 msgstr "Gehitu hitz mutuak eta etiketak"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:133
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:172
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:134
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:173
 #: src/screens/ProfileList/AboutSection.tsx:72
 #: src/screens/ProfileList/AboutSection.tsx:90
 msgid "Add people"
@@ -3131,8 +3136,8 @@ msgstr "Kamerarako sarbidea behar da"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
 #: src/screens/ModerationInbox/Notice.tsx:437
-#: src/screens/Profile/Header/EditProfileDialog.tsx:282
-#: src/screens/Profile/Header/EditProfileDialog.tsx:290
+#: src/screens/Profile/Header/EditProfileDialog.tsx:286
+#: src/screens/Profile/Header/EditProfileDialog.tsx:294
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
 #: src/screens/Search/components/SearchHistory.tsx:151
@@ -3603,11 +3608,11 @@ msgstr "Egin klik informazioa lortzeko"
 msgid "click here"
 msgstr "klik hemen"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:129
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:130
 msgid "Click here to add people to this group chat"
 msgstr "Egin klik hemen txat talde honetara jendea gehitzeko"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:143
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:144
 msgid "Click here to create or manage an invite link for this group chat"
 msgstr "Egin klik hemen txat talde honetarako gonbidapen-esteka sortzeko edo kudeatzeko"
 
@@ -3637,7 +3642,7 @@ msgstr "Egin klik hemen zure jaiotze data eguneratzeko"
 msgid "Click here to update your email"
 msgstr "Egin klik hemen zure posta elektronikoa eguneratzeko"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:144
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:145
 msgid "Click here to view the invite link for this group chat"
 msgstr "Egin klik hemen txat talde honetarako gonbidapen-esteka ikusteko"
 
@@ -4691,8 +4696,8 @@ msgstr "Ezabatutako posta"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:463
 #: src/components/SendErrorReportDialog.tsx:78
-#: src/screens/Profile/Header/EditProfileDialog.tsx:428
-#: src/screens/Profile/Header/EditProfileDialog.tsx:435
+#: src/screens/Profile/Header/EditProfileDialog.tsx:432
+#: src/screens/Profile/Header/EditProfileDialog.tsx:439
 msgid "Description"
 msgstr "Deskribapena"
 
@@ -4916,8 +4921,8 @@ msgstr "QR eskanerra baztertzen du"
 msgid "Display larger alt text badges"
 msgstr "Erakutsi aukerazko testu bereizgarri handiagoak"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:378
-#: src/screens/Profile/Header/EditProfileDialog.tsx:384
+#: src/screens/Profile/Header/EditProfileDialog.tsx:382
+#: src/screens/Profile/Header/EditProfileDialog.tsx:388
 msgid "Display name"
 msgstr "Bistaratzeko izena"
 
@@ -5074,7 +5079,7 @@ msgstr "Ilunabarra"
 msgid "e.g. alice"
 msgstr "adib. alice"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:385
+#: src/screens/Profile/Header/EditProfileDialog.tsx:389
 msgid "e.g. Alice Lastname"
 msgstr "adib. Alice Abizena"
 
@@ -5220,8 +5225,8 @@ msgstr "Editatu Jendea"
 msgid "Edit post interaction settings"
 msgstr "Editatu posten interakzio-ezarpenak"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:332
-#: src/screens/Profile/Header/EditProfileDialog.tsx:339
+#: src/screens/Profile/Header/EditProfileDialog.tsx:336
+#: src/screens/Profile/Header/EditProfileDialog.tsx:343
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:300
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:351
 msgid "Edit profile"
@@ -5440,7 +5445,7 @@ msgstr "Sartu {prettyNumber}-ra bidalitako 6 digituko kodea"
 
 #: src/screens/Login/LoginForm.tsx:437
 msgid "Enter the code from your email or authenticator app"
-msgstr ""
+msgstr "Sartu zure posta elektronikotik edo autentifikatzaile aplikaziotik jasotako kodea"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:382
 msgid "Enter the domain you want to use"
@@ -5452,7 +5457,7 @@ msgstr "Sartu zure kontua sortzeko erabili duzun posta elektronikoa. \"Berrezarr
 
 #: src/screens/Login/LoginForm.tsx:440
 msgid "Enter the sign in code from your email or authenticator app."
-msgstr ""
+msgstr "Sartu zure posta elektronikotik edo autentifikatzaile aplikaziotik jasotako saioa hasteko kodea."
 
 #: src/screens/Login/LoginForm.tsx:333
 msgid "Enter the username or email address you used when you created your account"
@@ -5708,8 +5713,7 @@ msgstr "Ezin izan da onartu sartzeko eskaera"
 msgid "Failed to add emoji reaction"
 msgstr "Errorea emoji erreakzioa gehitzean"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:45
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:63
+#: src/components/dms/getAddGroupMembersErrorMessage.ts:14
 msgid "Failed to add members"
 msgstr "Ezin izan dira kideak gehitu"
 
@@ -7713,7 +7717,7 @@ msgstr "Gonbidatu lagunak <0/>"
 #: src/screens/Messages/components/InviteLinkDialog.tsx:327
 #: src/screens/Messages/components/InviteLinkDialog.tsx:333
 #: src/screens/Messages/components/InviteLinkDialog.tsx:512
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:149
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:150
 #: src/screens/Messages/ConversationSettings/index.tsx:561
 msgid "Invite link"
 msgstr "Gonbidapen-esteka"
@@ -7866,8 +7870,8 @@ msgstr "Etiketa kenduta"
 msgid "Label reply for algo"
 msgstr "Etiketatu erantzuna algoritmoarentzat"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:57
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:64
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:108
 msgid "Label: {labelName}"
 msgstr "Etiketa: {labelName}"
 
@@ -7943,7 +7947,7 @@ msgstr "Azkena"
 #: src/components/verification/VerificationsDialog.tsx:169
 #: src/components/verification/VerifierDialog.tsx:137
 #: src/screens/Moderation/VerificationSettings.tsx:50
-#: src/screens/Profile/Header/EditProfileDialog.tsx:414
+#: src/screens/Profile/Header/EditProfileDialog.tsx:418
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:215
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:279
 msgctxt "english-only-resource"
@@ -8693,6 +8697,14 @@ msgstr "Kideak"
 msgid "Members can still read chat history but can’t send new messages."
 msgstr "Kideek txat-historia irakur dezakete oraindik, baina ezin dute mezu berririk bidali."
 
+#: src/components/dms/getAddGroupMembersErrorMessage.ts:12
+msgid "Members could not be added because one of the selected accounts has blocked you."
+msgstr ""
+
+#: src/components/dms/getAddGroupMembersErrorMessage.ts:10
+msgid "Members could not be added because you have blocked one of the selected accounts."
+msgstr ""
+
 #: src/components/WhoCanReply.tsx:302
 msgid "mentioned users"
 msgstr "aipatutako erabiltzaileak"
@@ -9151,19 +9163,19 @@ msgid "New chat"
 msgstr "Txat berria"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:61
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:62
 msgid "New chat with {0}"
 msgstr "Txat berria {0}-rekin"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:65
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:66
 msgid "New chat with {0} and {1}"
 msgstr "Txat berria {0} eta {1}-rekin"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:73
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:74
 msgid "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
 msgstr "Txat berria {0}, {1}, eta {memberCount, plural, one {{memberCount} gehiagorekin} other {{memberCount} gehiagorekin}}."
 
@@ -10135,7 +10147,7 @@ msgstr "Ireki txat talde hau"
 #. placeholder {0}: getLinkHost(link.url)
 #. placeholder {0}: link.url
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:85
-#: src/features/profileLinks/components/ProfileLinks.tsx:155
+#: src/features/profileLinks/components/ProfileLinks.tsx:161
 msgid "Opens {0} outside Bluesky"
 msgstr "{0} Blueskytik kanpo irekitzen du"
 
@@ -10847,7 +10859,7 @@ msgstr "Bideo bat posteatu"
 #: src/screens/Notifications/index.tsx:159
 msgctxt "notifications tab"
 msgid "Post alerts"
-msgstr ""
+msgstr "Post alertak"
 
 #: src/view/com/composer/Composer.tsx:1909
 msgctxt "action"
@@ -11107,7 +11119,7 @@ msgstr "Profil-esteka kopiatuta"
 msgid "Profile not found"
 msgstr "Profila ez da aurkitu"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:247
+#: src/screens/Profile/Header/EditProfileDialog.tsx:251
 msgctxt "toast"
 msgid "Profile updated"
 msgstr "Profila eguneratu da"
@@ -12220,8 +12232,8 @@ msgstr "GIF tristeak"
 #: src/features/liveNow/components/EditLiveDialog.tsx:199
 #: src/features/liveNow/components/EditLiveDialog.tsx:206
 #: src/screens/Messages/ConversationSettings/prompts.tsx:74
-#: src/screens/Profile/Header/EditProfileDialog.tsx:300
-#: src/screens/Profile/Header/EditProfileDialog.tsx:314
+#: src/screens/Profile/Header/EditProfileDialog.tsx:304
+#: src/screens/Profile/Header/EditProfileDialog.tsx:318
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:315
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:269
@@ -12579,7 +12591,7 @@ msgstr "Aukeratu {langName}"
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:117
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:121
 msgid "Select a beta feature"
-msgstr ""
+msgstr "Hautatu beta ezaugarri bat"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -13115,7 +13127,7 @@ msgstr "Erakutsi txat taldearen eguneraketak"
 msgid "Show less like this"
 msgstr "Erakutsi honelako gutxiago"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:170
+#: src/features/profileLinks/components/ProfileLinks.tsx:176
 msgid "Show link details"
 msgstr "Erakutsi estekaren xehetasunak"
 
@@ -13914,7 +13926,7 @@ msgstr "Txartel luzea"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:110
 msgid "Tap below to allow Bluesky to access your approximate location via GPS. We will then use that data to more accurately determine the content and features available in your region."
-msgstr ""
+msgstr "Sakatu behean Bluesky-ri zure gutxi gorabeherako kokapena GPS bidez atzitzeko aukera emateko. Ondoren, datu horiek erabiliko ditugu zure eskualdean eskuragarri dauden edukia eta funtzioak zehatzago zehazteko."
 
 #: src/components/dms/MessageItem.tsx:697
 msgid "Tap for details"
@@ -13930,7 +13942,7 @@ msgstr "Ukitu informazio gehiago lortzeko"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:216
 msgid "Tap here to update your approximate location via GPS."
-msgstr ""
+msgstr "Sakatu hemen zure gutxi gorabeherako kokapena GPS bidez eguneratzeko."
 
 #: src/screens/Signup/StepInfo/index.tsx:341
 msgid "Tap here to update your location with GPS."
@@ -14018,7 +14030,7 @@ msgstr "Irakatsi gure algoritmoari gustatzen zaizuna"
 msgid "Tech"
 msgstr "Teknologia"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:436
+#: src/screens/Profile/Header/EditProfileDialog.tsx:440
 msgid "Tell us a bit about yourself"
 msgstr "Kontaiguzu zure buruari buruz pixka bat"
 
@@ -14482,6 +14494,11 @@ msgstr "Kontu honek egiaztapen-marka bat du, iturri fidagarriek egiaztatu dutela
 #: src/components/BotAccountAlert.tsx:27
 msgid "This account has been marked as automated by its owner."
 msgstr "Kontu hau jabeak automatizatu gisa markatu du."
+
+#: src/components/dms/components/GroupChatProfileCard.tsx:34
+#: src/components/dms/InitiateChatFlow.tsx:1145
+msgid "This account has blocked you and can’t be added."
+msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:95
 msgid "This account has one or more attempted verifications, but it is not currently verified."
@@ -16111,7 +16128,7 @@ msgstr "Irudi osoa ikusten du"
 msgid "Views video in immersive mode"
 msgstr "Bideoa murgiltze moduan ikusten du"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:46
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:51
 msgid "Violates Community Guideline: {policyLabel}"
 msgstr "Komunitatearen Gidalerroak urratzen ditu: {policyLabel}"
 
@@ -16277,7 +16294,7 @@ msgstr "Zure salaketa aztertu dugu eta ikusi dugu honek ez dituela gure arauak h
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Esteka bat duen mezu elektroniko bat bidali dugu <0>{0}</0> helbidera. Egin klik gainean helbide elektronikoaren egiaztapen prozesua osatzeko."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:50
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
 msgid "We sent you an email about your account"
 msgstr "Zure kontuari buruzko email bat bidali dizugu"
 
@@ -16705,7 +16722,7 @@ msgstr "Orain zuzenean zaude!"
 msgid "You are verified"
 msgstr "Egiaztatuta zaude"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:409
+#: src/screens/Profile/Header/EditProfileDialog.tsx:413
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
 msgstr "Egiaztatuta zaude. Zure egiaztapen-egoera galduko duzu bistaratzeko izena aldatzen baduzu. <0>Ikasi gehiago.</0>"
 
@@ -16843,6 +16860,11 @@ msgstr "Zu lehenengo iritsi zinen hona"
 #: src/components/intents/GroupChatJoinDialog.tsx:179
 msgid "You have been previously removed from this group and can’t join it using this link."
 msgstr "Aurretik kendu zaituzte talde honetatik eta ezin zara sartu esteka hau erabiliz."
+
+#: src/components/dms/components/GroupChatProfileCard.tsx:32
+#: src/components/dms/InitiateChatFlow.tsx:1143
+msgid "You have blocked this account and can’t add them."
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:93
 #: src/lib/moderation/useModerationCauseDescription.ts:55
@@ -17205,7 +17227,7 @@ msgstr "Bideoak kargatzeko eguneko mugara iritsi zara (bideo gehiegi)"
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "Ikusteko bideorik gabe geratu zara. Agian momentu ona da atsedena hartzeko?"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:88
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:95
 msgid "Your ability to submit reports was restricted"
 msgstr "Salaketak bidaltzeko zure gaitasuna murriztu da"
 
@@ -17219,7 +17241,7 @@ msgstr "Zure kontua"
 msgid "Your account cannot submit reports while it is suspended."
 msgstr "Zure kontuak ezin ditu salaketak bidali esekita dagoen bitartean."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:92
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
 msgid "Your account credentials were revoked"
 msgstr "Zure kontuaren kredentzialak baliogabetu dira"
 
@@ -17264,8 +17286,8 @@ msgstr "Zure kontuaren biltegia, datu publikoen erregistro guztiak dituena, \"CA
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
 msgstr "Zure kontua <0>Bluesky Sozial Zerbitzu-Baldintzak</0> urratzen dituela ikusi da. Mezu elektroniko bat bidali dizugu, hala badagokio, arau-hauste zehatza eta eteteko epea azaltzen duena. Erabaki hau apelatu dezakezu akats bat izan dela uste baduzu."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:67
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:91
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:73
 msgid "Your account was suspended"
 msgstr "Zure kontua eten da"
@@ -17318,6 +17340,7 @@ msgstr "Zure <0/> kontaktua Bluesky-n dago"
 msgid "Your content"
 msgstr "Zure edukia"
 
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
 msgid "Your content was removed"
 msgstr "Zure edukia kendu da"
@@ -17418,7 +17441,7 @@ msgstr "Pasahitzak 8 karaktereko luzera izan behar du gutxienez."
 msgid "Your post"
 msgstr "Zure posta"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:44
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
 msgid "Your post was removed"
 msgstr "Zure posta kendu da"

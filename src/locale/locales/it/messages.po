@@ -8,7 +8,7 @@ msgstr ""
 "Language: it\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-30 14:58\n"
+"PO-Revision-Date: 2026-11-02 19:30\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -265,13 +265,13 @@ msgid "{0} <0>in <1>text & tags</1></0>"
 msgstr "{0} <0>in <1>testo e tag</1></0>"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:44
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:45
 msgid "{0} added to chat"
 msgstr "{0} aggiunto alla chat"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:46
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:47
 msgid "{0} and {1} added to chat"
 msgstr "{0} e {1} aggiunti alla chat"
 
@@ -392,7 +392,7 @@ msgstr "{0}, "
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:49
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:50
 msgid "{0}, {1} and {memberCount, plural, one {# other} other {# others}} added to chat"
 msgstr "{0}, {1} e {memberCount, plural, one {# altro} other {# altri}} aggiunti alla chat"
 
@@ -539,7 +539,7 @@ msgstr "{count, plural, one {# richiesta} other {# richieste}}"
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# elemento non letto} other {# elementi non letti}}"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:333
+#: src/features/profileLinks/components/ProfileLinks.tsx:339
 msgid "{count, plural, one {Show # more link} other {Show # more links}}"
 msgstr "{count, plural, one {Mostra # altro link} other {Mostra # altri link}}"
 
@@ -764,8 +764,8 @@ msgstr "{formatted} fa"
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr "{formattedPostCount} {postCount, plural, one {post} other {post}}"
 
-#: src/components/dms/components/GroupChatProfileCard.tsx:62
-#: src/components/dms/InitiateChatFlow.tsx:1158
+#: src/components/dms/components/GroupChatProfileCard.tsx:35
+#: src/components/dms/InitiateChatFlow.tsx:1146
 msgid "{handle} can’t be added"
 msgstr "Non è possibile aggiungere {handle}"
 
@@ -786,7 +786,7 @@ msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesStrin
 msgstr "{hours, plural, one {# ora {minutesString}} other {# ore {minutesString}}}"
 
 #: src/features/liveNow/utils.ts:44
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:69
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
 msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# ora} other {# ore}}"
 
@@ -829,11 +829,11 @@ msgstr "{label}. {description}"
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
 msgstr "{MAX_ALT_TEXT, plural, other {Il testo alternativo deve essere lungo meno di # caratteri.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:448
+#: src/screens/Profile/Header/EditProfileDialog.tsx:452
 msgid "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DESCRIPTION, plural, other {La descrizione è troppo lunga. Il numero massimo di caratteri è #.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:397
+#: src/screens/Profile/Header/EditProfileDialog.tsx:401
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DISPLAY_NAME, plural, other {Il nome visualizzato è troppo lungo. Il numero massimo di caratteri è #.}}"
 
@@ -976,11 +976,11 @@ msgstr "{notificationCount, plural, one {# elemento non letto} other {# elementi
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
 msgstr "{numMatches, plural, one {# contatto trovato} other {# contatti trovati}}"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:77
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
 msgid "{policyLabel} – {duration}"
 msgstr "{policyLabel} – {duration}"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:83
 msgid "{policyLabel} – {duration}, now expired"
 msgstr "{policyLabel} – {duration}, ora scaduto"
 
@@ -1307,25 +1307,30 @@ msgstr "Una striscia orizzontale di contenuti qualsiasi. Ogni elemento mantiene 
 msgid "A kawaii scene"
 msgstr "Una scena kawaii"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:78
 msgid "A label was added to your account"
 msgstr "È stata aggiunta un'etichetta al tuo account"
 
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:63
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:81
 msgid "A label was added to your content"
 msgstr "Un'etichetta è stata aggiunta al tuo contenuto"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:56
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:62
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:80
 msgid "A label was added to your post"
 msgstr "Un'etichetta è stata aggiunta al tuo post"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:97
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:104
 msgid "A label was removed from your account"
 msgstr "Un'etichetta è stata rimossa dal tuo account"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:98
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
+msgid "A label was removed from your content"
+msgstr ""
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:106
 msgid "A label was removed from your post"
 msgstr "Un'etichetta è stata rimossa dal tuo post"
 
@@ -1715,9 +1720,9 @@ msgstr "Aggiungi link"
 msgid "Add media to post"
 msgstr "Aggiungi media al post"
 
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:72
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:106
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:125
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:73
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:107
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:126
 msgid "Add members"
 msgstr "Aggiungi membri"
 
@@ -1739,8 +1744,8 @@ msgstr "Aggiungi parola silenziata con le impostazioni indicate"
 msgid "Add muted words and tags"
 msgstr "Aggiungi parole e tag silenziati"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:133
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:172
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:134
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:173
 #: src/screens/ProfileList/AboutSection.tsx:72
 #: src/screens/ProfileList/AboutSection.tsx:90
 msgid "Add people"
@@ -3131,8 +3136,8 @@ msgstr "Accesso alla fotocamera necessario"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
 #: src/screens/ModerationInbox/Notice.tsx:437
-#: src/screens/Profile/Header/EditProfileDialog.tsx:282
-#: src/screens/Profile/Header/EditProfileDialog.tsx:290
+#: src/screens/Profile/Header/EditProfileDialog.tsx:286
+#: src/screens/Profile/Header/EditProfileDialog.tsx:294
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
 #: src/screens/Search/components/SearchHistory.tsx:151
@@ -3603,11 +3608,11 @@ msgstr "Fai clic per informazioni"
 msgid "click here"
 msgstr "clicca qui"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:129
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:130
 msgid "Click here to add people to this group chat"
 msgstr "Fai clic qui per aggiungere persone a questa chat di gruppo"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:143
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:144
 msgid "Click here to create or manage an invite link for this group chat"
 msgstr "Fai clic qui per creare o gestire un link di invito per questa chat di gruppo"
 
@@ -3637,7 +3642,7 @@ msgstr "Fai clic qui per aggiornare la tua data di nascita"
 msgid "Click here to update your email"
 msgstr "Fai clic qui per aggiornare il tuo indirizzo email"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:144
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:145
 msgid "Click here to view the invite link for this group chat"
 msgstr "Fai clic qui per visualizzare il link di invito per questa chat di gruppo"
 
@@ -4691,8 +4696,8 @@ msgstr "Post eliminato"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:463
 #: src/components/SendErrorReportDialog.tsx:78
-#: src/screens/Profile/Header/EditProfileDialog.tsx:428
-#: src/screens/Profile/Header/EditProfileDialog.tsx:435
+#: src/screens/Profile/Header/EditProfileDialog.tsx:432
+#: src/screens/Profile/Header/EditProfileDialog.tsx:439
 msgid "Description"
 msgstr "Descrizione"
 
@@ -4916,8 +4921,8 @@ msgstr "Chiude lo scanner QR"
 msgid "Display larger alt text badges"
 msgstr "Aumenta dimensione dell'icona del testo alternativo"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:378
-#: src/screens/Profile/Header/EditProfileDialog.tsx:384
+#: src/screens/Profile/Header/EditProfileDialog.tsx:382
+#: src/screens/Profile/Header/EditProfileDialog.tsx:388
 msgid "Display name"
 msgstr "Nome visualizzato"
 
@@ -5074,7 +5079,7 @@ msgstr "Tramonto"
 msgid "e.g. alice"
 msgstr "es. alice"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:385
+#: src/screens/Profile/Header/EditProfileDialog.tsx:389
 msgid "e.g. Alice Lastname"
 msgstr "es. Mario Rossi"
 
@@ -5220,8 +5225,8 @@ msgstr "Modifica utenti"
 msgid "Edit post interaction settings"
 msgstr "Modifica impostazioni di interazione del post"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:332
-#: src/screens/Profile/Header/EditProfileDialog.tsx:339
+#: src/screens/Profile/Header/EditProfileDialog.tsx:336
+#: src/screens/Profile/Header/EditProfileDialog.tsx:343
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:300
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:351
 msgid "Edit profile"
@@ -5708,8 +5713,7 @@ msgstr "Non è stato possibile accettare la richiesta di partecipazione"
 msgid "Failed to add emoji reaction"
 msgstr "Non è stato possibile aggiungere la reazione emoji"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:45
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:63
+#: src/components/dms/getAddGroupMembersErrorMessage.ts:14
 msgid "Failed to add members"
 msgstr "Non è stato possibile aggiungere membri"
 
@@ -7713,7 +7717,7 @@ msgstr "Invita amici <0/>"
 #: src/screens/Messages/components/InviteLinkDialog.tsx:327
 #: src/screens/Messages/components/InviteLinkDialog.tsx:333
 #: src/screens/Messages/components/InviteLinkDialog.tsx:512
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:149
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:150
 #: src/screens/Messages/ConversationSettings/index.tsx:561
 msgid "Invite link"
 msgstr "Link di invito"
@@ -7866,8 +7870,8 @@ msgstr "Etichetta rimossa"
 msgid "Label reply for algo"
 msgstr "Etichetta risposta per algoritmo"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:57
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:64
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:108
 msgid "Label: {labelName}"
 msgstr "Etichetta: {labelName}"
 
@@ -7943,7 +7947,7 @@ msgstr "Recenti"
 #: src/components/verification/VerificationsDialog.tsx:169
 #: src/components/verification/VerifierDialog.tsx:137
 #: src/screens/Moderation/VerificationSettings.tsx:50
-#: src/screens/Profile/Header/EditProfileDialog.tsx:414
+#: src/screens/Profile/Header/EditProfileDialog.tsx:418
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:215
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:279
 msgctxt "english-only-resource"
@@ -8693,6 +8697,14 @@ msgstr "Membri"
 msgid "Members can still read chat history but can’t send new messages."
 msgstr "I membri possono ancora leggere la cronologia della chat ma non possono inviare nuovi messaggi."
 
+#: src/components/dms/getAddGroupMembersErrorMessage.ts:12
+msgid "Members could not be added because one of the selected accounts has blocked you."
+msgstr ""
+
+#: src/components/dms/getAddGroupMembersErrorMessage.ts:10
+msgid "Members could not be added because you have blocked one of the selected accounts."
+msgstr ""
+
 #: src/components/WhoCanReply.tsx:302
 msgid "mentioned users"
 msgstr "utenti menzionati"
@@ -9151,19 +9163,19 @@ msgid "New chat"
 msgstr "Nuova chat"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:61
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:62
 msgid "New chat with {0}"
 msgstr "Nuova chat con {0}"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:65
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:66
 msgid "New chat with {0} and {1}"
 msgstr "Nuova chat con {0} e {1}"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:73
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:74
 msgid "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
 msgstr "Nuova chat con {0}, {1} e {memberCount, plural, one {{memberCount} altro} other {{memberCount} altri}}."
 
@@ -10135,7 +10147,7 @@ msgstr "Apri questa chat di gruppo"
 #. placeholder {0}: getLinkHost(link.url)
 #. placeholder {0}: link.url
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:85
-#: src/features/profileLinks/components/ProfileLinks.tsx:155
+#: src/features/profileLinks/components/ProfileLinks.tsx:161
 msgid "Opens {0} outside Bluesky"
 msgstr "Apre {0} al di fuori di Bluesky"
 
@@ -11107,7 +11119,7 @@ msgstr "Link del profilo copiato"
 msgid "Profile not found"
 msgstr "Profilo non trovato"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:247
+#: src/screens/Profile/Header/EditProfileDialog.tsx:251
 msgctxt "toast"
 msgid "Profile updated"
 msgstr "Profilo aggiornato"
@@ -12220,8 +12232,8 @@ msgstr "GIF tristi"
 #: src/features/liveNow/components/EditLiveDialog.tsx:199
 #: src/features/liveNow/components/EditLiveDialog.tsx:206
 #: src/screens/Messages/ConversationSettings/prompts.tsx:74
-#: src/screens/Profile/Header/EditProfileDialog.tsx:300
-#: src/screens/Profile/Header/EditProfileDialog.tsx:314
+#: src/screens/Profile/Header/EditProfileDialog.tsx:304
+#: src/screens/Profile/Header/EditProfileDialog.tsx:318
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:315
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:269
@@ -13115,7 +13127,7 @@ msgstr "Mostra aggiornamenti chat di gruppo"
 msgid "Show less like this"
 msgstr "Mostra meno come questo"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:170
+#: src/features/profileLinks/components/ProfileLinks.tsx:176
 msgid "Show link details"
 msgstr "Mostra dettagli del link"
 
@@ -14018,7 +14030,7 @@ msgstr "Insegna all'algoritmo cosa ti piace"
 msgid "Tech"
 msgstr "Tecnologia"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:436
+#: src/screens/Profile/Header/EditProfileDialog.tsx:440
 msgid "Tell us a bit about yourself"
 msgstr "Raccontaci un po' di te"
 
@@ -14482,6 +14494,11 @@ msgstr "Questo account ha un segno di spunta perché è stato verificato da font
 #: src/components/BotAccountAlert.tsx:27
 msgid "This account has been marked as automated by its owner."
 msgstr "Questo account è stato contrassegnato come automatizzato dal suo proprietario."
+
+#: src/components/dms/components/GroupChatProfileCard.tsx:34
+#: src/components/dms/InitiateChatFlow.tsx:1145
+msgid "This account has blocked you and can’t be added."
+msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:95
 msgid "This account has one or more attempted verifications, but it is not currently verified."
@@ -16111,7 +16128,7 @@ msgstr "Vedi l'immagine completa"
 msgid "Views video in immersive mode"
 msgstr "Mostra video in modalità immersiva"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:46
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:51
 msgid "Violates Community Guideline: {policyLabel}"
 msgstr "Viola le linee guida della community: {policyLabel}"
 
@@ -16277,7 +16294,7 @@ msgstr "Abbiamo esaminato la tua segnalazione e abbiamo riscontrato che non viol
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Abbiamo inviato un'email a <0>{0}</0> contenente un link. Fai clic su di esso per completare la procedura di verifica dell'email."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:50
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
 msgid "We sent you an email about your account"
 msgstr "Ti abbiamo inviato un'email riguardo al tuo account"
 
@@ -16705,7 +16722,7 @@ msgstr "Adesso sei in diretta!"
 msgid "You are verified"
 msgstr "Sei verificato"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:409
+#: src/screens/Profile/Header/EditProfileDialog.tsx:413
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
 msgstr "Sei verificato. Se cambi il tuo nome visualizzato, perderai lo stato di verifica. <0>Maggiori informazioni.</0>"
 
@@ -16843,6 +16860,11 @@ msgstr "Sei arrivato qui per primo"
 #: src/components/intents/GroupChatJoinDialog.tsx:179
 msgid "You have been previously removed from this group and can’t join it using this link."
 msgstr "Sei stato precedentemente rimosso da questo gruppo e non puoi partecipare usando questo link."
+
+#: src/components/dms/components/GroupChatProfileCard.tsx:32
+#: src/components/dms/InitiateChatFlow.tsx:1143
+msgid "You have blocked this account and can’t add them."
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:93
 #: src/lib/moderation/useModerationCauseDescription.ts:55
@@ -17205,7 +17227,7 @@ msgstr "Hai raggiunto il limite giornaliero di video caricati (troppi video)"
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "Non ci sono altri video da guardare. Forse è il momento giusto per fare una pausa?"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:88
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:95
 msgid "Your ability to submit reports was restricted"
 msgstr "La tua possibilità di inviare segnalazioni è stata limitata"
 
@@ -17219,7 +17241,7 @@ msgstr "Il tuo account"
 msgid "Your account cannot submit reports while it is suspended."
 msgstr "Il tuo account non può inviare segnalazioni quando è sospeso."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:92
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
 msgid "Your account credentials were revoked"
 msgstr "Le credenziali del tuo account sono state revocate"
 
@@ -17264,8 +17286,8 @@ msgstr "L'archivio del tuo account, che contiene tutti i record di dati pubblici
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
 msgstr "Abbiamo riscontrato che il tuo account viola i <0>termini di servizio di Bluesky</0>. Ti abbiamo inviato un'email che descrive la violazione e il periodo di sospensione, se applicabile. Se ritieni che questa decisione sia stata presa per errore, puoi richiedere una revisione della sospensione."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:67
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:91
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:73
 msgid "Your account was suspended"
 msgstr "Il tuo account è stato sospeso"
@@ -17318,6 +17340,7 @@ msgstr "Il tuo contatto <0/> è su Bluesky"
 msgid "Your content"
 msgstr "Il tuo contenuto"
 
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
 msgid "Your content was removed"
 msgstr "Il tuo contenuto è stato rimosso"
@@ -17418,7 +17441,7 @@ msgstr "La tua password deve essere lunga almeno 8 caratteri."
 msgid "Your post"
 msgstr "Il tuo post"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:44
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
 msgid "Your post was removed"
 msgstr "Il tuo post è stato rimosso"

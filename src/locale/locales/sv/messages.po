@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-30 14:59\n"
+"PO-Revision-Date: 2026-11-02 19:30\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -265,13 +265,13 @@ msgid "{0} <0>in <1>text & tags</1></0>"
 msgstr "{0} <0>i <1>text och taggar</1></0>"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:44
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:45
 msgid "{0} added to chat"
 msgstr "{0} lades till i chatten"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:46
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:47
 msgid "{0} and {1} added to chat"
 msgstr "{0} och {1} lades till i chatten"
 
@@ -392,7 +392,7 @@ msgstr "{0}, "
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:49
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:50
 msgid "{0}, {1} and {memberCount, plural, one {# other} other {# others}} added to chat"
 msgstr "{0}, {1} och {memberCount, plural, one {# annan} other {# andra}} lades till i chatten"
 
@@ -539,7 +539,7 @@ msgstr "{count, plural, one {# förfrågan} other {# förfrågningar}}"
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# oläst notis} other {# olästa notiser}}"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:333
+#: src/features/profileLinks/components/ProfileLinks.tsx:339
 msgid "{count, plural, one {Show # more link} other {Show # more links}}"
 msgstr "{count, plural, one {Visa en länk till} other {Visa # länkar till}}"
 
@@ -764,8 +764,8 @@ msgstr "{formatted} sedan"
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr "{formattedPostCount} {postCount, plural, one {inlägg} other {inlägg}}"
 
-#: src/components/dms/components/GroupChatProfileCard.tsx:62
-#: src/components/dms/InitiateChatFlow.tsx:1158
+#: src/components/dms/components/GroupChatProfileCard.tsx:35
+#: src/components/dms/InitiateChatFlow.tsx:1146
 msgid "{handle} can’t be added"
 msgstr "{handle} kan inte läggas till"
 
@@ -786,7 +786,7 @@ msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesStrin
 msgstr "{hours, plural, one {# timme {minutesString}} other {# timmar {minutesString}}}"
 
 #: src/features/liveNow/utils.ts:44
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:69
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
 msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# timme} other {# timmar}}"
 
@@ -799,7 +799,7 @@ msgstr "{index}/{count}"
 #: src/view/com/pager/TabBar.tsx:452
 #: src/view/com/pager/TabBar.web.tsx:132
 msgid "{item}, unread"
-msgstr ""
+msgstr "{item}, oläst"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/RequestStatus.tsx:69
@@ -829,11 +829,11 @@ msgstr "{label}. {description}"
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
 msgstr "{MAX_ALT_TEXT, plural, other {Alternativtext måste vara mindre än # tecken.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:448
+#: src/screens/Profile/Header/EditProfileDialog.tsx:452
 msgid "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DESCRIPTION, plural, other {Beskrivningen är för lång. Maximalt antal tecken är #.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:397
+#: src/screens/Profile/Header/EditProfileDialog.tsx:401
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DISPLAY_NAME, plural, other {Visningsnamnet är för långt. Maximalt antal tecken är #.}}"
 
@@ -976,11 +976,11 @@ msgstr "{notificationCount, plural, one {# oläst notis} other {# olästa notise
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
 msgstr "{numMatches, plural, one {# kontakt} other {# kontakter}} hittades"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:77
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
 msgid "{policyLabel} – {duration}"
 msgstr "{policyLabel} {duration}"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:83
 msgid "{policyLabel} – {duration}, now expired"
 msgstr "{policyLabel} {duration}, utlöpt"
 
@@ -1261,7 +1261,7 @@ msgstr "<0>Logga in</0><1> eller </1><2>skapa ett konto</2><3> </3><4>för att s
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:251
 msgid "<0>Tap here to update your approximate location via GPS.</0>"
-msgstr ""
+msgstr "<0>Tryck här för att uppdatera din ungefärliga plats med GPS.</0>"
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #: src/screens/StarterPack/Wizard/index.tsx:500
@@ -1307,25 +1307,30 @@ msgstr ""
 msgid "A kawaii scene"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:78
 msgid "A label was added to your account"
 msgstr "En etikett har satts på ditt konto"
 
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:63
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:81
 msgid "A label was added to your content"
 msgstr "En etikett har satts på ditt innehåll"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:56
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:62
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:80
 msgid "A label was added to your post"
 msgstr "En etikett har satts på ditt inlägg"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:97
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:104
 msgid "A label was removed from your account"
 msgstr "En etikett har tagits bort från ditt konto"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:98
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
+msgid "A label was removed from your content"
+msgstr ""
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:106
 msgid "A label was removed from your post"
 msgstr "En etikett har tagits bort från ditt inlägg"
 
@@ -1715,9 +1720,9 @@ msgstr "Lägg till länk"
 msgid "Add media to post"
 msgstr "Lägg till media i inlägg"
 
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:72
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:106
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:125
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:73
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:107
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:126
 msgid "Add members"
 msgstr "Lägg till medlemmar"
 
@@ -1739,8 +1744,8 @@ msgstr "Lägg till ignorerat ord med de angivna inställningarna"
 msgid "Add muted words and tags"
 msgstr "Lägg till ord och taggar att ignorera"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:133
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:172
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:134
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:173
 #: src/screens/ProfileList/AboutSection.tsx:72
 #: src/screens/ProfileList/AboutSection.tsx:90
 msgid "Add people"
@@ -3131,8 +3136,8 @@ msgstr "Kameraåtkomst krävs"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
 #: src/screens/ModerationInbox/Notice.tsx:437
-#: src/screens/Profile/Header/EditProfileDialog.tsx:282
-#: src/screens/Profile/Header/EditProfileDialog.tsx:290
+#: src/screens/Profile/Header/EditProfileDialog.tsx:286
+#: src/screens/Profile/Header/EditProfileDialog.tsx:294
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
 #: src/screens/Search/components/SearchHistory.tsx:151
@@ -3603,11 +3608,11 @@ msgstr "Klicka för information"
 msgid "click here"
 msgstr "klicka här"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:129
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:130
 msgid "Click here to add people to this group chat"
 msgstr "Klicka här för att lägga till personer i den här gruppchatten"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:143
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:144
 msgid "Click here to create or manage an invite link for this group chat"
 msgstr "Klicka här för att skapa eller modifiera en inbjudningslänk för den här gruppchatten"
 
@@ -3637,7 +3642,7 @@ msgstr "Klicka här för att uppdatera ditt födelsedatum"
 msgid "Click here to update your email"
 msgstr "Klicka här för att uppdatera din e-post"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:144
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:145
 msgid "Click here to view the invite link for this group chat"
 msgstr "Klicka här för att visa inbjudningslänken för den här gruppchatten"
 
@@ -4691,8 +4696,8 @@ msgstr "Raderat inlägg"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:463
 #: src/components/SendErrorReportDialog.tsx:78
-#: src/screens/Profile/Header/EditProfileDialog.tsx:428
-#: src/screens/Profile/Header/EditProfileDialog.tsx:435
+#: src/screens/Profile/Header/EditProfileDialog.tsx:432
+#: src/screens/Profile/Header/EditProfileDialog.tsx:439
 msgid "Description"
 msgstr "Beskrivning"
 
@@ -4916,8 +4921,8 @@ msgstr "Stänger QR-skannern"
 msgid "Display larger alt text badges"
 msgstr "Visa större ALT-märken"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:378
-#: src/screens/Profile/Header/EditProfileDialog.tsx:384
+#: src/screens/Profile/Header/EditProfileDialog.tsx:382
+#: src/screens/Profile/Header/EditProfileDialog.tsx:388
 msgid "Display name"
 msgstr "Visningsnamn"
 
@@ -5074,7 +5079,7 @@ msgstr "Skymning"
 msgid "e.g. alice"
 msgstr "t.ex. alice"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:385
+#: src/screens/Profile/Header/EditProfileDialog.tsx:389
 msgid "e.g. Alice Lastname"
 msgstr "t.ex. Alice Efternamn"
 
@@ -5220,8 +5225,8 @@ msgstr "Redigera personer"
 msgid "Edit post interaction settings"
 msgstr "Redigera interaktionsinställningar för inlägg"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:332
-#: src/screens/Profile/Header/EditProfileDialog.tsx:339
+#: src/screens/Profile/Header/EditProfileDialog.tsx:336
+#: src/screens/Profile/Header/EditProfileDialog.tsx:343
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:300
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:351
 msgid "Edit profile"
@@ -5440,7 +5445,7 @@ msgstr "Ange den sexsiffriga kod som har skickats till {prettyNumber}"
 
 #: src/screens/Login/LoginForm.tsx:437
 msgid "Enter the code from your email or authenticator app"
-msgstr ""
+msgstr "Ange koden som du har fått via e-post eller din autentiseringsapp"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:382
 msgid "Enter the domain you want to use"
@@ -5452,7 +5457,7 @@ msgstr "Ange den e-postadress som du använde för att skapa ditt konto. Vi skic
 
 #: src/screens/Login/LoginForm.tsx:440
 msgid "Enter the sign in code from your email or authenticator app."
-msgstr ""
+msgstr "Ange inloggningskoden som du har fått via e-post eller din autentiseringsapp."
 
 #: src/screens/Login/LoginForm.tsx:333
 msgid "Enter the username or email address you used when you created your account"
@@ -5708,8 +5713,7 @@ msgstr "Det gick inte att godkänna medlemsförfrågan"
 msgid "Failed to add emoji reaction"
 msgstr "Det gick inte att lägga till emoji-reaktion"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:45
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:63
+#: src/components/dms/getAddGroupMembersErrorMessage.ts:14
 msgid "Failed to add members"
 msgstr "Det gick inte att lägga till medlemmar"
 
@@ -7713,7 +7717,7 @@ msgstr "Bjud in vänner <0/>"
 #: src/screens/Messages/components/InviteLinkDialog.tsx:327
 #: src/screens/Messages/components/InviteLinkDialog.tsx:333
 #: src/screens/Messages/components/InviteLinkDialog.tsx:512
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:149
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:150
 #: src/screens/Messages/ConversationSettings/index.tsx:561
 msgid "Invite link"
 msgstr "Inbjudningslänk"
@@ -7866,8 +7870,8 @@ msgstr "Etiketten har tagits bort"
 msgid "Label reply for algo"
 msgstr "Sätt etikett på svar för algo"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:57
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:64
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:108
 msgid "Label: {labelName}"
 msgstr "Etikett: {labelName}"
 
@@ -7943,7 +7947,7 @@ msgstr "Senaste"
 #: src/components/verification/VerificationsDialog.tsx:169
 #: src/components/verification/VerifierDialog.tsx:137
 #: src/screens/Moderation/VerificationSettings.tsx:50
-#: src/screens/Profile/Header/EditProfileDialog.tsx:414
+#: src/screens/Profile/Header/EditProfileDialog.tsx:418
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:215
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:279
 msgctxt "english-only-resource"
@@ -8693,6 +8697,14 @@ msgstr "Medlemmar"
 msgid "Members can still read chat history but can’t send new messages."
 msgstr "Medlemmarna kan fortfarande läsa chatthistoriken men kan inte skicka nya meddelanden."
 
+#: src/components/dms/getAddGroupMembersErrorMessage.ts:12
+msgid "Members could not be added because one of the selected accounts has blocked you."
+msgstr ""
+
+#: src/components/dms/getAddGroupMembersErrorMessage.ts:10
+msgid "Members could not be added because you have blocked one of the selected accounts."
+msgstr ""
+
 #: src/components/WhoCanReply.tsx:302
 msgid "mentioned users"
 msgstr "omnämnda användare"
@@ -9151,19 +9163,19 @@ msgid "New chat"
 msgstr "Ny chatt"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:61
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:62
 msgid "New chat with {0}"
 msgstr "Ny chatt med {0}"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:65
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:66
 msgid "New chat with {0} and {1}"
 msgstr "Ny chatt med {0} och {1}"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:73
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:74
 msgid "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
 msgstr "Ny chatt med {0}, {1} och {memberCount, plural, one {{memberCount} till} other {{memberCount} till}}."
 
@@ -9348,7 +9360,7 @@ msgstr "Nej"
 
 #: src/screens/ModerationInbox/index.tsx:371
 msgid "No actions against you"
-msgstr "Inga åtgärder har tagits mot dig"
+msgstr "Inga åtgärder har vidtagits mot dig"
 
 #: src/screens/ModerationInbox/index.tsx:372
 msgid "No actions match this filter"
@@ -10135,7 +10147,7 @@ msgstr "Öppna den här gruppchatten"
 #. placeholder {0}: getLinkHost(link.url)
 #. placeholder {0}: link.url
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:85
-#: src/features/profileLinks/components/ProfileLinks.tsx:155
+#: src/features/profileLinks/components/ProfileLinks.tsx:161
 msgid "Opens {0} outside Bluesky"
 msgstr "Öppnar {0} utanför Bluesky"
 
@@ -10847,7 +10859,7 @@ msgstr "Publicera ett videoklipp"
 #: src/screens/Notifications/index.tsx:159
 msgctxt "notifications tab"
 msgid "Post alerts"
-msgstr ""
+msgstr "Aktivitet från andra"
 
 #: src/view/com/composer/Composer.tsx:1909
 msgctxt "action"
@@ -11107,7 +11119,7 @@ msgstr "Profillänken kopierades"
 msgid "Profile not found"
 msgstr "Profilen hittades inte"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:247
+#: src/screens/Profile/Header/EditProfileDialog.tsx:251
 msgctxt "toast"
 msgid "Profile updated"
 msgstr "Profilen uppdaterades"
@@ -12220,8 +12232,8 @@ msgstr "Ledsna gif-bilder"
 #: src/features/liveNow/components/EditLiveDialog.tsx:199
 #: src/features/liveNow/components/EditLiveDialog.tsx:206
 #: src/screens/Messages/ConversationSettings/prompts.tsx:74
-#: src/screens/Profile/Header/EditProfileDialog.tsx:300
-#: src/screens/Profile/Header/EditProfileDialog.tsx:314
+#: src/screens/Profile/Header/EditProfileDialog.tsx:304
+#: src/screens/Profile/Header/EditProfileDialog.tsx:318
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:315
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:269
@@ -12579,7 +12591,7 @@ msgstr "Välj {langName}"
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:117
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:121
 msgid "Select a beta feature"
-msgstr ""
+msgstr "Välj en betafunktion"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -13115,7 +13127,7 @@ msgstr "Visa chatthändelser"
 msgid "Show less like this"
 msgstr "Visa mindre av sånt här"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:170
+#: src/features/profileLinks/components/ProfileLinks.tsx:176
 msgid "Show link details"
 msgstr "Visa länkdetaljer"
 
@@ -13914,7 +13926,7 @@ msgstr ""
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:110
 msgid "Tap below to allow Bluesky to access your approximate location via GPS. We will then use that data to more accurately determine the content and features available in your region."
-msgstr ""
+msgstr "Tryck nedan för att ge Bluesky åtkomst till din GPS för att fastställa din ungefärliga plats. Vi använder sedan den informationen för att mer exakt kunna avgöra vilket innehåll och vilka funktioner som är tillgängliga i din region."
 
 #: src/components/dms/MessageItem.tsx:697
 msgid "Tap for details"
@@ -13930,7 +13942,7 @@ msgstr "Tryck för mer information"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:216
 msgid "Tap here to update your approximate location via GPS."
-msgstr ""
+msgstr "Tryck här för att uppdatera din ungefärliga plats med GPS."
 
 #: src/screens/Signup/StepInfo/index.tsx:341
 msgid "Tap here to update your location with GPS."
@@ -14018,7 +14030,7 @@ msgstr "Lär vår algoritm vad du vill"
 msgid "Tech"
 msgstr "Teknik"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:436
+#: src/screens/Profile/Header/EditProfileDialog.tsx:440
 msgid "Tell us a bit about yourself"
 msgstr "Berätta lite om dig själv"
 
@@ -14482,6 +14494,11 @@ msgstr "Det här kontot har en bockmarkering eftersom det har verifierats av bet
 #: src/components/BotAccountAlert.tsx:27
 msgid "This account has been marked as automated by its owner."
 msgstr "Det här kontot har markerats som automatiserat av ägaren."
+
+#: src/components/dms/components/GroupChatProfileCard.tsx:34
+#: src/components/dms/InitiateChatFlow.tsx:1145
+msgid "This account has blocked you and can’t be added."
+msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:95
 msgid "This account has one or more attempted verifications, but it is not currently verified."
@@ -16111,7 +16128,7 @@ msgstr "Visar hela bilden"
 msgid "Views video in immersive mode"
 msgstr "Visar videoklipp i uppslukande läge"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:46
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:51
 msgid "Violates Community Guideline: {policyLabel}"
 msgstr "Bryter mot gemenskapsriktlinjer gällande: {policyLabel}"
 
@@ -16277,7 +16294,7 @@ msgstr "Vi har granskat din omprövningsbegäran och bedömer att det här inte 
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Vi har skickat ett e-postmeddelande till <0>{0}</0> med en länk. Klicka på den för att slutföra verifieringsprocessen."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:50
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
 msgid "We sent you an email about your account"
 msgstr "Vi har skickat ett e-postmeddelande angående ditt konto"
 
@@ -16705,7 +16722,7 @@ msgstr "Du sänder nu live!"
 msgid "You are verified"
 msgstr "Du är verifierad"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:409
+#: src/screens/Profile/Header/EditProfileDialog.tsx:413
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
 msgstr "Du är verifierad. Din verifieringsstatus går förlorad om du ändrar ditt visningsnamn. <0>Läs mer.</0>"
 
@@ -16843,6 +16860,11 @@ msgstr "Du kom hit först"
 #: src/components/intents/GroupChatJoinDialog.tsx:179
 msgid "You have been previously removed from this group and can’t join it using this link."
 msgstr "Du har tidigare tagits bort från den här gruppen och kan inte gå med i den genom länken."
+
+#: src/components/dms/components/GroupChatProfileCard.tsx:32
+#: src/components/dms/InitiateChatFlow.tsx:1143
+msgid "You have blocked this account and can’t add them."
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:93
 #: src/lib/moderation/useModerationCauseDescription.ts:55
@@ -17205,7 +17227,7 @@ msgstr "Du har nått din dagliga gräns för videouppladdningar (för många vid
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "Det finns inga fler videoklipp att titta på. Det kanske är dags för att ta en paus?"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:88
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:95
 msgid "Your ability to submit reports was restricted"
 msgstr "Din möjlighet att skicka in anmälningar har begränsats"
 
@@ -17219,7 +17241,7 @@ msgstr "Ditt konto"
 msgid "Your account cannot submit reports while it is suspended."
 msgstr "Ditt konto kan inte skicka anmälningar när det är avstängt."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:92
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
 msgid "Your account credentials were revoked"
 msgstr "Dina kontouppgifter har återkallats"
 
@@ -17264,8 +17286,8 @@ msgstr "Ditt kontos dataarkiv innehåller alla publika dataposter och kan laddas
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
 msgstr "Ditt konto har visats sig bryta mot <0>Bluesky Socials användarvillkor</0>. Ett e-postmeddelande har skickats till dig med information om den specifika överträdelsen och avstängningsperioden, om tillämpligt. Om du anser att detta beslut är felaktigt kan du begära att det omprövas."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:67
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:91
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:73
 msgid "Your account was suspended"
 msgstr "Ditt konto har stängts av"
@@ -17318,6 +17340,7 @@ msgstr "Din kontakt <0/> finns på Bluesky"
 msgid "Your content"
 msgstr "Ditt innehåll"
 
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
 msgid "Your content was removed"
 msgstr "Ditt innehåll har tagits bort"
@@ -17418,7 +17441,7 @@ msgstr "Ditt lösenord måste vara minst 8 tecken långt."
 msgid "Your post"
 msgstr "Ditt inlägg"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:44
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
 msgid "Your post was removed"
 msgstr "Ditt inlägg togs bort"

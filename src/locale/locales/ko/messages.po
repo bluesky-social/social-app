@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-30 14:58\n"
+"PO-Revision-Date: 2026-11-02 19:30\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -265,13 +265,13 @@ msgid "{0} <0>in <1>text & tags</1></0>"
 msgstr "<0><1>텍스트 및 태그</1>:</0> {0}"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:44
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:45
 msgid "{0} added to chat"
 msgstr "{0} 님이 대화에 추가되었습니다"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:46
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:47
 msgid "{0} and {1} added to chat"
 msgstr "{0} 님과 {1} 님이 대화에 추가되었습니다"
 
@@ -392,7 +392,7 @@ msgstr "{0}, "
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:49
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:50
 msgid "{0}, {1} and {memberCount, plural, one {# other} other {# others}} added to chat"
 msgstr "{0} 님, {1} 님 {memberCount, plural, other {외 #명}}이 대화에 추가되었습니다"
 
@@ -539,7 +539,7 @@ msgstr "{count, plural, other {#개}} 요청"
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "읽지 않은 항목 {count, plural, other {#개}}"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:333
+#: src/features/profileLinks/components/ProfileLinks.tsx:339
 msgid "{count, plural, one {Show # more link} other {Show # more links}}"
 msgstr "링크 {count, plural, other {#개}} 더 표시"
 
@@ -764,8 +764,8 @@ msgstr "{formatted} 전"
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr "{postCount, plural, other {게시물}} {formattedPostCount}개"
 
-#: src/components/dms/components/GroupChatProfileCard.tsx:62
-#: src/components/dms/InitiateChatFlow.tsx:1158
+#: src/components/dms/components/GroupChatProfileCard.tsx:35
+#: src/components/dms/InitiateChatFlow.tsx:1146
 msgid "{handle} can’t be added"
 msgstr "{handle} 님은 추가할 수 없습니다"
 
@@ -786,7 +786,7 @@ msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesStrin
 msgstr "{hours, plural, other {#시간 {minutesString}}}"
 
 #: src/features/liveNow/utils.ts:44
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:69
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
 msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, other {#시간}}"
 
@@ -829,11 +829,11 @@ msgstr "{label}. {description}"
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
 msgstr "대체 텍스트는 {MAX_ALT_TEXT, plural, other {#자}} 미만이어야 합니다."
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:448
+#: src/screens/Profile/Header/EditProfileDialog.tsx:452
 msgid "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DESCRIPTION, plural, other {설명이 너무 깁니다. 최대 #자까지 입력할 수 있습니다.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:397
+#: src/screens/Profile/Header/EditProfileDialog.tsx:401
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DISPLAY_NAME, plural, other {표시 이름이 너무 깁니다. 최대 #자까지 입력할 수 있습니다.}}"
 
@@ -976,11 +976,11 @@ msgstr "읽지 않은 항목 {notificationCount, plural, other {#개}}"
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
 msgstr "{numMatches, plural, other {연락처 #개를}} 찾았습니다"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:77
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
 msgid "{policyLabel} – {duration}"
 msgstr "{policyLabel} – {duration}"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:83
 msgid "{policyLabel} – {duration}, now expired"
 msgstr "{policyLabel} – {duration}, 현재 만료됨"
 
@@ -1307,25 +1307,30 @@ msgstr "어떤 콘텐츠든 담을 수 있는 가로 스트립입니다. 각 항
 msgid "A kawaii scene"
 msgstr "귀여운 장면"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:78
 msgid "A label was added to your account"
 msgstr "내 계정에 라벨이 추가되었습니다"
 
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:63
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:81
 msgid "A label was added to your content"
 msgstr "내 콘텐츠에 라벨이 추가되었습니다"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:56
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:62
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:80
 msgid "A label was added to your post"
 msgstr "내 게시물에 라벨이 추가되었습니다"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:97
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:104
 msgid "A label was removed from your account"
 msgstr "내 계정에서 라벨이 제거되었습니다"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:98
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
+msgid "A label was removed from your content"
+msgstr ""
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:106
 msgid "A label was removed from your post"
 msgstr "내 게시물에서 라벨이 제거되었습니다"
 
@@ -1715,9 +1720,9 @@ msgstr "링크 추가"
 msgid "Add media to post"
 msgstr "게시물에 미디어 추가"
 
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:72
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:106
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:125
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:73
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:107
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:126
 msgid "Add members"
 msgstr "멤버 추가"
 
@@ -1739,8 +1744,8 @@ msgstr "선택한 설정으로 뮤트 단어 추가"
 msgid "Add muted words and tags"
 msgstr "뮤트할 단어 및 태그 추가"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:133
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:172
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:134
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:173
 #: src/screens/ProfileList/AboutSection.tsx:72
 #: src/screens/ProfileList/AboutSection.tsx:90
 msgid "Add people"
@@ -3131,8 +3136,8 @@ msgstr "카메라 접근 권한이 필요합니다"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
 #: src/screens/ModerationInbox/Notice.tsx:437
-#: src/screens/Profile/Header/EditProfileDialog.tsx:282
-#: src/screens/Profile/Header/EditProfileDialog.tsx:290
+#: src/screens/Profile/Header/EditProfileDialog.tsx:286
+#: src/screens/Profile/Header/EditProfileDialog.tsx:294
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
 #: src/screens/Search/components/SearchHistory.tsx:151
@@ -3603,11 +3608,11 @@ msgstr "세부 정보 보기"
 msgid "click here"
 msgstr "이곳을 클릭"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:129
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:130
 msgid "Click here to add people to this group chat"
 msgstr "이곳을 클릭하여 그룹 대화에 사용자를 추가하기"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:143
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:144
 msgid "Click here to create or manage an invite link for this group chat"
 msgstr "이곳을 클릭하여 이 그룹 대화의 초대 링크를 생성하거나 관리하기"
 
@@ -3637,7 +3642,7 @@ msgstr "이곳을 클릭하여 생년월일 변경하기"
 msgid "Click here to update your email"
 msgstr "이곳을 클릭하여 이메일 변경하기"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:144
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:145
 msgid "Click here to view the invite link for this group chat"
 msgstr "이곳을 클릭하여 이 그룹 대화의 초대 링크 보기"
 
@@ -4691,8 +4696,8 @@ msgstr "삭제된 게시물"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:463
 #: src/components/SendErrorReportDialog.tsx:78
-#: src/screens/Profile/Header/EditProfileDialog.tsx:428
-#: src/screens/Profile/Header/EditProfileDialog.tsx:435
+#: src/screens/Profile/Header/EditProfileDialog.tsx:432
+#: src/screens/Profile/Header/EditProfileDialog.tsx:439
 msgid "Description"
 msgstr "설명"
 
@@ -4916,8 +4921,8 @@ msgstr "QR 코드 스캐너를 닫습니다"
 msgid "Display larger alt text badges"
 msgstr "더 큰 대체 텍스트 배지 표시"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:378
-#: src/screens/Profile/Header/EditProfileDialog.tsx:384
+#: src/screens/Profile/Header/EditProfileDialog.tsx:382
+#: src/screens/Profile/Header/EditProfileDialog.tsx:388
 msgid "Display name"
 msgstr "표시 이름"
 
@@ -5074,7 +5079,7 @@ msgstr "저녁"
 msgid "e.g. alice"
 msgstr "예: alice"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:385
+#: src/screens/Profile/Header/EditProfileDialog.tsx:389
 msgid "e.g. Alice Lastname"
 msgstr "예: 앨리스 라스트네임"
 
@@ -5220,8 +5225,8 @@ msgstr "사용자 편집하기"
 msgid "Edit post interaction settings"
 msgstr "게시물 상호작용 설정 편집하기"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:332
-#: src/screens/Profile/Header/EditProfileDialog.tsx:339
+#: src/screens/Profile/Header/EditProfileDialog.tsx:336
+#: src/screens/Profile/Header/EditProfileDialog.tsx:343
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:300
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:351
 msgid "Edit profile"
@@ -5708,8 +5713,7 @@ msgstr "참여 요청을 승인하지 못했습니다"
 msgid "Failed to add emoji reaction"
 msgstr "이모티콘 반응을 추가하지 못했습니다"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:45
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:63
+#: src/components/dms/getAddGroupMembersErrorMessage.ts:14
 msgid "Failed to add members"
 msgstr "멤버를 추가하지 못했습니다"
 
@@ -7713,7 +7717,7 @@ msgstr "친구 초대하기 <0/>"
 #: src/screens/Messages/components/InviteLinkDialog.tsx:327
 #: src/screens/Messages/components/InviteLinkDialog.tsx:333
 #: src/screens/Messages/components/InviteLinkDialog.tsx:512
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:149
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:150
 #: src/screens/Messages/ConversationSettings/index.tsx:561
 msgid "Invite link"
 msgstr "초대 링크"
@@ -7866,8 +7870,8 @@ msgstr "라벨 제거됨"
 msgid "Label reply for algo"
 msgstr "알고리즘에 답글 라벨링"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:57
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:64
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:108
 msgid "Label: {labelName}"
 msgstr "라벨: {labelName}"
 
@@ -7943,7 +7947,7 @@ msgstr "최신"
 #: src/components/verification/VerificationsDialog.tsx:169
 #: src/components/verification/VerifierDialog.tsx:137
 #: src/screens/Moderation/VerificationSettings.tsx:50
-#: src/screens/Profile/Header/EditProfileDialog.tsx:414
+#: src/screens/Profile/Header/EditProfileDialog.tsx:418
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:215
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:279
 msgctxt "english-only-resource"
@@ -8693,6 +8697,14 @@ msgstr "멤버"
 msgid "Members can still read chat history but can’t send new messages."
 msgstr "멤버들이 대화 기록은 읽을 수 있지만 새 메시지는 보낼 수 없습니다."
 
+#: src/components/dms/getAddGroupMembersErrorMessage.ts:12
+msgid "Members could not be added because one of the selected accounts has blocked you."
+msgstr ""
+
+#: src/components/dms/getAddGroupMembersErrorMessage.ts:10
+msgid "Members could not be added because you have blocked one of the selected accounts."
+msgstr ""
+
 #: src/components/WhoCanReply.tsx:302
 msgid "mentioned users"
 msgstr "멘션한 사용자"
@@ -9151,19 +9163,19 @@ msgid "New chat"
 msgstr "새 대화"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:61
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:62
 msgid "New chat with {0}"
 msgstr "{0} 님과의 새 대화"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:65
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:66
 msgid "New chat with {0} and {1}"
 msgstr "{0} 님, {1} 님과의 새 대화"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:73
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:74
 msgid "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
 msgstr "{0} 님, {1} 님 외 {memberCount, plural, other {{memberCount}명}}과의 새 대화."
 
@@ -10135,7 +10147,7 @@ msgstr "이 그룹 대화를 엽니다"
 #. placeholder {0}: getLinkHost(link.url)
 #. placeholder {0}: link.url
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:85
-#: src/features/profileLinks/components/ProfileLinks.tsx:155
+#: src/features/profileLinks/components/ProfileLinks.tsx:161
 msgid "Opens {0} outside Bluesky"
 msgstr "Bluesky 외부에서 {0}(을)를 엽니다"
 
@@ -11107,7 +11119,7 @@ msgstr "프로필 링크를 복사했습니다"
 msgid "Profile not found"
 msgstr "프로필을 찾을 수 없습니다"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:247
+#: src/screens/Profile/Header/EditProfileDialog.tsx:251
 msgctxt "toast"
 msgid "Profile updated"
 msgstr "프로필을 업데이트했습니다"
@@ -12220,8 +12232,8 @@ msgstr "슬픈 GIF"
 #: src/features/liveNow/components/EditLiveDialog.tsx:199
 #: src/features/liveNow/components/EditLiveDialog.tsx:206
 #: src/screens/Messages/ConversationSettings/prompts.tsx:74
-#: src/screens/Profile/Header/EditProfileDialog.tsx:300
-#: src/screens/Profile/Header/EditProfileDialog.tsx:314
+#: src/screens/Profile/Header/EditProfileDialog.tsx:304
+#: src/screens/Profile/Header/EditProfileDialog.tsx:318
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:315
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:269
@@ -13115,7 +13127,7 @@ msgstr "그룹 대화 업데이트를 표시합니다"
 msgid "Show less like this"
 msgstr "이런 항목 덜 보기"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:170
+#: src/features/profileLinks/components/ProfileLinks.tsx:176
 msgid "Show link details"
 msgstr "링크 세부 정보 표시"
 
@@ -14018,7 +14030,7 @@ msgstr "무엇을 좋아하는지 알고리즘에게 알려주세요"
 msgid "Tech"
 msgstr "기술"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:436
+#: src/screens/Profile/Header/EditProfileDialog.tsx:440
 msgid "Tell us a bit about yourself"
 msgstr "본인에 대해 간단히 소개해 주세요"
 
@@ -14482,6 +14494,11 @@ msgstr "이 계정은 신뢰할 수 있는 출처에 의해 인증되었으므�
 #: src/components/BotAccountAlert.tsx:27
 msgid "This account has been marked as automated by its owner."
 msgstr "이 계정은 소유자에 의해 자동화된 계정으로 표시되었습니다."
+
+#: src/components/dms/components/GroupChatProfileCard.tsx:34
+#: src/components/dms/InitiateChatFlow.tsx:1145
+msgid "This account has blocked you and can’t be added."
+msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:95
 msgid "This account has one or more attempted verifications, but it is not currently verified."
@@ -16111,7 +16128,7 @@ msgstr "전체 이미지를 봅니다"
 msgid "Views video in immersive mode"
 msgstr "몰입형 모드로 동영상을 봅니다"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:46
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:51
 msgid "Violates Community Guideline: {policyLabel}"
 msgstr "커뮤니티 가이드라인 위반: {policyLabel}"
 
@@ -16277,7 +16294,7 @@ msgstr "내 신고를 검토한 결과, 규칙을 위반하지 않는 것으로 
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "링크가 포함된 이메일을 <0>{0}</0>(으)로 보냈습니다. 이메일 인증 절차를 완료하려면 해당 링크를 클릭하세요."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:50
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
 msgid "We sent you an email about your account"
 msgstr "내 계정에 대한 이메일이 전송되었습니다"
 
@@ -16705,7 +16722,7 @@ msgstr "라이브 중입니다!"
 msgid "You are verified"
 msgstr "내 계정은 인증되었습니다"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:409
+#: src/screens/Profile/Header/EditProfileDialog.tsx:413
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
 msgstr "현재 인증된 상태입니다. 표시 이름을 변경하면 인증이 해제될 수 있습니다. <0>자세히 알아보기 (영어)</0>"
 
@@ -16843,6 +16860,11 @@ msgstr "제일 먼저 오셨네요"
 #: src/components/intents/GroupChatJoinDialog.tsx:179
 msgid "You have been previously removed from this group and can’t join it using this link."
 msgstr "이전에 이 그룹에서 내보내졌으므로 이 링크를 사용하여 다시 가입할 수 없습니다."
+
+#: src/components/dms/components/GroupChatProfileCard.tsx:32
+#: src/components/dms/InitiateChatFlow.tsx:1143
+msgid "You have blocked this account and can’t add them."
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:93
 #: src/lib/moderation/useModerationCauseDescription.ts:55
@@ -17205,7 +17227,7 @@ msgstr "동영상 업로드 일일 한도에 도달했습니다 (동영상 수�
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "시청할 동영상이 부족합니다. 잠시 쉬는 건 어떠신가요?"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:88
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:95
 msgid "Your ability to submit reports was restricted"
 msgstr "신고를 제출할 수 있는 권한이 제한되었습니다"
 
@@ -17219,7 +17241,7 @@ msgstr "내 계정"
 msgid "Your account cannot submit reports while it is suspended."
 msgstr "계정이 정지된 동안에는 신고를 제출할 수 없습니다."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:92
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
 msgid "Your account credentials were revoked"
 msgstr "내 계정의 자격 증명이 취소되었습니다"
 
@@ -17264,8 +17286,8 @@ msgstr "모든 공개 데이터 레코드가 포함된 계정 저장소를 ‘CA
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
 msgstr "내 계정이 <0>Bluesky Social 서비스 이용약관</0>을 위반한 것으로 확인되었습니다. 구체적인 위반 사항과 정지 기간(해당하는 경우)이 명시된 이메일을 전송했습니다. 이 결정이 잘못되었다고 생각되면 이의를 신청할 수 있습니다."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:67
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:91
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:73
 msgid "Your account was suspended"
 msgstr "내 계정이 일시 정지되었습니다"
@@ -17318,6 +17340,7 @@ msgstr "연락처에 있는 <0/> 님이 Bluesky에 있습니다"
 msgid "Your content"
 msgstr "내 콘텐츠"
 
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
 msgid "Your content was removed"
 msgstr "내 콘텐츠가 삭제되었습니다"
@@ -17418,7 +17441,7 @@ msgstr "비밀번호는 8자 이상이어야 합니다."
 msgid "Your post"
 msgstr "내 게시물"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:44
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
 msgid "Your post was removed"
 msgstr "내 게시물이 삭제되었습니다"

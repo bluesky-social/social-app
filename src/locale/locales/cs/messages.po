@@ -8,7 +8,7 @@ msgstr ""
 "Language: cs\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-30 14:58\n"
+"PO-Revision-Date: 2026-11-02 19:30\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
@@ -265,13 +265,13 @@ msgid "{0} <0>in <1>text & tags</1></0>"
 msgstr "{0} <0>v <1>textu a značkách</1></0>"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:44
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:45
 msgid "{0} added to chat"
 msgstr "{0} přidán do konverzace"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:46
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:47
 msgid "{0} and {1} added to chat"
 msgstr "Přidáno do konverzace: {0} a {1}"
 
@@ -392,7 +392,7 @@ msgstr "{0}, "
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:49
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:50
 msgid "{0}, {1} and {memberCount, plural, one {# other} other {# others}} added to chat"
 msgstr "{0}, {1} a {memberCount, plural, one {# další přidán} few {# další přidáni} other {# dalších přidáno}} do konverzace"
 
@@ -539,7 +539,7 @@ msgstr "{count, plural, one {# žádost} few {# žádosti} many {# žádostí} o
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# nepřečtená položka} few {# nepřečtené položky} many {# nepřečtených položek} other {# nepřečtených položek}}"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:333
+#: src/features/profileLinks/components/ProfileLinks.tsx:339
 msgid "{count, plural, one {Show # more link} other {Show # more links}}"
 msgstr "{count, plural, one {Zobrazit # další odkaz} few {Zobrazit # další odkazy} many {Zobrazit # dalších odkazů} other {Zobrazit # dalších odkazů}}"
 
@@ -764,8 +764,8 @@ msgstr "před {formatted}"
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr "{formattedPostCount} {postCount, plural, one {příspěvek} few {příspěvky} many {příspěvku} other {příspěvků}}"
 
-#: src/components/dms/components/GroupChatProfileCard.tsx:62
-#: src/components/dms/InitiateChatFlow.tsx:1158
+#: src/components/dms/components/GroupChatProfileCard.tsx:35
+#: src/components/dms/InitiateChatFlow.tsx:1146
 msgid "{handle} can’t be added"
 msgstr "{handle} nemůže být přidán"
 
@@ -786,7 +786,7 @@ msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesStrin
 msgstr "{hours, plural, one {# hodina {minutesString}} few {# hodiny {minutesString}} many {# hodin {minutesString}} other {# hodin {minutesString}}}"
 
 #: src/features/liveNow/utils.ts:44
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:69
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
 msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# hodina} few {# hodiny} many {# hodin} other {# hodin}}"
 
@@ -829,11 +829,11 @@ msgstr "{label}. {description}"
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
 msgstr "{MAX_ALT_TEXT, plural, one {Alternativní text musí být kratší než # znak.} few {Alternativní text musí být kratší než # znaky.} many {Alternativní text musí být kratší než # znaku.} other {Alternativní text musí být kratší než # znaků.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:448
+#: src/screens/Profile/Header/EditProfileDialog.tsx:452
 msgid "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DESCRIPTION, plural, other {Popis je příliš dlouhý. Maximální počet znaků je #.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:397
+#: src/screens/Profile/Header/EditProfileDialog.tsx:401
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DISPLAY_NAME, plural, other {Zobrazované jméno je příliš dlouhé. Maximální počet znaků je #.}}"
 
@@ -976,11 +976,11 @@ msgstr "{notificationCount, plural, one {# nepřečtená položka} few {# nepře
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
 msgstr "{numMatches, plural, one {nalezen # kontakt} few {nalezeny # kontakty} many {nalezeno # kontaktu} other {nalezeno # kontaktů}}"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:77
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
 msgid "{policyLabel} – {duration}"
 msgstr "{policyLabel} – {duration}"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:83
 msgid "{policyLabel} – {duration}, now expired"
 msgstr "{policyLabel} – {duration}, nyní vypršelo"
 
@@ -1307,25 +1307,30 @@ msgstr "Vodorovný pruh libovolného obsahu. Každá položka si zachovává vla
 msgid "A kawaii scene"
 msgstr "Kawaii scéna"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:78
 msgid "A label was added to your account"
 msgstr "K vašemu účtu byl přidán štítek"
 
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:63
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:81
 msgid "A label was added to your content"
 msgstr "K vašemu obsahu byl přidán štítek"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:56
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:62
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:80
 msgid "A label was added to your post"
 msgstr "K vašemu příspěvku byl přidán štítek"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:97
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:104
 msgid "A label was removed from your account"
 msgstr "Z vašeho účtu byl odstraněn štítek"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:98
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
+msgid "A label was removed from your content"
+msgstr ""
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:106
 msgid "A label was removed from your post"
 msgstr "Z vašeho příspěvku byl odstraněn štítek"
 
@@ -1715,9 +1720,9 @@ msgstr "Přidat odkaz"
 msgid "Add media to post"
 msgstr "Přidat média k příspěvku"
 
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:72
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:106
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:125
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:73
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:107
+#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:126
 msgid "Add members"
 msgstr "Přidat účastníky"
 
@@ -1739,8 +1744,8 @@ msgstr "Přidat ztlumení slova s vybranými nastaveními"
 msgid "Add muted words and tags"
 msgstr "Přidat zltumená slova a značky"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:133
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:172
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:134
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:173
 #: src/screens/ProfileList/AboutSection.tsx:72
 #: src/screens/ProfileList/AboutSection.tsx:90
 msgid "Add people"
@@ -3131,8 +3136,8 @@ msgstr "Je vyžadován přístup ke kameře"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
 #: src/screens/ModerationInbox/Notice.tsx:437
-#: src/screens/Profile/Header/EditProfileDialog.tsx:282
-#: src/screens/Profile/Header/EditProfileDialog.tsx:290
+#: src/screens/Profile/Header/EditProfileDialog.tsx:286
+#: src/screens/Profile/Header/EditProfileDialog.tsx:294
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
 #: src/screens/Search/components/SearchHistory.tsx:151
@@ -3603,11 +3608,11 @@ msgstr "Klikněte pro informace"
 msgid "click here"
 msgstr "klikněte zde"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:129
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:130
 msgid "Click here to add people to this group chat"
 msgstr "Klikněte zde pro přidání osob do tohoto skupinového chatu"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:143
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:144
 msgid "Click here to create or manage an invite link for this group chat"
 msgstr "Klikněte zde pro vytvoření nebo správu pozvánky pro tuto skupinovou konverzaci"
 
@@ -3637,7 +3642,7 @@ msgstr "Klikněte zde pro aktualizaci data narození"
 msgid "Click here to update your email"
 msgstr "Klikněte zde pro aktualizaci vašeho e-mailu"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:144
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:145
 msgid "Click here to view the invite link for this group chat"
 msgstr "Klikněte zde pro zobrazení pozvánky na tuto skupinovou konverzaci"
 
@@ -4691,8 +4696,8 @@ msgstr "Smazaný příspěvek"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:463
 #: src/components/SendErrorReportDialog.tsx:78
-#: src/screens/Profile/Header/EditProfileDialog.tsx:428
-#: src/screens/Profile/Header/EditProfileDialog.tsx:435
+#: src/screens/Profile/Header/EditProfileDialog.tsx:432
+#: src/screens/Profile/Header/EditProfileDialog.tsx:439
 msgid "Description"
 msgstr "Popis"
 
@@ -4916,8 +4921,8 @@ msgstr "Zavře skener QR kódů"
 msgid "Display larger alt text badges"
 msgstr "Zobrazit větší odznaky alternativního textu"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:378
-#: src/screens/Profile/Header/EditProfileDialog.tsx:384
+#: src/screens/Profile/Header/EditProfileDialog.tsx:382
+#: src/screens/Profile/Header/EditProfileDialog.tsx:388
 msgid "Display name"
 msgstr "Zobrazované jméno"
 
@@ -5074,7 +5079,7 @@ msgstr "Soumrak"
 msgid "e.g. alice"
 msgstr "např. alice"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:385
+#: src/screens/Profile/Header/EditProfileDialog.tsx:389
 msgid "e.g. Alice Lastname"
 msgstr "např. Alice Nováková"
 
@@ -5220,8 +5225,8 @@ msgstr "Upravit lidi"
 msgid "Edit post interaction settings"
 msgstr "Upravit nastavení interakcí s příspěvkem"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:332
-#: src/screens/Profile/Header/EditProfileDialog.tsx:339
+#: src/screens/Profile/Header/EditProfileDialog.tsx:336
+#: src/screens/Profile/Header/EditProfileDialog.tsx:343
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:300
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:351
 msgid "Edit profile"
@@ -5708,8 +5713,7 @@ msgstr "Nepodařilo se přijmout požadavek na přidání"
 msgid "Failed to add emoji reaction"
 msgstr "Nepodařilo se přidat reakci emoji"
 
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:45
-#: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:63
+#: src/components/dms/getAddGroupMembersErrorMessage.ts:14
 msgid "Failed to add members"
 msgstr "Nepodařilo se přidat členy"
 
@@ -7713,7 +7717,7 @@ msgstr "Pozvěte přátele <0/>"
 #: src/screens/Messages/components/InviteLinkDialog.tsx:327
 #: src/screens/Messages/components/InviteLinkDialog.tsx:333
 #: src/screens/Messages/components/InviteLinkDialog.tsx:512
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:149
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:150
 #: src/screens/Messages/ConversationSettings/index.tsx:561
 msgid "Invite link"
 msgstr "Odkaz na pozvánku"
@@ -7866,8 +7870,8 @@ msgstr "Štítek odstraněn"
 msgid "Label reply for algo"
 msgstr "Označit odpověď pro algoritmus"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:57
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:64
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:108
 msgid "Label: {labelName}"
 msgstr "Štítek: {labelName}"
 
@@ -7943,7 +7947,7 @@ msgstr "Nejnovější"
 #: src/components/verification/VerificationsDialog.tsx:169
 #: src/components/verification/VerifierDialog.tsx:137
 #: src/screens/Moderation/VerificationSettings.tsx:50
-#: src/screens/Profile/Header/EditProfileDialog.tsx:414
+#: src/screens/Profile/Header/EditProfileDialog.tsx:418
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:215
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:279
 msgctxt "english-only-resource"
@@ -8693,6 +8697,14 @@ msgstr "Členové"
 msgid "Members can still read chat history but can’t send new messages."
 msgstr "Členové mohou stále číst historii chatu, ale nemohou odesílat nové zprávy."
 
+#: src/components/dms/getAddGroupMembersErrorMessage.ts:12
+msgid "Members could not be added because one of the selected accounts has blocked you."
+msgstr ""
+
+#: src/components/dms/getAddGroupMembersErrorMessage.ts:10
+msgid "Members could not be added because you have blocked one of the selected accounts."
+msgstr ""
+
 #: src/components/WhoCanReply.tsx:302
 msgid "mentioned users"
 msgstr "zmíněné uživatele"
@@ -9151,19 +9163,19 @@ msgid "New chat"
 msgstr "Nová konverzace"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:61
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:62
 msgid "New chat with {0}"
 msgstr "Nová konverzace s uživatelem {0}"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:65
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:66
 msgid "New chat with {0} and {1}"
 msgstr "Nová konverzace s {0} a {1}"
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
-#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:73
+#: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:74
 msgid "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
 msgstr "Nová konverzace s {0}, {1} a {memberCount, plural, one {{memberCount} dalším} few {{memberCount} dalšími} many {{memberCount} dalšími} other {{memberCount} dalšími}}."
 
@@ -10135,7 +10147,7 @@ msgstr "Otevřít tuto skupinovou konverzaci"
 #. placeholder {0}: getLinkHost(link.url)
 #. placeholder {0}: link.url
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:85
-#: src/features/profileLinks/components/ProfileLinks.tsx:155
+#: src/features/profileLinks/components/ProfileLinks.tsx:161
 msgid "Opens {0} outside Bluesky"
 msgstr "Otevře {0} mimo Bluesky"
 
@@ -11107,7 +11119,7 @@ msgstr "Odkaz na profil byl zkopírován"
 msgid "Profile not found"
 msgstr "Profil nenalezen"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:247
+#: src/screens/Profile/Header/EditProfileDialog.tsx:251
 msgctxt "toast"
 msgid "Profile updated"
 msgstr "Profil byl aktualizován"
@@ -12220,8 +12232,8 @@ msgstr "Smutné GIFy"
 #: src/features/liveNow/components/EditLiveDialog.tsx:199
 #: src/features/liveNow/components/EditLiveDialog.tsx:206
 #: src/screens/Messages/ConversationSettings/prompts.tsx:74
-#: src/screens/Profile/Header/EditProfileDialog.tsx:300
-#: src/screens/Profile/Header/EditProfileDialog.tsx:314
+#: src/screens/Profile/Header/EditProfileDialog.tsx:304
+#: src/screens/Profile/Header/EditProfileDialog.tsx:318
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:315
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:269
@@ -13115,7 +13127,7 @@ msgstr "Zobrazit aktualizace skupinové konverzace"
 msgid "Show less like this"
 msgstr "Zobrazovat méně podobného obsahu"
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:170
+#: src/features/profileLinks/components/ProfileLinks.tsx:176
 msgid "Show link details"
 msgstr "Zobrazit podrobnosti odkazu"
 
@@ -14018,7 +14030,7 @@ msgstr "Naučte náš algoritmus, co se vám líbí"
 msgid "Tech"
 msgstr "Technologie"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:436
+#: src/screens/Profile/Header/EditProfileDialog.tsx:440
 msgid "Tell us a bit about yourself"
 msgstr "Řekněte nám o sobě něco málo"
 
@@ -14482,6 +14494,11 @@ msgstr "Tento účet má značku ověření, protože byl ověřen důvěryhodn�
 #: src/components/BotAccountAlert.tsx:27
 msgid "This account has been marked as automated by its owner."
 msgstr "Tento účet byl jeho vlastníkem označen jako automatizovaný."
+
+#: src/components/dms/components/GroupChatProfileCard.tsx:34
+#: src/components/dms/InitiateChatFlow.tsx:1145
+msgid "This account has blocked you and can’t be added."
+msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:95
 msgid "This account has one or more attempted verifications, but it is not currently verified."
@@ -16111,7 +16128,7 @@ msgstr "Zobrazí obrázek v plné velikosti"
 msgid "Views video in immersive mode"
 msgstr "Zobrazí video v režimu na celou obrazovku"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:46
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:51
 msgid "Violates Community Guideline: {policyLabel}"
 msgstr "Porušuje pravidlo komunity: {policyLabel}"
 
@@ -16277,7 +16294,7 @@ msgstr "Zkontrolovali jsme vaše nahlášení a zjistili jsme, že neporušuje n
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Na adresu <0>{0}</0> jsme odeslali e-mail s odkazem. Pro dokončení ověření e-mailu na něj klikněte."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:50
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
 msgid "We sent you an email about your account"
 msgstr "Zaslali jsme vám e-mail ohledně vašeho účtu"
 
@@ -16705,7 +16722,7 @@ msgstr "Nyní vysíláte živě!"
 msgid "You are verified"
 msgstr "Jste ověřeni"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:409
+#: src/screens/Profile/Header/EditProfileDialog.tsx:413
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
 msgstr "Jste ověřeni. Pokud změníte své zobrazované jméno, ztratíte status ověření. <0>Zjistit více.</0>"
 
@@ -16843,6 +16860,11 @@ msgstr "Byl jsi tu první"
 #: src/components/intents/GroupChatJoinDialog.tsx:179
 msgid "You have been previously removed from this group and can’t join it using this link."
 msgstr "Z této skupiny jste byli dříve odebráni a nemůžete se do ní pomocí tohoto odkazu připojit."
+
+#: src/components/dms/components/GroupChatProfileCard.tsx:32
+#: src/components/dms/InitiateChatFlow.tsx:1143
+msgid "You have blocked this account and can’t add them."
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:93
 #: src/lib/moderation/useModerationCauseDescription.ts:55
@@ -17205,7 +17227,7 @@ msgstr "Dosáhli jste denního limitu pro nahrávání videí (příliš mnoho v
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "Došla vám videa ke sledování. Možná je vhodný čas si dát pauzu?"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:88
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:95
 msgid "Your ability to submit reports was restricted"
 msgstr "Vaše možnost odesílat nahlášení byla omezena"
 
@@ -17219,7 +17241,7 @@ msgstr "Váš účet"
 msgid "Your account cannot submit reports while it is suspended."
 msgstr "Váš účet nemůže odesílat nahlášení, pokud je pozastaven."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:92
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
 msgid "Your account credentials were revoked"
 msgstr "Přihlašovací údaje k vašemu účtu byly zrušeny"
 
@@ -17264,8 +17286,8 @@ msgstr "Repozitář vašeho účtu, který obsahuje všechny veřejné datové z
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
 msgstr "Bylo zjištěno, že váš účet porušuje <0>Podmínky služby Bluesky Social</0>. Byl vám zaslán e-mail s popisem konkrétního porušení a případné doby pozastavení účtu. Pokud se domníváte, že toto rozhodnutí bylo učiněno chybně, můžete se proti němu odvolat."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:67
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:91
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:73
 msgid "Your account was suspended"
 msgstr "Váš účet byl pozastaven"
@@ -17318,6 +17340,7 @@ msgstr "Váš kontakt <0/> je na Bluesky"
 msgid "Your content"
 msgstr "Váš obsah"
 
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
 msgid "Your content was removed"
 msgstr "Váš obsah byl odstraněn"
@@ -17418,7 +17441,7 @@ msgstr "Vaše heslo musí mít alespoň 8 znaků."
 msgid "Your post"
 msgstr "Váš příspěvek"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:44
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
 msgid "Your post was removed"
 msgstr "Váš příspěvek byl odstraněn"
