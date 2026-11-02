@@ -11,6 +11,7 @@ import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {AddMembersFlow} from '#/components/dms/AddMembersFlow'
+import {getAddGroupMembersErrorMessage} from '#/components/dms/getAddGroupMembersErrorMessage'
 import {type ConvoWithDetails} from '#/components/dms/util'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
@@ -42,7 +43,7 @@ export function MessagesListGroupInfoPanel({
     },
     onError: e => {
       logger.error('Failed to add group chat members', {message: e})
-      Toast.show(l`Failed to add members`, {type: 'error'})
+      Toast.show(l(getAddGroupMembersErrorMessage(e)), {type: 'error'})
     },
   })
 
