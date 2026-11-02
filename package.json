@@ -133,7 +133,7 @@
     "@bsky.app/expo-translate-text": "^0.2.9",
     "@bsky.app/peek-menu": "^0.3.2",
     "@bsky.app/react-native-scroll-forwarder": "link:./modules/react-native-scroll-forwarder",
-    "@bsky.app/react-native-uitextview": "^2.7.1",
+    "@bsky.app/react-native-uitextview": "^2.7.2",
     "@bsky.app/sift": "^0.3.9",
     "@bsky.app/tapper": "^0.6.1",
     "@bsky.app/video": "0.4.2",

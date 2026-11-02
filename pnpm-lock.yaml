@@ -291,8 +291,8 @@ importers:
         specifier: link:./modules/react-native-scroll-forwarder
         version: link:modules/react-native-scroll-forwarder
       '@bsky.app/react-native-uitextview':
-        specifier: ^2.7.1
-        version: 2.7.1(react-native@0.88.0(patch_hash=1f80f55b2279e2e11bc734ee488debb302cbca469cd25a4720eae9ff2211d691)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)
+        specifier: ^2.7.2
+        version: 2.7.2(react-native@0.88.0(patch_hash=1f80f55b2279e2e11bc734ee488debb302cbca469cd25a4720eae9ff2211d691)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)
       '@bsky.app/sift':
         specifier: ^0.3.9
         version: 0.3.9(expo@58.0.19)(react-native-safe-area-context@5.10.1(patch_hash=308b83c6e4dd215b2e930a0a07177297948a8d49eded4020bf7244b6e48b0124)(react-native@0.88.0(patch_hash=1f80f55b2279e2e11bc734ee488debb302cbca469cd25a4720eae9ff2211d691)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0))(react-native@0.88.0(patch_hash=1f80f55b2279e2e11bc734ee488debb302cbca469cd25a4720eae9ff2211d691)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)
@@ -1834,8 +1834,8 @@ packages:
       react: '*'
       react-native: '*'
 
-  '@bsky.app/react-native-uitextview@2.7.1':
-    resolution: {integrity: sha512-hy1UCDFwBJc+GAzezaLx5Xl++lqRoN4/Y38VbUQ27htYfGXSSUl9UAc1hmaiFxKwRD4KZjclo6JQuB5cRWbVPg==}
+  '@bsky.app/react-native-uitextview@2.7.2':
+    resolution: {integrity: sha512-VTgGOho7+EBy+Ehd1aQAhr2Vq7mjAOyA/LOKhWgFiPJHhkjULC4RZya84+XUTQ0wGlbqvwM4jwKQhKvRQzi8Pw==}
     peerDependencies:
       react: '*'
       react-native: '>=0.81.5'
@@ -11130,7 +11130,7 @@ snapshots:
       react: 19.3.0
       react-native: 0.88.0(patch_hash=1f80f55b2279e2e11bc734ee488debb302cbca469cd25a4720eae9ff2211d691)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1)
 
-  '@bsky.app/react-native-uitextview@2.7.1(react-native@0.88.0(patch_hash=1f80f55b2279e2e11bc734ee488debb302cbca469cd25a4720eae9ff2211d691)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)':
+  '@bsky.app/react-native-uitextview@2.7.2(react-native@0.88.0(patch_hash=1f80f55b2279e2e11bc734ee488debb302cbca469cd25a4720eae9ff2211d691)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)':
     dependencies:
       react: 19.3.0
       react-native: 0.88.0(patch_hash=1f80f55b2279e2e11bc734ee488debb302cbca469cd25a4720eae9ff2211d691)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1)
