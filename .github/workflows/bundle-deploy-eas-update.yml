@@ -164,7 +164,7 @@ jobs:
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
-        uses: bluesky-social/github-actions/fingerprint-native@2287aefd4ddca2914fd85715cbe47124b7d9f360 # v0.4.0
+        uses: bluesky-social/github-actions/fingerprint-native@b88e349da268d7ec3f2b039196393da55c25f6a4 # v0.5.0
         with:
           profile: ${{ inputs.channel || 'testflight' }}
           previous-commit-tag: ${{ inputs.runtimeVersion }}
@@ -202,7 +202,7 @@ jobs:
         run: pnpm icons:check
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
+        uses: expo/expo-github-action@9da89d3617bb88139671bad31b09c65714c2ee06 # 9.0.1
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
           !steps.version.outputs.version-changed }}
         with:
