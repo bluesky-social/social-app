@@ -416,6 +416,8 @@ export function LabelText({
   const t = useTheme()
   return (
     <Text
+      // For the item shapes in style.css
+      dataSet={{menuLabel: ''}}
       style={[
         a.px_sm,
         // With the 17px line, a 32px row.
