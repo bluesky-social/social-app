@@ -165,23 +165,23 @@ function GlyphIcon({glyph}: {glyph: Glyph}) {
 
   switch (glyph) {
     case 'like':
-      return <HeartIcon size="xl" fill={t.palette.pink} />
+      return <HeartIcon size="2xl" fill={t.palette.pink} />
     case 'repost':
-      return <RepostIcon size="xl" fill={t.palette.positive_500} />
+      return <RepostIcon size="2xl" fill={t.palette.positive_500} />
     case 'likeViaRepost':
-      return <LikeRepostIcon size="xl" fill={t.palette.pink} />
+      return <LikeRepostIcon size="2xl" fill={t.palette.pink} />
     case 'repostViaRepost':
-      return <RepostRepostIcon size="xl" fill={t.palette.positive_500} />
+      return <RepostRepostIcon size="2xl" fill={t.palette.positive_500} />
     case 'follow':
-      return <PersonPlusIcon size="xl" fill={t.palette.primary_500} />
+      return <PersonPlusIcon size="2xl" fill={t.palette.primary_500} />
     case 'verified':
-      return <VerifiedCheck size="xl" />
+      return <VerifiedCheck size="2xl" />
     case 'unverified':
-      return <VerifiedCheck size="xl" fill={t.palette.contrast_500} />
+      return <VerifiedCheck size="2xl" fill={t.palette.contrast_500} />
     case 'starterPack':
-      return <StarterPackIcon width={30} gradient="sky" />
+      return <StarterPackIcon width={34} gradient="sky" />
     case 'contacts':
-      return <ContactsIcon size="xl" fill={t.palette.primary_500} />
+      return <ContactsIcon size="2xl" fill={t.palette.primary_500} />
   }
 }
 
@@ -214,7 +214,7 @@ export function AvatarSkeleton() {
 export function IconSkeleton() {
   return (
     <View style={[a.align_end, {width: AVATAR_SIZE}]}>
-      <Skele.Circle size={28} />
+      <Skele.Circle size={32} />
     </View>
   )
 }
