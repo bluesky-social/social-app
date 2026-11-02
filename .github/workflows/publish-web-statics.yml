@@ -1,4 +1,5 @@
 name: publish-web-statics
+run-name: publish-web-statics ${{ inputs.sourceRef }}
 
 # Builds the web app and publishes its statics to S3 under <commit SHA>/, so
 # bskyweb can serve them by setting BSKY_APP_VERSION to that SHA. Publishing
@@ -8,7 +9,7 @@ on:
     inputs:
       sourceRef:
         type: string
-        description: Commit SHA, branch, or tag to build
+        description: Full 40-character commit SHA to build
         required: true
 
 permissions:
@@ -24,6 +25,15 @@ jobs:
       id-token: write
 
     steps:
+      - name: Validate source SHA
+        env:
+          SOURCE_SHA: ${{ inputs.sourceRef }}
+        run: |
+          if [[ ! "$SOURCE_SHA" =~ ^[0-9a-fA-F]{40}$ ]]; then
+            echo "::error::sourceRef must be a full 40-character commit SHA"
+            exit 1
+          fi
+
       # Temporary until fixed runner images roll out:
       # https://github.com/actions/runner-images/issues/15018
       - name: Update Ubuntu CA certificates
