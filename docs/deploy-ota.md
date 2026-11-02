@@ -90,14 +90,14 @@ and run the action.
 
 **For web,** in the **social-app repository**, run the
 [publish-web-statics GitHub Actions workflow](https://github.com/bluesky-social/social-app/actions/workflows/publish-web-statics.yml)
-with **"Use workflow from" set to `main`** and **`sourceRef` set to the latest
+with **"Use workflow from" set to `main`** and **`sha` set to the latest
 commit SHA on your OTA branch `1.x.0-ota-x`**.
 
 ### 7. Deploy web
 
 After the workflow succeeds, open a PR in the **deploy repository** updating
 **`BSKY_APP_VERSION` in `apps/bapp/values.yaml`** to the same commit SHA used in
-`sourceRef`. Post this hash in `#ops-deploys`, and merge the PR to deploy the frontend.
+`sha`. Post this hash in `#ops-deploys`, and merge the PR to deploy the frontend.
 
 ### 8. Confirm successful deployment
 

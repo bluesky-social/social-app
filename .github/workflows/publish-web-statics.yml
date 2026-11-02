@@ -1,5 +1,5 @@
 name: publish-web-statics
-run-name: publish-web-statics ${{ inputs.sourceRef }}
+run-name: publish-web-statics ${{ inputs.sha }}
 
 # Builds the web app and publishes its statics to S3 under <commit SHA>/, so
 # bskyweb can serve them by setting BSKY_APP_VERSION to that SHA. Publishing
@@ -7,9 +7,9 @@ run-name: publish-web-statics ${{ inputs.sourceRef }}
 on:
   workflow_dispatch:
     inputs:
-      sourceRef:
+      sha:
         type: string
-        description: Full 40-character commit SHA to build
+        description: Full 40-character commit SHA from the release-1.***.* branch you want to deploy
         required: true
 
 permissions:
@@ -27,10 +27,10 @@ jobs:
     steps:
       - name: Validate source SHA
         env:
-          SOURCE_SHA: ${{ inputs.sourceRef }}
+          SOURCE_SHA: ${{ inputs.sha }}
         run: |
           if [[ ! "$SOURCE_SHA" =~ ^[0-9a-fA-F]{40}$ ]]; then
-            echo "::error::sourceRef must be a full 40-character commit SHA"
+            echo "::error::sha must be a full 40-character commit SHA"
             exit 1
           fi
 
@@ -44,7 +44,7 @@ jobs:
       - name: ⬇️ Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ inputs.sourceRef }}
+          ref: ${{ inputs.sha }}
           persist-credentials: false
 
       - name: Resolve build source
