@@ -118,8 +118,8 @@ export function Notifications() {
 
 /**
  * Someone quoting each of the embed fixtures' quoted posts, then likes of
- * posts with media or a link, then mentions that are nothing but a video,
- * which play in full.
+ * posts with media or a link, then mentions that are nothing but media,
+ * which show in full.
  */
 const MEDIA_NOTIFICATIONS: NotificationView[] = [
   ...[...QUOTES, ...QUOTE_PLACEHOLDERS].map(
@@ -158,12 +158,14 @@ const MEDIA_NOTIFICATIONS: NotificationView[] = [
       embed,
     }),
   })),
-  ...[MEDIA.video, MEDIA.videoGif].map((embed, i): NotificationView => ({
-    type: 'mention',
-    id: `story-mention-${i}`,
-    isRead: true,
-    indexedAt: new Date(Date.now() - (i + 40) * 60_000).toISOString(),
-    count: 1,
-    post: postWith({rkey: `story-mention-${i}`, text: '', embed}),
-  })),
+  ...[MEDIA.oneImage, MEDIA.threeImages, MEDIA.video, MEDIA.videoGif].map(
+    (embed, i): NotificationView => ({
+      type: 'mention',
+      id: `story-mention-${i}`,
+      isRead: true,
+      indexedAt: new Date(Date.now() - (i + 40) * 60_000).toISOString(),
+      count: 1,
+      post: postWith({rkey: `story-mention-${i}`, text: '', embed}),
+    }),
+  ),
 ]
