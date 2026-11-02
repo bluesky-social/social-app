@@ -1549,6 +1549,10 @@ export type Events = {
   'profile:associated:germ:self-reconnect': {}
 
   'profile:links:click': {
+    /**
+     * The profile the link is on, not the viewer.
+     */
+    profileDid: string
     domain: string
     /**
      * Name of the recognized support provider, if the link is a support link.
@@ -1560,6 +1564,7 @@ export type Events = {
    * A profile showing links was viewed. The denominator for tap rate.
    */
   'profile:links:impression': {
+    profileDid: string
     linkCount: number
     supportLinkCount: number
     isOwnProfile: boolean
@@ -1589,6 +1594,7 @@ export type Events = {
    * A visitor opened a link's details, e.g. by long-pressing it.
    */
   'profile:links:preview': {
+    profileDid: string
     domain: string
     supportProvider: string | undefined
   }
