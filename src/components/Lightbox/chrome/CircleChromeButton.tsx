@@ -27,9 +27,13 @@ type Props = {
   | 'accessibilityHint'
 >
 
-const SIZE = 32
+/**
+ * Apple's minimum tap size. The image options button is a native menu trigger
+ * on iOS, where `hitSlop` doesn't apply, so the circle itself is the target.
+ */
+const SIZE = 44
 const RADIUS = SIZE / 2
-const ICON = 18
+const ICON = 24
 
 export function CircleChromeButton({
   icon: Icon,
