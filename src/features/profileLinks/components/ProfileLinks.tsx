@@ -125,6 +125,7 @@ function ProfileLinksRow({
   const logClick = (link: ProfileLink) => {
     ax.metric('profile:links:click', {
       profileDid: profile.did,
+      linkUri: link.uri,
       domain: getLinkHost(link.url),
       supportProvider: getSupportProvider(link.url)?.name,
       isOwnProfile,
@@ -134,8 +135,10 @@ function ProfileLinksRow({
   const showPreview = (link: ProfileLink) => {
     ax.metric('profile:links:preview', {
       profileDid: profile.did,
+      linkUri: link.uri,
       domain: getLinkHost(link.url),
       supportProvider: getSupportProvider(link.url)?.name,
+      isOwnProfile,
     })
     setActiveLink(link)
     previewControl.open()
