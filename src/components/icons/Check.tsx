@@ -8,6 +8,12 @@ export const Check_Stroke2_Corner0_Rounded = createSinglePathSVG({
   glyph: 'Check_Stroke2_Corner0_Rounded',
 })
 
+export const Check_Stroke3_Corner0_Rounded = createSinglePathSVG({
+  path: 'M19.645 4.527a1.6 1.6 0 0 1 2.196-.169c.655.538.734 1.484.176 2.115l-11.948 13.5a1.58 1.58 0 0 1-1.086.524 1.6 1.6 0 0 1-1.148-.387l-5.714-5a1.46 1.46 0 0 1-.105-2.119 1.6 1.6 0 0 1 2.201-.101l4.523 3.958 10.905-12.32Z',
+  viewBox: '0 0 24 24',
+  glyph: 'Check_Stroke3_Corner0_Rounded',
+})
+
 export const CheckThick_Stroke2_Corner0_Rounded = createSinglePathSVG({
   path: 'M21.474 2.98a2.5 2.5 0 0 1 .545 3.494l-10.222 14a2.5 2.5 0 0 1-3.528.52L2.49 16.617a2.5 2.5 0 0 1 3.018-3.986l3.75 2.84L17.98 3.525a2.5 2.5 0 0 1 3.493-.545Z',
   viewBox: '0 0 24 24',
