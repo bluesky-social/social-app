@@ -25,9 +25,9 @@ matches what's live in production.
 
 ### 1. Find the build numbers
 
-Find the iOS build number and Android version code of the production builds.
-The quickest place to look is the summary of the latest successful [Build and
-Submit
+Find the iOS build number and Android version code of the production builds. You
+can find these in App Store Connect and Google Play Console, but the quickest
+place to look is the summary of the latest successful [Build and Submit
 iOS](https://github.com/bluesky-social/social-app/actions/workflows/build-submit-ios.yml)
 and [Build and Submit
 Android](https://github.com/bluesky-social/social-app/actions/workflows/build-submit-android.yml)
@@ -52,16 +52,15 @@ commit to fingerprint and diff against.
 
 ### 3. Create a branch off the release branch
 
-Create a branch off `release-x.y.z`. The name doesn't matter much since the PR
-is squash-merged, but something like `yourname/release-x.y.z-ota-1` keeps it
-easy to find. Double check that the `version` in `package.json` is `x.y.z`.
+Create a branch off `release-x.y.z` with the pattern `release-x.y.z-ota-n`.
+Double check that the `version` in `package.json` is `x.y.z`.
 
 Then cherry-pick the commits that need to be deployed, in the order they landed
 on `main`:
 
 ```sh
 git fetch origin
-git switch -c yourname/release-x.y.z-ota-1 origin/release-x.y.z --no-track
+git switch -c release-x.y.z-ota-1 origin/release-x.y.z --no-track
 git cherry-pick <sha> <sha> ...
 ```
 
@@ -89,9 +88,9 @@ branch.
 
 ### 6. Run the GitHub actions
 
-You'll need to run two separate actions: one to deploy the iOS/Android OTA
-itself, and one to build the web Docker container. Run both from the
-`release-x.y.z` branch, not from your PR branch.
+You'll need to run two separate workflows: one to deploy the iOS/Android OTA
+itself from `release-x.y.z`, and one to build and publish the web frontend
+using the workflow on `main` with the release branch's commit SHA.
 
 **For the iOS/Android OTA,** head to [Actions > Bundle and Deploy EAS
 Update](https://github.com/bluesky-social/social-app/actions/workflows/bundle-deploy-eas-update.yml)
@@ -114,19 +113,16 @@ and run the action.
 >   version and build numbers you entered will not match any clients in the
 >   wild, so none will be able to receive the update.
 
-**For web,** head to [Actions >
-build-and-push-bskyweb-aws](https://github.com/bluesky-social/social-app/actions/workflows/build-and-push-bskyweb-aws.yaml)
-and run the action.
-
-| Steps |     |
-| ----- | --- |
-| Select the `release-x.y.z` branch, leave `sourceRef` empty to build the tip of the branch, and click "Run workflow" | ![workflow](./img/web_action.png) |
+**For web,** in the **social-app repository**, run the
+[publish-web-statics GitHub Actions workflow](https://github.com/bluesky-social/social-app/actions/workflows/publish-web-statics.yml)
+with **"Use workflow from" set to `main`** and **`sha` set to the full
+40-character commit SHA of the OTA squash-merge on `release-x.y.z`**.
 
 ### 7. Deploy web
 
-Once the web Docker container build finishes, copy the most recent commit hash
-on `release-x.y.z`. Post this hash in `#ops-deploys` and request someone with
-web deploy access deploy the built container.
+After the workflow succeeds, open a PR in the **deploy repository** updating
+**`BSKY_APP_VERSION` in `apps/bapp/values.yaml`** to the same commit SHA used in
+`sha`. Post this hash in `#ops-deploys`, and merge the PR to deploy the frontend.
 
 ### 8. Confirm successful deployment
 

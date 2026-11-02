@@ -2691,7 +2691,7 @@ msgid "Beta Feature"
 msgstr ""
 
 #: src/Navigation.tsx:459
-#: src/screens/Notifications/index.tsx:671
+#: src/screens/Notifications/index.tsx:672
 #: src/screens/Settings/BetaFeaturesSettings.tsx:142
 #: src/screens/Settings/Settings.tsx:276
 #: src/screens/Settings/Settings.tsx:279
@@ -9703,7 +9703,7 @@ msgstr "Notice"
 #: src/components/dialogs/NotificationSettingsDialog.tsx:72
 #: src/Navigation.tsx:498
 #: src/Navigation.tsx:585
-#: src/screens/Notifications/index.tsx:683
+#: src/screens/Notifications/index.tsx:684
 #: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
 msgstr ""
@@ -9717,7 +9717,7 @@ msgstr ""
 #: src/Navigation.tsx:933
 #: src/screens/Messages/Settings.tsx:255
 #: src/screens/Notifications/ActivityList.tsx:31
-#: src/screens/Notifications/index.tsx:661
+#: src/screens/Notifications/index.tsx:662
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
 #: src/screens/Settings/NotificationSettings/index.tsx:128
 #: src/screens/Settings/Settings.tsx:226
@@ -10253,7 +10253,7 @@ msgstr ""
 msgid "Opens this profile"
 msgstr ""
 
-#: src/screens/Notifications/index.tsx:672
+#: src/screens/Notifications/index.tsx:673
 msgid "Opens your beta features settings"
 msgstr "Opens your beta features settings"
 

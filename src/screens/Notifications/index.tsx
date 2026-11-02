@@ -613,9 +613,10 @@ function NotificationsHeader({
       {/*
        * On native, the background fades out under the header, down to the
        * bottom of the pills as they move up. On web, the title and the pills
-       * each have their own background. On tablets it stays inside the center
-       * column, like `NativeCenterBorders`, so it doesn't cover the column's
-       * borders or the scroll indicator at the edge of the screen
+       * each have their own background. On wider screens it all stays inside
+       * the center column, like `NativeCenterBorders`, so it doesn't cover the
+       * column's borders, the scroll indicator at the edge of the screen, or
+       * the side columns on web
        */}
       {!IS_WEB && (
         <Animated.View
@@ -648,7 +649,7 @@ function NotificationsHeader({
         style={[IS_LIQUID_GLASS && {paddingTop: insets.top}, titleStyle]}
         onLayout={onTitleLayout}>
         {IS_WEB && (
-          <View
+          <Layout.Center
             pointerEvents="none"
             style={[a.absolute, a.inset_0, t.atoms.bg]}
           />
@@ -700,7 +701,11 @@ function NotificationsHeader({
       <Animated.View
         style={pillsStyle}
         onLayout={event => setPillsHeight(event.nativeEvent.layout.height)}>
-        {IS_WEB && <HeaderFade />}
+        {IS_WEB && (
+          <Layout.Center pointerEvents="none" style={[a.absolute, a.inset_0]}>
+            <HeaderFade />
+          </Layout.Center>
+        )}
         <Layout.Center>{children}</Layout.Center>
       </Animated.View>
       {/* Last, so the backgrounds above don't cover it */}

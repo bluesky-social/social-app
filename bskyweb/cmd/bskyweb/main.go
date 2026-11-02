@@ -125,6 +125,27 @@ func run(args []string) {
 					Value:    "",
 					EnvVars:  []string{"STATIC_CDN_HOST"},
 				},
+				&cli.StringFlag{
+					Name:     "bsky-app-version",
+					Usage:    "commit SHA of the web app build to serve from the statics bucket. Empty serves the build embedded in the binary",
+					Required: false,
+					Value:    "",
+					EnvVars:  []string{"BSKY_APP_VERSION"},
+				},
+				&cli.StringFlag{
+					Name:     "bsky-app-statics-bucket",
+					Usage:    "S3 bucket with the web app builds, used when bsky-app-version is set",
+					Required: false,
+					Value:    "bsky-app-web-statics-prod",
+					EnvVars:  []string{"BSKY_APP_STATICS_BUCKET"},
+				},
+				&cli.StringFlag{
+					Name:     "bsky-app-statics-region",
+					Usage:    "AWS region of the web app statics bucket",
+					Required: false,
+					Value:    "us-east-2",
+					EnvVars:  []string{"BSKY_APP_STATICS_REGION"},
+				},
 				&cli.BoolFlag{
 					Name:     "bsky-canonical-instance",
 					Usage:    "Enable if this is the canonical deployment (bsky.app)",
