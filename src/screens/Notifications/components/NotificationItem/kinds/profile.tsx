@@ -9,6 +9,7 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
+import {NotificationVerifiedSmall_Filled_Corner0_Rounded as CheckIcon} from '#/components/icons/Notification'
 import type * as bsky from '#/types/bsky'
 import * as Item from '../Item'
 import {type NotificationOf} from '../types'
@@ -227,10 +228,10 @@ export function VerifiedNotification({
       isRead={notification.isRead}
       label={l`${name} verified you`}
       onBeforePress={cacheProfile}
+      style={a.align_center}
       testID={`notification-verified-${notification.id}`}>
-      <Item.Icon glyph="verified" />
+      <Item.Avatar profile={actor} icon={CheckIcon} tone="follow" />
       <Item.Content>
-        <Item.AvatarRow actor={actor} />
         <Item.PrimaryText>
           <Trans>
             <Item.Name profile={actor} /> verified you
@@ -262,10 +263,10 @@ export function UnverifiedNotification({
       isRead={notification.isRead}
       label={l`${name} removed their verification from your account`}
       onBeforePress={cacheProfile}
+      style={a.align_center}
       testID={`notification-unverified-${notification.id}`}>
-      <Item.Icon glyph="unverified" />
+      <Item.Avatar profile={actor} icon={CheckIcon} tone="neutral" />
       <Item.Content>
-        <Item.AvatarRow actor={actor} />
         <Item.PrimaryText>
           <Trans>
             <Item.Name profile={actor} /> removed their verification from your
@@ -335,10 +336,10 @@ export function ContactMatchNotification({
       // Lets screen readers reach the follow button
       accessible={false}
       onBeforePress={cacheProfile}
+      style={a.align_center}
       testID={`notification-contactMatch-${notification.id}`}>
-      <Item.Icon glyph="contacts" />
+      <Item.Avatar profile={actor} />
       <Item.Content>
-        <Item.AvatarRow actor={actor} />
         <Item.HeadlineWithButton
           button={
             <Item.FollowButton

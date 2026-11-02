@@ -5,9 +5,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {StarterPackMultiPathLarge as StarterPackIcon} from '#/components/icons/brands/StarterPack'
-import {VerifiedCheck} from '#/components/icons/brands/VerifiedCheck'
 import {type Props as SVGIconProps} from '#/components/icons/common'
-import {Contacts_Filled_Corner2_Rounded as ContactsIcon} from '#/components/icons/Contacts'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
 import {LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon} from '#/components/icons/LikeRepost'
 import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
@@ -22,7 +20,7 @@ import {useItemBackgroundColor} from './Root'
 /**
  * The colour family of a notification's icon badge.
  */
-export type BadgeTone = 'conversation' | 'activity'
+export type BadgeTone = 'follow' | 'conversation' | 'activity' | 'neutral'
 
 /**
  * The v1-style icon that a reaction row has in its left column instead of an
@@ -34,10 +32,7 @@ export type Glyph =
   | 'likeViaRepost'
   | 'repostViaRepost'
   | 'follow'
-  | 'verified'
-  | 'unverified'
   | 'starterPack'
-  | 'contacts'
 
 /**
  * Activity (subscribed post) badges use an orange that isn't in the ALF
@@ -47,7 +42,7 @@ const ACTIVITY_ORANGE = '#F26022'
 
 /**
  * Reply, quote and mention badges use a purple that isn't in the ALF palette
- * yet.
+ * yet, which sets them apart from repost green and follow blue.
  */
 const CONVERSATION_PURPLE = '#8679FC'
 
@@ -82,18 +77,18 @@ const BADGE_POSITION = {
 }
 
 /**
- * The author's avatar, for a row about their post (a reply, quote, mention or
- * post alert), with an icon badge overlapping its bottom-end corner that says
- * what kind of notification this is. Reactions have an `Icon` instead.
+ * The primary actor's avatar, with an icon badge overlapping its bottom-end
+ * corner that says what kind of notification this is. Omit `icon` for an
+ * unbadged avatar. Likes, reposts and follows have an `Icon` instead.
  */
 export function Avatar({
   profile,
   icon: Icon,
-  tone,
+  tone = 'follow',
 }: {
   profile: bsky.profile.AnyProfileView
-  icon: React.ComponentType<SVGIconProps>
-  tone: BadgeTone
+  icon?: React.ComponentType<SVGIconProps>
+  tone?: BadgeTone
 }) {
   const t = useTheme()
   const ringColor = useItemBackgroundColor()
@@ -103,12 +98,19 @@ export function Avatar({
     : undefined
 
   const badgeColor = {
+    follow: t.palette.primary_500,
     conversation: CONVERSATION_PURPLE,
     activity: ACTIVITY_ORANGE,
+    neutral: t.palette.contrast_500,
   }[tone]
 
   return (
-    <View style={SLOT_SIZE}>
+    <View
+      style={[
+        SLOT_SIZE,
+        // Without a badge, the avatar sits vertically centred in its slot
+        !Icon && a.justify_center,
+      ]}>
       <PreviewableUserAvatar
         size={AVATAR_SIZE}
         profile={profile}
@@ -117,32 +119,34 @@ export function Avatar({
         // It would cover the badge. The red ring still says they're live
         hideLiveBadge
       />
-      {/*
-       * The ring is a padded circle behind the badge rather than a border on
-       * it. A view's background is drawn under its border too, so it would
-       * show through the anti-aliased edge of the ring.
-       */}
-      <View
-        style={[
-          a.absolute,
-          a.rounded_full,
-          BADGE_POSITION,
-          {padding: BADGE_RING, backgroundColor: ringColor},
-        ]}>
+      {Icon && (
+        /*
+         * The ring is a padded circle behind the badge rather than a border
+         * on it. A view's background is drawn under its border too, so it
+         * would show through the anti-aliased edge of the ring.
+         */
         <View
           style={[
+            a.absolute,
             a.rounded_full,
-            a.align_center,
-            a.justify_center,
-            {
-              width: BADGE_SIZE,
-              height: BADGE_SIZE,
-              backgroundColor: badgeColor,
-            },
+            BADGE_POSITION,
+            {padding: BADGE_RING, backgroundColor: ringColor},
           ]}>
-          <Icon size="xs" fill={t.palette.white} />
+          <View
+            style={[
+              a.rounded_full,
+              a.align_center,
+              a.justify_center,
+              {
+                width: BADGE_SIZE,
+                height: BADGE_SIZE,
+                backgroundColor: badgeColor,
+              },
+            ]}>
+            <Icon size="xs" fill={t.palette.white} />
+          </View>
         </View>
-      </View>
+      )}
     </View>
   )
 }
@@ -174,14 +178,8 @@ function GlyphIcon({glyph}: {glyph: Glyph}) {
       return <RepostRepostIcon size="2xl" fill={t.palette.positive_500} />
     case 'follow':
       return <PersonPlusIcon size="2xl" fill={t.palette.primary_500} />
-    case 'verified':
-      return <VerifiedCheck size="2xl" />
-    case 'unverified':
-      return <VerifiedCheck size="2xl" fill={t.palette.contrast_500} />
     case 'starterPack':
       return <StarterPackIcon width={34} gradient="sky" />
-    case 'contacts':
-      return <ContactsIcon size="2xl" fill={t.palette.primary_500} />
   }
 }
 
