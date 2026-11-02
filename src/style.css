@@ -152,8 +152,10 @@ input:focus {
    of the menu's first and last items, which are concentric with the menu's:
    its 16px radius minus its 8px padding. Groups don't wrap their items on
    web, so the items are siblings, and this counts them across the whole menu,
-   including items rendered by custom components and not hidden ones.
-   Highlighted and selected items override these with an inline 8px. */
+   including items rendered by custom components and not hidden ones. An
+   item directly above a label, like a footnote, ends its block, so its
+   bottom corners are rounder too. Highlighted and selected items override
+   all of these with an inline 8px. */
 [data-menu-item] {
   border-radius: 4px;
 }
@@ -161,7 +163,8 @@ input:focus {
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
-[data-menu-item]:nth-last-child(1 of [data-menu-item]) {
+[data-menu-item]:nth-last-child(1 of [data-menu-item]),
+[data-menu-item]:has(+ [data-menu-label]) {
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
 }
