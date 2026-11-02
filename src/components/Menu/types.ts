@@ -38,8 +38,8 @@ export type RootProps = React.PropsWithChildren<{
    * counterparts. Native menus can't host React Native views, so
    * `ContainerItem` and any custom item content are dropped, and icons only
    * show if they render as nano-icons glyphs. `Menu.Trigger` and `Menu.Outer`
-   * must be direct children of `Menu.Root`, and the items must be mounted
-   * before the menu opens. Otherwise the menu falls back to the bottom sheet.
+   * must be direct children of `Menu.Root`, otherwise the menu falls back to
+   * the bottom sheet.
    *
    * iOS menus can't be opened programmatically, so `control.open()` does
    * nothing there.
