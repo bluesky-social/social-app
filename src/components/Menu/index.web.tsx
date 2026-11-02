@@ -201,12 +201,13 @@ export function Outer({children, style, onCloseAutoFocus}: OuterProps) {
         <View
           style={[
             /*
-             * The first and last items' outer corners are concentric with
-             * these: the radius minus the padding. See `[data-menu-item]` in
+             * Material 3's menu tokens: items inset 4px, and the first and
+             * last items' outer corners concentric with these, i.e. the
+             * radius minus the padding. See `[data-menu-item]` in
              * `src/style.css`.
              */
             a.rounded_lg,
-            a.p_sm,
+            a.p_xs,
             t.name === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
             t.atoms.border_contrast_low,
             {borderWidth: 0.5, minWidth: 160},
@@ -283,13 +284,16 @@ export function Item({
           a.flex_row,
           a.align_center,
           a.gap_sm,
-          a.px_md,
+          a.px_lg,
           a.py_md,
           a.overflow_hidden,
           {minHeight: 44},
           web({outline: 0}),
-          // Filled items are evenly rounded, overriding the positional corners
-          (highlighted || selected) && a.rounded_sm,
+          /*
+           * The selected item's pill is evenly rounded, overriding the
+           * positional corners. Hovered items keep them.
+           */
+          selected && a.rounded_sm,
           selected && {backgroundColor: t.palette.primary_50},
           highlighted && [
             web({outline: '0 !important'}),
@@ -347,7 +351,7 @@ export function ItemText({children, style}: ItemTextProps) {
     <Text
       style={[
         a.flex_1,
-        a.text_md,
+        a.text_sm,
         a.font_medium,
         a.leading_snug,
         t.atoms.text,
@@ -419,7 +423,7 @@ export function LabelText({
       // For the item shapes in style.css
       dataSet={{menuLabel: ''}}
       style={[
-        a.px_sm,
+        a.px_md,
         // With the 17px line, a 32px row.
         {paddingVertical: 7.5},
         a.text_sm,
@@ -442,6 +446,9 @@ export function Divider() {
   return (
     <DropdownMenu.Separator
       style={flattenToCSS([
+        // Keeps a highlighted item's fill off the line
+        a.mx_xs,
+        a.my_xs,
         t.atoms.bg_contrast_100,
         a.flex_shrink_0,
         {height: 1},
