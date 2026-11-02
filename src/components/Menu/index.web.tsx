@@ -288,6 +288,8 @@ export function Item({
           a.overflow_hidden,
           {minHeight: 44},
           web({outline: 0}),
+          // Filled items are evenly rounded, overriding the positional corners
+          (highlighted || selected) && a.rounded_sm,
           selected && {backgroundColor: t.palette.primary_50},
           highlighted && [
             web({outline: '0 !important'}),
