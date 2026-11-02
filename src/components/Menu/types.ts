@@ -52,6 +52,11 @@ export type RootProps = React.PropsWithChildren<{
 export type ItemContextType = {
   disabled: boolean
   destructive: boolean
+  /**
+   * Set for radio items on web, i.e. those with a `Menu.ItemRadio`, which
+   * colour their text and icons when selected.
+   */
+  selected?: boolean
 }
 
 export type OuterProps = React.PropsWithChildren<
@@ -158,6 +163,11 @@ export type ItemProps = React.PropsWithChildren<
 export type ItemTextProps = React.PropsWithChildren<TextStyleProp & {}>
 export type ItemIconProps = React.PropsWithChildren<{
   icon: React.ComponentType<SVGIconProps>
+  /**
+   * Has no effect. On web, `Item` puts icons on the leading side, or the
+   * trailing side in radio items. On native, sheet menus show them where
+   * they're written, and inline menus where the platform puts them.
+   */
   position?: 'left' | 'right'
   fill?: (props: {disabled: boolean}) => string
 }>
