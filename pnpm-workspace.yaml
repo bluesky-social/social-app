@@ -22,7 +22,7 @@ overrides:
   'react-native-worklets': '0.13.0'
   'psl': '1.9.0'
   '@types/psl': '1.1.1'
-  'react-native-screens': '4.30.0'
+  'react-native-screens': '4.30.1'
 allowBuilds:
   '@sentry/cli': true
   '@swc/core': false
@@ -34,25 +34,24 @@ allowBuilds:
   'protobufjs': false
   'unrs-resolver': true
 patchedDependencies:
-  '@expo/cli@58.1.17': patches/@expo__cli@58.1.17.patch
-  '@expo/ui@58.0.25': patches/@expo__ui@58.0.25.patch
+  '@expo/cli@58.1.18': patches/@expo__cli@58.1.18.patch
+  '@expo/ui@58.0.26': patches/@expo__ui@58.0.26.patch
   '@formatjs/bigdecimal@0.2.5': patches/@formatjs__bigdecimal@0.2.5.patch
   '@sentry/expo-upload-sourcemaps@8.26.0': patches/@sentry__expo-upload-sourcemaps@8.26.0.patch
   'expo-image@58.0.18': patches/expo-image@58.0.18.patch
   'expo-media-library@58.0.13': patches/expo-media-library@58.0.13.patch
-  'expo-modules-core@58.0.28': patches/expo-modules-core@58.0.28.patch
+  'expo-modules-core@58.0.29': patches/expo-modules-core@58.0.29.patch
   expo-notifications@58.1.7: patches/expo-notifications@58.1.7.patch
-  expo-updates@58.0.19: patches/expo-updates@58.0.19.patch
-  expo-widgets@58.0.25: patches/expo-widgets@58.0.25.patch
-  expo@58.0.21: patches/expo@58.0.21.patch
+  expo-updates@58.0.20: patches/expo-updates@58.0.20.patch
+  expo-widgets@58.0.26: patches/expo-widgets@58.0.26.patch
+  expo@58.0.22: patches/expo@58.0.22.patch
   'metro-runtime@0.87.1': patches/metro-runtime@0.87.1.patch
   'metro@0.87.1': patches/metro@0.87.1.patch
   react-native-keyboard-controller@1.22.7: patches/react-native-keyboard-controller@1.22.7.patch
   react-native-nano-icons@1.0.1: patches/react-native-nano-icons@1.0.1.patch
-  react-native-pager-view@9.0.9: patches/react-native-pager-view@9.0.9.patch
+  react-native-pager-view@9.0.11: patches/react-native-pager-view@9.0.11.patch
   react-native-reanimated@4.7.1: patches/react-native-reanimated@4.7.1.patch
-  react-native-safe-area-context@5.10.1: patches/react-native-safe-area-context@5.10.1.patch
-  react-native-screens@4.30.0: patches/react-native-screens@4.30.0.patch
+  react-native-screens@4.30.1: patches/react-native-screens@4.30.1.patch
   'react-native-svg@15.16.0': patches/react-native-svg@15.16.0.patch
   react-native@0.88.1: patches/react-native@0.88.1.patch
 minimumReleaseAgeExclude:
