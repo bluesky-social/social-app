@@ -155,7 +155,8 @@ input:focus {
    including items rendered by custom components and not hidden ones. An
    item directly above a label, like a footnote, ends its block, so its
    bottom corners are rounder too. Selected items override all of these with
-   an inline 8px. */
+   an inline 8px. Neighbouring items are 2px apart, Material 3's segmented
+   gap, so a hovered item's fill doesn't touch the selected item's. */
 [data-menu-item] {
   border-radius: 4px;
 }
@@ -167,6 +168,9 @@ input:focus {
 [data-menu-item]:has(+ [data-menu-label]) {
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
+}
+[data-menu-item] + [data-menu-item] {
+  margin-top: 2px;
 }
 
 /* Spinner component */
