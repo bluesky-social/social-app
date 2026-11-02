@@ -31,6 +31,7 @@ import {
   getEmbedThumbnails,
 } from '#/components/Post/Embed/CompactMedia'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
+import {ImageEmbed} from '#/components/Post/Embed/ImageEmbed'
 import {VideoEmbed} from '#/components/Post/Embed/VideoEmbed'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostControls} from '#/components/PostControls'
@@ -449,8 +450,8 @@ function EmbedPreview({
    */
   moderation: ModerationDecision | undefined
   /**
-   * Whether the post is nothing but this embed, so a video plays in full as
-   * a GIF does, rather than as a thumbnail.
+   * Whether the post is nothing but this embed, so its images or video show
+   * in full, as a GIF does, rather than as a thumbnail.
    */
   isMediaOnly: boolean
 }) {
@@ -485,15 +486,30 @@ function EmbedPreview({
       </ContentHider>
     )
   }
-  if (isMediaOnly && bsky.isType(app.bsky.embed.video.view, embed)) {
-    return (
-      <ContentHider modui={moderation?.ui('contentMedia')}>
-        {/* Cancels the video's own top padding, which the row already gives */}
-        <View style={{marginTop: -tokens.space.xs}}>
-          <VideoEmbed embed={embed} post={post} />
-        </View>
-      </ContentHider>
-    )
+  if (isMediaOnly) {
+    const parsed = bsky.post.parseEmbed(embed)
+    if (parsed.type === 'images' || parsed.type === 'gallery') {
+      return (
+        <ContentHider modui={moderation?.ui('contentMedia')}>
+          <ImageEmbed
+            embed={parsed}
+            post={post}
+            // The row already spaces the images from the header
+            style={a.mt_0}
+          />
+        </ContentHider>
+      )
+    }
+    if (parsed.type === 'video') {
+      return (
+        <ContentHider modui={moderation?.ui('contentMedia')}>
+          {/* Cancels the video's own top padding, which the row already gives */}
+          <View style={{marginTop: -tokens.space.xs}}>
+            <VideoEmbed embed={parsed.view} post={post} />
+          </View>
+        </ContentHider>
+      )
+    }
   }
   return (
     <CompactMedia
