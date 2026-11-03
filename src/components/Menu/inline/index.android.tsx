@@ -180,6 +180,13 @@ export function InlineItem({
   const textStyle = useComposeTextStyle([a.text_md, a.font_medium])
   const icon = drawable(glyph)
   const destructiveColor = destructive ? t.palette.negative_500 : undefined
+  /*
+   * Dark themes go a shade lighter, so the selected pill and its label don't
+   * turn muddy. Their palettes run the other way, so that's a higher number.
+   */
+  const dark = t.scheme === 'dark'
+  const selectedPill = dark ? t.palette.primary_100 : t.palette.primary_50
+  const selectedContent = dark ? t.palette.primary_600 : t.palette.primary_500
 
   const modifiers = [
     // Also sets the menu's min width, which is its widest item's.
@@ -202,9 +209,9 @@ export function InlineItem({
         colors={{
           textColor: destructiveColor,
           trailingContentColor: destructiveColor ?? t.atoms.text.color,
-          selectedTextColor: destructiveColor ?? t.palette.primary_500,
-          selectedTrailingContentColor:
-            destructiveColor ?? t.palette.primary_500,
+          selectedContainerColor: selectedPill,
+          selectedTextColor: destructiveColor ?? selectedContent,
+          selectedTrailingContentColor: destructiveColor ?? selectedContent,
         }}
         modifiers={modifiers}
         onClick={onClick}>
@@ -222,7 +229,7 @@ export function InlineItem({
              */}
             <Icon
               source={CHECK}
-              tint={t.palette.primary_500}
+              tint={selectedContent}
               modifiers={[
                 padding(CHECK_INSET, CHECK_INSET, CHECK_INSET, CHECK_INSET),
                 size(CHECK_SIZE, CHECK_SIZE),
