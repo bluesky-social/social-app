@@ -145,7 +145,6 @@ const CATALOG = [
     },
   },
   {
-    // Covers Gmail too, for people who set it as their default mail app
     id: 'email',
     label: 'Email',
     ios: {
@@ -157,6 +156,19 @@ const CATALOG = [
       scheme: 'mailto',
       getShareUrl: ({url, title}) =>
         `mailto:?subject=${enc(title)}&body=${enc(url)}`,
+    },
+  },
+  {
+    id: 'gmail',
+    label: 'Gmail',
+    ios: {
+      scheme: 'googlegmail',
+      getShareUrl: ({url, title}) =>
+        `googlegmail:///co?subject=${enc(title)}&body=${enc(url)}`,
+    },
+    android: {
+      packages: ['com.google.android.gm'],
+      directShare: true,
     },
   },
   {
