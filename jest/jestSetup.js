@@ -11,9 +11,21 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
   // eslint-disable-next-line import-x/no-nodejs-modules
   const {EventEmitter} = require('events')
+  // Like the real NativeEventEmitter, addListener returns a subscription;
+  // Animated's cleanup calls subscription.remove().
+  class NativeEventEmitter extends EventEmitter {
+    /**
+     * @param {string} eventType
+     * @param {(...args: unknown[]) => void} listener
+     */
+    addListener(eventType, listener) {
+      super.addListener(eventType, listener)
+      return {remove: () => this.removeListener(eventType, listener)}
+    }
+  }
   return {
     __esModule: true,
-    default: EventEmitter,
+    default: NativeEventEmitter,
   }
 })
 
