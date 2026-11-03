@@ -149,6 +149,7 @@ export function PageList({
   const isActive = usePager().selectedPage === pageIndex
   const bottomBarOffset = useBottomBarOffset()
   const [isPTRing, setIsPTRing] = useState(false)
+  const [isScrolledDown, setIsScrolledDown] = useState(false)
   /**
    * The height reported from List onLayout is the frame of the scrollview on
    * native. On web, it's the height of the entire list, including content.
@@ -278,7 +279,10 @@ export function PageList({
                   setNativeListContainerHeight(event.nativeEvent.layout.height)
               : undefined
           }
-          onScrolledDownChange={onScrolledDownChange}
+          onScrolledDownChange={value => {
+            setIsScrolledDown(value)
+            onScrolledDownChange?.(value)
+          }}
           headerOffset={headerOffset}
           data={rows}
           keyExtractor={(row: Row) => row.key}
@@ -407,6 +411,7 @@ export function PageList({
       </MainScrollProvider>
       <RefreshPill
         visible={showRefreshPill}
+        isScrolledDown={isScrolledDown}
         headerHeight={headerOffset}
         titleHeight={titleHeight}
         onPress={onPressRefreshPill}
