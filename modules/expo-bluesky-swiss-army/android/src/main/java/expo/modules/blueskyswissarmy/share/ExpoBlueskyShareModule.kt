@@ -86,7 +86,7 @@ class ExpoBlueskyShareModule : Module() {
        * only sees packages declared in the manifest's <queries>, so anything
        * undeclared reports as not installed.
        */
-      Function("getInstalledPackages") { packages: List<String> ->
+      AsyncFunction("getInstalledPackages") { packages: List<String> ->
         packages.filter { isPackageInstalled(it) }
       }
 

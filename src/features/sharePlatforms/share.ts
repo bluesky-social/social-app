@@ -30,8 +30,13 @@ export async function openSharePlatform(
   if (IS_IOS && platform.ios) {
     const ios = platform.ios
     if (ios.copyAndOpen) {
+      const appUrl = `${ios.scheme}://`
+      // Check first, so a failed open doesn't overwrite the clipboard
+      if (!(await Linking.canOpenURL(appUrl))) {
+        throw new Error(`${id} is not installed`)
+      }
       await Clipboard.setUrlAsync(content.url)
-      await Linking.openURL(`${ios.scheme}://`)
+      await Linking.openURL(appUrl)
       return {copiedLink: true}
     }
     await Linking.openURL(ios.getShareUrl(content))
@@ -41,7 +46,7 @@ export async function openSharePlatform(
   if (IS_ANDROID && platform.android) {
     const android = platform.android
     if (android.directShare) {
-      const [pkg] = Share.getInstalledPackages(android.packages) ?? []
+      const [pkg] = (await Share.getInstalledPackages(android.packages)) ?? []
       if (!pkg) throw new Error(`${id} is not installed`)
       await Share.shareTextToPackage(content.url, pkg)
       return {copiedLink: false}

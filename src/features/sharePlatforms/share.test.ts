@@ -33,6 +33,7 @@ describe('openSharePlatform', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined)
+    jest.spyOn(Linking, 'canOpenURL').mockResolvedValue(true)
   })
 
   it('opens the share link on iOS', async () => {
@@ -54,11 +55,21 @@ describe('openSharePlatform', () => {
     expect(openURL).toHaveBeenCalledWith('sgnl://')
   })
 
+  it('leaves the clipboard alone when a copy-and-open app is gone', async () => {
+    mockOS = 'ios'
+    jest.spyOn(Linking, 'canOpenURL').mockResolvedValue(false)
+    await expect(openSharePlatform('signal', content)).rejects.toThrow(
+      'not installed',
+    )
+    expect(Clipboard.setUrlAsync).not.toHaveBeenCalled()
+    expect(openURL).not.toHaveBeenCalled()
+  })
+
   it('sends to the installed package for direct share on Android', async () => {
     mockOS = 'android'
     jest
       .mocked(Share.getInstalledPackages)
-      .mockReturnValue(['com.whatsapp.w4b'])
+      .mockResolvedValue(['com.whatsapp.w4b'])
     await openSharePlatform('whatsapp', content)
     expect(Share.shareTextToPackage).toHaveBeenCalledWith(
       content.url,
@@ -69,7 +80,7 @@ describe('openSharePlatform', () => {
 
   it('rejects direct share when the app is gone', async () => {
     mockOS = 'android'
-    jest.mocked(Share.getInstalledPackages).mockReturnValue([])
+    jest.mocked(Share.getInstalledPackages).mockResolvedValue([])
     await expect(openSharePlatform('signal', content)).rejects.toThrow(
       'not installed',
     )

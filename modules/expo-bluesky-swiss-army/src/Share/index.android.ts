@@ -9,7 +9,7 @@ import {type NativeShareResult} from './types'
  */
 const NativeModule = requireOptionalNativeModule<{
   shareText(text: string): Promise<NativeShareResult>
-  getInstalledPackages?(packages: string[]): string[]
+  getInstalledPackages?(packages: string[]): Promise<string[]>
   shareTextToPackage?(text: string, packageName: string): Promise<void>
 }>('ExpoBlueskyShare')
 
@@ -31,16 +31,11 @@ export function shareText(text: string): Promise<NativeShareResult> {
  * declared in the manifest's `<queries>`, or they always report as missing.
  * Returns `null` on binaries built without this method.
  */
-export function getInstalledPackages(packages: string[]): string[] | null {
+export async function getInstalledPackages(
+  packages: string[],
+): Promise<string[] | null> {
   if (!NativeModule?.getInstalledPackages) return null
-  return NativeModule.getInstalledPackages(packages)
-}
-
-/**
- * Whether this binary can send text straight to one app's share screen.
- */
-export function canShareTextToPackage(): boolean {
-  return !!NativeModule?.shareTextToPackage
+  return await NativeModule.getInstalledPackages(packages)
 }
 
 /**

@@ -57,7 +57,7 @@ describe('getInstalledSharePlatforms', () => {
   it('checks packages and system schemes on Android', async () => {
     mockOS = 'android'
     mockHandledSchemes(['mailto'])
-    getInstalledPackages.mockReturnValue([
+    getInstalledPackages.mockResolvedValue([
       'com.whatsapp.w4b',
       'org.thoughtcrime.securesms',
     ])
@@ -71,7 +71,7 @@ describe('getInstalledSharePlatforms', () => {
   it('hides package-based apps when the binary cannot check', async () => {
     mockOS = 'android'
     mockHandledSchemes(['sms'])
-    getInstalledPackages.mockReturnValue(null)
+    getInstalledPackages.mockResolvedValue(null)
     await expect(getInstalledSharePlatforms()).resolves.toEqual(['messages'])
   })
 
