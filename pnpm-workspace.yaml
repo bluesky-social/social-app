@@ -34,6 +34,7 @@ allowBuilds:
   'protobufjs': false
   'unrs-resolver': true
 patchedDependencies:
+  '@bsky.app/alf@0.2.1': patches/@bsky.app__alf@0.2.1.patch
   '@expo/cli@58.1.15': patches/@expo__cli@58.1.15.patch
   '@expo/ui@58.0.23': patches/@expo__ui@58.0.23.patch
   '@formatjs/bigdecimal@0.2.5': patches/@formatjs__bigdecimal@0.2.5.patch

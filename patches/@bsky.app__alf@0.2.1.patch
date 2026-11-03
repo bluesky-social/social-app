@@ -1,0 +1,1192 @@
+diff --git a/dist/atoms/common.d.ts b/dist/atoms/common.d.ts
+index 10f41b25400c311fa9631d2716c926ec4b3c54b7..4f2acd211d3ef0f0e9339ac15701d46e5a89d392 100644
+--- a/dist/atoms/common.d.ts
++++ b/dist/atoms/common.d.ts
+@@ -166,8 +166,15 @@ export declare const atoms: {
+     readonly flex_nowrap: {
+         readonly flexWrap: "nowrap";
+     };
++    /**
++     * Longhands rather than `flex: '0 0 auto'`: RNW only accepts single values
++     * for the `flex` shorthand, and longhands resolve the same way inline and as
++     * atomic classes.
++     */
+     readonly flex_0: {
+-        readonly flex: CommonStyle["flex"];
++        readonly flexGrow: 0;
++        readonly flexShrink: 0;
++        readonly flexBasis: "auto";
+     };
+     readonly flex_1: {
+         readonly flex: 1;
+diff --git a/dist/atoms/common.js b/dist/atoms/common.js
+index ff4d439dd9ab79fbccd3a7ec8082faa76fb76678..7e1211e949bdbe3165a3b7d423b4a41e98bd5e18 100644
+--- a/dist/atoms/common.js
++++ b/dist/atoms/common.js
+@@ -214,8 +214,15 @@ exports.atoms = {
+     flex_nowrap: {
+         flexWrap: 'nowrap',
+     },
++    /**
++     * Longhands rather than `flex: '0 0 auto'`: RNW only accepts single values
++     * for the `flex` shorthand, and longhands resolve the same way inline and as
++     * atomic classes.
++     */
+     flex_0: {
+-        flex: '0 0 auto',
++        flexGrow: 0,
++        flexShrink: 0,
++        flexBasis: 'auto',
+     },
+     flex_1: {
+         flex: 1,
+diff --git a/dist/atoms/index.js b/dist/atoms/index.js
+index 259ef006d210f289efdf20ecdf1e6b139fad83d9..d30b91c0358d40b9b8f269aa7f05a81c707d3caf 100644
+--- a/dist/atoms/index.js
++++ b/dist/atoms/index.js
+@@ -14,5 +14,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
+     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+ };
+ Object.defineProperty(exports, "__esModule", { value: true });
++const compile_1 = require("../compile");
++const common_1 = require("./common");
++(0, compile_1.compile)(common_1.atoms);
+ __exportStar(require("./common"), exports);
+ //# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/dist/atoms/index.native.d.ts b/dist/atoms/index.native.d.ts
+index 3bba5a1b2916da6f2a29f30c6aa788724103847d..2d32fcb78da00352f0bcac13b570404867e15b38 100644
+--- a/dist/atoms/index.native.d.ts
++++ b/dist/atoms/index.native.d.ts
+@@ -4,9 +4,6 @@ export declare const atoms: {
+     };
+     readonly sticky: {};
+     readonly overflow_auto: {};
+-    readonly flex_0: {
+-        readonly flex: 0;
+-    };
+     readonly border: {
+         readonly borderWidth: number;
+     };
+@@ -30,84 +27,10 @@ export declare const atoms: {
+         readonly borderTopWidth: number;
+         readonly borderBottomWidth: number;
+     };
+-    readonly border_transparent: {
+-        readonly borderColor: "transparent";
+-    };
+     readonly curve_circular: any;
+     readonly curve_continuous: any;
+-    readonly shadow_xs: {
+-        shadowRadius?: undefined;
+-        shadowOpacity?: undefined;
+-        elevation?: undefined;
+-        shadowOffset?: undefined;
+-    } | {
+-        shadowRadius: number;
+-        shadowOpacity: number;
+-        elevation: number;
+-        shadowOffset: {
+-            width: number;
+-            height: number;
+-        };
+-    };
+-    readonly shadow_sm: {
+-        shadowRadius?: undefined;
+-        shadowOpacity?: undefined;
+-        elevation?: undefined;
+-        shadowOffset?: undefined;
+-    } | {
+-        shadowRadius: number;
+-        shadowOpacity: number;
+-        elevation: number;
+-        shadowOffset: {
+-            width: number;
+-            height: number;
+-        };
+-    };
+-    readonly shadow_md: {
+-        shadowRadius?: undefined;
+-        shadowOpacity?: undefined;
+-        elevation?: undefined;
+-        shadowOffset?: undefined;
+-    } | {
+-        shadowRadius: number;
+-        shadowOpacity: number;
+-        elevation: number;
+-        shadowOffset: {
+-            width: number;
+-            height: number;
+-        };
+-    };
+-    readonly shadow_lg: {
+-        shadowRadius?: undefined;
+-        shadowOpacity?: undefined;
+-        elevation?: undefined;
+-        shadowOffset?: undefined;
+-    } | {
+-        shadowRadius: number;
+-        shadowOpacity: number;
+-        elevation: number;
+-        shadowOffset: {
+-            width: number;
+-            height: number;
+-        };
+-    };
+-    readonly shadow_xl: {
+-        shadowRadius?: undefined;
+-        shadowOpacity?: undefined;
+-        elevation?: undefined;
+-        shadowOffset?: undefined;
+-    } | {
+-        shadowRadius: number;
+-        shadowOpacity: number;
+-        elevation: number;
+-        shadowOffset: {
+-            width: number;
+-            height: number;
+-        };
+-    };
+     readonly inline: {};
+     readonly block: {};
+-    readonly pointer: {};
+     readonly debug: {
+         readonly borderColor: "red";
+         readonly borderWidth: 1;
+@@ -265,6 +188,11 @@ export declare const atoms: {
+     readonly flex_nowrap: {
+         readonly flexWrap: "nowrap";
+     };
++    readonly flex_0: {
++        readonly flexGrow: 0;
++        readonly flexShrink: 0;
++        readonly flexBasis: "auto";
++    };
+     readonly flex_1: {
+         readonly flex: 1;
+     };
+@@ -427,6 +355,14 @@ export declare const atoms: {
+         readonly borderTopWidth: 0;
+         readonly borderBottomWidth: 0;
+     };
++    readonly border_transparent: {
++        readonly borderColor: "transparent";
++    };
++    readonly shadow_xs: import("./types").ShadowStyle;
++    readonly shadow_sm: import("./types").ShadowStyle;
++    readonly shadow_md: import("./types").ShadowStyle;
++    readonly shadow_lg: import("./types").ShadowStyle;
++    readonly shadow_xl: import("./types").ShadowStyle;
+     readonly gutter_tight: {
+         readonly padding: 8;
+     };
+@@ -1047,5 +983,8 @@ export declare const atoms: {
+     readonly contents: {
+         readonly display: "contents";
+     };
++    readonly pointer: {
++        readonly cursor: "pointer";
++    };
+ };
+ //# sourceMappingURL=index.native.d.ts.map
+\ No newline at end of file
+diff --git a/dist/atoms/index.native.js b/dist/atoms/index.native.js
+index 6383031f43d09563b3a544c9b7c3a16a50d409a7..095ffa9afb25e4250907decbb44566c852f3ff18 100644
+--- a/dist/atoms/index.native.js
++++ b/dist/atoms/index.native.js
+@@ -39,14 +39,15 @@ const common = __importStar(require("./common"));
+ const platform_1 = require("../platform");
+ exports.atoms = {
+     ...common.atoms,
++    /*
++     * RN has no `position: fixed | sticky`, `overflow: auto`, or
++     * `display: inline | block`.
++     */
+     fixed: {
+         position: 'absolute',
+     },
+     sticky: {},
+     overflow_auto: {},
+-    flex_0: {
+-        flex: 0,
+-    },
+     border: {
+         borderWidth: react_native_1.StyleSheet.hairlineWidth,
+     },
+@@ -70,72 +71,13 @@ exports.atoms = {
+         borderTopWidth: react_native_1.StyleSheet.hairlineWidth,
+         borderBottomWidth: react_native_1.StyleSheet.hairlineWidth,
+     },
+-    border_transparent: {
+-        borderColor: 'transparent',
+-    },
+     curve_circular: (0, platform_1.ios)({
+         borderCurve: 'circular',
+     }),
+     curve_continuous: (0, platform_1.ios)({
+         borderCurve: 'continuous',
+     }),
+-    shadow_xs: platform_1.isFabric
+-        ? {}
+-        : {
+-            shadowRadius: 8,
+-            shadowOpacity: 0.1,
+-            elevation: 4,
+-            shadowOffset: {
+-                width: 0,
+-                height: 2,
+-            },
+-        },
+-    shadow_sm: platform_1.isFabric
+-        ? {}
+-        : {
+-            shadowRadius: 4,
+-            shadowOpacity: 0.1,
+-            elevation: 8,
+-            shadowOffset: {
+-                width: 0,
+-                height: 4,
+-            },
+-        },
+-    shadow_md: platform_1.isFabric
+-        ? {}
+-        : {
+-            shadowRadius: 8,
+-            shadowOpacity: 0.1,
+-            elevation: 16,
+-            shadowOffset: {
+-                width: 0,
+-                height: 8,
+-            },
+-        },
+-    shadow_lg: platform_1.isFabric
+-        ? {}
+-        : {
+-            shadowRadius: 16,
+-            shadowOpacity: 0.1,
+-            elevation: 32,
+-            shadowOffset: {
+-                width: 0,
+-                height: 16,
+-            },
+-        },
+-    shadow_xl: platform_1.isFabric
+-        ? {}
+-        : {
+-            shadowRadius: 40,
+-            shadowOpacity: 0.1,
+-            elevation: 48,
+-            shadowOffset: {
+-                width: 0,
+-                height: 10,
+-            },
+-        },
+     inline: {},
+     block: {},
+-    pointer: {},
+ };
+ //# sourceMappingURL=index.native.js.map
+\ No newline at end of file
+diff --git a/dist/compile/index.d.ts b/dist/compile/index.d.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..b1ac3ab61f3b0b1f53ef2c178aba6fad39e3c32a
+--- /dev/null
++++ b/dist/compile/index.d.ts
+@@ -0,0 +1,10 @@
++/**
++ * Registers ALF's style objects with the platform's style system. Only web
++ * does anything (see `index.web.ts`).
++ *
++ * Unlike most platform-split files in ALF, the default here is a no-op rather
++ * than the web implementation, because `@bsky.app/alf/core` loads it outside
++ * of any React Native environment.
++ */
++export declare function compile<T extends object>(styles: T): T;
++//# sourceMappingURL=index.d.ts.map
+\ No newline at end of file
+diff --git a/dist/compile/index.js b/dist/compile/index.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..474af9ee9d2f25b4efd6b59d975dc78f3596a1af
+--- /dev/null
++++ b/dist/compile/index.js
+@@ -0,0 +1,15 @@
++"use strict";
++Object.defineProperty(exports, "__esModule", { value: true });
++exports.compile = compile;
++/**
++ * Registers ALF's style objects with the platform's style system. Only web
++ * does anything (see `index.web.ts`).
++ *
++ * Unlike most platform-split files in ALF, the default here is a no-op rather
++ * than the web implementation, because `@bsky.app/alf/core` loads it outside
++ * of any React Native environment.
++ */
++function compile(styles) {
++    return styles;
++}
++//# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/dist/compile/index.web.d.ts b/dist/compile/index.web.d.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..b177accff987cad5853ae5d495d9d7644dd8c18f
+--- /dev/null
++++ b/dist/compile/index.web.d.ts
+@@ -0,0 +1,12 @@
++/**
++ * Passes every style object in `styles` through `StyleSheet.create`, so that
++ * react-native-web compiles it once into atomic CSS classes. Without this, RNW
++ * resolves plain objects into inline styles on every render.
++ *
++ * `StyleSheet.create` on web returns the same objects and keeps the compiled
++ * classes in a side table keyed by object identity, so values stay readable
++ * (e.g. `atoms.text_md.fontSize`) and nothing else changes for callers.
++ * Arrays and platform-gated `undefined` entries are skipped.
++ */
++export declare function compile<T extends object>(styles: T): T;
++//# sourceMappingURL=index.web.d.ts.map
+\ No newline at end of file
+diff --git a/dist/compile/index.web.js b/dist/compile/index.web.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..89ef305c92ae84a55fa81a1553afc1c671a904d1
+--- /dev/null
++++ b/dist/compile/index.web.js
+@@ -0,0 +1,25 @@
++"use strict";
++Object.defineProperty(exports, "__esModule", { value: true });
++exports.compile = compile;
++const react_native_1 = require("react-native");
++/**
++ * Passes every style object in `styles` through `StyleSheet.create`, so that
++ * react-native-web compiles it once into atomic CSS classes. Without this, RNW
++ * resolves plain objects into inline styles on every render.
++ *
++ * `StyleSheet.create` on web returns the same objects and keeps the compiled
++ * classes in a side table keyed by object identity, so values stay readable
++ * (e.g. `atoms.text_md.fontSize`) and nothing else changes for callers.
++ * Arrays and platform-gated `undefined` entries are skipped.
++ */
++function compile(styles) {
++    const objects = {};
++    for (const [key, value] of Object.entries(styles)) {
++        if (value && typeof value === 'object' && !Array.isArray(value)) {
++            objects[key] = value;
++        }
++    }
++    react_native_1.StyleSheet.create(objects);
++    return styles;
++}
++//# sourceMappingURL=index.web.js.map
+\ No newline at end of file
+diff --git a/dist/hover/index.d.ts b/dist/hover/index.d.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4edf50eb0679972459c220b2da8a481b1752f2ae
+--- /dev/null
++++ b/dist/hover/index.d.ts
+@@ -0,0 +1,20 @@
++import { type HoverStyle, type PseudoStyle } from './types';
++export type { HoverStyle, PseudoStyle } from './types';
++/**
++ * Applies `style` while a mouse hovers the element, as a CSS `:hover` rule
++ * instead of JS hover state, so hovering doesn't re-render anything. Web only:
++ * returns `undefined` on native.
++ *
++ * Two rules keep it working:
++ *
++ * - The base style for the same prop must be an atom, theme atom, or other
++ *   `StyleSheet.create` style. Inline styles beat any CSS rule, so with
++ *   `[{backgroundColor: x}, hover(...)]` the hover never shows.
++ * - Pass the result straight into a style array. It holds class names, not
++ *   style values, so flattening or spreading it breaks the whole style.
++ *
++ * @example
++ * <View style={[t.atoms.bg, hover(t.atoms.bg_contrast_25)]} />
++ */
++export declare function hover(style: HoverStyle | null | undefined | false): PseudoStyle | undefined;
++//# sourceMappingURL=index.d.ts.map
+\ No newline at end of file
+diff --git a/dist/hover/index.js b/dist/hover/index.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..461df0365bfc46b68bd0aa43646b2365c49b95b6
+--- /dev/null
++++ b/dist/hover/index.js
+@@ -0,0 +1,133 @@
++"use strict";
++Object.defineProperty(exports, "__esModule", { value: true });
++exports.hover = hover;
++const SUPPORTED_PROPS = new Set([
++    'backgroundColor',
++    'borderColor',
++    'borderTopColor',
++    'borderRightColor',
++    'borderBottomColor',
++    'borderLeftColor',
++    'color',
++    'opacity',
++    'textDecorationColor',
++    'textDecorationLine',
++    'textDecorationStyle',
++]);
++const SHEET_ID = 'alf-pseudo-stylesheet';
++const IS_DEV = process.env.NODE_ENV !== 'production';
++/**
++ * Class name for each `prop:value` declaration, so each one gets one rule no
++ * matter how many hover() calls use it.
++ */
++const classNames = new Map();
++/**
++ * Declaration for each class name, to detect hash collisions.
++ */
++const declarations = new Map();
++/**
++ * hover() results for stable style objects, e.g. atoms.
++ */
++const compiledStyles = new WeakMap();
++let sheet = null;
++function getSheet() {
++    if (sheet || typeof document === 'undefined')
++        return sheet;
++    let element = document.getElementById(SHEET_ID);
++    if (!element) {
++        element = document.createElement('style');
++        element.id = SHEET_ID;
++        // After RNW's sheet (which goes first in <head>) and app CSS
++        document.head.appendChild(element);
++    }
++    sheet = element.sheet;
++    return sheet;
++}
++/**
++ * FNV-1a, base 36.
++ */
++function hash(value) {
++    let h = 0x811c9dc5;
++    for (let i = 0; i < value.length; i++) {
++        h ^= value.charCodeAt(i);
++        h = Math.imul(h, 0x01000193);
++    }
++    return (h >>> 0).toString(36);
++}
++function hyphenate(prop) {
++    return prop.replace(/[A-Z]/g, char => `-${char.toLowerCase()}`);
++}
++function getClassName(prop, value) {
++    const declaration = `${prop}:${value}`;
++    let className = classNames.get(declaration);
++    if (className)
++        return className;
++    const base = IS_DEV
++        ? `alf-hover-${prop}-${hash(declaration)}`
++        : `alf-h-${hash(declaration)}`;
++    className = base;
++    for (let i = 1; declarations.has(className); i++) {
++        className = `${base}-${i}`;
++    }
++    classNames.set(declaration, className);
++    declarations.set(className, declaration);
++    /*
++     * `(hover: hover)` keeps touch devices from getting stuck in the hover state
++     * after a tap. The `:hover` selector (0,2,0) beats RNW's atomic classes
++     * (0,1,0), so it doesn't depend on stylesheet order.
++     */
++    getSheet()?.insertRule(`@media (hover: hover) { .${className}:hover { ${hyphenate(prop)}: ${value}; } }`, sheet.cssRules.length);
++    return className;
++}
++/**
++ * Applies `style` while a mouse hovers the element, as a CSS `:hover` rule
++ * instead of JS hover state, so hovering doesn't re-render anything. Web only:
++ * returns `undefined` on native.
++ *
++ * Two rules keep it working:
++ *
++ * - The base style for the same prop must be an atom, theme atom, or other
++ *   `StyleSheet.create` style. Inline styles beat any CSS rule, so with
++ *   `[{backgroundColor: x}, hover(...)]` the hover never shows.
++ * - Pass the result straight into a style array. It holds class names, not
++ *   style values, so flattening or spreading it breaks the whole style.
++ *
++ * @example
++ * <View style={[t.atoms.bg, hover(t.atoms.bg_contrast_25)]} />
++ */
++function hover(style) {
++    if (!style)
++        return undefined;
++    const cached = compiledStyles.get(style);
++    if (cached)
++        return cached;
++    /*
++     * A precompiled style in react-native-web's format: `$$css` marks it as
++     * already compiled, and each string value is a class name. The key only
++     * matters for de-duping, so a later hover() for the same prop wins without
++     * conflicting with the base style's `backgroundColor` etc.
++     */
++    const compiled = { $$css: true };
++    for (const [prop, value] of Object.entries(style)) {
++        if (value == null)
++            continue;
++        if (!SUPPORTED_PROPS.has(prop)) {
++            if (IS_DEV) {
++                console.warn(`ALF: hover() ignored unsupported prop "${prop}"`);
++            }
++            continue;
++        }
++        if (!(typeof value === 'string' || typeof value === 'number') ||
++            /[;{}]/.test(String(value))) {
++            if (IS_DEV) {
++                console.warn(`ALF: hover() ignored invalid value for "${prop}"`);
++            }
++            continue;
++        }
++        compiled[`:hover:${prop}`] = getClassName(prop, value);
++    }
++    const result = compiled;
++    compiledStyles.set(style, result);
++    return result;
++}
++//# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/dist/hover/index.native.d.ts b/dist/hover/index.native.d.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..0bb09bdff1ad307ac9feb4cdceac02e7f9aa8ecf
+--- /dev/null
++++ b/dist/hover/index.native.d.ts
+@@ -0,0 +1,7 @@
++import { type HoverStyle, type PseudoStyle } from './types';
++export type { HoverStyle, PseudoStyle } from './types';
++/**
++ * No-op on native, where there's no CSS `:hover`. See `index.ts`.
++ */
++export declare function hover(_style: HoverStyle | null | undefined | false): PseudoStyle | undefined;
++//# sourceMappingURL=index.native.d.ts.map
+\ No newline at end of file
+diff --git a/dist/hover/index.native.js b/dist/hover/index.native.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..b0d98c583f2eaf0bafd740e2356cd15d7a4f7cba
+--- /dev/null
++++ b/dist/hover/index.native.js
+@@ -0,0 +1,10 @@
++"use strict";
++Object.defineProperty(exports, "__esModule", { value: true });
++exports.hover = hover;
++/**
++ * No-op on native, where there's no CSS `:hover`. See `index.ts`.
++ */
++function hover(_style) {
++    return undefined;
++}
++//# sourceMappingURL=index.native.js.map
+\ No newline at end of file
+diff --git a/dist/hover/types.d.ts b/dist/hover/types.d.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4d31a2d9ad324fd369e907890522c1540ab6d111
+--- /dev/null
++++ b/dist/hover/types.d.ts
+@@ -0,0 +1,15 @@
++import { type TextStyle, type ViewStyle } from 'react-native';
++/**
++ * Props that `hover()` supports. Limited to paint-only props: hovering never
++ * triggers layout, and the CSS for them needs no unit or shorthand handling.
++ */
++export type HoverStyle = Pick<ViewStyle & TextStyle, 'backgroundColor' | 'borderColor' | 'borderTopColor' | 'borderRightColor' | 'borderBottomColor' | 'borderLeftColor' | 'color' | 'opacity' | 'textDecorationColor' | 'textDecorationLine' | 'textDecorationStyle'>;
++/**
++ * An opaque style returned by `hover()`. Put it in a style array as-is. Its
++ * values are CSS class names rather than style values, so don't read from it,
++ * flatten it, or spread it into another style object.
++ *
++ * Typed as an empty object so it's assignable to any RN style prop.
++ */
++export type PseudoStyle = Readonly<Record<never, never>>;
++//# sourceMappingURL=types.d.ts.map
+\ No newline at end of file
+diff --git a/dist/hover/types.js b/dist/hover/types.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..11e638d1ee44ae0dcb1feb5aef676ea74a7d4df3
+--- /dev/null
++++ b/dist/hover/types.js
+@@ -0,0 +1,3 @@
++"use strict";
++Object.defineProperty(exports, "__esModule", { value: true });
++//# sourceMappingURL=types.js.map
+\ No newline at end of file
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index 55324aa82970fd6dd0824d7f009f0f77455eec79..4cb597ed6bf039b50376759b1b61f06f87f870ed 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -1,6 +1,8 @@
+ import { type StyleProp, type TextStyle, type ViewStyle } from 'react-native';
+ import { type Theme } from './themes';
+ export * from './atoms';
++export { compile } from './compile';
++export * from './hover';
+ export * from './palette';
+ export * from './themes';
+ export * from './platform';
+diff --git a/dist/index.js b/dist/index.js
+index 10ab33e827b3c4c71450ee42bff9761d0b547f58..d5ae1a2244aa9a71b8925a1064cd0c25c0a3988c 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -36,13 +36,16 @@ var __importStar = (this && this.__importStar) || (function () {
+     };
+ })();
+ Object.defineProperty(exports, "__esModule", { value: true });
+-exports.Context = exports.utils = exports.tokens = void 0;
++exports.Context = exports.utils = exports.tokens = exports.compile = void 0;
+ exports.Provider = Provider;
+ exports.useTheme = useTheme;
+ const jsx_runtime_1 = require("react/jsx-runtime");
+ const react_1 = require("react");
+ const themes_1 = require("./themes");
+ __exportStar(require("./atoms"), exports);
++var compile_1 = require("./compile");
++Object.defineProperty(exports, "compile", { enumerable: true, get: function () { return compile_1.compile; } });
++__exportStar(require("./hover"), exports);
+ __exportStar(require("./palette"), exports);
+ __exportStar(require("./themes"), exports);
+ __exportStar(require("./platform"), exports);
+diff --git a/dist/themes.js b/dist/themes.js
+index b9f09c530f16c88f49dd04db930b28eb31213614..c0aed2f8f57a216efe1de73e639d07ab69680193 100644
+--- a/dist/themes.js
++++ b/dist/themes.js
+@@ -4,6 +4,7 @@ exports.themes = void 0;
+ exports.createTheme = createTheme;
+ exports.createThemes = createThemes;
+ const atoms_1 = require("./atoms");
++const compile_1 = require("./compile");
+ const alpha_1 = require("./utils/alpha");
+ const palette_1 = require("./palette");
+ exports.themes = createThemes({
+@@ -13,7 +14,7 @@ exports.themes = createThemes({
+ function createTheme({ scheme, name, palette, options = {}, }) {
+     const shadowOpacity = options.shadowOpacity ?? 0.1;
+     const shadowColor = (0, alpha_1.alpha)(palette.black, shadowOpacity);
+-    return {
++    const theme = {
+         scheme,
+         name,
+         palette,
+@@ -114,6 +115,8 @@ function createTheme({ scheme, name, palette, options = {}, }) {
+             },
+         },
+     };
++    (0, compile_1.compile)(theme.atoms);
++    return theme;
+ }
+ function createThemes({ defaultPalette, subduedPalette, }) {
+     const light = createTheme({
+diff --git a/dist/utils/flatten/index.web.d.ts b/dist/utils/flatten/index.web.d.ts
+index 5cd46f4b97de2ffa5774c4948f1294b3d7cf0142..290190ae2605109ba3f591ffbf3e0f9cfe68f6e3 100644
+--- a/dist/utils/flatten/index.web.d.ts
++++ b/dist/utils/flatten/index.web.d.ts
+@@ -1,3 +1,12 @@
+-import { StyleSheet } from 'react-native';
++import { type StyleSheet } from 'react-native';
++/**
++ * `StyleSheet.flatten`, except that it skips precompiled styles (`$$css`), such
++ * as the ones `hover()` returns. Their values are class names, and merging one
++ * into a plain style makes RNW read every value in the result as a class name.
++ *
++ * Flattening is fine for reading values, but render the original style array
++ * where you can: a flattened style is a new object, so RNW renders it inline
++ * instead of with the atoms' classes, and any `hover()` styles are dropped.
++ */
+ export declare const flatten: typeof StyleSheet.flatten;
+ //# sourceMappingURL=index.web.d.ts.map
+\ No newline at end of file
+diff --git a/dist/utils/flatten/index.web.js b/dist/utils/flatten/index.web.js
+index 9f084b971eb60d322f92db3ba506e67d9ed76f45..ccd088e25edee3170bc1713b615137f929576fcf 100644
+--- a/dist/utils/flatten/index.web.js
++++ b/dist/utils/flatten/index.web.js
+@@ -1,6 +1,30 @@
+ "use strict";
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.flatten = void 0;
+-const react_native_1 = require("react-native");
+-exports.flatten = react_native_1.StyleSheet.flatten;
++/**
++ * `StyleSheet.flatten`, except that it skips precompiled styles (`$$css`), such
++ * as the ones `hover()` returns. Their values are class names, and merging one
++ * into a plain style makes RNW read every value in the result as a class name.
++ *
++ * Flattening is fine for reading values, but render the original style array
++ * where you can: a flattened style is a new object, so RNW renders it inline
++ * instead of with the atoms' classes, and any `hover()` styles are dropped.
++ */
++const flatten = (style) => {
++    const result = {};
++    merge(result, style);
++    return result;
++};
++exports.flatten = flatten;
++function merge(target, style) {
++    if (!style || typeof style !== 'object')
++        return;
++    if (Array.isArray(style)) {
++        for (const item of style)
++            merge(target, item);
++    }
++    else if (style.$$css !== true) {
++        Object.assign(target, style);
++    }
++}
+ //# sourceMappingURL=index.web.js.map
+\ No newline at end of file
+diff --git a/src/atoms/common.ts b/src/atoms/common.ts
+index c26ce03b9841c2d201ff067f55635b4ae85b8bb8..ad591a89dfd63e981c6eb4ee2d721ad061fb85df 100644
+--- a/src/atoms/common.ts
++++ b/src/atoms/common.ts
+@@ -185,8 +185,15 @@ export const atoms = {
+   flex_nowrap: {
+     flexWrap: 'nowrap',
+   },
++  /**
++   * Longhands rather than `flex: '0 0 auto'`: RNW only accepts single values
++   * for the `flex` shorthand, and longhands resolve the same way inline and as
++   * atomic classes.
++   */
+   flex_0: {
+-    flex: '0 0 auto' as unknown as CommonStyle['flex'],
++    flexGrow: 0,
++    flexShrink: 0,
++    flexBasis: 'auto',
+   },
+   flex_1: {
+     flex: 1,
+diff --git a/src/atoms/index.native.ts b/src/atoms/index.native.ts
+index 7ed3aa6db1e2e04c46fa0a211c4cec02cc3f671f..0cb41992a57eeba988a663620fa7b7e69fe003e5 100644
+--- a/src/atoms/index.native.ts
++++ b/src/atoms/index.native.ts
+@@ -1,18 +1,19 @@
+ import {StyleSheet} from 'react-native'
+ 
+ import * as common from './common'
+-import {ios, isFabric} from '../platform'
++import {ios} from '../platform'
+ 
+ export const atoms = {
+   ...common.atoms,
++  /*
++   * RN has no `position: fixed | sticky`, `overflow: auto`, or
++   * `display: inline | block`.
++   */
+   fixed: {
+     position: 'absolute',
+   },
+   sticky: {},
+   overflow_auto: {},
+-  flex_0: {
+-    flex: 0,
+-  },
+   border: {
+     borderWidth: StyleSheet.hairlineWidth,
+   },
+@@ -36,71 +37,12 @@ export const atoms = {
+     borderTopWidth: StyleSheet.hairlineWidth,
+     borderBottomWidth: StyleSheet.hairlineWidth,
+   },
+-  border_transparent: {
+-    borderColor: 'transparent',
+-  },
+   curve_circular: ios({
+     borderCurve: 'circular',
+   }),
+   curve_continuous: ios({
+     borderCurve: 'continuous',
+   }),
+-  shadow_xs: isFabric
+-    ? {}
+-    : {
+-        shadowRadius: 8,
+-        shadowOpacity: 0.1,
+-        elevation: 4,
+-        shadowOffset: {
+-          width: 0,
+-          height: 2,
+-        },
+-      },
+-  shadow_sm: isFabric
+-    ? {}
+-    : {
+-        shadowRadius: 4,
+-        shadowOpacity: 0.1,
+-        elevation: 8,
+-        shadowOffset: {
+-          width: 0,
+-          height: 4,
+-        },
+-      },
+-  shadow_md: isFabric
+-    ? {}
+-    : {
+-        shadowRadius: 8,
+-        shadowOpacity: 0.1,
+-        elevation: 16,
+-        shadowOffset: {
+-          width: 0,
+-          height: 8,
+-        },
+-      },
+-  shadow_lg: isFabric
+-    ? {}
+-    : {
+-        shadowRadius: 16,
+-        shadowOpacity: 0.1,
+-        elevation: 32,
+-        shadowOffset: {
+-          width: 0,
+-          height: 16,
+-        },
+-      },
+-  shadow_xl: isFabric
+-    ? {}
+-    : {
+-        shadowRadius: 40,
+-        shadowOpacity: 0.1,
+-        elevation: 48,
+-        shadowOffset: {
+-          width: 0,
+-          height: 10,
+-        },
+-      },
+   inline: {},
+   block: {},
+-  pointer: {},
+ } as const
+diff --git a/src/atoms/index.ts b/src/atoms/index.ts
+index 89a3196b12061ec1ff8a86c04be0a9094307505a..2fa916b1e351e45921762b601c465655eb3aed7e 100644
+--- a/src/atoms/index.ts
++++ b/src/atoms/index.ts
+@@ -1 +1,6 @@
++import {compile} from '../compile'
++import {atoms} from './common'
++
++compile(atoms)
++
+ export * from './common'
+diff --git a/src/compile/index.ts b/src/compile/index.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..15dd7c53c2933f0dca3284e108351e8b93457835
+--- /dev/null
++++ b/src/compile/index.ts
+@@ -0,0 +1,11 @@
++/**
++ * Registers ALF's style objects with the platform's style system. Only web
++ * does anything (see `index.web.ts`).
++ *
++ * Unlike most platform-split files in ALF, the default here is a no-op rather
++ * than the web implementation, because `@bsky.app/alf/core` loads it outside
++ * of any React Native environment.
++ */
++export function compile<T extends object>(styles: T): T {
++  return styles
++}
+diff --git a/src/compile/index.web.ts b/src/compile/index.web.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..cedec4038c8eca7d31919ef40dbb825684c3dc4b
+--- /dev/null
++++ b/src/compile/index.web.ts
+@@ -0,0 +1,22 @@
++import {StyleSheet} from 'react-native'
++
++/**
++ * Passes every style object in `styles` through `StyleSheet.create`, so that
++ * react-native-web compiles it once into atomic CSS classes. Without this, RNW
++ * resolves plain objects into inline styles on every render.
++ *
++ * `StyleSheet.create` on web returns the same objects and keeps the compiled
++ * classes in a side table keyed by object identity, so values stay readable
++ * (e.g. `atoms.text_md.fontSize`) and nothing else changes for callers.
++ * Arrays and platform-gated `undefined` entries are skipped.
++ */
++export function compile<T extends object>(styles: T): T {
++  const objects: Record<string, object> = {}
++  for (const [key, value] of Object.entries(styles)) {
++    if (value && typeof value === 'object' && !Array.isArray(value)) {
++      objects[key] = value
++    }
++  }
++  StyleSheet.create(objects)
++  return styles
++}
+diff --git a/src/hover/index.native.ts b/src/hover/index.native.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..9937a2bdc7a0dbda378c1484507e81fe2ed16dd0
+--- /dev/null
++++ b/src/hover/index.native.ts
+@@ -0,0 +1,12 @@
++import {type HoverStyle, type PseudoStyle} from './types'
++
++export type {HoverStyle, PseudoStyle} from './types'
++
++/**
++ * No-op on native, where there's no CSS `:hover`. See `index.ts`.
++ */
++export function hover(
++  _style: HoverStyle | null | undefined | false,
++): PseudoStyle | undefined {
++  return undefined
++}
+diff --git a/src/hover/index.ts b/src/hover/index.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..56b7040e29ba7d291b44e7b32b807d13136f1d44
+--- /dev/null
++++ b/src/hover/index.ts
+@@ -0,0 +1,152 @@
++import {type HoverStyle, type PseudoStyle} from './types'
++
++export type {HoverStyle, PseudoStyle} from './types'
++
++/**
++ * Bundlers that support react-native-web define this, since RNW reads it too.
++ */
++declare const process: {env: {NODE_ENV?: string}}
++
++const SUPPORTED_PROPS: ReadonlySet<string> = new Set<keyof HoverStyle>([
++  'backgroundColor',
++  'borderColor',
++  'borderTopColor',
++  'borderRightColor',
++  'borderBottomColor',
++  'borderLeftColor',
++  'color',
++  'opacity',
++  'textDecorationColor',
++  'textDecorationLine',
++  'textDecorationStyle',
++])
++
++const SHEET_ID = 'alf-pseudo-stylesheet'
++const IS_DEV = process.env.NODE_ENV !== 'production'
++
++/**
++ * Class name for each `prop:value` declaration, so each one gets one rule no
++ * matter how many hover() calls use it.
++ */
++const classNames = new Map<string, string>()
++/**
++ * Declaration for each class name, to detect hash collisions.
++ */
++const declarations = new Map<string, string>()
++/**
++ * hover() results for stable style objects, e.g. atoms.
++ */
++const compiledStyles = new WeakMap<object, PseudoStyle>()
++let sheet: CSSStyleSheet | null = null
++
++function getSheet() {
++  if (sheet || typeof document === 'undefined') return sheet
++  let element = document.getElementById(SHEET_ID) as HTMLStyleElement | null
++  if (!element) {
++    element = document.createElement('style')
++    element.id = SHEET_ID
++    // After RNW's sheet (which goes first in <head>) and app CSS
++    document.head.appendChild(element)
++  }
++  sheet = element.sheet
++  return sheet
++}
++
++/**
++ * FNV-1a, base 36.
++ */
++function hash(value: string) {
++  let h = 0x811c9dc5
++  for (let i = 0; i < value.length; i++) {
++    h ^= value.charCodeAt(i)
++    h = Math.imul(h, 0x01000193)
++  }
++  return (h >>> 0).toString(36)
++}
++
++function hyphenate(prop: string) {
++  return prop.replace(/[A-Z]/g, char => `-${char.toLowerCase()}`)
++}
++
++function getClassName(prop: string, value: string | number) {
++  const declaration = `${prop}:${value}`
++  let className = classNames.get(declaration)
++  if (className) return className
++
++  const base = IS_DEV
++    ? `alf-hover-${prop}-${hash(declaration)}`
++    : `alf-h-${hash(declaration)}`
++  className = base
++  for (let i = 1; declarations.has(className); i++) {
++    className = `${base}-${i}`
++  }
++  classNames.set(declaration, className)
++  declarations.set(className, declaration)
++
++  /*
++   * `(hover: hover)` keeps touch devices from getting stuck in the hover state
++   * after a tap. The `:hover` selector (0,2,0) beats RNW's atomic classes
++   * (0,1,0), so it doesn't depend on stylesheet order.
++   */
++  getSheet()?.insertRule(
++    `@media (hover: hover) { .${className}:hover { ${hyphenate(prop)}: ${value}; } }`,
++    sheet!.cssRules.length,
++  )
++  return className
++}
++
++/**
++ * Applies `style` while a mouse hovers the element, as a CSS `:hover` rule
++ * instead of JS hover state, so hovering doesn't re-render anything. Web only:
++ * returns `undefined` on native.
++ *
++ * Two rules keep it working:
++ *
++ * - The base style for the same prop must be an atom, theme atom, or other
++ *   `StyleSheet.create` style. Inline styles beat any CSS rule, so with
++ *   `[{backgroundColor: x}, hover(...)]` the hover never shows.
++ * - Pass the result straight into a style array. It holds class names, not
++ *   style values, so flattening or spreading it breaks the whole style.
++ *
++ * @example
++ * <View style={[t.atoms.bg, hover(t.atoms.bg_contrast_25)]} />
++ */
++export function hover(
++  style: HoverStyle | null | undefined | false,
++): PseudoStyle | undefined {
++  if (!style) return undefined
++
++  const cached = compiledStyles.get(style)
++  if (cached) return cached
++
++  /*
++   * A precompiled style in react-native-web's format: `$$css` marks it as
++   * already compiled, and each string value is a class name. The key only
++   * matters for de-duping, so a later hover() for the same prop wins without
++   * conflicting with the base style's `backgroundColor` etc.
++   */
++  const compiled: Record<string, unknown> = {$$css: true}
++  for (const [prop, value] of Object.entries(style)) {
++    if (value == null) continue
++    if (!SUPPORTED_PROPS.has(prop)) {
++      if (IS_DEV) {
++        console.warn(`ALF: hover() ignored unsupported prop "${prop}"`)
++      }
++      continue
++    }
++    if (
++      !(typeof value === 'string' || typeof value === 'number') ||
++      /[;{}]/.test(String(value))
++    ) {
++      if (IS_DEV) {
++        console.warn(`ALF: hover() ignored invalid value for "${prop}"`)
++      }
++      continue
++    }
++    compiled[`:hover:${prop}`] = getClassName(prop, value)
++  }
++
++  const result = compiled as PseudoStyle
++  compiledStyles.set(style, result)
++  return result
++}
+diff --git a/src/hover/types.ts b/src/hover/types.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..32c210abb2dc161e7f43556a0ae950f7222636ca
+--- /dev/null
++++ b/src/hover/types.ts
+@@ -0,0 +1,29 @@
++import {type TextStyle, type ViewStyle} from 'react-native'
++
++/**
++ * Props that `hover()` supports. Limited to paint-only props: hovering never
++ * triggers layout, and the CSS for them needs no unit or shorthand handling.
++ */
++export type HoverStyle = Pick<
++  ViewStyle & TextStyle,
++  | 'backgroundColor'
++  | 'borderColor'
++  | 'borderTopColor'
++  | 'borderRightColor'
++  | 'borderBottomColor'
++  | 'borderLeftColor'
++  | 'color'
++  | 'opacity'
++  | 'textDecorationColor'
++  | 'textDecorationLine'
++  | 'textDecorationStyle'
++>
++
++/**
++ * An opaque style returned by `hover()`. Put it in a style array as-is. Its
++ * values are CSS class names rather than style values, so don't read from it,
++ * flatten it, or spread it into another style object.
++ *
++ * Typed as an empty object so it's assignable to any RN style prop.
++ */
++export type PseudoStyle = Readonly<Record<never, never>>
+diff --git a/src/index.tsx b/src/index.tsx
+index 3b5eedbfc529c0521c770b102385e0b61ae4d1f9..d71354443696fdecc678cc6983e2dfb6e5161806 100644
+--- a/src/index.tsx
++++ b/src/index.tsx
+@@ -4,6 +4,8 @@ import {createContext, useContext, useMemo} from 'react'
+ import {themes, type Theme} from './themes'
+ 
+ export * from './atoms'
++export {compile} from './compile'
++export * from './hover'
+ export * from './palette'
+ export * from './themes'
+ export * from './platform'
+diff --git a/src/themes.ts b/src/themes.ts
+index 79091179aa1f9aec64e7a8cbc2204b82de4276ac..4129689bd42cf5c4298ccdb79bbb33732364a991 100644
+--- a/src/themes.ts
++++ b/src/themes.ts
+@@ -1,4 +1,5 @@
+ import {atoms} from './atoms'
++import {compile} from './compile'
+ import {alpha} from './utils/alpha'
+ 
+ import {
+@@ -126,7 +127,7 @@ export function createTheme({
+ }): Theme {
+   const shadowOpacity = options.shadowOpacity ?? 0.1
+   const shadowColor = alpha(palette.black, shadowOpacity)
+-  return {
++  const theme: Theme = {
+     scheme,
+     name,
+     palette,
+@@ -227,6 +228,8 @@ export function createTheme({
+       },
+     },
+   }
++  compile(theme.atoms)
++  return theme
+ }
+ 
+ export function createThemes({
+diff --git a/src/utils/flatten/index.web.ts b/src/utils/flatten/index.web.ts
+index 2cd737852998b9d374c374f2a8f7b527018bddf5..771f7770e93bc70dd5fe3e3c8b8720f959ec5891 100644
+--- a/src/utils/flatten/index.web.ts
++++ b/src/utils/flatten/index.web.ts
+@@ -1,3 +1,25 @@
+-import {StyleSheet} from 'react-native'
++import {type StyleSheet} from 'react-native'
+ 
+-export const flatten: typeof StyleSheet.flatten = StyleSheet.flatten
++/**
++ * `StyleSheet.flatten`, except that it skips precompiled styles (`$$css`), such
++ * as the ones `hover()` returns. Their values are class names, and merging one
++ * into a plain style makes RNW read every value in the result as a class name.
++ *
++ * Flattening is fine for reading values, but render the original style array
++ * where you can: a flattened style is a new object, so RNW renders it inline
++ * instead of with the atoms' classes, and any `hover()` styles are dropped.
++ */
++export const flatten: typeof StyleSheet.flatten = (style: any) => {
++  const result: Record<string, unknown> = {}
++  merge(result, style)
++  return result as any
++}
++
++function merge(target: Record<string, unknown>, style: unknown) {
++  if (!style || typeof style !== 'object') return
++  if (Array.isArray(style)) {
++    for (const item of style) merge(target, item)
++  } else if ((style as {$$css?: unknown}).$$css !== true) {
++    Object.assign(target, style)
++  }
++}
