@@ -1,4 +1,6 @@
-import {fireEvent, render, screen} from '@testing-library/react-native'
+import {type RefreshControlProps} from 'react-native'
+import {createDeferrable} from '@atproto/common-web'
+import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
 import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/exploreResponse'
 import {livestreamPreviewFixture} from '#/screens/Atmosphere/__tests__/fixtures/livestreamPreview'
@@ -97,6 +99,13 @@ jest.mock('#/screens/Atmosphere/components/FeaturedPhotos', () => ({
 const mockQuery = jest.mocked(useAtmosphereExploreQuery)
 const refetch = jest.fn()
 
+function getRefreshControlProps() {
+  const {refreshControl} = screen.getByTestId('atmosphereExploreTab').props as {
+    refreshControl: React.ReactElement<RefreshControlProps>
+  }
+  return refreshControl.props
+}
+
 function setQuery(
   result: Partial<ReturnType<typeof useAtmosphereExploreQuery>>,
 ) {
@@ -104,6 +113,7 @@ function setQuery(
     data: undefined,
     isError: false,
     isPending: false,
+    isRefetching: false,
     refetch,
     ...result,
   } as never)
@@ -165,7 +175,8 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.getByText('nux')).toBeTruthy()
     expect(screen.getByText('banner:Launch')).toBeTruthy()
     expect(screen.getByText('articles:Live article')).toBeTruthy()
-    expect(screen.getByText('apps:Live app')).toBeTruthy()
+    /* Apps live in their own tab, even though the response includes them. */
+    expect(screen.queryByText(/^apps:/)).toBeNull()
     expect(screen.queryByText(/^livestreams:/)).toBeNull()
     expect(screen.queryByText(/^photos:/)).toBeNull()
     expect(
@@ -207,7 +218,7 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.queryByText(/^articles:/)).toBeNull()
     expect(screen.getByText(/^photos:/)).toBeTruthy()
     expect(screen.getByText(/^livestreams:/)).toBeTruthy()
-    expect(screen.getByText(/^apps:/)).toBeTruthy()
+    expect(screen.queryByText(/^apps:/)).toBeNull()
     expect(screen.getByText(/^banner:/)).toBeTruthy()
   })
 
@@ -267,5 +278,49 @@ describe('AtmosphereExploreTab', () => {
     ).toBeTruthy()
     fireEvent.press(screen.getByTestId('retry'))
     expect(refetch).toHaveBeenCalledTimes(1)
+  })
+
+  it.each([
+    ['loading', {isPending: true}],
+    ['error', {isError: true}],
+    ['loaded', {data}],
+  ])('shows the spinner only for a pull while %s', async (_name, result) => {
+    const refresh = createDeferrable()
+    refetch.mockReturnValueOnce(refresh.complete)
+    setQuery({...result, isRefetching: true})
+    render(<AtmosphereExploreTab />)
+
+    expect(getRefreshControlProps().refreshing).toBe(false)
+    act(() => {
+      void getRefreshControlProps().onRefresh?.()
+    })
+    expect(refetch).toHaveBeenCalledTimes(1)
+    expect(getRefreshControlProps().refreshing).toBe(true)
+
+    await act(async () => {
+      refresh.resolve()
+      await refresh.complete
+    })
+    expect(getRefreshControlProps().refreshing).toBe(false)
+  })
+
+  it('clears the pull spinner when refetch rejects', async () => {
+    const refresh = createDeferrable()
+    refetch.mockReturnValueOnce(refresh.complete)
+    setQuery({data})
+    render(<AtmosphereExploreTab />)
+
+    let completion: unknown
+    act(() => {
+      completion = getRefreshControlProps().onRefresh?.()
+    })
+    expect(getRefreshControlProps().refreshing).toBe(true)
+
+    await act(async () => {
+      refresh.reject(new Error('offline'))
+      await expect(completion).rejects.toThrow('offline')
+    })
+    expect(getRefreshControlProps().refreshing).toBe(false)
+    expect(screen.getByText('articles:Live article')).toBeTruthy()
   })
 })
