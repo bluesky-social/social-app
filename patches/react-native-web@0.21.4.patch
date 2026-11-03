@@ -1,0 +1,51 @@
+diff --git a/dist/cjs/exports/StyleSheet/index.js b/dist/cjs/exports/StyleSheet/index.js
+index eedf49039dce440eb60bb4eefbc5c4c8be952f30..d299d92ba4b7d0b7f984d357369542a717486702 100644
+--- a/dist/cjs/exports/StyleSheet/index.js
++++ b/dist/cjs/exports/StyleSheet/index.js
+@@ -41,6 +41,12 @@ function customStyleq(styles, options) {
+       if (compiledStyle != null) {
+         return (0, _transformLocalizeStyle.localizeStyle)(compiledStyle, isRTL);
+       }
++      // Compiled objects (e.g., from StyleX) are already in styleq's format.
++      // Preprocessing them would rewrite keys, and return a new object that
++      // defeats styleq's cache.
++      if (style.$$css === true) {
++        return (0, _transformLocalizeStyle.localizeStyle)(style, isRTL);
++      }
+       return (0, _preprocess.preprocess)(style, (0, _objectSpread2.default)((0, _objectSpread2.default)({}, defaultPreprocessOptions), preprocessOptions));
+     }
+   })(styles);
+diff --git a/dist/exports/StyleSheet/index.js b/dist/exports/StyleSheet/index.js
+index 891994c511839216d523e68786daea85261539fb..ee534c9e7eb07da3e2c057c1ca57309c27d29d81 100644
+--- a/dist/exports/StyleSheet/index.js
++++ b/dist/exports/StyleSheet/index.js
+@@ -37,6 +37,12 @@ function customStyleq(styles, options) {
+       if (compiledStyle != null) {
+         return localizeStyle(compiledStyle, isRTL);
+       }
++      // Compiled objects (e.g., from StyleX) are already in styleq's format.
++      // Preprocessing them would rewrite keys, and return a new object that
++      // defeats styleq's cache.
++      if (style.$$css === true) {
++        return localizeStyle(style, isRTL);
++      }
+       return preprocess(style, _objectSpread(_objectSpread({}, defaultPreprocessOptions), preprocessOptions));
+     }
+   })(styles);
+diff --git a/src/exports/StyleSheet/index.js b/src/exports/StyleSheet/index.js
+index a13393665b8ef9e28a46f19f2aea9edf0bd53bdd..62061fc9d2df04c05dce94310d32d83197405f5f 100644
+--- a/src/exports/StyleSheet/index.js
++++ b/src/exports/StyleSheet/index.js
+@@ -29,6 +29,12 @@ function customStyleq(styles, options: Options = {}) {
+       if (compiledStyle != null) {
+         return localizeStyle(compiledStyle, isRTL);
+       }
++      // Compiled objects (e.g., from StyleX) are already in styleq's format.
++      // Preprocessing them would rewrite keys, and return a new object that
++      // defeats styleq's cache.
++      if (style.$$css === true) {
++        return localizeStyle(style, isRTL);
++      }
+       return preprocess(style, {
+         ...defaultPreprocessOptions,
+         ...preprocessOptions
