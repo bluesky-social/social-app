@@ -43,7 +43,7 @@ index faf88fc1164c2a9391039f1cb9ed880933e0fe55..ca16524c001cc257dabdb34627d0cfeb
  import './setupReactNativeEnvironment';
 -import '../../types';
 diff --git a/package.json b/package.json
-index 7bcfcdd818a4f52a49d1a026633ed73b9b4ca0e2..fc1488674aaaa9a12ac7eb5ba8c97aa15af9fc12 100644
+index f2ee3f5a326e01a0f974d935521437d03a06172a..36ffedf3cf7050ea1eeb781f4eeb3bfa3c0e1e78 100644
 --- a/package.json
 +++ b/package.json
 @@ -66,7 +66,9 @@
