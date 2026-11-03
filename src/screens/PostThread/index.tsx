@@ -8,14 +8,13 @@ import {
 } from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
-import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {isInvalidHandle} from '#/lib/strings/handles'
+import {useSetPostTitle} from '#/lib/hooks/useSetPostTitle'
 import {
   FeedFeedbackProvider,
   type StateContext as FeedFeedbackStateContext,
@@ -93,15 +92,7 @@ export function PostThread({uri}: {uri: string}) {
     return {hasParents}
   }, [thread.data.items])
 
-  // The route title uses the URL's handle-or-DID; prefer the resolved handle,
-  // but keep the route title over "handle.invalid".
-  const {t: l} = useLingui()
-  const author = anchor?.value.post.author
-  useSetTitle(
-    author && !isInvalidHandle(author.handle)
-      ? l`Post by @${author.handle}`
-      : undefined,
-  )
+  useSetPostTitle(anchor?.value.post.author)
 
   // Track post:view event when anchor post is viewed
   const seenPostUriRef = useRef<string | null>(null)
