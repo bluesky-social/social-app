@@ -2,11 +2,11 @@ import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 
+import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {type AtmosphereAppCardData} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, useTheme} from '#/alf'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {toNiceDomain} from '#/lib/strings/url-helpers'
 
 export function AppCard({app}: {app: AtmosphereAppCardData}) {
   const {t: l} = useLingui()
@@ -47,10 +47,16 @@ export function AppCard({app}: {app: AtmosphereAppCardData}) {
           ) : undefined}
           <View style={[a.flex_1, a.gap_2xs]}>
             <Text>
-              <Text emoji style={[a.text_md, a.font_semi_bold]} numberOfLines={1}>
+              <Text
+                emoji
+                style={[a.text_md, a.font_semi_bold]}
+                numberOfLines={1}>
                 {app.title}
               </Text>{' '}
-              <Text emoji style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={1}>
+              <Text
+                emoji
+                style={[a.text_sm, t.atoms.text_contrast_medium]}
+                numberOfLines={1}>
                 • {toNiceDomain(app.href)}
               </Text>
             </Text>

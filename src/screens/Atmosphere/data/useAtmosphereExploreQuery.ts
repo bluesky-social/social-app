@@ -19,8 +19,8 @@ export function useAtmosphereExploreQuery() {
       acceptLanguage,
     }),
     /*
-     * Memory-only and shared by the Explore and Apps tabs. Only an explicit
-     * refetch (pull-to-refresh or error retry) replaces a successful response.
+     * Memory-only. Only an explicit refetch (pull-to-refresh or error retry)
+     * replaces a successful response.
      */
     staleTime: STALE.INFINITY,
     gcTime: GCTIME.INFINITY,

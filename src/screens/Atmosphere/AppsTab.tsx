@@ -1,11 +1,11 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {RefreshControl, View} from 'react-native'
 import {useSharedValue, withTiming} from 'react-native-reanimated'
 import {useLingui} from '@lingui/react/macro'
 
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {getAtmosphereApps} from '#/screens/Atmosphere/data/exploreData'
-import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
+import {useAtmosphereAppsQuery} from '#/screens/Atmosphere/data/useAtmosphereAppsQuery'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
@@ -17,19 +17,43 @@ export function AtmosphereAppsTab() {
   const t = useTheme()
   const {t: l} = useLingui()
   const {data, isError, isPending, isRefetching, refetch} =
-    useAtmosphereExploreQuery()
+    useAtmosphereAppsQuery()
   const [selectedKey, setSelectedKey] = useState('all')
   const dragProgress = useSharedValue(0)
 
   /** Keys other than `all` are the category values sent by the backend. */
-  const categories = [
+  const categoryDefinitions = [
     {key: 'all', label: l`All`},
     {key: 'writing', label: l`Blogging`},
     {key: 'photography', label: l`Photo`},
     {key: 'video', label: l`Video`},
     {key: 'games', label: l`Games`},
     {key: 'feeds', label: l`Feeds`},
+    {key: 'social', label: l`Social`},
+    {key: 'dev', label: l`Dev`},
+    {key: 'audio', label: l`Audio`},
+    {key: 'events', label: l`Events`},
+    {key: 'utils', label: l`Utils`},
   ]
+  /*
+   * Only show categories with at least one renderable app. All is always
+   * shown and keeps apps with a missing or unknown category.
+   */
+  const categories = categoryDefinitions.filter(
+    ({key}) =>
+      key === 'all' || (data && getAtmosphereApps(data, key).length > 0),
+  )
+  const selectedIndex = categories.findIndex(({key}) => key === selectedKey)
+
+  /*
+   * Keeps the indicator on the selected pill, including when a refresh
+   * removes categories before it, and returns to All if the selected category
+   * itself disappears.
+   */
+  useEffect(() => {
+    dragProgress.set(withTiming(Math.max(0, selectedIndex)))
+    if (selectedIndex === -1) setSelectedKey('all')
+  }, [selectedIndex, dragProgress])
 
   const refreshControl = (
     <RefreshControl
@@ -71,17 +95,11 @@ export function AtmosphereAppsTab() {
     )
   }
 
+  const activeKey = selectedIndex === -1 ? 'all' : selectedKey
   const apps = getAtmosphereApps(
     data,
-    selectedKey === 'all' ? undefined : selectedKey,
+    activeKey === 'all' ? undefined : activeKey,
   )
-
-  function onSelectCategory(key: string) {
-    setSelectedKey(key)
-    dragProgress.set(
-      withTiming(categories.findIndex(category => category.key === key)),
-    )
-  }
 
   return (
     <Layout.Content
@@ -93,9 +111,9 @@ export function AtmosphereAppsTab() {
         {isError ? <View style={[a.px_lg]}>{errorMessage}</View> : undefined}
         <TabPills
           tabs={categories}
-          selectedTab={selectedKey}
+          selectedTab={activeKey}
           dragProgress={dragProgress}
-          onSelectTab={onSelectCategory}
+          onSelectTab={setSelectedKey}
           getAccessibilityHint={tab => l`Shows ${tab.label} apps`}
         />
         <View style={[a.gap_md, a.px_lg]}>

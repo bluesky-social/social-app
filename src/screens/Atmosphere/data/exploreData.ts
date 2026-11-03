@@ -6,6 +6,8 @@ import * as bsky from '#/types/bsky'
 
 export type AtmosphereData =
   app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody
+export type AtmosphereAppsData =
+  app.bsky.unspecced.getAtmosphereApps.$OutputBody
 
 type AtmosphereProfileView = l.InferOutput<
   typeof app.bsky.actor.defs.profileViewBasic
@@ -35,8 +37,6 @@ export type AtmosphereAppCardData = {
   description?: string
   logo?: string
   backgroundImage?: string
-  overlayColor?: string
-  textColor?: string
   href: string
 }
 
@@ -175,7 +175,7 @@ export function getAtmospherePublications(
  * category.
  */
 export function getAtmosphereApps(
-  data: AtmosphereData,
+  data: AtmosphereAppsData,
   category?: string,
 ): AtmosphereAppCardData[] {
   return dedupeById(
@@ -189,9 +189,7 @@ export function getAtmosphereApps(
           title: app.title,
           description: app.description || undefined,
           logo: app.logo,
-          backgroundImage: app.backgroundImage,
-          overlayColor: app.overlayColor,
-          textColor: app.textColor,
+          backgroundImage: app.banner,
           href: app.url,
         },
       ]

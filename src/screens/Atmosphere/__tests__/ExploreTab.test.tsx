@@ -167,7 +167,8 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.getByText('nux')).toBeTruthy()
     expect(screen.getByText('banner:Launch')).toBeTruthy()
     expect(screen.getByText('articles:Live article')).toBeTruthy()
-    expect(screen.getByText('apps:Live app')).toBeTruthy()
+    /* Apps live in their own tab, even though the response includes them. */
+    expect(screen.queryByText(/^apps:/)).toBeNull()
     expect(screen.queryByText(/^livestreams:/)).toBeNull()
     expect(screen.queryByText(/^photos:/)).toBeNull()
     expect(
@@ -209,7 +210,7 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.queryByText(/^articles:/)).toBeNull()
     expect(screen.getByText(/^photos:/)).toBeTruthy()
     expect(screen.getByText(/^livestreams:/)).toBeTruthy()
-    expect(screen.getByText(/^apps:/)).toBeTruthy()
+    expect(screen.queryByText(/^apps:/)).toBeNull()
     expect(screen.getByText(/^banner:/)).toBeTruthy()
   })
 

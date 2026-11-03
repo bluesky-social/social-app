@@ -1,6 +1,7 @@
 import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/exploreResponse'
 import {livestreamPreviewFixture} from '#/screens/Atmosphere/__tests__/fixtures/livestreamPreview'
 import {
+  type AtmosphereAppsData,
   type AtmosphereData,
   getAtmosphereAnnouncementBanner,
   getAtmosphereApps,
@@ -24,6 +25,8 @@ const emptyData: AtmosphereData = {
   livestreams: {items: []},
   apps: [],
 }
+
+const emptyAppsData: AtmosphereAppsData = {apps: []}
 
 const testProfile = {
   $type: 'app.bsky.actor.defs#profileViewBasic',
@@ -271,18 +274,6 @@ describe('Atmosphere Explore response fixtures', () => {
       authorProfile: {handle: 'author.test'},
     })
 
-    expect(getAtmosphereApps(fixtureData)).toEqual([
-      {
-        id: 'app',
-        title: 'Test app',
-        description: 'An app description',
-        logo: 'https://example.com/app-logo.jpg',
-        backgroundImage: 'https://example.com/app-background.jpg',
-        overlayColor: '#123456',
-        textColor: '#ffffff',
-        href: 'https://example.com/app',
-      },
-    ])
     expect(getAtmosphereAnnouncementBanner(fixtureData)).toEqual({
       id: 'banner',
       title: 'Test announcement',
@@ -423,7 +414,11 @@ describe('Atmosphere Explore response fixtures', () => {
       livestreams: {items: livestreamPreviewFixture},
     }).livestreams.items
     const [publication] = fixtureData.publications.items
-    const [firstApp] = fixtureData.apps
+    const firstApp = {
+      id: 'app',
+      title: 'Test app',
+      url: 'https://example.com/app' as const,
+    }
 
     function twoOf<T extends {view: {uri: string}}>(item: T) {
       return {
@@ -459,13 +454,12 @@ describe('Atmosphere Explore response fixtures', () => {
 
     it('in apps, keeping the first occurrence', () => {
       const data = {
-        ...emptyData,
         apps: [
           firstApp,
           {...firstApp, id: 'other'},
           {...firstApp, title: 'dupe'},
         ],
-      } satisfies AtmosphereData
+      } satisfies AtmosphereAppsData
 
       const result = getAtmosphereApps(data)
 
@@ -474,22 +468,84 @@ describe('Atmosphere Explore response fixtures', () => {
     })
   })
 
+  describe('getAtmosphereApps', () => {
+    const parseApps = (data: unknown): AtmosphereAppsData =>
+      app.bsky.unspecced.getAtmosphereApps.$output.schema.parse(data)
+
+    it('adapts the hydrated logo and banner and drops obsolete colors', () => {
+      const [card] = getAtmosphereApps(
+        parseApps({
+          apps: [
+            {
+              id: 'app',
+              title: 'Test app',
+              description: 'An app description',
+              logo: 'https://example.com/app-logo.jpg',
+              banner: 'https://example.com/app-banner.jpg',
+              url: 'https://example.com/app',
+              category: 'social',
+            },
+          ],
+        }),
+      )
+
+      expect(card).toEqual({
+        id: 'app',
+        title: 'Test app',
+        description: 'An app description',
+        logo: 'https://example.com/app-logo.jpg',
+        backgroundImage: 'https://example.com/app-banner.jpg',
+        href: 'https://example.com/app',
+      })
+    })
+
+    it('handles sparse and empty responses', () => {
+      expect(getAtmosphereApps(emptyAppsData)).toEqual([])
+      expect(
+        getAtmosphereApps(
+          parseApps({
+            apps: [
+              {id: 'sparse', title: 'Sparse app', url: 'https://example.com'},
+            ],
+          }),
+        ),
+      ).toEqual([
+        {
+          id: 'sparse',
+          title: 'Sparse app',
+          description: undefined,
+          logo: undefined,
+          backgroundImage: undefined,
+          href: 'https://example.com',
+        },
+      ])
+    })
+
+    it('validates the live response contract', () => {
+      expect(() => parseApps({apps: [{url: 'not a uri'}]})).toThrow()
+    })
+  })
+
   describe('getAtmosphereApps categories', () => {
     const url = 'https://example.com/app'
     const data = {
-      ...emptyData,
       apps: [
         {id: 'writing', title: 'Writing', url, category: 'writing'},
         {id: 'photo', title: 'Photo', url, category: 'photography'},
         {id: 'video', title: 'Video', url, category: 'video'},
         {id: 'feeds', title: 'Feeds', url, category: 'feeds'},
         {id: 'games', title: 'Games', url, category: 'games'},
+        {id: 'social', title: 'Social', url, category: 'social'},
+        {id: 'dev', title: 'Dev', url, category: 'dev'},
+        {id: 'audio', title: 'Audio', url, category: 'audio'},
+        {id: 'events', title: 'Events', url, category: 'events'},
+        {id: 'utils', title: 'Utils', url, category: 'utils'},
         {id: 'unknown', title: 'Unknown', url, category: 'new-category'},
         {id: 'missing', title: 'Missing', url},
         {id: 'invalid', title: '', url, category: 'writing'},
         {id: 'writing', title: 'Duplicate', url, category: 'writing'},
       ],
-    } satisfies AtmosphereData
+    } satisfies AtmosphereAppsData
 
     it('returns every valid app, including unknown and missing categories, without a category', () => {
       expect(getAtmosphereApps(data).map(app => app.id)).toEqual([
@@ -498,6 +554,11 @@ describe('Atmosphere Explore response fixtures', () => {
         'video',
         'feeds',
         'games',
+        'social',
+        'dev',
+        'audio',
+        'events',
+        'utils',
         'unknown',
         'missing',
       ])
@@ -509,6 +570,11 @@ describe('Atmosphere Explore response fixtures', () => {
       ['video', ['video']],
       ['feeds', ['feeds']],
       ['games', ['games']],
+      ['social', ['social']],
+      ['dev', ['dev']],
+      ['audio', ['audio']],
+      ['events', ['events']],
+      ['utils', ['utils']],
       ['empty', []],
     ])(
       'filters raw category %s, still validating and deduping',
@@ -580,7 +646,6 @@ describe('Atmosphere Explore response fixtures', () => {
       href: 'https://example.com/announcement',
     })
     expect(getAtmosphereArticles(emptyData)).toEqual([])
-    expect(getAtmosphereApps(emptyData)).toEqual([])
     expect(getAtmosphereLivestreams(emptyData)).toEqual([])
     expect(getAtmospherePhotos(emptyData)).toEqual([])
 
@@ -651,9 +716,6 @@ describe('Atmosphere Explore response fixtures', () => {
           },
         ],
       },
-      apps: [
-        {id: 'sparse-app', title: 'Sparse app', url: 'https://example.com'},
-      ],
     })
 
     expect(getAtmosphereArticles(sparseData)[0]).toMatchObject({
@@ -674,18 +736,6 @@ describe('Atmosphere Explore response fixtures', () => {
       },
     ])
     expect(getAtmosphereLivestreams(sparseData)).toEqual([])
-    expect(getAtmosphereApps(sparseData)).toEqual([
-      {
-        id: 'sparse-app',
-        title: 'Sparse app',
-        description: undefined,
-        logo: undefined,
-        backgroundImage: undefined,
-        overlayColor: undefined,
-        textColor: undefined,
-        href: 'https://example.com',
-      },
-    ])
   })
 
   it('keeps associated profiles that omit $type and drops invalid ones', () => {

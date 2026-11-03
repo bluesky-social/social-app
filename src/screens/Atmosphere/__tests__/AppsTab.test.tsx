@@ -2,8 +2,8 @@ import {type RefreshControlProps} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {AtmosphereAppsTab} from '#/screens/Atmosphere/AppsTab'
-import {type AtmosphereData} from '#/screens/Atmosphere/data/exploreData'
-import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
+import {type AtmosphereAppsData} from '#/screens/Atmosphere/data/exploreData'
+import {useAtmosphereAppsQuery} from '#/screens/Atmosphere/data/useAtmosphereAppsQuery'
 
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({
@@ -12,19 +12,27 @@ jest.mock('@lingui/react', () => ({
   }),
 }))
 
+/* The most recent shared value, so tests can read it after effects run. */
+const mockProgress: {get: () => number} = {get: () => 0}
+
 jest.mock('react-native-reanimated', () => ({
   useSharedValue: (initial: number) => {
     const {useState} = require('react') as typeof import('react')
     return useState(() => {
       let value = initial
-      return {get: () => value, set: (next: number) => (value = next)}
+      const sharedValue = {
+        get: () => value,
+        set: (next: number) => (value = next),
+      }
+      mockProgress.get = sharedValue.get
+      return sharedValue
     })[0]
   },
   withTiming: (value: number) => value,
 }))
 
-jest.mock('#/screens/Atmosphere/data/useAtmosphereExploreQuery', () => ({
-  useAtmosphereExploreQuery: jest.fn(),
+jest.mock('#/screens/Atmosphere/data/useAtmosphereAppsQuery', () => ({
+  useAtmosphereAppsQuery: jest.fn(),
 }))
 
 jest.mock('#/components/Layout', () => {
@@ -81,17 +89,14 @@ jest.mock('#/screens/Notifications/components/TabPills', () => {
     TabPills: ({
       tabs,
       selectedTab,
-      dragProgress,
       onSelectTab,
     }: {
       tabs: {key: string; label: string}[]
       selectedTab: string
-      dragProgress: {get: () => number}
       onSelectTab: (key: string) => void
     }) => (
       <View>
         <Text testID="selectedTab">{selectedTab}</Text>
-        <Text testID="progress">{String(dragProgress.get())}</Text>
         {tabs.map(tab => (
           <Pressable
             key={tab.key}
@@ -106,12 +111,10 @@ jest.mock('#/screens/Notifications/components/TabPills', () => {
   }
 })
 
-const mockQuery = jest.mocked(useAtmosphereExploreQuery)
+const mockQuery = jest.mocked(useAtmosphereAppsQuery)
 const refetch = jest.fn()
 
-function setQuery(
-  result: Partial<ReturnType<typeof useAtmosphereExploreQuery>>,
-) {
+function setQuery(result: Partial<ReturnType<typeof useAtmosphereAppsQuery>>) {
   mockQuery.mockReturnValue({
     data: undefined,
     isError: false,
@@ -123,19 +126,40 @@ function setQuery(
 }
 
 const url = 'https://example.com/app'
-const data: AtmosphereData = {
-  articles: {items: []},
-  publications: {items: []},
-  photos: {items: []},
-  livestreams: {items: []},
+const data: AtmosphereAppsData = {
   apps: [
     {id: 'blog', title: 'Blog app', url, category: 'writing'},
     {id: 'photo', title: 'Photo app', url, category: 'photography'},
     {id: 'game', title: 'Game app', url, category: 'games'},
+    {id: 'social', title: 'Social app', url, category: 'social'},
+    {id: 'dev', title: 'Dev app', url, category: 'dev'},
+    {id: 'audio', title: 'Audio app', url, category: 'audio'},
+    {id: 'event', title: 'Event app', url, category: 'events'},
+    {id: 'util', title: 'Util app', url, category: 'utils'},
     {id: 'unknown', title: 'Unknown app', url, category: 'new'},
     {id: 'missing', title: 'Missing app', url},
-    {id: 'invalid', title: '', url, category: 'writing'},
+    /* Invalid cards never render, so they must not create a pill. */
+    {id: 'invalid', title: '', url, category: 'video'},
+    {id: 'invalid-feed', title: 'No URL', category: 'feeds'},
   ],
+}
+
+const populatedKeys = [
+  'all',
+  'writing',
+  'photography',
+  'games',
+  'social',
+  'dev',
+  'audio',
+  'events',
+  'utils',
+]
+
+function pillKeys() {
+  return screen
+    .getAllByTestId(/^pill-/)
+    .map(pill => (pill.props as {testID: string}).testID.slice('pill-'.length))
 }
 
 beforeEach(() => {
@@ -173,11 +197,17 @@ describe('AtmosphereAppsTab', () => {
       'Blog app',
       'Photo app',
       'Game app',
+      'Social app',
+      'Dev app',
+      'Audio app',
+      'Event app',
+      'Util app',
       'Unknown app',
       'Missing app',
     ]) {
       expect(screen.getByText(title)).toBeTruthy()
     }
+    expect(screen.queryByText('No apps in this category yet.')).toBeNull()
     expect(screen.queryByTestId('retry')).toBeNull()
   })
 
@@ -185,6 +215,11 @@ describe('AtmosphereAppsTab', () => {
     ['writing', 'Blog app'],
     ['photography', 'Photo app'],
     ['games', 'Game app'],
+    ['social', 'Social app'],
+    ['dev', 'Dev app'],
+    ['audio', 'Audio app'],
+    ['events', 'Event app'],
+    ['utils', 'Util app'],
   ])('filters %s locally without refetching', (key, title) => {
     setQuery({data})
     render(<AtmosphereAppsTab />)
@@ -192,13 +227,7 @@ describe('AtmosphereAppsTab', () => {
     fireEvent.press(screen.getByTestId(`pill-${key}`))
 
     expect(screen.getByTestId('selectedTab').props.children).toBe(key)
-    expect(screen.getByTestId('progress').props.children).toBe(
-      String(
-        ['all', 'writing', 'photography', 'video', 'games', 'feeds'].indexOf(
-          key,
-        ),
-      ),
-    )
+    expect(mockProgress.get()).toBe(populatedKeys.indexOf(key))
     expect(screen.getByText(title)).toBeTruthy()
     expect(screen.queryByText('Unknown app')).toBeNull()
     expect(screen.queryByText('Missing app')).toBeNull()
@@ -206,26 +235,58 @@ describe('AtmosphereAppsTab', () => {
     expect(refetch).not.toHaveBeenCalled()
   })
 
-  it('keeps every category pill and shows an empty message for an empty category', () => {
+  it('shows only All and populated categories, in order', () => {
     setQuery({data})
     render(<AtmosphereAppsTab />)
 
-    for (const label of [
-      'All',
-      'Blogging',
-      'Photo',
-      'Video',
-      'Games',
-      'Feeds',
-    ]) {
+    expect(pillKeys()).toEqual(populatedKeys)
+    for (const label of ['Social', 'Dev', 'Audio', 'Events', 'Utils']) {
       expect(screen.getByText(label)).toBeTruthy()
     }
+    /* Video has only an invalid app and Feeds none that render. */
+    expect(screen.queryByText('Video')).toBeNull()
+    expect(screen.queryByText('Feeds')).toBeNull()
+  })
 
-    fireEvent.press(screen.getByTestId('pill-video'))
+  it('keeps All and the empty message for an empty response', () => {
+    setQuery({data: {apps: []}})
+    render(<AtmosphereAppsTab />)
 
+    expect(pillKeys()).toEqual(['all'])
     expect(screen.getByText('No apps in this category yet.')).toBeTruthy()
-    expect(screen.queryByText(/ app$/)).toBeNull()
-    expect(screen.getByTestId('pill-all')).toBeTruthy()
+  })
+
+  it('returns to All when a refresh removes the selected category', () => {
+    setQuery({data})
+    const {rerender} = render(<AtmosphereAppsTab />)
+    fireEvent.press(screen.getByTestId('pill-dev'))
+    expect(screen.getByTestId('selectedTab').props.children).toBe('dev')
+
+    setQuery({data: {apps: data.apps.filter(app => app.category !== 'dev')}})
+    rerender(<AtmosphereAppsTab />)
+
+    expect(screen.getByTestId('selectedTab').props.children).toBe('all')
+    expect(mockProgress.get()).toBe(0)
+    expect(screen.getByText('Blog app')).toBeTruthy()
+    expect(screen.getByText('Unknown app')).toBeTruthy()
+    expect(screen.queryByTestId('pill-dev')).toBeNull()
+  })
+
+  it('moves the indicator when a refresh removes a category before the selected one', () => {
+    setQuery({data})
+    const {rerender} = render(<AtmosphereAppsTab />)
+    fireEvent.press(screen.getByTestId('pill-dev'))
+    expect(mockProgress.get()).toBe(5)
+
+    setQuery({
+      data: {apps: data.apps.filter(app => app.category !== 'photography')},
+    })
+    rerender(<AtmosphereAppsTab />)
+
+    expect(screen.getByTestId('selectedTab').props.children).toBe('dev')
+    expect(mockProgress.get()).toBe(4)
+    expect(screen.getByText('Dev app')).toBeTruthy()
+    expect(refetch).not.toHaveBeenCalled()
   })
 
   it('keeps cached apps and offers retry when a refetch fails', () => {
