@@ -28,6 +28,7 @@ import {Notifications} from './Notifications'
 import {ProfileBadges} from './ProfileBadges'
 import {Settings} from './Settings'
 import {Shadows} from './Shadows'
+import {SharePlatforms} from './SharePlatforms'
 import {Spacing} from './Spacing'
 import {Splash} from './Splash'
 import {Theming} from './Theming'
@@ -128,6 +129,7 @@ export default function Storybook() {
 
             <Splash />
             <Haptics />
+            <SharePlatforms />
             <Toasts />
             <Buttons />
             <NewPostsPill />
