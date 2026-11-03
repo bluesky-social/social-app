@@ -180,4 +180,10 @@ describe('PostThread document title', () => {
       title: 'Post by @ironeconomist.bsky.social — Bluesky',
     })
   })
+
+  it('keeps the URL title when the author handle is invalid', () => {
+    mockItems = [threadPost('handle.invalid')]
+    renderThread()
+    expect(mockSetOptions).not.toHaveBeenCalled()
+  })
 })

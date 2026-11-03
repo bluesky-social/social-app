@@ -15,6 +15,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
+import {isInvalidHandle} from '#/lib/strings/handles'
 import {
   FeedFeedbackProvider,
   type StateContext as FeedFeedbackStateContext,
@@ -92,10 +93,14 @@ export function PostThread({uri}: {uri: string}) {
     return {hasParents}
   }, [thread.data.items])
 
-  // The route title uses the URL's handle-or-DID; prefer the resolved handle.
+  // The route title uses the URL's handle-or-DID; prefer the resolved handle,
+  // but keep the route title over "handle.invalid".
   const {t: l} = useLingui()
+  const author = anchor?.value.post.author
   useSetTitle(
-    anchor ? l`Post by @${anchor.value.post.author.handle}` : undefined,
+    author && !isInvalidHandle(author.handle)
+      ? l`Post by @${author.handle}`
+      : undefined,
   )
 
   // Track post:view event when anchor post is viewed
