@@ -64,9 +64,8 @@ function SingleFollowNotification({
       accessible={false}
       onBeforePress={cacheProfile}
       testID={`notification-follow-${notification.id}`}>
-      <Item.Icon glyph="follow" />
+      <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
       <Item.Content>
-        <Item.AvatarRow actor={actor} />
         <View style={[a.gap_xs]}>
           <Item.HeadlineWithButton
             button={

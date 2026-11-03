@@ -210,9 +210,8 @@ function FollowSkeleton({index}: {index: number}) {
 
   return (
     <Row>
-      <Item.IconSkeleton />
+      <Item.AvatarSkeleton />
       <Item.Content>
-        <AvatarRowSkeleton count={1} overflow={false} />
         <Item.HeadlineWithButton button={<FollowButtonSkeleton />}>
           <Lines style={a.text_md} widths={[even ? '60%' : '50%']} />
         </Item.HeadlineWithButton>
