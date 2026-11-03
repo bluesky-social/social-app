@@ -18,9 +18,9 @@ export const AVATAR_GAP = space.sm
 export const TOGGLE_PADDING = 8
 
 /**
- * The size of the toggle's chevron, the `sm` icon size.
+ * The size of the toggle's chevron, the `2xs` icon size.
  */
-export const CHEVRON_SIZE = 16
+export const CHEVRON_SIZE = 8
 
 /**
  * Space between the toggle's "+N" count and its chevron.

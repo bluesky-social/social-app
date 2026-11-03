@@ -29,12 +29,9 @@ import {
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
-import {
-  ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
-  ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
-} from '#/components/icons/Chevron'
+import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon} from '#/components/icons/TinyChevronBottom'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -493,7 +490,14 @@ function GroupToggle({
       hitSlop={HITSLOP_10}
       onPress={onToggle}
       style={style}
-      hoverStyle={t.atoms.bg_contrast_25}>
+      /*
+       * Also the pressed style. A press is over too quickly for the faint
+       * hover tint to show, so on native it's a step stronger
+       */
+      hoverStyle={platform({
+        web: t.atoms.bg_contrast_25,
+        native: t.atoms.bg_contrast_50,
+      })}>
       {contents}
     </Button>
   )
@@ -528,12 +532,16 @@ function OverflowCount({count}: {count: number}) {
 /**
  * Points down when the group is collapsed and up when it's expanded.
  *
- * Swaps icons rather than rotating one, since react-native-svg applies a
- * transform on the icon to its contents too, rotating the path out of view.
+ * There's only a downward tiny chevron, so a wrapping view turns it over. A
+ * transform on the icon itself would apply to its contents too, in
+ * react-native-svg, rotating the path out of view.
  */
 function ExpandChevron({expanded}: {expanded: boolean}) {
   const t = useTheme()
-  const Icon = expanded ? ChevronUpIcon : ChevronDownIcon
-  // `sm`, which `fitAvatarCount` allows for as `CHEVRON_SIZE`
-  return <Icon size="sm" style={[t.atoms.text_contrast_high]} />
+  return (
+    <View style={expanded && {transform: [{rotate: '180deg'}]}}>
+      {/* `2xs`, which `fitAvatarCount` allows for as `CHEVRON_SIZE` */}
+      <TinyChevronIcon size="2xs" style={[t.atoms.text_contrast_high]} />
+    </View>
+  )
 }
