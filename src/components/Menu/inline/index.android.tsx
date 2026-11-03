@@ -53,8 +53,11 @@ function drawable(glyph: NanoGlyphName | undefined) {
 
 const CHECK = drawable(Check.glyph)
 
-/** `MenuDefaults.LeadingIconSize` */
-const ICON_SIZE = 20
+/**
+ * A bit under `MenuDefaults.LeadingIconSize` (20dp), to balance with our
+ * labels. Material still gives the icon a 24dp slot, so labels don't move.
+ */
+const ICON_SIZE = 18
 
 /** Our `sm` icon size, so the check sits lighter than the item icons. */
 const CHECK_SIZE = 16
