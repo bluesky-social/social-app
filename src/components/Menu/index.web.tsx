@@ -284,7 +284,9 @@ export function Item({
           a.flex_row,
           a.align_center,
           a.gap_sm,
-          a.px_lg,
+          // Less on the leading side, for the icon's visual balance
+          a.pl_md,
+          a.pr_lg,
           a.py_md,
           a.overflow_hidden,
           {minHeight: 44},
@@ -373,7 +375,8 @@ export function ItemIcon({icon: Comp, fill}: ItemIconProps) {
   const {disabled, destructive, selected} = useMenuItemContext()
   return (
     <Comp
-      size="md"
+      // Between `sm` and `md`, to sit with the 13px labels
+      width={18}
       fill={
         fill
           ? fill({disabled})
