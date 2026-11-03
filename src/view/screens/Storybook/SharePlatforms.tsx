@@ -18,8 +18,6 @@ const CONTENT = {
   title: 'Post by @bsky.app on Bluesky',
 }
 
-const enc = encodeURIComponent
-
 /**
  * Links that research couldn't confirm, to settle on a device which one, if
  * any, opens the app with the link filled in.
@@ -27,27 +25,27 @@ const enc = encodeURIComponent
 const ALTERNATIVES: {label: string; url: string}[] = [
   {
     label: 'X web intent (/intent/tweet)',
-    url: `https://x.com/intent/tweet?url=${enc(CONTENT.url)}`,
+    url: `https://x.com/intent/tweet?url=${encodeURIComponent(CONTENT.url)}`,
   },
   {
     label: 'X web intent (/intent/post)',
-    url: `https://x.com/intent/post?text=${enc(CONTENT.url)}`,
+    url: `https://x.com/intent/post?text=${encodeURIComponent(CONTENT.url)}`,
   },
   {
     label: 'Facebook sharer.php',
-    url: `https://www.facebook.com/sharer/sharer.php?u=${enc(CONTENT.url)}`,
+    url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(CONTENT.url)}`,
   },
   {
     label: 'Messenger fb-messenger://share',
-    url: `fb-messenger://share/?link=${enc(CONTENT.url)}`,
+    url: `fb-messenger://share/?link=${encodeURIComponent(CONTENT.url)}`,
   },
   {
     label: 'Reddit /submit/ (trailing slash)',
-    url: `https://www.reddit.com/submit/?url=${enc(CONTENT.url)}&title=${enc(CONTENT.title)}`,
+    url: `https://www.reddit.com/submit/?url=${encodeURIComponent(CONTENT.url)}&title=${encodeURIComponent(CONTENT.title)}`,
   },
   {
     label: 'Discord discord://send (unconfirmed)',
-    url: `discord://send?message=${enc(CONTENT.url)}`,
+    url: `discord://send?message=${encodeURIComponent(CONTENT.url)}`,
   },
 ]
 

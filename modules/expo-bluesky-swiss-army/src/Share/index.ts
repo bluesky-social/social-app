@@ -18,7 +18,8 @@ export function getInstalledPackages(_packages: string[]): string[] | null {
 }
 
 /**
- * Android only. iOS has no way to send text to one specific app.
+ * Android only. iOS can't send text straight to another app's share screen,
+ * so on iOS those apps use a share link or copy-and-open instead.
  */
 export function canShareTextToPackage(): boolean {
   return false
