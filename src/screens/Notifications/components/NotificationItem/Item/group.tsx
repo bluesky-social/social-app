@@ -540,8 +540,8 @@ function ExpandChevron({expanded}: {expanded: boolean}) {
   const t = useTheme()
   return (
     <View style={expanded && {transform: [{rotate: '180deg'}]}}>
-      {/* `2xs`, which `fitAvatarCount` allows for as `CHEVRON_SIZE` */}
-      <TinyChevronIcon size="2xs" style={[t.atoms.text_contrast_high]} />
+      {/* `xs`, which `fitAvatarCount` allows for as `CHEVRON_SIZE` */}
+      <TinyChevronIcon size="xs" style={[t.atoms.text_contrast_high]} />
     </View>
   )
 }
