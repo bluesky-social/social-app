@@ -36,7 +36,7 @@ export type AtmosphereAppCardData = {
   title: string
   description?: string
   logo?: string
-  backgroundImage?: string
+  banner?: string
   href: string
 }
 
@@ -189,7 +189,7 @@ export function getAtmosphereApps(
           title: app.title,
           description: app.description || undefined,
           logo: app.logo,
-          backgroundImage: app.banner,
+          banner: app.banner,
           href: app.url,
         },
       ]

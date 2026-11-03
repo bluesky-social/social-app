@@ -22,9 +22,9 @@ export function AppCard({app}: {app: AtmosphereAppCardData}) {
         a.border,
         t.atoms.border_contrast_low,
       ]}>
-      {app.backgroundImage ? (
+      {app.banner ? (
         <Image
-          source={app.backgroundImage}
+          source={app.banner}
           contentFit="cover"
           style={[a.absolute, {top: 0, right: 0, bottom: 0, width: 96}]}
           accessible={false}

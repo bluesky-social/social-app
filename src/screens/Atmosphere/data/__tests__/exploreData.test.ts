@@ -494,7 +494,7 @@ describe('Atmosphere Explore response fixtures', () => {
         title: 'Test app',
         description: 'An app description',
         logo: 'https://example.com/app-logo.jpg',
-        backgroundImage: 'https://example.com/app-banner.jpg',
+        banner: 'https://example.com/app-banner.jpg',
         href: 'https://example.com/app',
       })
     })
@@ -515,7 +515,7 @@ describe('Atmosphere Explore response fixtures', () => {
           title: 'Sparse app',
           description: undefined,
           logo: undefined,
-          backgroundImage: undefined,
+          banner: undefined,
           href: 'https://example.com',
         },
       ])
