@@ -29,7 +29,7 @@ import {
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, platform, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon} from '#/components/icons/TinyChevronBottom'
 import * as Toast from '#/components/Toast'
@@ -38,6 +38,7 @@ import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
 import {fitAvatarCount, PREVIEW_AVATAR_SIZE, TOGGLE_PADDING} from './avatarRow'
 import {Expandable} from './Expandable'
+import {useSuppressHover} from './hover'
 import {ActorList, ShowMoreActorsButton} from './profile'
 import {Root, useRowBackgroundColor} from './Root'
 import {useDisplayName} from './text'
@@ -464,6 +465,7 @@ function GroupToggle({
   const t = useTheme()
   const {t: l} = useLingui()
   const {isExpanded, toggleOnPress, onToggle} = expansion
+  const suppressHover = useSuppressHover()
 
   const style = [
     a.flex_row,
@@ -489,15 +491,12 @@ function GroupToggle({
       aria-expanded={isExpanded}
       hitSlop={HITSLOP_10}
       onPress={onToggle}
+      // Keeps the row from highlighting as well, which the tint would blend into
+      onHoverIn={() => suppressHover(true)}
+      onHoverOut={() => suppressHover(false)}
       style={style}
-      /*
-       * Also the pressed style. A press is over too quickly for the faint
-       * hover tint to show, so on native it's a step stronger
-       */
-      hoverStyle={platform({
-        web: t.atoms.bg_contrast_25,
-        native: t.atoms.bg_contrast_50,
-      })}>
+      // Also the pressed style on native
+      hoverStyle={t.atoms.bg_contrast_50}>
       {contents}
     </Button>
   )
