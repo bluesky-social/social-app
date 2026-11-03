@@ -76,7 +76,7 @@ export type SharePlatform = {
 
 const enc = encodeURIComponent
 
-/*
+/**
  * In default display order, by where people share posts today. Germ isn't
  * listed yet: it has no link or share screen that accepts text.
  */
@@ -126,8 +126,9 @@ const CATALOG = [
       getShareUrl: ({url}) => `https://t.me/share/url?url=${enc(url)}`,
     },
     android: {
+      // Direct share, since the t.me link may not open Telegram X
       packages: ['org.telegram.messenger', 'org.thunderdog.challegram'],
-      getShareUrl: ({url}) => `https://t.me/share/url?url=${enc(url)}`,
+      directShare: true,
     },
   },
   {

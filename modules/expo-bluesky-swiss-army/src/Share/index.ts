@@ -13,20 +13,15 @@ export function shareText(text: string): Promise<NativeShareResult> {
 /**
  * Android only. iOS checks URL schemes with `Linking.canOpenURL` instead.
  */
-export function getInstalledPackages(_packages: string[]): string[] | null {
-  return null
+export function getInstalledPackages(
+  _packages: string[],
+): Promise<string[] | null> {
+  return Promise.resolve(null)
 }
 
 /**
  * Android only. iOS can't send text straight to another app's share screen,
  * so on iOS those apps use a share link or copy-and-open instead.
- */
-export function canShareTextToPackage(): boolean {
-  return false
-}
-
-/**
- * Android only.
  */
 export function shareTextToPackage(
   text: string,
