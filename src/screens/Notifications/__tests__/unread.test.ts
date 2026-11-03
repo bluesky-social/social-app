@@ -75,7 +75,7 @@ describe('getMarkReadAt', () => {
 
   it('marks up to the newest notification All loaded, not the request', () => {
     // Anything between the two may not have reached the feed yet
-    const newestAt = REQUESTED_AT - 10_000
+    const newestAt = REQUESTED_AT - 5000
     expect(getMarkReadAt(load({newestAt}))).toEqual(new Date(newestAt))
   })
 
@@ -90,15 +90,10 @@ describe('getMarkReadAt', () => {
     expect(getMarkReadAt(load({newestAt}))).toEqual(new Date(WINDOW_START))
   })
 
-  it('never moves the server seenAt backwards', () => {
-    const seenAt = new Date(REQUESTED_AT + 60_000).toISOString()
-    expect(getMarkReadAt(load({seenAt}))).toEqual(new Date(seenAt))
-  })
-
   it('marks up to the safety window for an empty feed', () => {
-    expect(
-      getMarkReadAt(load({newestAt: undefined, seenAt: undefined})),
-    ).toEqual(new Date(WINDOW_START))
+    expect(getMarkReadAt(load({newestAt: undefined}))).toEqual(
+      new Date(WINDOW_START),
+    )
   })
 
   it('leaves the other feeds to All', () => {

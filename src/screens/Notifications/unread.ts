@@ -43,14 +43,14 @@ export function nextSeenAt({
  * The server leaves the last 5 seconds out of the feed, and our clock can be
  * off from the server's, or a notification slow to reach the feed.
  */
-export const MARK_READ_SAFETY_WINDOW_MS = 60_000
+export const MARK_READ_SAFETY_WINDOW_MS = 10_000
 
 /**
  * How far a fresh load marks notifications as seen on the server, if at all.
  *
  * Only "All" marks notifications as seen, as the other tabs leave things out.
- * It marks up to the newest notification the load showed, and never moves the
- * server's `seenAt` backwards.
+ * It marks up to the newest notification the load showed. The server ignores a
+ * `seenAt` older than the one it has, so there's no need to check for that.
  *
  * It doesn't mark up to the time of the request, as anything from just before
  * it may not have reached the feed yet, and would be marked as seen before
@@ -66,7 +66,6 @@ export function getMarkReadAt(load: FeedLoad): Date | undefined {
     Math.max(
       load.newestAt ?? -Infinity,
       load.requestedAt - MARK_READ_SAFETY_WINDOW_MS,
-      parseTime(load.seenAt) ?? -Infinity,
     ),
   )
 }
