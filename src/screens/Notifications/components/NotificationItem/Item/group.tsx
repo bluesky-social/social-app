@@ -528,7 +528,7 @@ function OverflowCount({count}: {count: number}) {
     <Text
       allowFontScaling={false}
       numberOfLines={1}
-      style={[a.text_sm, t.atoms.text_contrast_medium]}>
+      style={[a.text_sm, a.font_medium, t.atoms.text_contrast_medium]}>
       {formatRemaining(i18n, count)}
     </Text>
   )
@@ -547,7 +547,7 @@ function ExpandChevron({expanded}: {expanded: boolean}) {
     <View style={expanded && {transform: [{rotate: '180deg'}]}}>
       <TinyChevronIcon
         width={CHEVRON_SIZE}
-        style={[t.atoms.text_contrast_high]}
+        style={[t.atoms.text_contrast_medium]}
       />
     </View>
   )
