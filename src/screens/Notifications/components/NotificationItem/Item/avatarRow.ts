@@ -12,10 +12,11 @@ export const PREVIEW_AVATAR_SIZE = 28
 export const AVATAR_GAP = space.sm
 
 /**
- * Padding either side of the toggle's contents, the "+N" count and the
- * chevron.
+ * Padding after the toggle's contents, the "+N" count and the chevron, to
+ * make it easier to hit. There's none before them, so they sit an
+ * `AVATAR_GAP` after the avatars, as the avatars do after each other.
  */
-export const TOGGLE_PADDING = 8
+export const TOGGLE_PADDING_END = 8
 
 /**
  * The size of the toggle's chevron, between the `2xs` and `xs` icon sizes.
@@ -68,7 +69,7 @@ export function fitAvatarCount({
     return Math.min(Math.max(fit, 0), resolved)
   }
 
-  const chevronOnly = TOGGLE_PADDING + CHEVRON_SIZE + TOGGLE_PADDING
+  const chevronOnly = CHEVRON_SIZE + TOGGLE_PADDING_END
   if (resolved >= total && resolved * perAvatar + chevronOnly <= width) {
     return resolved
   }
@@ -79,11 +80,10 @@ export function fitAvatarCount({
   for (let count = Math.min(resolved, total - 1); count > 0; count--) {
     const label = formatRemaining(total - count)
     const toggle =
-      TOGGLE_PADDING +
       label.length * COUNT_CHAR_WIDTH +
       COUNT_GAP +
       CHEVRON_SIZE +
-      TOGGLE_PADDING
+      TOGGLE_PADDING_END
     if (count * perAvatar + toggle <= width) {
       return count
     }

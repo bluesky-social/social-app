@@ -37,10 +37,11 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
 import {
+  AVATAR_GAP,
   CHEVRON_SIZE,
   fitAvatarCount,
   PREVIEW_AVATAR_SIZE,
-  TOGGLE_PADDING,
+  TOGGLE_PADDING_END,
 } from './avatarRow'
 import {Expandable} from './Expandable'
 import {useSuppressHover} from './hover'
@@ -457,8 +458,9 @@ export function AvatarRow({actor}: {actor?: ProfileView}) {
 /**
  * The end of an `AvatarRow`: a "+N" count of anyone it didn't show, and the
  * chevron. Unless pressing the row toggles the group already, they're a
- * button that does, with some slop around them. On native, screen readers
- * don't reach it inside the row's header, which they can expand instead.
+ * button that does, which dims while hovered or pressed. On native, screen
+ * readers don't reach it inside the row's header, which they can expand
+ * instead.
  */
 function GroupToggle({
   expansion,
@@ -467,7 +469,6 @@ function GroupToggle({
   expansion: GroupExpansion
   remaining: number
 }) {
-  const t = useTheme()
   const {t: l} = useLingui()
   const {isExpanded, toggleOnPress, onToggle} = expansion
   const suppressHover = useSuppressHover()
@@ -476,8 +477,7 @@ function GroupToggle({
     a.flex_row,
     a.align_center,
     a.gap_xs,
-    a.rounded_full,
-    {height: PREVIEW_AVATAR_SIZE, paddingHorizontal: TOGGLE_PADDING},
+    {height: PREVIEW_AVATAR_SIZE, paddingRight: TOGGLE_PADDING_END},
   ]
   const contents = (
     <>
@@ -494,14 +494,15 @@ function GroupToggle({
     <Button
       label={isExpanded ? l`Collapse list of users` : l`Expand list of users`}
       aria-expanded={isExpanded}
-      hitSlop={HITSLOP_10}
+      // Stops at the last avatar, so as not to take its presses
+      hitSlop={{...HITSLOP_10, left: AVATAR_GAP}}
       onPress={onToggle}
-      // Keeps the row from highlighting as well, which the tint would blend into
+      // It doesn't follow the row's link, so the row doesn't highlight
       onHoverIn={() => suppressHover(true)}
       onHoverOut={() => suppressHover(false)}
       style={style}
-      // Also the pressed style on native
-      hoverStyle={t.atoms.bg_contrast_50}>
+      // Also the pressed style
+      hoverStyle={{opacity: 0.5}}>
       {contents}
     </Button>
   )
