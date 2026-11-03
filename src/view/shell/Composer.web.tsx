@@ -7,7 +7,7 @@ import {RemoveScrollBar} from 'react-remove-scroll-bar'
 import {useA11y} from '#/state/a11y'
 import {type ComposerOpts, useComposerState} from '#/state/shell/composer'
 import {ComposePost, useComposerCancelRef} from '#/view/com/composer/Composer'
-import {atoms as a, flatten, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, flattenToCSS, useBreakpoints, useTheme} from '#/alf'
 
 const BOTTOM_BAR_HEIGHT = 61
 
@@ -40,7 +40,7 @@ function Inner({state}: {state: ComposerOpts}) {
       <DismissableLayer.DismissableLayer
         role="dialog"
         aria-modal
-        style={flatten([
+        style={flattenToCSS([
           {position: 'fixed'},
           a.inset_0,
           {backgroundColor: '#000c'},

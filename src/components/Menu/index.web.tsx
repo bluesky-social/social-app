@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import {useA11y} from '#/state/a11y'
-import {atoms as a, flatten, flattenToCSS, useTheme, web} from '#/alf'
+import {atoms as a, flattenToCSS, useTheme, web} from '#/alf'
 import type * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {
@@ -25,6 +25,7 @@ import {
   type TriggerProps,
 } from '#/components/Menu/types'
 import {Portal} from '#/components/Portal'
+import {SlotPressable} from '#/components/Slot'
 import {Text} from '#/components/Typography'
 
 export {type DialogControlProps as MenuControlProps} from '#/components/Dialog'
@@ -237,7 +238,7 @@ export function Item({
 
   return (
     <DropdownMenu.Item asChild>
-      <Pressable
+      <SlotPressable
         {...rest}
         className="radix-dropdown-item"
         accessibilityHint=""
@@ -255,8 +256,7 @@ export function Item({
         }}
         onFocus={onFocus}
         onBlur={onBlur}
-        // need `flatten` here for Radix compat
-        style={flatten([
+        rnStyle={[
           a.flex_row,
           a.align_center,
           a.gap_lg,
@@ -273,7 +273,7 @@ export function Item({
                 : t.atoms.bg_contrast_50,
             ],
           style,
-        ])}
+        ]}
         {...web({
           onMouseEnter,
           onMouseLeave,
@@ -282,7 +282,7 @@ export function Item({
           value={{disabled: Boolean(rest.disabled), destructive}}>
           {children}
         </ItemContext.Provider>
-      </Pressable>
+      </SlotPressable>
     </DropdownMenu.Item>
   )
 }

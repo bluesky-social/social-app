@@ -4,7 +4,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import {useA11y} from '#/state/a11y'
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
-import {atoms as a, flatten} from '#/alf'
+import {atoms as a, flattenToCSS} from '#/alf'
 import * as Menu from '../Menu'
 import {useWebPreloadEmoji} from './preload'
 import {
@@ -123,7 +123,7 @@ export function Picker({keepOpenWhenShiftHeld = true}: PickerProps) {
         }}>
         <div
           onWheel={evt => evt.stopPropagation()}
-          style={flatten([!reduceMotionEnabled && a.zoom_fade_in])}>
+          style={flattenToCSS([!reduceMotionEnabled && a.zoom_fade_in])}>
           <EmojiPicker
             autoFocus
             onEmojiSelect={(emoji: Emoji) => {
