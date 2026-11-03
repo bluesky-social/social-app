@@ -523,10 +523,11 @@ export function GeneratorLikeNotification({
 }
 
 /**
- * New posts from accounts the viewer has subscribed to. A single post has its
- * author's avatar and opens that post. Several have an icon and the authors'
- * avatars, and the row and its "View all" link open the activity list with
- * all of them. Posts from several authors expand to list the authors.
+ * New posts from accounts the viewer has subscribed to. Posts from one author
+ * have their avatar, and posts from several have an icon and the authors'
+ * avatars, and expand to list the authors. A single post opens that post.
+ * Several open the activity list with all of them, as does their "View all"
+ * link.
  */
 export function SubscribedPostNotification({
   notification,
@@ -541,8 +542,9 @@ export function SubscribedPostNotification({
   const replyParent = count === 1 ? parent : undefined
   const {actor, name, second, secondName, others} =
     Item.useGroupNames(notification)
-  const isSingle = items.length === 1
-  const href = isSingle
+  const isOnePost = items.length === 1
+  const isOneAuthor = others === 0
+  const href = isOnePost
     ? makePostLink(post)
     : makeActivityListLink(items.map(item => item.post.uri))
   const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
@@ -565,13 +567,13 @@ export function SubscribedPostNotification({
               : l`New ${plural(count, {one: 'post', other: 'posts'})} from ${name}`
       }
       testID={`notification-${notification.type}-${notification.id}`}>
-      {isSingle ? (
+      {isOneAuthor ? (
         <Item.Avatar profile={actor} icon={ActivityIcon} tone="activity" />
       ) : (
         <Item.Icon glyph="activity" />
       )}
       <Item.Content>
-        {!isSingle && <Item.AvatarRow />}
+        {!isOneAuthor && <Item.AvatarRow />}
         <Item.PrimaryText>
           {second ? (
             <Trans>
@@ -599,7 +601,7 @@ export function SubscribedPostNotification({
         {replyParent && <Item.ReplyContext parent={replyParent} />}
         <Item.PostPreview post={post} />
         <Item.Timestamp date={notification.indexedAt} />
-        {!isSingle && (
+        {!isOnePost && (
           <Item.ViewAllLink
             href={href}
             label={
