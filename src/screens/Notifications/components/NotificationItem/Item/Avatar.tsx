@@ -5,7 +5,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
-import {type Props as SVGIconProps} from '#/components/icons/common'
+import {type Props as SVGIconProps, sizes} from '#/components/icons/common'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
 import {LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon} from '#/components/icons/LikeRepost'
 import {PersonPlus_Filled_Corner2_Rounded as PersonPlusIcon} from '#/components/icons/Person'
@@ -15,6 +15,7 @@ import {
 } from '#/components/icons/Repost'
 import * as Skele from '#/components/Skeleton'
 import type * as bsky from '#/types/bsky'
+import {PREVIEW_AVATAR_SIZE} from './avatarRow'
 import {useItemBackgroundColor} from './Root'
 
 /**
@@ -153,6 +154,21 @@ export function Avatar({
 }
 
 /**
+ * The size of an `Icon`, the `2xl` icon size its glyphs are drawn at.
+ */
+const ICON_SIZE = sizes['2xl']
+
+/**
+ * Where an `Icon` sits: in the avatar's column, at its end edge, and pulled
+ * up so that it's centred on the smaller avatars of the `Item.AvatarRow`
+ * beside it.
+ */
+const ICON_SLOT = [
+  a.align_end,
+  {width: AVATAR_SIZE, marginTop: (PREVIEW_AVATAR_SIZE - ICON_SIZE) / 2},
+]
+
+/**
  * The left column of a row that can be about a group of people, e.g. a like,
  * as in v1: an icon saying what happened, where the avatar would be,
  * right-aligned to its end edge. The people are in the row's `Item.AvatarRow`
@@ -160,7 +176,7 @@ export function Avatar({
  */
 export function Icon({glyph}: {glyph: Glyph}) {
   return (
-    <View style={[a.align_end, {width: AVATAR_SIZE}]}>
+    <View style={ICON_SLOT}>
       <GlyphIcon glyph={glyph} />
     </View>
   )
@@ -213,8 +229,8 @@ export function AvatarSkeleton() {
  */
 export function IconSkeleton() {
   return (
-    <View style={[a.align_end, {width: AVATAR_SIZE}]}>
-      <Skele.Circle size={32} />
+    <View style={ICON_SLOT}>
+      <Skele.Circle size={ICON_SIZE} />
     </View>
   )
 }
