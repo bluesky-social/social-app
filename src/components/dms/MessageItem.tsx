@@ -83,6 +83,15 @@ const FRESH_MESSAGE_WINDOW_MS = 3_000
  * after the side they start from, so this is `FadeInDown`, not `FadeInUp`.
  */
 const MESSAGE_ENTERING = FadeInDown.duration(220)
+/**
+ * A pending message is the sent bubble faded toward the background, so it reads
+ * the same way in every theme, and it eases to full strength once confirmed.
+ */
+const PENDING_OPACITY = 0.6
+const PENDING_TRANSITION = {
+  transitionProperty: 'opacity',
+  transitionDuration: '300ms',
+} as const
 
 export type MessageItemNeighbor =
   | chat.bsky.convo.defs.MessageView
@@ -269,13 +278,7 @@ let MessageItem = ({
     isInCluster &&
     (isInMiddleOfCluster || isLastInCluster)
 
-  const pendingColor = t.palette.primary_300
-
-  const bubbleColor = isFromSelf
-    ? isPending
-      ? pendingColor
-      : t.palette.primary_500
-    : t.palette.contrast_50
+  const bubbleColor = isFromSelf ? t.palette.primary_500 : t.palette.contrast_50
   const highlightColor = isFromSelf
     ? t.palette.primary_300
     : t.palette.primary_100
@@ -598,6 +601,8 @@ let MessageItem = ({
                           borderRadiusStyle,
                           highlightStyle,
                         ],
+                        {opacity: isPending ? PENDING_OPACITY : 1},
+                        PENDING_TRANSITION,
                       ]}>
                       {replyTo && !isEmojiOnly ? (
                         <ReplyQuote
