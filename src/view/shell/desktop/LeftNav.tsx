@@ -838,7 +838,7 @@ export function DesktopLeftNav({
       style={[
         a.fixed,
         a.top_0,
-        a.p_lg,
+        web(a.p_lg),
         styles.leftNav,
         IS_NATIVE && {top: insets.top, bottom: insets.bottom},
         !hasSession && !leftNavMinimal && {width: LEFT_NAV_PWI_WIDTH},
@@ -867,7 +867,17 @@ export function DesktopLeftNav({
         },
       ]}>
       {IS_NATIVE ? (
-        <ScrollView style={[a.flex_1, a.w_full]}>{content}</ScrollView>
+        /*
+         * Padding lives on the scroll content rather than the container, so
+         * on short screens the items scroll to the edge instead of being
+         * clipped at the padding.
+         */
+        <ScrollView
+          style={[a.flex_1, a.w_full]}
+          contentContainerStyle={a.p_lg}
+          showsVerticalScrollIndicator={false}>
+          {content}
+        </ScrollView>
       ) : (
         content
       )}
