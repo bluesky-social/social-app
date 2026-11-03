@@ -152,10 +152,9 @@ const GroupContext = createContext<GroupContextValue | undefined>(undefined)
 /**
  * The root of a row about a group of people, e.g. everyone who liked a post.
  * With two or more, the row's `Item.AvatarRow` shows some of them and a
- * chevron, and the row expands to list them all beneath it. A pair whose
- * sentence names them both doesn't expand, since the list would only repeat
- * them, so it shows the other person's avatar without a chevron. With one,
- * this is a plain `Item.Root`.
+ * chevron, and the row expands to list them all beneath it. That includes a
+ * pair whose sentence names them both, as the list has their follow
+ * buttons. With one, this is a plain `Item.Root`.
  *
  * Pressing the row follows `href`, and the avatar row's "+N" and chevron
  * toggle the list. With `toggleOnPress`, pressing anywhere on the row toggles
@@ -203,7 +202,7 @@ export function GroupRoot({
 }) {
   const group = getNotificationGroup(notification)
 
-  if (group.count < 2 || isNamedPair(group)) {
+  if (group.count < 2) {
     return (
       <GroupContext.Provider value={group}>
         <Root

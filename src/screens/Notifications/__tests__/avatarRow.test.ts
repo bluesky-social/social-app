@@ -137,7 +137,7 @@ describe('fitAvatarCount', () => {
   })
 
   it('needs no room for a toggle when there is none', () => {
-    // A pair named in full: one avatar, 28 wide
+    // A row about one person: their avatar, 28 wide
     expect(
       fitAvatarCount({
         width: 28,
