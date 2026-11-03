@@ -17,17 +17,12 @@ jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
   }
 })
 
-jest.mock('react-native-safe-area-context', () => {
-  const inset = {top: 0, right: 0, bottom: 0, left: 0}
-  return {
-    SafeAreaProvider: jest.fn().mockImplementation(({children}) => children),
-    SafeAreaConsumer: jest.fn().mockImplementation(
-      /** @param {{children: (i: typeof inset) => unknown}} props */
-      ({children}) => children(inset),
-    ),
-    useSafeAreaInsets: jest.fn().mockImplementation(() => inset),
-  }
-})
+// The library's own mock keeps the real contexts (e.g. SafeAreaInsetsContext,
+// read by React Navigation) and supplies zero insets.
+jest.mock(
+  'react-native-safe-area-context',
+  () => require('react-native-safe-area-context/jest/mock').default,
+)
 
 jest.mock('expo-file-system/legacy', () => ({
   getInfoAsync: jest.fn().mockResolvedValue({exists: true, size: 100}),
