@@ -8,26 +8,6 @@ configure({asyncUtilTimeout: 20000})
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 )
-jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
-  // eslint-disable-next-line import-x/no-nodejs-modules
-  const {EventEmitter} = require('events')
-  // Like the real NativeEventEmitter, addListener returns a subscription;
-  // Animated's cleanup calls subscription.remove().
-  class NativeEventEmitter extends EventEmitter {
-    /**
-     * @param {string} eventType
-     * @param {(...args: unknown[]) => void} listener
-     */
-    addListener(eventType, listener) {
-      super.addListener(eventType, listener)
-      return {remove: () => this.removeListener(eventType, listener)}
-    }
-  }
-  return {
-    __esModule: true,
-    default: NativeEventEmitter,
-  }
-})
 
 // The library's own mock keeps the real contexts (e.g. SafeAreaInsetsContext,
 // read by React Navigation) and supplies zero insets.
