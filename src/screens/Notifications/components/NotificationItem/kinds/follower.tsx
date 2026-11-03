@@ -46,7 +46,7 @@ export function FollowedYouHeader() {
   const {t: l} = useLingui()
 
   return (
-    <View style={[a.pr_lg, a.py_md, {paddingLeft: Item.ROW_PADDING_START}]}>
+    <View style={[a.px_lg, a.py_md]}>
       <Text accessibilityRole="header" style={[a.text_md, a.font_bold]}>
         {l({
           message: 'Followed you',
