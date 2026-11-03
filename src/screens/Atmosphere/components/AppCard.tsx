@@ -1,15 +1,16 @@
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {LinearGradient} from 'expo-linear-gradient'
 import {useLingui} from '@lingui/react/macro'
 
 import {type AtmosphereAppCardData} from '#/screens/Atmosphere/data/exploreData'
-import {atoms as a, utils} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {toNiceDomain} from '#/lib/strings/url-helpers'
 
 export function AppCard({app}: {app: AtmosphereAppCardData}) {
   const {t: l} = useLingui()
+  const t = useTheme()
 
   return (
     <View
@@ -18,7 +19,8 @@ export function AppCard({app}: {app: AtmosphereAppCardData}) {
         a.relative,
         a.rounded_xl,
         a.overflow_hidden,
-        {backgroundColor: app.overlayColor},
+        a.border,
+        t.atoms.border_contrast_low,
       ]}>
       {app.backgroundImage ? (
         <Image
@@ -28,32 +30,13 @@ export function AppCard({app}: {app: AtmosphereAppCardData}) {
           accessible={false}
         />
       ) : undefined}
-      {app.overlayColor ? (
-        <LinearGradient
-          colors={[
-            utils.alpha(app.overlayColor, 1),
-            utils.alpha(app.overlayColor, 0),
-          ]}
-          start={{x: 0, y: 0.5}}
-          end={{x: 1, y: 0.5}}
-          style={[a.absolute, {top: 0, right: 0, bottom: 0, width: 96}]}
-          pointerEvents="none"
-        />
-      ) : undefined}
       <Link
         to={app.href}
         label={l`Open ${app.title}`}
         accessibilityHint=""
         style={[a.w_full]}>
         <View
-          style={[
-            a.flex_row,
-            a.w_full,
-            a.align_center,
-            a.gap_md,
-            a.py_md,
-            {paddingLeft: 24, paddingRight: 96},
-          ]}>
+          style={[a.flex_row, a.w_full, a.gap_md, a.p_md, {paddingRight: 96}]}>
           {app.logo ? (
             <Image
               source={app.logo}
@@ -63,17 +46,16 @@ export function AppCard({app}: {app: AtmosphereAppCardData}) {
             />
           ) : undefined}
           <View style={[a.flex_1, a.gap_2xs]}>
-            <Text
-              emoji
-              style={[a.text_md, a.font_semi_bold, {color: app.textColor}]}
-              numberOfLines={1}>
-              {app.title}
+            <Text>
+              <Text emoji style={[a.text_md, a.font_semi_bold]} numberOfLines={1}>
+                {app.title}
+              </Text>{' '}
+              <Text emoji style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={1}>
+                • {toNiceDomain(app.href)}
+              </Text>
             </Text>
             {app.description ? (
-              <Text
-                emoji
-                style={[a.text_sm, a.leading_snug, {color: app.textColor}]}
-                numberOfLines={2}>
+              <Text emoji style={[a.text_sm, a.leading_snug]} numberOfLines={2}>
                 {app.description}
               </Text>
             ) : undefined}

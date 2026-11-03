@@ -4,7 +4,6 @@ import {useLingui} from '@lingui/react/macro'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {
   getAtmosphereAnnouncementBanner,
-  getAtmosphereApps,
   getAtmosphereArticles,
   getAtmosphereLivestreams,
   getAtmospherePhotos,
@@ -17,7 +16,6 @@ import {Loader} from '#/components/Loader'
 import {AnnouncementBanner} from './components/AnnouncementBanner'
 import {AtmosphereNux} from './components/AtmosphereNux'
 import {ExploreGalleryBleed} from './components/ExploreGallery'
-import {FeaturedApps} from './components/FeaturedApps'
 import {FeaturedArticles} from './components/FeaturedArticles'
 import {FeaturedLivestreams} from './components/FeaturedLivestreams'
 import {FeaturedPhotos} from './components/FeaturedPhotos'
@@ -90,7 +88,6 @@ export function AtmosphereExploreTab() {
           />
           <FeaturedLivestreams livestreams={getAtmosphereLivestreams(data)} />
           <FeaturedPhotos photos={getAtmospherePhotos(data)} />
-          <FeaturedApps apps={getAtmosphereApps(data)} />
         </View>
       </ExploreGalleryBleed>
     </Layout.Content>
