@@ -142,6 +142,24 @@ input:focus {
   z-index: 1;
 }
 
+/*
+ * SubtleHover (src/components/SubtleHover.tsx): show the overlay while its
+ * parent is hovered. The overlay is absolutely positioned over its parent, so
+ * this is exactly while the pointer is over it. Opacities match the native
+ * ones in SubtleHover.
+ */
+@media (hover: hover) {
+  :hover > [data-subtle-hover='light'] {
+    opacity: 0.5;
+  }
+  :hover > [data-subtle-hover='dim'] {
+    opacity: 0.45;
+  }
+  :hover > [data-subtle-hover='dark'] {
+    opacity: 0.4;
+  }
+}
+
 /* NativeDropdown component */
 .radix-dropdown-item:focus,
 .nativeDropdown-item:focus {

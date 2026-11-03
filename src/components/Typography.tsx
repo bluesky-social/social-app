@@ -2,7 +2,7 @@ import {StyleSheet, type TextStyle} from 'react-native'
 import {UITextView} from '@bsky.app/react-native-uitextview'
 
 import {logger} from '#/logger'
-import {atoms as a, useAlf, useTheme, web} from '#/alf'
+import {atoms as a, internStyle, useAlf, useTheme, web} from '#/alf'
 import {
   childHasEmoji,
   getTextStyleOverrides,
@@ -49,7 +49,7 @@ export function Text({
    * Native has no classes, so it keeps the flattened style.
    */
   const s = IS_WEB
-    ? [input, internTextStyle(getTextStyleOverrides(input, options))]
+    ? [input, internStyle(getTextStyleOverrides(input, options))]
     : normalizeTextStyles(input, options)
 
   if (__DEV__) {
@@ -129,23 +129,3 @@ const styles = StyleSheet.create({
     // overflowInline: 'clip',
   } satisfies React.CSSProperties as TextStyle,
 })
-
-const MAX_INTERNED_TEXT_STYLES = 500
-const internedTextStyles = new Map<string, TextStyle>()
-
-/**
- * Text's computed props take few distinct values (one per font size, leading
- * and family), so each combination is created once and reused, which on web
- * makes it a CSS class too. Past a cap, e.g. if something animates a font
- * size, new combinations are returned as-is and render inline.
- */
-function internTextStyle(style: TextStyle) {
-  const key = JSON.stringify(style)
-  let interned = internedTextStyles.get(key)
-  if (!interned) {
-    if (internedTextStyles.size >= MAX_INTERNED_TEXT_STYLES) return style
-    interned = StyleSheet.create({style}).style
-    internedTextStyles.set(key, interned)
-  }
-  return interned
-}

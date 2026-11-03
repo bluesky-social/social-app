@@ -71,7 +71,11 @@ export function GapRow({
           ]}>
           {({hovered, pressed}) => (
             <>
-              <SubtleHover hover={(hovered || pressed) && !isFilling} native />
+              <SubtleHover
+                hover={hovered || pressed}
+                disabled={isFilling}
+                native
+              />
               {isFilling && <Loader size="sm" />}
               <Text
                 style={[

@@ -601,7 +601,7 @@ export function ActorListItem({
   starterPack?: bsky.starterPack.AnyStarterPackView
 }) {
   const t = useTheme()
-  const {hover, hoverProps, setSuppressed} = useRowHover()
+  const {suppressed, hoverProps, setSuppressed} = useRowHover()
   const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
@@ -639,7 +639,7 @@ export function ActorListItem({
           a.pr_lg,
           {paddingLeft: ACTOR_LIST_INSET},
         ]}>
-        <SubtleHover hover={hover} />
+        <SubtleHover disabled={suppressed} />
         <Pressable
           accessibilityRole="link"
           accessibilityLabel={l`Go to ${name}’s profile`}

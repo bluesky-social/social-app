@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react'
+import {useCallback} from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -30,7 +30,6 @@ export function ComposerPrompt() {
   const {_} = useLingui()
   const {openComposer} = useOpenComposer()
   const profile = useCurrentAccountProfile()
-  const [hover, setHover] = useState(false)
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
@@ -160,8 +159,6 @@ export function ComposerPrompt() {
       accessibilityRole={IS_NATIVE ? 'button' : undefined} // In HTML, <button> cannot be a descendant of <button>.
       accessibilityLabel={_(msg`Compose new post`)}
       accessibilityHint={_(msg`Opens the post composer`)}
-      onPointerEnter={() => setHover(true)}
-      onPointerLeave={() => setHover(false)}
       style={({pressed}) => [
         a.relative,
         a.flex_row,
@@ -180,7 +177,7 @@ export function ComposerPrompt() {
         }),
         pressed && web({outline: 'none'}),
       ]}>
-      <SubtleHover hover={hover} />
+      <SubtleHover />
       <UserAvatar
         avatar={profile.avatar}
         size={42}

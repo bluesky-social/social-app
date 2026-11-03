@@ -31,7 +31,6 @@ import {
 } from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {GalleryBleed} from '#/components/images/Gallery'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -424,17 +423,9 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 })
 
 function SubtleHoverWrapper({children}: {children: React.ReactNode}) {
-  const {
-    state: hover,
-    onIn: onHoverIn,
-    onOut: onHoverOut,
-  } = useInteractionState()
   return (
-    <View
-      onPointerEnter={onHoverIn}
-      onPointerLeave={onHoverOut}
-      style={[a.flex_1, a.pointer]}>
-      <SubtleHover hover={hover} />
+    <View style={[a.flex_1, a.pointer]}>
+      <SubtleHover />
       {children}
     </View>
   )

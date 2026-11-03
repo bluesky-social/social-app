@@ -607,108 +607,106 @@ let NotificationFeedItem = ({
           onToggleAuthorsExpanded()
         }
       }}>
-      {({hovered}) => (
-        <>
-          <SubtleHover hover={hovered && !isHoveringAuthorsList} />
-          <View style={[styles.layoutIcon, a.pr_sm]}>
-            {/* TODO: Prevent conditional rendering and move toward composable
+      <>
+        <SubtleHover disabled={isHoveringAuthorsList} />
+        <View style={[styles.layoutIcon, a.pr_sm]}>
+          {/* TODO: Prevent conditional rendering and move toward composable
           notifications for clearer accessibility labeling */}
-            {icon}
-          </View>
-          <View style={[a.flex_1]}>
-            <ExpandListPressable
-              hasMultipleAuthors={hasMultipleAuthors}
+          {icon}
+        </View>
+        <View style={[a.flex_1]}>
+          <ExpandListPressable
+            hasMultipleAuthors={hasMultipleAuthors}
+            onToggleAuthorsExpanded={onToggleAuthorsExpanded}
+            onHoverIn={() => setIsHoveringAuthorsList(true)}
+            onHoverOut={() => setIsHoveringAuthorsList(false)}>
+            <CondensedAuthorsList
+              visible={!isAuthorsExpanded}
+              authors={authors}
               onToggleAuthorsExpanded={onToggleAuthorsExpanded}
-              onHoverIn={() => setIsHoveringAuthorsList(true)}
-              onHoverOut={() => setIsHoveringAuthorsList(false)}>
-              <CondensedAuthorsList
-                visible={!isAuthorsExpanded}
-                authors={authors}
-                onToggleAuthorsExpanded={onToggleAuthorsExpanded}
-                showDmButton={item.type === 'starterpack-joined'}
-              />
-              <ExpandedAuthorsList
-                visible={isAuthorsExpanded}
-                authors={authors}
-                moderationOpts={moderationOpts}
-              />
-              <Text
+              showDmButton={item.type === 'starterpack-joined'}
+            />
+            <ExpandedAuthorsList
+              visible={isAuthorsExpanded}
+              authors={authors}
+              moderationOpts={moderationOpts}
+            />
+            <Text
+              style={[
+                a.flex_row,
+                a.flex_wrap,
+                {paddingTop: 6},
+                a.self_start,
+                a.text_md,
+              ]}
+              accessibilityHint=""
+              accessibilityLabel={a11yLabel}>
+              {notificationContent}
+              <TimeElapsed timestamp={item.notification.indexedAt}>
+                {({timeElapsed}) => (
+                  <>
+                    {/* make sure there's whitespace around the middot -sfn */}
+                    <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+                      {' '}
+                      &middot;{' '}
+                    </Text>
+                    <Text
+                      style={[a.text_md, t.atoms.text_contrast_medium]}
+                      title={niceTimestamp}>
+                      {timeElapsed}
+                    </Text>
+                  </>
+                )}
+              </TimeElapsed>
+            </Text>
+          </ExpandListPressable>
+          {allFollowedViaSameStarterPack && starterPack ? (
+            <FollowedViaStarterPack starterPack={starterPack} />
+          ) : null}
+          {(item.type === 'follow' && !hasMultipleAuthors && !isFollowBack) ||
+          (item.type === 'contact-match' &&
+            !item.notification.author.viewer?.following) ? (
+            <FollowBackButton profile={item.notification.author} />
+          ) : null}
+          {item.type === 'post-like' ||
+          item.type === 'repost' ||
+          item.type === 'like-via-repost' ||
+          item.type === 'repost-via-repost' ||
+          item.type === 'subscribed-post' ? (
+            <View style={[a.pt_2xs]}>
+              <AdditionalPostText post={item.subject} />
+            </View>
+          ) : null}
+          {item.type === 'feedgen-like' && item.subjectUri ? (
+            <FeedSourceCard
+              feedUri={item.subjectUri}
+              link={false}
+              style={[
+                t.atoms.bg,
+                t.atoms.border_contrast_low,
+                a.border,
+                a.p_md,
+                styles.feedcard,
+              ]}
+              showLikes
+            />
+          ) : null}
+          {item.type === 'starterpack-joined' ? (
+            <View>
+              <View
                 style={[
-                  a.flex_row,
-                  a.flex_wrap,
-                  {paddingTop: 6},
-                  a.self_start,
-                  a.text_md,
-                ]}
-                accessibilityHint=""
-                accessibilityLabel={a11yLabel}>
-                {notificationContent}
-                <TimeElapsed timestamp={item.notification.indexedAt}>
-                  {({timeElapsed}) => (
-                    <>
-                      {/* make sure there's whitespace around the middot -sfn */}
-                      <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-                        {' '}
-                        &middot;{' '}
-                      </Text>
-                      <Text
-                        style={[a.text_md, t.atoms.text_contrast_medium]}
-                        title={niceTimestamp}>
-                        {timeElapsed}
-                      </Text>
-                    </>
-                  )}
-                </TimeElapsed>
-              </Text>
-            </ExpandListPressable>
-            {allFollowedViaSameStarterPack && starterPack ? (
-              <FollowedViaStarterPack starterPack={starterPack} />
-            ) : null}
-            {(item.type === 'follow' && !hasMultipleAuthors && !isFollowBack) ||
-            (item.type === 'contact-match' &&
-              !item.notification.author.viewer?.following) ? (
-              <FollowBackButton profile={item.notification.author} />
-            ) : null}
-            {item.type === 'post-like' ||
-            item.type === 'repost' ||
-            item.type === 'like-via-repost' ||
-            item.type === 'repost-via-repost' ||
-            item.type === 'subscribed-post' ? (
-              <View style={[a.pt_2xs]}>
-                <AdditionalPostText post={item.subject} />
-              </View>
-            ) : null}
-            {item.type === 'feedgen-like' && item.subjectUri ? (
-              <FeedSourceCard
-                feedUri={item.subjectUri}
-                link={false}
-                style={[
-                  t.atoms.bg,
-                  t.atoms.border_contrast_low,
                   a.border,
-                  a.p_md,
-                  styles.feedcard,
-                ]}
-                showLikes
-              />
-            ) : null}
-            {item.type === 'starterpack-joined' ? (
-              <View>
-                <View
-                  style={[
-                    a.border,
-                    a.p_sm,
-                    a.rounded_sm,
-                    a.mt_sm,
-                    t.atoms.border_contrast_low,
-                  ]}>
-                  <StarterPackCard starterPack={item.subject} />
-                </View>
+                  a.p_sm,
+                  a.rounded_sm,
+                  a.mt_sm,
+                  t.atoms.border_contrast_low,
+                ]}>
+                <StarterPackCard starterPack={item.subject} />
               </View>
-            ) : null}
-          </View>
-        </>
-      )}
+            </View>
+          ) : null}
+        </View>
+      </>
     </Link>
   )
 }

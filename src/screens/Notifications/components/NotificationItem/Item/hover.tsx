@@ -14,28 +14,21 @@ export function useSuppressHover() {
 }
 
 /**
- * Hover state for a row, which is `hover` unless a nested control has
- * suppressed it. Spread `hoverProps` onto the row, and provide `setSuppressed`
- * through `SuppressHoverContext`.
- *
- * The row stays hovered while the pointer is over a nested control, so a
- * control can't clear it by itself.
+ * Whether a nested control has suppressed a row's hover highlight. The
+ * highlight itself is CSS (see `SubtleHover`), so pass this as its `disabled`.
+ * Spread `hoverProps` onto the row, and provide `setSuppressed` through
+ * `SuppressHoverContext`.
  */
 export function useRowHover() {
-  const [hovered, setHovered] = useState(false)
   const [suppressed, setSuppressed] = useState(false)
 
   return {
-    hover: hovered && !suppressed,
+    suppressed,
     setSuppressed,
     hoverProps: {
-      onPointerEnter: () => setHovered(true),
-      // Also clears a control that unmounted while hovered, so it can't leave
-      // the row stuck without a highlight
-      onPointerLeave: () => {
-        setHovered(false)
-        setSuppressed(false)
-      },
+      // Clears a control that unmounted while hovered, so it can't leave the
+      // row stuck without a highlight
+      onPointerLeave: () => setSuppressed(false),
     },
   }
 }
