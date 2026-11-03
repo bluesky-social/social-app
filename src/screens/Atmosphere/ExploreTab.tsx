@@ -93,11 +93,11 @@ export function AtmosphereExploreTab() {
             <AnnouncementBanner banner={announcementBanner} />
           ) : undefined}
           <FeaturedArticles articles={getAtmosphereArticles(data)} />
+          <FeaturedLivestreams livestreams={getAtmosphereLivestreams(data)} />
+          <FeaturedPhotos photos={getAtmospherePhotos(data)} />
           <FeaturedPublications
             publications={getAtmospherePublications(data)}
           />
-          <FeaturedLivestreams livestreams={getAtmosphereLivestreams(data)} />
-          <FeaturedPhotos photos={getAtmospherePhotos(data)} />
         </View>
       </ExploreGalleryBleed>
     </Layout.Content>

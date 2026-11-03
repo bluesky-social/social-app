@@ -164,10 +164,12 @@ export function getAtmospherePublications(
         },
       },
     })),
-  ).sort(
-    (a, b) =>
-      b.view.description.trim().length - a.view.description.trim().length,
   )
+    .sort(
+      (a, b) =>
+        b.view.description.trim().length - a.view.description.trim().length,
+    )
+    .slice(0, 5)
 }
 
 /**

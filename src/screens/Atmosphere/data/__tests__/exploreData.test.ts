@@ -189,8 +189,10 @@ describe('Atmosphere Explore response fixtures', () => {
           ? getAtmosphereArticles(data)
           : getAtmospherePublications(data)
 
+      const expectedOrder =
+        section === 'publications' ? [3, 1, 4, 5, 0] : [3, 1, 4, 5, 0, 2, 6]
       expect(cards.map(card => card.id)).toEqual(
-        [3, 1, 4, 5, 0, 2, 6].map(index => `https://example.com/${index}`),
+        expectedOrder.map(index => `https://example.com/${index}`),
       )
       expect(JSON.stringify(data)).toBe(before)
       expect(data[section].recIdStr).toBe('42')

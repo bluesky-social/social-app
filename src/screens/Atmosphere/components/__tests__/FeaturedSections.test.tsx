@@ -220,24 +220,21 @@ describe('FeaturedPhotos', () => {
 })
 
 describe('FeaturedPublications', () => {
-  it('renders the header and one slide per publication in a labelled gallery', () => {
+  it('renders publications in a column without fixed card widths or gallery focus', () => {
     render(<FeaturedPublications publications={publications} />)
 
     expect(screen.getByText('Featured publications')).toBeTruthy()
-    expect(screen.getByTestId('atmospherePublicationsGallery')).toBeTruthy()
-    expect(slides().map(slide => slide.props['aria-label'])).toEqual([
-      'First publication',
-      'Second publication',
+    expect(screen.queryByTestId('atmospherePublicationsGallery')).toBeNull()
+    expect(slides()).toHaveLength(0)
+    expect(screen.getAllByRole('link').map(link => link.props.testID)).toEqual([
+      'publication-u1',
+      'publication-u2',
     ])
-    expect(width('publication-u1')).toBe(320)
-    expect(width('publication-u2')).toBe(320)
-  })
-
-  it('wires the gallery focus target to each card', () => {
-    render(<FeaturedPublications publications={publications} />)
-
-    expect(screen.getByTestId('publication-u1').props.tabIndex).toBe(0)
-    expect(screen.getByTestId('publication-u2').props.tabIndex).toBe(-1)
+    for (const publication of publications) {
+      const testID = `publication-${publication.id}`
+      expect(width(testID)).toBeUndefined()
+      expect(screen.getByTestId(testID).props.tabIndex).toBeUndefined()
+    }
   })
 
   it('renders nothing, including the header, without publications', () => {

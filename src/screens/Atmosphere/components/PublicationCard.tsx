@@ -34,7 +34,6 @@ export function PublicationCard({
 
   return (
     <SharedPublicationCard
-      hideSubscribe
       view={publication.view}
       themeColors={themeColors}
       style={[a.flex_grow, width ? {width} : undefined]}

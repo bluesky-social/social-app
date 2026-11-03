@@ -222,6 +222,17 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.getByText(/^banner:/)).toBeTruthy()
   })
 
+  it('renders publications below photos', () => {
+    setQuery({data: exploreResponseFixture})
+    render(<AtmosphereExploreTab />)
+
+    expect(
+      screen
+        .getAllByText(/^(articles|photos|publications):/)
+        .map(section => (section.props.children as string).split(':')[0]),
+    ).toEqual(['articles', 'photos', 'publications'])
+  })
+
   it('renders publications from the response, even when articles are empty', () => {
     setQuery({
       data: {
