@@ -44,10 +44,6 @@ export function getAtmosphereArticles(
   return dedupeBy(
     data.articles.items.map(({view}) => view),
     article => article.uri,
-  ).sort(
-    (a, b) =>
-      Number(Boolean(b.image)) - Number(Boolean(a.image)) ||
-      b.description.trim().length - a.description.trim().length,
   )
 }
 

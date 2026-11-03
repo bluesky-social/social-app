@@ -2,9 +2,14 @@ import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 
+import {makeProfileLink} from '#/lib/routes/links'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {niceDate} from '#/lib/strings/time'
 import {atoms as a, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Link} from '#/components/Link'
+import {PageText_Stroke2_Corner0_Rounded as IconPage} from '#/components/icons/Page'
+import {InlineLinkText, Link} from '#/components/Link'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
@@ -19,13 +24,16 @@ export function ArticleCard({
   width?: number
   galleryFocus?: ExploreGalleryFocusProps
 }) {
-  const {t: l} = useLingui()
+  const {t: l, i18n} = useLingui()
   const t = useTheme()
   const {
     state: interacted,
     onIn: onInteract,
     onOut: onInteractOut,
   } = useInteractionState()
+
+  const author = article.associatedProfiles?.[0]
+  if (!author) return null
 
   return (
     <View
@@ -55,17 +63,28 @@ export function ArticleCard({
           }}
           onBlur={onInteractOut}
           style={[a.flex_col, a.flex_1, a.w_full]}>
-          <View
-            style={[a.w_full, t.atoms.bg_contrast_25, {aspectRatio: 16 / 9}]}>
-            {article.image ? (
+          {article.image ? (
+            <View
+              style={[a.w_full, t.atoms.bg_contrast_50, {aspectRatio: 16 / 9}]}>
               <Image
                 source={article.image}
                 contentFit="cover"
                 style={[a.absolute, a.inset_0, a.w_full, a.h_full]}
                 accessible={false}
               />
-            ) : undefined}
-          </View>
+            </View>
+          ) : (
+            <View
+              style={[
+                a.align_center,
+                a.justify_center,
+                a.w_full,
+                a.p_md,
+                t.atoms.bg_contrast_50,
+              ]}>
+              <IconPage size="md" fill={t.atoms.text_contrast_low.color} />
+            </View>
+          )}
           <View style={[a.w_full, a.flex_1, a.p_md]}>
             {article.publisher?.title || article.publisher?.logo ? (
               <View
@@ -109,10 +128,57 @@ export function ArticleCard({
                     a.leading_snug,
                     t.atoms.text_contrast_medium,
                   ]}
-                  numberOfLines={2}>
+                  numberOfLines={article.image ? 2 : 6}>
                   {article.description}
                 </Text>
               ) : undefined}
+            </View>
+            <View style={[a.gap_xs, a.pt_md]}>
+              <Text
+                emoji
+                style={[
+                  a.text_xs,
+                  a.leading_tight,
+                  t.atoms.text_contrast_medium,
+                ]}
+                numberOfLines={1}>
+                {article.createdAt && (
+                  <Text
+                    emoji
+                    style={[
+                      a.text_xs,
+                      a.leading_tight,
+                      t.atoms.text_contrast_medium,
+                    ]}>
+                    {niceDate(i18n, article.createdAt, 'medium', 'none')}
+                    {' • '}
+                  </Text>
+                )}
+                <Text
+                  emoji
+                  style={[
+                    a.text_xs,
+                    a.leading_tight,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  by{' '}
+                  <ProfileHoverCard did={author.did}>
+                    <InlineLinkText
+                      label={l`Open ${sanitizeHandle(author.handle, '@')}'s profile`}
+                      to={makeProfileLink({
+                        handle: author.handle,
+                        did: author.did,
+                      })}
+                      style={[
+                        a.text_xs,
+                        a.leading_tight,
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      {sanitizeHandle(author.handle, '@')}
+                    </InlineLinkText>
+                  </ProfileHoverCard>
+                </Text>
+              </Text>
             </View>
           </View>
         </Link>
