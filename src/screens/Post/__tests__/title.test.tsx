@@ -7,6 +7,7 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {PostLikedByScreen} from '#/screens/Post/PostLikedBy'
+import {PostQuotesScreen} from '#/screens/Post/PostQuotes'
 import {PostRepostedByScreen} from '#/screens/Post/PostRepostedBy'
 import {type app} from '#/lexicons'
 
@@ -31,6 +32,7 @@ jest.mock('#/components/Layout', () => {
     children ?? null
   return {
     Screen: Passthrough,
+    Center: Passthrough,
     Header: {
       Outer: Passthrough,
       BackButton: () => null,
@@ -46,6 +48,20 @@ jest.mock('#/view/com/post-thread/PostLikedBy', () => ({
 }))
 jest.mock('#/view/com/post-thread/PostRepostedBy', () => ({
   PostRepostedBy: () => null,
+}))
+jest.mock('#/view/com/post-thread/PostQuotes', () => ({
+  PostQuotes: () => null,
+}))
+jest.mock('#/view/com/pager/Pager', () => ({Pager: () => null}))
+jest.mock('#/view/com/pager/TabBar', () => ({TabBar: () => null}))
+jest.mock('#/alf', () => ({
+  atoms: new Proxy({}, {get: () => ({})}),
+  web: () => ({}),
+}))
+jest.mock('#/analytics', () => ({
+  AnalyticsContext: ({children}: {children: React.ReactNode}) => children,
+  useAnalytics: () => ({metric: jest.fn()}),
+  utils: {useMeta: () => ({})},
 }))
 
 function postBy(handle: string) {
@@ -101,6 +117,13 @@ describe("post screens' document title", () => {
 
   it("titles DID-addressed reposted-by with the author's handle", () => {
     renderScreen(PostRepostedByScreen)
+    expect(mockSetOptions).toHaveBeenLastCalledWith({
+      title: 'Post by @ironeconomist.bsky.social — Bluesky',
+    })
+  })
+
+  it("titles DID-addressed quotes with the author's handle", () => {
+    renderScreen(PostQuotesScreen)
     expect(mockSetOptions).toHaveBeenLastCalledWith({
       title: 'Post by @ironeconomist.bsky.social — Bluesky',
     })
