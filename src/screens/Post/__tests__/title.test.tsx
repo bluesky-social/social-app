@@ -7,6 +7,7 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {PostLikedByScreen} from '#/screens/Post/PostLikedBy'
+import {PostRepostedByScreen} from '#/screens/Post/PostRepostedBy'
 import {type app} from '#/lexicons'
 
 const DID = 'did:plc:7r7oxqovttrrcgzsy24ogise'
@@ -42,6 +43,9 @@ jest.mock('#/components/Layout', () => {
 })
 jest.mock('#/view/com/post-thread/PostLikedBy', () => ({
   PostLikedBy: () => null,
+}))
+jest.mock('#/view/com/post-thread/PostRepostedBy', () => ({
+  PostRepostedBy: () => null,
 }))
 
 function postBy(handle: string) {
@@ -90,6 +94,13 @@ beforeEach(() => {
 describe("post screens' document title", () => {
   it("titles DID-addressed liked-by with the author's handle", () => {
     renderScreen(PostLikedByScreen)
+    expect(mockSetOptions).toHaveBeenLastCalledWith({
+      title: 'Post by @ironeconomist.bsky.social — Bluesky',
+    })
+  })
+
+  it("titles DID-addressed reposted-by with the author's handle", () => {
+    renderScreen(PostRepostedByScreen)
     expect(mockSetOptions).toHaveBeenLastCalledWith({
       title: 'Post by @ironeconomist.bsky.social — Bluesky',
     })
