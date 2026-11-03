@@ -598,7 +598,11 @@ export const Button = forwardRef<React.ComponentRef<typeof View>, ButtonProps>(
 )
 Button.displayName = 'Button'
 
-export function useSharedButtonTextStyles() {
+/**
+ * Text styles for the current button variant and size, as an array, so that
+ * atoms keep their identity (on web, that's what gives them CSS classes).
+ */
+function useButtonTextStyles() {
   const t = useTheme()
   const {color, variant, disabled, size} = useButtonContext()
   return useMemo(() => {
@@ -773,12 +777,20 @@ export function useSharedButtonTextStyles() {
       baseStyles.push(a.text_xs, a.font_semi_bold)
     }
 
-    return flatten(baseStyles)
+    return baseStyles
   }, [t, variant, color, size, disabled])
 }
 
+/**
+ * The current button's text styles merged into one object, for reading values
+ * such as `color`. Render `ButtonText` rather than these.
+ */
+export function useSharedButtonTextStyles() {
+  return flatten(useButtonTextStyles())
+}
+
 export function ButtonText({children, style, ...rest}: ButtonTextProps) {
-  const textStyles = useSharedButtonTextStyles()
+  const textStyles = useButtonTextStyles()
 
   return (
     <Text {...rest} style={[a.text_center, textStyles, style]}>
