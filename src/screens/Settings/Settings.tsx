@@ -671,35 +671,39 @@ function AccountRow({
         </SettingsList.ItemText>
         {pendingDid === account.did && <SettingsList.ItemIcon icon={Loader} />}
       </SettingsList.PressableItem>
+      {/*
+       * An inline menu hosts its trigger in a native view, so position the
+       * whole menu over the row rather than the trigger inside it.
+       */}
       {!pendingDid && (
-        <Menu.Root inline>
-          <Menu.Trigger label={l`Account options`}>
-            {({props, state}) => (
-              <Pressable
-                {...props}
-                hitSlop={HITSLOP_10}
-                style={[
-                  a.absolute,
-                  {top: 10, right: tokens.space.lg},
-                  a.p_xs,
-                  a.rounded_full,
-                  (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
-                ]}>
-                <DotsHorizontal size="md" style={t.atoms.text} />
-              </Pressable>
-            )}
-          </Menu.Trigger>
-          <Menu.Outer showCancel>
-            <Menu.Item
-              label={l`Remove account`}
-              onPress={() => removePromptControl.open()}>
-              <Menu.ItemText>
-                <Trans>Remove account</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={PersonXIcon} />
-            </Menu.Item>
-          </Menu.Outer>
-        </Menu.Root>
+        <View style={[a.absolute, {top: 10, right: tokens.space.lg}]}>
+          <Menu.Root inline>
+            <Menu.Trigger label={l`Account options`}>
+              {({props, state}) => (
+                <Pressable
+                  {...props}
+                  hitSlop={HITSLOP_10}
+                  style={[
+                    a.p_xs,
+                    a.rounded_full,
+                    (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
+                  ]}>
+                  <DotsHorizontal size="md" style={t.atoms.text} />
+                </Pressable>
+              )}
+            </Menu.Trigger>
+            <Menu.Outer showCancel>
+              <Menu.Item
+                label={l`Remove account`}
+                onPress={() => removePromptControl.open()}>
+                <Menu.ItemText>
+                  <Trans>Remove account</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={PersonXIcon} />
+              </Menu.Item>
+            </Menu.Outer>
+          </Menu.Root>
+        </View>
       )}
 
       <Prompt.Basic
