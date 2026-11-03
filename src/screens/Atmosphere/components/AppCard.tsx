@@ -4,7 +4,6 @@ import {useLingui} from '@lingui/react/macro'
 
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {type AtmosphereAppCardData} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {
   KnownFollowers,
@@ -12,11 +11,18 @@ import {
 } from '#/components/KnownFollowers'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 
-export function AppCard({app}: {app: AtmosphereAppCardData}) {
+export function AppCard({
+  app,
+}: {
+  app: app.bsky.unspecced.getAtmosphereApps.AppCard
+}) {
   const {t: l} = useLingui()
   const t = useTheme()
   const moderationOpts = useModerationOpts()
+
+  if (!app.title || !app.url) return null
 
   return (
     <View
@@ -37,7 +43,7 @@ export function AppCard({app}: {app: AtmosphereAppCardData}) {
         />
       ) : undefined}
       <Link
-        to={app.href}
+        to={app.url}
         label={l`Open ${app.title}`}
         accessibilityHint=""
         style={[a.w_full]}>
@@ -63,7 +69,7 @@ export function AppCard({app}: {app: AtmosphereAppCardData}) {
                 emoji
                 style={[a.text_sm, t.atoms.text_contrast_medium]}
                 numberOfLines={1}>
-                • {toNiceDomain(app.href)}
+                • {toNiceDomain(app.url)}
               </Text>
             </Text>
             {app.description ? (

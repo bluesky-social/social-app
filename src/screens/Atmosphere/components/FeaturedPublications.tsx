@@ -1,15 +1,15 @@
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {type AtmospherePublicationCardData} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a} from '#/alf'
+import {type app} from '#/lexicons'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
 import {PublicationCard} from './PublicationCard'
 
 export function FeaturedPublications({
   publications,
 }: {
-  publications: AtmospherePublicationCardData[]
+  publications: app.bsky.embed.external.ViewArticlePublication[]
 }) {
   const {t: l} = useLingui()
 
@@ -19,7 +19,7 @@ export function FeaturedPublications({
     <View style={[a.gap_md]}>
       <ExploreSectionHeader title={l`Featured publications`} />
       {publications.map(publication => (
-        <PublicationCard key={publication.id} publication={publication} />
+        <PublicationCard key={publication.uri} publication={publication} />
       ))}
     </View>
   )

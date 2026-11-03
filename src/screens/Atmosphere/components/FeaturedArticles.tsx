@@ -1,8 +1,8 @@
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {type AtmosphereArticleCardData} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a} from '#/alf'
+import {type app} from '#/lexicons'
 import {ArticleCard} from './ArticleCard'
 import {ExploreGallery} from './ExploreGallery'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
@@ -12,7 +12,7 @@ const CARD_WIDTH = 250
 export function FeaturedArticles({
   articles,
 }: {
-  articles: AtmosphereArticleCardData[]
+  articles: app.bsky.embed.external.ViewArticle[]
 }) {
   const {t: l} = useLingui()
 

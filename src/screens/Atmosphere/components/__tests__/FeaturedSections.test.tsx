@@ -1,12 +1,7 @@
 import {type StyleProp, StyleSheet, type ViewStyle} from 'react-native'
 import {render, screen} from '@testing-library/react-native'
 
-import {
-  type AtmosphereArticleCardData,
-  type AtmosphereLivestreamCardData,
-  type AtmospherePhotoCardData,
-  type AtmospherePublicationCardData,
-} from '#/screens/Atmosphere/data/exploreData'
+import {type app} from '#/lexicons'
 import {type ExploreGalleryFocusProps} from '../ExploreGallery'
 import {FeaturedArticles} from '../FeaturedArticles'
 import {FeaturedLivestreams} from '../FeaturedLivestreams'
@@ -58,10 +53,10 @@ function mockCard(prefix: string, prop: string) {
     width?: number
     galleryFocus?: ExploreGalleryFocusProps
   }) => {
-    const item = rest[prop] as {id: string; title: string}
+    const item = rest[prop] as {uri: string; title: string}
     return (
       <Pressable
-        testID={`${prefix}-${item.id}`}
+        testID={`${prefix}-${item.uri.split('/').at(-1)}`}
         accessibilityRole="link"
         accessibilityLabel={item.title}
         accessibilityHint=""
@@ -84,23 +79,43 @@ jest.mock('../PublicationCard', () => ({
 }))
 jest.mock('../PhotoCard', () => ({PhotoCard: mockCard('photo', 'photo')}))
 
-const articles = [
-  {id: 'a1', title: 'First article'},
-  {id: 'a2', title: 'Second article'},
-] as AtmosphereArticleCardData[]
-const livestreams = [
-  {id: 'l1', title: 'First stream'},
-  {id: 'l2', title: 'Second stream'},
-] as AtmosphereLivestreamCardData[]
-const photos = [
-  {id: 'p1', title: 'First photo'},
-  {id: 'p2', title: 'Second photo'},
-] as AtmospherePhotoCardData[]
+const articles: app.bsky.embed.external.ViewArticle[] = [
+  {uri: 'https://example.com/a1', title: 'First article', description: ''},
+  {uri: 'https://example.com/a2', title: 'Second article', description: ''},
+]
+const livestreams: app.bsky.embed.external.ViewLivestream[] = [
+  {
+    uri: 'https://example.com/l1',
+    title: 'First stream',
+    description: '',
+    active: true,
+  },
+  {
+    uri: 'https://example.com/l2',
+    title: 'Second stream',
+    description: '',
+    active: false,
+  },
+]
+const photos: app.bsky.embed.external.ViewGallery[] = [
+  {
+    uri: 'https://example.com/p1',
+    title: 'First photo',
+    description: '',
+    items: [],
+  },
+  {
+    uri: 'https://example.com/p2',
+    title: 'Second photo',
+    description: '',
+    items: [],
+  },
+]
 
-const publications = [
-  {id: 'u1', title: 'First publication'},
-  {id: 'u2', title: 'Second publication'},
-] as AtmospherePublicationCardData[]
+const publications: app.bsky.embed.external.ViewArticlePublication[] = [
+  {uri: 'https://example.com/u1', title: 'First publication', description: ''},
+  {uri: 'https://example.com/u2', title: 'Second publication', description: ''},
+]
 
 function slides() {
   return screen.UNSAFE_root.findAll(
@@ -231,7 +246,7 @@ describe('FeaturedPublications', () => {
       'publication-u2',
     ])
     for (const publication of publications) {
-      const testID = `publication-${publication.id}`
+      const testID = `publication-${publication.uri.split('/').at(-1)}`
       expect(width(testID)).toBeUndefined()
       expect(screen.getByTestId(testID).props.tabIndex).toBeUndefined()
     }

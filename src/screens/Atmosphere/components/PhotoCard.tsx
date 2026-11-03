@@ -8,19 +8,23 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {type AtmospherePhotoCardData} from '#/screens/Atmosphere/data/exploreData'
+import {
+  getAssociatedProfile,
+  getGalleryImage,
+} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 export function PhotoCard({
   photo,
   galleryFocus,
 }: {
-  photo: AtmospherePhotoCardData
+  photo: app.bsky.embed.external.ViewGallery
   galleryFocus?: ExploreGalleryFocusProps
 }) {
   const {t: l, i18n} = useLingui()
@@ -31,18 +35,23 @@ export function PhotoCard({
     onOut: onInteractOut,
   } = useInteractionState()
   const moderationOpts = useModerationOpts()
+  const authorProfile = getAssociatedProfile(photo.associatedProfiles)
+  const image = getGalleryImage(photo)
+  const likeCount = photo.likeCount ?? 0
+
+  if (!authorProfile || !image) return null
+
   const moderation = moderationOpts
-    ? moderateProfile(photo.authorProfile, moderationOpts)
+    ? moderateProfile(authorProfile, moderationOpts)
     : undefined
   const authorName = sanitizeDisplayName(
-    photo.authorProfile.displayName ||
-      sanitizeHandle(photo.authorProfile.handle),
+    authorProfile.displayName || sanitizeHandle(authorProfile.handle),
     moderation?.ui('displayName'),
   )
 
   return (
     <Link
-      to={photo.href}
+      to={photo.uri}
       label={l`Open ${photo.title}`}
       accessibilityHint=""
       ref={galleryFocus?.focusRef}
@@ -66,12 +75,12 @@ export function PhotoCard({
           t.atoms.bg_contrast_25,
         ]}>
         <Image
-          source={photo.image}
+          source={image.thumbnail}
           contentFit="cover"
-          accessibilityLabel={photo.imageAlt}
+          accessibilityLabel={image.alt}
           accessibilityHint=""
           style={[a.w_full, a.h_full]}
-          accessible={!!photo.imageAlt}
+          accessible={!!image.alt}
         />
         {interacted ? (
           <View
@@ -85,7 +94,7 @@ export function PhotoCard({
             ]}
           />
         ) : undefined}
-        {photo.likeCount > 0 ? (
+        {likeCount > 0 ? (
           <View
             accessible={false}
             pointerEvents="none"
@@ -105,7 +114,7 @@ export function PhotoCard({
             ]}>
             <Heart size="xs" style={{color: 'white'}} />
             <Text style={[a.text_xs, a.font_medium, {color: 'white'}]}>
-              {formatCount(i18n, photo.likeCount)}
+              {formatCount(i18n, likeCount)}
             </Text>
           </View>
         ) : undefined}
@@ -120,7 +129,7 @@ export function PhotoCard({
         <UserAvatar
           type="user"
           size={16}
-          avatar={photo.authorProfile.avatar}
+          avatar={authorProfile.avatar}
           moderation={moderation?.ui('avatar')}
         />
         <Text emoji style={[a.text_xs, a.font_medium]} numberOfLines={1}>

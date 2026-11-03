@@ -1,20 +1,51 @@
-import {type AtmospherePublicationCardData} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, useTheme, utils} from '#/alf'
+import {hexToRgb} from '#/alf/util/colorGeneration'
 import {PublicationCard as SharedPublicationCard} from '#/components/Post/Embed/StandardSiteEmbed'
 import type * as ssTypes from '#/components/Post/Embed/StandardSiteEmbed/types'
+import {type app} from '#/lexicons'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
+
+function toColorRgb(
+  hex?: string,
+): app.bsky.embed.external.ColorRgb | undefined {
+  return hex ? (hexToRgb(hex) ?? undefined) : undefined
+}
 
 export function PublicationCard({
   publication,
   width,
   galleryFocus,
 }: {
-  publication: AtmospherePublicationCardData
+  publication: app.bsky.embed.external.ViewArticlePublication
   width?: number
   galleryFocus?: ExploreGalleryFocusProps
 }) {
   const t = useTheme()
-  const {accentRGB, accentForegroundRGB} = publication.view.source?.theme || {}
+  /* The shared embed still consumes the legacy external view and RGB theme. */
+  const view: app.bsky.embed.external.ViewExternal = {
+    uri: publication.uri,
+    title: publication.title,
+    description: publication.description,
+    thumb: publication.image,
+    createdAt: publication.createdAt,
+    updatedAt: publication.updatedAt,
+    labels: publication.labels,
+    associatedRefs: publication.associatedRefs,
+    associatedProfiles: publication.associatedProfiles,
+    source: {
+      uri: publication.uri,
+      title: publication.title,
+      description: publication.description,
+      icon: publication.logo,
+      theme: publication.theme && {
+        backgroundRGB: toColorRgb(publication.theme.background),
+        foregroundRGB: toColorRgb(publication.theme.foreground),
+        accentRGB: toColorRgb(publication.theme.accent),
+        accentForegroundRGB: toColorRgb(publication.theme.accentForeground),
+      },
+    },
+  }
+  const {accentRGB, accentForegroundRGB} = view.source?.theme || {}
   let themeColors: ssTypes.ThemeColors = {
     custom: false,
     accent: t.atoms.text.color,
@@ -34,7 +65,7 @@ export function PublicationCard({
 
   return (
     <SharedPublicationCard
-      view={publication.view}
+      view={view}
       themeColors={themeColors}
       style={[a.flex_grow, width ? {width} : undefined]}
       linkProps={

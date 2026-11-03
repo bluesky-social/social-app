@@ -4,7 +4,6 @@ import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
 import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/exploreResponse'
 import {livestreamPreviewFixture} from '#/screens/Atmosphere/__tests__/fixtures/livestreamPreview'
-import {type AtmosphereData} from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
 import {AtmosphereExploreTab} from '#/screens/Atmosphere/ExploreTab'
 import {app} from '#/lexicons'
@@ -119,7 +118,7 @@ function setQuery(
   } as never)
 }
 
-const data: AtmosphereData = {
+const data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody = {
   announcementBanner: {title: 'Launch', url: 'https://example.com/launch'},
   articles: {
     items: [

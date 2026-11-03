@@ -3,17 +3,19 @@ import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {useLingui} from '@lingui/react/macro'
 
-import {type AtmosphereAnnouncementBannerData} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, utils} from '#/alf'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 
 export function AnnouncementBanner({
   banner,
 }: {
-  banner: AtmosphereAnnouncementBannerData
+  banner: app.bsky.unspecced.getAtmosphereExploreTab.AnnouncementBanner
 }) {
   const {t: l} = useLingui()
+
+  if (!banner.title || !banner.url) return null
 
   return (
     <View style={a.pb_md}>
@@ -48,7 +50,7 @@ export function AnnouncementBanner({
           />
         ) : undefined}
         <Link
-          to={banner.href}
+          to={banner.url}
           label={l`Open announcement: ${banner.title}`}
           accessibilityHint=""
           style={[

@@ -1,12 +1,16 @@
 import {View} from 'react-native'
 import {Trans} from '@lingui/react/macro'
 
-import {type AtmosphereAppCardData} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 import {AppCard} from './AppCard'
 
-export function FeaturedApps({apps}: {apps: AtmosphereAppCardData[]}) {
+export function FeaturedApps({
+  apps,
+}: {
+  apps: app.bsky.unspecced.getAtmosphereApps.AppCard[]
+}) {
   if (!apps.length) return null
 
   return (

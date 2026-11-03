@@ -15,7 +15,7 @@ export type ExploreGalleryFocusProps = GalleryPrimitive.ItemFocusProps
  * Horizontal card carousel for the Atmosphere Explore sections. Cards own
  * their own width and stretch to the tallest card in the strip.
  */
-export function ExploreGallery<T extends {id: string; title: string}>({
+export function ExploreGallery<T extends {uri: string; title: string}>({
   items,
   label,
   testID,
@@ -29,7 +29,7 @@ export function ExploreGallery<T extends {id: string; title: string}>({
   return (
     <GalleryPrimitive.Root label={label} testID={testID} stretch>
       {items.map(item => (
-        <GalleryPrimitive.Item key={item.id} label={item.title}>
+        <GalleryPrimitive.Item key={item.uri} label={item.title}>
           {focusProps => (
             /*
              * The bottom allowance lives inside the item so it is measured and

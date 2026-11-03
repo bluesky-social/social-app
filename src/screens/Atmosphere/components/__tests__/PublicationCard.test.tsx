@@ -2,7 +2,9 @@ import {Children} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
-import {type AtmospherePublicationCardData} from '#/screens/Atmosphere/data/exploreData'
+import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/exploreResponse'
+import {PublicationCard as SharedPublicationCard} from '#/components/Post/Embed/StandardSiteEmbed'
+import {type app} from '#/lexicons'
 import {PublicationCard} from '../PublicationCard'
 
 const mockBreakpoints = {gtPhone: true}
@@ -115,22 +117,14 @@ jest.mock('#/components/Link', () => {
   }
 })
 
-const publication: AtmospherePublicationCardData = {
-  id: 'https://example.com/pub',
+const publication: app.bsky.embed.external.ViewArticlePublication = {
+  uri: 'https://example.com/pub',
   title: 'Test publication',
-  view: {
-    uri: 'https://example.com/pub',
-    title: 'Test publication',
-    description: 'A description',
-    source: {
-      uri: 'https://example.com/pub',
-      title: 'Test publication',
-      icon: 'https://example.com/logo.png',
-      theme: {
-        accentRGB: {r: 18, g: 52, b: 86},
-        accentForegroundRGB: {r: 255, g: 255, b: 255},
-      },
-    },
+  description: 'A description',
+  logo: 'https://example.com/logo.png',
+  theme: {
+    accent: '#123456',
+    accentForeground: '#ffffff',
   },
 }
 
@@ -147,8 +141,7 @@ beforeEach(() => {
 })
 
 describe.each([true, false])('PublicationCard (gtPhone: %s)', gtPhone => {
-  /* The Atmosphere card hides the CTA on wide layouts (`hideSubscribe`). */
-  const linkCount = gtPhone ? 1 : 2
+  const linkCount = 2
 
   beforeEach(() => {
     mockBreakpoints.gtPhone = gtPhone
@@ -214,7 +207,7 @@ describe.each([true, false])('PublicationCard (gtPhone: %s)', gtPhone => {
       <PublicationCard
         publication={{
           ...publication,
-          view: {...publication.view, description: ''},
+          description: '',
         }}
       />,
     )
@@ -231,15 +224,12 @@ describe.each([true, false])('PublicationCard (gtPhone: %s)', gtPhone => {
   })
 
   it('falls back to an initial when there is no logo or theme', () => {
-    const {source, ...view} = publication.view
     render(
       <PublicationCard
         publication={{
           ...publication,
-          view: {
-            ...view,
-            source: {...source!, icon: undefined, theme: undefined},
-          },
+          logo: undefined,
+          theme: undefined,
         }}
       />,
     )
@@ -249,3 +239,54 @@ describe.each([true, false])('PublicationCard (gtPhone: %s)', gtPhone => {
     expect(links()).toHaveLength(linkCount)
   })
 })
+
+function sharedView() {
+  const props = screen.UNSAFE_getByType(SharedPublicationCard)
+    .props as React.ComponentProps<typeof SharedPublicationCard>
+  return props.view
+}
+
+it('adapts the lexicon publication to the legacy shared embed without mutating it', () => {
+  const publication = exploreResponseFixture.publications.items[0].view
+  const before = JSON.stringify(publication)
+  render(<PublicationCard publication={publication} />)
+
+  expect(sharedView()).toMatchObject({
+    uri: publication.uri,
+    title: publication.title,
+    description: publication.description,
+    associatedProfiles: publication.associatedProfiles,
+    source: {
+      uri: publication.uri,
+      title: publication.title,
+      icon: publication.logo,
+      theme: {
+        backgroundRGB: {r: 255, g: 255, b: 255},
+        foregroundRGB: {r: 0, g: 0, b: 0},
+        accentRGB: {r: 0x12, g: 0x34, b: 0x56},
+        accentForegroundRGB: {r: 255, g: 255, b: 255},
+      },
+    },
+  })
+  expect(JSON.stringify(publication)).toBe(before)
+})
+
+it.each([
+  {theme: {accent: '#fff'}, expected: {accentRGB: {r: 255, g: 255, b: 255}}},
+  {theme: {accent: 'red', background: '#12'}, expected: {}},
+])(
+  'safely converts partial and invalid publication themes: $theme',
+  ({theme, expected}) => {
+    render(<PublicationCard publication={{...publication, theme}} />)
+    const converted = sharedView().source?.theme
+    expect(converted).toMatchObject(expected)
+    for (const key of [
+      'backgroundRGB',
+      'foregroundRGB',
+      'accentRGB',
+      'accentForegroundRGB',
+    ] as const) {
+      if (!(key in expected)) expect(converted?.[key]).toBeUndefined()
+    }
+  },
+)

@@ -2,12 +2,12 @@ import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 
-import {type AtmosphereArticleCardData} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 export function ArticleCard({
@@ -15,7 +15,7 @@ export function ArticleCard({
   width,
   galleryFocus,
 }: {
-  article: AtmosphereArticleCardData
+  article: app.bsky.embed.external.ViewArticle
   width?: number
   galleryFocus?: ExploreGalleryFocusProps
 }) {
@@ -41,8 +41,8 @@ export function ArticleCard({
       ]}>
       <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
         <Link
-          to={article.href}
-          label={l`Open ${article.title}`}
+          to={article.uri}
+          label={l`Open ${article.title.trim()}`}
           ref={galleryFocus?.focusRef}
           tabIndex={galleryFocus?.tabIndex}
           {...web({
@@ -67,7 +67,7 @@ export function ArticleCard({
             ) : undefined}
           </View>
           <View style={[a.w_full, a.flex_1, a.p_md]}>
-            {article.publisher || article.publisherAvatar ? (
+            {article.publisher?.title || article.publisher?.logo ? (
               <View
                 style={[
                   a.flex_row,
@@ -76,20 +76,20 @@ export function ArticleCard({
                   IS_NATIVE ? a.pb_xs : a.pb_sm,
                   {alignSelf: 'flex-start'},
                 ]}>
-                {article.publisherAvatar ? (
+                {article.publisher?.logo ? (
                   <Image
-                    source={article.publisherAvatar}
+                    source={article.publisher.logo}
                     contentFit="cover"
                     style={[a.rounded_xs, {width: 16, height: 16}]}
                     accessible={false}
                   />
                 ) : undefined}
-                {article.publisher ? (
+                {article.publisher?.title ? (
                   <Text
                     emoji
                     style={[a.text_xs, a.font_medium]}
                     numberOfLines={1}>
-                    {article.publisher}
+                    {article.publisher.title}
                   </Text>
                 ) : undefined}
               </View>
@@ -99,7 +99,7 @@ export function ArticleCard({
                 emoji
                 style={[a.text_md, a.font_bold, a.leading_tight]}
                 numberOfLines={2}>
-                {article.title}
+                {article.title.trim()}
               </Text>
               {article.description ? (
                 <Text

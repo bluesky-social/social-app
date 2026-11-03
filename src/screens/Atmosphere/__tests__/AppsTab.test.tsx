@@ -3,8 +3,8 @@ import {createDeferrable} from '@atproto/common-web'
 import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
 import {AtmosphereAppsTab} from '#/screens/Atmosphere/AppsTab'
-import {type AtmosphereAppsData} from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereAppsQuery} from '#/screens/Atmosphere/data/useAtmosphereAppsQuery'
+import {type app} from '#/lexicons'
 
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({
@@ -134,7 +134,7 @@ function setQuery(result: Partial<ReturnType<typeof useAtmosphereAppsQuery>>) {
 }
 
 const url = 'https://example.com/app'
-const data: AtmosphereAppsData = {
+const data: app.bsky.unspecced.getAtmosphereApps.$OutputBody = {
   apps: [
     {id: 'blog', title: 'Blog app', url, category: 'writing'},
     {id: 'photo', title: 'Photo app', url, category: 'photography'},

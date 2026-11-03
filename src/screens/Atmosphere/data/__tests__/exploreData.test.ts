@@ -1,8 +1,6 @@
 import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/exploreResponse'
 import {livestreamPreviewFixture} from '#/screens/Atmosphere/__tests__/fixtures/livestreamPreview'
 import {
-  type AtmosphereAppsData,
-  type AtmosphereData,
   getAtmosphereAnnouncementBanner,
   getAtmosphereApps,
   getAtmosphereArticles,
@@ -12,13 +10,15 @@ import {
 } from '#/screens/Atmosphere/data/exploreData'
 import {app} from '#/lexicons'
 
-function parseData(data: unknown): AtmosphereData {
+function parseData(
+  data: unknown,
+): app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody {
   return app.bsky.unspecced.getAtmosphereExploreTab.$output.schema.parse(data)
 }
 
 const fixtureData = parseData(exploreResponseFixture)
 
-const emptyData: AtmosphereData = {
+const emptyData: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody = {
   articles: {items: []},
   publications: {items: []},
   photos: {items: []},
@@ -26,7 +26,9 @@ const emptyData: AtmosphereData = {
   apps: [],
 }
 
-const emptyAppsData: AtmosphereAppsData = {apps: []}
+const emptyAppsData: app.bsky.unspecced.getAtmosphereApps.$OutputBody = {
+  apps: [],
+}
 
 const testProfile = {
   $type: 'app.bsky.actor.defs#profileViewBasic',
@@ -89,7 +91,7 @@ describe('Atmosphere Explore response fixtures', () => {
     })
 
     expect(data.articles.recIdStr).toBe('18446744073709551615')
-    expect(getAtmosphereArticles(data).map(article => article.href)).toEqual([
+    expect(getAtmosphereArticles(data).map(article => article.uri)).toEqual([
       'https://example.com/first-article',
       'https://example.com/second-article',
     ])
@@ -124,7 +126,7 @@ describe('Atmosphere Explore response fixtures', () => {
     ).toThrow()
   })
 
-  it('validates gallery images and skips malformed images at the adapter boundary', () => {
+  it('validates gallery images and skips malformed images during selection', () => {
     expect(app.bsky.embed.external.viewGalleryImage.parse(image)).toMatchObject(
       image,
     )
@@ -191,7 +193,7 @@ describe('Atmosphere Explore response fixtures', () => {
 
       const expectedOrder =
         section === 'publications' ? [3, 1, 4, 5, 0] : [3, 1, 4, 5, 0, 2, 6]
-      expect(cards.map(card => card.id)).toEqual(
+      expect(cards.map(card => card.uri)).toEqual(
         expectedOrder.map(index => `https://example.com/${index}`),
       )
       expect(JSON.stringify(data)).toBe(before)
@@ -229,62 +231,25 @@ describe('Atmosphere Explore response fixtures', () => {
     const before = JSON.stringify(data)
     Object.freeze(data.articles.items)
 
-    expect(getAtmosphereArticles(data).map(article => article.id)).toEqual(
+    expect(getAtmosphereArticles(data).map(article => article.uri)).toEqual(
       [3, 5, 1, 2, 0, 4].map(index => `https://example.com/${index}`),
     )
     expect(JSON.stringify(data)).toBe(before)
   })
 
-  it('maps populated card fields and prioritizes article images', () => {
+  it('returns the original lexicon views without flattening fields or dropping metadata', () => {
     const articles = getAtmosphereArticles(fixtureData)
-    expect(
-      articles.map(({title, publisher, description}) => ({
-        title,
-        publisher,
-        description,
-      })),
-    ).toEqual([
-      {
-        title: 'First article',
-        publisher: 'Test publication',
-        description: undefined,
-      },
-      {
-        title: 'Second article',
-        publisher: 'Test publication',
-        description: 'An article description',
-      },
-    ])
-    expect(articles[0]).toMatchObject({
-      id: 'https://example.com/first-article',
-      href: 'https://example.com/first-article',
-      image: 'https://example.com/article.jpg',
-      publisherAvatar: 'https://example.com/logo.jpg',
-    })
+    expect(articles[0]).toBe(fixtureData.articles.items[0].view)
+    expect(articles[1]).toBe(fixtureData.articles.items[1].view)
+    expect(articles[0].publisher?.logo).toBe('https://example.com/logo.jpg')
 
     const photos = getAtmospherePhotos(fixtureData)
-    expect(photos.map(({title}) => title)).toEqual([
-      'First photo',
-      'Second photo',
-    ])
-    expect(photos[0]).toMatchObject({
-      id: 'https://example.com/gallery-0',
-      href: 'https://example.com/gallery-0',
-      image: 'https://example.com/thumbnail.jpg',
-      imageAlt: 'A test photo',
-      likeCount: 2,
-      authorProfile: {handle: 'author.test'},
-    })
-
-    expect(getAtmosphereAnnouncementBanner(fixtureData)).toEqual({
-      id: 'banner',
-      title: 'Test announcement',
-      description: 'An announcement description',
-      image: 'https://example.com/banner.jpg',
-      overlayColor: '#000000',
-      textColor: '#ffffff',
-      href: 'https://example.com/announcement',
-    })
+    expect(photos[0]).toBe(fixtureData.photos.items[0].view)
+    expect(photos[1]).toBe(fixtureData.photos.items[1].view)
+    expect(photos[0].associatedProfiles?.[0].handle).toBe('author.test')
+    expect(getAtmosphereAnnouncementBanner(fixtureData)).toBe(
+      fixtureData.announcementBanner,
+    )
   })
 
   describe('getAtmospherePublications', () => {
@@ -304,42 +269,22 @@ describe('Atmosphere Explore response fixtures', () => {
         {featured: false, view: {...publicationView, uri: 'https://c.test/'}},
       ])
 
-      expect(getAtmospherePublications(data).map(p => p.id)).toEqual([
+      expect(getAtmospherePublications(data).map(p => p.uri)).toEqual([
         'https://a.test/',
         'https://b.test/',
         'https://c.test/',
       ])
     })
 
-    it('builds the legacy view the shared card renders', () => {
-      const [card] = getAtmospherePublications(fixtureData)
-
-      expect(card).toMatchObject({
-        id: publicationView.uri,
-        title: publicationView.title,
-        view: {
-          uri: publicationView.uri,
-          title: publicationView.title,
-          description: publicationView.description,
-          associatedProfiles: publicationView.associatedProfiles,
-          source: {
-            uri: publicationView.uri,
-            title: publicationView.title,
-            icon: publicationView.logo,
-            theme: {
-              backgroundRGB: {r: 255, g: 255, b: 255},
-              foregroundRGB: {r: 0, g: 0, b: 0},
-              accentRGB: {r: 0x12, g: 0x34, b: 0x56},
-              accentForegroundRGB: {r: 255, g: 255, b: 255},
-            },
-          },
-        },
-      })
+    it('preserves the original publication view, including subscription metadata', () => {
+      const [publication] = getAtmospherePublications(fixtureData)
+      expect(publication).toBe(publicationView)
+      expect(publication.subscriptionCount).toBe(1)
     })
 
     it('copies associated metadata and does not mutate the response', () => {
       /* Built without parsing: only the shape of the refs matters here. */
-      const data: AtmosphereData = {
+      const data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody = {
         ...emptyData,
         publications: {
           recIdStr: '1',
@@ -362,39 +307,11 @@ describe('Atmosphere Explore response fixtures', () => {
       const before = JSON.stringify(data)
       const [card] = getAtmospherePublications(data)
 
-      expect(card.view.associatedRefs).toEqual(
+      expect(card.associatedRefs).toEqual(
         data.publications.items[0].view.associatedRefs,
       )
       expect(JSON.stringify(data)).toBe(before)
       expect(data.publications.recIdStr).toBe('1')
-    })
-
-    it.each([
-      {
-        name: 'partial',
-        theme: {accent: '#fff'},
-        expected: {accentRGB: {r: 255, g: 255, b: 255}},
-      },
-      {
-        name: 'invalid',
-        theme: {accent: 'red', background: '#12'},
-        expected: {},
-      },
-    ])('converts $name theme colors', ({theme, expected}) => {
-      const data = withPublications([
-        {featured: true, view: {...publicationView, theme}},
-      ])
-      const source = getAtmospherePublications(data)[0].view.source
-
-      expect(source?.theme).toMatchObject(expected)
-      for (const key of [
-        'backgroundRGB',
-        'foregroundRGB',
-        'accentRGB',
-        'accentForegroundRGB',
-      ] as const) {
-        if (!(key in expected)) expect(source?.theme?.[key]).toBeUndefined()
-      }
     })
 
     it('keeps publications without a logo, theme, or profiles', () => {
@@ -402,13 +319,14 @@ describe('Atmosphere Explore response fixtures', () => {
       const data = withPublications([{featured: false, view: bare}])
       const [card] = getAtmospherePublications(data)
 
-      expect(card.view.source?.icon).toBeUndefined()
-      expect(card.view.source?.theme).toBeUndefined()
-      expect(card.view.associatedProfiles).toBeUndefined()
+      expect(card).toBe(data.publications.items[0].view)
+      expect(card.logo).toBeUndefined()
+      expect(card.theme).toBeUndefined()
+      expect(card.associatedProfiles).toBeUndefined()
     })
   })
 
-  describe('dedupes items by id', () => {
+  describe('dedupes views by URI and apps by id', () => {
     const [article] = fixtureData.articles.items
     const [photo] = fixtureData.photos.items
     const [livestream] = parseData({
@@ -448,7 +366,7 @@ describe('Atmosphere Explore response fixtures', () => {
       const result = adapt(data)
 
       expect(result).toHaveLength(2)
-      expect(result.map(r => r.id).sort()).toEqual(
+      expect(result.map(r => r.uri).sort()).toEqual(
         [first.view.uri, second.view.uri].sort(),
       )
       expect(result.map(r => r.title)).not.toContain('duplicate')
@@ -461,7 +379,7 @@ describe('Atmosphere Explore response fixtures', () => {
           {...firstApp, id: 'other'},
           {...firstApp, title: 'dupe'},
         ],
-      } satisfies AtmosphereAppsData
+      } satisfies app.bsky.unspecced.getAtmosphereApps.$OutputBody
 
       const result = getAtmosphereApps(data)
 
@@ -471,7 +389,9 @@ describe('Atmosphere Explore response fixtures', () => {
   })
 
   describe('getAtmosphereApps', () => {
-    const parseApps = (data: unknown): AtmosphereAppsData =>
+    const parseApps = (
+      data: unknown,
+    ): app.bsky.unspecced.getAtmosphereApps.$OutputBody =>
       app.bsky.unspecced.getAtmosphereApps.$output.schema.parse(data)
 
     it('preserves the hydrated profile, logo and banner', () => {
@@ -503,7 +423,8 @@ describe('Atmosphere Explore response fixtures', () => {
         description: 'An app description',
         logo: 'https://example.com/app-logo.jpg',
         banner: 'https://example.com/app-banner.jpg',
-        href: 'https://example.com/app',
+        url: 'https://example.com/app',
+        category: 'social',
         profile,
       })
     })
@@ -522,11 +443,7 @@ describe('Atmosphere Explore response fixtures', () => {
         {
           id: 'sparse',
           title: 'Sparse app',
-          description: undefined,
-          logo: undefined,
-          banner: undefined,
-          href: 'https://example.com',
-          profile: undefined,
+          url: 'https://example.com',
         },
       ])
     })
@@ -555,7 +472,7 @@ describe('Atmosphere Explore response fixtures', () => {
         {id: 'invalid', title: '', url, category: 'writing'},
         {id: 'writing', title: 'Duplicate', url, category: 'writing'},
       ],
-    } satisfies AtmosphereAppsData
+    } satisfies app.bsky.unspecced.getAtmosphereApps.$OutputBody
 
     it('returns every valid app, including unknown and missing categories, without a category', () => {
       expect(getAtmosphereApps(data).map(app => app.id)).toEqual([
@@ -596,7 +513,7 @@ describe('Atmosphere Explore response fixtures', () => {
     )
   })
 
-  it('adapts the active and ended local livestream previews', () => {
+  it('selects the active and ended local livestream previews', () => {
     const previewData = parseData({
       ...emptyData,
       livestreams: {items: livestreamPreviewFixture},
@@ -604,26 +521,26 @@ describe('Atmosphere Explore response fixtures', () => {
     const livestreams = getAtmosphereLivestreams(previewData)
 
     expect(
-      livestreams.map(({title, active, href}) => ({
+      livestreams.map(({title, active, uri}) => ({
         title,
         active,
-        href,
+        uri,
       })),
     ).toEqual([
       {
         title: 'A look at open publishing',
         active: true,
-        href: 'https://example.com/livestreams/open-publishing',
+        uri: 'https://example.com/livestreams/open-publishing',
       },
       {
         title: 'Community Q&A',
         active: false,
-        href: 'https://example.com/livestreams/community-q-and-a',
+        uri: 'https://example.com/livestreams/community-q-and-a',
       },
       {
         title: 'Creative coding session',
         active: true,
-        href: 'https://example.com/livestreams/creative-coding',
+        uri: 'https://example.com/livestreams/creative-coding',
       },
     ])
     expect(
@@ -647,13 +564,8 @@ describe('Atmosphere Explore response fixtures', () => {
         },
       }),
     ).toEqual({
-      id: undefined,
       title: 'Title only',
-      description: undefined,
-      image: undefined,
-      overlayColor: undefined,
-      textColor: undefined,
-      href: 'https://example.com/announcement',
+      url: 'https://example.com/announcement',
     })
     expect(getAtmosphereArticles(emptyData)).toEqual([])
     expect(getAtmosphereLivestreams(emptyData)).toEqual([])
@@ -728,22 +640,11 @@ describe('Atmosphere Explore response fixtures', () => {
       },
     })
 
-    expect(getAtmosphereArticles(sparseData)[0]).toMatchObject({
-      title: 'Sparse article',
-      image: undefined,
-      publisher: undefined,
-      publisherAvatar: undefined,
-    })
+    expect(getAtmosphereArticles(sparseData)[0]).toBe(
+      sparseData.articles.items[0].view,
+    )
     expect(getAtmospherePhotos(sparseData)).toEqual([
-      {
-        id: 'https://example.com/gallery',
-        href: 'https://example.com/gallery',
-        title: 'Sparse gallery',
-        image: image.thumbnail,
-        imageAlt: undefined,
-        likeCount: 0,
-        authorProfile: testProfile,
-      },
+      sparseData.photos.items[0].view,
     ])
     expect(getAtmosphereLivestreams(sparseData)).toEqual([])
   })

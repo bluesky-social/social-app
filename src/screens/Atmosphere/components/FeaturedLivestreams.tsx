@@ -1,8 +1,8 @@
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {type AtmosphereLivestreamCardData} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a} from '#/alf'
+import {type app} from '#/lexicons'
 import {ExploreGallery} from './ExploreGallery'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
 import {LivestreamCard} from './LivestreamCard'
@@ -12,7 +12,7 @@ const CARD_WIDTH = 214
 export function FeaturedLivestreams({
   livestreams,
 }: {
-  livestreams: AtmosphereLivestreamCardData[]
+  livestreams: app.bsky.embed.external.ViewLivestream[]
 }) {
   const {t: l} = useLingui()
 

@@ -1,11 +1,7 @@
 import {StyleSheet} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
-import {
-  type AtmosphereArticleCardData,
-  type AtmosphereLivestreamCardData,
-  type AtmospherePhotoCardData,
-} from '#/screens/Atmosphere/data/exploreData'
+import {type app} from '#/lexicons'
 import {ArticleCard} from '../ArticleCard'
 import {type ExploreGalleryFocusProps} from '../ExploreGallery'
 import {LivestreamCard} from '../LivestreamCard'
@@ -114,31 +110,37 @@ jest.mock('#/components/Link', () => {
   }
 })
 
-const authorProfile = {
-  did: 'did:plc:author',
+const authorProfile: app.bsky.actor.defs.ProfileViewBasic = {
+  did: 'did:plc:6ayddqghxhciedbaofoxkcbs',
   handle: 'author.test',
   displayName: 'Author',
-} as AtmospherePhotoCardData['authorProfile']
+}
 
-const article: AtmosphereArticleCardData = {
-  id: 'article',
-  href: '/article',
+const article: app.bsky.embed.external.ViewArticle = {
+  uri: 'https://example.com/article',
+  description: '',
   title: 'An article',
 }
-const livestream: AtmosphereLivestreamCardData = {
-  id: 'livestream',
-  href: '/livestream',
+const livestream: app.bsky.embed.external.ViewLivestream = {
+  uri: 'https://example.com/livestream',
+  description: '',
   title: 'A livestream',
   active: false,
-  authorProfile,
+  associatedProfiles: [authorProfile],
 }
-const photo: AtmospherePhotoCardData = {
-  id: 'photo',
-  href: '/photo',
+const photo: app.bsky.embed.external.ViewGallery = {
+  uri: 'https://example.com/photo',
+  description: '',
   title: 'A photo',
-  image: 'https://example.com/photo.jpg',
+  items: [
+    {
+      $type: 'app.bsky.embed.external#viewGalleryImage',
+      thumbnail: 'https://example.com/photo.jpg',
+      fullsize: 'https://example.com/photo-fullsize.jpg',
+    },
+  ],
   likeCount: 0,
-  authorProfile,
+  associatedProfiles: [authorProfile],
 }
 
 const cards: [

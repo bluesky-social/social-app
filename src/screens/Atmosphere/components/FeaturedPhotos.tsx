@@ -1,15 +1,19 @@
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {type AtmospherePhotoCardData} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a} from '#/alf'
+import {type app} from '#/lexicons'
 import {ExploreGallery} from './ExploreGallery'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
 import {PhotoCard} from './PhotoCard'
 
 const CARD_WIDTH = 225
 
-export function FeaturedPhotos({photos}: {photos: AtmospherePhotoCardData[]}) {
+export function FeaturedPhotos({
+  photos,
+}: {
+  photos: app.bsky.embed.external.ViewGallery[]
+}) {
   const {t: l} = useLingui()
 
   if (!photos.length) return null
