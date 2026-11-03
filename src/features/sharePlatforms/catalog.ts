@@ -145,16 +145,18 @@ const CATALOG = [
     },
   },
   {
-    id: 'messenger',
-    label: 'Messenger',
-    // The fb-messenger://share link is undocumented and reported to fail on send
+    // Covers Gmail too, for people who set it as their default mail app
+    id: 'email',
+    label: 'Email',
     ios: {
-      scheme: 'fb-messenger',
-      copyAndOpen: true,
+      scheme: 'mailto',
+      getShareUrl: ({url, title}) =>
+        `mailto:?subject=${enc(title)}&body=${enc(url)}`,
     },
     android: {
-      packages: ['com.facebook.orca'],
-      directShare: true,
+      scheme: 'mailto',
+      getShareUrl: ({url, title}) =>
+        `mailto:?subject=${enc(title)}&body=${enc(url)}`,
     },
   },
   {
@@ -171,57 +173,16 @@ const CATALOG = [
     },
   },
   {
-    id: 'email',
-    label: 'Email',
+    id: 'messenger',
+    label: 'Messenger',
+    // The fb-messenger://share link is undocumented and reported to fail on send
     ios: {
-      scheme: 'mailto',
-      getShareUrl: ({url, title}) =>
-        `mailto:?subject=${enc(title)}&body=${enc(url)}`,
+      scheme: 'fb-messenger',
+      copyAndOpen: true,
     },
     android: {
-      scheme: 'mailto',
-      getShareUrl: ({url, title}) =>
-        `mailto:?subject=${enc(title)}&body=${enc(url)}`,
-    },
-  },
-  {
-    id: 'gmail',
-    label: 'Gmail',
-    ios: {
-      scheme: 'googlegmail',
-      getShareUrl: ({url, title}) =>
-        `googlegmail:///co?subject=${enc(title)}&body=${enc(url)}`,
-    },
-    android: {
-      packages: ['com.google.android.gm'],
+      packages: ['com.facebook.orca'],
       directShare: true,
-    },
-  },
-  {
-    // Undocumented scheme; the x.com intent link is reported to open a login page
-    id: 'x',
-    label: 'X',
-    ios: {
-      scheme: 'twitter',
-      getShareUrl: ({url}) => `twitter://post?message=${enc(url)}`,
-    },
-    android: {
-      packages: ['com.twitter.android'],
-      getShareUrl: ({url}) => `twitter://post?message=${enc(url)}`,
-    },
-  },
-  {
-    id: 'threads',
-    label: 'Threads',
-    ios: {
-      scheme: 'barcelona',
-      getShareUrl: ({url}) =>
-        `https://www.threads.com/intent/post?text=${enc(url)}`,
-    },
-    android: {
-      packages: ['com.instagram.barcelona'],
-      getShareUrl: ({url}) =>
-        `https://www.threads.com/intent/post?text=${enc(url)}`,
     },
   },
   {
@@ -263,6 +224,33 @@ const CATALOG = [
       packages: ['com.reddit.frontpage'],
       getShareUrl: ({url, title}) =>
         `https://www.reddit.com/submit?url=${enc(url)}&title=${enc(title)}`,
+    },
+  },
+  {
+    // Undocumented scheme; the x.com intent link is reported to open a login page
+    id: 'x',
+    label: 'X',
+    ios: {
+      scheme: 'twitter',
+      getShareUrl: ({url}) => `twitter://post?message=${enc(url)}`,
+    },
+    android: {
+      packages: ['com.twitter.android'],
+      getShareUrl: ({url}) => `twitter://post?message=${enc(url)}`,
+    },
+  },
+  {
+    id: 'threads',
+    label: 'Threads',
+    ios: {
+      scheme: 'barcelona',
+      getShareUrl: ({url}) =>
+        `https://www.threads.com/intent/post?text=${enc(url)}`,
+    },
+    android: {
+      packages: ['com.instagram.barcelona'],
+      getShareUrl: ({url}) =>
+        `https://www.threads.com/intent/post?text=${enc(url)}`,
     },
   },
 ] as const satisfies readonly SharePlatform[]
