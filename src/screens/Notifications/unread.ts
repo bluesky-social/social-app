@@ -39,18 +39,36 @@ export function nextSeenAt({
 }
 
 /**
+ * How long before the request a load can't be sure it has shown everything.
+ * The server leaves the last 5 seconds out of the feed, and our clock can be
+ * off from the server's, or a notification slow to reach the feed.
+ */
+export const MARK_READ_SAFETY_WINDOW_MS = 60_000
+
+/**
  * How far a fresh load marks notifications as seen on the server, if at all.
  *
  * Only "All" marks notifications as seen, as the other tabs leave things out.
- * It marks up to the newest notification the load showed, rather than the
- * time of the request: one from just before the request can still be on its
- * way into the feed, and would otherwise be marked as seen before anyone saw
- * it. An empty load marks nothing, and it never moves the server's `seenAt`
- * backwards.
+ * It marks up to the newest notification the load showed, and never moves the
+ * server's `seenAt` backwards.
+ *
+ * It doesn't mark up to the time of the request, as anything from just before
+ * it may not have reached the feed yet, and would be marked as seen before
+ * anyone saw it. But it does mark up to `MARK_READ_SAFETY_WINDOW_MS` before
+ * the request, even past the newest notification it showed. Anything older
+ * that the load left out was filtered out by the server, e.g. a like on a
+ * deleted post. Left unread, it would bring the unread badge and the
+ * "Refresh" pill back after every refresh.
  */
 export function getMarkReadAt(load: FeedLoad): Date | undefined {
-  if (load.feed !== 'all' || load.newestAt === undefined) return
-  return new Date(Math.max(load.newestAt, parseTime(load.seenAt) ?? -Infinity))
+  if (load.feed !== 'all') return
+  return new Date(
+    Math.max(
+      load.newestAt ?? -Infinity,
+      load.requestedAt - MARK_READ_SAFETY_WINDOW_MS,
+      parseTime(load.seenAt) ?? -Infinity,
+    ),
+  )
 }
 
 /**
