@@ -1,9 +1,16 @@
+import {type HandleString} from '@atproto/syntax'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
 import {render} from '@testing-library/react-native'
 
 import {type ThreadItem} from '#/state/queries/usePostThread'
+import {
+  postViewToThreadPlaceholder,
+  threadPost,
+} from '#/state/queries/usePostThread/views'
 import {PostThread} from '#/screens/PostThread'
+import {type app} from '#/lexicons'
 
 const DID = 'did:plc:7r7oxqovttrrcgzsy24ogise'
 const URI = `at://${DID}/app.bsky.feed.post/3mzcxu73eg22h`
@@ -133,26 +140,38 @@ jest.mock('#/screens/PostThread/components/ThreadItemTreePost', () => ({
   ThreadItemTreePostSkeleton: () => null,
 }))
 
-function threadPost(handle: string): ThreadItem {
-  return {
-    type: 'threadPost',
-    key: URI,
+const MODERATION_OPTS: ModerationOpts = {
+  userDid: undefined,
+  prefs: {
+    adultContentEnabled: false,
+    labels: {},
+    labelers: [],
+    mutedWords: [],
+    hiddenPosts: [],
+  },
+  labelDefs: {},
+}
+
+/** Built the way usePostThread builds a placeholder anchor from a PostView. */
+function anchorPostBy(handle: HandleString): ThreadItem {
+  const post: app.bsky.feed.defs.PostView = {
+    uri: URI,
+    cid: 'bafyreih',
+    author: {did: DID, handle},
+    record: {
+      $type: 'app.bsky.feed.post',
+      text: 'Ireland is such good evidence',
+      createdAt: '2026-11-02T09:06:10.071Z',
+    },
+    indexedAt: '2026-11-02T09:06:10.071Z',
+  }
+  return threadPost({
     uri: URI,
     depth: 0,
-    value: {
-      post: {
-        uri: URI,
-        cid: 'bafyreih',
-        author: {did: DID, handle},
-        record: {
-          $type: 'app.bsky.feed.post',
-          text: 'Ireland is such good evidence',
-          createdAt: '2026-11-02T09:06:10.071Z',
-        },
-        indexedAt: '2026-11-02T09:06:10.071Z',
-      },
-    },
-  } as ThreadItem
+    value: postViewToThreadPlaceholder(post).value,
+    moderationOpts: MODERATION_OPTS,
+    threadgateHiddenReplies: new Set(),
+  })
 }
 
 function renderThread() {
@@ -174,7 +193,7 @@ beforeEach(() => {
 
 describe('PostThread document title', () => {
   it("titles a DID-addressed post with its author's handle", () => {
-    mockItems = [threadPost('ironeconomist.bsky.social')]
+    mockItems = [anchorPostBy('ironeconomist.bsky.social')]
     renderThread()
     expect(mockSetOptions).toHaveBeenLastCalledWith({
       title: 'Post by @ironeconomist.bsky.social — Bluesky',
@@ -182,7 +201,7 @@ describe('PostThread document title', () => {
   })
 
   it('keeps the URL title when the author handle is invalid', () => {
-    mockItems = [threadPost('handle.invalid')]
+    mockItems = [anchorPostBy('handle.invalid')]
     renderThread()
     expect(mockSetOptions).not.toHaveBeenCalled()
   })
