@@ -257,6 +257,11 @@ export function Item({
   const disabled = Boolean(rest.disabled)
   const {selected, content} = arrangeItemContent(children)
   const highlighted = (hovered || focused) && !disabled
+  /*
+   * Radix also focuses items as the pointer moves over them, so only focus
+   * the browser treats as keyboard focus gets the ring.
+   */
+  const [focusVisible, setFocusVisible] = useState(false)
 
   return (
     <DropdownMenu.Item asChild disabled={disabled}>
@@ -277,8 +282,16 @@ export function Item({
             control.close()
           }
         }}
-        onFocus={onFocus}
-        onBlur={onBlur}
+        onFocus={e => {
+          onFocus()
+          setFocusVisible(
+            (e.target as unknown as Element).matches(':focus-visible'),
+          )
+        }}
+        onBlur={() => {
+          onBlur()
+          setFocusVisible(false)
+        }}
         // need `flatten` here for Radix compat
         style={flatten([
           a.flex_row,
@@ -305,6 +318,12 @@ export function Item({
                 ? t.atoms.bg_contrast_50
                 : t.atoms.bg_contrast_100,
           ],
+          focusVisible &&
+            !disabled &&
+            web({
+              outline: `2px solid ${t.palette.primary_500}`,
+              outlineOffset: -2,
+            }),
           style,
         ])}
         {...web({
