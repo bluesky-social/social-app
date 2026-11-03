@@ -287,9 +287,9 @@ export function Item({
           // Less on the leading side, for the icon's visual balance
           a.pl_md,
           a.pr_lg,
-          a.py_md,
+          a.py_sm,
           a.overflow_hidden,
-          {minHeight: 44},
+          {minHeight: 40},
           web({outline: 0}),
           /*
            * The selected item's pill is evenly rounded, overriding the
