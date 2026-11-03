@@ -472,7 +472,12 @@ describe('Atmosphere Explore response fixtures', () => {
     const parseApps = (data: unknown): AtmosphereAppsData =>
       app.bsky.unspecced.getAtmosphereApps.$output.schema.parse(data)
 
-    it('adapts the hydrated logo and banner and drops obsolete colors', () => {
+    it('preserves the hydrated profile, logo and banner', () => {
+      const profile = {
+        did: testProfile.did,
+        handle: 'app.bsky.social',
+        viewer: {knownFollowers: {count: 1, followers: [testProfile]}},
+      }
       const [card] = getAtmosphereApps(
         parseApps({
           apps: [
@@ -484,6 +489,7 @@ describe('Atmosphere Explore response fixtures', () => {
               banner: 'https://example.com/app-banner.jpg',
               url: 'https://example.com/app',
               category: 'social',
+              profile,
             },
           ],
         }),
@@ -496,6 +502,7 @@ describe('Atmosphere Explore response fixtures', () => {
         logo: 'https://example.com/app-logo.jpg',
         banner: 'https://example.com/app-banner.jpg',
         href: 'https://example.com/app',
+        profile,
       })
     })
 
@@ -517,6 +524,7 @@ describe('Atmosphere Explore response fixtures', () => {
           logo: undefined,
           banner: undefined,
           href: 'https://example.com',
+          profile: undefined,
         },
       ])
     })

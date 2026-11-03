@@ -38,6 +38,7 @@ export type AtmosphereAppCardData = {
   logo?: string
   banner?: string
   href: string
+  profile?: app.bsky.actor.defs.ProfileViewDetailed
 }
 
 export type AtmosphereAnnouncementBannerData = {
@@ -191,6 +192,7 @@ export function getAtmosphereApps(
           logo: app.logo,
           banner: app.banner,
           href: app.url,
+          profile: app.profile,
         },
       ]
     }),

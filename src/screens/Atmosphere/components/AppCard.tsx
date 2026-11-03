@@ -3,14 +3,20 @@ import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 
 import {toNiceDomain} from '#/lib/strings/url-helpers'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {type AtmosphereAppCardData} from '#/screens/Atmosphere/data/exploreData'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
+import {
+  KnownFollowers,
+  shouldShowKnownFollowers,
+} from '#/components/KnownFollowers'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function AppCard({app}: {app: AtmosphereAppCardData}) {
   const {t: l} = useLingui()
   const t = useTheme()
+  const moderationOpts = useModerationOpts()
 
   return (
     <View
@@ -68,6 +74,26 @@ export function AppCard({app}: {app: AtmosphereAppCardData}) {
           </View>
         </View>
       </Link>
+      {/* KnownFollowers links internally, so it cannot nest inside the app link. */}
+      {app.profile &&
+      moderationOpts &&
+      shouldShowKnownFollowers(app.profile.viewer?.knownFollowers) ? (
+        <View
+          style={[
+            a.pb_md,
+            {
+              paddingLeft:
+                tokens.space.md + (app.logo ? 44 + tokens.space.md : 0),
+              paddingRight: 96,
+            },
+          ]}>
+          <KnownFollowers
+            profile={app.profile}
+            moderationOpts={moderationOpts}
+            minimal
+          />
+        </View>
+      ) : undefined}
     </View>
   )
 }
