@@ -1,4 +1,5 @@
 import {View} from 'react-native'
+import {Image} from 'expo-image'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -40,15 +41,13 @@ export function AtmosphereNux() {
           a.overflow_hidden,
           {height: 180},
         ]}>
-        {/*
+        <GradientFill gradient={tokens.gradients.sky} />
         <Image
-          source={discoverAtmosphereNux}
+          source={require('../../../../assets/images/atmosphere-tab-banner.webp')}
           contentFit="cover"
           style={[a.absolute, a.inset_0]}
           accessible={false}
         />
-        */}
-        <GradientFill gradient={tokens.gradients.sky} />
         <View style={[a.absolute, a.inset_0, a.justify_end, a.p_lg, a.gap_xs]}>
           <Text
             emoji
