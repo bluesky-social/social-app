@@ -1,31 +1,50 @@
-import {View} from 'react-native'
+import {useState} from 'react'
+import {RefreshControl, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {
   getAtmosphereAnnouncementBanner,
-  getAtmosphereApps,
   getAtmosphereArticles,
   getAtmosphereLivestreams,
   getAtmospherePhotos,
   getAtmospherePublications,
 } from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {AnnouncementBanner} from './components/AnnouncementBanner'
 import {AtmosphereNux} from './components/AtmosphereNux'
 import {ExploreGalleryBleed} from './components/ExploreGallery'
-import {FeaturedApps} from './components/FeaturedApps'
 import {FeaturedArticles} from './components/FeaturedArticles'
 import {FeaturedLivestreams} from './components/FeaturedLivestreams'
 import {FeaturedPhotos} from './components/FeaturedPhotos'
 import {FeaturedPublications} from './components/FeaturedPublications'
 
 export function AtmosphereExploreTab() {
+  const t = useTheme()
   const {t: l} = useLingui()
   const {data, isError, isPending, refetch} = useAtmosphereExploreQuery()
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
+  async function onRefresh() {
+    setIsRefreshing(true)
+    try {
+      await refetch()
+    } finally {
+      setIsRefreshing(false)
+    }
+  }
+
+  const refreshControl = (
+    <RefreshControl
+      refreshing={isRefreshing}
+      onRefresh={onRefresh}
+      tintColor={t.atoms.text.color}
+      titleColor={t.atoms.text.color}
+    />
+  )
 
   const errorMessage = (
     <ErrorMessage
@@ -38,6 +57,8 @@ export function AtmosphereExploreTab() {
     return (
       <Layout.Content
         testID="atmosphereExploreTab"
+        alwaysBounceVertical
+        refreshControl={refreshControl}
         contentContainerStyle={[a.pb_xl]}>
         {isPending ? (
           <View
@@ -61,6 +82,8 @@ export function AtmosphereExploreTab() {
   return (
     <Layout.Content
       testID="atmosphereExploreTab"
+      alwaysBounceVertical
+      refreshControl={refreshControl}
       contentContainerStyle={[a.pb_xl]}>
       <ExploreGalleryBleed>
         <View style={[a.gap_lg, a.px_lg, a.py_lg]}>
@@ -75,7 +98,6 @@ export function AtmosphereExploreTab() {
           />
           <FeaturedLivestreams livestreams={getAtmosphereLivestreams(data)} />
           <FeaturedPhotos photos={getAtmospherePhotos(data)} />
-          <FeaturedApps apps={getAtmosphereApps(data)} />
         </View>
       </ExploreGalleryBleed>
     </Layout.Content>

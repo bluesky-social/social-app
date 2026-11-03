@@ -9,6 +9,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {AddMembersFlow} from '#/components/dms/AddMembersFlow'
+import {getAddGroupMembersErrorMessage} from '#/components/dms/getAddGroupMembersErrorMessage'
 import {type ConvoWithDetails} from '#/components/dms/util'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon} from '#/components/icons/Chevron'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
@@ -60,7 +61,7 @@ export function AddMembersLink({
       },
       onError: e => {
         logger.error('Failed to add group chat members', {message: e})
-        Toast.show(l`Failed to add members`, {type: 'error'})
+        Toast.show(l(getAddGroupMembersErrorMessage(e)), {type: 'error'})
       },
     },
   )

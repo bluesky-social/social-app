@@ -239,7 +239,11 @@ function DialogInner({
         newUserBanner,
       })
       if (nextLinks && written) {
-        logProfileLinkChanges(ax, storedLinks ?? [], nextLinks)
+        logProfileLinkChanges(
+          ax,
+          storedLinks ?? [],
+          nextLinks.map((link, i) => ({...link, uri: written.refs[i].uri})),
+        )
         setOwnProfileLinksCache(profile.did, nextLinks, written.refs)
         await written.deleteRemoved()
       }

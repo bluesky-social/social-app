@@ -6,6 +6,8 @@ import * as bsky from '#/types/bsky'
 
 export type AtmosphereData =
   app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody
+export type AtmosphereAppsData =
+  app.bsky.unspecced.getAtmosphereApps.$OutputBody
 
 type AtmosphereProfileView = l.InferOutput<
   typeof app.bsky.actor.defs.profileViewBasic
@@ -34,10 +36,9 @@ export type AtmosphereAppCardData = {
   title: string
   description?: string
   logo?: string
-  backgroundImage?: string
-  overlayColor?: string
-  textColor?: string
+  banner?: string
   href: string
+  profile?: app.bsky.actor.defs.ProfileViewDetailed
 }
 
 export type AtmosphereAnnouncementBannerData = {
@@ -169,12 +170,19 @@ export function getAtmospherePublications(
   )
 }
 
+/**
+ * Returns the valid apps, optionally limited to a raw backend `category`.
+ * Omit `category` for all apps, including those with a missing or unknown
+ * category.
+ */
 export function getAtmosphereApps(
-  data: AtmosphereData,
+  data: AtmosphereAppsData,
+  category?: string,
 ): AtmosphereAppCardData[] {
   return dedupeById(
     data.apps.flatMap(app => {
       if (!app.id || !app.title || !app.url) return []
+      if (category !== undefined && app.category !== category) return []
 
       return [
         {
@@ -182,10 +190,9 @@ export function getAtmosphereApps(
           title: app.title,
           description: app.description || undefined,
           logo: app.logo,
-          backgroundImage: app.backgroundImage,
-          overlayColor: app.overlayColor,
-          textColor: app.textColor,
+          banner: app.banner,
           href: app.url,
+          profile: app.profile,
         },
       ]
     }),

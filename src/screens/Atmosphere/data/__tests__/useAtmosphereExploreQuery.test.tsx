@@ -1,6 +1,6 @@
 import {type PropsWithChildren} from 'react'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
-import {renderHook, waitFor} from '@testing-library/react-native'
+import {act, renderHook, waitFor} from '@testing-library/react-native'
 
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useAppviewClient} from '#/state/session'
@@ -29,10 +29,12 @@ function setLanguages(contentLanguages: string[]) {
     .mockReturnValue({contentLanguages} as ReturnType<typeof useLanguagePrefs>)
 }
 
-function setup(did: string | undefined = 'did:plc:viewer') {
-  const queryClient = new QueryClient({
+function setup(
+  did: string | undefined = 'did:plc:viewer',
+  queryClient = new QueryClient({
     defaultOptions: {queries: {gcTime: Infinity, retry: false}},
-  })
+  }),
+) {
   const client = {did, call: jest.fn()}
   jest.mocked(useAppviewClient).mockReturnValue(client as never)
   setLanguages(['en'])
@@ -137,20 +139,6 @@ describe('useAtmosphereExploreQuery', () => {
     expect(result.current.data?.articles.recIdStr).toBe('18446744073709551615')
   })
 
-  it('reuses cached data before the stale time elapses', async () => {
-    const {client, queryClient, wrapper} = setup()
-    client.call.mockResolvedValue(data)
-
-    const first = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
-    await waitFor(() => expect(first.result.current.isSuccess).toBe(true))
-    first.unmount()
-
-    const second = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
-    expect(second.result.current.data).toBe(data)
-    expect(client.call).toHaveBeenCalledTimes(1)
-    expect(queryClient.getQueryCache().getAll()).toHaveLength(1)
-  })
-
   it.each(['did:plc:two', undefined])(
     'isolates the cache for viewer %s',
     async did => {
@@ -217,5 +205,85 @@ describe('useAtmosphereExploreQuery', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data).toBe(data)
     expect(client.call).toHaveBeenCalledTimes(3)
+  })
+
+  describe('cache and refresh', () => {
+    const refreshed = {
+      ...data,
+      apps: [{id: 'a', title: 'A', url: 'https://a.test'}],
+    }
+
+    function setupDefaults() {
+      return setup('did:plc:viewer', new QueryClient())
+    }
+
+    /*
+     * Notifications and the failed-refetch retry delay both run on timers, so
+     * advance past them instead of waiting in real time.
+     */
+    async function refetchAndFlush(refetch: () => Promise<unknown>) {
+      await act(async () => {
+        const refetching = refetch()
+        await jest.advanceTimersByTimeAsync(5000)
+        await refetching
+      })
+    }
+
+    beforeEach(() => {
+      jest.useFakeTimers()
+    })
+
+    afterEach(() => {
+      jest.useRealTimers()
+    })
+
+    it('coalesces concurrent consumers into one request', async () => {
+      const {client, wrapper} = setupDefaults()
+      client.call.mockResolvedValue(data)
+
+      const {result} = renderHook(
+        () => [useAtmosphereExploreQuery(), useAtmosphereExploreQuery()],
+        {wrapper},
+      )
+      await waitFor(() => expect(result.current[0].isSuccess).toBe(true))
+
+      expect(client.call).toHaveBeenCalledTimes(1)
+      expect(result.current[1].data).toBe(data)
+    })
+
+    it('shows cached data and refetches on remount', async () => {
+      const {client, queryClient, wrapper} = setup()
+      client.call.mockResolvedValue(data)
+
+      const first = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
+      await waitFor(() => expect(first.result.current.isSuccess).toBe(true))
+      first.unmount()
+
+      const second = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
+      expect(second.result.current.data).toBe(data)
+      await waitFor(() => expect(client.call).toHaveBeenCalledTimes(2))
+      expect(queryClient.getQueryCache().getAll()).toHaveLength(1)
+    })
+
+    it('updates every consumer on an explicit refetch and keeps data when it fails', async () => {
+      const {client, wrapper} = setupDefaults()
+      client.call.mockResolvedValueOnce(data).mockResolvedValueOnce(refreshed)
+
+      const {result} = renderHook(
+        () => [useAtmosphereExploreQuery(), useAtmosphereExploreQuery()],
+        {wrapper},
+      )
+      await waitFor(() => expect(result.current[0].isSuccess).toBe(true))
+
+      await refetchAndFlush(result.current[0].refetch)
+      expect(result.current[0].data).toEqual(refreshed)
+      expect(result.current[1].data).toEqual(refreshed)
+
+      client.call.mockRejectedValue(new Error('offline'))
+      await refetchAndFlush(result.current[1].refetch)
+      expect(result.current[0].isError).toBe(true)
+      expect(result.current[0].data).toEqual(refreshed)
+      expect(result.current[1].data).toEqual(refreshed)
+    })
   })
 })

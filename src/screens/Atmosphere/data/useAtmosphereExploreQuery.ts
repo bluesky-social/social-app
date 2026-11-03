@@ -1,7 +1,6 @@
 import {useQuery} from '@tanstack/react-query'
 
 import {useLanguagePrefs} from '#/state/preferences/languages'
-import {STALE} from '#/state/queries'
 import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
@@ -18,7 +17,6 @@ export function useAtmosphereExploreQuery() {
       did: client.did,
       acceptLanguage,
     }),
-    staleTime: STALE.MINUTES.FIVE,
     retry: 1,
     queryFn: ({signal}) =>
       client.call(

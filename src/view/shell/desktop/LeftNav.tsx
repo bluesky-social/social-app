@@ -45,6 +45,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {
   atoms as a,
+  native,
   tokens,
   useBreakpoints,
   useLayoutBreakpoints,
@@ -838,9 +839,9 @@ export function DesktopLeftNav({
       style={[
         a.fixed,
         a.top_0,
-        a.p_lg,
+        web(a.p_lg),
         styles.leftNav,
-        IS_NATIVE && {top: insets.top, bottom: insets.bottom},
+        native(a.bottom_0),
         !hasSession && !leftNavMinimal && {width: LEFT_NAV_PWI_WIDTH},
         leftNavMinimal && [
           {width: LEFT_NAV_MINIMAL_WIDTH},
@@ -867,7 +868,18 @@ export function DesktopLeftNav({
         },
       ]}>
       {IS_NATIVE ? (
-        <ScrollView style={[a.flex_1, a.w_full]}>{content}</ScrollView>
+        <ScrollView
+          style={[a.flex_1, a.w_full]}
+          contentContainerStyle={[
+            a.p_lg,
+            {
+              paddingTop: insets.top + tokens.space.lg,
+              paddingBottom: insets.bottom + tokens.space.lg,
+            },
+          ]}
+          showsVerticalScrollIndicator={false}>
+          {content}
+        </ScrollView>
       ) : (
         content
       )}
