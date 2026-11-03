@@ -36,7 +36,12 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
-import {fitAvatarCount, PREVIEW_AVATAR_SIZE, TOGGLE_PADDING} from './avatarRow'
+import {
+  CHEVRON_SIZE,
+  fitAvatarCount,
+  PREVIEW_AVATAR_SIZE,
+  TOGGLE_PADDING,
+} from './avatarRow'
 import {Expandable} from './Expandable'
 import {useSuppressHover} from './hover'
 import {ActorList, ShowMoreActorsButton} from './profile'
@@ -539,8 +544,10 @@ function ExpandChevron({expanded}: {expanded: boolean}) {
   const t = useTheme()
   return (
     <View style={expanded && {transform: [{rotate: '180deg'}]}}>
-      {/* `xs`, which `fitAvatarCount` allows for as `CHEVRON_SIZE` */}
-      <TinyChevronIcon size="xs" style={[t.atoms.text_contrast_high]} />
+      <TinyChevronIcon
+        width={CHEVRON_SIZE}
+        style={[t.atoms.text_contrast_high]}
+      />
     </View>
   )
 }
