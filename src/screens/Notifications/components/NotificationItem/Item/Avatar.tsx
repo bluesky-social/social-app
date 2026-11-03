@@ -154,9 +154,9 @@ export function Avatar({
 }
 
 /**
- * The size of an `Icon`, the `2xl` icon size its glyphs are drawn at.
+ * The size of an `Icon`, the `xl` icon size its glyphs are drawn at.
  */
-const ICON_SIZE = sizes['2xl']
+const ICON_SIZE = sizes.xl
 
 /**
  * Where an `Icon` sits: in the avatar's column, at its end edge, and pulled
@@ -187,17 +187,17 @@ function GlyphIcon({glyph}: {glyph: Glyph}) {
 
   switch (glyph) {
     case 'like':
-      return <HeartIcon size="2xl" fill={t.palette.pink} />
+      return <HeartIcon size="xl" fill={t.palette.pink} />
     case 'repost':
-      return <RepostIcon size="2xl" fill={t.palette.positive_500} />
+      return <RepostIcon size="xl" fill={t.palette.positive_500} />
     case 'likeViaRepost':
-      return <LikeRepostIcon size="2xl" fill={t.palette.pink} />
+      return <LikeRepostIcon size="xl" fill={t.palette.pink} />
     case 'repostViaRepost':
-      return <RepostRepostIcon size="2xl" fill={t.palette.positive_500} />
+      return <RepostRepostIcon size="xl" fill={t.palette.positive_500} />
     case 'follow':
-      return <PersonPlusIcon size="2xl" fill={t.palette.primary_500} />
+      return <PersonPlusIcon size="xl" fill={t.palette.primary_500} />
     case 'activity':
-      return <BellRingingIcon size="2xl" fill={ACTIVITY_ORANGE} />
+      return <BellRingingIcon size="xl" fill={ACTIVITY_ORANGE} />
   }
 }
 
