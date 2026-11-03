@@ -45,6 +45,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {
   atoms as a,
+  native,
   tokens,
   useBreakpoints,
   useLayoutBreakpoints,
@@ -840,7 +841,7 @@ export function DesktopLeftNav({
         a.top_0,
         web(a.p_lg),
         styles.leftNav,
-        IS_NATIVE && {top: insets.top, bottom: insets.bottom},
+        native(a.bottom_0),
         !hasSession && !leftNavMinimal && {width: LEFT_NAV_PWI_WIDTH},
         leftNavMinimal && [
           {width: LEFT_NAV_MINIMAL_WIDTH},
@@ -867,14 +868,15 @@ export function DesktopLeftNav({
         },
       ]}>
       {IS_NATIVE ? (
-        /*
-         * Padding lives on the scroll content rather than the container, so
-         * on short screens the items scroll to the edge instead of being
-         * clipped at the padding.
-         */
         <ScrollView
           style={[a.flex_1, a.w_full]}
-          contentContainerStyle={a.p_lg}
+          contentContainerStyle={[
+            a.p_lg,
+            {
+              paddingTop: insets.top + tokens.space.lg,
+              paddingBottom: insets.bottom + tokens.space.lg,
+            },
+          ]}
           showsVerticalScrollIndicator={false}>
           {content}
         </ScrollView>
