@@ -23,21 +23,10 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context'
+import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {scheduleOnRN} from 'react-native-worklets'
 import {Image} from 'expo-image'
-import {
-  ScrollEdgeEffect,
-  ScrollEdgeEffectProvider,
-  useScrollEdgeEffectRef,
-} from '@bsky.app/expo-scroll-edge-effect'
 
-import {mergeRefs} from '#/lib/merge-refs'
-import {atoms as a} from '#/alf'
-import {IS_LIQUID_GLASS} from '#/env'
 import {
   type Dimensions as ImageDimensions,
   type ImageSource,
@@ -67,15 +56,7 @@ type Props = {
   transforms: Readonly<SharedValue<LightboxTransforms>>
 }
 
-function ImageItem(props: Props) {
-  return (
-    <ScrollEdgeEffectProvider>
-      <ImageItemContent {...props} />
-    </ScrollEdgeEffectProvider>
-  )
-}
-
-const ImageItemContent = ({
+const ImageItem = ({
   imageSrc,
   onTap,
   onZoom,
@@ -88,8 +69,6 @@ const ImageItemContent = ({
   transforms,
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
-  const scrollEdgeRef = useScrollEdgeEffectRef()
-  const {top: topInset} = useSafeAreaInsets()
   const [scaled, setScaled] = useState(false)
   const isDragging = useSharedValue(false)
   const screenSizeDelayedForJSThreadOnly = useSafeAreaFrame()
@@ -240,61 +219,47 @@ const ImageItemContent = ({
   }))
 
   return (
-    <>
-      <GestureDetector gesture={composedGesture}>
-        <Animated.ScrollView
-          ref={mergeRefs([scrollViewRef, scrollEdgeRef])}
-          pinchGestureEnabled
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          maximumZoomScale={maxZoomScale}
-          onScroll={scrollHandler}
-          style={containerStyle}
-          animatedProps={scrollViewProps}
-          centerContent>
-          {showLoader && (
-            <ActivityIndicator
-              size="small"
-              color="#FFF"
-              style={styles.loading}
+    <GestureDetector gesture={composedGesture}>
+      <Animated.ScrollView
+        ref={scrollViewRef}
+        pinchGestureEnabled
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        maximumZoomScale={maxZoomScale}
+        onScroll={scrollHandler}
+        style={containerStyle}
+        animatedProps={scrollViewProps}
+        centerContent>
+        {showLoader && (
+          <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
+        )}
+        <Animated.View style={[imageCropStyle, imageLayoutStyle]}>
+          <Animated.View style={[imageStyle, imageLayoutStyle]}>
+            <Image
+              contentFit="contain"
+              source={{uri: imageSrc.uri}}
+              placeholderContentFit="contain"
+              placeholder={{uri: imageSrc.thumbUri}}
+              style={{flex: 1, borderRadius}}
+              accessibilityLabel={imageSrc.alt}
+              accessibilityHint=""
+              enableLiveTextInteraction={showControls && !scaled}
+              accessibilityIgnoresInvertColors
+              onLoad={
+                hasLoaded
+                  ? undefined
+                  : e => {
+                      setHasLoaded(true)
+                      onLoad({width: e.source.width, height: e.source.height})
+                    }
+              }
+              cachePolicy="memory"
+              useAppleWebpCodec
             />
-          )}
-          <Animated.View style={[imageCropStyle, imageLayoutStyle]}>
-            <Animated.View style={[imageStyle, imageLayoutStyle]}>
-              <Image
-                contentFit="contain"
-                source={{uri: imageSrc.uri}}
-                placeholderContentFit="contain"
-                placeholder={{uri: imageSrc.thumbUri}}
-                style={{flex: 1, borderRadius}}
-                accessibilityLabel={imageSrc.alt}
-                accessibilityHint=""
-                enableLiveTextInteraction={showControls && !scaled}
-                accessibilityIgnoresInvertColors
-                onLoad={
-                  hasLoaded
-                    ? undefined
-                    : e => {
-                        setHasLoaded(true)
-                        onLoad({width: e.source.width, height: e.source.height})
-                      }
-                }
-                cachePolicy="memory"
-                useAppleWebpCodec
-              />
-            </Animated.View>
           </Animated.View>
-        </Animated.ScrollView>
-      </GestureDetector>
-      {IS_LIQUID_GLASS && (
-        <ScrollEdgeEffect
-          edge="top"
-          effect={showControls ? 'soft' : 'hidden'}
-          pointerEvents="none"
-          style={[a.absolute, a.inset_0, {height: topInset}]}
-        />
-      )}
-    </>
+        </Animated.View>
+      </Animated.ScrollView>
+    </GestureDetector>
   )
 }
 

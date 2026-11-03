@@ -43,7 +43,7 @@ import {setSystemUITheme} from '#/alf/util/systemUI'
 import {measureThumb} from '#/components/Lightbox/measureThumb'
 import {type Lightbox} from '#/components/Lightbox/state'
 import {useAnalytics} from '#/analytics'
-import {IS_IOS, IS_IPAD, IS_LIQUID_GLASS} from '#/env'
+import {IS_IOS, IS_IPAD} from '#/env'
 import {Footer} from '../chrome/Footer'
 import {Header} from '../chrome/Header'
 import {
@@ -465,8 +465,7 @@ function ImageView({
       <SystemBars
         style={{statusBar: 'light', navigationBar: 'light'}}
         hidden={{
-          // the edge effect keeps the status bar legible over a zoomed image
-          statusBar: (isScaled && !IS_LIQUID_GLASS) || !showControls,
+          statusBar: isScaled || !showControls,
           navigationBar: false,
         }}
       />
