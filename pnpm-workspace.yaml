@@ -17,6 +17,7 @@ overrides:
   '@react-native/babel-preset': '0.88.0'
   '@react-native/normalize-colors': '0.88.0'
   '@expo/image-utils': '0.12.5'
+  'expo-modules-core': '58.0.29'
   '@types/estree': '1.0.6'
   'react-native-reanimated': '4.7.1'
   'react-native-worklets': '0.13.0'
@@ -61,5 +62,3 @@ minimumReleaseAgeExclude:
   - '@bsky.app/*'
   - '@bsky/*'
   - react-native-nano-icons@1.0.1
-  - expo-modules-core@58.0.30
-  - expo-modules-jsi@58.0.22
