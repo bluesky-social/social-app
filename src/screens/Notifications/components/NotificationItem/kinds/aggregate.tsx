@@ -523,9 +523,10 @@ export function GeneratorLikeNotification({
 }
 
 /**
- * New posts from accounts the viewer has subscribed to. A single post opens
- * that post, otherwise the row opens the activity list with all of them.
- * Posts from several authors expand to list the authors.
+ * New posts from accounts the viewer has subscribed to. A single post has its
+ * author's avatar and opens that post. Several have an icon and the authors'
+ * avatars, and the row and its "View all" link open the activity list with
+ * all of them. Posts from several authors expand to list the authors.
  */
 export function SubscribedPostNotification({
   notification,
@@ -540,17 +541,17 @@ export function SubscribedPostNotification({
   const replyParent = count === 1 ? parent : undefined
   const {actor, name, second, secondName, others} =
     Item.useGroupNames(notification)
+  const isSingle = items.length === 1
+  const href = isSingle
+    ? makePostLink(post)
+    : makeActivityListLink(items.map(item => item.post.uri))
   const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
   const mediaBlurred = Item.usePostMediaBlurred(post)
 
   return (
     <Item.GroupRoot
       notification={notification}
-      href={
-        items.length === 1
-          ? makePostLink(post)
-          : makeActivityListLink(items.map(item => item.post.uri))
-      }
+      href={href}
       label={
         second
           ? l`New posts from ${name} and ${secondName}`
@@ -564,9 +565,13 @@ export function SubscribedPostNotification({
               : l`New ${plural(count, {one: 'post', other: 'posts'})} from ${name}`
       }
       testID={`notification-${notification.type}-${notification.id}`}>
-      <Item.Avatar profile={actor} icon={ActivityIcon} tone="activity" />
+      {isSingle ? (
+        <Item.Avatar profile={actor} icon={ActivityIcon} tone="activity" />
+      ) : (
+        <Item.Icon glyph="activity" />
+      )}
       <Item.Content>
-        <Item.AvatarRow />
+        {!isSingle && <Item.AvatarRow />}
         <Item.PrimaryText>
           {second ? (
             <Trans>
@@ -594,6 +599,16 @@ export function SubscribedPostNotification({
         {replyParent && <Item.ReplyContext parent={replyParent} />}
         <Item.PostPreview post={post} />
         <Item.Timestamp date={notification.indexedAt} />
+        {!isSingle && (
+          <Item.ViewAllLink
+            href={href}
+            label={
+              others > 0
+                ? l`View all new posts`
+                : l`View all new posts from ${name}`
+            }
+          />
+        )}
       </Item.Content>
       {hasThumbnails && (
         <Item.Trailing>

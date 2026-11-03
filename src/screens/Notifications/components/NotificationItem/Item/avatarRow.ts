@@ -90,26 +90,3 @@ export function fitAvatarCount({
   }
   return 0
 }
-
-/**
- * Which actors an avatar row lists, and how many people they stand for. The
- * primary actor comes first. `showsPrimary` includes them, for rows where
- * they don't have an avatar in the left column.
- */
-export function getAvatarRowActors<T>({
-  actors,
-  count,
-  showsPrimary,
-}: {
-  actors: T[]
-  /**
-   * How many people the group has, which may be more than `actors`.
-   */
-  count: number
-  showsPrimary: boolean
-}) {
-  return {
-    others: showsPrimary ? actors : actors.slice(1),
-    othersTotal: showsPrimary ? count : count - 1,
-  }
-}

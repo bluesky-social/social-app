@@ -4,11 +4,11 @@ import {moderateProfile} from '@bsky/sdk/moderation'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
-import {StarterPackMultiPathLarge as StarterPackIcon} from '#/components/icons/brands/StarterPack'
+import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
 import {LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon} from '#/components/icons/LikeRepost'
-import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
+import {PersonPlus_Filled_Corner2_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {
   Repost_Stroke2_Corner3_Rounded as RepostIcon,
   RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon,
@@ -23,7 +23,7 @@ import {useItemBackgroundColor} from './Root'
 export type BadgeTone = 'follow' | 'conversation' | 'activity' | 'neutral'
 
 /**
- * The v1-style icon that a reaction row has in its left column instead of an
+ * The v1-style icon that a groupable row has in its left column instead of an
  * avatar.
  */
 export type Glyph =
@@ -32,11 +32,11 @@ export type Glyph =
   | 'likeViaRepost'
   | 'repostViaRepost'
   | 'follow'
-  | 'starterPack'
+  | 'activity'
 
 /**
- * Activity (subscribed post) badges use an orange that isn't in the ALF
- * palette yet.
+ * Activity (subscribed post) badges and icons use an orange that isn't in the
+ * ALF palette yet.
  */
 const ACTIVITY_ORANGE = '#F26022'
 
@@ -79,7 +79,8 @@ const BADGE_POSITION = {
 /**
  * The primary actor's avatar, with an icon badge overlapping its bottom-end
  * corner that says what kind of notification this is. Omit `icon` for an
- * unbadged avatar. Likes, reposts and follows have an `Icon` instead.
+ * unbadged avatar. Rows that can be about a group of people, e.g. likes, have
+ * an `Icon` instead.
  */
 export function Avatar({
   profile,
@@ -152,9 +153,10 @@ export function Avatar({
 }
 
 /**
- * The left column of a like, repost, follow and the like, as in v1: an icon
- * saying what happened, where the avatar would be, right-aligned to its end
- * edge. The people are in the row's `Item.AvatarRow` instead.
+ * The left column of a row that can be about a group of people, e.g. a like,
+ * as in v1: an icon saying what happened, where the avatar would be,
+ * right-aligned to its end edge. The people are in the row's `Item.AvatarRow`
+ * instead.
  */
 export function Icon({glyph}: {glyph: Glyph}) {
   return (
@@ -178,8 +180,8 @@ function GlyphIcon({glyph}: {glyph: Glyph}) {
       return <RepostRepostIcon size="2xl" fill={t.palette.positive_500} />
     case 'follow':
       return <PersonPlusIcon size="2xl" fill={t.palette.primary_500} />
-    case 'starterPack':
-      return <StarterPackIcon width={34} gradient="sky" />
+    case 'activity':
+      return <BellRingingIcon size="2xl" fill={ACTIVITY_ORANGE} />
   }
 }
 

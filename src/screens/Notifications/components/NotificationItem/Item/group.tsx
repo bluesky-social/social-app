@@ -39,12 +39,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
-import {
-  fitAvatarCount,
-  getAvatarRowActors,
-  PREVIEW_AVATAR_SIZE,
-  TOGGLE_PADDING,
-} from './avatarRow'
+import {fitAvatarCount, PREVIEW_AVATAR_SIZE, TOGGLE_PADDING} from './avatarRow'
 import {Expandable} from './Expandable'
 import {ActorList, ShowMoreActorsButton} from './profile'
 import {Root, useRowBackgroundColor} from './Root'
@@ -143,11 +138,6 @@ type GroupContextValue = NotificationGroup & {
    * How the group expands, if it does.
    */
   expansion?: GroupExpansion
-  /**
-   * Whether `AvatarRow` includes the primary actor. They do when they have no
-   * avatar of their own, as a like or repost has an icon in the left column.
-   */
-  showsPrimary: boolean
 }
 
 /**
@@ -208,15 +198,10 @@ export function GroupRoot({
   children: React.ReactNode
 }) {
   const group = getNotificationGroup(notification)
-  /*
-   * A post alert has the author's `Item.Avatar`, so there's no one to add.
-   * Every other kind has an `Item.Icon` in the left column.
-   */
-  const showsPrimary = notification.type !== 'subscribedPost'
 
   if (group.count < 2 || isNamedPair(group)) {
     return (
-      <GroupContext.Provider value={{...group, showsPrimary}}>
+      <GroupContext.Provider value={group}>
         <Root
           href={href}
           isRead={notification.isRead}
@@ -235,7 +220,6 @@ export function GroupRoot({
     <ExpandableGroupRoot
       notification={notification}
       group={group}
-      showsPrimary={showsPrimary}
       href={href}
       label={label}
       toggleOnPress={toggleOnPress}
@@ -251,7 +235,6 @@ export function GroupRoot({
 function ExpandableGroupRoot({
   notification,
   group,
-  showsPrimary,
   href,
   label,
   toggleOnPress,
@@ -263,7 +246,6 @@ function ExpandableGroupRoot({
 }: {
   notification: GroupNotificationView
   group: NotificationGroup
-  showsPrimary: boolean
   href: string
   label: string
   toggleOnPress: boolean
@@ -306,11 +288,7 @@ function ExpandableGroupRoot({
 
   return (
     <GroupContext.Provider
-      value={{
-        ...group,
-        showsPrimary,
-        expansion: {isExpanded, toggleOnPress, onToggle},
-      }}>
+      value={{...group, expansion: {isExpanded, toggleOnPress, onToggle}}}>
       {/* Carries the row's unread tint down behind the list */}
       <View style={{backgroundColor}}>
         <Root
@@ -400,12 +378,10 @@ function GroupActorList({
 
 /**
  * Small avatars of the people in a row, above the primary sentence: "alice"
- * and the "24 others" in "**alice** and **24 others** liked your post". A
- * like, repost or follow has an `Item.Icon` in the left column rather than an
- * avatar, so the row includes the primary actor, even if they are the only
- * one. Rows that aren't in a `GroupRoot` pass their `actor` for that. A post
- * alert leaves the author out, as they already have `Item.Avatar`, and so
- * renders nothing when it's about one person.
+ * and the "24 others" in "**alice** and **24 others** liked your post". It
+ * goes with an `Item.Icon` in the left column rather than an avatar, so it
+ * includes the primary actor, even if they are the only one. Rows that aren't
+ * in a `GroupRoot` pass their `actor` for that.
  *
  * Shows as many avatars as fit the row's width, each linking to its profile.
  * Then, if the group expands, a "+N" count of everyone else and a chevron
@@ -431,28 +407,22 @@ export function AvatarRow({actor}: {actor?: ProfileView}) {
     if (rect) setWidth(rect.width)
   }, [])
 
-  const showsPrimary = group ? group.showsPrimary : true
   const actors = group ? group.actors : actor ? [actor] : []
   const total = group ? group.count : 1
-  if (actors.length === 0 || (!showsPrimary && total < 2)) return null
+  if (actors.length === 0) return null
 
-  const {others, othersTotal} = getAvatarRowActors({
-    actors,
-    count: total,
-    showsPrimary,
-  })
   const count =
     width === undefined
       ? 0
       : fitAvatarCount({
           width,
-          resolved: others.length,
-          total: othersTotal,
+          resolved: actors.length,
+          total,
           hasToggle: !!group?.expansion,
           formatRemaining: remaining => formatRemaining(i18n, remaining),
         })
-  const shown = others.slice(0, count)
-  const remaining = Math.max(othersTotal - shown.length, 0)
+  const shown = actors.slice(0, count)
+  const remaining = Math.max(total - shown.length, 0)
 
   return (
     <View

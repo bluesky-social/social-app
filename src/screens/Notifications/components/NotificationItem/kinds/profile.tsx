@@ -9,7 +9,11 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
-import {NotificationVerifiedSmall_Filled_Corner0_Rounded as CheckIcon} from '#/components/icons/Notification'
+import {
+  NotificationFollowSmall_Filled_Corner0_Rounded as PersonPlusIcon,
+  NotificationStarterPackSmall_Filled_Corner0_Rounded as StarterPackIcon,
+  NotificationVerifiedSmall_Filled_Corner0_Rounded as CheckIcon,
+} from '#/components/icons/Notification'
 import type * as bsky from '#/types/bsky'
 import * as Item from '../Item'
 import {type NotificationOf} from '../types'
@@ -192,10 +196,10 @@ export function FollowBackNotification({
           : l`${name} followed you back`
       }
       onBeforePress={cacheProfile}
+      style={a.align_center}
       testID={`notification-followBack-${notification.id}`}>
-      <Item.Icon glyph="follow" />
+      <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
       <Item.Content style={a.gap_2xs}>
-        <Item.AvatarRow actor={actor} />
         <Item.PrimaryText>
           <Trans>
             <Item.Name profile={actor} /> followed you back! 🎉
@@ -299,9 +303,8 @@ export function StarterPackJoinedNotification({
       accessible={false}
       onBeforePress={cacheProfile}
       testID={`notification-starterPackJoined-${notification.id}`}>
-      <Item.Icon glyph="starterPack" />
+      <Item.Avatar profile={actor} icon={StarterPackIcon} tone="follow" />
       <Item.Content style={a.gap_sm}>
-        <Item.AvatarRow actor={actor} />
         <View style={[a.flex_row, a.align_start, a.gap_2xl]}>
           <Item.PrimaryText style={a.flex_1}>
             <Trans>
