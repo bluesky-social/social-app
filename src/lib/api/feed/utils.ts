@@ -18,16 +18,19 @@ export function createBskyTopicsHeader(userInterests?: string) {
   }
 }
 
-/**
- * Only disclose platform and IP-based service data to Bluesky-owned feeds,
- * never GPS data.
- * Read at request time so long-lived feed APIs pick up service updates.
- */
+/** Only disclose platform and service geolocation to Bluesky-owned feeds. */
 export function createBskyFeedHeaders(feedUri: string) {
-  const headers: Record<string, string> = {}
-  if (!isBlueskyOwnedFeed(feedUri)) return headers
+  return isBlueskyOwnedFeed(feedUri) ? createBskyAppviewHeaders() : {}
+}
 
-  headers['x-atproto-bsky-platform'] = Platform.OS
+/**
+ * Platform and IP-based service data for Bluesky appview requests, never GPS.
+ * Read at request time so callers pick up service updates.
+ */
+export function createBskyAppviewHeaders() {
+  const headers: Record<string, string> = {
+    'x-atproto-bsky-platform': Platform.OS,
+  }
 
   const geolocation = device.get(['geolocationServiceResponse'])
   if (geolocation?.countryCode) {
