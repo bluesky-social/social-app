@@ -238,6 +238,21 @@ export function Outer({children, style, onCloseAutoFocus}: OuterProps) {
   )
 }
 
+/**
+ * A selected item's colours. Dark themes go a shade lighter, so the pill and
+ * its label don't turn muddy. Their palettes run the other way, so that's a
+ * higher number.
+ */
+function useSelectedColors() {
+  const t = useTheme()
+  const dark = t.scheme === 'dark'
+  return {
+    pill: dark ? t.palette.primary_100 : t.palette.primary_50,
+    pillHovered: dark ? t.palette.primary_200 : t.palette.primary_100,
+    content: dark ? t.palette.primary_600 : t.palette.primary_500,
+  }
+}
+
 export function Item({
   children,
   label,
@@ -247,6 +262,7 @@ export function Item({
   ...rest
 }: ItemProps) {
   const t = useTheme()
+  const selectedColors = useSelectedColors()
   const {control} = useMenuContext()
   const {
     state: hovered,
@@ -309,11 +325,11 @@ export function Item({
            * positional corners. Hovered items keep them.
            */
           selected && a.rounded_sm,
-          selected && {backgroundColor: t.palette.primary_50},
+          selected && {backgroundColor: selectedColors.pill},
           highlighted && [
             web({outline: '0 !important'}),
             selected
-              ? {backgroundColor: t.palette.primary_100}
+              ? {backgroundColor: selectedColors.pillHovered}
               : t.name === 'light'
                 ? t.atoms.bg_contrast_50
                 : t.atoms.bg_contrast_100,
@@ -367,6 +383,7 @@ function arrangeItemContent(children: React.ReactNode) {
 
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
+  const selectedColors = useSelectedColors()
   const {disabled, destructive, selected} = useMenuItemContext()
   return (
     <Text
@@ -377,7 +394,7 @@ export function ItemText({children, style}: ItemTextProps) {
         a.leading_snug,
         t.atoms.text,
         style,
-        selected && {color: t.palette.primary_500},
+        selected && {color: selectedColors.content},
         destructive && {color: t.palette.negative_500},
         disabled && t.atoms.text_contrast_low,
       ]}>
@@ -391,6 +408,7 @@ export function ItemText({children, style}: ItemTextProps) {
  */
 export function ItemIcon({icon: Comp, fill}: ItemIconProps) {
   const t = useTheme()
+  const selectedColors = useSelectedColors()
   const {disabled, destructive, selected} = useMenuItemContext()
   return (
     <Comp
@@ -404,7 +422,7 @@ export function ItemIcon({icon: Comp, fill}: ItemIconProps) {
             : destructive
               ? t.palette.negative_500
               : selected
-                ? t.palette.primary_500
+                ? selectedColors.content
                 : t.atoms.text.color
       }
     />
@@ -417,6 +435,7 @@ export function ItemIcon({icon: Comp, fill}: ItemIconProps) {
  */
 export function ItemRadio({selected}: {selected: boolean}) {
   const t = useTheme()
+  const selectedColors = useSelectedColors()
   const {disabled} = useMenuItemContext()
   return (
     <View style={{height: 16, width: 16}}>
@@ -424,7 +443,7 @@ export function ItemRadio({selected}: {selected: boolean}) {
         <Check
           size="sm"
           fill={
-            disabled ? t.atoms.text_contrast_low.color : t.palette.primary_500
+            disabled ? t.atoms.text_contrast_low.color : selectedColors.content
           }
         />
       )}
