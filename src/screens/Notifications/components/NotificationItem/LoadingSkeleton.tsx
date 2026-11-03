@@ -118,9 +118,8 @@ function TodayHeaderSkeleton() {
   return (
     <View
       style={[
-        a.pr_lg,
         a.py_sm,
-        {paddingLeft: Item.ROW_PADDING_START},
+        {paddingHorizontal: Item.ROW_GUTTER},
         SHOW_ROW_BORDERS && [a.border_b, t.atoms.border_contrast_low],
       ]}>
       <Skele.Text style={[a.text_md, a.font_bold, {width: 48}]} />
@@ -266,7 +265,7 @@ function FollowersSkeleton() {
   return (
     <>
       {/* Matches `FollowedYouHeader` */}
-      <View style={[a.pr_lg, a.py_md, {paddingLeft: Item.ROW_PADDING_START}]}>
+      <View style={[a.py_md, {paddingHorizontal: Item.ROW_GUTTER}]}>
         <Skele.Text style={[a.text_md, {width: 96}]} />
       </View>
       {Array.from({length: FOLLOWER_ROW_COUNT}, (_, index) => (
@@ -313,9 +312,8 @@ function Row({
       style={[
         a.flex_row,
         a.align_start,
-        a.pr_lg,
         a.py_md,
-        {gap: Item.ROW_GAP, paddingLeft: Item.ROW_PADDING_START},
+        {gap: Item.ROW_GAP, paddingHorizontal: Item.ROW_GUTTER},
         style,
       ]}>
       {children}

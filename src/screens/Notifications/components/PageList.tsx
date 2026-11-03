@@ -35,7 +35,7 @@ import {
 } from '#/screens/Notifications/components/NotificationItem'
 import {
   getRowBorderColor,
-  ROW_PADDING_START,
+  ROW_GUTTER,
   useRowBackgroundColor,
 } from '#/screens/Notifications/components/NotificationItem/Item/Root'
 import {usePager} from '#/screens/Notifications/components/PagerView'
@@ -560,9 +560,8 @@ function SectionHeader({
       )}
       <View
         style={[
-          a.pr_lg,
           section === 'today' ? a.py_sm : [a.border_t, a.pt_md, a.pb_sm],
-          {paddingLeft: ROW_PADDING_START},
+          {paddingHorizontal: ROW_GUTTER},
           // Rows are divided, so the header is too
           SHOW_ROW_BORDERS && a.border_b,
           // Per side, since the rows above and below can differ
