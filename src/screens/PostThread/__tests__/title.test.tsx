@@ -186,4 +186,9 @@ describe('PostThread document title', () => {
     renderThread()
     expect(mockSetOptions).not.toHaveBeenCalled()
   })
+
+  it('keeps the URL title until the anchor post loads', () => {
+    renderThread()
+    expect(mockSetOptions).not.toHaveBeenCalled()
+  })
 })
