@@ -9,6 +9,7 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
+import {Contacts_Filled_Corner2_Rounded as ContactsIcon} from '#/components/icons/Contacts'
 import {
   NotificationFollowSmall_Filled_Corner0_Rounded as PersonPlusIcon,
   NotificationStarterPackSmall_Filled_Corner0_Rounded as StarterPackIcon,
@@ -340,7 +341,8 @@ export function ContactMatchNotification({
       onBeforePress={cacheProfile}
       style={a.align_center}
       testID={`notification-contactMatch-${notification.id}`}>
-      <Item.Avatar profile={actor} />
+      {/* There's no small contacts icon yet, so this is the full-size one */}
+      <Item.Avatar profile={actor} icon={ContactsIcon} tone="follow" />
       <Item.Content>
         <Item.HeadlineWithButton
           button={
