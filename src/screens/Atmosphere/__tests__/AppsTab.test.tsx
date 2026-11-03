@@ -1,5 +1,6 @@
 import {type RefreshControlProps} from 'react-native'
-import {fireEvent, render, screen} from '@testing-library/react-native'
+import {createDeferrable} from '@atproto/common-web'
+import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
 import {AtmosphereAppsTab} from '#/screens/Atmosphere/AppsTab'
 import {type AtmosphereAppsData} from '#/screens/Atmosphere/data/exploreData'
@@ -113,6 +114,13 @@ jest.mock('#/screens/Notifications/components/TabPills', () => {
 
 const mockQuery = jest.mocked(useAtmosphereAppsQuery)
 const refetch = jest.fn()
+
+function getRefreshControlProps() {
+  const {refreshControl} = screen.getByTestId('atmosphereAppsTab').props as {
+    refreshControl: React.ReactElement<RefreshControlProps>
+  }
+  return refreshControl.props
+}
 
 function setQuery(result: Partial<ReturnType<typeof useAtmosphereAppsQuery>>) {
   mockQuery.mockReturnValue({
@@ -302,15 +310,23 @@ describe('AtmosphereAppsTab', () => {
     ['loading', {isPending: true}],
     ['error', {isError: true}],
     ['loaded', {data}],
-  ])('wires pull-to-refresh to the query while %s', (_name, result) => {
+  ])('shows the spinner only for a pull while %s', async (_name, result) => {
+    const refresh = createDeferrable()
+    refetch.mockReturnValueOnce(refresh.complete)
     setQuery({...result, isRefetching: true})
     render(<AtmosphereAppsTab />)
 
-    const {refreshControl} = screen.getByTestId('atmosphereAppsTab').props as {
-      refreshControl: React.ReactElement<RefreshControlProps>
-    }
-    expect(refreshControl.props.refreshing).toBe(true)
-    void refreshControl.props.onRefresh?.()
+    expect(getRefreshControlProps().refreshing).toBe(false)
+    act(() => {
+      void getRefreshControlProps().onRefresh?.()
+    })
     expect(refetch).toHaveBeenCalledTimes(1)
+    expect(getRefreshControlProps().refreshing).toBe(true)
+
+    await act(async () => {
+      refresh.resolve()
+      await refresh.complete
+    })
+    expect(getRefreshControlProps().refreshing).toBe(false)
   })
 })

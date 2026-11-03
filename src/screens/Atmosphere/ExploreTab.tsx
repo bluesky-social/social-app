@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import {RefreshControl, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
@@ -24,13 +25,22 @@ import {FeaturedPublications} from './components/FeaturedPublications'
 export function AtmosphereExploreTab() {
   const t = useTheme()
   const {t: l} = useLingui()
-  const {data, isError, isPending, isRefetching, refetch} =
-    useAtmosphereExploreQuery()
+  const {data, isError, isPending, refetch} = useAtmosphereExploreQuery()
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
+  async function onRefresh() {
+    setIsRefreshing(true)
+    try {
+      await refetch()
+    } finally {
+      setIsRefreshing(false)
+    }
+  }
 
   const refreshControl = (
     <RefreshControl
-      refreshing={isRefetching}
-      onRefresh={() => void refetch()}
+      refreshing={isRefreshing}
+      onRefresh={onRefresh}
       tintColor={t.atoms.text.color}
       titleColor={t.atoms.text.color}
     />

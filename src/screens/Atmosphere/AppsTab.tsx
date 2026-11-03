@@ -16,9 +16,9 @@ import {AppCard} from './components/AppCard'
 export function AtmosphereAppsTab() {
   const t = useTheme()
   const {t: l} = useLingui()
-  const {data, isError, isPending, isRefetching, refetch} =
-    useAtmosphereAppsQuery()
+  const {data, isError, isPending, refetch} = useAtmosphereAppsQuery()
   const [selectedKey, setSelectedKey] = useState('all')
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const dragProgress = useSharedValue(0)
 
   /** Keys other than `all` are the category values sent by the backend. */
@@ -55,10 +55,19 @@ export function AtmosphereAppsTab() {
     if (selectedIndex === -1) setSelectedKey('all')
   }, [selectedIndex, dragProgress])
 
+  async function onRefresh() {
+    setIsRefreshing(true)
+    try {
+      await refetch()
+    } finally {
+      setIsRefreshing(false)
+    }
+  }
+
   const refreshControl = (
     <RefreshControl
-      refreshing={isRefetching}
-      onRefresh={() => void refetch()}
+      refreshing={isRefreshing}
+      onRefresh={onRefresh}
       tintColor={t.atoms.text.color}
       titleColor={t.atoms.text.color}
     />

@@ -1,10 +1,5 @@
 import {type PropsWithChildren} from 'react'
-import {
-  focusManager,
-  onlineManager,
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {act, renderHook, waitFor} from '@testing-library/react-native'
 
 import {useAppviewClient} from '#/state/session'
@@ -22,7 +17,6 @@ const refreshed: app.bsky.unspecced.getAtmosphereApps.$OutputBody = {
   apps: [{id: 'b', title: 'B', url: 'https://b.test', category: 'dev'}],
 }
 
-/* Uses library defaults so the hook's own cache options are exercised. */
 function setup(did: string | undefined = 'did:plc:viewer') {
   const queryClient = new QueryClient()
   const client = {did, call: jest.fn()}
@@ -51,8 +45,6 @@ beforeEach(() => {
 
 afterEach(() => {
   jest.useRealTimers()
-  focusManager.setFocused(undefined)
-  onlineManager.setOnline(true)
 })
 
 describe('useAtmosphereAppsQuery', () => {
@@ -72,8 +64,8 @@ describe('useAtmosphereAppsQuery', () => {
     )
   })
 
-  it('reuses one request across consumers and a remount long after the stale and gc windows', async () => {
-    const {client, wrapper} = setup()
+  it('shares an in-flight request and refetches cached data on remount', async () => {
+    const {client, queryClient, wrapper} = setup()
     client.call.mockResolvedValue(data)
 
     const first = renderHook(
@@ -82,36 +74,13 @@ describe('useAtmosphereAppsQuery', () => {
     )
     await waitFor(() => expect(first.result.current[0].isSuccess).toBe(true))
     expect(first.result.current[1].data).toBe(data)
+    expect(client.call).toHaveBeenCalledTimes(1)
     first.unmount()
-
-    act(() => {
-      jest.advanceTimersByTime(24 * 60 * 60 * 1000)
-    })
 
     const second = renderHook(() => useAtmosphereAppsQuery(), {wrapper})
     expect(second.result.current.data).toBe(data)
-    expect(second.result.current.isFetching).toBe(false)
-    expect(client.call).toHaveBeenCalledTimes(1)
-  })
-
-  it('does not refetch on focus or reconnect', async () => {
-    const {client, wrapper} = setup()
-    client.call.mockResolvedValue(data)
-
-    const {result} = renderHook(() => useAtmosphereAppsQuery(), {wrapper})
-    await waitFor(() => expect(result.current.isSuccess).toBe(true))
-
-    await act(async () => {
-      await jest.advanceTimersByTimeAsync(60 * 60 * 1000)
-      focusManager.setFocused(false)
-      focusManager.setFocused(true)
-      onlineManager.setOnline(false)
-      onlineManager.setOnline(true)
-      await jest.advanceTimersByTimeAsync(0)
-    })
-
-    expect(result.current.isFetching).toBe(false)
-    expect(client.call).toHaveBeenCalledTimes(1)
+    await waitFor(() => expect(client.call).toHaveBeenCalledTimes(2))
+    expect(queryClient.getQueryCache().getAll()).toHaveLength(1)
   })
 
   it.each(['did:plc:two', undefined])(

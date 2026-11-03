@@ -1,5 +1,6 @@
 import {type RefreshControlProps} from 'react-native'
-import {fireEvent, render, screen} from '@testing-library/react-native'
+import {createDeferrable} from '@atproto/common-web'
+import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
 import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/exploreResponse'
 import {livestreamPreviewFixture} from '#/screens/Atmosphere/__tests__/fixtures/livestreamPreview'
@@ -97,6 +98,13 @@ jest.mock('#/screens/Atmosphere/components/FeaturedPhotos', () => ({
 
 const mockQuery = jest.mocked(useAtmosphereExploreQuery)
 const refetch = jest.fn()
+
+function getRefreshControlProps() {
+  const {refreshControl} = screen.getByTestId('atmosphereExploreTab').props as {
+    refreshControl: React.ReactElement<RefreshControlProps>
+  }
+  return refreshControl.props
+}
 
 function setQuery(
   result: Partial<ReturnType<typeof useAtmosphereExploreQuery>>,
@@ -276,14 +284,43 @@ describe('AtmosphereExploreTab', () => {
     ['loading', {isPending: true}],
     ['error', {isError: true}],
     ['loaded', {data}],
-  ])('wires pull-to-refresh to the query while %s', (_name, result) => {
+  ])('shows the spinner only for a pull while %s', async (_name, result) => {
+    const refresh = createDeferrable()
+    refetch.mockReturnValueOnce(refresh.complete)
     setQuery({...result, isRefetching: true})
     render(<AtmosphereExploreTab />)
 
-    const {refreshControl} = screen.getByTestId('atmosphereExploreTab')
-      .props as {refreshControl: React.ReactElement<RefreshControlProps>}
-    expect(refreshControl.props.refreshing).toBe(true)
-    void refreshControl.props.onRefresh?.()
+    expect(getRefreshControlProps().refreshing).toBe(false)
+    act(() => {
+      void getRefreshControlProps().onRefresh?.()
+    })
     expect(refetch).toHaveBeenCalledTimes(1)
+    expect(getRefreshControlProps().refreshing).toBe(true)
+
+    await act(async () => {
+      refresh.resolve()
+      await refresh.complete
+    })
+    expect(getRefreshControlProps().refreshing).toBe(false)
+  })
+
+  it('clears the pull spinner when refetch rejects', async () => {
+    const refresh = createDeferrable()
+    refetch.mockReturnValueOnce(refresh.complete)
+    setQuery({data})
+    render(<AtmosphereExploreTab />)
+
+    let completion: unknown
+    act(() => {
+      completion = getRefreshControlProps().onRefresh?.()
+    })
+    expect(getRefreshControlProps().refreshing).toBe(true)
+
+    await act(async () => {
+      refresh.reject(new Error('offline'))
+      await expect(completion).rejects.toThrow('offline')
+    })
+    expect(getRefreshControlProps().refreshing).toBe(false)
+    expect(screen.getByText('articles:Live article')).toBeTruthy()
   })
 })
