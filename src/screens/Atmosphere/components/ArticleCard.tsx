@@ -1,6 +1,6 @@
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
@@ -161,7 +161,7 @@ export function ArticleCard({
                         a.leading_tight,
                         t.atoms.text_contrast_medium,
                       ]}>
-                      by {sanitizeHandle(author.handle, '@')}
+                      <Trans>by {sanitizeHandle(author.handle, '@')}</Trans>
                     </Text>
                   )}
                 </Text>
