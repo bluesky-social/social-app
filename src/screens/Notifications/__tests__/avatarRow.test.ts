@@ -12,16 +12,17 @@ function formatRemaining(remaining: number) {
 }
 
 /*
- * Each avatar takes 36 (28 and a gap of 8). The toggle takes 32 with just
- * the chevron. With a "+N" it takes 36 and 10 for each character of the
- * "+N", e.g. 66 for "+17" and 86 for "+1.2K".
+ * Each avatar takes 36 (28 and a gap of 8). The toggle's left padding
+ * overlaps the last gap, so it takes 24 with just the chevron. With a "+N" it
+ * takes 28 and 10 for each character of the "+N", e.g. 58 for "+17" and 78
+ * for "+1.2K".
  */
 describe('fitAvatarCount', () => {
   it('shows everyone, without a "+N", when they all fit', () => {
-    // 6 * 36 + 32 = 248
+    // 6 * 36 + 24 = 240
     expect(
       fitAvatarCount({
-        width: 248,
+        width: 240,
         resolved: 6,
         total: 6,
         hasToggle: true,
@@ -31,20 +32,20 @@ describe('fitAvatarCount', () => {
   })
 
   it('makes room for the "+N" once everyone no longer fits', () => {
-    // 247 is too narrow for all 6 and the chevron. 5 and "+1" take 236
+    // 239 is too narrow for all 6 and the chevron. 5 and "+1" take 228
     expect(
       fitAvatarCount({
-        width: 247,
+        width: 239,
         resolved: 6,
         total: 6,
         hasToggle: true,
         formatRemaining,
       }),
     ).toBe(5)
-    // 235 is too narrow for that, and 4 and "+2" take 200
+    // 227 is too narrow for that, and 4 and "+2" take 192
     expect(
       fitAvatarCount({
-        width: 235,
+        width: 227,
         resolved: 6,
         total: 6,
         hasToggle: true,
@@ -64,7 +65,7 @@ describe('fitAvatarCount', () => {
         formatRemaining,
       }),
     ).toBe(3)
-    // 2 and "+18" take 138, a phone row beside a thumbnail
+    // 2 and "+18" take 130, a phone row beside a thumbnail
     expect(
       fitAvatarCount({
         width: 148,
@@ -77,7 +78,7 @@ describe('fitAvatarCount', () => {
   })
 
   it('leaves more room for a longer "+N"', () => {
-    // 4 and "+16" take 210
+    // 4 and "+16" take 202
     expect(
       fitAvatarCount({
         width: 220,
@@ -87,7 +88,7 @@ describe('fitAvatarCount', () => {
         formatRemaining,
       }),
     ).toBe(4)
-    // 4 and "+1.2K" take 230, but 3 and "+1.2K" take 194
+    // 4 and "+1.2K" take 222, but 3 and "+1.2K" take 186
     expect(
       fitAvatarCount({
         width: 220,
@@ -102,11 +103,11 @@ describe('fitAvatarCount', () => {
   it('checks each count against the "+N" it would show', () => {
     /*
      * 3 leaves "+1K", but 4 leaves "+999", which is a character longer. 4 and
-     * "+999" take 220, and 3 and "+1K" take 174
+     * "+999" take 212, and 3 and "+1K" take 166
      */
     expect(
       fitAvatarCount({
-        width: 220,
+        width: 212,
         resolved: 9,
         total: 1003,
         hasToggle: true,
@@ -115,7 +116,7 @@ describe('fitAvatarCount', () => {
     ).toBe(4)
     expect(
       fitAvatarCount({
-        width: 219,
+        width: 211,
         resolved: 9,
         total: 1003,
         hasToggle: true,

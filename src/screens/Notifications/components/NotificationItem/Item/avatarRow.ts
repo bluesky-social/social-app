@@ -13,7 +13,9 @@ export const AVATAR_GAP = space.sm
 
 /**
  * Padding either side of the toggle's contents, the "+N" count and the
- * chevron.
+ * chevron. The toggle is pulled back over the gap before it by as much, so
+ * its contents sit as far from the last avatar as the avatars do from each
+ * other, while its hover background stays even either side.
  */
 export const TOGGLE_PADDING = 8
 
@@ -68,7 +70,8 @@ export function fitAvatarCount({
     return Math.min(Math.max(fit, 0), resolved)
   }
 
-  const chevronOnly = TOGGLE_PADDING + CHEVRON_SIZE + TOGGLE_PADDING
+  // The toggle's left padding overlaps the gap before it, so takes no room
+  const chevronOnly = CHEVRON_SIZE + TOGGLE_PADDING
   if (resolved >= total && resolved * perAvatar + chevronOnly <= width) {
     return resolved
   }
@@ -79,7 +82,6 @@ export function fitAvatarCount({
   for (let count = Math.min(resolved, total - 1); count > 0; count--) {
     const label = formatRemaining(total - count)
     const toggle =
-      TOGGLE_PADDING +
       label.length * COUNT_CHAR_WIDTH +
       COUNT_GAP +
       CHEVRON_SIZE +

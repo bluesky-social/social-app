@@ -472,7 +472,12 @@ function GroupToggle({
     a.align_center,
     a.gap_xs,
     a.rounded_full,
-    {height: PREVIEW_AVATAR_SIZE, paddingHorizontal: TOGGLE_PADDING},
+    {
+      height: PREVIEW_AVATAR_SIZE,
+      paddingHorizontal: TOGGLE_PADDING,
+      // Pulled back over the gap before it, see `TOGGLE_PADDING`
+      marginLeft: -TOGGLE_PADDING,
+    },
   ]
   const contents = (
     <>
