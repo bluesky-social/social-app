@@ -232,6 +232,7 @@ export function Shell() {
   const aa = useAgeAssurance()
   const {currentAccount} = useSession()
   const fullyExpandedCount = useDialogFullyExpandedCountContext()
+  const {gtMobile} = useBreakpoints()
 
   useIntentHandler()
   useOTAUpdateRecovery()
@@ -245,6 +246,7 @@ export function Shell() {
       <StatusBar
         animated
         hidden={false}
+        verticalBarBehaviorIOS={gtMobile ? 'automatic' : 'disabled'}
         style={
           t.name !== 'light' ||
           (IS_IOS && !IS_LIQUID_GLASS && fullyExpandedCount > 0)
