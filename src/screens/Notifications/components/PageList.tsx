@@ -35,7 +35,6 @@ import {
 } from '#/screens/Notifications/components/NotificationItem'
 import {
   getRowBorderColor,
-  ROW_PADDING_START,
   useRowBackgroundColor,
 } from '#/screens/Notifications/components/NotificationItem/Item/Root'
 import {usePager} from '#/screens/Notifications/components/PagerView'
@@ -150,6 +149,7 @@ export function PageList({
   const isActive = usePager().selectedPage === pageIndex
   const bottomBarOffset = useBottomBarOffset()
   const [isPTRing, setIsPTRing] = useState(false)
+  const [isScrolledDown, setIsScrolledDown] = useState(false)
   /**
    * The height reported from List onLayout is the frame of the scrollview on
    * native. On web, it's the height of the entire list, including content.
@@ -279,7 +279,10 @@ export function PageList({
                   setNativeListContainerHeight(event.nativeEvent.layout.height)
               : undefined
           }
-          onScrolledDownChange={onScrolledDownChange}
+          onScrolledDownChange={value => {
+            setIsScrolledDown(value)
+            onScrolledDownChange?.(value)
+          }}
           headerOffset={headerOffset}
           data={rows}
           keyExtractor={(row: Row) => row.key}
@@ -408,6 +411,7 @@ export function PageList({
       </MainScrollProvider>
       <RefreshPill
         visible={showRefreshPill}
+        isScrolledDown={isScrolledDown}
         headerHeight={headerOffset}
         titleHeight={titleHeight}
         onPress={onPressRefreshPill}
@@ -560,9 +564,8 @@ function SectionHeader({
       )}
       <View
         style={[
-          a.pr_lg,
+          a.px_lg,
           section === 'today' ? a.py_sm : [a.border_t, a.pt_md, a.pb_sm],
-          {paddingLeft: ROW_PADDING_START},
           // Rows are divided, so the header is too
           SHOW_ROW_BORDERS && a.border_b,
           // Per side, since the rows above and below can differ

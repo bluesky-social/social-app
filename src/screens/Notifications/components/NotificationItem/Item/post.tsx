@@ -119,7 +119,7 @@ export function Author({profile}: {profile: bsky.profile.AnyProfileView}) {
 
 /**
  * A single line of context under the author, with a small leading icon, e.g.
- * "replied to **you**: ...". Children are text spans, truncated with an
+ * "replied to you: ...". Children are text spans, truncated with an
  * ellipsis.
  */
 export function ContextLine({
@@ -145,7 +145,7 @@ export function ContextLine({
 }
 
 /**
- * Which post a notification's post is responding to, e.g. "replied to **you**:
+ * Which post a notification's post is responding to, e.g. "replied to you:
  * <your post>" or "replied to **bob**: <bob's post>".
  */
 export function ReplyContext({
@@ -252,7 +252,7 @@ function ReplyContextPost({
   if (variant === 'reply') {
     return isViewer ? (
       <Trans comment="In a notification, someone replied to the viewer’s own post. Followed by a preview of that post">
-        replied to <Strong style={a.text_sm}>you</Strong>: {previewNode}
+        replied to you: {previewNode}
       </Trans>
     ) : (
       <Trans comment="In a notification, someone replied to another person’s post. {subject} is that person’s name, followed by a preview of their post">
@@ -263,7 +263,7 @@ function ReplyContextPost({
 
   return isViewer ? (
     <Trans comment="In a notification about a mention or quote, the post is a reply to the viewer’s own post. Followed by a preview of that post">
-      in reply to <Strong style={a.text_sm}>you</Strong>: {previewNode}
+      in reply to you: {previewNode}
     </Trans>
   ) : (
     <Trans comment="In a notification about a mention or quote, the post is a reply to another person’s post. {subject} is that person’s name, followed by a preview of their post">
