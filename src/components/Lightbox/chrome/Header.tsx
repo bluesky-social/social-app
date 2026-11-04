@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
 
-import {atoms as a} from '#/alf'
+import {atoms as a, tokens} from '#/alf'
 import {TimesLarge_Stroke2_Corner0_Rounded as CloseIcon} from '#/components/icons/Times'
 import {CircleChromeButton} from './CircleChromeButton'
 import {ImageMenu} from './ImageMenu'
@@ -36,9 +36,12 @@ export function Header({
         a.flex_row,
         a.justify_between,
         a.align_center,
-        a.px_md,
         a.pointer_events_box_none,
-        {paddingTop: insets.top + 8},
+        {
+          paddingTop: insets.top + 8,
+          paddingLeft: insets.left + tokens.space.md,
+          paddingRight: insets.right + tokens.space.md,
+        },
       ]}>
       <ImageMenu onPressShare={onPressShare} onPressSave={onPressSave} />
       <PagerDots count={imageCount} activeIndex={activeIndex} />

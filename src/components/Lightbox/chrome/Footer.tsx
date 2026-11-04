@@ -39,7 +39,11 @@ export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
         a.right_0,
         a.bottom_0,
         a.pointer_events_box_none,
-        {paddingBottom: insets.bottom + 8},
+        {
+          paddingBottom: insets.bottom + 8,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+        },
       ]}>
       <View style={[a.mx_md, styles.altWrap]}>
         <BlurView
