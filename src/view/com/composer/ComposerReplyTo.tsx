@@ -1,6 +1,13 @@
 import {useCallback, useMemo, useState} from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
+import {
+  AppBskyEmbedImages,
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
+  AppBskyFeedPost,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -12,6 +19,7 @@ import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, utils, web} from '#/alf'
 import {QuoteEmbed} from '#/components/Post/Embed'
 import {ProfileBadges} from '#/components/ProfileBadges'
+import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -21,6 +29,14 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const t = useTheme()
   const {_} = useLingui()
   const {embed} = replyTo
+
+  const richText = useMemo(() => {
+    const rt = new RichTextAPI({text: replyTo.text, facets: replyTo.facets})
+    if (!replyTo.facets) {
+      rt.detectFacetsWithoutResolution()
+    }
+    return rt
+  }, [replyTo.text, replyTo.facets])
 
   const [showFull, setShowFull] = useState(false)
 
@@ -120,12 +136,14 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         </View>
         <View style={[a.flex_row, a.gap_md]}>
           <View style={[a.flex_1, a.flex_grow]}>
-            <Text
-              style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}
+            <RichText
+              value={richText}
+              style={[a.text_md]}
               numberOfLines={!showFull ? 6 : undefined}
-              emoji>
-              {replyTo.text}
-            </Text>
+              enableTags
+              disableMentionFacetValidation
+              authorHandle={replyTo.author.handle}
+            />
           </View>
           {images && !replyTo.moderation?.ui('contentMedia').blur && (
             <ComposerReplyToImages images={images} totalNumber={totalNumber} />
