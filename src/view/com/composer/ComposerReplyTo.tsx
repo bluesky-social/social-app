@@ -123,6 +123,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
             <Text
               style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}
               numberOfLines={!showFull ? 6 : undefined}
+              selectable={true}
               emoji>
               {replyTo.text}
             </Text>
