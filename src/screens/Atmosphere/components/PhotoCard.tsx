@@ -17,7 +17,7 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {type app} from '#/lexicons'
+import {type app, social} from '#/lexicons'
 import {AtmosphereCardMenu} from './AtmosphereCardMenu'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
@@ -142,6 +142,7 @@ export function PhotoCard({
       <AtmosphereCardMenu
         type="photo"
         item={photo}
+        reportableTypes={[social.grain.gallery.$type]}
         author={authorProfile}
         galleryFocus={galleryFocus}
       />

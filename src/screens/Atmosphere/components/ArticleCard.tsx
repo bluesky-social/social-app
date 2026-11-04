@@ -10,7 +10,7 @@ import {PageText_Stroke2_Corner0_Rounded as IconPage} from '#/components/icons/P
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
-import {type app} from '#/lexicons'
+import {type app, site} from '#/lexicons'
 import {AtmosphereCardMenu} from './AtmosphereCardMenu'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
@@ -170,6 +170,7 @@ export function ArticleCard({
       <AtmosphereCardMenu
         type="article"
         item={article}
+        reportableTypes={[site.standard.document.$type]}
         author={author}
         galleryFocus={galleryFocus}
       />

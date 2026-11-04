@@ -270,6 +270,10 @@
     "com.atproto.sync.requestCrawl",
     "com.atproto.sync.subscribeRepos",
     "com.germnetwork.declaration",
+    "site.standard.document",
+    "site.standard.publication",
+    "social.grain.gallery",
+    "social.grain.photo",
     "tools.ozone.inbox.appealActionedSubject",
     "tools.ozone.inbox.defs",
     "tools.ozone.inbox.getAccountStatus",
@@ -1361,6 +1365,42 @@
     "com.germnetwork.declaration": {
       "uri": "at://did:plc:qyqmmncrm6qx33kpy7vqndik/com.atproto.lexicon.schema/com.germnetwork.declaration",
       "cid": "bafyreickqsspgkujwucg3low5or64ywjryf44eua6xtszd6zsl2yteumoi"
+    },
+    "community.lexicon.location.address": {
+      "uri": "at://did:plc:mtr7qrqtcyseedx3jyr5o7db/com.atproto.lexicon.schema/community.lexicon.location.address",
+      "cid": "bafyreicdvexolyvp6j6yksqiib7hihwktt6ogalbvyzvtkj6ecrtqqw5fq"
+    },
+    "community.lexicon.location.hthree": {
+      "uri": "at://did:plc:mtr7qrqtcyseedx3jyr5o7db/com.atproto.lexicon.schema/community.lexicon.location.hthree",
+      "cid": "bafyreic6xmiv4ycbcfvcvj5uu537ytl7hnjazcxf7hhd7g6o6s7p6tonky"
+    },
+    "site.standard.document": {
+      "uri": "at://did:plc:re3ebnp5v7ffagz6rb6xfei4/com.atproto.lexicon.schema/site.standard.document",
+      "cid": "bafyreifylc5lfr4vqfzrwdtqm4pnfg7cbra7z4acbgikylqandzefwdeaq"
+    },
+    "site.standard.publication": {
+      "uri": "at://did:plc:re3ebnp5v7ffagz6rb6xfei4/com.atproto.lexicon.schema/site.standard.publication",
+      "cid": "bafyreiapvnarfn3nl2wvg27hsylli5zqvou7a74p7od5mu4detprtejapy"
+    },
+    "site.standard.theme.basic": {
+      "uri": "at://did:plc:re3ebnp5v7ffagz6rb6xfei4/com.atproto.lexicon.schema/site.standard.theme.basic",
+      "cid": "bafyreiabm6f64zosv5jcdmwd3qvekjhoi7enevg53rxj734ney4sd6lmku"
+    },
+    "site.standard.theme.color": {
+      "uri": "at://did:plc:re3ebnp5v7ffagz6rb6xfei4/com.atproto.lexicon.schema/site.standard.theme.color",
+      "cid": "bafyreicps42z5maxdqwml7t3klsrrpk332jthyfgpeb4zjn3wlvp5vyjia"
+    },
+    "social.grain.defs": {
+      "uri": "at://did:plc:e7rftrdyz5e2rw4y6ocszew2/com.atproto.lexicon.schema/social.grain.defs",
+      "cid": "bafyreia3nt5ow66tq325s2p4vxqwzntvfgnasf5circqmaa7cqhlrq327e"
+    },
+    "social.grain.gallery": {
+      "uri": "at://did:plc:e7rftrdyz5e2rw4y6ocszew2/com.atproto.lexicon.schema/social.grain.gallery",
+      "cid": "bafyreic645nrikuhuc34gfmieief6jwprz245movnuaubxv2u4qhk6noua"
+    },
+    "social.grain.photo": {
+      "uri": "at://did:plc:e7rftrdyz5e2rw4y6ocszew2/com.atproto.lexicon.schema/social.grain.photo",
+      "cid": "bafyreigigzkmnzz4qycj2wbaonl7zdqgi2566qipjhdcqdrr5g4gz3y64y"
     },
     "tools.ozone.inbox.appealActionedSubject": {
       "uri": "at://did:plc:33dt5kftu3jq2h5h4jjlqezt/com.atproto.lexicon.schema/tools.ozone.inbox.appealActionedSubject",

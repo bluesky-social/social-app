@@ -29,6 +29,7 @@ import {type ExploreGalleryFocusProps} from './ExploreGallery'
 export function AtmosphereCardMenu({
   type,
   item,
+  reportableTypes,
   author,
   galleryFocus,
   children,
@@ -36,6 +37,7 @@ export function AtmosphereCardMenu({
   | {type: 'article'; item: app.bsky.embed.external.ViewArticle}
   | {type: 'photo'; item: app.bsky.embed.external.ViewGallery}
 ) & {
+  reportableTypes: readonly string[]
   author: app.bsky.actor.defs.ProfileViewBasic
   galleryFocus?: ExploreGalleryFocusProps
   children?: React.ReactNode
@@ -48,7 +50,10 @@ export function AtmosphereCardMenu({
   const viewLabel = type === 'article' ? l`View article` : l`View photo`
   const reportLabel = type === 'article' ? l`Report article` : l`Report photo`
 
-  const reportTargets = getAssociatedReportSubjects(item.associatedRefs)
+  const reportTargets = getAssociatedReportSubjects(item.associatedRefs).filter(
+    ({parsedSubject}) =>
+      'nsid' in parsedSubject && reportableTypes.includes(parsedSubject.nsid),
+  )
 
   return (
     <View style={[a.absolute, a.z_10, {top: 8, right: 8}]}>

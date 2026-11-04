@@ -1,7 +1,7 @@
 import {Text} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
-import {type app} from '#/lexicons'
+import {type app, site, social} from '#/lexicons'
 import {AtmosphereCardMenu} from '../AtmosphereCardMenu'
 
 const mockOpenLink = jest.fn()
@@ -113,11 +113,11 @@ const author: app.bsky.actor.defs.ProfileViewBasic = {
 
 const REPO = 'at://did:plc:6ayddqghxhciedbaofoxkcbs'
 const documentRef = {
-  uri: `${REPO}/site.standard.document/3kdoc`,
+  uri: `${REPO}/${site.standard.document.$type}/3kdoc`,
   cid: 'bafyreicl6ujc6ncfktctxxroxognfn7d2fqavvrryoc2lv6m4i6hpbkfti',
 }
 const publicationRef = {
-  uri: `${REPO}/site.standard.publication/3kpub`,
+  uri: `${REPO}/${site.standard.publication.$type}/3kpub`,
   cid: 'bafyreig3yg2msah74sgvow25uxddqbabex3f3mh6hysess3w5kmgiv6zqy',
 }
 const view = {
@@ -126,7 +126,15 @@ const view = {
   description: '',
 }
 type Ref = {uri: string; cid: string}
-const associatedRefs = [documentRef, publicationRef]
+const galleryRef = {
+  uri: `${REPO}/${social.grain.gallery.$type}/3kgallery`,
+  cid: documentRef.cid,
+}
+const photoRef = {
+  uri: `${REPO}/${social.grain.photo.$type}/3kphoto`,
+  cid: publicationRef.cid,
+}
+const associatedRefs = [publicationRef, photoRef, galleryRef, documentRef]
 const article = {...view, associatedRefs}
 const photo = {...view, items: [], associatedRefs}
 
@@ -134,12 +142,16 @@ function renderMenu(
   type: 'article' | 'photo',
   overrides: {associatedRefs?: Ref[]} = {},
   children?: React.ReactNode,
+  reportableTypes: readonly string[] = type === 'article'
+    ? [site.standard.document.$type]
+    : [social.grain.gallery.$type],
 ) {
   return render(
     type === 'article' ? (
       <AtmosphereCardMenu
         type="article"
         item={{...article, ...overrides} as app.bsky.embed.external.ViewArticle}
+        reportableTypes={reportableTypes}
         author={author}>
         {children}
       </AtmosphereCardMenu>
@@ -147,6 +159,7 @@ function renderMenu(
       <AtmosphereCardMenu
         type="photo"
         item={{...photo, ...overrides} as app.bsky.embed.external.ViewGallery}
+        reportableTypes={reportableTypes}
         author={author}>
         {children}
       </AtmosphereCardMenu>
@@ -165,18 +178,21 @@ describe.each([
   const labels = () =>
     screen.getAllByRole('menuitem').map(i => i.props.accessibilityLabel)
 
-  it('labels the trigger and lists view, profile, then a report per record', () => {
+  const reportLabel =
+    type === 'article' ? 'Report this article' : 'Report this gallery'
+  const record = type === 'article' ? documentRef : galleryRef
+  const allowedCollection =
+    type === 'article'
+      ? site.standard.document.$type
+      : social.grain.gallery.$type
+
+  it('lists only the record types allowed by the callsite', () => {
     renderMenu(type)
 
     expect(
       screen.getByTestId('atmosphereCardMenuTrigger').props.accessibilityLabel,
     ).toBe(trigger)
-    expect(labels()).toEqual([
-      viewLabel,
-      'View author profile',
-      'Report this article',
-      'Report this publication',
-    ])
+    expect(labels()).toEqual([viewLabel, 'View author profile', reportLabel])
   })
 
   it('opens the external uri', () => {
@@ -193,13 +209,10 @@ describe.each([
     expect(mockNavigate).toHaveBeenCalledWith('Profile', {name: author.did})
   })
 
-  it.each([
-    ['Report this article', documentRef],
-    ['Report this publication', publicationRef],
-  ])('%s opens the dialog with exactly its record', (label, record) => {
+  it('opens the dialog with exactly the allowed record', () => {
     renderMenu(type)
 
-    const item = screen.getByLabelText(label)
+    const item = screen.getByLabelText(reportLabel)
     expect(item).toBeEnabled()
     fireEvent.press(item)
     expect(mockOpenReport).toHaveBeenCalledTimes(1)
@@ -208,16 +221,19 @@ describe.each([
     })
   })
 
-  it('titles a record after its collection, not the card', () => {
-    const unknown = {uri: `${REPO}/app.test.thing/3kabc`, cid: documentRef.cid}
-    renderMenu(type, {associatedRefs: [unknown, unknown]})
+  it.each(['app.test.thing', `${allowedCollection}.extra`])(
+    'does not offer unlisted collection %s',
+    collection => {
+      const unlisted = {
+        uri: `${REPO}/${collection}/3kabc`,
+        cid: documentRef.cid,
+      }
+      renderMenu(type, {associatedRefs: [unlisted, unlisted]})
 
-    expect(labels()).toEqual([
-      viewLabel,
-      'View author profile',
-      'Report this record',
-    ])
-  })
+      expect(labels()).toEqual([viewLabel, 'View author profile', fallback])
+      expect(screen.getByLabelText(fallback)).toBeDisabled()
+    },
+  )
 
   it.each([
     ['no refs', undefined],
@@ -242,7 +258,6 @@ it('puts view, profile and report icons on the menu items', () => {
     'SquareArrowTopRight_Stroke2_Corner0_Rounded',
     'Person_Stroke2_Corner0_Rounded',
     'Warning_Stroke2_Corner0_Rounded',
-    'Warning_Stroke2_Corner0_Rounded',
   ])
 })
 
@@ -264,6 +279,22 @@ it('places extra children after the profile item and before Report', () => {
     'View author profile',
     'Extra',
     'Report this article',
-    'Report this publication',
   ])
+})
+
+it('uses the explicit callsite allowlist rather than inferring it from the card', () => {
+  renderMenu('article', {}, undefined, [social.grain.gallery.$type])
+
+  expect(screen.queryByLabelText('Report this article')).toBeNull()
+  fireEvent.press(screen.getByLabelText('Report this gallery'))
+  expect(mockOpenReport).toHaveBeenCalledWith({
+    subject: {$type: 'com.atproto.repo.strongRef', ...galleryRef},
+  })
+})
+
+it('does not offer reports when the callsite allows no record types', () => {
+  renderMenu('article', {}, undefined, [])
+
+  expect(screen.getByLabelText('Report article')).toBeDisabled()
+  expect(screen.queryByLabelText('Report this article')).toBeNull()
 })
