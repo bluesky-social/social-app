@@ -120,7 +120,7 @@
     "@atproto/lex-password-session": "0.2.2",
     "@atproto/syntax": "0.7.5",
     "@bitdrift/react-native": "^0.6.8",
-    "@braintree/sanitize-url": "^6.0.2",
+    "@braintree/sanitize-url": "^7.1.2",
     "@bsky.app/alf": "^0.1.15",
     "@bsky.app/bottom-sheet": "link:./modules/bottom-sheet",
     "@bsky.app/expo-background-notification-handler": "link:./modules/expo-background-notification-handler",
