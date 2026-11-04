@@ -53,6 +53,7 @@ import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Features, useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -353,6 +354,20 @@ let FeedItemInner = ({
         onPointerLeave={() => {
           setHover(false)
         }}>
+        {IS_WEB && (
+          /*
+           * Gives the browser a real link to right-click or middle-click
+           * without wrapping the post's own links in an outer anchor.
+           * See `data-post-link-overlay` in style.css.
+           */
+          <a
+            href={href}
+            data-post-link-overlay
+            aria-hidden
+            tabIndex={-1}
+            style={{position: 'absolute', inset: 0}}
+          />
+        )}
         <SubtleHover hover={hover} />
         <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
           <View style={{width: 42}}>
