@@ -1,5 +1,6 @@
 import {createContext, useCallback, useContext} from 'react'
 import {type GestureResponderEvent, Keyboard, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -52,6 +53,12 @@ export function Outer({
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
   const {centerColumnOffset} = useLayoutBreakpoints()
   const {isWithinSplitView, isWithinLeftPanel} = useIsWithinSplitView()
+  /*
+   * Native headers sit 4px lower in their box to balance the status bar above
+   * them. Without a top inset (e.g. iPhone Duo, landscape) there's nothing to
+   * balance, so pad the top too
+   */
+  const hasTopInset = useSafeAreaInsets().top > 0
 
   return (
     <View
@@ -65,7 +72,9 @@ export function Outer({
         sticky && web([a.sticky, {top: 0}, a.z_10, t.atoms.bg]),
         isWithinLeftPanel ? a.px_lg : gutters,
         platform({
-          native: [a.pb_xs, {minHeight: 48}],
+          native: hasTopInset
+            ? [a.pb_xs, {minHeight: 48}]
+            : [a.py_xs, {minHeight: 52}],
           web: [a.py_xs, {minHeight: 52}],
         }),
         t.atoms.border_contrast_low,
