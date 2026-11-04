@@ -1,4 +1,4 @@
-import {useCallback, useRef, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {type LayoutChangeEvent, View} from 'react-native'
 import Animated, {
   interpolate,
@@ -29,9 +29,10 @@ import {
   type LoadedGroupedNotificationsPage,
   peekGroupedNotifications,
   refreshGroupedNotifications,
+  useGroupedNotificationsQuery,
 } from '#/state/queries/notifications/grouped'
 import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
-import {useAppviewClient} from '#/state/session'
+import {useAppviewClient, useSession} from '#/state/session'
 import {useShellHeaderLayout} from '#/state/shell/shell-layout'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {
@@ -64,6 +65,7 @@ import {Loader} from '#/components/Loader'
 import {type Metrics, useAnalytics} from '#/analytics'
 import {Features, isOnForBetaUser} from '#/analytics/features'
 import {IS_INTERNAL, IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {account} from '#/storage'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -164,8 +166,19 @@ function NewNotificationsScreenInner() {
       }),
     },
   ]
+  const {currentAccount} = useSession()
+  // Opens on the tab the user last switched to, falling back to "All"
+  const [initialPage] = useState(() => {
+    const lastTab =
+      currentAccount &&
+      account.get([currentAccount.did, 'lastSelectedNotificationsTab'])
+    return Math.max(
+      0,
+      tabs.findIndex(tab => tab.key === lastTab),
+    )
+  })
   const {seenAt, onFirstLoad, refresh} = useSessionSeenAt()
-  const activeFeed = useRef<GroupedNotificationsFeed>(tabs[0].key)
+  const activeFeed = useRef<GroupedNotificationsFeed>(tabs[initialPage].key)
   const scrolledDownFeeds = useRef(new Set<GroupedNotificationsFeed>())
   const queryClient = useQueryClient()
   const client = useAppviewClient()
@@ -346,12 +359,19 @@ function NewNotificationsScreenInner() {
 
   return (
     <Pager.Root
+      initialPage={initialPage}
       onPageSelected={page => {
         const feed = tabs[page].key
         const isTap = tabTaps.take(page)
         // Web reports the page it starts on, too
         if (feed === activeFeed.current) return
         activeFeed.current = feed
+        if (currentAccount) {
+          account.set(
+            [currentAccount.did, 'lastSelectedNotificationsTab'],
+            feed,
+          )
+        }
         logTabDisplayed(page, isTap ? 'tap' : 'swipe')
         /*
          * Switching tabs never clears what's tinted. A tab brought along by
@@ -450,8 +470,37 @@ function NewNotificationsScreenInner() {
           />
         ))}
       </Pager.Content>
+      {tabs[initialPage].key !== 'all' && (
+        <PreloadAllFeed seenAt={seenAt} onFirstLoad={onFirstLoad} />
+      )}
     </Pager.Root>
   )
+}
+
+/**
+ * Loads "All" without showing it, for when the screen opens on another tab.
+ * Only "All" marks notifications as seen, so this clears the unread badge as
+ * opening on "All" would, and lets refreshes on other tabs bring it along,
+ * which they only do once it has loaded.
+ */
+function PreloadAllFeed({
+  seenAt,
+  onFirstLoad,
+}: {
+  seenAt?: Date
+  onFirstLoad: (
+    feed: GroupedNotificationsFeed,
+    page: LoadedGroupedNotificationsPage,
+  ) => void
+}) {
+  const {data} = useGroupedNotificationsQuery({feed: 'all', seenAt})
+  const top = data?.pages[0]
+  useEffect(() => {
+    if (top) {
+      onFirstLoad('all', top)
+    }
+  }, [top, onFirstLoad])
+  return null
 }
 
 /**
