@@ -110,7 +110,8 @@ jest.mock('#/components/Menu', () => ({
   Outer: () => null,
 }))
 jest.mock('#/components/moderation/ReportDialog', () => ({
-  parseReportSubject: () => undefined,
+  getAssociatedReportSubjects: () => [],
+  useCopyForSubject: () => ({title: '', subtitle: ''}),
   useGlobalReportDialogControl: () => ({open: jest.fn()}),
 }))
 jest.mock('#/components/icons/DotGrid', () => ({

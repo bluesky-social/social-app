@@ -8,7 +8,7 @@ jest.mock('@lingui/react', () => ({
 
 const ref = {uri: 'at://did:plc:x/app.test.thing/3k', cid: 'cid', nsid: 'a.b.c'}
 
-it.each(['article', 'photo'] as const)(
+it.each(['article', 'photo', 'publication', 'gallery', 'record'] as const)(
   'words %s reports for that content',
   type => {
     const {result} = renderHook(() => useCopyForSubject({type, ...ref}))

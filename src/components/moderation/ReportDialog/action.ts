@@ -80,7 +80,10 @@ export function useSubmitReportMutation() {
         case 'starterPack':
         case 'profileLink':
         case 'article':
-        case 'photo': {
+        case 'photo':
+        case 'publication':
+        case 'gallery':
+        case 'record': {
           report = {
             reasonType,
             reason: state.details,

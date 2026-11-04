@@ -1,4 +1,5 @@
 import {View} from 'react-native'
+import {type $Typed} from '@atproto/lex'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -12,11 +13,12 @@ import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ExternalLinkIcon} from '#
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as Menu from '#/components/Menu'
 import {
-  parseReportSubject,
-  type ReportSubject,
+  getAssociatedReportSubjects,
+  useCopyForSubject,
   useGlobalReportDialogControl,
 } from '#/components/moderation/ReportDialog'
-import {type app} from '#/lexicons'
+import {type ParsedReportSubject} from '#/components/moderation/ReportDialog/types'
+import {type app, type com} from '#/lexicons'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 /**
@@ -41,23 +43,12 @@ export function AtmosphereCardMenu({
   const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const openLink = useOpenLink()
-  const reportDialogControl = useGlobalReportDialogControl()
-
   const triggerLabel =
     type === 'article' ? l`Article options` : l`Photo options`
   const viewLabel = type === 'article' ? l`View article` : l`View photo`
   const reportLabel = type === 'article' ? l`Report article` : l`Report photo`
 
-  /*
-   * Appview views may omit `$type`, which the dialog needs to recognize them.
-   * The dialog reports the first valid record in `item.associatedRefs`, so
-   * Report is only offered when it can find one.
-   */
-  const reportSubject: ReportSubject =
-    type === 'article'
-      ? {...item, $type: 'app.bsky.embed.external#viewArticle'}
-      : {...item, $type: 'app.bsky.embed.external#viewGallery'}
-  const canReport = parseReportSubject(reportSubject) !== undefined
+  const reportTargets = getAssociatedReportSubjects(item.associatedRefs)
 
   return (
     <View style={[a.absolute, a.z_10, {top: 8, right: 8}]}>
@@ -99,19 +90,47 @@ export function AtmosphereCardMenu({
           </Menu.Group>
           <Menu.Divider />
           <Menu.Group>
-            <Menu.Item
-              label={reportLabel}
-              disabled={!canReport}
-              onPress={() => {
-                if (canReport)
-                  reportDialogControl.open({subject: reportSubject})
-              }}>
-              <Menu.ItemText>{reportLabel}</Menu.ItemText>
-              <Menu.ItemIcon icon={WarningIcon} position="right" />
-            </Menu.Item>
+            {reportTargets.length ? (
+              reportTargets.map(({subject, parsedSubject}) => (
+                <ReportItem
+                  key={subject.uri}
+                  subject={subject}
+                  parsedSubject={parsedSubject}
+                />
+              ))
+            ) : (
+              <Menu.Item label={reportLabel} disabled onPress={() => {}}>
+                <Menu.ItemText>{reportLabel}</Menu.ItemText>
+                <Menu.ItemIcon icon={WarningIcon} position="right" />
+              </Menu.Item>
+            )}
           </Menu.Group>
         </Menu.Outer>
       </Menu.Root>
     </View>
+  )
+}
+
+/**
+ * Titled like the report dialog it opens, so the menu and dialog always agree.
+ * A component of its own because the copy is a hook, one per record.
+ */
+function ReportItem({
+  subject,
+  parsedSubject,
+}: {
+  subject: $Typed<com.atproto.repo.strongRef.Main>
+  parsedSubject: ParsedReportSubject
+}) {
+  const reportDialogControl = useGlobalReportDialogControl()
+  const {title} = useCopyForSubject(parsedSubject)
+
+  return (
+    <Menu.Item
+      label={title}
+      onPress={() => reportDialogControl.open({subject})}>
+      <Menu.ItemText>{title}</Menu.ItemText>
+      <Menu.ItemIcon icon={WarningIcon} position="right" />
+    </Menu.Item>
   )
 }

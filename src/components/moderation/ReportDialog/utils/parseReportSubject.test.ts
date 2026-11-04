@@ -1,7 +1,11 @@
 import {describe, expect, it, jest} from '@jest/globals'
 
-import {type app} from '#/lexicons'
-import {parseReportSubject} from './parseReportSubject'
+import {type app, type com} from '#/lexicons'
+import {type ReportSubject} from '../types'
+import {
+  getAssociatedReportSubjects,
+  parseReportSubject,
+} from './parseReportSubject'
 
 /* Associated ref validation needs real CID parsing, which the repo mocks. */
 jest.unmock('multiformats/cid')
@@ -62,18 +66,26 @@ describe('parseReportSubject', () => {
       first,
       second,
     ]
-    expect(parseReportSubject(article(refs))).toEqual({
-      type: 'article',
+    const expected = {
+      type: 'record',
       uri: first.uri,
       cid: first.cid,
       nsid: 'app.test.first',
+    }
+    expect(parseReportSubject(article(refs))).toEqual(expected)
+    expect(parseReportSubject(photo(refs))).toEqual(expected)
+  })
+
+  it('classifies a direct record reference by its own collection', () => {
+    expect(parseReportSubject(strongRef(second))).toEqual({
+      type: 'record',
+      uri: second.uri,
+      cid: second.cid,
+      nsid: 'app.test.second',
     })
-    expect(parseReportSubject(photo(refs))).toEqual({
-      type: 'photo',
-      uri: first.uri,
-      cid: first.cid,
-      nsid: 'app.test.first',
-    })
+    expect(
+      parseReportSubject(strongRef({uri: first.uri, cid: 'nope'})),
+    ).toBeUndefined()
   })
 
   it('accepts associated refs that carry their own $type', () => {
@@ -94,5 +106,73 @@ describe('parseReportSubject', () => {
   ])('is not reportable with %s', (_name, refs) => {
     expect(parseReportSubject(article(refs))).toBeUndefined()
     expect(parseReportSubject(photo(refs))).toBeUndefined()
+  })
+})
+
+type Ref = {uri: string; cid: string}
+const strongRef = (ref: Ref) =>
+  ({$type: 'com.atproto.repo.strongRef', ...ref}) as ReportSubject
+const enumerate = (refs: Ref[] | undefined) =>
+  getAssociatedReportSubjects(refs as com.atproto.repo.strongRef.Main[])
+
+describe('getAssociatedReportSubjects', () => {
+  const at = (collection: string, rkey = '3kabc') =>
+    `${REPO}/${collection}/${rkey}`
+
+  it.each([
+    ['site.standard.document', 'article'],
+    ['site.standard.publication', 'publication'],
+    ['social.grain.photo', 'photo'],
+    ['social.grain.gallery', 'gallery'],
+    ['social.grain.gallery.item', 'record'],
+    ['site.standard.document.extra', 'record'],
+    ['example.site.standard.publication', 'record'],
+    ['app.test.unknown', 'record'],
+  ])('classifies %s as %s by exact collection', (collection, type) => {
+    const ref = {uri: at(collection), cid: CID_A}
+    expect(enumerate([ref])).toEqual([
+      {
+        subject: {$type: 'com.atproto.repo.strongRef', ...ref},
+        parsedSubject: {type, nsid: collection, ...ref},
+      },
+    ])
+  })
+
+  it('keeps distinct records in response order', () => {
+    const refs = [
+      {uri: at('site.standard.publication'), cid: CID_B},
+      {uri: at('site.standard.document', '3kone'), cid: CID_A},
+      {uri: at('site.standard.document', '3ktwo'), cid: CID_B},
+    ]
+    expect(enumerate(refs).map(t => t.subject)).toEqual(
+      refs.map(ref => ({$type: 'com.atproto.repo.strongRef', ...ref})),
+    )
+  })
+
+  it('skips invalid refs and keeps the first valid ref for a URI', () => {
+    const uri = at('site.standard.document')
+    const targets = enumerate([
+      {uri, cid: 'not-a-cid'},
+      {uri: 'https://example.com/ref', cid: CID_A},
+      {uri, cid: CID_A},
+      {uri, cid: CID_B},
+    ])
+    expect(targets).toHaveLength(1)
+    expect(targets[0].subject).toMatchObject({uri, cid: CID_A})
+  })
+
+  it('does not mutate its input', () => {
+    const refs = [first, {uri: first.uri, cid: CID_B}, second].map(ref =>
+      Object.freeze({...ref}),
+    )
+    const copy = refs.map(ref => ({...ref}))
+    enumerate(refs)
+    expect(refs).toEqual(copy)
+  })
+
+  it('has nothing to report without valid refs', () => {
+    expect(enumerate(undefined)).toEqual([])
+    expect(enumerate([])).toEqual([])
+    expect(enumerate([{uri: REPO, cid: CID_A}])).toEqual([])
   })
 })

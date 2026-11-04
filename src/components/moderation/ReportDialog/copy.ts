@@ -55,6 +55,24 @@ export function useCopyForSubject(subject: ParsedReportSubject) {
           subtitle: l`Why should this photo be reviewed?`,
         }
       }
+      case 'publication': {
+        return {
+          title: l`Report this publication`,
+          subtitle: l`Why should this publication be reviewed?`,
+        }
+      }
+      case 'gallery': {
+        return {
+          title: l`Report this gallery`,
+          subtitle: l`Why should this gallery be reviewed?`,
+        }
+      }
+      case 'record': {
+        return {
+          title: l`Report this record`,
+          subtitle: l`Why should this record be reviewed?`,
+        }
+      }
       case 'starterPack': {
         return {
           title: l`Report this Starter Pack`,

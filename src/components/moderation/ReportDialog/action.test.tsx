@@ -41,6 +41,9 @@ const ref = {
 const subjects: [string, ParsedReportSubject][] = [
   ['article', {type: 'article', ...ref}],
   ['photo', {type: 'photo', ...ref}],
+  ['publication', {type: 'publication', ...ref}],
+  ['gallery', {type: 'gallery', ...ref}],
+  ['record', {type: 'record', ...ref}],
   ['an existing record type', {type: 'feed', ...ref}],
 ]
 

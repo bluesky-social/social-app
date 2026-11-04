@@ -24,10 +24,13 @@ jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({navigate: mockNavigate}),
 }))
 jest.mock('#/components/moderation/ReportDialog', () => ({
-  parseReportSubject: jest.requireActual<
+  getAssociatedReportSubjects: jest.requireActual<
     typeof import('#/components/moderation/ReportDialog/utils/parseReportSubject')
   >('#/components/moderation/ReportDialog/utils/parseReportSubject')
-    .parseReportSubject,
+    .getAssociatedReportSubjects,
+  useCopyForSubject: jest.requireActual<
+    typeof import('#/components/moderation/ReportDialog/copy')
+  >('#/components/moderation/ReportDialog/copy').useCopyForSubject,
   useGlobalReportDialogControl: () => ({open: mockOpenReport}),
 }))
 jest.mock('#/components/Button', () => {
@@ -108,9 +111,14 @@ const author: app.bsky.actor.defs.ProfileViewBasic = {
   handle: 'author.test',
 }
 
-const ref = {
-  uri: 'at://did:plc:6ayddqghxhciedbaofoxkcbs/app.test.thing/3kabc',
+const REPO = 'at://did:plc:6ayddqghxhciedbaofoxkcbs'
+const documentRef = {
+  uri: `${REPO}/site.standard.document/3kdoc`,
   cid: 'bafyreicl6ujc6ncfktctxxroxognfn7d2fqavvrryoc2lv6m4i6hpbkfti',
+}
+const publicationRef = {
+  uri: `${REPO}/site.standard.publication/3kpub`,
+  cid: 'bafyreig3yg2msah74sgvow25uxddqbabex3f3mh6hysess3w5kmgiv6zqy',
 }
 const view = {
   uri: 'https://example.com/thing',
@@ -118,8 +126,9 @@ const view = {
   description: '',
 }
 type Ref = {uri: string; cid: string}
-const article = {...view, associatedRefs: [ref]}
-const photo = {...view, items: [], associatedRefs: [ref]}
+const associatedRefs = [documentRef, publicationRef]
+const article = {...view, associatedRefs}
+const photo = {...view, items: [], associatedRefs}
 
 function renderMenu(
   type: 'article' | 'photo',
@@ -150,82 +159,79 @@ beforeEach(() => {
 })
 
 describe.each([
-  [
-    'article',
-    'Article options',
-    'View article',
-    'Report article',
-    'app.bsky.embed.external#viewArticle',
-  ],
-  [
-    'photo',
-    'Photo options',
-    'View photo',
-    'Report photo',
-    'app.bsky.embed.external#viewGallery',
-  ],
-] as const)(
-  'AtmosphereCardMenu %s',
-  (type, trigger, viewLabel, report, $type) => {
-    it('labels the trigger and lists view, profile and report in order', () => {
-      renderMenu(type)
+  ['article', 'Article options', 'View article', 'Report article'],
+  ['photo', 'Photo options', 'View photo', 'Report photo'],
+] as const)('AtmosphereCardMenu %s', (type, trigger, viewLabel, fallback) => {
+  const labels = () =>
+    screen.getAllByRole('menuitem').map(i => i.props.accessibilityLabel)
 
-      expect(
-        screen.getByTestId('atmosphereCardMenuTrigger').props
-          .accessibilityLabel,
-      ).toBe(trigger)
-      expect(
-        screen.getAllByRole('menuitem').map(i => i.props.accessibilityLabel),
-      ).toEqual([viewLabel, 'View author profile', report])
+  it('labels the trigger and lists view, profile, then a report per record', () => {
+    renderMenu(type)
+
+    expect(
+      screen.getByTestId('atmosphereCardMenuTrigger').props.accessibilityLabel,
+    ).toBe(trigger)
+    expect(labels()).toEqual([
+      viewLabel,
+      'View author profile',
+      'Report this article',
+      'Report this publication',
+    ])
+  })
+
+  it('opens the external uri', () => {
+    renderMenu(type)
+
+    fireEvent.press(screen.getByLabelText(viewLabel))
+    expect(mockOpenLink).toHaveBeenCalledWith(view.uri)
+  })
+
+  it('navigates to the author by DID', () => {
+    renderMenu(type)
+
+    fireEvent.press(screen.getByLabelText('View author profile'))
+    expect(mockNavigate).toHaveBeenCalledWith('Profile', {name: author.did})
+  })
+
+  it.each([
+    ['Report this article', documentRef],
+    ['Report this publication', publicationRef],
+  ])('%s opens the dialog with exactly its record', (label, record) => {
+    renderMenu(type)
+
+    const item = screen.getByLabelText(label)
+    expect(item).toBeEnabled()
+    fireEvent.press(item)
+    expect(mockOpenReport).toHaveBeenCalledTimes(1)
+    expect(mockOpenReport).toHaveBeenCalledWith({
+      subject: {$type: 'com.atproto.repo.strongRef', ...record},
     })
+  })
 
-    it('opens the external uri', () => {
-      renderMenu(type)
+  it('titles a record after its collection, not the card', () => {
+    const unknown = {uri: `${REPO}/app.test.thing/3kabc`, cid: documentRef.cid}
+    renderMenu(type, {associatedRefs: [unknown, unknown]})
 
-      fireEvent.press(screen.getByLabelText(viewLabel))
-      expect(mockOpenLink).toHaveBeenCalledWith(view.uri)
-    })
+    expect(labels()).toEqual([
+      viewLabel,
+      'View author profile',
+      'Report this record',
+    ])
+  })
 
-    it('navigates to the author by DID', () => {
-      renderMenu(type)
+  it.each([
+    ['no refs', undefined],
+    ['empty refs', []],
+    ['only invalid refs', [{uri: 'https://example.com/thing', cid: 'nope'}]],
+  ])('disables Report and keeps it inert with %s', (_name, refs) => {
+    renderMenu(type, {associatedRefs: refs})
 
-      fireEvent.press(screen.getByLabelText('View author profile'))
-      expect(mockNavigate).toHaveBeenCalledWith('Profile', {name: author.did})
-    })
-
-    it('opens the report dialog with the typed original view', () => {
-      renderMenu(type)
-
-      const item = screen.getByLabelText(report)
-      expect(item).toBeEnabled()
-      fireEvent.press(item)
-      expect(mockOpenReport).toHaveBeenCalledTimes(1)
-      expect(mockOpenReport).toHaveBeenCalledWith({
-        subject: expect.objectContaining({
-          $type,
-          uri: view.uri,
-          associatedRefs: [ref],
-        }),
-      })
-    })
-
-    it.each([
-      ['no refs', undefined],
-      ['empty refs', []],
-      ['only invalid refs', [{uri: 'https://example.com/thing', cid: 'nope'}]],
-    ])(
-      'disables Report and keeps it inert with %s',
-      (_name, associatedRefs) => {
-        renderMenu(type, {associatedRefs})
-
-        const item = screen.getByLabelText(report)
-        expect(item).toBeDisabled()
-        fireEvent.press(item)
-        expect(mockOpenReport).not.toHaveBeenCalled()
-      },
-    )
-  },
-)
+    const item = screen.getByLabelText(fallback)
+    expect(item).toBeDisabled()
+    fireEvent.press(item)
+    expect(mockOpenReport).not.toHaveBeenCalled()
+  })
+})
 
 it('puts view, profile and report icons on the menu items', () => {
   renderMenu('photo')
@@ -235,6 +241,7 @@ it('puts view, profile and report icons on the menu items', () => {
   ).toEqual([
     'SquareArrowTopRight_Stroke2_Corner0_Rounded',
     'Person_Stroke2_Corner0_Rounded',
+    'Warning_Stroke2_Corner0_Rounded',
     'Warning_Stroke2_Corner0_Rounded',
   ])
 })
@@ -252,5 +259,11 @@ it('places extra children after the profile item and before Report', () => {
 
   expect(
     screen.getAllByRole('menuitem').map(i => i.props.accessibilityLabel),
-  ).toEqual(['View article', 'View author profile', 'Extra', 'Report article'])
+  ).toEqual([
+    'View article',
+    'View author profile',
+    'Extra',
+    'Report this article',
+    'Report this publication',
+  ])
 })

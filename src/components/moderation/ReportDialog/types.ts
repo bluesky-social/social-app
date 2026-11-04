@@ -1,7 +1,7 @@
 import {type $Typed} from '@atproto/lex'
 
 import type * as Dialog from '#/components/Dialog'
-import {type app, type chat} from '#/lexicons'
+import {type app, type chat, type com} from '#/lexicons'
 
 export type ReportSubjectConvoMessage = {
   view: 'convo' | 'message'
@@ -26,6 +26,7 @@ export type ReportSubject =
   | $Typed<app.bsky.actor.defs.ProfileLinkView>
   | $Typed<app.bsky.embed.external.ViewArticle>
   | $Typed<app.bsky.embed.external.ViewGallery>
+  | $Typed<com.atproto.repo.strongRef.Main>
   | ReportSubjectConvoMessage
   | ReportSubjectConvo
 
@@ -74,7 +75,7 @@ export type ParsedReportSubject =
       nsid: string
     }
   | {
-      type: 'article' | 'photo'
+      type: 'article' | 'photo' | 'publication' | 'gallery' | 'record'
       uri: string
       cid: string
       nsid: string
