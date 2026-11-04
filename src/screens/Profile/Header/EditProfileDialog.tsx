@@ -46,7 +46,8 @@ import {
   PILL_VERTICAL,
 } from '#/features/profileLinks/pillSize'
 import {type app} from '#/lexicons'
-import {PronounsDialog} from './PronounsDialog'
+import {PRONOUN_SUGGESTIONS, PronounsDialog} from './PronounsDialog'
+import {describePronounsChange} from './pronounSuggestions'
 
 export function EditProfileDialog({
   profile,
@@ -116,7 +117,7 @@ function DialogInner({
   setDirty: (dirty: boolean) => void
   onPressCancel: () => void
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const ax = useAnalytics()
   const control = Dialog.useDialogContext()
@@ -253,6 +254,14 @@ function DialogInner({
         newUserAvatar,
         newUserBanner,
       })
+      const pronounsChange = describePronounsChange(
+        initialPronouns,
+        pronouns,
+        PRONOUN_SUGGESTIONS.map(s => i18n._(s)),
+      )
+      if (pronounsChange) {
+        ax.metric('profile:pronouns:save', pronounsChange)
+      }
       if (nextLinks && written) {
         logProfileLinkChanges(
           ax,
@@ -280,6 +289,7 @@ function DialogInner({
     newUserBanner,
     setImageError,
     _,
+    i18n,
     editedLinks,
     linksDirty,
     storedLinks,

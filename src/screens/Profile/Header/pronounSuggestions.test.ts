@@ -1,5 +1,6 @@
 import {
   composePronouns,
+  describePronounsChange,
   parsePronouns,
   togglePronoun,
 } from './pronounSuggestions'
@@ -79,5 +80,35 @@ describe('togglePronoun', () => {
 
   it('builds on typed combos', () => {
     expect(togglePronoun('He/They', SHE, SUGGESTIONS)).toBe('he/they/she')
+  })
+})
+
+describe('describePronounsChange', () => {
+  it('ignores unchanged pronouns', () => {
+    expect(describePronounsChange('she/her', ' she/her ', SUGGESTIONS)).toBe(
+      undefined,
+    )
+    expect(describePronounsChange('', '', SUGGESTIONS)).toBe(undefined)
+  })
+
+  it('tells adds, edits and removes apart', () => {
+    expect(describePronounsChange('', 'she/her', SUGGESTIONS)).toEqual({
+      action: 'add',
+      source: 'preset',
+    })
+    expect(describePronounsChange('she/her', 'she/they', SUGGESTIONS)).toEqual({
+      action: 'edit',
+      source: 'combined',
+    })
+    expect(describePronounsChange('she/her', '', SUGGESTIONS)).toEqual({
+      action: 'remove',
+    })
+  })
+
+  it('reports custom text without including it', () => {
+    expect(describePronounsChange('', 'xe/xem', SUGGESTIONS)).toEqual({
+      action: 'add',
+      source: 'custom',
+    })
   })
 })

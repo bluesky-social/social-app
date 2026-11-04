@@ -66,3 +66,27 @@ export function togglePronoun(
     : [...picked, index]
   return composePronouns(next, suggestions)
 }
+
+/**
+ * What changed in the pronouns on save, for the `profile:pronouns:save`
+ * metric. Never includes the text itself, only how it was entered. Returns
+ * `undefined` when nothing changed beyond surrounding whitespace.
+ */
+export function describePronounsChange(
+  previous: string,
+  next: string,
+  suggestions: string[],
+):
+  | {action: 'remove'}
+  | {action: 'add' | 'edit'; source: 'preset' | 'combined' | 'custom'}
+  | undefined {
+  const before = previous.trim()
+  const after = next.trim()
+  if (before === after) return undefined
+  if (!after) return {action: 'remove'}
+  const picked = parsePronouns(after, suggestions)
+  return {
+    action: before ? 'edit' : 'add',
+    source: !picked ? 'custom' : picked.length > 1 ? 'combined' : 'preset',
+  }
+}

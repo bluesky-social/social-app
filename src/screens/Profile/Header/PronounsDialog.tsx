@@ -26,7 +26,7 @@ const SHOW_COUNT_FROM = 12
  * Quick picks shown above the pronouns field. They only fill in the field, so
  * people can still type anything that fits.
  */
-const PRONOUN_SUGGESTIONS = [
+export const PRONOUN_SUGGESTIONS = [
   msg({
     message: 'she/her',
     comment:
