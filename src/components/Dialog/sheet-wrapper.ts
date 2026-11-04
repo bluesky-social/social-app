@@ -14,9 +14,11 @@ export function useSheetWrapper() {
         barStyle: 'light-content',
         animated: true,
       })
-      const res = await promise
-      StatusBar.popStackEntry(entry)
-      return res
+      try {
+        return await promise
+      } finally {
+        StatusBar.popStackEntry(entry)
+      }
     } else {
       return await promise
     }
