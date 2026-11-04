@@ -43,6 +43,7 @@ const subjects: [string, ParsedReportSubject][] = [
   ['photo', {type: 'photo', ...ref}],
   ['publication', {type: 'publication', ...ref}],
   ['gallery', {type: 'gallery', ...ref}],
+  ['livestream', {type: 'livestream', ...ref}],
   ['record', {type: 'record', ...ref}],
   ['an existing record type', {type: 'feed', ...ref}],
 ]

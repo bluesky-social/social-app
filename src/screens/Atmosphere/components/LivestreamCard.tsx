@@ -12,7 +12,8 @@ import {atoms as a, useTheme} from '#/alf'
 import {Play_Filled_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {type app} from '#/lexicons'
+import {type app, place} from '#/lexicons'
+import {AtmosphereCardMenu} from './AtmosphereCardMenu'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 export function LivestreamCard({
@@ -161,6 +162,13 @@ export function LivestreamCard({
           </View>
         </Link>
       </View>
+      <AtmosphereCardMenu
+        type="livestream"
+        item={livestream}
+        reportableTypes={[place.stream.livestream.$type]}
+        author={authorProfile}
+        galleryFocus={galleryFocus}
+      />
     </View>
   )
 }

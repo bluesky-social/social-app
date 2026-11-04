@@ -75,7 +75,13 @@ export type ParsedReportSubject =
       nsid: string
     }
   | {
-      type: 'article' | 'photo' | 'publication' | 'gallery' | 'record'
+      type:
+        | 'article'
+        | 'photo'
+        | 'publication'
+        | 'gallery'
+        | 'livestream'
+        | 'record'
       uri: string
       cid: string
       nsid: string

@@ -13,7 +13,8 @@ export function useCopyForSubject(subject: ParsedReportSubject) {
           subtitle: l`Why should this user be reviewed?`,
         }
       }
-      case 'status': {
+      case 'status':
+      case 'livestream': {
         return {
           title: l`Report this livestream`,
           subtitle: l`Why should this livestream be reviewed?`,

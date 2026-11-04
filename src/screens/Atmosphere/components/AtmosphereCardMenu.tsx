@@ -22,7 +22,7 @@ import {type app, type com} from '#/lexicons'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 /**
- * Top-right options menu for article and photo cards. Render it as a sibling
+ * Top-right options menu for Atmosphere cards. Render it as a sibling
  * of the card's primary link, never inside it, so the two stay un-nested.
  * `children` are extra `Menu.Item`s shown before Report.
  */
@@ -36,19 +36,55 @@ export function AtmosphereCardMenu({
 }: (
   | {type: 'article'; item: app.bsky.embed.external.ViewArticle}
   | {type: 'photo'; item: app.bsky.embed.external.ViewGallery}
+  | {type: 'publication'; item: app.bsky.embed.external.ViewArticlePublication}
+  | {type: 'livestream'; item: app.bsky.embed.external.ViewLivestream}
 ) & {
+  /**
+   * Collections whose associated records may be reported from this card.
+   */
   reportableTypes: readonly string[]
-  author: app.bsky.actor.defs.ProfileViewBasic
+  /**
+   * Omit when the card can't tell who owns the content; the profile action is
+   * then left out.
+   */
+  author?: app.bsky.actor.defs.ProfileViewBasic
   galleryFocus?: ExploreGalleryFocusProps
   children?: React.ReactNode
 }) {
   const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const openLink = useOpenLink()
-  const triggerLabel =
-    type === 'article' ? l`Article options` : l`Photo options`
-  const viewLabel = type === 'article' ? l`View article` : l`View photo`
-  const reportLabel = type === 'article' ? l`Report article` : l`Report photo`
+  let labels: {trigger: string; view: string; report: string}
+  switch (type) {
+    case 'article':
+      labels = {
+        trigger: l`Article options`,
+        view: l`View article`,
+        report: l`Report article`,
+      }
+      break
+    case 'photo':
+      labels = {
+        trigger: l`Photo options`,
+        view: l`View photo`,
+        report: l`Report photo`,
+      }
+      break
+    case 'publication':
+      labels = {
+        trigger: l`Publication options`,
+        view: l`View publication`,
+        report: l`Report publication`,
+      }
+      break
+    case 'livestream':
+      labels = {
+        trigger: l`Livestream options`,
+        view: l`View livestream`,
+        report: l`Report livestream`,
+      }
+      break
+  }
 
   const reportTargets = getAssociatedReportSubjects(item.associatedRefs).filter(
     ({parsedSubject}) =>
@@ -58,12 +94,12 @@ export function AtmosphereCardMenu({
   return (
     <View style={[a.absolute, a.z_10, {top: 8, right: 8}]}>
       <Menu.Root>
-        <Menu.Trigger label={triggerLabel}>
+        <Menu.Trigger label={labels.trigger}>
           {({props}) => (
             <Button
               {...props}
               testID="atmosphereCardMenuTrigger"
-              label={triggerLabel}
+              label={labels.trigger}
               size="small"
               shape="round"
               color="secondary"
@@ -79,18 +115,20 @@ export function AtmosphereCardMenu({
         </Menu.Trigger>
         <Menu.Outer>
           <Menu.Group>
-            <Menu.Item label={viewLabel} onPress={() => openLink(item.uri)}>
-              <Menu.ItemText>{viewLabel}</Menu.ItemText>
+            <Menu.Item label={labels.view} onPress={() => openLink(item.uri)}>
+              <Menu.ItemText>{labels.view}</Menu.ItemText>
               <Menu.ItemIcon icon={ExternalLinkIcon} position="right" />
             </Menu.Item>
-            <Menu.Item
-              label={l`View author profile`}
-              onPress={() =>
-                navigation.navigate('Profile', {name: author.did})
-              }>
-              <Menu.ItemText>{l`View author profile`}</Menu.ItemText>
-              <Menu.ItemIcon icon={PersonIcon} position="right" />
-            </Menu.Item>
+            {author && (
+              <Menu.Item
+                label={l`View author profile`}
+                onPress={() =>
+                  navigation.navigate('Profile', {name: author.did})
+                }>
+                <Menu.ItemText>{l`View author profile`}</Menu.ItemText>
+                <Menu.ItemIcon icon={PersonIcon} position="right" />
+              </Menu.Item>
+            )}
             {children}
           </Menu.Group>
           <Menu.Divider />
@@ -104,8 +142,8 @@ export function AtmosphereCardMenu({
                 />
               ))
             ) : (
-              <Menu.Item label={reportLabel} disabled onPress={() => {}}>
-                <Menu.ItemText>{reportLabel}</Menu.ItemText>
+              <Menu.Item label={labels.report} disabled onPress={() => {}}>
+                <Menu.ItemText>{labels.report}</Menu.ItemText>
                 <Menu.ItemIcon icon={WarningIcon} position="right" />
               </Menu.Item>
             )}

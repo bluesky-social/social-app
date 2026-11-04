@@ -18,3 +18,14 @@ it.each(['article', 'photo', 'publication', 'gallery', 'record'] as const)(
     })
   },
 )
+
+it.each(['status', 'livestream'] as const)(
+  'words %s reports as a livestream',
+  type => {
+    const {result} = renderHook(() => useCopyForSubject({type, ...ref}))
+    expect(result.current).toEqual({
+      title: 'Report this livestream',
+      subtitle: 'Why should this livestream be reviewed?',
+    })
+  },
+)

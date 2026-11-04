@@ -83,6 +83,7 @@ export function useSubmitReportMutation() {
         case 'photo':
         case 'publication':
         case 'gallery':
+        case 'livestream':
         case 'record': {
           report = {
             reasonType,

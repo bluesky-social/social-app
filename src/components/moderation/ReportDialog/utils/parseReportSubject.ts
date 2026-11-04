@@ -5,7 +5,7 @@ import {
   type ParsedReportSubject,
   type ReportSubject,
 } from '#/components/moderation/ReportDialog/types'
-import {app, com, site, social} from '#/lexicons'
+import {app, com, place, site, social} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function parseReportSubject(
@@ -169,6 +169,8 @@ function getRecordType(nsid: string) {
       return 'photo'
     case social.grain.gallery.$type:
       return 'gallery'
+    case place.stream.livestream.$type:
+      return 'livestream'
     default:
       return 'record'
   }

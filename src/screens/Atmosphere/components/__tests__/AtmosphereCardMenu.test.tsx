@@ -1,7 +1,7 @@
 import {Text} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
-import {type app, site, social} from '#/lexicons'
+import {type app, place, site, social} from '#/lexicons'
 import {AtmosphereCardMenu} from '../AtmosphereCardMenu'
 
 const mockOpenLink = jest.fn()
@@ -134,37 +134,46 @@ const photoRef = {
   uri: `${REPO}/${social.grain.photo.$type}/3kphoto`,
   cid: publicationRef.cid,
 }
-const associatedRefs = [publicationRef, photoRef, galleryRef, documentRef]
-const article = {...view, associatedRefs}
-const photo = {...view, items: [], associatedRefs}
+const livestreamRef = {
+  uri: `${REPO}/${place.stream.livestream.$type}/3klive`,
+  cid: documentRef.cid,
+}
+const associatedRefs = [
+  publicationRef,
+  photoRef,
+  galleryRef,
+  livestreamRef,
+  documentRef,
+]
+const items = {
+  article: {...view, associatedRefs},
+  photo: {...view, items: [], associatedRefs},
+  publication: {...view, associatedRefs},
+  livestream: {...view, active: false, associatedRefs},
+}
+type MenuType = keyof typeof items
+const defaultReportableTypes: Record<MenuType, string> = {
+  article: site.standard.document.$type,
+  photo: social.grain.gallery.$type,
+  publication: site.standard.publication.$type,
+  livestream: place.stream.livestream.$type,
+}
 
 function renderMenu(
-  type: 'article' | 'photo',
+  type: MenuType,
   overrides: {associatedRefs?: Ref[]} = {},
   children?: React.ReactNode,
-  reportableTypes: readonly string[] = type === 'article'
-    ? [site.standard.document.$type]
-    : [social.grain.gallery.$type],
+  reportableTypes: readonly string[] = [defaultReportableTypes[type]],
+  withAuthor = true,
 ) {
-  return render(
-    type === 'article' ? (
-      <AtmosphereCardMenu
-        type="article"
-        item={{...article, ...overrides} as app.bsky.embed.external.ViewArticle}
-        reportableTypes={reportableTypes}
-        author={author}>
-        {children}
-      </AtmosphereCardMenu>
-    ) : (
-      <AtmosphereCardMenu
-        type="photo"
-        item={{...photo, ...overrides} as app.bsky.embed.external.ViewGallery}
-        reportableTypes={reportableTypes}
-        author={author}>
-        {children}
-      </AtmosphereCardMenu>
-    ),
-  )
+  const props = {
+    type,
+    item: {...items[type], ...overrides},
+    reportableTypes,
+    author: withAuthor ? author : undefined,
+    children,
+  } as unknown as React.ComponentProps<typeof AtmosphereCardMenu>
+  return render(<AtmosphereCardMenu {...props} />)
 }
 
 beforeEach(() => {
@@ -172,82 +181,116 @@ beforeEach(() => {
 })
 
 describe.each([
-  ['article', 'Article options', 'View article', 'Report article'],
-  ['photo', 'Photo options', 'View photo', 'Report photo'],
-] as const)('AtmosphereCardMenu %s', (type, trigger, viewLabel, fallback) => {
-  const labels = () =>
-    screen.getAllByRole('menuitem').map(i => i.props.accessibilityLabel)
+  [
+    'article',
+    'Article options',
+    'View article',
+    'Report article',
+    'Report this article',
+    documentRef,
+  ],
+  [
+    'photo',
+    'Photo options',
+    'View photo',
+    'Report photo',
+    'Report this gallery',
+    galleryRef,
+  ],
+  [
+    'publication',
+    'Publication options',
+    'View publication',
+    'Report publication',
+    'Report this publication',
+    publicationRef,
+  ],
+  [
+    'livestream',
+    'Livestream options',
+    'View livestream',
+    'Report livestream',
+    'Report this livestream',
+    livestreamRef,
+  ],
+] as const)(
+  'AtmosphereCardMenu %s',
+  (type, trigger, viewLabel, fallback, reportLabel, record) => {
+    const labels = () =>
+      screen.getAllByRole('menuitem').map(i => i.props.accessibilityLabel)
 
-  const reportLabel =
-    type === 'article' ? 'Report this article' : 'Report this gallery'
-  const record = type === 'article' ? documentRef : galleryRef
-  const allowedCollection =
-    type === 'article'
-      ? site.standard.document.$type
-      : social.grain.gallery.$type
+    const allowedCollection = defaultReportableTypes[type]
 
-  it('lists only the record types allowed by the callsite', () => {
-    renderMenu(type)
+    it('omits the profile action without an author', () => {
+      renderMenu(type, {}, undefined, undefined, false)
 
-    expect(
-      screen.getByTestId('atmosphereCardMenuTrigger').props.accessibilityLabel,
-    ).toBe(trigger)
-    expect(labels()).toEqual([viewLabel, 'View author profile', reportLabel])
-  })
-
-  it('opens the external uri', () => {
-    renderMenu(type)
-
-    fireEvent.press(screen.getByLabelText(viewLabel))
-    expect(mockOpenLink).toHaveBeenCalledWith(view.uri)
-  })
-
-  it('navigates to the author by DID', () => {
-    renderMenu(type)
-
-    fireEvent.press(screen.getByLabelText('View author profile'))
-    expect(mockNavigate).toHaveBeenCalledWith('Profile', {name: author.did})
-  })
-
-  it('opens the dialog with exactly the allowed record', () => {
-    renderMenu(type)
-
-    const item = screen.getByLabelText(reportLabel)
-    expect(item).toBeEnabled()
-    fireEvent.press(item)
-    expect(mockOpenReport).toHaveBeenCalledTimes(1)
-    expect(mockOpenReport).toHaveBeenCalledWith({
-      subject: {$type: 'com.atproto.repo.strongRef', ...record},
+      expect(labels()).toEqual([viewLabel, reportLabel])
     })
-  })
 
-  it.each(['app.test.thing', `${allowedCollection}.extra`])(
-    'does not offer unlisted collection %s',
-    collection => {
-      const unlisted = {
-        uri: `${REPO}/${collection}/3kabc`,
-        cid: documentRef.cid,
-      }
-      renderMenu(type, {associatedRefs: [unlisted, unlisted]})
+    it('lists only the record types allowed by the callsite', () => {
+      renderMenu(type)
 
-      expect(labels()).toEqual([viewLabel, 'View author profile', fallback])
-      expect(screen.getByLabelText(fallback)).toBeDisabled()
-    },
-  )
+      expect(
+        screen.getByTestId('atmosphereCardMenuTrigger').props
+          .accessibilityLabel,
+      ).toBe(trigger)
+      expect(labels()).toEqual([viewLabel, 'View author profile', reportLabel])
+    })
 
-  it.each([
-    ['no refs', undefined],
-    ['empty refs', []],
-    ['only invalid refs', [{uri: 'https://example.com/thing', cid: 'nope'}]],
-  ])('disables Report and keeps it inert with %s', (_name, refs) => {
-    renderMenu(type, {associatedRefs: refs})
+    it('opens the external uri', () => {
+      renderMenu(type)
 
-    const item = screen.getByLabelText(fallback)
-    expect(item).toBeDisabled()
-    fireEvent.press(item)
-    expect(mockOpenReport).not.toHaveBeenCalled()
-  })
-})
+      fireEvent.press(screen.getByLabelText(viewLabel))
+      expect(mockOpenLink).toHaveBeenCalledWith(view.uri)
+    })
+
+    it('navigates to the author by DID', () => {
+      renderMenu(type)
+
+      fireEvent.press(screen.getByLabelText('View author profile'))
+      expect(mockNavigate).toHaveBeenCalledWith('Profile', {name: author.did})
+    })
+
+    it('opens the dialog with exactly the allowed record', () => {
+      renderMenu(type)
+
+      const item = screen.getByLabelText(reportLabel)
+      expect(item).toBeEnabled()
+      fireEvent.press(item)
+      expect(mockOpenReport).toHaveBeenCalledTimes(1)
+      expect(mockOpenReport).toHaveBeenCalledWith({
+        subject: {$type: 'com.atproto.repo.strongRef', ...record},
+      })
+    })
+
+    it.each(['app.test.thing', `${allowedCollection}.extra`])(
+      'does not offer unlisted collection %s',
+      collection => {
+        const unlisted = {
+          uri: `${REPO}/${collection}/3kabc`,
+          cid: documentRef.cid,
+        }
+        renderMenu(type, {associatedRefs: [unlisted, unlisted]})
+
+        expect(labels()).toEqual([viewLabel, 'View author profile', fallback])
+        expect(screen.getByLabelText(fallback)).toBeDisabled()
+      },
+    )
+
+    it.each([
+      ['no refs', undefined],
+      ['empty refs', []],
+      ['only invalid refs', [{uri: 'https://example.com/thing', cid: 'nope'}]],
+    ])('disables Report and keeps it inert with %s', (_name, refs) => {
+      renderMenu(type, {associatedRefs: refs})
+
+      const item = screen.getByLabelText(fallback)
+      expect(item).toBeDisabled()
+      fireEvent.press(item)
+      expect(mockOpenReport).not.toHaveBeenCalled()
+    })
+  },
+)
 
 it('puts view, profile and report icons on the menu items', () => {
   renderMenu('photo')

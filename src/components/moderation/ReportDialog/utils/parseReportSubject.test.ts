@@ -1,6 +1,7 @@
 import {describe, expect, it, jest} from '@jest/globals'
 
 import {type app, type com} from '#/lexicons'
+import {BSKY_LABELER_ONLY_SUBJECT_TYPES} from '../const'
 import {type ReportSubject} from '../types'
 import {
   getAssociatedReportSubjects,
@@ -124,6 +125,8 @@ describe('getAssociatedReportSubjects', () => {
     ['site.standard.publication', 'publication'],
     ['social.grain.photo', 'photo'],
     ['social.grain.gallery', 'gallery'],
+    ['place.stream.livestream', 'livestream'],
+    ['place.stream.livestream.extra', 'record'],
     ['social.grain.gallery.item', 'record'],
     ['site.standard.document.extra', 'record'],
     ['example.site.standard.publication', 'record'],
@@ -175,4 +178,13 @@ describe('getAssociatedReportSubjects', () => {
     expect(enumerate([])).toEqual([])
     expect(enumerate([{uri: REPO, cid: CID_A}])).toEqual([])
   })
+})
+
+it('keeps place.stream livestreams out of the Bluesky-only subject types', () => {
+  const [target] = enumerate([
+    {uri: `${REPO}/place.stream.livestream/3kabc`, cid: CID_A},
+  ])
+  expect(target.parsedSubject.type).toBe('livestream')
+  expect(BSKY_LABELER_ONLY_SUBJECT_TYPES.has('livestream')).toBe(false)
+  expect(BSKY_LABELER_ONLY_SUBJECT_TYPES.has('status')).toBe(true)
 })

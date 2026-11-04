@@ -20,3 +20,13 @@ pins, not published record CIDs, and their `uri` values are only installer
 compatibility hints, not published record locations. An unscoped network update
 will fail when it tries to fetch these schemas. Update them from upstream JSON
 and compute each local CID with `cidForLex` from `@atproto/lex-cbor`.
+
+## Exception: `place.stream.badge.defs`
+
+`place.stream.livestream` reaches `place.stream.badge.defs` through
+`place.stream.chat.defs`, but `_lexicon.badge.stream.place` has no TXT record,
+so the installer cannot resolve it by NSID. It is pinned by AT URI from the
+`did:plc` repo that publishes `place.stream.livestream`; its CID matches the copy
+in the `did:web:stream.place` repo. Install it with
+`pnpm lexicons:install at://did:plc:gqtagsooi75obldmytuow57q/com.atproto.lexicon.schema/place.stream.badge.defs`
+when adding or refreshing `place.stream.*` schemas.

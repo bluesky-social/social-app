@@ -1,0 +1,108 @@
+{
+  "id": "place.stream.chat.profile",
+  "defs": {
+    "main": {
+      "key": "literal:self",
+      "type": "record",
+      "record": {
+        "type": "object",
+        "properties": {
+          "color": {
+            "ref": "#color",
+            "type": "ref"
+          },
+          "badges": {
+            "ref": "#badgeSelections",
+            "type": "ref",
+            "description": "Badge selections for display in chat."
+          },
+          "selfLabels": {
+            "type": "array",
+            "items": {
+              "ref": "#selfLabel",
+              "type": "ref"
+            },
+            "maxLength": 10,
+            "description": "Self-applied labels for this profile, e.g. 'bot'."
+          }
+        }
+      },
+      "description": "Record containing customizations for a user's chat profile."
+    },
+    "color": {
+      "type": "object",
+      "required": [
+        "red",
+        "green",
+        "blue"
+      ],
+      "properties": {
+        "red": {
+          "type": "integer",
+          "maximum": 255,
+          "minimum": 0
+        },
+        "blue": {
+          "type": "integer",
+          "maximum": 255,
+          "minimum": 0
+        },
+        "green": {
+          "type": "integer",
+          "maximum": 255,
+          "minimum": 0
+        }
+      },
+      "description": "Customizations for the color of a user's name in chat"
+    },
+    "selfLabel": {
+      "type": "string",
+      "description": "Label that a user can apply to their own profile.",
+      "knownValues": [
+        "bot"
+      ]
+    },
+    "badgeSelections": {
+      "type": "object",
+      "properties": {
+        "global": {
+          "ref": "com.atproto.repo.strongRef",
+          "type": "ref",
+          "description": "Selected globally-issued badge (e.g. event badge)."
+        },
+        "streamer": {
+          "type": "array",
+          "items": {
+            "ref": "#streamerBadgeSelection",
+            "type": "ref"
+          },
+          "maxLength": 20,
+          "description": "Selected streamer-issued badges, one per streamer channel."
+        }
+      },
+      "description": "Selected badges for display in chat, organized by slot."
+    },
+    "streamerBadgeSelection": {
+      "type": "object",
+      "required": [
+        "streamer",
+        "badge"
+      ],
+      "properties": {
+        "badge": {
+          "ref": "com.atproto.repo.strongRef",
+          "type": "ref",
+          "description": "Strong reference to the selected place.stream.badge.issuance record."
+        },
+        "streamer": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of the streamer whose channel this selection applies to."
+        }
+      },
+      "description": "A selected badge for a specific streamer's channel."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

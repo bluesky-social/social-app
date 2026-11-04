@@ -210,6 +210,10 @@ const triggerCards: [
     focus => <ArticleCard article={article} galleryFocus={focus} />,
   ],
   ['PhotoCard', focus => <PhotoCard photo={photo} galleryFocus={focus} />],
+  [
+    'LivestreamCard',
+    focus => <LivestreamCard livestream={livestream} galleryFocus={focus} />,
+  ],
 ]
 
 const cards: [
