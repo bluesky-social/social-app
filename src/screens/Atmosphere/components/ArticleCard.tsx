@@ -11,6 +11,7 @@ import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
+import {AtmosphereCardMenu} from './AtmosphereCardMenu'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 export function ArticleCard({
@@ -166,6 +167,12 @@ export function ArticleCard({
           </View>
         </Link>
       </View>
+      <AtmosphereCardMenu
+        type="article"
+        uri={article.uri}
+        author={author}
+        galleryFocus={galleryFocus}
+      />
     </View>
   )
 }

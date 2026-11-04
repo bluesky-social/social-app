@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native'
+import {StyleSheet, type ViewProps} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {type app} from '#/lexicons'
@@ -14,10 +14,14 @@ jest.mock('@lingui/react', () => ({
   }),
 }))
 jest.mock('#/alf', () => {
-  const atoms = new Proxy(
-    {},
-    {get: (_, name) => (name === 'flex_grow' ? {flexGrow: 1} : {})},
-  )
+  const knownAtoms = {
+    flex_grow: {flexGrow: 1},
+    absolute: {position: 'absolute'},
+    z_10: {zIndex: 10},
+  }
+  const atoms = new Proxy(knownAtoms, {
+    get: (target, name) => target[name as keyof typeof target] ?? {},
+  })
   const themeAtoms = new Proxy(
     {
       bg: {backgroundColor: '#ffffff'},
@@ -59,6 +63,54 @@ jest.mock('#/components/icons/Eye', () => ({
 }))
 jest.mock('#/components/icons/Play', () => ({
   Play_Filled_Corner2_Rounded: () => null,
+}))
+
+const mockTriggerOnFocus = jest.fn()
+jest.mock('@react-navigation/native', () => ({
+  useNavigation: () => ({navigate: jest.fn()}),
+}))
+jest.mock('#/lib/hooks/useOpenLink', () => ({useOpenLink: () => jest.fn()}))
+jest.mock('#/components/Button', () => {
+  const {Pressable} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    Button: ({
+      label,
+      tabIndex,
+      onFocus,
+      testID,
+      children,
+    }: {
+      label: string
+      tabIndex?: number
+      onFocus?: () => void
+      testID?: string
+      children: React.ReactNode
+    }) => (
+      <Pressable
+        testID={testID}
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        accessibilityHint=""
+        tabIndex={tabIndex as never}
+        onFocus={onFocus}>
+        {children}
+      </Pressable>
+    ),
+    ButtonIcon: () => null,
+  }
+})
+jest.mock('#/components/Menu', () => ({
+  Root: ({children}: {children: React.ReactNode}) => children,
+  Trigger: ({
+    children,
+  }: {
+    children: (state: {props: {onFocus: () => void}}) => React.ReactNode
+  }) => children({props: {onFocus: mockTriggerOnFocus}}),
+  Outer: () => null,
+}))
+jest.mock('#/components/icons/DotGrid', () => ({
+  DotGrid3x1_Stroke2_Corner0_Rounded: () => null,
 }))
 
 /*
@@ -120,6 +172,7 @@ const article: app.bsky.embed.external.ViewArticle = {
   uri: 'https://example.com/article',
   description: '',
   title: 'An article',
+  associatedProfiles: [authorProfile],
 }
 const livestream: app.bsky.embed.external.ViewLivestream = {
   uri: 'https://example.com/livestream',
@@ -142,6 +195,17 @@ const photo: app.bsky.embed.external.ViewGallery = {
   likeCount: 0,
   associatedProfiles: [authorProfile],
 }
+
+const triggerCards: [
+  string,
+  (focus?: ExploreGalleryFocusProps) => React.ReactElement,
+][] = [
+  [
+    'ArticleCard',
+    focus => <ArticleCard article={article} galleryFocus={focus} />,
+  ],
+  ['PhotoCard', focus => <PhotoCard photo={photo} galleryFocus={focus} />],
+]
 
 const cards: [
   string,
@@ -246,3 +310,61 @@ it.each(interactions)(
     expect(screen.queryByTestId('atmospherePhotoHoverOverlay')).toBeNull()
   },
 )
+
+describe.each(triggerCards)('%s menu trigger', (_name, renderCard) => {
+  const getTrigger = () => screen.getByTestId('atmosphereCardMenuTrigger')
+
+  it('mirrors the roving tabIndex but not the focus ref', () => {
+    const galleryFocus = {
+      focusRef: jest.fn(),
+      tabIndex: 0 as const,
+      onFocus: jest.fn(),
+    }
+    const {rerender} = render(renderCard(galleryFocus))
+
+    expect(getTrigger().props.tabIndex).toBe(0)
+    expect(galleryFocus.focusRef).toHaveBeenCalledTimes(1)
+    expect(screen.getByTestId('link').props.tabIndex).toBe(0)
+
+    rerender(renderCard({...galleryFocus, tabIndex: -1}))
+    expect(getTrigger().props.tabIndex).toBe(-1)
+
+    rerender(renderCard())
+    expect(getTrigger().props.tabIndex).toBeUndefined()
+  })
+
+  it('calls both the menu and gallery focus callbacks', () => {
+    mockTriggerOnFocus.mockClear()
+    const galleryFocus = {
+      focusRef: jest.fn(),
+      tabIndex: 0 as const,
+      onFocus: jest.fn(),
+    }
+    render(renderCard(galleryFocus))
+
+    fireEvent(getTrigger(), 'focus')
+    expect(mockTriggerOnFocus).toHaveBeenCalledTimes(1)
+    expect(galleryFocus.onFocus).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not throw on focus without gallery focus props', () => {
+    render(renderCard())
+    expect(() => fireEvent(getTrigger(), 'focus')).not.toThrow()
+  })
+
+  it('sits top-right, outside the link and any pointer-disabled ancestor', () => {
+    render(renderCard())
+
+    const link = screen.getByTestId('link')
+    let wrapperStyle: ViewProps['style']
+    let node = getTrigger().parent
+    while (node) {
+      expect(node).not.toBe(link)
+      const style = StyleSheet.flatten((node.props as ViewProps).style)
+      expect(style?.pointerEvents).not.toBe('none')
+      if (style?.position === 'absolute') wrapperStyle ??= style
+      node = node.parent
+    }
+    expect(wrapperStyle).toMatchObject({position: 'absolute', top: 8, right: 8})
+  })
+})
