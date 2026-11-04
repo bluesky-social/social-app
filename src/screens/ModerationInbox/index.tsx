@@ -40,7 +40,10 @@ import {type tools} from '#/lexicons'
 import {AccountStatus} from './components/AccountStatus'
 import {FilterMenu} from './components/FilterMenu'
 import {type ActionedSubject} from './components/hooks/useActionedSubjectLabels'
-import {getAccountEnforcement} from './components/util/accountData'
+import {
+  getAccountEnforcement,
+  getHasActiveStrikes,
+} from './components/util/accountData'
 import {YourAccountActions} from './components/YourAccountActions'
 import {YourReportRow} from './components/YourReportRow'
 
@@ -346,6 +349,7 @@ function YourAccount() {
         <AccountStatus
           status={accountStanding}
           enforcement={getAccountEnforcement(accountStatusQuery.data)}
+          hasActiveStrikes={getHasActiveStrikes(accountStatusQuery.data)}
         />
       ) : undefined}
     </Layout.Center>

@@ -14,9 +14,11 @@ import {type AccountEnforcement} from './util/accountData'
 export function AccountStatus({
   status,
   enforcement,
+  hasActiveStrikes,
 }: {
   status: 'good' | 'warning' | 'atRisk'
   enforcement?: AccountEnforcement
+  hasActiveStrikes?: boolean
 }) {
   const t = useTheme()
   const {i18n, t: l} = useLingui()
@@ -41,7 +43,9 @@ export function AccountStatus({
         ? l`Your account is at risk of permanent suspension`
         : status === 'atRisk'
           ? l`Your account may be suspended or at risk of suspension`
-          : l`Your account has moderation actions`
+          : hasActiveStrikes
+            ? l`Your account has strikes against it`
+            : l`Your account has moderation actions`
   const description = isTakenDown ? (
     <Trans>
       Your account is suspended on Bluesky. See your notices for details and
@@ -51,6 +55,12 @@ export function AccountStatus({
     <Trans>
       Your account is temporarily suspended on Bluesky. See your notices for
       details and available appeal options.
+    </Trans>
+  ) : status === 'atRisk' && enforcement && hasActiveStrikes ? (
+    <Trans>
+      We’ve taken action on your account for violating our Community Guidelines.
+      Your record now carries enough strikes that another violation could lead
+      to permanent suspension.
     </Trans>
   ) : status === 'atRisk' && enforcement ? (
     <Trans>
@@ -62,12 +72,18 @@ export function AccountStatus({
       Your account may already be suspended or at risk of suspension. See your
       notices for details.
     </Trans>
+  ) : hasActiveStrikes ? (
+    <Trans>
+      We’ve taken action on your account for violating our Community Guidelines,
+      and strikes have been added to your record. More violations will lead to
+      stronger enforcement, including suspension.
+    </Trans>
   ) : (
     <Trans>
       We’ve taken action on your account. See your notices for details.
     </Trans>
   )
-  const disclaimer =
+  const scheduledEnd =
     isSuspended && enforcement?.expiresAt ? (
       <Trans>
         Scheduled end:{' '}
@@ -76,12 +92,22 @@ export function AccountStatus({
           timeStyle: 'short',
         })}
       </Trans>
-    ) : !isTakenDown && !isSuspended ? (
+    ) : null
+  const disclaimer = hasActiveStrikes ? (
+    isTakenDown || isSuspended ? (
+      <Trans>
+        Your account has strikes against it. Strikes come off your record over
+        time.
+      </Trans>
+    ) : (
       <Trans>
         Some account features may be restricted. Strikes come off your record
         over time.
       </Trans>
-    ) : null
+    )
+  ) : !isTakenDown && !isSuspended ? (
+    <Trans>Some account features may be restricted.</Trans>
+  ) : null
 
   return (
     <>
@@ -115,6 +141,9 @@ export function AccountStatus({
           </View>
           <Prompt.TitleText>{title}</Prompt.TitleText>
           <Prompt.DescriptionText>{description}</Prompt.DescriptionText>
+          {scheduledEnd ? (
+            <Prompt.DescriptionText>{scheduledEnd}</Prompt.DescriptionText>
+          ) : null}
           {disclaimer ? (
             <Prompt.DescriptionText>{disclaimer}</Prompt.DescriptionText>
           ) : null}

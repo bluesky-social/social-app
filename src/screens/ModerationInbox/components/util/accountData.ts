@@ -5,6 +5,13 @@ export type AccountEnforcement = {
   expiresAt?: string
 }
 
+export function getHasActiveStrikes(data: unknown): boolean | undefined {
+  if (!data || typeof data !== 'object' || !('hasActiveStrikes' in data)) return
+  return typeof data.hasActiveStrikes === 'boolean'
+    ? data.hasActiveStrikes
+    : undefined
+}
+
 export function getAccountPreview(data: unknown): AccountPreview | undefined {
   if (!data || typeof data !== 'object' || !('account' in data)) return
   const account = data.account
