@@ -1,8 +1,9 @@
 /**
  * @file Give the system bar icons day/night-aware colors before JS runs.
- * `react-native-edge-to-edge`'s theme used to do this. Without it, the status
- * bar icons stay white on the light window until the first `StatusBar` update.
- * `isLightTheme` comes from AppCompat, which flips it for DayNight themes.
+ * Without these, the status bar icons stay white on the light window until the
+ * first `StatusBar` update. `isLightTheme` comes from AppCompat, which flips it
+ * for DayNight themes. Must be registered before `expo-navigation-bar`, which
+ * removes `android:windowLightNavigationBar` when no `style` is set.
  */
 
 const {withAndroidStyles, AndroidConfig} = require('expo/config-plugins')
