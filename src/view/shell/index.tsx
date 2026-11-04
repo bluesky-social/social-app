@@ -244,6 +244,7 @@ export function Shell() {
     <View testID="mobileShellView" style={[a.h_full, t.atoms.bg]}>
       <StatusBar
         animated
+        hidden={false}
         style={
           t.name !== 'light' ||
           (IS_IOS && !IS_LIQUID_GLASS && fullyExpandedCount > 0)
@@ -251,7 +252,10 @@ export function Shell() {
             : 'dark'
         }
       />
-      <NavigationBar style={t.name !== 'light' ? 'light' : 'dark'} />
+      <NavigationBar
+        hidden={false}
+        style={t.name !== 'light' ? 'light' : 'dark'}
+      />
       {currentAccount?.status === 'takendown' ? (
         <Takendown />
       ) : currentAccount?.status === 'deactivated' ? (

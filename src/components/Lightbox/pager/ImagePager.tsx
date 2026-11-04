@@ -469,7 +469,7 @@ function ImageView({
         // the edge effect keeps the status bar legible over a zoomed image
         hidden={(isScaled && !IS_LIQUID_GLASS) || !showControls}
       />
-      <NavigationBar style="light" />
+      <NavigationBar style="light" hidden={false} />
       <Animated.View
         style={[styles.backdrop, backdropStyle]}
         renderToHardwareTextureAndroid
