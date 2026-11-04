@@ -19,6 +19,7 @@ import {
   type NanoGlyphName,
 } from '#/components/icons/glyphMaps'
 import {type IconWithSvgMeta} from '#/components/icons/TEMPLATE'
+import {IS_INTERNAL} from '#/env'
 /*
  * Each set is typed by its own glyph names, so widen the components to accept
  * any name. The native renderers put `style` in an array, so a style array is
@@ -48,15 +49,17 @@ const iconSets = {
 type GlyphEntry = [number, [number, string][]]
 
 /**
- * Icon font families that nano-icons reports missing from the native binary.
- * In development this means the dev client was built with different icon
- * fonts than the running JS, e.g. from an older commit, so the glyphs would
- * render blank.
+ * Icon font families that nano-icons reports missing from the native binary,
+ * so their glyphs would render blank. The binary was built with different
+ * icon fonts than the running JS: a dev client built from an older commit, or
+ * a TestFlight build running a per-PR OTA update. Those updates only compare
+ * the fingerprint against the PR's base commit, but install on any TestFlight
+ * binary with the same app version.
  */
 const missingFonts = new Set<string>()
 const missingFontListeners = new Set<() => void>()
 
-if (__DEV__) {
+if (IS_INTERNAL) {
   addFontIntegrityListener((issue, status) => {
     if (status === 'found') {
       missingFonts.add(issue.family)
@@ -78,13 +81,13 @@ function subscribeToMissingFonts(listener: () => void) {
   }
 }
 
-function useIsFontMissingDev(family: string) {
+function useIsFontMissingInternal(family: string) {
   return useSyncExternalStore(subscribeToMissingFonts, () =>
     missingFonts.has(family),
   )
 }
 
-function useIsFontMissingRelease(_family: string) {
+function useIsFontMissingProduction(_family: string) {
   return false
 }
 
@@ -92,9 +95,11 @@ function useIsFontMissingRelease(_family: string) {
  * Whether an icon font is missing from the native binary, so that its icons
  * should render with react-native-svg. Always false in production, where
  * `fingerprint.config.js` makes any font change a native build, which also
- * keeps the subscription out of release renders.
+ * keeps the subscription out of production renders.
  */
-const useIsFontMissing = __DEV__ ? useIsFontMissingDev : useIsFontMissingRelease
+const useIsFontMissing = IS_INTERNAL
+  ? useIsFontMissingInternal
+  : useIsFontMissingProduction
 
 const reportedFallbacks = new Set<string>()
 
@@ -122,8 +127,8 @@ function warnFallback(name: string, prop: string) {
  * cannot reproduce - a `gradient`, a `ref` (which must point at the `Svg`), a
  * `height` that differs from the width, or any other SVG prop - renders the
  * SVG icon instead, so the prop contract and the `svgPaths` metadata read by
- * `@bsky.app/peek-menu` stay exactly those of the SVG icon. In development,
- * so does every icon of a font that the dev client lacks.
+ * `@bsky.app/peek-menu` stay exactly those of the SVG icon. In development
+ * and TestFlight, so does every icon of a font that the binary lacks.
  */
 export function withNanoGlyph(
   SvgIcon: IconWithSvgMeta,
