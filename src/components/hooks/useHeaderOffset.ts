@@ -2,7 +2,7 @@ import {useWindowDimensions} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useBreakpoints} from '#/alf'
-import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 export function useHeaderOffset() {
   const {gtMobile} = useBreakpoints()
@@ -11,7 +11,7 @@ export function useHeaderOffset() {
   if (gtMobile && IS_WEB) {
     return 0
   }
-  const navBarHeight = 52 + (IS_LIQUID_GLASS ? insets.top : 0)
+  const navBarHeight = 52 + (IS_NATIVE ? insets.top : 0)
   const tabBarPad = 10 + 10 + 3 // padding + border
   const normalLineHeight = 20 // matches tab bar
   const tabBarText = normalLineHeight * fontScale
