@@ -2,14 +2,12 @@ import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 
-import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
 import {atoms as a, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {PageText_Stroke2_Corner0_Rounded as IconPage} from '#/components/icons/Page'
-import {InlineLinkText, Link} from '#/components/Link'
-import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
@@ -161,22 +159,7 @@ export function ArticleCard({
                     a.leading_tight,
                     t.atoms.text_contrast_medium,
                   ]}>
-                  by{' '}
-                  <ProfileHoverCard did={author.did}>
-                    <InlineLinkText
-                      label={l`Open ${sanitizeHandle(author.handle, '@')}'s profile`}
-                      to={makeProfileLink({
-                        handle: author.handle,
-                        did: author.did,
-                      })}
-                      style={[
-                        a.text_xs,
-                        a.leading_tight,
-                        t.atoms.text_contrast_medium,
-                      ]}>
-                      {sanitizeHandle(author.handle, '@')}
-                    </InlineLinkText>
-                  </ProfileHoverCard>
+                  by {sanitizeHandle(author.handle, '@')}
                 </Text>
               </Text>
             </View>
