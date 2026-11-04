@@ -19,6 +19,8 @@ import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {Pencil_Stroke2_Corner2_Rounded as PencilIcon} from '#/components/icons/Pencil'
+import {PlusSmall_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
@@ -36,7 +38,15 @@ import {
   useSetOwnProfileLinksCache,
   useWriteProfileLinks,
 } from '#/features/profileLinks'
+import {
+  PILL_DASHED_BORDER,
+  PILL_LEFT,
+  PILL_RIGHT_GRIP,
+  PILL_RIGHT_TEXT,
+  PILL_VERTICAL,
+} from '#/features/profileLinks/pillSize'
 import {type app} from '#/lexicons'
+import {PronounsDialog} from './PronounsDialog'
 
 export function EditProfileDialog({
   profile,
@@ -128,6 +138,9 @@ function DialogInner({
   const [displayName, setDisplayName] = useState(initialDisplayName)
   const initialDescription = profile.description || ''
   const [description, setDescription] = useState(initialDescription)
+  const initialPronouns = profile.pronouns || ''
+  const [pronouns, setPronouns] = useState(initialPronouns)
+  const pronounsControl = Dialog.useDialogControl()
   const [userBanner, setUserBanner] = useState<string | undefined | null>(
     profile.banner,
   )
@@ -170,6 +183,7 @@ function DialogInner({
   const profileDirty =
     displayName !== initialDisplayName ||
     description !== initialDescription ||
+    pronouns !== initialPronouns ||
     userAvatar !== profile.avatar ||
     userBanner !== profile.banner
   const linksDirty =
@@ -231,6 +245,7 @@ function DialogInner({
         updates: {
           displayName: displayName.trimEnd(),
           description: description.trimEnd(),
+          ...(pronouns !== initialPronouns && {pronouns: pronouns.trim()}),
           ...(written && {
             links: written.refs.length ? written.refs : undefined,
           }),
@@ -259,6 +274,8 @@ function DialogInner({
     control,
     displayName,
     description,
+    pronouns,
+    initialPronouns,
     newUserAvatar,
     newUserBanner,
     setImageError,
@@ -426,6 +443,74 @@ function DialogInner({
               </Trans>
             </Admonition>
           )}
+
+        <View>
+          <TextField.LabelText>
+            <Trans>Pronouns</Trans>
+          </TextField.LabelText>
+          {/*
+           * A pill that opens a sheet, rather than a full field, so pronouns
+           * stay optional and out of the way. It matches the link pills.
+           */}
+          <View style={[a.flex_row]}>
+            <Button
+              testID="editProfilePronounsBtn"
+              label={
+                pronouns
+                  ? _(msg`Edit pronouns: ${pronouns}`)
+                  : _(msg`Add pronouns`)
+              }
+              size="small"
+              color="secondary"
+              // unset, it matches the dashed "Add link" pill
+              variant={pronouns ? 'solid' : 'outline'}
+              onPress={() => pronounsControl.open()}
+              style={
+                pronouns
+                  ? {
+                      paddingVertical: PILL_VERTICAL,
+                      // starts with text, ends in a pencil sized like the drag grip
+                      paddingLeft: PILL_RIGHT_TEXT,
+                      paddingRight: PILL_RIGHT_GRIP,
+                    }
+                  : {
+                      // the outline variant draws a hairline on native; this wants a full point
+                      borderStyle: 'dashed',
+                      borderWidth: PILL_DASHED_BORDER,
+                      borderColor: t.palette.contrast_600,
+                      // less the border, so it's the same size as the solid pills
+                      paddingVertical: PILL_VERTICAL - PILL_DASHED_BORDER,
+                      paddingLeft: PILL_LEFT - PILL_DASHED_BORDER,
+                      paddingRight: PILL_RIGHT_TEXT - PILL_DASHED_BORDER,
+                    }
+              }>
+              {pronouns ? (
+                <>
+                  <ButtonText emoji numberOfLines={1} style={t.atoms.text}>
+                    {pronouns}
+                  </ButtonText>
+                  {/* sized and colored like the drag grip on the link pills */}
+                  <PencilIcon
+                    width={14}
+                    style={[{marginLeft: -2}, t.atoms.text_contrast_low]}
+                  />
+                </>
+              ) : (
+                <>
+                  <ButtonIcon icon={PlusIcon} />
+                  <ButtonText style={{marginLeft: -2}}>
+                    <Trans>Add pronouns</Trans>
+                  </ButtonText>
+                </>
+              )}
+            </Button>
+          </View>
+          <PronounsDialog
+            control={pronounsControl}
+            pronouns={pronouns}
+            onSave={setPronouns}
+          />
+        </View>
 
         <View>
           <TextField.LabelText>
