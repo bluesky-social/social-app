@@ -63,7 +63,7 @@ import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {type Metrics, useAnalytics} from '#/analytics'
 import {Features, isOnForBetaUser} from '#/analytics/features'
-import {IS_INTERNAL, IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {IS_INTERNAL, IS_NATIVE, IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -89,7 +89,7 @@ export function NewNotificationsScreen({}: Props) {
   const {openComposer} = useOpenComposer()
 
   return (
-    <Layout.Screen testID="newNotificationsScreen" noInsetTop={IS_LIQUID_GLASS}>
+    <Layout.Screen testID="newNotificationsScreen" noInsetTop={IS_NATIVE}>
       <HomeHeaderModeProvider>
         <NewNotificationsScreenInner />
       </HomeHeaderModeProvider>
@@ -561,7 +561,7 @@ function NotificationsHeader({
   const {selectedPage} = Pager.usePager()
   const {gtMobile} = useBreakpoints()
   const insets = useSafeAreaInsets()
-  const headerPinnedHeight = IS_LIQUID_GLASS ? insets.top : 0
+  const headerPinnedHeight = IS_NATIVE ? insets.top : 0
 
   const titleStyle = useAnimatedStyle(() => {
     if (IS_WEB) return {}
@@ -646,7 +646,7 @@ function NotificationsHeader({
         </Animated.View>
       )}
       <Animated.View
-        style={[IS_LIQUID_GLASS && {paddingTop: insets.top}, titleStyle]}
+        style={[IS_NATIVE && {paddingTop: insets.top}, titleStyle]}
         onLayout={onTitleLayout}>
         {IS_WEB && (
           <Layout.Center

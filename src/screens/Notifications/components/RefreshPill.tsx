@@ -10,7 +10,7 @@ import {useHomeHeaderMode} from '#/view/com/util/MainScrollProvider'
 import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {NewPostsPill} from '#/components/NewPostsPill'
-import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {IS_WEB} from '#/env'
 
 /**
  * Space between the bottom edge of the header and the pill.
@@ -74,7 +74,7 @@ export function RefreshPill({
   const mode = useHomeHeaderMode()
   const {top: topInset} = useSafeAreaInsets()
   // As `NotificationsHeader` has it
-  const pinnedHeight = IS_LIQUID_GLASS ? topInset : 0
+  const pinnedHeight = topInset
   // Translate only: a transform moves it without a layout pass every frame
   const follow = useAnimatedStyle(() => ({
     transform: [
