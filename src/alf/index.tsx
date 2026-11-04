@@ -10,7 +10,6 @@ import {
 } from '#/alf/fonts'
 import {themes} from '#/alf/themes'
 import {
-  alpha,
   contrastRatio,
   darken,
   lighten,
@@ -29,7 +28,6 @@ export * from '#/alf/util/themeSelector'
 export * from '#/alf/util/useGutters'
 export const utils = {
   ...baseUtils,
-  alpha,
   rgbToHex,
   lighten,
   darken,
