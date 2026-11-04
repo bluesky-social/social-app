@@ -42,14 +42,23 @@ const strip = [
  * the content column. It follows the header as the title hides on scroll,
  * coming to rest under the tab pills that stay. The web header doesn't hide,
  * so there it stays put. Render it in a tab, after its list.
+ *
+ * Once the list is scrolled down it says "New" with an up arrow instead, as
+ * pressing it takes the user back to the top.
  */
 export function RefreshPill({
   visible,
+  isScrolledDown,
   headerHeight,
   titleHeight,
   onPress,
 }: {
   visible: boolean
+  /**
+   * Whether the list is scrolled down, as it reports with
+   * `onScrolledDownChange`.
+   */
+  isScrolledDown: boolean
   /**
    * The height of the whole header, title and tab pills, with the title
    * shown.
@@ -84,11 +93,17 @@ export function RefreshPill({
           testID="notificationsRefreshPill"
           visible={visible}
           variant="new"
-          text={l({
-            message: 'Refresh',
-            comment:
-              'Pill on the notifications list, shown when there are new notifications to load.',
-          })}
+          showArrow={isScrolledDown}
+          // Without `text`, the pill says "New"
+          text={
+            isScrolledDown
+              ? undefined
+              : l({
+                  message: 'Refresh',
+                  comment:
+                    'Pill on the notifications list, shown when there are new notifications to load.',
+                })
+          }
           label={l`Load new notifications`}
           onPress={onPress}
         />

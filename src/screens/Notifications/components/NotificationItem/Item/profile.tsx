@@ -43,7 +43,7 @@ import * as bsky from '#/types/bsky'
 import {AVATAR_SIZE} from './Avatar'
 import {SuppressHoverContext, useRowHover, useSuppressHover} from './hover'
 import {Card} from './media'
-import {ROW_GAP, ROW_PADDING_START} from './Root'
+import {ROW_GAP, ROW_GUTTER} from './Root'
 import {useDisplayName} from './text'
 
 type FollowLogContext = Metrics['profile:follow']['logContext'] &
@@ -475,11 +475,7 @@ const ACTOR_AVATAR_SIZE = 32
  * gap in from theirs.
  */
 const ACTOR_LIST_INSET =
-  ROW_PADDING_START +
-  AVATAR_SIZE +
-  ROW_GAP -
-  ACTOR_AVATAR_SIZE -
-  tokens.space.sm
+  ROW_GUTTER + AVATAR_SIZE + ROW_GAP - ACTOR_AVATAR_SIZE - tokens.space.sm
 
 /**
  * The expanded list of everyone in a grouped notification, each linking to
@@ -636,8 +632,7 @@ export function ActorListItem({
           a.align_center,
           a.gap_sm,
           a.py_sm,
-          a.pr_lg,
-          {paddingLeft: ACTOR_LIST_INSET},
+          {paddingLeft: ACTOR_LIST_INSET, paddingRight: ROW_GUTTER},
         ]}>
         <SubtleHover hover={hover} />
         <Pressable

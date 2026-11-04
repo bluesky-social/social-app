@@ -16,10 +16,10 @@ import {SubtleHover} from '#/components/SubtleHover'
 import {SuppressHoverContext, useRowHover} from './hover'
 
 /**
- * A row's padding before the avatar, which lines the avatar up with a feed
- * post's. Section headers use it too, to line up with the avatars.
+ * A row's padding at either side. Section headers sit further in, with
+ * `a.px_lg`.
  */
-export const ROW_PADDING_START = 18
+export const ROW_GUTTER = tokens.space.md
 
 /**
  * The space between a row's avatar and its content. It's a little wider than
@@ -171,9 +171,8 @@ export function Root({
                * shrinks to fit its content rather than stretching
                */
               a.w_full,
-              a.pr_lg,
               a.py_md,
-              {gap: ROW_GAP, paddingLeft: ROW_PADDING_START, backgroundColor},
+              {gap: ROW_GAP, paddingHorizontal: ROW_GUTTER, backgroundColor},
               style,
             ]}>
             <SubtleHover hover={hover} />

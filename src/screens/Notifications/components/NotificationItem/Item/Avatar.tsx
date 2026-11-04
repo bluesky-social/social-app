@@ -4,20 +4,40 @@ import {moderateProfile} from '@bsky/sdk/moderation'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
-import {type Props as SVGIconProps} from '#/components/icons/common'
+import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
+import {type Props as SVGIconProps, sizes} from '#/components/icons/common'
+import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
+import {LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon} from '#/components/icons/LikeRepost'
+import {PersonPlus_Filled_Corner2_Rounded as PersonPlusIcon} from '#/components/icons/Person'
+import {
+  Repost_Stroke2_Corner3_Rounded as RepostIcon,
+  RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon,
+} from '#/components/icons/Repost'
 import * as Skele from '#/components/Skeleton'
 import type * as bsky from '#/types/bsky'
+import {PREVIEW_AVATAR_SIZE} from './avatarRow'
 import {useItemBackgroundColor} from './Root'
 
 /**
  * The colour family of a notification's icon badge.
  */
-export type BadgeTone =
-  'like' | 'repost' | 'follow' | 'conversation' | 'activity' | 'neutral'
+export type BadgeTone = 'follow' | 'conversation' | 'activity' | 'neutral'
 
 /**
- * Activity (subscribed post) badges use an orange that isn't in the ALF
- * palette yet.
+ * The v1-style icon that a groupable row has in its left column instead of an
+ * avatar.
+ */
+export type Glyph =
+  | 'like'
+  | 'repost'
+  | 'likeViaRepost'
+  | 'repostViaRepost'
+  | 'follow'
+  | 'activity'
+
+/**
+ * Activity (subscribed post) badges and icons use an orange that isn't in the
+ * ALF palette yet.
  */
 const ACTIVITY_ORANGE = '#F26022'
 
@@ -60,7 +80,8 @@ const BADGE_POSITION = {
 /**
  * The primary actor's avatar, with an icon badge overlapping its bottom-end
  * corner that says what kind of notification this is. Omit `icon` for an
- * unbadged avatar.
+ * unbadged avatar. Rows that can be about a group of people, e.g. likes, have
+ * an `Icon` instead.
  */
 export function Avatar({
   profile,
@@ -79,8 +100,6 @@ export function Avatar({
     : undefined
 
   const badgeColor = {
-    like: t.palette.pink,
-    repost: t.palette.positive_500,
     follow: t.palette.primary_500,
     conversation: CONVERSATION_PURPLE,
     activity: ACTIVITY_ORANGE,
@@ -135,6 +154,54 @@ export function Avatar({
 }
 
 /**
+ * The size of an `Icon`, the `xl` icon size its glyphs are drawn at.
+ */
+const ICON_SIZE = sizes.xl
+
+/**
+ * Where an `Icon` sits: in the avatar's column, at its end edge, and pulled
+ * up so that it's centred on the smaller avatars of the `Item.AvatarRow`
+ * beside it.
+ */
+const ICON_SLOT = [
+  a.align_end,
+  {width: AVATAR_SIZE, marginTop: (PREVIEW_AVATAR_SIZE - ICON_SIZE) / 2},
+]
+
+/**
+ * The left column of a row that can be about a group of people, e.g. a like,
+ * as in v1: an icon saying what happened, where the avatar would be,
+ * right-aligned to its end edge. The people are in the row's `Item.AvatarRow`
+ * instead.
+ */
+export function Icon({glyph}: {glyph: Glyph}) {
+  return (
+    <View style={ICON_SLOT}>
+      <GlyphIcon glyph={glyph} />
+    </View>
+  )
+}
+
+function GlyphIcon({glyph}: {glyph: Glyph}) {
+  const t = useTheme()
+
+  switch (glyph) {
+    case 'like':
+      return <HeartIcon size="xl" fill={t.palette.pink} />
+    case 'repost':
+      return <RepostIcon size="xl" fill={t.palette.positive_500} />
+    case 'likeViaRepost':
+      return <LikeRepostIcon size="xl" fill={t.palette.pink} />
+    case 'repostViaRepost':
+      return <RepostRepostIcon size="xl" fill={t.palette.positive_500} />
+    case 'follow':
+      return <PersonPlusIcon size="xl" fill={t.palette.primary_500} />
+    case 'activity':
+      return <BellRingingIcon size="xl" fill={ACTIVITY_ORANGE} />
+  }
+}
+
+/**
  * Stands in for a badged `Avatar` while the row loads, in the same slot, with
  * a faint circle where the badge goes.
  */
@@ -153,6 +220,17 @@ export function AvatarSkeleton() {
         ]}>
         <Skele.Circle blend size={BADGE_SIZE} />
       </View>
+    </View>
+  )
+}
+
+/**
+ * Stands in for an `Icon` while the row loads.
+ */
+export function IconSkeleton() {
+  return (
+    <View style={ICON_SLOT}>
+      <Skele.Circle size={ICON_SIZE} />
     </View>
   )
 }
