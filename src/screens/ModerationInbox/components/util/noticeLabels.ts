@@ -54,6 +54,8 @@ export function getNoticeLabels(
     header = isAccount
       ? msg`The action against your account was reversed`
       : msg`The action against your content was reversed`
+  } else if (isAccount && action?.type === 'communicationSent') {
+    header = msg`Email about your account`
   } else if (action?.type === 'accountSuspended' && action.expiresAt) {
     const hours = Math.max(
       0,
