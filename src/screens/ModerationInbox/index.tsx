@@ -17,6 +17,7 @@ import {logger} from '#/logger'
 import {
   useModerationInboxAccountStatusQuery,
   useModerationInboxActionedSubjectsQuery,
+  useModerationInboxCacheMutation,
   useModerationInboxReportsQuery,
   useModerationInboxUnreadCountQuery,
   useUpdateModerationInboxSeenMutation,
@@ -265,6 +266,7 @@ function YourAccount() {
   const [isPTRing, setIsPTRing] = useState(false)
   const [filter, setFilter] = useState<ReportFilter>('all')
   const actionedSubjectsQuery = useModerationInboxActionedSubjectsQuery(filter)
+  const invalidateInbox = useModerationInboxCacheMutation()
   const accountStatusQuery = useModerationInboxAccountStatusQuery()
   const unreadCountQuery = useModerationInboxUnreadCountQuery()
   const markSeen = useUpdateModerationInboxSeenMutation()
@@ -286,11 +288,7 @@ function YourAccount() {
   const onRefresh = async () => {
     setIsPTRing(true)
     try {
-      await Promise.all([
-        actionedSubjectsQuery.refetch(),
-        accountStatusQuery.refetch(),
-        unreadCountQuery.refetch(),
-      ])
+      await invalidateInbox()
     } catch (err) {
       logger.error('Failed to refresh moderation inbox account', {error: err})
     } finally {

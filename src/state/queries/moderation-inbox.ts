@@ -147,8 +147,6 @@ export function useModerationInboxSubjectQuery({
   const did = currentAccount?.did
 
   return useInfiniteQuery({
-    // Matching observers share one request and fresh result. Keep the viewer,
-    // service, subject and starting cursor distinct for correct access and paging.
     queryKey: createQueryKey(QUERY_KEY_ROOT, {
       did,
       endpoint: 'subject',

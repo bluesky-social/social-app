@@ -31,7 +31,7 @@ import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Layout from '#/components/Layout'
-import {InlineLinkText} from '#/components/Link'
+import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -166,6 +166,7 @@ export function ModerationInboxNoticeDetailsScreen({
           <NoticeDetails
             key={`${currentAccount?.did}:${moderationService}:${subject}`}
             data={data}
+            subject={subject}
             actions={actions}
             selectedAction={selectedAction}
             serviceName={serviceName ?? moderationService}
@@ -210,11 +211,13 @@ export function ModerationInboxNoticeDetailsScreen({
 
 function NoticeDetails({
   data,
+  subject,
   actions,
   selectedAction,
   serviceName,
 }: {
   data: tools.ozone.inbox.getActionedSubject.$OutputBody
+  subject: string
   actions: tools.ozone.inbox.defs.ActionView[]
   selectedAction?: tools.ozone.inbox.defs.ActionView
   serviceName: string
@@ -246,14 +249,13 @@ function NoticeDetails({
     ].includes(candidate.type)
   const isAppealable = (candidate: tools.ozone.inbox.defs.ActionView) =>
     !candidate.reversedAt && isAppealDecision(candidate)
-  const appealedAction = selectedAction
-    ? isAppealable(selectedAction)
-      ? selectedAction
-      : undefined
-    : actions.find(isAppealable)
-  const canAppeal =
-    (data.availableActions?.includes('appeal') ?? false) &&
-    (!selectedAction || !!appealedAction)
+  const appealedAction = selectedAction ? undefined : actions.find(isAppealable)
+  /*
+   * The server grants appeals for the current subject, not each history entry.
+   * Historical notices link to current options rather than infer eligibility.
+   */
+  const canAppealSubject = data.availableActions?.includes('appeal') ?? false
+  const canAppeal = !selectedAction && canAppealSubject
 
   return (
     <>
@@ -351,7 +353,23 @@ function NoticeDetails({
               )}
             </Text>
           ) : null}
-          {canAppeal ? (
+          {selectedAction && canAppealSubject ? (
+            <View style={[a.align_start]}>
+              <Link
+                testID="moderationInboxAppealOptionsLink"
+                to={{
+                  screen: 'ModerationInboxNoticeDetails',
+                  params: {moderationService: data.src, subject},
+                }}
+                label={l`View current appeal options`}
+                size="small"
+                color="secondary">
+                <ButtonText>
+                  <Trans>View current appeal options</Trans>
+                </ButtonText>
+              </Link>
+            </View>
+          ) : canAppeal ? (
             <View style={[a.gap_2xs]}>
               <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
                 {isAccount ? (

@@ -28,7 +28,7 @@ export function YourAccountActions({item}: {item: ActionedSubject}) {
     <>
       {pages ? (
         pages.flatMap((page, pageIndex) =>
-          page.actions.map((action, actionIndex) => (
+          page.actions.map(action => (
             <YourAccountRow
               key={action.id}
               item={item}
@@ -38,7 +38,7 @@ export function YourAccountActions({item}: {item: ActionedSubject}) {
                   ? history.data.pageParams[pageIndex]
                   : undefined
               }
-              unread={!item.isRead && pageIndex === 0 && actionIndex === 0}
+              unread={!item.isRead && action.id === item.latestAction?.id}
             />
           )),
         )
@@ -54,6 +54,7 @@ export function YourAccountActions({item}: {item: ActionedSubject}) {
       {history.hasNextPage ? (
         <View style={[a.p_lg, a.align_start]}>
           <Button
+            testID="moderationInboxOlderAccountActionsBtn"
             label={l`Load older account actions`}
             size="small"
             color="secondary"

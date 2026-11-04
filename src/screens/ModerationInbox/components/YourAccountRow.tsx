@@ -39,7 +39,10 @@ export function YourAccountRow({
           moderationService: item.src,
           subject,
           ...('did' in item.subject
-            ? {actionId: String(action.id), actionCursor}
+            ? {
+                actionId: String(action.id),
+                ...(actionCursor ? {actionCursor} : {}),
+              }
             : {}),
         },
       }}
