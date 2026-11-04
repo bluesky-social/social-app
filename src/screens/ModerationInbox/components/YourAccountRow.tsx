@@ -7,12 +7,15 @@ import {ReportRow} from './ReportRow'
 export function YourAccountRow({
   item,
   unread,
+  action = item.latestAction,
+  actionCursor,
 }: {
   item: ActionedSubject
   unread: boolean
+  action?: ActionedSubject['latestAction']
+  actionCursor?: string
 }) {
-  const labels = useActionedSubjectLabels(item)
-  const action = item.latestAction
+  const labels = useActionedSubjectLabels({...item, latestAction: action})
   const subject =
     'did' in item.subject && typeof item.subject.did === 'string'
       ? item.subject.did
@@ -35,6 +38,9 @@ export function YourAccountRow({
         params: {
           moderationService: item.src,
           subject,
+          ...('did' in item.subject
+            ? {actionId: String(action.id), actionCursor}
+            : {}),
         },
       }}
       unread={unread}

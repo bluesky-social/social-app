@@ -52,7 +52,7 @@ export function useActionedSubjectLabels(
         : undefined
       break
     case 'communicationSent':
-      subject = l`We sent you an email about your account`
+      subject = l`Email about your account`
       summary = policyLabel
       break
     case 'labelApplied':

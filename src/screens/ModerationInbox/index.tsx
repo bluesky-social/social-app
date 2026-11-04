@@ -39,7 +39,8 @@ import {type tools} from '#/lexicons'
 import {AccountStatus} from './components/AccountStatus'
 import {FilterMenu} from './components/FilterMenu'
 import {type ActionedSubject} from './components/hooks/useActionedSubjectLabels'
-import {YourAccountRow} from './components/YourAccountRow'
+import {getAccountEnforcement} from './components/util/accountData'
+import {YourAccountActions} from './components/YourAccountActions'
 import {YourReportRow} from './components/YourReportRow'
 
 type ReportFilter = 'all' | 'pending' | 'resolved' | 'unread'
@@ -343,7 +344,12 @@ function YourAccount() {
           ) : undefined}
         </View>
       ) : undefined}
-      {accountStanding ? <AccountStatus status={accountStanding} /> : undefined}
+      {accountStanding ? (
+        <AccountStatus
+          status={accountStanding}
+          enforcement={getAccountEnforcement(accountStatusQuery.data)}
+        />
+      ) : undefined}
     </Layout.Center>
   )
 
@@ -355,7 +361,7 @@ function YourAccount() {
       onRefresh={() => void onRefresh()}
       renderItem={({item}: ListRenderItemInfo<ActionedSubject>) => (
         <Layout.Center>
-          <YourAccountRow item={item} unread={!item.isRead} />
+          <YourAccountActions item={item} />
         </Layout.Center>
       )}
       ListHeaderComponent={listHeader}

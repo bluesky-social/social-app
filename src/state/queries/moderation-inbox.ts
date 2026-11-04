@@ -134,10 +134,12 @@ export function useModerationInboxAccountStatusQuery() {
 export function useModerationInboxSubjectQuery({
   moderationService,
   subject,
+  initialCursor,
   enabled = true,
 }: {
   moderationService?: DidString
   subject?: tools.ozone.inbox.getActionedSubject.$Params['subject']
+  initialCursor?: string
   enabled?: boolean
 }) {
   const client = useAppviewClient()
@@ -150,6 +152,7 @@ export function useModerationInboxSubjectQuery({
       endpoint: 'subject',
       moderationService,
       subject,
+      initialCursor,
     }),
     queryFn: async ({pageParam}) => {
       if (!moderationService || !subject) {
@@ -161,7 +164,7 @@ export function useModerationInboxSubjectQuery({
         {service: `${moderationService}#atproto_labeler`},
       )
     },
-    initialPageParam: undefined as string | undefined,
+    initialPageParam: initialCursor,
     getNextPageParam: page => page.cursor,
     staleTime: STALE.MINUTES.ONE,
     enabled: enabled && hasSession && !!did && !!moderationService && !!subject,
@@ -219,9 +222,9 @@ export function useModerationInboxCacheMutation() {
           subject,
         })
         await queryClient.cancelQueries({queryKey: subjectQueryKey})
-        queryClient.setQueryData<
+        queryClient.setQueriesData<
           InfiniteData<tools.ozone.inbox.getActionedSubject.$OutputBody>
-        >(subjectQueryKey, data =>
+        >({queryKey: subjectQueryKey}, data =>
           data
             ? {
                 ...data,

@@ -37,7 +37,7 @@ export function getReportActionLabel({
       case 'labelRemoved':
         return msg`Label removed`
       case 'communicationSent':
-        return msg`Communication sent`
+        return msg`Email about your account`
       case 'reportingRestricted':
         return msg`Reporting restricted`
       case 'credentialsRevoked':
