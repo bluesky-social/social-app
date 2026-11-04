@@ -1,8 +1,10 @@
+import {parseAtUriString} from '@atproto/syntax'
+
 import {
   type ParsedReportSubject,
   type ReportSubject,
 } from '#/components/moderation/ReportDialog/types'
-import {app} from '#/lexicons'
+import {app, com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function parseReportSubject(
@@ -69,6 +71,26 @@ export function parseReportSubject(
       uri: subject.uri,
       cid: subject.cid,
       nsid: 'app.bsky.actor.link',
+    }
+  } else if (
+    bsky.isType(app.bsky.embed.external.viewArticle, subject) ||
+    bsky.isType(app.bsky.embed.external.viewGallery, subject)
+  ) {
+    /*
+     * The view's own uri is the external destination, so report the first
+     * valid record it was associated with instead.
+     */
+    const isArticle = bsky.isType(app.bsky.embed.external.viewArticle, subject)
+    for (const ref of subject.associatedRefs ?? []) {
+      if (!bsky.matches(com.atproto.repo.strongRef.main, ref)) continue
+      const uri = parseAtUriString(ref.uri)
+      if (!uri.success || !uri.value.collection || !uri.value.rkey) continue
+      return {
+        type: isArticle ? 'article' : 'photo',
+        uri: ref.uri,
+        cid: ref.cid,
+        nsid: uri.value.collection,
+      }
     }
   } else if (bsky.isType(app.bsky.feed.defs.postView, subject)) {
     const record = subject.record

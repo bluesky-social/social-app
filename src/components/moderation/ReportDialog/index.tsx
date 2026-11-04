@@ -66,6 +66,7 @@ import {
 } from './utils/useReportOptions'
 
 export {type ReportSubject} from './types'
+export {parseReportSubject} from './utils/parseReportSubject'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
 export function useGlobalReportDialogControl() {

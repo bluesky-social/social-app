@@ -78,7 +78,9 @@ export function useSubmitReportMutation() {
         case 'list':
         case 'feed':
         case 'starterPack':
-        case 'profileLink': {
+        case 'profileLink':
+        case 'article':
+        case 'photo': {
           report = {
             reasonType,
             reason: state.details,

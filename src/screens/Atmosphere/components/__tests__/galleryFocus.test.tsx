@@ -109,6 +109,10 @@ jest.mock('#/components/Menu', () => ({
   }) => children({props: {onFocus: mockTriggerOnFocus}}),
   Outer: () => null,
 }))
+jest.mock('#/components/moderation/ReportDialog', () => ({
+  parseReportSubject: () => undefined,
+  useGlobalReportDialogControl: () => ({open: jest.fn()}),
+}))
 jest.mock('#/components/icons/DotGrid', () => ({
   DotGrid3x1_Stroke2_Corner0_Rounded: () => null,
 }))

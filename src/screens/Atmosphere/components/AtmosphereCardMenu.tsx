@@ -11,6 +11,11 @@ import {Person_Stroke2_Corner0_Rounded as PersonIcon} from '#/components/icons/P
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ExternalLinkIcon} from '#/components/icons/Square'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as Menu from '#/components/Menu'
+import {
+  parseReportSubject,
+  type ReportSubject,
+  useGlobalReportDialogControl,
+} from '#/components/moderation/ReportDialog'
 import {type app} from '#/lexicons'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
@@ -21,13 +26,14 @@ import {type ExploreGalleryFocusProps} from './ExploreGallery'
  */
 export function AtmosphereCardMenu({
   type,
-  uri,
+  item,
   author,
   galleryFocus,
   children,
-}: {
-  type: 'article' | 'photo'
-  uri: string
+}: (
+  | {type: 'article'; item: app.bsky.embed.external.ViewArticle}
+  | {type: 'photo'; item: app.bsky.embed.external.ViewGallery}
+) & {
   author: app.bsky.actor.defs.ProfileViewBasic
   galleryFocus?: ExploreGalleryFocusProps
   children?: React.ReactNode
@@ -35,11 +41,23 @@ export function AtmosphereCardMenu({
   const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const openLink = useOpenLink()
+  const reportDialogControl = useGlobalReportDialogControl()
 
   const triggerLabel =
     type === 'article' ? l`Article options` : l`Photo options`
   const viewLabel = type === 'article' ? l`View article` : l`View photo`
   const reportLabel = type === 'article' ? l`Report article` : l`Report photo`
+
+  /*
+   * Appview views may omit `$type`, which the dialog needs to recognize them.
+   * The dialog reports the first valid record in `item.associatedRefs`, so
+   * Report is only offered when it can find one.
+   */
+  const reportSubject: ReportSubject =
+    type === 'article'
+      ? {...item, $type: 'app.bsky.embed.external#viewArticle'}
+      : {...item, $type: 'app.bsky.embed.external#viewGallery'}
+  const canReport = parseReportSubject(reportSubject) !== undefined
 
   return (
     <View style={[a.absolute, a.z_10, {top: 8, right: 8}]}>
@@ -65,7 +83,7 @@ export function AtmosphereCardMenu({
         </Menu.Trigger>
         <Menu.Outer>
           <Menu.Group>
-            <Menu.Item label={viewLabel} onPress={() => openLink(uri)}>
+            <Menu.Item label={viewLabel} onPress={() => openLink(item.uri)}>
               <Menu.ItemText>{viewLabel}</Menu.ItemText>
               <Menu.ItemIcon icon={ExternalLinkIcon} position="right" />
             </Menu.Item>
@@ -81,8 +99,13 @@ export function AtmosphereCardMenu({
           </Menu.Group>
           <Menu.Divider />
           <Menu.Group>
-            {/* Reporting is deferred, so this stays disabled and inert. */}
-            <Menu.Item label={reportLabel} disabled onPress={() => {}}>
+            <Menu.Item
+              label={reportLabel}
+              disabled={!canReport}
+              onPress={() => {
+                if (canReport)
+                  reportDialogControl.open({subject: reportSubject})
+              }}>
               <Menu.ItemText>{reportLabel}</Menu.ItemText>
               <Menu.ItemIcon icon={WarningIcon} position="right" />
             </Menu.Item>

@@ -141,7 +141,7 @@ export function PhotoCard({
       </Link>
       <AtmosphereCardMenu
         type="photo"
-        uri={photo.uri}
+        item={photo}
         author={authorProfile}
         galleryFocus={galleryFocus}
       />

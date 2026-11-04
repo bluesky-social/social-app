@@ -169,7 +169,7 @@ export function ArticleCard({
       </View>
       <AtmosphereCardMenu
         type="article"
-        uri={article.uri}
+        item={article}
         author={author}
         galleryFocus={galleryFocus}
       />

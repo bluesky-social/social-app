@@ -24,6 +24,8 @@ export type ReportSubject =
   | $Typed<app.bsky.graph.defs.StarterPackView>
   | $Typed<app.bsky.feed.defs.PostView>
   | $Typed<app.bsky.actor.defs.ProfileLinkView>
+  | $Typed<app.bsky.embed.external.ViewArticle>
+  | $Typed<app.bsky.embed.external.ViewGallery>
   | ReportSubjectConvoMessage
   | ReportSubjectConvo
 
@@ -67,6 +69,12 @@ export type ParsedReportSubject =
     }
   | {
       type: 'profileLink'
+      uri: string
+      cid: string
+      nsid: string
+    }
+  | {
+      type: 'article' | 'photo'
       uri: string
       cid: string
       nsid: string
