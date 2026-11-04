@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-11-02 19:30\n"
+"PO-Revision-Date: 2026-11-04 22:39\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -215,7 +215,7 @@ msgid "{0, plural, one {Load # new post} other {Load # new posts}}"
 msgstr "{0, plural, one {Încărcați o postare nouă} few {Încărcați # postări noi} other {Încărcați # de postări noi}}"
 
 #. placeholder {0}: profile.postsCount || 0
-#: src/screens/Profile/Header/Metrics.tsx:58
+#: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {postare} few {postări} other {de postări}}"
 
@@ -276,7 +276,7 @@ msgid "{0} and {1} added to chat"
 msgstr "{0} și {1} au fost adăugați la conversație"
 
 #. placeholder {0}: profile.followsCount || 0
-#: src/screens/Profile/Header/Metrics.tsx:49
+#: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{0} following"
 msgstr "{0} urmăriți"
 
@@ -748,7 +748,7 @@ msgstr "{firstAuthorName} s-a înregistrat cu pachetul dvs. de pornire"
 msgid "{firstAuthorName} verified you"
 msgstr "{firstAuthorName} v-a verificat"
 
-#: src/components/ProfileHoverCard/index.web.tsx:571
+#: src/components/ProfileHoverCard/index.web.tsx:575
 msgid "{following} following"
 msgstr "{following} urmăriți"
 
@@ -825,21 +825,29 @@ msgstr "{label}, Beta"
 msgid "{label}. {description}"
 msgstr "{label}. {description}"
 
+#: src/screens/Profile/Header/PronounsDialog.tsx:184
+msgid "{length} out of {MAX_PRONOUNS} characters"
+msgstr ""
+
 #: src/view/com/composer/videos/SubtitleDialog.tsx:138
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
 msgstr "{MAX_ALT_TEXT, plural, one {} few {Textul alternativ trebuie să aibă mai puțin de # caractere.}other {Textul alternativ trebuie să aibă mai puțin de # de caractere.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:452
+#: src/screens/Profile/Header/EditProfileDialog.tsx:547
 msgid "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 msgstr "Descrierea listei este prea lungă. {MAX_DESCRIPTION, plural, one {Numărul maxim de caractere este #.} few {Numărul maxim de caractere este #.}other {Numărul maxim de caractere este de #.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:401
+#: src/screens/Profile/Header/EditProfileDialog.tsx:428
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DISPLAY_NAME, plural, one {} few {Numele afișat este prea lung. Numărul maxim de caracter este #.}other {Numele afișat este prea lung. Numărul maxim de caracter este de #.}}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:398
 msgid "{MAX_HIDDEN_REPLIES, plural, other {You can hide a maximum of # replies.}}"
 msgstr "{MAX_HIDDEN_REPLIES, plural, one {} few {Puteți ascunde maxim # răspunsuri.}other {Puteți ascunde maxim # de răspunsuri.}}"
+
+#: src/screens/Profile/Header/PronounsDialog.tsx:204
+msgid "{MAX_PRONOUNS, plural, other {Pronouns can be up to # characters.}}"
+msgstr ""
 
 #. The number of group chat members out of the total number of permitted users.
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:39
@@ -850,79 +858,79 @@ msgstr "{memberCount}/{memberLimit}"
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr "{minutes, plural, one {# minut} few {# minute} other {# de minute}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:126
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:127
 msgid "{name} and {others, plural, one {# other} other {# others}} followed you"
 msgstr "{name} și {others, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}} v-au urmărit"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:501
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:486
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your custom feed"
 msgstr "{name} și {others, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}} v-au apreciat fluxul personalizat"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:96
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:88
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your post"
 msgstr "{name} și {others, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}} v-au apreciat postarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:199
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:189
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your repost"
 msgstr "{name} și {others, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}} v-au apreciat repostarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:147
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:138
 msgid "{name} and {others, plural, one {# other} other {# others}} reposted your post"
 msgstr "{name} și {others, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}} v-au repostat postarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:251
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:240
 msgid "{name} and {others, plural, one {# other} other {# others}} reposted your repost"
 msgstr "{name} și {others, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}} v-au repostat repostarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:125
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:126
 msgid "{name} and {secondName} followed you"
 msgstr "{name} și {secondName} v-au urmărit"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:499
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:484
 msgid "{name} and {secondName} liked your custom feed"
 msgstr "{name} și {secondName} v-au apreciat fluxul personalizat"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:94
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:86
 msgid "{name} and {secondName} liked your post"
 msgstr "{name} și {secondName} v-au apreciat postarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:197
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:187
 msgid "{name} and {secondName} liked your repost"
 msgstr "{name} și {secondName} v-au apreciat repostarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:145
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:136
 msgid "{name} and {secondName} reposted your post"
 msgstr "{name} și {secondName} v-au repostat postarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:249
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:238
 msgid "{name} and {secondName} reposted your repost"
 msgstr "{name} și {secondName} v-au repostat repostarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:195
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:196
 msgid "{name} followed you back"
 msgstr "{name} v-a urmărit înapoi"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:194
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:195
 msgid "{name} followed you back via starter pack {starterPackName}"
 msgstr "{name} v-a urmărit înapoi prin pachetul de pornire {starterPackName}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:364
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:352
 msgid "{name} liked {count} of your {count, plural, one {post} other {posts}}"
 msgstr "{name} v-a apreciat {count} dintre {count, plural, one {postările dvs.} few {postările dvs.} other {postările dvs.}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:429
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:415
 msgid "{name} liked {count} of your {count, plural, one {repost} other {reposts}}"
 msgstr "{name} v-a apreciat {count} dintre {count, plural, one {repostările dvs.} few {repostările dvs.} other {repostările dvs.}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:505
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:490
 msgid "{name} liked your custom feed"
 msgstr "{name} v-a apreciat fluxul personalizat"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:100
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:92
 msgid "{name} liked your post"
 msgstr "{name} v-a apreciat postarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:203
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:193
 msgid "{name} liked your repost"
 msgstr "{name} v-a apreciat repostarea"
 
@@ -931,27 +939,27 @@ msgstr "{name} v-a apreciat repostarea"
 msgid "{name} reacted {0} to {target}"
 msgstr "{name} a reacționat {0} la {target}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:267
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:268
 msgid "{name} removed their verification from your account"
 msgstr "{name} și-a retras verificarea de pe contul dvs."
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:396
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:383
 msgid "{name} reposted {count} of your {count, plural, one {post} other {posts}}"
 msgstr "{name} v-a repostat {count} dintre {count, plural, one {postările dvs.} few {postările dvs.} other {postările dvs.}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:462
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:447
 msgid "{name} reposted {count} of your {count, plural, one {repost} other {reposts}}"
 msgstr "{name} v-a repostat {count} dintre {count, plural, one {repostările dvs.} few {repostările dvs.} other {repostările dvs.}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:151
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:142
 msgid "{name} reposted your post"
 msgstr "{name} v-a repostat postarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:255
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:244
 msgid "{name} reposted your repost"
 msgstr "{name} v-a repostat repostarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:232
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:233
 msgid "{name} verified you"
 msgstr "{name} v-a verificat"
 
@@ -1063,7 +1071,7 @@ msgstr "@{displayedHandle}"
 #. placeholder {0}: labels.length
 #. placeholder {0}: totalNumber - 3
 #: src/components/moderation/PostAlerts.tsx:159
-#: src/view/com/composer/ComposerReplyTo.tsx:273
+#: src/view/com/composer/ComposerReplyTo.tsx:294
 msgid "+{0}"
 msgstr "+{0}"
 
@@ -1072,107 +1080,107 @@ msgstr "+{0}"
 msgid "+{computedTotal}"
 msgstr "+{computedTotal}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:151
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:152
 msgid "<0/> and <1/> followed you"
 msgstr "<0/> și <1/> v-au urmărit"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:514
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:499
 msgid "<0/> and <1/> liked your custom feed"
 msgstr "<0/> și <1/> v-au apreciat fluxul personalizat"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:104
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:96
 msgid "<0/> and <1/> liked your post"
 msgstr "<0/> și <1/> v-au apreciat postarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:207
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:197
 msgid "<0/> and <1/> liked your repost"
 msgstr "<0/> și <1/> v-au apreciat repostarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:155
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:146
 msgid "<0/> and <1/> reposted your post"
 msgstr "<0/> și <1/> v-au repostat postarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:259
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:248
 msgid "<0/> and <1/> reposted your repost"
 msgstr "<0/> și <1/> v-au repostat repostarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:156
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:157
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> followed you"
 msgstr "<0/> și <1>{others, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}}</1> v-au urmărit"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:519
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:504
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your custom feed"
 msgstr "<0/> și <1>{others, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}}</1> v-au apreciat fluxul personalizat"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:109
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:101
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your post"
 msgstr "<0/> și <1>{others, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}}</1> v-au apreciat postarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:212
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:202
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your repost"
 msgstr "<0/> și <1>{others, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}}</1> v-au apreciat repostarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:160
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:151
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> reposted your post"
 msgstr "<0/> și <1>{others, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}}</1> v-au repostat postarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:264
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:253
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> reposted your repost"
 msgstr "<0/> și <1>{others, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}}</1> v-au repostat repostarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:78
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:79
 msgid "<0/> followed you"
 msgstr "<0/> v-a urmărit"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:203
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:204
 msgid "<0/> followed you back! 🎉"
 msgstr "<0/> v-a urmărit înapoi! 🎉"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:370
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:358
 msgid "<0/> liked {count} of your {count, plural, one {post} other {posts}}"
 msgstr "<0/> v-a apreciat {count} dintre {count, plural, one {postări} few {postări} other {postări}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:435
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:421
 msgid "<0/> liked {count} of your {count, plural, one {repost} other {reposts}}"
 msgstr "<0/> v-a apreciat {count} dintre {count, plural, one {repostări} few {repostări} other {repostări}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:527
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:512
 msgid "<0/> liked your custom feed"
 msgstr "<0/> v-a apreciat fluxul personalizat"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:117
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:109
 msgid "<0/> liked your post"
 msgstr "<0/> v-a apreciat postarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:220
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:210
 msgid "<0/> liked your repost"
 msgstr "<0/> v-a apreciat repostarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:274
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:275
 msgid "<0/> removed their verification from your account"
 msgstr "<0/> și-a retras verificarea de pe contul dvs."
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:402
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:389
 msgid "<0/> reposted {count} of your {count, plural, one {post} other {posts}}"
 msgstr "<0/> v-a repostat {count} dintre {count, plural, one {postări} few {postări} other {postări}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:468
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:453
 msgid "<0/> reposted {count} of your {count, plural, one {repost} other {reposts}}"
 msgstr "<0/> v-a repostat{count} dintre {count, plural, one {repostări} few {repostări} other {repostări}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:168
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:159
 msgid "<0/> reposted your post"
 msgstr "<0/> v-a repostat postarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:272
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:261
 msgid "<0/> reposted your repost"
 msgstr "<0/> v-a repostat repostarea"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:309
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:310
 msgid "<0/> signed up with your starter pack"
 msgstr "<0/> s-a înregistrat cu pachetul dvs. de pornire"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:239
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:240
 msgid "<0/> verified you"
 msgstr "<0/> v-a verificat"
 
@@ -1269,7 +1277,7 @@ msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your Starter Pack"
 msgstr "<0>Dvs.</0> și<1> </1><2>{0} </2> sunteți incluși în pachetul dvs. de pornire"
 
 #: src/lib/strings/handles.ts:38
-#: src/screens/Profile/Header/Handle.tsx:58
+#: src/screens/Profile/Header/Handle.tsx:70
 msgid "⚠Invalid Handle"
 msgstr "⚠Identificator invalid"
 
@@ -1328,7 +1336,7 @@ msgstr "O etichetă a fost eliminată de pe contul dvs."
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
 msgid "A label was removed from your content"
-msgstr ""
+msgstr "O etichetă a fost eliminată de pe conținutul dvs."
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:106
 msgid "A label was removed from your post"
@@ -1624,7 +1632,7 @@ msgstr "Adăugați un avertisment de conținut"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:265
 #: src/features/profileLinks/components/LinkFormDialog.tsx:285
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:133
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:138
 msgid "Add a link"
 msgstr "Adăugați un link"
 
@@ -1711,7 +1719,7 @@ msgstr "Adăugare imagine"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:398
 #: src/features/profileLinks/components/LinkFormDialog.tsx:417
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:149
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:155
 msgid "Add link"
 msgstr "Adăugare link"
 
@@ -1758,6 +1766,13 @@ msgstr "Adăugați persoane la listă"
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:185
 msgid "Add people with a link"
 msgstr "Adăugați persoane cu un link"
+
+#: src/screens/Profile/Header/EditProfileDialog.tsx:471
+#: src/screens/Profile/Header/EditProfileDialog.tsx:512
+#: src/screens/Profile/Header/PronounsDialog.tsx:102
+#: src/screens/Profile/Header/PronounsDialog.tsx:125
+msgid "Add pronouns"
+msgstr ""
 
 #: src/components/dms/EmojiPopup.android.tsx:56
 msgid "Add Reaction"
@@ -2454,7 +2469,7 @@ msgid "Are you sure you want to delete this Starter Pack?"
 msgstr "Sunteți sigur că doriți să ștergeți acest pachet de pornire?"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
-#: src/screens/Profile/Header/EditProfileDialog.tsx:89
+#: src/screens/Profile/Header/EditProfileDialog.tsx:100
 msgid "Are you sure you want to discard your changes?"
 msgstr "Sunteți sigur că doriți să renunțați la modificările dvs.?"
 
@@ -3136,8 +3151,8 @@ msgstr "Este necesar accesul la cameră"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
 #: src/screens/ModerationInbox/Notice.tsx:437
-#: src/screens/Profile/Header/EditProfileDialog.tsx:286
-#: src/screens/Profile/Header/EditProfileDialog.tsx:294
+#: src/screens/Profile/Header/EditProfileDialog.tsx:313
+#: src/screens/Profile/Header/EditProfileDialog.tsx:321
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
 #: src/screens/Search/components/SearchHistory.tsx:151
@@ -3707,6 +3722,7 @@ msgstr "Faceți clic pentru a reîncerca mesajul eșuat"
 #: src/features/liveNow/components/EditLiveDialog.tsx:218
 #: src/screens/Messages/components/InviteLinkDialog.tsx:522
 #: src/screens/Messages/components/InviteLinkDialog.tsx:527
+#: src/screens/Profile/Header/PronounsDialog.tsx:104
 #: src/view/com/feeds/MissingFeed.tsx:211
 #: src/view/com/feeds/MissingFeed.tsx:218
 msgid "Close"
@@ -3787,13 +3803,13 @@ msgstr "Închideți alerta pentru actualizarea parolei"
 msgid "Closes post composer and discards post draft"
 msgstr "Închide compozitorul de postări și elimină ciorna"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:284
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:490
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:287
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:494
 #: src/view/com/notifications/NotificationFeedItem.tsx:589
 msgid "Collapse list of users"
 msgstr "Restrângeți lista de utilizatori"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:301
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:304
 msgid "Collapses list of users"
 msgstr "Restrânge lista de utilizatori"
 
@@ -4319,7 +4335,7 @@ msgstr "Nu s-au putut încărca contactele. Trebuie să vă reverificați număr
 msgid "Couldn’t load GIFs"
 msgstr "Nu s-au putut încărca GIF-urile"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:356
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:359
 msgid "Couldn’t load more accounts, please try again"
 msgstr "Nu s-au putut încărca mai multe conturi, vă rugăm să încercați din nou"
 
@@ -4696,8 +4712,8 @@ msgstr "Postare ștearsă"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:463
 #: src/components/SendErrorReportDialog.tsx:78
-#: src/screens/Profile/Header/EditProfileDialog.tsx:432
-#: src/screens/Profile/Header/EditProfileDialog.tsx:439
+#: src/screens/Profile/Header/EditProfileDialog.tsx:527
+#: src/screens/Profile/Header/EditProfileDialog.tsx:534
 msgid "Description"
 msgstr "Descriere"
 
@@ -4820,7 +4836,7 @@ msgid "Disabled"
 msgstr "Dezactivat"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:102
-#: src/screens/Profile/Header/EditProfileDialog.tsx:91
+#: src/screens/Profile/Header/EditProfileDialog.tsx:102
 #: src/view/com/composer/Composer.tsx:1513
 #: src/view/com/composer/Composer.tsx:1558
 #: src/view/com/composer/Composer.tsx:1768
@@ -4830,7 +4846,7 @@ msgid "Discard"
 msgstr "Renunțare"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:99
-#: src/screens/Profile/Header/EditProfileDialog.tsx:88
+#: src/screens/Profile/Header/EditProfileDialog.tsx:99
 msgid "Discard changes?"
 msgstr "Renunțați la modificări?"
 
@@ -4921,8 +4937,8 @@ msgstr "Închide scanerul de coduri QR"
 msgid "Display larger alt text badges"
 msgstr "Afișați mai mare insignele de text alternativ"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:382
-#: src/screens/Profile/Header/EditProfileDialog.tsx:388
+#: src/screens/Profile/Header/EditProfileDialog.tsx:409
+#: src/screens/Profile/Header/EditProfileDialog.tsx:415
 msgid "Display name"
 msgstr "Nume afișat"
 
@@ -4992,6 +5008,8 @@ msgstr "Nu vă faceți griji! Toate mesajele existente și setările sunt salvat
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:97
 #: src/screens/Onboarding/StepProfile/index.tsx:355
 #: src/screens/Onboarding/StepProfile/index.tsx:358
+#: src/screens/Profile/Header/PronounsDialog.tsx:216
+#: src/screens/Profile/Header/PronounsDialog.tsx:223
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/composer/labels/LabelsBtn.tsx:219
@@ -5079,7 +5097,7 @@ msgstr "Amurg"
 msgid "e.g. alice"
 msgstr "de ex. andreea"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:389
+#: src/screens/Profile/Header/EditProfileDialog.tsx:416
 msgid "e.g. Alice Lastname"
 msgstr "ex: Alice Numedefamilie"
 
@@ -5107,11 +5125,16 @@ msgstr "de ex: Spammeri"
 msgid "e.g. The posters who never miss."
 msgstr "de ex. Cei mai buni creatori."
 
+#. Example pronouns in the pronouns field
+#: src/screens/Profile/Header/PronounsDialog.tsx:171
+msgid "e.g. they/them"
+msgstr ""
+
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:385
 msgid "e.g. Users that repeatedly reply with ads."
 msgstr "de ex. Utilizatori care răspund în mod repetat cu reclame."
 
-#: src/screens/Notifications/components/PageList.tsx:577
+#: src/screens/Notifications/components/PageList.tsx:580
 msgctxt "Notifications section header"
 msgid "Earlier"
 msgstr "Mai devreme"
@@ -5136,7 +5159,7 @@ msgid "Edit"
 msgstr "Editare"
 
 #. placeholder {0}: linkLabel(item.link)
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:78
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:83
 msgid "Edit {0}"
 msgstr "Editare {0}"
 
@@ -5225,8 +5248,8 @@ msgstr "Editare persoane"
 msgid "Edit post interaction settings"
 msgstr "Editați setările de interacțiune ale postărilor"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:336
-#: src/screens/Profile/Header/EditProfileDialog.tsx:343
+#: src/screens/Profile/Header/EditProfileDialog.tsx:363
+#: src/screens/Profile/Header/EditProfileDialog.tsx:370
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:300
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:351
 msgid "Edit profile"
@@ -5236,6 +5259,15 @@ msgstr "Editare profil"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:353
 msgid "Edit Profile"
 msgstr "Editare profil"
+
+#: src/screens/Profile/Header/PronounsDialog.tsx:102
+#: src/screens/Profile/Header/PronounsDialog.tsx:123
+msgid "Edit pronouns"
+msgstr ""
+
+#: src/screens/Profile/Header/EditProfileDialog.tsx:470
+msgid "Edit pronouns: {pronouns}"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:613
 msgid "Edit Starter Pack"
@@ -5586,13 +5618,13 @@ msgstr "Ieșire ecran complet"
 msgid "Expand alt text"
 msgstr "Extindere text alternativ"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:285
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:490
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:288
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:494
 #: src/view/com/notifications/NotificationFeedItem.tsx:590
 msgid "Expand list of users"
 msgstr "Extindeți lista de utilizatori"
 
-#: src/view/com/composer/ComposerReplyTo.tsx:98
+#: src/view/com/composer/ComposerReplyTo.tsx:101
 msgid "Expand or collapse the full post you are replying to"
 msgstr "Extindeți sau restrângeți postarea completă la care răspundeți"
 
@@ -5600,7 +5632,7 @@ msgstr "Extindeți sau restrângeți postarea completă la care răspundeți"
 msgid "Expand post text"
 msgstr "Extindeți textul postării"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:302
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:305
 msgid "Expands list of users"
 msgstr "Extinde lista de utilizatori"
 
@@ -6243,8 +6275,8 @@ msgstr "Găsire și invitare prieteni"
 msgid "Find Contacts"
 msgstr "Găsire contacte"
 
-#: src/screens/Notifications/components/PageList.tsx:633
-#: src/screens/Notifications/components/PageList.tsx:638
+#: src/screens/Notifications/components/PageList.tsx:636
+#: src/screens/Notifications/components/PageList.tsx:641
 msgid "Find friends"
 msgstr "Găsiți prieteni"
 
@@ -6269,7 +6301,7 @@ msgstr "Găsiți persoane pe care le cunoașteți"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Găsiți postări, utilizatori și fluxuri pe Bluesky"
 
-#: src/screens/Notifications/components/PageList.tsx:627
+#: src/screens/Notifications/components/PageList.tsx:630
 msgid "Find some friends to start getting notifications!"
 msgstr "Găsiți câțiva prieteni pentru a începe să primiți notificări!"
 
@@ -6433,7 +6465,7 @@ msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {
 msgstr "Urmărit de <0>{0}</0>, <1>{1}</1> și de {2, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}}"
 
 #. Heading of the Followers tab of notifications, above the list of people who followed you
-#: src/screens/Notifications/components/NotificationItem/kinds/follower.tsx:52
+#: src/screens/Notifications/components/NotificationItem/kinds/follower.tsx:51
 msgctxt "Notifications section header"
 msgid "Followed you"
 msgstr "V-au urmărit"
@@ -6512,7 +6544,7 @@ msgid "Follows"
 msgstr "Urmăriri"
 
 #: src/components/Pills.tsx:215
-#: src/screens/Profile/Header/Handle.tsx:33
+#: src/screens/Profile/Header/Handle.tsx:39
 msgid "Follows you"
 msgstr "Vă urmărește"
 
@@ -6844,7 +6876,7 @@ msgid "Go to {firstAuthorName}'s profile"
 msgstr "Mergeți la profilul lui {firstAuthorName}"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:78
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:645
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:640
 #: src/screens/Notifications/components/NotificationItem/Item/text.tsx:113
 msgid "Go to {name}’s profile"
 msgstr "Mergeți la profilul utilizatorului {name}"
@@ -7073,6 +7105,11 @@ msgstr "Am greșit locația dvs.? <0>Atingeți aici pentru a vă actualiza loca�
 #: src/screens/Signup/index.tsx:239
 msgid "Having trouble?"
 msgstr "Aveți dificultăți?"
+
+#. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “he/they”.
+#: src/screens/Profile/Header/PronounsDialog.tsx:35
+msgid "he/him"
+msgstr ""
 
 #: src/components/contacts/screens/PhoneInput.tsx:290
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
@@ -7507,11 +7544,6 @@ msgstr "Pentru a oferi o experiență adecvată vârstei, trebuie să vă știm 
 msgid "in reply to <0>{subject}</0>: {previewNode}"
 msgstr "ca răspuns către <0>{subject}</0>: {previewNode}"
 
-#. In a notification about a mention or quote, the post is a reply to the viewer’s own post. Followed by a preview of that post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:265
-msgid "in reply to <0>you</0>: {previewNode}"
-msgstr "ca răspuns către <0>dvs.</0>: {previewNode}"
-
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:173
 msgid "in reply to a blocked post"
 msgstr "ca răspuns la o postare blocată"
@@ -7519,6 +7551,11 @@ msgstr "ca răspuns la o postare blocată"
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:178
 msgid "in reply to a deleted post"
 msgstr "ca răspuns la o postare ștearsă"
+
+#. In a notification about a mention or quote, the post is a reply to the viewer’s own post. Followed by a preview of that post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:265
+msgid "in reply to you: {previewNode}"
+msgstr ""
 
 #: src/screens/Settings/NotificationSettings/components/SettingPreview.tsx:30
 msgid "In-app"
@@ -7947,7 +7984,7 @@ msgstr "Cele mai recente"
 #: src/components/verification/VerificationsDialog.tsx:169
 #: src/components/verification/VerifierDialog.tsx:137
 #: src/screens/Moderation/VerificationSettings.tsx:50
-#: src/screens/Profile/Header/EditProfileDialog.tsx:418
+#: src/screens/Profile/Header/EditProfileDialog.tsx:445
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:215
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:279
 msgctxt "english-only-resource"
@@ -8233,7 +8270,7 @@ msgstr "Detalii link"
 msgid "Link to {domain}"
 msgstr "Link către {domain}"
 
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:92
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:97
 msgid "Links"
 msgstr "Link-uri"
 
@@ -8427,7 +8464,7 @@ msgstr "Încărcați mai multe fluxuri sugerate"
 
 #. Accessible action on the notification list pill.
 #: src/components/NewPostsPill/index.tsx:163
-#: src/screens/Notifications/components/RefreshPill.tsx:92
+#: src/screens/Notifications/components/RefreshPill.tsx:107
 #: src/view/screens/Notifications.tsx:271
 msgid "Load new notifications"
 msgstr "Încărcați notificări noi"
@@ -8479,7 +8516,7 @@ msgstr "Se încarcă setările de interacțiune pentru postări..."
 msgid "Loading..."
 msgstr "Se Încarcă..."
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:558
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:554
 msgid "Loads more people into this list"
 msgstr "Încarcă mai multe persoane în această listă"
 
@@ -8699,11 +8736,11 @@ msgstr "Membrii încă pot citi istoricul conversațiilor, dar nu pot trimite me
 
 #: src/components/dms/getAddGroupMembersErrorMessage.ts:12
 msgid "Members could not be added because one of the selected accounts has blocked you."
-msgstr ""
+msgstr "Membrii nu au putut fi adăugați deoarece unul dintre conturile selectate v-a blocat."
 
 #: src/components/dms/getAddGroupMembersErrorMessage.ts:10
 msgid "Members could not be added because you have blocked one of the selected accounts."
-msgstr ""
+msgstr "Membrii nu au putut fi adăugați deoarece ați blocat unul dintre conturile selectate."
 
 #: src/components/WhoCanReply.tsx:302
 msgid "mentioned users"
@@ -8918,7 +8955,7 @@ msgstr "Mai multe limbi..."
 msgid "More options"
 msgstr "Mai multe opțiuni"
 
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:59
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:64
 msgid "Move earlier"
 msgstr "Mutare mai devreme"
 
@@ -8930,7 +8967,7 @@ msgstr "Mutați fluxul în jos"
 msgid "Move feed up"
 msgstr "Mutați fluxul în sus"
 
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:60
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:65
 msgid "Move later"
 msgstr "Mutare mai târziu"
 
@@ -9136,11 +9173,11 @@ msgctxt "nux-description"
 msgid "New"
 msgstr "Nou"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:579
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:567
 msgid "New {count, plural, one {post} other {posts}} from {name}"
 msgstr "{count, plural, one {Postare nouă} few {Postări noi} other {Postări noi}} de la {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:603
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:595
 msgid "New {count, plural, one {post} other {posts}} from <0/>"
 msgstr "{count, plural, one {Postare nouă} few {Postări noi} other {Postări noi}} de la <0/>"
 
@@ -9276,27 +9313,27 @@ msgstr "Postare nouă de la {firstAuthorLink} și <0>{additionalAuthorsCount, pl
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr "Postare nouă de la {firstAuthorName} și {additionalAuthorsCount, plural, one {{formattedAuthorsCount} un alt utilizator} few {{formattedAuthorsCount} alți utilizatori} other {{formattedAuthorsCount} alți utilizatori}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:573
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:561
 msgid "New posts from {name} and {others, plural, one {# other} other {# others}}"
 msgstr "Postări noi de la {name} și {others, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:571
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:559
 msgid "New posts from {name} and {secondName}"
 msgstr "Postări noi de la {name} și {secondName}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:587
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:579
 msgid "New posts from <0/> and <1/>"
 msgstr "Postări noi de la <0/> și <1/>"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:592
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:584
 msgid "New posts from <0/> and <1>{others, plural, one {# other} other {# others}}</1>"
 msgstr "Postări noi de la <0/> și <1>{others, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}}</1>"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:578
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:566
 msgid "New reply from {name}"
 msgstr "Răspuns nou de la {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:599
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:591
 msgid "New reply from <0/>"
 msgstr "Răspuns nou de la <0/>"
 
@@ -9412,7 +9449,7 @@ msgstr "Fără expirare setată"
 msgid "No feeds found. Try searching for something else."
 msgstr "Nu s-au găsit fluxuri. Încercați să căutați altceva."
 
-#: src/screens/Notifications/components/PageList.tsx:667
+#: src/screens/Notifications/components/PageList.tsx:670
 msgid "No followers to show yet"
 msgstr "Niciun urmăritor de afișat încă"
 
@@ -9484,12 +9521,12 @@ msgstr "Gata cu algoritmii plini cu informații inutile. Găsiți fluxuri care f
 msgid "No name"
 msgstr "Niciun nume"
 
-#: src/screens/Notifications/components/PageList.tsx:664
+#: src/screens/Notifications/components/PageList.tsx:667
 msgid "No notifications from people you follow yet"
 msgstr "Nicio notificare de la persoanele pe care le urmăriți încă"
 
-#: src/screens/Notifications/components/PageList.tsx:616
-#: src/screens/Notifications/components/PageList.tsx:661
+#: src/screens/Notifications/components/PageList.tsx:619
+#: src/screens/Notifications/components/PageList.tsx:664
 msgid "No notifications yet"
 msgstr "Nu există notificări încă"
 
@@ -9553,7 +9590,7 @@ msgstr "Încă nu există citate"
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "Încă nu există GIF-uri recente. Alegeți unul pentru a-l vedea aici."
 
-#: src/screens/Notifications/components/PageList.tsx:670
+#: src/screens/Notifications/components/PageList.tsx:673
 msgid "No replies to show yet"
 msgstr "Niciun răspuns de afișat încă"
 
@@ -9725,6 +9762,10 @@ msgstr "Observație"
 msgid "Notification settings"
 msgstr "Setări pentru notificări"
 
+#: src/screens/Settings/NotificationSettings/index.tsx:128
+msgid "Notification Settings"
+msgstr ""
+
 #: src/screens/Messages/Settings.tsx:305
 #: src/screens/Messages/Settings.tsx:318
 msgid "Notification sounds"
@@ -9736,7 +9777,6 @@ msgstr "Sunete notificare"
 #: src/screens/Notifications/ActivityList.tsx:31
 #: src/screens/Notifications/index.tsx:661
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
-#: src/screens/Settings/NotificationSettings/index.tsx:128
 #: src/screens/Settings/Settings.tsx:226
 #: src/screens/Settings/Settings.tsx:229
 #: src/view/screens/Notifications.tsx:128
@@ -11119,7 +11159,7 @@ msgstr "Link către profil copiat"
 msgid "Profile not found"
 msgstr "Profilul nu a fost găsit"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:251
+#: src/screens/Profile/Header/EditProfileDialog.tsx:275
 msgctxt "toast"
 msgid "Profile updated"
 msgstr "Profil actualizat"
@@ -11127,6 +11167,12 @@ msgstr "Profil actualizat"
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:222
 msgid "Promoting or selling prohibited items or services"
 msgstr "Promovarea sau vânzarea de articole sau servicii interzise"
+
+#: src/screens/Profile/Header/EditProfileDialog.tsx:459
+#: src/screens/Profile/Header/PronounsDialog.tsx:140
+#: src/screens/Profile/Header/PronounsDialog.tsx:170
+msgid "Pronouns"
+msgstr ""
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:161
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:162
@@ -11367,7 +11413,7 @@ msgid "Redesigned notifications"
 msgstr "Notificări reproiectate"
 
 #. Pill on the notifications list, shown when there are new notifications to load.
-#: src/screens/Notifications/components/RefreshPill.tsx:87
+#: src/screens/Notifications/components/RefreshPill.tsx:101
 msgid "Refresh"
 msgstr "Reîmprospătare"
 
@@ -11563,6 +11609,11 @@ msgstr "Eliminați cuvântul amuțit din listele dvs."
 msgid "Remove profile"
 msgstr "Eliminați profilul"
 
+#: src/screens/Profile/Header/PronounsDialog.tsx:229
+#: src/screens/Profile/Header/PronounsDialog.tsx:234
+msgid "Remove pronouns"
+msgstr ""
+
 #: src/components/PostControls/RepostButton.tsx:154
 #: src/components/PostControls/RepostButton.tsx:164
 msgid "Remove repost"
@@ -11679,11 +11730,6 @@ msgctxt "description"
 msgid "Replied to <0><1/></0>"
 msgstr "Răspuns la <0><1/></0>"
 
-#. In a notification, someone replied to the viewer’s own post. Followed by a preview of that post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:254
-msgid "replied to <0>you</0>: {previewNode}"
-msgstr "s-a răspuns către <0>dvs.</0>: {previewNode}"
-
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:171
 msgid "replied to a blocked post"
 msgstr "s-a răspuns la o postare blocată"
@@ -11706,6 +11752,11 @@ msgstr "Răspuns la o postare"
 msgctxt "description"
 msgid "Replied to you"
 msgstr "Răspuns către dvs."
+
+#. In a notification, someone replied to the viewer’s own post. Followed by a preview of that post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:254
+msgid "replied to you: {previewNode}"
+msgstr ""
 
 #: src/components/dms/MessageItem.tsx:943
 msgid "Replied-to message from {senderName}, tap to scroll to it"
@@ -12232,8 +12283,8 @@ msgstr "GIF-uri triste"
 #: src/features/liveNow/components/EditLiveDialog.tsx:199
 #: src/features/liveNow/components/EditLiveDialog.tsx:206
 #: src/screens/Messages/ConversationSettings/prompts.tsx:74
-#: src/screens/Profile/Header/EditProfileDialog.tsx:304
-#: src/screens/Profile/Header/EditProfileDialog.tsx:318
+#: src/screens/Profile/Header/EditProfileDialog.tsx:331
+#: src/screens/Profile/Header/EditProfileDialog.tsx:345
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:315
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:269
@@ -13072,6 +13123,11 @@ msgstr "Partajarea intervalului dvs. de vârstă dezvăluie doar intervalul asoc
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr "Partajarea intervalului dvs. de vârstă dezvăluie doar intervalul asociat cu contul dvs. Google – de exemplu, faptul că aveți cel puțin 18 ani. <0>Vârsta dvs. exactă și ziua de naștere nu sunt niciodată partajate,</0> iar aceste date nu părăsesc niciodată acest dispozitiv. Prin urmare, se activează accesul doar pe acest dispozitiv. Alternativ, <1>puteți folosi partenerul nostru de încredere, KWS</1>, pentru a finaliza verificarea și a activa accesul pe toate platformele."
 
+#. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “she/they”.
+#: src/screens/Profile/Header/PronounsDialog.tsx:30
+msgid "she/her"
+msgstr ""
+
 #: src/features/profileLinks/components/LinkFormDialog.tsx:250
 msgid "Short links can’t be added. Use the full link instead."
 msgstr "Linkurile scurte nu pot fi adăugate. Folosiți linkul complet în schimb."
@@ -13140,8 +13196,8 @@ msgid "Show lists of users to select from"
 msgstr "Afișați liste de utilizatori din care puteți selecta"
 
 #: src/components/Post/ShowMoreTextButton.tsx:59
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:557
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:583
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:553
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:579
 msgid "Show more"
 msgstr "Afișați mai multe"
 
@@ -14030,7 +14086,7 @@ msgstr "Învățați algoritmul ce vă place"
 msgid "Tech"
 msgstr "Tehnologie"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:440
+#: src/screens/Profile/Header/EditProfileDialog.tsx:535
 msgid "Tell us a bit about yourself"
 msgstr "Spuneți-ne un pic despre dvs."
 
@@ -14366,7 +14422,7 @@ msgstr "A apărut o problemă la contactarea serverului"
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "A apărut o problemă la contactarea serverului, vă rugăm să vă verificați conexiunea la internet și încercați din nou."
 
-#: src/screens/Notifications/components/PageList.tsx:363
+#: src/screens/Notifications/components/PageList.tsx:366
 #: src/view/com/notifications/NotificationFeed.tsx:137
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "A apărut o problemă la preluarea notificărilor. Atingeți aici pentru a încerca din nou."
@@ -14483,6 +14539,11 @@ msgstr "Aceștia dețin această conversație"
 msgid "They won’t be able to rejoin unless you invite them again."
 msgstr "Nu se vor putea realătura decât dacă îi invitați din nou."
 
+#. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “they/she”.
+#: src/screens/Profile/Header/PronounsDialog.tsx:40
+msgid "they/them"
+msgstr ""
+
 #: src/components/moderation/ScreenHider.tsx:117
 msgid "This {screenDescription} has been flagged:"
 msgstr "Acest {screenDescription} a fost etichetat:"
@@ -14498,7 +14559,7 @@ msgstr "Acest cont a fost marcat ca automatizat de către proprietarul său."
 #: src/components/dms/components/GroupChatProfileCard.tsx:34
 #: src/components/dms/InitiateChatFlow.tsx:1145
 msgid "This account has blocked you and can’t be added."
-msgstr ""
+msgstr "Acest cont v-a blocat și nu poate fi adăugat."
 
 #: src/components/verification/VerificationsDialog.tsx:95
 msgid "This account has one or more attempted verifications, but it is not currently verified."
@@ -14969,7 +15030,7 @@ msgstr "Pentru a vă deconecta, faceți <0>clic aici</0>. Sau dacă preferați, 
 msgid "Today"
 msgstr "Astăzi"
 
-#: src/screens/Notifications/components/PageList.tsx:576
+#: src/screens/Notifications/components/PageList.tsx:579
 msgctxt "Notifications section header"
 msgid "Today"
 msgstr "Astăzi"
@@ -15960,23 +16021,31 @@ msgstr "Vizualizare {publicationTitle}"
 msgid "View all"
 msgstr "Vizualizați toate"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:134
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:135
 msgid "View all followers"
 msgstr "Vizualizați toți urmăritorii"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:368
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:609
+msgid "View all new posts"
+msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:610
+msgid "View all new posts from {name}"
+msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:356
 msgid "View all posts {name} liked"
 msgstr "Vizualizați toate postările apreciate de {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:400
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:387
 msgid "View all posts {name} reposted"
 msgstr "Vizualizați toate postările repostate de {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:433
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:419
 msgid "View all reposts {name} liked"
 msgstr "Vizualizați toate repostările apreciate de {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:466
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:451
 msgid "View all reposts {name} reposted"
 msgstr "Vizualizați toate repostările repostate de {name}"
 
@@ -16722,7 +16791,7 @@ msgstr "Acum sunteți în direct!"
 msgid "You are verified"
 msgstr "Sunteți verificat"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:413
+#: src/screens/Profile/Header/EditProfileDialog.tsx:440
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
 msgstr "Sunteți verificat. Veți pierde starea de verificare dacă vă schimbați numele afișat. <0>Aflați mai multe.</0>"
 
@@ -16864,7 +16933,7 @@ msgstr "Ați fost eliminat anterior din acest grup și nu vă puteți alătura f
 #: src/components/dms/components/GroupChatProfileCard.tsx:32
 #: src/components/dms/InitiateChatFlow.tsx:1143
 msgid "You have blocked this account and can’t add them."
-msgstr ""
+msgstr "Ați blocat acest cont și nu îl puteți adăuga."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:93
 #: src/lib/moderation/useModerationCauseDescription.ts:55
@@ -17332,7 +17401,7 @@ msgstr "Persoana dvs. de contact {firstAuthorName} este pe Bluesky"
 msgid "Your contact {name}"
 msgstr "Contactul dvs. {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:353
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:355
 msgid "Your contact <0/> is on Bluesky"
 msgstr "Persoana dvs. de contact <0/> este pe Bluesky"
 
@@ -17470,6 +17539,10 @@ msgstr "Imaginea dvs. de profil înconjurată de cercuri concentrice cu imagini 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Profilul, postările, fluxurile și listele dvs. nu vor mai fi vizibile pentru alți utilizatori Bluesky. Vă puteți reactiva contul în orice moment, conectându-vă."
+
+#: src/screens/Profile/Header/PronounsDialog.tsx:129
+msgid "Your pronouns show next to your handle on your profile."
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1238
 msgid "Your reply was sent"

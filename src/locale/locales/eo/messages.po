@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-11-02 19:30\n"
+"PO-Revision-Date: 2026-11-04 22:39\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -215,7 +215,7 @@ msgid "{0, plural, one {Load # new post} other {Load # new posts}}"
 msgstr "{0, plural, one {Ŝargi # novan afiŝon} other {Ŝargi # novajn afiŝojn}}"
 
 #. placeholder {0}: profile.postsCount || 0
-#: src/screens/Profile/Header/Metrics.tsx:58
+#: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {afiŝo} other {afiŝoj}}"
 
@@ -276,7 +276,7 @@ msgid "{0} and {1} added to chat"
 msgstr "{0} kaj {1} aligitaj al babilejo"
 
 #. placeholder {0}: profile.followsCount || 0
-#: src/screens/Profile/Header/Metrics.tsx:49
+#: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{0} following"
 msgstr "{0} sekvataj"
 
@@ -748,7 +748,7 @@ msgstr "{firstAuthorName} registriĝis kun via startpako"
 msgid "{firstAuthorName} verified you"
 msgstr "{firstAuthorName} konfirmis vin"
 
-#: src/components/ProfileHoverCard/index.web.tsx:571
+#: src/components/ProfileHoverCard/index.web.tsx:575
 msgid "{following} following"
 msgstr "{following} sekvataj"
 
@@ -825,21 +825,29 @@ msgstr "{label}, Beta"
 msgid "{label}. {description}"
 msgstr "{label}. {description}"
 
+#: src/screens/Profile/Header/PronounsDialog.tsx:184
+msgid "{length} out of {MAX_PRONOUNS} characters"
+msgstr ""
+
 #: src/view/com/composer/videos/SubtitleDialog.tsx:138
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
 msgstr "{MAX_ALT_TEXT, plural, other {Alternativa teksto devas havi malpli ol # signojn.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:452
+#: src/screens/Profile/Header/EditProfileDialog.tsx:547
 msgid "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DESCRIPTION, plural, other {Priskribo estas tro longa. La maksimuma nombro da signoj estas #.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:401
+#: src/screens/Profile/Header/EditProfileDialog.tsx:428
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DISPLAY_NAME, plural, other {Montrata nomo estas tro longa. La maksimuma nombro da signoj estas #.}}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:398
 msgid "{MAX_HIDDEN_REPLIES, plural, other {You can hide a maximum of # replies.}}"
 msgstr "{MAX_HIDDEN_REPLIES, plural, one {Vi povas kaŝi maksimume # respondon.} other {Vi povas kaŝi maksimume # respondojn.}}"
+
+#: src/screens/Profile/Header/PronounsDialog.tsx:204
+msgid "{MAX_PRONOUNS, plural, other {Pronouns can be up to # characters.}}"
+msgstr ""
 
 #. The number of group chat members out of the total number of permitted users.
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:39
@@ -850,79 +858,79 @@ msgstr "{memberCount}/{memberLimit}"
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr "{minutes, plural, one {# minuto} other {# minutoj}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:126
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:127
 msgid "{name} and {others, plural, one {# other} other {# others}} followed you"
 msgstr "{name} kaj {others, plural, one {# alia} other {# aliaj}} eksekvis vin"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:501
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:486
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your custom feed"
 msgstr "{name} kaj {others, plural, one {# alia} other {# aliaj}} ŝatas vian propran fluon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:96
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:88
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your post"
 msgstr "{name} kaj {others, plural, one {# alia} other {# aliaj}} ŝatas vian afiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:199
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:189
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your repost"
 msgstr "{name} kaj {others, plural, one {# alia} other {# aliaj}} ŝatas vian reafiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:147
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:138
 msgid "{name} and {others, plural, one {# other} other {# others}} reposted your post"
 msgstr "{name} kaj {others, plural, one {# alia} other {# aliaj}} reafiŝis vian afiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:251
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:240
 msgid "{name} and {others, plural, one {# other} other {# others}} reposted your repost"
 msgstr "{name} kaj {others, plural, one {# alia} other {# aliaj}} reafiŝis vian reafiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:125
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:126
 msgid "{name} and {secondName} followed you"
 msgstr "{name} kaj {secondName} eksekvis vin"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:499
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:484
 msgid "{name} and {secondName} liked your custom feed"
 msgstr "{name} kaj {secondName} ŝatas vian propran fluon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:94
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:86
 msgid "{name} and {secondName} liked your post"
 msgstr "{name} kaj {secondName} ŝatas vian afiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:197
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:187
 msgid "{name} and {secondName} liked your repost"
 msgstr "{name} kaj {secondName} ŝatas vian reafiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:145
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:136
 msgid "{name} and {secondName} reposted your post"
 msgstr "{name} kaj {secondName} reafiŝis vian reafiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:249
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:238
 msgid "{name} and {secondName} reposted your repost"
 msgstr "{name} kaj {secondName} reafiŝis vian reafiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:195
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:196
 msgid "{name} followed you back"
 msgstr "{name} eksekvis vin reciproke"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:194
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:195
 msgid "{name} followed you back via starter pack {starterPackName}"
 msgstr "{name} sekvis vin reciproke per startpako {starterPackName}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:364
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:352
 msgid "{name} liked {count} of your {count, plural, one {post} other {posts}}"
 msgstr "{name} ŝatas {count} el {count, plural, one {via afiŝo} other {viaj afiŝoj}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:429
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:415
 msgid "{name} liked {count} of your {count, plural, one {repost} other {reposts}}"
 msgstr "{name} ŝatas {count} el {count, plural, one {via reafiŝo} other {viaj reafiŝoj}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:505
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:490
 msgid "{name} liked your custom feed"
 msgstr "{name} ŝatas vian propran fluon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:100
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:92
 msgid "{name} liked your post"
 msgstr "{name} ŝatas vian afiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:203
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:193
 msgid "{name} liked your repost"
 msgstr "{name} ŝatas vian reafiŝon"
 
@@ -931,27 +939,27 @@ msgstr "{name} ŝatas vian reafiŝon"
 msgid "{name} reacted {0} to {target}"
 msgstr "{name} reagis per {0} al {target}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:267
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:268
 msgid "{name} removed their verification from your account"
 msgstr "{name} forigis sian konfirmon el via konto"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:396
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:383
 msgid "{name} reposted {count} of your {count, plural, one {post} other {posts}}"
 msgstr "{name} reafiŝis {count} el {count, plural, one {via afiŝo} other {viaj afiŝoj}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:462
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:447
 msgid "{name} reposted {count} of your {count, plural, one {repost} other {reposts}}"
 msgstr "{name} reafiŝis {count} el {count, plural, one {via reafiŝo} other {viaj reafiŝoj}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:151
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:142
 msgid "{name} reposted your post"
 msgstr "{name} reafiŝis vian afiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:255
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:244
 msgid "{name} reposted your repost"
 msgstr "{name} reafiŝis vian reafiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:232
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:233
 msgid "{name} verified you"
 msgstr "{name} konfirmis vin"
 
@@ -1063,7 +1071,7 @@ msgstr "@{displayedHandle}"
 #. placeholder {0}: labels.length
 #. placeholder {0}: totalNumber - 3
 #: src/components/moderation/PostAlerts.tsx:159
-#: src/view/com/composer/ComposerReplyTo.tsx:273
+#: src/view/com/composer/ComposerReplyTo.tsx:294
 msgid "+{0}"
 msgstr "+{0}"
 
@@ -1072,107 +1080,107 @@ msgstr "+{0}"
 msgid "+{computedTotal}"
 msgstr "+{computedTotal}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:151
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:152
 msgid "<0/> and <1/> followed you"
 msgstr "<0/> kaj <1/> eksekvis vin"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:514
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:499
 msgid "<0/> and <1/> liked your custom feed"
 msgstr "<0/> kaj <1/> ŝatas vian propran fluon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:104
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:96
 msgid "<0/> and <1/> liked your post"
 msgstr "<0/> kaj <1/> ŝatas vian afiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:207
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:197
 msgid "<0/> and <1/> liked your repost"
 msgstr "<0/> kaj <1/> ŝatas vian reafiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:155
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:146
 msgid "<0/> and <1/> reposted your post"
 msgstr "<0/> kaj <1/> reafiŝis vian afiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:259
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:248
 msgid "<0/> and <1/> reposted your repost"
 msgstr "<0/> kaj <1/> reafiŝis vian reafiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:156
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:157
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> followed you"
 msgstr "<0/> kaj <1>{others, plural, one {# alia} other {# aliaj}}</1> eksekvis vin"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:519
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:504
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your custom feed"
 msgstr "<0/> kaj <1>{others, plural, one {# alia} other {# aliaj}}</1> ŝatas vian propran fluon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:109
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:101
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your post"
 msgstr "<0/> kaj <1>{others, plural, one {# alia} other {# aliaj}}</1> ŝatas vian afiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:212
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:202
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your repost"
 msgstr "<0/> kaj <1>{others, plural, one {# alia} other {# aliaj}}</1> ŝatas vian reafiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:160
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:151
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> reposted your post"
 msgstr "<0/> kaj <1>{others, plural, one {# alia} other {# aliaj}}</1> reafiŝis vian afiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:264
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:253
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> reposted your repost"
 msgstr "<0/> kaj <1>{others, plural, one {# alia} other {# aliaj}}</1> reafiŝis vian reafiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:78
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:79
 msgid "<0/> followed you"
 msgstr "<0/> eksekvis vin"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:203
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:204
 msgid "<0/> followed you back! 🎉"
 msgstr "<0/> eksekvis vin reciproke! 🎉"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:370
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:358
 msgid "<0/> liked {count} of your {count, plural, one {post} other {posts}}"
 msgstr "<0/> ŝatas {count} el {count, plural, one {via afiŝo} other {viaj afiŝoj}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:435
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:421
 msgid "<0/> liked {count} of your {count, plural, one {repost} other {reposts}}"
 msgstr "<0/> ŝatas {count} el {count, plural, one {via reafiŝo} other {viaj reafiŝoj}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:527
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:512
 msgid "<0/> liked your custom feed"
 msgstr "<0/> ŝatas vian propran fluon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:117
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:109
 msgid "<0/> liked your post"
 msgstr "<0/> ŝatas vian afiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:220
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:210
 msgid "<0/> liked your repost"
 msgstr "<0/> ŝatas vian reafiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:274
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:275
 msgid "<0/> removed their verification from your account"
 msgstr "<0/> forigis sian konfirmon el via konto"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:402
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:389
 msgid "<0/> reposted {count} of your {count, plural, one {post} other {posts}}"
 msgstr "<0/> reafiŝis {count} el {count, plural, one {via afiŝo} other {viaj afiŝoj}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:468
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:453
 msgid "<0/> reposted {count} of your {count, plural, one {repost} other {reposts}}"
 msgstr "<0/> reafiŝis {count} el {count, plural, one {via reafiŝo} other {viaj reafiŝoj}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:168
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:159
 msgid "<0/> reposted your post"
 msgstr "<0/> reafiŝis vian afiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:272
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:261
 msgid "<0/> reposted your repost"
 msgstr "<0/> reafiŝis vian reafiŝon"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:309
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:310
 msgid "<0/> signed up with your starter pack"
 msgstr "<0/> registriĝis kun via startpako"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:239
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:240
 msgid "<0/> verified you"
 msgstr "<0/> konfirmis vin"
 
@@ -1269,7 +1277,7 @@ msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your Starter Pack"
 msgstr "<0>Vi</0> kaj<1> </1><2>{0} </2>estas inkluzivitaj en via startpako"
 
 #: src/lib/strings/handles.ts:38
-#: src/screens/Profile/Header/Handle.tsx:58
+#: src/screens/Profile/Header/Handle.tsx:70
 msgid "⚠Invalid Handle"
 msgstr "⚠Nevalida identigilo"
 
@@ -1624,7 +1632,7 @@ msgstr "Aldoni averton pri enhavo"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:265
 #: src/features/profileLinks/components/LinkFormDialog.tsx:285
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:133
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:138
 msgid "Add a link"
 msgstr "Aldoni ligilon"
 
@@ -1711,7 +1719,7 @@ msgstr "Aldoni bildon"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:398
 #: src/features/profileLinks/components/LinkFormDialog.tsx:417
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:149
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:155
 msgid "Add link"
 msgstr "Aldoni ligilon"
 
@@ -1758,6 +1766,13 @@ msgstr "Aldoni homojn al la listo"
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:185
 msgid "Add people with a link"
 msgstr "Aldoni homojn per ligilo"
+
+#: src/screens/Profile/Header/EditProfileDialog.tsx:471
+#: src/screens/Profile/Header/EditProfileDialog.tsx:512
+#: src/screens/Profile/Header/PronounsDialog.tsx:102
+#: src/screens/Profile/Header/PronounsDialog.tsx:125
+msgid "Add pronouns"
+msgstr ""
 
 #: src/components/dms/EmojiPopup.android.tsx:56
 msgid "Add Reaction"
@@ -2454,7 +2469,7 @@ msgid "Are you sure you want to delete this Starter Pack?"
 msgstr "Ĉu vi certas, ke vi volas forigi ĉi tiun startpakon?"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
-#: src/screens/Profile/Header/EditProfileDialog.tsx:89
+#: src/screens/Profile/Header/EditProfileDialog.tsx:100
 msgid "Are you sure you want to discard your changes?"
 msgstr "Ĉu vi certas, ke vi volas forĵeti viajn ŝanĝojn?"
 
@@ -3136,8 +3151,8 @@ msgstr "Aliro al kamerao estas bezonata"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
 #: src/screens/ModerationInbox/Notice.tsx:437
-#: src/screens/Profile/Header/EditProfileDialog.tsx:286
-#: src/screens/Profile/Header/EditProfileDialog.tsx:294
+#: src/screens/Profile/Header/EditProfileDialog.tsx:313
+#: src/screens/Profile/Header/EditProfileDialog.tsx:321
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
 #: src/screens/Search/components/SearchHistory.tsx:151
@@ -3707,6 +3722,7 @@ msgstr "Alklaku por reprovi sendi mesaĝon"
 #: src/features/liveNow/components/EditLiveDialog.tsx:218
 #: src/screens/Messages/components/InviteLinkDialog.tsx:522
 #: src/screens/Messages/components/InviteLinkDialog.tsx:527
+#: src/screens/Profile/Header/PronounsDialog.tsx:104
 #: src/view/com/feeds/MissingFeed.tsx:211
 #: src/view/com/feeds/MissingFeed.tsx:218
 msgid "Close"
@@ -3787,13 +3803,13 @@ msgstr "Fermas la averton pri pasvorta ĝisdatigo"
 msgid "Closes post composer and discards post draft"
 msgstr "Fermas afiŝan redaktilon kaj forĵetas afiŝan malneton"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:284
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:490
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:287
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:494
 #: src/view/com/notifications/NotificationFeedItem.tsx:589
 msgid "Collapse list of users"
 msgstr "Maletendi liston de uzantoj"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:301
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:304
 msgid "Collapses list of users"
 msgstr "Maletendas liston de uzantoj"
 
@@ -4319,7 +4335,7 @@ msgstr "Ne eblis alŝuti kontaktojn. Vi bezonas rekonfirmi vian telefonnumeron p
 msgid "Couldn’t load GIFs"
 msgstr "Ne eblis ŝargi GIF-ojn"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:356
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:359
 msgid "Couldn’t load more accounts, please try again"
 msgstr "Ne eblis ŝargi pli da kontoj, bonvolu reprovi"
 
@@ -4696,8 +4712,8 @@ msgstr "Forigita afiŝo"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:463
 #: src/components/SendErrorReportDialog.tsx:78
-#: src/screens/Profile/Header/EditProfileDialog.tsx:432
-#: src/screens/Profile/Header/EditProfileDialog.tsx:439
+#: src/screens/Profile/Header/EditProfileDialog.tsx:527
+#: src/screens/Profile/Header/EditProfileDialog.tsx:534
 msgid "Description"
 msgstr "Priskribo"
 
@@ -4820,7 +4836,7 @@ msgid "Disabled"
 msgstr "Malŝaltita"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:102
-#: src/screens/Profile/Header/EditProfileDialog.tsx:91
+#: src/screens/Profile/Header/EditProfileDialog.tsx:102
 #: src/view/com/composer/Composer.tsx:1513
 #: src/view/com/composer/Composer.tsx:1558
 #: src/view/com/composer/Composer.tsx:1768
@@ -4830,7 +4846,7 @@ msgid "Discard"
 msgstr "Forĵeti"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:99
-#: src/screens/Profile/Header/EditProfileDialog.tsx:88
+#: src/screens/Profile/Header/EditProfileDialog.tsx:99
 msgid "Discard changes?"
 msgstr "Ĉu forĵeti ŝanĝojn?"
 
@@ -4921,8 +4937,8 @@ msgstr "Forĵeti la QR-skanilon"
 msgid "Display larger alt text badges"
 msgstr "Montri pli grandajn ŝildojn de alternativa teksto"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:382
-#: src/screens/Profile/Header/EditProfileDialog.tsx:388
+#: src/screens/Profile/Header/EditProfileDialog.tsx:409
+#: src/screens/Profile/Header/EditProfileDialog.tsx:415
 msgid "Display name"
 msgstr "Montrata nomo"
 
@@ -4992,6 +5008,8 @@ msgstr "Ne maltrankvilu! Ĉiuj ekzistantaj mesaĝoj kaj agordoj estas konservita
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:97
 #: src/screens/Onboarding/StepProfile/index.tsx:355
 #: src/screens/Onboarding/StepProfile/index.tsx:358
+#: src/screens/Profile/Header/PronounsDialog.tsx:216
+#: src/screens/Profile/Header/PronounsDialog.tsx:223
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/composer/labels/LabelsBtn.tsx:219
@@ -5079,7 +5097,7 @@ msgstr "Vesperruĝo"
 msgid "e.g. alice"
 msgstr "ekz. ludoviko"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:389
+#: src/screens/Profile/Header/EditProfileDialog.tsx:416
 msgid "e.g. Alice Lastname"
 msgstr "ekz. Ludoviko Familinomo"
 
@@ -5107,11 +5125,16 @@ msgstr "ekz. Spamistoj"
 msgid "e.g. The posters who never miss."
 msgstr "ekz. Neerarantaj afiŝantoj."
 
+#. Example pronouns in the pronouns field
+#: src/screens/Profile/Header/PronounsDialog.tsx:171
+msgid "e.g. they/them"
+msgstr ""
+
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:385
 msgid "e.g. Users that repeatedly reply with ads."
 msgstr "ekz. Uzantoj kiuj ripete respondas per reklamoj."
 
-#: src/screens/Notifications/components/PageList.tsx:577
+#: src/screens/Notifications/components/PageList.tsx:580
 msgctxt "Notifications section header"
 msgid "Earlier"
 msgstr "Pli frue"
@@ -5136,7 +5159,7 @@ msgid "Edit"
 msgstr "Redakti"
 
 #. placeholder {0}: linkLabel(item.link)
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:78
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:83
 msgid "Edit {0}"
 msgstr "Redakti {0}"
 
@@ -5225,8 +5248,8 @@ msgstr "Redakti homojn"
 msgid "Edit post interaction settings"
 msgstr "Redakti interagajn agordojn de afiŝo"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:336
-#: src/screens/Profile/Header/EditProfileDialog.tsx:343
+#: src/screens/Profile/Header/EditProfileDialog.tsx:363
+#: src/screens/Profile/Header/EditProfileDialog.tsx:370
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:300
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:351
 msgid "Edit profile"
@@ -5236,6 +5259,15 @@ msgstr "Redakti profilon"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:353
 msgid "Edit Profile"
 msgstr "Redakti profilon"
+
+#: src/screens/Profile/Header/PronounsDialog.tsx:102
+#: src/screens/Profile/Header/PronounsDialog.tsx:123
+msgid "Edit pronouns"
+msgstr ""
+
+#: src/screens/Profile/Header/EditProfileDialog.tsx:470
+msgid "Edit pronouns: {pronouns}"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:613
 msgid "Edit Starter Pack"
@@ -5586,13 +5618,13 @@ msgstr "Malŝalti plenekranon"
 msgid "Expand alt text"
 msgstr "Etendi alternativan tekston"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:285
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:490
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:288
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:494
 #: src/view/com/notifications/NotificationFeedItem.tsx:590
 msgid "Expand list of users"
 msgstr "Etendi liston de uzantoj"
 
-#: src/view/com/composer/ComposerReplyTo.tsx:98
+#: src/view/com/composer/ComposerReplyTo.tsx:101
 msgid "Expand or collapse the full post you are replying to"
 msgstr "Etendi aŭ maletendi la tutan afiŝon, al kiu vi respondas"
 
@@ -5600,7 +5632,7 @@ msgstr "Etendi aŭ maletendi la tutan afiŝon, al kiu vi respondas"
 msgid "Expand post text"
 msgstr "Etendi afiŝan tekston"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:302
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:305
 msgid "Expands list of users"
 msgstr "Etendas liston de uzantoj"
 
@@ -6243,8 +6275,8 @@ msgstr "Trovi kaj inviti amikojn"
 msgid "Find Contacts"
 msgstr "Trovi kontaktojn"
 
-#: src/screens/Notifications/components/PageList.tsx:633
-#: src/screens/Notifications/components/PageList.tsx:638
+#: src/screens/Notifications/components/PageList.tsx:636
+#: src/screens/Notifications/components/PageList.tsx:641
 msgid "Find friends"
 msgstr "Trovi amikojn"
 
@@ -6269,7 +6301,7 @@ msgstr "Trovi konatojn"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Trovi afiŝojn, uzantojn kaj fluojn ĉe Bluesky"
 
-#: src/screens/Notifications/components/PageList.tsx:627
+#: src/screens/Notifications/components/PageList.tsx:630
 msgid "Find some friends to start getting notifications!"
 msgstr "Trovu iujn amikojn por ekricevi sciigojn!"
 
@@ -6433,7 +6465,7 @@ msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {
 msgstr "Sekvata de <0>{0}</0>, <1>{1}</1>, kaj {2, plural, one {# alia} other {# aliaj}}"
 
 #. Heading of the Followers tab of notifications, above the list of people who followed you
-#: src/screens/Notifications/components/NotificationItem/kinds/follower.tsx:52
+#: src/screens/Notifications/components/NotificationItem/kinds/follower.tsx:51
 msgctxt "Notifications section header"
 msgid "Followed you"
 msgstr "Eksekvis vin"
@@ -6512,7 +6544,7 @@ msgid "Follows"
 msgstr ""
 
 #: src/components/Pills.tsx:215
-#: src/screens/Profile/Header/Handle.tsx:33
+#: src/screens/Profile/Header/Handle.tsx:39
 msgid "Follows you"
 msgstr "Sekvas vin"
 
@@ -6844,7 +6876,7 @@ msgid "Go to {firstAuthorName}'s profile"
 msgstr "Iri al la profilo de {firstAuthorName}"
 
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:78
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:645
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:640
 #: src/screens/Notifications/components/NotificationItem/Item/text.tsx:113
 msgid "Go to {name}’s profile"
 msgstr "Iri al profilo de {name}"
@@ -7073,6 +7105,11 @@ msgstr "Ĉu ni misdivenis vian lokon? <0>Tuŝetu ĉi tie por aktualigi vian loko
 #: src/screens/Signup/index.tsx:239
 msgid "Having trouble?"
 msgstr "Ĉu vi havas problemon?"
+
+#. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “he/they”.
+#: src/screens/Profile/Header/PronounsDialog.tsx:35
+msgid "he/him"
+msgstr ""
 
 #: src/components/contacts/screens/PhoneInput.tsx:290
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
@@ -7507,11 +7544,6 @@ msgstr "Por provizi sperton taŭgan por via aĝo, ni bezonas ekscii vian naskiĝ
 msgid "in reply to <0>{subject}</0>: {previewNode}"
 msgstr "responde al <0>{subject}</0>: {previewNode}"
 
-#. In a notification about a mention or quote, the post is a reply to the viewer’s own post. Followed by a preview of that post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:265
-msgid "in reply to <0>you</0>: {previewNode}"
-msgstr ""
-
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:173
 msgid "in reply to a blocked post"
 msgstr "responde al blokita afiŝo"
@@ -7519,6 +7551,11 @@ msgstr "responde al blokita afiŝo"
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:178
 msgid "in reply to a deleted post"
 msgstr "responde al forigita afiŝo"
+
+#. In a notification about a mention or quote, the post is a reply to the viewer’s own post. Followed by a preview of that post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:265
+msgid "in reply to you: {previewNode}"
+msgstr ""
 
 #: src/screens/Settings/NotificationSettings/components/SettingPreview.tsx:30
 msgid "In-app"
@@ -7947,7 +7984,7 @@ msgstr "Plej freŝaj"
 #: src/components/verification/VerificationsDialog.tsx:169
 #: src/components/verification/VerifierDialog.tsx:137
 #: src/screens/Moderation/VerificationSettings.tsx:50
-#: src/screens/Profile/Header/EditProfileDialog.tsx:418
+#: src/screens/Profile/Header/EditProfileDialog.tsx:445
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:215
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:279
 msgctxt "english-only-resource"
@@ -8233,7 +8270,7 @@ msgstr "Ligilaj detaloj"
 msgid "Link to {domain}"
 msgstr "Ligilo al {domain}"
 
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:92
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:97
 msgid "Links"
 msgstr "Ligiloj"
 
@@ -8427,7 +8464,7 @@ msgstr "Ŝargi pliajn proponitajn fluojn"
 
 #. Accessible action on the notification list pill.
 #: src/components/NewPostsPill/index.tsx:163
-#: src/screens/Notifications/components/RefreshPill.tsx:92
+#: src/screens/Notifications/components/RefreshPill.tsx:107
 #: src/view/screens/Notifications.tsx:271
 msgid "Load new notifications"
 msgstr "Ŝargi novajn sciigojn"
@@ -8479,7 +8516,7 @@ msgstr "Ŝargado de interagaj agordoj de afiŝo..."
 msgid "Loading..."
 msgstr "Ŝargado..."
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:558
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:554
 msgid "Loads more people into this list"
 msgstr "Ŝargas pliajn homojn en ĉi tiun liston"
 
@@ -8918,7 +8955,7 @@ msgstr "Pliaj lingvoj..."
 msgid "More options"
 msgstr "Pli da opcioj"
 
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:59
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:64
 msgid "Move earlier"
 msgstr "Movi pli fruen"
 
@@ -8930,7 +8967,7 @@ msgstr "Movi fluon pli sube"
 msgid "Move feed up"
 msgstr "Movi fluon pli supre"
 
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:60
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:65
 msgid "Move later"
 msgstr "Movi pli malfruen"
 
@@ -9136,11 +9173,11 @@ msgctxt "nux-description"
 msgid "New"
 msgstr "Nova"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:579
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:567
 msgid "New {count, plural, one {post} other {posts}} from {name}"
 msgstr "{count, plural, one {Nova afiŝo} other {Novaj afiŝoj}} de {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:603
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:595
 msgid "New {count, plural, one {post} other {posts}} from <0/>"
 msgstr "{count, plural, one {Nova afiŝo} other {Novaj afiŝoj}} de <0/>"
 
@@ -9276,27 +9313,27 @@ msgstr "Novaj afiŝoj de {firstAuthorLink} kaj <0>{additionalAuthorsCount, plura
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr "Novaj afiŝoj de {firstAuthorName} kaj {additionalAuthorsCount, plural, one {{formattedAuthorsCount} alia} other {{formattedAuthorsCount} aliaj}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:573
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:561
 msgid "New posts from {name} and {others, plural, one {# other} other {# others}}"
 msgstr "Novaj afiŝoj de {name} kaj {others, plural, one {# alia} other {# aliaj}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:571
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:559
 msgid "New posts from {name} and {secondName}"
 msgstr "Novaj afiŝoj de {name} kaj {secondName}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:587
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:579
 msgid "New posts from <0/> and <1/>"
 msgstr "Novaj afiŝoj de <0/> kaj <1/>"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:592
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:584
 msgid "New posts from <0/> and <1>{others, plural, one {# other} other {# others}}</1>"
 msgstr "Novaj afiŝoj de <0/> kaj <1>{others, plural, one {# alia} other {# aliaj}}</1>"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:578
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:566
 msgid "New reply from {name}"
 msgstr "Nova respondo de {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:599
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:591
 msgid "New reply from <0/>"
 msgstr "Nova respondo de <0/>"
 
@@ -9412,7 +9449,7 @@ msgstr "Neniu eksvalidiĝo agordita"
 msgid "No feeds found. Try searching for something else."
 msgstr "Neniu fluo trovita. Provu serĉi ion alian."
 
-#: src/screens/Notifications/components/PageList.tsx:667
+#: src/screens/Notifications/components/PageList.tsx:670
 msgid "No followers to show yet"
 msgstr "Ankoraŭ neniu sekvanto por montri"
 
@@ -9484,12 +9521,12 @@ msgstr "Ne plu da eterna rulumado tra aĉaĵo-plenaj algoritmoj. Trovu fluojn ki
 msgid "No name"
 msgstr "Sen nomo"
 
-#: src/screens/Notifications/components/PageList.tsx:664
+#: src/screens/Notifications/components/PageList.tsx:667
 msgid "No notifications from people you follow yet"
 msgstr "Ankoraŭ neniu sciigo de homoj, kiujn vi sekvas"
 
-#: src/screens/Notifications/components/PageList.tsx:616
-#: src/screens/Notifications/components/PageList.tsx:661
+#: src/screens/Notifications/components/PageList.tsx:619
+#: src/screens/Notifications/components/PageList.tsx:664
 msgid "No notifications yet"
 msgstr "Ankoraŭ neniu sciigo"
 
@@ -9553,7 +9590,7 @@ msgstr "Ankoraŭ neniu citaĵo"
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "Ankoraŭ neniu lasta GIF-o. Elektu iun por vidi ĝin ĉi tie."
 
-#: src/screens/Notifications/components/PageList.tsx:670
+#: src/screens/Notifications/components/PageList.tsx:673
 msgid "No replies to show yet"
 msgstr "Ankoraŭ neniu respondo por montri"
 
@@ -9725,6 +9762,10 @@ msgstr "Atentigo"
 msgid "Notification settings"
 msgstr "Sciigaj agordoj"
 
+#: src/screens/Settings/NotificationSettings/index.tsx:128
+msgid "Notification Settings"
+msgstr ""
+
 #: src/screens/Messages/Settings.tsx:305
 #: src/screens/Messages/Settings.tsx:318
 msgid "Notification sounds"
@@ -9736,7 +9777,6 @@ msgstr "Sciigaj sonoj"
 #: src/screens/Notifications/ActivityList.tsx:31
 #: src/screens/Notifications/index.tsx:661
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
-#: src/screens/Settings/NotificationSettings/index.tsx:128
 #: src/screens/Settings/Settings.tsx:226
 #: src/screens/Settings/Settings.tsx:229
 #: src/view/screens/Notifications.tsx:128
@@ -11119,7 +11159,7 @@ msgstr "Profila ligilo kopiita"
 msgid "Profile not found"
 msgstr "Profilo netrovita"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:251
+#: src/screens/Profile/Header/EditProfileDialog.tsx:275
 msgctxt "toast"
 msgid "Profile updated"
 msgstr "Profilo ĝisdatigita"
@@ -11127,6 +11167,12 @@ msgstr "Profilo ĝisdatigita"
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:222
 msgid "Promoting or selling prohibited items or services"
 msgstr "Privarbo aŭ vendo de malpermesitaj aĵoj kaj servoj"
+
+#: src/screens/Profile/Header/EditProfileDialog.tsx:459
+#: src/screens/Profile/Header/PronounsDialog.tsx:140
+#: src/screens/Profile/Header/PronounsDialog.tsx:170
+msgid "Pronouns"
+msgstr ""
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:161
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:162
@@ -11367,7 +11413,7 @@ msgid "Redesigned notifications"
 msgstr "Redezajnitaj sciigoj"
 
 #. Pill on the notifications list, shown when there are new notifications to load.
-#: src/screens/Notifications/components/RefreshPill.tsx:87
+#: src/screens/Notifications/components/RefreshPill.tsx:101
 msgid "Refresh"
 msgstr "Reŝargi"
 
@@ -11563,6 +11609,11 @@ msgstr "Forigi silentigitan vorton el via listo"
 msgid "Remove profile"
 msgstr "Forigi profilon"
 
+#: src/screens/Profile/Header/PronounsDialog.tsx:229
+#: src/screens/Profile/Header/PronounsDialog.tsx:234
+msgid "Remove pronouns"
+msgstr ""
+
 #: src/components/PostControls/RepostButton.tsx:154
 #: src/components/PostControls/RepostButton.tsx:164
 msgid "Remove repost"
@@ -11679,11 +11730,6 @@ msgctxt "description"
 msgid "Replied to <0><1/></0>"
 msgstr "Respondis al <0><1/></0>"
 
-#. In a notification, someone replied to the viewer’s own post. Followed by a preview of that post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:254
-msgid "replied to <0>you</0>: {previewNode}"
-msgstr ""
-
 #: src/screens/Notifications/components/NotificationItem/Item/post.tsx:171
 msgid "replied to a blocked post"
 msgstr "respondis al blokita afiŝo"
@@ -11706,6 +11752,11 @@ msgstr "Respondis al afiŝo"
 msgctxt "description"
 msgid "Replied to you"
 msgstr "Respondis al vi"
+
+#. In a notification, someone replied to the viewer’s own post. Followed by a preview of that post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:254
+msgid "replied to you: {previewNode}"
+msgstr ""
 
 #: src/components/dms/MessageItem.tsx:943
 msgid "Replied-to message from {senderName}, tap to scroll to it"
@@ -12232,8 +12283,8 @@ msgstr "GIF-oj pri malfeliĉo"
 #: src/features/liveNow/components/EditLiveDialog.tsx:199
 #: src/features/liveNow/components/EditLiveDialog.tsx:206
 #: src/screens/Messages/ConversationSettings/prompts.tsx:74
-#: src/screens/Profile/Header/EditProfileDialog.tsx:304
-#: src/screens/Profile/Header/EditProfileDialog.tsx:318
+#: src/screens/Profile/Header/EditProfileDialog.tsx:331
+#: src/screens/Profile/Header/EditProfileDialog.tsx:345
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:315
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:269
@@ -13072,6 +13123,11 @@ msgstr ""
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr ""
 
+#. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “she/they”.
+#: src/screens/Profile/Header/PronounsDialog.tsx:30
+msgid "she/her"
+msgstr ""
+
 #: src/features/profileLinks/components/LinkFormDialog.tsx:250
 msgid "Short links can’t be added. Use the full link instead."
 msgstr "Mallongaj ligiloj ne povas esti aldonitaj. Uzu la tutan ligilon anstataŭe."
@@ -13140,8 +13196,8 @@ msgid "Show lists of users to select from"
 msgstr "Montri listojn de elekteblaj uzantoj"
 
 #: src/components/Post/ShowMoreTextButton.tsx:59
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:557
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:583
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:553
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:579
 msgid "Show more"
 msgstr "Montri pli"
 
@@ -14030,7 +14086,7 @@ msgstr "Sciigu la algoritmon pri tio, kion vi ŝatas"
 msgid "Tech"
 msgstr "Teknologio"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:440
+#: src/screens/Profile/Header/EditProfileDialog.tsx:535
 msgid "Tell us a bit about yourself"
 msgstr "Diru nin iom pri vi"
 
@@ -14366,7 +14422,7 @@ msgstr "Estis problemo konektante servilon"
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "Estis problemo konektante servilon, bonvolu kontroli vian interretan konekton kaj reprovu."
 
-#: src/screens/Notifications/components/PageList.tsx:363
+#: src/screens/Notifications/components/PageList.tsx:366
 #: src/view/com/notifications/NotificationFeed.tsx:137
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Estis problemo ŝargante sciigojn. Tuŝetu ĉi tie por reprovi."
@@ -14482,6 +14538,11 @@ msgstr "Tiu homo posedas ĉi tiun babilejon"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:169
 msgid "They won’t be able to rejoin unless you invite them again."
 msgstr "Ĉi tiu homo ne povos realiĝi, krom se tiu estos invitota de vi denove."
+
+#. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “they/she”.
+#: src/screens/Profile/Header/PronounsDialog.tsx:40
+msgid "they/them"
+msgstr ""
 
 #: src/components/moderation/ScreenHider.tsx:117
 msgid "This {screenDescription} has been flagged:"
@@ -14969,7 +15030,7 @@ msgstr "Por elsaluti <0>klaku ĉi tie</0>. Aŭ, se vi preferas, vi povas <1>fori
 msgid "Today"
 msgstr "Hodiaŭ"
 
-#: src/screens/Notifications/components/PageList.tsx:576
+#: src/screens/Notifications/components/PageList.tsx:579
 msgctxt "Notifications section header"
 msgid "Today"
 msgstr "Hodiaŭ"
@@ -15960,23 +16021,31 @@ msgstr "Vidi {publicationTitle}"
 msgid "View all"
 msgstr "Vidi ĉiujn"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:134
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:135
 msgid "View all followers"
 msgstr "Vidi ĉiujn sekvantojn"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:368
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:609
+msgid "View all new posts"
+msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:610
+msgid "View all new posts from {name}"
+msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:356
 msgid "View all posts {name} liked"
 msgstr "Vidi ĉiujn afiŝojn ŝatatajn de {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:400
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:387
 msgid "View all posts {name} reposted"
 msgstr "Vidi ĉiujn afiŝojn reafiŝitajn de {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:433
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:419
 msgid "View all reposts {name} liked"
 msgstr "Vidi ĉiujn reafiŝojn ŝatatajn de {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:466
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:451
 msgid "View all reposts {name} reposted"
 msgstr "Vidi ĉiujn reafiŝojn reafiŝitajn de {name}"
 
@@ -16722,7 +16791,7 @@ msgstr "Vi nun tujelsendas!"
 msgid "You are verified"
 msgstr "Vi estas konfirmita"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:413
+#: src/screens/Profile/Header/EditProfileDialog.tsx:440
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
 msgstr "Vi estas konfirmita. Vi perdos vian konfirman staton, se vi ŝanĝos vian montratan nomon. <0>Eksciu pli.</0>"
 
@@ -17332,7 +17401,7 @@ msgstr "Via kontakto {firstAuthorName} estas ĉe Bluesky"
 msgid "Your contact {name}"
 msgstr "Via kontakto {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:353
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:355
 msgid "Your contact <0/> is on Bluesky"
 msgstr "Via kontakto <0/> estas ĉe Bluesky"
 
@@ -17470,6 +17539,10 @@ msgstr "Via profilbildo ĉirkaŭita per samcentraj cirkloj de profilbildoj de al
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Via profilo, afiŝoj, fluoj kaj listoj ne plu videblos por aliaj uzantoj de Bluesky. Vi povas reaktivigi vian konton iam ajn per ensaluto."
+
+#: src/screens/Profile/Header/PronounsDialog.tsx:129
+msgid "Your pronouns show next to your handle on your profile."
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1238
 msgid "Your reply was sent"
