@@ -37,6 +37,7 @@ import {NavigationBar} from 'expo-navigation-bar'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import {StatusBar} from 'expo-status-bar'
 import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
+import {ScrollEdgeEffectProvider} from '@bsky.app/expo-scroll-edge-effect'
 
 import {type Dimensions} from '#/lib/media/types'
 import {useTheme} from '#/alf'
@@ -462,95 +463,98 @@ function ImageView({
   }, [t])
 
   return (
-    <Animated.View style={[styles.container, containerStyle]}>
-      <StatusBar
-        animated
-        style="light"
-        // the edge effect keeps the status bar legible over a zoomed image
-        hidden={(isScaled && !IS_LIQUID_GLASS) || !showControls}
-      />
-      <NavigationBar style="light" hidden={false} />
-      <Animated.View
-        style={[styles.backdrop, backdropStyle]}
-        renderToHardwareTextureAndroid
-      />
-      <PagerView
-        scrollEnabled={!isScaled}
-        initialPage={initialImageIndex}
-        onPageSelected={(e: PagerViewOnPageSelectedEvent) => {
-          const next = e.nativeEvent.position
-          if (next !== imageIndex) {
-            onIndexChange?.(next)
-          }
-          setImageIndex(prev => {
-            if (metricsContext && prev !== next) {
-              ax.metric('post:photoEmbed:lightboxSwipe', {
-                layout: metricsContext.layout,
-                fromImage: prev + 1,
-                toImage: next + 1,
-                totalImages: images.length,
-                postUri: metricsContext.postUri,
-                postAuthorDid: metricsContext.postAuthorDid,
-                feedDescriptor: metricsContext.feedDescriptor,
-              })
+    <ScrollEdgeEffectProvider>
+      <Animated.View style={[styles.container, containerStyle]}>
+        <StatusBar
+          animated
+          style="light"
+          // the edge effect keeps the status bar legible over a zoomed image
+          hidden={(isScaled && !IS_LIQUID_GLASS) || !showControls}
+        />
+        <NavigationBar style="light" hidden={false} />
+        <Animated.View
+          style={[styles.backdrop, backdropStyle]}
+          renderToHardwareTextureAndroid
+        />
+        <PagerView
+          scrollEnabled={!isScaled}
+          initialPage={initialImageIndex}
+          onPageSelected={(e: PagerViewOnPageSelectedEvent) => {
+            const next = e.nativeEvent.position
+            if (next !== imageIndex) {
+              onIndexChange?.(next)
             }
-            return next
-          })
-          setIsScaled(false)
-        }}
-        onPageScrollStateChanged={(e: PageScrollStateChangedNativeEvent) => {
-          setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
-        }}
-        overdrag={true}
-        style={styles.pager}>
-        {images.map((imageSrc, i) => (
-          <View key={`${i}-${imageSrc.uri}`}>
-            <LightboxImage
-              onTap={onTap}
-              onZoom={onZoom}
-              imageSrc={imageSrc}
+            setImageIndex(prev => {
+              if (metricsContext && prev !== next) {
+                ax.metric('post:photoEmbed:lightboxSwipe', {
+                  layout: metricsContext.layout,
+                  fromImage: prev + 1,
+                  toImage: next + 1,
+                  totalImages: images.length,
+                  postUri: metricsContext.postUri,
+                  postAuthorDid: metricsContext.postAuthorDid,
+                  feedDescriptor: metricsContext.feedDescriptor,
+                })
+              }
+              return next
+            })
+            setIsScaled(false)
+          }}
+          onPageScrollStateChanged={(e: PageScrollStateChangedNativeEvent) => {
+            setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
+          }}
+          overdrag={true}
+          style={styles.pager}>
+          {images.map((imageSrc, i) => (
+            <View key={`${i}-${imageSrc.uri}`}>
+              <LightboxImage
+                onTap={onTap}
+                onZoom={onZoom}
+                imageSrc={imageSrc}
+                onRequestClose={handleRequestClose}
+                isScrollViewBeingDragged={isDragging}
+                showControls={showControls && !isDismissSwiping}
+                safeAreaRef={safeAreaRef}
+                isScaled={isScaled}
+                isDismissing={isDismissing}
+                isActive={i === imageIndex}
+                dismissSwipeTranslateX={dismissSwipeTranslateX}
+                dismissSwipeTranslateY={dismissSwipeTranslateY}
+                onDismissSwipe={onDismissSwipe}
+                openProgress={openProgress}
+                thumbRects={thumbRects}
+                imageIndex={i}
+              />
+            </View>
+          ))}
+        </PagerView>
+        <View style={styles.controls} pointerEvents="box-none">
+          <Animated.View
+            style={animatedHeaderStyle}
+            pointerEvents="box-none"
+            renderToHardwareTextureAndroid>
+            <Header
               onRequestClose={handleRequestClose}
-              isScrollViewBeingDragged={isDragging}
-              showControls={showControls && !isDismissSwiping}
-              safeAreaRef={safeAreaRef}
-              isScaled={isScaled}
-              isDismissing={isDismissing}
-              isActive={i === imageIndex}
-              dismissSwipeTranslateX={dismissSwipeTranslateX}
-              dismissSwipeTranslateY={dismissSwipeTranslateY}
-              onDismissSwipe={onDismissSwipe}
-              openProgress={openProgress}
-              thumbRects={thumbRects}
-              imageIndex={i}
+              onPressShare={() => onPressShare(images[imageIndex].uri)}
+              onPressSave={() => onPressSave(images[imageIndex].uri)}
+              imageCount={images.length}
+              activeIndex={imageIndex}
             />
-          </View>
-        ))}
-      </PagerView>
-      <View style={styles.controls} pointerEvents="box-none">
-        <Animated.View
-          style={animatedHeaderStyle}
-          pointerEvents="box-none"
-          renderToHardwareTextureAndroid>
-          <Header
-            onRequestClose={handleRequestClose}
-            onPressShare={() => onPressShare(images[imageIndex].uri)}
-            onPressSave={() => onPressSave(images[imageIndex].uri)}
-            imageCount={images.length}
-            activeIndex={imageIndex}
-          />
-        </Animated.View>
-        <Animated.View
-          style={animatedFooterStyle}
-          pointerEvents="box-none"
-          renderToHardwareTextureAndroid={!isAltExpanded}>
-          <Footer
-            altText={images[imageIndex].alt}
-            isAltExpanded={isAltExpanded}
-            onToggleAltExpanded={() => setIsAltExpanded(e => !e)}
-          />
-        </Animated.View>
-      </View>
-    </Animated.View>
+          </Animated.View>
+          <Animated.View
+            style={animatedFooterStyle}
+            pointerEvents="box-none"
+            renderToHardwareTextureAndroid={!isAltExpanded}>
+            <Footer
+              altText={images[imageIndex].alt}
+              showControls={showControls && !isDismissSwiping}
+              isAltExpanded={isAltExpanded}
+              onToggleAltExpanded={() => setIsAltExpanded(e => !e)}
+            />
+          </Animated.View>
+        </View>
+      </Animated.View>
+    </ScrollEdgeEffectProvider>
   )
 }
 
@@ -728,6 +732,7 @@ function LightboxImage({
       onRequestClose={onRequestClose}
       onLoad={setFetchedDims}
       isScrollViewBeingDragged={isScrollViewBeingDragged}
+      isActive={isActive}
       showControls={showControls}
       measureSafeArea={measureSafeArea}
       imageAspect={imageAspect}

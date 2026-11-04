@@ -31,7 +31,6 @@ import {scheduleOnRN} from 'react-native-worklets'
 import {Image} from 'expo-image'
 import {
   ScrollEdgeEffect,
-  ScrollEdgeEffectProvider,
   useScrollEdgeEffectRef,
 } from '@bsky.app/expo-scroll-edge-effect'
 
@@ -54,6 +53,7 @@ type Props = {
   onZoom: (scaled: boolean) => void
   onLoad: (dims: ImageDimensions) => void
   isScrollViewBeingDragged: boolean
+  isActive: boolean
   showControls: boolean
   measureSafeArea: () => {
     x: number
@@ -67,19 +67,12 @@ type Props = {
   transforms: Readonly<SharedValue<LightboxTransforms>>
 }
 
-function ImageItem(props: Props) {
-  return (
-    <ScrollEdgeEffectProvider>
-      <ImageItemContent {...props} />
-    </ScrollEdgeEffectProvider>
-  )
-}
-
-const ImageItemContent = ({
+const ImageItem = ({
   imageSrc,
   onTap,
   onZoom,
   onLoad,
+  isActive,
   showControls,
   measureSafeArea,
   imageAspect,
@@ -243,7 +236,9 @@ const ImageItemContent = ({
     <>
       <GestureDetector gesture={composedGesture}>
         <Animated.ScrollView
-          ref={mergeRefs([scrollViewRef, scrollEdgeRef])}
+          ref={
+            isActive ? mergeRefs([scrollViewRef, scrollEdgeRef]) : scrollViewRef
+          }
           pinchGestureEnabled
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
@@ -289,7 +284,7 @@ const ImageItemContent = ({
       {IS_LIQUID_GLASS && (
         <ScrollEdgeEffect
           edge="top"
-          effect={showControls ? 'soft' : 'hidden'}
+          effect={showControls && isActive ? 'soft' : 'hidden'}
           pointerEvents="none"
           style={[a.absolute, a.inset_0, {height: topInset}]}
         />

@@ -49,6 +49,7 @@ type Props = {
   onZoom: (isZoomed: boolean) => void
   onLoad: (dims: ImageDimensions) => void
   isScrollViewBeingDragged: boolean
+  isActive: boolean
   showControls: boolean
   measureSafeArea: () => {
     x: number

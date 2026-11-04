@@ -5,6 +5,7 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
 import {BlurView} from 'expo-blur'
+import {ScrollEdgeEffect} from '@bsky.app/expo-scroll-edge-effect'
 import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, platform, useTheme} from '#/alf'
@@ -13,11 +14,17 @@ import {IS_ANDROID} from '#/env'
 
 type Props = {
   altText: string | undefined
+  showControls: boolean
   isAltExpanded: boolean
   onToggleAltExpanded: () => void
 }
 
-export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
+export function Footer({
+  altText,
+  showControls,
+  isAltExpanded,
+  onToggleAltExpanded,
+}: Props) {
   const {t: l} = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
@@ -46,7 +53,15 @@ export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
           paddingHorizontal: sideInset,
         },
       ]}>
-      <View style={[a.mx_md, styles.altWrap]}>
+      {/*
+       * Lets the bubble shape the edge effect of the active image's scroll
+       * view, the same way the header does at the top. The scroll view is
+       * registered by the active page in ImageItem.ios.
+       */}
+      <ScrollEdgeEffect
+        edge="bottom"
+        effect={showControls ? 'soft' : 'hidden'}
+        style={[a.mx_md, styles.altWrap]}>
         <BlurView
           intensity={16}
           tint="dark"
@@ -106,7 +121,7 @@ export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
             </View>
           </ScrollView>
         </BlurView>
-      </View>
+      </ScrollEdgeEffect>
     </View>
   )
 }
