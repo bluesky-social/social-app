@@ -22,6 +22,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
+import {makeActivityListLink} from '#/lib/routes/activity-list'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {forceLTR} from '#/lib/strings/bidi'
@@ -128,11 +129,9 @@ let NotificationFeedItem = ({
         break
       }
       case 'subscribed-post': {
-        const posts: string[] = []
-        for (const post of [item.notification, ...(item.additional ?? [])]) {
-          posts.push(post.uri)
-        }
-        return `/notifications/activity?posts=${encodeURIComponent(posts.slice(0, 25).join(','))}`
+        return makeActivityListLink(
+          [item.notification, ...(item.additional ?? [])].map(post => post.uri),
+        )
       }
     }
 

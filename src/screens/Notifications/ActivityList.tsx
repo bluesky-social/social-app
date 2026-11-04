@@ -1,8 +1,7 @@
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {parseActivityListPosts} from '#/lib/routes/activity-list'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {PostFeed} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
@@ -19,8 +18,8 @@ export function NotificationsActivityListScreen({
     params: {posts},
   },
 }: Props) {
-  const uris = decodeURIComponent(posts)
-  const {_} = useLingui()
+  const uris = parseActivityListPosts(decodeURIComponent(posts)).join(',')
+  const {t: l} = useLingui()
 
   return (
     <Layout.Screen testID="NotificationsActivityListScreen">
@@ -40,7 +39,7 @@ export function NotificationsActivityListScreen({
           <EmptyState
             icon={EditIcon}
             iconSize="2xl"
-            message={_(msg`No posts here`)}
+            message={l`No posts here`}
           />
         )}
         renderEndOfFeed={() => <ListFooter />}
