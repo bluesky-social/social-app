@@ -32,6 +32,12 @@ describe('transparentifyColor', () => {
     expect(result).toBe('#aabbcc66')
   })
 
+  it('zero-pads a single-digit alpha channel', () => {
+    expect(transparentifyColor('#aabbcc', 0.02)).toBe('#aabbcc05')
+    expect(transparentifyColor('#aabbcc', 0.06)).toBe('#aabbcc0f')
+    expect(transparentifyColor('#abc', 0.06)).toBe('#aabbcc0f')
+  })
+
   it('returns the original string and warns for unsupported formats', () => {
     const unsupported = 'blue'
     const result = transparentifyColor(unsupported, 0.5)

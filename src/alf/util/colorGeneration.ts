@@ -3,9 +3,30 @@ import {utils} from '@bsky.app/alf'
 export const BLUE_HUE = 211
 
 /**
- * @deprecated use `utils.alpha` from `@bsky.app/alf` instead
+ * `utils.alpha` from `@bsky.app/alf`, but zero-padding the alpha byte of a hex
+ * color. alf's repeats a lone hex digit instead, so opacities under 16/255 come
+ * out far too strong: 0.06 rounds to `f`, which becomes `ff`, fully opaque.
  */
-export const transparentifyColor = utils.alpha
+export function alpha(color: string, opacity: number): string {
+  if (color.startsWith('#') && (color.length === 4 || color.length === 7)) {
+    const hex =
+      color.length === 4
+        ? `#${color[1].repeat(2)}${color[2].repeat(2)}${color[3].repeat(2)}`
+        : color
+    return (
+      hex +
+      Math.round(opacity * 255)
+        .toString(16)
+        .padStart(2, '0')
+    )
+  }
+  return utils.alpha(color, opacity)
+}
+
+/**
+ * @deprecated use `utils.alpha` from `#/alf` instead
+ */
+export const transparentifyColor = alpha
 
 /**
  * Lighten a hex color by `amount` percentage points of HSL lightness (0-100).
