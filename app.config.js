@@ -83,6 +83,13 @@ module.exports = function (_config) {
             'UIInterfaceOrientationLandscapeRight',
           ],
           CADisableMinimumFrameDurationOnPhone: true,
+          /*
+           * Apps built with the iOS 27 SDK can't use the app-level status bar
+           * API, so RN's StatusBar needs view controller-based appearance.
+           * Expo's prebuild template only switched this default to true
+           * partway through SDK 58, so pin it.
+           */
+          UIViewControllerBasedStatusBarAppearance: true,
           UIBackgroundModes: ['remote-notification'],
           NSUserActivityTypes: ['INSendMessageIntent'],
           NSCameraUsageDescription:
