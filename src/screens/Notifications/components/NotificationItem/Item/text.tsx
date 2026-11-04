@@ -136,11 +136,11 @@ export function Timestamp({date}: {date: string}) {
   const t = useTheme()
   const {i18n} = useLingui()
   /*
-   * `contrast_300` is too faint in the dark themes, especially on the unread
-   * tint, so they're a step stronger (`#667B99` in dark, per design).
+   * The dark themes use `contrast_500` (`#667B99` in dark, per design), as
+   * the lower steps are too faint against them, especially on the unread tint.
    */
   const color = select(t.name, {
-    light: t.palette.contrast_300,
+    light: t.palette.contrast_400,
     dim: t.palette.contrast_500,
     dark: t.palette.contrast_500,
   })
