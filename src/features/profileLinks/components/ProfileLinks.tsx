@@ -63,6 +63,8 @@ export function ProfileHeaderLinks({
   const supportLinkCount = links.filter(link =>
     getSupportProvider(link.url),
   ).length
+  const linkUris = links.flatMap(link => (link.uri ? [link.uri] : []))
+  const linkUrisKey = linkUris.join()
 
   useEffect(() => {
     if (links.length === 0) return
@@ -70,11 +72,12 @@ export function ProfileHeaderLinks({
       profileDid: profile.did,
       linkCount: links.length,
       supportLinkCount,
+      linkUris,
       isOwnProfile,
     })
     // Once per profile and set of links, not on every render.
     // oxlint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile.did, links.length, supportLinkCount])
+  }, [profile.did, linkUrisKey, links.length, supportLinkCount])
 
   if (links.length === 0) {
     // the header is a column, so a lone button would stretch to full width

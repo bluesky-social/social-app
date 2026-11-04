@@ -1572,6 +1572,11 @@ export type Events = {
     profileDid: string
     linkCount: number
     supportLinkCount: number
+    /**
+     * The `app.bsky.actor.link` records of the links shown, in display order,
+     * including any folded behind "+N". The per-link denominator for tap rate.
+     */
+    linkUris: string[]
     isOwnProfile: boolean
   }
   /**
