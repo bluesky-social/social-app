@@ -349,7 +349,7 @@ msgid "{0} reacted {1}"
 msgstr ""
 
 #. placeholder {0}: tab.label
-#: src/screens/Notifications/components/TabPills.tsx:406
+#: src/screens/Notifications/components/TabPills.tsx:428
 msgid "{0} tab, selected"
 msgstr "{0} tab, selected"
 
@@ -447,7 +447,7 @@ msgstr "{0}/{imageCount}"
 #. placeholder {0}: i18n.number(UNREAD_NOTIFICATION_CAP - 1)
 #: src/screens/Messages/components/InboxRequests.tsx:55
 #: src/screens/Settings/components/SettingsList.tsx:328
-#: src/view/shell/desktop/LeftNav.tsx:699
+#: src/view/shell/desktop/LeftNav.tsx:700
 #: src/view/shell/Drawer.tsx:762
 msgid "{0}+"
 msgstr "{0}+"
@@ -530,7 +530,7 @@ msgstr "{count, plural, one {# new join request} other {# new join requests}}"
 msgid "{count, plural, one {# request} other {# requests}}"
 msgstr "{count, plural, one {# request} other {# requests}}"
 
-#: src/view/shell/desktop/LeftNav.tsx:541
+#: src/view/shell/desktop/LeftNav.tsx:542
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -811,7 +811,7 @@ msgstr "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
 msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:451
+#: src/view/shell/desktop/LeftNav.tsx:452
 #: src/view/shell/Drawer.tsx:806
 msgid "{label}, Beta"
 msgstr "{label}, Beta"
@@ -1578,7 +1578,7 @@ msgstr "Action taken"
 msgid "Active index {0} (from {1}), {2} user navigation events"
 msgstr "Active index {0} (from {1}), {2} user navigation events"
 
-#: src/screens/Atmosphere/index.tsx:43
+#: src/screens/Atmosphere/index.tsx:44
 msgid "Activity"
 msgstr "Activity"
 
@@ -1653,8 +1653,8 @@ msgstr ""
 
 #: src/screens/Settings/Settings.tsx:614
 #: src/screens/Settings/Settings.tsx:617
-#: src/view/shell/desktop/LeftNav.tsx:387
-#: src/view/shell/desktop/LeftNav.tsx:390
+#: src/view/shell/desktop/LeftNav.tsx:388
+#: src/view/shell/desktop/LeftNav.tsx:391
 msgid "Add another account"
 msgstr ""
 
@@ -1905,6 +1905,7 @@ msgstr ""
 
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
+#: src/screens/Atmosphere/AppsTab.tsx:26
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:205
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
@@ -2399,6 +2400,10 @@ msgstr ""
 msgid "Apply update from this channel"
 msgstr "Apply update from this channel"
 
+#: src/screens/Atmosphere/index.tsx:44
+msgid "Apps"
+msgstr "Apps"
+
 #: src/screens/Atmosphere/components/FeaturedApps.tsx:15
 msgid "Apps on the Atmosphere"
 msgstr "Apps on the Atmosphere"
@@ -2523,11 +2528,15 @@ msgid "AT Protocol FAQ"
 msgstr "AT Protocol FAQ"
 
 #: src/Navigation.tsx:194
-#: src/screens/Atmosphere/index.tsx:31
-#: src/view/shell/desktop/LeftNav.tsx:763
+#: src/screens/Atmosphere/index.tsx:32
+#: src/view/shell/desktop/LeftNav.tsx:764
 #: src/view/shell/Drawer.tsx:559
 msgid "Atmosphere"
 msgstr "Atmosphere"
+
+#: src/screens/Atmosphere/AppsTab.tsx:34
+msgid "Audio"
+msgstr "Audio"
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:48
 msgctxt "Name of app icon variant"
@@ -2844,6 +2853,10 @@ msgstr ""
 msgid "Blog"
 msgstr ""
 
+#: src/screens/Atmosphere/AppsTab.tsx:27
+msgid "Blogging"
+msgstr "Blogging"
+
 #. Advanced search: Examples of hashtags
 #: src/screens/Search/components/AdvancedSearchDialog/hooks.tsx:17
 msgid "bloomscrolling booksky"
@@ -3151,7 +3164,7 @@ msgstr "Camera access needed"
 #: src/view/com/composer/Composer.tsx:1847
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
-#: src/view/shell/desktop/LeftNav.tsx:266
+#: src/view/shell/desktop/LeftNav.tsx:267
 msgid "Cancel"
 msgstr ""
 
@@ -3338,7 +3351,7 @@ msgstr "Channel"
 #: src/lib/hooks/useNotificationHandler.ts:139
 #: src/Navigation.tsx:554
 #: src/view/shell/bottom-bar/BottomBar.tsx:246
-#: src/view/shell/desktop/LeftNav.tsx:776
+#: src/view/shell/desktop/LeftNav.tsx:777
 #: src/view/shell/Drawer.tsx:611
 msgid "Chat"
 msgstr ""
@@ -3837,7 +3850,7 @@ msgstr ""
 
 #: src/lib/hotkeys/index.tsx:66
 #: src/view/com/feeds/ComposerPrompt.tsx:161
-#: src/view/shell/desktop/LeftNav.tsx:648
+#: src/view/shell/desktop/LeftNav.tsx:649
 msgid "Compose new post"
 msgstr ""
 
@@ -4260,7 +4273,8 @@ msgstr ""
 msgid "Could not leave chat."
 msgstr "Could not leave chat."
 
-#: src/screens/Atmosphere/ExploreTab.tsx:32
+#: src/screens/Atmosphere/AppsTab.tsx:78
+#: src/screens/Atmosphere/ExploreTab.tsx:51
 msgid "Could not load Atmosphere content. Please try again."
 msgstr "Could not load Atmosphere content. Please try again."
 
@@ -4723,6 +4737,10 @@ msgstr ""
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:870
 msgid "Detach quote post?"
 msgstr ""
+
+#: src/screens/Atmosphere/AppsTab.tsx:33
+msgid "Dev"
+msgstr "Dev"
 
 #: src/screens/Settings/AboutSettings.tsx:158
 msgctxt "toast"
@@ -5522,6 +5540,10 @@ msgstr ""
 msgid "Error: {error}"
 msgstr ""
 
+#: src/screens/Atmosphere/AppsTab.tsx:35
+msgid "Events"
+msgstr "Events"
+
 #: src/components/WhoCanReply.tsx:72
 msgid "Everybody can reply"
 msgstr ""
@@ -5643,9 +5665,9 @@ msgid "Explicit sexual images."
 msgstr ""
 
 #: src/Navigation.tsx:928
-#: src/screens/Atmosphere/index.tsx:43
+#: src/screens/Atmosphere/index.tsx:44
 #: src/screens/Search/Shell.tsx:564
-#: src/view/shell/desktop/LeftNav.tsx:742
+#: src/view/shell/desktop/LeftNav.tsx:743
 #: src/view/shell/Drawer.tsx:538
 msgid "Explore"
 msgstr ""
@@ -6126,13 +6148,14 @@ msgid "Feedback sent to feed operator"
 msgstr ""
 
 #: src/Navigation.tsx:590
+#: src/screens/Atmosphere/AppsTab.tsx:31
 #: src/screens/SavedFeeds.tsx:112
 #: src/screens/SavedFeeds.tsx:303
 #: src/screens/Search/SearchResults.tsx:108
 #: src/screens/StarterPack/StarterPackScreen.tsx:194
 #: src/view/screens/Feeds.tsx:505
 #: src/view/screens/Profile.tsx:274
-#: src/view/shell/desktop/LeftNav.tsx:788
+#: src/view/shell/desktop/LeftNav.tsx:789
 #: src/view/shell/Drawer.tsx:673
 msgid "Feeds"
 msgstr ""
@@ -6613,6 +6636,10 @@ msgstr "Gallery text field"
 msgid "Gallery with one item"
 msgstr "Gallery with one item"
 
+#: src/screens/Atmosphere/AppsTab.tsx:30
+msgid "Games"
+msgstr "Games"
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:335
 msgid "Generate a Starter Pack"
 msgstr "Generate a Starter Pack"
@@ -6867,8 +6894,8 @@ msgstr ""
 #: src/components/dms/ConvoMenu.tsx:262
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:102
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:194
-#: src/view/shell/desktop/LeftNav.tsx:378
-#: src/view/shell/desktop/LeftNav.tsx:384
+#: src/view/shell/desktop/LeftNav.tsx:379
+#: src/view/shell/desktop/LeftNav.tsx:385
 msgid "Go to profile"
 msgstr ""
 
@@ -7270,7 +7297,7 @@ msgstr ""
 #: src/Navigation.tsx:923
 #: src/Navigation.tsx:944
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
-#: src/view/shell/desktop/LeftNav.tsx:730
+#: src/view/shell/desktop/LeftNav.tsx:731
 #: src/view/shell/Drawer.tsx:585
 msgid "Home"
 msgstr ""
@@ -8345,7 +8372,7 @@ msgstr ""
 #: src/view/screens/Lists.tsx:60
 #: src/view/screens/Profile.tsx:268
 #: src/view/screens/Profile.tsx:276
-#: src/view/shell/desktop/LeftNav.tsx:796
+#: src/view/shell/desktop/LeftNav.tsx:797
 #: src/view/shell/Drawer.tsx:688
 msgid "Lists"
 msgstr ""
@@ -8445,7 +8472,8 @@ msgstr "Load new posts from the people you follow"
 msgid "Load older actions"
 msgstr "Load older actions"
 
-#: src/screens/Atmosphere/ExploreTab.tsx:47
+#: src/screens/Atmosphere/AppsTab.tsx:95
+#: src/screens/Atmosphere/ExploreTab.tsx:68
 msgid "Loading Atmosphere content"
 msgstr "Loading Atmosphere content"
 
@@ -9250,7 +9278,7 @@ msgstr ""
 #: src/features/followingV2/home/FeedPage.tsx:192
 #: src/screens/Notifications/index.tsx:101
 #: src/view/com/feeds/FeedPage.tsx:191
-#: src/view/shell/desktop/LeftNav.tsx:656
+#: src/view/shell/desktop/LeftNav.tsx:657
 msgctxt "action"
 msgid "New post"
 msgstr ""
@@ -9368,6 +9396,10 @@ msgstr ""
 #: src/screens/Settings/AppPasswords.tsx:109
 msgid "No app passwords yet"
 msgstr ""
+
+#: src/screens/Atmosphere/AppsTab.tsx:139
+msgid "No apps in this category yet."
+msgstr "No apps in this category yet."
 
 #: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
 #: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:30
@@ -9736,7 +9768,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:229
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:283
-#: src/view/shell/desktop/LeftNav.tsx:753
+#: src/view/shell/desktop/LeftNav.tsx:754
 #: src/view/shell/Drawer.tsx:638
 msgid "Notifications"
 msgstr ""
@@ -9949,7 +9981,7 @@ msgstr ""
 #. placeholder {0}: article.title
 #. placeholder {0}: linkLabel(link)
 #: src/features/profileLinks/components/LinkPill.tsx:87
-#: src/screens/Atmosphere/components/AppCard.tsx:45
+#: src/screens/Atmosphere/components/AppCard.tsx:41
 #: src/screens/Atmosphere/components/ArticleCard.tsx:45
 #: src/screens/Atmosphere/components/PhotoCard.tsx:46
 msgid "Open {0}"
@@ -10543,6 +10575,10 @@ msgstr ""
 msgid "Phone number verified"
 msgstr ""
 
+#: src/screens/Atmosphere/AppsTab.tsx:28
+msgid "Photo"
+msgstr "Photo"
+
 #: src/lib/interests.ts:69
 msgid "Photography"
 msgstr ""
@@ -11095,7 +11131,7 @@ msgid "profile"
 msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:326
-#: src/view/shell/desktop/LeftNav.tsx:812
+#: src/view/shell/desktop/LeftNav.tsx:813
 #: src/view/shell/Drawer.tsx:117
 #: src/view/shell/Drawer.tsx:739
 msgid "Profile"
@@ -12309,7 +12345,7 @@ msgstr ""
 msgid "Save your position in the Following feed between sessions. New posts wait above you until you’re ready to view them."
 msgstr "Save your position in the Following feed between sessions. New posts wait above you until you’re ready to view them."
 
-#: src/view/shell/desktop/LeftNav.tsx:804
+#: src/view/shell/desktop/LeftNav.tsx:805
 #: src/view/shell/Drawer.tsx:714
 msgctxt "link to bookmarks screen"
 msgid "Saved"
@@ -12362,12 +12398,12 @@ msgid "Science"
 msgstr ""
 
 #: src/components/InterestTabs.tsx:258
-#: src/screens/Notifications/components/TabPills.tsx:335
+#: src/screens/Notifications/components/TabPills.tsx:353
 msgid "Scroll left"
 msgstr ""
 
 #: src/components/InterestTabs.tsx:292
-#: src/screens/Notifications/components/TabPills.tsx:365
+#: src/screens/Notifications/components/TabPills.tsx:383
 msgid "Scroll right"
 msgstr ""
 
@@ -12574,7 +12610,7 @@ msgid "Select {0}"
 msgstr ""
 
 #. placeholder {0}: tab.label
-#: src/screens/Notifications/components/TabPills.tsx:406
+#: src/screens/Notifications/components/TabPills.tsx:428
 msgid "Select {0} tab"
 msgstr "Select {0} tab"
 
@@ -12870,7 +12906,7 @@ msgstr ""
 
 #: src/Navigation.tsx:260
 #: src/screens/Settings/Settings.tsx:118
-#: src/view/shell/desktop/LeftNav.tsx:820
+#: src/view/shell/desktop/LeftNav.tsx:821
 #: src/view/shell/Drawer.tsx:773
 msgid "Settings"
 msgstr ""
@@ -13210,7 +13246,12 @@ msgid "Show when you’re live"
 msgstr ""
 
 #. placeholder {0}: tab.label
-#: src/screens/Notifications/components/TabPills.tsx:408
+#: src/screens/Atmosphere/AppsTab.tsx:126
+msgid "Shows {0} apps"
+msgstr "Shows {0} apps"
+
+#. placeholder {0}: tab.label
+#: src/screens/Notifications/components/TabPills.tsx:431
 msgid "Shows {0} notifications"
 msgstr "Shows {0} notifications"
 
@@ -13299,9 +13340,9 @@ msgstr ""
 #: src/screens/SignupQueued.tsx:100
 #: src/screens/SignupQueued.tsx:103
 #: src/screens/Takendown.tsx:88
-#: src/view/shell/desktop/LeftNav.tsx:265
-#: src/view/shell/desktop/LeftNav.tsx:393
-#: src/view/shell/desktop/LeftNav.tsx:396
+#: src/view/shell/desktop/LeftNav.tsx:266
+#: src/view/shell/desktop/LeftNav.tsx:394
+#: src/view/shell/desktop/LeftNav.tsx:397
 msgid "Sign out"
 msgstr ""
 
@@ -13310,7 +13351,7 @@ msgid "Sign Out"
 msgstr ""
 
 #: src/screens/Settings/Settings.tsx:333
-#: src/view/shell/desktop/LeftNav.tsx:262
+#: src/view/shell/desktop/LeftNav.tsx:263
 msgid "Sign out?"
 msgstr ""
 
@@ -13392,6 +13433,10 @@ msgstr ""
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:155
 msgid "So many thoughts, you should post one"
 msgstr ""
+
+#: src/screens/Atmosphere/AppsTab.tsx:32
+msgid "Social"
+msgstr "Social"
 
 #: src/components/WelcomeModal.tsx:150
 msgid "Social media you control."
@@ -13862,11 +13907,11 @@ msgstr "Suspended accounts cannot participate in chat."
 #: src/screens/Settings/Settings.tsx:142
 #: src/screens/Settings/Settings.tsx:154
 #: src/screens/Settings/Settings.tsx:654
-#: src/view/shell/desktop/LeftNav.tsx:350
+#: src/view/shell/desktop/LeftNav.tsx:351
 msgid "Switch account"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:162
+#: src/view/shell/desktop/LeftNav.tsx:163
 msgid "Switch accounts"
 msgstr ""
 
@@ -13881,7 +13926,7 @@ msgid "Switch OTA channel"
 msgstr "Switch OTA channel"
 
 #. placeholder {0}: sanitizeHandle( profile?.handle ?? account.handle, '@', )
-#: src/view/shell/desktop/LeftNav.tsx:359
+#: src/view/shell/desktop/LeftNav.tsx:360
 msgid "Switch to {0}"
 msgstr ""
 
@@ -15727,6 +15772,10 @@ msgstr ""
 msgid "users following <0>@{0}</0>"
 msgstr ""
 
+#: src/screens/Atmosphere/AppsTab.tsx:36
+msgid "Utils"
+msgstr "Utils"
+
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:451
 msgid "Value:"
 msgstr ""
@@ -15850,6 +15899,7 @@ msgstr "via Starter Pack <0/><1>{starterPackName}</1>"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:128
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:194
+#: src/screens/Atmosphere/AppsTab.tsx:29
 msgid "Video"
 msgstr ""
 
@@ -17079,7 +17129,7 @@ msgid "You will be eligible to appear in this Starter Pack again."
 msgstr "You will be eligible to appear in this Starter Pack again."
 
 #: src/screens/Settings/Settings.tsx:334
-#: src/view/shell/desktop/LeftNav.tsx:263
+#: src/view/shell/desktop/LeftNav.tsx:264
 msgid "You will be signed out of all your accounts."
 msgstr ""
 
