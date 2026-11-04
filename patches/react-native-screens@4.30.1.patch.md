@@ -1,4 +1,4 @@
-# react-native-screens+4.30.0.patch
+# react-native-screens+4.30.1.patch
 
 ## Android: do not transition RecyclerView children individually
 
@@ -14,7 +14,7 @@ Related issues:
 - https://github.com/callstack/react-native-pager-view/issues/1005
 - https://github.com/software-mansion/react-native-screens/issues/2461
 
-Still needed as of 4.30.0: upstream's transition traversal has no RecyclerView
+Still needed as of 4.30.1: upstream's transition traversal has no RecyclerView
 handling. 4.28.0's `SwipeRefreshLayout` filler fix (#4519) is a different crash
 in the same traversal.
 
@@ -105,6 +105,6 @@ Upstream: https://github.com/software-mansion/react-native-screens/issues/4777
 (reported for Android only; repro at
 https://github.com/TantiE100/rns-setsize-layout-repro). Fix PR:
 https://github.com/software-mansion/react-native-screens/pull/4922 (not merged
-as of 4.30.0). The C++ changes here match the PR exactly; on `main` the v4
-files live under `legacy/`, but 4.30.0 still has the flat layout. Linear:
+as of 4.30.1). The C++ changes here match the PR exactly; on `main` the v4
+files live under `legacy/`, but 4.30.1 still has the flat layout. Linear:
 APP-3435.
