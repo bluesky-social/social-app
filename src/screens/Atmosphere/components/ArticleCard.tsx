@@ -32,7 +32,6 @@ export function ArticleCard({
   } = useInteractionState()
 
   const author = article.associatedProfiles?.[0]
-  if (!author) return null
 
   return (
     <View
@@ -132,38 +131,42 @@ export function ArticleCard({
                 </Text>
               ) : undefined}
             </View>
-            <View style={[a.gap_xs, a.pt_md]}>
-              <Text
-                emoji
-                style={[
-                  a.text_xs,
-                  a.leading_tight,
-                  t.atoms.text_contrast_medium,
-                ]}
-                numberOfLines={1}>
-                {article.createdAt && (
-                  <Text
-                    emoji
-                    style={[
-                      a.text_xs,
-                      a.leading_tight,
-                      t.atoms.text_contrast_medium,
-                    ]}>
-                    {niceDate(i18n, article.createdAt, 'medium', 'none')}
-                    {' • '}
-                  </Text>
-                )}
+            {(!!article.createdAt || !!author?.handle) && (
+              <View style={[a.gap_xs, a.pt_md]}>
                 <Text
                   emoji
                   style={[
                     a.text_xs,
                     a.leading_tight,
                     t.atoms.text_contrast_medium,
-                  ]}>
-                  by {sanitizeHandle(author.handle, '@')}
+                  ]}
+                  numberOfLines={1}>
+                  {article.createdAt && (
+                    <Text
+                      emoji
+                      style={[
+                        a.text_xs,
+                        a.leading_tight,
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      {niceDate(i18n, article.createdAt, 'medium', 'none')}
+                      {' • '}
+                    </Text>
+                  )}
+                  {author?.handle && (
+                    <Text
+                      emoji
+                      style={[
+                        a.text_xs,
+                        a.leading_tight,
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      by {sanitizeHandle(author.handle, '@')}
+                    </Text>
+                  )}
                 </Text>
-              </Text>
-            </View>
+              </View>
+            )}
           </View>
         </Link>
       </View>
