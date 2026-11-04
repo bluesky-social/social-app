@@ -83,7 +83,6 @@ module.exports = function (_config) {
             'UIInterfaceOrientationLandscapeRight',
           ],
           CADisableMinimumFrameDurationOnPhone: true,
-          UIViewControllerBasedStatusBarAppearance: true,
           UIBackgroundModes: ['remote-notification'],
           NSUserActivityTypes: ['INSendMessageIntent'],
           NSCameraUsageDescription:
