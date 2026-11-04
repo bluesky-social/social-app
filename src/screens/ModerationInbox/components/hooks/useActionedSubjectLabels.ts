@@ -29,7 +29,7 @@ export function useActionedSubjectLabels(
     isAtUriString(item.subject.uri, {strict: false}) &&
     new AtUri(item.subject.uri).collection === 'app.bsky.feed.post'
   const policyLabel = action.policies?.[0]?.displayName
-  const label = action.labels?.[0] ?? item.enforcement.labels?.[0]
+  const label = action.labels?.[0]
   const labelDefinition = label
     ? labelDefs[item.src]?.find(
         definition =>
