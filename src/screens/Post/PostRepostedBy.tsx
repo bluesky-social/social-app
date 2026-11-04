@@ -1,5 +1,6 @@
 import {Plural, Trans} from '@lingui/react/macro'
 
+import {useSetPostTitle} from '#/lib/hooks/useSetPostTitle'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -14,6 +15,7 @@ export const PostRepostedByScreen = ({route}: Props) => {
   const {name, rkey} = route.params
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
   const {data: post} = usePostQuery(uri)
+  useSetPostTitle(post?.author)
 
   let quoteCount
   if (post) {
