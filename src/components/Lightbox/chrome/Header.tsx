@@ -25,6 +25,8 @@ export function Header({
 }: Props) {
   const {t: l} = useLingui()
   const insets = useSafeAreaInsets()
+  // Pad both sides equally so the pager dots stay centred on the screen
+  const sideInset = Math.max(insets.left, insets.right)
 
   return (
     <View
@@ -39,8 +41,7 @@ export function Header({
         a.pointer_events_box_none,
         {
           paddingTop: insets.top + 8,
-          paddingLeft: insets.left + tokens.space.md,
-          paddingRight: insets.right + tokens.space.md,
+          paddingHorizontal: sideInset + tokens.space.md,
         },
       ]}>
       <ImageMenu onPressShare={onPressShare} onPressSave={onPressSave} />
