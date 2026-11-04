@@ -1,11 +1,14 @@
-import {forwardRef} from 'react'
+import {forwardRef, useSyncExternalStore} from 'react'
 import {
   type ColorValue,
   type StyleProp,
   StyleSheet,
   type ViewStyle,
 } from 'react-native'
-import {createNanoIconSet} from 'react-native-nano-icons'
+import {
+  addFontIntegrityListener,
+  createNanoIconSet,
+} from 'react-native-nano-icons'
 import type Svg from 'react-native-svg'
 
 import {useTheme} from '#/alf'
@@ -44,6 +47,55 @@ const iconSets = {
  */
 type GlyphEntry = [number, [number, string][]]
 
+/**
+ * Icon font families that nano-icons reports missing from the native binary.
+ * In development this means the dev client was built with different icon
+ * fonts than the running JS, e.g. from an older commit, so the glyphs would
+ * render blank.
+ */
+const missingFonts = new Set<string>()
+const missingFontListeners = new Set<() => void>()
+
+if (__DEV__) {
+  addFontIntegrityListener((issue, status) => {
+    if (status === 'found') {
+      missingFonts.add(issue.family)
+      console.warn(
+        `Icon font "${issue.fontFamily}" doesn't match this dev client, so its icons render with react-native-svg. ` +
+          'Rebuild the dev client to render them as glyphs.',
+      )
+    } else {
+      missingFonts.delete(issue.family)
+    }
+    for (const listener of missingFontListeners) listener()
+  })
+}
+
+function subscribeToMissingFonts(listener: () => void) {
+  missingFontListeners.add(listener)
+  return () => {
+    missingFontListeners.delete(listener)
+  }
+}
+
+function useIsFontMissingDev(family: string) {
+  return useSyncExternalStore(subscribeToMissingFonts, () =>
+    missingFonts.has(family),
+  )
+}
+
+function useIsFontMissingRelease(_family: string) {
+  return false
+}
+
+/**
+ * Whether an icon font is missing from the native binary, so that its icons
+ * should render with react-native-svg. Always false in production, where
+ * `fingerprint.config.js` makes any font change a native build, which also
+ * keeps the subscription out of release renders.
+ */
+const useIsFontMissing = __DEV__ ? useIsFontMissingDev : useIsFontMissingRelease
+
 const reportedFallbacks = new Set<string>()
 
 /**
@@ -70,7 +122,8 @@ function warnFallback(name: string, prop: string) {
  * cannot reproduce - a `gradient`, a `ref` (which must point at the `Svg`), a
  * `height` that differs from the width, or any other SVG prop - renders the
  * SVG icon instead, so the prop contract and the `svgPaths` metadata read by
- * `@bsky.app/peek-menu` stay exactly those of the SVG icon.
+ * `@bsky.app/peek-menu` stay exactly those of the SVG icon. In development,
+ * so does every icon of a font that the dev client lacks.
  */
 export function withNanoGlyph(
   SvgIcon: IconWithSvgMeta,
@@ -93,11 +146,13 @@ export function withNanoGlyph(
     set => name in glyphMaps[set].i,
   )!
   const NanoIconSet = iconSets[iconSet]
+  const fontFamily = glyphMaps[iconSet].m.f
   const glyphMap = glyphMaps[iconSet].i as unknown as Record<string, GlyphEntry>
   const layers = glyphMap[name][1].map(([, color]) => color)
 
   const Icon = forwardRef<Svg, Props>(function NanoIcon(props, ref) {
     const t = useTheme()
+    const fontMissing = useIsFontMissing(fontFamily)
     const {
       fill,
       size,
@@ -120,7 +175,7 @@ export function withNanoGlyph(
      */
     const resolvedSize = Number(size ? sizes[size] : width || sizes.md)
 
-    if (gradient) {
+    if (gradient || fontMissing) {
       return <SvgIcon {...props} ref={ref} />
     }
     const unsupported =
