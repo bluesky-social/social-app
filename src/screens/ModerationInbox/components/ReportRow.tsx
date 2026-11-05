@@ -12,6 +12,7 @@ export function ReportRow({
   action,
   date,
   dateEnd,
+  dateLabel,
   to,
   unread,
 }: {
@@ -19,6 +20,7 @@ export function ReportRow({
   action?: string
   date: Date
   dateEnd?: Date
+  dateLabel?: string
   to: React.ComponentProps<typeof Link>['to']
   unread?: boolean
 }) {
@@ -57,6 +59,7 @@ export function ReportRow({
           <Text style={[a.text_sm, t.atoms.text_contrast_high]}>{action}</Text>
         ) : undefined}
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+          {dateLabel ? `${dateLabel} ` : undefined}
           {dateEnd
             ? `${i18n.date(date, {
                 month: 'short',

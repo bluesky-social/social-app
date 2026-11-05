@@ -44,7 +44,7 @@ import {
   getAccountEnforcement,
   getHasActiveStrikes,
 } from './components/util/accountData'
-import {YourAccountActions} from './components/YourAccountActions'
+import {YourAccountRow} from './components/YourAccountRow'
 import {YourReportRow} from './components/YourReportRow'
 
 type ReportFilter = 'all' | 'pending' | 'resolved' | 'unread'
@@ -363,7 +363,7 @@ function YourAccount() {
       onRefresh={() => void onRefresh()}
       renderItem={({item}: ListRenderItemInfo<ActionedSubject>) => (
         <Layout.Center>
-          <YourAccountActions item={item} filter={filter} />
+          <YourAccountRow item={item} unread={!item.isRead} />
         </Layout.Center>
       )}
       ListHeaderComponent={listHeader}

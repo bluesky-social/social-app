@@ -31,16 +31,22 @@ import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Layout from '#/components/Layout'
-import {InlineLinkText, Link} from '#/components/Link'
+import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {tools} from '#/lexicons'
+import {AccountActionTimeline} from './components/AccountActionTimeline'
 import {ActionSummaryText} from './components/ActionSummaryText'
 import {ContentBlock} from './components/ContentBlock'
 import {useActionedSubjectLabels} from './components/hooks/useActionedSubjectLabels'
 import {ReportSubjectPreview} from './components/ReportSubjectPreview'
+import {
+  appealAction,
+  appealReference,
+  currentAccountAction,
+} from './components/util/accountActions'
 import {getNoticeLabels} from './components/util/noticeLabels'
 
 export function ModerationInboxNoticeDetailsScreen({
@@ -73,7 +79,6 @@ export function ModerationInboxNoticeDetailsScreen({
   const subjectQuery = useModerationInboxSubjectQuery({
     moderationService,
     subject,
-    initialCursor: route.params?.actionCursor,
     enabled: isEnabled,
   })
   const {data: labeler} = useLabelerInfoQuery({
@@ -91,11 +96,6 @@ export function ModerationInboxNoticeDetailsScreen({
         ? l`Bluesky Moderation Service`
         : moderationService
   const data = subjectQuery.data?.pages[0]
-  const actions = subjectQuery.data?.pages.flatMap(page => page.actions) ?? []
-  const actionId = route.params?.actionId
-  const selectedAction = actionId
-    ? actions.find(action => String(action.id) === actionId)
-    : undefined
   const isLoading = !data && !subjectQuery.isError
   const notFound =
     matchXrpcError(subjectQuery.error, tools.ozone.inbox.getActionedSubject) ===
@@ -106,8 +106,7 @@ export function ModerationInboxNoticeDetailsScreen({
     !!moderationService &&
     !!subject &&
     !notFound &&
-    !!data &&
-    (!actionId || !!selectedAction)
+    !!data
 
   useFocusEffect(
     useCallback(() => {
@@ -131,14 +130,7 @@ export function ModerationInboxNoticeDetailsScreen({
     }, [ax, isEnabled, hasSession, moderationService, subject, notFound]),
   )
 
-  if (
-    !isEnabled ||
-    !hasSession ||
-    !moderationService ||
-    !subject ||
-    notFound ||
-    (data && actionId && !selectedAction && !subjectQuery.hasNextPage)
-  ) {
+  if (!isEnabled || !hasSession || !moderationService || !subject || notFound) {
     return <NotFoundScreen />
   }
 
@@ -162,19 +154,15 @@ export function ModerationInboxNoticeDetailsScreen({
         contentContainerStyle={
           isLoading ? [a.flex_grow, a.justify_center] : undefined
         }>
-        {data && (!actionId || selectedAction) ? (
+        {data ? (
           <NoticeDetails
             key={`${currentAccount?.did}:${moderationService}:${subject}`}
             data={data}
-            subject={subject}
-            actions={actions}
-            selectedAction={selectedAction}
+            actions={
+              subjectQuery.data?.pages.flatMap(page => page.actions) ?? []
+            }
             serviceName={serviceName ?? moderationService}
           />
-        ) : data && actionId ? (
-          <Text style={[a.p_lg, a.text_md]}>
-            <Trans>Load older actions to find this notice.</Trans>
-          </Text>
         ) : isLoading ? (
           <View style={[a.align_center, a.p_5xl]}>
             <Loader size="xl" />
@@ -211,51 +199,34 @@ export function ModerationInboxNoticeDetailsScreen({
 
 function NoticeDetails({
   data,
-  subject,
   actions,
-  selectedAction,
   serviceName,
 }: {
   data: tools.ozone.inbox.getActionedSubject.$OutputBody
-  subject: string
   actions: tools.ozone.inbox.defs.ActionView[]
-  selectedAction?: tools.ozone.inbox.defs.ActionView
   serviceName: string
 }) {
   const t = useTheme()
   const {i18n, t: l} = useLingui()
   const ax = useAnalytics()
   const appealDialogControl = Dialog.useDialogControl()
-  const action = selectedAction ?? data.actions[0]
-  const labels = getNoticeLabels(
-    selectedAction
-      ? {...data, actions: [selectedAction], appeal: undefined}
-      : data,
-  )
+  const labels = getNoticeLabels(data)
+  const isAccount = 'did' in data.subject
+  const currentAction =
+    isAccount &&
+    (data.enforcement.state === 'takendown' ||
+      data.enforcement.state === 'suspended')
+      ? currentAccountAction(data, actions)
+      : data.actions[0]
   const actionLabels = useActionedSubjectLabels({
     src: data.src,
     subject: data.subject,
     enforcement: data.enforcement,
-    latestAction: action,
+    latestAction: currentAction,
   })
-  const policies = action?.policies ?? []
-  const isAccount = 'did' in data.subject
-  const isAppealDecision = (candidate: tools.ozone.inbox.defs.ActionView) =>
-    [
-      'contentRemoved',
-      'accountSuspended',
-      'accountTakedown',
-      'labelApplied',
-    ].includes(candidate.type)
-  const isAppealable = (candidate: tools.ozone.inbox.defs.ActionView) =>
-    !candidate.reversedAt && isAppealDecision(candidate)
-  const appealedAction = selectedAction ? undefined : actions.find(isAppealable)
-  /*
-   * The server grants appeals for the current subject, not each history entry.
-   * Historical notices link to current options rather than infer eligibility.
-   */
-  const canAppealSubject = data.availableActions?.includes('appeal') ?? false
-  const canAppeal = !selectedAction && canAppealSubject
+  const policies = currentAction?.policies ?? []
+  const canAppeal = data.availableActions?.includes('appeal') ?? false
+  const appealedAction = appealAction(data, actions)
 
   return (
     <>
@@ -265,11 +236,12 @@ function NoticeDetails({
           date={labels.date ? new Date(labels.date) : undefined}>
           {labels.appealResolved ? (
             i18n._(labels.appealSummary)
-          ) : !selectedAction && data.appeal?.state === 'pending' ? (
+          ) : data.appeal?.state === 'pending' ? (
             <Trans>
               Your appeal has been submitted and is awaiting review.
             </Trans>
-          ) : action?.type === 'contentRemoved' && !action.reversedAt ? (
+          ) : currentAction?.type === 'contentRemoved' &&
+            !currentAction.reversedAt ? (
             <Trans>
               {serviceName} removed your content for violating our{' '}
               <InlineLinkText
@@ -288,8 +260,8 @@ function NoticeDetails({
             enforcement={data.enforcement}
             allowOwnRecordSnapshot
           />
-          {(action?.type === 'labelApplied' ||
-            action?.type === 'labelRemoved') &&
+          {(currentAction?.type === 'labelApplied' ||
+            currentAction?.type === 'labelRemoved') &&
           actionLabels?.summary ? (
             <Text emoji style={[a.text_sm]}>
               {actionLabels.summary}
@@ -318,58 +290,7 @@ function NoticeDetails({
               ))}
             </View>
           ) : null}
-          {selectedAction &&
-          isAppealDecision(selectedAction) &&
-          data.appeal?.state === 'pending' ? (
-            <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
-              {isAccount ? (
-                <Trans>An appeal for this account is under review.</Trans>
-              ) : (
-                <Trans>An appeal for this content is under review.</Trans>
-              )}
-            </Text>
-          ) : selectedAction &&
-            isAppealDecision(selectedAction) &&
-            data.appeal?.state === 'resolved' ? (
-            <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
-              {isAccount && data.appeal.outcome === 'approved' ? (
-                <Trans>Your most recent account appeal was approved.</Trans>
-              ) : isAccount && data.appeal.outcome === 'denied' ? (
-                <Trans>Your most recent account appeal was denied.</Trans>
-              ) : isAccount ? (
-                <Trans>Your most recent account appeal was reviewed.</Trans>
-              ) : data.appeal.outcome === 'approved' ? (
-                <Trans>
-                  Your most recent appeal for this content was approved.
-                </Trans>
-              ) : data.appeal.outcome === 'denied' ? (
-                <Trans>
-                  Your most recent appeal for this content was denied.
-                </Trans>
-              ) : (
-                <Trans>
-                  Your most recent appeal for this content was reviewed.
-                </Trans>
-              )}
-            </Text>
-          ) : null}
-          {selectedAction && canAppealSubject ? (
-            <View style={[a.align_start]}>
-              <Link
-                testID="moderationInboxAppealOptionsLink"
-                to={{
-                  screen: 'ModerationInboxNoticeDetails',
-                  params: {moderationService: data.src, subject},
-                }}
-                label={l`View current appeal options`}
-                size="small"
-                color="secondary">
-                <ButtonText>
-                  <Trans>View current appeal options</Trans>
-                </ButtonText>
-              </Link>
-            </View>
-          ) : canAppeal ? (
+          {canAppeal ? (
             <View style={[a.gap_2xs]}>
               <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
                 {isAccount ? (
@@ -414,13 +335,13 @@ function NoticeDetails({
                 </Button>
               </View>
             </View>
-          ) : (!selectedAction || appealedAction) &&
-            data.appeal?.state === 'expired' ? (
+          ) : data.appeal?.state === 'expired' ? (
             <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
               <Trans>The appeal window has closed.</Trans>
             </Text>
           ) : null}
         </ContentBlock>
+        {isAccount && <AccountActionTimeline data={data} actions={actions} />}
       </View>
       <AppealDialog
         control={appealDialogControl}
@@ -486,12 +407,7 @@ function AppealDialog({
       const updatedSubject = await appeal.mutateAsync({
         subject: data.subject,
         reason: details.trim(),
-        action: appealedAction
-          ? {
-              $type: 'tools.ozone.inbox.appealActionedSubject#actionRef',
-              id: appealedAction.id,
-            }
-          : undefined,
+        action: appealReference(data, appealedAction),
       })
       ax.metric('moderation:inbox:submitAppeal', {
         type: appealedAction?.type,
