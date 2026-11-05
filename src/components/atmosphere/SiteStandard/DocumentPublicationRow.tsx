@@ -16,7 +16,7 @@ export function DocumentPublicationRow({
 
   return (
     <View style={[a.flex_row, a.align_center, a.gap_sm, a.pb_xs, style]}>
-      <PublicationIcon view={view} size={20} />
+      <PublicationIcon view={view} size={18} />
       <Text
         emoji
         numberOfLines={1}
