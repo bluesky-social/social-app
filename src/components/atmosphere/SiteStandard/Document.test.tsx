@@ -16,6 +16,10 @@ jest.mock('#/alf', () => ({
         name === 'p_md' ? {padding: 12} : {[`atom_${String(name)}`]: true},
     },
   ),
+  extractPadding:
+    jest.requireActual<typeof import('#/alf/util/flatten')>(
+      '#/alf/util/flatten',
+    ).extractPadding,
   useTheme: () => ({atoms: new Proxy({}, {get: () => ({})})}),
   web: () => undefined,
 }))
@@ -77,12 +81,13 @@ const view = {
 
 type Json = {props: {style?: object}; children: Json[]}
 
-/** Outer frame > inset wrapper > unpadded anchor > [link, menu]. */
+/** The link contains the padding; the menu is its direct sibling. */
 function parts() {
   const frame = screen.toJSON() as unknown as Json
-  const inset = frame.children[0]
-  const anchor = inset.children[0]
-  return {frame, inset, anchor}
+  const link = frame.children[0]
+  const inset = link.children[0]
+  const menu = frame.children[1]
+  return {frame, link, inset, menu}
 }
 
 const flat = (style?: object) =>
@@ -92,21 +97,22 @@ describe.each([
   ['Document', Document, 'document'],
   ['DocumentCard', DocumentCard, 'documentCard'],
 ])('%s', (_name, Component, testID) => {
-  it('keeps the menu a sibling of the link, flush to the inset corner', () => {
-    render(<Component view={view} containerStyle={{margin: 3}} />)
-    const {inset, anchor} = parts()
+  it('includes asymmetric padding in the link while keeping the menu independently inset', () => {
+    const containerStyle = {
+      paddingTop: 8,
+      paddingRight: 20,
+      paddingBottom: 16,
+      paddingLeft: 4,
+    }
+    render(<Component view={view} containerStyle={containerStyle} />)
+    const {frame, link, inset, menu} = parts()
 
     expect(screen.getByTestId(testID)).toBeTruthy()
-    expect(flat(inset.props.style)).toMatchObject({margin: 3})
-    expect(flat(anchor.props.style)).toEqual({atom_relative: true})
-    expect(anchor.children.map(c => c.props)).toEqual([
-      expect.objectContaining({testID: 'link'}),
-      expect.objectContaining({testID: 'menu'}),
-    ])
-    expect(flat(screen.getByTestId('menu').props.style)).toEqual({
-      top: 0,
-      right: 0,
-    })
+    expect(link.props).toMatchObject({testID: 'link'})
+    expect(flat(inset.props.style)).toMatchObject(containerStyle)
+    expect(frame.children).toHaveLength(2)
+    expect(menu.props).toMatchObject({testID: 'menu'})
+    expect(flat(menu.props.style)).toEqual({top: 8, right: 20})
   })
 
   it('hides the menu in preview', () => {
@@ -147,12 +153,14 @@ describe('DocumentCard', () => {
       atom_rounded_lg: true,
     })
     expect(flat(inset.props.style)).toEqual({padding: 12})
+    expect(flat(parts().menu.props.style)).toEqual({top: 12, right: 12})
   })
 
   it('lets caller containerStyle override the default padding', () => {
     render(<DocumentCard view={view} containerStyle={{padding: 2}} />)
 
     expect(flat(parts().inset.props.style)).toEqual({padding: 2})
+    expect(flat(parts().menu.props.style)).toEqual({top: 2, right: 2})
   })
 })
 
@@ -193,11 +201,25 @@ describe('menu clearance without an image', () => {
     expect(titleWrapperStyle()).not.toHaveProperty('atom_pr_5xl')
   })
 
+  it('adds the image inset to resolved container padding', () => {
+    render(
+      <DocumentCard
+        view={{...view, image}}
+        containerStyle={{paddingTop: 0, paddingRight: 4}}
+      />,
+    )
+
+    expect(flat(parts().menu.props.style)).toEqual({top: 8, right: 12})
+  })
+
   it('reserves nothing with an image or in preview', () => {
     render(<Document view={{...view, image}} />)
     expect(titleWrapperStyle()).not.toHaveProperty('atom_pr_5xl')
-    // The image holds the menu, so it keeps the menu's default inset.
-    expect(flat(screen.getByTestId('menu').props.style)).toEqual({})
+    // The image keeps the menu's extra inset.
+    expect(flat(screen.getByTestId('menu').props.style)).toEqual({
+      top: 8,
+      right: 8,
+    })
     screen.unmount()
 
     render(<Document view={view} preview />)

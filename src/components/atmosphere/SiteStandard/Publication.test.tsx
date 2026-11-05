@@ -33,7 +33,9 @@ jest.mock('#/alf', () => ({
 jest.mock('#/components/Link', () => ({
   Link: (props: LinkMockProps) => {
     mockPrimaryLink(props)
-    return null
+    const {View} =
+      jest.requireActual<typeof import('react-native')>('react-native')
+    return <View testID="primaryLink" style={props.style} />
   },
 }))
 jest.mock('#/components/Typography', () => ({Text: () => null}))
@@ -58,12 +60,12 @@ const view = {
 
 type Json = {props: {style?: object}; children: Json[]}
 
-/** Outer frame > inset wrapper > unpadded anchor > content. */
+/** The full-frame primary link is a sibling of the padded content. */
 function parts() {
   const frame = screen.toJSON() as unknown as Json
-  const inset = frame.children[0]
-  const anchor = inset.children[0]
-  return {frame, inset, anchor}
+  const link = frame.children[0]
+  const inset = frame.children[1]
+  return {frame, link, inset}
 }
 
 const flat = (style?: object) =>
@@ -83,7 +85,7 @@ describe('Publication', () => {
         containerStyle={[{paddingLeft: 4}, {paddingTop: 8}]}
       />,
     )
-    const {frame, inset, anchor} = parts()
+    const {frame, link, inset} = parts()
 
     expect(screen.getByTestId('publication')).toBeTruthy()
     expect(flat(frame.props.style)).toMatchObject({margin: 1})
@@ -91,7 +93,12 @@ describe('Publication', () => {
       expect(flat(frame.props.style)).not.toHaveProperty(`atom_${atom}`)
     }
     expect(flat(inset.props.style)).toEqual({paddingLeft: 4, paddingTop: 8})
-    expect(flat(anchor.props.style)).toEqual({atom_relative: true})
+    expect(flat(frame.props.style)).toHaveProperty('atom_relative', true)
+    expect(link.props).toMatchObject({testID: 'primaryLink'})
+    expect(flat(link.props.style)).toEqual({
+      atom_absolute: true,
+      atom_inset_0: true,
+    })
   })
 
   it('keeps primary and subscribe focus props independent', () => {
@@ -113,8 +120,13 @@ describe('Publication', () => {
 describe('PublicationCard', () => {
   it('is framed and applies its default padding through the inset wrapper', () => {
     render(<PublicationCard view={view} style={{margin: 1}} />)
-    const {frame, inset} = parts()
+    const {frame, link, inset} = parts()
 
+    expect(link.props).toMatchObject({testID: 'primaryLink'})
+    expect(flat(link.props.style)).toEqual({
+      atom_absolute: true,
+      atom_inset_0: true,
+    })
     expect(screen.getByTestId('publicationCard')).toBeTruthy()
     expect(flat(frame.props.style)).toMatchObject({
       margin: 1,

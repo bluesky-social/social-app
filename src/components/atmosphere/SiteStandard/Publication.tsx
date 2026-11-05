@@ -21,8 +21,8 @@ type PublicationProps = ssTypes.PreviewProps &
      */
     style?: StyleProp<ViewStyle>
     /**
-     * Applied last to an inset wrapper around the content, so padding moves
-     * the whole publication. Use this, not `style`, to inset rows in a list.
+     * Insets the content without shrinking the primary link's hit area.
+     * Use this, not `style`, to inset rows in a list.
      */
     containerStyle?: StyleProp<ViewStyle>
     /**
@@ -85,6 +85,7 @@ function PublicationBase({
     <View
       testID={card ? 'publicationCard' : 'publication'}
       style={[
+        a.relative,
         a.w_full,
         card && [
           a.rounded_lg,
@@ -97,67 +98,86 @@ function PublicationBase({
         interacted ? t.atoms.bg_contrast_25 : card && t.atoms.bg,
         style,
       ]}>
+      <Link
+        shouldProxy
+        to={view.uri}
+        label={view.title ? l`View ${view.title}` : l`View publication`}
+        onPress={onPress}
+        onLongPress={onLongPress}
+        {...web({
+          onMouseEnter: onInteract,
+          onMouseLeave: onInteractOut,
+        })}
+        ref={linkProps?.ref}
+        tabIndex={linkProps?.tabIndex}
+        onFocus={e => {
+          onInteract()
+          linkProps?.onFocus?.(e)
+        }}
+        onBlur={onInteractOut}
+        style={[a.absolute, a.inset_0]}>
+        <></>
+      </Link>
       <View style={containerStyle}>
-        <View style={a.relative}>
-          <Link
-            shouldProxy
-            to={view.uri}
-            label={view.title ? l`View ${view.title}` : l`View publication`}
-            onPress={onPress}
-            onLongPress={onLongPress}
-            {...web({
-              onMouseEnter: onInteract,
-              onMouseLeave: onInteractOut,
-            })}
-            ref={linkProps?.ref}
-            tabIndex={linkProps?.tabIndex}
-            onFocus={e => {
-              onInteract()
-              linkProps?.onFocus?.(e)
-            }}
-            onBlur={onInteractOut}
-            style={[a.absolute, a.inset_0]}>
-            <></>
-          </Link>
-
+        <View
+          style={[
+            a.align_center,
+            a.justify_between,
+            a.gap_md,
+            a.pointer_events_none,
+            gtPhone && [a.flex_row, a.gap_sm],
+          ]}>
           <View
             style={[
+              a.w_full,
+              a.flex_row,
               a.align_center,
-              a.justify_between,
-              a.gap_md,
-              a.pointer_events_none,
-              gtPhone && [a.flex_row, a.gap_sm],
+              a.gap_sm,
+              gtPhone && a.flex_1,
             ]}>
-            <View
-              style={[
-                a.w_full,
-                a.flex_row,
-                a.align_center,
-                a.gap_sm,
-                gtPhone && a.flex_1,
-              ]}>
-              <PublicationIcon view={view} size={40} interacted={interacted} />
-              <View style={[a.flex_1, a.gap_2xs]}>
-                <Text
-                  emoji
-                  numberOfLines={1}
-                  style={[
-                    a.text_md,
-                    a.font_semi_bold,
-                    t.atoms.text,
-                    a.leading_snug,
-                  ]}>
-                  {view.title}
-                </Text>
-                <StandardSiteMetaRow
-                  preview={preview}
-                  type="publication"
-                  view={view}
-                />
-              </View>
+            <PublicationIcon view={view} size={40} interacted={interacted} />
+            <View style={[a.flex_1, a.gap_2xs]}>
+              <Text
+                emoji
+                numberOfLines={1}
+                style={[
+                  a.text_md,
+                  a.font_semi_bold,
+                  t.atoms.text,
+                  a.leading_snug,
+                ]}>
+                {view.title}
+              </Text>
+              <StandardSiteMetaRow
+                preview={preview}
+                type="publication"
+                view={view}
+              />
             </View>
+          </View>
 
-            {gtPhone && !hideSubscribe && (
+          {gtPhone && !hideSubscribe && (
+            <SubscribeButton
+              preview={preview}
+              view={view}
+              style={[!gtPhone && [a.w_full, a.justify_center]]}
+              linkProps={subscribeLinkProps}
+              onEmbedInteractionCallback={onEmbedInteractionCallback}
+            />
+          )}
+        </View>
+
+        <View style={[a.flex_1, a.pointer_events_none]}>
+          {!!view.description && (
+            <View style={[a.pt_sm]}>
+              <Text emoji style={[a.text_sm, a.leading_snug]} numberOfLines={3}>
+                {view.description}
+              </Text>
+            </View>
+          )}
+
+          {!gtPhone && (
+            <View style={[a.pt_sm]}>
               <SubscribeButton
                 preview={preview}
                 view={view}
@@ -165,33 +185,8 @@ function PublicationBase({
                 linkProps={subscribeLinkProps}
                 onEmbedInteractionCallback={onEmbedInteractionCallback}
               />
-            )}
-          </View>
-
-          <View style={[a.flex_1, a.pointer_events_none]}>
-            {!!view.description && (
-              <View style={[a.pt_sm]}>
-                <Text
-                  emoji
-                  style={[a.text_sm, a.leading_snug]}
-                  numberOfLines={3}>
-                  {view.description}
-                </Text>
-              </View>
-            )}
-
-            {!gtPhone && (
-              <View style={[a.pt_sm]}>
-                <SubscribeButton
-                  preview={preview}
-                  view={view}
-                  style={[!gtPhone && [a.w_full, a.justify_center]]}
-                  linkProps={subscribeLinkProps}
-                  onEmbedInteractionCallback={onEmbedInteractionCallback}
-                />
-              </View>
-            )}
-          </View>
+            </View>
+          )}
         </View>
       </View>
     </View>

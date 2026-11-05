@@ -6,7 +6,7 @@ import {useHaptics} from '#/lib/haptics'
 import {shareUrl} from '#/lib/sharing'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, extractPadding, useTheme, web} from '#/alf'
 import {DocumentPublicationRow} from '#/components/atmosphere/SiteStandard/DocumentPublicationRow'
 import {DocumentStats} from '#/components/atmosphere/SiteStandard/DocumentStats'
 import {StandardSiteMetaRow} from '#/components/atmosphere/SiteStandard/StandardSiteMetaRow'
@@ -27,9 +27,9 @@ type DocumentProps = ssTypes.PreviewProps &
      */
     style?: StyleProp<ViewStyle>
     /**
-     * Applied last to an inset wrapper around the article and its menu, so
-     * padding moves both together. Use this, not `style`, to inset rows in a
-     * list.
+     * Insets the article content and its independent menu. Padding stays
+     * inside the article link's hit area. The menu follows the resolved
+     * padding. Use this, not `style`, to inset rows in a list.
      */
     containerStyle?: StyleProp<ViewStyle>
   }
@@ -65,7 +65,9 @@ function DocumentBase({
   const niceUrl = toNiceDomain(view.uri)
   const imageUri = view.image
   const publisher = view.publisher
+  const {paddingTop, paddingRight} = extractPadding(containerStyle)
   const hasMedia = Boolean(imageUri)
+  const menuInset = hasMedia ? 8 : 0
   /*
    * The menu is a sibling of the article link, not inside it, since
    * interactive elements can't nest in one. With no image to hold it, the
@@ -101,115 +103,115 @@ function DocumentBase({
     <View
       testID={card ? 'documentCard' : 'document'}
       style={[
+        a.relative,
         a.flex_col,
         a.w_full,
         card && [a.rounded_lg, a.border, borderColor],
-        /* The inset sits outside the link, so tint the frame too. */
         interacted && t.atoms.bg_contrast_25,
         preview && a.pointer_events_none,
         style,
       ]}>
-      <View style={containerStyle}>
-        <View style={a.relative}>
-          {/*
-           * The article is an in-flow `Link` wrapping the content so the iOS
-           * peek menu has something to lift.
-           */}
-          <Link
-            peek
-            shouldProxy
-            to={view.uri}
-            label={view.title || l`Open link to ${niceUrl}`}
-            onPress={onPress}
-            onLongPress={onLongPress}
-            style={card && a.rounded_lg}
-            {...web({
-              onMouseEnter: onInteract,
-              onMouseLeave: onInteractOut,
-            })}
-            onFocus={onInteract}
-            onBlur={onInteractOut}>
-            {({pressed}) => (
+      {/* Keep real content in the link for the native peek preview. */}
+      <Link
+        peek
+        shouldProxy
+        to={view.uri}
+        label={view.title || l`Open link to ${niceUrl}`}
+        onPress={onPress}
+        onLongPress={onLongPress}
+        style={[
+          /* Override Button's row/center layout so the padded content stretches. */
+          a.flex_col,
+          a.align_stretch,
+          card && a.rounded_lg,
+        ]}
+        {...web({
+          onMouseEnter: onInteract,
+          onMouseLeave: onInteractOut,
+        })}
+        onFocus={onInteract}
+        onBlur={onInteractOut}>
+        {({pressed}) => (
+          <View style={containerStyle}>
+            <View
+              style={[
+                a.w_full,
+                /*
+                 * The inner view clips and rounds, not the container, since
+                 * overflow_hidden on the container breaks the peek lift
+                 * animation.
+                 */
+                card && [a.rounded_lg, a.overflow_hidden],
+                pressed && t.atoms.bg,
+              ]}>
+              {imageUri ? (
+                <Image
+                  style={[a.aspect_card]}
+                  source={{uri: imageUri}}
+                  accessibilityIgnoresInvertColors
+                  loading="lazy"
+                  useAppleWebpCodec
+                />
+              ) : undefined}
+
               <View
                 style={[
-                  a.w_full,
-                  /*
-                   * The inner view clips and rounds, not the container, since
-                   * overflow_hidden on the container breaks the peek lift
-                   * animation.
-                   */
-                  card && [a.rounded_lg, a.overflow_hidden],
-                  pressed && t.atoms.bg,
+                  a.flex_1,
+                  hasMedia && [a.pt_md, a.border_t, borderColor],
+                  /* Separates the body from the footer divider below. */
+                  !publisher && a.pb_sm,
+                  {gap: 5},
                 ]}>
-                {imageUri ? (
-                  <Image
-                    style={[a.aspect_card]}
-                    source={{uri: imageUri}}
-                    accessibilityIgnoresInvertColors
-                    loading="lazy"
-                    useAppleWebpCodec
+                {publisher && (
+                  <DocumentPublicationRow
+                    view={publisher}
+                    style={menuClearance}
                   />
-                ) : undefined}
-
-                <View
-                  style={[
-                    a.flex_1,
-                    hasMedia && [a.pt_md, a.border_t, borderColor],
-                    /* Separates the body from the footer divider below. */
-                    !publisher && a.pb_sm,
-                    {gap: 5},
-                  ]}>
-                  {publisher && (
-                    <DocumentPublicationRow
-                      view={publisher}
-                      style={menuClearance}
-                    />
-                  )}
-                  <View style={[{gap: 3}]}>
-                    <View style={!publisher && menuClearance}>
-                      <Text
-                        emoji
-                        numberOfLines={3}
-                        style={[a.text_lg, a.font_bold, a.leading_snug]}>
-                        {view.title}
-                      </Text>
-                    </View>
-                    {view.description ? (
-                      <Text
-                        emoji
-                        numberOfLines={imageUri ? 2 : 4}
-                        style={[a.text_sm, a.leading_snug]}>
-                        {view.description}
-                      </Text>
-                    ) : undefined}
+                )}
+                <View style={[{gap: 3}]}>
+                  <View style={!publisher && menuClearance}>
+                    <Text
+                      emoji
+                      numberOfLines={3}
+                      style={[a.text_lg, a.font_bold, a.leading_snug]}>
+                      {view.title}
+                    </Text>
                   </View>
-
-                  <DocumentStats view={view} />
+                  {view.description ? (
+                    <Text
+                      emoji
+                      numberOfLines={imageUri ? 2 : 4}
+                      style={[a.text_sm, a.leading_snug]}>
+                      {view.description}
+                    </Text>
+                  ) : undefined}
                 </View>
 
-                {!publisher && (
-                  <View>
-                    <Divider />
-                    <View style={[a.pt_sm]}>
-                      <StandardSiteMetaRow preview={preview} view={view} />
-                    </View>
-                  </View>
-                )}
+                <DocumentStats view={view} />
               </View>
-            )}
-          </Link>
 
-          {hasMenu && (
-            <AtmosphereCardMenu
-              type="article"
-              item={view}
-              reportableTypes={[site.standard.document.$type]}
-              author={view.associatedProfiles?.[0]}
-              style={!hasMedia && {top: 0, right: 0}}
-            />
-          )}
-        </View>
-      </View>
+              {!publisher && (
+                <View>
+                  <Divider />
+                  <View style={[a.pt_sm]}>
+                    <StandardSiteMetaRow preview={preview} view={view} />
+                  </View>
+                </View>
+              )}
+            </View>
+          </View>
+        )}
+      </Link>
+
+      {hasMenu && (
+        <AtmosphereCardMenu
+          type="article"
+          item={view}
+          reportableTypes={[site.standard.document.$type]}
+          author={view.associatedProfiles?.[0]}
+          style={{top: paddingTop + menuInset, right: paddingRight + menuInset}}
+        />
+      )}
     </View>
   )
 }
