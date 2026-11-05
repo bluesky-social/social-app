@@ -3,9 +3,9 @@ import {useLingui} from '@lingui/react/macro'
 
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {atoms as a} from '#/alf'
+import {PublicationCard} from '#/components/atmosphere/SiteStandard/Publication'
 import {type app} from '#/lexicons'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
-import {PublicationCard} from './PublicationCard'
 
 export function FeaturedPublications({
   publications,
@@ -20,7 +20,7 @@ export function FeaturedPublications({
     <View style={[a.gap_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
       <ExploreSectionHeader title={l`Featured publications`} />
       {publications.map(publication => (
-        <PublicationCard key={publication.uri} publication={publication} />
+        <PublicationCard key={publication.uri} view={publication} />
       ))}
     </View>
   )

@@ -1,18 +1,10 @@
-import {type Ref} from 'react'
-import {StyleSheet, type View} from 'react-native'
+import {StyleSheet} from 'react-native'
 import {render, screen} from '@testing-library/react-native'
 
 import {type app} from '#/lexicons'
 import {Publication, PublicationCard} from './Publication'
 
-type LinkMockProps = {
-  ref?: Ref<View>
-  tabIndex?: 0 | -1
-  onFocus?: () => void
-  style?: object
-}
-const mockPrimaryLink = jest.fn<void, [LinkMockProps]>()
-const mockSubscribe = jest.fn<void, [{linkProps?: object}]>()
+const mockMenu = jest.fn<void, [{author?: object; offsetY?: number}]>()
 
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({_: (value: {message: string}) => value.message}),
@@ -26,16 +18,28 @@ jest.mock('#/alf', () => ({
         name === 'p_md' ? {padding: 12} : {[`atom_${String(name)}`]: true},
     },
   ),
+  extractPadding:
+    jest.requireActual<typeof import('#/alf/util/flatten')>(
+      '#/alf/util/flatten',
+    ).extractPadding,
   useTheme: () => ({atoms: new Proxy({}, {get: () => ({})})}),
-  useBreakpoints: () => ({gtPhone: true}),
   web: () => undefined,
 }))
+jest.mock('#/env', () => ({IS_NATIVE: false}))
+jest.mock('#/analytics', () => ({useAnalytics: () => ({metric: jest.fn()})}))
+jest.mock('#/lib/haptics', () => ({
+  useHaptics: () => ({tap: jest.fn(), longPress: jest.fn()}),
+}))
+jest.mock('#/lib/sharing', () => ({shareUrl: jest.fn()}))
 jest.mock('#/components/Link', () => ({
-  Link: (props: LinkMockProps) => {
-    mockPrimaryLink(props)
+  Link: ({
+    children,
+  }: {
+    children: (state: {pressed: boolean}) => React.ReactNode
+  }) => {
     const {View} =
       jest.requireActual<typeof import('react-native')>('react-native')
-    return <View testID="primaryLink" style={props.style} />
+    return <View testID="link">{children({pressed: false})}</View>
   },
 }))
 jest.mock('#/components/Typography', () => ({Text: () => null}))
@@ -45,13 +49,27 @@ jest.mock('#/components/atmosphere/SiteStandard/PublicationIcon', () => ({
 jest.mock('#/components/atmosphere/SiteStandard/StandardSiteMetaRow', () => ({
   StandardSiteMetaRow: () => null,
 }))
-jest.mock('#/components/atmosphere/SiteStandard/SubscribeButton', () => ({
-  SubscribeButton: (props: {linkProps?: object}) => {
-    mockSubscribe(props)
-    return null
+jest.mock('#/screens/Atmosphere/components/AtmosphereCardMenu', () => ({
+  AtmosphereCardMenu: (props: {author?: object; offsetY?: number}) => {
+    mockMenu(props)
+    const {View} =
+      jest.requireActual<typeof import('react-native')>('react-native')
+    return (
+      <View
+        testID="menu"
+        style={{
+          top: props.offsetY,
+          right: (props as {offsetX?: number}).offsetX,
+        }}
+      />
+    )
   },
 }))
 
+const owner: app.bsky.actor.defs.ProfileViewBasic = {
+  did: 'did:plc:ewvi7nxzyoun6zhxrhs64oiz',
+  handle: 'owner.test',
+}
 const view = {
   uri: 'https://example.com',
   title: 'Title',
@@ -60,24 +78,22 @@ const view = {
 
 type Json = {props: {style?: object}; children: Json[]}
 
-/** The full-frame primary link is a sibling of the padded content. */
+/** The link contains the padding; the menu is its direct sibling. */
 function parts() {
   const frame = screen.toJSON() as unknown as Json
   const link = frame.children[0]
-  const inset = frame.children[1]
-  return {frame, link, inset}
+  const inset = link.children[0]
+  const menu = frame.children[1]
+  return {frame, link, inset, menu}
 }
 
 const flat = (style?: object) =>
   (StyleSheet.flatten(style) ?? {}) as Record<string, unknown>
 
-beforeEach(() => {
-  mockPrimaryLink.mockClear()
-  mockSubscribe.mockClear()
-})
+beforeEach(() => mockMenu.mockClear())
 
 describe('Publication', () => {
-  it('has no default padding, frame, or fill, and styles the frame and inset independently', () => {
+  it('has no default padding or frame, and styles the frame and inset independently', () => {
     render(
       <Publication
         view={view}
@@ -85,48 +101,70 @@ describe('Publication', () => {
         containerStyle={[{paddingLeft: 4}, {paddingTop: 8}]}
       />,
     )
-    const {frame, link, inset} = parts()
+    const {frame, inset} = parts()
 
     expect(screen.getByTestId('publication')).toBeTruthy()
     expect(flat(frame.props.style)).toMatchObject({margin: 1})
-    for (const atom of ['border', 'rounded_lg', 'overflow_hidden', 'p_md']) {
+    for (const atom of ['border', 'rounded_lg', 'p_md']) {
       expect(flat(frame.props.style)).not.toHaveProperty(`atom_${atom}`)
     }
     expect(flat(inset.props.style)).toEqual({paddingLeft: 4, paddingTop: 8})
-    expect(flat(frame.props.style)).toHaveProperty('atom_relative', true)
-    expect(link.props).toMatchObject({testID: 'primaryLink'})
-    expect(flat(link.props.style)).toEqual({
-      atom_absolute: true,
-      atom_inset_0: true,
-    })
   })
 
-  it('keeps primary and subscribe focus props independent', () => {
-    const ref = {current: null}
-    const onFocus = jest.fn()
-    render(<Publication view={view} linkProps={{ref, tabIndex: -1, onFocus}} />)
+  it.each([Publication, PublicationCard])(
+    'includes padding in the link and offsets its sibling menu (%p)',
+    Component => {
+      const containerStyle = {
+        paddingTop: 8,
+        paddingRight: 20,
+        paddingBottom: 16,
+        paddingLeft: 4,
+      }
+      render(<Component view={view} containerStyle={containerStyle} />)
+      const {frame, link, inset, menu} = parts()
 
-    expect(mockPrimaryLink.mock.calls[0][0]).toMatchObject({
-      ref,
-      tabIndex: -1,
-    })
-    expect(mockSubscribe.mock.calls[0][0].linkProps).toEqual({
-      tabIndex: -1,
-      onFocus,
-    })
+      expect(link.props).toMatchObject({testID: 'link'})
+      expect(flat(inset.props.style)).toMatchObject(containerStyle)
+      expect(frame.children).toHaveLength(2)
+      expect(flat(menu.props.style)).toEqual({top: 8, right: 20})
+    },
+  )
+
+  it('hides the menu in preview', () => {
+    render(<Publication view={view} preview />)
+
+    expect(screen.queryByTestId('menu')).toBeNull()
+  })
+
+  it('gives the menu the profile whose repo holds the publication record', () => {
+    const other: app.bsky.actor.defs.ProfileViewBasic = {
+      did: 'did:plc:other',
+      handle: 'other.test',
+    }
+    render(
+      <Publication
+        view={{
+          ...view,
+          associatedProfiles: [other, owner],
+          associatedRefs: [
+            {
+              uri: `at://${owner.did}/site.standard.publication/abc`,
+              cid: 'bafyreicl6ujc6ncfktctxxroxognfn7d2fqavvrryoc2lv6m4i6hpbkfti',
+            },
+          ],
+        }}
+      />,
+    )
+
+    expect(mockMenu.mock.calls[0][0].author).toBe(owner)
   })
 })
 
 describe('PublicationCard', () => {
   it('is framed and applies its default padding through the inset wrapper', () => {
     render(<PublicationCard view={view} style={{margin: 1}} />)
-    const {frame, link, inset} = parts()
+    const {frame, inset, menu} = parts()
 
-    expect(link.props).toMatchObject({testID: 'primaryLink'})
-    expect(flat(link.props.style)).toEqual({
-      atom_absolute: true,
-      atom_inset_0: true,
-    })
     expect(screen.getByTestId('publicationCard')).toBeTruthy()
     expect(flat(frame.props.style)).toMatchObject({
       margin: 1,
@@ -135,11 +173,13 @@ describe('PublicationCard', () => {
     })
     expect(flat(frame.props.style)).not.toHaveProperty('padding')
     expect(flat(inset.props.style)).toEqual({padding: 12})
+    expect(flat(menu.props.style)).toEqual({top: 12, right: 12})
   })
 
   it('lets caller containerStyle override the default padding', () => {
     render(<PublicationCard view={view} containerStyle={{padding: 2}} />)
 
     expect(flat(parts().inset.props.style)).toEqual({padding: 2})
+    expect(flat(parts().menu.props.style)).toEqual({top: 2, right: 2})
   })
 })

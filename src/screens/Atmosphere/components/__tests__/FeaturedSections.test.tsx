@@ -97,8 +97,8 @@ jest.mock('#/components/Divider', () => {
 jest.mock('../LivestreamCard', () => ({
   LivestreamCard: mockCard('livestream', 'livestream'),
 }))
-jest.mock('../PublicationCard', () => ({
-  PublicationCard: mockCard('publication', 'publication'),
+jest.mock('#/components/atmosphere/SiteStandard/Publication', () => ({
+  PublicationCard: mockCard('publication', 'view'),
 }))
 jest.mock('../PhotoCard', () => ({PhotoCard: mockCard('photo', 'photo')}))
 

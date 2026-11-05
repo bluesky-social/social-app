@@ -52,10 +52,16 @@ jest.mock('#/components/atmosphere/SiteStandard/DocumentStats', () => ({
   DocumentStats: () => null,
 }))
 jest.mock('#/screens/Atmosphere/components/AtmosphereCardMenu', () => ({
-  AtmosphereCardMenu: ({style}: {style?: object}) => {
+  AtmosphereCardMenu: ({
+    offsetY,
+    offsetX,
+  }: {
+    offsetY?: number
+    offsetX?: number
+  }) => {
     const {View} =
       jest.requireActual<typeof import('react-native')>('react-native')
-    return <View testID="menu" style={style} />
+    return <View testID="menu" style={{top: offsetY, right: offsetX}} />
   },
 }))
 
