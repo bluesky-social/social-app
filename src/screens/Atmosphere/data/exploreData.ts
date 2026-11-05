@@ -44,7 +44,7 @@ export function getAtmosphereArticles(
   return dedupeBy(
     data.articles.items.map(({view}) => view),
     article => article.uri,
-  )
+  ).slice(0, 5)
 }
 
 export function getAtmospherePublications(

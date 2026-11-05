@@ -24,7 +24,20 @@ jest.mock('#/view/shell/BlockDrawerGesture', () => ({
   BlockDrawerGesture: ({children}: {children: React.ReactNode}) => children,
 }))
 jest.mock('#/alf', () => ({
-  atoms: new Proxy({}, {get: () => ({})}),
+  atoms: new Proxy(
+    {},
+    {
+      get: (_, name) =>
+        name === 'py_md'
+          ? {paddingVertical: 12}
+          : name === 'px_lg'
+            ? {paddingHorizontal: 16}
+            : name === 'mx_lg'
+              ? {marginHorizontal: 16}
+              : {},
+    },
+  ),
+  tokens: {space: {lg: 16}},
   web: () => undefined,
 }))
 
@@ -48,10 +61,12 @@ function mockCard(prefix: string, prop: string) {
   return ({
     width,
     galleryFocus,
+    containerStyle,
     ...rest
   }: Record<string, unknown> & {
     width?: number
     galleryFocus?: ExploreGalleryFocusProps
+    containerStyle?: StyleProp<ViewStyle>
   }) => {
     const item = rest[prop] as {uri: string; title: string}
     return (
@@ -63,14 +78,23 @@ function mockCard(prefix: string, prop: string) {
         ref={galleryFocus?.focusRef}
         tabIndex={galleryFocus?.tabIndex}
         onFocus={galleryFocus?.onFocus}
-        style={width ? {width} : undefined}
+        style={[width ? {width} : undefined, containerStyle]}
       />
     )
   }
 }
-jest.mock('../ArticleCard', () => ({
-  ArticleCard: mockCard('article', 'article'),
+jest.mock('#/components/atmosphere/SiteStandard/DocumentCompact', () => ({
+  DocumentCompact: mockCard('article', 'view'),
 }))
+jest.mock('#/components/Divider', () => {
+  const {View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    Divider: ({style}: {style?: StyleProp<ViewStyle>}) => (
+      <View testID="articleDivider" style={style} />
+    ),
+  }
+})
 jest.mock('../LivestreamCard', () => ({
   LivestreamCard: mockCard('livestream', 'livestream'),
 }))
@@ -134,26 +158,39 @@ function width(testID: string) {
 }
 
 describe('FeaturedArticles', () => {
-  it('renders the header and one slide per article in a labelled gallery', () => {
+  it('renders compact documents in response order with dividers only between rows', () => {
     render(<FeaturedArticles articles={articles} />)
 
     expect(screen.getByText('Featured articles')).toBeTruthy()
-    expect(screen.getByTestId('atmosphereArticlesGallery')).toBeTruthy()
-    expect(slides().map(slide => slide.props['aria-label'])).toEqual([
-      'First article',
-      'Second article',
-    ])
-    expect(width('article-a1')).toBe(250)
-    expect(width('article-a2')).toBe(250)
+    expect(screen.getByTestId('atmosphereArticlesList')).toBeTruthy()
+    expect(screen.queryByTestId('atmosphereArticlesGallery')).toBeNull()
+    expect(slides()).toHaveLength(0)
+    expect(
+      screen
+        .getAllByTestId(/^(article-|articleDivider$)/)
+        .map(row => row.props.testID),
+    ).toEqual(['article-a1', 'articleDivider', 'article-a2'])
   })
 
-  it('wires the gallery focus target to each card', () => {
+  it('uses full-width rows with 12px vertical padding and no gallery focus', () => {
     render(<FeaturedArticles articles={articles} />)
 
-    expect(screen.getByTestId('article-a1').props.tabIndex).toBe(0)
-    expect(screen.getByTestId('article-a2').props.tabIndex).toBe(-1)
-    for (const slide of slides()) {
-      expect(slide.props.tabIndex).toBeUndefined()
+    expect(
+      flat(screen.getByTestId('atmosphereArticlesList').props.style),
+    ).toEqual({marginHorizontal: -16})
+    expect(flat(screen.getByTestId('articleDivider').props.style)).toEqual({
+      marginHorizontal: 16,
+      width: 'auto',
+    })
+
+    for (const id of ['article-a1', 'article-a2']) {
+      const row = screen.getByTestId(id)
+      expect(flat(row.props.style)).toEqual({
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+      })
+      expect(width(id)).toBeUndefined()
+      expect(row.props.tabIndex).toBeUndefined()
     }
   })
 
@@ -161,7 +198,8 @@ describe('FeaturedArticles', () => {
     render(<FeaturedArticles articles={[]} />)
 
     expect(screen.queryByText('Featured articles')).toBeNull()
-    expect(screen.queryByTestId('atmosphereArticlesGallery')).toBeNull()
+    expect(screen.queryByTestId('atmosphereArticlesList')).toBeNull()
+    expect(screen.queryByTestId('articleDivider')).toBeNull()
   })
 })
 

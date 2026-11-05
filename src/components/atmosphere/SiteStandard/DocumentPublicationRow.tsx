@@ -15,7 +15,7 @@ export function DocumentPublicationRow({
   const t = useTheme()
 
   return (
-    <View style={[a.flex_row, a.align_center, a.gap_sm, a.pb_xs, style]}>
+    <View style={[a.flex_row, a.align_center, a.gap_sm, style]}>
       <PublicationIcon view={view} size={18} />
       <Text
         emoji

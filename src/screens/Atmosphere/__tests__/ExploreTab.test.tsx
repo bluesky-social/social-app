@@ -186,22 +186,31 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.queryByTestId('retry')).toBeNull()
   })
 
-  it('renders nonfeatured recommendations in server order', () => {
+  it('renders the first five nonfeatured recommendations in server order', () => {
     setQuery({
       data: {
         ...data,
         articles: {
           recIdStr: '18446744073709551615',
-          items: ['Second', 'First'].map(title => ({
-            featured: false,
-            view: {uri: `https://example.com/${title}`, title, description: ''},
-          })),
+          items: ['Second', 'First', 'Third', 'Fourth', 'Fifth', 'Sixth'].map(
+            title => ({
+              featured: false,
+              view: {
+                uri: `https://example.com/${title}`,
+                title,
+                description: '',
+              },
+            }),
+          ),
         },
       },
     })
     render(<AtmosphereExploreTab />)
 
-    expect(screen.getByText('articles:Second,First')).toBeTruthy()
+    expect(
+      screen.getByText('articles:Second,First,Third,Fourth,Fifth'),
+    ).toBeTruthy()
+    expect(screen.queryByText(/Sixth/)).toBeNull()
   })
 
   it('hides only articles when recommendations are empty', () => {

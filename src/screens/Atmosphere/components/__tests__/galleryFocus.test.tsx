@@ -2,7 +2,6 @@ import {StyleSheet, type ViewProps} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {type app} from '#/lexicons'
-import {ArticleCard} from '../ArticleCard'
 import {type ExploreGalleryFocusProps} from '../ExploreGallery'
 import {LivestreamCard} from '../LivestreamCard'
 import {PhotoCard} from '../PhotoCard'
@@ -173,12 +172,6 @@ const authorProfile: app.bsky.actor.defs.ProfileViewBasic = {
   displayName: 'Author',
 }
 
-const article: app.bsky.embed.external.ViewArticle = {
-  uri: 'https://example.com/article',
-  description: '',
-  title: 'An article',
-  associatedProfiles: [authorProfile],
-}
 const livestream: app.bsky.embed.external.ViewLivestream = {
   uri: 'https://example.com/livestream',
   description: '',
@@ -205,10 +198,6 @@ const triggerCards: [
   string,
   (focus?: ExploreGalleryFocusProps) => React.ReactElement,
 ][] = [
-  [
-    'ArticleCard',
-    focus => <ArticleCard article={article} galleryFocus={focus} />,
-  ],
   ['PhotoCard', focus => <PhotoCard photo={photo} galleryFocus={focus} />],
   [
     'LivestreamCard',
@@ -220,10 +209,6 @@ const cards: [
   string,
   (focus?: ExploreGalleryFocusProps) => React.ReactElement,
 ][] = [
-  [
-    'ArticleCard',
-    focus => <ArticleCard article={article} galleryFocus={focus} />,
-  ],
   [
     'LivestreamCard',
     focus => <LivestreamCard livestream={livestream} galleryFocus={focus} />,
@@ -276,30 +261,6 @@ const interactions = [
   ['hover', 'mouseEnter', 'mouseLeave'],
   ['focus', 'focus', 'blur'],
 ]
-
-it.each(interactions)(
-  'highlights the article background and border on %s',
-  (_name, enter, leave) => {
-    render(<ArticleCard article={article} />)
-    const link = screen.getByTestId('link')
-    const card = screen.root
-
-    expect(card).toHaveStyle({
-      backgroundColor: '#ffffff',
-      borderColor: '#dddddd',
-    })
-    fireEvent(link, enter)
-    expect(card).toHaveStyle({
-      backgroundColor: '#f8f8f8',
-      borderColor: '#555555',
-    })
-    fireEvent(link, leave)
-    expect(card).toHaveStyle({
-      backgroundColor: '#ffffff',
-      borderColor: '#dddddd',
-    })
-  },
-)
 
 it.each(interactions)(
   'dims the photo image on %s without intercepting interactions',

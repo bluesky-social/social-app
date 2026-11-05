@@ -1,13 +1,12 @@
+import {Fragment} from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {atoms as a} from '#/alf'
+import {atoms as a, tokens} from '#/alf'
+import {DocumentCompact} from '#/components/atmosphere/SiteStandard/DocumentCompact'
+import {Divider} from '#/components/Divider'
 import {type app} from '#/lexicons'
-import {ArticleCard} from './ArticleCard'
-import {ExploreGallery} from './ExploreGallery'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
-
-const CARD_WIDTH = 250
 
 export function FeaturedArticles({
   articles,
@@ -19,20 +18,22 @@ export function FeaturedArticles({
   if (!articles.length) return null
 
   return (
-    <View style={[a.gap_md]}>
+    <View>
       <ExploreSectionHeader title={l`Featured articles`} />
-      <ExploreGallery
-        items={articles}
-        label={l`Featured articles`}
-        testID="atmosphereArticlesGallery"
-        renderItem={(item, galleryFocus) => (
-          <ArticleCard
-            article={item}
-            width={CARD_WIDTH}
-            galleryFocus={galleryFocus}
-          />
-        )}
-      />
+      {/* Bleed through ExploreTab's px_lg so links include the page gutter. */}
+      <View
+        testID="atmosphereArticlesList"
+        style={{marginHorizontal: -tokens.space.lg}}>
+        {articles.map((article, index) => (
+          <Fragment key={article.uri}>
+            {index > 0 && <Divider style={[a.mx_lg, {width: 'auto'}]} />}
+            <DocumentCompact
+              view={article}
+              containerStyle={[a.px_lg, a.py_md]}
+            />
+          </Fragment>
+        ))}
+      </View>
     </View>
   )
 }

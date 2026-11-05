@@ -91,10 +91,9 @@ describe('Atmosphere Explore response fixtures', () => {
     })
 
     expect(data.articles.recIdStr).toBe('18446744073709551615')
-    expect(getAtmosphereArticles(data).map(article => article.uri)).toEqual([
-      'https://example.com/first-article',
-      'https://example.com/second-article',
-    ])
+    expect(getAtmosphereArticles(data).map(article => article.uri)).toEqual(
+      items.map(item => item.view.uri),
+    )
     expect(data.articles.items.map(item => item.featured)).toEqual([
       false,
       true,
@@ -156,7 +155,7 @@ describe('Atmosphere Explore response fixtures', () => {
   })
 
   it.each(['articles', 'publications'] as const)(
-    'sorts %s by description length without mutating the response',
+    'selects at most five %s without mutating the response',
     section => {
       const item = fixtureData[section].items[0]
       const descriptions = [
@@ -192,7 +191,7 @@ describe('Atmosphere Explore response fixtures', () => {
           : getAtmospherePublications(data)
 
       const expectedOrder =
-        section === 'publications' ? [3, 1, 4, 5, 0] : [3, 1, 4, 5, 0, 2, 6]
+        section === 'publications' ? [3, 1, 4, 5, 0] : [0, 1, 2, 3, 4]
       expect(cards.map(card => card.uri)).toEqual(
         expectedOrder.map(index => `https://example.com/${index}`),
       )
@@ -201,7 +200,7 @@ describe('Atmosphere Explore response fixtures', () => {
     },
   )
 
-  it('sorts articles with images first, then by description length', () => {
+  it('keeps the first five articles in server order regardless of images', () => {
     const item = fixtureData.articles.items[0]
     const entries = [
       {description: 'The longest description. '.repeat(10)},
@@ -232,7 +231,7 @@ describe('Atmosphere Explore response fixtures', () => {
     Object.freeze(data.articles.items)
 
     expect(getAtmosphereArticles(data).map(article => article.uri)).toEqual(
-      [3, 5, 1, 2, 0, 4].map(index => `https://example.com/${index}`),
+      [0, 1, 2, 3, 4].map(index => `https://example.com/${index}`),
     )
     expect(JSON.stringify(data)).toBe(before)
   })
@@ -250,6 +249,30 @@ describe('Atmosphere Explore response fixtures', () => {
     expect(getAtmosphereAnnouncementBanner(fixtureData)).toBe(
       fixtureData.announcementBanner,
     )
+  })
+
+  it('caps articles after deduplication, keeping original views and response metadata', () => {
+    const items = Array.from({length: 6}, (_, index) => ({
+      ...fixtureData.articles.items[0],
+      view: {
+        ...fixtureData.articles.items[0].view,
+        uri: `https://example.com/article-${index}`,
+      },
+    }))
+    const data = parseData({
+      ...emptyData,
+      articles: {
+        items: [items[0], items[0], ...items.slice(1)],
+        recIdStr: '42',
+      },
+    })
+    const before = JSON.stringify(data)
+    Object.freeze(data.articles.items)
+
+    expect(getAtmosphereArticles(data)).toEqual(
+      [0, 2, 3, 4, 5].map(index => data.articles.items[index].view),
+    )
+    expect(JSON.stringify(data)).toBe(before)
   })
 
   describe('getAtmospherePublications', () => {

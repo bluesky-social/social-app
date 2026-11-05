@@ -144,7 +144,7 @@ function DocumentCompactBase({
                   style={[
                     a.justify_center,
                     hasMenu && a.pr_5xl,
-                    {minHeight: 28},
+                    {minHeight: 20},
                   ]}>
                   {publisher && <DocumentPublicationRow view={publisher} />}
                 </View>
