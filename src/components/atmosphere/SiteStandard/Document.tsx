@@ -7,14 +7,15 @@ import {useHaptics} from '#/lib/haptics'
 import {shareUrl} from '#/lib/sharing'
 import {niceDate} from '#/lib/strings/time'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
+import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useTheme, web} from '#/alf'
-import {PublicationFooter} from '#/components/atmosphere/SiteStandard/PublicationFooter'
+import {PublicationIcon} from '#/components/atmosphere/SiteStandard/PublicationIcon'
 import {StandardSiteMetaRow} from '#/components/atmosphere/SiteStandard/StandardSiteMetaRow'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
-import {isStandardSiteEmbed} from '#/components/atmosphere/SiteStandard/utils'
 import {Divider} from '#/components/Divider'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
+import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -26,10 +27,18 @@ export function Document({
   view,
   onEmbedInteractionCallback,
   style,
+  menu,
 }: ssTypes.PreviewProps &
   ssTypes.PublicApiProps & {
     view: app.bsky.embed.external.ViewArticle
     style?: StyleProp<ViewStyle>
+    /**
+     * Rendered as a sibling of the article link, so it must position itself
+     * (e.g. absolutely, top right). It can't live inside the link because
+     * interactive elements can't nest in one. Content that would sit under
+     * the menu is padded away when there's no image to hold it.
+     */
+    menu?: React.ReactNode
   }) {
   const ax = useAnalytics()
   const {t: l, i18n} = useLingui()
@@ -39,7 +48,8 @@ export function Document({
   const imageUri = view.image
   const publisher = view.publisher
   const hasMedia = Boolean(imageUri)
-  const isStandard = isStandardSiteEmbed(view)
+  const likeCount = view.likeCount
+  const menuClearance = !!menu && !hasMedia && a.pr_5xl
 
   const {
     state: interacted,
@@ -60,24 +70,6 @@ export function Document({
         }
       }
     : undefined
-  const onPressPublication = () => {
-    haptics.tap()
-    onEmbedInteractionCallback?.()
-    ax.metric('embed:standardSite:publication:press', {
-      url: publisher?.uri || '',
-    })
-  }
-  const onLongPressPublication = IS_NATIVE
-    ? () => {
-        if (publisher?.uri) {
-          haptics.longPress()
-          void shareUrl(publisher.uri)
-          ax.metric('embed:standardSite:publication:longPress', {
-            url: publisher.uri,
-          })
-        }
-      }
-    : undefined
 
   return (
     <View
@@ -92,9 +84,7 @@ export function Document({
       ]}>
       {/*
        * The article is an in-flow `Link` wrapping the content so the iOS peek
-       * menu has something to lift. The publication footer below lives outside
-       * it - it has its own link (to the publication) and Subscribe button, so
-       * it can't be nested inside the article's peek.
+       * menu has something to lift.
        */}
       <Link
         peek
@@ -114,21 +104,12 @@ export function Document({
           <View
             style={[
               a.w_full,
-              a.overflow_hidden,
               /*
-               * The container can't clip (overflow_hidden there breaks the peek
-               * lift animation), so each half rounds its own outer corners to
-               * match the container border. The article rounds the top, plus the
-               * bottom when there's no footer beneath it.
+               * The inner view clips and rounds, not the container, since
+               * overflow_hidden on the container breaks the peek lift animation.
                */
-              {
-                borderTopLeftRadius: a.rounded_lg.borderRadius,
-                borderTopRightRadius: a.rounded_lg.borderRadius,
-              },
-              !publisher && {
-                borderBottomLeftRadius: a.rounded_lg.borderRadius,
-                borderBottomRightRadius: a.rounded_lg.borderRadius,
-              },
+              a.overflow_hidden,
+              a.rounded_lg,
               interacted ? t.atoms.bg_contrast_25 : pressed && t.atoms.bg,
             ]}>
             {imageUri ? (
@@ -144,42 +125,61 @@ export function Document({
             <View
               style={[
                 a.flex_1,
-                a.pt_sm,
+                a.pt_md,
                 hasMedia && a.border_t,
                 interacted
                   ? t.atoms.border_contrast_high
                   : t.atoms.border_contrast_low,
                 {gap: 3},
-                isStandard && a.pt_md,
               ]}>
-              <View
-                style={[
-                  a.pb_xs,
-                  a.px_md,
-                  {gap: 3},
-                  isStandard && [{gap: 5}, a.pb_sm],
-                ]}>
-                <Text
-                  emoji
-                  numberOfLines={3}
-                  style={[
-                    a.text_md,
-                    a.font_semi_bold,
-                    a.leading_snug,
-                    isStandard && [a.text_lg, a.font_bold],
-                  ]}>
-                  {view.title}
-                </Text>
-                {view.description ? (
+              <View style={[a.pb_sm, a.px_md, {gap: 5}]}>
+                {publisher && (
+                  <View
+                    style={[
+                      a.flex_row,
+                      a.align_center,
+                      a.gap_sm,
+                      a.pb_xs,
+                      menuClearance,
+                    ]}>
+                    <PublicationIcon view={publisher} size={20} />
+                    <Text
+                      emoji
+                      numberOfLines={1}
+                      style={[
+                        a.flex_1,
+                        a.text_xs,
+                        a.font_medium,
+                        a.leading_tight,
+                        t.atoms.text,
+                      ]}>
+                      {publisher.title}
+                    </Text>
+                  </View>
+                )}
+                <View style={[{gap: 3}]}>
                   <Text
                     emoji
-                    numberOfLines={imageUri ? 2 : 4}
-                    style={[a.text_sm, a.leading_snug]}>
-                    {view.description}
+                    numberOfLines={3}
+                    style={[
+                      a.text_lg,
+                      a.font_bold,
+                      a.leading_snug,
+                      !publisher && menuClearance,
+                    ]}>
+                    {view.title}
                   </Text>
-                ) : undefined}
+                  {view.description ? (
+                    <Text
+                      emoji
+                      numberOfLines={imageUri ? 2 : 4}
+                      style={[a.text_sm, a.leading_snug]}>
+                      {view.description}
+                    </Text>
+                  ) : undefined}
+                </View>
 
-                {isStandard && (view.createdAt || view.readingTime) && (
+                {!!(view.createdAt || likeCount || view.readingTime) && (
                   <View
                     style={[
                       a.flex_row,
@@ -197,7 +197,20 @@ export function Document({
                         {niceDate(i18n, view.createdAt, 'long', 'none')}
                       </Text>
                     )}
-                    {view.readingTime && (
+                    {!!likeCount && (
+                      <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
+                        <Heart size="xs" style={t.atoms.text_contrast_medium} />
+                        <Text
+                          style={[
+                            a.text_xs,
+                            a.leading_snug,
+                            t.atoms.text_contrast_medium,
+                          ]}>
+                          {formatCount(i18n, likeCount)}
+                        </Text>
+                      </View>
+                    )}
+                    {!!view.readingTime && (
                       <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
                         <Clock size="xs" style={t.atoms.text_contrast_medium} />
                         <Text
@@ -233,19 +246,7 @@ export function Document({
         )}
       </Link>
 
-      {publisher && (
-        <View>
-          <Divider />
-          <PublicationFooter
-            preview={preview}
-            view={publisher}
-            onPress={onPressPublication}
-            onLongPress={onLongPressPublication}
-            interactedOuter={interacted}
-            onEmbedInteractionCallback={onEmbedInteractionCallback}
-          />
-        </View>
-      )}
+      {menu}
     </View>
   )
 }
