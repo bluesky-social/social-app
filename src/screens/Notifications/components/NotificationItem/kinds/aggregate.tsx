@@ -181,7 +181,7 @@ export function LikeViaRepostNotification({
   return (
     <PostReactionRow
       notification={notification}
-      glyph="likeViaRepost"
+      glyph="like"
       label={
         second
           ? l`${name} and ${secondName} liked your repost`
@@ -232,7 +232,7 @@ export function RepostViaRepostNotification({
   return (
     <PostReactionRow
       notification={notification}
-      glyph="repostViaRepost"
+      glyph="repost"
       label={
         second
           ? l`${name} and ${secondName} reposted your repost`
@@ -411,7 +411,7 @@ export function MultiPostLikeViaRepostNotification({
   return (
     <MultiPostRow
       notification={notification}
-      glyph="likeViaRepost"
+      glyph="like"
       label={l`${name} liked ${count} of your ${plural(count, {
         one: 'repost',
         other: 'reposts',
@@ -443,7 +443,7 @@ export function MultiPostRepostViaRepostNotification({
   return (
     <MultiPostRow
       notification={notification}
-      glyph="repostViaRepost"
+      glyph="repost"
       label={l`${name} reposted ${count} of your ${plural(count, {
         one: 'repost',
         other: 'reposts',

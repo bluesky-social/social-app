@@ -7,12 +7,8 @@ import {atoms as a, useTheme} from '#/alf'
 import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {type Props as SVGIconProps, sizes} from '#/components/icons/common'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
-import {LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon} from '#/components/icons/LikeRepost'
 import {PersonPlus_Filled_Corner2_Rounded as PersonPlusIcon} from '#/components/icons/Person'
-import {
-  Repost_Stroke2_Corner3_Rounded as RepostIcon,
-  RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon,
-} from '#/components/icons/Repost'
+import {Repost_Stroke2_Corner3_Rounded as RepostIcon} from '#/components/icons/Repost'
 import * as Skele from '#/components/Skeleton'
 import type * as bsky from '#/types/bsky'
 import {PREVIEW_AVATAR_SIZE} from './avatarRow'
@@ -27,13 +23,7 @@ export type BadgeTone = 'follow' | 'conversation' | 'activity' | 'neutral'
  * The v1-style icon that a groupable row has in its left column instead of an
  * avatar.
  */
-export type Glyph =
-  | 'like'
-  | 'repost'
-  | 'likeViaRepost'
-  | 'repostViaRepost'
-  | 'follow'
-  | 'activity'
+export type Glyph = 'like' | 'repost' | 'follow' | 'activity'
 
 /**
  * Activity (subscribed post) badges and icons use an orange that isn't in the
@@ -190,10 +180,6 @@ function GlyphIcon({glyph}: {glyph: Glyph}) {
       return <HeartIcon size="xl" fill={t.palette.pink} />
     case 'repost':
       return <RepostIcon size="xl" fill={t.palette.positive_500} />
-    case 'likeViaRepost':
-      return <LikeRepostIcon size="xl" fill={t.palette.pink} />
-    case 'repostViaRepost':
-      return <RepostRepostIcon size="xl" fill={t.palette.positive_500} />
     case 'follow':
       return <PersonPlusIcon size="xl" fill={t.palette.primary_500} />
     case 'activity':
