@@ -9,7 +9,13 @@ import {Button, ButtonText} from '#/components/Button'
 import {type ActionedSubject} from './hooks/useActionedSubjectLabels'
 import {YourAccountRow} from './YourAccountRow'
 
-export function YourAccountActions({item}: {item: ActionedSubject}) {
+export function YourAccountActions({
+  item,
+  filter,
+}: {
+  item: ActionedSubject
+  filter: 'all' | 'pending' | 'resolved' | 'unread'
+}) {
   const {t: l} = useLingui()
   const did =
     'did' in item.subject && typeof item.subject.did === 'string'
@@ -18,10 +24,12 @@ export function YourAccountActions({item}: {item: ActionedSubject}) {
   const history = useModerationInboxSubjectQuery({
     moderationService: item.src,
     subject: did,
-    enabled: !!did,
+    enabled: !!did && filter === 'all',
   })
 
-  if (!did) return <YourAccountRow item={item} unread={!item.isRead} />
+  if (!did || filter !== 'all') {
+    return <YourAccountRow item={item} unread={!item.isRead} />
+  }
 
   const pages = history.data?.pages
   return (

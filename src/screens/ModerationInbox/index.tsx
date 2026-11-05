@@ -363,7 +363,7 @@ function YourAccount() {
       onRefresh={() => void onRefresh()}
       renderItem={({item}: ListRenderItemInfo<ActionedSubject>) => (
         <Layout.Center>
-          <YourAccountActions item={item} />
+          <YourAccountActions item={item} filter={filter} />
         </Layout.Center>
       )}
       ListHeaderComponent={listHeader}
