@@ -26,3 +26,37 @@ index 56ec98a3be31a328d320dfde3237cb4a058af1f6..015bebfbf0bea5a6eefc4357984e1697
          }
  
          if scrollDelegate.originalDelegate == nil {
+diff --git a/ios/PagerViewProvider.swift b/ios/PagerViewProvider.swift
+index 87def2acf1bfb83fa79ff34a1537cac6afee3752..1e97045531befc80114f7c6f5959a99cbcd05ebd 100644
+--- a/ios/PagerViewProvider.swift
++++ b/ios/PagerViewProvider.swift
+@@ -74,6 +74,8 @@ final class PagerViewProvider: UIView, RNCPagerViewProviding {
+     super.didMoveToWindow()
+     if window != nil {
+       setupView()
++    } else {
++      detachFromParentViewController()
+     }
+   }
+ 
+@@ -240,6 +242,20 @@ final class PagerViewProvider: UIView, RNCPagerViewProviding {
+     hostingController.didMove(toParent: parentViewController)
+   }
+ 
++  /// Off-window, the hosting controller must not stay a child of the view
++  /// controller it was attached to. Otherwise an unmounted (or recycled) pager
++  /// leaves it behind, often on the root view controller, which changes what
++  /// UIKit and libraries that inspect `children` see (for example the status
++  /// bar delegation in react-native-screens). It is re-attached by
++  /// `willMove(toWindow:)` / `setupView()` when the pager is back in a window.
++  private func detachFromParentViewController() {
++    guard let hostingController, hostingController.parent != nil else {
++      return
++    }
++    hostingController.willMove(toParent: nil)
++    hostingController.removeFromParent()
++  }
++
+   /// SwiftUI can recreate the page controller around this React view while
+   /// preserving the view itself. Keep the hosting controller attached to the
+   /// current page controller so UIKit's view-controller hierarchy stays valid.
