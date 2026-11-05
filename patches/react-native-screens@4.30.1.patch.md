@@ -57,6 +57,35 @@ frames are in the screen view's coordinates, which match the snapshot's. They
 are now also released when the view has already left the window and no
 snapshot is taken. The 4.30.0 port hasn't been re-run against the repro.
 
+## iOS: screens without status bar props defer to the JS status bar
+
+Port of upstream PR
+https://github.com/software-mansion/react-native-screens/pull/5135 (open, not
+in a release as of 4.30.1).
+
+With `UIViewControllerBasedStatusBarAppearance = YES`, React Native 0.88.1
+stores `<StatusBar>` / `StatusBar.pushStackEntry` values in
+`RCTStatusBarAppearance` and expects the root view controller to return them
+(`ExpoRootViewController` does). But `UIViewController+RNScreens.mm` swizzles
+`childViewControllerForStatusBarStyle/Hidden` on every view controller: when
+the root's last child is an RNS controller, UIKit asks the top `RNSScreen`
+instead, which returned hard-coded defaults (`Auto` style following the system
+appearance, not hidden, `Fade`). So every JS status bar change was ignored on
+iOS, e.g. the light status bar over profile banners, and the app theme when it
+differs from the system appearance.
+
+It only showed from a cold start. Opening the lightbox leaked pager-view's
+hosting controller onto the root view controller, so the root's last child was
+no longer an RNS controller and the swizzle fell through. See the pager-view
+patch. Debug dev-client builds also hide it, because the dev launcher puts a
+non-RNS view controller in the chain, so verify in a Release build.
+
+The patch makes `RNSScreen` fall back to `RCTStatusBarAppearance` for each
+trait the screen doesn't set. A screen that sets `statusBarStyle` /
+`statusBarHidden` / `statusBarAnimation` still wins. We set none of them, so
+for us the JS status bar always applies. Verified in a Release build on an
+iOS 27.2 simulator (Xcode 27.2): broken before, fixed after.
+
 ## iOS + Android: do not dirty shadow nodes' Yoga nodes on every clone
 
 Several component descriptors call `YogaLayoutableShadowNode::setSize()` from
