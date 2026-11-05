@@ -470,7 +470,7 @@ index 0000000000000000000000000000000000000000..7498c7aea5a853ad12ea607cce921d47
 +
 +} // namespace rnscreens
 diff --git a/ios/RNSScreen.mm b/ios/RNSScreen.mm
-index 049fd22427b2bde17fd7ca59b8de65d0ee07b4b5..ac484f9033e16f61fb382ed266eac8c3d6fe8b74 100644
+index 049fd22427b2bde17fd7ca59b8de65d0ee07b4b5..a1597db71b69de1c2db87ddf9f825aa51850f2e7 100644
 --- a/ios/RNSScreen.mm
 +++ b/ios/RNSScreen.mm
 @@ -1,4 +1,5 @@
@@ -479,7 +479,15 @@ index 049fd22427b2bde17fd7ca59b8de65d0ee07b4b5..ac484f9033e16f61fb382ed266eac8c3
  
  #import "RNSModalScreen.h"
  #import "RNSScreen.h"
-@@ -1226,9 +1227,82 @@ - (BOOL)hasHeaderConfig
+@@ -10,6 +11,7 @@
+ #import <React/RCTFabricComponentsPlugins.h>
+ #import <React/RCTRootComponentView.h>
+ #import <React/RCTScrollViewComponentView.h>
++#import <React/RCTStatusBarAppearance.h>
+ #import <React/RCTSurfaceTouchHandler.h>
+ #import <react/renderer/components/rnscreens/EventEmitters.h>
+ #import <react/renderer/components/rnscreens/Props.h>
+@@ -1226,9 +1228,82 @@ - (BOOL)hasHeaderConfig
    return _config != nil;
  }
  
@@ -562,7 +570,39 @@ index 049fd22427b2bde17fd7ca59b8de65d0ee07b4b5..ac484f9033e16f61fb382ed266eac8c3
  }
  
  + (react::ComponentDescriptorProvider)componentDescriptorProvider
-@@ -2110,6 +2184,12 @@ - (RNSOrientation)evaluateOrientation
+@@ -1955,7 +2030,8 @@ - (UIViewController *)childViewControllerForStatusBarHidden
+ 
+ - (BOOL)prefersStatusBarHidden
+ {
+-  return self.screenView.statusBarHidden;
++  // A screen without the prop defers to the status bar set from JS.
++  return self.screenView.hasStatusBarHiddenSet ? self.screenView.statusBarHidden : RCTStatusBarAppearance.hidden;
+ }
+ 
+ - (UIViewController *)childViewControllerForStatusBarStyle
+@@ -1966,7 +2042,10 @@ - (UIViewController *)childViewControllerForStatusBarStyle
+ 
+ - (UIStatusBarStyle)preferredStatusBarStyle
+ {
+-  return [RNSScreenWindowTraits statusBarStyleForRNSStatusBarStyle:self.screenView.statusBarStyle];
++  // A screen without the prop defers to the status bar set from JS.
++  return self.screenView.hasStatusBarStyleSet
++      ? [RNSScreenWindowTraits statusBarStyleForRNSStatusBarStyle:self.screenView.statusBarStyle]
++      : RCTStatusBarAppearance.style;
+ }
+ 
+ - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
+@@ -1976,7 +2055,8 @@ - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
+   if ([vc isKindOfClass:[RNSScreen class]]) {
+     return ((RNSScreen *)vc).screenView.statusBarAnimation;
+   }
+-  return UIStatusBarAnimationFade;
++  // No screen sets the animation, so use the one set from JS.
++  return RCTStatusBarAppearance.updateAnimation;
+ }
+ 
+ - (UIInterfaceOrientationMask)supportedInterfaceOrientations
+@@ -2110,6 +2190,12 @@ - (RNSOrientation)evaluateOrientation
  
  - (void)addSnapshotToView
  {
@@ -575,7 +615,7 @@ index 049fd22427b2bde17fd7ca59b8de65d0ee07b4b5..ac484f9033e16f61fb382ed266eac8c3
    // if we dismissed the view natively, it will already be detached from view hierarchy
    if (self.view.window == nil) {
      return;
-@@ -2123,6 +2203,13 @@ - (void)addSnapshotToView
+@@ -2123,6 +2209,13 @@ - (void)addSnapshotToView
    snapshot.frame = self.view.bounds;
    // fill the whole screen view with the snapshot
    snapshot.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

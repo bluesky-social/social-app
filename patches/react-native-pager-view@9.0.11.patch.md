@@ -1,6 +1,6 @@
 # react-native-pager-view+9.0.11.patch
 
-Carries one iOS change, in `ios/PagerView.swift`. Drop it once a release
+Carries two iOS changes. Drop each one once a release
 contains it.
 
 These upstream PRs were carried here until they shipped:
@@ -32,3 +32,21 @@ This can't be fixed from JS. react-native-screens re-applies the option only
 when the screen attaches or the prop changes, and RN views do not trigger
 UIKit's edge effect. Drop this part if upstream adds a prop to keep the top
 edge effect.
+
+## iOS: detach the hosting controller when the pager leaves the window
+
+Backport of the `didMoveToWindow` hunk of upstream PR
+https://github.com/callstack/react-native-pager-view/pull/1204 (released in
+10.0.0). Drop it when we upgrade to 10.x.
+
+In 9.0.11 the pager's `UIHostingController` is added as a child of
+`reactViewController()` and never removed, only re-parented. The lightbox
+pager sits outside the navigation stack, so after the first lightbox open the
+root view controller keeps a leaked hosting controller as its last child.
+
+That matters because react-native-screens' status bar swizzle only delegates to
+its own view controllers when one is the root's *last* child. The leak changed
+which view controller UIKit asked for the status bar style for the rest of the
+session (it made the JS status bar start working, and would make RNS screen
+status bar options stop working). With the detach, the root's children no
+longer depend on whether the lightbox has been opened.
