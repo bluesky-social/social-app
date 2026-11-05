@@ -17,10 +17,10 @@ import {SecondaryText} from './text'
 /**
  * A short preview of a post's rich text, muted and ellipsized.
  *
- * Posts without text render nothing if they have images or video, since rows
- * show those as a trailing `Item.InlineImages`. One that only quotes another
- * post shows the quoted post instead. Otherwise this says what the post
- * contains, e.g. "Link to nytimes.com".
+ * Posts without text render nothing if they have images, video or a GIF,
+ * since rows show those as a trailing `Item.InlineImages`. One that only
+ * quotes another post shows the quoted post instead. Otherwise this says what
+ * the post contains, e.g. "Link to nytimes.com".
  */
 export function PostPreview({
   post,
