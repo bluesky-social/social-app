@@ -1,21 +1,17 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
 import {shareUrl} from '#/lib/sharing'
-import {niceDate} from '#/lib/strings/time'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useTheme, web} from '#/alf'
-import {PublicationIcon} from '#/components/atmosphere/SiteStandard/PublicationIcon'
+import {DocumentPublicationRow} from '#/components/atmosphere/SiteStandard/DocumentPublicationRow'
+import {DocumentStats} from '#/components/atmosphere/SiteStandard/DocumentStats'
 import {StandardSiteMetaRow} from '#/components/atmosphere/SiteStandard/StandardSiteMetaRow'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
 import {Divider} from '#/components/Divider'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
-import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -41,14 +37,13 @@ export function Document({
     menu?: React.ReactNode
   }) {
   const ax = useAnalytics()
-  const {t: l, i18n} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const haptics = useHaptics()
   const niceUrl = toNiceDomain(view.uri)
   const imageUri = view.image
   const publisher = view.publisher
   const hasMedia = Boolean(imageUri)
-  const likeCount = view.likeCount
   const menuClearance = !!menu && !hasMedia && a.pr_5xl
 
   const {
@@ -134,28 +129,10 @@ export function Document({
               ]}>
               <View style={[a.pb_sm, a.px_md, {gap: 5}]}>
                 {publisher && (
-                  <View
-                    style={[
-                      a.flex_row,
-                      a.align_center,
-                      a.gap_sm,
-                      a.pb_xs,
-                      menuClearance,
-                    ]}>
-                    <PublicationIcon view={publisher} size={20} />
-                    <Text
-                      emoji
-                      numberOfLines={1}
-                      style={[
-                        a.flex_1,
-                        a.text_xs,
-                        a.font_medium,
-                        a.leading_tight,
-                        t.atoms.text,
-                      ]}>
-                      {publisher.title}
-                    </Text>
-                  </View>
+                  <DocumentPublicationRow
+                    view={publisher}
+                    style={menuClearance}
+                  />
                 )}
                 <View style={[{gap: 3}]}>
                   <Text
@@ -179,58 +156,7 @@ export function Document({
                   ) : undefined}
                 </View>
 
-                {!!(view.createdAt || likeCount || view.readingTime) && (
-                  <View
-                    style={[
-                      a.flex_row,
-                      a.align_center,
-                      a.gap_md,
-                      {paddingTop: 2},
-                    ]}>
-                    {view.createdAt && (
-                      <Text
-                        style={[
-                          a.text_xs,
-                          a.leading_snug,
-                          t.atoms.text_contrast_medium,
-                        ]}>
-                        {niceDate(i18n, view.createdAt, 'long', 'none')}
-                      </Text>
-                    )}
-                    {!!likeCount && (
-                      <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
-                        <Heart size="xs" style={t.atoms.text_contrast_medium} />
-                        <Text
-                          style={[
-                            a.text_xs,
-                            a.leading_snug,
-                            t.atoms.text_contrast_medium,
-                          ]}>
-                          {formatCount(i18n, likeCount)}
-                        </Text>
-                      </View>
-                    )}
-                    {!!view.readingTime && (
-                      <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
-                        <Clock size="xs" style={t.atoms.text_contrast_medium} />
-                        <Text
-                          style={[
-                            a.text_xs,
-                            a.leading_snug,
-                            t.atoms.text_contrast_medium,
-                          ]}>
-                          {l({
-                            message: plural(view.readingTime, {
-                              one: '#m',
-                              other: '#m',
-                            }),
-                            comment: `How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.`,
-                          })}
-                        </Text>
-                      </View>
-                    )}
-                  </View>
-                )}
+                <DocumentStats view={view} />
               </View>
             </View>
 

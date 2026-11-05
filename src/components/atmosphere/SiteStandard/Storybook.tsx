@@ -2,7 +2,11 @@ import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
 import {Document} from '#/components/atmosphere/SiteStandard/Document'
+import {DocumentCompact} from '#/components/atmosphere/SiteStandard/DocumentCompact'
 import {Publication} from '#/components/atmosphere/SiteStandard/Publication'
+import {Button, ButtonIcon} from '#/components/Button'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
+import * as Menu from '#/components/Menu'
 import {H1, H2} from '#/components/Typography'
 import {type app, site} from '#/lexicons'
 
@@ -53,6 +57,37 @@ export function SiteStandardStorybook() {
   return (
     <View testID="siteStandardStorybook" style={[a.gap_lg]}>
       <H1>SiteStandard v2</H1>
+
+      <View style={[a.gap_md]}>
+        <H2>Document compact</H2>
+        <DocumentCompact
+          view={document}
+          menu={
+            <View style={[a.absolute, a.z_10, {top: 8, right: 8}]}>
+              <Menu.Root>
+                <Menu.Trigger label="Document options">
+                  {({props}) => (
+                    <Button
+                      {...props}
+                      testID="documentCompactMenuTrigger"
+                      label="Document options"
+                      color="secondary"
+                      size="small"
+                      shape="round">
+                      <ButtonIcon icon={EllipsisIcon} />
+                    </Button>
+                  )}
+                </Menu.Trigger>
+                <Menu.Outer>
+                  <Menu.Item label="Example action" onPress={() => {}}>
+                    <Menu.ItemText>Example action</Menu.ItemText>
+                  </Menu.Item>
+                </Menu.Outer>
+              </Menu.Root>
+            </View>
+          }
+        />
+      </View>
 
       <View style={[a.gap_md]}>
         <H2>Document</H2>
