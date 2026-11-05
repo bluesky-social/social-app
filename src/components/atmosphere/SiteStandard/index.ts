@@ -1,7 +1,4 @@
-export {
-  Document,
-  DocumentCard,
-} from '#/components/atmosphere/SiteStandard/Document'
+export {Document} from '#/components/atmosphere/SiteStandard/Document'
 export {
   DocumentCompact,
   DocumentCompactCard,

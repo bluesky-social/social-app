@@ -6,7 +6,7 @@ import {useHaptics} from '#/lib/haptics'
 import {shareUrl} from '#/lib/sharing'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
-import {atoms as a, extractPadding, useTheme, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {DocumentPublicationRow} from '#/components/atmosphere/SiteStandard/DocumentPublicationRow'
 import {DocumentStats} from '#/components/atmosphere/SiteStandard/DocumentStats'
 import {StandardSiteMetaRow} from '#/components/atmosphere/SiteStandard/StandardSiteMetaRow'
@@ -19,45 +19,16 @@ import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {type app, site} from '#/lexicons'
 
-type DocumentProps = ssTypes.PreviewProps &
-  ssTypes.PublicApiProps & {
-    view: app.bsky.embed.external.ViewArticle
-    /**
-     * Applied to the outer frame.
-     */
-    style?: StyleProp<ViewStyle>
-    /**
-     * Insets the article content and its independent menu. Padding stays
-     * inside the article link's hit area. The menu follows the resolved
-     * padding. Use this, not `style`, to inset rows in a list.
-     */
-    containerStyle?: StyleProp<ViewStyle>
-  }
-
-/**
- * Fills its host column with no outer padding, border, or rounding of its own.
- */
-export function Document(props: DocumentProps) {
-  return <DocumentBase {...props} card={false} />
-}
-
-/**
- * The framed presentation: bordered, rounded, and inset.
- */
-export function DocumentCard({containerStyle, ...props}: DocumentProps) {
-  return (
-    <DocumentBase {...props} card containerStyle={[a.p_md, containerStyle]} />
-  )
-}
-
-function DocumentBase({
-  card,
+export function Document({
   preview,
   view,
   onEmbedInteractionCallback,
   style,
-  containerStyle,
-}: DocumentProps & {card: boolean}) {
+}: ssTypes.PreviewProps &
+  ssTypes.PublicApiProps & {
+    view: app.bsky.embed.external.ViewArticle
+    style?: StyleProp<ViewStyle>
+  }) {
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const t = useTheme()
@@ -65,25 +36,20 @@ function DocumentBase({
   const niceUrl = toNiceDomain(view.uri)
   const imageUri = view.image
   const publisher = view.publisher
-  const {paddingTop, paddingRight} = extractPadding(containerStyle)
   const hasMedia = Boolean(imageUri)
-  const menuInset = hasMedia ? 8 : 0
   /*
    * The menu is a sibling of the article link, not inside it, since
-   * interactive elements can't nest in one. With no image to hold it, the
-   * first row is padded away from it and kept at least as tall as its trigger.
+   * interactive elements can't nest in one. With no image to hold it, content
+   * that would sit under it is padded away.
    */
   const hasMenu = !preview
-  const menuClearance = hasMenu && !hasMedia && [a.pr_5xl, {minHeight: 28}]
+  const menuClearance = hasMenu && !hasMedia && a.pr_5xl
 
   const {
     state: interacted,
     onIn: onInteract,
     onOut: onInteractOut,
   } = useInteractionState()
-  const borderColor = interacted
-    ? t.atoms.border_contrast_high
-    : t.atoms.border_contrast_low
   const onPress = () => {
     haptics.tap()
     onEmbedInteractionCallback?.()
@@ -101,17 +67,19 @@ function DocumentBase({
 
   return (
     <View
-      testID={card ? 'documentCard' : 'document'}
       style={[
-        a.relative,
         a.flex_col,
+        a.rounded_lg,
         a.w_full,
-        card && [a.rounded_lg, a.border, borderColor],
-        interacted && t.atoms.bg_contrast_25,
+        a.border,
+        interacted ? t.atoms.border_contrast_high : t.atoms.border_contrast_low,
         preview && a.pointer_events_none,
         style,
       ]}>
-      {/* Keep real content in the link for the native peek preview. */}
+      {/*
+       * The article is an in-flow `Link` wrapping the content so the iOS peek
+       * menu has something to lift.
+       */}
       <Link
         peek
         shouldProxy
@@ -119,12 +87,7 @@ function DocumentBase({
         label={view.title || l`Open link to ${niceUrl}`}
         onPress={onPress}
         onLongPress={onLongPress}
-        style={[
-          /* Override Button's row/center layout so the padded content stretches. */
-          a.flex_col,
-          a.align_stretch,
-          card && a.rounded_lg,
-        ]}
+        style={[a.rounded_lg]}
         {...web({
           onMouseEnter: onInteract,
           onMouseLeave: onInteractOut,
@@ -132,36 +95,38 @@ function DocumentBase({
         onFocus={onInteract}
         onBlur={onInteractOut}>
         {({pressed}) => (
-          <View style={containerStyle}>
+          <View
+            style={[
+              a.w_full,
+              /*
+               * The inner view clips and rounds, not the container, since
+               * overflow_hidden on the container breaks the peek lift animation.
+               */
+              a.overflow_hidden,
+              a.rounded_lg,
+              interacted ? t.atoms.bg_contrast_25 : pressed && t.atoms.bg,
+            ]}>
+            {imageUri ? (
+              <Image
+                style={[a.aspect_card]}
+                source={{uri: imageUri}}
+                accessibilityIgnoresInvertColors
+                loading="lazy"
+                useAppleWebpCodec
+              />
+            ) : undefined}
+
             <View
               style={[
-                a.w_full,
-                /*
-                 * The inner view clips and rounds, not the container, since
-                 * overflow_hidden on the container breaks the peek lift
-                 * animation.
-                 */
-                card && [a.rounded_lg, a.overflow_hidden],
-                pressed && t.atoms.bg,
+                a.flex_1,
+                a.pt_md,
+                hasMedia && a.border_t,
+                interacted
+                  ? t.atoms.border_contrast_high
+                  : t.atoms.border_contrast_low,
+                {gap: 3},
               ]}>
-              {imageUri ? (
-                <Image
-                  style={[a.aspect_card]}
-                  source={{uri: imageUri}}
-                  accessibilityIgnoresInvertColors
-                  loading="lazy"
-                  useAppleWebpCodec
-                />
-              ) : undefined}
-
-              <View
-                style={[
-                  a.flex_1,
-                  hasMedia && [a.pt_md, a.border_t, borderColor],
-                  /* Separates the body from the footer divider below. */
-                  !publisher && a.pb_sm,
-                  {gap: 5},
-                ]}>
+              <View style={[a.pb_sm, a.px_md, {gap: 5}]}>
                 {publisher && (
                   <DocumentPublicationRow
                     view={publisher}
@@ -169,14 +134,17 @@ function DocumentBase({
                   />
                 )}
                 <View style={[{gap: 3}]}>
-                  <View style={!publisher && menuClearance}>
-                    <Text
-                      emoji
-                      numberOfLines={3}
-                      style={[a.text_lg, a.font_bold, a.leading_snug]}>
-                      {view.title}
-                    </Text>
-                  </View>
+                  <Text
+                    emoji
+                    numberOfLines={3}
+                    style={[
+                      a.text_lg,
+                      a.font_bold,
+                      a.leading_snug,
+                      !publisher && menuClearance,
+                    ]}>
+                    {view.title}
+                  </Text>
                   {view.description ? (
                     <Text
                       emoji
@@ -189,16 +157,16 @@ function DocumentBase({
 
                 <DocumentStats view={view} />
               </View>
-
-              {!publisher && (
-                <View>
-                  <Divider />
-                  <View style={[a.pt_sm]}>
-                    <StandardSiteMetaRow preview={preview} view={view} />
-                  </View>
-                </View>
-              )}
             </View>
+
+            {!publisher && (
+              <View style={[a.px_md]}>
+                <Divider />
+                <View style={[a.py_sm]}>
+                  <StandardSiteMetaRow preview={preview} view={view} />
+                </View>
+              </View>
+            )}
           </View>
         )}
       </Link>
@@ -209,7 +177,6 @@ function DocumentBase({
           item={view}
           reportableTypes={[site.standard.document.$type]}
           author={view.associatedProfiles?.[0]}
-          style={{top: paddingTop + menuInset, right: paddingRight + menuInset}}
         />
       )}
     </View>
