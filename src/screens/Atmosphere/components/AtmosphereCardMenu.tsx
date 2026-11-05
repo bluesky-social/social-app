@@ -1,4 +1,4 @@
-import {View} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type $Typed} from '@atproto/lex'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -32,6 +32,7 @@ export function AtmosphereCardMenu({
   reportableTypes,
   author,
   galleryFocus,
+  style,
   children,
 }: (
   | {type: 'article'; item: app.bsky.embed.external.ViewArticle}
@@ -49,6 +50,11 @@ export function AtmosphereCardMenu({
    */
   author?: app.bsky.actor.defs.ProfileViewBasic
   galleryFocus?: ExploreGalleryFocusProps
+  /**
+   * Applied last to the absolute wrapper, e.g. to override the default
+   * top/right inset.
+   */
+  style?: StyleProp<ViewStyle>
   children?: React.ReactNode
 }) {
   const {t: l} = useLingui()
@@ -92,7 +98,7 @@ export function AtmosphereCardMenu({
   )
 
   return (
-    <View style={[a.absolute, a.z_10, {top: 8, right: 8}]}>
+    <View style={[a.absolute, a.z_10, {top: 8, right: 8}, style]}>
       <Menu.Root>
         <Menu.Trigger label={labels.trigger}>
           {({props}) => (

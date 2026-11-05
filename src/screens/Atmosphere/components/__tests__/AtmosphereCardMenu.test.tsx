@@ -1,4 +1,4 @@
-import {Text} from 'react-native'
+import {StyleSheet, Text} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {type app, place, site, social} from '#/lexicons'
@@ -165,12 +165,14 @@ function renderMenu(
   children?: React.ReactNode,
   reportableTypes: readonly string[] = [defaultReportableTypes[type]],
   withAuthor = true,
+  style?: React.ComponentProps<typeof AtmosphereCardMenu>['style'],
 ) {
   const props = {
     type,
     item: {...items[type], ...overrides},
     reportableTypes,
     author: withAuthor ? author : undefined,
+    style,
     children,
   } as unknown as React.ComponentProps<typeof AtmosphereCardMenu>
   return render(<AtmosphereCardMenu {...props} />)
@@ -340,4 +342,23 @@ it('does not offer reports when the callsite allows no record types', () => {
 
   expect(screen.getByLabelText('Report article')).toBeDisabled()
   expect(screen.queryByLabelText('Report this article')).toBeNull()
+})
+
+describe('wrapper position', () => {
+  const wrapperStyle = () =>
+    StyleSheet.flatten(
+      (screen.toJSON() as unknown as {props: {style: object}}).props.style,
+    )
+
+  it('defaults to an 8px top-right inset', () => {
+    renderMenu('article')
+
+    expect(wrapperStyle()).toMatchObject({top: 8, right: 8})
+  })
+
+  it('lets a caller override the inset', () => {
+    renderMenu('article', {}, undefined, undefined, true, {top: 0, right: 0})
+
+    expect(wrapperStyle()).toMatchObject({top: 0, right: 0})
+  })
 })

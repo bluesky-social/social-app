@@ -17,16 +17,52 @@ import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {type app, site} from '#/lexicons'
 
-export function DocumentCompact({
+type DocumentCompactProps = ssTypes.PreviewProps &
+  ssTypes.PublicApiProps & {
+    view: app.bsky.embed.external.ViewArticle
+    /**
+     * Applied to the outer frame.
+     */
+    style?: StyleProp<ViewStyle>
+    /**
+     * Applied last to an inset wrapper around the article and its menu, so
+     * padding moves both together. Use this, not `style`, to inset rows in a
+     * list.
+     */
+    containerStyle?: StyleProp<ViewStyle>
+  }
+
+/**
+ * Fills its host column with no outer padding, border, or rounding of its own.
+ */
+export function DocumentCompact(props: DocumentCompactProps) {
+  return <DocumentCompactBase {...props} card={false} />
+}
+
+/**
+ * The framed presentation: bordered, rounded, and inset.
+ */
+export function DocumentCompactCard({
+  containerStyle,
+  ...props
+}: DocumentCompactProps) {
+  return (
+    <DocumentCompactBase
+      {...props}
+      card
+      containerStyle={[a.p_md, containerStyle]}
+    />
+  )
+}
+
+function DocumentCompactBase({
+  card,
   preview,
   view,
   onEmbedInteractionCallback,
   style,
-}: ssTypes.PreviewProps &
-  ssTypes.PublicApiProps & {
-    view: app.bsky.embed.external.ViewArticle
-    style?: StyleProp<ViewStyle>
-  }) {
+  containerStyle,
+}: DocumentCompactProps & {card: boolean}) {
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const t = useTheme()
@@ -58,99 +94,108 @@ export function DocumentCompact({
 
   return (
     <View
-      testID="documentCompact"
+      testID={card ? 'documentCompactCard' : 'documentCompact'}
       style={[
         a.flex_col,
-        a.rounded_lg,
         a.w_full,
-        a.border,
-        interacted ? t.atoms.border_contrast_high : t.atoms.border_contrast_low,
+        card && [
+          a.rounded_lg,
+          a.border,
+          interacted
+            ? t.atoms.border_contrast_high
+            : t.atoms.border_contrast_low,
+        ],
+        /* The inset sits outside the link, so tint the frame too. */
+        interacted && t.atoms.bg_contrast_25,
         preview && a.pointer_events_none,
         style,
       ]}>
-      <Link
-        peek
-        shouldProxy
-        to={view.uri}
-        label={view.title || l`Open link to ${niceUrl}`}
-        onPress={onPress}
-        onLongPress={onLongPress}
-        style={[a.rounded_lg]}
-        {...web({
-          onMouseEnter: onInteract,
-          onMouseLeave: onInteractOut,
-        })}
-        onFocus={onInteract}
-        onBlur={onInteractOut}>
-        {({pressed}) => (
-          <View
-            style={[
-              a.w_full,
-              a.gap_sm,
-              a.p_md,
-              a.rounded_lg,
-              a.overflow_hidden,
-              interacted ? t.atoms.bg_contrast_25 : pressed && t.atoms.bg,
-            ]}>
-            {!!(publisher || hasMenu) && (
+      <View style={containerStyle}>
+        <View style={a.relative}>
+          <Link
+            peek
+            shouldProxy
+            to={view.uri}
+            label={view.title || l`Open link to ${niceUrl}`}
+            onPress={onPress}
+            onLongPress={onLongPress}
+            style={card && a.rounded_lg}
+            {...web({
+              onMouseEnter: onInteract,
+              onMouseLeave: onInteractOut,
+            })}
+            onFocus={onInteract}
+            onBlur={onInteractOut}>
+            {({pressed}) => (
               <View
                 style={[
-                  a.justify_center,
-                  hasMenu && a.pr_5xl,
-                  {minHeight: 28},
+                  a.w_full,
+                  a.gap_sm,
+                  card && [a.rounded_lg, a.overflow_hidden],
+                  pressed && t.atoms.bg,
                 ]}>
-                {publisher && <DocumentPublicationRow view={publisher} />}
+                {!!(publisher || hasMenu) && (
+                  <View
+                    style={[
+                      a.justify_center,
+                      hasMenu && a.pr_5xl,
+                      {minHeight: 28},
+                    ]}>
+                    {publisher && <DocumentPublicationRow view={publisher} />}
+                  </View>
+                )}
+
+                <View style={[a.flex_row, a.align_start, a.gap_md]}>
+                  <View style={[a.flex_1, a.gap_xs, {minWidth: 0}]}>
+                    <Text
+                      emoji
+                      numberOfLines={2}
+                      style={[a.text_lg, a.font_bold, a.leading_snug]}>
+                      {view.title}
+                    </Text>
+                    {!!view.description && (
+                      <Text
+                        emoji
+                        numberOfLines={3}
+                        style={[a.text_sm, a.leading_snug, {maxWidth: 360}]}>
+                        {view.description}
+                      </Text>
+                    )}
+                  </View>
+
+                  {!!view.image && (
+                    <Image
+                      source={{uri: view.image}}
+                      contentFit="cover"
+                      style={[
+                        a.flex_shrink_0,
+                        a.rounded_lg,
+                        {width: 80, height: 80},
+                      ]}
+                      accessible={false}
+                      accessibilityIgnoresInvertColors
+                      loading="lazy"
+                      useAppleWebpCodec
+                    />
+                  )}
+                </View>
+
+                <DocumentStats view={view} />
               </View>
             )}
+          </Link>
 
-            <View style={[a.flex_row, a.align_start, a.gap_md]}>
-              <View style={[a.flex_1, a.gap_xs, {minWidth: 0}]}>
-                <Text
-                  emoji
-                  numberOfLines={2}
-                  style={[a.text_lg, a.font_bold, a.leading_snug]}>
-                  {view.title}
-                </Text>
-                {!!view.description && (
-                  <Text
-                    emoji
-                    numberOfLines={3}
-                    style={[a.text_sm, a.leading_snug, {maxWidth: 360}]}>
-                    {view.description}
-                  </Text>
-                )}
-              </View>
-
-              {!!view.image && (
-                <Image
-                  source={{uri: view.image}}
-                  contentFit="cover"
-                  style={[
-                    a.flex_shrink_0,
-                    a.rounded_lg,
-                    {width: 80, height: 80},
-                  ]}
-                  accessible={false}
-                  accessibilityIgnoresInvertColors
-                  loading="lazy"
-                  useAppleWebpCodec
-                />
-              )}
-            </View>
-
-            <DocumentStats view={view} />
-          </View>
-        )}
-      </Link>
-
-      {hasMenu && (
-        <AtmosphereCardMenu
-          type="article"
-          item={view}
-          reportableTypes={[site.standard.document.$type]}
-          author={view.associatedProfiles?.[0]}
-        />
-      )}
+          {hasMenu && (
+            <AtmosphereCardMenu
+              type="article"
+              item={view}
+              reportableTypes={[site.standard.document.$type]}
+              author={view.associatedProfiles?.[0]}
+              style={{top: 0, right: 0}}
+            />
+          )}
+        </View>
+      </View>
     </View>
   )
 }

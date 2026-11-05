@@ -2,7 +2,10 @@ import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
 import {Document} from '#/components/atmosphere/SiteStandard/Document'
-import {DocumentCompact} from '#/components/atmosphere/SiteStandard/DocumentCompact'
+import {
+  DocumentCompact,
+  DocumentCompactCard,
+} from '#/components/atmosphere/SiteStandard/DocumentCompact'
 import {Publication} from '#/components/atmosphere/SiteStandard/Publication'
 import {H1, H2} from '#/components/Typography'
 import {type app, site} from '#/lexicons'
@@ -58,6 +61,16 @@ export function SiteStandardStorybook() {
       <View style={[a.gap_md]}>
         <H2>Document compact</H2>
         <DocumentCompact view={document} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document compact card</H2>
+        <DocumentCompactCard view={document} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document compact with containerStyle</H2>
+        <DocumentCompact view={document} containerStyle={[a.px_lg, a.py_md]} />
       </View>
 
       <View style={[a.gap_md]}>
