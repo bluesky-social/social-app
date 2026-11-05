@@ -163,7 +163,7 @@ export type ItemIconProps = React.PropsWithChildren<{
   icon: React.ComponentType<SVGIconProps>
   /**
    * Has no effect. On web, `Item` puts icons on the leading side, or the
-   * trailing side in radio items. On native, sheet menus show them where
+   * trailing side in radio items, and a right chevron always trails. On native, sheet menus show them where
    * they're written, and inline menus where the platform puts them.
    */
   position?: 'left' | 'right'

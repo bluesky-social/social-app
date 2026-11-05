@@ -17,6 +17,7 @@ import {atoms as a, flatten, flattenToCSS, useTheme, utils, web} from '#/alf'
 import type * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Check_Stroke3_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {
   Context,
   ItemContext,
@@ -357,14 +358,19 @@ export function Item({
 /**
  * Puts an item's icons on the leading side, whatever order they're written
  * in, like Android's menus. A radio item leads with its check instead, and its
- * icons trail.
+ * icons trail. A right chevron means the item opens more options, so it
+ * trails like Android's submenu arrow.
  */
 function arrangeItemContent(children: React.ReactNode) {
   let radio: React.ReactElement<{selected: boolean}> | undefined
   const icons: React.ReactNode[] = []
   const rest: React.ReactNode[] = []
   for (const child of flattenReactChildren(children)) {
-    if (isValidElement(child) && child.type === ItemIcon) {
+    if (
+      isValidElement<ItemIconProps>(child) &&
+      child.type === ItemIcon &&
+      child.props.icon !== ChevronRight
+    ) {
       icons.push(child)
     } else if (
       isValidElement<{selected: boolean}>(child) &&
@@ -404,7 +410,8 @@ export function ItemText({children, style}: ItemTextProps) {
 }
 
 /**
- * `position` has no effect: icons always lead, or trail in radio items.
+ * `position` has no effect: icons always lead, or trail in radio items. A
+ * right chevron always trails.
  */
 export function ItemIcon({icon: Comp, fill}: ItemIconProps) {
   const t = useTheme()
