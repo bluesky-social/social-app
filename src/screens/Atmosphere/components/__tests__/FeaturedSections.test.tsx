@@ -30,11 +30,10 @@ jest.mock('#/alf', () => ({
       get: (_, name) =>
         name === 'py_md'
           ? {paddingVertical: 12}
-          : name === 'px_lg'
-            ? {paddingHorizontal: 16}
-            : name === 'mx_lg'
-              ? {marginHorizontal: 16}
-              : {},
+          : /* Deliberately not 16, so a hardcoded inset can't pass. */
+            name === 'p_lg'
+            ? {padding: 24}
+            : {},
     },
   ),
   tokens: {space: {lg: 16}},
@@ -153,6 +152,13 @@ function flat(style: unknown): ViewStyle {
   return StyleSheet.flatten(style as StyleProp<ViewStyle>) ?? {}
 }
 
+/** Style of the nearest host View above the section heading. */
+function sectionRootStyle(title: string) {
+  let node = screen.getByText(title).parent
+  while (node && typeof node.type !== 'string') node = node.parent
+  return flat(node?.props.style)
+}
+
 function width(testID: string) {
   return flat(screen.getByTestId(testID).props.style).width
 }
@@ -177,16 +183,19 @@ describe('FeaturedArticles', () => {
 
     expect(
       flat(screen.getByTestId('atmosphereArticlesList').props.style),
-    ).toEqual({marginHorizontal: -16})
+    ).toEqual({})
+    expect(sectionRootStyle('Featured articles')).toEqual({
+      paddingHorizontal: 24,
+    })
     expect(flat(screen.getByTestId('articleDivider').props.style)).toEqual({
-      marginHorizontal: 16,
+      marginHorizontal: 24,
       width: 'auto',
     })
 
     for (const id of ['article-a1', 'article-a2']) {
       const row = screen.getByTestId(id)
       expect(flat(row.props.style)).toEqual({
-        paddingHorizontal: 16,
+        paddingHorizontal: 24,
         paddingVertical: 12,
       })
       expect(width(id)).toBeUndefined()
@@ -215,6 +224,7 @@ describe('FeaturedLivestreams', () => {
     ])
     expect(width('livestream-l1')).toBe(214)
     expect(width('livestream-l2')).toBe(214)
+    expect(sectionRootStyle('Featured livestreams').paddingHorizontal).toBe(24)
   })
 
   it('wires the gallery focus target to each card', () => {
@@ -242,6 +252,7 @@ describe('FeaturedPhotos', () => {
       'First photo',
       'Second photo',
     ])
+    expect(sectionRootStyle('Featured photos').paddingHorizontal).toBe(24)
   })
 
   it('keeps the card inside a 225px wrapper', () => {
@@ -278,6 +289,7 @@ describe('FeaturedPublications', () => {
 
     expect(screen.getByText('Featured publications')).toBeTruthy()
     expect(screen.queryByTestId('atmospherePublicationsGallery')).toBeNull()
+    expect(sectionRootStyle('Featured publications').paddingHorizontal).toBe(24)
     expect(slides()).toHaveLength(0)
     expect(screen.getAllByRole('link').map(link => link.props.testID)).toEqual([
       'publication-u1',

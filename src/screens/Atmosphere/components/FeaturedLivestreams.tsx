@@ -1,6 +1,7 @@
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
+import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {atoms as a} from '#/alf'
 import {type app} from '#/lexicons'
 import {ExploreGallery} from './ExploreGallery'
@@ -19,7 +20,7 @@ export function FeaturedLivestreams({
   if (!livestreams.length) return null
 
   return (
-    <View style={[a.gap_md]}>
+    <View style={[a.gap_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
       <ExploreSectionHeader title={l`Featured livestreams`} />
       <ExploreGallery
         items={livestreams}

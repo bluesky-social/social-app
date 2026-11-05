@@ -3,6 +3,7 @@ import {RefreshControl, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
+import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {
   getAtmosphereAnnouncementBanner,
   getAtmosphereArticles,
@@ -86,8 +87,12 @@ export function AtmosphereExploreTab() {
       refreshControl={refreshControl}
       contentContainerStyle={[a.pb_xl]}>
       <ExploreGalleryBleed>
-        <View style={[a.gap_lg, a.px_lg, a.py_lg]}>
-          {isError ? errorMessage : undefined}
+        <View style={[a.gap_3xl, a.py_lg]}>
+          {isError ? (
+            <View style={{paddingHorizontal: EXPLORE_SECTION_PADDING}}>
+              {errorMessage}
+            </View>
+          ) : undefined}
           <AtmosphereNux />
           {announcementBanner ? (
             <AnnouncementBanner banner={announcementBanner} />

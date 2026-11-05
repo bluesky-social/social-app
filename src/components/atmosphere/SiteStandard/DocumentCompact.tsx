@@ -197,7 +197,8 @@ function DocumentCompactBase({
           item={view}
           reportableTypes={[site.standard.document.$type]}
           author={view.associatedProfiles?.[0]}
-          style={{top: paddingTop, right: paddingRight}}
+          offsetY={paddingTop}
+          offsetX={paddingRight}
         />
       )}
     </View>

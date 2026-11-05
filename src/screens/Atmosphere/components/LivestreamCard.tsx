@@ -168,6 +168,8 @@ export function LivestreamCard({
         reportableTypes={[place.stream.livestream.$type]}
         author={authorProfile}
         galleryFocus={galleryFocus}
+        offsetY={a.p_sm.padding}
+        offsetX={a.p_sm.padding}
       />
     </View>
   )

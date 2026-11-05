@@ -145,6 +145,8 @@ export function PhotoCard({
         reportableTypes={[social.grain.gallery.$type]}
         author={authorProfile}
         galleryFocus={galleryFocus}
+        offsetY={a.p_sm.padding}
+        offsetX={a.p_sm.padding}
       />
     </View>
   )

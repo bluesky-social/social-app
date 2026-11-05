@@ -177,6 +177,8 @@ export function Document({
           item={view}
           reportableTypes={[site.standard.document.$type]}
           author={view.associatedProfiles?.[0]}
+          offsetY={a.p_sm.padding}
+          offsetX={a.p_sm.padding}
         />
       )}
     </View>

@@ -2,7 +2,8 @@ import {Fragment} from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {atoms as a, tokens} from '#/alf'
+import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
+import {atoms as a} from '#/alf'
 import {DocumentCompact} from '#/components/atmosphere/SiteStandard/DocumentCompact'
 import {Divider} from '#/components/Divider'
 import {type app} from '#/lexicons'
@@ -19,17 +20,26 @@ export function FeaturedArticles({
 
   return (
     <View>
-      <ExploreSectionHeader title={l`Featured articles`} />
-      {/* Bleed through ExploreTab's px_lg so links include the page gutter. */}
-      <View
-        testID="atmosphereArticlesList"
-        style={{marginHorizontal: -tokens.space.lg}}>
+      <View style={[a.pb_sm, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
+        <ExploreSectionHeader title={l`Featured articles`} />
+      </View>
+      <View testID="atmosphereArticlesList">
         {articles.map((article, index) => (
           <Fragment key={article.uri}>
-            {index > 0 && <Divider style={[a.mx_lg, {width: 'auto'}]} />}
+            {index > 0 && (
+              <Divider
+                style={{
+                  marginHorizontal: EXPLORE_SECTION_PADDING,
+                  width: 'auto',
+                }}
+              />
+            )}
             <DocumentCompact
               view={article}
-              containerStyle={[a.px_lg, a.py_md]}
+              containerStyle={[
+                a.py_md,
+                {paddingHorizontal: EXPLORE_SECTION_PADDING},
+              ]}
             />
           </Fragment>
         ))}

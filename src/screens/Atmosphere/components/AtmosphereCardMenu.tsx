@@ -1,4 +1,4 @@
-import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {View} from 'react-native'
 import {type $Typed} from '@atproto/lex'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -21,6 +21,8 @@ import {type ParsedReportSubject} from '#/components/moderation/ReportDialog/typ
 import {type app, type com} from '#/lexicons'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
+const BUTTON_VISUAL_ADJUSTMENT = 4
+
 /**
  * Top-right options menu for Atmosphere cards. Render it as a sibling
  * of the card's primary link, never inside it, so the two stay un-nested.
@@ -32,7 +34,8 @@ export function AtmosphereCardMenu({
   reportableTypes,
   author,
   galleryFocus,
-  style,
+  offsetY = 0,
+  offsetX = 0,
   children,
 }: (
   | {type: 'article'; item: app.bsky.embed.external.ViewArticle}
@@ -51,10 +54,17 @@ export function AtmosphereCardMenu({
   author?: app.bsky.actor.defs.ProfileViewBasic
   galleryFocus?: ExploreGalleryFocusProps
   /**
+   * The distance from the top-right corner of the card
+   */
+  offsetY?: number
+  /**
+   * The distance from the top-right corner of the card
+   */
+  offsetX?: number
+  /**
    * Applied last to the absolute wrapper, e.g. to override the default
    * top/right inset.
    */
-  style?: StyleProp<ViewStyle>
   children?: React.ReactNode
 }) {
   const {t: l} = useLingui()
@@ -98,7 +108,15 @@ export function AtmosphereCardMenu({
   )
 
   return (
-    <View style={[a.absolute, a.z_10, {top: 8, right: 8}, style]}>
+    <View
+      style={[
+        a.absolute,
+        a.z_10,
+        {
+          top: offsetY > 0 ? offsetY - BUTTON_VISUAL_ADJUSTMENT : 0,
+          right: offsetX > 0 ? offsetX - BUTTON_VISUAL_ADJUSTMENT : 0,
+        },
+      ]}>
       <Menu.Root>
         <Menu.Trigger label={labels.trigger}>
           {({props}) => (
