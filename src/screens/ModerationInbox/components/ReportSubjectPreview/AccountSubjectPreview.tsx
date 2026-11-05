@@ -1,4 +1,4 @@
-import {useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -63,7 +63,7 @@ export function AccountSubjectPreview({
   } else {
     content = (
       <Text emoji style={[a.text_md]}>
-        {fallbackHandle || did}
+        {fallbackHandle || (account ? did : <Trans>Account unavailable</Trans>)}
       </Text>
     )
   }
