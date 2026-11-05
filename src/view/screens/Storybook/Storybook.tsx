@@ -6,6 +6,7 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {useSetThemePrefs} from '#/state/shell'
 import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider} from '#/alf'
+import {SiteStandardStorybook} from '#/components/atmosphere/SiteStandard/Storybook'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {GalleryStorybook} from '#/components/Gallery/Storybook'
@@ -139,6 +140,7 @@ export default function Storybook() {
             <Shadows />
             <Icons />
             <Links />
+            <SiteStandardStorybook />
             <Tooltips />
             <Dialogs />
             <Menus />
