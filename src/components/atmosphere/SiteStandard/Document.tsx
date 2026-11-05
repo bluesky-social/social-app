@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react/macro'
 import {useHaptics} from '#/lib/haptics'
 import {shareUrl} from '#/lib/sharing'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
+import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
 import {atoms as a, useTheme, web} from '#/alf'
 import {DocumentPublicationRow} from '#/components/atmosphere/SiteStandard/DocumentPublicationRow'
 import {DocumentStats} from '#/components/atmosphere/SiteStandard/DocumentStats'
@@ -16,25 +17,17 @@ import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
-import {type app} from '#/lexicons'
+import {type app, site} from '#/lexicons'
 
 export function Document({
   preview,
   view,
   onEmbedInteractionCallback,
   style,
-  menu,
 }: ssTypes.PreviewProps &
   ssTypes.PublicApiProps & {
     view: app.bsky.embed.external.ViewArticle
     style?: StyleProp<ViewStyle>
-    /**
-     * Rendered as a sibling of the article link, so it must position itself
-     * (e.g. absolutely, top right). It can't live inside the link because
-     * interactive elements can't nest in one. Content that would sit under
-     * the menu is padded away when there's no image to hold it.
-     */
-    menu?: React.ReactNode
   }) {
   const ax = useAnalytics()
   const {t: l} = useLingui()
@@ -44,7 +37,13 @@ export function Document({
   const imageUri = view.image
   const publisher = view.publisher
   const hasMedia = Boolean(imageUri)
-  const menuClearance = !!menu && !hasMedia && a.pr_5xl
+  /*
+   * The menu is a sibling of the article link, not inside it, since
+   * interactive elements can't nest in one. With no image to hold it, content
+   * that would sit under it is padded away.
+   */
+  const hasMenu = !preview
+  const menuClearance = hasMenu && !hasMedia && a.pr_5xl
 
   const {
     state: interacted,
@@ -172,7 +171,14 @@ export function Document({
         )}
       </Link>
 
-      {menu}
+      {hasMenu && (
+        <AtmosphereCardMenu
+          type="article"
+          item={view}
+          reportableTypes={[site.standard.document.$type]}
+          author={view.associatedProfiles?.[0]}
+        />
+      )}
     </View>
   )
 }
