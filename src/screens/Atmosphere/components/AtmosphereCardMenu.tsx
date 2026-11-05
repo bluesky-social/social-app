@@ -100,16 +100,17 @@ export function AtmosphereCardMenu({
               {...props}
               testID="atmosphereCardMenuTrigger"
               label={labels.trigger}
-              size="small"
+              size="tiny"
               shape="round"
               color="secondary"
+              variant="ghost"
               hitSlop={8}
               tabIndex={galleryFocus?.tabIndex}
               onFocus={() => {
                 props.onFocus()
                 galleryFocus?.onFocus()
               }}>
-              <ButtonIcon icon={EllipsisIcon} />
+              <ButtonIcon icon={EllipsisIcon} size="sm" />
             </Button>
           )}
         </Menu.Trigger>
