@@ -1,28 +1,34 @@
 import {View} from 'react-native'
-import {Trans} from '@lingui/react/macro'
+import {useLingui} from '@lingui/react/macro'
 
+import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
+import {type FeaturedApp} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a} from '#/alf'
-import {Text} from '#/components/Typography'
-import {type app} from '#/lexicons'
-import {AppCard} from './AppCard'
+import {ExploreGallery} from './ExploreGallery'
+import {ExploreSectionHeader} from './ExploreSectionHeader'
+import {FeaturedAppCard} from './FeaturedAppCard'
 
-export function FeaturedApps({
-  apps,
-}: {
-  apps: app.bsky.unspecced.getAtmosphereApps.AppCard[]
-}) {
+const CARD_WIDTH = 320
+
+export function FeaturedApps({apps}: {apps: FeaturedApp[]}) {
+  const {t: l} = useLingui()
+
   if (!apps.length) return null
 
   return (
-    <View style={[a.gap_md]}>
-      <Text accessibilityRole="header" style={[a.text_lg, a.font_semi_bold]}>
-        <Trans>Apps on the Atmosphere</Trans>
-      </Text>
-      <View style={[a.gap_md]}>
-        {apps.map(app => (
-          <AppCard key={app.id} app={app} />
-        ))}
-      </View>
+    <View style={[a.gap_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
+      <ExploreSectionHeader title={l`Featured apps`} />
+      <ExploreGallery
+        items={apps}
+        getKey={app => app.id}
+        label={l`Featured apps`}
+        testID="atmosphereAppsGallery"
+        renderItem={(app, galleryFocus) => (
+          <View style={[a.flex_grow, {width: CARD_WIDTH}]}>
+            <FeaturedAppCard app={app} galleryFocus={galleryFocus} />
+          </View>
+        )}
+      />
     </View>
   )
 }

@@ -11,25 +11,37 @@ export const ExploreGalleryBleed = GalleryPrimitive.Bleed
 
 export type ExploreGalleryFocusProps = GalleryPrimitive.ItemFocusProps
 
-/**
- * Horizontal card carousel for the Atmosphere Explore sections. Cards own
- * their own width and stretch to the tallest card in the strip.
- */
-export function ExploreGallery<T extends {uri: string; title: string}>({
-  items,
-  label,
-  testID,
-  renderItem,
-}: {
+type ExploreGalleryProps<T> = {
   items: T[]
   label: string
   testID: string
   renderItem: (item: T, focusProps: ExploreGalleryFocusProps) => React.ReactNode
+}
+
+/**
+ * Horizontal card carousel for the Atmosphere Explore sections. Cards own
+ * their own width and stretch to the tallest card in the strip. Items are
+ * keyed by `uri` unless `getKey` is given, which items without a `uri` need.
+ */
+export function ExploreGallery<T extends {uri: string; title: string}>(
+  props: ExploreGalleryProps<T> & {getKey?: (item: T) => string},
+): React.ReactNode
+export function ExploreGallery<T extends {title: string}>(
+  props: ExploreGalleryProps<T> & {getKey: (item: T) => string},
+): React.ReactNode
+export function ExploreGallery({
+  items,
+  label,
+  testID,
+  renderItem,
+  getKey = item => item.uri,
+}: ExploreGalleryProps<{uri: string; title: string}> & {
+  getKey?: (item: {uri: string; title: string}) => string
 }) {
   return (
     <GalleryPrimitive.Root label={label} testID={testID} stretch>
       {items.map(item => (
-        <GalleryPrimitive.Item key={item.uri} label={item.title}>
+        <GalleryPrimitive.Item key={getKey(item)} label={item.title}>
           {focusProps => (
             /*
              * The bottom allowance lives inside the item so it is measured and

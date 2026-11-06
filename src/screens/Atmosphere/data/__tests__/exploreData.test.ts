@@ -4,6 +4,7 @@ import {
   getAtmosphereAnnouncementBanner,
   getAtmosphereApps,
   getAtmosphereArticles,
+  getAtmosphereExploreApps,
   getAtmosphereLivestreams,
   getAtmospherePhotos,
   getAtmospherePublications,
@@ -741,5 +742,41 @@ describe('Atmosphere Explore response fixtures', () => {
     expect(() =>
       parseData({...emptyData, articles: {items: [{view: {}}]}}),
     ).toThrow()
+  })
+})
+
+describe('getAtmosphereExploreApps', () => {
+  const valid = {
+    id: 'app',
+    title: 'Test app',
+    url: 'https://example.com/app' as const,
+    backgroundImage: 'https://example.com/bg.jpg' as const,
+  }
+
+  it.each(['id', 'title', 'url', 'backgroundImage'] as const)(
+    'drops apps missing %s',
+    field => {
+      const data = parseData({
+        ...exploreResponseFixture,
+        apps: [
+          {...valid, id: 'kept'},
+          {...valid, [field]: undefined},
+        ],
+      })
+
+      expect(getAtmosphereExploreApps(data).map(a => a.id)).toEqual(['kept'])
+    },
+  )
+
+  it('dedupes by id, keeping the first in server order', () => {
+    const data = parseData({
+      ...exploreResponseFixture,
+      apps: [valid, {...valid, id: 'other'}, {...valid, title: 'dupe'}],
+    })
+
+    const result = getAtmosphereExploreApps(data)
+
+    expect(result.map(a => a.id)).toEqual(['app', 'other'])
+    expect(result[0].title).toBe('Test app')
   })
 })

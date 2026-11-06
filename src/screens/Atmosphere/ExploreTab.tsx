@@ -7,6 +7,7 @@ import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {
   getAtmosphereAnnouncementBanner,
   getAtmosphereArticles,
+  getAtmosphereExploreApps,
   getAtmosphereLivestreams,
   getAtmospherePhotos,
   getAtmospherePublications,
@@ -18,6 +19,7 @@ import {Loader} from '#/components/Loader'
 import {AnnouncementBanner} from './components/AnnouncementBanner'
 import {AtmosphereNux} from './components/AtmosphereNux'
 import {ExploreGalleryBleed} from './components/ExploreGallery'
+import {FeaturedApps} from './components/FeaturedApps'
 import {FeaturedArticles} from './components/FeaturedArticles'
 import {FeaturedLivestreams} from './components/FeaturedLivestreams'
 import {FeaturedPhotos} from './components/FeaturedPhotos'
@@ -97,6 +99,7 @@ export function AtmosphereExploreTab() {
           {announcementBanner ? (
             <AnnouncementBanner banner={announcementBanner} />
           ) : undefined}
+          <FeaturedApps apps={getAtmosphereExploreApps(data)} />
           <FeaturedArticles articles={getAtmosphereArticles(data)} />
           <FeaturedLivestreams livestreams={getAtmosphereLivestreams(data)} />
           <FeaturedPhotos photos={getAtmospherePhotos(data)} />

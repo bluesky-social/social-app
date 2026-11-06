@@ -11,7 +11,8 @@ The `app.bsky.unspecced` namespace is intentionally unpublished (it is a DNS
 carveout upstream, and resolving it is a CI violation there), so the installer
 cannot fetch it. These schemas are copied from merged upstream sources:
 
-- [`lexicons/app/bsky/unspecced/getAtmosphereExploreTab.json` at `293d6494ed90`](https://github.com/bluesky-social/bsky/blob/293d6494ed9058e28a04b97133d16ab8abe7ef5e/lexicons/app/bsky/unspecced/getAtmosphereExploreTab.json)
+- `lexicons-overrides/app/bsky/unspecced/getAtmosphereExploreTab.json` at atproto
+  `7b640e8fee709d22a0d62262068db0ddb3106741` (from atproto PR 5809)
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereApps.json` at atproto
   `11f52c5588279d159ab12404a1b323731a467fdd` (from atproto PR 5801)
 

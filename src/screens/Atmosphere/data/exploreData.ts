@@ -1,4 +1,4 @@
-import {type $Typed} from '@atproto/lex'
+import {type $Typed, type UriString} from '@atproto/lex'
 
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -74,6 +74,30 @@ export function getAtmosphereApps(
         app.title &&
         app.url &&
         (category === undefined || app.category === category),
+    ),
+    app => app.id,
+  )
+}
+
+/** An explore app with the fields the featured card can't render without. */
+export type FeaturedApp = app.bsky.unspecced.getAtmosphereExploreTab.AppCard & {
+  id: string
+  title: string
+  url: UriString
+  backgroundImage: UriString
+}
+
+/**
+ * Returns the valid apps for the featured gallery. Unlike the Apps tab, these
+ * need a banner image because the card is built around it.
+ */
+export function getAtmosphereExploreApps(
+  data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody,
+): FeaturedApp[] {
+  return dedupeBy(
+    data.apps.filter(
+      (app): app is FeaturedApp =>
+        !!(app.id && app.title && app.url && app.backgroundImage),
     ),
     app => app.id,
   )

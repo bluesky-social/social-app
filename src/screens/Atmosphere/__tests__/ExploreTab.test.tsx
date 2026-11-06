@@ -148,7 +148,14 @@ const data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody = {
   publications: {items: []},
   photos: {items: []},
   livestreams: {items: []},
-  apps: [{id: 'app', title: 'Live app', url: 'https://example.com/app'}],
+  apps: [
+    {
+      id: 'app',
+      title: 'Live app',
+      url: 'https://example.com/app',
+      backgroundImage: 'https://example.com/app-background.jpg',
+    },
+  ],
 }
 
 beforeEach(() => {
@@ -187,8 +194,7 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.getByText('nux')).toBeTruthy()
     expect(screen.getByText('banner:Launch')).toBeTruthy()
     expect(screen.getByText('articles:Live article')).toBeTruthy()
-    /* Apps live in their own tab, even though the response includes them. */
-    expect(screen.queryByText(/^apps:/)).toBeNull()
+    expect(screen.getByText('apps:Live app')).toBeTruthy()
     expect(screen.queryByText(/^livestreams:/)).toBeNull()
     expect(screen.queryByText(/^photos:/)).toBeNull()
     expect(
@@ -245,6 +251,22 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.queryByText(/Sixth/)).toBeNull()
   })
 
+  it('renders apps after the banners and before articles', () => {
+    setQuery({data})
+    render(<AtmosphereExploreTab />)
+
+    expect(
+      screen
+        .getAllByText(/^(nux|banner:|apps:|articles:)/)
+        .map(node => node.props.children),
+    ).toEqual([
+      'nux',
+      'banner:Launch',
+      'apps:Live app',
+      'articles:Live article',
+    ])
+  })
+
   it('hides only articles when recommendations are empty', () => {
     const populated =
       app.bsky.unspecced.getAtmosphereExploreTab.$output.schema.parse({
@@ -258,7 +280,7 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.queryByText(/^articles:/)).toBeNull()
     expect(screen.getByText(/^photos:/)).toBeTruthy()
     expect(screen.getByText(/^livestreams:/)).toBeTruthy()
-    expect(screen.queryByText(/^apps:/)).toBeNull()
+    expect(screen.getByText(/^apps:/)).toBeTruthy()
     expect(screen.getByText(/^banner:/)).toBeTruthy()
   })
 
