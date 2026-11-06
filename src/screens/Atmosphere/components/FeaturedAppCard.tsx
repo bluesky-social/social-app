@@ -17,7 +17,6 @@ import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 const LOGO_SIZE = 56
 const BACKGROUND_BLUR_RADIUS = 50
-const BACKGROUND_OVERLAY_OPACITY = 0.85
 
 /**
  * Featured app card. Always renders in the opposite of the current theme so it
@@ -55,6 +54,7 @@ function CardContent({
   const categoryLabel = categories.find(({key}) => key === app.category)?.label
   const profile = app.profile
   const {title} = app
+  const isLight = t.name === 'light'
 
   return (
     <View
@@ -70,7 +70,7 @@ function CardContent({
         style={[
           StyleSheet.absoluteFill,
           t.atoms.bg,
-          {opacity: BACKGROUND_OVERLAY_OPACITY},
+          {opacity: isLight ? 0.7 : 0.8},
         ]}
       />
       <View style={[a.flex_grow, a.p_lg, a.gap_md]}>
