@@ -5,13 +5,18 @@ import {useLingui} from '@lingui/react/macro'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {atoms as a, tokens, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import {
   KnownFollowers,
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
-import {Link} from '#/components/Link'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
+import {AppDialog} from './AppDialog'
+
+const LOGO_SIZE = 56
 
 export function AppCard({
   app,
@@ -21,85 +26,102 @@ export function AppCard({
   const {t: l} = useLingui()
   const t = useTheme()
   const moderationOpts = useModerationOpts()
+  const control = useDialogControl()
 
   if (!app.title || !app.url) return null
 
+  const domain = toNiceDomain(app.url)
+
+  const showFollowers =
+    app.profile &&
+    moderationOpts &&
+    shouldShowKnownFollowers(app.profile.viewer?.knownFollowers)
+
   return (
-    <View
-      style={[
-        a.w_full,
-        a.relative,
-        a.rounded_xl,
-        a.overflow_hidden,
-        a.border,
-        t.atoms.border_contrast_low,
-      ]}>
-      {app.banner ? (
-        <Image
-          source={app.banner}
-          contentFit="cover"
-          style={[a.absolute, {top: 0, right: 0, bottom: 0, width: 96}]}
-          accessible={false}
-        />
-      ) : undefined}
-      <Link
-        to={app.url}
-        label={l`Open ${app.title}`}
+    <>
+      <Button
+        label={l`View details for ${app.title}`}
         accessibilityHint=""
-        style={[a.w_full]}>
-        <View
-          style={[a.flex_row, a.w_full, a.gap_md, a.p_md, {paddingRight: 96}]}>
-          {app.logo ? (
-            <Image
-              source={app.logo}
-              contentFit="cover"
-              style={[a.rounded_md, {width: 44, height: 44}]}
-              accessible={false}
-            />
-          ) : undefined}
-          <View style={[a.flex_1, a.gap_2xs]}>
-            <Text>
-              <Text
-                emoji
-                style={[a.text_md, a.font_semi_bold]}
-                numberOfLines={1}>
-                {app.title}
-              </Text>{' '}
-              <Text
-                emoji
-                style={[a.text_sm, t.atoms.text_contrast_medium]}
-                numberOfLines={1}>
-                • {toNiceDomain(app.url)}
-              </Text>
-            </Text>
-            {app.description ? (
-              <Text emoji style={[a.text_sm, a.leading_snug]} numberOfLines={2}>
-                {app.description}
-              </Text>
+        onPress={() => control.open()}
+        style={[
+          a.w_full,
+          a.rounded_xl,
+          a.overflow_hidden,
+          a.border,
+          t.atoms.border_contrast_low,
+        ]}>
+        {({hovered, pressed}) => (
+          <View
+            style={[a.w_full, (hovered || pressed) && t.atoms.bg_contrast_25]}>
+            <View
+              style={[
+                a.flex_row,
+                a.w_full,
+                a.gap_md,
+                a.p_md,
+                showFollowers && a.pb_sm,
+              ]}>
+              {app.logo ? (
+                <View style={[a.relative, a.rounded_md, {width: LOGO_SIZE}]}>
+                  <Image
+                    source={app.logo}
+                    contentFit="cover"
+                    style={[
+                      a.rounded_md,
+                      {width: LOGO_SIZE, height: LOGO_SIZE},
+                    ]}
+                    accessible={false}
+                  />
+                  <MediaInsetBorder style={[a.rounded_md]} />
+                </View>
+              ) : undefined}
+              <View style={[a.flex_1, a.gap_xs]}>
+                <Text numberOfLines={1}>
+                  <Text emoji style={[a.text_md, a.font_medium, t.atoms.text]}>
+                    {app.title}
+                  </Text>
+                  <Text emoji style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                    {' · '}
+                    {domain}
+                  </Text>
+                </Text>
+                {app.description ? (
+                  <Text
+                    emoji
+                    style={[a.text_sm, a.leading_snug]}
+                    numberOfLines={2}>
+                    {app.description}
+                  </Text>
+                ) : undefined}
+              </View>
+            </View>
+            {/*
+             * KnownFollowers contains its own link. It is display-only here so
+             * the whole card opens the dialog instead.
+             */}
+            {showFollowers && app.profile && moderationOpts ? (
+              <View
+                pointerEvents="none"
+                aria-hidden
+                style={[
+                  a.pb_md,
+                  {
+                    paddingLeft:
+                      tokens.space.md +
+                      (app.logo ? LOGO_SIZE + tokens.space.md : 0),
+                  },
+                ]}>
+                <KnownFollowers
+                  profile={app.profile}
+                  moderationOpts={moderationOpts}
+                  minimal
+                />
+              </View>
             ) : undefined}
           </View>
-        </View>
-      </Link>
-      {/* KnownFollowers links internally, so it cannot nest inside the app link. */}
-      {app.profile &&
-      moderationOpts &&
-      shouldShowKnownFollowers(app.profile.viewer?.knownFollowers) ? (
-        <View
-          style={[
-            a.pb_md,
-            {
-              paddingLeft:
-                tokens.space.md + (app.logo ? 44 + tokens.space.md : 0),
-              paddingRight: 96,
-            },
-          ]}>
-          <KnownFollowers
-            profile={app.profile}
-            moderationOpts={moderationOpts}
-            minimal
-          />
-        </View>
-      ) : undefined}
-    </View>
+        )}
+      </Button>
+      <AppDialog control={control} app={app} />
+    </>
   )
 }
