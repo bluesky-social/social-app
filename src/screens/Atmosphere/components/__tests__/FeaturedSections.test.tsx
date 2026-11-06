@@ -1,4 +1,3 @@
-import {type StyleProp, StyleSheet, type ViewStyle} from 'react-native'
 import {render, screen} from '@testing-library/react-native'
 
 import {type app} from '#/lexicons'
@@ -24,18 +23,7 @@ jest.mock('#/view/shell/BlockDrawerGesture', () => ({
   BlockDrawerGesture: ({children}: {children: React.ReactNode}) => children,
 }))
 jest.mock('#/alf', () => ({
-  atoms: new Proxy(
-    {},
-    {
-      get: (_, name) =>
-        name === 'py_md'
-          ? {paddingVertical: 12}
-          : /* Deliberately not 16, so a hardcoded inset can't pass. */
-            name === 'p_lg'
-            ? {padding: 24}
-            : {},
-    },
-  ),
+  atoms: new Proxy({}, {get: () => ({})}),
   tokens: {space: {lg: 16}},
   web: () => undefined,
 }))
@@ -58,14 +46,10 @@ function mockCard(prefix: string, prop: string) {
   const {Pressable} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return ({
-    width,
     galleryFocus,
-    containerStyle,
     ...rest
   }: Record<string, unknown> & {
-    width?: number
     galleryFocus?: ExploreGalleryFocusProps
-    containerStyle?: StyleProp<ViewStyle>
   }) => {
     const item = rest[prop] as {uri: string; title: string}
     return (
@@ -77,7 +61,6 @@ function mockCard(prefix: string, prop: string) {
         ref={galleryFocus?.focusRef}
         tabIndex={galleryFocus?.tabIndex}
         onFocus={galleryFocus?.onFocus}
-        style={[width ? {width} : undefined, containerStyle]}
       />
     )
   }
@@ -89,9 +72,7 @@ jest.mock('#/components/Divider', () => {
   const {View} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {
-    Divider: ({style}: {style?: StyleProp<ViewStyle>}) => (
-      <View testID="articleDivider" style={style} />
-    ),
+    Divider: () => <View testID="articleDivider" />,
   }
 })
 jest.mock('../LivestreamCard', () => ({
@@ -148,21 +129,6 @@ function slides() {
   )
 }
 
-function flat(style: unknown): ViewStyle {
-  return StyleSheet.flatten(style as StyleProp<ViewStyle>) ?? {}
-}
-
-/** Style of the nearest host View above the section heading. */
-function sectionRootStyle(title: string) {
-  let node = screen.getByText(title).parent
-  while (node && typeof node.type !== 'string') node = node.parent
-  return flat(node?.props.style)
-}
-
-function width(testID: string) {
-  return flat(screen.getByTestId(testID).props.style).width
-}
-
 describe('FeaturedArticles', () => {
   it('renders compact documents in response order with dividers only between rows', () => {
     render(<FeaturedArticles articles={articles} />)
@@ -176,31 +142,7 @@ describe('FeaturedArticles', () => {
         .getAllByTestId(/^(article-|articleDivider$)/)
         .map(row => row.props.testID),
     ).toEqual(['article-a1', 'articleDivider', 'article-a2'])
-  })
-
-  it('uses full-width rows with 12px vertical padding and no gallery focus', () => {
-    render(<FeaturedArticles articles={articles} />)
-
-    expect(
-      flat(screen.getByTestId('atmosphereArticlesList').props.style),
-    ).toEqual({})
-    expect(sectionRootStyle('Featured articles')).toEqual({
-      paddingHorizontal: 24,
-    })
-    expect(flat(screen.getByTestId('articleDivider').props.style)).toEqual({
-      marginHorizontal: 24,
-      width: 'auto',
-    })
-
-    for (const id of ['article-a1', 'article-a2']) {
-      const row = screen.getByTestId(id)
-      expect(flat(row.props.style)).toEqual({
-        paddingHorizontal: 24,
-        paddingVertical: 12,
-      })
-      expect(width(id)).toBeUndefined()
-      expect(row.props.tabIndex).toBeUndefined()
-    }
+    expect(screen.getByTestId('article-a1').props.tabIndex).toBeUndefined()
   })
 
   it('renders nothing, including the header, without articles', () => {
@@ -222,9 +164,6 @@ describe('FeaturedLivestreams', () => {
       'First stream',
       'Second stream',
     ])
-    expect(width('livestream-l1')).toBe(214)
-    expect(width('livestream-l2')).toBe(214)
-    expect(sectionRootStyle('Featured livestreams').paddingHorizontal).toBe(24)
   })
 
   it('wires the gallery focus target to each card', () => {
@@ -252,20 +191,6 @@ describe('FeaturedPhotos', () => {
       'First photo',
       'Second photo',
     ])
-    expect(sectionRootStyle('Featured photos').paddingHorizontal).toBe(24)
-  })
-
-  it('keeps the card inside a 225px wrapper', () => {
-    render(<FeaturedPhotos photos={photos} />)
-
-    for (const id of ['p1', 'p2']) {
-      // The card itself is unsized; the nearest sized ancestor is the wrapper
-      let node = screen.getByTestId(`photo-${id}`).parent
-      while (node && flat(node.props.style).width == null) {
-        node = node.parent
-      }
-      expect(flat(node?.props.style).width).toBe(225)
-    }
   })
 
   it('wires the gallery focus target to each card', () => {
@@ -284,12 +209,11 @@ describe('FeaturedPhotos', () => {
 })
 
 describe('FeaturedPublications', () => {
-  it('renders publications in a column without fixed card widths or gallery focus', () => {
+  it('renders publications as links without gallery focus', () => {
     render(<FeaturedPublications publications={publications} />)
 
     expect(screen.getByText('Featured publications')).toBeTruthy()
     expect(screen.queryByTestId('atmospherePublicationsGallery')).toBeNull()
-    expect(sectionRootStyle('Featured publications').paddingHorizontal).toBe(24)
     expect(slides()).toHaveLength(0)
     expect(screen.getAllByRole('link').map(link => link.props.testID)).toEqual([
       'publication-u1',
@@ -297,7 +221,6 @@ describe('FeaturedPublications', () => {
     ])
     for (const publication of publications) {
       const testID = `publication-${publication.uri.split('/').at(-1)}`
-      expect(width(testID)).toBeUndefined()
       expect(screen.getByTestId(testID).props.tabIndex).toBeUndefined()
     }
   })

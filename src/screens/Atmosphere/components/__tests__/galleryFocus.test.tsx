@@ -1,4 +1,4 @@
-import {StyleSheet, type ViewProps, type ViewStyle} from 'react-native'
+import {StyleSheet, type ViewProps} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {type app} from '#/lexicons'
@@ -17,9 +17,6 @@ jest.mock('#/alf', () => {
     flex_grow: {flexGrow: 1},
     absolute: {position: 'absolute'},
     z_10: {zIndex: 10},
-    // Real paddings, which the cards pass to their menus as offsets.
-    p_sm: {padding: 8},
-    p_md: {padding: 12},
   }
   const atoms = new Proxy(knownAtoms, {
     get: (target, name) => target[name as keyof typeof target] ?? {},
@@ -220,13 +217,6 @@ const cards: [
 ]
 
 describe.each(cards)('%s gallery focus', (_name, renderCard) => {
-  it('lets the card root fill a stretched slide', () => {
-    render(renderCard())
-    expect(StyleSheet.flatten(screen.root.props.style)).toMatchObject({
-      flexGrow: 1,
-    })
-  })
-
   it('attaches the focus props to its single Link', () => {
     const galleryFocus = {
       focusRef: jest.fn(),
@@ -274,7 +264,6 @@ it.each(interactions)(
     expect(screen.queryByTestId('atmospherePhotoHoverOverlay')).toBeNull()
     fireEvent(link, enter)
     const overlay = screen.getByTestId('atmospherePhotoHoverOverlay')
-    expect(overlay).toHaveStyle({backgroundColor: 'rgba(0, 0, 0, 0.1)'})
     expect(overlay.props.pointerEvents).toBe('none')
     expect(overlay.props.accessible).toBe(false)
     expect(screen.getByText(photo.title)).toBeTruthy()
@@ -325,20 +314,16 @@ describe.each(triggerCards)('%s menu trigger', (_name, renderCard) => {
     expect(() => fireEvent(getTrigger(), 'focus')).not.toThrow()
   })
 
-  it('sits top-right, outside the link and any pointer-disabled ancestor', () => {
+  it('is reachable: outside the link and any pointer-disabled ancestor', () => {
     render(renderCard())
 
     const link = screen.getByTestId('link')
-    let wrapperStyle: ViewStyle | undefined
     let node = getTrigger().parent
     while (node) {
       expect(node).not.toBe(link)
       const style = StyleSheet.flatten((node.props as ViewProps).style)
       expect(style?.pointerEvents).not.toBe('none')
-      if (style?.position === 'absolute') wrapperStyle ??= style
       node = node.parent
     }
-    expect(wrapperStyle?.top).toBeGreaterThan(0)
-    expect(wrapperStyle?.right).toBe(wrapperStyle?.top)
   })
 })

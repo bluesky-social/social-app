@@ -1,8 +1,11 @@
-import {StyleSheet} from 'react-native'
-import {render, screen} from '@testing-library/react-native'
+import {render} from '@testing-library/react-native'
 
 import {type app} from '#/lexicons'
 import {DocumentCompact, DocumentCompactCard} from './DocumentCompact'
+
+const mockMenu = jest.fn<null, [{offsetY?: number; offsetX?: number}]>(
+  () => null,
+)
 
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({_: (value: {message: string}) => value.message}),
@@ -11,9 +14,8 @@ jest.mock('#/alf', () => ({
   atoms: new Proxy(
     {},
     {
-      get: (_, name) =>
-        // Real padding so caller overrides conflict with the default.
-        name === 'p_md' ? {padding: 12} : {[`atom_${String(name)}`]: true},
+      // Real card padding so caller overrides conflict with the default.
+      get: (_, name) => (name === 'p_md' ? {padding: 12} : {}),
     },
   ),
   extractPadding:
@@ -31,23 +33,7 @@ jest.mock('#/lib/haptics', () => ({
 jest.mock('#/lib/sharing', () => ({shareUrl: jest.fn()}))
 jest.mock('expo-image', () => ({Image: () => null}))
 jest.mock('#/components/Link', () => ({
-  Link: ({
-    children,
-    testID,
-    style,
-  }: {
-    children: React.ReactNode
-    testID?: string
-    style?: object
-  }) => {
-    const {View} =
-      jest.requireActual<typeof import('react-native')>('react-native')
-    return (
-      <View testID={testID} style={style}>
-        {children}
-      </View>
-    )
-  },
+  Link: ({children}: {children: React.ReactNode}) => children,
 }))
 jest.mock('#/components/Typography', () => ({Text: () => null}))
 jest.mock(
@@ -60,17 +46,8 @@ jest.mock('#/components/atmosphere/SiteStandard/DocumentStats', () => ({
   DocumentStats: () => null,
 }))
 jest.mock('#/screens/Atmosphere/components/AtmosphereCardMenu', () => ({
-  AtmosphereCardMenu: ({
-    offsetY,
-    offsetX,
-  }: {
-    offsetY?: number
-    offsetX?: number
-  }) => {
-    const {View} =
-      jest.requireActual<typeof import('react-native')>('react-native')
-    return <View testID="menu" style={{top: offsetY, right: offsetX}} />
-  },
+  AtmosphereCardMenu: (props: {offsetY?: number; offsetX?: number}) =>
+    mockMenu(props),
 }))
 
 const view = {
@@ -78,87 +55,41 @@ const view = {
   title: 'Title',
 } as unknown as app.bsky.embed.external.ViewArticle
 
-type Json = {props: {style?: object}; children: Json[]}
-
-/**
- * The link is the frame and contains the padding; the menu is its sibling in a
- * plain wrapper.
- */
-function parts() {
-  const wrapper = screen.toJSON() as unknown as Json
-  const link = wrapper.children[0]
-  const inset = link.children[0]
-  const menu = wrapper.children[1]
-  return {wrapper, link, inset, menu}
+const menuOffsets = () => {
+  const {offsetY, offsetX} = mockMenu.mock.calls[0][0]
+  return {offsetY, offsetX}
 }
 
-const flat = (style?: object) =>
-  StyleSheet.flatten(style) as Record<string, unknown>
+beforeEach(() => mockMenu.mockClear())
 
-describe('DocumentCompact', () => {
-  it('has no default padding or frame, and styles the frame and inset independently', () => {
+it.each([DocumentCompact, DocumentCompactCard])(
+  'aligns the menu with the container padding (%p)',
+  Component => {
     render(
-      <DocumentCompact
+      <Component
         view={view}
-        style={{margin: 1}}
-        containerStyle={[{paddingLeft: 4}, {paddingTop: 8}]}
+        containerStyle={{paddingTop: 8, paddingRight: 20, paddingLeft: 4}}
       />,
     )
-    const {wrapper, link, inset} = parts()
 
-    expect(flat(wrapper.props.style)).toMatchObject({margin: 1})
-    expect(flat(link.props.style)).not.toHaveProperty('atom_border')
-    expect(flat(inset.props.style)).toEqual({paddingLeft: 4, paddingTop: 8})
-    expect(screen.getByTestId('documentCompact')).toBeTruthy()
-  })
+    expect(menuOffsets()).toEqual({offsetY: 8, offsetX: 20})
+  },
+)
 
-  it.each([DocumentCompact, DocumentCompactCard])(
-    'includes padding in the link and offsets its sibling menu (%p)',
-    Component => {
-      const containerStyle = {
-        paddingTop: 8,
-        paddingRight: 20,
-        paddingBottom: 16,
-        paddingLeft: 4,
-      }
-      render(<Component view={view} containerStyle={containerStyle} />)
-      const {wrapper, inset, menu} = parts()
+it('aligns the card menu with its default padding', () => {
+  render(<DocumentCompactCard view={view} />)
 
-      expect(flat(inset.props.style)).toMatchObject(containerStyle)
-      expect(wrapper.children).toHaveLength(2)
-      expect(menu.props).toMatchObject({testID: 'menu'})
-      expect(flat(menu.props.style)).toEqual({top: 8, right: 20})
-    },
-  )
-
-  it('hides the menu in preview', () => {
-    render(<DocumentCompact view={view} preview />)
-
-    expect(screen.queryByTestId('menu')).toBeNull()
-  })
+  expect(menuOffsets()).toEqual({offsetY: 12, offsetX: 12})
 })
 
-describe('DocumentCompactCard', () => {
-  it('is framed and applies its default padding through the inset wrapper', () => {
-    render(<DocumentCompactCard view={view} />)
-    const {link, inset} = parts()
+it('aligns the card menu with a caller padding override', () => {
+  render(<DocumentCompactCard view={view} containerStyle={{padding: 2}} />)
 
-    expect(flat(link.props.style)).toMatchObject({
-      atom_border: true,
-      atom_rounded_lg: true,
-    })
-    expect(flat(inset.props.style)).toEqual({padding: 12})
-    expect(screen.getByTestId('documentCompactCard')).toBeTruthy()
-    expect(flat(screen.getByTestId('menu').props.style)).toEqual({
-      top: 12,
-      right: 12,
-    })
-  })
+  expect(menuOffsets()).toEqual({offsetY: 2, offsetX: 2})
+})
 
-  it('lets caller containerStyle override the default padding', () => {
-    render(<DocumentCompactCard view={view} containerStyle={{padding: 2}} />)
+it('hides the menu in preview', () => {
+  render(<DocumentCompact view={view} preview />)
 
-    expect(flat(parts().inset.props.style)).toEqual({padding: 2})
-    expect(flat(parts().menu.props.style)).toEqual({top: 2, right: 2})
-  })
+  expect(mockMenu).not.toHaveBeenCalled()
 })

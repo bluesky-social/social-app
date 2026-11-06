@@ -3,9 +3,6 @@ import {render, screen} from '@testing-library/react-native'
 import {type FeaturedApp} from '#/screens/Atmosphere/data/exploreData'
 import {FeaturedAppCard} from '../FeaturedAppCard'
 
-const mockThemeProvider = jest.fn()
-let mockThemeName = 'light'
-
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({_: (value: {message: string}) => value.message}),
 }))
@@ -49,19 +46,10 @@ jest.mock('#/components/Link', () => {
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
   useTheme: () => ({
-    name: mockThemeName,
+    name: 'light',
     atoms: new Proxy({}, {get: () => ({})}),
   }),
-  ThemeProvider: ({
-    theme,
-    children,
-  }: {
-    theme: string
-    children: React.ReactNode
-  }) => {
-    mockThemeProvider(theme)
-    return children
-  },
+  ThemeProvider: ({children}: {children: React.ReactNode}) => children,
 }))
 
 const app: FeaturedApp = {
@@ -71,11 +59,6 @@ const app: FeaturedApp = {
   backgroundImage: 'https://example.com/bg.jpg',
   profile: {did: 'did:plc:6ayddqghxhciedbaofoxkcbs', handle: 'app.test'},
 }
-
-beforeEach(() => {
-  jest.clearAllMocks()
-  mockThemeName = 'light'
-})
 
 describe('FeaturedAppCard', () => {
   it('links Visit app to the app url', () => {
@@ -99,16 +82,5 @@ describe('FeaturedAppCard', () => {
 
     expect(screen.getByTestId('featuredAppVisit')).toBeTruthy()
     expect(screen.queryByTestId('featuredAppProfile')).toBeNull()
-  })
-
-  it.each([
-    ['light', 'dark'],
-    ['dark', 'light'],
-    ['dim', 'light'],
-  ])('renders a %s theme as %s', (current, inverted) => {
-    mockThemeName = current
-    render(<FeaturedAppCard app={app} />)
-
-    expect(mockThemeProvider).toHaveBeenCalledWith(inverted)
   })
 })

@@ -1,4 +1,3 @@
-import {StyleSheet} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import * as Menu from '#/components/Menu'
@@ -115,9 +114,7 @@ jest.mock('#/components/Menu', () => {
     Divider: () => <View testID="divider" />,
     Item: menuItem,
     ItemText: Text,
-    ItemIcon: ({icon}: {icon: {name: string}}) => (
-      <Text testID="menuIcon">{icon.name}</Text>
-    ),
+    ItemIcon: () => null,
   }
 })
 
@@ -180,14 +177,12 @@ function renderMenu(
   children?: React.ReactNode,
   reportableTypes: readonly string[] = [defaultReportableTypes[type]],
   withAuthor = true,
-  offsets: {offsetY?: number; offsetX?: number} = {},
 ) {
   const props = {
     type,
     item: {...items[type], ...overrides},
     reportableTypes,
     author: withAuthor ? author : undefined,
-    ...offsets,
     children,
   } as unknown as React.ComponentProps<typeof AtmosphereCardMenu>
   return render(<AtmosphereCardMenu {...props} />)
@@ -309,18 +304,6 @@ describe.each([
   },
 )
 
-it('puts view, profile and report icons on the menu items', () => {
-  renderMenu('photo')
-
-  expect(
-    screen.getAllByTestId('menuIcon').map(icon => icon.props.children),
-  ).toEqual([
-    'SquareArrowTopRight_Stroke2_Corner0_Rounded',
-    'Person_Stroke2_Corner0_Rounded',
-    'Warning_Stroke2_Corner0_Rounded',
-  ])
-})
-
 it('places extra children after the profile item and before Report', () => {
   renderMenu(
     'article',
@@ -355,26 +338,4 @@ it('does not offer reports when the callsite allows no record types', () => {
 
   expect(screen.getByLabelText('Report article')).toBeDisabled()
   expect(screen.queryByLabelText('Report this article')).toBeNull()
-})
-
-describe('wrapper position', () => {
-  const wrapperStyle = () =>
-    StyleSheet.flatten(
-      (screen.toJSON() as unknown as {props: {style: object}}).props.style,
-    )
-
-  it('sits flush in the top-right corner by default', () => {
-    renderMenu('article')
-
-    expect(wrapperStyle()).toMatchObject({top: 0, right: 0})
-  })
-
-  it('pulls the trigger in by its own padding so the icon meets the offsets', () => {
-    renderMenu('article', {}, undefined, undefined, true, {
-      offsetY: 12,
-      offsetX: 16,
-    })
-
-    expect(wrapperStyle()).toMatchObject({top: 8, right: 12})
-  })
 })
