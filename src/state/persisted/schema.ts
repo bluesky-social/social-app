@@ -120,6 +120,7 @@ const schema = z.object({
       flickr: z.enum(externalEmbedOptions).optional(),
       bandcamp: z.enum(externalEmbedOptions).optional(),
       freemix: z.enum(externalEmbedOptions).optional(),
+      threespeak: z.enum(externalEmbedOptions).optional(),
     })
     .optional(),
   invites: z.object({

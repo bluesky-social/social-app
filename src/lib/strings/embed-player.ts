@@ -24,6 +24,7 @@ export const embedPlayerSources = [
   'flickr',
   'bandcamp',
   'freemix',
+  'threespeak',
 ] as const
 
 export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
@@ -48,6 +49,7 @@ export type EmbedPlayerType =
   | 'bandcamp_album'
   | 'bandcamp_track'
   | 'freemix_track'
+  | 'threespeak_video'
 
 export function getEmbedPlayerMediaType(
   type: EmbedPlayerType,
@@ -56,7 +58,8 @@ export function getEmbedPlayerMediaType(
     type === 'youtube_video' ||
     type === 'youtube_short' ||
     type === 'twitch_video' ||
-    type === 'vimeo_video'
+    type === 'vimeo_video' ||
+    type === 'threespeak_video'
   ) {
     return 'video'
   }
@@ -87,6 +90,7 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   flickr: 'Flickr',
   bandcamp: 'Bandcamp',
   freemix: 'FreeMix',
+  threespeak: '3Speak',
 }
 
 /**
@@ -126,6 +130,13 @@ const freemixRkeyRegex = /^[2-7a-z]{13}$/
 
 /** staging.freemix.fm is FreeMix's live test environment */
 const freemixHosts = ['app.freemix.fm', 'staging.freemix.fm']
+
+/**
+ * 3Speak videos are Hive posts, identified by `{author}/{permlink}`. Author is
+ * a Hive account name, permlink is the post's slug.
+ */
+const threespeakVideoRegex =
+  /^([a-z][a-z0-9.-]{1,14}[a-z0-9])\/([a-z0-9-]{1,255})$/
 
 /**
  * Converts a YouTube `t` param such as `90`, `90s` or `1h2m3s` to seconds.
@@ -342,6 +353,21 @@ export function parseEmbedPlayerFromUrl(
         type: 'vimeo_video',
         source: 'vimeo',
         playerUri: `https://player.vimeo.com/video/${videoId}?autoplay=1`,
+      }
+    }
+  }
+
+  // 3speak
+  if (urlp.hostname === '3speak.tv' || urlp.hostname === 'www.3speak.tv') {
+    const match =
+      urlp.pathname === '/watch' &&
+      threespeakVideoRegex.exec(urlp.searchParams.get('v') ?? '')
+    if (match) {
+      const [, author, permlink] = match
+      return {
+        type: 'threespeak_video',
+        source: 'threespeak',
+        playerUri: `https://play.3speak.tv/watch?v=${author}/${permlink}&mode=iframe`,
       }
     }
   }
@@ -603,6 +629,7 @@ export function getPlayerAspect({
     case 'youtube_video':
     case 'twitch_video':
     case 'vimeo_video':
+    case 'threespeak_video':
       return {aspectRatio: 16 / 9}
     case 'youtube_short':
       if (Dimensions.get('window').height < 600) {
