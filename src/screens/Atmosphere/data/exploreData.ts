@@ -1,88 +1,21 @@
-import {type $Typed, type l} from '@atproto/lex'
+import {type $Typed, type UriString} from '@atproto/lex'
 
-import {hexToRgb} from '#/alf/util/colorGeneration'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
-export type AtmosphereData =
-  app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody
-export type AtmosphereAppsData =
-  app.bsky.unspecced.getAtmosphereApps.$OutputBody
-
-type AtmosphereProfileView = l.InferOutput<
-  typeof app.bsky.actor.defs.profileViewBasic
->
-type AtmosphereViewGalleryImage =
-  $Typed<app.bsky.embed.external.ViewGalleryImage>
-
-export type AtmosphereArticleCardData = {
-  id: string
-  href: string
-  title: string
-  description?: string
-  image?: string
-  publisher?: string
-  publisherAvatar?: string
-}
-
-export type AtmospherePublicationCardData = {
-  id: string
-  title: string
-  view: app.bsky.embed.external.ViewExternal
-}
-
-export type AtmosphereAppCardData = {
-  id: string
-  title: string
-  description?: string
-  logo?: string
-  banner?: string
-  href: string
-  profile?: app.bsky.actor.defs.ProfileViewDetailed
-}
-
-export type AtmosphereAnnouncementBannerData = {
-  id?: string
-  title: string
-  description?: string
-  image?: string
-  overlayColor?: string
-  textColor?: string
-  href: string
-}
-
-export type AtmospherePhotoCardData = {
-  id: string
-  href: string
-  title: string
-  image: string
-  imageAlt?: string
-  likeCount: number
-  authorProfile: app.bsky.actor.defs.ProfileViewBasic
-}
-
-export type AtmosphereLivestreamCardData = {
-  id: string
-  href: string
-  title: string
-  active: boolean
-  activeCount?: number
-  image?: string
-  authorProfile: app.bsky.actor.defs.ProfileViewBasic
-}
-
-/** Keeps the first item for each id, preserving order. */
-function dedupeById<T extends {id: string}>(items: T[]): T[] {
-  const seen = new Set<string>()
+/** Keeps the first item for each key, preserving order. */
+function dedupeBy<T>(items: T[], getKey: (item: T) => string | undefined): T[] {
+  const seen = new Set<string | undefined>()
   return items.filter(item => {
-    if (seen.has(item.id)) return false
-    seen.add(item.id)
+    const key = getKey(item)
+    if (seen.has(key)) return false
+    seen.add(key)
     return true
   })
 }
 
-function getProfile(
-  profiles?: AtmosphereProfileView[],
+export function getAssociatedProfile(
+  profiles?: app.bsky.actor.defs.ProfileViewBasic[],
 ): app.bsky.actor.defs.ProfileViewBasic | undefined {
   const profile = profiles?.[0]
   /*
@@ -95,79 +28,36 @@ function getProfile(
     : undefined
 }
 
-function isGalleryImage(item: unknown): item is AtmosphereViewGalleryImage {
-  return (
-    bsky.isType(app.bsky.embed.external.viewGalleryImage, item) &&
-    bsky.matches(app.bsky.embed.external.viewGalleryImage, item)
+export function getGalleryImage(
+  gallery: app.bsky.embed.external.ViewGallery,
+): $Typed<app.bsky.embed.external.ViewGalleryImage> | undefined {
+  return gallery.items.find(
+    (item): item is $Typed<app.bsky.embed.external.ViewGalleryImage> =>
+      bsky.isType(app.bsky.embed.external.viewGalleryImage, item) &&
+      bsky.matches(app.bsky.embed.external.viewGalleryImage, item),
   )
 }
 
 export function getAtmosphereArticles(
-  data: AtmosphereData,
-): AtmosphereArticleCardData[] {
-  return dedupeById(
-    data.articles.items.map(({view: article}) => ({
-      id: article.uri,
-      href: article.uri,
-      title: article.title.trim(),
-      description: article.description || undefined,
-      image: article.image,
-      publisher: article.publisher?.title,
-      publisherAvatar: article.publisher?.logo,
-    })),
-  ).sort(
-    (a, b) =>
-      Number(Boolean(b.image)) - Number(Boolean(a.image)) ||
-      (b.description?.trim().length ?? 0) - (a.description?.trim().length ?? 0),
-  )
+  data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody,
+): app.bsky.embed.external.ViewArticle[] {
+  return dedupeBy(
+    data.articles.items
+      .map(({view}) => view)
+      .filter(article => article.publisher),
+    article => article.uri,
+  ).slice(0, 5)
 }
 
-function toColorRgb(
-  hex?: string,
-): app.bsky.embed.external.ColorRgb | undefined {
-  const rgb = hex ? hexToRgb(hex) : null
-  return rgb ?? undefined
-}
-
-/**
- * The shared publication card renders the legacy external view, so adapt the
- * publication view to it instead of reimplementing the card.
- */
 export function getAtmospherePublications(
-  data: AtmosphereData,
-): AtmospherePublicationCardData[] {
-  return dedupeById(
-    data.publications.items.map(({view: publication}) => ({
-      id: publication.uri,
-      title: publication.title,
-      view: {
-        uri: publication.uri,
-        title: publication.title,
-        description: publication.description,
-        thumb: publication.image,
-        createdAt: publication.createdAt,
-        updatedAt: publication.updatedAt,
-        labels: publication.labels,
-        associatedRefs: publication.associatedRefs,
-        associatedProfiles: publication.associatedProfiles,
-        source: {
-          uri: publication.uri,
-          title: publication.title,
-          description: publication.description,
-          icon: publication.logo,
-          theme: publication.theme && {
-            backgroundRGB: toColorRgb(publication.theme.background),
-            foregroundRGB: toColorRgb(publication.theme.foreground),
-            accentRGB: toColorRgb(publication.theme.accent),
-            accentForegroundRGB: toColorRgb(publication.theme.accentForeground),
-          },
-        },
-      },
-    })),
-  ).sort(
-    (a, b) =>
-      b.view.description.trim().length - a.view.description.trim().length,
+  data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody,
+): app.bsky.embed.external.ViewArticlePublication[] {
+  return dedupeBy(
+    data.publications.items.map(({view}) => view),
+    publication => publication.uri,
   )
+    .sort((a, b) => b.description.trim().length - a.description.trim().length)
+    .slice(0, 5)
 }
 
 /**
@@ -176,88 +66,79 @@ export function getAtmospherePublications(
  * category.
  */
 export function getAtmosphereApps(
-  data: AtmosphereAppsData,
+  data: app.bsky.unspecced.getAtmosphereApps.$OutputBody,
   category?: string,
-): AtmosphereAppCardData[] {
-  return dedupeById(
-    data.apps.flatMap(app => {
-      if (!app.id || !app.title || !app.url) return []
-      if (category !== undefined && app.category !== category) return []
+): app.bsky.unspecced.getAtmosphereApps.AppCard[] {
+  return dedupeBy(
+    data.apps.filter(
+      app =>
+        app.id &&
+        app.title &&
+        app.url &&
+        (category === undefined || app.category === category),
+    ),
+    app => app.id,
+  )
+}
 
-      return [
-        {
-          id: app.id,
-          title: app.title,
-          description: app.description || undefined,
-          logo: app.logo,
-          banner: app.banner,
-          href: app.url,
-          profile: app.profile,
-        },
-      ]
-    }),
+/** An explore app with the fields the featured card can't render without. */
+export type FeaturedApp = app.bsky.unspecced.getAtmosphereExploreTab.AppCard & {
+  id: string
+  title: string
+  url: UriString
+  backgroundImage: UriString
+}
+
+/**
+ * Returns the valid apps for the featured gallery. Unlike the Apps tab, these
+ * need a banner image because the card is built around it.
+ */
+export function getAtmosphereExploreApps(
+  data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody,
+): FeaturedApp[] {
+  return dedupeBy(
+    data.apps.filter(
+      (app): app is FeaturedApp =>
+        !!(app.id && app.title && app.url && app.backgroundImage),
+    ),
+    app => app.id,
   )
 }
 
 export function getAtmosphereAnnouncementBanner(
-  data: AtmosphereData,
-): AtmosphereAnnouncementBannerData | undefined {
+  data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody,
+): app.bsky.unspecced.getAtmosphereExploreTab.AnnouncementBanner | undefined {
   const banner = data.announcementBanner
-  if (!banner?.title || !banner.url) return undefined
-
-  return {
-    id: banner.id,
-    title: banner.title,
-    description: banner.description || undefined,
-    image: banner.image,
-    overlayColor: banner.overlayColor,
-    textColor: banner.textColor,
-    href: banner.url,
-  }
+  return banner?.title && banner.url ? banner : undefined
 }
 
 export function getAtmosphereLivestreams(
-  data: Pick<AtmosphereData, 'livestreams'>,
-): AtmosphereLivestreamCardData[] {
-  return dedupeById(
-    data.livestreams.items.flatMap(({view: livestream}) => {
-      const authorProfile = getProfile(livestream.associatedProfiles)
-      if (!authorProfile) return []
-
-      return [
-        {
-          id: livestream.uri,
-          href: livestream.uri,
-          title: livestream.title.trim(),
-          active: livestream.active,
-          image: livestream.image,
-          authorProfile,
-        },
-      ]
-    }),
+  data: Pick<
+    app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody,
+    'livestreams'
+  >,
+): app.bsky.embed.external.ViewLivestream[] {
+  return dedupeBy(
+    data.livestreams.items
+      .map(({view}) => view)
+      .filter(livestream =>
+        getAssociatedProfile(livestream.associatedProfiles),
+      ),
+    livestream => livestream.uri,
   )
 }
 
 export function getAtmospherePhotos(
-  data: AtmosphereData,
-): AtmospherePhotoCardData[] {
-  return dedupeById(
-    data.photos.items.flatMap(({view: photo}) => {
-      const image = photo.items.find(isGalleryImage)
-      const authorProfile = getProfile(photo.associatedProfiles)
-      if (!image || !authorProfile) return []
-
-      return [
-        {
-          id: photo.uri,
-          href: photo.uri,
-          title: photo.title,
-          image: image.thumbnail,
-          imageAlt: image.alt || undefined,
-          likeCount: photo.likeCount ?? 0,
-          authorProfile,
-        },
-      ]
-    }),
+  data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody,
+): app.bsky.embed.external.ViewGallery[] {
+  return dedupeBy(
+    data.photos.items
+      .map(({view}) => view)
+      .filter(
+        photo =>
+          getGalleryImage(photo) &&
+          getAssociatedProfile(photo.associatedProfiles),
+      ),
+    photo => photo.uri,
   )
 }

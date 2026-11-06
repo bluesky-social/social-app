@@ -1,38 +1,49 @@
+import {Fragment} from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {type AtmosphereArticleCardData} from '#/screens/Atmosphere/data/exploreData'
+import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {atoms as a} from '#/alf'
-import {ArticleCard} from './ArticleCard'
-import {ExploreGallery} from './ExploreGallery'
+import {DocumentCompact} from '#/components/atmosphere/SiteStandard/DocumentCompact'
+import {Divider} from '#/components/Divider'
+import {type app} from '#/lexicons'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
-
-const CARD_WIDTH = 250
 
 export function FeaturedArticles({
   articles,
 }: {
-  articles: AtmosphereArticleCardData[]
+  articles: app.bsky.embed.external.ViewArticle[]
 }) {
   const {t: l} = useLingui()
 
   if (!articles.length) return null
 
   return (
-    <View style={[a.gap_md]}>
-      <ExploreSectionHeader title={l`Featured articles`} />
-      <ExploreGallery
-        items={articles}
-        label={l`Featured articles`}
-        testID="atmosphereArticlesGallery"
-        renderItem={(item, galleryFocus) => (
-          <ArticleCard
-            article={item}
-            width={CARD_WIDTH}
-            galleryFocus={galleryFocus}
-          />
-        )}
-      />
+    <View>
+      <View style={[a.pb_sm, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
+        <ExploreSectionHeader title={l`Featured articles`} />
+      </View>
+      <View testID="atmosphereArticlesList">
+        {articles.map((article, index) => (
+          <Fragment key={article.uri}>
+            {index > 0 && (
+              <Divider
+                style={{
+                  marginHorizontal: EXPLORE_SECTION_PADDING,
+                  width: 'auto',
+                }}
+              />
+            )}
+            <DocumentCompact
+              view={article}
+              containerStyle={[
+                a.py_md,
+                {paddingHorizontal: EXPLORE_SECTION_PADDING},
+              ]}
+            />
+          </Fragment>
+        ))}
+      </View>
     </View>
   )
 }

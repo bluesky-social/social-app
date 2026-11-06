@@ -65,7 +65,12 @@ import {
   useReportOptions,
 } from './utils/useReportOptions'
 
+export {useCopyForSubject, useGetCopyForSubject} from './copy'
 export {type ReportSubject} from './types'
+export {
+  getAssociatedReportSubjects,
+  parseReportSubject,
+} from './utils/parseReportSubject'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
 export function useGlobalReportDialogControl() {

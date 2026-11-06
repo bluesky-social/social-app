@@ -40,12 +40,12 @@ jest.mock('#/view/shell/BlockDrawerGesture', () => ({
   BlockDrawerGesture: ({children}: {children: React.ReactNode}) => children,
 }))
 
-type Item = {id: string; title: string}
+type Item = {uri: string; title: string}
 
 const items: Item[] = [
-  {id: 'a', title: 'Alpha'},
-  {id: 'b', title: 'Beta'},
-  {id: 'c', title: 'Gamma'},
+  {uri: 'a', title: 'Alpha'},
+  {uri: 'b', title: 'Beta'},
+  {uri: 'c', title: 'Gamma'},
 ]
 
 function flat(style: unknown): ViewStyle {
@@ -69,7 +69,7 @@ function FocusCard({
 }) {
   return (
     <Pressable
-      testID={`card-${item.id}`}
+      testID={`card-${item.uri}`}
       accessibilityRole="button"
       accessibilityLabel={item.title}
       accessibilityHint=""
@@ -168,7 +168,7 @@ describe('ExploreGallery', () => {
     expect(slides()).toHaveLength(0)
   })
 
-  it('keys slides by id, not by array index', () => {
+  it('keys slides by URI, not by array index', () => {
     function Probe({item}: {item: Item}) {
       // Remembers the title it first mounted with, so a stale index key shows
       const [initial] = useState(item.title)

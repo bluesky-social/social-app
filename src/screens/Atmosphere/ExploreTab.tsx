@@ -3,9 +3,11 @@ import {RefreshControl, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
+import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {
   getAtmosphereAnnouncementBanner,
   getAtmosphereArticles,
+  getAtmosphereExploreApps,
   getAtmosphereLivestreams,
   getAtmospherePhotos,
   getAtmospherePublications,
@@ -17,12 +19,17 @@ import {Loader} from '#/components/Loader'
 import {AnnouncementBanner} from './components/AnnouncementBanner'
 import {AtmosphereNux} from './components/AtmosphereNux'
 import {ExploreGalleryBleed} from './components/ExploreGallery'
+import {FeaturedApps} from './components/FeaturedApps'
 import {FeaturedArticles} from './components/FeaturedArticles'
 import {FeaturedLivestreams} from './components/FeaturedLivestreams'
 import {FeaturedPhotos} from './components/FeaturedPhotos'
 import {FeaturedPublications} from './components/FeaturedPublications'
 
-export function AtmosphereExploreTab() {
+export function AtmosphereExploreTab({
+  onPressSeeMoreApps,
+}: {
+  onPressSeeMoreApps?: () => void
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const {data, isError, isPending, refetch} = useAtmosphereExploreQuery()
@@ -86,18 +93,26 @@ export function AtmosphereExploreTab() {
       refreshControl={refreshControl}
       contentContainerStyle={[a.pb_xl]}>
       <ExploreGalleryBleed>
-        <View style={[a.gap_lg, a.px_lg, a.py_lg]}>
-          {isError ? errorMessage : undefined}
+        <View style={[a.gap_xl, a.py_lg]}>
+          {isError ? (
+            <View style={{paddingHorizontal: EXPLORE_SECTION_PADDING}}>
+              {errorMessage}
+            </View>
+          ) : undefined}
           <AtmosphereNux />
           {announcementBanner ? (
             <AnnouncementBanner banner={announcementBanner} />
           ) : undefined}
+          <FeaturedApps
+            apps={getAtmosphereExploreApps(data)}
+            onPressSeeMore={onPressSeeMoreApps}
+          />
           <FeaturedArticles articles={getAtmosphereArticles(data)} />
+          <FeaturedLivestreams livestreams={getAtmosphereLivestreams(data)} />
+          <FeaturedPhotos photos={getAtmospherePhotos(data)} />
           <FeaturedPublications
             publications={getAtmospherePublications(data)}
           />
-          <FeaturedLivestreams livestreams={getAtmosphereLivestreams(data)} />
-          <FeaturedPhotos photos={getAtmospherePhotos(data)} />
         </View>
       </ExploreGalleryBleed>
     </Layout.Content>

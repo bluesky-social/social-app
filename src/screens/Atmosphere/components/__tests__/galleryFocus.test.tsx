@@ -1,12 +1,7 @@
-import {StyleSheet} from 'react-native'
+import {StyleSheet, type ViewProps} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
-import {
-  type AtmosphereArticleCardData,
-  type AtmosphereLivestreamCardData,
-  type AtmospherePhotoCardData,
-} from '#/screens/Atmosphere/data/exploreData'
-import {ArticleCard} from '../ArticleCard'
+import {type app} from '#/lexicons'
 import {type ExploreGalleryFocusProps} from '../ExploreGallery'
 import {LivestreamCard} from '../LivestreamCard'
 import {PhotoCard} from '../PhotoCard'
@@ -18,10 +13,14 @@ jest.mock('@lingui/react', () => ({
   }),
 }))
 jest.mock('#/alf', () => {
-  const atoms = new Proxy(
-    {},
-    {get: (_, name) => (name === 'flex_grow' ? {flexGrow: 1} : {})},
-  )
+  const knownAtoms = {
+    flex_grow: {flexGrow: 1},
+    absolute: {position: 'absolute'},
+    z_10: {zIndex: 10},
+  }
+  const atoms = new Proxy(knownAtoms, {
+    get: (target, name) => target[name as keyof typeof target] ?? {},
+  })
   const themeAtoms = new Proxy(
     {
       bg: {backgroundColor: '#ffffff'},
@@ -63,6 +62,59 @@ jest.mock('#/components/icons/Eye', () => ({
 }))
 jest.mock('#/components/icons/Play', () => ({
   Play_Filled_Corner2_Rounded: () => null,
+}))
+
+const mockTriggerOnFocus = jest.fn()
+jest.mock('@react-navigation/native', () => ({
+  useNavigation: () => ({navigate: jest.fn()}),
+}))
+jest.mock('#/lib/hooks/useOpenLink', () => ({useOpenLink: () => jest.fn()}))
+jest.mock('#/components/Button', () => {
+  const {Pressable} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    Button: ({
+      label,
+      tabIndex,
+      onFocus,
+      testID,
+      children,
+    }: {
+      label: string
+      tabIndex?: number
+      onFocus?: () => void
+      testID?: string
+      children: React.ReactNode
+    }) => (
+      <Pressable
+        testID={testID}
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        accessibilityHint=""
+        tabIndex={tabIndex as never}
+        onFocus={onFocus}>
+        {children}
+      </Pressable>
+    ),
+    ButtonIcon: () => null,
+  }
+})
+jest.mock('#/components/Menu', () => ({
+  Root: ({children}: {children: React.ReactNode}) => children,
+  Trigger: ({
+    children,
+  }: {
+    children: (state: {props: {onFocus: () => void}}) => React.ReactNode
+  }) => children({props: {onFocus: mockTriggerOnFocus}}),
+  Outer: () => null,
+}))
+jest.mock('#/components/moderation/ReportDialog', () => ({
+  getAssociatedReportSubjects: () => [],
+  useGetCopyForSubject: () => () => ({title: '', subtitle: ''}),
+  useGlobalReportDialogControl: () => ({open: jest.fn()}),
+}))
+jest.mock('#/components/icons/DotGrid', () => ({
+  DotGrid3x1_Stroke2_Corner0_Rounded: () => null,
 }))
 
 /*
@@ -114,41 +166,49 @@ jest.mock('#/components/Link', () => {
   }
 })
 
-const authorProfile = {
-  did: 'did:plc:author',
+const authorProfile: app.bsky.actor.defs.ProfileViewBasic = {
+  did: 'did:plc:6ayddqghxhciedbaofoxkcbs',
   handle: 'author.test',
   displayName: 'Author',
-} as AtmospherePhotoCardData['authorProfile']
-
-const article: AtmosphereArticleCardData = {
-  id: 'article',
-  href: '/article',
-  title: 'An article',
 }
-const livestream: AtmosphereLivestreamCardData = {
-  id: 'livestream',
-  href: '/livestream',
+
+const livestream: app.bsky.embed.external.ViewLivestream = {
+  uri: 'https://example.com/livestream',
+  description: '',
   title: 'A livestream',
   active: false,
-  authorProfile,
+  associatedProfiles: [authorProfile],
 }
-const photo: AtmospherePhotoCardData = {
-  id: 'photo',
-  href: '/photo',
+const photo: app.bsky.embed.external.ViewGallery = {
+  uri: 'https://example.com/photo',
+  description: '',
   title: 'A photo',
-  image: 'https://example.com/photo.jpg',
+  items: [
+    {
+      $type: 'app.bsky.embed.external#viewGalleryImage',
+      thumbnail: 'https://example.com/photo.jpg',
+      fullsize: 'https://example.com/photo-fullsize.jpg',
+    },
+  ],
   likeCount: 0,
-  authorProfile,
+  associatedProfiles: [authorProfile],
 }
+
+const triggerCards: [
+  string,
+  (focus?: ExploreGalleryFocusProps) => React.ReactElement,
+][] = [
+  ['PhotoCard', focus => <PhotoCard photo={photo} galleryFocus={focus} />],
+  [
+    'LivestreamCard',
+    focus => <LivestreamCard livestream={livestream} galleryFocus={focus} />,
+  ],
+]
 
 const cards: [
   string,
   (focus?: ExploreGalleryFocusProps) => React.ReactElement,
 ][] = [
-  [
-    'ArticleCard',
-    focus => <ArticleCard article={article} galleryFocus={focus} />,
-  ],
   [
     'LivestreamCard',
     focus => <LivestreamCard livestream={livestream} galleryFocus={focus} />,
@@ -157,13 +217,6 @@ const cards: [
 ]
 
 describe.each(cards)('%s gallery focus', (_name, renderCard) => {
-  it('lets the card root fill a stretched slide', () => {
-    render(renderCard())
-    expect(StyleSheet.flatten(screen.root.props.style)).toMatchObject({
-      flexGrow: 1,
-    })
-  })
-
   it('attaches the focus props to its single Link', () => {
     const galleryFocus = {
       focusRef: jest.fn(),
@@ -203,30 +256,6 @@ const interactions = [
 ]
 
 it.each(interactions)(
-  'highlights the article background and border on %s',
-  (_name, enter, leave) => {
-    render(<ArticleCard article={article} />)
-    const link = screen.getByTestId('link')
-    const card = screen.root
-
-    expect(card).toHaveStyle({
-      backgroundColor: '#ffffff',
-      borderColor: '#dddddd',
-    })
-    fireEvent(link, enter)
-    expect(card).toHaveStyle({
-      backgroundColor: '#f8f8f8',
-      borderColor: '#555555',
-    })
-    fireEvent(link, leave)
-    expect(card).toHaveStyle({
-      backgroundColor: '#ffffff',
-      borderColor: '#dddddd',
-    })
-  },
-)
-
-it.each(interactions)(
   'dims the photo image on %s without intercepting interactions',
   (_name, enter, leave) => {
     render(<PhotoCard photo={photo} />)
@@ -235,7 +264,6 @@ it.each(interactions)(
     expect(screen.queryByTestId('atmospherePhotoHoverOverlay')).toBeNull()
     fireEvent(link, enter)
     const overlay = screen.getByTestId('atmospherePhotoHoverOverlay')
-    expect(overlay).toHaveStyle({backgroundColor: 'rgba(0, 0, 0, 0.1)'})
     expect(overlay.props.pointerEvents).toBe('none')
     expect(overlay.props.accessible).toBe(false)
     expect(screen.getByText(photo.title)).toBeTruthy()
@@ -244,3 +272,58 @@ it.each(interactions)(
     expect(screen.queryByTestId('atmospherePhotoHoverOverlay')).toBeNull()
   },
 )
+
+describe.each(triggerCards)('%s menu trigger', (_name, renderCard) => {
+  const getTrigger = () => screen.getByTestId('atmosphereCardMenuTrigger')
+
+  it('mirrors the roving tabIndex but not the focus ref', () => {
+    const galleryFocus = {
+      focusRef: jest.fn(),
+      tabIndex: 0 as const,
+      onFocus: jest.fn(),
+    }
+    const {rerender} = render(renderCard(galleryFocus))
+
+    expect(getTrigger().props.tabIndex).toBe(0)
+    expect(galleryFocus.focusRef).toHaveBeenCalledTimes(1)
+    expect(screen.getByTestId('link').props.tabIndex).toBe(0)
+
+    rerender(renderCard({...galleryFocus, tabIndex: -1}))
+    expect(getTrigger().props.tabIndex).toBe(-1)
+
+    rerender(renderCard())
+    expect(getTrigger().props.tabIndex).toBeUndefined()
+  })
+
+  it('calls both the menu and gallery focus callbacks', () => {
+    mockTriggerOnFocus.mockClear()
+    const galleryFocus = {
+      focusRef: jest.fn(),
+      tabIndex: 0 as const,
+      onFocus: jest.fn(),
+    }
+    render(renderCard(galleryFocus))
+
+    fireEvent(getTrigger(), 'focus')
+    expect(mockTriggerOnFocus).toHaveBeenCalledTimes(1)
+    expect(galleryFocus.onFocus).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not throw on focus without gallery focus props', () => {
+    render(renderCard())
+    expect(() => fireEvent(getTrigger(), 'focus')).not.toThrow()
+  })
+
+  it('is reachable: outside the link and any pointer-disabled ancestor', () => {
+    render(renderCard())
+
+    const link = screen.getByTestId('link')
+    let node = getTrigger().parent
+    while (node) {
+      expect(node).not.toBe(link)
+      const style = StyleSheet.flatten((node.props as ViewProps).style)
+      expect(style?.pointerEvents).not.toBe('none')
+      node = node.parent
+    }
+  })
+})

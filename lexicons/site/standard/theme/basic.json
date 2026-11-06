@@ -1,0 +1,51 @@
+{
+  "id": "site.standard.theme.basic",
+  "defs": {
+    "main": {
+      "key": "tid",
+      "type": "record",
+      "record": {
+        "type": "object",
+        "required": [
+          "background",
+          "foreground",
+          "accent",
+          "accentForeground"
+        ],
+        "properties": {
+          "accent": {
+            "refs": [
+              "site.standard.theme.color#rgb"
+            ],
+            "type": "union",
+            "description": "Color used for links and button backgrounds."
+          },
+          "background": {
+            "refs": [
+              "site.standard.theme.color#rgb"
+            ],
+            "type": "union",
+            "description": "Color used for content background."
+          },
+          "foreground": {
+            "refs": [
+              "site.standard.theme.color#rgb"
+            ],
+            "type": "union",
+            "description": "Color used for content text."
+          },
+          "accentForeground": {
+            "refs": [
+              "site.standard.theme.color#rgb"
+            ],
+            "type": "union",
+            "description": "Color used for button text."
+          }
+        }
+      },
+      "description": "A simplified theme definition for publications, providing basic color customization for content display across different platforms and applications."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

@@ -12,6 +12,7 @@ import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {AppCard} from './components/AppCard'
+import {useAtmosphereAppCategories} from './components/appCategories'
 
 export function AtmosphereAppsTab() {
   const t = useTheme()
@@ -21,19 +22,9 @@ export function AtmosphereAppsTab() {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const dragProgress = useSharedValue(0)
 
-  /** Keys other than `all` are the category values sent by the backend. */
   const categoryDefinitions = [
     {key: 'all', label: l`All`},
-    {key: 'writing', label: l`Blogging`},
-    {key: 'photography', label: l`Photo`},
-    {key: 'video', label: l`Video`},
-    {key: 'games', label: l`Games`},
-    {key: 'feeds', label: l`Feeds`},
-    {key: 'social', label: l`Social`},
-    {key: 'dev', label: l`Dev`},
-    {key: 'audio', label: l`Audio`},
-    {key: 'events', label: l`Events`},
-    {key: 'utils', label: l`Utils`},
+    ...useAtmosphereAppCategories(),
   ]
   /*
    * Only show categories with at least one renderable app. All is always

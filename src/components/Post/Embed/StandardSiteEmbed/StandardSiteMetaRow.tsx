@@ -6,8 +6,8 @@ import {Trans} from '@lingui/react/macro'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {atoms as a, useTheme} from '#/alf'
 import {
-  matchStandardSitePublisher,
-  matchStandardSitePublisherByUri,
+  matchStandardSiteHostByPublication,
+  matchStandardSiteHostByUrl,
 } from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import type * as ssTypes from '#/components/Post/Embed/StandardSiteEmbed/types'
 import {
@@ -24,7 +24,7 @@ export function StandardSiteMetaRow({
     type?: 'document' | 'publication'
   }) {
   const t = useTheme()
-  const highlightedPublisher = !!matchStandardSitePublisher(view)
+  const highlightedPublisher = !!matchStandardSiteHostByPublication(view)
   const didsFromRecords =
     view.associatedRefs
       ?.filter(
@@ -39,7 +39,7 @@ export function StandardSiteMetaRow({
     ? view.associatedProfiles?.find(p => p.did === authorDid)
     : undefined
   const articleDomain = toNiceDomain(view.uri)
-  const articlePublisher = matchStandardSitePublisherByUri(view.uri)
+  const articlePublisher = matchStandardSiteHostByUrl(view.uri)
   const domainHandleMatch =
     authorProfile?.handle &&
     (articleDomain === authorProfile.handle ||
