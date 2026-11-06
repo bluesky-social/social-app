@@ -44,7 +44,7 @@ export function matchStandardSitePublisher(
   return matchByHost(getStandardSitePublisherHost(view))
 }
 
-export function matchStandardSitePublisherByUri(
+export function matchStandardSitePublisherByUrl(
   uri: string | undefined,
 ): StandardSitePublisher | null {
   return matchByHost(hostFromUri(uri))

@@ -5,7 +5,7 @@ import {Trans} from '@lingui/react/macro'
 
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {atoms as a, useTheme} from '#/alf'
-import {matchStandardSitePublisherByUri} from '#/components/atmosphere/SiteStandard/publishers'
+import {matchStandardSitePublisherByUrl} from '#/components/atmosphere/SiteStandard/publishers'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
 import {
   isStandardSiteDocumentUri,
@@ -39,7 +39,7 @@ export function StandardSiteMetaRow({
     ? view.associatedProfiles?.find(p => p.did === authorDid)
     : undefined
   const articleDomain = toNiceDomain(view.uri)
-  const articlePublisher = matchStandardSitePublisherByUri(view.uri)
+  const articlePublisher = matchStandardSitePublisherByUrl(view.uri)
   const highlightedPublisher = type === 'publication' && !!articlePublisher
   const domainHandleMatch =
     authorProfile?.handle &&

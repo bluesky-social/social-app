@@ -7,7 +7,7 @@ import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {atoms as a, useTheme} from '#/alf'
 import {
   matchStandardSitePublisher,
-  matchStandardSitePublisherByUri,
+  matchStandardSitePublisherByUrl,
 } from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import type * as ssTypes from '#/components/Post/Embed/StandardSiteEmbed/types'
 import {
@@ -39,7 +39,7 @@ export function StandardSiteMetaRow({
     ? view.associatedProfiles?.find(p => p.did === authorDid)
     : undefined
   const articleDomain = toNiceDomain(view.uri)
-  const articlePublisher = matchStandardSitePublisherByUri(view.uri)
+  const articlePublisher = matchStandardSitePublisherByUrl(view.uri)
   const domainHandleMatch =
     authorProfile?.handle &&
     (articleDomain === authorProfile.handle ||
