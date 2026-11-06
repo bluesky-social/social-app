@@ -262,7 +262,7 @@ class SheetView: ExpoView {
     }
     sheetVc.setContentView(innerView)
 
-    if let popover = sheetVc.popoverPresentationController {
+    if sheetVc.popoverPresentationController != nil {
       let sourceView: UIView
       let sourceRect: CGRect
 
