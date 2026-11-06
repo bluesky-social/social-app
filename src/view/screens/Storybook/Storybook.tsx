@@ -49,7 +49,6 @@ export default function Storybook() {
       <View style={[a.p_xl, a.gap_5xl, {paddingBottom: 100}]}>
         {!showContainedList ? (
           <>
-            <SiteStandardStorybook />
             <View style={[a.flex_row, a.align_start, a.gap_md]}>
               <Button
                 color="primary"
@@ -149,6 +148,7 @@ export default function Storybook() {
             <Admonitions />
             <Settings />
             <GalleryStorybook />
+            <SiteStandardStorybook />
 
             <Button
               color="primary"

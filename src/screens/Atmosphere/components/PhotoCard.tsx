@@ -105,17 +105,17 @@ export function PhotoCard({
                 a.flex_row,
                 a.align_center,
                 a.gap_2xs,
-                a.px_xs,
-                a.py_2xs,
+                a.rounded_full,
+                t.atoms.bg,
                 {
-                  top: 7,
+                  top: 8,
                   left: 8,
-                  backgroundColor: 'rgba(0, 0, 0, 0.75)',
-                  borderRadius: 5,
+                  paddingVertical: 5,
+                  paddingHorizontal: 7,
                 },
               ]}>
-              <Heart size="xs" style={{color: 'white'}} />
-              <Text style={[a.text_xs, a.font_medium, {color: 'white'}]}>
+              <Heart size="xs" fill={t.atoms.text.color} />
+              <Text style={[a.text_xs, a.font_medium, t.atoms.text]}>
                 {formatCount(i18n, likeCount)}
               </Text>
             </View>
@@ -145,8 +145,8 @@ export function PhotoCard({
         reportableTypes={[social.grain.gallery.$type]}
         author={authorProfile}
         galleryFocus={galleryFocus}
-        offsetY={a.p_sm.padding}
-        offsetX={a.p_sm.padding}
+        offsetY={a.p_md.padding}
+        offsetX={a.p_md.padding}
       />
     </View>
   )
