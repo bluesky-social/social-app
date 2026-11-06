@@ -338,11 +338,18 @@ export function useFeedPreviews(
             processedPageCache.current.set(page, processedPage)
             items.push(...processedPage)
           }
-        } else if (isError && !isEmpty) {
-          items.push({
-            type: 'preview:loadMoreError',
-            key: 'loadMoreError',
-          })
+
+          /*
+           * We only get here with data, so an error is a later feed failing
+           * to load. This has to be inside the branch above: nothing with data
+           * ever reaches an `else` of it.
+           */
+          if (isError) {
+            items.push({
+              type: 'preview:loadMoreError',
+              key: 'loadMoreError',
+            })
+          }
         }
       } else {
         items.push({
