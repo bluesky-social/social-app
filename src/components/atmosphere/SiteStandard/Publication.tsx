@@ -84,6 +84,7 @@ function PublicationBase({
     ? view.associatedProfiles?.find(p => p.did === authorDid)
     : undefined
   const articlePublisher = matchStandardSiteHostByUrl(view.uri)
+  const hasSubscribers = !!view.subscribers?.length || !!view.subscriptionCount
 
   const onPress = () => {
     haptics.tap()
@@ -179,7 +180,7 @@ function PublicationBase({
                 </Text>
               )}
 
-              {(!!view.subscribers?.length || !!view.subscriptionCount) && (
+              {(hasSubscribers || !!articlePublisher) && (
                 <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                   {!!view.subscribers?.length && (
                     <AvatarStack
@@ -207,7 +208,7 @@ function PublicationBase({
 
                   {!!articlePublisher && (
                     <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-                      {' • '}
+                      {hasSubscribers ? ' • ' : ''}
                       {l`Powered by ${articlePublisher.name}`}
                     </Text>
                   )}

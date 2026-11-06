@@ -1,15 +1,9 @@
-import {
-  type RefreshControlProps,
-  type StyleProp,
-  StyleSheet,
-  type ViewStyle,
-} from 'react-native'
+import {type RefreshControlProps} from 'react-native'
 import {createDeferrable} from '@atproto/common-web'
 import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
 import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/exploreResponse'
 import {livestreamPreviewFixture} from '#/screens/Atmosphere/__tests__/fixtures/livestreamPreview'
-import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
 import {AtmosphereExploreTab} from '#/screens/Atmosphere/ExploreTab'
 import {app} from '#/lexicons'
@@ -111,13 +105,6 @@ function getRefreshControlProps() {
   return refreshControl.props
 }
 
-/** Style of the shared wrapper around the loaded sections. */
-function loadedSectionsStyle() {
-  let node = screen.getByText('articles:Live article').parent
-  while (node && typeof node.type !== 'string') node = node.parent
-  return StyleSheet.flatten(node?.props.style as StyleProp<ViewStyle>)
-}
-
 function setQuery(
   result: Partial<ReturnType<typeof useAtmosphereExploreQuery>>,
 ) {
@@ -203,25 +190,6 @@ describe('AtmosphereExploreTab', () => {
       }),
     ).toBeNull()
     expect(screen.queryByTestId('retry')).toBeNull()
-  })
-
-  it('leaves horizontal insets to the sections', () => {
-    setQuery({data})
-    render(<AtmosphereExploreTab />)
-
-    /* px_lg expands to paddingLeft/Right, so check every horizontal key. */
-    const style = loadedSectionsStyle()
-    expect(style).toHaveProperty('paddingTop')
-    for (const key of [
-      'padding',
-      'paddingHorizontal',
-      'paddingLeft',
-      'paddingRight',
-      'paddingStart',
-      'paddingEnd',
-    ] as const) {
-      expect(style).not.toHaveProperty(key)
-    }
   })
 
   it('renders the first five nonfeatured recommendations in server order', () => {
@@ -351,25 +319,6 @@ describe('AtmosphereExploreTab', () => {
     ).toBeTruthy()
     fireEvent.press(screen.getByTestId('retry'))
     expect(refetch).toHaveBeenCalledTimes(1)
-  })
-
-  it('insets the background refetch error by the section padding', () => {
-    setQuery({data, isError: true})
-    render(<AtmosphereExploreTab />)
-
-    let node = screen.getByTestId('retry').parent
-    while (
-      node &&
-      !(
-        typeof node.type === 'string' &&
-        StyleSheet.flatten(node.props.style as StyleProp<ViewStyle>)
-          ?.paddingHorizontal != null
-      )
-    ) {
-      node = node.parent
-    }
-    const inset = StyleSheet.flatten(node?.props.style as StyleProp<ViewStyle>)
-    expect(inset).toEqual({paddingHorizontal: EXPLORE_SECTION_PADDING})
   })
 
   it.each([

@@ -171,6 +171,13 @@ describe('Publication', () => {
     expect(screen.queryByTestId('avatarStack')).toBeNull()
   })
 
+  it('names the host of a hosted publication without subscribers', () => {
+    // Hosted publications hide their domain, so this is the only host name
+    render(<Publication view={{...view, uri: 'https://foo.leaflet.pub'}} />)
+
+    expect(screen.getByText('Powered by Leaflet')).toBeTruthy()
+  })
+
   it('hides the menu in preview', () => {
     render(<Publication view={view} preview />)
 
