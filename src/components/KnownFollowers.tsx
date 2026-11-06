@@ -13,7 +13,7 @@ import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 const AVI_SIZE = 30
-const AVI_SIZE_SMALL = 16
+const AVI_SIZE_SMALL = 20
 const AVI_BORDER = 1
 
 /**
@@ -34,21 +34,12 @@ export function KnownFollowers({
   onLinkPress,
   minimal,
   showIfEmpty,
-  disableLink,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onLinkPress?: LinkProps['onPress']
-  /**
-   * Smaller avatars and text.
-   */
   minimal?: boolean
   showIfEmpty?: boolean
-  /**
-   * Render as plain, non-interactive content instead of a link to the
-   * known followers screen.
-   */
-  disableLink?: boolean
 }) {
   const cache = useRef<Map<string, app.bsky.actor.defs.KnownFollowers>>(
     new Map(),
@@ -76,7 +67,6 @@ export function KnownFollowers({
         onLinkPress={onLinkPress}
         minimal={minimal}
         showIfEmpty={showIfEmpty}
-        disableLink={disableLink}
       />
     )
   }
@@ -91,7 +81,6 @@ function KnownFollowersInner({
   onLinkPress,
   minimal,
   showIfEmpty,
-  disableLink,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
@@ -99,16 +88,11 @@ function KnownFollowersInner({
   onLinkPress?: LinkProps['onPress']
   minimal?: boolean
   showIfEmpty?: boolean
-  disableLink?: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
 
-  const textStyle = [
-    minimal ? a.text_xs : a.text_sm,
-    a.leading_snug,
-    t.atoms.text_contrast_medium,
-  ]
+  const textStyle = [a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]
 
   const slice = cachedKnownFollowers.followers.slice(0, 3).map(f => {
     const moderation = moderateProfile(f, moderationOpts)
@@ -135,142 +119,126 @@ function KnownFollowersInner({
 
   const SIZE = minimal ? AVI_SIZE_SMALL : AVI_SIZE
 
-  const layoutStyle = [
-    a.max_w_full,
-    a.flex_row,
-    minimal ? a.gap_sm : a.gap_md,
-    a.align_center,
-    {marginLeft: -AVI_BORDER},
-  ]
-
-  const renderContent = ({
-    hovered,
-    pressed,
-  }: {
-    hovered: boolean
-    pressed: boolean
-  }) => (
-    <>
-      <View
-        style={[
-          a.flex_row,
-          {
-            height: SIZE,
-          },
-          pressed && {
-            opacity: 0.5,
-          },
-        ]}>
-        {slice.map(({profile: prof, moderation}, i) => (
-          <View
-            key={prof.did}
-            style={[
-              a.rounded_full,
-              {
-                borderWidth: AVI_BORDER,
-                borderColor: t.atoms.bg.backgroundColor,
-                width: SIZE + AVI_BORDER * 2,
-                height: SIZE + AVI_BORDER * 2,
-                zIndex: AVI_BORDER - i,
-                marginLeft: i > 0 ? (minimal ? -6 : -8) : 0,
-              },
-            ]}>
-            <UserAvatar
-              size={SIZE}
-              avatar={prof.avatar}
-              moderation={moderation.ui('avatar')}
-              type={prof.associated?.labeler ? 'labeler' : 'user'}
-              noBorder
-            />
-          </View>
-        ))}
-      </View>
-
-      <Text
-        style={[
-          a.flex_shrink,
-          textStyle,
-          hovered && {
-            textDecorationLine: 'underline',
-            textDecorationColor: t.atoms.text_contrast_medium.color,
-          },
-          pressed && {
-            opacity: 0.5,
-          },
-        ]}
-        numberOfLines={2}>
-        {minimal ? (
-          <Plural
-            value={serverCount}
-            one="# follower you know"
-            other="# followers you know"
-          />
-        ) : slice.length >= 2 ? (
-          // 2-n followers, including blocks
-          // only 2
-          serverCount > 2 ? (
-            <Trans>
-              Followed by{' '}
-              <Text emoji key={slice[0].profile.did} style={textStyle}>
-                {slice[0].profile.displayName}
-              </Text>
-              ,{' '}
-              <Text emoji key={slice[1].profile.did} style={textStyle}>
-                {slice[1].profile.displayName}
-              </Text>
-              , and{' '}
-              <Plural value={serverCount - 2} one="# other" other="# others" />
-            </Trans>
-          ) : (
-            <Trans>
-              Followed by{' '}
-              <Text emoji key={slice[0].profile.did} style={textStyle}>
-                {slice[0].profile.displayName}
-              </Text>{' '}
-              and{' '}
-              <Text emoji key={slice[1].profile.did} style={textStyle}>
-                {slice[1].profile.displayName}
-              </Text>
-            </Trans>
-          )
-        ) : serverCount > 1 ? (
-          // 1-n followers, including blocks
-          <Trans>
-            Followed by{' '}
-            <Text emoji key={slice[0].profile.did} style={textStyle}>
-              {slice[0].profile.displayName}
-            </Text>{' '}
-            and{' '}
-            <Plural value={serverCount - 1} one="# other" other="# others" />
-          </Trans>
-        ) : (
-          // only 1
-          <Trans>
-            Followed by{' '}
-            <Text emoji key={slice[0].profile.did} style={textStyle}>
-              {slice[0].profile.displayName}
-            </Text>
-          </Trans>
-        )}
-      </Text>
-    </>
-  )
-
-  if (disableLink) {
-    return (
-      <View style={layoutStyle}>
-        {renderContent({hovered: false, pressed: false})}
-      </View>
-    )
-  }
-
   return (
     <Link
       label={l`Press to view followers of this account that you also follow`}
       onPress={onLinkPress}
       to={makeProfileLink(profile, 'known-followers')}
-      style={layoutStyle}>
-      {renderContent}
+      style={[
+        a.max_w_full,
+        a.flex_row,
+        minimal ? a.gap_sm : a.gap_md,
+        a.align_center,
+        {marginLeft: -AVI_BORDER},
+      ]}>
+      {({hovered, pressed}) => (
+        <>
+          <View
+            style={[
+              a.flex_row,
+              {
+                height: SIZE,
+              },
+              pressed && {
+                opacity: 0.5,
+              },
+            ]}>
+            {slice.map(({profile: prof, moderation}, i) => (
+              <View
+                key={prof.did}
+                style={[
+                  a.rounded_full,
+                  {
+                    borderWidth: AVI_BORDER,
+                    borderColor: t.atoms.bg.backgroundColor,
+                    width: SIZE + AVI_BORDER * 2,
+                    height: SIZE + AVI_BORDER * 2,
+                    zIndex: AVI_BORDER - i,
+                    marginLeft: i > 0 ? -8 : 0,
+                  },
+                ]}>
+                <UserAvatar
+                  size={SIZE}
+                  avatar={prof.avatar}
+                  moderation={moderation.ui('avatar')}
+                  type={prof.associated?.labeler ? 'labeler' : 'user'}
+                  noBorder
+                />
+              </View>
+            ))}
+          </View>
+
+          <Text
+            style={[
+              a.flex_shrink,
+              textStyle,
+              hovered && {
+                textDecorationLine: 'underline',
+                textDecorationColor: t.atoms.text_contrast_medium.color,
+              },
+              pressed && {
+                opacity: 0.5,
+              },
+            ]}
+            numberOfLines={2}>
+            {slice.length >= 2 ? (
+              // 2-n followers, including blocks
+              // only 2
+              serverCount > 2 ? (
+                <Trans>
+                  Followed by{' '}
+                  <Text emoji key={slice[0].profile.did} style={textStyle}>
+                    {slice[0].profile.displayName}
+                  </Text>
+                  ,{' '}
+                  <Text emoji key={slice[1].profile.did} style={textStyle}>
+                    {slice[1].profile.displayName}
+                  </Text>
+                  , and{' '}
+                  <Plural
+                    value={serverCount - 2}
+                    one="# other"
+                    other="# others"
+                  />
+                </Trans>
+              ) : (
+                <Trans>
+                  Followed by{' '}
+                  <Text emoji key={slice[0].profile.did} style={textStyle}>
+                    {slice[0].profile.displayName}
+                  </Text>{' '}
+                  and{' '}
+                  <Text emoji key={slice[1].profile.did} style={textStyle}>
+                    {slice[1].profile.displayName}
+                  </Text>
+                </Trans>
+              )
+            ) : serverCount > 1 ? (
+              // 1-n followers, including blocks
+              <Trans>
+                Followed by{' '}
+                <Text emoji key={slice[0].profile.did} style={textStyle}>
+                  {slice[0].profile.displayName}
+                </Text>{' '}
+                and{' '}
+                <Plural
+                  value={serverCount - 1}
+                  one="# other"
+                  other="# others"
+                />
+              </Trans>
+            ) : (
+              // only 1
+              <Trans>
+                Followed by{' '}
+                <Text emoji key={slice[0].profile.did} style={textStyle}>
+                  {slice[0].profile.displayName}
+                </Text>
+              </Trans>
+            )}
+          </Text>
+        </>
+      )}
     </Link>
   )
 }

@@ -3,18 +3,15 @@ import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 
 import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {
-  KnownFollowers,
-  shouldShowKnownFollowers,
-} from '#/components/KnownFollowers'
+import {shouldShowKnownFollowers} from '#/components/KnownFollowers'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 import {AppDialog} from './AppDialog'
+import {AppKnownFollowers} from './AppKnownFollowers'
 
 const LOGO_SIZE = 40
 
@@ -25,7 +22,6 @@ export function AppCard({
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
-  const moderationOpts = useModerationOpts()
   const control = useDialogControl()
 
   if (!app.title || !app.url) return null
@@ -33,9 +29,7 @@ export function AppCard({
   const domain = toNiceDomain(app.url)
 
   const showFollowers =
-    app.profile &&
-    moderationOpts &&
-    shouldShowKnownFollowers(app.profile.viewer?.knownFollowers)
+    app.profile && shouldShowKnownFollowers(app.profile.viewer?.knownFollowers)
 
   return (
     <>
@@ -95,14 +89,9 @@ export function AppCard({
                   </Text>
                 ) : undefined}
 
-                {showFollowers && app.profile && moderationOpts ? (
+                {showFollowers && app.profile ? (
                   <View style={[a.pt_xs, a.pb_sm]}>
-                    <KnownFollowers
-                      profile={app.profile}
-                      moderationOpts={moderationOpts}
-                      minimal
-                      disableLink
-                    />
+                    <AppKnownFollowers profile={app.profile} />
                   </View>
                 ) : undefined}
               </View>

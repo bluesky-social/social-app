@@ -4,15 +4,14 @@ import {useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {type FeaturedApp} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, ThemeProvider, useTheme} from '#/alf'
 import {ButtonIcon, ButtonText} from '#/components/Button'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ExternalLinkIcon} from '#/components/icons/Square'
-import {KnownFollowers} from '#/components/KnownFollowers'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAtmosphereAppCategories} from './appCategories'
+import {AppKnownFollowers} from './AppKnownFollowers'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 const LOGO_SIZE = 56
@@ -49,7 +48,6 @@ function CardContent({
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
-  const moderationOpts = useModerationOpts()
   const categories = useAtmosphereAppCategories()
   const categoryLabel = categories.find(({key}) => key === app.category)?.label
   const profile = app.profile
@@ -120,13 +118,7 @@ function CardContent({
               {app.description}
             </Text>
           ) : undefined}
-          {profile && moderationOpts ? (
-            <KnownFollowers
-              profile={profile}
-              moderationOpts={moderationOpts}
-              minimal
-            />
-          ) : undefined}
+          {profile ? <AppKnownFollowers profile={profile} link /> : undefined}
         </View>
         <View style={[a.flex_row, a.gap_sm, a.pt_xs, a.mt_auto]}>
           <Link
