@@ -6,9 +6,12 @@ import {Publication, PublicationCard} from './Publication'
 
 const mockMenu = jest.fn<void, [{author?: object; offsetY?: number}]>()
 
-jest.mock('@lingui/react', () => ({
-  useLingui: () => ({_: (value: {message: string}) => value.message}),
-}))
+jest.mock('@lingui/react', () => {
+  const {i18n} =
+    jest.requireActual<typeof import('@lingui/core')>('@lingui/core')
+  i18n.loadAndActivate({locale: 'en', messages: {}})
+  return {useLingui: () => ({_: i18n._.bind(i18n), i18n})}
+})
 jest.mock('#/alf', () => ({
   atoms: new Proxy(
     {},
@@ -42,7 +45,20 @@ jest.mock('#/components/Link', () => ({
     return <View testID="link">{children({pressed: false})}</View>
   },
 }))
-jest.mock('#/components/Typography', () => ({Text: () => null}))
+jest.mock('#/components/AvatarStack', () => ({
+  AvatarStack: () => {
+    const {View} =
+      jest.requireActual<typeof import('react-native')>('react-native')
+    return <View testID="avatarStack" />
+  },
+}))
+jest.mock('#/components/Typography', () => ({
+  Text: ({children}: {children?: React.ReactNode}) => {
+    const {Text: HostText} =
+      jest.requireActual<typeof import('react-native')>('react-native')
+    return <HostText>{children}</HostText>
+  },
+}))
 jest.mock('#/components/atmosphere/SiteStandard/PublicationIcon', () => ({
   PublicationIcon: () => null,
 }))
@@ -129,6 +145,31 @@ describe('Publication', () => {
       expect(flat(menu.props.style)).toEqual({top: 8, right: 20})
     },
   )
+
+  it('shows the subscriber avatars only when there are subscribers', () => {
+    const {rerender} = render(<Publication view={view} />)
+    expect(screen.queryByTestId('avatarStack')).toBeNull()
+
+    rerender(<Publication view={{...view, subscribers: [owner]}} />)
+    expect(screen.getByTestId('avatarStack')).toBeTruthy()
+  })
+
+  it.each([
+    [1, '1 subscriber'],
+    [2, '2 subscribers'],
+    [12345, '12.3K subscribers'],
+  ])('pluralizes the subscription count (%s)', (subscriptionCount, text) => {
+    render(<Publication view={{...view, subscriptionCount}} />)
+
+    expect(screen.getByText(text)).toBeTruthy()
+  })
+
+  it('omits the subscriber row when there are no subscriptions', () => {
+    render(<Publication view={view} />)
+
+    expect(screen.queryByText(/subscriber/)).toBeNull()
+    expect(screen.queryByTestId('avatarStack')).toBeNull()
+  })
 
   it('hides the menu in preview', () => {
     render(<Publication view={view} preview />)

@@ -1,15 +1,18 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {AtUri} from '@atproto/syntax'
+import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
 import {shareUrl} from '#/lib/sharing'
+import {formatCount} from '#/view/com/util/numeric/format'
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
 import {atoms as a, extractPadding, useTheme, web} from '#/alf'
 import {PublicationIcon} from '#/components/atmosphere/SiteStandard/PublicationIcon'
 import {StandardSiteMetaRow} from '#/components/atmosphere/SiteStandard/StandardSiteMetaRow'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
 import {isStandardSitePublicationUri} from '#/components/atmosphere/SiteStandard/utils'
+import {AvatarStack} from '#/components/AvatarStack'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -62,7 +65,7 @@ function PublicationBase({
 }: PublicationProps & {card: boolean}) {
   const ax = useAnalytics()
   const t = useTheme()
-  const {t: l} = useLingui()
+  const {t: l, i18n} = useLingui()
   const haptics = useHaptics()
   const {paddingTop, paddingRight} = extractPadding(containerStyle)
   /* A sibling of the link; interactive elements can't nest in one. */
@@ -131,13 +134,7 @@ function PublicationBase({
         onBlur={onInteractOut}>
         {({pressed}) => (
           <View style={containerStyle}>
-            <View
-              style={[
-                a.w_full,
-                a.gap_sm,
-                card && [a.rounded_lg, a.overflow_hidden],
-                pressed && t.atoms.bg,
-              ]}>
+            <View style={[a.w_full, a.gap_sm, pressed && t.atoms.bg]}>
               <View
                 style={[
                   a.flex_row,
@@ -162,6 +159,7 @@ function PublicationBase({
                     ]}>
                     {view.title}
                   </Text>
+
                   <StandardSiteMetaRow
                     preview={preview}
                     type="publication"
@@ -177,6 +175,34 @@ function PublicationBase({
                   style={[a.text_sm, a.leading_snug]}>
                   {view.description}
                 </Text>
+              )}
+
+              {(!!view.subscribers?.length || !!view.subscriptionCount) && (
+                <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                  {!!view.subscribers?.length && (
+                    <AvatarStack
+                      size={16}
+                      profiles={view.subscribers.slice(0, 3)}
+                      backgroundColor={
+                        interacted
+                          ? t.atoms.bg_contrast_25.backgroundColor
+                          : t.atoms.bg.backgroundColor
+                      }
+                    />
+                  )}
+                  {!!view.subscriptionCount && (
+                    <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+                      {l({
+                        message: plural(view.subscriptionCount, {
+                          one: `${formatCount(i18n, view.subscriptionCount)} subscriber`,
+                          other: `${formatCount(i18n, view.subscriptionCount)} subscribers`,
+                        }),
+                        comment:
+                          'Number of people subscribed to a publication.',
+                      })}
+                    </Text>
+                  )}
+                </View>
               )}
             </View>
           </View>

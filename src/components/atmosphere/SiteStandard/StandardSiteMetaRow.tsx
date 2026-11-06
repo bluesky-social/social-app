@@ -11,6 +11,7 @@ import {
   isStandardSiteDocumentUri,
   isStandardSitePublicationUri,
 } from '#/components/atmosphere/SiteStandard/utils'
+import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 
@@ -44,7 +45,6 @@ export function StandardSiteMetaRow({
     authorProfile?.handle &&
     (articleDomain === authorProfile.handle ||
       articleDomain.endsWith(`.${authorProfile.handle}`))
-  const DomainIcon = articlePublisher?.Icon
   const metaTextStyle = [
     a.text_xs,
     a.leading_tight,
@@ -53,22 +53,6 @@ export function StandardSiteMetaRow({
 
   const items: {key: string; node: ReactNode}[] = []
 
-  if (!highlightedPublisher && !domainHandleMatch) {
-    items.push({
-      key: 'domain',
-      node: (
-        <View style={[a.flex_shrink, a.flex_row, a.align_center, a.gap_2xs]}>
-          {DomainIcon && (
-            <DomainIcon size="xs" fill={t.atoms.text_contrast_medium.color} />
-          )}
-          <Text numberOfLines={1} style={[metaTextStyle, a.flex_shrink]}>
-            {articleDomain}
-          </Text>
-        </View>
-      ),
-    })
-  }
-
   if (authorProfile) {
     items.push({
       key: 'author',
@@ -76,6 +60,20 @@ export function StandardSiteMetaRow({
         <Text numberOfLines={1} style={[metaTextStyle]}>
           <Trans>by @{authorProfile.handle}</Trans>
         </Text>
+      ),
+    })
+  }
+
+  if (!highlightedPublisher && !domainHandleMatch) {
+    items.push({
+      key: 'domain',
+      node: (
+        <View style={[a.flex_shrink, a.flex_row, a.align_center, a.gap_2xs]}>
+          <ChainLinkIcon size="xs" fill={t.atoms.text_contrast_medium.color} />
+          <Text numberOfLines={1} style={[metaTextStyle, a.flex_shrink]}>
+            {articleDomain}
+          </Text>
+        </View>
       ),
     })
   }

@@ -39,6 +39,7 @@ jest.mock('#/view/com/util/UserAvatar', () => ({
     return <Text testID="logo">{avatar}</Text>
   },
 }))
+jest.mock('#/components/AvatarStack', () => ({AvatarStack: () => null}))
 jest.mock('#/components/MediaInsetBorder', () => ({
   MediaInsetBorder: () => null,
 }))
