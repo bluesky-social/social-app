@@ -1,3 +1,4 @@
+import {useEffect} from 'react'
 import {type Client} from '@atproto/lex'
 import {PasswordSession} from '@atproto/lex-password-session'
 import {beforeEach, describe, expect, it, jest} from '@jest/globals'
@@ -66,9 +67,11 @@ import {
   Provider,
   useAppviewClient,
   useChatClient,
+  useIsCurrentAppviewClient,
   useMaybeChatClient,
   useMaybePdsClient,
   usePdsClient,
+  useSession,
   useSessionApi,
 } from '#/state/session'
 import {type SessionApiContext} from '#/state/session/types'
@@ -185,5 +188,88 @@ describe('client hooks with a session', () => {
 
     expect(clients().maybePds).toBe(clients().pds)
     expect(clients().maybeChat).toBe(clients().chat)
+  })
+})
+
+describe('useIsCurrentAppviewClient', () => {
+  /**
+   * Like App.tsx, key the consumer by DID so logout and account switches
+   * remove it, and record what its captured check says during cleanup.
+   */
+  function renderGuardConsumer() {
+    let api!: SessionApiContext
+    const captured: {
+      isCurrent?: (client: Client) => boolean
+      client?: Client
+      duringCleanup?: boolean
+    } = {}
+    function Consumer() {
+      const isCurrent = useIsCurrentAppviewClient()
+      const client = useAppviewClient()
+      useEffect(() => {
+        captured.isCurrent = isCurrent
+        captured.client = client
+        return () => {
+          captured.duringCleanup = isCurrent(client)
+        }
+      }, [isCurrent, client])
+      return null
+    }
+    function Probe() {
+      api = useSessionApi()
+      return <Consumer key={useSession().currentAccount?.did} />
+    }
+    render(
+      <Provider>
+        <Probe />
+      </Provider>,
+    )
+    return {api: () => api, captured}
+  }
+
+  it('is false for the logged-out public client', () => {
+    const {captured} = renderGuardConsumer()
+    expect(captured.isCurrent!(captured.client!)).toBe(false)
+  })
+
+  it('turns false for a removed consumer on logout', async () => {
+    const account = makeAccount()
+    const bundle = makeBundle(account)
+    const {api, captured} = renderGuardConsumer()
+    mockLogin.mockResolvedValueOnce({bundle, account})
+    await act(async () => {
+      await api().login({} as never, 'LoginForm')
+    })
+    const {isCurrent, client} = captured
+    expect(isCurrent!(client!)).toBe(true)
+
+    captured.duringCleanup = undefined
+    act(() => {
+      api().logoutCurrentAccount('Settings')
+    })
+    expect(captured.duringCleanup).toBe(false)
+    expect(isCurrent!(client!)).toBe(false)
+  })
+
+  it('turns false for the old client on an account switch', async () => {
+    const accountA = makeAccount()
+    const accountB = makeAccount({did: 'did:plc:other', handle: 'bob.test'})
+    const bundleA = makeBundle(accountA)
+    const bundleB = makeBundle(accountB)
+    const {api, captured} = renderGuardConsumer()
+    mockLogin.mockResolvedValueOnce({bundle: bundleA, account: accountA})
+    await act(async () => {
+      await api().login({} as never, 'LoginForm')
+    })
+    const {isCurrent} = captured
+
+    captured.duringCleanup = undefined
+    mockLogin.mockResolvedValueOnce({bundle: bundleB, account: accountB})
+    await act(async () => {
+      await api().login({} as never, 'LoginForm')
+    })
+    expect(captured.duringCleanup).toBe(false)
+    expect(isCurrent!(bundleA.appviewClient)).toBe(false)
+    expect(isCurrent!(bundleB.appviewClient)).toBe(true)
   })
 })

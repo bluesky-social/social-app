@@ -45,10 +45,14 @@ import {HITSLOP_20} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {hasPlaybackStarted} from '#/lib/media/video/analytics'
 import {
-  createPlaybackDurationTracker,
-  hasPlaybackStarted,
-} from '#/lib/media/video/analytics'
+  createBoundPlaybackDurationTracker,
+  getSourceLoadDurationSeconds,
+  getVideoMediaKey,
+  sendVideoWatchSegment,
+  type VideoFeedFeedbackAttribution,
+} from '#/lib/media/video/feedFeedback'
 import {
   createPlaybackTelemetry,
   type PlaybackTelemetry,
@@ -592,10 +596,15 @@ let VideoItem = ({
           <VideoItemPlaceholder embed={embed} />
           {shouldRenderVideo && player && (
             <VideoItemInner
+              key={getVideoMediaKey({
+                postUri: post.uri,
+                playlist: embed.playlist,
+              })}
               player={player}
               embed={embed}
               post={post}
               active={active}
+              feedbackAttribution={{item: post.uri, feedContext, reqId}}
             />
           )}
           {moderation && (
@@ -628,11 +637,13 @@ function VideoItemInner({
   embed,
   post,
   active,
+  feedbackAttribution,
 }: {
   player: VideoPlayer
   embed: app.bsky.embed.video.View
   post: app.bsky.feed.defs.PostView
   active: boolean
+  feedbackAttribution: VideoFeedFeedbackAttribution
 }) {
   const {bottom} = useSafeAreaInsets()
   const [isReady, setIsReady] = useState(!IS_ANDROID)
@@ -640,16 +651,25 @@ function VideoItemInner({
     ReportDialogMetadataContext.useReportDialogMetadataContext()
   const ax = useAnalytics()
   const playbackStartTrackedRef = useRef(false)
+  const {sendVideoWatch} = useFeedFeedbackContext()
+  const videoDurationSeconds = useRef<number | undefined>(undefined)
   const [durationTracker] = useState(() => {
-    const tracker = createPlaybackDurationTracker({
+    const tracker = createBoundPlaybackDurationTracker({
       enabled: embed.presentation !== 'gif',
-      onSegment: segment => {
+      binding: {attribution: feedbackAttribution, sendVideoWatch},
+      onSegment: (segment, binding) => {
         ax.metric('video:playback:duration', {
           ...segment,
           postUri: post.uri,
           postAuthorDid: post.author.did,
           context: 'immersiveFeed',
           presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+        })
+        sendVideoWatchSegment({
+          binding,
+          segment,
+          context: 'immersiveFeed',
+          videoDurationSeconds: videoDurationSeconds.current,
         })
       },
     })
@@ -664,6 +684,10 @@ function VideoItemInner({
   useEffect(() => {
     durationTracker.setActive(active)
   }, [active, durationTracker])
+
+  useEffect(() => {
+    durationTracker.rebind({attribution: feedbackAttribution, sendVideoWatch})
+  }, [durationTracker, feedbackAttribution, sendVideoWatch])
 
   useEffect(() => {
     return () => durationTracker.flush('unmounted')
@@ -712,6 +736,18 @@ function VideoItemInner({
 
   useEventListener(player, 'playingChange', evt => {
     durationTracker.setPlaying(evt.isPlaying)
+  })
+
+  /*
+   * Players are pooled and preloaded with other items' sources, so only trust
+   * a length reported for this item's own source. If that load happened before
+   * this component mounted, the length stays unknown and is omitted.
+   */
+  useEventListener(player, 'sourceLoad', evt => {
+    const seconds = getSourceLoadDurationSeconds(evt, embed.playlist)
+    if (seconds !== undefined) {
+      videoDurationSeconds.current = seconds
+    }
   })
 
   useEventListener(player, 'statusChange', evt => {

@@ -6,11 +6,17 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {getCurrentState, useOnAppStateChange} from '#/lib/appState'
-import {createPlaybackDurationTracker} from '#/lib/media/video/analytics'
+import {
+  createBoundPlaybackDurationTracker,
+  getVideoMediaKey,
+  sendVideoWatchSegment,
+  type VideoFeedFeedbackAttribution,
+} from '#/lib/media/video/feedFeedback'
 import {
   createPlaybackTelemetry,
   type PlaybackTelemetry,
 } from '#/lib/media/video/playbackTelemetry'
+import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, platform} from '#/alf'
 import {Button} from '#/components/Button'
@@ -26,9 +32,11 @@ import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 interface Props {
   embed: app.bsky.embed.video.View
   post?: app.bsky.feed.defs.PostView
+  /** Explicit feed attribution; without it no watch feedback is sent. */
+  feedbackAttribution?: VideoFeedFeedbackAttribution
 }
 
-export function VideoEmbed({embed, post}: Props) {
+export function VideoEmbed({embed, post, feedbackAttribution}: Props) {
   const [key, setKey] = useState(0)
 
   const renderError = useCallback(
@@ -55,7 +63,12 @@ export function VideoEmbed({embed, post}: Props) {
 
   const contents = (
     <ErrorBoundary renderError={renderError} key={key}>
-      <InnerWrapper embed={embed} post={post} />
+      <InnerWrapper
+        key={getVideoMediaKey({postUri: post?.uri, playlist: embed.playlist})}
+        embed={embed}
+        post={post}
+        feedbackAttribution={feedbackAttribution}
+      />
     </ErrorBoundary>
   )
 
@@ -72,9 +85,10 @@ export function VideoEmbed({embed, post}: Props) {
   )
 }
 
-function InnerWrapper({embed, post}: Props) {
+function InnerWrapper({embed, post, feedbackAttribution}: Props) {
   const {_} = useLingui()
   const ax = useAnalytics()
+  const {sendVideoWatch} = useFeedFeedbackContext()
   const ref = useRef<{togglePlayback: () => void}>(null)
 
   const [status, setStatus] = useState<'playing' | 'paused' | 'pending'>(
@@ -92,9 +106,10 @@ function InnerWrapper({embed, post}: Props) {
   const impressionTrackedRef = useRef(false)
   const playbackStartTrackedRef = useRef(false)
   const [durationTracker] = useState(() => {
-    const tracker = createPlaybackDurationTracker({
+    const tracker = createBoundPlaybackDurationTracker({
       enabled: embed.presentation !== 'gif',
-      onSegment: segment => {
+      binding: {attribution: feedbackAttribution, sendVideoWatch},
+      onSegment: (segment, binding) => {
         ax.metric('video:playback:duration', {
           ...segment,
           postUri: post?.uri,
@@ -102,6 +117,8 @@ function InnerWrapper({embed, post}: Props) {
           context: 'embed',
           presentation: embed.presentation === 'gif' ? 'gif' : 'video',
         })
+        // The native player only reports remaining time, so length is unknown.
+        sendVideoWatchSegment({binding, segment, context: 'embed'})
       },
     })
     tracker.setForeground(getCurrentState() === 'active')
@@ -110,6 +127,9 @@ function InnerWrapper({embed, post}: Props) {
   useOnAppStateChange(state => {
     durationTracker.setForeground(state === 'active')
   })
+  useEffect(() => {
+    durationTracker.rebind({attribution: feedbackAttribution, sendVideoWatch})
+  }, [durationTracker, feedbackAttribution, sendVideoWatch])
   useEffect(() => {
     return () => {
       telemetryRef.current?.deactivated()
