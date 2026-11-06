@@ -1,7 +1,39 @@
 import {type RichText} from '@bsky/sdk/richtext'
-import {countGraphemes} from 'unicode-segmenter/grapheme'
+import {countGraphemes, splitGraphemes} from 'unicode-segmenter/grapheme'
 
 import {shortenLinks} from './rich-text-manip'
+
+/**
+ * Takes at most `len` UTF-16 code units from the start of `str`, stopping at
+ * the last whole grapheme cluster that fits.
+ *
+ * Slicing by code unit alone can cut an emoji in half. The leftover - a lone
+ * surrogate, or a flag/ZWJ sequence missing its tail - renders as a
+ * replacement character rather than as the emoji.
+ */
+function takeGraphemes(str: string, len: number): string {
+  if (len <= 0) return ''
+  let out = ''
+  for (const grapheme of splitGraphemes(str)) {
+    if (out.length + grapheme.length > len) break
+    out += grapheme
+  }
+  return out
+}
+
+/**
+ * Same as {@link takeGraphemes}, but takes from the end of the string.
+ */
+function takeGraphemesFromEnd(str: string, len: number): string {
+  if (len <= 0) return ''
+  const graphemes = [...splitGraphemes(str)]
+  let out = ''
+  for (let i = graphemes.length - 1; i >= 0; i--) {
+    if (out.length + graphemes[i].length > len) break
+    out = graphemes[i] + out
+  }
+  return out
+}
 
 export function enforceLen(
   str: string,
@@ -13,16 +45,16 @@ export function enforceLen(
   if (str.length > len) {
     if (ellipsis) {
       if (mode === 'end') {
-        return str.slice(0, len) + '…'
+        return takeGraphemes(str, len) + '…'
       } else if (mode === 'middle') {
         const half = Math.floor(len / 2)
-        return str.slice(0, half) + '…' + str.slice(-half)
+        return takeGraphemes(str, half) + '…' + takeGraphemesFromEnd(str, half)
       } else {
         // fallback
-        return str.slice(0, len)
+        return takeGraphemes(str, len)
       }
     } else {
-      return str.slice(0, len)
+      return takeGraphemes(str, len)
     }
   }
   return str
