@@ -1,5 +1,5 @@
-import {useRef, useState} from 'react'
-import {type ImageStyle, View} from 'react-native'
+import {useDeferredValue, useRef, useState} from 'react'
+import {type ImageStyle, type ScrollView, View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -73,6 +73,9 @@ const ImageAltTextInner = ({
   image: Props['image']
 }): React.ReactNode => {
   const [altText, setAltText] = useState(image.alt)
+  const deferredAltText = useDeferredValue(altText)
+  const scrollViewRef = useRef<React.ComponentRef<typeof ScrollView>>(null)
+  const inputContentHeight = useRef<number | null>(null)
   const {_, i18n} = useLingui()
   const t = useTheme()
   const source = image.transformed ?? image.source
@@ -83,7 +86,7 @@ const ImageAltTextInner = ({
   }
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
+    <Dialog.ScrollableInner ref={scrollViewRef} label={_(msg`Add alt text`)}>
       <Dialog.Close />
 
       <View>
@@ -125,6 +128,21 @@ const ImageAltTextInner = ({
                 multiline
                 autoFocus
                 scrollEnabled={false}
+                onContentSizeChange={e => {
+                  const height = e.nativeEvent.contentSize.height
+                  /*
+                   * The outer ScrollView only reacts to the keyboard
+                   * showing/hiding, not to this input growing afterwards, so
+                   * follow the caret down ourselves as new lines appear.
+                   */
+                  if (
+                    inputContentHeight.current != null &&
+                    height > inputContentHeight.current
+                  ) {
+                    scrollViewRef.current?.scrollToEnd({animated: true})
+                  }
+                  inputContentHeight.current = height
+                }}
               />
             </TextField.Root>
           </View>
@@ -150,7 +168,7 @@ const ImageAltTextInner = ({
           )}
         </View>
 
-        <AltTextCounterWrapper altText={altText}>
+        <AltTextCounterWrapper altText={deferredAltText}>
           <Button
             label={_(msg`Save`)}
             disabled={altText === image.alt}
