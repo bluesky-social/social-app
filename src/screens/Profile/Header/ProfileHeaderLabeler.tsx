@@ -18,9 +18,10 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import {atoms as a, tokens, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogOuterProps, useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
+import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRight} from '#/components/icons/Arrow'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as Heart,
@@ -31,7 +32,8 @@ import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_IOS} from '#/env'
+import {IS_IOS, IS_NATIVE} from '#/env'
+import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {type app} from '#/lexicons'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
@@ -242,6 +244,7 @@ export function HeaderLabelerButtons({
   const requireAuth = useRequireAuth()
   const haptics = useHaptics()
   const editProfileControl = useDialogControl()
+  const inviteFriendsControl = useDialogControl()
   const {data: preferences} = usePreferencesQuery()
   const {
     mutateAsync: toggleSubscription,
@@ -303,7 +306,29 @@ export function HeaderLabelerButtons({
               <Trans>Edit Profile</Trans>
             </ButtonText>
           </Button>
+          {/* Invite friends is a native-only share sheet (the dialog is a
+              no-op on web), so gate the entry point to avoid a dead button. */}
+          {IS_NATIVE && (
+            <Button
+              testID="profileHeaderShareButton"
+              size="small"
+              color="secondary"
+              shape="round"
+              // expand the 33pt button toward a 44pt touch target, capped
+              // horizontally at half the 4pt row gap so the target cannot
+              // overlap the neighboring buttons' own targets
+              hitSlop={{top: 6, bottom: 6, left: 2, right: 2}}
+              onPress={() => {
+                haptics.tap()
+                ax.metric('invite:dialog:open', {logContext: 'ProfileHeader'})
+                inviteFriendsControl.open()
+              }}
+              label={_(msg`Invite friends`)}>
+              <ButtonIcon icon={ArrowShareRight} />
+            </Button>
+          )}
           <EditProfileDialog profile={profile} control={editProfileControl} />
+          {IS_NATIVE && <InviteFriendsDialog control={inviteFriendsControl} />}
         </>
       ) : !isAppLabeler(profile.did) && !minimal ? (
         // hidden in the minimal header, because it's not shadowed so the two buttons
