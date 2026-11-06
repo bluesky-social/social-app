@@ -37,6 +37,12 @@ const testProfile = {
   handle: 'test.bsky.social',
 }
 
+const testPublisher = {
+  uri: 'https://example.com/publication',
+  title: 'Test publication',
+  description: '',
+}
+
 const image = {
   $type: 'app.bsky.embed.external#viewGalleryImage',
   thumbnail: 'https://example.com/thumbnail.jpg',
@@ -577,6 +583,31 @@ describe('Atmosphere Explore response fixtures', () => {
     expect(livestreams[0].image).toBe(livestreamPreviewFixture[0].view.image)
   })
 
+  it('drops articles without a publisher before limiting to five', () => {
+    const data = parseData({
+      ...emptyData,
+      articles: {
+        items: ['a', 'b', 'c', 'd', 'e', 'f', 'g'].map(id => ({
+          featured: false,
+          view: {
+            uri: `https://example.com/${id}`,
+            title: id,
+            description: '',
+            publisher: id === 'b' ? undefined : testPublisher,
+          },
+        })),
+      },
+    })
+
+    expect(getAtmosphereArticles(data).map(article => article.title)).toEqual([
+      'a',
+      'c',
+      'd',
+      'e',
+      'f',
+    ])
+  })
+
   it('safely handles absent optional data, empty arrays, and gallery variants', () => {
     expect(getAtmosphereAnnouncementBanner(emptyData)).toBeUndefined()
     expect(
@@ -609,6 +640,7 @@ describe('Atmosphere Explore response fixtures', () => {
               uri: 'https://example.com/article',
               title: 'Sparse article',
               description: 'No optional card fields',
+              publisher: testPublisher,
             },
           },
         ],

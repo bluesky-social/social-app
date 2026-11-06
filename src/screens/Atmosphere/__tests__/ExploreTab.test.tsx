@@ -118,6 +118,12 @@ function setQuery(
   } as never)
 }
 
+const publisher: app.bsky.embed.external.ViewArticlePublication = {
+  uri: 'https://example.com/publication',
+  title: 'Publication',
+  description: '',
+}
+
 const data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody = {
   announcementBanner: {title: 'Launch', url: 'https://example.com/launch'},
   articles: {
@@ -128,6 +134,7 @@ const data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody = {
           uri: 'https://example.com/article',
           title: 'Live article',
           description: '',
+          publisher,
         },
       },
     ],
@@ -205,6 +212,7 @@ describe('AtmosphereExploreTab', () => {
                 uri: `https://example.com/${title}`,
                 title,
                 description: '',
+                publisher,
               },
             }),
           ),

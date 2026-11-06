@@ -42,7 +42,9 @@ export function getAtmosphereArticles(
   data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody,
 ): app.bsky.embed.external.ViewArticle[] {
   return dedupeBy(
-    data.articles.items.map(({view}) => view),
+    data.articles.items
+      .map(({view}) => view)
+      .filter(article => article.publisher),
     article => article.uri,
   ).slice(0, 5)
 }
