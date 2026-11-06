@@ -17,6 +17,7 @@ import {logger} from '#/logger'
 import {
   useModerationInboxAccountStatusQuery,
   useModerationInboxActionedSubjectsQuery,
+  useModerationInboxCacheMutation,
   useModerationInboxReportsQuery,
   useModerationInboxUnreadCountQuery,
   useUpdateModerationInboxSeenMutation,
@@ -39,6 +40,10 @@ import {type tools} from '#/lexicons'
 import {AccountStatus} from './components/AccountStatus'
 import {FilterMenu} from './components/FilterMenu'
 import {type ActionedSubject} from './components/hooks/useActionedSubjectLabels'
+import {
+  getAccountEnforcement,
+  getHasActiveStrikes,
+} from './components/util/accountData'
 import {YourAccountRow} from './components/YourAccountRow'
 import {YourReportRow} from './components/YourReportRow'
 
@@ -264,6 +269,7 @@ function YourAccount() {
   const [isPTRing, setIsPTRing] = useState(false)
   const [filter, setFilter] = useState<ReportFilter>('all')
   const actionedSubjectsQuery = useModerationInboxActionedSubjectsQuery(filter)
+  const invalidateInbox = useModerationInboxCacheMutation()
   const accountStatusQuery = useModerationInboxAccountStatusQuery()
   const unreadCountQuery = useModerationInboxUnreadCountQuery()
   const markSeen = useUpdateModerationInboxSeenMutation()
@@ -285,11 +291,7 @@ function YourAccount() {
   const onRefresh = async () => {
     setIsPTRing(true)
     try {
-      await Promise.all([
-        actionedSubjectsQuery.refetch(),
-        accountStatusQuery.refetch(),
-        unreadCountQuery.refetch(),
-      ])
+      await invalidateInbox()
     } catch (err) {
       logger.error('Failed to refresh moderation inbox account', {error: err})
     } finally {
@@ -343,7 +345,13 @@ function YourAccount() {
           ) : undefined}
         </View>
       ) : undefined}
-      {accountStanding ? <AccountStatus status={accountStanding} /> : undefined}
+      {accountStanding ? (
+        <AccountStatus
+          status={accountStanding}
+          enforcement={getAccountEnforcement(accountStatusQuery.data)}
+          hasActiveStrikes={getHasActiveStrikes(accountStatusQuery.data)}
+        />
+      ) : undefined}
     </Layout.Center>
   )
 
