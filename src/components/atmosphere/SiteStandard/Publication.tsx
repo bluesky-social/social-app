@@ -9,6 +9,7 @@ import {formatCount} from '#/view/com/util/numeric/format'
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
 import {atoms as a, extractPadding, useTheme, web} from '#/alf'
 import {PublicationIcon} from '#/components/atmosphere/SiteStandard/PublicationIcon'
+import {matchStandardSiteHostByUrl} from '#/components/atmosphere/SiteStandard/publishers'
 import {StandardSiteMetaRow} from '#/components/atmosphere/SiteStandard/StandardSiteMetaRow'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
 import {isStandardSitePublicationUri} from '#/components/atmosphere/SiteStandard/utils'
@@ -82,6 +83,7 @@ function PublicationBase({
   const author = authorDid
     ? view.associatedProfiles?.find(p => p.did === authorDid)
     : undefined
+  const articlePublisher = matchStandardSiteHostByUrl(view.uri)
 
   const onPress = () => {
     haptics.tap()
@@ -134,7 +136,7 @@ function PublicationBase({
         onBlur={onInteractOut}>
         {({pressed}) => (
           <View style={containerStyle}>
-            <View style={[a.w_full, a.gap_sm, pressed && t.atoms.bg]}>
+            <View style={[a.w_full, {gap: 10}, pressed && t.atoms.bg]}>
               <View
                 style={[
                   a.flex_row,
@@ -200,6 +202,13 @@ function PublicationBase({
                         comment:
                           'Number of people subscribed to a publication.',
                       })}
+                    </Text>
+                  )}
+
+                  {!!articlePublisher && (
+                    <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+                      {' • '}
+                      {l`Powered by ${articlePublisher.name}`}
                     </Text>
                   )}
                 </View>
