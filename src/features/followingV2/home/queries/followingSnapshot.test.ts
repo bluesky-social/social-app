@@ -19,11 +19,14 @@ import {
   FOLLOWING_SNAPSHOT_QUERY_KEY,
   FOLLOWING_SNAPSHOT_VERSION,
   type FollowingSnapshot,
+  type FollowingSnapshotRule,
+  inspectFollowingSnapshot,
   isFollowingSnapshotQuery,
   loadFollowingSnapshot,
   readFollowingSnapshot,
   saveFollowingSnapshot,
   selectFollowingSnapshot,
+  takeFollowingSnapshotLoad,
 } from './followingSnapshot'
 import {type FeedPageUnselected, type PostFeedData} from './postFeed'
 
@@ -393,49 +396,57 @@ describe('readFollowingSnapshot', () => {
     ).toBeInstanceOf(Uint8Array)
   })
 
-  it.each([
-    ['nothing', () => undefined],
-    ['plain query data', () => following(2)],
+  it.each<[string, (s: FollowingSnapshot) => unknown, FollowingSnapshotRule]>([
+    ['nothing', () => undefined, 'malformed'],
+    ['plain query data', () => following(2), 'version'],
     [
       'another version',
-      (s: FollowingSnapshot) => ({
+      s => ({
         ...s,
         version: FOLLOWING_SNAPSHOT_VERSION + 1,
       }),
+      'version',
     ],
     [
       'misaligned page params',
-      (s: FollowingSnapshot) => ({...s, pageParams: [null, {cursor: 'nope'}]}),
+      s => ({...s, pageParams: [null, {cursor: 'nope'}]}),
+      'misaligned',
     ],
     [
       'fewer page params than pages',
-      (s: FollowingSnapshot) => ({...s, pageParams: [null]}),
+      s => ({...s, pageParams: [null]}),
+      'malformed',
     ],
     [
       'pages that are not pages',
-      (s: FollowingSnapshot) => ({...s, pages: [s.pages[0], {cursor: 1}]}),
+      s => ({...s, pages: [s.pages[0], {cursor: 1}]}),
+      'malformed',
     ],
     [
       'no startCursor on the top page',
-      (s: FollowingSnapshot) => ({
+      s => ({
         ...s,
         pages: s.pages.map(({startCursor: _, ...page}) => page),
       }),
+      'noStartCursor',
     ],
     [
       'a since that is not a cursor',
-      (s: FollowingSnapshot) => ({
+      s => ({
         ...s,
         pages: [{...s.pages[0], since: 1}, s.pages[1]],
       }),
+      'malformed',
     ],
     [
       'a Discover page',
-      (s: FollowingSnapshot) => ({
+      s => ({
         ...s,
         pages: [s.pages[0], {...s.pages[1], source: 'discover'}],
       }),
+      'discover',
     ],
+    ['no pages', s => ({...s, pages: [], pageParams: []}), 'pageCount'],
     [
       'more than three pages',
       () =>
@@ -445,19 +456,23 @@ describe('readFollowingSnapshot', () => {
             ...following(4),
           }),
         ),
+      'pageCount',
     ],
     [
       'more than 1 MiB',
-      (s: FollowingSnapshot) => ({
+      s => ({
         ...s,
         pages: [
           s.pages[0],
           {...s.pages[1], feed: ['x'.repeat(FOLLOWING_SNAPSHOT_MAX_BYTES)]},
         ],
       }),
+      'tooLarge',
     ],
-  ])('rejects %s', (_, tamper: (s: FollowingSnapshot) => unknown) => {
-    expect(readFollowingSnapshot(tamper(savedSnapshot()))).toBeUndefined()
+  ])('rejects %s', (_, tamper, rule) => {
+    const snapshot = tamper(savedSnapshot())
+    expect(readFollowingSnapshot(snapshot)).toBeUndefined()
+    expect(inspectFollowingSnapshot(snapshot).rejection).toBe(rule)
   })
 })
 
@@ -683,4 +698,131 @@ describe('through the persister', () => {
       })
     },
   )
+})
+
+describe('what a read reports', () => {
+  const MINUTE = 60e3
+  const BUSTER = 'v1'
+  const MAX_AGE = 24 * 60 * MINUTE
+
+  /**
+   * A persisted client as it reads back from disk, saved a minute ago by this
+   * app version, with `data` as the Following query's.
+   */
+  function persisted(
+    data: unknown,
+    {
+      timestamp = Date.now() - MINUTE,
+      buster = BUSTER,
+      isInvalidated = false,
+    }: {timestamp?: number; buster?: string; isInvalidated?: boolean} = {},
+  ): PersistedClient {
+    return {
+      timestamp,
+      buster,
+      clientState: {
+        mutations: [],
+        queries: [
+          {
+            queryKey: FOLLOWING_SNAPSHOT_QUERY_KEY,
+            queryHash: hashKey(FOLLOWING_SNAPSHOT_QUERY_KEY),
+            state: {data, isInvalidated},
+          },
+        ],
+      },
+    } as unknown as PersistedClient
+  }
+
+  function load(client: PersistedClient, {restore}: {restore?: boolean} = {}) {
+    const queryClient = new QueryClient()
+    const loaded = loadFollowingSnapshot(client, {
+      restore,
+      queryClient,
+      buster: BUSTER,
+      maxAge: MAX_AGE,
+    })
+    return {loaded, report: takeFollowingSnapshotLoad(queryClient)}
+  }
+
+  beforeEach(() => {
+    // The snapshot's pages were fetched five minutes before it's read.
+    jest.spyOn(Date, 'now').mockReturnValue(NOW + 5 * MINUTE)
+  })
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
+  it('a valid snapshot, with its age, size and pages, and the top it restored', () => {
+    const snapshot = savedSnapshot()
+
+    expect(load(persisted(snapshot)).report).toEqual({
+      snapshot: 'valid',
+      ageMs: 5 * MINUTE,
+      bytes: new TextEncoder().encode(JSON.stringify(snapshot)).length,
+      pageCount: 2,
+      topFetchedAt: NOW,
+    })
+  })
+
+  it('no snapshot, when the client has no Following query', () => {
+    const client = persisted(savedSnapshot())
+    client.clientState.queries = []
+
+    expect(load(client).report).toEqual({snapshot: 'missing'})
+  })
+
+  it.each([
+    [
+      'a snapshot that breaks a rule',
+      () => load(persisted({...savedSnapshot(), version: 0})),
+      'version',
+    ],
+    [
+      'a snapshot saved while invalidated',
+      () => load(persisted(savedSnapshot(), {isInvalidated: true})),
+      'invalidated',
+    ],
+    [
+      'a valid snapshot with restoring off',
+      () => load(persisted(savedSnapshot()), {restore: false}),
+      'disabled',
+    ],
+    [
+      'a client saved too long ago',
+      () => load(persisted(savedSnapshot(), {timestamp: NOW - MAX_AGE})),
+      'expired',
+    ],
+    [
+      'a client saved by another app version',
+      () => load(persisted(savedSnapshot(), {buster: 'v0'})),
+      'appVersion',
+    ],
+  ])('%s, as rejected', (_, read, reason) => {
+    expect(read().report).toMatchObject({
+      snapshot: 'rejected',
+      rejectionReason: reason,
+      ageMs: 5 * MINUTE,
+      pageCount: 2,
+    })
+  })
+
+  it('without changing what it reads back, which TanStack drops itself', () => {
+    const snapshot = savedSnapshot()
+
+    const {loaded} = load(persisted(snapshot, {buster: 'v0'}))
+
+    expect(loaded.clientState.queries[0].state.data).toEqual(
+      readFollowingSnapshot(snapshot),
+    )
+  })
+
+  it('once per read', () => {
+    const queryClient = new QueryClient()
+    loadFollowingSnapshot(persisted(savedSnapshot()), {queryClient})
+
+    expect(takeFollowingSnapshotLoad(queryClient)).toMatchObject({
+      snapshot: 'valid',
+    })
+    expect(takeFollowingSnapshotLoad(queryClient)).toBeUndefined()
+  })
 })
