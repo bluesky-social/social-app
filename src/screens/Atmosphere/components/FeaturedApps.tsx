@@ -10,14 +10,27 @@ import {FeaturedAppCard} from './FeaturedAppCard'
 
 const CARD_WIDTH = 320
 
-export function FeaturedApps({apps}: {apps: FeaturedApp[]}) {
+export function FeaturedApps({
+  apps,
+  onPressSeeMore,
+}: {
+  apps: FeaturedApp[]
+  onPressSeeMore?: () => void
+}) {
   const {t: l} = useLingui()
 
   if (!apps.length) return null
 
   return (
     <View style={[a.gap_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
-      <ExploreSectionHeader title={l`Featured apps`} />
+      <ExploreSectionHeader
+        title={l`Featured apps`}
+        seeMore={
+          onPressSeeMore
+            ? {label: l`See more apps`, onPress: onPressSeeMore}
+            : undefined
+        }
+      />
       <ExploreGallery
         items={apps}
         getKey={app => app.id}

@@ -25,7 +25,11 @@ import {FeaturedLivestreams} from './components/FeaturedLivestreams'
 import {FeaturedPhotos} from './components/FeaturedPhotos'
 import {FeaturedPublications} from './components/FeaturedPublications'
 
-export function AtmosphereExploreTab() {
+export function AtmosphereExploreTab({
+  onPressSeeMoreApps,
+}: {
+  onPressSeeMoreApps?: () => void
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const {data, isError, isPending, refetch} = useAtmosphereExploreQuery()
@@ -99,7 +103,10 @@ export function AtmosphereExploreTab() {
           {announcementBanner ? (
             <AnnouncementBanner banner={announcementBanner} />
           ) : undefined}
-          <FeaturedApps apps={getAtmosphereExploreApps(data)} />
+          <FeaturedApps
+            apps={getAtmosphereExploreApps(data)}
+            onPressSeeMore={onPressSeeMoreApps}
+          />
           <FeaturedArticles articles={getAtmosphereArticles(data)} />
           <FeaturedLivestreams livestreams={getAtmosphereLivestreams(data)} />
           <FeaturedPhotos photos={getAtmospherePhotos(data)} />

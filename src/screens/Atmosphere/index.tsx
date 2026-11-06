@@ -1,7 +1,8 @@
+import {useRef} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {Pager} from '#/view/com/pager/Pager'
+import {Pager, type PagerRef} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {NotFoundScreen} from '#/view/screens/NotFound'
 import {atoms as a, web} from '#/alf'
@@ -12,10 +13,14 @@ import {AtmosphereActivityTab} from './ActivityTab'
 import {AtmosphereAppsTab} from './AppsTab'
 import {AtmosphereExploreTab} from './ExploreTab'
 
+/** Matches the Apps position in the tab bar items below. */
+const APPS_TAB_INDEX = 2
+
 export function AtmosphereScreen() {
   const {t: l} = useLingui()
   const ax = useAnalytics()
   const isEnabled = ax.features.enabled(ax.features.AtmosphereScreenEnable)
+  const pagerRef = useRef<PagerRef>(null)
 
   if (!isEnabled) {
     return <NotFoundScreen />
@@ -38,6 +43,7 @@ export function AtmosphereScreen() {
         <Layout.Header.Slot />
       </Layout.Header.Outer>
       <Pager
+        ref={pagerRef}
         testID="atmospherePager"
         renderTabBar={props => (
           <Layout.Center style={[a.z_10, web([a.sticky, {top: 0}])]}>
@@ -45,7 +51,9 @@ export function AtmosphereScreen() {
           </Layout.Center>
         )}>
         <AtmosphereActivityTab />
-        <AtmosphereExploreTab />
+        <AtmosphereExploreTab
+          onPressSeeMoreApps={() => pagerRef.current?.setPage(APPS_TAB_INDEX)}
+        />
         <AtmosphereAppsTab />
       </Pager>
     </Layout.Screen>
