@@ -7,13 +7,24 @@ const config = {
    * behaviour so any change to native sources changes the fingerprint.
    */
   preset: 'strict',
-  /*
-   * The worklets Babel plugin writes generated JS into this directory whenever
-   * Metro bundles, which would otherwise change the fingerprint of any checkout
-   * that has run Metro and make EAS build cache lookups miss. Only `*.js` is
-   * ignored so the shipped `dummy.md` keeps clean-install hashes unchanged.
-   */
-  ignorePaths: ['**/node_modules/react-native-worklets/.worklets/*.js'],
+  ignorePaths: [
+    /*
+     * The worklets Babel plugin writes generated JS into this directory
+     * whenever Metro bundles, which would otherwise change the fingerprint of
+     * any checkout that has run Metro and make EAS build cache lookups miss.
+     * Only `*.js` is ignored so the shipped `dummy.md` keeps clean-install
+     * hashes unchanged.
+     */
+    '**/node_modules/react-native-worklets/.worklets/*.js',
+    /*
+     * CI treats any change under `patches/` as native. Patches to autolinked
+     * packages already change those packages' own hashes, and the rest are JS
+     * or tooling. react-native isn't autolinked, so its combined patch is the
+     * only one worth hashing here.
+     */
+    'patches/**',
+    '!patches/react-native@*.patch',
+  ],
   /*
    * The nano icon fonts are linked into the native binary, but the fingerprint
    * only sees the plugin config, not the icons. Without this, adding or
