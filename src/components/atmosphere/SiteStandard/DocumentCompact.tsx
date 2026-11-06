@@ -21,7 +21,8 @@ type DocumentCompactProps = ssTypes.PreviewProps &
   ssTypes.PublicApiProps & {
     view: app.bsky.embed.external.ViewArticle
     /**
-     * Applied to the outer frame.
+     * Applied to the outer wrapper around the article link and its menu, so
+     * outer layout (margins, flex) moves both together.
      */
     style?: StyleProp<ViewStyle>
     /**
@@ -94,24 +95,9 @@ function DocumentCompactBase({
     : undefined
 
   return (
-    <View
-      testID={card ? 'documentCompactCard' : 'documentCompact'}
-      style={[
-        a.relative,
-        a.flex_col,
-        a.w_full,
-        card && [
-          a.rounded_lg,
-          a.border,
-          interacted
-            ? t.atoms.border_contrast_high
-            : t.atoms.border_contrast_low,
-        ],
-        interacted && t.atoms.bg_contrast_25,
-        preview && a.pointer_events_none,
-        style,
-      ]}>
+    <View style={[a.relative, style]}>
       <Link
+        testID={card ? 'documentCompactCard' : 'documentCompact'}
         peek
         shouldProxy
         to={view.uri}
@@ -122,7 +108,19 @@ function DocumentCompactBase({
           /* Override Button's row/center layout so the padded content stretches. */
           a.flex_col,
           a.align_stretch,
-          card && a.rounded_lg,
+          a.w_full,
+          card && [a.rounded_lg, a.border],
+          preview && a.pointer_events_none,
+          /*
+           * The peek lifts this view on a clear background, so it needs its own
+           * fill for the padding to show.
+           */
+          t.atoms.bg,
+          interacted && t.atoms.bg_contrast_25,
+          card &&
+            (interacted
+              ? t.atoms.border_contrast_high
+              : t.atoms.border_contrast_low),
         ]}
         {...web({
           onMouseEnter: onInteract,
@@ -130,65 +128,62 @@ function DocumentCompactBase({
         })}
         onFocus={onInteract}
         onBlur={onInteractOut}>
-        {({pressed}) => (
-          <View style={containerStyle}>
-            <View
-              style={[
-                a.w_full,
-                a.gap_sm,
-                card && [a.rounded_lg, a.overflow_hidden],
-                pressed && t.atoms.bg,
-              ]}>
-              {!!(publisher || hasMenu) && (
-                <View
-                  style={[
-                    a.justify_center,
-                    hasMenu && a.pr_5xl,
-                    {minHeight: 20},
-                  ]}>
-                  {publisher && <DocumentPublicationRow view={publisher} />}
-                </View>
-              )}
+        <View style={containerStyle}>
+          <View
+            style={[
+              a.w_full,
+              a.gap_sm,
+              card && [a.rounded_lg, a.overflow_hidden],
+            ]}>
+            {!!publisher && (
+              <View
+                style={[
+                  a.justify_center,
+                  hasMenu && a.pr_5xl,
+                  {minHeight: 20},
+                ]}>
+                {publisher && <DocumentPublicationRow view={publisher} />}
+              </View>
+            )}
 
-              <View style={[a.flex_row, a.align_start, a.gap_md]}>
-                <View style={[a.flex_1, a.gap_xs, {minWidth: 0}]}>
+            <View style={[a.flex_row, a.align_start, a.gap_md]}>
+              <View style={[a.flex_1, a.gap_xs, {minWidth: 0}]}>
+                <Text
+                  emoji
+                  numberOfLines={2}
+                  style={[a.text_lg, a.font_bold, a.leading_snug]}>
+                  {view.title}
+                </Text>
+                {!!view.description && (
                   <Text
                     emoji
-                    numberOfLines={2}
-                    style={[a.text_lg, a.font_bold, a.leading_snug]}>
-                    {view.title}
+                    numberOfLines={3}
+                    style={[a.text_sm, a.leading_snug, {maxWidth: 360}]}>
+                    {view.description}
                   </Text>
-                  {!!view.description && (
-                    <Text
-                      emoji
-                      numberOfLines={3}
-                      style={[a.text_sm, a.leading_snug, {maxWidth: 360}]}>
-                      {view.description}
-                    </Text>
-                  )}
-                </View>
-
-                {!!view.image && (
-                  <Image
-                    source={{uri: view.image}}
-                    contentFit="cover"
-                    style={[
-                      a.flex_shrink_0,
-                      a.rounded_lg,
-                      {width: 80, height: 80},
-                    ]}
-                    accessible={false}
-                    accessibilityIgnoresInvertColors
-                    loading="lazy"
-                    useAppleWebpCodec
-                  />
                 )}
               </View>
 
-              <DocumentStats view={view} />
+              {!!view.image && (
+                <Image
+                  source={{uri: view.image}}
+                  contentFit="cover"
+                  style={[
+                    a.flex_shrink_0,
+                    a.rounded_lg,
+                    {width: 80, height: 80},
+                  ]}
+                  accessible={false}
+                  accessibilityIgnoresInvertColors
+                  loading="lazy"
+                  useAppleWebpCodec
+                />
+              )}
             </View>
+
+            <DocumentStats view={view} />
           </View>
-        )}
+        </View>
       </Link>
 
       {hasMenu && (

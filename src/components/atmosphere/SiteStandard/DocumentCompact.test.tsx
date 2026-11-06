@@ -33,12 +33,20 @@ jest.mock('expo-image', () => ({Image: () => null}))
 jest.mock('#/components/Link', () => ({
   Link: ({
     children,
+    testID,
+    style,
   }: {
-    children: (state: {pressed: boolean}) => React.ReactNode
+    children: React.ReactNode
+    testID?: string
+    style?: object
   }) => {
     const {View} =
       jest.requireActual<typeof import('react-native')>('react-native')
-    return <View testID="link">{children({pressed: false})}</View>
+    return (
+      <View testID={testID} style={style}>
+        {children}
+      </View>
+    )
   },
 }))
 jest.mock('#/components/Typography', () => ({Text: () => null}))
@@ -72,13 +80,16 @@ const view = {
 
 type Json = {props: {style?: object}; children: Json[]}
 
-/** The link contains the padding; the menu is its direct sibling. */
+/**
+ * The link is the frame and contains the padding; the menu is its sibling in a
+ * plain wrapper.
+ */
 function parts() {
-  const frame = screen.toJSON() as unknown as Json
-  const link = frame.children[0]
+  const wrapper = screen.toJSON() as unknown as Json
+  const link = wrapper.children[0]
   const inset = link.children[0]
-  const menu = frame.children[1]
-  return {frame, link, inset, menu}
+  const menu = wrapper.children[1]
+  return {wrapper, link, inset, menu}
 }
 
 const flat = (style?: object) =>
@@ -93,10 +104,10 @@ describe('DocumentCompact', () => {
         containerStyle={[{paddingLeft: 4}, {paddingTop: 8}]}
       />,
     )
-    const {frame, inset} = parts()
+    const {wrapper, link, inset} = parts()
 
-    expect(flat(frame.props.style)).toMatchObject({margin: 1})
-    expect(flat(frame.props.style)).not.toHaveProperty('atom_border')
+    expect(flat(wrapper.props.style)).toMatchObject({margin: 1})
+    expect(flat(link.props.style)).not.toHaveProperty('atom_border')
     expect(flat(inset.props.style)).toEqual({paddingLeft: 4, paddingTop: 8})
     expect(screen.getByTestId('documentCompact')).toBeTruthy()
   })
@@ -111,11 +122,10 @@ describe('DocumentCompact', () => {
         paddingLeft: 4,
       }
       render(<Component view={view} containerStyle={containerStyle} />)
-      const {frame, link, inset, menu} = parts()
+      const {wrapper, inset, menu} = parts()
 
-      expect(link.props).toMatchObject({testID: 'link'})
       expect(flat(inset.props.style)).toMatchObject(containerStyle)
-      expect(frame.children).toHaveLength(2)
+      expect(wrapper.children).toHaveLength(2)
       expect(menu.props).toMatchObject({testID: 'menu'})
       expect(flat(menu.props.style)).toEqual({top: 8, right: 20})
     },
@@ -131,9 +141,9 @@ describe('DocumentCompact', () => {
 describe('DocumentCompactCard', () => {
   it('is framed and applies its default padding through the inset wrapper', () => {
     render(<DocumentCompactCard view={view} />)
-    const {frame, inset} = parts()
+    const {link, inset} = parts()
 
-    expect(flat(frame.props.style)).toMatchObject({
+    expect(flat(link.props.style)).toMatchObject({
       atom_border: true,
       atom_rounded_lg: true,
     })
