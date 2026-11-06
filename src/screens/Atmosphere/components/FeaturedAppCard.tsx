@@ -17,7 +17,7 @@ import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 const LOGO_SIZE = 56
 const BACKGROUND_BLUR_RADIUS = 50
-const BACKGROUND_OVERLAY_OPACITY = 0.7
+const BACKGROUND_OVERLAY_OPACITY = 0.85
 
 /**
  * Featured app card. Always renders in the opposite of the current theme so it
@@ -57,7 +57,8 @@ function CardContent({
   const {title} = app
 
   return (
-    <View style={[a.flex_grow, a.w_full, a.rounded_xl, a.overflow_hidden]}>
+    <View
+      style={[a.flex_grow, a.w_full, {borderRadius: 24}, a.overflow_hidden]}>
       <Image
         source={app.backgroundImage}
         contentFit="cover"
@@ -72,14 +73,14 @@ function CardContent({
           {opacity: BACKGROUND_OVERLAY_OPACITY},
         ]}
       />
-      <View style={[a.flex_grow, a.p_md, a.gap_md]}>
+      <View style={[a.flex_grow, a.p_lg, a.gap_md]}>
         <Image
           source={app.backgroundImage}
           contentFit="cover"
           style={[a.w_full, a.rounded_lg, {aspectRatio: 3}]}
           accessible={false}
         />
-        <View style={[a.flex_row, a.align_center, a.gap_md]}>
+        <View style={[a.flex_row, a.align_center, a.gap_md, a.pt_xs]}>
           {app.logo ? (
             <Image
               source={app.logo}
@@ -127,13 +128,13 @@ function CardContent({
             />
           ) : undefined}
         </View>
-        <View style={[a.flex_row, a.gap_sm, a.pt_xs]}>
+        <View style={[a.flex_row, a.gap_sm, a.pt_xs, a.mt_auto]}>
           <Link
             testID="featuredAppVisit"
             to={app.url}
             label={l`Visit ${title}`}
             size="small"
-            color="primary"
+            color="secondary_inverted"
             style={[a.flex_1, a.justify_center]}
             ref={galleryFocus?.focusRef}
             tabIndex={galleryFocus?.tabIndex}

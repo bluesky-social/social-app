@@ -14,6 +14,7 @@ import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ArrowIcon} from '#/compon
 import {isClickEventWithMetaKey, Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
 import {useAtmosphereAppCategories} from './appCategories'
 
@@ -72,7 +73,11 @@ function AppDialogInner({
         <Image
           source={app.banner}
           contentFit="cover"
-          style={[a.w_full, a.rounded_lg, {aspectRatio: 3}]}
+          style={[
+            a.w_full,
+            IS_NATIVE ? a.rounded_lg : a.rounded_md,
+            {aspectRatio: 3},
+          ]}
           accessible={false}
         />
       ) : undefined}

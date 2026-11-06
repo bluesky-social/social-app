@@ -20,7 +20,7 @@ export function FeaturedArticles({
 
   return (
     <View>
-      <View style={[a.pb_sm, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
+      <View style={[a.pb_sm]}>
         <ExploreSectionHeader title={l`Featured articles`} />
       </View>
       <View testID="atmosphereArticlesList">

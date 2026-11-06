@@ -89,7 +89,7 @@ export function AtmosphereExploreTab() {
       refreshControl={refreshControl}
       contentContainerStyle={[a.pb_xl]}>
       <ExploreGalleryBleed>
-        <View style={[a.gap_3xl, a.py_lg]}>
+        <View style={[a.gap_xl, a.py_lg]}>
           {isError ? (
             <View style={{paddingHorizontal: EXPLORE_SECTION_PADDING}}>
               {errorMessage}

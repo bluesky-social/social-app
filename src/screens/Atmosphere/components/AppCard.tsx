@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react/macro'
 
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {atoms as a, tokens, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {
@@ -16,7 +16,7 @@ import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 import {AppDialog} from './AppDialog'
 
-const LOGO_SIZE = 56
+const LOGO_SIZE = 40
 
 export function AppCard({
   app,
@@ -56,6 +56,7 @@ export function AppCard({
             <View
               style={[
                 a.flex_row,
+                a.align_start,
                 a.w_full,
                 a.gap_md,
                 a.p_md,
@@ -93,26 +94,19 @@ export function AppCard({
                     {app.description}
                   </Text>
                 ) : undefined}
+
+                {showFollowers && app.profile && moderationOpts ? (
+                  <View style={[a.pt_xs, a.pb_sm]}>
+                    <KnownFollowers
+                      profile={app.profile}
+                      moderationOpts={moderationOpts}
+                      minimal
+                      disableLink
+                    />
+                  </View>
+                ) : undefined}
               </View>
             </View>
-            {showFollowers && app.profile && moderationOpts ? (
-              <View
-                style={[
-                  a.pb_md,
-                  {
-                    paddingLeft:
-                      tokens.space.md +
-                      (app.logo ? LOGO_SIZE + tokens.space.md : 0),
-                  },
-                ]}>
-                <KnownFollowers
-                  profile={app.profile}
-                  moderationOpts={moderationOpts}
-                  minimal
-                  disableLink
-                />
-              </View>
-            ) : undefined}
           </View>
         )}
       </Button>
