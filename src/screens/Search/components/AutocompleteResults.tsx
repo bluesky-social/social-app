@@ -3,6 +3,7 @@ import {TouchableOpacity, View, type ViewStyle} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {getActorAutocompleteState} from '#/screens/Search/actorAutocomplete'
 import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
 import {atoms as a, native, useTheme} from '#/alf'
 import {type AutocompleteItem} from '#/components/Autocomplete'
@@ -21,6 +22,7 @@ let AutocompleteResults = ({
   onSubmit,
   onResultPress,
   onProfileClick,
+  onSelectSearchOperator,
 }: {
   items: AutocompleteItem[]
   isFetching: boolean
@@ -28,10 +30,16 @@ let AutocompleteResults = ({
   onSubmit: () => void
   onResultPress: () => void
   onProfileClick: (profile: bsky.profile.AnyProfileView) => void
+  onSelectSearchOperator: (
+    profile: bsky.profile.AnyProfileView,
+    position: number,
+  ) => void
 }): React.ReactNode => {
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
+  const operatorContext = getActorAutocompleteState(searchText).context
+  const isIncompleteOperator = operatorContext?.query === ''
 
   return (
     <>
@@ -45,16 +53,18 @@ let AutocompleteResults = ({
         <Layout.Content
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag">
-          <SearchLinkCard
-            label={l`Search for “${searchText}”`}
-            onPress={native(onSubmit)}
-            to={
-              IS_NATIVE
-                ? undefined
-                : `/search?q=${encodeURIComponent(searchText)}`
-            }
-            style={a.border_b}
-          />
+          {!isIncompleteOperator && (
+            <SearchLinkCard
+              label={l`Search for “${searchText}”`}
+              onPress={native(onSubmit)}
+              to={
+                IS_NATIVE
+                  ? undefined
+                  : `/search?q=${encodeURIComponent(searchText)}`
+              }
+              style={a.border_b}
+            />
+          )}
           {items.map((item, index) => {
             if (item.type !== 'profile') return null
             return (
@@ -62,7 +72,22 @@ let AutocompleteResults = ({
                 key={item.key}
                 profile={item.profile}
                 moderationOpts={moderationOpts}
-                onPress={() => {
+                accessibilityLabel={
+                  operatorContext
+                    ? l`Use ${item.profile.handle} as the search author`
+                    : undefined
+                }
+                accessibilityHint={
+                  operatorContext
+                    ? l`Completes the from search filter`
+                    : undefined
+                }
+                onPress={event => {
+                  if (operatorContext) {
+                    event.preventDefault()
+                    onSelectSearchOperator(item.profile, index)
+                    return false
+                  }
                   ax.metric('search:autocomplete:press', {
                     profileDid: item.profile.did,
                     position: index,
