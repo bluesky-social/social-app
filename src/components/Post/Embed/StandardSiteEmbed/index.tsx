@@ -18,7 +18,7 @@ import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
 import {StandardSite} from '#/components/icons/community/StandardSite'
 import {Link, type LinkProps} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
-import {matchStandardSitePublisher} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
+import {matchStandardSiteHostByPublication} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import {StandardSiteMetaRow} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow'
 import {StandardSiteThemeProvider} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteThemeProvider'
 import type * as ssTypes from '#/components/Post/Embed/StandardSiteEmbed/types'
@@ -464,7 +464,7 @@ export function SubscribeButton({
   const {t: l} = useLingui()
   const haptics = useHaptics()
 
-  const highlightedPublisher = matchStandardSitePublisher(view)
+  const highlightedPublisher = matchStandardSiteHostByPublication(view)
   const cta = highlightedPublisher
     ? l`Subscribe on ${highlightedPublisher.name}`
     : l`View publication`
