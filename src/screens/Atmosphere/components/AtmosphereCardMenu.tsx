@@ -52,16 +52,16 @@ export function AtmosphereCardMenu({
   author?: app.bsky.actor.defs.ProfileViewBasic
   galleryFocus?: ExploreGalleryFocusProps
   /**
-   * The distance from the top-right corner of the card
+   * Distance from the card's top edge.
    */
   offsetY?: number
   /**
-   * The distance from the top-right corner of the card
+   * Distance from the card's right edge.
    */
   offsetX?: number
   /**
-   * Applied last to the absolute wrapper, e.g. to override the default
-   * top/right inset.
+   * Extra `Menu.Item`s shown after the view/profile actions and before Report.
+   * Pass `Menu.Item`s directly; native menu groups drop any other children.
    */
   children?: React.ReactNode
 }) {
