@@ -220,17 +220,15 @@ function NotificationsTab({
   ])
 
   const onFocusCheckLatest = useNonReactiveCallback(() => {
-    // on focus, check for latest, but only invalidate if the user
-    // isnt scrolled down to avoid moving content underneath them
-    let currentIsScrolledDown
-    if (IS_NATIVE) {
-      currentIsScrolledDown = isScrolledDown
-    } else {
-      // On the web, this isn't always updated in time so
-      // we're just going to look it up synchronously.
-      currentIsScrolledDown = window.scrollY > 200
-    }
-    checkUnread({invalidate: !currentIsScrolledDown})
+    // On focus, only refresh the unread count/badge. Never truncate and
+    // reload the already-rendered list here: focus also fires when
+    // returning from a pushed child screen (e.g. a notification's detail
+    // view), and truncating+regrouping in that case can make already-visible
+    // notifications disappear, since the replacement page is built from an
+    // independently fetched window that may not line up with what's on
+    // screen. Refreshing the visible list is reserved for explicit user
+    // action (the "Load new notifications" button, or tapping the active tab).
+    checkUnread({invalidate: false})
   })
 
   // on-visible setup
