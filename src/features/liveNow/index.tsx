@@ -25,6 +25,7 @@ import {useAnalytics} from '#/analytics'
 import {
   getLiveNowHost,
   getLiveServiceNames,
+  isLiveNowHostAllowed,
   isStatusStillActive,
 } from '#/features/liveNow/utils'
 import {app, com} from '#/lexicons'
@@ -167,10 +168,15 @@ export function isStatusValidForViewers(
   try {
     const {host: liveDid} = new AtUri(status.uri)
     if (bsky.isType(app.bsky.embed.external.view, status.embed)) {
-      const host = getLiveNowHost(status.embed.external.uri)
+      const {hostname} = new URL(status.embed.external.uri)
       const exception = config.allowedHostsExceptionsByDid.get(liveDid)
-      const isValidException = exception ? exception.has(host) : false
-      const isValidForAnyone = config.defaultAllowedHosts.has(host)
+      const isValidException = exception
+        ? isLiveNowHostAllowed(hostname, exception)
+        : false
+      const isValidForAnyone = isLiveNowHostAllowed(
+        hostname,
+        config.defaultAllowedHosts,
+      )
       return isValidException || isValidForAnyone
     } else {
       return false

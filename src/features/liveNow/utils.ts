@@ -90,6 +90,26 @@ export function sanitizeLiveNowHost(hostname: string) {
 }
 
 /**
+ * Whether `hostname` is one of `hosts` or a subdomain of one, e.g.
+ * `www.twitch.tv` matches `twitch.tv`.
+ *
+ * For hosts that are registrable domains, which allowed Live Now hosts are,
+ * this gives the same answer as looking up the apex domain with
+ * `sanitizeLiveNowHost`, without parsing the public suffix list. That parse
+ * scans thousands of rules per call and showed up at 5-10% of JS time while
+ * rendering feeds, since statuses are validated per post, per render.
+ */
+export function isLiveNowHostAllowed(hostname: string, hosts: Set<string>) {
+  let candidate = hostname.toLowerCase()
+  while (true) {
+    if (hosts.has(candidate)) return true
+    const dot = candidate.indexOf('.')
+    if (dot === -1) return false
+    candidate = candidate.slice(dot + 1)
+  }
+}
+
+/**
  * Extracts the apex domain from a given URL, for use when matching allowed
  * Live Now hosts.
  */
