@@ -32,6 +32,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {useMarkJoinRequestsRead} from '#/state/queries/messages/mark-join-request-read'
 import {useSession} from '#/state/session'
+import {useDuoCompactHeader} from '#/view/shell/duoFoldedNavigation'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, web} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
@@ -104,6 +105,7 @@ function Inner({convoId}: {convoId: string}) {
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const isFocused = useIsFocused()
+  const compactHeader = useDuoCompactHeader()
   const {top: topInset} = useSafeAreaInsets()
   const {data: convoData} = useConvoQuery({convoId})
 
@@ -129,7 +131,12 @@ function Inner({convoId}: {convoId: string}) {
     return (
       <>
         <Layout.Center
-          style={[a.w_full, IS_LIQUID_GLASS && {paddingTop: topInset}]}>
+          style={[
+            a.w_full,
+            IS_LIQUID_GLASS && {
+              paddingTop: compactHeader?.topPadding ?? topInset,
+            },
+          ]}>
           <MessagesListHeader convo={convo} />
         </Layout.Center>
         <Error
@@ -170,6 +177,7 @@ function InnerReady({
   isDisabled: boolean
 }) {
   const navigation = useNavigation<NavigationProp>()
+  const compactHeader = useDuoCompactHeader()
   const {top: topInset} = useSafeAreaInsets()
   const [headerHeight, setHeaderHeight] = useState(0)
   const onHeaderLayout = (e: LayoutChangeEvent) => {
@@ -272,7 +280,12 @@ function InnerReady({
       {IS_LIQUID_GLASS ? (
         <ScrollEdgeEffect
           edge="top"
-          style={[a.absolute, a.w_full, a.z_10, {paddingTop: topInset}]}
+          style={[
+            a.absolute,
+            a.w_full,
+            a.z_10,
+            {paddingTop: compactHeader?.topPadding ?? topInset},
+          ]}
           onLayout={onHeaderLayout}>
           {header}
         </ScrollEdgeEffect>

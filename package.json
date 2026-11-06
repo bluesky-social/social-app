@@ -112,7 +112,10 @@
     "icons:generate": "node ./scripts/icons/generate.mts",
     "icons:check": "node ./scripts/icons/generate.mts --check",
     "icons:test": "node --test ./scripts/icons/lib.test.mts",
-    "prettier": "prettier --check ."
+    "prettier": "prettier --check .",
+    "test:duo-layout": "pnpm test --runInBand --watch=false src/view/shell/nativeTabBarVisibility.test.ts src/view/shell/duoFoldedNavigation.test.ts src/view/shell/Composer.ios.test.tsx",
+    "lint:duo-layout": "oxlint src/Navigation.tsx src/components/Layout/Header/index.tsx src/components/Layout/index.tsx src/components/Lightbox/chrome/Header.tsx src/components/dms/MessagesListHeader.tsx src/components/hooks/useHeaderOffset.ts src/screens/Messages/Conversation.tsx src/screens/Notifications/index.tsx src/screens/Profile/Header/Shell.tsx src/screens/Profile/Header/index.tsx src/screens/VideoFeed/components/Header.tsx src/screens/VideoFeed/index.tsx src/view/com/home/HomeHeaderLayoutMobile.tsx src/view/com/util/fab/FAB.tsx src/view/shell/bottom-bar/BottomBar.tsx src/view/shell/bottom-bar/BottomBarStyles.tsx src/view/shell/nativeTabBarVisibility.ts src/view/shell/nativeTabBarVisibility.test.ts src/view/shell/duoFoldedNavigation.ts src/view/shell/duoFoldedNavigation.test.ts src/view/shell/__fixtures__/headerEntry.ios.tsx",
+    "format:duo-layout": "prettier --write src/Navigation.tsx src/components/Layout/Header/index.tsx src/components/Layout/index.tsx src/components/Lightbox/chrome/Header.tsx src/components/dms/MessagesListHeader.tsx src/components/hooks/useHeaderOffset.ts src/screens/Messages/Conversation.tsx src/screens/Notifications/index.tsx src/screens/Profile/Header/Shell.tsx src/screens/Profile/Header/index.tsx src/screens/VideoFeed/components/Header.tsx src/screens/VideoFeed/index.tsx src/view/com/home/HomeHeaderLayoutMobile.tsx src/view/com/util/fab/FAB.tsx src/view/shell/bottom-bar/BottomBar.tsx src/view/shell/bottom-bar/BottomBarStyles.tsx src/view/shell/nativeTabBarVisibility.ts src/view/shell/nativeTabBarVisibility.test.ts src/view/shell/duoFoldedNavigation.ts src/view/shell/duoFoldedNavigation.test.ts src/view/shell/__fixtures__/headerEntry.ios.tsx package.json docs/duo-layout-reference.md"
   },
   "dependencies": {
     "@atproto/common-web": "0.5.10",

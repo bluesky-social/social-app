@@ -19,6 +19,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {useDuoCompactHeader} from '#/view/shell/duoFoldedNavigation'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Header} from '#/components/Layout'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -109,6 +110,7 @@ const MinimalHeader = memo(function MinimalHeader({
   hideBackButton?: boolean
 }) {
   const t = useTheme()
+  const compactHeader = useDuoCompactHeader()
   const insets = useSafeAreaInsets()
   const ctx = usePagerHeaderContext()
   const profile = useProfileShadow(profileUnshadowed)
@@ -185,7 +187,7 @@ const MinimalHeader = memo(function MinimalHeader({
           top: 0,
           left: 0,
           right: 0,
-          paddingTop: insets.top,
+          paddingTop: compactHeader?.topPadding ?? insets.top,
         },
         animatedStyle,
       ]}>

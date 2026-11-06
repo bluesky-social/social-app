@@ -13,6 +13,7 @@ describe('getNativeTabBarVisibility', () => {
   it('shows the tablet sidebar for regular signed-in routes', () => {
     expect(getNativeTabBarVisibility(base)).toEqual({
       showTabletSidebar: true,
+      showFoldedRightRail: false,
       hideTabBar: false,
     })
   })
@@ -25,6 +26,7 @@ describe('getNativeTabBarVisibility', () => {
   ])('hides tablet navigation during %s', (_surface, overrides) => {
     expect(getNativeTabBarVisibility({...base, ...overrides})).toEqual({
       showTabletSidebar: false,
+      showFoldedRightRail: false,
       hideTabBar: true,
     })
   })
@@ -32,6 +34,7 @@ describe('getNativeTabBarVisibility', () => {
   it('keeps the existing bottom-bar behavior for the video feed', () => {
     expect(getNativeTabBarVisibility({...base, isVideoFeed: true})).toEqual({
       showTabletSidebar: false,
+      showFoldedRightRail: false,
       hideTabBar: false,
     })
   })
@@ -39,7 +42,32 @@ describe('getNativeTabBarVisibility', () => {
   it('preserves phone-like navigation in compact windows', () => {
     expect(getNativeTabBarVisibility({...base, gtMobile: false})).toEqual({
       showTabletSidebar: false,
+      showFoldedRightRail: false,
       hideTabBar: false,
     })
+  })
+})
+
+describe('folded right navigation', () => {
+  const folded = {...base, gtMobile: false, foldedRightNavigation: true}
+
+  it('uses only the right rail for signed-in folded routes', () => {
+    expect(getNativeTabBarVisibility(folded)).toEqual({
+      showTabletSidebar: false,
+      showFoldedRightRail: true,
+      hideTabBar: false,
+    })
+  })
+
+  it.each([
+    {showLoggedOut: true},
+    {signupQueued: true},
+    {onboardingActive: true},
+    {hasSession: false},
+    {isVideoFeed: true},
+  ])('suppresses the rail on excluded surfaces: %o', overrides => {
+    expect(
+      getNativeTabBarVisibility({...folded, ...overrides}).showFoldedRightRail,
+    ).toBe(false)
   })
 })

@@ -1,4 +1,15 @@
-import {type JSX, useCallback, useEffect, useRef} from 'react'
+import {
+  createContext,
+  type JSX,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
+import {View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as Linking from 'expo-linking'
 import * as Notifications from 'expo-notifications'
 import {Referrer} from '@bsky.app/expo-bluesky-swiss-army'
@@ -84,6 +95,11 @@ import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
 import {DesktopLeftNav} from '#/view/shell/desktop/LeftNav'
+import {
+  DUO_NAV_RAIL_WIDTH,
+  DuoRightRailContext,
+  useDuoFoldedNavigation,
+} from '#/view/shell/duoFoldedNavigation'
 import {getNativeTabBarVisibility} from '#/view/shell/nativeTabBarVisibility'
 import {AtmosphereScreen} from '#/screens/Atmosphere'
 import {BookmarksScreen} from '#/screens/Bookmarks'
@@ -638,6 +654,8 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
   )
 }
 
+const FoldedRailWidthContext = createContext<(width: number) => void>(() => {})
+
 /**
  * The TabsNavigator is used by native mobile to represent the routes
  * in 3 distinct tab-stacks with a different root screen on each.
@@ -647,6 +665,7 @@ function TabsNavigator({
 }: {
   layout: React.ComponentProps<typeof Tab.Navigator>['layout']
 }) {
+  const [railWidth, setRailWidth] = useState(0)
   const tabBar = useCallback(
     (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
       <NativeTabBar {...props} />
@@ -655,41 +674,51 @@ function TabsNavigator({
   )
 
   return (
-    <Tab.Navigator
-      initialRouteName="HomeTab"
-      backBehavior="initialRoute"
-      screenOptions={{headerShown: false, lazy: true}}
-      tabBar={tabBar}
-      layout={layout}>
-      <Tab.Screen name="HomeTab" getComponent={() => HomeTabNavigator} />
-      <Tab.Screen name="SearchTab" getComponent={() => SearchTabNavigator} />
-      <Tab.Screen
-        name="MessagesTab"
-        getComponent={() => MessagesTabNavigator}
-      />
-      <Tab.Screen
-        name="NotificationsTab"
-        getComponent={() => NotificationsTabNavigator}
-      />
-      <Tab.Screen
-        name="MyProfileTab"
-        getComponent={() => MyProfileTabNavigator}
-      />
-      <Tab.Screen
-        name="AtmosphereTab"
-        getComponent={() => AtmosphereTabNavigator}
-      />
-      <Tab.Screen name="FeedsTab" getComponent={() => FeedsTabNavigator} />
-      <Tab.Screen name="ListsTab" getComponent={() => ListsTabNavigator} />
-      <Tab.Screen
-        name="BookmarksTab"
-        getComponent={() => BookmarksTabNavigator}
-      />
-      <Tab.Screen
-        name="SettingsTab"
-        getComponent={() => SettingsTabNavigator}
-      />
-    </Tab.Navigator>
+    <FoldedRailWidthContext.Provider value={setRailWidth}>
+      <DuoRightRailContext.Provider value={railWidth > 0}>
+        <Tab.Navigator
+          initialRouteName="HomeTab"
+          backBehavior="initialRoute"
+          screenOptions={{headerShown: false, lazy: true}}
+          tabBar={tabBar}
+          screenLayout={({children}) => (
+            <View style={{flex: 1, paddingRight: railWidth}}>{children}</View>
+          )}
+          layout={layout}>
+          <Tab.Screen name="HomeTab" getComponent={() => HomeTabNavigator} />
+          <Tab.Screen
+            name="SearchTab"
+            getComponent={() => SearchTabNavigator}
+          />
+          <Tab.Screen
+            name="MessagesTab"
+            getComponent={() => MessagesTabNavigator}
+          />
+          <Tab.Screen
+            name="NotificationsTab"
+            getComponent={() => NotificationsTabNavigator}
+          />
+          <Tab.Screen
+            name="MyProfileTab"
+            getComponent={() => MyProfileTabNavigator}
+          />
+          <Tab.Screen
+            name="AtmosphereTab"
+            getComponent={() => AtmosphereTabNavigator}
+          />
+          <Tab.Screen name="FeedsTab" getComponent={() => FeedsTabNavigator} />
+          <Tab.Screen name="ListsTab" getComponent={() => ListsTabNavigator} />
+          <Tab.Screen
+            name="BookmarksTab"
+            getComponent={() => BookmarksTabNavigator}
+          />
+          <Tab.Screen
+            name="SettingsTab"
+            getComponent={() => SettingsTabNavigator}
+          />
+        </Tab.Navigator>
+      </DuoRightRailContext.Provider>
+    </FoldedRailWidthContext.Provider>
   )
 }
 
@@ -729,26 +758,36 @@ function SettingsTabNavigator() {
 }
 
 function NativeTabBar(props: BottomTabBarProps) {
+  const foldedRightNavigation = useDuoFoldedNavigation()
+  const insets = useSafeAreaInsets()
+  const setRailWidth = useContext(FoldedRailWidthContext)
   const {gtMobile} = useBreakpoints()
   const {hasSession, currentAccount} = useSession()
   const onboardingState = useOnboardingState()
   const {showLoggedOut} = useLoggedOutView()
   const {footerHeight} = useShellLayout()
   const currentRouteName = getCurrentRoute(props.state).name
-  const {showTabletSidebar, hideTabBar} = getNativeTabBarVisibility({
-    gtMobile,
-    hasSession,
-    signupQueued: !!currentAccount?.signupQueued,
-    showLoggedOut,
-    onboardingActive: onboardingState.isActive,
-    isVideoFeed: currentRouteName === 'VideoFeed',
-  })
+  const {showTabletSidebar, showFoldedRightRail, hideTabBar} =
+    getNativeTabBarVisibility({
+      foldedRightNavigation,
+      gtMobile,
+      hasSession,
+      signupQueued: !!currentAccount?.signupQueued,
+      showLoggedOut,
+      onboardingActive: onboardingState.isActive,
+      isVideoFeed: currentRouteName === 'VideoFeed',
+    })
+
+  useLayoutEffect(() => {
+    setRailWidth(showFoldedRightRail ? DUO_NAV_RAIL_WIDTH + insets.right : 0)
+    return () => setRailWidth(0)
+  }, [showFoldedRightRail, insets.right, setRailWidth])
 
   useEffect(() => {
-    if (showTabletSidebar || hideTabBar) {
+    if (showTabletSidebar || showFoldedRightRail || hideTabBar) {
       footerHeight.set(0)
     }
-  }, [showTabletSidebar, hideTabBar, footerHeight])
+  }, [showTabletSidebar, showFoldedRightRail, hideTabBar, footerHeight])
 
   const onNavigateTab = (tab: SidebarTab) => {
     const state = props.navigation.getState()
@@ -788,7 +827,7 @@ function NativeTabBar(props: BottomTabBarProps) {
     )
   }
 
-  return <BottomBar {...props} />
+  return <BottomBar {...props} sideRail={showFoldedRightRail} />
 }
 
 function screenOptions(t: Theme) {
