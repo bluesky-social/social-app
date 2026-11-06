@@ -25,6 +25,11 @@
       "onFail": "download"
     }
   },
+  "reanimated": {
+    "staticFeatureFlags": {
+      "IOS_SYNCHRONOUSLY_UPDATE_UI_PROPS": true
+    }
+  },
   "expo": {
     "autolinking": {
       "android": {
