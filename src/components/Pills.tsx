@@ -28,23 +28,36 @@ export type CommonProps = {
   size?: 'sm' | 'lg'
 }
 
+/**
+ * Pill spacing within a Row, by size. Exported so PostAlerts can include the
+ * gap when computing how many pills fit on a line.
+ */
+export const ROW_GAP = {
+  sm: 3,
+  lg: 5,
+} as const
+
 export function Row({
   children,
   style,
   size = 'sm',
-}: {children: React.ReactNode | React.ReactNode[]} & CommonProps &
+  ref,
+}: {
+  children: React.ReactNode | React.ReactNode[]
+  ref?: React.Ref<View>
+} & CommonProps &
   ViewStyleProp) {
   const styles = useMemo(() => {
     switch (size) {
       case 'lg':
-        return [{gap: 5}]
+        return [{gap: ROW_GAP.lg}]
       case 'sm':
       default:
-        return [{gap: 3}]
+        return [{gap: ROW_GAP.sm}]
     }
   }, [size])
   return (
-    <View style={[a.flex_row, a.flex_wrap, a.gap_xs, styles, style]}>
+    <View ref={ref} style={[a.flex_row, a.flex_wrap, a.gap_xs, styles, style]}>
       {children}
     </View>
   )
