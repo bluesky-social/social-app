@@ -199,7 +199,13 @@ function KnownFollowersInner({
           },
         ]}
         numberOfLines={2}>
-        {slice.length >= 2 ? (
+        {minimal ? (
+          <Plural
+            value={serverCount}
+            one="# follower you know"
+            other="# followers you know"
+          />
+        ) : slice.length >= 2 ? (
           // 2-n followers, including blocks
           // only 2
           serverCount > 2 ? (

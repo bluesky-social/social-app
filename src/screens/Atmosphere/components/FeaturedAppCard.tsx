@@ -110,22 +110,24 @@ function CardContent({
             </View>
           </View>
         </View>
-        {app.description ? (
-          <Text
-            emoji
-            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}
-            numberOfLines={2}>
-            {app.description}
-          </Text>
-        ) : undefined}
-        {profile && moderationOpts ? (
-          <KnownFollowers
-            profile={profile}
-            moderationOpts={moderationOpts}
-            minimal
-          />
-        ) : undefined}
-        <View style={[a.flex_row, a.gap_sm, a.mt_auto]}>
+        <View style={[a.gap_sm]}>
+          {app.description ? (
+            <Text
+              emoji
+              style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}
+              numberOfLines={2}>
+              {app.description}
+            </Text>
+          ) : undefined}
+          {profile && moderationOpts ? (
+            <KnownFollowers
+              profile={profile}
+              moderationOpts={moderationOpts}
+              minimal
+            />
+          ) : undefined}
+        </View>
+        <View style={[a.flex_row, a.gap_sm, a.pt_xs]}>
           <Link
             testID="featuredAppVisit"
             to={app.url}
