@@ -128,7 +128,13 @@ export function ProfileLinkPill({
 
   if (opensLink) {
     return (
-      <Link {...props} to={link.url} onPress={onPress} shouldProxy>
+      <Link
+        {...props}
+        to={link.url}
+        // a custom title can hide the destination, so warn when it doesn't match
+        displayText={link.title}
+        onPress={onPress}
+        shouldProxy>
         {content}
       </Link>
     )
