@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react'
-import {Pressable, View} from 'react-native'
+import {type LayoutChangeEvent, Pressable, View} from 'react-native'
 import {
   useKeyboardHandler,
   useReanimatedKeyboardAnimation,
@@ -46,6 +46,7 @@ const MIN_HEIGHT = 40
 
 export function MessageComposer({
   textInputId,
+  onWillSendMessage,
   onSendMessage,
   messageEmbed,
   setEmbed,
@@ -53,6 +54,12 @@ export function MessageComposer({
   loading = false,
 }: {
   textInputId?: string
+  /**
+   * Called synchronously when a send is accepted, just before the input
+   * clears, with how much shorter the composer is about to get (0 if it can't
+   * tell yet, e.g. it's never been laid out with a single line).
+   */
+  onWillSendMessage?: (composerShrink: number) => void
   onSendMessage: (
     message: string,
     embed?: MessageEmbedState,
@@ -115,6 +122,25 @@ export function MessageComposer({
    */
   const isSubmittingRef = useRef(false)
 
+  /*
+   * The composer's height now, and its smallest height with nothing attached
+   * - one line, which is what it shrinks back to after a send.
+   */
+  const heights = useRef<{current: number; collapsed: number | null}>({
+    current: 0,
+    collapsed: null,
+  })
+  const onLayout = (event: LayoutChangeEvent) => {
+    const height = event.nativeEvent.layout.height
+    heights.current.current = height
+    if (!messageEmbed && !replyTo) {
+      heights.current.collapsed = Math.min(
+        heights.current.collapsed ?? height,
+        height,
+      )
+    }
+  }
+
   const onSubmit = (
     message: string,
     embed: MessageEmbedState | undefined,
@@ -133,6 +159,18 @@ export function MessageComposer({
     }
 
     isSubmittingRef.current = true
+    /*
+     * Only predict a text-only shrink. Clearing the text is near-instant, but
+     * a reply or embed preview goes away with a re-render that lands a few
+     * frames later - predicting that would move the list ahead of the
+     * composer, so let the list follow its real layout instead.
+     */
+    const {current, collapsed} = heights.current
+    onWillSendMessage?.(
+      collapsed === null || embed || replyTo
+        ? 0
+        : Math.max(0, current - collapsed),
+    )
     clearDraft()
     haptics.confirm()
     setEmbed(undefined)
@@ -202,6 +240,7 @@ export function MessageComposer({
     <ComposerContainer>
       <View
         collapsable={false}
+        onLayout={onLayout}
         ref={native(
           (node: React.ComponentRef<typeof View>) =>
             void composerInternalApiRef.current?.setAutocompleteAnchor(node),
