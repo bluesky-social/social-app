@@ -1,4 +1,4 @@
-import {type JSX, useCallback} from 'react'
+import {createContext, type JSX, useCallback, useContext, useState} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -14,11 +14,15 @@ import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useHideBottomBarBorder} from '#/lib/hooks/useHideBottomBarBorder'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {clamp} from '#/lib/numbers'
-import {getTabState, TabState} from '#/lib/routes/helpers'
+import {getCurrentRoute, getTabState, TabState} from '#/lib/routes/helpers'
 import {type SharedNavTab, TAB_TO_NAV_ITEM} from '#/lib/routes/tab-to-nav-item'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
+import {isInvalidHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
 import {useHomeBadge} from '#/state/home-badge'
+import {useFetchHandle} from '#/state/queries/handle'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
@@ -30,8 +34,9 @@ import {useCloseAllActiveElements} from '#/state/util'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {DUO_NAV_RAIL_WIDTH} from '#/view/shell/duoFoldedNavigation'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {
@@ -39,6 +44,7 @@ import {
   Bell_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
 import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilled,
   HomeOpen_Stoke2_Corner0_Rounded as Home,
@@ -62,8 +68,45 @@ import {useActorStatus} from '#/features/liveNow'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {styles} from './BottomBarStyles'
 
-export function BottomBar({navigation}: BottomTabBarProps) {
+const SideRailContext = createContext(false)
+
+export function BottomBar({
+  navigation,
+  sideRail = false,
+}: BottomTabBarProps & {sideRail?: boolean}) {
   const {hasSession, currentAccount} = useSession()
+  const {openComposer} = useOpenComposer()
+  const fetchHandle = useFetchHandle()
+  const [isPreparingCompose, setIsPreparingCompose] = useState(false)
+
+  const onPressCompose = async () => {
+    if (isPreparingCompose) return
+    let mention: string | undefined
+    const route = getCurrentRoute(navigation.getState())
+    if (route.name === 'Profile') {
+      mention = (route.params as CommonNavigatorParams['Profile']).name
+      if (mention.startsWith('did:')) {
+        setIsPreparingCompose(true)
+        try {
+          mention = await fetchHandle(mention)
+        } catch {
+          mention = undefined
+        } finally {
+          setIsPreparingCompose(false)
+        }
+      }
+      if (
+        mention === currentAccount?.handle ||
+        (mention && isInvalidHandle(mention))
+      ) {
+        mention = undefined
+      }
+    }
+    openComposer({
+      mention,
+      logContext: route.name === 'Profile' ? 'ProfileFeed' : 'Fab',
+    })
+  }
   const t = useTheme()
   const {t: l} = useLingui()
   const ax = useAnalytics()
@@ -161,10 +204,11 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const isLabeler = profile?.associated?.labeler
 
   return (
-    <>
+    <SideRailContext.Provider value={sideRail}>
       <SwitchAccountDialog control={accountSwitchControl} />
       <MessagesTabMenu control={messagesMenuControl} />
       <Animated.View
+        key={sideRail ? 'right-rail' : 'bottom-bar'}
         style={[
           styles.bottomBar,
           t.atoms.bg,
@@ -172,10 +216,20 @@ export function BottomBar({navigation}: BottomTabBarProps) {
             ? {borderColor: t.atoms.bg.backgroundColor}
             : t.atoms.border_contrast_low,
           {paddingBottom: clamp(safeAreaInsets.bottom, 15, 60)},
-          footerMinimalShellTransform,
+          sideRail
+            ? [
+                styles.sideRail,
+                {
+                  width: DUO_NAV_RAIL_WIDTH + safeAreaInsets.right,
+                  paddingTop: safeAreaInsets.top,
+                  paddingBottom: safeAreaInsets.bottom,
+                  paddingRight: safeAreaInsets.right,
+                },
+              ]
+            : footerMinimalShellTransform,
         ]}
         onLayout={e => {
-          footerHeight.set(e.nativeEvent.layout.height)
+          footerHeight.set(sideRail ? 0 : e.nativeEvent.layout.height)
         }}>
         {hasSession ? (
           <>
@@ -326,6 +380,20 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               accessibilityLabel={l`Profile`}
               accessibilityHint=""
             />
+            {sideRail && (
+              <View style={{alignItems: 'center', paddingTop: 12}}>
+                <Button
+                  testID="rightRailComposeBtn"
+                  label={l`Compose new post`}
+                  onPress={() => void onPressCompose()}
+                  disabled={isPreparingCompose}
+                  size="large"
+                  shape="round"
+                  color="primary">
+                  <ButtonIcon icon={EditBigIcon} size="lg" />
+                </Button>
+              </View>
+            )}
           </>
         ) : (
           <>
@@ -373,7 +441,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
           </>
         )}
       </Animated.View>
-    </>
+    </SideRailContext.Provider>
   )
 }
 
@@ -404,11 +472,12 @@ function Btn({
   accessibilityLabel,
 }: BtnProps) {
   const t = useTheme()
+  const sideRail = useContext(SideRailContext)
 
   return (
     <PressableScale
       testID={testID}
-      style={[styles.ctrl, a.flex_1]}
+      style={[styles.ctrl, a.flex_1, sideRail && styles.sideRailControl]}
       onPress={onPress}
       onLongPress={onLongPress}
       accessible={accessible}

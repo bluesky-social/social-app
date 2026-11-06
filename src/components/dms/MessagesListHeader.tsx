@@ -54,10 +54,10 @@ export function MessagesListHeader({convo}: {convo?: ConvoWithDetails | null}) {
                   t.atoms.bg_contrast_25,
                 ]}
               />
-              <View style={a.gap_xs}>
+              <View style={[a.gap_xs, a.flex_1]}>
                 <View
                   style={[
-                    {width: 150, height: 16},
+                    {width: '100%', height: 16},
                     a.rounded_xs,
                     t.atoms.bg_contrast_25,
                     a.mt_xs,

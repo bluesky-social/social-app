@@ -5,6 +5,7 @@ export function getNativeTabBarVisibility({
   showLoggedOut,
   onboardingActive,
   isVideoFeed,
+  foldedRightNavigation = false,
 }: {
   gtMobile: boolean
   hasSession: boolean
@@ -12,12 +13,16 @@ export function getNativeTabBarVisibility({
   showLoggedOut: boolean
   onboardingActive: boolean
   isVideoFeed: boolean
+  foldedRightNavigation?: boolean
 }) {
   const isAuthSurface =
     !hasSession || signupQueued || showLoggedOut || onboardingActive
 
   return {
-    showTabletSidebar: gtMobile && !isAuthSurface && !isVideoFeed,
+    showTabletSidebar:
+      gtMobile && !foldedRightNavigation && !isAuthSurface && !isVideoFeed,
+    showFoldedRightRail:
+      foldedRightNavigation && !isAuthSurface && !isVideoFeed,
     hideTabBar: gtMobile && isAuthSurface,
   }
 }

@@ -15,6 +15,7 @@ import {useSession} from '#/state/session'
 import {useShellHeaderLayout} from '#/state/shell/shell-layout'
 import {useHomeHeaderTransform} from '#/view/com/util/MainScrollProvider'
 import {Logo} from '#/view/icons/Logo'
+import {useDuoCompactHeader} from '#/view/shell/duoFoldedNavigation'
 import {
   atoms as a,
   useBreakpoints,
@@ -35,6 +36,7 @@ export function HomeHeaderLayoutMobile({
   children: React.ReactNode
   tabBarAnchor: React.ReactElement | null | undefined
 }) {
+  const compactHeader = useDuoCompactHeader()
   const t = useTheme()
   const {_} = useLingui()
   const ax = useAnalytics()
@@ -71,7 +73,7 @@ export function HomeHeaderLayoutMobile({
           t.atoms.bg,
           {top: 0},
           widthStyle,
-          IS_NATIVE && {paddingTop: insets.top},
+          IS_NATIVE && {paddingTop: compactHeader?.topPadding ?? insets.top},
           headerMinimalShellTransform,
         ]}
         onLayout={onLayout}>

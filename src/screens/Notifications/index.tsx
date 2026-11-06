@@ -39,6 +39,7 @@ import {
   useHomeHeaderMode,
 } from '#/view/com/util/MainScrollProvider'
 import {NotificationsScreen as LegacyNotificationsScreen} from '#/view/screens/Notifications'
+import {useDuoCompactHeader} from '#/view/shell/duoFoldedNavigation'
 import {PageList} from '#/screens/Notifications/components/PageList'
 import * as Pager from '#/screens/Notifications/components/PagerView'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
@@ -560,6 +561,7 @@ function NotificationsHeader({
   const headerMode = useHomeHeaderMode()
   const {selectedPage} = Pager.usePager()
   const {gtMobile} = useBreakpoints()
+  const compactHeader = useDuoCompactHeader()
   const insets = useSafeAreaInsets()
   const headerPinnedHeight = IS_NATIVE ? insets.top : 0
 
@@ -646,7 +648,10 @@ function NotificationsHeader({
         </Animated.View>
       )}
       <Animated.View
-        style={[IS_NATIVE && {paddingTop: insets.top}, titleStyle]}
+        style={[
+          IS_NATIVE && {paddingTop: compactHeader?.topPadding ?? insets.top},
+          titleStyle,
+        ]}
         onLayout={onTitleLayout}>
         {IS_WEB && (
           <Layout.Center
