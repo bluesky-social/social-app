@@ -1,6 +1,7 @@
 import {init} from '@sentry/browser'
 
 import {featureFlagsIntegration} from '#/logger/sentry/featureFlags'
+import {dropInjectedScriptErrors} from '#/logger/sentry/injectedScriptErrors'
 import {dropExpectedNetworkErrors} from '#/logger/sentry/network-errors'
 import * as env from '#/env'
 
@@ -19,7 +20,8 @@ init({
   environment: env.ENV,
   dist: env.BUNDLE_IDENTIFIER,
   release: env.SENTRY_RELEASE,
-  beforeSend: dropExpectedNetworkErrors,
+  beforeSend: (event, hint) =>
+    dropExpectedNetworkErrors(event, hint) && dropInjectedScriptErrors(event),
   ignoreErrors: [
     /*
      * Unknown internals errors
