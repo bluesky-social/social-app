@@ -1,6 +1,7 @@
-import {StyleSheet, Text} from 'react-native'
+import {StyleSheet} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
+import * as Menu from '#/components/Menu'
 import {type app, place, site, social} from '#/lexicons'
 import {AtmosphereCardMenu} from '../AtmosphereCardMenu'
 
@@ -28,9 +29,9 @@ jest.mock('#/components/moderation/ReportDialog', () => ({
     typeof import('#/components/moderation/ReportDialog/utils/parseReportSubject')
   >('#/components/moderation/ReportDialog/utils/parseReportSubject')
     .getAssociatedReportSubjects,
-  useCopyForSubject: jest.requireActual<
+  useGetCopyForSubject: jest.requireActual<
     typeof import('#/components/moderation/ReportDialog/copy')
-  >('#/components/moderation/ReportDialog/copy').useCopyForSubject,
+  >('#/components/moderation/ReportDialog/copy').useGetCopyForSubject,
   useGlobalReportDialogControl: () => ({open: mockOpenReport}),
 }))
 jest.mock('#/components/Button', () => {
@@ -62,6 +63,30 @@ jest.mock('#/components/icons/Warning', () => ({
 jest.mock('#/components/Menu', () => {
   const {Pressable, Text, View} =
     jest.requireActual<typeof import('react-native')>('react-native')
+  const {Children, isValidElement} =
+    jest.requireActual<typeof import('react')>('react')
+  /* Lowercase so the React Compiler doesn't instrument it inside the factory. */
+  const menuItem = ({
+    children,
+    label,
+    disabled,
+    onPress,
+  }: {
+    children: React.ReactNode
+    label: string
+    disabled?: boolean
+    onPress: () => void
+  }) => (
+    <Pressable
+      accessibilityRole="menuitem"
+      accessibilityHint=""
+      accessibilityLabel={label}
+      accessibilityState={{disabled: !!disabled}}
+      disabled={disabled}
+      onPress={onPress}>
+      {children}
+    </Pressable>
+  )
   return {
     Root: ({children}: {children: React.ReactNode}) => children,
     Trigger: ({
@@ -76,29 +101,19 @@ jest.mock('#/components/Menu', () => {
       </View>
     ),
     Outer: ({children}: {children: React.ReactNode}) => <View>{children}</View>,
-    Group: ({children}: {children: React.ReactNode}) => <View>{children}</View>,
-    Divider: () => <View testID="divider" />,
-    Item: ({
-      children,
-      label,
-      disabled,
-      onPress,
-    }: {
-      children: React.ReactNode
-      label: string
-      disabled?: boolean
-      onPress: () => void
-    }) => (
-      <Pressable
-        accessibilityRole="menuitem"
-        accessibilityHint=""
-        accessibilityLabel={label}
-        accessibilityState={{disabled: !!disabled}}
-        disabled={disabled}
-        onPress={onPress}>
-        {children}
-      </Pressable>
+    /*
+     * Mirrors the native Group, which drops any child that isn't a direct
+     * Menu.Item, so wrapped items fail here as they would on device.
+     */
+    Group: ({children}: {children: React.ReactNode}) => (
+      <View>
+        {Children.toArray(children).filter(
+          child => isValidElement(child) && child.type === menuItem,
+        )}
+      </View>
     ),
+    Divider: () => <View testID="divider" />,
+    Item: menuItem,
     ItemText: Text,
     ItemIcon: ({icon}: {icon: {name: string}}) => (
       <Text testID="menuIcon">{icon.name}</Text>
@@ -310,11 +325,9 @@ it('places extra children after the profile item and before Report', () => {
   renderMenu(
     'article',
     {},
-    <Text
-      accessibilityRole="menuitem"
-      accessibilityLabel="Extra"
-      accessibilityHint=""
-    />,
+    <Menu.Item label="Extra" onPress={() => {}}>
+      <Menu.ItemText>Extra</Menu.ItemText>
+    </Menu.Item>,
   )
 
   expect(

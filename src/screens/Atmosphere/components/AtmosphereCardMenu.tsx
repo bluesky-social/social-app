@@ -1,5 +1,4 @@
 import {View} from 'react-native'
-import {type $Typed} from '@atproto/lex'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -14,11 +13,10 @@ import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons
 import * as Menu from '#/components/Menu'
 import {
   getAssociatedReportSubjects,
-  useCopyForSubject,
+  useGetCopyForSubject,
   useGlobalReportDialogControl,
 } from '#/components/moderation/ReportDialog'
-import {type ParsedReportSubject} from '#/components/moderation/ReportDialog/types'
-import {type app, type com} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 const BUTTON_VISUAL_ADJUSTMENT = 4
@@ -70,6 +68,8 @@ export function AtmosphereCardMenu({
   const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const openLink = useOpenLink()
+  const reportDialogControl = useGlobalReportDialogControl()
+  const getReportCopy = useGetCopyForSubject()
   let labels: {trigger: string; view: string; report: string}
   switch (type) {
     case 'article':
@@ -159,13 +159,23 @@ export function AtmosphereCardMenu({
           <Menu.Divider />
           <Menu.Group>
             {reportTargets.length ? (
-              reportTargets.map(({subject, parsedSubject}) => (
-                <ReportItem
-                  key={subject.uri}
-                  subject={subject}
-                  parsedSubject={parsedSubject}
-                />
-              ))
+              reportTargets.map(({subject, parsedSubject}) => {
+                /*
+                 * Titled like the report dialog it opens, so the menu and
+                 * dialog always agree. Rendered inline because the native
+                 * Menu.Group only renders direct Menu.Item children.
+                 */
+                const {title} = getReportCopy(parsedSubject)
+                return (
+                  <Menu.Item
+                    key={subject.uri}
+                    label={title}
+                    onPress={() => reportDialogControl.open({subject})}>
+                    <Menu.ItemText>{title}</Menu.ItemText>
+                    <Menu.ItemIcon icon={WarningIcon} position="right" />
+                  </Menu.Item>
+                )
+              })
             ) : (
               <Menu.Item label={labels.report} disabled onPress={() => {}}>
                 <Menu.ItemText>{labels.report}</Menu.ItemText>
@@ -176,29 +186,5 @@ export function AtmosphereCardMenu({
         </Menu.Outer>
       </Menu.Root>
     </View>
-  )
-}
-
-/**
- * Titled like the report dialog it opens, so the menu and dialog always agree.
- * A component of its own because the copy is a hook, one per record.
- */
-function ReportItem({
-  subject,
-  parsedSubject,
-}: {
-  subject: $Typed<com.atproto.repo.strongRef.Main>
-  parsedSubject: ParsedReportSubject
-}) {
-  const reportDialogControl = useGlobalReportDialogControl()
-  const {title} = useCopyForSubject(parsedSubject)
-
-  return (
-    <Menu.Item
-      label={title}
-      onPress={() => reportDialogControl.open({subject})}>
-      <Menu.ItemText>{title}</Menu.ItemText>
-      <Menu.ItemIcon icon={WarningIcon} position="right" />
-    </Menu.Item>
   )
 }

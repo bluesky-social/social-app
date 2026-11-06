@@ -65,7 +65,7 @@ import {
   useReportOptions,
 } from './utils/useReportOptions'
 
-export {useCopyForSubject} from './copy'
+export {useCopyForSubject, useGetCopyForSubject} from './copy'
 export {type ReportSubject} from './types'
 export {
   getAssociatedReportSubjects,

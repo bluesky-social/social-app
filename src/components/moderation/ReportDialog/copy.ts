@@ -1,11 +1,18 @@
-import {useMemo} from 'react'
 import {useLingui} from '@lingui/react/macro'
 
 import {type ParsedReportSubject} from './types'
 
 export function useCopyForSubject(subject: ParsedReportSubject) {
+  return useGetCopyForSubject()(subject)
+}
+
+/**
+ * Returns a getter for report copy, for callers that need copy for several
+ * subjects at once, e.g. one menu item per reportable record.
+ */
+export function useGetCopyForSubject() {
   const {t: l} = useLingui()
-  return useMemo(() => {
+  return (subject: ParsedReportSubject) => {
     switch (subject.type) {
       case 'account': {
         return {
@@ -103,5 +110,5 @@ export function useCopyForSubject(subject: ParsedReportSubject) {
         }
       }
     }
-  }, [l, subject])
+  }
 }
