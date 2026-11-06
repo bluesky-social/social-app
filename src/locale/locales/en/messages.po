@@ -6142,7 +6142,7 @@ msgstr ""
 msgid "Feed by {authorName}"
 msgstr "Feed by {authorName}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/media.tsx:225
+#: src/screens/Notifications/components/NotificationItem/Item/media.tsx:263
 msgid "Feed by {handle}"
 msgstr "Feed by {handle}"
 
