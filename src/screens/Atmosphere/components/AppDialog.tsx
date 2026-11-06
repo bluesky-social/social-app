@@ -67,7 +67,7 @@ function AppDialogInner({
   }
 
   return (
-    <View style={[a.gap_lg]}>
+    <View style={[a.gap_md]}>
       {app.banner ? (
         <Image
           source={app.banner}
@@ -76,7 +76,7 @@ function AppDialogInner({
           accessible={false}
         />
       ) : undefined}
-      <View style={[a.flex_row, a.gap_md]}>
+      <View style={[a.flex_row, a.gap_md, a.pt_xs]}>
         {app.logo ? (
           <View style={[a.relative, a.rounded_md, {width: LOGO_SIZE}]}>
             <Image

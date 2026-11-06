@@ -95,14 +95,8 @@ export function AppCard({
                 ) : undefined}
               </View>
             </View>
-            {/*
-             * KnownFollowers contains its own link. It is display-only here so
-             * the whole card opens the dialog instead.
-             */}
             {showFollowers && app.profile && moderationOpts ? (
               <View
-                pointerEvents="none"
-                aria-hidden
                 style={[
                   a.pb_md,
                   {
@@ -115,6 +109,7 @@ export function AppCard({
                   profile={app.profile}
                   moderationOpts={moderationOpts}
                   minimal
+                  disableLink
                 />
               </View>
             ) : undefined}
