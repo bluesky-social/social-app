@@ -9,6 +9,7 @@ import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useSession} from '#/state/session'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
+import {useComposerState} from '#/state/shell/composer'
 import {useCloseAllActiveElements} from '#/state/util'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Deactivated} from '#/screens/Deactivated'
@@ -41,6 +42,7 @@ import {DrawerContent} from './Drawer'
 function ShellInner() {
   const navigator = useNavigation<NavigationProp>()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const isComposerOpen = !!useComposerState()
   const {state: policyUpdateState} = usePolicyUpdateContext()
   const welcomeModalControl = useWelcomeModal()
 
@@ -48,10 +50,15 @@ function ShellInner() {
 
   useEffect(() => {
     const unsubscribe = navigator.addListener('state', () => {
+      /*
+       * The composer handles browser back itself so it can prompt to save a
+       * draft, rather than being closed and losing its content.
+       */
+      if (isComposerOpen) return
       closeAllActiveElements()
     })
     return unsubscribe
-  }, [navigator, closeAllActiveElements])
+  }, [navigator, closeAllActiveElements, isComposerOpen])
 
   const drawerLayout = useCallback(
     ({children}: {children: React.ReactNode}) => (

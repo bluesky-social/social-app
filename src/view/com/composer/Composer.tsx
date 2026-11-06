@@ -879,34 +879,45 @@ export const ComposePost = ({
     [insets.top, insets.bottom],
   )
 
+  const hasContent = thread.posts.some(
+    post =>
+      post.shortenedGraphemeLength > 0 || post.embed.media || post.embed.link,
+  )
+  /*
+   * Unsaved if there's content AND either:
+   * - No draft is loaded (new composition)
+   * - Draft is loaded but has been modified
+   */
+  const hasUnsavedChanges =
+    hasContent && (!composerState.draftId || composerState.isDirty)
+
   const onPressCancel = useCallback(() => {
     if (textInputRef.current?.maybeClosePopup()) {
       return
     }
 
-    const hasContent = thread.posts.some(
-      post =>
-        post.shortenedGraphemeLength > 0 || post.embed.media || post.embed.link,
-    )
-
-    // Show discard prompt if there's content AND either:
-    // - No draft is loaded (new composition)
-    // - Draft is loaded but has been modified
-    if (hasContent && (!composerState.draftId || composerState.isDirty)) {
+    if (hasUnsavedChanges) {
       closeAllDialogs()
       Keyboard.dismiss()
       discardPromptControl.open()
     } else {
       onClose()
     }
-  }, [
-    thread,
-    composerState.draftId,
-    composerState.isDirty,
-    closeAllDialogs,
-    discardPromptControl,
-    onClose,
-  ])
+  }, [hasUnsavedChanges, closeAllDialogs, discardPromptControl, onClose])
+
+  // 'You might lose unsaved changes' warning when leaving or reloading the page
+  useEffect(() => {
+    if (IS_WEB && hasUnsavedChanges) {
+      const abortController = new AbortController()
+      const {signal} = abortController
+      window.addEventListener('beforeunload', evt => evt.preventDefault(), {
+        signal,
+      })
+      return () => {
+        abortController.abort()
+      }
+    }
+  }, [hasUnsavedChanges])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
 
