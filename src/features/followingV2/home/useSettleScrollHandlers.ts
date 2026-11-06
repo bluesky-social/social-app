@@ -8,7 +8,8 @@ import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript
 import {scheduleOnRN} from 'react-native-worklets'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {SETTLE_AT_TOP_LIMIT, type SettleAtTopHandlers} from './useSettleAtTop'
+import {SETTLE_AT_TOP_LIMIT} from './atTop'
+import {type SettleAtTopHandlers} from './useSettleAtTop'
 
 /**
  * What the list reports on the JS thread: what {@link SettleAtTopHandlers}

@@ -105,6 +105,10 @@ export function FeedPage({
       getTabState(getRootNavigation(navigation).getState(), 'Home') ===
       TabState.InsideAtRoot
     if (isScreenFocused && isPageFocused) {
+      // A feed that stages new posts above the reader takes the press itself.
+      if (feedRef.current?.pressHome()) {
+        return
+      }
       scrollToTop()
       void feedRef.current?.refresh()
       setHasNew(false)
