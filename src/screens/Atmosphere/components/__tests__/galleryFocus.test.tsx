@@ -1,4 +1,4 @@
-import {StyleSheet, type ViewProps} from 'react-native'
+import {StyleSheet, type ViewProps, type ViewStyle} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {type app} from '#/lexicons'
@@ -17,6 +17,9 @@ jest.mock('#/alf', () => {
     flex_grow: {flexGrow: 1},
     absolute: {position: 'absolute'},
     z_10: {zIndex: 10},
+    // Real paddings, which the cards pass to their menus as offsets.
+    p_sm: {padding: 8},
+    p_md: {padding: 12},
   }
   const atoms = new Proxy(knownAtoms, {
     get: (target, name) => target[name as keyof typeof target] ?? {},
@@ -326,7 +329,7 @@ describe.each(triggerCards)('%s menu trigger', (_name, renderCard) => {
     render(renderCard())
 
     const link = screen.getByTestId('link')
-    let wrapperStyle: ViewProps['style']
+    let wrapperStyle: ViewStyle | undefined
     let node = getTrigger().parent
     while (node) {
       expect(node).not.toBe(link)
@@ -335,6 +338,7 @@ describe.each(triggerCards)('%s menu trigger', (_name, renderCard) => {
       if (style?.position === 'absolute') wrapperStyle ??= style
       node = node.parent
     }
-    expect(wrapperStyle).toMatchObject({position: 'absolute', top: 8, right: 8})
+    expect(wrapperStyle?.top).toBeGreaterThan(0)
+    expect(wrapperStyle?.right).toBe(wrapperStyle?.top)
   })
 })

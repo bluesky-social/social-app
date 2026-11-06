@@ -180,14 +180,14 @@ function renderMenu(
   children?: React.ReactNode,
   reportableTypes: readonly string[] = [defaultReportableTypes[type]],
   withAuthor = true,
-  style?: React.ComponentProps<typeof AtmosphereCardMenu>['style'],
+  offsets: {offsetY?: number; offsetX?: number} = {},
 ) {
   const props = {
     type,
     item: {...items[type], ...overrides},
     reportableTypes,
     author: withAuthor ? author : undefined,
-    style,
+    ...offsets,
     children,
   } as unknown as React.ComponentProps<typeof AtmosphereCardMenu>
   return render(<AtmosphereCardMenu {...props} />)
@@ -363,15 +363,18 @@ describe('wrapper position', () => {
       (screen.toJSON() as unknown as {props: {style: object}}).props.style,
     )
 
-  it('defaults to an 8px top-right inset', () => {
+  it('sits flush in the top-right corner by default', () => {
     renderMenu('article')
 
-    expect(wrapperStyle()).toMatchObject({top: 8, right: 8})
+    expect(wrapperStyle()).toMatchObject({top: 0, right: 0})
   })
 
-  it('lets a caller override the inset', () => {
-    renderMenu('article', {}, undefined, undefined, true, {top: 0, right: 0})
+  it('pulls the trigger in by its own padding so the icon meets the offsets', () => {
+    renderMenu('article', {}, undefined, undefined, true, {
+      offsetY: 12,
+      offsetX: 16,
+    })
 
-    expect(wrapperStyle()).toMatchObject({top: 0, right: 0})
+    expect(wrapperStyle()).toMatchObject({top: 8, right: 12})
   })
 })
