@@ -47,6 +47,10 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {CreateListFromStarterPackDialog} from '#/components/dialogs/lists/CreateListFromStarterPackDialog'
+import {
+  ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon,
+  ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon,
+} from '#/components/icons/Arrow'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -590,8 +594,8 @@ function OverflowMenu({
 
   return (
     <>
-      <Menu.Root>
-        <Menu.Trigger label={l`Repost or quote post`}>
+      <Menu.Root inline>
+        <Menu.Trigger label={l`Open Starter Pack menu`}>
           {({props}) => (
             <Button
               {...props}
@@ -692,6 +696,14 @@ function OverflowMenu({
                       <Trans>Opt out of Starter Pack</Trans>
                     )}
                   </Menu.ItemText>
+                  <Menu.ItemIcon
+                    icon={
+                      referenceListOptOut
+                        ? ArrowRotateCounterClockwiseIcon
+                        : ArrowBoxLeftIcon
+                    }
+                    position="right"
+                  />
                 </Menu.Item>
               ) : null}
             </>

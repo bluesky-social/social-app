@@ -22,11 +22,7 @@ import {
 import {RepostButtonMenu, type RepostButtonProps} from './RepostButtonMenu'
 
 let RepostButton = (props: RepostButtonProps): React.ReactNode =>
-  IS_IPAD ? (
-    <RepostButtonMenu {...props} longPressToQuote />
-  ) : (
-    <RepostButtonDialog {...props} />
-  )
+  IS_IPAD ? <RepostButtonMenu {...props} /> : <RepostButtonDialog {...props} />
 
 RepostButton = memo(RepostButton)
 export {RepostButton}
