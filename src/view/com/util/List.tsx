@@ -23,6 +23,7 @@ import {shouldCenterNativeTabletContent} from '#/alf/breakpoints.shared'
 import {useDialogContext} from '#/components/Dialog/context'
 import {CENTER_COLUMN_WIDTH} from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
+import {useNativeHeaderHeight} from '#/components/Layout/Header/native/context'
 import {useLightboxIsOpenSharedValue} from '#/components/Lightbox/state'
 import {IS_IOS, IS_IPAD} from '#/env'
 import {FlatList_INTERNAL} from './Views'
@@ -96,6 +97,9 @@ let List = forwardRef<ListMethods, ListProps>(
     const offsetContext = useMemo(() => ({isWithinOffsetView: true}), [])
     const dedupe = useDedupe(400)
     const scrollsToTopProps = useScrollsToTopProps()
+    const nativeHeaderHeight = useNativeHeaderHeight()
+    // See `Layout.Content`
+    const underNativeHeader = nativeHeaderHeight > 0 && !isWithinOffsetView
 
     const handleScrolledDownChange = useNonReactiveCallback(
       (didScrollDown: boolean) => {
@@ -190,10 +194,15 @@ let List = forwardRef<ListMethods, ListProps>(
           showsVerticalScrollIndicator // overridable
           onViewableItemsChanged={onViewableItemsChanged}
           viewabilityConfig={viewabilityConfig}
+          contentInsetAdjustmentBehavior={
+            underNativeHeader ? 'automatic' : undefined
+          }
           {...props}
           automaticallyAdjustsScrollIndicatorInsets={
             automaticallyAdjustsScrollIndicatorInsets ??
-            (usesSystemScrollIndicatorInsets || isWithinContainedTabletSurface
+            (underNativeHeader ||
+            usesSystemScrollIndicatorInsets ||
+            isWithinContainedTabletSurface
               ? undefined
               : false)
           }
@@ -215,7 +224,11 @@ let List = forwardRef<ListMethods, ListProps>(
           onScroll={scrollHandler}
           animatedProps={scrollsToTopProps}
           scrollEventThrottle={1}
-          style={[style, centerOnTablet && {width: '100%'}]}
+          style={[
+            style,
+            centerOnTablet && {width: '100%'},
+            underNativeHeader && {marginTop: -nativeHeaderHeight},
+          ]}
           contentContainerStyle={[
             // Keep the gutters inside the scrollable viewport.
             centerOnTablet && {
