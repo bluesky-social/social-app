@@ -15,4 +15,12 @@ export type ClipImageOptions = {
    * Pixels per point of the output, usually `PixelRatio.get()`.
    */
   scale: number
+  /**
+   * Color of an optional inset border, drawn inside the clip.
+   */
+  borderColor?: string
+  /**
+   * Width of the border, in points. Defaults to 0 (no border).
+   */
+  borderWidth?: number
 }

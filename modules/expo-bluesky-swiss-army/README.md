@@ -153,10 +153,11 @@ as a PNG to the caches directory, keyed on the inputs so repeat calls are free.
 
 **Functions:**
 
-- `clipImageAsync({url, size, cornerRadius, scale}): Promise<string>` - Returns
-  a `file://` URI for the clipped PNG. `size` and `cornerRadius` are in points
-  (`cornerRadius: size / 2` for a circle) and `scale` is pixels per point.
-  Pass the same `scale` in the image source so it renders at `size` points.
+- `clipImageAsync({url, size, cornerRadius, scale, borderColor?, borderWidth?}): Promise<string>` -
+  Returns a `file://` URI for the clipped PNG. `size`, `cornerRadius` and
+  `borderWidth` are in points (`cornerRadius: size / 2` for a circle) and
+  `scale` is pixels per point. Pass the same `scale` in the image source so it
+  renders at `size` points. The optional border is drawn inset, inside the clip.
 
 **Platform Support:**
 - iOS: Full support
