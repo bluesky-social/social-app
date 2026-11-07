@@ -2176,7 +2176,6 @@ function ComposerFooter({
   textInputRef: React.RefObject<TextInputRef | null>
 }) {
   const t = useTheme()
-  const sideInsets = useHorizontalSafeAreaInsets()
   const {t: l} = useLingui()
   const {gtPhone} = useBreakpoints()
   /*
@@ -2269,10 +2268,7 @@ function ComposerFooter({
       style={[
         a.flex_row,
         a.py_xs,
-        {
-          paddingLeft: 7 + sideInsets.left,
-          paddingRight: 16 + sideInsets.right,
-        },
+        {paddingLeft: 7, paddingRight: 16},
         a.align_center,
         a.border_t,
         t.atoms.bg,
