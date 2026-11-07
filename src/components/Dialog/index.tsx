@@ -70,6 +70,7 @@ import {
 import {createInput} from '#/components/forms/TextField'
 import {useOnKeyboard} from '#/components/hooks/useOnKeyboard'
 import {IS_ANDROID, IS_IOS, IS_IPAD, IS_LIQUID_GLASS} from '#/env'
+import {useHorizontalSafeAreaInsets} from '#/features/verticalBar'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/shared'
@@ -389,6 +390,7 @@ export function ScrollableInner({
   const isAtMaxSnapPoint =
     nativeSnapPoint === BottomSheetSnapPoint.Full || isNativePopover
   const insets = useSafeAreaInsets()
+  const sideInsets = useHorizontalSafeAreaInsets()
   const [keyboardHeight, setKeyboardHeight] = useState(() =>
     IS_ANDROID ? (Keyboard.metrics()?.height ?? 0) : 0,
   )
@@ -439,6 +441,8 @@ export function ScrollableInner({
         contentContainerStyle={[
           a.pt_2xl,
           IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,
+          // The sheet's own insets, e.g. where it runs under the vertical bar
+          {marginLeft: sideInsets.left, marginRight: sideInsets.right},
           platform({
             ios: a.pb_2xl,
             android: {
@@ -499,6 +503,7 @@ export const InnerFlatList = forwardRef<
   ref,
 ) {
   const insets = useSafeAreaInsets()
+  const sideInsets = useHorizontalSafeAreaInsets()
   const {nativeSnapPoint, disableDrag, setDisableDrag, isNativePopover} =
     useDialogContext()
 
@@ -537,6 +542,8 @@ export const InnerFlatList = forwardRef<
         style={[a.h_full, style]}
         contentContainerStyle={[
           {paddingTop: headerOffset},
+          // The sheet's own insets, e.g. where it runs under the vertical bar
+          {marginLeft: sideInsets.left, marginRight: sideInsets.right},
           android({
             paddingBottom: insets.top + insets.bottom + tokens.space.xl,
           }),
@@ -559,6 +566,7 @@ export function FlatListFooter({
 }) {
   const t = useTheme()
   const {bottom} = useSafeAreaInsets()
+  const sideInsets = useHorizontalSafeAreaInsets()
   const {presentationBottomOffset} = useDialogContext()
   const {height} = useReanimatedKeyboardAnimation()
 
@@ -587,9 +595,12 @@ export function FlatListFooter({
         border && a.border_t,
         t.atoms.bg,
         t.atoms.border_contrast_low,
-        a.px_lg,
         a.pt_md,
-        {paddingBottom: bottom + tokens.space.md},
+        {
+          paddingLeft: tokens.space.lg + sideInsets.left,
+          paddingRight: tokens.space.lg + sideInsets.right,
+          paddingBottom: bottom + tokens.space.md,
+        },
         // TODO: had to admit defeat here, but we should
         // try and get this to work for Android as well -sfn
         ios(animatedStyle),

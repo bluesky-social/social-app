@@ -15,6 +15,10 @@ import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {clamp} from '#/lib/numbers'
 import {atoms as a, ios, useBreakpoints, useTheme} from '#/alf'
 import {IS_WEB} from '#/env'
+import {
+  useHasNativeTabs,
+  usePhoneHorizontalSafeAreaInsets,
+} from '#/features/verticalBar'
 
 /**
  * Minimum time between the press-in and release haptics on iOS, so a quick tap
@@ -30,6 +34,8 @@ export interface FABProps extends ComponentProps<typeof Pressable> {
 
 export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
   const insets = useSafeAreaInsets()
+  const sideInsets = usePhoneHorizontalSafeAreaInsets()
+  const hasNativeTabs = useHasNativeTabs()
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
   const haptics = useHaptics()
@@ -40,7 +46,15 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
 
   const tabletSpacing = gtMobile
     ? {right: 50, bottom: 50}
-    : {right: 24, bottom: clamp(insets.bottom, 15, 60) + 15}
+    : {
+        right: 24 + sideInsets.right,
+        /*
+         * With native tabs, the inset includes the tab bar (which is much
+         * taller than the clamp allows), see `useHasNativeTabs`.
+         */
+        bottom:
+          (hasNativeTabs ? insets.bottom : clamp(insets.bottom, 15, 60)) + 15,
+      }
 
   return (
     <Animated.View

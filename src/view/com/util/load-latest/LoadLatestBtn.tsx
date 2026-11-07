@@ -15,6 +15,10 @@ import {ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon} from '#/components/icons/
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {SubtleHover} from '#/components/SubtleHover'
 import {IS_NATIVE} from '#/env'
+import {
+  useHasNativeTabs,
+  usePhoneHorizontalSafeAreaInsets,
+} from '#/features/verticalBar'
 
 export function LoadLatestBtn({
   onPress,
@@ -31,6 +35,8 @@ export function LoadLatestBtn({
   const {width: windowWidth} = useWindowDimensions()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
   const insets = useSafeAreaInsets()
+  const sideInsets = usePhoneHorizontalSafeAreaInsets()
+  const hasNativeTabs = useHasNativeTabs()
   const t = useTheme()
   const {
     state: hovered,
@@ -47,7 +53,11 @@ export function LoadLatestBtn({
 
   const bottomPosition = isTablet
     ? {bottom: 50}
-    : {bottom: clamp(insets.bottom, 15, 60) + 15}
+    : {
+        bottom:
+          // With native tabs, the inset includes the tab bar
+          (hasNativeTabs ? insets.bottom : clamp(insets.bottom, 15, 60)) + 15,
+      }
 
   return (
     <Animated.View
@@ -55,7 +65,7 @@ export function LoadLatestBtn({
       style={[
         a.fixed,
         a.z_20,
-        {left: 18},
+        {left: 18 + sideInsets.left},
         isDesktop &&
           (isTallViewport
             ? styles.loadLatestOutOfLine

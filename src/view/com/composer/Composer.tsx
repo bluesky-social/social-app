@@ -144,6 +144,7 @@ import {
   IS_WEB_SAFARI,
 } from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
+import {useHorizontalSafeAreaInsets} from '#/features/verticalBar'
 import {app, chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {
@@ -1338,6 +1339,7 @@ export const ComposePost = ({
   }
 
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
+  const sideInsets = useHorizontalSafeAreaInsets()
   useEffect(() => {
     if (composerState.mutableNeedsFocusActive) {
       composerState.mutableNeedsFocusActive = false
@@ -1467,7 +1469,11 @@ export const ComposePost = ({
           <Animated.ScrollView
             ref={scrollViewRef}
             onScroll={scrollHandler}
-            contentContainerStyle={a.flex_grow}
+            contentContainerStyle={[
+              a.flex_grow,
+              // Keep the posts clear of the vertical bar (iPhone Duo)
+              {marginLeft: sideInsets.left, marginRight: sideInsets.right},
+            ]}
             style={[
               a.flex_1,
               web({
@@ -1831,6 +1837,7 @@ function ComposerTopBar({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const sideInsets = useHorizontalSafeAreaInsets()
 
   return (
     <Animated.View style={topBarAnimatedStyle}>
@@ -1840,6 +1847,8 @@ function ComposerTopBar({
           a.align_center,
           a.gap_xs,
           IS_LIQUID_GLASS ? [a.px_lg, a.pt_lg, a.pb_md] : [a.p_sm],
+          // Keep the buttons clear of the vertical bar (iPhone Duo)
+          {marginLeft: sideInsets.left, marginRight: sideInsets.right},
         ]}>
         <Button
           label={l`Cancel`}
@@ -2153,6 +2162,7 @@ function ComposerFooter({
   textInputRef: React.RefObject<TextInputRef | null>
 }) {
   const t = useTheme()
+  const sideInsets = useHorizontalSafeAreaInsets()
   const {t: l} = useLingui()
   const {gtPhone} = useBreakpoints()
   /*
@@ -2245,7 +2255,10 @@ function ComposerFooter({
       style={[
         a.flex_row,
         a.py_xs,
-        {paddingLeft: 7, paddingRight: 16},
+        {
+          paddingLeft: 7 + sideInsets.left,
+          paddingRight: 16 + sideInsets.right,
+        },
         a.align_center,
         a.border_t,
         t.atoms.bg,

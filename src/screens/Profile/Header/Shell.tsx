@@ -32,6 +32,7 @@ import {useActorStatus} from '#/features/liveNow'
 import {EditLiveDialog} from '#/features/liveNow/components/EditLiveDialog'
 import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
 import {LiveStatusDialog} from '#/features/liveNow/components/LiveStatusDialog'
+import {usePhoneHorizontalSafeAreaInsets} from '#/features/verticalBar'
 import {type app} from '#/lexicons'
 import {GrowableAvatar} from './GrowableAvatar'
 import {GrowableBanner} from './GrowableBanner'
@@ -60,6 +61,8 @@ let ProfileHeaderShell = ({
   const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
   const {top: topInset} = useSafeAreaInsets()
+  // Content below the full-bleed banner stays clear of the vertical bar
+  const sideInsets = usePhoneHorizontalSafeAreaInsets()
   const haptics = useHaptics()
   const liveStatusControl = useDialogControl()
 
@@ -188,7 +191,7 @@ let ProfileHeaderShell = ({
                     }),
                     left: platform({
                       web: 18,
-                      default: 12,
+                      default: 12 + sideInsets.left,
                     }),
                   },
                 ]}>
@@ -229,7 +232,11 @@ let ProfileHeaderShell = ({
         </GrowableBanner>
       </View>
 
-      {children}
+      <View
+        style={{marginLeft: sideInsets.left, marginRight: sideInsets.right}}
+        pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
+        {children}
+      </View>
 
       {!isPlaceholderProfile &&
         (isMe ? (
@@ -239,6 +246,7 @@ let ProfileHeaderShell = ({
               a.px_lg,
               a.pt_xs,
               a.pb_sm,
+              {marginLeft: sideInsets.left, marginRight: sideInsets.right},
               IS_IOS ? a.pointer_events_auto : {pointerEvents: 'box-none'},
             ]}
           />
@@ -250,12 +258,14 @@ let ProfileHeaderShell = ({
               a.px_lg,
               a.pt_xs,
               a.pb_sm,
+              {marginLeft: sideInsets.left, marginRight: sideInsets.right},
               IS_IOS ? a.pointer_events_auto : {pointerEvents: 'box-none'},
             ]}
           />
         ))}
 
-      <GrowableAvatar style={[a.absolute, {top: 104, left: 10}]}>
+      <GrowableAvatar
+        style={[a.absolute, {top: 104, left: 10 + sideInsets.left}]}>
         <Pressable
           testID="profileHeaderAviButton"
           onPress={onPressAvi}
