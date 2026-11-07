@@ -854,8 +854,11 @@ function NativeTabsNavigator({layout}: {layout: TabsLayout}) {
       screenOptions={({route}) => ({
         headerShown: false,
         lazy: true,
-        // Labels don't fit ("Notifications" throws the alignment off)
-        tabBarShowLabel: false,
+        /*
+         * Labels don't fit in the floating bottom bar ("Notifications" throws
+         * the alignment off), but keep them for the vertical bar's rail.
+         */
+        tabBarShowLabel: placement !== 'bottom',
         tabBarActiveTintColor: t.atoms.text.color,
         // Match the JS tab bar's unread badges, which are blue rather than red
         tabBarBadgeStyle: {
