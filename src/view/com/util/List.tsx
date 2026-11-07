@@ -23,6 +23,7 @@ import {shouldCenterNativeTabletContent} from '#/alf/breakpoints.shared'
 import {useDialogContext} from '#/components/Dialog/context'
 import {CENTER_COLUMN_WIDTH} from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
+import {useNativeHeader} from '#/components/Layout/Header/native/context'
 import {useLightboxIsOpenSharedValue} from '#/components/Lightbox/state'
 import {IS_IOS, IS_IPAD} from '#/env'
 import {FlatList_INTERNAL} from './Views'
@@ -96,6 +97,7 @@ let List = forwardRef<ListMethods, ListProps>(
     const offsetContext = useMemo(() => ({isWithinOffsetView: true}), [])
     const dedupe = useDedupe(400)
     const scrollsToTopProps = useScrollsToTopProps()
+    const nativeHeader = useNativeHeader()
 
     const handleScrolledDownChange = useNonReactiveCallback(
       (didScrollDown: boolean) => {
@@ -190,10 +192,19 @@ let List = forwardRef<ListMethods, ListProps>(
           showsVerticalScrollIndicator // overridable
           onViewableItemsChanged={onViewableItemsChanged}
           viewabilityConfig={viewabilityConfig}
+          /*
+           * The native header is transparent, so scroll under it and let UIKit
+           * inset the content (and draw the scroll edge effect).
+           */
+          contentInsetAdjustmentBehavior={
+            nativeHeader ? 'automatic' : undefined
+          }
           {...props}
           automaticallyAdjustsScrollIndicatorInsets={
             automaticallyAdjustsScrollIndicatorInsets ??
-            (usesSystemScrollIndicatorInsets || isWithinContainedTabletSurface
+            (nativeHeader ||
+            usesSystemScrollIndicatorInsets ||
+            isWithinContainedTabletSurface
               ? undefined
               : false)
           }

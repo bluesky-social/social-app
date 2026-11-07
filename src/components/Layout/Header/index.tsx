@@ -1,13 +1,9 @@
-import {createContext, useCallback, useContext} from 'react'
-import {type GestureResponderEvent, Keyboard, View} from 'react-native'
+import {createContext, useContext} from 'react'
+import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 
-import {getHomeNavigationAction} from '#/lib/routes/navigation'
-import {type NavigationProp} from '#/lib/routes/types'
-import {useSetDrawerOpen} from '#/state/shell'
 import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
 import {
   atoms as a,
@@ -30,23 +26,44 @@ import {
   SCROLLBAR_OFFSET,
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
+import {
+  useHeaderBack,
+  useHeaderOpenDrawer,
+} from '#/components/Layout/Header/actions'
+import {useNativeHeader} from '#/components/Layout/Header/native/context'
+import {NativeHeader} from '#/components/Layout/Header/native/NativeHeader'
+import {setHeaderRole} from '#/components/Layout/Header/native/roles'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
 
 const HEADER_BUTTON_HITSLOP = {top: 30, bottom: 10, left: 30, right: 30}
 
-export function Outer({
-  children,
-  noBottomBorder,
-  headerRef,
-  sticky = true,
-}: {
+type OuterProps = {
   children: React.ReactNode
   noBottomBorder?: boolean
   headerRef?: React.RefObject<React.ComponentRef<typeof View> | null>
   sticky?: boolean
-}) {
+}
+
+/**
+ * On screens with the native header (see `useNativeHeader`), the children are
+ * read into native header options instead of being rendered.
+ */
+export function Outer(props: OuterProps) {
+  const nativeHeader = useNativeHeader()
+  return nativeHeader ? (
+    <NativeHeader>{props.children}</NativeHeader>
+  ) : (
+    <OuterView {...props} />
+  )
+}
+
+function OuterView({
+  children,
+  noBottomBorder,
+  headerRef,
+  sticky = true,
+}: OuterProps) {
   const t = useTheme()
   const gutters = useGutters([0, 'base'])
   const {gtMobile} = useBreakpoints()
@@ -123,22 +140,7 @@ export function Slot({children}: {children?: React.ReactNode}) {
 
 export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
   const {_} = useLingui()
-  const navigation = useNavigation<NavigationProp>()
-
-  const onPressBack = useCallback(
-    (evt: GestureResponderEvent) => {
-      onPress?.(evt)
-      if (evt.defaultPrevented) return
-      if (navigation.canGoBack()) {
-        navigation.goBack()
-      } else {
-        navigation.dispatch(
-          getHomeNavigationAction(navigation.getState(), 'navigate'),
-        )
-      }
-    },
-    [onPress, navigation],
-  )
+  const onPressBack = useHeaderBack(onPress)
 
   return (
     <Slot>
@@ -164,15 +166,8 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
 
 export function MenuButton() {
   const {_} = useLingui()
-  const ax = useAnalytics()
-  const setDrawerOpen = useSetDrawerOpen()
   const {gtMobile} = useBreakpoints()
-
-  const onPress = useCallback(() => {
-    ax.metric('nav:click', {item: 'menu', surface: 'topBar'})
-    Keyboard.dismiss()
-    setDrawerOpen(true)
-  }, [setDrawerOpen, ax])
+  const onPress = useHeaderOpenDrawer()
 
   return gtMobile ? null : (
     <Slot>
@@ -236,3 +231,10 @@ export function SubtitleText({children}: {children: React.ReactNode}) {
     </Text>
   )
 }
+
+setHeaderRole(BackButton, 'back')
+setHeaderRole(MenuButton, 'menu')
+setHeaderRole(Content, 'content')
+setHeaderRole(TitleText, 'title')
+setHeaderRole(SubtitleText, 'subtitle')
+setHeaderRole(Slot, 'slot')
