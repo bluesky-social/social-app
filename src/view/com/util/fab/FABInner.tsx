@@ -14,6 +14,7 @@ import {useHaptics} from '#/lib/haptics'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {clamp} from '#/lib/numbers'
 import {atoms as a, ios, useBreakpoints, useTheme} from '#/alf'
+import {GlassView} from '#/components/GlassView'
 import {IS_WEB} from '#/env'
 import {
   useHasNativeTabs,
@@ -87,12 +88,22 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
         style={[
           a.rounded_full,
           size,
-          {backgroundColor: t.palette.primary_500},
+          !hasNativeTabs && {backgroundColor: t.palette.primary_500},
           a.align_center,
           a.justify_center,
           style,
         ]}
         {...props}>
+        {/* Liquid Glass, to match the native tab bar */}
+        {hasNativeTabs && (
+          <GlassView
+            pointerEvents="none"
+            glassEffectStyle="regular"
+            tintColor={t.palette.primary_500}
+            style={[a.absolute, a.inset_0, a.rounded_full]}
+            fallbackStyle={{backgroundColor: t.palette.primary_500}}
+          />
+        )}
         {icon}
       </PressableScale>
     </Animated.View>
