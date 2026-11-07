@@ -10,9 +10,13 @@ public class ExpoBlueskyClippedImageModule: Module {
     Name("ExpoBlueskyClippedImage")
 
     AsyncFunction("clipImageAsync") {
-      (url: URL, size: Double, cornerRadius: Double, scale: Double) async throws -> String in
+      (
+        url: URL, size: Double, cornerRadius: Double, scale: Double, borderColor: UIColor?,
+        borderWidth: Double
+      ) async throws -> String in
+      let borderKey = borderColor.map { "\($0.cgColor.components ?? [])|\(borderWidth)" } ?? ""
       let file = try Self.cacheFile(
-        for: "\(url.absoluteString)|\(size)|\(cornerRadius)|\(scale)")
+        for: "\(url.absoluteString)|\(size)|\(cornerRadius)|\(scale)|\(borderKey)")
       if FileManager.default.fileExists(atPath: file.path) {
         return file.absoluteString
       }
@@ -40,6 +44,16 @@ public class ExpoBlueskyClippedImageModule: Module {
         let height = image.size.height * fill
         image.draw(
           in: CGRect(x: (size - width) / 2, y: (size - height) / 2, width: width, height: height))
+
+        // An inset border, like `MediaInsetBorder` on `UserAvatar`
+        if let borderColor, borderWidth > 0 {
+          let border = UIBezierPath(
+            roundedRect: rect.insetBy(dx: borderWidth / 2, dy: borderWidth / 2),
+            cornerRadius: max(0, cornerRadius - borderWidth / 2))
+          border.lineWidth = borderWidth
+          borderColor.setStroke()
+          border.stroke()
+        }
       }
 
       try png.write(to: file, options: .atomic)

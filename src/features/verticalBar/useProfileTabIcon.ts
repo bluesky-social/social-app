@@ -8,13 +8,15 @@ import {STALE} from '#/state/queries'
 import {useProfileQuery} from '#/state/queries/profile'
 import {createQueryKey} from '#/state/queries/util'
 import {useSession} from '#/state/session'
+import {useTheme} from '#/alf'
+import {transparentifyColor} from '#/alf/util/colorGeneration'
 
 /**
  * Size of the avatar in the native tab bar, in points. The native tab bar draws
- * its glyphs at about 20pt, and this keeps the avatar about as much bigger than
- * them as it is in the JS tab bar.
+ * its glyphs at about 20pt, and a filled circle needs to be a bit bigger to
+ * look the same size.
  */
-const TAB_ICON_SIZE = 23
+const TAB_ICON_SIZE = 26
 
 const profileTabIconQueryKeyRoot = 'profileTabIcon'
 
@@ -32,12 +34,25 @@ export function useProfileTabIcon(): NativeBottomTabIcon | undefined {
   const avatar = profile?.avatar
   const isLabeler = !!profile?.associated?.labeler
   const scale = PixelRatio.get()
+  const t = useTheme()
+  /*
+   * The same hairline inset border as `UserAvatar` (see `MediaInsetBorder`),
+   * which keeps pale avatars from blending into the glass.
+   */
+  const borderColor = transparentifyColor(
+    t.name === 'light'
+      ? t.atoms.border_contrast_low.borderColor
+      : t.atoms.border_contrast_high.borderColor,
+    0.6,
+  )
+  const borderWidth = 1 / scale
 
   const {data: uri} = useQuery({
     queryKey: createQueryKey(profileTabIconQueryKeyRoot, {
       avatar,
       isLabeler,
       scale,
+      borderColor,
     }),
     queryFn: () =>
       ClippedImage.clipImageAsync({
@@ -46,6 +61,8 @@ export function useProfileTabIcon(): NativeBottomTabIcon | undefined {
         // Same corner radius as `UserAvatar` at this size
         cornerRadius: isLabeler ? 3 : TAB_ICON_SIZE / 2,
         scale,
+        borderColor,
+        borderWidth,
       }),
     enabled: !!avatar,
     staleTime: STALE.INFINITY,
