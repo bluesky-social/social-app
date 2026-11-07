@@ -30,12 +30,15 @@ import {
   SCROLLBAR_OFFSET,
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
-import {useNativeHeader} from '#/components/Layout/Header/native/context'
+import {useNativeHeaderHeight} from '#/components/Layout/Header/native/context'
 import {IS_IPAD, IS_WEB} from '#/env'
 
 export * from '#/components/Layout/const'
 export * as Header from '#/components/Layout/Header'
-export {useNativeHeader} from '#/components/Layout/Header/native/context'
+export {
+  useNativeHeader,
+  useNativeHeaderHeight,
+} from '#/components/Layout/Header/native/context'
 
 export type ScreenProps = React.ComponentProps<typeof View> & {
   style?: StyleProp<ViewStyle>
@@ -58,8 +61,11 @@ export const Screen = memo(function Screen({
   const {top} = useSafeAreaInsets()
   const {isWithinSplitView} = useIsWithinSplitView()
   const {gtMobile} = useBreakpoints()
-  // The native header sits under the status bar and takes care of it.
-  const nativeHeader = useNativeHeader()
+  /*
+   * The native header covers the status bar too. Content starts below it, and
+   * the screen's scroll view pulls itself back up under it (see `Content`).
+   */
+  const nativeHeaderHeight = useNativeHeaderHeight()
 
   useEnableMinimalShellModeForScreen({enabled: minimalShell})
 
@@ -73,7 +79,13 @@ export const Screen = memo(function Screen({
       <View
         style={[
           a.util_screen_outer,
-          {paddingTop: noInsetTop || nativeHeader ? 0 : top},
+          {
+            paddingTop: nativeHeaderHeight
+              ? nativeHeaderHeight
+              : noInsetTop
+                ? 0
+                : top,
+          },
           isWithinSplitView && {maxHeight: '100%'},
           style,
         ]}
@@ -120,7 +132,13 @@ export const Content = memo(function Content({
   const usesSystemScrollIndicatorInsets =
     gtMobile && !isWithinContainedTabletSurface
   const offsetContext = useMemo(() => ({isWithinOffsetView: true}), [])
-  const nativeHeader = useNativeHeader()
+  const nativeHeaderHeight = useNativeHeaderHeight()
+  /*
+   * The screen's own scroll view (not one nested in another) scrolls under the
+   * transparent native header, so UIKit can draw the scroll edge effect, and
+   * insets its content to match.
+   */
+  const underNativeHeader = nativeHeaderHeight > 0 && !isWithinOffsetView
 
   // note - if we ever make the footer transparent in any way,
   // we'll need to change this to use contentInsets/scrollIndicatorInsets
@@ -136,14 +154,12 @@ export const Content = memo(function Content({
       ref={ref}
       id="content"
       centerContent={centerOnTablet ? false : centerContent}
-      /*
-       * The native header is transparent, so scroll under it and let UIKit
-       * inset the content (and draw the scroll edge effect).
-       */
-      contentInsetAdjustmentBehavior={nativeHeader ? 'automatic' : undefined}
+      contentInsetAdjustmentBehavior={
+        underNativeHeader ? 'automatic' : undefined
+      }
       automaticallyAdjustsScrollIndicatorInsets={
         automaticallyAdjustsScrollIndicatorInsets ??
-        (nativeHeader ||
+        (underNativeHeader ||
         usesSystemScrollIndicatorInsets ||
         isWithinContainedTabletSurface
           ? undefined
@@ -155,6 +171,7 @@ export const Content = memo(function Content({
       style={[
         a.w_full,
         animatedStyle,
+        underNativeHeader && {marginTop: -nativeHeaderHeight},
         isWithinSplitView &&
           web({
             flex: 1,

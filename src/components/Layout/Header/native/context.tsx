@@ -1,6 +1,12 @@
 import {createContext, useContext} from 'react'
+/*
+ * A dependency of `@react-navigation/native-stack`, which provides this
+ * context. Not in our package.json yet.
+ */
+import {HeaderHeightContext} from '@react-navigation/elements'
 
 import {useBreakpoints} from '#/alf'
+import {useDialogContext} from '#/components/Dialog/context'
 import {IS_IOS} from '#/env'
 
 const NativeHeaderContext = createContext(false)
@@ -9,11 +15,25 @@ NativeHeaderContext.displayName = 'NativeHeaderContext'
 /**
  * Whether this screen uses the native header. When it does,
  * `Layout.Header.Outer` hands its contents to the native header instead of
- * rendering them, `Layout.Screen` leaves the status bar to it, and scroll
- * views scroll under it.
+ * rendering them, `Layout.Screen` starts its content below the header, and
+ * the screen's scroll view scrolls under it.
+ *
+ * Always false inside a dialog, which has nothing to do with the screen's
+ * header even when it's rendered inside the screen.
  */
 export function useNativeHeader() {
-  return useContext(NativeHeaderContext)
+  const nativeHeader = useContext(NativeHeaderContext)
+  const {isWithinDialog} = useDialogContext()
+  return nativeHeader && !isWithinDialog
+}
+
+/**
+ * The native header's height, including the status bar, or 0 without one.
+ */
+export function useNativeHeaderHeight() {
+  const nativeHeader = useNativeHeader()
+  const height = useContext(HeaderHeightContext)
+  return nativeHeader ? (height ?? 0) : 0
 }
 
 /**
