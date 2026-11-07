@@ -78,6 +78,11 @@
             "type": "string",
             "format": "datetime",
             "description": "Client-declared timestamp when this post was originally created."
+          },
+          "via": {
+            "type": "string",
+            "maxLength": 128,
+            "description": "The app or client used to create this post."
           }
         }
       },

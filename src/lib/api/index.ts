@@ -39,6 +39,7 @@ export {uploadBlob}
 
 interface PostOpts {
   thread: ThreadDraft
+  via: string
   replyTo?: string
   onStateChange?: (state: string) => void
   langs?: string[]
@@ -124,6 +125,7 @@ export async function post(queryClient: QueryClient, opts: PostOpts) {
       // present and will produce the wrong CID if you omit it.
       $type: 'app.bsky.feed.post',
       createdAt: toDatetimeString(now),
+      via: opts.via,
       text: rt.text,
       facets: rt.facets,
       reply,

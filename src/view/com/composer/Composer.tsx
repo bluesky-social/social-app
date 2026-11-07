@@ -1058,6 +1058,7 @@ export const ComposePost = ({
       postUri = (
         await apilib.post(queryClient, {
           thread: filteredThread,
+          via: IS_WEB ? 'Bluesky Web App' : 'Bluesky Mobile App',
           replyTo: replyTo?.uri,
           onStateChange: setPublishingStage,
           langs: currentLanguages,
