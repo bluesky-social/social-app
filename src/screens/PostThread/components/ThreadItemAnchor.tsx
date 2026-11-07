@@ -35,7 +35,7 @@ import {
   OUTER_SPACE,
   REPLY_LINE_WIDTH,
 } from '#/screens/PostThread/const'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
@@ -191,6 +191,12 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const showPostNumber = useHasThreadItemPostNumber(postNumbering)
   const moderation = item.moderation
   const authorShadow = useProfileShadow(post.author)
+  const pronouns = authorShadow.pronouns?.trim()
+  const showPronouns =
+    !!pronouns &&
+    !authorShadow.viewer?.blocking &&
+    !authorShadow.viewer?.blockedBy &&
+    !moderation.ui('profileView').blur
   const {isActive: live} = useActorStatus(post.author)
   const richText = useMemo(
     () =>
@@ -369,15 +375,33 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                       />
                     </View>
                   </View>
-                  <Text
-                    style={[
-                      a.text_md,
-                      a.leading_snug,
-                      t.atoms.text_contrast_medium,
-                    ]}
-                    numberOfLines={1}>
-                    {sanitizeHandle(post.author.handle, '@')}
-                  </Text>
+                  <View style={[a.flex_row, a.align_center, a.flex_shrink]}>
+                    <Text
+                      style={[
+                        a.flex_shrink,
+                        a.text_md,
+                        a.leading_snug,
+                        t.atoms.text_contrast_medium,
+                      ]}
+                      numberOfLines={1}>
+                      {sanitizeHandle(post.author.handle, '@')}
+                    </Text>
+                    {showPronouns && (
+                      <Text
+                        emoji
+                        numberOfLines={1}
+                        style={[
+                          a.pl_xs,
+                          a.flex_shrink_0,
+                          a.text_md,
+                          a.leading_snug,
+                          {color: t.palette.contrast_600},
+                          web({unicodeBidi: 'isolate'}),
+                        ]}>
+                        {pronouns}
+                      </Text>
+                    )}
+                  </View>
                 </ProfileHoverCard>
               </View>
             </Link>

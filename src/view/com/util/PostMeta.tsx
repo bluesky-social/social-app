@@ -43,6 +43,12 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const author = useProfileShadow(opts.author)
   const displayName = author.displayName || author.handle
   const handle = author.handle
+  const pronouns = author.pronouns?.trim()
+  const showPronouns =
+    !!pronouns &&
+    !author.viewer?.blocking &&
+    !author.viewer?.blockedBy &&
+    !opts.moderation?.ui('profileView').blur
   const profileLink = makeProfileLink(author)
   const queryClient = useQueryClient()
   const onOpenAuthor = opts.onOpenAuthor
@@ -130,6 +136,21 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
               ]}>
               {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
             </MaybeLinkText>
+            {showPronouns && (
+              <Text
+                emoji
+                numberOfLines={1}
+                style={[
+                  a.pl_xs,
+                  a.flex_shrink_0,
+                  a.text_md,
+                  a.leading_tight,
+                  {color: t.palette.contrast_600},
+                  web({unicodeBidi: 'isolate'}),
+                ]}>
+                {pronouns}
+              </Text>
+            )}
           </View>
         </ProfileHoverCard>
 
