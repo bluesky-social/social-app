@@ -67,6 +67,17 @@ class SheetViewController: UIViewController,
     self.applyContainerBackgroundColor()
   }
 
+  #if canImport(UIKit, _version: 9127.0.85)
+  /// Sheets don't use the vertical bar (iPhone Duo): their content is laid
+  /// out for the full width, so the status bar goes back to the horizontal
+  /// axis while a sheet is up, and there's no side inset to pad for. This
+  /// resolves per presentation, so the rest of the app keeps the vertical bar.
+  @available(iOS 27.1, *)
+  override var preferredVerticalBarBehavior: UIVerticalBarBehavior {
+    .disabled
+  }
+  #endif
+
   func setContainerBackgroundColor(_ color: UIColor?) {
     self.containerBackgroundColor = color
     self.applyContainerBackgroundColor()

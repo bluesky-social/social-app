@@ -292,6 +292,19 @@ class SheetView: ExpoView {
       }
     }
 
+    #if canImport(UIKit, _version: 9127.0.85)
+    /*
+     * A sheet only gets to opt out of the vertical bar (iPhone Duo, see
+     * `SheetViewController.preferredVerticalBarBehavior`) when it controls the
+     * status bar, which non-fullscreen presentations don't by default. Only
+     * capture it when there is a vertical bar, so the status bar's style is
+     * otherwise left to the screen behind the sheet, as before.
+     */
+    if #available(iOS 27.1, *), rvc.traitCollection.verticalBarEdge != .unspecified {
+      sheetVc.modalPresentationCapturesStatusBarAppearance = true
+    }
+    #endif
+
     self.sheetVc = sheetVc
     self.isOpening = true
     if !self.fullHeight {
