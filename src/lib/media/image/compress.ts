@@ -6,11 +6,16 @@ import {type PickerImage} from '#/lib/media/picker.shared'
 import {getDataUriSize} from '#/lib/media/util'
 import {type ComposerImage} from '#/state/gallery'
 
-export async function compressImage(
-  img: ComposerImage,
-  {maxDimension, maxSize}: {maxDimension: number; maxSize: number},
-): Promise<PickerImage> {
-  const source = img.transformed || img.source
+export async function compressImage({
+  image,
+  maxDimension,
+  maxSize,
+}: {
+  image: ComposerImage
+  maxDimension: number
+  maxSize: number
+}): Promise<PickerImage> {
+  const source = image.transformed || image.source
 
   let attempts = 0
   /*
@@ -27,11 +32,11 @@ export async function compressImage(
   while (maxQualityPercentage - minQualityPercentage > 1) {
     if (attempts >= 4) break
 
-    const [w, h] = containImageRes(
-      source.width,
-      source.height,
-      currentDimension,
-    )
+    const [w, h] = containImageRes({
+      width: source.width,
+      height: source.height,
+      maxDimension: currentDimension,
+    })
     const qualityPercentage = Math.round(
       (maxQualityPercentage + minQualityPercentage) / 2,
     )
@@ -69,7 +74,7 @@ export async function compressImage(
     if (base64 && size <= maxBytes) {
       minQualityPercentage = qualityPercentage
       newDataUri = {
-        path: await moveIfNecessary(res.uri),
+        path: await moveIfNecessary({from: res.uri}),
         width: res.width,
         height: res.height,
         mime: 'image/jpeg',
@@ -87,18 +92,22 @@ export async function compressImage(
   throw new Error(`Unable to compress image`)
 }
 
-function containImageRes(
-  w: number,
-  h: number,
-  max: number,
-): [width: number, height: number] {
+function containImageRes({
+  width,
+  height,
+  maxDimension,
+}: {
+  width: number
+  height: number
+  maxDimension: number
+}): [width: number, height: number] {
   let scale = 1
 
-  if (w > max || h > max) {
-    scale = w > h ? max / w : max / h
-    w = Math.floor(w * scale)
-    h = Math.floor(h * scale)
+  if (width > maxDimension || height > maxDimension) {
+    scale = width > height ? maxDimension / width : maxDimension / height
+    width = Math.floor(width * scale)
+    height = Math.floor(height * scale)
   }
 
-  return [w, h]
+  return [width, height]
 }

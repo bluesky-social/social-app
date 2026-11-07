@@ -453,7 +453,10 @@ let EditableUserAvatar = ({
 
   const onChangeEditImage = useCallback(
     async (image: ComposerImage) => {
-      const compressed = await compressImage(image, IMAGE_SIZE_CONFIG_2K_1MB)
+      const compressed = await compressImage({
+        image,
+        ...IMAGE_SIZE_CONFIG_2K_1MB,
+      })
       onSelectNewAvatar(compressed)
     },
     [onSelectNewAvatar],

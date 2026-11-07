@@ -503,6 +503,12 @@ function DevOptions() {
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
       <SettingsList.PressableItem
+        testID="settings-debug-composer"
+        onPress={() => navigation.navigate('DebugComposer')}
+        label="Open composer debug page">
+        <SettingsList.ItemText>Debug Composer</SettingsList.ItemText>
+      </SettingsList.PressableItem>
+      <SettingsList.PressableItem
         onPress={() => deleteChatDeclarationRecord()}
         label={l`Delete chat declaration record`}>
         <SettingsList.ItemText>
