@@ -21,6 +21,7 @@ import {type PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {getTabState, TabState} from '#/lib/routes/helpers'
 import {
+  getCommonNavigationAction,
   getTabNavigationAction,
   getTabResetAction,
 } from '#/lib/routes/navigation'
@@ -82,6 +83,7 @@ import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
+import {useHasNativeTabs} from '#/features/verticalBar'
 
 const iconWidth = 26
 type SecondarySidebarTab =
@@ -222,6 +224,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   } = useNavigationTabState()
   const {hasSession, currentAccount} = useSession()
   const inviteFriendsControl = useDialogControl()
+  const hasNativeTabs = useHasNativeTabs()
   const isAtmosphereExploreEnabled = ax.features.enabled(
     ax.features.AtmosphereScreenEnable,
   )
@@ -290,6 +293,14 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   const navigateToSecondaryTab = useCallback(
     (tab: SecondarySidebarTab) => {
       const state: NavigationState = navigation.getState()
+      if (hasNativeTabs) {
+        // Native tabs only hold the primary tabs, so open it in the current one
+        navigation.dispatch(
+          getCommonNavigationAction({name: tab, params: undefined}, state),
+        )
+        setDrawerOpen(false)
+        return
+      }
       const tabState = getTabState(state, tab)
       const routeName = SECONDARY_TAB_ROUTES[tab]
       if (tabState === TabState.InsideAtRoot) {
@@ -310,7 +321,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
       }
       setDrawerOpen(false)
     },
-    [navigation, setDrawerOpen],
+    [navigation, setDrawerOpen, hasNativeTabs],
   )
 
   const onPressMyFeeds = useCallback(() => {
