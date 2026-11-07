@@ -2,7 +2,7 @@
   "worktree": {
     "setup": [
       "pnpm install --frozen-lockfile",
-      "cp google-services.json.example google-services.json"
+      "[ -f google-services.json ] || cp google-services.json.example google-services.json"
     ]
   },
   "scripts": {
