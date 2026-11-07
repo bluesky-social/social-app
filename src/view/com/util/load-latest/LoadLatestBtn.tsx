@@ -9,35 +9,50 @@ import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {useSession} from '#/state/session'
-import {atoms as a, useLayoutBreakpoints, useTheme, web} from '#/alf'
-import {GlassView} from '#/components/GlassView'
+import {
+  atoms as a,
+  useBreakpoints,
+  useLayoutBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon} from '#/components/icons/Arrow'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {SubtleHover} from '#/components/SubtleHover'
-import {IS_NATIVE} from '#/env'
-import {
-  useHasNativeTabs,
-  usePhoneHorizontalSafeAreaInsets,
-} from '#/features/verticalBar'
+import {IS_LIQUID_GLASS, IS_NATIVE} from '#/env'
+import {useIsNativeTabsEnabled} from '#/features/verticalBar'
 
-export function LoadLatestBtn({
-  onPress,
-  label,
-  showIndicator,
-}: {
+type LoadLatestBtnProps = {
   onPress: () => void
   label: string
   showIndicator: boolean
-}) {
+}
+
+export function LoadLatestBtn(props: LoadLatestBtnProps) {
+  const isNativeTabsEnabled = useIsNativeTabsEnabled()
+  const {gtMobile} = useBreakpoints()
+  /*
+   * With the native shell on Liquid Glass phones, there's no scroll to top
+   * button - tapping the current tab or the status bar does it instead.
+   */
+  if (isNativeTabsEnabled && IS_LIQUID_GLASS && !gtMobile) {
+    return null
+  }
+  return <LoadLatestBtnInner {...props} />
+}
+
+function LoadLatestBtnInner({
+  onPress,
+  label,
+  showIndicator,
+}: LoadLatestBtnProps) {
   const {hasSession} = useSession()
   const {isDesktop, isTablet, isMobile, isTabletOrMobile} = useWebMediaQueries()
   const {centerColumnOffset} = useLayoutBreakpoints()
   const {width: windowWidth} = useWindowDimensions()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
   const insets = useSafeAreaInsets()
-  const sideInsets = usePhoneHorizontalSafeAreaInsets()
-  const hasNativeTabs = useHasNativeTabs()
   const t = useTheme()
   const {
     state: hovered,
@@ -54,11 +69,7 @@ export function LoadLatestBtn({
 
   const bottomPosition = isTablet
     ? {bottom: 50}
-    : {
-        bottom:
-          // With native tabs, the inset includes the tab bar
-          (hasNativeTabs ? insets.bottom : clamp(insets.bottom, 15, 60)) + 15,
-      }
+    : {bottom: clamp(insets.bottom, 15, 60) + 15}
 
   return (
     <Animated.View
@@ -66,7 +77,7 @@ export function LoadLatestBtn({
       style={[
         a.fixed,
         a.z_20,
-        {left: 18 + sideInsets.left},
+        {left: 18},
         isDesktop &&
           (isTallViewport
             ? styles.loadLatestOutOfLine
@@ -92,13 +103,9 @@ export function LoadLatestBtn({
           a.rounded_full,
           a.align_center,
           a.justify_center,
-          !hasNativeTabs && [
-            a.border,
-            t.atoms.border_contrast_low,
-            showIndicator
-              ? {backgroundColor: t.palette.primary_50}
-              : t.atoms.bg,
-          ],
+          a.border,
+          t.atoms.border_contrast_low,
+          showIndicator ? {backgroundColor: t.palette.primary_50} : t.atoms.bg,
         ]}
         onPress={onPress}
         hitSlop={HITSLOP_20}
@@ -107,22 +114,6 @@ export function LoadLatestBtn({
         targetScale={0.9}
         onPointerEnter={onHoverIn}
         onPointerLeave={onHoverOut}>
-        {/* Liquid Glass, to match the native tab bar */}
-        {hasNativeTabs && (
-          <GlassView
-            pointerEvents="none"
-            glassEffectStyle="regular"
-            tintColor={showIndicator ? t.palette.primary_50 : undefined}
-            style={[a.absolute, a.inset_0, a.rounded_full]}
-            fallbackStyle={[
-              a.border,
-              t.atoms.border_contrast_low,
-              showIndicator
-                ? {backgroundColor: t.palette.primary_50}
-                : t.atoms.bg,
-            ]}
-          />
-        )}
         <SubtleHover hover={hovered} style={[a.rounded_full]} />
         <ArrowIcon
           size="md"
