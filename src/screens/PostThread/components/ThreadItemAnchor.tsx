@@ -560,6 +560,11 @@ function ExpandedPostDetails({
   const t = useTheme()
   const {i18n} = useLingui()
   const isRootPost = !('reply' in post.record)
+  const record = bsky.isType(app.bsky.feed.post, post.record)
+    ? post.record
+    : undefined
+  const via =
+    record?.via === 'Bluesky Website' ? 'Bluesky Web App' : record?.via
 
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
@@ -568,6 +573,12 @@ function ExpandedPostDetails({
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
           {niceDate(i18n, post.indexedAt, 'dot separated')}
         </Text>
+        {via && (
+          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+            {'· '}
+            {via}
+          </Text>
+        )}
         {isRootPost && (
           <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
         )}
