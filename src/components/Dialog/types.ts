@@ -56,10 +56,11 @@ export type DialogContextProps = {
   // in the event that the hook is used outside of a dialog
   isWithinDialog: boolean
   isHeightConstrained: boolean
-  shouldMeasureContentHeight: boolean
-  setDesiredContentHeight: React.Dispatch<
-    React.SetStateAction<number | undefined>
-  >
+  /**
+   * Hands the native sheet the React tag of the content's ScrollView, which it
+   * uses to measure the content's natural height on iOS.
+   */
+  setContentScrollViewTag: (tag: number | undefined) => void
 }
 
 export type DialogControlOpenOptions = {

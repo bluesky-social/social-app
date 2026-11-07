@@ -141,8 +141,7 @@ export function Outer({
       setDisableDrag: () => {},
       isWithinDialog: true,
       isHeightConstrained: false,
-      shouldMeasureContentHeight: false,
-      setDesiredContentHeight: () => {},
+      setContentScrollViewTag: () => {},
     }),
     [close, preventDismiss],
   )

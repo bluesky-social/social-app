@@ -107,7 +107,7 @@ function BottomSheetNativeComponentInner({
   children,
   backgroundColor,
   containerBackgroundColor,
-  desiredContentHeight,
+  contentScrollViewTag,
   maxHeight,
   onStateChange,
   onPresentationSizeChange,
@@ -129,15 +129,16 @@ function BottomSheetNativeComponentInner({
     Platform.OS === 'ios' ? presentationSize?.height : undefined
   const hasPresentedPopover = presentationSize?.isPopover === true
   /*
-   * Content that reports its own height can be capped at the presented height,
-   * since the cap doesn't change what it reports. It isn't stretched to fill
-   * the presentation, though: content shorter than the sheet keeps its natural
-   * height, so it doesn't follow the sheet around while it's dragged or resized.
+   * Content measured through its ScrollView can be capped at the presented
+   * height, since the cap doesn't change the measured height. It isn't
+   * stretched to fill the presentation, though: content shorter than the sheet
+   * keeps its natural height, so it doesn't follow the sheet around while it's
+   * dragged or resized.
    */
-  const usesReportedContentHeight =
+  const usesMeasuredContentHeight =
     Platform.OS === 'ios' &&
     presentationHeight != null &&
-    desiredContentHeight != null
+    contentScrollViewTag != null
   const isHeightConstrained =
     maxHeight != null || rest.fullHeight === true || hasPresentedPopover
   const viewportMaxHeight =
@@ -152,7 +153,7 @@ function BottomSheetNativeComponentInner({
 
   const effectiveViewportMaxHeight =
     viewportMaxHeight ??
-    (usesReportedContentHeight ? presentationHeight : undefined)
+    (usesMeasuredContentHeight ? presentationHeight : undefined)
   const nativeContainerBackgroundColor =
     Platform.OS === 'ios'
       ? (containerBackgroundColor ?? backgroundColor)
@@ -163,7 +164,7 @@ function BottomSheetNativeComponentInner({
       {...rest}
       {...(Platform.OS === 'ios'
         ? {
-            desiredContentHeight,
+            contentScrollViewTag,
             popover,
             popoverWidth,
             onPresentationSizeChange,
