@@ -72,6 +72,7 @@ import {
 } from '#/lib/routes/types'
 import {bskyTitle} from '#/lib/strings/headings'
 import {emitSoftReset} from '#/state/events'
+import {useHomeBadge} from '#/state/home-badge'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
@@ -177,6 +178,7 @@ import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {setNavigationMetadata} from '#/analytics/metadata'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {isFollowingV2HomeDotEnabled} from '#/features/followingV2/eligibility'
 import {HomeScreen} from '#/features/followingV2/home'
 import {InviteScannerScreen} from '#/features/inviteFriends'
 import {
@@ -765,6 +767,14 @@ const ROUTES_WITHOUT_BOTTOM_TAB_BAR = new Set<string>([
 ])
 
 /**
+ * Native tab badges only hold text, so the "something new" dot is a dot
+ * character, with a clear badge background and our blue text (needs the
+ * `react-native-screens` and `@react-navigation/bottom-tabs` patches for the
+ * text color). An empty badge would be dropped, see the patch notes.
+ */
+const DOT_BADGE = '\u25CF'
+
+/**
  * Gives a tab its own safe area, measured from inside the tab. UIKit includes
  * the native tab bar in that, so content can clear it (and follow it as it
  * shows and hides) with the usual `useSafeAreaInsets().bottom`.
@@ -793,6 +803,11 @@ function NativeTabsNavigator({layout}: {layout: TabsLayout}) {
   const {gtMobile} = useBreakpoints()
   const profileTabIcon = useProfileTabIcon()
   const placement = useNativeTabBarPlacement()
+  const hasHomeBadge = useHomeBadge()
+  const dotBadgeStyle = {
+    backgroundColor: 'transparent',
+    color: t.palette.primary_500,
+  }
 
   /*
    * There's no JS bottom bar. Content clears the native one with the bottom
@@ -894,6 +909,11 @@ function NativeTabsNavigator({layout}: {layout: TabsLayout}) {
         getComponent={() => HomeTabNavigator}
         options={{
           title: l`Home`,
+          ...(hasHomeBadge &&
+            isFollowingV2HomeDotEnabled(ax) && {
+              tabBarBadge: DOT_BADGE,
+              tabBarBadgeStyle: dotBadgeStyle,
+            }),
           tabBarIcon: ({focused}) =>
             nanoTabIcon(
               focused
@@ -926,10 +946,15 @@ function NativeTabsNavigator({layout}: {layout: TabsLayout}) {
                 ? 'Message_Stroke2_Corner0_Rounded_Filled'
                 : 'Message_Stroke2_Corner0_Rounded',
             ),
-          tabBarBadge:
-            aa.flags.chatDisabled || !numUnreadMessages.numUnread
-              ? undefined
-              : numUnreadMessages.numUnread,
+          ...(aa.flags.chatDisabled
+            ? null
+            : numUnreadMessages.numUnread
+              ? {tabBarBadge: numUnreadMessages.numUnread}
+              : // e.g. only chat requests
+                numUnreadMessages.hasNew && {
+                  tabBarBadge: DOT_BADGE,
+                  tabBarBadgeStyle: dotBadgeStyle,
+                }),
         }}
       />
       <NativeTab.Screen
