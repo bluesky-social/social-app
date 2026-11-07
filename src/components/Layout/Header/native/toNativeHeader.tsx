@@ -129,8 +129,10 @@ function toItem(
 }
 
 /**
- * A `Button` whose only content is a `ButtonIcon` with a native icon, and/or a
- * `ButtonText` of plain text, becomes a native bar button.
+ * A `Button` whose only content is a `ButtonText` of plain text and/or a
+ * `ButtonIcon`, becomes a native bar button. Bar buttons show text or an icon,
+ * not both, so text wins and the icon is dropped. An icon on its own needs a
+ * native icon.
  */
 function toButtonItem(
   el: React.ReactElement,
@@ -141,12 +143,11 @@ function toButtonItem(
   const props = el.props as ButtonProps
   if (!props.onPress || typeof props.children === 'function') return undefined
 
-  let icon: PlatformIconIOS | undefined
+  let iconComponent: unknown
   let text: string | undefined
   for (const child of flatten(props.children)) {
-    if (child.type === ButtonIcon && !icon) {
-      icon = resolveIcon((child.props as {icon: unknown}).icon)
-      if (!icon) return undefined
+    if (child.type === ButtonIcon && iconComponent === undefined) {
+      iconComponent = (child.props as {icon: unknown}).icon
     } else if (child.type === ButtonText && text === undefined) {
       const textChildren = (child.props as {children?: React.ReactNode})
         .children
@@ -156,19 +157,37 @@ function toButtonItem(
       return undefined
     }
   }
-  if (!icon && !text) return undefined
+
+  let icon: PlatformIconIOS | undefined
+  if (!text) {
+    if (iconComponent === undefined) return undefined
+    icon = resolveIcon(iconComponent)
+    if (!icon) return undefined
+  }
 
   const onPress = props.onPress
   return {
     type: 'button',
-    // Shown when there's no icon, and the accessibility label when there is.
-    label: icon ? props.label : (text ?? props.label),
+    // Shown when there's no icon
+    label: text || props.label,
     icon,
     disabled: props.disabled,
     // `color="primary"` is our call to action, which native shows prominently.
     variant: props.color === 'primary' ? 'prominent' : 'plain',
     onPress: () => onPress(createPressEvent()),
+    ...nativeAccessibilityLabel(props.label),
   }
+}
+
+/**
+ * The button's full `label` (e.g. "New list" for a button that shows "New")
+ * for VoiceOver, and so E2E flows can find the button by it: bar buttons
+ * can't take a `testID`. react-native-screens reads `accessibilityLabel` on
+ * bar button items, and native-stack passes unknown keys through, but its
+ * types don't declare it yet.
+ */
+export function nativeAccessibilityLabel(label: string) {
+  return {accessibilityLabel: label} as {}
 }
 
 /*

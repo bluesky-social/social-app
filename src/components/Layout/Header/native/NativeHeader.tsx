@@ -14,6 +14,7 @@ import {
 } from '#/components/Layout/Header/actions'
 import {
   createPressEvent,
+  nativeAccessibilityLabel,
   toNativeHeader,
 } from '#/components/Layout/Header/native/toNativeHeader'
 
@@ -40,6 +41,7 @@ export function NativeHeader({children}: {children: React.ReactNode}) {
       leftItems.push({
         type: 'button',
         label: l`Open drawer menu`,
+        ...nativeAccessibilityLabel(l`Open drawer menu`),
         icon: {type: 'sfSymbol', name: 'line.3.horizontal'},
         onPress: openDrawer,
       })
@@ -48,6 +50,7 @@ export function NativeHeader({children}: {children: React.ReactNode}) {
       leftItems.push({
         type: 'button',
         label: l`Go back`,
+        ...nativeAccessibilityLabel(l`Go back`),
         icon: {type: 'sfSymbol', name: 'chevron.backward'},
         onPress: () => goBack(createPressEvent()),
       })

@@ -108,21 +108,27 @@ describe('toNativeHeader', () => {
 
   it('converts icon and text buttons to native bar buttons', () => {
     const onAdd = jest.fn()
-    const onDone = jest.fn()
+    const onSave = jest.fn()
+    const onNew = jest.fn()
     const spec = toNativeHeader(
       <>
         <Header.Content>
           <Header.TitleText>Lists</Header.TitleText>
         </Header.Content>
         <Header.Slot>
-          <Button label="New list" onPress={onAdd}>
+          <Button label="Add" onPress={onAdd}>
             <ButtonIcon icon={Plus} />
           </Button>
         </Header.Slot>
-        <Button label="Save changes" color="primary" onPress={onDone}>
+        <Button label="Save changes" color="primary" disabled onPress={onSave}>
           <ButtonText>
             <Trans>Save</Trans>
           </ButtonText>
+        </Button>
+        {/* Text wins, even over an icon with no native equivalent */}
+        <Button label="New list" onPress={onNew}>
+          <ButtonIcon icon={() => null} />
+          <ButtonText>New</ButtonText>
         </Button>
       </>,
       i18n,
@@ -132,7 +138,8 @@ describe('toNativeHeader', () => {
     expect(spec.rightItems).toEqual([
       {
         type: 'button',
-        label: 'New list',
+        label: 'Add',
+        accessibilityLabel: 'Add',
         icon: sfPlus,
         disabled: undefined,
         variant: 'plain',
@@ -141,15 +148,28 @@ describe('toNativeHeader', () => {
       {
         type: 'button',
         label: 'Save',
+        accessibilityLabel: 'Save changes',
         icon: undefined,
-        disabled: undefined,
+        disabled: true,
         variant: 'prominent',
         onPress: expect.any(Function),
       },
+      {
+        type: 'button',
+        label: 'New',
+        accessibilityLabel: 'New list',
+        icon: undefined,
+        disabled: undefined,
+        variant: 'plain',
+        onPress: expect.any(Function),
+      },
     ])
-    const [add] = spec.rightItems
-    if (add.type === 'button') add.onPress()
+    for (const item of spec.rightItems) {
+      if (item.type === 'button') item.onPress()
+    }
     expect(onAdd).toHaveBeenCalledTimes(1)
+    expect(onSave).toHaveBeenCalledTimes(1)
+    expect(onNew).toHaveBeenCalledTimes(1)
   })
 
   it('falls back to custom items for anything else', () => {
