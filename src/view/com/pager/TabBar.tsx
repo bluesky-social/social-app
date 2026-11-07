@@ -22,6 +22,7 @@ import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useTheme} from '#/alf'
 import {Center} from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {usePhoneHorizontalSafeAreaInsets} from '#/features/verticalBar'
 
 export interface TabBarProps {
   testID?: string
@@ -56,6 +57,7 @@ export function TabBar({
   transparent,
 }: TabBarProps) {
   const t = useTheme()
+  const sideInsets = usePhoneHorizontalSafeAreaInsets()
   const scrollElRef = useAnimatedRef<ScrollView>()
   const syncScrollState = useSharedValue<'synced' | 'unsynced' | 'needs-sync'>(
     'synced',
@@ -332,6 +334,8 @@ export function TabBar({
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           ref={scrollElRef}
+          // Clip the tabs at the vertical bar (iPhone Duo) rather than under it
+          style={{marginLeft: sideInsets.left, marginRight: sideInsets.right}}
           contentContainerStyle={styles.contentContainer}
           onLayout={e => {
             containerSize.set(e.nativeEvent.layout.width)

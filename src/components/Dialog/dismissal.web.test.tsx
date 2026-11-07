@@ -27,6 +27,9 @@ jest.mock('#/alf', () => ({
   }),
 }))
 jest.mock('#/logger', () => ({logger: {error: jest.fn()}}))
+jest.mock('#/features/verticalBar', () => ({
+  useHorizontalSafeAreaInsets: () => ({left: 0, right: 0}),
+}))
 jest.mock('#/components/Portal', () => ({
   Portal: ({children}: {children: React.ReactNode}) => <>{children}</>,
 }))

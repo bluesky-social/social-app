@@ -1,5 +1,6 @@
 import {View} from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Trans} from '@lingui/react/macro'
 
 import {useShellLayout} from '#/state/shell/shell-layout'
@@ -7,12 +8,16 @@ import {atoms as a, useTheme} from '#/alf'
 import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Earth'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {useHasNativeTabs} from '#/features/verticalBar'
 
 export function AtmosphereActivityTab() {
   const t = useTheme()
   const {footerHeight} = useShellLayout()
+  // With native tabs there's no footer, but the safe area includes the tab bar
+  const {bottom: bottomInset} = useSafeAreaInsets()
+  const hasNativeTabs = useHasNativeTabs()
   const animatedStyle = useAnimatedStyle(() => ({
-    paddingBottom: footerHeight.get(),
+    paddingBottom: hasNativeTabs ? bottomInset : footerHeight.get(),
   }))
 
   return (

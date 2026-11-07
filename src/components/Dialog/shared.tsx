@@ -9,6 +9,7 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import {IS_LIQUID_GLASS} from '#/env'
+import {useHorizontalSafeAreaInsets} from '#/features/verticalBar'
 
 export function Header({
   renderLeft,
@@ -24,6 +25,8 @@ export function Header({
   onLayout?: (event: LayoutChangeEvent) => void
 }) {
   const t = useTheme()
+  const sideInsets = useHorizontalSafeAreaInsets()
+  const sideOffset = IS_LIQUID_GLASS ? 12 : 6
   return (
     <View
       onLayout={onLayout}
@@ -45,13 +48,13 @@ export function Header({
         style,
       ]}>
       {renderLeft && (
-        <View style={[a.absolute, {left: IS_LIQUID_GLASS ? 12 : 6}]}>
+        <View style={[a.absolute, {left: sideOffset + sideInsets.left}]}>
           {renderLeft()}
         </View>
       )}
       {children}
       {renderRight && (
-        <View style={[a.absolute, {right: IS_LIQUID_GLASS ? 12 : 6}]}>
+        <View style={[a.absolute, {right: sideOffset + sideInsets.right}]}>
           {renderRight()}
         </View>
       )}

@@ -31,6 +31,10 @@ import {
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {IS_IPAD, IS_WEB} from '#/env'
+import {
+  useHasNativeTabs,
+  useHorizontalSafeAreaInsets,
+} from '#/features/verticalBar'
 
 export * from '#/components/Layout/const'
 export * as Header from '#/components/Layout/Header'
@@ -116,6 +120,25 @@ export const Content = memo(function Content({
   const usesSystemScrollIndicatorInsets =
     gtMobile && !isWithinContainedTabletSurface
   const offsetContext = useMemo(() => ({isWithinOffsetView: true}), [])
+  /*
+   * Keep full-width content clear of the vertical bar (iPhone Duo), see
+   * `List`.
+   */
+  const sideInsets = useHorizontalSafeAreaInsets()
+  const hasSideInsets =
+    !centerOnTablet &&
+    !isWithinContainedTabletSurface &&
+    (sideInsets.left > 0 || sideInsets.right > 0)
+
+  /*
+   * Native tabs float over the content (or sit beside it, in the vertical
+   * bar), so scroll under them and inset by the bottom safe area, which
+   * includes the tab bar. The JS bottom bar is opaque, so stop above it.
+   */
+  const hasNativeTabs = useHasNativeTabs()
+  const {bottom: bottomInset} = useSafeAreaInsets()
+  const nativeTabsInsets =
+    hasNativeTabs && !isWithinDialog ? {bottom: bottomInset} : undefined
 
   // note - if we ever make the footer transparent in any way,
   // we'll need to change this to use contentInsets/scrollIndicatorInsets
@@ -138,6 +161,8 @@ export const Content = memo(function Content({
           : false)
       }
       indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
+      contentInset={nativeTabsInsets}
+      scrollIndicatorInsets={nativeTabsInsets}
       // Header taps scroll to the top on iPadOS 26, see `List`
       scrollsToTop={IS_IPAD ? false : undefined}
       style={[
@@ -160,6 +185,10 @@ export const Content = memo(function Content({
         },
         /* UIKit centering would also add horizontal insets to the column. */
         centerOnTablet && centerContent && [a.flex_grow, a.justify_center],
+        hasSideInsets && {
+          marginLeft: sideInsets.left,
+          marginRight: sideInsets.right,
+        },
         contentContainerStyle,
       ]}
       {...props}>

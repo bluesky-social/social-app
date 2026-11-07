@@ -73,6 +73,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {usePhoneHorizontalSafeAreaInsets} from '#/features/verticalBar'
 import {account, useStorage} from '#/storage'
 import type * as bsky from '#/types/bsky'
 import {AdvancedSearchDialog} from './components/AdvancedSearchDialog'
@@ -539,6 +540,7 @@ export function SearchScreenShell({
   }, [ax, query, filters, l])
 
   const showHeader = !gtMobile || navButton !== 'menu'
+  const sideInsets = usePhoneHorizontalSafeAreaInsets()
 
   return (
     <Layout.Screen testID={testID}>
@@ -597,7 +599,15 @@ export function SearchScreenShell({
               </Layout.Header.Outer>
             </View>
           )}
-          <View style={[a.px_lg, a.pt_sm, a.pb_sm, a.overflow_hidden]}>
+          <View
+            style={[
+              a.px_lg,
+              a.pt_sm,
+              a.pb_sm,
+              a.overflow_hidden,
+              // Keep the search bar clear of the vertical bar (iPhone Duo)
+              {marginLeft: sideInsets.left, marginRight: sideInsets.right},
+            ]}>
             <View style={[a.gap_sm]}>
               {!!query && !showAutocomplete && (
                 <DetectedLanguagesAdmonition
