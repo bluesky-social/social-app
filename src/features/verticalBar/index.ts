@@ -5,6 +5,7 @@ import {useBreakpoints} from '#/alf'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_IPAD, IS_LIQUID_GLASS} from '#/env'
 
+export {NATIVE_TAB_BAR_SIDE_MARGIN} from '#/features/verticalBar/constants'
 export {
   getNativeTabsMounted,
   setNativeTabsMounted,
