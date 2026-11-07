@@ -178,8 +178,14 @@ const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
  * These "common screens" are reused across stacks.
  */
 function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
-  const title = (page: MessageDescriptor) =>
-    bskyTitle(i18n._(page), unreadCountLabel)
+  /*
+   * On web this is the document title. On native, iOS shows it in the back
+   * button's long-press menu, so leave off the " — Bluesky" suffix there.
+   */
+  const title = (page: MessageDescriptor | string) => {
+    const text = typeof page === 'string' ? page : i18n._(page)
+    return IS_WEB ? bskyTitle(text, unreadCountLabel) : text
+  }
 
   return (
     <>
@@ -196,7 +202,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="Lists"
         component={ListsScreen}
-        options={{title: title(msg`Lists`), requireAuth: true}}
+        options={{
+          title: title(msg`Lists`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="Moderation"
@@ -224,17 +234,29 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="ModerationInboxReportDetails"
         getComponent={() => ModerationInboxReportDetailsScreen}
-        options={{title: title(msg`Your report`), requireAuth: true}}
+        options={{
+          title: title(msg`Your report`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="ModerationInboxNoticeDetails"
         getComponent={() => ModerationInboxNoticeDetailsScreen}
-        options={{title: title(msg`Notice`), requireAuth: true}}
+        options={{
+          title: title(msg`Notice`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="ModerationModlists"
         getComponent={() => ModerationModlistsScreen}
-        options={{title: title(msg`Moderation Lists`), requireAuth: true}}
+        options={{
+          title: title(msg`Moderation Lists`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="ModerationMutedAccounts"
@@ -294,7 +316,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="Profile"
         getComponent={() => ProfileScreen}
         options={({route}) => ({
-          title: bskyTitle(`@${route.params.name}`, unreadCountLabel),
+          title: title(`@${route.params.name}`),
         })}
       />
       <Stack.Screen
@@ -302,6 +324,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => ProfileFollowersScreen}
         options={({route}) => ({
           title: title(msg`People following @${route.params.name}`),
+          nativeHeader: true,
         })}
       />
       <Stack.Screen
@@ -309,6 +332,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => ProfileFollowsScreen}
         options={({route}) => ({
           title: title(msg`People followed by @${route.params.name}`),
+          nativeHeader: true,
         })}
       />
       <Stack.Screen
@@ -342,6 +366,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => PostLikedByScreen}
         options={({route}) => ({
           title: title(msg`Post by @${route.params.name}`),
+          nativeHeader: true,
         })}
       />
       <Stack.Screen
@@ -349,6 +374,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => PostRepostedByScreen}
         options={({route}) => ({
           title: title(msg`Post by @${route.params.name}`),
+          nativeHeader: true,
         })}
       />
       <Stack.Screen
@@ -443,7 +469,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="SavedFeeds"
         getComponent={() => SavedFeeds}
-        options={{title: title(msg`Edit My Feeds`), requireAuth: true}}
+        options={{
+          title: title(msg`Edit My Feeds`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="PreferencesFollowingFeed"
@@ -617,12 +647,20 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         <Stack.Screen
           name="MessagesConversationSettings"
           getComponent={() => MessagesConversationSettingsScreen}
-          options={{title: title(msg`Group chat settings`), requireAuth: true}}
+          options={{
+            title: title(msg`Group chat settings`),
+            requireAuth: true,
+            nativeHeader: true,
+          }}
         />
         <Stack.Screen
           name="MessagesJoinRequests"
           getComponent={() => MessagesJoinRequestsScreen}
-          options={{title: title(msg`Requests to join`), requireAuth: true}}
+          options={{
+            title: title(msg`Requests to join`),
+            requireAuth: true,
+            nativeHeader: true,
+          }}
         />
         <Stack.Screen
           name="MessagesSettings"
@@ -671,12 +709,20 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="StarterPackWizard"
         getComponent={() => Wizard}
-        options={{title: title(msg`Create a Starter Pack`), requireAuth: true}}
+        options={{
+          title: title(msg`Create a Starter Pack`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="StarterPackEdit"
         getComponent={() => Wizard}
-        options={{title: title(msg`Edit your Starter Pack`), requireAuth: true}}
+        options={{
+          title: title(msg`Edit your Starter Pack`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="VideoFeed"
