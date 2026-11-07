@@ -98,6 +98,9 @@ stats.json
 /android/
 /ios/
 
+# Native symbols, built from assets/icons at prebuild
+/assets/nano-icons/symbols/
+
 # environment variables
 .env
 .env.*
