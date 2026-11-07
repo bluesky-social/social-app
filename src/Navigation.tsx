@@ -186,7 +186,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="NotFound"
         getComponent={() => NotFoundScreen}
-        options={{title: title(msg`Not Found`)}}
+        options={{title: title(msg`Not Found`), nativeHeader: true}}
       />
       <Stack.Screen
         name="Atmosphere"
@@ -201,7 +201,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="Moderation"
         getComponent={() => ModerationScreen}
-        options={{title: title(msg`Moderation`), requireAuth: true}}
+        options={{
+          title: title(msg`Moderation`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="ModerationInbox"
@@ -211,7 +215,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="ModerationInboxSettings"
         getComponent={() => ModerationInboxSettingsScreen}
-        options={{title: title(msg`Mod inbox settings`), requireAuth: true}}
+        options={{
+          title: title(msg`Mod inbox settings`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="ModerationInboxReportDetails"
@@ -231,12 +239,20 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="ModerationMutedAccounts"
         getComponent={() => ModerationMutedAccounts}
-        options={{title: title(msg`Muted Accounts`), requireAuth: true}}
+        options={{
+          title: title(msg`Muted Accounts`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="ModerationBlockedAccounts"
         getComponent={() => ModerationBlockedAccounts}
-        options={{title: title(msg`Blocked Accounts`), requireAuth: true}}
+        options={{
+          title: title(msg`Blocked Accounts`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="ModerationInteractionSettings"
@@ -244,6 +260,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Post Interaction Settings`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
@@ -252,6 +269,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Verification Settings`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
@@ -348,7 +366,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="CustomFeedLikedBy"
         getComponent={() => CustomFeedLikedByScreen}
-        options={{title: title(msg`Liked by`)}}
+        options={{title: title(msg`Liked by`), nativeHeader: true}}
       />
       <Stack.Screen
         name="ProfileLabelerLikedBy"
@@ -358,7 +376,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="Debug"
         getComponent={() => StorybookScreen}
-        options={{title: title(msg`Storybook`), requireAuth: true}}
+        options={{
+          title: title(msg`Storybook`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="DebugMod"
@@ -378,7 +400,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="Log"
         getComponent={() => LogScreen}
-        options={{title: title(msg`Log`), requireAuth: true}}
+        options={{
+          title: title(msg`Log`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="Support"
@@ -601,7 +627,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         <Stack.Screen
           name="MessagesSettings"
           getComponent={() => MessagesSettingsScreen}
-          options={{title: title(msg`Chat settings`), requireAuth: true}}
+          options={{
+            title: title(msg`Chat settings`),
+            requireAuth: true,
+            nativeHeader: true,
+          }}
         />
         <Stack.Screen
           name="MessagesInbox"
@@ -612,7 +642,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="NotificationsActivityList"
         getComponent={() => NotificationsActivityListScreen}
-        options={{title: title(msg`Notifications`), requireAuth: true}}
+        options={{
+          title: title(msg`Notifications`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="LegacyNotificationSettings"
@@ -658,6 +692,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Saved Posts`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
