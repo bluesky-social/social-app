@@ -1,4 +1,8 @@
-import {getGlobalScope, init} from '@sentry/react-native'
+import {
+  getGlobalScope,
+  init,
+  reactNativeTracingIntegration,
+} from '@sentry/react-native'
 
 import {featureFlagsIntegration} from '#/logger/sentry/featureFlags'
 import {dropExpectedNetworkErrors} from '#/logger/sentry/network-errors'
@@ -15,7 +19,25 @@ init({
   dist: env.BUNDLE_IDENTIFIER,
   release: env.SENTRY_RELEASE,
   beforeSend: dropExpectedNetworkErrors,
-  integrations: [featureFlagsIntegration],
+  integrations: [
+    featureFlagsIntegration,
+    /*
+     * Setting tracesSampleRate adds this integration by default, which wraps
+     * every XHR/fetch in a span. Our only spans are the manual video ones,
+     * which are inactive, so request spans almost never have a parent and get
+     * discarded on device (millions a day as no_parent_span) after the work
+     * of creating them. Overriding it by name keeps the rest of the
+     * integration but skips request instrumentation.
+     */
+    reactNativeTracingIntegration({traceFetch: false, traceXHR: false}),
+  ],
+  /*
+   * On native the SDK defaults this to match every URL, which adds
+   * sentry-trace and baggage headers (release, environment, public key) to
+   * requests to every host, including third-party PDSes and CDNs. None of our
+   * backends read them, so propagate to nothing.
+   */
+  tracePropagationTargets: [],
   ignoreErrors: [
     /*
      * Unknown internals errors
