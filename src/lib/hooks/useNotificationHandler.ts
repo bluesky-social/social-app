@@ -10,6 +10,11 @@ import {
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
+import {
+  moderationPushDestination,
+  type ModerationPushPayload,
+  parseModerationPush,
+} from '#/lib/notifications/moderation'
 import {logger as notyLogger} from '#/lib/notifications/util'
 import {getMessagesNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -23,7 +28,7 @@ import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_IOS} from '#/env'
-import {navigateToPath, resetToTab} from '#/Navigation'
+import {navigate, navigateToPath, resetToTab} from '#/Navigation'
 import {router} from '#/routes'
 
 export type NotificationReason =
@@ -44,6 +49,7 @@ export type NotificationReason =
   | 'verified'
   | 'unverified'
   | 'subscribed-post'
+  | 'moderation-inbox'
 
 type ChatNotificationReason = Extract<NotificationReason, `chat-${string}`>
 
@@ -55,11 +61,15 @@ type ChatNotificationReason = Extract<NotificationReason, `chat-${string}`>
 export type NotificationPayload =
   | undefined
   | {
-      reason: Exclude<NotificationReason, ChatNotificationReason>
+      reason: Exclude<
+        NotificationReason,
+        ChatNotificationReason | 'moderation-inbox'
+      >
       uri: string
       subject: string
       recipientDid: string
     }
+  | ModerationPushPayload
   | {
       reason: 'chat-message'
       convoId: string
@@ -90,6 +100,12 @@ export function isChatNotificationPayload(
   payload: NonNullable<NotificationPayload>,
 ): payload is ChatNotificationPayload {
   return payload.reason.startsWith('chat-')
+}
+
+export function isModerationNotificationPayload(
+  payload: NonNullable<NotificationPayload>,
+): payload is ModerationPushPayload {
+  return payload.reason === 'moderation-inbox'
 }
 
 const DEFAULT_HANDLER_OPTIONS = {
@@ -221,11 +237,37 @@ export function useNotificationsHandler() {
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
+    void Notifications.setNotificationChannelAsync(
+      'moderation-inbox' satisfies NotificationReason,
+      {
+        name: l`Moderation updates`,
+        importance: Notifications.AndroidImportance.HIGH,
+        showBadge: false,
+      },
+    )
   }, [l])
 
   useEffect(() => {
     const handleNotification = (payload?: NotificationPayload) => {
       if (!payload) return
+
+      if (isModerationNotificationPayload(payload)) {
+        if (payload.recipientDid !== currentAccount?.did) {
+          if (!storedAccountSwitchPayload) {
+            storePayloadForAccountSwitch(payload)
+            closeAllActiveElements()
+            const account = accounts.find(a => a.did === payload.recipientDid)
+            if (account) void onPressSwitchAccount(account, 'Notification')
+            else setShowLoggedOut(true)
+          }
+          return
+        }
+        void queryClient.invalidateQueries({
+          queryKey: ['moderation-inbox', {did: payload.recipientDid}],
+        })
+        void navigate(moderationPushDestination(payload))
+        return
+      }
 
       if (isChatNotificationPayload(payload)) {
         logger.debug(`useNotificationsHandler: handling chat notification`, {
@@ -308,6 +350,18 @@ export function useNotificationsHandler() {
 
         if (!payload) return Promise.resolve(DEFAULT_HANDLER_OPTIONS)
 
+        if (isModerationNotificationPayload(payload)) {
+          void queryClient.invalidateQueries({
+            queryKey: ['moderation-inbox', {did: payload.recipientDid}],
+          })
+          return Promise.resolve({
+            shouldShowList: true,
+            shouldShowBanner: true,
+            shouldPlaySound: false,
+            shouldSetBadge: false,
+          } satisfies Notifications.NotificationBehavior)
+        }
+
         logger.debug('useNotificationsHandler: incoming', {e, payload})
 
         if (
@@ -360,8 +414,10 @@ export function useNotificationsHandler() {
             causedBoot: false,
           })
 
-          invalidateCachedUnreadPage()
-          void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
+          if (!isModerationNotificationPayload(payload)) {
+            invalidateCachedUnreadPage()
+            void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
+          }
 
           if (
             payload.reason === 'mention' ||
@@ -372,14 +428,19 @@ export function useNotificationsHandler() {
           }
 
           // Notifications v2 refreshes itself, as it decides what's seen
-          if (!isChatNotificationPayload(payload)) {
+          if (
+            !isChatNotificationPayload(payload) &&
+            !isModerationNotificationPayload(payload)
+          ) {
             emitPushNotificationOpened()
           }
 
-          logger.debug('Notifications: handleNotification', {
-            content: e.notification.request.content,
-            payload: payload,
-          })
+          if (!isModerationNotificationPayload(payload)) {
+            logger.debug('Notifications: handleNotification', {
+              content: e.notification.request.content,
+              payload: payload,
+            })
+          }
 
           handleNotification(payload)
           void Notifications.dismissAllNotificationsAsync()
@@ -406,11 +467,13 @@ export function useNotificationsHandler() {
     // Whenever currentAccount changes, we should try to handle it again.
     if (
       storedAccountSwitchPayload &&
-      isChatNotificationPayload(storedAccountSwitchPayload) &&
+      (isChatNotificationPayload(storedAccountSwitchPayload) ||
+        isModerationNotificationPayload(storedAccountSwitchPayload)) &&
       currentAccount?.did === storedAccountSwitchPayload.recipientDid
     ) {
-      handleNotification(storedAccountSwitchPayload)
+      const payload = storedAccountSwitchPayload
       storedAccountSwitchPayload = undefined
+      handleNotification(payload)
     }
 
     return () => {
@@ -451,6 +514,9 @@ export function getNotificationPayload(
     IS_IOS ? e.request.trigger.payload : e.request.content.data
   ) as NotificationPayload
 
+  if (payload?.reason === 'moderation-inbox') {
+    return parseModerationPush(payload)
+  }
   if (payload && payload.reason) {
     return payload
   } else {

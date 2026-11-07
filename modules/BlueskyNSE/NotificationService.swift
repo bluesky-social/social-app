@@ -67,6 +67,8 @@ class NotificationService: UNNotificationServiceExtension {
       mutateWithGroupSubtitle(bestAttempt, userInfo: request.content.userInfo)
       mutateWithBadge(bestAttempt)
       contentHandler(bestAttempt)
+    } else if reason == "moderation-inbox" {
+      contentHandler(bestAttempt)
     } else {
       mutateWithBadge(bestAttempt)
       contentHandler(bestAttempt)
