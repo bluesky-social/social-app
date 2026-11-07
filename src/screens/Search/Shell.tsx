@@ -39,6 +39,11 @@ import {
 import {extractFromMe} from '#/state/queries/search-posts-params'
 import {useSession} from '#/state/session'
 import {
+  completeTrailingFrom,
+  getProfileTypeaheadQuery,
+  getTrailingFromValue,
+} from '#/screens/Search/profileTypeahead'
+import {
   countActiveFilters,
   definedFilterParams,
   filtersToRouteParams,
@@ -157,7 +162,7 @@ export function SearchScreenShell({
        * query; only the native inline list consumes this one, so pass an empty
        * query on web to keep the hook a no-op instead of doing wasted work.
        */
-      query: IS_NATIVE ? searchText : '',
+      query: IS_NATIVE ? getProfileTypeaheadQuery(searchText) : '',
     })
 
   const [showAutocomplete, setShowAutocomplete] = useState(false)
@@ -426,6 +431,19 @@ export function SearchScreenShell({
   )
 
   /**
+   * Native only. Selecting a profile while typing a `from:` operator fills in
+   * its handle and leaves the input focused to keep typing.
+   */
+  const onCompleteFrom = useCallback(
+    (profile: bsky.profile.AnyProfileView) => {
+      updateSearchText(
+        completeTrailingFrom(searchTextRef.current, profile.handle),
+      )
+    },
+    [updateSearchText],
+  )
+
+  /**
    * Web only. Selecting a profile from the anchored autocomplete dropdown.
    */
   const onSelectProfile = useCallback(
@@ -691,6 +709,11 @@ export function SearchScreenShell({
                 onSubmit={onSubmit('autocomplete')}
                 onResultPress={onAutocompleteResultPress}
                 onProfileClick={handleProfileClick}
+                onCompleteFrom={
+                  getTrailingFromValue(searchText) !== undefined
+                    ? onCompleteFrom
+                    : undefined
+                }
               />
             ) : (
               <SearchHistory

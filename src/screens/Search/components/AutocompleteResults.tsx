@@ -21,6 +21,7 @@ let AutocompleteResults = ({
   onSubmit,
   onResultPress,
   onProfileClick,
+  onCompleteFrom,
 }: {
   items: AutocompleteItem[]
   isFetching: boolean
@@ -28,6 +29,11 @@ let AutocompleteResults = ({
   onSubmit: () => void
   onResultPress: () => void
   onProfileClick: (profile: bsky.profile.AnyProfileView) => void
+  /**
+   * Set while a `from:` operator is being typed. Picking a profile then fills
+   * in its handle instead of opening the profile.
+   */
+  onCompleteFrom?: (profile: bsky.profile.AnyProfileView) => void
 }): React.ReactNode => {
   const ax = useAnalytics()
   const {t: l} = useLingui()
@@ -46,7 +52,7 @@ let AutocompleteResults = ({
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag">
           <SearchLinkCard
-            label={l`Search for “${searchText}”`}
+            label={l`Search for “${searchText.trim()}”`}
             onPress={native(onSubmit)}
             to={
               IS_NATIVE
@@ -62,7 +68,16 @@ let AutocompleteResults = ({
                 key={item.key}
                 profile={item.profile}
                 moderationOpts={moderationOpts}
+                label={
+                  onCompleteFrom
+                    ? l`Filter search to posts from ${item.profile.handle}`
+                    : undefined
+                }
                 onPress={() => {
+                  if (onCompleteFrom) {
+                    onCompleteFrom(item.profile)
+                    return false
+                  }
                   ax.metric('search:autocomplete:press', {
                     profileDid: item.profile.did,
                     position: index,
