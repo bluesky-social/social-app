@@ -6,14 +6,6 @@
       "#/*": ["./src/*"],
       "crypto": ["./src/platform/crypto.ts"],
       /*
-       * expo-file-system/legacy resolves to the package's raw TypeScript
-       * source, whose internals break under .web module suffixes. Point it
-       * at the compiled declarations, where skipLibCheck applies.
-       */
-      "expo-file-system/legacy": [
-        "./node_modules/expo-file-system/build/legacy/index.d.ts"
-      ],
-      /*
        * Mirrors the root tsconfig mappings (paths does not merge across
        * extends): expo-file-system's and expo-image-manipulator's `exports`
        * maps block the deep type imports in src/platform/misc.web-check.d.ts.
