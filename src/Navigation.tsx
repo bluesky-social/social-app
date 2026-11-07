@@ -257,12 +257,20 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="Settings"
         getComponent={() => SettingsScreen}
-        options={{title: title(msg`Settings`), requireAuth: true}}
+        options={{
+          title: title(msg`Settings`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="LanguageSettings"
         getComponent={() => LanguageSettingsScreen}
-        options={{title: title(msg`Language Settings`), requireAuth: true}}
+        options={{
+          title: title(msg`Language Settings`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="Profile"
@@ -400,7 +408,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="AppPasswords"
         getComponent={() => AppPasswordsScreen}
-        options={{title: title(msg`App Passwords`), requireAuth: true}}
+        options={{
+          title: title(msg`App Passwords`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="SavedFeeds"
@@ -413,12 +425,17 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Following Feed Preferences`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
         name="PreferencesThreads"
         getComponent={() => ThreadPreferencesScreen}
-        options={{title: title(msg`Threads Preferences`), requireAuth: true}}
+        options={{
+          title: title(msg`Threads Preferences`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="PreferencesExternalEmbeds"
@@ -426,6 +443,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`External Media Preferences`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
@@ -434,6 +452,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Accessibility Settings`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
@@ -442,6 +461,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Appearance`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
@@ -450,6 +470,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Account`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
@@ -458,6 +479,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Beta features`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
@@ -466,6 +488,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Automation Label`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
@@ -474,6 +497,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Privacy and Security`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
@@ -482,6 +506,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Privacy and Security`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
@@ -490,12 +515,17 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Find Contacts`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
         name="NotificationSettings"
         getComponent={() => NotificationSettingsScreen}
-        options={{title: title(msg`Notification settings`), requireAuth: true}}
+        options={{
+          title: title(msg`Notification settings`),
+          requireAuth: true,
+          nativeHeader: true,
+        }}
       />
       <Stack.Screen
         name="ActivityNotificationSettings"
@@ -503,6 +533,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Activity notifications`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
@@ -511,6 +542,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Content and Media`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
@@ -519,6 +551,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Your interests`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
@@ -527,6 +560,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`About`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
@@ -535,6 +569,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`App Icon`),
           requireAuth: true,
+          nativeHeader: true,
         }}
       />
       <Stack.Screen
