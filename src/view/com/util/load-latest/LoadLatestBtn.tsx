@@ -10,6 +10,7 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {useSession} from '#/state/session'
 import {atoms as a, useLayoutBreakpoints, useTheme, web} from '#/alf'
+import {GlassView} from '#/components/GlassView'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon} from '#/components/icons/Arrow'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
@@ -91,9 +92,13 @@ export function LoadLatestBtn({
           a.rounded_full,
           a.align_center,
           a.justify_center,
-          a.border,
-          t.atoms.border_contrast_low,
-          showIndicator ? {backgroundColor: t.palette.primary_50} : t.atoms.bg,
+          !hasNativeTabs && [
+            a.border,
+            t.atoms.border_contrast_low,
+            showIndicator
+              ? {backgroundColor: t.palette.primary_50}
+              : t.atoms.bg,
+          ],
         ]}
         onPress={onPress}
         hitSlop={HITSLOP_20}
@@ -102,6 +107,22 @@ export function LoadLatestBtn({
         targetScale={0.9}
         onPointerEnter={onHoverIn}
         onPointerLeave={onHoverOut}>
+        {/* Liquid Glass, to match the native tab bar */}
+        {hasNativeTabs && (
+          <GlassView
+            pointerEvents="none"
+            glassEffectStyle="regular"
+            tintColor={showIndicator ? t.palette.primary_50 : undefined}
+            style={[a.absolute, a.inset_0, a.rounded_full]}
+            fallbackStyle={[
+              a.border,
+              t.atoms.border_contrast_low,
+              showIndicator
+                ? {backgroundColor: t.palette.primary_50}
+                : t.atoms.bg,
+            ]}
+          />
+        )}
         <SubtleHover hover={hovered} style={[a.rounded_full]} />
         <ArrowIcon
           size="md"
