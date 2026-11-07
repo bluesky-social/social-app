@@ -1,4 +1,5 @@
 import * as AppLink from './src/AppLink'
+import * as ClippedImage from './src/ClippedImage'
 import * as PlatformInfo from './src/PlatformInfo'
 import {AudioCategory} from './src/PlatformInfo/types'
 import * as Referrer from './src/Referrer'
@@ -10,6 +11,7 @@ import * as WidgetInfo from './src/WidgetInfo'
 export {
   AppLink,
   AudioCategory,
+  ClippedImage,
   PlatformInfo,
   Referrer,
   Share,
