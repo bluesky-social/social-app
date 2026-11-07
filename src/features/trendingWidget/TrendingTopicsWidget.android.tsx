@@ -89,7 +89,8 @@ function TrendingTopicsWidget(
                   <Text
                     color={secondaryTextColor}
                     style={{fontSize: 14, fontWeight: '500'}}
-                    modifiers={[width(24)]}>
+                    // the icon + spacer width, to line up with the header title
+                    modifiers={[width(22)]}>
                     {`${index + 1}.`}
                   </Text>
                   <Column modifiers={[fillMaxWidth()]}>
