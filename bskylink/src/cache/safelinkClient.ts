@@ -44,6 +44,10 @@ export function domainLookupOrder(host: string): string[] {
   return order
 }
 
+function isExpired(rule: SafelinkRule) {
+  return !!rule.expiresAt && Date.parse(rule.expiresAt) <= Date.now()
+}
+
 export class SafelinkClient {
   private domainCache: LRUCache<string, SafelinkRule | 'ok'>
   private urlCache: LRUCache<string, SafelinkRule | 'ok'>
@@ -115,18 +119,17 @@ export class SafelinkClient {
     key: string,
     pattern: ToolsOzoneSafelinkDefs.PatternType,
   ): Promise<SafelinkRule | 'ok'> {
-    const cached = cache.get(key)
-    if (cached) {
-      return cached
+    let rule = cache.get(key)
+    if (!rule) {
+      try {
+        rule = await this.getRule(this.db, key, pattern)
+      } catch {
+        rule = 'ok'
+      }
+      cache.set(key, rule)
     }
-    let rule: SafelinkRule | 'ok'
-    try {
-      rule = await this.getRule(this.db, key, pattern)
-    } catch {
-      rule = 'ok'
-    }
-    cache.set(key, rule)
-    return rule
+    // checked on every lookup, so a cached rule stops applying once it expires
+    return rule !== 'ok' && isExpired(rule) ? 'ok' : rule
   }
 
   private async getRule(
@@ -169,6 +172,7 @@ export class SafelinkClient {
         pattern: rule.pattern,
         action: rule.action,
         createdAt: rule.createdAt,
+        expiresAt: rule.expiresAt ?? null,
       })
       .onConflict(oc => oc.column('id').doNothing())
       .execute()
