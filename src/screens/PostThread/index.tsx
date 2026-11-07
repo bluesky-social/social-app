@@ -695,6 +695,13 @@ function AnalyticsOnlyFeedFeedbackProvider({
   return <FeedFeedbackProvider value={value}>{children}</FeedFeedbackProvider>
 }
 
+/**
+ * UIKit's side margin for the floating tab bar on iPhones, so the floating
+ * reply prompt can match its width. It's the same on 402pt and 440pt wide
+ * screens (measured on iOS 27.2).
+ */
+const NATIVE_TAB_BAR_SIDE_MARGIN = 21
+
 function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
   const hasNativeTabs = useHasNativeTabs()
   return hasNativeTabs ? (
@@ -740,9 +747,8 @@ function FloatingComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
       style={[
         a.absolute,
         a.bottom_0,
-        // Roughly lines up with the floating native tab bar's sides
-        a.px_xl,
         {
+          paddingHorizontal: NATIVE_TAB_BAR_SIDE_MARGIN,
           left: sideInsets.left,
           right: sideInsets.right,
           // Don't sit flush on a screen edge with no home indicator
