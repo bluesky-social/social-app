@@ -8,6 +8,8 @@ export function getIsReducedMotionEnabled(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 
+export function reportFullyDrawn(): void {}
+
 export function setAudioActive(active: boolean): void {
   throw new NotImplementedError({active})
 }
