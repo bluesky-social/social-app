@@ -1,0 +1,26 @@
+diff --git a/lib/module/unstable/NativeBottomTabView.native.js b/lib/module/unstable/NativeBottomTabView.native.js
+index 9010f181c4e80cdf74cf730238d7cc6bf431e5ca..c841271bb342760de2aeac9f02b71d0d60980dcc 100644
+--- a/lib/module/unstable/NativeBottomTabView.native.js
++++ b/lib/module/unstable/NativeBottomTabView.native.js
+@@ -249,7 +249,8 @@ export function NativeBottomTabView({
+           tabBarItemTitleFontStyle: fontStyle,
+           tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
+           tabBarItemIconColor: inactiveTintColor,
+-          tabBarItemBadgeBackgroundColor: badgeBackgroundColor
++          tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
++            tabBarItemBadgeTextColor: badgeTextColor
+         };
+         const normalTabItemAppearance = {
+           tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
+diff --git a/src/unstable/NativeBottomTabView.native.tsx b/src/unstable/NativeBottomTabView.native.tsx
+index d63c444fc8c2490b4af6885a53d81cd511b6e8e3..cde7f4f15220da60eafec6823d798195f7a8ea5d 100644
+--- a/src/unstable/NativeBottomTabView.native.tsx
++++ b/src/unstable/NativeBottomTabView.native.tsx
+@@ -382,6 +382,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
+             tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
+             tabBarItemIconColor: inactiveTintColor,
+             tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
++            tabBarItemBadgeTextColor: badgeTextColor,
+           };
+ 
+           const normalTabItemAppearance: TabsScreenItemStateAppearanceAndroid =

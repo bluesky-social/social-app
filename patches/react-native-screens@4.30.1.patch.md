@@ -137,3 +137,21 @@ https://github.com/software-mansion/react-native-screens/pull/4922 (not merged
 as of 4.30.1). The C++ changes here match the PR exactly; on `main` the v4
 files live under `legacy/`, but 4.30.1 still has the flat layout. Linear:
 APP-3435.
+
+## iOS: badge text color for tab bar items
+
+Adds a `tabBarItemBadgeTextColor` key to the iOS tab bar item appearance,
+which sets `UITabBarItemStateAppearance.badgeTextAttributes`'s foreground
+color. Upstream only supports the badge's background color on iOS (the text
+color prop exists, but only for Android).
+
+We use it to draw our blue "something new" dot in the native tab bar, which
+has no dot badge: the badge is a "●" with a clear background and blue text.
+An empty `badgeValue` doesn't work, because `RNSTabsScreenComponentView` maps
+it to nil. The appearance props are an untyped dictionary (`UnsafeMixed`), so
+no codegen change is needed, but `TabsScreen.ios.tsx` has to `processColor`
+the new key like the others, or it reaches native as a string that
+`RCTConvert UIColor` can't read. The matching
+`@react-navigation/bottom-tabs` patch passes `tabBarBadgeStyle.color` through.
+
+Not upstreamed yet.
