@@ -6,6 +6,10 @@ import {type Platform} from 'react-native'
 
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type VideoCompressSkipReason} from '#/lib/media/video/types'
+import {
+  type OTADownloadFailureReason,
+  type OTAPatchFallbackReason,
+} from '#/lib/ota/patchTelemetry'
 import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
@@ -148,6 +152,58 @@ export type Events = {
   }
   'state:background': {}
   'state:foreground': {}
+  /**
+   * An OTA update finished downloading. Fires once per update, from the
+   * expo-updates log, see `#/lib/ota/patchTelemetry`. Native only.
+   */
+  'ota:download': {
+    /**
+     * The JS bundle came down as a bsdiff patch against the running update's
+     * bundle, rather than in full.
+     */
+    patched: boolean
+    /**
+     * Set when the server sent a patch that the app couldn't use, so it
+     * downloaded the full bundle instead. With `patched: false` and no reason,
+     * the server sent the full bundle straight away.
+     */
+    patchFallbackReason?: OTAPatchFallbackReason
+    /**
+     * The downloaded update's ID, to match against the patches the update
+     * server has for it.
+     */
+    updateId: string
+    /** The channel the update was fetched from, e.g. `production`. */
+    channel: string
+    /**
+     * Whether the update that was running, and so the patch's base, is the
+     * one embedded in the native build rather than an earlier OTA.
+     */
+    isEmbeddedLaunch: boolean
+  }
+  /**
+   * Downloading an OTA update failed. Fires for every failed attempt, from
+   * the error and the expo-updates log, see `#/lib/ota/patchTelemetry`. Native
+   * only.
+   */
+  'ota:downloadFailed': {
+    failureReason: OTADownloadFailureReason
+    /**
+     * Set when the server sent a patch that the app couldn't use before the
+     * download failed. With `failureReason: 'assetHashMismatch'`, this points
+     * at the full download getting patch bytes, e.g. from the CDN cache.
+     */
+    patchFallbackReason?: OTAPatchFallbackReason
+    /** The update that the check before the download found, if any. */
+    updateId?: string
+    /** The channel the update was fetched from, e.g. `production`. */
+    channel: string
+    /**
+     * Whether the update that was running is the one embedded in the native
+     * build rather than an earlier OTA.
+     */
+    isEmbeddedLaunch: boolean
+  }
   'router:navigate': {
     from?: string
   }
