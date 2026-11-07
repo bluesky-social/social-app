@@ -854,6 +854,8 @@ function NativeTabsNavigator({layout}: {layout: TabsLayout}) {
       screenOptions={({route}) => ({
         headerShown: false,
         lazy: true,
+        // Labels don't fit ("Notifications" throws the alignment off)
+        tabBarShowLabel: false,
         tabBarActiveTintColor: t.atoms.text.color,
         // Match the JS tab bar's unread badges, which are blue rather than red
         tabBarBadgeStyle: {

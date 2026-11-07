@@ -14,3 +14,14 @@ in `src/Navigation.tsx`.
 Both `src` and `lib/module` are patched, since Metro may resolve either.
 
 Not upstreamed yet.
+
+## Native tabs: `tabBarShowLabel` on iOS
+
+Adds a `tabBarShowLabel` option (named after the JS tabs option). When it's
+`false`, the screen gets no `title`, which `react-native-screens` needs to be
+`undefined` (not an empty string) for UIKit to drop the label, and the label
+moves to `tabBarItemAccessibilityLabel` so VoiceOver still reads it. Upstream
+always passes a title, so labels can't be hidden.
+
+We hide them because the labels don't fit (Notifications is too long and
+throws the alignment off).
