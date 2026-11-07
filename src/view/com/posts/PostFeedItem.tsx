@@ -33,7 +33,7 @@ import {
   ThreadItemPostNumber,
   useHasThreadItemPostNumber,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
-import {atoms as a, select, useTheme} from '#/alf'
+import {atoms as a, select, useBreakpoints, useTheme} from '#/alf'
 import {
   GalleryBleed,
   maybeApplyGalleryOffsetStyles,
@@ -170,6 +170,7 @@ let FeedItemInner = ({
   onShowLess?: (interaction: app.bsky.feed.defs.Interaction) => void
 }): React.ReactNode => {
   const ax = useAnalytics()
+  const {gtMobile} = useBreakpoints()
   const queryClient = useQueryClient()
   const {openComposer} = useOpenComposer()
   const pal = usePalette('default')
@@ -279,11 +280,15 @@ let FeedItemInner = ({
 
   const outerStyles = [
     styles.outer,
+    gtMobile ? a.pl_sm : a.pl_xs,
+    gtMobile ? a.pr_lg : a.pr_md,
     {
       borderColor: pal.colors.border,
       paddingBottom:
         isThreadLastChild || (!isThreadChild && !isThreadParent)
-          ? 8
+          ? gtMobile
+            ? 14
+            : 10
           : undefined,
       borderTopWidth:
         hideTopBorder || isThreadChild ? 0 : StyleSheet.hairlineWidth,
@@ -373,7 +378,7 @@ let FeedItemInner = ({
             )}
           </View>
 
-          <View style={[a.pt_sm, a.flex_shrink]}>
+          <View style={[gtMobile ? a.pt_lg : a.pt_md, a.flex_shrink]}>
             {reason && (
               <PostFeedReason
                 reason={reason}
@@ -578,8 +583,6 @@ PostContent = memo(PostContent)
 
 const styles = StyleSheet.create({
   outer: {
-    paddingLeft: 10,
-    paddingRight: 15,
     cursor: 'pointer',
   },
   replyLine: {
