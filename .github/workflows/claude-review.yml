@@ -12,7 +12,50 @@ on:
 permissions: {}
 
 jobs:
+  # A push that leaves the pull request's changes as they were, such as a clean
+  # rebase onto the base branch, gets no new review. Anything that fails here
+  # falls back to reviewing.
+  diff-changed:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      changed: ${{ steps.compare.outputs.changed }}
+    steps:
+      - name: Compare the pull request's changes before and after the push
+        id: compare
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          ACTION: ${{ github.event.action }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.event.after }}
+        run: |
+          set -euo pipefail
+          changed=true
+          if [[ "${ACTION}" == synchronize ]]; then
+            # The pull request's own changes at a commit: the diff from its
+            # merge base with the base branch. patch-id ignores line numbers,
+            # so a clean rebase onto newer commits keeps the same ID.
+            pr_patch_id() {
+              gh api -H 'Accept: application/vnd.github.diff' \
+                "repos/${GH_REPO}/compare/${BASE_REF}...${1}" |
+                git patch-id --verbatim | cut -d' ' -f1
+            }
+            if before="$(pr_patch_id "${BEFORE}")" && after="$(pr_patch_id "${AFTER}")" &&
+              [[ -n "${before}" && "${before}" == "${after}" ]]; then
+              echo "The pull request's changes are unchanged by this push; skipping the review."
+              changed=false
+            fi
+          fi
+          echo "changed=${changed}" >>"${GITHUB_OUTPUT}"
+
   review:
+    needs: diff-changed
+    if: needs.diff-changed.outputs.changed == 'true'
     uses: bluesky-social/.github/.github/workflows/claude-review.yml@a3e052de61c5f04144a821e2e80f2b3a00c93d15 # v1.0.0
     permissions:
       contents: read
