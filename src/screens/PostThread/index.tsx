@@ -68,6 +68,7 @@ import {
   usePostSource,
 } from '#/features/feedFeedback/postSource'
 import {
+  NATIVE_TAB_BAR_SIDE_MARGIN,
   useHasNativeTabs,
   usePhoneHorizontalSafeAreaInsets,
 } from '#/features/verticalBar'
@@ -678,12 +679,6 @@ export function PostThread({uri}: {uri: string}) {
   )
 }
 
-/**
- * UIKit's side margin for the floating tab bar on iPhones, so the floating
- * reply prompt can match its width. It's the same on 402pt and 440pt wide
- * screens (measured on iOS 27.2).
- */
-const NATIVE_TAB_BAR_SIDE_MARGIN = 21
 
 function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
   const hasNativeTabs = useHasNativeTabs()

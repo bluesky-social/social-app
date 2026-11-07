@@ -17,7 +17,8 @@ import {atoms as a, ios, useBreakpoints, useTheme} from '#/alf'
 import {GlassView} from '#/components/GlassView'
 import {IS_WEB} from '#/env'
 import {
-  useHasNativeTabs,
+  NATIVE_TAB_BAR_SIDE_MARGIN,
+  useNativeTabBarPlacement,
   usePhoneHorizontalSafeAreaInsets,
 } from '#/features/verticalBar'
 
@@ -36,7 +37,8 @@ export interface FABProps extends ComponentProps<typeof Pressable> {
 export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
   const insets = useSafeAreaInsets()
   const sideInsets = usePhoneHorizontalSafeAreaInsets()
-  const hasNativeTabs = useHasNativeTabs()
+  const placement = useNativeTabBarPlacement()
+  const hasNativeTabs = placement !== null
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
   const haptics = useHaptics()
@@ -48,7 +50,11 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
   const tabletSpacing = gtMobile
     ? {right: 50, bottom: 50}
     : {
-        right: 24 + sideInsets.right,
+        // Line up with the floating native tab bar's edge
+        right:
+          placement === 'bottom'
+            ? NATIVE_TAB_BAR_SIDE_MARGIN
+            : 24 + sideInsets.right,
         /*
          * With native tabs, the inset includes the tab bar (which is much
          * taller than the clamp allows), see `useHasNativeTabs`.

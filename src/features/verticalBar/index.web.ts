@@ -2,6 +2,7 @@
  * Native tabs and the vertical bar are iOS-only, so web skips the feature flag (and the
  * analytics import that comes with it) entirely.
  */
+export {NATIVE_TAB_BAR_SIDE_MARGIN} from '#/features/verticalBar/constants'
 export {
   getNativeTabsMounted,
   setNativeTabsMounted,
