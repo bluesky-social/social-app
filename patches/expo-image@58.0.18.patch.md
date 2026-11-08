@@ -29,6 +29,11 @@ discards them. The real load starts in `onSizeChanged`. The patch skips
 hidden, which is the state `cleanIfNeeded` used to leave them in. Images that
 stay 0×0 behave as before: Android never loads them.
 
+`ExpoImageView` also extends `ImageView` instead of `AppCompatImageView`. The
+AppCompat constructor checks the theme and reads tint and `srcCompat`
+attributes that expo-image never sets, and expo-image uses no AppCompat
+behaviour.
+
 expo-image ships a prebuilt Android AAR, so it is in
 `expo.autolinking.android.buildFromSource` in `package.json`. Without that,
 Gradle uses the AAR and ignores this part of the patch.

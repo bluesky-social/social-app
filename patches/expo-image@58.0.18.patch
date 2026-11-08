@@ -1,3 +1,25 @@
+diff --git a/android/src/main/java/expo/modules/image/ExpoImageView.kt b/android/src/main/java/expo/modules/image/ExpoImageView.kt
+index 423e3b72923a3c0e1b3efb9145a757942a312378..f2e9058db28d378a7a8805348690fdd29e371e1c 100644
+--- a/android/src/main/java/expo/modules/image/ExpoImageView.kt
++++ b/android/src/main/java/expo/modules/image/ExpoImageView.kt
+@@ -10,7 +10,7 @@ import android.graphics.drawable.Drawable
+ import android.os.Build
+ import android.util.Log
+ import android.view.ViewConfiguration
+-import androidx.appcompat.widget.AppCompatImageView
++import android.widget.ImageView
+ import androidx.core.graphics.transform
+ import androidx.core.view.isVisible
+ import com.facebook.react.common.annotations.UnstableReactNativeAPI
+@@ -22,7 +22,7 @@ import expo.modules.image.svg.SVGPictureDrawable
+ @SuppressLint("ViewConstructor")
+ class ExpoImageView(
+   context: Context
+-) : AppCompatImageView(context) {
++) : ImageView(context) {
+   internal var targetBindingId = 0L
+     private set
+ 
 diff --git a/android/src/main/java/expo/modules/image/ExpoImageViewWrapper.kt b/android/src/main/java/expo/modules/image/ExpoImageViewWrapper.kt
 index e0689c97e05316b83fdf2f1b1b190dd07f899daa..dca463a8b66a082bd47e63d27f2a6255786d8080 100644
 --- a/android/src/main/java/expo/modules/image/ExpoImageViewWrapper.kt
