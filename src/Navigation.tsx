@@ -183,7 +183,7 @@ import {isFollowingV2HomeDotEnabled} from '#/features/followingV2/eligibility'
 import {HomeScreen} from '#/features/followingV2/home'
 import {InviteScannerScreen} from '#/features/inviteFriends'
 import {
-  setNativeTabsMounted,
+  setNativeTabsEnabled,
   useHasNativeTabs,
   useNativeTabBarPlacement,
 } from '#/features/verticalBar'
@@ -751,15 +751,6 @@ function nanoTabIcon(glyph: string) {
 }
 
 /**
- * Native tabs, used on Liquid Glass iPhones and while the system places a
- * vertical bar (iPhone Duo), where UIKit moves the tab bar into it. See
- * `useNativeTabBarPlacement`.
- *
- * Native tabs can't hide individual tabs, so this only holds the primary
- * tabs. The secondary destinations (Feeds, Lists, Settings, etc.) open in the
- * current tab's stack instead, see `navigateToSecondaryTab` in the drawer.
- */
-/**
  * Screens that hide the JS bottom bar, via `Layout.Screen`'s `minimalShell`.
  * The native tab bar can't be hidden from inside a screen, so these are hidden
  * by route name instead - keep the two in sync.
@@ -795,6 +786,15 @@ function NativeTabSafeAreaProvider({children}: {children: React.ReactNode}) {
   )
 }
 
+/**
+ * Native tabs, used on Liquid Glass iPhones and while the system places a
+ * vertical bar (iPhone Duo), where UIKit moves the tab bar into it. See
+ * `useNativeTabBarPlacement`.
+ *
+ * Native tabs can't hide individual tabs, so this only holds the primary
+ * tabs. The secondary destinations (Feeds, Lists, Settings, etc.) open in the
+ * current tab's stack instead, see `navigateToSecondaryTab` in the drawer.
+ */
 function NativeTabsNavigator({layout}: {layout: TabsLayout}) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -822,11 +822,6 @@ function NativeTabsNavigator({layout}: {layout: TabsLayout}) {
   useEffect(() => {
     footerHeight.set(0)
   }, [footerHeight])
-
-  useEffect(() => {
-    setNativeTabsMounted(true)
-    return () => setNativeTabsMounted(false)
-  }, [])
 
   NativeTab ??= createNativeBottomTabNavigator<BottomTabNavigatorParams>()
 
@@ -1332,6 +1327,11 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const emailDialogControl = useEmailDialogControl()
   const closeAllActiveElements = useCloseAllActiveElements()
   const linkingUrl = Linking.useLinkingURL()
+  /*
+   * The linking config reads this, and `NavigationContainer` resolves the
+   * initial URL while rendering, before the tabs navigator mounts.
+   */
+  setNativeTabsEnabled(useHasNativeTabs())
 
   /**
    * Handle navigation to the messages tab, or prepares for account switch.

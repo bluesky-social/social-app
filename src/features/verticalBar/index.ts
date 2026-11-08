@@ -7,9 +7,9 @@ import {IS_IOS, IS_IPAD, IS_LIQUID_GLASS} from '#/env'
 
 export {NATIVE_TAB_BAR_SIDE_MARGIN} from '#/features/verticalBar/constants'
 export {
-  getNativeTabsMounted,
-  setNativeTabsMounted,
-} from '#/features/verticalBar/nativeTabsMounted'
+  getNativeTabsEnabled,
+  setNativeTabsEnabled,
+} from '#/features/verticalBar/nativeTabsEnabled'
 
 /**
  * Whether the native iOS shell is enabled: native tabs on Liquid Glass
