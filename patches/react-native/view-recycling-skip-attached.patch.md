@@ -43,5 +43,9 @@ https://github.com/software-mansion/react-native-screens/issues/3249, with a
 fix in https://github.com/software-mansion/react-native-screens/pull/3250
 (still open).
 
-**TODO: Remove when React Native stops recycling views that still have a
-parent. Not fixed on `main` as of November 2026, including after #59776.**
+Upstream issue: https://github.com/react/react-native/issues/59863, with a
+core-only repro on a nightly that includes #59776:
+https://github.com/mozzius/view-recycling-transition-repro.
+
+**TODO: Remove when https://github.com/react/react-native/issues/59863 is fixed
+in a release we're on.**
