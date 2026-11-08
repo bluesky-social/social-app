@@ -1180,6 +1180,7 @@ function HomeTabNavigator() {
           headerBackVisible: false,
           scrollEdgeEffects: {
             top: 'soft',
+            bottom: 'soft',
           },
         } as const)
       : {}
