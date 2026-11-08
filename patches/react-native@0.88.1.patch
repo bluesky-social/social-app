@@ -331,11 +331,115 @@ index bcdbee9996758476eee1e055de8d08129837d62d..59d22d96f7d222627b6e86016ad19779
      if (currParentView != null) {
        val actualParentId = if (currParentView is ViewGroup) currParentView.id else View.NO_ID
        ReactSoftExceptionLogger.logSoftException(
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/uimanager/BaseViewManager.java b/ReactAndroid/src/main/java/com/facebook/react/uimanager/BaseViewManager.java
+index c78d3151219afbefacead05ea2e4ff305aeed9e7..33c3ea3e88f87a75d929caf7a30389ee6632c878 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/uimanager/BaseViewManager.java
++++ b/ReactAndroid/src/main/java/com/facebook/react/uimanager/BaseViewManager.java
+@@ -19,6 +19,7 @@ import android.view.accessibility.AccessibilityEvent;
+ import androidx.annotation.ColorInt;
+ import androidx.annotation.NonNull;
+ import androidx.annotation.Nullable;
++import androidx.core.view.AccessibilityDelegateCompat;
+ import androidx.core.view.ViewCompat;
+ import com.facebook.common.logging.FLog;
+ import com.facebook.react.R;
+@@ -88,6 +89,11 @@ public abstract class BaseViewManager<T extends View, C extends LayoutShadowNode
+     view.setTag(R.id.accessibility_actions, null);
+     view.setTag(R.id.accessibility_value, null);
+     view.setTag(R.id.accessibility_state_expanded, null);
++    view.setTag(R.id.accessibility_collection, null);
++    view.setTag(R.id.accessibility_collection_item, null);
++    view.setTag(R.id.role, null);
++    view.setTag(R.id.accessibility_order_parent, null);
++    view.setTag(R.id.original_focusability, null);
+     view.setTag(R.id.accessibility_state_disabled, null);
+     view.setEnabled(true);
+     view.setTag(R.id.view_clipped, null);
+@@ -156,6 +162,20 @@ public abstract class BaseViewManager<T extends View, C extends LayoutShadowNode
+     view.setFocusable(false);
+     view.setFocusableInTouchMode(false);
+ 
++    // Accessibility state the props apply to the view itself, as a new view has it. The delegate
++    // stays, since a view's constructor may have installed it, and forgets what it cached.
++    AccessibilityDelegateCompat accessibilityDelegate = ViewCompat.getAccessibilityDelegate(view);
++    if (accessibilityDelegate instanceof ReactAccessibilityDelegate) {
++      ((ReactAccessibilityDelegate) accessibilityDelegate).internal_prepareToRecycle();
++    }
++    view.setContentDescription(null);
++    view.setSelected(false);
++    view.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_AUTO);
++    ViewCompat.setAccessibilityLiveRegion(view, ViewCompat.ACCESSIBILITY_LIVE_REGION_NONE);
++    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
++      view.setScreenReaderFocusable(false);
++    }
++
+     // https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-mainline-12.0.0_r96/core/java/android/view/View.java#5491
+     view.setElevation(0);
+ 
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/uimanager/ReactAccessibilityDelegate.kt b/ReactAndroid/src/main/java/com/facebook/react/uimanager/ReactAccessibilityDelegate.kt
+index e6c12f6368e4d43aae88b594386ec1b5b10ab43a..1a288da592653ea24c53a6f0ba0c2669bf1a9ea7 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/uimanager/ReactAccessibilityDelegate.kt
++++ b/ReactAndroid/src/main/java/com/facebook/react/uimanager/ReactAccessibilityDelegate.kt
+@@ -57,7 +57,6 @@ public open class ReactAccessibilityDelegate( // The View this delegate is attac
+         }
+       }
+   private val accessibilityActionsMap = HashMap<Int, String?>()
+-  private var accessibilityLabelledBy: View? = null
+ 
+   init {
+     // We need to reset these two properties, as ExploreByTouchHelper sets focusable to "true" and
+@@ -68,6 +67,12 @@ public open class ReactAccessibilityDelegate( // The View this delegate is attac
+     hostView.importantForAccessibility = originalImportantForAccessibility
+   }
+ 
++  /** Forgets the actions cached from the props of a view that is about to be recycled. */
++  @JvmName("internal_prepareToRecycle")
++  internal fun prepareToRecycle() {
++    accessibilityActionsMap.clear()
++  }
++
+   override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfoCompat) {
+     super.onInitializeAccessibilityNodeInfo(host, info)
+ 
+@@ -90,9 +95,9 @@ public open class ReactAccessibilityDelegate( // The View this delegate is attac
+ 
+     val accessibilityLabelledBy = host.getTag(R.id.labelled_by)
+     if (accessibilityLabelledBy != null) {
+-      this.accessibilityLabelledBy = findView(host.rootView, accessibilityLabelledBy as String)
+-      if (this.accessibilityLabelledBy != null) {
+-        info.setLabeledBy(this.accessibilityLabelledBy)
++      val labellingView = findView(host.rootView, accessibilityLabelledBy as String)
++      if (labellingView != null) {
++        info.setLabeledBy(labellingView)
+       }
+     }
+ 
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/text/ReactTextView.java b/ReactAndroid/src/main/java/com/facebook/react/views/text/ReactTextView.java
+index c20f271bb512dfd8e20ae0013fe69385d73009d4..811fab0b4a3f0ce4e47ca066c62a45b75e565877 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/views/text/ReactTextView.java
++++ b/ReactAndroid/src/main/java/com/facebook/react/views/text/ReactTextView.java
+@@ -149,6 +149,8 @@ public class ReactTextView extends AppCompatTextView implements ReactCompoundVie
+     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+       setFocusable(View.FOCUSABLE_AUTO);
+     }
++    // TextView's constructor makes the view important for accessibility
++    setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
+ 
+     setHyphenationFrequency(Layout.HYPHENATION_FREQUENCY_NONE);
+     updateView(); // call after changing ellipsizeLocation in particular
 diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
-index ae2e36ca1ed64d9f6cb44e6c2519a17fcca3ca18..0eeeb63b1225a3c575abb257a79aaef609659e2f 100644
+index ae2e36ca1ed64d9f6cb44e6c2519a17fcca3ca18..04ca2d7ca1eec58a1c20ce85e76e1fb1b8560dd4 100644
 --- a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
 +++ b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
-@@ -461,6 +461,13 @@ public open class ReactViewGroup public constructor(context: Context?) :
+@@ -179,6 +179,7 @@ public open class ReactViewGroup public constructor(context: Context?) :
+     allChildrenCount = 0
+     clippingRect = null
+     hitSlopRect = null
++    axOrderList = null
+     // pointerEvents setter reads _overflow, so _overflow must be assigned first.
+     _overflow = Overflow.VISIBLE
+     pointerEvents = PointerEvents.AUTO
+@@ -461,6 +462,13 @@ public open class ReactViewGroup public constructor(context: Context?) :
      inSubviewClippingLoop = true
      var clippedSoFar = 0
      for (i in 0..<allChildrenCount) {
@@ -349,7 +453,7 @@ index ae2e36ca1ed64d9f6cb44e6c2519a17fcca3ca18..0eeeb63b1225a3c575abb257a79aaef6
        try {
          updateSubviewClipStatus(clippingRect, i, clippedSoFar, excludedViewsSet)
        } catch (ex: IndexOutOfBoundsException) {
-@@ -498,7 +505,9 @@ public open class ReactViewGroup public constructor(context: Context?) :
+@@ -498,7 +506,9 @@ public open class ReactViewGroup public constructor(context: Context?) :
    ) {
      assertOnUiThread()
  

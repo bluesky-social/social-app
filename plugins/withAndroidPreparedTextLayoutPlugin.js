@@ -25,6 +25,13 @@ const imports = [
  * prepared text cache is the only one left. Its default of 200 entries is
  * smaller than the number of text nodes in a long thread or feed, which makes
  * scrolling re-measure text on the JS thread.
+ *
+ * The same override also turns on Fabric's native view recycling, which pools
+ * Android host views (View, Text, Image) by component type instead of creating
+ * a new one for every mount. React keys and state are untouched. Recycled views
+ * kept their accessibility state in 0.88.1, which the pr-59047 React Native
+ * patch fixes. Both flags have to live in this one override, because it
+ * replaces the whole flag provider.
  */
 const override = `
     if (DefaultNewArchitectureEntryPoint.releaseLevel == ReleaseLevel.STABLE) {
@@ -32,6 +39,7 @@ const override = `
           object : ReactNativeNewArchitectureFeatureFlagsDefaults() {
             override fun enablePreparedTextLayout() = true
             override fun preparedTextCacheSize() = 1000.0
+            override fun enableViewRecycling() = true
           })
       if (flagsReadEarly != null) {
         Log.w("MainApplication", "Feature flags read before override: $flagsReadEarly")
