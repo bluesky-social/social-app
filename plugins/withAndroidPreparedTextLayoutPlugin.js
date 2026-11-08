@@ -28,10 +28,13 @@ const imports = [
  *
  * The same override also turns on Fabric's native view recycling, which pools
  * Android host views (View, Text, Image) by component type instead of creating
- * a new one for every mount. React keys and state are untouched. Recycled views
- * kept their accessibility state in 0.88.1, which the pr-59047 React Native
- * patch fixes. Both flags have to live in this one override, because it
- * replaces the whole flag provider.
+ * a new one for every mount. React keys and state are untouched. In 0.88.1,
+ * recycled views kept their accessibility state (fixed by the pr-59047 React
+ * Native patch), and views still held by a screen's exit transition could be
+ * reused and crash (fixed by view-recycling-skip-attached; pr-59776 does not
+ * cover a view whose old parent has already left the window). Both flags
+ * have to live in this one override, because it replaces the whole flag
+ * provider.
  */
 const override = `
     if (DefaultNewArchitectureEntryPoint.releaseLevel == ReleaseLevel.STABLE) {
