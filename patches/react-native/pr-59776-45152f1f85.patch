@@ -1,0 +1,17 @@
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/fabric/mounting/SurfaceMountingManager.kt b/ReactAndroid/src/main/java/com/facebook/react/fabric/mounting/SurfaceMountingManager.kt
+index 0c8c7bf05502..8830c63a4e40 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/fabric/mounting/SurfaceMountingManager.kt
++++ b/ReactAndroid/src/main/java/com/facebook/react/fabric/mounting/SurfaceMountingManager.kt
+@@ -335,7 +335,11 @@ internal constructor(
+       logViewHierarchy(parentView, false)
+     }
+ 
+-    val currParentView = view.parent
++    var currParentView = view.parent
++    if (currParentView is ViewGroup && currParentView.indexOfChild(view) == -1) {
++      currParentView.endViewTransition(view)
++      currParentView = view.parent
++    }
+     if (currParentView != null) {
+       val actualParentId = if (currParentView is ViewGroup) currParentView.id else View.NO_ID
+       ReactSoftExceptionLogger.logSoftException(
