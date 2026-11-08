@@ -20,8 +20,8 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon} from '#/components/icons/Arrow'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {SubtleHover} from '#/components/SubtleHover'
-import {IS_LIQUID_GLASS, IS_NATIVE} from '#/env'
-import {useIsNativeTabsEnabled} from '#/features/verticalBar'
+import {IS_NATIVE} from '#/env'
+import {useHasNativeTabs} from '#/features/verticalBar'
 
 type LoadLatestBtnProps = {
   onPress: () => void
@@ -30,13 +30,13 @@ type LoadLatestBtnProps = {
 }
 
 export function LoadLatestBtn(props: LoadLatestBtnProps) {
-  const isNativeTabsEnabled = useIsNativeTabsEnabled()
+  const hasNativeTabs = useHasNativeTabs()
   const {gtMobile} = useBreakpoints()
   /*
-   * With the native shell on Liquid Glass phones, there's no scroll to top
-   * button - tapping the current tab or the status bar does it instead.
+   * With native tabs on phones, there's no scroll to top button - tapping the
+   * current tab or the status bar does it instead.
    */
-  if (isNativeTabsEnabled && IS_LIQUID_GLASS && !gtMobile) {
+  if (hasNativeTabs && !gtMobile) {
     return null
   }
   return <LoadLatestBtnInner {...props} />

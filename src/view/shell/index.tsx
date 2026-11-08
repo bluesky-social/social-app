@@ -47,7 +47,7 @@ import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
 import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
 import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
-import {useHasNativeTabs, useIsNativeTabsEnabled} from '#/features/verticalBar'
+import {useIsNativeTabsEnabled} from '#/features/verticalBar'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
@@ -140,8 +140,7 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
   const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
   const winDim = useWindowDimensions()
   const {gtMobile} = useBreakpoints()
-  const hasNativeTabs = useHasNativeTabs()
-  const hasTabletSidebar = gtMobile && !hasNativeTabs
+  const hasTabletSidebar = gtMobile
 
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
   const {hasSession} = useSession()
@@ -250,7 +249,7 @@ export function Shell() {
         animated
         hidden={false}
         verticalBarBehaviorIOS={
-          isNativeTabsEnabled || gtMobile ? undefined : 'disabled'
+          isNativeTabsEnabled || gtMobile ? 'automatic' : 'disabled'
         }
         style={
           t.name !== 'light' ||

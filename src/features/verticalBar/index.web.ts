@@ -4,9 +4,9 @@
  */
 export {NATIVE_TAB_BAR_SIDE_MARGIN} from '#/features/verticalBar/constants'
 export {
-  getNativeTabsMounted,
-  setNativeTabsMounted,
-} from '#/features/verticalBar/nativeTabsMounted'
+  getNativeTabsEnabled,
+  setNativeTabsEnabled,
+} from '#/features/verticalBar/nativeTabsEnabled'
 
 const NO_INSETS = {left: 0, right: 0}
 
