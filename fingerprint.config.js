@@ -21,7 +21,7 @@ const config = {
      * Android packages, are already hashed as part of the resolved Expo config,
      * so ignoring the file still catches the changes that need a native build.
      */
-    'src/features/sharePlatforms/catalog.ts',
+    'src/components/ShareDialog/catalog.ts',
   ],
   /*
    * The nano icon fonts are linked into the native binary, but the fingerprint

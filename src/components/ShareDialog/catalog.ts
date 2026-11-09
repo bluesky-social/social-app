@@ -224,7 +224,6 @@ const CATALOG = [
     },
   },
   {
-    // Likely opens the website rather than the app; pending a device test
     id: 'reddit',
     label: 'Reddit',
     ios: {
@@ -239,16 +238,17 @@ const CATALOG = [
     },
   },
   {
-    // Undocumented scheme; the x.com intent link is reported to open a login page
     id: 'x',
     label: 'X',
     ios: {
+      // Undocumented scheme; the x.com intent link is reported to open a login page
       scheme: 'twitter',
       getShareUrl: ({url}) => `twitter://post?message=${enc(url)}`,
     },
     android: {
+      // twitter://post opens a blank composer on Android
       packages: ['com.twitter.android'],
-      getShareUrl: ({url}) => `twitter://post?message=${enc(url)}`,
+      getShareUrl: ({url}) => `https://x.com/intent/post?text=${enc(url)}`,
     },
   },
   {

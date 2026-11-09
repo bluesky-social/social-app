@@ -3,7 +3,7 @@ const {withAndroidManifest} = require('expo/config-plugins')
 /**
  * Declares the share platforms' apps in the manifest's `<queries>` so Android
  * 11+ lets us check whether they're installed and send text to them. The lists
- * come from `src/features/sharePlatforms/catalog.ts` via `app.config.js`.
+ * come from `src/components/ShareDialog/catalog.ts` via `app.config.js`.
  *
  * @param {import('expo/config-plugins').ExpoConfig} config
  * @param {{packages: string[], schemes: string[]}} props

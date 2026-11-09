@@ -3,15 +3,15 @@ import {Linking, View} from 'react-native'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {Text} from '#/components/Typography'
-import {IS_ANDROID, IS_IOS, IS_NATIVE} from '#/env'
 import {
   SHARE_PLATFORMS,
   type SharePlatform,
   type SharePlatformId,
-} from '#/features/sharePlatforms/catalog'
-import {getInstalledSharePlatforms} from '#/features/sharePlatforms/detect'
-import {openSharePlatform} from '#/features/sharePlatforms/share'
+} from '#/components/ShareDialog/catalog'
+import {getInstalledSharePlatforms} from '#/components/ShareDialog/detect'
+import {openSharePlatform} from '#/components/ShareDialog/share'
+import {Text} from '#/components/Typography'
+import {IS_ANDROID, IS_IOS, IS_NATIVE} from '#/env'
 
 const CONTENT = {
   url: 'https://bsky.app/profile/bsky.app',

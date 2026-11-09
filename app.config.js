@@ -1,6 +1,6 @@
 // @ts-check
 const pkg = require('./package.json')
-const {getNativeQueries} = require('./src/features/sharePlatforms/catalog.ts')
+const {getNativeQueries} = require('./src/components/ShareDialog/catalog.ts')
 
 /**
  * @param {import('@expo/config-types').ExpoConfig} _config
