@@ -1,11 +1,19 @@
+import {I18nManager} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useVerticalBarEdgeIOS} from 'expo-status-bar'
 
 import {useBreakpoints} from '#/alf'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_IPAD, IS_LIQUID_GLASS} from '#/env'
+import {
+  VERTICAL_BAR_RAIL_MARGIN,
+  VERTICAL_BAR_SAFE_AREA_GAP,
+} from '#/features/verticalBar/constants'
 
-export {NATIVE_TAB_BAR_SIDE_MARGIN} from '#/features/verticalBar/constants'
+export {
+  NATIVE_TAB_BAR_SIDE_MARGIN,
+  VERTICAL_BAR_RAIL_MARGIN,
+} from '#/features/verticalBar/constants'
 export {
   getNativeTabsEnabled,
   setNativeTabsEnabled,
@@ -81,4 +89,34 @@ export function usePhoneHorizontalSafeAreaInsets() {
   const insets = useHorizontalSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
   return gtMobile ? NO_INSETS : insets
+}
+
+/**
+ * Margins for things floating at the bottom of the content (the thread reply
+ * prompt, the chat composer, the FAB) on phone-width iPhone Duo layouts, so
+ * they sit level with the vertical bar's tab rail:
+ * {@link VERTICAL_BAR_RAIL_MARGIN} from the screen's bottom and outer edges,
+ * and from the rail itself. The side margins are from the safe area, which
+ * already leaves {@link VERTICAL_BAR_SAFE_AREA_GAP} beside the rail. The
+ * bottom is from the screen edge, since the rail ignores the home indicator's
+ * inset too.
+ *
+ * `null` everywhere else, where the bar keeps its usual margins.
+ */
+export function useVerticalBarFloatingMargins(): {
+  left: number
+  right: number
+  bottom: number
+} | null {
+  const placement = useNativeTabBarPlacement()
+  const edge = useVerticalBarEdgeIOS()
+  const {gtMobile} = useBreakpoints()
+  if (placement !== 'side' || gtMobile || edge === null) return null
+  const railOnLeft = (edge === 'leading') !== I18nManager.isRTL
+  const railSide = VERTICAL_BAR_RAIL_MARGIN - VERTICAL_BAR_SAFE_AREA_GAP
+  return {
+    left: railOnLeft ? railSide : VERTICAL_BAR_RAIL_MARGIN,
+    right: railOnLeft ? VERTICAL_BAR_RAIL_MARGIN : railSide,
+    bottom: VERTICAL_BAR_RAIL_MARGIN,
+  }
 }

@@ -2,7 +2,10 @@
  * Native tabs and the vertical bar are iOS-only, so web skips the feature flag (and the
  * analytics import that comes with it) entirely.
  */
-export {NATIVE_TAB_BAR_SIDE_MARGIN} from '#/features/verticalBar/constants'
+export {
+  NATIVE_TAB_BAR_SIDE_MARGIN,
+  VERTICAL_BAR_RAIL_MARGIN,
+} from '#/features/verticalBar/constants'
 export {
   getNativeTabsEnabled,
   setNativeTabsEnabled,
@@ -28,4 +31,12 @@ export function useHorizontalSafeAreaInsets() {
 
 export function usePhoneHorizontalSafeAreaInsets() {
   return NO_INSETS
+}
+
+export function useVerticalBarFloatingMargins(): {
+  left: number
+  right: number
+  bottom: number
+} | null {
+  return null
 }
