@@ -560,6 +560,8 @@ function ExpandedPostDetails({
   const t = useTheme()
   const {i18n} = useLingui()
   const isRootPost = !('reply' in post.record)
+  const time = formatDateTime(i18n, post.indexedAt, {timeStyle: 'short'})
+  const date = i18n.date(new Date(post.indexedAt), {dateStyle: 'medium'})
 
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
@@ -572,21 +574,12 @@ function ExpandedPostDetails({
           a.flex_wrap,
           a.gap_md,
         ]}>
-        <View
-          style={[
-            a.flex_row,
-            a.flex_wrap,
-            a.align_center,
-            a.gap_sm,
-            {maxWidth: '100%'},
-          ]}>
-          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            {formatDateTime(i18n, post.indexedAt, {timeStyle: 'short'})}
-          </Text>
-          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            {i18n.date(new Date(post.indexedAt), {dateStyle: 'medium'})}
-          </Text>
-        </View>
+        <Text
+          style={[a.text_sm, t.atoms.text_contrast_medium, {maxWidth: '100%'}]}>
+          <Trans comment="Post timestamp. {time} is the localized time and {date} is the localized date. Reorder them and add surrounding text or prefixes as needed for your language; separate them with a space instead of a dot.">
+            {time} {date}
+          </Trans>
+        </Text>
         {isRootPost && (
           <View style={{marginLeft: 'auto'}}>
             <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} plain />
