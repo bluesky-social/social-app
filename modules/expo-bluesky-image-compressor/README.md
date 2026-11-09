@@ -1,10 +1,11 @@
 # expo-bluesky-image-compressor
 
 Re-encodes an image as a JPEG that fits a pixel and byte budget, for uploading.
-iOS and Android only. The app uses it while the
-`image_uploads:native_compression:enable` gate is on. Otherwise, and on web, it
-falls back to an `expo-image-manipulator` loop
-(`src/lib/media/image/compressWithManipulator.ts`).
+iOS and Android only. Web does the same with a canvas, in
+`src/lib/media/image/compressToFit.web.ts`. The app uses them while the
+`image_uploads:native_compression:enable` and
+`image_uploads:web_compression:enable` gates are on, and otherwise falls back to
+an `expo-image-manipulator` loop (`src/lib/media/image/compressWithManipulator.ts`).
 
 ```ts
 import {compressImage} from '@bsky.app/expo-bluesky-image-compressor'
@@ -39,7 +40,9 @@ image. So some trial and error is unavoidable, but it can be cheap:
 3. **Shrink and retry.** If nothing fits, the long side shrinks by 20% and it
    starts again, up to 4 sizes in total.
 
-`QualitySearch` is duplicated in Swift and Kotlin. Keep them in sync.
+`QualitySearch` is duplicated in Swift, Kotlin and TypeScript
+(`src/lib/media/image/qualitySearch.ts`, which has the tests). Keep them in
+sync.
 
 Output has no metadata (so no location) but keeps the color profile, and
 transparency is flattened onto white.

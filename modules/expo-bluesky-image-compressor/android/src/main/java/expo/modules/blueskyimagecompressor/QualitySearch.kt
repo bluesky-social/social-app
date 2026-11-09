@@ -9,7 +9,9 @@ import kotlin.math.roundToInt
  * [record] the result, until [nextQuality] returns null. Then [best] is the
  * result to use, or null if nothing fit.
  *
- * Kept in sync with QualitySearch.swift. See the README for the strategy.
+ * Kept in sync with QualitySearch.swift and
+ * src/lib/media/image/qualitySearch.ts, which has the tests. See the README
+ * for the strategy.
  */
 internal class QualitySearch<Payload>(
   private val maxBytes: Int,
