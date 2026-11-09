@@ -202,7 +202,7 @@ jobs:
         run: pnpm icons:check
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
+        uses: expo/expo-github-action@9da89d3617bb88139671bad31b09c65714c2ee06 # 9.0.1
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
           !steps.version.outputs.version-changed }}
         with:
