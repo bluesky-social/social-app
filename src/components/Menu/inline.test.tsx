@@ -50,6 +50,15 @@ jest.mock('#/components/Button', () => ({
   ButtonText: () => null,
 }))
 jest.mock('#/components/Typography', () => ({Text: () => null}))
+const mockGateEnabled = jest.fn(() => true)
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({
+    features: {
+      enabled: () => mockGateEnabled(),
+      NativeMenusEnable: 'native_menus:enable',
+    },
+  }),
+}))
 jest.mock('#/alf', () => ({atoms: {}, useTheme: () => ({atoms: {}})}))
 
 const i18n = setupI18n()
@@ -88,6 +97,7 @@ function trigger() {
 afterEach(() => {
   jest.clearAllMocks()
   jest.restoreAllMocks()
+  mockGateEnabled.mockReturnValue(true)
 })
 
 describe('inline menu', () => {
@@ -111,6 +121,25 @@ describe('inline menu', () => {
     expect(itemProps()).toEqual([
       expect.objectContaining({title: 'Copy link', destructive: false}),
     ])
+  })
+
+  it('falls back to the sheet while the feature gate is off', () => {
+    mockGateEnabled.mockReturnValue(false)
+    renderMenu(
+      <Menu.Root inline>
+        {trigger()}
+        <Menu.Outer>
+          <Menu.Item label="Copy link" onPress={() => {}}>
+            <Menu.ItemText>
+              <Trans>Copy link</Trans>
+            </Menu.ItemText>
+          </Menu.Item>
+        </Menu.Outer>
+      </Menu.Root>,
+    )
+
+    expect(Inline.InlineRoot).not.toHaveBeenCalled()
+    expect(Dialog.Outer).toHaveBeenCalled()
   })
 
   it('maps item text, icons, radios and states', () => {

@@ -45,6 +45,7 @@ import {
   type TriggerProps,
 } from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {
   IS_ANDROID,
   IS_DEV,
@@ -66,8 +67,16 @@ export {
 
 export {useMenuContext}
 
-export function Root({children, control, inline = false}: RootProps) {
+export function Root({
+  children,
+  control,
+  inline: inlineProp = false,
+}: RootProps) {
+  const ax = useAnalytics()
   const defaultControl = Dialog.useDialogControl()
+  // Rolling out behind a gate. While it's off, every menu is a bottom sheet
+  const inline =
+    inlineProp && ax.features.enabled(ax.features.NativeMenusEnable)
   const inlineTriggerOnPress = useRef<() => void>(undefined)
   const inlineParts = inline ? getInlineParts(children) : undefined
   const isInline = inlineParts !== undefined

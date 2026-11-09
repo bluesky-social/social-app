@@ -43,6 +43,8 @@ export type RootProps = React.PropsWithChildren<{
    *
    * iOS menus can't be opened programmatically, so `control.open()` does
    * nothing there.
+   *
+   * Only takes effect while the `native_menus:enable` feature gate is on.
    */
   inline?: boolean
 }>
