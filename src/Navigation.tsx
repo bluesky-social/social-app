@@ -33,6 +33,7 @@ import {
 } from '@react-navigation/native'
 
 import {timeout} from '#/lib/async/timeout'
+import {useHaptics} from '#/lib/haptics'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -102,7 +103,7 @@ import {ProfileScreen} from '#/view/screens/Profile'
 import {StorybookScreen} from '#/view/screens/Storybook'
 import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
-import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
+import {BottomBar, MessagesTabMenu} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
 import {DesktopLeftNav} from '#/view/shell/desktop/LeftNav'
 import {getNativeTabBarVisibility} from '#/view/shell/nativeTabBarVisibility'
@@ -170,10 +171,13 @@ import {Wizard} from '#/screens/StarterPack/Wizard'
 import TopicScreen from '#/screens/Topic'
 import {VideoFeed} from '#/screens/VideoFeed'
 import {type Theme, useBreakpoints, useTheme} from '#/alf'
+import {useDialogControl} from '#/components/Dialog'
 import {
   EmailDialogScreenID,
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
+import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
+import * as Menu from '#/components/Menu'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {setNavigationMetadata} from '#/analytics/metadata'
@@ -766,6 +770,12 @@ const ROUTES_WITHOUT_BOTTOM_TAB_BAR = new Set<string>([
 const DOT_BADGE = '\u25CF'
 
 /**
+ * Native tabs have no long press, so a double press on Profile or Chat does
+ * what a long press on the JS tab bar does.
+ */
+const TAB_DOUBLE_PRESS_MS = 300
+
+/**
  * Gives a tab its own safe area, measured from inside the tab. UIKit includes
  * the native tab bar in that, so content can clear it (and follow it as it
  * shows and hides) with the usual `useSafeAreaInsets().bottom`.
@@ -804,6 +814,10 @@ function NativeTabsNavigator({layout}: {layout: TabsLayout}) {
   const profileTabIcon = useProfileTabIcon()
   const placement = useNativeTabBarPlacement()
   const hasHomeBadge = useHomeBadge()
+  const haptics = useHaptics()
+  const accountSwitchControl = useDialogControl()
+  const messagesMenuControl = Menu.useMenuControl()
+  const lastTabPress = useRef<{name: string; time: number} | null>(null)
   const dotBadgeStyle = {
     backgroundColor: 'transparent',
     color: t.palette.primary_500,
@@ -825,6 +839,31 @@ function NativeTabsNavigator({layout}: {layout: TabsLayout}) {
     showLoggedOut ||
     onboardingState.isActive
 
+  /**
+   * Returns true when this press is the second of a double press (see
+   * {@link TAB_DOUBLE_PRESS_MS}) and opened a menu.
+   */
+  const handleTabDoublePress = (name: string) => {
+    const now = Date.now()
+    const last = lastTabPress.current
+    lastTabPress.current = {name, time: now}
+    if (last?.name !== name || now - last.time > TAB_DOUBLE_PRESS_MS) {
+      return false
+    }
+    lastTabPress.current = null
+    if (name === 'MyProfileTab') {
+      haptics.longPress()
+      accountSwitchControl.open()
+      return true
+    }
+    if (name === 'MessagesTab' && !aa.flags.chatDisabled) {
+      haptics.longPress()
+      messagesMenuControl.open()
+      return true
+    }
+    return false
+  }
+
   return (
     <NativeTab.Navigator
       initialRouteName="HomeTab"
@@ -839,6 +878,12 @@ function NativeTabsNavigator({layout}: {layout: TabsLayout}) {
                 state={props.state}
                 navigation={props.navigation}
               />
+              {hasSession && (
+                <>
+                  <SwitchAccountDialog control={accountSwitchControl} />
+                  <MessagesTabMenu control={messagesMenuControl} />
+                </>
+              )}
             </>
           ),
         })
@@ -892,6 +937,7 @@ function NativeTabsNavigator({layout}: {layout: TabsLayout}) {
             item: TAB_TO_NAV_ITEM[tab],
             surface: 'bottomBar',
           })
+          if (handleTabDoublePress(route.name)) return
           /*
            * Native tabs pop to the root and scroll to the top when the
            * selected tab is pressed again. At the root, also soft reset, like
