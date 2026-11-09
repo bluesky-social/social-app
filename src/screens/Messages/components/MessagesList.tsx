@@ -64,6 +64,7 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
+import {useVerticalBarFloatingMargins} from '#/features/verticalBar'
 import {app, chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {ChatStatusInfo} from './ChatStatusInfo'
@@ -514,8 +515,11 @@ export function MessagesList({
   // -- Keyboard animation handling
 
   const {bottom: bottomInset} = useSafeAreaInsets()
-  const {stickyViewClosedOffset} =
-    getMessageComposerKeyboardOffsets(bottomInset)
+  const railMargins = useVerticalBarFloatingMargins()
+  const {stickyViewClosedOffset} = getMessageComposerKeyboardOffsets(
+    bottomInset,
+    railMargins?.bottom,
+  )
 
   // -- Message sending
   const onSendMessage = useCallback(
@@ -939,7 +943,11 @@ function ChatScrollComponent({
 }) {
   const scrollEdgeRef = useScrollEdgeEffectRef()
   const {bottom: bottomInset} = useSafeAreaInsets()
-  const {chatScrollOffset} = getMessageComposerKeyboardOffsets(bottomInset)
+  const railMargins = useVerticalBarFloatingMargins()
+  const {chatScrollOffset} = getMessageComposerKeyboardOffsets(
+    bottomInset,
+    railMargins?.bottom,
+  )
 
   const offset = platform({
     ios: chatScrollOffset,

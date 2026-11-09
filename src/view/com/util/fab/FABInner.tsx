@@ -20,6 +20,7 @@ import {
   NATIVE_TAB_BAR_SIDE_MARGIN,
   useNativeTabBarPlacement,
   usePhoneHorizontalSafeAreaInsets,
+  useVerticalBarFloatingMargins,
 } from '#/features/verticalBar'
 
 /**
@@ -38,6 +39,7 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
   const insets = useSafeAreaInsets()
   const sideInsets = usePhoneHorizontalSafeAreaInsets()
   const placement = useNativeTabBarPlacement()
+  const railMargins = useVerticalBarFloatingMargins()
   const hasNativeTabs = placement !== null
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
@@ -49,19 +51,25 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
 
   const tabletSpacing = gtMobile
     ? {right: 50, bottom: 50}
-    : {
-        // Line up with the floating native tab bar's edge
-        right:
-          placement === 'bottom'
-            ? NATIVE_TAB_BAR_SIDE_MARGIN
-            : 24 + sideInsets.right,
-        /*
-         * With native tabs, the inset includes the tab bar (which is much
-         * taller than the clamp allows), see `useHasNativeTabs`.
-         */
-        bottom:
-          (hasNativeTabs ? insets.bottom : clamp(insets.bottom, 15, 60)) + 15,
-      }
+    : railMargins
+      ? // Beside the vertical bar's rail, level with its bottom
+        {
+          right: sideInsets.right + railMargins.right,
+          bottom: railMargins.bottom,
+        }
+      : {
+          // Line up with the floating native tab bar's edge
+          right:
+            placement === 'bottom'
+              ? NATIVE_TAB_BAR_SIDE_MARGIN
+              : 24 + sideInsets.right,
+          /*
+           * With native tabs, the inset includes the tab bar (which is much
+           * taller than the clamp allows), see `useHasNativeTabs`.
+           */
+          bottom:
+            (hasNativeTabs ? insets.bottom : clamp(insets.bottom, 15, 60)) + 15,
+        }
 
   return (
     <Animated.View

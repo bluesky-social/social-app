@@ -38,6 +38,7 @@ import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} fro
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {useVerticalBarFloatingMargins} from '#/features/verticalBar'
 import {type chat} from '#/lexicons'
 import {getMessageComposerHorizontalPadding} from './messageComposerLayout'
 import {type MessageEmbedState} from './MessageInputEmbed'
@@ -369,9 +370,21 @@ function ComposerContainer({children}: {children: React.ReactNode}) {
   const {progress} = useReanimatedKeyboardAnimation()
   const t = useTheme()
   const horizontalPadding = getMessageComposerHorizontalPadding(bottomInset)
+  // Sit level with the vertical bar's tab rail (iPhone Duo)
+  const railMargins = useVerticalBarFloatingMargins()
+  const paddingLeft = railMargins
+    ? [railMargins.left, horizontalPadding[1]]
+    : horizontalPadding
+  const paddingRight = railMargins
+    ? [railMargins.right, horizontalPadding[1]]
+    : horizontalPadding
 
   const animatedContainerStyle = useAnimatedStyle(() => ({
-    paddingHorizontal: interpolate(progress.get(), [0, 1], horizontalPadding, {
+    paddingLeft: interpolate(progress.get(), [0, 1], paddingLeft, {
+      extrapolateRight: Extrapolation.CLAMP,
+      extrapolateLeft: Extrapolation.CLAMP,
+    }),
+    paddingRight: interpolate(progress.get(), [0, 1], paddingRight, {
       extrapolateRight: Extrapolation.CLAMP,
       extrapolateLeft: Extrapolation.CLAMP,
     }),

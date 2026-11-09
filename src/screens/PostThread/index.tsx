@@ -68,6 +68,7 @@ import {
   NATIVE_TAB_BAR_SIDE_MARGIN,
   useHasNativeTabs,
   usePhoneHorizontalSafeAreaInsets,
+  useVerticalBarFloatingMargins,
 } from '#/features/verticalBar'
 
 const PARENT_CHUNK_SIZE = IS_NATIVE ? 5 : 20
@@ -733,6 +734,8 @@ function FloatingComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
   const {bottom: bottomInset} = useSafeAreaInsets()
   // Keep clear of the vertical bar (iPhone Duo)
   const sideInsets = usePhoneHorizontalSafeAreaInsets()
+  // Sit level with the vertical bar's tab rail (iPhone Duo)
+  const railMargins = useVerticalBarFloatingMargins()
 
   return (
     <ScrollEdgeEffect
@@ -742,11 +745,13 @@ function FloatingComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
         a.absolute,
         a.bottom_0,
         {
-          paddingHorizontal: NATIVE_TAB_BAR_SIDE_MARGIN,
           left: sideInsets.left,
           right: sideInsets.right,
-          // Don't sit flush on a screen edge with no home indicator
+          paddingLeft: railMargins?.left ?? NATIVE_TAB_BAR_SIDE_MARGIN,
+          paddingRight: railMargins?.right ?? NATIVE_TAB_BAR_SIDE_MARGIN,
           paddingBottom:
+            railMargins?.bottom ??
+            // Don't sit flush on a screen edge with no home indicator
             Math.max(bottomInset, tokens.space.md) + tokens.space.sm,
         },
       ]}>
