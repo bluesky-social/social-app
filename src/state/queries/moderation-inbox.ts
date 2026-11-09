@@ -214,9 +214,9 @@ export function useModerationInboxCacheMutation() {
           subject,
         })
         await queryClient.cancelQueries({queryKey: subjectQueryKey})
-        queryClient.setQueryData<
+        queryClient.setQueriesData<
           InfiniteData<tools.ozone.inbox.getActionedSubject.$OutputBody>
-        >(subjectQueryKey, data =>
+        >({queryKey: subjectQueryKey}, data =>
           data
             ? {
                 ...data,

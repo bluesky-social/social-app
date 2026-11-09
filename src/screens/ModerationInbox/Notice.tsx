@@ -37,10 +37,16 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {tools} from '#/lexicons'
+import {AccountActionTimeline} from './components/AccountActionTimeline'
 import {ActionSummaryText} from './components/ActionSummaryText'
 import {ContentBlock} from './components/ContentBlock'
 import {useActionedSubjectLabels} from './components/hooks/useActionedSubjectLabels'
 import {ReportSubjectPreview} from './components/ReportSubjectPreview'
+import {
+  appealAction,
+  appealReference,
+  currentAccountAction,
+} from './components/util/accountActions'
 import {getNoticeLabels} from './components/util/noticeLabels'
 
 export function ModerationInboxNoticeDetailsScreen({
@@ -192,25 +198,22 @@ function NoticeDetails({
   const ax = useAnalytics()
   const appealDialogControl = Dialog.useDialogControl()
   const labels = getNoticeLabels(data)
+  const isAccount = 'did' in data.subject
+  const currentAction =
+    isAccount &&
+    (data.enforcement.state === 'takendown' ||
+      data.enforcement.state === 'suspended')
+      ? currentAccountAction(data, actions)
+      : data.actions[0]
   const actionLabels = useActionedSubjectLabels({
     src: data.src,
     subject: data.subject,
     enforcement: data.enforcement,
-    latestAction: data.actions[0],
+    latestAction: currentAction,
   })
-  const policies = data.actions[0]?.policies ?? []
+  const policies = currentAction?.policies ?? []
   const canAppeal = data.availableActions?.includes('appeal') ?? false
-  const isAccount = 'did' in data.subject
-  const appealedAction = actions.find(
-    action =>
-      !action.reversedAt &&
-      [
-        'contentRemoved',
-        'accountSuspended',
-        'accountTakedown',
-        'labelApplied',
-      ].includes(action.type),
-  )
+  const appealedAction = appealAction(data, actions)
 
   return (
     <>
@@ -224,8 +227,8 @@ function NoticeDetails({
             <Trans>
               Your appeal has been submitted and is awaiting review.
             </Trans>
-          ) : data.actions[0]?.type === 'contentRemoved' &&
-            !data.actions[0]?.reversedAt ? (
+          ) : currentAction?.type === 'contentRemoved' &&
+            !currentAction.reversedAt ? (
             <Trans>
               {serviceName} removed your content for violating our{' '}
               <InlineLinkText
@@ -244,8 +247,8 @@ function NoticeDetails({
             enforcement={data.enforcement}
             allowOwnRecordSnapshot
           />
-          {(data.actions[0]?.type === 'labelApplied' ||
-            data.actions[0]?.type === 'labelRemoved') &&
+          {(currentAction?.type === 'labelApplied' ||
+            currentAction?.type === 'labelRemoved') &&
           actionLabels?.summary ? (
             <Text emoji style={[a.text_sm]}>
               {actionLabels.summary}
@@ -325,6 +328,7 @@ function NoticeDetails({
             </Text>
           ) : null}
         </ContentBlock>
+        {isAccount && <AccountActionTimeline data={data} actions={actions} />}
       </View>
       <AppealDialog
         control={appealDialogControl}
@@ -390,12 +394,7 @@ function AppealDialog({
       const updatedSubject = await appeal.mutateAsync({
         subject: data.subject,
         reason: details.trim(),
-        action: appealedAction
-          ? {
-              $type: 'tools.ozone.inbox.appealActionedSubject#actionRef',
-              id: appealedAction.id,
-            }
-          : undefined,
+        action: appealReference(data, appealedAction),
       })
       ax.metric('moderation:inbox:submitAppeal', {
         type: appealedAction?.type,
