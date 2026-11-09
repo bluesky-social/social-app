@@ -87,8 +87,9 @@ async function compressImageNow(
     )
 
     /*
-     * Measure the written file rather than requesting base64, which would
-     * encode the JPEG a second time and copy it into JS on every pass.
+     * Measure the written file rather than requesting base64, which builds a
+     * base64 copy of every pass and sends it to JS (Android even encodes the
+     * JPEG a second time to do it).
      */
     const size = await getUriSize(res.uri)
     if (size <= maxBytes) {
