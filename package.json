@@ -125,6 +125,7 @@
     "@bsky.app/bottom-sheet": "link:./modules/bottom-sheet",
     "@bsky.app/expo-background-notification-handler": "link:./modules/expo-background-notification-handler",
     "@bsky.app/expo-bluesky-gif-view": "link:./modules/expo-bluesky-gif-view",
+    "@bsky.app/expo-bluesky-image-compressor": "link:./modules/expo-bluesky-image-compressor",
     "@bsky.app/expo-bluesky-swiss-army": "link:./modules/expo-bluesky-swiss-army",
     "@bsky.app/expo-dynamic-app-icon": "^1.8.5",
     "@bsky.app/expo-emoji-picker": "link:./modules/expo-emoji-picker",

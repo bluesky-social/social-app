@@ -1,0 +1,20 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'expo.modules.blueskyimagecompressor'
+version = '0.1.0'
+
+android {
+  namespace "expo.modules.blueskyimagecompressor"
+  defaultConfig {
+    versionCode 1
+    versionName "0.1.0"
+  }
+}
+
+dependencies {
+  // Matches expo-camera, so this doesn't add a second version
+  implementation "androidx.exifinterface:exifinterface:1.4.2"
+}

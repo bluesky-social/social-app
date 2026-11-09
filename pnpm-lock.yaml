@@ -263,6 +263,9 @@ importers:
       '@bsky.app/expo-bluesky-gif-view':
         specifier: link:./modules/expo-bluesky-gif-view
         version: link:modules/expo-bluesky-gif-view
+      '@bsky.app/expo-bluesky-image-compressor':
+        specifier: link:./modules/expo-bluesky-image-compressor
+        version: link:modules/expo-bluesky-image-compressor
       '@bsky.app/expo-bluesky-swiss-army':
         specifier: link:./modules/expo-bluesky-swiss-army
         version: link:modules/expo-bluesky-swiss-army
