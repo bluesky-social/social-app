@@ -85,10 +85,9 @@ export function CompactMedia({
 }: {
   embed: app.bsky.feed.defs.PostView['embed']
   /**
-   * 100 beside a compact quote's text, 80 when the media stands in for a
-   * post's text, or 60 trailing a notification.
+   * 90 beside a compact quote's text, or 60 trailing a notification.
    */
-  size: 60 | 80 | 100
+  size: 60 | 90
   /**
    * Heavily blurs the thumbnails, for media behind a moderation warning that
    * can't be revealed in place.

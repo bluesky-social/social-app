@@ -571,9 +571,7 @@ function CompactQuoteBody({
    * the text, behind the usual warning, and appears there once revealed.
    */
   const isMediaHidden = Boolean(mediaModui?.blurs[0])
-  const square = hasThumbnails && (
-    <CompactMedia embed={quote.embed} size={100} />
-  )
+  const square = hasThumbnails && <CompactMedia embed={quote.embed} size={90} />
 
   return (
     <>
