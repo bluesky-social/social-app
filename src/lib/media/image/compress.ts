@@ -1,12 +1,35 @@
 import {SaveFormat} from 'expo-image-manipulator'
 
+import {createLimit} from '#/lib/async/limit'
 import {moveIfNecessary} from '#/lib/media/image/cache'
 import {renderImage} from '#/lib/media/image-manipulator'
 import {type PickerImage} from '#/lib/media/picker.shared'
-import {getDataUriSize} from '#/lib/media/util'
+import {getUriSize} from '#/lib/media/uriSize'
 import {type ComposerImage} from '#/state/gallery'
 
-export async function compressImage(
+/*
+ * Each image being compressed holds full-size decoded bitmaps while it renders
+ * (about 48 MB each for a 12 MP photo on iOS), and iOS starts decoding as
+ * soon as a manipulation is created. Compressing a 10-image gallery all at
+ * once is enough to get the app killed for memory (APP-3190). iOS encodes on a
+ * single serial queue anyway, so running more than two at once buys little.
+ */
+const MAX_CONCURRENT_COMPRESSIONS = 2
+const limit = createLimit(MAX_CONCURRENT_COMPRESSIONS)
+
+/**
+ * Compresses an image to fit within `maxDimension` and `maxSize`. At most
+ * {@link MAX_CONCURRENT_COMPRESSIONS} images are compressed at once across the
+ * app, so callers can start them all in parallel.
+ */
+export function compressImage(
+  img: ComposerImage,
+  opts: {maxDimension: number; maxSize: number},
+): Promise<PickerImage> {
+  return limit(() => compressImageNow(img, opts))
+}
+
+async function compressImageNow(
   img: ComposerImage,
   {maxDimension, maxSize}: {maxDimension: number; maxSize: number},
 ): Promise<PickerImage> {
@@ -60,13 +83,15 @@ export async function compressImage(
       {
         compress: qualityPercentage / 100,
         format: SaveFormat.JPEG,
-        base64: true,
       },
     )
 
-    const base64 = res.base64
-    const size = base64 ? getDataUriSize(base64) : 0
-    if (base64 && size <= maxBytes) {
+    /*
+     * Measure the written file rather than requesting base64, which would
+     * encode the JPEG a second time and copy it into JS on every pass.
+     */
+    const size = await getUriSize(res.uri)
+    if (size <= maxBytes) {
       minQualityPercentage = qualityPercentage
       newDataUri = {
         path: await moveIfNecessary(res.uri),
