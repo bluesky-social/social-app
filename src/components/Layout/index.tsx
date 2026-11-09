@@ -10,7 +10,10 @@ import Animated, {
   type AnimatedScrollViewProps,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {
+  SafeAreaInsetsContext,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 
 import {useEnableMinimalShellModeForScreen} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
@@ -34,6 +37,7 @@ import {IS_IPAD, IS_WEB} from '#/env'
 import {
   useHasNativeTabs,
   useHorizontalSafeAreaInsets,
+  usePhoneHorizontalSafeAreaInsets,
 } from '#/features/verticalBar'
 
 export * from '#/components/Layout/const'
@@ -227,6 +231,30 @@ export const Center = memo(function LayoutCenter({
   const {isWithinDialog} = useDialogContext()
   const {isWithinSplitView} = useIsWithinSplitView()
   const ctx = useMemo(() => ({isWithinOffsetView: true}), [])
+  /*
+   * A top-level column spans the full width on phones, so keep it clear of the
+   * vertical bar (iPhone Duo). Like UIKit narrowing a subview's safe area, zero
+   * the side insets inside it, so that nothing in it insets twice.
+   */
+  const insets = useSafeAreaInsets()
+  const sideInsets = usePhoneHorizontalSafeAreaInsets()
+  const hasSideInsets =
+    !isWithinOffsetView &&
+    !isWithinSplitView &&
+    !isWithinDialog &&
+    (sideInsets.left > 0 || sideInsets.right > 0)
+  let content = (
+    <ScrollbarOffsetContext.Provider value={ctx}>
+      {children}
+    </ScrollbarOffsetContext.Provider>
+  )
+  if (hasSideInsets) {
+    content = (
+      <SafeAreaInsetsContext.Provider value={{...insets, left: 0, right: 0}}>
+        {content}
+      </SafeAreaInsetsContext.Provider>
+    )
+  }
   return (
     <View
       style={[
@@ -250,11 +278,20 @@ export const Center = memo(function LayoutCenter({
             ],
           },
         style,
+        /*
+         * Margins rather than padding, so that absolutely positioned children
+         * (like a floating header) are inset too. Last, since callers often pass
+         * `a.w_full`.
+         */
+        hasSideInsets && {
+          width: 'auto',
+          alignSelf: 'stretch',
+          marginLeft: sideInsets.left,
+          marginRight: sideInsets.right,
+        },
       ]}
       {...props}>
-      <ScrollbarOffsetContext.Provider value={ctx}>
-        {children}
-      </ScrollbarOffsetContext.Provider>
+      {content}
     </View>
   )
 })
