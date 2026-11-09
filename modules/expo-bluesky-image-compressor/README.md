@@ -1,8 +1,10 @@
 # expo-bluesky-image-compressor
 
 Re-encodes an image as a JPEG that fits a pixel and byte budget, for uploading.
-iOS and Android only. Web uses `expo-image-manipulator` (see
-`src/lib/media/image/compressToFit.web.ts`).
+iOS and Android only. The app uses it while the
+`image_uploads:native_compression:enable` gate is on. Otherwise, and on web, it
+falls back to an `expo-image-manipulator` loop
+(`src/lib/media/image/compressWithManipulator.ts`).
 
 ```ts
 import {compressImage} from '@bsky.app/expo-bluesky-image-compressor'

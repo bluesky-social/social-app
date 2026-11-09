@@ -24,6 +24,7 @@ export enum Features {
   ModerationInboxEnable = 'moderation_inbox:enable',
   AtmosphereScreenEnable = 'atmosphere_screen:enable',
   NotificationsV2Enable = 'notifications_v2:enable',
+  ImageUploadsNativeCompressionEnable = 'image_uploads:native_compression:enable',
 
   // values
   StarterPacksConfig = 'starter_packs:config',
