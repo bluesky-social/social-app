@@ -132,8 +132,14 @@ function DialogInner({
     mutateAsync: updateProfileMutation,
     error: updateProfileError,
     isError: isUpdateProfileError,
-    isPending: isUpdatingProfile,
   } = useProfileUpdateMutation()
+  /*
+   * Covers the whole save, not just the profile mutation: links are written
+   * first, and a second save started meanwhile would create every new link's
+   * record again. The ref catches a second press before the re-render.
+   */
+  const [isSaving, setIsSaving] = useState(false)
+  const isSavingRef = useRef(false)
   const [imageError, setImageError] = useState('')
   const initialDisplayName = profile.displayName || ''
   const [displayName, setDisplayName] = useState(initialDisplayName)
@@ -234,6 +240,9 @@ function DialogInner({
   )
 
   const onPressSave = useCallback(async () => {
+    if (isSavingRef.current) return
+    isSavingRef.current = true
+    setIsSaving(true)
     setImageError('')
     try {
       const nextLinks = linksDirty ? editedLinks : undefined
@@ -275,6 +284,9 @@ function DialogInner({
       Toast.show(_(msg({message: 'Profile updated', context: 'toast'})))
     } catch (e: any) {
       logger.error('Failed to update user profile', {message: String(e)})
+      // left set on success, so Save stays off while the dialog closes
+      isSavingRef.current = false
+      setIsSaving(false)
     }
   }, [
     updateProfileMutation,
@@ -331,10 +343,7 @@ function DialogInner({
         label={_(msg`Save`)}
         onPress={onPressSave}
         disabled={
-          !dirty ||
-          isUpdatingProfile ||
-          displayNameTooLong ||
-          descriptionTooLong
+          !dirty || isSaving || displayNameTooLong || descriptionTooLong
         }
         size="small"
         color="primary"
@@ -344,7 +353,7 @@ function DialogInner({
         <ButtonText style={[a.text_md, !dirty && t.atoms.text_contrast_low]}>
           <Trans>Save</Trans>
         </ButtonText>
-        {isUpdatingProfile && <ButtonIcon icon={Loader} />}
+        {isSaving && <ButtonIcon icon={Loader} />}
       </Button>
     ),
     [
@@ -352,7 +361,7 @@ function DialogInner({
       t,
       dirty,
       onPressSave,
-      isUpdatingProfile,
+      isSaving,
       displayNameTooLong,
       descriptionTooLong,
     ],
