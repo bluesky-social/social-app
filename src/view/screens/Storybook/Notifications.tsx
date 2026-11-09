@@ -22,6 +22,8 @@ import {
   postWith,
   QUOTE_PLACEHOLDERS,
   QUOTES,
+  RECORD_WITH_MEDIA,
+  SHARED_RECORDS,
 } from '#/components/Post/Embed/__fixtures__'
 import {H1, H3} from '#/components/Typography'
 
@@ -118,8 +120,9 @@ export function Notifications() {
 
 /**
  * Someone quoting each of the embed fixtures' quoted posts, then likes of
- * posts with media or a link, then mentions that are nothing but media,
- * which show in full.
+ * posts with media or a link, then mentions with media, with and without
+ * text, which show it in full. Last, posts that share a feed, list or
+ * starter pack, as a mention and as a like.
  */
 const MEDIA_NOTIFICATIONS: NotificationView[] = [
   ...[...QUOTES, ...QUOTE_PLACEHOLDERS].map(
@@ -158,14 +161,49 @@ const MEDIA_NOTIFICATIONS: NotificationView[] = [
       embed,
     }),
   })),
-  ...[MEDIA.oneImage, MEDIA.threeImages, MEDIA.video, MEDIA.videoGif].map(
-    (embed, i): NotificationView => ({
+  ...(
+    [
+      ['', MEDIA.oneImage],
+      ['', MEDIA.threeImages],
+      ['', MEDIA.video],
+      ['', MEDIA.videoGif],
+      ['Text and three images', MEDIA.threeImages],
+      ['Text and a video', MEDIA.video],
+      ['Text and a GIF', MEDIA.tenorGif],
+      ['Text and a link', MEDIA.link],
+      ['Text, images and a quote', RECORD_WITH_MEDIA],
+    ] as const
+  ).map(([text, embed], i): NotificationView => ({
+    type: 'mention',
+    id: `story-mention-${i}`,
+    isRead: i % 2 === 1,
+    indexedAt: new Date(Date.now() - (i + 40) * 60_000).toISOString(),
+    count: 1,
+    post: postWith({rkey: `story-mention-${i}`, text, embed}),
+  })),
+  ...SHARED_RECORDS.flatMap(({title, embed}, i): NotificationView[] => [
+    {
       type: 'mention',
-      id: `story-mention-${i}`,
-      isRead: true,
-      indexedAt: new Date(Date.now() - (i + 40) * 60_000).toISOString(),
+      id: `story-shared-mention-${i}`,
+      isRead: false,
+      indexedAt: new Date(Date.now() - (i + 60) * 60_000).toISOString(),
       count: 1,
-      post: postWith({rkey: `story-mention-${i}`, text: '', embed}),
-    }),
-  ),
+      post: postWith({rkey: `story-shared-mention-${i}`, text: title, embed}),
+    },
+    {
+      type: 'like',
+      id: `story-shared-like-${i}`,
+      isRead: true,
+      indexedAt: new Date(Date.now() - (i + 60) * 60_000).toISOString(),
+      count: 1,
+      actors: [AUTHORS.ines],
+      actorDids: [AUTHORS.ines.did],
+      post: postWith({
+        author: AUTHORS.priya,
+        rkey: `story-shared-like-${i}`,
+        text: '',
+        embed,
+      }),
+    },
+  ]),
 ]

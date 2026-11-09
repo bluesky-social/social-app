@@ -478,6 +478,55 @@ export const QUOTE_PLACEHOLDERS: {title: string; embed: RecordView}[] = [
 ]
 
 /**
+ * Record embeds for a post that shares a feed, list or starter pack rather
+ * than quoting a post.
+ */
+export const SHARED_RECORDS: {title: string; embed: RecordView}[] = [
+  {
+    title: 'Shared feed',
+    embed: {$type: 'app.bsky.embed.record#view', record: feed},
+  },
+  {
+    title: 'Shared list',
+    embed: {
+      $type: 'app.bsky.embed.record#view',
+      record: {
+        $type: 'app.bsky.graph.defs#listView',
+        uri: `at://${AUTHORS.ines.did}/app.bsky.graph.list/mycologists`,
+        cid: cid('mycologists-list'),
+        name: 'Mycologists',
+        description: 'People who study fungi for a living, or for fun',
+        creator: AUTHORS.ines,
+        purpose: 'app.bsky.graph.defs#curatelist',
+        listItemCount: 42,
+        indexedAt: ago(30 * 24 * 60),
+      },
+    },
+  },
+  {
+    title: 'Shared starter pack',
+    embed: {
+      $type: 'app.bsky.embed.record#view',
+      record: {
+        $type: 'app.bsky.graph.defs#starterPackViewBasic',
+        uri: `at://${AUTHORS.ines.did}/app.bsky.graph.starterpack/fungi`,
+        cid: cid('fungi-starter-pack'),
+        record: {
+          $type: 'app.bsky.graph.starterpack',
+          name: 'Fungi folks',
+          list: `at://${AUTHORS.ines.did}/app.bsky.graph.list/fungi-folks`,
+          createdAt: ago(30 * 24 * 60),
+        },
+        creator: AUTHORS.ines,
+        listItemCount: 24,
+        joinedAllTimeCount: 310,
+        indexedAt: ago(30 * 24 * 60),
+      },
+    },
+  },
+]
+
+/**
  * A post's own images with a quote, as a feed shows a record with media.
  */
 export const RECORD_WITH_MEDIA = recordWithMedia(
