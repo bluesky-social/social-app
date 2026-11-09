@@ -6,7 +6,8 @@ import Foundation
  the result, until `nextQuality()` returns nil. Then `best` is the result to
  use, or nil if nothing fit.
 
- Kept in sync with QualitySearch.kt. See the README for the strategy.
+ Kept in sync with QualitySearch.kt and src/lib/media/image/qualitySearch.ts,
+ which has the tests. See the README for the strategy.
  */
 struct QualitySearch<Payload> {
   static var firstQuality: Int { 90 }

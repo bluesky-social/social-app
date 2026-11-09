@@ -8,8 +8,8 @@ import {type ImageMeta} from '#/state/gallery'
 
 /**
  * Re-encodes the image as a JPEG that fits `maxDimension` and `maxSize`, by
- * binary searching the quality with a full manipulator pass per attempt. Used
- * on web, and on native while `image_uploads:native_compression:enable` is off.
+ * binary searching the quality with a full manipulator pass per attempt. This
+ * is the fallback while the native and web compressors' gates are off.
  */
 export async function compressWithManipulator(
   source: ImageMeta,
