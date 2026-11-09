@@ -1,6 +1,7 @@
 import {type StyleProp, type ViewStyle} from 'react-native'
 import {type ModerationDecision} from '@bsky/sdk/moderation'
 
+import {type VideoFeedFeedbackAttribution} from '#/lib/media/video/feedFeedback'
 import {type app} from '#/lexicons'
 
 export enum PostEmbedViewContext {
@@ -23,6 +24,13 @@ export type CommonProps = {
    */
   post?: app.bsky.feed.defs.PostView
   feedDescriptor?: string
+  /**
+   * Feed feedback attribution of the recommended feed item that contains this
+   * embed. Passed through quote embeds unchanged, so video watch feedback is
+   * attributed to the outer feed item rather than the quoted post. Leave
+   * undefined outside feeds and no video watch feedback is sent.
+   */
+  videoFeedbackAttribution?: VideoFeedFeedbackAttribution
 }
 
 export type EmbedProps = CommonProps & {
