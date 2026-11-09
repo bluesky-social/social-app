@@ -13,7 +13,16 @@ const config = {
    * that has run Metro and make EAS build cache lookups miss. Only `*.js` is
    * ignored so the shipped `dummy.md` keeps clean-install hashes unchanged.
    */
-  ignorePaths: ['**/node_modules/react-native-worklets/.worklets/*.js'],
+  ignorePaths: [
+    '**/node_modules/react-native-worklets/.worklets/*.js',
+    /*
+     * app.config.js loads the share platform catalog, which would make every
+     * catalog edit look native. The only native parts, its iOS schemes and
+     * Android packages, are already hashed as part of the resolved Expo config,
+     * so ignoring the file still catches the changes that need a native build.
+     */
+    'src/components/ShareDialog/catalog.ts',
+  ],
   /*
    * The nano icon fonts are linked into the native binary, but the fingerprint
    * only sees the plugin config, not the icons. Without this, adding or

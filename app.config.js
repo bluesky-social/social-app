@@ -1,5 +1,6 @@
 // @ts-check
 const pkg = require('./package.json')
+const {getNativeQueries} = require('./src/components/ShareDialog/catalog.ts')
 
 /**
  * @param {import('@expo/config-types').ExpoConfig} _config
@@ -46,6 +47,12 @@ module.exports = function (_config) {
 
   const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
 
+  /**
+   * Apps the share sheet can detect, generated from the share platform
+   * catalog. Changing these needs a native build.
+   */
+  const SHARE_PLATFORM_QUERIES = getNativeQueries()
+
   const IOS_ICON_FILE =
     PLATFORM === 'web' // web build doesn't like .icon files
       ? './assets/app-icons/ios_icon_default_next.png'
@@ -85,6 +92,7 @@ module.exports = function (_config) {
           CADisableMinimumFrameDurationOnPhone: true,
           UIBackgroundModes: ['remote-notification'],
           NSUserActivityTypes: ['INSendMessageIntent'],
+          LSApplicationQueriesSchemes: SHARE_PLATFORM_QUERIES.iosSchemes,
           NSCameraUsageDescription:
             'Used for profile pictures, posts, and other kinds of content.',
           NSPhotoLibraryAddUsageDescription:
@@ -420,6 +428,13 @@ module.exports = function (_config) {
         './plugins/withAndroidManifestLargeHeapPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidManifestIntentQueriesPlugin.js',
+        [
+          './plugins/withAndroidManifestSharePlatformQueriesPlugin.js',
+          {
+            packages: SHARE_PLATFORM_QUERIES.androidPackages,
+            schemes: SHARE_PLATFORM_QUERIES.androidSchemes,
+          },
+        ],
         './plugins/withAndroidManifestOptionalCameraPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidNoJitpackPlugin.js',
