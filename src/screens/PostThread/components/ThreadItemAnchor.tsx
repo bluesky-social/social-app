@@ -9,7 +9,7 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {niceDate} from '#/lib/strings/time'
+import {formatDateTime, niceDate} from '#/lib/strings/time'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -564,12 +564,33 @@ function ExpandedPostDetails({
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
       <BackdatedPostIndicator post={post} />
-      <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
-        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          {niceDate(i18n, post.indexedAt, 'dot separated')}
-        </Text>
+      <View
+        style={[
+          a.self_stretch,
+          a.flex_row,
+          a.align_center,
+          a.flex_wrap,
+          a.gap_md,
+        ]}>
+        <View
+          style={[
+            a.flex_row,
+            a.flex_wrap,
+            a.align_center,
+            a.gap_sm,
+            {maxWidth: '100%'},
+          ]}>
+          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+            {formatDateTime(i18n, post.indexedAt, {timeStyle: 'short'})}
+          </Text>
+          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+            {i18n.date(new Date(post.indexedAt), {dateStyle: 'medium'})}
+          </Text>
+        </View>
         {isRootPost && (
-          <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
+          <View style={{marginLeft: 'auto'}}>
+            <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} plain />
+          </View>
         )}
       </View>
     </View>
