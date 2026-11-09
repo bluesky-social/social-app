@@ -22,7 +22,7 @@ export async function compressToFit(
     return compressWithManipulator(source, {maxDimension, maxSize})
   }
 
-  const image = await decode(source.path)
+  const image = await decode(source)
   try {
     let longSide = Math.min(Math.max(image.width, image.height), maxDimension)
 
@@ -57,9 +57,38 @@ export async function compressToFit(
  * Decodes at full size, upright. Not an `<img>`: iOS Safari draws large ones
  * from a lower resolution copy, so the output comes out blurry.
  */
-async function decode(uri: string) {
-  const blob = await (await fetch(uri)).blob()
+async function decode(source: ImageMeta) {
+  const blob = await (await fetch(source.path)).blob()
+  if (blob.type === 'image/svg+xml') {
+    return decodeSvg(blob, source)
+  }
   return createImageBitmap(blob, {imageOrientation: 'from-image'})
+}
+
+/**
+ * `createImageBitmap` can't decode vector images, so SVGs are drawn with an
+ * `<img>` first, at the size it gives them (or the size the picker measured,
+ * if the SVG has none).
+ */
+async function decodeSvg(blob: Blob, source: ImageMeta) {
+  const url = URL.createObjectURL(blob)
+  try {
+    const image = new Image()
+    image.src = url
+    await image.decode()
+    const {canvas, context} = createCanvas(
+      image.naturalWidth || source.width,
+      image.naturalHeight || source.height,
+    )
+    try {
+      context.drawImage(image, 0, 0, canvas.width, canvas.height)
+      return await createImageBitmap(canvas)
+    } finally {
+      releaseCanvas(canvas)
+    }
+  } finally {
+    URL.revokeObjectURL(url)
+  }
 }
 
 /**
