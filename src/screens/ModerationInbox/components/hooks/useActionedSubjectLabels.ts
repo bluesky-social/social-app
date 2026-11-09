@@ -29,7 +29,7 @@ export function useActionedSubjectLabels(
     isAtUriString(item.subject.uri, {strict: false}) &&
     new AtUri(item.subject.uri).collection === 'app.bsky.feed.post'
   const policyLabel = action.policies?.[0]?.displayName
-  const label = action.labels?.[0] ?? item.enforcement.labels?.[0]
+  const label = action.labels?.[0]
   const labelDefinition = label
     ? labelDefs[item.src]?.find(
         definition =>
@@ -51,8 +51,16 @@ export function useActionedSubjectLabels(
         ? l`Violates Community Guideline: ${policyLabel}`
         : undefined
       break
+    case 'contentRestored':
+      subject = isPost
+        ? l`Your post was restored`
+        : l`Your content was restored`
+      break
+    case 'accountRestored':
+      subject = l`Your account was restored`
+      break
     case 'communicationSent':
-      subject = l`We sent you an email about your account`
+      subject = l`An email was sent about your account`
       summary = policyLabel
       break
     case 'labelApplied':
@@ -108,7 +116,8 @@ export function useActionedSubjectLabels(
       summary = labelName ? l`Label: ${labelName}` : undefined
       break
     default:
-      return
+      subject = l`Moderation notice`
+      break
   }
 
   return {subject, summary}
