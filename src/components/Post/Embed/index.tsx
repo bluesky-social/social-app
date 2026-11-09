@@ -84,12 +84,7 @@ export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
             rest.viewContext === PostEmbedViewContext.ChatMessage && a.gap_sm,
           ]}>
           <MediaEmbed embed={embed.media} {...rest} />
-          <RecordEmbed
-            embed={embed.view}
-            {...rest}
-            // The post's own media comes first, so its quote steps back
-            quotePresentation={rest.quotePresentation ?? 'compact'}
-          />
+          <RecordEmbed embed={embed.view} {...rest} />
         </View>
       )
     }

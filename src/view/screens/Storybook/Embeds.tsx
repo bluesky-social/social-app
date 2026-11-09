@@ -54,12 +54,12 @@ export function Embeds() {
 
       <Section
         title="Record with media"
-        description="A post's own media with a quote. The quote is compact unless told otherwise.">
-        <Case title="Compact, by default">
+        description="A post's own media with a quote.">
+        <Case title="Default">
           <Embed embed={RECORD_WITH_MEDIA} />
         </Case>
-        <Case title='quotePresentation="default"'>
-          <Embed embed={RECORD_WITH_MEDIA} quotePresentation="default" />
+        <Case title='quotePresentation="compact"'>
+          <Embed embed={RECORD_WITH_MEDIA} quotePresentation="compact" />
         </Case>
       </Section>
 
