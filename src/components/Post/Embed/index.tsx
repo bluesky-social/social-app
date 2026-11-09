@@ -261,7 +261,10 @@ export function RecordEmbed({
     case 'starter_pack': {
       return (
         <View style={a.mt_sm}>
-          <StarterPackCard starterPack={embed.view} />
+          <StarterPackCard
+            starterPack={embed.view}
+            borderColor={rest.borderColor}
+          />
         </View>
       )
     }

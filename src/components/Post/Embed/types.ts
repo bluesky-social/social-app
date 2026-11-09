@@ -28,9 +28,9 @@ export type CommonProps = {
    */
   isQuoteTextMuted?: boolean
   /**
-   * The colour of card borders (quotes and their placeholders, links, feeds
-   * and lists) while they aren't hovered, for embeds on a background that
-   * `border_contrast_low` doesn't show against.
+   * The colour of card borders (quotes and their placeholders, links, feeds,
+   * lists and starter packs) while they aren't hovered, for embeds on a
+   * background that `border_contrast_low` doesn't show against.
    */
   borderColor?: string
   /**
