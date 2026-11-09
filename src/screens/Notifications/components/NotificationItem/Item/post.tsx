@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
-import {moderatePost, type ModerationDecision} from '@bsky/sdk/moderation'
+import {moderatePost} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -25,14 +25,7 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 import {WebOnlyInlineLinkText} from '#/components/Link'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
-import {RecordEmbed} from '#/components/Post/Embed'
-import {
-  CompactMedia,
-  getEmbedThumbnails,
-} from '#/components/Post/Embed/CompactMedia'
-import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
-import {ImageEmbed} from '#/components/Post/Embed/ImageEmbed'
-import {VideoEmbed} from '#/components/Post/Embed/VideoEmbed'
+import {Embed, RecordEmbed} from '#/components/Post/Embed'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostControls} from '#/components/PostControls'
 import {ProfileBadges} from '#/components/ProfileBadges'
@@ -41,7 +34,6 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import {FeedCard} from './media'
 import {getRowBorderColor, useItemContext} from './Root'
 import {Strong, useDisplayName} from './text'
 
@@ -277,11 +269,13 @@ function ReplyContextPost({
 }
 
 /**
- * A post's text and a compact preview of its embed, behind the usual
- * moderation hider. Images stand in for the text when there isn't any. Long
+ * A post's text and its embed, behind the usual moderation hider. The embed
+ * shows in full, as in a feed, except that a quoted post is compact. Long
  * text is cut short with a "Show more" button, as in feeds.
  */
 export function PostBody({post}: {post: PostView}) {
+  const t = useTheme()
+  const {isRead} = useItemContext()
   const moderationOpts = useModerationOpts()
   const record = bsky.isType(app.bsky.feed.post, post.record)
     ? post.record
@@ -301,7 +295,7 @@ export function PostBody({post}: {post: PostView}) {
   const moderation = moderationOpts
     ? moderatePost(post, moderationOpts)
     : undefined
-  const embedPreview = post.embed ? getEmbedPreviewKind(post.embed) : undefined
+  const hasEmbed = post.embed ? rendersEmbed(post.embed) : false
 
   const onPressShowMore = (event: GestureResponderEvent) => {
     // Keep the press from reaching the row, which on web would follow its link
@@ -335,19 +329,28 @@ export function PostBody({post}: {post: PostView}) {
           )}
         </View>
       )}
-      {post.embed && embedPreview && (
+      {hasEmbed && (
         /*
-         * The row stacks its lines 4px apart, but an embed gets 8px from
-         * the header when there's no text, and media and links get 8px
-         * before the timestamp too.
+         * Embeds bring their own top margin, for the text above them in a
+         * post, which the hider's gap already gives. Without text they sit
+         * 8px from the header rather than the row's usual 4px, and they get
+         * 4px more before the timestamp, as a feed post's embed does.
          */
         <View
-          style={[!richText && a.mt_xs, embedPreview === 'media' && a.mb_xs]}>
-          <EmbedPreview
+          style={[
+            a.mb_xs,
+            {
+              marginTop: richText
+                ? -tokens.space.sm
+                : -tokens.space.sm + tokens.space.xs,
+            },
+          ]}>
+          <Embed
             embed={post.embed}
-            post={post}
             moderation={moderation}
-            isMediaOnly={!richText}
+            post={post}
+            quotePresentation="compact"
+            borderColor={getRowBorderColor(t, !isRead)}
           />
         </View>
       )}
@@ -356,47 +359,19 @@ export function PostBody({post}: {post: PostView}) {
 }
 
 /**
- * What `EmbedPreview` shows for an embed, by what it ends with: `media` for
- * thumbnails and links, `quote` for a quoted post or a shared feed (with or
- * without media above it), or undefined when it shows nothing.
+ * Whether `Embed` renders anything for an embed. Labelers and unknown
+ * embeds render nothing, so they shouldn't take up space in the row.
  */
-function getEmbedPreviewKind(
-  embed: NonNullable<PostView['embed']>,
-): 'media' | 'quote' | undefined {
-  if (bsky.isType(app.bsky.embed.recordWithMedia.view, embed)) {
-    return hasRecordCard(embed.record)
-      ? 'quote'
-      : getEmbedPreviewKind(embed.media)
-  }
-  if (bsky.isType(app.bsky.embed.record.view, embed)) {
-    return hasRecordCard(embed) ? 'quote' : undefined
-  }
-  if (bsky.isType(app.bsky.embed.external.view, embed)) {
-    return 'media'
-  }
-  return getEmbedThumbnails(embed).length > 0 ? 'media' : undefined
+function rendersEmbed(embed: NonNullable<PostView['embed']>) {
+  const {type} = bsky.post.parseEmbed(embed)
+  return type !== 'labeler' && type !== 'unknown'
 }
 
 /**
- * Whether `RecordPreview` renders anything for a record embed.
- */
-function hasRecordCard(embed: app.bsky.embed.record.View) {
-  switch (bsky.post.parseEmbedRecordView(embed).type) {
-    case 'post':
-    case 'post_blocked':
-    case 'post_not_found':
-    case 'post_detached':
-    case 'feed':
-      return true
-    default:
-      return false
-  }
-}
-
-/**
- * The card for a record embed: a quoted post as a compact quote, or a feed
- * that was shared. Without it a post that shares a feed reads like a plain
- * reply to whoever made the feed. Other records, like lists, render nothing.
+ * The card for a record embed, for a post with nothing else to preview: a
+ * quoted post as a compact quote, or the feed, list or starter pack it
+ * shares. Without it a post that shares a feed reads like a plain reply to
+ * whoever made the feed.
  */
 export function RecordPreview({
   embed,
@@ -412,14 +387,11 @@ export function RecordPreview({
   const {isRead} = useItemContext()
   const parsed = bsky.post.parseEmbedRecordView(embed)
 
-  if (!hasRecordCard(embed)) return null
-  if (parsed.type === 'feed') {
-    return <FeedCard generator={parsed.view} />
-  }
+  if (parsed.type === 'labeler' || parsed.type === 'unknown') return null
   return (
     /*
-     * Quotes and their placeholders bring their own top margin, for the text
-     * above them in a post. The row already spaces them.
+     * Record embeds bring their own top margin, for the text above them in a
+     * post. The row already spaces them.
      */
     <View style={{marginTop: -tokens.space.sm}}>
       <RecordEmbed
@@ -429,94 +401,6 @@ export function RecordPreview({
         borderColor={getRowBorderColor(t, !isRead)}
       />
     </View>
-  )
-}
-
-/**
- * A compact stand-in for the full post embed: thumbnails for media, the
- * usual external embed for links, a compact quote for quoted posts, a card
- * for shared feeds, and nothing for lists and the like.
- */
-function EmbedPreview({
-  embed,
-  post,
-  moderation,
-  isMediaOnly,
-}: {
-  embed: NonNullable<PostView['embed']>
-  post: PostView
-  /**
-   * The post's own moderation, for its media. Quoted posts apply their own.
-   */
-  moderation: ModerationDecision | undefined
-  /**
-   * Whether the post is nothing but this embed, so its images or video show
-   * in full, as a GIF does, rather than as a thumbnail.
-   */
-  isMediaOnly: boolean
-}) {
-  const t = useTheme()
-  const {isRead} = useItemContext()
-
-  if (bsky.isType(app.bsky.embed.recordWithMedia.view, embed)) {
-    return (
-      <View style={[a.gap_sm]}>
-        <EmbedPreview
-          embed={embed.media}
-          post={post}
-          moderation={moderation}
-          isMediaOnly={false}
-        />
-        <RecordPreview embed={embed.record} />
-      </View>
-    )
-  }
-  if (bsky.isType(app.bsky.embed.record.view, embed)) {
-    return <RecordPreview embed={embed} />
-  }
-  if (bsky.isType(app.bsky.embed.external.view, embed)) {
-    return (
-      <ContentHider modui={moderation?.ui('contentMedia')}>
-        <ExternalEmbed
-          link={embed.external}
-          post={post}
-          // Matches `Card`, whose border the post's own embeds don't share
-          borderColor={getRowBorderColor(t, !isRead)}
-        />
-      </ContentHider>
-    )
-  }
-  if (isMediaOnly) {
-    const parsed = bsky.post.parseEmbed(embed)
-    if (parsed.type === 'images' || parsed.type === 'gallery') {
-      return (
-        <ContentHider modui={moderation?.ui('contentMedia')}>
-          <ImageEmbed
-            embed={parsed}
-            post={post}
-            // The row already spaces the images from the header
-            style={a.mt_0}
-          />
-        </ContentHider>
-      )
-    }
-    if (parsed.type === 'video') {
-      return (
-        <ContentHider modui={moderation?.ui('contentMedia')}>
-          {/* Cancels the video's own top padding, which the row already gives */}
-          <View style={{marginTop: -tokens.space.xs}}>
-            <VideoEmbed embed={parsed.view} post={post} />
-          </View>
-        </ContentHider>
-      )
-    }
-  }
-  return (
-    <CompactMedia
-      embed={embed}
-      size={80}
-      blurred={moderation?.ui('contentMedia').blur ?? false}
-    />
   )
 }
 

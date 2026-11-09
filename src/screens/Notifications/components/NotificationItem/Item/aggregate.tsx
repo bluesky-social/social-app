@@ -23,7 +23,8 @@ import {getRowBorderColor, useItemContext} from './Root'
  *
  * Images, video and GIFs aren't previewed here, since rows show those as a
  * trailing `CompactMedia`. A post with nothing but a quote or a shared feed
- * shows that instead, as a compact quote or a feed card.
+ * shows that instead, as a compact quote or the shared feed, list or
+ * starter pack.
  */
 export function PostPreview({
   post,
