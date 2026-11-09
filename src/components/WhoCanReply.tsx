@@ -17,10 +17,10 @@ import {
   PostInteractionSettingsDialog,
   usePrefetchPostInteractionSettings,
 } from '#/components/dialogs/PostInteractionSettingsDialog'
-import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronDownIcon} from '#/components/icons/Chevron'
-import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSignIcon} from '#/components/icons/CircleBanSign'
-import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Globe'
-import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Group'
+import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSignIcon} from '#/components/icons/Circle'
+import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Earth'
+import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Group3'
+import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronDownIcon} from '#/components/icons/TinyChevronBottom'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -34,7 +34,7 @@ interface WhoCanReplyProps {
   style?: StyleProp<ViewStyle>
   /**
    * Quieter version for the post thread's date line: no leading icon and
-   * shorter wording ("Anybody can reply", "Some can reply"). The author sees
+   * shorter wording ("Anyone can reply", "Some can reply"). The author sees
    * it in the default text color; everyone else sees it in the date's gray,
    * and not at all when anybody can reply.
    */
@@ -80,7 +80,7 @@ export function WhoCanReply({
   const noOneCanReply = settings.length === 1 && settings[0].type === 'nobody'
   const description = anyoneCanReply
     ? plain
-      ? l`Anybody can reply`
+      ? l`Anyone can reply`
       : l`Everybody can reply`
     : noOneCanReply
       ? l`Replies disabled`
@@ -97,7 +97,7 @@ export function WhoCanReply({
 
       // wait on prefetch if it manages to resolve in under 200ms
       // otherwise, proceed immediately and show the spinner -sfn
-      Promise.race([
+      void Promise.race([
         prefetchPromise.current,
         new Promise(res => setTimeout(res, 200)),
       ]).finally(() => {
