@@ -217,8 +217,8 @@ let List = forwardRef<ListMethods, ListProps>(
                   : undefined
                 : {
                     top: headerOffset,
-                    right: hasSideInsets ? sideInsets.right : 1,
-                    left: hasSideInsets ? sideInsets.left : undefined,
+                    // At the screen edge, past the vertical bar, like system apps
+                    right: 1,
                     ...props.scrollIndicatorInsets,
                   }
           }
