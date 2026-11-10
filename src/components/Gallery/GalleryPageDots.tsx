@@ -45,7 +45,14 @@ export function GalleryPageDots({
       }
       accessibilityHint=""
       role={IS_WEB ? 'group' : undefined}
-      style={[a.flex_row, a.align_center, a.justify_center, style]}>
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.justify_center,
+        a.py_sm,
+        a.gap_sm,
+        style,
+      ]}>
       {itemKeys.map((key, index) => (
         <PageDot
           key={key}
@@ -127,8 +134,6 @@ function PageDot({
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
       style={[
-        a.px_sm,
-        a.py_md,
         a.rounded_full,
         web({
           cursor: 'pointer',
