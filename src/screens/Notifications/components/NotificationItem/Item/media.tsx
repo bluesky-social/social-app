@@ -103,9 +103,9 @@ export function InlineImages({
 }: {
   embed: app.bsky.feed.defs.PostView['embed']
   /**
-   * 60 for a trailing preview, 80 when the images stand in for post text.
+   * The square's width and height.
    */
-  size: 60 | 80
+  size: number
   /**
    * Heavily blurs the thumbnails, for media behind a moderation warning. Get
    * this from `usePostMediaBlurred`, or from the post's `contentMedia`
