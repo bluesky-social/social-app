@@ -38,6 +38,7 @@ import {Post} from '#/view/com/post/Post'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {makeActivityListLink} from '#/screens/Notifications/components/NotificationItem/links'
 import {atoms as a, native, platform, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
@@ -128,11 +129,9 @@ let NotificationFeedItem = ({
         break
       }
       case 'subscribed-post': {
-        const posts: string[] = []
-        for (const post of [item.notification, ...(item.additional ?? [])]) {
-          posts.push(post.uri)
-        }
-        return `/notifications/activity?posts=${encodeURIComponent(posts.slice(0, 25).join(','))}`
+        return makeActivityListLink(
+          [item.notification, ...(item.additional ?? [])].map(post => post.uri),
+        )
       }
     }
 
