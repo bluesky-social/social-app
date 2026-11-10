@@ -69,7 +69,7 @@ describe('linksFromProfileView', () => {
   it('skips links the app does not allow', () => {
     const links = linksFromProfileView([
       view('a', 'javascript:alert(1)'),
-      view('b', 'https://onlyfans.com/kat'),
+      view('b', 'https://videy.at/v/abc'),
       view('c', 'https://bit.ly/kat'),
       view('d', 'http://insecure.example'),
       view('e', 'https://example.com'),
@@ -128,6 +128,13 @@ describe('filterModeratedLinkViews', () => {
     expect(
       filterModeratedLinkViews([labeled(labeler, 'porn')], opts()),
     ).toEqual([])
+  })
+
+  it('keeps labeled links the viewer has chosen to see', () => {
+    const link = labeled(labeler, 'porn')
+    const adultOpts = opts(true)
+    adultOpts.prefs.labels = {porn: 'ignore'}
+    expect(filterModeratedLinkViews([link], adultOpts)).toEqual([link])
   })
 
   it('hides links the owner self-labels as adult content', () => {

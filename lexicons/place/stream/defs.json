@@ -1,0 +1,107 @@
+{
+  "id": "place.stream.defs",
+  "defs": {
+    "blockView": {
+      "type": "object",
+      "required": [
+        "uri",
+        "cid",
+        "blocker",
+        "record",
+        "indexedAt"
+      ],
+      "properties": {
+        "cid": {
+          "type": "string",
+          "format": "cid"
+        },
+        "uri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "record": {
+          "ref": "app.bsky.graph.block",
+          "type": "ref"
+        },
+        "blocker": {
+          "ref": "app.bsky.actor.defs#profileViewBasic",
+          "type": "ref"
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    },
+    "rendition": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "renditions": {
+      "type": "object",
+      "required": [
+        "renditions"
+      ],
+      "properties": {
+        "renditions": {
+          "type": "array",
+          "items": {
+            "ref": "#rendition",
+            "type": "ref"
+          }
+        }
+      }
+    },
+    "activityGame": {
+      "type": "object",
+      "required": [
+        "uri"
+      ],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "name": {
+          "type": "string",
+          "description": "Cached display name of the game."
+        }
+      },
+      "description": "A game from the gamesgamesgamesgames catalog, identified by its AT URI."
+    },
+    "activityLabel": {
+      "type": "object",
+      "required": [
+        "label"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "knownValues": [
+            "events",
+            "just_chatting",
+            "podcasting",
+            "music",
+            "art",
+            "software_dev",
+            "cooking",
+            "miniatures",
+            "makers_crafting",
+            "fitness",
+            "sports"
+          ]
+        }
+      },
+      "description": "A non-game activity with a well-known label."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

@@ -108,19 +108,25 @@ export function SortablePills({
     : frames
   const height = ready ? rowHeightFor(shown) : 0
 
-  // row width, and pill sizes, from the DOM
+  /*
+   * Row width, and pill sizes, from the DOM. Layout sizes rather than
+   * `getBoundingClientRect`, which includes transforms: the dialog zooms in
+   * from 95%, so pills measured on open would come out short and end up
+   * touching, and nothing re-measures once the zoom finishes.
+   */
   useLayoutEffect(() => {
     const row = rowEl.current
     if (!row) return
     const measure = () => {
-      setRowWidth(row.getBoundingClientRect().width)
+      setRowWidth(row.offsetWidth)
       setSizes(prev => {
         let next = prev
         for (const [key, el] of elements.current) {
-          const r = el.getBoundingClientRect()
+          const w = el.offsetWidth
+          const h = el.offsetHeight
           const cur = next[key]
-          if (!cur || cur.w !== r.width || cur.h !== r.height) {
-            next = {...next, [key]: {w: r.width, h: r.height}}
+          if (!cur || cur.w !== w || cur.h !== h) {
+            next = {...next, [key]: {w, h}}
           }
         }
         return next

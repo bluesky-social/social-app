@@ -14,6 +14,7 @@ import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
+import {useSetPostTitle} from '#/lib/hooks/useSetPostTitle'
 import {
   FeedFeedbackProvider,
   type StateContext as FeedFeedbackStateContext,
@@ -90,6 +91,8 @@ export function PostThread({uri}: {uri: string}) {
     }
     return {hasParents}
   }, [thread.data.items])
+
+  useSetPostTitle(anchor?.value.post.author)
 
   // Track post:view event when anchor post is viewed
   const seenPostUriRef = useRef<string | null>(null)

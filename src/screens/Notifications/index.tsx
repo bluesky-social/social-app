@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useEffectEvent, useRef, useState} from 'react'
+import {useCallback, useRef, useState} from 'react'
 import {type LayoutChangeEvent, View} from 'react-native'
 import Animated, {
   interpolate,
@@ -11,17 +11,17 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {type AnyAppReturn, onAnyAppReturn} from '#/lib/appState'
 import {HITSLOP_10} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
 } from '#/lib/routes/types'
-import {emitSoftReset, listenPushNotificationOpened} from '#/state/events'
+import {emitSoftReset} from '#/state/events'
 import {
   getGroupedNotificationsTop,
   type GroupedNotificationsFeed,
@@ -33,6 +33,7 @@ import {
 import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
 import {useAppviewClient} from '#/state/session'
 import {useShellHeaderLayout} from '#/state/shell/shell-layout'
+import {FAB} from '#/view/com/util/fab/FAB'
 import {
   HomeHeaderModeProvider,
   useHomeHeaderMode,
@@ -41,6 +42,10 @@ import {NotificationsScreen as LegacyNotificationsScreen} from '#/view/screens/N
 import {PageList} from '#/screens/Notifications/components/PageList'
 import * as Pager from '#/screens/Notifications/components/PagerView'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
+import {
+  type RefreshReason,
+  useReturnToScreen,
+} from '#/screens/Notifications/returnToScreen'
 import {createTabTaps} from '#/screens/Notifications/tabTaps'
 import {
   type FeedLoad,
@@ -51,20 +56,19 @@ import {atoms as a, useBreakpoints, useTheme, utils} from '#/alf'
 import {BetaTag} from '#/components/BetaTag'
 import {ButtonIcon} from '#/components/Button'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {type Metrics, useAnalytics} from '#/analytics'
 import {Features, isOnForBetaUser} from '#/analytics/features'
-import {IS_INTERNAL, IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {IS_INTERNAL, IS_NATIVE, IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
   'Notifications'
 >
-
-type RefreshReason = Metrics['notifications:refresh']['reason']
 
 export function NotificationsScreen(props: Props) {
   const ax = useAnalytics()
@@ -80,11 +84,23 @@ export function NotificationsScreen(props: Props) {
 }
 
 export function NewNotificationsScreen({}: Props) {
+  const {t: l} = useLingui()
+  const t = useTheme()
+  const {openComposer} = useOpenComposer()
+
   return (
-    <Layout.Screen testID="newNotificationsScreen" noInsetTop={IS_LIQUID_GLASS}>
+    <Layout.Screen testID="newNotificationsScreen" noInsetTop={IS_NATIVE}>
       <HomeHeaderModeProvider>
         <NewNotificationsScreenInner />
       </HomeHeaderModeProvider>
+      <FAB
+        testID="composeFAB"
+        onPress={() => openComposer({logContext: 'Fab'})}
+        icon={<EditBigIcon size="lg" fill={t.palette.white} />}
+        accessibilityRole="button"
+        accessibilityLabel={l({message: 'New post', context: 'action'})}
+        accessibilityHint=""
+      />
     </Layout.Screen>
   )
 }
@@ -92,6 +108,7 @@ export function NewNotificationsScreen({}: Props) {
 function NewNotificationsScreenInner() {
   const {t: l} = useLingui()
   const ax = useAnalytics()
+  const navigation = useNavigation()
   const headerMode = useHomeHeaderMode()
   const initialHeaderOffset = useHeaderOffset()
   const [headerOffset, setHeaderOffset] = useState(initialHeaderOffset)
@@ -101,11 +118,51 @@ function NewNotificationsScreenInner() {
    */
   const {height: titleHeight, onLayout: onTitleLayout} = useShellHeaderLayout()
   const tabs: {key: GroupedNotificationsFeed; label: string}[] = [
-    {key: 'all', label: l`All`},
-    {key: 'people-i-follow', label: l`People I follow`},
-    {key: 'conversations', label: l`Replies`},
-    {key: 'followers', label: l`Follows`},
-    {key: 'activity', label: l`Activity`},
+    {
+      key: 'all',
+      label: l({
+        message: 'All',
+        context: 'notifications tab',
+        comment:
+          'Tab label in Notifications that shows every notification. Space is tight, so keep it as short as possible.',
+      }),
+    },
+    {
+      key: 'people-i-follow',
+      label: l({
+        message: 'People I follow',
+        context: 'notifications tab',
+        comment:
+          'Tab label in Notifications that shows only notifications from accounts you follow. Space is tight, so keep it as short as possible, ideally one or two words.',
+      }),
+    },
+    {
+      key: 'conversations',
+      label: l({
+        message: 'Replies',
+        context: 'notifications tab',
+        comment:
+          'Tab label in Notifications that shows replies, quotes and mentions. Space is tight, so keep it as short as possible.',
+      }),
+    },
+    {
+      key: 'followers',
+      label: l({
+        message: 'Follows',
+        context: 'notifications tab',
+        comment:
+          'Tab label in Notifications that shows people who followed you. Space is tight, so keep it as short as possible.',
+      }),
+    },
+    {
+      key: 'activity',
+      label: l({
+        message: 'Post alerts',
+        context: 'notifications tab',
+        comment:
+          'Tab label in Notifications that shows new posts from accounts you get activity notifications for. Space is tight, so keep it as short as possible.',
+      }),
+    },
   ]
   const {seenAt, onFirstLoad, refresh} = useSessionSeenAt()
   const activeFeed = useRef<GroupedNotificationsFeed>(tabs[0].key)
@@ -203,10 +260,15 @@ function NewNotificationsScreenInner() {
    * `useReturnToScreen`. It refreshes, unless the user is partway down it,
    * in which case it's only peeked, so the list doesn't move under them. A
    * significant return to the app, or opening a push, brings every tab along.
+   *
+   * On web, a `'focus'` return passes `isScrolledDown` from the real window
+   * position, rather than leaving this to read `scrolledDownFeeds`, which
+   * starts empty after a remount; see `useReturnToScreen`.
    */
   const checkLatest = (
     feed: GroupedNotificationsFeed,
     reason: RefreshReason,
+    {isScrolledDown}: {isScrolledDown?: boolean} = {},
   ) => {
     const everyTab = reason === 'significantReturn' || reason === 'pushOpened'
     // Not loaded yet, so its first load is on the way
@@ -216,7 +278,7 @@ function NewNotificationsScreenInner() {
       }
       return
     }
-    if (!scrolledDownFeeds.current.has(feed)) {
+    if (!(isScrolledDown ?? scrolledDownFeeds.current.has(feed))) {
       ax.metric('notifications:refresh', {tab: feed, reason})
       void refreshTab(feed, {everyTab})
       return
@@ -231,6 +293,7 @@ function NewNotificationsScreenInner() {
     activeFeed,
     checkLatest,
     peekLatest: feed => void peekLatest(feed),
+    scrolledDownFeeds,
   })
   /*
    * With no notifications at all, every tab is empty, so the screen drops
@@ -369,6 +432,12 @@ function NewNotificationsScreenInner() {
               })
             }}
             onScrolledDownChange={isScrolledDown => {
+              /*
+               * On web, a screen left under another stays mounted but
+               * hidden, which the list reports as scrolled down. Coming back
+               * would then only peek, so a tab keeps the state it was left in
+               */
+              if (!navigation.isFocused()) return
               if (isScrolledDown) {
                 scrolledDownFeeds.current.add(tab.key)
               } else {
@@ -465,76 +534,6 @@ function useSessionSeenAt() {
   return {seenAt, onFirstLoad, refresh}
 }
 
-/**
- * Coming back to the screen: focusing it again, mounting it (web remounts
- * the screen on every visit), or, while it's open, a significant return to
- * the app or opening a push. Each one checks the tab in view for anything
- * new, with `checkLatest`. A quick hop out of the app and back, e.g. to a
- * share sheet, only peeks with `peekLatest`, so the list stays as it is and
- * the "Refresh" pill offers anything new.
- *
- * As in v1, coming back from a screen pushed within the Notifications tab
- * (e.g. a post) refreshes too, unless the user is partway down the list. So
- * what was tinted before is cleared, having been seen.
- */
-function useReturnToScreen({
-  activeFeed,
-  checkLatest,
-  peekLatest,
-}: {
-  activeFeed: React.RefObject<GroupedNotificationsFeed>
-  checkLatest: (feed: GroupedNotificationsFeed, reason: RefreshReason) => void
-  /**
-   * Asks the server for anything new in a feed without loading it, which
-   * offers the "Refresh" pill if there is.
-   */
-  peekLatest: (feed: GroupedNotificationsFeed) => void
-}) {
-  const isFocused = useIsFocused()
-
-  const onReturn = useEffectEvent((reason: RefreshReason) => {
-    checkLatest(activeFeed.current, reason)
-  })
-
-  // Mounting counts, as the cache can outlive the screen
-  const wasFocused = useRef(false)
-  useEffect(() => {
-    if (isFocused && !wasFocused.current) {
-      onReturn('focus')
-    }
-    wasFocused.current = isFocused
-  }, [isFocused])
-
-  const onLeftApp = useEffectEvent(
-    (reason: 'significantReturn' | 'pushOpened') => {
-      if (isFocused) {
-        onReturn(reason)
-      }
-    },
-  )
-  const onAppReturn = useEffectEvent((appReturn: AnyAppReturn) => {
-    if (appReturn.isSignificant) {
-      onLeftApp('significantReturn')
-    } else if (isFocused) {
-      peekLatest(activeFeed.current)
-    }
-  })
-  useEffect(() => {
-    const returns = onAnyAppReturn(appReturn => onAppReturn(appReturn))
-    /*
-     * Opening a push leaves the app too, even when it never went to the
-     * background, e.g. from Notification Center on iOS.
-     */
-    const unlistenPush = listenPushNotificationOpened(() =>
-      onLeftApp('pushOpened'),
-    )
-    return () => {
-      returns.remove()
-      unlistenPush()
-    }
-  }, [])
-}
-
 function NotificationsHeader({
   children,
   titleHeight,
@@ -562,7 +561,7 @@ function NotificationsHeader({
   const {selectedPage} = Pager.usePager()
   const {gtMobile} = useBreakpoints()
   const insets = useSafeAreaInsets()
-  const headerPinnedHeight = IS_LIQUID_GLASS ? insets.top : 0
+  const headerPinnedHeight = IS_NATIVE ? insets.top : 0
 
   const titleStyle = useAnimatedStyle(() => {
     if (IS_WEB) return {}
@@ -614,12 +613,24 @@ function NotificationsHeader({
       {/*
        * On native, the background fades out under the header, down to the
        * bottom of the pills as they move up. On web, the title and the pills
-       * each have their own background
+       * each have their own background. On wider screens it all stays inside
+       * the center column, like `NativeCenterBorders`, so it doesn't cover the
+       * column's borders, the scroll indicator at the edge of the screen, or
+       * the side columns on web
        */}
       {!IS_WEB && (
         <Animated.View
           pointerEvents="none"
-          style={[a.absolute, a.inset_0, {transformOrigin: 'top'}, fadeStyle]}>
+          style={[
+            a.absolute,
+            a.top_0,
+            a.bottom_0,
+            a.w_full,
+            a.self_center,
+            gtMobile && {maxWidth: Layout.CENTER_COLUMN_WIDTH},
+            {transformOrigin: 'top'},
+            fadeStyle,
+          ]}>
           <HeaderFade
             /*
              * With the title hidden, the strong part reaches the middle of
@@ -635,10 +646,10 @@ function NotificationsHeader({
         </Animated.View>
       )}
       <Animated.View
-        style={[IS_LIQUID_GLASS && {paddingTop: insets.top}, titleStyle]}
+        style={[IS_NATIVE && {paddingTop: insets.top}, titleStyle]}
         onLayout={onTitleLayout}>
         {IS_WEB && (
-          <View
+          <Layout.Center
             pointerEvents="none"
             style={[a.absolute, a.inset_0, t.atoms.bg]}
           />
@@ -690,7 +701,11 @@ function NotificationsHeader({
       <Animated.View
         style={pillsStyle}
         onLayout={event => setPillsHeight(event.nativeEvent.layout.height)}>
-        {IS_WEB && <HeaderFade />}
+        {IS_WEB && (
+          <Layout.Center pointerEvents="none" style={[a.absolute, a.inset_0]}>
+            <HeaderFade />
+          </Layout.Center>
+        )}
         <Layout.Center>{children}</Layout.Center>
       </Animated.View>
       {/* Last, so the backgrounds above don't cover it */}

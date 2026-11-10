@@ -323,6 +323,19 @@ export function createGroupedNotificationsFixture(
     indexedAt: ago(2 * DAY),
     reply: {root: notFoundPost, parent: notFoundPost},
   })
+  const omarEmoji = post({
+    author: omar,
+    rkey: 'emoji',
+    text: '😅',
+    indexedAt: ago(1 * DAY + 1 * HOUR + 30 * MINUTE),
+  })
+  const theoEmojiReply = post({
+    author: theo,
+    rkey: 'reply-emoji',
+    text: 'Wat',
+    indexedAt: ago(1 * DAY + 1 * HOUR),
+    reply: {root: omarEmoji, parent: omarEmoji},
+  })
   const marcusQuote = post({
     author: marcus,
     rkey: 'quote-fungus',
@@ -417,6 +430,15 @@ export function createGroupedNotificationsFixture(
     likeCount: 128,
     indexedAt: ago(90 * DAY),
   }
+  // Shares the viewer's feed in a reply to someone else's post
+  const inesFeedQuote = post({
+    author: ines,
+    rkey: 'quote-feed',
+    text: 'Piggybacking off this. There’s a feed for exactly that if you want it',
+    indexedAt: ago(22 * HOUR),
+    reply: {root: priyaPost, parent: priyaPost},
+    embed: feedView(fungiFeed),
+  })
   const mycologyPack = starterPack({
     creator: tim,
     rkey: 'mycology',
@@ -696,6 +718,17 @@ export function createGroupedNotificationsFixture(
       },
     },
     {
+      id: 'quote-feed',
+      isRead: true,
+      indexedAt: ago(22 * HOUR),
+      count: 1,
+      kind: {
+        $type: `${$group}#quoteNotification`,
+        post: inesFeedQuote.uri,
+        parent: priyaPost.uri,
+      },
+    },
+    {
       id: 'generator-like-fungi',
       isRead: true,
       indexedAt: ago(1 * DAY),
@@ -704,6 +737,17 @@ export function createGroupedNotificationsFixture(
         $type: `${$group}#generatorLikeGroup`,
         generator: fungiFeed.uri,
         items: [aiko, priya, noah].map(p => ({actor: p.did})),
+      },
+    },
+    {
+      id: 'reply-emoji-parent',
+      isRead: true,
+      indexedAt: ago(1 * DAY + 1 * HOUR),
+      count: 1,
+      kind: {
+        $type: `${$group}#replyNotification`,
+        post: theoEmojiReply.uri,
+        parent: omarEmoji.uri,
       },
     },
     {
@@ -902,6 +946,8 @@ export function createGroupedNotificationsFixture(
       lenaMention,
       aikoReply,
       jonasReply,
+      omarEmoji,
+      theoEmojiReply,
       marcusQuote,
       samuelMention,
       samuelBlog,
@@ -914,6 +960,7 @@ export function createGroupedNotificationsFixture(
       blockedPost,
       notFoundPost,
       fungiFeed,
+      inesFeedQuote,
       mycologyPack,
       scicommPack,
     ],
@@ -981,7 +1028,7 @@ function post({
   rkey: string
   text: string
   indexedAt: DatetimeString
-  embed?: $Typed<app.bsky.embed.images.View>
+  embed?: PostView['embed']
   /**
    * A post to embed as a quote, which sets both the record embed and the
    * hydrated embed view.
@@ -1079,6 +1126,15 @@ function quoteView(quoted: PostView): $Typed<app.bsky.embed.record.View> {
       replyCount: quoted.replyCount,
       quoteCount: quoted.quoteCount,
     },
+  }
+}
+
+function feedView(
+  generator: $Typed<GeneratorView>,
+): $Typed<app.bsky.embed.record.View> {
+  return {
+    $type: 'app.bsky.embed.record#view',
+    record: generator,
   }
 }
 

@@ -489,8 +489,15 @@ function SortablePill({
       const f = layout.get().frames[itemKey]
       if (!touch || !f || touch.x < f.w - GRIP_ZONE) {
         GestureStateManager.fail(e.handlerTag)
-        return
       }
+    },
+    /*
+     * Activate on the first move rather than on touch down: Android ignores
+     * activation until the pan has begun, which happens after `onTouchesDown`.
+     * It's still well before a parent scroll view would claim the touch.
+     */
+    onTouchesMove: e => {
+      'worklet'
       GestureStateManager.activate(e.handlerTag)
     },
     onActivate,

@@ -1,4 +1,4 @@
-import {View} from 'react-native'
+import {type GestureResponderEvent, View} from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -24,7 +24,7 @@ export function LinkPreviewSheet({
 }: {
   control: Dialog.DialogControlProps
   link: ProfileLink | null
-  onOpen: (link: ProfileLink) => void
+  onOpen: (link: ProfileLink, e: GestureResponderEvent) => void
   /** Runs after the sheet closes. Leave unset to hide reporting. */
   onReport?: () => void
 }) {
@@ -48,7 +48,7 @@ function LinkPreviewSheetInner({
   onReport,
 }: {
   link: ProfileLink
-  onOpen: (link: ProfileLink) => void
+  onOpen: (link: ProfileLink, e: GestureResponderEvent) => void
   onReport?: () => void
 }) {
   const control = Dialog.useDialogContext()
@@ -83,7 +83,7 @@ function LinkPreviewSheetInner({
             testID="profileLinkPreviewOpenBtn"
             label={l`Open link`}
             accessibilityHint={l`Opens ${link.url} outside Bluesky`}
-            onPress={() => control.close(() => onOpen(link))}
+            onPress={e => control.close(() => onOpen(link, e))}
             size="large"
             color="primary">
             <ButtonText>

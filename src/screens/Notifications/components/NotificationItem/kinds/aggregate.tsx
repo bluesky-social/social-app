@@ -4,35 +4,28 @@ import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {makeCustomFeedLink} from '#/lib/routes/links'
-import {atoms as a, useTheme} from '#/alf'
-import {type Props as SVGIconProps} from '#/components/icons/common'
-import {
-  NotificationActivitySmall_Filled_Corner0_Rounded as ActivityIcon,
-  NotificationLikeSmall_Filled_Corner0_Rounded as HeartIcon,
-  NotificationRepostSmall_Filled_Corner0_Rounded as RepostIcon,
-} from '#/components/icons/Notification'
+import {atoms as a} from '#/alf'
+import {NotificationActivitySmall_Filled_Corner0_Rounded as ActivityIcon} from '#/components/icons/Notification'
 import * as Item from '../Item'
 import {makeActivityListLink, makePostLink} from '../links'
 import {type NotificationOf} from '../types'
 
 /**
- * Shared anatomy for likes and reposts of one post: the headline actor's
- * avatar, the other actors, the primary sentence, a preview of the post, and
- * the post's images on the trailing edge. Pressing the row opens the post,
- * and a group expands to list everyone in it.
+ * Shared anatomy for likes and reposts of one post: an icon saying which, the
+ * actors' avatars, the primary sentence, a preview of the post, and the post's
+ * images on the trailing edge. Pressing the row opens the post, and a group
+ * expands to list everyone in it.
  */
 function PostReactionRow({
   notification,
-  icon,
-  tone,
+  glyph,
   label,
   children,
 }: {
   notification: NotificationOf<
     'like' | 'repost' | 'likeViaRepost' | 'repostViaRepost'
   >
-  icon: React.ComponentType<SVGIconProps>
-  tone: Item.BadgeTone
+  glyph: Item.Glyph
   /**
    * Plain-text version of the primary sentence, for screen readers.
    */
@@ -42,7 +35,7 @@ function PostReactionRow({
    */
   children: React.ReactNode
 }) {
-  const {post, actors} = notification
+  const {post} = notification
   const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
   const mediaBlurred = Item.usePostMediaBlurred(post)
 
@@ -52,7 +45,7 @@ function PostReactionRow({
       href={makePostLink(post)}
       label={label}
       testID={`notification-${notification.type}-${notification.id}`}>
-      <Item.Avatar profile={actors[0]} icon={icon} tone={tone} />
+      <Item.Icon glyph={glyph} />
       <Item.Content>
         <Item.AvatarRow />
         {children}
@@ -87,8 +80,7 @@ export function LikeNotification({
   return (
     <PostReactionRow
       notification={notification}
-      icon={HeartIcon}
-      tone="like"
+      glyph="like"
       label={
         second
           ? l`${name} and ${secondName} liked your post`
@@ -138,8 +130,7 @@ export function RepostNotification({
   return (
     <PostReactionRow
       notification={notification}
-      icon={RepostIcon}
-      tone="repost"
+      glyph="repost"
       label={
         second
           ? l`${name} and ${secondName} reposted your post`
@@ -190,8 +181,7 @@ export function LikeViaRepostNotification({
   return (
     <PostReactionRow
       notification={notification}
-      icon={HeartIcon}
-      tone="like"
+      glyph="likeViaRepost"
       label={
         second
           ? l`${name} and ${secondName} liked your repost`
@@ -242,8 +232,7 @@ export function RepostViaRepostNotification({
   return (
     <PostReactionRow
       notification={notification}
-      icon={RepostIcon}
-      tone="repost"
+      glyph="repostViaRepost"
       label={
         second
           ? l`${name} and ${secondName} reposted your repost`
@@ -279,14 +268,14 @@ export function RepostViaRepostNotification({
 }
 
 /**
- * Shared anatomy for one person liking or reposting several posts: their
- * avatar, the primary sentence, a preview of the newest post, and a "View
- * all" link. The row and the link open the activity list with every post.
+ * Shared anatomy for one person liking or reposting several posts: an icon
+ * saying which, their avatar, the primary sentence, a preview of the newest
+ * post, and a "View all" link. The row and the link open the activity list
+ * with every post.
  */
 function MultiPostRow({
   notification,
-  icon,
-  tone,
+  glyph,
   label,
   viewAllLabel,
   children,
@@ -297,8 +286,7 @@ function MultiPostRow({
     | 'multiPostLikeViaRepost'
     | 'multiPostRepostViaRepost'
   >
-  icon: React.ComponentType<SVGIconProps>
-  tone: Item.BadgeTone
+  glyph: Item.Glyph
   /**
    * Plain-text version of the primary sentence, for screen readers.
    */
@@ -312,7 +300,6 @@ function MultiPostRow({
    */
   children: React.ReactNode
 }) {
-  const t = useTheme()
   const {actor, posts} = notification
   const [post] = posts
   const href = makeActivityListLink(posts.map(p => p.uri))
@@ -325,10 +312,11 @@ function MultiPostRow({
       isRead={notification.isRead}
       label={label}
       testID={`notification-${notification.type}-${notification.id}`}>
-      <Item.Avatar profile={actor} icon={icon} tone={tone} />
+      <Item.Icon glyph={glyph} />
       <Item.Content>
+        <Item.AvatarRow actor={actor} />
         {children}
-        <Item.PostPreview post={post} style={t.atoms.text_contrast_high} />
+        <Item.PostPreview post={post} />
         <Item.Timestamp date={notification.indexedAt} />
         <Item.ViewAllLink href={href} label={viewAllLabel} />
       </Item.Content>
@@ -360,8 +348,7 @@ export function MultiPostLikeNotification({
   return (
     <MultiPostRow
       notification={notification}
-      icon={HeartIcon}
-      tone="like"
+      glyph="like"
       label={l`${name} liked ${count} of your ${plural(count, {
         one: 'post',
         other: 'posts',
@@ -392,8 +379,7 @@ export function MultiPostRepostNotification({
   return (
     <MultiPostRow
       notification={notification}
-      icon={RepostIcon}
-      tone="repost"
+      glyph="repost"
       label={l`${name} reposted ${count} of your ${plural(count, {
         one: 'post',
         other: 'posts',
@@ -425,8 +411,7 @@ export function MultiPostLikeViaRepostNotification({
   return (
     <MultiPostRow
       notification={notification}
-      icon={HeartIcon}
-      tone="like"
+      glyph="likeViaRepost"
       label={l`${name} liked ${count} of your ${plural(count, {
         one: 'repost',
         other: 'reposts',
@@ -458,8 +443,7 @@ export function MultiPostRepostViaRepostNotification({
   return (
     <MultiPostRow
       notification={notification}
-      icon={RepostIcon}
-      tone="repost"
+      glyph="repostViaRepost"
       label={l`${name} reposted ${count} of your ${plural(count, {
         one: 'repost',
         other: 'reposts',
@@ -506,7 +490,7 @@ export function GeneratorLikeNotification({
             : l`${name} liked your custom feed`
       }
       testID={`notification-${notification.type}-${notification.id}`}>
-      <Item.Avatar profile={actor} icon={HeartIcon} tone="like" />
+      <Item.Icon glyph="like" />
       <Item.Content style={a.gap_sm}>
         <View style={[a.gap_xs]}>
           <Item.AvatarRow />
@@ -539,9 +523,11 @@ export function GeneratorLikeNotification({
 }
 
 /**
- * New posts from accounts the viewer has subscribed to. A single post opens
- * that post, otherwise the row opens the activity list with all of them.
- * Posts from several authors expand to list the authors.
+ * New posts from accounts the viewer has subscribed to. Posts from one author
+ * have their avatar, and posts from several have an icon and the authors'
+ * avatars, and expand to list the authors. A single post opens that post.
+ * Several open the activity list with all of them, as does their "View all"
+ * link.
  */
 export function SubscribedPostNotification({
   notification,
@@ -556,17 +542,18 @@ export function SubscribedPostNotification({
   const replyParent = count === 1 ? parent : undefined
   const {actor, name, second, secondName, others} =
     Item.useGroupNames(notification)
+  const isOnePost = items.length === 1
+  const isOneAuthor = others === 0
+  const href = isOnePost
+    ? makePostLink(post)
+    : makeActivityListLink(items.map(item => item.post.uri))
   const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
   const mediaBlurred = Item.usePostMediaBlurred(post)
 
   return (
     <Item.GroupRoot
       notification={notification}
-      href={
-        items.length === 1
-          ? makePostLink(post)
-          : makeActivityListLink(items.map(item => item.post.uri))
-      }
+      href={href}
       label={
         second
           ? l`New posts from ${name} and ${secondName}`
@@ -580,9 +567,13 @@ export function SubscribedPostNotification({
               : l`New ${plural(count, {one: 'post', other: 'posts'})} from ${name}`
       }
       testID={`notification-${notification.type}-${notification.id}`}>
-      <Item.Avatar profile={actor} icon={ActivityIcon} tone="activity" />
+      {isOneAuthor ? (
+        <Item.Avatar profile={actor} icon={ActivityIcon} tone="activity" />
+      ) : (
+        <Item.Icon glyph="activity" />
+      )}
       <Item.Content>
-        <Item.AvatarRow />
+        {!isOneAuthor && <Item.AvatarRow />}
         <Item.PrimaryText>
           {second ? (
             <Trans>
@@ -610,6 +601,16 @@ export function SubscribedPostNotification({
         {replyParent && <Item.ReplyContext parent={replyParent} />}
         <Item.PostPreview post={post} />
         <Item.Timestamp date={notification.indexedAt} />
+        {!isOnePost && (
+          <Item.ViewAllLink
+            href={href}
+            label={
+              others > 0
+                ? l`View all new posts`
+                : l`View all new posts from ${name}`
+            }
+          />
+        )}
       </Item.Content>
       {hasThumbnails && (
         <Item.Trailing>

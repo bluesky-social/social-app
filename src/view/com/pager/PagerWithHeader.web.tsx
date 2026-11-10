@@ -37,6 +37,8 @@ export interface PagerWithHeaderProps {
   onPageSelected?: (index: number) => void
   onCurrentPageSelected?: (index: number) => void
   allowHeaderOverScroll?: boolean // Ignored on web.
+  /** Native-only vertical room for horizontally clipped headers. */
+  headerOverflowInset?: number
 }
 export const PagerWithHeader = forwardRef<PagerRef, PagerWithHeaderProps>(
   function PageWithHeaderImpl(
@@ -52,7 +54,7 @@ export const PagerWithHeader = forwardRef<PagerRef, PagerWithHeaderProps>(
     }: PagerWithHeaderProps,
     ref,
   ) {
-    const [currentPage, setCurrentPage] = useState(0)
+    const [currentPage, setCurrentPage] = useState(initialPage ?? 0)
 
     const renderTabBar = useCallback(
       (props: RenderTabBarFnProps) => {

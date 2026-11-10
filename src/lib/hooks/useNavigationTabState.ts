@@ -1,17 +1,17 @@
 import {useNavigationState} from '@react-navigation/native'
 
-import {getCurrentRoute, getTabState, TabState} from '#/lib/routes/helpers'
+import {getTabState, TabState} from '#/lib/routes/helpers'
 
 export function useNavigationTabState() {
   return useNavigationState(state => {
-    const isAtAtmosphere = getCurrentRoute(state).name === 'Atmosphere'
     const res = {
       isAtHome: getTabState(state, 'Home') !== TabState.Outside,
       isAtSearch: getTabState(state, 'Search') !== TabState.Outside,
-      isAtAtmosphere,
-      // FeedsTab no longer exists, but this check works for `Feeds` screen as well
+      isAtAtmosphere: getTabState(state, 'Atmosphere') !== TabState.Outside,
       isAtFeeds: getTabState(state, 'Feeds') !== TabState.Outside,
+      isAtLists: getTabState(state, 'Lists') !== TabState.Outside,
       isAtBookmarks: getTabState(state, 'Bookmarks') !== TabState.Outside,
+      isAtSettings: getTabState(state, 'Settings') !== TabState.Outside,
       isAtNotifications:
         getTabState(state, 'Notifications') !== TabState.Outside,
       isAtMyProfile: getTabState(state, 'MyProfile') !== TabState.Outside,
@@ -23,7 +23,10 @@ export function useNavigationTabState() {
       !res.isAtSearch &&
       !res.isAtAtmosphere &&
       !res.isAtFeeds &&
+      !res.isAtLists &&
       !res.isAtNotifications &&
+      !res.isAtBookmarks &&
+      !res.isAtSettings &&
       !res.isAtMyProfile &&
       !res.isAtMessages
     ) {

@@ -33,9 +33,11 @@ import {
   LoadingSkeleton,
   NotificationItem,
 } from '#/screens/Notifications/components/NotificationItem'
+import {useRowBackgroundColor} from '#/screens/Notifications/components/NotificationItem/Item/Root'
 import {usePager} from '#/screens/Notifications/components/PagerView'
 import {RefreshPill} from '#/screens/Notifications/components/RefreshPill'
 import {useRefreshPillMetrics} from '#/screens/Notifications/refreshPillMetrics'
+import {SHOW_ROW_BORDERS} from '#/screens/Notifications/rowBorders'
 import {isRefreshPillVisible} from '#/screens/Notifications/unread'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {ButtonText} from '#/components/Button'
@@ -49,7 +51,16 @@ import type * as bsky from '#/types/bsky'
 
 type Row =
   | {type: 'section'; key: string; section: 'today' | 'earlier'}
-  | {type: 'notification'; key: string; notification: NotificationView}
+  | {
+      type: 'notification'
+      key: string
+      notification: NotificationView
+      /**
+       * Whether a divider separates it from the notification above. Only
+       * drawn when `SHOW_ROW_BORDERS` is on.
+       */
+      hasDivider: boolean
+    }
   | {type: 'followersHeader'; key: string}
   | {
       type: 'follower'
@@ -126,6 +137,7 @@ export function PageList({
    */
   onEmptyChange?: (isEmpty: boolean) => void
 }) {
+  const t = useTheme()
   const {t: l} = useLingui()
   const ax = useAnalytics()
   const initialNumToRender = useInitialNumToRender()
@@ -134,6 +146,7 @@ export function PageList({
   const isActive = usePager().selectedPage === pageIndex
   const bottomBarOffset = useBottomBarOffset()
   const [isPTRing, setIsPTRing] = useState(false)
+  const [isScrolledDown, setIsScrolledDown] = useState(false)
   /**
    * The height reported from List onLayout is the frame of the scrollview on
    * native. On web, it's the height of the entire list, including content.
@@ -263,16 +276,29 @@ export function PageList({
                   setNativeListContainerHeight(event.nativeEvent.layout.height)
               : undefined
           }
-          onScrolledDownChange={onScrolledDownChange}
+          onScrolledDownChange={value => {
+            setIsScrolledDown(value)
+            onScrolledDownChange?.(value)
+          }}
           headerOffset={headerOffset}
           data={rows}
           keyExtractor={(row: Row) => row.key}
-          renderItem={({item: row}: {item: Row}) => {
+          renderItem={({item: row, index}: {item: Row; index: number}) => {
             switch (row.type) {
               case 'section':
-                return <SectionHeader section={row.section} />
+                return (
+                  <SectionHeader
+                    section={row.section}
+                    isUnreadAbove={isUnreadRow(rows[index - 1])}
+                  />
+                )
               case 'notification':
-                return <NotificationItem notification={row.notification} />
+                return (
+                  <NotificationItem
+                    notification={row.notification}
+                    hasDivider={row.hasDivider}
+                  />
+                )
               case 'followersHeader':
                 return <FollowedYouHeader />
               case 'follower':
@@ -330,7 +356,11 @@ export function PageList({
           }}
           ListFooterComponent={
             isFetchingNextPage ? (
-              <View style={[a.pt_xl]}>
+              <View
+                style={[
+                  a.pt_xl,
+                  SHOW_ROW_BORDERS && [a.border_t, t.atoms.border_contrast_low],
+                ]}>
                 <ActivityIndicator />
               </View>
             ) : undefined
@@ -358,6 +388,7 @@ export function PageList({
       </MainScrollProvider>
       <RefreshPill
         visible={showRefreshPill}
+        isScrolledDown={isScrolledDown}
         headerHeight={headerOffset}
         titleHeight={titleHeight}
         onPress={onPressRefreshPill}
@@ -415,7 +446,13 @@ export function buildRows(
       rows.push({type: 'section', key: 'section-earlier', section: 'earlier'})
       addedEarlier = true
     }
-    rows.push({type: 'notification', key: notification.id, notification})
+    rows.push({
+      type: 'notification',
+      key: notification.id,
+      notification,
+      // Not under a section header, which sets itself apart
+      hasDivider: rows.at(-1)?.type === 'notification',
+    })
   }
   return rows
 }
@@ -444,36 +481,64 @@ function buildFollowerRows(notifications: NotificationView[]): Row[] {
         })
       }
     } else {
-      rows.push({type: 'notification', key: notification.id, notification})
+      rows.push({
+        type: 'notification',
+        key: notification.id,
+        notification,
+        // People are listed without dividers, so only between notifications
+        hasDivider: rows.at(-1)?.type === 'notification',
+      })
     }
   }
   return rows
 }
 
-function SectionHeader({section}: {section: 'today' | 'earlier'}) {
+/**
+ * Whether a row is tinted as unread.
+ */
+function isUnreadRow(row: Row | undefined) {
+  return (
+    (row?.type === 'notification' || row?.type === 'follower') &&
+    !row.notification.isRead
+  )
+}
+
+function SectionHeader({
+  section,
+  isUnreadAbove,
+}: {
+  section: 'today' | 'earlier'
+  /**
+   * Whether the row above is unread. Without row borders, "Earlier" sits a
+   * gap below the last row, and the gap takes that row's tint so the tint
+   * runs right down to the header's border.
+   */
+  isUnreadAbove: boolean
+}) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const gapColor = useRowBackgroundColor(!isUnreadAbove)
 
   return (
-    <View
-      style={[
-        a.px_lg,
-        section === 'today'
-          ? a.py_sm
-          : [
-              a.mt_md,
-              a.border_t,
-              a.pt_md,
-              a.pb_sm,
-              t.atoms.border_contrast_low,
-            ],
-      ]}>
-      <Text accessibilityRole="header" style={[a.text_md, a.font_bold]}>
-        {section === 'today'
-          ? l({message: 'Today', context: 'Notifications section header'})
-          : l({message: 'Earlier', context: 'Notifications section header'})}
-      </Text>
-    </View>
+    <>
+      {section === 'earlier' && !SHOW_ROW_BORDERS && (
+        <View style={[a.pt_md, {backgroundColor: gapColor}]} />
+      )}
+      <View
+        style={[
+          a.px_lg,
+          section === 'today' ? a.py_sm : [a.border_t, a.pt_md, a.pb_sm],
+          // Rows are divided, so the header is too
+          SHOW_ROW_BORDERS && a.border_b,
+          t.atoms.border_contrast_low,
+        ]}>
+        <Text accessibilityRole="header" style={[a.text_md, a.font_bold]}>
+          {section === 'today'
+            ? l({message: 'Today', context: 'Notifications section header'})
+            : l({message: 'Earlier', context: 'Notifications section header'})}
+        </Text>
+      </View>
+    </>
   )
 }
 

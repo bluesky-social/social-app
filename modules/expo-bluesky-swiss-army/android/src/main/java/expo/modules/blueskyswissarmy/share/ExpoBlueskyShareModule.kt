@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -81,6 +82,45 @@ class ExpoBlueskyShareModule : Module() {
       }.runOnQueue(Queues.MAIN)
 
       /*
+       * Returns the given packages that are installed and enabled. Android 11+
+       * only sees packages declared in the manifest's <queries>, so anything
+       * undeclared reports as not installed.
+       */
+      AsyncFunction("getInstalledPackages") { packages: List<String> ->
+        packages.filter { isPackageInstalled(it) }
+      }
+
+      /*
+       * Sends text straight to one app's share screen, skipping the chooser.
+       * Used for apps with no link that opens them with text filled in.
+       */
+      AsyncFunction("shareTextToPackage") { text: String, packageName: String, promise: Promise ->
+        val intent =
+          Intent(Intent.ACTION_SEND).apply {
+            setTypeAndNormalize("text/plain")
+            putExtra(Intent.EXTRA_TEXT, text)
+            setPackage(packageName)
+          }
+
+        if (intent.resolveActivity(context.packageManager) == null) {
+          promise.reject("E_NO_ACTIVITY", "$packageName can't receive shared text", null)
+          return@AsyncFunction
+        }
+
+        val activity = appContext.currentActivity
+        try {
+          if (activity != null) {
+            activity.startActivity(intent)
+          } else {
+            context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+          }
+          promise.resolve(null)
+        } catch (e: Exception) {
+          promise.reject("E_UNABLE_TO_OPEN", "Failed to open $packageName", e)
+        }
+      }.runOnQueue(Queues.MAIN)
+
+      /*
        * Android doesn't report a dismissed chooser, so treat returning to the
        * app without a reported pick as dismissed. The delay gives the pick
        * broadcast time to arrive first.
@@ -103,6 +143,22 @@ class ExpoBlueskyShareModule : Module() {
         }
         receiver = null
       }
+    }
+
+  private fun isPackageInstalled(packageName: String): Boolean =
+    try {
+      val info =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+          context.packageManager.getApplicationInfo(
+            packageName,
+            PackageManager.ApplicationInfoFlags.of(0),
+          )
+        } else {
+          context.packageManager.getApplicationInfo(packageName, 0)
+        }
+      info.enabled
+    } catch (_: PackageManager.NameNotFoundException) {
+      false
     }
 
   private fun registerReceiverIfNeeded() {

@@ -11,8 +11,12 @@ export function createChunkReader(video: CompressedVideo): ChunkReader {
   const handle = new File(video.uri).open()
   return {
     read(offset, size) {
+      /*
+       * Must be sync: `readBytes()` is async and reads from wherever the
+       * offset is when it runs, and concurrent part uploads share this handle.
+       */
       handle.offset = offset
-      return Promise.resolve(handle.readBytes(size))
+      return Promise.resolve(handle.readBytesSync(size))
     },
     close() {
       handle.close()

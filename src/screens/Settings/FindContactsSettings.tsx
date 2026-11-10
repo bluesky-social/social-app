@@ -13,7 +13,7 @@ import {wait} from '#/lib/async/wait'
 import {HITSLOP_10, urls} from '#/lib/constants'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {
-  type AllNavigatorParams,
+  type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
@@ -53,7 +53,10 @@ import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {bulkWriteFollows} from '../Onboarding/util'
 
-type Props = NativeStackScreenProps<AllNavigatorParams, 'FindContactsSettings'>
+type Props = NativeStackScreenProps<
+  CommonNavigatorParams,
+  'FindContactsSettings'
+>
 export function FindContactsSettingsScreen({}: Props) {
   const {_} = useLingui()
   const ax = useAnalytics()

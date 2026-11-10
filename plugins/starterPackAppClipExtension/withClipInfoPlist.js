@@ -1,3 +1,4 @@
+/* eslint-disable import/no-nodejs-modules -- Expo config plugins run in Node. */
 const {withInfoPlist} = require('expo/config-plugins')
 const plist = require('@expo/plist')
 const path = require('path')
@@ -25,14 +26,12 @@ const withClipInfoPlist = (config, {targetName}) => {
       CFBundleShortVersionString: config.version,
       CFBundleIconName: 'AppIcon',
       UIViewControllerBasedStatusBarAppearance: 'NO',
-      UISupportedInterfaceOrientations: [
-        'UIInterfaceOrientationPortrait',
-        'UIInterfaceOrientationPortraitUpsideDown',
-      ],
-      'UISupportedInterfaceOrientations~ipad': [
-        'UIInterfaceOrientationPortrait',
-        'UIInterfaceOrientationPortraitUpsideDown',
-      ],
+      // Match the parent's resolved orientation and multitasking settings.
+      UISupportedInterfaceOrientations:
+        config.modResults.UISupportedInterfaceOrientations,
+      'UISupportedInterfaceOrientations~ipad':
+        config.modResults['UISupportedInterfaceOrientations~ipad'],
+      UIRequiresFullScreen: config.modResults.UIRequiresFullScreen,
     })
 
     fs.mkdirSync(path.dirname(targetPath), {recursive: true})

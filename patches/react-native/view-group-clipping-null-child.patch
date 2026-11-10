@@ -1,0 +1,29 @@
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
+index ae2e36c..0eeeb63 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
++++ b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
+@@ -461,6 +461,13 @@ public open class ReactViewGroup public constructor(context: Context?) :
+     inSubviewClippingLoop = true
+     var clippedSoFar = 0
+     for (i in 0..<allChildrenCount) {
++      // Reentrant child removal during this loop can compact allChildren and leave a null at
++      // an index below allChildrenCount. A null entry means the view is already detached, so
++      // treat it as clipped instead of crashing.
++      if (childArray[i] == null) {
++        clippedSoFar++
++        continue
++      }
+       try {
+         updateSubviewClipStatus(clippingRect, i, clippedSoFar, excludedViewsSet)
+       } catch (ex: IndexOutOfBoundsException) {
+@@ -498,7 +505,9 @@ public open class ReactViewGroup public constructor(context: Context?) :
+   ) {
+     assertOnUiThread()
+ 
+-    val child = checkNotNull(allChildren?.get(idx))
++    // allChildren can be mutated reentrantly while a clipping pass is running, so a stale
++    // index can point at a null slot. Skip it instead of crashing.
++    val child = allChildren?.get(idx) ?: return
+     val intersects = clippingRect.intersects(child.left, child.top, child.right, child.bottom)
+     var needUpdateClippingRecursive = false
+ 

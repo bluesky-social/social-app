@@ -44,6 +44,7 @@ export const APP_METADATA = `${BUNDLE_IDENTIFIER.slice(0, 7)} (${
  * Platform detection
  */
 export const IS_IOS: boolean = Platform.OS === 'ios'
+export const IS_IPAD: boolean = Platform.OS === 'ios' && Platform.isPad
 export const IS_ANDROID: boolean = Platform.OS === 'android'
 export const IS_NATIVE: boolean = true
 export const IS_WEB: boolean = false

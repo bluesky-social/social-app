@@ -22,9 +22,10 @@ export enum Features {
   FollowingV2Enable = 'following_v2:enable',
   OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
   ModerationInboxEnable = 'moderation_inbox:enable',
-  AtmosphereExploreEnable = 'atmosphere_explore:enable',
+  AtmosphereScreenEnable = 'atmosphere_screen:enable',
   NotificationsV2Enable = 'notifications_v2:enable',
-  ProfileLinksEnable = 'profile_links:enable',
+  ImageUploadsNativeCompressionEnable = 'image_uploads:native_compression:enable',
+  ImageUploadsWebCompressionEnable = 'image_uploads:web_compression:enable',
 
   // values
   StarterPacksConfig = 'starter_packs:config',

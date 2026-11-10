@@ -16,19 +16,22 @@ func ExpandPostText(post *appbsky.FeedPost) string {
 	var charsAdded int = 0
 	// iterate over facets, check if they're link facets, and if found, grab the uri
 	for _, facet := range post.Facets {
+		// offsets come from the record, and charsAdded can be negative here
+		if facet == nil || facet.Index == nil {
+			continue
+		}
+		start := int(facet.Index.ByteStart) + charsAdded
+		end := int(facet.Index.ByteEnd) + charsAdded
+		if start < 0 || end < start || end > len(postText) {
+			continue
+		}
 		linkUri := ""
 		if slices.ContainsFunc(facet.Features, func(feat *appbsky.RichtextFacet_Features_Elem) bool {
-			if feat.RichtextFacet_Link == nil || feat.RichtextFacet_Link.LexiconTypeID != "app.bsky.richtext.facet#link" {
+			if feat == nil || feat.RichtextFacet_Link == nil || feat.RichtextFacet_Link.LexiconTypeID != "app.bsky.richtext.facet#link" {
 				return false
 			}
 
-			// bail out if bounds checks fail
-			if facet.Index.ByteStart > facet.Index.ByteEnd ||
-				int(facet.Index.ByteStart)+charsAdded > len(postText) ||
-				int(facet.Index.ByteEnd)+charsAdded > len(postText) {
-				return false
-			}
-			linkText := postText[int(facet.Index.ByteStart)+charsAdded : int(facet.Index.ByteEnd)+charsAdded]
+			linkText := postText[start:end]
 			linkUri = feat.RichtextFacet_Link.Uri
 
 			// only expand uris that have been shortened (as opposed to those with non-uri anchor text)
@@ -39,8 +42,8 @@ func ExpandPostText(post *appbsky.FeedPost) string {
 		}) {
 			// replace the shortened uri with the full length one from the facet using utf8 byte offsets
 			// NOTE: we already did bounds check above
-			postText = postText[0:int(facet.Index.ByteStart)+charsAdded] + linkUri + postText[int(facet.Index.ByteEnd)+charsAdded:]
-			charsAdded += len(linkUri) - int(facet.Index.ByteEnd-facet.Index.ByteStart)
+			postText = postText[:start] + linkUri + postText[end:]
+			charsAdded += len(linkUri) - (end - start)
 		}
 	}
 	// if the post has an embeded link and its url doesn't already appear in postText, append it to

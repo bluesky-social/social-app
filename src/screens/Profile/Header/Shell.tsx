@@ -12,13 +12,14 @@ import {useNavigation} from '@react-navigation/native'
 
 import {BACK_HITSLOP} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
+import {getHomeNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {type Shadow} from '#/state/cache/types'
 import {useSession} from '#/state/session'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
-import {atoms as a, platform, useTheme} from '#/alf'
+import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -34,6 +35,7 @@ import {LiveStatusDialog} from '#/features/liveNow/components/LiveStatusDialog'
 import {type app} from '#/lexicons'
 import {GrowableAvatar} from './GrowableAvatar'
 import {GrowableBanner} from './GrowableBanner'
+import {PROFILE_BANNER_HEIGHT} from './layout'
 import {StatusBarShadow} from './StatusBarShadow'
 
 interface Props {
@@ -51,6 +53,7 @@ let ProfileHeaderShell = ({
   isPlaceholderProfile,
 }: React.PropsWithChildren<Props>): React.ReactNode => {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const {t: l} = useLingui()
@@ -67,7 +70,9 @@ let ProfileHeaderShell = ({
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
-      navigation.navigate('Home')
+      navigation.dispatch(
+        getHomeNavigationAction(navigation.getState(), 'navigate'),
+      )
     }
   }, [navigation])
 
@@ -155,8 +160,8 @@ let ProfileHeaderShell = ({
     <View style={t.atoms.bg} pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
       <View
         pointerEvents={IS_IOS ? 'auto' : 'box-none'}
-        style={[a.relative, {height: 150}]}>
-        <StatusBarShadow />
+        style={[a.relative, {height: PROFILE_BANNER_HEIGHT}]}>
+        {!gtMobile && <StatusBarShadow />}
         <GrowableBanner
           testID={profile.banner ? 'userBannerImage' : 'userBannerFallback'}
           label={

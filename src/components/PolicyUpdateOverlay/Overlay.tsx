@@ -68,7 +68,16 @@ export function Overlay({
               paddingVertical: '10vh',
             }),
         ]}
-        contentContainerStyle={[a.align_center]}>
+        contentContainerStyle={[
+          a.align_center,
+          IS_NATIVE &&
+            gtPhone && [
+              a.flex_grow,
+              a.justify_center,
+              a.px_2xl,
+              {paddingTop: Math.max(insets.top, GUTTER)},
+            ],
+        ]}>
         {/**
          * This is needed to prevent centered dialogs from overflowing
          * above the screen, and provides a "natural" centering so that
@@ -124,9 +133,7 @@ export function Overlay({
                   a.border,
                   t.atoms.shadow_lg,
                   t.atoms.border_contrast_low,
-                  web({
-                    maxWidth: 420,
-                  }),
+                  {maxWidth: 420},
                 ],
               ]}>
               {children}

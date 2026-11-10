@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mirrors the light colors in TrendingTopicsWidget.android.tsx -->
+<resources>
+  <color name="trending_topics_widget_preview_background">#FFFFFF</color>
+  <color name="trending_topics_widget_preview_text">#0A0A0A</color>
+  <color name="trending_topics_widget_preview_secondary_text">#536471</color>
+  <color name="trending_topics_widget_preview_border">#E5E7EB</color>
+  <color name="trending_topics_widget_preview_title_bar">#D4DBE3</color>
+  <color name="trending_topics_widget_preview_description_bar">#EBEEF2</color>
+  <color name="trending_topics_widget_preview_accent">#0085FF</color>
+  <string name="trending_topics_widget_preview_title">Trending on Bluesky</string>
+</resources>

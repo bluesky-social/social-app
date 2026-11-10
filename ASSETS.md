@@ -39,7 +39,7 @@ Assets are scoped by directory wherever possible, so that adding a file to a car
 
 **`assets/illustrations/`**
 
-The landing-screen illustration, in light and dark variants (`assets/illustrations/illustration-mobile.png` and `assets/illustrations/illustration-mobile-dark.png`), used by `src/view/com/auth/SplashScreen.tsx`.
+The landing-screen illustration, in light and dark variants, used by `src/view/com/auth/NativeSplashScreen.tsx`. Each comes as a phone version extended with extra sky and ground (`assets/illustrations/illustration-mobile.webp` and `assets/illustrations/illustration-mobile-dark.webp`) and an unextended version for wider screens (`assets/illustrations/illustration-mobile-safe.webp` and `assets/illustrations/illustration-mobile-dark-safe.webp`).
 
 **Rights holder: Owen D. Pomery**, represented by Brilliant Artists Ltd. Bluesky Social PBC commissioned the work and holds a usage license. Copyright remains with the artist. Our license is limited to Bluesky's own products and channels, is exclusive to us, and does not permit us to sublicense the artwork or to distribute modified versions of it.
 

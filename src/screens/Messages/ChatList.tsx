@@ -27,7 +27,7 @@ import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
-import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {ChatListSkeleton} from '#/screens/Messages/components/ChatListSkeleton'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
@@ -394,7 +394,7 @@ export function ChatList({
     return (
       <Layout.Center style={web({minHeight: '100%'})}>
         {isLoading ? (
-          <ChatListLoadingPlaceholder />
+          <ChatListSkeleton />
         ) : (
           <>
             {isError ? (

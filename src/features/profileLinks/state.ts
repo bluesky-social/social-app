@@ -9,16 +9,15 @@ import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
 import {LINK_FAVICON_PROXY} from '#/lib/constants'
+import {blobToDataUri} from '#/lib/media/util'
 import {isNetworkError} from '#/lib/strings/errors'
 import {isRecordNotFoundError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
-import {useProfileUpdateMutation} from '#/state/queries/profile'
 import {createQueryKey} from '#/state/queries/util'
 import {usePdsClient} from '#/state/session'
 import {useAgeAssurance} from '#/ageAssurance'
-import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
 import {
   filterModeratedLinkViews,
@@ -26,15 +25,6 @@ import {
   linksFromRecords,
 } from './record'
 import {type ProfileLink} from './types'
-
-/**
- * Profile links roll out behind a GrowthBook flag. Always on in local
- * development.
- */
-export function useProfileLinksEnabled() {
-  const ax = useAnalytics()
-  return __DEV__ || ax.features.enabled(ax.features.ProfileLinksEnable)
-}
 
 /**
  * Someone's links from their profile view, minus any that labels hide for
@@ -56,9 +46,8 @@ export function useProfileViewLinks(
  * accounts, like those in Safe mode, still see links but can't add them.
  */
 export function useCanEditProfileLinks() {
-  const enabled = useProfileLinksEnabled()
   const aa = useAgeAssurance()
-  return enabled && !aa.flags.isAgeRestricted
+  return !aa.flags.isAgeRestricted
 }
 
 type StrongRef = {uri: l.AtUriString; cid: l.CidString}
@@ -202,37 +191,6 @@ export function useSetOwnProfileLinksCache() {
   }
 }
 
-/**
- * Saves the owner's links, for edits made outside Edit Profile (tapping a link
- * on your own profile).
- */
-export function useSaveProfileLinksMutation() {
-  const {mutateAsync: updateProfile, isPending} = useProfileUpdateMutation()
-  const writeProfileLinks = useWriteProfileLinks()
-  const setOwnProfileLinksCache = useSetOwnProfileLinksCache()
-  const save = async (
-    profile: app.bsky.actor.defs.ProfileViewDetailed,
-    links: ProfileLink[],
-    existing: ProfileLink[],
-  ) => {
-    const {refs, deleteRemoved} = await writeProfileLinks(
-      profile.did,
-      links,
-      existing,
-    )
-    await updateProfile({
-      profile,
-      updates: record => ({...record, links: refs.length ? refs : undefined}),
-      checkCommitted: fresh =>
-        (fresh?.links ?? []).map(link => link.cid).join() ===
-        refs.map(ref => ref.cid).join(),
-    })
-    setOwnProfileLinksCache(profile.did, links, refs)
-    await deleteRemoved()
-  }
-  return {save, isPending}
-}
-
 const FAVICON_TIMEOUT = 8e3
 
 /**
@@ -240,17 +198,26 @@ const FAVICON_TIMEOUT = 8e3
  * like a link card thumbnail. Storing the blob on the record means it's
  * scanned like any other profile image, instead of hotlinked. Resolves to
  * undefined when the site has no usable icon; the pill falls back to a globe.
+ *
+ * Also resolves to a data URI of the icon: the CDN can't serve the blob until
+ * the profile is saved and a record points at it, so the editor shows this
+ * instead.
+ *
+ * Always asks for the site's current icon, skipping cardyb's and the HTTP
+ * cache, so re-adding a link picks up a favicon the site has since changed.
  */
 export function useUploadLinkIcon() {
   const pdsClient = usePdsClient()
-  return async (url: string): Promise<BlobRef | undefined> => {
+  return async (
+    url: string,
+  ): Promise<{icon: BlobRef; previewUrl: string} | undefined> => {
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), FAVICON_TIMEOUT)
     let icon: Blob
     try {
       const res = await fetch(
-        `${LINK_FAVICON_PROXY()}${encodeURIComponent(url)}`,
-        {signal: controller.signal},
+        `${LINK_FAVICON_PROXY()}${encodeURIComponent(url)}&fresh=true`,
+        {signal: controller.signal, cache: 'no-store'},
       )
       if (!res.ok || res.headers.get('content-type') !== 'image/png') {
         return undefined
@@ -263,8 +230,11 @@ export function useUploadLinkIcon() {
       clearTimeout(timeout)
     }
     try {
-      const {blob} = await uploadBlob(pdsClient, icon, 'image/png')
-      return blob
+      const [{blob}, previewUrl] = await Promise.all([
+        uploadBlob(pdsClient, icon, 'image/png'),
+        blobToDataUri(icon),
+      ])
+      return {icon: blob, previewUrl}
     } catch (e) {
       if (!isNetworkError(e)) {
         logger.error('Failed to upload profile link icon', {safeMessage: e})

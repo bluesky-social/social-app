@@ -1,0 +1,26 @@
+diff --git a/ios/NanoIconInlineBaseline.mm b/ios/NanoIconInlineBaseline.mm
+index f20efaaa4ed2fbd0413e285a4dc3f95d9a299139..3e55ed55dd523b9c55e9abfb0211a2e15bc5e319 100644
+--- a/ios/NanoIconInlineBaseline.mm
++++ b/ios/NanoIconInlineBaseline.mm
+@@ -11,16 +11,12 @@
+ // of the attachment run's font`, and that run only carries the NSTextStorage
+ // default font, so the view lands below the baseline by an amount that
+ // depends on the text's font size and lineHeight.
++//
++// Bluesky: our react-native patch (patches/react-native/inline-view-baseline.patch)
++// places inline views on the baseline, so this correction is redundant. It would
++// also undo deliberate offsets, such as ProfileBadges' inline nudge.
+ static BOOL NanoIconReactNativePlacesInlineViewsOffBaseline(void) {
+-  static BOOL result;
+-  static dispatch_once_t once;
+-  dispatch_once(&once, ^{
+-    NSDictionary *version = RCTGetReactNativeVersion();
+-    NSInteger major = [version[RCTVersionMajor] integerValue];
+-    NSInteger minor = [version[RCTVersionMinor] integerValue];
+-    result = major > 0 || minor >= 82;
+-  });
+-  return result;
++  return NO;
+ }
+ 
+ // The paragraph view is the direct superview of an inline icon; a couple of

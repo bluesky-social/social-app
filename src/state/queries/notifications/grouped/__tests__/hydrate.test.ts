@@ -383,6 +383,18 @@ describe('hydratePage', () => {
       ).toBe(related(res, PRIYA_POST))
     })
 
+    it('keeps the feed that a quote shares', () => {
+      const {res, page} = setup()
+      const quote = get(page, 'quote-feed', 'quote')
+      expect(
+        quote.parent?.type === 'post' ? quote.parent.post : undefined,
+      ).toBe(related(res, PRIYA_POST))
+      expect(quote.post.embed).toMatchObject({
+        $type: 'app.bsky.embed.record#view',
+        record: {uri: FUNGI_FEED},
+      })
+    })
+
     it('maps single-actor kinds', () => {
       const {res, page} = setup()
       const bluesky = related(res, 'did:plc:bluesky')

@@ -1,0 +1,97 @@
+{
+  "id": "place.stream.chat.defs",
+  "defs": {
+    "messageView": {
+      "type": "object",
+      "required": [
+        "uri",
+        "cid",
+        "author",
+        "record",
+        "indexedAt"
+      ],
+      "properties": {
+        "cid": {
+          "type": "string",
+          "format": "cid"
+        },
+        "uri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "author": {
+          "ref": "app.bsky.actor.defs#profileViewBasic",
+          "type": "ref"
+        },
+        "badges": {
+          "type": "array",
+          "items": {
+            "ref": "place.stream.badge.defs#badgeView",
+            "type": "ref"
+          },
+          "maxLength": 3,
+          "description": "Up to 3 badge tokens to display with the message. First badge is server-controlled, remaining badges are user-settable. Tokens are looked up in badges.json for display info."
+        },
+        "record": {
+          "type": "unknown"
+        },
+        "deleted": {
+          "type": "boolean",
+          "description": "If true, this message has been deleted or labeled and should be cleared from the cache"
+        },
+        "replyTo": {
+          "refs": [
+            "#messageView"
+          ],
+          "type": "union"
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "chatProfile": {
+          "ref": "place.stream.chat.profile",
+          "type": "ref"
+        }
+      }
+    },
+    "pinnedRecordView": {
+      "type": "object",
+      "required": [
+        "uri",
+        "cid",
+        "record",
+        "indexedAt"
+      ],
+      "properties": {
+        "cid": {
+          "type": "string",
+          "format": "cid"
+        },
+        "uri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "record": {
+          "ref": "place.stream.chat.pinnedRecord",
+          "type": "ref"
+        },
+        "message": {
+          "ref": "#messageView",
+          "type": "ref"
+        },
+        "pinnedBy": {
+          "ref": "place.stream.chat.profile",
+          "type": "ref"
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime"
+        }
+      },
+      "description": "View of a pinned chat record with hydrated message data."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

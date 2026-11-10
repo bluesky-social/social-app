@@ -4,6 +4,7 @@ import * as Referrer from './src/Referrer'
 import * as Share from './src/Share'
 import * as SharedPrefs from './src/SharedPrefs'
 import VisibilityView from './src/VisibilityView'
+import * as WidgetInfo from './src/WidgetInfo'
 
 export {
   AudioCategory,
@@ -12,4 +13,5 @@ export {
   Share,
   SharedPrefs,
   VisibilityView,
+  WidgetInfo,
 }

@@ -40,7 +40,7 @@ appId: xyz.blueskyweb.app
     id: "editProfileDescriptionInput"
 - eraseText
 - inputText: "One cool hacker"
-- tapOn: "Description"
+- tapOn: "Bio"
 - tapOn:
     id: "editProfileSaveBtn"
 - assertNotVisible:
@@ -59,7 +59,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "editProfileDescriptionInput"
 - eraseText
-- tapOn: "Description"
+- tapOn: "Bio"
 - tapOn:
     id: "editProfileSaveBtn"
 - assertNotVisible:

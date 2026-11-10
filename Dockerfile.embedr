@@ -33,7 +33,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
 #
 # Stage 2: build the embedr Go binary, embedding the assets from stage 1.
 #
-FROM golang:1.26-bookworm AS go-build
+FROM golang:1.26.10-bookworm AS go-build
 
 WORKDIR /usr/src/social-app
 

@@ -6,7 +6,6 @@ import {
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
 import {
-  DEFAULT_FETCH_LIMIT,
   DEFAULT_LIMIT,
   useGetTrendsQuery,
 } from '#/state/queries/trending/useGetTrendsQuery'
@@ -15,6 +14,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
+import {Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {
   getTrendingTopicFeedUri,
@@ -35,7 +35,7 @@ function Inner() {
   const {t: l} = useLingui()
   const ax = useAnalytics()
 
-  const topicCount = ax.features.getValue(
+  const exploreTopicCount = ax.features.getValue(
     ax.features.TrendingExploreTopicsCountValue,
     DEFAULT_LIMIT,
   )
@@ -47,8 +47,6 @@ function Inner() {
     error,
     isLoading,
   } = useGetTrendsQuery({
-    fetchLimit: Math.min(topicCount * 2, DEFAULT_FETCH_LIMIT),
-    limit: topicCount,
     refetchOnWindowFocus: true,
   })
   const noTopics = !isLoading && !error && !trending?.trends?.length
@@ -67,6 +65,26 @@ function Inner() {
           <Text style={[a.flex_1, a.text_md, a.font_semi_bold]}>
             <Trans>Trending</Trans>
           </Text>
+          {exploreTopicCount > DEFAULT_LIMIT ? (
+            <Link label={l`See more trending topics`} to="/search">
+              {({hovered, pressed}) => (
+                <Text
+                  style={[
+                    a.text_sm,
+                    a.font_medium,
+                    {
+                      color:
+                        hovered || pressed
+                          ? t.palette.contrast_800
+                          : t.palette.contrast_500,
+                    },
+                  ]}
+                  numberOfLines={1}>
+                  <Trans>See more</Trans>
+                </Text>
+              )}
+            </Link>
+          ) : null}
           <Button
             variant="ghost"
             size="tiny"
@@ -81,7 +99,7 @@ function Inner() {
 
         <View style={[a.gap_xs]}>
           {isLoading ? (
-            Array(topicCount)
+            Array(DEFAULT_LIMIT)
               .fill(0)
               .map((_n, i) => (
                 <View key={i} style={[a.flex_row, a.align_center, a.gap_sm]}>
@@ -104,7 +122,7 @@ function Inner() {
               ))
           ) : !trending?.trends ? null : (
             <>
-              {trending.trends.slice(0, topicCount).map((topic, i) => {
+              {trending.trends.slice(0, DEFAULT_LIMIT).map((topic, i) => {
                 const rank = i + 1
                 return (
                   <TrendingTopicLink

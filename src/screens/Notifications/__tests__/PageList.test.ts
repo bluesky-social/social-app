@@ -7,6 +7,7 @@ import {
 } from '#/screens/Notifications/components/PageList'
 
 // The placeholder helper doesn't need the native runtime or analytics setup.
+jest.mock('#/lib/hooks/useBottomBarOffset', () => ({}))
 jest.mock('#/state/queries/notifications/grouped', () => ({}))
 jest.mock('#/state/queries/notifications/unread', () => ({}))
 jest.mock('#/view/com/util/List', () => ({}))
@@ -51,8 +52,8 @@ describe('buildRows', () => {
   ).toISOString()
 
   // Only the fields `buildRows` reads
-  function notification(id: string, indexedAt: string) {
-    return {id, type: 'like', indexedAt} as unknown as NotificationView
+  function notification(id: string, indexedAt: string, isRead = true) {
+    return {id, type: 'like', indexedAt, isRead} as unknown as NotificationView
   }
 
   function layout(notifications: NotificationView[]) {
@@ -75,5 +76,28 @@ describe('buildRows', () => {
     expect(
       layout([notification('a', lastYear), notification('b', lastYear)]),
     ).toEqual(['a', 'b'])
+  })
+
+  function dividers(notifications: NotificationView[]) {
+    return buildRows(notifications, 'all').map(row =>
+      row.type === 'notification' ? row.hasDivider : row.type,
+    )
+  }
+
+  it('divides notifications from the one above, but not from a header', () => {
+    expect(
+      dividers([
+        notification('a', today),
+        notification('b', today),
+        notification('c', lastYear),
+        notification('d', lastYear),
+      ]),
+    ).toEqual(['section', false, true, 'section', false, true])
+  })
+
+  it('divides every notification but the first without headers', () => {
+    expect(
+      dividers([notification('a', lastYear), notification('b', lastYear)]),
+    ).toEqual([false, true])
   })
 })

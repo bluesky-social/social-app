@@ -1,3 +1,4 @@
+import {AtUri, isAtUriString} from '@atproto/syntax'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
@@ -23,8 +24,12 @@ export function useActionedSubjectLabels(
   if (!action) return
 
   const isAccount = 'did' in item.subject
+  const isPost =
+    'uri' in item.subject &&
+    isAtUriString(item.subject.uri, {strict: false}) &&
+    new AtUri(item.subject.uri).collection === 'app.bsky.feed.post'
   const policyLabel = action.policies?.[0]?.displayName
-  const label = action.labels?.[0] ?? item.enforcement.labels?.[0]
+  const label = action.labels?.[0]
   const labelDefinition = label
     ? labelDefs[item.src]?.find(
         definition =>
@@ -41,19 +46,29 @@ export function useActionedSubjectLabels(
   let summary: string | undefined
   switch (action.type) {
     case 'contentRemoved':
-      subject = l`Your post was removed`
+      subject = isPost ? l`Your post was removed` : l`Your content was removed`
       summary = policyLabel
         ? l`Violates Community Guideline: ${policyLabel}`
         : undefined
       break
+    case 'contentRestored':
+      subject = isPost
+        ? l`Your post was restored`
+        : l`Your content was restored`
+      break
+    case 'accountRestored':
+      subject = l`Your account was restored`
+      break
     case 'communicationSent':
-      subject = l`We sent you an email about your account`
+      subject = l`An email was sent about your account`
       summary = policyLabel
       break
     case 'labelApplied':
       subject = isAccount
         ? l`A label was added to your account`
-        : l`A label was added to your post`
+        : isPost
+          ? l`A label was added to your post`
+          : l`A label was added to your content`
       summary = labelName ? l`Label: ${labelName}` : undefined
       break
     case 'accountSuspended': {
@@ -95,11 +110,14 @@ export function useActionedSubjectLabels(
     case 'labelRemoved':
       subject = isAccount
         ? l`A label was removed from your account`
-        : l`A label was removed from your post`
+        : isPost
+          ? l`A label was removed from your post`
+          : l`A label was removed from your content`
       summary = labelName ? l`Label: ${labelName}` : undefined
       break
     default:
-      return
+      subject = l`Moderation notice`
+      break
   }
 
   return {subject, summary}

@@ -16,7 +16,10 @@ function loadShareUrl({
   nativeModule,
 }: {
   platform: 'ios' | 'android'
-  nativeModule?: {isAvailable: boolean; shareText: jest.Mock}
+  nativeModule?: {
+    isAvailable: boolean
+    shareText: jest.Mock<(text: string) => Promise<unknown>>
+  }
 }) {
   jest.doMock('#/env', () => ({
     IS_IOS: platform === 'ios',
@@ -57,7 +60,7 @@ describe('shareUrl', () => {
 
   it('uses the native module on Android when available', async () => {
     const shareText = jest
-      .fn<() => Promise<unknown>>()
+      .fn<(text: string) => Promise<unknown>>()
       .mockResolvedValue({action: 'sharedAction', target: 'com.whatsapp'})
     const rnShare = jest.spyOn(Share, 'share')
     const shareUrl = loadShareUrl({

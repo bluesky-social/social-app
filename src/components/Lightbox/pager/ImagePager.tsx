@@ -9,7 +9,6 @@
 // https://github.com/jobtoday/react-native-image-viewing
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {PixelRatio, StyleSheet, useWindowDimensions, View} from 'react-native'
-import {SystemBars} from 'react-native-edge-to-edge'
 import {usePanGesture} from 'react-native-gesture-handler'
 import PagerView, {
   type PagerViewOnPageSelectedEvent,
@@ -34,7 +33,9 @@ import Animated, {
 } from 'react-native-reanimated'
 import {scheduleOnRN, scheduleOnUI} from 'react-native-worklets'
 import {Image} from 'expo-image'
+import {NavigationBar} from 'expo-navigation-bar'
 import * as ScreenOrientation from 'expo-screen-orientation'
+import {StatusBar} from 'expo-status-bar'
 import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
 
 import {type Dimensions} from '#/lib/media/types'
@@ -43,7 +44,7 @@ import {setSystemUITheme} from '#/alf/util/systemUI'
 import {measureThumb} from '#/components/Lightbox/measureThumb'
 import {type Lightbox} from '#/components/Lightbox/state'
 import {useAnalytics} from '#/analytics'
-import {IS_IOS} from '#/env'
+import {IS_IOS, IS_IPAD, IS_LIQUID_GLASS} from '#/env'
 import {Footer} from '../chrome/Footer'
 import {Header} from '../chrome/Header'
 import {
@@ -66,6 +67,11 @@ type ImagePlacement = {
 }
 
 const PORTRAIT_UP = ScreenOrientation.OrientationLock.PORTRAIT_UP
+/**
+ * iPhone keeps the app locked to portrait and only unlocks rotation while the
+ * lightbox is open. Everywhere else the whole app rotates.
+ */
+const IS_PORTRAIT_LOCKED = IS_IOS && !IS_IPAD
 const PIXEL_RATIO = PixelRatio.get()
 const AT_REST: ImagePlacement = {
   translateX: 0,
@@ -162,16 +168,9 @@ export default function ImageViewRoot({
     thumbRects.set(initial)
 
     const isAnimated = canAnimate(nextLightbox)
-
-    // https://github.com/software-mansion/react-native-reanimated/issues/6677
-    rAF_FIXED(() => {
-      openProgress.set(isAnimated ? withClampedSpring(1, SLOW_SPRING) : 1)
-    })
+    scheduleOnUI(animateOpenProgress, openProgress, 1, isAnimated)
     return () => {
-      // https://github.com/software-mansion/react-native-reanimated/issues/6677
-      rAF_FIXED(() => {
-        openProgress.set(isAnimated ? withClampedSpring(0, SLOW_SPRING) : 0)
-      })
+      scheduleOnUI(animateOpenProgress, openProgress, 0, isAnimated)
     }
   }, [nextLightbox, openProgress, thumbRects])
 
@@ -220,10 +219,11 @@ export default function ImageViewRoot({
   useAnimatedReaction(
     () => openProgress.get() === 1,
     (isOpen, wasOpen) => {
+      if (!IS_PORTRAIT_LOCKED) return
       if (isOpen && !wasOpen) {
         scheduleOnRN(ScreenOrientation.unlockAsync)
       } else if (!isOpen && wasOpen) {
-        // default is PORTRAIT_UP - set via config plugin in app.config.js -sfn
+        // Restore the phone's portrait layout after leaving the lightbox.
         scheduleOnRN(ScreenOrientation.lockAsync, PORTRAIT_UP)
       }
     },
@@ -333,10 +333,16 @@ function ImageView({
     return {pointerEvents: 'auto', opacity: 1}
   })
 
+  /*
+   * Rotating the lightbox on a portrait-locked iPhone rotates the app behind
+   * it too, into a layout it doesn't support, so keep that hidden.
+   */
+  const hidesAppBehind = IS_PORTRAIT_LOCKED && orientation === 'landscape'
+
   const backdropStyle = useAnimatedStyle(() => {
     const screenSize = measure(safeAreaRef)
     let opacity = 1
-    if (screenSize && orientation === 'portrait') {
+    if (screenSize && !hidesAppBehind) {
       opacity -= getDismissSwipeProgress(
         dismissSwipeTranslateY.get(),
         screenSize.height,
@@ -457,13 +463,13 @@ function ImageView({
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
-      <SystemBars
-        style={{statusBar: 'light', navigationBar: 'light'}}
-        hidden={{
-          statusBar: isScaled || !showControls,
-          navigationBar: false,
-        }}
+      <StatusBar
+        animated
+        style="light"
+        // the edge effect keeps the status bar legible over a zoomed image
+        hidden={(isScaled && !IS_LIQUID_GLASS) || !showControls}
       />
+      <NavigationBar style="light" hidden={false} />
       <Animated.View
         style={[styles.backdrop, backdropStyle]}
         renderToHardwareTextureAndroid
@@ -958,31 +964,26 @@ function withClampedSpring<T extends AnimatableValue>(
   return withSpring(value, {...config, overshootClamping: true})
 }
 
-// We have to do this because we can't trust RN's rAF to fire in order.
-// https://github.com/facebook/react-native/issues/48005
-let isFrameScheduled = false
-let pendingFrameCallbacks: Array<() => void> = []
-function rAF_FIXED(callback: () => void) {
-  pendingFrameCallbacks.push(callback)
-  if (!isFrameScheduled) {
-    isFrameScheduled = true
+/**
+ * Springs the lightbox open or closed, starting on the second UI frame from
+ * now. If the main thread is busy (e.g. mounting the lightbox) when the display
+ * link wakes up, its first frame carries the timestamp of the vsync it missed,
+ * so a spring started on it would skip ahead on its first step. Worklet rAF
+ * callbacks run in order, so a close followed by a quick reopen still ends up
+ * open.
+ *
+ * Keep this below `withClampedSpring`: a module-level worklet captures the
+ * functions it calls when it's defined, so it would capture `undefined`.
+ */
+function animateOpenProgress(
+  openProgress: SharedValue<number>,
+  to: number,
+  isAnimated: boolean,
+) {
+  'worklet'
+  requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      const callbacks = pendingFrameCallbacks.slice()
-      isFrameScheduled = false
-      pendingFrameCallbacks = []
-      let hasError = false
-      let error
-      for (let i = 0; i < callbacks.length; i++) {
-        try {
-          callbacks[i]()
-        } catch (e) {
-          hasError = true
-          error = e
-        }
-      }
-      if (hasError) {
-        throw error
-      }
+      openProgress.set(isAnimated ? withClampedSpring(to, SLOW_SPRING) : to)
     })
-  }
+  })
 }

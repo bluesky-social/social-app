@@ -113,15 +113,7 @@ function AutocompleteProfileCard({
               numberOfLines={1}>
               {displayName}
             </Text>
-            <ProfileBadges
-              profile={profile}
-              size="sm"
-              style={[
-                {
-                  marginTop: platform({android: -2}),
-                },
-              ]}
-            />
+            <ProfileBadges profile={profile} size="sm" />
           </View>
         </View>
         <Text

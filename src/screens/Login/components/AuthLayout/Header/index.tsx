@@ -1,14 +1,26 @@
 import {useContext} from 'react'
-import {type GestureResponderEvent, View} from 'react-native'
+import {
+  type GestureResponderEvent,
+  useWindowDimensions,
+  View,
+} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {Logomark} from '#/view/icons/Logomark'
-import {atoms as a, platform, useGutters, useTheme} from '#/alf'
+import {
+  atoms as a,
+  BreakpointWidthContext,
+  platform,
+  useGutters,
+  useTheme,
+} from '#/alf'
 import {Button, ButtonIcon, type ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {
   BUTTON_VISUAL_ALIGNMENT_OFFSET,
+  CENTER_COLUMN_WIDTH,
   Header,
   HEADER_SLOT_SIZE,
 } from '#/components/Layout'
@@ -22,8 +34,33 @@ import {AuthLayoutNavigationContext} from '../context'
 export const Slot = Header.Slot
 
 export function Outer({children}: {children: React.ReactNode}) {
+  const {width} = useWindowDimensions()
+
+  /*
+   * Same column as the form in `LoggedOutLayout`, so that on tablets the back
+   * button lines up with the form rather than the edge of the screen
+   */
+  return (
+    <BreakpointWidthContext value={Math.min(width, CENTER_COLUMN_WIDTH)}>
+      <View style={[a.w_full, a.self_center, {maxWidth: CENTER_COLUMN_WIDTH}]}>
+        <OuterInner>{children}</OuterInner>
+      </View>
+    </BreakpointWidthContext>
+  )
+}
+
+/**
+ * Inside the column's `BreakpointWidthContext`, so the gutters match the form's.
+ */
+function OuterInner({children}: {children: React.ReactNode}) {
   const t = useTheme()
   const gutters = useGutters([0, 'wide'])
+  /*
+   * Native headers sit 4px lower in their box to balance the status bar above
+   * them. Without a top inset (e.g. iPhone Duo, landscape) there's nothing to
+   * balance, so pad the top too
+   */
+  const hasTopInset = useSafeAreaInsets().top > 0
 
   return (
     <View
@@ -34,7 +71,9 @@ export function Outer({children}: {children: React.ReactNode}) {
         a.gap_sm,
         gutters,
         platform({
-          native: [a.pb_xs, {minHeight: 48}],
+          native: hasTopInset
+            ? [a.pb_xs, {minHeight: 48}]
+            : [a.py_xs, {minHeight: 52}],
           web: [a.py_xs, {minHeight: 52}],
         }),
         t.atoms.border_contrast_low,

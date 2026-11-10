@@ -1,6 +1,7 @@
 import {type Client} from '@atproto/lex'
 import {useMutation} from '@tanstack/react-query'
 
+import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {usePdsClient, useSessionApi} from '#/state/session'
 import {useRequestEmailUpdate} from '#/components/dialogs/EmailDialog/data/useRequestEmailUpdate'
 import {com} from '#/lexicons'
@@ -13,7 +14,7 @@ async function updateEmailAndRefreshSession(
 ) {
   await pdsClient.call(com.atproto.server.updateEmail, {
     email: email.trim(),
-    token,
+    token: token ? checkAndFormatResetCode(token) || token : token,
   })
   await refreshSession()
 }

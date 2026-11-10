@@ -1,6 +1,7 @@
 import Animated, {
   type SharedValue,
   useAnimatedStyle,
+  useDerivedValue,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
@@ -35,15 +36,11 @@ export function StatusBarShadow() {
 function StatusBarShadowInnner({scrollY}: {scrollY: SharedValue<number>}) {
   const {top: topInset} = useSafeAreaInsets()
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: Math.min(0, scrollY.get()),
-        },
-      ],
-    }
-  })
+  // Derived so the style only updates while overscrolling
+  const translateY = useDerivedValue(() => Math.min(0, scrollY.get()))
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{translateY: translateY.get()}],
+  }))
 
   return (
     <AnimatedLinearGradient

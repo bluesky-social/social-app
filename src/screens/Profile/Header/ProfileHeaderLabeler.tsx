@@ -118,7 +118,7 @@ let ProfileHeaderLabeler = ({
         </View>
         <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_md]}>
           <ProfileHeaderDisplayName profile={profile} moderation={moderation} />
-          <ProfileHeaderHandle profile={profile} />
+          <ProfileHeaderHandle profile={profile} moderation={moderation} />
         </View>
         {!isPlaceholderProfile && (
           <>

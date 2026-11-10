@@ -1,8 +1,9 @@
 import {useCallback, useEffect} from 'react'
 import {BackHandler, useWindowDimensions, View} from 'react-native'
 import {Drawer} from 'react-native-drawer-layout'
-import {SystemBars} from 'react-native-edge-to-edge'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {NavigationBar} from 'expo-navigation-bar'
+import {StatusBar} from 'expo-status-bar'
 import {BottomSheetOutlet} from '@bsky.app/bottom-sheet'
 import {updateActiveViewAsync} from '@bsky.app/expo-bluesky-swiss-army/src/VisibilityView'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
@@ -24,7 +25,7 @@ import {useCloseAnyActiveElement} from '#/state/util'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Deactivated} from '#/screens/Deactivated'
 import {Takendown} from '#/screens/Takendown'
-import {atoms as a, select, useTheme} from '#/alf'
+import {atoms as a, select, useBreakpoints, useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
@@ -137,11 +138,20 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
   const setIsDrawerOpen = useSetDrawerOpen()
   const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
   const winDim = useWindowDimensions()
+  const {gtMobile} = useBreakpoints()
+  const hasTabletSidebar = gtMobile
 
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
   const {hasSession} = useSession()
 
-  const swipeEnabled = !canGoBack && hasSession && !isDrawerSwipeDisabled
+  const swipeEnabled =
+    !hasTabletSidebar && !canGoBack && hasSession && !isDrawerSwipeDisabled
+
+  useEffect(() => {
+    if (hasTabletSidebar && isDrawerOpen) {
+      setIsDrawerOpen(false)
+    }
+  }, [hasTabletSidebar, isDrawerOpen, setIsDrawerOpen])
 
   const renderDrawerContent = useCallback(() => <DrawerContent />, [])
   const onOpenDrawer = useCallback(
@@ -196,7 +206,7 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
           }
         }
       }}
-      open={isDrawerOpen}
+      open={isDrawerOpen && !hasTabletSidebar}
       onOpen={onOpenDrawer}
       onClose={onCloseDrawer}
       swipeEdgeWidth={winDim.width}
@@ -222,6 +232,7 @@ export function Shell() {
   const aa = useAgeAssurance()
   const {currentAccount} = useSession()
   const fullyExpandedCount = useDialogFullyExpandedCountContext()
+  const {gtMobile} = useBreakpoints()
 
   useIntentHandler()
   useOTAUpdateRecovery()
@@ -232,19 +243,20 @@ export function Shell() {
 
   return (
     <View testID="mobileShellView" style={[a.h_full, t.atoms.bg]}>
-      <SystemBars
-        hidden={{
-          statusBar: false,
-          navigationBar: false,
-        }}
-        style={{
-          statusBar:
-            t.name !== 'light' ||
-            (IS_IOS && !IS_LIQUID_GLASS && fullyExpandedCount > 0)
-              ? 'light'
-              : 'dark',
-          navigationBar: t.name !== 'light' ? 'light' : 'dark',
-        }}
+      <StatusBar
+        animated
+        hidden={false}
+        verticalBarBehaviorIOS={gtMobile ? 'automatic' : 'disabled'}
+        style={
+          t.name !== 'light' ||
+          (IS_IOS && !IS_LIQUID_GLASS && fullyExpandedCount > 0)
+            ? 'light'
+            : 'dark'
+        }
+      />
+      <NavigationBar
+        hidden={false}
+        style={t.name !== 'light' ? 'light' : 'dark'}
       />
       {currentAccount?.status === 'takendown' ? (
         <Takendown />
