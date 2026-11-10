@@ -365,3 +365,16 @@ input[type='range'][orient='vertical']::-moz-range-thumb {
     opacity: 0;
   }
 }
+
+/* Feed posts: let clicks fall through the post's
+content to the overlay link beneath it,
+except on the content's own interactive elements. */
+[data-post-link-overlay] ~ * {
+  pointer-events: none;
+}
+
+[data-post-link-overlay]
+  ~ *
+  :is(a, button, input, textarea, video, [role='button'], [role='link']) {
+  pointer-events: auto;
+}
