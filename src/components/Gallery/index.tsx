@@ -24,6 +24,7 @@ import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, web} from '#/alf'
 import {Bleed, useGalleryBleed} from '#/components/Gallery/Bleed'
 import {ITEM_GAP} from '#/components/Gallery/const'
+import {GalleryContext} from '#/components/Gallery/context'
 import {type GalleryRef} from '#/components/Gallery/types'
 import {useKeyboardHandlers} from '#/components/Gallery/useKeyboardHandlers'
 import {usePointerHandlers} from '#/components/Gallery/usePointerHandlers'
@@ -31,6 +32,7 @@ import {getIndexForOffset, getRevealOffset} from '#/components/Gallery/utils'
 import {IS_ANDROID, IS_WEB} from '#/env'
 
 export {Bleed, useGalleryBleed}
+export {GalleryPageDots} from '#/components/Gallery/GalleryPageDots'
 export {ITEM_GAP}
 export type {GalleryRef}
 
@@ -77,8 +79,11 @@ export function Root({
   ref,
   onIndexChange,
   stretch = false,
+  footer,
 }: {
   children?: React.ReactNode
+  /** Optional non-scrolling content with gallery context, such as page dots. */
+  footer?: React.ReactNode
   /** Translated accessible label for the whole gallery */
   label: string
   testID?: string
@@ -105,6 +110,14 @@ export function Root({
   const [sizes, setSizes] = useState<Map<string, Size>>(() => new Map())
   const [focusIndex, setFocusIndex] = useState(0)
   const [viewportWidth, setViewportWidth] = useState(0)
+  const [pageSelection, setPageSelection] = useState({key: keys[0], index: 0})
+  const survivingPageIndex = keys.indexOf(pageSelection.key)
+  const pageIndex =
+    survivingPageIndex !== -1
+      ? survivingPageIndex
+      : Math.max(0, Math.min(pageSelection.index, itemCount - 1))
+  const [navigationRevision, setNavigationRevision] = useState(0)
+  const navigationResetKey = `${keysSignature}\u0001${navigationRevision}`
 
   const scrollRef = useRef<React.ComponentRef<typeof ScrollView>>(null)
   const itemWidthsRef = useRef<Map<number, number>>(new Map())
@@ -113,6 +126,8 @@ export function Root({
   const activeKeyRef = useRef<string | null>(keys[0] ?? null)
   const scrollOffsetRef = useRef(0)
   const userScrollingRef = useRef(false)
+  /** A selected item may already be visible, or share an offset with others. */
+  const selectedPageOffsetRef = useRef<number | null>(null)
 
   /*
    * Container overflow styles
@@ -188,16 +203,26 @@ export function Root({
     scrollRef.current?.scrollTo({x: offset, animated: false})
   })
 
-  /** Sync the active index without telling anyone */
+  const setPageIndex = useNonReactiveCallback((index: number) => {
+    setPageSelection(prev =>
+      prev.key === keys[index] && prev.index === index
+        ? prev
+        : {key: keys[index], index},
+    )
+  })
+
+  /** Sync the active index without reporting user navigation. */
   const syncIndex = useNonReactiveCallback((index: number) => {
     currentIndexRef.current = index
     activeKeyRef.current = keys[index] ?? null
+    setPageIndex(index)
+    selectedPageOffsetRef.current = scrollOffsetRef.current
   })
 
   const setCurrentIndex = useNonReactiveCallback((index: number) => {
     const prev = currentIndexRef.current
-    if (prev === index) return
     syncIndex(index)
+    if (prev === index) return
     onIndexChange?.(index, prev)
   })
 
@@ -208,6 +233,15 @@ export function Root({
    */
   useEffect(() => {
     const currentKeys = keysSignature ? keysSignature.split('\u0000') : []
+    selectedPageOffsetRef.current = null
+    setPageSelection(prev => {
+      const survivedAt = currentKeys.indexOf(prev.key)
+      const index =
+        survivedAt !== -1
+          ? survivedAt
+          : Math.max(0, Math.min(prev.index, currentKeys.length - 1))
+      return {key: currentKeys[index], index}
+    })
     const present = new Set(currentKeys)
     setSizes(prev => {
       let changed = false
@@ -252,6 +286,10 @@ export function Root({
       viewportWidth,
       currentOffset: current,
     })
+    if (IS_WEB) {
+      setPageIndex(index)
+      selectedPageOffsetRef.current = next
+    }
     if (next === current) return
     if (!IS_WEB) {
       /*
@@ -264,6 +302,25 @@ export function Root({
   })
 
   useImperativeHandle(ref, () => ({scrollIntoView}), [scrollIntoView])
+
+  const activateIndex = useNonReactiveCallback((index: number) => {
+    if (!Number.isInteger(index) || index < 0 || index >= itemCount) return
+    const current = getScrollNode()?.scrollLeft ?? 0
+    const next = getRevealOffset({
+      itemWidths: itemWidthsRef.current,
+      itemCount,
+      index,
+      viewportWidth,
+      currentOffset: current,
+    })
+    /* Cancel any in-flight keyboard or pointer settle before selecting a dot. */
+    setNavigationRevision(revision => revision + 1)
+    setCurrentIndex(index)
+    setPageIndex(index)
+    setFocusIndex(index)
+    selectedPageOffsetRef.current = next
+    if (next !== current) scrollTo(next)
+  })
 
   const onSettle = useNonReactiveCallback((index: number) => {
     setCurrentIndex(index)
@@ -318,7 +375,7 @@ export function Root({
     scrollTo,
     onSettle,
     itemCount,
-    resetKey: keysSignature,
+    resetKey: navigationResetKey,
   })
 
   usePointerHandlers({
@@ -328,7 +385,7 @@ export function Root({
     scrollTo,
     onSettle,
     itemCount,
-    resetKey: keysSignature,
+    resetKey: navigationResetKey,
   })
 
   /*
@@ -345,10 +402,23 @@ export function Root({
     }
   }
 
-  // web handles via onSettle in the web hooks
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    if (IS_WEB) return
-    onScrollOffset(e.nativeEvent.contentOffset.x, userScrollingRef.current)
+    const offset = e.nativeEvent.contentOffset.x
+    if (IS_WEB) {
+      scrollOffsetRef.current = offset
+      /*
+       * Browser touch and trackpad scrolling must update the dots without
+       * changing the existing navigation callback or moving keyboard focus.
+       * Keep an explicitly selected item when its offset is shared by others.
+       */
+      const selectedOffset = selectedPageOffsetRef.current
+      if (selectedOffset != null && Math.abs(selectedOffset - offset) < 1)
+        return
+      selectedPageOffsetRef.current = null
+      setPageIndex(getIndexForOffset(itemWidthsRef.current, offset, itemCount))
+      return
+    }
+    onScrollOffset(offset, userScrollingRef.current)
   }
 
   /*
@@ -367,88 +437,94 @@ export function Root({
   const rovingEnabled = IS_WEB && !screenReaderEnabled
 
   return (
-    <View
-      ref={contentRef}
-      testID={testID}
-      style={[
-        a.w_full,
-        {
-          /* Let the row size itself so stretched measurements cannot lock its height. */
-          height: !stretch && maxHeight > 0 ? maxHeight : undefined,
-          overflow: 'visible',
-        },
-      ]}
-      onLayout={(e: LayoutChangeEvent) => {
-        setViewportWidth(e.nativeEvent.layout.width)
-        measure()
-      }}>
-      <BlockDrawerGesture>
-        <ScrollView
-          ref={scrollRef}
-          role="group"
-          aria-roledescription={l`carousel`}
-          aria-label={label}
-          horizontal
-          pagingEnabled={false}
-          /*
-           * Snap back to 0 if Android stretch overscroll leaves the carousel
-           * slightly off the left edge, without disabling native stretching.
-           */
-          overScrollMode="auto"
-          snapToOffsets={IS_ANDROID ? [0] : undefined}
-          snapToEnd={false}
-          showsHorizontalScrollIndicator={false}
-          directionalLockEnabled
-          nestedScrollEnabled
-          alwaysBounceVertical={false}
-          scrollEventThrottle={16}
-          onScroll={onScroll}
-          onScrollBeginDrag={() => {
-            userScrollingRef.current = true
-          }}
-          onScrollEndDrag={onScrollEnd}
-          onMomentumScrollBegin={() => {
-            userScrollingRef.current = true
-          }}
-          onMomentumScrollEnd={onScrollEnd}
+    <GalleryContext.Provider
+      value={{label, itemKeys: keys, activeIndex: pageIndex, activateIndex}}>
+      <View style={a.w_full}>
+        <View
+          ref={contentRef}
+          testID={testID}
           style={[
-            // Native scroll views grow to fill their parent by default
-            {flexGrow: 0},
-            isBleeding && {width: bleedWidth, marginLeft: -insetLeft},
-            /*
-             * Prevent Chrome/Firefox horizontal swipes from triggering browser
-             * history navigation. Safari ignores overscroll-behavior, so its
-             * wheel listener in usePointerHandlers.web.ts handles this.
-             */
-            web({overscrollBehaviorX: 'contain'}),
-          ]}
-          contentContainerStyle={[
-            stretch ? a.align_stretch : a.align_start,
+            a.w_full,
             {
-              gap: ITEM_GAP,
-              paddingLeft: insetLeft,
-              paddingRight: insetRight,
+              /* Let the row size itself so stretched measurements cannot lock its height. */
+              height: !stretch && maxHeight > 0 ? maxHeight : undefined,
+              overflow: 'visible',
             },
-          ]}>
-          {slides.map((slide, index) => (
-            <ItemContext.Provider
-              key={keys[index]}
-              value={{
-                itemKey: keys[index],
-                index,
-                isFocusTarget: index === activeFocusIndex,
-                rovingEnabled,
-                stretch,
-                onItemLayout,
-                registerFocusNode,
-                onItemFocus,
-              }}>
-              {slide}
-            </ItemContext.Provider>
-          ))}
-        </ScrollView>
-      </BlockDrawerGesture>
-    </View>
+          ]}
+          onLayout={(e: LayoutChangeEvent) => {
+            setViewportWidth(e.nativeEvent.layout.width)
+            measure()
+          }}>
+          <BlockDrawerGesture>
+            <ScrollView
+              ref={scrollRef}
+              role="group"
+              aria-roledescription={l`carousel`}
+              aria-label={label}
+              horizontal
+              pagingEnabled={false}
+              /*
+               * Snap back to 0 if Android stretch overscroll leaves the carousel
+               * slightly off the left edge, without disabling native stretching.
+               */
+              overScrollMode="auto"
+              snapToOffsets={IS_ANDROID ? [0] : undefined}
+              snapToEnd={false}
+              showsHorizontalScrollIndicator={false}
+              directionalLockEnabled
+              nestedScrollEnabled
+              alwaysBounceVertical={false}
+              scrollEventThrottle={16}
+              onScroll={onScroll}
+              onScrollBeginDrag={() => {
+                userScrollingRef.current = true
+              }}
+              onScrollEndDrag={onScrollEnd}
+              onMomentumScrollBegin={() => {
+                userScrollingRef.current = true
+              }}
+              onMomentumScrollEnd={onScrollEnd}
+              style={[
+                // Native scroll views grow to fill their parent by default
+                {flexGrow: 0},
+                isBleeding && {width: bleedWidth, marginLeft: -insetLeft},
+                /*
+                 * Prevent Chrome/Firefox horizontal swipes from triggering browser
+                 * history navigation. Safari ignores overscroll-behavior, so its
+                 * wheel listener in usePointerHandlers.web.ts handles this.
+                 */
+                web({overscrollBehaviorX: 'contain'}),
+              ]}
+              contentContainerStyle={[
+                stretch ? a.align_stretch : a.align_start,
+                {
+                  gap: ITEM_GAP,
+                  paddingLeft: insetLeft,
+                  paddingRight: insetRight,
+                },
+              ]}>
+              {slides.map((slide, index) => (
+                <ItemContext.Provider
+                  key={keys[index]}
+                  value={{
+                    itemKey: keys[index],
+                    index,
+                    isFocusTarget: index === activeFocusIndex,
+                    rovingEnabled,
+                    stretch,
+                    onItemLayout,
+                    registerFocusNode,
+                    onItemFocus,
+                  }}>
+                  {slide}
+                </ItemContext.Provider>
+              ))}
+            </ScrollView>
+          </BlockDrawerGesture>
+        </View>
+        {footer}
+      </View>
+    </GalleryContext.Provider>
   )
 }
 

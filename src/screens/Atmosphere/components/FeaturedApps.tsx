@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react/macro'
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {type FeaturedApp} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a} from '#/alf'
-import {ExploreGallery} from './ExploreGallery'
+import {ExploreGallery, GalleryPageDots} from './ExploreGallery'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
 import {FeaturedAppCard} from './FeaturedAppCard'
 
@@ -36,6 +36,7 @@ export function FeaturedApps({
         getKey={app => app.id}
         label={l`Featured apps`}
         testID="atmosphereAppsGallery"
+        footer={<GalleryPageDots testID="atmosphereAppsGallery-dots" />}
         renderItem={(app, galleryFocus) => (
           <View style={[a.flex_grow, {width: CARD_WIDTH}]}>
             <FeaturedAppCard app={app} galleryFocus={galleryFocus} />

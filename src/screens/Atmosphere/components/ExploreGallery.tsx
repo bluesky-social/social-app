@@ -8,6 +8,7 @@ import * as GalleryPrimitive from '#/components/Gallery'
  * bleed context with the galleries rendered inside it.
  */
 export const ExploreGalleryBleed = GalleryPrimitive.Bleed
+export const GalleryPageDots = GalleryPrimitive.GalleryPageDots
 
 export type ExploreGalleryFocusProps = GalleryPrimitive.ItemFocusProps
 
@@ -15,6 +16,7 @@ type ExploreGalleryProps<T> = {
   items: T[]
   label: string
   testID: string
+  footer?: React.ReactNode
   renderItem: (item: T, focusProps: ExploreGalleryFocusProps) => React.ReactNode
 }
 
@@ -33,13 +35,18 @@ export function ExploreGallery({
   items,
   label,
   testID,
+  footer,
   renderItem,
   getKey = item => item.uri,
 }: ExploreGalleryProps<{uri: string; title: string}> & {
   getKey?: (item: {uri: string; title: string}) => string
 }) {
   return (
-    <GalleryPrimitive.Root label={label} testID={testID} stretch>
+    <GalleryPrimitive.Root
+      label={label}
+      testID={testID}
+      footer={footer}
+      stretch>
       {items.map(item => (
         <GalleryPrimitive.Item key={getKey(item)} label={item.title}>
           {focusProps => (

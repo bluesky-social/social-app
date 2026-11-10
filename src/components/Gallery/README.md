@@ -74,14 +74,48 @@ Anything else, at any size:
 
 ### `Gallery.Root`
 
-| Prop            | Description                                                                 |
-| --------------- | --------------------------------------------------------------------------- |
-| `label`         | Required, translated. Names the carousel for assistive tech.                |
-| `testID`        | Optional.                                                                   |
-| `ref`           | Optional `GalleryRef`, see below.                                           |
-| `stretch`       | Optional boolean, default false. Stretch slides to the tallest sibling.     |
+| Prop            | Description                                                                           |
+| --------------- | ------------------------------------------------------------------------------------- |
+| `label`         | Required, translated. Names the carousel for assistive tech.                          |
+| `testID`        | Optional.                                                                             |
+| `ref`           | Optional `GalleryRef`, see below.                                                     |
+| `stretch`       | Optional boolean, default false. Stretch slides to the tallest sibling.               |
 | `onIndexChange` | `(index, previousIndex) => void`. Called when the user navigates to a different item. |
-| `children`      | `Gallery.Item`s. Fragments, arrays, and conditional `null`s are flattened.  |
+| `children`      | `Gallery.Item`s. Fragments, arrays, and conditional `null`s are flattened.            |
+
+`footer` optionally renders non-scrolling content within the gallery context,
+without including it in slide counting or height measurements. Use it for
+`GalleryPageDots`, directly or inside a layout wrapper:
+
+```tsx
+<Gallery.Root label={l`Featured apps`} footer={<Gallery.GalleryPageDots />}>
+  {apps.map(app => (
+    <Gallery.Item key={app.id} label={app.title}>
+      <AppCard app={app} />
+    </Gallery.Item>
+  ))}
+</Gallery.Root>
+```
+
+### `GalleryPageDots`
+
+One dot per item, including when several items fit in the viewport. Hidden for
+zero or one item. Optional `style` and `testID` props configure the row. The
+active dot grows from 8 to 30 pixels wide over 200ms as the previous dot shrinks;
+reduced motion makes the change immediate. Colors follow the theme.
+
+On web, dots are labelled buttons with a current-item indicator and keyboard
+focus ring. Clicking or activating a dot selects that item and scrolls only as
+far as needed to reveal it, keeping focus on the button. Selecting an already
+visible item need not scroll. On native, dots are not buttons; the row exposes
+a translated position label to screen readers instead.
+
+The dots track all scrolling, including browser touch and trackpad scrolling,
+and follow selected items by key when content changes. This display state is
+separate from `onIndexChange`, whose existing scroll-reporting behavior stays
+unchanged. Dot activation is user navigation and does call `onIndexChange`.
+
+### Navigation callbacks
 
 `onIndexChange` reports native swiping, mouse dragging, arrow keys, and
 Safari horizontal-wheel navigation. Browser touch scrolling and Chrome/Firefox
@@ -97,11 +131,11 @@ a nearby one.
 
 ### `Gallery.Item`
 
-| Prop       | Description                                       |
-| ---------- | ------------------------------------------------- |
-| `label`    | Optional accessible label for the slide.          |
-| `testID`   | Optional.                                         |
-| `children` | A node, or a function, see "Focus" below.         |
+| Prop       | Description                               |
+| ---------- | ----------------------------------------- |
+| `label`    | Optional accessible label for the slide.  |
+| `testID`   | Optional.                                 |
+| `children` | A node, or a function, see "Focus" below. |
 
 The item wraps its children in a view with no imposed width, aspect ratio, or
 height. By default it stays at its intrinsic height; with `Root stretch` its
@@ -235,5 +269,10 @@ pnpm test --runInBand src/components/Gallery/__tests__ src/components/images/Gal
   (in Safari) no back/forward swipe from horizontal scrolling.
 - Native: swiping works inside the vertical scroll without opening the drawer,
   and Android's start-edge overscroll settles back.
+- Page dots: swipe/drag/trackpad scrolling updates the selected dot. On web,
+  click and keyboard-activate dots, including when multiple cards fit; the
+  selected item stays selected at shared/clamped offsets. Reverse the cards,
+  reveal the last one, and toggle down to a single card in Storybook. Dots
+  should follow keys, disappear for one card, and skip animation with reduced motion.
 - Screen reader: items are reachable and labelled, and the image adapter shows
   its vertical list of images.
