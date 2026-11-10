@@ -287,16 +287,18 @@ function getAuthorDid(author: string | undefined): string | undefined {
 }
 
 async function resolveExternal(uri: string): Promise<ResolvedExternalLink> {
-  const telemetry = createLinkPreviewTelemetry()
+  let telemetry: ReturnType<typeof createLinkPreviewTelemetry> | undefined
   try {
-    telemetry.startMetadata()
-    const result = await getLinkMeta(uri)
-    telemetry.finishMetadata(Boolean(result.image))
+    const result = await getLinkMeta(uri, undefined, () => {
+      telemetry = createLinkPreviewTelemetry()
+      telemetry.startMetadata()
+    })
+    telemetry?.finishMetadata(Boolean(result.image))
     if (result.image) {
-      telemetry.startThumbnail()
+      telemetry?.startThumbnail()
     }
     const thumb = result.image ? await imageToThumb(result.image) : undefined
-    telemetry.finish(
+    telemetry?.finish(
       result.error
         ? 'metadata_error'
         : !result.image
@@ -320,7 +322,7 @@ async function resolveExternal(uri: string): Promise<ResolvedExternalLink> {
       view: result.view,
     }
   } finally {
-    telemetry.finish('error')
+    telemetry?.finish('error')
   }
 }
 
