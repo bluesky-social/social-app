@@ -12,8 +12,13 @@ import {
 import {useRequireAuth, useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {type ActivityAssociatedPost} from '#/screens/Atmosphere/activityPost'
-import {type ActivityActor} from '#/screens/Atmosphere/types'
+import {
+  type ActivityActor,
+  type ActivityGroup,
+  type ActivityItem,
+} from '#/screens/Atmosphere/types'
 import {useDialogControl} from '#/components/Dialog'
+import {CodeBrackets_Stroke2_Corner0_Rounded as CodeIcon} from '#/components/icons/Code'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -33,13 +38,16 @@ import {
 import * as Toast from '#/components/Toast'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+import {ActivityRawResponseDialog} from './ActivityRawResponseDialog'
 
 export function ActivityMenu({
   actor,
   post,
+  rawResponse,
 }: {
   actor: ActivityActor
   post?: ActivityAssociatedPost
+  rawResponse: ActivityItem | ActivityGroup
 }) {
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
@@ -48,6 +56,7 @@ export function ActivityMenu({
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const blockDialogControl = useDialogControl()
+  const rawResponseDialogControl = useDialogControl()
   const reportDialogControl = useGlobalReportDialogControl()
   const getPost = useGetPost()
   const [isReporting, setIsReporting] = useState(false)
@@ -142,8 +151,6 @@ export function ActivityMenu({
     }
   }
 
-  if (!canMute && !canBlock && !canReport) return null
-
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
@@ -208,6 +215,12 @@ export function ActivityMenu({
                 <Menu.ItemIcon icon={FlagIcon} />
               </Menu.Item>
             )}
+            <Menu.Item
+              label="View raw response"
+              onPress={() => rawResponseDialogControl.open()}>
+              <Menu.ItemText>View raw response</Menu.ItemText>
+              <Menu.ItemIcon icon={CodeIcon} />
+            </Menu.Item>
           </Menu.Group>
         </Menu.Outer>
       </Menu.Root>
@@ -215,6 +228,10 @@ export function ActivityMenu({
         control={blockDialogControl}
         profile={profile}
         onBlock={onBlock}
+      />
+      <ActivityRawResponseDialog
+        control={rawResponseDialogControl}
+        response={rawResponse}
       />
     </EventStopper>
   )

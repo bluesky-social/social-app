@@ -7,7 +7,11 @@ import {Mark as BlueskyIcon} from '#/components/icons/brands/Mark'
 import {createSinglePathSVG} from '#/components/icons/TEMPLATE'
 import {Link} from '#/components/Link'
 import {type ActivityAssociatedPost} from '../activityPost'
-import {type ActivityActor} from '../types'
+import {
+  type ActivityActor,
+  type ActivityGroup,
+  type ActivityItem,
+} from '../types'
 import {ActivityMenu} from './ActivityMenu'
 
 const BlueskyOutlineIcon = createSinglePathSVG({
@@ -21,9 +25,11 @@ const BlueskyOutlineIcon = createSinglePathSVG({
 export function ActivityActions({
   actor,
   post,
+  rawResponse,
 }: {
   actor: ActivityActor
   post?: ActivityAssociatedPost
+  rawResponse: ActivityItem | ActivityGroup
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -66,7 +72,7 @@ export function ActivityActions({
           {icon}
         </Button>
       )}
-      <ActivityMenu actor={actor} post={post} />
+      <ActivityMenu actor={actor} post={post} rawResponse={rawResponse} />
     </View>
   )
 }

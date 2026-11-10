@@ -24,7 +24,6 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
 import {AtmosphereAppsTab} from './AppsTab'
-import {RawActivityList} from './components/RawActivityList'
 import {TimelineRow} from './components/TimelineRow'
 import {ACTIVITY_ROW_CONTENT_INSET} from './constants'
 import {AtmosphereExploreTab} from './ExploreTab'
@@ -49,7 +48,6 @@ export function AtmosphereScreen({}: Props) {
   const pagerRef = useRef<PagerRef>(null)
   const sections = [
     {title: l`Activity`, component: <AtmosphereList />},
-    {title: l`Raw`, component: <RawActivityList />},
     {
       title: l`Explore`,
       component: (

@@ -10,8 +10,13 @@ import {
 } from '@testing-library/react-native'
 
 import {type ActivityAssociatedPost} from '#/screens/Atmosphere/activityPost'
-import {createActor, createPostView} from '#/screens/Atmosphere/testFixtures'
+import {
+  createActivity,
+  createActor,
+  createPostView,
+} from '#/screens/Atmosphere/testFixtures'
 import {type ActivityActor} from '#/screens/Atmosphere/types'
+import {type DialogControlProps} from '#/components/Dialog'
 import {type app} from '#/lexicons'
 import {ActivityMenu} from './ActivityMenu'
 
@@ -22,7 +27,6 @@ const mockUnblock = jest.fn()
 const mockGetPost = jest.fn()
 const mockReport = jest.fn()
 const mockToast = jest.fn()
-const mockOpenBlockDialog = jest.fn()
 const mockSignIn = jest.fn()
 const mockSession: {currentAccount?: {did: string}} = {
   currentAccount: {did: 'did:plc:viewer'},
@@ -50,9 +54,33 @@ jest.mock('#/state/session', () => ({
     else mockSignIn()
   },
 }))
-jest.mock('#/components/Dialog', () => ({
-  useDialogControl: () => ({open: mockOpenBlockDialog}),
-}))
+jest.mock('#/components/Dialog', () => {
+  const {useState} = jest.requireActual<typeof import('react')>('react')
+  const {View} = jest.requireActual<typeof ReactNative>('react-native')
+  return {
+    useDialogControl: () => {
+      const [isOpen, setIsOpen] = useState(false)
+      return {
+        isOpen,
+        open: () => setIsOpen(true),
+        close: () => setIsOpen(false),
+      }
+    },
+    Outer: ({children, control}: Children & {control: DialogControlProps}) =>
+      control.isOpen ? <View>{children}</View> : null,
+    ScrollableInner: ({children, label}: Children & {label: string}) => (
+      <View accessibilityHint="" accessibilityLabel={label}>
+        {children}
+      </View>
+    ),
+    Handle: () => null,
+    Close: () => null,
+  }
+})
+jest.mock('#/components/Typography', () => {
+  const {Text} = jest.requireActual<typeof ReactNative>('react-native')
+  return {Text}
+})
 jest.mock('#/components/moderation/ReportDialog', () => ({
   useGlobalReportDialogControl: () => ({open: mockReport}),
 }))
@@ -60,14 +88,21 @@ jest.mock('#/components/moderation/BlockDialog', () => {
   const {Pressable, Text} =
     jest.requireActual<typeof ReactNative>('react-native')
   return {
-    BlockDialog: ({onBlock}: {onBlock: () => Promise<void>}) => (
-      <Pressable
-        accessibilityHint=""
-        accessibilityLabel="Confirm block action"
-        onPress={onBlock}>
-        <Text>Confirm block action</Text>
-      </Pressable>
-    ),
+    BlockDialog: ({
+      control,
+      onBlock,
+    }: {
+      control: DialogControlProps
+      onBlock: () => Promise<void>
+    }) =>
+      control.isOpen ? (
+        <Pressable
+          accessibilityHint=""
+          accessibilityLabel="Confirm block action"
+          onPress={onBlock}>
+          <Text>Confirm block action</Text>
+        </Pressable>
+      ) : null,
   }
 })
 jest.mock('#/components/Toast', () => ({
@@ -152,7 +187,7 @@ function associatedPost(
 function renderMenu(actor = createActor(), post?: ActivityAssociatedPost) {
   return render(
     <I18nProvider i18n={i18n}>
-      <ActivityMenu actor={actor} post={post} />
+      <ActivityMenu actor={actor} post={post} rawResponse={createActivity()} />
     </I18nProvider>,
   )
 }
@@ -191,7 +226,6 @@ describe('Atmosphere activity moderation menu', () => {
           name: blocking ? 'Unblock account' : 'Block account',
         }),
       )
-      expect(mockOpenBlockDialog).toHaveBeenCalledTimes(1)
       expect(mockBlock).not.toHaveBeenCalled()
       expect(mockUnblock).not.toHaveBeenCalled()
       await fireEventAsync.press(screen.getByLabelText('Confirm block action'))
@@ -238,10 +272,16 @@ describe('Atmosphere activity moderation menu', () => {
   it('omits account actions for self but can report another associated author', async () => {
     const actor = createActor('did:plc:viewer')
     const screen = renderMenu(actor)
-    expect(screen.queryByTestId('atmosphereActivityMenu')).toBeNull()
+    expect(screen.queryByRole('menuitem', {name: 'Mute account'})).toBeNull()
+    expect(screen.queryByRole('menuitem', {name: 'Block account'})).toBeNull()
+    expect(screen.queryByRole('menuitem', {name: 'Report account'})).toBeNull()
     screen.rerender(
       <I18nProvider i18n={i18n}>
-        <ActivityMenu actor={actor} post={associatedPost()} />
+        <ActivityMenu
+          actor={actor}
+          post={associatedPost()}
+          rawResponse={createActivity()}
+        />
       </I18nProvider>,
     )
     expect(screen.queryByRole('menuitem', {name: 'Mute account'})).toBeNull()
@@ -250,6 +290,19 @@ describe('Atmosphere activity moderation menu', () => {
       screen.getByRole('menuitem', {name: 'Report post'}),
     )
     expect(mockReport).toHaveBeenCalledTimes(1)
+  })
+
+  it('opens raw inspection for self without exposing moderation actions', () => {
+    const screen = renderMenu(createActor('did:plc:viewer'))
+    expect(screen.queryByRole('menuitem', {name: 'Mute account'})).toBeNull()
+    expect(screen.queryByRole('menuitem', {name: 'Block account'})).toBeNull()
+    expect(screen.queryByRole('menuitem', {name: 'Report account'})).toBeNull()
+    expect(screen.queryByLabelText('Raw response')).toBeNull()
+    fireEvent.press(screen.getByRole('menuitem', {name: 'View raw response'}))
+    expect(screen.getByLabelText('Raw response')).toBeTruthy()
+    expect(
+      screen.getByTestId('atmosphereRawResponse').props.children,
+    ).toContain(createActivity().record.uri)
   })
 
   it('does not offer reporting a post owned by the current account', () => {
@@ -357,7 +410,7 @@ describe('Atmosphere activity moderation menu', () => {
     fireEvent.press(screen.getByRole('menuitem', {name: 'Report post'}))
     expect(mockSignIn).toHaveBeenCalledTimes(3)
     expect(mockMute).not.toHaveBeenCalled()
-    expect(mockOpenBlockDialog).not.toHaveBeenCalled()
+    expect(screen.queryByLabelText('Confirm block action')).toBeNull()
     expect(mockGetPost).not.toHaveBeenCalled()
     expect(mockReport).not.toHaveBeenCalled()
   })
@@ -368,6 +421,9 @@ describe('Atmosphere activity moderation menu', () => {
       const mutation = action === 'mute' ? mockMute : mockBlock
       mutation.mockRejectedValueOnce(new Error('private server response'))
       const screen = renderMenu()
+      if (action === 'block') {
+        fireEvent.press(screen.getByRole('menuitem', {name: 'Block account'}))
+      }
       await fireEventAsync.press(
         action === 'mute'
           ? screen.getByRole('menuitem', {name: 'Mute account'})

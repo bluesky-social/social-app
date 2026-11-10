@@ -21,6 +21,8 @@ export type ActivityGroupRowItem = {
   type: 'group'
   key: string
   group: ActivityGroup
+  /** Original API group when display deduplication removes children. */
+  rawGroup?: ActivityGroup
   actors: ActivityActors
 }
 
@@ -74,6 +76,8 @@ export function buildActivityListItems(
             groupItems.length === entry.items.length
               ? entry
               : {...entry, items: groupItems},
+          rawGroup:
+            groupItems.length === entry.items.length ? undefined : entry,
           actors: page.actors,
         })
       } else if (bsky.isType(schema.activityItem, entry)) {

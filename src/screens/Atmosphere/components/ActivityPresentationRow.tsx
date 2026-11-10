@@ -43,6 +43,11 @@ export function ActivityPresentationRow({
             <ActivityActions
               actor={actor}
               post={getActivityAssociatedPost(item)}
+              rawResponse={
+                item.type === 'activity'
+                  ? item.activity
+                  : (item.rawGroup ?? item.group)
+              }
             />
           ) : undefined
         }

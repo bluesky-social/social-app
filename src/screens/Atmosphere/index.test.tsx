@@ -375,7 +375,7 @@ describe('AtmosphereScreen', () => {
 
     expect(
       screen.getAllByRole('tab').map(tab => tab.props.accessibilityLabel),
-    ).toEqual(['Activity', 'Raw', 'Explore', 'Apps'])
+    ).toEqual(['Activity', 'Explore', 'Apps'])
     expect(
       screen.getByRole('tab', {name: 'Activity'}).props.accessibilityState,
     ).toEqual({selected: true})
@@ -614,127 +614,6 @@ describe('AtmosphereScreen', () => {
     })
     expect(query.fetchNextPage).toHaveBeenCalledTimes(1)
     expect(mockTimeElapsed).not.toHaveBeenCalled()
-  })
-})
-
-describe('Raw tab', () => {
-  it('shows the original feed JSON including groups, overflow, related activity, and actorless entries', () => {
-    const first = createActivity({
-      subscribed: true,
-      relatedActivity: [
-        createActivity({
-          collection: activityCollections.recommendation,
-          rkey: 'related',
-          view: createArticleView(),
-        }),
-      ],
-    })
-    const second = createActivity({rkey: 'second'})
-    const group = {
-      $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup' as const,
-      id: 'raw-group',
-      groupBy: 'actor' as const,
-      actor: 'did:plc:author',
-      collection: activityCollections.document,
-      indexedAt: first.record.indexedAt,
-      items: [first, second],
-    } satisfies AtmosphereActivityPage['feed'][number]
-    const overflow = {
-      $type:
-        'app.bsky.unspecced.getAtmosphereTimeline#activityItemOverflow' as const,
-      collection: activityCollections.document,
-      count: 17,
-      associatedProfiles: [createActor('did:plc:author')],
-    }
-    const missingActor = createActivity({
-      collection: 'example.unknown.record',
-      did: 'did:plc:missing',
-    })
-    const query = basicQuery([first, group, overflow, missingActor])
-    query.data.pages.push({feed: [first], actors: {}})
-    mockUseAtmosphereQuery.mockReturnValue(query)
-    const screen = renderScreen()
-    fireEvent.press(screen.getByRole('tab', {name: 'Raw'}))
-
-    expect(screen.getByTestId('atmosphereRawList')).toBeTruthy()
-    expect(screen.queryByTestId('atmosphereList')).toBeNull()
-    expect(screen.getAllByTestId('atmosphereRawRow')).toHaveLength(5)
-    expect(
-      screen
-        .getAllByTestId('atmosphereRawEntry')
-        .map(node => JSON.parse(node.props.children)),
-    ).toEqual(query.data.pages.flatMap(page => page.feed))
-    expect(screen.queryByTestId('atmosphereFootnote')).toBeNull()
-    expect(screen.queryByTestId('atmosphereArticleCard')).toBeNull()
-    expect(screen.queryByTestId('atmosphereOverflowRow')).toBeNull()
-  })
-
-  it('uses the shared query for raw loading, retry, and empty states', () => {
-    const raw = {
-      ...basicQuery(),
-      data: undefined,
-      error: undefined as Error | undefined,
-    }
-    mockUseAtmosphereQuery.mockReturnValue(raw)
-    const screen = renderScreen()
-    fireEvent.press(screen.getByRole('tab', {name: 'Raw'}))
-    expect(screen.getByTestId('atmosphereRawLoading')).toBeTruthy()
-    raw.error = new Error('Raw unavailable')
-    screen.rerender(screenElement())
-    expect(screen.getByTestId('atmosphereRawError')).toBeTruthy()
-    fireEvent.press(screen.getByLabelText('Retry loading raw activity'))
-    expect(raw.refetch).toHaveBeenCalledTimes(1)
-    const empty = basicQuery()
-    empty.data.pages[0].feed = []
-    mockUseAtmosphereQuery.mockReturnValue(empty)
-    screen.rerender(screenElement())
-    expect(screen.getByTestId('atmosphereRawEmpty')).toBeTruthy()
-  })
-
-  it.each(['fetching', 'last-page'] as const)(
-    'does not fetch another raw page when %s',
-    reason => {
-      const raw = {
-        ...basicQuery(),
-        isFetching: reason === 'fetching',
-        hasNextPage: reason !== 'last-page',
-      }
-      mockUseAtmosphereQuery.mockReturnValue(raw)
-      const screen = renderScreen()
-      fireEvent.press(screen.getByRole('tab', {name: 'Raw'}))
-      act(() => {
-        void latestListProps?.onEndReached?.()
-      })
-      expect(raw.fetchNextPage).not.toHaveBeenCalled()
-    },
-  )
-
-  it('wires raw refresh and pagination and stops automatic pagination after an error', async () => {
-    const raw = basicQuery()
-    mockUseAtmosphereQuery.mockReturnValue(raw)
-    const screen = renderScreen()
-    fireEvent.press(screen.getByRole('tab', {name: 'Raw'}))
-    await act(async () => {
-      await latestListProps?.onRefresh?.()
-    })
-    act(() => {
-      void latestListProps?.onEndReached?.()
-    })
-    expect(raw.refetch).toHaveBeenCalledTimes(1)
-    expect(raw.fetchNextPage).toHaveBeenCalledWith({cancelRefetch: false})
-    raw.error = new Error('Next page failed')
-    screen.rerender(screenElement())
-    act(() => {
-      void latestListProps?.onEndReached?.()
-    })
-    expect(raw.fetchNextPage).toHaveBeenCalledTimes(1)
-    expect(screen.getByTestId('atmosphereRawRow')).toBeTruthy()
-    expect(mockListFooter).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        error: 'Next page failed',
-        onRetry: expect.any(Function),
-      }),
-    )
   })
 })
 
