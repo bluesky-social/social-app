@@ -170,8 +170,14 @@ export function Link({
 
 export function Embed({
   starterPack,
+  borderColor,
 }: {
   starterPack: bsky.starterPack.AnyStarterPackView
+  /**
+   * The card's border colour, for a background that `border_contrast_low`
+   * doesn't show against.
+   */
+  borderColor?: string
 }) {
   const t = useTheme()
   const imageUri = getStarterPackOgCard(starterPack)
@@ -183,6 +189,7 @@ export function Embed({
         a.rounded_sm,
         a.overflow_hidden,
         t.atoms.border_contrast_low,
+        borderColor ? {borderColor} : null,
       ]}>
       <Link starterPack={starterPack}>
         <Image

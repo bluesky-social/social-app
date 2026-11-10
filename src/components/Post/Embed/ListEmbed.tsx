@@ -10,6 +10,7 @@ import {type CommonProps} from './types'
 
 export function ListEmbed({
   embed,
+  borderColor,
 }: CommonProps & {
   embed: EmbedType<'list'>
 }) {
@@ -17,13 +18,20 @@ export function ListEmbed({
   return (
     <ListCard.Default
       view={embed.view}
-      style={[a.border, t.atoms.border_contrast_low, a.p_md, a.rounded_sm]}
+      style={[
+        a.border,
+        t.atoms.border_contrast_low,
+        borderColor !== undefined && {borderColor},
+        a.p_md,
+        a.rounded_sm,
+      ]}
     />
   )
 }
 
 export function ModeratedListEmbed({
   embed,
+  borderColor,
 }: CommonProps & {
   embed: EmbedType<'list'>
 }) {
@@ -37,7 +45,7 @@ export function ModeratedListEmbed({
     <ContentHider
       modui={moderation?.ui('contentList')}
       childContainerStyle={[a.pt_xs]}>
-      <ListEmbed embed={embed} />
+      <ListEmbed embed={embed} borderColor={borderColor} />
     </ContentHider>
   )
 }

@@ -5,12 +5,27 @@ import {InfoCircleIcon} from '#/lib/icons'
 import {Text} from '#/view/com/util/text/Text'
 import {atoms as a, useTheme} from '#/alf'
 
-export function PostPlaceholder({children}: {children: React.ReactNode}) {
+export function PostPlaceholder({
+  borderColor,
+  children,
+}: {
+  /**
+   * For a placeholder on a background that `border_contrast_low` doesn't
+   * show against.
+   */
+  borderColor?: string
+  children: React.ReactNode
+}) {
   const t = useTheme()
   const pal = usePalette('default')
   return (
     <View
-      style={[styles.errorContainer, a.border, t.atoms.border_contrast_low]}>
+      style={[
+        styles.errorContainer,
+        a.border,
+        t.atoms.border_contrast_low,
+        borderColor !== undefined && {borderColor},
+      ]}>
       <InfoCircleIcon size={18} style={pal.text} />
       <Text type="lg" style={pal.text}>
         {children}
