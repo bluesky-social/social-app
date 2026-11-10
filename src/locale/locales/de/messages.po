@@ -217,7 +217,7 @@ msgstr "{0, plural, one {Lade # neuen Post} other {Lade # neue Posts}}"
 #. placeholder {0}: profile.postsCount || 0
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, one {Post} other {Posts}}"
+msgstr "{0, plural, one {# Beitrag} other {# Beiträge}}"
 
 #. placeholder {0}: policies.length
 #: src/screens/ModerationInbox/Notice.tsx:266
