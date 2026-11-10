@@ -106,7 +106,8 @@ reduced motion makes the change immediate. Colors follow the theme.
 
 On web, dots are labelled buttons with a current-item indicator and keyboard
 focus ring. Clicking or activating a dot selects that item and scrolls only as
-far as needed to reveal it, keeping focus on the button. Selecting an already
+far as needed to reveal it with animation (unless reduced motion is enabled),
+keeping focus on the button. Selecting an already
 visible item need not scroll. On native, dots are not buttons; the row exposes
 a translated position label to screen readers instead.
 

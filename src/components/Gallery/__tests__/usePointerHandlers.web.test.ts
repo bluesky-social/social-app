@@ -83,7 +83,7 @@ describe('usePointerHandlers (web)', () => {
     setup()
     mouseDown(text)
     drag(150) // 50px left
-    expect(scrollTo).toHaveBeenLastCalledWith(150)
+    expect(scrollTo).toHaveBeenLastCalledWith({offset: 150})
     expect(scroller.style.cursor).toBe('grabbing')
     expect(dom.selection.removeAllRanges).toHaveBeenCalled()
   })
@@ -227,7 +227,7 @@ describe('usePointerHandlers (web)', () => {
     // The overscroll bounce runs first, then nothing else scrolls past the end
     dom.flushFrames()
     expect(onSettle).toHaveBeenCalledWith(2)
-    for (const [offset] of scrollTo.mock.calls) {
+    for (const [{offset}] of scrollTo.mock.calls) {
       expect(offset).toBeLessThanOrEqual(100)
     }
   })

@@ -100,7 +100,7 @@ export function Root({
   onIndexChange?: (index: number, previousIndex: number) => void
 }) {
   const {t: l} = useLingui()
-  const {screenReaderEnabled} = useA11y()
+  const {screenReaderEnabled, reduceMotionEnabled} = useA11y()
 
   const slides = flattenReactChildren(children).filter(isValidElement)
   const keys = slides.map(slide => String(slide.key))
@@ -126,8 +126,11 @@ export function Root({
   const activeKeyRef = useRef<string | null>(keys[0] ?? null)
   const scrollOffsetRef = useRef(0)
   const userScrollingRef = useRef(false)
-  /** A selected item may already be visible, or share an offset with others. */
-  const selectedPageOffsetRef = useRef<number | null>(null)
+  /** Keep an explicit selection during its scroll and at shared offsets. */
+  const selectedPageOffsetRef = useRef<{
+    offset: number
+    animated: boolean
+  } | null>(null)
 
   /*
    * Container overflow styles
@@ -199,9 +202,31 @@ export function Root({
   const getScrollNode = () =>
     scrollRef.current?.getScrollableNode() as unknown as HTMLElement | null
 
-  const scrollTo = useNonReactiveCallback((offset: number) => {
-    scrollRef.current?.scrollTo({x: offset, animated: false})
-  })
+  const scrollTo = useNonReactiveCallback(
+    ({offset, animated = false}: {offset: number; animated?: boolean}) => {
+      const selection = selectedPageOffsetRef.current
+      if (selection) selection.animated = animated
+      scrollRef.current?.scrollTo({x: offset, animated})
+    },
+  )
+
+  useEffect(() => {
+    if (!IS_WEB) return
+    const node =
+      scrollRef.current?.getScrollableNode() as unknown as HTMLElement | null
+    if (!node) return
+    const interrupt = () => {
+      if (selectedPageOffsetRef.current?.animated) {
+        selectedPageOffsetRef.current = null
+      }
+    }
+    node.addEventListener('wheel', interrupt, {passive: true})
+    node.addEventListener('pointerdown', interrupt, {passive: true})
+    return () => {
+      node.removeEventListener('wheel', interrupt)
+      node.removeEventListener('pointerdown', interrupt)
+    }
+  }, [])
 
   const setPageIndex = useNonReactiveCallback((index: number) => {
     setPageSelection(prev =>
@@ -213,12 +238,18 @@ export function Root({
 
   const selectPage = useNonReactiveCallback((index: number, offset: number) => {
     setPageIndex(index)
-    selectedPageOffsetRef.current = offset
+    selectedPageOffsetRef.current = {offset, animated: false}
   })
 
   const updatePageForOffset = useNonReactiveCallback((offset: number) => {
-    const selectedOffset = selectedPageOffsetRef.current
-    if (selectedOffset != null && Math.abs(selectedOffset - offset) < 1) return
+    const selection = selectedPageOffsetRef.current
+    if (selection) {
+      if (Math.abs(selection.offset - offset) < 1) {
+        selection.animated = false
+        return
+      }
+      if (selection.animated) return
+    }
     selectedPageOffsetRef.current = null
     setPageIndex(getIndexForOffset(itemWidthsRef.current, offset, itemCount))
   })
@@ -305,7 +336,7 @@ export function Root({
        */
       syncIndex(getIndexForOffset(itemWidthsRef.current, next, itemCount))
     }
-    scrollTo(next)
+    scrollTo({offset: next})
   })
 
   useImperativeHandle(ref, () => ({scrollIntoView}), [scrollIntoView])
@@ -325,7 +356,9 @@ export function Root({
     setCurrentIndex(index)
     selectPage(index, next)
     setFocusIndex(index)
-    if (next !== current) scrollTo(next)
+    if (next !== current) {
+      scrollTo({offset: next, animated: !reduceMotionEnabled})
+    }
   })
 
   const onSettle = useNonReactiveCallback((index: number) => {

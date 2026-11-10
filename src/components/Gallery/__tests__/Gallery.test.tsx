@@ -12,6 +12,7 @@ import {
 import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
 import * as Gallery from '#/components/Gallery'
+import {FakeElement} from '#/components/Gallery/__tests__/fakeDom'
 
 const mockEnv = {IS_WEB: false, IS_ANDROID: false}
 const mockA11y = {screenReaderEnabled: false, reduceMotionEnabled: true}
@@ -152,6 +153,9 @@ function threeCards({
 }
 
 describe('GalleryPageDots', () => {
+  beforeEach(() => jest.useFakeTimers())
+  afterEach(() => jest.useRealTimers())
+
   const dots = (
     <View>
       <Gallery.GalleryPageDots />
@@ -244,24 +248,61 @@ describe('GalleryPageDots', () => {
     expect(onIndexChange).not.toHaveBeenCalled()
   })
 
-  it('selects and reveals the clicked item, retaining it at a shared offset', () => {
-    mockEnv.IS_WEB = true
-    const onIndexChange = jest.fn()
-    threeCards({footer: dots, onIndexChange})
-    fireEvent.press(
-      screen.getByRole('button', {name: 'Cards, go to item 3 of 3'}),
-    )
-    expectActive(2)
-    expect(scrollTo).toHaveBeenLastCalledWith({x: 316, animated: false})
-    expect(onIndexChange).toHaveBeenCalledWith(2, 0)
-    // At this offset, the generic leading-item calculation still selects b.
-    scrollBy(316)
-    expectActive(2)
-    expect(onIndexChange).toHaveBeenCalledTimes(1)
-    scrollBy(120)
-    expectActive(1)
-    expect(onIndexChange).toHaveBeenCalledTimes(1)
-  })
+  it.each([false, true])(
+    'retains clicked selection through scrolling (reduced motion: %s)',
+    reduceMotion => {
+      mockEnv.IS_WEB = true
+      mockA11y.reduceMotionEnabled = reduceMotion
+      const onIndexChange = jest.fn()
+      threeCards({footer: dots, onIndexChange})
+      fireEvent.press(
+        screen.getByRole('button', {name: 'Cards, go to item 3 of 3'}),
+      )
+      expectActive(2)
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        x: 316,
+        animated: !reduceMotion,
+      })
+      expect(onIndexChange).toHaveBeenCalledWith(2, 0)
+      if (!reduceMotion) {
+        scrollBy(50)
+        expectActive(2)
+        scrollBy(208)
+        expectActive(2)
+      }
+      // At this offset, the generic leading-item calculation still selects b.
+      scrollBy(316)
+      expectActive(2)
+      expect(onIndexChange).toHaveBeenCalledTimes(1)
+      scrollBy(120)
+      expectActive(1)
+      expect(onIndexChange).toHaveBeenCalledTimes(1)
+    },
+  )
+
+  it.each(['wheel', 'pointerdown'])(
+    'resumes scroll tracking when %s interrupts dot navigation',
+    event => {
+      mockEnv.IS_WEB = true
+      mockA11y.reduceMotionEnabled = false
+      const node = new FakeElement()
+      const getScrollableNode = jest
+        .spyOn(ScrollView.prototype, 'getScrollableNode')
+        .mockReturnValue(node)
+      const {unmount} = threeCards({footer: dots})
+      fireEvent.press(dot(2))
+      scrollBy(120)
+      expectActive(2)
+      act(() => {
+        node.dispatch(event)
+      })
+      scrollBy(120)
+      expectActive(1)
+      unmount()
+      expect(node.listenerCount(event)).toBe(0)
+      getScrollableNode.mockRestore()
+    },
+  )
 
   it('can select an already visible item without scrolling', () => {
     mockEnv.IS_WEB = true
