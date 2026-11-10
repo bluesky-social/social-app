@@ -415,13 +415,13 @@ function DialogInner({
       <View style={[a.mt_4xl, a.px_xl, a.gap_xl]}>
         <View>
           <TextField.LabelText>
-            <Trans>Display name</Trans>
+            <Trans>Name</Trans>
           </TextField.LabelText>
           <TextField.Root isInvalid={displayNameTooLong}>
             <Dialog.Input
               value={displayName}
               onChangeText={setDisplayName}
-              label={_(msg`Display name`)}
+              label={_(msg`Name`)}
               placeholder={_(msg`e.g. Alice Lastname`)}
               testID="editProfileDisplayNameInput"
             />
@@ -436,7 +436,7 @@ function DialogInner({
               ]}>
               <Plural
                 value={MAX_DISPLAY_NAME}
-                other="Display name is too long. The maximum number of characters is #."
+                other="Name is too long. The maximum number of characters is #."
               />
             </Text>
           )}
@@ -462,6 +462,36 @@ function DialogInner({
               </Trans>
             </Admonition>
           )}
+
+        <View>
+          <TextField.LabelText>
+            <Trans>Bio</Trans>
+          </TextField.LabelText>
+          <TextField.Root isInvalid={descriptionTooLong}>
+            <Dialog.Input
+              value={description}
+              onChangeText={setDescription}
+              multiline
+              label={_(msg`Bio`)}
+              placeholder={_(msg`Tell us a bit about yourself`)}
+              testID="editProfileDescriptionInput"
+            />
+          </TextField.Root>
+          {descriptionTooLong && (
+            <Text
+              style={[
+                a.text_sm,
+                a.mt_xs,
+                a.font_semi_bold,
+                {color: t.palette.negative_400},
+              ]}>
+              <Plural
+                value={MAX_DESCRIPTION}
+                other="Bio is too long. The maximum number of characters is #."
+              />
+            </Text>
+          )}
+        </View>
 
         <View>
           <TextField.LabelText>
@@ -529,36 +559,6 @@ function DialogInner({
             pronouns={pronouns}
             onSave={setPronouns}
           />
-        </View>
-
-        <View>
-          <TextField.LabelText>
-            <Trans>Description</Trans>
-          </TextField.LabelText>
-          <TextField.Root isInvalid={descriptionTooLong}>
-            <Dialog.Input
-              value={description}
-              onChangeText={setDescription}
-              multiline
-              label={_(msg`Description`)}
-              placeholder={_(msg`Tell us a bit about yourself`)}
-              testID="editProfileDescriptionInput"
-            />
-          </TextField.Root>
-          {descriptionTooLong && (
-            <Text
-              style={[
-                a.text_sm,
-                a.mt_xs,
-                a.font_semi_bold,
-                {color: t.palette.negative_400},
-              ]}>
-              <Plural
-                value={MAX_DESCRIPTION}
-                other="Description is too long. The maximum number of characters is #."
-              />
-            </Text>
-          )}
         </View>
 
         {linksEnabled && links && (
