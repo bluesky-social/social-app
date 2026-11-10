@@ -74,6 +74,11 @@
         },
         "bookmarkCount": {
           "type": "integer"
+        },
+        "viewCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Approximate number of times the post has been viewed. Only included in authenticated responses to the post's author when eligible to see the count. Omitted for users under 18 and counts less than 100."
         }
       }
     },
