@@ -5,9 +5,11 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
+import {AboutAtmosphereDialog} from '#/screens/Atmosphere/components/AboutAtmosphereDialog'
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {atoms as a, tokens, useAlf, utils} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
 import {GradientFill} from '#/components/GradientFill'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/TimesLarge'
 import * as Toast from '#/components/Toast'
@@ -20,6 +22,7 @@ export function AtmosphereNux() {
   const {themes} = useAlf()
   const {nux} = useNux(Nux.AtmosphereNux)
   const {mutate: save, variables} = useSaveNux()
+  const aboutDialogControl = Dialog.useDialogControl()
 
   if (variables || nux?.completed) return null
 
@@ -64,10 +67,18 @@ export function AtmosphereNux() {
           ]}
           locations={[0, 0.3, 1]}
           start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
+          end={{x: 1, y: 0}}
           style={[a.absolute, a.inset_0]}
         />
-        <View style={[a.absolute, a.inset_0, a.justify_end, a.p_lg, a.gap_xs]}>
+        <View
+          style={[
+            a.absolute,
+            a.inset_0,
+            a.align_start,
+            a.justify_end,
+            a.p_lg,
+            a.gap_xs,
+          ]}>
           <Text
             emoji
             style={[a.text_lg, a.font_bold, {color: 'white'}, textShadow]}
@@ -79,7 +90,8 @@ export function AtmosphereNux() {
             style={[
               a.text_sm,
               a.leading_snug,
-              {color: 'white', maxWidth: 260},
+              a.pb_sm,
+              {color: 'white', maxWidth: 240},
               textShadow,
             ]}
             numberOfLines={4}>
@@ -88,6 +100,19 @@ export function AtmosphereNux() {
               integrations. Your account unlocks them all.
             </Trans>
           </Text>
+          <Button
+            label={l`Learn more`}
+            accessibilityHint={l`Opens a dialog with more information about the Atmosphere`}
+            hitSlop={HITSLOP_10}
+            testID="atmosphereNuxLearnMore"
+            onPress={aboutDialogControl.open}
+            color="primary"
+            size="small"
+            style={[a.px_md, a.py_xs]}>
+            <ButtonText>
+              <Trans>Learn more</Trans>
+            </ButtonText>
+          </Button>
         </View>
         <Button
           label={l`Dismiss info banner`}
@@ -107,6 +132,7 @@ export function AtmosphereNux() {
           <ButtonIcon icon={XIcon} size="sm" />
         </Button>
       </View>
+      <AboutAtmosphereDialog control={aboutDialogControl} />
     </View>
   )
 }
