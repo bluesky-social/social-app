@@ -1,5 +1,5 @@
-import {useRef, useState} from 'react'
-import {TouchableOpacity, View} from 'react-native'
+import {useDeferredValue, useRef, useState} from 'react'
+import {type ScrollView, TouchableOpacity, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -160,11 +160,14 @@ function AltTextInner({
   thumb: string | undefined
 }) {
   const [altText, setAltText] = useState(initialAltText)
+  const deferredAltText = useDeferredValue(altText)
+  const scrollViewRef = useRef<React.ComponentRef<typeof ScrollView>>(null)
+  const inputContentHeight = useRef<number | null>(null)
   const t = useTheme()
   const {_, i18n} = useLingui()
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
+    <Dialog.ScrollableInner ref={scrollViewRef} label={_(msg`Add alt text`)}>
       <View style={a.flex_col_reverse}>
         <View style={[a.mt_md, a.gap_md]}>
           <View style={[a.gap_sm]}>
@@ -188,6 +191,21 @@ function AltTextInner({
                     if (nativeEvent.key === 'Escape') {
                       control.close()
                     }
+                  }}
+                  onContentSizeChange={e => {
+                    const height = e.nativeEvent.contentSize.height
+                    /*
+                     * The outer ScrollView only reacts to the keyboard
+                     * showing/hiding, not to this input growing afterwards, so
+                     * follow the caret down ourselves as new lines appear.
+                     */
+                    if (
+                      inputContentHeight.current != null &&
+                      height > inputContentHeight.current
+                    ) {
+                      scrollViewRef.current?.scrollToEnd({animated: true})
+                    }
+                    inputContentHeight.current = height
                   }}
                 />
               </TextField.Root>
@@ -214,7 +232,7 @@ function AltTextInner({
             )}
           </View>
 
-          <AltTextCounterWrapper altText={altText}>
+          <AltTextCounterWrapper altText={deferredAltText}>
             <Button
               label={_(msg`Save`)}
               size="large"
