@@ -45,14 +45,7 @@ export function GalleryPageDots({
       }
       accessibilityHint=""
       role={IS_WEB ? 'group' : undefined}
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.justify_center,
-        a.py_sm,
-        a.gap_sm,
-        style,
-      ]}>
+      style={[a.flex_row, a.align_center, a.justify_center, style]}>
       {itemKeys.map((key, index) => (
         <PageDot
           key={key}
@@ -134,16 +127,30 @@ function PageDot({
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
       style={[
+        a.px_sm,
+        a.py_sm,
         a.rounded_full,
         web({
           cursor: 'pointer',
-          outlineStyle: focused ? 'solid' : 'none',
-          outlineWidth: 2,
-          outlineOffset: 2,
-          outlineColor: t.palette.primary_500,
+          outlineStyle: 'none',
         }),
       ]}>
       {dot}
+      <View
+        style={[
+          a.absolute,
+          a.rounded_full,
+          {
+            top: 2,
+            bottom: 2,
+            left: 2,
+            right: 2,
+            borderWidth: 2,
+            borderColor: t.palette.primary_500,
+            opacity: focused ? 1 : 0,
+          },
+        ]}
+      />
     </Pressable>
   )
 }
