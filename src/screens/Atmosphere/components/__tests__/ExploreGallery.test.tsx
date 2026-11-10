@@ -146,6 +146,29 @@ describe('ExploreGallery', () => {
     ).toBeUndefined()
   })
 
+  it('passes through optional native slide snapping', () => {
+    render(
+      <ExploreGallery
+        items={items}
+        label="Things"
+        testID="thingsGallery"
+        snapToItems
+        renderItem={item => <Text>{item.title}</Text>}
+      />,
+    )
+    fireEvent(screen.getByTestId('thingsGallery'), 'layout', {
+      nativeEvent: {layout: {x: 0, y: 0, width: 150, height: 50}},
+    })
+    for (const slide of slides()) {
+      fireEvent(slide, 'layout', {
+        nativeEvent: {layout: {x: 0, y: 0, width: 100, height: 50}},
+      })
+    }
+    const scroll = screen.UNSAFE_getByType(ScrollView)
+    expect(scroll.props.snapToOffsets).toEqual([0, 108, 166])
+    expect(scroll.props.decelerationRate).toBe('fast')
+  })
+
   it('attaches focus to the rendered element rather than the slide', () => {
     mockEnv.IS_WEB = true
     render(renderGallery())

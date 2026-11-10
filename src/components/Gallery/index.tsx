@@ -28,7 +28,12 @@ import {GalleryContext} from '#/components/Gallery/context'
 import {type GalleryRef} from '#/components/Gallery/types'
 import {useKeyboardHandlers} from '#/components/Gallery/useKeyboardHandlers'
 import {usePointerHandlers} from '#/components/Gallery/usePointerHandlers'
-import {getIndexForOffset, getRevealOffset} from '#/components/Gallery/utils'
+import {
+  getIndexForOffset,
+  getMaxOffset,
+  getOffsetForIndex,
+  getRevealOffset,
+} from '#/components/Gallery/utils'
 import {IS_ANDROID, IS_WEB} from '#/env'
 
 export {Bleed, useGalleryBleed}
@@ -79,6 +84,7 @@ export function Root({
   ref,
   onIndexChange,
   stretch = false,
+  snapToItems = false,
   footer,
 }: {
   children?: React.ReactNode
@@ -90,6 +96,8 @@ export function Root({
   ref?: React.Ref<GalleryRef>
   /** Stretch slides to the tallest sibling, without imposing child heights. */
   stretch?: boolean
+  /** Snap native scrolling to item boundaries. Ignored on web. */
+  snapToItems?: boolean
   /**
    * Called when the user navigates to a different item via native swipe,
    * mouse drag, arrow keys, or Safari horizontal wheel events. Browser touch
@@ -198,6 +206,19 @@ export function Root({
   useLayoutEffect(() => {
     itemWidthsRef.current = itemWidths
   })
+
+  const nativeSnapping = snapToItems && !IS_WEB
+  let snapToOffsets: number[] | undefined = IS_ANDROID ? [0] : undefined
+  if (nativeSnapping) {
+    snapToOffsets = [0]
+    if (viewportWidth > 0 && keys.every(key => sizes.has(key))) {
+      const maxOffset = getMaxOffset(itemWidths, itemCount, viewportWidth)
+      for (let index = 1; index < itemCount; index++) {
+        const offset = Math.min(getOffsetForIndex(itemWidths, index), maxOffset)
+        if (offset !== snapToOffsets.at(-1)) snapToOffsets.push(offset)
+      }
+    }
+  }
 
   const getScrollNode = () =>
     scrollRef.current?.getScrollableNode() as unknown as HTMLElement | null
@@ -502,12 +523,13 @@ export function Root({
               horizontal
               pagingEnabled={false}
               /*
-               * Snap back to 0 if Android stretch overscroll leaves the carousel
-               * slightly off the left edge, without disabling native stretching.
+               * Even without item snapping, Android stretch overscroll must
+               * settle back to 0 if it leaves the carousel off the left edge.
                */
               overScrollMode="auto"
-              snapToOffsets={IS_ANDROID ? [0] : undefined}
-              snapToEnd={false}
+              snapToOffsets={snapToOffsets}
+              snapToEnd={nativeSnapping}
+              decelerationRate={nativeSnapping ? 'fast' : undefined}
               showsHorizontalScrollIndicator={false}
               directionalLockEnabled
               nestedScrollEnabled

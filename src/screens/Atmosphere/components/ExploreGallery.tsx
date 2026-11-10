@@ -17,6 +17,7 @@ type ExploreGalleryProps<T> = {
   label: string
   testID: string
   footer?: React.ReactNode
+  snapToItems?: boolean
   renderItem: (item: T, focusProps: ExploreGalleryFocusProps) => React.ReactNode
 }
 
@@ -36,6 +37,7 @@ export function ExploreGallery({
   label,
   testID,
   footer,
+  snapToItems,
   renderItem,
   getKey = item => item.uri,
 }: ExploreGalleryProps<{uri: string; title: string}> & {
@@ -46,6 +48,7 @@ export function ExploreGallery({
       label={label}
       testID={testID}
       footer={footer}
+      snapToItems={snapToItems}
       stretch>
       {items.map(item => (
         <GalleryPrimitive.Item key={getKey(item)} label={item.title}>

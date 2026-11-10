@@ -1180,6 +1180,91 @@ describe('Gallery.Bleed', () => {
 })
 
 describe('Gallery scroll view', () => {
+  it.each([false, true])(
+    'keeps free scrolling by default (Android: %s)',
+    android => {
+      mockEnv.IS_ANDROID = android
+      threeCards({})
+      expect(scrollView().props.snapToOffsets).toEqual(
+        android ? [0] : undefined,
+      )
+      expect(scrollView().props.snapToEnd).toBe(false)
+      expect(scrollView().props.decelerationRate).toBeUndefined()
+    },
+  )
+
+  it.each([false, true])(
+    'opts into measured slide snapping (Android: %s)',
+    android => {
+      mockEnv.IS_ANDROID = android
+      render(
+        <Gallery.Root label="Cards" testID="gallery" snapToItems>
+          {card('a', 200, 100)}
+          {card('b', 200, 100)}
+          {card('c', 200, 100)}
+        </Gallery.Root>,
+      )
+      layout('gallery', 300, 100)
+      layout('a', 200, 100)
+      layout('b', 200, 100)
+      // Do not snap to provisional positions before all items are measured.
+      expect(scrollView().props.snapToOffsets).toEqual([0])
+      layout('c', 200, 100)
+      expect(scrollView().props.snapToOffsets).toEqual([0, 208, 316])
+      expect(scrollView().props.snapToEnd).toBe(true)
+      expect(scrollView().props.decelerationRate).toBe('fast')
+    },
+  )
+
+  it('updates variable-width snap positions after reorder and resize', () => {
+    const gallery = (ids: string[]) => (
+      <Gallery.Root label="Cards" testID="gallery" snapToItems>
+        {ids.map(id => card(id, 100, 100))}
+      </Gallery.Root>
+    )
+    const {rerender} = render(gallery(['a', 'b', 'c', 'd']))
+    layout('gallery', 300, 100)
+    layout('a', 100, 100)
+    layout('b', 200, 100)
+    layout('c', 120, 100)
+    layout('d', 80, 100)
+    expect(scrollView().props.snapToOffsets).toEqual([0, 108, 224])
+    rerender(gallery(['b', 'a', 'c', 'd']))
+    expect(scrollView().props.snapToOffsets).toEqual([0, 208, 224])
+    layout('b', 280, 100)
+    expect(scrollView().props.snapToOffsets).toEqual([0, 288, 304])
+    layout('gallery', 800, 100)
+    expect(scrollView().props.snapToOffsets).toEqual([0])
+  })
+
+  it('ignores native snapping on web', () => {
+    mockEnv.IS_WEB = true
+    render(
+      <Gallery.Root label="Cards" snapToItems>
+        {card('a', 200, 100)}
+        {card('b', 200, 100)}
+      </Gallery.Root>,
+    )
+    expect(scrollView().props.snapToOffsets).toBeUndefined()
+    expect(scrollView().props.snapToEnd).toBe(false)
+    expect(scrollView().props.decelerationRate).toBeUndefined()
+  })
+
+  it('can turn native snapping off again', () => {
+    const gallery = (snapToItems: boolean) => (
+      <Gallery.Root label="Cards" snapToItems={snapToItems}>
+        {card('a', 200, 100)}
+        {card('b', 200, 100)}
+      </Gallery.Root>
+    )
+    const {rerender} = render(gallery(true))
+    expect(scrollView().props.decelerationRate).toBe('fast')
+    rerender(gallery(false))
+    expect(scrollView().props.snapToOffsets).toBeUndefined()
+    expect(scrollView().props.snapToEnd).toBe(false)
+    expect(scrollView().props.decelerationRate).toBeUndefined()
+  })
+
   it('does not stretch to fill constrained ancestors', () => {
     render(
       <Gallery.Root testID="gallery" label="Cards">

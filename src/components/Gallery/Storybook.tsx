@@ -64,6 +64,7 @@ export function GalleryStorybook() {
 function PageDotsExample() {
   const ref = useRef<Gallery.GalleryRef>(null)
   const [ids, setIds] = useState([1, 2, 3, 4, 5])
+  const [snapToItems, setSnapToItems] = useState(false)
   return (
     <Section
       titleText="Optional page dots"
@@ -96,9 +97,18 @@ function PageDotsExample() {
           onPress={() => ref.current?.scrollIntoView(ids.length - 1)}>
           <ButtonText>Reveal last card</ButtonText>
         </Button>
+        <Button
+          label="Toggle native snapping"
+          testID="galleryStorybook-dots-snap"
+          color="secondary"
+          size="small"
+          onPress={() => setSnapToItems(value => !value)}>
+          <ButtonText>Native snapping: {snapToItems ? 'on' : 'off'}</ButtonText>
+        </Button>
       </View>
       <Gallery.Root
         ref={ref}
+        snapToItems={snapToItems}
         label="Page dot example"
         testID="galleryStorybook-dots-root"
         footer={

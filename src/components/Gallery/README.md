@@ -74,14 +74,15 @@ Anything else, at any size:
 
 ### `Gallery.Root`
 
-| Prop            | Description                                                                           |
-| --------------- | ------------------------------------------------------------------------------------- |
-| `label`         | Required, translated. Names the carousel for assistive tech.                          |
-| `testID`        | Optional.                                                                             |
-| `ref`           | Optional `GalleryRef`, see below.                                                     |
-| `stretch`       | Optional boolean, default false. Stretch slides to the tallest sibling.               |
-| `onIndexChange` | `(index, previousIndex) => void`. Called when the user navigates to a different item. |
-| `children`      | `Gallery.Item`s. Fragments, arrays, and conditional `null`s are flattened.            |
+| Prop            | Description                                                                                 |
+| --------------- | ------------------------------------------------------------------------------------------- |
+| `label`         | Required, translated. Names the carousel for assistive tech.                                |
+| `testID`        | Optional.                                                                                   |
+| `ref`           | Optional `GalleryRef`, see below.                                                           |
+| `stretch`       | Optional boolean, default false. Stretch slides to the tallest sibling.                     |
+| `snapToItems`   | Optional boolean, default false. Snap native scrolling to slide boundaries. Ignored on web. |
+| `onIndexChange` | `(index, previousIndex) => void`. Called when the user navigates to a different item.       |
+| `children`      | `Gallery.Item`s. Fragments, arrays, and conditional `null`s are flattened.                  |
 
 `footer` optionally renders non-scrolling content within the gallery context,
 without including it in slide counting or height measurements. Use it for
@@ -96,6 +97,13 @@ without including it in slide counting or height measurements. Use it for
   ))}
 </Gallery.Root>
 ```
+
+`snapToItems` opts into slide snapping on iOS and Android. Snap positions use
+measured item widths and the gap, so variable-width slides work too. Positions
+near the end are clamped to the scrollable range; the last slide can still be
+fully revealed. Native inertia uses fast deceleration when enabled. With the
+prop omitted, existing free scrolling is unchanged. Web navigation is unchanged.
+The Atmosphere `ExploreGallery` wrapper also accepts this prop.
 
 ### `GalleryPageDots`
 
@@ -269,7 +277,9 @@ pnpm test --runInBand src/components/Gallery/__tests__ src/components/images/Gal
 - Web: click versus drag, trackpad scrolling, normal page scrolling, and
   (in Safari) no back/forward swipe from horizontal scrolling.
 - Native: swiping works inside the vertical scroll without opening the drawer,
-  and Android's start-edge overscroll settles back.
+  and Android's start-edge overscroll settles back. Toggle native snapping in
+  the page dots example: releases should settle on slide boundaries or the
+  content end. Turn it off to restore free scrolling.
 - Page dots: swipe/drag/trackpad scrolling updates the selected dot. On web,
   click and keyboard-activate dots, including when multiple cards fit; the
   selected item stays selected at shared/clamped offsets. Reverse the cards,
