@@ -20,11 +20,17 @@ import Animated, {
 } from 'react-native-reanimated'
 import {setStringAsync} from 'expo-clipboard'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useViewportZoomLock} from '#/lib/hooks/useViewportZoomLock'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {
   type CommonNavigatorParams,
@@ -126,6 +132,9 @@ export function SearchScreenShell({
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
+  const isFocused = useIsFocused()
+
+  useViewportZoomLock({enabled: isFocused})
 
   // Get tab parameter from route params
   const tabParam = (route.params as {q?: string; tab?: TabParam})?.tab
