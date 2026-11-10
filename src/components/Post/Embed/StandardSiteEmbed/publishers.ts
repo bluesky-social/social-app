@@ -77,7 +77,7 @@ function matchByThemeNsid(
 export function matchStandardSiteHostByPublication(
   view: app.bsky.embed.external.ViewExternal,
 ): StandardSitePublisher | null {
-  return matchHostByDomain(view.uri)
+  return matchHostByDomain(view.source?.uri || '')
 }
 
 export function matchStandardSiteHostByUrl(

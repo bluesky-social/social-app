@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useRef, useState} from 'react'
 import {View} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -11,7 +11,7 @@ import {
 } from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {Pager} from '#/view/com/pager/Pager'
+import {Pager, type PagerRef} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
@@ -25,6 +25,7 @@ import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
 import {RawActivityList} from './components/RawActivityList'
 import {TimelineRow} from './components/TimelineRow'
+import {AtmosphereAppsTab} from './AppsTab'
 import {AtmosphereExploreTab} from './ExploreTab'
 import {buildActivityListItems} from './model'
 import {buildActivityPresentationListItems} from './presentation'
@@ -38,18 +39,31 @@ import {useTimelineNow} from './useTimelineNow'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Atmosphere'>
 
+/** Matches the Apps position in the sections below, including the Raw tab. */
+const APPS_TAB_INDEX = 3
+
 export function AtmosphereScreen({}: Props) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const pagerRef = useRef<PagerRef>(null)
   const sections = [
     {title: l`Activity`, component: <AtmosphereList />},
     {title: l`Raw`, component: <RawActivityList />},
-    {title: l`Explore`, component: <AtmosphereExploreTab />},
+    {
+      title: l`Explore`,
+      component: (
+        <AtmosphereExploreTab
+          onPressSeeMoreApps={() => pagerRef.current?.setPage(APPS_TAB_INDEX)}
+        />
+      ),
+    },
+    {title: l`Apps`, component: <AtmosphereAppsTab />},
   ]
 
   return (
     <Layout.Screen testID="atmosphereScreen">
       <Pager
+        ref={pagerRef}
         testID="atmospherePager"
         initialPage={0}
         renderTabBar={props => (

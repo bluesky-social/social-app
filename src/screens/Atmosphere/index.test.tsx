@@ -86,10 +86,27 @@ jest.mock('#/alf', () => ({
 }))
 jest.mock('./components/ShareSnippets', () => ({ShareSnippets: () => null}))
 jest.mock('./ExploreTab', () => {
-  const {View} = jest.requireActual('react-native')
+  const {Pressable, Text, View} = jest.requireActual('react-native')
   return {
-    AtmosphereExploreTab: () => <View testID="atmosphereExploreTab" />,
+    AtmosphereExploreTab: ({
+      onPressSeeMoreApps,
+    }: {
+      onPressSeeMoreApps?: () => void
+    }) => (
+      <View testID="atmosphereExploreTab">
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="See more apps"
+          onPress={onPressSeeMoreApps}>
+          <Text>See more</Text>
+        </Pressable>
+      </View>
+    ),
   }
+})
+jest.mock('./AppsTab', () => {
+  const {View} = jest.requireActual('react-native')
+  return {AtmosphereAppsTab: () => <View testID="atmosphereAppsTab" />}
 })
 jest.mock('#/components/images/Gallery', () => ({
   Gallery: () => null,
@@ -127,6 +144,7 @@ jest.mock('#/view/com/pager/Pager', () => {
       initialPage = 0,
       renderTabBar,
       testID,
+      ref,
     }: React.PropsWithChildren<{
       initialPage?: number
       renderTabBar: (props: {
@@ -136,8 +154,10 @@ jest.mock('#/view/com/pager/Pager', () => {
         dragState: {value: 'idle'}
       }) => React.ReactNode
       testID?: string
+      ref?: React.Ref<{setPage: (index: number) => void}>
     }>) => {
       const [selectedPage, setSelectedPage] = React.useState(initialPage)
+      React.useImperativeHandle(ref, () => ({setPage: setSelectedPage}))
       const pages = React.Children.toArray(children)
       const onSelect = (index: number) => setSelectedPage(index)
       return (
@@ -368,7 +388,7 @@ describe('AtmosphereScreen', () => {
 
     expect(
       screen.getAllByRole('tab').map(tab => tab.props.accessibilityLabel),
-    ).toEqual(['Activity', 'Raw', 'Explore'])
+    ).toEqual(['Activity', 'Raw', 'Explore', 'Apps'])
     expect(
       screen.getByRole('tab', {name: 'Activity'}).props.accessibilityState,
     ).toEqual({selected: true})
@@ -382,6 +402,17 @@ describe('AtmosphereScreen', () => {
     ).toEqual({selected: true})
     expect(screen.getByTestId('atmosphereExploreTab')).toBeTruthy()
     expect(screen.queryByTestId('atmosphereList')).toBeNull()
+
+    fireEvent.press(screen.getByRole('button', {name: 'See more apps'}))
+
+    expect(
+      screen.getByRole('tab', {name: 'Apps'}).props.accessibilityState,
+    ).toEqual({selected: true})
+    expect(screen.getByTestId('atmosphereAppsTab')).toBeTruthy()
+    expect(screen.queryByTestId('atmosphereExploreTab')).toBeNull()
+
+    fireEvent.press(screen.getByRole('tab', {name: 'Activity'}))
+    expect(screen.getByTestId('atmosphereList')).toBeTruthy()
   })
 
   it('renders hydrated standalone, grouped, and unknown collections without JSON diagnostics', () => {
