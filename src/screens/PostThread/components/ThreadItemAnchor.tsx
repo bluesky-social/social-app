@@ -9,7 +9,7 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {formatDateTime, niceDate} from '#/lib/strings/time'
+import {niceDate} from '#/lib/strings/time'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -560,8 +560,6 @@ function ExpandedPostDetails({
   const t = useTheme()
   const {i18n} = useLingui()
   const isRootPost = !('reply' in post.record)
-  const time = formatDateTime(i18n, post.indexedAt, {timeStyle: 'short'})
-  const date = i18n.date(new Date(post.indexedAt), {dateStyle: 'medium'})
 
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
@@ -576,9 +574,7 @@ function ExpandedPostDetails({
         ]}>
         <Text
           style={[a.text_sm, t.atoms.text_contrast_medium, {maxWidth: '100%'}]}>
-          <Trans comment="Post timestamp. {time} is the localized time and {date} is the localized date. Reorder them and add surrounding text or prefixes as needed for your language; separate them with a space instead of a dot.">
-            {time} {date}
-          </Trans>
+          {niceDate(i18n, post.indexedAt, 'dot separated')}
         </Text>
         {isRootPost && (
           <View style={{marginLeft: 'auto'}}>
