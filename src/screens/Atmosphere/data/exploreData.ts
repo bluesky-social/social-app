@@ -107,7 +107,6 @@ export function getAtmospherePublications(
     .sort((a, b) => b.description.trim().length - a.description.trim().length)
     .slice(0, 5)
 }
-
 /**
  * Returns the valid apps, optionally limited to a raw backend `category`.
  * Omit `category` for all apps, including those with a missing or unknown

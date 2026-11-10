@@ -1,5 +1,4 @@
 import {type app} from '#/lexicons'
-
 import {
   matchStandardSiteHostByPublication,
   matchStandardSiteHostByUrl,
@@ -7,7 +6,9 @@ import {
 } from './publishers'
 
 jest.mock('#/components/icons/community/Leaflet', () => ({Leaflet: () => null}))
-jest.mock('#/components/icons/community/Offprint', () => ({Offprint: () => null}))
+jest.mock('#/components/icons/community/Offprint', () => ({
+  Offprint: () => null,
+}))
 jest.mock('#/components/icons/community/Pckt', () => ({Pckt: () => null}))
 
 function createView({
@@ -15,8 +16,8 @@ function createView({
   sourceUri = 'https://custom.example',
   themeType,
 }: {
-  uri?: string
-  sourceUri?: string
+  uri?: app.bsky.embed.external.ViewExternal['uri']
+  sourceUri?: app.bsky.embed.external.ViewExternalSource['uri']
   themeType?: unknown
 } = {}): app.bsky.embed.external.ViewExternal {
   return {
@@ -26,7 +27,9 @@ function createView({
     source: {
       uri: sourceUri,
       title: 'Publication',
-      theme: {$type: themeType} as app.bsky.embed.external.ViewExternalSourceTheme,
+      theme: {
+        $type: themeType,
+      } as app.bsky.embed.external.ViewExternalSourceTheme,
     },
   }
 }
@@ -53,9 +56,12 @@ describe('standard site publisher matching', () => {
     ['https://leaflet.pub.example/article', undefined],
     ['invalid URL', undefined],
     [undefined, undefined],
-  ])('matches only exact publisher domains and subdomains (%s)', (url, name) => {
-    expect(matchStandardSiteHostByUrl(url)?.name).toBe(name)
-  })
+  ])(
+    'matches only exact publisher domains and subdomains (%s)',
+    (url, name) => {
+      expect(matchStandardSiteHostByUrl(url)?.name).toBe(name)
+    },
+  )
 
   it('prefers source URL evidence to article URLs and theme hints', () => {
     expect(

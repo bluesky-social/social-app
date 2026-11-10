@@ -97,6 +97,7 @@ jest.mock('./ExploreTab', () => {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="See more apps"
+          accessibilityHint=""
           onPress={onPressSeeMoreApps}>
           <Text>See more</Text>
         </Pressable>
