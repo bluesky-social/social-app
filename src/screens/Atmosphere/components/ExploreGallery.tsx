@@ -58,9 +58,7 @@ export function ExploreGallery({
              * scrolled with the card, which keeps card shadows from being
              * clipped.
              */
-            <View style={[a.flex_grow, a.pb_md]}>
-              {renderItem(item, focusProps)}
-            </View>
+            <View style={[a.flex_grow]}>{renderItem(item, focusProps)}</View>
           )}
         </GalleryPrimitive.Item>
       ))}
