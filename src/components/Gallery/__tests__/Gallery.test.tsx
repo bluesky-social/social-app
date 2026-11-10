@@ -1,5 +1,6 @@
 import {createRef, Fragment, useState} from 'react'
 import {
+  Animated,
   Pressable,
   ScrollView,
   type StyleProp,
@@ -57,6 +58,7 @@ beforeEach(() => {
   mockEnv.IS_WEB = false
   mockEnv.IS_ANDROID = false
   mockA11y.screenReaderEnabled = false
+  mockA11y.reduceMotionEnabled = true
   scrollTo.mockClear()
 })
 
@@ -208,6 +210,27 @@ describe('GalleryPageDots', () => {
     expect(screen.getByLabelText('Cards, item 3 of 3')).toBeTruthy()
   })
 
+  it('animates between 8 and 30 pixels unless reduced motion is enabled', () => {
+    const timing = jest.spyOn(Animated, 'timing')
+    threeCards({footer: dots})
+    expect(timing).not.toHaveBeenCalled()
+
+    mockA11y.reduceMotionEnabled = false
+    userScroll(120)
+    for (const toValue of [8, 30]) {
+      expect(timing).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({toValue, useNativeDriver: false}),
+      )
+    }
+
+    timing.mockClear()
+    mockA11y.reduceMotionEnabled = true
+    userScroll(330)
+    expect(timing).not.toHaveBeenCalled()
+    timing.mockRestore()
+  })
+
   it('updates on browser scroll without reporting navigation or moving focus', () => {
     mockEnv.IS_WEB = true
     const onIndexChange = jest.fn()
@@ -249,6 +272,21 @@ describe('GalleryPageDots', () => {
     expect(scrollTo).not.toHaveBeenCalled()
     scrollBy(0)
     expectActive(2)
+  })
+
+  it('updates native dots when revealing an already visible item', () => {
+    const ref = createRef<Gallery.GalleryRef>()
+    const onIndexChange = jest.fn()
+    threeCards({footer: dots, ref, onIndexChange})
+    layout('gallery', 800, 100)
+    act(() => ref.current?.scrollIntoView(2))
+    expect(screen.getByLabelText('Cards, item 3 of 3')).toBeTruthy()
+    expect(scrollTo).not.toHaveBeenCalled()
+    scrollBy(0)
+    expect(screen.getByLabelText('Cards, item 3 of 3')).toBeTruthy()
+    act(() => ref.current?.scrollIntoView(0))
+    expect(screen.getByLabelText('Cards, item 1 of 3')).toBeTruthy()
+    expect(onIndexChange).not.toHaveBeenCalled()
   })
 
   it('reflects programmatic web reveals without reporting navigation', () => {

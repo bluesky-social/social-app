@@ -211,18 +211,28 @@ export function Root({
     )
   })
 
-  /** Sync the active index without reporting user navigation. */
+  const selectPage = useNonReactiveCallback((index: number, offset: number) => {
+    setPageIndex(index)
+    selectedPageOffsetRef.current = offset
+  })
+
+  const updatePageForOffset = useNonReactiveCallback((offset: number) => {
+    const selectedOffset = selectedPageOffsetRef.current
+    if (selectedOffset != null && Math.abs(selectedOffset - offset) < 1) return
+    selectedPageOffsetRef.current = null
+    setPageIndex(getIndexForOffset(itemWidthsRef.current, offset, itemCount))
+  })
+
+  /** Sync the navigation index without reporting user navigation. */
   const syncIndex = useNonReactiveCallback((index: number) => {
     currentIndexRef.current = index
     activeKeyRef.current = keys[index] ?? null
-    setPageIndex(index)
-    selectedPageOffsetRef.current = scrollOffsetRef.current
   })
 
   const setCurrentIndex = useNonReactiveCallback((index: number) => {
     const prev = currentIndexRef.current
-    syncIndex(index)
     if (prev === index) return
+    syncIndex(index)
     onIndexChange?.(index, prev)
   })
 
@@ -286,10 +296,7 @@ export function Root({
       viewportWidth,
       currentOffset: current,
     })
-    if (IS_WEB) {
-      setPageIndex(index)
-      selectedPageOffsetRef.current = next
-    }
+    selectPage(index, next)
     if (next === current) return
     if (!IS_WEB) {
       /*
@@ -316,14 +323,14 @@ export function Root({
     /* Cancel any in-flight keyboard or pointer settle before selecting a dot. */
     setNavigationRevision(revision => revision + 1)
     setCurrentIndex(index)
-    setPageIndex(index)
+    selectPage(index, next)
     setFocusIndex(index)
-    selectedPageOffsetRef.current = next
     if (next !== current) scrollTo(next)
   })
 
   const onSettle = useNonReactiveCallback((index: number) => {
     setCurrentIndex(index)
+    selectPage(index, getScrollNode()?.scrollLeft ?? scrollOffsetRef.current)
     if (!IS_WEB) return
     setFocusIndex(index)
     const node = focusNodesRef.current.get(keys[index]) as HTMLElement | null
@@ -342,6 +349,7 @@ export function Root({
   const onItemFocus = useNonReactiveCallback((index: number) => {
     if (!IS_WEB) return
     syncIndex(index)
+    selectPage(index, getScrollNode()?.scrollLeft ?? scrollOffsetRef.current)
     setFocusIndex(index)
   })
 
@@ -394,6 +402,7 @@ export function Root({
    */
   const onScrollOffset = (offsetX: number, isUserScroll: boolean) => {
     scrollOffsetRef.current = offsetX
+    updatePageForOffset(offsetX)
     const index = getIndexForOffset(itemWidthsRef.current, offsetX, itemCount)
     if (isUserScroll) {
       setCurrentIndex(index)
@@ -411,11 +420,7 @@ export function Root({
        * changing the existing navigation callback or moving keyboard focus.
        * Keep an explicitly selected item when its offset is shared by others.
        */
-      const selectedOffset = selectedPageOffsetRef.current
-      if (selectedOffset != null && Math.abs(selectedOffset - offset) < 1)
-        return
-      selectedPageOffsetRef.current = null
-      setPageIndex(getIndexForOffset(itemWidthsRef.current, offset, itemCount))
+      updatePageForOffset(offset)
       return
     }
     onScrollOffset(offset, userScrollingRef.current)
@@ -477,6 +482,7 @@ export function Root({
               scrollEventThrottle={16}
               onScroll={onScroll}
               onScrollBeginDrag={() => {
+                selectedPageOffsetRef.current = null
                 userScrollingRef.current = true
               }}
               onScrollEndDrag={onScrollEnd}
