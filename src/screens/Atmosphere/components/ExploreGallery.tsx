@@ -53,11 +53,6 @@ export function ExploreGallery({
       {items.map(item => (
         <GalleryPrimitive.Item key={getKey(item)} label={item.title}>
           {focusProps => (
-            /*
-             * The bottom allowance lives inside the item so it is measured and
-             * scrolled with the card, which keeps card shadows from being
-             * clipped.
-             */
             <View style={[a.flex_grow]}>{renderItem(item, focusProps)}</View>
           )}
         </GalleryPrimitive.Item>
