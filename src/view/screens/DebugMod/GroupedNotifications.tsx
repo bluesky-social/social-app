@@ -284,6 +284,10 @@ function createMockNotifications({
       ),
     ],
   })
+  const postGroup = (posts: NonEmptyArray<PostView>) => ({
+    posts,
+    postUris: posts.map(post => post.uri),
+  })
   const postLabels = (on: LabelTarget, author: {did: string}, rkey: string) =>
     labelsFor(on, {
       authorDid: author.did,
@@ -461,7 +465,7 @@ function createMockNotifications({
         ...base('multi-post-like', 2),
         type: 'multiPostLike',
         actor: target,
-        posts: [likedPost, otherLikedPost],
+        ...postGroup([likedPost, otherLikedPost]),
       },
     },
     {
@@ -471,7 +475,7 @@ function createMockNotifications({
         ...base('multi-post-repost', 2),
         type: 'multiPostRepost',
         actor: target,
-        posts: [likedPost, otherLikedPost],
+        ...postGroup([likedPost, otherLikedPost]),
       },
     },
     {
@@ -481,7 +485,7 @@ function createMockNotifications({
         ...base('multi-post-like-via-repost', 2),
         type: 'multiPostLikeViaRepost',
         actor: target,
-        posts: [repostedPost, otherLikedPost],
+        ...postGroup([repostedPost, otherLikedPost]),
       },
     },
     {
@@ -491,7 +495,7 @@ function createMockNotifications({
         ...base('multi-post-repost-via-repost', 2),
         type: 'multiPostRepostViaRepost',
         actor: target,
-        posts: [repostedPost, otherLikedPost],
+        ...postGroup([repostedPost, otherLikedPost]),
       },
     },
     {
@@ -511,6 +515,7 @@ function createMockNotifications({
         ...base('subscribed-post'),
         type: 'subscribedPost',
         items: [subscribedItems[0]],
+        postUris: [subscribedItems[0].post.uri],
       },
     },
     {
@@ -523,6 +528,7 @@ function createMockNotifications({
           groupPosition === 'first'
             ? [subscribedItems[0], subscribedItems[1], subscribedItems[2]]
             : [subscribedItems[1], subscribedItems[0], subscribedItems[2]],
+        postUris: subscribedItems.map(item => item.post.uri),
       },
     },
     {

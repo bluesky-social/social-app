@@ -742,6 +742,25 @@ describe('hydratePage', () => {
       expect(multi.posts[1]).toBe(related(res, PLANTS_POST))
     })
 
+    it('keeps every post uri but blocked and not-found ones', () => {
+      const multi = narrow(
+        hydrateKind({
+          $type: `${NS}#multiPostLikeGroup`,
+          actor: DANIELLE,
+          items: [
+            {post: FUNGUS_POST},
+            {post: BLOCKED_POST},
+            {post: MISSING_POST},
+            {post: NOT_FOUND_POST},
+            {post: PLANTS_POST},
+          ],
+        }),
+        'multiPostLike',
+      )
+      // The API only includes views for the newest 10, so a missing one stays
+      expect(multi.postUris).toEqual([FUNGUS_POST, MISSING_POST, PLANTS_POST])
+    })
+
     it('drops the group when no post remains', () => {
       expect(
         hydrateKind({
@@ -771,6 +790,27 @@ describe('hydratePage', () => {
       expect(subscribed.items).toHaveLength(1)
       expect(subscribed.items[0].actor).toBe(related(res, DANIELLE))
       expect(subscribed.items[0].post).toBe(related(res, FUNGUS_POST))
+    })
+
+    it('keeps every post uri but blocked and not-found ones', () => {
+      const subscribed = narrow(
+        hydrateKind({
+          $type: `${NS}#subscribedPostGroup`,
+          items: [
+            {actor: DANIELLE, post: FUNGUS_POST},
+            {actor: GHOST, post: PLANTS_POST},
+            {actor: MICHAEL, post: BLOCKED_POST},
+            {actor: MICHAEL, post: MISSING_POST},
+            {actor: MICHAEL, post: NOT_FOUND_POST},
+          ],
+        }),
+        'subscribedPost',
+      )
+      expect(subscribed.postUris).toEqual([
+        FUNGUS_POST,
+        PLANTS_POST,
+        MISSING_POST,
+      ])
     })
 
     it('drops the group when no item remains', () => {
