@@ -305,6 +305,10 @@ export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
      * Forwarded to the underlying `Button`, e.g. for a roving focus target.
      */
     ref?: React.Ref<React.ComponentRef<typeof View>>
+    /**
+     * Web-only attribute. Overrides the default `rel` attr on web.
+     */
+    rel?: string
   }
 
 /**
@@ -325,6 +329,7 @@ export function Link({
   shouldProxy,
   overridePresentation,
   peek,
+  rel,
   ...rest
 }: LinkProps) {
   const {href, isExternal, onPress, onLongPress, openExternally} = useLink({
@@ -356,7 +361,7 @@ export function Link({
       {...web({
         hrefAttrs: {
           target: download ? undefined : isExternal ? 'blank' : undefined,
-          rel: isExternal ? 'noopener noreferrer' : undefined,
+          rel: rel ?? (isExternal ? 'noopener noreferrer' : undefined),
           download,
         },
         dataSet: {
