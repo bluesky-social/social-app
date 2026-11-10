@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 
 import {WebAuxClickWrapper} from '#/view/com/util/WebAuxClickWrapper'
-import {atoms as a, select, type Theme, tokens, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {useLink} from '#/components/Link'
 import {SubtleHover} from '#/components/SubtleHover'
 import {SuppressHoverContext, useRowHover} from './hover'
@@ -42,29 +42,14 @@ export function useItemContext() {
 }
 
 /**
- * The background colour of a row, tinted while unread. The dark themes use
- * design's own tints, which aren't in the palette: `primary_25` barely shows
- * against their backgrounds.
+ * The background colour of a row, tinted while unread. Dim uses design's own
+ * tint, which isn't in its palette: its `primary_25` barely shows against
+ * its background.
  */
 export function useRowBackgroundColor(isRead: boolean) {
   const t = useTheme()
   if (isRead) return t.atoms.bg.backgroundColor
-  return select(t.name, {
-    light: t.palette.primary_25,
-    dim: '#071F40',
-    dark: '#202F43',
-  })
-}
-
-/**
- * The colour of a border on or beside a row. The dark theme's unread tint is
- * about as light as `border_contrast_low`, which vanishes against it, so
- * there a border that touches an unread row is a step stronger.
- */
-export function getRowBorderColor(t: Theme, touchesUnread: boolean) {
-  return touchesUnread && t.name === 'dark'
-    ? t.atoms.border_contrast_medium.borderColor
-    : t.atoms.border_contrast_low.borderColor
+  return t.name === 'dim' ? '#071F40' : t.palette.primary_25
 }
 
 /**

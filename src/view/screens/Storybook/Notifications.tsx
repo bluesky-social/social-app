@@ -52,9 +52,10 @@ export function Notifications() {
           a.overflow_hidden,
           t.atoms.border_contrast_low,
         ]}>
-        {notifications.map(notification => (
+        {notifications.map((notification, index) => (
           <NotificationItem
             key={notification.id}
+            hasDivider={index > 0}
             notification={
               readState === 'fixture'
                 ? notification

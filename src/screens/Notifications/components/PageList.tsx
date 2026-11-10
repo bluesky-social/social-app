@@ -33,10 +33,7 @@ import {
   LoadingSkeleton,
   NotificationItem,
 } from '#/screens/Notifications/components/NotificationItem'
-import {
-  getRowBorderColor,
-  useRowBackgroundColor,
-} from '#/screens/Notifications/components/NotificationItem/Item/Root'
+import {useRowBackgroundColor} from '#/screens/Notifications/components/NotificationItem/Item/Root'
 import {usePager} from '#/screens/Notifications/components/PagerView'
 import {RefreshPill} from '#/screens/Notifications/components/RefreshPill'
 import {useRefreshPillMetrics} from '#/screens/Notifications/refreshPillMetrics'
@@ -293,26 +290,14 @@ export function PageList({
                   <SectionHeader
                     section={row.section}
                     isUnreadAbove={isUnreadRow(rows[index - 1])}
-                    isUnreadBelow={isUnreadRow(rows[index + 1])}
                   />
                 )
               case 'notification':
                 return (
-                  <View
-                    style={[
-                      row.hasDivider &&
-                        SHOW_ROW_BORDERS && [
-                          a.border_t,
-                          {
-                            borderColor: getRowBorderColor(
-                              t,
-                              isUnreadBorder(rows[index - 1], row),
-                            ),
-                          },
-                        ],
-                    ]}>
-                    <NotificationItem notification={row.notification} />
-                  </View>
+                  <NotificationItem
+                    notification={row.notification}
+                    hasDivider={row.hasDivider}
+                  />
                 )
               case 'followersHeader':
                 return <FollowedYouHeader />
@@ -374,15 +359,7 @@ export function PageList({
               <View
                 style={[
                   a.pt_xl,
-                  SHOW_ROW_BORDERS && [
-                    a.border_t,
-                    {
-                      borderColor: getRowBorderColor(
-                        t,
-                        isUnreadRow(rows.at(-1)),
-                      ),
-                    },
-                  ],
+                  SHOW_ROW_BORDERS && [a.border_t, t.atoms.border_contrast_low],
                 ]}>
                 <ActivityIndicator />
               </View>
@@ -526,32 +503,17 @@ function isUnreadRow(row: Row | undefined) {
   )
 }
 
-/**
- * Whether the border between two rows touches an unread row, which can make
- * it stronger, see `getRowBorderColor`.
- */
-export function isUnreadBorder(above: Row | undefined, below: Row | undefined) {
-  return isUnreadRow(above) || isUnreadRow(below)
-}
-
 function SectionHeader({
   section,
   isUnreadAbove,
-  isUnreadBelow,
 }: {
   section: 'today' | 'earlier'
   /**
-   * Whether the row above is unread, for the colour of the border "Earlier"
-   * draws above itself. Without row borders, "Earlier" also sits a gap below
-   * the last row, and the gap takes that row's tint so the tint runs right
-   * down to the header's border.
+   * Whether the row above is unread. Without row borders, "Earlier" sits a
+   * gap below the last row, and the gap takes that row's tint so the tint
+   * runs right down to the header's border.
    */
   isUnreadAbove: boolean
-  /**
-   * Whether the row below is unread, for the colour of the border below the
-   * header.
-   */
-  isUnreadBelow: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -568,11 +530,7 @@ function SectionHeader({
           section === 'today' ? a.py_sm : [a.border_t, a.pt_md, a.pb_sm],
           // Rows are divided, so the header is too
           SHOW_ROW_BORDERS && a.border_b,
-          // Per side, since the rows above and below can differ
-          {
-            borderTopColor: getRowBorderColor(t, isUnreadAbove),
-            borderBottomColor: getRowBorderColor(t, isUnreadBelow),
-          },
+          t.atoms.border_contrast_low,
         ]}>
         <Text accessibilityRole="header" style={[a.text_md, a.font_bold]}>
           {section === 'today'
