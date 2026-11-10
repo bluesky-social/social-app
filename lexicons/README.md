@@ -34,8 +34,9 @@ and compute each local CID with `cidForLex` from `@atproto/lex-cbor`.
 The authenticated Activity timeline uses the session's appview client. Its feed
 contains hydrated activities, page-local groups, and overflow counts; it has no
 raw-record sidecars or separate raw endpoint. Missing interaction-owner profiles
-are fetched through `app.bsky.actor.getProfiles` in batches of at most 25. The Raw
-tab inspects the original timeline entries from the same account-scoped query.
+are fetched through `app.bsky.actor.getProfiles` in batches of at most 25. Each
+activity menu can inspect the original timeline entry from the same account-scoped
+query. The Apps tab follows Explore; Explore's app gallery opens it with “See more”.
 
 ## Exception: `place.stream.badge.defs`
 

@@ -39,8 +39,8 @@ import {useTimelineNow} from './useTimelineNow'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Atmosphere'>
 
-/** Matches the Apps position in the sections below, including the Raw tab. */
-const APPS_TAB_INDEX = 3
+/** Matches the Apps position in the sections below. */
+const APPS_TAB_INDEX = 2
 
 export function AtmosphereScreen({}: Props) {
   const t = useTheme()
