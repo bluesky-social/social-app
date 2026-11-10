@@ -68,6 +68,8 @@ export function Content({
 }: {
   children: React.ReactNode
   label: string
+  /** Native-only; web targets already toggle through Popover.Trigger. */
+  targetHandlesToggle?: boolean
 }) {
   const t = useTheme()
   const {position, color} = useContext(TooltipContext)
@@ -101,7 +103,12 @@ export function Content({
           height={ARROW_SIZE / 2}
           fill={style.surface}
         />
-        <View style={[a.px_md, a.py_sm, {maxWidth: BUBBLE_MAX_WIDTH}]}>
+        <View
+          style={[
+            color === 'outlined' ? a.px_sm : a.px_md,
+            a.py_sm,
+            {maxWidth: BUBBLE_MAX_WIDTH},
+          ]}>
           {children}
         </View>
       </Popover.Content>

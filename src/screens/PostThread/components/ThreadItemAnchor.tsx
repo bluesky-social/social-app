@@ -22,6 +22,7 @@ import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {LikesStat} from '#/screens/PostThread/components/LikesStat'
+import {PostViewCount} from '#/screens/PostThread/components/PostViewCount'
 import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
   POST_NUMBER_INLINE_OFFSET,
@@ -525,10 +526,24 @@ function ExpandedPostDetails({
           a.flex_wrap,
           a.gap_md,
         ]}>
-        <Text
-          style={[a.text_sm, t.atoms.text_contrast_medium, {maxWidth: '100%'}]}>
-          {niceDate(i18n, post.indexedAt, 'dot separated')}
-        </Text>
+        <View
+          style={[
+            a.flex_row,
+            a.align_center,
+            a.flex_wrap,
+            a.gap_xs,
+            {maxWidth: '100%'},
+          ]}>
+          <Text
+            style={[
+              a.text_sm,
+              t.atoms.text_contrast_medium,
+              {maxWidth: '100%'},
+            ]}>
+            {niceDate(i18n, post.indexedAt, 'dot separated')}
+          </Text>
+          <PostViewCount key={post.uri} post={post} />
+        </View>
         {isRootPost && (
           <View style={{marginLeft: 'auto'}}>
             <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} plain />
