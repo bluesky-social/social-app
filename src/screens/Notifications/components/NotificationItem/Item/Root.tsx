@@ -52,7 +52,7 @@ export function useRowBackgroundColor(isRead: boolean) {
   return select(t.name, {
     light: t.palette.primary_25,
     dim: '#071F40',
-    dark: '#202F43',
+    dark: '#001533',
   })
 }
 
