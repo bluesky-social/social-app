@@ -32,6 +32,7 @@ export function FeaturedApps({
         }
       />
       <ExploreGallery
+        snapToItems
         items={apps}
         getKey={app => app.id}
         label={l`Featured apps`}
