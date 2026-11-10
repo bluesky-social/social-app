@@ -11,7 +11,7 @@ import {Text} from '#/components/Typography'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {getPostThumbnails} from './media'
-import {QuoteCard} from './post'
+import {Quote} from './post'
 import {SecondaryText} from './text'
 
 /**
@@ -58,7 +58,7 @@ export function PostPreview({
   if (!embed) return null
 
   if (embed.type === 'quote') {
-    return <QuoteCard embed={embed.record} numberOfLines={4} isMuted />
+    return <Quote embed={embed.record} />
   }
 
   const domain = embed.domain
