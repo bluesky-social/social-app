@@ -404,33 +404,37 @@ class SheetView: ExpoView {
     }
   }
 
-  /*
+  /**
    * Static so the closures never capture the deallocating view. Dismissing from
    * the presenting controller also removes anything presented on top of the
-   * sheet. UIKit ignores a dismiss while a transition is running (presenting
-   * this sheet, an interactive swipe, or dismissing a sheet stacked on it), so
-   * retry once it ends. If that transition dismissed the sheet, the guard makes
-   * the retry a no-op.
+   * sheet.
+   *
+   * UIKit drops a dismiss while a transition is running, so wait for it to end
+   * and check again. That covers the present animation, an interactive swipe
+   * (one that completes dismisses the sheet itself, but one that springs back
+   * would otherwise leave the empty sheet up), and a sheet stacked on this one
+   * that's being dismissed. The hop to the next run loop lets UIKit finish the
+   * transition before we look at it again.
    */
   private static func dismissOrphanedSheet(_ sheetVc: SheetViewController) {
     guard let presenting = sheetVc.presentingViewController else {
       return
     }
 
-    let dismiss = {
-      guard sheetVc.presentingViewController === presenting,
-            !sheetVc.isBeingDismissed else {
-        return
-      }
-      presenting.dismiss(animated: true)
-    }
-
     if let coordinator = sheetVc.transitionCoordinator
       ?? sheetVc.presentedViewController?.transitionCoordinator {
-      coordinator.animate(alongsideTransition: nil) { _ in dismiss() }
-    } else {
-      dismiss()
+      coordinator.animate(alongsideTransition: nil) { _ in
+        DispatchQueue.main.async {
+          Self.dismissOrphanedSheet(sheetVc)
+        }
+      }
+      return
     }
+
+    guard !sheetVc.isBeingDismissed else {
+      return
+    }
+    presenting.dismiss(animated: true)
   }
 
   // MARK: - Utils
