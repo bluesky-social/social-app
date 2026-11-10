@@ -203,8 +203,8 @@ Return the summary in exactly this shape:
 ```markdown
 | | Rating | Why |
 | :-- | :-- | :-- |
-| **Risk** | 🟡 Medium | <reason> |
-| **Impact** | 🟢 Low | <reason> |
+| **Risk** | 🟡 Medium | <reason> |
+| **Impact** | 🟢 Low | <reason> |
 
 **Findings:** 1 blocking, 1 non-blocking, posted inline.
 
@@ -217,7 +217,8 @@ Return the summary in exactly this shape:
 - **Unverified** `path:line`: <the assumption, and how to confirm it>
 ```
 
-Count only the severities that occur, so never write "0 blocking". With no
+In the rating cells, put a non-breaking space (U+00A0) between the emoji and
+the word so they never wrap apart. Count only the severities that occur, so never write "0 blocking". With no
 findings, the findings line is `**Findings:** None.` with no list. Leave out the
 "Worth a close look" section when it has no items. Add nothing else: no
 diff summary, praise, checklist, list of what you checked, or caveats about your
