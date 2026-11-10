@@ -48,6 +48,7 @@ export function PostViewCount({post}: {post: app.bsky.feed.defs.PostView}) {
             testID="postViewCount"
             label={l({
               message: plural(count, {one: '# view', other: '# views'}),
+              comment: 'Post view count.',
             })}
             accessibilityHint={l`Shows how view counts work`}
             accessibilityState={{expanded: tooltipVisible}}
