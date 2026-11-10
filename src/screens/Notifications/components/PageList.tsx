@@ -294,16 +294,10 @@ export function PageList({
                 )
               case 'notification':
                 return (
-                  <View
-                    style={[
-                      row.hasDivider &&
-                        SHOW_ROW_BORDERS && [
-                          a.border_t,
-                          t.atoms.border_contrast_low,
-                        ],
-                    ]}>
-                    <NotificationItem notification={row.notification} />
-                  </View>
+                  <NotificationItem
+                    notification={row.notification}
+                    hasDivider={row.hasDivider}
+                  />
                 )
               case 'followersHeader':
                 return <FollowedYouHeader />
