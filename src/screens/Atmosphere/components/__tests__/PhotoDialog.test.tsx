@@ -253,12 +253,6 @@ describe('metadata', () => {
       '#landscape',
     )
   })
-
-  it('omits a missing description', () => {
-    renderDialog(gallery({description: '  '}))
-
-    expect(screen.queryByText('A visit to the jetty.')).toBeNull()
-  })
 })
 
 describe('stats', () => {

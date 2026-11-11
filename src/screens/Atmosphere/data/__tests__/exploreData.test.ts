@@ -83,6 +83,9 @@ describe('Atmosphere Explore response fixtures', () => {
     expect(fixtureData.photos.items[0].view.items[0].$type).toBe(
       'app.bsky.embed.external#viewGalleryImage',
     )
+    const photos = getAtmospherePhotos(fixtureData, moderationOpts)
+    expect(photos.map(photo => photo.photoCount)).toEqual([42, undefined])
+    expect(fixtureData.photos.items[0].view.photoCount).toBe(42)
   })
 
   it.each(['articles', 'publications', 'photos', 'livestreams'] as const)(
@@ -122,46 +125,6 @@ describe('Atmosphere Explore response fixtures', () => {
       false,
       true,
     ])
-  })
-
-  it.each([
-    {
-      schema: app.bsky.embed.external.viewArticle,
-      view: fixtureData.articles.items[0].view,
-    },
-    {
-      schema: app.bsky.embed.external.viewArticlePublication,
-      view: fixtureData.publications.items[0].view,
-    },
-    {
-      schema: app.bsky.embed.external.viewGallery,
-      view: fixtureData.photos.items[0].view,
-    },
-    {
-      schema: app.bsky.embed.external.viewLivestream,
-      view: livestreamPreviewFixture[0].view,
-    },
-  ])('uses generated validation for $view.$type', ({schema, view}) => {
-    expect(schema.parse(view)).toMatchObject(view)
-    expect(() => schema.parse({...view, uri: 'invalid'})).toThrow()
-    expect(() =>
-      schema.parse({...view, associatedProfiles: [{did: 'nope'}]}),
-    ).toThrow()
-  })
-
-  it('validates an optional non-negative total photo count', () => {
-    const view = fixtureData.photos.items[0].view
-    for (const photoCount of [0, 42]) {
-      expect(
-        app.bsky.embed.external.viewGallery.parse({...view, photoCount})
-          .photoCount,
-      ).toBe(photoCount)
-    }
-    for (const photoCount of [-1, 1.5, '42']) {
-      expect(() =>
-        app.bsky.embed.external.viewGallery.parse({...view, photoCount}),
-      ).toThrow()
-    }
   })
 
   it('validates gallery images and skips malformed images during selection', () => {

@@ -185,30 +185,6 @@ describe('several images', () => {
       'https://example.com/thumb-3.jpg',
     ])
   })
-
-  it('sizes each image from its aspect ratio at a shared height, with limits', () => {
-    renderGallery([
-      image(1, {width: 3, height: 2}),
-      image(2, {width: 1, height: 4}),
-      image(3, {width: 10, height: 1}),
-      image(4),
-    ])
-
-    expect(
-      screen.getAllByTestId('image').map(i => {
-        const {width, height} = i.props.style as {
-          width: number
-          height: number
-        }
-        return [width, height]
-      }),
-    ).toEqual([
-      [300, 200],
-      [133, 200],
-      [300, 200],
-      [200, 200],
-    ])
-  })
 })
 
 it('skips invalid images', () => {

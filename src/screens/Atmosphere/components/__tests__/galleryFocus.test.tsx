@@ -1,5 +1,4 @@
-import {StyleSheet, type ViewProps} from 'react-native'
-import {fireEvent, render, screen} from '@testing-library/react-native'
+import {fireEvent, render, screen, within} from '@testing-library/react-native'
 
 import {type ItemFocusProps} from '#/components/Gallery'
 import {type app} from '#/lexicons'
@@ -70,6 +69,7 @@ jest.mock('#/components/icons/Play', () => ({
 }))
 
 const mockTriggerOnFocus = jest.fn()
+const mockTriggerOnPress = jest.fn()
 const mockOpenLink = jest.fn()
 const mockNavigate = jest.fn()
 const mockOpenPhotoDialog = jest.fn()
@@ -168,8 +168,13 @@ jest.mock('#/components/Menu', () => ({
   Trigger: ({
     children,
   }: {
-    children: (state: {props: {onFocus: () => void}}) => React.ReactNode
-  }) => children({props: {onFocus: mockTriggerOnFocus}}),
+    children: (state: {
+      props: {onFocus: () => void; onPress: () => void}
+    }) => React.ReactNode
+  }) =>
+    children({
+      props: {onFocus: mockTriggerOnFocus, onPress: mockTriggerOnPress},
+    }),
   Outer: () => null,
 }))
 jest.mock('#/components/moderation/ReportDialog', () => ({
@@ -220,6 +225,7 @@ jest.mock('#/components/Link', () => {
         accessibilityValue={{text: to}}
         ref={ref as never}
         tabIndex={tabIndex as never}
+        onPress={() => mockOpenLink(to)}
         {...{onMouseEnter, onMouseLeave}}
         onFocus={onFocus}
         onBlur={onBlur}
@@ -264,6 +270,8 @@ type CardCase = [
   /** testID of the card's primary control, which owns the gallery focus. */
   primaryTestID: string,
   labelPattern: RegExp,
+  /** The spy the card's primary control is expected to trigger. */
+  primaryEffect: jest.Mock,
 ]
 
 /* LivestreamCard's primary control is still a Link, PhotoCard's is a Button. */
@@ -273,12 +281,14 @@ const cards: CardCase[] = [
     focus => <LivestreamCard livestream={livestream} galleryFocus={focus} />,
     'link',
     /^Open/,
+    mockOpenLink,
   ],
   [
     'PhotoCard',
     focus => <PhotoCard photo={photo} galleryFocus={focus} />,
     'atmospherePhotoCard',
     /^View photos in/,
+    mockOpenPhotoDialog,
   ],
 ]
 
@@ -378,57 +388,66 @@ it.each(interactions)(
   },
 )
 
-describe.each(cards)('%s menu trigger', (_name, renderCard, primary) => {
-  const getTrigger = () => screen.getByTestId('atmosphereCardMenuTrigger')
+describe.each(cards)(
+  '%s menu trigger',
+  (_name, renderCard, primary, _label, primaryEffect) => {
+    const getTrigger = () => screen.getByTestId('atmosphereCardMenuTrigger')
 
-  it('mirrors the roving tabIndex but not the focus ref', () => {
-    const galleryFocus = {
-      focusRef: jest.fn(),
-      tabIndex: 0 as const,
-      onFocus: jest.fn(),
-    }
-    const {rerender} = render(renderCard(galleryFocus))
+    it('mirrors the roving tabIndex but not the focus ref', () => {
+      const galleryFocus = {
+        focusRef: jest.fn(),
+        tabIndex: 0 as const,
+        onFocus: jest.fn(),
+      }
+      const {rerender} = render(renderCard(galleryFocus))
 
-    expect(getTrigger().props.tabIndex).toBe(0)
-    expect(galleryFocus.focusRef).toHaveBeenCalledTimes(1)
-    expect(screen.getByTestId(primary).props.tabIndex).toBe(0)
+      expect(getTrigger().props.tabIndex).toBe(0)
+      expect(galleryFocus.focusRef).toHaveBeenCalledTimes(1)
+      expect(screen.getByTestId(primary).props.tabIndex).toBe(0)
 
-    rerender(renderCard({...galleryFocus, tabIndex: -1}))
-    expect(getTrigger().props.tabIndex).toBe(-1)
+      rerender(renderCard({...galleryFocus, tabIndex: -1}))
+      expect(getTrigger().props.tabIndex).toBe(-1)
 
-    rerender(renderCard())
-    expect(getTrigger().props.tabIndex).toBeUndefined()
-  })
+      rerender(renderCard())
+      expect(getTrigger().props.tabIndex).toBeUndefined()
+    })
 
-  it('calls both the menu and gallery focus callbacks', () => {
-    mockTriggerOnFocus.mockClear()
-    const galleryFocus = {
-      focusRef: jest.fn(),
-      tabIndex: 0 as const,
-      onFocus: jest.fn(),
-    }
-    render(renderCard(galleryFocus))
+    it('calls both the menu and gallery focus callbacks', () => {
+      mockTriggerOnFocus.mockClear()
+      const galleryFocus = {
+        focusRef: jest.fn(),
+        tabIndex: 0 as const,
+        onFocus: jest.fn(),
+      }
+      render(renderCard(galleryFocus))
 
-    fireEvent(getTrigger(), 'focus')
-    expect(mockTriggerOnFocus).toHaveBeenCalledTimes(1)
-    expect(galleryFocus.onFocus).toHaveBeenCalledTimes(1)
-  })
+      fireEvent(getTrigger(), 'focus')
+      expect(mockTriggerOnFocus).toHaveBeenCalledTimes(1)
+      expect(galleryFocus.onFocus).toHaveBeenCalledTimes(1)
+    })
 
-  it('does not throw on focus without gallery focus props', () => {
-    render(renderCard())
-    expect(() => fireEvent(getTrigger(), 'focus')).not.toThrow()
-  })
+    it('does not throw on focus without gallery focus props', () => {
+      render(renderCard())
+      expect(() => fireEvent(getTrigger(), 'focus')).not.toThrow()
+    })
 
-  it('is reachable: outside the link and any pointer-disabled ancestor', () => {
-    render(renderCard())
+    it('activates independently of the primary control', () => {
+      render(renderCard())
 
-    const link = screen.getByTestId(primary)
-    let node = getTrigger().parent
-    while (node) {
-      expect(node).not.toBe(link)
-      const style = StyleSheet.flatten((node.props as ViewProps).style)
-      expect(style?.pointerEvents).not.toBe('none')
-      node = node.parent
-    }
-  })
-})
+      expect(
+        within(screen.getByTestId(primary)).queryByTestId(
+          'atmosphereCardMenuTrigger',
+        ),
+      ).toBeNull()
+
+      fireEvent.press(getTrigger())
+      expect(mockTriggerOnPress).toHaveBeenCalledTimes(1)
+      expect(mockOpenPhotoDialog).not.toHaveBeenCalled()
+      expect(mockOpenLink).not.toHaveBeenCalled()
+
+      fireEvent.press(screen.getByTestId(primary))
+      expect(primaryEffect).toHaveBeenCalledTimes(1)
+      expect(mockTriggerOnPress).toHaveBeenCalledTimes(1)
+    })
+  },
+)
