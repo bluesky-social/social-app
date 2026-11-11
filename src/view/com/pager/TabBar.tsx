@@ -326,6 +326,8 @@ export function TabBar({
   return (
     <Center
       testID={testID}
+      // The tabs keep clear of the vertical bar themselves, see below
+      ignoreVerticalBarInsets
       style={[!transparent && t.atoms.bg, a.flex_row]}
       accessibilityRole="tablist">
       <BlockDrawerGesture>

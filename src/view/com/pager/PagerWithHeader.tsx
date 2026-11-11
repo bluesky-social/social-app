@@ -313,6 +313,8 @@ let PagerTabBar = ({
          */}
         <Center
           pointerEvents="box-none"
+          // Headers keep clear of the vertical bar themselves
+          ignoreVerticalBarInsets
           style={
             headerOverflowInset != null && {
               overflow: 'hidden',
