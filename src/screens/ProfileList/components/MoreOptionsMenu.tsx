@@ -167,7 +167,7 @@ export function MoreOptionsMenu({
 
   return (
     <>
-      <Menu.Root>
+      <Menu.Root inline>
         <Menu.Trigger label={l`More options`}>
           {({props}) => (
             <Button

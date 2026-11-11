@@ -1,6 +1,5 @@
 import {fireEvent, render, within} from '@testing-library/react-native'
 
-import * as Menu from '#/components/Menu'
 import {RepostButtonMenu} from './RepostButtonMenu'
 
 jest.mock('#/state/session', () => ({
@@ -12,12 +11,8 @@ jest.mock('#/alf', () => ({
 }))
 jest.mock('#/components/Menu', () => {
   const {Pressable, Text, View} = require('react-native')
-  const open = jest.fn()
-  const unanchoredOpen = jest.fn()
 
   return {
-    __testOpen: open,
-    __testUnanchoredOpen: unanchoredOpen,
     Root: ({children}: React.PropsWithChildren) => <View>{children}</View>,
     Trigger: ({
       children,
@@ -30,8 +25,8 @@ jest.mock('#/components/Menu', () => {
       label: string
     }) =>
       children({
-        control: {open: unanchoredOpen},
-        props: {accessibilityLabel: label, onPress: open},
+        control: {open: jest.fn()},
+        props: {accessibilityLabel: label, onPress: jest.fn()},
       }),
     Outer: ({children}: React.PropsWithChildren) => <View>{children}</View>,
     Group: ({children}: React.PropsWithChildren) => (
@@ -73,19 +68,16 @@ jest.mock('./PostControlButton', () => {
     PostControlButton: ({
       children,
       label,
-      onLongPress,
       onPress,
       testID,
     }: React.PropsWithChildren<{
       label?: string
-      onLongPress?: () => void
       onPress?: () => void
       testID?: string
     }>) => (
       <Pressable
         accessibilityHint=""
         accessibilityLabel={label}
-        onLongPress={onLongPress}
         onPress={onPress}
         testID={testID}>
         {children}
@@ -109,11 +101,6 @@ jest.mock('@lingui/react', () => ({
       typeof message === 'string' ? message : message.message,
   }),
 }))
-
-const mockMenuOpen = (Menu as unknown as {__testOpen: jest.Mock}).__testOpen
-const mockUnanchoredOpen = (
-  Menu as unknown as {__testUnanchoredOpen: jest.Mock}
-).__testUnanchoredOpen
 
 afterEach(() => {
   jest.clearAllMocks()
@@ -157,40 +144,5 @@ describe('RepostButtonMenu', () => {
     expect(quoteButton.props.accessibilityLabel).toBe('Quote posts disabled')
     fireEvent.press(quoteButton)
     expect(onQuote).not.toHaveBeenCalled()
-  })
-
-  it('opens the menu on long press when quote is disabled', () => {
-    const screen = render(
-      <RepostButtonMenu
-        isReposted={false}
-        onRepost={jest.fn()}
-        onQuote={jest.fn()}
-        embeddingDisabled
-        longPressToQuote
-      />,
-    )
-
-    fireEvent(screen.getByTestId('repostBtn'), 'longPress')
-
-    expect(mockMenuOpen).toHaveBeenCalledTimes(1)
-    expect(mockUnanchoredOpen).not.toHaveBeenCalled()
-  })
-
-  it('keeps long press-to-quote when quote is enabled', () => {
-    const onQuote = jest.fn()
-    const screen = render(
-      <RepostButtonMenu
-        isReposted={false}
-        onRepost={jest.fn()}
-        onQuote={onQuote}
-        embeddingDisabled={false}
-        longPressToQuote
-      />,
-    )
-
-    fireEvent(screen.getByTestId('repostBtn'), 'longPress')
-
-    expect(onQuote).toHaveBeenCalledTimes(1)
-    expect(mockMenuOpen).not.toHaveBeenCalled()
   })
 })

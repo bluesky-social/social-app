@@ -54,9 +54,10 @@ export function MemberMenu({
   const removeMemberPrompt = Prompt.usePromptControl()
 
   const [menuDidOpen, setMenuDidOpen] = useState(false)
-  const {data: convoAvailability} = useGetConvoAvailabilityQuery(profile.did, {
-    enabled: menuDidOpen,
-  })
+  const {data: prefetchedAvailability, refetch: fetchAvailability} =
+    useGetConvoAvailabilityQuery(profile.did, {
+      enabled: menuDidOpen,
+    })
   const {mutate: initiateConvo} = useGetConvoForMembers({
     onSuccess: ({convo}) => {
       ax.metric('chat:open', {logContext: 'ConvoSettings'})
@@ -78,7 +79,7 @@ export function MemberMenu({
   })
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
 
-  const messageMember = () => {
+  const openChat = (convoAvailability: typeof prefetchedAvailability) => {
     if (!convoAvailability?.canChat) {
       return
     }
@@ -91,6 +92,19 @@ export function MemberMenu({
     } else {
       ax.metric('chat:create', {logContext: 'ConvoSettings'})
       initiateConvo([profile.did])
+    }
+  }
+
+  const messageMember = () => {
+    if (prefetchedAvailability) {
+      openChat(prefetchedAvailability)
+    } else {
+      /*
+       * The trigger prefetches this, but on iOS its onPress only runs when
+       * the menu first opens, and the badge trigger's never does, since its
+       * onPress is nested in `pressableProps`.
+       */
+      void fetchAvailability().then(({data}) => openChat(data))
     }
   }
 
@@ -138,7 +152,7 @@ export function MemberMenu({
 
   return (
     <>
-      <Menu.Root>
+      <Menu.Root inline>
         <Menu.Trigger label={l`Open chat member options for ${displayName}`}>
           {({props, state, control: menuControl}) => {
             const isActive =
