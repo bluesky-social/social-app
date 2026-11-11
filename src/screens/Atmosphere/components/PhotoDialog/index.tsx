@@ -90,6 +90,7 @@ function PhotoDialogInner({
       </View>
       <ProfileCard.Link
         profile={author}
+        onPress={() => control.close()}
         style={[a.flex_row, a.align_center, a.gap_md, a.py_sm, a.pb_xs]}>
         <ProfileCard.Header>
           <ProfileCard.Avatar
@@ -114,6 +115,7 @@ function PhotoDialogInner({
             value={photo.description}
             enableTags
             disableMentionFacetValidation
+            onLinkPress={() => control.close()}
             style={[a.text_md, a.leading_snug]}
           />
         ) : null}

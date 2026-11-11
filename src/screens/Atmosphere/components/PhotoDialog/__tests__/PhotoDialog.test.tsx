@@ -50,15 +50,18 @@ jest.mock('#/components/Link', () => {
   return {
     InlineLinkText: ({
       to,
+      onPress,
       children,
     }: {
       to: string
+      onPress?: React.ComponentProps<typeof Text>['onPress']
       children: React.ReactNode
     }) => (
       <Text
         accessibilityRole="link"
         accessibilityLabel={to}
-        accessibilityHint="">
+        accessibilityHint=""
+        onPress={onPress}>
         {children}
       </Text>
     ),
@@ -89,7 +92,21 @@ jest.mock('#/components/ProfileCard', () => {
     jest.requireActual<typeof import('react-native')>('react-native')
   const passthrough = ({children}: {children?: React.ReactNode}) => children
   return {
-    Link: passthrough,
+    Link: ({
+      onPress,
+      children,
+    }: {
+      onPress?: React.ComponentProps<typeof Text>['onPress']
+      children: React.ReactNode
+    }) => (
+      <Text
+        accessibilityRole="link"
+        accessibilityLabel="Author profile"
+        accessibilityHint=""
+        onPress={onPress}>
+        {children}
+      </Text>
+    ),
     Header: passthrough,
     Avatar: () => null,
     NameAndHandle: ({
@@ -258,6 +275,22 @@ describe('metadata', () => {
     expect(screen.getByRole('link', {name: '#landscape'})).toHaveTextContent(
       '#landscape',
     )
+  })
+
+  it.each([
+    'Author profile',
+    'https://example.com/photos',
+    '/profile/author.test',
+  ])('dismisses the dialog when pressing %s', name => {
+    renderDialog(
+      gallery({
+        description: 'See https://example.com/photos by @author.test',
+      }),
+    )
+
+    fireEvent.press(screen.getByRole('link', {name}))
+
+    expect(mockClose).toHaveBeenCalledTimes(1)
   })
 })
 
