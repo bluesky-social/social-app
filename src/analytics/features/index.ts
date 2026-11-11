@@ -125,6 +125,25 @@ export function getFeatureDescription(feature: Features, i18n: I18n) {
           }),
         ),
       }
+    case Features.NativeMenusEnable:
+      // Web always renders menus as dropdowns, see `RootProps['inline']`
+      if (env.IS_WEB) return null
+      return {
+        key: feature,
+        name: i18n._(
+          msg({
+            message: 'Native menus',
+            comment: 'Name for a feature flag',
+          }),
+        ),
+        description: i18n._(
+          msg({
+            message:
+              'Some menus open as your phone’s own menus, right next to the button you tapped, instead of sliding up from the bottom of the screen.',
+            comment: 'Description of a feature flag (Native menus)',
+          }),
+        ),
+      }
     case Features.ModerationInboxEnable:
       return {
         key: feature,

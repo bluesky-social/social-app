@@ -31,6 +31,11 @@ jest.mock('#/components/Button', () => ({
   ButtonText: () => null,
 }))
 jest.mock('#/components/Typography', () => ({Text: () => null}))
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({
+    features: {enabled: () => true, NativeMenusEnable: 'native_menus:enable'},
+  }),
+}))
 jest.mock('#/alf', () => ({atoms: {}}))
 jest.mock('@lingui/react/macro', () => ({
   useLingui: () => ({t: () => 'Menu'}),
