@@ -184,6 +184,11 @@
           },
           "description": "The media items in the gallery. Each item may be of a different type, but all types must be supported by the client."
         },
+        "photoCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of photos in the gallery, which may exceed the number of hydrated items."
+        },
         "title": {
           "type": "string"
         },

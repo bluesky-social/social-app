@@ -10,16 +10,19 @@ import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {
   getAssociatedProfile,
-  getGalleryImage,
+  getGalleryImages,
 } from '#/screens/Atmosphere/data/exploreData'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import {type ItemFocusProps} from '#/components/Gallery'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2'
-import {Link} from '#/components/Link'
+import {Image_Stroke2_Corner2_Rounded as ImageIcon} from '#/components/icons/Image'
 import {Text} from '#/components/Typography'
 import {type app, social} from '#/lexicons'
 import {AtmosphereCardMenu} from './AtmosphereCardMenu'
+import {PhotoDialog} from './PhotoDialog'
 
 export function PhotoCard({
   photo,
@@ -35,10 +38,14 @@ export function PhotoCard({
     onIn: onInteract,
     onOut: onInteractOut,
   } = useInteractionState()
+  const dialogControl = useDialogControl()
   const moderationOpts = useModerationOpts()
   const authorProfile = getAssociatedProfile(photo.associatedProfiles)
-  const image = getGalleryImage(photo)
+  const photos = getGalleryImages(photo)
+  const image = photos[0]
   const likeCount = photo.likeCount ?? 0
+  const photoCount = photo.photoCount ?? photos.length
+  const title = photo.title
 
   if (!authorProfile || !image) return null
 
@@ -50,18 +57,34 @@ export function PhotoCard({
     moderation?.ui('displayName'),
   )
 
+  const countPillStyle = [
+    a.flex_row,
+    a.align_center,
+    a.gap_2xs,
+    a.rounded_full,
+    t.atoms.bg,
+    {paddingVertical: 5, paddingHorizontal: 7},
+  ]
+
   return (
     <View style={[a.flex_grow, a.w_full]}>
-      <Link
-        to={photo.uri}
-        label={l`Open ${photo.title}`}
-        accessibilityHint=""
+      <Button
+        testID="atmospherePhotoCard"
+        label={l({
+          message: `View photos in ${title}`,
+          comment:
+            'Accessibility label for a card that opens a photo gallery. {title} is the gallery title, written by its author.',
+        })}
+        accessibilityHint={l({
+          message: 'Opens the photos in a dialog',
+          comment:
+            'Accessibility hint for a card that opens a photo gallery in a dialog (a popup window) rather than navigating away.',
+        })}
         ref={galleryFocus?.focusRef}
         tabIndex={galleryFocus?.tabIndex}
-        {...web({
-          onMouseEnter: onInteract,
-          onMouseLeave: onInteractOut,
-        })}
+        onPress={() => dialogControl.open()}
+        onHoverIn={onInteract}
+        onHoverOut={onInteractOut}
         onFocus={() => {
           onInteract()
           galleryFocus?.onFocus()
@@ -96,30 +119,25 @@ export function PhotoCard({
               ]}
             />
           ) : undefined}
-          {likeCount > 0 ? (
-            <View
-              accessible={false}
-              pointerEvents="none"
-              style={[
-                a.absolute,
-                a.flex_row,
-                a.align_center,
-                a.gap_2xs,
-                a.rounded_full,
-                t.atoms.bg,
-                {
-                  top: 8,
-                  left: 8,
-                  paddingVertical: 5,
-                  paddingHorizontal: 7,
-                },
-              ]}>
-              <Heart size="xs" fill={t.atoms.text.color} />
+          <View
+            accessible={false}
+            pointerEvents="none"
+            style={[a.absolute, a.flex_row, a.gap_xs, {top: 8, left: 8}]}>
+            {likeCount > 0 ? (
+              <View testID="atmospherePhotoCardLikes" style={countPillStyle}>
+                <Heart size="xs" fill={t.atoms.text.color} />
+                <Text style={[a.text_xs, a.font_medium, t.atoms.text]}>
+                  {formatCount(i18n, likeCount)}
+                </Text>
+              </View>
+            ) : undefined}
+            <View testID="atmospherePhotoCardPhotos" style={countPillStyle}>
+              <ImageIcon size="xs" fill={t.atoms.text.color} />
               <Text style={[a.text_xs, a.font_medium, t.atoms.text]}>
-                {formatCount(i18n, likeCount)}
+                {formatCount(i18n, photoCount)}
               </Text>
             </View>
-          ) : undefined}
+          </View>
         </View>
         <Text
           emoji
@@ -138,7 +156,7 @@ export function PhotoCard({
             {authorName}
           </Text>
         </View>
-      </Link>
+      </Button>
       <AtmosphereCardMenu
         type="photo"
         item={photo}
@@ -147,6 +165,11 @@ export function PhotoCard({
         galleryFocus={galleryFocus}
         offsetY={a.p_md.padding}
         offsetX={a.p_md.padding}
+      />
+      <PhotoDialog
+        control={dialogControl}
+        photo={photo}
+        author={authorProfile}
       />
     </View>
   )

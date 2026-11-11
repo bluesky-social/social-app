@@ -2,6 +2,7 @@ import {useState} from 'react'
 import {RefreshControl, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {
@@ -33,6 +34,7 @@ export function AtmosphereExploreTab({
   const t = useTheme()
   const {t: l} = useLingui()
   const {data, isError, isPending, refetch} = useAtmosphereExploreQuery()
+  const moderationOpts = useModerationOpts()
   const [isRefreshing, setIsRefreshing] = useState(false)
 
   async function onRefresh() {
@@ -93,7 +95,7 @@ export function AtmosphereExploreTab({
       refreshControl={refreshControl}
       contentContainerStyle={[a.pb_xl]}>
       <Gallery.Bleed>
-        <View style={[a.gap_xl, a.py_lg]}>
+        <View style={[a.gap_lg, a.py_lg]}>
           {isError ? (
             <View style={{paddingHorizontal: EXPLORE_SECTION_PADDING}}>
               {errorMessage}
@@ -107,11 +109,13 @@ export function AtmosphereExploreTab({
             apps={getAtmosphereExploreApps(data)}
             onPressSeeMore={onPressSeeMoreApps}
           />
-          <FeaturedArticles articles={getAtmosphereArticles(data)} />
+          <FeaturedArticles
+            articles={getAtmosphereArticles(data, moderationOpts)}
+          />
           <FeaturedLivestreams livestreams={getAtmosphereLivestreams(data)} />
-          <FeaturedPhotos photos={getAtmospherePhotos(data)} />
+          <FeaturedPhotos photos={getAtmospherePhotos(data, moderationOpts)} />
           <FeaturedPublications
-            publications={getAtmospherePublications(data)}
+            publications={getAtmospherePublications(data, moderationOpts)}
           />
         </View>
       </Gallery.Bleed>

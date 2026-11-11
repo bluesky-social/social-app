@@ -94,7 +94,17 @@ export type CommonNavigatorParams = {
   Search: SearchParams
   Hashtag: {tag: string; author?: string}
   Topic: {topic: string}
-  MessagesConversation: {conversation: string; embed?: string; accept?: true}
+  MessagesConversation: {
+    conversation: string
+    /** A post URI to stage as a quoted-post embed. */
+    embed?: string
+    /**
+     * Text to stage in the message composer, e.g. a shared external URL. It's
+     * consumed once and never sent automatically.
+     */
+    text?: string
+    accept?: true
+  }
   MessagesConversationSettings: {conversation: string}
   MessagesJoinRequests: {conversation: string}
   MessagesSettings: undefined

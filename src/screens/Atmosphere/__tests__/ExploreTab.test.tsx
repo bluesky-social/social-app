@@ -1,5 +1,6 @@
 import {type RefreshControlProps} from 'react-native'
 import {createDeferrable} from '@atproto/common-web'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
 import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/exploreResponse'
@@ -13,6 +14,10 @@ jest.mock('@lingui/react', () => ({
     _: (message: {message?: string} | string) =>
       typeof message === 'string' ? message : (message.message ?? ''),
   }),
+}))
+
+jest.mock('#/state/preferences/moderation-opts', () => ({
+  useModerationOpts: () => mockModerationOpts,
 }))
 
 jest.mock('#/screens/Atmosphere/data/useAtmosphereExploreQuery', () => ({
@@ -95,6 +100,17 @@ jest.mock('#/screens/Atmosphere/components/FeaturedPhotos', () => ({
   FeaturedPhotos: mockSection('photos', 'photos'),
 }))
 
+const defaultModerationOpts: ModerationOpts = {
+  userDid: undefined,
+  prefs: {
+    adultContentEnabled: true,
+    labels: {},
+    labelers: [],
+    mutedWords: [],
+    hiddenPosts: [],
+  },
+}
+let mockModerationOpts: ModerationOpts | undefined
 const mockQuery = jest.mocked(useAtmosphereExploreQuery)
 const refetch = jest.fn()
 
@@ -154,6 +170,7 @@ const data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody = {
 
 beforeEach(() => {
   jest.clearAllMocks()
+  mockModerationOpts = defaultModerationOpts
 })
 
 describe('AtmosphereExploreTab', () => {
@@ -197,6 +214,40 @@ describe('AtmosphereExploreTab', () => {
       }),
     ).toBeNull()
     expect(screen.queryByTestId('retry')).toBeNull()
+  })
+
+  it('withholds moderated sections until preferences are ready without hiding other sections', () => {
+    mockModerationOpts = undefined
+    setQuery({data: exploreResponseFixture})
+    render(<AtmosphereExploreTab />)
+
+    expect(screen.queryByText(/^articles:/)).toBeNull()
+    expect(screen.queryByText(/^photos:/)).toBeNull()
+    expect(screen.queryByText(/^publications:/)).toBeNull()
+    expect(screen.getByText(/^apps:/)).toBeTruthy()
+    expect(screen.getByText(/^banner:/)).toBeTruthy()
+  })
+
+  it('reapplies changed moderation preferences to cached views without refetching', () => {
+    setQuery({data})
+    const {rerender} = render(<AtmosphereExploreTab />)
+    expect(screen.getByText('articles:Live article')).toBeTruthy()
+
+    mockModerationOpts = {
+      ...defaultModerationOpts,
+      prefs: {
+        ...defaultModerationOpts.prefs,
+        mutedWords: [{value: 'Live article', targets: ['content']}],
+      },
+    }
+    rerender(<AtmosphereExploreTab />)
+    expect(screen.queryByText(/^articles:/)).toBeNull()
+    expect(screen.getByText('apps:Live app')).toBeTruthy()
+    expect(refetch).not.toHaveBeenCalled()
+
+    mockModerationOpts = defaultModerationOpts
+    rerender(<AtmosphereExploreTab />)
+    expect(screen.getByText('articles:Live article')).toBeTruthy()
   })
 
   it('renders the first five nonfeatured recommendations in server order', () => {

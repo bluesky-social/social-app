@@ -5,8 +5,8 @@ import {useLingui} from '@lingui/react/macro'
 import {niceDate} from '#/lib/strings/time'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useTheme} from '#/alf'
+import {ArrowPathUp_Stroke2_Corner1_Rounded as ArrowTopCircleIcon} from '#/components/icons/Arrow'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
-import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 
@@ -30,7 +30,7 @@ export function DocumentStats({
       )}
       {!!likeCount && (
         <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
-          <Heart size="xs" style={t.atoms.text_contrast_medium} />
+          <ArrowTopCircleIcon size="xs" style={t.atoms.text_contrast_medium} />
           <Text
             style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
             {formatCount(i18n, likeCount)}

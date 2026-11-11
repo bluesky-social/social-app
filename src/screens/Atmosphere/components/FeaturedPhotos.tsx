@@ -20,7 +20,8 @@ export function FeaturedPhotos({
   if (!photos.length) return null
 
   return (
-    <View style={[a.gap_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
+    <View
+      style={[a.gap_md, a.pb_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
       <ExploreSectionHeader title={l`Featured photos`} />
       <Gallery.Root
         stretch

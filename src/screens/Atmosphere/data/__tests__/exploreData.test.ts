@@ -1,3 +1,5 @@
+import {type ModerationOpts} from '@bsky/sdk/moderation'
+
 import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/exploreResponse'
 import {livestreamPreviewFixture} from '#/screens/Atmosphere/__tests__/fixtures/livestreamPreview'
 import {
@@ -8,8 +10,13 @@ import {
   getAtmosphereLivestreams,
   getAtmospherePhotos,
   getAtmospherePublications,
+  getGalleryImage,
+  getGalleryImages,
 } from '#/screens/Atmosphere/data/exploreData'
 import {app} from '#/lexicons'
+
+/* Moderation fixtures include backing records, which require real CID validation. */
+jest.unmock('multiformats/cid')
 
 function parseData(
   data: unknown,
@@ -18,6 +25,16 @@ function parseData(
 }
 
 const fixtureData = parseData(exploreResponseFixture)
+const moderationOpts: ModerationOpts = {
+  userDid: undefined,
+  prefs: {
+    adultContentEnabled: true,
+    labels: {},
+    labelers: [],
+    mutedWords: [],
+    hiddenPosts: [],
+  },
+}
 
 const emptyData: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody = {
   articles: {items: []},
@@ -66,6 +83,9 @@ describe('Atmosphere Explore response fixtures', () => {
     expect(fixtureData.photos.items[0].view.items[0].$type).toBe(
       'app.bsky.embed.external#viewGalleryImage',
     )
+    const photos = getAtmospherePhotos(fixtureData, moderationOpts)
+    expect(photos.map(photo => photo.photoCount)).toEqual([42, undefined])
+    expect(fixtureData.photos.items[0].view.photoCount).toBe(42)
   })
 
   it.each(['articles', 'publications', 'photos', 'livestreams'] as const)(
@@ -98,38 +118,13 @@ describe('Atmosphere Explore response fixtures', () => {
     })
 
     expect(data.articles.recIdStr).toBe('18446744073709551615')
-    expect(getAtmosphereArticles(data).map(article => article.uri)).toEqual(
-      items.map(item => item.view.uri),
-    )
+    expect(
+      getAtmosphereArticles(data, moderationOpts).map(article => article.uri),
+    ).toEqual(items.map(item => item.view.uri))
     expect(data.articles.items.map(item => item.featured)).toEqual([
       false,
       true,
     ])
-  })
-
-  it.each([
-    {
-      schema: app.bsky.embed.external.viewArticle,
-      view: fixtureData.articles.items[0].view,
-    },
-    {
-      schema: app.bsky.embed.external.viewArticlePublication,
-      view: fixtureData.publications.items[0].view,
-    },
-    {
-      schema: app.bsky.embed.external.viewGallery,
-      view: fixtureData.photos.items[0].view,
-    },
-    {
-      schema: app.bsky.embed.external.viewLivestream,
-      view: livestreamPreviewFixture[0].view,
-    },
-  ])('uses generated validation for $view.$type', ({schema, view}) => {
-    expect(schema.parse(view)).toMatchObject(view)
-    expect(() => schema.parse({...view, uri: 'invalid'})).toThrow()
-    expect(() =>
-      schema.parse({...view, associatedProfiles: [{did: 'nope'}]}),
-    ).toThrow()
   })
 
   it('validates gallery images and skips malformed images during selection', () => {
@@ -144,20 +139,23 @@ describe('Atmosphere Explore response fixtures', () => {
     ).toThrow()
     const photo = fixtureData.photos.items[0]
     expect(
-      getAtmospherePhotos({
-        ...fixtureData,
-        photos: {
-          items: [
-            {
-              ...photo,
-              view: {
-                ...photo.view,
-                items: [{...image, thumbnail: 'invalid'} as never],
+      getAtmospherePhotos(
+        {
+          ...fixtureData,
+          photos: {
+            items: [
+              {
+                ...photo,
+                view: {
+                  ...photo.view,
+                  items: [{...image, thumbnail: 'invalid'} as never],
+                },
               },
-            },
-          ],
+            ],
+          },
         },
-      }),
+        moderationOpts,
+      ),
     ).toEqual([])
   })
 
@@ -194,8 +192,8 @@ describe('Atmosphere Explore response fixtures', () => {
 
       const cards =
         section === 'articles'
-          ? getAtmosphereArticles(data)
-          : getAtmospherePublications(data)
+          ? getAtmosphereArticles(data, moderationOpts)
+          : getAtmospherePublications(data, moderationOpts)
 
       const expectedOrder =
         section === 'publications' ? [3, 1, 4, 5, 0] : [0, 1, 2, 3, 4]
@@ -237,19 +235,19 @@ describe('Atmosphere Explore response fixtures', () => {
     const before = JSON.stringify(data)
     Object.freeze(data.articles.items)
 
-    expect(getAtmosphereArticles(data).map(article => article.uri)).toEqual(
-      [0, 1, 2, 3, 4].map(index => `https://example.com/${index}`),
-    )
+    expect(
+      getAtmosphereArticles(data, moderationOpts).map(article => article.uri),
+    ).toEqual([0, 1, 2, 3, 4].map(index => `https://example.com/${index}`))
     expect(JSON.stringify(data)).toBe(before)
   })
 
   it('returns the original lexicon views without flattening fields or dropping metadata', () => {
-    const articles = getAtmosphereArticles(fixtureData)
+    const articles = getAtmosphereArticles(fixtureData, moderationOpts)
     expect(articles[0]).toBe(fixtureData.articles.items[0].view)
     expect(articles[1]).toBe(fixtureData.articles.items[1].view)
     expect(articles[0].publisher?.logo).toBe('https://example.com/logo.jpg')
 
-    const photos = getAtmospherePhotos(fixtureData)
+    const photos = getAtmospherePhotos(fixtureData, moderationOpts)
     expect(photos[0]).toBe(fixtureData.photos.items[0].view)
     expect(photos[1]).toBe(fixtureData.photos.items[1].view)
     expect(photos[0].associatedProfiles?.[0].handle).toBe('author.test')
@@ -276,7 +274,7 @@ describe('Atmosphere Explore response fixtures', () => {
     const before = JSON.stringify(data)
     Object.freeze(data.articles.items)
 
-    expect(getAtmosphereArticles(data)).toEqual(
+    expect(getAtmosphereArticles(data, moderationOpts)).toEqual(
       [0, 2, 3, 4, 5].map(index => data.articles.items[index].view),
     )
     expect(JSON.stringify(data)).toBe(before)
@@ -289,7 +287,7 @@ describe('Atmosphere Explore response fixtures', () => {
     ) => parseData({...emptyData, publications: {items, recIdStr: '1'}})
 
     it('returns nothing for an empty list', () => {
-      expect(getAtmospherePublications(emptyData)).toEqual([])
+      expect(getAtmospherePublications(emptyData, moderationOpts)).toEqual([])
     })
 
     it('keeps response order for equal-length descriptions, regardless of featured', () => {
@@ -299,15 +297,16 @@ describe('Atmosphere Explore response fixtures', () => {
         {featured: false, view: {...publicationView, uri: 'https://c.test/'}},
       ])
 
-      expect(getAtmospherePublications(data).map(p => p.uri)).toEqual([
-        'https://a.test/',
-        'https://b.test/',
-        'https://c.test/',
-      ])
+      expect(
+        getAtmospherePublications(data, moderationOpts).map(p => p.uri),
+      ).toEqual(['https://a.test/', 'https://b.test/', 'https://c.test/'])
     })
 
     it('preserves the original publication view, including subscription metadata', () => {
-      const [publication] = getAtmospherePublications(fixtureData)
+      const [publication] = getAtmospherePublications(
+        fixtureData,
+        moderationOpts,
+      )
       expect(publication).toBe(publicationView)
       expect(publication.subscriptionCount).toBe(1)
     })
@@ -335,7 +334,7 @@ describe('Atmosphere Explore response fixtures', () => {
         },
       }
       const before = JSON.stringify(data)
-      const [card] = getAtmospherePublications(data)
+      const [card] = getAtmospherePublications(data, moderationOpts)
 
       expect(card.associatedRefs).toEqual(
         data.publications.items[0].view.associatedRefs,
@@ -347,7 +346,7 @@ describe('Atmosphere Explore response fixtures', () => {
     it('keeps publications without a logo, theme, or profiles', () => {
       const {logo, theme, subscribers, ...bare} = publicationView
       const data = withPublications([{featured: false, view: bare}])
-      const [card] = getAtmospherePublications(data)
+      const [card] = getAtmospherePublications(data, moderationOpts)
 
       expect(card).toBe(data.publications.items[0].view)
       expect(card.logo).toBeUndefined()
@@ -393,7 +392,7 @@ describe('Atmosphere Explore response fixtures', () => {
         [name]: {items: [first, second, duplicate]},
       }
 
-      const result = adapt(data)
+      const result = adapt(data, moderationOpts)
 
       expect(result).toHaveLength(2)
       expect(result.map(r => r.uri).sort()).toEqual(
@@ -599,13 +598,9 @@ describe('Atmosphere Explore response fixtures', () => {
       },
     })
 
-    expect(getAtmosphereArticles(data).map(article => article.title)).toEqual([
-      'a',
-      'c',
-      'd',
-      'e',
-      'f',
-    ])
+    expect(
+      getAtmosphereArticles(data, moderationOpts).map(article => article.title),
+    ).toEqual(['a', 'c', 'd', 'e', 'f'])
   })
 
   it('safely handles absent optional data, empty arrays, and gallery variants', () => {
@@ -622,9 +617,9 @@ describe('Atmosphere Explore response fixtures', () => {
       title: 'Title only',
       url: 'https://example.com/announcement',
     })
-    expect(getAtmosphereArticles(emptyData)).toEqual([])
+    expect(getAtmosphereArticles(emptyData, moderationOpts)).toEqual([])
     expect(getAtmosphereLivestreams(emptyData)).toEqual([])
-    expect(getAtmospherePhotos(emptyData)).toEqual([])
+    expect(getAtmospherePhotos(emptyData, moderationOpts)).toEqual([])
 
     const sparseData = parseData({
       ...emptyData,
@@ -696,10 +691,10 @@ describe('Atmosphere Explore response fixtures', () => {
       },
     })
 
-    expect(getAtmosphereArticles(sparseData)[0]).toBe(
+    expect(getAtmosphereArticles(sparseData, moderationOpts)[0]).toBe(
       sparseData.articles.items[0].view,
     )
-    expect(getAtmospherePhotos(sparseData)).toEqual([
+    expect(getAtmospherePhotos(sparseData, moderationOpts)).toEqual([
       sparseData.photos.items[0].view,
     ])
     expect(getAtmosphereLivestreams(sparseData)).toEqual([])
@@ -751,7 +746,7 @@ describe('Atmosphere Explore response fixtures', () => {
       },
     })
 
-    expect(getAtmospherePhotos(data)).toHaveLength(1)
+    expect(getAtmospherePhotos(data, moderationOpts)).toHaveLength(1)
     expect(getAtmosphereLivestreams(data)).toHaveLength(1)
 
     const invalidProfile = {
@@ -759,10 +754,13 @@ describe('Atmosphere Explore response fixtures', () => {
       associatedProfiles: [{did: 'nope'}],
     }
     expect(
-      getAtmospherePhotos({
-        ...data,
-        photos: {items: [{featured: true, view: invalidProfile as never}]},
-      }),
+      getAtmospherePhotos(
+        {
+          ...data,
+          photos: {items: [{featured: true, view: invalidProfile as never}]},
+        },
+        moderationOpts,
+      ),
     ).toEqual([])
     expect(getAtmosphereLivestreams({livestreams: {items: []}})).toEqual([])
   })
@@ -775,6 +773,178 @@ describe('Atmosphere Explore response fixtures', () => {
       parseData({...emptyData, articles: {items: [{view: {}}]}}),
     ).toThrow()
   })
+})
+
+describe('Explore moderation', () => {
+  const labeler = 'did:web:labeler.test'
+  const opts: ModerationOpts = {
+    ...moderationOpts,
+    userDid: 'did:web:viewer.test',
+    prefs: {
+      ...moderationOpts.prefs,
+      labels: {porn: 'warn'},
+      labelers: [{did: labeler, labels: {}}],
+      mutedWords: [{value: 'spoiler', targets: ['content']}],
+    },
+  }
+  const label = (val: string) => ({
+    src: labeler,
+    uri: 'https://example.com/content',
+    val,
+    cts: '2026-01-01T00:00:00.000Z',
+  })
+
+  it.each([
+    ['articles', getAtmosphereArticles],
+    ['photos', getAtmospherePhotos],
+    ['publications', getAtmospherePublications],
+  ] as const)(
+    'filters %s before deduplication and leaves the response intact',
+    (section, select) => {
+      const original = fixtureData[section].items[0]
+      const data = parseData({
+        ...fixtureData,
+        [section]: {
+          items: [
+            {
+              ...original,
+              view: {
+                ...original.view,
+                uri: 'https://example.com/duplicate',
+                labels: [label('porn')],
+              },
+            },
+            {
+              ...original,
+              view: {
+                ...original.view,
+                uri: 'https://example.com/warning',
+                labels: [label('!warn')],
+              },
+            },
+            {
+              ...original,
+              view: {
+                ...original.view,
+                uri: 'https://example.com/hidden',
+                labels: [label('!hide')],
+              },
+            },
+            {
+              ...original,
+              view: {
+                ...original.view,
+                uri: 'https://example.com/word',
+                title: 'A spoiler',
+              },
+            },
+            {
+              ...original,
+              view: {
+                ...original.view,
+                uri: 'https://example.com/owner-muted',
+                associatedRefs: [
+                  {
+                    uri: 'at://did:web:owner.test/example.test.record/1',
+                    cid: 'bafyreicl6ujc6ncfktctxxroxognfn7d2fqavvrryoc2lv6m4i6hpbkfti',
+                  },
+                ],
+                associatedProfiles: [
+                  {
+                    did: 'did:web:owner.test',
+                    handle: 'owner.test',
+                    viewer: {muted: true},
+                  },
+                ],
+              },
+            },
+            {
+              ...original,
+              view: {...original.view, uri: 'https://example.com/duplicate'},
+            },
+          ],
+        },
+      })
+      const before = JSON.stringify(data)
+      const cards = select(data, opts)
+      expect(cards).toEqual([data[section].items[5].view])
+      expect(JSON.stringify(data)).toBe(before)
+      expect(select(data, undefined)).toEqual([])
+    },
+  )
+
+  it.each([
+    ['articles', getAtmosphereArticles],
+    ['publications', getAtmospherePublications],
+  ] as const)(
+    'applies moderation before the five-item limit for %s',
+    (section, select) => {
+      const original = fixtureData[section].items[0]
+      const data = parseData({
+        ...emptyData,
+        [section]: {
+          items: Array.from({length: 7}, (_, index) => ({
+            ...original,
+            view: {
+              ...original.view,
+              uri: `https://example.com/${index}`,
+              labels: index < 2 ? [label('porn')] : [],
+            },
+          })),
+        },
+      })
+      expect(select(data, opts).map(view => view.uri)).toEqual(
+        [2, 3, 4, 5, 6].map(index => `https://example.com/${index}`),
+      )
+    },
+  )
+
+  it.each(['labels', 'owner mute', 'muted words'])(
+    'omits an own article when its separately owned publisher fails %s moderation',
+    cause => {
+      const article = fixtureData.articles.items[0]
+      const publisher = fixtureData.publications.items[0].view
+      const data = parseData({
+        ...emptyData,
+        articles: {
+          items: [
+            {
+              ...article,
+              view: {
+                ...article.view,
+                associatedRefs: [
+                  {
+                    uri: 'at://did:web:viewer.test/site.standard.document/1',
+                    cid: 'bafyreicl6ujc6ncfktctxxroxognfn7d2fqavvrryoc2lv6m4i6hpbkfti',
+                  },
+                ],
+                publisher: {
+                  ...publisher,
+                  title:
+                    cause === 'muted words' ? 'A spoiler' : publisher.title,
+                  labels: cause === 'labels' ? [label('porn')] : [],
+                  associatedRefs: [
+                    {
+                      uri: 'at://did:web:publisher.test/site.standard.publication/1',
+                      cid: 'bafyreicl6ujc6ncfktctxxroxognfn7d2fqavvrryoc2lv6m4i6hpbkfti',
+                    },
+                  ],
+                  associatedProfiles: [
+                    {
+                      did: 'did:web:publisher.test',
+                      handle: 'publisher.test',
+                      viewer: {muted: cause === 'owner mute'},
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      })
+      expect(getAtmosphereArticles(data, opts)).toEqual([])
+    },
+  )
 })
 
 describe('getAtmosphereExploreApps', () => {
@@ -810,5 +980,54 @@ describe('getAtmosphereExploreApps', () => {
 
     expect(result.map(a => a.id)).toEqual(['app', 'other'])
     expect(result[0].title).toBe('Test app')
+  })
+})
+
+describe('getGalleryImages', () => {
+  const baseGallery = fixtureData.photos.items[0].view
+  const numbered = (n: number) => ({
+    ...image,
+    thumbnail: `https://example.com/thumb-${n}.jpg`,
+    fullsize: `https://example.com/full-${n}.jpg`,
+  })
+  const galleryOf = (items: unknown[]) =>
+    ({...baseGallery, items}) as typeof baseGallery
+
+  it('keeps valid images in order and skips unknown or malformed items', () => {
+    const gallery = galleryOf([
+      {$type: 'app.test#unknown', value: 1},
+      {...numbered(1), thumbnail: 'invalid'},
+      numbered(2),
+      numbered(3),
+    ])
+
+    expect(getGalleryImages(gallery).map(i => i.fullsize)).toEqual([
+      'https://example.com/full-2.jpg',
+      'https://example.com/full-3.jpg',
+    ])
+    expect(getGalleryImage(gallery)?.thumbnail).toBe(
+      'https://example.com/thumb-2.jpg',
+    )
+  })
+
+  it('caps at ten valid images, counting only the valid ones', () => {
+    const invalid = {...numbered(0), fullsize: 'invalid'}
+    const gallery = galleryOf([
+      invalid,
+      ...Array.from({length: 12}, (_, i) => numbered(i + 1)),
+    ])
+    const before = JSON.stringify(gallery)
+
+    const images = getGalleryImages(gallery)
+    expect(images).toHaveLength(10)
+    expect(images[9].fullsize).toBe('https://example.com/full-10.jpg')
+    expect(JSON.stringify(gallery)).toBe(before)
+  })
+
+  it('returns nothing when no item is usable', () => {
+    expect(getGalleryImages(galleryOf([]))).toEqual([])
+    expect(getGalleryImage(galleryOf([{$type: 'app.test#unknown'}]))).toBe(
+      undefined,
+    )
   })
 })

@@ -2,12 +2,21 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {type NavigationProp} from '#/lib/routes/types'
+import {shareUrl} from '#/lib/sharing'
+import {useRequireAuth, useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
+import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
 import {type ItemFocusProps} from '#/components/Gallery'
+import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
+import {Mark as BlueskyIcon} from '#/components/icons/brands/Mark'
+import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
+import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import {Person_Stroke2_Corner0_Rounded as PersonIcon} from '#/components/icons/Person'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ExternalLinkIcon} from '#/components/icons/Square'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
@@ -17,6 +26,8 @@ import {
   useGetCopyForSubject,
   useGlobalReportDialogControl,
 } from '#/components/moderation/ReportDialog'
+import {useAgeAssurance} from '#/ageAssurance'
+import {IS_WEB} from '#/env'
 import {type app} from '#/lexicons'
 
 const BUTTON_VISUAL_ADJUSTMENT = 4
@@ -24,6 +35,7 @@ const BUTTON_VISUAL_ADJUSTMENT = 4
 /**
  * Top-right options menu for Atmosphere cards. Render it as a sibling
  * of the card's primary link, never inside it, so the two stay un-nested.
+ * Sharing actions always use the card's external URL (`item.uri`).
  * `children` are extra `Menu.Item`s shown before Report.
  */
 export function AtmosphereCardMenu({
@@ -68,6 +80,11 @@ export function AtmosphereCardMenu({
   const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const openLink = useOpenLink()
+  const {hasSession} = useSession()
+  const aa = useAgeAssurance()
+  const requireAuth = useRequireAuth()
+  const {openComposer} = useOpenComposer()
+  const sendViaChatControl = useDialogControl()
   const reportDialogControl = useGlobalReportDialogControl()
   const getReportCopy = useGetCopyForSubject()
   let labels: {trigger: string; view: string; report: string}
@@ -101,6 +118,9 @@ export function AtmosphereCardMenu({
       }
       break
   }
+
+  const canSendViaChat = hasSession && aa.state.access === aa.Access.Full
+  const shareLabel = IS_WEB ? l`Copy link` : l`Share`
 
   const reportTargets = getAssociatedReportSubjects(item.associatedRefs).filter(
     ({parsedSubject}) =>
@@ -139,6 +159,39 @@ export function AtmosphereCardMenu({
           )}
         </Menu.Trigger>
         <Menu.Outer>
+          <Menu.Group>
+            <Menu.Item
+              testID="atmosphereCardShare"
+              label={shareLabel}
+              onPress={() => void shareUrl(item.uri)}>
+              <Menu.ItemText>{shareLabel}</Menu.ItemText>
+              <Menu.ItemIcon
+                icon={IS_WEB ? ChainLinkIcon : ArrowOutOfBoxIcon}
+                position="right"
+              />
+            </Menu.Item>
+            <Menu.Item
+              testID="atmosphereCardCreatePost"
+              label={l`Create post`}
+              onPress={() =>
+                requireAuth(() =>
+                  openComposer({text: item.uri, logContext: 'Other'}),
+                )
+              }>
+              <Menu.ItemText>{l`Post to Bluesky`}</Menu.ItemText>
+              <Menu.ItemIcon icon={BlueskyIcon} position="right" />
+            </Menu.Item>
+            {canSendViaChat && (
+              <Menu.Item
+                testID="atmosphereCardSendViaChat"
+                label={l`Send via chat`}
+                onPress={() => sendViaChatControl.open()}>
+                <Menu.ItemText>{l`Send via chat`}</Menu.ItemText>
+                <Menu.ItemIcon icon={PaperPlaneIcon} position="right" />
+              </Menu.Item>
+            )}
+          </Menu.Group>
+          <Menu.Divider />
           <Menu.Group>
             <Menu.Item label={labels.view} onPress={() => openLink(item.uri)}>
               <Menu.ItemText>{labels.view}</Menu.ItemText>
@@ -184,6 +237,16 @@ export function AtmosphereCardMenu({
             )}
           </Menu.Group>
         </Menu.Outer>
+        {/* Outside Menu.Outer so it stays mounted after the menu closes. */}
+        <SendViaChatDialog
+          control={sendViaChatControl}
+          onSelectChat={conversation =>
+            navigation.navigate('MessagesConversation', {
+              conversation,
+              text: item.uri,
+            })
+          }
+        />
       </Menu.Root>
     </View>
   )

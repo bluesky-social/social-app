@@ -1,9 +1,17 @@
 # Lexicons
 
 Published schemas are fetched with `pnpm lexicons:update`; use a scoped manifest
-to exclude the unpublished exception below. `lexicons.json` pins each schema's
-URI and CID, and `pnpm lexicons:verify` checks the installed files against it.
-Do not hand-edit published schemas.
+to exclude the locally maintained exceptions below. `lexicons.json` pins
+each schema's URI and CID, and `pnpm lexicons:verify` checks the installed files
+against it. Do not hand-edit published schemas.
+
+## Local extension: `app.bsky.embed.external`
+
+`viewGallery.photoCount` is an optional non-negative total photo count, distinct
+from the number of hydrated gallery items. This schema includes that local
+extension; its manifest CID is a locally calculated content-integrity pin, not
+the published record CID. Exclude it from scoped updates until the published
+schema includes the field.
 
 ## Exceptions: `app.bsky.unspecced.getAtmosphereExploreTab` and `getAtmosphereApps`
 
