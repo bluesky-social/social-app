@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-11-04 22:39\n"
+"PO-Revision-Date: 2026-11-11 16:57\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -584,170 +584,6 @@ msgstr "{feedCount, plural, one {# feed} other {# feeds}}"
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
 msgstr "{filterCount, plural, one {+# filtro} other {+# filtros}}"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:355
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
-msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {outros {formattedAuthorsCount}}}</0> seguiram você"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:387
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
-msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {outros {formattedAuthorsCount}}}</0> curtiram seu feed personalizado"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:293
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {outros {formattedAuthorsCount}}}</0> curtiram sua postagem"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:484
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your repost"
-msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {outros {formattedAuthorsCount}}}</0> curtiram sua repostagem"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:459
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
-msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {{formattedAuthorsCount} outros}}</0> removeram suas verificações da sua conta"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:315
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
-msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {outros {formattedAuthorsCount}}}</0> repostaram sua postagem"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:506
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your repost"
-msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {outros {formattedAuthorsCount}}}</0> repostaram sua repostagem"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:409
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your Starter Pack"
-msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {mais {formattedAuthorsCount}} other {mais {formattedAuthorsCount}}}</0> se registraram com seu pacote inicial"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:436
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
-msgstr "{firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {{formattedAuthorsCount} outros}}</0> verificaram você"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:367
-msgid "{firstAuthorLink} followed you"
-msgstr "{firstAuthorLink} te seguiu"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:339
-msgid "{firstAuthorLink} followed you back"
-msgstr "{firstAuthorLink} te seguiu de volta"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:399
-msgid "{firstAuthorLink} liked your custom feed"
-msgstr "{firstAuthorLink} curtiu seu feed personalizado"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:305
-msgid "{firstAuthorLink} liked your post"
-msgstr "{firstAuthorLink} curtiu sua postagem"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:496
-msgid "{firstAuthorLink} liked your repost"
-msgstr "{firstAuthorLink} curtiu sua repostagem"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:471
-msgid "{firstAuthorLink} removed their verification from your account"
-msgstr "{firstAuthorLink} removeu a verificação da sua conta"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:327
-msgid "{firstAuthorLink} reposted your post"
-msgstr "{firstAuthorLink} repostou sua postagem"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:518
-msgid "{firstAuthorLink} reposted your repost"
-msgstr "{firstAuthorLink} repostou sua repostagem"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:421
-msgid "{firstAuthorLink} signed up with your Starter Pack"
-msgstr "{firstAuthorLink} se registrou com seu Pacote Inicial"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:448
-msgid "{firstAuthorLink} verified you"
-msgstr "{firstAuthorLink} verificou você"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:349
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
-msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {outros {formattedAuthorsCount}}} te seguiram"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:343
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you via Starter Pack {starterPackName}"
-msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {mais {formattedAuthorsCount}} other {mais {formattedAuthorsCount}}} seguiram você através do pacote inicial {starterPackName}"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:381
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
-msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {outros {formattedAuthorsCount}}} curtiram seu feed personalizado"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:287
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
-msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {outros {formattedAuthorsCount}}} curtiram sua postagem"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:478
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your repost"
-msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {outros {formattedAuthorsCount}}} curtiram sua repostagem"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:453
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} removed their verifications from your account"
-msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {{formattedAuthorsCount} outros}} removeram suas verificações da sua conta"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:309
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
-msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {outros {formattedAuthorsCount}}} repostaram sua postagem"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:500
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your repost"
-msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {outros {formattedAuthorsCount}}} repostaram sua repostagem"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:403
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your Starter Pack"
-msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {mais {formattedAuthorsCount} outro} other {mais {formattedAuthorsCount}}} se registraram com seu pacote inicial"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:430
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
-msgstr "{firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {{formattedAuthorsCount} outros}} verificaram você"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:353
-msgid "{firstAuthorName} followed you"
-msgstr "{firstAuthorName} te seguiu"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:338
-msgid "{firstAuthorName} followed you back"
-msgstr "{firstAuthorName} te seguiu de volta"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:337
-msgid "{firstAuthorName} followed you back via Starter Pack {starterPackName}"
-msgstr "{firstAuthorName} seguiu você de volta através do pacote inicial {starterPackName}"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:347
-msgid "{firstAuthorName} followed you via Starter Pack {starterPackName}"
-msgstr "{firstAuthorName} seguiu você através do pacote inicial {starterPackName}"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:385
-msgid "{firstAuthorName} liked your custom feed"
-msgstr "{firstAuthorName} curtiu seu feed personalizado"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:291
-msgid "{firstAuthorName} liked your post"
-msgstr "{firstAuthorName} curtiu sua postagem"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:482
-msgid "{firstAuthorName} liked your repost"
-msgstr "{firstAuthorName} curtiu sua repostagem"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:457
-msgid "{firstAuthorName} removed their verification from your account"
-msgstr "{firstAuthorName} removeu a verificação da sua conta"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:313
-msgid "{firstAuthorName} reposted your post"
-msgstr "{firstAuthorName} repostou sua postagem"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:504
-msgid "{firstAuthorName} reposted your repost"
-msgstr "{firstAuthorName} repostou sua repostagem"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:407
-msgid "{firstAuthorName} signed up with your Starter Pack"
-msgstr "{firstAuthorName} se registrou com seu Pacote Inicial"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:434
-msgid "{firstAuthorName} verified you"
-msgstr "{firstAuthorName} verificou você"
-
 #: src/components/ProfileHoverCard/index.web.tsx:575
 msgid "{following} following"
 msgstr "{following} seguindo"
@@ -812,7 +648,7 @@ msgid "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
 msgstr "{JOIN_REQUESTS_THRESHOLD}+ novas solicitações de entrada"
 
 #. Number of users (always at least 50) who have joined Bluesky using a specific Starter Pack
-#: src/components/StarterPack/StarterPackCard.tsx:97
+#: src/components/StarterPack/StarterPackCard.tsx:80
 msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr "{joinedAllTimeCount, plural, other {# usuários se juntaram}}!"
 
@@ -835,11 +671,11 @@ msgstr "{MAX_ALT_TEXT, plural, other {O texto alternativo deve ter menos de # ca
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:547
 msgid "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
-msgstr "{MAX_DESCRIPTION, plural, other {Descrição muito longa. O número máximo de caracteres é #.}}"
+msgstr ""
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:428
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
-msgstr "{MAX_DISPLAY_NAME, plural, other {Nome de exibição muito longo. O número máximo de caracteres é #.}}"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:398
 msgid "{MAX_HIDDEN_REPLIES, plural, other {You can hide a maximum of # replies.}}"
@@ -916,11 +752,11 @@ msgstr "{name} seguiu você de volta através do pacote de iniciante {starterPac
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:352
 msgid "{name} liked {count} of your {count, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "{name} curtiu {count} das {count, plural, one {suas postagens} other {suas postagens}}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:415
 msgid "{name} liked {count} of your {count, plural, one {repost} other {reposts}}"
-msgstr ""
+msgstr "{name} curtiu {count} das {count, plural, one {suas repostagens} other {suas repostagens}}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:490
 msgid "{name} liked your custom feed"
@@ -1313,7 +1149,7 @@ msgstr "Uma faixa horizontal de qualquer conteúdo. Cada item mantém sua própr
 
 #: src/components/Gallery/Storybook.tsx:189
 msgid "A kawaii scene"
-msgstr ""
+msgstr "Uma cena kawaii"
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:78
@@ -1336,7 +1172,7 @@ msgstr "Um rótulo foi removido da sua conta"
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
 msgid "A label was removed from your content"
-msgstr ""
+msgstr "Um rótulo foi removido do seu conteúdo"
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:106
 msgid "A label was removed from your post"
@@ -1589,13 +1425,13 @@ msgstr "Ação aplicada"
 #. placeholder {2}: nav.events
 #: src/components/Gallery/Storybook.tsx:659
 msgid "Active index {0} (from {1}), {2} user navigation events"
-msgstr ""
+msgstr "Índice ativo {0} (de {1}), {2} eventos de navegação de usuário"
 
 #: src/screens/Atmosphere/index.tsx:43
 msgid "Activity"
 msgstr "Atividade"
 
-#: src/lib/hooks/useNotificationHandler.ts:220
+#: src/lib/hooks/useNotificationHandler.ts:215
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:105
 #: src/screens/Settings/NotificationSettings/index.tsx:228
 msgid "Activity from others"
@@ -1772,7 +1608,7 @@ msgstr "Adicionar pessoas com um link"
 #: src/screens/Profile/Header/PronounsDialog.tsx:102
 #: src/screens/Profile/Header/PronounsDialog.tsx:125
 msgid "Add pronouns"
-msgstr ""
+msgstr "Adicionar pronomes"
 
 #: src/components/dms/EmojiPopup.android.tsx:56
 msgid "Add Reaction"
@@ -1926,7 +1762,6 @@ msgstr "alice@exemplo.com"
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:205
-#: src/view/screens/Notifications.tsx:86
 msgid "All"
 msgstr "Tudo"
 
@@ -1936,7 +1771,7 @@ msgid "All"
 msgstr "Tudo"
 
 #. Tab label in Notifications that shows every notification. Space is tight, so keep it as short as possible.
-#: src/screens/Notifications/index.tsx:123
+#: src/screens/Notifications/index.tsx:106
 msgctxt "notifications tab"
 msgid "All"
 msgstr "Tudo"
@@ -2082,7 +1917,7 @@ msgstr "Um e-mail foi enviado para {0}. Nele possui um código de confirmação 
 
 #: src/components/Gallery/Storybook.tsx:757
 msgid "An empty gallery takes up no space. A single item behaves like any other, without dragging or arrow key navigation to go anywhere."
-msgstr ""
+msgstr "Uma galeria vazia não ocupa espaço. Um único item se comporta como qualquer outro, sem arrastar ou navegação com setas do teclado para ir a qualquer lugar."
 
 #. Accessibility label for the dialog shown when the GIF picker hits an unexpected runtime error and falls back to its error boundary.
 #: src/components/dialogs/LanguageSelectDialog.tsx:344
@@ -2200,8 +2035,6 @@ msgstr "Ocorreu um erro ao iniciar a conversa em grupo, tente novamente."
 #: src/components/ProfileCard.tsx:510
 #: src/components/ProfileCard.tsx:535
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:218
-#: src/view/com/notifications/NotificationFeedItem.tsx:823
-#: src/view/com/notifications/NotificationFeedItem.tsx:844
 msgid "An issue occurred, please try again."
 msgstr "Ocorreu um problema, tente novamente."
 
@@ -2421,7 +2254,7 @@ msgstr "Aplicar atualização deste canal"
 
 #: src/screens/Atmosphere/components/FeaturedApps.tsx:15
 msgid "Apps on the Atmosphere"
-msgstr "Aplicativos no ambiente Atmosfera"
+msgstr ""
 
 #. placeholder {0}: niceDate(i18n, createdAt, 'medium')
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:627
@@ -2716,7 +2549,6 @@ msgid "Beta Feature"
 msgstr "Recurso em Teste"
 
 #: src/Navigation.tsx:459
-#: src/screens/Notifications/index.tsx:671
 #: src/screens/Settings/BetaFeaturesSettings.tsx:142
 #: src/screens/Settings/Settings.tsx:276
 #: src/screens/Settings/Settings.tsx:279
@@ -2737,7 +2569,7 @@ msgstr "Recursos em teste podem ser instáveis. Algumas alterações talvez exij
 #: src/screens/Settings/BetaFeaturesSettings.tsx:183
 msgctxt "native"
 msgid "Beta features may be unstable. Some changes may require restarting the app. Some beta features may not work properly with ad blockers or VPNs enabled."
-msgstr ""
+msgstr "Recursos em teste podem ser instáveis. Algumas alterações talvez exijam reiniciar o aplicativo. Alguns recursos em teste talvez não funcionem adequadamente em conjunto com bloqueadores de anúncios ou VPNs."
 
 #: src/components/dialogs/BirthDateSettings.tsx:163
 msgid "Birthdate"
@@ -2843,10 +2675,6 @@ msgstr "Contas bloqueadas não podem te responder, te mencionar ou interagir com
 #: src/view/screens/ModerationBlockedAccounts.tsx:179
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Contas bloqueadas não podem responder aos seus fios, nem mencionar ou interagir com você. Você não poderá ver seu conteúdo e eles serão impedidos de ver o seu."
-
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:484
-msgid "Blocked post"
-msgstr "Postagem bloqueada"
 
 #: src/screens/Profile/Sections/Labels.tsx:204
 msgid "Blocking does not prevent this labeler from placing labels on your account."
@@ -3315,7 +3143,7 @@ msgstr "Alterar motivo da denúncia"
 
 #: src/components/Gallery/Storybook.tsx:531
 msgid "Change the items from outside. Resizing, reordering, and revealing are not user navigation, so the event count should only go up when you swipe, drag, or use the arrow keys."
-msgstr ""
+msgstr "Altere os itens externamente. Redimensionar, reordenar e revelar não são navegação de usuário, então o contador de eventos deve aumentar apenas se você deslizar, arrastar ou usar as teclas de seta."
 
 #: src/components/Post/Translated/index.tsx:421
 msgid "Change the source language"
@@ -3355,7 +3183,7 @@ msgstr "Alterar sua senha irá desconectar você. Será necessário conectar nov
 msgid "Channel"
 msgstr "Canal"
 
-#: src/lib/hooks/useNotificationHandler.ts:139
+#: src/lib/hooks/useNotificationHandler.ts:134
 #: src/Navigation.tsx:554
 #: src/view/shell/bottom-bar/BottomBar.tsx:246
 #: src/view/shell/desktop/LeftNav.tsx:776
@@ -3383,11 +3211,11 @@ msgstr "Link de convite para conversa não está mais disponível"
 msgid "Chat locked"
 msgstr "Conversa trancada"
 
-#: src/lib/hooks/useNotificationHandler.ts:152
+#: src/lib/hooks/useNotificationHandler.ts:147
 msgid "Chat messages - silent"
 msgstr "Conversas — silêncio"
 
-#: src/lib/hooks/useNotificationHandler.ts:143
+#: src/lib/hooks/useNotificationHandler.ts:138
 msgid "Chat messages - sound"
 msgstr "Conversas — som"
 
@@ -3803,19 +3631,14 @@ msgstr "Fecha o alerta de alteração de senha"
 msgid "Closes post composer and discards post draft"
 msgstr "Fecha a janela de nova postagem e descarta o rascunho"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:287
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:494
-#: src/view/com/notifications/NotificationFeedItem.tsx:589
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:286
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:493
 msgid "Collapse list of users"
 msgstr "Esconder lista de usuários"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:304
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:303
 msgid "Collapses list of users"
 msgstr "Oculta a lista de usuários"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:969
-msgid "Collapses list of users for a given notification"
-msgstr "Esconde a lista de usuários para uma notificação"
 
 #: src/features/inviteFriends/components/ThemePicker.tsx:68
 msgid "Color"
@@ -4335,7 +4158,7 @@ msgstr "Não foi possível enviar contatos. Você precisa verificar novamente o 
 msgid "Couldn’t load GIFs"
 msgstr "Falha ao carregar GIFs"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:359
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:358
 msgid "Couldn’t load more accounts, please try again"
 msgstr "Não foi possível carregar mais contas, tente novamente"
 
@@ -4706,10 +4529,6 @@ msgstr "Excluído pelo Plivo após a verificação"
 msgid "Deleted list"
 msgstr "Lista excluída"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:487
-msgid "Deleted post"
-msgstr "Postagem excluída"
-
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:463
 #: src/components/SendErrorReportDialog.tsx:78
 #: src/screens/Profile/Header/EditProfileDialog.tsx:527
@@ -4940,7 +4759,7 @@ msgstr "Exibir ícones maiores de texto alternativo"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:409
 #: src/screens/Profile/Header/EditProfileDialog.tsx:415
 msgid "Display name"
-msgstr "Nome de exibição"
+msgstr ""
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:33
 msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
@@ -5134,7 +4953,7 @@ msgstr ""
 msgid "e.g. Users that repeatedly reply with ads."
 msgstr "ex.: Perfis que são irritantes."
 
-#: src/screens/Notifications/components/PageList.tsx:580
+#: src/screens/Notifications/components/PageList.tsx:538
 msgctxt "Notifications section header"
 msgid "Earlier"
 msgstr "Antes"
@@ -5263,11 +5082,11 @@ msgstr "Editar perfil"
 #: src/screens/Profile/Header/PronounsDialog.tsx:102
 #: src/screens/Profile/Header/PronounsDialog.tsx:123
 msgid "Edit pronouns"
-msgstr ""
+msgstr "Editar pronomes"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:470
 msgid "Edit pronouns: {pronouns}"
-msgstr ""
+msgstr "Editar pronomes: {pronouns}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:613
 msgid "Edit Starter Pack"
@@ -5477,7 +5296,7 @@ msgstr "Digite o código de 6 dígitos enviado para {prettyNumber}"
 
 #: src/screens/Login/LoginForm.tsx:437
 msgid "Enter the code from your email or authenticator app"
-msgstr ""
+msgstr "Insira o código do seu email ou do aplicativo de autenticação"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:382
 msgid "Enter the domain you want to use"
@@ -5489,7 +5308,7 @@ msgstr "Insira o email usado para criar sua conta. Nós enviaremos um \"código 
 
 #: src/screens/Login/LoginForm.tsx:440
 msgid "Enter the sign in code from your email or authenticator app."
-msgstr ""
+msgstr "Insira o código de acesso do seu email ou do aplicativo de autenticação."
 
 #: src/screens/Login/LoginForm.tsx:333
 msgid "Enter the username or email address you used when you created your account"
@@ -5618,9 +5437,8 @@ msgstr "Sair da tela cheia"
 msgid "Expand alt text"
 msgstr "Expandir texto alternativo"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:288
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:494
-#: src/view/com/notifications/NotificationFeedItem.tsx:590
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:287
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:493
 msgid "Expand list of users"
 msgstr "Expandir lista de usuário"
 
@@ -5632,7 +5450,7 @@ msgstr "Expandir ou esconder a postagem que você está respondendo"
 msgid "Expand post text"
 msgstr "Expandir texto da postagem"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:305
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:304
 msgid "Expands list of users"
 msgstr "Expande a lista de usuários"
 
@@ -6125,7 +5943,7 @@ msgstr "Feed por {0}"
 msgid "Feed by {authorName}"
 msgstr "Feed de {authorName}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/media.tsx:225
+#: src/screens/Notifications/components/NotificationItem/Item/media.tsx:262
 msgid "Feed by {handle}"
 msgstr "Feed de {handle}"
 
@@ -6275,8 +6093,8 @@ msgstr "Encontrar e convidar amigos"
 msgid "Find Contacts"
 msgstr "Encontrar Contatos"
 
-#: src/screens/Notifications/components/PageList.tsx:636
-#: src/screens/Notifications/components/PageList.tsx:641
+#: src/screens/Notifications/components/PageList.tsx:594
+#: src/screens/Notifications/components/PageList.tsx:599
 msgid "Find friends"
 msgstr "Encontrar amigos"
 
@@ -6301,7 +6119,7 @@ msgstr "Encontre pessoas que você conhece"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Encontre postagens, usuários e feeds no Bluesky"
 
-#: src/screens/Notifications/components/PageList.tsx:630
+#: src/screens/Notifications/components/PageList.tsx:588
 msgid "Find some friends to start getting notifications!"
 msgstr "Encontre alguns amigos para começar a receber notificações!"
 
@@ -6369,8 +6187,6 @@ msgstr "Focado {focusCount} vezes"
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:430
 #: src/screens/VideoFeed/index.tsx:1060
-#: src/view/com/notifications/NotificationFeedItem.tsx:886
-#: src/view/com/notifications/NotificationFeedItem.tsx:893
 msgid "Follow"
 msgstr "Seguir"
 
@@ -6427,8 +6243,6 @@ msgstr "Seguir todas as contas"
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:229
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:155
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:428
-#: src/view/com/notifications/NotificationFeedItem.tsx:886
-#: src/view/com/notifications/NotificationFeedItem.tsx:893
 msgid "Follow back"
 msgstr "Seguir de volta"
 
@@ -6486,7 +6300,6 @@ msgstr "Seguidores que você conhece"
 
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
-#. User is following this account, click to unfollow
 #: src/components/ProfileCard.tsx:542
 #: src/components/ProfileHoverCard/index.web.tsx:502
 #: src/components/ProfileHoverCard/index.web.tsx:513
@@ -6494,8 +6307,6 @@ msgstr "Seguidores que você conhece"
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:426
 #: src/screens/VideoFeed/index.tsx:1058
-#: src/view/com/notifications/NotificationFeedItem.tsx:865
-#: src/view/com/notifications/NotificationFeedItem.tsx:881
 msgid "Following"
 msgstr "Seguindo"
 
@@ -6508,10 +6319,8 @@ msgstr "Seguindo"
 
 #. placeholder {0}: sanitizeDisplayName( displayNameOrHandle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( displayNameOrHandle, moderation.ui('displayName'), )
-#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, )
 #: src/components/ProfileCard.tsx:496
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:265
-#: src/view/com/notifications/NotificationFeedItem.tsx:816
 msgid "Following {0}"
 msgstr "Seguindo {0}"
 
@@ -6538,10 +6347,10 @@ msgid "Following Feed Preferences"
 msgstr "Preferências do feed principal"
 
 #. Tab label in Notifications that shows people who followed you. Space is tight, so keep it as short as possible.
-#: src/screens/Notifications/index.tsx:150
+#: src/screens/Notifications/index.tsx:133
 msgctxt "notifications tab"
 msgid "Follows"
-msgstr ""
+msgstr "Seguidores"
 
 #: src/components/Pills.tsx:215
 #: src/screens/Profile/Header/Handle.tsx:39
@@ -6871,11 +6680,7 @@ msgstr "Entrar ao vivo por"
 msgid "Go to {0}'s profile"
 msgstr "Ir para o perfil de {0}"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:250
-msgid "Go to {firstAuthorName}'s profile"
-msgstr "Ir para perfil de {firstAuthorName}"
-
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:78
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:73
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:640
 #: src/screens/Notifications/components/NotificationItem/Item/text.tsx:113
 msgid "Go to {name}’s profile"
@@ -7109,7 +6914,7 @@ msgstr "Precisa de ajuda?"
 #. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “he/they”.
 #: src/screens/Profile/Header/PronounsDialog.tsx:35
 msgid "he/him"
-msgstr ""
+msgstr "ele/dele"
 
 #: src/components/contacts/screens/PhoneInput.tsx:290
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
@@ -7158,7 +6963,7 @@ msgid "Hidden list"
 msgstr "Lista oculta"
 
 #. Shown in place of the text of a post that is hidden by the viewer’s moderation settings
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:213
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:208
 msgid "Hidden post"
 msgstr "Postagem oculta"
 
@@ -7171,11 +6976,6 @@ msgstr "Postagem oculta"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:23
 #: src/lib/moderation/useLabelBehaviorDescription.ts:28
 #: src/lib/moderation/useLabelBehaviorDescription.ts:33
-msgid "Hide"
-msgstr "Ocultar"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:975
-msgctxt "action"
 msgid "Hide"
 msgstr "Ocultar"
 
@@ -7242,10 +7042,6 @@ msgstr "Ocultar assuntos em alta"
 #: src/components/interstitials/TrendingVideos.tsx:138
 msgid "Hide trending videos?"
 msgstr "Ocultar vídeos em alta?"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:968
-msgid "Hide user list"
-msgstr "Ocultar lista de usuários"
 
 #: src/screens/Moderation/VerificationSettings.tsx:88
 #: src/screens/Moderation/VerificationSettings.tsx:97
@@ -7540,20 +7336,20 @@ msgid "In order to provide an age-appropriate experience, we need to know your b
 msgstr "Para fornecermos uma experiência apropriada para a idade, precisamos saber a sua data de nascimento. Esta é uma solicitação única, e seus dados serão mantidos privados."
 
 #. In a notification about a mention or quote, the post is a reply to another person’s post. {subject} is that person’s name, followed by a preview of their post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:269
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:264
 msgid "in reply to <0>{subject}</0>: {previewNode}"
 msgstr "em resposta a <0>{subject}</0>: {previewNode}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:173
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:168
 msgid "in reply to a blocked post"
 msgstr "em resposta a uma postagem bloqueada"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:178
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:173
 msgid "in reply to a deleted post"
 msgstr "em resposta a uma postagem excluída"
 
 #. In a notification about a mention or quote, the post is a reply to the viewer’s own post. Followed by a preview of that post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:265
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:260
 msgid "in reply to you: {previewNode}"
 msgstr ""
 
@@ -8223,14 +8019,14 @@ msgstr "Curtido por {0} e {1}"
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "Curtido por {likeCount, plural, one {# usuário} other {# usuários}}"
 
-#: src/lib/hooks/useNotificationHandler.ts:164
+#: src/lib/hooks/useNotificationHandler.ts:159
 #: src/screens/Settings/NotificationSettings/index.tsx:162
 #: src/screens/Settings/NotificationSettings/index.tsx:317
 #: src/view/screens/Profile.tsx:273
 msgid "Likes"
 msgstr "Curtidas"
 
-#: src/lib/hooks/useNotificationHandler.ts:206
+#: src/lib/hooks/useNotificationHandler.ts:201
 #: src/screens/Settings/NotificationSettings/index.tsx:241
 #: src/screens/Settings/NotificationSettings/index.tsx:367
 msgid "Likes of your reposts"
@@ -8465,7 +8261,6 @@ msgstr "Carregar mais sugestões de feeds"
 #. Accessible action on the notification list pill.
 #: src/components/NewPostsPill/index.tsx:163
 #: src/screens/Notifications/components/RefreshPill.tsx:107
-#: src/view/screens/Notifications.tsx:271
 msgid "Load new notifications"
 msgstr "Carregar novas notificações"
 
@@ -8736,20 +8531,19 @@ msgstr "Membros ainda podem ler o histórico do chat, mas não podem enviar nova
 
 #: src/components/dms/getAddGroupMembersErrorMessage.ts:12
 msgid "Members could not be added because one of the selected accounts has blocked you."
-msgstr ""
+msgstr "Não foi possível adicionar os membros porque uma das contas selecionadas bloqueou você."
 
 #: src/components/dms/getAddGroupMembersErrorMessage.ts:10
 msgid "Members could not be added because you have blocked one of the selected accounts."
-msgstr ""
+msgstr "Não foi possível adicionar os membros porque você bloqueou uma das contas selecionadas."
 
 #: src/components/WhoCanReply.tsx:302
 msgid "mentioned users"
 msgstr "usuários mencionados"
 
-#: src/lib/hooks/useNotificationHandler.ts:185
+#: src/lib/hooks/useNotificationHandler.ts:180
 #: src/screens/Settings/NotificationSettings/index.tsx:195
 #: src/screens/Settings/NotificationSettings/index.tsx:342
-#: src/view/screens/Notifications.tsx:99
 msgid "Mentions"
 msgstr "Menções"
 
@@ -8868,7 +8662,7 @@ msgid "Moderation details"
 msgstr "Detalhes da moderação"
 
 #. Name for a feature flag
-#: src/analytics/features/index.ts:149
+#: src/analytics/features/index.ts:132
 #: src/Navigation.tsx:209
 #: src/screens/Moderation/index.tsx:299
 #: src/screens/ModerationInbox/index.tsx:101
@@ -9128,12 +8922,12 @@ msgstr "Natureza"
 
 #. placeholder {0}: record.name
 #. placeholder {0}: view.record.name
-#: src/components/StarterPack/StarterPackCard.tsx:126
-#: src/components/StarterPack/StarterPackCard.tsx:156
+#: src/components/StarterPack/StarterPackCard.tsx:109
+#: src/components/StarterPack/StarterPackCard.tsx:139
 msgid "Navigate to {0}"
 msgstr "Navegar para {0}"
 
-#: src/components/StarterPack/StarterPackCard.tsx:127
+#: src/components/StarterPack/StarterPackCard.tsx:110
 msgid "Navigate to Starter Pack"
 msgstr "Navegar até o pacote inicial"
 
@@ -9173,21 +8967,13 @@ msgctxt "nux-description"
 msgid "New"
 msgstr "Novo"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:567
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:565
 msgid "New {count, plural, one {post} other {posts}} from {name}"
 msgstr "{count, plural, one {Nova postagem} other {Novas postagens}} de {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:595
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:593
 msgid "New {count, plural, one {post} other {posts}} from <0/>"
 msgstr "{count, plural, one {Nova postagem} other {Novas postagens}} de <0/>"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:547
-msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
-msgstr "{postsCount, plural, one {Nova postagem} other {Novas postagens}} de {firstAuthorLink}"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:531
-msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
-msgstr "{postsCount, plural, one {Nova postagem} other {Novas postagens}} de {firstAuthorName}"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:162
 #: src/components/dms/dialogs/NewChatDialog.tsx:177
@@ -9228,7 +9014,7 @@ msgstr "Novo endereço de e-mail"
 msgid "New Feature"
 msgstr "Novo Recurso"
 
-#: src/lib/hooks/useNotificationHandler.ts:199
+#: src/lib/hooks/useNotificationHandler.ts:194
 #: src/screens/Settings/NotificationSettings/index.tsx:173
 #: src/screens/Settings/NotificationSettings/index.tsx:326
 msgid "New followers"
@@ -9284,13 +9070,12 @@ msgstr "Nova senha"
 #: src/screens/ProfileList/index.tsx:234
 #: src/screens/ProfileList/index.tsx:277
 #: src/view/screens/Feeds.tsx:546
-#: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:660
 msgid "New post"
 msgstr "Postar"
 
 #: src/features/followingV2/home/FeedPage.tsx:192
-#: src/screens/Notifications/index.tsx:101
+#: src/screens/Notifications/index.tsx:84
 #: src/view/com/feeds/FeedPage.tsx:191
 #: src/view/shell/desktop/LeftNav.tsx:656
 msgctxt "action"
@@ -9305,35 +9090,27 @@ msgstr "Novas postagens"
 msgid "New posts are ready to load from the people you follow"
 msgstr "Novas postagens das pessoas que você segue estão prontas para serem carregadas"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:536
-msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> "
-msgstr "Novas postagens de {firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {outros {formattedAuthorsCount}}}</0> "
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:524
-msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
-msgstr "Novas postagens de {firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} outro} other {outros {formattedAuthorsCount}}}"
-
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:561
-msgid "New posts from {name} and {others, plural, one {# other} other {# others}}"
-msgstr ""
-
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:559
+msgid "New posts from {name} and {others, plural, one {# other} other {# others}}"
+msgstr "Novas postagens de {name} e {others, plural, one {mais #} other {mais #}}"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:557
 msgid "New posts from {name} and {secondName}"
 msgstr "Novas postagens de {name} e {secondName}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:579
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:577
 msgid "New posts from <0/> and <1/>"
 msgstr "Novas postagens de <0/> e <1/>"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:584
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:582
 msgid "New posts from <0/> and <1>{others, plural, one {# other} other {# others}}</1>"
-msgstr ""
+msgstr "Novas postagens de <0/> e <1>{others, plural, one {mais #} other {mais #}}</1>"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:566
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:564
 msgid "New reply from {name}"
 msgstr "Nova resposta de {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:591
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:589
 msgid "New reply from <0/>"
 msgstr "Nova resposta de <0/>"
 
@@ -9449,7 +9226,7 @@ msgstr "Sem expiração definida"
 msgid "No feeds found. Try searching for something else."
 msgstr "Nenhum feed encontrado. Tente pesquisar por outra coisa."
 
-#: src/screens/Notifications/components/PageList.tsx:670
+#: src/screens/Notifications/components/PageList.tsx:628
 msgid "No followers to show yet"
 msgstr "Ainda não há seguidores para mostrar"
 
@@ -9489,10 +9266,8 @@ msgstr "Sem listas"
 
 #. placeholder {0}: sanitizeDisplayName( displayNameOrHandle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( displayNameOrHandle, moderation.ui('displayName'), )
-#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, )
 #: src/components/ProfileCard.tsx:524
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:294
-#: src/view/com/notifications/NotificationFeedItem.tsx:837
 msgid "No longer following {0}"
 msgstr "Você não está mais seguindo {0}"
 
@@ -9521,18 +9296,14 @@ msgstr "Chega de algoritmos de rolagem eterna cheios de lixo. Encontre feeds que
 msgid "No name"
 msgstr "Sem nome"
 
-#: src/screens/Notifications/components/PageList.tsx:667
+#: src/screens/Notifications/components/PageList.tsx:625
 msgid "No notifications from people you follow yet"
 msgstr "Ainda não há notificações das pessoas que você segue"
 
-#: src/screens/Notifications/components/PageList.tsx:619
-#: src/screens/Notifications/components/PageList.tsx:664
+#: src/screens/Notifications/components/PageList.tsx:577
+#: src/screens/Notifications/components/PageList.tsx:622
 msgid "No notifications yet"
 msgstr "Nenhuma notificação ainda"
-
-#: src/view/com/notifications/NotificationFeed.tsx:130
-msgid "No notifications yet!"
-msgstr "Nenhuma notificação!"
 
 #: src/screens/Messages/Settings.tsx:104
 msgctxt "allow group chat invites from"
@@ -9564,7 +9335,7 @@ msgstr "Ninguém pode enviar mensagens"
 msgid "No post filter"
 msgstr "Sem filtro de postagens"
 
-#: src/screens/Notifications/ActivityList.tsx:43
+#: src/screens/Notifications/ActivityList.tsx:41
 msgid "No posts here"
 msgstr "Não há postagens aqui"
 
@@ -9590,7 +9361,7 @@ msgstr "Sem citações ainda"
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "Ainda não há GIFs recentes. Escolha um para vê-lo aqui."
 
-#: src/screens/Notifications/components/PageList.tsx:673
+#: src/screens/Notifications/components/PageList.tsx:631
 msgid "No replies to show yet"
 msgstr "Ainda não há respostas para mostrar"
 
@@ -9663,7 +9434,7 @@ msgstr "Nenhuma tradução recebida do seu dispositivo."
 
 #: src/features/trendingWidget/Sync.native.tsx:40
 msgid "No trending topics are available right now."
-msgstr ""
+msgstr "Nenhum tópico em alta está disponível no momento."
 
 #: src/view/screens/Profile.tsx:565
 msgid "No video posts yet"
@@ -9757,14 +9528,13 @@ msgstr "Aviso"
 #: src/components/dialogs/NotificationSettingsDialog.tsx:72
 #: src/Navigation.tsx:498
 #: src/Navigation.tsx:585
-#: src/screens/Notifications/index.tsx:683
-#: src/view/screens/Notifications.tsx:134
+#: src/screens/Notifications/index.tsx:650
 msgid "Notification settings"
 msgstr "Configurações de notificação"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:128
 msgid "Notification Settings"
-msgstr ""
+msgstr "Configurações de notificação"
 
 #: src/screens/Messages/Settings.tsx:305
 #: src/screens/Messages/Settings.tsx:318
@@ -9774,22 +9544,16 @@ msgstr "Sons de notificação"
 #: src/Navigation.tsx:580
 #: src/Navigation.tsx:933
 #: src/screens/Messages/Settings.tsx:255
-#: src/screens/Notifications/ActivityList.tsx:31
-#: src/screens/Notifications/index.tsx:661
+#: src/screens/Notifications/ActivityList.tsx:29
+#: src/screens/Notifications/index.tsx:644
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
 #: src/screens/Settings/Settings.tsx:226
 #: src/screens/Settings/Settings.tsx:229
-#: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:283
 #: src/view/shell/desktop/LeftNav.tsx:753
 #: src/view/shell/Drawer.tsx:638
 msgid "Notifications"
 msgstr "Notificações"
-
-#. Description of a feature flag (Redesigned notifications)
-#: src/analytics/features/index.ts:138
-msgid "Notifications sorted into tabs – people you follow, followers, replies and activity."
-msgstr ""
 
 #: src/lib/hooks/useTimeAgo.ts:135
 msgid "now"
@@ -10107,18 +9871,18 @@ msgstr "Abrir lista"
 #. placeholder {0}: livestream.title
 #: src/screens/Atmosphere/components/LivestreamCard.tsx:65
 msgid "Open livestream: {0}"
-msgstr "Abrir transmissão ao vivo: {0}"
+msgstr ""
 
 #. placeholder {0}: livestream.title
 #: src/screens/Atmosphere/components/LivestreamCard.tsx:64
 msgid "Open livestream: {0}, live"
-msgstr "Abrir transmissão ao vivo: {0}, ao vivo"
+msgstr ""
 
 #. placeholder {0}: livestream.title
 #. placeholder {1}: livestream.activeCount
 #: src/screens/Atmosphere/components/LivestreamCard.tsx:57
 msgid "Open livestream: {0}, live with {1, plural, one {# viewer} other {# viewers}}"
-msgstr "Abrir transmissão ao vivo: {0}, ao vivo com {1, plural, one {# espectador} other {# espectadores}}"
+msgstr ""
 
 #: src/components/dms/ActionsWrapper.tsx:41
 msgid "Open message options"
@@ -10309,10 +10073,6 @@ msgstr "Abre este rascunho no editor"
 #: src/view/com/util/UserAvatar.tsx:625
 msgid "Opens this profile"
 msgstr "Abre este perfil"
-
-#: src/screens/Notifications/index.tsx:672
-msgid "Opens your beta features settings"
-msgstr "Abre as configurações de recursos em teste"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:795
 msgid "Opt out"
@@ -10542,7 +10302,7 @@ msgid "People I follow"
 msgstr "Pessoas que eu sigo"
 
 #. Tab label in Notifications that shows only notifications from accounts you follow. Space is tight, so keep it as short as possible, ideally one or two words.
-#: src/screens/Notifications/index.tsx:132
+#: src/screens/Notifications/index.tsx:115
 msgctxt "notifications tab"
 msgid "People I follow"
 msgstr "Pessoas que eu sigo"
@@ -10896,7 +10656,7 @@ msgid "Post a video"
 msgstr "Postar um vídeo"
 
 #. Tab label in Notifications that shows new posts from accounts you get activity notifications for. Space is tight, so keep it as short as possible.
-#: src/screens/Notifications/index.tsx:159
+#: src/screens/Notifications/index.tsx:142
 msgctxt "notifications tab"
 msgid "Post alerts"
 msgstr ""
@@ -10918,17 +10678,13 @@ msgstr "Postagem bloqueada"
 msgid "Post by {authorName}"
 msgstr "Postagem de {authorName}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:544
-msgid "Post by {name}"
-msgstr "Postagem de {name}"
-
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:311
 #: src/Navigation.tsx:318
 #: src/Navigation.tsx:325
 #: src/Navigation.tsx:332
 msgid "Post by @{0}"
-msgstr "Postagem por @{0}"
+msgstr "Postagem de @{0}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:203
 msgctxt "toast"
@@ -11004,7 +10760,7 @@ msgid "Post unpinned"
 msgstr "Postagem desafixada"
 
 #. Shown in place of the text of a post that has no text, only images, video, a link or a quoted post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:219
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:214
 msgid "Post with media"
 msgstr "Postagem com mídia"
 
@@ -11135,7 +10891,7 @@ msgstr "Processando..."
 msgid "Production image adapter"
 msgstr ""
 
-#: src/view/screens/DebugMod/index.tsx:960
+#: src/view/screens/DebugMod/index.tsx:873
 msgid "profile"
 msgstr "perfil"
 
@@ -11172,7 +10928,7 @@ msgstr "Promover ou vender itens ou serviços proibidos"
 #: src/screens/Profile/Header/PronounsDialog.tsx:140
 #: src/screens/Profile/Header/PronounsDialog.tsx:170
 msgid "Pronouns"
-msgstr ""
+msgstr "Pronomes"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:161
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:162
@@ -11257,7 +11013,7 @@ msgstr "A postagem de citação foi desanexada com sucesso"
 msgid "Quote posts disabled"
 msgstr "Citações desabilitadas"
 
-#: src/lib/hooks/useNotificationHandler.ts:192
+#: src/lib/hooks/useNotificationHandler.ts:187
 #: src/screens/Post/PostQuotes.tsx:31
 #: src/screens/Settings/NotificationSettings/index.tsx:206
 #: src/screens/Settings/NotificationSettings/index.tsx:349
@@ -11407,11 +11163,6 @@ msgstr "Usados recentemente"
 msgid "Reconnect"
 msgstr "Reconectar"
 
-#. Name for a feature flag
-#: src/analytics/features/index.ts:132
-msgid "Redesigned notifications"
-msgstr ""
-
 #. Pill on the notifications list, shown when there are new notifications to load.
 #: src/screens/Notifications/components/RefreshPill.tsx:101
 msgid "Refresh"
@@ -11537,11 +11288,11 @@ msgstr "Remover filtro"
 
 #: src/components/Gallery/Storybook.tsx:570
 msgid "Remove first"
-msgstr ""
+msgstr "Remover primeiro"
 
 #: src/components/Gallery/Storybook.tsx:564
 msgid "Remove first card"
-msgstr ""
+msgstr "Remover primeiro cartão"
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:238
 msgid "Remove from chat"
@@ -11580,11 +11331,11 @@ msgstr "Remover imagem"
 
 #: src/components/Gallery/Storybook.tsx:560
 msgid "Remove last"
-msgstr ""
+msgstr "Remover último"
 
 #: src/components/Gallery/Storybook.tsx:554
 msgid "Remove last card"
-msgstr ""
+msgstr "Remover último cartão"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:425
 #: src/features/profileLinks/components/LinkFormDialog.tsx:430
@@ -11612,7 +11363,7 @@ msgstr "Remover perfil"
 #: src/screens/Profile/Header/PronounsDialog.tsx:229
 #: src/screens/Profile/Header/PronounsDialog.tsx:234
 msgid "Remove pronouns"
-msgstr ""
+msgstr "Remover pronomes"
 
 #: src/components/PostControls/RepostButton.tsx:154
 #: src/components/PostControls/RepostButton.tsx:164
@@ -11652,12 +11403,10 @@ msgid "Remove your verification for this account?"
 msgstr "Remover a sua verificação para essa conta?"
 
 #: src/components/Post/Embed/index.tsx:294
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:496
 msgid "Removed by author"
 msgstr "Removido pelo autor"
 
 #: src/components/Post/Embed/index.tsx:292
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:494
 msgid "Removed by you"
 msgstr "Removido por você"
 
@@ -11721,7 +11470,7 @@ msgid "Replace with Discover"
 msgstr "Trocar pelo Discover"
 
 #. In a notification, someone replied to another person’s post. {subject} is that person’s name, followed by a preview of their post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:258
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:253
 msgid "replied to <0>{subject}</0>: {previewNode}"
 msgstr "respondeu a <0>{subject}</0>: {previewNode}"
 
@@ -11730,7 +11479,7 @@ msgctxt "description"
 msgid "Replied to <0><1/></0>"
 msgstr "Respondeu para <0><1/></0>"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:171
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:166
 msgid "replied to a blocked post"
 msgstr "respondeu a uma postagem bloqueada"
 
@@ -11739,7 +11488,7 @@ msgctxt "description"
 msgid "Replied to a blocked post"
 msgstr "Respondeu para uma postagem bloqueada"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:176
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:171
 msgid "replied to a deleted post"
 msgstr "respondeu a uma postagem excluída"
 
@@ -11754,7 +11503,7 @@ msgid "Replied to you"
 msgstr "Respondeu a você"
 
 #. In a notification, someone replied to the viewer’s own post. Followed by a preview of that post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:254
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:249
 msgid "replied to you: {previewNode}"
 msgstr ""
 
@@ -11772,7 +11521,7 @@ msgstr "Mensagem respondida, toque para rolar até ela"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:271
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:283
-#: src/lib/hooks/useNotificationHandler.ts:178
+#: src/lib/hooks/useNotificationHandler.ts:173
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:218
 #: src/screens/Settings/NotificationSettings/index.tsx:184
 #: src/screens/Settings/NotificationSettings/index.tsx:333
@@ -11781,7 +11530,7 @@ msgid "Replies"
 msgstr "Respostas"
 
 #. Tab label in Notifications that shows replies, quotes and mentions. Space is tight, so keep it as short as possible.
-#: src/screens/Notifications/index.tsx:141
+#: src/screens/Notifications/index.tsx:124
 msgctxt "notifications tab"
 msgid "Replies"
 msgstr "Respostas"
@@ -12016,7 +11765,7 @@ msgstr "Repostado por {reposter}"
 msgid "Reposted by you"
 msgstr "Repostado por você"
 
-#: src/lib/hooks/useNotificationHandler.ts:171
+#: src/lib/hooks/useNotificationHandler.ts:166
 #: src/screens/Settings/NotificationSettings/index.tsx:217
 #: src/screens/Settings/NotificationSettings/index.tsx:358
 msgid "Reposts"
@@ -12030,7 +11779,7 @@ msgstr "Repostagens ocultas"
 msgid "Reposts of this post"
 msgstr "Repostagens"
 
-#: src/lib/hooks/useNotificationHandler.ts:213
+#: src/lib/hooks/useNotificationHandler.ts:208
 #: src/screens/Settings/NotificationSettings/index.tsx:254
 #: src/screens/Settings/NotificationSettings/index.tsx:376
 msgid "Reposts of your reposts"
@@ -12389,8 +12138,6 @@ msgstr "Adicionado aos seus feeds"
 
 #: src/components/dialogs/NewskieDialog/index.tsx:119
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:295
-#: src/view/com/notifications/NotificationFeedItem.tsx:933
-#: src/view/com/notifications/NotificationFeedItem.tsx:941
 msgid "Say hello!"
 msgstr "Diga olá!"
 
@@ -13126,7 +12873,7 @@ msgstr "Compartilhar sua faixa etária revela somente a faixa associada à sua c
 #. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “she/they”.
 #: src/screens/Profile/Header/PronounsDialog.tsx:30
 msgid "she/her"
-msgstr ""
+msgstr "ela/dela"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:250
 msgid "Short links can’t be added. Use the full link instead."
@@ -13397,7 +13144,7 @@ msgstr "Desde"
 
 #: src/components/Gallery/Storybook.tsx:303
 msgid "Sizes: 100×80, 220×160, 140×240, 180×120, and a wide card of {wideCardSize}×100, which is the gallery width of {galleryWidth} plus 80."
-msgstr ""
+msgstr "Tamanhos: 100×80, 220×160, 140×240, 180×120, e um cartão largo de {wideCardSize}×100, que é a largura da galeria de {galleryWidth} mais 80."
 
 #: src/components/contacts/screens/PhoneInput.tsx:163
 #: src/components/contacts/screens/VerifyNumber.tsx:208
@@ -13667,7 +13414,7 @@ msgid "Starter Pack “{starterPackName}”"
 msgstr "Pacote de Iniciante “{starterPackName}”"
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
-#: src/components/StarterPack/StarterPackCard.tsx:86
+#: src/components/StarterPack/StarterPackCard.tsx:69
 msgid "Starter Pack by {0}"
 msgstr "Pacote inicial de {0}"
 
@@ -13684,7 +13431,7 @@ msgstr "Pacote inicial de @{0}"
 msgid "Starter Pack by <0/>"
 msgstr "Pacote inicial de <0/>"
 
-#: src/components/StarterPack/StarterPackCard.tsx:85
+#: src/components/StarterPack/StarterPackCard.tsx:68
 #: src/view/com/profile/ProfileSubpageHeader.tsx:166
 msgid "Starter Pack by you"
 msgstr "Pacote inicial feito por você"
@@ -14242,7 +13989,7 @@ msgstr "A aplicação web Bluesky"
 
 #: src/components/Gallery/Storybook.tsx:243
 msgid "The carousel used for post images. Tap an image to open the lightbox, change images, and close it: it should land on the right thumbnail. The first and last images are cropped, and the third learns its size when it loads."
-msgstr ""
+msgstr "O carrossel usado para imagens de postagens. Clique em uma imagem para abrir a lightbox, mudar de imagens e fechá-la: ele deve acabar na miniatura correta. A primeira e última imagem são cortadas, e a terceira ajusta seu tamanho ao carregar."
 
 #: src/view/screens/CommunityGuidelines.tsx:32
 msgid "The Community Guidelines have been moved to <0/>"
@@ -14250,7 +13997,7 @@ msgstr "As Diretrizes da Comunidade foram movidas para <0/>"
 
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:75
 msgid "The content you reported has been restored after another review. If you’d rather not see it, you can mute or block the account. Read our <0>Community Guidelines</0>."
-msgstr ""
+msgstr "O conteúdo que você denunciou foi restaurado após uma nova análise. Se preferir não vê-lo, você pode silenciar ou bloquear a conta. Leia nossas <0>Diretrizes da Comunidade</0>."
 
 #: src/view/screens/CopyrightPolicy.tsx:29
 msgid "The Copyright Policy has been moved to <0/>"
@@ -14290,7 +14037,7 @@ msgstr "As opções a seguir serão utilizadas como padrão ao criar postagens n
 
 #: src/components/Gallery/Storybook.tsx:697
 msgid "The gallery fills whatever width it has. Inside a bleed ancestor, the first and last items line up with the padded content while the rest run to the outer edge."
-msgstr ""
+msgstr "A galeria preencher qualquer largura ela tiver. Em um ancestral estendido, o primeiro e último item alinham com o conteúdo com preenchimento, enquanto o resto vão para a borda externa."
 
 #: src/components/ageAssurance/useAgeAssuranceCopy.ts:23
 msgid "The laws in your region require you to verify you're an adult to access certain features. Tap to learn more."
@@ -14365,7 +14112,7 @@ msgstr "Os Termos de Serviço foram movidos para"
 
 #: src/components/Gallery/Storybook.tsx:769
 msgid "The two lines above should touch."
-msgstr ""
+msgstr "As duas linhas acima devem se tocar."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
@@ -14422,8 +14169,7 @@ msgstr "Tivemos um problema ao contatar o servidor deste feed"
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "Houve um problema ao comunicar com o servidor, por favor verifique sua conexão de internet e tente novamente."
 
-#: src/screens/Notifications/components/PageList.tsx:366
-#: src/view/com/notifications/NotificationFeed.tsx:137
+#: src/screens/Notifications/components/PageList.tsx:351
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Tivemos um problema ao carregar notificações. Toque aqui para tentar de novo."
 
@@ -14542,7 +14288,7 @@ msgstr "Eles não poderão voltar a entrar a menos que você os convide novament
 #. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “they/she”.
 #: src/screens/Profile/Header/PronounsDialog.tsx:40
 msgid "they/them"
-msgstr ""
+msgstr "elu/delu"
 
 #: src/components/moderation/ScreenHider.tsx:117
 msgid "This {screenDescription} has been flagged:"
@@ -14559,7 +14305,7 @@ msgstr "Esta conta foi marcada como automatizada pelo seu proprietário."
 #: src/components/dms/components/GroupChatProfileCard.tsx:34
 #: src/components/dms/InitiateChatFlow.tsx:1145
 msgid "This account has blocked you and can’t be added."
-msgstr ""
+msgstr "Esta conta bloqueou você e não pode ser adicionada."
 
 #: src/components/verification/VerificationsDialog.tsx:95
 msgid "This account has one or more attempted verifications, but it is not currently verified."
@@ -14606,11 +14352,11 @@ msgstr "Este botão permite que outros abram o aplicativo Germ DM para lhe envia
 
 #: src/screens/Search/components/SearchHistory.tsx:148
 msgid "This can’t be undone, and all of your recent searches will be removed."
-msgstr ""
+msgstr "Isso não pode ser desfeito, e todas as suas buscas recentes serão removidas."
 
 #: src/components/Gallery/Storybook.tsx:379
 msgid "This card has enough text to wrap over many lines. Its siblings should stretch to match its height without stretching any images or imposing a fixed height. When this text disappears, all of the cards should shrink again."
-msgstr ""
+msgstr "Este cartão tem texto suficiente para quebrar em várias linhas. Seus irmãos devem se esticar para corresponder à sua altura sem esticar nenhuma imagem ou impor uma altura fixa. Quando este texto desaparecer, todos os cartões devem encolher novamente."
 
 #: src/screens/Messages/components/ChatEnded.tsx:55
 msgid "This chat has ended"
@@ -14780,7 +14526,7 @@ msgstr "Este rotulador não declarou quais rótulos utiliza e pode não estar fu
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:248
 msgid "This link can’t be added. It goes to a site that’s blocked on Bluesky."
-msgstr ""
+msgstr "Este link não pode ser adicionado. Ele leva a um site que está bloqueado no Bluesky."
 
 #: src/components/dialogs/LinkWarning.tsx:95
 msgid "This link is taking you to the following website:"
@@ -15030,7 +14776,7 @@ msgstr "Para encerrar a sessão, <0>clique aqui</0>. Ou, se preferir, você pode
 msgid "Today"
 msgstr "Hoje"
 
-#: src/screens/Notifications/components/PageList.tsx:579
+#: src/screens/Notifications/components/PageList.tsx:537
 msgctxt "Notifications section header"
 msgid "Today"
 msgstr "Hoje"
@@ -15088,7 +14834,7 @@ msgid "Topic"
 msgstr "Assunto"
 
 #. Description of a feature flag (Moderation inbox)
-#: src/analytics/features/index.ts:155
+#: src/analytics/features/index.ts:138
 msgid "Track your reports, review moderation decisions, and submit appeals."
 msgstr "Acompanhe suas denúncias, reveja decisões de moderação e envie contestações."
 
@@ -15909,11 +15655,6 @@ msgstr "Versão {0}"
 msgid "via starter pack <0/> <1>{name}</1>"
 msgstr "através do pacote de iniciante <0/> <1>{name}</1>"
 
-#. When the source of a follow is a Starter Pack, i.e., 'via Starter Pack {starterPackName}'.
-#: src/view/com/notifications/NotificationFeedItem.tsx:734
-msgid "via Starter Pack <0/><1>{starterPackName}</1>"
-msgstr "através do pacote inicial <0/><1>{starterPackName}</1>"
-
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:128
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:194
 msgid "Video"
@@ -15993,13 +15734,12 @@ msgstr "Ver {0}"
 msgid "View {0}'s avatar"
 msgstr "Ver o avatar de {0}"
 
-#. placeholder {0}: authors[0].profile.displayName || authors[0].profile.handle
 #. placeholder {0}: info.creatorHandle
 #. placeholder {0}: profile.handle
+#. placeholder {0}: sanitizeDisplayName( post.author.displayName || post.author.handle, )
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:513
 #: src/screens/Search/components/SearchProfileCard.tsx:37
 #: src/screens/VideoFeed/index.tsx:1003
-#: src/view/com/notifications/NotificationFeedItem.tsx:596
 msgid "View {0}'s profile"
 msgstr "Ver perfil de {0}"
 
@@ -16025,11 +15765,11 @@ msgstr "Ver tudo"
 msgid "View all followers"
 msgstr "Ver todos os seguidores"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:609
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:607
 msgid "View all new posts"
-msgstr ""
+msgstr "Ver todas as novas postagens"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:610
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:608
 msgid "View all new posts from {name}"
 msgstr ""
 
@@ -16226,10 +15966,6 @@ msgstr "Visitar site"
 msgid "Visit site on {0}"
 msgstr "Visitar site em {0}"
 
-#: src/view/screens/Notifications.tsx:296
-msgid "Visit your notification settings"
-msgstr "Acessar suas configurações de notificação"
-
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:80
 msgid "Volume"
 msgstr "Volume"
@@ -16295,7 +16031,7 @@ msgstr "Não foi possível carregar as configurações da sua conta. Verifique s
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:256
 msgid "We couldn’t reach this link. Check it, or save anyway."
-msgstr ""
+msgstr "Não foi possível acessar este link. Verifique-o ou salve mesmo assim."
 
 #: src/screens/Login/LoginForm.tsx:459
 msgid "We couldn’t verify your hosting provider. Check your internet connection, or <0>set your hosting provider manually</0>."
@@ -16352,11 +16088,11 @@ msgstr "Analisamos sua contestação. A situação atual do seu conteúdo ou de 
 
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:103
 msgid "We reviewed your report and found that this doesn’t break our rules. Read our <0>Community Guidelines</0>."
-msgstr ""
+msgstr "Analisamos sua denúncia e constatamos que isso não infringe nossas regras. Leia nossas <0>Diretrizes da Comunidade</0>."
 
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:89
 msgid "We reviewed your report and found that this doesn’t break our rules. You can mute or block the account if you’d rather not see the post. Read our <0>Community Guidelines</0>."
-msgstr ""
+msgstr "Analisamos sua denúncia e descobrimos que isso não infringe nossas regras. Você pode silenciar ou bloquear a conta se preferir não ver a postagem. Leia nossas <0>Diretrizes da Comunidade</0>."
 
 #. placeholder {0}: currentAccount!.email
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:250
@@ -16365,7 +16101,7 @@ msgstr "Enviamos um email para <0>{0}</0> contendo um link. Clique nele para con
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
 msgid "We sent you an email about your account"
-msgstr "Enviamos um email para você sobre a sua conta"
+msgstr ""
 
 #: src/view/com/composer/state/video.ts:521
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
@@ -16824,7 +16560,7 @@ msgstr "Você sempre pode escolher não usar e excluir seus dados"
 msgid "You can appeal once per decision. A different moderator will review the appeal."
 msgstr "Você pode contestar uma vez por decisão. Um moderador diferente irá analisar o recurso."
 
-#: src/lib/hooks/useNotificationHandler.ts:140
+#: src/lib/hooks/useNotificationHandler.ts:135
 msgid "You can choose whether chat notifications have sound in the chat settings within the app"
 msgstr "Você pode escolher se as notificações de conversa terão som nas configurações de conversa dentro do app"
 
@@ -16933,7 +16669,7 @@ msgstr "Você foi removido deste grupo anteriormente e não pode entrar usando e
 #: src/components/dms/components/GroupChatProfileCard.tsx:32
 #: src/components/dms/InitiateChatFlow.tsx:1143
 msgid "You have blocked this account and can’t add them."
-msgstr ""
+msgstr "Você bloqueou esta conta e não pode adicioná-la."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:93
 #: src/lib/moderation/useModerationCauseDescription.ts:55
@@ -16944,10 +16680,6 @@ msgstr "Você bloqueou este usuário. Você não pode ver este conteúdo."
 #: src/components/ageAssurance/useAgeAssuranceCopy.ts:17
 msgid "You have completed the Age Assurance process, but based on the results, we cannot be sure that you are 18 years of age or older. Due to laws in your region, certain features on Bluesky must remain restricted until you're able to verify you're an adult."
 msgstr "Você completou o processo de validação de idade, mas com base nos resultados, não conseguimos confirmar que você tem 18 anos de idade ou mais. Devido a leis na sua região, certos recursos no Bluesky devem permanecer restritos até que você possa confirmar que é maior de idade."
-
-#: src/view/screens/Notifications.tsx:291
-msgid "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your <0>notification settings</0>."
-msgstr "Você desativou completamente as notificações de resposta, citação e menção, por isso esta aba não será atualizada. Para mudar isso, vá até suas <0>configurações de notificação</0>."
 
 #: src/screens/Login/SetNewPasswordForm.tsx:49
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:110
@@ -17389,14 +17121,6 @@ msgstr "Suas conversas foram desativadas"
 msgid "Your choice will be remembered for future links. You can change it at any time in settings."
 msgstr "Sua escolha será lembrada para links futuros. Você pode alterá-la a qualquer momento nas configurações."
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:374
-msgid "Your contact {firstAuthorLink} is on Bluesky"
-msgstr "Seu contato {firstAuthorLink} está no Bluesky"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:372
-msgid "Your contact {firstAuthorName} is on Bluesky"
-msgstr "Seu contato {firstAuthorName} está no Bluesky"
-
 #: src/components/contacts/screens/ViewMatches.tsx:462
 msgid "Your contact {name}"
 msgstr "Seu contato {name}"
@@ -17542,7 +17266,7 @@ msgstr "Seu perfil, postagens, feeds e listas não serão mais visíveis para ou
 
 #: src/screens/Profile/Header/PronounsDialog.tsx:129
 msgid "Your pronouns show next to your handle on your profile."
-msgstr ""
+msgstr "Seus pronomes aparecem ao lado do seu nome de usuário no seu perfil."
 
 #: src/view/com/composer/Composer.tsx:1238
 msgid "Your reply was sent"
@@ -17577,11 +17301,11 @@ msgstr "Seus interesses escolhidos nos ajudam a entregar o conteúdo que interes
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:56
 msgid "Your standing doesn’t restrict your account right now, and strikes come off your record over time."
-msgstr "Sua reputação não restringe sua conta no momento, e as advertências são removidas do seu histórico com o tempo."
+msgstr ""
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:51
 msgid "Your standing may restrict certain features on your account. Strikes come off your record over time."
-msgstr "Sua reputação pode restringir certos recursos em sua conta. As advertências saem do seu registro com o tempo."
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1569
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."

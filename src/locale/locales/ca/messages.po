@@ -8,7 +8,7 @@ msgstr ""
 "Language: ca\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-11-04 22:39\n"
+"PO-Revision-Date: 2026-11-11 16:57\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -584,170 +584,6 @@ msgstr "{feedCount, plural, one {# canal} other {# canals}}"
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
 msgstr "{filterCount, plural, one {+# filtre} other {+# filtres}}"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:355
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
-msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}}</0> t'han seguit"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:387
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
-msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}}</0> els ha agradat el teu canal personalitzat"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:293
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}}</0> els ha agradat la teva publicació"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:484
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your repost"
-msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}}</0> els ha agradat la teva republicació"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:459
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
-msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}}</0> han tret la seva verificació del teu compte"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:315
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
-msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}}</0> han republicat la teva publicació"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:506
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your repost"
-msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}}</0> han republicat la teva republicació"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:409
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your Starter Pack"
-msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}}</0> s'han registrat amb el teu Starter Pack"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:436
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
-msgstr "{firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}}</0> t'han verificat"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:367
-msgid "{firstAuthorLink} followed you"
-msgstr "{firstAuthorLink} t'ha seguit"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:339
-msgid "{firstAuthorLink} followed you back"
-msgstr "{firstAuthorLink} t'ha seguit de tornada"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:399
-msgid "{firstAuthorLink} liked your custom feed"
-msgstr "{firstAuthorLink} li ha agradat el teu canal personalitzat"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:305
-msgid "{firstAuthorLink} liked your post"
-msgstr "{firstAuthorLink} li ha agradat la teva publicació"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:496
-msgid "{firstAuthorLink} liked your repost"
-msgstr "{firstAuthorLink} li ha agradat la teva republicació"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:471
-msgid "{firstAuthorLink} removed their verification from your account"
-msgstr "{firstAuthorLink} ha tret la seva verificació del teu compte"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:327
-msgid "{firstAuthorLink} reposted your post"
-msgstr "{firstAuthorLink} ha republicat la teva publicació"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:518
-msgid "{firstAuthorLink} reposted your repost"
-msgstr "{firstAuthorLink} ha republicat la teva republicació"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:421
-msgid "{firstAuthorLink} signed up with your Starter Pack"
-msgstr "{firstAuthorLink} s'ha registrat amb el teu Starter Pack"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:448
-msgid "{firstAuthorLink} verified you"
-msgstr "{firstAuthorLink} t'ha verificat"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:349
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
-msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}} t'han seguit"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:343
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you via Starter Pack {starterPackName}"
-msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}} t'han seguit mitjançant l'Starter Pack {starterPackName}"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:381
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
-msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}} els ha agradat el teu canal personalitzat"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:287
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
-msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}} els ha agradat la teva publicació"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:478
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your repost"
-msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}} els ha agradat la teva republicació"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:453
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} removed their verifications from your account"
-msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}} han tret la seva verificació del teu compte"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:309
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
-msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}} han republicat la teva publicació"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:500
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your repost"
-msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}} han republicat la teva republicació"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:403
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your Starter Pack"
-msgstr "{firstAuthorName} i {additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}} s'han registrat amb el teu Starter Pack"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:430
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
-msgstr "{firstAuthorName} i{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}} t'han verificat"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:353
-msgid "{firstAuthorName} followed you"
-msgstr "{firstAuthorName} t'ha seguit"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:338
-msgid "{firstAuthorName} followed you back"
-msgstr "{firstAuthorName} t'ha seguit de tornada"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:337
-msgid "{firstAuthorName} followed you back via Starter Pack {starterPackName}"
-msgstr "{firstAuthorName} t'ha seguit mitjançant l'starter pack {starterPackName}"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:347
-msgid "{firstAuthorName} followed you via Starter Pack {starterPackName}"
-msgstr "{firstAuthorName} t'ha seguit mitjançant l'Starter Pack {starterPackName}"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:385
-msgid "{firstAuthorName} liked your custom feed"
-msgstr "{firstAuthorName} li ha agradat el teu canal personalitzat"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:291
-msgid "{firstAuthorName} liked your post"
-msgstr "{firstAuthorName} li ha agradat la teva publicació"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:482
-msgid "{firstAuthorName} liked your repost"
-msgstr "{firstAuthorName} li ha agradat la teva republicació"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:457
-msgid "{firstAuthorName} removed their verification from your account"
-msgstr "{firstAuthorName} ha tret la seva verificació del teu compte"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:313
-msgid "{firstAuthorName} reposted your post"
-msgstr "{firstAuthorName} ha republicat la teva publicació"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:504
-msgid "{firstAuthorName} reposted your repost"
-msgstr "{firstAuthorName} ha republicat la teva republicació"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:407
-msgid "{firstAuthorName} signed up with your Starter Pack"
-msgstr "{firstAuthorName} s'ha registrat amb el teu Starter Pack"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:434
-msgid "{firstAuthorName} verified you"
-msgstr "{firstAuthorName} t'ha verificat"
-
 #: src/components/ProfileHoverCard/index.web.tsx:575
 msgid "{following} following"
 msgstr "{following} seguint"
@@ -812,7 +648,7 @@ msgid "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
 msgstr "{JOIN_REQUESTS_THRESHOLD}+ noves sol·licituds per a unir-se"
 
 #. Number of users (always at least 50) who have joined Bluesky using a specific Starter Pack
-#: src/components/StarterPack/StarterPackCard.tsx:97
+#: src/components/StarterPack/StarterPackCard.tsx:80
 msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr "{joinedAllTimeCount, plural, one {}other {# usuaris s'han}} unit!"
 
@@ -827,7 +663,7 @@ msgstr "{label}. {description}"
 
 #: src/screens/Profile/Header/PronounsDialog.tsx:184
 msgid "{length} out of {MAX_PRONOUNS} characters"
-msgstr ""
+msgstr "{length} de {MAX_PRONOUNS} caràcters"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:138
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
@@ -835,11 +671,11 @@ msgstr "{MAX_ALT_TEXT, plural, other {El text alternatiu ha de tenir menys de # 
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:547
 msgid "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
-msgstr "{MAX_DESCRIPTION, plural, other {La descripció és massa llarga, el nombre màxim de caràcters és #.}}"
+msgstr ""
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:428
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
-msgstr "{MAX_DISPLAY_NAME, plural, other {El nom per mostrar és massa llarg, el nombre màxim de caràcters és #.}}"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:398
 msgid "{MAX_HIDDEN_REPLIES, plural, other {You can hide a maximum of # replies.}}"
@@ -847,7 +683,7 @@ msgstr "{MAX_HIDDEN_REPLIES, plural, other {Pots amagar un màxim de # respostes
 
 #: src/screens/Profile/Header/PronounsDialog.tsx:204
 msgid "{MAX_PRONOUNS, plural, other {Pronouns can be up to # characters.}}"
-msgstr ""
+msgstr "{MAX_PRONOUNS, plural, one {Els pronoms de preferència poden tenir fins a # caràcter.} other {Els pronoms de preferència poden tenir fins a # caràcters.}}"
 
 #. The number of group chat members out of the total number of permitted users.
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:39
@@ -1595,7 +1431,7 @@ msgstr "Índex actiu {0} (de {1}), {2} esdeveniments de navegació de l'usuari"
 msgid "Activity"
 msgstr "Activitat"
 
-#: src/lib/hooks/useNotificationHandler.ts:220
+#: src/lib/hooks/useNotificationHandler.ts:215
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:105
 #: src/screens/Settings/NotificationSettings/index.tsx:228
 msgid "Activity from others"
@@ -1772,7 +1608,7 @@ msgstr "Afegeix gent amb un enllaç"
 #: src/screens/Profile/Header/PronounsDialog.tsx:102
 #: src/screens/Profile/Header/PronounsDialog.tsx:125
 msgid "Add pronouns"
-msgstr ""
+msgstr "Afegeix pronoms de preferència"
 
 #: src/components/dms/EmojiPopup.android.tsx:56
 msgid "Add Reaction"
@@ -1926,7 +1762,6 @@ msgstr "josepmaria@exemple.cat"
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:205
-#: src/view/screens/Notifications.tsx:86
 msgid "All"
 msgstr "Totes"
 
@@ -1936,7 +1771,7 @@ msgid "All"
 msgstr "Totes"
 
 #. Tab label in Notifications that shows every notification. Space is tight, so keep it as short as possible.
-#: src/screens/Notifications/index.tsx:123
+#: src/screens/Notifications/index.tsx:106
 msgctxt "notifications tab"
 msgid "All"
 msgstr "Totes"
@@ -2200,8 +2035,6 @@ msgstr "S'ha produït un problema en iniciar el xat de grup. Torna-ho a provar."
 #: src/components/ProfileCard.tsx:510
 #: src/components/ProfileCard.tsx:535
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:218
-#: src/view/com/notifications/NotificationFeedItem.tsx:823
-#: src/view/com/notifications/NotificationFeedItem.tsx:844
 msgid "An issue occurred, please try again."
 msgstr "Hi ha hagut un problema, prova-ho de nou."
 
@@ -2421,7 +2254,7 @@ msgstr "Aplica l'actualització d'aquest canal"
 
 #: src/screens/Atmosphere/components/FeaturedApps.tsx:15
 msgid "Apps on the Atmosphere"
-msgstr "Aplicacions a l'Atmosphere"
+msgstr ""
 
 #. placeholder {0}: niceDate(i18n, createdAt, 'medium')
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:627
@@ -2716,7 +2549,6 @@ msgid "Beta Feature"
 msgstr "Funció beta"
 
 #: src/Navigation.tsx:459
-#: src/screens/Notifications/index.tsx:671
 #: src/screens/Settings/BetaFeaturesSettings.tsx:142
 #: src/screens/Settings/Settings.tsx:276
 #: src/screens/Settings/Settings.tsx:279
@@ -2843,10 +2675,6 @@ msgstr "Els comptes bloquejats no poden respondre cap fil teu, ni anomenar-te ni
 #: src/view/screens/ModerationBlockedAccounts.tsx:179
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Els comptes bloquejats no poden respondre a cap fil teu, ni anomenar-te ni interactuar amb tu de cap manera. No veuràs mai el seu contingut ni ells el teu."
-
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:484
-msgid "Blocked post"
-msgstr "Publicació bloquejada"
 
 #: src/screens/Profile/Sections/Labels.tsx:204
 msgid "Blocking does not prevent this labeler from placing labels on your account."
@@ -3355,7 +3183,7 @@ msgstr "Si canvies la contrasenya, es tancarà la sessió. Hauràs d'iniciar ses
 msgid "Channel"
 msgstr "Canal"
 
-#: src/lib/hooks/useNotificationHandler.ts:139
+#: src/lib/hooks/useNotificationHandler.ts:134
 #: src/Navigation.tsx:554
 #: src/view/shell/bottom-bar/BottomBar.tsx:246
 #: src/view/shell/desktop/LeftNav.tsx:776
@@ -3383,11 +3211,11 @@ msgstr "L'enllaç d'invitació al xat ja no està disponible"
 msgid "Chat locked"
 msgstr "Xat tancat"
 
-#: src/lib/hooks/useNotificationHandler.ts:152
+#: src/lib/hooks/useNotificationHandler.ts:147
 msgid "Chat messages - silent"
 msgstr "Missatges del xat - silenciats"
 
-#: src/lib/hooks/useNotificationHandler.ts:143
+#: src/lib/hooks/useNotificationHandler.ts:138
 msgid "Chat messages - sound"
 msgstr "Missatges del xat - amb so"
 
@@ -3803,19 +3631,14 @@ msgstr "Tanca l'alerta d'actualització de contrasenya"
 msgid "Closes post composer and discards post draft"
 msgstr "Tanca l'editor de la publicació i descarta l'esborrany"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:287
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:494
-#: src/view/com/notifications/NotificationFeedItem.tsx:589
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:286
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:493
 msgid "Collapse list of users"
 msgstr "Plega la llista d'usuaris"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:304
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:303
 msgid "Collapses list of users"
 msgstr "Plega la llista d'usuaris"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:969
-msgid "Collapses list of users for a given notification"
-msgstr "Plega la llista d'usuaris per una notificació concreta"
 
 #: src/features/inviteFriends/components/ThemePicker.tsx:68
 msgid "Color"
@@ -4335,7 +4158,7 @@ msgstr "No s'han pogut carregar els contactes. Cal que tornis a verificar el teu
 msgid "Couldn’t load GIFs"
 msgstr "No s'han pogut carregar els GIFs"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:359
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:358
 msgid "Couldn’t load more accounts, please try again"
 msgstr "No s'han pogut carregar més comptes. Torna-ho a provar"
 
@@ -4706,10 +4529,6 @@ msgstr "Eliminat per Plivo després de la verificació"
 msgid "Deleted list"
 msgstr "Llista eliminada"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:487
-msgid "Deleted post"
-msgstr "Publicació eliminada"
-
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:463
 #: src/components/SendErrorReportDialog.tsx:78
 #: src/screens/Profile/Header/EditProfileDialog.tsx:527
@@ -4940,7 +4759,7 @@ msgstr "Mostra insígnies de text alternatiu més grans"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:409
 #: src/screens/Profile/Header/EditProfileDialog.tsx:415
 msgid "Display name"
-msgstr "Nom mostrat"
+msgstr ""
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:33
 msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
@@ -5128,13 +4947,13 @@ msgstr "p. ex. Els que mai fallen."
 #. Example pronouns in the pronouns field
 #: src/screens/Profile/Header/PronounsDialog.tsx:171
 msgid "e.g. they/them"
-msgstr ""
+msgstr "p. ex. elli/li"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:385
 msgid "e.g. Users that repeatedly reply with ads."
 msgstr "p. ex. Usuaris que sempre responen amb anuncis."
 
-#: src/screens/Notifications/components/PageList.tsx:580
+#: src/screens/Notifications/components/PageList.tsx:538
 msgctxt "Notifications section header"
 msgid "Earlier"
 msgstr "Anteriors"
@@ -5263,11 +5082,11 @@ msgstr "Edita el perfil"
 #: src/screens/Profile/Header/PronounsDialog.tsx:102
 #: src/screens/Profile/Header/PronounsDialog.tsx:123
 msgid "Edit pronouns"
-msgstr ""
+msgstr "Edita els pronoms de preferència"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:470
 msgid "Edit pronouns: {pronouns}"
-msgstr ""
+msgstr "Edita els pronoms de preferència: {pronouns}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:613
 msgid "Edit Starter Pack"
@@ -5618,9 +5437,8 @@ msgstr "Surt de la pantalla completa"
 msgid "Expand alt text"
 msgstr "Expandeix el text alternatiu"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:288
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:494
-#: src/view/com/notifications/NotificationFeedItem.tsx:590
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:287
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:493
 msgid "Expand list of users"
 msgstr "Expandeix la llista d'usuaris"
 
@@ -5632,7 +5450,7 @@ msgstr "Expandeix o replega la publicació completa a la qual estàs responent"
 msgid "Expand post text"
 msgstr "Expandeix el text de la publicació"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:305
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:304
 msgid "Expands list of users"
 msgstr "Expandeix la llista d'usuaris"
 
@@ -6125,7 +5943,7 @@ msgstr "Canal per {0}"
 msgid "Feed by {authorName}"
 msgstr "Canal per {authorName}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/media.tsx:225
+#: src/screens/Notifications/components/NotificationItem/Item/media.tsx:262
 msgid "Feed by {handle}"
 msgstr "Canal per {handle}"
 
@@ -6275,8 +6093,8 @@ msgstr "Cerca i convida amics"
 msgid "Find Contacts"
 msgstr "Troba contactes"
 
-#: src/screens/Notifications/components/PageList.tsx:636
-#: src/screens/Notifications/components/PageList.tsx:641
+#: src/screens/Notifications/components/PageList.tsx:594
+#: src/screens/Notifications/components/PageList.tsx:599
 msgid "Find friends"
 msgstr "Troba amics"
 
@@ -6301,7 +6119,7 @@ msgstr "Troba gent que coneguis"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Troba publicacions, usuaris i canals a Bluesky"
 
-#: src/screens/Notifications/components/PageList.tsx:630
+#: src/screens/Notifications/components/PageList.tsx:588
 msgid "Find some friends to start getting notifications!"
 msgstr "Troba alguns amics per començar a rebre notificacions!"
 
@@ -6369,8 +6187,6 @@ msgstr "Enfocat {focusCount} vegades"
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:430
 #: src/screens/VideoFeed/index.tsx:1060
-#: src/view/com/notifications/NotificationFeedItem.tsx:886
-#: src/view/com/notifications/NotificationFeedItem.tsx:893
 msgid "Follow"
 msgstr "Segueix"
 
@@ -6427,8 +6243,6 @@ msgstr "Segueix tots els comptes"
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:229
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:155
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:428
-#: src/view/com/notifications/NotificationFeedItem.tsx:886
-#: src/view/com/notifications/NotificationFeedItem.tsx:893
 msgid "Follow back"
 msgstr "Segueix"
 
@@ -6486,7 +6300,6 @@ msgstr "Seguidors que coneixes"
 
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
-#. User is following this account, click to unfollow
 #: src/components/ProfileCard.tsx:542
 #: src/components/ProfileHoverCard/index.web.tsx:502
 #: src/components/ProfileHoverCard/index.web.tsx:513
@@ -6494,8 +6307,6 @@ msgstr "Seguidors que coneixes"
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:426
 #: src/screens/VideoFeed/index.tsx:1058
-#: src/view/com/notifications/NotificationFeedItem.tsx:865
-#: src/view/com/notifications/NotificationFeedItem.tsx:881
 msgid "Following"
 msgstr "Seguint"
 
@@ -6508,10 +6319,8 @@ msgstr "Seguint"
 
 #. placeholder {0}: sanitizeDisplayName( displayNameOrHandle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( displayNameOrHandle, moderation.ui('displayName'), )
-#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, )
 #: src/components/ProfileCard.tsx:496
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:265
-#: src/view/com/notifications/NotificationFeedItem.tsx:816
 msgid "Following {0}"
 msgstr "Seguint {0}"
 
@@ -6538,7 +6347,7 @@ msgid "Following Feed Preferences"
 msgstr "Preferències del canal Seguint"
 
 #. Tab label in Notifications that shows people who followed you. Space is tight, so keep it as short as possible.
-#: src/screens/Notifications/index.tsx:150
+#: src/screens/Notifications/index.tsx:133
 msgctxt "notifications tab"
 msgid "Follows"
 msgstr "Segueixes"
@@ -6871,11 +6680,7 @@ msgstr "Emet en directe durant"
 msgid "Go to {0}'s profile"
 msgstr "Vés al perfil de {0}"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:250
-msgid "Go to {firstAuthorName}'s profile"
-msgstr "Vés al perfil de {firstAuthorName}"
-
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:78
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:73
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:640
 #: src/screens/Notifications/components/NotificationItem/Item/text.tsx:113
 msgid "Go to {name}’s profile"
@@ -7109,7 +6914,7 @@ msgstr "Tens problemes?"
 #. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “he/they”.
 #: src/screens/Profile/Header/PronounsDialog.tsx:35
 msgid "he/him"
-msgstr ""
+msgstr "ell/el"
 
 #: src/components/contacts/screens/PhoneInput.tsx:290
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
@@ -7158,7 +6963,7 @@ msgid "Hidden list"
 msgstr "Llista amagada"
 
 #. Shown in place of the text of a post that is hidden by the viewer’s moderation settings
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:213
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:208
 msgid "Hidden post"
 msgstr "Publicació amagada"
 
@@ -7171,11 +6976,6 @@ msgstr "Publicació amagada"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:23
 #: src/lib/moderation/useLabelBehaviorDescription.ts:28
 #: src/lib/moderation/useLabelBehaviorDescription.ts:33
-msgid "Hide"
-msgstr "Amaga"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:975
-msgctxt "action"
 msgid "Hide"
 msgstr "Amaga"
 
@@ -7242,10 +7042,6 @@ msgstr "Amaga els temes del moment"
 #: src/components/interstitials/TrendingVideos.tsx:138
 msgid "Hide trending videos?"
 msgstr "Vols amagar els vídeos populars?"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:968
-msgid "Hide user list"
-msgstr "Amaga la llista d'usuaris"
 
 #: src/screens/Moderation/VerificationSettings.tsx:88
 #: src/screens/Moderation/VerificationSettings.tsx:97
@@ -7540,22 +7336,22 @@ msgid "In order to provide an age-appropriate experience, we need to know your b
 msgstr "Per tal d'oferir una experiència adequada a l'edat, necessitem saber la teva data de naixement. Només cal fer-ho un sol cop i les teves dades es mantindran privades."
 
 #. In a notification about a mention or quote, the post is a reply to another person’s post. {subject} is that person’s name, followed by a preview of their post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:269
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:264
 msgid "in reply to <0>{subject}</0>: {previewNode}"
 msgstr "en resposta a <0>{subject}</0>: {previewNode}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:173
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:168
 msgid "in reply to a blocked post"
 msgstr "en resposta a una publicació bloquejada"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:178
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:173
 msgid "in reply to a deleted post"
 msgstr "en resposta a una publicació eliminada"
 
 #. In a notification about a mention or quote, the post is a reply to the viewer’s own post. Followed by a preview of that post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:265
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:260
 msgid "in reply to you: {previewNode}"
-msgstr ""
+msgstr "en resposta a tu: {previewNode}"
 
 #: src/screens/Settings/NotificationSettings/components/SettingPreview.tsx:30
 msgid "In-app"
@@ -8223,14 +8019,14 @@ msgstr "Li ha agradat a {0} i {1}"
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "Li ha agradat a {likeCount, plural, one {# usuari} other {# usuaris}}"
 
-#: src/lib/hooks/useNotificationHandler.ts:164
+#: src/lib/hooks/useNotificationHandler.ts:159
 #: src/screens/Settings/NotificationSettings/index.tsx:162
 #: src/screens/Settings/NotificationSettings/index.tsx:317
 #: src/view/screens/Profile.tsx:273
 msgid "Likes"
 msgstr "M'agrades"
 
-#: src/lib/hooks/useNotificationHandler.ts:206
+#: src/lib/hooks/useNotificationHandler.ts:201
 #: src/screens/Settings/NotificationSettings/index.tsx:241
 #: src/screens/Settings/NotificationSettings/index.tsx:367
 msgid "Likes of your reposts"
@@ -8465,7 +8261,6 @@ msgstr "Carrega més canals suggerits"
 #. Accessible action on the notification list pill.
 #: src/components/NewPostsPill/index.tsx:163
 #: src/screens/Notifications/components/RefreshPill.tsx:107
-#: src/view/screens/Notifications.tsx:271
 msgid "Load new notifications"
 msgstr "Carrega noves notificacions"
 
@@ -8746,10 +8541,9 @@ msgstr "No s'han pogut afegir els membres perquè has blocat un dels comptes sel
 msgid "mentioned users"
 msgstr "usuaris mencionats"
 
-#: src/lib/hooks/useNotificationHandler.ts:185
+#: src/lib/hooks/useNotificationHandler.ts:180
 #: src/screens/Settings/NotificationSettings/index.tsx:195
 #: src/screens/Settings/NotificationSettings/index.tsx:342
-#: src/view/screens/Notifications.tsx:99
 msgid "Mentions"
 msgstr "Mencions"
 
@@ -8868,7 +8662,7 @@ msgid "Moderation details"
 msgstr "Detalls de la moderació"
 
 #. Name for a feature flag
-#: src/analytics/features/index.ts:149
+#: src/analytics/features/index.ts:132
 #: src/Navigation.tsx:209
 #: src/screens/Moderation/index.tsx:299
 #: src/screens/ModerationInbox/index.tsx:101
@@ -9128,12 +8922,12 @@ msgstr "Natura"
 
 #. placeholder {0}: record.name
 #. placeholder {0}: view.record.name
-#: src/components/StarterPack/StarterPackCard.tsx:126
-#: src/components/StarterPack/StarterPackCard.tsx:156
+#: src/components/StarterPack/StarterPackCard.tsx:109
+#: src/components/StarterPack/StarterPackCard.tsx:139
 msgid "Navigate to {0}"
 msgstr "Ves a {0}"
 
-#: src/components/StarterPack/StarterPackCard.tsx:127
+#: src/components/StarterPack/StarterPackCard.tsx:110
 msgid "Navigate to Starter Pack"
 msgstr "Ves a l'Starter Pack"
 
@@ -9173,21 +8967,13 @@ msgctxt "nux-description"
 msgid "New"
 msgstr "Nova"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:567
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:565
 msgid "New {count, plural, one {post} other {posts}} from {name}"
 msgstr "{count, plural, one {Nova publicació} other {Noves publicacions}} de {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:595
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:593
 msgid "New {count, plural, one {post} other {posts}} from <0/>"
 msgstr "{count, plural, one {Nova publicació} other {Noves publicacions}} de <0/>"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:547
-msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
-msgstr "Nou {postsCount, plural, one {publicació} other{publicacions}} de {firstAuthorLink}"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:531
-msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
-msgstr "Nou {postsCount, plural, one {publicació} other{publicacions}} de {firstAuthorName}"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:162
 #: src/components/dms/dialogs/NewChatDialog.tsx:177
@@ -9228,7 +9014,7 @@ msgstr "Adreça de correu nova"
 msgid "New Feature"
 msgstr "Funció nova"
 
-#: src/lib/hooks/useNotificationHandler.ts:199
+#: src/lib/hooks/useNotificationHandler.ts:194
 #: src/screens/Settings/NotificationSettings/index.tsx:173
 #: src/screens/Settings/NotificationSettings/index.tsx:326
 msgid "New followers"
@@ -9284,13 +9070,12 @@ msgstr "Nova contrasenya"
 #: src/screens/ProfileList/index.tsx:234
 #: src/screens/ProfileList/index.tsx:277
 #: src/view/screens/Feeds.tsx:546
-#: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:660
 msgid "New post"
 msgstr "Nova publicació"
 
 #: src/features/followingV2/home/FeedPage.tsx:192
-#: src/screens/Notifications/index.tsx:101
+#: src/screens/Notifications/index.tsx:84
 #: src/view/com/feeds/FeedPage.tsx:191
 #: src/view/shell/desktop/LeftNav.tsx:656
 msgctxt "action"
@@ -9305,35 +9090,27 @@ msgstr "Publicacions noves"
 msgid "New posts are ready to load from the people you follow"
 msgstr "Hi ha publicacions noves a punt per carregar-se de la gent que segueixes"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:536
-msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> "
-msgstr "Noves publicacions de {firstAuthorLink} i <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}}</0> "
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:524
-msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
-msgstr "Noves publicacions de {firstAuthorName} i{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altre} other {{formattedAuthorsCount} altres}}"
-
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:561
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:559
 msgid "New posts from {name} and {others, plural, one {# other} other {# others}}"
 msgstr "Noves publicacions de {name} i {others, plural, one {# altre} other {# altres}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:559
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:557
 msgid "New posts from {name} and {secondName}"
 msgstr "Noves publicacions de {name} i {secondName}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:579
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:577
 msgid "New posts from <0/> and <1/>"
 msgstr "Publicacions noves de <0/> i <1/>"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:584
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:582
 msgid "New posts from <0/> and <1>{others, plural, one {# other} other {# others}}</1>"
 msgstr "Publicacions noves de <0/> i <1>{others, plural, one {# altre} other {# altres}}</1>"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:566
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:564
 msgid "New reply from {name}"
 msgstr "Nova resposta de {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:591
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:589
 msgid "New reply from <0/>"
 msgstr "Nova resposta de <0/>"
 
@@ -9449,7 +9226,7 @@ msgstr "Sense caducitat definida"
 msgid "No feeds found. Try searching for something else."
 msgstr "No s'han trobat canals. Intenta cercar una altra cosa."
 
-#: src/screens/Notifications/components/PageList.tsx:670
+#: src/screens/Notifications/components/PageList.tsx:628
 msgid "No followers to show yet"
 msgstr "Encara no hi ha seguidors per mostrar"
 
@@ -9489,10 +9266,8 @@ msgstr "No hi ha llistes"
 
 #. placeholder {0}: sanitizeDisplayName( displayNameOrHandle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( displayNameOrHandle, moderation.ui('displayName'), )
-#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, )
 #: src/components/ProfileCard.tsx:524
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:294
-#: src/view/com/notifications/NotificationFeedItem.tsx:837
 msgid "No longer following {0}"
 msgstr "Ja no segueixes a {0}"
 
@@ -9521,17 +9296,13 @@ msgstr "S'han acabat els algoritmes plens de brossa i que t'enganxen en una espi
 msgid "No name"
 msgstr "Sense nom"
 
-#: src/screens/Notifications/components/PageList.tsx:667
+#: src/screens/Notifications/components/PageList.tsx:625
 msgid "No notifications from people you follow yet"
 msgstr "Encara no hi ha notificacions de persones que segueixes"
 
-#: src/screens/Notifications/components/PageList.tsx:619
-#: src/screens/Notifications/components/PageList.tsx:664
+#: src/screens/Notifications/components/PageList.tsx:577
+#: src/screens/Notifications/components/PageList.tsx:622
 msgid "No notifications yet"
-msgstr "Encara no tens cap notificació"
-
-#: src/view/com/notifications/NotificationFeed.tsx:130
-msgid "No notifications yet!"
 msgstr "Encara no tens cap notificació"
 
 #: src/screens/Messages/Settings.tsx:104
@@ -9564,7 +9335,7 @@ msgstr "Ningú pot enviar missatges"
 msgid "No post filter"
 msgstr "Sense filtre de publicacions"
 
-#: src/screens/Notifications/ActivityList.tsx:43
+#: src/screens/Notifications/ActivityList.tsx:41
 msgid "No posts here"
 msgstr "No hi ha publicacions aquí"
 
@@ -9590,7 +9361,7 @@ msgstr "Encara no té cap citació"
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "No hi ha GIFs recents encara. Tria'n un per veure'l aquí."
 
-#: src/screens/Notifications/components/PageList.tsx:673
+#: src/screens/Notifications/components/PageList.tsx:631
 msgid "No replies to show yet"
 msgstr "Encara no hi ha respostes per mostrar"
 
@@ -9757,14 +9528,13 @@ msgstr "Avís"
 #: src/components/dialogs/NotificationSettingsDialog.tsx:72
 #: src/Navigation.tsx:498
 #: src/Navigation.tsx:585
-#: src/screens/Notifications/index.tsx:683
-#: src/view/screens/Notifications.tsx:134
+#: src/screens/Notifications/index.tsx:650
 msgid "Notification settings"
 msgstr "Configuració de les notificacions"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:128
 msgid "Notification Settings"
-msgstr ""
+msgstr "Configuració de les notificacions"
 
 #: src/screens/Messages/Settings.tsx:305
 #: src/screens/Messages/Settings.tsx:318
@@ -9774,22 +9544,16 @@ msgstr "Sons de les notificacions"
 #: src/Navigation.tsx:580
 #: src/Navigation.tsx:933
 #: src/screens/Messages/Settings.tsx:255
-#: src/screens/Notifications/ActivityList.tsx:31
-#: src/screens/Notifications/index.tsx:661
+#: src/screens/Notifications/ActivityList.tsx:29
+#: src/screens/Notifications/index.tsx:644
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
 #: src/screens/Settings/Settings.tsx:226
 #: src/screens/Settings/Settings.tsx:229
-#: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:283
 #: src/view/shell/desktop/LeftNav.tsx:753
 #: src/view/shell/Drawer.tsx:638
 msgid "Notifications"
 msgstr "Notificacions"
-
-#. Description of a feature flag (Redesigned notifications)
-#: src/analytics/features/index.ts:138
-msgid "Notifications sorted into tabs – people you follow, followers, replies and activity."
-msgstr "Notificacions ordenades en pestanyes: persones que segueixes, seguidors, respostes i activitat."
 
 #: src/lib/hooks/useTimeAgo.ts:135
 msgid "now"
@@ -10107,18 +9871,18 @@ msgstr "Obre la llista"
 #. placeholder {0}: livestream.title
 #: src/screens/Atmosphere/components/LivestreamCard.tsx:65
 msgid "Open livestream: {0}"
-msgstr "Obre la retransmissió en directe: {0}"
+msgstr ""
 
 #. placeholder {0}: livestream.title
 #: src/screens/Atmosphere/components/LivestreamCard.tsx:64
 msgid "Open livestream: {0}, live"
-msgstr "Obre la retransmissió en directe: {0}, en directe"
+msgstr ""
 
 #. placeholder {0}: livestream.title
 #. placeholder {1}: livestream.activeCount
 #: src/screens/Atmosphere/components/LivestreamCard.tsx:57
 msgid "Open livestream: {0}, live with {1, plural, one {# viewer} other {# viewers}}"
-msgstr "Obre la retransmissió en directe: {0}, en directe amb {1, plural, one {# espectador} other {# espectadors}}"
+msgstr ""
 
 #: src/components/dms/ActionsWrapper.tsx:41
 msgid "Open message options"
@@ -10309,10 +10073,6 @@ msgstr "Obre aquest esborrany a l'editor"
 #: src/view/com/util/UserAvatar.tsx:625
 msgid "Opens this profile"
 msgstr "Obre aquest perfil"
-
-#: src/screens/Notifications/index.tsx:672
-msgid "Opens your beta features settings"
-msgstr "Obre la configuració de les funcions beta"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:795
 msgid "Opt out"
@@ -10542,7 +10302,7 @@ msgid "People I follow"
 msgstr "Gent que segueixo"
 
 #. Tab label in Notifications that shows only notifications from accounts you follow. Space is tight, so keep it as short as possible, ideally one or two words.
-#: src/screens/Notifications/index.tsx:132
+#: src/screens/Notifications/index.tsx:115
 msgctxt "notifications tab"
 msgid "People I follow"
 msgstr "Gent que segueixo"
@@ -10896,7 +10656,7 @@ msgid "Post a video"
 msgstr "Publica un vídeo"
 
 #. Tab label in Notifications that shows new posts from accounts you get activity notifications for. Space is tight, so keep it as short as possible.
-#: src/screens/Notifications/index.tsx:159
+#: src/screens/Notifications/index.tsx:142
 msgctxt "notifications tab"
 msgid "Post alerts"
 msgstr "Alertes de publicacions"
@@ -10917,10 +10677,6 @@ msgstr "Publicació bloquejada"
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:36
 msgid "Post by {authorName}"
 msgstr "Publicació de {authorName}"
-
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:544
-msgid "Post by {name}"
-msgstr "Publicació de {name}"
 
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:311
@@ -11004,7 +10760,7 @@ msgid "Post unpinned"
 msgstr "Publicació sense fixar"
 
 #. Shown in place of the text of a post that has no text, only images, video, a link or a quoted post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:219
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:214
 msgid "Post with media"
 msgstr "Publicació amb contingut multimèdia"
 
@@ -11135,7 +10891,7 @@ msgstr "Processant…"
 msgid "Production image adapter"
 msgstr "Adaptador d'imatge de producció"
 
-#: src/view/screens/DebugMod/index.tsx:960
+#: src/view/screens/DebugMod/index.tsx:873
 msgid "profile"
 msgstr "perfil"
 
@@ -11172,7 +10928,7 @@ msgstr "Promoció o venda d'articles o serveis prohibits"
 #: src/screens/Profile/Header/PronounsDialog.tsx:140
 #: src/screens/Profile/Header/PronounsDialog.tsx:170
 msgid "Pronouns"
-msgstr ""
+msgstr "Pronoms de preferència"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:161
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:162
@@ -11257,7 +11013,7 @@ msgstr "La publicació citada s'ha desenganxat amb èxit"
 msgid "Quote posts disabled"
 msgstr "S'han deshabilitat les citacions"
 
-#: src/lib/hooks/useNotificationHandler.ts:192
+#: src/lib/hooks/useNotificationHandler.ts:187
 #: src/screens/Post/PostQuotes.tsx:31
 #: src/screens/Settings/NotificationSettings/index.tsx:206
 #: src/screens/Settings/NotificationSettings/index.tsx:349
@@ -11406,11 +11162,6 @@ msgstr "Utilitzat recentment"
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Reconnect"
 msgstr "Torna a connectar"
-
-#. Name for a feature flag
-#: src/analytics/features/index.ts:132
-msgid "Redesigned notifications"
-msgstr "Notificacions redissenyades"
 
 #. Pill on the notifications list, shown when there are new notifications to load.
 #: src/screens/Notifications/components/RefreshPill.tsx:101
@@ -11612,7 +11363,7 @@ msgstr "Elimina el perfil"
 #: src/screens/Profile/Header/PronounsDialog.tsx:229
 #: src/screens/Profile/Header/PronounsDialog.tsx:234
 msgid "Remove pronouns"
-msgstr ""
+msgstr "Elimina els pronoms de preferència"
 
 #: src/components/PostControls/RepostButton.tsx:154
 #: src/components/PostControls/RepostButton.tsx:164
@@ -11652,12 +11403,10 @@ msgid "Remove your verification for this account?"
 msgstr "Vols eliminar la teva verificació d'aquest compte?"
 
 #: src/components/Post/Embed/index.tsx:294
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:496
 msgid "Removed by author"
 msgstr "Eliminat per l'autor"
 
 #: src/components/Post/Embed/index.tsx:292
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:494
 msgid "Removed by you"
 msgstr "Tu l'has eliminat"
 
@@ -11721,7 +11470,7 @@ msgid "Replace with Discover"
 msgstr "Canvia amb Discover"
 
 #. In a notification, someone replied to another person’s post. {subject} is that person’s name, followed by a preview of their post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:258
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:253
 msgid "replied to <0>{subject}</0>: {previewNode}"
 msgstr "ha respost a <0>{subject}</0>: {previewNode}"
 
@@ -11730,7 +11479,7 @@ msgctxt "description"
 msgid "Replied to <0><1/></0>"
 msgstr "Ha respost a <0><1/></0>"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:171
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:166
 msgid "replied to a blocked post"
 msgstr "ha respost a una publicació bloquejada"
 
@@ -11739,7 +11488,7 @@ msgctxt "description"
 msgid "Replied to a blocked post"
 msgstr "Ha respost a una publicació bloquejada"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:176
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:171
 msgid "replied to a deleted post"
 msgstr "ha respost a una publicació eliminada"
 
@@ -11754,9 +11503,9 @@ msgid "Replied to you"
 msgstr "T'ha respost"
 
 #. In a notification, someone replied to the viewer’s own post. Followed by a preview of that post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:254
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:249
 msgid "replied to you: {previewNode}"
-msgstr ""
+msgstr "t'ha respost: {previewNode}"
 
 #: src/components/dms/MessageItem.tsx:943
 msgid "Replied-to message from {senderName}, tap to scroll to it"
@@ -11772,7 +11521,7 @@ msgstr "Missatge respost, toca per desplaçar-t'hi"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:271
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:283
-#: src/lib/hooks/useNotificationHandler.ts:178
+#: src/lib/hooks/useNotificationHandler.ts:173
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:218
 #: src/screens/Settings/NotificationSettings/index.tsx:184
 #: src/screens/Settings/NotificationSettings/index.tsx:333
@@ -11781,7 +11530,7 @@ msgid "Replies"
 msgstr "Respostes"
 
 #. Tab label in Notifications that shows replies, quotes and mentions. Space is tight, so keep it as short as possible.
-#: src/screens/Notifications/index.tsx:141
+#: src/screens/Notifications/index.tsx:124
 msgctxt "notifications tab"
 msgid "Replies"
 msgstr "Respostes"
@@ -12016,7 +11765,7 @@ msgstr "Republicat per {reposter}"
 msgid "Reposted by you"
 msgstr "Republicat per tu"
 
-#: src/lib/hooks/useNotificationHandler.ts:171
+#: src/lib/hooks/useNotificationHandler.ts:166
 #: src/screens/Settings/NotificationSettings/index.tsx:217
 #: src/screens/Settings/NotificationSettings/index.tsx:358
 msgid "Reposts"
@@ -12030,7 +11779,7 @@ msgstr "Republicacions amagades"
 msgid "Reposts of this post"
 msgstr "Republicacions d'aquesta publicació"
 
-#: src/lib/hooks/useNotificationHandler.ts:213
+#: src/lib/hooks/useNotificationHandler.ts:208
 #: src/screens/Settings/NotificationSettings/index.tsx:254
 #: src/screens/Settings/NotificationSettings/index.tsx:376
 msgid "Reposts of your reposts"
@@ -12389,8 +12138,6 @@ msgstr "S'ha desat als teus canals."
 
 #: src/components/dialogs/NewskieDialog/index.tsx:119
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:295
-#: src/view/com/notifications/NotificationFeedItem.tsx:933
-#: src/view/com/notifications/NotificationFeedItem.tsx:941
 msgid "Say hello!"
 msgstr "Digues hola!"
 
@@ -13126,7 +12873,7 @@ msgstr "Compartir el teu interval d'edat només revela l'interval associat al te
 #. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “she/they”.
 #: src/screens/Profile/Header/PronounsDialog.tsx:30
 msgid "she/her"
-msgstr ""
+msgstr "ella"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:250
 msgid "Short links can’t be added. Use the full link instead."
@@ -13667,7 +13414,7 @@ msgid "Starter Pack “{starterPackName}”"
 msgstr "Starter Pack «{starterPackName}»"
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
-#: src/components/StarterPack/StarterPackCard.tsx:86
+#: src/components/StarterPack/StarterPackCard.tsx:69
 msgid "Starter Pack by {0}"
 msgstr "Starter Pack de {0}"
 
@@ -13684,7 +13431,7 @@ msgstr "Starter Pack de {0}"
 msgid "Starter Pack by <0/>"
 msgstr "Starter pack de <0/>"
 
-#: src/components/StarterPack/StarterPackCard.tsx:85
+#: src/components/StarterPack/StarterPackCard.tsx:68
 #: src/view/com/profile/ProfileSubpageHeader.tsx:166
 msgid "Starter Pack by you"
 msgstr "Starter Pack fet per tu"
@@ -14422,8 +14169,7 @@ msgstr "Hi ha hagut un problema per a contactar amb el servidor"
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "S'ha produït un problema en contactar amb el servidor, comprova la teva connexió a Internet i torna-ho a provar."
 
-#: src/screens/Notifications/components/PageList.tsx:366
-#: src/view/com/notifications/NotificationFeed.tsx:137
+#: src/screens/Notifications/components/PageList.tsx:351
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Hi ha hagut un problema en obtenir les notificacions. Toca aquí per a tornar-ho a provar."
 
@@ -14542,7 +14288,7 @@ msgstr "No s'hi podran tornar a unir tret que els hi tornis a convidar."
 #. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “they/she”.
 #: src/screens/Profile/Header/PronounsDialog.tsx:40
 msgid "they/them"
-msgstr ""
+msgstr "elle/elli"
 
 #: src/components/moderation/ScreenHider.tsx:117
 msgid "This {screenDescription} has been flagged:"
@@ -15030,7 +14776,7 @@ msgstr "Per tancar la sessió, <0>fes clic aquí</0>. O si ho prefereixes, pots 
 msgid "Today"
 msgstr "Avui"
 
-#: src/screens/Notifications/components/PageList.tsx:579
+#: src/screens/Notifications/components/PageList.tsx:537
 msgctxt "Notifications section header"
 msgid "Today"
 msgstr "Avui"
@@ -15088,7 +14834,7 @@ msgid "Topic"
 msgstr "Tema"
 
 #. Description of a feature flag (Moderation inbox)
-#: src/analytics/features/index.ts:155
+#: src/analytics/features/index.ts:138
 msgid "Track your reports, review moderation decisions, and submit appeals."
 msgstr "Feu un seguiment dels vostres informes, reviseu les decisions de moderació i envieu apel·lacions."
 
@@ -15909,11 +15655,6 @@ msgstr "Versió {0}"
 msgid "via starter pack <0/> <1>{name}</1>"
 msgstr "a través de l'Starter pack <0/> <1>{name}</1>"
 
-#. When the source of a follow is a Starter Pack, i.e., 'via Starter Pack {starterPackName}'.
-#: src/view/com/notifications/NotificationFeedItem.tsx:734
-msgid "via Starter Pack <0/><1>{starterPackName}</1>"
-msgstr "a través de l'Starter Pack <0/><1>{starterPackName}</1>"
-
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:128
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:194
 msgid "Video"
@@ -15993,13 +15734,12 @@ msgstr "Mostra {0}"
 msgid "View {0}'s avatar"
 msgstr "Veure l'avatar de {0}"
 
-#. placeholder {0}: authors[0].profile.displayName || authors[0].profile.handle
 #. placeholder {0}: info.creatorHandle
 #. placeholder {0}: profile.handle
+#. placeholder {0}: sanitizeDisplayName( post.author.displayName || post.author.handle, )
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:513
 #: src/screens/Search/components/SearchProfileCard.tsx:37
 #: src/screens/VideoFeed/index.tsx:1003
-#: src/view/com/notifications/NotificationFeedItem.tsx:596
 msgid "View {0}'s profile"
 msgstr "Veure el perfil de {0}"
 
@@ -16025,13 +15765,13 @@ msgstr "Mostra-ho tot"
 msgid "View all followers"
 msgstr "Veure tots els seguidors"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:609
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:607
 msgid "View all new posts"
-msgstr ""
+msgstr "Mostra totes les publicacions noves"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:610
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:608
 msgid "View all new posts from {name}"
-msgstr ""
+msgstr "Mostra totes les noves publicacions de {name}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:356
 msgid "View all posts {name} liked"
@@ -16226,10 +15966,6 @@ msgstr "Visita el lloc"
 msgid "Visit site on {0}"
 msgstr "Obre el web a {0}"
 
-#: src/view/screens/Notifications.tsx:296
-msgid "Visit your notification settings"
-msgstr "Ves a la configuració de les notificacions"
-
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:80
 msgid "Volume"
 msgstr "Volum"
@@ -16365,7 +16101,7 @@ msgstr "Hem enviat un correu a <0>{0}</0> amb un enllaç. Fes-hi clic per comple
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
 msgid "We sent you an email about your account"
-msgstr "T'hem enviat un correu electrònic sobre el teu compte"
+msgstr ""
 
 #: src/view/com/composer/state/video.ts:521
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
@@ -16824,7 +16560,7 @@ msgstr "Sempre pots optar per no participar i suprimir les teves dades"
 msgid "You can appeal once per decision. A different moderator will review the appeal."
 msgstr "Pots presentar un recurs un sol cop per decisió. Un moderador diferent revisarà el recurs."
 
-#: src/lib/hooks/useNotificationHandler.ts:140
+#: src/lib/hooks/useNotificationHandler.ts:135
 msgid "You can choose whether chat notifications have sound in the chat settings within the app"
 msgstr "Pots triar si les notificacions dels xats tenen so en la configuració del xat en l'aplicació"
 
@@ -16944,10 +16680,6 @@ msgstr "Has bloquejat aquest usuari. No pots veure el seu contingut."
 #: src/components/ageAssurance/useAgeAssuranceCopy.ts:17
 msgid "You have completed the Age Assurance process, but based on the results, we cannot be sure that you are 18 years of age or older. Due to laws in your region, certain features on Bluesky must remain restricted until you're able to verify you're an adult."
 msgstr "Has completat el procés de verificació d'edat, però, basant-nos en els resultats, no podem estar segurs que tinguis 18 anys o més. A causa de les lleis de la teva regió, certes funcions de Bluesky han de romandre restringides fins que puguis verificar que ets un adult."
-
-#: src/view/screens/Notifications.tsx:291
-msgid "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your <0>notification settings</0>."
-msgstr "Has desactivat completament les notificacions de resposta, cita i menció, de manera que aquesta pestanya ja no s'actualitzarà. Per ajustar-ho, visita la <0>configuració de notificacions</0>."
 
 #: src/screens/Login/SetNewPasswordForm.tsx:49
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:110
@@ -17389,14 +17121,6 @@ msgstr "Els teus xats s'han desactivat"
 msgid "Your choice will be remembered for future links. You can change it at any time in settings."
 msgstr "La teva elecció es recordarà per a futurs enllaços. Pots canviar-la en qualsevol moment a la configuració."
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:374
-msgid "Your contact {firstAuthorLink} is on Bluesky"
-msgstr "El teu contacte {firstAuthorLink} està a Bluesky"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:372
-msgid "Your contact {firstAuthorName} is on Bluesky"
-msgstr "El teu contacte {firstAuthorName} està a Bluesky"
-
 #: src/components/contacts/screens/ViewMatches.tsx:462
 msgid "Your contact {name}"
 msgstr "El teu contacte {name}"
@@ -17542,7 +17266,7 @@ msgstr "El teu perfil, publicacions, canals i llistes ja no seran visibles per a
 
 #: src/screens/Profile/Header/PronounsDialog.tsx:129
 msgid "Your pronouns show next to your handle on your profile."
-msgstr ""
+msgstr "Els teus pronoms de preferència es mostren al costat del teu identificador al teu perfil."
 
 #: src/view/com/composer/Composer.tsx:1238
 msgid "Your reply was sent"
@@ -17577,11 +17301,11 @@ msgstr "Seleccionar els teus interessos ens ajuda a mostrar-te el contingut que 
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:56
 msgid "Your standing doesn’t restrict your account right now, and strikes come off your record over time."
-msgstr "La teva reputació no restringeix el teu compte en aquest moment, i les sancions s'eliminen del teu historial amb el temps."
+msgstr ""
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:51
 msgid "Your standing may restrict certain features on your account. Strikes come off your record over time."
-msgstr "La teva reputació pot restringir certes funcions del teu compte. Les sancions s'eliminen del teu historial amb el temps."
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1569
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."

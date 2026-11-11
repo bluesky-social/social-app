@@ -1,5 +1,6 @@
 /**
- * A kind of companion API to ./feed.ts. See that file for more info.
+ * Polls for unread notifications, for the badges and the Notifications
+ * screen's "Refresh" pill, and marks notifications as seen.
  */
 
 import {
@@ -12,38 +13,32 @@ import {
 } from 'react'
 import {AppState} from 'react-native'
 import {type ISODatetimeString} from '@atproto/syntax'
-import {useQueryClient} from '@tanstack/react-query'
-import {EventEmitter} from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
 import {resetBadgeCount} from '#/lib/notifications/notifications'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {truncateAndInvalidate} from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
 import {app} from '#/lexicons'
-import {RQKEY as RQKEY_NOTIFS} from './feed'
-import {type CachedFeedPage, type FeedPage, type UnreadCheck} from './types'
-import {fetchPage, markUnreadCheckSeen, summarizeUnreadCheck} from './util'
+import {type Notification, type UnreadCheck} from './types'
+import {
+  fetchUnreadCheckPage,
+  markUnreadCheckSeen,
+  summarizeUnreadCheck,
+} from './util'
 
 const UPDATE_INTERVAL = 30 * 1e3 // 30sec
 
 const broadcast = new BroadcastChannel('NOTIFS_BROADCAST_CHANNEL')
 
-const emitter = new EventEmitter()
-
 type StateContext = string
+
+type CheckUnread = (opts?: {isPoll?: boolean}) => Promise<void>
 
 interface ApiContext {
   /**
-   * Marks notifications as seen on the server, up to `seenAt` if given,
-   * otherwise up to the last unread check.
+   * Marks notifications as seen on the server, up to `seenAt`.
    */
-  markAllRead: (opts?: {seenAt?: Date}) => Promise<void>
-  checkUnread: (opts?: {
-    invalidate?: boolean
-    isPoll?: boolean
-  }) => Promise<void>
-  getCachedUnreadPage: () => FeedPage | undefined
+  markAllRead: (opts: {seenAt: Date}) => Promise<void>
 }
 
 const stateContext = createContext<StateContext>('')
@@ -54,39 +49,23 @@ lastCheckContext.displayName = 'NotificationsUnreadLastCheckContext'
 
 const apiContext = createContext<ApiContext>({
   async markAllRead() {},
-  async checkUnread() {},
-  getCachedUnreadPage: () => undefined,
 })
 apiContext.displayName = 'NotificationsUnreadApiContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {hasSession} = useSession()
   const client = useAppviewClient()
-  const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
 
   const [numUnread, setNumUnread] = useState('')
   const [lastCheck, setLastCheck] = useState<UnreadCheck>()
 
-  const checkUnreadRef = useRef<ApiContext['checkUnread'] | null>(null)
-  const cacheRef = useRef<CachedFeedPage>({
-    usableInFeed: false,
-    syncedAt: new Date(),
-    data: undefined,
-    unreadCount: 0,
-  })
-
-  useEffect(() => {
-    function markAsUnusable() {
-      if (cacheRef.current) {
-        cacheRef.current.usableInFeed = false
-      }
-    }
-    emitter.addListener('invalidate', markAsUnusable)
-    return () => {
-      emitter.removeListener('invalidate', markAsUnusable)
-    }
-  }, [])
+  const checkUnreadRef = useRef<CheckUnread | null>(null)
+  /**
+   * How many unread notifications the last check found, which slows polling
+   * down while there are some.
+   */
+  const unreadCountRef = useRef(0)
 
   // periodic sync
   useEffect(() => {
@@ -104,17 +83,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   // listen for broadcasts
   useEffect(() => {
     const listener = ({data}: MessageEvent) => {
-      cacheRef.current = {
-        usableInFeed: false,
-        syncedAt: new Date(),
-        data: undefined,
-        unreadCount:
-          data.event === '30+'
-            ? 30
-            : data.event === ''
-              ? 0
-              : parseInt(data.event, 10) || 1,
-      }
+      unreadCountRef.current =
+        data.event === '30+'
+          ? 30
+          : data.event === ''
+            ? 0
+            : parseInt(data.event, 10) || 1
       setNumUnread(data.event)
     }
     broadcast.addEventListener('message', listener)
@@ -130,10 +104,60 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
    */
   const lastMarkedReadAt = useRef(0)
 
+  const checkUnread: CheckUnread = async ({isPoll} = {}) => {
+    try {
+      if (!hasSession) return
+      if (AppState.currentState !== 'active') {
+        return
+      }
+
+      // reduce polling if unread count is set
+      if (isPoll && unreadCountRef.current !== 0) {
+        // if hit 30+ then don't poll, otherwise reduce polling by 50%
+        if (unreadCountRef.current >= 30 || Math.random() >= 0.5) {
+          return
+        }
+      }
+
+      if (isFetchingRef.current) {
+        return
+      }
+      // Do not move this without ensuring it gets a symmetrical reset in the finally block.
+      isFetchingRef.current = true
+
+      // count
+      const requestedAt = Date.now()
+      const {notifications} = await fetchUnreadCheckPage({
+        client,
+        limit: 40,
+        moderationOpts,
+      })
+      /*
+       * Marked read while this was in flight, so the count may be stale.
+       * The next check will catch up.
+       */
+      if (requestedAt < lastMarkedReadAt.current) {
+        return
+      }
+      const unreadCount = countUnread(notifications)
+      const unreadCountStr =
+        unreadCount >= 30 ? '30+' : unreadCount === 0 ? '' : String(unreadCount)
+      unreadCountRef.current = unreadCount
+
+      // update & broadcast
+      setNumUnread(unreadCountStr)
+      setLastCheck(summarizeUnreadCheck(notifications, requestedAt))
+      broadcast.postMessage({event: unreadCountStr})
+    } finally {
+      isFetchingRef.current = false
+    }
+  }
+  checkUnreadRef.current = checkUnread
+
   // create API
   const api = useMemo<ApiContext>(() => {
     return {
-      async markAllRead({seenAt = cacheRef.current.syncedAt} = {}) {
+      async markAllRead({seenAt}) {
         // update server
         await client.call(app.bsky.notification.updateSeen, {
           // toISOString always emits the Z-suffixed form the format requires
@@ -141,15 +165,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         })
         lastMarkedReadAt.current = Date.now()
 
-        /*
-         * Nothing is unread any more, so polling goes back to its usual rate,
-         * and the page from the last check is out of date.
-         */
-        cacheRef.current = {
-          ...cacheRef.current,
-          unreadCount: 0,
-          usableInFeed: false,
-        }
+        // Nothing is unread any more, so polling goes back to its usual rate
+        unreadCountRef.current = 0
 
         // update & broadcast
         setNumUnread('')
@@ -157,96 +174,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         broadcast.postMessage({event: ''})
         resetBadgeCount()
       },
-
-      async checkUnread({
-        invalidate,
-        isPoll,
-      }: {invalidate?: boolean; isPoll?: boolean} = {}) {
-        try {
-          if (!hasSession) return
-          if (AppState.currentState !== 'active') {
-            return
-          }
-
-          // reduce polling if unread count is set
-          if (isPoll && cacheRef.current?.unreadCount !== 0) {
-            // if hit 30+ then don't poll, otherwise reduce polling by 50%
-            if (cacheRef.current?.unreadCount >= 30 || Math.random() >= 0.5) {
-              return
-            }
-          }
-
-          if (isFetchingRef.current) {
-            return
-          }
-          // Do not move this without ensuring it gets a symmetrical reset in the finally block.
-          isFetchingRef.current = true
-
-          // count
-          const requestedAt = Date.now()
-          const {page, indexedAt: lastIndexed} = await fetchPage({
-            client,
-            cursor: undefined,
-            limit: 40,
-            queryClient,
-            moderationOpts,
-            reasons: [],
-
-            // only fetch subjects when the page is going to be used
-            // in the notifications query, otherwise skip it
-            fetchAdditionalData: !!invalidate,
-          })
-          /*
-           * Marked read while this was in flight, so the count may be stale.
-           * The next check will catch up. A check that loads into the feed
-           * goes ahead, since that feed marks what it shows as read anyway.
-           */
-          if (!invalidate && requestedAt < lastMarkedReadAt.current) {
-            return
-          }
-          const unreadCount = countUnread(page)
-          const unreadCountStr =
-            unreadCount >= 30
-              ? '30+'
-              : unreadCount === 0
-                ? ''
-                : String(unreadCount)
-
-          // track last sync
-          const now = new Date()
-          const lastIndexedDate = lastIndexed
-            ? new Date(lastIndexed)
-            : undefined
-          cacheRef.current = {
-            usableInFeed: !!invalidate, // will be used immediately
-            data: page,
-            syncedAt:
-              !lastIndexedDate || now > lastIndexedDate ? now : lastIndexedDate,
-            unreadCount,
-          }
-
-          // update & broadcast
-          setNumUnread(unreadCountStr)
-          setLastCheck(summarizeUnreadCheck(page, requestedAt))
-          if (invalidate) {
-            truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
-            truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
-          }
-          broadcast.postMessage({event: unreadCountStr})
-        } finally {
-          isFetchingRef.current = false
-        }
-      },
-
-      getCachedUnreadPage() {
-        // return cached page if it's marked as fresh enough
-        if (cacheRef.current.usableInFeed) {
-          return cacheRef.current.data
-        }
-      },
     }
-  }, [setNumUnread, queryClient, moderationOpts, client, hasSession])
-  checkUnreadRef.current = api.checkUnread
+  }, [client])
 
   return (
     <stateContext.Provider value={numUnread}>
@@ -273,23 +202,6 @@ export function useUnreadNotificationsApi() {
   return useContext(apiContext)
 }
 
-function countUnread(page: FeedPage) {
-  let num = 0
-  for (const item of page.items) {
-    if (!item.notification.isRead) {
-      num++
-    }
-    if (item.additional) {
-      for (const item2 of item.additional) {
-        if (!item2.isRead) {
-          num++
-        }
-      }
-    }
-  }
-  return num
-}
-
-export function invalidateCachedUnreadPage() {
-  emitter.emit('invalidate')
+function countUnread(notifications: Notification[]) {
+  return notifications.filter(notif => !notif.isRead).length
 }

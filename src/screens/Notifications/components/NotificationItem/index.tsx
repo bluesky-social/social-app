@@ -1,4 +1,8 @@
+import {View} from 'react-native'
+
 import {type NotificationView} from '#/state/queries/notifications/grouped/types'
+import {SHOW_ROW_BORDERS} from '#/screens/Notifications/rowBorders'
+import {atoms as a, useTheme} from '#/alf'
 import {
   GeneratorLikeNotification,
   LikeNotification,
@@ -40,9 +44,27 @@ export {LoadingSkeleton} from './LoadingSkeleton'
  */
 export function NotificationItem({
   notification,
+  hasDivider = false,
 }: {
   notification: NotificationView
+  /**
+   * Whether to draw a divider above the row, when `SHOW_ROW_BORDERS` is on.
+   */
+  hasDivider?: boolean
 }) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        hasDivider &&
+          SHOW_ROW_BORDERS && [a.border_t, t.atoms.border_contrast_low],
+      ]}>
+      <NotificationRow notification={notification} />
+    </View>
+  )
+}
+
+function NotificationRow({notification}: {notification: NotificationView}) {
   switch (notification.type) {
     case 'like':
       return <LikeNotification notification={notification} />
