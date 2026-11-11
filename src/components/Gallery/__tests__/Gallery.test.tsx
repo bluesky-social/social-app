@@ -1,11 +1,10 @@
-import {createRef, Fragment, useState} from 'react'
+import {createRef, Fragment} from 'react'
 import {
   Animated,
   Pressable,
   ScrollView,
   type StyleProp,
   StyleSheet,
-  Text,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -13,6 +12,8 @@ import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
 import * as Gallery from '#/components/Gallery'
 import {FakeElement} from '#/components/Gallery/__tests__/fakeDom'
+import * as keyboardHandlers from '#/components/Gallery/useKeyboardHandlers'
+import * as pointerHandlers from '#/components/Gallery/usePointerHandlers'
 
 const mockEnv = {IS_WEB: false, IS_ANDROID: false}
 const mockA11y = {screenReaderEnabled: false, reduceMotionEnabled: true}
@@ -282,6 +283,26 @@ describe('GalleryPageDots', () => {
     },
   )
 
+  it('cancels existing web navigation before starting a dot scroll', () => {
+    mockEnv.IS_WEB = true
+    const calls: string[] = []
+    const keyboard = jest
+      .spyOn(keyboardHandlers, 'useKeyboardHandlers')
+      .mockReturnValue(() => calls.push('keyboard'))
+    const pointer = jest
+      .spyOn(pointerHandlers, 'usePointerHandlers')
+      .mockReturnValue(() => calls.push('pointer'))
+    threeCards({footer: dots})
+    scrollTo.mockImplementationOnce(() => calls.push('scroll'))
+
+    fireEvent.press(dot(2))
+
+    expect(calls).toEqual(['keyboard', 'pointer', 'scroll'])
+    expectActive(2)
+    keyboard.mockRestore()
+    pointer.mockRestore()
+  })
+
   it('resumes web tracking after a smooth scroll stops short', () => {
     mockEnv.IS_WEB = true
     mockA11y.reduceMotionEnabled = false
@@ -379,22 +400,6 @@ describe('GalleryPageDots', () => {
     scrollBy(316)
     expectActive(2)
     expect(onIndexChange).not.toHaveBeenCalled()
-  })
-
-  it('follows the selected key through reordering and clamps after removal', () => {
-    mockEnv.IS_WEB = true
-    const gallery = (ids: string[]) => (
-      <Gallery.Root label="Cards" footer={dots}>
-        {ids.map(id => card(id, 200, 100))}
-      </Gallery.Root>
-    )
-    const {rerender} = render(gallery(['a', 'b', 'c']))
-    fireEvent.press(dot(2))
-    rerender(gallery(['c', 'a', 'b']))
-    expectActive(0)
-    rerender(gallery(['a', 'b']))
-    expect(dot(0).props['aria-current']).toBe('true')
-    expect(screen.queryByTestId('galleryPageDots-2')).toBeNull()
   })
 })
 
@@ -1022,7 +1027,7 @@ describe('Gallery ref', () => {
   })
 })
 
-describe('Gallery reconciliation', () => {
+describe('Gallery item updates', () => {
   function Harness({
     ids,
     onIndexChange,
@@ -1048,27 +1053,6 @@ describe('Gallery reconciliation', () => {
     return {...result, onIndexChange}
   }
 
-  it('keeps the active item through a reorder', () => {
-    const {rerender, onIndexChange} = setup(['a', 'b', 'c'])
-    userScroll(330) // on c
-    onIndexChange.mockClear()
-    rerender(<Harness ids={['c', 'a', 'b']} onIndexChange={onIndexChange} />)
-    expect(onIndexChange).not.toHaveBeenCalled()
-    // c is now first, so it's where we're coming from
-    userScroll(120)
-    expect(onIndexChange).toHaveBeenCalledWith(1, 0)
-  })
-
-  it('stays in range when the active item is removed', () => {
-    const {rerender, onIndexChange} = setup(['a', 'b', 'c'])
-    userScroll(330) // on c
-    onIndexChange.mockClear()
-    rerender(<Harness ids={['a', 'b']} onIndexChange={onIndexChange} />)
-    expect(onIndexChange).not.toHaveBeenCalled()
-    userScroll(0)
-    expect(onIndexChange).toHaveBeenCalledWith(0, 1)
-  })
-
   it('is silent when items are added', () => {
     const {rerender, onIndexChange} = setup(['a', 'b'])
     rerender(
@@ -1085,38 +1069,6 @@ describe('Gallery reconciliation', () => {
     onIndexChange.mockClear()
     rerender(<Harness ids={[]} onIndexChange={onIndexChange} />)
     expect(onIndexChange).not.toHaveBeenCalled()
-  })
-
-  it('moves the roving tab stop with a reordered active item', () => {
-    mockEnv.IS_WEB = true
-    function Reorderable() {
-      const [ids, setIds] = useState(['a', 'b'])
-      return (
-        <>
-          <Pressable
-            testID="reverse"
-            accessibilityRole="button"
-            accessibilityLabel="Reverse"
-            accessibilityHint=""
-            onPress={() => setIds(['b', 'a'])}
-          />
-          <Gallery.Root testID="gallery" label="Cards">
-            {ids.map(id => (
-              <Gallery.Item key={id} testID={id}>
-                <Text>{id}</Text>
-              </Gallery.Item>
-            ))}
-          </Gallery.Root>
-        </>
-      )
-    }
-    render(<Reorderable />)
-    fireEvent(screen.getByTestId('b'), 'focus')
-    expect(screen.getByTestId('b').props.tabIndex).toBe(0)
-    fireEvent.press(screen.getByTestId('reverse'))
-    // b is still the target, now in first position
-    expect(screen.getByTestId('b').props.tabIndex).toBe(0)
-    expect(screen.getByTestId('a').props.tabIndex).toBe(-1)
   })
 })
 

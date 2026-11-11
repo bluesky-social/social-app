@@ -118,20 +118,12 @@ export function Root({
   const [sizes, setSizes] = useState<Map<string, Size>>(() => new Map())
   const [focusIndex, setFocusIndex] = useState(0)
   const [viewportWidth, setViewportWidth] = useState(0)
-  const [pageSelection, setPageSelection] = useState({key: keys[0], index: 0})
-  const survivingPageIndex = keys.indexOf(pageSelection.key)
-  const pageIndex =
-    survivingPageIndex !== -1
-      ? survivingPageIndex
-      : Math.max(0, Math.min(pageSelection.index, itemCount - 1))
-  const [navigationRevision, setNavigationRevision] = useState(0)
-  const navigationResetKey = `${keysSignature}\u0001${navigationRevision}`
+  const [pageIndex, setPageIndex] = useState(0)
 
   const scrollRef = useRef<React.ComponentRef<typeof ScrollView>>(null)
   const itemWidthsRef = useRef<Map<number, number>>(new Map())
   const focusNodesRef = useRef<Map<string, unknown>>(new Map())
   const currentIndexRef = useRef(0)
-  const activeKeyRef = useRef<string | null>(keys[0] ?? null)
   const scrollOffsetRef = useRef(0)
   const userScrollingRef = useRef(false)
   /** Keep an explicit selection during its scroll and at shared offsets. */
@@ -258,14 +250,6 @@ export function Root({
     }
   }, [])
 
-  const setPageIndex = useNonReactiveCallback((index: number) => {
-    setPageSelection(prev =>
-      prev.key === keys[index] && prev.index === index
-        ? prev
-        : {key: keys[index], index},
-    )
-  })
-
   const selectPage = useNonReactiveCallback((index: number, offset: number) => {
     clearTimeout(webPageScrollIdleTimeoutRef.current)
     setPageIndex(index)
@@ -303,7 +287,6 @@ export function Root({
   /** Sync the navigation index without reporting user navigation. */
   const syncIndex = useNonReactiveCallback((index: number) => {
     currentIndexRef.current = index
-    activeKeyRef.current = keys[index] ?? null
   })
 
   const setCurrentIndex = useNonReactiveCallback((index: number) => {
@@ -313,23 +296,11 @@ export function Root({
     onIndexChange?.(index, prev)
   })
 
-  /*
-   * Items can come and go, and move around. Keep the active index on the item
-   * it was on if that's still here, otherwise stay in range. This isn't the
-   * user going anywhere, so nobody is notified.
-   */
+  // Discard measurements and focus refs for items that are no longer mounted.
   useEffect(() => {
     const currentKeys = keysSignature ? keysSignature.split('\u0000') : []
     clearTimeout(webPageScrollIdleTimeoutRef.current)
     selectedPageOffsetRef.current = null
-    setPageSelection(prev => {
-      const survivedAt = currentKeys.indexOf(prev.key)
-      const index =
-        survivedAt !== -1
-          ? survivedAt
-          : Math.max(0, Math.min(prev.index, currentKeys.length - 1))
-      return {key: currentKeys[index], index}
-    })
     const present = new Set(currentKeys)
     setSizes(prev => {
       let changed = false
@@ -343,17 +314,6 @@ export function Root({
     focusNodesRef.current.forEach((_node, key) => {
       if (!present.has(key)) focusNodesRef.current.delete(key)
     })
-    const survivedAt =
-      activeKeyRef.current != null
-        ? currentKeys.indexOf(activeKeyRef.current)
-        : -1
-    const next =
-      survivedAt !== -1
-        ? survivedAt
-        : Math.max(0, Math.min(currentIndexRef.current, currentKeys.length - 1))
-    currentIndexRef.current = next
-    activeKeyRef.current = currentKeys[next] ?? null
-    setFocusIndex(next)
   }, [keysSignature])
 
   /*
@@ -390,6 +350,8 @@ export function Root({
 
   const activateIndex = useNonReactiveCallback((index: number) => {
     if (!Number.isInteger(index) || index < 0 || index >= itemCount) return
+    cancelWebKeyboardNavigation()
+    cancelWebPointerNavigation()
     const current = getScrollNode()?.scrollLeft ?? 0
     const next = getRevealOffset({
       itemWidths: itemWidthsRef.current,
@@ -398,8 +360,6 @@ export function Root({
       viewportWidth,
       currentOffset: current,
     })
-    /* Cancel any in-flight keyboard or pointer settle before selecting a dot. */
-    setNavigationRevision(revision => revision + 1)
     setCurrentIndex(index)
     selectPage(index, next)
     setFocusIndex(index)
@@ -456,24 +416,24 @@ export function Root({
     },
   )
 
-  useKeyboardHandlers({
+  const cancelWebKeyboardNavigation = useKeyboardHandlers({
     scrollRef,
     itemWidthsRef,
     currentIndexRef,
     scrollTo,
     onSettle,
     itemCount,
-    resetKey: navigationResetKey,
+    resetKey: keysSignature,
   })
 
-  usePointerHandlers({
+  const cancelWebPointerNavigation = usePointerHandlers({
     scrollRef,
     itemWidthsRef,
     currentIndexRef,
     scrollTo,
     onSettle,
     itemCount,
-    resetKey: navigationResetKey,
+    resetKey: keysSignature,
   })
 
   /*

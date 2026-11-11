@@ -148,6 +148,23 @@ describe('useKeyboardHandlers (web)', () => {
     expect(onSettle).toHaveBeenCalledWith(1)
   })
 
+  it('cancels an in-flight move without stopping future keyboard navigation', () => {
+    const {result, currentIndexRef} = setup()
+    press('ArrowRight', button)
+    scrollTo.mockClear()
+
+    result.current()
+    dom.flushFrames()
+    expect(scrollTo).not.toHaveBeenCalled()
+    expect(onSettle).not.toHaveBeenCalled()
+
+    currentIndexRef.current = 1
+    press('ArrowRight', button)
+    dom.flushFrames()
+    expect(onSettle).toHaveBeenCalledTimes(1)
+    expect(onSettle).toHaveBeenCalledWith(2)
+  })
+
   it('drops an in-flight move when the items change at the same count', () => {
     const {rerender} = setup()
     press('ArrowRight', button)

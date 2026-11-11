@@ -6,7 +6,13 @@ import {
 } from '#/components/Gallery/__tests__/fakeDom'
 import {usePointerHandlers} from '#/components/Gallery/usePointerHandlers.web'
 
-jest.mock('#/env', () => ({IS_WEB_SAFARI: false}))
+let mockSafari = false
+
+jest.mock('#/env', () => ({
+  get IS_WEB_SAFARI() {
+    return mockSafari
+  },
+}))
 
 let dom: ReturnType<typeof installFakeDom>
 let scroller: FakeElement
@@ -18,6 +24,7 @@ let scrollTo: jest.Mock
 let onSettle: jest.Mock
 
 beforeEach(() => {
+  mockSafari = false
   dom = installFakeDom()
   scroller = new FakeElement()
   scroller.scrollLeft = 100
@@ -34,7 +41,8 @@ afterEach(() => {
 })
 
 function setup({itemCount = 3} = {}) {
-  return renderHook(
+  const currentIndexRef = {current: 0}
+  const hook = renderHook(
     (props: {itemCount: number; resetKey: string}) =>
       usePointerHandlers({
         scrollRef: {current: {getScrollableNode: () => scroller}},
@@ -45,7 +53,7 @@ function setup({itemCount = 3} = {}) {
             [2, 200],
           ]),
         },
-        currentIndexRef: {current: 0},
+        currentIndexRef,
         scrollTo,
         onSettle,
         itemCount: props.itemCount,
@@ -53,6 +61,7 @@ function setup({itemCount = 3} = {}) {
       }),
     {initialProps: {itemCount, resetKey: 'abc'}},
   )
+  return {...hook, currentIndexRef}
 }
 
 function mouseDown(target: FakeElement, extra = {}) {
@@ -230,6 +239,52 @@ describe('usePointerHandlers (web)', () => {
     for (const [{offset}] of scrollTo.mock.calls) {
       expect(offset).toBeLessThanOrEqual(100)
     }
+  })
+
+  it('cancels an in-flight settle without stopping future pointer navigation', () => {
+    const {result} = setup()
+    mouseDown(text)
+    drag(150)
+    release()
+    scrollTo.mockClear()
+
+    result.current()
+    dom.flushFrames()
+    expect(scrollTo).not.toHaveBeenCalled()
+    expect(onSettle).not.toHaveBeenCalled()
+
+    mouseDown(text)
+    drag(150)
+    release()
+    dom.flushFrames()
+    expect(onSettle).toHaveBeenCalledTimes(1)
+  })
+
+  it('reports Safari wheel navigation after another item is selected', () => {
+    mockSafari = true
+    const {result, currentIndexRef} = setup()
+    scroller.scrollLeft = 0
+    result.current()
+    currentIndexRef.current = 2
+
+    scroller.dispatch('wheel', {deltaX: 50, deltaY: 0})
+
+    expect(onSettle).toHaveBeenCalledWith(0)
+  })
+
+  it('abandons a cancelled drag and clears its overscroll displacement', () => {
+    const {result} = setup()
+    mouseDown(text)
+    drag(400)
+    scrollTo.mockClear()
+
+    result.current()
+    drag(450)
+    release()
+    dom.flushFrames()
+    expect(scrollTo).not.toHaveBeenCalled()
+    expect(onSettle).not.toHaveBeenCalled()
+    expect(scroller.style.transform).toBe('')
   })
 
   it('drops an in-flight settle when the items change at the same count', () => {

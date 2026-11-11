@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 
 import {ITEM_GAP} from '#/components/Gallery/const'
 import {isEditableTarget} from '#/components/Gallery/domUtils'
@@ -42,6 +42,7 @@ function whichByDistance(
   return Math.max(0, Math.min(i, itemCount - 1))
 }
 
+/** Returns a function to cancel a drag or settle. */
 export function usePointerHandlers({
   scrollRef,
   itemWidthsRef,
@@ -51,6 +52,8 @@ export function usePointerHandlers({
   itemCount,
   resetKey,
 }: NavigationHandlerArgs) {
+  const cancelWebNavigationRef = useRef<(() => void) | null>(null)
+
   useEffect(() => {
     if (itemCount <= 1) return
 
@@ -75,6 +78,17 @@ export function usePointerHandlers({
       overscrollX = 0
       el.style.transform = ''
     }
+
+    const cancelWebNavigation = () => {
+      stopTween?.()
+      stopTween = null
+      isMouseDown = false
+      isDragging = false
+      clearOverscroll()
+      el.style.cursor = 'grab'
+      el.style.userSelect = ''
+    }
+    cancelWebNavigationRef.current = cancelWebNavigation
 
     /*
      * We don't preventDefault on mousedown, since that would break focus and
@@ -301,7 +315,7 @@ export function usePointerHandlers({
       // only settle when it actually changes - onSettle moves focus, which we
       // don't want to thrash on every wheel tick.
       const index = getIndexForOffset(itemWidthsRef.current, next, itemCount)
-      if (index !== localIndex) {
+      if (index !== currentIndexRef.current) {
         localIndex = index
         onSettle(index)
       }
@@ -319,10 +333,9 @@ export function usePointerHandlers({
       el.removeEventListener('wheel', onWheel)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('mouseup', onMouseUp)
-      if (stopTween) stopTween()
-      clearOverscroll()
+      cancelWebNavigation()
+      cancelWebNavigationRef.current = null
       el.style.cursor = ''
-      el.style.userSelect = ''
     }
   }, [
     scrollRef,
@@ -333,4 +346,6 @@ export function usePointerHandlers({
     itemCount,
     resetKey,
   ])
+
+  return () => cancelWebNavigationRef.current?.()
 }

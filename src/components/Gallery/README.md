@@ -119,11 +119,10 @@ keeping focus on the button. Selecting an already
 visible item need not scroll. On native, dots are not buttons; the row exposes
 a translated position label to screen readers instead.
 
-The dots track all scrolling, including browser touch and trackpad scrolling,
-and follow selected items by key when content changes. This display state is
-separate from `onIndexChange`, which follows the rules under "Navigation
-callbacks" below. Dot activation is user navigation and does call
-`onIndexChange`.
+The dots track the current index through all scrolling, including browser
+touch and trackpad scrolling. This display state is separate from
+`onIndexChange`, which follows the rules under "Navigation callbacks" below.
+Dot activation is user navigation and does call `onIndexChange`.
 
 ### Navigation callbacks
 
@@ -134,9 +133,9 @@ trackpad scrolling move the content, but do not report index changes.
 simply lands on an item (for example a click just before opening a lightbox),
 or when items are added, removed, or reordered.
 
-Give every child a stable `key`. Measurements and the active item follow the
-key, so reordering keeps the active item and removing the active item moves to
-a nearby one.
+Give every child a stable `key` so measurements stay associated with the
+correct item. Selection is index-based; it does not follow an item through
+reordering or removal.
 
 ### `Gallery.Item`
 
@@ -282,8 +281,7 @@ pnpm test --runInBand src/components/Gallery/__tests__ src/components/images/Gal
   content end. Turn it off to restore free scrolling.
 - Page dots: swipe/drag/trackpad scrolling updates the selected dot. On web,
   click and keyboard-activate dots, including when multiple cards fit; the
-  selected item stays selected at shared/clamped offsets. Reverse the cards,
-  reveal the last one, and toggle down to a single card in Storybook. Dots
-  should follow keys, disappear for one card, and skip animation with reduced motion.
+  selected item stays selected at shared/clamped offsets. Reveal the last
+  card in Storybook, and check that reduced motion skips animation.
 - Screen reader: items are reachable and labelled, and the image adapter shows
   its vertical list of images.

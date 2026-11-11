@@ -63,7 +63,7 @@ export function GalleryStorybook() {
 
 function PageDotsExample() {
   const ref = useRef<Gallery.GalleryRef>(null)
-  const [ids, setIds] = useState([1, 2, 3, 4, 5])
+  const ids = [1, 2, 3, 4, 5]
   const [snapToItems, setSnapToItems] = useState(false)
   return (
     <Section
@@ -71,24 +71,6 @@ function PageDotsExample() {
       descriptionText="One dot per item, even when several cards fit. Swipe, drag, or use a trackpad to update them. On web, click or keyboard-activate a dot to reveal its card."
       testID="galleryStorybook-dots">
       <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
-        <Button
-          label="Reverse cards"
-          testID="galleryStorybook-dots-reverse"
-          color="secondary"
-          size="small"
-          onPress={() => setIds(items => [...items].reverse())}>
-          <ButtonText>Reverse cards</ButtonText>
-        </Button>
-        <Button
-          label="Toggle extra cards"
-          testID="galleryStorybook-dots-toggle"
-          color="secondary"
-          size="small"
-          onPress={() =>
-            setIds(items => (items.length > 1 ? [items[0]] : [1, 2, 3, 4, 5]))
-          }>
-          <ButtonText>Toggle extra cards</ButtonText>
-        </Button>
         <Button
           label="Reveal last card"
           testID="galleryStorybook-dots-reveal"
