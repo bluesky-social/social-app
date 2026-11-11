@@ -139,6 +139,13 @@ export function Root({
     offset: number
     animated: boolean
   } | null>(null)
+  const webPageScrollIdleTimeoutRef =
+    useRef<ReturnType<typeof setTimeout>>(undefined)
+
+  useEffect(() => {
+    if (!IS_WEB) return
+    return () => clearTimeout(webPageScrollIdleTimeoutRef.current)
+  }, [])
 
   /*
    * Container overflow styles
@@ -227,6 +234,7 @@ export function Root({
     ({offset, animated = false}: {offset: number; animated?: boolean}) => {
       const selection = selectedPageOffsetRef.current
       if (selection) selection.animated = animated
+      if (IS_WEB) resetWebPageScrollIdle()
       scrollRef.current?.scrollTo({x: offset, animated})
     },
   )
@@ -238,6 +246,7 @@ export function Root({
     if (!node) return
     const interrupt = () => {
       if (selectedPageOffsetRef.current?.animated) {
+        clearTimeout(webPageScrollIdleTimeoutRef.current)
         selectedPageOffsetRef.current = null
       }
     }
@@ -258,6 +267,7 @@ export function Root({
   })
 
   const selectPage = useNonReactiveCallback((index: number, offset: number) => {
+    clearTimeout(webPageScrollIdleTimeoutRef.current)
     setPageIndex(index)
     selectedPageOffsetRef.current = {offset, animated: false}
   })
@@ -274,6 +284,21 @@ export function Root({
     selectedPageOffsetRef.current = null
     setPageIndex(getIndexForOffset(itemWidthsRef.current, offset, itemCount))
   })
+
+  /** Release the web dot selection lock even if a smooth scroll stops short. */
+  function resetWebPageScrollIdle() {
+    clearTimeout(webPageScrollIdleTimeoutRef.current)
+    if (!selectedPageOffsetRef.current?.animated) return
+    webPageScrollIdleTimeoutRef.current = setTimeout(() => {
+      webPageScrollIdleTimeoutRef.current = undefined
+      const selection = selectedPageOffsetRef.current
+      if (!selection?.animated) return
+      selection.animated = false
+      updatePageForOffset(
+        getScrollNode()?.scrollLeft ?? scrollOffsetRef.current,
+      )
+    }, 150)
+  }
 
   /** Sync the navigation index without reporting user navigation. */
   const syncIndex = useNonReactiveCallback((index: number) => {
@@ -295,6 +320,7 @@ export function Root({
    */
   useEffect(() => {
     const currentKeys = keysSignature ? keysSignature.split('\u0000') : []
+    clearTimeout(webPageScrollIdleTimeoutRef.current)
     selectedPageOffsetRef.current = null
     setPageSelection(prev => {
       const survivedAt = currentKeys.indexOf(prev.key)
@@ -475,6 +501,7 @@ export function Root({
        * Keep an explicitly selected item when its offset is shared by others.
        */
       updatePageForOffset(offset)
+      resetWebPageScrollIdle()
       return
     }
     onScrollOffset(offset, userScrollingRef.current)

@@ -255,12 +255,13 @@ describe('GalleryPageDots', () => {
       mockA11y.reduceMotionEnabled = reduceMotion
       const onIndexChange = jest.fn()
       threeCards({footer: dots, onIndexChange})
+      layout('gallery', 400, 100)
       fireEvent.press(
         screen.getByRole('button', {name: 'Cards, go to item 3 of 3'}),
       )
       expectActive(2)
       expect(scrollTo).toHaveBeenLastCalledWith({
-        x: 316,
+        x: 216,
         animated: !reduceMotion,
       })
       expect(onIndexChange).toHaveBeenCalledWith(2, 0)
@@ -271,7 +272,8 @@ describe('GalleryPageDots', () => {
         expectActive(2)
       }
       // At this offset, the generic leading-item calculation still selects b.
-      scrollBy(316)
+      scrollBy(216)
+      act(() => jest.advanceTimersByTime(150))
       expectActive(2)
       expect(onIndexChange).toHaveBeenCalledTimes(1)
       scrollBy(120)
@@ -279,6 +281,44 @@ describe('GalleryPageDots', () => {
       expect(onIndexChange).toHaveBeenCalledTimes(1)
     },
   )
+
+  it('resumes web tracking after a smooth scroll stops short', () => {
+    mockEnv.IS_WEB = true
+    mockA11y.reduceMotionEnabled = false
+    const onIndexChange = jest.fn()
+    threeCards({footer: dots, onIndexChange})
+    fireEvent.press(dot(2))
+    scrollBy(120)
+    act(() => jest.advanceTimersByTime(149))
+    expectActive(2)
+
+    scrollBy(208)
+    act(() => jest.advanceTimersByTime(149))
+    expectActive(2)
+    act(() => jest.advanceTimersByTime(1))
+    expectActive(1)
+
+    scrollBy(0)
+    expectActive(0)
+    expect(screen.getByTestId('c').props.tabIndex).toBe(0)
+    expect(onIndexChange).toHaveBeenCalledTimes(1)
+    expect(onIndexChange).toHaveBeenCalledWith(2, 0)
+  })
+
+  it('releases web dot selection even when no scroll events arrive', () => {
+    mockEnv.IS_WEB = true
+    mockA11y.reduceMotionEnabled = false
+    const onIndexChange = jest.fn()
+    threeCards({footer: dots, onIndexChange})
+    fireEvent.press(dot(2))
+    expectActive(2)
+
+    act(() => jest.advanceTimersByTime(150))
+    expectActive(0)
+    scrollBy(120)
+    expectActive(1)
+    expect(onIndexChange).toHaveBeenCalledTimes(1)
+  })
 
   it.each(['wheel', 'pointerdown'])(
     'resumes scroll tracking when %s interrupts dot navigation',
