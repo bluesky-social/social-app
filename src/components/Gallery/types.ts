@@ -12,7 +12,7 @@ export type NavigationHandlerArgs = {
   scrollRef: React.RefObject<ScrollHandle | null>
   itemWidthsRef: React.RefObject<Map<number, number>>
   currentIndexRef: React.RefObject<number>
-  scrollTo: (offset: number) => void
+  scrollTo: (options: {offset: number; animated?: boolean}) => void
   onSettle: (index: number) => void
   itemCount: number
   /**

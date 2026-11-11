@@ -14,11 +14,11 @@ import {
 } from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
 import {atoms as a, useTheme} from '#/alf'
+import * as Gallery from '#/components/Gallery'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {AnnouncementBanner} from './components/AnnouncementBanner'
 import {AtmosphereNux} from './components/AtmosphereNux'
-import {ExploreGalleryBleed} from './components/ExploreGallery'
 import {FeaturedApps} from './components/FeaturedApps'
 import {FeaturedArticles} from './components/FeaturedArticles'
 import {FeaturedLivestreams} from './components/FeaturedLivestreams'
@@ -92,7 +92,7 @@ export function AtmosphereExploreTab({
       alwaysBounceVertical
       refreshControl={refreshControl}
       contentContainerStyle={[a.pb_xl]}>
-      <ExploreGalleryBleed>
+      <Gallery.Bleed>
         <View style={[a.gap_xl, a.py_lg]}>
           {isError ? (
             <View style={{paddingHorizontal: EXPLORE_SECTION_PADDING}}>
@@ -114,7 +114,7 @@ export function AtmosphereExploreTab({
             publications={getAtmospherePublications(data)}
           />
         </View>
-      </ExploreGalleryBleed>
+      </Gallery.Bleed>
     </Layout.Content>
   )
 }
