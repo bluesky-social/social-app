@@ -2,6 +2,7 @@ import {View} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {formatTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {formatCount} from '#/view/com/util/numeric/format'
@@ -64,6 +65,7 @@ function PhotoDialogInner({
 }) {
   const {t: l, i18n} = useLingui()
   const t = useTheme()
+  const openLink = useOpenLink()
   const moderationOpts = useModerationOpts()
 
   const createdAt = photo.createdAt
@@ -165,7 +167,7 @@ function PhotoDialogInner({
         })}
         color="primary"
         size="large"
-        onPress={() => control.close()}>
+        onPress={() => control.close(() => openLink(photo.uri))}>
         <View style={[a.p_2xs, a.rounded_xs, {backgroundColor: 'white'}]}>
           <GrainMark width={12} />
         </View>

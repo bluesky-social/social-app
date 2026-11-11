@@ -4,7 +4,10 @@ import {fireEvent, render, screen} from '@testing-library/react-native'
 import {PhotoDialog} from '#/screens/Atmosphere/components/PhotoDialog'
 import {type app} from '#/lexicons'
 
-const mockClose = jest.fn()
+const mockClose = jest.fn((_afterClose?: () => void) => {})
+const mockOpenLink = jest.fn()
+
+jest.mock('#/lib/hooks/useOpenLink', () => ({useOpenLink: () => mockOpenLink}))
 
 jest.mock('@lingui/react', () => {
   const fill = (message: string, values: Record<string, unknown> = {}) =>
@@ -304,9 +307,15 @@ describe('stats', () => {
   })
 })
 
-it('closes from the Close button', () => {
-  renderDialog()
+it('opens the gallery link only after the dialog has closed', () => {
+  renderDialog(gallery({uri: 'https://grain.social/gallery/42'}))
 
-  fireEvent.press(screen.getByTestId('atmospherePhotoDialogClose'))
+  fireEvent.press(screen.getByRole('button', {name: 'View on Grain'}))
   expect(mockClose).toHaveBeenCalledTimes(1)
+  expect(mockClose).toHaveBeenCalledWith(expect.any(Function))
+  expect(mockOpenLink).not.toHaveBeenCalled()
+
+  mockClose.mock.calls[0][0]?.()
+  expect(mockOpenLink).toHaveBeenCalledTimes(1)
+  expect(mockOpenLink).toHaveBeenCalledWith('https://grain.social/gallery/42')
 })
