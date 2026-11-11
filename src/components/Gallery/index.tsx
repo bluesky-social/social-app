@@ -37,7 +37,7 @@ import {
 import {IS_ANDROID, IS_WEB} from '#/env'
 
 export {Bleed, useGalleryBleed}
-export {PageDots} from '#/components/Gallery/GalleryPageDots'
+export {PageDots} from '#/components/Gallery/PageDots'
 export {ITEM_GAP}
 export type {GalleryRef}
 
@@ -108,7 +108,7 @@ export function Root({
   onIndexChange?: (index: number, previousIndex: number) => void
 }) {
   const {t: l} = useLingui()
-  const {screenReaderEnabled, reduceMotionEnabled} = useA11y()
+  const {screenReaderEnabled} = useA11y()
 
   const slides = flattenReactChildren(children).filter(isValidElement)
   const keys = slides.map(slide => String(slide.key))
@@ -126,11 +126,6 @@ export function Root({
   const currentIndexRef = useRef(0)
   const scrollOffsetRef = useRef(0)
   const userScrollingRef = useRef(false)
-  /** Keep an explicit selection during its scroll and at shared offsets. */
-  const selectedPageOffsetRef = useRef<{
-    offset: number
-    animated: boolean
-  } | null>(null)
   /*
    * Container overflow styles
    *
@@ -216,83 +211,11 @@ export function Root({
 
   const scrollTo = useNonReactiveCallback(
     ({offset, animated = false}: {offset: number; animated?: boolean}) => {
-      const selection = selectedPageOffsetRef.current
-      if (selection) selection.animated = animated
-      if (IS_WEB) resetWebPageScrollIdle()
       scrollRef.current?.scrollTo({x: offset, animated})
     },
   )
 
-  /*
-   * Web page-scroll lifecycle
-   *
-   * A smooth scroll can stop short of its target. Release the animation lock
-   * on interruption or idle so pagination cannot remain frozen.
-   */
-  const webPageScrollIdleTimeoutRef =
-    useRef<ReturnType<typeof setTimeout>>(undefined)
-
-  // Timer cleanup must not depend on finding a DOM node for the listeners.
-  useEffect(() => {
-    if (!IS_WEB) return
-    return () => clearTimeout(webPageScrollIdleTimeoutRef.current)
-  }, [])
-
-  useEffect(() => {
-    if (!IS_WEB) return
-    const webScrollNode =
-      scrollRef.current?.getScrollableNode() as unknown as HTMLElement | null
-    if (!webScrollNode) return
-    const onWebPageScrollInterrupt = () => {
-      if (selectedPageOffsetRef.current?.animated) {
-        clearTimeout(webPageScrollIdleTimeoutRef.current)
-        selectedPageOffsetRef.current = null
-      }
-    }
-    webScrollNode.addEventListener('wheel', onWebPageScrollInterrupt, {
-      passive: true,
-    })
-    webScrollNode.addEventListener('pointerdown', onWebPageScrollInterrupt, {
-      passive: true,
-    })
-    return () => {
-      webScrollNode.removeEventListener('wheel', onWebPageScrollInterrupt)
-      webScrollNode.removeEventListener('pointerdown', onWebPageScrollInterrupt)
-    }
-  }, [])
-
-  /** Restart the web-only idle fallback while an animated scroll is active. */
-  function resetWebPageScrollIdle() {
-    clearTimeout(webPageScrollIdleTimeoutRef.current)
-    if (!selectedPageOffsetRef.current?.animated) return
-    webPageScrollIdleTimeoutRef.current = setTimeout(() => {
-      webPageScrollIdleTimeoutRef.current = undefined
-      const selection = selectedPageOffsetRef.current
-      if (!selection?.animated) return
-      selection.animated = false
-      updatePageForOffset(
-        getScrollNode()?.scrollLeft ?? scrollOffsetRef.current,
-      )
-    }, 150)
-  }
-  /* End web page-scroll lifecycle */
-
-  const selectPage = useNonReactiveCallback((index: number, offset: number) => {
-    clearTimeout(webPageScrollIdleTimeoutRef.current)
-    setPageIndex(index)
-    selectedPageOffsetRef.current = {offset, animated: false}
-  })
-
   const updatePageForOffset = useNonReactiveCallback((offset: number) => {
-    const selection = selectedPageOffsetRef.current
-    if (selection) {
-      if (Math.abs(selection.offset - offset) < 1) {
-        selection.animated = false
-        return
-      }
-      if (selection.animated) return
-    }
-    selectedPageOffsetRef.current = null
     setPageIndex(getIndexForOffset(itemWidthsRef.current, offset, itemCount))
   })
 
@@ -311,8 +234,6 @@ export function Root({
   // Discard measurements and focus refs for items that are no longer mounted.
   useEffect(() => {
     const currentKeys = keysSignature ? keysSignature.split('\u0000') : []
-    clearTimeout(webPageScrollIdleTimeoutRef.current)
-    selectedPageOffsetRef.current = null
     const present = new Set(currentKeys)
     setSizes(prev => {
       let changed = false
@@ -346,7 +267,6 @@ export function Root({
       viewportWidth,
       currentOffset: current,
     })
-    selectPage(index, next)
     if (next === current) return
     if (!IS_WEB) {
       /*
@@ -360,29 +280,9 @@ export function Root({
 
   useImperativeHandle(ref, () => ({scrollIntoView}), [scrollIntoView])
 
-  const activateIndex = useNonReactiveCallback((index: number) => {
-    if (!Number.isInteger(index) || index < 0 || index >= itemCount) return
-    cancelWebKeyboardNavigation()
-    cancelWebPointerNavigation()
-    const current = getScrollNode()?.scrollLeft ?? 0
-    const next = getRevealOffset({
-      itemWidths: itemWidthsRef.current,
-      itemCount,
-      index,
-      viewportWidth,
-      currentOffset: current,
-    })
-    setCurrentIndex(index)
-    selectPage(index, next)
-    setFocusIndex(index)
-    if (next !== current) {
-      scrollTo({offset: next, animated: !reduceMotionEnabled})
-    }
-  })
-
   const onSettle = useNonReactiveCallback((index: number) => {
     setCurrentIndex(index)
-    selectPage(index, getScrollNode()?.scrollLeft ?? scrollOffsetRef.current)
+    updatePageForOffset(getScrollNode()?.scrollLeft ?? scrollOffsetRef.current)
     if (!IS_WEB) return
     setFocusIndex(index)
     const node = focusNodesRef.current.get(keys[index]) as HTMLElement | null
@@ -401,7 +301,6 @@ export function Root({
   const onItemFocus = useNonReactiveCallback((index: number) => {
     if (!IS_WEB) return
     syncIndex(index)
-    selectPage(index, getScrollNode()?.scrollLeft ?? scrollOffsetRef.current)
     setFocusIndex(index)
   })
 
@@ -428,7 +327,7 @@ export function Root({
     },
   )
 
-  const cancelWebKeyboardNavigation = useKeyboardHandlers({
+  useKeyboardHandlers({
     scrollRef,
     itemWidthsRef,
     currentIndexRef,
@@ -438,7 +337,7 @@ export function Root({
     resetKey: keysSignature,
   })
 
-  const cancelWebPointerNavigation = usePointerHandlers({
+  usePointerHandlers({
     scrollRef,
     itemWidthsRef,
     currentIndexRef,
@@ -454,8 +353,8 @@ export function Root({
    */
   const onScrollOffset = (offsetX: number, isUserScroll: boolean) => {
     scrollOffsetRef.current = offsetX
-    updatePageForOffset(offsetX)
     const index = getIndexForOffset(itemWidthsRef.current, offsetX, itemCount)
+    setPageIndex(index)
     if (isUserScroll) {
       setCurrentIndex(index)
     } else {
@@ -470,10 +369,8 @@ export function Root({
       /*
        * Browser touch and trackpad scrolling must update the dots without
        * changing the existing navigation callback or moving keyboard focus.
-       * Keep an explicitly selected item when its offset is shared by others.
        */
       updatePageForOffset(offset)
-      resetWebPageScrollIdle()
       return
     }
     onScrollOffset(offset, userScrollingRef.current)
@@ -496,7 +393,7 @@ export function Root({
 
   return (
     <GalleryContext.Provider
-      value={{label, itemKeys: keys, activeIndex: pageIndex, activateIndex}}>
+      value={{label, itemKeys: keys, activeIndex: pageIndex}}>
       <View style={a.w_full}>
         <View
           ref={contentRef}
@@ -536,7 +433,6 @@ export function Root({
               scrollEventThrottle={16}
               onScroll={onScroll}
               onScrollBeginDrag={() => {
-                selectedPageOffsetRef.current = null
                 userScrollingRef.current = true
               }}
               onScrollEndDrag={onScrollEnd}

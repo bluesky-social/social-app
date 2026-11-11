@@ -4,7 +4,6 @@ export const GalleryContext = createContext<{
   label: string
   itemKeys: string[]
   activeIndex: number
-  activateIndex: (index: number) => void
 } | null>(null)
 GalleryContext.displayName = 'GalleryContext'
 

@@ -11,9 +11,6 @@ import {
 import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
 import * as Gallery from '#/components/Gallery'
-import {FakeElement} from '#/components/Gallery/__tests__/fakeDom'
-import * as keyboardHandlers from '#/components/Gallery/useKeyboardHandlers'
-import * as pointerHandlers from '#/components/Gallery/usePointerHandlers'
 
 const mockEnv = {IS_WEB: false, IS_ANDROID: false}
 const mockA11y = {screenReaderEnabled: false, reduceMotionEnabled: true}
@@ -162,13 +159,8 @@ describe('Gallery.PageDots', () => {
       <Gallery.PageDots />
     </View>
   )
-  const dot = (index: number) => screen.getByTestId(`galleryPageDots-${index}`)
-  const expectActive = (index: number) => {
-    for (let i = 0; i < 3; i++) {
-      expect(dot(i).props['aria-current']).toBe(
-        i === index ? 'true' : undefined,
-      )
-    }
+  const expectPosition = (index: number) => {
+    expect(screen.getByLabelText(`Cards, item ${index + 1} of 3`)).toBeTruthy()
   }
 
   it('requires gallery context', () => {
@@ -203,17 +195,31 @@ describe('Gallery.PageDots', () => {
     expect(screen.queryByTestId('galleryPageDots')).toBeNull()
   })
 
-  it('exposes native position as text, not nonfunctional buttons', () => {
-    threeCards({footer: dots})
-    expect(
-      screen.getByLabelText('Cards, item 1 of 3').props.accessibilityRole,
-    ).toBe('text')
-    expect(screen.queryAllByRole('button')).toHaveLength(0)
-    userScroll(120)
-    expect(screen.getByLabelText('Cards, item 2 of 3')).toBeTruthy()
-    userScroll(330)
-    expect(screen.getByLabelText('Cards, item 3 of 3')).toBeTruthy()
-  })
+  it.each([false, true])(
+    'exposes position without buttons or tab stops (web: %s)',
+    isWeb => {
+      mockEnv.IS_WEB = isWeb
+      threeCards({footer: dots})
+      expect(
+        screen.getByRole(isWeb ? 'image' : 'text', {
+          name: 'Cards, item 1 of 3',
+        }),
+      ).toBeTruthy()
+      expect(screen.queryAllByRole('button')).toHaveLength(0)
+      for (const id of [
+        'galleryPageDots',
+        'galleryPageDots-0',
+        'galleryPageDots-1',
+        'galleryPageDots-2',
+      ]) {
+        expect(screen.getByTestId(id).props.tabIndex).toBeUndefined()
+      }
+      userScroll(120)
+      expectPosition(1)
+      userScroll(330)
+      expectPosition(2)
+    },
+  )
 
   it('animates between 8 and 30 pixels unless reduced motion is enabled', () => {
     const timing = jest.spyOn(Animated, 'timing')
@@ -240,154 +246,64 @@ describe('Gallery.PageDots', () => {
     mockEnv.IS_WEB = true
     const onIndexChange = jest.fn()
     threeCards({footer: dots, onIndexChange})
-    expectActive(0)
+    expectPosition(0)
     scrollBy(120)
-    expectActive(1)
+    expectPosition(1)
     scrollBy(330)
-    expectActive(2)
+    expectPosition(2)
     expect(screen.getByTestId('a').props.tabIndex).toBe(0)
     expect(onIndexChange).not.toHaveBeenCalled()
   })
 
   it.each([false, true])(
-    'retains clicked selection through scrolling (reduced motion: %s)',
-    reduceMotion => {
-      mockEnv.IS_WEB = true
-      mockA11y.reduceMotionEnabled = reduceMotion
+    'reports the leading item at a shared reveal offset (web: %s)',
+    isWeb => {
+      mockEnv.IS_WEB = isWeb
+      const ref = createRef<Gallery.GalleryRef>()
       const onIndexChange = jest.fn()
-      threeCards({footer: dots, onIndexChange})
+      threeCards({footer: dots, ref, onIndexChange})
       layout('gallery', 400, 100)
-      fireEvent.press(
-        screen.getByRole('button', {name: 'Cards, go to item 3 of 3'}),
-      )
-      expectActive(2)
-      expect(scrollTo).toHaveBeenLastCalledWith({
-        x: 216,
-        animated: !reduceMotion,
-      })
-      expect(onIndexChange).toHaveBeenCalledWith(2, 0)
-      if (!reduceMotion) {
-        scrollBy(50)
-        expectActive(2)
-        scrollBy(208)
-        expectActive(2)
-      }
-      // At this offset, the generic leading-item calculation still selects b.
+
+      act(() => ref.current?.scrollIntoView(2))
+      expect(scrollTo).toHaveBeenLastCalledWith({x: 216, animated: false})
+      expectPosition(0)
       scrollBy(216)
-      act(() => jest.advanceTimersByTime(150))
-      expectActive(2)
-      expect(onIndexChange).toHaveBeenCalledTimes(1)
-      scrollBy(120)
-      expectActive(1)
-      expect(onIndexChange).toHaveBeenCalledTimes(1)
+      expectPosition(1)
+      scrollBy(0)
+      expectPosition(0)
+      expect(onIndexChange).not.toHaveBeenCalled()
     },
   )
 
-  it('cancels existing web navigation before starting a dot scroll', () => {
+  it.each([false, true])(
+    'keeps position when revealing an already visible item (web: %s)',
+    isWeb => {
+      mockEnv.IS_WEB = isWeb
+      const ref = createRef<Gallery.GalleryRef>()
+      const onIndexChange = jest.fn()
+      threeCards({footer: dots, ref, onIndexChange})
+      layout('gallery', 800, 100)
+
+      act(() => ref.current?.scrollIntoView(2))
+      expect(scrollTo).not.toHaveBeenCalled()
+      expectPosition(0)
+      scrollBy(0)
+      expectPosition(0)
+      expect(onIndexChange).not.toHaveBeenCalled()
+    },
+  )
+
+  it('does not select a dot just because a visible item receives focus', () => {
     mockEnv.IS_WEB = true
-    const calls: string[] = []
-    const keyboard = jest
-      .spyOn(keyboardHandlers, 'useKeyboardHandlers')
-      .mockReturnValue(() => calls.push('keyboard'))
-    const pointer = jest
-      .spyOn(pointerHandlers, 'usePointerHandlers')
-      .mockReturnValue(() => calls.push('pointer'))
-    threeCards({footer: dots})
-    scrollTo.mockImplementationOnce(() => calls.push('scroll'))
-
-    fireEvent.press(dot(2))
-
-    expect(calls).toEqual(['keyboard', 'pointer', 'scroll'])
-    expectActive(2)
-    keyboard.mockRestore()
-    pointer.mockRestore()
-  })
-
-  it('resumes web tracking after a smooth scroll stops short', () => {
-    mockEnv.IS_WEB = true
-    mockA11y.reduceMotionEnabled = false
     const onIndexChange = jest.fn()
     threeCards({footer: dots, onIndexChange})
-    fireEvent.press(dot(2))
-    scrollBy(120)
-    act(() => jest.advanceTimersByTime(149))
-    expectActive(2)
+    fireEvent(screen.getByTestId('c'), 'focus')
 
-    scrollBy(208)
-    act(() => jest.advanceTimersByTime(149))
-    expectActive(2)
-    act(() => jest.advanceTimersByTime(1))
-    expectActive(1)
-
-    scrollBy(0)
-    expectActive(0)
+    expectPosition(0)
     expect(screen.getByTestId('c').props.tabIndex).toBe(0)
-    expect(onIndexChange).toHaveBeenCalledTimes(1)
-    expect(onIndexChange).toHaveBeenCalledWith(2, 0)
-  })
-
-  it('releases web dot selection even when no scroll events arrive', () => {
-    mockEnv.IS_WEB = true
-    mockA11y.reduceMotionEnabled = false
-    const onIndexChange = jest.fn()
-    threeCards({footer: dots, onIndexChange})
-    fireEvent.press(dot(2))
-    expectActive(2)
-
-    act(() => jest.advanceTimersByTime(150))
-    expectActive(0)
     scrollBy(120)
-    expectActive(1)
-    expect(onIndexChange).toHaveBeenCalledTimes(1)
-  })
-
-  it.each(['wheel', 'pointerdown'])(
-    'resumes scroll tracking when %s interrupts dot navigation',
-    event => {
-      mockEnv.IS_WEB = true
-      mockA11y.reduceMotionEnabled = false
-      const node = new FakeElement()
-      const getScrollableNode = jest
-        .spyOn(ScrollView.prototype, 'getScrollableNode')
-        .mockReturnValue(node)
-      const {unmount} = threeCards({footer: dots})
-      fireEvent.press(dot(2))
-      scrollBy(120)
-      expectActive(2)
-      act(() => {
-        node.dispatch(event)
-      })
-      scrollBy(120)
-      expectActive(1)
-      unmount()
-      expect(node.listenerCount(event)).toBe(0)
-      getScrollableNode.mockRestore()
-    },
-  )
-
-  it('can select an already visible item without scrolling', () => {
-    mockEnv.IS_WEB = true
-    threeCards({footer: dots})
-    layout('gallery', 800, 100)
-    fireEvent.press(dot(2))
-    expectActive(2)
-    expect(scrollTo).not.toHaveBeenCalled()
-    scrollBy(0)
-    expectActive(2)
-  })
-
-  it('updates native dots when revealing an already visible item', () => {
-    const ref = createRef<Gallery.GalleryRef>()
-    const onIndexChange = jest.fn()
-    threeCards({footer: dots, ref, onIndexChange})
-    layout('gallery', 800, 100)
-    act(() => ref.current?.scrollIntoView(2))
-    expect(screen.getByLabelText('Cards, item 3 of 3')).toBeTruthy()
-    expect(scrollTo).not.toHaveBeenCalled()
-    scrollBy(0)
-    expect(screen.getByLabelText('Cards, item 3 of 3')).toBeTruthy()
-    act(() => ref.current?.scrollIntoView(0))
-    expect(screen.getByLabelText('Cards, item 1 of 3')).toBeTruthy()
+    expectPosition(1)
+    expect(screen.getByTestId('c').props.tabIndex).toBe(0)
     expect(onIndexChange).not.toHaveBeenCalled()
   })
 
@@ -398,7 +314,7 @@ describe('Gallery.PageDots', () => {
     threeCards({footer: dots, ref, onIndexChange})
     act(() => ref.current?.scrollIntoView(2))
     scrollBy(316)
-    expectActive(2)
+    expectPosition(2)
     expect(onIndexChange).not.toHaveBeenCalled()
   })
 })

@@ -210,13 +210,18 @@ describe('usePointerHandlers (web)', () => {
     expect(scroller.listenerCount('mousedown')).toBe(0)
   })
 
-  it('cleans up on unmount', () => {
+  it('cleans up listeners and pending motion on unmount', () => {
     const {unmount} = setup()
     expect(scroller.listenerCount('mousedown')).toBe(1)
     expect(dom.window.listenerCount('mousemove')).toBe(1)
     mouseDown(text)
     drag(100)
+    release()
+    scrollTo.mockClear()
     unmount()
+    dom.flushFrames()
+    expect(scrollTo).not.toHaveBeenCalled()
+    expect(onSettle).not.toHaveBeenCalled()
     expect(scroller.listenerCount('mousedown')).toBe(0)
     expect(scroller.listenerCount('dragstart')).toBe(0)
     expect(scroller.listenerCount('wheel')).toBe(0)
@@ -241,50 +246,15 @@ describe('usePointerHandlers (web)', () => {
     }
   })
 
-  it('cancels an in-flight settle without stopping future pointer navigation', () => {
-    const {result} = setup()
-    mouseDown(text)
-    drag(150)
-    release()
-    scrollTo.mockClear()
-
-    result.current()
-    dom.flushFrames()
-    expect(scrollTo).not.toHaveBeenCalled()
-    expect(onSettle).not.toHaveBeenCalled()
-
-    mouseDown(text)
-    drag(150)
-    release()
-    dom.flushFrames()
-    expect(onSettle).toHaveBeenCalledTimes(1)
-  })
-
-  it('reports Safari wheel navigation after another item is selected', () => {
+  it('uses the current navigation index for Safari wheel scrolling', () => {
     mockSafari = true
-    const {result, currentIndexRef} = setup()
+    const {currentIndexRef} = setup()
     scroller.scrollLeft = 0
-    result.current()
     currentIndexRef.current = 2
 
     scroller.dispatch('wheel', {deltaX: 50, deltaY: 0})
 
     expect(onSettle).toHaveBeenCalledWith(0)
-  })
-
-  it('abandons a cancelled drag and clears its overscroll displacement', () => {
-    const {result} = setup()
-    mouseDown(text)
-    drag(400)
-    scrollTo.mockClear()
-
-    result.current()
-    drag(450)
-    release()
-    dom.flushFrames()
-    expect(scrollTo).not.toHaveBeenCalled()
-    expect(onSettle).not.toHaveBeenCalled()
-    expect(scroller.style.transform).toBe('')
   })
 
   it('drops an in-flight settle when the items change at the same count', () => {

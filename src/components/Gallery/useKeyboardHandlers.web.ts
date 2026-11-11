@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react'
+import {useEffect} from 'react'
 
 import {isEditableTarget} from '#/components/Gallery/domUtils'
 import {tween} from '#/components/Gallery/tween'
@@ -7,7 +7,6 @@ import {getOffsetForIndex} from '#/components/Gallery/utils'
 
 const SETTLE_DURATION = 700
 
-/** Returns a function to cancel an in-flight keyboard move. */
 export function useKeyboardHandlers({
   scrollRef,
   itemWidthsRef,
@@ -17,20 +16,11 @@ export function useKeyboardHandlers({
   itemCount,
   resetKey,
 }: NavigationHandlerArgs) {
-  const cancelWebNavigationRef = useRef<(() => void) | null>(null)
-
   useEffect(() => {
     if (itemCount <= 1) return
 
     let stopTween: (() => void) | null = null
     let pendingIndex: number | null = null
-
-    const cancelWebNavigation = () => {
-      stopTween?.()
-      stopTween = null
-      pendingIndex = null
-    }
-    cancelWebNavigationRef.current = cancelWebNavigation
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.defaultPrevented) return
@@ -96,8 +86,7 @@ export function useKeyboardHandlers({
     window.addEventListener('keydown', onKeyDown)
     return () => {
       window.removeEventListener('keydown', onKeyDown)
-      cancelWebNavigation()
-      cancelWebNavigationRef.current = null
+      if (stopTween) stopTween()
     }
   }, [
     scrollRef,
@@ -108,6 +97,4 @@ export function useKeyboardHandlers({
     itemCount,
     resetKey,
   ])
-
-  return () => cancelWebNavigationRef.current?.()
 }

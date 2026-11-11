@@ -95,17 +95,15 @@ zero or one item. Optional `style` and `testID` props configure the row. The
 active dot grows from 8 to 30 pixels wide over 200ms as the previous dot shrinks;
 reduced motion makes the change immediate. Colors follow the theme.
 
-On web, dots are labelled buttons with a current-item indicator and keyboard
-focus ring. Clicking or activating a dot selects that item and scrolls only as
-far as needed to reveal it with animation (unless reduced motion is enabled),
-keeping focus on the button. Selecting an already
-visible item need not scroll. On native, dots are not buttons; the row exposes
-a translated position label to screen readers instead.
+Dots are read-only on every platform, with no buttons or extra tab stops.
+The row exposes a single translated position label to screen readers. Use
+the gallery's swipe, drag, trackpad, and arrow-key navigation to move between
+items.
 
-The dots track the current index through all scrolling, including browser
-touch and trackpad scrolling. This display state is separate from
-`onIndexChange`, which follows the rules under "Navigation callbacks" below.
-Dot activation is user navigation and does call `onIndexChange`.
+The active dot follows the actual scroll position, including at shared or
+clamped offsets, rather than a separately selected target item. This display
+state is separate from `onIndexChange`, which follows the rules under
+"Navigation callbacks" below.
 
 ### Navigation callbacks
 
@@ -262,9 +260,9 @@ pnpm test --runInBand src/components/Gallery/__tests__ src/components/images/Gal
   and Android's start-edge overscroll settles back. Toggle native snapping in
   the page dots example: releases should settle on slide boundaries or the
   content end. Turn it off to restore free scrolling.
-- Page dots: swipe/drag/trackpad scrolling updates the selected dot. On web,
-  click and keyboard-activate dots, including when multiple cards fit; the
-  selected item stays selected at shared/clamped offsets. Reveal the last
-  card in Storybook, and check that reduced motion skips animation.
+- Page dots: swipe/drag/trackpad scrolling updates the position indicator.
+  Dots are not buttons or extra tab stops on any platform. Reveal the last
+  card in Storybook and check the indicator follows the scroll position,
+  including when multiple cards fit. Check that reduced motion skips animation.
 - Screen reader: items are reachable and labelled, and the image adapter shows
   its vertical list of images.

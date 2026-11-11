@@ -128,11 +128,15 @@ describe('useKeyboardHandlers (web)', () => {
     },
   )
 
-  it('stops listening on unmount', () => {
+  it('cancels pending navigation on unmount', () => {
     const {unmount} = setup()
     expect(dom.window.listenerCount('keydown')).toBe(1)
+    press('ArrowRight', button)
     unmount()
+    dom.flushFrames()
     expect(dom.window.listenerCount('keydown')).toBe(0)
+    expect(scrollTo).not.toHaveBeenCalled()
+    expect(onSettle).not.toHaveBeenCalled()
   })
 
   it('stops listening when items drop to one', () => {
@@ -146,23 +150,6 @@ describe('useKeyboardHandlers (web)', () => {
     press('ArrowRight', button)
     dom.flushFrames()
     expect(onSettle).toHaveBeenCalledWith(1)
-  })
-
-  it('cancels an in-flight move without stopping future keyboard navigation', () => {
-    const {result, currentIndexRef} = setup()
-    press('ArrowRight', button)
-    scrollTo.mockClear()
-
-    result.current()
-    dom.flushFrames()
-    expect(scrollTo).not.toHaveBeenCalled()
-    expect(onSettle).not.toHaveBeenCalled()
-
-    currentIndexRef.current = 1
-    press('ArrowRight', button)
-    dom.flushFrames()
-    expect(onSettle).toHaveBeenCalledTimes(1)
-    expect(onSettle).toHaveBeenCalledWith(2)
   })
 
   it('drops an in-flight move when the items change at the same count', () => {
