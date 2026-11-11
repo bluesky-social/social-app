@@ -589,9 +589,7 @@ function ExpandedPostDetails({
       key="count"
       style={[
         {maxWidth: '100%'},
-        wrapCount
-          ? {flexBasis: '100%'}
-          : {marginLeft: hasCount ? a.gap_xs.gap : 0},
+        wrapCount ? {width: '100%'} : {marginLeft: hasCount ? a.gap_xs.gap : 0},
       ]}>
       <View
         onLayout={e => measure('count', e.nativeEvent.layout.width)}
