@@ -24,6 +24,11 @@ const ANDROID_INLINE_OFFSETS = [
  */
 export const POST_NUMBER_INLINE_OFFSET = 14
 
+/**
+ * Descent of the iOS system font (SF Pro), as a fraction of the font size.
+ */
+const IOS_SYSTEM_FONT_DESCENT = 0.2412
+
 function getAndroidInlineOffset(fontScale: number) {
   return ANDROID_INLINE_OFFSETS.reduce((nearest, candidate) =>
     Math.abs(candidate[0] - fontScale) < Math.abs(nearest[0] - fontScale)
@@ -96,9 +101,20 @@ export function ThreadItemPostNumber({
               },
               ios: {
                 /*
-                 * For iOS, we just need to offset the padding we applied.
+                 * Like Android, iOS puts the inline view's bottom on the
+                 * text baseline (with our inline-view-baseline RN patch).
+                 * Move it down by the padding plus the descent of the badge
+                 * text so the two baselines line up.
                  */
-                transform: [{translateY: a.py_2xs.paddingBottom}],
+                transform: [
+                  {
+                    translateY:
+                      a.py_2xs.paddingBottom +
+                      a.text_xs.fontSize *
+                        nativeFontScale *
+                        IOS_SYSTEM_FONT_DESCENT,
+                  },
+                ],
               },
               web: {
                 /*

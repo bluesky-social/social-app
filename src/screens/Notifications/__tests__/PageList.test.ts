@@ -3,11 +3,8 @@ import {describe, expect, it, jest} from '@jest/globals'
 import {type NotificationView} from '#/state/queries/notifications/grouped/types'
 import {
   buildRows,
-  getBorderColor,
   getPlaceholderRow,
-  isUnreadBorder,
 } from '#/screens/Notifications/components/PageList'
-import {type Theme} from '#/alf'
 
 // The placeholder helper doesn't need the native runtime or analytics setup.
 jest.mock('#/lib/hooks/useBottomBarOffset', () => ({}))
@@ -102,62 +99,5 @@ describe('buildRows', () => {
     expect(
       dividers([notification('a', lastYear), notification('b', lastYear)]),
     ).toEqual([false, true])
-  })
-
-  it('tints the borders on both sides of an unread notification', () => {
-    const rows = buildRows(
-      [
-        notification('a', today, false),
-        notification('b', today),
-        notification('c', lastYear, false),
-        notification('d', lastYear),
-      ],
-      'all',
-    )
-    // The border above each row, then the one below the last
-    expect([
-      ...rows.map((row, i) => isUnreadBorder(rows[i - 1], row)),
-      isUnreadBorder(rows.at(-1), undefined),
-    ]).toEqual([
-      false, // above "Today"
-      true, // "Today" | a
-      true, // a | b
-      false, // b | "Earlier"
-      true, // "Earlier" | c
-      true, // c | d
-      false, // below d
-    ])
-  })
-})
-
-describe('getBorderColor', () => {
-  const UNREAD = '#unread'
-  const READ = '#read'
-  const t = {
-    palette: {primary_100: UNREAD},
-    atoms: {border_contrast_low: {borderColor: READ}},
-  } as unknown as Theme
-
-  it('colours every side by default', () => {
-    expect(getBorderColor(t, true)).toEqual({borderColor: UNREAD})
-    expect(getBorderColor(t, false)).toEqual({borderColor: READ})
-  })
-
-  it('colours only the side asked for', () => {
-    expect(getBorderColor(t, true, 'top')).toEqual({borderTopColor: UNREAD})
-    expect(getBorderColor(t, false, 'bottom')).toEqual({
-      borderBottomColor: READ,
-    })
-  })
-
-  it("lets one view's two borders take different colours", () => {
-    // The "Earlier" header, with an unread row above it and a read one below
-    expect(
-      Object.assign(
-        {},
-        getBorderColor(t, true, 'top'),
-        getBorderColor(t, false, 'bottom'),
-      ),
-    ).toEqual({borderTopColor: UNREAD, borderBottomColor: READ})
   })
 })

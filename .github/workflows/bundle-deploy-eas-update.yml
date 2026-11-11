@@ -164,7 +164,7 @@ jobs:
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
-        uses: bluesky-social/github-actions/fingerprint-native@2287aefd4ddca2914fd85715cbe47124b7d9f360 # v0.4.0
+        uses: bluesky-social/github-actions/fingerprint-native@b8aac187f297a2cb3e84434d1e8dedd907918c9d # v0.5.1
         with:
           profile: ${{ inputs.channel || 'testflight' }}
           previous-commit-tag: ${{ inputs.runtimeVersion }}
@@ -202,11 +202,11 @@ jobs:
         run: pnpm icons:check
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
+        uses: expo/expo-github-action@9da89d3617bb88139671bad31b09c65714c2ee06 # 9.0.1
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
           !steps.version.outputs.version-changed }}
         with:
-          eas-version: '24.12.0'
+          eas-version: '25.3.0'
           packager: 'pnpm --dangerously-allow-all-builds'
           token: ${{ secrets.EXPO_TOKEN }}
 
@@ -279,7 +279,7 @@ jobs:
       profile: testflight
       testFlightGroup: "QA Team"
       # OTA rebuilds don't need the xlarge builder used for releases
-      runner: macos-26
+      runner: xcode-27
     # Pass only the secrets the reusable workflow declares, rather than `secrets: inherit`,
     # so this workflow never hands the reusable workflow the entire repo secret store.
     secrets:
@@ -311,7 +311,9 @@ jobs:
     uses: $/.github/workflows/build-submit-android.yml
     with:
       profile: testflight-android
-      runner: ubuntu-latest
+      # No runner override: the build keeps the reusable workflow's 32-core default.
+      # Building React Native from source gets killed mid-Gradle on ubuntu-latest
+      # (Ubuntu 26.04), and the post-build jobs already run on ubuntu-latest.
     # Pass only the secrets the reusable workflow declares, rather than `secrets: inherit`,
     # so this workflow never hands the reusable workflow the entire repo secret store.
     secrets:

@@ -47,8 +47,11 @@ by its config plugin in `app.config.js`. Codegen passes each icon's glyph name t
 props a glyph cannot honour, such as `gradient` or a `ref`, and in development warns once when it
 does so for a prop that could be avoided. Web always renders the SVG icons.
 
+SVG dimensions preserve the viewBox aspect ratio. Size tokens set the width; an explicit width
+or height infers the other dimension, while an explicit pair sets both dimensions.
+
 An icon stays on react-native-svg when its glyph would not match the SVG icon: a non-square
-viewBox (glyphs are sized by height, SVG icons letterbox into a square), or a fill path that
+viewBox (glyphs are sized by height, while SVG size tokens set the width), or a fill path that
 `createSinglePathSVG` renders with evenodd but whose SVG file does not declare it, where the two
 fill rules differ by more than 0.1% of the viewBox. Declare `fill-rule="evenodd"` in such SVGs.
 
@@ -77,7 +80,7 @@ and deeper nesting are rejected. Run `pnpm icons:generate` as usual. A temporary
 - is optimized and kept fresh like any other source: `pnpm icons:check` still requires its SVG and
   generated TypeScript to be current;
 - is marked by a docblock on its export, `Temporary SVG-only icon. Move its source to
-  assets/icons/<lane>/ before a native release.`, and listed by the generator (informational, never
+assets/icons/<lane>/ before a native release.`, and listed by the generator (informational, never
   a failure).
 
 Only use `tmp/` for new icons that are not in the fonts of any released binary. Moving the source

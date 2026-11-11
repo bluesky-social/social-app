@@ -6,7 +6,7 @@ import {BLUESKY_PROXY_HEADER} from '#/lib/constants'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useOnboardingDispatch} from '#/state/shell/onboarding'
-import {navigate} from '../../../Navigation'
+import {navigate, resetToTab} from '#/Navigation'
 
 LogBox.ignoreAllLogs()
 
@@ -71,37 +71,37 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eGotoHome"
-        onPress={() => navigate('Home')}
+        onPress={() => resetToTab('Home')}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eGotoSettings"
-        onPress={() => navigate('Settings')}
+        onPress={() => navigate({name: 'Settings', params: undefined})}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eGotoModeration"
-        onPress={() => navigate('Moderation')}
+        onPress={() => navigate({name: 'Moderation', params: undefined})}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eGotoLists"
-        onPress={() => navigate('Lists')}
+        onPress={() => navigate({name: 'Lists', params: undefined})}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eGotoFeeds"
-        onPress={() => navigate('Feeds')}
+        onPress={() => navigate({name: 'Feeds', params: undefined})}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="storybookBtn"
-        onPress={() => navigate('Debug')}
+        onPress={() => navigate({name: 'Debug', params: undefined})}
         accessibilityRole="button"
         style={BTN}
       />

@@ -1,0 +1,11 @@
+{
+  "platforms": ["ios", "android"],
+  "ios": {
+    "modules": ["ExpoBlueskyImageCompressorModule"]
+  },
+  "android": {
+    "modules": [
+      "expo.modules.blueskyimagecompressor.ExpoBlueskyImageCompressorModule"
+    ]
+  }
+}

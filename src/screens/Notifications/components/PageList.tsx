@@ -33,12 +33,13 @@ import {
   LoadingSkeleton,
   NotificationItem,
 } from '#/screens/Notifications/components/NotificationItem'
+import {useRowBackgroundColor} from '#/screens/Notifications/components/NotificationItem/Item/Root'
 import {usePager} from '#/screens/Notifications/components/PagerView'
 import {RefreshPill} from '#/screens/Notifications/components/RefreshPill'
 import {useRefreshPillMetrics} from '#/screens/Notifications/refreshPillMetrics'
 import {SHOW_ROW_BORDERS} from '#/screens/Notifications/rowBorders'
 import {isRefreshPillVisible} from '#/screens/Notifications/unread'
-import {atoms as a, native, type Theme, useTheme, web} from '#/alf'
+import {atoms as a, native, useTheme, web} from '#/alf'
 import {ButtonText} from '#/components/Button'
 import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
 import {EnvelopeNotification_Filled_Corner2_Rounded as EnvelopeNotificationIcon} from '#/components/icons/brands/EnvelopeNotification'
@@ -145,6 +146,7 @@ export function PageList({
   const isActive = usePager().selectedPage === pageIndex
   const bottomBarOffset = useBottomBarOffset()
   const [isPTRing, setIsPTRing] = useState(false)
+  const [isScrolledDown, setIsScrolledDown] = useState(false)
   /**
    * The height reported from List onLayout is the frame of the scrollview on
    * native. On web, it's the height of the entire list, including content.
@@ -274,7 +276,10 @@ export function PageList({
                   setNativeListContainerHeight(event.nativeEvent.layout.height)
               : undefined
           }
-          onScrolledDownChange={onScrolledDownChange}
+          onScrolledDownChange={value => {
+            setIsScrolledDown(value)
+            onScrolledDownChange?.(value)
+          }}
           headerOffset={headerOffset}
           data={rows}
           keyExtractor={(row: Row) => row.key}
@@ -285,24 +290,14 @@ export function PageList({
                   <SectionHeader
                     section={row.section}
                     isUnreadAbove={isUnreadRow(rows[index - 1])}
-                    isUnreadBelow={isUnreadRow(rows[index + 1])}
                   />
                 )
               case 'notification':
                 return (
-                  <View
-                    style={[
-                      row.hasDivider &&
-                        SHOW_ROW_BORDERS && [
-                          a.border_t,
-                          getBorderColor(
-                            t,
-                            isUnreadBorder(rows[index - 1], row),
-                          ),
-                        ],
-                    ]}>
-                    <NotificationItem notification={row.notification} />
-                  </View>
+                  <NotificationItem
+                    notification={row.notification}
+                    hasDivider={row.hasDivider}
+                  />
                 )
               case 'followersHeader':
                 return <FollowedYouHeader />
@@ -364,10 +359,7 @@ export function PageList({
               <View
                 style={[
                   a.pt_xl,
-                  SHOW_ROW_BORDERS && [
-                    a.border_t,
-                    getBorderColor(t, isUnreadRow(rows.at(-1))),
-                  ],
+                  SHOW_ROW_BORDERS && [a.border_t, t.atoms.border_contrast_low],
                 ]}>
                 <ActivityIndicator />
               </View>
@@ -396,6 +388,7 @@ export function PageList({
       </MainScrollProvider>
       <RefreshPill
         visible={showRefreshPill}
+        isScrolledDown={isScrolledDown}
         headerHeight={headerOffset}
         titleHeight={titleHeight}
         onPress={onPressRefreshPill}
@@ -510,86 +503,42 @@ function isUnreadRow(row: Row | undefined) {
   )
 }
 
-/**
- * Whether the border between two rows takes the unread colour. It does when
- * either row is unread, so an unread row is outlined on both sides.
- */
-export function isUnreadBorder(above: Row | undefined, below: Row | undefined) {
-  return isUnreadRow(above) || isUnreadRow(below)
-}
-
-/**
- * The colour of a border between rows, in v1's unread colour when it borders
- * an unread row.
- *
- * `borderColor` colours all four sides, so a view with borders on two sides
- * that can differ, like the "Earlier" header, passes the `side` of each. Else
- * the border style that comes last would colour both.
- */
-export function getBorderColor(
-  t: Theme,
-  isUnread: boolean,
-  side?: 'top' | 'bottom',
-) {
-  const borderColor = isUnread
-    ? t.palette.primary_100
-    : t.atoms.border_contrast_low.borderColor
-  switch (side) {
-    case 'top':
-      return {borderTopColor: borderColor}
-    case 'bottom':
-      return {borderBottomColor: borderColor}
-    default:
-      return {borderColor}
-  }
-}
-
 function SectionHeader({
   section,
   isUnreadAbove,
-  isUnreadBelow,
 }: {
   section: 'today' | 'earlier'
   /**
-   * Whether the row above is unread, which tints the border "Earlier" draws
-   * above itself.
+   * Whether the row above is unread. Without row borders, "Earlier" sits a
+   * gap below the last row, and the gap takes that row's tint so the tint
+   * runs right down to the header's border.
    */
   isUnreadAbove: boolean
-  /**
-   * Whether the row below is unread, which tints the border drawn below the
-   * header.
-   */
-  isUnreadBelow: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const gapColor = useRowBackgroundColor(!isUnreadAbove)
 
   return (
-    <View
-      style={[
-        a.px_lg,
-        section === 'today'
-          ? a.py_sm
-          : [
-              // With row borders, its own border sits flush like a divider
-              !SHOW_ROW_BORDERS && a.mt_md,
-              a.border_t,
-              a.pt_md,
-              a.pb_sm,
-              getBorderColor(t, isUnreadAbove, 'top'),
-            ],
-        // Rows are divided, so the header is too
-        SHOW_ROW_BORDERS && [
-          a.border_b,
-          getBorderColor(t, isUnreadBelow, 'bottom'),
-        ],
-      ]}>
-      <Text accessibilityRole="header" style={[a.text_md, a.font_bold]}>
-        {section === 'today'
-          ? l({message: 'Today', context: 'Notifications section header'})
-          : l({message: 'Earlier', context: 'Notifications section header'})}
-      </Text>
-    </View>
+    <>
+      {section === 'earlier' && !SHOW_ROW_BORDERS && (
+        <View style={[a.pt_md, {backgroundColor: gapColor}]} />
+      )}
+      <View
+        style={[
+          a.px_lg,
+          section === 'today' ? a.py_sm : [a.border_t, a.pt_md, a.pb_sm],
+          // Rows are divided, so the header is too
+          SHOW_ROW_BORDERS && a.border_b,
+          t.atoms.border_contrast_low,
+        ]}>
+        <Text accessibilityRole="header" style={[a.text_md, a.font_bold]}>
+          {section === 'today'
+            ? l({message: 'Today', context: 'Notifications section header'})
+            : l({message: 'Earlier', context: 'Notifications section header'})}
+        </Text>
+      </View>
+    </>
   )
 }
 

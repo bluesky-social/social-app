@@ -6,6 +6,7 @@ import {Trans} from '@lingui/react/macro'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {logger} from '#/logger'
 import {
   useChatClient,
@@ -117,7 +118,8 @@ function DeleteAccountDialogInner({
       if (!currentAccount?.did) {
         throw new Error('Invalid did')
       }
-      const token = confirmCode.replace(WHITESPACE_RE, '')
+      const strippedCode = confirmCode.replace(WHITESPACE_RE, '')
+      const token = checkAndFormatResetCode(strippedCode) || strippedCode
       /*
        * Inform chat service of intent to delete account. A non-2xx response
        * throws, so reaching the next line means the chat service accepted it -
@@ -131,7 +133,7 @@ function DeleteAccountDialogInner({
       })
       control.close(() => {
         toast.show(_(msg`Your account has been deleted, see ya! ✌️`))
-        resetToTab('HomeTab')
+        resetToTab('Home')
         removeAccount(currentAccount)
       })
     } catch (e: any) {

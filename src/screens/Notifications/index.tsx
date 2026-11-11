@@ -14,8 +14,8 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {HITSLOP_10} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
@@ -32,11 +32,11 @@ import {
 import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
 import {useAppviewClient} from '#/state/session'
 import {useShellHeaderLayout} from '#/state/shell/shell-layout'
+import {FAB} from '#/view/com/util/fab/FAB'
 import {
   HomeHeaderModeProvider,
   useHomeHeaderMode,
 } from '#/view/com/util/MainScrollProvider'
-import {NotificationsScreen as LegacyNotificationsScreen} from '#/view/screens/Notifications'
 import {PageList} from '#/screens/Notifications/components/PageList'
 import * as Pager from '#/screens/Notifications/components/PagerView'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
@@ -51,46 +51,44 @@ import {
   nextSeenAt,
 } from '#/screens/Notifications/unread'
 import {atoms as a, useBreakpoints, useTheme, utils} from '#/alf'
-import {BetaTag} from '#/components/BetaTag'
 import {ButtonIcon} from '#/components/Button'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {type Metrics, useAnalytics} from '#/analytics'
-import {Features, isOnForBetaUser} from '#/analytics/features'
-import {IS_INTERNAL, IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
   'Notifications'
 >
 
-export function NotificationsScreen(props: Props) {
-  const ax = useAnalytics()
-  // Dev and TestFlight builds always get it, so it's dogfooded before rollout
-  const isNewNotificationsEnabled =
-    IS_INTERNAL || ax.features.enabled(ax.features.NotificationsV2Enable)
+export function NotificationsScreen({}: Props) {
+  const {t: l} = useLingui()
+  const t = useTheme()
+  const {openComposer} = useOpenComposer()
 
-  if (isNewNotificationsEnabled) {
-    return <NewNotificationsScreen {...props} />
-  }
-
-  return <LegacyNotificationsScreen {...props} />
-}
-
-export function NewNotificationsScreen({}: Props) {
   return (
-    <Layout.Screen testID="newNotificationsScreen" noInsetTop={IS_LIQUID_GLASS}>
+    <Layout.Screen testID="notificationsScreen" noInsetTop={IS_NATIVE}>
       <HomeHeaderModeProvider>
-        <NewNotificationsScreenInner />
+        <NotificationsScreenInner />
       </HomeHeaderModeProvider>
+      <FAB
+        testID="composeFAB"
+        onPress={() => openComposer({logContext: 'Fab'})}
+        icon={<EditBigIcon size="lg" fill={t.palette.white} />}
+        accessibilityRole="button"
+        accessibilityLabel={l({message: 'New post', context: 'action'})}
+        accessibilityHint=""
+      />
     </Layout.Screen>
   )
 }
 
-function NewNotificationsScreenInner() {
+function NotificationsScreenInner() {
   const {t: l} = useLingui()
   const ax = useAnalytics()
   const navigation = useNavigation()
@@ -103,11 +101,51 @@ function NewNotificationsScreenInner() {
    */
   const {height: titleHeight, onLayout: onTitleLayout} = useShellHeaderLayout()
   const tabs: {key: GroupedNotificationsFeed; label: string}[] = [
-    {key: 'all', label: l`All`},
-    {key: 'people-i-follow', label: l`People I follow`},
-    {key: 'conversations', label: l`Replies`},
-    {key: 'followers', label: l`Follows`},
-    {key: 'activity', label: l`Activity`},
+    {
+      key: 'all',
+      label: l({
+        message: 'All',
+        context: 'notifications tab',
+        comment:
+          'Tab label in Notifications that shows every notification. Space is tight, so keep it as short as possible.',
+      }),
+    },
+    {
+      key: 'people-i-follow',
+      label: l({
+        message: 'People I follow',
+        context: 'notifications tab',
+        comment:
+          'Tab label in Notifications that shows only notifications from accounts you follow. Space is tight, so keep it as short as possible, ideally one or two words.',
+      }),
+    },
+    {
+      key: 'conversations',
+      label: l({
+        message: 'Replies',
+        context: 'notifications tab',
+        comment:
+          'Tab label in Notifications that shows replies, quotes and mentions. Space is tight, so keep it as short as possible.',
+      }),
+    },
+    {
+      key: 'followers',
+      label: l({
+        message: 'Follows',
+        context: 'notifications tab',
+        comment:
+          'Tab label in Notifications that shows people who followed you. Space is tight, so keep it as short as possible.',
+      }),
+    },
+    {
+      key: 'activity',
+      label: l({
+        message: 'Post alerts',
+        context: 'notifications tab',
+        comment:
+          'Tab label in Notifications that shows new posts from accounts you get activity notifications for. Space is tight, so keep it as short as possible.',
+      }),
+    },
   ]
   const {seenAt, onFirstLoad, refresh} = useSessionSeenAt()
   const activeFeed = useRef<GroupedNotificationsFeed>(tabs[0].key)
@@ -506,7 +544,7 @@ function NotificationsHeader({
   const {selectedPage} = Pager.usePager()
   const {gtMobile} = useBreakpoints()
   const insets = useSafeAreaInsets()
-  const headerPinnedHeight = IS_LIQUID_GLASS ? insets.top : 0
+  const headerPinnedHeight = IS_NATIVE ? insets.top : 0
 
   const titleStyle = useAnimatedStyle(() => {
     if (IS_WEB) return {}
@@ -558,9 +596,10 @@ function NotificationsHeader({
       {/*
        * On native, the background fades out under the header, down to the
        * bottom of the pills as they move up. On web, the title and the pills
-       * each have their own background. On tablets it stays inside the center
-       * column, like `NativeCenterBorders`, so it doesn't cover the column's
-       * borders or the scroll indicator at the edge of the screen
+       * each have their own background. On wider screens it all stays inside
+       * the center column, like `NativeCenterBorders`, so it doesn't cover the
+       * column's borders, the scroll indicator at the edge of the screen, or
+       * the side columns on web
        */}
       {!IS_WEB && (
         <Animated.View
@@ -590,10 +629,10 @@ function NotificationsHeader({
         </Animated.View>
       )}
       <Animated.View
-        style={[IS_LIQUID_GLASS && {paddingTop: insets.top}, titleStyle]}
+        style={[IS_NATIVE && {paddingTop: insets.top}, titleStyle]}
         onLayout={onTitleLayout}>
         {IS_WEB && (
-          <View
+          <Layout.Center
             pointerEvents="none"
             style={[a.absolute, a.inset_0, t.atoms.bg]}
           />
@@ -601,26 +640,9 @@ function NotificationsHeader({
         <Layout.Header.Outer noBottomBorder sticky={false}>
           <Layout.Header.MenuButton />
           <Layout.Header.Content>
-            <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-              <Layout.Header.TitleText>
-                <Trans>Notifications</Trans>
-              </Layout.Header.TitleText>
-              {
-                /*
-                 * Only for those who have it because they opted in to beta
-                 * features, not internal builds or a wider rollout
-                 */
-                isOnForBetaUser(Features.NotificationsV2Enable) && (
-                  <Link
-                    to={{screen: 'BetaFeaturesSettings'}}
-                    label={l`Beta features`}
-                    accessibilityHint={l`Opens your beta features settings`}
-                    hitSlop={HITSLOP_10}>
-                    <BetaTag />
-                  </Link>
-                )
-              }
-            </View>
+            <Layout.Header.TitleText>
+              <Trans>Notifications</Trans>
+            </Layout.Header.TitleText>
           </Layout.Header.Content>
           <Layout.Header.Slot>
             <Link
@@ -645,7 +667,11 @@ function NotificationsHeader({
       <Animated.View
         style={pillsStyle}
         onLayout={event => setPillsHeight(event.nativeEvent.layout.height)}>
-        {IS_WEB && <HeaderFade />}
+        {IS_WEB && (
+          <Layout.Center pointerEvents="none" style={[a.absolute, a.inset_0]}>
+            <HeaderFade />
+          </Layout.Center>
+        )}
         <Layout.Center>{children}</Layout.Center>
       </Animated.View>
       {/* Last, so the backgrounds above don't cover it */}

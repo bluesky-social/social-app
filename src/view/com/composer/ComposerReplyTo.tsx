@@ -21,6 +21,9 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const t = useTheme()
   const {_} = useLingui()
   const {embed} = replyTo
+  const pronouns = replyTo.moderation?.ui('profileView').blur
+    ? undefined
+    : replyTo.author.pronouns?.trim()
 
   const [showFull, setShowFull] = useState(false)
 
@@ -117,6 +120,24 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
             )}
           </Text>
           <ProfileBadges profile={replyTo.author} size="sm" style={[a.pl_xs]} />
+          {pronouns && (
+            // the display name truncates first so pronouns stay whole
+            <Text
+              emoji
+              numberOfLines={1}
+              testID="composerReplyToPronouns"
+              style={[
+                {paddingLeft: 10},
+                a.flex_shrink_0,
+                a.text_md,
+                a.leading_snug,
+                // matches the profile header's handle row
+                {color: t.palette.contrast_600},
+                web({unicodeBidi: 'isolate'}),
+              ]}>
+              {pronouns}
+            </Text>
+          )}
         </View>
         <View style={[a.flex_row, a.gap_md]}>
           <View style={[a.flex_1, a.flex_grow]}>

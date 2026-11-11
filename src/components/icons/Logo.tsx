@@ -8,16 +8,16 @@ export function Full(
     textFill?: Props['fill']
   },
 ) {
-  const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
-  const ratio = 123 / 555
+  const {fill, width, height, viewBox, style, gradient, ...rest} =
+    useCommonSVGProps(props, '0 0 555 123')
 
   return (
     <Svg
       fill="none"
       {...rest}
-      viewBox="0 0 555 123"
-      width={size}
-      height={size * ratio}
+      viewBox={viewBox}
+      width={width}
+      height={height}
       style={[style]}>
       {gradient}
       <Path

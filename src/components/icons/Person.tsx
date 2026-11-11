@@ -32,6 +32,12 @@ export const PersonGroup_Stroke2_Corner2_Rounded = createSinglePathSVG({
   glyph: 'PersonGroup_Stroke2_Corner2_Rounded',
 })
 
+export const PersonPlus_Filled_Corner2_Rounded = createSinglePathSVG({
+  path: 'M17.7 14v-1.7H16a1.3 1.3 0 1 1 0-2.6h1.7V8a1.3 1.3 0 1 1 2.6 0v1.7H22a1.3 1.3 0 1 1 0 2.6h-1.7V14a1.3 1.3 0 1 1-2.6 0ZM5.501 6.5a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM2.046 17.516C3.236 14.296 6.17 12 10.002 12c3.831 0 6.764 2.296 7.955 5.516.34.92.107 1.828-.434 2.473A2.9 2.9 0 0 1 15.305 21H4.698a2.9 2.9 0 0 1-2.218-1.011 2.46 2.46 0 0 1-.434-2.473Z',
+  viewBox: '0 0 24 24',
+  glyph: 'PersonPlus_Filled_Corner2_Rounded',
+})
+
 export const PersonPlus_Filled_Stroke2_Corner0_Rounded = createSinglePathSVG({
   path: 'M7.5 6.5a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM12 12c-4.758 0-8.083 3.521-8.496 7.906A1 1 0 0 0 4.5 21H15a3 3 0 1 1 0-6c0-.824.332-1.571.87-2.113C14.739 12.32 13.435 12 12 12Zm6 2a1 1 0 0 1 1 1v2h2a1 1 0 1 1 0 2h-2v2a1 1 0 1 1-2 0v-2h-2a1 1 0 1 1 0-2h2v-2a1 1 0 0 1 1-1Z',
   viewBox: '0 0 24 24',

@@ -944,11 +944,33 @@ export type Events = {
     feedSliceIndex?: number
   }
   'trendingTopic:click': {
-    context: 'sidebar' | 'interstitial' | 'explore'
+    context: 'sidebar' | 'interstitial' | 'explore' | 'widget'
     feedUri?: string
     recId?: string
     rank: number
     feedSliceIndex?: number
+  }
+  /**
+   * The trending topics home screen widget was seen installed on this device,
+   * having not been installed the last time we checked.
+   */
+  'trendingWidget:installed': {}
+  /**
+   * The last trending topics home screen widget was removed from this device.
+   * Only checked when the app comes to the foreground, so it can lag the
+   * actual removal.
+   */
+  'trendingWidget:uninstalled': {}
+  /**
+   * The trending topics widget was tapped outside a topic, which opens
+   * Explore. On the small iOS widget that's every tap, because it can't have
+   * per-topic links. Topic taps log `trendingTopic:click` instead.
+   */
+  'trendingWidget:explore:click': {
+    /**
+     * The iOS widget family, e.g. `systemSmall`. Android doesn't report it.
+     */
+    size?: string
   }
   'trendingVideos:show': {
     context: 'settings'
@@ -1406,6 +1428,9 @@ export type Events = {
    */
   'blockedGeoOverlay:shown': {}
 
+  // user dismisses the Atmosphere introduction banner
+  'atmosphere:nux:bannerDismissed': {}
+
   'geo:debug': {}
 
   /*
@@ -1524,6 +1549,15 @@ export type Events = {
   'profile:associated:germ:self-reconnect': {}
 
   'profile:links:click': {
+    /**
+     * The profile the link is on, not the viewer.
+     */
+    profileDid: string
+    /**
+     * The link's `app.bsky.actor.link` record, which tells apart two links to
+     * the same site. Editing a link keeps its record.
+     */
+    linkUri: string | undefined
     domain: string
     /**
      * Name of the recognized support provider, if the link is a support link.
@@ -1535,14 +1569,34 @@ export type Events = {
    * A profile showing links was viewed. The denominator for tap rate.
    */
   'profile:links:impression': {
+    profileDid: string
     linkCount: number
     supportLinkCount: number
+    /**
+     * The `app.bsky.actor.link` records of the links shown, in display order,
+     * including any folded behind "+N". The per-link denominator for tap rate.
+     */
+    linkUris: string[]
     isOwnProfile: boolean
   }
   /**
    * Edit Profile was opened, from any profile header.
    */
   'profile:edit:open': {}
+  /**
+   * Edit Profile saved a change to the profile's pronouns. Never includes the
+   * pronouns themselves.
+   */
+  'profile:pronouns:save':
+    | {action: 'remove'}
+    | {
+        action: 'add' | 'edit'
+        /**
+         * How the saved pronouns were entered: one suggestion, several
+         * suggestions combined, or custom text.
+         */
+        source: 'preset' | 'combined' | 'custom'
+      }
   /**
    * Edit Profile was opened with the Links section available.
    */
@@ -1553,10 +1607,12 @@ export type Events = {
    * Logged on save, one event per link actually added or removed.
    */
   'profile:links:add': {
+    linkUri: string | undefined
     domain: string
     supportProvider: string | undefined
   }
   'profile:links:remove': {
+    linkUri: string | undefined
     domain: string
     supportProvider: string | undefined
   }
@@ -1564,8 +1620,11 @@ export type Events = {
    * A visitor opened a link's details, e.g. by long-pressing it.
    */
   'profile:links:preview': {
+    profileDid: string
+    linkUri: string | undefined
     domain: string
     supportProvider: string | undefined
+    isOwnProfile: boolean
   }
   /**
    * A link couldn't be added, e.g. because its site is blocked.

@@ -19,7 +19,8 @@ export type IconWithSvgMeta = ForwardRefExoticComponent<
 
 export const IconTemplate_Stroke2_Corner0_Rounded = forwardRef(
   function LogoImpl(props: Props, ref) {
-    const {fill, size, style, ...rest} = useCommonSVGProps(props)
+    const {fill, width, height, viewBox, style, ...rest} =
+      useCommonSVGProps(props)
 
     return (
       <Svg
@@ -27,9 +28,9 @@ export const IconTemplate_Stroke2_Corner0_Rounded = forwardRef(
         {...rest}
         // @ts-expect-error it's fiiiiine
         ref={ref}
-        viewBox="0 0 24 24"
-        width={size}
-        height={size}
+        viewBox={viewBox}
+        width={width}
+        height={height}
         style={[style]}>
         <Path
           fill={fill}
@@ -62,7 +63,15 @@ export function createSinglePathSVG({
   glyph?: NanoGlyphName
 }) {
   const Icon = forwardRef<Svg, Props>(function LogoImpl(props, ref) {
-    const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
+    const {
+      fill,
+      width,
+      height,
+      viewBox: resolvedViewBox,
+      style,
+      gradient,
+      ...rest
+    } = useCommonSVGProps(props, viewBox)
 
     const hasStroke = strokeWidth > 0
 
@@ -71,9 +80,9 @@ export function createSinglePathSVG({
         fill="none"
         {...rest}
         ref={ref}
-        viewBox={viewBox ?? '0 0 24 24'}
-        width={size}
-        height={size}
+        viewBox={resolvedViewBox}
+        width={width}
+        height={height}
         style={[style]}>
         {gradient}
         <Path
@@ -106,16 +115,24 @@ export function createMultiPathSVG({
   viewBox?: string
 }) {
   const Icon = forwardRef<Svg, Props>(function LogoImpl(props, ref) {
-    const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
+    const {
+      fill,
+      width,
+      height,
+      viewBox: resolvedViewBox,
+      style,
+      gradient,
+      ...rest
+    } = useCommonSVGProps(props, viewBox)
 
     return (
       <Svg
         fill="none"
         {...rest}
         ref={ref}
-        viewBox={viewBox ?? '0 0 24 24'}
-        width={size}
-        height={size}
+        viewBox={resolvedViewBox}
+        width={width}
+        height={height}
         style={[style]}>
         {gradient}
         {paths.map((path, i) => (
@@ -173,7 +190,15 @@ export function createSVG({
   glyph?: NanoGlyphName
 }) {
   const Icon = forwardRef<Svg, Props>(function LogoImpl(props, ref) {
-    const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
+    const {
+      fill,
+      width,
+      height,
+      viewBox: resolvedViewBox,
+      style,
+      gradient,
+      ...rest
+    } = useCommonSVGProps(props, viewBox)
     const paint = (value: string | undefined) =>
       value === 'currentColor' ? fill : value
 
@@ -182,9 +207,9 @@ export function createSVG({
         fill="none"
         {...rest}
         ref={ref}
-        viewBox={viewBox}
-        width={size}
-        height={size}
+        viewBox={resolvedViewBox}
+        width={width}
+        height={height}
         style={[style]}>
         {gradient}
         {elements.map((element, i) => {

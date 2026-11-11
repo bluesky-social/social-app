@@ -2,12 +2,14 @@ import {View} from 'react-native'
 import {AtUri, isAtUriString} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {useSession} from '#/state/session'
 import {useReportSubjectLabel} from '#/screens/ModerationInbox/components/hooks/useReportSubjectLabel'
 import {atoms as a, useTheme} from '#/alf'
 import {ButtonText} from '#/components/Button'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type tools} from '#/lexicons'
+import {getAccountPreview} from '../util/accountData'
 import {AccountSubjectPreview} from './AccountSubjectPreview'
 import {ChatSubjectPreview} from './ChatSubjectPreview'
 import {FeedSubjectPreview} from './FeedSubjectPreview'
@@ -23,13 +25,16 @@ type Report = Pick<
 
 export function ReportSubjectPreview({
   report,
+  enforcement,
   allowOwnRecordSnapshot = false,
 }: {
   report: Report
+  enforcement?: tools.ozone.inbox.defs.EnforcementView
   allowOwnRecordSnapshot?: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const {currentAccount, hasSession} = useSession()
   const subjectLabel = useReportSubjectLabel(report.subject)
   const uri =
     'uri' in report.subject &&
@@ -48,13 +53,25 @@ export function ReportSubjectPreview({
     'did' in report.subject &&
     typeof report.subject.did === 'string'
   ) {
-    preview = <AccountSubjectPreview did={report.subject.did} />
+    preview = (
+      <AccountSubjectPreview
+        did={report.subject.did}
+        account={
+          allowOwnRecordSnapshot &&
+          hasSession &&
+          report.subject.did === currentAccount?.did
+            ? getAccountPreview(report)
+            : undefined
+        }
+      />
+    )
   } else {
     switch (uri?.collection) {
       case 'app.bsky.feed.post':
         preview = (
           <PostSubjectPreview
             report={report}
+            enforcement={enforcement}
             uri={uri}
             subjectLabel={subjectLabel}
             allowOwnRecordSnapshot={allowOwnRecordSnapshot}

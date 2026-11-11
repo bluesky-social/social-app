@@ -6,7 +6,8 @@
       "ExpoBlueskyReferrerModule",
       "ExpoBlueskyVisibilityViewModule",
       "ExpoPlatformInfoModule",
-      "ExpoBlueskyNotificationSettingsModule"
+      "ExpoBlueskyNotificationSettingsModule",
+      "ExpoBlueskyWidgetInfoModule"
     ]
   },
   "android": {
@@ -15,7 +16,8 @@
       "expo.modules.blueskyswissarmy.referrer.ExpoBlueskyReferrerModule",
       "expo.modules.blueskyswissarmy.visibilityview.ExpoBlueskyVisibilityViewModule",
       "expo.modules.blueskyswissarmy.platforminfo.ExpoPlatformInfoModule",
-      "expo.modules.blueskyswissarmy.share.ExpoBlueskyShareModule"
+      "expo.modules.blueskyswissarmy.share.ExpoBlueskyShareModule",
+      "expo.modules.blueskyswissarmy.widgetinfo.ExpoBlueskyWidgetInfoModule"
     ]
   }
 }

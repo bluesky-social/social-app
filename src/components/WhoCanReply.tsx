@@ -1,9 +1,7 @@
 import {Fragment, useMemo, useRef} from 'react'
 import {Keyboard, type StyleProp, View, type ViewStyle} from 'react-native'
 import {AtUri} from '@atproto/syntax'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {makeListLink, makeProfileLink} from '#/lib/routes/links'
@@ -19,10 +17,10 @@ import {
   PostInteractionSettingsDialog,
   usePrefetchPostInteractionSettings,
 } from '#/components/dialogs/PostInteractionSettingsDialog'
-import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronDownIcon} from '#/components/icons/Chevron'
-import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSignIcon} from '#/components/icons/CircleBanSign'
-import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Globe'
-import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Group'
+import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSignIcon} from '#/components/icons/Circle'
+import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Earth'
+import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Group3'
+import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronDownIcon} from '#/components/icons/TinyChevronBottom'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -34,12 +32,24 @@ interface WhoCanReplyProps {
   post: app.bsky.feed.defs.PostView
   isThreadAuthor: boolean
   style?: StyleProp<ViewStyle>
+  /**
+   * Quieter version for the post thread's date line: no leading icon and
+   * shorter wording ("Anyone can reply", "Some can reply"). The author sees
+   * it in the default text color; everyone else sees it in the date's gray,
+   * and not at all when anybody can reply.
+   */
+  plain?: boolean
 }
 
-export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
+export function WhoCanReply({
+  post,
+  isThreadAuthor,
+  style,
+  plain = false,
+}: WhoCanReplyProps) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const infoDialogControl = useDialogControl()
   const editDialogControl = useDialogControl()
 
@@ -69,10 +79,14 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
     settings.length === 1 && settings[0].type === 'everybody'
   const noOneCanReply = settings.length === 1 && settings[0].type === 'nobody'
   const description = anyoneCanReply
-    ? _(msg`Everybody can reply`)
+    ? plain
+      ? l`Anyone can reply`
+      : l`Everybody can reply`
     : noOneCanReply
-      ? _(msg`Replies disabled`)
-      : _(msg`Some people can reply`)
+      ? l`Replies disabled`
+      : plain
+        ? l`Some can reply`
+        : l`Some people can reply`
 
   const onPressOpen = () => {
     if (IS_NATIVE && Keyboard.isVisible()) {
@@ -83,7 +97,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
 
       // wait on prefetch if it manages to resolve in under 200ms
       // otherwise, proceed immediately and show the spinner -sfn
-      Promise.race([
+      void Promise.race([
         prefetchPromise.current,
         new Promise(res => setTimeout(res, 200)),
       ]).finally(() => {
@@ -96,12 +110,13 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
     }
   }
 
+  // Open replies are the default, so only the author needs to be told
+  if (plain && anyoneCanReply && !isThreadAuthor) return null
+
   return (
     <>
       <Button
-        label={
-          isThreadAuthor ? _(msg`Edit who can reply`) : _(msg`Who can reply`)
-        }
+        label={isThreadAuthor ? l`Edit who can reply` : l`Who can reply`}
         onPress={onPressOpen}
         {...(isThreadAuthor
           ? IS_WEB
@@ -109,39 +124,64 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
             : {onPressIn: prefetch}
           : {})}
         hitSlop={HITSLOP_10}>
-        {({hovered, focused, pressed}) => (
-          <View
-            style={[
-              a.flex_row,
-              a.align_center,
-              a.gap_xs,
-              (hovered || focused || pressed) && native({opacity: 0.5}),
-              style,
-            ]}>
-            <Icon
-              color={
-                isThreadAuthor ? t.palette.primary_500 : t.palette.contrast_400
-              }
-              width={16}
-              settings={settings}
-            />
-            <Text
+        {({hovered, focused, pressed}) => {
+          const active = hovered || focused || pressed
+          /*
+           * The plain version turns blue on web hover instead of underlining.
+           * Dark mode uses the lighter blue 400 swatch, which the inverted
+           * dark palette stores as primary_600.
+           */
+          const plainColor =
+            IS_WEB && active
+              ? t.scheme === 'dark'
+                ? t.palette.primary_600
+                : t.palette.primary_500
+              : isThreadAuthor
+                ? t.atoms.text.color
+                : t.atoms.text_contrast_medium.color
+          return (
+            <View
               style={[
-                a.text_sm,
-                a.leading_tight,
-                isThreadAuthor
-                  ? {color: t.palette.primary_500}
-                  : t.atoms.text_contrast_medium,
-                (hovered || focused || pressed) && web(a.underline),
+                a.flex_row,
+                a.align_center,
+                a.gap_xs,
+                active && native({opacity: 0.5}),
+                style,
               ]}>
-              {description}
-            </Text>
+              {!plain && (
+                <Icon
+                  color={
+                    isThreadAuthor
+                      ? t.palette.primary_500
+                      : t.palette.contrast_400
+                  }
+                  width={16}
+                  settings={settings}
+                />
+              )}
+              <Text
+                style={[
+                  a.text_sm,
+                  a.leading_tight,
+                  plain
+                    ? {color: plainColor}
+                    : isThreadAuthor
+                      ? {color: t.palette.primary_500}
+                      : t.atoms.text_contrast_medium,
+                  !plain && active && web(a.underline),
+                ]}>
+                {description}
+              </Text>
 
-            {isThreadAuthor && (
-              <TinyChevronDownIcon width={8} fill={t.palette.primary_500} />
-            )}
-          </View>
-        )}
+              {isThreadAuthor && (
+                <TinyChevronDownIcon
+                  width={8}
+                  fill={plain ? plainColor : t.palette.primary_500}
+                />
+              )}
+            </View>
+          )
+        }}
       </Button>
 
       {isThreadAuthor ? (
@@ -195,13 +235,13 @@ function WhoCanReplyDialog({
   settings: ThreadgateAllowUISetting[]
   embeddingDisabled: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
-        label={_(msg`Dialog: adjust who can interact with this post`)}
+        label={l`Dialog: adjust who can interact with this post`}
         style={web({maxWidth: 400})}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_semi_bold, a.text_xl, a.pb_sm]}>
@@ -215,7 +255,7 @@ function WhoCanReplyDialog({
         </View>
         {IS_NATIVE && (
           <Button
-            label={_(msg`Close`)}
+            label={l`Close`}
             onPress={() => control.close()}
             size="small"
             variant="solid"

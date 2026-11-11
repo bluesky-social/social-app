@@ -83,6 +83,7 @@ export function Outer({
   control,
   onOpen,
   onClose,
+  preventDismiss = false,
   nativeOptions,
   testID,
 }: React.PropsWithChildren<DialogOuterProps>) {
@@ -111,6 +112,12 @@ export function Outer({
     isIPad: IS_IPAD,
     popover: nativeOptions?.popover,
   })
+
+  /*
+   * Only user dismissal paths are blocked natively; the imperative `close`
+   * below still dismisses the sheet.
+   */
+  const shouldPreventDismiss = preventDismiss || !!nativeOptions?.preventDismiss
 
   const callQueuedCallbacks = useCallback(() => {
     for (const cb of closeCallbacks.current) {
@@ -264,6 +271,7 @@ export function Outer({
       isNativePopover: IS_IOS && presentation?.isPopover === true,
       nativeSnapPoint: snapPoint,
       disableDrag,
+      preventDismiss: shouldPreventDismiss,
       setDisableDrag,
       isWithinDialog: true,
       isHeightConstrained,
@@ -275,6 +283,7 @@ export function Outer({
       presentation,
       snapPoint,
       disableDrag,
+      shouldPreventDismiss,
       setDisableDrag,
       isHeightConstrained,
       shouldMeasureContentHeight,
@@ -292,6 +301,7 @@ export function Outer({
       backgroundColor={t.atoms.bg.backgroundColor}
       colorScheme={t.scheme}
       {...nativeOptions}
+      preventDismiss={shouldPreventDismiss}
       sourceViewTag={sourceViewTag ?? nativeOptions?.sourceViewTag}
       onSnapPointChange={onSnapPointChange}
       onStateChange={onStateChange}

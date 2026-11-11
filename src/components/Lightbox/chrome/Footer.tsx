@@ -21,6 +21,8 @@ export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
   const {t: l} = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
+  // Pad both sides equally to match the header
+  const sideInset = Math.max(insets.left, insets.right)
   const {height: screenHeight} = useSafeAreaFrame()
   const isMomentumScrolling = useRef(false)
 
@@ -39,7 +41,10 @@ export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
         a.right_0,
         a.bottom_0,
         a.pointer_events_box_none,
-        {paddingBottom: insets.bottom + 8},
+        {
+          paddingBottom: insets.bottom + 8,
+          paddingHorizontal: sideInset,
+        },
       ]}>
       <View style={[a.mx_md, styles.altWrap]}>
         <BlurView

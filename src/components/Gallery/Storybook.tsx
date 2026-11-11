@@ -48,14 +48,62 @@ export function GalleryStorybook() {
           height, and the strip is as tall as the tallest one.
         </Trans>
       </Text>
+      <PageDotsExample />
       <ImageContent />
       <ImageAdapter />
       <MixedContent />
+      <StretchingContent />
       <InteractiveChildren />
       <ChangingContent />
       <ConstrainedAndBleeding />
       <EmptyAndSingle />
     </View>
+  )
+}
+
+function PageDotsExample() {
+  const ref = useRef<Gallery.GalleryRef>(null)
+  const ids = [1, 2, 3, 4, 5]
+  const [snapToItems, setSnapToItems] = useState(false)
+  return (
+    <Section
+      titleText="Optional page dots"
+      descriptionText="One dot per item, even when several cards fit. Swipe, drag, or use a trackpad to update them. The dots are a read-only position indicator."
+      testID="galleryStorybook-dots">
+      <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
+        <Button
+          label="Reveal last card"
+          testID="galleryStorybook-dots-reveal"
+          color="secondary"
+          size="small"
+          onPress={() => ref.current?.scrollIntoView(ids.length - 1)}>
+          <ButtonText>Reveal last card</ButtonText>
+        </Button>
+        <Button
+          label="Toggle native snapping"
+          testID="galleryStorybook-dots-snap"
+          color="secondary"
+          size="small"
+          onPress={() => setSnapToItems(value => !value)}>
+          <ButtonText>Native snapping: {snapToItems ? 'on' : 'off'}</ButtonText>
+        </Button>
+      </View>
+      <Gallery.Root
+        ref={ref}
+        snapToItems={snapToItems}
+        label="Page dot example"
+        testID="galleryStorybook-dots-root"
+        footer={<Gallery.PageDots testID="galleryStorybook-dots-pagination" />}>
+        {ids.map(id => (
+          <Gallery.Item
+            key={id}
+            label={`Card ${id}`}
+            testID={`galleryStorybook-dots-card-${id}`}>
+            <Card width={240} height={120} title={`Card ${id}`} />
+          </Gallery.Item>
+        ))}
+      </Gallery.Root>
+    </Section>
   )
 }
 
@@ -305,6 +353,88 @@ function MixedContent() {
           80.
         </Trans>
       </CaptionText>
+    </Section>
+  )
+}
+
+/** Equal-height cards that can shrink again when content changes or leaves. */
+function StretchingContent() {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const [expanded, setExpanded] = useState(true)
+  const [showTallest, setShowTallest] = useState(true)
+
+  return (
+    <Section
+      testID="galleryStorybook-stretch"
+      titleText={<Trans>Stretching cards</Trans>}
+      descriptionText={
+        <Trans>
+          Cards stretch to the tallest sibling. Shortening or removing the tall
+          card should let the whole row shrink again.
+        </Trans>
+      }>
+      <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
+        <Button
+          label={l`Toggle tall content`}
+          testID="galleryStorybook-stretch-resize"
+          color="secondary"
+          size="small"
+          onPress={() => setExpanded(value => !value)}>
+          <ButtonText>
+            <Trans>Toggle tall content</Trans>
+          </ButtonText>
+        </Button>
+        <Button
+          label={l`Toggle tallest card`}
+          testID="galleryStorybook-stretch-remove"
+          color="secondary"
+          size="small"
+          onPress={() => setShowTallest(value => !value)}>
+          <ButtonText>
+            <Trans>Toggle tallest card</Trans>
+          </ButtonText>
+        </Button>
+      </View>
+      <Gallery.Root
+        stretch
+        label={l`Equal-height cards`}
+        testID="galleryStorybook-stretch-root">
+        {[0, 1, ...(showTallest ? [2] : [])].map(index => (
+          <Gallery.Item
+            key={index}
+            testID={`galleryStorybook-stretch-${index}`}>
+            <View
+              testID={`galleryStorybook-stretch-card-${index}`}
+              style={[
+                a.flex_grow,
+                a.gap_sm,
+                a.p_md,
+                a.rounded_md,
+                t.atoms.bg_contrast_25,
+                {width: 160},
+              ]}>
+              <Text style={[a.font_bold]}>
+                <Trans>Card {index}</Trans>
+              </Text>
+              {index === 1 ? (
+                <Text>
+                  <Trans>A little more content than the first card.</Trans>
+                </Text>
+              ) : index === 2 && expanded ? (
+                <Text>
+                  <Trans>
+                    This card has enough text to wrap over many lines. Its
+                    siblings should stretch to match its height without
+                    stretching any images or imposing a fixed height. When this
+                    text disappears, all of the cards should shrink again.
+                  </Trans>
+                </Text>
+              ) : null}
+            </View>
+          </Gallery.Item>
+        ))}
+      </Gallery.Root>
     </Section>
   )
 }

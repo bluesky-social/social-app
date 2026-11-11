@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": "24.12.0",
+    "version": ">=25",
     "promptToConfigurePushNotifications": false,
     "appVersionSource": "remote"
   },

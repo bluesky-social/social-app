@@ -366,10 +366,7 @@ export class SafelinkClient {
         .selectAll()
         .where('id', '=', 1)
         .executeTakeFirst()
-      if (!res) {
-        return ''
-      }
-      this.cursor = res.cursor
+      this.cursor = res?.cursor ?? ''
     }
     return this.cursor
   }

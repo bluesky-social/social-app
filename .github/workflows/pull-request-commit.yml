@@ -247,7 +247,7 @@ jobs:
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
         timeout-minutes: 5
-        uses: bluesky-social/github-actions/fingerprint-native@2287aefd4ddca2914fd85715cbe47124b7d9f360 # v0.4.0
+        uses: bluesky-social/github-actions/fingerprint-native@b8aac187f297a2cb3e84434d1e8dedd907918c9d # v0.5.1
         with:
           profile: pull-request
 
@@ -351,7 +351,7 @@ jobs:
         uses: $/.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
-          eas-version: '24.12.0'
+          eas-version: '25.3.0'
 
       - name: 🔤 Compile translations
         uses: $/.github/actions/compile-i18n

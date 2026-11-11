@@ -1,20 +1,18 @@
 # Gallery
 
 A horizontal strip of arbitrary content. Each item owns its own width and
-height, and the strip is as tall as the tallest item. It handles swiping,
-dragging, trackpads, and the arrow keys; it does not crop, resize, or
-virtualize anything.
+height, and the strip is as tall as the tallest item. An opt-in `stretch` mode
+lets slides share that height. It handles swiping, dragging, trackpads, and the
+arrow keys; it does not crop or virtualize anything.
 
 ```tsx
 import * as Gallery from '#/components/Gallery'
 ```
 
-## Import boundaries
+## Post images
 
-App code does not import this module. It uses a configured gallery module,
-which wraps this one with the choices that make it fit a use case, and exports
-everything the app needs from there. For post images that is
-`#/components/images/Gallery`:
+Post images use `#/components/images/Gallery`, which wraps this module with the
+choices that make it fit them and exports everything the app needs from there:
 
 ```tsx
 import {
@@ -25,20 +23,8 @@ import {
 ```
 
 `GalleryBleed` and `useGalleryBleed` are this module's `Bleed` and
-`useGalleryBleed`, re-exported, so there is still one bleed context.
-
-The `Root` and `Item` examples below are for implementing a configured wrapper,
-and for the generic Storybook. A lint rule (`no-restricted-imports` in
-`.oxlintrc.json`) rejects `#/components/Gallery` and its subpaths everywhere
-except:
-
-- `src/components/Gallery/**`: this implementation, its tests, and its
-  Storybook
-- `src/components/images/Gallery/**`: the image wrapper and its tests
-- `src/view/screens/Storybook/Storybook.tsx`: the page that shows the Storybook
-
-A new configured wrapper opts in by adding its own directory to that list when
-it is introduced.
+`useGalleryBleed`, re-exported, so there is still one bleed context. Anything
+else imports this module directly.
 
 ## Usage
 
@@ -72,36 +58,77 @@ Anything else, at any size:
 
 ### `Gallery.Root`
 
-| Prop            | Description                                                                 |
-| --------------- | --------------------------------------------------------------------------- |
-| `label`         | Required, translated. Names the carousel for assistive tech.                |
-| `testID`        | Optional.                                                                   |
-| `ref`           | Optional `GalleryRef`, see below.                                           |
-| `onIndexChange` | `(index, previousIndex) => void`. Called when the user navigates to a different item. |
-| `children`      | `Gallery.Item`s. Fragments, arrays, and conditional `null`s are flattened.  |
+| Prop            | Description                                                                                 |
+| --------------- | ------------------------------------------------------------------------------------------- |
+| `label`         | Required, translated. Names the carousel for assistive tech.                                |
+| `testID`        | Optional.                                                                                   |
+| `ref`           | Optional `GalleryRef`, see below.                                                           |
+| `stretch`       | Optional boolean, default false. Stretch slides to the tallest sibling.                     |
+| `snapToItems`   | Optional boolean, default false. Snap native scrolling to slide boundaries. Ignored on web. |
+| `onIndexChange` | `(index, previousIndex) => void`. Called when the user navigates to a different item.       |
+| `children`      | `Gallery.Item`s. Fragments, arrays, and conditional `null`s are flattened.                  |
+
+`footer` optionally renders non-scrolling content within the gallery context,
+without including it in slide counting or height measurements. Use it for
+`Gallery.PageDots`, directly or inside a layout wrapper:
+
+```tsx
+<Gallery.Root label={l`Featured apps`} footer={<Gallery.PageDots />}>
+  {apps.map(app => (
+    <Gallery.Item key={app.id} label={app.title}>
+      <AppCard app={app} />
+    </Gallery.Item>
+  ))}
+</Gallery.Root>
+```
+
+`snapToItems` opts into slide snapping on iOS and Android. Snap positions use
+measured item widths and the gap, so variable-width slides work too. Positions
+near the end are clamped to the scrollable range; the last slide can still be
+fully revealed. Native inertia uses fast deceleration when enabled. When the
+prop is omitted, native scrolling is free. Web ignores the prop.
+
+### `Gallery.PageDots`
+
+One dot per item, including when several items fit in the viewport. Hidden for
+zero or one item. Optional `style` and `testID` props configure the row. The
+active dot grows from 8 to 30 pixels wide over 200ms as the previous dot shrinks;
+reduced motion makes the change immediate. Colors follow the theme.
+
+Dots are read-only on every platform, with no buttons or extra tab stops.
+The row exposes a single translated position label to screen readers. Use
+the gallery's swipe, drag, trackpad, and arrow-key navigation to move between
+items.
+
+The active dot follows the actual scroll position, including at shared or
+clamped offsets, rather than a separately selected target item. This display
+state is separate from `onIndexChange`, which follows the rules under
+"Navigation callbacks" below.
+
+### Navigation callbacks
 
 `onIndexChange` reports native swiping, mouse dragging, arrow keys, and
 Safari horizontal-wheel navigation. Browser touch scrolling and Chrome/Firefox
-trackpad scrolling move the content, but do not report index changes; this
-preserves the existing image carousel behavior. It is **not** called on
-mount, for `scrollIntoView`, when focus simply lands on an item (for example a
-click just before opening a lightbox), or when items are added, removed, or
-reordered.
+trackpad scrolling move the content, but do not report index changes.
+`onIndexChange` is **not** called on mount, for `scrollIntoView`, when focus
+simply lands on an item (for example a click just before opening a lightbox),
+or when items are added, removed, or reordered.
 
-Give every child a stable `key`. Measurements and the active item follow the
-key, so reordering keeps the active item and removing the active item moves to
-a nearby one.
+Give every child a stable `key` so measurements stay associated with the
+correct item. Selection is index-based; it does not follow an item through
+reordering or removal.
 
 ### `Gallery.Item`
 
-| Prop       | Description                                       |
-| ---------- | ------------------------------------------------- |
-| `label`    | Optional accessible label for the slide.          |
-| `testID`   | Optional.                                         |
-| `children` | A node, or a function, see "Focus" below.         |
+| Prop       | Description                               |
+| ---------- | ----------------------------------------- |
+| `label`    | Optional accessible label for the slide.  |
+| `testID`   | Optional.                                 |
+| `children` | A node, or a function, see "Focus" below. |
 
-The item wraps its children in a view that is measured as it is: never
-stretched, and given no width, aspect ratio, or height by the gallery.
+The item wraps its children in a view with no imposed width, aspect ratio, or
+height. By default it stays at its intrinsic height; with `Root stretch` its
+wrapper stretches to the tallest sibling.
 
 ### `GalleryRef`
 
@@ -139,7 +166,13 @@ with the padded content.
   children and the two would depend on each other.
 - The strip is as tall as its tallest current item, and follows items as they
   grow, shrink, or leave. An item wider than the gallery scrolls rather than
-  shrinking. Items are aligned to the top.
+  shrinking. Items are aligned to the top by default.
+- With `stretch`, the flex row determines its own height instead of applying a
+  measured height back to it. This lets it shrink when the tallest child shrinks
+  or leaves. To fill a slide, use `flexGrow: 1` on the card and any intermediate
+  wrappers. Keep image dimensions/aspect ratios on an inner frame rather than
+  stretching the image itself. The Atmosphere Explore carousels use this mode;
+  post-image galleries retain intrinsic sizing.
 - The space between items is fixed at 8, since the navigation math depends on
   it.
 - An empty gallery takes up no height.
@@ -208,6 +241,9 @@ pnpm test --runInBand src/components/Gallery/__tests__ src/components/images/Gal
 
 - Mixed content: every card keeps its size, the strip is as tall as the
   tallest card, and the wide card scrolls instead of being cropped.
+- Stretching cards: all card backgrounds share a height. Toggle tall content
+  and remove/re-add the tallest card; the row must grow and shrink without a
+  stale height. Check rotation and larger font sizes too.
 - Changing content: add, remove, reverse, tall/short and wide/narrow all
   resize the strip without stale offsets. Neither these nor "Reveal last"
   increase the navigation event count; swiping, dragging, and arrow keys do.
@@ -221,6 +257,12 @@ pnpm test --runInBand src/components/Gallery/__tests__ src/components/images/Gal
 - Web: click versus drag, trackpad scrolling, normal page scrolling, and
   (in Safari) no back/forward swipe from horizontal scrolling.
 - Native: swiping works inside the vertical scroll without opening the drawer,
-  and Android's start-edge overscroll settles back.
+  and Android's start-edge overscroll settles back. Toggle native snapping in
+  the page dots example: releases should settle on slide boundaries or the
+  content end. Turn it off to restore free scrolling.
+- Page dots: swipe/drag/trackpad scrolling updates the position indicator.
+  Dots are not buttons or extra tab stops on any platform. Reveal the last
+  card in Storybook and check the indicator follows the scroll position,
+  including when multiple cards fit. Check that reduced motion skips animation.
 - Screen reader: items are reachable and labelled, and the image adapter shows
   its vertical list of images.

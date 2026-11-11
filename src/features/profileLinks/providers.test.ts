@@ -50,6 +50,14 @@ describe('getSupportProvider', () => {
       'PayPal',
     )
     expect(getSupportProvider('https://paypal.com/signin')).toBe(undefined)
+    expect(getSupportProvider('https://github.com/sponsors/kat')?.name).toBe(
+      'GitHub Sponsors',
+    )
+    expect(
+      getSupportProvider('https://www.github.com/sponsors/kat')?.name,
+    ).toBe('GitHub Sponsors')
+    expect(getSupportProvider('https://github.com/kat')).toBe(undefined)
+    expect(getSupportProvider('https://github.com/sponsors/')).toBe(undefined)
   })
 
   it('never treats a bare provider homepage as a support link', () => {

@@ -18,7 +18,6 @@ import {STALE} from '#/state/queries'
 import {createQueryKey} from '#/state/queries/util'
 import {usePdsClient} from '#/state/session'
 import {useAgeAssurance} from '#/ageAssurance'
-import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
 import {
   filterModeratedLinkViews,
@@ -26,15 +25,6 @@ import {
   linksFromRecords,
 } from './record'
 import {type ProfileLink} from './types'
-
-/**
- * Profile links roll out behind a GrowthBook flag. Always on in local
- * development.
- */
-export function useProfileLinksEnabled() {
-  const ax = useAnalytics()
-  return __DEV__ || ax.features.enabled(ax.features.ProfileLinksEnable)
-}
 
 /**
  * Someone's links from their profile view, minus any that labels hide for
@@ -56,9 +46,8 @@ export function useProfileViewLinks(
  * accounts, like those in Safe mode, still see links but can't add them.
  */
 export function useCanEditProfileLinks() {
-  const enabled = useProfileLinksEnabled()
   const aa = useAgeAssurance()
-  return enabled && !aa.flags.isAgeRestricted
+  return !aa.flags.isAgeRestricted
 }
 
 type StrongRef = {uri: l.AtUriString; cid: l.CidString}

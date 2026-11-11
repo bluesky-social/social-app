@@ -47,6 +47,11 @@ export type DialogContextProps = {
   isNativePopover: boolean
   nativeSnapPoint: BottomSheetSnapPoint
   disableDrag: boolean
+  /**
+   * Whether user dismissal (backdrop, swipe, back, Escape, close button) is
+   * currently prevented. `close` itself is never blocked.
+   */
+  preventDismiss: boolean
   setDisableDrag: React.Dispatch<React.SetStateAction<boolean>>
   // in the event that the hook is used outside of a dialog
   isWithinDialog: boolean
@@ -77,6 +82,15 @@ export type DialogOuterProps = {
   control: DialogControlProps
   onOpen?: () => void
   onClose?: () => void
+  /**
+   * Prevents the user from dismissing the dialog (backdrop press, swipe, back
+   * button, Escape, and the close button), e.g. while a request is pending.
+   * Does not block `control.close()`, so the pending operation can still close
+   * the dialog itself when it finishes.
+   *
+   * @default false
+   */
+  preventDismiss?: boolean
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
   webOptions?: {
     alignCenter?: boolean

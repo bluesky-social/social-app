@@ -4,6 +4,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
@@ -54,6 +55,12 @@ export function Outer({children}: {children: React.ReactNode}) {
 function OuterInner({children}: {children: React.ReactNode}) {
   const t = useTheme()
   const gutters = useGutters([0, 'wide'])
+  /*
+   * Native headers sit 4px lower in their box to balance the status bar above
+   * them. Without a top inset (e.g. iPhone Duo, landscape) there's nothing to
+   * balance, so pad the top too
+   */
+  const hasTopInset = useSafeAreaInsets().top > 0
 
   return (
     <View
@@ -64,7 +71,9 @@ function OuterInner({children}: {children: React.ReactNode}) {
         a.gap_sm,
         gutters,
         platform({
-          native: [a.pb_xs, {minHeight: 48}],
+          native: hasTopInset
+            ? [a.pb_xs, {minHeight: 48}]
+            : [a.py_xs, {minHeight: 52}],
           web: [a.py_xs, {minHeight: 52}],
         }),
         t.atoms.border_contrast_low,
