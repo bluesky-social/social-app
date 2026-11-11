@@ -21,7 +21,7 @@ const ANIMATION_DURATION = 200
  * Optional gallery pagination. Place in `Root`'s footer (including inside a
  * layout wrapper). Web dots are buttons; native exposes a single position label.
  */
-export function GalleryPageDots({
+export function PageDots({
   style,
   testID = 'galleryPageDots',
 }: {

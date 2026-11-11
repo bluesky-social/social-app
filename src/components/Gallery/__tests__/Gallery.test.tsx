@@ -153,13 +153,13 @@ function threeCards({
   return result
 }
 
-describe('GalleryPageDots', () => {
+describe('Gallery.PageDots', () => {
   beforeEach(() => jest.useFakeTimers())
   afterEach(() => jest.useRealTimers())
 
   const dots = (
     <View>
-      <Gallery.GalleryPageDots />
+      <Gallery.PageDots />
     </View>
   )
   const dot = (index: number) => screen.getByTestId(`galleryPageDots-${index}`)
@@ -173,8 +173,8 @@ describe('GalleryPageDots', () => {
 
   it('requires gallery context', () => {
     const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-    expect(() => render(<Gallery.GalleryPageDots />)).toThrow(
-      'GalleryPageDots must be rendered inside Gallery.Root',
+    expect(() => render(<Gallery.PageDots />)).toThrow(
+      'useGalleryContext must be used within Gallery.Root',
     )
     spy.mockRestore()
   })

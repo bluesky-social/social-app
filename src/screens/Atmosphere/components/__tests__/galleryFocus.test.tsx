@@ -1,8 +1,8 @@
 import {StyleSheet, type ViewProps} from 'react-native'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
+import {type ItemFocusProps} from '#/components/Gallery'
 import {type app} from '#/lexicons'
-import {type ExploreGalleryFocusProps} from '../ExploreGallery'
 import {LivestreamCard} from '../LivestreamCard'
 import {PhotoCard} from '../PhotoCard'
 
@@ -194,21 +194,16 @@ const photo: app.bsky.embed.external.ViewGallery = {
   associatedProfiles: [authorProfile],
 }
 
-const triggerCards: [
-  string,
-  (focus?: ExploreGalleryFocusProps) => React.ReactElement,
-][] = [
-  ['PhotoCard', focus => <PhotoCard photo={photo} galleryFocus={focus} />],
+const triggerCards: [string, (focus?: ItemFocusProps) => React.ReactElement][] =
   [
-    'LivestreamCard',
-    focus => <LivestreamCard livestream={livestream} galleryFocus={focus} />,
-  ],
-]
+    ['PhotoCard', focus => <PhotoCard photo={photo} galleryFocus={focus} />],
+    [
+      'LivestreamCard',
+      focus => <LivestreamCard livestream={livestream} galleryFocus={focus} />,
+    ],
+  ]
 
-const cards: [
-  string,
-  (focus?: ExploreGalleryFocusProps) => React.ReactElement,
-][] = [
+const cards: [string, (focus?: ItemFocusProps) => React.ReactElement][] = [
   [
     'LivestreamCard',
     focus => <LivestreamCard livestream={livestream} galleryFocus={focus} />,

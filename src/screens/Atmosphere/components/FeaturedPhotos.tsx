@@ -3,8 +3,8 @@ import {useLingui} from '@lingui/react/macro'
 
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {atoms as a} from '#/alf'
+import * as Gallery from '#/components/Gallery'
 import {type app} from '#/lexicons'
-import {ExploreGallery} from './ExploreGallery'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
 import {PhotoCard} from './PhotoCard'
 
@@ -22,16 +22,22 @@ export function FeaturedPhotos({
   return (
     <View style={[a.gap_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
       <ExploreSectionHeader title={l`Featured photos`} />
-      <ExploreGallery
-        items={photos}
+      <Gallery.Root
+        stretch
         label={l`Featured photos`}
-        testID="atmospherePhotosGallery"
-        renderItem={(photo, galleryFocus) => (
-          <View style={[a.flex_grow, {width: CARD_WIDTH}]}>
-            <PhotoCard photo={photo} galleryFocus={galleryFocus} />
-          </View>
-        )}
-      />
+        testID="atmospherePhotosGallery">
+        {photos.map(photo => (
+          <Gallery.Item key={photo.uri} label={photo.title}>
+            {galleryFocus => (
+              <View style={[a.flex_grow]}>
+                <View style={[a.flex_grow, {width: CARD_WIDTH}]}>
+                  <PhotoCard photo={photo} galleryFocus={galleryFocus} />
+                </View>
+              </View>
+            )}
+          </Gallery.Item>
+        ))}
+      </Gallery.Root>
     </View>
   )
 }

@@ -7,12 +7,12 @@ import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {type FeaturedApp} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, ThemeProvider, useTheme} from '#/alf'
 import {ButtonIcon, ButtonText} from '#/components/Button'
+import {type ItemFocusProps} from '#/components/Gallery'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ExternalLinkIcon} from '#/components/icons/Square'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAtmosphereAppCategories} from './appCategories'
 import {AppKnownFollowers} from './AppKnownFollowers'
-import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 const LOGO_SIZE = 56
 const BACKGROUND_BLUR_RADIUS = 50
@@ -27,7 +27,7 @@ export function FeaturedAppCard({
   galleryFocus,
 }: {
   app: FeaturedApp
-  galleryFocus?: ExploreGalleryFocusProps
+  galleryFocus?: ItemFocusProps
 }) {
   const t = useTheme()
 
@@ -44,7 +44,7 @@ function CardContent({
   galleryFocus,
 }: {
   app: FeaturedApp
-  galleryFocus?: ExploreGalleryFocusProps
+  galleryFocus?: ItemFocusProps
 }) {
   const {t: l} = useLingui()
   const t = useTheme()

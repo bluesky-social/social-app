@@ -37,7 +37,7 @@ import {
 import {IS_ANDROID, IS_WEB} from '#/env'
 
 export {Bleed, useGalleryBleed}
-export {GalleryPageDots} from '#/components/Gallery/GalleryPageDots'
+export {PageDots} from '#/components/Gallery/GalleryPageDots'
 export {ITEM_GAP}
 export type {GalleryRef}
 

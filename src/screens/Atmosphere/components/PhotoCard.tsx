@@ -13,20 +13,20 @@ import {
   getGalleryImage,
 } from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, useTheme, web} from '#/alf'
+import {type ItemFocusProps} from '#/components/Gallery'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type app, social} from '#/lexicons'
 import {AtmosphereCardMenu} from './AtmosphereCardMenu'
-import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 export function PhotoCard({
   photo,
   galleryFocus,
 }: {
   photo: app.bsky.embed.external.ViewGallery
-  galleryFocus?: ExploreGalleryFocusProps
+  galleryFocus?: ItemFocusProps
 }) {
   const {t: l, i18n} = useLingui()
   const t = useTheme()

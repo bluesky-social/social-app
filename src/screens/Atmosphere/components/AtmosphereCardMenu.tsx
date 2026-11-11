@@ -6,6 +6,7 @@ import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {type NavigationProp} from '#/lib/routes/types'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
+import {type ItemFocusProps} from '#/components/Gallery'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {Person_Stroke2_Corner0_Rounded as PersonIcon} from '#/components/icons/Person'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ExternalLinkIcon} from '#/components/icons/Square'
@@ -17,7 +18,6 @@ import {
   useGlobalReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import {type app} from '#/lexicons'
-import {type ExploreGalleryFocusProps} from './ExploreGallery'
 
 const BUTTON_VISUAL_ADJUSTMENT = 4
 
@@ -50,7 +50,7 @@ export function AtmosphereCardMenu({
    * then left out.
    */
   author?: app.bsky.actor.defs.ProfileViewBasic
-  galleryFocus?: ExploreGalleryFocusProps
+  galleryFocus?: ItemFocusProps
   /**
    * Distance from the card's top edge.
    */

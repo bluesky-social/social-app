@@ -9,12 +9,10 @@ arrow keys; it does not crop or virtualize anything.
 import * as Gallery from '#/components/Gallery'
 ```
 
-## Import boundaries
+## Post images
 
-App code does not import this module. It uses a configured gallery module,
-which wraps this one with the choices that make it fit a use case, and exports
-everything the app needs from there. For post images that is
-`#/components/images/Gallery`:
+Post images use `#/components/images/Gallery`, which wraps this module with the
+choices that make it fit them and exports everything the app needs from there:
 
 ```tsx
 import {
@@ -25,22 +23,8 @@ import {
 ```
 
 `GalleryBleed` and `useGalleryBleed` are this module's `Bleed` and
-`useGalleryBleed`, re-exported, so there is still one bleed context.
-
-The `Root` and `Item` examples below are for implementing a configured wrapper,
-and for the generic Storybook. A lint rule (`no-restricted-imports` in
-`.oxlintrc.json`) rejects `#/components/Gallery` and its subpaths everywhere
-except:
-
-- `src/components/Gallery/**`: this implementation, its tests, and its
-  Storybook
-- `src/components/images/Gallery/**`: the image wrapper and its tests
-- `src/screens/Atmosphere/components/ExploreGallery.tsx`: the Atmosphere Explore
-  card carousel wrapper
-- `src/view/screens/Storybook/Storybook.tsx`: the page that shows the Storybook
-
-A new configured wrapper opts in by adding its own directory to that list when
-it is introduced.
+`useGalleryBleed`, re-exported, so there is still one bleed context. Anything
+else imports this module directly.
 
 ## Usage
 
@@ -86,10 +70,10 @@ Anything else, at any size:
 
 `footer` optionally renders non-scrolling content within the gallery context,
 without including it in slide counting or height measurements. Use it for
-`GalleryPageDots`, directly or inside a layout wrapper:
+`Gallery.PageDots`, directly or inside a layout wrapper:
 
 ```tsx
-<Gallery.Root label={l`Featured apps`} footer={<Gallery.GalleryPageDots />}>
+<Gallery.Root label={l`Featured apps`} footer={<Gallery.PageDots />}>
   {apps.map(app => (
     <Gallery.Item key={app.id} label={app.title}>
       <AppCard app={app} />
@@ -102,10 +86,9 @@ without including it in slide counting or height measurements. Use it for
 measured item widths and the gap, so variable-width slides work too. Positions
 near the end are clamped to the scrollable range; the last slide can still be
 fully revealed. Native inertia uses fast deceleration when enabled. When the
-prop is omitted, native scrolling is free. Web ignores the prop. The Atmosphere
-`ExploreGallery` wrapper also accepts this prop.
+prop is omitted, native scrolling is free. Web ignores the prop.
 
-### `GalleryPageDots`
+### `Gallery.PageDots`
 
 One dot per item, including when several items fit in the viewport. Hidden for
 zero or one item. Optional `style` and `testID` props configure the row. The
@@ -190,7 +173,7 @@ with the padded content.
   measured height back to it. This lets it shrink when the tallest child shrinks
   or leaves. To fill a slide, use `flexGrow: 1` on the card and any intermediate
   wrappers. Keep image dimensions/aspect ratios on an inner frame rather than
-  stretching the image itself. The Atmosphere Explore wrapper uses this mode;
+  stretching the image itself. The Atmosphere Explore carousels use this mode;
   post-image galleries retain intrinsic sizing.
 - The space between items is fixed at 8, since the navigation math depends on
   it.

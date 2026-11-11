@@ -93,9 +93,7 @@ function PageDotsExample() {
         snapToItems={snapToItems}
         label="Page dot example"
         testID="galleryStorybook-dots-root"
-        footer={
-          <Gallery.GalleryPageDots testID="galleryStorybook-dots-pagination" />
-        }>
+        footer={<Gallery.PageDots testID="galleryStorybook-dots-pagination" />}>
         {ids.map(id => (
           <Gallery.Item
             key={id}

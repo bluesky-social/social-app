@@ -11,7 +11,7 @@ GalleryContext.displayName = 'GalleryContext'
 export function useGalleryContext() {
   const context = useContext(GalleryContext)
   if (!context) {
-    throw new Error('GalleryPageDots must be rendered inside Gallery.Root')
+    throw new Error('useGalleryContext must be used within Gallery.Root')
   }
   return context
 }
