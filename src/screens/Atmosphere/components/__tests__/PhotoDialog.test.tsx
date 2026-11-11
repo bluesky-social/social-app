@@ -273,6 +273,19 @@ describe('stats', () => {
     expect(stat('Time')).toHaveTextContent(/^4d ago$/)
   })
 
+  it.each([
+    [42, '42 photos'],
+    [1, '1 photo'],
+    [0, '0 photos'],
+  ] as const)(
+    'uses the total photo count %s when provided',
+    (photoCount, label) => {
+      renderDialog(gallery({photoCount}))
+
+      expect(stat('Photos')).toHaveTextContent(label)
+    },
+  )
+
   it('uses singular forms', () => {
     renderDialog(gallery({likeCount: 1, items: [image(1)] as never}))
 

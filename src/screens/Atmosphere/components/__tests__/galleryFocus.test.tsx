@@ -53,9 +53,14 @@ jest.mock('#/state/preferences/moderation-opts', () => ({
   useModerationOpts: () => undefined,
 }))
 jest.mock('#/view/com/util/UserAvatar', () => ({UserAvatar: () => null}))
-jest.mock('#/view/com/util/numeric/format', () => ({formatCount: String}))
+jest.mock('#/view/com/util/numeric/format', () => ({
+  formatCount: (_i18n: unknown, count: number) => String(count),
+}))
 jest.mock('#/components/icons/Heart2', () => ({
   Heart2_Stroke2_Corner0_Rounded: () => null,
+}))
+jest.mock('#/components/icons/Image', () => ({
+  Image_Stroke2_Corner2_Rounded: () => null,
 }))
 jest.mock('#/components/icons/Eye', () => ({
   Eye_Stroke2_Corner0_Rounded: () => null,
@@ -318,6 +323,23 @@ describe.each(cards)(
     })
   },
 )
+
+describe('PhotoCard counts', () => {
+  it.each([
+    [42, '42'],
+    [undefined, '1'],
+    [0, '0'],
+  ] as const)('shows photo count %s beside likes', (photoCount, expected) => {
+    render(<PhotoCard photo={{...photo, likeCount: 7, photoCount}} />)
+
+    expect(screen.getByTestId('atmospherePhotoCardLikes')).toHaveTextContent(
+      /^7$/,
+    )
+    expect(screen.getByTestId('atmospherePhotoCardPhotos')).toHaveTextContent(
+      new RegExp(`^${expected}$`),
+    )
+  })
+})
 
 describe('PhotoCard activation', () => {
   it('opens the photo dialog instead of the external url', () => {

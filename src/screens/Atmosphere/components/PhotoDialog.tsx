@@ -69,11 +69,7 @@ function PhotoDialogInner({
   const createdAt = photo.createdAt
   const hasDate = !!createdAt && !Number.isNaN(Date.parse(createdAt))
   const likeCount = photo.likeCount ?? 0
-  /*
-   * Placeholder until the total is available: only the hydrated photos are
-   * counted.
-   */
-  const photoCount = getGalleryImages(photo).length
+  const photoCount = photo.photoCount ?? getGalleryImages(photo).length
   const likes = formatCount(i18n, likeCount)
   const photos = formatCount(i18n, photoCount)
   if (!author || !moderationOpts) return null

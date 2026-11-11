@@ -149,6 +149,21 @@ describe('Atmosphere Explore response fixtures', () => {
     ).toThrow()
   })
 
+  it('validates an optional non-negative total photo count', () => {
+    const view = fixtureData.photos.items[0].view
+    for (const photoCount of [0, 42]) {
+      expect(
+        app.bsky.embed.external.viewGallery.parse({...view, photoCount})
+          .photoCount,
+      ).toBe(photoCount)
+    }
+    for (const photoCount of [-1, 1.5, '42']) {
+      expect(() =>
+        app.bsky.embed.external.viewGallery.parse({...view, photoCount}),
+      ).toThrow()
+    }
+  })
+
   it('validates gallery images and skips malformed images during selection', () => {
     expect(app.bsky.embed.external.viewGalleryImage.parse(image)).toMatchObject(
       image,
