@@ -1,8 +1,8 @@
 import {i18n} from '@lingui/core'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
+import {PhotoDialog} from '#/screens/Atmosphere/components/PhotoDialog'
 import {type app} from '#/lexicons'
-import {PhotoDialog} from '../PhotoDialog'
 
 const mockClose = jest.fn()
 
@@ -110,15 +110,18 @@ jest.mock('#/view/com/util/TimeElapsed', () => ({
     children: (state: {timeElapsed: string}) => React.ReactNode
   }) => children({timeElapsed: timeToString({}, timestamp)}),
 }))
-jest.mock('../PhotoGallery', () => {
-  const {View} =
-    jest.requireActual<typeof import('react-native')>('react-native')
-  return {
-    PhotoGallery: ({photo}: {photo: {uri: string}}) => (
-      <View testID="photoGallery" accessibilityValue={{text: photo.uri}} />
-    ),
-  }
-})
+jest.mock(
+  '#/screens/Atmosphere/components/PhotoDialog/PhotoDialogGallery',
+  () => {
+    const {View} =
+      jest.requireActual<typeof import('react-native')>('react-native')
+    return {
+      PhotoDialogGallery: ({photo}: {photo: {uri: string}}) => (
+        <View testID="photoGallery" accessibilityValue={{text: photo.uri}} />
+      ),
+    }
+  },
+)
 jest.mock('#/components/icons/Clock', () => ({
   Clock_Stroke2_Corner0_Rounded: () => null,
 }))

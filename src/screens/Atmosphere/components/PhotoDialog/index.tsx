@@ -20,7 +20,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
-import {PhotoGallery} from './PhotoGallery'
+import {PhotoDialogGallery} from './PhotoDialogGallery'
 
 export function PhotoDialog({
   control,
@@ -102,7 +102,7 @@ function PhotoDialogInner({
           />
         </ProfileCard.Header>
       </ProfileCard.Link>
-      <PhotoGallery photo={photo} />
+      <PhotoDialogGallery photo={photo} />
       <View style={[a.gap_xs, a.pb_md]}>
         <Text emoji style={[a.text_lg, a.font_semi_bold, a.leading_snug]}>
           {photo.title}

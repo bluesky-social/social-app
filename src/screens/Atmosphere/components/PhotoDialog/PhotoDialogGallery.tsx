@@ -22,7 +22,7 @@ const MIN_SINGLE_ASPECT_RATIO = 1 / 2
  * gallery at its source rather than opening a lightbox: a single image is shown
  * whole, and several form a carousel with the next image peeking in.
  */
-export function PhotoGallery({
+export function PhotoDialogGallery({
   photo,
 }: {
   photo: app.bsky.embed.external.ViewGallery

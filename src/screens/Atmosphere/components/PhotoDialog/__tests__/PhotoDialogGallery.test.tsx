@@ -1,7 +1,7 @@
 import {render, screen} from '@testing-library/react-native'
 
+import {PhotoDialogGallery} from '#/screens/Atmosphere/components/PhotoDialog/PhotoDialogGallery'
 import {type app} from '#/lexicons'
-import {PhotoGallery} from '../PhotoGallery'
 
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({
@@ -120,7 +120,7 @@ function image(
 
 function renderGallery(items: unknown[]) {
   render(
-    <PhotoGallery
+    <PhotoDialogGallery
       photo={
         {
           uri: URI,
