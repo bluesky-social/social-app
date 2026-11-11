@@ -1,4 +1,5 @@
 import {Image} from 'expo-image'
+import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {getGalleryImages} from '#/screens/Atmosphere/data/exploreData'
@@ -33,8 +34,18 @@ export function PhotoGallery({
 
   if (images.length === 0) return null
 
-  const label = (image: (typeof images)[number], index: number) =>
-    image.alt || l`Photo ${index + 1} of ${images.length}`
+  const total = images.length
+  const label = (image: (typeof images)[number], index: number) => {
+    const position = index + 1
+    return (
+      image.alt ||
+      l({
+        message: `Photo ${position} of ${total}`,
+        comment:
+          'Accessibility label for a photo that has no description. {position} is its 1-based number in the gallery and {total} is how many photos the gallery has.',
+      })
+    )
+  }
 
   if (images.length === 1) {
     const [image] = images
@@ -42,7 +53,7 @@ export function PhotoGallery({
     return (
       <Link
         to={photo.uri}
-        label={label(image, 0)}
+        label={image.alt || photo.title}
         accessibilityHint=""
         style={[a.w_full]}>
         <ConstrainedImage
@@ -62,7 +73,11 @@ export function PhotoGallery({
 
   return (
     <Gallery.Root
-      label={l`Photos, ${images.length} photos`}
+      label={l({
+        message: plural(total, {one: '# photo', other: '# photos'}),
+        comment:
+          'Accessibility label for a scrollable row of photos. The number is how many photos are in it.',
+      })}
       footer={<Gallery.PageDots />}>
       {images.map((image, index) => {
         const {aspectRatio, width} = computeDims({

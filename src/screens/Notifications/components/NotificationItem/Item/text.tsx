@@ -1,10 +1,8 @@
 import {type StyleProp, type TextStyle} from 'react-native'
 import {moderateProfile} from '@bsky/sdk/moderation'
-import {type I18n} from '@lingui/core'
-import {defineMessage} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
-import {dateDiff, formatDateDiff} from '#/lib/hooks/useTimeAgo'
+import {formatTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {makeProfileLink} from '#/lib/routes/links'
 import {forceLTR} from '#/lib/strings/bidi'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -155,23 +153,5 @@ export function Timestamp({date}: {date: string}) {
         </Text>
       )}
     </TimeElapsed>
-  )
-}
-
-function formatTimeAgo(i18n: I18n, timestamp: string) {
-  const diff = dateDiff(timestamp, Date.now())
-  const formatted = formatDateDiff({diff, i18n})
-
-  // "now", and dates over a year old, read fine on their own
-  if (diff.unit === 'now' || (diff.unit === 'month' && diff.value >= 12)) {
-    return formatted
-  }
-
-  return i18n._(
-    defineMessage({
-      message: `${formatted} ago`,
-      comment:
-        'How long ago a notification happened, e.g. "7m ago". The time is already abbreviated and translated.',
-    }),
   )
 }

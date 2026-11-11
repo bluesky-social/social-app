@@ -2,6 +2,7 @@ import {View} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {formatTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
@@ -16,6 +17,7 @@ import {Heart2_Stroke2_Corner0_Rounded as HeartIcon} from '#/components/icons/He
 import {Image_Stroke2_Corner2_Rounded as ImageIcon} from '#/components/icons/Image'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ExternalLinkIcon} from '#/components/icons/Square'
 import * as ProfileCard from '#/components/ProfileCard'
+import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 import {PhotoGallery} from './PhotoGallery'
@@ -30,13 +32,18 @@ export function PhotoDialog({
   author: app.bsky.actor.defs.ProfileViewBasic
 }) {
   const {t: l} = useLingui()
+  const title = photo.title
 
   return (
     <Dialog.Outer control={control} testID="atmospherePhotoDialog">
       <Dialog.Handle />
       <Gallery.Bleed>
         <Dialog.ScrollableInner
-          label={l`Photos: ${photo.title}`}
+          label={l({
+            message: `Photos: ${title}`,
+            comment:
+              'Accessibility label for a dialog (a popup window) showing a photo gallery. {title} is the gallery title, written by its author.',
+          })}
           style={[web({maxWidth: 600})]}>
           <PhotoDialogInner control={control} photo={photo} author={author} />
           <Dialog.Close />
@@ -67,6 +74,8 @@ function PhotoDialogInner({
    * counted.
    */
   const photoCount = getGalleryImages(photo).length
+  const likes = formatCount(i18n, likeCount)
+  const photos = formatCount(i18n, photoCount)
   if (!author || !moderationOpts) return null
 
   return (
@@ -75,7 +84,9 @@ function PhotoDialogInner({
         <Text
           testID="atmospherePhotoDialogSource"
           style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          <Trans>Powered by</Trans>
+          <Trans comment='Shown right before the Grain logo, as in "Powered by Grain". Grain is a photo-sharing app built on the AT Protocol.'>
+            Powered by
+          </Trans>
         </Text>
         <GrainFull width={45} fill={t.atoms.text.color} />
       </View>
@@ -101,28 +112,43 @@ function PhotoDialogInner({
           {photo.title}
         </Text>
         {photo.description.trim() ? (
-          <Text
-            emoji
-            style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
-            {photo.description}
-          </Text>
+          <RichText
+            value={photo.description}
+            enableTags
+            disableMentionFacetValidation
+            style={[a.text_md, a.leading_snug]}
+          />
         ) : null}
         <View
-          style={[a.flex_row, a.flex_wrap, a.align_center, a.gap_md, a.pt_xs]}>
+          style={[a.flex_row, a.flex_wrap, a.align_center, a.gap_md, a.pt_sm]}>
           {likeCount > 0 ? (
             <Stat
               testID="atmospherePhotoDialogLikes"
               icon={HeartIcon}
-              label={`${formatCount(i18n, likeCount)} ${plural(likeCount, {one: 'like', other: 'likes'})}`}
+              label={l({
+                message: plural(likeCount, {
+                  one: `${likes} like`,
+                  other: `${likes} likes`,
+                }),
+                comment:
+                  'Number of likes on a photo gallery. {likes} is already abbreviated and formatted, e.g. "1.2K".',
+              })}
             />
           ) : null}
           <Stat
             testID="atmospherePhotoDialogPhotos"
             icon={ImageIcon}
-            label={`${formatCount(i18n, photoCount)} ${plural(photoCount, {one: 'photo', other: 'photos'})}`}
+            label={l({
+              message: plural(photoCount, {
+                one: `${photos} photo`,
+                other: `${photos} photos`,
+              }),
+              comment:
+                'Number of photos in a gallery. {photos} is already formatted.',
+            })}
           />
           {hasDate ? (
-            <TimeElapsed timestamp={createdAt}>
+            <TimeElapsed timestamp={createdAt} timeToString={formatTimeAgo}>
               {({timeElapsed}) => (
                 <Stat
                   testID="atmospherePhotoDialogTime"
@@ -136,7 +162,11 @@ function PhotoDialogInner({
       </View>
       <Button
         testID="atmospherePhotoDialogClose"
-        label={l`Close`}
+        label={l({
+          message: 'View on Grain',
+          comment:
+            'Accessibility label for a button that opens a photo gallery on Grain, a photo-sharing app. "Grain" is a brand name.',
+        })}
         color="primary"
         size="large"
         onPress={() => control.close()}>
@@ -144,7 +174,9 @@ function PhotoDialogInner({
           <GrainMark width={12} />
         </View>
         <ButtonText>
-          <Trans>View on Grain</Trans>
+          <Trans comment='Button that opens a photo gallery on Grain, a photo-sharing app. "Grain" is a brand name.'>
+            View on Grain
+          </Trans>
         </ButtonText>
         <ButtonIcon icon={ExternalLinkIcon} size="sm" />
       </Button>

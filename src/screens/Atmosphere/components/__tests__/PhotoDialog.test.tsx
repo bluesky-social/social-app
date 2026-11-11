@@ -12,8 +12,11 @@ jest.mock('@lingui/react', () => {
   return {
     useLingui: () => ({
       i18n: {},
-      _: (value: {message: string; values?: Record<string, unknown>}) =>
-        fill(value.message, value.values),
+      /* Real formatting, so that plurals resolve. */
+      _: (value: Parameters<typeof i18n._>[0]) =>
+        jest
+          .requireActual<typeof import('@lingui/core')>('@lingui/core')
+          .i18n._(value),
     }),
     Trans: ({
       message,
@@ -38,6 +41,40 @@ jest.mock('#/components/Typography', () => {
     jest.requireActual<typeof import('react-native')>('react-native')
   return {Text}
 })
+jest.mock('#/components/Link', () => {
+  const {Text} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    InlineLinkText: ({
+      to,
+      children,
+    }: {
+      to: string
+      children: React.ReactNode
+    }) => (
+      <Text
+        accessibilityRole="link"
+        accessibilityLabel={to}
+        accessibilityHint="">
+        {children}
+      </Text>
+    ),
+  }
+})
+jest.mock('#/components/RichTextTag', () => {
+  const {Text} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    RichTextTag: ({display, tag}: {display: string; tag: string}) => (
+      <Text
+        accessibilityRole="link"
+        accessibilityLabel={`#${tag}`}
+        accessibilityHint="">
+        {display}
+      </Text>
+    ),
+  }
+})
 jest.mock('#/state/preferences/moderation-opts', () => ({
   useModerationOpts: () => ({}),
 }))
@@ -59,12 +96,19 @@ jest.mock('#/components/ProfileCard', () => {
     }) => <Text>{`${profile.displayName} @${profile.handle}`}</Text>,
   }
 })
+jest.mock('#/lib/hooks/useTimeAgo', () => ({
+  formatTimeAgo: () => '4d ago',
+}))
 jest.mock('#/view/com/util/TimeElapsed', () => ({
   TimeElapsed: ({
+    timestamp,
+    timeToString,
     children,
   }: {
+    timestamp: string
+    timeToString: (i18n: unknown, timestamp: string) => string
     children: (state: {timeElapsed: string}) => React.ReactNode
-  }) => children({timeElapsed: '4d'}),
+  }) => children({timeElapsed: timeToString({}, timestamp)}),
 }))
 jest.mock('../PhotoGallery', () => {
   const {View} =
@@ -77,6 +121,13 @@ jest.mock('../PhotoGallery', () => {
 })
 jest.mock('#/components/icons/Clock', () => ({
   Clock_Stroke2_Corner0_Rounded: () => null,
+}))
+jest.mock('#/components/icons/community/Grain', () => ({
+  GrainFull: () => null,
+  GrainMark: () => null,
+}))
+jest.mock('#/components/icons/Square', () => ({
+  SquareArrowTopRight_Stroke2_Corner0_Rounded: () => null,
 }))
 jest.mock('#/components/icons/Heart2', () => ({
   Heart2_Stroke2_Corner0_Rounded: () => null,
@@ -109,6 +160,7 @@ jest.mock('#/components/Button', () => {
       </Pressable>
     ),
     ButtonText: ({children}: {children: React.ReactNode}) => children,
+    ButtonIcon: () => null,
   }
 })
 jest.mock('#/components/Dialog', () => ({
@@ -183,23 +235,29 @@ describe('metadata', () => {
     expect(screen.getByText('A visit to the jetty.')).toBeTruthy()
   })
 
+  it('detects links, mentions, and hashtags in the description', () => {
+    renderDialog(
+      gallery({
+        description:
+          '📷 See https://example.com/photos by @author.test #landscape',
+      }),
+    )
+
+    expect(
+      screen.getByRole('link', {name: 'https://example.com/photos'}),
+    ).toBeTruthy()
+    expect(
+      screen.getByRole('link', {name: '/profile/author.test'}),
+    ).toHaveTextContent('@author.test')
+    expect(screen.getByRole('link', {name: '#landscape'})).toHaveTextContent(
+      '#landscape',
+    )
+  })
+
   it('omits a missing description', () => {
     renderDialog(gallery({description: '  '}))
 
     expect(screen.queryByText('A visit to the jetty.')).toBeNull()
-  })
-
-  it.each([
-    ['https://grain.social/gallery/1', 'Powered by grain'],
-    ['https://alice.grain.social/gallery/1', 'Powered by grain'],
-    ['https://example.com/gallery/1', 'Powered by example.com'],
-    ['https://notgrain.social/gallery/1', 'Powered by notgrain.social'],
-  ])('attributes %s', (uri, text) => {
-    renderDialog(gallery({uri: uri as never}))
-
-    expect(screen.getByTestId('atmospherePhotoDialogSource')).toHaveTextContent(
-      text,
-    )
   })
 })
 
@@ -212,7 +270,7 @@ describe('stats', () => {
 
     expect(stat('Likes')).toHaveTextContent(/^12 likes$/)
     expect(stat('Photos')).toHaveTextContent(/^3 photos$/)
-    expect(stat('Time')).toHaveTextContent(/^4d$/)
+    expect(stat('Time')).toHaveTextContent(/^4d ago$/)
   })
 
   it('uses singular forms', () => {

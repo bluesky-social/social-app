@@ -42,6 +42,7 @@ export function PhotoCard({
   const authorProfile = getAssociatedProfile(photo.associatedProfiles)
   const image = getGalleryImage(photo)
   const likeCount = photo.likeCount ?? 0
+  const title = photo.title
 
   if (!authorProfile || !image) return null
 
@@ -57,8 +58,16 @@ export function PhotoCard({
     <View style={[a.flex_grow, a.w_full]}>
       <Button
         testID="atmospherePhotoCard"
-        label={l`View photos in ${photo.title}`}
-        accessibilityHint={l`Opens the photos in a dialog`}
+        label={l({
+          message: `View photos in ${title}`,
+          comment:
+            'Accessibility label for a card that opens a photo gallery. {title} is the gallery title, written by its author.',
+        })}
+        accessibilityHint={l({
+          message: 'Opens the photos in a dialog',
+          comment:
+            'Accessibility hint for a card that opens a photo gallery in a dialog (a popup window) rather than navigating away.',
+        })}
         ref={galleryFocus?.focusRef}
         tabIndex={galleryFocus?.tabIndex}
         onPress={() => dialogControl.open()}
