@@ -139,8 +139,7 @@ function PageDot({
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
       style={[
-        a.px_xs,
-        a.py_sm,
+        a.p_sm,
         a.rounded_full,
         web({
           cursor: 'pointer',
