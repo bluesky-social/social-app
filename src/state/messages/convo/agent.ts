@@ -129,6 +129,12 @@ export class Convo {
       optimisticReplyTo?: $Typed<chat.bsky.convo.defs.MessageView>
     }
   > = new Map()
+  /**
+   * The temporary id our sent messages had while pending, keyed by their real
+   * id. Items keep it as their key so a message's row isn't remounted (and its
+   * entrance replayed) when the server confirms it.
+   */
+  private optimisticKeys: Map<string, string> = new Map()
   private deletedMessages: Set<string> = new Set()
   private relatedProfiles: Map<string, chat.bsky.actor.defs.ProfileViewBasic> =
     new Map()
@@ -560,6 +566,7 @@ export class Convo {
     this.pastMessages = new Map()
     this.newMessages = new Map()
     this.pendingMessages = new Map()
+    this.optimisticKeys = new Map()
     this.deletedMessages = new Set()
     this.relatedProfiles = new Map()
     // Shadow updates fired while suspended are missed, so the overlay may be
@@ -1164,6 +1171,7 @@ export class Convo {
 
       // remove from queue
       this.pendingMessages.delete(id)
+      this.optimisticKeys.set(res.id, id)
 
       /*
        * Insert into `newMessages` as soon as we have a real ID. That way, when
@@ -1277,9 +1285,12 @@ export class Convo {
         })
       }
 
-      for (const pendingMessage of messageArray) {
+      // The batch response is in the same order as the messages we sent
+      messageArray.forEach((pendingMessage, i) => {
         this.pendingMessages.delete(pendingMessage.id)
-      }
+        const sent = items[i]
+        if (sent) this.optimisticKeys.set(sent.id, pendingMessage.id)
+      })
 
       this.commit()
 
@@ -1354,13 +1365,13 @@ export class Convo {
       if (bsky.isType(chat.bsky.convo.defs.messageView, m)) {
         items.unshift({
           type: 'message',
-          key: m.id,
+          key: this.optimisticKeys.get(m.id) ?? m.id,
           message: this.tombstoneDeletedReplyTo(m),
         })
       } else if (bsky.isType(chat.bsky.convo.defs.deletedMessageView, m)) {
         items.unshift({
           type: 'deleted-message',
-          key: m.id,
+          key: this.optimisticKeys.get(m.id) ?? m.id,
           message: m,
         })
       } else if (bsky.isType(chat.bsky.convo.defs.systemMessageView, m)) {
@@ -1387,13 +1398,13 @@ export class Convo {
       if (bsky.isType(chat.bsky.convo.defs.messageView, m)) {
         items.push({
           type: 'message',
-          key: m.id,
+          key: this.optimisticKeys.get(m.id) ?? m.id,
           message: this.tombstoneDeletedReplyTo(m),
         })
       } else if (bsky.isType(chat.bsky.convo.defs.deletedMessageView, m)) {
         items.push({
           type: 'deleted-message',
-          key: m.id,
+          key: this.optimisticKeys.get(m.id) ?? m.id,
           message: m,
         })
       } else if (bsky.isType(chat.bsky.convo.defs.systemMessageView, m)) {
