@@ -533,6 +533,11 @@ function ExpandedPostDetails({
       widths.reply >
       widths.available
 
+  const wrapReply =
+    widths.reply > 0 &&
+    widths.available > 0 &&
+    widths.date + widths.reply > widths.available
+
   function measure(part: keyof typeof widths, width: number) {
     setWidths(prev => (prev[part] === width ? prev : {...prev, [part]: width}))
   }
@@ -542,7 +547,9 @@ function ExpandedPostDetails({
       key="count"
       style={[
         {maxWidth: '100%'},
-        wrapCount ? {width: '100%'} : {marginLeft: hasCount ? a.gap_xs.gap : 0},
+        wrapCount && !wrapReply
+          ? {width: '100%'}
+          : {marginLeft: hasCount && !wrapCount ? a.gap_xs.gap : 0},
       ]}>
       <View
         onLayout={e => measure('count', e.nativeEvent.layout.width)}
@@ -577,6 +584,7 @@ function ExpandedPostDetails({
             a.flex_row,
             a.align_center,
             {columnGap: hasCount && !wrapCount ? a.gap_xs.gap : 0},
+            wrapReply && {width: '100%'},
             {maxWidth: '100%'},
           ]}>
           <Text
@@ -599,7 +607,7 @@ function ExpandedPostDetails({
             ·
           </Text>
         </View>
-        {wrapCount ? [reply, viewCount] : [viewCount, reply]}
+        {wrapCount && !wrapReply ? [reply, viewCount] : [viewCount, reply]}
       </View>
     </View>
   )
