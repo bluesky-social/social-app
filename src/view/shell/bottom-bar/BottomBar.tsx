@@ -440,7 +440,7 @@ function Btn({
   )
 }
 
-function MessagesTabMenu({control}: {control: Menu.MenuControlProps}) {
+export function MessagesTabMenu({control}: {control: Menu.MenuControlProps}) {
   const {t: l} = useLingui()
 
   const {mutate: markAllChatsRead} = useUpdateAllRead('accepted', {

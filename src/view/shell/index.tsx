@@ -47,6 +47,7 @@ import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
 import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
 import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
+import {useIsNativeTabsEnabled} from '#/features/verticalBar'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
@@ -233,6 +234,7 @@ export function Shell() {
   const {currentAccount} = useSession()
   const fullyExpandedCount = useDialogFullyExpandedCountContext()
   const {gtMobile} = useBreakpoints()
+  const isNativeTabsEnabled = useIsNativeTabsEnabled()
 
   useIntentHandler()
   useOTAUpdateRecovery()
@@ -246,7 +248,9 @@ export function Shell() {
       <StatusBar
         animated
         hidden={false}
-        verticalBarBehaviorIOS={gtMobile ? 'automatic' : 'disabled'}
+        verticalBarBehaviorIOS={
+          isNativeTabsEnabled || gtMobile ? 'automatic' : 'disabled'
+        }
         style={
           t.name !== 'light' ||
           (IS_IOS && !IS_LIQUID_GLASS && fullyExpandedCount > 0)

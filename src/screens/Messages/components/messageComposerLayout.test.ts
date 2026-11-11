@@ -35,3 +35,12 @@ it.each([
     )
   },
 )
+
+it('sits the closed composer at a custom bottom gap', () => {
+  // iPhone Duo: level with the vertical bar's rail, inside the bottom inset
+  const offsets = getMessageComposerKeyboardOffsets(34, 24)
+
+  expect(offsets.stickyViewClosedOffset).toBe(26)
+  expect(offsets.chatScrollOffset).toBe(8)
+  expect(34 - offsets.stickyViewClosedOffset + space.lg).toBe(24)
+})

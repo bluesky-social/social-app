@@ -10,7 +10,10 @@ import Animated, {
   type AnimatedScrollViewProps,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {
+  SafeAreaInsetsContext,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 
 import {useEnableMinimalShellModeForScreen} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
@@ -31,6 +34,11 @@ import {
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {IS_IPAD, IS_WEB} from '#/env'
+import {
+  useHasNativeTabs,
+  useHorizontalSafeAreaInsets,
+  usePhoneHorizontalSafeAreaInsets,
+} from '#/features/verticalBar'
 
 export * from '#/components/Layout/const'
 export * as Header from '#/components/Layout/Header'
@@ -116,6 +124,25 @@ export const Content = memo(function Content({
   const usesSystemScrollIndicatorInsets =
     gtMobile && !isWithinContainedTabletSurface
   const offsetContext = useMemo(() => ({isWithinOffsetView: true}), [])
+  /*
+   * Keep full-width content clear of the vertical bar (iPhone Duo), see
+   * `List`.
+   */
+  const sideInsets = useHorizontalSafeAreaInsets()
+  const hasSideInsets =
+    !centerOnTablet &&
+    !isWithinContainedTabletSurface &&
+    (sideInsets.left > 0 || sideInsets.right > 0)
+
+  /*
+   * Native tabs float over the content (or sit beside it, in the vertical
+   * bar), so scroll under them and inset by the bottom safe area, which
+   * includes the tab bar. The JS bottom bar is opaque, so stop above it.
+   */
+  const hasNativeTabs = useHasNativeTabs()
+  const {bottom: bottomInset} = useSafeAreaInsets()
+  const nativeTabsInsets =
+    hasNativeTabs && !isWithinDialog ? {bottom: bottomInset} : undefined
 
   // note - if we ever make the footer transparent in any way,
   // we'll need to change this to use contentInsets/scrollIndicatorInsets
@@ -138,6 +165,8 @@ export const Content = memo(function Content({
           : false)
       }
       indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
+      contentInset={nativeTabsInsets}
+      scrollIndicatorInsets={nativeTabsInsets}
       // Header taps scroll to the top on iPadOS 26, see `List`
       scrollsToTop={IS_IPAD ? false : undefined}
       style={[
@@ -160,6 +189,10 @@ export const Content = memo(function Content({
         },
         /* UIKit centering would also add horizontal insets to the column. */
         centerOnTablet && centerContent && [a.flex_grow, a.justify_center],
+        hasSideInsets && {
+          marginLeft: sideInsets.left,
+          marginRight: sideInsets.right,
+        },
         contentContainerStyle,
       ]}
       {...props}>
@@ -190,14 +223,48 @@ export const Center = memo(function LayoutCenter({
   children,
   style,
   ignoreTabletLayoutOffset,
+  ignoreVerticalBarInsets = false,
   ...props
-}: ViewProps & {ignoreTabletLayoutOffset?: boolean}) {
+}: ViewProps & {
+  ignoreTabletLayoutOffset?: boolean
+  /**
+   * Don't inset from the vertical bar (iPhone Duo), for content that keeps
+   * clear of it itself so its background can run underneath, like the
+   * profile banner.
+   */
+  ignoreVerticalBarInsets?: boolean
+}) {
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
   const {gtMobile} = useBreakpoints()
   const {centerColumnOffset} = useLayoutBreakpoints()
   const {isWithinDialog} = useDialogContext()
   const {isWithinSplitView} = useIsWithinSplitView()
   const ctx = useMemo(() => ({isWithinOffsetView: true}), [])
+  /*
+   * A top-level column spans the full width on phones, so keep it clear of the
+   * vertical bar (iPhone Duo). Like UIKit narrowing a subview's safe area, zero
+   * the side insets inside it, so that nothing in it insets twice.
+   */
+  const insets = useSafeAreaInsets()
+  const sideInsets = usePhoneHorizontalSafeAreaInsets()
+  const hasSideInsets =
+    !ignoreVerticalBarInsets &&
+    !isWithinOffsetView &&
+    !isWithinSplitView &&
+    !isWithinDialog &&
+    (sideInsets.left > 0 || sideInsets.right > 0)
+  let content = (
+    <ScrollbarOffsetContext.Provider value={ctx}>
+      {children}
+    </ScrollbarOffsetContext.Provider>
+  )
+  if (hasSideInsets) {
+    content = (
+      <SafeAreaInsetsContext.Provider value={{...insets, left: 0, right: 0}}>
+        {content}
+      </SafeAreaInsetsContext.Provider>
+    )
+  }
   return (
     <View
       style={[
@@ -221,11 +288,20 @@ export const Center = memo(function LayoutCenter({
             ],
           },
         style,
+        /*
+         * Margins rather than padding, so that absolutely positioned children
+         * (like a floating header) are inset too. Last, since callers often pass
+         * `a.w_full`.
+         */
+        hasSideInsets && {
+          width: 'auto',
+          alignSelf: 'stretch',
+          marginLeft: sideInsets.left,
+          marginRight: sideInsets.right,
+        },
       ]}
       {...props}>
-      <ScrollbarOffsetContext.Provider value={ctx}>
-        {children}
-      </ScrollbarOffsetContext.Provider>
+      {content}
     </View>
   )
 })

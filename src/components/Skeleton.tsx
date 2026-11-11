@@ -113,11 +113,16 @@ export function Block({blend, style}: ViewStyleProp & SkeletonProps) {
   )
 }
 
+/**
+ * Fills the rest of a `Row`. It shrinks too, because percentage-width children
+ * (like a `Text` at 100%) otherwise size it to the whole row, pushing it past
+ * the row's padding by the width of anything beside it.
+ */
 export function Col({
   children,
   style,
 }: ViewStyleProp & {children?: React.ReactNode}) {
-  return <View style={[a.flex_grow, style]}>{children}</View>
+  return <View style={[a.flex_grow, a.flex_shrink, style]}>{children}</View>
 }
 
 export function Row({

@@ -25,6 +25,7 @@ import {CENTER_COLUMN_WIDTH} from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {useLightboxIsOpenSharedValue} from '#/components/Lightbox/state'
 import {IS_IOS, IS_IPAD} from '#/env'
+import {useHorizontalSafeAreaInsets} from '#/features/verticalBar'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
@@ -94,6 +95,16 @@ let List = forwardRef<ListMethods, ListProps>(
     const usesSystemScrollIndicatorInsets =
       gtMobile && !isWithinContainedTabletSurface
     const offsetContext = useMemo(() => ({isWithinOffsetView: true}), [])
+    /*
+     * Keep full-width lists clear of the vertical bar (iPhone Duo). Centered
+     * tablet columns and contained surfaces don't reach the screen edge, and
+     * dialogs pad their own content.
+     */
+    const sideInsets = useHorizontalSafeAreaInsets()
+    const hasSideInsets =
+      !centerOnTablet &&
+      !isWithinContainedTabletSurface &&
+      (sideInsets.left > 0 || sideInsets.right > 0)
     const dedupe = useDedupe(400)
     const scrollsToTopProps = useScrollsToTopProps()
 
@@ -206,6 +217,7 @@ let List = forwardRef<ListMethods, ListProps>(
                   : undefined
                 : {
                     top: headerOffset,
+                    // At the screen edge, past the vertical bar, like system apps
                     right: 1,
                     ...props.scrollIndicatorInsets,
                   }
@@ -231,6 +243,10 @@ let List = forwardRef<ListMethods, ListProps>(
                 },
                 t.atoms.border_contrast_low,
               ],
+            hasSideInsets && {
+              marginLeft: sideInsets.left,
+              marginRight: sideInsets.right,
+            },
             contentContainerStyle,
           ]}
           ref={ref}

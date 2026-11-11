@@ -28,6 +28,7 @@ import {
 } from '#/components/icons/Arrow'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import {usePhoneHorizontalSafeAreaInsets} from '#/features/verticalBar'
 
 export type TabPillItem = {
   key: string
@@ -53,6 +54,7 @@ export function TabPills({
   getAccessibilityHint?: (tab: TabPillItem) => string
 }) {
   const t = useTheme()
+  const sideInsets = usePhoneHorizontalSafeAreaInsets()
   const {t: l} = useLingui()
   const {width: windowWidth} = useWindowDimensions()
   const listRef = useRef<React.ComponentRef<typeof ScrollView>>(null)
@@ -234,7 +236,11 @@ export function TabPills({
         <DraggableScrollView
           ref={listRef}
           onLayout={measure}
-          style={web({maskImage: edgeMask})}
+          style={[
+            web({maskImage: edgeMask}),
+            // Clip the pills at the vertical bar (iPhone Duo), not under it
+            {marginLeft: sideInsets.left, marginRight: sideInsets.right},
+          ]}
           showsHorizontalScrollIndicator={false}
           decelerationRate="fast"
           snapToOffsets={

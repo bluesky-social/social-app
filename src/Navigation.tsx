@@ -1,23 +1,39 @@
 import {type JSX, useCallback, useEffect, useRef} from 'react'
+import {nativeNanoSymbol} from 'react-native-nano-icons/symbols'
+import {
+  SafeAreaProvider,
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 import * as Linking from 'expo-linking'
 import * as Notifications from 'expo-notifications'
 import {Referrer} from '@bsky.app/expo-bluesky-swiss-army'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react/macro'
 import {
   type BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import {
+  createNativeBottomTabNavigator,
+  type NativeBottomTabIcon,
+} from '@react-navigation/bottom-tabs/unstable'
+import {
   createNavigationContainerRef,
   DarkTheme,
   DefaultTheme,
+  getFocusedRouteNameFromRoute,
   type NavigationAction,
   NavigationContainer,
+  type NavigationHelpers,
+  type ParamListBase,
   StackActions,
+  type TabNavigationState,
 } from '@react-navigation/native'
 
 import {timeout} from '#/lib/async/timeout'
+import {useHaptics} from '#/lib/haptics'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -38,7 +54,11 @@ import {
   getTabNavigationAction,
   getTabResetAction,
 } from '#/lib/routes/navigation'
-import {type SidebarTab} from '#/lib/routes/tab-to-nav-item'
+import {
+  type SharedNavTab,
+  type SidebarTab,
+  TAB_TO_NAV_ITEM,
+} from '#/lib/routes/tab-to-nav-item'
 import {
   type BottomTabNavigatorParams,
   type CommonNavigationDestination,
@@ -53,6 +73,8 @@ import {
 } from '#/lib/routes/types'
 import {bskyTitle} from '#/lib/strings/headings'
 import {emitSoftReset} from '#/state/events'
+import {useHomeBadge} from '#/state/home-badge'
+import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
@@ -81,7 +103,7 @@ import {ProfileScreen} from '#/view/screens/Profile'
 import {StorybookScreen} from '#/view/screens/Storybook'
 import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
-import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
+import {BottomBar, MessagesTabMenu} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
 import {DesktopLeftNav} from '#/view/shell/desktop/LeftNav'
 import {getNativeTabBarVisibility} from '#/view/shell/nativeTabBarVisibility'
@@ -149,15 +171,26 @@ import {Wizard} from '#/screens/StarterPack/Wizard'
 import TopicScreen from '#/screens/Topic'
 import {VideoFeed} from '#/screens/VideoFeed'
 import {type Theme, useBreakpoints, useTheme} from '#/alf'
+import {useDialogControl} from '#/components/Dialog'
 import {
   EmailDialogScreenID,
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
+import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
+import * as Menu from '#/components/Menu'
+import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {setNavigationMetadata} from '#/analytics/metadata'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {isFollowingV2HomeDotEnabled} from '#/features/followingV2/eligibility'
 import {HomeScreen} from '#/features/followingV2/home'
 import {InviteScannerScreen} from '#/features/inviteFriends'
+import {
+  setNativeTabsEnabled,
+  useHasNativeTabs,
+  useNativeTabBarPlacement,
+} from '#/features/verticalBar'
+import {useProfileTabIcon} from '#/features/verticalBar/useProfileTabIcon'
 import {router} from '#/routes'
 
 const navigationRef = createNavigationContainerRef<RootNavigatorParams>()
@@ -173,6 +206,13 @@ const MessagesTab =
 const SecondaryTab = createNativeStackNavigatorWithAuth<CommonNavigatorParams>()
 const Flat = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
 const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
+/*
+ * Created on first use, since creating it throws on web, which doesn't
+ * support native tabs.
+ */
+let NativeTab:
+  | ReturnType<typeof createNativeBottomTabNavigator<BottomTabNavigatorParams>>
+  | undefined
 
 /**
  * These "common screens" are reused across stacks.
@@ -642,11 +682,17 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
  * The TabsNavigator is used by native mobile to represent the routes
  * in 3 distinct tab-stacks with a different root screen on each.
  */
-function TabsNavigator({
-  layout,
-}: {
-  layout: React.ComponentProps<typeof Tab.Navigator>['layout']
-}) {
+type TabsLayout = (props: {children: React.ReactNode}) => React.ReactElement
+
+function TabsNavigator({layout}: {layout: TabsLayout}) {
+  const hasNativeTabs = useHasNativeTabs()
+  if (hasNativeTabs) {
+    return <NativeTabsNavigator layout={layout} />
+  }
+  return <JSTabsNavigator layout={layout} />
+}
+
+function JSTabsNavigator({layout}: {layout: TabsLayout}) {
   const tabBar = useCallback(
     (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
       <NativeTabBar {...props} />
@@ -690,6 +736,302 @@ function TabsNavigator({
         getComponent={() => SettingsTabNavigator}
       />
     </Tab.Navigator>
+  )
+}
+
+function nanoTabIcon(glyph: string) {
+  /*
+   * The symbol sets in `app.config.js` are built from our icon SVGs, and
+   * react-native-screens falls back to the asset catalog when a name isn't one
+   * of Apple's SF Symbols.
+   */
+  return nativeNanoSymbol(glyph) as NativeBottomTabIcon
+}
+
+/**
+ * Screens that hide the JS bottom bar, via `Layout.Screen`'s `minimalShell`.
+ * The native tab bar can't be hidden from inside a screen, so these are hidden
+ * by route name instead - keep the two in sync.
+ */
+const ROUTES_WITHOUT_BOTTOM_TAB_BAR = new Set<string>([
+  'MessagesConversation',
+  'VideoFeed',
+  'StarterPackWizard',
+  'StarterPackEdit',
+  'InviteScanner',
+])
+
+/**
+ * Native tab badges only hold text, so the "something new" dot is a badge with
+ * a blank label. It can't have its own colors: UIKit styles every badge with
+ * the selected tab's appearance. An empty badge would be dropped, see the
+ * `react-native-screens` patch notes.
+ */
+const DOT_BADGE = ' '
+
+/**
+ * Native tabs have no long press, so a double press on Profile or Chat does
+ * what a long press on the JS tab bar does.
+ */
+const TAB_DOUBLE_PRESS_MS = 300
+
+/**
+ * Gives a tab its own safe area, measured from inside the tab. UIKit includes
+ * the native tab bar in that, so content can clear it (and follow it as it
+ * shows and hides) with the usual `useSafeAreaInsets().bottom`.
+ */
+function NativeTabSafeAreaProvider({children}: {children: React.ReactNode}) {
+  const insets = useSafeAreaInsets()
+  const frame = useSafeAreaFrame()
+  return (
+    <SafeAreaProvider initialMetrics={{insets, frame}}>
+      {children}
+    </SafeAreaProvider>
+  )
+}
+
+/**
+ * Native tabs, used on Liquid Glass iPhones and while the system places a
+ * vertical bar (iPhone Duo), where UIKit moves the tab bar into it. See
+ * `useNativeTabBarPlacement`.
+ *
+ * Native tabs can't hide individual tabs, so this only holds the primary
+ * tabs. The secondary destinations (Feeds, Lists, Settings, etc.) open in the
+ * current tab's stack instead, see `navigateToSecondaryTab` in the drawer.
+ */
+function NativeTabsNavigator({layout}: {layout: TabsLayout}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const ax = useAnalytics()
+  const aa = useAgeAssurance()
+  const {hasSession, currentAccount} = useSession()
+  const onboardingState = useOnboardingState()
+  const {showLoggedOut} = useLoggedOutView()
+  const {footerHeight} = useShellLayout()
+  const numUnreadNotifications = useUnreadNotifications()
+  const numUnreadMessages = useUnreadMessageCount()
+  const {gtMobile} = useBreakpoints()
+  const profileTabIcon = useProfileTabIcon()
+  const placement = useNativeTabBarPlacement()
+  const hasHomeBadge = useHomeBadge()
+  const haptics = useHaptics()
+  const accountSwitchControl = useDialogControl()
+  const messagesMenuControl = Menu.useMenuControl()
+  const lastTabPress = useRef<{name: string; time: number} | null>(null)
+
+  /*
+   * There's no JS bottom bar. Content clears the native one with the bottom
+   * safe area inset instead, see `NativeTabSafeAreaProvider`.
+   */
+  useEffect(() => {
+    footerHeight.set(0)
+  }, [footerHeight])
+
+  NativeTab ??= createNativeBottomTabNavigator<BottomTabNavigatorParams>()
+
+  const isAuthSurface =
+    !hasSession ||
+    !!currentAccount?.signupQueued ||
+    showLoggedOut ||
+    onboardingState.isActive
+
+  /**
+   * Returns true when this press is the second of a double press (see
+   * {@link TAB_DOUBLE_PRESS_MS}) and opened a menu.
+   */
+  const handleTabDoublePress = (name: string) => {
+    const now = Date.now()
+    const last = lastTabPress.current
+    lastTabPress.current = {name, time: now}
+    if (last?.name !== name || now - last.time > TAB_DOUBLE_PRESS_MS) {
+      return false
+    }
+    lastTabPress.current = null
+    if (name === 'MyProfileTab') {
+      haptics.longPress()
+      accountSwitchControl.open()
+      return true
+    }
+    if (name === 'MessagesTab' && !aa.flags.chatDisabled) {
+      haptics.longPress()
+      messagesMenuControl.open()
+      return true
+    }
+    return false
+  }
+
+  return (
+    <NativeTab.Navigator
+      initialRouteName="HomeTab"
+      backBehavior="initialRoute"
+      layout={props =>
+        layout({
+          ...props,
+          children: (
+            <>
+              {props.children}
+              <NativeTabsSidebar
+                state={props.state}
+                navigation={props.navigation}
+              />
+              {hasSession && (
+                <>
+                  <SwitchAccountDialog control={accountSwitchControl} />
+                  <MessagesTabMenu control={messagesMenuControl} />
+                </>
+              )}
+            </>
+          ),
+        })
+      }
+      screenLayout={({children}) => (
+        <NativeTabSafeAreaProvider>{children}</NativeTabSafeAreaProvider>
+      )}
+      screenOptions={({route}) => ({
+        headerShown: false,
+        lazy: true,
+        /*
+         * Labels don't fit in the floating bottom bar ("Notifications" throws
+         * the alignment off), but keep them for the vertical bar's rail.
+         */
+        tabBarShowLabel: placement !== 'bottom',
+        tabBarActiveTintColor: t.atoms.text.color,
+        /*
+         * Match the JS tab bar's unread badges, which are blue rather than
+         * red, and smaller and bolder than UIKit's. Set for every tab, since
+         * UIKit styles all the badges with the selected tab's appearance.
+         */
+        tabBarBadgeStyle: {
+          backgroundColor: t.palette.primary_500,
+          color: t.palette.white,
+          fontSize: 10,
+          fontWeight: '700',
+        },
+        /*
+         * The native default turns on `automatic` content insets for the first
+         * ScrollView in each tab, which would double the insets that our
+         * screens already pad by hand.
+         */
+        overrideScrollViewContentInsetAdjustmentBehavior: false,
+        tabBarStyle: {
+          /*
+           * Native tabs stay mounted when the layout widens (the Duo unfolding,
+           * an iPhone rotating), since switching navigators would lose the
+           * navigation state, but hide the tab bar for the sidebar. In the
+           * vertical bar it never covers content, so it only hides for
+           * full-screen flows, not for the screens that hide the JS one.
+           */
+          display:
+            gtMobile ||
+            isAuthSurface ||
+            (placement === 'bottom' &&
+              ROUTES_WITHOUT_BOTTOM_TAB_BAR.has(
+                getFocusedRouteNameFromRoute(route) ?? '',
+              ))
+              ? 'none'
+              : 'flex',
+        },
+      })}
+      screenListeners={({navigation, route}) => ({
+        tabPress: () => {
+          const tab = route.name.replace(/Tab$/, '') as SharedNavTab
+          ax.metric('nav:click', {
+            item: TAB_TO_NAV_ITEM[tab],
+            surface: 'bottomBar',
+          })
+          if (handleTabDoublePress(route.name)) return
+          /*
+           * Native tabs pop to the root and scroll to the top when the
+           * selected tab is pressed again. At the root, also soft reset, like
+           * the JS tab bar does.
+           */
+          if (
+            getTabState(navigation.getState(), tab) === TabState.InsideAtRoot
+          ) {
+            emitSoftReset()
+          }
+        },
+      })}>
+      <NativeTab.Screen
+        name="HomeTab"
+        getComponent={() => HomeTabNavigator}
+        options={{
+          title: l`Home`,
+          ...(hasHomeBadge &&
+            isFollowingV2HomeDotEnabled(ax) && {
+              tabBarBadge: DOT_BADGE,
+            }),
+          tabBarIcon: ({focused}) =>
+            nanoTabIcon(
+              focused
+                ? 'HomeOpen_Filled_Corner0_Rounded'
+                : 'HomeOpen_Stroke2_Corner0_Rounded',
+            ),
+        }}
+      />
+      <NativeTab.Screen
+        name="SearchTab"
+        getComponent={() => SearchTabNavigator}
+        options={{
+          title: l`Search`,
+          tabBarIcon: ({focused}) =>
+            nanoTabIcon(
+              focused
+                ? 'MagnifyingGlass_Filled_Stroke2_Corner0_Rounded'
+                : 'MagnifyingGlass_Stroke2_Corner0_Rounded',
+            ),
+        }}
+      />
+      <NativeTab.Screen
+        name="MessagesTab"
+        getComponent={() => MessagesTabNavigator}
+        options={{
+          title: l`Chat`,
+          tabBarIcon: ({focused}) =>
+            nanoTabIcon(
+              focused
+                ? 'Message_Stroke2_Corner0_Rounded_Filled'
+                : 'Message_Stroke2_Corner0_Rounded',
+            ),
+          ...(aa.flags.chatDisabled
+            ? null
+            : numUnreadMessages.numUnread
+              ? {tabBarBadge: numUnreadMessages.numUnread}
+              : // e.g. only chat requests
+                numUnreadMessages.hasNew && {
+                  tabBarBadge: DOT_BADGE,
+                }),
+        }}
+      />
+      <NativeTab.Screen
+        name="NotificationsTab"
+        getComponent={() => NotificationsTabNavigator}
+        options={{
+          title: l`Notifications`,
+          tabBarIcon: ({focused}) =>
+            nanoTabIcon(
+              focused
+                ? 'Bell_Filled_Corner0_Rounded'
+                : 'Bell_Stroke2_Corner0_Rounded',
+            ),
+          tabBarBadge: numUnreadNotifications || undefined,
+        }}
+      />
+      <NativeTab.Screen
+        name="MyProfileTab"
+        getComponent={() => MyProfileTabNavigator}
+        options={{
+          title: l`Profile`,
+          tabBarIcon: ({focused}) =>
+            profileTabIcon ??
+            nanoTabIcon(
+              focused
+                ? 'UserCircle_Filled_Corner0_Rounded'
+                : 'UserCircle_Stroke2_Corner0_Rounded',
+            ),
+        }}
+      />
+    </NativeTab.Navigator>
   )
 }
 
@@ -750,31 +1092,6 @@ function NativeTabBar(props: BottomTabBarProps) {
     }
   }, [showTabletSidebar, hideTabBar, footerHeight])
 
-  const onNavigateTab = (tab: SidebarTab) => {
-    const state = props.navigation.getState()
-    const tabState = getTabState(state, tab)
-    if (tabState === TabState.InsideAtRoot) {
-      emitSoftReset()
-    } else if (tabState === TabState.Inside) {
-      const target = state.routes.find(route => route.name === `${tab}Tab`)
-        ?.state?.key
-      if (target) {
-        props.navigation.dispatch({
-          ...StackActions.popToTop(),
-          target,
-        })
-      } else {
-        props.navigation.reset({
-          index: 0,
-          routes: [{name: `${tab}Tab`}],
-        })
-      }
-    } else {
-      // The tab navigator route names mirror the shared navigation tab names.
-      props.navigation.navigate(`${tab}Tab`)
-    }
-  }
-
   if (hideTabBar) {
     return null
   }
@@ -783,12 +1100,98 @@ function NativeTabBar(props: BottomTabBarProps) {
     return (
       <DesktopLeftNav
         routeName={currentRouteName}
-        onNavigateTab={onNavigateTab}
+        onNavigateTab={tab => navigateToSidebarTab(props.navigation, tab)}
       />
     )
   }
 
   return <BottomBar {...props} />
+}
+
+type SecondarySidebarTab =
+  'Atmosphere' | 'Feeds' | 'Lists' | 'Bookmarks' | 'Settings'
+
+function isSecondarySidebarTab(tab: SidebarTab): tab is SecondarySidebarTab {
+  return (
+    tab === 'Atmosphere' ||
+    tab === 'Feeds' ||
+    tab === 'Lists' ||
+    tab === 'Bookmarks' ||
+    tab === 'Settings'
+  )
+}
+
+function navigateToSidebarTab(
+  navigation: NavigationHelpers<ParamListBase>,
+  tab: SidebarTab,
+  {hasNativeTabs = false}: {hasNativeTabs?: boolean} = {},
+) {
+  const state = navigation.getState()
+  const tabState = getTabState(state, tab)
+  if (tabState === TabState.InsideAtRoot) {
+    emitSoftReset()
+  } else if (hasNativeTabs && isSecondarySidebarTab(tab)) {
+    // Native tabs only hold the primary tabs, so open it in the current one
+    navigation.dispatch(
+      getCommonNavigationAction({name: tab, params: undefined}, state),
+    )
+  } else if (tabState === TabState.Inside) {
+    const target = state.routes.find(route => route.name === `${tab}Tab`)?.state
+      ?.key
+    if (target) {
+      navigation.dispatch({
+        ...StackActions.popToTop(),
+        target,
+      })
+    } else {
+      navigation.reset({
+        index: 0,
+        routes: [{name: `${tab}Tab`}],
+      })
+    }
+  } else {
+    // The tab navigator route names mirror the shared navigation tab names.
+    navigation.navigate(`${tab}Tab`)
+  }
+}
+
+/**
+ * The tablet sidebar for native tabs, which have no custom tab bar. Rendered
+ * over the tabs, like the JS tab navigator renders it as its tab bar.
+ */
+function NativeTabsSidebar({
+  state,
+  navigation,
+}: {
+  state: TabNavigationState<ParamListBase>
+  navigation: NavigationHelpers<ParamListBase>
+}) {
+  const {gtMobile} = useBreakpoints()
+  const {hasSession, currentAccount} = useSession()
+  const onboardingState = useOnboardingState()
+  const {showLoggedOut} = useLoggedOutView()
+  const currentRouteName = getCurrentRoute(state).name
+  const {showTabletSidebar} = getNativeTabBarVisibility({
+    gtMobile,
+    hasSession,
+    signupQueued: !!currentAccount?.signupQueued,
+    showLoggedOut,
+    onboardingActive: onboardingState.isActive,
+    isVideoFeed: currentRouteName === 'VideoFeed',
+  })
+
+  if (!showTabletSidebar) {
+    return null
+  }
+
+  return (
+    <DesktopLeftNav
+      routeName={currentRouteName}
+      onNavigateTab={tab =>
+        navigateToSidebarTab(navigation, tab, {hasNativeTabs: true})
+      }
+    />
+  )
 }
 
 function screenOptions(t: Theme) {
@@ -812,6 +1215,7 @@ function HomeTabNavigator() {
           headerBackVisible: false,
           scrollEdgeEffects: {
             top: 'soft',
+            bottom: 'soft',
           },
         } as const)
       : {}
@@ -963,6 +1367,11 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const emailDialogControl = useEmailDialogControl()
   const closeAllActiveElements = useCloseAllActiveElements()
   const linkingUrl = Linking.useLinkingURL()
+  /*
+   * The linking config reads this, and `NavigationContainer` resolves the
+   * initial URL while rendering, before the tabs navigator mounts.
+   */
+  setNativeTabsEnabled(useHasNativeTabs())
 
   /**
    * Handle navigation to the messages tab, or prepares for account switch.

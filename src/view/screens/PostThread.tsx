@@ -1,3 +1,5 @@
+import {ScrollEdgeEffectProvider} from '@bsky.app/expo-scroll-edge-effect'
+
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -13,7 +15,10 @@ export function PostThreadScreen({route}: Props) {
 
   return (
     <Layout.Screen testID="postThreadScreen">
-      <PostThread uri={uri} />
+      {/* For the floating reply prompt, see `PostThread` */}
+      <ScrollEdgeEffectProvider>
+        <PostThread uri={uri} />
+      </ScrollEdgeEffectProvider>
     </Layout.Screen>
   )
 }

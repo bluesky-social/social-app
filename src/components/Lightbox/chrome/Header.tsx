@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
 
-import {atoms as a, tokens} from '#/alf'
+import {atoms as a, tokens, useBreakpoints} from '#/alf'
 import {TimesLarge_Stroke2_Corner0_Rounded as CloseIcon} from '#/components/icons/Times'
 import {CircleChromeButton} from './CircleChromeButton'
 import {ImageMenu} from './ImageMenu'
@@ -25,8 +25,15 @@ export function Header({
 }: Props) {
   const {t: l} = useLingui()
   const insets = useSafeAreaInsets()
-  // Pad both sides equally so the pager dots stay centred on the screen
+  const {gtMobile} = useBreakpoints()
+  /*
+   * On tablet layouts, pad both sides equally so the pager dots stay centred
+   * on the screen. On phones, keep the buttons as close to the edges as the
+   * safe area allows (e.g. clear of the iPhone Duo's vertical bar).
+   */
   const sideInset = Math.max(insets.left, insets.right)
+  const paddingLeft = (gtMobile ? sideInset : insets.left) + tokens.space.md
+  const paddingRight = (gtMobile ? sideInset : insets.right) + tokens.space.md
 
   return (
     <View
@@ -41,7 +48,8 @@ export function Header({
         a.pointer_events_box_none,
         {
           paddingTop: insets.top + 8,
-          paddingHorizontal: sideInset + tokens.space.md,
+          paddingLeft,
+          paddingRight,
         },
       ]}>
       <ImageMenu onPressShare={onPressShare} onPressSave={onPressSave} />

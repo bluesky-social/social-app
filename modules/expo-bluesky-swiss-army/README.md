@@ -11,6 +11,7 @@ This module consolidates several native features into a single Expo module:
 - **SharedPrefs**: Shared preferences storage using native platform APIs (UserDefaults on iOS, SharedPreferences on Android)
 - **VisibilityView**: A native view component that tracks which view is currently visible on screen
 - **NotificationSettings**: iOS handler that routes the system "notification settings" intent into the app
+- **ClippedImage**: Clips a remote image to a circle or rounded rect and caches it as a PNG, for image-source surfaces that can't clip (e.g. native tab bar items)
 
 ## Modules
 
@@ -142,6 +143,25 @@ config routes to the notification settings screen.
 - iOS: Full support
 - Android: Not applicable (Android opens the system notification settings directly)
 - Web: Not applicable
+
+### ClippedImage
+
+iOS only. Native tab bar items (and other UIKit surfaces that take an image
+source) can't clip images, so the profile tab can't show a round avatar on its
+own. This downloads the image, aspect-fills it into a rounded rect, and writes it
+as a PNG to the caches directory, keyed on the inputs so repeat calls are free.
+
+**Functions:**
+
+- `clipImageAsync({url, size, cornerRadius, scale, borderColor?, borderWidth?}): Promise<string>` -
+  Returns a `file://` URI for the clipped PNG. `size`, `cornerRadius` and
+  `borderWidth` are in points (`cornerRadius: size / 2` for a circle) and
+  `scale` is pixels per point. Pass the same `scale` in the image source so it
+  renders at `size` points. The optional border is drawn inset, inside the clip.
+
+**Platform Support:**
+- iOS: Full support
+- Android, Web: Rejects with NotImplementedError
 
 The module uses platform-specific file extensions to provide appropriate implementations:
 

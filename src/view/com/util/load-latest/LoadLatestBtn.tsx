@@ -9,22 +9,44 @@ import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {useSession} from '#/state/session'
-import {atoms as a, useLayoutBreakpoints, useTheme, web} from '#/alf'
+import {
+  atoms as a,
+  useBreakpoints,
+  useLayoutBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon} from '#/components/icons/Arrow'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {SubtleHover} from '#/components/SubtleHover'
 import {IS_NATIVE} from '#/env'
+import {useHasNativeTabs} from '#/features/verticalBar'
 
-export function LoadLatestBtn({
-  onPress,
-  label,
-  showIndicator,
-}: {
+type LoadLatestBtnProps = {
   onPress: () => void
   label: string
   showIndicator: boolean
-}) {
+}
+
+export function LoadLatestBtn(props: LoadLatestBtnProps) {
+  const hasNativeTabs = useHasNativeTabs()
+  const {gtMobile} = useBreakpoints()
+  /*
+   * With native tabs on phones, there's no scroll to top button - tapping the
+   * current tab or the status bar does it instead.
+   */
+  if (hasNativeTabs && !gtMobile) {
+    return null
+  }
+  return <LoadLatestBtnInner {...props} />
+}
+
+function LoadLatestBtnInner({
+  onPress,
+  label,
+  showIndicator,
+}: LoadLatestBtnProps) {
   const {hasSession} = useSession()
   const {isDesktop, isTablet, isMobile, isTabletOrMobile} = useWebMediaQueries()
   const {centerColumnOffset} = useLayoutBreakpoints()

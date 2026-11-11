@@ -8,6 +8,11 @@ import {
 } from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {
+  ScrollEdgeEffect,
+  useScrollEdgeEffectRef,
+} from '@bsky.app/expo-scroll-edge-effect'
 import {Trans} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -15,6 +20,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {useSetPostTitle} from '#/lib/hooks/useSetPostTitle'
+import {mergeRefs} from '#/lib/merge-refs'
 import {
   FeedFeedbackProvider,
   type StateContext as FeedFeedbackStateContext,
@@ -53,11 +59,17 @@ import {
   ThreadItemTreePost,
   ThreadItemTreePostSkeleton,
 } from '#/screens/PostThread/components/ThreadItemTreePost'
-import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
+import {atoms as a, native, platform, tokens, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {
+  NATIVE_TAB_BAR_SIDE_MARGIN,
+  useHasNativeTabs,
+  usePhoneHorizontalSafeAreaInsets,
+  useVerticalBarFloatingMargins,
+} from '#/features/verticalBar'
 
 const PARENT_CHUNK_SIZE = IS_NATIVE ? 5 : 20
 const CHILDREN_CHUNK_SIZE = 50
@@ -164,6 +176,7 @@ export function PostThread({uri}: {uri: string}) {
   const totalParentCount = useRef(0) // recomputed below
   const totalChildrenCount = useRef(thread.data.items.length) // recomputed below
   const listRef = useRef<ListMethods>(null)
+  const scrollEdgeRef = useScrollEdgeEffectRef()
   const anchorRef = useRef<React.ComponentRef<typeof View> | null>(null)
   const headerRef = useRef<React.ComponentRef<typeof View> | null>(null)
 
@@ -583,7 +596,7 @@ export function PostThread({uri}: {uri: string}) {
         <AnalyticsOnlyFeedFeedbackProvider
           feedDescriptor={feedFeedback.feedDescriptor}>
           <List
-            ref={listRef}
+            ref={mergeRefs([listRef, scrollEdgeRef])}
             data={deferredSlices}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
@@ -685,6 +698,18 @@ function AnalyticsOnlyFeedFeedbackProvider({
 }
 
 function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
+  const hasNativeTabs = useHasNativeTabs()
+  return hasNativeTabs ? (
+    <FloatingComposePrompt onPressReply={onPressReply} />
+  ) : (
+    <BottomBarComposePrompt onPressReply={onPressReply} />
+  )
+}
+
+/**
+ * Sits on top of the JS bottom bar, fading the thread out behind it.
+ */
+function BottomBarComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
   const {footerHeight} = useShellLayout()
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -697,6 +722,41 @@ function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
     <Animated.View style={[a.fixed, a.left_0, a.right_0, animatedStyle]}>
       <ThreadComposePrompt onPressCompose={onPressReply} />
     </Animated.View>
+  )
+}
+
+/**
+ * Floats a glass pill above the native tab bar, with the bottom scroll edge
+ * effect behind it, like the chat composer.
+ */
+function FloatingComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
+  // The bottom inset includes the native tab bar, see `useHasNativeTabs`
+  const {bottom: bottomInset} = useSafeAreaInsets()
+  // Keep clear of the vertical bar (iPhone Duo)
+  const sideInsets = usePhoneHorizontalSafeAreaInsets()
+  // Sit level with the vertical bar's tab rail (iPhone Duo)
+  const railMargins = useVerticalBarFloatingMargins()
+
+  return (
+    <ScrollEdgeEffect
+      edge="bottom"
+      effect="soft"
+      style={[
+        a.absolute,
+        a.bottom_0,
+        {
+          left: sideInsets.left,
+          right: sideInsets.right,
+          paddingLeft: railMargins?.left ?? NATIVE_TAB_BAR_SIDE_MARGIN,
+          paddingRight: railMargins?.right ?? NATIVE_TAB_BAR_SIDE_MARGIN,
+          paddingBottom:
+            railMargins?.bottom ??
+            // Don't sit flush on a screen edge with no home indicator
+            Math.max(bottomInset, tokens.space.md) + tokens.space.sm,
+        },
+      ]}>
+      <ThreadComposePrompt glass onPressCompose={onPressReply} />
+    </ScrollEdgeEffect>
   )
 }
 

@@ -144,6 +144,10 @@ import {
   IS_WEB_SAFARI,
 } from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
+import {
+  useHorizontalSafeAreaInsets,
+  useIsNativeTabsEnabled,
+} from '#/features/verticalBar'
 import {app, chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {
@@ -1333,6 +1337,7 @@ export const ComposePost = ({
   }
 
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
+  const sideInsets = useHorizontalSafeAreaInsets()
   useEffect(() => {
     if (composerState.mutableNeedsFocusActive) {
       composerState.mutableNeedsFocusActive = false
@@ -1374,7 +1379,18 @@ export const ComposePost = ({
     stickyBottom: isLastThreadedPost,
   })
 
-  const keyboardVerticalOffset = useKeyboardVerticalOffset()
+  const isNativeTabsEnabled = useIsNativeTabsEnabled()
+  /*
+   * Measure the sheet's position rather than assuming it starts at the top
+   * inset. That assumption breaks with the vertical bar (iPhone Duo), which
+   * moves the status bar out of the top inset, so the inset is 0 but the sheet
+   * still starts a few points down, putting the footer under the keyboard.
+   */
+  const automaticKeyboardOffset =
+    IS_IPAD || (IS_LIQUID_GLASS && isNativeTabsEnabled)
+  const keyboardVerticalOffset = useKeyboardVerticalOffset({
+    automaticOffset: automaticKeyboardOffset,
+  })
 
   const footer = (
     <>
@@ -1421,7 +1437,7 @@ export const ComposePost = ({
         testID="composePostView"
         behavior={IS_IOS ? 'padding' : 'height'}
         keyboardVerticalOffset={keyboardVerticalOffset}
-        automaticOffset={IS_IPAD}
+        automaticOffset={automaticKeyboardOffset}
         style={a.flex_1}>
         <View
           style={[a.flex_1, viewStyles]}
@@ -1461,7 +1477,11 @@ export const ComposePost = ({
           <Animated.ScrollView
             ref={scrollViewRef}
             onScroll={scrollHandler}
-            contentContainerStyle={a.flex_grow}
+            contentContainerStyle={[
+              a.flex_grow,
+              // Keep the posts clear of the vertical bar (iPhone Duo)
+              {marginLeft: sideInsets.left, marginRight: sideInsets.right},
+            ]}
             style={[
               a.flex_1,
               web({
@@ -1823,6 +1843,7 @@ function ComposerTopBar({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const sideInsets = useHorizontalSafeAreaInsets()
 
   return (
     <Animated.View style={topBarAnimatedStyle}>
@@ -1832,6 +1853,8 @@ function ComposerTopBar({
           a.align_center,
           a.gap_xs,
           IS_LIQUID_GLASS ? [a.px_lg, a.pt_lg, a.pb_md] : [a.p_sm],
+          // Keep the buttons clear of the vertical bar (iPhone Duo)
+          {marginLeft: sideInsets.left, marginRight: sideInsets.right},
         ]}>
         <Button
           label={l`Cancel`}
@@ -2445,15 +2468,19 @@ function useScrollTracker({
   }
 }
 
-function useKeyboardVerticalOffset() {
+function useKeyboardVerticalOffset({
+  automaticOffset,
+}: {
+  automaticOffset: boolean
+}) {
   const insets = useSafeAreaInsets()
 
   // the keyboardavoidingview has bottom padding to avoid being obscured by the safe area when keyboard is closed.
   // however, this leads to a gap when the keyboard is open. we account for that by subtracting the bottom inset when open.
   let keyboardVerticalOffset = insets.bottom * -1
 
-  // iPad sheets measure their own position via automaticOffset.
-  if (IS_IPAD) return keyboardVerticalOffset
+  // These sheets measure their own position via automaticOffset.
+  if (automaticOffset) return keyboardVerticalOffset
 
   // iOS requires a bit of extra offset to account for the native sheet not being at the top of the screen
   if (IS_IOS) {
