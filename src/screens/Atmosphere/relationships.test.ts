@@ -1,6 +1,8 @@
 import {type l} from '@atproto/lex'
 
 import {
+  getActivityContent,
+  getActivityCount,
   getActivityDocumentUri,
   getFirstActivity,
   getShareDocumentUri,
@@ -9,10 +11,12 @@ import {
 import {
   createActivity,
   createActor,
+  createActorGroup,
   createArticleView,
   createPostView,
   createRow,
   createShareRecord,
+  createSubjectGroup,
   documentUri,
   publicationUri,
   recordCid,
@@ -199,5 +203,46 @@ describe('Atmosphere share relationships', () => {
     expect(getActivityDocumentUri(recommendation)).toBeUndefined()
     recommendation.view = {$type: 'example.future#view' as l.Unknown$Type}
     expect(getActivityDocumentUri(recommendation)).toBeUndefined()
+  })
+
+  it('keeps actor-group content hydrated and counts all supplied URIs', () => {
+    const first = createActivity()
+    const second = createActivity({rkey: 'second'})
+    const group = createActorGroup([first, second])
+    const row = {type: 'group' as const, key: group.id, group, actors: {}}
+    expect(getFirstActivity(row)).toBe(first)
+    expect(getActivityContent(row)).toBe(first)
+    expect(getActivityCount(row)).toBe(2)
+    expect(getActivityCount(createRow([first]))).toBe(1)
+  })
+
+  it('keeps shared subjects separate from reference-only first activities', () => {
+    const group = createSubjectGroup(
+      [
+        createActivity({
+          collection: activityCollections.recommendation,
+          did: 'did:plc:one',
+        }),
+        createActivity({
+          collection: activityCollections.recommendation,
+          did: 'did:plc:two',
+        }),
+      ],
+      {
+        uri: documentUri,
+        viewerState: {subscribed: false},
+        view: createArticleView(),
+      },
+    )
+    const row = {type: 'group' as const, key: group.id, group, actors: {}}
+    expect(getFirstActivity(row)).toBe(group.activities[0])
+    expect(getFirstActivity(row)).not.toHaveProperty('view')
+    expect(getActivityContent(row)).toBe(group.subject)
+    expect(getActivityDocumentUri(group.subject)).toBe(documentUri)
+    expect(getActivityCount(row)).toBe(2)
+    group.activities = []
+    expect(getFirstActivity(row)).toBeUndefined()
+    expect(getActivityContent(row)).toBe(group.subject)
+    expect(getActivityCount(row)).toBe(0)
   })
 })

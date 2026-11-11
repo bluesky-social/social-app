@@ -1,8 +1,8 @@
 # Atmosphere tab API contract
 
-Status: active prototype contract
+Status: historical sandbox prototype contract; superseded for the frontend
 
-This document is the shared contract between the appview-sandbox Atmosphere backend session and the social-app Atmosphere tab frontend session. Read it before implementing or changing either side.
+This document preserves the earlier shared contract between the appview-sandbox Atmosphere backend session and the social-app Atmosphere tab frontend session. The current frontend consumes `app.bsky.unspecced.getAtmosphereTimeline`; see the current wire schema and response contract in [`frontend-spec.md`](./frontend-spec.md#timeline-response-contract). The synchronization table and sandbox details below are historical, not the current frontend transport.
 
 ## Synchronization
 

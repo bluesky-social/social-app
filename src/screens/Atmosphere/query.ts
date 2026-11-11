@@ -14,6 +14,7 @@ import {getArticleExternalView} from './externalViews'
 import {
   type ActivityActor,
   type ActivityActors,
+  type ActivityContent,
   type ActivityItem,
   type AtmosphereActivityPage,
 } from './types'
@@ -34,15 +35,16 @@ export function useAtmosphereQuery() {
       const actors: ActivityActors = {}
       const ownerDids = new Set<DidString>()
       const addProfiles = (profiles?: ActivityActor[]) => {
-        for (const profile of profiles ?? []) actors[profile.did] = profile
+        if (!profiles) return
+        for (const profile of profiles) actors[profile.did] = profile
       }
-      const visit = (activity: ActivityItem) => {
-        const did = new AtUri(activity.record.uri).host
-        if (isValidDid(did)) ownerDids.add(did)
-        const view = activity.view
+      const visitContent = (content: ActivityContent) => {
+        const post = content.viewBskyPost
+        if (post) actors[post.author.did] = post.author
+        const view = content.view
         if (bsky.isType(app.bsky.feed.defs.postView, view)) {
-          addProfiles([view.author])
-          addProfiles(getArticleExternalView(activity)?.associatedProfiles)
+          actors[view.author.did] = view.author
+          addProfiles(getArticleExternalView(content)?.associatedProfiles)
         } else if (bsky.isType(app.bsky.embed.external.viewArticle, view)) {
           addProfiles(view.associatedProfiles)
           addProfiles(view.likers)
@@ -58,16 +60,29 @@ export function useAtmosphereQuery() {
         } else if (bsky.isType(app.bsky.embed.external.viewLivestream, view)) {
           addProfiles(view.associatedProfiles)
         }
-        for (const related of activity.relatedActivity ?? []) visit(related)
+      }
+      const addOwner = (uri: string) => {
+        const did = new AtUri(uri).host
+        if (isValidDid(did)) ownerDids.add(did)
+      }
+      const visit = (activity: ActivityItem) => {
+        addOwner(activity.record.uri)
+        visitContent(activity)
+        for (const bucket of activity.relatedActivity ?? []) {
+          addProfiles(bucket.actors)
+          for (const related of bucket.activities) addOwner(related.record.uri)
+        }
       }
       for (const entry of response.feed) {
         if (bsky.isType(timeline.activityItem, entry)) {
           visit(entry)
-        } else if (bsky.isType(timeline.activityGroup, entry)) {
-          if (entry.actor) ownerDids.add(entry.actor)
-          for (const activity of entry.items) visit(activity)
-        } else if (bsky.isType(timeline.activityItemOverflow, entry)) {
-          addProfiles(entry.associatedProfiles)
+        } else if (bsky.isType(timeline.activityActorGroup, entry)) {
+          ownerDids.add(entry.actor)
+          visit(entry.item)
+        } else if (bsky.isType(timeline.activitySubjectGroup, entry)) {
+          addProfiles(entry.actors)
+          visitContent(entry.subject)
+          for (const activity of entry.activities) addOwner(activity.record.uri)
         }
       }
 

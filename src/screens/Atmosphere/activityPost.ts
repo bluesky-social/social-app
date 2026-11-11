@@ -1,8 +1,11 @@
 import {AtUri, isAtUriString, isValidDid} from '@atproto/syntax'
 
 import {type ActivityPresentationItem} from '#/screens/Atmosphere/presentation'
-import {getFirstActivity} from '#/screens/Atmosphere/relationships'
-import {activityCollections} from '#/screens/Atmosphere/types'
+import {
+  getActivityContent,
+  getFirstActivity,
+} from '#/screens/Atmosphere/relationships'
+import {activityCollections, isActorGroup} from '#/screens/Atmosphere/types'
 import {app, com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
@@ -12,45 +15,82 @@ export type ActivityAssociatedPost = {
   view?: app.bsky.feed.defs.PostView
 }
 
-/** Resolves only explicit post evidence on the first API-ordered activity. */
+/** Resolves explicit post evidence on the row's hydrated content only. */
 export function getActivityAssociatedPost(
   item: ActivityPresentationItem,
 ): ActivityAssociatedPost | undefined {
+  const content = getActivityContent(item)
+  if (!content) return undefined
   const activity = getFirstActivity(item)
-  if (!activity) return undefined
-
-  const view = bsky.isType(app.bsky.feed.defs.postView, activity.view)
-    ? activity.view
+  const directView = bsky.isType(app.bsky.feed.defs.postView, content.view)
+    ? content.view
     : undefined
-  const declaredPost = resolvePostRef(activity.bskyPostRef, view)
-  if (declaredPost) return declaredPost
 
-  if (activity.collection === activityCollections.share) {
-    const post = resolvePostRef(
-      {uri: activity.record.uri, cid: activity.record.cid},
-      view,
-    )
-    if (post) return post
+  // Standalone and actor-group native shares retain their own post.
+  if (item.type === 'activity' || isActorGroup(item.group)) {
+    if (activity?.collection === activityCollections.share) {
+      const post = resolvePostRef(
+        {uri: activity.record.uri, cid: activity.record.cid},
+        directView,
+      )
+      if (post) return post
+    }
   }
 
-  if (view) return resolvePostRef({uri: view.uri, cid: view.cid}, view)
+  // This is a typed ref field, so its optional $type tag is not required.
+  const associatedView =
+    !content.bskyPostRef ||
+    content.viewBskyPost?.uri === content.bskyPostRef.uri
+      ? content.viewBskyPost
+      : undefined
+  const declaredPost = resolvePostRef(content.bskyPostRef, directView)
+  if (declaredPost) {
+    if (associatedView?.uri === declaredPost.uri) {
+      const hydratedPost = resolvePostRef(
+        {uri: associatedView.uri, cid: associatedView.cid},
+        associatedView,
+      )
+      if (hydratedPost) return hydratedPost
+    }
+    return declaredPost
+  }
 
-  const external = activity.view
+  if (!content.bskyPostRef && associatedView) {
+    return resolvePostRef(
+      {uri: associatedView.uri, cid: associatedView.cid},
+      associatedView,
+    )
+  }
+  if (
+    directView &&
+    (!content.bskyPostRef || directView.uri === content.bskyPostRef.uri)
+  ) {
+    return resolvePostRef(
+      {uri: directView.uri, cid: directView.cid},
+      directView,
+    )
+  }
+
+  const shareFallback =
+    activity?.collection === activityCollections.share
+      ? resolvePostRef({uri: activity.record.uri, cid: activity.record.cid})
+      : undefined
+  const external = content.view
   if (
     !bsky.isType(app.bsky.embed.external.viewArticle, external) &&
     !bsky.isType(app.bsky.embed.external.viewArticlePublication, external) &&
     !bsky.isType(app.bsky.embed.external.viewGallery, external) &&
     !bsky.isType(app.bsky.embed.external.viewLivestream, external)
   ) {
-    return undefined
+    return shareFallback
   }
 
-  if (!Array.isArray(external.associatedRefs)) return undefined
+  if (!Array.isArray(external.associatedRefs)) return shareFallback
   for (const ref of external.associatedRefs) {
     const post = resolvePostRef(ref)
     if (post) return post
   }
-  return undefined
+  return shareFallback
 }
 
 function resolvePostRef(

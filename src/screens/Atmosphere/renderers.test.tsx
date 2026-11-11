@@ -17,6 +17,7 @@ import {
   createLivestreamView,
   createPostView,
   createPublicationView,
+  createRelatedGroup,
   createRow,
   createShareRecord,
   documentUri,
@@ -27,6 +28,8 @@ import {
   type ActivityActor,
   activityCollections,
   type ActivityItem,
+  isActorGroup,
+  isSubjectGroup,
 } from './types'
 
 const mockLink = jest.fn((_props: Record<string, unknown>) => {})
@@ -346,7 +349,14 @@ function recommendationRow(count = 1) {
 }
 
 function documentRow(subscribed = false, relatedActivity: ActivityItem[] = []) {
-  return createRow([createActivity({subscribed, relatedActivity})], {
+  const buckets = [
+    ...new Set(relatedActivity.map(activity => activity.collection)),
+  ].map(collection =>
+    createRelatedGroup(
+      relatedActivity.filter(activity => activity.collection === collection),
+    ),
+  )
+  return createRow([createActivity({subscribed, relatedActivity: buckets})], {
     actors: Object.fromEntries([
       ['did:plc:author', createActor()],
       ...relatedActivity.map(activity => {
@@ -452,7 +462,11 @@ function photoRow(
 }
 
 function activities(row: ActivityPresentationItem) {
-  return row.type === 'activity' ? [row.activity] : row.group.items
+  return row.type === 'activity'
+    ? [row.activity]
+    : isActorGroup(row.group)
+      ? [row.group.item]
+      : []
 }
 
 describe('hydrated articles and recommendation proof', () => {
@@ -486,9 +500,10 @@ describe('hydrated articles and recommendation proof', () => {
   it('counts distinct usable recommendation actors', () => {
     const row = recommendationRow(8)
     if (row.type !== 'group') throw new Error('Expected group')
-    row.group.items.push(row.group.items[0])
-    delete row.actors['did:plc:actor6']
-    row.actors['did:plc:actor7'].handle = 'handle.invalid'
+    if (!isSubjectGroup(row.group)) throw new Error('Expected subject group')
+    row.group.activities.push(row.group.activities[0])
+    row.group.actors.splice(6, 1)
+    row.group.actors[6].handle = 'handle.invalid'
     const screen = renderRow(row)
     expect(screen.getByLabelText(/and 5 others recommended/)).toBeTruthy()
   })
@@ -573,7 +588,12 @@ describe('hydrated articles and recommendation proof', () => {
     expect(screen.getByLabelText(/friend.example.*recommended/)).toBeTruthy()
     expect(mockShareSnippets).toHaveBeenCalledWith(
       expect.objectContaining({
-        shares: [{activity: shared, actor: row.actors['did:plc:author']}],
+        shares: [
+          {
+            activity: {record: shared.record, collection: shared.collection},
+            actor: row.actors['did:plc:author'],
+          },
+        ],
         hideActorMetadataForDid: 'did:plc:author',
       }),
     )
@@ -641,8 +661,25 @@ describe('hydrated share cards', () => {
     expect(screen.getByLabelText(/and 4 others shared/)).toBeTruthy()
     expect(
       mockShareSnippets.mock.calls[0][0].shares.map(item => item.activity),
-    ).toEqual(activities(row))
-    expect(screen.getByText('Commentary 0')).toBeTruthy()
+    ).toEqual(
+      row.type === 'group' && isSubjectGroup(row.group)
+        ? row.group.activities
+        : [],
+    )
+    expect(screen.queryByText(/Commentary/)).toBeNull()
+  })
+
+  it('retains subject-group reference links when the shared article preview is unavailable', () => {
+    const row = shareRow(2)
+    if (row.type !== 'group' || !isSubjectGroup(row.group))
+      throw new Error('Expected subject group')
+    row.group.subject.view = createArticleView({uri: 'javascript:alert(1)'})
+    const screen = renderRow(row)
+    expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
+    expect(screen.queryByTestId('atmosphereShareCard')).toBeNull()
+    expect(
+      mockShareSnippets.mock.calls[0][0].shares.map(share => share.activity),
+    ).toEqual(row.group.activities)
   })
 
   it('counts distinct people independently from post URI deduplication', () => {
@@ -652,7 +689,8 @@ describe('hydrated share cards', () => {
       share('did:plc:one', 'second'),
     ])
     if (row.type !== 'group') throw new Error('Expected group')
-    row.group.items.push(row.group.items[0])
+    if (!isSubjectGroup(row.group)) throw new Error('Expected subject group')
+    row.group.activities.push(row.group.activities[0])
     const screen = renderRow(row)
     expect(screen.getByLabelText(/and 1 other shared/)).toBeTruthy()
     expect(mockShareSnippets.mock.calls[0][0].shares).toHaveLength(3)
@@ -808,62 +846,68 @@ describe('hydrated gallery media and accessible lightboxes', () => {
     expect(menu.fullsizeUri).toBe(image.image.fullsize)
   })
 
-  it('caps an 87-photo group at ten in Gallery and lightbox without changing raw counts', () => {
+  it('uses only the hydrated newest gallery while counting every actor-group URI', () => {
     const row = photoRow(87)
-    if (row.type !== 'group') throw new Error('Expected group')
+    if (row.type !== 'group' || !isActorGroup(row.group))
+      throw new Error('Expected actor group')
     row.group.indexedAt = '2026-09-11T09:00:00Z'
     const screen = renderRow(row)
-    expect(screen.getAllByTestId('gallery')).toHaveLength(1)
     expect(
       screen.getByLabelText(
         /posted 87 galleries.*elapsed:2026-09-11T09:00:00Z/,
       ),
     ).toBeTruthy()
-    const props = mockGallery.mock.calls[0][0]
-    expect(props.images).toHaveLength(10)
-    expect(props.images.map(image => image.alt)).toEqual(
-      Array.from({length: 10}, (_, i) => `Photo ${i}`),
-    )
-    props.onPress?.(9, [], [])
-    const lightbox = mockOpenLightbox.mock.calls[0][0]
-    expect(lightbox.images).toHaveLength(10)
-    expect(lightbox.index).toBe(9)
-    expect(lightbox.images[9].alt).toBe('Photo 9')
-    expect(lightbox.metricsContext).toBeUndefined()
-    expect(mockAutoSizedImage).not.toHaveBeenCalled()
-    expect(row.group.items).toHaveLength(87)
+    expect(mockAutoSizedImage.mock.calls[0][0].image.alt).toBe('Photo 0')
+    expect(mockGallery).not.toHaveBeenCalled()
+    expect(row.group.uris).toHaveLength(87)
   })
 
-  it('compacts skipped images before selecting a lightbox index', () => {
-    const row = photoRow(3)
-    if (row.type !== 'group') throw new Error('Expected group')
-    row.group.items[1].view = createGalleryView({items: []})
-    const screen = renderRow(row)
-    expect(screen.getByLabelText(/posted 3 galleries/)).toBeTruthy()
+  it('keeps hydrated gallery image ordering when selecting a lightbox index', () => {
+    const row = photoRow()
+    if (row.type !== 'activity') throw new Error('Expected activity')
+    row.activity.view = createGalleryView({
+      items: [
+        {
+          $type: 'app.bsky.embed.external#viewGalleryImage',
+          thumbnail: 'https://images.example/0.jpg',
+          fullsize: 'https://images.example/0.jpg',
+          alt: 'Photo 0',
+        },
+        {
+          $type: 'app.bsky.embed.external#viewGalleryImage',
+          thumbnail: 'https://images.example/2.jpg',
+          fullsize: 'https://images.example/2.jpg',
+          alt: 'Photo 2',
+        },
+      ],
+    })
+    renderRow(row)
     const gallery = mockImageLayoutGrid.mock.calls[0][0]
     expect(gallery.images.map(image => image.alt)).toEqual([
       'Photo 0',
       'Photo 2',
     ])
-    const firstRef = imageRef(),
-      secondRef = imageRef(),
+    const ref = imageRef(),
       dims = {width: 600, height: 900}
-    gallery.onPress?.(1, [firstRef, secondRef], [null, dims])
+    gallery.onPress?.(1, [imageRef(), ref], [null, dims])
     const lightbox = mockOpenLightbox.mock.calls[0][0]
     expect(lightbox.index).toBe(1)
-    expect(lightbox.images.map(image => image.alt)).toEqual([
-      'Photo 0',
-      'Photo 2',
-    ])
-    expect(lightbox.images[1].thumbRef).toBe(secondRef)
+    expect(lightbox.images[1].thumbRef).toBe(ref)
     expect(lightbox.images[1].thumbDimensions).toBe(dims)
-    expect(lightbox.images[0].thumbRef).toBe(firstRef)
-    expect(lightbox.metricsContext).toBeUndefined()
-    expect(row.group.items).toHaveLength(3)
   })
 
   it('aligns a screen-reader carousel thumbnail with the selected lightbox image', () => {
-    renderRow(photoRow(5))
+    const row = photoRow()
+    if (row.type !== 'activity') throw new Error('Expected activity')
+    row.activity.view = createGalleryView({
+      items: Array.from({length: 5}, (_, i) => ({
+        $type: 'app.bsky.embed.external#viewGalleryImage' as const,
+        thumbnail: `https://images.example/${i}.jpg`,
+        fullsize: `https://images.example/${i}.jpg`,
+        alt: `Photo ${i}`,
+      })),
+    })
+    renderRow(row)
     const ref = imageRef(),
       dims = {width: 600, height: 900}
     mockGallery.mock.calls[0][0].onPress?.(1, [ref], [dims])
@@ -876,20 +920,34 @@ describe('hydrated gallery media and accessible lightboxes', () => {
     expect(lightbox.images[4].thumbRef).toBeNull()
   })
 
-  it('keeps a surviving image as a singleton without changing the raw group count', () => {
+  it('does not replace a missing newest gallery with later actor-group URIs', () => {
     const row = photoRow(3)
-    if (row.type !== 'group') throw new Error('Expected group')
-    row.group.items[0].view = undefined
-    row.group.items[2].view = undefined
+    if (row.type !== 'group' || !isActorGroup(row.group))
+      throw new Error('Expected actor group')
+    row.group.item.view = undefined
     const screen = renderRow(row)
-    expect(screen.getByLabelText(/posted 3 galleries/)).toBeTruthy()
-    const image = mockAutoSizedImage.mock.calls[0][0]
-    expect(image.image.alt).toBe('Photo 1')
-    image.onPress?.(imageRef(), null)
-    expect(mockOpenLightbox.mock.calls[0][0].index).toBe(0)
+    expect(screen.getByTestId('atmosphereGrainGalleryRow')).toBeTruthy()
+    expect(mockAutoSizedImage).not.toHaveBeenCalled()
     expect(mockGallery).not.toHaveBeenCalled()
   })
 
+  it('renders a favorite subject once without implying that its actors favorited different galleries', () => {
+    const row = createRow(
+      [0, 1].map(i =>
+        createActivity({
+          collection: activityCollections.grainFavorite,
+          did: `did:plc:fan${i}`,
+          view: createGalleryView(),
+        }),
+      ),
+    )
+    const screen = renderRow(row)
+    expect(
+      screen.getByLabelText(/and 1 other favorited a gallery/),
+    ).toBeTruthy()
+    expect(mockAutoSizedImage).toHaveBeenCalledTimes(1)
+    expect(screen.queryByText(/2 galleries/)).toBeNull()
+  })
   it('renders no media frame or empty card when all images are missing', () => {
     const row = photoRow(2)
     for (const activity of activities(row)) activity.view = undefined
@@ -974,13 +1032,14 @@ describe('hydrated metadata regressions', () => {
   it('keeps grouped subscriber counts distinct without suppressing a single subscriber card', () => {
     const row = subscriptionRow(8)
     if (row.type !== 'group') throw new Error('Expected group')
-    row.group.items.push(row.group.items[0])
-    delete row.actors['did:plc:subscriber6']
-    row.actors['did:plc:subscriber7'].handle = 'handle.invalid'
+    if (!isSubjectGroup(row.group)) throw new Error('Expected subject group')
+    row.group.activities.push(row.group.activities[0])
+    row.group.actors.splice(6, 1)
+    row.group.actors[6].handle = 'handle.invalid'
     const screen = renderRow(row)
     expect(screen.getByLabelText(/and 5 others subscribed/)).toBeTruthy()
     screen.unmount()
-    for (const i of [1, 2, 3, 4, 5]) delete row.actors[`did:plc:subscriber${i}`]
+    row.group.actors.splice(1, 5)
     expect(
       renderRow(row).queryByTestId('atmosphereSubscriptionCard'),
     ).toBeOnTheScreen()
@@ -995,30 +1054,21 @@ describe('hydrated metadata regressions', () => {
     ).toBeOnTheScreen()
   })
 
-  it('excludes unavailable actors and different share targets from social proof', () => {
+  it('retains supplied subject-group actors and reference-only shares without inventing views', () => {
     const row = shareRow(3)
-    if (row.type !== 'group') throw new Error('Expected group')
-    delete row.actors['did:plc:sharer1']
-    const third = row.group.items[2]
-    third.view = createPostView({
-      uri: third.record.uri,
-      author: createActor('did:plc:sharer2'),
-      record: createShareRecord(`${documentUri}-other`),
-      embed: {
-        $type: 'app.bsky.embed.external#view',
-        external: {
-          ...getArticleExternalView(createActivity())!,
-          associatedRefs: [
-            {uri: `${documentUri}-other`, cid: third.record.cid},
-          ],
-        },
-      },
-    })
+    if (row.type !== 'group' || !isSubjectGroup(row.group))
+      throw new Error('Expected subject group')
     const screen = renderRow(row)
-    expect(screen.queryByLabelText(/others shared/)).toBeNull()
+    expect(screen.getByLabelText(/and 2 others shared/)).toBeTruthy()
     expect(
       mockShareSnippets.mock.calls[0][0].shares.map(item => item.activity),
-    ).toEqual([row.group.items[0]])
+    ).toEqual(row.group.activities)
+    expect(
+      mockShareSnippets.mock.calls[0][0].shares.every(
+        ({activity}) => !('view' in activity),
+      ),
+    ).toBe(true)
+    expect(screen.queryByText(/Commentary/)).toBeNull()
   })
 
   it('preserves a usable post without inventing absent article media', () => {
@@ -1046,7 +1096,7 @@ describe('hydrated metadata regressions', () => {
     expect(screen.getByText('A real stream')).toBeTruthy()
     expect(screen.getByText('and 12 more livestreams')).toBeTruthy()
     expect(screen.queryByText(/Hidden stream/)).toBeNull()
-    expect(row.group.items).toHaveLength(13)
+    expect(isActorGroup(row.group) && row.group.uris.length).toBe(13)
   })
 
   it('does not substitute a later stream when the first hydrated view is missing', () => {

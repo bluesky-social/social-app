@@ -33,6 +33,7 @@ export function createAtmosphereDebugItem(
     }
   }
   visit(item.type === 'activity' ? item.activity : item.group)
+  if (item.type === 'group' && item.rawGroup) visit(item.rawGroup)
   const actors: ActivityActors = {}
   for (const did of dids) {
     const actor = item.actors[did]

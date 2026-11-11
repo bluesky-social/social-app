@@ -1,58 +1,46 @@
-import {
-  getActivityPostView,
-  getArticleExternalView,
-} from '#/screens/Atmosphere/externalViews'
 import {getActivityActor} from '#/screens/Atmosphere/presentation'
-import {
-  getActivityDocumentUri,
-  getSharePostHref,
-} from '#/screens/Atmosphere/relationships'
+import {getSharePostHref} from '#/screens/Atmosphere/relationships'
 import {
   type ActivityActor,
-  type ActivityActors,
   activityCollections,
-  type ActivityItem,
+  type ActivityContent,
+  type ActivityShare,
 } from '#/screens/Atmosphere/types'
-import {app} from '#/lexicons'
-import * as bsky from '#/types/bsky'
 
-/** Keeps separate proof categories and the original activity/profile references. */
-export function getDocumentSocialProof(
-  document: ActivityItem,
-  {actors}: {actors: ActivityActors},
-) {
+/** Related buckets contain references and profiles, never hydrated action views. */
+export function getDocumentSocialProof(document: ActivityContent): {
+  recommenders: ActivityActor[]
+  shares: ActivityShare[]
+} {
   const recommenders: ActivityActor[] = []
-  const shares: {activity: ActivityItem; actor: ActivityActor}[] = []
+  const shares: ActivityShare[] = []
   const recommenderDids = new Set<string>()
-  const sharerDids = new Set<string>()
+  const shareUris = new Set<string>()
+  if (
+    !('collection' in document) ||
+    document.collection !== activityCollections.document
+  )
+    return {recommenders, shares}
 
-  if (document.collection === activityCollections.document) {
-    for (const activity of document.relatedActivity ?? []) {
-      const view = getArticleExternalView(activity)
-      if (
-        getActivityDocumentUri(activity) !== document.record.uri ||
-        !view?.associatedRefs?.some(
-          ref =>
-            ref.uri === document.record.uri && ref.cid === document.record.cid,
-        )
-      )
-        continue
+  for (const bucket of document.relatedActivity ?? []) {
+    const actors = Object.fromEntries(
+      bucket.actors.map(actor => [actor.did, actor]),
+    )
+    for (const activity of bucket.activities) {
+      if (activity.collection !== bucket.collection) continue
       const actor = getActivityActor(activity, actors)
       if (!actor) continue
-      if (activity.collection === activityCollections.recommendation) {
+      if (bucket.collection === activityCollections.recommendation) {
         if (recommenderDids.has(actor.did)) continue
         recommenderDids.add(actor.did)
         recommenders.push(actor)
-      } else if (activity.collection === activityCollections.share) {
-        const post = getActivityPostView(activity)
+      } else if (bucket.collection === activityCollections.share) {
         if (
-          !post ||
-          !bsky.matches(app.bsky.feed.post, post.record) ||
-          !getSharePostHref(activity, actor) ||
-          sharerDids.has(actor.did)
+          shareUris.has(activity.record.uri) ||
+          !getSharePostHref(activity, actor)
         )
           continue
-        sharerDids.add(actor.did)
+        shareUris.add(activity.record.uri)
         shares.push({activity, actor})
       }
     }

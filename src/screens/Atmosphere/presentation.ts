@@ -6,11 +6,14 @@ import {
   type ActivityListItem,
   type ActivityRowItem,
 } from './model'
+import {getActivityContent} from './relationships'
 import {
   type ActivityActor,
   type ActivityActors,
   activityCollections,
+  type ActivityGroupItem,
   type ActivityItem,
+  isActorGroup,
 } from './types'
 
 export type ActivityPresentationItem = ActivityRowItem | ActivityGroupRowItem
@@ -19,8 +22,8 @@ export type ActivityComputedView = {
   /** Ordered, unique, usable actor references from the item's hydrated actors. */
   actors: ActivityActor[]
 
-  /** Aggregate publication subscription state for document-root activity only. */
-  subscriptionState?: 'all' | 'some' | 'none'
+  /** Subscription state of the rendered document, not unhydrated group members. */
+  subscriptionState?: 'all' | 'none'
 }
 
 export type ActivityPresentationListItem = {
@@ -80,20 +83,13 @@ function getDocumentSubscriptionState(
     return undefined
   }
 
-  const activities =
-    item.type === 'activity' ? [item.activity] : item.group.items
-  const subscribedCount = activities.filter(
-    activity => activity.viewerState.subscribed,
-  ).length
-
-  if (subscribedCount === 0) return 'none'
-  if (subscribedCount === activities.length) return 'all'
-  return 'some'
+  const content = getActivityContent(item)
+  return content ? (content.viewerState.subscribed ? 'all' : 'none') : undefined
 }
 
 /** Returns the original hydrated actor when usable, without a fallback identity. */
 export function getActivityActor(
-  activity: ActivityItem,
+  activity: ActivityItem | ActivityGroupItem,
   actors: ActivityActors,
 ): ActivityActor | undefined {
   return getRecordActor(activity.record.uri, actors)
@@ -112,28 +108,27 @@ export function getRecordActor(
 function resolveActivityActors(
   item: ActivityPresentationItem,
 ): ActivityActor[] {
-  return getCandidateActorDids(item).flatMap(did => {
-    const actor = item.actors[did]
-    return isUsableActivityActor(actor) && actor.did === did ? [actor] : []
-  })
-}
-
-function getCandidateActorDids(item: ActivityPresentationItem): string[] {
-  if (item.type === 'activity') {
-    return dedupeDefined([tryGetAuthorityDid(item.activity.record.uri)])
+  if (item.type === 'group' && !isActorGroup(item.group)) {
+    const seen = new Set<string>()
+    return item.group.actors.filter(actor => {
+      if (
+        !isUsableActivityActor(actor) ||
+        !isDid(actor.did) ||
+        seen.has(actor.did)
+      )
+        return false
+      seen.add(actor.did)
+      return true
+    })
   }
-
-  if (item.group.groupBy === 'actor') {
-    const groupActorDid = isDid(item.group.actor)
-      ? item.group.actor
-      : tryGetAuthorityDid(item.group.items[0]?.record.uri)
-
-    return dedupeDefined([groupActorDid])
-  }
-
-  return dedupeDefined(
-    item.group.items.map(activity => tryGetAuthorityDid(activity.record.uri)),
-  )
+  const did =
+    item.type === 'activity'
+      ? tryGetAuthorityDid(item.activity.record.uri)
+      : isActorGroup(item.group) && isDid(item.group.actor)
+        ? item.group.actor
+        : undefined
+  const actor = did ? item.actors[did] : undefined
+  return isUsableActivityActor(actor) && actor.did === did ? [actor] : []
 }
 
 function tryGetAuthorityDid(uri: string | undefined): string | undefined {
@@ -145,19 +140,6 @@ function tryGetAuthorityDid(uri: string | undefined): string | undefined {
   } catch {
     return undefined
   }
-}
-
-function dedupeDefined(values: Array<string | undefined>): string[] {
-  const seen = new Set<string>()
-  const deduped: string[] = []
-
-  for (const value of values) {
-    if (!value || seen.has(value)) continue
-    seen.add(value)
-    deduped.push(value)
-  }
-
-  return deduped
 }
 
 function isPresentationItem(

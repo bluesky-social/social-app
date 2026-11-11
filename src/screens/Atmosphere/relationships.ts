@@ -6,7 +6,10 @@ import {type ActivityPresentationItem} from '#/screens/Atmosphere/presentation'
 import {
   type ActivityActor,
   activityCollections,
+  type ActivityContent,
+  type ActivityGroupItem,
   type ActivityItem,
+  isActorGroup,
 } from '#/screens/Atmosphere/types'
 import {com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -48,7 +51,7 @@ export function getShareDocumentUri(record: unknown): string | undefined {
 
 /** A thread link for the actual post owner, never a document or quoted post. */
 export function getSharePostHref(
-  activity: ActivityItem,
+  activity: ActivityItem | ActivityGroupItem,
   actor: ActivityActor,
 ): string | undefined {
   if (activity.collection !== activityCollections.share) return undefined
@@ -64,15 +67,45 @@ export function getSharePostHref(
   }
 }
 
-/** First API-ordered child for bounded actor-group previews. */
-export function getFirstActivity(item: ActivityPresentationItem) {
-  return item.type === 'activity' ? item.activity : item.group.items[0]
+/** The actual first API reference; a shared subject is not an activity. */
+export function getFirstActivity(
+  item: ActivityPresentationItem,
+): ActivityItem | ActivityGroupItem | undefined {
+  if (item.type === 'activity') return item.activity
+  return isActorGroup(item.group) ? item.group.item : item.group.activities[0]
+}
+
+/** The only hydrated target supplied for this row. */
+export function getActivityContent(
+  item: ActivityPresentationItem,
+): ActivityContent | undefined {
+  if (item.type === 'activity') return item.activity
+  return isActorGroup(item.group) ? item.group.item : item.group.subject
+}
+
+export function getActivityCount(item: ActivityPresentationItem): number {
+  if (item.type === 'activity') return 1
+  return isActorGroup(item.group)
+    ? item.group.uris.length
+    : item.group.activities.length
 }
 
 /** Resolves only the document reference pinned in this activity's hydrated view. */
 export function getActivityDocumentUri(
-  activity: ActivityItem,
+  activity: ActivityContent,
 ): string | undefined {
+  if ('uri' in activity) {
+    try {
+      const uri = new AtUri(activity.uri)
+      return uri.host.startsWith('did:') &&
+        uri.collection === activityCollections.document &&
+        uri.rkey
+        ? activity.uri
+        : undefined
+    } catch {
+      return undefined
+    }
+  }
   if (activity.collection === activityCollections.document) {
     return activity.record.uri
   }

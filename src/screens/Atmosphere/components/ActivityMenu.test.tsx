@@ -16,10 +16,16 @@ import {
 import {
   createActivity,
   createActor,
+  createActorGroup,
   createPostView,
   createRow,
+  createSubjectGroup,
 } from '#/screens/Atmosphere/testFixtures'
-import {type ActivityActor} from '#/screens/Atmosphere/types'
+import {
+  type ActivityActor,
+  type ActivityGroup,
+  type ActivityItem,
+} from '#/screens/Atmosphere/types'
 import {type DialogControlProps} from '#/components/Dialog'
 import {type app} from '#/lexicons'
 import {ActivityMenu} from './ActivityMenu'
@@ -191,10 +197,14 @@ function associatedPost(
   }
 }
 
-function renderMenu(actor = createActor(), post?: ActivityAssociatedPost) {
+function renderMenu(
+  actor = createActor(),
+  post?: ActivityAssociatedPost,
+  rawResponse: ActivityItem | ActivityGroup = createActivity(),
+) {
   return render(
     <I18nProvider i18n={i18n}>
-      <ActivityMenu actor={actor} post={post} rawResponse={createActivity()} />
+      <ActivityMenu actor={actor} post={post} rawResponse={rawResponse} />
     </I18nProvider>,
   )
 }
@@ -336,6 +346,21 @@ describe('Atmosphere activity moderation menu', () => {
     ).toContain(createActivity().record.uri)
   })
 
+  it.each([createActorGroup, createSubjectGroup])(
+    'inspects the original API group without rebuilding its references',
+    makeGroup => {
+      const group = makeGroup([
+        createActivity({rkey: 'first'}),
+        createActivity({rkey: 'second'}),
+      ])
+      const screen = renderMenu(createActor(), undefined, group)
+      fireEvent.press(screen.getByRole('menuitem', {name: 'View raw response'}))
+      expect(screen.getByTestId('atmosphereRawResponse').props.children).toBe(
+        JSON.stringify(group, null, 2),
+      )
+    },
+  )
+
   it('does not offer reporting a post owned by the current account', () => {
     const post = createPostView({
       uri: 'at://did:plc:viewer/app.bsky.feed.post/self',
@@ -389,25 +414,56 @@ describe('Atmosphere activity moderation menu', () => {
     expect(mockReport).toHaveBeenCalledWith({subject: view})
   })
 
-  it.each(['uri', 'cid'] as const)(
-    'does not report a fetched post with a mismatched %s',
-    async field => {
-      const view = createPostView()
-      mockGetPost.mockResolvedValueOnce({
-        ...view,
-        [field]: field === 'uri' ? `${view.uri}-other` : 'different-cid',
+  it('does not report a fetched post with a mismatched URI', async () => {
+    const view = createPostView()
+    mockGetPost.mockResolvedValueOnce({...view, uri: `${view.uri}-other`})
+    const screen = renderMenu(createActor(), associatedPost(view, false))
+    await fireEventAsync.press(
+      screen.getByRole('menuitem', {name: 'Report post'}),
+    )
+    expect(mockReport).not.toHaveBeenCalled()
+    expect(mockToast).toHaveBeenCalledWith(
+      'Could not load this post. Please try again.',
+      {type: 'error'},
+    )
+  })
+
+  it.each([false, true])(
+    'rejects a changed pinned post revision (hydrated=%s)',
+    async hydrated => {
+      const original = createPostView()
+      const updated = createPostView({
+        cid: 'bafyreiaxduxpwdpjgvve3klfs4flkwjwfqiurszw4o6jvjarpqqmeqwiza',
       })
-      const screen = renderMenu(createActor(), associatedPost(view, false))
+      const post = associatedPost(original, hydrated)
+      if (hydrated) post.view = updated
+      mockGetPost.mockResolvedValueOnce(updated)
+      const screen = renderMenu(createActor(), post)
       await fireEventAsync.press(
         screen.getByRole('menuitem', {name: 'Report post'}),
       )
+      expect(mockGetPost).toHaveBeenCalledWith({uri: original.uri})
       expect(mockReport).not.toHaveBeenCalled()
-      expect(mockToast).toHaveBeenCalledWith(
-        'Could not load this post. Please try again.',
-        {type: 'error'},
-      )
+      expect(mockToast).toHaveBeenCalledWith(expect.any(String), {
+        type: 'error',
+      })
     },
   )
+
+  it('reports newer explicit associated hydration with its actual CID', async () => {
+    const view = createPostView({
+      cid: 'bafyreiaxduxpwdpjgvve3klfs4flkwjwfqiurszw4o6jvjarpqqmeqwiza',
+    })
+    const activity = createActivity({viewBskyPost: view})
+    activity.bskyPostRef = {uri: view.uri, cid: activity.record.cid}
+    const post = getActivityAssociatedPost(createRow([activity], {actors: {}}))
+    const screen = renderMenu(createActor(), post)
+    await fireEventAsync.press(
+      screen.getByRole('menuitem', {name: 'Report post'}),
+    )
+    expect(mockGetPost).not.toHaveBeenCalled()
+    expect(mockReport).toHaveBeenCalledWith({subject: view})
+  })
 
   it('shows private-safe lookup errors without falling back to an account report', async () => {
     mockGetPost.mockRejectedValueOnce(new Error('private post URI and payload'))

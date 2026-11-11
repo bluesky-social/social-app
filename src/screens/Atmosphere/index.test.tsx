@@ -406,13 +406,14 @@ describe('AtmosphereScreen', () => {
     const first = createActivity({did: 'did:plc:group-author', rkey: 'one'})
     const second = createActivity({did: 'did:plc:group-author', rkey: 'two'})
     const group = {
-      $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup' as const,
+      $type:
+        'app.bsky.unspecced.getAtmosphereTimeline#activityActorGroup' as const,
       id: 'opaque-group-id',
-      groupBy: 'actor' as const,
       collection: activityCollections.document,
       indexedAt: first.record.indexedAt,
       actor: 'did:plc:group-author',
-      items: [first, second],
+      item: first,
+      uris: [first.record.uri, second.record.uri],
     } satisfies AtmosphereActivityPage['feed'][number]
     const document = createActivity()
     const query = basicQuery([
@@ -558,62 +559,6 @@ describe('AtmosphereScreen', () => {
 
     expect(refetch).toHaveBeenCalledTimes(1)
     expect(fetchNextPage).toHaveBeenCalledTimes(1)
-  })
-
-  it.each([
-    ...Object.values(activityCollections),
-    'example.unknown.record' as const,
-  ])(
-    'shows server overflow count and profiles for %s without a timestamp',
-    collection => {
-      const profiles = [createActor('did:plc:one'), createActor('did:plc:two')]
-      mockUseAtmosphereQuery.mockReturnValue(
-        basicQuery([
-          {
-            $type:
-              'app.bsky.unspecced.getAtmosphereTimeline#activityItemOverflow',
-            count: 17,
-            collection,
-            associatedProfiles: profiles,
-          },
-        ]),
-      )
-      const screen = renderScreen()
-
-      expect(screen.getByTestId('atmosphereOverflowRow')).toHaveTextContent(
-        /\b17\b/,
-      )
-      for (const profile of profiles) {
-        expect(mockInlineLinkText).toHaveBeenCalledWith(
-          expect.objectContaining({to: `/profile/${profile.handle}`}),
-        )
-      }
-      expect(screen.queryByTestId('atmosphereDateHeading')).toBeNull()
-      expect(screen.queryByTestId('atmosphereEmptyState')).toBeNull()
-      expect(mockTimeElapsed).not.toHaveBeenCalled()
-    },
-  )
-
-  it('paginates an overflow-only page without inventing an activity timestamp', async () => {
-    const query = basicQuery([
-      {
-        $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityItemOverflow',
-        count: 1,
-        collection: activityCollections.grainGallery,
-        associatedProfiles: [createActor('did:plc:author')],
-      },
-    ])
-    mockUseAtmosphereQuery.mockReturnValue(query)
-    const screen = renderScreen()
-    expect(screen.getByTestId('atmosphereOverflowRow')).toBeTruthy()
-    expect(mockListFooter).toHaveBeenCalledWith(
-      expect.objectContaining({hasNextPage: true}),
-    )
-    await act(async () => {
-      await latestListProps?.onEndReached?.()
-    })
-    expect(query.fetchNextPage).toHaveBeenCalledTimes(1)
-    expect(mockTimeElapsed).not.toHaveBeenCalled()
   })
 })
 

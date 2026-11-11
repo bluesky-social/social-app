@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
-import {getFirstActivity} from '#/screens/Atmosphere/relationships'
+import {getActivityContent} from '#/screens/Atmosphere/relationships'
 import {atoms as a, useTheme} from '#/alf'
 import {Bookmark_Filled_Corner0_Rounded as BookmarkFilled} from '#/components/icons/Bookmark'
 import {StandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed'
@@ -24,14 +24,14 @@ export function ActivityArticleCard({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const first = getFirstActivity(item)
+  const content = getActivityContent(item)
 
   return (
     <View testID="atmosphereArticleCard" style={a.gap_lg}>
       <StandardSiteEmbed view={view}>
-        <ActivityCounts view={first.view} style={[a.px_md, a.pb_md]} />
+        <ActivityCounts view={content?.view} style={[a.px_md, a.pb_md]} />
       </StandardSiteEmbed>
-      {first.viewerState.subscribed ? (
+      {content?.viewerState.subscribed ? (
         <View
           style={[
             a.flex_row,

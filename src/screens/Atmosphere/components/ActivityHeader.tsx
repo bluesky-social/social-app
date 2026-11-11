@@ -13,6 +13,7 @@ import {
   ACTIVITY_ROW_PADDING_START,
 } from '../constants'
 import {type ActivityPresentationProps} from '../presentation'
+import {isSubjectGroup} from '../types'
 import {ActivityHandle, useActivityDisplayName} from './ActivityIdentity'
 import {ActivityInlineLinkText} from './ActivityInlineLinkText'
 import {ActivityRowContent} from './ActivityPrimitives'
@@ -49,9 +50,7 @@ export function ActivityRowHeader({
   }
 
   const othersCount =
-    item.type === 'group' && item.group.groupBy === 'subject'
-      ? actors.length - 1
-      : 0
+    item.type === 'group' && isSubjectGroup(item.group) ? actors.length - 1 : 0
   const othersLabel =
     othersCount > 0
       ? l`and ${plural(othersCount, {

@@ -4,7 +4,7 @@
   "defs": {
     "main": {
       "type": "query",
-      "description": "Get the authenticated viewer's Atmosphere activity timeline. Grouping and related activity are limited to the returned page.",
+      "description": "Get the authenticated viewer's Atmosphere activity timeline. Groups contain visible activities from the returned page.",
       "parameters": {
         "type": "params",
         "properties": {
@@ -22,7 +22,11 @@
               "type": "array",
               "items": {
                 "type": "union",
-                "refs": ["#activityItem", "#activityItemOverflow", "#activityGroup"]
+                "refs": [
+                  "#activityItem",
+                  "#activityActorGroup",
+                  "#activitySubjectGroup"
+                ]
               }
             }
           }
@@ -52,10 +56,20 @@
         "record": { "type": "ref", "ref": "#activityRecord" },
         "collection": { "type": "string", "format": "nsid" },
         "viewerState": { "type": "ref", "ref": "#viewerState" },
+        "relatedActivity": {
+          "type": "array",
+          "description": "Collection-specific activity references targeting this item's record. Article creations with related activity remain standalone; only the parent item's view is hydrated.",
+          "items": { "type": "ref", "ref": "#activityRelatedGroup" }
+        },
         "bskyPostRef": {
           "type": "ref",
           "ref": "com.atproto.repo.strongRef",
-          "description": "The Bluesky post associated with this activity. The referenced post may not be available."
+          "description": "The Bluesky post associated with the rendered article or livestream, as declared by its author. The referenced post may not be available."
+        },
+        "viewBskyPost": {
+          "type": "ref",
+          "ref": "app.bsky.feed.defs#postView",
+          "description": "The hydrated Bluesky post associated with the rendered article or livestream, as declared by its author. Omitted when the post is unavailable to the viewer."
         },
         "view": {
           "type": "union",
@@ -66,43 +80,117 @@
             "app.bsky.embed.external#viewLivestream",
             "app.bsky.feed.defs#postView"
           ]
-        },
-        "relatedActivity": {
-          "type": "array",
-          "description": "Recommendations and shares attached to this article. Attached activities do not themselves contain related activity.",
-          "items": { "type": "ref", "ref": "#activityItem" }
         }
       }
     },
-    "activityItemOverflow": {
+    "activityActorGroup": {
       "type": "object",
-      "description": "Distinct additional activities omitted from this page for an author and collection, without hydrating the omitted records.",
-      "required": ["count", "collection", "associatedProfiles"],
-      "properties": {
-        "count": { "type": "integer", "minimum": 1 },
-        "collection": { "type": "string", "format": "nsid" },
-        "associatedProfiles": {
-          "type": "array",
-          "items": { "type": "ref", "ref": "app.bsky.actor.defs#profileViewBasic" }
-        }
-      }
-    },
-    "activityGroup": {
-      "type": "object",
-      "description": "Two or more activities of the same collection, within a fixed window anchored at the newest member. The group occupies the newest member's position.",
-      "required": ["id", "groupBy", "collection", "indexedAt", "items"],
+      "description": "Activities by one actor in one collection, positioned at the newest group item. Only the newest item is hydrated. Article creations with related activity remain standalone.",
+      "required": ["id", "collection", "indexedAt", "actor", "item", "uris"],
       "properties": {
         "id": { "type": "string" },
-        "groupBy": { "type": "string", "knownValues": ["subject", "actor"] },
         "collection": { "type": "string", "format": "nsid" },
         "indexedAt": { "type": "string", "format": "datetime" },
-        "items": {
+        "actor": { "type": "string", "format": "did" },
+        "item": { "type": "ref", "ref": "#activityItem" },
+        "uris": {
           "type": "array",
+          "description": "All visible group item URIs, including the hydrated item, in newest-first timeline order.",
           "minLength": 2,
-          "items": { "type": "ref", "ref": "#activityItem" }
+          "items": { "type": "string", "format": "at-uri" }
+        }
+      }
+    },
+    "activitySubject": {
+      "type": "object",
+      "description": "The shared target of grouped activities, not an activity itself.",
+      "required": ["uri", "viewerState", "view"],
+      "properties": {
+        "uri": { "type": "string", "format": "at-uri" },
+        "viewerState": { "type": "ref", "ref": "#viewerState" },
+        "bskyPostRef": {
+          "type": "ref",
+          "ref": "com.atproto.repo.strongRef",
+          "description": "The author's declared Bluesky post for the target. The post may be unavailable."
         },
-        "subject": { "type": "string", "format": "at-uri" },
-        "actor": { "type": "string", "format": "did" }
+        "viewBskyPost": {
+          "type": "ref",
+          "ref": "app.bsky.feed.defs#postView",
+          "description": "The hydrated Bluesky post declared by the target's author. Omitted when the post is unavailable to the viewer."
+        },
+        "view": {
+          "type": "union",
+          "refs": [
+            "app.bsky.embed.external#viewArticle",
+            "app.bsky.embed.external#viewArticlePublication",
+            "app.bsky.embed.external#viewGallery"
+          ]
+        }
+      }
+    },
+    "activityGroupItem": {
+      "type": "object",
+      "description": "An unhydrated group item. Its actor DID is the authority of its record URI.",
+      "required": ["record", "collection"],
+      "properties": {
+        "record": { "type": "ref", "ref": "#activityRecord" },
+        "collection": { "type": "string", "format": "nsid" }
+      }
+    },
+    "activityRelatedGroup": {
+      "type": "object",
+      "description": "Visible activities in one collection targeting the parent item's record, without a time window. Contains references and profiles only, not a shared subject or hydrated action views. Buckets follow newest-first first appearance.",
+      "required": ["collection", "activities", "actors"],
+      "properties": {
+        "collection": { "type": "string", "format": "nsid" },
+        "activities": {
+          "type": "array",
+          "description": "Visible activity references in newest-first timeline order. Every activity has the bucket's collection.",
+          "minLength": 1,
+          "items": { "type": "ref", "ref": "#activityGroupItem" }
+        },
+        "actors": {
+          "type": "array",
+          "description": "Unique actors in first-appearance order among the bucket's activities.",
+          "minLength": 1,
+          "items": {
+            "type": "ref",
+            "ref": "app.bsky.actor.defs#profileViewBasic"
+          }
+        }
+      }
+    },
+    "activitySubjectGroup": {
+      "type": "object",
+      "description": "Activities in one collection sharing a target, by at least two distinct actors, positioned at the newest group item. Article recommendations and shares group separately across the returned page without a time window. Article creations are not subject-group items. Publication subscriptions and gallery favorites retain age-based grouping windows.",
+      "required": [
+        "id",
+        "collection",
+        "indexedAt",
+        "subject",
+        "activities",
+        "actors"
+      ],
+      "properties": {
+        "id": { "type": "string" },
+        "collection": { "type": "string", "format": "nsid" },
+        "indexedAt": { "type": "string", "format": "datetime" },
+        "subject": { "type": "ref", "ref": "#activitySubject" },
+        "activities": {
+          "type": "array",
+          "description": "Visible group items in newest-first timeline order. Every activity has the group's collection.",
+          "minLength": 2,
+          "items": { "type": "ref", "ref": "#activityGroupItem" }
+        },
+        "actors": {
+          "type": "array",
+          "description": "Unique actors in first-appearance order among group items. At least two distinct actors are required.",
+          "minLength": 2,
+          "items": {
+            "type": "ref",
+            "ref": "app.bsky.actor.defs#profileViewBasic"
+          }
+        }
       }
     }
   }

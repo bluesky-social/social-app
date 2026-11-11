@@ -225,12 +225,16 @@ describe('ShareSnippets', () => {
       missing.activity.record.uri,
     ])
 
-    expect(screen.getAllByTestId('atmosphereShareSnippet')).toHaveLength(1)
+    expect(screen.getAllByTestId('atmosphereShareSnippet')).toHaveLength(2)
     expect(screen.queryByTestId('atmosphereShareText')).toBeNull()
     expect(screen.queryByTestId('atmosphereShareExpand')).toBeNull()
     expect(mockLinkProps).toHaveBeenCalledWith(
       expect.objectContaining({to: '/profile/sharer0.example/post/post0'}),
     )
+    expect(mockLinkProps).toHaveBeenCalledWith(
+      expect.objectContaining({to: '/profile/sharer2.example/post/post2'}),
+    )
+    expect(screen.getAllByTestId('atmosphereShareMetrics')).toHaveLength(1)
   })
 
   it('can omit actor metadata while retaining the indexed post time when enabled', () => {
@@ -498,6 +502,35 @@ describe('ShareSnippets', () => {
       expect(quoteText.props.children).toBe(share.record.text)
     },
   )
+
+  it('keeps reference-only actors and links without fabricated text or metrics', () => {
+    const shares = [0, 1, 2].map(index => {
+      const {activity, actor} = createShare(index)
+      return {
+        activity: {record: activity.record, collection: activity.collection},
+        actor,
+      }
+    })
+    const screen = render(
+      <I18nProvider i18n={i18n}>
+        <ShareSnippets shares={shares} />
+      </I18nProvider>,
+    )
+    expect(screen.getAllByTestId('atmosphereShareSnippet')).toHaveLength(2)
+    expect(screen.queryByTestId('atmosphereShareText')).toBeNull()
+    expect(screen.queryByTestId('atmosphereShareMetrics')).toBeNull()
+    expect(mockRichTextProps).not.toHaveBeenCalled()
+    fireEvent.press(screen.getByTestId('atmosphereShareExpand'))
+    expect(screen.getAllByTestId('atmosphereShareSnippet')).toHaveLength(3)
+    for (const {actor} of shares) {
+      expect(mockActorLineProps).toHaveBeenCalledWith(
+        expect.objectContaining({actors: [actor]}),
+      )
+    }
+    expect(mockLinkProps).toHaveBeenCalledWith(
+      expect.objectContaining({to: '/profile/sharer2.example/post/post2'}),
+    )
+  })
 })
 
 function screenButtonProps(testID: string) {

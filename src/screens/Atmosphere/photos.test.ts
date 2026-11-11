@@ -28,7 +28,7 @@ function image(
 }
 
 describe('getGrainPhotos', () => {
-  it('uses supplied fullsize and thumbnail URLs in activity/gallery order for galleries and favorites', () => {
+  it('uses only the newest actor-group gallery, never unhydrated older galleries', () => {
     const first = image('first', {width: 3, height: 2})
     const second = image('second')
     const favorite = image('favorite')
@@ -41,11 +41,7 @@ describe('getGrainPhotos', () => {
         {groupBy: 'actor'},
       ),
     )
-    expect(photos.map(photo => photo.alt)).toEqual([
-      'first',
-      'second',
-      'favorite',
-    ])
+    expect(photos.map(photo => photo.alt)).toEqual(['first', 'second'])
     expect(photos[0]).toEqual({
       fullsize: first.fullsize,
       thumb: first.thumbnail,
@@ -55,22 +51,50 @@ describe('getGrainPhotos', () => {
     expect(photos[0].aspectRatio).toBe(first.aspectRatio)
   })
 
-  it('caps at ten usable photos after skipping unknown media and missing/unknown gallery views', () => {
-    const activities = [
-      createActivity({collection: activityCollections.grainGallery}),
-      createActivity({
-        collection: activityCollections.grainFavorite,
-        view: {$type: 'example.future#gallery' as l.Unknown$Type},
-      }),
-      gallery([
-        {$type: 'example.future#video' as l.Unknown$Type},
-        ...Array.from({length: 13}, (_, i) => image(String(i))),
-      ]),
-    ]
-    const photos = getGrainPhotos(createRow(activities, {groupBy: 'actor'}))
+  it('caps the supplied target at ten usable images and skips unknown media', () => {
+    const activity = gallery([
+      {$type: 'example.future#video' as l.Unknown$Type},
+      ...Array.from({length: 13}, (_, i) => image(String(i))),
+    ])
+    const photos = getGrainPhotos(createRow([activity]))
     expect(photos.map(photo => photo.alt)).toEqual(
       Array.from({length: 10}, (_, i) => String(i)),
     )
+  })
+
+  it('does not search older group members when the rendered gallery is missing', () => {
+    const missing = createActivity({
+      collection: activityCollections.grainGallery,
+    })
+    expect(
+      getGrainPhotos(
+        createRow([missing, gallery([image('older')])], {groupBy: 'actor'}),
+      ),
+    ).toEqual([])
+  })
+
+  it('uses only the shared subject gallery for favorites', () => {
+    const view = createGalleryView({items: [image('subject')]})
+    const row = createRow(
+      [
+        createActivity({
+          collection: activityCollections.grainFavorite,
+          did: 'did:plc:one',
+        }),
+        createActivity({
+          collection: activityCollections.grainFavorite,
+          did: 'did:plc:two',
+        }),
+      ],
+      {
+        subject: {
+          uri: 'at://did:plc:gallery/social.grain.gallery/subject',
+          viewerState: {subscribed: false},
+          view,
+        },
+      },
+    )
+    expect(getGrainPhotos(row).map(photo => photo.alt)).toEqual(['subject'])
   })
 
   it('preserves original views and uses empty alt when absent', () => {

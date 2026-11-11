@@ -7,13 +7,18 @@ import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {ACTIVITY_ROW_PADDING_START} from '#/screens/Atmosphere/constants'
 import {getArticleExternalView} from '#/screens/Atmosphere/externalViews'
 import {getRecordActor} from '#/screens/Atmosphere/presentation'
-import {getFirstActivity} from '#/screens/Atmosphere/relationships'
+import {
+  getActivityContent,
+  getActivityCount,
+  getFirstActivity,
+} from '#/screens/Atmosphere/relationships'
 import {type ActivityRendererProps} from '#/screens/Atmosphere/renderers'
 import {
+  getActivityRowKind,
   getArticleActivityUri,
   getShareActivities,
 } from '#/screens/Atmosphere/rowLayout'
-import {type ActivityActor} from '#/screens/Atmosphere/types'
+import {type ActivityActor, isActorGroup} from '#/screens/Atmosphere/types'
 import {atoms as a, useTheme} from '#/alf'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ShareIcon} from '#/components/icons/ArrowOutOfBox'
 import {InlineLinkText, Link} from '#/components/Link'
@@ -36,8 +41,9 @@ export function ShareActivityRenderer({
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
   const first = getFirstActivity(item)
-  if (!first || computedItemView.actors.length === 0) return null
-  const actorGroup = item.type === 'group' && item.group.groupBy === 'actor'
+  const content = getActivityContent(item)
+  if (!first || !content || computedItemView.actors.length === 0) return null
+  const actorGroup = item.type === 'group' && isActorGroup(item.group)
   const documentUri = getArticleActivityUri(item)
   const shares = getShareActivities(item)
   const seenActors = new Set<string>()
@@ -48,21 +54,22 @@ export function ShareActivityRenderer({
   })
   const timestamp =
     item.type === 'activity' ? first.record.indexedAt : item.group.indexedAt
-  const remainingCount = actorGroup ? item.group.items.length - 1 : 0
+  const remainingCount = actorGroup ? getActivityCount(item) - 1 : 0
   const suffix =
     remainingCount > 0
       ? l`and ${plural(remainingCount, {one: '# more post', other: '# more posts'})}`
       : undefined
-  const view = getArticleExternalView(first)
+  const view = getArticleExternalView(content)
   const title = view?.title.trim() || l`Article unavailable`
   const author = getRecordActor(documentUri, item.actors)
   const isMultiple = shares.length > 1
+  const isCard = getActivityRowKind({item, computedItemView}) === 'card'
 
   return (
     <View
       testID={testID}
       style={[a.pr_lg, {paddingLeft: ACTIVITY_ROW_PADDING_START}]}>
-      {shares.length > 0 ? (
+      {isCard ? (
         <ActivityRowContent
           actors={actors}
           icon={ShareIcon}
@@ -94,14 +101,16 @@ export function ShareActivityRenderer({
         </ActivityRowContent>
       ) : (
         <ActivityFootnote
-          title={l`Post unavailable`}
+          title={shares.length > 0 ? title : l`Post unavailable`}
+          to={view?.uri}
           icon={ShareIcon}
           actors={computedItemView.actors}
           action={l`shared`}
           timestamp={timestamp}
           suffix={suffix}
-          actions={actions}
-        />
+          actions={actions}>
+          {shares.length > 0 ? <ShareSnippets shares={shares} /> : null}
+        </ActivityFootnote>
       )}
     </View>
   )

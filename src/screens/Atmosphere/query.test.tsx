@@ -5,6 +5,7 @@ import {act, renderHook, waitFor} from '@testing-library/react-native'
 import {useAppviewClient, useSession} from '#/state/session'
 import {app} from '#/lexicons'
 import {useAtmosphereQuery} from './query'
+import {createPostView} from './testFixtures'
 
 jest.mock('#/state/session', () => ({
   useAppviewClient: jest.fn(),
@@ -131,7 +132,7 @@ it('keeps an old account response out of the current account timeline', async ()
   ).toHaveLength(2)
 })
 
-it('hydrates interaction owners that are not the target article author, including related activity', async () => {
+it('reuses related bucket actors while hydrating missing interaction owners', async () => {
   const view = {
     $type: 'app.bsky.embed.external#viewArticle',
     uri: 'https://publication.test/article',
@@ -139,9 +140,14 @@ it('hydrates interaction owners that are not the target article author, includin
     description: '',
     associatedProfiles: [profile('did:plc:author')],
   }
-  const related = activity('did:plc:related', view)
+  const related = activity('did:plc:related')
+  const bucket = {
+    collection: related.collection,
+    activities: [{record: related.record, collection: related.collection}],
+    actors: [profile('did:plc:related')],
+  }
   const {hook, profileRequests} = setup([
-    page([activity('did:plc:recommender', view, [related])]),
+    page([activity('did:plc:recommender', view, [bucket])]),
   ])
   await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
   expect(hook.result.current.data?.pages[0].actors).toEqual({
@@ -149,10 +155,7 @@ it('hydrates interaction owners that are not the target article author, includin
     'did:plc:recommender': profile('did:plc:recommender'),
     'did:plc:related': profile('did:plc:related'),
   })
-  expect(profileRequests.flat().sort()).toEqual([
-    'did:plc:recommender',
-    'did:plc:related',
-  ])
+  expect(profileRequests).toEqual([['did:plc:recommender']])
 })
 
 it('hydrates large pages without exceeding the profile endpoint batch limit', async () => {
@@ -167,21 +170,73 @@ it('hydrates large pages without exceeding the profile endpoint batch limit', as
   expect(profileRequests.map(batch => batch.length)).toEqual([25, 25, 1])
 })
 
-it('retains overflow and unknown entries and reuses the profiles provided with overflow', async () => {
-  const overflow = {
-    $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityItemOverflow',
-    count: 12,
-    collection: 'social.grain.gallery',
-    associatedProfiles: [profile('did:plc:author')],
+it('hydrates actor-group owners once without fetching URI-only members', async () => {
+  const item = activity('did:plc:actor')
+  const group = {
+    $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityActorGroup',
+    id: 'actor-group',
+    collection: item.collection,
+    indexedAt: item.record.indexedAt,
+    actor: 'did:plc:actor',
+    item,
+    uris: [
+      item.record.uri,
+      'at://did:plc:actor/site.standard.graph.recommend/older',
+    ],
+  }
+  const {hook, profileRequests} = setup([page([group], 'more')])
+  await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
+  expect(profileRequests).toEqual([['did:plc:actor']])
+  expect(hook.result.current.data?.pages[0].actors['did:plc:actor']).toEqual(
+    profile('did:plc:actor'),
+  )
+  expect(hook.result.current.hasNextPage).toBe(true)
+})
+
+it('preserves subject groups and caches supplied actors, target authors and associated post authors', async () => {
+  const first = activity('did:plc:first')
+  const second = activity('did:plc:second')
+  const post = createPostView({
+    uri: 'at://did:plc:declared/app.bsky.feed.post/post',
+    author: {did: 'did:plc:declared', handle: 'declared.test'},
+  })
+  const group = {
+    $type: 'app.bsky.unspecced.getAtmosphereTimeline#activitySubjectGroup',
+    id: 'subject-group',
+    collection: first.collection,
+    indexedAt: first.record.indexedAt,
+    subject: {
+      uri: 'at://did:plc:author/site.standard.document/article',
+      viewerState: {subscribed: true},
+      bskyPostRef: {uri: post.uri, cid: post.cid},
+      viewBskyPost: post,
+      view: {
+        $type: 'app.bsky.embed.external#viewArticle',
+        uri: 'https://publication.test/article',
+        title: 'An article',
+        description: '',
+        associatedProfiles: [profile('did:plc:author')],
+      },
+    },
+    activities: [first, second].map(({record, collection}) => ({
+      record,
+      collection,
+    })),
+    actors: [profile('did:plc:first'), profile('did:plc:second')],
   }
   const unknown = {
     $type: 'app.bsky.unspecced.getAtmosphereTimeline#futureEntry',
   }
-  const response = page([activity('did:plc:author'), overflow, unknown], 'more')
+  const response = page([group, unknown], 'more')
   const {hook, profileRequests} = setup([response])
   await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
   expect(hook.result.current.data?.pages[0].feed).toEqual(response.feed)
-  expect(hook.result.current.hasNextPage).toBe(true)
+  expect(hook.result.current.data?.pages[0].actors).toEqual({
+    'did:plc:first': profile('did:plc:first'),
+    'did:plc:second': profile('did:plc:second'),
+    'did:plc:author': profile('did:plc:author'),
+    'did:plc:declared': {did: 'did:plc:declared', handle: 'declared.test'},
+  })
   expect(profileRequests).toEqual([])
 })
 

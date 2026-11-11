@@ -6,34 +6,31 @@ import {
   getPublicationExternalView,
 } from '../externalViews'
 import {type ActivityPresentationProps} from '../presentation'
+import {getActivityContent} from '../relationships'
 import {ActivityCounts} from './ActivityCounts'
 import {ActivityRowBody} from './ActivityHeader'
 
 export function ActivityPublicationCardBody({item}: ActivityPresentationProps) {
   const t = useTheme()
 
-  const activities =
-    item.type === 'activity' ? [item.activity] : item.group.items
-  for (const activity of activities) {
-    const view = getPublicationExternalView(activity)
-    if (!view) continue
+  const content = getActivityContent(item)
+  if (!content) return null
+  const view = getPublicationExternalView(content)
+  if (!view) return null
 
-    const themeColors: ssTypes.ThemeColors = getPublicationBodyThemeColors(
-      view,
-    ) ?? {
-      custom: false,
-      accent: t.atoms.text?.color ?? '#000000',
-      accentForeground: t.atoms.text_inverted?.color ?? '#ffffff',
-    }
-
-    return (
-      <ActivityRowBody>
-        <PublicationCard view={view} themeColors={themeColors}>
-          <ActivityCounts view={activity.view} style={a.pt_sm} />
-        </PublicationCard>
-      </ActivityRowBody>
-    )
+  const themeColors: ssTypes.ThemeColors = getPublicationBodyThemeColors(
+    view,
+  ) ?? {
+    custom: false,
+    accent: t.atoms.text?.color ?? '#000000',
+    accentForeground: t.atoms.text_inverted?.color ?? '#ffffff',
   }
 
-  return null
+  return (
+    <ActivityRowBody>
+      <PublicationCard view={view} themeColors={themeColors}>
+        <ActivityCounts view={content.view} style={a.pt_sm} />
+      </PublicationCard>
+    </ActivityRowBody>
+  )
 }

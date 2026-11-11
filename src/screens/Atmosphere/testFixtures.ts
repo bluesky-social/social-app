@@ -1,15 +1,20 @@
 import {AtUri, isValidDid} from '@atproto/syntax'
 
+import {getArticleExternalView} from '#/screens/Atmosphere/externalViews'
 import {
   type ActivityPresentationItem,
   buildActivityPresentationListItems,
 } from '#/screens/Atmosphere/presentation'
 import {
   type ActivityActor,
+  type ActivityActorGroup,
   type ActivityActors,
   activityCollections,
-  type ActivityGroup,
+  type ActivityGroupItem,
   type ActivityItem,
+  type ActivityRelatedGroup,
+  type ActivitySubject,
+  type ActivitySubjectGroup,
   type ActivityView,
 } from '#/screens/Atmosphere/types'
 import {type app} from '#/lexicons'
@@ -171,13 +176,17 @@ export function createActivity({
     ? createArticleView()
     : undefined,
   relatedActivity,
+  bskyPostRef,
+  viewBskyPost,
 }: {
   collection?: ActivityItem['collection']
   did?: ActivityActor['did']
   rkey?: string
   subscribed?: boolean
   view?: ActivityView
-  relatedActivity?: ActivityItem[]
+  relatedActivity?: ActivityRelatedGroup[]
+  bskyPostRef?: ActivityItem['bskyPostRef']
+  viewBskyPost?: ActivityItem['viewBskyPost']
 } = {}): Typed<ActivityItem> {
   return {
     $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityItem',
@@ -190,6 +199,70 @@ export function createActivity({
     viewerState: {subscribed},
     view,
     relatedActivity,
+    bskyPostRef,
+    viewBskyPost,
+  }
+}
+
+export function createRelatedGroup(
+  activities: ActivityItem[],
+  actors = getFixtureActors(activities),
+): Typed<ActivityRelatedGroup> {
+  return {
+    $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityRelatedGroup',
+    collection: activities[0].collection,
+    activities: activities.map(toGroupItem),
+    actors,
+  }
+}
+
+export function createActorGroup(
+  activities: ActivityItem[],
+): Typed<ActivityActorGroup> {
+  const item = activities[0]
+  return {
+    $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityActorGroup',
+    id: 'group',
+    collection: item.collection,
+    indexedAt: item.record.indexedAt,
+    actor: getOwnerDid(item.record.uri),
+    item,
+    uris: activities.map(activity => activity.record.uri),
+  }
+}
+
+export function createSubjectGroup(
+  activities: ActivityItem[],
+  subject: ActivitySubject['uri'] | ActivitySubject = activities[0]
+    .collection === activityCollections.subscription
+    ? publicationUri
+    : documentUri,
+  actors = getFixtureActors(activities),
+): Typed<ActivitySubjectGroup> {
+  const first = activities[0]
+  const external = getArticleExternalView(first)
+  // Missing views remain deliberately malformed test input, not valid fallbacks.
+  const view =
+    first.collection === activityCollections.share && external
+      ? {...external, $type: 'app.bsky.embed.external#viewArticle' as const}
+      : (first.view as ActivitySubject['view'])
+  return {
+    $type: 'app.bsky.unspecced.getAtmosphereTimeline#activitySubjectGroup',
+    id: 'group',
+    collection: first.collection,
+    indexedAt: first.record.indexedAt,
+    subject:
+      typeof subject === 'string'
+        ? {
+            uri: subject,
+            viewerState: first.viewerState,
+            view,
+            bskyPostRef: first.bskyPostRef,
+            viewBskyPost: first.viewBskyPost,
+          }
+        : subject,
+    activities: activities.map(toGroupItem),
+    actors,
   }
 }
 
@@ -197,38 +270,54 @@ export function createRow(
   activities: ActivityItem[],
   {
     groupBy = 'subject',
-    subject = documentUri,
+    subject,
     actors = Object.fromEntries(
-      activities.map(activity => {
-        const did = getOwnerDid(activity.record.uri)
-        return [did, createActor(did)]
-      }),
+      getFixtureActors(activities).map(actor => [actor.did, actor]),
     ),
   }: {
     groupBy?: 'subject' | 'actor'
-    subject?: ActivityGroup['subject']
+    subject?: ActivitySubject['uri'] | ActivitySubject
     actors?: ActivityActors
   } = {},
-): ActivityPresentationItem {
+) {
   const first = activities[0]
+  if (!first) throw new Error('Expected at least one activity fixture')
   return activities.length === 1
-    ? {type: 'activity', key: first.record.uri, activity: first, actors}
-    : {
-        type: 'group',
-        key: 'group',
-        group: {
-          $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup',
-          id: 'group',
-          collection: first.collection,
-          groupBy,
-          actor:
-            groupBy === 'actor' ? getOwnerDid(first.record.uri) : undefined,
-          subject: groupBy === 'subject' ? subject : undefined,
-          indexedAt: first.record.indexedAt,
-          items: activities,
-        },
+    ? {
+        type: 'activity' as const,
+        key: first.record.uri,
+        activity: first,
         actors,
       }
+    : {
+        type: 'group' as const,
+        key: 'group',
+        group:
+          groupBy === 'actor'
+            ? createActorGroup(activities)
+            : createSubjectGroup(
+                activities,
+                subject,
+                getFixtureActors(activities).flatMap(actor =>
+                  actors[actor.did] ? [actors[actor.did]] : [],
+                ),
+              ),
+        actors,
+      }
+}
+
+function toGroupItem(activity: ActivityItem): ActivityGroupItem {
+  return {record: activity.record, collection: activity.collection}
+}
+
+function getFixtureActors(activities: ActivityItem[]): ActivityActor[] {
+  const seen = new Set<string>()
+  return activities.flatMap(activity => {
+    const did = getOwnerDid(activity.record.uri)
+    if (seen.has(did)) return []
+    seen.add(did)
+    return [createActor(did)]
+  })
 }
 
 function getOwnerDid(uri: ActivityItem['record']['uri']): ActivityActor['did'] {

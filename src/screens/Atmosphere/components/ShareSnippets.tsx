@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react/macro'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {getActivityPostView} from '#/screens/Atmosphere/externalViews'
 import {getSharePostHref} from '#/screens/Atmosphere/relationships'
-import {type ActivityActor, type ActivityItem} from '#/screens/Atmosphere/types'
+import {type ActivityShare} from '#/screens/Atmosphere/types'
 import {atoms as a, useTheme} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {Button, ButtonText} from '#/components/Button'
@@ -22,11 +22,6 @@ import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {ActivityActorLine} from './ActivityPrimitives'
 
-type Share = {
-  activity: ActivityItem
-  actor: ActivityActor
-}
-
 const INITIAL_SHARE_COUNT = 2
 
 export function ShareSnippets({
@@ -34,7 +29,7 @@ export function ShareSnippets({
   showActorMetadata = true,
   hideActorMetadataForDid,
 }: {
-  shares: Share[]
+  shares: ActivityShare[]
   showActorMetadata?: boolean
   hideActorMetadataForDid?: string
 }) {
@@ -43,8 +38,18 @@ export function ShareSnippets({
   const validShares = shares.flatMap(share => {
     const post = getActivityPostView(share.activity)
     const href = getSharePostHref(share.activity, share.actor)
-    return post && bsky.isType(app.bsky.feed.post, post.record) && href
-      ? [{...share, record: post.record, post, href}]
+    return href
+      ? [
+          {
+            ...share,
+            record:
+              post && bsky.isType(app.bsky.feed.post, post.record)
+                ? post.record
+                : undefined,
+            post,
+            href,
+          },
+        ]
       : []
   })
   if (validShares.length === 0) return null
@@ -97,9 +102,9 @@ export function ShareSnippets({
   )
 }
 
-type ValidShare = Share & {
-  record: app.bsky.feed.post.Main
-  post: app.bsky.feed.defs.PostView
+type ValidShare = ActivityShare & {
+  record?: app.bsky.feed.post.Main
+  post?: app.bsky.feed.defs.PostView
   href: string
 }
 
@@ -116,11 +121,14 @@ function ShareSnippet({
     to: share.href,
     displayText: l`View post`,
   })
-  const richText = new RichTextAPI({
-    text: share.record.text,
-    facets: share.record.facets,
-  })
-  const emojiOnly = !richText.facets?.length && isOnlyEmoji(richText.text)
+  const richText = share.record
+    ? new RichTextAPI({
+        text: share.record.text,
+        facets: share.record.facets,
+      })
+    : undefined
+  const emojiOnly =
+    richText && !richText.facets?.length && isOnlyEmoji(richText.text)
 
   return (
     <View testID="atmosphereShareSnippet" style={[a.gap_md]}>
@@ -132,7 +140,7 @@ function ShareSnippet({
           showAvatars={false}
         />
       ) : null}
-      {share.record.text.trim() ? (
+      {share.record?.text.trim() && richText ? (
         <Button
           role="link"
           accessibilityRole="link"
@@ -165,7 +173,7 @@ function ShareSnippet({
                 style={[a.text_md, a.leading_snug, t.atoms.text]}
               />
             )}
-            <ShareMetrics view={share.post} />
+            {share.post ? <ShareMetrics view={share.post} /> : null}
           </View>
         </Button>
       ) : (
@@ -173,7 +181,7 @@ function ShareSnippet({
           <Link to={share.href} label={l`View post`} style={[a.justify_start]}>
             <Text style={[a.text_sm, a.font_semi_bold]}>{l`View post`}</Text>
           </Link>
-          <ShareMetrics view={share.post} />
+          {share.post ? <ShareMetrics view={share.post} /> : null}
         </View>
       )}
     </View>

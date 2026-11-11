@@ -5,9 +5,13 @@ import {useLingui} from '@lingui/react/macro'
 import {ACTIVITY_ROW_PADDING_START} from '#/screens/Atmosphere/constants'
 import {isSafeWebUrl} from '#/screens/Atmosphere/externalViews'
 import {getGrainPhotos} from '#/screens/Atmosphere/photos'
-import {getFirstActivity} from '#/screens/Atmosphere/relationships'
+import {
+  getActivityContent,
+  getActivityCount,
+  getFirstActivity,
+} from '#/screens/Atmosphere/relationships'
 import {type ActivityRendererProps} from '#/screens/Atmosphere/renderers'
-import {activityCollections} from '#/screens/Atmosphere/types'
+import {activityCollections, isActorGroup} from '#/screens/Atmosphere/types'
 import {atoms as a, useTheme} from '#/alf'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as FavoriteIcon} from '#/components/icons/Heart2'
 import {Image_Stroke2_Corner2_Rounded as PhotoIcon} from '#/components/icons/Image'
@@ -35,15 +39,19 @@ export function GrainGalleryActivityRenderer({
   const t = useTheme()
   const {t: l} = useLingui()
   const first = getFirstActivity(item)
-  if (!first) return null
+  const content = getActivityContent(item)
+  if (!first || !content) return null
   const images = getGrainPhotos(item)
-  const gallery = bsky.isType(app.bsky.embed.external.viewGallery, first.view)
-    ? first.view
+  const gallery = bsky.isType(app.bsky.embed.external.viewGallery, content.view)
+    ? content.view
     : undefined
   const href = gallery && isSafeWebUrl(gallery.uri) ? gallery.uri : undefined
   const title = gallery?.title.trim() || l`Gallery`
   const favorite = first.collection === activityCollections.grainFavorite
-  const count = item.type === 'group' ? item.group.items.length : 1
+  const count =
+    item.type === 'group' && isActorGroup(item.group)
+      ? getActivityCount(item)
+      : 1
   const timestamp =
     item.type === 'group' ? item.group.indexedAt : first.record.indexedAt
   const action = favorite
@@ -112,7 +120,7 @@ export function GrainGalleryActivityRenderer({
                       ) : null}
                     </View>
                     <ActivityCounts
-                      view={first.view}
+                      view={content.view}
                       size="large"
                       style={a.flex_shrink_0}
                     />
@@ -139,7 +147,7 @@ export function GrainGalleryActivityRenderer({
           action={action}
           timestamp={timestamp}
           actions={actions}>
-          <ActivityCounts view={first.view} />
+          <ActivityCounts view={content.view} />
         </ActivityFootnote>
       )}
     </View>

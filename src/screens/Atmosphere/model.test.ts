@@ -2,7 +2,13 @@ import {type l} from '@atproto/lex'
 import {describe, expect, it} from '@jest/globals'
 
 import {buildActivityListItems} from './model'
-import {createActivity, createActor, createRow} from './testFixtures'
+import {
+  createActivity,
+  createActor,
+  createActorGroup,
+  createArticleView,
+  createSubjectGroup,
+} from './testFixtures'
 import {activityCollections, type AtmosphereActivityPage} from './types'
 
 function page(
@@ -11,19 +17,8 @@ function page(
   return {feed: [], actors: {}, ...values}
 }
 
-function group() {
-  const row = createRow(
-    [
-      createActivity({rkey: 'one', subscribed: true}),
-      createActivity({rkey: 'two'}),
-    ],
-    {groupBy: 'actor'},
-  )
-  if (row.type !== 'group') throw new Error('Expected group fixture')
-  return {
-    ...row.group,
-    $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup' as const,
-  }
+function rows(pages: AtmosphereActivityPage[]) {
+  return buildActivityListItems({pages, pageParams: pages.map(() => undefined)})
 }
 
 describe('Atmosphere list model', () => {
@@ -34,98 +29,130 @@ describe('Atmosphere list model', () => {
     expect(buildActivityListItems(undefined, 'boom')).toEqual([
       {type: 'error', key: 'error', error: 'boom'},
     ])
-    expect(
-      buildActivityListItems({pages: [page()], pageParams: [undefined]}),
-    ).toEqual([{type: 'empty', key: 'empty'}])
+    expect(rows([page()])).toEqual([{type: 'empty', key: 'empty'}])
   })
 
-  it('preserves server groups, ordered children, related activity and original references', () => {
-    const grouped = group()
-    const related = [
-      createActivity({collection: activityCollections.recommendation}),
-    ]
-    grouped.items[0].relatedActivity = related
-    const actors = {'did:plc:author': createActor()}
-    const [row] = buildActivityListItems({
-      pages: [page({feed: [grouped], actors})],
-      pageParams: [undefined],
-    })
-    if (row.type !== 'group') throw new Error('Expected group')
-    expect(row.group).toBe(grouped)
-    expect(row.group.items[0].relatedActivity).toBe(related)
-    expect(row.group.items.map(item => item.viewerState.subscribed)).toEqual([
-      true,
-      false,
+  it('preserves both API group shapes and their supplied references', () => {
+    const newest = createActivity({rkey: 'newest', subscribed: true})
+    const actorGroup = createActorGroup([
+      newest,
+      createActivity({rkey: 'older'}),
     ])
-    expect(row.actors).toBe(actors)
-  })
-
-  it('deduplicates only activity URIs across pages, retaining server groups and every overflow', () => {
-    const grouped = group()
-    const first = createActivity({rkey: 'one'})
-    const overflow = {
-      $type:
-        'app.bsky.unspecced.getAtmosphereTimeline#activityItemOverflow' as const,
-      collection: activityCollections.document,
-      count: 7,
-      associatedProfiles: [createActor()],
-    }
-    const firstActors = {'did:plc:author': createActor()}
-    const secondActors = {
-      'did:plc:author': {...createActor(), displayName: 'Second page'},
-    }
-    const pages = [
-      page({
-        feed: [first, overflow],
-        actors: firstActors,
-        cursor: 'opaque==cursor',
+    const subjectGroup = createSubjectGroup([
+      createActivity({
+        collection: activityCollections.recommendation,
+        did: 'did:plc:one',
+        view: createArticleView(),
       }),
-      page({feed: [grouped, first, overflow], actors: secondActors}),
-    ]
-    const rows = buildActivityListItems({
-      pages,
-      pageParams: [undefined, 'opaque==cursor'],
-    })
-    expect(rows.map(row => row.type)).toEqual([
-      'activity',
-      'overflow',
-      'group',
-      'overflow',
+      createActivity({
+        collection: activityCollections.recommendation,
+        did: 'did:plc:two',
+        view: createArticleView(),
+      }),
     ])
-    expect(rows.map(row => row.key)).toEqual([
-      first.record.uri,
-      'overflow:0:1',
-      grouped.id,
-      'overflow:1:2',
-    ])
-    if (rows[0].type !== 'activity' || rows[2].type !== 'group')
-      throw new Error('Expected activity and group')
-    expect(rows[0].actors).toBe(firstActors)
-    expect(rows[2].actors).toBe(secondActors)
-    expect(rows[2].group.items).toEqual([grouped.items[1]])
-    expect(grouped.items).toHaveLength(2)
-    expect(pages[0].cursor).toBe('opaque==cursor')
-    expect(rows[1]).toMatchObject({overflow})
-    expect(rows[3]).toMatchObject({overflow})
+    const actors = {'did:plc:author': createActor()}
+    const result = rows([page({feed: [actorGroup, subjectGroup], actors})])
+    if (result[0].type !== 'group' || result[1].type !== 'group')
+      throw new Error('Expected groups')
+    expect(result[0].group).toBe(actorGroup)
+    expect(result[1].group).toBe(subjectGroup)
+    expect(result[0].actors).toBe(actors)
+    expect(actorGroup.item).toBe(newest)
+    expect(subjectGroup.activities[0]).not.toHaveProperty('view')
   })
 
-  it('omits unknown feed unions and groupBy without claiming their children', () => {
-    const grouped = group()
-    const known = createActivity({rkey: 'one'})
-    const rows = buildActivityListItems({
-      pages: [
-        page({
-          feed: [
-            {$type: 'example.future#entry' as l.Unknown$Type},
-            {...grouped, groupBy: 'future'},
-            known,
-          ],
-        }),
-      ],
-      pageParams: [undefined],
+  it('filters actor URIs without replacing its only hydrated item or mutating raw JSON', () => {
+    const newest = createActivity({rkey: 'newest'})
+    const older = createActivity({rkey: 'older'})
+    const group = createActorGroup([newest, older])
+    const before = JSON.stringify(group)
+    const result = rows([page({feed: [older]}), page({feed: [group, newest]})])
+    expect(result).toHaveLength(2)
+    if (result[1].type !== 'group') throw new Error('Expected group')
+    expect(result[1].group).toEqual({...group, uris: [newest.record.uri]})
+    expect(result[1].rawGroup).toBe(group)
+    expect(JSON.stringify(group)).toBe(before)
+  })
+
+  it('never promotes an unavailable older actor-group member after a duplicate newest item', () => {
+    const newest = createActivity({rkey: 'newest'})
+    const older = createActivity({rkey: 'older'})
+    const group = createActorGroup([newest, older])
+    const result = rows([page({feed: [newest, group, older]})])
+    expect(result.map(row => row.key)).toEqual([
+      newest.record.uri,
+      older.record.uri,
+    ])
+    expect(result.every(row => row.type === 'activity')).toBe(true)
+  })
+
+  it('filters subject references and profiles in API order while retaining raw groups', () => {
+    const first = createActivity({
+      collection: activityCollections.recommendation,
+      did: 'did:plc:one',
+      view: createArticleView(),
     })
-    expect(rows).toEqual([
-      {type: 'activity', key: known.record.uri, activity: known, actors: {}},
+    const second = createActivity({
+      collection: activityCollections.recommendation,
+      did: 'did:plc:two',
+      view: createArticleView(),
+    })
+    const third = createActivity({
+      collection: activityCollections.recommendation,
+      did: 'did:plc:three',
+      view: createArticleView(),
+    })
+    const group = createSubjectGroup([first, second, third])
+    const before = JSON.stringify(group)
+    const result = rows([
+      page({feed: [first], cursor: 'opaque==cursor'}),
+      page({feed: [group, second]}),
+    ])
+    if (result[1].type !== 'group') throw new Error('Expected group')
+    expect(result).toHaveLength(2)
+    expect(result[1].group).toEqual({
+      ...group,
+      activities: group.activities.slice(1),
+      actors: group.actors.slice(1),
+    })
+    expect(result[1].rawGroup).toBe(group)
+    expect(JSON.stringify(group)).toBe(before)
+  })
+
+  it('removes repeated member URIs within groups and across pages', () => {
+    const first = createActivity({
+      collection: activityCollections.recommendation,
+      did: 'did:plc:one',
+      view: createArticleView(),
+    })
+    const second = createActivity({
+      collection: activityCollections.recommendation,
+      did: 'did:plc:two',
+      view: createArticleView(),
+    })
+    const group = createSubjectGroup([first, first, second])
+    const result = rows([
+      page({feed: [group]}),
+      page({feed: [group, first, second]}),
+    ])
+    expect(result).toHaveLength(1)
+    if (result[0].type !== 'group') throw new Error('Expected group')
+    expect(result[0].group).toEqual({
+      ...group,
+      activities: [group.activities[0], group.activities[2]],
+    })
+  })
+
+  it('omits unknown feed unions without claiming any activity URIs', () => {
+    const activity = createActivity()
+    expect(
+      rows([
+        page({
+          feed: [{$type: 'example.future#entry' as l.Unknown$Type}, activity],
+        }),
+      ]),
+    ).toEqual([
+      {type: 'activity', key: activity.record.uri, activity, actors: {}},
     ])
   })
 })

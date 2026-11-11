@@ -19,7 +19,7 @@ export type ActivityTimelineListItem = ActivityPresentationListItem & {
   }
 }
 
-/** Decorates visible activities while preserving server groups and overflow. */
+/** Decorates visible activities while preserving server group order. */
 export function buildActivityTimelineItems(
   items: ActivityPresentationListItem[],
   now: Date,

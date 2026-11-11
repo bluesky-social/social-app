@@ -6,7 +6,6 @@ import {
   type ActivityActors,
   type ActivityGroup,
   type ActivityItem,
-  type ActivityOverflow,
   type AtmosphereActivityPage,
 } from './types'
 
@@ -21,21 +20,14 @@ export type ActivityGroupRowItem = {
   type: 'group'
   key: string
   group: ActivityGroup
-  /** Original API group when display deduplication removes children. */
+  /** Original API group when display deduplication removes members. */
   rawGroup?: ActivityGroup
   actors: ActivityActors
-}
-
-export type ActivityOverflowRowItem = {
-  type: 'overflow'
-  key: string
-  overflow: ActivityOverflow
 }
 
 export type ActivityListItem =
   | ActivityRowItem
   | ActivityGroupRowItem
-  | ActivityOverflowRowItem
   | {type: 'loading'; key: 'loading'}
   | {type: 'empty'; key: 'empty'}
   | {type: 'error'; key: 'error'; error: string}
@@ -53,31 +45,44 @@ export function buildActivityListItems(
   const seen = new Set<string>()
   const items: ActivityListItem[] = []
   const schema = app.bsky.unspecced.getAtmosphereTimeline
-  for (const [pageIndex, page] of data.pages.entries()) {
-    for (const [entryIndex, entry] of page.feed.entries()) {
-      if (bsky.isType(schema.activityItemOverflow, entry)) {
-        items.push({
-          type: 'overflow',
-          key: `overflow:${pageIndex}:${entryIndex}`,
-          overflow: entry,
-        })
-      } else if (bsky.isType(schema.activityGroup, entry)) {
-        if (entry.groupBy !== 'actor' && entry.groupBy !== 'subject') continue
-        const groupItems = entry.items.filter(item => {
-          if (seen.has(item.record.uri)) return false
-          seen.add(item.record.uri)
+  for (const page of data.pages) {
+    for (const entry of page.feed) {
+      if (bsky.isType(schema.activityActorGroup, entry)) {
+        // Only this member is hydrated. Never promote an unhydrated URI.
+        if (seen.has(entry.item.record.uri)) continue
+        const uris = entry.uris.filter(uri => {
+          if (seen.has(uri)) return false
+          seen.add(uri)
           return true
         })
-        if (groupItems.length === 0) continue
+        if (uris.length === 0 || !uris.includes(entry.item.record.uri)) continue
         items.push({
           type: 'group',
           key: entry.id,
-          group:
-            groupItems.length === entry.items.length
-              ? entry
-              : {...entry, items: groupItems},
-          rawGroup:
-            groupItems.length === entry.items.length ? undefined : entry,
+          group: uris.length === entry.uris.length ? entry : {...entry, uris},
+          rawGroup: uris.length === entry.uris.length ? undefined : entry,
+          actors: page.actors,
+        })
+      } else if (bsky.isType(schema.activitySubjectGroup, entry)) {
+        const activities = entry.activities.filter(activity => {
+          if (seen.has(activity.record.uri)) return false
+          seen.add(activity.record.uri)
+          return true
+        })
+        if (activities.length === 0) continue
+        const changed = activities.length !== entry.activities.length
+        const actors = changed
+          ? entry.actors.filter(actor =>
+              activities.some(activity =>
+                activity.record.uri.startsWith(`at://${actor.did}/`),
+              ),
+            )
+          : entry.actors
+        items.push({
+          type: 'group',
+          key: entry.id,
+          group: changed ? {...entry, activities, actors} : entry,
+          rawGroup: changed ? entry : undefined,
           actors: page.actors,
         })
       } else if (bsky.isType(schema.activityItem, entry)) {

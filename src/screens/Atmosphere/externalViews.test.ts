@@ -13,6 +13,7 @@ import {
   createArticleView,
   createPostView,
   createPublicationView,
+  createSubjectGroup,
   documentUri,
   publicationUri,
   recordCid,
@@ -146,5 +147,29 @@ describe('hydrated external views', () => {
     }
     expect(getArticleExternalView(activity)).toBeUndefined()
     expect(getPublicationExternalView(activity)).toBeUndefined()
+  })
+
+  it('adapts the supplied subject without turning unhydrated group references into posts', () => {
+    const group = createSubjectGroup(
+      [
+        createActivity({
+          collection: activityCollections.recommendation,
+          did: 'did:plc:one',
+        }),
+        createActivity({
+          collection: activityCollections.recommendation,
+          did: 'did:plc:two',
+        }),
+      ],
+      {
+        uri: documentUri,
+        viewerState: {subscribed: false},
+        view: createArticleView(),
+      },
+    )
+    expect(getArticleExternalView(group.subject)?.title).toBe('An article')
+    expect(getActivityPostView(group.activities[0])).toBeUndefined()
+    group.subject.viewBskyPost = createPostView()
+    expect(getActivityPostView(group.subject)).toBeUndefined()
   })
 })

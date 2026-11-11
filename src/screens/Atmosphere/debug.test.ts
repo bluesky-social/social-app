@@ -4,6 +4,7 @@ import {
   createActor,
   createArticleView,
   createPostView,
+  createRelatedGroup,
   createRow,
 } from './testFixtures'
 import {activityCollections} from './types'
@@ -36,7 +37,7 @@ describe('Atmosphere debug mode', () => {
     expect(result.actors['did:plc:author']).toBe(actors['did:plc:author'])
   })
 
-  it('preserves server groups, mixed related activities, publisher views and original profile references', () => {
+  it('preserves standalone article buckets, publisher views and original profile references', () => {
     const recommendation = createActivity({
       collection: activityCollections.recommendation,
       did: 'did:plc:recommender',
@@ -47,7 +48,12 @@ describe('Atmosphere debug mode', () => {
       did: 'did:plc:sharer',
       view: createPostView(),
     })
-    const root = createActivity({relatedActivity: [recommendation, share]})
+    const root = createActivity({
+      relatedActivity: [
+        createRelatedGroup([recommendation]),
+        createRelatedGroup([share]),
+      ],
+    })
     const actors = Object.fromEntries(
       ['author', 'publisher', 'recommender', 'sharer', 'unrelated'].map(
         name => {
@@ -56,15 +62,12 @@ describe('Atmosphere debug mode', () => {
         },
       ),
     )
-    const item = createRow([root, createActivity({rkey: 'second'})], {
-      groupBy: 'actor',
-      actors,
-    })
+    const item = createRow([root], {actors})
     const result = createAtmosphereDebugItem(item)
-    if (item.type !== 'group' || result.type !== 'group')
-      throw new Error('Expected group')
-    expect(result.group).toBe(item.group)
-    expect(result.group.items[0].relatedActivity).toBe(root.relatedActivity)
+    if (item.type !== 'activity' || result.type !== 'activity')
+      throw new Error('Expected standalone article')
+    expect(result.activity).toBe(root)
+    expect(result.activity.relatedActivity).toBe(root.relatedActivity)
     expect(Object.keys(result.actors)).toEqual(
       expect.arrayContaining([
         'did:plc:author',

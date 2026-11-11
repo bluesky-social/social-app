@@ -12,15 +12,16 @@ import {
   getActivityActor,
 } from '#/screens/Atmosphere/presentation'
 import {
+  getActivityContent,
   getActivityDocumentUri,
   getFirstActivity,
   getSharePostHref,
 } from '#/screens/Atmosphere/relationships'
 import {getLivestreamUrl} from '#/screens/Atmosphere/streams'
 import {
-  type ActivityActor,
   activityCollections,
-  type ActivityItem,
+  type ActivityShare,
+  isSubjectGroup,
 } from '#/screens/Atmosphere/types'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -33,7 +34,9 @@ export function getActivityRowKind(
 ): ActivityRowKind | undefined {
   const {item, computedItemView} = props
   const first = getFirstActivity(item)
-  if (!first || computedItemView.actors.length === 0) return undefined
+  const content = getActivityContent(item)
+  if (!first || !content || computedItemView.actors.length === 0)
+    return undefined
   const collection =
     item.type === 'group' ? item.group.collection : first.collection
 
@@ -41,28 +44,32 @@ export function getActivityRowKind(
     case activityCollections.document:
     case activityCollections.recommendation:
       return getArticleActivityUri(item) &&
-        getArticleExternalView(first)?.title.trim()
+        getArticleExternalView(content)?.title.trim()
         ? 'card'
         : 'footnote'
     case activityCollections.subscription:
       return getSubscriptionActivityUri(item) &&
-        getPublicationExternalView(first)?.title.trim()
+        getPublicationExternalView(content)?.title.trim()
         ? 'card'
         : 'footnote'
     case activityCollections.share:
-      return getShareActivities(item).length > 0 ? 'card' : 'footnote'
+      return getArticleActivityUri(item) &&
+        getArticleExternalView(content)?.title.trim() &&
+        getShareActivities(item).length > 0
+        ? 'card'
+        : 'footnote'
     case activityCollections.grainGallery:
     case activityCollections.grainFavorite:
       return getGrainPhotos(item).length > 0 ? 'card' : 'footnote'
     case activityCollections.livestream:
-      return bsky.isType(app.bsky.embed.external.viewLivestream, first.view) &&
-        getLivestreamUrl(first.view)
+      return bsky.isType(
+        app.bsky.embed.external.viewLivestream,
+        content.view,
+      ) && getLivestreamUrl(content.view)
         ? 'card'
         : 'footnote'
     case activityCollections.publication:
-      return (item.type === 'group' ? item.group.items : [first]).some(
-        activity => getPublicationExternalView(activity)?.title.trim(),
-      )
+      return getPublicationExternalView(content)?.title.trim()
         ? 'card'
         : 'footnote'
     default:
@@ -70,27 +77,21 @@ export function getActivityRowKind(
   }
 }
 
-/** A subject group cannot replace the first child's pinned hydrated target. */
+/** Subject groups render their supplied target, not unhydrated action views. */
 export function getArticleActivityUri(item: ActivityPresentationItem) {
-  const first = getFirstActivity(item)
-  if (!first) return undefined
-  const target = getActivityDocumentUri(first)
-  return item.type === 'group' &&
-    item.group.groupBy === 'subject' &&
-    (item.group.collection === activityCollections.recommendation ||
-      item.group.collection === activityCollections.share) &&
-    item.group.subject &&
-    item.group.subject !== target
-    ? undefined
-    : target
+  const content = getActivityContent(item)
+  return content ? getActivityDocumentUri(content) : undefined
 }
 
-/** Uses the publication reference carried by this subscription's hydrated view. */
+/** Uses the shared subject or the publication pinned in the hydrated item. */
 export function getSubscriptionActivityUri(item: ActivityPresentationItem) {
-  const first = getFirstActivity(item)
-  if (!first) return undefined
-  const refs = getPublicationExternalView(first)?.associatedRefs ?? []
-  const target = refs.find(ref => {
+  const content = getActivityContent(item)
+  if (!content) return undefined
+  const candidates =
+    'uri' in content
+      ? [content]
+      : (getPublicationExternalView(content)?.associatedRefs ?? [])
+  return candidates.find(ref => {
     try {
       const uri = new AtUri(ref.uri)
       return (
@@ -102,37 +103,35 @@ export function getSubscriptionActivityUri(item: ActivityPresentationItem) {
       return false
     }
   })?.uri
-  return item.type === 'group' &&
-    item.group.groupBy === 'subject' &&
-    item.group.subject &&
-    item.group.subject !== target
-    ? undefined
-    : target
 }
 
-/** Shared by share rendering and adjacency classification so fallbacks agree. */
-export function getShareActivities(item: ActivityPresentationItem) {
+/** Keeps reference-only shares linkable without manufacturing post content. */
+export function getShareActivities(
+  item: ActivityPresentationItem,
+): ActivityShare[] {
+  if (!getArticleActivityUri(item)) return []
   const first = getFirstActivity(item)
-  const documentUri = getArticleActivityUri(item)
-  if (!first || !documentUri) return []
-  const candidates =
-    item.type === 'group' && item.group.groupBy !== 'actor'
-      ? item.group.items
-      : [first]
-  const shares: {activity: ActivityItem; actor: ActivityActor}[] = []
+  if (!first) return []
+  const subjectGroup =
+    item.type === 'group' && isSubjectGroup(item.group) ? item.group : undefined
+  const candidates = subjectGroup ? subjectGroup.activities : [first]
+  const actors = subjectGroup
+    ? Object.fromEntries(subjectGroup.actors.map(actor => [actor.did, actor]))
+    : item.actors
+  const shares: ActivityShare[] = []
   const seen = new Set<string>()
   for (const activity of candidates) {
-    const actor = getActivityActor(activity, item.actors)
-    const post = getActivityPostView(activity)
+    const actor = getActivityActor(activity, actors)
     if (
       !actor ||
-      !post ||
-      !bsky.matches(app.bsky.feed.post, post.record) ||
       !getSharePostHref(activity, actor) ||
-      getActivityDocumentUri(activity) !== documentUri ||
       seen.has(activity.record.uri)
     )
       continue
+    if (!subjectGroup) {
+      const post = getActivityPostView(activity)
+      if (!post || !bsky.matches(app.bsky.feed.post, post.record)) continue
+    }
     seen.add(activity.record.uri)
     shares.push({activity, actor})
   }

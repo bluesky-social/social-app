@@ -15,14 +15,13 @@ import {GrainGalleryActivityRenderer} from './components/PhotoActivity'
 import {ShareActivityRenderer} from './components/ShareActivity'
 import {LivestreamActivityRenderer} from './components/StreamActivity'
 import {SubscriptionActivityRenderer} from './components/SubscriptionActivity'
-import {type ActivityGroupRowItem} from './model'
-import {
-  type ActivityPresentationItem,
-  type ActivityPresentationProps,
-} from './presentation'
+import {type ActivityPresentationProps} from './presentation'
+import {getActivityCount} from './relationships'
 import {
   activityCollections,
+  isActorGroup,
   isKnownActivityCollection,
+  isSubjectGroup,
   type KnownActivityCollection,
 } from './types'
 
@@ -93,11 +92,12 @@ function PublicationActivityRenderer({
   testID,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
-  const actionText = isActorGroup(item)
-    ? l`${plural(getGroupCount(item), {one: 'created # publication', other: 'created # publications'})}`
-    : isSubjectGroup(item)
-      ? l`did something with a publication`
-      : l`created a publication`
+  const actionText =
+    item.type === 'group' && isActorGroup(item.group)
+      ? l`${plural(getActivityCount(item), {one: 'created # publication', other: 'created # publications'})}`
+      : item.type === 'group' && isSubjectGroup(item.group)
+        ? l`did something with a publication`
+        : l`created a publication`
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
       <ActivityRowHeader
@@ -112,20 +112,4 @@ function PublicationActivityRenderer({
       />
     </ActivityRow>
   )
-}
-
-function isActorGroup(
-  item: ActivityPresentationItem,
-): item is ActivityGroupRowItem & {group: {groupBy: 'actor'}} {
-  return item.type === 'group' && item.group.groupBy === 'actor'
-}
-
-function isSubjectGroup(
-  item: ActivityPresentationItem,
-): item is ActivityGroupRowItem & {group: {groupBy: 'subject'}} {
-  return item.type === 'group' && item.group.groupBy === 'subject'
-}
-
-function getGroupCount(item: ActivityPresentationItem) {
-  return item.type === 'group' ? item.group.items.length : 1
 }

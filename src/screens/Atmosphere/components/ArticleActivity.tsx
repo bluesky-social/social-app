@@ -5,13 +5,18 @@ import {useLingui} from '@lingui/react/macro'
 import {ACTIVITY_ROW_PADDING_START} from '#/screens/Atmosphere/constants'
 import {getArticleExternalView} from '#/screens/Atmosphere/externalViews'
 import {getRecordActor} from '#/screens/Atmosphere/presentation'
-import {getFirstActivity} from '#/screens/Atmosphere/relationships'
+import {
+  getActivityContent,
+  getActivityCount,
+  getFirstActivity,
+} from '#/screens/Atmosphere/relationships'
 import {type ActivityRendererProps} from '#/screens/Atmosphere/renderers'
 import {
   getActivityRowKind,
   getArticleActivityUri,
 } from '#/screens/Atmosphere/rowLayout'
 import {getDocumentSocialProof} from '#/screens/Atmosphere/socialProof'
+import {isActorGroup} from '#/screens/Atmosphere/types'
 import {atoms as a, useTheme} from '#/alf'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as RecommendIcon} from '#/components/icons/Heart2'
 import {PageText_Stroke2_Corner0_Rounded as ArticleIcon} from '#/components/icons/PageText'
@@ -46,25 +51,26 @@ function ArticleActivity({
   const t = useTheme()
   const {t: l} = useLingui()
   const first = getFirstActivity(item)
-  if (!first || computedItemView.actors.length === 0) return null
-  const actorGroup = item.type === 'group' && item.group.groupBy === 'actor'
+  const content = getActivityContent(item)
+  if (!first || !content || computedItemView.actors.length === 0) return null
+  const actorGroup = item.type === 'group' && isActorGroup(item.group)
   const documentUri = getArticleActivityUri(item)
-  const view = getArticleExternalView(first)
+  const view = getArticleExternalView(content)
   const title =
     view?.title.trim() ||
-    (bsky.isType(app.bsky.embed.external.viewArticle, first.view)
-      ? first.view.title.trim()
+    (bsky.isType(app.bsky.embed.external.viewArticle, content.view)
+      ? content.view.title.trim()
       : '') ||
     l`Article unavailable`
   const author = getRecordActor(documentUri, item.actors)
   const timestamp =
     item.type === 'activity' ? first.record.indexedAt : item.group.indexedAt
-  const remainingCount = actorGroup ? item.group.items.length - 1 : 0
+  const remainingCount = actorGroup ? getActivityCount(item) - 1 : 0
   const suffix =
     remainingCount > 0
       ? l`and ${plural(remainingCount, {one: '# more article', other: '# more articles'})}`
       : undefined
-  const {recommenders, shares} = getDocumentSocialProof(first, item)
+  const {recommenders, shares} = getDocumentSocialProof(content)
   const action = recommendation
     ? l`recommended an article`
     : l`published a new article`
@@ -132,7 +138,13 @@ function ArticleActivity({
           suffix={suffix}
           thumb={view?.thumb}
           actions={actions}>
-          <ActivityCounts view={first.view} />
+          <ActivityCounts view={content.view} />
+          {!recommendation && shares.length > 0 ? (
+            <ShareSnippets
+              shares={shares}
+              hideActorMetadataForDid={author?.did}
+            />
+          ) : null}
           {view?.source ? (
             <InlineLinkText
               to={view.source.uri}

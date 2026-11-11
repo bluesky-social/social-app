@@ -2,144 +2,114 @@ import {getDocumentSocialProof} from '#/screens/Atmosphere/socialProof'
 import {
   createActivity,
   createActor,
-  createArticleView,
-  createPostView,
-  createRow,
-  documentUri,
-  recordCid,
+  createRelatedGroup,
+  createSubjectGroup,
 } from '#/screens/Atmosphere/testFixtures'
 import {
   type ActivityActor,
   activityCollections,
-  type ActivityItem,
 } from '#/screens/Atmosphere/types'
-
-// The global CID mock cannot validate real strong-reference CIDs.
-jest.unmock('multiformats/cid')
-
-function relatedRow(related: ActivityItem[]) {
-  const actors = {'did:plc:author': createActor()}
-  return createRow([createActivity({relatedActivity: related})], {
-    actors: {
-      ...actors,
-      ...createRow(related.length ? related : [createActivity()]).actors,
-    },
-  })
-}
 
 function recommend(did: ActivityActor['did'], rkey = 'recommend') {
   return createActivity({
     collection: activityCollections.recommendation,
     did,
     rkey,
-    view: createArticleView(),
   })
 }
 
 function share(did: ActivityActor['did'], rkey = 'share') {
-  return createActivity({
-    collection: activityCollections.share,
-    did,
-    rkey,
-    view: createPostView({
-      uri: `at://${did}/${activityCollections.share}/${rkey}`,
-      author: createActor(did),
-    }),
-  })
+  return createActivity({collection: activityCollections.share, did, rkey})
 }
 
-describe('Atmosphere social-proof rules', () => {
-  it('keeps mixed proof separate, deduplicated, in API order, with original references', () => {
-    const first = recommend('did:plc:one')
-    const shared = share('did:plc:one')
-    const selfShared = share('did:plc:author')
-    const second = recommend('did:plc:two')
-    const row = relatedRow([
+describe('Atmosphere social-proof buckets', () => {
+  it('keeps ordered categories and supplied reference/profile objects without hydrated views', () => {
+    const recommendations = createRelatedGroup([
+      recommend('did:plc:one'),
+      recommend('did:plc:two'),
+      recommend('did:plc:one', 'another'),
+    ])
+    const shares = createRelatedGroup([
+      share('did:plc:one'),
+      share('did:plc:author'),
+      share('did:plc:one', 'another'),
+    ])
+    const relatedActivity = [shares, recommendations]
+    const document = createActivity({relatedActivity})
+    const proof = getDocumentSocialProof(document)
+    expect(proof.recommenders).toEqual(recommendations.actors)
+    expect(proof.recommenders[0]).toBe(recommendations.actors[0])
+    expect(proof.shares.map(entry => entry.activity)).toEqual(shares.activities)
+    expect(proof.shares[0].activity).toBe(shares.activities[0])
+    expect(proof.shares[0].actor).toBe(shares.actors[0])
+    expect(proof.shares[0].activity).not.toHaveProperty('view')
+    expect(proof.shares[0].activity).not.toHaveProperty('viewerState')
+    expect(document.relatedActivity).toBe(relatedActivity)
+  })
+
+  it('does not infer recommendations from self-shares or require unavailable share post content', () => {
+    const bucket = createRelatedGroup([share('did:plc:author')])
+    const proof = getDocumentSocialProof(
+      createActivity({relatedActivity: [bucket]}),
+    )
+    expect(proof.recommenders).toEqual([])
+    expect(proof.shares).toHaveLength(1)
+    expect(proof.shares[0].activity).toBe(bucket.activities[0])
+  })
+
+  it('deduplicates exact share references while retaining distinct posts by the same actor', () => {
+    const first = share('did:plc:one')
+    const bucket = createRelatedGroup([
       first,
-      shared,
-      second,
-      selfShared,
-      recommend('did:plc:one', 'duplicate'),
-      share('did:plc:one', 'duplicate'),
+      first,
+      share('did:plc:one', 'second'),
     ])
-    if (row.type !== 'activity')
-      throw new Error('Expected a standalone document')
-    const proof = getDocumentSocialProof(row.activity, row)
-    expect(proof.recommenders.map(actor => actor.did)).toEqual([
-      'did:plc:one',
-      'did:plc:two',
+    const proof = getDocumentSocialProof(
+      createActivity({relatedActivity: [bucket, bucket]}),
+    )
+    expect(proof.shares.map(entry => entry.activity.record.uri)).toEqual([
+      first.record.uri,
+      bucket.activities[2].record.uri,
     ])
-    expect(proof.shares.map(entry => entry.actor.did)).toEqual([
-      'did:plc:one',
-      'did:plc:author',
-    ])
-    expect(proof.recommenders[0]).toBe(row.actors['did:plc:one'])
-    expect(proof.shares[0].activity).toBe(shared)
-    expect(proof.shares[0].actor).toBe(row.actors['did:plc:one'])
-    expect(proof.shares[1].activity).toBe(selfShared)
-    expect(row.activity.relatedActivity?.[0]).toBe(first)
   })
 
-  it('does not treat a self-share as a recommendation', () => {
-    const row = relatedRow([share('did:plc:author')])
-    if (row.type !== 'activity')
-      throw new Error('Expected a standalone document')
-    expect(getDocumentSocialProof(row.activity, row).recommenders).toEqual([])
-  })
-
-  it('does not attribute interactions pinned to a different document revision', () => {
-    const recommendation = recommend('did:plc:recommender')
-    const shared = share('did:plc:sharer')
-    const row = relatedRow([recommendation, shared])
-    if (row.type !== 'activity') throw new Error('Expected standalone document')
-    row.activity.record.cid = 'bafyreifutureversion'
-    expect(getDocumentSocialProof(row.activity, row)).toEqual({
+  it('ignores missing/invalid profiles, mismatched bucket collections and invalid share sources', () => {
+    const recommendations = createRelatedGroup(
+      [recommend('did:plc:missing'), recommend('did:plc:bad')],
+      [{...createActor('did:plc:bad'), handle: 'handle.invalid'}],
+    )
+    const shares = createRelatedGroup([share('did:plc:sharer')])
+    shares.activities[0].record.uri =
+      'at://did:plc:sharer/site.standard.document/not-a-post'
+    const mismatched = createRelatedGroup([recommend('did:plc:other')])
+    mismatched.collection = activityCollections.share
+    const unrelated = createRelatedGroup([
+      createActivity({collection: activityCollections.subscription}),
+    ])
+    const document = createActivity({
+      relatedActivity: [recommendations, shares, mismatched, unrelated],
+    })
+    const before = JSON.stringify(document)
+    expect(getDocumentSocialProof(document)).toEqual({
       recommenders: [],
       shares: [],
     })
+    expect(JSON.stringify(document)).toBe(before)
   })
 
-  it('ignores missing, invalid, and unrelated proof without mutating it', () => {
-    const missing = recommend('did:plc:missing')
-    const badActor = recommend('did:plc:bad')
-    const wrongTarget = recommend('did:plc:wrong')
-    const noRecord = share('did:plc:no-record')
-    const invalidShare = share('did:plc:invalid-share')
-    const invalidSource = share('did:plc:invalid-source')
-    invalidSource.record.uri =
-      'at://did:plc:invalid-source/site.standard.document/not-a-post'
-    const unrelated = createActivity({
-      collection: activityCollections.subscription,
-    })
-    const children = [
-      missing,
-      badActor,
-      wrongTarget,
-      noRecord,
-      invalidShare,
-      invalidSource,
-      unrelated,
+  it('does not read proof from a shared subject or a non-document activity', () => {
+    const recommendation = recommend('did:plc:one')
+    recommendation.relatedActivity = [
+      createRelatedGroup([share('did:plc:author')]),
     ]
-    const row = relatedRow(children)
-    delete row.actors['did:plc:missing']
-    row.actors['did:plc:bad'].handle = 'handle.invalid'
-    wrongTarget.view = createArticleView({
-      associatedRefs: [{uri: `${documentUri}-other`, cid: recordCid}],
-    })
-    noRecord.view = undefined
-    invalidShare.view = createPostView({
-      record: {
-        $type: activityCollections.share,
-        text: null,
-        createdAt: invalidShare.record.indexedAt,
-      },
-    })
-    if (row.type !== 'activity')
-      throw new Error('Expected a standalone document')
-    expect(getDocumentSocialProof(row.activity, row)).toEqual({
+    expect(getDocumentSocialProof(recommendation)).toEqual({
       recommenders: [],
       shares: [],
     })
-    expect(row.activity.relatedActivity).toBe(children)
+    const group = createSubjectGroup([recommendation, recommend('did:plc:two')])
+    expect(getDocumentSocialProof(group.subject)).toEqual({
+      recommenders: [],
+      shares: [],
+    })
   })
 })

@@ -1,12 +1,16 @@
 import {getActivityAssociatedPost} from '#/screens/Atmosphere/activityPost'
 import {
   createActivity,
+  createActor,
+  createActorGroup,
   createArticleView,
   createGalleryView,
   createLivestreamView,
   createPostView,
   createPublicationView,
+  createRelatedGroup,
   createRow,
+  createSubjectGroup,
   documentUri,
   publicationUri,
   recordCid,
@@ -77,7 +81,7 @@ describe('Atmosphere associated posts', () => {
     },
   )
 
-  it('preserves the original hydrated view only for matching URI and CID', () => {
+  it('preserves the actual hydrated view for matching URI and CID', () => {
     const view = createPostView(postRef)
     const activity = rawPost()
     activity.view = view
@@ -86,18 +90,74 @@ describe('Atmosphere associated posts', () => {
     expect(result?.view).toBe(view)
   })
 
-  it.each([
-    {uri: secondPostUri, cid: recordCid},
-    {uri: postUri, cid: secondCid},
-  ] as const)(
-    'keeps the own record ahead of a mismatched hydrated view (%#)',
-    ref => {
-      const activity = rawPost()
-      activity.view = createPostView(ref)
-      expect(resolve(activity)).toEqual(expectedPost)
-      expect(resolve(activity)).not.toHaveProperty('view')
-    },
-  )
+  it('does not attach a mismatched-URI hydrated native share', () => {
+    const activity = rawPost()
+    activity.view = createPostView({uri: secondPostUri})
+    expect(resolve(activity)).toEqual(expectedPost)
+    expect(resolve(activity)).not.toHaveProperty('view')
+  })
+
+  it('uses the current matching-URI hydrated CID without mutating the original declared ref', () => {
+    const activity = createActivity()
+    activity.bskyPostRef = postRef
+    const view = createPostView({...postRef, cid: secondCid})
+    activity.viewBskyPost = view
+    expect(resolve(activity)).toEqual({uri: postUri, cid: secondCid, view})
+    expect(activity.bskyPostRef).toBe(postRef)
+    expect(activity.bskyPostRef.cid).toBe(recordCid)
+  })
+
+  it('accepts an untagged viewBskyPost reference while retaining the article view', () => {
+    const activity = createActivity()
+    activity.bskyPostRef = postRef
+    const {$type: _, ...view} = createPostView(postRef)
+    activity.viewBskyPost = view
+    expect(resolve(activity)).toEqual({...postRef, view})
+    expect(activity.view).toEqual(createArticleView())
+  })
+
+  it('never attaches an associated hydrated view with a different URI', () => {
+    const activity = createActivity()
+    activity.bskyPostRef = postRef
+    activity.viewBskyPost = createPostView({uri: secondPostUri})
+    expect(resolve(activity)).toEqual(postRef)
+  })
+
+  it('does not substitute mismatched associated hydration even if the declared CID is invalid', () => {
+    const activity = createActivity()
+    activity.bskyPostRef = {uri: postUri, cid: 'invalid-cid'}
+    activity.viewBskyPost = createPostView({uri: secondPostUri})
+    expect(resolve(activity)).toBeUndefined()
+  })
+
+  it('keeps a native share on its own post when its article declares another post', () => {
+    const activity = rawPost()
+    activity.bskyPostRef = {uri: secondPostUri, cid: secondCid}
+    activity.viewBskyPost = createPostView({uri: secondPostUri, cid: secondCid})
+    expect(resolve(activity)).toEqual(expectedPost)
+  })
+
+  it('uses an explicitly hydrated associated post even without a declared ref', () => {
+    const activity = createActivity()
+    const {$type: _, ...view} = createPostView(postRef)
+    activity.viewBskyPost = view
+    expect(resolve(activity)).toEqual({...postRef, view})
+  })
+
+  it('keeps the native share record CID and omits a same-URI view with a different CID', () => {
+    const activity = rawPost()
+    activity.view = createPostView({...postRef, cid: secondCid})
+    expect(resolve(activity)).toEqual(expectedPost)
+    expect(resolve(activity)).not.toHaveProperty('view')
+    expect(activity.record.cid).toBe(recordCid)
+  })
+
+  it('does not replace an invalid declared ref with newer associated hydration', () => {
+    const activity = createActivity()
+    activity.bskyPostRef = {uri: postUri, cid: 'invalid-cid'}
+    activity.viewBskyPost = createPostView({...postRef, cid: secondCid})
+    expect(resolve(activity)).toBeUndefined()
+  })
 
   it('keeps the own record ahead of external associated refs', () => {
     const activity = rawPost()
@@ -318,50 +378,91 @@ describe('Atmosphere associated posts', () => {
   })
 
   it('never substitutes related shares for the activity’s associated post', () => {
-    const activity = createActivity({relatedActivity: [rawPost()]})
+    const activity = createActivity({
+      relatedActivity: [createRelatedGroup([rawPost()])],
+    })
     expect(resolve(activity)).toBeUndefined()
   })
 
-  it.each(['actor', 'subject'] as const)(
-    'uses only the first child of a %s group',
-    groupBy => {
-      const row = createRow([rawPost(), rawPost({uri: secondPostUri})], {
-        groupBy,
+  it('uses only the hydrated item of an actor group, never its later URIs', () => {
+    const first = createActivity()
+    const group = createActorGroup([first, rawPost()])
+    expect(
+      getActivityAssociatedPost({
+        type: 'group',
+        key: group.id,
+        group,
         actors: {},
-      })
-      expect(getActivityAssociatedPost(row)).toEqual(expectedPost)
-    },
-  )
-
-  it.each(['actor', 'subject'] as const)(
-    'does not search later children or metadata in a %s group',
-    groupBy => {
-      const later = createActivity({
-        view: createArticleView({associatedRefs: [postRef]}),
-      })
-      const row = createRow([createActivity(), later], {
-        groupBy,
-        subject: postUri,
+      }),
+    ).toBeUndefined()
+    first.bskyPostRef = postRef
+    expect(
+      getActivityAssociatedPost({
+        type: 'group',
+        key: group.id,
+        group,
         actors: {},
-      })
-      expect(getActivityAssociatedPost(row)).toBeUndefined()
-    },
-  )
-
-  it('does not replace an invalid first post with a later grouped post', () => {
-    const row = createRow([rawPost({cid: 'invalid-cid'}), rawPost()], {
-      actors: {},
-    })
-    expect(getActivityAssociatedPost(row)).toBeUndefined()
+      }),
+    ).toEqual(postRef)
   })
 
-  it('handles an empty group without searching its metadata', () => {
-    const row = createRow([rawPost(), rawPost()], {
-      subject: postUri,
-      actors: {},
-    })
-    if (row.type !== 'group') throw new Error('Expected a group fixture')
-    row.group.items = []
-    expect(getActivityAssociatedPost(row)).toBeUndefined()
+  it('uses the shared subject associated post rather than activity actors or refs', () => {
+    const view = createPostView({...postRef, cid: secondCid})
+    const group = createSubjectGroup(
+      [rawPost(), rawPost({uri: secondPostUri})],
+      {
+        uri: documentUri,
+        viewerState: {subscribed: false},
+        view: createArticleView(),
+        bskyPostRef: postRef,
+        viewBskyPost: view,
+      },
+    )
+    const actors = {'did:plc:poster': createActor('did:plc:poster')}
+    expect(
+      getActivityAssociatedPost({type: 'group', key: group.id, group, actors}),
+    ).toEqual({uri: postUri, cid: secondCid, view})
+    expect(group.subject.bskyPostRef).toBe(postRef)
+  })
+
+  it('keeps subject navigation when the declared post is unavailable', () => {
+    const group = createSubjectGroup(
+      [createActivity(), createActivity({did: 'did:plc:other'})],
+      {
+        uri: documentUri,
+        viewerState: {subscribed: false},
+        view: createArticleView(),
+        bskyPostRef: postRef,
+      },
+    )
+    expect(
+      getActivityAssociatedPost({
+        type: 'group',
+        key: group.id,
+        group,
+        actors: {},
+      }),
+    ).toEqual(postRef)
+  })
+
+  it('falls back to the first actual subject-group share ref without a supplied associated post', () => {
+    const group = createSubjectGroup([rawPost(), rawPost({uri: secondPostUri})])
+    expect(
+      getActivityAssociatedPost({
+        type: 'group',
+        key: group.id,
+        group,
+        actors: {},
+      }),
+    ).toEqual(postRef)
+    group.activities[0].record.cid = 'invalid-cid'
+    expect(
+      getActivityAssociatedPost({
+        type: 'group',
+        key: group.id,
+        group,
+        actors: {},
+      }),
+    ).toBeUndefined()
   })
 })

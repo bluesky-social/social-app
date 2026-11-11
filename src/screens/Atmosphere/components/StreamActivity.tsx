@@ -5,7 +5,11 @@ import {useLingui} from '@lingui/react/macro'
 
 import {ACTIVITY_ROW_PADDING_START} from '#/screens/Atmosphere/constants'
 import {getActivityActor} from '#/screens/Atmosphere/presentation'
-import {getFirstActivity} from '#/screens/Atmosphere/relationships'
+import {
+  getActivityContent,
+  getActivityCount,
+  getFirstActivity,
+} from '#/screens/Atmosphere/relationships'
 import {type ActivityRendererProps} from '#/screens/Atmosphere/renderers'
 import {
   getLivestreamDurationSeconds,
@@ -33,9 +37,13 @@ export function LivestreamActivityRenderer({
   const t = useTheme()
   const {t: l} = useLingui()
   const first = getFirstActivity(item)
-  if (!first) return null
-  const record = bsky.isType(app.bsky.embed.external.viewLivestream, first.view)
-    ? first.view
+  const content = getActivityContent(item)
+  if (!first || !content) return null
+  const record = bsky.isType(
+    app.bsky.embed.external.viewLivestream,
+    content.view,
+  )
+    ? content.view
     : undefined
   const status = record ? getLivestreamStatus(record) : undefined
   const actor = getActivityActor(first, item.actors)
@@ -46,7 +54,7 @@ export function LivestreamActivityRenderer({
   const href = record ? getLivestreamUrl(record) : undefined
   const timestamp =
     item.type === 'activity' ? first.record.indexedAt : item.group.indexedAt
-  const remainingCount = item.type === 'group' ? item.group.items.length - 1 : 0
+  const remainingCount = getActivityCount(item) - 1
   const suffix =
     remainingCount > 0
       ? l`and ${plural(remainingCount, {one: '# more livestream', other: '# more livestreams'})}`

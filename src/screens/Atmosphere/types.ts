@@ -28,10 +28,18 @@ export type ActivityItem = app.bsky.unspecced.getAtmosphereTimeline.ActivityItem
 export type ActivityRecord =
   app.bsky.unspecced.getAtmosphereTimeline.ActivityRecord
 export type ActivityView = ActivityItem['view']
-export type ActivityGroup =
-  app.bsky.unspecced.getAtmosphereTimeline.ActivityGroup
-export type ActivityOverflow =
-  app.bsky.unspecced.getAtmosphereTimeline.ActivityItemOverflow
+export type ActivityActorGroup =
+  app.bsky.unspecced.getAtmosphereTimeline.ActivityActorGroup
+export type ActivitySubjectGroup =
+  app.bsky.unspecced.getAtmosphereTimeline.ActivitySubjectGroup
+export type ActivityGroup = ActivityActorGroup | ActivitySubjectGroup
+export type ActivityGroupItem =
+  app.bsky.unspecced.getAtmosphereTimeline.ActivityGroupItem
+export type ActivityRelatedGroup =
+  app.bsky.unspecced.getAtmosphereTimeline.ActivityRelatedGroup
+export type ActivitySubject =
+  app.bsky.unspecced.getAtmosphereTimeline.ActivitySubject
+export type ActivityContent = ActivityItem | ActivitySubject
 export type ActivityFeedEntry =
   app.bsky.unspecced.getAtmosphereTimeline.$OutputBody['feed'][number]
 export type CollectionActivityItem<TCollection extends string> =
@@ -40,6 +48,29 @@ export type CollectionActivityItem<TCollection extends string> =
   }
 export type ActivityActor = Omit<app.bsky.actor.defs.ProfileViewBasic, '$type'>
 export type ActivityActors = Record<string, ActivityActor>
+export type ActivityShare = {
+  activity: ActivityItem | ActivityGroupItem
+  actor: ActivityActor
+}
+
+export function isActorGroup(
+  group: ActivityGroup,
+): group is ActivityActorGroup {
+  return (
+    group.$type ===
+    'app.bsky.unspecced.getAtmosphereTimeline#activityActorGroup'
+  )
+}
+
+export function isSubjectGroup(
+  group: ActivityGroup,
+): group is ActivitySubjectGroup {
+  return (
+    group.$type ===
+    'app.bsky.unspecced.getAtmosphereTimeline#activitySubjectGroup'
+  )
+}
+
 export type AtmosphereActivityPage =
   app.bsky.unspecced.getAtmosphereTimeline.$OutputBody & {
     actors: ActivityActors

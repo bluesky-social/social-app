@@ -1,16 +1,12 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {makeProfileLink} from '#/lib/routes/links'
 import {cleanError} from '#/lib/strings/errors'
-import {sanitizeHandle} from '#/lib/strings/handles'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
 import {TimelineRow} from '#/screens/Atmosphere/components/TimelineRow'
-import {ACTIVITY_ROW_CONTENT_INSET} from '#/screens/Atmosphere/constants'
 import {buildActivityListItems} from '#/screens/Atmosphere/model'
 import {buildActivityPresentationListItems} from '#/screens/Atmosphere/presentation'
 import {useAtmosphereQuery} from '#/screens/Atmosphere/query'
@@ -18,17 +14,11 @@ import {
   type ActivityTimelineListItem,
   buildActivityTimelineItems,
 } from '#/screens/Atmosphere/timeline'
-import {
-  activityCollections,
-  type ActivityOverflow,
-} from '#/screens/Atmosphere/types'
 import {useTimelineNow} from '#/screens/Atmosphere/useTimelineNow'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
-import {InlineLinkText} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
 
 export function AtmosphereActivityTab() {
@@ -44,9 +34,7 @@ export function AtmosphereActivityTab() {
     buildActivityPresentationListItems(items),
     now,
   )
-  const hasActivityRows = timelineItems.some(
-    item => item.layout || item.item.type === 'overflow',
-  )
+  const hasActivityRows = timelineItems.some(item => item.layout)
 
   const onRefresh = async () => {
     setIsPTRing(true)
@@ -148,8 +136,6 @@ function renderItem({item}: {item: ActivityTimelineListItem}) {
       return <AtmosphereEmpty />
     case 'error':
       return <AtmosphereError error={item.item.error} />
-    case 'overflow':
-      return <AtmosphereOverflow overflow={item.item.overflow} />
     case 'activity':
     case 'group':
       return item.computedItemView && item.layout ? (
@@ -160,67 +146,6 @@ function renderItem({item}: {item: ActivityTimelineListItem}) {
         />
       ) : null
   }
-}
-
-function AtmosphereOverflow({overflow}: {overflow: ActivityOverflow}) {
-  const {t: l} = useLingui()
-  const t = useTheme()
-  const count = overflow.count
-  let label: string
-  switch (overflow.collection) {
-    case activityCollections.document:
-      label = l`${plural(count, {one: '# more article', other: '# more articles'})}`
-      break
-    case activityCollections.publication:
-      label = l`${plural(count, {one: '# more publication', other: '# more publications'})}`
-      break
-    case activityCollections.recommendation:
-      label = l`${plural(count, {one: '# more recommendation', other: '# more recommendations'})}`
-      break
-    case activityCollections.subscription:
-      label = l`${plural(count, {one: '# more subscription', other: '# more subscriptions'})}`
-      break
-    case activityCollections.livestream:
-      label = l`${plural(count, {one: '# more livestream', other: '# more livestreams'})}`
-      break
-    case activityCollections.grainGallery:
-      label = l`${plural(count, {one: '# more gallery', other: '# more galleries'})}`
-      break
-    case activityCollections.grainFavorite:
-      label = l`${plural(count, {one: '# more favorite', other: '# more favorites'})}`
-      break
-    case activityCollections.share:
-      label = l`${plural(count, {one: '# more post', other: '# more posts'})}`
-      break
-    default:
-      label = l`${plural(count, {one: '# more activity', other: '# more activities'})}`
-  }
-  return (
-    <View
-      testID="atmosphereOverflowRow"
-      style={[
-        a.pr_lg,
-        a.py_md,
-        a.gap_xs,
-        {paddingLeft: ACTIVITY_ROW_CONTENT_INSET},
-      ]}>
-      <Text style={[a.text_md, t.atoms.text_contrast_medium]}>{label}</Text>
-      {overflow.associatedProfiles.length > 0 ? (
-        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          {overflow.associatedProfiles.map((profile, index) => (
-            <InlineLinkText
-              key={profile.did}
-              to={makeProfileLink(profile)}
-              label={l`View ${sanitizeHandle(profile.handle, '@')}’s profile`}
-              style={[a.text_sm, t.atoms.text_contrast_medium]}>
-              {index > 0 ? ', ' : ''}
-              {sanitizeHandle(profile.handle, '@')}
-            </InlineLinkText>
-          ))}
-        </Text>
-      ) : null}
-    </View>
-  )
 }
 
 const keyExtractor = (item: ActivityTimelineListItem) => item.item.key

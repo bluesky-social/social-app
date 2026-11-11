@@ -5,8 +5,10 @@ import {buildActivityPresentationListItems} from './presentation'
 import {
   createActivity,
   createActor,
+  createArticleView,
   createPublicationView,
   createRow,
+  documentUri,
 } from './testFixtures'
 import {buildActivityTimelineItems} from './timeline'
 import {
@@ -14,7 +16,6 @@ import {
   activityCollections,
   type ActivityFeedEntry,
   type ActivityItem,
-  type ActivityOverflow,
   type AtmosphereActivityPage,
 } from './types'
 
@@ -69,35 +70,6 @@ function page(
 ): AtmosphereActivityPage {
   return {feed, actors}
 }
-
-it('passes overflow through without inventing a timestamp, heading, or presentation', () => {
-  const overflow = {
-    $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityItemOverflow',
-    count: 7,
-    collection: activityCollections.grainFavorite,
-    associatedProfiles: [createActor()],
-  } satisfies ActivityOverflow
-  const now = localDate(2026, 9, 11)
-  const first = unknownActivity({rkey: 'before-overflow', indexedAt: now})
-  const second = unknownActivity({rkey: 'after-overflow', indexedAt: now})
-  const items = timeline(
-    [
-      page([first, overflow, second], {
-        actors: {'did:plc:timeline': createActor('did:plc:timeline')},
-      }),
-    ],
-    now,
-  )
-  expect(items.map(item => item.item.type)).toEqual([
-    'activity',
-    'overflow',
-    'activity',
-  ])
-  expect(items[1].item).toEqual(expect.objectContaining({overflow}))
-  expect(items[1].computedItemView).toBeUndefined()
-  expect(items[1].layout).toBeUndefined()
-  expect(items[2].layout?.separator).toBe(false)
-})
 
 function timeline(pages: AtmosphereActivityPage[], now: Date) {
   const listItems = buildActivityListItems({
@@ -291,17 +263,9 @@ describe('Atmosphere timeline integration', () => {
 
     const listItems = buildActivityListItems({
       pages: [
-        page(
-          [
-            {
-              ...sourceGroup.group,
-              $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup',
-            },
-          ],
-          {
-            actors: sourceGroup.actors,
-          },
-        ),
+        page([sourceGroup.group], {
+          actors: sourceGroup.actors,
+        }),
       ],
       pageParams: [undefined],
     })
@@ -318,9 +282,10 @@ describe('Atmosphere timeline integration', () => {
       throw new Error('Expected grouped timeline item')
     expect(item.item.key).toBe(listItems[0].key)
     expect(item.item.actors['did:plc:group-author']).toBe(actor)
-    expect(item.item.group.items[0]).toBe(first)
-    expect(item.item.group.items[1]).toBe(second)
-    expect(item.item.group.items).toBe(listItems[0].group.items)
+    if (!('item' in item.item.group)) throw new Error('Expected actor group')
+    expect(item.item.group.item).toBe(first)
+    expect(item.item.group.uris).toEqual([first.record.uri, second.record.uri])
+    expect(item.item.group).toBe(listItems[0].group)
     expect(item.layout?.heading?.key).toBe('2026-09-09')
   })
 
@@ -329,21 +294,45 @@ describe('Atmosphere timeline integration', () => {
     const firstGroup = createRow(
       [
         unknownActivity({did: 'did:plc:first', rkey: 'one', indexedAt: now}),
-        unknownActivity({did: 'did:plc:first', rkey: 'two', indexedAt: now}),
+        unknownActivity({
+          did: 'did:plc:first-other',
+          rkey: 'two',
+          indexedAt: now,
+        }),
       ],
       {
         groupBy: 'subject',
-        actors: {'did:plc:first': createActor('did:plc:first')},
+        subject: {
+          uri: documentUri,
+          viewerState: {subscribed: false},
+          view: createArticleView(),
+        },
+        actors: {
+          'did:plc:first': createActor('did:plc:first'),
+          'did:plc:first-other': createActor('did:plc:first-other'),
+        },
       },
     )
     const secondGroup = createRow(
       [
         unknownActivity({did: 'did:plc:second', rkey: 'one', indexedAt: now}),
-        unknownActivity({did: 'did:plc:second', rkey: 'two', indexedAt: now}),
+        unknownActivity({
+          did: 'did:plc:second-other',
+          rkey: 'two',
+          indexedAt: now,
+        }),
       ],
       {
         groupBy: 'subject',
-        actors: {'did:plc:second': createActor('did:plc:second')},
+        subject: {
+          uri: documentUri,
+          viewerState: {subscribed: false},
+          view: createArticleView(),
+        },
+        actors: {
+          'did:plc:second': createActor('did:plc:second'),
+          'did:plc:second-other': createActor('did:plc:second-other'),
+        },
       },
     )
     if (firstGroup.type !== 'group' || secondGroup.type !== 'group')
@@ -353,24 +342,8 @@ describe('Atmosphere timeline integration', () => {
 
     const items = timeline(
       [
-        page(
-          [
-            {
-              ...firstGroup.group,
-              $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup',
-            },
-          ],
-          {actors: firstGroup.actors},
-        ),
-        page(
-          [
-            {
-              ...secondGroup.group,
-              $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityGroup',
-            },
-          ],
-          {actors: secondGroup.actors},
-        ),
+        page([firstGroup.group], {actors: firstGroup.actors}),
+        page([secondGroup.group], {actors: secondGroup.actors}),
       ],
       now,
     )

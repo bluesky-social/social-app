@@ -1,4 +1,7 @@
-import {type ActivityItem} from '#/screens/Atmosphere/types'
+import {
+  type ActivityContent,
+  type ActivityGroupItem,
+} from '#/screens/Atmosphere/types'
 import {hexToRgb} from '#/alf/util/colorGeneration'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -11,16 +14,17 @@ export type PublicationBodyThemeColors = {
 
 /** Uses only the post supplied by the endpoint, never a quoted post. */
 export function getActivityPostView(
-  activity: ActivityItem,
+  activity: ActivityContent | ActivityGroupItem,
 ): app.bsky.feed.defs.PostView | undefined {
-  return bsky.isType(app.bsky.feed.defs.postView, activity.view)
+  return 'view' in activity &&
+    bsky.isType(app.bsky.feed.defs.postView, activity.view)
     ? activity.view
     : undefined
 }
 
 /** Adapts hydrated content to the shared external card without rebuilding records. */
 export function getArticleExternalView(
-  activity: ActivityItem,
+  activity: ActivityContent,
 ): app.bsky.embed.external.ViewExternal | undefined {
   const view = activity.view
   if (bsky.isType(app.bsky.embed.external.viewArticle, view)) {
@@ -57,7 +61,7 @@ export function getArticleExternalView(
 }
 
 export function getPublicationExternalView(
-  activity: ActivityItem,
+  activity: ActivityContent,
 ): app.bsky.embed.external.ViewExternal | undefined {
   return bsky.isType(
     app.bsky.embed.external.viewArticlePublication,
