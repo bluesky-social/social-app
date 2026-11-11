@@ -9,11 +9,15 @@ import {
   waitFor,
 } from '@testing-library/react-native'
 
-import {type ActivityAssociatedPost} from '#/screens/Atmosphere/activityPost'
+import {
+  type ActivityAssociatedPost,
+  getActivityAssociatedPost,
+} from '#/screens/Atmosphere/activityPost'
 import {
   createActivity,
   createActor,
   createPostView,
+  createRow,
 } from '#/screens/Atmosphere/testFixtures'
 import {type ActivityActor} from '#/screens/Atmosphere/types'
 import {type DialogControlProps} from '#/components/Dialog'
@@ -28,12 +32,16 @@ const mockGetPost = jest.fn()
 const mockReport = jest.fn()
 const mockToast = jest.fn()
 const mockSignIn = jest.fn()
+const mockNavigate = jest.fn()
 const mockSession: {currentAccount?: {did: string}} = {
   currentAccount: {did: 'did:plc:viewer'},
 }
 type Children = {children?: React.ReactNode}
 
 jest.unmock('multiformats/cid')
+jest.mock('@react-navigation/native', () => ({
+  useNavigation: () => ({navigate: mockNavigate}),
+}))
 
 jest.mock('#/alf', () => ({atoms: {}}))
 
@@ -179,7 +187,6 @@ function associatedPost(
   return {
     uri: view.uri,
     cid: view.cid,
-    href: '/profile/did:plc:sharer/post/share',
     ...(includeView ? {view} : {}),
   }
 }
@@ -193,6 +200,30 @@ function renderMenu(actor = createActor(), post?: ActivityAssociatedPost) {
 }
 
 describe('Atmosphere activity moderation menu', () => {
+  it('navigates to bskyPostRef rather than the actor or hydrated post without requiring sign-in', () => {
+    mockSession.currentAccount = undefined
+    const activity = createActivity({view: createPostView()})
+    activity.bskyPostRef = {
+      uri: 'at://did:plc:declared/app.bsky.feed.post/comments',
+      cid: activity.record.cid,
+    }
+    const post = getActivityAssociatedPost(createRow([activity], {actors: {}}))
+    const screen = renderMenu(createActor(), post)
+    fireEvent.press(screen.getByRole('menuitem', {name: 'View Bluesky post'}))
+    expect(mockNavigate).toHaveBeenCalledWith('PostThread', {
+      name: 'did:plc:declared',
+      rkey: 'comments',
+    })
+    expect(mockSignIn).not.toHaveBeenCalled()
+  })
+
+  it('omits post navigation when no usable post is associated', () => {
+    const screen = renderMenu()
+    expect(
+      screen.queryByRole('menuitem', {name: 'View Bluesky post'}),
+    ).toBeNull()
+  })
+
   it('mutes an unmuted account', async () => {
     const screen = renderMenu(createActor(), associatedPost())
     await fireEventAsync.press(

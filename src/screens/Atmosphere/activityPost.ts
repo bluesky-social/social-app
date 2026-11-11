@@ -1,6 +1,5 @@
 import {AtUri, isAtUriString, isValidDid} from '@atproto/syntax'
 
-import {makeProfileLink} from '#/lib/routes/links'
 import {type ActivityPresentationItem} from '#/screens/Atmosphere/presentation'
 import {getFirstActivity} from '#/screens/Atmosphere/relationships'
 import {activityCollections} from '#/screens/Atmosphere/types'
@@ -10,7 +9,6 @@ import * as bsky from '#/types/bsky'
 export type ActivityAssociatedPost = {
   uri: app.bsky.feed.defs.PostView['uri']
   cid: app.bsky.feed.defs.PostView['cid']
-  href: string
   view?: app.bsky.feed.defs.PostView
 }
 
@@ -24,6 +22,8 @@ export function getActivityAssociatedPost(
   const view = bsky.isType(app.bsky.feed.defs.postView, activity.view)
     ? activity.view
     : undefined
+  const declaredPost = resolvePostRef(activity.bskyPostRef, view)
+  if (declaredPost) return declaredPost
 
   if (activity.collection === activityCollections.share) {
     const post = resolvePostRef(
@@ -73,7 +73,6 @@ function resolvePostRef(
   return {
     uri: ref.uri,
     cid: ref.cid,
-    href: makeProfileLink({did: uri.host, handle: ''}, 'post', uri.rkey),
     ...(view?.uri === ref.uri && view.cid === ref.cid ? {view} : {}),
   }
 }

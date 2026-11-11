@@ -26,7 +26,6 @@ const secondCid = 'bafyreiaxduxpwdpjgvve3klfs4flkwjwfqiurszw4o6jvjarpqqmeqwiza'
 const postRef = {uri: postUri, cid: recordCid} as const
 const expectedPost = {
   ...postRef,
-  href: '/profile/did:plc:poster/post/post',
 }
 
 function resolve(activity: ActivityItem) {
@@ -51,6 +50,21 @@ function rawPost(overrides: Partial<ActivityItem['record']> = {}) {
 }
 
 describe('Atmosphere associated posts', () => {
+  it('prefers bskyPostRef over a different hydrated or associated post', () => {
+    const activity = createActivity({
+      view: createPostView({uri: secondPostUri, cid: secondCid}),
+    })
+    activity.bskyPostRef = postRef
+    expect(resolve(activity)).toEqual(expectedPost)
+  })
+
+  it('resolves bskyPostRef without a hydrated view', () => {
+    const activity = createActivity()
+    activity.view = undefined
+    activity.bskyPostRef = postRef
+    expect(resolve(activity)).toEqual(expectedPost)
+  })
+
   it.each([false, true])(
     'resolves own post refs without views (typed=%s)',
     typed => {
@@ -171,6 +185,9 @@ describe('Atmosphere associated posts', () => {
     uri => {
       const postUri = uri as ActivityItem['record']['uri']
       expect(resolve(rawPost({uri: postUri}))).toBeUndefined()
+      const declared = createActivity({view: undefined})
+      declared.bskyPostRef = {uri: postUri, cid: recordCid}
+      expect(resolve(declared)).toBeUndefined()
       expect(
         resolve(createActivity({view: createPostView({uri: postUri})})),
       ).toBeUndefined()
@@ -189,7 +206,6 @@ describe('Atmosphere associated posts', () => {
       expect(resolve(rawPost({uri}))).toEqual({
         uri,
         cid: recordCid,
-        href: `/profile/did:plc:poster/post/${rkey}`,
       })
     },
   )
@@ -199,6 +215,9 @@ describe('Atmosphere associated posts', () => {
     cid => {
       const invalidCid = cid as ActivityItem['record']['cid']
       expect(resolve(rawPost({cid: invalidCid}))).toBeUndefined()
+      const declared = createActivity({view: undefined})
+      declared.bskyPostRef = {uri: postUri, cid: invalidCid}
+      expect(resolve(declared)).toBeUndefined()
       expect(
         resolve(
           createActivity({

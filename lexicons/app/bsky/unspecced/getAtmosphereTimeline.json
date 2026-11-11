@@ -52,6 +52,11 @@
         "record": { "type": "ref", "ref": "#activityRecord" },
         "collection": { "type": "string", "format": "nsid" },
         "viewerState": { "type": "ref", "ref": "#viewerState" },
+        "bskyPostRef": {
+          "type": "ref",
+          "ref": "com.atproto.repo.strongRef",
+          "description": "The Bluesky post associated with this activity. The referenced post may not be available."
+        },
         "view": {
           "type": "union",
           "refs": [

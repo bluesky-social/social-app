@@ -1,6 +1,9 @@
 import {useState} from 'react'
+import {AtUri} from '@atproto/syntax'
 import {useLingui} from '@lingui/react/macro'
+import {useNavigation} from '@react-navigation/native'
 
+import {type NavigationProp} from '#/lib/routes/types'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -27,6 +30,7 @@ import {
   PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
 } from '#/components/icons/Person'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
+import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ViewPostIcon} from '#/components/icons/Square'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import {BlockDialog} from '#/components/moderation/BlockDialog'
@@ -50,6 +54,7 @@ export function ActivityMenu({
   rawResponse: ActivityItem | ActivityGroup
 }) {
   const {t: l} = useLingui()
+  const navigation = useNavigation<NavigationProp>()
   const {currentAccount} = useSession()
   const requireAuth = useRequireAuth()
   const profile = useProfileShadow(actor)
@@ -169,6 +174,20 @@ export function ActivityMenu({
         </Menu.Trigger>
         <Menu.Outer showCancel style={{minWidth: 180}}>
           <Menu.Group>
+            {post && (
+              <Menu.Item
+                label={l`View Bluesky post`}
+                onPress={() => {
+                  const uri = new AtUri(post.uri)
+                  navigation.navigate('PostThread', {
+                    name: uri.host,
+                    rkey: uri.rkey,
+                  })
+                }}>
+                <Menu.ItemText>{l`View Bluesky post`}</Menu.ItemText>
+                <Menu.ItemIcon icon={ViewPostIcon} />
+              </Menu.Item>
+            )}
             {canMute && (
               <Menu.Item
                 label={

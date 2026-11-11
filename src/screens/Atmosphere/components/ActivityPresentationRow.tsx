@@ -13,7 +13,7 @@ import {
   UnknownActivityRenderer,
 } from '../renderers'
 import {isKnownActivityCollection} from '../types'
-import {ActivityActions} from './ActivityActions'
+import {ActivityMenu} from './ActivityMenu'
 
 export function ActivityPresentationRow({
   computedItemView,
@@ -40,7 +40,7 @@ export function ActivityPresentationRow({
         testID={getActivityRendererTestID(collection)}
         actions={
           actor ? (
-            <ActivityActions
+            <ActivityMenu
               actor={actor}
               post={getActivityAssociatedPost(item)}
               rawResponse={
