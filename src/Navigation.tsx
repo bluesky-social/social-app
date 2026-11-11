@@ -762,12 +762,12 @@ const ROUTES_WITHOUT_BOTTOM_TAB_BAR = new Set<string>([
 ])
 
 /**
- * Native tab badges only hold text, so the "something new" dot is a dot
- * character, with a clear badge background and our blue text (needs the
- * `react-native-screens` and `@react-navigation/bottom-tabs` patches for the
- * text color). An empty badge would be dropped, see the patch notes.
+ * Native tab badges only hold text, so the "something new" dot is a badge with
+ * a blank label. It can't have its own colors: UIKit styles every badge with
+ * the selected tab's appearance. An empty badge would be dropped, see the
+ * `react-native-screens` patch notes.
  */
-const DOT_BADGE = '\u25CF'
+const DOT_BADGE = ' '
 
 /**
  * Native tabs have no long press, so a double press on Profile or Chat does
@@ -818,10 +818,6 @@ function NativeTabsNavigator({layout}: {layout: TabsLayout}) {
   const accountSwitchControl = useDialogControl()
   const messagesMenuControl = Menu.useMenuControl()
   const lastTabPress = useRef<{name: string; time: number} | null>(null)
-  const dotBadgeStyle = {
-    backgroundColor: 'transparent',
-    color: t.palette.primary_500,
-  }
 
   /*
    * There's no JS bottom bar. Content clears the native one with the bottom
@@ -900,10 +896,16 @@ function NativeTabsNavigator({layout}: {layout: TabsLayout}) {
          */
         tabBarShowLabel: placement !== 'bottom',
         tabBarActiveTintColor: t.atoms.text.color,
-        // Match the JS tab bar's unread badges, which are blue rather than red
+        /*
+         * Match the JS tab bar's unread badges, which are blue rather than
+         * red, and smaller and bolder than UIKit's. Set for every tab, since
+         * UIKit styles all the badges with the selected tab's appearance.
+         */
         tabBarBadgeStyle: {
           backgroundColor: t.palette.primary_500,
           color: t.palette.white,
+          fontSize: 10,
+          fontWeight: '700',
         },
         /*
          * The native default turns on `automatic` content insets for the first
@@ -958,7 +960,6 @@ function NativeTabsNavigator({layout}: {layout: TabsLayout}) {
           ...(hasHomeBadge &&
             isFollowingV2HomeDotEnabled(ax) && {
               tabBarBadge: DOT_BADGE,
-              tabBarBadgeStyle: dotBadgeStyle,
             }),
           tabBarIcon: ({focused}) =>
             nanoTabIcon(
@@ -999,7 +1000,6 @@ function NativeTabsNavigator({layout}: {layout: TabsLayout}) {
               : // e.g. only chat requests
                 numUnreadMessages.hasNew && {
                   tabBarBadge: DOT_BADGE,
-                  tabBarBadgeStyle: dotBadgeStyle,
                 }),
         }}
       />
