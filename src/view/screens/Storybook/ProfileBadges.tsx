@@ -579,7 +579,7 @@ function RowSpecimen({specimen: c, name}: {specimen: RowCase; name: string}) {
 }
 
 /**
- * Mirrors `Name` inside `Item.PrimaryText` in Notifications v2.
+ * Mirrors `Name` inside `Item.PrimaryText` in Notifications.
  */
 function NotificationNameSpecimen({name, rest}: {name: string; rest: string}) {
   const t = useTheme()

@@ -56,7 +56,7 @@ const dave = bystander('dave.test', 'Dave Davidson')
 const erin = bystander('erin.test', 'Erin Ericsson')
 
 /**
- * Every Notifications v2 kind, built so that the scenario's target really
+ * Every notification kind, built so that the scenario's target really
  * receives its labels, block or mute. Each row shows whether list-time
  * moderation would filter or trim it, then renders it regardless, under the
  * scenario's moderation settings.
