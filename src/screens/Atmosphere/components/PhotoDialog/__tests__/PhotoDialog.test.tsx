@@ -258,7 +258,7 @@ describe('metadata', () => {
     expect(screen.getByText('A visit to the jetty.')).toBeTruthy()
   })
 
-  it('detects links, mentions, and hashtags in the description', () => {
+  it('links URLs and mentions but leaves hashtags as plain text', () => {
     renderDialog(
       gallery({
         description:
@@ -272,9 +272,8 @@ describe('metadata', () => {
     expect(
       screen.getByRole('link', {name: '/profile/author.test'}),
     ).toHaveTextContent('@author.test')
-    expect(screen.getByRole('link', {name: '#landscape'})).toHaveTextContent(
-      '#landscape',
-    )
+    expect(screen.getByText(/#landscape/)).toBeTruthy()
+    expect(screen.queryByRole('link', {name: '#landscape'})).toBeNull()
   })
 
   it.each([

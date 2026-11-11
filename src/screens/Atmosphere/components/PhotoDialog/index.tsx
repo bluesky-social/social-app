@@ -113,7 +113,6 @@ function PhotoDialogInner({
         {photo.description.trim() ? (
           <RichText
             value={photo.description}
-            enableTags
             disableMentionFacetValidation
             onLinkPress={() => control.close()}
             style={[a.text_md, a.leading_snug]}
