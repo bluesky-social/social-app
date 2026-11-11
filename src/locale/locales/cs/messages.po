@@ -8,7 +8,7 @@ msgstr ""
 "Language: cs\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-11-04 22:39\n"
+"PO-Revision-Date: 2026-11-11 16:57\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
@@ -584,170 +584,6 @@ msgstr "{feedCount, plural, one {# kanál} few {# kanály} many {# kanálů} oth
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
 msgstr "{filterCount, plural, one {+# filtr} few {+# filtry} many {+# filtrů} other {+# filtrů}}"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:355
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
-msgstr "{firstAuthorLink} a <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} další vás začali} few {{formattedAuthorsCount} další vás začali} many {{formattedAuthorsCount} dalších vás začalo} other {{formattedAuthorsCount} dalších vás začalo}}</0> sledovat"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:387
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
-msgstr "{firstAuthorLink} a <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} další dal} few {{formattedAuthorsCount} dalších dalo} many {{formattedAuthorsCount} dalších dalo} other {{formattedAuthorsCount} dalších dalo}}</0> lajk vašemu vlastnímu kanálu"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:293
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr "{firstAuthorLink} a <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} další dal/a} few {{formattedAuthorsCount} dalších dalo} many {{formattedAuthorsCount} dalších dalo} other {{formattedAuthorsCount} dalších dalo}}</0> lajk vašemu příspěvku"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:484
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your repost"
-msgstr "{firstAuthorLink} a <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} dalšímu} few {{formattedAuthorsCount} dalším} many {{formattedAuthorsCount} dalších} other {{formattedAuthorsCount} dalších}}</0> se líbí váš repost"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:459
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
-msgstr "{firstAuthorLink} a <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} další} few {{formattedAuthorsCount} dalších} many {{formattedAuthorsCount} dalších} other {{formattedAuthorsCount} dalších}}</0> odebrali svá ověření z vašeho účtu"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:315
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
-msgstr "{firstAuthorLink} a <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} další repostoval} few {{formattedAuthorsCount} dalších repostovalo} many {{formattedAuthorsCount} dalších repostovalo} other {{formattedAuthorsCount} dalších repostovalo}}</0> váš příspěvek"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:506
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your repost"
-msgstr "{firstAuthorLink} a <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} další repostoval} few {{formattedAuthorsCount} dalších repostovalo} many {{formattedAuthorsCount} dalších repostovalo} other {{formattedAuthorsCount} dalších repostovalo}}</0> váš repost"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:409
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your Starter Pack"
-msgstr "{firstAuthorLink} a <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} další se zaregistroval} few {{formattedAuthorsCount} další se zaregistrovali} many {{formattedAuthorsCount} dalších se zaregistrovalo} other {{formattedAuthorsCount} dalších se zaregistrovalo}}</0> pomocí vašeho Startovacího balíčku"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:436
-msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
-msgstr "{firstAuthorLink} a <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} další} few {{formattedAuthorsCount} další} many {{formattedAuthorsCount} dalších} other {{formattedAuthorsCount} dalších}}</0> vás ověřili"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:367
-msgid "{firstAuthorLink} followed you"
-msgstr "{firstAuthorLink} vás sleduje"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:339
-msgid "{firstAuthorLink} followed you back"
-msgstr "{firstAuthorLink} vás také sleduje"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:399
-msgid "{firstAuthorLink} liked your custom feed"
-msgstr "{firstAuthorLink} dal vašemu vláknu lajk"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:305
-msgid "{firstAuthorLink} liked your post"
-msgstr "{firstAuthorLink} dal vašemu příspěvku lajk"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:496
-msgid "{firstAuthorLink} liked your repost"
-msgstr "{firstAuthorLink} dal vašemu repostu lajk"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:471
-msgid "{firstAuthorLink} removed their verification from your account"
-msgstr "{firstAuthorLink} odstranil/a ověření z vašeho účtu"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:327
-msgid "{firstAuthorLink} reposted your post"
-msgstr "{firstAuthorLink} repostoval váš příspěvek"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:518
-msgid "{firstAuthorLink} reposted your repost"
-msgstr "{firstAuthorLink} repostoval váš repost"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:421
-msgid "{firstAuthorLink} signed up with your Starter Pack"
-msgstr "{firstAuthorLink} se zaregistroval pomocí vašeho Startovacího balíčku"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:448
-msgid "{firstAuthorLink} verified you"
-msgstr "Váš účet byl ověřen díky {firstAuthorLink}"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:349
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
-msgstr "{firstAuthorName} a {additionalAuthorsCount, plural, one {{formattedAuthorsCount} další vás začal} few {{formattedAuthorsCount} dalších vás začalo} many {{formattedAuthorsCount} dalších vás začalo} other {{formattedAuthorsCount} dalších vás začalo}} sledovat"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:343
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you via Starter Pack {starterPackName}"
-msgstr "{firstAuthorName} a {additionalAuthorsCount, plural, one {{formattedAuthorsCount} další vás začal sledovat} few {{formattedAuthorsCount} další vás začali sledovat} many {{formattedAuthorsCount} dalších vás začalo sledovat} other {{formattedAuthorsCount} dalších vás začalo sledovat}} pomocí Startovacího balíčku {starterPackName}"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:381
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
-msgstr "{firstAuthorName} a {additionalAuthorsCount, plural, one {{formattedAuthorsCount} dalšímu} few {{formattedAuthorsCount} dalším} many {{formattedAuthorsCount} dalších} other {{formattedAuthorsCount} dalších}} se líbí váš vlastní kanál"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:287
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
-msgstr "{firstAuthorName} a {additionalAuthorsCount, plural, one {{formattedAuthorsCount} dalšímu} few {{formattedAuthorsCount} dalším} many {{formattedAuthorsCount} dalších} other {{formattedAuthorsCount} dalších}} se líbí váš příspěvek"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:478
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your repost"
-msgstr "{firstAuthorName} a {additionalAuthorsCount, plural, one {{formattedAuthorsCount} dalšímu} few {{formattedAuthorsCount} dalším} many {{formattedAuthorsCount} dalším} other {{formattedAuthorsCount} dalším}} se líbí váš repost"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:453
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} removed their verifications from your account"
-msgstr "{firstAuthorName} a {additionalAuthorsCount, plural, one {{formattedAuthorsCount} další odebral/a} few {{formattedAuthorsCount} další odebrali} many {{formattedAuthorsCount} dalších odebralo} other {{formattedAuthorsCount} dalších odebralo}} ověření z vašeho účtu"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:309
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
-msgstr "{firstAuthorName} a {additionalAuthorsCount, plural, one {{formattedAuthorsCount} další repostoval} few {{formattedAuthorsCount} další repostovali} many {{formattedAuthorsCount} dalších repostovalo} other {{formattedAuthorsCount} dalších repostovalo}} váš příspěvek"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:500
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your repost"
-msgstr "{firstAuthorName} a {additionalAuthorsCount, plural, one {{formattedAuthorsCount} další repostoval} few {{formattedAuthorsCount} další repostovali} many {{formattedAuthorsCount} dalších repostovalo} other {{formattedAuthorsCount} dalších repostovalo}} váš repost"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:403
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your Starter Pack"
-msgstr "{firstAuthorName} a {additionalAuthorsCount, plural, one {{formattedAuthorsCount} další se zaregistroval} few {{formattedAuthorsCount} další se zaregistrovali} many {{formattedAuthorsCount} dalších se zaregistrovalo} other {{formattedAuthorsCount} dalších se zaregistrovalo}} pomocí vašeho Startovacího balíčku"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:430
-msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
-msgstr "{firstAuthorName} a {additionalAuthorsCount, plural, one {{formattedAuthorsCount} další vás ověřil/a} few {{formattedAuthorsCount} další vás ověřili} many {{formattedAuthorsCount} dalších vás ověřilo} other {{formattedAuthorsCount} dalších vás ověřilo}}"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:353
-msgid "{firstAuthorName} followed you"
-msgstr "{firstAuthorName} vás sleduje"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:338
-msgid "{firstAuthorName} followed you back"
-msgstr "{firstAuthorName} vás také sleduje"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:337
-msgid "{firstAuthorName} followed you back via Starter Pack {starterPackName}"
-msgstr "{firstAuthorName} vás začal/a také sledovat prostřednictvím Startovacího balíčku {starterPackName}"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:347
-msgid "{firstAuthorName} followed you via Starter Pack {starterPackName}"
-msgstr "{firstAuthorName} vás začal/a sledovat prostřednictvím Startovacího balíčku {starterPackName}"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:385
-msgid "{firstAuthorName} liked your custom feed"
-msgstr "{firstAuthorName} lajkoval váš kanál"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:291
-msgid "{firstAuthorName} liked your post"
-msgstr "{firstAuthorName} lajkoval váš příspěvek"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:482
-msgid "{firstAuthorName} liked your repost"
-msgstr "{firstAuthorName} lajkoval váš repost"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:457
-msgid "{firstAuthorName} removed their verification from your account"
-msgstr "{firstAuthorName} odstranil ověření z vašeho účtu"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:313
-msgid "{firstAuthorName} reposted your post"
-msgstr "{firstAuthorName} repostoval váš příspěvek"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:504
-msgid "{firstAuthorName} reposted your repost"
-msgstr "{firstAuthorName} repostoval váš repost"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:407
-msgid "{firstAuthorName} signed up with your Starter Pack"
-msgstr "{firstAuthorName} se zaregistroval pomocí vašeho Startovacího balíčku"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:434
-msgid "{firstAuthorName} verified you"
-msgstr "Váš účet byl ověřen díky {firstAuthorName}"
-
 #: src/components/ProfileHoverCard/index.web.tsx:575
 msgid "{following} following"
 msgstr "{following} sledovaných"
@@ -812,7 +648,7 @@ msgid "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
 msgstr "{JOIN_REQUESTS_THRESHOLD}+ nových požadavků na připojení"
 
 #. Number of users (always at least 50) who have joined Bluesky using a specific Starter Pack
-#: src/components/StarterPack/StarterPackCard.tsx:97
+#: src/components/StarterPack/StarterPackCard.tsx:80
 msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr "{joinedAllTimeCount, plural, one {# uživatel se připojil} few {# uživatelé se připojili} many {# uživatelů se připojilo} other {# uživatelů se připojilo}}!"
 
@@ -827,7 +663,7 @@ msgstr "{label}. {description}"
 
 #: src/screens/Profile/Header/PronounsDialog.tsx:184
 msgid "{length} out of {MAX_PRONOUNS} characters"
-msgstr ""
+msgstr "{length} z {MAX_PRONOUNS} znaků"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:138
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
@@ -835,11 +671,11 @@ msgstr "{MAX_ALT_TEXT, plural, one {Alternativní text musí být kratší než 
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:547
 msgid "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
-msgstr "{MAX_DESCRIPTION, plural, other {Popis je příliš dlouhý. Maximální počet znaků je #.}}"
+msgstr ""
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:428
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
-msgstr "{MAX_DISPLAY_NAME, plural, other {Zobrazované jméno je příliš dlouhé. Maximální počet znaků je #.}}"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:398
 msgid "{MAX_HIDDEN_REPLIES, plural, other {You can hide a maximum of # replies.}}"
@@ -847,7 +683,7 @@ msgstr "{MAX_HIDDEN_REPLIES, plural, one {Můžete skrýt maximálně # odpově�
 
 #: src/screens/Profile/Header/PronounsDialog.tsx:204
 msgid "{MAX_PRONOUNS, plural, other {Pronouns can be up to # characters.}}"
-msgstr ""
+msgstr "{MAX_PRONOUNS, plural, one {Výrazy mohou mít maximálně # znak.} few {Výrazy mohou mít maximálně # znaky.} many {Výrazy mohou mít maximálně # znaků.} other {Výrazy mohou mít maximálně # znaků.}}"
 
 #. The number of group chat members out of the total number of permitted users.
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:39
@@ -1595,7 +1431,7 @@ msgstr "Aktivní index {0} (z {1}), {2} uživatelské navigační události"
 msgid "Activity"
 msgstr "Aktivita"
 
-#: src/lib/hooks/useNotificationHandler.ts:220
+#: src/lib/hooks/useNotificationHandler.ts:215
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:105
 #: src/screens/Settings/NotificationSettings/index.tsx:228
 msgid "Activity from others"
@@ -1772,7 +1608,7 @@ msgstr "Přidat lidi pomocí odkazu"
 #: src/screens/Profile/Header/PronounsDialog.tsx:102
 #: src/screens/Profile/Header/PronounsDialog.tsx:125
 msgid "Add pronouns"
-msgstr ""
+msgstr "Přidat výrazy"
 
 #: src/components/dms/EmojiPopup.android.tsx:56
 msgid "Add Reaction"
@@ -1926,7 +1762,6 @@ msgstr "alice@example.com"
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:205
-#: src/view/screens/Notifications.tsx:86
 msgid "All"
 msgstr "Vše"
 
@@ -1936,7 +1771,7 @@ msgid "All"
 msgstr "Vše"
 
 #. Tab label in Notifications that shows every notification. Space is tight, so keep it as short as possible.
-#: src/screens/Notifications/index.tsx:123
+#: src/screens/Notifications/index.tsx:106
 msgctxt "notifications tab"
 msgid "All"
 msgstr "Vše"
@@ -2200,8 +2035,6 @@ msgstr "Při spouštění skupinového chatu došlo k problému, zkuste to pros�
 #: src/components/ProfileCard.tsx:510
 #: src/components/ProfileCard.tsx:535
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:218
-#: src/view/com/notifications/NotificationFeedItem.tsx:823
-#: src/view/com/notifications/NotificationFeedItem.tsx:844
 msgid "An issue occurred, please try again."
 msgstr "Došlo k chybě, zkuste to prosím znovu."
 
@@ -2421,7 +2254,7 @@ msgstr "Použít aktualizaci z tohoto kanálu"
 
 #: src/screens/Atmosphere/components/FeaturedApps.tsx:15
 msgid "Apps on the Atmosphere"
-msgstr "Aplikace v Atmosphere"
+msgstr ""
 
 #. placeholder {0}: niceDate(i18n, createdAt, 'medium')
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:627
@@ -2716,7 +2549,6 @@ msgid "Beta Feature"
 msgstr "Funkce beta verze"
 
 #: src/Navigation.tsx:459
-#: src/screens/Notifications/index.tsx:671
 #: src/screens/Settings/BetaFeaturesSettings.tsx:142
 #: src/screens/Settings/Settings.tsx:276
 #: src/screens/Settings/Settings.tsx:279
@@ -2843,10 +2675,6 @@ msgstr "Blokované účty nemohou odpovědět ve vašich vláknech, zmínit vás
 #: src/view/screens/ModerationBlockedAccounts.tsx:179
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Blokované účty nemohou odpovědět ve vašich vláknech, zmínit vás nebo jinak s vámi komunikovat. Neuvidíte jejich obsah a zabráníte jim, aby viděli váš obsah."
-
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:484
-msgid "Blocked post"
-msgstr "Blokovaný příspěvek"
 
 #: src/screens/Profile/Sections/Labels.tsx:204
 msgid "Blocking does not prevent this labeler from placing labels on your account."
@@ -3355,7 +3183,7 @@ msgstr "Změna hesla vás odhlásí. Budete se muset znovu přihlásit s novým 
 msgid "Channel"
 msgstr "Kanál"
 
-#: src/lib/hooks/useNotificationHandler.ts:139
+#: src/lib/hooks/useNotificationHandler.ts:134
 #: src/Navigation.tsx:554
 #: src/view/shell/bottom-bar/BottomBar.tsx:246
 #: src/view/shell/desktop/LeftNav.tsx:776
@@ -3383,11 +3211,11 @@ msgstr "Odkaz na pozvánku na konverzaci již není k dispozici"
 msgid "Chat locked"
 msgstr "Konverzace uzamknuta"
 
-#: src/lib/hooks/useNotificationHandler.ts:152
+#: src/lib/hooks/useNotificationHandler.ts:147
 msgid "Chat messages - silent"
 msgstr "Zprávy v konverzaci - tiché"
 
-#: src/lib/hooks/useNotificationHandler.ts:143
+#: src/lib/hooks/useNotificationHandler.ts:138
 msgid "Chat messages - sound"
 msgstr "Zprávy v konverzaci - zvuk"
 
@@ -3803,19 +3631,14 @@ msgstr "Zavře upozornění o aktualizaci hesla"
 msgid "Closes post composer and discards post draft"
 msgstr "Zavře editor příspěvku a zahodí koncept příspěvku"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:287
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:494
-#: src/view/com/notifications/NotificationFeedItem.tsx:589
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:286
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:493
 msgid "Collapse list of users"
 msgstr "Sbalit seznam uživatelů"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:304
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:303
 msgid "Collapses list of users"
 msgstr "Sbalí seznam uživatelů"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:969
-msgid "Collapses list of users for a given notification"
-msgstr "Sbalí seznam uživatelů pro dané oznámení"
 
 #: src/features/inviteFriends/components/ThemePicker.tsx:68
 msgid "Color"
@@ -4335,7 +4158,7 @@ msgstr "Nelze nahrát kontakty. Pro pokračování musíte znovu ověřit telefo
 msgid "Couldn’t load GIFs"
 msgstr "Nelze načíst GIFy"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:359
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:358
 msgid "Couldn’t load more accounts, please try again"
 msgstr "Nepodařilo se načíst další účty, zkuste to znovu"
 
@@ -4706,10 +4529,6 @@ msgstr "Po ověření smazán pomocí Plivo"
 msgid "Deleted list"
 msgstr "Smazaný seznam"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:487
-msgid "Deleted post"
-msgstr "Smazaný příspěvek"
-
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:463
 #: src/components/SendErrorReportDialog.tsx:78
 #: src/screens/Profile/Header/EditProfileDialog.tsx:527
@@ -4940,7 +4759,7 @@ msgstr "Zobrazit větší odznaky alternativního textu"
 #: src/screens/Profile/Header/EditProfileDialog.tsx:409
 #: src/screens/Profile/Header/EditProfileDialog.tsx:415
 msgid "Display name"
-msgstr "Zobrazované jméno"
+msgstr ""
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:33
 msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
@@ -5128,13 +4947,13 @@ msgstr "např. Lidé, kteří nikdy nezklamou."
 #. Example pronouns in the pronouns field
 #: src/screens/Profile/Header/PronounsDialog.tsx:171
 msgid "e.g. they/them"
-msgstr ""
+msgstr "např. oni/jim"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:385
 msgid "e.g. Users that repeatedly reply with ads."
 msgstr "např. Uživatelé, kteří opakovaně odpovídají reklamami."
 
-#: src/screens/Notifications/components/PageList.tsx:580
+#: src/screens/Notifications/components/PageList.tsx:538
 msgctxt "Notifications section header"
 msgid "Earlier"
 msgstr "Dříve"
@@ -5263,11 +5082,11 @@ msgstr "Upravit profil"
 #: src/screens/Profile/Header/PronounsDialog.tsx:102
 #: src/screens/Profile/Header/PronounsDialog.tsx:123
 msgid "Edit pronouns"
-msgstr ""
+msgstr "Upravit výrazy"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:470
 msgid "Edit pronouns: {pronouns}"
-msgstr ""
+msgstr "Upravit výrazy: {pronouns}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:613
 msgid "Edit Starter Pack"
@@ -5618,9 +5437,8 @@ msgstr "Ukončit režim celé obrazovky"
 msgid "Expand alt text"
 msgstr "Rozbalit alternativní text"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:288
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:494
-#: src/view/com/notifications/NotificationFeedItem.tsx:590
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:287
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:493
 msgid "Expand list of users"
 msgstr "Rozbalit seznam uživatelů"
 
@@ -5632,7 +5450,7 @@ msgstr "Rozbalit nebo sbalit celý příspěvek, na který odpovídáte"
 msgid "Expand post text"
 msgstr "Rozbalit text příspěvku"
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:305
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:304
 msgid "Expands list of users"
 msgstr "Rozbalí seznam uživatelů"
 
@@ -6125,7 +5943,7 @@ msgstr "Kanál od {0}"
 msgid "Feed by {authorName}"
 msgstr "Kanál od {authorName}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/media.tsx:225
+#: src/screens/Notifications/components/NotificationItem/Item/media.tsx:262
 msgid "Feed by {handle}"
 msgstr "Kanál od {handle}"
 
@@ -6275,8 +6093,8 @@ msgstr "Najít a pozvat přátele"
 msgid "Find Contacts"
 msgstr "Najít kontakty"
 
-#: src/screens/Notifications/components/PageList.tsx:636
-#: src/screens/Notifications/components/PageList.tsx:641
+#: src/screens/Notifications/components/PageList.tsx:594
+#: src/screens/Notifications/components/PageList.tsx:599
 msgid "Find friends"
 msgstr "Najít přátele"
 
@@ -6301,7 +6119,7 @@ msgstr "Najděte lidi, které znáte"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Najděte příspěvky, uživatele a kanály na Bluesky"
 
-#: src/screens/Notifications/components/PageList.tsx:630
+#: src/screens/Notifications/components/PageList.tsx:588
 msgid "Find some friends to start getting notifications!"
 msgstr "Najděte nějaké přátele a začněte dostávat oznámení!"
 
@@ -6369,8 +6187,6 @@ msgstr "Zaměřeno {focusCount}krát"
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:430
 #: src/screens/VideoFeed/index.tsx:1060
-#: src/view/com/notifications/NotificationFeedItem.tsx:886
-#: src/view/com/notifications/NotificationFeedItem.tsx:893
 msgid "Follow"
 msgstr "Sledovat"
 
@@ -6427,8 +6243,6 @@ msgstr "Sledovat všechny účty"
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:229
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:155
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:428
-#: src/view/com/notifications/NotificationFeedItem.tsx:886
-#: src/view/com/notifications/NotificationFeedItem.tsx:893
 msgid "Follow back"
 msgstr "Sledovat také"
 
@@ -6486,7 +6300,6 @@ msgstr "Sledující, které znáte"
 
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
-#. User is following this account, click to unfollow
 #: src/components/ProfileCard.tsx:542
 #: src/components/ProfileHoverCard/index.web.tsx:502
 #: src/components/ProfileHoverCard/index.web.tsx:513
@@ -6494,8 +6307,6 @@ msgstr "Sledující, které znáte"
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:426
 #: src/screens/VideoFeed/index.tsx:1058
-#: src/view/com/notifications/NotificationFeedItem.tsx:865
-#: src/view/com/notifications/NotificationFeedItem.tsx:881
 msgid "Following"
 msgstr "Sledované"
 
@@ -6508,10 +6319,8 @@ msgstr "Sledované"
 
 #. placeholder {0}: sanitizeDisplayName( displayNameOrHandle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( displayNameOrHandle, moderation.ui('displayName'), )
-#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, )
 #: src/components/ProfileCard.tsx:496
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:265
-#: src/view/com/notifications/NotificationFeedItem.tsx:816
 msgid "Following {0}"
 msgstr "Sledujete {0}"
 
@@ -6538,7 +6347,7 @@ msgid "Following Feed Preferences"
 msgstr "Předvolby kanálu Sledované"
 
 #. Tab label in Notifications that shows people who followed you. Space is tight, so keep it as short as possible.
-#: src/screens/Notifications/index.tsx:150
+#: src/screens/Notifications/index.tsx:133
 msgctxt "notifications tab"
 msgid "Follows"
 msgstr "Sledující"
@@ -6871,11 +6680,7 @@ msgstr "Začít vysílat živě na"
 msgid "Go to {0}'s profile"
 msgstr "Přejít na profil uživatele {0}"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:250
-msgid "Go to {firstAuthorName}'s profile"
-msgstr "Přejít na profil uživatele {firstAuthorName}"
-
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:78
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:73
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:640
 #: src/screens/Notifications/components/NotificationItem/Item/text.tsx:113
 msgid "Go to {name}’s profile"
@@ -7109,7 +6914,7 @@ msgstr "Máte potíže?"
 #. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “he/they”.
 #: src/screens/Profile/Header/PronounsDialog.tsx:35
 msgid "he/him"
-msgstr ""
+msgstr "on/jeho"
 
 #: src/components/contacts/screens/PhoneInput.tsx:290
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
@@ -7158,7 +6963,7 @@ msgid "Hidden list"
 msgstr "Skrytý seznam"
 
 #. Shown in place of the text of a post that is hidden by the viewer’s moderation settings
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:213
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:208
 msgid "Hidden post"
 msgstr "Skrytý příspěvek"
 
@@ -7171,11 +6976,6 @@ msgstr "Skrytý příspěvek"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:23
 #: src/lib/moderation/useLabelBehaviorDescription.ts:28
 #: src/lib/moderation/useLabelBehaviorDescription.ts:33
-msgid "Hide"
-msgstr "Skrýt"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:975
-msgctxt "action"
 msgid "Hide"
 msgstr "Skrýt"
 
@@ -7242,10 +7042,6 @@ msgstr "Skrýt populární témata"
 #: src/components/interstitials/TrendingVideos.tsx:138
 msgid "Hide trending videos?"
 msgstr "Skrýt populární videa?"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:968
-msgid "Hide user list"
-msgstr "Skrýt seznam uživatelů"
 
 #: src/screens/Moderation/VerificationSettings.tsx:88
 #: src/screens/Moderation/VerificationSettings.tsx:97
@@ -7540,22 +7336,22 @@ msgid "In order to provide an age-appropriate experience, we need to know your b
 msgstr "Abychom mohli poskytnout zážitek odpovídající vašemu věku, potřebujeme znát vaše datum narození. Jedná se o jednorázovou záležitost a vaše údaje zůstanou soukromé."
 
 #. In a notification about a mention or quote, the post is a reply to another person’s post. {subject} is that person’s name, followed by a preview of their post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:269
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:264
 msgid "in reply to <0>{subject}</0>: {previewNode}"
 msgstr "v odpovědi na <0>{subject}</0>: {previewNode}"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:173
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:168
 msgid "in reply to a blocked post"
 msgstr "v odpovědi na zablokovaný příspěvek"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:178
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:173
 msgid "in reply to a deleted post"
 msgstr "v odpovědi na smazaný příspěvek"
 
 #. In a notification about a mention or quote, the post is a reply to the viewer’s own post. Followed by a preview of that post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:265
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:260
 msgid "in reply to you: {previewNode}"
-msgstr ""
+msgstr "jako odpověď vám: {previewNode}"
 
 #: src/screens/Settings/NotificationSettings/components/SettingPreview.tsx:30
 msgid "In-app"
@@ -8223,14 +8019,14 @@ msgstr "To se líbí uživatelům {0} a {1}"
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "To se líbí {likeCount, plural, one {# uživateli} few {# uživatelům} many {# uživatelům} other {# uživatelům}}"
 
-#: src/lib/hooks/useNotificationHandler.ts:164
+#: src/lib/hooks/useNotificationHandler.ts:159
 #: src/screens/Settings/NotificationSettings/index.tsx:162
 #: src/screens/Settings/NotificationSettings/index.tsx:317
 #: src/view/screens/Profile.tsx:273
 msgid "Likes"
 msgstr "Lajky"
 
-#: src/lib/hooks/useNotificationHandler.ts:206
+#: src/lib/hooks/useNotificationHandler.ts:201
 #: src/screens/Settings/NotificationSettings/index.tsx:241
 #: src/screens/Settings/NotificationSettings/index.tsx:367
 msgid "Likes of your reposts"
@@ -8465,7 +8261,6 @@ msgstr "Načíst další doporučené kanály"
 #. Accessible action on the notification list pill.
 #: src/components/NewPostsPill/index.tsx:163
 #: src/screens/Notifications/components/RefreshPill.tsx:107
-#: src/view/screens/Notifications.tsx:271
 msgid "Load new notifications"
 msgstr "Načíst nová oznámení"
 
@@ -8746,10 +8541,9 @@ msgstr "Členy nelze přidat, protože jste zablokovali jeden z vybraných účt
 msgid "mentioned users"
 msgstr "zmíněné uživatele"
 
-#: src/lib/hooks/useNotificationHandler.ts:185
+#: src/lib/hooks/useNotificationHandler.ts:180
 #: src/screens/Settings/NotificationSettings/index.tsx:195
 #: src/screens/Settings/NotificationSettings/index.tsx:342
-#: src/view/screens/Notifications.tsx:99
 msgid "Mentions"
 msgstr "Zmínky"
 
@@ -8868,7 +8662,7 @@ msgid "Moderation details"
 msgstr "Podrobnosti moderování"
 
 #. Name for a feature flag
-#: src/analytics/features/index.ts:149
+#: src/analytics/features/index.ts:132
 #: src/Navigation.tsx:209
 #: src/screens/Moderation/index.tsx:299
 #: src/screens/ModerationInbox/index.tsx:101
@@ -9128,12 +8922,12 @@ msgstr "Příroda"
 
 #. placeholder {0}: record.name
 #. placeholder {0}: view.record.name
-#: src/components/StarterPack/StarterPackCard.tsx:126
-#: src/components/StarterPack/StarterPackCard.tsx:156
+#: src/components/StarterPack/StarterPackCard.tsx:109
+#: src/components/StarterPack/StarterPackCard.tsx:139
 msgid "Navigate to {0}"
 msgstr "Přejít na {0}"
 
-#: src/components/StarterPack/StarterPackCard.tsx:127
+#: src/components/StarterPack/StarterPackCard.tsx:110
 msgid "Navigate to Starter Pack"
 msgstr "Přejít na Startovací balíček"
 
@@ -9173,21 +8967,13 @@ msgctxt "nux-description"
 msgid "New"
 msgstr "Nový"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:567
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:565
 msgid "New {count, plural, one {post} other {posts}} from {name}"
 msgstr "N{count, plural, one {ový příspěvek} few {ové příspěvky} many {ových příspěvků} other {ových příspěvků}} od {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:595
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:593
 msgid "New {count, plural, one {post} other {posts}} from <0/>"
 msgstr "N{count, plural, one {ový příspěvek} few {ové příspěvky} many {ových příspěvků} other {ových příspěvků}} od <0/>"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:547
-msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
-msgstr "N{postsCount, plural, one {ový příspěvek} few {ové příspěvky} many {ových příspěvků} other {ových příspěvků}} od {firstAuthorLink}"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:531
-msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
-msgstr "N{postsCount, plural, one {ový příspěvek} few {ové příspěvky} many {ových příspěvků} other {ových příspěvků}} od {firstAuthorName}"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:162
 #: src/components/dms/dialogs/NewChatDialog.tsx:177
@@ -9228,7 +9014,7 @@ msgstr "Nová e-mailová adresa"
 msgid "New Feature"
 msgstr "Nová funkce"
 
-#: src/lib/hooks/useNotificationHandler.ts:199
+#: src/lib/hooks/useNotificationHandler.ts:194
 #: src/screens/Settings/NotificationSettings/index.tsx:173
 #: src/screens/Settings/NotificationSettings/index.tsx:326
 msgid "New followers"
@@ -9284,13 +9070,12 @@ msgstr "Nové heslo"
 #: src/screens/ProfileList/index.tsx:234
 #: src/screens/ProfileList/index.tsx:277
 #: src/view/screens/Feeds.tsx:546
-#: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:660
 msgid "New post"
 msgstr "Nový příspěvek"
 
 #: src/features/followingV2/home/FeedPage.tsx:192
-#: src/screens/Notifications/index.tsx:101
+#: src/screens/Notifications/index.tsx:84
 #: src/view/com/feeds/FeedPage.tsx:191
 #: src/view/shell/desktop/LeftNav.tsx:656
 msgctxt "action"
@@ -9305,35 +9090,27 @@ msgstr "Nové příspěvky"
 msgid "New posts are ready to load from the people you follow"
 msgstr "Nové příspěvky od lidí, které sledujete, jsou připraveny k načtení"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:536
-msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> "
-msgstr "Nové příspěvky od {firstAuthorLink} a <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} dalšího} few {{formattedAuthorsCount} dalších} many {{formattedAuthorsCount} dalších} other {{formattedAuthorsCount} dalších}}</0> "
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:524
-msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
-msgstr "Nové příspěvky od {firstAuthorName} a {additionalAuthorsCount, plural, one {{formattedAuthorsCount} dalšího} few {{formattedAuthorsCount} dalších} many {{formattedAuthorsCount} dalších} other {{formattedAuthorsCount} dalších}}"
-
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:561
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:559
 msgid "New posts from {name} and {others, plural, one {# other} other {# others}}"
 msgstr "Nové příspěvky od {name} a {others, plural, one {# dalšího} few {# dalších} many {# dalších} other {# dalších}}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:559
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:557
 msgid "New posts from {name} and {secondName}"
 msgstr "Nové příspěvky od {name} a {secondName}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:579
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:577
 msgid "New posts from <0/> and <1/>"
 msgstr "Nové příspěvky od <0/> a <1/>"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:584
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:582
 msgid "New posts from <0/> and <1>{others, plural, one {# other} other {# others}}</1>"
 msgstr "Nové příspěvky od <0/> a <1>{others, plural, one {# dalšího} few {# dalších} many {# dalších} other {# dalších}}</1>"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:566
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:564
 msgid "New reply from {name}"
 msgstr "Nová odpověď od {name}"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:591
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:589
 msgid "New reply from <0/>"
 msgstr "Nová odpověď od <0/>"
 
@@ -9449,7 +9226,7 @@ msgstr "Není nastaveno vypršení platnosti"
 msgid "No feeds found. Try searching for something else."
 msgstr "Nebyly nalezeny žádné kanály. Zkuste vyhledat něco jiného."
 
-#: src/screens/Notifications/components/PageList.tsx:670
+#: src/screens/Notifications/components/PageList.tsx:628
 msgid "No followers to show yet"
 msgstr "Zatím žádní sledující k zobrazení"
 
@@ -9489,10 +9266,8 @@ msgstr "Žádné seznamy"
 
 #. placeholder {0}: sanitizeDisplayName( displayNameOrHandle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( displayNameOrHandle, moderation.ui('displayName'), )
-#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, )
 #: src/components/ProfileCard.tsx:524
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:294
-#: src/view/com/notifications/NotificationFeedItem.tsx:837
 msgid "No longer following {0}"
 msgstr "Již nesledujete {0}"
 
@@ -9521,18 +9296,14 @@ msgstr "Konec nekonečného scrollování v algoritmech plných balastu. Najdět
 msgid "No name"
 msgstr "Bez jména"
 
-#: src/screens/Notifications/components/PageList.tsx:667
+#: src/screens/Notifications/components/PageList.tsx:625
 msgid "No notifications from people you follow yet"
 msgstr "Zatím žádná oznámení od lidí, které sledujete"
 
-#: src/screens/Notifications/components/PageList.tsx:619
-#: src/screens/Notifications/components/PageList.tsx:664
+#: src/screens/Notifications/components/PageList.tsx:577
+#: src/screens/Notifications/components/PageList.tsx:622
 msgid "No notifications yet"
 msgstr "Zatím žádná oznámení"
-
-#: src/view/com/notifications/NotificationFeed.tsx:130
-msgid "No notifications yet!"
-msgstr "Zatím žádná oznámení!"
 
 #: src/screens/Messages/Settings.tsx:104
 msgctxt "allow group chat invites from"
@@ -9564,7 +9335,7 @@ msgstr "Nikdo nemůže posílat zprávy"
 msgid "No post filter"
 msgstr "Bez filtru příspěvků"
 
-#: src/screens/Notifications/ActivityList.tsx:43
+#: src/screens/Notifications/ActivityList.tsx:41
 msgid "No posts here"
 msgstr "Žádné příspěvky"
 
@@ -9590,7 +9361,7 @@ msgstr "Zatím žádné citace"
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "Zatím žádné nedávné GIFy. Vyberte nějaký a zobrazí se zde."
 
-#: src/screens/Notifications/components/PageList.tsx:673
+#: src/screens/Notifications/components/PageList.tsx:631
 msgid "No replies to show yet"
 msgstr "Zatím zde nejsou žádné odpovědi"
 
@@ -9757,14 +9528,13 @@ msgstr "Oznámení"
 #: src/components/dialogs/NotificationSettingsDialog.tsx:72
 #: src/Navigation.tsx:498
 #: src/Navigation.tsx:585
-#: src/screens/Notifications/index.tsx:683
-#: src/view/screens/Notifications.tsx:134
+#: src/screens/Notifications/index.tsx:650
 msgid "Notification settings"
 msgstr "Nastavení oznámení"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:128
 msgid "Notification Settings"
-msgstr ""
+msgstr "Nastavení oznámení"
 
 #: src/screens/Messages/Settings.tsx:305
 #: src/screens/Messages/Settings.tsx:318
@@ -9774,22 +9544,16 @@ msgstr "Zvuky oznámení"
 #: src/Navigation.tsx:580
 #: src/Navigation.tsx:933
 #: src/screens/Messages/Settings.tsx:255
-#: src/screens/Notifications/ActivityList.tsx:31
-#: src/screens/Notifications/index.tsx:661
+#: src/screens/Notifications/ActivityList.tsx:29
+#: src/screens/Notifications/index.tsx:644
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
 #: src/screens/Settings/Settings.tsx:226
 #: src/screens/Settings/Settings.tsx:229
-#: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:283
 #: src/view/shell/desktop/LeftNav.tsx:753
 #: src/view/shell/Drawer.tsx:638
 msgid "Notifications"
 msgstr "Oznámení"
-
-#. Description of a feature flag (Redesigned notifications)
-#: src/analytics/features/index.ts:138
-msgid "Notifications sorted into tabs – people you follow, followers, replies and activity."
-msgstr "Oznámení roztříděná do záložek – lidé, které sledujete, sledující, odpovědi a aktivita."
 
 #: src/lib/hooks/useTimeAgo.ts:135
 msgid "now"
@@ -10107,18 +9871,18 @@ msgstr "Otevřít seznam"
 #. placeholder {0}: livestream.title
 #: src/screens/Atmosphere/components/LivestreamCard.tsx:65
 msgid "Open livestream: {0}"
-msgstr "Otevřít živé vysílání: {0}"
+msgstr ""
 
 #. placeholder {0}: livestream.title
 #: src/screens/Atmosphere/components/LivestreamCard.tsx:64
 msgid "Open livestream: {0}, live"
-msgstr "Otevřít živé vysílání: {0}, živě"
+msgstr ""
 
 #. placeholder {0}: livestream.title
 #. placeholder {1}: livestream.activeCount
 #: src/screens/Atmosphere/components/LivestreamCard.tsx:57
 msgid "Open livestream: {0}, live with {1, plural, one {# viewer} other {# viewers}}"
-msgstr "Otevřít živé vysílání: {0}, živě s {1, plural, one {# divákem} few {# diváky} many {# diváky} other {# diváky}}"
+msgstr ""
 
 #: src/components/dms/ActionsWrapper.tsx:41
 msgid "Open message options"
@@ -10309,10 +10073,6 @@ msgstr "Otevře tento koncept v editoru příspěvků"
 #: src/view/com/util/UserAvatar.tsx:625
 msgid "Opens this profile"
 msgstr "Otevře tento profil"
-
-#: src/screens/Notifications/index.tsx:672
-msgid "Opens your beta features settings"
-msgstr "Otevře nastavení beta funkcí"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:795
 msgid "Opt out"
@@ -10542,7 +10302,7 @@ msgid "People I follow"
 msgstr "Lidé, které sleduji"
 
 #. Tab label in Notifications that shows only notifications from accounts you follow. Space is tight, so keep it as short as possible, ideally one or two words.
-#: src/screens/Notifications/index.tsx:132
+#: src/screens/Notifications/index.tsx:115
 msgctxt "notifications tab"
 msgid "People I follow"
 msgstr "Lidé, které sleduji"
@@ -10896,7 +10656,7 @@ msgid "Post a video"
 msgstr "Přidat video"
 
 #. Tab label in Notifications that shows new posts from accounts you get activity notifications for. Space is tight, so keep it as short as possible.
-#: src/screens/Notifications/index.tsx:159
+#: src/screens/Notifications/index.tsx:142
 msgctxt "notifications tab"
 msgid "Post alerts"
 msgstr "Upozornění na příspěvky"
@@ -10917,10 +10677,6 @@ msgstr "Příspěvek zablokován"
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:36
 msgid "Post by {authorName}"
 msgstr "Příspěvek od {authorName}"
-
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:544
-msgid "Post by {name}"
-msgstr "Příspěvek od {name}"
 
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:311
@@ -11004,7 +10760,7 @@ msgid "Post unpinned"
 msgstr "Příspěvek odepnut"
 
 #. Shown in place of the text of a post that has no text, only images, video, a link or a quoted post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:219
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:214
 msgid "Post with media"
 msgstr "Příspěvek s médii"
 
@@ -11135,7 +10891,7 @@ msgstr "Zpracovává se..."
 msgid "Production image adapter"
 msgstr "Produkční adaptér obrázků"
 
-#: src/view/screens/DebugMod/index.tsx:960
+#: src/view/screens/DebugMod/index.tsx:873
 msgid "profile"
 msgstr "profil"
 
@@ -11172,7 +10928,7 @@ msgstr "Propagace nebo prodej zakázaných předmětů nebo služeb"
 #: src/screens/Profile/Header/PronounsDialog.tsx:140
 #: src/screens/Profile/Header/PronounsDialog.tsx:170
 msgid "Pronouns"
-msgstr ""
+msgstr "Výrazy"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:161
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:162
@@ -11257,7 +11013,7 @@ msgstr "Citovaný příspěvek byl úspěšně odpojen"
 msgid "Quote posts disabled"
 msgstr "Citování příspěvků zakázáno"
 
-#: src/lib/hooks/useNotificationHandler.ts:192
+#: src/lib/hooks/useNotificationHandler.ts:187
 #: src/screens/Post/PostQuotes.tsx:31
 #: src/screens/Settings/NotificationSettings/index.tsx:206
 #: src/screens/Settings/NotificationSettings/index.tsx:349
@@ -11406,11 +11162,6 @@ msgstr "Nedávno použité"
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Reconnect"
 msgstr "Znovu připojit"
-
-#. Name for a feature flag
-#: src/analytics/features/index.ts:132
-msgid "Redesigned notifications"
-msgstr "Přepracovaná oznámení"
 
 #. Pill on the notifications list, shown when there are new notifications to load.
 #: src/screens/Notifications/components/RefreshPill.tsx:101
@@ -11612,7 +11363,7 @@ msgstr "Odebrat profil"
 #: src/screens/Profile/Header/PronounsDialog.tsx:229
 #: src/screens/Profile/Header/PronounsDialog.tsx:234
 msgid "Remove pronouns"
-msgstr ""
+msgstr "Odstranit výrazy"
 
 #: src/components/PostControls/RepostButton.tsx:154
 #: src/components/PostControls/RepostButton.tsx:164
@@ -11652,12 +11403,10 @@ msgid "Remove your verification for this account?"
 msgstr "Odstranit vaše ověření tohoto účtu?"
 
 #: src/components/Post/Embed/index.tsx:294
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:496
 msgid "Removed by author"
 msgstr "Odstraněno autorem"
 
 #: src/components/Post/Embed/index.tsx:292
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:494
 msgid "Removed by you"
 msgstr "Odstraněno vámi"
 
@@ -11721,7 +11470,7 @@ msgid "Replace with Discover"
 msgstr "Nahradit kanálem Discover"
 
 #. In a notification, someone replied to another person’s post. {subject} is that person’s name, followed by a preview of their post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:258
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:253
 msgid "replied to <0>{subject}</0>: {previewNode}"
 msgstr "odpověděl/a uživateli <0>{subject}</0>: {previewNode}"
 
@@ -11730,7 +11479,7 @@ msgctxt "description"
 msgid "Replied to <0><1/></0>"
 msgstr "Odpovězeno uživateli <0><1/></0>"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:171
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:166
 msgid "replied to a blocked post"
 msgstr "odpověděl/a na zablokovaný příspěvek"
 
@@ -11739,7 +11488,7 @@ msgctxt "description"
 msgid "Replied to a blocked post"
 msgstr "Odpovězeno na zablokovaný příspěvek"
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:176
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:171
 msgid "replied to a deleted post"
 msgstr "odpověděl/a na smazaný příspěvek"
 
@@ -11754,9 +11503,9 @@ msgid "Replied to you"
 msgstr "Odpovězeno vám"
 
 #. In a notification, someone replied to the viewer’s own post. Followed by a preview of that post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:254
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:249
 msgid "replied to you: {previewNode}"
-msgstr ""
+msgstr "odpověděl/a vám: {previewNode}"
 
 #: src/components/dms/MessageItem.tsx:943
 msgid "Replied-to message from {senderName}, tap to scroll to it"
@@ -11772,7 +11521,7 @@ msgstr "Zpráva, na kterou bylo odpovězeno, klepnutím na ni přejdete"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:271
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:283
-#: src/lib/hooks/useNotificationHandler.ts:178
+#: src/lib/hooks/useNotificationHandler.ts:173
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:218
 #: src/screens/Settings/NotificationSettings/index.tsx:184
 #: src/screens/Settings/NotificationSettings/index.tsx:333
@@ -11781,7 +11530,7 @@ msgid "Replies"
 msgstr "Odpovědi"
 
 #. Tab label in Notifications that shows replies, quotes and mentions. Space is tight, so keep it as short as possible.
-#: src/screens/Notifications/index.tsx:141
+#: src/screens/Notifications/index.tsx:124
 msgctxt "notifications tab"
 msgid "Replies"
 msgstr "Odpovědi"
@@ -12016,7 +11765,7 @@ msgstr "Repostoval/a {reposter}"
 msgid "Reposted by you"
 msgstr "Repostováno vámi"
 
-#: src/lib/hooks/useNotificationHandler.ts:171
+#: src/lib/hooks/useNotificationHandler.ts:166
 #: src/screens/Settings/NotificationSettings/index.tsx:217
 #: src/screens/Settings/NotificationSettings/index.tsx:358
 msgid "Reposts"
@@ -12030,7 +11779,7 @@ msgstr "Reposty skryty"
 msgid "Reposts of this post"
 msgstr "Reposty tohoto příspěvku"
 
-#: src/lib/hooks/useNotificationHandler.ts:213
+#: src/lib/hooks/useNotificationHandler.ts:208
 #: src/screens/Settings/NotificationSettings/index.tsx:254
 #: src/screens/Settings/NotificationSettings/index.tsx:376
 msgid "Reposts of your reposts"
@@ -12389,8 +12138,6 @@ msgstr "Uloženo do vašich kanálů"
 
 #: src/components/dialogs/NewskieDialog/index.tsx:119
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:295
-#: src/view/com/notifications/NotificationFeedItem.tsx:933
-#: src/view/com/notifications/NotificationFeedItem.tsx:941
 msgid "Say hello!"
 msgstr "Pozdravte!"
 
@@ -13126,7 +12873,7 @@ msgstr "Sdílení věkového rozmezí odhalí pouze rozmezí spojené s vaším 
 #. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “she/they”.
 #: src/screens/Profile/Header/PronounsDialog.tsx:30
 msgid "she/her"
-msgstr ""
+msgstr "ona/její"
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:250
 msgid "Short links can’t be added. Use the full link instead."
@@ -13667,7 +13414,7 @@ msgid "Starter Pack “{starterPackName}”"
 msgstr "Startovací balíček „{starterPackName}“"
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
-#: src/components/StarterPack/StarterPackCard.tsx:86
+#: src/components/StarterPack/StarterPackCard.tsx:69
 msgid "Starter Pack by {0}"
 msgstr "Startovací balíček od {0}"
 
@@ -13684,7 +13431,7 @@ msgstr "Startovací balíček od @{0}"
 msgid "Starter Pack by <0/>"
 msgstr "Startovací balíček od uživatele <0/>"
 
-#: src/components/StarterPack/StarterPackCard.tsx:85
+#: src/components/StarterPack/StarterPackCard.tsx:68
 #: src/view/com/profile/ProfileSubpageHeader.tsx:166
 msgid "Starter Pack by you"
 msgstr "Startovací balíček od vás"
@@ -14422,8 +14169,7 @@ msgstr "Při kontaktování serveru došlo k problému"
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "Při kontaktování serveru došlo k chybě, zkontrolujte prosím připojení k internetu a zkuste to znovu."
 
-#: src/screens/Notifications/components/PageList.tsx:366
-#: src/view/com/notifications/NotificationFeed.tsx:137
+#: src/screens/Notifications/components/PageList.tsx:351
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Při načítání oznámení došlo k potížím. Klepnutím to zkuste znovu."
 
@@ -14542,7 +14288,7 @@ msgstr "Nebudou se moci znovu připojit, pokud je znovu nepozvete."
 #. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “they/she”.
 #: src/screens/Profile/Header/PronounsDialog.tsx:40
 msgid "they/them"
-msgstr ""
+msgstr "oni/je"
 
 #: src/components/moderation/ScreenHider.tsx:117
 msgid "This {screenDescription} has been flagged:"
@@ -15030,7 +14776,7 @@ msgstr "Pro odhlášení <0>klikněte zde</0>. Nebo pokud chcete, můžete <1>sm
 msgid "Today"
 msgstr "Dnes"
 
-#: src/screens/Notifications/components/PageList.tsx:579
+#: src/screens/Notifications/components/PageList.tsx:537
 msgctxt "Notifications section header"
 msgid "Today"
 msgstr "Dnes"
@@ -15088,7 +14834,7 @@ msgid "Topic"
 msgstr "Téma"
 
 #. Description of a feature flag (Moderation inbox)
-#: src/analytics/features/index.ts:155
+#: src/analytics/features/index.ts:138
 msgid "Track your reports, review moderation decisions, and submit appeals."
 msgstr "Sledujte svá nahlášení, prohlížejte si rozhodnutí moderace a podávejte odvolání."
 
@@ -15909,11 +15655,6 @@ msgstr "Verze {0}"
 msgid "via starter pack <0/> <1>{name}</1>"
 msgstr "přes startovací balíček <0/> <1>{name}</1>"
 
-#. When the source of a follow is a Starter Pack, i.e., 'via Starter Pack {starterPackName}'.
-#: src/view/com/notifications/NotificationFeedItem.tsx:734
-msgid "via Starter Pack <0/><1>{starterPackName}</1>"
-msgstr "přes Startovací balíček <0/><1>{starterPackName}</1>"
-
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:128
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:194
 msgid "Video"
@@ -15993,13 +15734,12 @@ msgstr "Zobrazit {0}"
 msgid "View {0}'s avatar"
 msgstr "Zobrazit profilový obrázek uživatele {0}"
 
-#. placeholder {0}: authors[0].profile.displayName || authors[0].profile.handle
 #. placeholder {0}: info.creatorHandle
 #. placeholder {0}: profile.handle
+#. placeholder {0}: sanitizeDisplayName( post.author.displayName || post.author.handle, )
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:513
 #: src/screens/Search/components/SearchProfileCard.tsx:37
 #: src/screens/VideoFeed/index.tsx:1003
-#: src/view/com/notifications/NotificationFeedItem.tsx:596
 msgid "View {0}'s profile"
 msgstr "Zobrazit profil uživatele {0}"
 
@@ -16025,13 +15765,13 @@ msgstr "Zobrazit vše"
 msgid "View all followers"
 msgstr "Zobrazit všechny sledující"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:609
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:607
 msgid "View all new posts"
-msgstr ""
+msgstr "Zobrazit všechny nové příspěvky"
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:610
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:608
 msgid "View all new posts from {name}"
-msgstr ""
+msgstr "Zobrazit všechny nové příspěvky od {name}"
 
 #: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:356
 msgid "View all posts {name} liked"
@@ -16226,10 +15966,6 @@ msgstr "Navštívit stránku"
 msgid "Visit site on {0}"
 msgstr "Navštívit stránku na {0}"
 
-#: src/view/screens/Notifications.tsx:296
-msgid "Visit your notification settings"
-msgstr "Přejít do nastavení oznámení"
-
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:80
 msgid "Volume"
 msgstr "Hlasitost"
@@ -16365,7 +16101,7 @@ msgstr "Na adresu <0>{0}</0> jsme odeslali e-mail s odkazem. Pro dokončení ov�
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
 msgid "We sent you an email about your account"
-msgstr "Zaslali jsme vám e-mail ohledně vašeho účtu"
+msgstr ""
 
 #: src/view/com/composer/state/video.ts:521
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
@@ -16824,7 +16560,7 @@ msgstr "Kdykoli se můžete odhlásit a smazat svá data"
 msgid "You can appeal once per decision. A different moderator will review the appeal."
 msgstr "Odvolat se můžete jednou proti každému rozhodnutí. Odvolání posoudí jiný moderátor."
 
-#: src/lib/hooks/useNotificationHandler.ts:140
+#: src/lib/hooks/useNotificationHandler.ts:135
 msgid "You can choose whether chat notifications have sound in the chat settings within the app"
 msgstr "V nastavení konverzace v aplikaci si můžete zvolit, zda mají notifikace konverzace vydávat zvuk"
 
@@ -16944,10 +16680,6 @@ msgstr "Tohoto uživatele jste zablokovali. Nemůžete zobrazit jeho obsah."
 #: src/components/ageAssurance/useAgeAssuranceCopy.ts:17
 msgid "You have completed the Age Assurance process, but based on the results, we cannot be sure that you are 18 years of age or older. Due to laws in your region, certain features on Bluesky must remain restricted until you're able to verify you're an adult."
 msgstr "Dokončili jste proces ověření věku, ale na základě výsledků si nemůžeme být jisti, že je vám 18 nebo více let. Kvůli zákonům ve vašem regionu musí některé funkce na Bluesky zůstat omezené, dokud nebudete schopni ověřit, že jste dospělí."
-
-#: src/view/screens/Notifications.tsx:291
-msgid "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your <0>notification settings</0>."
-msgstr "Úplně jste vypnuli oznámení o odpovědích, citacích a zmínkách, takže tato karta se již nebude aktualizovat. Pro úpravu navštivte <0>nastavení oznámení</0>."
 
 #: src/screens/Login/SetNewPasswordForm.tsx:49
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:110
@@ -17389,14 +17121,6 @@ msgstr "Vaše konverzace byly zakázány"
 msgid "Your choice will be remembered for future links. You can change it at any time in settings."
 msgstr "Vaše volba bude zapamatována pro budoucí odkazy. Kdykoli ji můžete změnit v nastavení."
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:374
-msgid "Your contact {firstAuthorLink} is on Bluesky"
-msgstr "Váš kontakt {firstAuthorLink} je na Bluesky"
-
-#: src/view/com/notifications/NotificationFeedItem.tsx:372
-msgid "Your contact {firstAuthorName} is on Bluesky"
-msgstr "Váš kontakt {firstAuthorName} je na Bluesky"
-
 #: src/components/contacts/screens/ViewMatches.tsx:462
 msgid "Your contact {name}"
 msgstr "Váš kontakt {name}"
@@ -17542,7 +17266,7 @@ msgstr "Váš profil, příspěvky, kanály a seznamy už nebudou viditelné pro
 
 #: src/screens/Profile/Header/PronounsDialog.tsx:129
 msgid "Your pronouns show next to your handle on your profile."
-msgstr ""
+msgstr "Vaše výrazy se zobrazují vedle vašeho handle na vašem profilu."
 
 #: src/view/com/composer/Composer.tsx:1238
 msgid "Your reply was sent"
@@ -17577,11 +17301,11 @@ msgstr "Vámi vybrané zájmy nám pomáhají poskytovat vám obsah, který vás
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:56
 msgid "Your standing doesn’t restrict your account right now, and strikes come off your record over time."
-msgstr "Vaše pozice momentálně váš účet neomezuje a prohřešky z vašeho záznamu časem mizí."
+msgstr ""
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:51
 msgid "Your standing may restrict certain features on your account. Strikes come off your record over time."
-msgstr "Vaše pozice může omezit některé funkce vašeho účtu. Prohřešky se z vašeho záznamu časem odstraní."
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1569
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."

@@ -8,7 +8,7 @@ msgstr ""
 "Language: bn\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-11-04 22:39\n"
+"PO-Revision-Date: 2026-11-11 16:57\n"
 "Last-Translator: \n"
 "Language-Team: Bengali\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -17,6 +17,10 @@ msgstr ""
 "X-Crowdin-Language: bn\n"
 "X-Crowdin-File: /main/src/locale/locales/en/messages.po\n"
 "X-Crowdin-File-ID: 11\n"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:71
+msgid "Your account may already be suspended or at risk of suspension. See your notices for details."
+msgstr ""
 
 #. placeholder {0}: record.text
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:95
@@ -85,6 +89,14 @@ msgstr ""
 msgid "(quoted post)"
 msgstr ""
 
+#. Number of people subscribed to a publication.
+#. placeholder {0}: view.subscriptionCount
+#. placeholder {1}: formatCount(i18n, view.subscriptionCount)
+#. placeholder {2}: formatCount(i18n, view.subscriptionCount)
+#: src/components/atmosphere/SiteStandard/Publication.tsx:198
+msgid "{0, plural, one {{1} subscriber} other {{2} subscribers}}"
+msgstr ""
+
 #. placeholder {0}: labels.length
 #: src/components/moderation/LabelsOnMe.tsx:57
 msgid "{0, plural, one {# account label} other {# account labels}}"
@@ -93,6 +105,11 @@ msgstr ""
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0, plural, one {# day} other {# days}}"
+msgstr ""
+
+#. placeholder {0}: knownFollowers.count
+#: src/screens/Atmosphere/components/AppKnownFollowers.tsx:58
+msgid "{0, plural, one {# follower you know} other {# followers you know}}"
 msgstr ""
 
 #. placeholder {0}: profile.followersCount ?? 0
@@ -126,7 +143,7 @@ msgid "{0, plural, one {# label applied} other {# labels applied}}"
 msgstr ""
 
 #. placeholder {0}: likeCount ?? 0
-#: src/screens/Post/PostLikedBy.tsx:34
+#: src/screens/Post/PostLikedBy.tsx:36
 msgid "{0, plural, one {# like} other {# likes}}"
 msgstr ""
 
@@ -158,12 +175,12 @@ msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
 msgstr ""
 
 #. placeholder {0}: post.quoteCount ?? 0
-#: src/screens/Post/PostQuotes.tsx:35
+#: src/screens/Post/PostQuotes.tsx:37
 msgid "{0, plural, one {# quote} other {# quotes}}"
 msgstr ""
 
 #. placeholder {0}: quoteCount ?? 0
-#: src/screens/Post/PostRepostedBy.tsx:34
+#: src/screens/Post/PostRepostedBy.tsx:36
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr ""
 
@@ -181,7 +198,9 @@ msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
 #. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
+#. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
 #. placeholder {0}: view.readingTime
+#: src/components/atmosphere/SiteStandard/DocumentStats.tsx:45
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:250
 msgid "{0, plural, one {#m} other {#m}}"
 msgstr ""
@@ -215,12 +234,12 @@ msgid "{0, plural, one {Load # new post} other {Load # new posts}}"
 msgstr ""
 
 #. placeholder {0}: profile.postsCount || 0
-#: src/screens/Profile/Header/Metrics.tsx:58
+#: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
 msgstr ""
 
 #. placeholder {0}: policies.length
-#: src/screens/ModerationInbox/Notice.tsx:270
+#: src/screens/ModerationInbox/Notice.tsx:273
 msgid "{0, plural, one {Rule violated:} other {Rules violated:}}"
 msgstr ""
 
@@ -275,8 +294,13 @@ msgstr ""
 msgid "{0} and {1} added to chat"
 msgstr ""
 
+#. placeholder {0}: app.title
+#: src/screens/Atmosphere/components/AppDialog.tsx:35
+msgid "{0} details"
+msgstr ""
+
 #. placeholder {0}: profile.followsCount || 0
-#: src/screens/Profile/Header/Metrics.tsx:49
+#: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{0} following"
 msgstr ""
 
@@ -539,11 +563,11 @@ msgstr ""
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:339
+#: src/features/profileLinks/components/ProfileLinks.tsx:342
 msgid "{count, plural, one {Show # more link} other {Show # more links}}"
 msgstr ""
 
-#: src/features/followingV2/home/PrependPill.tsx:76
+#: src/features/followingV2/home/PrependPill.tsx:75
 msgid "{count, plural, one {Show # new post} other {Show # new posts}}"
 msgstr ""
 
@@ -556,7 +580,7 @@ msgstr ""
 msgid "{date} at {time}"
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:425
+#: src/screens/ModerationInbox/Notice.tsx:424
 msgid "{detailsLength} of {MAX_REPORT_REASON_GRAPHEME_LENGTH} characters used"
 msgstr ""
 
@@ -568,11 +592,11 @@ msgstr ""
 msgid "{displayName}’s Starter Pack"
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:235
+#: src/screens/SignupQueued.tsx:234
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:241
+#: src/screens/SignupQueued.tsx:240
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr ""
 
@@ -584,171 +608,171 @@ msgstr ""
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:355
+#: src/view/com/notifications/NotificationFeedItem.tsx:354
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:387
+#: src/view/com/notifications/NotificationFeedItem.tsx:386
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:293
+#: src/view/com/notifications/NotificationFeedItem.tsx:292
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:484
+#: src/view/com/notifications/NotificationFeedItem.tsx:483
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:459
+#: src/view/com/notifications/NotificationFeedItem.tsx:458
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:315
+#: src/view/com/notifications/NotificationFeedItem.tsx:314
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:506
+#: src/view/com/notifications/NotificationFeedItem.tsx:505
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:409
+#: src/view/com/notifications/NotificationFeedItem.tsx:408
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your Starter Pack"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:436
+#: src/view/com/notifications/NotificationFeedItem.tsx:435
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:367
+#: src/view/com/notifications/NotificationFeedItem.tsx:366
 msgid "{firstAuthorLink} followed you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:339
+#: src/view/com/notifications/NotificationFeedItem.tsx:338
 msgid "{firstAuthorLink} followed you back"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:399
+#: src/view/com/notifications/NotificationFeedItem.tsx:398
 msgid "{firstAuthorLink} liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:305
+#: src/view/com/notifications/NotificationFeedItem.tsx:304
 msgid "{firstAuthorLink} liked your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:496
+#: src/view/com/notifications/NotificationFeedItem.tsx:495
 msgid "{firstAuthorLink} liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:471
+#: src/view/com/notifications/NotificationFeedItem.tsx:470
 msgid "{firstAuthorLink} removed their verification from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:327
+#: src/view/com/notifications/NotificationFeedItem.tsx:326
 msgid "{firstAuthorLink} reposted your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:518
+#: src/view/com/notifications/NotificationFeedItem.tsx:517
 msgid "{firstAuthorLink} reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:421
+#: src/view/com/notifications/NotificationFeedItem.tsx:420
 msgid "{firstAuthorLink} signed up with your Starter Pack"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:448
+#: src/view/com/notifications/NotificationFeedItem.tsx:447
 msgid "{firstAuthorLink} verified you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:349
+#: src/view/com/notifications/NotificationFeedItem.tsx:348
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:343
+#: src/view/com/notifications/NotificationFeedItem.tsx:342
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you via Starter Pack {starterPackName}"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:381
+#: src/view/com/notifications/NotificationFeedItem.tsx:380
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:287
+#: src/view/com/notifications/NotificationFeedItem.tsx:286
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:478
+#: src/view/com/notifications/NotificationFeedItem.tsx:477
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:453
+#: src/view/com/notifications/NotificationFeedItem.tsx:452
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} removed their verifications from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:309
+#: src/view/com/notifications/NotificationFeedItem.tsx:308
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:500
+#: src/view/com/notifications/NotificationFeedItem.tsx:499
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:403
+#: src/view/com/notifications/NotificationFeedItem.tsx:402
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your Starter Pack"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:430
+#: src/view/com/notifications/NotificationFeedItem.tsx:429
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:353
+#: src/view/com/notifications/NotificationFeedItem.tsx:352
 msgid "{firstAuthorName} followed you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:338
+#: src/view/com/notifications/NotificationFeedItem.tsx:337
 msgid "{firstAuthorName} followed you back"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:337
+#: src/view/com/notifications/NotificationFeedItem.tsx:336
 msgid "{firstAuthorName} followed you back via Starter Pack {starterPackName}"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:347
+#: src/view/com/notifications/NotificationFeedItem.tsx:346
 msgid "{firstAuthorName} followed you via Starter Pack {starterPackName}"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:385
+#: src/view/com/notifications/NotificationFeedItem.tsx:384
 msgid "{firstAuthorName} liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:291
+#: src/view/com/notifications/NotificationFeedItem.tsx:290
 msgid "{firstAuthorName} liked your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:482
+#: src/view/com/notifications/NotificationFeedItem.tsx:481
 msgid "{firstAuthorName} liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:457
+#: src/view/com/notifications/NotificationFeedItem.tsx:456
 msgid "{firstAuthorName} removed their verification from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:313
+#: src/view/com/notifications/NotificationFeedItem.tsx:312
 msgid "{firstAuthorName} reposted your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:504
+#: src/view/com/notifications/NotificationFeedItem.tsx:503
 msgid "{firstAuthorName} reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:407
+#: src/view/com/notifications/NotificationFeedItem.tsx:406
 msgid "{firstAuthorName} signed up with your Starter Pack"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:434
+#: src/view/com/notifications/NotificationFeedItem.tsx:433
 msgid "{firstAuthorName} verified you"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.web.tsx:571
+#: src/components/ProfileHoverCard/index.web.tsx:575
 msgid "{following} following"
 msgstr ""
 
@@ -786,12 +810,12 @@ msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesStrin
 msgstr ""
 
 #: src/features/liveNow/utils.ts:44
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
 msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr ""
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:129
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:145
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr ""
@@ -825,20 +849,28 @@ msgstr ""
 msgid "{label}. {description}"
 msgstr ""
 
+#: src/screens/Profile/Header/PronounsDialog.tsx:184
+msgid "{length} out of {MAX_PRONOUNS} characters"
+msgstr ""
+
 #: src/view/com/composer/videos/SubtitleDialog.tsx:138
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:452
-msgid "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
+#: src/screens/Profile/Header/EditProfileDialog.tsx:488
+msgid "{MAX_DESCRIPTION, plural, other {Bio is too long. The maximum number of characters is #.}}"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:401
-msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
+#: src/screens/Profile/Header/EditProfileDialog.tsx:437
+msgid "{MAX_DISPLAY_NAME, plural, other {Name is too long. The maximum number of characters is #.}}"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:398
 msgid "{MAX_HIDDEN_REPLIES, plural, other {You can hide a maximum of # replies.}}"
+msgstr ""
+
+#: src/screens/Profile/Header/PronounsDialog.tsx:204
+msgid "{MAX_PRONOUNS, plural, other {Pronouns can be up to # characters.}}"
 msgstr ""
 
 #. The number of group chat members out of the total number of permitted users.
@@ -850,79 +882,79 @@ msgstr ""
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:126
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:127
 msgid "{name} and {others, plural, one {# other} other {# others}} followed you"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:501
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:486
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your custom feed"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:96
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:88
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your post"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:199
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:189
 msgid "{name} and {others, plural, one {# other} other {# others}} liked your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:147
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:138
 msgid "{name} and {others, plural, one {# other} other {# others}} reposted your post"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:251
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:240
 msgid "{name} and {others, plural, one {# other} other {# others}} reposted your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:125
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:126
 msgid "{name} and {secondName} followed you"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:499
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:484
 msgid "{name} and {secondName} liked your custom feed"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:94
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:86
 msgid "{name} and {secondName} liked your post"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:197
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:187
 msgid "{name} and {secondName} liked your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:145
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:136
 msgid "{name} and {secondName} reposted your post"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:249
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:238
 msgid "{name} and {secondName} reposted your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:195
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:196
 msgid "{name} followed you back"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:194
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:195
 msgid "{name} followed you back via starter pack {starterPackName}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:364
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:352
 msgid "{name} liked {count} of your {count, plural, one {post} other {posts}}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:429
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:415
 msgid "{name} liked {count} of your {count, plural, one {repost} other {reposts}}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:505
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:490
 msgid "{name} liked your custom feed"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:100
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:92
 msgid "{name} liked your post"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:203
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:193
 msgid "{name} liked your repost"
 msgstr ""
 
@@ -931,27 +963,27 @@ msgstr ""
 msgid "{name} reacted {0} to {target}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:267
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:268
 msgid "{name} removed their verification from your account"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:396
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:383
 msgid "{name} reposted {count} of your {count, plural, one {post} other {posts}}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:462
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:447
 msgid "{name} reposted {count} of your {count, plural, one {repost} other {reposts}}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:151
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:142
 msgid "{name} reposted your post"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:255
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:244
 msgid "{name} reposted your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:232
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:233
 msgid "{name} verified you"
 msgstr ""
 
@@ -976,11 +1008,11 @@ msgstr ""
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:92
 msgid "{policyLabel} – {duration}"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:83
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:91
 msgid "{policyLabel} – {duration}, now expired"
 msgstr ""
 
@@ -1033,7 +1065,7 @@ msgstr ""
 msgid "{requestCount}+ requests"
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:242
+#: src/screens/ModerationInbox/Notice.tsx:245
 msgid "{serviceName} removed your content for violating our <0>Community Guidelines</0>."
 msgstr ""
 
@@ -1063,7 +1095,7 @@ msgstr ""
 #. placeholder {0}: labels.length
 #. placeholder {0}: totalNumber - 3
 #: src/components/moderation/PostAlerts.tsx:159
-#: src/view/com/composer/ComposerReplyTo.tsx:273
+#: src/view/com/composer/ComposerReplyTo.tsx:294
 msgid "+{0}"
 msgstr ""
 
@@ -1072,107 +1104,107 @@ msgstr ""
 msgid "+{computedTotal}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:151
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:152
 msgid "<0/> and <1/> followed you"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:514
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:499
 msgid "<0/> and <1/> liked your custom feed"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:104
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:96
 msgid "<0/> and <1/> liked your post"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:207
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:197
 msgid "<0/> and <1/> liked your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:155
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:146
 msgid "<0/> and <1/> reposted your post"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:259
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:248
 msgid "<0/> and <1/> reposted your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:156
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:157
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> followed you"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:519
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:504
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your custom feed"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:109
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:101
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your post"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:212
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:202
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:160
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:151
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> reposted your post"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:264
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:253
 msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> reposted your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:78
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:79
 msgid "<0/> followed you"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:203
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:204
 msgid "<0/> followed you back! 🎉"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:370
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:358
 msgid "<0/> liked {count} of your {count, plural, one {post} other {posts}}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:435
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:421
 msgid "<0/> liked {count} of your {count, plural, one {repost} other {reposts}}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:527
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:512
 msgid "<0/> liked your custom feed"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:117
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:109
 msgid "<0/> liked your post"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:220
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:210
 msgid "<0/> liked your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:274
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:275
 msgid "<0/> removed their verification from your account"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:402
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:389
 msgid "<0/> reposted {count} of your {count, plural, one {post} other {posts}}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:468
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:453
 msgid "<0/> reposted {count} of your {count, plural, one {repost} other {reposts}}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:168
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:159
 msgid "<0/> reposted your post"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:272
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:261
 msgid "<0/> reposted your repost"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:309
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:310
 msgid "<0/> signed up with your starter pack"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:239
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:240
 msgid "<0/> verified you"
 msgstr ""
 
@@ -1245,7 +1277,7 @@ msgid "<0>{0}</0> is included in your Starter Pack"
 msgstr ""
 
 #. placeholder {0}: list.name
-#: src/components/WhoCanReply.tsx:335
+#: src/components/WhoCanReply.tsx:375
 msgid "<0>{0}</0> members"
 msgstr ""
 
@@ -1269,7 +1301,7 @@ msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your Starter Pack"
 msgstr ""
 
 #: src/lib/strings/handles.ts:38
-#: src/screens/Profile/Header/Handle.tsx:58
+#: src/screens/Profile/Header/Handle.tsx:70
 msgid "⚠Invalid Handle"
 msgstr ""
 
@@ -1307,30 +1339,30 @@ msgstr ""
 msgid "A kawaii scene"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:78
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:68
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:87
 msgid "A label was added to your account"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:63
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:81
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:71
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:90
 msgid "A label was added to your content"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:62
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:80
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:70
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:89
 msgid "A label was added to your post"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:104
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:112
 msgid "A label was removed from your account"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:115
 msgid "A label was removed from your content"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:106
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:114
 msgid "A label was removed from your post"
 msgstr ""
 
@@ -1343,11 +1375,11 @@ msgstr ""
 msgid "a message"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:43
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:46
 msgid "A moderator reviewed your appeal and reversed the original decision."
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:42
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:45
 msgid "A moderator reviewed your appeal and reversed the original decision. Your post has been restored and is visible again."
 msgstr ""
 
@@ -1465,6 +1497,7 @@ msgstr ""
 #: src/Navigation.tsx:451
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:22
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:23
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:74
 #: src/screens/Settings/AccountSettings.tsx:54
 #: src/screens/Settings/Settings.tsx:193
 #: src/screens/Settings/Settings.tsx:196
@@ -1540,7 +1573,7 @@ msgstr ""
 msgid "Account taken down"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:40
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:66
 msgid "Account unavailable"
 msgstr ""
 
@@ -1571,6 +1604,10 @@ msgstr ""
 msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Bluesky."
 msgstr ""
 
+#: src/screens/ModerationInbox/components/AccountActionTimeline.tsx:107
+msgid "Action reversed"
+msgstr ""
+
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:46
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:51
 msgid "Action taken"
@@ -1583,7 +1620,7 @@ msgstr ""
 msgid "Active index {0} (from {1}), {2} user navigation events"
 msgstr ""
 
-#: src/screens/Atmosphere/index.tsx:44
+#: src/screens/Atmosphere/index.tsx:50
 msgid "Activity"
 msgstr ""
 
@@ -1624,7 +1661,7 @@ msgstr ""
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:265
 #: src/features/profileLinks/components/LinkFormDialog.tsx:285
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:133
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:138
 msgid "Add a link"
 msgstr ""
 
@@ -1711,7 +1748,7 @@ msgstr ""
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:398
 #: src/features/profileLinks/components/LinkFormDialog.tsx:417
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:149
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:155
 msgid "Add link"
 msgstr ""
 
@@ -1726,8 +1763,8 @@ msgstr ""
 msgid "Add members"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:606
-#: src/components/moderation/ReportDialog/index.tsx:610
+#: src/components/moderation/ReportDialog/index.tsx:611
+#: src/components/moderation/ReportDialog/index.tsx:615
 msgid "Add more details (optional)"
 msgstr ""
 
@@ -1757,6 +1794,13 @@ msgstr ""
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:185
 msgid "Add people with a link"
+msgstr ""
+
+#: src/screens/Profile/Header/EditProfileDialog.tsx:510
+#: src/screens/Profile/Header/EditProfileDialog.tsx:551
+#: src/screens/Profile/Header/PronounsDialog.tsx:102
+#: src/screens/Profile/Header/PronounsDialog.tsx:125
+msgid "Add pronouns"
 msgstr ""
 
 #: src/components/dms/EmojiPopup.android.tsx:56
@@ -1838,7 +1882,7 @@ msgstr ""
 msgid "Additional details (limit 1000 characters)"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:624
+#: src/components/moderation/ReportDialog/index.tsx:629
 msgid "Additional details (limit 300 characters)"
 msgstr ""
 
@@ -2066,6 +2110,11 @@ msgstr ""
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr ""
 
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:63
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:65
+msgid "An email was sent about your account"
+msgstr ""
+
 #: src/components/Gallery/Storybook.tsx:757
 msgid "An empty gallery takes up no space. A single item behaves like any other, without dragging or arrow key navigation to go anywhere."
 msgstr ""
@@ -2186,8 +2235,8 @@ msgstr ""
 #: src/components/ProfileCard.tsx:510
 #: src/components/ProfileCard.tsx:535
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:218
-#: src/view/com/notifications/NotificationFeedItem.tsx:823
-#: src/view/com/notifications/NotificationFeedItem.tsx:844
+#: src/view/com/notifications/NotificationFeedItem.tsx:822
+#: src/view/com/notifications/NotificationFeedItem.tsx:843
 msgid "An issue occurred, please try again."
 msgstr ""
 
@@ -2200,7 +2249,7 @@ msgstr ""
 msgid "an unknown labeler"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:356
+#: src/components/WhoCanReply.tsx:396
 msgid "and"
 msgstr ""
 
@@ -2248,6 +2297,10 @@ msgstr ""
 #: src/screens/Messages/components/InviteLinkDialog.tsx:151
 #: src/screens/Messages/components/InviteLinkDialog.tsx:152
 msgid "Anyone can join instantly"
+msgstr ""
+
+#: src/components/WhoCanReply.tsx:83
+msgid "Anyone can reply"
 msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:156
@@ -2311,7 +2364,7 @@ msgstr ""
 #: src/components/moderation/LabelsOnMeDialog.tsx:169
 #: src/components/moderation/LabelsOnMeDialog.tsx:172
 #: src/components/moderation/ModerationDetailsDialog.tsx:223
-#: src/screens/ModerationInbox/Notice.tsx:478
+#: src/screens/ModerationInbox/Notice.tsx:477
 #: src/screens/ModerationInbox/Report.tsx:180
 #: src/screens/ModerationInbox/Report.tsx:181
 msgid "Appeal"
@@ -2322,11 +2375,13 @@ msgstr ""
 msgid "Appeal \"{0}\" label"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:40
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:43
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:44
 msgid "Appeal approved"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:46
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:49
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:46
 msgid "Appeal denied"
 msgstr ""
 
@@ -2338,11 +2393,12 @@ msgstr ""
 msgid "Appeal livestream suspension"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:50
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:53
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:47
 msgid "Appeal resolved"
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:418
+#: src/screens/ModerationInbox/Notice.tsx:417
 msgid "Appeal submitted"
 msgstr ""
 
@@ -2366,9 +2422,9 @@ msgstr ""
 #: src/screens/Messages/components/ChatDisabled.tsx:79
 #: src/screens/Messages/components/ChatDisabled.tsx:130
 #: src/screens/Messages/components/ChatDisabled.tsx:132
-#: src/screens/ModerationInbox/Notice.tsx:319
-#: src/screens/ModerationInbox/Notice.tsx:330
-#: src/screens/ModerationInbox/Notice.tsx:473
+#: src/screens/ModerationInbox/Notice.tsx:322
+#: src/screens/ModerationInbox/Notice.tsx:333
+#: src/screens/ModerationInbox/Notice.tsx:472
 msgid "Appeal this decision"
 msgstr ""
 
@@ -2376,7 +2432,8 @@ msgstr ""
 msgid "Appeal this label"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:36
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:39
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:34
 msgid "Appeal under review"
 msgstr ""
 
@@ -2405,21 +2462,17 @@ msgstr ""
 msgid "Apply update from this channel"
 msgstr ""
 
-#: src/screens/Atmosphere/index.tsx:44
+#: src/screens/Atmosphere/index.tsx:50
 msgid "Apps"
 msgstr ""
 
-#: src/screens/Atmosphere/components/FeaturedApps.tsx:15
-msgid "Apps on the Atmosphere"
-msgstr ""
-
 #. placeholder {0}: niceDate(i18n, createdAt, 'medium')
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:627
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:637
 msgid "Archived from {0}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:598
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:636
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:608
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:646
 msgid "Archived post"
 msgstr ""
 
@@ -2459,7 +2512,7 @@ msgid "Are you sure you want to delete this Starter Pack?"
 msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
-#: src/screens/Profile/Header/EditProfileDialog.tsx:89
+#: src/screens/Profile/Header/EditProfileDialog.tsx:100
 msgid "Are you sure you want to discard your changes?"
 msgstr ""
 
@@ -2493,7 +2546,7 @@ msgstr ""
 msgid "Are you sure?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:929
+#: src/components/moderation/ReportDialog/index.tsx:934
 msgid "Are you the person depicted, or an authorized representative acting on behalf of the person depicted?"
 msgstr ""
 
@@ -2503,6 +2556,10 @@ msgstr ""
 
 #: src/lib/interests.ts:53
 msgid "Art"
+msgstr ""
+
+#: src/screens/Atmosphere/components/AtmosphereCardMenu.tsx:77
+msgid "Article options"
 msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:167
@@ -2533,13 +2590,13 @@ msgid "AT Protocol FAQ"
 msgstr ""
 
 #: src/Navigation.tsx:194
-#: src/screens/Atmosphere/index.tsx:32
+#: src/screens/Atmosphere/index.tsx:37
 #: src/view/shell/desktop/LeftNav.tsx:764
 #: src/view/shell/Drawer.tsx:559
 msgid "Atmosphere"
 msgstr ""
 
-#: src/screens/Atmosphere/AppsTab.tsx:34
+#: src/screens/Atmosphere/components/appCategories.ts:16
 msgid "Audio"
 msgstr ""
 
@@ -2733,6 +2790,11 @@ msgctxt "native"
 msgid "Beta features may be unstable. Some changes may require restarting the app. Some beta features may not work properly with ad blockers or VPNs enabled."
 msgstr ""
 
+#: src/screens/Profile/Header/EditProfileDialog.tsx:468
+#: src/screens/Profile/Header/EditProfileDialog.tsx:475
+msgid "Bio"
+msgstr ""
+
 #: src/components/dialogs/BirthDateSettings.tsx:163
 msgid "Birthdate"
 msgstr ""
@@ -2838,10 +2900,6 @@ msgstr ""
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:484
-msgid "Blocked post"
-msgstr ""
-
 #: src/screens/Profile/Sections/Labels.tsx:204
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr ""
@@ -2858,7 +2916,7 @@ msgstr ""
 msgid "Blog"
 msgstr ""
 
-#: src/screens/Atmosphere/AppsTab.tsx:27
+#: src/screens/Atmosphere/components/appCategories.ts:9
 msgid "Blogging"
 msgstr ""
 
@@ -2878,7 +2936,7 @@ msgstr ""
 msgid "Bluesky adapts to your iPad’s screen in any orientation or window size."
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:652
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:662
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
@@ -2920,7 +2978,7 @@ msgstr ""
 msgid "Bluesky is part of a growing network of hundreds of social apps. Your account unlocks them all."
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:90
+#: src/screens/ModerationInbox/Notice.tsx:96
 #: src/screens/ModerationInbox/Report.tsx:74
 msgid "Bluesky Moderation Service"
 msgstr ""
@@ -3047,7 +3105,7 @@ msgstr ""
 #. placeholder {0}: sanitizeHandle(handle, '@')
 #. placeholder {0}: sanitizeHandle(item.feed.creator.handle, '@')
 #: src/components/LabelingServiceCard/index.tsx:62
-#: src/components/moderation/ReportDialog/index.tsx:1093
+#: src/components/moderation/ReportDialog/index.tsx:1098
 #: src/screens/Messages/JoinRequest.tsx:185
 #: src/screens/Search/components/StarterPackCard.tsx:114
 #: src/screens/Search/Explore.tsx:996
@@ -3064,6 +3122,7 @@ msgid "By {name}"
 msgstr ""
 
 #. placeholder {0}: authorProfile.handle
+#: src/components/atmosphere/SiteStandard/StandardSiteMetaRow.tsx:61
 #: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:77
 msgid "by @{0}"
 msgstr ""
@@ -3148,9 +3207,9 @@ msgstr ""
 #: src/screens/Messages/ConversationSettings/prompts.tsx:124
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
-#: src/screens/ModerationInbox/Notice.tsx:437
-#: src/screens/Profile/Header/EditProfileDialog.tsx:286
-#: src/screens/Profile/Header/EditProfileDialog.tsx:294
+#: src/screens/ModerationInbox/Notice.tsx:436
+#: src/screens/Profile/Header/EditProfileDialog.tsx:325
+#: src/screens/Profile/Header/EditProfileDialog.tsx:333
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
 #: src/screens/Search/components/SearchHistory.tsx:151
@@ -3173,7 +3232,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:430
+#: src/screens/ModerationInbox/Notice.tsx:429
 msgid "Cancel appeal"
 msgstr ""
 
@@ -3189,7 +3248,7 @@ msgstr ""
 msgid "Cancel reply"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:607
+#: src/screens/Search/Shell.tsx:616
 msgid "Cancel search"
 msgstr ""
 
@@ -3290,7 +3349,7 @@ msgstr ""
 msgid "Change hosting provider"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:523
+#: src/components/moderation/ReportDialog/index.tsx:528
 msgid "Change moderation service"
 msgstr ""
 
@@ -3303,11 +3362,11 @@ msgstr ""
 msgid "Change password dialog"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:385
+#: src/components/moderation/ReportDialog/index.tsx:390
 msgid "Change report category"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:464
+#: src/components/moderation/ReportDialog/index.tsx:469
 msgid "Change report reason"
 msgstr ""
 
@@ -3477,8 +3536,8 @@ msgstr ""
 msgid "Check for updates"
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:85
-#: src/screens/SignupQueued.tsx:89
+#: src/screens/SignupQueued.tsx:84
+#: src/screens/SignupQueued.tsx:88
 msgid "Check my status"
 msgstr ""
 
@@ -3713,13 +3772,14 @@ msgstr ""
 #: src/components/TrendingTopics.tsx:55
 #: src/components/verification/VerificationsDialog.tsx:147
 #: src/components/verification/VerifierDialog.tsx:148
-#: src/components/WhoCanReply.tsx:218
-#: src/components/WhoCanReply.tsx:225
+#: src/components/WhoCanReply.tsx:258
+#: src/components/WhoCanReply.tsx:265
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:45
 #: src/features/liveNow/components/EditLiveDialog.tsx:212
 #: src/features/liveNow/components/EditLiveDialog.tsx:218
 #: src/screens/Messages/components/InviteLinkDialog.tsx:522
 #: src/screens/Messages/components/InviteLinkDialog.tsx:527
+#: src/screens/Profile/Header/PronounsDialog.tsx:104
 #: src/view/com/feeds/MissingFeed.tsx:211
 #: src/view/com/feeds/MissingFeed.tsx:218
 msgid "Close"
@@ -3756,7 +3816,7 @@ msgstr ""
 msgid "Close drawer menu"
 msgstr ""
 
-#: src/components/Lightbox/chrome/Header.tsx:47
+#: src/components/Lightbox/chrome/Header.tsx:51
 msgid "Close image"
 msgstr ""
 
@@ -3800,17 +3860,17 @@ msgstr ""
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:284
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:490
-#: src/view/com/notifications/NotificationFeedItem.tsx:589
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:287
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:494
+#: src/view/com/notifications/NotificationFeedItem.tsx:588
 msgid "Collapse list of users"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:301
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:304
 msgid "Collapses list of users"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:969
+#: src/view/com/notifications/NotificationFeedItem.tsx:968
 msgid "Collapses list of users for a given notification"
 msgstr ""
 
@@ -4004,7 +4064,7 @@ msgstr ""
 msgid "Content restored"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:86
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:100
 msgid "Content unavailable"
 msgstr ""
 
@@ -4099,7 +4159,7 @@ msgstr ""
 msgid "Copied build version to clipboard"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:527
+#: src/screens/Search/Shell.tsx:536
 msgid "Copied link to clipboard"
 msgstr ""
 
@@ -4278,8 +4338,8 @@ msgstr ""
 msgid "Could not leave chat."
 msgstr ""
 
-#: src/screens/Atmosphere/AppsTab.tsx:78
-#: src/screens/Atmosphere/ExploreTab.tsx:51
+#: src/screens/Atmosphere/AppsTab.tsx:69
+#: src/screens/Atmosphere/ExploreTab.tsx:58
 msgid "Could not load Atmosphere content. Please try again."
 msgstr ""
 
@@ -4333,7 +4393,7 @@ msgstr ""
 msgid "Couldn’t load GIFs"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:356
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:359
 msgid "Couldn’t load more accounts, please try again"
 msgstr ""
 
@@ -4462,8 +4522,8 @@ msgstr ""
 
 #. Accessibility label for button to create a moderation report for the selected option
 #. placeholder {0}: option.title
-#: src/components/moderation/ReportDialog/index.tsx:835
-#: src/components/moderation/ReportDialog/index.tsx:880
+#: src/components/moderation/ReportDialog/index.tsx:840
+#: src/components/moderation/ReportDialog/index.tsx:885
 msgid "Create report for {0}"
 msgstr ""
 
@@ -4687,7 +4747,7 @@ msgstr ""
 msgid "Deleted"
 msgstr ""
 
-#: src/components/dms/MessagesListHeader.tsx:103
+#: src/components/dms/MessagesListHeader.tsx:107
 #: src/screens/Messages/components/ChatListItem.tsx:134
 #: src/screens/Messages/ConversationSettings/Member.tsx:87
 msgid "Deleted Account"
@@ -4704,14 +4764,8 @@ msgstr ""
 msgid "Deleted list"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:487
-msgid "Deleted post"
-msgstr ""
-
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:463
 #: src/components/SendErrorReportDialog.tsx:78
-#: src/screens/Profile/Header/EditProfileDialog.tsx:432
-#: src/screens/Profile/Header/EditProfileDialog.tsx:439
 msgid "Description"
 msgstr ""
 
@@ -4743,7 +4797,7 @@ msgstr ""
 msgid "Detach quote post?"
 msgstr ""
 
-#: src/screens/Atmosphere/AppsTab.tsx:33
+#: src/screens/Atmosphere/components/appCategories.ts:15
 msgid "Dev"
 msgstr ""
 
@@ -4766,7 +4820,7 @@ msgstr ""
 msgid "Device failed to translate :("
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:204
+#: src/components/WhoCanReply.tsx:244
 msgid "Dialog: adjust who can interact with this post"
 msgstr ""
 
@@ -4838,7 +4892,7 @@ msgid "Disabled"
 msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:102
-#: src/screens/Profile/Header/EditProfileDialog.tsx:91
+#: src/screens/Profile/Header/EditProfileDialog.tsx:102
 #: src/view/com/composer/Composer.tsx:1513
 #: src/view/com/composer/Composer.tsx:1558
 #: src/view/com/composer/Composer.tsx:1768
@@ -4848,7 +4902,7 @@ msgid "Discard"
 msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:99
-#: src/screens/Profile/Header/EditProfileDialog.tsx:88
+#: src/screens/Profile/Header/EditProfileDialog.tsx:99
 msgid "Discard changes?"
 msgstr ""
 
@@ -4939,11 +4993,6 @@ msgstr ""
 msgid "Display larger alt text badges"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:382
-#: src/screens/Profile/Header/EditProfileDialog.tsx:388
-msgid "Display name"
-msgstr ""
-
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:33
 msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
 msgstr ""
@@ -5007,9 +5056,11 @@ msgstr ""
 #: src/lib/media/picker.tsx:37
 #: src/screens/Login/components/HostingProviderDialog.tsx:253
 #: src/screens/Login/components/HostingProviderDialog.tsx:255
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:97
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:152
 #: src/screens/Onboarding/StepProfile/index.tsx:355
 #: src/screens/Onboarding/StepProfile/index.tsx:358
+#: src/screens/Profile/Header/PronounsDialog.tsx:216
+#: src/screens/Profile/Header/PronounsDialog.tsx:223
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/composer/labels/LabelsBtn.tsx:219
@@ -5077,7 +5128,7 @@ msgstr ""
 msgid "Drafts"
 msgstr ""
 
-#: src/view/com/composer/text-input/TextInput.web.tsx:371
+#: src/view/com/composer/text-input/TextInput.web.tsx:381
 msgid "Drop to add images"
 msgstr ""
 
@@ -5097,7 +5148,7 @@ msgstr ""
 msgid "e.g. alice"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:389
+#: src/screens/Profile/Header/EditProfileDialog.tsx:425
 msgid "e.g. Alice Lastname"
 msgstr ""
 
@@ -5125,11 +5176,16 @@ msgstr ""
 msgid "e.g. The posters who never miss."
 msgstr ""
 
+#. Example pronouns in the pronouns field
+#: src/screens/Profile/Header/PronounsDialog.tsx:171
+msgid "e.g. they/them"
+msgstr ""
+
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:385
 msgid "e.g. Users that repeatedly reply with ads."
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:577
+#: src/screens/Notifications/components/PageList.tsx:538
 msgctxt "Notifications section header"
 msgid "Earlier"
 msgstr ""
@@ -5154,7 +5210,7 @@ msgid "Edit"
 msgstr ""
 
 #. placeholder {0}: linkLabel(item.link)
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:78
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:83
 msgid "Edit {0}"
 msgstr ""
 
@@ -5243,8 +5299,8 @@ msgstr ""
 msgid "Edit post interaction settings"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:336
-#: src/screens/Profile/Header/EditProfileDialog.tsx:343
+#: src/screens/Profile/Header/EditProfileDialog.tsx:372
+#: src/screens/Profile/Header/EditProfileDialog.tsx:379
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:300
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:351
 msgid "Edit profile"
@@ -5253,6 +5309,15 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:303
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:353
 msgid "Edit Profile"
+msgstr ""
+
+#: src/screens/Profile/Header/PronounsDialog.tsx:102
+#: src/screens/Profile/Header/PronounsDialog.tsx:123
+msgid "Edit pronouns"
+msgstr ""
+
+#: src/screens/Profile/Header/EditProfileDialog.tsx:509
+msgid "Edit pronouns: {pronouns}"
 msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:613
@@ -5268,7 +5333,7 @@ msgstr ""
 msgid "Edit user list"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:103
+#: src/components/WhoCanReply.tsx:119
 msgid "Edit who can reply"
 msgstr ""
 
@@ -5545,15 +5610,15 @@ msgstr ""
 msgid "Error: {error}"
 msgstr ""
 
-#: src/screens/Atmosphere/AppsTab.tsx:35
+#: src/screens/Atmosphere/components/appCategories.ts:17
 msgid "Events"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:72
+#: src/components/WhoCanReply.tsx:84
 msgid "Everybody can reply"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:261
+#: src/components/WhoCanReply.tsx:301
 msgid "Everybody can reply to this post."
 msgstr ""
 
@@ -5603,18 +5668,18 @@ msgstr ""
 msgid "Exit fullscreen"
 msgstr ""
 
-#: src/components/Lightbox/chrome/Footer.tsx:70
+#: src/components/Lightbox/chrome/Footer.tsx:75
 #: src/components/Lightbox/Lightbox.web.tsx:251
 msgid "Expand alt text"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:285
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:490
-#: src/view/com/notifications/NotificationFeedItem.tsx:590
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:288
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:494
+#: src/view/com/notifications/NotificationFeedItem.tsx:589
 msgid "Expand list of users"
 msgstr ""
 
-#: src/view/com/composer/ComposerReplyTo.tsx:98
+#: src/view/com/composer/ComposerReplyTo.tsx:101
 msgid "Expand or collapse the full post you are replying to"
 msgstr ""
 
@@ -5622,7 +5687,7 @@ msgstr ""
 msgid "Expand post text"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:302
+#: src/screens/Notifications/components/NotificationItem/Item/group.tsx:305
 msgid "Expands list of users"
 msgstr ""
 
@@ -5670,8 +5735,8 @@ msgid "Explicit sexual images."
 msgstr ""
 
 #: src/Navigation.tsx:928
-#: src/screens/Atmosphere/index.tsx:44
-#: src/screens/Search/Shell.tsx:564
+#: src/screens/Atmosphere/index.tsx:50
+#: src/screens/Search/Shell.tsx:573
 #: src/view/shell/desktop/LeftNav.tsx:743
 #: src/view/shell/Drawer.tsx:538
 msgid "Explore"
@@ -5753,7 +5818,7 @@ msgstr ""
 
 #: src/components/Lightbox/Lightbox.web.tsx:308
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:131
-#: src/screens/Search/Shell.tsx:528
+#: src/screens/Search/Shell.tsx:537
 msgid "Failed to copy link"
 msgstr ""
 
@@ -6008,7 +6073,7 @@ msgstr ""
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:386
+#: src/screens/ModerationInbox/Notice.tsx:390
 msgid "Failed to submit appeal. Please try again."
 msgstr ""
 
@@ -6071,23 +6136,26 @@ msgstr ""
 msgid "False information about elections"
 msgstr ""
 
-#: src/screens/Atmosphere/components/FeaturedArticles.tsx:23
-#: src/screens/Atmosphere/components/FeaturedArticles.tsx:26
+#: src/screens/Atmosphere/components/FeaturedApps.tsx:27
+#: src/screens/Atmosphere/components/FeaturedApps.tsx:37
+msgid "Featured apps"
+msgstr ""
+
+#: src/screens/Atmosphere/components/FeaturedArticles.tsx:24
 msgid "Featured articles"
 msgstr ""
 
-#: src/screens/Atmosphere/components/FeaturedLivestreams.tsx:23
-#: src/screens/Atmosphere/components/FeaturedLivestreams.tsx:26
+#: src/screens/Atmosphere/components/FeaturedLivestreams.tsx:24
+#: src/screens/Atmosphere/components/FeaturedLivestreams.tsx:27
 msgid "Featured livestreams"
 msgstr ""
 
-#: src/screens/Atmosphere/components/FeaturedPhotos.tsx:19
-#: src/screens/Atmosphere/components/FeaturedPhotos.tsx:22
+#: src/screens/Atmosphere/components/FeaturedPhotos.tsx:24
+#: src/screens/Atmosphere/components/FeaturedPhotos.tsx:27
 msgid "Featured photos"
 msgstr ""
 
-#: src/screens/Atmosphere/components/FeaturedPublications.tsx:23
-#: src/screens/Atmosphere/components/FeaturedPublications.tsx:26
+#: src/screens/Atmosphere/components/FeaturedPublications.tsx:21
 msgid "Featured publications"
 msgstr ""
 
@@ -6115,7 +6183,7 @@ msgstr ""
 msgid "Feed by {authorName}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/media.tsx:225
+#: src/screens/Notifications/components/NotificationItem/Item/media.tsx:262
 msgid "Feed by {handle}"
 msgstr ""
 
@@ -6153,7 +6221,7 @@ msgid "Feedback sent to feed operator"
 msgstr ""
 
 #: src/Navigation.tsx:590
-#: src/screens/Atmosphere/AppsTab.tsx:31
+#: src/screens/Atmosphere/components/appCategories.ts:13
 #: src/screens/SavedFeeds.tsx:112
 #: src/screens/SavedFeeds.tsx:303
 #: src/screens/Search/SearchResults.tsx:108
@@ -6266,8 +6334,8 @@ msgstr ""
 msgid "Find Contacts"
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:633
-#: src/screens/Notifications/components/PageList.tsx:638
+#: src/screens/Notifications/components/PageList.tsx:594
+#: src/screens/Notifications/components/PageList.tsx:599
 msgid "Find friends"
 msgstr ""
 
@@ -6288,11 +6356,11 @@ msgstr ""
 msgid "Find people you know"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:781
+#: src/screens/Search/Shell.tsx:790
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:627
+#: src/screens/Notifications/components/PageList.tsx:588
 msgid "Find some friends to start getting notifications!"
 msgstr ""
 
@@ -6360,8 +6428,8 @@ msgstr ""
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:430
 #: src/screens/VideoFeed/index.tsx:1060
-#: src/view/com/notifications/NotificationFeedItem.tsx:886
-#: src/view/com/notifications/NotificationFeedItem.tsx:893
+#: src/view/com/notifications/NotificationFeedItem.tsx:885
+#: src/view/com/notifications/NotificationFeedItem.tsx:892
 msgid "Follow"
 msgstr ""
 
@@ -6418,8 +6486,8 @@ msgstr ""
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:229
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:155
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:428
-#: src/view/com/notifications/NotificationFeedItem.tsx:886
-#: src/view/com/notifications/NotificationFeedItem.tsx:893
+#: src/view/com/notifications/NotificationFeedItem.tsx:885
+#: src/view/com/notifications/NotificationFeedItem.tsx:892
 msgid "Follow back"
 msgstr ""
 
@@ -6456,7 +6524,7 @@ msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {
 msgstr ""
 
 #. Heading of the Followers tab of notifications, above the list of people who followed you
-#: src/screens/Notifications/components/NotificationItem/kinds/follower.tsx:52
+#: src/screens/Notifications/components/NotificationItem/kinds/follower.tsx:51
 msgctxt "Notifications section header"
 msgid "Followed you"
 msgstr ""
@@ -6485,8 +6553,8 @@ msgstr ""
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:426
 #: src/screens/VideoFeed/index.tsx:1058
-#: src/view/com/notifications/NotificationFeedItem.tsx:865
-#: src/view/com/notifications/NotificationFeedItem.tsx:881
+#: src/view/com/notifications/NotificationFeedItem.tsx:864
+#: src/view/com/notifications/NotificationFeedItem.tsx:880
 msgid "Following"
 msgstr ""
 
@@ -6502,7 +6570,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, )
 #: src/components/ProfileCard.tsx:496
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:265
-#: src/view/com/notifications/NotificationFeedItem.tsx:816
+#: src/view/com/notifications/NotificationFeedItem.tsx:815
 msgid "Following {0}"
 msgstr ""
 
@@ -6535,7 +6603,7 @@ msgid "Follows"
 msgstr ""
 
 #: src/components/Pills.tsx:215
-#: src/screens/Profile/Header/Handle.tsx:33
+#: src/screens/Profile/Header/Handle.tsx:39
 msgid "Follows you"
 msgstr ""
 
@@ -6551,7 +6619,7 @@ msgstr ""
 msgid "Food"
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:304
+#: src/screens/ModerationInbox/Notice.tsx:307
 msgid "For more information about our appeals and redress process, please see our <0>Terms of Service</0>."
 msgstr ""
 
@@ -6629,6 +6697,10 @@ msgstr ""
 msgid "From these people"
 msgstr ""
 
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:66
+msgid "Further violations of our Community Guidelines could lead to permanent suspension."
+msgstr ""
+
 #: src/components/Gallery/Storybook.tsx:43
 msgid "Gallery"
 msgstr ""
@@ -6641,7 +6713,7 @@ msgstr ""
 msgid "Gallery with one item"
 msgstr ""
 
-#: src/screens/Atmosphere/AppsTab.tsx:30
+#: src/screens/Atmosphere/components/appCategories.ts:12
 msgid "Games"
 msgstr ""
 
@@ -6799,10 +6871,10 @@ msgstr ""
 
 #: src/components/dialogs/LinkWarning.tsx:127
 #: src/components/dialogs/LinkWarning.tsx:133
-#: src/components/Layout/Header/index.tsx:137
+#: src/components/Layout/Header/index.tsx:146
 #: src/components/moderation/ScreenHider.tsx:158
 #: src/components/moderation/ScreenHider.tsx:169
-#: src/screens/Login/components/AuthLayout/Header/index.tsx:104
+#: src/screens/Login/components/AuthLayout/Header/index.tsx:113
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:160
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:163
 #: src/screens/ProfileList/components/ErrorScreen.tsx:38
@@ -6866,12 +6938,12 @@ msgstr ""
 msgid "Go to {0}'s profile"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:250
+#: src/view/com/notifications/NotificationFeedItem.tsx:249
 msgid "Go to {firstAuthorName}'s profile"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:78
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:645
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:73
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:640
 #: src/screens/Notifications/components/NotificationItem/Item/text.tsx:113
 msgid "Go to {name}’s profile"
 msgstr ""
@@ -7101,6 +7173,11 @@ msgstr ""
 msgid "Having trouble?"
 msgstr ""
 
+#. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “he/they”.
+#: src/screens/Profile/Header/PronounsDialog.tsx:35
+msgid "he/him"
+msgstr ""
+
 #: src/components/contacts/screens/PhoneInput.tsx:290
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
 msgstr ""
@@ -7148,7 +7225,7 @@ msgid "Hidden list"
 msgstr ""
 
 #. Shown in place of the text of a post that is hidden by the viewer’s moderation settings
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:213
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:208
 msgid "Hidden post"
 msgstr ""
 
@@ -7164,7 +7241,7 @@ msgstr ""
 msgid "Hide"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:975
+#: src/view/com/notifications/NotificationFeedItem.tsx:974
 msgctxt "action"
 msgid "Hide"
 msgstr ""
@@ -7233,7 +7310,7 @@ msgstr ""
 msgid "Hide trending videos?"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:968
+#: src/view/com/notifications/NotificationFeedItem.tsx:967
 msgid "Hide user list"
 msgstr ""
 
@@ -7530,21 +7607,21 @@ msgid "In order to provide an age-appropriate experience, we need to know your b
 msgstr ""
 
 #. In a notification about a mention or quote, the post is a reply to another person’s post. {subject} is that person’s name, followed by a preview of their post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:269
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:264
 msgid "in reply to <0>{subject}</0>: {previewNode}"
 msgstr ""
 
-#. In a notification about a mention or quote, the post is a reply to the viewer’s own post. Followed by a preview of that post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:265
-msgid "in reply to <0>you</0>: {previewNode}"
-msgstr ""
-
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:173
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:168
 msgid "in reply to a blocked post"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:178
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:173
 msgid "in reply to a deleted post"
+msgstr ""
+
+#. In a notification about a mention or quote, the post is a reply to the viewer’s own post. Followed by a preview of that post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:260
+msgid "in reply to you: {previewNode}"
 msgstr ""
 
 #: src/screens/Settings/NotificationSettings/components/SettingPreview.tsx:30
@@ -7614,7 +7691,7 @@ msgid "Include posts made until this date"
 msgstr ""
 
 #. Checkbox shown when reporting a video. The value is the current playback position, formatted as minutes:seconds.
-#: src/components/moderation/ReportDialog/index.tsx:702
+#: src/components/moderation/ReportDialog/index.tsx:707
 msgid "Include video timestamp ({videoTimestamp})"
 msgstr ""
 
@@ -7697,7 +7774,7 @@ msgstr ""
 msgid "Invalid phone number"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:140
+#: src/components/moderation/ReportDialog/index.tsx:145
 msgid "Invalid report subject"
 msgstr ""
 
@@ -7857,7 +7934,7 @@ msgstr ""
 msgid "Join the conversation"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:35
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:61
 msgid "Joined {createdAt}"
 msgstr ""
 
@@ -7897,8 +7974,8 @@ msgstr ""
 msgid "Label reply for algo"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:64
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:108
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:72
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:116
 msgid "Label: {labelName}"
 msgstr ""
 
@@ -7965,7 +8042,7 @@ msgid "Last initiated just now"
 msgstr ""
 
 #: src/screens/Hashtag.tsx:99
-#: src/screens/Post/PostQuotes.tsx:88
+#: src/screens/Post/PostQuotes.tsx:90
 #: src/screens/Search/SearchResults.tsx:90
 #: src/screens/Topic.tsx:66
 msgid "Latest"
@@ -7974,7 +8051,7 @@ msgstr ""
 #: src/components/verification/VerificationsDialog.tsx:169
 #: src/components/verification/VerifierDialog.tsx:137
 #: src/screens/Moderation/VerificationSettings.tsx:50
-#: src/screens/Profile/Header/EditProfileDialog.tsx:418
+#: src/screens/Profile/Header/EditProfileDialog.tsx:454
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:215
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:279
 msgctxt "english-only-resource"
@@ -8115,7 +8192,7 @@ msgstr ""
 msgid "Left group chat."
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:174
+#: src/screens/SignupQueued.tsx:173
 msgid "left to go."
 msgstr ""
 
@@ -8176,7 +8253,7 @@ msgid "Liked by"
 msgstr ""
 
 #: src/screens/CustomFeed/CustomFeedLikedBy.tsx:22
-#: src/screens/Post/PostLikedBy.tsx:31
+#: src/screens/Post/PostLikedBy.tsx:33
 #: src/screens/Profile/ProfileLabelerLikedBy.tsx:22
 msgid "Liked By"
 msgstr ""
@@ -8230,7 +8307,7 @@ msgstr ""
 msgid "Likes on this post"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:87
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:96
 msgid "Limited profile"
 msgstr ""
 
@@ -8260,7 +8337,7 @@ msgstr ""
 msgid "Link to {domain}"
 msgstr ""
 
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:92
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:97
 msgid "Links"
 msgstr ""
 
@@ -8390,7 +8467,7 @@ msgstr ""
 msgid "Lists blocking this user:"
 msgstr ""
 
-#: src/screens/Atmosphere/components/LivestreamCard.tsx:148
+#: src/screens/Atmosphere/components/LivestreamCard.tsx:141
 msgid "Live"
 msgstr ""
 
@@ -8443,6 +8520,10 @@ msgstr ""
 msgid "Livestream by {authorName}"
 msgstr ""
 
+#: src/screens/Atmosphere/components/AtmosphereCardMenu.tsx:98
+msgid "Livestream options"
+msgstr ""
+
 #: src/screens/Search/Explore.tsx:84
 msgid "Load more"
 msgstr ""
@@ -8454,7 +8535,7 @@ msgstr ""
 
 #. Accessible action on the notification list pill.
 #: src/components/NewPostsPill/index.tsx:163
-#: src/screens/Notifications/components/RefreshPill.tsx:92
+#: src/screens/Notifications/components/RefreshPill.tsx:107
 #: src/view/screens/Notifications.tsx:271
 msgid "Load new notifications"
 msgstr ""
@@ -8472,13 +8553,13 @@ msgstr ""
 msgid "Load new posts from the people you follow"
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:175
-#: src/screens/ModerationInbox/Notice.tsx:184
+#: src/screens/ModerationInbox/Notice.tsx:181
+#: src/screens/ModerationInbox/Notice.tsx:190
 msgid "Load older actions"
 msgstr ""
 
-#: src/screens/Atmosphere/AppsTab.tsx:95
-#: src/screens/Atmosphere/ExploreTab.tsx:68
+#: src/screens/Atmosphere/AppsTab.tsx:86
+#: src/screens/Atmosphere/ExploreTab.tsx:75
 msgid "Loading Atmosphere content"
 msgstr ""
 
@@ -8507,7 +8588,7 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:558
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:554
 msgid "Loads more people into this list"
 msgstr ""
 
@@ -8628,14 +8709,14 @@ msgstr ""
 msgid "Manual"
 msgstr ""
 
-#: src/screens/ModerationInbox/index.tsx:335
+#: src/screens/ModerationInbox/index.tsx:337
 msgid "Mark all actions as read"
 msgstr ""
 
 #: src/screens/Messages/Inbox.tsx:318
 #: src/screens/Messages/Inbox.tsx:324
-#: src/screens/ModerationInbox/index.tsx:209
-#: src/screens/ModerationInbox/index.tsx:341
+#: src/screens/ModerationInbox/index.tsx:214
+#: src/screens/ModerationInbox/index.tsx:343
 msgid "Mark all as read"
 msgstr ""
 
@@ -8646,7 +8727,7 @@ msgstr ""
 msgid "Mark all chats as read"
 msgstr ""
 
-#: src/screens/ModerationInbox/index.tsx:203
+#: src/screens/ModerationInbox/index.tsx:208
 msgid "Mark all reports as read"
 msgstr ""
 
@@ -8733,7 +8814,7 @@ msgstr ""
 msgid "Members could not be added because you have blocked one of the selected accounts."
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:302
+#: src/components/WhoCanReply.tsx:342
 msgid "mentioned users"
 msgstr ""
 
@@ -8862,11 +8943,11 @@ msgstr ""
 #: src/analytics/features/index.ts:149
 #: src/Navigation.tsx:209
 #: src/screens/Moderation/index.tsx:299
-#: src/screens/ModerationInbox/index.tsx:101
+#: src/screens/ModerationInbox/index.tsx:106
 msgid "Moderation inbox"
 msgstr ""
 
-#: src/screens/ModerationInbox/index.tsx:108
+#: src/screens/ModerationInbox/index.tsx:113
 #: src/screens/ModerationInbox/Settings.tsx:53
 msgid "Moderation inbox settings"
 msgstr ""
@@ -8906,7 +8987,8 @@ msgstr ""
 msgid "Moderation Lists"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:32
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:119
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:35
 msgid "Moderation notice"
 msgstr ""
 
@@ -8946,7 +9028,7 @@ msgstr ""
 msgid "More options"
 msgstr ""
 
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:59
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:64
 msgid "Move earlier"
 msgstr ""
 
@@ -8958,7 +9040,7 @@ msgstr ""
 msgid "Move feed up"
 msgstr ""
 
-#: src/features/profileLinks/components/ProfileLinksEditor.tsx:60
+#: src/features/profileLinks/components/ProfileLinksEditor.tsx:65
 msgid "Move later"
 msgstr ""
 
@@ -9110,6 +9192,8 @@ msgid "My Starter Pack"
 msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:426
+#: src/screens/Profile/Header/EditProfileDialog.tsx:418
+#: src/screens/Profile/Header/EditProfileDialog.tsx:424
 msgid "Name"
 msgstr ""
 
@@ -9138,8 +9222,8 @@ msgstr ""
 msgid "Navigates to your profile"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:415
-#: src/components/moderation/ReportDialog/index.tsx:431
+#: src/components/moderation/ReportDialog/index.tsx:420
+#: src/components/moderation/ReportDialog/index.tsx:436
 msgid "Need to report a copyright violation, legal request, or regulatory compliance issue?"
 msgstr ""
 
@@ -9164,19 +9248,19 @@ msgctxt "nux-description"
 msgid "New"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:579
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:565
 msgid "New {count, plural, one {post} other {posts}} from {name}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:603
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:593
 msgid "New {count, plural, one {post} other {posts}} from <0/>"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:547
+#: src/view/com/notifications/NotificationFeedItem.tsx:546
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:531
+#: src/view/com/notifications/NotificationFeedItem.tsx:530
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
 msgstr ""
 
@@ -9296,35 +9380,35 @@ msgstr ""
 msgid "New posts are ready to load from the people you follow"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:536
+#: src/view/com/notifications/NotificationFeedItem.tsx:535
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> "
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:524
+#: src/view/com/notifications/NotificationFeedItem.tsx:523
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:573
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:559
 msgid "New posts from {name} and {others, plural, one {# other} other {# others}}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:571
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:557
 msgid "New posts from {name} and {secondName}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:587
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:577
 msgid "New posts from <0/> and <1/>"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:592
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:582
 msgid "New posts from <0/> and <1>{others, plural, one {# other} other {# others}}</1>"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:578
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:564
 msgid "New reply from {name}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:599
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:589
 msgid "New reply from <0/>"
 msgstr ""
 
@@ -9380,17 +9464,17 @@ msgstr ""
 msgid "Night"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:1011
-#: src/components/moderation/ReportDialog/index.tsx:1020
+#: src/components/moderation/ReportDialog/index.tsx:1016
+#: src/components/moderation/ReportDialog/index.tsx:1025
 msgctxt "Answer to a yes/no question"
 msgid "No"
 msgstr ""
 
-#: src/screens/ModerationInbox/index.tsx:371
+#: src/screens/ModerationInbox/index.tsx:379
 msgid "No actions against you"
 msgstr ""
 
-#: src/screens/ModerationInbox/index.tsx:372
+#: src/screens/ModerationInbox/index.tsx:380
 msgid "No actions match this filter"
 msgstr ""
 
@@ -9402,7 +9486,7 @@ msgstr ""
 msgid "No app passwords yet"
 msgstr ""
 
-#: src/screens/Atmosphere/AppsTab.tsx:139
+#: src/screens/Atmosphere/AppsTab.tsx:130
 msgid "No apps in this category yet."
 msgstr ""
 
@@ -9444,7 +9528,7 @@ msgstr ""
 msgid "No feeds found. Try searching for something else."
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:667
+#: src/screens/Notifications/components/PageList.tsx:628
 msgid "No followers to show yet"
 msgstr ""
 
@@ -9487,7 +9571,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, )
 #: src/components/ProfileCard.tsx:524
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:294
-#: src/view/com/notifications/NotificationFeedItem.tsx:837
+#: src/view/com/notifications/NotificationFeedItem.tsx:836
 msgid "No longer following {0}"
 msgstr ""
 
@@ -9516,12 +9600,12 @@ msgstr ""
 msgid "No name"
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:664
+#: src/screens/Notifications/components/PageList.tsx:625
 msgid "No notifications from people you follow yet"
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:616
-#: src/screens/Notifications/components/PageList.tsx:661
+#: src/screens/Notifications/components/PageList.tsx:577
+#: src/screens/Notifications/components/PageList.tsx:622
 msgid "No notifications yet"
 msgstr ""
 
@@ -9546,7 +9630,7 @@ msgctxt "enable for"
 msgid "No one"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:285
+#: src/components/WhoCanReply.tsx:325
 msgid "No one but the author can quote this post."
 msgstr ""
 
@@ -9559,7 +9643,7 @@ msgstr ""
 msgid "No post filter"
 msgstr ""
 
-#: src/screens/Notifications/ActivityList.tsx:43
+#: src/screens/Notifications/ActivityList.tsx:41
 msgid "No posts here"
 msgstr ""
 
@@ -9585,7 +9669,7 @@ msgstr ""
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:670
+#: src/screens/Notifications/components/PageList.tsx:631
 msgid "No replies to show yet"
 msgstr ""
 
@@ -9593,7 +9677,7 @@ msgstr ""
 msgid "No replies yet"
 msgstr ""
 
-#: src/screens/ModerationInbox/index.tsx:236
+#: src/screens/ModerationInbox/index.tsx:241
 msgid "No reports match this filter"
 msgstr ""
 
@@ -9745,7 +9829,7 @@ msgid "Nothing saved yet"
 msgstr ""
 
 #: src/Navigation.tsx:224
-#: src/screens/ModerationInbox/Notice.tsx:137
+#: src/screens/ModerationInbox/Notice.tsx:143
 msgid "Notice"
 msgstr ""
 
@@ -9757,6 +9841,10 @@ msgstr ""
 msgid "Notification settings"
 msgstr ""
 
+#: src/screens/Settings/NotificationSettings/index.tsx:128
+msgid "Notification Settings"
+msgstr ""
+
 #: src/screens/Messages/Settings.tsx:305
 #: src/screens/Messages/Settings.tsx:318
 msgid "Notification sounds"
@@ -9765,10 +9853,9 @@ msgstr ""
 #: src/Navigation.tsx:580
 #: src/Navigation.tsx:933
 #: src/screens/Messages/Settings.tsx:255
-#: src/screens/Notifications/ActivityList.tsx:31
+#: src/screens/Notifications/ActivityList.tsx:29
 #: src/screens/Notifications/index.tsx:662
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
-#: src/screens/Settings/NotificationSettings/index.tsx:128
 #: src/screens/Settings/Settings.tsx:226
 #: src/screens/Settings/Settings.tsx:229
 #: src/view/screens/Notifications.tsx:128
@@ -9823,7 +9910,7 @@ msgstr ""
 #: src/components/dms/InitiateChatFlow.tsx:838
 #: src/components/dms/MessageItem.tsx:758
 #: src/screens/Login/PasswordUpdatedForm.tsx:35
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:658
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:668
 msgid "Okay"
 msgstr ""
 
@@ -9893,7 +9980,7 @@ msgid "Only"
 msgstr ""
 
 #. placeholder {0}: settings.map((rule, i) => ( <Fragment key={`rule-${i}`}> <Rule rule={rule} post={post} lists={post.threadgate!.lists} /> <Separator i={i} length={settings.length} /> </Fragment> ))
-#: src/components/WhoCanReply.tsx:265
+#: src/components/WhoCanReply.tsx:305
 msgid "Only {0} can reply."
 msgstr ""
 
@@ -9982,17 +10069,14 @@ msgstr ""
 msgid "Oops!"
 msgstr ""
 
-#. placeholder {0}: app.title
-#. placeholder {0}: article.title
 #. placeholder {0}: linkLabel(link)
+#. placeholder {0}: photo.title
 #: src/features/profileLinks/components/LinkPill.tsx:87
-#: src/screens/Atmosphere/components/AppCard.tsx:41
-#: src/screens/Atmosphere/components/ArticleCard.tsx:45
-#: src/screens/Atmosphere/components/PhotoCard.tsx:46
+#: src/screens/Atmosphere/components/PhotoCard.tsx:57
 msgid "Open {0}"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:58
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:84
 msgid "Open account"
 msgstr ""
 
@@ -10001,7 +10085,7 @@ msgid "Open advanced search options"
 msgstr ""
 
 #. placeholder {0}: banner.title
-#: src/screens/Atmosphere/components/AnnouncementBanner.tsx:52
+#: src/screens/Atmosphere/components/AnnouncementBanner.tsx:55
 msgid "Open announcement: {0}"
 msgstr ""
 
@@ -10016,7 +10100,7 @@ msgstr ""
 #: src/components/dms/ChatInvite/Root.tsx:105
 #: src/components/intents/GroupChatJoinDialog.tsx:454
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ChatSubjectPreview.tsx:32
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:43
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:46
 msgid "Open chat"
 msgstr ""
 
@@ -10024,7 +10108,7 @@ msgstr ""
 msgid "Open chat member options for {displayName}"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:43
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:46
 msgid "Open content"
 msgstr ""
 
@@ -10037,7 +10121,7 @@ msgstr ""
 msgid "Open draft"
 msgstr ""
 
-#: src/components/Layout/Header/index.tsx:171
+#: src/components/Layout/Header/index.tsx:180
 msgid "Open drawer menu"
 msgstr ""
 
@@ -10072,8 +10156,8 @@ msgstr ""
 msgid "Open group chat"
 msgstr ""
 
-#: src/components/dms/MessagesListHeader.tsx:168
-#: src/components/dms/MessagesListHeader.tsx:204
+#: src/components/dms/MessagesListHeader.tsx:192
+#: src/components/dms/MessagesListHeader.tsx:228
 msgid "Open group chat settings"
 msgstr ""
 
@@ -10087,6 +10171,8 @@ msgstr ""
 msgid "Open link"
 msgstr ""
 
+#: src/components/atmosphere/SiteStandard/Document.tsx:87
+#: src/components/atmosphere/SiteStandard/DocumentCompact.tsx:104
 #: src/components/Post/Embed/ExternalEmbed/index.tsx:90
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:146
 msgid "Open link to {niceUrl}"
@@ -10096,20 +10182,12 @@ msgstr ""
 msgid "Open list"
 msgstr ""
 
-#. placeholder {0}: livestream.title
-#: src/screens/Atmosphere/components/LivestreamCard.tsx:65
-msgid "Open livestream: {0}"
+#: src/screens/Atmosphere/components/LivestreamCard.tsx:58
+msgid "Open livestream: {title}"
 msgstr ""
 
-#. placeholder {0}: livestream.title
-#: src/screens/Atmosphere/components/LivestreamCard.tsx:64
-msgid "Open livestream: {0}, live"
-msgstr ""
-
-#. placeholder {0}: livestream.title
-#. placeholder {1}: livestream.activeCount
 #: src/screens/Atmosphere/components/LivestreamCard.tsx:57
-msgid "Open livestream: {0}, live with {1, plural, one {# viewer} other {# viewers}}"
+msgid "Open livestream: {title}, live"
 msgstr ""
 
 #: src/components/dms/ActionsWrapper.tsx:41
@@ -10179,7 +10257,7 @@ msgstr ""
 #. placeholder {0}: getLinkHost(link.url)
 #. placeholder {0}: link.url
 #: src/features/profileLinks/components/LinkPreviewSheet.tsx:85
-#: src/features/profileLinks/components/ProfileLinks.tsx:161
+#: src/features/profileLinks/components/ProfileLinks.tsx:164
 msgid "Opens {0} outside Bluesky"
 msgstr ""
 
@@ -10580,8 +10658,12 @@ msgstr ""
 msgid "Phone number verified"
 msgstr ""
 
-#: src/screens/Atmosphere/AppsTab.tsx:28
+#: src/screens/Atmosphere/components/appCategories.ts:10
 msgid "Photo"
+msgstr ""
+
+#: src/screens/Atmosphere/components/AtmosphereCardMenu.tsx:84
+msgid "Photo options"
 msgstr ""
 
 #: src/lib/interests.ts:69
@@ -10819,7 +10901,7 @@ msgstr ""
 msgid "Please sign in as @{0}"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:962
+#: src/components/moderation/ReportDialog/index.tsx:967
 msgctxt "english-only-resource"
 msgid "Please submit your report through the Report non-consensual intimate imagery (NCII) form."
 msgstr ""
@@ -10870,13 +10952,13 @@ msgctxt "action"
 msgid "Post"
 msgstr ""
 
-#: src/screens/PostThread/index.tsx:561
+#: src/screens/PostThread/index.tsx:564
 msgctxt "description"
 msgid "Post"
 msgstr ""
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:114
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:130
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr ""
@@ -10914,11 +10996,9 @@ msgstr ""
 msgid "Post by {authorName}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:544
-msgid "Post by {name}"
-msgstr ""
-
+#. placeholder {0}: author.handle
 #. placeholder {0}: route.params.name
+#: src/lib/hooks/useSetPostTitle.ts:15
 #: src/Navigation.tsx:311
 #: src/Navigation.tsx:318
 #: src/Navigation.tsx:325
@@ -11000,7 +11080,7 @@ msgid "Post unpinned"
 msgstr ""
 
 #. Shown in place of the text of a post that has no text, only images, video, a link or a quoted post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:219
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:214
 msgid "Post with media"
 msgstr ""
 
@@ -11041,6 +11121,11 @@ msgstr ""
 msgid "Potentially misleading link warning"
 msgstr ""
 
+#. placeholder {0}: articlePublisher.name
+#: src/components/atmosphere/SiteStandard/Publication.tsx:212
+msgid "Powered by {0}"
+msgstr ""
+
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:301
 msgid "Preferred language"
 msgstr ""
@@ -11067,6 +11152,18 @@ msgstr ""
 
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:121
 msgid "Preview"
+msgstr ""
+
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:39
+msgid "Previous appeal approved"
+msgstr ""
+
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:41
+msgid "Previous appeal denied"
+msgstr ""
+
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:42
+msgid "Previous appeal resolved"
 msgstr ""
 
 #: src/components/Lightbox/Lightbox.web.tsx:203
@@ -11155,13 +11252,19 @@ msgstr ""
 msgid "Profile not found"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:251
+#: src/screens/Profile/Header/EditProfileDialog.tsx:284
 msgctxt "toast"
 msgid "Profile updated"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:222
 msgid "Promoting or selling prohibited items or services"
+msgstr ""
+
+#: src/screens/Profile/Header/EditProfileDialog.tsx:498
+#: src/screens/Profile/Header/PronounsDialog.tsx:140
+#: src/screens/Profile/Header/PronounsDialog.tsx:170
+msgid "Pronouns"
 msgstr ""
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:161
@@ -11171,6 +11274,10 @@ msgstr ""
 
 #: src/view/com/lists/MyLists.tsx:80
 msgid "Public, sharable lists of users to mute or block in bulk."
+msgstr ""
+
+#: src/screens/Atmosphere/components/AtmosphereCardMenu.tsx:91
+msgid "Publication options"
 msgstr ""
 
 #. Accessibility label for button to publish a single post
@@ -11248,7 +11355,7 @@ msgid "Quote posts disabled"
 msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:192
-#: src/screens/Post/PostQuotes.tsx:31
+#: src/screens/Post/PostQuotes.tsx:33
 #: src/screens/Settings/NotificationSettings/index.tsx:206
 #: src/screens/Settings/NotificationSettings/index.tsx:349
 msgid "Quotes"
@@ -11331,11 +11438,11 @@ msgstr ""
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:121
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:135
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:148
-#: src/screens/ModerationInbox/Notice.tsx:246
+#: src/screens/ModerationInbox/Notice.tsx:249
 msgid "Read our Community Guidelines"
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:309
+#: src/screens/ModerationInbox/Notice.tsx:312
 msgid "Read our Terms of Service"
 msgstr ""
 
@@ -11361,8 +11468,8 @@ msgstr ""
 msgid "Real people."
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:511
-#: src/screens/ModerationInbox/Notice.tsx:529
+#: src/screens/ModerationInbox/Notice.tsx:510
+#: src/screens/ModerationInbox/Notice.tsx:528
 #: src/screens/Takendown.tsx:158
 #: src/screens/Takendown.tsx:166
 msgid "Reason for appeal"
@@ -11403,7 +11510,7 @@ msgid "Redesigned notifications"
 msgstr ""
 
 #. Pill on the notifications list, shown when there are new notifications to load.
-#: src/screens/Notifications/components/RefreshPill.tsx:87
+#: src/screens/Notifications/components/RefreshPill.tsx:101
 msgid "Refresh"
 msgstr ""
 
@@ -11431,8 +11538,8 @@ msgstr ""
 msgid "Reload conversations"
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:495
-#: src/screens/ModerationInbox/Notice.tsx:504
+#: src/screens/ModerationInbox/Notice.tsx:494
+#: src/screens/ModerationInbox/Notice.tsx:503
 msgid "Reload notice"
 msgstr ""
 
@@ -11599,6 +11706,11 @@ msgstr ""
 msgid "Remove profile"
 msgstr ""
 
+#: src/screens/Profile/Header/PronounsDialog.tsx:229
+#: src/screens/Profile/Header/PronounsDialog.tsx:234
+msgid "Remove pronouns"
+msgstr ""
+
 #: src/components/PostControls/RepostButton.tsx:154
 #: src/components/PostControls/RepostButton.tsx:164
 msgid "Remove repost"
@@ -11637,12 +11749,10 @@ msgid "Remove your verification for this account?"
 msgstr ""
 
 #: src/components/Post/Embed/index.tsx:294
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:496
 msgid "Removed by author"
 msgstr ""
 
 #: src/components/Post/Embed/index.tsx:292
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:494
 msgid "Removed by you"
 msgstr ""
 
@@ -11671,7 +11781,7 @@ msgstr ""
 msgid "Removed from your feeds"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:91
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:100
 msgid "Removed post"
 msgstr ""
 
@@ -11706,7 +11816,7 @@ msgid "Replace with Discover"
 msgstr ""
 
 #. In a notification, someone replied to another person’s post. {subject} is that person’s name, followed by a preview of their post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:258
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:253
 msgid "replied to <0>{subject}</0>: {previewNode}"
 msgstr ""
 
@@ -11715,12 +11825,7 @@ msgctxt "description"
 msgid "Replied to <0><1/></0>"
 msgstr ""
 
-#. In a notification, someone replied to the viewer’s own post. Followed by a preview of that post
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:254
-msgid "replied to <0>you</0>: {previewNode}"
-msgstr ""
-
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:171
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:166
 msgid "replied to a blocked post"
 msgstr ""
 
@@ -11729,7 +11834,7 @@ msgctxt "description"
 msgid "Replied to a blocked post"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:176
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:171
 msgid "replied to a deleted post"
 msgstr ""
 
@@ -11741,6 +11846,11 @@ msgstr ""
 #: src/components/Post/PostRepliedTo.tsx:36
 msgctxt "description"
 msgid "Replied to you"
+msgstr ""
+
+#. In a notification, someone replied to the viewer’s own post. Followed by a preview of that post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:249
+msgid "replied to you: {previewNode}"
 msgstr ""
 
 #: src/components/dms/MessageItem.tsx:943
@@ -11771,11 +11881,11 @@ msgctxt "notifications tab"
 msgid "Replies"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:74
+#: src/components/WhoCanReply.tsx:86
 msgid "Replies disabled"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:263
+#: src/components/WhoCanReply.tsx:303
 msgid "Replies to this post are disabled."
 msgstr ""
 
@@ -11853,6 +11963,10 @@ msgstr ""
 msgid "Report account"
 msgstr ""
 
+#: src/screens/Atmosphere/components/AtmosphereCardMenu.tsx:79
+msgid "Report article"
+msgstr ""
+
 #: src/components/dms/ConvoMenu.tsx:295
 #: src/components/dms/ConvoMenu.tsx:299
 #: src/screens/Messages/components/RequestButtons.tsx:161
@@ -11860,8 +11974,8 @@ msgstr ""
 msgid "Report conversation"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:138
-#: src/components/moderation/ReportDialog/index.tsx:336
+#: src/components/moderation/ReportDialog/index.tsx:143
+#: src/components/moderation/ReportDialog/index.tsx:341
 msgid "Report dialog"
 msgstr ""
 
@@ -11880,13 +11994,25 @@ msgstr ""
 msgid "Report list"
 msgstr ""
 
+#: src/screens/Atmosphere/components/AtmosphereCardMenu.tsx:100
+msgid "Report livestream"
+msgstr ""
+
 #: src/components/dms/MessageContextMenu.tsx:216
 msgid "Report message"
+msgstr ""
+
+#: src/screens/Atmosphere/components/AtmosphereCardMenu.tsx:86
+msgid "Report photo"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:790
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:792
 msgid "Report post"
+msgstr ""
+
+#: src/screens/Atmosphere/components/AtmosphereCardMenu.tsx:93
+msgid "Report publication"
 msgstr ""
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:59
@@ -11910,44 +12036,64 @@ msgid "Report submitted"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:56
-#: src/components/moderation/ReportDialog/copy.ts:70
+msgid "Report this article"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/copy.ts:94
+#: src/components/moderation/ReportDialog/copy.ts:108
 msgid "Report this conversation"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:36
+#: src/components/moderation/ReportDialog/copy.ts:44
 msgid "Report this feed"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/copy.ts:74
+msgid "Report this gallery"
 msgstr ""
 
 #: src/screens/Messages/ConversationSettings/index.tsx:586
 msgid "Report this group chat"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:42
+#: src/components/moderation/ReportDialog/copy.ts:50
 msgid "Report this link"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:30
+#: src/components/moderation/ReportDialog/copy.ts:38
 msgid "Report this list"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:18
+#: src/components/moderation/ReportDialog/copy.ts:26
 #: src/features/liveNow/components/LiveStatusDialog.tsx:247
 msgid "Report this livestream"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:62
+#: src/components/moderation/ReportDialog/copy.ts:100
 msgid "Report this message"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:24
+#: src/components/moderation/ReportDialog/copy.ts:62
+msgid "Report this photo"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/copy.ts:32
 msgid "Report this post"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:48
+#: src/components/moderation/ReportDialog/copy.ts:68
+msgid "Report this publication"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/copy.ts:80
+msgid "Report this record"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/copy.ts:86
 msgid "Report this Starter Pack"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:12
+#: src/components/moderation/ReportDialog/copy.ts:19
 msgid "Report this user"
 msgstr ""
 
@@ -11987,7 +12133,7 @@ msgctxt "Toast after reposting"
 msgid "Reposted"
 msgstr ""
 
-#: src/screens/Post/PostRepostedBy.tsx:31
+#: src/screens/Post/PostRepostedBy.tsx:33
 msgid "Reposted By"
 msgstr ""
 
@@ -12157,7 +12303,7 @@ msgstr ""
 msgid "Restore the {defaultChannel} deployment"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:93
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:102
 msgid "Restored post"
 msgstr ""
 
@@ -12181,7 +12327,7 @@ msgstr ""
 #: src/components/contacts/screens/VerifyNumber.tsx:358
 #: src/components/Error.tsx:74
 #: src/components/Lists.tsx:115
-#: src/components/moderation/ReportDialog/index.tsx:370
+#: src/components/moderation/ReportDialog/index.tsx:375
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:56
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:59
 #: src/components/StarterPack/ProfileStarterPacks.tsx:371
@@ -12204,7 +12350,7 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:367
+#: src/components/moderation/ReportDialog/index.tsx:372
 #: src/view/screens/Storybook/Admonitions.tsx:61
 msgid "Retry loading report options"
 msgstr ""
@@ -12268,8 +12414,8 @@ msgstr ""
 #: src/features/liveNow/components/EditLiveDialog.tsx:199
 #: src/features/liveNow/components/EditLiveDialog.tsx:206
 #: src/screens/Messages/ConversationSettings/prompts.tsx:74
-#: src/screens/Profile/Header/EditProfileDialog.tsx:304
-#: src/screens/Profile/Header/EditProfileDialog.tsx:318
+#: src/screens/Profile/Header/EditProfileDialog.tsx:343
+#: src/screens/Profile/Header/EditProfileDialog.tsx:354
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:315
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:269
@@ -12374,8 +12520,8 @@ msgstr ""
 
 #: src/components/dialogs/NewskieDialog/index.tsx:119
 #: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:295
-#: src/view/com/notifications/NotificationFeedItem.tsx:933
-#: src/view/com/notifications/NotificationFeedItem.tsx:941
+#: src/view/com/notifications/NotificationFeedItem.tsx:932
+#: src/view/com/notifications/NotificationFeedItem.tsx:940
 msgid "Say hello!"
 msgstr ""
 
@@ -12396,6 +12542,11 @@ msgstr ""
 #: src/features/inviteFriends/InviteScannerScreen.web.tsx:23
 #: src/Navigation.tsx:363
 msgid "Scan QR code"
+msgstr ""
+
+#. placeholder {0}: i18n.date(new Date(enforcement.expiresAt), { dateStyle: 'medium', timeStyle: 'short', })
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:88
+msgid "Scheduled end: {0}"
 msgstr ""
 
 #: src/lib/interests.ts:71
@@ -12426,9 +12577,9 @@ msgstr ""
 #: src/components/forms/SearchInput.tsx:59
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
-#: src/screens/Search/Shell.tsx:564
-#: src/screens/Search/Shell.tsx:627
-#: src/screens/Search/Shell.tsx:769
+#: src/screens/Search/Shell.tsx:573
+#: src/screens/Search/Shell.tsx:636
+#: src/screens/Search/Shell.tsx:778
 #: src/view/shell/bottom-bar/BottomBar.tsx:220
 msgid "Search"
 msgstr ""
@@ -12573,8 +12724,13 @@ msgstr ""
 #: src/components/FeedInterstitials.tsx:555
 #: src/components/interstitials/FeedTrendingTopics.tsx:117
 #: src/components/moderation/BlockDialog.tsx:198
+#: src/screens/Atmosphere/components/ExploreSectionHeader.tsx:49
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:83
 msgid "See more"
+msgstr ""
+
+#: src/screens/Atmosphere/components/FeaturedApps.tsx:30
+msgid "See more apps"
 msgstr ""
 
 #: src/components/FeedInterstitials.tsx:476
@@ -12633,7 +12789,7 @@ msgstr ""
 msgid "Select a color"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:453
+#: src/components/moderation/ReportDialog/index.tsx:458
 msgid "Select a reason"
 msgstr ""
 
@@ -12730,7 +12886,7 @@ msgstr ""
 msgid "Select languages"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:508
+#: src/components/moderation/ReportDialog/index.tsx:513
 msgid "Select moderation service"
 msgstr ""
 
@@ -12833,7 +12989,7 @@ msgstr ""
 msgid "Send post to..."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:1064
+#: src/components/moderation/ReportDialog/index.tsx:1069
 msgid "Send report to {title}"
 msgstr ""
 
@@ -12983,7 +13139,7 @@ msgstr ""
 msgid "Sexually Suggestive"
 msgstr ""
 
-#: src/components/Link.tsx:433
+#: src/components/Link.tsx:438
 #: src/components/MediaPreview.tsx:243
 #: src/components/Post/Embed/ImageContextMenu.tsx:74
 #: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:167
@@ -13062,8 +13218,8 @@ msgstr ""
 msgid "Share this feed"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:580
-#: src/screens/Search/Shell.tsx:649
+#: src/screens/Search/Shell.tsx:589
+#: src/screens/Search/Shell.tsx:658
 msgid "Share this search"
 msgstr ""
 
@@ -13108,6 +13264,11 @@ msgstr ""
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr ""
 
+#. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “she/they”.
+#: src/screens/Profile/Header/PronounsDialog.tsx:30
+msgid "she/her"
+msgstr ""
+
 #: src/features/profileLinks/components/LinkFormDialog.tsx:250
 msgid "Short links can’t be added. Use the full link instead."
 msgstr ""
@@ -13118,7 +13279,7 @@ msgstr ""
 msgid "Show"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:66
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:116
 msgid "Show account status"
 msgstr ""
 
@@ -13163,7 +13324,7 @@ msgstr ""
 msgid "Show less like this"
 msgstr ""
 
-#: src/features/profileLinks/components/ProfileLinks.tsx:176
+#: src/features/profileLinks/components/ProfileLinks.tsx:179
 msgid "Show link details"
 msgstr ""
 
@@ -13176,8 +13337,8 @@ msgid "Show lists of users to select from"
 msgstr ""
 
 #: src/components/Post/ShowMoreTextButton.tsx:59
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:557
-#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:583
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:553
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:579
 msgid "Show more"
 msgstr ""
 
@@ -13251,7 +13412,7 @@ msgid "Show when you’re live"
 msgstr ""
 
 #. placeholder {0}: tab.label
-#: src/screens/Atmosphere/AppsTab.tsx:126
+#: src/screens/Atmosphere/AppsTab.tsx:117
 msgid "Shows {0} apps"
 msgstr ""
 
@@ -13260,7 +13421,7 @@ msgstr ""
 msgid "Shows {0} notifications"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:599
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:609
 msgid "Shows information about when this post was created"
 msgstr ""
 
@@ -13342,8 +13503,8 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:302
 #: src/screens/Settings/Settings.tsx:304
 #: src/screens/Settings/Settings.tsx:336
-#: src/screens/SignupQueued.tsx:100
-#: src/screens/SignupQueued.tsx:103
+#: src/screens/SignupQueued.tsx:99
+#: src/screens/SignupQueued.tsx:102
 #: src/screens/Takendown.tsx:88
 #: src/view/shell/desktop/LeftNav.tsx:266
 #: src/view/shell/desktop/LeftNav.tsx:394
@@ -13439,7 +13600,7 @@ msgstr ""
 msgid "So many thoughts, you should post one"
 msgstr ""
 
-#: src/screens/Atmosphere/AppsTab.tsx:32
+#: src/screens/Atmosphere/components/appCategories.ts:14
 msgid "Social"
 msgstr ""
 
@@ -13456,6 +13617,18 @@ msgstr ""
 msgid "Software Dev"
 msgstr ""
 
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:109
+msgid "Some account features may be restricted."
+msgstr ""
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:103
+msgid "Some account features may be restricted. Strikes come off your record over time."
+msgstr ""
+
+#: src/components/WhoCanReply.tsx:88
+msgid "Some can reply"
+msgstr ""
+
 #: src/screens/Moderation/index.tsx:526
 msgid "Some moderation services in your list are no longer available."
 msgstr ""
@@ -13468,7 +13641,7 @@ msgstr ""
 msgid "Some other feeds you might like"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:75
+#: src/components/WhoCanReply.tsx:89
 msgid "Some people can reply"
 msgstr ""
 
@@ -13518,7 +13691,7 @@ msgstr ""
 msgid "Someone was removed from the group"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:143
+#: src/components/moderation/ReportDialog/index.tsx:148
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr ""
 
@@ -13529,7 +13702,7 @@ msgid "Something went wrong"
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:141
-#: src/components/moderation/ReportDialog/index.tsx:362
+#: src/components/moderation/ReportDialog/index.tsx:367
 #: src/screens/Deactivated.tsx:92
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:60
 #: src/view/screens/Storybook/Admonitions.tsx:56
@@ -13551,7 +13724,7 @@ msgstr ""
 msgid "Something went wrong. Please try again in a moment."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:310
+#: src/components/moderation/ReportDialog/index.tsx:315
 msgid "Something went wrong. Please try again."
 msgstr ""
 
@@ -13754,12 +13927,12 @@ msgstr ""
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:138
 #: src/screens/Messages/components/ChatDisabled.tsx:172
 #: src/screens/Messages/components/ChatDisabled.tsx:174
-#: src/screens/ModerationInbox/Notice.tsx:452
+#: src/screens/ModerationInbox/Notice.tsx:451
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:164
 msgid "Submit"
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:445
+#: src/screens/ModerationInbox/Notice.tsx:444
 #: src/screens/Takendown.tsx:76
 msgid "Submit appeal"
 msgstr ""
@@ -13772,13 +13945,13 @@ msgstr ""
 msgid "Submit feedback"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:586
-#: src/components/moderation/ReportDialog/index.tsx:659
-#: src/components/moderation/ReportDialog/index.tsx:666
+#: src/components/moderation/ReportDialog/index.tsx:591
+#: src/components/moderation/ReportDialog/index.tsx:664
+#: src/components/moderation/ReportDialog/index.tsx:671
 msgid "Submit report"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:942
+#: src/components/moderation/ReportDialog/index.tsx:947
 msgctxt "english-only-resource"
 msgid "Submit your report through the Report non-consensual intimate imagery (NCII) form"
 msgstr ""
@@ -14075,7 +14248,7 @@ msgstr ""
 msgid "Tech"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:440
+#: src/screens/Profile/Header/EditProfileDialog.tsx:476
 msgid "Tell us a bit about yourself"
 msgstr ""
 
@@ -14083,7 +14256,7 @@ msgstr ""
 msgid "Tell us a little more"
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:484
+#: src/screens/ModerationInbox/Notice.tsx:483
 msgid "Tell us why you believe this decision was a mistake. We will review your appeal along with the original content."
 msgstr ""
 
@@ -14194,11 +14367,11 @@ msgstr ""
 msgid "The account you reported has been restored after another review. You can mute or block it if you’d rather not see its content. Read our <0>Community Guidelines</0>."
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:55
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:62
 msgid "The action against your account was reversed"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:56
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:63
 msgid "The action against your content was reversed"
 msgstr ""
 
@@ -14207,8 +14380,8 @@ msgstr ""
 msgid "The app will be restarted"
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:337
-#: src/screens/ModerationInbox/Notice.tsx:377
+#: src/screens/ModerationInbox/Notice.tsx:340
+#: src/screens/ModerationInbox/Notice.tsx:381
 msgid "The appeal window has closed."
 msgstr ""
 
@@ -14290,7 +14463,7 @@ msgstr ""
 msgid "The member limit has been reached."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:316
+#: src/components/moderation/ReportDialog/index.tsx:321
 msgid "The moderation service is temporarily unavailable. Please try again later."
 msgstr ""
 
@@ -14411,7 +14584,7 @@ msgstr ""
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:363
+#: src/screens/Notifications/components/PageList.tsx:351
 #: src/view/com/notifications/NotificationFeed.tsx:137
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
@@ -14493,7 +14666,7 @@ msgstr ""
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:149
+#: src/screens/SignupQueued.tsx:148
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr ""
 
@@ -14526,6 +14699,11 @@ msgstr ""
 
 #: src/screens/Messages/ConversationSettings/prompts.tsx:169
 msgid "They won’t be able to rejoin unless you invite them again."
+msgstr ""
+
+#. Suggested pronouns in Edit Profile. Keep the “subject/object” shape if your language has one: picking several suggestions combines the part before the slash, e.g. “they/she”.
+#: src/screens/Profile/Header/PronounsDialog.tsx:40
+msgid "they/them"
 msgstr ""
 
 #: src/components/moderation/ScreenHider.tsx:117
@@ -14627,7 +14805,7 @@ msgstr ""
 msgid "This confirmation code is not valid. Please try again."
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:383
+#: src/screens/ModerationInbox/Notice.tsx:387
 msgid "This content could not be appealed. Please reload the notice and try again."
 msgstr ""
 
@@ -14797,7 +14975,7 @@ msgstr ""
 msgid "This message is hidden because you are blocking this user."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:314
+#: src/components/moderation/ReportDialog/index.tsx:319
 msgid "This moderation service does not support that report reason. Please choose a different reason or moderation service."
 msgstr ""
 
@@ -14811,11 +14989,11 @@ msgstr ""
 
 #. placeholder {0}: niceDate(i18n, createdAt)
 #. placeholder {1}: niceDate(i18n, indexedAt)
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:639
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:649
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:256
+#: src/components/WhoCanReply.tsx:296
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr ""
 
@@ -14864,11 +15042,11 @@ msgstr ""
 msgid "This should only take a few minutes."
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:380
+#: src/screens/ModerationInbox/Notice.tsx:384
 msgid "This subject can no longer be appealed."
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:374
+#: src/screens/ModerationInbox/Notice.tsx:378
 msgid "This subject has already been appealed."
 msgstr ""
 
@@ -14983,6 +15161,10 @@ msgstr ""
 msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr ""
 
+#: src/screens/ModerationInbox/components/AccountActionTimeline.tsx:24
+msgid "Timeline"
+msgstr ""
+
 #: src/components/SendErrorReportDialog.tsx:68
 #: src/features/profileLinks/components/LinkFormDialog.tsx:364
 msgid "Title"
@@ -15014,7 +15196,7 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
-#: src/screens/Notifications/components/PageList.tsx:576
+#: src/screens/Notifications/components/PageList.tsx:537
 msgctxt "Notifications section header"
 msgid "Today"
 msgstr ""
@@ -15054,7 +15236,7 @@ msgid "Too many contacts - you've exceeded the number of contacts you can import
 msgstr ""
 
 #: src/screens/Hashtag.tsx:88
-#: src/screens/Post/PostQuotes.tsx:82
+#: src/screens/Post/PostQuotes.tsx:84
 #: src/screens/Search/SearchResults.tsx:78
 #: src/screens/Topic.tsx:60
 msgid "Top"
@@ -15374,7 +15556,7 @@ msgstr ""
 msgid "Unfollows the user"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:570
+#: src/components/moderation/ReportDialog/index.tsx:575
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr ""
 
@@ -15593,6 +15775,10 @@ msgstr ""
 msgid "Update your location"
 msgstr ""
 
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:67
+msgid "Updated"
+msgstr ""
+
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:359
 msgctxt "toast"
 msgid "Updating quote attachment failed"
@@ -15768,16 +15954,16 @@ msgid "Username or email address"
 msgstr ""
 
 #. placeholder {0}: post.author.handle
-#: src/components/WhoCanReply.tsx:319
+#: src/components/WhoCanReply.tsx:359
 msgid "users followed by <0>@{0}</0>"
 msgstr ""
 
 #. placeholder {0}: post.author.handle
-#: src/components/WhoCanReply.tsx:306
+#: src/components/WhoCanReply.tsx:346
 msgid "users following <0>@{0}</0>"
 msgstr ""
 
-#: src/screens/Atmosphere/AppsTab.tsx:36
+#: src/screens/Atmosphere/components/appCategories.ts:18
 msgid "Utils"
 msgstr ""
 
@@ -15898,13 +16084,13 @@ msgid "via starter pack <0/> <1>{name}</1>"
 msgstr ""
 
 #. When the source of a follow is a Starter Pack, i.e., 'via Starter Pack {starterPackName}'.
-#: src/view/com/notifications/NotificationFeedItem.tsx:734
+#: src/view/com/notifications/NotificationFeedItem.tsx:733
 msgid "via Starter Pack <0/><1>{starterPackName}</1>"
 msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:128
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:194
-#: src/screens/Atmosphere/AppsTab.tsx:29
+#: src/screens/Atmosphere/components/appCategories.ts:11
 msgid "Video"
 msgstr ""
 
@@ -15972,6 +16158,8 @@ msgid "View"
 msgstr ""
 
 #. placeholder {0}: view.source.title
+#. placeholder {0}: view.title
+#: src/components/atmosphere/SiteStandard/Publication.tsx:123
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:354
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:694
 msgid "View {0}"
@@ -15988,7 +16176,7 @@ msgstr ""
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:513
 #: src/screens/Search/components/SearchProfileCard.tsx:37
 #: src/screens/VideoFeed/index.tsx:1003
-#: src/view/com/notifications/NotificationFeedItem.tsx:596
+#: src/view/com/notifications/NotificationFeedItem.tsx:595
 msgid "View {0}'s profile"
 msgstr ""
 
@@ -15997,7 +16185,7 @@ msgstr ""
 msgid "View {0}’s profile"
 msgstr ""
 
-#: src/components/dms/MessagesListHeader.tsx:111
+#: src/components/dms/MessagesListHeader.tsx:119
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:188
 msgid "View {displayName}’s profile"
 msgstr ""
@@ -16006,32 +16194,53 @@ msgstr ""
 msgid "View {publicationTitle}"
 msgstr ""
 
+#: src/screens/Atmosphere/components/FeaturedAppCard.tsx:141
+msgid "View {title} profile"
+msgstr ""
+
 #: src/screens/Notifications/components/NotificationItem/Item/aggregate.tsx:127
 msgid "View all"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:134
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:135
 msgid "View all followers"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:368
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:607
+msgid "View all new posts"
+msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:608
+msgid "View all new posts from {name}"
+msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:356
 msgid "View all posts {name} liked"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:400
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:387
 msgid "View all posts {name} reposted"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:433
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:419
 msgid "View all reposts {name} liked"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:466
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:451
 msgid "View all reposts {name} reposted"
 msgstr ""
 
 #: src/features/profileLinks/components/LinkFormDialog.tsx:292
 msgid "View all support sites"
+msgstr ""
+
+#: src/screens/Atmosphere/components/AtmosphereCardMenu.tsx:78
+msgid "View article"
+msgstr ""
+
+#: src/screens/Atmosphere/components/AtmosphereCardMenu.tsx:149
+#: src/screens/Atmosphere/components/AtmosphereCardMenu.tsx:153
+msgid "View author profile"
 msgstr ""
 
 #: src/components/ProfileHoverCard/index.web.tsx:487
@@ -16049,6 +16258,15 @@ msgstr ""
 #: src/screens/VideoFeed/index.tsx:871
 #: src/screens/VideoFeed/index.tsx:889
 msgid "View details"
+msgstr ""
+
+#. placeholder {0}: app.title
+#: src/screens/Atmosphere/components/AppCard.tsx:37
+msgid "View details for {0}"
+msgstr ""
+
+#: src/screens/Atmosphere/components/AppKnownFollowers.tsx:71
+msgid "View followers of this account that you also follow"
 msgstr ""
 
 #: src/view/com/posts/ViewFullThread.tsx:31
@@ -16076,6 +16294,10 @@ msgstr ""
 msgid "View information about these labels"
 msgstr ""
 
+#: src/screens/Atmosphere/components/AtmosphereCardMenu.tsx:99
+msgid "View livestream"
+msgstr ""
+
 #: src/components/interstitials/TrendingVideos.tsx:201
 #: src/components/interstitials/TrendingVideos.tsx:223
 #: src/screens/Search/modules/ExploreTrendingVideos.tsx:193
@@ -16087,6 +16309,10 @@ msgstr ""
 msgid "View more trending videos"
 msgstr ""
 
+#: src/screens/Atmosphere/components/AtmosphereCardMenu.tsx:85
+msgid "View photo"
+msgstr ""
+
 #: src/view/com/composer/Composer.tsx:1243
 msgid "View post"
 msgstr ""
@@ -16094,6 +16320,9 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:473
 #: src/components/ProfileHoverCard/index.web.tsx:493
 #: src/components/ProfileHoverCard/index.web.tsx:520
+#: src/screens/Atmosphere/components/AppDialog.tsx:142
+#: src/screens/Atmosphere/components/AppDialog.tsx:151
+#: src/screens/Atmosphere/components/FeaturedAppCard.tsx:147
 #: src/view/com/posts/PostFeedErrorMessage.tsx:181
 #: src/view/com/util/PostMeta.tsx:93
 #: src/view/com/util/PostMeta.tsx:121
@@ -16104,14 +16333,16 @@ msgstr ""
 msgid "View profile banner"
 msgstr ""
 
+#: src/components/atmosphere/SiteStandard/Publication.tsx:123
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:354
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:470
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:501
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:694
+#: src/screens/Atmosphere/components/AtmosphereCardMenu.tsx:92
 msgid "View publication"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportRow.tsx:32
+#: src/screens/ModerationInbox/components/ReportRow.tsx:34
 msgid "View report details: {subject}"
 msgstr ""
 
@@ -16149,7 +16380,7 @@ msgid "View your default post interaction settings"
 msgstr ""
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:59
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:87
+#: src/view/com/home/HomeHeaderLayoutMobile.tsx:104
 msgid "View your feeds and explore more"
 msgstr ""
 
@@ -16194,6 +16425,16 @@ msgstr ""
 #. placeholder {1}: provider.name
 #: src/components/Post/Embed/AtCard/index.tsx:61
 msgid "Visit {0} on {1}"
+msgstr ""
+
+#: src/screens/Atmosphere/components/FeaturedAppCard.tsx:127
+msgid "Visit {title}"
+msgstr ""
+
+#: src/screens/Atmosphere/components/AppDialog.tsx:130
+#: src/screens/Atmosphere/components/AppDialog.tsx:135
+#: src/screens/Atmosphere/components/FeaturedAppCard.tsx:134
+msgid "Visit app"
 msgstr ""
 
 #: src/components/dialogs/LinkWarning.tsx:112
@@ -16290,7 +16531,7 @@ msgstr ""
 msgid "We don't store your friends' phone numbers or send any messages"
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:179
+#: src/screens/SignupQueued.tsx:178
 msgid "We estimate {estimatedTime} until your account is ready."
 msgstr ""
 
@@ -16323,11 +16564,11 @@ msgstr ""
 msgid "We recommend selecting at least two interests."
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:47
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:50
 msgid "We reviewed your appeal and are keeping our original decision in place."
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:33
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:36
 msgid "We reviewed your appeal. The current status of your content or account is shown below."
 msgstr ""
 
@@ -16342,10 +16583,6 @@ msgstr ""
 #. placeholder {0}: currentAccount!.email
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:250
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
-msgstr ""
-
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
-msgid "We sent you an email about your account"
 msgstr ""
 
 #: src/view/com/composer/state/video.ts:521
@@ -16369,7 +16606,7 @@ msgstr ""
 msgid "We were unable to receive the verification due to a connection issue. It may arrive later. If it does, your account will update automatically."
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:183
+#: src/screens/SignupQueued.tsx:182
 msgid "We will let you know when your account is ready."
 msgstr ""
 
@@ -16492,12 +16729,16 @@ msgstr ""
 msgid "We've confirmed your age assurance status. You can now close this dialog."
 msgstr ""
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:43
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:76
 msgid "We’ve taken action on your account for violating our Community Guidelines, and strikes have been added to your record. More violations will lead to stronger enforcement, including suspension."
 msgstr ""
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:37
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:60
 msgid "We’ve taken action on your account for violating our Community Guidelines. Your record now carries enough strikes that another violation could lead to permanent suspension."
+msgstr ""
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:82
+msgid "We’ve taken action on your account. See your notices for details."
 msgstr ""
 
 #: src/screens/Deactivated.tsx:121
@@ -16539,7 +16780,7 @@ msgstr ""
 msgid "Which link do you want to report?"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:208
+#: src/components/WhoCanReply.tsx:248
 msgid "Who can interact with this post?"
 msgstr ""
 
@@ -16548,7 +16789,7 @@ msgid "Who can join this group chat and how"
 msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:429
-#: src/components/WhoCanReply.tsx:103
+#: src/components/WhoCanReply.tsx:119
 msgid "Who can reply"
 msgstr ""
 
@@ -16572,39 +16813,59 @@ msgid "Why are you appealing?"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:57
-#: src/components/moderation/ReportDialog/copy.ts:71
+msgid "Why should this article be reviewed?"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/copy.ts:95
+#: src/components/moderation/ReportDialog/copy.ts:109
 msgid "Why should this conversation be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:37
+#: src/components/moderation/ReportDialog/copy.ts:45
 msgid "Why should this feed be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:43
+#: src/components/moderation/ReportDialog/copy.ts:75
+msgid "Why should this gallery be reviewed?"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/copy.ts:51
 msgid "Why should this link be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:31
+#: src/components/moderation/ReportDialog/copy.ts:39
 msgid "Why should this list be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:19
+#: src/components/moderation/ReportDialog/copy.ts:27
 msgid "Why should this livestream be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:63
+#: src/components/moderation/ReportDialog/copy.ts:101
 msgid "Why should this message be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:25
+#: src/components/moderation/ReportDialog/copy.ts:63
+msgid "Why should this photo be reviewed?"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/copy.ts:33
 msgid "Why should this post be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:49
+#: src/components/moderation/ReportDialog/copy.ts:69
+msgid "Why should this publication be reviewed?"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/copy.ts:81
+msgid "Why should this record be reviewed?"
+msgstr ""
+
+#: src/components/moderation/ReportDialog/copy.ts:87
 msgid "Why should this Starter Pack be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:13
+#: src/components/moderation/ReportDialog/copy.ts:20
 msgid "Why should this user be reviewed?"
 msgstr ""
 
@@ -16669,8 +16930,8 @@ msgstr ""
 msgid "www.mylivestream.tv"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:995
-#: src/components/moderation/ReportDialog/index.tsx:1004
+#: src/components/moderation/ReportDialog/index.tsx:1000
+#: src/components/moderation/ReportDialog/index.tsx:1009
 msgctxt "Answer to a yes/no question"
 msgid "Yes"
 msgstr ""
@@ -16743,7 +17004,7 @@ msgstr ""
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:176
+#: src/screens/SignupQueued.tsx:175
 msgid "You are in line."
 msgstr ""
 
@@ -16772,7 +17033,7 @@ msgstr ""
 msgid "You are verified"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:413
+#: src/screens/Profile/Header/EditProfileDialog.tsx:449
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
 msgstr ""
 
@@ -16801,7 +17062,7 @@ msgstr ""
 msgid "You can always opt out and delete your data"
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:299
+#: src/screens/ModerationInbox/Notice.tsx:302
 msgid "You can appeal once per decision. A different moderator will review the appeal."
 msgstr ""
 
@@ -16861,7 +17122,7 @@ msgstr ""
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:294
+#: src/screens/ModerationInbox/Notice.tsx:297
 msgid "You can submit one account appeal at a time. A different moderator will review the appeal."
 msgstr ""
 
@@ -17009,7 +17270,7 @@ msgstr ""
 msgid "You haven't muted any words or tags yet"
 msgstr ""
 
-#: src/screens/ModerationInbox/index.tsx:235
+#: src/screens/ModerationInbox/index.tsx:240
 msgid "You haven’t reported anything yet"
 msgstr ""
 
@@ -17211,7 +17472,7 @@ msgstr ""
 msgid "You’re in control"
 msgstr ""
 
-#: src/screens/SignupQueued.tsx:146
+#: src/screens/SignupQueued.tsx:145
 msgid "You're in line"
 msgstr ""
 
@@ -17277,21 +17538,21 @@ msgstr ""
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:95
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:103
 msgid "Your ability to submit reports was restricted"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:88
-#: src/screens/ModerationInbox/index.tsx:120
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:97
+#: src/screens/ModerationInbox/index.tsx:125
 #: src/screens/Signup/index.tsx:191
 msgid "Your account"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:312
+#: src/components/moderation/ReportDialog/index.tsx:317
 msgid "Your account cannot submit reports while it is suspended."
 msgstr ""
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
 msgid "Your account credentials were revoked"
 msgstr ""
 
@@ -17299,15 +17560,24 @@ msgstr ""
 msgid "Your account has been deleted, see ya! ✌️"
 msgstr ""
 
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:39
 #: src/screens/Takendown.tsx:142
 msgid "Your account has been suspended"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:34
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:48
+msgid "Your account has moderation actions"
+msgstr ""
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:47
 msgid "Your account has strikes against it"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:33
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:98
+msgid "Your account has strikes against it. Strikes come off your record over time."
+msgstr ""
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:43
 msgid "Your account is at risk of permanent suspension"
 msgstr ""
 
@@ -17315,8 +17585,31 @@ msgstr ""
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr ""
 
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:57
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:23
+msgid "Your account is suspended"
+msgstr ""
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:50
+msgid "Your account is suspended on Bluesky. See your notices for details and available appeal options."
+msgstr ""
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:41
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:59
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:25
+msgid "Your account is temporarily suspended"
+msgstr ""
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:55
+msgid "Your account is temporarily suspended on Bluesky. See your notices for details and available appeal options."
+msgstr ""
+
 #: src/components/dms/InitiateChatFlow.tsx:836
 msgid "Your account is too new"
+msgstr ""
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:45
+msgid "Your account may be suspended or at risk of suspension"
 msgstr ""
 
 #: src/components/dms/InitiateChatFlow.tsx:837
@@ -17336,17 +17629,21 @@ msgstr ""
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
 msgstr ""
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:67
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:91
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:73
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
+msgid "Your account was restored"
+msgstr ""
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:75
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:82
 msgid "Your account was suspended"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:65
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:74
 msgid "Your account was temporarily suspended for {hours, plural, one {# hour} other {# hours}}"
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:237
+#: src/screens/ModerationInbox/Notice.tsx:240
 msgid "Your appeal has been submitted and is awaiting review."
 msgstr ""
 
@@ -17370,11 +17667,11 @@ msgstr ""
 msgid "Your choice will be remembered for future links. You can change it at any time in settings."
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:374
+#: src/view/com/notifications/NotificationFeedItem.tsx:373
 msgid "Your contact {firstAuthorLink} is on Bluesky"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:372
+#: src/view/com/notifications/NotificationFeedItem.tsx:371
 msgid "Your contact {firstAuthorName} is on Bluesky"
 msgstr ""
 
@@ -17382,17 +17679,21 @@ msgstr ""
 msgid "Your contact {name}"
 msgstr ""
 
-#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:353
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:355
 msgid "Your contact <0/> is on Bluesky"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:95
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:104
 msgid "Your content"
 msgstr ""
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:84
 msgid "Your content was removed"
+msgstr ""
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:57
+msgid "Your content was restored"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(currentAccount?.handle || '', '@')
@@ -17487,13 +17788,17 @@ msgstr ""
 msgid "Your password must be at least 8 characters long."
 msgstr ""
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:94
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:103
 msgid "Your post"
 msgstr ""
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:84
 msgid "Your post was removed"
+msgstr ""
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:56
+msgid "Your post was restored"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1239
@@ -17521,6 +17826,10 @@ msgstr ""
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr ""
 
+#: src/screens/Profile/Header/PronounsDialog.tsx:129
+msgid "Your pronouns show next to your handle on your profile."
+msgstr ""
+
 #: src/view/com/composer/Composer.tsx:1238
 msgid "Your reply was sent"
 msgstr ""
@@ -17535,11 +17844,11 @@ msgid "Your report has been resolved. Read our <0>Community Guidelines</0>."
 msgstr ""
 
 #. placeholder {0}: state.selectedLabeler?.creator.displayName
-#: src/components/moderation/ReportDialog/index.tsx:597
+#: src/components/moderation/ReportDialog/index.tsx:602
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr ""
 
-#: src/screens/ModerationInbox/index.tsx:120
+#: src/screens/ModerationInbox/index.tsx:125
 msgid "Your reports"
 msgstr ""
 
@@ -17550,14 +17859,6 @@ msgstr ""
 
 #: src/screens/Settings/InterestsSettings.tsx:65
 msgid "Your selected interests help us serve you content you care about."
-msgstr ""
-
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:56
-msgid "Your standing doesn’t restrict your account right now, and strikes come off your record over time."
-msgstr ""
-
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:51
-msgid "Your standing may restrict certain features on your account. Strikes come off your record over time."
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1569
