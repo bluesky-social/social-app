@@ -1,15 +1,17 @@
 # @react-navigation/bottom-tabs+7.16.0.patch
 
-## Native tabs: pass the badge text color on iOS
+## Native tabs: badge text color and font on iOS
 
 `NativeBottomTabView` already turns `tabBarBadgeStyle.color` into a badge text
 color, but only passes it in the Android appearance. This adds it to the iOS
-appearance too, as `tabBarItemBadgeTextColor`, which our
-`react-native-screens` patch applies to `badgeTextAttributes`.
+appearance too, as `tabBarItemBadgeTextColor`, and adds `fontSize` and
+`fontWeight` to `tabBarBadgeStyle`, passed as `tabBarItemBadgeFontSize` and
+`tabBarItemBadgeFontWeight`. Our `react-native-screens` patch applies them to
+`badgeTextAttributes`.
 
-We need it to draw a dot badge (a "●" with a clear background and our blue
-text) for the chat requests and Following v2 dots, see `NativeTabsNavigator`
-in `src/Navigation.tsx`.
+We use them for smaller, bolder badges than UIKit's, see
+`NativeTabsNavigator` in `src/Navigation.tsx`. UIKit styles every badge with
+the selected tab's appearance, so set them for all tabs (in `screenOptions`).
 
 Both `src` and `lib/module` are patched, since Metro may resolve either.
 

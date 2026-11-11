@@ -138,20 +138,29 @@ as of 4.30.1). The C++ changes here match the PR exactly; on `main` the v4
 files live under `legacy/`, but 4.30.1 still has the flat layout. Linear:
 APP-3435.
 
-## iOS: badge text color for tab bar items
+## iOS: badge text color and font for tab bar items
 
-Adds a `tabBarItemBadgeTextColor` key to the iOS tab bar item appearance,
-which sets `UITabBarItemStateAppearance.badgeTextAttributes`'s foreground
-color. Upstream only supports the badge's background color on iOS (the text
-color prop exists, but only for Android).
+Adds `tabBarItemBadgeTextColor`, `tabBarItemBadgeFontSize` and
+`tabBarItemBadgeFontWeight` keys to the iOS tab bar item appearance, which set
+`UITabBarItemStateAppearance.badgeTextAttributes`'s foreground color and font
+(via `RCTFont`, like the title font keys). Upstream only supports the badge's
+background color on iOS (the text color prop exists, but only for Android).
 
-We use it to draw our blue "something new" dot in the native tab bar, which
-has no dot badge: the badge is a "●" with a clear background and blue text.
-An empty `badgeValue` doesn't work, because `RNSTabsScreenComponentView` maps
-it to nil. The appearance props are an untyped dictionary (`UnsafeMixed`), so
-no codegen change is needed, but `TabsScreen.ios.tsx` has to `processColor`
-the new key like the others, or it reaches native as a string that
-`RCTConvert UIColor` can't read. The matching
-`@react-navigation/bottom-tabs` patch passes `tabBarBadgeStyle.color` through.
+We use them for smaller, bolder badges than UIKit's. Note that the appearance
+is set on each `tabBarItem.standardAppearance`, and UIKit applies the selected
+item's appearance to the whole tab bar, so a tab can't style its own badge
+differently from the others.
+
+The appearance props are an untyped dictionary (`UnsafeMixed`), so no codegen
+change is needed, but `TabsScreen.ios.tsx` has to `processColor` the color
+key and stringify the weight like the others, or they reach native in a form
+`RCTConvert`/`RCTFont` can't read. The matching
+`@react-navigation/bottom-tabs` patch passes them through from
+`tabBarBadgeStyle`.
+
+Since the dot badge is now a blank badge rather than a blue "●" on a clear
+background, the text color key isn't needed anymore, but it's harmless.
+Badges with an empty `badgeValue` don't show, because
+`RNSTabsScreenComponentView` maps it to nil.
 
 Not upstreamed yet.

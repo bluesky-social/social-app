@@ -1,5 +1,5 @@
 diff --git a/lib/module/unstable/NativeBottomTabView.native.js b/lib/module/unstable/NativeBottomTabView.native.js
-index 9010f181c4e80cdf74cf730238d7cc6bf431e5ca..bb76cd4b1ff264ff797409fa2b47189e2f277a64 100644
+index 9010f181c4e80cdf74cf730238d7cc6bf431e5ca..a0e6b8df77e289c2e7074388293565da1efe37c5 100644
 --- a/lib/module/unstable/NativeBottomTabView.native.js
 +++ b/lib/module/unstable/NativeBottomTabView.native.js
 @@ -220,6 +220,7 @@ export function NativeBottomTabView({
@@ -10,17 +10,19 @@ index 9010f181c4e80cdf74cf730238d7cc6bf431e5ca..bb76cd4b1ff264ff797409fa2b47189e
            tabBarSelectionEnabled,
            tabBarBadgeStyle,
            tabBarIcon,
-@@ -249,7 +250,8 @@ export function NativeBottomTabView({
+@@ -249,7 +250,10 @@ export function NativeBottomTabView({
            tabBarItemTitleFontStyle: fontStyle,
            tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
            tabBarItemIconColor: inactiveTintColor,
 -          tabBarItemBadgeBackgroundColor: badgeBackgroundColor
 +          tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
-+            tabBarItemBadgeTextColor: badgeTextColor
++            tabBarItemBadgeTextColor: badgeTextColor,
++          tabBarItemBadgeFontSize: tabBarBadgeStyle?.fontSize,
++          tabBarItemBadgeFontWeight: tabBarBadgeStyle?.fontWeight
          };
          const normalTabItemAppearance = {
            tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
-@@ -285,7 +287,8 @@ export function NativeBottomTabView({
+@@ -285,7 +289,8 @@ export function NativeBottomTabView({
            screenKey: route.key,
            preventNativeSelection: tabBarSelectionEnabled === false,
            badgeValue: tabBarBadge?.toString(),
@@ -31,7 +33,7 @@ index 9010f181c4e80cdf74cf730238d7cc6bf431e5ca..bb76cd4b1ff264ff797409fa2b47189e
              repeatedTabSelection: {
                popToRoot: true,
 diff --git a/lib/typescript/src/unstable/types.d.ts b/lib/typescript/src/unstable/types.d.ts
-index 9950ea1af378651a9210e690be1b803b011e31bb..5ce7bc17ac94ba6d591de8e005c2f4e41c6128c4 100644
+index 9950ea1af378651a9210e690be1b803b011e31bb..65982adff681836be1cd6a9f950ed72a94ac3181 100644
 --- a/lib/typescript/src/unstable/types.d.ts
 +++ b/lib/typescript/src/unstable/types.d.ts
 @@ -103,6 +103,15 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
@@ -50,8 +52,23 @@ index 9950ea1af378651a9210e690be1b803b011e31bb..5ce7bc17ac94ba6d591de8e005c2f4e4
      /**
       * Label visibility mode for the tab bar items.
       *
+@@ -145,6 +154,14 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
+     tabBarBadgeStyle?: {
+         backgroundColor?: ColorValue;
+         color?: ColorValue;
++        /**
++         * @platform ios
++         */
++        fontSize?: number;
++        /**
++         * @platform ios
++         */
++        fontWeight?: TextStyle['fontWeight'];
+     };
+     /**
+      * Color for the icon and label in the active tab.
 diff --git a/src/unstable/NativeBottomTabView.native.tsx b/src/unstable/NativeBottomTabView.native.tsx
-index d63c444fc8c2490b4af6885a53d81cd511b6e8e3..ff8d00107fe5458ad9a577c183da624819d6bd95 100644
+index d63c444fc8c2490b4af6885a53d81cd511b6e8e3..da6f2dcfbb9609c867d5b26d7cd6c11040566456 100644
 --- a/src/unstable/NativeBottomTabView.native.tsx
 +++ b/src/unstable/NativeBottomTabView.native.tsx
 @@ -342,6 +342,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
@@ -62,15 +79,17 @@ index d63c444fc8c2490b4af6885a53d81cd511b6e8e3..ff8d00107fe5458ad9a577c183da6248
              tabBarSelectionEnabled,
              tabBarBadgeStyle,
              tabBarIcon,
-@@ -382,6 +383,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
+@@ -382,6 +383,9 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
              tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
              tabBarItemIconColor: inactiveTintColor,
              tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
 +            tabBarItemBadgeTextColor: badgeTextColor,
++            tabBarItemBadgeFontSize: tabBarBadgeStyle?.fontSize,
++            tabBarItemBadgeFontWeight: tabBarBadgeStyle?.fontWeight,
            };
  
            const normalTabItemAppearance: TabsScreenItemStateAppearanceAndroid =
-@@ -420,7 +422,10 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
+@@ -420,7 +424,10 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
                screenKey={route.key}
                preventNativeSelection={tabBarSelectionEnabled === false}
                badgeValue={tabBarBadge?.toString()}
@@ -83,7 +102,7 @@ index d63c444fc8c2490b4af6885a53d81cd511b6e8e3..ff8d00107fe5458ad9a577c183da6248
                  repeatedTabSelection: {
                    popToRoot: true,
 diff --git a/src/unstable/types.tsx b/src/unstable/types.tsx
-index 3ff5de0c3623c6abf0e47b73dd54fa75d2484db2..dca689198867cfda062a8987d8e3517434f04fe2 100644
+index 3ff5de0c3623c6abf0e47b73dd54fa75d2484db2..b6ef2aae13db3c1a28ba262b8d9a429e4cad87e4 100644
 --- a/src/unstable/types.tsx
 +++ b/src/unstable/types.tsx
 @@ -137,6 +137,16 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
@@ -103,3 +122,18 @@ index 3ff5de0c3623c6abf0e47b73dd54fa75d2484db2..dca689198867cfda062a8987d8e35174
    /**
     * Label visibility mode for the tab bar items.
     *
+@@ -186,6 +196,14 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
+   tabBarBadgeStyle?: {
+     backgroundColor?: ColorValue;
+     color?: ColorValue;
++    /**
++     * @platform ios
++     */
++    fontSize?: number;
++    /**
++     * @platform ios
++     */
++    fontWeight?: TextStyle['fontWeight'];
+   };
+ 
+   /**
