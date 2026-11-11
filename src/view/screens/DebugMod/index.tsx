@@ -24,14 +24,8 @@ import {
   moderationOptsOverrideContext,
   useModerationOpts,
 } from '#/state/preferences/moderation-opts'
-import {type FeedNotification} from '#/state/queries/notifications/types'
-import {
-  groupNotifications,
-  shouldFilterNotif,
-} from '#/state/queries/notifications/util'
 import {threadPost} from '#/state/queries/usePostThread/views'
 import {useSession} from '#/state/session'
-import {NotificationFeedItem} from '#/view/com/notifications/NotificationFeedItem'
 import {PagerHeaderProvider} from '#/view/com/pager/PagerHeaderContext'
 import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
@@ -182,51 +176,6 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
         : mock.imagesView()) as app.bsky.feed.defs.PostView['embed'],
     })
   }, [scenario, label, target, profile, isSelfLabel, did])
-
-  const replyNotif = useMemo(() => {
-    const notif = mock.replyNotification({
-      record: mock.post({
-        text: "This is the body of the post. It's where the text goes. You get the idea.",
-        reply: {
-          parent: {
-            uri: `at://${did}/app.bsky.feed.post/fake-parent`,
-            cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
-          },
-          root: {
-            uri: `at://${did}/app.bsky.feed.post/fake-parent`,
-            cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
-          },
-        },
-      }),
-      author: profile,
-      labels:
-        scenario[0] === 'label' && target[0] === 'post'
-          ? [
-              mock.label({
-                src: isSelfLabel ? did : undefined,
-                val: label[0],
-                uri: `at://${did}/app.bsky.feed.post/fake`,
-              }),
-            ]
-          : undefined,
-    })
-    const [item] = groupNotifications([notif])
-    item.subject = mock.postView({
-      record: notif.record as app.bsky.feed.post.Main,
-      author: profile,
-      labels: notif.labels,
-    })
-    return item
-  }, [scenario, label, target, profile, isSelfLabel, did])
-
-  const followNotif = useMemo(() => {
-    const notif = mock.followNotification({
-      author: profile,
-      subjectDid: currentAccount?.did || '',
-    })
-    const [item] = groupNotifications([notif])
-    return item
-  }, [profile, currentAccount])
 
   const modOpts = useMemo<ModerationOpts>(() => {
     return {
@@ -537,19 +486,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
 
                 {view[0] === 'notifications' && (
                   <>
-                    <Heading title="Notification" subtitle="quote or reply" />
-                    <MockNotifItem
-                      notif={replyNotif}
-                      moderationOpts={modOpts}
-                    />
-                    <View style={{height: 20}} />
-                    <Heading title="Notification" subtitle="follow or like" />
-                    <MockNotifItem
-                      notif={followNotif}
-                      moderationOpts={modOpts}
-                    />
-                    <View style={{height: 20}} />
-                    <Heading title="Notifications v2" subtitle="every kind" />
+                    <Heading title="Notifications" subtitle="every kind" />
                     <GroupedNotifications
                       profile={profile}
                       post={post}
@@ -892,30 +829,6 @@ function MockPostThreadItem({
     <ThreadItemPost item={thread} />
   ) : (
     <ThreadItemAnchor item={thread} />
-  )
-}
-
-function MockNotifItem({
-  notif,
-  moderationOpts,
-}: {
-  notif: FeedNotification
-  moderationOpts: ModerationOpts
-}) {
-  const t = useTheme()
-  if (shouldFilterNotif(notif.notification, moderationOpts)) {
-    return (
-      <P style={[t.atoms.bg_contrast_25, a.px_lg, a.py_md]}>
-        Filtered from the feed
-      </P>
-    )
-  }
-  return (
-    <NotificationFeedItem
-      item={notif}
-      moderationOpts={moderationOpts}
-      highlightUnread
-    />
   )
 }
 

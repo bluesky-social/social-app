@@ -20,7 +20,7 @@ import {H1, H3} from '#/components/Typography'
 type ReadState = 'fixture' | 'unread' | 'read'
 
 /**
- * Every Notifications v2 row kind, rendered from the grouped notifications
+ * Every notification row kind, rendered from the grouped notifications
  * fixtures, then the follow fixtures as the Followers tab shows them.
  */
 export function Notifications() {

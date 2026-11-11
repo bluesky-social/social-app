@@ -52,9 +52,8 @@ import {useDisplayName} from './text'
 type ProfileView = app.bsky.actor.defs.ProfileViewBasic
 
 /**
- * Each kind's name in the `notifications:bundleExpand` metric. These are the
- * names the original notifications screen logs, so that expands on either
- * screen can be compared.
+ * Each kind's name in the `notifications:bundleExpand` metric, the one the
+ * original notifications screen logged, so expands stay comparable.
  */
 const METRIC_NOTIFICATION_TYPES: Record<
   GroupNotificationView['type'],
