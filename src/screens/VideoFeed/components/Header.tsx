@@ -10,6 +10,7 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {useDuoCompactHeader} from '#/view/shell/duoFoldedNavigation'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, type ButtonProps} from '#/components/Button'
@@ -68,6 +69,7 @@ export function Header({
 }: {
   sourceContext: VideoFeedSourceContext
 }) {
+  const compactHeader = useDuoCompactHeader({fullWidth: true})
   let content = null
   switch (sourceContext.type) {
     case 'feedgen': {
@@ -82,7 +84,16 @@ export function Header({
   }
 
   return (
-    <Layout.Header.Outer noBottomBorder>
+    <Layout.Header.Outer
+      noBottomBorder
+      style={
+        compactHeader
+          ? {
+              minHeight: compactHeader.headerHeight,
+              paddingRight: compactHeader.headerRightPadding + 16,
+            }
+          : undefined
+      }>
       <BackButton />
       <Layout.Header.Content align="left">{content}</Layout.Header.Content>
     </Layout.Header.Outer>

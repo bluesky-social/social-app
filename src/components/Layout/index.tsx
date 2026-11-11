@@ -14,6 +14,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useEnableMinimalShellModeForScreen} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {useDuoCompactHeader} from '#/view/shell/duoFoldedNavigation'
 import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
 import {
   atoms as a,
@@ -53,6 +54,8 @@ export const Screen = memo(function Screen({
   fullBleed = false,
   ...props
 }: ScreenProps) {
+  const compactHeader = useDuoCompactHeader()
+  const {isWithinDialog} = useDialogContext()
   const {top} = useSafeAreaInsets()
   const {isWithinSplitView} = useIsWithinSplitView()
   const {gtMobile} = useBreakpoints()
@@ -69,7 +72,13 @@ export const Screen = memo(function Screen({
       <View
         style={[
           a.util_screen_outer,
-          {paddingTop: noInsetTop ? 0 : top},
+          {
+            paddingTop: noInsetTop
+              ? 0
+              : compactHeader && !isWithinDialog && !isWithinSplitView
+                ? compactHeader.topPadding
+                : top,
+          },
           isWithinSplitView && {maxHeight: '100%'},
           style,
         ]}

@@ -85,6 +85,7 @@ import {useSession} from '#/state/session'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {List} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {useDuoCompactHeader} from '#/view/shell/duoFoldedNavigation'
 import {ThreadComposePrompt} from '#/screens/PostThread/components/ThreadComposePrompt'
 import {Header} from '#/screens/VideoFeed/components/Header'
 import {atoms as a, ios, platform, ThemeProvider, useTheme} from '#/alf'
@@ -136,6 +137,7 @@ export function VideoFeed({}: NativeStackScreenProps<
   CommonNavigatorParams,
   'VideoFeed'
 >) {
+  const compactHeader = useDuoCompactHeader({fullWidth: true})
   const {top} = useSafeAreaInsets()
   const {params} = useRoute<RouteProp<CommonNavigatorParams, 'VideoFeed'>>()
 
@@ -164,7 +166,12 @@ export function VideoFeed({}: NativeStackScreenProps<
           style={[
             a.absolute,
             a.z_50,
-            {top: 0, left: 0, right: 0, paddingTop: top},
+            {
+              top: 0,
+              left: 0,
+              right: 0,
+              paddingTop: compactHeader?.topPadding ?? top,
+            },
           ]}>
           <Header sourceContext={params} />
         </View>

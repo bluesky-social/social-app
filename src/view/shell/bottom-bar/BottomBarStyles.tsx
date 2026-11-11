@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native'
 
+import {DUO_NAV_RAIL_WIDTH} from '#/view/shell/duoFoldedNavigation'
 import {atoms as a, tokens} from '#/alf'
 
 export const styles = StyleSheet.create({
@@ -12,6 +13,23 @@ export const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
     paddingLeft: tokens.space.sm,
     paddingRight: tokens.space.sm,
+  },
+  sideRail: {
+    top: 0,
+    left: undefined,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    borderTopWidth: 0,
+    borderLeftWidth: StyleSheet.hairlineWidth,
+    paddingLeft: 0,
+  },
+  sideRailControl: {
+    flex: 0,
+    width: DUO_NAV_RAIL_WIDTH,
+    minHeight: 56,
+    paddingTop: 14,
+    paddingBottom: 14,
+    justifyContent: 'center',
   },
   bottomBarWeb: a.fixed,
   ctrl: {

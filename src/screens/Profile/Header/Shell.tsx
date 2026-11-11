@@ -19,6 +19,7 @@ import {useSession} from '#/state/session'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
+import {useDuoCompactHeader} from '#/view/shell/duoFoldedNavigation'
 import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -59,6 +60,7 @@ let ProfileHeaderShell = ({
   const {t: l} = useLingui()
   const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
+  const compactHeader = useDuoCompactHeader()
   const {top: topInset} = useSafeAreaInsets()
   const haptics = useHaptics()
   const liveStatusControl = useDialogControl()
@@ -184,7 +186,7 @@ let ProfileHeaderShell = ({
                   {
                     top: platform({
                       web: 10,
-                      default: topInset,
+                      default: compactHeader?.topPadding ?? topInset,
                     }),
                     left: platform({
                       web: 18,

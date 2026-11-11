@@ -2,6 +2,7 @@ import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
 
+import {useDuoCompactHeader} from '#/view/shell/duoFoldedNavigation'
 import {atoms as a, tokens} from '#/alf'
 import {TimesLarge_Stroke2_Corner0_Rounded as CloseIcon} from '#/components/icons/Times'
 import {CircleChromeButton} from './CircleChromeButton'
@@ -24,6 +25,7 @@ export function Header({
   activeIndex,
 }: Props) {
   const {t: l} = useLingui()
+  const compactHeader = useDuoCompactHeader({fullWidth: true})
   const insets = useSafeAreaInsets()
   // Pad both sides equally so the pager dots stay centred on the screen
   const sideInset = Math.max(insets.left, insets.right)
@@ -40,8 +42,11 @@ export function Header({
         a.align_center,
         a.pointer_events_box_none,
         {
-          paddingTop: insets.top + 8,
+          paddingTop: (compactHeader?.topPadding ?? insets.top) + 8,
           paddingHorizontal: sideInset + tokens.space.md,
+          ...(compactHeader
+            ? {paddingRight: compactHeader.headerRightPadding + tokens.space.md}
+            : {}),
         },
       ]}>
       <ImageMenu onPressShare={onPressShare} onPressSave={onPressSave} />

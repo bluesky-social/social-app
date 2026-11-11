@@ -1,5 +1,11 @@
 import {createContext, useCallback, useContext} from 'react'
-import {type GestureResponderEvent, Keyboard, View} from 'react-native'
+import {
+  type GestureResponderEvent,
+  Keyboard,
+  type StyleProp,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -8,6 +14,7 @@ import {useNavigation} from '@react-navigation/native'
 import {getHomeNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useSetDrawerOpen} from '#/state/shell'
+import {useDuoCompactHeader} from '#/view/shell/duoFoldedNavigation'
 import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
 import {
   atoms as a,
@@ -20,6 +27,7 @@ import {
   web,
 } from '#/alf'
 import {Button, ButtonIcon, type ButtonProps} from '#/components/Button'
+import {useDialogContext} from '#/components/Dialog'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {
@@ -34,6 +42,8 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
 
+const CompactHeaderContext = createContext(false)
+
 const HEADER_BUTTON_HITSLOP = {top: 30, bottom: 10, left: 30, right: 30}
 
 export function Outer({
@@ -41,11 +51,13 @@ export function Outer({
   noBottomBorder,
   headerRef,
   sticky = true,
+  style,
 }: {
   children: React.ReactNode
   noBottomBorder?: boolean
   headerRef?: React.RefObject<React.ComponentRef<typeof View> | null>
   sticky?: boolean
+  style?: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
   const gutters = useGutters([0, 'base'])
@@ -53,6 +65,12 @@ export function Outer({
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
   const {centerColumnOffset} = useLayoutBreakpoints()
   const {isWithinSplitView, isWithinLeftPanel} = useIsWithinSplitView()
+  const candidate = useDuoCompactHeader()
+  const {isWithinDialog} = useDialogContext()
+  const compactHeader =
+    !isWithinDialog && !isWithinSplitView && !isWithinOffsetView
+      ? candidate
+      : null
   /*
    * Native headers sit 4px lower in their box to balance the status bar above
    * them. Without a top inset (e.g. iPhone Duo, landscape) there's nothing to
@@ -86,8 +104,16 @@ export function Outer({
               {translateX: web(SCROLLBAR_OFFSET) ?? 0},
             ],
           },
+        compactHeader && {
+          minHeight: compactHeader.headerHeight,
+          paddingRight: compactHeader.headerRightPadding + 16,
+          flexWrap: 'wrap',
+        },
+        style,
       ]}>
-      {children}
+      <CompactHeaderContext.Provider value={!!compactHeader}>
+        {children}
+      </CompactHeaderContext.Provider>
     </View>
   )
 }
@@ -102,10 +128,12 @@ export function Content({
   children?: React.ReactNode
   align?: 'platform' | 'left'
 }) {
+  const compact = useContext(CompactHeaderContext)
   return (
     <View
       style={[
         a.flex_1,
+        compact && {minWidth: 60},
         a.justify_center,
         IS_IOS && align === 'platform' && a.align_center,
         {minHeight: HEADER_SLOT_SIZE},
@@ -201,6 +229,7 @@ export function TitleText({
   const {gtMobile} = useBreakpoints()
   const {isWithinLeftPanel} = useIsWithinSplitView()
   const align = useContext(AlignmentContext)
+  const compact = useContext(CompactHeaderContext)
   return (
     <Text
       style={[
@@ -210,9 +239,10 @@ export function TitleText({
         a.leading_tight,
         IS_IOS && align === 'platform' && a.text_center,
         gtMobile && a.text_xl,
+        compact && a.flex_shrink,
         style,
       ]}
-      numberOfLines={2}
+      numberOfLines={compact ? 1 : 2}
       emoji
       maxFontSizeMultiplier={2}>
       {children}
