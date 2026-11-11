@@ -101,9 +101,9 @@ without including it in slide counting or height measurements. Use it for
 `snapToItems` opts into slide snapping on iOS and Android. Snap positions use
 measured item widths and the gap, so variable-width slides work too. Positions
 near the end are clamped to the scrollable range; the last slide can still be
-fully revealed. Native inertia uses fast deceleration when enabled. With the
-prop omitted, existing free scrolling is unchanged. Web navigation is unchanged.
-The Atmosphere `ExploreGallery` wrapper also accepts this prop.
+fully revealed. Native inertia uses fast deceleration when enabled. When the
+prop is omitted, native scrolling is free. Web ignores the prop. The Atmosphere
+`ExploreGallery` wrapper also accepts this prop.
 
 ### `GalleryPageDots`
 
@@ -121,18 +121,18 @@ a translated position label to screen readers instead.
 
 The dots track all scrolling, including browser touch and trackpad scrolling,
 and follow selected items by key when content changes. This display state is
-separate from `onIndexChange`, whose existing scroll-reporting behavior stays
-unchanged. Dot activation is user navigation and does call `onIndexChange`.
+separate from `onIndexChange`, which follows the rules under "Navigation
+callbacks" below. Dot activation is user navigation and does call
+`onIndexChange`.
 
 ### Navigation callbacks
 
 `onIndexChange` reports native swiping, mouse dragging, arrow keys, and
 Safari horizontal-wheel navigation. Browser touch scrolling and Chrome/Firefox
-trackpad scrolling move the content, but do not report index changes; this
-preserves the existing image carousel behavior. It is **not** called on
-mount, for `scrollIntoView`, when focus simply lands on an item (for example a
-click just before opening a lightbox), or when items are added, removed, or
-reordered.
+trackpad scrolling move the content, but do not report index changes.
+`onIndexChange` is **not** called on mount, for `scrollIntoView`, when focus
+simply lands on an item (for example a click just before opening a lightbox),
+or when items are added, removed, or reordered.
 
 Give every child a stable `key`. Measurements and the active item follow the
 key, so reordering keeps the active item and removing the active item moves to

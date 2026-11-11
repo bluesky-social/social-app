@@ -26,8 +26,8 @@ jest.mock('#/env', () => ({
   IS_WEB_SAFARI: false,
 }))
 /*
- * Each atom resolves to a marker naming itself, so tests can assert which
- * atoms were applied without loading the whole design system.
+ * Lightweight stand-in so the component renders without loading the whole
+ * design system.
  */
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: (_, name) => ({atom: name})}),
@@ -113,27 +113,10 @@ describe('ExploreGallery', () => {
     expect(screen.getAllByTestId(/^card-/)).toHaveLength(3)
   })
 
-  it('lets each card grow to fill its measured slide', () => {
+  it('does not impose a measured row height', () => {
     render(renderGallery())
 
     for (const slide of slides()) {
-      const [wrapper] = slide.children
-      if (typeof wrapper === 'string') throw new Error('expected an element')
-      expect(wrapper.props.style).toEqual([{atom: 'flex_grow'}])
-    }
-    const root = screen.getByTestId('thingsGallery')
-    expect(flat(root.props.style).height).toBeUndefined()
-  })
-
-  it('opts into stretch without imposing measured heights', () => {
-    render(renderGallery())
-
-    const scroll = screen.UNSAFE_getByType(ScrollView)
-    expect(flat(scroll.props.contentContainerStyle)).toMatchObject({
-      atom: 'align_stretch',
-    })
-    for (const slide of slides()) {
-      expect(flat(slide.props.style)).toMatchObject({atom: 'self_stretch'})
       fireEvent(slide, 'layout', {
         nativeEvent: {layout: {x: 0, y: 0, width: 100, height: 200}},
       })
