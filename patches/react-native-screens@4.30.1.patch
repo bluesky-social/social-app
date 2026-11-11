@@ -630,18 +630,33 @@ index 049fd22427b2bde17fd7ca59b8de65d0ee07b4b5..a1597db71b69de1c2db87ddf9f825aa5
  }
  
 diff --git a/ios/tabs/RNSTabBarAppearanceCoordinator.mm b/ios/tabs/RNSTabBarAppearanceCoordinator.mm
-index b3bc98dd720850ed88344368162360493957f0b9..e45a11eb1450177423cb452f88c927ecc555f14e 100644
+index b3bc98dd720850ed88344368162360493957f0b9..0bb4b2391a6d43b40b555ba53fcf0c3e6540848e 100644
 --- a/ios/tabs/RNSTabBarAppearanceCoordinator.mm
 +++ b/ios/tabs/RNSTabBarAppearanceCoordinator.mm
-@@ -354,6 +354,14 @@ + (void)configureTabBarItemStateAppearance:(nonnull UITabBarItemStateAppearance
+@@ -354,6 +354,29 @@ + (void)configureTabBarItemStateAppearance:(nonnull UITabBarItemStateAppearance
          [RCTConvert UIColor:itemStateAppearanceProps[@"tabBarItemBadgeBackgroundColor"]];
    }
  
-+  if (itemStateAppearanceProps[@"tabBarItemBadgeTextColor"] != nil) {
++  if (itemStateAppearanceProps[@"tabBarItemBadgeTextColor"] != nil ||
++      itemStateAppearanceProps[@"tabBarItemBadgeFontSize"] != nil ||
++      itemStateAppearanceProps[@"tabBarItemBadgeFontWeight"] != nil) {
 +    NSMutableDictionary *badgeTextAttributes =
 +        [tabBarItemStateAppearance.badgeTextAttributes mutableCopy] ?: [NSMutableDictionary new];
-+    badgeTextAttributes[NSForegroundColorAttributeName] =
-+        [RCTConvert UIColor:itemStateAppearanceProps[@"tabBarItemBadgeTextColor"]];
++    if (itemStateAppearanceProps[@"tabBarItemBadgeTextColor"] != nil) {
++      badgeTextAttributes[NSForegroundColorAttributeName] =
++          [RCTConvert UIColor:itemStateAppearanceProps[@"tabBarItemBadgeTextColor"]];
++    }
++    if (itemStateAppearanceProps[@"tabBarItemBadgeFontSize"] != nil ||
++        itemStateAppearanceProps[@"tabBarItemBadgeFontWeight"] != nil) {
++      badgeTextAttributes[NSFontAttributeName] =
++          [RCTFont updateFont:badgeTextAttributes[NSFontAttributeName]
++                   withFamily:nil
++                         size:itemStateAppearanceProps[@"tabBarItemBadgeFontSize"]
++                       weight:itemStateAppearanceProps[@"tabBarItemBadgeFontWeight"]
++                        style:nil
++                      variant:nil
++              scaleMultiplier:1.0];
++    }
 +    tabBarItemStateAppearance.badgeTextAttributes = badgeTextAttributes;
 +  }
 +
@@ -649,50 +664,60 @@ index b3bc98dd720850ed88344368162360493957f0b9..e45a11eb1450177423cb452f88c927ec
      tabBarItemStateAppearance.iconColor = [RCTConvert UIColor:itemStateAppearanceProps[@"tabBarItemIconColor"]];
    }
 diff --git a/lib/commonjs/components/tabs/screen/TabsScreen.ios.js b/lib/commonjs/components/tabs/screen/TabsScreen.ios.js
-index 893fa068d8cd92cc1494a7d3ed3647ff09b1b674..ff3173009da68101688fa7707c7121c35b389ce7 100644
+index 893fa068d8cd92cc1494a7d3ed3647ff09b1b674..41376831f3dcae8f1982156f01cd381c7473809b 100644
 --- a/lib/commonjs/components/tabs/screen/TabsScreen.ios.js
 +++ b/lib/commonjs/components/tabs/screen/TabsScreen.ios.js
-@@ -98,6 +98,7 @@ function mapItemStateAppearanceToNativeProp(itemStateAppearance) {
+@@ -98,14 +98,18 @@ function mapItemStateAppearanceToNativeProp(itemStateAppearance) {
      tabBarItemTitleFontColor,
      tabBarItemIconColor,
      tabBarItemBadgeBackgroundColor,
+-    tabBarItemTitleFontWeight
 +    tabBarItemBadgeTextColor,
-     tabBarItemTitleFontWeight
++    tabBarItemTitleFontWeight,
++    tabBarItemBadgeFontWeight
    } = itemStateAppearance;
    return {
-@@ -105,6 +106,7 @@ function mapItemStateAppearanceToNativeProp(itemStateAppearance) {
+     ...itemStateAppearance,
      tabBarItemTitleFontColor: (0, _reactNative.processColor)(tabBarItemTitleFontColor),
      tabBarItemIconColor: (0, _reactNative.processColor)(tabBarItemIconColor),
      tabBarItemBadgeBackgroundColor: (0, _reactNative.processColor)(tabBarItemBadgeBackgroundColor),
+-    tabBarItemTitleFontWeight: tabBarItemTitleFontWeight !== undefined ? String(tabBarItemTitleFontWeight) : undefined
 +    tabBarItemBadgeTextColor: (0, _reactNative.processColor)(tabBarItemBadgeTextColor),
-     tabBarItemTitleFontWeight: tabBarItemTitleFontWeight !== undefined ? String(tabBarItemTitleFontWeight) : undefined
++    tabBarItemTitleFontWeight: tabBarItemTitleFontWeight !== undefined ? String(tabBarItemTitleFontWeight) : undefined,
++    tabBarItemBadgeFontWeight: tabBarItemBadgeFontWeight !== undefined ? String(tabBarItemBadgeFontWeight) : undefined
    };
  }
+ function parseIconsToNativeProps(icon, selectedIcon) {
 diff --git a/lib/module/components/tabs/screen/TabsScreen.ios.js b/lib/module/components/tabs/screen/TabsScreen.ios.js
-index 94a6aec1641811c4f61b644719d4fa712e9c9837..771bef62c736961040a719f6de6d70d40a508b60 100644
+index 94a6aec1641811c4f61b644719d4fa712e9c9837..fd077442eded93a29e0d684ac0b8032411cabd17 100644
 --- a/lib/module/components/tabs/screen/TabsScreen.ios.js
 +++ b/lib/module/components/tabs/screen/TabsScreen.ios.js
-@@ -92,6 +92,7 @@ function mapItemStateAppearanceToNativeProp(itemStateAppearance) {
+@@ -92,14 +92,18 @@ function mapItemStateAppearanceToNativeProp(itemStateAppearance) {
      tabBarItemTitleFontColor,
      tabBarItemIconColor,
      tabBarItemBadgeBackgroundColor,
+-    tabBarItemTitleFontWeight
 +    tabBarItemBadgeTextColor,
-     tabBarItemTitleFontWeight
++    tabBarItemTitleFontWeight,
++    tabBarItemBadgeFontWeight
    } = itemStateAppearance;
    return {
-@@ -99,6 +100,7 @@ function mapItemStateAppearanceToNativeProp(itemStateAppearance) {
+     ...itemStateAppearance,
      tabBarItemTitleFontColor: processColor(tabBarItemTitleFontColor),
      tabBarItemIconColor: processColor(tabBarItemIconColor),
      tabBarItemBadgeBackgroundColor: processColor(tabBarItemBadgeBackgroundColor),
+-    tabBarItemTitleFontWeight: tabBarItemTitleFontWeight !== undefined ? String(tabBarItemTitleFontWeight) : undefined
 +    tabBarItemBadgeTextColor: processColor(tabBarItemBadgeTextColor),
-     tabBarItemTitleFontWeight: tabBarItemTitleFontWeight !== undefined ? String(tabBarItemTitleFontWeight) : undefined
++    tabBarItemTitleFontWeight: tabBarItemTitleFontWeight !== undefined ? String(tabBarItemTitleFontWeight) : undefined,
++    tabBarItemBadgeFontWeight: tabBarItemBadgeFontWeight !== undefined ? String(tabBarItemBadgeFontWeight) : undefined
    };
  }
+ function parseIconsToNativeProps(icon, selectedIcon) {
 diff --git a/lib/typescript/components/tabs/screen/TabsScreen.ios.types.d.ts b/lib/typescript/components/tabs/screen/TabsScreen.ios.types.d.ts
-index 951bf9681976ae54504c75f3e12016335d43728c..8c21f0a0a9b5025f448d8b438911bc05db7078ad 100644
+index 951bf9681976ae54504c75f3e12016335d43728c..28f4644984273a59e2ec279c16f4d0ebaacbf3b8 100644
 --- a/lib/typescript/components/tabs/screen/TabsScreen.ios.types.d.ts
 +++ b/lib/typescript/components/tabs/screen/TabsScreen.ios.types.d.ts
-@@ -182,6 +182,12 @@ export interface TabsScreenItemStateAppearanceIOS {
+@@ -182,6 +182,24 @@ export interface TabsScreenItemStateAppearanceIOS {
       * @platform ios
       */
      tabBarItemBadgeBackgroundColor?: ColorValue | undefined;
@@ -702,34 +727,50 @@ index 951bf9681976ae54504c75f3e12016335d43728c..8c21f0a0a9b5025f448d8b438911bc05
 +   * @platform ios
 +   */
 +  tabBarItemBadgeTextColor?: ColorValue | undefined;
++  /**
++   * @summary Specifies the font size of the badge text.
++   *
++   * @platform ios
++   */
++  tabBarItemBadgeFontSize?: number | undefined;
++  /**
++   * @summary Specifies the font weight of the badge text.
++   *
++   * @platform ios
++   */
++  tabBarItemBadgeFontWeight?: TextStyle['fontWeight'] | undefined;
  }
  export interface TabsScreenPropsIOS {
      /**
 diff --git a/lib/typescript/fabric/tabs/TabsScreenIOSNativeComponent.d.ts b/lib/typescript/fabric/tabs/TabsScreenIOSNativeComponent.d.ts
-index 23383c93fd27e02d914311487e84d142e2c159cf..13e8701a9468db6af85583afdc95dc70d93a2b7c 100644
+index 23383c93fd27e02d914311487e84d142e2c159cf..f288fc34223887fbb3504126f260a034946860dd 100644
 --- a/lib/typescript/fabric/tabs/TabsScreenIOSNativeComponent.d.ts
 +++ b/lib/typescript/fabric/tabs/TabsScreenIOSNativeComponent.d.ts
-@@ -16,6 +16,7 @@ export type ItemStateAppearance = {
+@@ -16,6 +16,9 @@ export type ItemStateAppearance = {
      } | undefined;
      tabBarItemIconColor?: ProcessedColorValue | null | undefined;
      tabBarItemBadgeBackgroundColor?: ProcessedColorValue | null | undefined;
 +    tabBarItemBadgeTextColor?: ProcessedColorValue | null | undefined;
++    tabBarItemBadgeFontSize?: number | undefined;
++    tabBarItemBadgeFontWeight?: string | undefined;
  };
  export type ItemAppearance = {
      normal?: ItemStateAppearance | undefined;
 diff --git a/src/components/tabs/screen/TabsScreen.ios.tsx b/src/components/tabs/screen/TabsScreen.ios.tsx
-index 5edc1b8a9f9eb7a49bfb19fcd5982f70d66f51c9..879478f6bac078fe807a1aab0a3601be2a967d99 100644
+index 5edc1b8a9f9eb7a49bfb19fcd5982f70d66f51c9..50c707d81c315654cd13241d3842cd6d07c64ade 100644
 --- a/src/components/tabs/screen/TabsScreen.ios.tsx
 +++ b/src/components/tabs/screen/TabsScreen.ios.tsx
-@@ -132,6 +132,7 @@ function mapItemStateAppearanceToNativeProp(
+@@ -132,7 +132,9 @@ function mapItemStateAppearanceToNativeProp(
      tabBarItemTitleFontColor,
      tabBarItemIconColor,
      tabBarItemBadgeBackgroundColor,
 +    tabBarItemBadgeTextColor,
      tabBarItemTitleFontWeight,
++    tabBarItemBadgeFontWeight,
    } = itemStateAppearance;
  
-@@ -142,6 +143,7 @@ function mapItemStateAppearanceToNativeProp(
+   return {
+@@ -142,10 +144,15 @@ function mapItemStateAppearanceToNativeProp(
      tabBarItemBadgeBackgroundColor: processColor(
        tabBarItemBadgeBackgroundColor,
      ),
@@ -737,11 +778,19 @@ index 5edc1b8a9f9eb7a49bfb19fcd5982f70d66f51c9..879478f6bac078fe807a1aab0a3601be
      tabBarItemTitleFontWeight:
        tabBarItemTitleFontWeight !== undefined
          ? String(tabBarItemTitleFontWeight)
+         : undefined,
++    tabBarItemBadgeFontWeight:
++      tabBarItemBadgeFontWeight !== undefined
++        ? String(tabBarItemBadgeFontWeight)
++        : undefined,
+   };
+ }
+ 
 diff --git a/src/components/tabs/screen/TabsScreen.ios.types.ts b/src/components/tabs/screen/TabsScreen.ios.types.ts
-index 72447b2d4c8b961bd5103f3dd7fbf00904067174..d11a18ba108289ca7f9f83a23e0940b09b736b20 100644
+index 72447b2d4c8b961bd5103f3dd7fbf00904067174..1c696f48f4ca0cacab2764783fda499aad5b5698 100644
 --- a/src/components/tabs/screen/TabsScreen.ios.types.ts
 +++ b/src/components/tabs/screen/TabsScreen.ios.types.ts
-@@ -203,6 +203,12 @@ export interface TabsScreenItemStateAppearanceIOS {
+@@ -203,6 +203,24 @@ export interface TabsScreenItemStateAppearanceIOS {
     * @platform ios
     */
    tabBarItemBadgeBackgroundColor?: ColorValue | undefined;
@@ -751,18 +800,32 @@ index 72447b2d4c8b961bd5103f3dd7fbf00904067174..d11a18ba108289ca7f9f83a23e0940b0
 +   * @platform ios
 +   */
 +  tabBarItemBadgeTextColor?: ColorValue | undefined;
++  /**
++   * @summary Specifies the font size of the badge text.
++   *
++   * @platform ios
++   */
++  tabBarItemBadgeFontSize?: number | undefined;
++  /**
++   * @summary Specifies the font weight of the badge text.
++   *
++   * @platform ios
++   */
++  tabBarItemBadgeFontWeight?: TextStyle['fontWeight'] | undefined;
  }
  
  export interface TabsScreenPropsIOS {
 diff --git a/src/fabric/tabs/TabsScreenIOSNativeComponent.ts b/src/fabric/tabs/TabsScreenIOSNativeComponent.ts
-index 2d62b9c48047c85be31a9b460bd970602b03a381..3bc39adda34bb400da2db2ed7dd7c1489af31b02 100644
+index 2d62b9c48047c85be31a9b460bd970602b03a381..b64aa338e7e540783695c6279a51973423e75365 100644
 --- a/src/fabric/tabs/TabsScreenIOSNativeComponent.ts
 +++ b/src/fabric/tabs/TabsScreenIOSNativeComponent.ts
-@@ -41,6 +41,7 @@ export type ItemStateAppearance = {
+@@ -41,6 +41,9 @@ export type ItemStateAppearance = {
      | undefined;
    tabBarItemIconColor?: ProcessedColorValue | null | undefined;
    tabBarItemBadgeBackgroundColor?: ProcessedColorValue | null | undefined;
 +  tabBarItemBadgeTextColor?: ProcessedColorValue | null | undefined;
++  tabBarItemBadgeFontSize?: number | undefined;
++  tabBarItemBadgeFontWeight?: string | undefined;
  };
  
  export type ItemAppearance = {
