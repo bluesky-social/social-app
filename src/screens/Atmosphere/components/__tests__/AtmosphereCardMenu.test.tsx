@@ -7,6 +7,13 @@ import {AtmosphereCardMenu} from '../AtmosphereCardMenu'
 const mockOpenLink = jest.fn()
 const mockNavigate = jest.fn()
 const mockOpenReport = jest.fn()
+const mockShareUrl = jest.fn()
+const mockOpenComposer = jest.fn()
+const mockRequireAuth = jest.fn((fn: () => unknown) => fn())
+const mockOpenSendViaChat = jest.fn()
+let mockHasSession = true
+let mockHasFullAccess = true
+let mockIsWeb = false
 
 /* Report availability relies on real CID validation, which the repo mocks. */
 jest.unmock('multiformats/cid')
@@ -17,9 +24,52 @@ jest.mock('@lingui/react', () => ({
   }),
 }))
 jest.mock('#/alf', () => ({atoms: new Proxy({}, {get: () => ({})})}))
+jest.mock('#/env', () => ({
+  get IS_WEB() {
+    return mockIsWeb
+  },
+}))
 jest.mock('#/lib/hooks/useOpenLink', () => ({
   useOpenLink: () => mockOpenLink,
 }))
+jest.mock('#/lib/hooks/useOpenComposer', () => ({
+  useOpenComposer: () => ({openComposer: mockOpenComposer}),
+}))
+jest.mock('#/lib/sharing', () => ({
+  shareUrl: (url: string) => mockShareUrl(url),
+}))
+jest.mock('#/state/session', () => ({
+  useSession: () => ({hasSession: mockHasSession}),
+  useRequireAuth: () => mockRequireAuth,
+}))
+jest.mock('#/ageAssurance', () => ({
+  useAgeAssurance: () => ({
+    Access: {Full: 'full', Limited: 'limited'},
+    state: {access: mockHasFullAccess ? 'full' : 'limited'},
+  }),
+}))
+jest.mock('#/components/Dialog', () => ({
+  useDialogControl: () => ({open: mockOpenSendViaChat}),
+}))
+/* Selecting a conversation is stubbed; the real picker needs network providers. */
+jest.mock('#/components/dms/dialogs/ShareViaChatDialog', () => {
+  const {Pressable} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    SendViaChatDialog: ({
+      onSelectChat,
+    }: {
+      onSelectChat: (conversation: string) => void
+    }) => (
+      <Pressable
+        testID="selectChat"
+        accessibilityHint=""
+        accessibilityLabel="Select chat"
+        onPress={() => onSelectChat('convo-1')}
+      />
+    ),
+  }
+})
 jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({navigate: mockNavigate}),
 }))
@@ -47,6 +97,18 @@ jest.mock('#/components/Button', () => {
     ButtonIcon: () => null,
   }
 })
+jest.mock('#/components/icons/ArrowOutOfBox', () => ({
+  ArrowOutOfBoxModified_Stroke2_Corner2_Rounded: () => null,
+}))
+jest.mock('#/components/icons/brands/Mark', () => ({
+  Mark: () => null,
+}))
+jest.mock('#/components/icons/ChainLink', () => ({
+  ChainLink_Stroke2_Corner0_Rounded: () => null,
+}))
+jest.mock('#/components/icons/PaperPlane', () => ({
+  PaperPlane_Stroke2_Corner0_Rounded: () => null,
+}))
 jest.mock('#/components/icons/DotGrid', () => ({
   DotGrid3x1_Stroke2_Corner0_Rounded: () => null,
 }))
@@ -164,6 +226,7 @@ const items = {
   livestream: {...view, active: false, associatedRefs},
 }
 type MenuType = keyof typeof items
+const sharingLabels = ['Share', 'Create post', 'Send via chat']
 const defaultReportableTypes: Record<MenuType, string> = {
   article: site.standard.document.$type,
   photo: social.grain.gallery.$type,
@@ -190,6 +253,9 @@ function renderMenu(
 
 beforeEach(() => {
   jest.clearAllMocks()
+  mockHasSession = true
+  mockHasFullAccess = true
+  mockIsWeb = false
 })
 
 describe.each([
@@ -236,7 +302,7 @@ describe.each([
     it('omits the profile action without an author', () => {
       renderMenu(type, {}, undefined, undefined, false)
 
-      expect(labels()).toEqual([viewLabel, reportLabel])
+      expect(labels()).toEqual([...sharingLabels, viewLabel, reportLabel])
     })
 
     it('lists only the record types allowed by the callsite', () => {
@@ -246,7 +312,44 @@ describe.each([
         screen.getByTestId('atmosphereCardMenuTrigger').props
           .accessibilityLabel,
       ).toBe(trigger)
-      expect(labels()).toEqual([viewLabel, 'View author profile', reportLabel])
+      expect(labels()).toEqual([
+        ...sharingLabels,
+        viewLabel,
+        'View author profile',
+        reportLabel,
+      ])
+    })
+
+    it('shares the external uri', () => {
+      renderMenu(type)
+
+      fireEvent.press(screen.getByLabelText('Share'))
+      expect(mockShareUrl).toHaveBeenCalledWith(view.uri)
+    })
+
+    it('opens the composer with the external uri after the auth check', () => {
+      renderMenu(type)
+
+      fireEvent.press(screen.getByLabelText('Create post'))
+      expect(mockRequireAuth).toHaveBeenCalledTimes(1)
+      expect(mockOpenComposer).toHaveBeenCalledWith({
+        text: view.uri,
+        logContext: 'Other',
+      })
+    })
+
+    it('stages the external uri as chat text, not as an embed', () => {
+      renderMenu(type)
+
+      fireEvent.press(screen.getByLabelText('Send via chat'))
+      expect(mockOpenSendViaChat).toHaveBeenCalledTimes(1)
+      expect(mockNavigate).not.toHaveBeenCalled()
+
+      fireEvent.press(screen.getByTestId('selectChat'))
+      expect(mockNavigate).toHaveBeenCalledWith('MessagesConversation', {
+        conversation: 'convo-1',
+        text: view.uri,
+      })
     })
 
     it('opens the external uri', () => {
@@ -284,7 +387,12 @@ describe.each([
         }
         renderMenu(type, {associatedRefs: [unlisted, unlisted]})
 
-        expect(labels()).toEqual([viewLabel, 'View author profile', fallback])
+        expect(labels()).toEqual([
+          ...sharingLabels,
+          viewLabel,
+          'View author profile',
+          fallback,
+        ])
         expect(screen.getByLabelText(fallback)).toBeDisabled()
       },
     )
@@ -316,11 +424,41 @@ it('places extra children after the profile item and before Report', () => {
   expect(
     screen.getAllByRole('menuitem').map(i => i.props.accessibilityLabel),
   ).toEqual([
+    ...sharingLabels,
     'View article',
     'View author profile',
     'Extra',
     'Report this article',
   ])
+})
+
+it('labels the first sharing action Copy link on web', () => {
+  mockIsWeb = true
+  renderMenu('article')
+
+  expect(screen.queryByLabelText('Share')).toBeNull()
+  fireEvent.press(screen.getByLabelText('Copy link'))
+  expect(mockShareUrl).toHaveBeenCalledWith(view.uri)
+})
+
+it('hides chat when logged out and gates Create post on auth', () => {
+  mockHasSession = false
+  mockRequireAuth.mockImplementationOnce(() => {})
+  renderMenu('article')
+
+  expect(screen.queryByLabelText('Send via chat')).toBeNull()
+  fireEvent.press(screen.getByLabelText('Create post'))
+  expect(mockRequireAuth).toHaveBeenCalledTimes(1)
+  expect(mockOpenComposer).not.toHaveBeenCalled()
+})
+
+it('hides chat without full age assurance access', () => {
+  mockHasFullAccess = false
+  renderMenu('article')
+
+  expect(screen.queryByLabelText('Send via chat')).toBeNull()
+  expect(screen.getByLabelText('Share')).toBeTruthy()
+  expect(screen.getByLabelText('Create post')).toBeTruthy()
 })
 
 it('uses the explicit callsite allowlist rather than inferring it from the card', () => {

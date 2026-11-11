@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react/macro'
 import {niceDate} from '#/lib/strings/time'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useTheme} from '#/alf'
-import {ArrowTopCircle_Stroke2_Corner0_Rounded as ArrowTopCircleIcon} from '#/components/icons/Arrow'
+import {ArrowPathUp_Stroke2_Corner1_Rounded as ArrowTopCircleIcon} from '#/components/icons/Arrow'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
@@ -30,7 +30,7 @@ export function DocumentStats({
       )}
       {!!likeCount && (
         <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
-          <ArrowTopCircleIcon width={13} style={t.atoms.text_contrast_medium} />
+          <ArrowTopCircleIcon size="xs" style={t.atoms.text_contrast_medium} />
           <Text
             style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
             {formatCount(i18n, likeCount)}
@@ -39,7 +39,7 @@ export function DocumentStats({
       )}
       {!!view.readingTime && (
         <View style={[a.flex_row, a.align_center, a.gap_2xs]}>
-          <Clock width={13} style={t.atoms.text_contrast_medium} />
+          <Clock size="xs" style={t.atoms.text_contrast_medium} />
           <Text
             style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
             {l({

@@ -69,6 +69,23 @@ jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({navigate: jest.fn()}),
 }))
 jest.mock('#/lib/hooks/useOpenLink', () => ({useOpenLink: () => jest.fn()}))
+jest.mock('#/lib/hooks/useOpenComposer', () => ({
+  useOpenComposer: () => ({openComposer: jest.fn()}),
+}))
+jest.mock('#/lib/sharing', () => ({shareUrl: jest.fn()}))
+jest.mock('#/state/session', () => ({
+  useSession: () => ({hasSession: false}),
+  useRequireAuth: () => jest.fn(),
+}))
+jest.mock('#/ageAssurance', () => ({
+  useAgeAssurance: () => ({Access: {Full: 'full'}, state: {access: 'full'}}),
+}))
+jest.mock('#/components/Dialog', () => ({
+  useDialogControl: () => ({open: jest.fn()}),
+}))
+jest.mock('#/components/dms/dialogs/ShareViaChatDialog', () => ({
+  SendViaChatDialog: () => null,
+}))
 jest.mock('#/components/Button', () => {
   const {Pressable} =
     jest.requireActual<typeof import('react-native')>('react-native')
