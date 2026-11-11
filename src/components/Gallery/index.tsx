@@ -131,14 +131,6 @@ export function Root({
     offset: number
     animated: boolean
   } | null>(null)
-  const webPageScrollIdleTimeoutRef =
-    useRef<ReturnType<typeof setTimeout>>(undefined)
-
-  useEffect(() => {
-    if (!IS_WEB) return
-    return () => clearTimeout(webPageScrollIdleTimeoutRef.current)
-  }, [])
-
   /*
    * Container overflow styles
    *
@@ -231,24 +223,59 @@ export function Root({
     },
   )
 
+  /*
+   * Web page-scroll lifecycle
+   *
+   * A smooth scroll can stop short of its target. Release the animation lock
+   * on interruption or idle so pagination cannot remain frozen.
+   */
+  const webPageScrollIdleTimeoutRef =
+    useRef<ReturnType<typeof setTimeout>>(undefined)
+
+  // Timer cleanup must not depend on finding a DOM node for the listeners.
   useEffect(() => {
     if (!IS_WEB) return
-    const node =
+    return () => clearTimeout(webPageScrollIdleTimeoutRef.current)
+  }, [])
+
+  useEffect(() => {
+    if (!IS_WEB) return
+    const webScrollNode =
       scrollRef.current?.getScrollableNode() as unknown as HTMLElement | null
-    if (!node) return
-    const interrupt = () => {
+    if (!webScrollNode) return
+    const onWebPageScrollInterrupt = () => {
       if (selectedPageOffsetRef.current?.animated) {
         clearTimeout(webPageScrollIdleTimeoutRef.current)
         selectedPageOffsetRef.current = null
       }
     }
-    node.addEventListener('wheel', interrupt, {passive: true})
-    node.addEventListener('pointerdown', interrupt, {passive: true})
+    webScrollNode.addEventListener('wheel', onWebPageScrollInterrupt, {
+      passive: true,
+    })
+    webScrollNode.addEventListener('pointerdown', onWebPageScrollInterrupt, {
+      passive: true,
+    })
     return () => {
-      node.removeEventListener('wheel', interrupt)
-      node.removeEventListener('pointerdown', interrupt)
+      webScrollNode.removeEventListener('wheel', onWebPageScrollInterrupt)
+      webScrollNode.removeEventListener('pointerdown', onWebPageScrollInterrupt)
     }
   }, [])
+
+  /** Restart the web-only idle fallback while an animated scroll is active. */
+  function resetWebPageScrollIdle() {
+    clearTimeout(webPageScrollIdleTimeoutRef.current)
+    if (!selectedPageOffsetRef.current?.animated) return
+    webPageScrollIdleTimeoutRef.current = setTimeout(() => {
+      webPageScrollIdleTimeoutRef.current = undefined
+      const selection = selectedPageOffsetRef.current
+      if (!selection?.animated) return
+      selection.animated = false
+      updatePageForOffset(
+        getScrollNode()?.scrollLeft ?? scrollOffsetRef.current,
+      )
+    }, 150)
+  }
+  /* End web page-scroll lifecycle */
 
   const selectPage = useNonReactiveCallback((index: number, offset: number) => {
     clearTimeout(webPageScrollIdleTimeoutRef.current)
@@ -268,21 +295,6 @@ export function Root({
     selectedPageOffsetRef.current = null
     setPageIndex(getIndexForOffset(itemWidthsRef.current, offset, itemCount))
   })
-
-  /** Release the web dot selection lock even if a smooth scroll stops short. */
-  function resetWebPageScrollIdle() {
-    clearTimeout(webPageScrollIdleTimeoutRef.current)
-    if (!selectedPageOffsetRef.current?.animated) return
-    webPageScrollIdleTimeoutRef.current = setTimeout(() => {
-      webPageScrollIdleTimeoutRef.current = undefined
-      const selection = selectedPageOffsetRef.current
-      if (!selection?.animated) return
-      selection.animated = false
-      updatePageForOffset(
-        getScrollNode()?.scrollLeft ?? scrollOffsetRef.current,
-      )
-    }, 150)
-  }
 
   /** Sync the navigation index without reporting user navigation. */
   const syncIndex = useNonReactiveCallback((index: number) => {
