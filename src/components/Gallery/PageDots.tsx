@@ -74,7 +74,7 @@ function PageDot({active, testID}: {active: boolean; testID: string}) {
   }, [active, reduceMotionEnabled, width])
 
   return (
-    <View testID={testID} style={IS_WEB ? a.p_sm : [a.px_xs, a.py_sm]}>
+    <View testID={testID} style={[a.p_sm, a.px_xs]}>
       <Animated.View
         accessible={false}
         style={[
