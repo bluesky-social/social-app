@@ -14,6 +14,7 @@ jest.mock('@lingui/react', () => ({
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
   useBreakpoints: () => ({gtPhone: false, gtMobile: false}),
+  useTheme: () => ({atoms: new Proxy({}, {get: () => ({})})}),
 }))
 jest.mock('#/components/Gallery', () => {
   const {View} =

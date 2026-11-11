@@ -1,3 +1,4 @@
+import {i18n} from '@lingui/core'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {type app} from '#/lexicons'
@@ -10,6 +11,7 @@ jest.mock('@lingui/react', () => {
     message.replace(/\{(\w+)\}/g, (_, key: string) => String(values[key]))
   return {
     useLingui: () => ({
+      i18n: {},
       _: (value: {message: string; values?: Record<string, unknown>}) =>
         fill(value.message, value.values),
     }),
@@ -37,9 +39,26 @@ jest.mock('#/components/Typography', () => {
   return {Text}
 })
 jest.mock('#/state/preferences/moderation-opts', () => ({
-  useModerationOpts: () => undefined,
+  useModerationOpts: () => ({}),
 }))
-jest.mock('#/view/com/util/UserAvatar', () => ({UserAvatar: () => null}))
+jest.mock('#/view/com/util/numeric/format', () => ({
+  formatCount: (_i18n: unknown, n: number) => String(n),
+}))
+jest.mock('#/components/ProfileCard', () => {
+  const {Text} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  const passthrough = ({children}: {children?: React.ReactNode}) => children
+  return {
+    Link: passthrough,
+    Header: passthrough,
+    Avatar: () => null,
+    NameAndHandle: ({
+      profile,
+    }: {
+      profile: {displayName: string; handle: string}
+    }) => <Text>{`${profile.displayName} @${profile.handle}`}</Text>,
+  }
+})
 jest.mock('#/view/com/util/TimeElapsed', () => ({
   TimeElapsed: ({
     children,
@@ -56,6 +75,15 @@ jest.mock('../PhotoGallery', () => {
     ),
   }
 })
+jest.mock('#/components/icons/Clock', () => ({
+  Clock_Stroke2_Corner0_Rounded: () => null,
+}))
+jest.mock('#/components/icons/Heart2', () => ({
+  Heart2_Stroke2_Corner0_Rounded: () => null,
+}))
+jest.mock('#/components/icons/Image', () => ({
+  Image_Stroke2_Corner2_Rounded: () => null,
+}))
 jest.mock('#/components/Button', () => {
   const {Pressable} =
     jest.requireActual<typeof import('react-native')>('react-native')
@@ -112,6 +140,7 @@ function gallery(
     uri: 'https://grain.social/gallery/1',
     title: 'Spiral Jetty',
     description: 'A visit to the jetty.',
+    likeCount: 12,
     createdAt: '2026-11-07T12:00:00.000Z',
     items: [image(1, 'First alt'), image(2), image(3)],
     ...overrides,
@@ -128,6 +157,10 @@ function renderDialog(photo = gallery()) {
   )
 }
 
+beforeAll(() => {
+  i18n.loadAndActivate({locale: 'en', messages: {}})
+})
+
 beforeEach(() => {
   jest.clearAllMocks()
 })
@@ -142,27 +175,18 @@ it('renders the photo gallery for the photo', () => {
 })
 
 describe('metadata', () => {
-  it('shows the author, relative date, title and description', () => {
+  it('shows the author, title and description', () => {
     renderDialog()
 
-    expect(screen.getByText('Author')).toBeTruthy()
-    expect(screen.getByText(/@author\.test/)).toBeTruthy()
-    expect(screen.getByText(' · 4d')).toBeTruthy()
+    expect(screen.getByText('Author @Author.Test')).toBeTruthy()
     expect(screen.getByText('Spiral Jetty')).toBeTruthy()
     expect(screen.getByText('A visit to the jetty.')).toBeTruthy()
   })
 
-  it('omits a missing description and date', () => {
-    renderDialog(gallery({description: '  ', createdAt: undefined}))
+  it('omits a missing description', () => {
+    renderDialog(gallery({description: '  '}))
 
-    expect(screen.queryByText(/ · /)).toBeNull()
     expect(screen.queryByText('A visit to the jetty.')).toBeNull()
-  })
-
-  it('omits an invalid date', () => {
-    renderDialog(gallery({createdAt: 'not a date' as never}))
-
-    expect(screen.queryByText(/ · /)).toBeNull()
   })
 
   it.each([
@@ -176,6 +200,39 @@ describe('metadata', () => {
     expect(screen.getByTestId('atmospherePhotoDialogSource')).toHaveTextContent(
       text,
     )
+  })
+})
+
+describe('stats', () => {
+  const stat = (name: 'Likes' | 'Photos' | 'Time') =>
+    screen.queryByTestId(`atmospherePhotoDialog${name}`)
+
+  it('shows likes, hydrated photo count and relative date', () => {
+    renderDialog()
+
+    expect(stat('Likes')).toHaveTextContent(/^12 likes$/)
+    expect(stat('Photos')).toHaveTextContent(/^3 photos$/)
+    expect(stat('Time')).toHaveTextContent(/^4d$/)
+  })
+
+  it('uses singular forms', () => {
+    renderDialog(gallery({likeCount: 1, items: [image(1)] as never}))
+
+    expect(stat('Likes')).toHaveTextContent(/^1 like$/)
+    expect(stat('Photos')).toHaveTextContent(/^1 photo$/)
+  })
+
+  it('omits likes when there are none', () => {
+    renderDialog(gallery({likeCount: undefined}))
+
+    expect(stat('Likes')).toBeNull()
+    expect(stat('Photos')).toBeTruthy()
+  })
+
+  it('omits a missing or invalid date', () => {
+    renderDialog(gallery({createdAt: 'not a date' as never}))
+
+    expect(stat('Time')).toBeNull()
   })
 })
 

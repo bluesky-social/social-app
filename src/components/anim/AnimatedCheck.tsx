@@ -25,7 +25,10 @@ export interface AnimatedCheckProps extends Props {
 
 export const AnimatedCheck = forwardRef<AnimatedCheckRef, AnimatedCheckProps>(
   function AnimatedCheck({playOnMount, ...props}, ref) {
-    const {fill, size, style, ...rest} = useCommonSVGProps(props)
+    const {fill, width, height, viewBox, style, ...rest} = useCommonSVGProps(
+      props,
+      '0 0 52 52',
+    )
     const circleAnim = useSharedValue(0)
     const checkAnim = useSharedValue(0)
 
@@ -66,9 +69,9 @@ export const AnimatedCheck = forwardRef<AnimatedCheckRef, AnimatedCheckProps>(
       <Svg
         fill="none"
         {...rest}
-        viewBox="0 0 52 52"
-        width={size}
-        height={size}
+        viewBox={viewBox}
+        width={width}
+        height={height}
         style={style}>
         <AnimatedCircle
           animatedProps={circleAnimatedProps}

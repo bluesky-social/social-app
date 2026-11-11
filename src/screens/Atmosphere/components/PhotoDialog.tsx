@@ -1,17 +1,21 @@
 import {View} from 'react-native'
-import {moderateProfile} from '@bsky/sdk/moderation'
+import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {formatCount} from '#/view/com/util/numeric/format'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {getGalleryImages} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, useTheme, web} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Gallery from '#/components/Gallery'
+import {Clock_Stroke2_Corner0_Rounded as ClockIcon} from '#/components/icons/Clock'
+import {GrainFull, GrainMark} from '#/components/icons/community/Grain'
+import {Heart2_Stroke2_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
+import {Image_Stroke2_Corner2_Rounded as ImageIcon} from '#/components/icons/Image'
+import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ExternalLinkIcon} from '#/components/icons/Square'
+import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 import {PhotoGallery} from './PhotoGallery'
@@ -51,55 +55,48 @@ function PhotoDialogInner({
   photo: app.bsky.embed.external.ViewGallery
   author: app.bsky.actor.defs.ProfileViewBasic
 }) {
-  const {t: l} = useLingui()
+  const {t: l, i18n} = useLingui()
   const t = useTheme()
   const moderationOpts = useModerationOpts()
 
-  const moderation = moderationOpts
-    ? moderateProfile(author, moderationOpts)
-    : undefined
-  const authorName = sanitizeDisplayName(
-    author.displayName || sanitizeHandle(author.handle),
-    moderation?.ui('displayName'),
-  )
-  const source = isGrainUrl(photo.uri) ? 'grain' : toNiceDomain(photo.uri)
   const createdAt = photo.createdAt
   const hasDate = !!createdAt && !Number.isNaN(Date.parse(createdAt))
+  const likeCount = photo.likeCount ?? 0
+  /*
+   * Placeholder until the total is available: only the hydrated photos are
+   * counted.
+   */
+  const photoCount = getGalleryImages(photo).length
+  if (!author || !moderationOpts) return null
 
   return (
-    <View style={[a.gap_lg]}>
-      <Text
-        testID="atmospherePhotoDialogSource"
-        style={[a.text_sm, t.atoms.text_contrast_medium]}>
-        <Trans>
-          Powered by <Text style={[a.font_bold, a.text_sm]}>{source}</Text>
-        </Trans>
-      </Text>
-      <View style={[a.flex_row, a.align_center, a.gap_md]}>
-        <UserAvatar
-          type="user"
-          size={40}
-          avatar={author.avatar}
-          moderation={moderation?.ui('avatar')}
-        />
-        <View style={[a.flex_1]}>
-          <Text emoji style={[a.text_md, a.font_medium]} numberOfLines={1}>
-            {authorName}
-          </Text>
-          <Text
-            style={[a.text_sm, t.atoms.text_contrast_medium]}
-            numberOfLines={1}>
-            {sanitizeHandle(author.handle, '@')}
-            {hasDate ? (
-              <TimeElapsed timestamp={createdAt}>
-                {({timeElapsed}) => <Text>{` · ${timeElapsed}`}</Text>}
-              </TimeElapsed>
-            ) : null}
-          </Text>
-        </View>
+    <View style={[a.gap_md]}>
+      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+        <Text
+          testID="atmospherePhotoDialogSource"
+          style={[a.text_sm, t.atoms.text_contrast_medium]}>
+          <Trans>Powered by</Trans>
+        </Text>
+        <GrainFull width={45} fill={t.atoms.text.color} />
       </View>
+      <ProfileCard.Link
+        profile={author}
+        style={[a.flex_row, a.align_center, a.gap_md, a.py_sm, a.pb_xs]}>
+        <ProfileCard.Header>
+          <ProfileCard.Avatar
+            size={40}
+            profile={author}
+            moderationOpts={moderationOpts}
+          />
+
+          <ProfileCard.NameAndHandle
+            profile={author}
+            moderationOpts={moderationOpts}
+          />
+        </ProfileCard.Header>
+      </ProfileCard.Link>
       <PhotoGallery photo={photo} />
-      <View style={[a.gap_xs]}>
+      <View style={[a.gap_xs, a.pb_md]}>
         <Text emoji style={[a.text_lg, a.font_semi_bold, a.leading_snug]}>
           {photo.title}
         </Text>
@@ -110,26 +107,66 @@ function PhotoDialogInner({
             {photo.description}
           </Text>
         ) : null}
+        <View
+          style={[a.flex_row, a.flex_wrap, a.align_center, a.gap_md, a.pt_xs]}>
+          {likeCount > 0 ? (
+            <Stat
+              testID="atmospherePhotoDialogLikes"
+              icon={HeartIcon}
+              label={`${formatCount(i18n, likeCount)} ${plural(likeCount, {one: 'like', other: 'likes'})}`}
+            />
+          ) : null}
+          <Stat
+            testID="atmospherePhotoDialogPhotos"
+            icon={ImageIcon}
+            label={`${formatCount(i18n, photoCount)} ${plural(photoCount, {one: 'photo', other: 'photos'})}`}
+          />
+          {hasDate ? (
+            <TimeElapsed timestamp={createdAt}>
+              {({timeElapsed}) => (
+                <Stat
+                  testID="atmospherePhotoDialogTime"
+                  icon={ClockIcon}
+                  label={timeElapsed}
+                />
+              )}
+            </TimeElapsed>
+          ) : null}
+        </View>
       </View>
       <Button
         testID="atmospherePhotoDialogClose"
         label={l`Close`}
-        color="secondary"
+        color="primary"
         size="large"
         onPress={() => control.close()}>
+        <View style={[a.p_2xs, a.rounded_xs, {backgroundColor: 'white'}]}>
+          <GrainMark width={12} />
+        </View>
         <ButtonText>
-          <Trans>Close</Trans>
+          <Trans>View on Grain</Trans>
         </ButtonText>
+        <ButtonIcon icon={ExternalLinkIcon} size="sm" />
       </Button>
     </View>
   )
 }
 
-function isGrainUrl(uri: string) {
-  try {
-    const {hostname} = new URL(uri)
-    return hostname === 'grain.social' || hostname.endsWith('.grain.social')
-  } catch {
-    return false
-  }
+function Stat({
+  icon: Icon,
+  testID,
+  label,
+}: {
+  icon: React.ComponentType<{size?: 'xs'; fill?: string}>
+  testID: string
+  label: string
+}) {
+  const t = useTheme()
+
+  return (
+    <View testID={testID} style={[a.flex_row, a.align_center, a.gap_xs]}>
+      <Icon size="xs" fill={t.atoms.text_contrast_medium.color} />
+      <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>{label}</Text>
+    </View>
+  )
 }
