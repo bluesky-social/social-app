@@ -20,6 +20,7 @@ import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ExternalLinkIcon} from '#
 import * as ProfileCard from '#/components/ProfileCard'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
 import {PhotoDialogGallery} from './PhotoDialogGallery'
 
@@ -160,7 +161,7 @@ function PhotoDialogInner({
         </View>
       </View>
       <Button
-        testID="atmospherePhotoDialogClose"
+        testID="atmospherePhotoDialogViewOnGrain"
         label={l({
           message: 'View on Grain',
           comment:
@@ -179,6 +180,19 @@ function PhotoDialogInner({
         </ButtonText>
         <ButtonIcon icon={ExternalLinkIcon} size="sm" />
       </Button>
+      {IS_NATIVE && (
+        <Button
+          testID="atmospherePhotoDialogClose"
+          label={l`Close`}
+          color="secondary"
+          size="large"
+          style={[a.w_full]}
+          onPress={() => control.close()}>
+          <ButtonText>
+            <Trans>Close</Trans>
+          </ButtonText>
+        </Button>
+      )}
     </View>
   )
 }

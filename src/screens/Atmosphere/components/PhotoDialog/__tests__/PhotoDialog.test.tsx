@@ -6,7 +6,15 @@ import {type app} from '#/lexicons'
 
 const mockClose = jest.fn((_afterClose?: () => void) => {})
 const mockOpenLink = jest.fn()
+let mockIsNative = true
 
+jest.mock('#/env', () =>
+  Object.defineProperty(
+    {...jest.requireActual<typeof import('#/env')>('#/env')},
+    'IS_NATIVE',
+    {get: () => mockIsNative},
+  ),
+)
 jest.mock('#/lib/hooks/useOpenLink', () => ({useOpenLink: () => mockOpenLink}))
 
 jest.mock('@lingui/react', () => {
@@ -238,6 +246,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   jest.clearAllMocks()
+  mockIsNative = true
 })
 
 it('renders the photo gallery for the photo', () => {
@@ -337,6 +346,24 @@ describe('stats', () => {
 
     expect(stat('Time')).toBeNull()
   })
+})
+
+it('dismisses from the native Close button without opening the gallery link', () => {
+  renderDialog()
+
+  fireEvent.press(screen.getByRole('button', {name: 'Close'}))
+
+  expect(mockClose).toHaveBeenCalledTimes(1)
+  expect(mockClose).toHaveBeenCalledWith()
+  expect(mockOpenLink).not.toHaveBeenCalled()
+})
+
+it('omits the native Close button on web', () => {
+  mockIsNative = false
+  renderDialog()
+
+  expect(screen.queryByRole('button', {name: 'Close'})).toBeNull()
+  expect(screen.getByRole('button', {name: 'View on Grain'})).toBeTruthy()
 })
 
 it('opens the gallery link only after the dialog has closed', () => {
