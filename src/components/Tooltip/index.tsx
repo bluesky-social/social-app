@@ -74,6 +74,7 @@ const ARROW_VISUAL_OFFSET = ARROW_SIZE / 1.25 // vibes-based, slightly off the t
 type TooltipContextType = {
   position: 'top' | 'bottom'
   color: TooltipColor
+  maxWidth: number
   visible: boolean
   /** Whether the bubble is playing its exit animation before being removed. */
   closing: boolean
@@ -97,6 +98,7 @@ type TargetContextType = {
 const TooltipContext = createContext<TooltipContextType>({
   position: 'bottom',
   color: 'default',
+  maxWidth: BUBBLE_MAX_WIDTH,
   visible: false,
   closing: false,
   onClosed: () => {},
@@ -115,12 +117,15 @@ export function Outer({
   children,
   position = 'bottom',
   color = 'default',
+  maxWidth = BUBBLE_MAX_WIDTH,
   visible: requestVisible,
   onVisibleChange,
 }: {
   children: React.ReactNode
   position?: 'top' | 'bottom'
   color?: TooltipColor
+  /** Widest the bubble can grow before its text wraps. */
+  maxWidth?: number
   visible: boolean
   onVisibleChange: (visible: boolean) => void
 }) {
@@ -162,8 +167,16 @@ export function Outer({
   }, [])
 
   const ctx = useMemo(
-    () => ({position, color, visible, closing, onClosed, onVisibleChange}),
-    [position, color, visible, closing, onClosed, onVisibleChange],
+    () => ({
+      position,
+      color,
+      maxWidth,
+      visible,
+      closing,
+      onClosed,
+      onVisibleChange,
+    }),
+    [position, color, maxWidth, visible, closing, onClosed, onVisibleChange],
   )
   const targetCtx = useMemo(
     () => ({
@@ -243,8 +256,15 @@ export function Content({
   /** Let a pressable target handle its own tooltip dismissal. */
   targetHandlesToggle?: boolean
 }) {
-  const {position, color, visible, closing, onClosed, onVisibleChange} =
-    useContext(TooltipContext)
+  const {
+    position,
+    color,
+    maxWidth,
+    visible,
+    closing,
+    onClosed,
+    onVisibleChange,
+  } = useContext(TooltipContext)
   const {targetMeasurements} = useContext(TargetContext)
   const isWithinProvider = !!useContext(TooltipProviderContext)
   const requestClose = useCallback(() => {
@@ -261,6 +281,7 @@ export function Content({
         label={label}
         position={position}
         color={color}
+        maxWidth={maxWidth}
         closing={closing}
         onClosed={onClosed}
         /*
@@ -281,6 +302,7 @@ function Bubble({
   label,
   position,
   color,
+  maxWidth,
   closing,
   onClosed,
   requestClose,
@@ -291,6 +313,7 @@ function Bubble({
   label: string
   position: TooltipContextType['position']
   color: TooltipColor
+  maxWidth: number
   closing: boolean
   onClosed: () => void
   requestClose: () => void
@@ -465,7 +488,7 @@ function Bubble({
         a.absolute,
         a.align_start,
         {
-          width: BUBBLE_MAX_WIDTH,
+          width: Math.min(maxWidth, dimensions.width - MIN_EDGE_SPACE * 2),
           opacity: bubbleMeasurements ? 1 : 0,
           top: coords.top,
           left: coords.left,
