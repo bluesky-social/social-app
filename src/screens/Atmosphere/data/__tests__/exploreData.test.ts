@@ -10,6 +10,8 @@ import {
   getAtmosphereLivestreams,
   getAtmospherePhotos,
   getAtmospherePublications,
+  getGalleryImage,
+  getGalleryImages,
 } from '#/screens/Atmosphere/data/exploreData'
 import {app} from '#/lexicons'
 
@@ -1000,5 +1002,54 @@ describe('getAtmosphereExploreApps', () => {
 
     expect(result.map(a => a.id)).toEqual(['app', 'other'])
     expect(result[0].title).toBe('Test app')
+  })
+})
+
+describe('getGalleryImages', () => {
+  const baseGallery = fixtureData.photos.items[0].view
+  const numbered = (n: number) => ({
+    ...image,
+    thumbnail: `https://example.com/thumb-${n}.jpg`,
+    fullsize: `https://example.com/full-${n}.jpg`,
+  })
+  const galleryOf = (items: unknown[]) =>
+    ({...baseGallery, items}) as typeof baseGallery
+
+  it('keeps valid images in order and skips unknown or malformed items', () => {
+    const gallery = galleryOf([
+      {$type: 'app.test#unknown', value: 1},
+      {...numbered(1), thumbnail: 'invalid'},
+      numbered(2),
+      numbered(3),
+    ])
+
+    expect(getGalleryImages(gallery).map(i => i.fullsize)).toEqual([
+      'https://example.com/full-2.jpg',
+      'https://example.com/full-3.jpg',
+    ])
+    expect(getGalleryImage(gallery)?.thumbnail).toBe(
+      'https://example.com/thumb-2.jpg',
+    )
+  })
+
+  it('caps at ten valid images, counting only the valid ones', () => {
+    const invalid = {...numbered(0), fullsize: 'invalid'}
+    const gallery = galleryOf([
+      invalid,
+      ...Array.from({length: 12}, (_, i) => numbered(i + 1)),
+    ])
+    const before = JSON.stringify(gallery)
+
+    const images = getGalleryImages(gallery)
+    expect(images).toHaveLength(10)
+    expect(images[9].fullsize).toBe('https://example.com/full-10.jpg')
+    expect(JSON.stringify(gallery)).toBe(before)
+  })
+
+  it('returns nothing when no item is usable', () => {
+    expect(getGalleryImages(galleryOf([]))).toEqual([])
+    expect(getGalleryImage(galleryOf([{$type: 'app.test#unknown'}]))).toBe(
+      undefined,
+    )
   })
 })

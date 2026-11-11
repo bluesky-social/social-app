@@ -65,10 +65,13 @@ jest.mock('#/components/icons/Play', () => ({
 }))
 
 const mockTriggerOnFocus = jest.fn()
+const mockOpenLink = jest.fn()
+const mockNavigate = jest.fn()
+const mockOpenPhotoDialog = jest.fn()
 jest.mock('@react-navigation/native', () => ({
-  useNavigation: () => ({navigate: jest.fn()}),
+  useNavigation: () => ({navigate: mockNavigate}),
 }))
-jest.mock('#/lib/hooks/useOpenLink', () => ({useOpenLink: () => jest.fn()}))
+jest.mock('#/lib/hooks/useOpenLink', () => ({useOpenLink: () => mockOpenLink}))
 jest.mock('#/lib/hooks/useOpenComposer', () => ({
   useOpenComposer: () => ({openComposer: jest.fn()}),
 }))
@@ -81,8 +84,28 @@ jest.mock('#/ageAssurance', () => ({
   useAgeAssurance: () => ({Access: {Full: 'full'}, state: {access: 'full'}}),
 }))
 jest.mock('#/components/Dialog', () => ({
-  useDialogControl: () => ({open: jest.fn()}),
+  useDialogControl: () => ({open: mockOpenPhotoDialog}),
 }))
+/* The dialog's own content is covered in PhotoDialog.test.tsx. */
+jest.mock('../PhotoDialog', () => {
+  const {View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    PhotoDialog: ({
+      photo,
+      author,
+    }: {
+      photo: {title: string}
+      author: {handle: string}
+    }) => (
+      <View
+        testID="photoDialogStub"
+        accessibilityLabel={`${photo.title} by ${author.handle}`}
+        accessibilityHint=""
+      />
+    ),
+  }
+})
 jest.mock('#/components/dms/dialogs/ShareViaChatDialog', () => ({
   SendViaChatDialog: () => null,
 }))
@@ -92,24 +115,43 @@ jest.mock('#/components/Button', () => {
   return {
     Button: ({
       label,
+      accessibilityHint,
+      ref,
       tabIndex,
       onFocus,
+      onBlur,
+      onPress,
+      onHoverIn,
+      onHoverOut,
       testID,
+      style,
       children,
     }: {
       label: string
+      accessibilityHint?: string
+      ref?: React.Ref<unknown>
       tabIndex?: number
       onFocus?: () => void
+      onBlur?: () => void
+      onPress?: () => void
+      onHoverIn?: () => void
+      onHoverOut?: () => void
       testID?: string
+      style?: React.ComponentProps<typeof Pressable>['style']
       children: React.ReactNode
     }) => (
       <Pressable
         testID={testID}
         accessibilityRole="button"
         accessibilityLabel={label}
-        accessibilityHint=""
+        accessibilityHint={accessibilityHint ?? ''}
+        ref={ref as never}
         tabIndex={tabIndex as never}
-        onFocus={onFocus}>
+        onFocus={onFocus}
+        onBlur={onBlur}
+        onPress={onPress}
+        {...{onHoverIn, onHoverOut}}
+        style={style}>
         {children}
       </Pressable>
     ),
@@ -211,59 +253,88 @@ const photo: app.bsky.embed.external.ViewGallery = {
   associatedProfiles: [authorProfile],
 }
 
-const triggerCards: [string, (focus?: ItemFocusProps) => React.ReactElement][] =
-  [
-    ['PhotoCard', focus => <PhotoCard photo={photo} galleryFocus={focus} />],
-    [
-      'LivestreamCard',
-      focus => <LivestreamCard livestream={livestream} galleryFocus={focus} />,
-    ],
-  ]
+type CardCase = [
+  name: string,
+  renderCard: (focus?: ItemFocusProps) => React.ReactElement,
+  /** testID of the card's primary control, which owns the gallery focus. */
+  primaryTestID: string,
+  labelPattern: RegExp,
+]
 
-const cards: [string, (focus?: ItemFocusProps) => React.ReactElement][] = [
+/* LivestreamCard's primary control is still a Link, PhotoCard's is a Button. */
+const cards: CardCase[] = [
   [
     'LivestreamCard',
     focus => <LivestreamCard livestream={livestream} galleryFocus={focus} />,
+    'link',
+    /^Open/,
   ],
-  ['PhotoCard', focus => <PhotoCard photo={photo} galleryFocus={focus} />],
+  [
+    'PhotoCard',
+    focus => <PhotoCard photo={photo} galleryFocus={focus} />,
+    'atmospherePhotoCard',
+    /^View photos in/,
+  ],
 ]
 
-describe.each(cards)('%s gallery focus', (_name, renderCard) => {
-  it('attaches the focus props to its single Link', () => {
-    const galleryFocus = {
-      focusRef: jest.fn(),
-      tabIndex: 0 as const,
-      onFocus: jest.fn(),
-    }
-    render(renderCard(galleryFocus))
+beforeEach(() => {
+  jest.clearAllMocks()
+})
 
-    const link = screen.getByTestId('link')
-    expect(screen.getAllByRole('link')).toHaveLength(1)
-    expect(galleryFocus.focusRef).toHaveBeenCalledWith(expect.anything())
-    expect(link.props.tabIndex).toBe(0)
+describe.each(cards)(
+  '%s gallery focus',
+  (_name, renderCard, primary, label) => {
+    it('attaches the focus props to its single primary control', () => {
+      const galleryFocus = {
+        focusRef: jest.fn(),
+        tabIndex: 0 as const,
+        onFocus: jest.fn(),
+      }
+      render(renderCard(galleryFocus))
 
-    fireEvent(link, 'focus')
-    expect(galleryFocus.onFocus).toHaveBeenCalledTimes(1)
-  })
+      const link = screen.getByTestId(primary)
+      expect(galleryFocus.focusRef).toHaveBeenCalledWith(expect.anything())
+      expect(link.props.tabIndex).toBe(0)
 
-  it('passes a roving tabIndex of -1 through', () => {
-    render(renderCard({focusRef: jest.fn(), tabIndex: -1, onFocus: jest.fn()}))
+      fireEvent(link, 'focus')
+      expect(galleryFocus.onFocus).toHaveBeenCalledTimes(1)
+    })
 
-    expect(screen.getByTestId('link').props.tabIndex).toBe(-1)
-  })
+    it('passes a roving tabIndex of -1 through', () => {
+      render(
+        renderCard({focusRef: jest.fn(), tabIndex: -1, onFocus: jest.fn()}),
+      )
 
-  it('renders as before without gallery focus props', () => {
-    render(renderCard())
+      expect(screen.getByTestId(primary).props.tabIndex).toBe(-1)
+    })
 
-    const link = screen.getByTestId('link')
-    expect(link.props.tabIndex).toBeUndefined()
-    expect(() => fireEvent(link, 'focus')).not.toThrow()
-    expect(link.props.accessibilityLabel).toMatch(/^Open/)
+    it('renders as before without gallery focus props', () => {
+      render(renderCard())
+
+      const link = screen.getByTestId(primary)
+      expect(link.props.tabIndex).toBeUndefined()
+      expect(() => fireEvent(link, 'focus')).not.toThrow()
+      expect(link.props.accessibilityLabel).toMatch(label)
+    })
+  },
+)
+
+describe('PhotoCard activation', () => {
+  it('opens the photo dialog instead of the external url', () => {
+    render(<PhotoCard photo={photo} />)
+
+    expect(screen.queryAllByRole('link')).toHaveLength(0)
+    fireEvent.press(screen.getByTestId('atmospherePhotoCard'))
+
+    expect(mockOpenPhotoDialog).toHaveBeenCalledTimes(1)
+    expect(mockOpenLink).not.toHaveBeenCalled()
+    expect(mockNavigate).not.toHaveBeenCalled()
+    expect(screen.getByLabelText('A photo by author.test')).toBeTruthy()
   })
 })
 
 const interactions = [
-  ['hover', 'mouseEnter', 'mouseLeave'],
+  ['hover', 'hoverIn', 'hoverOut'],
   ['focus', 'focus', 'blur'],
 ]
 
@@ -271,7 +342,7 @@ it.each(interactions)(
   'dims the photo image on %s without intercepting interactions',
   (_name, enter, leave) => {
     render(<PhotoCard photo={photo} />)
-    const link = screen.getByTestId('link')
+    const link = screen.getByTestId('atmospherePhotoCard')
 
     expect(screen.queryByTestId('atmospherePhotoHoverOverlay')).toBeNull()
     fireEvent(link, enter)
@@ -285,7 +356,7 @@ it.each(interactions)(
   },
 )
 
-describe.each(triggerCards)('%s menu trigger', (_name, renderCard) => {
+describe.each(cards)('%s menu trigger', (_name, renderCard, primary) => {
   const getTrigger = () => screen.getByTestId('atmosphereCardMenuTrigger')
 
   it('mirrors the roving tabIndex but not the focus ref', () => {
@@ -298,7 +369,7 @@ describe.each(triggerCards)('%s menu trigger', (_name, renderCard) => {
 
     expect(getTrigger().props.tabIndex).toBe(0)
     expect(galleryFocus.focusRef).toHaveBeenCalledTimes(1)
-    expect(screen.getByTestId('link').props.tabIndex).toBe(0)
+    expect(screen.getByTestId(primary).props.tabIndex).toBe(0)
 
     rerender(renderCard({...galleryFocus, tabIndex: -1}))
     expect(getTrigger().props.tabIndex).toBe(-1)
@@ -329,7 +400,7 @@ describe.each(triggerCards)('%s menu trigger', (_name, renderCard) => {
   it('is reachable: outside the link and any pointer-disabled ancestor', () => {
     render(renderCard())
 
-    const link = screen.getByTestId('link')
+    const link = screen.getByTestId(primary)
     let node = getTrigger().parent
     while (node) {
       expect(node).not.toBe(link)

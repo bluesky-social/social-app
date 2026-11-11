@@ -34,14 +34,29 @@ export function getAssociatedProfile(
     : undefined
 }
 
+/** The most images the photo dialog shows from one gallery. */
+const MAX_GALLERY_IMAGES = 10
+
+/**
+ * Valid, supported images in server order, capped at ten. Unsupported union
+ * members and images that fail schema validation are skipped.
+ */
+export function getGalleryImages(
+  gallery: app.bsky.embed.external.ViewGallery,
+): $Typed<app.bsky.embed.external.ViewGalleryImage>[] {
+  return gallery.items
+    .filter(
+      (item): item is $Typed<app.bsky.embed.external.ViewGalleryImage> =>
+        bsky.isType(app.bsky.embed.external.viewGalleryImage, item) &&
+        bsky.matches(app.bsky.embed.external.viewGalleryImage, item),
+    )
+    .slice(0, MAX_GALLERY_IMAGES)
+}
+
 export function getGalleryImage(
   gallery: app.bsky.embed.external.ViewGallery,
 ): $Typed<app.bsky.embed.external.ViewGalleryImage> | undefined {
-  return gallery.items.find(
-    (item): item is $Typed<app.bsky.embed.external.ViewGalleryImage> =>
-      bsky.isType(app.bsky.embed.external.viewGalleryImage, item) &&
-      bsky.matches(app.bsky.embed.external.viewGalleryImage, item),
-  )
+  return getGalleryImages(gallery)[0]
 }
 
 /** Explore omits cards that would need either a content or media blur. */

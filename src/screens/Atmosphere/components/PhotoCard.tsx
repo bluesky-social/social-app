@@ -12,14 +12,16 @@ import {
   getAssociatedProfile,
   getGalleryImage,
 } from '#/screens/Atmosphere/data/exploreData'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import {type ItemFocusProps} from '#/components/Gallery'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2'
-import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type app, social} from '#/lexicons'
 import {AtmosphereCardMenu} from './AtmosphereCardMenu'
+import {PhotoDialog} from './PhotoDialog'
 
 export function PhotoCard({
   photo,
@@ -35,6 +37,7 @@ export function PhotoCard({
     onIn: onInteract,
     onOut: onInteractOut,
   } = useInteractionState()
+  const dialogControl = useDialogControl()
   const moderationOpts = useModerationOpts()
   const authorProfile = getAssociatedProfile(photo.associatedProfiles)
   const image = getGalleryImage(photo)
@@ -52,16 +55,15 @@ export function PhotoCard({
 
   return (
     <View style={[a.flex_grow, a.w_full]}>
-      <Link
-        to={photo.uri}
-        label={l`Open ${photo.title}`}
-        accessibilityHint=""
+      <Button
+        testID="atmospherePhotoCard"
+        label={l`View photos in ${photo.title}`}
+        accessibilityHint={l`Opens the photos in a dialog`}
         ref={galleryFocus?.focusRef}
         tabIndex={galleryFocus?.tabIndex}
-        {...web({
-          onMouseEnter: onInteract,
-          onMouseLeave: onInteractOut,
-        })}
+        onPress={() => dialogControl.open()}
+        onHoverIn={onInteract}
+        onHoverOut={onInteractOut}
         onFocus={() => {
           onInteract()
           galleryFocus?.onFocus()
@@ -138,7 +140,7 @@ export function PhotoCard({
             {authorName}
           </Text>
         </View>
-      </Link>
+      </Button>
       <AtmosphereCardMenu
         type="photo"
         item={photo}
@@ -147,6 +149,11 @@ export function PhotoCard({
         galleryFocus={galleryFocus}
         offsetY={a.p_md.padding}
         offsetX={a.p_md.padding}
+      />
+      <PhotoDialog
+        control={dialogControl}
+        photo={photo}
+        author={authorProfile}
       />
     </View>
   )
