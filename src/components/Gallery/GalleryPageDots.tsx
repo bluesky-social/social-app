@@ -32,6 +32,7 @@ export function GalleryPageDots({
   const {label, itemKeys, activeIndex, activateIndex} = useGalleryContext()
   const count = itemKeys.length
   if (count <= 1) return null
+  const position = activeIndex + 1
 
   return (
     <View
@@ -41,20 +42,31 @@ export function GalleryPageDots({
       accessibilityLabel={
         IS_WEB
           ? l`${label} pages`
-          : l`${label}, item ${activeIndex + 1} of ${count}`
+          : l({
+              message: `${label}, item ${position} of ${count}`,
+              comment:
+                'Screen reader label for the carousel position on native. {label} is the carousel name, {position} is the 1-based number of the current item, and {count} is the total number of items.',
+            })
       }
       accessibilityHint=""
       role={IS_WEB ? 'group' : undefined}
       style={[a.flex_row, a.align_center, a.justify_center, a.pt_sm, style]}>
-      {itemKeys.map((key, index) => (
-        <PageDot
-          key={key}
-          active={index === activeIndex}
-          label={l`${label}, go to item ${index + 1} of ${count}`}
-          testID={`${testID}-${index}`}
-          onPress={() => activateIndex(index)}
-        />
-      ))}
+      {itemKeys.map((key, index) => {
+        const position = index + 1
+        return (
+          <PageDot
+            key={key}
+            active={index === activeIndex}
+            label={l({
+              message: `${label}, go to item ${position} of ${count}`,
+              comment:
+                'Accessibility label for a web button that scrolls the carousel to an item. {label} is the carousel name, {position} is the 1-based number of the target item, and {count} is the total number of items.',
+            })}
+            testID={`${testID}-${index}`}
+            onPress={() => activateIndex(index)}
+          />
+        )
+      })}
     </View>
   )
 }
