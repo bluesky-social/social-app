@@ -223,8 +223,17 @@ export const Center = memo(function LayoutCenter({
   children,
   style,
   ignoreTabletLayoutOffset,
+  ignoreVerticalBarInsets = false,
   ...props
-}: ViewProps & {ignoreTabletLayoutOffset?: boolean}) {
+}: ViewProps & {
+  ignoreTabletLayoutOffset?: boolean
+  /**
+   * Don't inset from the vertical bar (iPhone Duo), for content that keeps
+   * clear of it itself so its background can run underneath, like the
+   * profile banner.
+   */
+  ignoreVerticalBarInsets?: boolean
+}) {
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
   const {gtMobile} = useBreakpoints()
   const {centerColumnOffset} = useLayoutBreakpoints()
@@ -239,6 +248,7 @@ export const Center = memo(function LayoutCenter({
   const insets = useSafeAreaInsets()
   const sideInsets = usePhoneHorizontalSafeAreaInsets()
   const hasSideInsets =
+    !ignoreVerticalBarInsets &&
     !isWithinOffsetView &&
     !isWithinSplitView &&
     !isWithinDialog &&
