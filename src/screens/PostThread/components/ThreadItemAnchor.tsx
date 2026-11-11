@@ -1,4 +1,4 @@
-import {memo, useMemo} from 'react'
+import {memo, useMemo, useState} from 'react'
 import {Text as RNText, View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
@@ -562,26 +562,74 @@ function ExpandedPostDetails({
   const {i18n} = useLingui()
   const isRootPost = !('reply' in post.record)
 
+  const [widths, setWidths] = useState({
+    available: 0,
+    date: 0,
+    count: 0,
+    separator: 0,
+    reply: 0,
+  })
+  const hasCount = widths.count > 0
+  const wrapCount =
+    hasCount &&
+    widths.available > 0 &&
+    widths.date +
+      widths.separator +
+      widths.count +
+      a.gap_xs.gap * 2 +
+      widths.reply >
+      widths.available
+
+  function measure(part: keyof typeof widths, width: number) {
+    setWidths(prev => (prev[part] === width ? prev : {...prev, [part]: width}))
+  }
+
+  const viewCount = (
+    <View
+      key="count"
+      style={[
+        {maxWidth: '100%'},
+        wrapCount
+          ? {flexBasis: '100%'}
+          : {marginLeft: hasCount ? a.gap_xs.gap : 0},
+      ]}>
+      <View
+        onLayout={e => measure('count', e.nativeEvent.layout.width)}
+        style={[a.flex_row, a.self_start, {maxWidth: '100%'}]}>
+        <PostViewCount key={post.uri} post={post} />
+      </View>
+    </View>
+  )
+  const reply = isRootPost ? (
+    <View
+      key="reply"
+      onLayout={e => measure('reply', e.nativeEvent.layout.width)}
+      style={{marginLeft: 'auto', paddingLeft: a.gap_md.gap, maxWidth: '100%'}}>
+      <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} plain />
+    </View>
+  ) : null
+
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
       <BackdatedPostIndicator post={post} />
       <View
+        onLayout={e => measure('available', e.nativeEvent.layout.width)}
         style={[
           a.self_stretch,
           a.flex_row,
           a.align_center,
           a.flex_wrap,
-          a.gap_md,
+          {rowGap: a.gap_sm.gap},
         ]}>
         <View
           style={[
             a.flex_row,
             a.align_center,
-            a.flex_wrap,
-            a.gap_xs,
+            {columnGap: hasCount && !wrapCount ? a.gap_xs.gap : 0},
             {maxWidth: '100%'},
           ]}>
           <Text
+            onLayout={e => measure('date', e.nativeEvent.layout.width)}
             style={[
               a.text_sm,
               t.atoms.text_contrast_medium,
@@ -589,13 +637,18 @@ function ExpandedPostDetails({
             ]}>
             {niceDate(i18n, post.indexedAt, 'dot separated')}
           </Text>
-          <PostViewCount key={post.uri} post={post} />
+          <Text
+            aria-hidden
+            onLayout={e => measure('separator', e.nativeEvent.layout.width)}
+            style={[
+              a.text_sm,
+              t.atoms.text_contrast_medium,
+              (!hasCount || wrapCount) && [a.absolute, {opacity: 0}],
+            ]}>
+            ·
+          </Text>
         </View>
-        {isRootPost && (
-          <View style={{marginLeft: 'auto'}}>
-            <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} plain />
-          </View>
-        )}
+        {wrapCount ? [reply, viewCount] : [viewCount, reply]}
       </View>
     </View>
   )
