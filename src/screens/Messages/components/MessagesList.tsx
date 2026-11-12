@@ -540,6 +540,7 @@ export function MessagesList({
         | $Typed<chat.bsky.embed.joinLink.View>
         | undefined
       let replyTo: chat.bsky.convo.defs.ReplyRef | undefined
+      let sharedPost: {uri: string; authorDid: string} | undefined
 
       /**
        * Find the embedded link facet and, if it's at the start or end of the
@@ -579,6 +580,10 @@ export function MessagesList({
             embedView = {
               $type: 'app.bsky.embed.record#view',
               record: createEmbedViewRecordFromPost(post),
+            }
+
+            if (embedState.fromShareMenu) {
+              sharedPost = {uri: post.uri, authorDid: post.author.did}
             }
 
             stripLinkFacet(uri => {
@@ -644,6 +649,13 @@ export function MessagesList({
         reply,
       )
 
+      if (sharedPost) {
+        ax.metric('share:dm:send', {
+          ...sharedPost,
+          convoId: convoState.convo.view.id,
+          isGroup: convoState.convo.kind === 'group',
+        })
+      }
       if (replyTo) {
         ax.metric('chat:message:reply:send', {
           convoId: convoState.convo.view.id,

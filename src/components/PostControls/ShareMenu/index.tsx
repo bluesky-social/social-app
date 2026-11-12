@@ -124,6 +124,7 @@ let ShareMenuButton = ({
             timestamp={timestamp}
             threadgateRecord={threadgateRecord}
             onShare={onShare}
+            logContext={logContext}
           />
         )}
       </Menu.Root>

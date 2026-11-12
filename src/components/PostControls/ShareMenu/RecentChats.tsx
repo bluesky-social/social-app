@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import {ScrollView, View} from 'react-native'
 import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
@@ -18,33 +19,79 @@ import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {Button} from '#/components/Button'
 import {useDialogContext} from '#/components/Dialog'
 import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
+import {Message_Stroke2_Corner0_Rounded as ChatIcon} from '#/components/icons/Message'
 import {ProfileBadges} from '#/components/ProfileBadges'
+import {SHEET_GUTTER} from '#/components/ShareDialog/const'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type chat} from '#/lexicons'
 
+const WIDTH = 80
+const AVATAR_SIZE = WIDTH - 8
+
+/** The grid is 3 across, like Instagram's share sheet. */
+const GRID_COLUMNS = 3
+/** A multiple of the column count, so the last row is full. */
+const GRID_MAX_CHATS = GRID_COLUMNS * 8
+/** Avatar, gap and one line of name. */
+const GRID_ITEM_HEIGHT = AVATAR_SIZE + tokens.space.sm + 16
+const GRID_ROW_GAP = tokens.space.lg
+/*
+ * Shows two and a half rows, so the cut-off third row hints that the grid
+ * scrolls.
+ */
+const GRID_HEIGHT = GRID_ITEM_HEIGHT * 2.5 + GRID_ROW_GAP * 2
+
+/**
+ * The viewer's most recent chats, to send the post to one in a tap. `row` is
+ * a single scrolling row; `grid` is the share sheet's taller grid.
+ */
 export function RecentChats({
   postUri,
+  authorDid,
   onBeforePress,
+  layout = 'row',
 }: {
   postUri: string
+  authorDid: string
   onBeforePress?: () => void
+  layout?: 'row' | 'grid'
 }) {
   const ax = useAnalytics()
   const control = useDialogContext()
   const {currentAccount} = useSession()
+  const isGrid = layout === 'grid'
   const {data} = useListConvosQuery({
     status: 'accepted',
     lockStatus: 'unlocked',
+    // A few extra so muted or broken chats don't leave the grid short
+    limit: isGrid ? GRID_MAX_CHATS + 6 : undefined,
   })
-  const convos = data?.pages[0]?.convos?.slice(0, 10)
+  const convos = data?.pages[0]?.convos
+    ?.flatMap(c => {
+      const convo = parseConvoView(c, currentAccount?.did)
+      const primaryMember = convo?.primaryMember
+      if (
+        !convo ||
+        !primaryMember ||
+        primaryMember.handle === 'missing.invalid' ||
+        convo.view.muted
+      ) {
+        return []
+      }
+      return [{convo, primaryMember}]
+    })
+    .slice(0, isGrid ? GRID_MAX_CHATS : 10)
   const moderationOpts = useModerationOpts()
   const navigation = useNavigation<NavigationProp>()
+  /** Shows a line at the top of the grid once chats scroll under it. */
+  const [isScrolled, setIsScrolled] = useState(false)
+  const t = useTheme()
 
-  const onSelectChat = (convoId: string) => {
+  const onSelectChat = (convoId: string, position: number) => {
     onBeforePress?.()
     control.close(() => {
-      ax.metric('share:press:recentDm', {uri: postUri})
+      ax.metric('share:press:recentDm', {uri: postUri, authorDid, position})
       navigation.navigate('MessagesConversation', {
         conversation: convoId,
         embed: postUri,
@@ -53,6 +100,57 @@ export function RecentChats({
   }
 
   if (!moderationOpts) return null
+
+  const items =
+    convos && convos.length > 0
+      ? convos.map(({convo, primaryMember}, position) => (
+          <RecentChatItem
+            key={convo.view.id}
+            convo={convo}
+            primaryMember={primaryMember}
+            onPress={() => onSelectChat(convo.view.id, position)}
+            moderationOpts={moderationOpts}
+            isGrid={isGrid}
+          />
+        ))
+      : // The grid only shows placeholders while loading, not when empty
+        (!isGrid || !convos) &&
+        Array.from({length: isGrid ? GRID_COLUMNS * 3 : 5}, (_, i) => (
+          <ConvoSkeleton key={i} isGrid={isGrid} />
+        ))
+
+  if (isGrid) {
+    return (
+      <View style={[a.relative, {marginHorizontal: SHEET_GUTTER * -1}]}>
+        <ScrollView
+          style={{height: GRID_HEIGHT}}
+          contentContainerStyle={[
+            a.flex_row,
+            a.flex_wrap,
+            a.pt_2xs,
+            a.pb_md,
+            {paddingHorizontal: SHEET_GUTTER, rowGap: GRID_ROW_GAP},
+          ]}
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={16}
+          onScroll={e => setIsScrolled(e.nativeEvent.contentOffset.y > 0)}
+          nestedScrollEnabled>
+          {items}
+        </ScrollView>
+        {isScrolled && (
+          <View
+            style={[
+              a.absolute,
+              a.border_t,
+              t.atoms.border_contrast_low,
+              {top: 0, left: SHEET_GUTTER, right: SHEET_GUTTER},
+            ]}
+          />
+        )}
+        {convos && convos.length === 0 && <GridNoConvos />}
+      </View>
+    )
+  }
 
   return (
     <View
@@ -63,57 +161,25 @@ export function RecentChats({
         contentContainerStyle={[a.gap_sm, a.px_md]}
         showsHorizontalScrollIndicator={false}
         nestedScrollEnabled>
-        {convos && convos.length > 0 ? (
-          convos.map(c => {
-            const convo = parseConvoView(c, currentAccount?.did)
-
-            if (!convo) return null
-
-            if (
-              !convo.primaryMember ||
-              convo.primaryMember.handle === 'missing.invalid' ||
-              convo.view.muted
-            ) {
-              return null
-            }
-
-            return (
-              <RecentChatItem
-                key={convo.view.id}
-                convo={convo}
-                primaryMember={convo.primaryMember}
-                onPress={() => onSelectChat(convo.view.id)}
-                moderationOpts={moderationOpts}
-              />
-            )
-          })
-        ) : (
-          <>
-            <ConvoSkeleton />
-            <ConvoSkeleton />
-            <ConvoSkeleton />
-            <ConvoSkeleton />
-            <ConvoSkeleton />
-          </>
-        )}
+        {items}
       </ScrollView>
       {convos && convos.length === 0 && <NoConvos />}
     </View>
   )
 }
 
-const WIDTH = 80
-
 function RecentChatItem({
   onPress,
   moderationOpts,
   convo,
   primaryMember,
+  isGrid,
 }: {
   onPress: () => void
   moderationOpts: ModerationOpts
   convo: ConvoWithDetails
   primaryMember: chat.bsky.actor.defs.ProfileViewBasic
+  isGrid: boolean
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -143,17 +209,17 @@ function RecentChatItem({
       label={_(msg`Send post to ${name}`)}
       style={[
         a.flex_col,
-        {width: WIDTH},
         a.gap_sm,
         a.justify_start,
         a.align_center,
+        isGrid ? [a.px_xs, {width: `${100 / GRID_COLUMNS}%`}] : {width: WIDTH},
       ]}>
       {convo.kind === 'group' ? (
-        <AvatarBubbles profiles={convo.members} size={WIDTH - 8} />
+        <AvatarBubbles profiles={convo.members} size={AVATAR_SIZE} />
       ) : (
         <UserAvatar
           avatar={primaryProfile.avatar}
-          size={WIDTH - 8}
+          size={AVATAR_SIZE}
           type={primaryProfile.associated?.labeler ? 'labeler' : 'user'}
           moderation={moderation.ui('avatar')}
         />
@@ -161,7 +227,11 @@ function RecentChatItem({
       <View style={[a.flex_row, a.align_center, a.justify_center, a.w_full]}>
         <Text
           emoji
-          style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}
+          style={[
+            a.text_xs,
+            a.leading_snug,
+            isGrid ? t.atoms.text : t.atoms.text_contrast_medium,
+          ]}
           numberOfLines={1}>
           {name}
         </Text>
@@ -177,31 +247,76 @@ function RecentChatItem({
   )
 }
 
-function ConvoSkeleton() {
+function ConvoSkeleton({isGrid}: {isGrid: boolean}) {
   const t = useTheme()
   return (
     <View
       style={[
         a.flex_col,
-        {width: WIDTH, height: WIDTH + 15},
-        a.gap_xs,
         a.justify_start,
         a.align_center,
+        isGrid
+          ? [
+              a.gap_sm,
+              {width: `${100 / GRID_COLUMNS}%`, height: GRID_ITEM_HEIGHT},
+            ]
+          : [a.gap_xs, {width: WIDTH, height: WIDTH + 15}],
       ]}>
       <View
         style={[
           t.atoms.bg_contrast_50,
-          {width: WIDTH - 8, height: WIDTH - 8},
+          {width: AVATAR_SIZE, height: AVATAR_SIZE},
           a.rounded_full,
         ]}
       />
       <View
         style={[
           t.atoms.bg_contrast_50,
-          {width: WIDTH - 8, height: 10},
+          {width: AVATAR_SIZE, height: 10},
           a.rounded_xs,
         ]}
       />
+    </View>
+  )
+}
+
+/**
+ * Shown in place of the grid when there are no chats yet, centered in the
+ * part of the grid that's visible.
+ */
+function GridNoConvos() {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.absolute,
+        a.justify_center,
+        a.align_center,
+        a.px_2xl,
+        /*
+         * The visible part runs from the search bar (the gap above the grid)
+         * down to the share row, which overlaps the grid's bottom edge.
+         */
+        {
+          top: -tokens.space.xl,
+          left: 0,
+          right: 0,
+          height: GRID_HEIGHT + tokens.space.xl - tokens.space.lg,
+        },
+      ]}>
+      {/* The chat icon from the bottom bar */}
+      <ChatIcon size="2xl" fill={t.atoms.text.color} />
+      <Text
+        style={[
+          a.mt_xs,
+          a.text_sm,
+          a.font_semi_bold,
+          a.text_center,
+          t.atoms.text,
+        ]}>
+        <Trans>No chats yet</Trans>
+      </Text>
     </View>
   )
 }

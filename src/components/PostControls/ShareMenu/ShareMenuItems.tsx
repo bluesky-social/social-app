@@ -28,11 +28,26 @@ import {IS_IOS} from '#/env'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {RecentChats} from './RecentChats'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'
+import {ShareSheetItems} from './ShareSheetItems'
 
-let ShareMenuItems = ({
+let ShareMenuItems = (props: ShareMenuItemsProps): React.ReactNode => {
+  const ax = useAnalytics()
+  if (ax.features.enabled(ax.features.ShareDestinationsEnable)) {
+    return <ShareSheetItems {...props} />
+  }
+  return <LegacyShareMenuItems {...props} />
+}
+ShareMenuItems = memo(ShareMenuItems)
+export {ShareMenuItems}
+
+/**
+ * The share menu before the redesign. Delete with the
+ * `share_destinations:enable` flag.
+ */
+function LegacyShareMenuItems({
   post,
   onShare: onShareProp,
-}: ShareMenuItemsProps): React.ReactNode => {
+}: ShareMenuItemsProps): React.ReactNode {
   const ax = useAnalytics()
   const {hasSession} = useSession()
   const {t: l} = useLingui()
@@ -91,6 +106,10 @@ let ShareMenuItems = ({
   }
 
   const onSelectChatToShareTo = (conversation: string) => {
+    ax.metric('share:press:dmSelected', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+    })
     onBeforeShareViaChat()
     navigation.navigate('MessagesConversation', {
       conversation,
@@ -114,6 +133,7 @@ let ShareMenuItems = ({
             <Menu.ContainerItem>
               <RecentChats
                 postUri={postUri}
+                authorDid={postAuthor.did}
                 onBeforePress={onBeforeShareViaChat}
               />
             </Menu.ContainerItem>
@@ -121,7 +141,10 @@ let ShareMenuItems = ({
               testID="postDropdownSendViaDMBtn"
               label={l`Send via chat`}
               onPress={() => {
-                ax.metric('share:press:openDmSearch', {})
+                ax.metric('share:press:openDmSearch', {
+                  uri: postUri,
+                  authorDid: postAuthor.did,
+                })
                 sendViaChatControl.open()
               }}>
               <Menu.ItemText>
@@ -196,5 +219,3 @@ let ShareMenuItems = ({
     </>
   )
 }
-ShareMenuItems = memo(ShareMenuItems)
-export {ShareMenuItems}

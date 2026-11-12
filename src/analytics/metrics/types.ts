@@ -9,6 +9,7 @@ import {type VideoCompressSkipReason} from '#/lib/media/video/types'
 import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
+import {type SharePlatformId} from '#/components/ShareDialog/catalog'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
 export type Events = {
@@ -1338,7 +1339,7 @@ export type Events = {
   'share:press:nativeShare': {}
   /**
    * Fires when the system share sheet closes after sharing a post. Not
-   * logged on web, or on Android builds without the native share module.
+   * logged on Android builds without the native share module.
    */
   'share:nativeShare:result': {
     uri: string
@@ -1348,14 +1349,67 @@ export type Events = {
     /**
      * The app the user picked: the `activityType` on iOS, the package name on
      * Android. Android reports the chooser's own actions (e.g. Copy) as
-     * `dismissed` with no target.
+     * `dismissed` with no target. Never set on web, since browsers don't say.
      */
     target?: string
   }
-  'share:press:openDmSearch': {}
-  'share:press:dmSelected': {uri: string}
-  'share:press:recentDm': {uri: string}
+  'share:press:openDmSearch': {
+    uri: string
+    authorDid: string
+  }
+  /**
+   * Fires when the user picks a chat from the "Send via chat" search.
+   */
+  'share:press:dmSelected': {
+    uri: string
+    authorDid: string
+  }
+  'share:press:recentDm': {
+    uri: string
+    authorDid: string
+    /**
+     * 0-based index among the recent chats. Later chats are only seen by
+     * people who scroll.
+     */
+    position: number
+  }
+  /**
+   * Fires when a message is sent with a post attached from the share menu
+   * (a recent chat or "Send via chat"). The share-menu events above only mean
+   * a chat was opened; this one means the post was actually sent.
+   */
+  'share:dm:send': {
+    uri: string
+    authorDid: string
+    convoId: string
+    isGroup: boolean
+  }
   'share:press:embed': {uri: string}
+  /**
+   * Fires when the user picks an app from the share sheet's row of apps, e.g.
+   * `x` or `whatsapp`. Which apps were shown is never logged, since that
+   * reveals which apps are installed.
+   */
+  'share:press:platform': {
+    uri: string
+    authorDid: string
+    platform: SharePlatformId
+    /**
+     * 0-based index among the apps, not counting actions like "Copy link"
+     * ahead of them. The row scrolls, so later apps are only seen by people
+     * who swipe.
+     */
+    position: number
+  }
+  /**
+   * Fires when the app picked from the share sheet's row couldn't be opened,
+   * e.g. it was uninstalled after the row was shown.
+   */
+  'share:platform:openFailed': {
+    uri: string
+    authorDid: string
+    platform: SharePlatformId
+  }
 
   'embed:standardSite:view': {url: string}
   'embed:standardSite:article:press': {url: string}

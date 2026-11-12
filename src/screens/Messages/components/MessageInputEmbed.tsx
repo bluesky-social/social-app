@@ -40,7 +40,16 @@ import * as bsky from '#/types/bsky'
  * embed: either a quoted post or a group chat invite link.
  */
 export type MessageEmbedState =
-  {type: 'post'; uri: string} | {type: 'invite'; code: string}
+  | {
+      type: 'post'
+      uri: string
+      /**
+       * The post was attached by the share menu (it passed the post in when
+       * opening the chat), rather than pasted as a link.
+       */
+      fromShareMenu?: boolean
+    }
+  | {type: 'invite'; code: string}
 
 export function useMessageEmbed() {
   const route =
@@ -52,11 +61,13 @@ export function useMessageEmbed() {
   const embedFromParams = route.params.embed
 
   const [embed, setEmbed] = useState<MessageEmbedState | undefined>(
-    embedFromParams ? {type: 'post', uri: embedFromParams} : undefined,
+    embedFromParams
+      ? {type: 'post', uri: embedFromParams, fromShareMenu: true}
+      : undefined,
   )
 
   if (embedFromParams && embed?.type !== 'post') {
-    setEmbed({type: 'post', uri: embedFromParams})
+    setEmbed({type: 'post', uri: embedFromParams, fromShareMenu: true})
   }
 
   return {
