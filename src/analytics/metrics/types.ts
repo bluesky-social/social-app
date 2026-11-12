@@ -10,6 +10,7 @@ import {type GroupedNotificationsFeed} from '#/state/queries/notifications/group
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type SharePlatformId} from '#/components/ShareDialog/catalog'
+import {type ShareSubjectType} from '#/components/ShareDialog/types'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
 /** Where the system share sheet was opened from. */
@@ -17,6 +18,13 @@ type NativeShareEntryPoint = 'ShareMenu' | 'LongPress' | 'PostMenu'
 
 /** Which control saved or removed a post. */
 export type BookmarkEntryPoint = 'BookmarkButton' | 'PostMenu' | 'ShareMenu'
+
+/**
+ * What the share sheet was sharing. Unset from the share menu before the
+ * redesign and from long-pressing a post's share button, which only share
+ * posts.
+ */
+type ShareSubjectField = {subjectType?: ShareSubjectType}
 
 export type Events = {
   // App events
@@ -1345,23 +1353,22 @@ export type Events = {
     postContext: 'feed' | 'thread'
     position?: number
   }
-  'share:press:copyLink': {uri: string}
+  'share:press:copyLink': {uri: string} & ShareSubjectField
   /**
    * Fires when the user opens the system share sheet, or the browser's on
    * desktop web ("Share via…").
    */
-  'share:press:nativeShare': {
+  'share:press:nativeShare': ShareSubjectField & {
     uri: string
     authorDid: string
     entryPoint: NativeShareEntryPoint
     os: Platform['OS']
   }
   /**
-   * Fires when the system share sheet closes after sharing a post. Not
-   * logged from the post menu, or on Android builds without the native share
-   * module.
+   * Fires when the system share sheet closes after sharing. Not logged from
+   * the post menu, or on Android builds without the native share module.
    */
-  'share:nativeShare:result': {
+  'share:nativeShare:result': ShareSubjectField & {
     uri: string
     authorDid: string
     entryPoint: NativeShareEntryPoint
@@ -1377,18 +1384,18 @@ export type Events = {
      */
     target?: string
   }
-  'share:press:openDmSearch': {
+  'share:press:openDmSearch': ShareSubjectField & {
     uri: string
     authorDid: string
   }
   /**
    * Fires when the user picks a chat from the "Send via chat" search.
    */
-  'share:press:dmSelected': {
+  'share:press:dmSelected': ShareSubjectField & {
     uri: string
     authorDid: string
   }
-  'share:press:recentDm': {
+  'share:press:recentDm': ShareSubjectField & {
     uri: string
     authorDid: string
     /**
@@ -1420,7 +1427,7 @@ export type Events = {
    * `x` or `whatsapp`. Which apps were shown is never logged, since that
    * reveals which apps are installed.
    */
-  'share:press:platform': {
+  'share:press:platform': ShareSubjectField & {
     uri: string
     authorDid: string
     platform: SharePlatformId
@@ -1434,7 +1441,7 @@ export type Events = {
    * Fires when the app picked from the share sheet's row couldn't be opened,
    * e.g. it was uninstalled after the row was shown.
    */
-  'share:platform:openFailed': {
+  'share:platform:openFailed': ShareSubjectField & {
     uri: string
     authorDid: string
     platform: SharePlatformId

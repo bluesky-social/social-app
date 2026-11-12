@@ -4,11 +4,9 @@ import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
 
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {type NavigationProp} from '#/lib/routes/types'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
@@ -21,10 +19,9 @@ import {useDialogContext} from '#/components/Dialog'
 import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {Message_Stroke2_Corner0_Rounded as ChatIcon} from '#/components/icons/Message'
 import {ProfileBadges} from '#/components/ProfileBadges'
-import {SHEET_GUTTER} from '#/components/ShareDialog/const'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {type chat} from '#/lexicons'
+import {SHEET_GUTTER} from './const'
 
 const WIDTH = 80
 const AVATAR_SIZE = WIDTH - 8
@@ -61,21 +58,20 @@ function getGridHeight(chatCount: number) {
 }
 
 /**
- * The viewer's most recent chats, to send the post to one in a tap. `row` is
+ * The viewer's most recent chats, to send something to one in a tap. `row` is
  * a single scrolling row; `grid` is the share sheet's taller grid.
  */
 export function RecentChats({
-  postUri,
-  authorDid,
-  onBeforePress,
+  onSelectChat: onSelectChatProp,
   layout = 'row',
 }: {
-  postUri: string
-  authorDid: string
-  onBeforePress?: () => void
+  /**
+   * Runs once the sheet has closed, with the chat's position among those
+   * shown.
+   */
+  onSelectChat: (conversation: string, position: number) => void
   layout?: 'row' | 'grid'
 }) {
-  const ax = useAnalytics()
   const control = useDialogContext()
   const {currentAccount} = useSession()
   const isGrid = layout === 'grid'
@@ -101,21 +97,12 @@ export function RecentChats({
     })
     .slice(0, isGrid ? GRID_MAX_CHATS : 10)
   const moderationOpts = useModerationOpts()
-  const navigation = useNavigation<NavigationProp>()
   /** Shows a line at the top of the grid once chats scroll under it. */
   const [isScrolled, setIsScrolled] = useState(false)
   const t = useTheme()
 
   const onSelectChat = (convoId: string, position: number) => {
-    onBeforePress?.()
-    control.close(() => {
-      ax.metric('share:press:recentDm', {uri: postUri, authorDid, position})
-      navigation.navigate('MessagesConversation', {
-        conversation: convoId,
-        embed: postUri,
-        embedSource: 'recentChat',
-      })
-    })
+    control.close(() => onSelectChatProp(convoId, position))
   }
 
   if (!moderationOpts) return null
