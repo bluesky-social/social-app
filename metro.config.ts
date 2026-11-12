@@ -76,7 +76,7 @@ let config = getSentryExpoConfig(import.meta.dirname, {
         },
       })
 
-    return config
+    return config as unknown as Record<string, unknown>
   },
 })
 
