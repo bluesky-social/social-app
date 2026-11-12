@@ -12,18 +12,15 @@ import {
   ActivityContentCard,
   ActivityWarning,
 } from '#/screens/Atmosphere/ActivityTab/components/ActivityRow'
-import {toActivityListContent} from '#/screens/Atmosphere/ActivityTab/rows'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {parseActivityListUris} from './links'
 import {
-  type ActivityListPage,
+  type ActivityListItem as Item,
   useActivityListQuery,
 } from './useActivityListQuery'
-
-type Item = ActivityListPage['items'][number]
 
 /** Every activity in an actor group ("View all"), as stacked cards. */
 export function AtmosphereActivityListScreen({
@@ -59,7 +56,7 @@ function ActivityList({uris}: {uris: AtUriString[]}) {
     isFetchingNextPage,
   } = useActivityListQuery(uris)
   const [isPTRing, setIsPTRing] = useState(false)
-  const items = data?.pages.flatMap(page => page.items) ?? []
+  const items = data?.pages.flat() ?? []
 
   async function onRefresh() {
     setIsPTRing(true)
@@ -110,11 +107,10 @@ function ActivityList({uris}: {uris: AtUriString[]}) {
 
 function ActivityListItem({item}: {item: Item}) {
   const t = useTheme()
-  const content = toActivityListContent(item.uri, item.view)
   return (
     <View style={[a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
-      {content ? (
-        <ActivityContentCard content={content} />
+      {item.content ? (
+        <ActivityContentCard content={item.content} />
       ) : (
         <ActivityWarning />
       )}

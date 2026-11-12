@@ -10,7 +10,7 @@ import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {ActivityRow} from './components/ActivityRow'
-import {type ActivityRow as ActivityRowModel, toActivityRows} from './rows'
+import {type ActivityRow as ActivityRowModel} from './rows'
 import {useActivityTimelineQuery} from './useActivityTimelineQuery'
 
 export function ActivityTab() {
@@ -25,10 +25,7 @@ export function ActivityTab() {
     isFetchingNextPage,
   } = useActivityTimelineQuery()
   const [isPTRing, setIsPTRing] = useState(false)
-  const rows =
-    data?.pages.flatMap((page, pageIndex) =>
-      toActivityRows(page.feed, page.profiles, pageIndex),
-    ) ?? []
+  const rows = data?.pages.flat() ?? []
 
   async function onRefresh() {
     setIsPTRing(true)

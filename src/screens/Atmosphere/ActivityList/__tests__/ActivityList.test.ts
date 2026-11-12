@@ -9,6 +9,7 @@ import {
 import {fetchActivityListPage} from '../useActivityListQuery'
 
 jest.mock('#/state/session', () => ({}))
+jest.mock('#/state/preferences/moderation-opts', () => ({}))
 
 function makeUris(count: number) {
   return Array.from(

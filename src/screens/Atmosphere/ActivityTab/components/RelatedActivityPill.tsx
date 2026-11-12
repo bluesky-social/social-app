@@ -18,7 +18,7 @@ export function RelatedActivityPill({related}: {related: RelatedActivity}) {
   const t = useTheme()
   const moderationOpts = useModerationOpts()
   const [first] = related.actors
-  const others = related.actors.length - 1
+  const others = related.actorCount - 1
   const moderation = moderationOpts
     ? moderateProfile(first, moderationOpts)
     : undefined

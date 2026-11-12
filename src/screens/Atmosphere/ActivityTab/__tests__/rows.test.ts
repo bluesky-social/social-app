@@ -8,8 +8,10 @@ import {
   eric,
   gallery,
   item,
+  label,
   livestream,
   manton,
+  moderationOpts,
   NSID,
   paul,
   publication,
@@ -20,7 +22,7 @@ import {
 const profiles = new Map([debbie, eric, manton].map(p => [p.did, p]))
 
 function rowsOf(...feed: TimelineEntry[]) {
-  return toActivityRows(feed, profiles, 0)
+  return toActivityRows(feed, profiles, 0, moderationOpts)
 }
 
 function cardOf(entry: TimelineEntry): ActivityCardRow {
@@ -51,7 +53,11 @@ describe('toActivityRows', () => {
       content: {type: 'article'},
     })
     expect(row.related).toEqual([
-      {collection: NSID.recommend, actors: [danielle, caelin, paul]},
+      {
+        collection: NSID.recommend,
+        actors: [danielle, caelin, paul],
+        actorCount: 3,
+      },
     ])
   })
 
@@ -130,8 +136,67 @@ describe('toActivityRows', () => {
     const unknown = {
       $type: 'app.bsky.unspecced.getAtmosphereTimeline#somethingNew',
     } as never
-    const [first] = toActivityRows([unknown], profiles, 0)
-    const [second] = toActivityRows([unknown], profiles, 1)
+    const [first] = toActivityRows([unknown], profiles, 0, moderationOpts)
+    const [second] = toActivityRows([unknown], profiles, 1, moderationOpts)
     expect(first.key).not.toBe(second.key)
+  })
+})
+
+describe('toActivityRows moderation', () => {
+  function documentBy(actor = debbie, view = article()) {
+    return item({actor, collection: NSID.document, view})
+  }
+
+  it('drops cards hidden by a !hide label', () => {
+    expect(
+      rowsOf(
+        documentBy(debbie, article(undefined, {labels: [label('!hide')]})),
+      ),
+    ).toEqual([])
+  })
+
+  it('keeps cards the user can click through, with their blur', () => {
+    const row = cardOf(
+      documentBy(debbie, article(undefined, {labels: [label('!warn')]})),
+    )
+    expect(row.moderation.blur).toBe(true)
+    expect(row.moderation.noOverride).toBe(false)
+  })
+
+  it('drops cards filtered from lists, such as a muted actor', () => {
+    const muted = {...debbie, viewer: {muted: true}}
+    expect(
+      toActivityRows(
+        [documentBy(muted)],
+        new Map([[muted.did, muted]]),
+        0,
+        moderationOpts,
+      ),
+    ).toEqual([])
+  })
+
+  it('leaves moderated recommenders out of the pill but keeps their count', () => {
+    const muted = {...danielle, viewer: {muted: true}}
+    const withRecommenders = (actors: (typeof danielle)[]) =>
+      cardOf(
+        item({
+          actor: debbie,
+          collection: NSID.document,
+          view: article(),
+          relatedActivity: [recommendBucket(actors)],
+        }),
+      ).related
+
+    expect(withRecommenders([muted, caelin, paul])).toEqual([
+      {collection: NSID.recommend, actors: [caelin, paul], actorCount: 3},
+    ])
+    // With nobody left to name, there's no pill.
+    expect(withRecommenders([muted])).toEqual([])
+  })
+
+  it('drops an article when its publisher is hidden', () => {
+    const view = article()
+    view.publisher = {...view.publisher!, labels: [label('!hide')]}
+    expect(rowsOf(documentBy(debbie, view))).toEqual([])
   })
 })

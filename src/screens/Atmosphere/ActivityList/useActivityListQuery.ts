@@ -1,10 +1,20 @@
 import {type Client} from '@atproto/lex'
 import {type AtUriString} from '@atproto/syntax'
+import {type ModerationUI} from '@bsky/sdk/moderation'
 import {useInfiniteQuery} from '@tanstack/react-query'
 
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
+import {
+  isActivityHidden,
+  moderateActivity,
+} from '#/screens/Atmosphere/ActivityTab/moderation'
+import {
+  type ActivityContent,
+  toActivityListContent,
+} from '#/screens/Atmosphere/ActivityTab/rows'
 import {app} from '#/lexicons'
 
 /** The most records `getAtmosphereRecordViews` takes. */
@@ -12,7 +22,7 @@ const MAX_URIS_PER_REQUEST = 25
 
 const useActivityListQueryRoot = 'useActivityListQuery'
 
-export type ActivityListPage = {
+type ActivityListPage = {
   items: {
     uri: AtUriString
     view: app.bsky.unspecced.getAtmosphereRecordViews.RecordView['view']
@@ -43,21 +53,48 @@ export async function fetchActivityListPage(
   }
 }
 
+/** A card to render, or a warning when the record has no usable view. */
+export type ActivityListItem =
+  | {uri: AtUriString; content: ActivityContent; moderation: ModerationUI}
+  | {uri: AtUriString; content: undefined}
+
 /**
  * Hydrates a fixed list of records, a page at a time. The cursor is just an
- * offset into `uris`, like the notifications activity list.
+ * offset into `uris`, like the notifications activity list. As with the
+ * timeline, moderation runs in `select` over the raw cached views.
  */
 export function useActivityListQuery(uris: AtUriString[]) {
   const client = useAppviewClient()
   const {currentAccount} = useSession()
   const viewer = currentAccount?.did
+  const moderationOpts = useModerationOpts()
 
   return useInfiniteQuery({
     queryKey: createQueryKey(useActivityListQueryRoot, {viewer, uris}),
-    enabled: !!viewer,
+    // Wait for moderation opts so hidden cards never flash in.
+    enabled: !!viewer && !!moderationOpts,
     queryFn: ({pageParam}) => fetchActivityListPage(client, uris, pageParam),
     initialPageParam: 0,
     getNextPageParam: page => page.cursor,
     staleTime: STALE.MINUTES.ONE,
+    select: data => ({
+      pageParams: data.pageParams,
+      pages: moderationOpts
+        ? data.pages.map(page =>
+            page.items.flatMap(({uri, view}): ActivityListItem[] => {
+              const content = toActivityListContent(uri, view)
+              if (!content) return [{uri, content}]
+              const moderation = moderateActivity(
+                content,
+                undefined,
+                moderationOpts,
+              )
+              return isActivityHidden(moderation)
+                ? []
+                : [{uri, content, moderation}]
+            }),
+          )
+        : [],
+    }),
   })
 }

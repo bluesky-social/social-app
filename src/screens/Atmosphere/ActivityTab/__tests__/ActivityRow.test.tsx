@@ -18,6 +18,7 @@ import {
   item,
   livestream,
   manton,
+  moderationOpts,
   NSID,
   paul,
   publication,
@@ -112,7 +113,7 @@ function renderRow(row: ActivityRowModel) {
 }
 
 function renderEntry(entry: Parameters<typeof toActivityRows>[0][number]) {
-  return renderRow(toActivityRows([entry], profiles, 0)[0])
+  return renderRow(toActivityRows([entry], profiles, 0, moderationOpts)[0])
 }
 
 /** The sentence, then "1h on" and the app name (just "1h" without an app). */
@@ -192,6 +193,7 @@ describe('ActivityRow', () => {
       ],
       profiles,
       0,
+      moderationOpts,
     )
     renderRow(row)
     expect(screen.getByTestId('activityViewAll')).toBeTruthy()

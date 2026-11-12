@@ -1,6 +1,7 @@
 import {type $Typed} from '@atproto/lex'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 
-import {type app} from '#/lexicons'
+import {type app, type com} from '#/lexicons'
 import {type TimelineEntry} from '../rows'
 
 type Profile = app.bsky.actor.defs.ProfileViewBasic
@@ -13,6 +14,27 @@ export const NSID = {
   gallery: 'social.grain.gallery',
   livestream: 'place.stream.livestream',
 } as const
+
+export const LABELER = 'did:web:labeler.test' as const
+
+export const moderationOpts: ModerationOpts = {
+  userDid: 'did:web:viewer.test',
+  prefs: {
+    adultContentEnabled: false,
+    labels: {},
+    labelers: [{did: LABELER, labels: {}}],
+    mutedWords: [],
+    hiddenPosts: [],
+  },
+}
+
+/** A label on `uri` from the test labeler. */
+export function label(
+  val: string,
+  uri: com.atproto.label.defs.Label['uri'] = 'https://example.com/content',
+): com.atproto.label.defs.Label {
+  return {src: LABELER, uri, val, cts: '2026-01-01T00:00:00.000Z'}
+}
 
 export function profile(handle: string, displayName?: string): Profile {
   return {
