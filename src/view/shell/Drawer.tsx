@@ -746,16 +746,8 @@ ProfileMenuItem = memo(ProfileMenuItem)
 let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   const {i18n, t: l} = useLingui()
   const t = useTheme()
-  const ax = useAnalytics()
-  const isModerationInboxEnabled = ax.features.enabled(
-    ax.features.ModerationInboxEnable,
-  )
-  const unreadCountQuery = useModerationInboxUnreadCountQuery(
-    isModerationInboxEnabled,
-  )
-  const unreadCount = isModerationInboxEnabled
-    ? (unreadCountQuery.data?.unreadCounts.total ?? 0)
-    : 0
+  const unreadCountQuery = useModerationInboxUnreadCountQuery()
+  const unreadCount = unreadCountQuery.data?.unreadCounts.total ?? 0
   const count =
     unreadCount > 0
       ? unreadCount >= UNREAD_NOTIFICATION_CAP
