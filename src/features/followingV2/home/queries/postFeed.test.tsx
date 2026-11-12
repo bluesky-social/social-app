@@ -29,6 +29,7 @@ import {
 } from '#/features/followingV2/home/anchoredFollowing'
 import {FALLBACK_MARKER_POST} from '#/features/followingV2/home/api/home'
 import {useFollowingV2Metrics} from '#/features/followingV2/home/metrics'
+import {usePrependPillMetrics} from '#/features/followingV2/home/pillMetrics'
 import {
   LIST_REST_QUIET_MS,
   useListRest,
@@ -1141,7 +1142,7 @@ describe('usePostFeedPrepend', () => {
       // Not offered: the pill takes a replacement in itself while it's up.
       expect(hook.result.current.prepend.staged).toEqual({
         fetchedAt: cached().pages[0].fetchedAt,
-        offered: false,
+        offeredBy: undefined,
         isFull: false,
       })
     })
@@ -1168,7 +1169,7 @@ describe('usePostFeedPrepend', () => {
       ])
       expect(hook.result.current.prepend.staged).toEqual({
         fetchedAt: cached().pages[0].fetchedAt,
-        offered: false,
+        offeredBy: undefined,
         isFull: false,
       })
     })
@@ -1357,7 +1358,7 @@ describe('usePostFeedPrepend', () => {
     // The view knows which page it staged on top, for the pill to offer.
     expect(hook.result.current.prepend.staged).toEqual({
       fetchedAt: cached().pages[0].fetchedAt,
-      offered: true,
+      offeredBy: 'restore',
       isFull: false,
     })
     expect(cached().pageParams).toEqual([
@@ -1618,7 +1619,7 @@ describe('usePostFeedPrepend', () => {
       // For the pill to offer.
       expect(hook.result.current.prepend.staged).toEqual({
         fetchedAt: cached().pages[0].fetchedAt,
-        offered: true,
+        offeredBy: 'return',
         isFull: false,
       })
     })
@@ -1936,6 +1937,7 @@ describe('staging new posts on Home Following', () => {
         scrollToTop,
         onRead: prepend.markRead,
       })
+      usePrependPillMetrics({enabled: true, metric, pill})
       const {reports, onRowSeen: onItemSeen} = useFollowingListReports(
         'following',
         undefined,
@@ -2423,6 +2425,122 @@ describe('staging new posts on Home Following', () => {
     })
   })
 
+  describe("reports the pill's", () => {
+    it('impression on a warm open, and coming down as the reader reaches the top', async () => {
+      const {list, reported} = renderHome()
+      newest = 14
+      await warmOpen()
+      list.scroll(400)
+      list.scroll(0)
+
+      expect(reported('followingV2:pill:impression')).toEqual([
+        {
+          surface: 'homeFollowing',
+          source: 'return',
+          count: 2,
+          presentation: 'generic',
+        },
+      ])
+      expect(reported('followingV2:pill:hide')).toEqual([
+        {
+          surface: 'homeFollowing',
+          source: 'return',
+          reason: 'reachedTop',
+          count: 2,
+          shownMs: expect.any(Number),
+        },
+      ])
+    })
+
+    it('impression once, as later checks add to it, with the count it last showed', async () => {
+      const {list, reported} = renderHome()
+      newest = 14
+      await warmOpen()
+      newest = 15
+      await anInterval()
+      list.beginDrag(0)
+      list.endDrag(0)
+      await wait(SETTLE_QUIET_MS)
+
+      expect(reported('followingV2:pill:impression')).toMatchObject([
+        {count: 2},
+      ])
+      expect(reported('followingV2:pill:hide')).toMatchObject([
+        {reason: 'reachedTop', count: 3},
+      ])
+    })
+
+    it('press, and coming down for it', async () => {
+      const {latest, reported} = renderHome()
+      newest = 14
+      await warmOpen()
+      await wait(SECOND)
+
+      act(() => latest.pill.onPress())
+
+      expect(reported('followingV2:pill:press')).toEqual([
+        {
+          surface: 'homeFollowing',
+          source: 'return',
+          count: 2,
+          presentation: 'generic',
+          shownMs: expect.any(Number),
+        },
+      ])
+      expect(
+        reported('followingV2:pill:press')[0].shownMs,
+      ).toBeGreaterThanOrEqual(SECOND)
+      expect(reported('followingV2:pill:hide')).toMatchObject([
+        {reason: 'pressed'},
+      ])
+    })
+
+    it('coming down as a refresh replaces the feed', async () => {
+      const {latest, reported} = renderHome()
+      newest = 14
+      await warmOpen()
+
+      const top = holdNextRequest()
+      let refreshing!: Promise<unknown>
+      act(() => {
+        refreshing = latest.refresh()
+      })
+      await act(async () => {
+        top.respondWith({
+          cursor: 't:12',
+          startCursor: 't:14',
+          feed: [post(14), post(13)],
+        })
+        await refreshing
+      })
+
+      expect(reported('followingV2:pill:hide')).toMatchObject([
+        {reason: 'replaced'},
+      ])
+    })
+
+    it('impression from a restore only once its view is on screen', async () => {
+      newest = 14
+      const {setActive, reported} = renderHome({
+        isActive: false,
+        queryClient: coldStarted(),
+      })
+      await wait(SECOND)
+      expect(reported('followingV2:pill:impression')).toEqual([])
+
+      setActive(true)
+
+      expect(reported('followingV2:pill:impression')).toEqual([
+        {
+          surface: 'homeFollowing',
+          source: 'restore',
+          count: 2,
+          presentation: 'generic',
+        },
+      ])
+    })
+  })
+
   describe('on a quick hop away and back', () => {
     it('stages what is newer above the reader and lights the Home dot, with no pill', async () => {
       const {latest, cached, onHasNew} = renderHome()
@@ -2645,6 +2763,8 @@ describe('staging new posts on Home Following', () => {
           'followingV2:check',
           'followingV2:settle',
           'followingV2:refresh',
+          'followingV2:pill:impression',
+          'followingV2:pill:hide',
         ]),
       )
       expect(JSON.stringify(metric.mock.calls)).not.toMatch(
