@@ -25,7 +25,6 @@ import {Pager, type PagerRef} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
-import {NotFoundScreen} from '#/view/screens/NotFound'
 import {atoms as a, useTheme} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
 import {Inbox_Stroke2_Corner2_Rounded_Large as InboxIcon} from '#/components/icons/Inbox'
@@ -69,21 +68,14 @@ export function ModerationInboxScreen() {
     navigation.setParams({tab: index === 1 ? 'account' : 'reports'})
   }
 
-  const isEnabled = ax.features.enabled(ax.features.ModerationInboxEnable)
-  const unreadCountQuery = useModerationInboxUnreadCountQuery(isEnabled)
+  const unreadCountQuery = useModerationInboxUnreadCountQuery()
   const unreadCounts = unreadCountQuery.data?.unreadCounts
 
   useFocusEffect(
     useCallback(() => {
-      if (isEnabled) {
-        ax.metric('moderation:inbox:view', {tab: routeTab})
-      }
-    }, [ax, isEnabled, routeTab]),
+      ax.metric('moderation:inbox:view', {tab: routeTab})
+    }, [ax, routeTab]),
   )
-
-  if (!isEnabled) {
-    return <NotFoundScreen />
-  }
 
   return (
     <Layout.Screen testID="moderationInboxScreen">

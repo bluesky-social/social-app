@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-11-11 16:57\n"
+"PO-Revision-Date: 2026-11-12 21:07\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -28,7 +28,7 @@ msgstr "“{0}”"
 msgid "\"{interestsDisplayName}\" category (active)"
 msgstr "Kategorien \"{interestsDisplayName}\" (aktiv)"
 
-#: src/screens/ModerationInbox/Report.tsx:211
+#: src/screens/ModerationInbox/Report.tsx:208
 msgid "“{note}”"
 msgstr "“{note}”"
 
@@ -220,7 +220,7 @@ msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {opslag} other {opslag}}"
 
 #. placeholder {0}: policies.length
-#: src/screens/ModerationInbox/Notice.tsx:270
+#: src/screens/ModerationInbox/Notice.tsx:257
 msgid "{0, plural, one {Rule violated:} other {Rules violated:}}"
 msgstr "{0, plural, one {Overtrådt regel:} other {Overtrådte regler:}}"
 
@@ -452,8 +452,8 @@ msgstr "{0}/{imageCount}"
 #. placeholder {0}: i18n.number(UNREAD_NOTIFICATION_CAP - 1)
 #: src/screens/Messages/components/InboxRequests.tsx:55
 #: src/screens/Settings/components/SettingsList.tsx:328
-#: src/view/shell/desktop/LeftNav.tsx:699
-#: src/view/shell/Drawer.tsx:762
+#: src/view/shell/desktop/LeftNav.tsx:693
+#: src/view/shell/Drawer.tsx:754
 msgid "{0}+"
 msgstr "{0}+"
 
@@ -465,7 +465,7 @@ msgstr "{0}+ anmodninger"
 
 #. Displayed when the number of notifications exceeds the cap – for example, 99+ notifications
 #. placeholder {0}: i18n.number(UNREAD_NOTIFICATION_CAP - 1)
-#: src/screens/Moderation/index.tsx:174
+#: src/screens/Moderation/index.tsx:173
 msgid "{0}+ updates"
 msgstr "{0}+ opdateringer"
 
@@ -501,7 +501,7 @@ msgstr "{accountCount, plural, one {# konto} other {# konti}}"
 msgid "{accountCount, plural, one {# account} other {# accounts}}, {feedCount, plural, one {# feed} other {# feeds}}"
 msgstr "{accountCount, plural, one {# konto} other {# konti}}, {feedCount, plural, one {# feed} other {# feeds}}"
 
-#: src/screens/Moderation/index.tsx:179
+#: src/screens/Moderation/index.tsx:178
 msgid "{badge, plural, one {# update} other {# updates}}"
 msgstr "{badge, plural, one {# opdatering} other {# opdateringer}}"
 
@@ -556,7 +556,7 @@ msgstr "{count, plural, one {}other {#+ anmodninger om deltagelse}}"
 msgid "{date} at {time}"
 msgstr "{date} kl. {time}"
 
-#: src/screens/ModerationInbox/Notice.tsx:425
+#: src/screens/ModerationInbox/Notice.tsx:412
 msgid "{detailsLength} of {MAX_REPORT_REASON_GRAPHEME_LENGTH} characters used"
 msgstr "{detailsLength} af {MAX_REPORT_REASON_GRAPHEME_LENGTH} tegn brugt"
 
@@ -653,11 +653,11 @@ msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr "{joinedAllTimeCount, plural, one {}other {# brugere}} har oprettet sig!"
 
 #: src/view/shell/desktop/LeftNav.tsx:451
-#: src/view/shell/Drawer.tsx:806
+#: src/view/shell/Drawer.tsx:798
 msgid "{label}, Beta"
 msgstr "{label}, Beta"
 
-#: src/screens/ModerationInbox/Settings.tsx:138
+#: src/screens/ModerationInbox/Settings.tsx:129
 msgid "{label}. {description}"
 msgstr "{label}. {description}"
 
@@ -877,12 +877,12 @@ msgstr "{requestCount, plural, one {# anmodning} other {# anmodninger}}"
 msgid "{requestCount}+ requests"
 msgstr "{requestCount}+ anmodninger"
 
-#: src/screens/ModerationInbox/Notice.tsx:242
+#: src/screens/ModerationInbox/Notice.tsx:229
 msgid "{serviceName} removed your content for violating our <0>Community Guidelines</0>."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:212
-#: src/view/shell/Drawer.tsx:777
+#: src/screens/Settings/Settings.tsx:205
+#: src/view/shell/Drawer.tsx:769
 msgid "{unreadCount, plural, one {# unread update} other {# unread updates}}"
 msgstr "{unreadCount, plural, one {# ulæst opdatering} other {# ulæste opdateringer}}"
 
@@ -1255,8 +1255,8 @@ msgstr ""
 
 #: src/Navigation.tsx:528
 #: src/screens/Settings/AboutSettings.tsx:85
-#: src/screens/Settings/Settings.tsx:292
-#: src/screens/Settings/Settings.tsx:295
+#: src/screens/Settings/Settings.tsx:285
+#: src/screens/Settings/Settings.tsx:288
 msgid "About"
 msgstr "Om"
 
@@ -1297,8 +1297,8 @@ msgid "Access requested! The group owner will review your request."
 msgstr "Adgang anmodet! Gruppeejeren vil gennemgå din anmodning."
 
 #: src/screens/Settings/AccessibilitySettings.tsx:45
-#: src/screens/Settings/Settings.tsx:262
-#: src/screens/Settings/Settings.tsx:265
+#: src/screens/Settings/Settings.tsx:255
+#: src/screens/Settings/Settings.tsx:258
 msgid "Accessibility"
 msgstr "Tilgængelighed"
 
@@ -1310,8 +1310,8 @@ msgstr "Tilgængelighedsindstillinger"
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:22
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:23
 #: src/screens/Settings/AccountSettings.tsx:54
-#: src/screens/Settings/Settings.tsx:193
-#: src/screens/Settings/Settings.tsx:196
+#: src/screens/Settings/Settings.tsx:186
+#: src/screens/Settings/Settings.tsx:189
 msgid "Account"
 msgstr "Konto"
 
@@ -1340,7 +1340,7 @@ msgstr "Konto blev suspenderet"
 msgid "Account is deactivated"
 msgstr "Konto er deaktiveret"
 
-#: src/screens/ModerationInbox/Settings.tsx:98
+#: src/screens/ModerationInbox/Settings.tsx:89
 msgctxt "moderation-inbox-setting"
 msgid "Account labeling notifications"
 msgstr "Notifikationer om kontomærkater"
@@ -1360,11 +1360,11 @@ msgstr "Konto skjult"
 msgid "Account Muted by List"
 msgstr "Konto skjult af liste"
 
-#: src/screens/Settings/Settings.tsx:676
+#: src/screens/Settings/Settings.tsx:669
 msgid "Account options"
 msgstr "Kontoindstillinger"
 
-#: src/screens/Settings/Settings.tsx:711
+#: src/screens/Settings/Settings.tsx:704
 msgid "Account removed from quick access"
 msgstr "Konto fjernet fra kvikadgang"
 
@@ -1500,8 +1500,8 @@ msgstr "Tilføj alt-tekst"
 msgid "Add alt text (optional)"
 msgstr "Tilføj alt-tekst (valgfrit)"
 
-#: src/screens/Settings/Settings.tsx:614
-#: src/screens/Settings/Settings.tsx:617
+#: src/screens/Settings/Settings.tsx:607
+#: src/screens/Settings/Settings.tsx:610
 #: src/view/shell/desktop/LeftNav.tsx:387
 #: src/view/shell/desktop/LeftNav.tsx:390
 msgid "Add another account"
@@ -1713,7 +1713,7 @@ msgstr "Voksenindhold"
 msgid "Adult Content"
 msgstr "Porno"
 
-#: src/screens/Moderation/index.tsx:474
+#: src/screens/Moderation/index.tsx:465
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
 msgstr "Voksenindhold kan kun slås til via browserudgaven af <0>bsky.app</0>."
 
@@ -1730,7 +1730,7 @@ msgstr "Voksenindholdsmærkater"
 msgid "Adult sexual abuse content"
 msgstr "Seksuelt overgrebsmateriale med voksne"
 
-#: src/screens/Moderation/index.tsx:518
+#: src/screens/Moderation/index.tsx:509
 msgid "Advanced"
 msgstr "Avanceret"
 
@@ -2158,9 +2158,9 @@ msgstr "Appadgangskoder"
 #: src/components/moderation/LabelsOnMeDialog.tsx:169
 #: src/components/moderation/LabelsOnMeDialog.tsx:172
 #: src/components/moderation/ModerationDetailsDialog.tsx:223
-#: src/screens/ModerationInbox/Notice.tsx:478
-#: src/screens/ModerationInbox/Report.tsx:180
-#: src/screens/ModerationInbox/Report.tsx:181
+#: src/screens/ModerationInbox/Notice.tsx:465
+#: src/screens/ModerationInbox/Report.tsx:177
+#: src/screens/ModerationInbox/Report.tsx:178
 msgid "Appeal"
 msgstr "Klag"
 
@@ -2189,7 +2189,7 @@ msgstr "Klag over livestreamblokering"
 msgid "Appeal resolved"
 msgstr "Klage afgjort"
 
-#: src/screens/ModerationInbox/Notice.tsx:418
+#: src/screens/ModerationInbox/Notice.tsx:405
 msgid "Appeal submitted"
 msgstr "Klage afsendt"
 
@@ -2213,9 +2213,9 @@ msgstr "Klag over spærring"
 #: src/screens/Messages/components/ChatDisabled.tsx:79
 #: src/screens/Messages/components/ChatDisabled.tsx:130
 #: src/screens/Messages/components/ChatDisabled.tsx:132
-#: src/screens/ModerationInbox/Notice.tsx:319
-#: src/screens/ModerationInbox/Notice.tsx:330
-#: src/screens/ModerationInbox/Notice.tsx:473
+#: src/screens/ModerationInbox/Notice.tsx:306
+#: src/screens/ModerationInbox/Notice.tsx:317
+#: src/screens/ModerationInbox/Notice.tsx:460
 msgid "Appeal this decision"
 msgstr "Klag over afgørelse"
 
@@ -2229,8 +2229,8 @@ msgstr "Klage under behandling"
 
 #: src/Navigation.tsx:443
 #: src/screens/Settings/AppearanceSettings.tsx:71
-#: src/screens/Settings/Settings.tsx:254
-#: src/screens/Settings/Settings.tsx:257
+#: src/screens/Settings/Settings.tsx:247
+#: src/screens/Settings/Settings.tsx:250
 msgid "Appearance"
 msgstr "Udseende"
 
@@ -2243,8 +2243,8 @@ msgstr ""
 msgid "Apply default recommended feeds"
 msgstr "Brug anbefalede standardfeeds"
 
-#: src/screens/Settings/Settings.tsx:545
-#: src/screens/Settings/Settings.tsx:547
+#: src/screens/Settings/Settings.tsx:538
+#: src/screens/Settings/Settings.tsx:540
 msgid "Apply Pull Request"
 msgstr "Anvend pull request"
 
@@ -2377,7 +2377,7 @@ msgstr "AT Protocol-FAQ"
 
 #: src/Navigation.tsx:194
 #: src/screens/Atmosphere/index.tsx:31
-#: src/view/shell/desktop/LeftNav.tsx:763
+#: src/view/shell/desktop/LeftNav.tsx:757
 #: src/view/shell/Drawer.tsx:559
 msgid "Atmosphere"
 msgstr "Atmosfære"
@@ -2550,8 +2550,8 @@ msgstr "Betafunktion"
 
 #: src/Navigation.tsx:459
 #: src/screens/Settings/BetaFeaturesSettings.tsx:142
-#: src/screens/Settings/Settings.tsx:276
-#: src/screens/Settings/Settings.tsx:279
+#: src/screens/Settings/Settings.tsx:269
+#: src/screens/Settings/Settings.tsx:272
 msgid "Beta features"
 msgstr "Betafunktioner"
 
@@ -2659,7 +2659,7 @@ msgstr "Bloker bruger og/eller forlad denne samtale"
 msgid "Blocked"
 msgstr "Blokeret"
 
-#: src/screens/Moderation/index.tsx:392
+#: src/screens/Moderation/index.tsx:383
 msgid "Blocked accounts"
 msgstr "Blokerede konti"
 
@@ -2748,10 +2748,10 @@ msgstr "Bluesky er sjovere med venner. Vil du invitere nogle af dine? <0/>"
 
 #: src/screens/Atmosphere/components/AtmosphereNux.tsx:63
 msgid "Bluesky is part of a growing network of hundreds of social apps. Your account unlocks them all."
-msgstr "Bluesky er en del af et voksende netværk af hundredvis af sociale apps. Din konto giver adgang til dem alle."
+msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:90
-#: src/screens/ModerationInbox/Report.tsx:74
+#: src/screens/ModerationInbox/Notice.tsx:88
+#: src/screens/ModerationInbox/Report.tsx:72
 msgid "Bluesky Moderation Service"
 msgstr "Blueskys moderationstjeneste"
 
@@ -2978,7 +2978,7 @@ msgstr "Kameraadgang krævet"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:124
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
-#: src/screens/ModerationInbox/Notice.tsx:437
+#: src/screens/ModerationInbox/Notice.tsx:424
 #: src/screens/Profile/Header/EditProfileDialog.tsx:313
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
@@ -2992,7 +2992,7 @@ msgstr "Kameraadgang krævet"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:87
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:242
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:248
-#: src/screens/Settings/Settings.tsx:337
+#: src/screens/Settings/Settings.tsx:330
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
 #: src/view/com/composer/Composer.tsx:1837
@@ -3003,7 +3003,7 @@ msgstr "Kameraadgang krævet"
 msgid "Cancel"
 msgstr "Annuller"
 
-#: src/screens/ModerationInbox/Notice.tsx:430
+#: src/screens/ModerationInbox/Notice.tsx:417
 msgid "Cancel appeal"
 msgstr "Annuller klage"
 
@@ -3186,7 +3186,7 @@ msgstr "Kanal"
 #: src/lib/hooks/useNotificationHandler.ts:134
 #: src/Navigation.tsx:554
 #: src/view/shell/bottom-bar/BottomBar.tsx:246
-#: src/view/shell/desktop/LeftNav.tsx:776
+#: src/view/shell/desktop/LeftNav.tsx:770
 #: src/view/shell/Drawer.tsx:611
 msgid "Chat"
 msgstr "Chat"
@@ -3417,11 +3417,11 @@ msgstr "Ryd alle seneste søgninger"
 msgid "Clear all recent searches?"
 msgstr "Ryd alle seneste søgninger?"
 
-#: src/screens/Settings/Settings.tsx:537
+#: src/screens/Settings/Settings.tsx:530
 msgid "Clear all storage data"
 msgstr "Slet alle gemte oplysninger"
 
-#: src/screens/Settings/Settings.tsx:539
+#: src/screens/Settings/Settings.tsx:532
 msgid "Clear all storage data (restart after this)"
 msgstr "Slet alle gemte oplysninger (genstart efter dette)"
 
@@ -3788,8 +3788,8 @@ msgstr "Indhold"
 msgid "Content & Media"
 msgstr "Indhold og medier"
 
-#: src/screens/Settings/Settings.tsx:234
-#: src/screens/Settings/Settings.tsx:237
+#: src/screens/Settings/Settings.tsx:227
+#: src/screens/Settings/Settings.tsx:230
 msgid "Content and media"
 msgstr "Indhold og medier"
 
@@ -3805,7 +3805,7 @@ msgstr "Indhold blokeret"
 msgid "Content by {authorName}"
 msgstr "Indhold af {authorName}"
 
-#: src/screens/Moderation/index.tsx:424
+#: src/screens/Moderation/index.tsx:415
 msgid "Content filters"
 msgstr "Indholdsfiltre"
 
@@ -4139,7 +4139,7 @@ msgstr "Kunne ikke gemme ændringer: {0}"
 msgid "Could not share – please try again"
 msgstr "Kunne ikke dele – prøv igen"
 
-#: src/state/queries/moderation-inbox.ts:320
+#: src/state/queries/moderation-inbox.ts:313
 #: src/state/queries/notifications/settings.ts:123
 msgid "Could not update notification settings"
 msgstr "Kunne ikke opdatere notifikationsindstillinger"
@@ -4394,7 +4394,7 @@ msgstr "Dag"
 msgid "Deactivate account"
 msgstr "Deaktiver konto"
 
-#: src/screens/Settings/Settings.tsx:502
+#: src/screens/Settings/Settings.tsx:495
 msgid "Debug Moderation"
 msgstr "Fejlsøg moderation"
 
@@ -4447,8 +4447,8 @@ msgstr "Slet appadgangskode?"
 msgid "Delete chat"
 msgstr "Slet chat"
 
-#: src/screens/Settings/Settings.tsx:507
-#: src/screens/Settings/Settings.tsx:509
+#: src/screens/Settings/Settings.tsx:500
+#: src/screens/Settings/Settings.tsx:502
 msgid "Delete chat declaration record"
 msgstr "Slet chatdeklarationsregistrering"
 
@@ -4574,8 +4574,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr "Udviklertilstand aktiveret"
 
-#: src/screens/Settings/Settings.tsx:319
-#: src/screens/Settings/Settings.tsx:322
+#: src/screens/Settings/Settings.tsx:312
+#: src/screens/Settings/Settings.tsx:315
 msgid "Developer options"
 msgstr "Udviklingerindstillinger"
 
@@ -4650,7 +4650,7 @@ msgstr "Deaktiver dette invitationslink?"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:35
 #: src/lib/moderation/useLabelBehaviorDescription.ts:45
 #: src/lib/moderation/useLabelBehaviorDescription.ts:71
-#: src/screens/Moderation/index.tsx:464
+#: src/screens/Moderation/index.tsx:455
 msgid "Disabled"
 msgstr "Deaktiveret"
 
@@ -5193,7 +5193,7 @@ msgstr "Aktiver"
 msgid "Enable {0} only"
 msgstr "Aktiver kun {0}"
 
-#: src/screens/Moderation/index.tsx:449
+#: src/screens/Moderation/index.tsx:440
 msgid "Enable adult content"
 msgstr "Aktiver voksenindhold"
 
@@ -5247,7 +5247,7 @@ msgstr "Aktiver populære emner"
 msgid "Enable trending videos in your Discover feed"
 msgstr "Aktiver populære videoer i dit Opdag-feed"
 
-#: src/screens/Moderation/index.tsx:462
+#: src/screens/Moderation/index.tsx:453
 msgid "Enabled"
 msgstr "Aktiveret"
 
@@ -5500,7 +5500,7 @@ msgstr "Pornografiske billeder."
 #: src/Navigation.tsx:928
 #: src/screens/Atmosphere/index.tsx:43
 #: src/screens/Search/Shell.tsx:564
-#: src/view/shell/desktop/LeftNav.tsx:742
+#: src/view/shell/desktop/LeftNav.tsx:736
 #: src/view/shell/Drawer.tsx:538
 msgid "Explore"
 msgstr "Udforsk"
@@ -5690,7 +5690,7 @@ msgstr "Indlæsning af indstillinger for feeds fejlede"
 
 #: src/components/dialogs/NotificationSettingsDialog.tsx:85
 #: src/screens/Messages/Settings.tsx:369
-#: src/screens/ModerationInbox/Settings.tsx:62
+#: src/screens/ModerationInbox/Settings.tsx:53
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:112
 #: src/screens/Settings/NotificationSettings/index.tsx:151
 #: src/screens/Settings/NotificationSettings/index.tsx:270
@@ -5736,7 +5736,7 @@ msgstr "Kunne ikke markere alle chats som læst"
 msgid "Failed to mark all requests as read"
 msgstr "Kunne ikke markere alle anmodninger som læst"
 
-#: src/state/queries/moderation-inbox.ts:346
+#: src/state/queries/moderation-inbox.ts:339
 msgid "Failed to mark as read. Please try again."
 msgstr "Kunne ikke markere som læst. Prøv igen."
 
@@ -5836,7 +5836,7 @@ msgstr "Kunne ikke sende fejlmelding"
 msgid "Failed to submit appeal, please try again."
 msgstr "Afsendelse af klage fejlede, prøv igen."
 
-#: src/screens/ModerationInbox/Notice.tsx:386
+#: src/screens/ModerationInbox/Notice.tsx:373
 msgid "Failed to submit appeal. Please try again."
 msgstr "Afsendelse af klage fejlede. Prøv igen."
 
@@ -5987,7 +5987,7 @@ msgstr "Feedback blev sendt feedets ejer"
 #: src/screens/StarterPack/StarterPackScreen.tsx:194
 #: src/view/screens/Feeds.tsx:505
 #: src/view/screens/Profile.tsx:274
-#: src/view/shell/desktop/LeftNav.tsx:788
+#: src/view/shell/desktop/LeftNav.tsx:782
 #: src/view/shell/Drawer.tsx:673
 msgid "Feeds"
 msgstr "Feeds"
@@ -6083,8 +6083,8 @@ msgstr "Find konti, du kan følge"
 
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:52
 #: src/screens/Settings/FindContactsSettings.tsx:87
-#: src/screens/Settings/Settings.tsx:245
-#: src/screens/Settings/Settings.tsx:248
+#: src/screens/Settings/Settings.tsx:238
+#: src/screens/Settings/Settings.tsx:241
 msgid "Find and invite friends"
 msgstr "Find og inviter venner"
 
@@ -6369,7 +6369,7 @@ msgstr "Tekststørrelse"
 msgid "Food"
 msgstr "Mad"
 
-#: src/screens/ModerationInbox/Notice.tsx:304
+#: src/screens/ModerationInbox/Notice.tsx:291
 msgid "For more information about our appeals and redress process, please see our <0>Terms of Service</0>."
 msgstr ""
 
@@ -6547,7 +6547,7 @@ msgstr "Få notifikationer, når nogen sender dig beskedanmodninger."
 msgid "Get notifications when people send you messages."
 msgstr "Få notifikationer, når nogen sender dig beskeder."
 
-#: src/screens/ModerationInbox/Settings.tsx:87
+#: src/screens/ModerationInbox/Settings.tsx:78
 msgctxt "moderation-inbox-setting"
 msgid "Get notified about actions taken against you."
 msgstr ""
@@ -6561,7 +6561,7 @@ msgstr "Bliv notificeret om nye opslag"
 msgid "Get notified about posts and replies from accounts you choose."
 msgstr "Bliv notificereret om opslag og svar fra konti, du vælger."
 
-#: src/screens/ModerationInbox/Settings.tsx:72
+#: src/screens/ModerationInbox/Settings.tsx:63
 msgctxt "moderation-inbox-setting"
 msgid "Get notified about your report outcomes."
 msgstr "Få notifikationer om udfaldet af dine klager."
@@ -6578,7 +6578,7 @@ msgstr "Bliv notificeret om denne kontos aktivitet"
 msgid "Get notified when {name} posts"
 msgstr "Bliv notificeret, når {name} laver opslag"
 
-#: src/screens/ModerationInbox/Settings.tsx:102
+#: src/screens/ModerationInbox/Settings.tsx:93
 msgctxt "moderation-inbox-setting"
 msgid "Get notified when a label is added to your account and posts."
 msgstr "Få notifikationer, når en etiket føjes til din konto eller dine opslag."
@@ -6689,7 +6689,7 @@ msgstr "Gå til {name}s profil"
 #: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:93
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:73
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:82
-#: src/screens/Moderation/index.tsx:283
+#: src/screens/Moderation/index.tsx:276
 msgid "Go to account settings"
 msgstr "Gå til kontoindstillinger"
 
@@ -6829,7 +6829,7 @@ msgstr "Gruppenavn"
 msgid "Group name is too long. {MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, other {The maximum number of characters is #.}}"
 msgstr "Gruppenavnet er for langt. {MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, one {}other {Den maksimale længde er # tegn.}}"
 
-#: src/screens/Settings/Settings.tsx:487
+#: src/screens/Settings/Settings.tsx:480
 msgid "GrowthBook"
 msgstr "GrowthBook"
 
@@ -6920,8 +6920,8 @@ msgstr ""
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
 msgstr "Gemmes af Bluesky i 7 dage for at forhindre misbrug og slettes herefter"
 
-#: src/screens/Settings/Settings.tsx:284
-#: src/screens/Settings/Settings.tsx:288
+#: src/screens/Settings/Settings.tsx:277
+#: src/screens/Settings/Settings.tsx:281
 #: src/view/shell/desktop/RightNav.tsx:130
 #: src/view/shell/desktop/RightNav.tsx:133
 #: src/view/shell/Drawer.tsx:504
@@ -7093,7 +7093,7 @@ msgstr "Hmm, feedserveren gav et ugyldigt svar. Fortæl feedets ejer om dette pr
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr "Hmm, vi kan ikke finde dette feed. Det er muligvis blevet slettet."
 
-#: src/screens/Moderation/index.tsx:64
+#: src/screens/Moderation/index.tsx:63
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
 msgstr "Hmm, vi oplever problemer med at indlæse denne data. Se yderligere oplysninger herunder. Kontakt os, hvis problemet varer ved."
 
@@ -7108,7 +7108,7 @@ msgstr "Vent lidt! Vi udruller gradvist adgang til video, og du er stadig i kø.
 #: src/Navigation.tsx:923
 #: src/Navigation.tsx:944
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
-#: src/view/shell/desktop/LeftNav.tsx:730
+#: src/view/shell/desktop/LeftNav.tsx:724
 #: src/view/shell/Drawer.tsx:585
 msgid "Home"
 msgstr "Forside"
@@ -7440,7 +7440,7 @@ msgstr "Indtast ny adgangskode"
 msgid "Interaction limited"
 msgstr "Interaktion begrænset"
 
-#: src/screens/Moderation/index.tsx:332
+#: src/screens/Moderation/index.tsx:323
 msgid "Interaction settings"
 msgstr "Interaktionsindstillinger"
 
@@ -7751,8 +7751,8 @@ msgid "Language Settings"
 msgstr "Sprogindstillinger"
 
 #: src/screens/Settings/LanguageSettings.tsx:98
-#: src/screens/Settings/Settings.tsx:268
-#: src/screens/Settings/Settings.tsx:271
+#: src/screens/Settings/Settings.tsx:261
+#: src/screens/Settings/Settings.tsx:264
 msgid "Languages"
 msgstr "Sprog"
 
@@ -8183,7 +8183,7 @@ msgstr "Liste ikke længere skjult"
 #: src/view/screens/Lists.tsx:60
 #: src/view/screens/Profile.tsx:268
 #: src/view/screens/Profile.tsx:276
-#: src/view/shell/desktop/LeftNav.tsx:796
+#: src/view/shell/desktop/LeftNav.tsx:790
 #: src/view/shell/Drawer.tsx:688
 msgid "Lists"
 msgstr "Lister"
@@ -8277,8 +8277,8 @@ msgstr "Indlæs nye opslag"
 msgid "Load new posts from the people you follow"
 msgstr "Indlæs nye opslag fra personer, du følger"
 
-#: src/screens/ModerationInbox/Notice.tsx:175
-#: src/screens/ModerationInbox/Notice.tsx:184
+#: src/screens/ModerationInbox/Notice.tsx:162
+#: src/screens/ModerationInbox/Notice.tsx:171
 msgid "Load older actions"
 msgstr ""
 
@@ -8299,7 +8299,7 @@ msgstr "Indlæser lister..."
 msgid "Loading more posts"
 msgstr "Indlæser flere opslag"
 
-#: src/screens/ModerationInbox/Settings.tsx:173
+#: src/screens/ModerationInbox/Settings.tsx:164
 msgid "Loading notification settings"
 msgstr "Indlæser notifikationsindstillinger"
 
@@ -8352,7 +8352,7 @@ msgid "Logo by @sawaratsuki.bsky.social"
 msgstr "Logo af @sawaratsuki.bsky.social"
 
 #: src/view/shell/desktop/RightNav.tsx:139
-#: src/view/shell/Drawer.tsx:895
+#: src/view/shell/Drawer.tsx:887
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "Logo af <0>@sawaratsuki.bsky.social</0>"
 
@@ -8419,7 +8419,7 @@ msgstr ""
 msgid "Manage saved feeds"
 msgstr "Adminstrer gemte feeds"
 
-#: src/screens/Moderation/index.tsx:402
+#: src/screens/Moderation/index.tsx:393
 msgid "Manage verification settings"
 msgstr "Administrer verifikationsindstillinger"
 
@@ -8432,14 +8432,14 @@ msgstr "Administrer dine skjulte ord og tags"
 msgid "Manual"
 msgstr "Manuelt"
 
-#: src/screens/ModerationInbox/index.tsx:335
+#: src/screens/ModerationInbox/index.tsx:327
 msgid "Mark all actions as read"
 msgstr ""
 
 #: src/screens/Messages/Inbox.tsx:318
 #: src/screens/Messages/Inbox.tsx:324
-#: src/screens/ModerationInbox/index.tsx:209
-#: src/screens/ModerationInbox/index.tsx:341
+#: src/screens/ModerationInbox/index.tsx:201
+#: src/screens/ModerationInbox/index.tsx:333
 msgid "Mark all as read"
 msgstr "Marker alle læst"
 
@@ -8450,7 +8450,7 @@ msgstr "Marker alle læst"
 msgid "Mark all chats as read"
 msgstr "Marker alle chats som læst"
 
-#: src/screens/ModerationInbox/index.tsx:203
+#: src/screens/ModerationInbox/index.tsx:195
 msgid "Mark all reports as read"
 msgstr "Marker alle anmeldelser som læst"
 
@@ -8653,7 +8653,7 @@ msgid "Mod inbox settings"
 msgstr ""
 
 #: src/Navigation.tsx:204
-#: src/screens/Moderation/index.tsx:103
+#: src/screens/Moderation/index.tsx:102
 msgid "Moderation"
 msgstr "Moderation"
 
@@ -8661,16 +8661,14 @@ msgstr "Moderation"
 msgid "Moderation details"
 msgstr "Moderationsoplysninger"
 
-#. Name for a feature flag
-#: src/analytics/features/index.ts:132
 #: src/Navigation.tsx:209
-#: src/screens/Moderation/index.tsx:299
-#: src/screens/ModerationInbox/index.tsx:101
+#: src/screens/Moderation/index.tsx:291
+#: src/screens/ModerationInbox/index.tsx:93
 msgid "Moderation inbox"
 msgstr "Moderationsindbakke"
 
-#: src/screens/ModerationInbox/index.tsx:108
-#: src/screens/ModerationInbox/Settings.tsx:53
+#: src/screens/ModerationInbox/index.tsx:100
+#: src/screens/ModerationInbox/Settings.tsx:44
 msgid "Moderation inbox settings"
 msgstr "Indstillinger for moderationsindbakke"
 
@@ -8700,7 +8698,7 @@ msgctxt "toast"
 msgid "Moderation list updated"
 msgstr "Moderationsliste opdateret"
 
-#: src/screens/Moderation/index.tsx:362
+#: src/screens/Moderation/index.tsx:353
 msgid "Moderation lists"
 msgstr "Moderationslister"
 
@@ -8721,9 +8719,9 @@ msgstr "moderationsindstillinger"
 msgid "Moderation states"
 msgstr "Moderationstilstande"
 
-#: src/screens/Moderation/index.tsx:317
-#: src/screens/Settings/Settings.tsx:209
-#: src/screens/Settings/Settings.tsx:220
+#: src/screens/Moderation/index.tsx:308
+#: src/screens/Settings/Settings.tsx:202
+#: src/screens/Settings/Settings.tsx:213
 msgid "Moderation tools"
 msgstr "Moderationsværktøjer"
 
@@ -8864,7 +8862,7 @@ msgstr "Skjul, forlad eller fjern personer når som helst. Det er din chat."
 msgid "Muted"
 msgstr "Skjult"
 
-#: src/screens/Moderation/index.tsx:377
+#: src/screens/Moderation/index.tsx:368
 msgid "Muted accounts"
 msgstr "Skjulte konti"
 
@@ -8882,7 +8880,7 @@ msgstr "Opslag fra skjulte konti vil ikke optræde i dit feed og dine notifikati
 msgid "Muted by \"{0}\""
 msgstr "Skjult af \"{0}\""
 
-#: src/screens/Moderation/index.tsx:347
+#: src/screens/Moderation/index.tsx:338
 msgid "Muted words & tags"
 msgstr "Skjulte ord og tags"
 
@@ -9172,11 +9170,11 @@ msgctxt "Answer to a yes/no question"
 msgid "No"
 msgstr "Nej"
 
-#: src/screens/ModerationInbox/index.tsx:371
+#: src/screens/ModerationInbox/index.tsx:363
 msgid "No actions against you"
 msgstr ""
 
-#: src/screens/ModerationInbox/index.tsx:372
+#: src/screens/ModerationInbox/index.tsx:364
 msgid "No actions match this filter"
 msgstr ""
 
@@ -9369,7 +9367,7 @@ msgstr "Ingen svar at vise endnu"
 msgid "No replies yet"
 msgstr "Ingen svar endnu"
 
-#: src/screens/ModerationInbox/index.tsx:236
+#: src/screens/ModerationInbox/index.tsx:228
 msgid "No reports match this filter"
 msgstr "Ingen anmeldelser matcher dette filter"
 
@@ -9521,7 +9519,7 @@ msgid "Nothing saved yet"
 msgstr "Endnu ingen gemte"
 
 #: src/Navigation.tsx:224
-#: src/screens/ModerationInbox/Notice.tsx:137
+#: src/screens/ModerationInbox/Notice.tsx:124
 msgid "Notice"
 msgstr ""
 
@@ -9547,10 +9545,10 @@ msgstr "Notifikationslyde"
 #: src/screens/Notifications/ActivityList.tsx:29
 #: src/screens/Notifications/index.tsx:644
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
-#: src/screens/Settings/Settings.tsx:226
-#: src/screens/Settings/Settings.tsx:229
+#: src/screens/Settings/Settings.tsx:219
+#: src/screens/Settings/Settings.tsx:222
 #: src/view/shell/bottom-bar/BottomBar.tsx:283
-#: src/view/shell/desktop/LeftNav.tsx:753
+#: src/view/shell/desktop/LeftNav.tsx:747
 #: src/view/shell/Drawer.tsx:638
 msgid "Notifications"
 msgstr "Notifikationer"
@@ -9618,7 +9616,7 @@ msgstr "På Bluesky betyder det, at dine opslag kun vises i Opdag-feedet for fol
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "på<0><1/><2><3/></2></0>"
 
-#: src/screens/Settings/Settings.tsx:427
+#: src/screens/Settings/Settings.tsx:420
 msgid "Onboarding reset"
 msgstr "Nulstil velkomst"
 
@@ -9888,11 +9886,11 @@ msgstr ""
 msgid "Open message options"
 msgstr "Åbn beskedindstillinger"
 
-#: src/screens/Settings/Settings.tsx:500
+#: src/screens/Settings/Settings.tsx:493
 msgid "Open moderation debug page"
 msgstr "Åbn moderationsfejlsøgningsside"
 
-#: src/screens/Moderation/index.tsx:343
+#: src/screens/Moderation/index.tsx:334
 msgid "Open muted words and tags settings"
 msgstr "Åbn indstillinger for skjulte ord og tags"
 
@@ -9936,11 +9934,11 @@ msgstr "Åbn startpakke"
 msgid "Open Starter Pack menu"
 msgstr "Åbn startpakkemenu"
 
-#: src/screens/Settings/Settings.tsx:493
+#: src/screens/Settings/Settings.tsx:486
 msgid "Open storybook page"
 msgstr "Åbn storybook"
 
-#: src/screens/Settings/Settings.tsx:478
+#: src/screens/Settings/Settings.tsx:471
 msgid "Open system log"
 msgstr "Åbn systemlog"
 
@@ -10024,7 +10022,7 @@ msgstr "Åbner formular til at logge ind på din eksisterende Bluesky-konto"
 msgid "Opens full image"
 msgstr "Viser hele billedet"
 
-#: src/screens/Settings/Settings.tsx:285
+#: src/screens/Settings/Settings.tsx:278
 msgid "Opens helpdesk in browser"
 msgstr "Åbner hjælpeside i browser"
 
@@ -10843,8 +10841,8 @@ msgstr "Primært sprog"
 msgid "Privacy"
 msgstr "Privatliv"
 
-#: src/screens/Settings/Settings.tsx:201
-#: src/screens/Settings/Settings.tsx:204
+#: src/screens/Settings/Settings.tsx:194
+#: src/screens/Settings/Settings.tsx:197
 msgid "Privacy and security"
 msgstr "Privatliv og sikkerhed"
 
@@ -10866,8 +10864,8 @@ msgstr "Privatlivs- og sikkerhedsindstillinger"
 #: src/screens/Settings/AboutSettings.tsx:102
 #: src/screens/Settings/AboutSettings.tsx:105
 #: src/view/screens/PrivacyPolicy.tsx:25
-#: src/view/shell/Drawer.tsx:890
-#: src/view/shell/Drawer.tsx:891
+#: src/view/shell/Drawer.tsx:882
+#: src/view/shell/Drawer.tsx:883
 msgid "Privacy Policy"
 msgstr "Privatlivspolitik"
 
@@ -10896,7 +10894,7 @@ msgid "profile"
 msgstr "profil"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:326
-#: src/view/shell/desktop/LeftNav.tsx:812
+#: src/view/shell/desktop/LeftNav.tsx:806
 #: src/view/shell/Drawer.tsx:117
 #: src/view/shell/Drawer.tsx:739
 msgid "Profile"
@@ -11097,11 +11095,11 @@ msgstr "Læs vores blogindlæg"
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:121
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:135
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:148
-#: src/screens/ModerationInbox/Notice.tsx:246
+#: src/screens/ModerationInbox/Notice.tsx:233
 msgid "Read our Community Guidelines"
 msgstr "Læs vores fællesskabsregler"
 
-#: src/screens/ModerationInbox/Notice.tsx:309
+#: src/screens/ModerationInbox/Notice.tsx:296
 msgid "Read our Terms of Service"
 msgstr "Læs vores tjenestevilkår"
 
@@ -11127,14 +11125,14 @@ msgstr "Rigtige samtaler."
 msgid "Real people."
 msgstr "Rigtige mennesker."
 
-#: src/screens/ModerationInbox/Notice.tsx:511
-#: src/screens/ModerationInbox/Notice.tsx:529
+#: src/screens/ModerationInbox/Notice.tsx:498
+#: src/screens/ModerationInbox/Notice.tsx:516
 #: src/screens/Takendown.tsx:158
 #: src/screens/Takendown.tsx:166
 msgid "Reason for appeal"
 msgstr "Begrundelse for klage"
 
-#: src/screens/ModerationInbox/Report.tsx:198
+#: src/screens/ModerationInbox/Report.tsx:195
 msgid "Reason:"
 msgstr "Begrundelse:"
 
@@ -11192,8 +11190,8 @@ msgstr "Afvis anmodning om deltagelse"
 msgid "Reload conversations"
 msgstr "Genindlæs samtaler"
 
-#: src/screens/ModerationInbox/Notice.tsx:495
-#: src/screens/ModerationInbox/Notice.tsx:504
+#: src/screens/ModerationInbox/Notice.tsx:482
+#: src/screens/ModerationInbox/Notice.tsx:491
 msgid "Reload notice"
 msgstr ""
 
@@ -11210,8 +11208,8 @@ msgstr ""
 #: src/screens/Bookmarks.tsx:260
 #: src/screens/Messages/ConversationSettings/Member.tsx:162
 #: src/screens/Messages/ConversationSettings/prompts.tsx:170
-#: src/screens/Moderation/index.tsx:537
-#: src/screens/Settings/Settings.tsx:713
+#: src/screens/Moderation/index.tsx:528
+#: src/screens/Settings/Settings.tsx:706
 #: src/view/com/posts/PostFeedErrorMessage.tsx:219
 msgid "Remove"
 msgstr "Fjern"
@@ -11237,8 +11235,8 @@ msgstr "Fjern {displayName}?"
 msgid "Remove {q}"
 msgstr "Fjern {q}"
 
-#: src/screens/Settings/Settings.tsx:694
-#: src/screens/Settings/Settings.tsx:697
+#: src/screens/Settings/Settings.tsx:687
+#: src/screens/Settings/Settings.tsx:690
 msgid "Remove account"
 msgstr "Fjern konto"
 
@@ -11306,7 +11304,7 @@ msgstr "Fjern fra chat"
 msgid "Remove from my feeds"
 msgstr "Fjern fra mine feeds"
 
-#: src/screens/Settings/Settings.tsx:707
+#: src/screens/Settings/Settings.tsx:700
 msgid "Remove from quick access?"
 msgstr "Fjern fra kvikadgang?"
 
@@ -11379,7 +11377,7 @@ msgstr "Fjern forslag"
 msgid "Remove this feed from your saved feeds"
 msgstr "Fjern dette feed fra dine gemte feeds"
 
-#: src/screens/Moderation/index.tsx:533
+#: src/screens/Moderation/index.tsx:524
 msgid "Remove unavailable moderation services"
 msgstr "Fjern utilgængelige moderationstjenester"
 
@@ -11439,7 +11437,7 @@ msgstr "Fjernet fra dine feeds"
 msgid "Removed post"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:231
+#: src/screens/Moderation/index.tsx:224
 msgid "Removed unavailable services"
 msgstr "Fjernede utilgængelige tjenester"
 
@@ -11886,8 +11884,8 @@ msgstr "Gensend e-mail"
 msgid "Resend Verification Email"
 msgstr "Gensend bekræftelseskode"
 
-#: src/screens/Settings/Settings.tsx:529
-#: src/screens/Settings/Settings.tsx:531
+#: src/screens/Settings/Settings.tsx:522
+#: src/screens/Settings/Settings.tsx:524
 msgid "Reset activity subscription nudge"
 msgstr "Nulstil tip om notifikationer om nye opslag"
 
@@ -11895,8 +11893,8 @@ msgstr "Nulstil tip om notifikationer om nye opslag"
 msgid "Reset code"
 msgstr "Nulstil kode"
 
-#: src/screens/Settings/Settings.tsx:514
-#: src/screens/Settings/Settings.tsx:516
+#: src/screens/Settings/Settings.tsx:507
+#: src/screens/Settings/Settings.tsx:509
 msgid "Reset onboarding state"
 msgstr "Nulstil velkomsttilstand"
 
@@ -12114,7 +12112,7 @@ msgstr "Føj til mine feeds"
 msgid "Save your position in the Following feed between sessions. New posts wait above you until you’re ready to view them."
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:804
+#: src/view/shell/desktop/LeftNav.tsx:798
 #: src/view/shell/Drawer.tsx:714
 msgctxt "link to bookmarks screen"
 msgid "Saved"
@@ -12672,9 +12670,9 @@ msgid "Sets email for password reset"
 msgstr "Angiver e-mail til nulstilling af adgangskode"
 
 #: src/Navigation.tsx:260
-#: src/screens/Settings/Settings.tsx:118
-#: src/view/shell/desktop/LeftNav.tsx:820
-#: src/view/shell/Drawer.tsx:773
+#: src/screens/Settings/Settings.tsx:111
+#: src/view/shell/desktop/LeftNav.tsx:814
+#: src/view/shell/Drawer.tsx:765
 msgid "Settings"
 msgstr "Indstillinger"
 
@@ -13026,7 +13024,7 @@ msgstr ""
 msgid "Shows information about when this post was created"
 msgstr "Viser, hvornår dette opslag blev oprettet"
 
-#: src/screens/Settings/Settings.tsx:143
+#: src/screens/Settings/Settings.tsx:136
 msgid "Shows other accounts you can switch to"
 msgstr "Viser andre konti, du kan skifte til"
 
@@ -13101,9 +13099,9 @@ msgid "Sign in to view post"
 msgstr "Log ind for at se opslag"
 
 #: src/ageAssurance/components/DataUnavailableScreen.tsx:22
-#: src/screens/Settings/Settings.tsx:302
-#: src/screens/Settings/Settings.tsx:304
-#: src/screens/Settings/Settings.tsx:336
+#: src/screens/Settings/Settings.tsx:295
+#: src/screens/Settings/Settings.tsx:297
+#: src/screens/Settings/Settings.tsx:329
 #: src/screens/SignupQueued.tsx:100
 #: src/screens/SignupQueued.tsx:103
 #: src/screens/Takendown.tsx:88
@@ -13117,7 +13115,7 @@ msgstr "Log ud"
 msgid "Sign Out"
 msgstr "Log ud"
 
-#: src/screens/Settings/Settings.tsx:333
+#: src/screens/Settings/Settings.tsx:326
 #: src/view/shell/desktop/LeftNav.tsx:262
 msgid "Sign out?"
 msgstr "Log ud?"
@@ -13214,7 +13212,7 @@ msgstr ""
 msgid "Software Dev"
 msgstr "Softwareudvikling"
 
-#: src/screens/Moderation/index.tsx:526
+#: src/screens/Moderation/index.tsx:517
 msgid "Some moderation services in your list are no longer available."
 msgstr "Nogle af moderationstjenesterne i din liste er ikke længere tilgængelige."
 
@@ -13294,7 +13292,7 @@ msgstr "Noget gik galt"
 msgid "Something went wrong, please try again"
 msgstr "Noget gik galt, prøv igen"
 
-#: src/screens/Moderation/index.tsx:115
+#: src/screens/Moderation/index.tsx:114
 #: src/screens/Profile/Sections/Labels.tsx:185
 #: src/screens/Settings/BetaFeaturesSettings.tsx:110
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:90
@@ -13481,7 +13479,7 @@ msgstr "Status utilgængelig"
 msgid "Step {0} of {1}"
 msgstr "Trin {0} af {1}"
 
-#: src/screens/Settings/Settings.tsx:432
+#: src/screens/Settings/Settings.tsx:425
 msgid "Storage cleared, you need to restart the app now."
 msgstr "Lager tømt. Genstart appen nu."
 
@@ -13490,7 +13488,7 @@ msgid "Stored as part of a secure code for matching with others"
 msgstr "Gemt som del af en tjeksum for match med andre"
 
 #: src/Navigation.tsx:353
-#: src/screens/Settings/Settings.tsx:495
+#: src/screens/Settings/Settings.tsx:488
 msgid "Storybook"
 msgstr "Storybook"
 
@@ -13512,12 +13510,12 @@ msgstr ""
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:138
 #: src/screens/Messages/components/ChatDisabled.tsx:172
 #: src/screens/Messages/components/ChatDisabled.tsx:174
-#: src/screens/ModerationInbox/Notice.tsx:452
+#: src/screens/ModerationInbox/Notice.tsx:439
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:164
 msgid "Submit"
 msgstr "Gem"
 
-#: src/screens/ModerationInbox/Notice.tsx:445
+#: src/screens/ModerationInbox/Notice.tsx:432
 #: src/screens/Takendown.tsx:76
 msgid "Submit appeal"
 msgstr "Afsend klage"
@@ -13667,9 +13665,9 @@ msgstr "Spærrede konti kan ikke deltage i en chat."
 
 #: src/components/dialogs/SwitchAccount.tsx:47
 #: src/components/dialogs/SwitchAccount.tsx:50
-#: src/screens/Settings/Settings.tsx:142
-#: src/screens/Settings/Settings.tsx:154
-#: src/screens/Settings/Settings.tsx:654
+#: src/screens/Settings/Settings.tsx:135
+#: src/screens/Settings/Settings.tsx:147
+#: src/screens/Settings/Settings.tsx:647
 #: src/view/shell/desktop/LeftNav.tsx:350
 msgid "Switch account"
 msgstr "Skift konto"
@@ -13703,7 +13701,7 @@ msgstr "System"
 #: src/screens/Log.tsx:49
 #: src/screens/Settings/AboutSettings.tsx:117
 #: src/screens/Settings/AboutSettings.tsx:120
-#: src/screens/Settings/Settings.tsx:480
+#: src/screens/Settings/Settings.tsx:473
 msgid "System log"
 msgstr "Systemlog"
 
@@ -13841,7 +13839,7 @@ msgstr "Fortæl os lidt mere om dig selv"
 msgid "Tell us a little more"
 msgstr "Fortæl os lidt mere"
 
-#: src/screens/ModerationInbox/Notice.tsx:484
+#: src/screens/ModerationInbox/Notice.tsx:471
 msgid "Tell us why you believe this decision was a mistake. We will review your appeal along with the original content."
 msgstr "Fortæl os, hvorfor du mener, at denne beslutning var forkert. Vi vil gennemgå din klage sammen med det oprindelige indhold."
 
@@ -13861,8 +13859,8 @@ msgstr "Tjenestevilkår"
 #: src/screens/Settings/AboutSettings.tsx:94
 #: src/screens/Settings/AboutSettings.tsx:97
 #: src/view/screens/TermsOfService.tsx:25
-#: src/view/shell/Drawer.tsx:883
-#: src/view/shell/Drawer.tsx:885
+#: src/view/shell/Drawer.tsx:875
+#: src/view/shell/Drawer.tsx:877
 msgid "Terms of Service"
 msgstr "Tjenestevilkår"
 
@@ -13965,8 +13963,8 @@ msgstr ""
 msgid "The app will be restarted"
 msgstr "Appen vil blive genstartet"
 
-#: src/screens/ModerationInbox/Notice.tsx:337
-#: src/screens/ModerationInbox/Notice.tsx:377
+#: src/screens/ModerationInbox/Notice.tsx:324
+#: src/screens/ModerationInbox/Notice.tsx:364
 msgid "The appeal window has closed."
 msgstr ""
 
@@ -13983,7 +13981,7 @@ msgstr "Forfatteren af denne tråd har skjult dette svar."
 msgid "The birthdate you've entered means you are under 18 years old. Certain content and features may be unavailable to you."
 msgstr "Ifølge den fødselsdato, du har indtastet, er du under 18 år. Visse opslag og funktioner kan være utilgængelige for dig."
 
-#: src/screens/Moderation/index.tsx:477
+#: src/screens/Moderation/index.tsx:468
 msgid "The Bluesky web application"
 msgstr "Bluesky-webapplikationen"
 
@@ -14389,7 +14387,7 @@ msgstr "Koden er ugyldig. Gensend for at få en ny kode."
 msgid "This confirmation code is not valid. Please try again."
 msgstr "Denne bekræftelseskode er ikke gyldig. Prøv igen."
 
-#: src/screens/ModerationInbox/Notice.tsx:383
+#: src/screens/ModerationInbox/Notice.tsx:370
 msgid "This content could not be appealed. Please reload the notice and try again."
 msgstr ""
 
@@ -14626,11 +14624,11 @@ msgstr "Dette skulle oprette en DNS-record på:"
 msgid "This should only take a few minutes."
 msgstr "Det tager normalt kun et øjeblik."
 
-#: src/screens/ModerationInbox/Notice.tsx:380
+#: src/screens/ModerationInbox/Notice.tsx:367
 msgid "This subject can no longer be appealed."
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:374
+#: src/screens/ModerationInbox/Notice.tsx:361
 msgid "This subject has already been appealed."
 msgstr ""
 
@@ -14701,7 +14699,7 @@ msgid "This will irreversibly delete your Bluesky account <0>{currentHandle}</0>
 msgstr "Dette vil uigenkaldeligt slette din Bluesky-konto <0>{currentHandle}</0> og alle tilknyttede data. Bemærk at dette også vil påvirke alle andre <1>AT Protocol</1>-tjenester, du benytter med denne konto."
 
 #. placeholder {0}: account.handle
-#: src/screens/Settings/Settings.tsx:708
+#: src/screens/Settings/Settings.tsx:701
 msgid "This will remove @{0} from the quick access list."
 msgstr "Dette vil fjerne @{0} fra din kvikadgangsliste."
 
@@ -14795,7 +14793,7 @@ msgstr ""
 msgid "Toggle tallest card"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:452
+#: src/screens/Moderation/index.tsx:443
 msgid "Toggle to enable or disable adult content"
 msgstr "Tryk for at aktivere eller deaktivere voksenindhold"
 
@@ -14832,11 +14830,6 @@ msgstr "Mest populære svar først"
 #: src/Navigation.tsx:548
 msgid "Topic"
 msgstr "Emne"
-
-#. Description of a feature flag (Moderation inbox)
-#: src/analytics/features/index.ts:138
-msgid "Track your reports, review moderation decisions, and submit appeals."
-msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:190
 #: src/components/dms/MessageContextMenu.tsx:193
@@ -15012,11 +15005,11 @@ msgstr "Kunne ikke indlæse din konto"
 msgid "Unable to resolve handle"
 msgstr "Handle ikke genkendt"
 
-#: src/screens/Settings/Settings.tsx:554
+#: src/screens/Settings/Settings.tsx:547
 msgid "Unapply Pull Request"
 msgstr "Anvend ikke længere pull request"
 
-#: src/screens/Settings/Settings.tsx:556
+#: src/screens/Settings/Settings.tsx:549
 msgid "Unapply Pull Request {currentChannel}"
 msgstr "Anvend ikke længere pull requestet {currentChannel}"
 
@@ -15148,7 +15141,7 @@ msgstr "Desværre, ifølge fødselsdatoen på din profil, er du for ung til at f
 msgid "Unfortunately, your declared age indicates that you are not old enough to access Bluesky in your region."
 msgstr "Desværre, ifølge din oplyste alder er du ikke gammel nok til at bruge Bluesky i dit område."
 
-#: src/screens/ModerationInbox/Report.tsx:186
+#: src/screens/ModerationInbox/Report.tsx:183
 msgid "Unknown report reason"
 msgstr ""
 
@@ -15273,8 +15266,8 @@ msgctxt "moderation-report-filter"
 msgid "Unread"
 msgstr "Ulæst"
 
-#: src/screens/Settings/Settings.tsx:521
-#: src/screens/Settings/Settings.tsx:523
+#: src/screens/Settings/Settings.tsx:514
+#: src/screens/Settings/Settings.tsx:516
 msgid "Unsnooze email reminder"
 msgstr "Udsæt ikke længere påmindelsen"
 
@@ -15547,7 +15540,7 @@ msgstr "Værdi:"
 msgid "Verification failed, please try again."
 msgstr "Verificering fejlede, prøv igen."
 
-#: src/screens/Moderation/index.tsx:407
+#: src/screens/Moderation/index.tsx:398
 msgid "Verification settings"
 msgstr "Verifikationsindstillinger"
 
@@ -15815,7 +15808,7 @@ msgstr "Læs mere"
 msgid "View full thread"
 msgstr "Vis hele tråden"
 
-#: src/screens/Settings/Settings.tsx:485
+#: src/screens/Settings/Settings.tsx:478
 msgid "View GrowthBook information"
 msgstr "Vis GrowthBook-oplysninger"
 
@@ -15899,11 +15892,11 @@ msgstr "Vis brugere, der likede dette feed"
 msgid "View video"
 msgstr "Se video"
 
-#: src/screens/Moderation/index.tsx:387
+#: src/screens/Moderation/index.tsx:378
 msgid "View your blocked accounts"
 msgstr "Vis blokerede konti"
 
-#: src/screens/Moderation/index.tsx:327
+#: src/screens/Moderation/index.tsx:318
 msgid "View your default post interaction settings"
 msgstr "Se dine standardinteraktionsindstillinger"
 
@@ -15912,15 +15905,15 @@ msgstr "Se dine standardinteraktionsindstillinger"
 msgid "View your feeds and explore more"
 msgstr "Vis dine feeds og udforsk flere"
 
-#: src/screens/Moderation/index.tsx:293
+#: src/screens/Moderation/index.tsx:285
 msgid "View your moderation inbox"
 msgstr "Vis din moderationsindbakke"
 
-#: src/screens/Moderation/index.tsx:357
+#: src/screens/Moderation/index.tsx:348
 msgid "View your moderation lists"
 msgstr "Vis moderationslister"
 
-#: src/screens/Moderation/index.tsx:372
+#: src/screens/Moderation/index.tsx:363
 msgid "View your muted accounts"
 msgstr "Vis dine skjulte konti"
 
@@ -16115,7 +16108,7 @@ msgstr "Vi kunne ikke indlæse indstillingerne for aldersbegrænsning for dit om
 msgid "We were unable to load your birthdate preferences. Please try again."
 msgstr "Vi kunne ikke indlæse din fødselsdatoindstillinger. Prøv igen."
 
-#: src/screens/Moderation/index.tsx:551
+#: src/screens/Moderation/index.tsx:542
 msgid "We were unable to load your configured labelers at this time."
 msgstr "Vi kunne ikke indlæse dine konfigurede mærkningstjenester."
 
@@ -16271,7 +16264,7 @@ msgstr "Hvad interesserer du dig for?"
 msgid "What do you want to call your Starter Pack?"
 msgstr "Hvad vil du kalde din startpakke?"
 
-#: src/screens/ModerationInbox/Report.tsx:193
+#: src/screens/ModerationInbox/Report.tsx:190
 msgid "What you reported"
 msgstr "Hvad du anmeldte"
 
@@ -16556,7 +16549,7 @@ msgstr "Du kan også downloade dine chatdata som en JSONL-fil. Denne fil indehol
 msgid "You can always opt out and delete your data"
 msgstr "Du kan altid sige stop og slette dine data"
 
-#: src/screens/ModerationInbox/Notice.tsx:299
+#: src/screens/ModerationInbox/Notice.tsx:286
 msgid "You can appeal once per decision. A different moderator will review the appeal."
 msgstr ""
 
@@ -16616,7 +16609,7 @@ msgstr "Du kan læse chathistorikken men ikke sende nye beskeder."
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "Du kan vælge op til {MAX_GALLERY_IMAGES, plural, one {}other {# billeder}} i alt."
 
-#: src/screens/ModerationInbox/Notice.tsx:294
+#: src/screens/ModerationInbox/Notice.tsx:281
 msgid "You can submit one account appeal at a time. A different moderator will review the appeal."
 msgstr ""
 
@@ -16760,7 +16753,7 @@ msgstr "Du har endnu ikke lavet nogen tilpassede feeds."
 msgid "You haven't muted any words or tags yet"
 msgstr "Du har endnu ikke skjult ord eller tags"
 
-#: src/screens/ModerationInbox/index.tsx:235
+#: src/screens/ModerationInbox/index.tsx:227
 msgid "You haven’t reported anything yet"
 msgstr ""
 
@@ -16843,7 +16836,7 @@ msgstr "Du ejer denne chat"
 msgid "You previously deactivated @{0}."
 msgstr "Du har tidligere deaktiveret @{0}."
 
-#: src/screens/Settings/Settings.tsx:443
+#: src/screens/Settings/Settings.tsx:436
 msgid "You probably want to restart the app now."
 msgstr "Du vil nok foretrække at genstarte appen nu."
 
@@ -16884,7 +16877,7 @@ msgstr "Du anmodede om at deltage"
 msgid "You will be eligible to appear in this Starter Pack again."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:334
+#: src/screens/Settings/Settings.tsx:327
 #: src/view/shell/desktop/LeftNav.tsx:263
 msgid "You will be signed out of all your accounts."
 msgstr "Du vil blive logget ud af alle dine konti."
@@ -17033,7 +17026,7 @@ msgid "Your ability to submit reports was restricted"
 msgstr ""
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:88
-#: src/screens/ModerationInbox/index.tsx:120
+#: src/screens/ModerationInbox/index.tsx:112
 #: src/screens/Signup/index.tsx:191
 msgid "Your account"
 msgstr "Din konto"
@@ -17074,7 +17067,7 @@ msgstr "Din konto er for ny"
 msgid "Your account must be at least 7 days old to create a new group chat."
 msgstr "Din konto skal være mindst 7 dage gammel for at kunne oprette en ny gruppechat."
 
-#: src/screens/ModerationInbox/Settings.tsx:83
+#: src/screens/ModerationInbox/Settings.tsx:74
 msgctxt "moderation-inbox-setting"
 msgid "Your account notifications"
 msgstr "Dine kontonotifikationer"
@@ -17097,7 +17090,7 @@ msgstr "Din konto blev spærret"
 msgid "Your account was temporarily suspended for {hours, plural, one {# hour} other {# hours}}"
 msgstr "Din konto blev midlertidigt spærret i {hours, plural, one {# time} other {# timer}}"
 
-#: src/screens/ModerationInbox/Notice.tsx:237
+#: src/screens/ModerationInbox/Notice.tsx:224
 msgid "Your appeal has been submitted and is awaiting review."
 msgstr ""
 
@@ -17143,7 +17136,7 @@ msgstr "Dit indhold blev fjernet"
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr "Dit nuværende handle, <0>{0}</0>, vil automatisk blive reserveret til dig. Du kan når som helst skifte tilbage til dette handle."
 
-#: src/screens/Moderation/index.tsx:277
+#: src/screens/Moderation/index.tsx:270
 msgid "Your declared age is under 18. Some settings below may be disabled. If this was a mistake, you may edit your birthdate in your <0>account settings</0>."
 msgstr "Din oplyste alder er under 18. Visse af nedenstående indstillinger kan være deaktiveret. Hvis dette er en fejl, kan du redigere din fødselsdato under <0>kontoindstillinger</0>."
 
@@ -17222,7 +17215,7 @@ msgstr "Dine skjulte ord"
 msgid "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
 msgstr "Dit navn og profilbillede samt gruppechattens navn og antal medlemmer vil være synlige for alle."
 
-#: src/screens/ModerationInbox/Report.tsx:208
+#: src/screens/ModerationInbox/Report.tsx:205
 msgid "Your note:"
 msgstr "Din note:"
 
@@ -17273,7 +17266,7 @@ msgid "Your reply was sent"
 msgstr "Dit svar blev sendt"
 
 #: src/Navigation.tsx:219
-#: src/screens/ModerationInbox/Report.tsx:115
+#: src/screens/ModerationInbox/Report.tsx:112
 msgid "Your report"
 msgstr "Din anmeldelse"
 
@@ -17286,11 +17279,11 @@ msgstr ""
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr "Din anmeldelse vil blive sendt til <0>{0}</0>."
 
-#: src/screens/ModerationInbox/index.tsx:120
+#: src/screens/ModerationInbox/index.tsx:112
 msgid "Your reports"
 msgstr "Dine anmeldelser"
 
-#: src/screens/ModerationInbox/Settings.tsx:68
+#: src/screens/ModerationInbox/Settings.tsx:59
 msgctxt "moderation-inbox-setting"
 msgid "Your reports notifications"
 msgstr ""

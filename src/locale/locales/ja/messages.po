@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-11-11 16:57\n"
+"PO-Revision-Date: 2026-11-12 21:07\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -28,7 +28,7 @@ msgstr "「{0}」"
 msgid "\"{interestsDisplayName}\" category (active)"
 msgstr "「{interestsDisplayName}」カテゴリー（アクティブ）"
 
-#: src/screens/ModerationInbox/Report.tsx:211
+#: src/screens/ModerationInbox/Report.tsx:208
 msgid "“{note}”"
 msgstr "「{note}」"
 
@@ -220,7 +220,7 @@ msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, other {投稿}}"
 
 #. placeholder {0}: policies.length
-#: src/screens/ModerationInbox/Notice.tsx:270
+#: src/screens/ModerationInbox/Notice.tsx:257
 msgid "{0, plural, one {Rule violated:} other {Rules violated:}}"
 msgstr "{0, plural, other {違反したルール：}}"
 
@@ -452,8 +452,8 @@ msgstr "{0}/{imageCount}"
 #. placeholder {0}: i18n.number(UNREAD_NOTIFICATION_CAP - 1)
 #: src/screens/Messages/components/InboxRequests.tsx:55
 #: src/screens/Settings/components/SettingsList.tsx:328
-#: src/view/shell/desktop/LeftNav.tsx:699
-#: src/view/shell/Drawer.tsx:762
+#: src/view/shell/desktop/LeftNav.tsx:693
+#: src/view/shell/Drawer.tsx:754
 msgid "{0}+"
 msgstr "{0}件以上"
 
@@ -465,7 +465,7 @@ msgstr "{0}件以上のリクエスト"
 
 #. Displayed when the number of notifications exceeds the cap – for example, 99+ notifications
 #. placeholder {0}: i18n.number(UNREAD_NOTIFICATION_CAP - 1)
-#: src/screens/Moderation/index.tsx:174
+#: src/screens/Moderation/index.tsx:173
 msgid "{0}+ updates"
 msgstr "{0}件以上の更新"
 
@@ -501,7 +501,7 @@ msgstr "{accountCount, plural, other {#アカウント}}"
 msgid "{accountCount, plural, one {# account} other {# accounts}}, {feedCount, plural, one {# feed} other {# feeds}}"
 msgstr "{accountCount, plural, other {#アカウント}}、{feedCount, plural, other {#個のフィード}}"
 
-#: src/screens/Moderation/index.tsx:179
+#: src/screens/Moderation/index.tsx:178
 msgid "{badge, plural, one {# update} other {# updates}}"
 msgstr "{badge, plural, other {#件の更新}}"
 
@@ -556,7 +556,7 @@ msgstr "{count, plural, other {#件以上の新規参加リクエスト}}"
 msgid "{date} at {time}"
 msgstr "{date} {time}"
 
-#: src/screens/ModerationInbox/Notice.tsx:425
+#: src/screens/ModerationInbox/Notice.tsx:412
 msgid "{detailsLength} of {MAX_REPORT_REASON_GRAPHEME_LENGTH} characters used"
 msgstr "{detailsLength}文字（最大{MAX_REPORT_REASON_GRAPHEME_LENGTH}文字）"
 
@@ -653,11 +653,11 @@ msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr "{joinedAllTimeCount, plural, other {#人のユーザーが}}参加しました！"
 
 #: src/view/shell/desktop/LeftNav.tsx:451
-#: src/view/shell/Drawer.tsx:806
+#: src/view/shell/Drawer.tsx:798
 msgid "{label}, Beta"
 msgstr "{label}、ベータ版"
 
-#: src/screens/ModerationInbox/Settings.tsx:138
+#: src/screens/ModerationInbox/Settings.tsx:129
 msgid "{label}. {description}"
 msgstr "{label}。{description}"
 
@@ -877,12 +877,12 @@ msgstr "{requestCount, plural, other {#リクエスト}}"
 msgid "{requestCount}+ requests"
 msgstr "{requestCount}件以上のリクエスト"
 
-#: src/screens/ModerationInbox/Notice.tsx:242
+#: src/screens/ModerationInbox/Notice.tsx:229
 msgid "{serviceName} removed your content for violating our <0>Community Guidelines</0>."
 msgstr "<0>コミュニティガイドライン</0>に違反したため、{serviceName}があなたのコンテンツを削除しました。"
 
-#: src/screens/Settings/Settings.tsx:212
-#: src/view/shell/Drawer.tsx:777
+#: src/screens/Settings/Settings.tsx:205
+#: src/view/shell/Drawer.tsx:769
 msgid "{unreadCount, plural, one {# unread update} other {# unread updates}}"
 msgstr "{unreadCount, plural, other {#件の未読}}"
 
@@ -1255,8 +1255,8 @@ msgstr "アスペクト比の記録がない小さなかわいいシーン"
 
 #: src/Navigation.tsx:528
 #: src/screens/Settings/AboutSettings.tsx:85
-#: src/screens/Settings/Settings.tsx:292
-#: src/screens/Settings/Settings.tsx:295
+#: src/screens/Settings/Settings.tsx:285
+#: src/screens/Settings/Settings.tsx:288
 msgid "About"
 msgstr "このアプリについて"
 
@@ -1297,8 +1297,8 @@ msgid "Access requested! The group owner will review your request."
 msgstr "アクセスをリクエストしました！グループのオーナーがリクエストを確認します。"
 
 #: src/screens/Settings/AccessibilitySettings.tsx:45
-#: src/screens/Settings/Settings.tsx:262
-#: src/screens/Settings/Settings.tsx:265
+#: src/screens/Settings/Settings.tsx:255
+#: src/screens/Settings/Settings.tsx:258
 msgid "Accessibility"
 msgstr "アクセシビリティ"
 
@@ -1310,8 +1310,8 @@ msgstr "アクセシビリティの設定"
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:22
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:23
 #: src/screens/Settings/AccountSettings.tsx:54
-#: src/screens/Settings/Settings.tsx:193
-#: src/screens/Settings/Settings.tsx:196
+#: src/screens/Settings/Settings.tsx:186
+#: src/screens/Settings/Settings.tsx:189
 msgid "Account"
 msgstr "アカウント"
 
@@ -1340,7 +1340,7 @@ msgstr "アカウントは停止されています"
 msgid "Account is deactivated"
 msgstr "アカウントが無効です"
 
-#: src/screens/ModerationInbox/Settings.tsx:98
+#: src/screens/ModerationInbox/Settings.tsx:89
 msgctxt "moderation-inbox-setting"
 msgid "Account labeling notifications"
 msgstr "アカウントラベル付けの通知"
@@ -1360,11 +1360,11 @@ msgstr "ミュート中のアカウント"
 msgid "Account Muted by List"
 msgstr "リストによってミュート中のアカウント"
 
-#: src/screens/Settings/Settings.tsx:676
+#: src/screens/Settings/Settings.tsx:669
 msgid "Account options"
 msgstr "アカウントオプション"
 
-#: src/screens/Settings/Settings.tsx:711
+#: src/screens/Settings/Settings.tsx:704
 msgid "Account removed from quick access"
 msgstr "クイックアクセスからアカウントを解除"
 
@@ -1500,8 +1500,8 @@ msgstr "ALTテキストを追加"
 msgid "Add alt text (optional)"
 msgstr "ALTテキストを追加（オプション）"
 
-#: src/screens/Settings/Settings.tsx:614
-#: src/screens/Settings/Settings.tsx:617
+#: src/screens/Settings/Settings.tsx:607
+#: src/screens/Settings/Settings.tsx:610
 #: src/view/shell/desktop/LeftNav.tsx:387
 #: src/view/shell/desktop/LeftNav.tsx:390
 msgid "Add another account"
@@ -1713,7 +1713,7 @@ msgstr "成人向けコンテンツ"
 msgid "Adult Content"
 msgstr "成人向けコンテンツ"
 
-#: src/screens/Moderation/index.tsx:474
+#: src/screens/Moderation/index.tsx:465
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
 msgstr "成人向けコンテンツは<0>bsky.app</0>のウェブ版からしか有効にできません。"
 
@@ -1730,7 +1730,7 @@ msgstr "成人向けコンテンツのラベル"
 msgid "Adult sexual abuse content"
 msgstr "成人向けの性的虐待コンテンツ"
 
-#: src/screens/Moderation/index.tsx:518
+#: src/screens/Moderation/index.tsx:509
 msgid "Advanced"
 msgstr "高度な設定"
 
@@ -2158,9 +2158,9 @@ msgstr "アプリパスワード"
 #: src/components/moderation/LabelsOnMeDialog.tsx:169
 #: src/components/moderation/LabelsOnMeDialog.tsx:172
 #: src/components/moderation/ModerationDetailsDialog.tsx:223
-#: src/screens/ModerationInbox/Notice.tsx:478
-#: src/screens/ModerationInbox/Report.tsx:180
-#: src/screens/ModerationInbox/Report.tsx:181
+#: src/screens/ModerationInbox/Notice.tsx:465
+#: src/screens/ModerationInbox/Report.tsx:177
+#: src/screens/ModerationInbox/Report.tsx:178
 msgid "Appeal"
 msgstr "異議を申し立てる"
 
@@ -2189,7 +2189,7 @@ msgstr "ライブ配信の停止に異議申し立て"
 msgid "Appeal resolved"
 msgstr "異議申し立てが解決されました"
 
-#: src/screens/ModerationInbox/Notice.tsx:418
+#: src/screens/ModerationInbox/Notice.tsx:405
 msgid "Appeal submitted"
 msgstr "異議申し立てを送信しました"
 
@@ -2213,9 +2213,9 @@ msgstr "アカウント停止に異議申し立て"
 #: src/screens/Messages/components/ChatDisabled.tsx:79
 #: src/screens/Messages/components/ChatDisabled.tsx:130
 #: src/screens/Messages/components/ChatDisabled.tsx:132
-#: src/screens/ModerationInbox/Notice.tsx:319
-#: src/screens/ModerationInbox/Notice.tsx:330
-#: src/screens/ModerationInbox/Notice.tsx:473
+#: src/screens/ModerationInbox/Notice.tsx:306
+#: src/screens/ModerationInbox/Notice.tsx:317
+#: src/screens/ModerationInbox/Notice.tsx:460
 msgid "Appeal this decision"
 msgstr "この決定に異議を申し立てる"
 
@@ -2229,8 +2229,8 @@ msgstr "異議申し立てを確認中"
 
 #: src/Navigation.tsx:443
 #: src/screens/Settings/AppearanceSettings.tsx:71
-#: src/screens/Settings/Settings.tsx:254
-#: src/screens/Settings/Settings.tsx:257
+#: src/screens/Settings/Settings.tsx:247
+#: src/screens/Settings/Settings.tsx:250
 msgid "Appearance"
 msgstr "外観"
 
@@ -2243,8 +2243,8 @@ msgstr "適用"
 msgid "Apply default recommended feeds"
 msgstr "デフォルトのおすすめフィードを追加"
 
-#: src/screens/Settings/Settings.tsx:545
-#: src/screens/Settings/Settings.tsx:547
+#: src/screens/Settings/Settings.tsx:538
+#: src/screens/Settings/Settings.tsx:540
 msgid "Apply Pull Request"
 msgstr "プルリクエストを適用"
 
@@ -2377,7 +2377,7 @@ msgstr "ATプロトコルFAQ"
 
 #: src/Navigation.tsx:194
 #: src/screens/Atmosphere/index.tsx:31
-#: src/view/shell/desktop/LeftNav.tsx:763
+#: src/view/shell/desktop/LeftNav.tsx:757
 #: src/view/shell/Drawer.tsx:559
 msgid "Atmosphere"
 msgstr "Atmosphere"
@@ -2550,8 +2550,8 @@ msgstr "ベータ機能"
 
 #: src/Navigation.tsx:459
 #: src/screens/Settings/BetaFeaturesSettings.tsx:142
-#: src/screens/Settings/Settings.tsx:276
-#: src/screens/Settings/Settings.tsx:279
+#: src/screens/Settings/Settings.tsx:269
+#: src/screens/Settings/Settings.tsx:272
 msgid "Beta features"
 msgstr "ベータ版の機能"
 
@@ -2659,7 +2659,7 @@ msgstr "ユーザーをブロックするかこの会話から退出（あるい
 msgid "Blocked"
 msgstr "ブロックされています"
 
-#: src/screens/Moderation/index.tsx:392
+#: src/screens/Moderation/index.tsx:383
 msgid "Blocked accounts"
 msgstr "ブロック中のアカウント"
 
@@ -2748,10 +2748,10 @@ msgstr "Blueskyは友達ともっと楽しいです。あなたの友達を招�
 
 #: src/screens/Atmosphere/components/AtmosphereNux.tsx:63
 msgid "Bluesky is part of a growing network of hundreds of social apps. Your account unlocks them all."
-msgstr "Blueskyは、何百ものソーシャルアプリから構成される成長を続けるネットワークの一部です。あなたのアカウントで、そのすべてにアクセスできます。"
+msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:90
-#: src/screens/ModerationInbox/Report.tsx:74
+#: src/screens/ModerationInbox/Notice.tsx:88
+#: src/screens/ModerationInbox/Report.tsx:72
 msgid "Bluesky Moderation Service"
 msgstr "Blueskyモデレーションサービス"
 
@@ -2978,7 +2978,7 @@ msgstr "カメラへのアクセスが必要です"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:124
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
-#: src/screens/ModerationInbox/Notice.tsx:437
+#: src/screens/ModerationInbox/Notice.tsx:424
 #: src/screens/Profile/Header/EditProfileDialog.tsx:313
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
@@ -2992,7 +2992,7 @@ msgstr "カメラへのアクセスが必要です"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:87
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:242
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:248
-#: src/screens/Settings/Settings.tsx:337
+#: src/screens/Settings/Settings.tsx:330
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
 #: src/view/com/composer/Composer.tsx:1837
@@ -3003,7 +3003,7 @@ msgstr "カメラへのアクセスが必要です"
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: src/screens/ModerationInbox/Notice.tsx:430
+#: src/screens/ModerationInbox/Notice.tsx:417
 msgid "Cancel appeal"
 msgstr "異議申し立てをキャンセル"
 
@@ -3186,7 +3186,7 @@ msgstr "チャンネル"
 #: src/lib/hooks/useNotificationHandler.ts:134
 #: src/Navigation.tsx:554
 #: src/view/shell/bottom-bar/BottomBar.tsx:246
-#: src/view/shell/desktop/LeftNav.tsx:776
+#: src/view/shell/desktop/LeftNav.tsx:770
 #: src/view/shell/Drawer.tsx:611
 msgid "Chat"
 msgstr "チャット"
@@ -3417,11 +3417,11 @@ msgstr "最近の検索履歴をすべてクリア"
 msgid "Clear all recent searches?"
 msgstr "最近の検索履歴をすべてクリアしますか？"
 
-#: src/screens/Settings/Settings.tsx:537
+#: src/screens/Settings/Settings.tsx:530
 msgid "Clear all storage data"
 msgstr "すべてのストレージデータをクリア"
 
-#: src/screens/Settings/Settings.tsx:539
+#: src/screens/Settings/Settings.tsx:532
 msgid "Clear all storage data (restart after this)"
 msgstr "すべてのストレージデータをクリア（このあと再起動します）"
 
@@ -3788,8 +3788,8 @@ msgstr "コンテンツ"
 msgid "Content & Media"
 msgstr "コンテンツ＆メディア"
 
-#: src/screens/Settings/Settings.tsx:234
-#: src/screens/Settings/Settings.tsx:237
+#: src/screens/Settings/Settings.tsx:227
+#: src/screens/Settings/Settings.tsx:230
 msgid "Content and media"
 msgstr "コンテンツとメディア"
 
@@ -3805,7 +3805,7 @@ msgstr "ブロックされたコンテンツ"
 msgid "Content by {authorName}"
 msgstr "{authorName}によるコンテンツ"
 
-#: src/screens/Moderation/index.tsx:424
+#: src/screens/Moderation/index.tsx:415
 msgid "Content filters"
 msgstr "コンテンツのフィルター"
 
@@ -4139,7 +4139,7 @@ msgstr "変更を保存できませんでした：{0}"
 msgid "Could not share – please try again"
 msgstr "共有できませんでした – もう一度お試しください"
 
-#: src/state/queries/moderation-inbox.ts:320
+#: src/state/queries/moderation-inbox.ts:313
 #: src/state/queries/notifications/settings.ts:123
 msgid "Could not update notification settings"
 msgstr "通知の設定を更新できませんでした"
@@ -4394,7 +4394,7 @@ msgstr "昼"
 msgid "Deactivate account"
 msgstr "アカウントを無効化"
 
-#: src/screens/Settings/Settings.tsx:502
+#: src/screens/Settings/Settings.tsx:495
 msgid "Debug Moderation"
 msgstr "モデレーションをデバッグ"
 
@@ -4447,8 +4447,8 @@ msgstr "アプリパスワードを削除しますか？"
 msgid "Delete chat"
 msgstr "チャットを削除"
 
-#: src/screens/Settings/Settings.tsx:507
-#: src/screens/Settings/Settings.tsx:509
+#: src/screens/Settings/Settings.tsx:500
+#: src/screens/Settings/Settings.tsx:502
 msgid "Delete chat declaration record"
 msgstr "チャットの宣言レコードを削除"
 
@@ -4574,8 +4574,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr "開発者モードを有効にしました"
 
-#: src/screens/Settings/Settings.tsx:319
-#: src/screens/Settings/Settings.tsx:322
+#: src/screens/Settings/Settings.tsx:312
+#: src/screens/Settings/Settings.tsx:315
 msgid "Developer options"
 msgstr "開発者用オプション"
 
@@ -4650,7 +4650,7 @@ msgstr "この招待リンクを無効にしますか？"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:35
 #: src/lib/moderation/useLabelBehaviorDescription.ts:45
 #: src/lib/moderation/useLabelBehaviorDescription.ts:71
-#: src/screens/Moderation/index.tsx:464
+#: src/screens/Moderation/index.tsx:455
 msgid "Disabled"
 msgstr "無効"
 
@@ -4720,7 +4720,7 @@ msgstr "バナーを閉じる"
 
 #: src/screens/Atmosphere/components/AtmosphereNux.tsx:70
 msgid "Dismiss Discover the Atmosphere banner"
-msgstr "「Atmosphereでみつけよう」のバナーを消す"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:2623
 msgid "Dismiss error"
@@ -5193,7 +5193,7 @@ msgstr "有効にする"
 msgid "Enable {0} only"
 msgstr "{0}のみ有効にする"
 
-#: src/screens/Moderation/index.tsx:449
+#: src/screens/Moderation/index.tsx:440
 msgid "Enable adult content"
 msgstr "成人向けコンテンツを有効にする"
 
@@ -5247,7 +5247,7 @@ msgstr "トレンド・トピックを有効にする"
 msgid "Enable trending videos in your Discover feed"
 msgstr "Discoverフィードでトレンド・ビデオを有効にする"
 
-#: src/screens/Moderation/index.tsx:462
+#: src/screens/Moderation/index.tsx:453
 msgid "Enabled"
 msgstr "有効"
 
@@ -5500,7 +5500,7 @@ msgstr "露骨な性的画像。"
 #: src/Navigation.tsx:928
 #: src/screens/Atmosphere/index.tsx:43
 #: src/screens/Search/Shell.tsx:564
-#: src/view/shell/desktop/LeftNav.tsx:742
+#: src/view/shell/desktop/LeftNav.tsx:736
 #: src/view/shell/Drawer.tsx:538
 msgid "Explore"
 msgstr "検索"
@@ -5690,7 +5690,7 @@ msgstr "フィードの設定の読み込みに失敗しました"
 
 #: src/components/dialogs/NotificationSettingsDialog.tsx:85
 #: src/screens/Messages/Settings.tsx:369
-#: src/screens/ModerationInbox/Settings.tsx:62
+#: src/screens/ModerationInbox/Settings.tsx:53
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:112
 #: src/screens/Settings/NotificationSettings/index.tsx:151
 #: src/screens/Settings/NotificationSettings/index.tsx:270
@@ -5736,7 +5736,7 @@ msgstr "すべてのチャットを既読にできませんでした"
 msgid "Failed to mark all requests as read"
 msgstr "すべての要求を既読としてマークできませんでした"
 
-#: src/state/queries/moderation-inbox.ts:346
+#: src/state/queries/moderation-inbox.ts:339
 msgid "Failed to mark as read. Please try again."
 msgstr "既読にできませんでした。もう一度お試しください。"
 
@@ -5836,7 +5836,7 @@ msgstr "レポートの送信に失敗しました"
 msgid "Failed to submit appeal, please try again."
 msgstr "異議申し立ての送信に失敗しました。もう一度お試しください。"
 
-#: src/screens/ModerationInbox/Notice.tsx:386
+#: src/screens/ModerationInbox/Notice.tsx:373
 msgid "Failed to submit appeal. Please try again."
 msgstr "異議申し立ての送信に失敗しました。もう一度お試しください。"
 
@@ -5987,7 +5987,7 @@ msgstr "フィードの運営者にフィードバックを送りました"
 #: src/screens/StarterPack/StarterPackScreen.tsx:194
 #: src/view/screens/Feeds.tsx:505
 #: src/view/screens/Profile.tsx:274
-#: src/view/shell/desktop/LeftNav.tsx:788
+#: src/view/shell/desktop/LeftNav.tsx:782
 #: src/view/shell/Drawer.tsx:673
 msgid "Feeds"
 msgstr "フィード"
@@ -6083,8 +6083,8 @@ msgstr "フォローするアカウントを探す"
 
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:52
 #: src/screens/Settings/FindContactsSettings.tsx:87
-#: src/screens/Settings/Settings.tsx:245
-#: src/screens/Settings/Settings.tsx:248
+#: src/screens/Settings/Settings.tsx:238
+#: src/screens/Settings/Settings.tsx:241
 msgid "Find and invite friends"
 msgstr "友達を探して招待する"
 
@@ -6369,7 +6369,7 @@ msgstr "フォントサイズ"
 msgid "Food"
 msgstr "食べ物"
 
-#: src/screens/ModerationInbox/Notice.tsx:304
+#: src/screens/ModerationInbox/Notice.tsx:291
 msgid "For more information about our appeals and redress process, please see our <0>Terms of Service</0>."
 msgstr "異議申し立ておよび救済プロセスの詳細については、<0>利用規約</0>をご覧ください。"
 
@@ -6547,7 +6547,7 @@ msgstr "メッセージリクエストが送信されたら通知を受け取る
 msgid "Get notifications when people send you messages."
 msgstr "メッセージが送信されたら通知を受け取る。"
 
-#: src/screens/ModerationInbox/Settings.tsx:87
+#: src/screens/ModerationInbox/Settings.tsx:78
 msgctxt "moderation-inbox-setting"
 msgid "Get notified about actions taken against you."
 msgstr "あなたに対して行われたアクションについて通知を受け取る。"
@@ -6561,7 +6561,7 @@ msgstr "新しい投稿の通知を受け取る"
 msgid "Get notified about posts and replies from accounts you choose."
 msgstr "選択したアカウントからの投稿や返信について通知を受け取ります。"
 
-#: src/screens/ModerationInbox/Settings.tsx:72
+#: src/screens/ModerationInbox/Settings.tsx:63
 msgctxt "moderation-inbox-setting"
 msgid "Get notified about your report outcomes."
 msgstr "報告の結果について通知を受け取ります。"
@@ -6578,7 +6578,7 @@ msgstr "このアカウントのアクティビティの通知を受け取る"
 msgid "Get notified when {name} posts"
 msgstr "{name} が投稿した時に通知を受け取る"
 
-#: src/screens/ModerationInbox/Settings.tsx:102
+#: src/screens/ModerationInbox/Settings.tsx:93
 msgctxt "moderation-inbox-setting"
 msgid "Get notified when a label is added to your account and posts."
 msgstr "あなたのアカウントや投稿にラベルが追加されたときに通知を受け取ります。"
@@ -6689,7 +6689,7 @@ msgstr "{name}のプロフィールへ移動"
 #: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:93
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:73
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:82
-#: src/screens/Moderation/index.tsx:283
+#: src/screens/Moderation/index.tsx:276
 msgid "Go to account settings"
 msgstr "アカウント設定へ移動"
 
@@ -6829,7 +6829,7 @@ msgstr "グループ名"
 msgid "Group name is too long. {MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, other {The maximum number of characters is #.}}"
 msgstr "グループ名が長すぎます。{MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, other {最大で#文字です。}}"
 
-#: src/screens/Settings/Settings.tsx:487
+#: src/screens/Settings/Settings.tsx:480
 msgid "GrowthBook"
 msgstr "GrowthBook"
 
@@ -6920,8 +6920,8 @@ msgstr "he/him"
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
 msgstr "不正利用防止のため、Bluesky が7日間保持した後に削除されます"
 
-#: src/screens/Settings/Settings.tsx:284
-#: src/screens/Settings/Settings.tsx:288
+#: src/screens/Settings/Settings.tsx:277
+#: src/screens/Settings/Settings.tsx:281
 #: src/view/shell/desktop/RightNav.tsx:130
 #: src/view/shell/desktop/RightNav.tsx:133
 #: src/view/shell/Drawer.tsx:504
@@ -7059,7 +7059,7 @@ msgstr "友達招待のプロモーションバナーを非表示にする"
 
 #: src/screens/Atmosphere/components/AtmosphereNux.tsx:71
 msgid "Hides this banner from the Explore tab"
-msgstr "このバナーを「探す」タブから非表示にします"
+msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:76
 msgid "Hmm, it looks like you're signed in with an <0>App Password</0>. To set your birthdate, you'll need to sign in with your main account password, or ask whomever controls this account to do so."
@@ -7093,7 +7093,7 @@ msgstr "フィードサーバーの反応が悪いようです。この問題を
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr "このフィードが見つからないようです。もしかしたら削除されたのかもしれません。"
 
-#: src/screens/Moderation/index.tsx:64
+#: src/screens/Moderation/index.tsx:63
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
 msgstr "このデータの読み込みに問題があるようです。詳細は以下をご覧ください。この問題が解決しない場合は、サポートにご連絡ください。"
 
@@ -7108,7 +7108,7 @@ msgstr "待って！徐々にビデオへのアクセスを許可しています
 #: src/Navigation.tsx:923
 #: src/Navigation.tsx:944
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
-#: src/view/shell/desktop/LeftNav.tsx:730
+#: src/view/shell/desktop/LeftNav.tsx:724
 #: src/view/shell/Drawer.tsx:585
 msgid "Home"
 msgstr "ホーム"
@@ -7440,7 +7440,7 @@ msgstr "新しいパスワードを入力"
 msgid "Interaction limited"
 msgstr "反応が制限されています"
 
-#: src/screens/Moderation/index.tsx:332
+#: src/screens/Moderation/index.tsx:323
 msgid "Interaction settings"
 msgstr "反応関連の設定"
 
@@ -7751,8 +7751,8 @@ msgid "Language Settings"
 msgstr "言語の設定"
 
 #: src/screens/Settings/LanguageSettings.tsx:98
-#: src/screens/Settings/Settings.tsx:268
-#: src/screens/Settings/Settings.tsx:271
+#: src/screens/Settings/Settings.tsx:261
+#: src/screens/Settings/Settings.tsx:264
 msgid "Languages"
 msgstr "言語"
 
@@ -8183,7 +8183,7 @@ msgstr "リストのミュートを解除しました"
 #: src/view/screens/Lists.tsx:60
 #: src/view/screens/Profile.tsx:268
 #: src/view/screens/Profile.tsx:276
-#: src/view/shell/desktop/LeftNav.tsx:796
+#: src/view/shell/desktop/LeftNav.tsx:790
 #: src/view/shell/Drawer.tsx:688
 msgid "Lists"
 msgstr "リスト"
@@ -8277,8 +8277,8 @@ msgstr "最新の投稿を読み込む"
 msgid "Load new posts from the people you follow"
 msgstr "フォロー中のユーザーから新しい投稿を読み込む"
 
-#: src/screens/ModerationInbox/Notice.tsx:175
-#: src/screens/ModerationInbox/Notice.tsx:184
+#: src/screens/ModerationInbox/Notice.tsx:162
+#: src/screens/ModerationInbox/Notice.tsx:171
 msgid "Load older actions"
 msgstr "過去のアクションを読み込む"
 
@@ -8299,7 +8299,7 @@ msgstr "リストを読み込み中…"
 msgid "Loading more posts"
 msgstr "投稿をさらに読み込み中"
 
-#: src/screens/ModerationInbox/Settings.tsx:173
+#: src/screens/ModerationInbox/Settings.tsx:164
 msgid "Loading notification settings"
 msgstr "通知の設定を読み込み中"
 
@@ -8352,7 +8352,7 @@ msgid "Logo by @sawaratsuki.bsky.social"
 msgstr "@sawaratsuki.bsky.socialによるロゴ"
 
 #: src/view/shell/desktop/RightNav.tsx:139
-#: src/view/shell/Drawer.tsx:895
+#: src/view/shell/Drawer.tsx:887
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "<0>@sawaratsuki.bsky.social</0>によるロゴ"
 
@@ -8419,7 +8419,7 @@ msgstr "広くする"
 msgid "Manage saved feeds"
 msgstr "保存されたフィードを管理"
 
-#: src/screens/Moderation/index.tsx:402
+#: src/screens/Moderation/index.tsx:393
 msgid "Manage verification settings"
 msgstr "認証設定の管理"
 
@@ -8432,14 +8432,14 @@ msgstr "ミュートしたワードとタグの管理"
 msgid "Manual"
 msgstr "手動"
 
-#: src/screens/ModerationInbox/index.tsx:335
+#: src/screens/ModerationInbox/index.tsx:327
 msgid "Mark all actions as read"
 msgstr "すべてのアクションを既読にする"
 
 #: src/screens/Messages/Inbox.tsx:318
 #: src/screens/Messages/Inbox.tsx:324
-#: src/screens/ModerationInbox/index.tsx:209
-#: src/screens/ModerationInbox/index.tsx:341
+#: src/screens/ModerationInbox/index.tsx:201
+#: src/screens/ModerationInbox/index.tsx:333
 msgid "Mark all as read"
 msgstr "すべて既読にする"
 
@@ -8450,7 +8450,7 @@ msgstr "すべて既読にする"
 msgid "Mark all chats as read"
 msgstr "すべてのチャットを既読にする"
 
-#: src/screens/ModerationInbox/index.tsx:203
+#: src/screens/ModerationInbox/index.tsx:195
 msgid "Mark all reports as read"
 msgstr "すべての報告を既読にする"
 
@@ -8653,7 +8653,7 @@ msgid "Mod inbox settings"
 msgstr "モデレーション受信トレイの設定"
 
 #: src/Navigation.tsx:204
-#: src/screens/Moderation/index.tsx:103
+#: src/screens/Moderation/index.tsx:102
 msgid "Moderation"
 msgstr "モデレーション"
 
@@ -8661,16 +8661,14 @@ msgstr "モデレーション"
 msgid "Moderation details"
 msgstr "モデレーションの詳細"
 
-#. Name for a feature flag
-#: src/analytics/features/index.ts:132
 #: src/Navigation.tsx:209
-#: src/screens/Moderation/index.tsx:299
-#: src/screens/ModerationInbox/index.tsx:101
+#: src/screens/Moderation/index.tsx:291
+#: src/screens/ModerationInbox/index.tsx:93
 msgid "Moderation inbox"
 msgstr "モデレーション受信トレイ"
 
-#: src/screens/ModerationInbox/index.tsx:108
-#: src/screens/ModerationInbox/Settings.tsx:53
+#: src/screens/ModerationInbox/index.tsx:100
+#: src/screens/ModerationInbox/Settings.tsx:44
 msgid "Moderation inbox settings"
 msgstr "モデレーション受信トレイの設定"
 
@@ -8700,7 +8698,7 @@ msgctxt "toast"
 msgid "Moderation list updated"
 msgstr "モデレーションリストを更新しました"
 
-#: src/screens/Moderation/index.tsx:362
+#: src/screens/Moderation/index.tsx:353
 msgid "Moderation lists"
 msgstr "モデレーションリスト"
 
@@ -8721,9 +8719,9 @@ msgstr "モデレーションの設定"
 msgid "Moderation states"
 msgstr "モデレーションのステータス"
 
-#: src/screens/Moderation/index.tsx:317
-#: src/screens/Settings/Settings.tsx:209
-#: src/screens/Settings/Settings.tsx:220
+#: src/screens/Moderation/index.tsx:308
+#: src/screens/Settings/Settings.tsx:202
+#: src/screens/Settings/Settings.tsx:213
 msgid "Moderation tools"
 msgstr "モデレーションのツール"
 
@@ -8864,7 +8862,7 @@ msgstr "いつでもミュート、退出、メンバー削除が可能。あな
 msgid "Muted"
 msgstr "ミュート済み"
 
-#: src/screens/Moderation/index.tsx:377
+#: src/screens/Moderation/index.tsx:368
 msgid "Muted accounts"
 msgstr "ミュート中のアカウント"
 
@@ -8882,7 +8880,7 @@ msgstr "ミュート中のアカウントの投稿は、フィードや通知か
 msgid "Muted by \"{0}\""
 msgstr "「{0}」によってミュート中"
 
-#: src/screens/Moderation/index.tsx:347
+#: src/screens/Moderation/index.tsx:338
 msgid "Muted words & tags"
 msgstr "ミュートしたワードとタグ"
 
@@ -9172,11 +9170,11 @@ msgctxt "Answer to a yes/no question"
 msgid "No"
 msgstr "いいえ"
 
-#: src/screens/ModerationInbox/index.tsx:371
+#: src/screens/ModerationInbox/index.tsx:363
 msgid "No actions against you"
 msgstr "あなたに対するアクションはありません"
 
-#: src/screens/ModerationInbox/index.tsx:372
+#: src/screens/ModerationInbox/index.tsx:364
 msgid "No actions match this filter"
 msgstr "このフィルターに一致するアクションはありません"
 
@@ -9369,7 +9367,7 @@ msgstr "まだ表示する返信はありません"
 msgid "No replies yet"
 msgstr "まだ返信がありません"
 
-#: src/screens/ModerationInbox/index.tsx:236
+#: src/screens/ModerationInbox/index.tsx:228
 msgid "No reports match this filter"
 msgstr "このフィルターに一致する報告はありません"
 
@@ -9521,7 +9519,7 @@ msgid "Nothing saved yet"
 msgstr "まだ何も保存されていません"
 
 #: src/Navigation.tsx:224
-#: src/screens/ModerationInbox/Notice.tsx:137
+#: src/screens/ModerationInbox/Notice.tsx:124
 msgid "Notice"
 msgstr "お知らせ"
 
@@ -9547,10 +9545,10 @@ msgstr "通知音"
 #: src/screens/Notifications/ActivityList.tsx:29
 #: src/screens/Notifications/index.tsx:644
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
-#: src/screens/Settings/Settings.tsx:226
-#: src/screens/Settings/Settings.tsx:229
+#: src/screens/Settings/Settings.tsx:219
+#: src/screens/Settings/Settings.tsx:222
 #: src/view/shell/bottom-bar/BottomBar.tsx:283
-#: src/view/shell/desktop/LeftNav.tsx:753
+#: src/view/shell/desktop/LeftNav.tsx:747
 #: src/view/shell/Drawer.tsx:638
 msgid "Notifications"
 msgstr "通知"
@@ -9618,7 +9616,7 @@ msgstr "Blueskyでは、これはあなたの投稿があなたをフォロー�
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "<0><1/><2><3/></2></0>"
 
-#: src/screens/Settings/Settings.tsx:427
+#: src/screens/Settings/Settings.tsx:420
 msgid "Onboarding reset"
 msgstr "オンボーディングのリセット"
 
@@ -9888,11 +9886,11 @@ msgstr ""
 msgid "Open message options"
 msgstr "メッセージのオプションを開く"
 
-#: src/screens/Settings/Settings.tsx:500
+#: src/screens/Settings/Settings.tsx:493
 msgid "Open moderation debug page"
 msgstr "モデレーションデバッグページを開く"
 
-#: src/screens/Moderation/index.tsx:343
+#: src/screens/Moderation/index.tsx:334
 msgid "Open muted words and tags settings"
 msgstr "ミュートしたワードとタグの設定を開く"
 
@@ -9936,11 +9934,11 @@ msgstr "スターターパックを開く"
 msgid "Open Starter Pack menu"
 msgstr "スターターパックのメニューを開く"
 
-#: src/screens/Settings/Settings.tsx:493
+#: src/screens/Settings/Settings.tsx:486
 msgid "Open storybook page"
 msgstr "絵本のページを開く"
 
-#: src/screens/Settings/Settings.tsx:478
+#: src/screens/Settings/Settings.tsx:471
 msgid "Open system log"
 msgstr "システムのログを開く"
 
@@ -10024,7 +10022,7 @@ msgstr "既存のBlueskyアカウントにサインインする画面を開き�
 msgid "Opens full image"
 msgstr "画像全体を表示"
 
-#: src/screens/Settings/Settings.tsx:285
+#: src/screens/Settings/Settings.tsx:278
 msgid "Opens helpdesk in browser"
 msgstr "ブラウザでヘルプデスクを開く"
 
@@ -10659,7 +10657,7 @@ msgstr "ビデオを投稿"
 #: src/screens/Notifications/index.tsx:142
 msgctxt "notifications tab"
 msgid "Post alerts"
-msgstr "投稿アラート"
+msgstr "投稿通知"
 
 #: src/view/com/composer/Composer.tsx:1909
 msgctxt "action"
@@ -10843,8 +10841,8 @@ msgstr "第一言語"
 msgid "Privacy"
 msgstr "プライバシー"
 
-#: src/screens/Settings/Settings.tsx:201
-#: src/screens/Settings/Settings.tsx:204
+#: src/screens/Settings/Settings.tsx:194
+#: src/screens/Settings/Settings.tsx:197
 msgid "Privacy and security"
 msgstr "プライバシーとセキュリティ"
 
@@ -10866,8 +10864,8 @@ msgstr "プライバシーとセキュリティの設定"
 #: src/screens/Settings/AboutSettings.tsx:102
 #: src/screens/Settings/AboutSettings.tsx:105
 #: src/view/screens/PrivacyPolicy.tsx:25
-#: src/view/shell/Drawer.tsx:890
-#: src/view/shell/Drawer.tsx:891
+#: src/view/shell/Drawer.tsx:882
+#: src/view/shell/Drawer.tsx:883
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
@@ -10896,7 +10894,7 @@ msgid "profile"
 msgstr "プロフィール"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:326
-#: src/view/shell/desktop/LeftNav.tsx:812
+#: src/view/shell/desktop/LeftNav.tsx:806
 #: src/view/shell/Drawer.tsx:117
 #: src/view/shell/Drawer.tsx:739
 msgid "Profile"
@@ -11097,11 +11095,11 @@ msgstr "私たちのブログの記事を読む"
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:121
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:135
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:148
-#: src/screens/ModerationInbox/Notice.tsx:246
+#: src/screens/ModerationInbox/Notice.tsx:233
 msgid "Read our Community Guidelines"
 msgstr "コミュニティガイドラインを読む"
 
-#: src/screens/ModerationInbox/Notice.tsx:309
+#: src/screens/ModerationInbox/Notice.tsx:296
 msgid "Read our Terms of Service"
 msgstr "利用規約を読む"
 
@@ -11127,14 +11125,14 @@ msgstr "リアルな会話。"
 msgid "Real people."
 msgstr "リアルな人々。"
 
-#: src/screens/ModerationInbox/Notice.tsx:511
-#: src/screens/ModerationInbox/Notice.tsx:529
+#: src/screens/ModerationInbox/Notice.tsx:498
+#: src/screens/ModerationInbox/Notice.tsx:516
 #: src/screens/Takendown.tsx:158
 #: src/screens/Takendown.tsx:166
 msgid "Reason for appeal"
 msgstr "異議申し立ての理由"
 
-#: src/screens/ModerationInbox/Report.tsx:198
+#: src/screens/ModerationInbox/Report.tsx:195
 msgid "Reason:"
 msgstr "理由："
 
@@ -11192,8 +11190,8 @@ msgstr "参加リクエストを拒否"
 msgid "Reload conversations"
 msgstr "会話を再読み込み"
 
-#: src/screens/ModerationInbox/Notice.tsx:495
-#: src/screens/ModerationInbox/Notice.tsx:504
+#: src/screens/ModerationInbox/Notice.tsx:482
+#: src/screens/ModerationInbox/Notice.tsx:491
 msgid "Reload notice"
 msgstr "通知を再読み込み"
 
@@ -11210,8 +11208,8 @@ msgstr "通知を再読み込み"
 #: src/screens/Bookmarks.tsx:260
 #: src/screens/Messages/ConversationSettings/Member.tsx:162
 #: src/screens/Messages/ConversationSettings/prompts.tsx:170
-#: src/screens/Moderation/index.tsx:537
-#: src/screens/Settings/Settings.tsx:713
+#: src/screens/Moderation/index.tsx:528
+#: src/screens/Settings/Settings.tsx:706
 #: src/view/com/posts/PostFeedErrorMessage.tsx:219
 msgid "Remove"
 msgstr "削除"
@@ -11237,8 +11235,8 @@ msgstr "{displayName}を外しますか？"
 msgid "Remove {q}"
 msgstr "{q}を削除"
 
-#: src/screens/Settings/Settings.tsx:694
-#: src/screens/Settings/Settings.tsx:697
+#: src/screens/Settings/Settings.tsx:687
+#: src/screens/Settings/Settings.tsx:690
 msgid "Remove account"
 msgstr "アカウント切替リストから取り除く"
 
@@ -11306,7 +11304,7 @@ msgstr "チャットから削除"
 msgid "Remove from my feeds"
 msgstr "マイフィードから削除"
 
-#: src/screens/Settings/Settings.tsx:707
+#: src/screens/Settings/Settings.tsx:700
 msgid "Remove from quick access?"
 msgstr "クイックアクセスから削除しますか？"
 
@@ -11379,7 +11377,7 @@ msgstr "提案を削除"
 msgid "Remove this feed from your saved feeds"
 msgstr "保存されたフィードからこのフィードを削除"
 
-#: src/screens/Moderation/index.tsx:533
+#: src/screens/Moderation/index.tsx:524
 msgid "Remove unavailable moderation services"
 msgstr "利用できないモデレーションサービスを削除"
 
@@ -11439,7 +11437,7 @@ msgstr "あなたのフィードから削除しました"
 msgid "Removed post"
 msgstr "削除された投稿"
 
-#: src/screens/Moderation/index.tsx:231
+#: src/screens/Moderation/index.tsx:224
 msgid "Removed unavailable services"
 msgstr "利用できないサービスを削除しました"
 
@@ -11886,8 +11884,8 @@ msgstr "メール再送済"
 msgid "Resend Verification Email"
 msgstr "確認メールを再送済"
 
-#: src/screens/Settings/Settings.tsx:529
-#: src/screens/Settings/Settings.tsx:531
+#: src/screens/Settings/Settings.tsx:522
+#: src/screens/Settings/Settings.tsx:524
 msgid "Reset activity subscription nudge"
 msgstr "アクティビティ購読ナッジをリセット"
 
@@ -11895,8 +11893,8 @@ msgstr "アクティビティ購読ナッジをリセット"
 msgid "Reset code"
 msgstr "リセットコード"
 
-#: src/screens/Settings/Settings.tsx:514
-#: src/screens/Settings/Settings.tsx:516
+#: src/screens/Settings/Settings.tsx:507
+#: src/screens/Settings/Settings.tsx:509
 msgid "Reset onboarding state"
 msgstr "オンボーディングの状態をリセット"
 
@@ -12114,7 +12112,7 @@ msgstr "マイフィードに保存"
 msgid "Save your position in the Following feed between sessions. New posts wait above you until you’re ready to view them."
 msgstr "セッション間でフォロー中フィードの位置を保存します。新しい投稿は、閲覧の準備ができるまで上部で待機します。"
 
-#: src/view/shell/desktop/LeftNav.tsx:804
+#: src/view/shell/desktop/LeftNav.tsx:798
 #: src/view/shell/Drawer.tsx:714
 msgctxt "link to bookmarks screen"
 msgid "Saved"
@@ -12672,9 +12670,9 @@ msgid "Sets email for password reset"
 msgstr "パスワードをリセットするためのメールアドレスを入力"
 
 #: src/Navigation.tsx:260
-#: src/screens/Settings/Settings.tsx:118
-#: src/view/shell/desktop/LeftNav.tsx:820
-#: src/view/shell/Drawer.tsx:773
+#: src/screens/Settings/Settings.tsx:111
+#: src/view/shell/desktop/LeftNav.tsx:814
+#: src/view/shell/Drawer.tsx:765
 msgid "Settings"
 msgstr "設定"
 
@@ -13026,7 +13024,7 @@ msgstr "{0}の通知を表示"
 msgid "Shows information about when this post was created"
 msgstr "この投稿がいつ作成されたかについての情報を表示する"
 
-#: src/screens/Settings/Settings.tsx:143
+#: src/screens/Settings/Settings.tsx:136
 msgid "Shows other accounts you can switch to"
 msgstr "切替可能な他のアカウントを表示"
 
@@ -13101,9 +13099,9 @@ msgid "Sign in to view post"
 msgstr "サインインして投稿を表示"
 
 #: src/ageAssurance/components/DataUnavailableScreen.tsx:22
-#: src/screens/Settings/Settings.tsx:302
-#: src/screens/Settings/Settings.tsx:304
-#: src/screens/Settings/Settings.tsx:336
+#: src/screens/Settings/Settings.tsx:295
+#: src/screens/Settings/Settings.tsx:297
+#: src/screens/Settings/Settings.tsx:329
 #: src/screens/SignupQueued.tsx:100
 #: src/screens/SignupQueued.tsx:103
 #: src/screens/Takendown.tsx:88
@@ -13117,7 +13115,7 @@ msgstr "サインアウト"
 msgid "Sign Out"
 msgstr "サインアウト"
 
-#: src/screens/Settings/Settings.tsx:333
+#: src/screens/Settings/Settings.tsx:326
 #: src/view/shell/desktop/LeftNav.tsx:262
 msgid "Sign out?"
 msgstr "サインアウトしますか？"
@@ -13214,7 +13212,7 @@ msgstr "投稿に対するソーシャルプルーフ"
 msgid "Software Dev"
 msgstr "ソフトウェア開発"
 
-#: src/screens/Moderation/index.tsx:526
+#: src/screens/Moderation/index.tsx:517
 msgid "Some moderation services in your list are no longer available."
 msgstr "リスト中のいくつかのモデレーションサービスは利用できません。"
 
@@ -13294,7 +13292,7 @@ msgstr "何らかの問題が発生したようです"
 msgid "Something went wrong, please try again"
 msgstr "何らかの問題が発生したようなので、もう一度お試しください"
 
-#: src/screens/Moderation/index.tsx:115
+#: src/screens/Moderation/index.tsx:114
 #: src/screens/Profile/Sections/Labels.tsx:185
 #: src/screens/Settings/BetaFeaturesSettings.tsx:110
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:90
@@ -13481,7 +13479,7 @@ msgstr "ステータスを利用できません"
 msgid "Step {0} of {1}"
 msgstr "ステップ {0} / {1}"
 
-#: src/screens/Settings/Settings.tsx:432
+#: src/screens/Settings/Settings.tsx:425
 msgid "Storage cleared, you need to restart the app now."
 msgstr "ストレージがクリアされたため、今すぐアプリを再起動する必要があります。"
 
@@ -13490,7 +13488,7 @@ msgid "Stored as part of a secure code for matching with others"
 msgstr "他のユーザーとのマッチングのため、セキュアなコードの一部として保存されます"
 
 #: src/Navigation.tsx:353
-#: src/screens/Settings/Settings.tsx:495
+#: src/screens/Settings/Settings.tsx:488
 msgid "Storybook"
 msgstr "ストーリーブック"
 
@@ -13512,12 +13510,12 @@ msgstr "カードの引き延ばし"
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:138
 #: src/screens/Messages/components/ChatDisabled.tsx:172
 #: src/screens/Messages/components/ChatDisabled.tsx:174
-#: src/screens/ModerationInbox/Notice.tsx:452
+#: src/screens/ModerationInbox/Notice.tsx:439
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:164
 msgid "Submit"
 msgstr "送信"
 
-#: src/screens/ModerationInbox/Notice.tsx:445
+#: src/screens/ModerationInbox/Notice.tsx:432
 #: src/screens/Takendown.tsx:76
 msgid "Submit appeal"
 msgstr "異議申し立てを送信"
@@ -13667,9 +13665,9 @@ msgstr "停止中のアカウントはチャットに参加できません。"
 
 #: src/components/dialogs/SwitchAccount.tsx:47
 #: src/components/dialogs/SwitchAccount.tsx:50
-#: src/screens/Settings/Settings.tsx:142
-#: src/screens/Settings/Settings.tsx:154
-#: src/screens/Settings/Settings.tsx:654
+#: src/screens/Settings/Settings.tsx:135
+#: src/screens/Settings/Settings.tsx:147
+#: src/screens/Settings/Settings.tsx:647
 #: src/view/shell/desktop/LeftNav.tsx:350
 msgid "Switch account"
 msgstr "アカウントを切り替える"
@@ -13703,7 +13701,7 @@ msgstr "システム"
 #: src/screens/Log.tsx:49
 #: src/screens/Settings/AboutSettings.tsx:117
 #: src/screens/Settings/AboutSettings.tsx:120
-#: src/screens/Settings/Settings.tsx:480
+#: src/screens/Settings/Settings.tsx:473
 msgid "System log"
 msgstr "システムログ"
 
@@ -13841,7 +13839,7 @@ msgstr "あなた自身について少し教えて"
 msgid "Tell us a little more"
 msgstr "もう少し教えて"
 
-#: src/screens/ModerationInbox/Notice.tsx:484
+#: src/screens/ModerationInbox/Notice.tsx:471
 msgid "Tell us why you believe this decision was a mistake. We will review your appeal along with the original content."
 msgstr "この決定が間違いだったと信じる理由を教えてください。 私たちは、元のコンテンツと一緒にあなたの異議申し立てを確認します。"
 
@@ -13861,8 +13859,8 @@ msgstr "規約"
 #: src/screens/Settings/AboutSettings.tsx:94
 #: src/screens/Settings/AboutSettings.tsx:97
 #: src/view/screens/TermsOfService.tsx:25
-#: src/view/shell/Drawer.tsx:883
-#: src/view/shell/Drawer.tsx:885
+#: src/view/shell/Drawer.tsx:875
+#: src/view/shell/Drawer.tsx:877
 msgid "Terms of Service"
 msgstr "利用規約"
 
@@ -13965,8 +13963,8 @@ msgstr "あなたのコンテンツに対する措置が取り消されました
 msgid "The app will be restarted"
 msgstr "アプリを再起動します"
 
-#: src/screens/ModerationInbox/Notice.tsx:337
-#: src/screens/ModerationInbox/Notice.tsx:377
+#: src/screens/ModerationInbox/Notice.tsx:324
+#: src/screens/ModerationInbox/Notice.tsx:364
 msgid "The appeal window has closed."
 msgstr "異議申し立ての受付期間は終了しました。"
 
@@ -13983,7 +13981,7 @@ msgstr "このスレッドの投稿者がこの返信を非表示にしました
 msgid "The birthdate you've entered means you are under 18 years old. Certain content and features may be unavailable to you."
 msgstr "入力した生年月日は、あなたが18歳未満であることを意味します。特定のコンテンツや機能が利用できない場合があります。"
 
-#: src/screens/Moderation/index.tsx:477
+#: src/screens/Moderation/index.tsx:468
 msgid "The Bluesky web application"
 msgstr "Blueskyウェブアプリ"
 
@@ -14389,7 +14387,7 @@ msgstr "このコードは無効です。再送信で新しいコードを取得
 msgid "This confirmation code is not valid. Please try again."
 msgstr "この確認コードは無効です。もう一度やり直してください。"
 
-#: src/screens/ModerationInbox/Notice.tsx:383
+#: src/screens/ModerationInbox/Notice.tsx:370
 msgid "This content could not be appealed. Please reload the notice and try again."
 msgstr "このコンテンツは異議申し立てできませんでした。通知を再読み込みして、もう一度お試しください。"
 
@@ -14626,11 +14624,11 @@ msgstr "これにより以下にドメインレコードが作成されるはず
 msgid "This should only take a few minutes."
 msgstr "これには数分かかるはずです。"
 
-#: src/screens/ModerationInbox/Notice.tsx:380
+#: src/screens/ModerationInbox/Notice.tsx:367
 msgid "This subject can no longer be appealed."
 msgstr "この対象に対して、これ以上の異議申し立てはできません。"
 
-#: src/screens/ModerationInbox/Notice.tsx:374
+#: src/screens/ModerationInbox/Notice.tsx:361
 msgid "This subject has already been appealed."
 msgstr "この対象はすでに異議申し立てが行われています。"
 
@@ -14701,7 +14699,7 @@ msgid "This will irreversibly delete your Bluesky account <0>{currentHandle}</0>
 msgstr "あなたのBlueskyアカウント <0>{currentHandle}</0>と関連するすべてのデータは削除され、元に戻せません。このアカウントで使用する他の<1>ATプロトコル</1>サービスに影響を与えることに注意してください。"
 
 #. placeholder {0}: account.handle
-#: src/screens/Settings/Settings.tsx:708
+#: src/screens/Settings/Settings.tsx:701
 msgid "This will remove @{0} from the quick access list."
 msgstr "クイックアクセスのリストから@{0}を削除します。"
 
@@ -14795,7 +14793,7 @@ msgstr "背の高いコンテンツの切り替え"
 msgid "Toggle tallest card"
 msgstr "最も高いカードの切り替え"
 
-#: src/screens/Moderation/index.tsx:452
+#: src/screens/Moderation/index.tsx:443
 msgid "Toggle to enable or disable adult content"
 msgstr "成人向けコンテンツの有効化/無効化を切り替え"
 
@@ -14832,11 +14830,6 @@ msgstr "トップの返信を最初に"
 #: src/Navigation.tsx:548
 msgid "Topic"
 msgstr "トピック"
-
-#. Description of a feature flag (Moderation inbox)
-#: src/analytics/features/index.ts:138
-msgid "Track your reports, review moderation decisions, and submit appeals."
-msgstr "報告を追跡し、モデレーションの決定を確認し、異議申し立てを送信します。"
 
 #: src/components/dms/MessageContextMenu.tsx:190
 #: src/components/dms/MessageContextMenu.tsx:193
@@ -15012,11 +15005,11 @@ msgstr "アカウントを読み込めません"
 msgid "Unable to resolve handle"
 msgstr "ハンドルを解決できません"
 
-#: src/screens/Settings/Settings.tsx:554
+#: src/screens/Settings/Settings.tsx:547
 msgid "Unapply Pull Request"
 msgstr "プルリクエストを適用しない"
 
-#: src/screens/Settings/Settings.tsx:556
+#: src/screens/Settings/Settings.tsx:549
 msgid "Unapply Pull Request {currentChannel}"
 msgstr "プルリクエスト {currentChannel} を適用しない"
 
@@ -15148,7 +15141,7 @@ msgstr "残念ながら、あなたがプロフィールに設定した生年月
 msgid "Unfortunately, your declared age indicates that you are not old enough to access Bluesky in your region."
 msgstr "残念ながら、宣言された年齢は、お住まいの地域でBlueskyにアクセスできる年齢に達していないことを示しています。"
 
-#: src/screens/ModerationInbox/Report.tsx:186
+#: src/screens/ModerationInbox/Report.tsx:183
 msgid "Unknown report reason"
 msgstr "不明な報告の理由"
 
@@ -15273,8 +15266,8 @@ msgctxt "moderation-report-filter"
 msgid "Unread"
 msgstr "未読"
 
-#: src/screens/Settings/Settings.tsx:521
-#: src/screens/Settings/Settings.tsx:523
+#: src/screens/Settings/Settings.tsx:514
+#: src/screens/Settings/Settings.tsx:516
 msgid "Unsnooze email reminder"
 msgstr "メールのリマインダーのスヌーズを解除"
 
@@ -15547,7 +15540,7 @@ msgstr "値："
 msgid "Verification failed, please try again."
 msgstr "認証に失敗しました。再度試してください。"
 
-#: src/screens/Moderation/index.tsx:407
+#: src/screens/Moderation/index.tsx:398
 msgid "Verification settings"
 msgstr "認証設定"
 
@@ -15815,7 +15808,7 @@ msgstr "詳細を表示"
 msgid "View full thread"
 msgstr "スレッドをすべて表示"
 
-#: src/screens/Settings/Settings.tsx:485
+#: src/screens/Settings/Settings.tsx:478
 msgid "View GrowthBook information"
 msgstr "GrowthBook情報を表示"
 
@@ -15899,11 +15892,11 @@ msgstr "このフィードにいいねしたユーザーを見る"
 msgid "View video"
 msgstr "ビデオを表示"
 
-#: src/screens/Moderation/index.tsx:387
+#: src/screens/Moderation/index.tsx:378
 msgid "View your blocked accounts"
 msgstr "ブロックしたアカウントを見る"
 
-#: src/screens/Moderation/index.tsx:327
+#: src/screens/Moderation/index.tsx:318
 msgid "View your default post interaction settings"
 msgstr "投稿への反応のデフォルト設定を表示"
 
@@ -15912,15 +15905,15 @@ msgstr "投稿への反応のデフォルト設定を表示"
 msgid "View your feeds and explore more"
 msgstr "フィードを表示し、さらにフィードを探す"
 
-#: src/screens/Moderation/index.tsx:293
+#: src/screens/Moderation/index.tsx:285
 msgid "View your moderation inbox"
 msgstr "モデレーション受信トレイを見る"
 
-#: src/screens/Moderation/index.tsx:357
+#: src/screens/Moderation/index.tsx:348
 msgid "View your moderation lists"
 msgstr "モデレーションリストを見る"
 
-#: src/screens/Moderation/index.tsx:372
+#: src/screens/Moderation/index.tsx:363
 msgid "View your muted accounts"
 msgstr "ミュートしたアカウントを見る"
 
@@ -16115,7 +16108,7 @@ msgstr "お住まいの地域での年齢保証の設定をロードできませ
 msgid "We were unable to load your birthdate preferences. Please try again."
 msgstr "生年月日の設定を読み込むことができませんでした。もう一度お試しください。"
 
-#: src/screens/Moderation/index.tsx:551
+#: src/screens/Moderation/index.tsx:542
 msgid "We were unable to load your configured labelers at this time."
 msgstr "現在設定されたラベラーを読み込めません。"
 
@@ -16271,7 +16264,7 @@ msgstr "なにに興味がありますか？"
 msgid "What do you want to call your Starter Pack?"
 msgstr "あなたのスターターパックを何と呼びたいですか？"
 
-#: src/screens/ModerationInbox/Report.tsx:193
+#: src/screens/ModerationInbox/Report.tsx:190
 msgid "What you reported"
 msgstr "報告した内容"
 
@@ -16556,7 +16549,7 @@ msgstr "また、チャットデータを \"JSONL\" ファイルとしてダウ�
 msgid "You can always opt out and delete your data"
 msgstr "いつでもオプトアウトしてデータを削除することができます"
 
-#: src/screens/ModerationInbox/Notice.tsx:299
+#: src/screens/ModerationInbox/Notice.tsx:286
 msgid "You can appeal once per decision. A different moderator will review the appeal."
 msgstr "決定ごとに一回異議申し立てが可能です。別のモデレーターが異議申し立てを確認します。"
 
@@ -16616,7 +16609,7 @@ msgstr "チャットの履歴は読めますが、新しいメッセージは送
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "合計で{MAX_GALLERY_IMAGES, plural, other {#枚の画像}}まで選択できます。"
 
-#: src/screens/ModerationInbox/Notice.tsx:294
+#: src/screens/ModerationInbox/Notice.tsx:281
 msgid "You can submit one account appeal at a time. A different moderator will review the appeal."
 msgstr "アカウントに対する異議申し立ては一度に一件まで提出できます。別のモデレーターが異議申し立てを確認します。"
 
@@ -16760,7 +16753,7 @@ msgstr "まだカスタムフィードを作成していません。"
 msgid "You haven't muted any words or tags yet"
 msgstr "まだワードやタグをミュートしていません"
 
-#: src/screens/ModerationInbox/index.tsx:235
+#: src/screens/ModerationInbox/index.tsx:227
 msgid "You haven’t reported anything yet"
 msgstr "まだ何も報告していません"
 
@@ -16843,7 +16836,7 @@ msgstr "あなたはこのチャットのオーナーです"
 msgid "You previously deactivated @{0}."
 msgstr "以前、あなたは@{0}を無効化しました。"
 
-#: src/screens/Settings/Settings.tsx:443
+#: src/screens/Settings/Settings.tsx:436
 msgid "You probably want to restart the app now."
 msgstr "今すぐアプリを再起動したほうが良いでしょう。"
 
@@ -16884,7 +16877,7 @@ msgstr "参加をリクエストしました"
 msgid "You will be eligible to appear in this Starter Pack again."
 msgstr "再度このスターターパックに表示される対象になります。"
 
-#: src/screens/Settings/Settings.tsx:334
+#: src/screens/Settings/Settings.tsx:327
 #: src/view/shell/desktop/LeftNav.tsx:263
 msgid "You will be signed out of all your accounts."
 msgstr "すべてのアカウントからサインアウトします。"
@@ -17033,7 +17026,7 @@ msgid "Your ability to submit reports was restricted"
 msgstr "報告を送信する機能が制限されました"
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:88
-#: src/screens/ModerationInbox/index.tsx:120
+#: src/screens/ModerationInbox/index.tsx:112
 #: src/screens/Signup/index.tsx:191
 msgid "Your account"
 msgstr "あなたのアカウント"
@@ -17074,7 +17067,7 @@ msgstr "あなたのアカウントは新しすぎます"
 msgid "Your account must be at least 7 days old to create a new group chat."
 msgstr "新しいグループチャットを作るにはアカウントを作って少なくとも7日経ってなくてはなりません。"
 
-#: src/screens/ModerationInbox/Settings.tsx:83
+#: src/screens/ModerationInbox/Settings.tsx:74
 msgctxt "moderation-inbox-setting"
 msgid "Your account notifications"
 msgstr "アカウントの通知"
@@ -17097,7 +17090,7 @@ msgstr "あなたのアカウントは停止されています"
 msgid "Your account was temporarily suspended for {hours, plural, one {# hour} other {# hours}}"
 msgstr "アカウントは{hours, plural, other {#時間}}の間、一時的に停止されました"
 
-#: src/screens/ModerationInbox/Notice.tsx:237
+#: src/screens/ModerationInbox/Notice.tsx:224
 msgid "Your appeal has been submitted and is awaiting review."
 msgstr "異議申し立てが送信され、確認待ちとなっています。"
 
@@ -17143,7 +17136,7 @@ msgstr "あなたのコンテンツは削除されました"
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr "あなたの現在のハンドル<0>{0}</0>は自動的に予約されたままになります。いつでもこのアカウントに戻すことができます。"
 
-#: src/screens/Moderation/index.tsx:277
+#: src/screens/Moderation/index.tsx:270
 msgid "Your declared age is under 18. Some settings below may be disabled. If this was a mistake, you may edit your birthdate in your <0>account settings</0>."
 msgstr "あなたは18歳未満だと宣言しています。以下の設定のいくつかは無効になっているかもしれません。間違いであれば、<0>アカウント設定</0>で誕生日を変更できます。"
 
@@ -17222,7 +17215,7 @@ msgstr "ミュートしたワード"
 msgid "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
 msgstr "あなたの名前、アバター、グループチャットの名前、メンバーの人数は誰でも見ることができます。"
 
-#: src/screens/ModerationInbox/Report.tsx:208
+#: src/screens/ModerationInbox/Report.tsx:205
 msgid "Your note:"
 msgstr "あなたのメモ："
 
@@ -17273,7 +17266,7 @@ msgid "Your reply was sent"
 msgstr "返信が送信されました"
 
 #: src/Navigation.tsx:219
-#: src/screens/ModerationInbox/Report.tsx:115
+#: src/screens/ModerationInbox/Report.tsx:112
 msgid "Your report"
 msgstr "あなたの報告"
 
@@ -17286,11 +17279,11 @@ msgstr "あなたの報告は解決されました。<0>コミュニティガイ
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr "報告は <0>{0}</0>に送信されます。"
 
-#: src/screens/ModerationInbox/index.tsx:120
+#: src/screens/ModerationInbox/index.tsx:112
 msgid "Your reports"
 msgstr "あなたの報告"
 
-#: src/screens/ModerationInbox/Settings.tsx:68
+#: src/screens/ModerationInbox/Settings.tsx:59
 msgctxt "moderation-inbox-setting"
 msgid "Your reports notifications"
 msgstr "あなたの報告の通知"

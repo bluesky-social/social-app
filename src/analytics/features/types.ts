@@ -21,7 +21,6 @@ export enum Features {
   FollowSortEnable = 'follow_sort:enable',
   FollowingV2Enable = 'following_v2:enable',
   OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
-  ModerationInboxEnable = 'moderation_inbox:enable',
   AtmosphereScreenEnable = 'atmosphere_screen:enable',
 
   // values
