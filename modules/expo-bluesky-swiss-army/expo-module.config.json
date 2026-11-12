@@ -2,6 +2,7 @@
   "platforms": ["ios", "tvos", "android", "web"],
   "ios": {
     "modules": [
+      "ExpoBlueskyAppLinkModule",
       "ExpoBlueskySharedPrefsModule",
       "ExpoBlueskyReferrerModule",
       "ExpoBlueskyVisibilityViewModule",
@@ -12,6 +13,7 @@
   },
   "android": {
     "modules": [
+      "expo.modules.blueskyswissarmy.applink.ExpoBlueskyAppLinkModule",
       "expo.modules.blueskyswissarmy.sharedprefs.ExpoBlueskySharedPrefsModule",
       "expo.modules.blueskyswissarmy.referrer.ExpoBlueskyReferrerModule",
       "expo.modules.blueskyswissarmy.visibilityview.ExpoBlueskyVisibilityViewModule",
