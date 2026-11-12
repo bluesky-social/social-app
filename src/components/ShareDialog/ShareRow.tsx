@@ -18,7 +18,7 @@ import {SharePlatformIcon, useSharePlatformLabel} from './SharePlatformIcon'
  * The tile's circle. The icons and logos inside are sized on their own, so
  * this only changes the padding around them.
  */
-const ICON_SIZE = 52
+const ICON_SIZE = 60
 const ACTION_ICON_SIZE = 25
 const MIN_ITEM_WIDTH = 64
 const GAP = tokens.space.sm
