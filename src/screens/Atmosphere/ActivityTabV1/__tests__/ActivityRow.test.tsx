@@ -135,7 +135,8 @@ describe('ActivityRow', () => {
         view: article('caelin.pckt.blog'),
       }),
     )
-    expectHeader('Danielle Yuhan and 2 others recommended an article', 'pckt')
+    // Recommends can come from any app, so none is named.
+    expectHeader('Danielle Yuhan and 2 others recommended an article')
   })
 
   it('renders an actor group with its count and View all', () => {
@@ -147,8 +148,20 @@ describe('ActivityRow', () => {
         count: 16,
       }),
     )
-    expectHeader('Eric recommended 16 articles', 'pckt')
+    expectHeader('Eric recommended 16 articles')
     expect(screen.getByTestId('activityV1ViewAll')).toBeTruthy()
+  })
+
+  it('names the app of the newest article in a published group', () => {
+    renderEntry(
+      actorGroup({
+        actor: eric,
+        collection: NSID.document,
+        view: article('paul.pckt.blog'),
+        count: 3,
+      }),
+    )
+    expectHeader('Eric published 3 articles', 'pckt')
   })
 
   it.each([
@@ -177,30 +190,11 @@ describe('ActivityRow', () => {
     expectHeader('Debbie Ridpath Ohi published an article')
   })
 
-  it.each([
-    ['single', 1, 'Leaflet'],
-    ['grouped', 3, undefined],
-  ] as const)('%s subscription app attribution', (_, count, app) => {
+  it('never names an app for a subscription', () => {
     renderEntry(
-      count > 1
-        ? actorGroup({
-            actor: eric,
-            collection: NSID.subscription,
-            view: publication(),
-            count,
-          })
-        : item({
-            actor: eric,
-            collection: NSID.subscription,
-            view: publication(),
-          }),
+      item({actor: eric, collection: NSID.subscription, view: publication()}),
     )
-    expectHeader(
-      count > 1
-        ? `Eric subscribed to ${count} publications`
-        : 'Eric subscribed to a publication',
-      app,
-    )
+    expectHeader('Eric subscribed to a publication')
   })
 
   it('renders a posted gallery', () => {

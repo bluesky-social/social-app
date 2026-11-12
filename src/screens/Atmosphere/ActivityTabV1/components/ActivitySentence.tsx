@@ -2,6 +2,7 @@ import {Plural, Trans} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
+import {place, site, social} from '#/lexicons'
 import {type ActivityCardRow} from '../rows'
 
 /**
@@ -21,7 +22,7 @@ export function ActivitySentence({
   const others = row.otherActorCount
 
   switch (row.collection) {
-    case 'document':
+    case site.standard.document.$type:
       return count > 1 ? (
         <Trans>
           {actor} published{' '}
@@ -33,7 +34,7 @@ export function ActivitySentence({
         <Trans>{actor} published an article</Trans>
       )
 
-    case 'recommend':
+    case site.standard.graph.recommend.$type:
       if (others > 0) {
         return (
           <Trans>
@@ -56,7 +57,7 @@ export function ActivitySentence({
         <Trans>{actor} recommended an article</Trans>
       )
 
-    case 'subscription':
+    case site.standard.graph.subscription.$type:
       if (others > 0) {
         return (
           <Trans>
@@ -79,7 +80,7 @@ export function ActivitySentence({
         <Trans>{actor} subscribed to a publication</Trans>
       )
 
-    case 'gallery':
+    case social.grain.gallery.$type:
       return count > 1 ? (
         <Trans>
           {actor} posted{' '}
@@ -91,7 +92,7 @@ export function ActivitySentence({
         <Trans>{actor} posted a gallery</Trans>
       )
 
-    case 'livestream':
+    case place.stream.livestream.$type:
       if (row.content.type === 'livestream' && row.content.view.active) {
         return <Trans>{actor} is live</Trans>
       }

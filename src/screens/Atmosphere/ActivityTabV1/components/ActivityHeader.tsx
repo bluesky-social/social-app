@@ -18,6 +18,7 @@ import {
 import {GrainMark} from '#/components/icons/community/Grain'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {place, site, social} from '#/lexicons'
 import {type ActivityCardRow} from '../rows'
 import {ActivitySentence} from './ActivitySentence'
 
@@ -81,26 +82,31 @@ export function ActivityHeader({row}: {row: ActivityCardRow}) {
 type ActivityApp = {name: string; Icon?: StandardSiteHost['Icon']}
 
 /**
- * The app an activity happened on, when we can tell. Grouped subscriptions
- * can span publications on different apps, so they don't name one.
+ * The app an activity happened on, inferred only from the activity's own
+ * collection. Graph records (recommends, subscriptions) can be written from
+ * any app, so they never name one, regardless of what they point at.
  */
-function getActivityApp(row: ActivityCardRow): ActivityApp | undefined {
-  const {content} = row
-  switch (content.type) {
-    case 'article':
+function getActivityApp({
+  collection,
+  content,
+}: ActivityCardRow): ActivityApp | undefined {
+  switch (collection) {
+    case site.standard.document.$type:
+      // Publishing happens on the article's publisher. For actor groups this
+      // is the newest article.
+      if (content.type !== 'article') return undefined
       return (
         (content.view.publisher
           ? matchStandardSiteHostByPublication(content.view.publisher)
           : matchStandardSiteHostByUrl(content.view.uri)) ?? undefined
       )
-    case 'publication':
-      if (row.activityCount > 1 || row.otherActorCount > 0) return undefined
-      return matchStandardSiteHostByPublication(content.view) ?? undefined
-    case 'gallery':
+    case social.grain.gallery.$type:
       return {name: 'Grain', Icon: GrainMark}
-    case 'livestream':
+    case place.stream.livestream.$type:
       // No Streamplace icon exists yet.
       return {name: 'Streamplace'}
+    default:
+      return undefined
   }
 }
 

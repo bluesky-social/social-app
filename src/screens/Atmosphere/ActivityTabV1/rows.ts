@@ -15,19 +15,19 @@ export type TimelineEntry =
   app.bsky.unspecced.getAtmosphereTimeline.$OutputBody['feed'][number]
 type EntryView = app.bsky.unspecced.getAtmosphereTimeline.ActivityItem['view']
 
-/** Activity collections this tab knows how to render. */
-export type ActivityCollection =
-  'document' | 'recommend' | 'subscription' | 'gallery' | 'livestream'
+/** Activity collections (record NSIDs) this tab knows how to render. */
+const ACTIVITY_COLLECTIONS = [
+  site.standard.document.$type,
+  site.standard.graph.recommend.$type,
+  site.standard.graph.subscription.$type,
+  social.grain.gallery.$type,
+  place.stream.livestream.$type,
+] as const
 
-const RECOMMEND_NSID = 'site.standard.graph.recommend'
+export type ActivityCollection = (typeof ACTIVITY_COLLECTIONS)[number]
 
-const collections: Record<string, ActivityCollection> = {
-  [site.standard.document.$type]: 'document',
-  // The client doesn't generate site.standard.graph lexicons.
-  [RECOMMEND_NSID]: 'recommend',
-  'site.standard.graph.subscription': 'subscription',
-  [social.grain.gallery.$type]: 'gallery',
-  [place.stream.livestream.$type]: 'livestream',
+function isActivityCollection(nsid: string): nsid is ActivityCollection {
+  return (ACTIVITY_COLLECTIONS as readonly string[]).includes(nsid)
 }
 
 /** The view each card renders, already checked to be renderable. */
@@ -39,7 +39,7 @@ export type ActivityContent =
 
 /** One pill below the card, e.g. "Recommended by Danielle +2". */
 export type RelatedActivity = {
-  collection: 'recommend'
+  collection: typeof site.standard.graph.recommend.$type
   actors: app.bsky.actor.defs.ProfileViewBasic[]
 }
 
@@ -132,7 +132,7 @@ function toActivityRow(
 
 function toCardRow({
   key,
-  collection: nsid,
+  collection,
   actor,
   view,
   ...rest
@@ -141,8 +141,9 @@ function toCardRow({
   actor: Profile | undefined
   view: EntryView
 }): ActivityRow {
-  const collection = collections[nsid]
-  if (!collection) return {kind: 'warning', key, reason: 'unsupported-entry'}
+  if (!isActivityCollection(collection)) {
+    return {kind: 'warning', key, reason: 'unsupported-entry'}
+  }
   if (!actor) return {kind: 'warning', key, reason: 'missing-actor'}
   const content = toContent(collection, view)
   if (!content) return {kind: 'warning', key, reason: 'unexpected-content'}
@@ -156,16 +157,16 @@ function toContent(
 ): ActivityContent | undefined {
   const external = app.bsky.embed.external
   switch (collection) {
-    case 'document':
-    case 'recommend':
+    case site.standard.document.$type:
+    case site.standard.graph.recommend.$type:
       return bsky.isType(external.viewArticle, view)
         ? {type: 'article', view}
         : undefined
-    case 'subscription':
+    case site.standard.graph.subscription.$type:
       return bsky.isType(external.viewArticlePublication, view)
         ? {type: 'publication', view}
         : undefined
-    case 'gallery': {
+    case social.grain.gallery.$type: {
       if (!bsky.isType(external.viewGallery, view)) return undefined
       // The card needs a photo to show and an author for the photo dialog.
       return getGalleryImage(view) &&
@@ -173,7 +174,7 @@ function toContent(
         ? {type: 'gallery', view}
         : undefined
     }
-    case 'livestream':
+    case place.stream.livestream.$type:
       return bsky.isType(external.viewLivestream, view)
         ? {type: 'livestream', view}
         : undefined
@@ -185,8 +186,14 @@ function toRelatedActivity(
 ): RelatedActivity[] {
   return buckets.flatMap(bucket =>
     // Recommends are the only related activity the timeline returns today.
-    bucket.collection === RECOMMEND_NSID && bucket.actors.length > 0
-      ? [{collection: 'recommend', actors: bucket.actors}]
+    bucket.collection === site.standard.graph.recommend.$type &&
+    bucket.actors.length > 0
+      ? [
+          {
+            collection: site.standard.graph.recommend.$type,
+            actors: bucket.actors,
+          },
+        ]
       : [],
   )
 }

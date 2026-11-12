@@ -274,6 +274,8 @@
     "place.stream.badge.defs",
     "place.stream.livestream",
     "site.standard.document",
+    "site.standard.graph.recommend",
+    "site.standard.graph.subscription",
     "site.standard.publication",
     "social.grain.gallery",
     "social.grain.photo",
@@ -1408,6 +1410,14 @@
     "site.standard.document": {
       "uri": "at://did:plc:re3ebnp5v7ffagz6rb6xfei4/com.atproto.lexicon.schema/site.standard.document",
       "cid": "bafyreifylc5lfr4vqfzrwdtqm4pnfg7cbra7z4acbgikylqandzefwdeaq"
+    },
+    "site.standard.graph.recommend": {
+      "uri": "at://did:plc:re3ebnp5v7ffagz6rb6xfei4/com.atproto.lexicon.schema/site.standard.graph.recommend",
+      "cid": "bafyreibglev4uvatb5do5obqxlif5w6b63tysjb7ve6w44x54g7hfe2rgy"
+    },
+    "site.standard.graph.subscription": {
+      "uri": "at://did:plc:re3ebnp5v7ffagz6rb6xfei4/com.atproto.lexicon.schema/site.standard.graph.subscription",
+      "cid": "bafyreiccyb5e4vq3rwhrajeud72ztezljufzrqbo73vz6mw2jwbgsxfqta"
     },
     "site.standard.publication": {
       "uri": "at://did:plc:re3ebnp5v7ffagz6rb6xfei4/com.atproto.lexicon.schema/site.standard.publication",

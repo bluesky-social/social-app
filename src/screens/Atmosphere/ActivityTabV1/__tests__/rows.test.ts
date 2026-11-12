@@ -44,14 +44,14 @@ describe('toActivityRows', () => {
       }),
     )
     expect(row).toMatchObject({
-      collection: 'document',
+      collection: NSID.document,
       actor: debbie,
       otherActorCount: 0,
       activityCount: 1,
       content: {type: 'article'},
     })
     expect(row.related).toEqual([
-      {collection: 'recommend', actors: [danielle, caelin, paul]},
+      {collection: NSID.recommend, actors: [danielle, caelin, paul]},
     ])
   })
 
@@ -65,7 +65,7 @@ describe('toActivityRows', () => {
       }),
     )
     expect(row).toMatchObject({
-      collection: 'recommend',
+      collection: NSID.recommend,
       actor: eric,
       otherActorCount: 0,
       activityCount: 16,
@@ -89,12 +89,12 @@ describe('toActivityRows', () => {
   })
 
   it.each([
-    ['subscription', NSID.subscription, publication(), 'publication'],
-    ['gallery', NSID.gallery, gallery(), 'gallery'],
-    ['livestream', NSID.livestream, livestream(), 'livestream'],
-  ] as const)('maps %s to %s content', (collection, nsid, view, type) => {
-    const actor = collection === 'gallery' ? manton : debbie
-    expect(cardOf(item({actor, collection: nsid, view}))).toMatchObject({
+    [NSID.subscription, publication(), 'publication'],
+    [NSID.gallery, gallery(), 'gallery'],
+    [NSID.livestream, livestream(), 'livestream'],
+  ] as const)('maps %s to %s content', (collection, view, type) => {
+    const actor = collection === NSID.gallery ? manton : debbie
+    expect(cardOf(item({actor, collection, view}))).toMatchObject({
       collection,
       content: {type},
     })
