@@ -685,15 +685,9 @@ export function DesktopLeftNav({
     useLayoutBreakpoints()
   const numUnreadNotifications = useUnreadNotifications()
   const numUnreadMessages = useUnreadMessageCount()
-  const isModerationInboxEnabled = ax.features.enabled(
-    ax.features.ModerationInboxEnable,
-  )
-  const moderationInboxUnreadCountQuery = useModerationInboxUnreadCountQuery(
-    isModerationInboxEnabled,
-  )
-  const moderationInboxUnreadCount = isModerationInboxEnabled
-    ? (moderationInboxUnreadCountQuery.data?.unreadCounts.total ?? 0)
-    : 0
+  const moderationInboxUnreadCountQuery = useModerationInboxUnreadCountQuery()
+  const moderationInboxUnreadCount =
+    moderationInboxUnreadCountQuery.data?.unreadCounts.total ?? 0
   const numUnreadModerationInbox =
     moderationInboxUnreadCount > 0
       ? moderationInboxUnreadCount >= UNREAD_NOTIFICATION_CAP
