@@ -1,5 +1,5 @@
 import {memo, useMemo, useState} from 'react'
-import {type Insets} from 'react-native'
+import {type Insets, Platform} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {msg} from '@lingui/core/macro'
@@ -80,7 +80,7 @@ let ShareMenuButton = ({
   )
 
   const onNativeLongPress = () => {
-    ax.metric('share:press:nativeShare', {})
+    ax.metric('share:press:nativeShare', {os: Platform.OS})
     const urip = new AtUri(post.uri)
     const href = makeProfileLink(post.author, 'post', urip.rkey)
     const url = toShareUrl(href)

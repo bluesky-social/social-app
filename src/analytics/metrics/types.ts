@@ -1336,7 +1336,13 @@ export type Events = {
     position?: number
   }
   'share:press:copyLink': {uri: string}
-  'share:press:nativeShare': {}
+  /**
+   * Fires when the user opens the system share sheet, or the browser's on
+   * desktop web ("Share via…").
+   */
+  'share:press:nativeShare': {
+    os: Platform['OS']
+  }
   /**
    * Fires when the system share sheet closes after sharing a post. Not
    * logged on Android builds without the native share module.
@@ -1395,9 +1401,8 @@ export type Events = {
     authorDid: string
     platform: SharePlatformId
     /**
-     * 0-based index among the apps, not counting actions like "Copy link"
-     * ahead of them. The row scrolls, so later apps are only seen by people
-     * who swipe.
+     * 0-based index in the apps row. The row scrolls, so later apps are only
+     * seen by people who swipe.
      */
     position: number
   }

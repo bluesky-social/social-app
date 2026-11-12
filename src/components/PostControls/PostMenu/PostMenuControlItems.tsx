@@ -1,3 +1,4 @@
+import {Platform} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {useLingui} from '@lingui/react/macro'
 
@@ -142,7 +143,7 @@ export function PostMenuControlItems({
     if (IS_WEB) {
       ax.metric('share:press:copyLink', {uri: post.uri})
     } else {
-      ax.metric('share:press:nativeShare', {})
+      ax.metric('share:press:nativeShare', {os: Platform.OS})
     }
     const {rkey} = new AtUri(post.uri)
     void shareUrl(toShareUrl(makeProfileLink(post.author, 'post', rkey)))

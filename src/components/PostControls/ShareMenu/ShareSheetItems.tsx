@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Platform, StyleSheet, View} from 'react-native'
 import * as ExpoClipboard from 'expo-clipboard'
 import {AtUri} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -43,8 +43,8 @@ import {type ShareMenuItemsProps} from './ShareMenuItems.types'
 
 /**
  * The redesigned share sheet (APP-3670), behind `share_destinations:enable`:
- * a chat search and grid of recent chats, then one row with Copy link, Save,
- * the system share sheet and the apps installed on the device.
+ * a chat search and grid of recent chats, then a row of the apps installed on
+ * the device, with Copy link, Save and More (the system share sheet) below it.
  */
 export function ShareSheetItems({
   post,
@@ -79,7 +79,7 @@ export function ShareSheetItems({
   const showChats = hasSession && aa.state.access === aa.Access.Full
 
   const onSharePost = () => {
-    ax.metric('share:press:nativeShare', {})
+    ax.metric('share:press:nativeShare', {os: Platform.OS})
     const url = toShareUrl(href)
     void shareUrl(url).then(result => {
       if (!result) return

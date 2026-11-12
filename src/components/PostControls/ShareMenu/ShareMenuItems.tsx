@@ -1,4 +1,5 @@
 import {memo, useMemo} from 'react'
+import {Platform} from 'react-native'
 import * as ExpoClipboard from 'expo-clipboard'
 import {AtUri} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -72,7 +73,7 @@ function LegacyShareMenuItems({
   }, [postAuthor])
 
   const onSharePost = () => {
-    ax.metric('share:press:nativeShare', {})
+    ax.metric('share:press:nativeShare', {os: Platform.OS})
     const url = toShareUrl(href)
     void shareUrl(url).then(result => {
       if (!result) return

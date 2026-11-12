@@ -1,4 +1,5 @@
 import {memo, useMemo} from 'react'
+import {Platform} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -87,7 +88,7 @@ let ShareMenuItems = ({
     ax.features.enabled(ax.features.ShareDestinationsEnable)
 
   const onShareVia = () => {
-    ax.metric('share:press:nativeShare', {})
+    ax.metric('share:press:nativeShare', {os: Platform.OS})
     const url = toShareUrl(href)
     const logResult = (status: 'shared' | 'dismissed') => {
       ax.metric('share:nativeShare:result', {
