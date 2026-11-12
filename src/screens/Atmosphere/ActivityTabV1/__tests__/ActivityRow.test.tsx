@@ -2,6 +2,7 @@ import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
 import {render, screen} from '@testing-library/react-native'
 
+import {makeActivityListLink} from '#/screens/Atmosphere/ActivityList/links'
 import {ActivityRow} from '../components/ActivityRow'
 import {getStreamDuration, isLive} from '../components/LivestreamCard'
 import {type ActivityRow as ActivityRowModel, toActivityRows} from '../rows'
@@ -24,6 +25,8 @@ import {
   subjectGroup,
 } from './fixtures'
 
+const mockLinkTo = jest.fn()
+
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
   useTheme: () => ({
@@ -43,6 +46,18 @@ jest.mock('#/components/Link', () => {
     InlineLinkText: ({children}: {children: React.ReactNode}) => (
       <Text>{children}</Text>
     ),
+    Link: ({
+      children,
+      to,
+      testID,
+    }: {
+      children: React.ReactNode
+      to: string
+      testID?: string
+    }) => {
+      mockLinkTo(to)
+      return <Text testID={testID}>{children}</Text>
+    },
   }
 })
 jest.mock('#/components/Admonition', () => {
@@ -139,7 +154,7 @@ describe('ActivityRow', () => {
     expectHeader('Danielle Yuhan and 2 others recommended an article')
   })
 
-  it('renders an actor group with its count and View all', () => {
+  it('renders a recommend group without View all', () => {
     renderEntry(
       actorGroup({
         actor: eric,
@@ -149,7 +164,8 @@ describe('ActivityRow', () => {
       }),
     )
     expectHeader('Eric recommended 16 articles')
-    expect(screen.getByTestId('activityV1ViewAll')).toBeTruthy()
+    // Its URIs are recommend records, not the articles, so there's no list.
+    expect(screen.queryByTestId('activityV1ViewAll')).toBeNull()
   })
 
   it('names the app of the newest article in a published group', () => {
@@ -162,6 +178,27 @@ describe('ActivityRow', () => {
       }),
     )
     expectHeader('Eric published 3 articles', 'pckt')
+  })
+
+  it('links View all to the group as an activity list', () => {
+    const [row] = toActivityRows(
+      [
+        actorGroup({
+          actor: eric,
+          collection: NSID.document,
+          view: article('paul.pckt.blog'),
+          count: 3,
+        }),
+      ],
+      profiles,
+      0,
+    )
+    renderRow(row)
+    expect(screen.getByTestId('activityV1ViewAll')).toBeTruthy()
+    expect(row.kind === 'card' && row.uris).toHaveLength(3)
+    expect(mockLinkTo).toHaveBeenCalledWith(
+      makeActivityListLink(row.kind === 'card' ? (row.uris ?? []) : []),
+    )
   })
 
   it.each([

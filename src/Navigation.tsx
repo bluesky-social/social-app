@@ -86,6 +86,7 @@ import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStack
 import {DesktopLeftNav} from '#/view/shell/desktop/LeftNav'
 import {getNativeTabBarVisibility} from '#/view/shell/nativeTabBarVisibility'
 import {AtmosphereScreen} from '#/screens/Atmosphere'
+import {AtmosphereActivityListScreen} from '#/screens/Atmosphere/ActivityList'
 import {BookmarksScreen} from '#/screens/Bookmarks'
 import {CustomFeedScreen} from '#/screens/CustomFeed'
 import {CustomFeedLikedByScreen} from '#/screens/CustomFeed/CustomFeedLikedBy'
@@ -192,6 +193,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="Atmosphere"
         getComponent={() => AtmosphereScreen}
         options={{title: title(msg`Atmosphere`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="AtmosphereActivityList"
+        getComponent={() => AtmosphereActivityListScreen}
+        options={{title: title(msg`Activity`), requireAuth: true}}
       />
       <Stack.Screen
         name="Lists"

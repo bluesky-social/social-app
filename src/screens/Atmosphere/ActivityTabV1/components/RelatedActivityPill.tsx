@@ -52,11 +52,18 @@ export function RelatedActivityPill({related}: {related: RelatedActivity}) {
         style={[a.flex_1, a.text_xs, a.leading_snug, t.atoms.text]}>
         {others > 0 ? (
           <Trans>
-            Recommended by <Text style={strong}>{name}</Text> +{others}
+            Recommended by{' '}
+            <Text emoji style={strong}>
+              {name}
+            </Text>{' '}
+            +{others}
           </Trans>
         ) : (
           <Trans>
-            Recommended by <Text style={strong}>{name}</Text>
+            Recommended by{' '}
+            <Text emoji style={strong}>
+              {name}
+            </Text>
           </Trans>
         )}
       </Text>

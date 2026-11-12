@@ -25,6 +25,8 @@ cannot fetch it. These schemas are copied from merged upstream sources:
   `11f52c5588279d159ab12404a1b323731a467fdd` (from atproto PR 5801)
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereTimeline.json` at atproto
   `4ca55dbc6d9e04d721fc14abffb73ce33158e002` (from atproto PR 5871)
+- `lexicons-overrides/app/bsky/unspecced/getAtmosphereRecordViews.json` at atproto
+  `3fb2578a59813b3183fb1e443120e25a43ab4aba` (from atproto PR 5860)
 
 In `lexicons.json`, their `cid` values are locally calculated content-integrity
 pins, not published record CIDs, and their `uri` values are only installer

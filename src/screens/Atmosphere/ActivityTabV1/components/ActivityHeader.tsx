@@ -51,6 +51,7 @@ export function ActivityHeader({row}: {row: ActivityCardRow}) {
               <InlineLinkText
                 to={makeProfileLink(actor)}
                 label={name}
+                emoji
                 disableUnderline
                 style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
                 {name}

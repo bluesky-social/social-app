@@ -1,4 +1,4 @@
-import {AtUri} from '@atproto/syntax'
+import {AtUri, type AtUriString} from '@atproto/syntax'
 
 import {
   getAssociatedProfile,
@@ -53,6 +53,8 @@ export type ActivityCardRow = {
   otherActorCount: number
   /** Activities in this row; more than one means an actor group. */
   activityCount: number
+  /** Every activity URI in an actor group, newest first. */
+  uris?: AtUriString[]
   indexedAt: string
   content: ActivityContent
   related: RelatedActivity[]
@@ -110,6 +112,7 @@ function toActivityRow(
       actor: profiles.get(entry.actor),
       otherActorCount: 0,
       activityCount: entry.uris.length,
+      uris: entry.uris,
       indexedAt: entry.indexedAt,
       view: entry.item.view,
       related: toRelatedActivity(entry.item.relatedActivity),
@@ -179,6 +182,20 @@ function toContent(
         ? {type: 'livestream', view}
         : undefined
   }
+}
+
+/**
+ * The card for one record on the activity list, or undefined when its view is
+ * missing or doesn't match the record's collection.
+ */
+export function toActivityListContent(
+  uri: AtUriString,
+  view: EntryView | undefined,
+): ActivityContent | undefined {
+  const {collection} = new AtUri(uri)
+  return view && isActivityCollection(collection)
+    ? toContent(collection, view)
+    : undefined
 }
 
 function toRelatedActivity(
