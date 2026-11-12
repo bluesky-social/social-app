@@ -91,8 +91,8 @@ type Clients = {
 }
 
 /**
- * Build a bundle over a real `PasswordSession`, with the clients the provider
- * serves. Only the fields the provider reads are populated.
+ * Build a bundle over a real `PasswordSession`, with the three clients the
+ * provider serves. Only the fields the provider reads are populated.
  */
 function makeBundle(account: SessionAccount): SessionBundle {
   const fetchMock = makeMockFetch()

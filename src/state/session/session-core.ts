@@ -53,7 +53,7 @@ function deriveServiceUrl(session: PasswordSession | null): URL {
   )
 }
 
-/** The clients over one `PasswordSession`, the bundle's sole auth core. */
+/** The three clients over one `PasswordSession`, the bundle's sole auth core. */
 export type SessionBundle = {
   session: PasswordSession
   appviewClient: Client

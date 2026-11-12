@@ -12,10 +12,7 @@ import {
 import {type SessionAccount} from './types'
 
 /** The moderation surface of a session bundle. */
-type ModerationSession = {
-  appviewClient: Client
-  chatClient: Client
-}
+type ModerationSession = {appviewClient: Client; chatClient: Client}
 
 /**
  * Cache an account's subscribed labeler DIDs. Called on every preferences
@@ -48,7 +45,7 @@ export function readLabelers(did: string): string[] | undefined {
  * lex collects the two lists into a `Set` keyed on the suffixed string, so
  * neither dedupes against the other.
  *
- * Appview and chat take subscriptions. The PDS suppresses labelers because
+ * Appview and chat both take subscriptions. The PDS suppresses labelers because
  * repo and identity requests do not hydrate moderated content (see clients.ts).
  */
 export function applyLabelersToClient(

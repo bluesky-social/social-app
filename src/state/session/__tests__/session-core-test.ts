@@ -364,7 +364,7 @@ describe('sessionAccountToSessionData', () => {
 })
 
 describe('createSessionBundleFromStoredAccount', () => {
-  it('shares one session across clients and disables their transport on disposal', async () => {
+  it('builds three clients over one session', async () => {
     const result = createSessionBundleFromStoredAccount(
       makeAccount(),
       jest.fn(),
