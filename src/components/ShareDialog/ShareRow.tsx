@@ -11,7 +11,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type ShareContent, type SharePlatformId} from './catalog'
 import {SHEET_GUTTER} from './const'
-import {openSharePlatform} from './share'
+import {needsPaste, openSharePlatform} from './share'
 import {SharePlatformIcon, useSharePlatformLabel} from './SharePlatformIcon'
 
 /**
@@ -27,6 +27,12 @@ const GAP = tokens.space.sm
  * instead of a clipped item, and both rows share it so they line up.
  */
 const COLUMNS = 4.5
+/**
+ * How long the "paste it" toast stays up after the sheet closes, before the
+ * app opens. Long enough to read; once the app is open, Bluesky is in the
+ * background and the toast can't be seen.
+ */
+const PASTE_HINT_MS = 800
 
 /**
  * A non-platform item in the row, e.g. "Copy link", drawn as a neutral tile.
@@ -95,25 +101,22 @@ export function ShareRow({
       platform: id,
       position,
     })
-    control.close(() => {
-      openSharePlatform(id, content).then(
-        ({copiedLink}) => {
-          if (copiedLink) {
-            Toast.show(l`Link copied – paste it in ${label}`, {
-              type: 'success',
-            })
-          }
-        },
-        () => {
-          ax.metric('share:platform:openFailed', {
-            uri,
-            authorDid,
-            platform: id,
-          })
-          Toast.show(l`Couldn’t open ${label}`, {type: 'error'})
-        },
-      )
-    })
+    const open = () => {
+      openSharePlatform(id, content).catch(() => {
+        ax.metric('share:platform:openFailed', {
+          uri,
+          authorDid,
+          platform: id,
+        })
+        Toast.show(l`Couldn’t open ${label}`, {type: 'error'})
+      })
+    }
+    if (needsPaste(id)) {
+      Toast.show(l`Link copied – paste it in ${label}`, {type: 'success'})
+      control.close(() => setTimeout(open, PASTE_HINT_MS))
+    } else {
+      control.close(open)
+    }
     onShare()
   }
 

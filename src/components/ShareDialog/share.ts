@@ -18,6 +18,14 @@ export type OpenSharePlatformResult = {
 }
 
 /**
+ * Whether the platform gets the link on the clipboard for the person to
+ * paste, rather than filled in (`copyAndOpen` on iOS).
+ */
+export function needsPaste(id: SharePlatformId): boolean {
+  return IS_IOS && !!getSharePlatform(id).ios?.copyAndOpen
+}
+
+/**
  * Opens a platform's app with the post ready to send. Rejects when the app
  * can't be opened, e.g. it was uninstalled after the row was shown.
  */

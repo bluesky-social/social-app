@@ -3,7 +3,7 @@ import * as Clipboard from 'expo-clipboard'
 import {Share} from '@bsky.app/expo-bluesky-swiss-army'
 import {beforeEach, describe, expect, it, jest} from '@jest/globals'
 
-import {openSharePlatform} from './share'
+import {needsPaste, openSharePlatform} from './share'
 
 let mockOS: 'ios' | 'android' | 'web' = 'ios'
 
@@ -91,5 +91,15 @@ describe('openSharePlatform', () => {
     await expect(openSharePlatform('whatsapp', content)).rejects.toThrow(
       'not supported',
     )
+  })
+})
+
+describe('needsPaste', () => {
+  it('is true for copy-and-open apps on iOS only', () => {
+    mockOS = 'ios'
+    expect(needsPaste('signal')).toBe(true)
+    expect(needsPaste('whatsapp')).toBe(false)
+    mockOS = 'android'
+    expect(needsPaste('signal')).toBe(false)
   })
 })
