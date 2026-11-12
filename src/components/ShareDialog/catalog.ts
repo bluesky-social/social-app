@@ -23,9 +23,18 @@ export type IOSSharePlatform = {
    */
   scheme: string
 } & (
-  | {getShareUrl: GetShareUrl; copyAndOpen?: never}
+  | {
+      getShareUrl: GetShareUrl
+      copyAndOpen?: never
+      /**
+       * If the share link won't open, fall back to `copyAndOpen`. For apps
+       * whose share link is undocumented and might stop working.
+       */
+      pasteFallback?: true
+    }
   | {
       getShareUrl?: never
+      pasteFallback?: never
       /**
        * Copy the link and open the app, so the person pastes it. For apps with
        * no link that opens them with text filled in, since iOS can't send to
@@ -191,6 +200,7 @@ const CATALOG = [
       scheme: 'fb-messenger',
       // Undocumented by Meta, but it's what other apps' share sheets use
       getShareUrl: ({url}) => `fb-messenger://share/?link=${enc(url)}`,
+      pasteFallback: true,
     },
     android: {
       packages: ['com.facebook.orca'],

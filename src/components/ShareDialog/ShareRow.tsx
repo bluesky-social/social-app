@@ -11,7 +11,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type ShareContent, type SharePlatformId} from './catalog'
 import {SHEET_GUTTER} from './const'
-import {needsPaste, openSharePlatform} from './share'
+import {hasPasteFallback, needsPaste, openSharePlatform} from './share'
 import {SharePlatformIcon, useSharePlatformLabel} from './SharePlatformIcon'
 
 /**
@@ -101,19 +101,31 @@ export function ShareRow({
       platform: id,
       position,
     })
+    const onOpenFailed = () => {
+      ax.metric('share:platform:openFailed', {
+        uri,
+        authorDid,
+        platform: id,
+      })
+      Toast.show(l`Couldn’t open ${label}`, {type: 'error'})
+    }
+    const showPasteHint = () => {
+      Toast.show(l`Link copied – paste it in ${label}`, {type: 'success'})
+    }
+    const openWithPaste = () => {
+      openSharePlatform(id, content, {paste: true}).catch(onOpenFailed)
+    }
     const open = () => {
       openSharePlatform(id, content).catch(() => {
-        ax.metric('share:platform:openFailed', {
-          uri,
-          authorDid,
-          platform: id,
-        })
-        Toast.show(l`Couldn’t open ${label}`, {type: 'error'})
+        if (!hasPasteFallback(id)) return onOpenFailed()
+        // The share link didn't open, so we're still here to show the hint
+        showPasteHint()
+        setTimeout(openWithPaste, PASTE_HINT_MS)
       })
     }
     if (needsPaste(id)) {
-      Toast.show(l`Link copied – paste it in ${label}`, {type: 'success'})
-      control.close(() => setTimeout(open, PASTE_HINT_MS))
+      showPasteHint()
+      control.close(() => setTimeout(openWithPaste, PASTE_HINT_MS))
     } else {
       control.close(open)
     }
