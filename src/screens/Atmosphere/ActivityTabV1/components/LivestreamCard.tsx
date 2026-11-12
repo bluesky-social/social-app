@@ -1,6 +1,6 @@
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
 import {getAssociatedProfile} from '#/screens/Atmosphere/data/exploreData'
@@ -9,7 +9,7 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Play_Filled_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {place} from '#/lexicons'
+import {type app, place} from '#/lexicons'
 import {type ActivityContent} from '../rows'
 import {CardStats} from './CardStats'
 
@@ -91,6 +91,7 @@ export function LivestreamCard({
               <PlayIcon size="xl" fill="white" />
             </View>
           </View>
+          <LiveBadge live={isLive(view)} />
           {duration ? (
             <View
               pointerEvents="none"
@@ -116,6 +117,58 @@ export function LivestreamCard({
         offsetY={a.p_md.padding}
         offsetX={a.p_md.padding}
       />
+    </View>
+  )
+}
+
+/**
+ * Whether a stream is live. The appview sets `active` when Streamplace's
+ * `lastSeenAt` heartbeat is within 2 minutes of serving the view, but an
+ * `endedAt` always means the stream is over.
+ */
+export function isLive(view: app.bsky.embed.external.ViewLivestream) {
+  return view.active && !view.endedAt
+}
+
+/** "• LIVE" while the stream is live, otherwise a grayed-out "• ENDED". */
+function LiveBadge({live}: {live: boolean}) {
+  const t = useTheme()
+  return (
+    <View
+      pointerEvents="none"
+      style={[
+        a.absolute,
+        a.flex_row,
+        a.align_center,
+        a.gap_xs,
+        a.px_sm,
+        a.py_2xs,
+        a.rounded_sm,
+        {
+          top: 8,
+          left: 8,
+          backgroundColor: live
+            ? t.palette.negative_500
+            : t.palette.contrast_500,
+        },
+      ]}>
+      <View
+        style={[
+          a.rounded_full,
+          {width: 6, height: 6, backgroundColor: 'white'},
+        ]}
+      />
+      <Text style={[a.text_xs, a.font_bold, {color: 'white'}]}>
+        {live ? (
+          <Trans comment="Badge on a livestream thumbnail while it is streaming. Keep it very short.">
+            LIVE
+          </Trans>
+        ) : (
+          <Trans comment="Badge on a livestream thumbnail after the stream has ended. Keep it very short.">
+            ENDED
+          </Trans>
+        )}
+      </Text>
     </View>
   )
 }

@@ -3,7 +3,7 @@ import {I18nProvider} from '@lingui/react'
 import {render, screen} from '@testing-library/react-native'
 
 import {ActivityRow} from '../components/ActivityRow'
-import {getStreamDuration} from '../components/LivestreamCard'
+import {getStreamDuration, isLive} from '../components/LivestreamCard'
 import {type ActivityRow as ActivityRowModel, toActivityRows} from '../rows'
 import {
   actorGroup,
@@ -167,12 +167,12 @@ describe('ActivityRow', () => {
   it.each([
     [false, 'was live'],
     [true, 'is live'],
-  ])('renders a livestream (active: %s)', (active, verb) => {
+  ])('renders a livestream (live: %s)', (live, verb) => {
     renderEntry(
       item({
         actor: camp,
         collection: NSID.livestream,
-        view: livestream({active}),
+        view: livestream(live ? {active: true, endedAt: undefined} : {}),
       }),
     )
     // No display name, so the handle stands in.
@@ -209,6 +209,14 @@ describe('ActivityRow', () => {
     expect(
       screen.getByText('This activity can’t be shown right now.'),
     ).toBeTruthy()
+  })
+})
+
+describe('isLive', () => {
+  it('requires an active stream with no endedAt', () => {
+    expect(isLive(livestream({active: true, endedAt: undefined}))).toBe(true)
+    expect(isLive(livestream({active: true}))).toBe(false)
+    expect(isLive(livestream({active: false, endedAt: undefined}))).toBe(false)
   })
 })
 

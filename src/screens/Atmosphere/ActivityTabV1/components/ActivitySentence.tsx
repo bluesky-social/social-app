@@ -4,6 +4,7 @@ import {atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {place, site, social} from '#/lexicons'
 import {type ActivityCardRow} from '../rows'
+import {isLive} from './LivestreamCard'
 
 /**
  * The "<actor> <did something>" sentence. Each case is a full sentence so
@@ -93,7 +94,7 @@ export function ActivitySentence({
       )
 
     case place.stream.livestream.$type:
-      if (row.content.type === 'livestream' && row.content.view.active) {
+      if (row.content.type === 'livestream' && isLive(row.content.view)) {
         return <Trans>{actor} is live</Trans>
       }
       return count > 1 ? (

@@ -22,12 +22,7 @@ export function ActivityRow({row}: {row: ActivityRowModel}) {
   return (
     <View
       testID={row.kind === 'card' ? 'activityV1Row' : 'activityV1WarningRow'}
-      style={[
-        a.gap_sm,
-        a.p_lg,
-        a.border_b,
-        t.atoms.border_contrast_low,
-      ]}>
+      style={[a.gap_sm, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
       {row.kind === 'card' ? (
         <ActivityCard row={row} />
       ) : (
