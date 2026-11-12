@@ -139,7 +139,7 @@ describe('ActivityRow', () => {
     )
     expectHeader('Debbie Ridpath Ohi published an article', 'Leaflet')
     expect(screen.getByText('Recommended by Danielle Yuhan +2')).toBeTruthy()
-    expect(screen.queryByTestId('activityV1ViewAll')).toBeNull()
+    expect(screen.queryByTestId('activityViewAll')).toBeNull()
   })
 
   it('renders a subject group as "and N others"', () => {
@@ -165,7 +165,7 @@ describe('ActivityRow', () => {
     )
     expectHeader('Eric recommended 16 articles')
     // Its URIs are recommend records, not the articles, so there's no list.
-    expect(screen.queryByTestId('activityV1ViewAll')).toBeNull()
+    expect(screen.queryByTestId('activityViewAll')).toBeNull()
   })
 
   it('names the app of the newest article in a published group', () => {
@@ -194,7 +194,7 @@ describe('ActivityRow', () => {
       0,
     )
     renderRow(row)
-    expect(screen.getByTestId('activityV1ViewAll')).toBeTruthy()
+    expect(screen.getByTestId('activityViewAll')).toBeTruthy()
     expect(row.kind === 'card' && row.uris).toHaveLength(3)
     expect(mockLinkTo).toHaveBeenCalledWith(
       makeActivityListLink(row.kind === 'card' ? (row.uris ?? []) : []),

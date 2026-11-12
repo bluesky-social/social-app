@@ -30,7 +30,7 @@ export function LivestreamCard({
   return (
     <View style={a.relative}>
       <Link
-        testID="activityV1LivestreamCard"
+        testID="activityLivestreamCard"
         to={view.uri}
         label={l`Open livestream: ${view.title}`}
         onHoverIn={onIn}

@@ -30,7 +30,7 @@ export function RelatedActivityPill({related}: {related: RelatedActivity}) {
 
   return (
     <View
-      testID="activityV1RelatedPill"
+      testID="activityRelatedPill"
       style={[
         a.flex_row,
         a.align_center,

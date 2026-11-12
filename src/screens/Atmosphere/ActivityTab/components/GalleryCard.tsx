@@ -50,7 +50,7 @@ export function GalleryCard({
   return (
     <View style={a.relative}>
       <Button
-        testID="activityV1GalleryCard"
+        testID="activityGalleryCard"
         label={l({
           message: `View photos in ${view.title}`,
           comment:

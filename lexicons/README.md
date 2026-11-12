@@ -35,11 +35,11 @@ will fail when it tries to fetch these schemas. Update them from upstream JSON
 and compute each local CID with `cidForLex` from `@atproto/lex-cbor`.
 
 The authenticated Activity timeline uses the session's appview client. Its feed
-contains hydrated activities, page-local groups, and overflow counts; it has no
-raw-record sidecars or separate raw endpoint. Missing interaction-owner profiles
-are fetched through `app.bsky.actor.getProfiles` in batches of at most 25. Each
-activity menu can inspect the original timeline entry from the same account-scoped
-query. The Apps tab follows Explore; Explore's app gallery opens it with “See more”.
+contains hydrated activity items, actor groups, and subject groups. Until the
+timeline returns actor profiles, missing ones are fetched through
+`app.bsky.actor.getProfiles` in batches of at most 25. “View all” on an actor
+group hydrates the group's records through `getAtmosphereRecordViews`, 25 at a
+time. The Apps tab follows Explore; Explore's app gallery opens it with “See more”.
 
 ## Exception: `place.stream.badge.defs`
 

@@ -24,7 +24,7 @@ export function ActivityRow({row}: {row: ActivityRowModel}) {
   const t = useTheme()
   return (
     <View
-      testID={row.kind === 'card' ? 'activityV1Row' : 'activityV1WarningRow'}
+      testID={row.kind === 'card' ? 'activityRow' : 'activityWarningRow'}
       style={[a.gap_sm, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
       {row.kind === 'card' ? <ActivityCard row={row} /> : <ActivityWarning />}
     </View>
@@ -83,7 +83,7 @@ function ViewAllLink({row}: {row: ActivityCardRow}) {
   }
   return (
     <Link
-      testID="activityV1ViewAll"
+      testID="activityViewAll"
       to={makeActivityListLink(row.uris)}
       label={l`View all activity`}
       style={[a.flex_row, a.align_center, a.gap_xs, a.self_start]}>

@@ -13,7 +13,7 @@ import {ActivityRow} from './components/ActivityRow'
 import {type ActivityRow as ActivityRowModel, toActivityRows} from './rows'
 import {useActivityTimelineQuery} from './useActivityTimelineQuery'
 
-export function ActivityTabV1() {
+export function ActivityTab() {
   const {t: l} = useLingui()
   const {
     data,
@@ -49,7 +49,7 @@ export function ActivityTabV1() {
       />
     ) : (
       <View
-        testID="activityV1Loading"
+        testID="activityLoading"
         style={[a.align_center, a.justify_center, a.py_5xl]}>
         <Loader size="xl" />
       </View>
@@ -58,7 +58,7 @@ export function ActivityTabV1() {
 
   return (
     <List
-      testID="activityV1List"
+      testID="activityList"
       data={rows}
       keyExtractor={(row: ActivityRowModel) => row.key}
       renderItem={({item}: {item: ActivityRowModel}) => (
@@ -85,7 +85,7 @@ export function ActivityTabV1() {
 function EmptyState() {
   const t = useTheme()
   return (
-    <View testID="activityV1Empty" style={[a.align_center, a.px_xl, a.py_5xl]}>
+    <View testID="activityEmpty" style={[a.align_center, a.px_xl, a.py_5xl]}>
       <Text style={[a.text_md, a.text_center, t.atoms.text_contrast_medium]}>
         <Trans>No activity yet.</Trans>
       </Text>

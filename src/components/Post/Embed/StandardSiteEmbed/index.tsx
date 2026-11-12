@@ -22,15 +22,10 @@ import {matchStandardSiteHostByPublication} from '#/components/Post/Embed/Standa
 import {StandardSiteMetaRow} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow'
 import {StandardSiteThemeProvider} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteThemeProvider'
 import type * as ssTypes from '#/components/Post/Embed/StandardSiteEmbed/types'
-import {
-  isStandardSiteDocumentUri,
-  isStandardSitePublicationEmbed,
-} from '#/components/Post/Embed/StandardSiteEmbed/utils'
+import {isStandardSitePublicationEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
-
-export {StandardSiteCompactDocumentCard} from './StandardSiteCompactDocumentCard'
 
 const PUBLICATION_AVATAR_STYLE = {
   borderRadius: a.rounded_sm.borderRadius,
@@ -41,13 +36,10 @@ export const StandardSiteEmbed = ({
   view,
   onEmbedInteractionCallback,
   style,
-  children,
 }: ssTypes.CommonProps &
   ssTypes.PreviewProps &
   ssTypes.PublicApiProps & {
     style?: StyleProp<ViewStyle>
-    /** Supplemental card content outside the primary link. */
-    children?: React.ReactNode
   }) => {
   const ax = useAnalytics()
   const {t: l, i18n} = useLingui()
@@ -125,9 +117,8 @@ export const StandardSiteEmbed = ({
         onLongPress={onLongPressPublication}
         style={style}
         themeColors={themeColors}
-        onEmbedInteractionCallback={onEmbedInteractionCallback}>
-        {children}
-      </PublicationCard>
+        onEmbedInteractionCallback={onEmbedInteractionCallback}
+      />
     )
   }
 
@@ -282,7 +273,6 @@ export const StandardSiteEmbed = ({
           </View>
         )}
       </Link>
-      {children}
 
       {view.source && (
         <View>
@@ -312,7 +302,6 @@ export function PublicationCard({
   linkProps,
   onEmbedInteractionCallback,
   hideSubscribe,
-  children,
 }: ssTypes.CommonProps &
   ssTypes.PreviewProps &
   ssTypes.PublicApiProps & {
@@ -327,8 +316,6 @@ export function PublicationCard({
      */
     linkProps?: Pick<LinkProps, 'ref' | 'tabIndex' | 'onFocus'>
     hideSubscribe?: boolean
-    /** Supplemental content between the description and narrow-layout CTA. */
-    children?: React.ReactNode
   }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -444,7 +431,6 @@ export function PublicationCard({
             </Text>
           </View>
         )}
-        {children}
 
         {!gtPhone && (
           <View style={[a.pt_sm]}>
@@ -479,14 +465,9 @@ export function SubscribeButton({
   const haptics = useHaptics()
 
   const highlightedPublisher = matchStandardSiteHostByPublication(view)
-  const readNow =
-    !highlightedPublisher &&
-    view.associatedRefs?.some(isStandardSiteDocumentUri)
   const cta = highlightedPublisher
     ? l`Subscribe on ${highlightedPublisher.name}`
-    : readNow
-      ? l`Read now`
-      : l`View publication`
+    : l`View publication`
 
   /*
    * The custom site theme paints the button background with `accent` and the
@@ -509,20 +490,15 @@ export function SubscribeButton({
   }
 
   if (!view.source) return null
-  const targetUrl = readNow ? view.uri : view.source.uri
 
   const publicationTitle = view.source.title
   const label = highlightedPublisher
     ? publicationTitle
       ? l`Subscribe to ${publicationTitle} on ${highlightedPublisher.name}`
       : l`Subscribe on ${highlightedPublisher.name}`
-    : readNow
-      ? view.title
-        ? l`Read ${view.title}`
-        : l`Read now`
-      : publicationTitle
-        ? l`View ${publicationTitle}`
-        : l`View publication`
+    : publicationTitle
+      ? l`View ${publicationTitle}`
+      : l`View publication`
 
   const onPress = () => {
     haptics.tap()
@@ -532,31 +508,25 @@ export function SubscribeButton({
         url: view.source?.uri || '',
       })
     } else {
-      ax.metric(
-        readNow
-          ? 'embed:standardSite:article:press'
-          : 'embed:standardSite:publicationCta:press',
-        {url: targetUrl},
-      )
+      ax.metric('embed:standardSite:publicationCta:press', {
+        url: view.source?.uri || '',
+      })
     }
   }
 
   const onLongPress = IS_NATIVE
     ? () => {
-        if (targetUrl) {
+        if (view.source?.uri) {
           haptics.longPress()
-          void shareUrl(targetUrl)
+          void shareUrl(view.source.uri)
           if (highlightedPublisher) {
             ax.metric('embed:standardSite:subscribe:longPress', {
               url: view.source?.uri || '',
             })
           } else {
-            ax.metric(
-              readNow
-                ? 'embed:standardSite:article:longPress'
-                : 'embed:standardSite:publicationCta:longPress',
-              {url: targetUrl},
-            )
+            ax.metric('embed:standardSite:publicationCta:longPress', {
+              url: view.source?.uri || '',
+            })
           }
         }
       }
@@ -565,7 +535,7 @@ export function SubscribeButton({
   const button = (
     <Link
       shouldProxy
-      to={targetUrl}
+      to={view.source.uri}
       label={label}
       size="small"
       color="secondary_inverted"

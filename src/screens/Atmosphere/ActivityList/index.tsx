@@ -11,8 +11,8 @@ import {List} from '#/view/com/util/List'
 import {
   ActivityContentCard,
   ActivityWarning,
-} from '#/screens/Atmosphere/ActivityTabV1/components/ActivityRow'
-import {toActivityListContent} from '#/screens/Atmosphere/ActivityTabV1/rows'
+} from '#/screens/Atmosphere/ActivityTab/components/ActivityRow'
+import {toActivityListContent} from '#/screens/Atmosphere/ActivityTab/rows'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
