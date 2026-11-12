@@ -23,9 +23,8 @@ export function ActivityRow({row}: {row: ActivityRowModel}) {
     <View
       testID={row.kind === 'card' ? 'activityV1Row' : 'activityV1WarningRow'}
       style={[
-        a.gap_md,
-        a.px_lg,
-        a.py_lg,
+        a.gap_sm,
+        a.p_lg,
         a.border_b,
         t.atoms.border_contrast_low,
       ]}>
@@ -73,7 +72,7 @@ function ViewAllLink() {
     <View
       testID="activityV1ViewAll"
       style={[a.flex_row, a.align_center, a.gap_xs]}>
-      <Text style={[a.text_md, a.font_medium, {color: t.palette.primary_500}]}>
+      <Text style={[a.text_sm, a.font_medium, {color: t.palette.primary_500}]}>
         <Trans>View all</Trans>
       </Text>
       <ArrowRightIcon size="sm" fill={t.palette.primary_500} />

@@ -26,7 +26,7 @@ export function RelatedActivityPill({related}: {related: RelatedActivity}) {
     first.displayName || sanitizeHandle(first.handle),
     moderation?.ui('displayName'),
   )
-  const strong = [a.font_semi_bold, t.atoms.text]
+  const strong = [a.text_xs, a.font_semi_bold, t.atoms.text]
 
   return (
     <View
@@ -34,13 +34,13 @@ export function RelatedActivityPill({related}: {related: RelatedActivity}) {
       style={[
         a.flex_row,
         a.align_center,
-        a.gap_sm,
+        a.gap_xs,
         a.px_md,
         a.py_sm,
         a.rounded_full,
         t.atoms.bg_contrast_25,
       ]}>
-      <RecommendIcon size="md" fill={t.palette.primary_500} />
+      <RecommendIcon size="sm" fill={t.palette.primary_500} />
       <AvatarStack
         profiles={related.actors.slice(0, MAX_AVATARS)}
         size={20}
@@ -49,7 +49,7 @@ export function RelatedActivityPill({related}: {related: RelatedActivity}) {
       <Text
         emoji
         numberOfLines={1}
-        style={[a.flex_1, a.text_sm, a.leading_snug, t.atoms.text]}>
+        style={[a.flex_1, a.text_xs, a.leading_snug, t.atoms.text]}>
         {others > 0 ? (
           <Trans>
             Recommended by <Text style={strong}>{name}</Text> +{others}
