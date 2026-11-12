@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -24,7 +25,7 @@ export function LivestreamCard({
   const {t: l} = useLingui()
   const t = useTheme()
   const {state: interacted, onIn, onOut} = useInteractionState()
-  const duration = getStreamDuration(view.startedAt, view.endedAt)
+  const live = isLive(view)
 
   return (
     <View style={a.relative}>
@@ -91,22 +92,14 @@ export function LivestreamCard({
               <PlayIcon size="xl" fill="white" />
             </View>
           </View>
-          <LiveBadge live={isLive(view)} />
-          {duration ? (
-            <View
-              pointerEvents="none"
-              style={[
-                a.absolute,
-                a.px_sm,
-                a.py_xs,
-                a.rounded_full,
-                {bottom: 8, right: 8, backgroundColor: OVERLAY_COLOR},
-              ]}>
-              <Text style={[a.text_xs, a.font_medium, {color: 'white'}]}>
-                {duration}
-              </Text>
-            </View>
-          ) : null}
+          <LiveBadge live={live} />
+          {live && view.startedAt ? (
+            <LiveDurationPill startedAt={view.startedAt} />
+          ) : (
+            <DurationPill
+              duration={getStreamDuration(view.startedAt, view.endedAt)}
+            />
+          )}
         </View>
       </Link>
       <AtmosphereCardMenu
@@ -173,7 +166,45 @@ function LiveBadge({live}: {live: boolean}) {
   )
 }
 
-/** "3:50:23" for an ended stream; undefined while live or if unknown. */
+/** Counts up from `startedAt` every second while the stream is live. */
+function LiveDurationPill({startedAt}: {startedAt: string}) {
+  const [now, setNow] = useState(() => Date.now())
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), 1000)
+    return () => clearInterval(interval)
+  }, [])
+  return (
+    <DurationPill
+      duration={getStreamDuration(startedAt, new Date(now).toISOString())}
+    />
+  )
+}
+
+function DurationPill({duration}: {duration: string | undefined}) {
+  if (!duration) return null
+  return (
+    <View
+      pointerEvents="none"
+      style={[
+        a.absolute,
+        a.px_sm,
+        a.py_xs,
+        a.rounded_full,
+        {bottom: 8, right: 8, backgroundColor: OVERLAY_COLOR},
+      ]}>
+      <Text
+        style={[
+          a.text_xs,
+          a.font_medium,
+          {color: 'white', fontVariant: ['tabular-nums']},
+        ]}>
+        {duration}
+      </Text>
+    </View>
+  )
+}
+
+/** "3:50:23" between two times; undefined if either is missing or invalid. */
 export function getStreamDuration(
   startedAt: string | undefined,
   endedAt: string | undefined,
