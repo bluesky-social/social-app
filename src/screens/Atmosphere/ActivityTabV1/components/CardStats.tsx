@@ -2,16 +2,14 @@ import {View} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
-import {niceDate} from '#/lib/strings/time'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useTheme} from '#/alf'
-import {ArrowPathUp_Stroke2_Corner1_Rounded as LikeIcon} from '#/components/icons/Arrow'
+import {Heart2_Stroke2_Corner0_Rounded as LikeIcon} from '#/components/icons/Heart2'
 import {Image_Stroke2_Corner2_Rounded as ImageIcon} from '#/components/icons/Image'
 import {Text} from '#/components/Typography'
 
-/** The "date · ⬆ likes · photos" meta line on gallery and livestream cards. */
+/** The "likes · photos" meta line on gallery and livestream cards. */
 export function CardStats({
-  date,
   likeCount,
   photoCount,
 }: {
@@ -24,13 +22,10 @@ export function CardStats({
   const t = useTheme()
   const textStyle = [a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]
 
-  if (!date && !likeCount && !photoCount) return null
+  if (!likeCount && !photoCount) return null
 
   return (
     <View style={[a.flex_row, a.align_center, a.gap_md]}>
-      {!!date && (
-        <Text style={textStyle}>{niceDate(i18n, date, 'long', 'none')}</Text>
-      )}
       {!!likeCount && (
         <View
           accessible

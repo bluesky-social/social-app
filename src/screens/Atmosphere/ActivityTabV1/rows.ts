@@ -30,16 +30,11 @@ const collections: Record<string, ActivityCollection> = {
   [place.stream.livestream.$type]: 'livestream',
 }
 
-/** Everything a card needs, already validated, so cards never null-check. */
+/** The view each card renders, already checked to be renderable. */
 export type ActivityContent =
   | {type: 'article'; view: app.bsky.embed.external.ViewArticle}
   | {type: 'publication'; view: app.bsky.embed.external.ViewArticlePublication}
-  | {
-      type: 'gallery'
-      view: app.bsky.embed.external.ViewGallery
-      image: app.bsky.embed.external.ViewGalleryImage
-      author: app.bsky.actor.defs.ProfileViewBasic
-    }
+  | {type: 'gallery'; view: app.bsky.embed.external.ViewGallery}
   | {type: 'livestream'; view: app.bsky.embed.external.ViewLivestream}
 
 /** One pill below the card, e.g. "Recommended by Danielle +2". */
@@ -172,10 +167,10 @@ function toContent(
         : undefined
     case 'gallery': {
       if (!bsky.isType(external.viewGallery, view)) return undefined
-      const image = getGalleryImage(view)
-      const author = getAssociatedProfile(view.associatedProfiles)
-      return image && author
-        ? {type: 'gallery', view, image, author}
+      // The card needs a photo to show and an author for the photo dialog.
+      return getGalleryImage(view) &&
+        getAssociatedProfile(view.associatedProfiles)
+        ? {type: 'gallery', view}
         : undefined
     }
     case 'livestream':

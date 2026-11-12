@@ -4,6 +4,10 @@ import {useLingui} from '@lingui/react/macro'
 
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
 import {PhotoDialog} from '#/screens/Atmosphere/components/PhotoDialog'
+import {
+  getAssociatedProfile,
+  getGalleryImage,
+} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -19,7 +23,7 @@ const MAX_ASPECT_RATIO = 2
 
 /** A Grain gallery: title, stats, and its first photo. Opens the photo dialog. */
 export function GalleryCard({
-  content: {view, image, author},
+  content: {view},
 }: {
   content: Extract<ActivityContent, {type: 'gallery'}>
 }) {
@@ -27,6 +31,12 @@ export function GalleryCard({
   const t = useTheme()
   const dialogControl = useDialogControl()
   const {state: interacted, onIn, onOut} = useInteractionState()
+  const image = getGalleryImage(view)
+  const author = getAssociatedProfile(view.associatedProfiles)
+
+  // `toActivityRows` already turns galleries without these into warnings.
+  if (!image || !author) return null
+
   const aspectRatio = image.aspectRatio
     ? Math.min(
         Math.max(
@@ -56,7 +66,6 @@ export function GalleryCard({
           a.flex_col,
           a.align_stretch,
           a.w_full,
-          a.gap_sm,
           a.p_md,
           a.rounded_lg,
           a.border,
@@ -65,19 +74,31 @@ export function GalleryCard({
             ? [t.atoms.bg_contrast_25, t.atoms.border_contrast_high]
             : t.atoms.border_contrast_low,
         ]}>
-        {!!view.title && (
-          <Text
-            emoji
-            numberOfLines={2}
-            style={[a.pr_5xl, a.text_lg, a.font_bold, a.leading_snug]}>
-            {view.title}
-          </Text>
-        )}
-        <CardStats
-          date={view.createdAt}
-          likeCount={view.likeCount}
-          photoCount={view.photoCount}
-        />
+        <View style={[a.gap_xs, a.pb_md]}>
+          {!!view.title && (
+            <Text
+              emoji
+              numberOfLines={2}
+              style={[a.pr_5xl, a.text_lg, a.font_bold, a.leading_snug]}>
+              {view.title}
+            </Text>
+          )}
+          {!!view.description && (
+            <Text
+              emoji
+              numberOfLines={2}
+              style={[a.pr_5xl, a.text_md, a.leading_snug]}>
+              {view.description}
+            </Text>
+          )}
+          <View style={[a.pt_xs]}>
+            <CardStats
+              date={view.createdAt}
+              likeCount={view.likeCount}
+              photoCount={view.photoCount || view.items.length}
+            />
+          </View>
+        </View>
         <Image
           source={{uri: image.thumbnail}}
           contentFit="cover"
