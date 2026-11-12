@@ -187,10 +187,10 @@ const CATALOG = [
   {
     id: 'messenger',
     label: 'Messenger',
-    // The fb-messenger://share link is undocumented and reported to fail on send
     ios: {
       scheme: 'fb-messenger',
-      copyAndOpen: true,
+      // Undocumented by Meta, but it's what other apps' share sheets use
+      getShareUrl: ({url}) => `fb-messenger://share/?link=${enc(url)}`,
     },
     android: {
       packages: ['com.facebook.orca'],
