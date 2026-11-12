@@ -66,7 +66,7 @@ function PhotoDialogInner({
 }) {
   const {t: l, i18n} = useLingui()
   const t = useTheme()
-  const openLink = useOpenLink()
+  const openLink = useOpenLink({preferNativeApp: true})
   const moderationOpts = useModerationOpts()
 
   const createdAt = photo.createdAt
