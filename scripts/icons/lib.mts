@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises'
+import {createRequire} from 'node:module'
 import path from 'node:path'
 
 import {format} from 'prettier'
@@ -34,6 +35,36 @@ export const SOURCE_LANES = new Set([
 ])
 
 const CODEGEN_LANES = new Set(['brands', 'community', 'ui'])
+
+/**
+ * Root directory of temporary SVG-only icons: `tmp/<ui|brands|community>/`.
+ * It is a sibling of the font input directories, so the fonts never see it.
+ */
+export const TEMPORARY_ROOT = 'tmp'
+
+/**
+ * Splits a source path into its logical lane, which decides validation and the
+ * output namespace, and its file name. Temporary sources reuse the lane of the
+ * directory under `tmp/` so that a move into the normal lane changes nothing
+ * about the generated export or import path.
+ */
+function classifySource(relativePath) {
+  const [root, ...rest] = relativePath.split(path.sep)
+  if (root === TEMPORARY_ROOT) {
+    const [lane, ...deeper] = rest
+    if (deeper.length === 0) {
+      fail(relativePath, `temporary icons must be in ${TEMPORARY_ROOT}/ui/, ${TEMPORARY_ROOT}/brands/, or ${TEMPORARY_ROOT}/community/`)
+    }
+    if (!CODEGEN_LANES.has(lane)) {
+      fail(relativePath, `unsupported temporary source directory ${TEMPORARY_ROOT}/${lane}; use ui, brands, or community`)
+    }
+    if (deeper.length !== 1) fail(relativePath, 'nested icon source directories are not supported')
+    return {filename: deeper[0], lane, temporary: true}
+  }
+  if (!SOURCE_LANES.has(root)) fail(relativePath, `unclassified source directory ${root}`)
+  if (rest.length !== 1) fail(relativePath, 'nested icon source directories are not supported')
+  return {filename: rest[0], lane: root, temporary: false}
+}
 
 function fail(file, message) {
   throw new Error(`${file}: ${message}`)
@@ -287,7 +318,7 @@ function validateOrdinaryIcon(root, file, lane) {
     if (!['bevel', 'miter', 'round'].includes(strokeLinejoin)) fail(file, `unsupported stroke-linejoin ${strokeLinejoin}`)
     description = {path: attributes.d, strokeLinecap, strokeLinejoin, strokeWidth}
   } else {
-    description = {path: attributes.d, strokeWidth: 0}
+    description = {path: attributes.d, fillRule: attributes['fill-rule'] ?? 'nonzero', strokeWidth: 0}
   }
 
   return {description, viewBox}
@@ -406,15 +437,141 @@ function namespaceForLane(lane) {
   return ''
 }
 
+let pathKit
+
+/*
+ * The PathKit build that react-native-nano-icons compiles its fonts with, so
+ * the geometry checks below agree with the font pipeline.
+ */
+function loadPathKit() {
+  pathKit ??= (async () => {
+    const nanoRequire = createRequire(createRequire(import.meta.url).resolve('react-native-nano-icons/package.json'))
+    const entry = nanoRequire.resolve('pathkit-wasm/bin/pathkit.js')
+    const init = nanoRequire(entry)({
+      wasmBinary: await fs.readFile(path.join(path.dirname(entry), 'pathkit.wasm')),
+    })
+    return typeof init?.ready === 'function' ? init.ready() : init
+  })()
+  return pathKit
+}
+
+/**
+ * Largest share of the viewBox that may render differently between the
+ * evenodd and nonzero fill rules for an icon to still be drawn as a glyph.
+ * At 24pt it is about half a square point, below antialiasing noise.
+ */
+const FILL_RULE_TOLERANCE = 0.001
+
+/** Flattens a PathKit path into closed polylines, one per contour. */
+function flattenContours(PathKit, path) {
+  const contours = []
+  let contour
+  let current
+  function point(x, y) {
+    current = [x, y]
+    contour.push(current)
+  }
+  for (const [verb, ...args] of path.toCmds()) {
+    if (verb === PathKit.MOVE_VERB) {
+      contour = []
+      contours.push(contour)
+      point(args[0], args[1])
+    } else if (verb === PathKit.LINE_VERB) {
+      point(args[0], args[1])
+    } else if (verb === PathKit.QUAD_VERB || verb === PathKit.CONIC_VERB || verb === PathKit.CUBIC_VERB) {
+      const [x0, y0] = current
+      const weight = verb === PathKit.CONIC_VERB ? args[4] : 1
+      for (let step = 1; step <= 16; step++) {
+        const t = step / 16
+        const u = 1 - t
+        if (verb === PathKit.CUBIC_VERB) {
+          const [x1, y1, x2, y2, x3, y3] = args
+          point(
+            u * u * u * x0 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t * x3,
+            u * u * u * y0 + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t * t * t * y3,
+          )
+        } else {
+          const [x1, y1, x2, y2] = args
+          const denominator = u * u + 2 * weight * u * t + t * t
+          point(
+            (u * u * x0 + 2 * weight * u * t * x1 + t * t * x2) / denominator,
+            (u * u * y0 + 2 * weight * u * t * y1 + t * t * y2) / denominator,
+          )
+        }
+      }
+    }
+  }
+  return contours.filter(points => points.length > 2)
+}
+
+/*
+ * createSinglePathSVG always fills with evenodd, but the font compiles the
+ * fill rule written in the SVG, which defaults to nonzero. They disagree
+ * where the winding number is even but not zero, i.e. where contours overlap
+ * or nest in the same direction. Returns that area as a share of the viewBox.
+ */
+async function fillRuleDifference(d, [, minY, width, height]) {
+  const PathKit = await loadPathKit()
+  const evenodd = PathKit.FromSVGString(d)
+  evenodd.setFillType(PathKit.FillType.EVENODD)
+  const nonzero = PathKit.FromSVGString(d)
+  nonzero.setFillType(PathKit.FillType.WINDING)
+  const xor = PathKit.MakeFromOp(evenodd, nonzero, PathKit.PathOp.XOR)
+  const identical = xor.toCmds().length === 0
+  const contours = identical ? [] : flattenContours(PathKit, nonzero)
+  for (const item of [evenodd, nonzero, xor]) item.delete()
+  if (identical) return 0
+
+  // Sum, scanline by scanline, the spans whose winding number is even and nonzero.
+  const rows = 1024
+  let area = 0
+  for (let row = 0; row < rows; row++) {
+    const y = minY + ((row + 0.5) * height) / rows
+    const crossings = []
+    for (const points of contours) {
+      for (let index = 0; index < points.length; index++) {
+        const [x1, y1] = points[index]
+        const [x2, y2] = points[(index + 1) % points.length]
+        if (y1 <= y !== y2 <= y) {
+          crossings.push({x: x1 + ((y - y1) * (x2 - x1)) / (y2 - y1), direction: y2 > y1 ? 1 : -1})
+        }
+      }
+    }
+    crossings.sort((a, b) => a.x - b.x)
+    let winding = 0
+    for (let index = 0; index < crossings.length - 1; index++) {
+      winding += crossings[index].direction
+      if (winding !== 0 && winding % 2 === 0) area += crossings[index + 1].x - crossings[index].x
+    }
+  }
+  return (area * (height / rows)) / (width * height)
+}
+
+/**
+ * Returns why the react-native-nano-icons font glyph would not render the same
+ * as the SVG icon, or undefined when the icon can be drawn as a glyph.
+ */
+export async function glyphMismatch(data, width, height) {
+  /*
+   * Glyphs are sized by height and widened by the aspect ratio, while the SVG
+   * icons letterbox their viewBox into a size x size square.
+   */
+  if (width !== height) return 'non-square viewBox'
+  if (
+    data.description?.strokeWidth === 0 &&
+    data.description.fillRule !== 'evenodd' &&
+    (await fillRuleDifference(data.description.path, data.viewBox.split(' ').map(Number))) > FILL_RULE_TOLERANCE
+  ) {
+    return 'renders differently with the nonzero fill rule'
+  }
+}
+
 function cleanObject(value) {
   return Object.fromEntries(Object.entries(value).filter(([, item]) => item !== undefined))
 }
 
 export async function readIconSource(sourceRoot, relativePath) {
-  const [lane, ...rest] = relativePath.split(path.sep)
-  if (!SOURCE_LANES.has(lane)) fail(relativePath, `unclassified source directory ${lane}`)
-  if (rest.length !== 1) fail(relativePath, 'nested icon source directories are not supported')
-  const filename = rest[0]
+  const {filename, lane, temporary} = classifySource(relativePath)
   const source = await fs.readFile(path.join(sourceRoot, relativePath), 'utf8')
   let originalRoot
   let optimizedRoot
@@ -453,6 +610,7 @@ export async function readIconSource(sourceRoot, relativePath) {
   if (lane !== 'brands') validateOrdinarySourceSemantics(original.entries, relativePath, lane)
   const data = lane === 'brands' ? validateFlexibleIcon(optimizedRoot, relativePath, lane) : validateOrdinaryIcon(optimizedRoot, relativePath, lane)
   const [, , width, height] = data.viewBox.split(' ').map(Number)
+  const glyph = !temporary && (await glyphMismatch(data, width, height)) === undefined
   const warnings =
     (width === 24 && height === 24) || (width === 64 && height === 64)
       ? []
@@ -461,10 +619,12 @@ export async function readIconSource(sourceRoot, relativePath) {
     ...data,
     codegen: true,
     exportName,
+    glyph,
     lane,
     namespace: namespaceForLane(lane),
     optimized: result.data,
     relativePath,
+    temporary,
     warnings,
   }
 }
@@ -484,7 +644,10 @@ async function listFiles(root) {
 
 export async function discoverIconSources(sourceRoot) {
   const files = await listFiles(sourceRoot)
-  const unclassified = files.filter(file => file.endsWith('.svg') && !SOURCE_LANES.has(file.split(path.sep)[0]))
+  const unclassified = files.filter(file => {
+    const root = file.split(path.sep)[0]
+    return file.endsWith('.svg') && !SOURCE_LANES.has(root) && root !== TEMPORARY_ROOT
+  })
   if (unclassified.length > 0) throw new Error(`unclassified SVG sources:\n${unclassified.join('\n')}`)
   return files.filter(file => file.endsWith('.svg') && file.split(path.sep)[0] !== 'flags')
 }
@@ -495,6 +658,15 @@ function relativeImport(fromModule, targetModule) {
   return result
 }
 
+/**
+ * Cleanup marker for a temporary icon, attached to its export so it survives in
+ * modules that also hold ordinary icons.
+ */
+function temporaryDocblock(icon) {
+  if (!icon.temporary) return ''
+  return `/** Temporary SVG-only icon. Move its source to assets/icons/${icon.lane}/ before a native release. */\n`
+}
+
 function renderSingleIcon(icon) {
   const description = icon.description
   const properties = [`path: ${JSON.stringify(description.path)}`, `viewBox: ${JSON.stringify(icon.viewBox)}`]
@@ -503,11 +675,13 @@ function renderSingleIcon(icon) {
     if (description.strokeLinecap !== 'butt') properties.push(`strokeLinecap: ${JSON.stringify(description.strokeLinecap)}`)
     if (description.strokeLinejoin !== 'miter') properties.push(`strokeLinejoin: ${JSON.stringify(description.strokeLinejoin)}`)
   }
-  return `export const ${icon.exportName} = createSinglePathSVG({\n  ${properties.join(',\n  ')},\n})\n`
+  if (icon.glyph) properties.push(`glyph: ${JSON.stringify(icon.exportName)}`)
+  return `${temporaryDocblock(icon)}export const ${icon.exportName} = createSinglePathSVG({\n  ${properties.join(',\n  ')},\n})\n`
 }
 
 function renderFlexibleIcon(icon) {
-  return `export const ${icon.exportName} = createSVG({\n  elements: ${JSON.stringify(icon.elements.map(cleanObject), null, 2).replaceAll('\n', '\n  ')},\n  viewBox: ${JSON.stringify(icon.viewBox)},\n})\n`
+  const glyph = icon.glyph ? `\n  glyph: ${JSON.stringify(icon.exportName)},` : ''
+  return `${temporaryDocblock(icon)}export const ${icon.exportName} = createSVG({\n  elements: ${JSON.stringify(icon.elements.map(cleanObject), null, 2).replaceAll('\n', '\n  ')},\n  viewBox: ${JSON.stringify(icon.viewBox)},${glyph}\n})\n`
 }
 
 function renderModule(modulePath, icons, aliases) {
@@ -661,7 +835,54 @@ export async function buildIconSet({outputRoot, scanRoot, sourceRoot}) {
   }
   const svgOutputs = new Map(sources.map(source => [source.relativePath, source.optimized]))
   const warnings = sources.flatMap(source => source.warnings)
-  return {deprecatedImports, holdouts, icons, svgOutputs, tsOutputs, warnings}
+  const temporaryIcons = icons.filter(icon => icon.temporary).map(icon => icon.relativePath).sort()
+  return {deprecatedImports, holdouts, icons, svgOutputs, temporaryIcons, tsOutputs, warnings}
+}
+
+/**
+ * Builds the react-native-nano-icons fonts configured in the app config, which
+ * glyph icons render from. With `check`, builds into a temporary directory
+ * and returns the committed glyphmaps that differ from a fresh build, and the
+ * font binaries that are missing.
+ *
+ * The binaries are only checked for existence: the glyphmap pins every input
+ * of the build and is always written together with them, and a byte
+ * comparison could flap if the font toolchain embeds timestamps.
+ */
+export async function applyNanoFonts({check, repoRoot}) {
+  const require = createRequire(path.join(repoRoot, 'package.json'))
+  const {getConfig} = require('expo/config')
+  const {buildAllFonts} = require('react-native-nano-icons/cli')
+  const {exp} = getConfig(repoRoot, {skipSDKVersionRequirement: true})
+  const [, {iconSets}] = exp.plugins.find(plugin => Array.isArray(plugin) && plugin[0] === 'react-native-nano-icons')
+  if (!check) {
+    await buildAllFonts(iconSets, repoRoot)
+    return []
+  }
+
+  const scratch = await fs.mkdtemp(path.join(repoRoot, 'node_modules/.cache-icon-fonts-'))
+  try {
+    const results = await buildAllFonts(
+      iconSets.map(set => ({...set, outputDir: scratch})),
+      repoRoot,
+    )
+    const differences = []
+    for (const [index, set] of iconSets.entries()) {
+      const committed = path.join(repoRoot, set.outputDir, path.basename(results[index].glyphmapPath))
+      let current
+      try { current = await fs.readFile(committed, 'utf8') } catch {}
+      if (current !== (await fs.readFile(results[index].glyphmapPath, 'utf8'))) {
+        differences.push(path.relative(process.cwd(), committed))
+      }
+      for (const built of [results[index].ttfPath, results[index].woff2Path].filter(Boolean)) {
+        const binary = path.join(repoRoot, set.outputDir, path.basename(built))
+        try { await fs.access(binary) } catch { differences.push(path.relative(process.cwd(), binary)) }
+      }
+    }
+    return differences
+  } finally {
+    await fs.rm(scratch, {recursive: true, force: true})
+  }
 }
 
 export async function applyIconSet({check, outputRoot, result, sourceRoot}) {

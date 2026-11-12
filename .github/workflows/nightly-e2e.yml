@@ -25,7 +25,7 @@ jobs:
   ios:
     name: iOS Maestro E2E
     if: github.repository == 'bluesky-social/social-app'
-    runs-on: macos-26-xlarge
+    runs-on: xcode-27-xlarge
     timeout-minutes: 120
     steps:
       - name: ⬇️ Checkout
@@ -33,10 +33,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: 🛠️ Select Xcode 26.4
+      - name: 🛠️ Select Xcode 27.1
         uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
         with:
-          xcode-version: "26.4"
+          xcode-version: "27.1"
 
       - name: 🧰 Prepare E2E configuration
         run: |
@@ -51,10 +51,10 @@ jobs:
         uses: $/.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
-          eas-version: '24.12.0'
+          eas-version: '25.3.0'
 
       - name: ☕️ Set up Java 17
-        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: "17"
@@ -81,7 +81,7 @@ jobs:
         run: |
           echo "Booting iOS simulator" > artifacts/ios/phase.txt
           device_name="iPhone 17"
-          runtime_name="iOS 26.5"
+          runtime_name="iOS 27.0"
 
           runtime_id=$(xcrun simctl list runtimes available --json | jq -r \
             --arg name "$runtime_name" \
@@ -113,6 +113,9 @@ jobs:
           xcrun simctl shutdown all || true
           xcrun simctl boot "$udid"
           xcrun simctl bootstatus "$udid" -b
+          # Turn off password AutoFill so iOS doesn't offer a strong password on
+          # the signup form: its panel swallows the text Maestro types.
+          xcrun simctl spawn "$udid" defaults write com.apple.WebUI AutoFillPasswords -int 0
           echo "Using $device_name on $runtime_name ($udid)"
 
       - name: 🏷️ Mark iOS development client build phase
@@ -147,7 +150,7 @@ jobs:
 
       - name: 🚀 Upload iOS E2E artifacts
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: nightly-e2e-ios-${{ github.run_id }}
           path: artifacts/ios
@@ -161,6 +164,13 @@ jobs:
     runs-on: Linux-x64-32core
     timeout-minutes: 120
     steps:
+      # Temporary until fixed runner images roll out:
+      # https://github.com/actions/runner-images/issues/15018
+      - name: Update Ubuntu CA certificates
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --only-upgrade --no-install-recommends -y ca-certificates
+
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -179,10 +189,10 @@ jobs:
         uses: $/.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
-          eas-version: '24.12.0'
+          eas-version: '25.3.0'
 
       - name: ☕️ Set up Java 17
-        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: "17"
@@ -350,7 +360,7 @@ jobs:
 
       - name: 🚀 Upload Android E2E artifacts
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: nightly-e2e-android-${{ github.run_id }}
           path: artifacts/android
@@ -366,6 +376,13 @@ jobs:
       actions: read
       contents: read
     steps:
+      # Temporary until fixed runner images roll out:
+      # https://github.com/actions/runner-images/issues/15018
+      - name: Update Ubuntu CA certificates
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --only-upgrade --no-install-recommends -y ca-certificates
+
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -373,14 +390,14 @@ jobs:
 
       - name: ⬇️ Download iOS artifacts
         continue-on-error: true
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: nightly-e2e-ios-${{ github.run_id }}
           path: downloaded-artifacts/ios
 
       - name: ⬇️ Download Android artifacts
         continue-on-error: true
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: nightly-e2e-android-${{ github.run_id }}
           path: downloaded-artifacts/android
@@ -400,6 +417,11 @@ jobs:
                 android: (.artifacts | map(select(.name | startswith("nightly-e2e-android-"))) | first | if . then ($base + "/" + (.id | tostring)) else $run end)
               }' artifact-response.json > artifact-links.json
           fi
+
+      - name: 🔧 Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
 
       - name: 📊 Summarize platform results
         id: summary
@@ -431,16 +453,6 @@ jobs:
           steps.summary.outputs.screenshot_count != '0'
         continue-on-error: true
         uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
-
-      - name: 🔧 Set up Node for Slack screenshot framing
-        if: >-
-          steps.summary.outputs.notify == 'true' &&
-          steps.summary.outputs.screenshot_count != '0'
-        continue-on-error: true
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
-        with:
-          node-version-file: package.json
-          cache: pnpm
 
       - name: 📦 Install Slack screenshot framing dependencies
         if: >-

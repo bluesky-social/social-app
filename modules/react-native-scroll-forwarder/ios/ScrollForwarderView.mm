@@ -2,6 +2,7 @@
 
 #import <React/RCTEnhancedScrollView.h>
 #import <React/RCTScrollViewComponentView.h>
+#import <React/RCTSurfaceTouchHandler.h>
 #import <react/renderer/components/ScrollForwarderViewSpec/ComponentDescriptors.h>
 #import <react/renderer/components/ScrollForwarderViewSpec/EventEmitters.h>
 #import <react/renderer/components/ScrollForwarderViewSpec/Props.h>
@@ -135,7 +136,7 @@ static const CGFloat kMinimumVelocity = 5.0;
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
-  [self stopAnimation];
+  [self stopAnimationFromTouch];
   [super touchesBegan:touches withEvent:event];
 }
 
@@ -199,7 +200,8 @@ static const CGFloat kMinimumVelocity = 5.0;
   
   if (gesture.state == UIGestureRecognizerStateBegan) {
     _didImpact = false;
-    
+    [self cancelReactTouches];
+
     if (sv.contentOffset.y < 0) {
       CGPoint newOffset = CGPointMake(sv.contentOffset.x, 0);
       sv.contentOffset = newOffset;
@@ -241,6 +243,25 @@ static const CGFloat kMinimumVelocity = 5.0;
   }
 }
 
+/*
+ * Setting contentOffset used to emit scroll events that made the ScrollView take the JS responder, which cancelled any
+ * press that started on the header or during a fling. Since React Native 0.88 (react/react-native#57546) programmatic
+ * scrolls no longer steal the responder, so e.g. a short drag starting on the avatar would fire its onPress on
+ * release. Cancel the surface's JS touches ourselves instead, the same way react-native-gesture-handler does.
+ */
+- (void)cancelReactTouches
+{
+  for (UIView *view = self.superview; view; view = view.superview) {
+    for (UIGestureRecognizer *gr in view.gestureRecognizers) {
+      if ([gr isKindOfClass:[RCTSurfaceTouchHandler class]]) {
+        [gr setEnabled:false];
+        [gr setEnabled:true];
+        return;
+      }
+    }
+  }
+}
+
 - (CGFloat)dampenOffset:(CGFloat)offset
 {
   if (offset < 0) {
@@ -250,10 +271,19 @@ static const CGFloat kMinimumVelocity = 5.0;
 }
 
 - (void)handleTap:(UITapGestureRecognizer *)gesture {
-  [self stopAnimation];
+  [self stopAnimationFromTouch];
 }
 
 - (void)handleLongPress:(UILongPressGestureRecognizer *)gesture {
+  [self stopAnimationFromTouch];
+}
+
+// Like a native scroll view, a touch that stops the fling shouldn't also press whatever is under the finger
+- (void)stopAnimationFromTouch
+{
+  if (_displayLink) {
+    [self cancelReactTouches];
+  }
   [self stopAnimation];
 }
 

@@ -32,7 +32,7 @@ export function Loader(props: Props) {
         a.relative,
         a.justify_center,
         a.align_center,
-        {width: common.size, height: common.size},
+        {width: common.width, height: common.height},
         animatedStyles,
       ]}>
       <Icon

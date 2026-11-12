@@ -27,7 +27,8 @@
             "description": "Account to preview. Only Ozone staff can read another account; this does not change its read state."
           }
         }
-      }
+      },
+      "description": "Get moderation push notification preferences for report outcomes, account actions, and labeling. Returns all three categories, defaulting to enabled for an account without saved preferences."
     }
   },
   "$type": "com.atproto.lexicon.schema",

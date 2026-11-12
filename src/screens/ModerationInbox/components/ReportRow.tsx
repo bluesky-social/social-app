@@ -11,12 +11,16 @@ export function ReportRow({
   subject,
   action,
   date,
+  dateEnd,
+  dateLabel,
   to,
   unread,
 }: {
   subject: string
-  action: string
+  action?: string
   date: Date
+  dateEnd?: Date
+  dateLabel?: string
   to: React.ComponentProps<typeof Link>['to']
   unread?: boolean
 }) {
@@ -51,13 +55,26 @@ export function ReportRow({
           style={[a.text_md, unread ? a.font_semi_bold : a.font_medium]}>
           {subject}
         </Text>
-        <Text style={[a.text_sm, t.atoms.text_contrast_high]}>{action}</Text>
+        {action ? (
+          <Text style={[a.text_sm, t.atoms.text_contrast_high]}>{action}</Text>
+        ) : undefined}
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          {i18n.date(date, {
-            month: 'short',
-            day: 'numeric',
-            year: shouldShowYear ? 'numeric' : undefined,
-          })}
+          {dateLabel ? `${dateLabel} ` : undefined}
+          {dateEnd
+            ? `${i18n.date(date, {
+                month: 'short',
+                day: 'numeric',
+                year: shouldShowYear ? 'numeric' : undefined,
+              })} – ${i18n.date(dateEnd, {
+                month: 'short',
+                day: 'numeric',
+                year: shouldShowYear ? 'numeric' : undefined,
+              })}`
+            : i18n.date(date, {
+                month: 'short',
+                day: 'numeric',
+                year: shouldShowYear ? 'numeric' : undefined,
+              })}
         </Text>
       </View>
       <View

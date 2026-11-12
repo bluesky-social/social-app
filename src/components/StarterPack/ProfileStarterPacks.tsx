@@ -23,17 +23,17 @@ import {
 } from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
 import {findListNativeTag} from '#/view/com/util/listNativeTag'
-import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, ios, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {FeedCardSkeleton} from '#/components/FeedCardSkeleton'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
-import {IS_IOS} from '#/env'
+import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
 
 interface SectionRef {
@@ -133,7 +133,7 @@ export function ProfileStarterPacks({
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
   useEffect(() => {
-    if (IS_IOS && enabled && scrollElRef.current) {
+    if (IS_NATIVE && enabled && scrollElRef.current) {
       const nativeTag = findListNativeTag(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
@@ -178,7 +178,7 @@ export function ProfileStarterPacks({
         onEndReached={() => void onEndReached()}
         onRefresh={() => void onRefresh()}
         ListEmptyComponent={
-          data ? (isMe ? EmptyComponent : undefined) : FeedLoadingPlaceholder
+          data ? (isMe ? EmptyComponent : undefined) : FeedCardSkeleton
         }
         ListFooterComponent={
           !!data && items?.length !== 0 && isMe ? CreateAnother : undefined

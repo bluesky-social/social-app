@@ -14,4 +14,5 @@ export const AppleLogo = createSVG({
     },
   ],
   viewBox: '0 0 24 24',
+  glyph: 'AppleLogo',
 })

@@ -1,5 +1,5 @@
 import {useRef} from 'react'
-import {InteractionManager, View} from 'react-native'
+import {View} from 'react-native'
 import {type AnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 
@@ -76,6 +76,7 @@ export function ImageEmbed({
       index: number,
       refs: AnimatedRef[],
       fetchedDims: (Dimensions | null)[],
+      onIndexChange?: (index: number) => void,
     ) => {
       if (postContext) {
         ax.metric('post:photoEmbed:open', {
@@ -96,10 +97,11 @@ export function ImageEmbed({
         })),
         index,
         metricsContext,
+        onIndexChange,
       })
     }
     const onPressIn = (_: number) => {
-      InteractionManager.runAfterInteractions(() => {
+      setImmediate(() => {
         void Image.prefetch(
           items.map(i => i.uri),
           'memory',

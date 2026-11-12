@@ -1,38 +1,30 @@
+import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {type app} from '#/lexicons'
 
 export type Notification = app.bsky.notification.listNotifications.Notification
 
-export type NotificationType =
-  StarterPackNotificationType | OtherNotificationType
-
-export type FeedNotification =
-  | (FeedNotificationBase & {
-      type: StarterPackNotificationType
-      subject?: app.bsky.graph.defs.StarterPackViewBasic
-    })
-  | (FeedNotificationBase & {
-      type: OtherNotificationType
-      subject?: app.bsky.feed.defs.PostView
-    })
-
-export interface FeedPage {
-  cursor: string | undefined
-  seenAt: Date
-  items: FeedNotification[]
-}
-
-export interface CachedFeedPage {
+/**
+ * What the last unread check found, for the Notifications screen's "Refresh" pill.
+ */
+export interface UnreadCheck {
   /**
-   * if true, the cached page is recent enough to use as the response
+   * When the check asked the server, in ms since the epoch.
    */
-  usableInFeed: boolean
-  syncedAt: Date
-  data: FeedPage | undefined
-  unreadCount: number
+  requestedAt: number
+  /**
+   * For each grouped notifications feed, when the newest unread notification
+   * the check found for it was indexed, in ms since the epoch, or undefined
+   * if it found none.
+   */
+  newestUnreadAt: Record<GroupedNotificationsFeed, number | undefined>
 }
 
-type StarterPackNotificationType = 'starterpack-joined'
-type OtherNotificationType =
+/**
+ * The names the original notifications screen gave each kind, which metrics
+ * such as `notifications:bundleExpand` still use so they stay comparable.
+ */
+export type NotificationType =
+  | 'starterpack-joined'
   | 'post-like'
   | 'repost'
   | 'mention'
@@ -47,12 +39,3 @@ type OtherNotificationType =
   | 'subscribed-post'
   | 'contact-match'
   | 'unknown'
-
-type FeedNotificationBase = {
-  _reactKey: string
-  notification: Notification
-  additional?: Notification[]
-  subjectUri?: string
-  subject?:
-    app.bsky.feed.defs.PostView | app.bsky.graph.defs.StarterPackViewBasic
-}

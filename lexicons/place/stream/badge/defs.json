@@ -1,0 +1,146 @@
+{
+  "id": "place.stream.badge.defs",
+  "defs": {
+    "bot": {
+      "type": "token",
+      "description": "This user is a bot. Self-applied via place.stream.chat.profile selfLabels."
+    },
+    "mod": {
+      "type": "token",
+      "description": "This user is a moderator. Displayed with a sword icon."
+    },
+    "vip": {
+      "type": "token",
+      "description": "This user is a very important person."
+    },
+    "event": {
+      "type": "token",
+      "description": "This user has won or earned a special event or contest badge."
+    },
+    "streamer": {
+      "type": "token",
+      "description": "This user is the streamer. Displayed with a star icon."
+    },
+    "badgeSlot": {
+      "type": "object",
+      "required": [
+        "available"
+      ],
+      "properties": {
+        "selected": {
+          "ref": "#badgeIssuanceView",
+          "type": "ref",
+          "description": "The currently selected badge in this slot, if any."
+        },
+        "available": {
+          "type": "array",
+          "items": {
+            "ref": "#badgeIssuanceView",
+            "type": "ref"
+          },
+          "description": "All badges available for this slot."
+        }
+      },
+      "description": "A display slot containing available issuance-based badges and which one (if any) is currently selected."
+    },
+    "badgeView": {
+      "type": "object",
+      "required": [
+        "badgeType",
+        "issuer",
+        "recipient"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Display name from the badge definition."
+        },
+        "issuer": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of the badge issuer."
+        },
+        "imageUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "Resolved image URL for the badge icon."
+        },
+        "badgeType": {
+          "type": "string",
+          "knownValues": [
+            "place.stream.badge.defs#mod",
+            "place.stream.badge.defs#streamer",
+            "place.stream.badge.defs#vip",
+            "place.stream.badge.defs#event",
+            "place.stream.badge.defs#bot"
+          ]
+        },
+        "recipient": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of the badge recipient."
+        },
+        "signature": {
+          "type": "string",
+          "description": "TODO: Cryptographic signature of the badge (of a place.stream.key)."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description from the badge definition."
+        }
+      },
+      "description": "View of a badge record, with fields resolved for display. If the DID in issuer is not the current streamplace node, the signature field shall be required."
+    },
+    "badgeIssuanceView": {
+      "type": "object",
+      "required": [
+        "issuanceUri",
+        "badgeType",
+        "issuer"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Display name from the badge definition."
+        },
+        "issuer": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of the badge issuer."
+        },
+        "imageUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "Resolved image URL for the badge icon."
+        },
+        "selected": {
+          "type": "boolean",
+          "description": "Whether this badge is currently in the user's chat profile selection."
+        },
+        "badgeType": {
+          "type": "string",
+          "knownValues": [
+            "place.stream.badge.defs#vip",
+            "place.stream.badge.defs#event"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "Description from the badge definition."
+        },
+        "issuanceCid": {
+          "type": "string",
+          "description": "CID of the place.stream.badge.issuance record."
+        },
+        "issuanceUri": {
+          "type": "string",
+          "format": "at-uri",
+          "description": "AT URI of the place.stream.badge.issuance record."
+        }
+      },
+      "description": "A resolved view of a badge issuance, including def fields for display."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

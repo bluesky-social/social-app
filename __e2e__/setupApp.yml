@@ -1,8 +1,29 @@
 appId: xyz.blueskyweb.app
 ---
-- launchApp:
-    appId: "xyz.blueskyweb.app"
-    clearState: true
+# On Android, name the permissions to grant rather than taking launchApp's
+# default (all: allow). To grant "all", Maestro pulls the whole debug APK over
+# adb on every launch to read its manifest, and that transfer has no timeout,
+# so it occasionally hangs a flow for 25-45 minutes.
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - launchApp:
+          appId: "xyz.blueskyweb.app"
+          clearState: true
+          permissions:
+            notifications: allow
+            camera: allow
+            microphone: allow
+            medialibrary: allow
+            contacts: allow
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - launchApp:
+          appId: "xyz.blueskyweb.app"
+          clearState: true
 - extendedWaitUntil:
     visible: "Sign in"
     timeout: 180000

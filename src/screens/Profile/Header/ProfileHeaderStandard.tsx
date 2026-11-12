@@ -20,7 +20,7 @@ import {
 } from '#/state/queries/profile'
 import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
-import {atoms as a, platform} from '#/alf'
+import {atoms as a} from '#/alf'
 import {SubscribeProfileButton} from '#/components/activity-notifications/SubscribeProfileButton'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
@@ -39,8 +39,9 @@ import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
+import {ProfileHeaderLinks} from '#/features/profileLinks'
 import {type app} from '#/lexicons'
-import {GermButton} from '../components/GermButton'
+import {GermButton, isGermButtonShown} from '../components/GermButton'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
@@ -138,7 +139,7 @@ let ProfileHeaderStandard = ({
               profile={profile}
               moderation={moderation}
             />
-            <ProfileHeaderHandle profile={profile} />
+            <ProfileHeaderHandle profile={profile} moderation={moderation} />
           </View>
           {!isPlaceholderProfile && !isBlockedUser && (
             <View style={a.gap_md}>
@@ -149,7 +150,7 @@ let ProfileHeaderStandard = ({
                     testID="profileHeaderDescription"
                     style={[a.text_md]}
                     numberOfLines={15}
-                    selectable={platform({android: false, default: true})}
+                    selectable
                     value={descriptionRT}
                     enableTags
                     authorHandle={profile.handle}
@@ -158,14 +159,25 @@ let ProfileHeaderStandard = ({
                 </View>
               ) : undefined}
 
-              {profile.associated?.germ && (
-                <GermButton germ={profile.associated.germ} profile={profile} />
-              )}
+              <ProfileHeaderLinks
+                profile={profile}
+                hidden={!!moderation.ui('profileView').blur}
+                germButton={
+                  isGermButtonShown(
+                    profile.associated?.germ,
+                    profile,
+                    currentAccount?.did,
+                  ) ? (
+                    <GermButton
+                      germ={profile.associated.germ}
+                      profile={profile}
+                    />
+                  ) : undefined
+                }
+              />
 
               {!isMe &&
                 !isBlockedUser &&
-                // Social proof is only useful when deciding whether to follow
-                !profile.viewer?.following &&
                 shouldShowKnownFollowers(profile.viewer?.knownFollowers) && (
                   <View style={[a.flex_row, a.align_center, a.gap_sm]}>
                     <KnownFollowers

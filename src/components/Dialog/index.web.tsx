@@ -4,6 +4,7 @@ import {
   useContext,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import {
@@ -56,6 +57,7 @@ export function Outer({
   control,
   onOpen,
   onClose,
+  preventDismiss = false,
   webOptions,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const {_} = useLingui()
@@ -99,11 +101,23 @@ export function Outer({
     [control.id, onClose, setDialogIsOpen],
   )
 
+  /*
+   * When a press starts inside the dialog and ends on the backdrop, such as
+   * a drag to select text in a field, the browser fires the click on their
+   * common ancestor, which is outside the dialog. Only a press that started
+   * where it ended counts as a background press.
+   */
+  const pressStartTarget = useRef<unknown>(null)
+
   const handleBackgroundPress = useCallback(
     async (e: GestureResponderEvent) => {
+      const startTarget = pressStartTarget.current
+      pressStartTarget.current = null
+      if (startTarget && startTarget !== e.target) return
+      if (preventDismiss) return
       webOptions?.onBackgroundPress ? webOptions.onBackgroundPress(e) : close()
     },
-    [webOptions, close],
+    [webOptions, close, preventDismiss],
   )
 
   useImperativeHandle(
@@ -119,13 +133,18 @@ export function Outer({
     () => ({
       close,
       isNativeDialog: false,
+      presentationBottomOffset: 0,
+      isNativePopover: false,
       nativeSnapPoint: 0,
       disableDrag: false,
+      preventDismiss,
       setDisableDrag: () => {},
       isWithinDialog: true,
       isHeightConstrained: false,
+      shouldMeasureContentHeight: false,
+      setDesiredContentHeight: () => {},
     }),
-    [close],
+    [close, preventDismiss],
   )
 
   return (
@@ -137,6 +156,9 @@ export function Outer({
             <Pressable
               accessibilityHint={undefined}
               accessibilityLabel={_(msg`Close active dialog`)}
+              onPointerDown={e => {
+                pressStartTarget.current = e.target
+              }}
               onPress={handleBackgroundPress}>
               <View
                 style={[
@@ -189,7 +211,7 @@ export function Inner({
   contentContainerStyle,
 }: DialogInnerProps) {
   const t = useTheme()
-  const {close} = useContext(Context)
+  const {close, preventDismiss} = useContext(Context)
   const {gtMobile} = useBreakpoints()
   const {reduceMotionEnabled} = useA11y()
   FocusGuards.useFocusGuards()
@@ -207,7 +229,7 @@ export function Inner({
         // note: flatten is required for some reason -sfn
         style={flatten([
           a.relative,
-          a.rounded_md,
+          a.rounded_xl,
           a.w_full,
           a.border,
           t.atoms.bg,
@@ -225,7 +247,9 @@ export function Inner({
         <DismissableLayer.DismissableLayer
           onInteractOutside={preventDefault}
           onFocusOutside={preventDefault}
-          onDismiss={close}
+          onDismiss={() => {
+            if (!preventDismiss) close()
+          }}
           style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
           {header}
           <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
@@ -333,7 +357,7 @@ export function FlatListFooter({
 
 export function Close() {
   const {_} = useLingui()
-  const {close} = useContext(Context)
+  const {close, preventDismiss} = useContext(Context)
   return (
     <View
       style={[
@@ -350,6 +374,7 @@ export function Close() {
         color="secondary"
         shape="round"
         onPress={() => close()}
+        disabled={preventDismiss}
         label={_(msg`Close active dialog`)}>
         <ButtonIcon icon={X} size="md" />
       </Button>

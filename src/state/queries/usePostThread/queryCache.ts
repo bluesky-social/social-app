@@ -13,7 +13,7 @@ import {
   findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData,
   findPostNumberingInQueryData as findPostNumberingInExploreFeedPreviewsQueryData,
 } from '#/state/queries/explore-feed-previews'
-import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/queries/notifications/feed'
+import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/queries/notifications/grouped'
 import {
   findAllPostsInQueryData as findAllPostsInFeedQueryData,
   findPostNumberingInQueryData as findPostNumberingInFeedQueryData,

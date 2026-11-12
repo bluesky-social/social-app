@@ -214,7 +214,8 @@ export function NoAccessScreen() {
                                   })}
                                   style={[textStyles]}>
                                   <Trans>
-                                    Tap here to update your location with GPS.
+                                    Tap here to update your approximate location
+                                    via GPS.
                                   </Trans>
                                 </SimpleInlineLinkText>
                                 <DeviceLocationRequestDialog

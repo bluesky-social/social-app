@@ -42,6 +42,14 @@ appId: xyz.blueskyweb.app
     id: "composeFAB"
 - tapOn:
     id: "e2eRefreshHome"
+# Following v2 (always on in e2e builds) can keep the reader where they were
+# and put the refreshed posts above them, out of view - it does on Android.
+# Scroll up to the newest post, or the first replyBtn is one scrolled up under
+# the header.
+- scrollUntilVisible:
+    element:
+      text: "Post with a .*link card"
+    direction: UP
 - tapOn:
     id: "replyBtn"
 # Wait for the composer to fully open before typing. Tapping replyBtn right

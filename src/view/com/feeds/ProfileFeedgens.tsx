@@ -26,13 +26,13 @@ import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListRef} from '#/view/com/util/List'
 import {findListNativeTag} from '#/view/com/util/listNativeTag'
-import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
+import {FeedCardListSkeleton} from '#/components/FeedCardSkeleton'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import {ListFooter} from '#/components/Lists'
-import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -188,7 +188,7 @@ export function ProfileFeedgens({
           />
         )
       } else if (item === LOADING) {
-        return <FeedLoadingPlaceholder />
+        return <FeedCardListSkeleton />
       }
       if (preferences) {
         return (
@@ -218,7 +218,7 @@ export function ProfileFeedgens({
   )
 
   useEffect(() => {
-    if (IS_IOS && enabled && scrollElRef.current) {
+    if (IS_NATIVE && enabled && scrollElRef.current) {
       const nativeTag = findListNativeTag(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }

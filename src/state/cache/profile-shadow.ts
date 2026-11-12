@@ -16,7 +16,7 @@ import {findAllProfilesInQueryData as findAllProfilesInListConvosQueryData} from
 import {findAllProfilesInQueryData as findAllProfilesInMessagesQueryData} from '#/state/queries/messages/list-convo-members'
 import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData} from '#/state/queries/my-blocked-accounts'
 import {findAllProfilesInQueryData as findAllProfilesInMyMutedAccountsQueryData} from '#/state/queries/my-muted-accounts'
-import {findAllProfilesInQueryData as findAllProfilesInNotifsQueryData} from '#/state/queries/notifications/feed'
+import {findAllProfilesInQueryData as findAllProfilesInNotifsQueryData} from '#/state/queries/notifications/grouped'
 import {
   type FeedPage,
   findAllProfilesInQueryData as findAllProfilesInFeedsQueryData,

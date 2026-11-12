@@ -14,4 +14,5 @@ export const AndroidLogo = createSVG({
     },
   ],
   viewBox: '0 0 24 24',
+  glyph: 'AndroidLogo',
 })

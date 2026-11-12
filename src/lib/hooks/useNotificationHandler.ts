@@ -2,22 +2,24 @@ import {useEffect} from 'react'
 import * as Notifications from 'expo-notifications'
 import {AtUri} from '@atproto/syntax'
 import {useLingui} from '@lingui/react/macro'
-import {CommonActions, useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import {
+  CommonActions,
+  type NavigationState,
+  useNavigation,
+} from '@react-navigation/native'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {logger as notyLogger} from '#/lib/notifications/util'
+import {getMessagesNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
+import {emitPushNotificationOpened} from '#/state/events'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
-import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
-import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
-import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_IOS} from '#/env'
-import {resetToTab} from '#/Navigation'
+import {navigateToPath, resetToTab} from '#/Navigation'
 import {router} from '#/routes'
 
 export type NotificationReason =
@@ -109,7 +111,6 @@ export function useNotificationsHandler() {
   const ax = useAnalytics()
   // eslint-disable-next-line react-compiler/react-compiler
   const logger = ax.logger.useChild(ax.logger.Context.Notifications)
-  const queryClient = useQueryClient()
   const {currentAccount, accounts} = useSession()
   const {onPressSwitchAccount} = useAccountSwitcher()
   const navigation = useNavigation<NavigationProp>()
@@ -246,7 +247,7 @@ export function useNotificationsHandler() {
         ) {
           // chat-added-to-group routes to the convo because the recipient was
           // just added and now has access.
-          navigation.dispatch(state => {
+          navigation.dispatch((state: NavigationState) => {
             if (state.routes[0].name === 'Messages') {
               if (
                 state.routes[state.routes.length - 1].name ===
@@ -270,30 +271,24 @@ export function useNotificationsHandler() {
                 })
               }
             } else {
-              return CommonActions.navigate('MessagesTab', {
-                screen: 'Messages',
-                params: {
-                  pushToConversation: payload.convoId,
-                },
+              return getMessagesNavigationAction({
+                pushToConversation: payload.convoId,
               })
             }
           })
         } else {
           // chat-removed-from-group, chat-join-request-rejected: the convo is
           // no longer accessible to the recipient, so just open the list.
-          navigation.dispatch(
-            CommonActions.navigate('MessagesTab', {screen: 'Messages'}),
-          )
+          navigation.dispatch(getMessagesNavigationAction())
         }
       } else {
         const url = notificationToURL(payload)
 
         if (url === '/notifications') {
-          resetToTab('NotificationsTab')
+          resetToTab('Notifications')
         } else if (url) {
           const [screen, params] = router.matchPath(url)
-          // @ts-expect-error router is not typed :/ -sfn
-          navigation.navigate('HomeTab', {screen, params})
+          void navigateToPath(url)
           logger.debug(`useNotificationsHandler: navigate`, {
             screen,
             params,
@@ -329,8 +324,6 @@ export function useNotificationsHandler() {
           } satisfies Notifications.NotificationBehavior)
         }
 
-        // Any notification other than a chat message should invalidate the unread page
-        invalidateCachedUnreadPage()
         return Promise.resolve(DEFAULT_HANDLER_OPTIONS)
       },
     })
@@ -360,15 +353,9 @@ export function useNotificationsHandler() {
             causedBoot: false,
           })
 
-          invalidateCachedUnreadPage()
-          void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
-
-          if (
-            payload.reason === 'mention' ||
-            payload.reason === 'quote' ||
-            payload.reason === 'reply'
-          ) {
-            void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
+          // The Notifications screen refreshes itself, as it decides what's seen
+          if (!isChatNotificationPayload(payload)) {
+            emitPushNotificationOpened()
           }
 
           logger.debug('Notifications: handleNotification', {
@@ -414,7 +401,6 @@ export function useNotificationsHandler() {
   }, [
     ax,
     logger,
-    queryClient,
     currentAccount,
     currentConvoId,
     accounts,

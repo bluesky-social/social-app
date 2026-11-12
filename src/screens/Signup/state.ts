@@ -382,7 +382,10 @@ export function useSubmitSignup() {
           value: error,
           field: isHandleError ? 'handle' : undefined,
         })
-        dispatch({type: 'setStep', value: isHandleError ? 2 : 1})
+        dispatch({
+          type: 'setStep',
+          value: isHandleError ? SignupStep.HANDLE : SignupStep.INFO,
+        })
 
         const expected = classifyExpectedSignupError(e)
         if (expected) {

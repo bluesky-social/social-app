@@ -234,7 +234,17 @@ export function TextInput({
                 // treats them as separate 'blocks' and we're using \n
                 // as a stand-in. bail out if the last grapheme is a newline
                 // to let the default behavior handle it -sfn
-                if (lastGrapheme !== '\n') {
+                //
+                // We also bail out for any grapheme that is a single UTF-16
+                // code unit. The deleteRange below is only needed when one
+                // visible character spans several code units (emoji, ZWJ
+                // sequences, combining marks), because the browser would
+                // otherwise delete them one code unit at a time.
+                //
+                // Overriding the browser's default behaviour can interfere
+                // with autocorrect unnecessarily, particularly on iOS
+                // Safari.
+                if (lastGrapheme !== '\n' && lastGrapheme.length > 1) {
                   // otherwise, delete the last grapheme using deleteRange,
                   // so that emojis are deleted as a whole
                   const deleteFrom = cursorPosition - lastGrapheme.length

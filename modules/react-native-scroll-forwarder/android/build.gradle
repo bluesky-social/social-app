@@ -1,0 +1,17 @@
+apply plugin: 'com.android.library'
+apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'com.facebook.react'
+
+android {
+  namespace 'app.bsky.scrollforwarder'
+  compileSdk rootProject.ext.compileSdkVersion
+
+  defaultConfig {
+    minSdk rootProject.ext.minSdkVersion
+    targetSdk rootProject.ext.targetSdkVersion
+  }
+}
+
+dependencies {
+  implementation 'com.facebook.react:react-android'
+}

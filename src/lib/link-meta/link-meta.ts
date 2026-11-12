@@ -45,6 +45,8 @@ type CardybLinkMetaResponse = {
 export async function getLinkMeta(
   url: string,
   timeout = 15e3,
+  /** Called only when starting a metadata request for an external HTTP(S) URL. */
+  onFetchStart?: () => void,
 ): Promise<LinkMeta> {
   if (isBskyAppUrl(url) && !parseStarterPackUri(url)) {
     return {
@@ -83,10 +85,17 @@ export async function getLinkMeta(
     return meta
   }
 
+  const isExternalUrl =
+    (urlp.protocol === 'https:' || urlp.protocol === 'http:') &&
+    urlp.hostname !== 'bsky.app' &&
+    !urlp.hostname.endsWith('.bsky.app')
   const controller = new AbortController()
   const to = setTimeout(() => controller.abort(), timeout || 5e3)
 
   try {
+    if (isExternalUrl) {
+      onFetchStart?.()
+    }
     const response = await fetch(
       `${LINK_META_PROXY('')}${encodeURIComponent(url)}`,
       {signal: controller.signal},

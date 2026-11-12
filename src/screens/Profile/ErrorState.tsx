@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {getHomeNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -20,7 +21,9 @@ export function ErrorState({error}: {error: string}) {
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
-      navigation.navigate('Home')
+      navigation.dispatch(
+        getHomeNavigationAction(navigation.getState(), 'navigate'),
+      )
     }
   }, [navigation])
 

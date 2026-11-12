@@ -364,9 +364,7 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
             color="primary"
             onPress={handleConfirmEmail}
             disabled={
-              !state.token ||
-              state.token.length !== 11 ||
-              state.mutationStatus === 'pending'
+              !isValidCode(state.token) || state.mutationStatus === 'pending'
             }>
             <ButtonText>
               <Trans

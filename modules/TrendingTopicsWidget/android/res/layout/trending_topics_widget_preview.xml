@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Widget picker preview for TrendingTopicsWidget.android.tsx: the same layout
+  with placeholder bars instead of topics. Only views that RemoteViews supports
+  (FrameLayout, LinearLayout, TextView, ImageView) work here.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@android:id/background"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@drawable/trending_topics_widget_preview_background"
+  android:orientation="vertical"
+  android:padding="16dp">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingBottom="6dp">
+
+    <ImageView
+      android:layout_width="16dp"
+      android:layout_height="16dp"
+      android:importantForAccessibility="no"
+      android:src="@drawable/notification_icon"
+      android:tint="@color/trending_topics_widget_preview_accent" />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="6dp"
+      android:maxLines="1"
+      android:text="@string/trending_topics_widget_preview_title"
+      android:textColor="@color/trending_topics_widget_preview_text"
+      android:textSize="15sp"
+      android:textStyle="bold" />
+  </LinearLayout>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
+
+    <TextView
+      android:layout_width="24dp"
+      android:layout_height="wrap_content"
+      android:fontFamily="sans-serif-medium"
+      android:text="1."
+      android:textColor="@color/trending_topics_widget_preview_secondary_text"
+      android:textSize="14sp" />
+
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:orientation="vertical">
+
+      <FrameLayout
+        android:layout_width="150dp"
+        android:layout_height="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/trending_topics_widget_preview_title_bar" />
+
+      <FrameLayout
+        android:layout_width="215dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/trending_topics_widget_preview_description_bar" />
+    </LinearLayout>
+  </LinearLayout>
+
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/trending_topics_widget_preview_border" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
+
+    <TextView
+      android:layout_width="24dp"
+      android:layout_height="wrap_content"
+      android:fontFamily="sans-serif-medium"
+      android:text="2."
+      android:textColor="@color/trending_topics_widget_preview_secondary_text"
+      android:textSize="14sp" />
+
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:orientation="vertical">
+
+      <FrameLayout
+        android:layout_width="190dp"
+        android:layout_height="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/trending_topics_widget_preview_title_bar" />
+
+      <FrameLayout
+        android:layout_width="180dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/trending_topics_widget_preview_description_bar" />
+    </LinearLayout>
+  </LinearLayout>
+
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/trending_topics_widget_preview_border" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
+
+    <TextView
+      android:layout_width="24dp"
+      android:layout_height="wrap_content"
+      android:fontFamily="sans-serif-medium"
+      android:text="3."
+      android:textColor="@color/trending_topics_widget_preview_secondary_text"
+      android:textSize="14sp" />
+
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:orientation="vertical">
+
+      <FrameLayout
+        android:layout_width="130dp"
+        android:layout_height="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/trending_topics_widget_preview_title_bar" />
+
+      <FrameLayout
+        android:layout_width="225dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/trending_topics_widget_preview_description_bar" />
+    </LinearLayout>
+  </LinearLayout>
+
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/trending_topics_widget_preview_border" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
+
+    <TextView
+      android:layout_width="24dp"
+      android:layout_height="wrap_content"
+      android:fontFamily="sans-serif-medium"
+      android:text="4."
+      android:textColor="@color/trending_topics_widget_preview_secondary_text"
+      android:textSize="14sp" />
+
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:orientation="vertical">
+
+      <FrameLayout
+        android:layout_width="170dp"
+        android:layout_height="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/trending_topics_widget_preview_title_bar" />
+
+      <FrameLayout
+        android:layout_width="160dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/trending_topics_widget_preview_description_bar" />
+    </LinearLayout>
+  </LinearLayout>
+
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/trending_topics_widget_preview_border" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
+
+    <TextView
+      android:layout_width="24dp"
+      android:layout_height="wrap_content"
+      android:fontFamily="sans-serif-medium"
+      android:text="5."
+      android:textColor="@color/trending_topics_widget_preview_secondary_text"
+      android:textSize="14sp" />
+
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:orientation="vertical">
+
+      <FrameLayout
+        android:layout_width="115dp"
+        android:layout_height="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/trending_topics_widget_preview_title_bar" />
+
+      <FrameLayout
+        android:layout_width="200dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/trending_topics_widget_preview_description_bar" />
+    </LinearLayout>
+  </LinearLayout>
+</LinearLayout>

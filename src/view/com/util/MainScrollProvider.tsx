@@ -49,7 +49,7 @@ export function useHomeHeaderTransform() {
   const {headerHeight} = useShellLayout()
   const {top: topInset} = useSafeAreaInsets()
 
-  const headerPinnedHeight = IS_LIQUID_GLASS ? topInset : 0
+  const headerPinnedHeight = IS_NATIVE ? topInset : 0
 
   return useAnimatedStyle(() => {
     const headerModeValue = headerMode.get()
@@ -85,7 +85,11 @@ export function useHomeHeaderTransform() {
       opacity: Math.pow(1 - headerModeValue, 2),
       transform: [
         {
-          translateY: interpolate(headerModeValue, [0, 1], [0, -hHeight]),
+          translateY: interpolate(
+            headerModeValue,
+            [0, 1],
+            [0, headerPinnedHeight - hHeight],
+          ),
         },
       ],
     }
@@ -96,7 +100,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const {headerHeight} = useShellLayout()
   const headerMode = useHomeHeaderMode()
   const {top: topInset} = useSafeAreaInsets()
-  const headerPinnedHeight = IS_LIQUID_GLASS ? topInset : 0
+  const headerPinnedHeight = IS_NATIVE ? topInset : 0
   const startDragOffset = useSharedValue<number | null>(null)
   const startMode = useSharedValue<number | null>(null)
   const didJustRestoreScroll = useSharedValue<boolean>(false)

@@ -23,7 +23,7 @@
         },
         "pendingCount": {
           "type": "integer",
-          "description": "Number of reports currently not closed."
+          "description": "Number of unmuted reports currently not closed."
         },
         "actionedCount": {
           "type": "integer",
@@ -65,6 +65,17 @@
           "type": "integer",
           "description": "Average resolution time in seconds from report creation to close."
         },
+        "closureTargetMetRate": {
+          "type": "integer",
+          "maximum": 100,
+          "minimum": 0,
+          "description": "Percent of reports meeting their closure target."
+        },
+        "closureTargetMetCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Reports whose closure meets their closure target."
+        },
         "resolutionDurationSec": {
           "type": "integer",
           "description": "Sum of report creation-to-close seconds."
@@ -72,6 +83,16 @@
         "resolutionSampleCount": {
           "type": "integer",
           "description": "Number of closed-report samples in resolutionDurationSec."
+        },
+        "closureTargetMissedCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Reports whose closure exceeds their closure target."
+        },
+        "closureTargetOverdueCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Unmuted pending reports past their closure target."
         }
       },
       "description": "Live statistics for reports for the current calendar day, filterable by queue, moderator, or report type."
@@ -223,6 +244,16 @@
           "default": false,
           "description": "Whether this report was emitted by automated tooling."
         },
+        "priorityLevel": {
+          "type": "string",
+          "description": "Priority level assigned to the report."
+        },
+        "priorityScore": {
+          "type": "integer",
+          "maximum": 100,
+          "minimum": 0,
+          "description": "Report priority score. Higher scores have higher priority."
+        },
         "subjectStatus": {
           "ref": "tools.ozone.moderation.defs#subjectStatusView",
           "type": "ref",
@@ -235,9 +266,24 @@
           },
           "description": "Array of moderation event IDs representing actions taken on this report, in append order (most recently linked event last)"
         },
+        "priorityTargetMet": {
+          "type": "boolean",
+          "description": "Whether the current closure occurred within the report's snapshotted target."
+        },
+        "resolutionTimeSec": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Time from report creation to its last closure."
+        },
         "relatedReportCount": {
           "type": "integer",
           "description": "Number of other pending reports on the same subject"
+        },
+        "priorityTargetMinutes": {
+          "type": "integer",
+          "maximum": 2147483647,
+          "minimum": 1,
+          "description": "Target resolution duration in minutes."
         }
       }
     },
@@ -372,7 +418,7 @@
         },
         "pendingCount": {
           "type": "integer",
-          "description": "Number of reports not closed at time of computation."
+          "description": "Number of unmuted reports not closed at the end of this UTC day, or at computation time for the current day."
         },
         "actionedCount": {
           "type": "integer",
@@ -414,6 +460,17 @@
           "type": "integer",
           "description": "Average resolution time in seconds from report creation to close."
         },
+        "closureTargetMetRate": {
+          "type": "integer",
+          "maximum": 100,
+          "minimum": 0,
+          "description": "Percent of reports meeting their closure target."
+        },
+        "closureTargetMetCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Reports whose closure meets their closure target."
+        },
         "resolutionDurationSec": {
           "type": "integer",
           "description": "Sum of report creation-to-close seconds for this day's samples."
@@ -421,6 +478,16 @@
         "resolutionSampleCount": {
           "type": "integer",
           "description": "Number of closed-report samples in resolutionDurationSec."
+        },
+        "closureTargetMissedCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Reports whose closure exceeds their closure target."
+        },
+        "closureTargetOverdueCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Unmuted pending reports past their closure target at the snapshot time."
         }
       },
       "description": "A single daily snapshot of report statistics for a calendar date."

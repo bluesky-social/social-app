@@ -12,16 +12,18 @@ packageExtensions:
         optional: true
 trustPolicy: 'no-downgrade' # default: off
 trustPolicyIgnoreAfter: 10080 # 7 days, default: undefined
+pmOnFail: download # run the pnpm version pinned in devEngines; package.json keeps onFail: warn because npm/npx read it too
 overrides:
-  '@react-native/babel-preset': '0.86.3'
-  '@react-native/normalize-colors': '0.86.3'
-  '@expo/image-utils': '0.8.12'
+  '@react-native/babel-preset': '0.88.1'
+  '@react-native/normalize-colors': '0.88.1'
+  '@expo/image-utils': '0.12.6'
+  'expo-modules-core': '58.0.30'
   '@types/estree': '1.0.6'
   'react-native-reanimated': '4.7.1'
   'react-native-worklets': '0.13.0'
   'psl': '1.9.0'
   '@types/psl': '1.1.1'
-  'react-native-screens': '4.26.2'
+  'react-native-screens': '4.30.1'
 allowBuilds:
   '@sentry/cli': true
   '@swc/core': false
@@ -29,39 +31,61 @@ allowBuilds:
   'core-js-pure': false
   'dtrace-provider': false
   'esbuild': false
+  '@parcel/watcher': false
   'protobufjs': false
   'unrs-resolver': true
 patchedDependencies:
-  '@expo/cli@57.0.26': patches/@expo__cli@57.0.26.patch
+  '@expo/cli@58.1.19': patches/@expo__cli@58.1.19.patch
+  '@expo/ui@58.0.27': patches/@expo__ui@58.0.27.patch
   '@formatjs/bigdecimal@0.2.5': patches/@formatjs__bigdecimal@0.2.5.patch
   '@sentry/expo-upload-sourcemaps@8.26.0': patches/@sentry__expo-upload-sourcemaps@8.26.0.patch
-  'expo-age-range@57.0.2': patches/expo-age-range@57.0.2.patch
-  'expo-media-library@57.0.5': patches/expo-media-library@57.0.5.patch
-  'expo-modules-core@57.0.18': patches/expo-modules-core@57.0.18.patch
-  expo-notifications@57.0.20: patches/expo-notifications@57.0.20.patch
-  expo-updates@57.0.23: patches/expo-updates@57.0.23.patch
-  expo@57.0.24: patches/expo@57.0.24.patch
-  'metro-runtime@0.84.5': patches/metro-runtime@0.84.5.patch
-  'metro@0.84.5': patches/metro@0.84.5.patch
-  'react-native-keyboard-controller@1.21.9': patches/react-native-keyboard-controller@1.21.9.patch
-  'react-native-pager-view@6.8.0': patches/react-native-pager-view@6.8.0.patch
-  'react-native-screens@4.26.2': patches/react-native-screens@4.26.2.patch
-  'react-native-svg@15.15.4': patches/react-native-svg@15.15.4.patch
-  'react-native@0.86.3': patches/react-native@0.86.3.patch
+  'expo-image@58.0.18': patches/expo-image@58.0.18.patch
+  'expo-media-library@58.0.13': patches/expo-media-library@58.0.13.patch
+  'expo-modules-core@58.0.30': patches/expo-modules-core@58.0.30.patch
+  expo-notifications@58.1.8: patches/expo-notifications@58.1.8.patch
+  expo-updates@58.0.21: patches/expo-updates@58.0.21.patch
+  expo-widgets@58.0.27: patches/expo-widgets@58.0.27.patch
+  expo@58.0.23: patches/expo@58.0.23.patch
+  'metro-runtime@0.87.1': patches/metro-runtime@0.87.1.patch
+  'metro@0.87.1': patches/metro@0.87.1.patch
+  react-native-keyboard-controller@1.22.7: patches/react-native-keyboard-controller@1.22.7.patch
+  react-native-nano-icons@1.0.1: patches/react-native-nano-icons@1.0.1.patch
+  react-native-pager-view@9.0.11: patches/react-native-pager-view@9.0.11.patch
+  react-native-reanimated@4.7.1: patches/react-native-reanimated@4.7.1.patch
+  react-native-screens@4.30.1: patches/react-native-screens@4.30.1.patch
+  'react-native-svg@15.16.0': patches/react-native-svg@15.16.0.patch
+  react-native@0.88.1: patches/react-native@0.88.1.patch
 minimumReleaseAgeExclude:
   - '@atproto/*'
   - '@atproto-labs/*'
   - '@bsky.app/*'
   - '@bsky/*'
-  - react-native-reanimated@4.7.1
-  - '@expo/cli@57.0.25'
-  - '@expo/router-server@57.0.10'
-  - babel-preset-expo@57.0.12
-  - expo@57.0.24
-  - expo-build-properties@57.0.21
-  - expo-image-manipulator@57.0.19
-  - expo-image-picker@57.0.19
-  - expo-location@57.0.19
-  - expo-notifications@57.0.20
-  - expo-sharing@57.0.21 # TODO
-  - '@expo/ui@57.0.20'
+  - react-native-nano-icons@1.0.1
+  - '@expo/cli@58.1.19'
+  - '@expo/config-plugins@58.0.12'
+  - '@expo/config@58.0.11'
+  - '@expo/env@2.5.4'
+  - '@expo/fingerprint@0.21.9'
+  - '@expo/inline-modules@0.2.9'
+  - '@expo/local-build-cache-provider@58.0.11'
+  - '@expo/log-box@58.0.15'
+  - '@expo/metro-config@58.0.21'
+  - '@expo/metro-runtime@58.0.17'
+  - '@expo/prebuild-config@58.0.19'
+  - '@expo/router-server@58.0.21'
+  - '@expo/ui@58.0.27'
+  - babel-preset-expo@58.0.24
+  - expo-asset@58.0.20
+  - expo-constants@58.0.15
+  - expo-linking@58.0.16
+  - expo-modules-autolinking@58.0.17
+  - expo-modules-core@58.0.30
+  - expo-modules-jsi@58.0.22
+  - expo-notifications@58.1.8
+  - expo-screen-orientation@58.0.4
+  - expo-sharing@58.0.22
+  - expo-splash-screen@58.0.13
+  - expo-updates@58.0.21
+  - expo-widgets@58.0.27
+  - expo@58.0.23
+  - jest-expo@58.0.14

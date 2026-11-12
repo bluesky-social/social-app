@@ -1,0 +1,16 @@
+diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
+index 14a08b4..21abb2d 100644
+--- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
++++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
+@@ -1157,6 +1157,11 @@ - (RCTVirtualViewContainerState *)virtualViewContainerState
+   return _virtualViewContainerState;
+ }
+ 
+++ (BOOL)shouldBeRecycled
++{
++  return NO;
++}
++
+ @end
+ 
+ Class<RCTComponentViewProtocol> RCTScrollViewCls(void)

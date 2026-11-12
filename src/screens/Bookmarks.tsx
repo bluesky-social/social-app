@@ -12,6 +12,7 @@ import {
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
+import {getHomeNavigationAction} from '#/lib/routes/navigation'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -22,7 +23,6 @@ import {useBookmarksQuery} from '#/state/queries/bookmarks/useBookmarksQuery'
 import {Post} from '#/view/com/post/Post'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
-import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {
@@ -32,6 +32,7 @@ import {
 import {CircleQuestion_Stroke2_Corner2_Rounded as QuestionIcon} from '#/components/icons/CircleQuestion'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
+import {PostFeedSkeleton} from '#/components/PostFeedSkeleton'
 import * as Skele from '#/components/Skeleton'
 import * as toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -295,7 +296,10 @@ function BookmarksEmpty() {
       button={{
         label: _(msg`Button to go back to the home timeline`),
         text: _(msg`Go home`),
-        onPress: () => navigation.navigate('Home' as never),
+        onPress: () =>
+          navigation.dispatch(
+            getHomeNavigationAction(navigation.getState(), 'navigate'),
+          ),
         size: 'small',
         color: 'secondary',
       }}
@@ -307,7 +311,7 @@ function BookmarksEmpty() {
 function renderItem({item, index}: {item: ListItem; index: number}) {
   switch (item.type) {
     case 'loading': {
-      return <PostFeedLoadingPlaceholder />
+      return <PostFeedSkeleton />
     }
     case 'empty': {
       return <BookmarksEmpty />
