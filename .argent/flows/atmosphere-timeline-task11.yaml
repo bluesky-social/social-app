@@ -1,5 +1,0 @@
-steps:
-  - launch: xyz.blueskyweb.app
-  - await: {visible: {text: Open drawer menu}}
-  - await: {idle: true}
-  - run: atmosphere-enter.yaml

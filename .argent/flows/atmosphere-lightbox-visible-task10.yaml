@@ -1,4 +1,0 @@
-executionPrerequisite: The instrumented English iOS app is displaying an image lightbox.
-steps:
-  - assert: {visible: {text: Close image}}
-  - await: {idle: true}
