@@ -43,6 +43,24 @@ const GRID_ROW_GAP = tokens.space.lg
 const GRID_HEIGHT = GRID_ITEM_HEIGHT * 2.5 + GRID_ROW_GAP * 2
 
 /**
+ * The grid's height for this many chats. Fewer than fill it get a shorter
+ * grid, so there's no empty space under them. The share sheet pulls the
+ * section below up over the grid's bottom by `space.lg`, which a full grid
+ * uses to cut through its last row, so a short one leaves room for it under
+ * the names.
+ */
+function getGridHeight(chatCount: number) {
+  const rows = Math.ceil(chatCount / GRID_COLUMNS)
+  const fitHeight =
+    tokens.space._2xs +
+    rows * GRID_ITEM_HEIGHT +
+    (rows - 1) * GRID_ROW_GAP +
+    tokens.space.md +
+    tokens.space.lg
+  return Math.min(GRID_HEIGHT, fitHeight)
+}
+
+/**
  * The viewer's most recent chats, to send the post to one in a tap. `row` is
  * a single scrolling row; `grid` is the share sheet's taller grid.
  */
@@ -123,7 +141,13 @@ export function RecentChats({
     return (
       <View style={[a.relative, {marginHorizontal: SHEET_GUTTER * -1}]}>
         <ScrollView
-          style={{height: GRID_HEIGHT}}
+          // Full height while loading, and for the empty state
+          style={{
+            height:
+              convos && convos.length > 0
+                ? getGridHeight(convos.length)
+                : GRID_HEIGHT,
+          }}
           contentContainerStyle={[
             a.flex_row,
             a.flex_wrap,
