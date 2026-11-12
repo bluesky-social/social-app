@@ -12,6 +12,12 @@ import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type SharePlatformId} from '#/components/ShareDialog/catalog'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
+/** Where the system share sheet was opened from. */
+type NativeShareEntryPoint = 'ShareMenu' | 'LongPress' | 'PostMenu'
+
+/** Which control saved or removed a post. */
+export type BookmarkEntryPoint = 'BookmarkButton' | 'PostMenu' | 'ShareMenu'
+
 export type Events = {
   // App events
   init: {
@@ -543,6 +549,8 @@ export type Events = {
     uri: string
     authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    /** Which control saved it. `logContext` is where the post was shown. */
+    entryPoint: BookmarkEntryPoint
     feedDescriptor?: string
     position?: number
   }
@@ -550,6 +558,8 @@ export type Events = {
     uri: string
     authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    /** Which control removed it. `logContext` is where the post was shown. */
+    entryPoint: BookmarkEntryPoint
     feedDescriptor?: string
     position?: number
   }
@@ -1341,17 +1351,25 @@ export type Events = {
    * desktop web ("Share via…").
    */
   'share:press:nativeShare': {
+    uri: string
+    authorDid: string
+    entryPoint: NativeShareEntryPoint
     os: Platform['OS']
   }
   /**
    * Fires when the system share sheet closes after sharing a post. Not
-   * logged on Android builds without the native share module.
+   * logged from the post menu, or on Android builds without the native share
+   * module.
    */
   'share:nativeShare:result': {
     uri: string
     authorDid: string
-    entryPoint: 'ShareMenu' | 'LongPress'
-    status: 'shared' | 'dismissed'
+    entryPoint: NativeShareEntryPoint
+    /**
+     * `failed` is web only: the browser refused to open its share sheet, so
+     * the link was copied instead. That isn't counted as a share.
+     */
+    status: 'shared' | 'dismissed' | 'failed'
     /**
      * The app the user picked: the `activityType` on iOS, the package name on
      * Android. Android reports the chooser's own actions (e.g. Copy) as
@@ -1380,15 +1398,21 @@ export type Events = {
     position: number
   }
   /**
-   * Fires when a message is sent with a post attached from the share menu
-   * (a recent chat or "Send via chat"). The share-menu events above only mean
-   * a chat was opened; this one means the post was actually sent.
+   * Fires when the user sends a message with a post attached from the share
+   * menu (a recent chat or "Send via chat"). The share-menu events above only
+   * mean a chat was opened; this one means the user sent the post. It fires
+   * once the message is queued, not when the server confirms it.
    */
   'share:dm:send': {
     uri: string
     authorDid: string
     convoId: string
     isGroup: boolean
+    /**
+     * How the chat was picked. Unset when the chat was opened with the post
+     * some other way, e.g. a link.
+     */
+    source?: 'recentChat' | 'chatSearch'
   }
   'share:press:embed': {uri: string}
   /**

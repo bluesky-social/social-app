@@ -63,7 +63,11 @@ export function ShareSheetItems({
 
   const postUri = post.uri
   const postAuthor = useProfileShadow(post.author)
-  const {isBookmarked, toggleBookmark} = usePostBookmark({post, logContext})
+  const {isBookmarked, toggleBookmark} = usePostBookmark({
+    post,
+    logContext,
+    entryPoint: 'ShareMenu',
+  })
 
   const href = useMemo(() => {
     const urip = new AtUri(postUri)
@@ -79,7 +83,12 @@ export function ShareSheetItems({
   const showChats = hasSession && aa.state.access === aa.Access.Full
 
   const onSharePost = () => {
-    ax.metric('share:press:nativeShare', {os: Platform.OS})
+    ax.metric('share:press:nativeShare', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      entryPoint: 'ShareMenu',
+      os: Platform.OS,
+    })
     const url = toShareUrl(href)
     void shareUrl(url).then(result => {
       if (!result) return
@@ -121,6 +130,7 @@ export function ShareSheetItems({
     navigation.navigate('MessagesConversation', {
       conversation,
       embed: postUri,
+      embedSource: 'chatSearch',
     })
   }
 

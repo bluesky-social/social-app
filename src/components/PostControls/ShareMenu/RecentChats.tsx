@@ -113,6 +113,7 @@ export function RecentChats({
       navigation.navigate('MessagesConversation', {
         conversation: convoId,
         embed: postUri,
+        embedSource: 'recentChat',
       })
     })
   }

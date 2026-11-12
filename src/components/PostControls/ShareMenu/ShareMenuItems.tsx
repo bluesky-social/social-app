@@ -73,7 +73,12 @@ function LegacyShareMenuItems({
   }, [postAuthor])
 
   const onSharePost = () => {
-    ax.metric('share:press:nativeShare', {os: Platform.OS})
+    ax.metric('share:press:nativeShare', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      entryPoint: 'ShareMenu',
+      os: Platform.OS,
+    })
     const url = toShareUrl(href)
     void shareUrl(url).then(result => {
       if (!result) return
@@ -115,6 +120,7 @@ function LegacyShareMenuItems({
     navigation.navigate('MessagesConversation', {
       conversation,
       embed: postUri,
+      embedSource: 'chatSearch',
     })
   }
 

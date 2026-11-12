@@ -72,6 +72,7 @@ let ShareMenuItems = ({
     navigation.navigate('MessagesConversation', {
       conversation,
       embed: postUri,
+      embedSource: 'chatSearch',
     })
   }
 
@@ -88,9 +89,14 @@ let ShareMenuItems = ({
     ax.features.enabled(ax.features.ShareDestinationsEnable)
 
   const onShareVia = () => {
-    ax.metric('share:press:nativeShare', {os: Platform.OS})
+    ax.metric('share:press:nativeShare', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      entryPoint: 'ShareMenu',
+      os: Platform.OS,
+    })
     const url = toShareUrl(href)
-    const logResult = (status: 'shared' | 'dismissed') => {
+    const logResult = (status: 'shared' | 'dismissed' | 'failed') => {
       ax.metric('share:nativeShare:result', {
         uri: postUri,
         authorDid: postAuthor.did,
@@ -106,6 +112,7 @@ let ShareMenuItems = ({
           logResult('dismissed')
         } else {
           // e.g. the browser refused; copying the link still gets it shared
+          logResult('failed')
           void shareUrl(url)
         }
       },

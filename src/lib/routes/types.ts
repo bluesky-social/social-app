@@ -99,6 +99,8 @@ export type CommonNavigatorParams = {
     conversation: string
     /** A post URI to stage as a quoted-post embed. */
     embed?: string
+    /** How the share menu picked this chat for `embed`, for metrics. */
+    embedSource?: 'recentChat' | 'chatSearch'
     /**
      * Text to stage in the message composer, e.g. a shared external URL. It's
      * consumed once and never sent automatically.

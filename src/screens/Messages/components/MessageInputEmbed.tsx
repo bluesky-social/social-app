@@ -48,6 +48,8 @@ export type MessageEmbedState =
        * opening the chat), rather than pasted as a link.
        */
       fromShareMenu?: boolean
+      /** How the share menu picked the chat, for metrics. */
+      shareSource?: 'recentChat' | 'chatSearch'
     }
   | {type: 'invite'; code: string}
 
@@ -59,15 +61,21 @@ export function useMessageEmbed() {
       NavigationProp<CommonNavigatorParams, 'MessagesConversation'>
     >()
   const embedFromParams = route.params.embed
+  const embedFromParamsState: MessageEmbedState | undefined = embedFromParams
+    ? {
+        type: 'post',
+        uri: embedFromParams,
+        fromShareMenu: true,
+        shareSource: route.params.embedSource,
+      }
+    : undefined
 
   const [embed, setEmbed] = useState<MessageEmbedState | undefined>(
-    embedFromParams
-      ? {type: 'post', uri: embedFromParams, fromShareMenu: true}
-      : undefined,
+    embedFromParamsState,
   )
 
-  if (embedFromParams && embed?.type !== 'post') {
-    setEmbed({type: 'post', uri: embedFromParams, fromShareMenu: true})
+  if (embedFromParamsState && embed?.type !== 'post') {
+    setEmbed(embedFromParamsState)
   }
 
   return {
@@ -77,7 +85,7 @@ export function useMessageEmbed() {
         if (!embedUrl) {
           // Only the post embed is reflected in the route param (used by the
           // share-to-DM intent flow); invites are local-only.
-          navigation.setParams({embed: ''})
+          navigation.setParams({embed: '', embedSource: undefined})
           setEmbed(undefined)
           return
         }
