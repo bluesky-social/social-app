@@ -8,7 +8,7 @@ msgstr ""
 "Language: cs\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-11-11 16:57\n"
+"PO-Revision-Date: 2026-11-12 21:07\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
@@ -28,7 +28,7 @@ msgstr "„{0}“"
 msgid "\"{interestsDisplayName}\" category (active)"
 msgstr "Kategorie \"{interestsDisplayName}\" (aktivní)"
 
-#: src/screens/ModerationInbox/Report.tsx:211
+#: src/screens/ModerationInbox/Report.tsx:208
 msgid "“{note}”"
 msgstr "„{note}“"
 
@@ -220,7 +220,7 @@ msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {příspěvek} few {příspěvky} many {příspěvků} other {příspěvků}}"
 
 #. placeholder {0}: policies.length
-#: src/screens/ModerationInbox/Notice.tsx:270
+#: src/screens/ModerationInbox/Notice.tsx:257
 msgid "{0, plural, one {Rule violated:} other {Rules violated:}}"
 msgstr "{0, plural, one {Porušené pravidlo:} few {Porušená pravidla:} many {Porušených pravidel:} other {Porušených pravidel:}}"
 
@@ -452,8 +452,8 @@ msgstr "{0}/{imageCount}"
 #. placeholder {0}: i18n.number(UNREAD_NOTIFICATION_CAP - 1)
 #: src/screens/Messages/components/InboxRequests.tsx:55
 #: src/screens/Settings/components/SettingsList.tsx:328
-#: src/view/shell/desktop/LeftNav.tsx:699
-#: src/view/shell/Drawer.tsx:762
+#: src/view/shell/desktop/LeftNav.tsx:693
+#: src/view/shell/Drawer.tsx:754
 msgid "{0}+"
 msgstr "{0}+"
 
@@ -465,7 +465,7 @@ msgstr "{0}+ požadavků"
 
 #. Displayed when the number of notifications exceeds the cap – for example, 99+ notifications
 #. placeholder {0}: i18n.number(UNREAD_NOTIFICATION_CAP - 1)
-#: src/screens/Moderation/index.tsx:174
+#: src/screens/Moderation/index.tsx:173
 msgid "{0}+ updates"
 msgstr "{0}+ aktualizací"
 
@@ -501,7 +501,7 @@ msgstr "{accountCount, plural, one {# účet} few {# účty} many {# účtů} ot
 msgid "{accountCount, plural, one {# account} other {# accounts}}, {feedCount, plural, one {# feed} other {# feeds}}"
 msgstr "{accountCount, plural, one {# účet} few {# účty} many {# účtů} other {# účtů}}, {feedCount, plural, one {# kanál} few {# kanály} many {# kanálů} other {# kanálů}}"
 
-#: src/screens/Moderation/index.tsx:179
+#: src/screens/Moderation/index.tsx:178
 msgid "{badge, plural, one {# update} other {# updates}}"
 msgstr "{badge, plural, one {# aktualizace} few {# aktualizace} many {# aktualizací} other {# aktualizací}}"
 
@@ -556,7 +556,7 @@ msgstr "{count, plural, one {#+ žádost o připojení} few {#+ žádosti o při
 msgid "{date} at {time}"
 msgstr "{date} v {time}"
 
-#: src/screens/ModerationInbox/Notice.tsx:425
+#: src/screens/ModerationInbox/Notice.tsx:412
 msgid "{detailsLength} of {MAX_REPORT_REASON_GRAPHEME_LENGTH} characters used"
 msgstr "Použito {detailsLength} z {MAX_REPORT_REASON_GRAPHEME_LENGTH} znaků"
 
@@ -653,11 +653,11 @@ msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr "{joinedAllTimeCount, plural, one {# uživatel se připojil} few {# uživatelé se připojili} many {# uživatelů se připojilo} other {# uživatelů se připojilo}}!"
 
 #: src/view/shell/desktop/LeftNav.tsx:451
-#: src/view/shell/Drawer.tsx:806
+#: src/view/shell/Drawer.tsx:798
 msgid "{label}, Beta"
 msgstr "{label}, Beta"
 
-#: src/screens/ModerationInbox/Settings.tsx:138
+#: src/screens/ModerationInbox/Settings.tsx:129
 msgid "{label}. {description}"
 msgstr "{label}. {description}"
 
@@ -877,12 +877,12 @@ msgstr "{requestCount, plural, one {# žádost} few {# žádosti} many {# žádo
 msgid "{requestCount}+ requests"
 msgstr "{requestCount}+ požadavků"
 
-#: src/screens/ModerationInbox/Notice.tsx:242
+#: src/screens/ModerationInbox/Notice.tsx:229
 msgid "{serviceName} removed your content for violating our <0>Community Guidelines</0>."
 msgstr "Služba {serviceName} odstranila váš obsah za porušení našich <0>pokynů komunity</0>."
 
-#: src/screens/Settings/Settings.tsx:212
-#: src/view/shell/Drawer.tsx:777
+#: src/screens/Settings/Settings.tsx:205
+#: src/view/shell/Drawer.tsx:769
 msgid "{unreadCount, plural, one {# unread update} other {# unread updates}}"
 msgstr "{unreadCount, plural, one {# nepřečtená aktualizace} few {# nepřečtené aktualizace} many {# nepřečtených aktualizací} other {# nepřečtených aktualizací}}"
 
@@ -1255,8 +1255,8 @@ msgstr "Malá kawaii scéna bez zaznamenaného poměru stran"
 
 #: src/Navigation.tsx:528
 #: src/screens/Settings/AboutSettings.tsx:85
-#: src/screens/Settings/Settings.tsx:292
-#: src/screens/Settings/Settings.tsx:295
+#: src/screens/Settings/Settings.tsx:285
+#: src/screens/Settings/Settings.tsx:288
 msgid "About"
 msgstr "Informace"
 
@@ -1297,8 +1297,8 @@ msgid "Access requested! The group owner will review your request."
 msgstr "Žádost o přístup odeslána! Vlastník skupiny posoudí vaši žádost."
 
 #: src/screens/Settings/AccessibilitySettings.tsx:45
-#: src/screens/Settings/Settings.tsx:262
-#: src/screens/Settings/Settings.tsx:265
+#: src/screens/Settings/Settings.tsx:255
+#: src/screens/Settings/Settings.tsx:258
 msgid "Accessibility"
 msgstr "Přístupnost"
 
@@ -1310,8 +1310,8 @@ msgstr "Nastavení přístupnosti"
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:22
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:23
 #: src/screens/Settings/AccountSettings.tsx:54
-#: src/screens/Settings/Settings.tsx:193
-#: src/screens/Settings/Settings.tsx:196
+#: src/screens/Settings/Settings.tsx:186
+#: src/screens/Settings/Settings.tsx:189
 msgid "Account"
 msgstr "Účet"
 
@@ -1340,7 +1340,7 @@ msgstr "Účet byl pozastaven"
 msgid "Account is deactivated"
 msgstr "Účet byl deaktivován"
 
-#: src/screens/ModerationInbox/Settings.tsx:98
+#: src/screens/ModerationInbox/Settings.tsx:89
 msgctxt "moderation-inbox-setting"
 msgid "Account labeling notifications"
 msgstr "Oznámení o označení účtu"
@@ -1360,11 +1360,11 @@ msgstr "Účet byl ztlumen"
 msgid "Account Muted by List"
 msgstr "Účet byl ztlumen ze seznamu"
 
-#: src/screens/Settings/Settings.tsx:676
+#: src/screens/Settings/Settings.tsx:669
 msgid "Account options"
 msgstr "Možnosti účtu"
 
-#: src/screens/Settings/Settings.tsx:711
+#: src/screens/Settings/Settings.tsx:704
 msgid "Account removed from quick access"
 msgstr "Účet byl odebrán z rychlého přístupu"
 
@@ -1500,8 +1500,8 @@ msgstr "Přidat alternativní text"
 msgid "Add alt text (optional)"
 msgstr "Přidat alternativní text (volitelně)"
 
-#: src/screens/Settings/Settings.tsx:614
-#: src/screens/Settings/Settings.tsx:617
+#: src/screens/Settings/Settings.tsx:607
+#: src/screens/Settings/Settings.tsx:610
 #: src/view/shell/desktop/LeftNav.tsx:387
 #: src/view/shell/desktop/LeftNav.tsx:390
 msgid "Add another account"
@@ -1713,7 +1713,7 @@ msgstr "Obsah pro dospělé"
 msgid "Adult Content"
 msgstr "Obsah pro dospělé"
 
-#: src/screens/Moderation/index.tsx:474
+#: src/screens/Moderation/index.tsx:465
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
 msgstr "Obsah pro dospělé může být povolen pouze prostřednictvím webu na <0>bsky.app</0>."
 
@@ -1730,7 +1730,7 @@ msgstr "Štítky obsahu pro dospělé"
 msgid "Adult sexual abuse content"
 msgstr "Obsah sexuálního zneužívání dospělých"
 
-#: src/screens/Moderation/index.tsx:518
+#: src/screens/Moderation/index.tsx:509
 msgid "Advanced"
 msgstr "Rozšířené"
 
@@ -2158,9 +2158,9 @@ msgstr "Hesla aplikace"
 #: src/components/moderation/LabelsOnMeDialog.tsx:169
 #: src/components/moderation/LabelsOnMeDialog.tsx:172
 #: src/components/moderation/ModerationDetailsDialog.tsx:223
-#: src/screens/ModerationInbox/Notice.tsx:478
-#: src/screens/ModerationInbox/Report.tsx:180
-#: src/screens/ModerationInbox/Report.tsx:181
+#: src/screens/ModerationInbox/Notice.tsx:465
+#: src/screens/ModerationInbox/Report.tsx:177
+#: src/screens/ModerationInbox/Report.tsx:178
 msgid "Appeal"
 msgstr "Odvolání"
 
@@ -2189,7 +2189,7 @@ msgstr "Odvolání pozastavení živých streamů"
 msgid "Appeal resolved"
 msgstr "Odvolání vyřešeno"
 
-#: src/screens/ModerationInbox/Notice.tsx:418
+#: src/screens/ModerationInbox/Notice.tsx:405
 msgid "Appeal submitted"
 msgstr "Odvolání bylo podáno"
 
@@ -2213,9 +2213,9 @@ msgstr "Odvolat se proti pozastavení"
 #: src/screens/Messages/components/ChatDisabled.tsx:79
 #: src/screens/Messages/components/ChatDisabled.tsx:130
 #: src/screens/Messages/components/ChatDisabled.tsx:132
-#: src/screens/ModerationInbox/Notice.tsx:319
-#: src/screens/ModerationInbox/Notice.tsx:330
-#: src/screens/ModerationInbox/Notice.tsx:473
+#: src/screens/ModerationInbox/Notice.tsx:306
+#: src/screens/ModerationInbox/Notice.tsx:317
+#: src/screens/ModerationInbox/Notice.tsx:460
 msgid "Appeal this decision"
 msgstr "Odvolat toto rozhodnutí"
 
@@ -2229,8 +2229,8 @@ msgstr "Odvolání se posuzuje"
 
 #: src/Navigation.tsx:443
 #: src/screens/Settings/AppearanceSettings.tsx:71
-#: src/screens/Settings/Settings.tsx:254
-#: src/screens/Settings/Settings.tsx:257
+#: src/screens/Settings/Settings.tsx:247
+#: src/screens/Settings/Settings.tsx:250
 msgid "Appearance"
 msgstr "Vzhled"
 
@@ -2243,8 +2243,8 @@ msgstr "Použít"
 msgid "Apply default recommended feeds"
 msgstr "Použít výchozí doporučené kanály"
 
-#: src/screens/Settings/Settings.tsx:545
-#: src/screens/Settings/Settings.tsx:547
+#: src/screens/Settings/Settings.tsx:538
+#: src/screens/Settings/Settings.tsx:540
 msgid "Apply Pull Request"
 msgstr "Použít žádost o přijetí změn"
 
@@ -2377,7 +2377,7 @@ msgstr "Často kladené otázky k protokolu AT"
 
 #: src/Navigation.tsx:194
 #: src/screens/Atmosphere/index.tsx:31
-#: src/view/shell/desktop/LeftNav.tsx:763
+#: src/view/shell/desktop/LeftNav.tsx:757
 #: src/view/shell/Drawer.tsx:559
 msgid "Atmosphere"
 msgstr "Atmosféra"
@@ -2550,8 +2550,8 @@ msgstr "Funkce beta verze"
 
 #: src/Navigation.tsx:459
 #: src/screens/Settings/BetaFeaturesSettings.tsx:142
-#: src/screens/Settings/Settings.tsx:276
-#: src/screens/Settings/Settings.tsx:279
+#: src/screens/Settings/Settings.tsx:269
+#: src/screens/Settings/Settings.tsx:272
 msgid "Beta features"
 msgstr "Funkce beta verze"
 
@@ -2659,7 +2659,7 @@ msgstr "Blokovat uživatele a/nebo opustit tuto konverzaci"
 msgid "Blocked"
 msgstr "Zablokováno"
 
-#: src/screens/Moderation/index.tsx:392
+#: src/screens/Moderation/index.tsx:383
 msgid "Blocked accounts"
 msgstr "Blokované účty"
 
@@ -2748,10 +2748,10 @@ msgstr "Bluesky je zábavnější s přáteli. Chcete pozvat některé z vašich
 
 #: src/screens/Atmosphere/components/AtmosphereNux.tsx:63
 msgid "Bluesky is part of a growing network of hundreds of social apps. Your account unlocks them all."
-msgstr "Bluesky je součástí rostoucí sítě stovek sociálních aplikací. Váš účet vám je všechny zpřístupní."
+msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:90
-#: src/screens/ModerationInbox/Report.tsx:74
+#: src/screens/ModerationInbox/Notice.tsx:88
+#: src/screens/ModerationInbox/Report.tsx:72
 msgid "Bluesky Moderation Service"
 msgstr "Moderátorská služba Bluesky"
 
@@ -2978,7 +2978,7 @@ msgstr "Je vyžadován přístup ke kameře"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:124
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
-#: src/screens/ModerationInbox/Notice.tsx:437
+#: src/screens/ModerationInbox/Notice.tsx:424
 #: src/screens/Profile/Header/EditProfileDialog.tsx:313
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
@@ -2992,7 +2992,7 @@ msgstr "Je vyžadován přístup ke kameře"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:87
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:242
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:248
-#: src/screens/Settings/Settings.tsx:337
+#: src/screens/Settings/Settings.tsx:330
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
 #: src/view/com/composer/Composer.tsx:1837
@@ -3003,7 +3003,7 @@ msgstr "Je vyžadován přístup ke kameře"
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: src/screens/ModerationInbox/Notice.tsx:430
+#: src/screens/ModerationInbox/Notice.tsx:417
 msgid "Cancel appeal"
 msgstr "Zrušit odvolání"
 
@@ -3186,7 +3186,7 @@ msgstr "Kanál"
 #: src/lib/hooks/useNotificationHandler.ts:134
 #: src/Navigation.tsx:554
 #: src/view/shell/bottom-bar/BottomBar.tsx:246
-#: src/view/shell/desktop/LeftNav.tsx:776
+#: src/view/shell/desktop/LeftNav.tsx:770
 #: src/view/shell/Drawer.tsx:611
 msgid "Chat"
 msgstr "Konverzace"
@@ -3417,11 +3417,11 @@ msgstr "Vymazat všechna nedávná vyhledávání"
 msgid "Clear all recent searches?"
 msgstr "Vymazat všechna nedávná vyhledávání?"
 
-#: src/screens/Settings/Settings.tsx:537
+#: src/screens/Settings/Settings.tsx:530
 msgid "Clear all storage data"
 msgstr "Vymazat všechna data úložiště"
 
-#: src/screens/Settings/Settings.tsx:539
+#: src/screens/Settings/Settings.tsx:532
 msgid "Clear all storage data (restart after this)"
 msgstr "Vymazat všechna data úložiště (poté restartujte)"
 
@@ -3788,8 +3788,8 @@ msgstr "Obsah"
 msgid "Content & Media"
 msgstr "Obsah & Média"
 
-#: src/screens/Settings/Settings.tsx:234
-#: src/screens/Settings/Settings.tsx:237
+#: src/screens/Settings/Settings.tsx:227
+#: src/screens/Settings/Settings.tsx:230
 msgid "Content and media"
 msgstr "Obsah a média"
 
@@ -3805,7 +3805,7 @@ msgstr "Obsah zablokován"
 msgid "Content by {authorName}"
 msgstr "Obsah od {authorName}"
 
-#: src/screens/Moderation/index.tsx:424
+#: src/screens/Moderation/index.tsx:415
 msgid "Content filters"
 msgstr "Filtry obsahu"
 
@@ -4139,7 +4139,7 @@ msgstr "Nelze uložit změny: {0}"
 msgid "Could not share – please try again"
 msgstr "Sdílení se nezdařilo – zkuste to prosím znovu"
 
-#: src/state/queries/moderation-inbox.ts:320
+#: src/state/queries/moderation-inbox.ts:313
 #: src/state/queries/notifications/settings.ts:123
 msgid "Could not update notification settings"
 msgstr "Nelze aktualizovat nastavení oznámení"
@@ -4394,7 +4394,7 @@ msgstr "Den"
 msgid "Deactivate account"
 msgstr "Deaktivovat účet"
 
-#: src/screens/Settings/Settings.tsx:502
+#: src/screens/Settings/Settings.tsx:495
 msgid "Debug Moderation"
 msgstr "Ladít Moderaci"
 
@@ -4447,8 +4447,8 @@ msgstr "Smazat heslo aplikace?"
 msgid "Delete chat"
 msgstr "Odstranit konverzaci"
 
-#: src/screens/Settings/Settings.tsx:507
-#: src/screens/Settings/Settings.tsx:509
+#: src/screens/Settings/Settings.tsx:500
+#: src/screens/Settings/Settings.tsx:502
 msgid "Delete chat declaration record"
 msgstr "Odstranit deklaraci konverzace"
 
@@ -4574,8 +4574,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr "Vývojářský režim povolen"
 
-#: src/screens/Settings/Settings.tsx:319
-#: src/screens/Settings/Settings.tsx:322
+#: src/screens/Settings/Settings.tsx:312
+#: src/screens/Settings/Settings.tsx:315
 msgid "Developer options"
 msgstr "Možnosti pro vývojáře"
 
@@ -4650,7 +4650,7 @@ msgstr "Zakázat tento odkaz na pozvánku?"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:35
 #: src/lib/moderation/useLabelBehaviorDescription.ts:45
 #: src/lib/moderation/useLabelBehaviorDescription.ts:71
-#: src/screens/Moderation/index.tsx:464
+#: src/screens/Moderation/index.tsx:455
 msgid "Disabled"
 msgstr "Neaktivní"
 
@@ -4720,7 +4720,7 @@ msgstr "Odmítnout banner"
 
 #: src/screens/Atmosphere/components/AtmosphereNux.tsx:70
 msgid "Dismiss Discover the Atmosphere banner"
-msgstr "Zavřít banner Objevte Atmosphere"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:2623
 msgid "Dismiss error"
@@ -5193,7 +5193,7 @@ msgstr "Povolit"
 msgid "Enable {0} only"
 msgstr "Povolit pouze {0}"
 
-#: src/screens/Moderation/index.tsx:449
+#: src/screens/Moderation/index.tsx:440
 msgid "Enable adult content"
 msgstr "Povolit obsah pro dospělé"
 
@@ -5247,7 +5247,7 @@ msgstr "Povolit trendující témata"
 msgid "Enable trending videos in your Discover feed"
 msgstr "Povolit trendující videa ve vašem kanálu Objevit"
 
-#: src/screens/Moderation/index.tsx:462
+#: src/screens/Moderation/index.tsx:453
 msgid "Enabled"
 msgstr "Povoleno"
 
@@ -5500,7 +5500,7 @@ msgstr "Explicitní sexuální obrázky."
 #: src/Navigation.tsx:928
 #: src/screens/Atmosphere/index.tsx:43
 #: src/screens/Search/Shell.tsx:564
-#: src/view/shell/desktop/LeftNav.tsx:742
+#: src/view/shell/desktop/LeftNav.tsx:736
 #: src/view/shell/Drawer.tsx:538
 msgid "Explore"
 msgstr "Prozkoumat"
@@ -5690,7 +5690,7 @@ msgstr "Nepodařilo se načíst předvolby kanálů"
 
 #: src/components/dialogs/NotificationSettingsDialog.tsx:85
 #: src/screens/Messages/Settings.tsx:369
-#: src/screens/ModerationInbox/Settings.tsx:62
+#: src/screens/ModerationInbox/Settings.tsx:53
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:112
 #: src/screens/Settings/NotificationSettings/index.tsx:151
 #: src/screens/Settings/NotificationSettings/index.tsx:270
@@ -5736,7 +5736,7 @@ msgstr "Nepodařilo se označit všechny konverzace jako přečtené"
 msgid "Failed to mark all requests as read"
 msgstr "Nepodařilo se označit všechny žádosti jako přečtené"
 
-#: src/state/queries/moderation-inbox.ts:346
+#: src/state/queries/moderation-inbox.ts:339
 msgid "Failed to mark as read. Please try again."
 msgstr "Nepodařilo se označit jako přečtené. Zkuste to prosím znovu."
 
@@ -5836,7 +5836,7 @@ msgstr "Odeslání hlášení se nezdařilo"
 msgid "Failed to submit appeal, please try again."
 msgstr "Odeslání odvolání se nezdařilo, zkuste to prosím znovu."
 
-#: src/screens/ModerationInbox/Notice.tsx:386
+#: src/screens/ModerationInbox/Notice.tsx:373
 msgid "Failed to submit appeal. Please try again."
 msgstr "Odeslání odvolání se nezdařilo. Zkuste to prosím znovu."
 
@@ -5987,7 +5987,7 @@ msgstr "Zpětná vazba byla odeslána provozovateli kanálu"
 #: src/screens/StarterPack/StarterPackScreen.tsx:194
 #: src/view/screens/Feeds.tsx:505
 #: src/view/screens/Profile.tsx:274
-#: src/view/shell/desktop/LeftNav.tsx:788
+#: src/view/shell/desktop/LeftNav.tsx:782
 #: src/view/shell/Drawer.tsx:673
 msgid "Feeds"
 msgstr "Kanály"
@@ -6083,8 +6083,8 @@ msgstr "Najít účty ke sledování"
 
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:52
 #: src/screens/Settings/FindContactsSettings.tsx:87
-#: src/screens/Settings/Settings.tsx:245
-#: src/screens/Settings/Settings.tsx:248
+#: src/screens/Settings/Settings.tsx:238
+#: src/screens/Settings/Settings.tsx:241
 msgid "Find and invite friends"
 msgstr "Najít a pozvat přátele"
 
@@ -6369,7 +6369,7 @@ msgstr "Velikost písma"
 msgid "Food"
 msgstr "Jídlo"
 
-#: src/screens/ModerationInbox/Notice.tsx:304
+#: src/screens/ModerationInbox/Notice.tsx:291
 msgid "For more information about our appeals and redress process, please see our <0>Terms of Service</0>."
 msgstr "Další informace o našem procesu odvolání a nápravy najdete v našich <0>Podmínkách služby</0>."
 
@@ -6547,7 +6547,7 @@ msgstr "Dostávejte oznámení, když vám lidé pošlou žádost o zprávu."
 msgid "Get notifications when people send you messages."
 msgstr "Dostávejte oznámení, když vám lidé pošlou zprávu."
 
-#: src/screens/ModerationInbox/Settings.tsx:87
+#: src/screens/ModerationInbox/Settings.tsx:78
 msgctxt "moderation-inbox-setting"
 msgid "Get notified about actions taken against you."
 msgstr "Dostávejte upozornění na opatření přijatá vůči vám."
@@ -6561,7 +6561,7 @@ msgstr "Dostávejte upozornění na nové příspěvky"
 msgid "Get notified about posts and replies from accounts you choose."
 msgstr "Dostávejte oznámení o příspěvcích a odpovědích od účtů, které si vyberete."
 
-#: src/screens/ModerationInbox/Settings.tsx:72
+#: src/screens/ModerationInbox/Settings.tsx:63
 msgctxt "moderation-inbox-setting"
 msgid "Get notified about your report outcomes."
 msgstr "Dostávejte upozornění na výsledky vašich nahlášení."
@@ -6578,7 +6578,7 @@ msgstr "Dostávejte upozornění na aktivitu tohoto účtu"
 msgid "Get notified when {name} posts"
 msgstr "Dostávejte upozornění, když {name} přidá příspěvek"
 
-#: src/screens/ModerationInbox/Settings.tsx:102
+#: src/screens/ModerationInbox/Settings.tsx:93
 msgctxt "moderation-inbox-setting"
 msgid "Get notified when a label is added to your account and posts."
 msgstr "Dostávejte upozornění, když je k vašemu účtu a příspěvkům přidán štítek."
@@ -6689,7 +6689,7 @@ msgstr "Přejít na profil uživatele {name}"
 #: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:93
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:73
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:82
-#: src/screens/Moderation/index.tsx:283
+#: src/screens/Moderation/index.tsx:276
 msgid "Go to account settings"
 msgstr "Přejít do nastavení účtu"
 
@@ -6829,7 +6829,7 @@ msgstr "Název skupiny"
 msgid "Group name is too long. {MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, other {The maximum number of characters is #.}}"
 msgstr "Název skupiny je příliš dlouhý. {MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, one {Maximální počet znaků je #.} few {Maximální počet znaků je #.} many {Maximální počet znaků je #.} other {Maximální počet znaků je #.}}"
 
-#: src/screens/Settings/Settings.tsx:487
+#: src/screens/Settings/Settings.tsx:480
 msgid "GrowthBook"
 msgstr "GrowthBook"
 
@@ -6920,8 +6920,8 @@ msgstr "on/jeho"
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
 msgstr "Bluesky je uchovává po dobu 7 dnů kvůli prevenci zneužití, poté budou smazána"
 
-#: src/screens/Settings/Settings.tsx:284
-#: src/screens/Settings/Settings.tsx:288
+#: src/screens/Settings/Settings.tsx:277
+#: src/screens/Settings/Settings.tsx:281
 #: src/view/shell/desktop/RightNav.tsx:130
 #: src/view/shell/desktop/RightNav.tsx:133
 #: src/view/shell/Drawer.tsx:504
@@ -7059,7 +7059,7 @@ msgstr "Skryje propagační banner pro pozvání přátel"
 
 #: src/screens/Atmosphere/components/AtmosphereNux.tsx:71
 msgid "Hides this banner from the Explore tab"
-msgstr "Skryje tento banner na kartě Prozkoumat"
+msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:76
 msgid "Hmm, it looks like you're signed in with an <0>App Password</0>. To set your birthdate, you'll need to sign in with your main account password, or ask whomever controls this account to do so."
@@ -7093,7 +7093,7 @@ msgstr "Hmm, server kanálu vrátil chybnou odpověď. Dejte prosím vlastníkov
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr "Hmm, máme problém s nalezením tohoto kanálu. Možná byl smazán."
 
-#: src/screens/Moderation/index.tsx:64
+#: src/screens/Moderation/index.tsx:63
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
 msgstr "Hmm, zdá se, že máme problém s načtením těchto dat. Více informací naleznete níže. Pokud problém přetrvává, kontaktujte nás prosím."
 
@@ -7108,7 +7108,7 @@ msgstr "Vydržte! Přístup k videu zpřístupňujeme postupně a vy stále ček
 #: src/Navigation.tsx:923
 #: src/Navigation.tsx:944
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
-#: src/view/shell/desktop/LeftNav.tsx:730
+#: src/view/shell/desktop/LeftNav.tsx:724
 #: src/view/shell/Drawer.tsx:585
 msgid "Home"
 msgstr "Domů"
@@ -7440,7 +7440,7 @@ msgstr "Zadejte nové heslo"
 msgid "Interaction limited"
 msgstr "Interakce omezeny"
 
-#: src/screens/Moderation/index.tsx:332
+#: src/screens/Moderation/index.tsx:323
 msgid "Interaction settings"
 msgstr "Nastavení interakcí"
 
@@ -7751,8 +7751,8 @@ msgid "Language Settings"
 msgstr "Nastavení jazyka"
 
 #: src/screens/Settings/LanguageSettings.tsx:98
-#: src/screens/Settings/Settings.tsx:268
-#: src/screens/Settings/Settings.tsx:271
+#: src/screens/Settings/Settings.tsx:261
+#: src/screens/Settings/Settings.tsx:264
 msgid "Languages"
 msgstr "Jazyky"
 
@@ -8183,7 +8183,7 @@ msgstr "Seznam již není ztlumen"
 #: src/view/screens/Lists.tsx:60
 #: src/view/screens/Profile.tsx:268
 #: src/view/screens/Profile.tsx:276
-#: src/view/shell/desktop/LeftNav.tsx:796
+#: src/view/shell/desktop/LeftNav.tsx:790
 #: src/view/shell/Drawer.tsx:688
 msgid "Lists"
 msgstr "Seznamy"
@@ -8277,8 +8277,8 @@ msgstr "Načíst nové příspěvky"
 msgid "Load new posts from the people you follow"
 msgstr "Načíst nové příspěvky od lidí, které sledujete"
 
-#: src/screens/ModerationInbox/Notice.tsx:175
-#: src/screens/ModerationInbox/Notice.tsx:184
+#: src/screens/ModerationInbox/Notice.tsx:162
+#: src/screens/ModerationInbox/Notice.tsx:171
 msgid "Load older actions"
 msgstr "Načíst starší akce"
 
@@ -8299,7 +8299,7 @@ msgstr "Načítání seznamů..."
 msgid "Loading more posts"
 msgstr "Načítání dalších příspěvků"
 
-#: src/screens/ModerationInbox/Settings.tsx:173
+#: src/screens/ModerationInbox/Settings.tsx:164
 msgid "Loading notification settings"
 msgstr "Načítání nastavení oznámení"
 
@@ -8352,7 +8352,7 @@ msgid "Logo by @sawaratsuki.bsky.social"
 msgstr "Logo od @sawaratsuki.bsky.social"
 
 #: src/view/shell/desktop/RightNav.tsx:139
-#: src/view/shell/Drawer.tsx:895
+#: src/view/shell/Drawer.tsx:887
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "Logo od <0>@sawaratsuki.bsky.social</0>"
 
@@ -8419,7 +8419,7 @@ msgstr "Rozšířit"
 msgid "Manage saved feeds"
 msgstr "Spravovat uložené kanály"
 
-#: src/screens/Moderation/index.tsx:402
+#: src/screens/Moderation/index.tsx:393
 msgid "Manage verification settings"
 msgstr "Spravovat nastavení ověřování"
 
@@ -8432,14 +8432,14 @@ msgstr "Spravujte svá ztlumená slova a štítky"
 msgid "Manual"
 msgstr "Ručně"
 
-#: src/screens/ModerationInbox/index.tsx:335
+#: src/screens/ModerationInbox/index.tsx:327
 msgid "Mark all actions as read"
 msgstr "Označit všechny akce jako přečtené"
 
 #: src/screens/Messages/Inbox.tsx:318
 #: src/screens/Messages/Inbox.tsx:324
-#: src/screens/ModerationInbox/index.tsx:209
-#: src/screens/ModerationInbox/index.tsx:341
+#: src/screens/ModerationInbox/index.tsx:201
+#: src/screens/ModerationInbox/index.tsx:333
 msgid "Mark all as read"
 msgstr "Označit vše jako přečtené"
 
@@ -8450,7 +8450,7 @@ msgstr "Označit vše jako přečtené"
 msgid "Mark all chats as read"
 msgstr "Označit všechny konverzace jako přečtené"
 
-#: src/screens/ModerationInbox/index.tsx:203
+#: src/screens/ModerationInbox/index.tsx:195
 msgid "Mark all reports as read"
 msgstr "Označit všechna nahlášení jako přečtená"
 
@@ -8653,7 +8653,7 @@ msgid "Mod inbox settings"
 msgstr "Nastavení moderované schránky"
 
 #: src/Navigation.tsx:204
-#: src/screens/Moderation/index.tsx:103
+#: src/screens/Moderation/index.tsx:102
 msgid "Moderation"
 msgstr "Moderace"
 
@@ -8661,16 +8661,14 @@ msgstr "Moderace"
 msgid "Moderation details"
 msgstr "Podrobnosti moderování"
 
-#. Name for a feature flag
-#: src/analytics/features/index.ts:132
 #: src/Navigation.tsx:209
-#: src/screens/Moderation/index.tsx:299
-#: src/screens/ModerationInbox/index.tsx:101
+#: src/screens/Moderation/index.tsx:291
+#: src/screens/ModerationInbox/index.tsx:93
 msgid "Moderation inbox"
 msgstr "Moderační schránka"
 
-#: src/screens/ModerationInbox/index.tsx:108
-#: src/screens/ModerationInbox/Settings.tsx:53
+#: src/screens/ModerationInbox/index.tsx:100
+#: src/screens/ModerationInbox/Settings.tsx:44
 msgid "Moderation inbox settings"
 msgstr "Nastavení moderované schránky"
 
@@ -8700,7 +8698,7 @@ msgctxt "toast"
 msgid "Moderation list updated"
 msgstr "Moderační seznam aktualizován"
 
-#: src/screens/Moderation/index.tsx:362
+#: src/screens/Moderation/index.tsx:353
 msgid "Moderation lists"
 msgstr "Seznamy moderování"
 
@@ -8721,9 +8719,9 @@ msgstr "nastavení moderování"
 msgid "Moderation states"
 msgstr "Stavy moderování"
 
-#: src/screens/Moderation/index.tsx:317
-#: src/screens/Settings/Settings.tsx:209
-#: src/screens/Settings/Settings.tsx:220
+#: src/screens/Moderation/index.tsx:308
+#: src/screens/Settings/Settings.tsx:202
+#: src/screens/Settings/Settings.tsx:213
 msgid "Moderation tools"
 msgstr "Moderační nástroje"
 
@@ -8864,7 +8862,7 @@ msgstr "Konverzaci můžete kdykoli ztlumit, opustit nebo odebrat lidi z konverz
 msgid "Muted"
 msgstr "Ztlumeno"
 
-#: src/screens/Moderation/index.tsx:377
+#: src/screens/Moderation/index.tsx:368
 msgid "Muted accounts"
 msgstr "Ztlumené účty"
 
@@ -8882,7 +8880,7 @@ msgstr "Příspěvky ztlumených účtů jsou odstraněny z vašeho kanálu i z 
 msgid "Muted by \"{0}\""
 msgstr "Ztlumeno uživatelem \"{0}\""
 
-#: src/screens/Moderation/index.tsx:347
+#: src/screens/Moderation/index.tsx:338
 msgid "Muted words & tags"
 msgstr "Ztlumená slova a značky"
 
@@ -9172,11 +9170,11 @@ msgctxt "Answer to a yes/no question"
 msgid "No"
 msgstr "Ne"
 
-#: src/screens/ModerationInbox/index.tsx:371
+#: src/screens/ModerationInbox/index.tsx:363
 msgid "No actions against you"
 msgstr "Žádná opatření proti vám"
 
-#: src/screens/ModerationInbox/index.tsx:372
+#: src/screens/ModerationInbox/index.tsx:364
 msgid "No actions match this filter"
 msgstr "Tomuto filtru neodpovídají žádné akce"
 
@@ -9369,7 +9367,7 @@ msgstr "Zatím zde nejsou žádné odpovědi"
 msgid "No replies yet"
 msgstr "Zatím žádné odpovědi"
 
-#: src/screens/ModerationInbox/index.tsx:236
+#: src/screens/ModerationInbox/index.tsx:228
 msgid "No reports match this filter"
 msgstr "Tomuto filtru neodpovídají žádná nahlášení"
 
@@ -9521,7 +9519,7 @@ msgid "Nothing saved yet"
 msgstr "Zatím nic uloženo"
 
 #: src/Navigation.tsx:224
-#: src/screens/ModerationInbox/Notice.tsx:137
+#: src/screens/ModerationInbox/Notice.tsx:124
 msgid "Notice"
 msgstr "Oznámení"
 
@@ -9547,10 +9545,10 @@ msgstr "Zvuky oznámení"
 #: src/screens/Notifications/ActivityList.tsx:29
 #: src/screens/Notifications/index.tsx:644
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
-#: src/screens/Settings/Settings.tsx:226
-#: src/screens/Settings/Settings.tsx:229
+#: src/screens/Settings/Settings.tsx:219
+#: src/screens/Settings/Settings.tsx:222
 #: src/view/shell/bottom-bar/BottomBar.tsx:283
-#: src/view/shell/desktop/LeftNav.tsx:753
+#: src/view/shell/desktop/LeftNav.tsx:747
 #: src/view/shell/Drawer.tsx:638
 msgid "Notifications"
 msgstr "Oznámení"
@@ -9618,7 +9616,7 @@ msgstr "Na Bluesky to znamená, že vaše příspěvky se budou zobrazovat ve fe
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "na<0><1/><2><3/></2></0>"
 
-#: src/screens/Settings/Settings.tsx:427
+#: src/screens/Settings/Settings.tsx:420
 msgid "Onboarding reset"
 msgstr "Resetovat onboarding"
 
@@ -9888,11 +9886,11 @@ msgstr ""
 msgid "Open message options"
 msgstr "Otevřít možnosti zprávy"
 
-#: src/screens/Settings/Settings.tsx:500
+#: src/screens/Settings/Settings.tsx:493
 msgid "Open moderation debug page"
 msgstr "Otevřít stránku pro ladění moderace"
 
-#: src/screens/Moderation/index.tsx:343
+#: src/screens/Moderation/index.tsx:334
 msgid "Open muted words and tags settings"
 msgstr "Otevřít nastavení ztlumených slov a značek"
 
@@ -9936,11 +9934,11 @@ msgstr "Otevřít startovací balíček"
 msgid "Open Starter Pack menu"
 msgstr "Otevřít nabídku Startovacího balíčku"
 
-#: src/screens/Settings/Settings.tsx:493
+#: src/screens/Settings/Settings.tsx:486
 msgid "Open storybook page"
 msgstr "Otevřít stránku storybook"
 
-#: src/screens/Settings/Settings.tsx:478
+#: src/screens/Settings/Settings.tsx:471
 msgid "Open system log"
 msgstr "Otevřít systémový protokol"
 
@@ -10024,7 +10022,7 @@ msgstr "Otevře průvodce pro přihlášení do vašeho stávajícího účtu Bl
 msgid "Opens full image"
 msgstr "Otevře obrázek v plné velikosti"
 
-#: src/screens/Settings/Settings.tsx:285
+#: src/screens/Settings/Settings.tsx:278
 msgid "Opens helpdesk in browser"
 msgstr "Otevře centrum nápovědy v prohlížeči"
 
@@ -10843,8 +10841,8 @@ msgstr "Primární jazyk"
 msgid "Privacy"
 msgstr "Soukromí"
 
-#: src/screens/Settings/Settings.tsx:201
-#: src/screens/Settings/Settings.tsx:204
+#: src/screens/Settings/Settings.tsx:194
+#: src/screens/Settings/Settings.tsx:197
 msgid "Privacy and security"
 msgstr "Soukromí a zabezpečení"
 
@@ -10866,8 +10864,8 @@ msgstr "Nastavení soukromí a zabezpečení"
 #: src/screens/Settings/AboutSettings.tsx:102
 #: src/screens/Settings/AboutSettings.tsx:105
 #: src/view/screens/PrivacyPolicy.tsx:25
-#: src/view/shell/Drawer.tsx:890
-#: src/view/shell/Drawer.tsx:891
+#: src/view/shell/Drawer.tsx:882
+#: src/view/shell/Drawer.tsx:883
 msgid "Privacy Policy"
 msgstr "Zásady ochrany osobních údajů"
 
@@ -10896,7 +10894,7 @@ msgid "profile"
 msgstr "profil"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:326
-#: src/view/shell/desktop/LeftNav.tsx:812
+#: src/view/shell/desktop/LeftNav.tsx:806
 #: src/view/shell/Drawer.tsx:117
 #: src/view/shell/Drawer.tsx:739
 msgid "Profile"
@@ -11097,11 +11095,11 @@ msgstr "Přečíst náš blogový příspěvek"
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:121
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:135
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:148
-#: src/screens/ModerationInbox/Notice.tsx:246
+#: src/screens/ModerationInbox/Notice.tsx:233
 msgid "Read our Community Guidelines"
 msgstr "Přečtěte si naše obecné zásady komunity"
 
-#: src/screens/ModerationInbox/Notice.tsx:309
+#: src/screens/ModerationInbox/Notice.tsx:296
 msgid "Read our Terms of Service"
 msgstr "Přečíst si naše Podmínky služby"
 
@@ -11127,14 +11125,14 @@ msgstr "Skutečné konverzace."
 msgid "Real people."
 msgstr "Skuteční lidé."
 
-#: src/screens/ModerationInbox/Notice.tsx:511
-#: src/screens/ModerationInbox/Notice.tsx:529
+#: src/screens/ModerationInbox/Notice.tsx:498
+#: src/screens/ModerationInbox/Notice.tsx:516
 #: src/screens/Takendown.tsx:158
 #: src/screens/Takendown.tsx:166
 msgid "Reason for appeal"
 msgstr "Důvod odvolání"
 
-#: src/screens/ModerationInbox/Report.tsx:198
+#: src/screens/ModerationInbox/Report.tsx:195
 msgid "Reason:"
 msgstr "Důvod:"
 
@@ -11192,8 +11190,8 @@ msgstr "Odmítnout požadavek na přidání"
 msgid "Reload conversations"
 msgstr "Znovu načíst konverzace"
 
-#: src/screens/ModerationInbox/Notice.tsx:495
-#: src/screens/ModerationInbox/Notice.tsx:504
+#: src/screens/ModerationInbox/Notice.tsx:482
+#: src/screens/ModerationInbox/Notice.tsx:491
 msgid "Reload notice"
 msgstr "Znovu načíst oznámení"
 
@@ -11210,8 +11208,8 @@ msgstr "Znovu načíst oznámení"
 #: src/screens/Bookmarks.tsx:260
 #: src/screens/Messages/ConversationSettings/Member.tsx:162
 #: src/screens/Messages/ConversationSettings/prompts.tsx:170
-#: src/screens/Moderation/index.tsx:537
-#: src/screens/Settings/Settings.tsx:713
+#: src/screens/Moderation/index.tsx:528
+#: src/screens/Settings/Settings.tsx:706
 #: src/view/com/posts/PostFeedErrorMessage.tsx:219
 msgid "Remove"
 msgstr "Odebrat"
@@ -11237,8 +11235,8 @@ msgstr "Odebrat uživatele {displayName}?"
 msgid "Remove {q}"
 msgstr "Odebrat {q}"
 
-#: src/screens/Settings/Settings.tsx:694
-#: src/screens/Settings/Settings.tsx:697
+#: src/screens/Settings/Settings.tsx:687
+#: src/screens/Settings/Settings.tsx:690
 msgid "Remove account"
 msgstr "Odebrat účet"
 
@@ -11306,7 +11304,7 @@ msgstr "Odebrat z konverzace"
 msgid "Remove from my feeds"
 msgstr "Odebrat z mých kanálů"
 
-#: src/screens/Settings/Settings.tsx:707
+#: src/screens/Settings/Settings.tsx:700
 msgid "Remove from quick access?"
 msgstr "Odebrat z rychlého přístupu?"
 
@@ -11379,7 +11377,7 @@ msgstr "Odstranit návrh"
 msgid "Remove this feed from your saved feeds"
 msgstr "Odebrat tento kanál z uložených kanálů"
 
-#: src/screens/Moderation/index.tsx:533
+#: src/screens/Moderation/index.tsx:524
 msgid "Remove unavailable moderation services"
 msgstr "Odebrat nedostupné moderační služby"
 
@@ -11439,7 +11437,7 @@ msgstr "Odebráno z vašich kanálů"
 msgid "Removed post"
 msgstr "Odstraněný příspěvek"
 
-#: src/screens/Moderation/index.tsx:231
+#: src/screens/Moderation/index.tsx:224
 msgid "Removed unavailable services"
 msgstr "Nedostupné služby byly odstraněny"
 
@@ -11886,8 +11884,8 @@ msgstr "Odeslat e-mail znovu"
 msgid "Resend Verification Email"
 msgstr "Znovu odeslat ověřovací e-mail"
 
-#: src/screens/Settings/Settings.tsx:529
-#: src/screens/Settings/Settings.tsx:531
+#: src/screens/Settings/Settings.tsx:522
+#: src/screens/Settings/Settings.tsx:524
 msgid "Reset activity subscription nudge"
 msgstr "Resetovat upozornění na odběr aktivity"
 
@@ -11895,8 +11893,8 @@ msgstr "Resetovat upozornění na odběr aktivity"
 msgid "Reset code"
 msgstr "Resetovací kód"
 
-#: src/screens/Settings/Settings.tsx:514
-#: src/screens/Settings/Settings.tsx:516
+#: src/screens/Settings/Settings.tsx:507
+#: src/screens/Settings/Settings.tsx:509
 msgid "Reset onboarding state"
 msgstr "Resetovat stav onboardingu"
 
@@ -12114,7 +12112,7 @@ msgstr "Uložit do mých kanálů"
 msgid "Save your position in the Following feed between sessions. New posts wait above you until you’re ready to view them."
 msgstr "Uložte si svou pozici v kanálu Sledovaní mezi relacemi. Nové příspěvky čekají výše, dokud nebudete připraveni si je zobrazit."
 
-#: src/view/shell/desktop/LeftNav.tsx:804
+#: src/view/shell/desktop/LeftNav.tsx:798
 #: src/view/shell/Drawer.tsx:714
 msgctxt "link to bookmarks screen"
 msgid "Saved"
@@ -12672,9 +12670,9 @@ msgid "Sets email for password reset"
 msgstr "Nastaví e-mail pro obnovení hesla"
 
 #: src/Navigation.tsx:260
-#: src/screens/Settings/Settings.tsx:118
-#: src/view/shell/desktop/LeftNav.tsx:820
-#: src/view/shell/Drawer.tsx:773
+#: src/screens/Settings/Settings.tsx:111
+#: src/view/shell/desktop/LeftNav.tsx:814
+#: src/view/shell/Drawer.tsx:765
 msgid "Settings"
 msgstr "Nastavení"
 
@@ -13026,7 +13024,7 @@ msgstr "Zobrazí oznámení v záložce {0}"
 msgid "Shows information about when this post was created"
 msgstr "Zobrazí informace o tom, kdy byl tento příspěvek vytvořen"
 
-#: src/screens/Settings/Settings.tsx:143
+#: src/screens/Settings/Settings.tsx:136
 msgid "Shows other accounts you can switch to"
 msgstr "Zobrazí další účty, na které lze přepnout"
 
@@ -13101,9 +13099,9 @@ msgid "Sign in to view post"
 msgstr "Pro zobrazení příspěvku se přihlaste"
 
 #: src/ageAssurance/components/DataUnavailableScreen.tsx:22
-#: src/screens/Settings/Settings.tsx:302
-#: src/screens/Settings/Settings.tsx:304
-#: src/screens/Settings/Settings.tsx:336
+#: src/screens/Settings/Settings.tsx:295
+#: src/screens/Settings/Settings.tsx:297
+#: src/screens/Settings/Settings.tsx:329
 #: src/screens/SignupQueued.tsx:100
 #: src/screens/SignupQueued.tsx:103
 #: src/screens/Takendown.tsx:88
@@ -13117,7 +13115,7 @@ msgstr "Odhlásit se"
 msgid "Sign Out"
 msgstr "Odhlásit se"
 
-#: src/screens/Settings/Settings.tsx:333
+#: src/screens/Settings/Settings.tsx:326
 #: src/view/shell/desktop/LeftNav.tsx:262
 msgid "Sign out?"
 msgstr "Odhlásit se?"
@@ -13214,7 +13212,7 @@ msgstr "Sociální doporučení u příspěvků"
 msgid "Software Dev"
 msgstr "Vývoj softwaru"
 
-#: src/screens/Moderation/index.tsx:526
+#: src/screens/Moderation/index.tsx:517
 msgid "Some moderation services in your list are no longer available."
 msgstr "Některé moderátorské služby ve vašem seznamu již nejsou dostupné."
 
@@ -13294,7 +13292,7 @@ msgstr "Něco se pokazilo"
 msgid "Something went wrong, please try again"
 msgstr "Něco se pokazilo, zkuste to prosím znovu"
 
-#: src/screens/Moderation/index.tsx:115
+#: src/screens/Moderation/index.tsx:114
 #: src/screens/Profile/Sections/Labels.tsx:185
 #: src/screens/Settings/BetaFeaturesSettings.tsx:110
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:90
@@ -13481,7 +13479,7 @@ msgstr "Stav není k dispozici"
 msgid "Step {0} of {1}"
 msgstr "Krok {0} z {1}"
 
-#: src/screens/Settings/Settings.tsx:432
+#: src/screens/Settings/Settings.tsx:425
 msgid "Storage cleared, you need to restart the app now."
 msgstr "Úložiště bylo vymazáno, nyní je nutné aplikaci restartovat."
 
@@ -13490,7 +13488,7 @@ msgid "Stored as part of a secure code for matching with others"
 msgstr "Uloženo jako součást zabezpečeného kódu pro porovnání s ostatními"
 
 #: src/Navigation.tsx:353
-#: src/screens/Settings/Settings.tsx:495
+#: src/screens/Settings/Settings.tsx:488
 msgid "Storybook"
 msgstr "Storybook"
 
@@ -13512,12 +13510,12 @@ msgstr "Roztahovací karty"
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:138
 #: src/screens/Messages/components/ChatDisabled.tsx:172
 #: src/screens/Messages/components/ChatDisabled.tsx:174
-#: src/screens/ModerationInbox/Notice.tsx:452
+#: src/screens/ModerationInbox/Notice.tsx:439
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:164
 msgid "Submit"
 msgstr "Odeslat"
 
-#: src/screens/ModerationInbox/Notice.tsx:445
+#: src/screens/ModerationInbox/Notice.tsx:432
 #: src/screens/Takendown.tsx:76
 msgid "Submit appeal"
 msgstr "Odeslat odvolání"
@@ -13667,9 +13665,9 @@ msgstr "Pozastavené účty se nemohou účastnit konverzace."
 
 #: src/components/dialogs/SwitchAccount.tsx:47
 #: src/components/dialogs/SwitchAccount.tsx:50
-#: src/screens/Settings/Settings.tsx:142
-#: src/screens/Settings/Settings.tsx:154
-#: src/screens/Settings/Settings.tsx:654
+#: src/screens/Settings/Settings.tsx:135
+#: src/screens/Settings/Settings.tsx:147
+#: src/screens/Settings/Settings.tsx:647
 #: src/view/shell/desktop/LeftNav.tsx:350
 msgid "Switch account"
 msgstr "Přepnout účet"
@@ -13703,7 +13701,7 @@ msgstr "Systémové"
 #: src/screens/Log.tsx:49
 #: src/screens/Settings/AboutSettings.tsx:117
 #: src/screens/Settings/AboutSettings.tsx:120
-#: src/screens/Settings/Settings.tsx:480
+#: src/screens/Settings/Settings.tsx:473
 msgid "System log"
 msgstr "Systémový protokol"
 
@@ -13841,7 +13839,7 @@ msgstr "Řekněte nám o sobě něco málo"
 msgid "Tell us a little more"
 msgstr "Řekněte nám něco více"
 
-#: src/screens/ModerationInbox/Notice.tsx:484
+#: src/screens/ModerationInbox/Notice.tsx:471
 msgid "Tell us why you believe this decision was a mistake. We will review your appeal along with the original content."
 msgstr "Řekněte nám, proč si myslíte, že toto rozhodnutí bylo chybou. Vaše odvolání posoudíme spolu s původním obsahem."
 
@@ -13861,8 +13859,8 @@ msgstr "Podmínky"
 #: src/screens/Settings/AboutSettings.tsx:94
 #: src/screens/Settings/AboutSettings.tsx:97
 #: src/view/screens/TermsOfService.tsx:25
-#: src/view/shell/Drawer.tsx:883
-#: src/view/shell/Drawer.tsx:885
+#: src/view/shell/Drawer.tsx:875
+#: src/view/shell/Drawer.tsx:877
 msgid "Terms of Service"
 msgstr "Podmínky služby"
 
@@ -13965,8 +13963,8 @@ msgstr "Opatření proti vašemu obsahu bylo zrušeno"
 msgid "The app will be restarted"
 msgstr "Aplikace bude restartována"
 
-#: src/screens/ModerationInbox/Notice.tsx:337
-#: src/screens/ModerationInbox/Notice.tsx:377
+#: src/screens/ModerationInbox/Notice.tsx:324
+#: src/screens/ModerationInbox/Notice.tsx:364
 msgid "The appeal window has closed."
 msgstr "Lhůta pro odvolání vypršela."
 
@@ -13983,7 +13981,7 @@ msgstr "Autor tohoto vlákna skryl tuto odpověď."
 msgid "The birthdate you've entered means you are under 18 years old. Certain content and features may be unavailable to you."
 msgstr "Datum narození, které jste zadali, znamená, že je vám méně než 18 let. Některý obsah a funkce pro vás mohou být nedostupné."
 
-#: src/screens/Moderation/index.tsx:477
+#: src/screens/Moderation/index.tsx:468
 msgid "The Bluesky web application"
 msgstr "Webová aplikace Bluesky"
 
@@ -14389,7 +14387,7 @@ msgstr "Tento kód je neplatný. Pro získání nového kódu jej odešlete znov
 msgid "This confirmation code is not valid. Please try again."
 msgstr "Tento potvrzovací kód není platný. Zkuste to prosím znovu."
 
-#: src/screens/ModerationInbox/Notice.tsx:383
+#: src/screens/ModerationInbox/Notice.tsx:370
 msgid "This content could not be appealed. Please reload the notice and try again."
 msgstr "Tento obsah nebylo možné podrobit odvolání. Načtěte prosím oznámení znovu a zkuste to znovu."
 
@@ -14626,11 +14624,11 @@ msgstr "Tím by se měl vytvořit doménový záznam na:"
 msgid "This should only take a few minutes."
 msgstr "Mělo by to zabrat jen několik minut."
 
-#: src/screens/ModerationInbox/Notice.tsx:380
+#: src/screens/ModerationInbox/Notice.tsx:367
 msgid "This subject can no longer be appealed."
 msgstr "Proti tomuto předmětu se již nelze odvolat."
 
-#: src/screens/ModerationInbox/Notice.tsx:374
+#: src/screens/ModerationInbox/Notice.tsx:361
 msgid "This subject has already been appealed."
 msgstr "Proti tomuto předmětu již bylo podáno odvolání."
 
@@ -14701,7 +14699,7 @@ msgid "This will irreversibly delete your Bluesky account <0>{currentHandle}</0>
 msgstr "Tímto nevratně smažete svůj účet Bluesky <0>{currentHandle}</0> a všechna související data. Vezměte na vědomí, že to ovlivní i další služby <1>AT Protocol</1>, které s tímto účtem používáte."
 
 #. placeholder {0}: account.handle
-#: src/screens/Settings/Settings.tsx:708
+#: src/screens/Settings/Settings.tsx:701
 msgid "This will remove @{0} from the quick access list."
 msgstr "Tímto odeberete @{0} ze seznamu rychlého přístupu."
 
@@ -14795,7 +14793,7 @@ msgstr "Přepnout vysoký obsah"
 msgid "Toggle tallest card"
 msgstr "Přepnout nejvyšší kartu"
 
-#: src/screens/Moderation/index.tsx:452
+#: src/screens/Moderation/index.tsx:443
 msgid "Toggle to enable or disable adult content"
 msgstr "Přepnout pro povolení nebo zakázání obsahu pro dospělé"
 
@@ -14832,11 +14830,6 @@ msgstr "Nejlepší odpovědi jako první"
 #: src/Navigation.tsx:548
 msgid "Topic"
 msgstr "Téma"
-
-#. Description of a feature flag (Moderation inbox)
-#: src/analytics/features/index.ts:138
-msgid "Track your reports, review moderation decisions, and submit appeals."
-msgstr "Sledujte svá nahlášení, prohlížejte si rozhodnutí moderace a podávejte odvolání."
 
 #: src/components/dms/MessageContextMenu.tsx:190
 #: src/components/dms/MessageContextMenu.tsx:193
@@ -15012,11 +15005,11 @@ msgstr "Nelze načíst váš účet"
 msgid "Unable to resolve handle"
 msgstr "Nepodařilo se rozpoznat uživatelské jméno"
 
-#: src/screens/Settings/Settings.tsx:554
+#: src/screens/Settings/Settings.tsx:547
 msgid "Unapply Pull Request"
 msgstr "Zrušit použití pull requestu"
 
-#: src/screens/Settings/Settings.tsx:556
+#: src/screens/Settings/Settings.tsx:549
 msgid "Unapply Pull Request {currentChannel}"
 msgstr "Zrušit použití Pull Requestu {currentChannel}"
 
@@ -15148,7 +15141,7 @@ msgstr "Datum narození uložené ve vašem profilu bohužel ukazuje, že jste p
 msgid "Unfortunately, your declared age indicates that you are not old enough to access Bluesky in your region."
 msgstr "Vámi uvedený věk bohužel naznačuje, že nejste dostatečně staří na přístup k Bluesky ve vašem regionu."
 
-#: src/screens/ModerationInbox/Report.tsx:186
+#: src/screens/ModerationInbox/Report.tsx:183
 msgid "Unknown report reason"
 msgstr "Neznámý důvod hlášení"
 
@@ -15273,8 +15266,8 @@ msgctxt "moderation-report-filter"
 msgid "Unread"
 msgstr "Nepřečtené"
 
-#: src/screens/Settings/Settings.tsx:521
-#: src/screens/Settings/Settings.tsx:523
+#: src/screens/Settings/Settings.tsx:514
+#: src/screens/Settings/Settings.tsx:516
 msgid "Unsnooze email reminder"
 msgstr "Zrušit odložení e-mailové připomínky"
 
@@ -15547,7 +15540,7 @@ msgstr "Hodnota:"
 msgid "Verification failed, please try again."
 msgstr "Ověření se nezdařilo, zkuste to prosím znovu."
 
-#: src/screens/Moderation/index.tsx:407
+#: src/screens/Moderation/index.tsx:398
 msgid "Verification settings"
 msgstr "Nastavení ověření"
 
@@ -15815,7 +15808,7 @@ msgstr "Zobrazit podrobnosti"
 msgid "View full thread"
 msgstr "Zobrazit celé vlákno"
 
-#: src/screens/Settings/Settings.tsx:485
+#: src/screens/Settings/Settings.tsx:478
 msgid "View GrowthBook information"
 msgstr "Zobrazit informace o GrowthBook"
 
@@ -15899,11 +15892,11 @@ msgstr "Zobrazit uživatele, kteří mají rádi tento kanál"
 msgid "View video"
 msgstr "Zobrazit video"
 
-#: src/screens/Moderation/index.tsx:387
+#: src/screens/Moderation/index.tsx:378
 msgid "View your blocked accounts"
 msgstr "Zobrazit vaše zablokované účty"
 
-#: src/screens/Moderation/index.tsx:327
+#: src/screens/Moderation/index.tsx:318
 msgid "View your default post interaction settings"
 msgstr "Zobrazit vaše výchozí nastavení interakcí s příspěvkem"
 
@@ -15912,15 +15905,15 @@ msgstr "Zobrazit vaše výchozí nastavení interakcí s příspěvkem"
 msgid "View your feeds and explore more"
 msgstr "Zobrazit vaše kanály a objevovat další"
 
-#: src/screens/Moderation/index.tsx:293
+#: src/screens/Moderation/index.tsx:285
 msgid "View your moderation inbox"
 msgstr "Zobrazit vaši moderační schránku"
 
-#: src/screens/Moderation/index.tsx:357
+#: src/screens/Moderation/index.tsx:348
 msgid "View your moderation lists"
 msgstr "Zobrazit vaše seznamy moderování"
 
-#: src/screens/Moderation/index.tsx:372
+#: src/screens/Moderation/index.tsx:363
 msgid "View your muted accounts"
 msgstr "Zobrazit vaše ztlumené účty"
 
@@ -16115,7 +16108,7 @@ msgstr "Nepodařilo se nám načíst konfiguraci ověření věku pro vaši obla
 msgid "We were unable to load your birthdate preferences. Please try again."
 msgstr "Nepodařilo se nám načíst předvolby data narození. Zkuste to prosím znovu."
 
-#: src/screens/Moderation/index.tsx:551
+#: src/screens/Moderation/index.tsx:542
 msgid "We were unable to load your configured labelers at this time."
 msgstr "V tuto chvíli se nepodařilo načíst nakonfigurované labelery."
 
@@ -16271,7 +16264,7 @@ msgstr "Jaké jsou vaše zájmy?"
 msgid "What do you want to call your Starter Pack?"
 msgstr "Jak chcete pojmenovat svůj Startovací balíček?"
 
-#: src/screens/ModerationInbox/Report.tsx:193
+#: src/screens/ModerationInbox/Report.tsx:190
 msgid "What you reported"
 msgstr "Co jste nahlásili"
 
@@ -16556,7 +16549,7 @@ msgstr "Svá data z chatů si můžete také stáhnout jako soubor „JSONL“. 
 msgid "You can always opt out and delete your data"
 msgstr "Kdykoli se můžete odhlásit a smazat svá data"
 
-#: src/screens/ModerationInbox/Notice.tsx:299
+#: src/screens/ModerationInbox/Notice.tsx:286
 msgid "You can appeal once per decision. A different moderator will review the appeal."
 msgstr "Odvolat se můžete jednou proti každému rozhodnutí. Odvolání posoudí jiný moderátor."
 
@@ -16616,7 +16609,7 @@ msgstr "Můžete číst historii konverzace, ale nemůžete odesílat nové zpr�
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "Celkem můžete vybrat až {MAX_GALLERY_IMAGES, plural, one {# obrázek} few {# obrázky} many {# obrázků} other {# obrázků}}."
 
-#: src/screens/ModerationInbox/Notice.tsx:294
+#: src/screens/ModerationInbox/Notice.tsx:281
 msgid "You can submit one account appeal at a time. A different moderator will review the appeal."
 msgstr "V jednu chvíli můžete podat jedno odvolání účtu. Odvolání posoudí jiný moderátor."
 
@@ -16760,7 +16753,7 @@ msgstr "Zatím jste nevytvořili žádné vlastní kanály."
 msgid "You haven't muted any words or tags yet"
 msgstr "Zatím jste neztlumili žádná slova ani štítky"
 
-#: src/screens/ModerationInbox/index.tsx:235
+#: src/screens/ModerationInbox/index.tsx:227
 msgid "You haven’t reported anything yet"
 msgstr "Zatím jste nic nenahlásili"
 
@@ -16843,7 +16836,7 @@ msgstr "Tuto konverzaci vlastníte vy"
 msgid "You previously deactivated @{0}."
 msgstr "Účet @{0} jste dříve deaktivovali."
 
-#: src/screens/Settings/Settings.tsx:443
+#: src/screens/Settings/Settings.tsx:436
 msgid "You probably want to restart the app now."
 msgstr "Pravděpodobně budete chtít aplikaci nyní restartovat."
 
@@ -16884,7 +16877,7 @@ msgstr "Požádali jste o připojení"
 msgid "You will be eligible to appear in this Starter Pack again."
 msgstr "Budete moci být znovu zahrnuti do tohoto Startovacího balíčku."
 
-#: src/screens/Settings/Settings.tsx:334
+#: src/screens/Settings/Settings.tsx:327
 #: src/view/shell/desktop/LeftNav.tsx:263
 msgid "You will be signed out of all your accounts."
 msgstr "Budete odhlášeni ze všech svých účtů."
@@ -17033,7 +17026,7 @@ msgid "Your ability to submit reports was restricted"
 msgstr "Vaše možnost odesílat nahlášení byla omezena"
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:88
-#: src/screens/ModerationInbox/index.tsx:120
+#: src/screens/ModerationInbox/index.tsx:112
 #: src/screens/Signup/index.tsx:191
 msgid "Your account"
 msgstr "Váš účet"
@@ -17074,7 +17067,7 @@ msgstr "Váš účet je příliš nový"
 msgid "Your account must be at least 7 days old to create a new group chat."
 msgstr "Pro vytvoření nové skupinové konverzace musí být váš účet starý alespoň 7 dní."
 
-#: src/screens/ModerationInbox/Settings.tsx:83
+#: src/screens/ModerationInbox/Settings.tsx:74
 msgctxt "moderation-inbox-setting"
 msgid "Your account notifications"
 msgstr "Oznámení vašeho účtu"
@@ -17097,7 +17090,7 @@ msgstr "Váš účet byl pozastaven"
 msgid "Your account was temporarily suspended for {hours, plural, one {# hour} other {# hours}}"
 msgstr "Váš účet byl dočasně pozastaven na {hours, plural, one {# hodinu} few {# hodiny} many {# hodin} other {# hodin}}"
 
-#: src/screens/ModerationInbox/Notice.tsx:237
+#: src/screens/ModerationInbox/Notice.tsx:224
 msgid "Your appeal has been submitted and is awaiting review."
 msgstr "Vaše odvolání bylo odesláno a čeká na posouzení."
 
@@ -17143,7 +17136,7 @@ msgstr "Váš obsah byl odstraněn"
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr "Vaše stávající uživatelské jméno <0>{0}</0> pro vás zůstane automaticky rezervováno. Kdykoli se k němu z tohoto účtu můžete vrátit."
 
-#: src/screens/Moderation/index.tsx:277
+#: src/screens/Moderation/index.tsx:270
 msgid "Your declared age is under 18. Some settings below may be disabled. If this was a mistake, you may edit your birthdate in your <0>account settings</0>."
 msgstr "Vámi uvedený věk je nižší než 18 let. Některá níže uvedená nastavení mohou být zakázána. Pokud se jednalo o chybu, můžete upravit datum narození v <0>nastavení účtu</0>."
 
@@ -17222,7 +17215,7 @@ msgstr "Vaše ztlumená slova"
 msgid "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
 msgstr "Vaše jméno, avatar, název skupinového chatu a počet členů budou viditelné pro všechny."
 
-#: src/screens/ModerationInbox/Report.tsx:208
+#: src/screens/ModerationInbox/Report.tsx:205
 msgid "Your note:"
 msgstr "Vaše poznámka:"
 
@@ -17273,7 +17266,7 @@ msgid "Your reply was sent"
 msgstr "Vaše odpověď byla odeslána"
 
 #: src/Navigation.tsx:219
-#: src/screens/ModerationInbox/Report.tsx:115
+#: src/screens/ModerationInbox/Report.tsx:112
 msgid "Your report"
 msgstr "Vaše nahlášení"
 
@@ -17286,11 +17279,11 @@ msgstr "Vaše nahlášení bylo vyřízeno. Přečtěte si naše <0>Pravidla kom
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr "Vaše hlášení bude odesláno na <0>{0}</0>."
 
-#: src/screens/ModerationInbox/index.tsx:120
+#: src/screens/ModerationInbox/index.tsx:112
 msgid "Your reports"
 msgstr "Vaše nahlášení"
 
-#: src/screens/ModerationInbox/Settings.tsx:68
+#: src/screens/ModerationInbox/Settings.tsx:59
 msgctxt "moderation-inbox-setting"
 msgid "Your reports notifications"
 msgstr "Oznámení o vašich hlášeních"

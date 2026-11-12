@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-11-11 16:57\n"
+"PO-Revision-Date: 2026-11-12 21:07\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -28,7 +28,7 @@ msgstr "„{0}”"
 msgid "\"{interestsDisplayName}\" category (active)"
 msgstr "{interestsDisplayName} kategória (aktív)"
 
-#: src/screens/ModerationInbox/Report.tsx:211
+#: src/screens/ModerationInbox/Report.tsx:208
 msgid "“{note}”"
 msgstr "„{note}”"
 
@@ -220,7 +220,7 @@ msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {bejegyzés} other {bejegyzés}}"
 
 #. placeholder {0}: policies.length
-#: src/screens/ModerationInbox/Notice.tsx:270
+#: src/screens/ModerationInbox/Notice.tsx:257
 msgid "{0, plural, one {Rule violated:} other {Rules violated:}}"
 msgstr "Megszegett {0, plural, one {szabály} other {szabályok}}:"
 
@@ -452,8 +452,8 @@ msgstr "{imageCount}/{0}"
 #. placeholder {0}: i18n.number(UNREAD_NOTIFICATION_CAP - 1)
 #: src/screens/Messages/components/InboxRequests.tsx:55
 #: src/screens/Settings/components/SettingsList.tsx:328
-#: src/view/shell/desktop/LeftNav.tsx:699
-#: src/view/shell/Drawer.tsx:762
+#: src/view/shell/desktop/LeftNav.tsx:693
+#: src/view/shell/Drawer.tsx:754
 msgid "{0}+"
 msgstr "Több, mint {0}"
 
@@ -465,7 +465,7 @@ msgstr "Több, mint {0} kérelem"
 
 #. Displayed when the number of notifications exceeds the cap – for example, 99+ notifications
 #. placeholder {0}: i18n.number(UNREAD_NOTIFICATION_CAP - 1)
-#: src/screens/Moderation/index.tsx:174
+#: src/screens/Moderation/index.tsx:173
 msgid "{0}+ updates"
 msgstr "Több, mint {0} új esemény"
 
@@ -501,7 +501,7 @@ msgstr "{accountCount, plural, other {# fiók}}"
 msgid "{accountCount, plural, one {# account} other {# accounts}}, {feedCount, plural, one {# feed} other {# feeds}}"
 msgstr "{accountCount, plural, other {# fiók}}, {feedCount, plural, other {# hírfolyam}}"
 
-#: src/screens/Moderation/index.tsx:179
+#: src/screens/Moderation/index.tsx:178
 msgid "{badge, plural, one {# update} other {# updates}}"
 msgstr "{badge, plural, one {#} other {#}} új esemény"
 
@@ -556,7 +556,7 @@ msgstr "Több, mint {count, plural, one {#} other {#}} csatlakozási kérelem"
 msgid "{date} at {time}"
 msgstr "{date}, {time}"
 
-#: src/screens/ModerationInbox/Notice.tsx:425
+#: src/screens/ModerationInbox/Notice.tsx:412
 msgid "{detailsLength} of {MAX_REPORT_REASON_GRAPHEME_LENGTH} characters used"
 msgstr "{MAX_REPORT_REASON_GRAPHEME_LENGTH}/{detailsLength} karakter"
 
@@ -653,11 +653,11 @@ msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr "{joinedAllTimeCount, plural, other {#}} felhasználó csatlakozott ezzel!"
 
 #: src/view/shell/desktop/LeftNav.tsx:451
-#: src/view/shell/Drawer.tsx:806
+#: src/view/shell/Drawer.tsx:798
 msgid "{label}, Beta"
 msgstr "{label}, kísérleti"
 
-#: src/screens/ModerationInbox/Settings.tsx:138
+#: src/screens/ModerationInbox/Settings.tsx:129
 msgid "{label}. {description}"
 msgstr "{label}. {description}"
 
@@ -877,12 +877,12 @@ msgstr "{requestCount, plural, other {# felkérés}}"
 msgid "{requestCount}+ requests"
 msgstr "Több, mint {requestCount} kérelem"
 
-#: src/screens/ModerationInbox/Notice.tsx:242
+#: src/screens/ModerationInbox/Notice.tsx:229
 msgid "{serviceName} removed your content for violating our <0>Community Guidelines</0>."
 msgstr "A(z) {serviceName} eltávolította ezt a tartalmat a <0>közösségi irányelveink</0> megsértése miatt."
 
-#: src/screens/Settings/Settings.tsx:212
-#: src/view/shell/Drawer.tsx:777
+#: src/screens/Settings/Settings.tsx:205
+#: src/view/shell/Drawer.tsx:769
 msgid "{unreadCount, plural, one {# unread update} other {# unread updates}}"
 msgstr "{unreadCount, plural, other {#}} új esemény"
 
@@ -1255,8 +1255,8 @@ msgstr "Képarány nélküli cukimuki jelenet"
 
 #: src/Navigation.tsx:528
 #: src/screens/Settings/AboutSettings.tsx:85
-#: src/screens/Settings/Settings.tsx:292
-#: src/screens/Settings/Settings.tsx:295
+#: src/screens/Settings/Settings.tsx:285
+#: src/screens/Settings/Settings.tsx:288
 msgid "About"
 msgstr "Névjegy"
 
@@ -1297,8 +1297,8 @@ msgid "Access requested! The group owner will review your request."
 msgstr "Kérelem elküldve. Az elfogadást csoport tulajdonosa fogja bírálni."
 
 #: src/screens/Settings/AccessibilitySettings.tsx:45
-#: src/screens/Settings/Settings.tsx:262
-#: src/screens/Settings/Settings.tsx:265
+#: src/screens/Settings/Settings.tsx:255
+#: src/screens/Settings/Settings.tsx:258
 msgid "Accessibility"
 msgstr "Akadálymentesítés"
 
@@ -1310,8 +1310,8 @@ msgstr "Akadálymentesítés"
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:22
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:23
 #: src/screens/Settings/AccountSettings.tsx:54
-#: src/screens/Settings/Settings.tsx:193
-#: src/screens/Settings/Settings.tsx:196
+#: src/screens/Settings/Settings.tsx:186
+#: src/screens/Settings/Settings.tsx:189
 msgid "Account"
 msgstr "Fiók"
 
@@ -1340,7 +1340,7 @@ msgstr "Ez a fiók felfüggesztésre került"
 msgid "Account is deactivated"
 msgstr "Ez a fiók deaktiválásra került"
 
-#: src/screens/ModerationInbox/Settings.tsx:98
+#: src/screens/ModerationInbox/Settings.tsx:89
 msgctxt "moderation-inbox-setting"
 msgid "Account labeling notifications"
 msgstr "Fiókfeljegyzési értesítések"
@@ -1360,11 +1360,11 @@ msgstr "Elnémított fiók"
 msgid "Account Muted by List"
 msgstr "Elnémított fiók (lista által)"
 
-#: src/screens/Settings/Settings.tsx:676
+#: src/screens/Settings/Settings.tsx:669
 msgid "Account options"
 msgstr "Fióklehetőségek"
 
-#: src/screens/Settings/Settings.tsx:711
+#: src/screens/Settings/Settings.tsx:704
 msgid "Account removed from quick access"
 msgstr "Fiók levéve a listáról"
 
@@ -1500,8 +1500,8 @@ msgstr "Helyettesítő szöveg hozzáadása"
 msgid "Add alt text (optional)"
 msgstr "Helyettesítő szöveg hozzáadása (nem kötelező)"
 
-#: src/screens/Settings/Settings.tsx:614
-#: src/screens/Settings/Settings.tsx:617
+#: src/screens/Settings/Settings.tsx:607
+#: src/screens/Settings/Settings.tsx:610
 #: src/view/shell/desktop/LeftNav.tsx:387
 #: src/view/shell/desktop/LeftNav.tsx:390
 msgid "Add another account"
@@ -1713,7 +1713,7 @@ msgstr "Felnőtt tartalom"
 msgid "Adult Content"
 msgstr "Felnőtt tartalom"
 
-#: src/screens/Moderation/index.tsx:474
+#: src/screens/Moderation/index.tsx:465
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
 msgstr "A felnőtt tartalmakat csak böngészőből, a <0>bsky.app</0> honlapon engedélyezheted."
 
@@ -1730,7 +1730,7 @@ msgstr "Felnőtt tartalmi feljegyzések"
 msgid "Adult sexual abuse content"
 msgstr "Felnőttek szexuális kizsákmányolása"
 
-#: src/screens/Moderation/index.tsx:518
+#: src/screens/Moderation/index.tsx:509
 msgid "Advanced"
 msgstr "Haladó beállítások"
 
@@ -2158,9 +2158,9 @@ msgstr "Alkalmazásjelszók"
 #: src/components/moderation/LabelsOnMeDialog.tsx:169
 #: src/components/moderation/LabelsOnMeDialog.tsx:172
 #: src/components/moderation/ModerationDetailsDialog.tsx:223
-#: src/screens/ModerationInbox/Notice.tsx:478
-#: src/screens/ModerationInbox/Report.tsx:180
-#: src/screens/ModerationInbox/Report.tsx:181
+#: src/screens/ModerationInbox/Notice.tsx:465
+#: src/screens/ModerationInbox/Report.tsx:177
+#: src/screens/ModerationInbox/Report.tsx:178
 msgid "Appeal"
 msgstr "Fellebbezés"
 
@@ -2189,7 +2189,7 @@ msgstr "Felfüggesztés fellebbezése"
 msgid "Appeal resolved"
 msgstr "Fellebbezés feldolgozva"
 
-#: src/screens/ModerationInbox/Notice.tsx:418
+#: src/screens/ModerationInbox/Notice.tsx:405
 msgid "Appeal submitted"
 msgstr "Fellebbezés elküldve"
 
@@ -2213,9 +2213,9 @@ msgstr "Felfüggesztés fellebbezése"
 #: src/screens/Messages/components/ChatDisabled.tsx:79
 #: src/screens/Messages/components/ChatDisabled.tsx:130
 #: src/screens/Messages/components/ChatDisabled.tsx:132
-#: src/screens/ModerationInbox/Notice.tsx:319
-#: src/screens/ModerationInbox/Notice.tsx:330
-#: src/screens/ModerationInbox/Notice.tsx:473
+#: src/screens/ModerationInbox/Notice.tsx:306
+#: src/screens/ModerationInbox/Notice.tsx:317
+#: src/screens/ModerationInbox/Notice.tsx:460
 msgid "Appeal this decision"
 msgstr "Döntés fellebbezése"
 
@@ -2229,8 +2229,8 @@ msgstr "Átvizsgálás alatt"
 
 #: src/Navigation.tsx:443
 #: src/screens/Settings/AppearanceSettings.tsx:71
-#: src/screens/Settings/Settings.tsx:254
-#: src/screens/Settings/Settings.tsx:257
+#: src/screens/Settings/Settings.tsx:247
+#: src/screens/Settings/Settings.tsx:250
 msgid "Appearance"
 msgstr "Megjelenés"
 
@@ -2243,8 +2243,8 @@ msgstr "Alkalmaz"
 msgid "Apply default recommended feeds"
 msgstr "Ajánlott hírfolyamok elfogadása"
 
-#: src/screens/Settings/Settings.tsx:545
-#: src/screens/Settings/Settings.tsx:547
+#: src/screens/Settings/Settings.tsx:538
+#: src/screens/Settings/Settings.tsx:540
 msgid "Apply Pull Request"
 msgstr "Lekéréses kérelem alkalmazása"
 
@@ -2373,11 +2373,11 @@ msgstr "Adj meg legalább 8 karaktert"
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:340
 msgid "AT Protocol FAQ"
-msgstr "AT protokoll GYIK"
+msgstr "AT Protokoll-GYIK"
 
 #: src/Navigation.tsx:194
 #: src/screens/Atmosphere/index.tsx:31
-#: src/view/shell/desktop/LeftNav.tsx:763
+#: src/view/shell/desktop/LeftNav.tsx:757
 #: src/view/shell/Drawer.tsx:559
 msgid "Atmosphere"
 msgstr "Atmosphere"
@@ -2550,8 +2550,8 @@ msgstr "Kísérleti funkció"
 
 #: src/Navigation.tsx:459
 #: src/screens/Settings/BetaFeaturesSettings.tsx:142
-#: src/screens/Settings/Settings.tsx:276
-#: src/screens/Settings/Settings.tsx:279
+#: src/screens/Settings/Settings.tsx:269
+#: src/screens/Settings/Settings.tsx:272
 msgid "Beta features"
 msgstr "Kísérleti funkciók"
 
@@ -2659,7 +2659,7 @@ msgstr "A másik fél letiltása és/vagy a beszélgetés elhagyása"
 msgid "Blocked"
 msgstr "Letiltva"
 
-#: src/screens/Moderation/index.tsx:392
+#: src/screens/Moderation/index.tsx:383
 msgid "Blocked accounts"
 msgstr "Letiltott fiókok"
 
@@ -2748,10 +2748,10 @@ msgstr "A Bluesky ismerősökkel még mókásabb. Szeretnél meghívni valakit? 
 
 #: src/screens/Atmosphere/components/AtmosphereNux.tsx:63
 msgid "Bluesky is part of a growing network of hundreds of social apps. Your account unlocks them all."
-msgstr "A Bluesky egy több száz közösségi alkalmazásból álló hálózat része. A fiókoddal mindegyikhez hozzáférhetsz."
+msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:90
-#: src/screens/ModerationInbox/Report.tsx:74
+#: src/screens/ModerationInbox/Notice.tsx:88
+#: src/screens/ModerationInbox/Report.tsx:72
 msgid "Bluesky Moderation Service"
 msgstr "Bluesky-moderálásiszolgáltatás"
 
@@ -2978,7 +2978,7 @@ msgstr "Kamera-hozzáférés szükséges"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:124
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
-#: src/screens/ModerationInbox/Notice.tsx:437
+#: src/screens/ModerationInbox/Notice.tsx:424
 #: src/screens/Profile/Header/EditProfileDialog.tsx:313
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
@@ -2992,7 +2992,7 @@ msgstr "Kamera-hozzáférés szükséges"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:87
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:242
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:248
-#: src/screens/Settings/Settings.tsx:337
+#: src/screens/Settings/Settings.tsx:330
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
 #: src/view/com/composer/Composer.tsx:1837
@@ -3003,7 +3003,7 @@ msgstr "Kamera-hozzáférés szükséges"
 msgid "Cancel"
 msgstr "Mégse"
 
-#: src/screens/ModerationInbox/Notice.tsx:430
+#: src/screens/ModerationInbox/Notice.tsx:417
 msgid "Cancel appeal"
 msgstr "Fellebbezés visszavonása"
 
@@ -3186,7 +3186,7 @@ msgstr "Csatorna"
 #: src/lib/hooks/useNotificationHandler.ts:134
 #: src/Navigation.tsx:554
 #: src/view/shell/bottom-bar/BottomBar.tsx:246
-#: src/view/shell/desktop/LeftNav.tsx:776
+#: src/view/shell/desktop/LeftNav.tsx:770
 #: src/view/shell/Drawer.tsx:611
 msgid "Chat"
 msgstr "Csevegés"
@@ -3417,11 +3417,11 @@ msgstr "Legutóbbi keresések törlése"
 msgid "Clear all recent searches?"
 msgstr "Legutóbbi keresések törlése"
 
-#: src/screens/Settings/Settings.tsx:537
+#: src/screens/Settings/Settings.tsx:530
 msgid "Clear all storage data"
 msgstr "Összes adat törlése"
 
-#: src/screens/Settings/Settings.tsx:539
+#: src/screens/Settings/Settings.tsx:532
 msgid "Clear all storage data (restart after this)"
 msgstr "Összes adat törlése (A program újra fog indulni)"
 
@@ -3788,8 +3788,8 @@ msgstr "Egyéb tartalom"
 msgid "Content & Media"
 msgstr "Tartalom és mellékletek"
 
-#: src/screens/Settings/Settings.tsx:234
-#: src/screens/Settings/Settings.tsx:237
+#: src/screens/Settings/Settings.tsx:227
+#: src/screens/Settings/Settings.tsx:230
 msgid "Content and media"
 msgstr "Tartalom és mellékletek"
 
@@ -3805,7 +3805,7 @@ msgstr "Letiltottad a tartalmat"
 msgid "Content by {authorName}"
 msgstr "Egyéb tartalom – Szerző: {authorName}"
 
-#: src/screens/Moderation/index.tsx:424
+#: src/screens/Moderation/index.tsx:415
 msgid "Content filters"
 msgstr "Tartalomszűrés"
 
@@ -4139,7 +4139,7 @@ msgstr "A mentés meghiúsult. Indoklás: {0}"
 msgid "Could not share – please try again"
 msgstr "A továbbítás meghiúsult. Próbáld újra."
 
-#: src/state/queries/moderation-inbox.ts:320
+#: src/state/queries/moderation-inbox.ts:313
 #: src/state/queries/notifications/settings.ts:123
 msgid "Could not update notification settings"
 msgstr "Az értesítési beállítások frissítése meghiúsult"
@@ -4394,7 +4394,7 @@ msgstr "Dél"
 msgid "Deactivate account"
 msgstr "Fiók deaktiválása"
 
-#: src/screens/Settings/Settings.tsx:502
+#: src/screens/Settings/Settings.tsx:495
 msgid "Debug Moderation"
 msgstr "Moderálási hibakeresés"
 
@@ -4447,8 +4447,8 @@ msgstr "Alkalmazásjelszó törlése"
 msgid "Delete chat"
 msgstr "Csevegés törlése"
 
-#: src/screens/Settings/Settings.tsx:507
-#: src/screens/Settings/Settings.tsx:509
+#: src/screens/Settings/Settings.tsx:500
+#: src/screens/Settings/Settings.tsx:502
 msgid "Delete chat declaration record"
 msgstr "Csevegéskijelentési jegyzőkönyv ürítése"
 
@@ -4574,8 +4574,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr "Fejlesztői mód engedélyezve"
 
-#: src/screens/Settings/Settings.tsx:319
-#: src/screens/Settings/Settings.tsx:322
+#: src/screens/Settings/Settings.tsx:312
+#: src/screens/Settings/Settings.tsx:315
 msgid "Developer options"
 msgstr "Fejlesztői beállítások"
 
@@ -4650,7 +4650,7 @@ msgstr "Meghívó letiltása"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:35
 #: src/lib/moderation/useLabelBehaviorDescription.ts:45
 #: src/lib/moderation/useLabelBehaviorDescription.ts:71
-#: src/screens/Moderation/index.tsx:464
+#: src/screens/Moderation/index.tsx:455
 msgid "Disabled"
 msgstr "Letiltva"
 
@@ -4720,7 +4720,7 @@ msgstr "Reklámcsík bezárása"
 
 #: src/screens/Atmosphere/components/AtmosphereNux.tsx:70
 msgid "Dismiss Discover the Atmosphere banner"
-msgstr "Atmosphere-reklámcsík bezárása"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:2623
 msgid "Dismiss error"
@@ -5193,7 +5193,7 @@ msgstr "Engedélyezés"
 msgid "Enable {0} only"
 msgstr "Csak a(z) {0} engedélyezése"
 
-#: src/screens/Moderation/index.tsx:449
+#: src/screens/Moderation/index.tsx:440
 msgid "Enable adult content"
 msgstr "Felnőtt tartalmak megjelenítése"
 
@@ -5247,7 +5247,7 @@ msgstr "Felkapott témakörök megjelenítése"
 msgid "Enable trending videos in your Discover feed"
 msgstr "Felkapott videók megjelenítése a Követett hírfolyamon"
 
-#: src/screens/Moderation/index.tsx:462
+#: src/screens/Moderation/index.tsx:453
 msgid "Enabled"
 msgstr "Engedélyezve"
 
@@ -5500,7 +5500,7 @@ msgstr "Szexuális tartalmakat ábrázoló képek."
 #: src/Navigation.tsx:928
 #: src/screens/Atmosphere/index.tsx:43
 #: src/screens/Search/Shell.tsx:564
-#: src/view/shell/desktop/LeftNav.tsx:742
+#: src/view/shell/desktop/LeftNav.tsx:736
 #: src/view/shell/Drawer.tsx:538
 msgid "Explore"
 msgstr "Felfedezés"
@@ -5690,7 +5690,7 @@ msgstr "A hírfolyambeállítások betöltése meghiúsult"
 
 #: src/components/dialogs/NotificationSettingsDialog.tsx:85
 #: src/screens/Messages/Settings.tsx:369
-#: src/screens/ModerationInbox/Settings.tsx:62
+#: src/screens/ModerationInbox/Settings.tsx:53
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:112
 #: src/screens/Settings/NotificationSettings/index.tsx:151
 #: src/screens/Settings/NotificationSettings/index.tsx:270
@@ -5736,7 +5736,7 @@ msgstr "A csevegések megjelölése olvasottként meghiúsult"
 msgid "Failed to mark all requests as read"
 msgstr "A kérelmek megjelölése olvasottként meghiúsult"
 
-#: src/state/queries/moderation-inbox.ts:346
+#: src/state/queries/moderation-inbox.ts:339
 msgid "Failed to mark as read. Please try again."
 msgstr "Az olvasottnak jelölés meghiúsult. Próbáld újra."
 
@@ -5836,7 +5836,7 @@ msgstr "A jelentés elküldése meghiúsult"
 msgid "Failed to submit appeal, please try again."
 msgstr "A fellebbezés elküldése meghiúsult. Próbáld újra."
 
-#: src/screens/ModerationInbox/Notice.tsx:386
+#: src/screens/ModerationInbox/Notice.tsx:373
 msgid "Failed to submit appeal. Please try again."
 msgstr "A fellebbezés elküldése meghiúsult. Próbáld újra."
 
@@ -5987,7 +5987,7 @@ msgstr "Visszajelzés elküldve az üzemeltetőnek"
 #: src/screens/StarterPack/StarterPackScreen.tsx:194
 #: src/view/screens/Feeds.tsx:505
 #: src/view/screens/Profile.tsx:274
-#: src/view/shell/desktop/LeftNav.tsx:788
+#: src/view/shell/desktop/LeftNav.tsx:782
 #: src/view/shell/Drawer.tsx:673
 msgid "Feeds"
 msgstr "Hírfolyamok"
@@ -6083,8 +6083,8 @@ msgstr "Követendő fiókok felfedezése"
 
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:52
 #: src/screens/Settings/FindContactsSettings.tsx:87
-#: src/screens/Settings/Settings.tsx:245
-#: src/screens/Settings/Settings.tsx:248
+#: src/screens/Settings/Settings.tsx:238
+#: src/screens/Settings/Settings.tsx:241
 msgid "Find and invite friends"
 msgstr "Barátok meghívása"
 
@@ -6369,7 +6369,7 @@ msgstr "Betűméret"
 msgid "Food"
 msgstr "Étel-ital"
 
-#: src/screens/ModerationInbox/Notice.tsx:304
+#: src/screens/ModerationInbox/Notice.tsx:291
 msgid "For more information about our appeals and redress process, please see our <0>Terms of Service</0>."
 msgstr "A fellebbezési és helyreállítási eljárásról további információt a <0>felhasználási feltételekben</0> olvashatsz."
 
@@ -6547,7 +6547,7 @@ msgstr "Értesítés, ha vannak bejövő csevegési kérelmeid."
 msgid "Get notifications when people send you messages."
 msgstr "Értesítés, ha vannak bejövő üzeneteid."
 
-#: src/screens/ModerationInbox/Settings.tsx:87
+#: src/screens/ModerationInbox/Settings.tsx:78
 msgctxt "moderation-inbox-setting"
 msgid "Get notified about actions taken against you."
 msgstr "Értesítések a fiókoddal szemben tett lépésekről."
@@ -6561,7 +6561,7 @@ msgstr "Feliratkozás értesítésekre"
 msgid "Get notified about posts and replies from accounts you choose."
 msgstr "Értesülhetsz kívánt fiókok új tevékenységeiről."
 
-#: src/screens/ModerationInbox/Settings.tsx:72
+#: src/screens/ModerationInbox/Settings.tsx:63
 msgctxt "moderation-inbox-setting"
 msgid "Get notified about your report outcomes."
 msgstr "Értesítések a jelentések végkimeneteléről."
@@ -6578,7 +6578,7 @@ msgstr "Feliratkozás a fiók tevékenységeire"
 msgid "Get notified when {name} posts"
 msgstr "Feliratkozás {name} új bejegyzéseire"
 
-#: src/screens/ModerationInbox/Settings.tsx:102
+#: src/screens/ModerationInbox/Settings.tsx:93
 msgctxt "moderation-inbox-setting"
 msgid "Get notified when a label is added to your account and posts."
 msgstr "Értesítés a fiókodra és bejegyzéseidre alkalmazott fejegyzésekről."
@@ -6689,7 +6689,7 @@ msgstr "{name} profiljának megnyitása"
 #: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:93
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:73
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:82
-#: src/screens/Moderation/index.tsx:283
+#: src/screens/Moderation/index.tsx:276
 msgid "Go to account settings"
 msgstr "Ugrás a fiókbeállításokhoz"
 
@@ -6829,7 +6829,7 @@ msgstr "Csoportnév"
 msgid "Group name is too long. {MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, other {The maximum number of characters is #.}}"
 msgstr "A csoportbeszélgetés címe túl hosszú. {MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, other {Korlát: # karakter.}}"
 
-#: src/screens/Settings/Settings.tsx:487
+#: src/screens/Settings/Settings.tsx:480
 msgid "GrowthBook"
 msgstr "GrowthBook"
 
@@ -6920,8 +6920,8 @@ msgstr "he/him"
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
 msgstr "A visszaélések elkerülése érdekében a Bluesky 7 napig megtartja, majd törli ezeket az adatokat"
 
-#: src/screens/Settings/Settings.tsx:284
-#: src/screens/Settings/Settings.tsx:288
+#: src/screens/Settings/Settings.tsx:277
+#: src/screens/Settings/Settings.tsx:281
 #: src/view/shell/desktop/RightNav.tsx:130
 #: src/view/shell/desktop/RightNav.tsx:133
 #: src/view/shell/Drawer.tsx:504
@@ -7059,7 +7059,7 @@ msgstr "Az ismerős-felkutatási reklámcsík bezárása"
 
 #: src/screens/Atmosphere/components/AtmosphereNux.tsx:71
 msgid "Hides this banner from the Explore tab"
-msgstr "Reklámcsík eltávolítása a Felfedezés hírfolyamról"
+msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:76
 msgid "Hmm, it looks like you're signed in with an <0>App Password</0>. To set your birthdate, you'll need to sign in with your main account password, or ask whomever controls this account to do so."
@@ -7093,7 +7093,7 @@ msgstr "Hmm… Úgy tűnik, hogy a hírfolyamkiszolgáló helytelen választ ado
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr "Hmm… A hírfolyam felkeresése meghiúsult. Lehetséges, hogy már nem létezik."
 
-#: src/screens/Moderation/index.tsx:64
+#: src/screens/Moderation/index.tsx:63
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
 msgstr "Hmmmm… Az adatok betöltése meghiúsult. A részleteket alább láthatod. Ha a probléma fennáll, jelentsd nekünk."
 
@@ -7108,7 +7108,7 @@ msgstr "Egy pillanat! A videófeltöltés lehetősége még nem mindenki számá
 #: src/Navigation.tsx:923
 #: src/Navigation.tsx:944
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
-#: src/view/shell/desktop/LeftNav.tsx:730
+#: src/view/shell/desktop/LeftNav.tsx:724
 #: src/view/shell/Drawer.tsx:585
 msgid "Home"
 msgstr "Kezdőoldal"
@@ -7440,7 +7440,7 @@ msgstr "Új jelszó megadása"
 msgid "Interaction limited"
 msgstr "A kapcsolatbalépés korlátozott"
 
-#: src/screens/Moderation/index.tsx:332
+#: src/screens/Moderation/index.tsx:323
 msgid "Interaction settings"
 msgstr "Kapcsolatbalépési beállítások"
 
@@ -7751,8 +7751,8 @@ msgid "Language Settings"
 msgstr "Nyelvi beállítások"
 
 #: src/screens/Settings/LanguageSettings.tsx:98
-#: src/screens/Settings/Settings.tsx:268
-#: src/screens/Settings/Settings.tsx:271
+#: src/screens/Settings/Settings.tsx:261
+#: src/screens/Settings/Settings.tsx:264
 msgid "Languages"
 msgstr "Nyelvek"
 
@@ -8183,7 +8183,7 @@ msgstr "A listán szereplő személyek némítása feloldva"
 #: src/view/screens/Lists.tsx:60
 #: src/view/screens/Profile.tsx:268
 #: src/view/screens/Profile.tsx:276
-#: src/view/shell/desktop/LeftNav.tsx:796
+#: src/view/shell/desktop/LeftNav.tsx:790
 #: src/view/shell/Drawer.tsx:688
 msgid "Lists"
 msgstr "Listák"
@@ -8277,8 +8277,8 @@ msgstr "Új bejegyzések betöltése"
 msgid "Load new posts from the people you follow"
 msgstr "Követett személyek új bejegyzéseinek betöltése"
 
-#: src/screens/ModerationInbox/Notice.tsx:175
-#: src/screens/ModerationInbox/Notice.tsx:184
+#: src/screens/ModerationInbox/Notice.tsx:162
+#: src/screens/ModerationInbox/Notice.tsx:171
 msgid "Load older actions"
 msgstr "Korábbi események megjelenítése"
 
@@ -8299,7 +8299,7 @@ msgstr "Listák betöltése…"
 msgid "Loading more posts"
 msgstr "További bejegyzések betöltése folyamatban"
 
-#: src/screens/ModerationInbox/Settings.tsx:173
+#: src/screens/ModerationInbox/Settings.tsx:164
 msgid "Loading notification settings"
 msgstr "Értesítési beállítások betöltése"
 
@@ -8352,7 +8352,7 @@ msgid "Logo by @sawaratsuki.bsky.social"
 msgstr "A logó szerzője: @sawaratsuki.bsky.social"
 
 #: src/view/shell/desktop/RightNav.tsx:139
-#: src/view/shell/Drawer.tsx:895
+#: src/view/shell/Drawer.tsx:887
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "A logó szerzője: <0>@sawaratsuki.bsky.social</0>"
 
@@ -8419,7 +8419,7 @@ msgstr "Szélesítés"
 msgid "Manage saved feeds"
 msgstr "Mentett hírfolyamok kezelése"
 
-#: src/screens/Moderation/index.tsx:402
+#: src/screens/Moderation/index.tsx:393
 msgid "Manage verification settings"
 msgstr "Hitelesítési beállítások"
 
@@ -8432,14 +8432,14 @@ msgstr "Elnémított szavak és címkék kezelése"
 msgid "Manual"
 msgstr "Kézi"
 
-#: src/screens/ModerationInbox/index.tsx:335
+#: src/screens/ModerationInbox/index.tsx:327
 msgid "Mark all actions as read"
 msgstr "Összes lépés megjelölése olvasottként"
 
 #: src/screens/Messages/Inbox.tsx:318
 #: src/screens/Messages/Inbox.tsx:324
-#: src/screens/ModerationInbox/index.tsx:209
-#: src/screens/ModerationInbox/index.tsx:341
+#: src/screens/ModerationInbox/index.tsx:201
+#: src/screens/ModerationInbox/index.tsx:333
 msgid "Mark all as read"
 msgstr "Összes megjelölése olvasottként"
 
@@ -8450,7 +8450,7 @@ msgstr "Összes megjelölése olvasottként"
 msgid "Mark all chats as read"
 msgstr "Összes csevegés megjelölése olvasottként"
 
-#: src/screens/ModerationInbox/index.tsx:203
+#: src/screens/ModerationInbox/index.tsx:195
 msgid "Mark all reports as read"
 msgstr "Összes jelentés megjelölése olvasottként"
 
@@ -8653,7 +8653,7 @@ msgid "Mod inbox settings"
 msgstr "Moderátorüzeneti beállítások"
 
 #: src/Navigation.tsx:204
-#: src/screens/Moderation/index.tsx:103
+#: src/screens/Moderation/index.tsx:102
 msgid "Moderation"
 msgstr "Moderálás"
 
@@ -8661,16 +8661,14 @@ msgstr "Moderálás"
 msgid "Moderation details"
 msgstr "Moderálási részletek"
 
-#. Name for a feature flag
-#: src/analytics/features/index.ts:132
 #: src/Navigation.tsx:209
-#: src/screens/Moderation/index.tsx:299
-#: src/screens/ModerationInbox/index.tsx:101
+#: src/screens/Moderation/index.tsx:291
+#: src/screens/ModerationInbox/index.tsx:93
 msgid "Moderation inbox"
 msgstr "Moderátori üzenetek"
 
-#: src/screens/ModerationInbox/index.tsx:108
-#: src/screens/ModerationInbox/Settings.tsx:53
+#: src/screens/ModerationInbox/index.tsx:100
+#: src/screens/ModerationInbox/Settings.tsx:44
 msgid "Moderation inbox settings"
 msgstr "Moderátorüzeneti beállítások"
 
@@ -8700,7 +8698,7 @@ msgctxt "toast"
 msgid "Moderation list updated"
 msgstr "Moderálólista frissítve"
 
-#: src/screens/Moderation/index.tsx:362
+#: src/screens/Moderation/index.tsx:353
 msgid "Moderation lists"
 msgstr "Moderálólisták"
 
@@ -8721,9 +8719,9 @@ msgstr "moderálási beállítások"
 msgid "Moderation states"
 msgstr "Moderálási állapotok"
 
-#: src/screens/Moderation/index.tsx:317
-#: src/screens/Settings/Settings.tsx:209
-#: src/screens/Settings/Settings.tsx:220
+#: src/screens/Moderation/index.tsx:308
+#: src/screens/Settings/Settings.tsx:202
+#: src/screens/Settings/Settings.tsx:213
 msgid "Moderation tools"
 msgstr "Moderálási eszközök"
 
@@ -8864,7 +8862,7 @@ msgstr "Egy csoportot bármikor elnémíthatsz vagy elhagyhatsz."
 msgid "Muted"
 msgstr "Elnémítva"
 
-#: src/screens/Moderation/index.tsx:377
+#: src/screens/Moderation/index.tsx:368
 msgid "Muted accounts"
 msgstr "Elnémított fiókok"
 
@@ -8882,7 +8880,7 @@ msgstr "Egy elnémított fiók nem fog megjelenni a hírfolyamaidban és nem kap
 msgid "Muted by \"{0}\""
 msgstr "Némítás forrása: {0}"
 
-#: src/screens/Moderation/index.tsx:347
+#: src/screens/Moderation/index.tsx:338
 msgid "Muted words & tags"
 msgstr "Elnémított szavak és címkék"
 
@@ -9172,11 +9170,11 @@ msgctxt "Answer to a yes/no question"
 msgid "No"
 msgstr "Nem"
 
-#: src/screens/ModerationInbox/index.tsx:371
+#: src/screens/ModerationInbox/index.tsx:363
 msgid "No actions against you"
 msgstr "Nincsenek Veled szemben tett lépések"
 
-#: src/screens/ModerationInbox/index.tsx:372
+#: src/screens/ModerationInbox/index.tsx:364
 msgid "No actions match this filter"
 msgstr "Nincsenek találatok erre a szűrőre"
 
@@ -9369,7 +9367,7 @@ msgstr "Még nincsenek megjeleníthető válaszok"
 msgid "No replies yet"
 msgstr "Még nincsenek válaszok"
 
-#: src/screens/ModerationInbox/index.tsx:236
+#: src/screens/ModerationInbox/index.tsx:228
 msgid "No reports match this filter"
 msgstr "Nincsenek találatok erre a szűrőre"
 
@@ -9521,7 +9519,7 @@ msgid "Nothing saved yet"
 msgstr "Még semmit sem mentettél"
 
 #: src/Navigation.tsx:224
-#: src/screens/ModerationInbox/Notice.tsx:137
+#: src/screens/ModerationInbox/Notice.tsx:124
 msgid "Notice"
 msgstr "Értesítés"
 
@@ -9547,10 +9545,10 @@ msgstr "Értesítési hangok"
 #: src/screens/Notifications/ActivityList.tsx:29
 #: src/screens/Notifications/index.tsx:644
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
-#: src/screens/Settings/Settings.tsx:226
-#: src/screens/Settings/Settings.tsx:229
+#: src/screens/Settings/Settings.tsx:219
+#: src/screens/Settings/Settings.tsx:222
 #: src/view/shell/bottom-bar/BottomBar.tsx:283
-#: src/view/shell/desktop/LeftNav.tsx:753
+#: src/view/shell/desktop/LeftNav.tsx:747
 #: src/view/shell/Drawer.tsx:638
 msgid "Notifications"
 msgstr "Értesítések"
@@ -9618,7 +9616,7 @@ msgstr "A lehetőség engedélyezésével a Bluesky csak a Téged követő szem�
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "a <0><1/></0> Blueskyon"
 
-#: src/screens/Settings/Settings.tsx:427
+#: src/screens/Settings/Settings.tsx:420
 msgid "Onboarding reset"
 msgstr "Regisztrációs varázslót alaphelyzetbe állítva"
 
@@ -9888,11 +9886,11 @@ msgstr ""
 msgid "Open message options"
 msgstr "Üzenetlehetőségek megnyitása"
 
-#: src/screens/Settings/Settings.tsx:500
+#: src/screens/Settings/Settings.tsx:493
 msgid "Open moderation debug page"
 msgstr "Moderálási hibakeresési oldal megnyitása"
 
-#: src/screens/Moderation/index.tsx:343
+#: src/screens/Moderation/index.tsx:334
 msgid "Open muted words and tags settings"
 msgstr "Elnémított szavak és címkék beállításainak megnyitása"
 
@@ -9936,11 +9934,11 @@ msgstr "Kezdőcsomag megnyitása"
 msgid "Open Starter Pack menu"
 msgstr "Kezdőcsomagmenü megnyitása"
 
-#: src/screens/Settings/Settings.tsx:493
+#: src/screens/Settings/Settings.tsx:486
 msgid "Open storybook page"
 msgstr "Mesekönyv-oldal megnyitása"
 
-#: src/screens/Settings/Settings.tsx:478
+#: src/screens/Settings/Settings.tsx:471
 msgid "Open system log"
 msgstr "Rendszernapló megnyitása"
 
@@ -10024,7 +10022,7 @@ msgstr "Bejelentkezési varázsló megnyitása"
 msgid "Opens full image"
 msgstr "Teljes kép megtekintése"
 
-#: src/screens/Settings/Settings.tsx:285
+#: src/screens/Settings/Settings.tsx:278
 msgid "Opens helpdesk in browser"
 msgstr "Támogatási hivatkozás megnyitása böngészőben"
 
@@ -10843,8 +10841,8 @@ msgstr "Elsődleges nyelv"
 msgid "Privacy"
 msgstr "Adatvédelem"
 
-#: src/screens/Settings/Settings.tsx:201
-#: src/screens/Settings/Settings.tsx:204
+#: src/screens/Settings/Settings.tsx:194
+#: src/screens/Settings/Settings.tsx:197
 msgid "Privacy and security"
 msgstr "Adatvédelem és biztonság"
 
@@ -10866,8 +10864,8 @@ msgstr "Adatvédelmi- és biztonsági beállítások"
 #: src/screens/Settings/AboutSettings.tsx:102
 #: src/screens/Settings/AboutSettings.tsx:105
 #: src/view/screens/PrivacyPolicy.tsx:25
-#: src/view/shell/Drawer.tsx:890
-#: src/view/shell/Drawer.tsx:891
+#: src/view/shell/Drawer.tsx:882
+#: src/view/shell/Drawer.tsx:883
 msgid "Privacy Policy"
 msgstr "Adatvédelmi irányelvek"
 
@@ -10896,7 +10894,7 @@ msgid "profile"
 msgstr "profil"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:326
-#: src/view/shell/desktop/LeftNav.tsx:812
+#: src/view/shell/desktop/LeftNav.tsx:806
 #: src/view/shell/Drawer.tsx:117
 #: src/view/shell/Drawer.tsx:739
 msgid "Profile"
@@ -11097,11 +11095,11 @@ msgstr "Blogbejegyzés megtekintése"
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:121
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:135
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:148
-#: src/screens/ModerationInbox/Notice.tsx:246
+#: src/screens/ModerationInbox/Notice.tsx:233
 msgid "Read our Community Guidelines"
 msgstr "Közösségi irányelvek megtekintése"
 
-#: src/screens/ModerationInbox/Notice.tsx:309
+#: src/screens/ModerationInbox/Notice.tsx:296
 msgid "Read our Terms of Service"
 msgstr "A felhasználási feltételek megtekintése"
 
@@ -11127,14 +11125,14 @@ msgstr "Valódi párbeszéd."
 msgid "Real people."
 msgstr "Valódi emberek."
 
-#: src/screens/ModerationInbox/Notice.tsx:511
-#: src/screens/ModerationInbox/Notice.tsx:529
+#: src/screens/ModerationInbox/Notice.tsx:498
+#: src/screens/ModerationInbox/Notice.tsx:516
 #: src/screens/Takendown.tsx:158
 #: src/screens/Takendown.tsx:166
 msgid "Reason for appeal"
 msgstr "Fellebbezési ok"
 
-#: src/screens/ModerationInbox/Report.tsx:198
+#: src/screens/ModerationInbox/Report.tsx:195
 msgid "Reason:"
 msgstr "Indoklás:"
 
@@ -11192,8 +11190,8 @@ msgstr "Csatlakozási kérelem elutasítása"
 msgid "Reload conversations"
 msgstr "Beszélgetések újratöltése"
 
-#: src/screens/ModerationInbox/Notice.tsx:495
-#: src/screens/ModerationInbox/Notice.tsx:504
+#: src/screens/ModerationInbox/Notice.tsx:482
+#: src/screens/ModerationInbox/Notice.tsx:491
 msgid "Reload notice"
 msgstr "Értesítés újratöltése"
 
@@ -11210,8 +11208,8 @@ msgstr "Értesítés újratöltése"
 #: src/screens/Bookmarks.tsx:260
 #: src/screens/Messages/ConversationSettings/Member.tsx:162
 #: src/screens/Messages/ConversationSettings/prompts.tsx:170
-#: src/screens/Moderation/index.tsx:537
-#: src/screens/Settings/Settings.tsx:713
+#: src/screens/Moderation/index.tsx:528
+#: src/screens/Settings/Settings.tsx:706
 #: src/view/com/posts/PostFeedErrorMessage.tsx:219
 msgid "Remove"
 msgstr "Eltávolítás"
@@ -11237,8 +11235,8 @@ msgstr "Biztosan el akarod távolítani {displayName} felhasználót?"
 msgid "Remove {q}"
 msgstr "A(z) „{q}” kifejezés eltávolítása"
 
-#: src/screens/Settings/Settings.tsx:694
-#: src/screens/Settings/Settings.tsx:697
+#: src/screens/Settings/Settings.tsx:687
+#: src/screens/Settings/Settings.tsx:690
 msgid "Remove account"
 msgstr "Fiók eltávolítása"
 
@@ -11306,7 +11304,7 @@ msgstr "Eltávolítás a csevegésből"
 msgid "Remove from my feeds"
 msgstr "Eltávolítás a hírfolyamgyűjteményből"
 
-#: src/screens/Settings/Settings.tsx:707
+#: src/screens/Settings/Settings.tsx:700
 msgid "Remove from quick access?"
 msgstr "Eltávolítás a fióklistáról"
 
@@ -11379,7 +11377,7 @@ msgstr "Javaslat eltávolítása"
 msgid "Remove this feed from your saved feeds"
 msgstr "Eltávolítás a mentett hírfolyamok közül"
 
-#: src/screens/Moderation/index.tsx:533
+#: src/screens/Moderation/index.tsx:524
 msgid "Remove unavailable moderation services"
 msgstr "Nem elérhető moderálási szolgáltatások eltávolítása"
 
@@ -11439,7 +11437,7 @@ msgstr "Eltávolítva a hírfolyamgyűjteményből"
 msgid "Removed post"
 msgstr "Bejegyzés eltávolítva"
 
-#: src/screens/Moderation/index.tsx:231
+#: src/screens/Moderation/index.tsx:224
 msgid "Removed unavailable services"
 msgstr "Nem elérhető szolgáltatások eltávolítva"
 
@@ -11886,8 +11884,8 @@ msgstr "E-mail újraküldése"
 msgid "Resend Verification Email"
 msgstr "Visszaigazoló e-mail újraküldése"
 
-#: src/screens/Settings/Settings.tsx:529
-#: src/screens/Settings/Settings.tsx:531
+#: src/screens/Settings/Settings.tsx:522
+#: src/screens/Settings/Settings.tsx:524
 msgid "Reset activity subscription nudge"
 msgstr "Tevékenységértesítés-feliratkozási jelző alaphelyzetbe állítása"
 
@@ -11895,8 +11893,8 @@ msgstr "Tevékenységértesítés-feliratkozási jelző alaphelyzetbe állítás
 msgid "Reset code"
 msgstr "Helyreállítási kód"
 
-#: src/screens/Settings/Settings.tsx:514
-#: src/screens/Settings/Settings.tsx:516
+#: src/screens/Settings/Settings.tsx:507
+#: src/screens/Settings/Settings.tsx:509
 msgid "Reset onboarding state"
 msgstr "Regisztrációs varázsló állapotának alaphelyzetbe állítása"
 
@@ -12114,7 +12112,7 @@ msgstr "Mentés a hírfolyamgyűjteménybe"
 msgid "Save your position in the Following feed between sessions. New posts wait above you until you’re ready to view them."
 msgstr "A Követett hírfolyam megnyitása a legutóbb megtekintett bejegyzésnél. Az újabb bejegyzések megtekintéséhez feljebb kell görgetni."
 
-#: src/view/shell/desktop/LeftNav.tsx:804
+#: src/view/shell/desktop/LeftNav.tsx:798
 #: src/view/shell/Drawer.tsx:714
 msgctxt "link to bookmarks screen"
 msgid "Saved"
@@ -12672,9 +12670,9 @@ msgid "Sets email for password reset"
 msgstr "E-mail cím beállítása jelszóvisszaállításhoz"
 
 #: src/Navigation.tsx:260
-#: src/screens/Settings/Settings.tsx:118
-#: src/view/shell/desktop/LeftNav.tsx:820
-#: src/view/shell/Drawer.tsx:773
+#: src/screens/Settings/Settings.tsx:111
+#: src/view/shell/desktop/LeftNav.tsx:814
+#: src/view/shell/Drawer.tsx:765
 msgid "Settings"
 msgstr "Beállítások"
 
@@ -13026,7 +13024,7 @@ msgstr "{0}-értesítések megjelenítése"
 msgid "Shows information about when this post was created"
 msgstr "További információ a bejegyzés dátumáról"
 
-#: src/screens/Settings/Settings.tsx:143
+#: src/screens/Settings/Settings.tsx:136
 msgid "Shows other accounts you can switch to"
 msgstr "További fiókok megjelenítése váltás céljából"
 
@@ -13101,9 +13099,9 @@ msgid "Sign in to view post"
 msgstr "A megtekintéshez bejelentkezés szükséges"
 
 #: src/ageAssurance/components/DataUnavailableScreen.tsx:22
-#: src/screens/Settings/Settings.tsx:302
-#: src/screens/Settings/Settings.tsx:304
-#: src/screens/Settings/Settings.tsx:336
+#: src/screens/Settings/Settings.tsx:295
+#: src/screens/Settings/Settings.tsx:297
+#: src/screens/Settings/Settings.tsx:329
 #: src/screens/SignupQueued.tsx:100
 #: src/screens/SignupQueued.tsx:103
 #: src/screens/Takendown.tsx:88
@@ -13117,7 +13115,7 @@ msgstr "Kijelentkezés"
 msgid "Sign Out"
 msgstr "Kijelentkezés"
 
-#: src/screens/Settings/Settings.tsx:333
+#: src/screens/Settings/Settings.tsx:326
 #: src/view/shell/desktop/LeftNav.tsx:262
 msgid "Sign out?"
 msgstr "Kijelentkezés"
@@ -13214,7 +13212,7 @@ msgstr "Ismert kedvelők megjelenítése"
 msgid "Software Dev"
 msgstr "Szoftverfejlesztő"
 
-#: src/screens/Moderation/index.tsx:526
+#: src/screens/Moderation/index.tsx:517
 msgid "Some moderation services in your list are no longer available."
 msgstr "A feliratkozott moderálólisták némelyike már nem elérhető."
 
@@ -13294,7 +13292,7 @@ msgstr "Valami balul sült el"
 msgid "Something went wrong, please try again"
 msgstr "Valami balul sült el. Próbáld újra"
 
-#: src/screens/Moderation/index.tsx:115
+#: src/screens/Moderation/index.tsx:114
 #: src/screens/Profile/Sections/Labels.tsx:185
 #: src/screens/Settings/BetaFeaturesSettings.tsx:110
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:90
@@ -13481,7 +13479,7 @@ msgstr "Az állapot nem elérhető"
 msgid "Step {0} of {1}"
 msgstr "{1}/{0}. lépés"
 
-#: src/screens/Settings/Settings.tsx:432
+#: src/screens/Settings/Settings.tsx:425
 msgid "Storage cleared, you need to restart the app now."
 msgstr "Adatok törölve. Indítsd újra az alkalmazást."
 
@@ -13490,7 +13488,7 @@ msgid "Stored as part of a secure code for matching with others"
 msgstr "Ezeket az adatokat egy titkosított kód részeként tároljuk ismerősfelkutatás céljából"
 
 #: src/Navigation.tsx:353
-#: src/screens/Settings/Settings.tsx:495
+#: src/screens/Settings/Settings.tsx:488
 msgid "Storybook"
 msgstr "Mesekönyv"
 
@@ -13512,12 +13510,12 @@ msgstr "Az elérhető helyet kitöltő kártyák"
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:138
 #: src/screens/Messages/components/ChatDisabled.tsx:172
 #: src/screens/Messages/components/ChatDisabled.tsx:174
-#: src/screens/ModerationInbox/Notice.tsx:452
+#: src/screens/ModerationInbox/Notice.tsx:439
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:164
 msgid "Submit"
 msgstr "Küldés"
 
-#: src/screens/ModerationInbox/Notice.tsx:445
+#: src/screens/ModerationInbox/Notice.tsx:432
 #: src/screens/Takendown.tsx:76
 msgid "Submit appeal"
 msgstr "Fellebbezés beküldése"
@@ -13667,9 +13665,9 @@ msgstr "Egy felfüggesztett fiók nem vehet részt csevegésekben."
 
 #: src/components/dialogs/SwitchAccount.tsx:47
 #: src/components/dialogs/SwitchAccount.tsx:50
-#: src/screens/Settings/Settings.tsx:142
-#: src/screens/Settings/Settings.tsx:154
-#: src/screens/Settings/Settings.tsx:654
+#: src/screens/Settings/Settings.tsx:135
+#: src/screens/Settings/Settings.tsx:147
+#: src/screens/Settings/Settings.tsx:647
 #: src/view/shell/desktop/LeftNav.tsx:350
 msgid "Switch account"
 msgstr "Fiókváltás"
@@ -13703,7 +13701,7 @@ msgstr "Rendszer"
 #: src/screens/Log.tsx:49
 #: src/screens/Settings/AboutSettings.tsx:117
 #: src/screens/Settings/AboutSettings.tsx:120
-#: src/screens/Settings/Settings.tsx:480
+#: src/screens/Settings/Settings.tsx:473
 msgid "System log"
 msgstr "Rendszernapló"
 
@@ -13843,7 +13841,7 @@ msgstr "Mesélj magadról!"
 msgid "Tell us a little more"
 msgstr "További részletek"
 
-#: src/screens/ModerationInbox/Notice.tsx:484
+#: src/screens/ModerationInbox/Notice.tsx:471
 msgid "Tell us why you believe this decision was a mistake. We will review your appeal along with the original content."
 msgstr "Oszd meg, hogy miért gondolod úgy, hogy tévedésből távolítottuk el a bejegyzést. Az eltávolított tartalmat a fellebbezés fényében ismét átvizsgáljuk."
 
@@ -13863,8 +13861,8 @@ msgstr "Feltételek"
 #: src/screens/Settings/AboutSettings.tsx:94
 #: src/screens/Settings/AboutSettings.tsx:97
 #: src/view/screens/TermsOfService.tsx:25
-#: src/view/shell/Drawer.tsx:883
-#: src/view/shell/Drawer.tsx:885
+#: src/view/shell/Drawer.tsx:875
+#: src/view/shell/Drawer.tsx:877
 msgid "Terms of Service"
 msgstr "Felhasználási feltételek"
 
@@ -13967,8 +13965,8 @@ msgstr "A tartalmad ellen tett lépést visszavonták"
 msgid "The app will be restarted"
 msgstr "A beállítások érvénybeléptetése érdekében az alkalmazás újra lesz indítva"
 
-#: src/screens/ModerationInbox/Notice.tsx:337
-#: src/screens/ModerationInbox/Notice.tsx:377
+#: src/screens/ModerationInbox/Notice.tsx:324
+#: src/screens/ModerationInbox/Notice.tsx:364
 msgid "The appeal window has closed."
 msgstr "A fellebbezési időszak lejárt."
 
@@ -13985,7 +13983,7 @@ msgstr "A válaszlánc szerzője elrejtette ezt a választ."
 msgid "The birthdate you've entered means you are under 18 years old. Certain content and features may be unavailable to you."
 msgstr "A megadott születési dátum szerint még nem vagy felnőttkorú. Ez azt jelenti, hogy a Bluesky bizonyos tartalmai és funkciói nem lesznek elérhetőek Számodra."
 
-#: src/screens/Moderation/index.tsx:477
+#: src/screens/Moderation/index.tsx:468
 msgid "The Bluesky web application"
 msgstr "A Bluesky webalkalmazás"
 
@@ -14391,7 +14389,7 @@ msgstr "A megadott kód érvénytelen. Ha új kódot szeretnél, akkor küldd ú
 msgid "This confirmation code is not valid. Please try again."
 msgstr "A megadott megerősítőkód érvénytelen. Próbáld újra."
 
-#: src/screens/ModerationInbox/Notice.tsx:383
+#: src/screens/ModerationInbox/Notice.tsx:370
 msgid "This content could not be appealed. Please reload the notice and try again."
 msgstr "A fellebbezés meghiúsult. Nyisd meg újra az értesítést, majd próbáld újra."
 
@@ -14628,11 +14626,11 @@ msgstr "Ez az alábbi helyen fog tartományrekordot létrehozni:"
 msgid "This should only take a few minutes."
 msgstr "Ez a folyamat csupán néhány percet vesz igénybe."
 
-#: src/screens/ModerationInbox/Notice.tsx:380
+#: src/screens/ModerationInbox/Notice.tsx:367
 msgid "This subject can no longer be appealed."
 msgstr "Eme döntés ellen már nem lehet fellebbezni."
 
-#: src/screens/ModerationInbox/Notice.tsx:374
+#: src/screens/ModerationInbox/Notice.tsx:361
 msgid "This subject has already been appealed."
 msgstr "Eme döntést már fellebbezted."
 
@@ -14703,7 +14701,7 @@ msgid "This will irreversibly delete your Bluesky account <0>{currentHandle}</0>
 msgstr "Ez véglegesen törölni fogja a(z) <0>{currentHandle}</0> Bluesky-fiókot és minden hozzá tartozó adatot. Ez a fiókot használó többi <1>AT Protokoll</1>-szolgáltatást is érinti."
 
 #. placeholder {0}: account.handle
-#: src/screens/Settings/Settings.tsx:708
+#: src/screens/Settings/Settings.tsx:701
 msgid "This will remove @{0} from the quick access list."
 msgstr "Ezzel @{0} el lesz távolítva a fióklistáról."
 
@@ -14797,7 +14795,7 @@ msgstr "Magas tartalom be/ki"
 msgid "Toggle tallest card"
 msgstr "Legmagasabb kártya be/ki"
 
-#: src/screens/Moderation/index.tsx:452
+#: src/screens/Moderation/index.tsx:443
 msgid "Toggle to enable or disable adult content"
 msgstr "Felnőtt tartalmak be/ki"
 
@@ -14834,11 +14832,6 @@ msgstr "A legjobbra értékelt válaszok elöl"
 #: src/Navigation.tsx:548
 msgid "Topic"
 msgstr "Témakör"
-
-#. Description of a feature flag (Moderation inbox)
-#: src/analytics/features/index.ts:138
-msgid "Track your reports, review moderation decisions, and submit appeals."
-msgstr "Jelentések követése, korábbi döntések megtekintése, fellebbezés."
 
 #: src/components/dms/MessageContextMenu.tsx:190
 #: src/components/dms/MessageContextMenu.tsx:193
@@ -15014,11 +15007,11 @@ msgstr "A fiók betöltése meghiúsult"
 msgid "Unable to resolve handle"
 msgstr "A felhasználónév nem található"
 
-#: src/screens/Settings/Settings.tsx:554
+#: src/screens/Settings/Settings.tsx:547
 msgid "Unapply Pull Request"
 msgstr "Lekéréses kérelem alkalmazásának visszavonása"
 
-#: src/screens/Settings/Settings.tsx:556
+#: src/screens/Settings/Settings.tsx:549
 msgid "Unapply Pull Request {currentChannel}"
 msgstr "Lekéréses kérelem alkalmazásának visszavonása ({currentChannel})"
 
@@ -15150,7 +15143,7 @@ msgstr "A megadott születési dátum szerint sajnos túl fiatal vagy a Bluesky 
 msgid "Unfortunately, your declared age indicates that you are not old enough to access Bluesky in your region."
 msgstr "A saját állításod szerint ebben a régióban sajnos még túl fiatal vagy a Bluesky használatához."
 
-#: src/screens/ModerationInbox/Report.tsx:186
+#: src/screens/ModerationInbox/Report.tsx:183
 msgid "Unknown report reason"
 msgstr "A jelentés oka ismeretlen"
 
@@ -15275,8 +15268,8 @@ msgctxt "moderation-report-filter"
 msgid "Unread"
 msgstr "Olvasatlan"
 
-#: src/screens/Settings/Settings.tsx:521
-#: src/screens/Settings/Settings.tsx:523
+#: src/screens/Settings/Settings.tsx:514
+#: src/screens/Settings/Settings.tsx:516
 msgid "Unsnooze email reminder"
 msgstr "E-mail-cím-emlékeztető elhalasztásának visszavonása"
 
@@ -15549,7 +15542,7 @@ msgstr "Érték:"
 msgid "Verification failed, please try again."
 msgstr "A hitelesítés meghiúsult. Próbáld újra."
 
-#: src/screens/Moderation/index.tsx:407
+#: src/screens/Moderation/index.tsx:398
 msgid "Verification settings"
 msgstr "Hitelesítési beállítások"
 
@@ -15817,7 +15810,7 @@ msgstr "Részletek"
 msgid "View full thread"
 msgstr "Teljes válaszlánc megtekintése"
 
-#: src/screens/Settings/Settings.tsx:485
+#: src/screens/Settings/Settings.tsx:478
 msgid "View GrowthBook information"
 msgstr "GrowthBook-információ megtekintése"
 
@@ -15901,11 +15894,11 @@ msgstr "A hírfolyamot kedvelő felhasználók megtekintése"
 msgid "View video"
 msgstr "Videó megtekintése"
 
-#: src/screens/Moderation/index.tsx:387
+#: src/screens/Moderation/index.tsx:378
 msgid "View your blocked accounts"
 msgstr "Letiltott felhasználók megtekintése"
 
-#: src/screens/Moderation/index.tsx:327
+#: src/screens/Moderation/index.tsx:318
 msgid "View your default post interaction settings"
 msgstr "Alapértelmezett kapcsolatbalépési beállítások megtekintése"
 
@@ -15914,15 +15907,15 @@ msgstr "Alapértelmezett kapcsolatbalépési beállítások megtekintése"
 msgid "View your feeds and explore more"
 msgstr "Hírfolyamgyűjtemény megnyitása és további hírfolyamok felfedezése"
 
-#: src/screens/Moderation/index.tsx:293
+#: src/screens/Moderation/index.tsx:285
 msgid "View your moderation inbox"
 msgstr "Moderátori üzenetek megtekintése"
 
-#: src/screens/Moderation/index.tsx:357
+#: src/screens/Moderation/index.tsx:348
 msgid "View your moderation lists"
 msgstr "Moderálólisták megtekintése"
 
-#: src/screens/Moderation/index.tsx:372
+#: src/screens/Moderation/index.tsx:363
 msgid "View your muted accounts"
 msgstr "Elnémított fiókok megjelenítése"
 
@@ -16117,7 +16110,7 @@ msgstr "Egy esetleges hálózati hiba miatt képtelenek voltunk betölteni a tar
 msgid "We were unable to load your birthdate preferences. Please try again."
 msgstr "A születési dátumod beállításainak betöltése meghiúsult. Próbáld újra."
 
-#: src/screens/Moderation/index.tsx:551
+#: src/screens/Moderation/index.tsx:542
 msgid "We were unable to load your configured labelers at this time."
 msgstr "A feljegyzőid betöltése meghiúsult."
 
@@ -16273,7 +16266,7 @@ msgstr "Milyen érdeklődési köreid vannak?"
 msgid "What do you want to call your Starter Pack?"
 msgstr "Milyen címet adnál a kezdőcsomagodnak?"
 
-#: src/screens/ModerationInbox/Report.tsx:193
+#: src/screens/ModerationInbox/Report.tsx:190
 msgid "What you reported"
 msgstr "Jelentett tartalom"
 
@@ -16558,7 +16551,7 @@ msgstr "Emellett lehetőséged van letölteni a csevegési adataidat is, „JSON
 msgid "You can always opt out and delete your data"
 msgstr "Ezt az engedélyt bármikor visszavonhatod és törölheted az adataidat"
 
-#: src/screens/ModerationInbox/Notice.tsx:299
+#: src/screens/ModerationInbox/Notice.tsx:286
 msgid "You can appeal once per decision. A different moderator will review the appeal."
 msgstr "Minden moderátori döntéssel szemben csak egyszer fellebbezhetsz. A fellebbezést egy másik moderátor vizsgálja át."
 
@@ -16618,7 +16611,7 @@ msgstr "Továbbra is képes leszel az üzenetek elolvasására, de újakat nem t
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "Egy bejegyzéshez {MAX_GALLERY_IMAGES, plural, other {# kép}} csatolható."
 
-#: src/screens/ModerationInbox/Notice.tsx:294
+#: src/screens/ModerationInbox/Notice.tsx:281
 msgid "You can submit one account appeal at a time. A different moderator will review the appeal."
 msgstr "Egyszerre egy fiókkal kapcsolatos fellebbezést küldhetsz be. A fellebbezést egy másik moderátor vizsgálja át."
 
@@ -16762,7 +16755,7 @@ msgstr "Még egy egyéni hírfolyamot sem hoztál létre."
 msgid "You haven't muted any words or tags yet"
 msgstr "Még egy szót vagy címkét sem némítottál el"
 
-#: src/screens/ModerationInbox/index.tsx:235
+#: src/screens/ModerationInbox/index.tsx:227
 msgid "You haven’t reported anything yet"
 msgstr "Még semmit sem jelentettél"
 
@@ -16845,7 +16838,7 @@ msgstr "Saját csoport"
 msgid "You previously deactivated @{0}."
 msgstr "Korábban deaktiváltad a(z) @{0} fiókot."
 
-#: src/screens/Settings/Settings.tsx:443
+#: src/screens/Settings/Settings.tsx:436
 msgid "You probably want to restart the app now."
 msgstr "Lehetséges, hogy most előnyös lenne bezárni és újra megnyitni az alkalmazást."
 
@@ -16886,7 +16879,7 @@ msgstr "Csatlakozási kérelem elküldve"
 msgid "You will be eligible to appear in this Starter Pack again."
 msgstr "A jövőben ismét megjelenhetsz ebben a kezdőcsomagban."
 
-#: src/screens/Settings/Settings.tsx:334
+#: src/screens/Settings/Settings.tsx:327
 #: src/view/shell/desktop/LeftNav.tsx:263
 msgid "You will be signed out of all your accounts."
 msgstr "Ezzel az összes fiókból ki fogsz jelentkezni."
@@ -17035,7 +17028,7 @@ msgid "Your ability to submit reports was restricted"
 msgstr "A jelentési képességed korlátozva van"
 
 #: src/screens/ModerationInbox/components/util/noticeLabels.ts:88
-#: src/screens/ModerationInbox/index.tsx:120
+#: src/screens/ModerationInbox/index.tsx:112
 #: src/screens/Signup/index.tsx:191
 msgid "Your account"
 msgstr "Saját fiók"
@@ -17076,7 +17069,7 @@ msgstr "Új fiók"
 msgid "Your account must be at least 7 days old to create a new group chat."
 msgstr "Csoportbeszélgetés létrehozásához a fiókodnak legalább 7 naposnak kell lennie."
 
-#: src/screens/ModerationInbox/Settings.tsx:83
+#: src/screens/ModerationInbox/Settings.tsx:74
 msgctxt "moderation-inbox-setting"
 msgid "Your account notifications"
 msgstr "Fiókértesítések"
@@ -17099,7 +17092,7 @@ msgstr "A fiókod felfüggesztésre került"
 msgid "Your account was temporarily suspended for {hours, plural, one {# hour} other {# hours}}"
 msgstr "A fiókod átmenetileg fel van függesztve. Még {hours} óra van hátra."
 
-#: src/screens/ModerationInbox/Notice.tsx:237
+#: src/screens/ModerationInbox/Notice.tsx:224
 msgid "Your appeal has been submitted and is awaiting review."
 msgstr "A fellebbezést megkaptuk és jelenleg átvizsgálásra vár."
 
@@ -17145,7 +17138,7 @@ msgstr "A tartalmadat eltávolították"
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr "Lefoglaljuk a jelenlegi felhasználónevedet (<0>{0}</0>), így bármikor visszaválthatsz rá."
 
-#: src/screens/Moderation/index.tsx:277
+#: src/screens/Moderation/index.tsx:270
 msgid "Your declared age is under 18. Some settings below may be disabled. If this was a mistake, you may edit your birthdate in your <0>account settings</0>."
 msgstr "A saját állításod szerint kiskorú vagy, ezért az alábbi lehetőségek némelyike zárolva lehet. Ha ez tévedésből történt, akkor a <0>fiókbeállításokban</0> módosíthatod a születési dátumodat."
 
@@ -17224,7 +17217,7 @@ msgstr "Elnémított szavak"
 msgid "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
 msgstr "A felhasználóneved, profilképed, illetve a csoport neve és tagszáma nyilvánosan megtekinthető lesz."
 
-#: src/screens/ModerationInbox/Report.tsx:208
+#: src/screens/ModerationInbox/Report.tsx:205
 msgid "Your note:"
 msgstr "Megjegyzés:"
 
@@ -17275,7 +17268,7 @@ msgid "Your reply was sent"
 msgstr "Válasz elküldve"
 
 #: src/Navigation.tsx:219
-#: src/screens/ModerationInbox/Report.tsx:115
+#: src/screens/ModerationInbox/Report.tsx:112
 msgid "Your report"
 msgstr "Jelentés"
 
@@ -17288,11 +17281,11 @@ msgstr "A jelentést feldolgoztuk. <0>A közösségi irányelvek megtekintése</
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr "A jelentés címzettje: <0>{0}</0>."
 
-#: src/screens/ModerationInbox/index.tsx:120
+#: src/screens/ModerationInbox/index.tsx:112
 msgid "Your reports"
 msgstr "Saját jelentések"
 
-#: src/screens/ModerationInbox/Settings.tsx:68
+#: src/screens/ModerationInbox/Settings.tsx:59
 msgctxt "moderation-inbox-setting"
 msgid "Your reports notifications"
 msgstr "Jelentéssel kapcsolatos értesítések"
