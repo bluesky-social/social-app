@@ -23,7 +23,8 @@ cannot fetch it. These schemas are copied from merged upstream sources:
   `7b640e8fee709d22a0d62262068db0ddb3106741` (from atproto PR 5809)
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereApps.json` at atproto
   `11f52c5588279d159ab12404a1b323731a467fdd` (from atproto PR 5801)
-- [`getAtmosphereTimeline` at `15aacf4299dc`](https://github.com/bluesky-social/atproto/blob/15aacf4299dc84a650d906e3aa6e82bde1b828d8/lexicons-overrides/app/bsky/unspecced/getAtmosphereTimeline.json)
+- `lexicons-overrides/app/bsky/unspecced/getAtmosphereTimeline.json` at atproto
+  `4ca55dbc6d9e04d721fc14abffb73ce33158e002` (from atproto PR 5871)
 
 In `lexicons.json`, their `cid` values are locally calculated content-integrity
 pins, not published record CIDs, and their `uri` values are only installer

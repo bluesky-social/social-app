@@ -12,13 +12,14 @@ import {AtmosphereActivityTab} from '#/screens/Atmosphere/ActivityTab'
 import {atoms as a, useTheme, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {ActivityTabV1} from './ActivityTabV1'
 import {AtmosphereAppsTab} from './AppsTab'
 import {AtmosphereExploreTab} from './ExploreTab'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Atmosphere'>
 
 /** Matches the Apps position in the sections below. */
-const APPS_TAB_INDEX = 2
+const APPS_TAB_INDEX = 3
 
 export function AtmosphereScreen({}: Props) {
   const t = useTheme()
@@ -26,6 +27,7 @@ export function AtmosphereScreen({}: Props) {
   const pagerRef = useRef<PagerRef>(null)
   const sections = [
     {title: l`Activity`, component: <AtmosphereActivityTab />},
+    {title: l`V1`, component: <ActivityTabV1 />},
     {
       title: l`Explore`,
       component: (
