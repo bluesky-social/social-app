@@ -458,7 +458,7 @@
     },
     "app.bsky.feed.defs": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.feed.defs",
-      "cid": "bafyreiddy3jwbcwadbavgd2xj2ozlfzmqpor7mpvfzt44jbm3tozetf63q"
+      "cid": "bafyreiahnhkn4372va5uxnox327ryjqm7xdgfeq27miwtq3hndvzhf2eny"
     },
     "app.bsky.feed.describeFeedGenerator": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.feed.describeFeedGenerator",
