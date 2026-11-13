@@ -5,9 +5,11 @@ import {postCidMatch} from './postCidMatch'
 
 jest.unmock('multiformats/cid')
 
-const POST_CID = 'bafyreie5737gdxlw5i64vzichcalba3z2v5n6icifvx5xytvske7mr3hpm'
-const IMAGE_CID = 'bafkreibme22gw2h7y2h7tg2fhqotaqjucnbc24deqo72b6mkl2egezxhvy'
-const OTHER_CID = 'bafkreieq5jui4j25lacwomsqgjeswwl3y5zcdrresptwgmfylxo2depppq'
+// CIDs generated from the strings "example post", "example image", and
+// "example other"; they do not reference real records or blobs.
+const POST_CID = 'bafyreif5n5m2ol4zppdwjwfcq36xsoqoxn2k2bnaineijucvhkpmh6of2q'
+const IMAGE_CID = 'bafkreianqx226hqn7ievapyl3mlzvohtprbclnb5iqvdvepftq6ijg6jty'
+const OTHER_CID = 'bafkreididtw63y3m2jzoh6yp4uinvvqhel5ruvoruvr4d4wkrwvfjn4tnu'
 
 const blob = (cid: string, mimeType = 'image/jpeg') => ({
   $type: 'blob',
