@@ -6,6 +6,7 @@ import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
 import {app} from '#/lexicons'
 import {type ActorProfiles, fetchActorProfiles} from './actorProfiles'
+import {shadowTimelinePage, useProfileShadows} from './profileShadows'
 import {toActivityRows} from './rows'
 
 const useActivityTimelineQueryRoot = 'useActivityTimelineQuery'
@@ -18,14 +19,15 @@ export type ActivityTimelinePage =
 
 /**
  * The viewer's activity timeline as rows. The cache holds raw pages, and
- * moderation runs in `select`, so a change to moderation settings re-filters
- * without a refetch.
+ * profile shadows and moderation apply in `select`, so muting someone or
+ * changing moderation settings re-filters without a refetch.
  */
 export function useActivityTimelineQuery() {
   const client = useAppviewClient()
   const {currentAccount} = useSession()
   const viewer = currentAccount?.did
   const moderationOpts = useModerationOpts()
+  const shadows = useProfileShadows()
 
   return useInfiniteQuery({
     queryKey: createQueryKey(useActivityTimelineQueryRoot, {viewer}),
@@ -44,9 +46,10 @@ export function useActivityTimelineQuery() {
     select: data => ({
       pageParams: data.pageParams,
       pages: moderationOpts
-        ? data.pages.map((page, pageIndex) =>
-            toActivityRows(page.feed, page.profiles, pageIndex, moderationOpts),
-          )
+        ? data.pages.map((page, pageIndex) => {
+            const {feed, profiles} = shadowTimelinePage(page, shadows)
+            return toActivityRows(feed, profiles, pageIndex, moderationOpts)
+          })
         : [],
     }),
   })

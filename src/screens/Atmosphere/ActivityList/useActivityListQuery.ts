@@ -12,6 +12,10 @@ import {
   moderateActivity,
 } from '#/screens/Atmosphere/ActivityTab/moderation'
 import {
+  shadowView,
+  useProfileShadows,
+} from '#/screens/Atmosphere/ActivityTab/profileShadows'
+import {
   type ActivityContent,
   toActivityListContent,
 } from '#/screens/Atmosphere/ActivityTab/rows'
@@ -61,13 +65,15 @@ export type ActivityListItem =
 /**
  * Hydrates a fixed list of records, a page at a time. The cursor is just an
  * offset into `uris`, like the notifications activity list. As with the
- * timeline, moderation runs in `select` over the raw cached views.
+ * timeline, profile shadows and moderation apply in `select` over the raw
+ * cached views.
  */
 export function useActivityListQuery(uris: AtUriString[]) {
   const client = useAppviewClient()
   const {currentAccount} = useSession()
   const viewer = currentAccount?.did
   const moderationOpts = useModerationOpts()
+  const shadows = useProfileShadows()
 
   return useInfiniteQuery({
     queryKey: createQueryKey(useActivityListQueryRoot, {viewer, uris}),
@@ -82,7 +88,10 @@ export function useActivityListQuery(uris: AtUriString[]) {
       pages: moderationOpts
         ? data.pages.map(page =>
             page.items.flatMap(({uri, view}): ActivityListItem[] => {
-              const content = toActivityListContent(uri, view)
+              const content = toActivityListContent(
+                uri,
+                shadowView(view, shadows),
+              )
               if (!content) return [{uri, content}]
               const moderation = moderateActivity(
                 content,

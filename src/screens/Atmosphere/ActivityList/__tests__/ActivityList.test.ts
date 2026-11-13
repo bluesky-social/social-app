@@ -10,6 +10,7 @@ import {fetchActivityListPage} from '../useActivityListQuery'
 
 jest.mock('#/state/session', () => ({}))
 jest.mock('#/state/preferences/moderation-opts', () => ({}))
+jest.mock('#/screens/Atmosphere/ActivityTab/profileShadows', () => ({}))
 
 function makeUris(count: number) {
   return Array.from(

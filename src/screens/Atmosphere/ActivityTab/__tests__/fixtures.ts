@@ -1,4 +1,5 @@
 import {type $Typed} from '@atproto/lex'
+import {type AtUriString} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky/sdk/moderation'
 
 import {type app, type com} from '#/lexicons'
@@ -115,7 +116,11 @@ export function livestream(
   }
 }
 
-export function recordUri(actor: Profile, collection: string, rkey = '1') {
+export function recordUri(
+  actor: Profile,
+  collection: string,
+  rkey = '1',
+): AtUriString {
   return `at://${actor.did}/${collection}/${rkey}`
 }
 
