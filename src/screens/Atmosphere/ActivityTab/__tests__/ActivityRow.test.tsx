@@ -1,6 +1,6 @@
 import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
-import {render, screen} from '@testing-library/react-native'
+import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {makeActivityListLink} from '#/screens/Atmosphere/ActivityList/links'
 import {ActivityRow} from '../components/ActivityRow'
@@ -16,6 +16,7 @@ import {
   eric,
   gallery,
   item,
+  label,
   livestream,
   manton,
   moderationOpts,
@@ -81,13 +82,44 @@ jest.mock('#/view/com/util/UserAvatar', () => ({
   PreviewableUserAvatar: () => null,
 }))
 jest.mock('#/components/AvatarStack', () => ({AvatarStack: () => null}))
+jest.mock('#/components/Button', () => {
+  const {Pressable} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    Button: ({
+      label,
+      testID,
+      onPress,
+    }: {
+      label: string
+      testID?: string
+      onPress: () => void
+    }) => (
+      <Pressable
+        testID={testID}
+        accessibilityLabel={label}
+        accessibilityHint=""
+        onPress={onPress}
+      />
+    ),
+  }
+})
+jest.mock('#/components/moderation/ModerationDetailsDialog', () => ({
+  ModerationDetailsDialog: () => null,
+  useModerationDetailsDialogControl: () => ({open: jest.fn()}),
+}))
+jest.mock('#/lib/moderation/useModerationCauseDescription', () => ({
+  useModerationCauseDescription: () => ({name: 'Content warning'}),
+}))
 jest.mock('#/components/icons/community/Grain', () => ({GrainMark: () => null}))
 jest.mock('#/state/preferences/moderation-opts', () => ({
   useModerationOpts: () => undefined,
 }))
-jest.mock('#/components/atmosphere/SiteStandard/DocumentCompact', () => ({
-  DocumentCompactCard: () => null,
-}))
+jest.mock('#/components/atmosphere/SiteStandard/DocumentCompact', () => {
+  const {View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {DocumentCompactCard: () => <View testID="documentCard" />}
+})
 jest.mock('#/components/atmosphere/SiteStandard/Publication', () => ({
   PublicationCard: () => null,
 }))
@@ -129,6 +161,20 @@ function expectHeader(sentence: string, app?: string) {
 }
 
 describe('ActivityRow', () => {
+  it('masks a card the user can click through until they reveal it', () => {
+    renderEntry(
+      item({
+        actor: debbie,
+        collection: NSID.document,
+        view: article(undefined, {labels: [label('!warn')]}),
+      }),
+    )
+    expectHeader('Debbie Ridpath Ohi published an article', 'Leaflet')
+    expect(screen.queryByTestId('documentCard')).toBeNull()
+    fireEvent.press(screen.getByTestId('activityContentMask'))
+    expect(screen.getByTestId('documentCard')).toBeTruthy()
+  })
+
   it('renders a published article with its recommends', () => {
     renderEntry(
       item({

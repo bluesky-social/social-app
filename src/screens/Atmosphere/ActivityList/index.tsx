@@ -8,6 +8,7 @@ import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List} from '#/view/com/util/List'
+import {ActivityContentHider} from '#/screens/Atmosphere/ActivityTab/components/ActivityContentHider'
 import {
   ActivityContentCard,
   ActivityWarning,
@@ -110,7 +111,9 @@ function ActivityListItem({item}: {item: Item}) {
   return (
     <View style={[a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
       {item.content ? (
-        <ActivityContentCard content={item.content} />
+        <ActivityContentHider moderation={item.moderation}>
+          <ActivityContentCard content={item.content} />
+        </ActivityContentHider>
       ) : (
         <ActivityWarning />
       )}

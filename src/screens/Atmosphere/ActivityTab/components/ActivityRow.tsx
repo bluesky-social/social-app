@@ -15,6 +15,7 @@ import {
   type ActivityContent,
   type ActivityRow as ActivityRowModel,
 } from '../rows'
+import {ActivityContentHider} from './ActivityContentHider'
 import {ActivityHeader} from './ActivityHeader'
 import {GalleryCard} from './GalleryCard'
 import {LivestreamCard} from './LivestreamCard'
@@ -25,7 +26,7 @@ export function ActivityRow({row}: {row: ActivityRowModel}) {
   return (
     <View
       testID={row.kind === 'card' ? 'activityRow' : 'activityWarningRow'}
-      style={[a.gap_sm, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
+      style={[a.gap_md, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
       {row.kind === 'card' ? <ActivityCard row={row} /> : <ActivityWarning />}
     </View>
   )
@@ -35,7 +36,9 @@ function ActivityCard({row}: {row: ActivityCardRow}) {
   return (
     <>
       <ActivityHeader row={row} />
-      <ActivityContentCard content={row.content} />
+      <ActivityContentHider moderation={row.moderation}>
+        <ActivityContentCard content={row.content} />
+      </ActivityContentHider>
       {row.related.map(related => (
         <RelatedActivityPill key={related.collection} related={related} />
       ))}
