@@ -81,6 +81,7 @@ jest.mock('#/lib/hooks/useOpenComposer', () => ({
   useOpenComposer: () => ({openComposer: jest.fn()}),
 }))
 jest.mock('#/lib/sharing', () => ({shareUrl: jest.fn()}))
+jest.mock('#/components/Toast', () => ({show: jest.fn()}))
 jest.mock('#/state/session', () => ({
   useSession: () => ({hasSession: false}),
   useRequireAuth: () => jest.fn(),
