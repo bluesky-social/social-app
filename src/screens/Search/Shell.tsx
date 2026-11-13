@@ -444,7 +444,7 @@ export function SearchScreenShell({
         position,
       })
       handleProfileClick(profile)
-      navigation.navigate('Profile', {name: profile.handle})
+      navigation.push('Profile', {name: profile.handle})
     },
     [ax, handleProfileClick, navigation],
   )

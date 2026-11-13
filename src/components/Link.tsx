@@ -223,8 +223,13 @@ export function useLink({
             } else if (action === 'replace') {
               navigation.dispatch(StackActions.replace(screen, params))
             } else if (action === 'navigate') {
-              // @ts-expect-error not typed
-              navigation.navigate(screen, params, {pop: true})
+              if (IS_WEB) {
+                // @ts-expect-error not typed
+                navigation.navigate(screen, params)
+              } else {
+                // @ts-expect-error not typed
+                navigation.navigate(screen, params, {pop: true})
+              }
             } else {
               throw Error('Unsupported navigator action.')
             }
