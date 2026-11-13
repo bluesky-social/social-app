@@ -20,7 +20,7 @@ import {
 } from '#/state/queries/profile'
 import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
-import {atoms as a, platform} from '#/alf'
+import {atoms as a} from '#/alf'
 import {SubscribeProfileButton} from '#/components/activity-notifications/SubscribeProfileButton'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
@@ -139,7 +139,7 @@ let ProfileHeaderStandard = ({
               profile={profile}
               moderation={moderation}
             />
-            <ProfileHeaderHandle profile={profile} />
+            <ProfileHeaderHandle profile={profile} moderation={moderation} />
           </View>
           {!isPlaceholderProfile && !isBlockedUser && (
             <View style={a.gap_md}>
@@ -150,7 +150,7 @@ let ProfileHeaderStandard = ({
                     testID="profileHeaderDescription"
                     style={[a.text_md]}
                     numberOfLines={15}
-                    selectable={platform({android: false, default: true})}
+                    selectable
                     value={descriptionRT}
                     enableTags
                     authorHandle={profile.handle}

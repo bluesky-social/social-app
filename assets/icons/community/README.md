@@ -3,6 +3,7 @@ The icons in this directory are the marks of third-party services that appear in
 | Icon | Rights holder |
 |---|---|
 | `Leaflet.svg` | [Leaflet](https://leaflet.pub) |
+| `Grain.svg` | [Grain](https://grain.social) |
 | `Offprint.svg` | [Offprint](https://offprint.net) |
 | `Pckt.svg`, `PcktFull.svg` | [pckt](https://pckt.blog) |
 | `StandardSite.svg` | [Standard.site](https://standard.site) |
@@ -43,6 +44,17 @@ The icons in this directory are the marks of third-party services that appear in
 | `Venmo.svg` | [Venmo](https://venmo.com) |
 | `Vgen.svg` | [VGen](https://vgen.co) |
 | `Zeffy.svg` | [Zeffy](https://www.zeffy.com) |
+| `Discord.svg` | [Discord](https://discord.com) |
+| `Facebook.svg` | [Meta Platforms](https://www.facebook.com) |
+| `Line.svg` | [LY Corporation](https://line.me) |
+| `Messenger.svg` | [Meta Platforms](https://www.messenger.com) |
+| `Reddit.svg` | [Reddit](https://www.reddit.com) |
+| `Signal.svg` | [Signal Technology Foundation](https://signal.org) |
+| `Snapchat.svg` | [Snap Inc.](https://www.snapchat.com) |
+| `Telegram.svg` | [Telegram](https://telegram.org) |
+| `Threads.svg` | [Meta Platforms](https://www.threads.com) |
+| `WhatsApp.svg` | [Meta Platforms](https://www.whatsapp.com) |
+| `X.svg` | [X Corp.](https://x.com) |
 
 **These marks belong to their respective owners.** They are not Bluesky trademarks, they are not covered by the [MIT license](../../../LICENSE) that applies to the rest of this repository, and we are not in a position to grant or withhold permission to use them. We include them to identify those services in our UI.
 

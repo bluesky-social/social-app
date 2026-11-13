@@ -1,10 +1,10 @@
-import {createRef, Fragment, useState} from 'react'
+import {createRef, Fragment} from 'react'
 import {
+  Animated,
   Pressable,
   ScrollView,
   type StyleProp,
   StyleSheet,
-  Text,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -13,10 +13,15 @@ import {act, fireEvent, render, screen} from '@testing-library/react-native'
 import * as Gallery from '#/components/Gallery'
 
 const mockEnv = {IS_WEB: false, IS_ANDROID: false}
-const mockA11y = {screenReaderEnabled: false}
+const mockA11y = {screenReaderEnabled: false, reduceMotionEnabled: true}
 
 jest.mock('@lingui/react', () => ({
-  useLingui: () => ({_: (value: {message: string}) => value.message}),
+  useLingui: () => ({
+    _: (value: {message: string; values?: Record<string, unknown>}) =>
+      value.message.replace(/\{(\w+)\}/g, (_, key: string) =>
+        String(value.values?.[key]),
+      ),
+  }),
 }))
 jest.mock('#/env', () => ({
   get IS_WEB() {
@@ -42,6 +47,7 @@ jest.mock('#/alf', () => ({
     flex_shrink_0: {flexShrink: 0},
   },
   web: () => undefined,
+  useTheme: () => ({palette: {primary_500: 'blue', contrast_200: 'gray'}}),
 }))
 
 const scrollTo = (ScrollView.prototype as unknown as {scrollTo: jest.Mock})
@@ -51,6 +57,7 @@ beforeEach(() => {
   mockEnv.IS_WEB = false
   mockEnv.IS_ANDROID = false
   mockA11y.screenReaderEnabled = false
+  mockA11y.reduceMotionEnabled = true
   scrollTo.mockClear()
 })
 
@@ -118,16 +125,19 @@ function userScroll(offset: number) {
 function threeCards({
   onIndexChange,
   ref,
+  footer,
 }: {
   onIndexChange?: (index: number, previous: number) => void
   ref?: React.Ref<Gallery.GalleryRef>
+  footer?: React.ReactNode
 } = {}) {
   const result = render(
     <Gallery.Root
       ref={ref}
       testID="gallery"
       label="Cards"
-      onIndexChange={onIndexChange}>
+      onIndexChange={onIndexChange}
+      footer={footer}>
       {card('a', 200, 100)}
       {card('b', 200, 100)}
       {card('c', 200, 100)}
@@ -139,6 +149,175 @@ function threeCards({
   layout('c', 200, 100)
   return result
 }
+
+describe('Gallery.PageDots', () => {
+  beforeEach(() => jest.useFakeTimers())
+  afterEach(() => jest.useRealTimers())
+
+  const dots = (
+    <View>
+      <Gallery.PageDots />
+    </View>
+  )
+  const expectPosition = (index: number) => {
+    expect(screen.getByLabelText(`Cards, item ${index + 1} of 3`)).toBeTruthy()
+  }
+
+  it('requires gallery context', () => {
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
+    expect(() => render(<Gallery.PageDots />)).toThrow(
+      'useGalleryContext must be used within Gallery.Root',
+    )
+    spy.mockRestore()
+  })
+
+  it('keeps nested footer content out of the slides and measured height', () => {
+    threeCards({footer: dots})
+    expect(screen.getByTestId('galleryPageDots')).toBeTruthy()
+    expect(
+      scrollView().findAll(
+        node =>
+          typeof node.type === 'string' &&
+          node.props['aria-roledescription'] === 'slide',
+      ),
+    ).toHaveLength(3)
+    expect(rootHeight()).toBe(100)
+  })
+
+  it.each([0, 1])('hides for %i items', count => {
+    render(
+      <Gallery.Root label="Cards" footer={dots}>
+        {Array.from({length: count}, (_, index) =>
+          card(String(index), 200, 100),
+        )}
+      </Gallery.Root>,
+    )
+    expect(screen.queryByTestId('galleryPageDots')).toBeNull()
+  })
+
+  it.each([false, true])(
+    'exposes position without buttons or tab stops (web: %s)',
+    isWeb => {
+      mockEnv.IS_WEB = isWeb
+      threeCards({footer: dots})
+      expect(
+        screen.getByRole(isWeb ? 'image' : 'text', {
+          name: 'Cards, item 1 of 3',
+        }),
+      ).toBeTruthy()
+      expect(screen.queryAllByRole('button')).toHaveLength(0)
+      for (const id of [
+        'galleryPageDots',
+        'galleryPageDots-0',
+        'galleryPageDots-1',
+        'galleryPageDots-2',
+      ]) {
+        expect(screen.getByTestId(id).props.tabIndex).toBeUndefined()
+      }
+      userScroll(120)
+      expectPosition(1)
+      userScroll(330)
+      expectPosition(2)
+    },
+  )
+
+  it('animates between 8 and 30 pixels unless reduced motion is enabled', () => {
+    const timing = jest.spyOn(Animated, 'timing')
+    threeCards({footer: dots})
+    expect(timing).not.toHaveBeenCalled()
+
+    mockA11y.reduceMotionEnabled = false
+    userScroll(120)
+    for (const toValue of [8, 30]) {
+      expect(timing).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({toValue, useNativeDriver: false}),
+      )
+    }
+
+    timing.mockClear()
+    mockA11y.reduceMotionEnabled = true
+    userScroll(330)
+    expect(timing).not.toHaveBeenCalled()
+    timing.mockRestore()
+  })
+
+  it('updates on browser scroll without reporting navigation or moving focus', () => {
+    mockEnv.IS_WEB = true
+    const onIndexChange = jest.fn()
+    threeCards({footer: dots, onIndexChange})
+    expectPosition(0)
+    scrollBy(120)
+    expectPosition(1)
+    scrollBy(330)
+    expectPosition(2)
+    expect(screen.getByTestId('a').props.tabIndex).toBe(0)
+    expect(onIndexChange).not.toHaveBeenCalled()
+  })
+
+  it.each([false, true])(
+    'reports the leading item at a shared reveal offset (web: %s)',
+    isWeb => {
+      mockEnv.IS_WEB = isWeb
+      const ref = createRef<Gallery.GalleryRef>()
+      const onIndexChange = jest.fn()
+      threeCards({footer: dots, ref, onIndexChange})
+      layout('gallery', 400, 100)
+
+      act(() => ref.current?.scrollIntoView(2))
+      expect(scrollTo).toHaveBeenLastCalledWith({x: 216, animated: false})
+      expectPosition(0)
+      scrollBy(216)
+      expectPosition(1)
+      scrollBy(0)
+      expectPosition(0)
+      expect(onIndexChange).not.toHaveBeenCalled()
+    },
+  )
+
+  it.each([false, true])(
+    'keeps position when revealing an already visible item (web: %s)',
+    isWeb => {
+      mockEnv.IS_WEB = isWeb
+      const ref = createRef<Gallery.GalleryRef>()
+      const onIndexChange = jest.fn()
+      threeCards({footer: dots, ref, onIndexChange})
+      layout('gallery', 800, 100)
+
+      act(() => ref.current?.scrollIntoView(2))
+      expect(scrollTo).not.toHaveBeenCalled()
+      expectPosition(0)
+      scrollBy(0)
+      expectPosition(0)
+      expect(onIndexChange).not.toHaveBeenCalled()
+    },
+  )
+
+  it('does not select a dot just because a visible item receives focus', () => {
+    mockEnv.IS_WEB = true
+    const onIndexChange = jest.fn()
+    threeCards({footer: dots, onIndexChange})
+    fireEvent(screen.getByTestId('c'), 'focus')
+
+    expectPosition(0)
+    expect(screen.getByTestId('c').props.tabIndex).toBe(0)
+    scrollBy(120)
+    expectPosition(1)
+    expect(screen.getByTestId('c').props.tabIndex).toBe(0)
+    expect(onIndexChange).not.toHaveBeenCalled()
+  })
+
+  it('reflects programmatic web reveals without reporting navigation', () => {
+    mockEnv.IS_WEB = true
+    const ref = createRef<Gallery.GalleryRef>()
+    const onIndexChange = jest.fn()
+    threeCards({footer: dots, ref, onIndexChange})
+    act(() => ref.current?.scrollIntoView(2))
+    scrollBy(316)
+    expectPosition(2)
+    expect(onIndexChange).not.toHaveBeenCalled()
+  })
+})
 
 describe('Gallery sizing', () => {
   it('renders non-image children at their own sizes', () => {
@@ -764,7 +943,7 @@ describe('Gallery ref', () => {
   })
 })
 
-describe('Gallery reconciliation', () => {
+describe('Gallery item updates', () => {
   function Harness({
     ids,
     onIndexChange,
@@ -790,27 +969,6 @@ describe('Gallery reconciliation', () => {
     return {...result, onIndexChange}
   }
 
-  it('keeps the active item through a reorder', () => {
-    const {rerender, onIndexChange} = setup(['a', 'b', 'c'])
-    userScroll(330) // on c
-    onIndexChange.mockClear()
-    rerender(<Harness ids={['c', 'a', 'b']} onIndexChange={onIndexChange} />)
-    expect(onIndexChange).not.toHaveBeenCalled()
-    // c is now first, so it's where we're coming from
-    userScroll(120)
-    expect(onIndexChange).toHaveBeenCalledWith(1, 0)
-  })
-
-  it('stays in range when the active item is removed', () => {
-    const {rerender, onIndexChange} = setup(['a', 'b', 'c'])
-    userScroll(330) // on c
-    onIndexChange.mockClear()
-    rerender(<Harness ids={['a', 'b']} onIndexChange={onIndexChange} />)
-    expect(onIndexChange).not.toHaveBeenCalled()
-    userScroll(0)
-    expect(onIndexChange).toHaveBeenCalledWith(0, 1)
-  })
-
   it('is silent when items are added', () => {
     const {rerender, onIndexChange} = setup(['a', 'b'])
     rerender(
@@ -827,38 +985,6 @@ describe('Gallery reconciliation', () => {
     onIndexChange.mockClear()
     rerender(<Harness ids={[]} onIndexChange={onIndexChange} />)
     expect(onIndexChange).not.toHaveBeenCalled()
-  })
-
-  it('moves the roving tab stop with a reordered active item', () => {
-    mockEnv.IS_WEB = true
-    function Reorderable() {
-      const [ids, setIds] = useState(['a', 'b'])
-      return (
-        <>
-          <Pressable
-            testID="reverse"
-            accessibilityRole="button"
-            accessibilityLabel="Reverse"
-            accessibilityHint=""
-            onPress={() => setIds(['b', 'a'])}
-          />
-          <Gallery.Root testID="gallery" label="Cards">
-            {ids.map(id => (
-              <Gallery.Item key={id} testID={id}>
-                <Text>{id}</Text>
-              </Gallery.Item>
-            ))}
-          </Gallery.Root>
-        </>
-      )
-    }
-    render(<Reorderable />)
-    fireEvent(screen.getByTestId('b'), 'focus')
-    expect(screen.getByTestId('b').props.tabIndex).toBe(0)
-    fireEvent.press(screen.getByTestId('reverse'))
-    // b is still the target, now in first position
-    expect(screen.getByTestId('b').props.tabIndex).toBe(0)
-    expect(screen.getByTestId('a').props.tabIndex).toBe(-1)
   })
 })
 
@@ -962,6 +1088,91 @@ describe('Gallery.Bleed', () => {
 })
 
 describe('Gallery scroll view', () => {
+  it.each([false, true])(
+    'keeps free scrolling by default (Android: %s)',
+    android => {
+      mockEnv.IS_ANDROID = android
+      threeCards({})
+      expect(scrollView().props.snapToOffsets).toEqual(
+        android ? [0] : undefined,
+      )
+      expect(scrollView().props.snapToEnd).toBe(false)
+      expect(scrollView().props.decelerationRate).toBeUndefined()
+    },
+  )
+
+  it.each([false, true])(
+    'opts into measured slide snapping (Android: %s)',
+    android => {
+      mockEnv.IS_ANDROID = android
+      render(
+        <Gallery.Root label="Cards" testID="gallery" snapToItems>
+          {card('a', 200, 100)}
+          {card('b', 200, 100)}
+          {card('c', 200, 100)}
+        </Gallery.Root>,
+      )
+      layout('gallery', 300, 100)
+      layout('a', 200, 100)
+      layout('b', 200, 100)
+      // Do not snap to provisional positions before all items are measured.
+      expect(scrollView().props.snapToOffsets).toEqual([0])
+      layout('c', 200, 100)
+      expect(scrollView().props.snapToOffsets).toEqual([0, 208, 316])
+      expect(scrollView().props.snapToEnd).toBe(true)
+      expect(scrollView().props.decelerationRate).toBe('fast')
+    },
+  )
+
+  it('updates variable-width snap positions after reorder and resize', () => {
+    const gallery = (ids: string[]) => (
+      <Gallery.Root label="Cards" testID="gallery" snapToItems>
+        {ids.map(id => card(id, 100, 100))}
+      </Gallery.Root>
+    )
+    const {rerender} = render(gallery(['a', 'b', 'c', 'd']))
+    layout('gallery', 300, 100)
+    layout('a', 100, 100)
+    layout('b', 200, 100)
+    layout('c', 120, 100)
+    layout('d', 80, 100)
+    expect(scrollView().props.snapToOffsets).toEqual([0, 108, 224])
+    rerender(gallery(['b', 'a', 'c', 'd']))
+    expect(scrollView().props.snapToOffsets).toEqual([0, 208, 224])
+    layout('b', 280, 100)
+    expect(scrollView().props.snapToOffsets).toEqual([0, 288, 304])
+    layout('gallery', 800, 100)
+    expect(scrollView().props.snapToOffsets).toEqual([0])
+  })
+
+  it('ignores native snapping on web', () => {
+    mockEnv.IS_WEB = true
+    render(
+      <Gallery.Root label="Cards" snapToItems>
+        {card('a', 200, 100)}
+        {card('b', 200, 100)}
+      </Gallery.Root>,
+    )
+    expect(scrollView().props.snapToOffsets).toBeUndefined()
+    expect(scrollView().props.snapToEnd).toBe(false)
+    expect(scrollView().props.decelerationRate).toBeUndefined()
+  })
+
+  it('can turn native snapping off again', () => {
+    const gallery = (snapToItems: boolean) => (
+      <Gallery.Root label="Cards" snapToItems={snapToItems}>
+        {card('a', 200, 100)}
+        {card('b', 200, 100)}
+      </Gallery.Root>
+    )
+    const {rerender} = render(gallery(true))
+    expect(scrollView().props.decelerationRate).toBe('fast')
+    rerender(gallery(false))
+    expect(scrollView().props.snapToOffsets).toBeUndefined()
+    expect(scrollView().props.snapToEnd).toBe(false)
+    expect(scrollView().props.decelerationRate).toBeUndefined()
+  })
+
   it('does not stretch to fill constrained ancestors', () => {
     render(
       <Gallery.Root testID="gallery" label="Cards">

@@ -17,6 +17,7 @@ import {
   NavigationContainer,
   StackActions,
 } from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {timeout} from '#/lib/async/timeout'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
@@ -29,6 +30,7 @@ import {
   isModerationNotificationPayload,
   notificationToURL,
   storePayloadForAccountSwitch,
+  takeStoredModerationPush,
 } from '#/lib/hooks/useNotificationHandler'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {moderationPushDestination} from '#/lib/notifications/moderation'
@@ -89,6 +91,7 @@ import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStack
 import {DesktopLeftNav} from '#/view/shell/desktop/LeftNav'
 import {getNativeTabBarVisibility} from '#/view/shell/nativeTabBarVisibility'
 import {AtmosphereScreen} from '#/screens/Atmosphere'
+import {AtmosphereActivityListScreen} from '#/screens/Atmosphere/ActivityList'
 import {BookmarksScreen} from '#/screens/Bookmarks'
 import {CustomFeedScreen} from '#/screens/CustomFeed'
 import {CustomFeedLikedByScreen} from '#/screens/CustomFeed/CustomFeedLikedBy'
@@ -194,7 +197,12 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="Atmosphere"
         getComponent={() => AtmosphereScreen}
-        options={{title: title(msg`Atmosphere`)}}
+        options={{title: title(msg`Atmosphere`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="AtmosphereActivityList"
+        getComponent={() => AtmosphereActivityListScreen}
+        options={{title: title(msg`Activity`), requireAuth: true}}
       />
       <Stack.Screen
         name="Lists"
@@ -958,6 +966,7 @@ function RoutesContainer({
   children,
   restricted = false,
 }: React.PropsWithChildren<{restricted?: boolean}>) {
+  const queryClient = useQueryClient()
   const ax = useAnalytics()
   // eslint-disable-next-line react-compiler/react-compiler
   const notyLogger = ax.logger.useChild(ax.logger.Context.Notifications)
@@ -1089,6 +1098,16 @@ function RoutesContainer({
     })
     previousScreen.current = currentScreen
 
+    const pendingModerationPush = takeStoredModerationPush(currentAccount?.did)
+    if (pendingModerationPush) {
+      void queryClient.invalidateQueries({
+        queryKey: [
+          'moderation-inbox',
+          {did: pendingModerationPush.recipientDid},
+        ],
+      })
+      void navigate(moderationPushDestination(pendingModerationPush))
+    }
     handlePushNotificationEntry()
 
     ax.metric('router:navigate', {})
@@ -1157,6 +1176,10 @@ function getCurrentRouteName() {
   } else {
     return undefined
   }
+}
+
+function isNavigationReady() {
+  return navigationRef.isReady()
 }
 
 /**
@@ -1231,6 +1254,7 @@ function reset(): Promise<void> {
 
 export {
   FlatNavigator,
+  isNavigationReady,
   navigate,
   navigateToPath,
   reset,

@@ -22,7 +22,7 @@ import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
 import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
 import {Text} from '#/components/Typography'
-import {IS_IOS, IS_NATIVE} from '#/env'
+import {IS_NATIVE} from '#/env'
 import {type SectionRef} from './types'
 
 interface FeedSectionProps {
@@ -89,7 +89,7 @@ export function ProfileFeedSection({
   }, [_, emptyStateButton, emptyStateIcon, emptyStateMessage])
 
   useEffect(() => {
-    if (IS_IOS && isFocused && scrollElRef.current) {
+    if (IS_NATIVE && isFocused && scrollElRef.current) {
       const nativeTag = findListNativeTag(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }

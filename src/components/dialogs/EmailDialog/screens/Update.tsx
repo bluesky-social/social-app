@@ -297,8 +297,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
           onPress={handleUpdateEmail}
           disabled={
             !state.email ||
-            (state.step === 'token' &&
-              (!state.token || state.token.length !== 11)) ||
+            (state.step === 'token' && !isValidCode(state.token)) ||
             state.mutationStatus === 'pending'
           }>
           <ButtonText>

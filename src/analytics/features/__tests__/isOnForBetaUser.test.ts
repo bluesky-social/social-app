@@ -16,7 +16,7 @@ jest.mock('#/analytics/features/bootstrap', () => ({
   readFeatureBootstrap: () => Promise.resolve(),
 }))
 
-const FEATURE = Features.NotificationsV2Enable
+const FEATURE = Features.PostFeedKnownLikersEnable
 
 async function setRules(
   rules: {id: string; condition?: FeatureRule['condition']}[],

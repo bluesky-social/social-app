@@ -1,4 +1,5 @@
 import {memo, useMemo} from 'react'
+import {Platform} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -13,6 +14,7 @@ import {useBreakpoints} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedDialog} from '#/components/dialogs/Embed'
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
+import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
@@ -63,14 +65,60 @@ let ShareMenuItems = ({
   }
 
   const onSelectChatToShareTo = (conversation: string) => {
-    ax.metric('share:press:dmSelected', {uri: postUri})
+    ax.metric('share:press:dmSelected', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+    })
     navigation.navigate('MessagesConversation', {
       conversation,
       embed: postUri,
+      embedSource: 'chatSearch',
     })
   }
 
   const canEmbed = IS_WEB && gtMobile && !hideInPWI
+
+  /*
+   * The browser's own share sheet. Desktop only, and only where the browser
+   * has one (e.g. Safari, and Chrome on Mac and Windows; not desktop Firefox).
+   */
+  const canShareVia =
+    IS_WEB &&
+    gtMobile &&
+    typeof navigator?.share === 'function' &&
+    ax.features.enabled(ax.features.ShareDestinationsEnable)
+
+  const onShareVia = () => {
+    ax.metric('share:press:nativeShare', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      entryPoint: 'ShareMenu',
+      os: Platform.OS,
+    })
+    const url = toShareUrl(href)
+    const logResult = (status: 'shared' | 'dismissed' | 'failed') => {
+      ax.metric('share:nativeShare:result', {
+        uri: postUri,
+        authorDid: postAuthor.did,
+        entryPoint: 'ShareMenu',
+        status,
+      })
+    }
+    // Must be called synchronously in the press handler, or browsers block it
+    navigator.share({url}).then(
+      () => logResult('shared'),
+      (e: unknown) => {
+        if (e instanceof DOMException && e.name === 'AbortError') {
+          logResult('dismissed')
+        } else {
+          // e.g. the browser refused; copying the link still gets it shared
+          logResult('failed')
+          void shareUrl(url)
+        }
+      },
+    )
+    onShareProp()
+  }
 
   const onShareATURI = () => {
     void simpleShareText(postUri)
@@ -102,7 +150,10 @@ let ShareMenuItems = ({
             testID="postDropdownSendViaDMBtn"
             label={l`Send via chat`}
             onPress={() => {
-              ax.metric('share:press:openDmSearch', {})
+              ax.metric('share:press:openDmSearch', {
+                uri: postUri,
+                authorDid: postAuthor.did,
+              })
               sendViaChatControl.open()
             }}>
             <Menu.ItemText>
@@ -122,6 +173,18 @@ let ShareMenuItems = ({
             }}>
             <Menu.ItemText>{l`Embed post`}</Menu.ItemText>
             <Menu.ItemIcon icon={CodeBracketsIcon} position="right" />
+          </Menu.Item>
+        )}
+
+        {canShareVia && (
+          <Menu.Item
+            testID="postDropdownShareViaBtn"
+            label={l`Share via…`}
+            onPress={onShareVia}>
+            <Menu.ItemText>
+              <Trans>Share via…</Trans>
+            </Menu.ItemText>
+            <Menu.ItemIcon icon={ArrowOutOfBoxIcon} position="right" />
           </Menu.Item>
         )}
 

@@ -3,19 +3,29 @@ import {Image} from 'expo-image'
 import {moderatePost} from '@bsky/sdk/moderation'
 import {Trans} from '@lingui/react/macro'
 
+import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
+import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
+import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {IS_WEB} from '#/env'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import {getRowBorderColor, useItemContext} from './Root'
+import {useItemContext} from './Root'
 
 type Thumbnail = {
-  uri: string
+  /**
+   * Missing for a video or GIF without a thumbnail, which still gets a tile.
+   */
+  uri: string | undefined
   alt: string
+  /**
+   * Videos and GIFs, which get a play button over the thumbnail.
+   */
+  isPlayable: boolean
 }
 
 /**
@@ -37,8 +47,8 @@ export function usePostMediaBlurred(post: app.bsky.feed.defs.PostView) {
 }
 
 /**
- * Image and video thumbnails attached to a post, including the media half of
- * a record-with-media embed.
+ * Thumbnails for the images, video or GIF attached to a post, including the
+ * media half of a record-with-media embed. Other links have none.
  */
 export function getPostThumbnails(
   embed: app.bsky.feed.defs.PostView['embed'],
@@ -48,25 +58,42 @@ export function getPostThumbnails(
     : embed
 
   if (bsky.isType(app.bsky.embed.images.view, media)) {
-    return media.images.map(image => ({uri: image.thumb, alt: image.alt}))
+    return media.images.map(image => ({
+      uri: image.thumb,
+      alt: image.alt,
+      isPlayable: false,
+    }))
   }
   if (bsky.isType(app.bsky.embed.gallery.view, media)) {
     return media.items.flatMap(item =>
       bsky.isType(app.bsky.embed.gallery.viewImage, item)
-        ? [{uri: item.thumbnail, alt: item.alt}]
+        ? [{uri: item.thumbnail, alt: item.alt, isPlayable: false}]
         : [],
     )
   }
-  if (bsky.isType(app.bsky.embed.video.view, media) && media.thumbnail) {
-    return [{uri: media.thumbnail, alt: media.alt ?? ''}]
+  if (bsky.isType(app.bsky.embed.video.view, media)) {
+    return [{uri: media.thumbnail, alt: media.alt ?? '', isPlayable: true}]
+  }
+  if (
+    bsky.isType(app.bsky.embed.external.view, media) &&
+    parseEmbedPlayerFromUrl(media.external.uri)?.isGif
+  ) {
+    return [
+      {
+        uri: media.external.thumb,
+        alt: parseAltFromGIFDescription(media.external.description).alt,
+        isPlayable: true,
+      },
+    ]
   }
   return []
 }
 
 /**
- * A compact square preview of a post's images: one image fills the square,
- * two sit side by side, and three or more form a 2x2 grid. Renders nothing if
- * the post has no images.
+ * A compact square preview of a post's media: one image, video or GIF fills
+ * the square, two sit side by side, and three or more form a 2x2 grid.
+ * Videos and GIFs get a play button. Renders nothing if the post has no
+ * thumbnails, per `getPostThumbnails`.
  */
 export function InlineImages({
   embed,
@@ -76,9 +103,9 @@ export function InlineImages({
 }: {
   embed: app.bsky.feed.defs.PostView['embed']
   /**
-   * 60 for a trailing preview, 80 when the images stand in for post text.
+   * The square's width and height.
    */
-  size: 60 | 80
+  size: number
   /**
    * Heavily blurs the thumbnails, for media behind a moderation warning. Get
    * this from `usePostMediaBlurred`, or from the post's `contentMedia`
@@ -116,7 +143,7 @@ export function InlineImages({
             const isBottom = rowIndex === column.length - 1
             return (
               <View
-                key={thumbnail.uri}
+                key={`${columnIndex}-${rowIndex}`}
                 style={[
                   a.flex_1,
                   a.overflow_hidden,
@@ -132,7 +159,7 @@ export function InlineImages({
                   },
                 ]}>
                 <Image
-                  source={{uri: thumbnail.uri}}
+                  source={thumbnail.uri ? {uri: thumbnail.uri} : undefined}
                   accessibilityIgnoresInvertColors
                   // Alt text could describe what the blur is hiding
                   accessibilityLabel={blurred ? undefined : thumbnail.alt}
@@ -141,6 +168,17 @@ export function InlineImages({
                   style={[a.flex_1, t.atoms.bg_contrast_25]}
                   contentFit="cover"
                 />
+                {thumbnail.isPlayable && (
+                  <View
+                    style={[
+                      a.absolute,
+                      a.inset_0,
+                      a.align_center,
+                      a.justify_center,
+                    ]}>
+                    <PlayButtonIcon size={size / 4} />
+                  </View>
+                )}
               </View>
             )
           })}
@@ -160,8 +198,7 @@ function cornerRadius(isOuter: boolean) {
 
 /**
  * Outlined container for compact previews of feeds, starter packs, links and
- * quoted posts. Its border is the one the same embeds have in a post, but
- * for the dark theme's unread tint, see `getRowBorderColor`. It is
+ * quoted posts. Its border is the one the same embeds have in a post. It is
  * transparent on the unread tint, so it doesn't punch a white hole in the row.
  */
 export function Card({
@@ -181,7 +218,7 @@ export function Card({
         a.rounded_md,
         a.curve_continuous,
         a.border,
-        {borderColor: getRowBorderColor(t, !isRead)},
+        t.atoms.border_contrast_low,
         isRead && t.atoms.bg,
         style,
       ]}>

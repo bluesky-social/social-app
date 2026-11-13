@@ -1,6 +1,6 @@
 import {View} from 'react-native'
 import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
-import {Trans} from '@lingui/react/macro'
+import {useLingui} from '@lingui/react/macro'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -19,6 +19,7 @@ export function GroupChatProfileCard({
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
+  const {t: l} = useLingui()
   const enabled = canBeAddedToGroup(profile)
   const moderation = moderateProfile(profile, moderationOpts)
   const handle = sanitizeHandle(profile.handle, '@')
@@ -26,13 +27,19 @@ export function GroupChatProfileCard({
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),
   )
+  const disabledReason =
+    profile.viewer?.blocking || profile.viewer?.blockingByList
+      ? l`You have blocked this account and can’t add them.`
+      : profile.viewer?.blockedBy
+        ? l`This account has blocked you and can’t be added.`
+        : l`${handle} can’t be added`
 
   return (
     <Toggle.Item
       key={profile.did}
       disabled={!enabled}
       name={profile.did}
-      label={displayName}
+      label={enabled ? displayName : `${displayName}. ${disabledReason}`}
       style={[a.flex_1, a.py_sm, a.px_lg]}>
       {({disabled, selected}) => (
         <>
@@ -59,7 +66,7 @@ export function GroupChatProfileCard({
                   <Text
                     style={[a.leading_snug, t.atoms.text_contrast_high]}
                     numberOfLines={2}>
-                    <Trans>{handle} can’t be added</Trans>
+                    {disabledReason}
                   </Text>
                 )}
               </View>

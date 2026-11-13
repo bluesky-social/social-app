@@ -20,7 +20,7 @@ import {H1, H3} from '#/components/Typography'
 type ReadState = 'fixture' | 'unread' | 'read'
 
 /**
- * Every Notifications v2 row kind, rendered from the grouped notifications
+ * Every notification row kind, rendered from the grouped notifications
  * fixtures, then the follow fixtures as the Followers tab shows them.
  */
 export function Notifications() {
@@ -52,9 +52,10 @@ export function Notifications() {
           a.overflow_hidden,
           t.atoms.border_contrast_low,
         ]}>
-        {notifications.map(notification => (
+        {notifications.map((notification, index) => (
           <NotificationItem
             key={notification.id}
+            hasDivider={index > 0}
             notification={
               readState === 'fixture'
                 ? notification

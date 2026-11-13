@@ -1135,8 +1135,15 @@ function GroupChatMemberProfileCard({
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
+  const {t: l} = useLingui()
   const enabled = canBeAddedToGroup(profile)
   const handle = sanitizeHandle(profile.handle, '@')
+  const disabledReason =
+    profile.viewer?.blocking || profile.viewer?.blockingByList
+      ? l`You have blocked this account and can’t add them.`
+      : profile.viewer?.blockedBy
+        ? l`This account has blocked you and can’t be added.`
+        : l`${handle} can’t be added`
 
   return (
     <View style={[a.flex_1, a.py_sm, a.px_lg, t.atoms.bg]}>
@@ -1155,7 +1162,7 @@ function GroupChatMemberProfileCard({
             <Text
               style={[a.leading_snug, t.atoms.text_contrast_high]}
               numberOfLines={2}>
-              <Trans>{handle} can’t be added</Trans>
+              {disabledReason}
             </Text>
           )}
         </View>

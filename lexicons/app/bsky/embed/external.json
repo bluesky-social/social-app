@@ -184,6 +184,11 @@
           },
           "description": "The media items in the gallery. Each item may be of a different type, but all types must be supported by the client."
         },
+        "photoCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of gallery item backlinks, independent of the items included in this view."
+        },
         "title": {
           "type": "string"
         },
@@ -362,6 +367,11 @@
             "ref": "app.bsky.actor.defs#profileViewBasic",
             "type": "ref"
           }
+        },
+        "lastSeenAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When the livestream last reported that it was live. A livestream without endedAt is considered active until two minutes after its last heartbeat; clients can apply the same window to tell whether a cached view is still live."
         }
       }
     },
@@ -493,6 +503,10 @@
             "ref": "app.bsky.actor.defs#profileViewBasic",
             "type": "ref"
           }
+        },
+        "viewer": {
+          "type": "ref",
+          "ref": "#viewArticlePublicationViewerState"
         }
       }
     },
@@ -516,7 +530,7 @@
           "type": "ref"
         }
       },
-      "description": "The theme colors of an external source, such as a site.standard.publication. These colors may be used when rendering an embed from that source."
+      "description": "The theme colors of an external source, such as a standard.site publication. These colors may be used when rendering an embed from that source."
     },
     "viewArticlePublicationTheme": {
       "type": "object",
@@ -536,6 +550,17 @@
         "accentForeground": {
           "type": "string",
           "description": "Hex color string, if available. Example: '#ffffff'."
+        }
+      }
+    },
+    "viewArticlePublicationViewerState": {
+      "type": "object",
+      "description": "Metadata about the requesting account's relationship with the subject publication. Only has meaningful content for authed requests.",
+      "properties": {
+        "subscription": {
+          "type": "string",
+          "format": "at-uri",
+          "description": "The requesting account's site.standard.graph.subscription record for this publication, if subscribed."
         }
       }
     }

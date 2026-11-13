@@ -1,23 +1,42 @@
+import {type ModerationOpts} from '@bsky/sdk/moderation'
+
 import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/exploreResponse'
 import {livestreamPreviewFixture} from '#/screens/Atmosphere/__tests__/fixtures/livestreamPreview'
 import {
-  type AtmosphereData,
   getAtmosphereAnnouncementBanner,
   getAtmosphereApps,
   getAtmosphereArticles,
+  getAtmosphereExploreApps,
   getAtmosphereLivestreams,
   getAtmospherePhotos,
   getAtmospherePublications,
+  getGalleryImage,
+  getGalleryImages,
 } from '#/screens/Atmosphere/data/exploreData'
 import {app} from '#/lexicons'
 
-function parseData(data: unknown): AtmosphereData {
+/* Moderation fixtures include backing records, which require real CID validation. */
+jest.unmock('multiformats/cid')
+
+function parseData(
+  data: unknown,
+): app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody {
   return app.bsky.unspecced.getAtmosphereExploreTab.$output.schema.parse(data)
 }
 
 const fixtureData = parseData(exploreResponseFixture)
+const moderationOpts: ModerationOpts = {
+  userDid: undefined,
+  prefs: {
+    adultContentEnabled: true,
+    labels: {},
+    labelers: [],
+    mutedWords: [],
+    hiddenPosts: [],
+  },
+}
 
-const emptyData: AtmosphereData = {
+const emptyData: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody = {
   articles: {items: []},
   publications: {items: []},
   photos: {items: []},
@@ -25,10 +44,20 @@ const emptyData: AtmosphereData = {
   apps: [],
 }
 
+const emptyAppsData: app.bsky.unspecced.getAtmosphereApps.$OutputBody = {
+  apps: [],
+}
+
 const testProfile = {
   $type: 'app.bsky.actor.defs#profileViewBasic',
   did: 'did:plc:6ayddqghxhciedbaofoxkcbs',
   handle: 'test.bsky.social',
+}
+
+const testPublisher = {
+  uri: 'https://example.com/publication',
+  title: 'Test publication',
+  description: '',
 }
 
 const image = {
@@ -54,6 +83,9 @@ describe('Atmosphere Explore response fixtures', () => {
     expect(fixtureData.photos.items[0].view.items[0].$type).toBe(
       'app.bsky.embed.external#viewGalleryImage',
     )
+    const photos = getAtmospherePhotos(fixtureData, moderationOpts)
+    expect(photos.map(photo => photo.photoCount)).toEqual([42, undefined])
+    expect(fixtureData.photos.items[0].view.photoCount).toBe(42)
   })
 
   it.each(['articles', 'publications', 'photos', 'livestreams'] as const)(
@@ -86,42 +118,16 @@ describe('Atmosphere Explore response fixtures', () => {
     })
 
     expect(data.articles.recIdStr).toBe('18446744073709551615')
-    expect(getAtmosphereArticles(data).map(article => article.href)).toEqual([
-      'https://example.com/first-article',
-      'https://example.com/second-article',
-    ])
+    expect(
+      getAtmosphereArticles(data, moderationOpts).map(article => article.uri),
+    ).toEqual(items.map(item => item.view.uri))
     expect(data.articles.items.map(item => item.featured)).toEqual([
       false,
       true,
     ])
   })
 
-  it.each([
-    {
-      schema: app.bsky.embed.external.viewArticle,
-      view: fixtureData.articles.items[0].view,
-    },
-    {
-      schema: app.bsky.embed.external.viewArticlePublication,
-      view: fixtureData.publications.items[0].view,
-    },
-    {
-      schema: app.bsky.embed.external.viewGallery,
-      view: fixtureData.photos.items[0].view,
-    },
-    {
-      schema: app.bsky.embed.external.viewLivestream,
-      view: livestreamPreviewFixture[0].view,
-    },
-  ])('uses generated validation for $view.$type', ({schema, view}) => {
-    expect(schema.parse(view)).toMatchObject(view)
-    expect(() => schema.parse({...view, uri: 'invalid'})).toThrow()
-    expect(() =>
-      schema.parse({...view, associatedProfiles: [{did: 'nope'}]}),
-    ).toThrow()
-  })
-
-  it('validates gallery images and skips malformed images at the adapter boundary', () => {
+  it('validates gallery images and skips malformed images during selection', () => {
     expect(app.bsky.embed.external.viewGalleryImage.parse(image)).toMatchObject(
       image,
     )
@@ -133,25 +139,28 @@ describe('Atmosphere Explore response fixtures', () => {
     ).toThrow()
     const photo = fixtureData.photos.items[0]
     expect(
-      getAtmospherePhotos({
-        ...fixtureData,
-        photos: {
-          items: [
-            {
-              ...photo,
-              view: {
-                ...photo.view,
-                items: [{...image, thumbnail: 'invalid'} as never],
+      getAtmospherePhotos(
+        {
+          ...fixtureData,
+          photos: {
+            items: [
+              {
+                ...photo,
+                view: {
+                  ...photo.view,
+                  items: [{...image, thumbnail: 'invalid'} as never],
+                },
               },
-            },
-          ],
+            ],
+          },
         },
-      }),
+        moderationOpts,
+      ),
     ).toEqual([])
   })
 
   it.each(['articles', 'publications'] as const)(
-    'sorts %s by description length without mutating the response',
+    'selects at most five %s without mutating the response',
     section => {
       const item = fixtureData[section].items[0]
       const descriptions = [
@@ -183,18 +192,20 @@ describe('Atmosphere Explore response fixtures', () => {
 
       const cards =
         section === 'articles'
-          ? getAtmosphereArticles(data)
-          : getAtmospherePublications(data)
+          ? getAtmosphereArticles(data, moderationOpts)
+          : getAtmospherePublications(data, moderationOpts)
 
-      expect(cards.map(card => card.id)).toEqual(
-        [3, 1, 4, 5, 0, 2, 6].map(index => `https://example.com/${index}`),
+      const expectedOrder =
+        section === 'publications' ? [3, 1, 4, 5, 0] : [0, 1, 2, 3, 4]
+      expect(cards.map(card => card.uri)).toEqual(
+        expectedOrder.map(index => `https://example.com/${index}`),
       )
       expect(JSON.stringify(data)).toBe(before)
       expect(data[section].recIdStr).toBe('42')
     },
   )
 
-  it('sorts articles with images first, then by description length', () => {
+  it('keeps the first five articles in server order regardless of images', () => {
     const item = fixtureData.articles.items[0]
     const entries = [
       {description: 'The longest description. '.repeat(10)},
@@ -224,74 +235,49 @@ describe('Atmosphere Explore response fixtures', () => {
     const before = JSON.stringify(data)
     Object.freeze(data.articles.items)
 
-    expect(getAtmosphereArticles(data).map(article => article.id)).toEqual(
-      [3, 5, 1, 2, 0, 4].map(index => `https://example.com/${index}`),
-    )
+    expect(
+      getAtmosphereArticles(data, moderationOpts).map(article => article.uri),
+    ).toEqual([0, 1, 2, 3, 4].map(index => `https://example.com/${index}`))
     expect(JSON.stringify(data)).toBe(before)
   })
 
-  it('maps populated card fields and prioritizes article images', () => {
-    const articles = getAtmosphereArticles(fixtureData)
-    expect(
-      articles.map(({title, publisher, description}) => ({
-        title,
-        publisher,
-        description,
-      })),
-    ).toEqual([
-      {
-        title: 'First article',
-        publisher: 'Test publication',
-        description: undefined,
-      },
-      {
-        title: 'Second article',
-        publisher: 'Test publication',
-        description: 'An article description',
-      },
-    ])
-    expect(articles[0]).toMatchObject({
-      id: 'https://example.com/first-article',
-      href: 'https://example.com/first-article',
-      image: 'https://example.com/article.jpg',
-      publisherAvatar: 'https://example.com/logo.jpg',
-    })
+  it('returns the original lexicon views without flattening fields or dropping metadata', () => {
+    const articles = getAtmosphereArticles(fixtureData, moderationOpts)
+    expect(articles[0]).toBe(fixtureData.articles.items[0].view)
+    expect(articles[1]).toBe(fixtureData.articles.items[1].view)
+    expect(articles[0].publisher?.logo).toBe('https://example.com/logo.jpg')
 
-    const photos = getAtmospherePhotos(fixtureData)
-    expect(photos.map(({title}) => title)).toEqual([
-      'First photo',
-      'Second photo',
-    ])
-    expect(photos[0]).toMatchObject({
-      id: 'https://example.com/gallery-0',
-      href: 'https://example.com/gallery-0',
-      image: 'https://example.com/thumbnail.jpg',
-      imageAlt: 'A test photo',
-      likeCount: 2,
-      authorProfile: {handle: 'author.test'},
-    })
+    const photos = getAtmospherePhotos(fixtureData, moderationOpts)
+    expect(photos[0]).toBe(fixtureData.photos.items[0].view)
+    expect(photos[1]).toBe(fixtureData.photos.items[1].view)
+    expect(photos[0].associatedProfiles?.[0].handle).toBe('author.test')
+    expect(getAtmosphereAnnouncementBanner(fixtureData)).toBe(
+      fixtureData.announcementBanner,
+    )
+  })
 
-    expect(getAtmosphereApps(fixtureData)).toEqual([
-      {
-        id: 'app',
-        title: 'Test app',
-        description: 'An app description',
-        logo: 'https://example.com/app-logo.jpg',
-        backgroundImage: 'https://example.com/app-background.jpg',
-        overlayColor: '#123456',
-        textColor: '#ffffff',
-        href: 'https://example.com/app',
+  it('caps articles after deduplication, keeping original views and response metadata', () => {
+    const items = Array.from({length: 6}, (_, index) => ({
+      ...fixtureData.articles.items[0],
+      view: {
+        ...fixtureData.articles.items[0].view,
+        uri: `https://example.com/article-${index}`,
       },
-    ])
-    expect(getAtmosphereAnnouncementBanner(fixtureData)).toEqual({
-      id: 'banner',
-      title: 'Test announcement',
-      description: 'An announcement description',
-      image: 'https://example.com/banner.jpg',
-      overlayColor: '#000000',
-      textColor: '#ffffff',
-      href: 'https://example.com/announcement',
+    }))
+    const data = parseData({
+      ...emptyData,
+      articles: {
+        items: [items[0], items[0], ...items.slice(1)],
+        recIdStr: '42',
+      },
     })
+    const before = JSON.stringify(data)
+    Object.freeze(data.articles.items)
+
+    expect(getAtmosphereArticles(data, moderationOpts)).toEqual(
+      [0, 2, 3, 4, 5].map(index => data.articles.items[index].view),
+    )
+    expect(JSON.stringify(data)).toBe(before)
   })
 
   describe('getAtmospherePublications', () => {
@@ -301,7 +287,7 @@ describe('Atmosphere Explore response fixtures', () => {
     ) => parseData({...emptyData, publications: {items, recIdStr: '1'}})
 
     it('returns nothing for an empty list', () => {
-      expect(getAtmospherePublications(emptyData)).toEqual([])
+      expect(getAtmospherePublications(emptyData, moderationOpts)).toEqual([])
     })
 
     it('keeps response order for equal-length descriptions, regardless of featured', () => {
@@ -311,42 +297,23 @@ describe('Atmosphere Explore response fixtures', () => {
         {featured: false, view: {...publicationView, uri: 'https://c.test/'}},
       ])
 
-      expect(getAtmospherePublications(data).map(p => p.id)).toEqual([
-        'https://a.test/',
-        'https://b.test/',
-        'https://c.test/',
-      ])
+      expect(
+        getAtmospherePublications(data, moderationOpts).map(p => p.uri),
+      ).toEqual(['https://a.test/', 'https://b.test/', 'https://c.test/'])
     })
 
-    it('builds the legacy view the shared card renders', () => {
-      const [card] = getAtmospherePublications(fixtureData)
-
-      expect(card).toMatchObject({
-        id: publicationView.uri,
-        title: publicationView.title,
-        view: {
-          uri: publicationView.uri,
-          title: publicationView.title,
-          description: publicationView.description,
-          associatedProfiles: publicationView.associatedProfiles,
-          source: {
-            uri: publicationView.uri,
-            title: publicationView.title,
-            icon: publicationView.logo,
-            theme: {
-              backgroundRGB: {r: 255, g: 255, b: 255},
-              foregroundRGB: {r: 0, g: 0, b: 0},
-              accentRGB: {r: 0x12, g: 0x34, b: 0x56},
-              accentForegroundRGB: {r: 255, g: 255, b: 255},
-            },
-          },
-        },
-      })
+    it('preserves the original publication view, including subscription metadata', () => {
+      const [publication] = getAtmospherePublications(
+        fixtureData,
+        moderationOpts,
+      )
+      expect(publication).toBe(publicationView)
+      expect(publication.subscriptionCount).toBe(1)
     })
 
     it('copies associated metadata and does not mutate the response', () => {
       /* Built without parsing: only the shape of the refs matters here. */
-      const data: AtmosphereData = {
+      const data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody = {
         ...emptyData,
         publications: {
           recIdStr: '1',
@@ -367,55 +334,28 @@ describe('Atmosphere Explore response fixtures', () => {
         },
       }
       const before = JSON.stringify(data)
-      const [card] = getAtmospherePublications(data)
+      const [card] = getAtmospherePublications(data, moderationOpts)
 
-      expect(card.view.associatedRefs).toEqual(
+      expect(card.associatedRefs).toEqual(
         data.publications.items[0].view.associatedRefs,
       )
       expect(JSON.stringify(data)).toBe(before)
       expect(data.publications.recIdStr).toBe('1')
     })
 
-    it.each([
-      {
-        name: 'partial',
-        theme: {accent: '#fff'},
-        expected: {accentRGB: {r: 255, g: 255, b: 255}},
-      },
-      {
-        name: 'invalid',
-        theme: {accent: 'red', background: '#12'},
-        expected: {},
-      },
-    ])('converts $name theme colors', ({theme, expected}) => {
-      const data = withPublications([
-        {featured: true, view: {...publicationView, theme}},
-      ])
-      const source = getAtmospherePublications(data)[0].view.source
-
-      expect(source?.theme).toMatchObject(expected)
-      for (const key of [
-        'backgroundRGB',
-        'foregroundRGB',
-        'accentRGB',
-        'accentForegroundRGB',
-      ] as const) {
-        if (!(key in expected)) expect(source?.theme?.[key]).toBeUndefined()
-      }
-    })
-
     it('keeps publications without a logo, theme, or profiles', () => {
       const {logo, theme, subscribers, ...bare} = publicationView
       const data = withPublications([{featured: false, view: bare}])
-      const [card] = getAtmospherePublications(data)
+      const [card] = getAtmospherePublications(data, moderationOpts)
 
-      expect(card.view.source?.icon).toBeUndefined()
-      expect(card.view.source?.theme).toBeUndefined()
-      expect(card.view.associatedProfiles).toBeUndefined()
+      expect(card).toBe(data.publications.items[0].view)
+      expect(card.logo).toBeUndefined()
+      expect(card.theme).toBeUndefined()
+      expect(card.associatedProfiles).toBeUndefined()
     })
   })
 
-  describe('dedupes items by id', () => {
+  describe('dedupes views by URI and apps by id', () => {
     const [article] = fixtureData.articles.items
     const [photo] = fixtureData.photos.items
     const [livestream] = parseData({
@@ -423,7 +363,11 @@ describe('Atmosphere Explore response fixtures', () => {
       livestreams: {items: livestreamPreviewFixture},
     }).livestreams.items
     const [publication] = fixtureData.publications.items
-    const [firstApp] = fixtureData.apps
+    const firstApp = {
+      id: 'app',
+      title: 'Test app',
+      url: 'https://example.com/app' as const,
+    }
 
     function twoOf<T extends {view: {uri: string}}>(item: T) {
       return {
@@ -448,10 +392,10 @@ describe('Atmosphere Explore response fixtures', () => {
         [name]: {items: [first, second, duplicate]},
       }
 
-      const result = adapt(data)
+      const result = adapt(data, moderationOpts)
 
       expect(result).toHaveLength(2)
-      expect(result.map(r => r.id).sort()).toEqual(
+      expect(result.map(r => r.uri).sort()).toEqual(
         [first.view.uri, second.view.uri].sort(),
       )
       expect(result.map(r => r.title)).not.toContain('duplicate')
@@ -459,13 +403,12 @@ describe('Atmosphere Explore response fixtures', () => {
 
     it('in apps, keeping the first occurrence', () => {
       const data = {
-        ...emptyData,
         apps: [
           firstApp,
           {...firstApp, id: 'other'},
           {...firstApp, title: 'dupe'},
         ],
-      } satisfies AtmosphereData
+      } satisfies app.bsky.unspecced.getAtmosphereApps.$OutputBody
 
       const result = getAtmosphereApps(data)
 
@@ -474,7 +417,150 @@ describe('Atmosphere Explore response fixtures', () => {
     })
   })
 
-  it('adapts the active and ended local livestream previews', () => {
+  describe('getAtmosphereApps', () => {
+    const parseApps = (
+      data: unknown,
+    ): app.bsky.unspecced.getAtmosphereApps.$OutputBody =>
+      app.bsky.unspecced.getAtmosphereApps.$output.schema.parse(data)
+
+    it('preserves the hydrated profile, logo and banner', () => {
+      const profile = {
+        did: testProfile.did,
+        handle: 'app.bsky.social',
+        viewer: {knownFollowers: {count: 1, followers: [testProfile]}},
+      }
+      const [card] = getAtmosphereApps(
+        parseApps({
+          apps: [
+            {
+              id: 'app',
+              title: 'Test app',
+              description: 'An app description',
+              logo: 'https://example.com/app-logo.jpg',
+              banner: 'https://example.com/app-banner.jpg',
+              url: 'https://example.com/app',
+              category: 'social',
+              profile,
+            },
+          ],
+        }),
+      )
+
+      expect(card).toEqual({
+        id: 'app',
+        title: 'Test app',
+        description: 'An app description',
+        logo: 'https://example.com/app-logo.jpg',
+        banner: 'https://example.com/app-banner.jpg',
+        url: 'https://example.com/app',
+        category: 'social',
+        profile,
+      })
+    })
+
+    it('handles sparse and empty responses', () => {
+      expect(getAtmosphereApps(emptyAppsData)).toEqual([])
+      expect(
+        getAtmosphereApps(
+          parseApps({
+            apps: [
+              {id: 'sparse', title: 'Sparse app', url: 'https://example.com'},
+            ],
+          }),
+        ),
+      ).toEqual([
+        {
+          id: 'sparse',
+          title: 'Sparse app',
+          url: 'https://example.com',
+        },
+      ])
+    })
+
+    it('keeps apps with a website or a profile, and drops apps with neither', () => {
+      const apps = getAtmosphereApps(
+        parseApps({
+          apps: [
+            {id: 'website', title: 'Website', url: 'https://example.com'},
+            {
+              id: 'profile',
+              title: 'Profile',
+              profile: {did: testProfile.did, handle: 'app.bsky.social'},
+            },
+            {id: 'neither', title: 'Neither'},
+          ],
+        }),
+      )
+
+      expect(apps.map(app => app.id)).toEqual(['website', 'profile'])
+    })
+
+    it('validates the live response contract', () => {
+      expect(() => parseApps({apps: [{url: 'not a uri'}]})).toThrow()
+    })
+  })
+
+  describe('getAtmosphereApps categories', () => {
+    const url = 'https://example.com/app'
+    const data = {
+      apps: [
+        {id: 'writing', title: 'Writing', url, category: 'writing'},
+        {id: 'photo', title: 'Photo', url, category: 'photography'},
+        {id: 'video', title: 'Video', url, category: 'video'},
+        {id: 'feeds', title: 'Feeds', url, category: 'feeds'},
+        {id: 'games', title: 'Games', url, category: 'games'},
+        {id: 'social', title: 'Social', url, category: 'social'},
+        {id: 'dev', title: 'Dev', url, category: 'dev'},
+        {id: 'audio', title: 'Audio', url, category: 'audio'},
+        {id: 'events', title: 'Events', url, category: 'events'},
+        {id: 'utils', title: 'Utils', url, category: 'utils'},
+        {id: 'unknown', title: 'Unknown', url, category: 'new-category'},
+        {id: 'missing', title: 'Missing', url},
+        {id: 'invalid', title: '', url, category: 'writing'},
+        {id: 'writing', title: 'Duplicate', url, category: 'writing'},
+      ],
+    } satisfies app.bsky.unspecced.getAtmosphereApps.$OutputBody
+
+    it('returns every valid app, including unknown and missing categories, without a category', () => {
+      expect(getAtmosphereApps(data).map(app => app.id)).toEqual([
+        'writing',
+        'photo',
+        'video',
+        'feeds',
+        'games',
+        'social',
+        'dev',
+        'audio',
+        'events',
+        'utils',
+        'unknown',
+        'missing',
+      ])
+    })
+
+    it.each([
+      ['writing', ['writing']],
+      ['photography', ['photo']],
+      ['video', ['video']],
+      ['feeds', ['feeds']],
+      ['games', ['games']],
+      ['social', ['social']],
+      ['dev', ['dev']],
+      ['audio', ['audio']],
+      ['events', ['events']],
+      ['utils', ['utils']],
+      ['empty', []],
+    ])(
+      'filters raw category %s, still validating and deduping',
+      (category, ids) => {
+        expect(getAtmosphereApps(data, category).map(app => app.id)).toEqual(
+          ids,
+        )
+      },
+    )
+  })
+
+  it('selects the active and ended local livestream previews', () => {
     const previewData = parseData({
       ...emptyData,
       livestreams: {items: livestreamPreviewFixture},
@@ -482,26 +568,26 @@ describe('Atmosphere Explore response fixtures', () => {
     const livestreams = getAtmosphereLivestreams(previewData)
 
     expect(
-      livestreams.map(({title, active, href}) => ({
+      livestreams.map(({title, active, uri}) => ({
         title,
         active,
-        href,
+        uri,
       })),
     ).toEqual([
       {
         title: 'A look at open publishing',
         active: true,
-        href: 'https://example.com/livestreams/open-publishing',
+        uri: 'https://example.com/livestreams/open-publishing',
       },
       {
         title: 'Community Q&A',
         active: false,
-        href: 'https://example.com/livestreams/community-q-and-a',
+        uri: 'https://example.com/livestreams/community-q-and-a',
       },
       {
         title: 'Creative coding session',
         active: true,
-        href: 'https://example.com/livestreams/creative-coding',
+        uri: 'https://example.com/livestreams/creative-coding',
       },
     ])
     expect(
@@ -512,6 +598,27 @@ describe('Atmosphere Explore response fixtures', () => {
       ),
     ).toBe(true)
     expect(livestreams[0].image).toBe(livestreamPreviewFixture[0].view.image)
+  })
+
+  it('drops articles without a publisher before limiting to five', () => {
+    const data = parseData({
+      ...emptyData,
+      articles: {
+        items: ['a', 'b', 'c', 'd', 'e', 'f', 'g'].map(id => ({
+          featured: false,
+          view: {
+            uri: `https://example.com/${id}`,
+            title: id,
+            description: '',
+            publisher: id === 'b' ? undefined : testPublisher,
+          },
+        })),
+      },
+    })
+
+    expect(
+      getAtmosphereArticles(data, moderationOpts).map(article => article.title),
+    ).toEqual(['a', 'c', 'd', 'e', 'f'])
   })
 
   it('safely handles absent optional data, empty arrays, and gallery variants', () => {
@@ -525,18 +632,12 @@ describe('Atmosphere Explore response fixtures', () => {
         },
       }),
     ).toEqual({
-      id: undefined,
       title: 'Title only',
-      description: undefined,
-      image: undefined,
-      overlayColor: undefined,
-      textColor: undefined,
-      href: 'https://example.com/announcement',
+      url: 'https://example.com/announcement',
     })
-    expect(getAtmosphereArticles(emptyData)).toEqual([])
-    expect(getAtmosphereApps(emptyData)).toEqual([])
+    expect(getAtmosphereArticles(emptyData, moderationOpts)).toEqual([])
     expect(getAtmosphereLivestreams(emptyData)).toEqual([])
-    expect(getAtmospherePhotos(emptyData)).toEqual([])
+    expect(getAtmospherePhotos(emptyData, moderationOpts)).toEqual([])
 
     const sparseData = parseData({
       ...emptyData,
@@ -552,6 +653,7 @@ describe('Atmosphere Explore response fixtures', () => {
               uri: 'https://example.com/article',
               title: 'Sparse article',
               description: 'No optional card fields',
+              publisher: testPublisher,
             },
           },
         ],
@@ -605,41 +707,15 @@ describe('Atmosphere Explore response fixtures', () => {
           },
         ],
       },
-      apps: [
-        {id: 'sparse-app', title: 'Sparse app', url: 'https://example.com'},
-      ],
     })
 
-    expect(getAtmosphereArticles(sparseData)[0]).toMatchObject({
-      title: 'Sparse article',
-      image: undefined,
-      publisher: undefined,
-      publisherAvatar: undefined,
-    })
-    expect(getAtmospherePhotos(sparseData)).toEqual([
-      {
-        id: 'https://example.com/gallery',
-        href: 'https://example.com/gallery',
-        title: 'Sparse gallery',
-        image: image.thumbnail,
-        imageAlt: undefined,
-        likeCount: 0,
-        authorProfile: testProfile,
-      },
+    expect(getAtmosphereArticles(sparseData, moderationOpts)[0]).toBe(
+      sparseData.articles.items[0].view,
+    )
+    expect(getAtmospherePhotos(sparseData, moderationOpts)).toEqual([
+      sparseData.photos.items[0].view,
     ])
     expect(getAtmosphereLivestreams(sparseData)).toEqual([])
-    expect(getAtmosphereApps(sparseData)).toEqual([
-      {
-        id: 'sparse-app',
-        title: 'Sparse app',
-        description: undefined,
-        logo: undefined,
-        backgroundImage: undefined,
-        overlayColor: undefined,
-        textColor: undefined,
-        href: 'https://example.com',
-      },
-    ])
   })
 
   it('keeps associated profiles that omit $type and drops invalid ones', () => {
@@ -688,7 +764,7 @@ describe('Atmosphere Explore response fixtures', () => {
       },
     })
 
-    expect(getAtmospherePhotos(data)).toHaveLength(1)
+    expect(getAtmospherePhotos(data, moderationOpts)).toHaveLength(1)
     expect(getAtmosphereLivestreams(data)).toHaveLength(1)
 
     const invalidProfile = {
@@ -696,10 +772,13 @@ describe('Atmosphere Explore response fixtures', () => {
       associatedProfiles: [{did: 'nope'}],
     }
     expect(
-      getAtmospherePhotos({
-        ...data,
-        photos: {items: [{featured: true, view: invalidProfile as never}]},
-      }),
+      getAtmospherePhotos(
+        {
+          ...data,
+          photos: {items: [{featured: true, view: invalidProfile as never}]},
+        },
+        moderationOpts,
+      ),
     ).toEqual([])
     expect(getAtmosphereLivestreams({livestreams: {items: []}})).toEqual([])
   })
@@ -711,5 +790,283 @@ describe('Atmosphere Explore response fixtures', () => {
     expect(() =>
       parseData({...emptyData, articles: {items: [{view: {}}]}}),
     ).toThrow()
+  })
+})
+
+describe('Explore moderation', () => {
+  const labeler = 'did:web:labeler.test'
+  const opts: ModerationOpts = {
+    ...moderationOpts,
+    userDid: 'did:web:viewer.test',
+    prefs: {
+      ...moderationOpts.prefs,
+      labels: {porn: 'warn'},
+      labelers: [{did: labeler, labels: {}}],
+      mutedWords: [{value: 'spoiler', targets: ['content']}],
+    },
+  }
+  const label = (val: string) => ({
+    src: labeler,
+    uri: 'https://example.com/content',
+    val,
+    cts: '2026-01-01T00:00:00.000Z',
+  })
+
+  it.each([
+    ['articles', getAtmosphereArticles],
+    ['photos', getAtmospherePhotos],
+    ['publications', getAtmospherePublications],
+  ] as const)(
+    'filters %s before deduplication and leaves the response intact',
+    (section, select) => {
+      const original = fixtureData[section].items[0]
+      const data = parseData({
+        ...fixtureData,
+        [section]: {
+          items: [
+            {
+              ...original,
+              view: {
+                ...original.view,
+                uri: 'https://example.com/duplicate',
+                labels: [label('porn')],
+              },
+            },
+            {
+              ...original,
+              view: {
+                ...original.view,
+                uri: 'https://example.com/warning',
+                labels: [label('!warn')],
+              },
+            },
+            {
+              ...original,
+              view: {
+                ...original.view,
+                uri: 'https://example.com/hidden',
+                labels: [label('!hide')],
+              },
+            },
+            {
+              ...original,
+              view: {
+                ...original.view,
+                uri: 'https://example.com/word',
+                title: 'A spoiler',
+              },
+            },
+            {
+              ...original,
+              view: {
+                ...original.view,
+                uri: 'https://example.com/owner-muted',
+                associatedRefs: [
+                  {
+                    uri: 'at://did:web:owner.test/example.test.record/1',
+                    cid: 'bafyreicl6ujc6ncfktctxxroxognfn7d2fqavvrryoc2lv6m4i6hpbkfti',
+                  },
+                ],
+                associatedProfiles: [
+                  {
+                    did: 'did:web:owner.test',
+                    handle: 'owner.test',
+                    viewer: {muted: true},
+                  },
+                ],
+              },
+            },
+            {
+              ...original,
+              view: {...original.view, uri: 'https://example.com/duplicate'},
+            },
+          ],
+        },
+      })
+      const before = JSON.stringify(data)
+      const cards = select(data, opts)
+      expect(cards).toEqual([data[section].items[5].view])
+      expect(JSON.stringify(data)).toBe(before)
+      expect(select(data, undefined)).toEqual([])
+    },
+  )
+
+  it.each([
+    ['articles', getAtmosphereArticles],
+    ['publications', getAtmospherePublications],
+  ] as const)(
+    'applies moderation before the five-item limit for %s',
+    (section, select) => {
+      const original = fixtureData[section].items[0]
+      const data = parseData({
+        ...emptyData,
+        [section]: {
+          items: Array.from({length: 7}, (_, index) => ({
+            ...original,
+            view: {
+              ...original.view,
+              uri: `https://example.com/${index}`,
+              labels: index < 2 ? [label('porn')] : [],
+            },
+          })),
+        },
+      })
+      expect(select(data, opts).map(view => view.uri)).toEqual(
+        [2, 3, 4, 5, 6].map(index => `https://example.com/${index}`),
+      )
+    },
+  )
+
+  it.each(['labels', 'owner mute', 'muted words'])(
+    'omits an own article when its separately owned publisher fails %s moderation',
+    cause => {
+      const article = fixtureData.articles.items[0]
+      const publisher = fixtureData.publications.items[0].view
+      const data = parseData({
+        ...emptyData,
+        articles: {
+          items: [
+            {
+              ...article,
+              view: {
+                ...article.view,
+                associatedRefs: [
+                  {
+                    uri: 'at://did:web:viewer.test/site.standard.document/1',
+                    cid: 'bafyreicl6ujc6ncfktctxxroxognfn7d2fqavvrryoc2lv6m4i6hpbkfti',
+                  },
+                ],
+                publisher: {
+                  ...publisher,
+                  title:
+                    cause === 'muted words' ? 'A spoiler' : publisher.title,
+                  labels: cause === 'labels' ? [label('porn')] : [],
+                  associatedRefs: [
+                    {
+                      uri: 'at://did:web:publisher.test/site.standard.publication/1',
+                      cid: 'bafyreicl6ujc6ncfktctxxroxognfn7d2fqavvrryoc2lv6m4i6hpbkfti',
+                    },
+                  ],
+                  associatedProfiles: [
+                    {
+                      did: 'did:web:publisher.test',
+                      handle: 'publisher.test',
+                      viewer: {muted: cause === 'owner mute'},
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      })
+      expect(getAtmosphereArticles(data, opts)).toEqual([])
+    },
+  )
+})
+
+describe('getAtmosphereExploreApps', () => {
+  const valid = {
+    id: 'app',
+    title: 'Test app',
+    url: 'https://example.com/app' as const,
+    backgroundImage: 'https://example.com/bg.jpg' as const,
+  }
+
+  it.each(['id', 'title', 'backgroundImage'] as const)(
+    'drops apps missing %s',
+    field => {
+      const data = parseData({
+        ...exploreResponseFixture,
+        apps: [
+          {...valid, id: 'kept'},
+          {...valid, [field]: undefined},
+        ],
+      })
+
+      expect(getAtmosphereExploreApps(data).map(a => a.id)).toEqual(['kept'])
+    },
+  )
+
+  it('keeps apps with a website or a profile, and drops apps with neither', () => {
+    const data = parseData({
+      ...exploreResponseFixture,
+      apps: [
+        {...valid, id: 'website'},
+        {
+          ...valid,
+          id: 'profile',
+          url: undefined,
+          profile: {did: 'did:plc:6ayddqghxhciedbaofoxkcbs', handle: 'a.test'},
+        },
+        {...valid, id: 'neither', url: undefined},
+      ],
+    })
+
+    expect(getAtmosphereExploreApps(data).map(a => a.id)).toEqual([
+      'website',
+      'profile',
+    ])
+  })
+
+  it('dedupes by id, keeping the first in server order', () => {
+    const data = parseData({
+      ...exploreResponseFixture,
+      apps: [valid, {...valid, id: 'other'}, {...valid, title: 'dupe'}],
+    })
+
+    const result = getAtmosphereExploreApps(data)
+
+    expect(result.map(a => a.id)).toEqual(['app', 'other'])
+    expect(result[0].title).toBe('Test app')
+  })
+})
+
+describe('getGalleryImages', () => {
+  const baseGallery = fixtureData.photos.items[0].view
+  const numbered = (n: number) => ({
+    ...image,
+    thumbnail: `https://example.com/thumb-${n}.jpg`,
+    fullsize: `https://example.com/full-${n}.jpg`,
+  })
+  const galleryOf = (items: unknown[]) =>
+    ({...baseGallery, items}) as typeof baseGallery
+
+  it('keeps valid images in order and skips unknown or malformed items', () => {
+    const gallery = galleryOf([
+      {$type: 'app.test#unknown', value: 1},
+      {...numbered(1), thumbnail: 'invalid'},
+      numbered(2),
+      numbered(3),
+    ])
+
+    expect(getGalleryImages(gallery).map(i => i.fullsize)).toEqual([
+      'https://example.com/full-2.jpg',
+      'https://example.com/full-3.jpg',
+    ])
+    expect(getGalleryImage(gallery)?.thumbnail).toBe(
+      'https://example.com/thumb-2.jpg',
+    )
+  })
+
+  it('caps at ten valid images, counting only the valid ones', () => {
+    const invalid = {...numbered(0), fullsize: 'invalid'}
+    const gallery = galleryOf([
+      invalid,
+      ...Array.from({length: 12}, (_, i) => numbered(i + 1)),
+    ])
+    const before = JSON.stringify(gallery)
+
+    const images = getGalleryImages(gallery)
+    expect(images).toHaveLength(10)
+    expect(images[9].fullsize).toBe('https://example.com/full-10.jpg')
+    expect(JSON.stringify(gallery)).toBe(before)
+  })
+
+  it('returns nothing when no item is usable', () => {
+    expect(getGalleryImages(galleryOf([]))).toEqual([])
+    expect(getGalleryImage(galleryOf([{$type: 'app.test#unknown'}]))).toBe(
+      undefined,
+    )
   })
 })

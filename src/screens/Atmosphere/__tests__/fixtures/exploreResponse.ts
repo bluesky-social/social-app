@@ -1,4 +1,3 @@
-import {type AtmosphereData} from '#/screens/Atmosphere/data/exploreData'
 import {type app} from '#/lexicons'
 
 const author: app.bsky.actor.defs.ProfileViewBasic = {
@@ -31,8 +30,8 @@ const image = {
   alt: 'A test photo',
 }
 
-/** Small synthetic response for schema, mapping, and screen tests. */
-export const exploreResponseFixture: AtmosphereData = {
+/** Small synthetic response for schema, selection, and screen tests. */
+export const exploreResponseFixture = {
   announcementBanner: {
     id: 'banner',
     title: 'Test announcement',
@@ -81,6 +80,7 @@ export const exploreResponseFixture: AtmosphereData = {
         description: '',
         items: [image],
         associatedProfiles: [author],
+        ...(index === 0 ? {photoCount: 42} : {}),
         likeCount: 2,
         likers: [author],
       },
@@ -99,4 +99,4 @@ export const exploreResponseFixture: AtmosphereData = {
       url: 'https://example.com/app',
     },
   ],
-}
+} satisfies app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody

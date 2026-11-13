@@ -22,7 +22,8 @@ For the assets Bluesky itself owns, we are not treating anyone's past use as bad
 | [`assets/kawaii.png`, `assets/kawaii_smol.png`](#4-community-and-contest-artwork--credited-but-not-ours-to-license) | [@sawaratsuki.bsky.social](https://bsky.app/profile/sawaratsuki.bsky.social) | No | Replace or remove |
 | [`assets/icons/brands/AppleLogo.svg`](#5-third-party-trademarks) | Apple Inc. | No | Rests on your own basis |
 | [`assets/icons/brands/AndroidLogo.svg`](#5-third-party-trademarks) | Google LLC | No | Rests on your own basis |
-| [`assets/icons/community/`](#5-third-party-trademarks) | Leaflet, Offprint, pckt, Standard.site, Germ Network | No | Rests on your own basis |
+| [`assets/icons/community/`](#5-third-party-trademarks) | Leaflet, Offprint, pckt, Standard.site, Germ Network, and the share sheet's apps (see Section 5) | No | Rests on your own basis |
+| [Share sheet logos in `src/components/ShareDialog/icons.tsx`](#5-third-party-trademarks) | Apple Inc., Snap Inc., Google LLC | No | Rests on your own basis |
 | [`assets/fonts/inter/`](#6-third-party-assets-you-may-redistribute), Inter files in `bskyogcard/src/assets/fonts/` | The Inter Project Authors | Separate — OFL 1.1 | **Keep, with the notice** |
 | [Noto fonts downloaded by `bskyogcard/scripts/install-fonts.ts`](#6-third-party-assets-you-may-redistribute) | Adobe, Google LLC, and The Noto Project Authors | Separate — OFL 1.1 | **Keep, with the notice** |
 | [`assets/icons/flags/`](#6-third-party-assets-you-may-redistribute) | @catamphetamine | Separate — MIT | **Keep, with the license** |
@@ -120,6 +121,18 @@ These marks belong to other companies. We include them to identify their service
 - `assets/icons/community/Pckt.svg` and `assets/icons/community/PcktFull.svg` — **pckt**
 - `assets/icons/community/StandardSite.svg` — **Standard.site**
 - `assets/icons/community/germ_logo.webp` — **Germ Network**
+
+The share sheet's app row uses these:
+
+- `assets/icons/community/Discord.svg` — **Discord**
+- `assets/icons/community/Facebook.svg`, `Messenger.svg`, `Threads.svg` and `WhatsApp.svg` — **Meta Platforms**
+- `assets/icons/community/Line.svg` — **LY Corporation**
+- `assets/icons/community/Reddit.svg` — **Reddit**
+- `assets/icons/community/Signal.svg` — **Signal Technology Foundation**
+- `assets/icons/community/Snapchat.svg` — **Snap Inc.**
+- `assets/icons/community/Telegram.svg` — **Telegram**
+- `assets/icons/community/X.svg` — **X Corp.**
+- Inline vector path data in `src/components/ShareDialog/icons.tsx`: the Messages bubble (**Apple Inc.**), the Snapchat ghost (**Snap Inc.**) and the Gmail logo (**Google LLC**)
 
 Apple's and Google's marks in particular carry their own brand guidelines governing size, spacing, and permitted contexts. If you ship a sign-in button or a store badge, follow their guidelines.
 

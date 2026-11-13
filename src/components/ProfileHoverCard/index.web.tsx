@@ -536,7 +536,11 @@ function Inner({
             <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
           </View>
 
-          <ProfileHeaderHandle profile={profileShadow} disableTaps />
+          <ProfileHeaderHandle
+            profile={profileShadow}
+            moderation={moderation}
+            disableTaps
+          />
         </View>
       </Link>
 

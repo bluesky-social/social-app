@@ -47,7 +47,6 @@ import {GlobalLabelPreference} from '#/components/moderation/LabelPreference'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
-import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
 
 function ErrorState({error}: {error: string}) {
@@ -198,13 +197,7 @@ export function ModerationScreenInner({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
-  const ax = useAnalytics()
-  const isModerationInboxEnabled = ax.features.enabled(
-    ax.features.ModerationInboxEnable,
-  )
-  const unreadCountQuery = useModerationInboxUnreadCountQuery(
-    isModerationInboxEnabled,
-  )
+  const unreadCountQuery = useModerationInboxUnreadCountQuery()
   const {
     isLoading: isLabelersLoading,
     data: labelers,
@@ -288,25 +281,23 @@ export function ModerationScreenInner({
           </Admonition.Admonition>
         </View>
       )}
-      {isModerationInboxEnabled && (
-        <Link
-          label={l`View your moderation inbox`}
-          testID="moderationInboxBtn"
-          to="/moderation/inbox"
-          style={[a.mb_2xl, a.rounded_md, a.overflow_hidden]}>
-          {state => (
-            <SubItem
-              title={l`Moderation inbox`}
-              icon={Inbox}
-              badge={unreadCountQuery.data?.unreadCounts.total}
-              style={[
-                t.atoms.bg_contrast_25,
-                (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
-              ]}
-            />
-          )}
-        </Link>
-      )}
+      <Link
+        label={l`View your moderation inbox`}
+        testID="moderationInboxBtn"
+        to="/moderation/inbox"
+        style={[a.mb_2xl, a.rounded_md, a.overflow_hidden]}>
+        {state => (
+          <SubItem
+            title={l`Moderation inbox`}
+            icon={Inbox}
+            badge={unreadCountQuery.data?.unreadCounts.total}
+            style={[
+              t.atoms.bg_contrast_25,
+              (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
+            ]}
+          />
+        )}
+      </Link>
       <Text
         style={[
           a.text_md,

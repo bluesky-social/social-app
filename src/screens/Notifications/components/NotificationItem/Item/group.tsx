@@ -31,16 +31,20 @@ import {formatCount} from '#/view/com/util/numeric/format'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
-import {
-  ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
-  ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
-} from '#/components/icons/Chevron'
+import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon} from '#/components/icons/TinyChevronBottom'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
-import {fitAvatarCount, PREVIEW_AVATAR_SIZE, TOGGLE_PADDING} from './avatarRow'
+import {
+  AVATAR_GAP,
+  CHEVRON_SIZE,
+  fitAvatarCount,
+  PREVIEW_AVATAR_SIZE,
+  TOGGLE_PADDING_END,
+} from './avatarRow'
 import {Expandable} from './Expandable'
+import {useSuppressHover} from './hover'
 import {ActorList, ShowMoreActorsButton} from './profile'
 import {Root, useRowBackgroundColor} from './Root'
 import {useDisplayName} from './text'
@@ -48,9 +52,8 @@ import {useDisplayName} from './text'
 type ProfileView = app.bsky.actor.defs.ProfileViewBasic
 
 /**
- * Each kind's name in the `notifications:bundleExpand` metric. These are the
- * names the original notifications screen logs, so that expands on either
- * screen can be compared.
+ * Each kind's name in the `notifications:bundleExpand` metric, the one the
+ * original notifications screen logged, so expands stay comparable.
  */
 const METRIC_NOTIFICATION_TYPES: Record<
   GroupNotificationView['type'],
@@ -148,10 +151,9 @@ const GroupContext = createContext<GroupContextValue | undefined>(undefined)
 /**
  * The root of a row about a group of people, e.g. everyone who liked a post.
  * With two or more, the row's `Item.AvatarRow` shows some of them and a
- * chevron, and the row expands to list them all beneath it. A pair whose
- * sentence names them both doesn't expand, since the list would only repeat
- * them, so it shows the other person's avatar without a chevron. With one,
- * this is a plain `Item.Root`.
+ * chevron, and the row expands to list them all beneath it. That includes a
+ * pair whose sentence names them both, as the list has their follow
+ * buttons. With one, this is a plain `Item.Root`.
  *
  * Pressing the row follows `href`, and the avatar row's "+N" and chevron
  * toggle the list. With `toggleOnPress`, pressing anywhere on the row toggles
@@ -199,7 +201,7 @@ export function GroupRoot({
 }) {
   const group = getNotificationGroup(notification)
 
-  if (group.count < 2 || isNamedPair(group)) {
+  if (group.count < 2) {
     return (
       <GroupContext.Provider value={group}>
         <Root
@@ -377,10 +379,11 @@ function GroupActorList({
 }
 
 /**
- * Small avatars of the other people in a `GroupRoot`, i.e. the "24 others"
- * in "**alice** and **24 others** liked your post". Sits above the primary
- * sentence and leaves out the primary actor, who already has `Item.Avatar`.
- * Renders nothing in a row about one person.
+ * Small avatars of the people in a row, above the primary sentence: "alice"
+ * and the "24 others" in "**alice** and **24 others** liked your post". It
+ * goes with an `Item.Icon` in the left column rather than an avatar, so it
+ * includes the primary actor, even if they are the only one. Rows that aren't
+ * in a `GroupRoot` pass their `actor` for that.
  *
  * Shows as many avatars as fit the row's width, each linking to its profile.
  * Then, if the group expands, a "+N" count of everyone else and a chevron
@@ -388,7 +391,7 @@ function GroupActorList({
  * than it has people, in which case the avatars run out early and the count
  * covers the rest.
  */
-export function AvatarRow() {
+export function AvatarRow({actor}: {actor?: ProfileView}) {
   const {i18n} = useLingui()
   const moderationOpts = useModerationOpts()
   const group = useContext(GroupContext)
@@ -406,22 +409,22 @@ export function AvatarRow() {
     if (rect) setWidth(rect.width)
   }, [])
 
-  if (!group || group.count < 2) return null
+  const actors = group ? group.actors : actor ? [actor] : []
+  const total = group ? group.count : 1
+  if (actors.length === 0) return null
 
-  // The primary actor comes first, and has their own avatar
-  const others = group.actors.slice(1)
   const count =
     width === undefined
       ? 0
       : fitAvatarCount({
           width,
-          resolved: others.length,
-          total: group.count - 1,
-          hasToggle: !!group.expansion,
+          resolved: actors.length,
+          total,
+          hasToggle: !!group?.expansion,
           formatRemaining: remaining => formatRemaining(i18n, remaining),
         })
-  const shown = others.slice(0, count)
-  const remaining = Math.max(group.count - 1 - shown.length, 0)
+  const shown = actors.slice(0, count)
+  const remaining = Math.max(total - shown.length, 0)
 
   return (
     <View
@@ -443,7 +446,7 @@ export function AvatarRow() {
           type={profile.associated?.labeler ? 'labeler' : 'user'}
         />
       ))}
-      {group.expansion && (
+      {group?.expansion && (
         <GroupToggle expansion={group.expansion} remaining={remaining} />
       )}
     </View>
@@ -453,8 +456,9 @@ export function AvatarRow() {
 /**
  * The end of an `AvatarRow`: a "+N" count of anyone it didn't show, and the
  * chevron. Unless pressing the row toggles the group already, they're a
- * button that does, with some slop around them. On native, screen readers
- * don't reach it inside the row's header, which they can expand instead.
+ * button that does, which dims while hovered or pressed. On native, screen
+ * readers don't reach it inside the row's header, which they can expand
+ * instead.
  */
 function GroupToggle({
   expansion,
@@ -463,16 +467,15 @@ function GroupToggle({
   expansion: GroupExpansion
   remaining: number
 }) {
-  const t = useTheme()
   const {t: l} = useLingui()
   const {isExpanded, toggleOnPress, onToggle} = expansion
+  const suppressHover = useSuppressHover()
 
   const style = [
     a.flex_row,
     a.align_center,
     a.gap_xs,
-    a.rounded_full,
-    {height: PREVIEW_AVATAR_SIZE, paddingHorizontal: TOGGLE_PADDING},
+    {height: PREVIEW_AVATAR_SIZE, paddingRight: TOGGLE_PADDING_END},
   ]
   const contents = (
     <>
@@ -489,10 +492,15 @@ function GroupToggle({
     <Button
       label={isExpanded ? l`Collapse list of users` : l`Expand list of users`}
       aria-expanded={isExpanded}
-      hitSlop={HITSLOP_10}
+      // Stops at the last avatar, so as not to take its presses
+      hitSlop={{...HITSLOP_10, left: AVATAR_GAP}}
       onPress={onToggle}
+      // It doesn't follow the row's link, so the row doesn't highlight
+      onHoverIn={() => suppressHover(true)}
+      onHoverOut={() => suppressHover(false)}
       style={style}
-      hoverStyle={t.atoms.bg_contrast_25}>
+      // Also the pressed style
+      hoverStyle={{opacity: 0.5}}>
       {contents}
     </Button>
   )
@@ -518,7 +526,7 @@ function OverflowCount({count}: {count: number}) {
     <Text
       allowFontScaling={false}
       numberOfLines={1}
-      style={[a.text_sm, t.atoms.text_contrast_medium]}>
+      style={[a.text_sm, a.font_medium, t.atoms.text_contrast_medium]}>
       {formatRemaining(i18n, count)}
     </Text>
   )
@@ -527,12 +535,18 @@ function OverflowCount({count}: {count: number}) {
 /**
  * Points down when the group is collapsed and up when it's expanded.
  *
- * Swaps icons rather than rotating one, since react-native-svg applies a
- * transform on the icon to its contents too, rotating the path out of view.
+ * There's only a downward tiny chevron, so a wrapping view turns it over. A
+ * transform on the icon itself would apply to its contents too, in
+ * react-native-svg, rotating the path out of view.
  */
 function ExpandChevron({expanded}: {expanded: boolean}) {
   const t = useTheme()
-  const Icon = expanded ? ChevronUpIcon : ChevronDownIcon
-  // `sm`, which `fitAvatarCount` allows for as `CHEVRON_SIZE`
-  return <Icon size="sm" style={[t.atoms.text_contrast_high]} />
+  return (
+    <View style={expanded && {transform: [{rotate: '180deg'}]}}>
+      <TinyChevronIcon
+        width={CHEVRON_SIZE}
+        style={[t.atoms.text_contrast_medium]}
+      />
+    </View>
+  )
 }

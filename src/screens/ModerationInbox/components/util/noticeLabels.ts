@@ -2,6 +2,7 @@ import {AtUri, isAtUriString} from '@atproto/syntax'
 import {msg, plural} from '@lingui/core/macro'
 
 import {type tools} from '#/lexicons'
+import {currentAccountAction, isAppealDecision} from './accountActions'
 import {getReportActionLabel} from './reportActionLabel'
 
 /** Labels reflect explicit appeal outcomes and the current moderation state. */
@@ -9,6 +10,7 @@ export function getNoticeLabels(
   data: tools.ozone.inbox.getActionedSubject.$OutputBody,
 ) {
   const action = data.actions[0]
+  const latestDecision = data.actions.find(isAppealDecision)
   const isAccount = 'did' in data.subject
   const isPost =
     'uri' in data.subject &&
@@ -23,8 +25,9 @@ export function getNoticeLabels(
   const appealResolved =
     data.appeal?.state === 'resolved' &&
     (!data.appeal.resolvedAt ||
-      !action ||
-      Date.parse(data.appeal.resolvedAt) >= Date.parse(action.createdAt))
+      !latestDecision ||
+      Date.parse(data.appeal.resolvedAt) >=
+        Date.parse(latestDecision.createdAt))
   let header =
     getReportActionLabel({
       status: '',
@@ -50,10 +53,16 @@ export function getNoticeLabels(
         header = msg`Appeal resolved`
         break
     }
+  } else if (isAccount && data.enforcement.state === 'takendown') {
+    header = msg`Your account is suspended`
+  } else if (isAccount && data.enforcement.state === 'suspended') {
+    header = msg`Your account is temporarily suspended`
   } else if (action?.reversedAt) {
     header = isAccount
       ? msg`The action against your account was reversed`
       : msg`The action against your content was reversed`
+  } else if (isAccount && action?.type === 'communicationSent') {
+    header = msg`An email was sent about your account`
   } else if (action?.type === 'accountSuspended' && action.expiresAt) {
     const hours = Math.max(
       0,
@@ -98,7 +107,11 @@ export function getNoticeLabels(
       ? data.appeal.appealedAt
       : appealResolved
         ? data.appeal?.resolvedAt
-        : (action?.reversedAt ?? action?.createdAt)
+        : isAccount &&
+            (data.enforcement.state === 'takendown' ||
+              data.enforcement.state === 'suspended')
+          ? currentAccountAction(data, data.actions)?.createdAt
+          : (action?.reversedAt ?? action?.createdAt)
 
   return {header, blockHeader, date, appealResolved, appealSummary}
 }

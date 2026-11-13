@@ -61,6 +61,12 @@ export const ArrowOutOfBoxModified_Stroke2_Corner2_Rounded =
     glyph: 'ArrowOutOfBoxModified_Stroke2_Corner2_Rounded',
   })
 
+export const ArrowPathUp_Stroke2_Corner1_Rounded = createSinglePathSVG({
+  path: 'M4.483 8.508C3.63 9.476 4.316 11 5.608 11H8v9a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-9h2.392c1.292 0 1.98-1.524 1.125-2.492L13.5 1.688a2 2 0 0 0-3 0l-6.017 6.82Z',
+  viewBox: '0 0 24 24',
+  glyph: 'ArrowPathUp_Stroke2_Corner1_Rounded',
+})
+
 export const ArrowRight_Stroke2_Corner0_Rounded = createSinglePathSVG({
   path: 'M21 12a1 1 0 0 1-.293.707l-6 6a1 1 0 0 1-1.414-1.414L17.586 13H4a1 1 0 1 1 0-2h13.586l-4.293-4.293a1 1 0 0 1 1.414-1.414l6 6A1 1 0 0 1 21 12Z',
   viewBox: '0 0 24 24',

@@ -32,6 +32,7 @@ export type ModerationInboxTab = 'reports' | 'account'
 export type CommonNavigatorParams = {
   NotFound: undefined
   Atmosphere: undefined
+  AtmosphereActivityList: {uris: string}
   Lists: undefined
   Moderation: undefined
   ModerationInbox: {tab?: ModerationInboxTab}
@@ -94,7 +95,19 @@ export type CommonNavigatorParams = {
   Search: SearchParams
   Hashtag: {tag: string; author?: string}
   Topic: {topic: string}
-  MessagesConversation: {conversation: string; embed?: string; accept?: true}
+  MessagesConversation: {
+    conversation: string
+    /** A post URI to stage as a quoted-post embed. */
+    embed?: string
+    /** How the share menu picked this chat for `embed`, for metrics. */
+    embedSource?: 'recentChat' | 'chatSearch'
+    /**
+     * Text to stage in the message composer, e.g. a shared external URL. It's
+     * consumed once and never sent automatically.
+     */
+    text?: string
+    accept?: true
+  }
   MessagesConversationSettings: {conversation: string}
   MessagesJoinRequests: {conversation: string}
   MessagesSettings: undefined

@@ -6,6 +6,7 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {useSetThemePrefs} from '#/state/shell'
 import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider} from '#/alf'
+import {SiteStandardStorybook} from '#/components/atmosphere/SiteStandard/Storybook'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {GalleryStorybook} from '#/components/Gallery/Storybook'
@@ -28,6 +29,7 @@ import {Notifications} from './Notifications'
 import {ProfileBadges} from './ProfileBadges'
 import {Settings} from './Settings'
 import {Shadows} from './Shadows'
+import {SharePlatforms} from './SharePlatforms'
 import {Spacing} from './Spacing'
 import {Splash} from './Splash'
 import {Theming} from './Theming'
@@ -128,6 +130,7 @@ export default function Storybook() {
 
             <Splash />
             <Haptics />
+            <SharePlatforms />
             <Toasts />
             <Buttons />
             <NewPostsPill />
@@ -147,6 +150,7 @@ export default function Storybook() {
             <Admonitions />
             <Settings />
             <GalleryStorybook />
+            <SiteStandardStorybook />
 
             <Button
               color="primary"

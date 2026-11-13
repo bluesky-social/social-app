@@ -1,0 +1,82 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.unspecced.getAtmosphereRecordViews",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Get hydrated views and raw associations for multiple Atmosphere records. Requires authentication. Roots may be latest or pinned to exact CIDs; dependencies are always latest.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["records"],
+          "properties": {
+            "records": {
+              "type": "array",
+              "minLength": 1,
+              "maxLength": 25,
+              "items": { "type": "ref", "ref": "#recordRef" },
+              "description": "Records to fetch. Results preserve this order, including duplicates."
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["views"],
+          "properties": {
+            "views": {
+              "type": "array",
+              "maxLength": 25,
+              "items": { "type": "ref", "ref": "#recordView" },
+              "description": "Index-aligned with the input records. Missing or invisible roots produce empty objects. Visible roots without a supported view still return raw associations. Each result includes only its own dependencies."
+            }
+          }
+        }
+      }
+    },
+    "recordRef": {
+      "type": "object",
+      "required": ["uri"],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "at-uri",
+          "description": "Complete DID-based AT-URI of the record, including collection and record key."
+        },
+        "cid": {
+          "type": "string",
+          "format": "cid",
+          "description": "Optional CID pinning the exact record version. Omit to fetch the latest version. Unavailable pins never fall back to latest."
+        }
+      }
+    },
+    "recordView": {
+      "type": "object",
+      "properties": {
+        "view": {
+          "type": "union",
+          "refs": [
+            "app.bsky.embed.external#viewArticle",
+            "app.bsky.embed.external#viewArticlePublication",
+            "app.bsky.embed.external#viewGallery",
+            "app.bsky.embed.external#viewLivestream"
+          ],
+          "description": "Hydrated view, present only when the records supply enough information to populate the required fields."
+        },
+        "associatedRefs": {
+          "type": "array",
+          "items": { "type": "ref", "ref": "com.atproto.repo.strongRef" },
+          "description": "The selected root followed by its visible latest dependencies: a document's publication or a gallery's items and photos. Index-aligned with associatedRecords."
+        },
+        "associatedRecords": {
+          "type": "array",
+          "items": { "type": "unknown" },
+          "description": "Raw record data, index-aligned with associatedRefs."
+        }
+      }
+    }
+  }
+}

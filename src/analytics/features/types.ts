@@ -21,9 +21,10 @@ export enum Features {
   FollowSortEnable = 'follow_sort:enable',
   FollowingV2Enable = 'following_v2:enable',
   OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
-  ModerationInboxEnable = 'moderation_inbox:enable',
   AtmosphereScreenEnable = 'atmosphere_screen:enable',
-  NotificationsV2Enable = 'notifications_v2:enable',
+  ShareDestinationsEnable = 'share_destinations:enable',
+  ImageUploadsNativeCompressionEnable = 'image_uploads:native_compression:enable',
+  ImageUploadsWebCompressionEnable = 'image_uploads:web_compression:enable',
 
   // values
   StarterPacksConfig = 'starter_packs:config',

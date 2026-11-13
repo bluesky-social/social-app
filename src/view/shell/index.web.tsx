@@ -12,7 +12,7 @@ import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Deactivated} from '#/screens/Deactivated'
-import {Takendown} from '#/screens/Takendown'
+import {TakendownNavigator} from '#/screens/TakendownNavigator'
 import {atoms as a, select, useBreakpoints, useTheme} from '#/alf'
 import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
@@ -163,7 +163,7 @@ export function Shell() {
   return (
     <View style={[a.util_screen_outer, t.atoms.bg]}>
       {currentAccount?.status === 'takendown' ? (
-        <Takendown />
+        <TakendownNavigator />
       ) : currentAccount?.status === 'deactivated' ? (
         <Deactivated />
       ) : (

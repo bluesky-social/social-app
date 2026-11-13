@@ -1,8 +1,10 @@
-import {fireEvent, render, screen} from '@testing-library/react-native'
+import {type RefreshControlProps} from 'react-native'
+import {createDeferrable} from '@atproto/common-web'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
+import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
 import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/exploreResponse'
 import {livestreamPreviewFixture} from '#/screens/Atmosphere/__tests__/fixtures/livestreamPreview'
-import {type AtmosphereData} from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
 import {AtmosphereExploreTab} from '#/screens/Atmosphere/ExploreTab'
 import {app} from '#/lexicons'
@@ -12,6 +14,10 @@ jest.mock('@lingui/react', () => ({
     _: (message: {message?: string} | string) =>
       typeof message === 'string' ? message : (message.message ?? ''),
   }),
+}))
+
+jest.mock('#/state/preferences/moderation-opts', () => ({
+  useModerationOpts: () => mockModerationOpts,
 }))
 
 jest.mock('#/screens/Atmosphere/data/useAtmosphereExploreQuery', () => ({
@@ -94,8 +100,26 @@ jest.mock('#/screens/Atmosphere/components/FeaturedPhotos', () => ({
   FeaturedPhotos: mockSection('photos', 'photos'),
 }))
 
+const defaultModerationOpts: ModerationOpts = {
+  userDid: undefined,
+  prefs: {
+    adultContentEnabled: true,
+    labels: {},
+    labelers: [],
+    mutedWords: [],
+    hiddenPosts: [],
+  },
+}
+let mockModerationOpts: ModerationOpts | undefined
 const mockQuery = jest.mocked(useAtmosphereExploreQuery)
 const refetch = jest.fn()
+
+function getRefreshControlProps() {
+  const {refreshControl} = screen.getByTestId('atmosphereExploreTab').props as {
+    refreshControl: React.ReactElement<RefreshControlProps>
+  }
+  return refreshControl.props
+}
 
 function setQuery(
   result: Partial<ReturnType<typeof useAtmosphereExploreQuery>>,
@@ -104,12 +128,19 @@ function setQuery(
     data: undefined,
     isError: false,
     isPending: false,
+    isRefetching: false,
     refetch,
     ...result,
   } as never)
 }
 
-const data: AtmosphereData = {
+const publisher: app.bsky.embed.external.ViewArticlePublication = {
+  uri: 'https://example.com/publication',
+  title: 'Publication',
+  description: '',
+}
+
+const data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody = {
   announcementBanner: {title: 'Launch', url: 'https://example.com/launch'},
   articles: {
     items: [
@@ -119,6 +150,7 @@ const data: AtmosphereData = {
           uri: 'https://example.com/article',
           title: 'Live article',
           description: '',
+          publisher,
         },
       },
     ],
@@ -126,11 +158,19 @@ const data: AtmosphereData = {
   publications: {items: []},
   photos: {items: []},
   livestreams: {items: []},
-  apps: [{id: 'app', title: 'Live app', url: 'https://example.com/app'}],
+  apps: [
+    {
+      id: 'app',
+      title: 'Live app',
+      url: 'https://example.com/app',
+      backgroundImage: 'https://example.com/app-background.jpg',
+    },
+  ],
 }
 
 beforeEach(() => {
   jest.clearAllMocks()
+  mockModerationOpts = defaultModerationOpts
 })
 
 describe('AtmosphereExploreTab', () => {
@@ -176,22 +216,82 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.queryByTestId('retry')).toBeNull()
   })
 
-  it('renders nonfeatured recommendations in server order', () => {
+  it('withholds moderated sections until preferences are ready without hiding other sections', () => {
+    mockModerationOpts = undefined
+    setQuery({data: exploreResponseFixture})
+    render(<AtmosphereExploreTab />)
+
+    expect(screen.queryByText(/^articles:/)).toBeNull()
+    expect(screen.queryByText(/^photos:/)).toBeNull()
+    expect(screen.queryByText(/^publications:/)).toBeNull()
+    expect(screen.getByText(/^apps:/)).toBeTruthy()
+    expect(screen.getByText(/^banner:/)).toBeTruthy()
+  })
+
+  it('reapplies changed moderation preferences to cached views without refetching', () => {
+    setQuery({data})
+    const {rerender} = render(<AtmosphereExploreTab />)
+    expect(screen.getByText('articles:Live article')).toBeTruthy()
+
+    mockModerationOpts = {
+      ...defaultModerationOpts,
+      prefs: {
+        ...defaultModerationOpts.prefs,
+        mutedWords: [{value: 'Live article', targets: ['content']}],
+      },
+    }
+    rerender(<AtmosphereExploreTab />)
+    expect(screen.queryByText(/^articles:/)).toBeNull()
+    expect(screen.getByText('apps:Live app')).toBeTruthy()
+    expect(refetch).not.toHaveBeenCalled()
+
+    mockModerationOpts = defaultModerationOpts
+    rerender(<AtmosphereExploreTab />)
+    expect(screen.getByText('articles:Live article')).toBeTruthy()
+  })
+
+  it('renders the first five nonfeatured recommendations in server order', () => {
     setQuery({
       data: {
         ...data,
         articles: {
           recIdStr: '18446744073709551615',
-          items: ['Second', 'First'].map(title => ({
-            featured: false,
-            view: {uri: `https://example.com/${title}`, title, description: ''},
-          })),
+          items: ['Second', 'First', 'Third', 'Fourth', 'Fifth', 'Sixth'].map(
+            title => ({
+              featured: false,
+              view: {
+                uri: `https://example.com/${title}`,
+                title,
+                description: '',
+                publisher,
+              },
+            }),
+          ),
         },
       },
     })
     render(<AtmosphereExploreTab />)
 
-    expect(screen.getByText('articles:Second,First')).toBeTruthy()
+    expect(
+      screen.getByText('articles:Second,First,Third,Fourth,Fifth'),
+    ).toBeTruthy()
+    expect(screen.queryByText(/Sixth/)).toBeNull()
+  })
+
+  it('renders apps after the banners and before articles', () => {
+    setQuery({data})
+    render(<AtmosphereExploreTab />)
+
+    expect(
+      screen
+        .getAllByText(/^(nux|banner:|apps:|articles:)/)
+        .map(node => node.props.children),
+    ).toEqual([
+      'nux',
+      'banner:Launch',
+      'apps:Live app',
+      'articles:Live article',
+    ])
   })
 
   it('hides only articles when recommendations are empty', () => {
@@ -209,6 +309,17 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.getByText(/^livestreams:/)).toBeTruthy()
     expect(screen.getByText(/^apps:/)).toBeTruthy()
     expect(screen.getByText(/^banner:/)).toBeTruthy()
+  })
+
+  it('renders publications below photos', () => {
+    setQuery({data: exploreResponseFixture})
+    render(<AtmosphereExploreTab />)
+
+    expect(
+      screen
+        .getAllByText(/^(articles|photos|publications):/)
+        .map(section => (section.props.children as string).split(':')[0]),
+    ).toEqual(['articles', 'photos', 'publications'])
   })
 
   it('renders publications from the response, even when articles are empty', () => {
@@ -267,5 +378,49 @@ describe('AtmosphereExploreTab', () => {
     ).toBeTruthy()
     fireEvent.press(screen.getByTestId('retry'))
     expect(refetch).toHaveBeenCalledTimes(1)
+  })
+
+  it.each([
+    ['loading', {isPending: true}],
+    ['error', {isError: true}],
+    ['loaded', {data}],
+  ])('shows the spinner only for a pull while %s', async (_name, result) => {
+    const refresh = createDeferrable()
+    refetch.mockReturnValueOnce(refresh.complete)
+    setQuery({...result, isRefetching: true})
+    render(<AtmosphereExploreTab />)
+
+    expect(getRefreshControlProps().refreshing).toBe(false)
+    act(() => {
+      void getRefreshControlProps().onRefresh?.()
+    })
+    expect(refetch).toHaveBeenCalledTimes(1)
+    expect(getRefreshControlProps().refreshing).toBe(true)
+
+    await act(async () => {
+      refresh.resolve()
+      await refresh.complete
+    })
+    expect(getRefreshControlProps().refreshing).toBe(false)
+  })
+
+  it('clears the pull spinner when refetch rejects', async () => {
+    const refresh = createDeferrable()
+    refetch.mockReturnValueOnce(refresh.complete)
+    setQuery({data})
+    render(<AtmosphereExploreTab />)
+
+    let completion: unknown
+    act(() => {
+      completion = getRefreshControlProps().onRefresh?.()
+    })
+    expect(getRefreshControlProps().refreshing).toBe(true)
+
+    await act(async () => {
+      refresh.reject(new Error('offline'))
+      await expect(completion).rejects.toThrow('offline')
+    })
+    expect(getRefreshControlProps().refreshing).toBe(false)
+    expect(screen.getByText('articles:Live article')).toBeTruthy()
   })
 })

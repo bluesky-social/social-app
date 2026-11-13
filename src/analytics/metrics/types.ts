@@ -9,7 +9,14 @@ import {type VideoCompressSkipReason} from '#/lib/media/video/types'
 import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
+import {type SharePlatformId} from '#/components/ShareDialog/catalog'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
+
+/** Where the system share sheet was opened from. */
+type NativeShareEntryPoint = 'ShareMenu' | 'LongPress' | 'PostMenu'
+
+/** Which control saved or removed a post. */
+export type BookmarkEntryPoint = 'BookmarkButton' | 'PostMenu' | 'ShareMenu'
 
 export type Events = {
   // App events
@@ -542,6 +549,8 @@ export type Events = {
     uri: string
     authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    /** Which control saved it. `logContext` is where the post was shown. */
+    entryPoint: BookmarkEntryPoint
     feedDescriptor?: string
     position?: number
   }
@@ -549,6 +558,8 @@ export type Events = {
     uri: string
     authorDid: string
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    /** Which control removed it. `logContext` is where the post was shown. */
+    entryPoint: BookmarkEntryPoint
     feedDescriptor?: string
     position?: number
   }
@@ -1335,27 +1346,99 @@ export type Events = {
     position?: number
   }
   'share:press:copyLink': {uri: string}
-  'share:press:nativeShare': {}
+  /**
+   * Fires when the user opens the system share sheet, or the browser's on
+   * desktop web ("Share via…").
+   */
+  'share:press:nativeShare': {
+    uri: string
+    authorDid: string
+    entryPoint: NativeShareEntryPoint
+    os: Platform['OS']
+  }
   /**
    * Fires when the system share sheet closes after sharing a post. Not
-   * logged on web, or on Android builds without the native share module.
+   * logged from the post menu, or on Android builds without the native share
+   * module.
    */
   'share:nativeShare:result': {
     uri: string
     authorDid: string
-    entryPoint: 'ShareMenu' | 'LongPress'
-    status: 'shared' | 'dismissed'
+    entryPoint: NativeShareEntryPoint
+    /**
+     * `failed` is web only: the browser refused to open its share sheet, so
+     * the link was copied instead. That isn't counted as a share.
+     */
+    status: 'shared' | 'dismissed' | 'failed'
     /**
      * The app the user picked: the `activityType` on iOS, the package name on
      * Android. Android reports the chooser's own actions (e.g. Copy) as
-     * `dismissed` with no target.
+     * `dismissed` with no target. Never set on web, since browsers don't say.
      */
     target?: string
   }
-  'share:press:openDmSearch': {}
-  'share:press:dmSelected': {uri: string}
-  'share:press:recentDm': {uri: string}
+  'share:press:openDmSearch': {
+    uri: string
+    authorDid: string
+  }
+  /**
+   * Fires when the user picks a chat from the "Send via chat" search.
+   */
+  'share:press:dmSelected': {
+    uri: string
+    authorDid: string
+  }
+  'share:press:recentDm': {
+    uri: string
+    authorDid: string
+    /**
+     * 0-based index among the recent chats. Later chats are only seen by
+     * people who scroll.
+     */
+    position: number
+  }
+  /**
+   * Fires when the user sends a message with a post attached from the share
+   * menu (a recent chat or "Send via chat"). The share-menu events above only
+   * mean a chat was opened; this one means the user sent the post. It fires
+   * once the message is queued, not when the server confirms it.
+   */
+  'share:dm:send': {
+    uri: string
+    authorDid: string
+    convoId: string
+    isGroup: boolean
+    /**
+     * How the chat was picked. Unset when the chat was opened with the post
+     * some other way, e.g. a link.
+     */
+    source?: 'recentChat' | 'chatSearch'
+  }
   'share:press:embed': {uri: string}
+  /**
+   * Fires when the user picks an app from the share sheet's row of apps, e.g.
+   * `x` or `whatsapp`. Which apps were shown is never logged, since that
+   * reveals which apps are installed.
+   */
+  'share:press:platform': {
+    uri: string
+    authorDid: string
+    platform: SharePlatformId
+    /**
+     * 0-based index in the apps row. The row scrolls, so later apps are only
+     * seen by people who swipe.
+     */
+    position: number
+  }
+  /**
+   * Fires when the app picked from the share sheet's row couldn't be opened,
+   * e.g. it was uninstalled after the row was shown.
+   */
+  'share:platform:openFailed': {
+    uri: string
+    authorDid: string
+    platform: SharePlatformId
+  }
 
   'embed:standardSite:view': {url: string}
   'embed:standardSite:article:press': {url: string}
@@ -1549,6 +1632,15 @@ export type Events = {
   'profile:associated:germ:self-reconnect': {}
 
   'profile:links:click': {
+    /**
+     * The profile the link is on, not the viewer.
+     */
+    profileDid: string
+    /**
+     * The link's `app.bsky.actor.link` record, which tells apart two links to
+     * the same site. Editing a link keeps its record.
+     */
+    linkUri: string | undefined
     domain: string
     /**
      * Name of the recognized support provider, if the link is a support link.
@@ -1560,14 +1652,34 @@ export type Events = {
    * A profile showing links was viewed. The denominator for tap rate.
    */
   'profile:links:impression': {
+    profileDid: string
     linkCount: number
     supportLinkCount: number
+    /**
+     * The `app.bsky.actor.link` records of the links shown, in display order,
+     * including any folded behind "+N". The per-link denominator for tap rate.
+     */
+    linkUris: string[]
     isOwnProfile: boolean
   }
   /**
    * Edit Profile was opened, from any profile header.
    */
   'profile:edit:open': {}
+  /**
+   * Edit Profile saved a change to the profile's pronouns. Never includes the
+   * pronouns themselves.
+   */
+  'profile:pronouns:save':
+    | {action: 'remove'}
+    | {
+        action: 'add' | 'edit'
+        /**
+         * How the saved pronouns were entered: one suggestion, several
+         * suggestions combined, or custom text.
+         */
+        source: 'preset' | 'combined' | 'custom'
+      }
   /**
    * Edit Profile was opened with the Links section available.
    */
@@ -1578,10 +1690,12 @@ export type Events = {
    * Logged on save, one event per link actually added or removed.
    */
   'profile:links:add': {
+    linkUri: string | undefined
     domain: string
     supportProvider: string | undefined
   }
   'profile:links:remove': {
+    linkUri: string | undefined
     domain: string
     supportProvider: string | undefined
   }
@@ -1589,8 +1703,11 @@ export type Events = {
    * A visitor opened a link's details, e.g. by long-pressing it.
    */
   'profile:links:preview': {
+    profileDid: string
+    linkUri: string | undefined
     domain: string
     supportProvider: string | undefined
+    isOwnProfile: boolean
   }
   /**
    * A link couldn't be added, e.g. because its site is blocked.

@@ -20,15 +20,17 @@ import {getMessagesNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {emitPushNotificationOpened} from '#/state/events'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
-import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
-import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
-import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_IOS} from '#/env'
-import {navigate, navigateToPath, resetToTab} from '#/Navigation'
+import {
+  isNavigationReady,
+  navigate,
+  navigateToPath,
+  resetToTab,
+} from '#/Navigation'
 import {router} from '#/routes'
 
 export type NotificationReason =
@@ -129,9 +131,9 @@ let lastHandledNotificationDateDedupe = 0
 
 export function useNotificationsHandler() {
   const ax = useAnalytics()
+  const queryClient = useQueryClient()
   // eslint-disable-next-line react-compiler/react-compiler
   const logger = ax.logger.useChild(ax.logger.Context.Notifications)
-  const queryClient = useQueryClient()
   const {currentAccount, accounts} = useSession()
   const {onPressSwitchAccount} = useAccountSwitcher()
   const navigation = useNavigation<NavigationProp>()
@@ -383,8 +385,6 @@ export function useNotificationsHandler() {
           } satisfies Notifications.NotificationBehavior)
         }
 
-        // Any notification other than a chat message should invalidate the unread page
-        invalidateCachedUnreadPage()
         return Promise.resolve(DEFAULT_HANDLER_OPTIONS)
       },
     })
@@ -414,20 +414,7 @@ export function useNotificationsHandler() {
             causedBoot: false,
           })
 
-          if (!isModerationNotificationPayload(payload)) {
-            invalidateCachedUnreadPage()
-            void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
-          }
-
-          if (
-            payload.reason === 'mention' ||
-            payload.reason === 'quote' ||
-            payload.reason === 'reply'
-          ) {
-            void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
-          }
-
-          // Notifications v2 refreshes itself, as it decides what's seen
+          // The Notifications screen refreshes itself, as it decides what's seen
           if (
             !isChatNotificationPayload(payload) &&
             !isModerationNotificationPayload(payload)
@@ -468,7 +455,8 @@ export function useNotificationsHandler() {
     if (
       storedAccountSwitchPayload &&
       (isChatNotificationPayload(storedAccountSwitchPayload) ||
-        isModerationNotificationPayload(storedAccountSwitchPayload)) &&
+        (isModerationNotificationPayload(storedAccountSwitchPayload) &&
+          isNavigationReady())) &&
       currentAccount?.did === storedAccountSwitchPayload.recipientDid
     ) {
       const payload = storedAccountSwitchPayload
@@ -482,7 +470,6 @@ export function useNotificationsHandler() {
   }, [
     ax,
     logger,
-    queryClient,
     currentAccount,
     currentConvoId,
     accounts,
@@ -490,12 +477,26 @@ export function useNotificationsHandler() {
     currentAccount?.did,
     navigation,
     onPressSwitchAccount,
+    queryClient,
     setShowLoggedOut,
   ])
 }
 
 export function storePayloadForAccountSwitch(payload: NotificationPayload) {
   storedAccountSwitchPayload = payload
+}
+
+export function takeStoredModerationPush(did?: string) {
+  const payload = storedAccountSwitchPayload
+  if (
+    !payload ||
+    !isModerationNotificationPayload(payload) ||
+    payload.recipientDid !== did
+  ) {
+    return undefined
+  }
+  storedAccountSwitchPayload = undefined
+  return payload
 }
 
 export function getNotificationPayload(

@@ -22,7 +22,6 @@ import * as TextField from '#/components/forms/TextField'
 import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {tools} from '#/lexicons'
 import {navigate} from '#/Navigation'
@@ -31,7 +30,6 @@ const COL_WIDTH = 400
 
 export function Takendown() {
   const {_} = useLingui()
-  const ax = useAnalytics()
   const t = useTheme()
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
@@ -225,26 +223,25 @@ export function Takendown() {
               </P>
             )}
 
-            {!isAppealling &&
-              ax.features.enabled(ax.features.ModerationInboxEnable) && (
-                <View style={[a.mt_lg]}>
-                  <Button
-                    variant="ghost"
-                    color="secondary"
-                    size="large"
-                    label={_(msg`View your moderation inbox`)}
-                    onPress={() =>
-                      void navigate({
-                        name: 'ModerationInbox',
-                        params: {tab: 'account'},
-                      })
-                    }>
-                    <ButtonText>
-                      <Trans>View your moderation inbox</Trans>
-                    </ButtonText>
-                  </Button>
-                </View>
-              )}
+            {!isAppealling && (
+              <View style={[a.mt_lg]}>
+                <Button
+                  variant="ghost"
+                  color="secondary"
+                  size="large"
+                  label={_(msg`View your moderation inbox`)}
+                  onPress={() =>
+                    void navigate({
+                      name: 'ModerationInbox',
+                      params: {tab: 'account'},
+                    })
+                  }>
+                  <ButtonText>
+                    <Trans>View your moderation inbox</Trans>
+                  </ButtonText>
+                </Button>
+              </View>
+            )}
 
             {webLayout && (
               <View

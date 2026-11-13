@@ -1,5 +1,6 @@
 // @ts-check
 const pkg = require('./package.json')
+const {getNativeQueries} = require('./src/components/ShareDialog/catalog.ts')
 
 /**
  * @param {import('@expo/config-types').ExpoConfig} _config
@@ -28,6 +29,10 @@ module.exports = function (_config) {
     'applinks:staging.bsky.app',
     'appclips:bsky.app',
     'appclips:go.bsky.app', // Allows App Clip to work when scanning QR codes
+    // Password AutoFill offers credentials saved for either site (bsky.social
+    // is the account host). Both serve a matching apple-app-site-association.
+    'webcredentials:bsky.app',
+    'webcredentials:bsky.social',
     // When testing local services, enter an ngrok (et al) domain here. It must use a standard HTTP/HTTPS port.
     ...(IS_DEV || IS_TESTFLIGHT ? [] : []),
   ]
@@ -41,6 +46,12 @@ module.exports = function (_config) {
     (IS_TESTFLIGHT || IS_PRODUCTION) && !process.env.DISABLE_UPDATES
 
   const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
+
+  /**
+   * Apps the share sheet can detect, generated from the share platform
+   * catalog. Changing these needs a native build.
+   */
+  const SHARE_PLATFORM_QUERIES = getNativeQueries()
 
   const IOS_ICON_FILE =
     PLATFORM === 'web' // web build doesn't like .icon files
@@ -81,6 +92,7 @@ module.exports = function (_config) {
           CADisableMinimumFrameDurationOnPhone: true,
           UIBackgroundModes: ['remote-notification'],
           NSUserActivityTypes: ['INSendMessageIntent'],
+          LSApplicationQueriesSchemes: SHARE_PLATFORM_QUERIES.iosSchemes,
           NSCameraUsageDescription:
             'Used for profile pictures, posts, and other kinds of content.',
           NSPhotoLibraryAddUsageDescription:
@@ -345,10 +357,13 @@ module.exports = function (_config) {
             })),
           },
         ],
-        [
-          'react-native-edge-to-edge',
-          {android: {enforceNavigationBarContrast: false}},
-        ],
+        /*
+         * Mods run in reverse registration order. Register the system bars
+         * plugin before expo-navigation-bar, which removes
+         * `android:windowLightNavigationBar` when no `style` is set.
+         */
+        './plugins/withAndroidStylesSystemBarsPlugin.js',
+        ['expo-navigation-bar', {enforceContrast: false}],
         /*
          * Expo runs Gradle mods in reverse registration order. Keep Bitdrift
          * before Sentry so its plugins block is prepended after Sentry's apply
@@ -413,6 +428,13 @@ module.exports = function (_config) {
         './plugins/withAndroidManifestLargeHeapPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidManifestIntentQueriesPlugin.js',
+        [
+          './plugins/withAndroidManifestSharePlatformQueriesPlugin.js',
+          {
+            packages: SHARE_PLATFORM_QUERIES.androidPackages,
+            schemes: SHARE_PLATFORM_QUERIES.androidSchemes,
+          },
+        ],
         './plugins/withAndroidManifestOptionalCameraPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidNoJitpackPlugin.js',

@@ -11,16 +11,16 @@ import {Text} from '#/components/Typography'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {getPostThumbnails} from './media'
-import {QuoteCard} from './post'
+import {RecordCard} from './post'
 import {SecondaryText} from './text'
 
 /**
  * A short preview of a post's rich text, muted and ellipsized.
  *
- * Posts without text render nothing if they have images or video, since rows
- * show those as a trailing `Item.InlineImages`. One that only quotes another
- * post shows the quoted post instead. Otherwise this says what the post
- * contains, e.g. "Link to nytimes.com".
+ * Posts without text render nothing if they have images, video or a GIF,
+ * since rows show those as a trailing `Item.InlineImages`. One that only
+ * quotes a post, or shares a feed, list or starter pack, shows that instead.
+ * Otherwise this says what the post contains, e.g. "Link to nytimes.com".
  */
 export function PostPreview({
   post,
@@ -57,8 +57,8 @@ export function PostPreview({
   const embed = getTextlessEmbed(post.embed)
   if (!embed) return null
 
-  if (embed.type === 'quote') {
-    return <QuoteCard embed={embed.record} numberOfLines={4} isMuted />
+  if (embed.type === 'record') {
+    return <RecordCard embed={embed.record} />
   }
 
   const domain = embed.domain
@@ -78,7 +78,7 @@ function getTextlessEmbed(
   embed: app.bsky.feed.defs.PostView['embed'],
 ):
   | {type: 'link'; domain: string}
-  | {type: 'quote'; record: app.bsky.embed.record.View}
+  | {type: 'record'; record: app.bsky.embed.record.View}
   | undefined {
   const media = bsky.isType(app.bsky.embed.recordWithMedia.view, embed)
     ? embed.media
@@ -88,10 +88,10 @@ function getTextlessEmbed(
     return {type: 'link', domain: toNiceDomain(media.external.uri)}
   }
   if (bsky.isType(app.bsky.embed.record.view, embed)) {
-    return {type: 'quote', record: embed}
+    return {type: 'record', record: embed}
   }
   if (bsky.isType(app.bsky.embed.recordWithMedia.view, embed)) {
-    return {type: 'quote', record: embed.record}
+    return {type: 'record', record: embed.record}
   }
   return undefined
 }

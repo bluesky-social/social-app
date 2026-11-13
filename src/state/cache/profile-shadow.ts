@@ -16,8 +16,7 @@ import {findAllProfilesInQueryData as findAllProfilesInListConvosQueryData} from
 import {findAllProfilesInQueryData as findAllProfilesInMessagesQueryData} from '#/state/queries/messages/list-convo-members'
 import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData} from '#/state/queries/my-blocked-accounts'
 import {findAllProfilesInQueryData as findAllProfilesInMyMutedAccountsQueryData} from '#/state/queries/my-muted-accounts'
-import {findAllProfilesInQueryData as findAllProfilesInNotifsQueryData} from '#/state/queries/notifications/feed'
-import {findAllProfilesInQueryData as findAllProfilesInGroupedNotifsQueryData} from '#/state/queries/notifications/grouped'
+import {findAllProfilesInQueryData as findAllProfilesInNotifsQueryData} from '#/state/queries/notifications/grouped'
 import {
   type FeedPage,
   findAllProfilesInQueryData as findAllProfilesInFeedsQueryData,
@@ -34,6 +33,9 @@ import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForDiscover
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForExploreQueryData} from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForSeeMoreQueryData} from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery'
 import {findAllProfilesInQueryData as findAllProfilesInPostThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
+import {findAllProfilesInQueryData as findAllProfilesInAtmosphereActivityListQueryData} from '#/screens/Atmosphere/ActivityList/useActivityListQuery'
+import {findAllProfilesInQueryData as findAllProfilesInAtmosphereActivityTimelineQueryData} from '#/screens/Atmosphere/ActivityTab/useActivityTimelineQuery'
+import {findAllProfilesInQueryData as findAllProfilesInAtmosphereExploreQueryData} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
 import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {castAsShadow, type Shadow} from './types'
@@ -137,6 +139,36 @@ export function useMaybeProfileShadow<
       return castAsShadow(profile)
     }
   }, [profile, shadow])
+}
+
+/**
+ * For derived data outside components, like a query's `select`: returns a
+ * function that applies each profile's shadow. The function's identity changes
+ * on every shadow update, so a `select` that closes over it re-runs.
+ */
+export function useApplyProfileShadow() {
+  const [apply, setApply] = useState(() => applyProfileShadow)
+  useEffect(
+    () =>
+      listenProfileShadowUpdate(() => {
+        setApply(
+          () =>
+            <TProfileView extends bsky.profile.AnyProfileView>(
+              profile: TProfileView,
+            ) =>
+              applyProfileShadow(profile),
+        )
+      }),
+    [],
+  )
+  return apply
+}
+
+function applyProfileShadow<TProfileView extends bsky.profile.AnyProfileView>(
+  profile: TProfileView,
+): Shadow<TProfileView> {
+  const shadow = shadows.get(profile)
+  return shadow ? mergeShadow(profile, shadow) : castAsShadow(profile)
 }
 
 /**
@@ -311,6 +343,9 @@ function* findProfilesInCache(
   queryClient: QueryClient,
   did: string,
 ): Generator<bsky.profile.AnyProfileView, void> {
+  yield* findAllProfilesInAtmosphereActivityTimelineQueryData(queryClient, did)
+  yield* findAllProfilesInAtmosphereActivityListQueryData(queryClient, did)
+  yield* findAllProfilesInAtmosphereExploreQueryData(queryClient, did)
   yield* findAllProfilesInListMembersQueryData(queryClient, did)
   yield* findAllProfilesInMyBlockedAccountsQueryData(queryClient, did)
   yield* findAllProfilesInMyMutedAccountsQueryData(queryClient, did)
@@ -334,7 +369,6 @@ function* findProfilesInCache(
   yield* findAllProfilesInExploreFeedPreviewsQueryData(queryClient, did)
   yield* findAllProfilesInActivitySubscriptionsQueryData(queryClient, did)
   yield* findAllProfilesInNotifsQueryData(queryClient, did)
-  yield* findAllProfilesInGroupedNotifsQueryData(queryClient, did)
   yield* findAllProfilesInContactMatchesQueryData(queryClient, did)
   yield* findAllProfilesInMessagesQueryData(queryClient, did)
   yield* findAllProfilesInGetConvoQueryData(queryClient, did)

@@ -4,22 +4,14 @@
   "defs": {
     "main": {
       "type": "query",
-      "description": "Get Atmosphere Explore content. Articles are recommended when algorithmic recommendations are enabled for the request, and curated otherwise; other sections are curated. Authentication is optional; authenticated requests include viewer-specific profile state.",
+      "description": "Get Atmosphere Explore content. Articles and photo galleries are recommended when their algorithmic recommendations are enabled for the request, and curated otherwise; other sections are curated. Curated content is selected using the x-atproto-bsky-geo-country, x-atproto-bsky-geo-region, and x-atproto-bsky-topics request headers. Authentication is optional; authenticated requests include viewer-specific profile state.",
       "parameters": {
         "type": "params",
         "properties": {
           "langs": {
             "type": "array",
-            "description": "Preferred languages for article recommendations when algorithmic recommendations are enabled. Ignored otherwise.",
+            "description": "Preferred languages for article and photo gallery recommendations when their algorithmic recommendations are enabled. Ignored otherwise.",
             "items": { "type": "string", "format": "language" }
-          },
-          "countryCode": {
-            "type": "string",
-            "description": "The ISO 3166-1 alpha-2 country code used to select curated content."
-          },
-          "regionCode": {
-            "type": "string",
-            "description": "The ISO 3166-2 region code used to select curated content."
           }
         }
       },
@@ -112,7 +104,20 @@
       "type": "object",
       "required": ["featured", "view"],
       "properties": {
-        "featured": { "type": "boolean" },
+        "featured": {
+          "type": "boolean",
+          "description": "Deprecated. Retained for compatibility; always false."
+        },
+        "bskyPostRef": {
+          "type": "ref",
+          "ref": "com.atproto.repo.strongRef",
+          "description": "The Bluesky post associated with the article, as declared by its author. The referenced post may not be available."
+        },
+        "viewBskyPost": {
+          "type": "ref",
+          "ref": "app.bsky.feed.defs#postView",
+          "description": "The hydrated Bluesky post associated with the article, as declared by its author. Omitted when the post is unavailable to the viewer."
+        },
         "view": { "type": "ref", "ref": "app.bsky.embed.external#viewArticle" }
       }
     },
@@ -120,7 +125,10 @@
       "type": "object",
       "required": ["featured", "view"],
       "properties": {
-        "featured": { "type": "boolean" },
+        "featured": {
+          "type": "boolean",
+          "description": "Deprecated. Retained for compatibility; always false."
+        },
         "view": {
           "type": "ref",
           "ref": "app.bsky.embed.external#viewArticlePublication"
@@ -131,7 +139,10 @@
       "type": "object",
       "required": ["featured", "view"],
       "properties": {
-        "featured": { "type": "boolean" },
+        "featured": {
+          "type": "boolean",
+          "description": "Deprecated. Retained for compatibility; always false."
+        },
         "view": { "type": "ref", "ref": "app.bsky.embed.external#viewGallery" }
       }
     },
@@ -139,7 +150,20 @@
       "type": "object",
       "required": ["featured", "view"],
       "properties": {
-        "featured": { "type": "boolean" },
+        "featured": {
+          "type": "boolean",
+          "description": "Deprecated. Retained for compatibility; always false."
+        },
+        "bskyPostRef": {
+          "type": "ref",
+          "ref": "com.atproto.repo.strongRef",
+          "description": "The Bluesky post that announced the livestream, as declared by its author. The referenced post may not be available."
+        },
+        "viewBskyPost": {
+          "type": "ref",
+          "ref": "app.bsky.feed.defs#postView",
+          "description": "The hydrated Bluesky post that announced the livestream, as declared by its author. Omitted when the post is unavailable to the viewer."
+        },
         "view": {
           "type": "ref",
           "ref": "app.bsky.embed.external#viewLivestream"
@@ -164,16 +188,47 @@
         "id": { "type": "string", "maxLength": 4096 },
         "title": { "type": "string", "maxLength": 4096 },
         "description": { "type": "string", "maxLength": 4096 },
-        "logo": { "type": "string", "format": "uri", "maxLength": 4096 },
+        "logo": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 4096,
+          "description": "The profile avatar when available, otherwise the editorial logo."
+        },
         "backgroundImage": {
           "type": "string",
           "format": "uri",
-          "maxLength": 4096
+          "maxLength": 4096,
+          "description": "The profile banner when available, otherwise the editorial background image."
         },
-        "overlayColor": { "type": "string", "maxLength": 4096 },
-        "textColor": { "type": "string", "maxLength": 4096 },
+        "overlayColor": {
+          "type": "string",
+          "maxLength": 4096,
+          "description": "Deprecated. Retained for compatibility."
+        },
+        "textColor": {
+          "type": "string",
+          "maxLength": 4096,
+          "description": "Deprecated. Retained for compatibility."
+        },
         "url": { "type": "string", "format": "uri", "maxLength": 4096 },
-        "category": { "type": "string", "maxLength": 4096 }
+        "appStoreUrl": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 4096,
+          "description": "Optional link to the app on the Apple App Store."
+        },
+        "googlePlayUrl": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 4096,
+          "description": "Optional link to the app on Google Play."
+        },
+        "category": { "type": "string", "maxLength": 4096 },
+        "profile": {
+          "type": "ref",
+          "ref": "app.bsky.actor.defs#profileViewDetailed",
+          "description": "The app's optional Bluesky account profile. Omitted when no profile is configured or the profile is unavailable."
+        }
       }
     }
   }
