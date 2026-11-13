@@ -42,6 +42,13 @@ describe('standard site publisher matching', () => {
     ).toBeNull()
   })
 
+  it('falls back to the article host without a publication source', () => {
+    const {source: _, ...view} = createView({
+      uri: 'https://writer.leaflet.pub/article',
+    })
+    expect(matchStandardSiteHostByPublication(view)?.name).toBe('Leaflet')
+  })
+
   it.each([
     ['https://leaflet.pub/article', 'Leaflet'],
     ['https://writer.pckt.blog/article', 'pckt'],

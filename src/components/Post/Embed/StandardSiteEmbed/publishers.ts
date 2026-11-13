@@ -39,10 +39,14 @@ function matchHostByDomain(url: string): StandardSitePublisher | null {
   return STANDARD_SITE_PUBLISHERS.find(p => hostMatches(host, p.host)) ?? null
 }
 
+/**
+ * Matches the publication's host, falling back to the article's own URL when
+ * the view has no publication source.
+ */
 export function matchStandardSiteHostByPublication(
   view: app.bsky.embed.external.ViewExternal,
 ): StandardSitePublisher | null {
-  return matchHostByDomain(view.source?.uri || '')
+  return matchHostByDomain(view.source?.uri || view.uri)
 }
 
 export function matchStandardSiteHostByUrl(
