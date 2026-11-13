@@ -30,6 +30,19 @@ jest.mock('#/alf', () => ({
     },
   }),
 }))
+let mockEnabled = true
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({
+    features: {
+      enabled: () => mockEnabled,
+      AtmosphereScreenEnable: 'AtmosphereScreenEnable',
+    },
+  }),
+}))
+jest.mock('#/view/screens/NotFound', () => {
+  const {View} = jest.requireActual('react-native')
+  return {NotFoundScreen: () => <View testID="notFoundScreen" />}
+})
 jest.mock('./ExploreTab', () => {
   const {Pressable, Text, View} = jest.requireActual('react-native')
   return {
@@ -165,7 +178,19 @@ function renderScreen() {
   )
 }
 
+beforeEach(() => {
+  mockEnabled = true
+})
+
 describe('AtmosphereScreen', () => {
+  it('renders not found when the feature gate is off', () => {
+    mockEnabled = false
+    const screen = renderScreen()
+
+    expect(screen.getByTestId('notFoundScreen')).toBeTruthy()
+    expect(screen.queryByTestId('atmosphereScreen')).toBeNull()
+  })
+
   it('defaults to Activity and switches between tabs', () => {
     const screen = renderScreen()
 

@@ -225,6 +225,9 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   } = useNavigationTabState()
   const {hasSession, currentAccount} = useSession()
   const inviteFriendsControl = useDialogControl()
+  const isAtmosphereEnabled = ax.features.enabled(
+    ax.features.AtmosphereScreenEnable,
+  )
 
   // events
   // =
@@ -413,10 +416,12 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
               isActive={isAtNotifications}
               onPress={onPressNotifications}
             />
-            <AtmosphereMenuItem
-              isActive={isAtAtmosphere}
-              onPress={onPressAtmosphere}
-            />
+            {isAtmosphereEnabled && (
+              <AtmosphereMenuItem
+                isActive={isAtAtmosphere}
+                onPress={onPressAtmosphere}
+              />
+            )}
             <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
             <ListsMenuItem onPress={onPressLists} />
             <BookmarksMenuItem

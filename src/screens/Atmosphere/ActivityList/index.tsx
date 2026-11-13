@@ -8,6 +8,7 @@ import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List} from '#/view/com/util/List'
+import {NotFoundScreen} from '#/view/screens/NotFound'
 import {ActivityContentHider} from '#/screens/Atmosphere/ActivityTab/components/ActivityContentHider'
 import {
   ActivityContentCard,
@@ -17,6 +18,7 @@ import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
+import {useAnalytics} from '#/analytics'
 import {parseActivityListUris} from './links'
 import {
   type ActivityListItem as Item,
@@ -29,6 +31,12 @@ export function AtmosphereActivityListScreen({
     params: {uris},
   },
 }: NativeStackScreenProps<CommonNavigatorParams, 'AtmosphereActivityList'>) {
+  const ax = useAnalytics()
+
+  if (!ax.features.enabled(ax.features.AtmosphereScreenEnable)) {
+    return <NotFoundScreen />
+  }
+
   return (
     <Layout.Screen testID="atmosphereActivityListScreen">
       <Layout.Header.Outer>

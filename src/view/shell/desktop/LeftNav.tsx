@@ -703,6 +703,9 @@ export function DesktopLeftNav({
         : i18n.number(moderationInboxUnreadCount)
       : undefined
   const hasHomeBadge = useHomeBadge()
+  const isAtmosphereEnabled = ax.features.enabled(
+    ax.features.AtmosphereScreenEnable,
+  )
   const insets = useSafeAreaInsets()
 
   const leftNavMinimal = isMessagesRelatedScreen || leftNavMinimalBreakpoint
@@ -754,19 +757,21 @@ export function DesktopLeftNav({
             count={numUnreadNotifications}
             icons={{inactive: BellIcon, active: BellFilledIcon}}
           />
-          <NavItem
-            label={l`Atmosphere`}
-            href="/atmosphere"
-            navItem="atmosphere"
-            onNavigateTab={onNavigateTab}
-            exactMatch
-            minimal={leftNavMinimal}
-            beta
-            icons={{
-              inactive: EarthIcon,
-              active: EarthIcon,
-            }}
-          />
+          {isAtmosphereEnabled && (
+            <NavItem
+              label={l`Atmosphere`}
+              href="/atmosphere"
+              navItem="atmosphere"
+              onNavigateTab={onNavigateTab}
+              exactMatch
+              minimal={leftNavMinimal}
+              beta
+              icons={{
+                inactive: EarthIcon,
+                active: EarthIcon,
+              }}
+            />
+          )}
           <NavItem
             label={l`Chat`}
             href="/messages"

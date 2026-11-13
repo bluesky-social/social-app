@@ -8,9 +8,11 @@ import {
 } from '#/lib/routes/types'
 import {Pager, type PagerRef} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
+import {NotFoundScreen} from '#/view/screens/NotFound'
 import {atoms as a, useTheme, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {ActivityTab} from './ActivityTab'
 import {AtmosphereAppsTab} from './AppsTab'
 import {AtmosphereExploreTab} from './ExploreTab'
@@ -23,7 +25,13 @@ const APPS_TAB_INDEX = 2
 export function AtmosphereScreen({}: Props) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const ax = useAnalytics()
   const pagerRef = useRef<PagerRef>(null)
+
+  if (!ax.features.enabled(ax.features.AtmosphereScreenEnable)) {
+    return <NotFoundScreen />
+  }
+
   const sections = [
     {title: l`Activity`, component: <ActivityTab />},
     {

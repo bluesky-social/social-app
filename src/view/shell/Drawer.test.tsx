@@ -12,6 +12,7 @@ const mockDispatch = jest.fn()
 const mockSetDrawerOpen = jest.fn()
 const mockMetric = jest.fn()
 let mockHasSession = true
+let mockAtmosphereEnabled = true
 let mockNavigationState: State
 
 jest.mock('@react-navigation/native', () => ({
@@ -48,8 +49,10 @@ jest.mock('#/analytics', () => ({
   useAnalytics: () => ({
     metric: mockMetric,
     features: {
-      enabled: () => false,
+      enabled: (feature: string) =>
+        feature === 'AtmosphereScreenEnable' && mockAtmosphereEnabled,
       ModerationInboxEnable: 'ModerationInboxEnable',
+      AtmosphereScreenEnable: 'AtmosphereScreenEnable',
     },
   }),
 }))
@@ -135,6 +138,7 @@ i18n.loadAndActivate({locale: 'en', messages: {}})
 beforeEach(() => {
   jest.clearAllMocks()
   mockHasSession = true
+  mockAtmosphereEnabled = true
   mockNavigationState = buildStateObject('SearchTab', 'Search', {})
 })
 
@@ -175,6 +179,13 @@ describe('Atmosphere drawer navigation', () => {
 
     const screen = renderDrawer()
     expect(screen.getByText('Atmosphere')).toHaveStyle({fontWeight: '700'})
+  })
+
+  it('hides the entry when the feature gate is off', () => {
+    mockAtmosphereEnabled = false
+    const screen = renderDrawer()
+
+    expect(screen.queryByRole('tab', {name: 'Atmosphere, Beta'})).toBeNull()
   })
 
   it('does not show the authenticated destination when signed out', () => {
