@@ -120,6 +120,7 @@
     "app.bsky.richtext.facet",
     "app.bsky.unspecced.getAtmosphereApps",
     "app.bsky.unspecced.getAtmosphereExploreTab",
+    "app.bsky.unspecced.getAtmosphereRecommendedActivity",
     "app.bsky.unspecced.getAtmosphereRecordViews",
     "app.bsky.unspecced.getAtmosphereTimelineV2",
     "app.bsky.video.defs",
@@ -771,6 +772,10 @@
     "app.bsky.unspecced.getAtmosphereExploreTab": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.unspecced.getAtmosphereExploreTab",
       "cid": "bafyreicztq47cvaj4xyswhr2m7whyuug5z5hxoxx3os6qh4ke5cq5s42ey"
+    },
+    "app.bsky.unspecced.getAtmosphereRecommendedActivity": {
+      "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.unspecced.getAtmosphereRecommendedActivity",
+      "cid": "bafyreiejhbrkbo7rtz62eqgwgbs4ktyfpi4gh3a75n4kodge2zj2djf4ti"
     },
     "app.bsky.unspecced.getAtmosphereRecordViews": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.unspecced.getAtmosphereRecordViews",

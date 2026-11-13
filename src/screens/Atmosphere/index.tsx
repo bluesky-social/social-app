@@ -15,12 +15,13 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {ActivityTab} from './ActivityTab'
 import {AtmosphereAppsTab} from './AppsTab'
+import {AtmosphereDiscoverTab} from './DiscoverTab'
 import {AtmosphereExploreTab} from './ExploreTab'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Atmosphere'>
 
 /** Matches the Apps position in the sections below. */
-const APPS_TAB_INDEX = 2
+const APPS_TAB_INDEX = 3
 
 export function AtmosphereScreen({}: Props) {
   const t = useTheme()
@@ -33,6 +34,7 @@ export function AtmosphereScreen({}: Props) {
   }
 
   const sections = [
+    {title: l`Discover`, component: <AtmosphereDiscoverTab />},
     {title: l`Following`, component: <ActivityTab />},
     {
       title: l`Explore`,
