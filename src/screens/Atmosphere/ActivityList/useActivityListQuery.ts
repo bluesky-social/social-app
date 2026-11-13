@@ -13,10 +13,6 @@ import {STALE} from '#/state/queries'
 import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
 import {
-  findProfiles,
-  mapViewProfiles,
-} from '#/screens/Atmosphere/ActivityTab/mapProfiles'
-import {
   isActivityHidden,
   moderateActivity,
 } from '#/screens/Atmosphere/ActivityTab/moderation'
@@ -24,6 +20,10 @@ import {
   type ActivityContent,
   toActivityListContent,
 } from '#/screens/Atmosphere/ActivityTab/rows'
+import {
+  findProfiles,
+  mapViewProfiles,
+} from '#/screens/Atmosphere/data/mapProfiles'
 import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 

@@ -1,10 +1,10 @@
+import {type ActorProfiles} from '#/screens/Atmosphere/ActivityTab/actorProfiles'
+import {type TimelineEntry} from '#/screens/Atmosphere/ActivityTab/rows'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import {type ActorProfiles} from './actorProfiles'
-import {type TimelineEntry} from './rows'
 
 /*
- * Every place a profile lives in the activity queries' cached data, as
+ * Every place a profile lives in the Atmosphere queries' cached data, as
  * mappers. The queries' `select` maps profiles through their profile shadows,
  * and their cache finders (registered in `#/state/cache/profile-shadow`) walk
  * the same places, so the two can't drift apart.
@@ -12,7 +12,17 @@ import {type TimelineEntry} from './rows'
 
 type Profile = bsky.profile.AnyProfileView
 type ActivityItem = app.bsky.unspecced.getAtmosphereTimeline.ActivityItem
-type EntryView = ActivityItem['view']
+type ExploreTab = app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody
+type ExploreSection = ExploreTab[
+  'articles' | 'publications' | 'photos' | 'livestreams']
+
+/** Every lexicon view `mapViewProfiles` accepts. */
+type MappableView = NonNullable<
+  | ActivityItem['view']
+  | app.bsky.unspecced.getAtmosphereTimeline.ActivitySubject['view']
+  | app.bsky.unspecced.getAtmosphereRecordViews.RecordView['view']
+  | ExploreSection['items'][number]['view']
+>
 
 export type ProfileMapper = <P extends Profile>(profile: P) => P
 
@@ -31,13 +41,45 @@ export function mapTimelinePageProfiles<
   }
 }
 
-/** A view with its owners (and an article's publisher's owners) mapped. */
-export function mapViewProfiles<V extends EntryView | undefined>(
+/** The Explore tab's data with every profile in its views mapped. */
+export function mapExploreProfiles(
+  data: ExploreTab,
+  map: ProfileMapper,
+): ExploreTab {
+  function mapSection<S extends {items: {view: MappableView}[]}>(
+    section: S,
+  ): S {
+    return {
+      ...section,
+      items: section.items.map(item => ({
+        ...item,
+        view: mapViewProfiles(item.view, map),
+      })),
+    }
+  }
+  return {
+    ...data,
+    articles: mapSection(data.articles),
+    publications: mapSection(data.publications),
+    photos: mapSection(data.photos),
+    livestreams: mapSection(data.livestreams),
+  }
+}
+
+/**
+ * A view with its profiles mapped: owners, likers and subscribers, and the
+ * same for an article's publisher.
+ */
+export function mapViewProfiles<V extends MappableView | undefined>(
   view: V,
   map: ProfileMapper,
-): V {
+): V
+export function mapViewProfiles(
+  view: OwnedView | undefined,
+  map: ProfileMapper,
+): OwnedView | undefined {
   if (!view) return view
-  return mapOwners(view as OwnedView, map) as V
+  return mapOwnedView(view, map)
 }
 
 /** The profiles in `walk` with this DID, e.g. for a cache finder. */
@@ -54,15 +96,22 @@ export function findProfiles(
 }
 
 /** The parts of an external view that hold profiles. */
-type OwnedView = {associatedProfiles?: Profile[]; publisher?: OwnedView}
+type OwnedView = {
+  associatedProfiles?: Profile[]
+  likers?: Profile[]
+  subscribers?: Profile[]
+  publisher?: OwnedView
+}
 
-function mapOwners(view: OwnedView, map: ProfileMapper): OwnedView {
+function mapOwnedView(view: OwnedView, map: ProfileMapper): OwnedView {
   return {
     ...view,
     ...(view.associatedProfiles && {
       associatedProfiles: view.associatedProfiles.map(map),
     }),
-    ...(view.publisher && {publisher: mapOwners(view.publisher, map)}),
+    ...(view.likers && {likers: view.likers.map(map)}),
+    ...(view.subscribers && {subscribers: view.subscribers.map(map)}),
+    ...(view.publisher && {publisher: mapOwnedView(view.publisher, map)}),
   }
 }
 

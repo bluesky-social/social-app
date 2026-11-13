@@ -35,6 +35,7 @@ import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForSeeMoreQ
 import {findAllProfilesInQueryData as findAllProfilesInPostThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
 import {findAllProfilesInQueryData as findAllProfilesInAtmosphereActivityListQueryData} from '#/screens/Atmosphere/ActivityList/useActivityListQuery'
 import {findAllProfilesInQueryData as findAllProfilesInAtmosphereActivityTimelineQueryData} from '#/screens/Atmosphere/ActivityTab/useActivityTimelineQuery'
+import {findAllProfilesInQueryData as findAllProfilesInAtmosphereExploreQueryData} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
 import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {castAsShadow, type Shadow} from './types'
@@ -344,6 +345,7 @@ function* findProfilesInCache(
 ): Generator<bsky.profile.AnyProfileView, void> {
   yield* findAllProfilesInAtmosphereActivityTimelineQueryData(queryClient, did)
   yield* findAllProfilesInAtmosphereActivityListQueryData(queryClient, did)
+  yield* findAllProfilesInAtmosphereExploreQueryData(queryClient, did)
   yield* findAllProfilesInListMembersQueryData(queryClient, did)
   yield* findAllProfilesInMyBlockedAccountsQueryData(queryClient, did)
   yield* findAllProfilesInMyMutedAccountsQueryData(queryClient, did)

@@ -9,10 +9,13 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
+import {
+  findProfiles,
+  mapTimelinePageProfiles,
+} from '#/screens/Atmosphere/data/mapProfiles'
 import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {type ActorProfiles, fetchActorProfiles} from './actorProfiles'
-import {findProfiles, mapTimelinePageProfiles} from './mapProfiles'
 import {toActivityRows} from './rows'
 
 const useActivityTimelineQueryRoot = 'useActivityTimelineQuery'
