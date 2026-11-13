@@ -29,10 +29,13 @@ class ShareViewController: UIViewController {
     }
 
     Task {
+      let textAttachments = self.extensionContext?.inputItems
+        .compactMap { $0 as? NSExtensionItem }
+        .flatMap { $0.attachments ?? [] } ?? []
       if firstAttachment.hasItemConformingToTypeIdentifier("public.text") {
-        await self.handleText(item: firstAttachment)
+        await self.handleText(items: textAttachments)
       } else if firstAttachment.hasItemConformingToTypeIdentifier("public.url") {
-        await self.handleUrl(item: firstAttachment)
+        await self.handleUrl(item: firstAttachment, textItems: textAttachments)
       } else if firstAttachment.hasItemConformingToTypeIdentifier("public.image") {
         await self.handleImages(items: attachments)
       } else if firstAttachment.hasItemConformingToTypeIdentifier("public.movie") {
@@ -43,15 +46,41 @@ class ShareViewController: UIViewController {
     }
   }
 
-  private func handleText(item: NSItemProvider) async {
-    if let data = try? await item.loadItem(forTypeIdentifier: "public.text") as? String,
-       let url = self.composeUrl(param: "text", value: data) {
+  private func handleText(items: [NSItemProvider]) async {
+    var texts: [String] = []
+    var urls: [String] = []
+
+    for item in items {
+      if item.hasItemConformingToTypeIdentifier("public.text"),
+         let text = try? await item.loadItem(forTypeIdentifier: "public.text") as? String {
+        texts.append(text)
+      }
+      if item.hasItemConformingToTypeIdentifier("public.url"),
+         let url = try? await item.loadItem(forTypeIdentifier: "public.url") as? URL,
+         !url.isFileURL {
+        urls.append(url.absoluteString)
+      }
+    }
+
+    guard !texts.isEmpty || !urls.isEmpty else {
+      self.completeRequest()
+      return
+    }
+    texts.removeAll(where: \.isEmpty)
+    var text = texts.joined(separator: "\n")
+    let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+    let matches = detector?.matches(in: text, range: NSRange(text.startIndex..., in: text)) ?? []
+    var seenUrls = Set(matches.compactMap { $0.url?.absoluteString })
+    for url in urls where seenUrls.insert(url).inserted {
+      text += text.isEmpty ? url : " \(url)"
+    }
+    if let url = self.composeUrl(param: "text", value: text) {
       _ = self.openURL(url)
     }
     self.completeRequest()
   }
 
-  private func handleUrl(item: NSItemProvider) async {
+  private func handleUrl(item: NSItemProvider, textItems: [NSItemProvider]) async {
     if let data = try? await item.loadItem(forTypeIdentifier: "public.url") as? URL {
       switch data.type {
       case .image:
@@ -61,6 +90,10 @@ class ShareViewController: UIViewController {
         await handleVideos(items: [item])
         return
       case .other:
+        if !data.isFileURL {
+          await self.handleText(items: textItems)
+          return
+        }
         if let url = self.composeUrl(param: "text", value: data.absoluteString) {
           _ = self.openURL(url)
         }
