@@ -757,6 +757,18 @@ export function DesktopLeftNav({
             count={numUnreadNotifications}
             icons={{inactive: BellIcon, active: BellFilledIcon}}
           />
+          <NavItem
+            label={l`Chat`}
+            href="/messages"
+            navItem="chat"
+            onNavigateTab={onNavigateTab}
+            minimal={leftNavMinimal}
+            count={
+              aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread
+            }
+            hasNew={!aa.flags.chatDisabled && numUnreadMessages.hasNew}
+            icons={{inactive: MessageIcon, active: MessageFilledIcon}}
+          />
           {isAtmosphereEnabled && (
             <NavItem
               label={l`Atmosphere`}
@@ -772,18 +784,6 @@ export function DesktopLeftNav({
               }}
             />
           )}
-          <NavItem
-            label={l`Chat`}
-            href="/messages"
-            navItem="chat"
-            onNavigateTab={onNavigateTab}
-            minimal={leftNavMinimal}
-            count={
-              aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread
-            }
-            hasNew={!aa.flags.chatDisabled && numUnreadMessages.hasNew}
-            icons={{inactive: MessageIcon, active: MessageFilledIcon}}
-          />
           <NavItem
             label={l`Feeds`}
             href="/feeds"
