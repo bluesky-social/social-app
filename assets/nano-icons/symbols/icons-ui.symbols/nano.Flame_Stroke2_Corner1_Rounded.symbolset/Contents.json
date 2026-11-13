@@ -1,0 +1,15 @@
+{
+  "info": {
+    "author": "xcode",
+    "version": 1
+  },
+  "properties": {
+    "symbol-rendering-intent": "template"
+  },
+  "symbols": [
+    {
+      "filename": "nano.Flame_Stroke2_Corner1_Rounded.svg",
+      "idiom": "universal"
+    }
+  ]
+}

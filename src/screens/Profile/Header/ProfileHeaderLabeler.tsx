@@ -34,7 +34,9 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
+import {ProfileHeaderLinks} from '#/features/profileLinks'
 import {type app} from '#/lexicons'
+import {GermButton, isGermButtonShown} from '../components/GermButton'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
@@ -123,7 +125,7 @@ let ProfileHeaderLabeler = ({
           <ProfileHeaderHandle profile={profile} moderation={moderation} />
         </View>
         {!isPlaceholderProfile && (
-          <>
+          <View style={a.gap_md}>
             {isSelf && <ProfileHeaderMetrics profile={profile} />}
             {descriptionRT && !moderation.ui('profileView').blur ? (
               <View pointerEvents="auto">
@@ -138,8 +140,26 @@ let ProfileHeaderLabeler = ({
                 />
               </View>
             ) : undefined}
+
+            <ProfileHeaderLinks
+              profile={profile}
+              hidden={!!moderation.ui('profileView').blur}
+              germButton={
+                isGermButtonShown(
+                  profile.associated?.germ,
+                  profile,
+                  currentAccount?.did,
+                ) ? (
+                  <GermButton
+                    germ={profile.associated.germ}
+                    profile={profile}
+                  />
+                ) : undefined
+              }
+            />
+
             {!isAppLabeler(profile.did) && (
-              <View style={[a.flex_row, a.gap_xs, a.align_center, a.pt_lg]}>
+              <View style={[a.flex_row, a.gap_xs, a.align_center]}>
                 <Button
                   testID="toggleLikeBtn"
                   size="small"
@@ -193,7 +213,7 @@ let ProfileHeaderLabeler = ({
                 )}
               </View>
             )}
-          </>
+          </View>
         )}
       </View>
     </ProfileHeaderShell>
