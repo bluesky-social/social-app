@@ -121,7 +121,6 @@
     "app.bsky.unspecced.getAtmosphereApps",
     "app.bsky.unspecced.getAtmosphereExploreTab",
     "app.bsky.unspecced.getAtmosphereRecordViews",
-    "app.bsky.unspecced.getAtmosphereTimeline",
     "app.bsky.unspecced.getAtmosphereTimelineV2",
     "app.bsky.video.defs",
     "app.bsky.video.getJobStatus",
@@ -776,10 +775,6 @@
     "app.bsky.unspecced.getAtmosphereRecordViews": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.unspecced.getAtmosphereRecordViews",
       "cid": "bafyreiezb7d6z2x7ay6tlcltibinxtwvbrka2btokd5g3xl5hirtaw3rb4"
-    },
-    "app.bsky.unspecced.getAtmosphereTimeline": {
-      "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.unspecced.getAtmosphereTimeline",
-      "cid": "bafyreicspzwzz74a2xovpvz5qt5v6f362j7j3o3epuqsxfeowqkclycgbm"
     },
     "app.bsky.unspecced.getAtmosphereTimelineV2": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.unspecced.getAtmosphereTimelineV2",

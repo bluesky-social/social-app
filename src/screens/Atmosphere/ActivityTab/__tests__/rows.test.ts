@@ -6,6 +6,7 @@ import {
   danielle,
   debbie,
   eric,
+  everyone,
   gallery,
   item,
   label,
@@ -13,16 +14,17 @@ import {
   manton,
   moderationOpts,
   NSID,
+  page,
   paul,
+  profile,
   publication,
-  recommendBucket,
+  recordUri,
+  related,
   subjectGroup,
 } from './fixtures'
 
-const profiles = new Map([debbie, eric, manton].map(p => [p.did, p]))
-
 function rowsOf(...feed: TimelineEntry[]) {
-  return toActivityRows(feed, profiles, 0, moderationOpts)
+  return toActivityRows(page(feed), 0, moderationOpts)
 }
 
 function cardOf(entry: TimelineEntry): ActivityCardRow {
@@ -39,9 +41,9 @@ describe('toActivityRows', () => {
         collection: NSID.document,
         view: article(),
         relatedActivity: [
-          recommendBucket([danielle, caelin, paul]),
-          // Shares are vestigial; only recommend buckets render.
-          {...recommendBucket([paul]), collection: 'app.bsky.feed.post'},
+          ...related([danielle, caelin, paul]),
+          // Only recommends render as pills.
+          ...related([eric], 'app.bsky.feed.post'),
         ],
       }),
     )
@@ -52,6 +54,7 @@ describe('toActivityRows', () => {
       activityCount: 1,
       content: {type: 'article'},
     })
+    expect(row.subjectUris).toBeUndefined()
     expect(row.related).toEqual([
       {
         collection: NSID.recommend,
@@ -61,7 +64,22 @@ describe('toActivityRows', () => {
     ])
   })
 
-  it('maps an actor group to its actor, newest card, and activity count', () => {
+  it('counts every distinct recommender, even those without a profile', () => {
+    const stranger = profile('stranger.example.com')
+    const row = cardOf(
+      item({
+        actor: debbie,
+        collection: NSID.document,
+        view: article(),
+        relatedActivity: related([danielle, caelin, danielle, stranger]),
+      }),
+    )
+    expect(row.related).toEqual([
+      {collection: NSID.recommend, actors: [danielle, caelin], actorCount: 3},
+    ])
+  })
+
+  it('maps an actor group to its actor, newest card, and subjects', () => {
     const row = cardOf(
       actorGroup({
         actor: eric,
@@ -77,12 +95,15 @@ describe('toActivityRows', () => {
       activityCount: 16,
       content: {type: 'article'},
     })
+    // View all lists the recommended articles, not the recommend records.
+    expect(row.subjectUris).toHaveLength(16)
+    expect(row.subjectUris?.[0]).toBe(recordUri(paul, NSID.document, '0'))
   })
 
-  it('maps a subject group to its first actor and the other actor count', () => {
+  it('maps a subject group to its newest actor and the other actor count', () => {
     const row = cardOf(
       subjectGroup({
-        actors: [danielle, caelin, paul],
+        actors: [danielle, caelin, danielle, paul],
         collection: NSID.recommend,
         view: article('caelin.pckt.blog'),
       }),
@@ -107,20 +128,29 @@ describe('toActivityRows', () => {
   })
 
   it('warns instead of dropping entries it cannot render', () => {
-    const rows = rowsOf(
-      item({
-        actor: debbie,
-        collection: 'social.grain.favorite',
-        view: gallery(),
-      }),
-      item({actor: debbie, collection: NSID.document, view: gallery()}),
-      item({actor: paul, collection: NSID.document, view: article()}),
-      item({
-        actor: manton,
-        collection: NSID.gallery,
-        view: {...gallery(), items: []},
-      }),
-      {$type: 'app.bsky.unspecced.getAtmosphereTimeline#somethingNew'} as never,
+    const rows = toActivityRows(
+      page(
+        [
+          item({
+            actor: debbie,
+            collection: 'social.grain.favorite',
+            view: gallery(),
+          }),
+          item({actor: debbie, collection: NSID.document, view: gallery()}),
+          item({actor: paul, collection: NSID.document, view: article()}),
+          item({
+            actor: manton,
+            collection: NSID.gallery,
+            view: {...gallery(), items: []},
+          }),
+          {
+            $type: 'app.bsky.unspecced.getAtmosphereTimelineV2#somethingNew',
+          } as never,
+        ],
+        everyone.filter(p => p !== paul),
+      ),
+      0,
+      moderationOpts,
     )
     expect(rows.map(row => row.kind === 'warning' && row.reason)).toEqual([
       'unsupported-entry',
@@ -134,10 +164,10 @@ describe('toActivityRows', () => {
 
   it('keeps fallback keys unique across pages', () => {
     const unknown = {
-      $type: 'app.bsky.unspecced.getAtmosphereTimeline#somethingNew',
+      $type: 'app.bsky.unspecced.getAtmosphereTimelineV2#somethingNew',
     } as never
-    const [first] = toActivityRows([unknown], profiles, 0, moderationOpts)
-    const [second] = toActivityRows([unknown], profiles, 1, moderationOpts)
+    const [first] = toActivityRows(page([unknown]), 0, moderationOpts)
+    const [second] = toActivityRows(page([unknown]), 1, moderationOpts)
     expect(first.key).not.toBe(second.key)
   })
 })
@@ -166,26 +196,30 @@ describe('toActivityRows moderation', () => {
   it('drops cards filtered from lists, such as a muted actor', () => {
     const muted = {...debbie, viewer: {muted: true}}
     expect(
-      toActivityRows(
-        [documentBy(muted)],
-        new Map([[muted.did, muted]]),
-        0,
-        moderationOpts,
-      ),
+      toActivityRows(page([documentBy(muted)], [muted]), 0, moderationOpts),
     ).toEqual([])
   })
 
   it('leaves moderated recommenders out of the pill but keeps their count', () => {
     const muted = {...danielle, viewer: {muted: true}}
-    const withRecommenders = (actors: (typeof danielle)[]) =>
-      cardOf(
-        item({
-          actor: debbie,
-          collection: NSID.document,
-          view: article(),
-          relatedActivity: [recommendBucket(actors)],
-        }),
-      ).related
+    const withRecommenders = (actors: (typeof danielle)[]) => {
+      const [row] = toActivityRows(
+        page(
+          [
+            item({
+              actor: debbie,
+              collection: NSID.document,
+              view: article(),
+              relatedActivity: related(actors),
+            }),
+          ],
+          [debbie, ...actors],
+        ),
+        0,
+        moderationOpts,
+      )
+      return row.kind === 'card' ? row.related : undefined
+    }
 
     expect(withRecommenders([muted, caelin, paul])).toEqual([
       {collection: NSID.recommend, actors: [caelin, paul], actorCount: 3},

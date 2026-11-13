@@ -1,5 +1,7 @@
-import {type ActorProfiles} from '#/screens/Atmosphere/ActivityTab/actorProfiles'
-import {type TimelineEntry} from '#/screens/Atmosphere/ActivityTab/rows'
+import {
+  type TimelineEntry,
+  type TimelinePage,
+} from '#/screens/Atmosphere/ActivityTab/rows'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
@@ -11,32 +13,33 @@ import * as bsky from '#/types/bsky'
  */
 
 type Profile = bsky.profile.AnyProfileView
-type ActivityItem = app.bsky.unspecced.getAtmosphereTimeline.ActivityItem
 type ExploreTab = app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody
 type ExploreSection = ExploreTab[
   'articles' | 'publications' | 'photos' | 'livestreams']
 
 /** Every lexicon view `mapViewProfiles` accepts. */
 type MappableView = NonNullable<
-  | ActivityItem['view']
-  | app.bsky.unspecced.getAtmosphereTimeline.ActivitySubject['view']
+  | app.bsky.unspecced.getAtmosphereTimelineV2.ActivitySubject['view']
   | app.bsky.unspecced.getAtmosphereRecordViews.RecordView['view']
   | ExploreSection['items'][number]['view']
 >
 
 export type ProfileMapper = <P extends Profile>(profile: P) => P
 
-const timeline = app.bsky.unspecced.getAtmosphereTimeline
+const timeline = app.bsky.unspecced.getAtmosphereTimelineV2
 
 /** A timeline page with every profile in it passed through `map`. */
-export function mapTimelinePageProfiles<
-  Page extends {feed: TimelineEntry[]; profiles: ActorProfiles},
->(page: Page, map: ProfileMapper): Page {
+export function mapTimelinePageProfiles<Page extends TimelinePage>(
+  page: Page,
+  map: ProfileMapper,
+): Page {
   return {
     ...page,
     feed: page.feed.map(entry => mapEntryProfiles(entry, map)),
-    profiles: new Map(
-      [...page.profiles].map(([did, profile]) => [did, map(profile)]),
+    relatedViews: page.relatedViews.map(view =>
+      bsky.isType(app.bsky.actor.defs.profileViewBasic, view)
+        ? map(view)
+        : view,
     ),
   }
 }
@@ -120,34 +123,23 @@ function mapEntryProfiles(
   map: ProfileMapper,
 ): TimelineEntry {
   if (bsky.isType(timeline.activityItem, entry)) {
-    return mapItemProfiles(entry, map)
+    return {...entry, subject: mapSubjectProfiles(entry.subject, map)}
   }
   if (bsky.isType(timeline.activityActorGroup, entry)) {
-    return {...entry, item: mapItemProfiles(entry.item, map)}
-  }
-  if (bsky.isType(timeline.activitySubjectGroup, entry)) {
     return {
       ...entry,
-      actors: entry.actors.map(map),
-      subject: {
-        ...entry.subject,
-        view: mapViewProfiles(entry.subject.view, map),
-      },
+      subjects: entry.subjects.map(subject => mapSubjectProfiles(subject, map)),
     }
+  }
+  if (bsky.isType(timeline.activitySubjectGroup, entry)) {
+    return {...entry, subject: mapSubjectProfiles(entry.subject, map)}
   }
   return entry
 }
 
-function mapItemProfiles<I extends ActivityItem>(
-  item: I,
+function mapSubjectProfiles(
+  subject: app.bsky.unspecced.getAtmosphereTimelineV2.ActivitySubject,
   map: ProfileMapper,
-): I {
-  return {
-    ...item,
-    view: mapViewProfiles(item.view, map),
-    relatedActivity: item.relatedActivity?.map(bucket => ({
-      ...bucket,
-      actors: bucket.actors.map(map),
-    })),
-  }
+): app.bsky.unspecced.getAtmosphereTimelineV2.ActivitySubject {
+  return {...subject, view: mapViewProfiles(subject.view, map)}
 }

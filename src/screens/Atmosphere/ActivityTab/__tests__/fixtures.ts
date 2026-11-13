@@ -3,10 +3,12 @@ import {type AtUriString} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky/sdk/moderation'
 
 import {type app, type com} from '#/lexicons'
-import {type TimelineEntry} from '../rows'
+import {type TimelineEntry, type TimelinePage} from '../rows'
 
 type Profile = app.bsky.actor.defs.ProfileViewBasic
-type View = app.bsky.unspecced.getAtmosphereTimeline.ActivityItem['view']
+type View = app.bsky.unspecced.getAtmosphereTimelineV2.ActivitySubject['view']
+type RelatedActivity =
+  app.bsky.unspecced.getAtmosphereTimelineV2.ActivityItemRelatedActivity
 
 export const NSID = {
   document: 'site.standard.document',
@@ -39,6 +41,7 @@ export function label(
 
 export function profile(handle: string, displayName?: string): Profile {
   return {
+    $type: 'app.bsky.actor.defs#profileViewBasic',
     did: `did:plc:${handle.split('.')[0]}`,
     handle: handle as Profile['handle'],
     displayName,
@@ -52,6 +55,17 @@ export const paul = profile('paul.example.com', 'Paul')
 export const eric = profile('eric.example.com', 'Eric')
 export const manton = profile('manton.example.com', 'Manton Reece')
 export const camp = profile('pdx.atproto.camp')
+
+/** Everyone above, as the timeline's `relatedViews`. */
+export const everyone = [debbie, danielle, caelin, paul, eric, manton, camp]
+
+/** A timeline page whose `relatedViews` holds `profiles`. */
+export function page(
+  feed: TimelineEntry[],
+  profiles: Profile[] = everyone,
+): TimelinePage {
+  return {feed, relatedViews: profiles} as TimelinePage
+}
 
 export function article(
   host = 'debbie.leaflet.pub',
@@ -124,6 +138,16 @@ export function recordUri(
   return `at://${actor.did}/${collection}/${rkey}`
 }
 
+const INDEXED_AT = '2026-11-11T12:00:00.000Z'
+
+function strongRef(uri: AtUriString) {
+  return {uri, cid: 'bafycid'}
+}
+
+function subject(view: View, uri = recordUri(paul, NSID.document)) {
+  return {ref: strongRef(uri), view}
+}
+
 export function item({
   actor,
   collection,
@@ -135,22 +159,23 @@ export function item({
   collection: string
   view: View
   rkey?: string
-  relatedActivity?: app.bsky.unspecced.getAtmosphereTimeline.ActivityRelatedGroup[]
+  relatedActivity?: RelatedActivity[]
 }): TimelineEntry {
   return {
-    $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityItem',
-    record: {
-      uri: recordUri(actor, collection, rkey),
-      cid: 'bafycid',
-      indexedAt: '2026-11-11T12:00:00.000Z',
-    },
+    $type: 'app.bsky.unspecced.getAtmosphereTimelineV2#activityItem',
+    ref: strongRef(recordUri(actor, collection, rkey)),
     collection,
-    viewerState: {subscribed: false},
-    view,
+    indexedAt: INDEXED_AT,
+    actor: actor.did,
+    subject: subject(view),
     relatedActivity,
-  } as unknown as TimelineEntry
+  } as TimelineEntry
 }
 
+/**
+ * Published documents are their own subjects; anything else targets one of
+ * Paul's articles.
+ */
 export function actorGroup({
   actor,
   collection,
@@ -162,20 +187,28 @@ export function actorGroup({
   view: View
   count: number
 }): TimelineEntry {
-  const uris = Array.from({length: count}, (_, i) =>
-    recordUri(actor, collection, String(i)),
-  )
+  const activities = Array.from({length: count}, (_, i) => {
+    const uri = recordUri(actor, collection, String(i))
+    return {
+      ref: strongRef(uri),
+      indexedAt: INDEXED_AT,
+      subject:
+        collection === NSID.document
+          ? uri
+          : recordUri(paul, NSID.document, String(i)),
+    }
+  })
   return {
-    $type: 'app.bsky.unspecced.getAtmosphereTimeline#activityActorGroup',
-    id: `actor:${uris[0]}`,
+    $type: 'app.bsky.unspecced.getAtmosphereTimelineV2#activityActorGroup',
     collection,
-    indexedAt: '2026-11-08T12:00:00.000Z',
+    indexedAt: INDEXED_AT,
     actor: actor.did,
-    item: item({actor, collection, view, rkey: '0'}),
-    uris,
-  } as unknown as TimelineEntry
+    subjects: [subject(view, activities[0].subject)],
+    activities,
+  } as TimelineEntry
 }
 
+/** One activity per actor, newest first; repeat an actor to repeat them. */
 export function subjectGroup({
   actors,
   collection,
@@ -185,38 +218,28 @@ export function subjectGroup({
   collection: string
   view: View
 }): TimelineEntry {
-  const activities = actors.map((actor, i) => ({
-    record: {
-      uri: recordUri(actor, collection, String(i)),
-      cid: 'bafycid',
-      indexedAt: '2026-11-11T12:00:00.000Z',
-    },
-    collection,
-  }))
   return {
-    $type: 'app.bsky.unspecced.getAtmosphereTimeline#activitySubjectGroup',
-    id: `subject:${activities[0].record.uri}`,
+    $type: 'app.bsky.unspecced.getAtmosphereTimelineV2#activitySubjectGroup',
     collection,
-    indexedAt: '2026-11-11T12:00:00.000Z',
-    subject: {uri: 'at://subject', viewerState: {subscribed: false}, view},
-    activities,
-    actors,
-  } as unknown as TimelineEntry
+    indexedAt: INDEXED_AT,
+    subject: subject(view),
+    activities: actors.map((actor, i) => ({
+      ref: strongRef(recordUri(actor, collection, String(i))),
+      indexedAt: INDEXED_AT,
+      actor: actor.did,
+    })),
+  } as TimelineEntry
 }
 
-export function recommendBucket(
+/** Related activity on an item: one `collection` record per actor. */
+export function related(
   actors: Profile[],
-): app.bsky.unspecced.getAtmosphereTimeline.ActivityRelatedGroup {
-  return {
-    collection: NSID.recommend,
-    activities: actors.map((actor, i) => ({
-      record: {
-        uri: recordUri(actor, NSID.recommend, String(i)),
-        cid: 'bafycid',
-        indexedAt: '2026-11-11T12:00:00.000Z',
-      },
-      collection: NSID.recommend,
-    })),
-    actors,
-  } as unknown as app.bsky.unspecced.getAtmosphereTimeline.ActivityRelatedGroup
+  collection: string = NSID.recommend,
+): RelatedActivity[] {
+  return actors.map((actor, i) => ({
+    ref: strongRef(recordUri(actor, collection, String(i))),
+    collection: collection as RelatedActivity['collection'],
+    indexedAt: INDEXED_AT,
+    actor: actor.did,
+  }))
 }

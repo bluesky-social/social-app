@@ -25,8 +25,6 @@ cannot fetch it. These schemas are copied from merged upstream sources:
   `a704f10c040a989244cfa578e65f006ff7de0f83` (from atproto PR 5892)
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereApps.json` at atproto
   `a704f10c040a989244cfa578e65f006ff7de0f83` (from atproto PR 5892)
-- `lexicons-overrides/app/bsky/unspecced/getAtmosphereTimeline.json` at atproto
-  `4ca55dbc6d9e04d721fc14abffb73ce33158e002` (from atproto PR 5871)
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereTimelineV2.json` at atproto
   `f0653de696169e16dc003f11877b9eb0ae6533c0` (from atproto PR 5893)
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereRecordViews.json` at atproto
@@ -38,12 +36,12 @@ compatibility hints, not published record locations. An unscoped network update
 will fail when it tries to fetch these schemas. Update them from upstream JSON
 and compute each local CID with `cidForLex` from `@atproto/lex-cbor`.
 
-The authenticated Activity timeline uses the session's appview client. Its feed
-contains hydrated activity items, actor groups, and subject groups. Until the
-timeline returns actor profiles, missing ones are fetched through
-`app.bsky.actor.getProfiles` in batches of at most 25. “View all” on an actor
-group hydrates the group's records through `getAtmosphereRecordViews`, 25 at a
-time. The Apps tab follows Explore; Explore's app gallery opens it with “See more”.
+The authenticated Activity timeline (`getAtmosphereTimelineV2`) uses the
+session's appview client. Its feed contains activity items, actor groups, and
+subject groups, with actor profiles in `relatedViews`. “View all” on an actor
+group hydrates the subjects of the group's activities through
+`getAtmosphereRecordViews`, 25 at a time. The Apps tab follows Explore;
+Explore's app gallery opens it with “See more”.
 
 ## Exception: `place.stream.badge.defs`
 
