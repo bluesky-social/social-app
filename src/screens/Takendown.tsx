@@ -24,6 +24,7 @@ import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
 import {tools} from '#/lexicons'
+import {navigate} from '#/Navigation'
 
 const COL_WIDTH = 400
 
@@ -220,6 +221,26 @@ export function Takendown() {
                   decision if you believe it was made in error.
                 </Trans>
               </P>
+            )}
+
+            {!isAppealling && (
+              <View style={[a.mt_lg]}>
+                <Button
+                  variant="ghost"
+                  color="secondary"
+                  size="large"
+                  label={_(msg`View your moderation inbox`)}
+                  onPress={() =>
+                    void navigate({
+                      name: 'ModerationInbox',
+                      params: {tab: 'account'},
+                    })
+                  }>
+                  <ButtonText>
+                    <Trans>View your moderation inbox</Trans>
+                  </ButtonText>
+                </Button>
+              </View>
             )}
 
             {webLayout && (
