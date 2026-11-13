@@ -150,10 +150,20 @@ function toActivityRow(
   }
   if (bsky.isType(timeline.activitySubjectGroup, entry)) {
     const actors = distinct(entry.activities.map(a => a.actor))
+    /*
+     * Lead with the newest actor the viewer can see, so one muted actor
+     * doesn't hide the group. If none is visible, the newest one leads and
+     * moderation drops the card.
+     */
+    const lead =
+      actors
+        .map(did => profiles.get(did))
+        .find(actor => actor && !isActorHidden(actor, moderationOpts)) ??
+      profiles.get(actors[0])
     return toCardRow(moderationOpts, {
       key: entry.activities[0].ref.uri,
       collection: entry.collection,
-      actor: profiles.get(actors[0]),
+      actor: lead,
       otherActorCount: actors.length - 1,
       activityCount: 1,
       indexedAt: entry.indexedAt,

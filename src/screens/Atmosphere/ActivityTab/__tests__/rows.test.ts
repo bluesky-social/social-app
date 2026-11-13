@@ -228,6 +228,31 @@ describe('toActivityRows moderation', () => {
     expect(withRecommenders([muted])).toEqual([])
   })
 
+  it('leads a subject group with its newest visible actor', () => {
+    const muted = {...danielle, viewer: {muted: true}}
+    const groupOf = (actors: (typeof danielle)[]) =>
+      toActivityRows(
+        page(
+          [
+            subjectGroup({
+              actors,
+              collection: NSID.recommend,
+              view: article('caelin.pckt.blog'),
+            }),
+          ],
+          actors,
+        ),
+        0,
+        moderationOpts,
+      )
+
+    expect(groupOf([muted, caelin, paul])).toMatchObject([
+      {kind: 'card', actor: caelin, otherActorCount: 2},
+    ])
+    // With nobody visible to lead, the group is dropped.
+    expect(groupOf([muted, {...paul, viewer: {muted: true}}])).toEqual([])
+  })
+
   it('drops an article when its publisher is hidden', () => {
     const view = article()
     view.publisher = {...view.publisher!, labels: [label('!hide')]}
