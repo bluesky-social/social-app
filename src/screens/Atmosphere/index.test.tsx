@@ -191,14 +191,14 @@ describe('AtmosphereScreen', () => {
     expect(screen.queryByTestId('atmosphereScreen')).toBeNull()
   })
 
-  it('defaults to Activity and switches between tabs', () => {
+  it('defaults to Following and switches between tabs', () => {
     const screen = renderScreen()
 
     expect(
       screen.getAllByRole('tab').map(tab => tab.props.accessibilityLabel),
-    ).toEqual(['Activity', 'Explore', 'Apps'])
+    ).toEqual(['Following', 'Explore', 'Apps'])
     expect(
-      screen.getByRole('tab', {name: 'Activity'}).props.accessibilityState,
+      screen.getByRole('tab', {name: 'Following'}).props.accessibilityState,
     ).toEqual({selected: true})
     expect(screen.getByTestId('activityTab')).toBeTruthy()
 

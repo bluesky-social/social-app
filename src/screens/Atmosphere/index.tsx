@@ -33,7 +33,7 @@ export function AtmosphereScreen({}: Props) {
   }
 
   const sections = [
-    {title: l`Activity`, component: <ActivityTab />},
+    {title: l`Following`, component: <ActivityTab />},
     {
       title: l`Explore`,
       component: (
