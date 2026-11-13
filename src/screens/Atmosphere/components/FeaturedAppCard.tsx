@@ -19,8 +19,8 @@ const BACKGROUND_BLUR_RADIUS = 50
 
 /**
  * Featured app card. Always renders in the opposite of the current theme so it
- * stands out from the surrounding Explore content. Only its two links and
- * the known followers link are interactive.
+ * stands out from the surrounding Explore content. Only its links are
+ * interactive.
  */
 export function FeaturedAppCard({
   app,
@@ -53,6 +53,9 @@ function CardContent({
   const profile = app.profile
   const {title} = app
   const isLight = t.name === 'light'
+  const subtitle = [app.url && toNiceDomain(app.url), categoryLabel]
+    .filter(Boolean)
+    .join(' · ')
 
   return (
     <View
@@ -94,19 +97,22 @@ function CardContent({
               numberOfLines={1}>
               {app.title}
             </Text>
-            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <ExternalLinkIcon
-                size="xs"
-                fill={t.atoms.text_contrast_medium.color}
-              />
-              <Text
-                emoji
-                style={[a.flex_1, a.text_sm, t.atoms.text_contrast_medium]}
-                numberOfLines={1}>
-                {toNiceDomain(app.url)}
-                {categoryLabel ? ` · ${categoryLabel}` : ''}
-              </Text>
-            </View>
+            {subtitle ? (
+              <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                {app.url ? (
+                  <ExternalLinkIcon
+                    size="xs"
+                    fill={t.atoms.text_contrast_medium.color}
+                  />
+                ) : undefined}
+                <Text
+                  emoji
+                  style={[a.flex_1, a.text_sm, t.atoms.text_contrast_medium]}
+                  numberOfLines={1}>
+                  {subtitle}
+                </Text>
+              </View>
+            ) : undefined}
           </View>
         </View>
         <View style={[a.gap_sm]}>
@@ -121,19 +127,21 @@ function CardContent({
           {profile ? <AppKnownFollowers profile={profile} link /> : undefined}
         </View>
         <View style={[a.flex_row, a.gap_sm, a.pt_xs, a.mt_auto]}>
-          <Link
-            testID="featuredAppVisit"
-            to={app.url}
-            label={l`Visit ${title}`}
-            size="small"
-            color="secondary_inverted"
-            style={[a.flex_1, a.justify_center]}
-            ref={galleryFocus?.focusRef}
-            tabIndex={galleryFocus?.tabIndex}
-            onFocus={galleryFocus?.onFocus}>
-            <ButtonText>{l`Visit app`}</ButtonText>
-            <ButtonIcon icon={ExternalLinkIcon} />
-          </Link>
+          {app.url ? (
+            <Link
+              testID="featuredAppVisit"
+              to={app.url}
+              label={l`Visit the ${title} website`}
+              size="small"
+              color="secondary_inverted"
+              style={[a.flex_1, a.justify_center]}
+              ref={galleryFocus?.focusRef}
+              tabIndex={galleryFocus?.tabIndex}
+              onFocus={galleryFocus?.onFocus}>
+              <ButtonText>{l`Website`}</ButtonText>
+              <ButtonIcon icon={ExternalLinkIcon} />
+            </Link>
+          ) : undefined}
           {profile ? (
             <Link
               testID="featuredAppProfile"
@@ -142,6 +150,7 @@ function CardContent({
               size="small"
               color="secondary"
               style={[a.flex_1, a.justify_center]}
+              ref={app.url ? undefined : galleryFocus?.focusRef}
               tabIndex={galleryFocus?.tabIndex}
               onFocus={galleryFocus?.onFocus}>
               <ButtonText>{l`View profile`}</ButtonText>

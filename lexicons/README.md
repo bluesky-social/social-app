@@ -17,10 +17,11 @@ schema includes the field.
 
 The `app.bsky.unspecced` namespace is intentionally unpublished (it is a DNS
 carveout upstream, and resolving it is a CI violation there), so the installer
-cannot fetch it. These schemas are copied from merged upstream sources:
+cannot fetch it. These schemas are copied from upstream sources:
 
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereExploreTab.json` at atproto
-  `7b640e8fee709d22a0d62262068db0ddb3106741` (from atproto PR 5809)
+  `473c744c3d43dee51f08316475cf8ee3138ec7a2` (from atproto PR 5892, not yet
+  merged)
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereApps.json` at atproto
   `11f52c5588279d159ab12404a1b323731a467fdd` (from atproto PR 5801)
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereTimeline.json` at atproto

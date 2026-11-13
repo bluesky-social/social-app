@@ -24,9 +24,7 @@ export function AppCard({
   const t = useTheme()
   const control = useDialogControl()
 
-  if (!app.title || !app.url) return null
-
-  const domain = toNiceDomain(app.url)
+  if (!app.title) return null
 
   const showFollowers =
     app.profile && shouldShowKnownFollowers(app.profile.viewer?.knownFollowers)
@@ -75,10 +73,14 @@ export function AppCard({
                   <Text emoji style={[a.text_md, a.font_medium, t.atoms.text]}>
                     {app.title}
                   </Text>
-                  <Text emoji style={[a.text_sm, t.atoms.text_contrast_medium]}>
-                    {' · '}
-                    {domain}
-                  </Text>
+                  {app.url ? (
+                    <Text
+                      emoji
+                      style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                      {' · '}
+                      {toNiceDomain(app.url)}
+                    </Text>
+                  ) : undefined}
                 </Text>
                 {app.description ? (
                   <Text
