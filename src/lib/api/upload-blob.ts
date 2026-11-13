@@ -1,7 +1,8 @@
-import {copyAsync} from 'expo-file-system/legacy'
+import uuid from 'react-native-uuid'
+import {File, Paths} from 'expo-file-system'
 import {type BlobRef, type Client, type EncodingString} from '@atproto/lex'
 
-import {safeDeleteAsync} from '#/lib/media/manip'
+import {safeDelete} from '#/lib/media/manip'
 
 /**
  * The blob-upload response body: `{blob}`. lex `Client.uploadBlob` returns the
@@ -89,9 +90,9 @@ async function withSafeFile<T>(
     // Since we don't "own" the file, we should avoid renaming or modifying it.
     // Instead, let's copy it to a temporary file and use that (then remove the
     // temporary file).
-    const newPath = uri.replace(/\.jpe?g$/, '.bin')
+    const newPath = new File(Paths.cache, `${uuid.v4()}.bin`).uri
     try {
-      await copyAsync({from: uri, to: newPath})
+      await new File(uri).copy(new File(newPath))
     } catch {
       // Failed to copy the file, just use the original
       return await fn(uri)
@@ -100,7 +101,7 @@ async function withSafeFile<T>(
       return await fn(newPath)
     } finally {
       // Remove the temporary file
-      await safeDeleteAsync(newPath)
+      safeDelete(newPath)
     }
   } else {
     return fn(uri)
