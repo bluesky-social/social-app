@@ -3,6 +3,7 @@ import {type ColorValue, View} from 'react-native'
 import {GestureDetector, usePanGesture} from 'react-native-gesture-handler'
 import Animated, {
   clamp,
+  Extrapolation,
   interpolate,
   interpolateColor,
   useAnimatedReaction,
@@ -276,13 +277,22 @@ export function GestureActionView({
     }
   })
 
-  const animatedIconStyle = useAnimatedStyle(() => {
-    const absTransX = Math.abs(clampedTransX.get())
-    return {
-      opacity: interpolate(absTransX, [0, 75], [0.15, 1]),
-      transform: [{scale: iconScale.get()}],
-    }
-  })
+  /*
+   * Clamped and derived so the icon stops updating once it's fully shown,
+   * instead of on every pan frame.
+   */
+  const iconOpacity = useDerivedValue(() =>
+    interpolate(
+      Math.abs(clampedTransX.get()),
+      [0, 75],
+      [0.15, 1],
+      Extrapolation.CLAMP,
+    ),
+  )
+  const animatedIconStyle = useAnimatedStyle(() => ({
+    opacity: iconOpacity.get(),
+    transform: [{scale: iconScale.get()}],
+  }))
 
   return (
     <GestureDetector gesture={panGesture}>
