@@ -8,7 +8,7 @@ msgstr ""
 "Language: cs\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-11-12 21:07\n"
+"PO-Revision-Date: 2026-11-13 21:02\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
@@ -18,8 +18,12 @@ msgstr ""
 "X-Crowdin-File: /main/src/locale/locales/en/messages.po\n"
 "X-Crowdin-File-ID: 11\n"
 
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:71
+msgid "Your account may already be suspended or at risk of suspension. See your notices for details."
+msgstr "Váš účet může být pozastaven nebo mu hrozí pozastavení. Podrobnosti najdete ve svých oznámeních."
+
 #. placeholder {0}: record.text
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:95
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:100
 msgid "“{0}”"
 msgstr "„{0}“"
 
@@ -220,7 +224,7 @@ msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {příspěvek} few {příspěvky} many {příspěvků} other {příspěvků}}"
 
 #. placeholder {0}: policies.length
-#: src/screens/ModerationInbox/Notice.tsx:257
+#: src/screens/ModerationInbox/Notice.tsx:260
 msgid "{0, plural, one {Rule violated:} other {Rules violated:}}"
 msgstr "{0, plural, one {Porušené pravidlo:} few {Porušená pravidla:} many {Porušených pravidel:} other {Porušených pravidel:}}"
 
@@ -556,7 +560,7 @@ msgstr "{count, plural, one {#+ žádost o připojení} few {#+ žádosti o při
 msgid "{date} at {time}"
 msgstr "{date} v {time}"
 
-#: src/screens/ModerationInbox/Notice.tsx:412
+#: src/screens/ModerationInbox/Notice.tsx:411
 msgid "{detailsLength} of {MAX_REPORT_REASON_GRAPHEME_LENGTH} characters used"
 msgstr "Použito {detailsLength} z {MAX_REPORT_REASON_GRAPHEME_LENGTH} znaků"
 
@@ -622,7 +626,7 @@ msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesStrin
 msgstr "{hours, plural, one {# hodina {minutesString}} few {# hodiny {minutesString}} many {# hodin {minutesString}} other {# hodin {minutesString}}}"
 
 #: src/features/liveNow/utils.ts:44
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
 msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# hodina} few {# hodiny} many {# hodin} other {# hodin}}"
 
@@ -820,11 +824,11 @@ msgstr "{notificationCount, plural, one {# nepřečtená položka} few {# nepře
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
 msgstr "{numMatches, plural, one {nalezen # kontakt} few {nalezeny # kontakty} many {nalezeno # kontaktu} other {nalezeno # kontaktů}}"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:92
 msgid "{policyLabel} – {duration}"
 msgstr "{policyLabel} – {duration}"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:83
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:91
 msgid "{policyLabel} – {duration}, now expired"
 msgstr "{policyLabel} – {duration}, nyní vypršelo"
 
@@ -877,7 +881,7 @@ msgstr "{requestCount, plural, one {# žádost} few {# žádosti} many {# žádo
 msgid "{requestCount}+ requests"
 msgstr "{requestCount}+ požadavků"
 
-#: src/screens/ModerationInbox/Notice.tsx:229
+#: src/screens/ModerationInbox/Notice.tsx:232
 msgid "{serviceName} removed your content for violating our <0>Community Guidelines</0>."
 msgstr "Služba {serviceName} odstranila váš obsah za porušení našich <0>pokynů komunity</0>."
 
@@ -1151,30 +1155,30 @@ msgstr "Vodorovný pruh libovolného obsahu. Každá položka si zachovává vla
 msgid "A kawaii scene"
 msgstr "Kawaii scéna"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:78
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:68
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:87
 msgid "A label was added to your account"
 msgstr "K vašemu účtu byl přidán štítek"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:63
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:81
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:71
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:90
 msgid "A label was added to your content"
 msgstr "K vašemu obsahu byl přidán štítek"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:62
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:80
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:70
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:89
 msgid "A label was added to your post"
 msgstr "K vašemu příspěvku byl přidán štítek"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:104
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:112
 msgid "A label was removed from your account"
 msgstr "Z vašeho účtu byl odstraněn štítek"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:115
 msgid "A label was removed from your content"
 msgstr "Z vašeho obsahu byl odstraněn štítek"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:106
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:114
 msgid "A label was removed from your post"
 msgstr "Z vašeho příspěvku byl odstraněn štítek"
 
@@ -1187,11 +1191,11 @@ msgstr "O něco více obsahu než na první kartě."
 msgid "a message"
 msgstr "zpráva"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:43
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:46
 msgid "A moderator reviewed your appeal and reversed the original decision."
 msgstr "Moderátor přezkoumal vaše odvolání a zrušil původní rozhodnutí."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:42
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:45
 msgid "A moderator reviewed your appeal and reversed the original decision. Your post has been restored and is visible again."
 msgstr "Moderátor přezkoumal vaše odvolání a zrušil původní rozhodnutí. Váš příspěvek byl obnoven a je opět viditelný."
 
@@ -1309,6 +1313,7 @@ msgstr "Nastavení přístupnosti"
 #: src/Navigation.tsx:451
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:22
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:23
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:74
 #: src/screens/Settings/AccountSettings.tsx:54
 #: src/screens/Settings/Settings.tsx:186
 #: src/screens/Settings/Settings.tsx:189
@@ -1384,7 +1389,7 @@ msgstr "Účet pozastaven"
 msgid "Account taken down"
 msgstr "Účet odstraněn"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:40
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:66
 msgid "Account unavailable"
 msgstr "Účet není dostupný"
 
@@ -1414,6 +1419,10 @@ msgstr "Ukončeno ztlumení účtu"
 #: src/components/verification/VerifierDialog.tsx:101
 msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Bluesky."
 msgstr "Účty s vroubkovanou modrou značkou zaškrtnutí <0><1/></0> mohou ověřovat ostatní. Tyto důvěryhodné ověřovatele vybírá Bluesky."
+
+#: src/screens/ModerationInbox/components/AccountActionTimeline.tsx:107
+msgid "Action reversed"
+msgstr "Akce zrušena"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:46
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:51
@@ -1915,6 +1924,11 @@ msgstr "Alternativní text bude zkrácen. {MAX_ALT_TEXT, plural, one {Limit: {0}
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr "E-mail byl odeslán na {0}. Obsahuje potvrzovací kód, který můžete zadat níže."
 
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:63
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:65
+msgid "An email was sent about your account"
+msgstr "Ohledně vašeho účtu byl odeslán e-mail"
+
 #: src/components/Gallery/Storybook.tsx:757
 msgid "An empty gallery takes up no space. A single item behaves like any other, without dragging or arrow key navigation to go anywhere."
 msgstr "Prázdná galerie nezabírá žádné místo. Jediná položka se chová jako každá jiná, bez přetahování nebo navigace šipkami kamkoli."
@@ -2158,7 +2172,7 @@ msgstr "Hesla aplikace"
 #: src/components/moderation/LabelsOnMeDialog.tsx:169
 #: src/components/moderation/LabelsOnMeDialog.tsx:172
 #: src/components/moderation/ModerationDetailsDialog.tsx:223
-#: src/screens/ModerationInbox/Notice.tsx:465
+#: src/screens/ModerationInbox/Notice.tsx:464
 #: src/screens/ModerationInbox/Report.tsx:177
 #: src/screens/ModerationInbox/Report.tsx:178
 msgid "Appeal"
@@ -2169,11 +2183,13 @@ msgstr "Odvolání"
 msgid "Appeal \"{0}\" label"
 msgstr "Odvolat \"{0}\" štítek"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:40
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:43
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:44
 msgid "Appeal approved"
 msgstr "Odvolání schváleno"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:46
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:49
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:46
 msgid "Appeal denied"
 msgstr "Odvolání bylo zamítnuto"
 
@@ -2185,11 +2201,12 @@ msgstr "Odvolat štítek"
 msgid "Appeal livestream suspension"
 msgstr "Odvolání pozastavení živých streamů"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:50
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:53
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:47
 msgid "Appeal resolved"
 msgstr "Odvolání vyřešeno"
 
-#: src/screens/ModerationInbox/Notice.tsx:405
+#: src/screens/ModerationInbox/Notice.tsx:404
 msgid "Appeal submitted"
 msgstr "Odvolání bylo podáno"
 
@@ -2213,9 +2230,9 @@ msgstr "Odvolat se proti pozastavení"
 #: src/screens/Messages/components/ChatDisabled.tsx:79
 #: src/screens/Messages/components/ChatDisabled.tsx:130
 #: src/screens/Messages/components/ChatDisabled.tsx:132
-#: src/screens/ModerationInbox/Notice.tsx:306
-#: src/screens/ModerationInbox/Notice.tsx:317
-#: src/screens/ModerationInbox/Notice.tsx:460
+#: src/screens/ModerationInbox/Notice.tsx:309
+#: src/screens/ModerationInbox/Notice.tsx:320
+#: src/screens/ModerationInbox/Notice.tsx:459
 msgid "Appeal this decision"
 msgstr "Odvolat toto rozhodnutí"
 
@@ -2223,7 +2240,8 @@ msgstr "Odvolat toto rozhodnutí"
 msgid "Appeal this label"
 msgstr "Odvolat se proti tomuto štítku"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:36
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:39
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:34
 msgid "Appeal under review"
 msgstr "Odvolání se posuzuje"
 
@@ -2750,7 +2768,7 @@ msgstr "Bluesky je zábavnější s přáteli. Chcete pozvat některé z vašich
 msgid "Bluesky is part of a growing network of hundreds of social apps. Your account unlocks them all."
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:88
+#: src/screens/ModerationInbox/Notice.tsx:94
 #: src/screens/ModerationInbox/Report.tsx:72
 msgid "Bluesky Moderation Service"
 msgstr "Moderátorská služba Bluesky"
@@ -2978,7 +2996,7 @@ msgstr "Je vyžadován přístup ke kameře"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:124
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
-#: src/screens/ModerationInbox/Notice.tsx:424
+#: src/screens/ModerationInbox/Notice.tsx:423
 #: src/screens/Profile/Header/EditProfileDialog.tsx:313
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
@@ -3003,7 +3021,7 @@ msgstr "Je vyžadován přístup ke kameře"
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: src/screens/ModerationInbox/Notice.tsx:417
+#: src/screens/ModerationInbox/Notice.tsx:416
 msgid "Cancel appeal"
 msgstr "Zrušit odvolání"
 
@@ -3830,7 +3848,7 @@ msgstr "Obsah odstraněn"
 msgid "Content restored"
 msgstr "Obsah obnoven"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:86
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:100
 msgid "Content unavailable"
 msgstr "Obsah není k dispozici"
 
@@ -4339,6 +4357,10 @@ msgstr "Aktuální funkce beta verze"
 msgid "Current chat"
 msgstr "Aktuální konverzace"
 
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:127
+msgid "Current version of post"
+msgstr ""
+
 #: src/components/dialogs/ServerInput.tsx:152
 #: src/components/dialogs/ServerInput.tsx:154
 msgid "Custom"
@@ -4824,7 +4846,7 @@ msgstr "Žádné obavy! Všechny stávající zprávy a nastavení jsou uložen�
 #: src/lib/media/picker.tsx:37
 #: src/screens/Login/components/HostingProviderDialog.tsx:253
 #: src/screens/Login/components/HostingProviderDialog.tsx:255
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:97
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:152
 #: src/screens/Onboarding/StepProfile/index.tsx:355
 #: src/screens/Onboarding/StepProfile/index.tsx:358
 #: src/screens/Profile/Header/PronounsDialog.tsx:216
@@ -5836,7 +5858,7 @@ msgstr "Odeslání hlášení se nezdařilo"
 msgid "Failed to submit appeal, please try again."
 msgstr "Odeslání odvolání se nezdařilo, zkuste to prosím znovu."
 
-#: src/screens/ModerationInbox/Notice.tsx:373
+#: src/screens/ModerationInbox/Notice.tsx:377
 msgid "Failed to submit appeal. Please try again."
 msgstr "Odeslání odvolání se nezdařilo. Zkuste to prosím znovu."
 
@@ -6369,7 +6391,7 @@ msgstr "Velikost písma"
 msgid "Food"
 msgstr "Jídlo"
 
-#: src/screens/ModerationInbox/Notice.tsx:291
+#: src/screens/ModerationInbox/Notice.tsx:294
 msgid "For more information about our appeals and redress process, please see our <0>Terms of Service</0>."
 msgstr "Další informace o našem procesu odvolání a nápravy najdete v našich <0>Podmínkách služby</0>."
 
@@ -6446,6 +6468,10 @@ msgstr "Z <0/>"
 #: src/screens/Search/components/AdvancedSearchDialog/hooks.tsx:30
 msgid "From these people"
 msgstr "Od těchto lidí"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:66
+msgid "Further violations of our Community Guidelines could lead to permanent suspension."
+msgstr "Další porušení našich pravidel komunity může vést k trvalému pozastavení účtu."
 
 #: src/components/Gallery/Storybook.tsx:43
 msgid "Gallery"
@@ -7663,7 +7689,7 @@ msgstr "Žádost o připojení byla zrušena."
 msgid "Join the conversation"
 msgstr "Připojit se ke konverzaci"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:35
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:61
 msgid "Joined {createdAt}"
 msgstr "Připojil/a se {createdAt}"
 
@@ -7703,8 +7729,8 @@ msgstr "Štítek odstraněn"
 msgid "Label reply for algo"
 msgstr "Označit odpověď pro algoritmus"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:64
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:108
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:72
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:116
 msgid "Label: {labelName}"
 msgstr "Štítek: {labelName}"
 
@@ -8036,7 +8062,7 @@ msgstr "Lajky vašich repostů"
 msgid "Likes on this post"
 msgstr "Lajky u tohoto příspěvku"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:87
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:96
 msgid "Limited profile"
 msgstr "Omezený profil"
 
@@ -8277,8 +8303,8 @@ msgstr "Načíst nové příspěvky"
 msgid "Load new posts from the people you follow"
 msgstr "Načíst nové příspěvky od lidí, které sledujete"
 
-#: src/screens/ModerationInbox/Notice.tsx:162
-#: src/screens/ModerationInbox/Notice.tsx:171
+#: src/screens/ModerationInbox/Notice.tsx:168
+#: src/screens/ModerationInbox/Notice.tsx:177
 msgid "Load older actions"
 msgstr "Načíst starší akce"
 
@@ -8432,14 +8458,14 @@ msgstr "Spravujte svá ztlumená slova a štítky"
 msgid "Manual"
 msgstr "Ručně"
 
-#: src/screens/ModerationInbox/index.tsx:327
+#: src/screens/ModerationInbox/index.tsx:329
 msgid "Mark all actions as read"
 msgstr "Označit všechny akce jako přečtené"
 
 #: src/screens/Messages/Inbox.tsx:318
 #: src/screens/Messages/Inbox.tsx:324
-#: src/screens/ModerationInbox/index.tsx:201
-#: src/screens/ModerationInbox/index.tsx:333
+#: src/screens/ModerationInbox/index.tsx:206
+#: src/screens/ModerationInbox/index.tsx:335
 msgid "Mark all as read"
 msgstr "Označit vše jako přečtené"
 
@@ -8450,7 +8476,7 @@ msgstr "Označit vše jako přečtené"
 msgid "Mark all chats as read"
 msgstr "Označit všechny konverzace jako přečtené"
 
-#: src/screens/ModerationInbox/index.tsx:195
+#: src/screens/ModerationInbox/index.tsx:200
 msgid "Mark all reports as read"
 msgstr "Označit všechna nahlášení jako přečtená"
 
@@ -8663,11 +8689,11 @@ msgstr "Podrobnosti moderování"
 
 #: src/Navigation.tsx:209
 #: src/screens/Moderation/index.tsx:291
-#: src/screens/ModerationInbox/index.tsx:93
+#: src/screens/ModerationInbox/index.tsx:98
 msgid "Moderation inbox"
 msgstr "Moderační schránka"
 
-#: src/screens/ModerationInbox/index.tsx:100
+#: src/screens/ModerationInbox/index.tsx:105
 #: src/screens/ModerationInbox/Settings.tsx:44
 msgid "Moderation inbox settings"
 msgstr "Nastavení moderované schránky"
@@ -8707,7 +8733,8 @@ msgstr "Seznamy moderování"
 msgid "Moderation Lists"
 msgstr "Seznamy moderování"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:32
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:119
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:35
 msgid "Moderation notice"
 msgstr "Oznámení o moderování"
 
@@ -9170,11 +9197,11 @@ msgctxt "Answer to a yes/no question"
 msgid "No"
 msgstr "Ne"
 
-#: src/screens/ModerationInbox/index.tsx:363
+#: src/screens/ModerationInbox/index.tsx:371
 msgid "No actions against you"
 msgstr "Žádná opatření proti vám"
 
-#: src/screens/ModerationInbox/index.tsx:364
+#: src/screens/ModerationInbox/index.tsx:372
 msgid "No actions match this filter"
 msgstr "Tomuto filtru neodpovídají žádné akce"
 
@@ -9367,7 +9394,7 @@ msgstr "Zatím zde nejsou žádné odpovědi"
 msgid "No replies yet"
 msgstr "Zatím žádné odpovědi"
 
-#: src/screens/ModerationInbox/index.tsx:228
+#: src/screens/ModerationInbox/index.tsx:233
 msgid "No reports match this filter"
 msgstr "Tomuto filtru neodpovídají žádná nahlášení"
 
@@ -9519,7 +9546,7 @@ msgid "Nothing saved yet"
 msgstr "Zatím nic uloženo"
 
 #: src/Navigation.tsx:224
-#: src/screens/ModerationInbox/Notice.tsx:124
+#: src/screens/ModerationInbox/Notice.tsx:130
 msgid "Notice"
 msgstr "Oznámení"
 
@@ -9762,7 +9789,7 @@ msgstr "Jejda!"
 msgid "Open {0}"
 msgstr "Otevřít {0}"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:58
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:84
 msgid "Open account"
 msgstr "Otevřít účet"
 
@@ -9786,7 +9813,7 @@ msgstr "Otevřít fotoaparát"
 #: src/components/dms/ChatInvite/Root.tsx:105
 #: src/components/intents/GroupChatJoinDialog.tsx:454
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ChatSubjectPreview.tsx:32
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:43
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:46
 msgid "Open chat"
 msgstr "Otevřít konverzaci"
 
@@ -9794,7 +9821,7 @@ msgstr "Otevřít konverzaci"
 msgid "Open chat member options for {displayName}"
 msgstr "Otevřít možnosti člena konverzace pro {displayName}"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:43
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:46
 msgid "Open content"
 msgstr "Otevřít obsah"
 
@@ -9898,8 +9925,8 @@ msgstr "Otevřít nastavení ztlumených slov a značek"
 msgid "Open pack"
 msgstr "Otevřít balíček"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:134
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:138
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:144
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:148
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:51
 msgid "Open post"
 msgstr "Otevřít příspěvek"
@@ -10748,7 +10775,7 @@ msgstr "Příspěvek připnut"
 msgid "Post type"
 msgstr "Typ příspěvku"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:147
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:157
 msgid "Post unavailable"
 msgstr "Příspěvek není dostupný"
 
@@ -10764,8 +10791,8 @@ msgstr "Příspěvek s médii"
 
 #. placeholder {0}: i18n.date(POSTED_AT, { month: 'short', day: 'numeric', year: 'numeric', })
 #. placeholder {0}: i18n.date(new Date(record.createdAt), {dateStyle: 'medium'})
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:121
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:151
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:131
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:161
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:35
 msgid "Posted {0}"
 msgstr "Zveřejněno {0}"
@@ -10826,6 +10853,18 @@ msgstr "Stisknuto {pressCount}krát"
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:121
 msgid "Preview"
 msgstr "Náhled"
+
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:39
+msgid "Previous appeal approved"
+msgstr "Předchozí odvolání schváleno"
+
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:41
+msgid "Previous appeal denied"
+msgstr "Předchozí odvolání zamítnuto"
+
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:42
+msgid "Previous appeal resolved"
+msgstr "Předchozí odvolání vyřešeno"
 
 #: src/components/Lightbox/Lightbox.web.tsx:203
 msgid "Previous image"
@@ -11095,11 +11134,11 @@ msgstr "Přečíst náš blogový příspěvek"
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:121
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:135
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:148
-#: src/screens/ModerationInbox/Notice.tsx:233
+#: src/screens/ModerationInbox/Notice.tsx:236
 msgid "Read our Community Guidelines"
 msgstr "Přečtěte si naše obecné zásady komunity"
 
-#: src/screens/ModerationInbox/Notice.tsx:296
+#: src/screens/ModerationInbox/Notice.tsx:299
 msgid "Read our Terms of Service"
 msgstr "Přečíst si naše Podmínky služby"
 
@@ -11125,8 +11164,8 @@ msgstr "Skutečné konverzace."
 msgid "Real people."
 msgstr "Skuteční lidé."
 
-#: src/screens/ModerationInbox/Notice.tsx:498
-#: src/screens/ModerationInbox/Notice.tsx:516
+#: src/screens/ModerationInbox/Notice.tsx:497
+#: src/screens/ModerationInbox/Notice.tsx:515
 #: src/screens/Takendown.tsx:158
 #: src/screens/Takendown.tsx:166
 msgid "Reason for appeal"
@@ -11190,8 +11229,8 @@ msgstr "Odmítnout požadavek na přidání"
 msgid "Reload conversations"
 msgstr "Znovu načíst konverzace"
 
-#: src/screens/ModerationInbox/Notice.tsx:482
-#: src/screens/ModerationInbox/Notice.tsx:491
+#: src/screens/ModerationInbox/Notice.tsx:481
+#: src/screens/ModerationInbox/Notice.tsx:490
 msgid "Reload notice"
 msgstr "Znovu načíst oznámení"
 
@@ -11433,7 +11472,7 @@ msgstr "Odebráno ze Startovacího balíčku"
 msgid "Removed from your feeds"
 msgstr "Odebráno z vašich kanálů"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:91
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:100
 msgid "Removed post"
 msgstr "Odstraněný příspěvek"
 
@@ -11543,7 +11582,7 @@ msgstr "Odpovědi na tento příspěvek jsou zakázány."
 
 #: src/components/dms/MessageContextMenu.tsx:181
 #: src/components/dms/MessageContextMenu.tsx:184
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:90
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:95
 msgid "Reply"
 msgstr "Odpovědět"
 
@@ -11580,7 +11619,7 @@ msgstr "Řazení odpovědí"
 msgid "Reply to {handle}"
 msgstr "Odpovědět uživateli {handle}"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:89
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:94
 msgid "Reply to {parentName}"
 msgstr "Odpovědět uživateli {parentName}"
 
@@ -11919,7 +11958,7 @@ msgstr "Obnovit výchozí"
 msgid "Restore the {defaultChannel} deployment"
 msgstr "Obnovit nasazení {defaultChannel}"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:93
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:102
 msgid "Restored post"
 msgstr "Obnovený příspěvek"
 
@@ -12157,6 +12196,11 @@ msgstr "Skenovat"
 #: src/Navigation.tsx:363
 msgid "Scan QR code"
 msgstr "Naskenovat QR kód"
+
+#. placeholder {0}: i18n.date(new Date(enforcement.expiresAt), { dateStyle: 'medium', timeStyle: 'short', })
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:88
+msgid "Scheduled end: {0}"
+msgstr "Plánované ukončení: {0}"
 
 #: src/lib/interests.ts:71
 msgid "Science"
@@ -12883,7 +12927,7 @@ msgstr "Krátké odkazy nelze přidat. Použijte místo toho celý odkaz."
 msgid "Show"
 msgstr "Zobrazit"
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:66
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:116
 msgid "Show account status"
 msgstr "Zobrazit stav účtu"
 
@@ -13212,6 +13256,14 @@ msgstr "Sociální doporučení u příspěvků"
 msgid "Software Dev"
 msgstr "Vývoj softwaru"
 
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:109
+msgid "Some account features may be restricted."
+msgstr "Některé funkce účtu mohou být omezené."
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:103
+msgid "Some account features may be restricted. Strikes come off your record over time."
+msgstr "Některé funkce účtu mohou být omezeny. Varování se po čase z vašeho záznamu odstraní."
+
 #: src/screens/Moderation/index.tsx:517
 msgid "Some moderation services in your list are no longer available."
 msgstr "Některé moderátorské služby ve vašem seznamu již nejsou dostupné."
@@ -13510,12 +13562,12 @@ msgstr "Roztahovací karty"
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:138
 #: src/screens/Messages/components/ChatDisabled.tsx:172
 #: src/screens/Messages/components/ChatDisabled.tsx:174
-#: src/screens/ModerationInbox/Notice.tsx:439
+#: src/screens/ModerationInbox/Notice.tsx:438
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:164
 msgid "Submit"
 msgstr "Odeslat"
 
-#: src/screens/ModerationInbox/Notice.tsx:432
+#: src/screens/ModerationInbox/Notice.tsx:431
 #: src/screens/Takendown.tsx:76
 msgid "Submit appeal"
 msgstr "Odeslat odvolání"
@@ -13839,7 +13891,7 @@ msgstr "Řekněte nám o sobě něco málo"
 msgid "Tell us a little more"
 msgstr "Řekněte nám něco více"
 
-#: src/screens/ModerationInbox/Notice.tsx:471
+#: src/screens/ModerationInbox/Notice.tsx:470
 msgid "Tell us why you believe this decision was a mistake. We will review your appeal along with the original content."
 msgstr "Řekněte nám, proč si myslíte, že toto rozhodnutí bylo chybou. Vaše odvolání posoudíme spolu s původním obsahem."
 
@@ -13950,11 +14002,11 @@ msgstr "Po odblokování s vámi účet bude moci interagovat."
 msgid "The account you reported has been restored after another review. You can mute or block it if you’d rather not see its content. Read our <0>Community Guidelines</0>."
 msgstr "Účet, který jste nahlásili, byl po dalším přezkoumání obnoven. Pokud jeho obsah nechcete vidět, můžete jej ztlumit nebo zablokovat. Přečtěte si naše <0>Pravidla komunity</0>."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:55
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:62
 msgid "The action against your account was reversed"
 msgstr "Opatření proti vašemu účtu bylo zrušeno"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:56
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:63
 msgid "The action against your content was reversed"
 msgstr "Opatření proti vašemu obsahu bylo zrušeno"
 
@@ -13963,8 +14015,8 @@ msgstr "Opatření proti vašemu obsahu bylo zrušeno"
 msgid "The app will be restarted"
 msgstr "Aplikace bude restartována"
 
-#: src/screens/ModerationInbox/Notice.tsx:324
-#: src/screens/ModerationInbox/Notice.tsx:364
+#: src/screens/ModerationInbox/Notice.tsx:327
+#: src/screens/ModerationInbox/Notice.tsx:368
 msgid "The appeal window has closed."
 msgstr "Lhůta pro odvolání vypršela."
 
@@ -14387,7 +14439,7 @@ msgstr "Tento kód je neplatný. Pro získání nového kódu jej odešlete znov
 msgid "This confirmation code is not valid. Please try again."
 msgstr "Tento potvrzovací kód není platný. Zkuste to prosím znovu."
 
-#: src/screens/ModerationInbox/Notice.tsx:370
+#: src/screens/ModerationInbox/Notice.tsx:374
 msgid "This content could not be appealed. Please reload the notice and try again."
 msgstr "Tento obsah nebylo možné podrobit odvolání. Načtěte prosím oznámení znovu a zkuste to znovu."
 
@@ -14624,11 +14676,11 @@ msgstr "Tím by se měl vytvořit doménový záznam na:"
 msgid "This should only take a few minutes."
 msgstr "Mělo by to zabrat jen několik minut."
 
-#: src/screens/ModerationInbox/Notice.tsx:367
+#: src/screens/ModerationInbox/Notice.tsx:371
 msgid "This subject can no longer be appealed."
 msgstr "Proti tomuto předmětu se již nelze odvolat."
 
-#: src/screens/ModerationInbox/Notice.tsx:361
+#: src/screens/ModerationInbox/Notice.tsx:365
 msgid "This subject has already been appealed."
 msgstr "Proti tomuto předmětu již bylo podáno odvolání."
 
@@ -14742,6 +14794,10 @@ msgstr "Tři"
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/TimeIndicator.tsx:34
 msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr "Zbývající čas: {0, plural, one {# sekunda} few {# sekundy} many {# sekund} other {# sekund}}"
+
+#: src/screens/ModerationInbox/components/AccountActionTimeline.tsx:24
+msgid "Timeline"
+msgstr "Časová osa"
 
 #: src/components/SendErrorReportDialog.tsx:68
 #: src/features/profileLinks/components/LinkFormDialog.tsx:364
@@ -15348,6 +15404,10 @@ msgstr "Aktualizovat e-mail"
 msgid "Update your location"
 msgstr "Aktualizovat polohu"
 
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:67
+msgid "Updated"
+msgstr "Aktualizováno"
+
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:359
 msgctxt "toast"
 msgid "Updating quote attachment failed"
@@ -15863,7 +15923,7 @@ msgstr "Zobrazit banner profilu"
 msgid "View publication"
 msgstr "Zobrazit příspěvek"
 
-#: src/screens/ModerationInbox/components/ReportRow.tsx:32
+#: src/screens/ModerationInbox/components/ReportRow.tsx:34
 msgid "View report details: {subject}"
 msgstr "Zobrazit podrobnosti hlášení: {subject}"
 
@@ -16071,11 +16131,11 @@ msgstr "Došly nám příspěvky od lidí, které sledujete. Zde je nejnovějš�
 msgid "We recommend selecting at least two interests."
 msgstr "Doporučujeme vybrat alespoň dva zájmy."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:47
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:50
 msgid "We reviewed your appeal and are keeping our original decision in place."
 msgstr "Vaše odvolání jsme přezkoumali a ponecháváme naše původní rozhodnutí v platnosti."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:33
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:36
 msgid "We reviewed your appeal. The current status of your content or account is shown below."
 msgstr "Zkontrolovali jsme vaše odvolání. Aktuální stav vašeho obsahu nebo účtu je zobrazen níže."
 
@@ -16091,10 +16151,6 @@ msgstr "Zkontrolovali jsme vaše nahlášení a zjistili jsme, že neporušuje n
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:250
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Na adresu <0>{0}</0> jsme odeslali e-mail s odkazem. Pro dokončení ověření e-mailu na něj klikněte."
-
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
-msgid "We sent you an email about your account"
-msgstr ""
 
 #: src/view/com/composer/state/video.ts:521
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
@@ -16240,13 +16296,17 @@ msgstr "Aktualizujeme naše Podmínky služby, Zásady ochrany osobních údajů
 msgid "We've confirmed your age assurance status. You can now close this dialog."
 msgstr "Potvrdili jsme stav ověření vašeho věku. Nyní můžete toto dialogové okno zavřít."
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:43
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:76
 msgid "We’ve taken action on your account for violating our Community Guidelines, and strikes have been added to your record. More violations will lead to stronger enforcement, including suspension."
 msgstr "Přijali jsme opatření vůči vašemu účtu za porušení našich komunitních pravidel a do vašeho záznamu byly přidány prohřešky. Další porušení povedou k přísnějšímu vymáhání, včetně pozastavení účtu."
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:37
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:60
 msgid "We’ve taken action on your account for violating our Community Guidelines. Your record now carries enough strikes that another violation could lead to permanent suspension."
 msgstr "Přijali jsme opatření vůči vašemu účtu za porušení našich komunitních pravidel. Váš záznam nyní obsahuje dostatek prohřešků na to, aby další porušení mohlo vést k trvalému pozastavení účtu."
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:82
+msgid "We’ve taken action on your account. See your notices for details."
+msgstr "Podnikli jsme opatření vůči vašemu účtu. Podrobnosti najdete ve svých oznámeních."
 
 #: src/screens/Deactivated.tsx:121
 msgid "Welcome back!"
@@ -16549,7 +16609,7 @@ msgstr "Svá data z chatů si můžete také stáhnout jako soubor „JSONL“. 
 msgid "You can always opt out and delete your data"
 msgstr "Kdykoli se můžete odhlásit a smazat svá data"
 
-#: src/screens/ModerationInbox/Notice.tsx:286
+#: src/screens/ModerationInbox/Notice.tsx:289
 msgid "You can appeal once per decision. A different moderator will review the appeal."
 msgstr "Odvolat se můžete jednou proti každému rozhodnutí. Odvolání posoudí jiný moderátor."
 
@@ -16609,7 +16669,7 @@ msgstr "Můžete číst historii konverzace, ale nemůžete odesílat nové zpr�
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "Celkem můžete vybrat až {MAX_GALLERY_IMAGES, plural, one {# obrázek} few {# obrázky} many {# obrázků} other {# obrázků}}."
 
-#: src/screens/ModerationInbox/Notice.tsx:281
+#: src/screens/ModerationInbox/Notice.tsx:284
 msgid "You can submit one account appeal at a time. A different moderator will review the appeal."
 msgstr "V jednu chvíli můžete podat jedno odvolání účtu. Odvolání posoudí jiný moderátor."
 
@@ -16753,7 +16813,7 @@ msgstr "Zatím jste nevytvořili žádné vlastní kanály."
 msgid "You haven't muted any words or tags yet"
 msgstr "Zatím jste neztlumili žádná slova ani štítky"
 
-#: src/screens/ModerationInbox/index.tsx:227
+#: src/screens/ModerationInbox/index.tsx:232
 msgid "You haven’t reported anything yet"
 msgstr "Zatím jste nic nenahlásili"
 
@@ -17021,12 +17081,12 @@ msgstr "Dosáhli jste denního limitu pro nahrávání videí (příliš mnoho v
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "Došla vám videa ke sledování. Možná je vhodný čas si dát pauzu?"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:95
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:103
 msgid "Your ability to submit reports was restricted"
 msgstr "Vaše možnost odesílat nahlášení byla omezena"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:88
-#: src/screens/ModerationInbox/index.tsx:112
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:97
+#: src/screens/ModerationInbox/index.tsx:117
 #: src/screens/Signup/index.tsx:191
 msgid "Your account"
 msgstr "Váš účet"
@@ -17035,7 +17095,7 @@ msgstr "Váš účet"
 msgid "Your account cannot submit reports while it is suspended."
 msgstr "Váš účet nemůže odesílat nahlášení, pokud je pozastaven."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
 msgid "Your account credentials were revoked"
 msgstr "Přihlašovací údaje k vašemu účtu byly zrušeny"
 
@@ -17043,15 +17103,24 @@ msgstr "Přihlašovací údaje k vašemu účtu byly zrušeny"
 msgid "Your account has been deleted, see ya! ✌️"
 msgstr "Váš účet byl smazán, mějte se! ✌️"
 
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:39
 #: src/screens/Takendown.tsx:142
 msgid "Your account has been suspended"
 msgstr "Váš účet byl pozastaven"
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:34
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:48
+msgid "Your account has moderation actions"
+msgstr "Na vašem účtu byly provedeny moderátorské zásahy"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:47
 msgid "Your account has strikes against it"
 msgstr "Váš účet má v záznamu prohřešky"
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:33
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:98
+msgid "Your account has strikes against it. Strikes come off your record over time."
+msgstr "Váš účet má prohřešky. Prohřešky se z vašeho záznamu časem odstraní."
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:43
 msgid "Your account is at risk of permanent suspension"
 msgstr "Vašemu účtu hrozí trvalé pozastavení"
 
@@ -17059,9 +17128,32 @@ msgstr "Vašemu účtu hrozí trvalé pozastavení"
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Váš účet ještě není dostatečně starý na nahrávání videí. Zkuste to prosím později."
 
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:57
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:23
+msgid "Your account is suspended"
+msgstr "Váš účet je pozastaven"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:50
+msgid "Your account is suspended on Bluesky. See your notices for details and available appeal options."
+msgstr "Váš účet je na Bluesky pozastaven. Podrobnosti a dostupné možnosti odvolání najdete v upozorněních."
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:41
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:59
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:25
+msgid "Your account is temporarily suspended"
+msgstr "Váš účet je dočasně pozastaven"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:55
+msgid "Your account is temporarily suspended on Bluesky. See your notices for details and available appeal options."
+msgstr "Váš účet je na Bluesky dočasně pozastaven. Podrobnosti a dostupné možnosti odvolání najdete ve svých oznámeních."
+
 #: src/components/dms/InitiateChatFlow.tsx:836
 msgid "Your account is too new"
 msgstr "Váš účet je příliš nový"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:45
+msgid "Your account may be suspended or at risk of suspension"
+msgstr "Váš účet může být pozastaven nebo mu hrozí pozastavení"
 
 #: src/components/dms/InitiateChatFlow.tsx:837
 msgid "Your account must be at least 7 days old to create a new group chat."
@@ -17080,17 +17172,21 @@ msgstr "Repozitář vašeho účtu, který obsahuje všechny veřejné datové z
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
 msgstr "Bylo zjištěno, že váš účet porušuje <0>Podmínky služby Bluesky Social</0>. Byl vám zaslán e-mail s popisem konkrétního porušení a případné doby pozastavení účtu. Pokud se domníváte, že toto rozhodnutí bylo učiněno chybně, můžete se proti němu odvolat."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:67
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:91
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:73
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
+msgid "Your account was restored"
+msgstr "Váš účet byl obnoven"
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:75
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:82
 msgid "Your account was suspended"
 msgstr "Váš účet byl pozastaven"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:65
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:74
 msgid "Your account was temporarily suspended for {hours, plural, one {# hour} other {# hours}}"
 msgstr "Váš účet byl dočasně pozastaven na {hours, plural, one {# hodinu} few {# hodiny} many {# hodin} other {# hodin}}"
 
-#: src/screens/ModerationInbox/Notice.tsx:224
+#: src/screens/ModerationInbox/Notice.tsx:227
 msgid "Your appeal has been submitted and is awaiting review."
 msgstr "Vaše odvolání bylo odesláno a čeká na posouzení."
 
@@ -17122,14 +17218,18 @@ msgstr "Váš kontakt {name}"
 msgid "Your contact <0/> is on Bluesky"
 msgstr "Váš kontakt <0/> je na Bluesky"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:95
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:104
 msgid "Your content"
 msgstr "Váš obsah"
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:84
 msgid "Your content was removed"
 msgstr "Váš obsah byl odstraněn"
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:57
+msgid "Your content was restored"
+msgstr "Váš obsah byl obnoven"
 
 #. placeholder {0}: sanitizeHandle(currentAccount?.handle || '', '@')
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:531
@@ -17223,14 +17323,18 @@ msgstr "Vaše poznámka:"
 msgid "Your password must be at least 8 characters long."
 msgstr "Vaše heslo musí mít alespoň 8 znaků."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:94
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:103
 msgid "Your post"
 msgstr "Váš příspěvek"
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:84
 msgid "Your post was removed"
 msgstr "Váš příspěvek byl odstraněn"
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:56
+msgid "Your post was restored"
+msgstr "Váš příspěvek byl obnoven"
 
 #: src/view/com/composer/Composer.tsx:1239
 msgid "Your post was sent"
@@ -17279,7 +17383,7 @@ msgstr "Vaše nahlášení bylo vyřízeno. Přečtěte si naše <0>Pravidla kom
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr "Vaše hlášení bude odesláno na <0>{0}</0>."
 
-#: src/screens/ModerationInbox/index.tsx:112
+#: src/screens/ModerationInbox/index.tsx:117
 msgid "Your reports"
 msgstr "Vaše nahlášení"
 
@@ -17291,14 +17395,6 @@ msgstr "Oznámení o vašich hlášeních"
 #: src/screens/Settings/InterestsSettings.tsx:65
 msgid "Your selected interests help us serve you content you care about."
 msgstr "Vámi vybrané zájmy nám pomáhají poskytovat vám obsah, který vás zajímá."
-
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:56
-msgid "Your standing doesn’t restrict your account right now, and strikes come off your record over time."
-msgstr ""
-
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:51
-msgid "Your standing may restrict certain features on your account. Strikes come off your record over time."
-msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1569
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."

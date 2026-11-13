@@ -8,7 +8,7 @@ msgstr ""
 "Language: it\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-11-12 21:07\n"
+"PO-Revision-Date: 2026-11-13 21:02\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -18,8 +18,12 @@ msgstr ""
 "X-Crowdin-File: /main/src/locale/locales/en/messages.po\n"
 "X-Crowdin-File-ID: 11\n"
 
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:71
+msgid "Your account may already be suspended or at risk of suspension. See your notices for details."
+msgstr "Il tuo account potrebbe essere già sospeso o a rischio di sospensione. Consulta i tuoi avvisi per i dettagli."
+
 #. placeholder {0}: record.text
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:95
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:100
 msgid "“{0}”"
 msgstr "“{0}”"
 
@@ -220,7 +224,7 @@ msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {post} other {post}}"
 
 #. placeholder {0}: policies.length
-#: src/screens/ModerationInbox/Notice.tsx:257
+#: src/screens/ModerationInbox/Notice.tsx:260
 msgid "{0, plural, one {Rule violated:} other {Rules violated:}}"
 msgstr "{0, plural, one {Regola violata:} other {Regole violate:}}"
 
@@ -556,7 +560,7 @@ msgstr "{count, plural, other {#+ richieste di partecipazione}}"
 msgid "{date} at {time}"
 msgstr "{date} alle {time}"
 
-#: src/screens/ModerationInbox/Notice.tsx:412
+#: src/screens/ModerationInbox/Notice.tsx:411
 msgid "{detailsLength} of {MAX_REPORT_REASON_GRAPHEME_LENGTH} characters used"
 msgstr "{detailsLength} di {MAX_REPORT_REASON_GRAPHEME_LENGTH} caratteri usati"
 
@@ -622,7 +626,7 @@ msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesStrin
 msgstr "{hours, plural, one {# ora {minutesString}} other {# ore {minutesString}}}"
 
 #: src/features/liveNow/utils.ts:44
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
 msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# ora} other {# ore}}"
 
@@ -820,11 +824,11 @@ msgstr "{notificationCount, plural, one {# elemento non letto} other {# elementi
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
 msgstr "{numMatches, plural, one {# contatto trovato} other {# contatti trovati}}"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:92
 msgid "{policyLabel} – {duration}"
 msgstr "{policyLabel} – {duration}"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:83
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:91
 msgid "{policyLabel} – {duration}, now expired"
 msgstr "{policyLabel} – {duration}, ora scaduto"
 
@@ -877,7 +881,7 @@ msgstr "{requestCount, plural, one {# richiesta} other {# richieste}}"
 msgid "{requestCount}+ requests"
 msgstr "{requestCount}+ richieste"
 
-#: src/screens/ModerationInbox/Notice.tsx:229
+#: src/screens/ModerationInbox/Notice.tsx:232
 msgid "{serviceName} removed your content for violating our <0>Community Guidelines</0>."
 msgstr "{serviceName} ha rimosso il tuo contenuto perché viola le nostre <0>linee guida della community</0>."
 
@@ -1151,30 +1155,30 @@ msgstr "Una striscia orizzontale di contenuti qualsiasi. Ogni elemento mantiene 
 msgid "A kawaii scene"
 msgstr "Una scena kawaii"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:78
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:68
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:87
 msgid "A label was added to your account"
 msgstr "È stata aggiunta un'etichetta al tuo account"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:63
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:81
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:71
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:90
 msgid "A label was added to your content"
 msgstr "Un'etichetta è stata aggiunta al tuo contenuto"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:62
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:80
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:70
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:89
 msgid "A label was added to your post"
 msgstr "Un'etichetta è stata aggiunta al tuo post"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:104
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:112
 msgid "A label was removed from your account"
 msgstr "Un'etichetta è stata rimossa dal tuo account"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:115
 msgid "A label was removed from your content"
 msgstr "Un'etichetta è stata rimossa dal tuo contenuto"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:106
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:114
 msgid "A label was removed from your post"
 msgstr "Un'etichetta è stata rimossa dal tuo post"
 
@@ -1187,11 +1191,11 @@ msgstr "Un po' più di contenuto rispetto alla prima scheda."
 msgid "a message"
 msgstr "un messaggio"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:43
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:46
 msgid "A moderator reviewed your appeal and reversed the original decision."
 msgstr "Un moderatore ha esaminato il tuo ricorso e ha annullato la decisione originale."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:42
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:45
 msgid "A moderator reviewed your appeal and reversed the original decision. Your post has been restored and is visible again."
 msgstr "Un moderatore ha esaminato il tuo ricorso e ha annullato la decisione originale. Il tuo post è stato ripristinato ed è nuovamente visibile."
 
@@ -1309,6 +1313,7 @@ msgstr "Impostazioni di accessibilità"
 #: src/Navigation.tsx:451
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:22
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:23
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:74
 #: src/screens/Settings/AccountSettings.tsx:54
 #: src/screens/Settings/Settings.tsx:186
 #: src/screens/Settings/Settings.tsx:189
@@ -1384,7 +1389,7 @@ msgstr "Account sospeso"
 msgid "Account taken down"
 msgstr "Account disabilitato"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:40
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:66
 msgid "Account unavailable"
 msgstr "Account non disponibile"
 
@@ -1414,6 +1419,10 @@ msgstr "Account riattivato"
 #: src/components/verification/VerifierDialog.tsx:101
 msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Bluesky."
 msgstr "Gli account con una spunta blu dentellata <0><1/></0> possono verificare l'identità di altri account. I certificatori attendibili sono selezionati da Bluesky."
+
+#: src/screens/ModerationInbox/components/AccountActionTimeline.tsx:107
+msgid "Action reversed"
+msgstr "Azione annullata"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:46
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:51
@@ -1915,6 +1924,11 @@ msgstr "Il testo alternaivo verrà troncato. {MAX_ALT_TEXT, plural, other {Limit
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr "È stata inviata un'email a {0}. Include un codice di conferma che puoi inserire di seguito."
 
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:63
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:65
+msgid "An email was sent about your account"
+msgstr "È stata inviata un'email relativa al tuo account"
+
 #: src/components/Gallery/Storybook.tsx:757
 msgid "An empty gallery takes up no space. A single item behaves like any other, without dragging or arrow key navigation to go anywhere."
 msgstr "Una galleria vuota non occupa spazio. Un singolo elemento si comporta come qualsiasi altro, senza trascinamento o navigazione con i tasti freccia per spostarsi."
@@ -2158,7 +2172,7 @@ msgstr "Password per app"
 #: src/components/moderation/LabelsOnMeDialog.tsx:169
 #: src/components/moderation/LabelsOnMeDialog.tsx:172
 #: src/components/moderation/ModerationDetailsDialog.tsx:223
-#: src/screens/ModerationInbox/Notice.tsx:465
+#: src/screens/ModerationInbox/Notice.tsx:464
 #: src/screens/ModerationInbox/Report.tsx:177
 #: src/screens/ModerationInbox/Report.tsx:178
 msgid "Appeal"
@@ -2169,11 +2183,13 @@ msgstr "Ricorso"
 msgid "Appeal \"{0}\" label"
 msgstr "Etichetta \"{0}\" del ricorso"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:40
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:43
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:44
 msgid "Appeal approved"
 msgstr "Ricorso approvato"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:46
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:49
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:46
 msgid "Appeal denied"
 msgstr "Ricorso respinto"
 
@@ -2185,11 +2201,12 @@ msgstr "Contesta l'etichetta"
 msgid "Appeal livestream suspension"
 msgstr "Contesta la sospensione della diretta"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:50
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:53
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:47
 msgid "Appeal resolved"
 msgstr "Ricorso risolto"
 
-#: src/screens/ModerationInbox/Notice.tsx:405
+#: src/screens/ModerationInbox/Notice.tsx:404
 msgid "Appeal submitted"
 msgstr "Appello inviato"
 
@@ -2213,9 +2230,9 @@ msgstr "Revisione sospensione"
 #: src/screens/Messages/components/ChatDisabled.tsx:79
 #: src/screens/Messages/components/ChatDisabled.tsx:130
 #: src/screens/Messages/components/ChatDisabled.tsx:132
-#: src/screens/ModerationInbox/Notice.tsx:306
-#: src/screens/ModerationInbox/Notice.tsx:317
-#: src/screens/ModerationInbox/Notice.tsx:460
+#: src/screens/ModerationInbox/Notice.tsx:309
+#: src/screens/ModerationInbox/Notice.tsx:320
+#: src/screens/ModerationInbox/Notice.tsx:459
 msgid "Appeal this decision"
 msgstr "Fai ricorso contro questa decisione"
 
@@ -2223,7 +2240,8 @@ msgstr "Fai ricorso contro questa decisione"
 msgid "Appeal this label"
 msgstr "Contesta questa etichetta"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:36
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:39
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:34
 msgid "Appeal under review"
 msgstr "Ricorso in esame"
 
@@ -2750,7 +2768,7 @@ msgstr "Bluesky è più divertente con gli amici. Vuoi invitarne qualcuno? <0/>"
 msgid "Bluesky is part of a growing network of hundreds of social apps. Your account unlocks them all."
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:88
+#: src/screens/ModerationInbox/Notice.tsx:94
 #: src/screens/ModerationInbox/Report.tsx:72
 msgid "Bluesky Moderation Service"
 msgstr "Servizio di moderazione di Bluesky"
@@ -2978,7 +2996,7 @@ msgstr "Accesso alla fotocamera necessario"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:124
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
-#: src/screens/ModerationInbox/Notice.tsx:424
+#: src/screens/ModerationInbox/Notice.tsx:423
 #: src/screens/Profile/Header/EditProfileDialog.tsx:313
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
@@ -3003,7 +3021,7 @@ msgstr "Accesso alla fotocamera necessario"
 msgid "Cancel"
 msgstr "Annulla"
 
-#: src/screens/ModerationInbox/Notice.tsx:417
+#: src/screens/ModerationInbox/Notice.tsx:416
 msgid "Cancel appeal"
 msgstr "Annulla ricorso"
 
@@ -3830,7 +3848,7 @@ msgstr "Contenuto rimosso"
 msgid "Content restored"
 msgstr "Contenuto ripristinato"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:86
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:100
 msgid "Content unavailable"
 msgstr "Contenuto non disponibile"
 
@@ -4339,6 +4357,10 @@ msgstr "Funzionalità beta attuali"
 msgid "Current chat"
 msgstr "Chat corrente"
 
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:127
+msgid "Current version of post"
+msgstr ""
+
 #: src/components/dialogs/ServerInput.tsx:152
 #: src/components/dialogs/ServerInput.tsx:154
 msgid "Custom"
@@ -4824,7 +4846,7 @@ msgstr "Non preoccuparti! Tutti i messaggi e le impostazioni esistenti sono stat
 #: src/lib/media/picker.tsx:37
 #: src/screens/Login/components/HostingProviderDialog.tsx:253
 #: src/screens/Login/components/HostingProviderDialog.tsx:255
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:97
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:152
 #: src/screens/Onboarding/StepProfile/index.tsx:355
 #: src/screens/Onboarding/StepProfile/index.tsx:358
 #: src/screens/Profile/Header/PronounsDialog.tsx:216
@@ -5836,7 +5858,7 @@ msgstr "Non è stato possibile inviare il report"
 msgid "Failed to submit appeal, please try again."
 msgstr "Non è stato possibile inviare l'appello, riprova."
 
-#: src/screens/ModerationInbox/Notice.tsx:373
+#: src/screens/ModerationInbox/Notice.tsx:377
 msgid "Failed to submit appeal. Please try again."
 msgstr "Non è stato possibile inviare il ricorso. Riprova."
 
@@ -6369,7 +6391,7 @@ msgstr "Dimensione carattere"
 msgid "Food"
 msgstr "Cibo"
 
-#: src/screens/ModerationInbox/Notice.tsx:291
+#: src/screens/ModerationInbox/Notice.tsx:294
 msgid "For more information about our appeals and redress process, please see our <0>Terms of Service</0>."
 msgstr "Per maggiori informazioni sul nostro processo di contestazione e revisione, consulta i nostri <0>termini di servizio</0>."
 
@@ -6446,6 +6468,10 @@ msgstr "Da <0/>"
 #: src/screens/Search/components/AdvancedSearchDialog/hooks.tsx:30
 msgid "From these people"
 msgstr "Da queste persone"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:66
+msgid "Further violations of our Community Guidelines could lead to permanent suspension."
+msgstr "Ulteriori violazioni delle linee guida della nostra community potrebbero portare alla sospensione permanente."
 
 #: src/components/Gallery/Storybook.tsx:43
 msgid "Gallery"
@@ -7663,7 +7689,7 @@ msgstr "Richiesta di partecipazione annullata."
 msgid "Join the conversation"
 msgstr "Partecipa alla conversazione"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:35
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:61
 msgid "Joined {createdAt}"
 msgstr "Iscritto {createdAt}"
 
@@ -7703,8 +7729,8 @@ msgstr "Etichetta rimossa"
 msgid "Label reply for algo"
 msgstr "Etichetta risposta per algoritmo"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:64
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:108
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:72
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:116
 msgid "Label: {labelName}"
 msgstr "Etichetta: {labelName}"
 
@@ -8036,7 +8062,7 @@ msgstr "Mi piace dei tuoi repost"
 msgid "Likes on this post"
 msgstr "Mi piace in questo post"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:87
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:96
 msgid "Limited profile"
 msgstr "Profilo limitato"
 
@@ -8277,8 +8303,8 @@ msgstr "Carica nuovi post"
 msgid "Load new posts from the people you follow"
 msgstr "Carica nuovi post delle persone che segui"
 
-#: src/screens/ModerationInbox/Notice.tsx:162
-#: src/screens/ModerationInbox/Notice.tsx:171
+#: src/screens/ModerationInbox/Notice.tsx:168
+#: src/screens/ModerationInbox/Notice.tsx:177
 msgid "Load older actions"
 msgstr "Carica azioni meno recenti"
 
@@ -8432,14 +8458,14 @@ msgstr "Gestisci parole e tag silenziati"
 msgid "Manual"
 msgstr "Manuale"
 
-#: src/screens/ModerationInbox/index.tsx:327
+#: src/screens/ModerationInbox/index.tsx:329
 msgid "Mark all actions as read"
 msgstr "Contrassegna tutte le azioni come lette"
 
 #: src/screens/Messages/Inbox.tsx:318
 #: src/screens/Messages/Inbox.tsx:324
-#: src/screens/ModerationInbox/index.tsx:201
-#: src/screens/ModerationInbox/index.tsx:333
+#: src/screens/ModerationInbox/index.tsx:206
+#: src/screens/ModerationInbox/index.tsx:335
 msgid "Mark all as read"
 msgstr "Segna tutto come letto"
 
@@ -8450,7 +8476,7 @@ msgstr "Segna tutto come letto"
 msgid "Mark all chats as read"
 msgstr "Contrassegna tutte le chat come lette"
 
-#: src/screens/ModerationInbox/index.tsx:195
+#: src/screens/ModerationInbox/index.tsx:200
 msgid "Mark all reports as read"
 msgstr "Contrassegna tutte le segnalazioni come lette"
 
@@ -8663,11 +8689,11 @@ msgstr "Dettagli sulla moderazione"
 
 #: src/Navigation.tsx:209
 #: src/screens/Moderation/index.tsx:291
-#: src/screens/ModerationInbox/index.tsx:93
+#: src/screens/ModerationInbox/index.tsx:98
 msgid "Moderation inbox"
 msgstr "Casella di moderazione"
 
-#: src/screens/ModerationInbox/index.tsx:100
+#: src/screens/ModerationInbox/index.tsx:105
 #: src/screens/ModerationInbox/Settings.tsx:44
 msgid "Moderation inbox settings"
 msgstr "Impostazioni casella di moderazione"
@@ -8707,7 +8733,8 @@ msgstr "Liste di moderazione"
 msgid "Moderation Lists"
 msgstr "Liste di moderazione"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:32
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:119
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:35
 msgid "Moderation notice"
 msgstr "Avviso di moderazione"
 
@@ -9170,11 +9197,11 @@ msgctxt "Answer to a yes/no question"
 msgid "No"
 msgstr "No"
 
-#: src/screens/ModerationInbox/index.tsx:363
+#: src/screens/ModerationInbox/index.tsx:371
 msgid "No actions against you"
 msgstr "Nessuna azione contro di te"
 
-#: src/screens/ModerationInbox/index.tsx:364
+#: src/screens/ModerationInbox/index.tsx:372
 msgid "No actions match this filter"
 msgstr "Nessuna azione corrisponde a questo filtro"
 
@@ -9367,7 +9394,7 @@ msgstr "Nessuna risposta da mostrare per ora"
 msgid "No replies yet"
 msgstr "Ancora nessuna risposta"
 
-#: src/screens/ModerationInbox/index.tsx:228
+#: src/screens/ModerationInbox/index.tsx:233
 msgid "No reports match this filter"
 msgstr "Nessuna segnalazione corrisponde a questo filtro"
 
@@ -9519,7 +9546,7 @@ msgid "Nothing saved yet"
 msgstr "Non è stato ancora salvato nulla"
 
 #: src/Navigation.tsx:224
-#: src/screens/ModerationInbox/Notice.tsx:124
+#: src/screens/ModerationInbox/Notice.tsx:130
 msgid "Notice"
 msgstr "Avviso"
 
@@ -9762,7 +9789,7 @@ msgstr "Ops!"
 msgid "Open {0}"
 msgstr "Apri {0}"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:58
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:84
 msgid "Open account"
 msgstr "Apri account"
 
@@ -9786,7 +9813,7 @@ msgstr "Apri fotocamera"
 #: src/components/dms/ChatInvite/Root.tsx:105
 #: src/components/intents/GroupChatJoinDialog.tsx:454
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ChatSubjectPreview.tsx:32
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:43
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:46
 msgid "Open chat"
 msgstr "Apri chat"
 
@@ -9794,7 +9821,7 @@ msgstr "Apri chat"
 msgid "Open chat member options for {displayName}"
 msgstr "Apri le opzioni dei membri della chat per {displayName}"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:43
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:46
 msgid "Open content"
 msgstr "Apri contenuto"
 
@@ -9898,8 +9925,8 @@ msgstr "Apri le impostazioni delle parole e dei tag silenziati"
 msgid "Open pack"
 msgstr "Apri pack"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:134
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:138
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:144
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:148
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:51
 msgid "Open post"
 msgstr "Apri post"
@@ -10748,7 +10775,7 @@ msgstr "Post fissato"
 msgid "Post type"
 msgstr "Tipo di post"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:147
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:157
 msgid "Post unavailable"
 msgstr "Post non disponibile"
 
@@ -10764,8 +10791,8 @@ msgstr "Post con media"
 
 #. placeholder {0}: i18n.date(POSTED_AT, { month: 'short', day: 'numeric', year: 'numeric', })
 #. placeholder {0}: i18n.date(new Date(record.createdAt), {dateStyle: 'medium'})
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:121
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:151
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:131
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:161
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:35
 msgid "Posted {0}"
 msgstr "Pubblicato {0}"
@@ -10826,6 +10853,18 @@ msgstr "Premuto {pressCount} volte"
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:121
 msgid "Preview"
 msgstr "Anteprima"
+
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:39
+msgid "Previous appeal approved"
+msgstr "Ricorso precedente approvato"
+
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:41
+msgid "Previous appeal denied"
+msgstr "Ricorso precedente respinto"
+
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:42
+msgid "Previous appeal resolved"
+msgstr "Ricorso precedente risolto"
 
 #: src/components/Lightbox/Lightbox.web.tsx:203
 msgid "Previous image"
@@ -11095,11 +11134,11 @@ msgstr "Leggi il post sul nostro blog"
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:121
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:135
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:148
-#: src/screens/ModerationInbox/Notice.tsx:233
+#: src/screens/ModerationInbox/Notice.tsx:236
 msgid "Read our Community Guidelines"
 msgstr "Leggi le nostre linee guida della community"
 
-#: src/screens/ModerationInbox/Notice.tsx:296
+#: src/screens/ModerationInbox/Notice.tsx:299
 msgid "Read our Terms of Service"
 msgstr "Leggi i nostri termini di servizio"
 
@@ -11125,8 +11164,8 @@ msgstr "Conversazioni reali."
 msgid "Real people."
 msgstr "Persone vere."
 
-#: src/screens/ModerationInbox/Notice.tsx:498
-#: src/screens/ModerationInbox/Notice.tsx:516
+#: src/screens/ModerationInbox/Notice.tsx:497
+#: src/screens/ModerationInbox/Notice.tsx:515
 #: src/screens/Takendown.tsx:158
 #: src/screens/Takendown.tsx:166
 msgid "Reason for appeal"
@@ -11190,8 +11229,8 @@ msgstr "Rifiuta richiesta di partecipazione"
 msgid "Reload conversations"
 msgstr "Ricarica conversazioni"
 
-#: src/screens/ModerationInbox/Notice.tsx:482
-#: src/screens/ModerationInbox/Notice.tsx:491
+#: src/screens/ModerationInbox/Notice.tsx:481
+#: src/screens/ModerationInbox/Notice.tsx:490
 msgid "Reload notice"
 msgstr "Ricarica avviso"
 
@@ -11433,7 +11472,7 @@ msgstr "Rimosso dallo starter pack"
 msgid "Removed from your feeds"
 msgstr "Rimosso dai tuoi feed"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:91
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:100
 msgid "Removed post"
 msgstr "Post rimosso"
 
@@ -11543,7 +11582,7 @@ msgstr "Le risposte a questo post sono disattivate."
 
 #: src/components/dms/MessageContextMenu.tsx:181
 #: src/components/dms/MessageContextMenu.tsx:184
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:90
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:95
 msgid "Reply"
 msgstr "Rispondi"
 
@@ -11580,7 +11619,7 @@ msgstr "Ordine delle risposte"
 msgid "Reply to {handle}"
 msgstr "Rispondi a {handle}"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:89
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:94
 msgid "Reply to {parentName}"
 msgstr "Rispondi a {parentName}"
 
@@ -11919,7 +11958,7 @@ msgstr "Ripristina predefinito"
 msgid "Restore the {defaultChannel} deployment"
 msgstr "Ripristina la distribuzione {defaultChannel}"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:93
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:102
 msgid "Restored post"
 msgstr "Post ripristinato"
 
@@ -12157,6 +12196,11 @@ msgstr "Scansiona"
 #: src/Navigation.tsx:363
 msgid "Scan QR code"
 msgstr "Scansiona codice QR"
+
+#. placeholder {0}: i18n.date(new Date(enforcement.expiresAt), { dateStyle: 'medium', timeStyle: 'short', })
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:88
+msgid "Scheduled end: {0}"
+msgstr "Fine pianificata: {0}"
 
 #: src/lib/interests.ts:71
 msgid "Science"
@@ -12883,7 +12927,7 @@ msgstr "Impossibile aggiungere link abbreviati. Usa invece il link completo."
 msgid "Show"
 msgstr "Mostra"
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:66
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:116
 msgid "Show account status"
 msgstr "Mostra stato dell'account"
 
@@ -13212,6 +13256,14 @@ msgstr "Contesto sociale dei post"
 msgid "Software Dev"
 msgstr "Sviluppo software"
 
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:109
+msgid "Some account features may be restricted."
+msgstr "Alcune funzionalità dell'account potrebbero essere limitate."
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:103
+msgid "Some account features may be restricted. Strikes come off your record over time."
+msgstr "Alcune funzionalità dell'account potrebbero essere limitate. Gli ammonimenti vengono rimosse dal tuo storico nel tempo."
+
 #: src/screens/Moderation/index.tsx:517
 msgid "Some moderation services in your list are no longer available."
 msgstr "Alcuni servizi di moderazione nella tua lista non sono più disponibili."
@@ -13510,12 +13562,12 @@ msgstr "Schede estensibili"
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:138
 #: src/screens/Messages/components/ChatDisabled.tsx:172
 #: src/screens/Messages/components/ChatDisabled.tsx:174
-#: src/screens/ModerationInbox/Notice.tsx:439
+#: src/screens/ModerationInbox/Notice.tsx:438
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:164
 msgid "Submit"
 msgstr "Invia"
 
-#: src/screens/ModerationInbox/Notice.tsx:432
+#: src/screens/ModerationInbox/Notice.tsx:431
 #: src/screens/Takendown.tsx:76
 msgid "Submit appeal"
 msgstr "Invia richiesta"
@@ -13839,7 +13891,7 @@ msgstr "Raccontaci un po' di te"
 msgid "Tell us a little more"
 msgstr "Dicci un po' di più"
 
-#: src/screens/ModerationInbox/Notice.tsx:471
+#: src/screens/ModerationInbox/Notice.tsx:470
 msgid "Tell us why you believe this decision was a mistake. We will review your appeal along with the original content."
 msgstr "Spiegaci perché ritieni che questa decisione sia stata un errore. Esamineremo il tuo ricorso insieme al contenuto originale."
 
@@ -13950,11 +14002,11 @@ msgstr "L'account sarà in grado di interagire con te dopo lo sblocco."
 msgid "The account you reported has been restored after another review. You can mute or block it if you’d rather not see its content. Read our <0>Community Guidelines</0>."
 msgstr "L'account che hai segnalato è stato ripristinato dopo un'ulteriore revisione. Se preferisci non vederne i contenuti, puoi silenziarlo o bloccarlo. Leggi le <0>linee guida della nostra community</0>."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:55
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:62
 msgid "The action against your account was reversed"
 msgstr "L'azione contro il tuo account è stata annullata"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:56
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:63
 msgid "The action against your content was reversed"
 msgstr "L'azione contro il tuo contenuto è stata annullata"
 
@@ -13963,8 +14015,8 @@ msgstr "L'azione contro il tuo contenuto è stata annullata"
 msgid "The app will be restarted"
 msgstr "L'app verrà riavviata"
 
-#: src/screens/ModerationInbox/Notice.tsx:324
-#: src/screens/ModerationInbox/Notice.tsx:364
+#: src/screens/ModerationInbox/Notice.tsx:327
+#: src/screens/ModerationInbox/Notice.tsx:368
 msgid "The appeal window has closed."
 msgstr "La finestra per il ricorso è stata chiusa."
 
@@ -14387,7 +14439,7 @@ msgstr "Questo codice non è valido. Invia nuovamente per ottenere un nuovo codi
 msgid "This confirmation code is not valid. Please try again."
 msgstr "Questo codice di conferma non è valido. Riprova."
 
-#: src/screens/ModerationInbox/Notice.tsx:370
+#: src/screens/ModerationInbox/Notice.tsx:374
 msgid "This content could not be appealed. Please reload the notice and try again."
 msgstr "Non è stato possibile presentare ricorso per questo contenuto. Ricarica l'avviso e riprova."
 
@@ -14624,11 +14676,11 @@ msgstr "Questo dovrebbe creare un record di dominio in:"
 msgid "This should only take a few minutes."
 msgstr "Dovrebbe richiedere solo pochi minuti."
 
-#: src/screens/ModerationInbox/Notice.tsx:367
+#: src/screens/ModerationInbox/Notice.tsx:371
 msgid "This subject can no longer be appealed."
 msgstr "Non è più possibile presentare ricorso per questo argomento."
 
-#: src/screens/ModerationInbox/Notice.tsx:361
+#: src/screens/ModerationInbox/Notice.tsx:365
 msgid "This subject has already been appealed."
 msgstr "Questo contenuto è già stato oggetto di ricorso."
 
@@ -14742,6 +14794,10 @@ msgstr "Tre"
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/TimeIndicator.tsx:34
 msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr "Tempo rimanente: {0, plural, one {# secondo} other {# secondi}}"
+
+#: src/screens/ModerationInbox/components/AccountActionTimeline.tsx:24
+msgid "Timeline"
+msgstr "Cronologia"
 
 #: src/components/SendErrorReportDialog.tsx:68
 #: src/features/profileLinks/components/LinkFormDialog.tsx:364
@@ -15348,6 +15404,10 @@ msgstr "Aggiorna la tua email"
 msgid "Update your location"
 msgstr "Aggiorna la tua posizione"
 
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:67
+msgid "Updated"
+msgstr "Aggiornato"
+
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:359
 msgctxt "toast"
 msgid "Updating quote attachment failed"
@@ -15863,7 +15923,7 @@ msgstr "Vedi banner del profilo"
 msgid "View publication"
 msgstr "Vedi pubblicazione"
 
-#: src/screens/ModerationInbox/components/ReportRow.tsx:32
+#: src/screens/ModerationInbox/components/ReportRow.tsx:34
 msgid "View report details: {subject}"
 msgstr "Vedi dettagli della segnalazione: {subject}"
 
@@ -16071,11 +16131,11 @@ msgstr "Abbiamo esaurito i post di chi segui. Ecco le ultime novità da <0/>."
 msgid "We recommend selecting at least two interests."
 msgstr "Consigliamo di selezionare almeno due interessi."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:47
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:50
 msgid "We reviewed your appeal and are keeping our original decision in place."
 msgstr "Abbiamo esaminato il tuo ricorso e manteniamo la nostra decisione originale."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:33
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:36
 msgid "We reviewed your appeal. The current status of your content or account is shown below."
 msgstr "Abbiamo esaminato il tuo ricorso. Lo stato attuale del tuo contenuto o account è mostrato di seguito."
 
@@ -16091,10 +16151,6 @@ msgstr "Abbiamo esaminato la tua segnalazione e abbiamo riscontrato che non viol
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:250
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Abbiamo inviato un'email a <0>{0}</0> contenente un link. Fai clic su di esso per completare la procedura di verifica dell'email."
-
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
-msgid "We sent you an email about your account"
-msgstr ""
 
 #: src/view/com/composer/state/video.ts:521
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
@@ -16240,13 +16296,17 @@ msgstr "Stiamo aggiornando i nostri termini di servizio, l'informativa sulla pri
 msgid "We've confirmed your age assurance status. You can now close this dialog."
 msgstr "Abbiamo verificato la tua età. Ora puoi chiudere questa finestra."
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:43
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:76
 msgid "We’ve taken action on your account for violating our Community Guidelines, and strikes have been added to your record. More violations will lead to stronger enforcement, including suspension."
 msgstr "Abbiamo preso provvedimenti sul tuo account per violazione delle linee guida della nostra community e sono stati aggiunti degli ammonimenti al tuo storico. Ulteriori violazioni porteranno a misure più severe, inclusa la sospensione."
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:37
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:60
 msgid "We’ve taken action on your account for violating our Community Guidelines. Your record now carries enough strikes that another violation could lead to permanent suspension."
 msgstr "Abbiamo preso provvedimenti sul tuo account per aver violato le linee guida della nostra community. Il tuo storico ha ora accumulato un numero di ammonimenti tale che un'ulteriore violazione potrebbe comportare la sospensione permanente."
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:82
+msgid "We’ve taken action on your account. See your notices for details."
+msgstr "Abbiamo preso provvedimenti sul tuo account. Consulta gli avvisi per i dettagli."
 
 #: src/screens/Deactivated.tsx:121
 msgid "Welcome back!"
@@ -16549,7 +16609,7 @@ msgstr "Puoi anche scaricare i dati delle tue chat come file \"JSONL\". Questo f
 msgid "You can always opt out and delete your data"
 msgstr "Puoi sempre scegliere di disattivare la funzionalità e cancellare i tuoi dati"
 
-#: src/screens/ModerationInbox/Notice.tsx:286
+#: src/screens/ModerationInbox/Notice.tsx:289
 msgid "You can appeal once per decision. A different moderator will review the appeal."
 msgstr "Puoi presentare ricorso una volta per decisione. Un moderatore differente esaminerà il ricorso."
 
@@ -16609,7 +16669,7 @@ msgstr "Puoi leggere la cronologia della chat ma non puoi inviare nuovi messaggi
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "Puoi selezionare fino a {MAX_GALLERY_IMAGES, plural, other {# immagini}} in totale."
 
-#: src/screens/ModerationInbox/Notice.tsx:281
+#: src/screens/ModerationInbox/Notice.tsx:284
 msgid "You can submit one account appeal at a time. A different moderator will review the appeal."
 msgstr "Puoi presentare un ricorso per account alla volta. Un moderatore differente esaminerà il ricorso."
 
@@ -16753,7 +16813,7 @@ msgstr "Non hai ancora creato alcun feed personalizzato."
 msgid "You haven't muted any words or tags yet"
 msgstr "Non hai ancora silenziato nessuna parola o tag"
 
-#: src/screens/ModerationInbox/index.tsx:227
+#: src/screens/ModerationInbox/index.tsx:232
 msgid "You haven’t reported anything yet"
 msgstr "Non hai ancora segnalato nulla"
 
@@ -17021,12 +17081,12 @@ msgstr "Hai raggiunto il limite giornaliero di video caricati (troppi video)"
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "Non ci sono altri video da guardare. Forse è il momento giusto per fare una pausa?"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:95
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:103
 msgid "Your ability to submit reports was restricted"
 msgstr "La tua possibilità di inviare segnalazioni è stata limitata"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:88
-#: src/screens/ModerationInbox/index.tsx:112
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:97
+#: src/screens/ModerationInbox/index.tsx:117
 #: src/screens/Signup/index.tsx:191
 msgid "Your account"
 msgstr "Il tuo account"
@@ -17035,7 +17095,7 @@ msgstr "Il tuo account"
 msgid "Your account cannot submit reports while it is suspended."
 msgstr "Il tuo account non può inviare segnalazioni quando è sospeso."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
 msgid "Your account credentials were revoked"
 msgstr "Le credenziali del tuo account sono state revocate"
 
@@ -17043,15 +17103,24 @@ msgstr "Le credenziali del tuo account sono state revocate"
 msgid "Your account has been deleted, see ya! ✌️"
 msgstr "Il tuo account è stato eliminato, addio! ✌️"
 
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:39
 #: src/screens/Takendown.tsx:142
 msgid "Your account has been suspended"
 msgstr "Il tuo account è stato sospeso"
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:34
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:48
+msgid "Your account has moderation actions"
+msgstr "Il tuo account ha azioni di moderazione"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:47
 msgid "Your account has strikes against it"
 msgstr "Il tuo account ha ricevuto degli ammonimenti"
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:33
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:98
+msgid "Your account has strikes against it. Strikes come off your record over time."
+msgstr "Il tuo account ha degli ammonimenti. Gli ammonimenti vengono rimossi dal tuo storico con il passare del tempo."
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:43
 msgid "Your account is at risk of permanent suspension"
 msgstr "Il tuo account è a rischio di sospensione permanente"
 
@@ -17059,9 +17128,32 @@ msgstr "Il tuo account è a rischio di sospensione permanente"
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Il tuo account è troppo recente per caricare video. Riprova più tardi."
 
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:57
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:23
+msgid "Your account is suspended"
+msgstr "Il tuo account è sospeso"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:50
+msgid "Your account is suspended on Bluesky. See your notices for details and available appeal options."
+msgstr "Il tuo account è sospeso su Bluesky. Consulta i tuoi avvisi per i dettagli e le opzioni di ricorso disponibili."
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:41
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:59
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:25
+msgid "Your account is temporarily suspended"
+msgstr "Il tuo account è temporaneamente sospeso"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:55
+msgid "Your account is temporarily suspended on Bluesky. See your notices for details and available appeal options."
+msgstr "Il tuo account è temporaneamente sospeso su Bluesky. Consulta i tuoi avvisi per i dettagli e le opzioni di ricorso disponibili."
+
 #: src/components/dms/InitiateChatFlow.tsx:836
 msgid "Your account is too new"
 msgstr "Il tuo account è troppo recente"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:45
+msgid "Your account may be suspended or at risk of suspension"
+msgstr "Il tuo account potrebbe essere sospeso o a rischio di sospensione"
 
 #: src/components/dms/InitiateChatFlow.tsx:837
 msgid "Your account must be at least 7 days old to create a new group chat."
@@ -17080,17 +17172,21 @@ msgstr "L'archivio del tuo account, che contiene tutti i record di dati pubblici
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
 msgstr "Abbiamo riscontrato che il tuo account viola i <0>termini di servizio di Bluesky</0>. Ti abbiamo inviato un'email che descrive la violazione e il periodo di sospensione, se applicabile. Se ritieni che questa decisione sia stata presa per errore, puoi richiedere una revisione della sospensione."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:67
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:91
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:73
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
+msgid "Your account was restored"
+msgstr "Il tuo account è stato ripristinato"
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:75
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:82
 msgid "Your account was suspended"
 msgstr "Il tuo account è stato sospeso"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:65
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:74
 msgid "Your account was temporarily suspended for {hours, plural, one {# hour} other {# hours}}"
 msgstr "Il tuo account è stato temporaneamente sospeso per {hours, plural, one {# ora} other {# ore}}"
 
-#: src/screens/ModerationInbox/Notice.tsx:224
+#: src/screens/ModerationInbox/Notice.tsx:227
 msgid "Your appeal has been submitted and is awaiting review."
 msgstr "Il tuo ricorso è stato inviato ed è in attesa di revisione."
 
@@ -17122,14 +17218,18 @@ msgstr "Il tuo contatto {name}"
 msgid "Your contact <0/> is on Bluesky"
 msgstr "Il tuo contatto <0/> è su Bluesky"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:95
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:104
 msgid "Your content"
 msgstr "Il tuo contenuto"
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:84
 msgid "Your content was removed"
 msgstr "Il tuo contenuto è stato rimosso"
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:57
+msgid "Your content was restored"
+msgstr "Il tuo contenuto è stato ripristinato"
 
 #. placeholder {0}: sanitizeHandle(currentAccount?.handle || '', '@')
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:531
@@ -17223,14 +17323,18 @@ msgstr "La tua nota:"
 msgid "Your password must be at least 8 characters long."
 msgstr "La tua password deve essere lunga almeno 8 caratteri."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:94
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:103
 msgid "Your post"
 msgstr "Il tuo post"
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:84
 msgid "Your post was removed"
 msgstr "Il tuo post è stato rimosso"
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:56
+msgid "Your post was restored"
+msgstr "Il tuo post è stato ripristinato"
 
 #: src/view/com/composer/Composer.tsx:1239
 msgid "Your post was sent"
@@ -17279,7 +17383,7 @@ msgstr "La tua segnalazione è stata risolta. Leggi le nostre <0>linee guida del
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr "La segnalazione sarà inviata a <0>{0}</0>."
 
-#: src/screens/ModerationInbox/index.tsx:112
+#: src/screens/ModerationInbox/index.tsx:117
 msgid "Your reports"
 msgstr "Le tue segnalazioni"
 
@@ -17291,14 +17395,6 @@ msgstr "Notifiche delle tue segnalazioni"
 #: src/screens/Settings/InterestsSettings.tsx:65
 msgid "Your selected interests help us serve you content you care about."
 msgstr "Gli interessi che selezioni ci permettono di mostrare i contenuti più pertinenti."
-
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:56
-msgid "Your standing doesn’t restrict your account right now, and strikes come off your record over time."
-msgstr ""
-
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:51
-msgid "Your standing may restrict certain features on your account. Strikes come off your record over time."
-msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1569
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
