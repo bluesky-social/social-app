@@ -21,6 +21,7 @@ import {
   type ActivityContent,
   toViewContent,
 } from '#/screens/Atmosphere/ActivityTab/rows'
+import {getAssociatedProfile} from '#/screens/Atmosphere/data/exploreData'
 import {
   findProfiles,
   mapViewProfiles,
@@ -87,7 +88,7 @@ export function useAtmosphereRecommendedActivityQuery() {
             if (!content) return []
             const moderation = moderateActivity(
               content,
-              undefined,
+              getAssociatedProfile(content.view.associatedProfiles),
               moderationOpts,
             )
             return isActivityHidden(moderation) ? [] : [{content, moderation}]

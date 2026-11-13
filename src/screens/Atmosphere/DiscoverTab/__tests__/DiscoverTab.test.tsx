@@ -6,8 +6,10 @@ import {act, fireEvent, render} from '@testing-library/react-native'
 
 import {
   article,
+  debbie,
   gallery,
 } from '#/screens/Atmosphere/ActivityTab/__tests__/fixtures'
+import {type ActivityContent} from '#/screens/Atmosphere/ActivityTab/rows'
 import {AtmosphereDiscoverTab} from '../index'
 import {useAtmosphereRecommendedActivityQuery} from '../useAtmosphereRecommendedActivityQuery'
 
@@ -17,13 +19,37 @@ jest.mock('../useAtmosphereRecommendedActivityQuery', () => ({
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
   useTheme: () => ({
-    atoms: {text_contrast_medium: {}, border_contrast_low: {}},
+    atoms: {text_contrast_medium: {color: '#667788'}, border_contrast_low: {}},
+    palette: {primary_500: '#006aff'},
   }),
 }))
 jest.mock('#/components/Typography', () => ({
   Text: jest.requireActual<typeof import('react-native')>('react-native').Text,
 }))
 jest.mock('#/components/Loader', () => ({Loader: () => null}))
+jest.mock('#/state/preferences/moderation-opts', () => ({
+  useModerationOpts: () => undefined,
+}))
+jest.mock('#/view/com/util/TimeElapsed', () => ({
+  TimeElapsed: ({
+    timestamp,
+    children,
+  }: {
+    timestamp: string
+    children: (props: {timeElapsed: string}) => React.ReactNode
+  }) => {
+    mockTimestamp(timestamp)
+    return children({timeElapsed: '1h'})
+  },
+}))
+jest.mock('#/view/com/util/UserAvatar', () => ({
+  PreviewableUserAvatar: () => null,
+}))
+jest.mock('#/components/Link', () => ({
+  InlineLinkText:
+    jest.requireActual<typeof import('react-native')>('react-native').Text,
+}))
+jest.mock('#/components/icons/community/Grain', () => ({GrainMark: () => null}))
 jest.mock('#/view/com/util/List', () => ({
   List: jest.requireActual<typeof import('react-native')>('react-native')
     .FlatList,
@@ -46,6 +72,9 @@ jest.mock(
     ActivityContentHider: ({children}: {children: React.ReactNode}) => children,
   }),
 )
+jest.mock('#/screens/Atmosphere/ActivityTab/components/LivestreamCard', () => ({
+  isLive: () => false,
+}))
 jest.mock('#/screens/Atmosphere/ActivityTab/components/ActivityRow', () => {
   const {Text} = jest.requireActual('react-native')
   return {
@@ -55,6 +84,7 @@ jest.mock('#/screens/Atmosphere/ActivityTab/components/ActivityRow', () => {
   }
 })
 
+const mockTimestamp = jest.fn()
 const refetch = jest.fn()
 const mockQuery = jest.mocked(useAtmosphereRecommendedActivityQuery)
 const errorMessage = 'Could not load recommendations. Please try again.'
@@ -115,6 +145,62 @@ it('renders cards in order, with refresh but no load-more handler', async () => 
   })
   expect(list().props.refreshing).toBe(false)
 })
+
+it.each([
+  {
+    content: {
+      type: 'article',
+      view: article(undefined, {
+        associatedProfiles: [debbie],
+        createdAt: '2026-11-13T12:00:00Z',
+      }),
+    } satisfies ActivityContent,
+    sentence: 'Debbie Ridpath Ohi published an article',
+    app: 'Leaflet',
+  },
+  {
+    content: {
+      type: 'gallery',
+      view: {...gallery(), createdAt: '2026-11-13T12:00:00Z'},
+    } satisfies ActivityContent,
+    sentence: 'Manton Reece posted a gallery',
+    app: 'Grain',
+  },
+])('infers a creation header: $sentence', ({content, sentence, app}) => {
+  setQuery({
+    data: {items: [{content, moderation: {}}], recIdStr: '123'} as never,
+  })
+  const screen = renderTab()
+
+  expect(screen.getByText(sentence)).toBeTruthy()
+  expect(screen.getByText('1h on')).toBeTruthy()
+  expect(screen.getByText(app)).toBeTruthy()
+  expect(mockTimestamp).toHaveBeenCalledWith(content.view.createdAt)
+  expect(screen.getByText(content.view.title)).toBeTruthy()
+})
+
+it.each([
+  {
+    type: 'article',
+    view: article(undefined, {createdAt: '2026-11-13T12:00:00Z'}),
+  },
+  {type: 'article', view: article(undefined, {associatedProfiles: [debbie]})},
+  {type: 'gallery', view: gallery()},
+] satisfies ActivityContent[])(
+  'keeps a $type card without a header when the author or creation date is missing',
+  content => {
+    setQuery({
+      data: {items: [{content, moderation: {}}], recIdStr: '123'} as never,
+    })
+    const screen = renderTab()
+
+    expect(screen.getByText(content.view.title)).toBeTruthy()
+    expect(mockTimestamp).not.toHaveBeenCalled()
+    expect(
+      screen.queryByText(/published an article|posted a gallery/),
+    ).toBeNull()
+  },
+)
 
 it('shows loading, retryable errors, and an empty state', () => {
   setQuery({})

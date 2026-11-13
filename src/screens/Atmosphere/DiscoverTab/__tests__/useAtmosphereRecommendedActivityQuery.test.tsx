@@ -196,6 +196,40 @@ it('finds cached owners and publisher profiles, and re-filters shadows without a
   expect(result.current.data?.items).toHaveLength(2)
 })
 
+it.each(['muted', 'blocked'])(
+  'filters a %s header author even when associatedRefs are absent',
+  async state => {
+    const {client, wrapper} = setup()
+    client.call.mockResolvedValue(
+      response([
+        article(undefined, {
+          associatedProfiles: [manton],
+          createdAt: '2026-11-13T12:00:00Z',
+        }),
+        {...gallery(), createdAt: '2026-11-13T12:00:00Z'},
+      ]),
+    )
+    const {result, rerender} = renderHook(
+      () => useAtmosphereRecommendedActivityQuery(),
+      {wrapper},
+    )
+    await waitFor(() => expect(result.current.data?.items).toHaveLength(2))
+
+    mockApplyProfileShadow = profile => ({
+      ...profile,
+      viewer: {
+        ...profile.viewer,
+        ...(state === 'muted'
+          ? {muted: true}
+          : {blocking: 'at://did:plc:viewer/app.bsky.graph.block/1' as const}),
+      },
+    })
+    rerender({})
+    expect(result.current.data?.items).toEqual([])
+    expect(client.call).toHaveBeenCalledTimes(1)
+  },
+)
+
 it('skips unknown views and galleries without an image or author', async () => {
   const {client, wrapper} = setup()
   client.call.mockResolvedValue(

@@ -5,10 +5,14 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List} from '#/view/com/util/List'
 import {ActivityContentHider} from '#/screens/Atmosphere/ActivityTab/components/ActivityContentHider'
+import {ActivityHeader} from '#/screens/Atmosphere/ActivityTab/components/ActivityHeader'
 import {ActivityContentCard} from '#/screens/Atmosphere/ActivityTab/components/ActivityRow'
+import {type ActivityCardRow} from '#/screens/Atmosphere/ActivityTab/rows'
+import {getAssociatedProfile} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {site, social} from '#/lexicons'
 import {
   type DiscoverItem,
   useAtmosphereRecommendedActivityQuery,
@@ -70,14 +74,38 @@ export function AtmosphereDiscoverTab() {
   )
 }
 
-function DiscoverCard({item}: {item: DiscoverItem}) {
+function DiscoverCard({item: {content, moderation}}: {item: DiscoverItem}) {
   const t = useTheme()
+  /** Infer a creation event; the recommendation response has no activities. */
+  let row: ActivityCardRow | undefined
+  if (content.type === 'article' || content.type === 'gallery') {
+    const actor = getAssociatedProfile(content.view.associatedProfiles)
+    if (actor && content.view.createdAt) {
+      row = {
+        kind: 'card',
+        key: content.view.uri,
+        collection:
+          content.type === 'article'
+            ? site.standard.document.$type
+            : social.grain.gallery.$type,
+        actor,
+        indexedAt: content.view.createdAt,
+        activityCount: 1,
+        otherActorCount: 0,
+        related: [],
+        content,
+        moderation,
+      }
+    }
+  }
+
   return (
     <View
       testID="atmosphereDiscoverCard"
-      style={[a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
-      <ActivityContentHider moderation={item.moderation}>
-        <ActivityContentCard content={item.content} />
+      style={[a.gap_md, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
+      {row ? <ActivityHeader row={row} /> : null}
+      <ActivityContentHider moderation={moderation}>
+        <ActivityContentCard content={content} />
       </ActivityContentHider>
     </View>
   )
