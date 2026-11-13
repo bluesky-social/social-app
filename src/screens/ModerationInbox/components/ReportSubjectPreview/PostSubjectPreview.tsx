@@ -17,6 +17,7 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
 import {app, type tools} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+import {postCidMatch} from './postCidMatch'
 
 type Report = Pick<
   tools.ozone.inbox.getReport.$OutputBody['report'],
@@ -41,18 +42,22 @@ export function PostSubjectPreview({
   const moderationOpts = useModerationOpts()
   const {currentAccount, hasSession} = useSession()
   const postQuery = usePostQuery(uri.toString())
-  // Do not present an edited post as the content that was reported.
-  const post =
+  const cidMatch =
     postQuery.data &&
     'cid' in report.subject &&
-    report.subject.cid === postQuery.data.cid
-      ? postQuery.data
-      : undefined
-  const record = bsky.matches(app.bsky.feed.post, report.record)
-    ? report.record
-    : post && bsky.matches(app.bsky.feed.post, post.record)
+    postCidMatch(postQuery.data, report.subject.cid)
+  const post = cidMatch ? postQuery.data : undefined
+  // A blob match identifies the current media, not the original post text.
+  const record =
+    cidMatch === 'embed' &&
+    post &&
+    bsky.matches(app.bsky.feed.post, post.record, {strict: false})
       ? post.record
-      : undefined
+      : bsky.matches(app.bsky.feed.post, report.record)
+        ? report.record
+        : post && bsky.matches(app.bsky.feed.post, post.record, {strict: false})
+          ? post.record
+          : undefined
   /*
    * Ozone can return the owner's removed record even when appview cannot.
    * Report previews still require a live, moderated post with the same CID.
@@ -117,6 +122,11 @@ export function PostSubjectPreview({
           ) : (
             text
           )}
+          {cidMatch === 'embed' ? (
+            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              <Trans>Current version of post</Trans>
+            </Text>
+          ) : null}
           <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
             <Trans>
               Posted{' '}
