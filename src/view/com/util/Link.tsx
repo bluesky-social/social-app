@@ -430,6 +430,8 @@ function onPressInner(
         const tabState = getTabState(state, routeName)
         if (tabState === TabState.InsideAtRoot) {
           emitSoftReset()
+        } else if (IS_WEB) {
+          navigation.dispatch(StackActions.push(routeName, params))
         } else {
           // note: 'navigate' actually acts the same as 'push' nowadays
           // therefore we need to add 'pop' -sfn

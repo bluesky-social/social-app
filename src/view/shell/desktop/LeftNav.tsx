@@ -9,7 +9,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useNavigation, useNavigationState} from '@react-navigation/native'
+import {
+  StackActions,
+  useNavigation,
+  useNavigationState,
+} from '@react-navigation/native'
 
 import {UNREAD_NOTIFICATION_CAP} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
@@ -328,8 +332,12 @@ function SwitchMenuItems({
         emitSoftReset()
       } else {
         const [screen, params] = router.matchPath(profileLink)
-        // @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
-        navigation.navigate(screen, params, {pop: true})
+        if (IS_WEB) {
+          navigation.dispatch(StackActions.push(screen, params))
+        } else {
+          // @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
+          navigation.navigate(screen, params, {pop: true})
+        }
       }
     }
 
@@ -494,8 +502,12 @@ function NavItem({
         emitSoftReset()
       } else {
         const [screen, params] = router.matchPath(href)
-        // @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
-        navigation.navigate(screen, params, {pop: true})
+        if (IS_WEB) {
+          navigation.dispatch(StackActions.push(screen, params))
+        } else {
+          // @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
+          navigation.navigate(screen, params, {pop: true})
+        }
       }
     },
     [navigation, href, isCurrent, ax, navItem, onNavigateTab, tab],

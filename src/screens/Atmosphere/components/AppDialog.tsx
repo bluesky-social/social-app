@@ -1,7 +1,7 @@
 import {type GestureResponderEvent, View} from 'react-native'
 import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
+import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -149,7 +149,9 @@ function AppDialogInner({
             style={[a.justify_center]}
             onPress={e =>
               closeThen(e, () =>
-                navigation.navigate('Profile', {name: profile.did}),
+                navigation.dispatch(
+                  StackActions.push('Profile', {name: profile.did}),
+                ),
               )
             }>
             <ButtonText>{l`View profile`}</ButtonText>
