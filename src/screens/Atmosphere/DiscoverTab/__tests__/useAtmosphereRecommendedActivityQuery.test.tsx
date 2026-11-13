@@ -96,6 +96,34 @@ it('fetches one batch in recommendation order and keeps the raw response and rec
   expect(queryClient.getQueryCache().getAll()[0].state.data).toBe(data)
 })
 
+it('deduplicates content URLs while preserving the first recommendation and raw cache', async () => {
+  const {client, queryClient, wrapper} = setup()
+  const firstArticle = article(undefined, {
+    uri: 'https://bskycheck.com/stats.php',
+    title: 'First article',
+  })
+  const firstGallery = gallery()
+  const data = response([
+    firstArticle,
+    firstGallery,
+    {...firstArticle, title: 'Duplicate article'},
+    {...firstGallery, title: 'Duplicate gallery'},
+    article('another.example.com'),
+  ])
+  client.call.mockResolvedValue(data)
+  const {result} = renderHook(() => useAtmosphereRecommendedActivityQuery(), {
+    wrapper,
+  })
+
+  await waitFor(() => expect(result.current.isSuccess).toBe(true))
+  expect(result.current.data?.items.map(item => item.content.view)).toEqual([
+    firstArticle,
+    firstGallery,
+    article('another.example.com'),
+  ])
+  expect(queryClient.getQueryCache().getAll()[0].state.data).toBe(data)
+})
+
 it('waits for moderation preferences before fetching', async () => {
   const {client, wrapper} = setup()
   mockModerationOpts = undefined

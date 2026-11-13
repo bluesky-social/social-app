@@ -78,23 +78,29 @@ export function useAtmosphereRecommendedActivityQuery() {
           },
         },
       ),
-    select: data => ({
-      ...data,
-      items: moderationOpts
-        ? data.items.flatMap(({view}): DiscoverItem[] => {
-            const content = toViewContent(
-              mapViewProfiles(view, applyProfileShadow),
-            )
-            if (!content) return []
-            const moderation = moderateActivity(
-              content,
-              getAssociatedProfile(content.view.associatedProfiles),
-              moderationOpts,
-            )
-            return isActivityHidden(moderation) ? [] : [{content, moderation}]
-          })
-        : [],
-    }),
+    select: data => {
+      const seen = new Set<string>()
+      return {
+        ...data,
+        items: moderationOpts
+          ? data.items.flatMap(({view}): DiscoverItem[] => {
+              const content = toViewContent(
+                mapViewProfiles(view, applyProfileShadow),
+              )
+              if (!content || seen.has(content.view.uri)) return []
+              const moderation = moderateActivity(
+                content,
+                getAssociatedProfile(content.view.associatedProfiles),
+                moderationOpts,
+              )
+              if (isActivityHidden(moderation)) return []
+              // Hydrated URLs can repeat even for different source records.
+              seen.add(content.view.uri)
+              return [{content, moderation}]
+            })
+          : [],
+      }
+    },
   })
 }
 
