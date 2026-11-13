@@ -22,6 +22,10 @@ jest.mock('#/state/session', () => ({
   useAppviewClient: jest.fn(),
 }))
 
+jest.mock('#/state/cache/profile-shadow', () => ({
+  useApplyProfileShadow: () => (profile: unknown) => profile,
+}))
+
 jest.mock('#/env', () => ({IS_WEB: false}))
 jest.mock('#/storage', () => ({device: {get: jest.fn()}}))
 
@@ -83,7 +87,7 @@ describe('useAtmosphereExploreQuery', () => {
     const {result} = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
-    expect(result.current.data).toBe(data)
+    expect(result.current.data).toEqual(data)
     expect(client.call).toHaveBeenCalledTimes(1)
     expect(client.call).toHaveBeenCalledWith(
       app.bsky.unspecced.getAtmosphereExploreTab,
@@ -258,7 +262,7 @@ describe('useAtmosphereExploreQuery', () => {
     const {result} = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(result.current.data).toBe(response)
+    expect(result.current.data).toEqual(response)
     expect(queryClient.getQueryCache().getAll()[0].state.data).toBe(response)
     expect(result.current.data?.articles.recIdStr).toBe('18446744073709551615')
   })
@@ -307,7 +311,7 @@ describe('useAtmosphereExploreQuery', () => {
       timeout: 3000,
     })
 
-    expect(result.current.data).toBe(data)
+    expect(result.current.data).toEqual(data)
     expect(result.current.isError).toBe(false)
     expect(client.call).toHaveBeenCalledTimes(2)
   })
@@ -327,7 +331,7 @@ describe('useAtmosphereExploreQuery', () => {
     await result.current.refetch()
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
-    expect(result.current.data).toBe(data)
+    expect(result.current.data).toEqual(data)
     expect(client.call).toHaveBeenCalledTimes(3)
   })
 
@@ -372,7 +376,7 @@ describe('useAtmosphereExploreQuery', () => {
       await waitFor(() => expect(result.current[0].isSuccess).toBe(true))
 
       expect(client.call).toHaveBeenCalledTimes(1)
-      expect(result.current[1].data).toBe(data)
+      expect(result.current[1].data).toEqual(data)
     })
 
     it('shows cached data and refetches on remount', async () => {
@@ -384,7 +388,7 @@ describe('useAtmosphereExploreQuery', () => {
       first.unmount()
 
       const second = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
-      expect(second.result.current.data).toBe(data)
+      expect(second.result.current.data).toEqual(data)
       await waitFor(() => expect(client.call).toHaveBeenCalledTimes(2))
       expect(queryClient.getQueryCache().getAll()).toHaveLength(1)
     })

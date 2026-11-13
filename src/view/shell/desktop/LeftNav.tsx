@@ -425,6 +425,7 @@ function SwitchMenuItemAvatar({
 interface NavItemProps {
   beta?: boolean
   count?: string
+  exactMatch?: boolean
   hasNew?: boolean
   href: string
   icons: {
@@ -439,6 +440,7 @@ interface NavItemProps {
 function NavItem({
   beta,
   count,
+  exactMatch = false,
   hasNew,
   href,
   icons,
@@ -473,7 +475,9 @@ function NavItem({
     IS_NATIVE && tab
       ? getTabState(navigationState, tab) !== TabState.Outside
       : isCurrent
-  const isRelated = currentRouteInfo.name.startsWith(pathName)
+  const isRelated = exactMatch
+    ? false
+    : currentRouteInfo.name.startsWith(pathName)
   const navigation = useNavigation<NavigationProp>()
   const onPressWrapped = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -699,7 +703,7 @@ export function DesktopLeftNav({
         : i18n.number(moderationInboxUnreadCount)
       : undefined
   const hasHomeBadge = useHomeBadge()
-  const isAtmosphereExploreEnabled = ax.features.enabled(
+  const isAtmosphereEnabled = ax.features.enabled(
     ax.features.AtmosphereScreenEnable,
   )
   const insets = useSafeAreaInsets()
@@ -753,20 +757,6 @@ export function DesktopLeftNav({
             count={numUnreadNotifications}
             icons={{inactive: BellIcon, active: BellFilledIcon}}
           />
-          {isAtmosphereExploreEnabled && (
-            <NavItem
-              label={l`Atmosphere`}
-              href="/atmosphere"
-              navItem="atmosphere"
-              onNavigateTab={onNavigateTab}
-              minimal={leftNavMinimal}
-              beta
-              icons={{
-                inactive: EarthIcon,
-                active: EarthIcon,
-              }}
-            />
-          )}
           <NavItem
             label={l`Chat`}
             href="/messages"
@@ -779,6 +769,21 @@ export function DesktopLeftNav({
             hasNew={!aa.flags.chatDisabled && numUnreadMessages.hasNew}
             icons={{inactive: MessageIcon, active: MessageFilledIcon}}
           />
+          {isAtmosphereEnabled && (
+            <NavItem
+              label={l`Atmosphere`}
+              href="/atmosphere"
+              navItem="atmosphere"
+              onNavigateTab={onNavigateTab}
+              exactMatch
+              minimal={leftNavMinimal}
+              beta
+              icons={{
+                inactive: EarthIcon,
+                active: EarthIcon,
+              }}
+            />
+          )}
           <NavItem
             label={l`Feeds`}
             href="/feeds"

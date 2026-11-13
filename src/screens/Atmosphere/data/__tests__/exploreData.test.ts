@@ -477,6 +477,24 @@ describe('Atmosphere Explore response fixtures', () => {
       ])
     })
 
+    it('keeps apps with a website or a profile, and drops apps with neither', () => {
+      const apps = getAtmosphereApps(
+        parseApps({
+          apps: [
+            {id: 'website', title: 'Website', url: 'https://example.com'},
+            {
+              id: 'profile',
+              title: 'Profile',
+              profile: {did: testProfile.did, handle: 'app.bsky.social'},
+            },
+            {id: 'neither', title: 'Neither'},
+          ],
+        }),
+      )
+
+      expect(apps.map(app => app.id)).toEqual(['website', 'profile'])
+    })
+
     it('validates the live response contract', () => {
       expect(() => parseApps({apps: [{url: 'not a uri'}]})).toThrow()
     })
@@ -955,7 +973,7 @@ describe('getAtmosphereExploreApps', () => {
     backgroundImage: 'https://example.com/bg.jpg' as const,
   }
 
-  it.each(['id', 'title', 'url', 'backgroundImage'] as const)(
+  it.each(['id', 'title', 'backgroundImage'] as const)(
     'drops apps missing %s',
     field => {
       const data = parseData({
@@ -969,6 +987,27 @@ describe('getAtmosphereExploreApps', () => {
       expect(getAtmosphereExploreApps(data).map(a => a.id)).toEqual(['kept'])
     },
   )
+
+  it('keeps apps with a website or a profile, and drops apps with neither', () => {
+    const data = parseData({
+      ...exploreResponseFixture,
+      apps: [
+        {...valid, id: 'website'},
+        {
+          ...valid,
+          id: 'profile',
+          url: undefined,
+          profile: {did: 'did:plc:6ayddqghxhciedbaofoxkcbs', handle: 'a.test'},
+        },
+        {...valid, id: 'neither', url: undefined},
+      ],
+    })
+
+    expect(getAtmosphereExploreApps(data).map(a => a.id)).toEqual([
+      'website',
+      'profile',
+    ])
+  })
 
   it('dedupes by id, keeping the first in server order', () => {
     const data = parseData({

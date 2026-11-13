@@ -90,7 +90,7 @@ export function PhotoCard({
           galleryFocus?.onFocus()
         }}
         onBlur={onInteractOut}
-        style={[a.flex_grow, a.w_full, a.flex_col, a.align_start, a.gap_sm]}>
+        style={[a.w_full, a.flex_col, a.align_start, a.gap_sm]}>
         <View
           style={[
             a.w_full,

@@ -25,6 +25,9 @@ font glyphmaps match a fresh build, and that the font files exist.
 `pnpm icons:test` runs the focused generator tests. Generation warns, but does not fail, when a
 generated icon uses a viewBox other than 24×24 or 64×64.
 
+Path validation accepts SVG numbers in decimal or scientific notation and rejects malformed path
+commands, non-finite numbers, and misplaced commas.
+
 ## Output grouping
 
 Grouping has no per-icon manifest. The generator removes style suffixes, tokenizes semantic

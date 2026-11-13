@@ -53,7 +53,7 @@ function AppDialogInner({
   const categories = useAtmosphereAppCategories()
   const categoryLabel = categories.find(c => c.key === app.category)?.label
   const profile = app.profile
-  const url = app.url ?? ''
+  const url = app.url
 
   /*
    * Links keep real hrefs for semantics, but navigation must wait for the
@@ -98,10 +98,12 @@ function AppDialogInner({
             <Text emoji style={[a.text_xl, a.font_semi_bold, t.atoms.text]}>
               {app.title}
             </Text>
-            <Text emoji style={[a.text_md, t.atoms.text_contrast_medium]}>
-              {' · '}
-              {toNiceDomain(url)}
-            </Text>
+            {url ? (
+              <Text emoji style={[a.text_md, t.atoms.text_contrast_medium]}>
+                {' · '}
+                {toNiceDomain(url)}
+              </Text>
+            ) : undefined}
           </Text>
           {categoryLabel ? (
             <View
@@ -124,17 +126,19 @@ function AppDialogInner({
         </Text>
       ) : undefined}
       <View style={[a.gap_sm]}>
-        <Link
-          testID="appDialogVisit"
-          to={url}
-          label={l`Visit app`}
-          color="secondary"
-          size="large"
-          style={[a.justify_center]}
-          onPress={e => closeThen(e, () => openLink(url))}>
-          <ButtonText>{l`Visit app`}</ButtonText>
-          <ButtonIcon icon={ArrowIcon} position="right" />
-        </Link>
+        {url ? (
+          <Link
+            testID="appDialogVisit"
+            to={url}
+            label={l`Visit the ${app.title} website`}
+            color="secondary"
+            size="large"
+            style={[a.justify_center]}
+            onPress={e => closeThen(e, () => openLink(url))}>
+            <ButtonText>{l`Website`}</ButtonText>
+            <ButtonIcon icon={ArrowIcon} position="right" />
+          </Link>
+        ) : undefined}
         {profile ? (
           <Link
             testID="appDialogProfile"

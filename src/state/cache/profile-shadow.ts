@@ -33,6 +33,9 @@ import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForDiscover
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForExploreQueryData} from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForSeeMoreQueryData} from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery'
 import {findAllProfilesInQueryData as findAllProfilesInPostThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
+import {findAllProfilesInQueryData as findAllProfilesInAtmosphereActivityListQueryData} from '#/screens/Atmosphere/ActivityList/useActivityListQuery'
+import {findAllProfilesInQueryData as findAllProfilesInAtmosphereActivityTimelineQueryData} from '#/screens/Atmosphere/ActivityTab/useActivityTimelineQuery'
+import {findAllProfilesInQueryData as findAllProfilesInAtmosphereExploreQueryData} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
 import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {castAsShadow, type Shadow} from './types'
@@ -136,6 +139,36 @@ export function useMaybeProfileShadow<
       return castAsShadow(profile)
     }
   }, [profile, shadow])
+}
+
+/**
+ * For derived data outside components, like a query's `select`: returns a
+ * function that applies each profile's shadow. The function's identity changes
+ * on every shadow update, so a `select` that closes over it re-runs.
+ */
+export function useApplyProfileShadow() {
+  const [apply, setApply] = useState(() => applyProfileShadow)
+  useEffect(
+    () =>
+      listenProfileShadowUpdate(() => {
+        setApply(
+          () =>
+            <TProfileView extends bsky.profile.AnyProfileView>(
+              profile: TProfileView,
+            ) =>
+              applyProfileShadow(profile),
+        )
+      }),
+    [],
+  )
+  return apply
+}
+
+function applyProfileShadow<TProfileView extends bsky.profile.AnyProfileView>(
+  profile: TProfileView,
+): Shadow<TProfileView> {
+  const shadow = shadows.get(profile)
+  return shadow ? mergeShadow(profile, shadow) : castAsShadow(profile)
 }
 
 /**
@@ -310,6 +343,9 @@ function* findProfilesInCache(
   queryClient: QueryClient,
   did: string,
 ): Generator<bsky.profile.AnyProfileView, void> {
+  yield* findAllProfilesInAtmosphereActivityTimelineQueryData(queryClient, did)
+  yield* findAllProfilesInAtmosphereActivityListQueryData(queryClient, did)
+  yield* findAllProfilesInAtmosphereExploreQueryData(queryClient, did)
   yield* findAllProfilesInListMembersQueryData(queryClient, did)
   yield* findAllProfilesInMyBlockedAccountsQueryData(queryClient, did)
   yield* findAllProfilesInMyMutedAccountsQueryData(queryClient, did)

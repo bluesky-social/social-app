@@ -35,6 +35,18 @@ jest.mock('#/lib/hooks/useOpenLink', () => ({
 jest.mock('#/lib/hooks/useOpenComposer', () => ({
   useOpenComposer: () => ({openComposer: mockOpenComposer}),
 }))
+let mockDevMode = false
+const mockSetString = jest.fn()
+jest.mock('#/storage/hooks/dev-mode', () => ({
+  useDevMode: () => [mockDevMode],
+}))
+jest.mock('expo-clipboard', () => ({
+  setStringAsync: (value: string) => mockSetString(value),
+}))
+jest.mock('#/components/Toast', () => ({show: jest.fn()}))
+jest.mock('#/components/icons/Clipboard', () => ({
+  Clipboard_Stroke2_Corner2_Rounded: () => null,
+}))
 jest.mock('#/lib/sharing', () => ({
   shareUrl: (url: string) => mockShareUrl(url),
 }))
@@ -256,6 +268,7 @@ beforeEach(() => {
   mockHasSession = true
   mockHasFullAccess = true
   mockIsWeb = false
+  mockDevMode = false
 })
 
 describe.each([
@@ -476,4 +489,37 @@ it('does not offer reports when the callsite allows no record types', () => {
 
   expect(screen.getByLabelText('Report article')).toBeDisabled()
   expect(screen.queryByLabelText('Report this article')).toBeNull()
+})
+
+describe('AtmosphereCardMenu dev mode', () => {
+  const copyLabels = () =>
+    screen
+      .queryAllByRole('menuitem')
+      .map(i => i.props.accessibilityLabel)
+      .filter(
+        (label: string) => label.startsWith('Copy') && /AT URI/.test(label),
+      )
+
+  it('hides the copy actions unless dev mode is on', () => {
+    renderMenu('article')
+    expect(copyLabels()).toEqual([])
+  })
+
+  it.each([
+    ['article', ['Copy publication AT URI', 'Copy article AT URI']],
+    ['photo', ['Copy gallery AT URI']],
+    ['publication', ['Copy publication AT URI']],
+    ['livestream', ['Copy livestream AT URI']],
+  ] as const)('offers only the %s records', (type, expected) => {
+    mockDevMode = true
+    renderMenu(type)
+    expect(copyLabels()).toEqual(expected)
+  })
+
+  it('copies the record uri', () => {
+    mockDevMode = true
+    renderMenu('photo')
+    fireEvent.press(screen.getByLabelText('Copy gallery AT URI'))
+    expect(mockSetString).toHaveBeenCalledWith(galleryRef.uri)
+  })
 })

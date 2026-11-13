@@ -8,27 +8,40 @@ against it. Do not hand-edit published schemas.
 ## Local extension: `app.bsky.embed.external`
 
 `viewGallery.photoCount` is an optional non-negative total photo count, distinct
-from the number of hydrated gallery items. This schema includes that local
-extension; its manifest CID is a locally calculated content-integrity pin, not
-the published record CID. Exclude it from scoped updates until the published
-schema includes the field.
+from the number of hydrated gallery items. Upstream added it in atproto PR 5880
+(`lexicons-overrides/app/bsky/embed/external.json` at
+`e9fbdab8e2302e3e01ea923c2db5ee4d7ff33681`), which this schema matches, but the
+published schema record does not include it yet. Its manifest CID is a locally
+calculated content-integrity pin, not the published record CID. Exclude it from
+scoped updates until the published schema includes the field.
 
-## Exceptions: `app.bsky.unspecced.getAtmosphereExploreTab` and `getAtmosphereApps`
+## Unpublished Atmosphere schemas
 
 The `app.bsky.unspecced` namespace is intentionally unpublished (it is a DNS
 carveout upstream, and resolving it is a CI violation there), so the installer
 cannot fetch it. These schemas are copied from merged upstream sources:
 
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereExploreTab.json` at atproto
-  `7b640e8fee709d22a0d62262068db0ddb3106741` (from atproto PR 5809)
+  `a704f10c040a989244cfa578e65f006ff7de0f83` (from atproto PR 5892)
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereApps.json` at atproto
-  `11f52c5588279d159ab12404a1b323731a467fdd` (from atproto PR 5801)
+  `a704f10c040a989244cfa578e65f006ff7de0f83` (from atproto PR 5892)
+- `lexicons-overrides/app/bsky/unspecced/getAtmosphereTimeline.json` at atproto
+  `4ca55dbc6d9e04d721fc14abffb73ce33158e002` (from atproto PR 5871)
+- `lexicons-overrides/app/bsky/unspecced/getAtmosphereRecordViews.json` at atproto
+  `3fb2578a59813b3183fb1e443120e25a43ab4aba` (from atproto PR 5860)
 
 In `lexicons.json`, their `cid` values are locally calculated content-integrity
 pins, not published record CIDs, and their `uri` values are only installer
 compatibility hints, not published record locations. An unscoped network update
 will fail when it tries to fetch these schemas. Update them from upstream JSON
 and compute each local CID with `cidForLex` from `@atproto/lex-cbor`.
+
+The authenticated Activity timeline uses the session's appview client. Its feed
+contains hydrated activity items, actor groups, and subject groups. Until the
+timeline returns actor profiles, missing ones are fetched through
+`app.bsky.actor.getProfiles` in batches of at most 25. “View all” on an actor
+group hydrates the group's records through `getAtmosphereRecordViews`, 25 at a
+time. The Apps tab follows Explore; Explore's app gallery opens it with “See more”.
 
 ## Exception: `place.stream.badge.defs`
 

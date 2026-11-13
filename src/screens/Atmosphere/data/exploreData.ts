@@ -107,11 +107,10 @@ export function getAtmospherePublications(
     .sort((a, b) => b.description.trim().length - a.description.trim().length)
     .slice(0, 5)
 }
-
 /**
  * Returns the valid apps, optionally limited to a raw backend `category`.
  * Omit `category` for all apps, including those with a missing or unknown
- * category.
+ * category. Apps need a website or a profile to link to.
  */
 export function getAtmosphereApps(
   data: app.bsky.unspecced.getAtmosphereApps.$OutputBody,
@@ -122,7 +121,7 @@ export function getAtmosphereApps(
       app =>
         app.id &&
         app.title &&
-        app.url &&
+        (app.url || app.profile) &&
         (category === undefined || app.category === category),
     ),
     app => app.id,
@@ -133,13 +132,13 @@ export function getAtmosphereApps(
 export type FeaturedApp = app.bsky.unspecced.getAtmosphereExploreTab.AppCard & {
   id: string
   title: string
-  url: UriString
   backgroundImage: UriString
 }
 
 /**
  * Returns the valid apps for the featured gallery. Unlike the Apps tab, these
- * need a banner image because the card is built around it.
+ * need a banner image because the card is built around it. Like the Apps tab,
+ * they need a website or a profile to link to.
  */
 export function getAtmosphereExploreApps(
   data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody,
@@ -147,7 +146,12 @@ export function getAtmosphereExploreApps(
   return dedupeBy(
     data.apps.filter(
       (app): app is FeaturedApp =>
-        !!(app.id && app.title && app.url && app.backgroundImage),
+        !!(
+          app.id &&
+          app.title &&
+          app.backgroundImage &&
+          (app.url || app.profile)
+        ),
     ),
     app => app.id,
   )

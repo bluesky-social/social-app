@@ -1,0 +1,245 @@
+import {AtUri, type AtUriString} from '@atproto/syntax'
+import {type ModerationOpts, type ModerationUI} from '@bsky/sdk/moderation'
+
+import {
+  getAssociatedProfile,
+  getGalleryImage,
+} from '#/screens/Atmosphere/data/exploreData'
+import {app, place, site, social} from '#/lexicons'
+import * as bsky from '#/types/bsky'
+import {type ActorProfiles} from './actorProfiles'
+import {isActivityHidden, isActorHidden, moderateActivity} from './moderation'
+
+const timeline = app.bsky.unspecced.getAtmosphereTimeline
+
+type Profile = bsky.profile.AnyProfileView
+export type TimelineEntry =
+  app.bsky.unspecced.getAtmosphereTimeline.$OutputBody['feed'][number]
+type EntryView = app.bsky.unspecced.getAtmosphereTimeline.ActivityItem['view']
+
+/** Activity collections (record NSIDs) this tab knows how to render. */
+const ACTIVITY_COLLECTIONS = [
+  site.standard.document.$type,
+  site.standard.graph.recommend.$type,
+  site.standard.graph.subscription.$type,
+  social.grain.gallery.$type,
+  place.stream.livestream.$type,
+] as const
+
+export type ActivityCollection = (typeof ACTIVITY_COLLECTIONS)[number]
+
+function isActivityCollection(nsid: string): nsid is ActivityCollection {
+  return (ACTIVITY_COLLECTIONS as readonly string[]).includes(nsid)
+}
+
+/** The view each card renders, already checked to be renderable. */
+export type ActivityContent =
+  | {type: 'article'; view: app.bsky.embed.external.ViewArticle}
+  | {type: 'publication'; view: app.bsky.embed.external.ViewArticlePublication}
+  | {type: 'gallery'; view: app.bsky.embed.external.ViewGallery}
+  | {type: 'livestream'; view: app.bsky.embed.external.ViewLivestream}
+
+/** One pill below the card, e.g. "Recommended by Danielle +2". */
+export type RelatedActivity = {
+  collection: typeof site.standard.graph.recommend.$type
+  /** Actors to show, with moderated ones left out. Never empty. */
+  actors: app.bsky.actor.defs.ProfileViewBasic[]
+  /** Every actor, including moderated ones, for "+N". */
+  actorCount: number
+}
+
+export type ActivityCardRow = {
+  kind: 'card'
+  key: string
+  collection: ActivityCollection
+  /** The lead actor, shown as the avatar and first name in the sentence. */
+  actor: Profile
+  /** Distinct actors besides `actor` ("and 2 others"). */
+  otherActorCount: number
+  /** Activities in this row; more than one means an actor group. */
+  activityCount: number
+  /** Every activity URI in an actor group, newest first. */
+  uris?: AtUriString[]
+  indexedAt: string
+  content: ActivityContent
+  related: RelatedActivity[]
+  /** Hidden cards are already dropped, so any blur here can be revealed. */
+  moderation: ModerationUI
+}
+
+export type ActivityWarningRow = {
+  kind: 'warning'
+  key: string
+  reason: 'unsupported-entry' | 'unexpected-content' | 'missing-actor'
+}
+
+export type ActivityRow = ActivityCardRow | ActivityWarningRow
+
+/**
+ * The single boundary between the API response and the UI. Every entry
+ * becomes at most one row. Moderation drops cards the user must not see (see
+ * `isActivityHidden`); anything else we can't fully render becomes a visible
+ * warning instead of being dropped.
+ *
+ * `profiles` resolves actors for entries that only carry a DID. It's
+ * temporary until the timeline returns actor profiles itself.
+ */
+export function toActivityRows(
+  feed: TimelineEntry[],
+  profiles: ActorProfiles,
+  /** Position of this page in the list; keeps fallback row keys unique. */
+  pageIndex: number,
+  moderationOpts: ModerationOpts,
+): ActivityRow[] {
+  return feed.flatMap((entry, index) => {
+    const row = toActivityRow(
+      entry,
+      `unsupported:${pageIndex}:${index}`,
+      profiles,
+      moderationOpts,
+    )
+    return row ? [row] : []
+  })
+}
+
+function toActivityRow(
+  entry: TimelineEntry,
+  /** For entries with no identity of their own. */
+  fallbackKey: string,
+  profiles: ActorProfiles,
+  moderationOpts: ModerationOpts,
+): ActivityRow | undefined {
+  if (bsky.isType(timeline.activityItem, entry)) {
+    return toCardRow(moderationOpts, {
+      key: entry.record.uri,
+      collection: entry.collection,
+      actor: profiles.get(new AtUri(entry.record.uri).host),
+      otherActorCount: 0,
+      activityCount: 1,
+      indexedAt: entry.record.indexedAt,
+      view: entry.view,
+      related: toRelatedActivity(entry.relatedActivity, moderationOpts),
+    })
+  }
+  if (bsky.isType(timeline.activityActorGroup, entry)) {
+    return toCardRow(moderationOpts, {
+      key: entry.id,
+      collection: entry.collection,
+      actor: profiles.get(entry.actor),
+      otherActorCount: 0,
+      activityCount: entry.uris.length,
+      uris: entry.uris,
+      indexedAt: entry.indexedAt,
+      view: entry.item.view,
+      related: toRelatedActivity(entry.item.relatedActivity, moderationOpts),
+    })
+  }
+  if (bsky.isType(timeline.activitySubjectGroup, entry)) {
+    return toCardRow(moderationOpts, {
+      key: entry.id,
+      collection: entry.collection,
+      actor: entry.actors[0],
+      otherActorCount: Math.max(entry.actors.length - 1, 0),
+      activityCount: 1,
+      indexedAt: entry.indexedAt,
+      view: entry.subject.view,
+      related: [],
+    })
+  }
+  return {kind: 'warning', key: fallbackKey, reason: 'unsupported-entry'}
+}
+
+function toCardRow(
+  moderationOpts: ModerationOpts,
+  {
+    key,
+    collection,
+    actor,
+    view,
+    ...rest
+  }: Omit<
+    ActivityCardRow,
+    'kind' | 'collection' | 'actor' | 'content' | 'moderation'
+  > & {
+    collection: string
+    actor: Profile | undefined
+    view: EntryView
+  },
+): ActivityRow | undefined {
+  if (!isActivityCollection(collection)) {
+    return {kind: 'warning', key, reason: 'unsupported-entry'}
+  }
+  if (!actor) return {kind: 'warning', key, reason: 'missing-actor'}
+  const content = toContent(collection, view)
+  if (!content) return {kind: 'warning', key, reason: 'unexpected-content'}
+  const moderation = moderateActivity(content, actor, moderationOpts)
+  if (isActivityHidden(moderation)) return undefined
+  return {kind: 'card', key, collection, actor, content, moderation, ...rest}
+}
+
+/** Each collection must carry exactly one kind of view. */
+function toContent(
+  collection: ActivityCollection,
+  view: EntryView,
+): ActivityContent | undefined {
+  const external = app.bsky.embed.external
+  switch (collection) {
+    case site.standard.document.$type:
+    case site.standard.graph.recommend.$type:
+      return bsky.isType(external.viewArticle, view)
+        ? {type: 'article', view}
+        : undefined
+    case site.standard.graph.subscription.$type:
+      return bsky.isType(external.viewArticlePublication, view)
+        ? {type: 'publication', view}
+        : undefined
+    case social.grain.gallery.$type: {
+      if (!bsky.isType(external.viewGallery, view)) return undefined
+      // The card needs a photo to show and an author for the photo dialog.
+      return getGalleryImage(view) &&
+        getAssociatedProfile(view.associatedProfiles)
+        ? {type: 'gallery', view}
+        : undefined
+    }
+    case place.stream.livestream.$type:
+      return bsky.isType(external.viewLivestream, view)
+        ? {type: 'livestream', view}
+        : undefined
+  }
+}
+
+/**
+ * The card for one record on the activity list, or undefined when its view is
+ * missing or doesn't match the record's collection.
+ */
+export function toActivityListContent(
+  uri: AtUriString,
+  view: EntryView | undefined,
+): ActivityContent | undefined {
+  const {collection} = new AtUri(uri)
+  return view && isActivityCollection(collection)
+    ? toContent(collection, view)
+    : undefined
+}
+
+function toRelatedActivity(
+  buckets: app.bsky.unspecced.getAtmosphereTimeline.ActivityRelatedGroup[] = [],
+  moderationOpts: ModerationOpts,
+): RelatedActivity[] {
+  return buckets.flatMap(bucket => {
+    // Recommends are the only related activity the timeline returns today.
+    if (bucket.collection !== site.standard.graph.recommend.$type) return []
+    const actors = bucket.actors.filter(
+      actor => !isActorHidden(actor, moderationOpts),
+    )
+    // With nobody left to name, there's no pill.
+    if (actors.length === 0) return []
+    return [
+      {
+        collection: site.standard.graph.recommend.$type,
+        actors,
+        actorCount: bucket.actors.length,
+      },
+    ]
+  })
+}
