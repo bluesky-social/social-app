@@ -7,13 +7,13 @@ against it. Do not hand-edit published schemas.
 
 ## Local extension: `app.bsky.embed.external`
 
-`viewGallery.photoCount` is an optional non-negative total photo count, distinct
-from the number of hydrated gallery items. Upstream added it in atproto PR 5880
-(`lexicons-overrides/app/bsky/embed/external.json` at
-`e9fbdab8e2302e3e01ea923c2db5ee4d7ff33681`), which this schema matches, but the
-published schema record does not include it yet. Its manifest CID is a locally
-calculated content-integrity pin, not the published record CID. Exclude it from
-scoped updates until the published schema includes the field.
+This schema matches upstream `lexicons-overrides/app/bsky/embed/external.json`
+at atproto `f0653de696169e16dc003f11877b9eb0ae6533c0`, which is ahead of the
+published schema record: it adds `viewGallery.photoCount` (atproto PR 5880),
+plus `viewLivestream.lastSeenAt` and `viewArticlePublication.viewer` (atproto PR
+5893). Its manifest CID is a locally calculated content-integrity pin, not the
+published record CID. Exclude it from scoped updates until the published schema
+includes these fields.
 
 ## Unpublished Atmosphere schemas
 
@@ -27,6 +27,8 @@ cannot fetch it. These schemas are copied from merged upstream sources:
   `a704f10c040a989244cfa578e65f006ff7de0f83` (from atproto PR 5892)
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereTimeline.json` at atproto
   `4ca55dbc6d9e04d721fc14abffb73ce33158e002` (from atproto PR 5871)
+- `lexicons-overrides/app/bsky/unspecced/getAtmosphereTimelineV2.json` at atproto
+  `f0653de696169e16dc003f11877b9eb0ae6533c0` (from atproto PR 5893)
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereRecordViews.json` at atproto
   `3fb2578a59813b3183fb1e443120e25a43ab4aba` (from atproto PR 5860)
 

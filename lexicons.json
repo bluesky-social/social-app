@@ -122,6 +122,7 @@
     "app.bsky.unspecced.getAtmosphereExploreTab",
     "app.bsky.unspecced.getAtmosphereRecordViews",
     "app.bsky.unspecced.getAtmosphereTimeline",
+    "app.bsky.unspecced.getAtmosphereTimelineV2",
     "app.bsky.video.defs",
     "app.bsky.video.getJobStatus",
     "app.bsky.video.getUploadLimits",
@@ -434,7 +435,7 @@
     },
     "app.bsky.embed.external": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.embed.external",
-      "cid": "bafyreieaiqypvddk6sp2b3z32jvqhxt435n334m6jdefyb5wr2nshgm4ha"
+      "cid": "bafyreicnmkv77o556qifk5cknsanqkrhtdyhim6y7fqo5slobvuajrmbee"
     },
     "app.bsky.embed.gallery": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.embed.gallery",
@@ -779,6 +780,10 @@
     "app.bsky.unspecced.getAtmosphereTimeline": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.unspecced.getAtmosphereTimeline",
       "cid": "bafyreicspzwzz74a2xovpvz5qt5v6f362j7j3o3epuqsxfeowqkclycgbm"
+    },
+    "app.bsky.unspecced.getAtmosphereTimelineV2": {
+      "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.unspecced.getAtmosphereTimelineV2",
+      "cid": "bafyreieczkg6w4bhosu3dhl7jtos7elsz7vsrljf67coqjox24esdw4vum"
     },
     "app.bsky.video.defs": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.video.defs",
