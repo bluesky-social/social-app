@@ -140,7 +140,7 @@
     "@bsky.app/tapper": "^0.6.1",
     "@bsky.app/video": "0.4.2",
     "@bsky.app/video-compressor": "0.2.0",
-    "@bsky/sdk": "1.3.1",
+    "@bsky/sdk": "1.3.2",
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
     "@expo/metro-runtime": "~58.0.17",
