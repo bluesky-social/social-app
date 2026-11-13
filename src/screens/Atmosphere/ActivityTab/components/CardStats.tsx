@@ -14,7 +14,6 @@ export function CardStats({
   photoCount,
 }: {
   date?: string
-  /** Shown with the up arrow, matching the design spec and article cards. */
   likeCount?: number
   photoCount?: number
 }) {
