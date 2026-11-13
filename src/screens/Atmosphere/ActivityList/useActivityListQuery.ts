@@ -1,25 +1,31 @@
 import {type Client} from '@atproto/lex'
 import {type AtUriString} from '@atproto/syntax'
 import {type ModerationUI} from '@bsky/sdk/moderation'
-import {useInfiniteQuery} from '@tanstack/react-query'
+import {
+  type InfiniteData,
+  type QueryClient,
+  useInfiniteQuery,
+} from '@tanstack/react-query'
 
+import {useApplyProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
 import {
+  findProfiles,
+  mapViewProfiles,
+} from '#/screens/Atmosphere/ActivityTab/mapProfiles'
+import {
   isActivityHidden,
   moderateActivity,
 } from '#/screens/Atmosphere/ActivityTab/moderation'
-import {
-  shadowView,
-  useProfileShadows,
-} from '#/screens/Atmosphere/ActivityTab/profileShadows'
 import {
   type ActivityContent,
   toActivityListContent,
 } from '#/screens/Atmosphere/ActivityTab/rows'
 import {app} from '#/lexicons'
+import type * as bsky from '#/types/bsky'
 
 /** The most records `getAtmosphereRecordViews` takes. */
 const MAX_URIS_PER_REQUEST = 25
@@ -73,7 +79,7 @@ export function useActivityListQuery(uris: AtUriString[]) {
   const {currentAccount} = useSession()
   const viewer = currentAccount?.did
   const moderationOpts = useModerationOpts()
-  const shadows = useProfileShadows()
+  const applyProfileShadow = useApplyProfileShadow()
 
   return useInfiniteQuery({
     queryKey: createQueryKey(useActivityListQueryRoot, {viewer, uris}),
@@ -90,7 +96,7 @@ export function useActivityListQuery(uris: AtUriString[]) {
             page.items.flatMap(({uri, view}): ActivityListItem[] => {
               const content = toActivityListContent(
                 uri,
-                shadowView(view, shadows),
+                mapViewProfiles(view, applyProfileShadow),
               )
               if (!content) return [{uri, content}]
               const moderation = moderateActivity(
@@ -106,4 +112,20 @@ export function useActivityListQuery(uris: AtUriString[]) {
         : [],
     }),
   })
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<bsky.profile.AnyProfileView, void> {
+  const queryDatas = queryClient.getQueriesData<InfiniteData<ActivityListPage>>(
+    {queryKey: [useActivityListQueryRoot]},
+  )
+  for (const [, data] of queryDatas) {
+    for (const page of data?.pages ?? []) {
+      for (const {view} of page.items) {
+        yield* findProfiles(did, map => mapViewProfiles(view, map))
+      }
+    }
+  }
 }

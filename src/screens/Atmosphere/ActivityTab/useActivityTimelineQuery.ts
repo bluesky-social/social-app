@@ -1,12 +1,18 @@
-import {useInfiniteQuery} from '@tanstack/react-query'
+import {
+  type InfiniteData,
+  type QueryClient,
+  useInfiniteQuery,
+} from '@tanstack/react-query'
 
+import {useApplyProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
 import {app} from '#/lexicons'
+import type * as bsky from '#/types/bsky'
 import {type ActorProfiles, fetchActorProfiles} from './actorProfiles'
-import {shadowTimelinePage, useProfileShadows} from './profileShadows'
+import {findProfiles, mapTimelinePageProfiles} from './mapProfiles'
 import {toActivityRows} from './rows'
 
 const useActivityTimelineQueryRoot = 'useActivityTimelineQuery'
@@ -27,7 +33,7 @@ export function useActivityTimelineQuery() {
   const {currentAccount} = useSession()
   const viewer = currentAccount?.did
   const moderationOpts = useModerationOpts()
-  const shadows = useProfileShadows()
+  const applyProfileShadow = useApplyProfileShadow()
 
   return useInfiniteQuery({
     queryKey: createQueryKey(useActivityTimelineQueryRoot, {viewer}),
@@ -47,10 +53,27 @@ export function useActivityTimelineQuery() {
       pageParams: data.pageParams,
       pages: moderationOpts
         ? data.pages.map((page, pageIndex) => {
-            const {feed, profiles} = shadowTimelinePage(page, shadows)
+            const {feed, profiles} = mapTimelinePageProfiles(
+              page,
+              applyProfileShadow,
+            )
             return toActivityRows(feed, profiles, pageIndex, moderationOpts)
           })
         : [],
     }),
   })
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<bsky.profile.AnyProfileView, void> {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<ActivityTimelinePage>
+  >({queryKey: [useActivityTimelineQueryRoot]})
+  for (const [, data] of queryDatas) {
+    for (const page of data?.pages ?? []) {
+      yield* findProfiles(did, map => mapTimelinePageProfiles(page, map))
+    }
+  }
 }
