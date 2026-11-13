@@ -77,7 +77,6 @@
         },
         "viewCount": {
           "type": "integer",
-          "minimum": 0,
           "description": "Approximate number of times the post has been viewed. Only included in authenticated responses to the post's author when eligible to see the count. Counts less than 100 are omitted."
         }
       }
