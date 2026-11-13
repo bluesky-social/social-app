@@ -6,6 +6,11 @@ import {useAppviewClient} from '#/state/session'
 import {useAtmosphereAppsQuery} from '#/screens/Atmosphere/data/useAtmosphereAppsQuery'
 import {app} from '#/lexicons'
 
+/* Reverses instead of shuffling so the order is deterministic. */
+jest.mock('lodash.shuffle', () => ({
+  __esModule: true,
+  default: <T,>(items: T[]) => [...items].reverse(),
+}))
 jest.mock('#/state/session', () => ({
   useAppviewClient: jest.fn(),
 }))
@@ -55,13 +60,35 @@ describe('useAtmosphereAppsQuery', () => {
     const {result} = renderHook(() => useAtmosphereAppsQuery(), {wrapper})
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(result.current.data).toBe(data)
+    expect(result.current.data).toEqual(data)
     expect(client.call).toHaveBeenCalledTimes(1)
     expect(client.call).toHaveBeenCalledWith(
       app.bsky.unspecced.getAtmosphereApps,
       {},
       {signal: expect.any(AbortSignal)},
     )
+  })
+
+  it('shuffles apps once per fetch without touching the cached response', async () => {
+    const {client, queryClient, wrapper} = setup()
+    const catalog: app.bsky.unspecced.getAtmosphereApps.$OutputBody = {
+      apps: [
+        {id: 'a', title: 'A', url: 'https://a.test', category: 'social'},
+        {id: 'b', title: 'B', url: 'https://b.test', category: 'dev'},
+      ],
+    }
+    client.call.mockResolvedValue(catalog)
+
+    const {result, rerender} = renderHook(() => useAtmosphereAppsQuery(), {
+      wrapper,
+    })
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+    const shuffled = result.current.data
+    expect(shuffled?.apps.map(a => a.id)).toEqual(['b', 'a'])
+    rerender({})
+    expect(result.current.data).toBe(shuffled)
+    expect(queryClient.getQueryCache().getAll()[0].state.data).toBe(catalog)
   })
 
   it('shares an in-flight request and refetches cached data on remount', async () => {
@@ -73,12 +100,12 @@ describe('useAtmosphereAppsQuery', () => {
       {wrapper},
     )
     await waitFor(() => expect(first.result.current[0].isSuccess).toBe(true))
-    expect(first.result.current[1].data).toBe(data)
+    expect(first.result.current[1].data).toEqual(data)
     expect(client.call).toHaveBeenCalledTimes(1)
     first.unmount()
 
     const second = renderHook(() => useAtmosphereAppsQuery(), {wrapper})
-    expect(second.result.current.data).toBe(data)
+    expect(second.result.current.data).toEqual(data)
     await waitFor(() => expect(client.call).toHaveBeenCalledTimes(2))
     expect(queryClient.getQueryCache().getAll()).toHaveLength(1)
   })
@@ -119,7 +146,7 @@ describe('useAtmosphereAppsQuery', () => {
     client.call.mockResolvedValue(data)
     await refetchAndFlush(result.current.refetch)
 
-    expect(result.current.data).toBe(data)
+    expect(result.current.data).toEqual(data)
     expect(client.call).toHaveBeenCalledTimes(3)
   })
 
