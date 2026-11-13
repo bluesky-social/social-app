@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-11-12 21:07\n"
+"PO-Revision-Date: 2026-11-13 21:02\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -18,8 +18,12 @@ msgstr ""
 "X-Crowdin-File: /main/src/locale/locales/en/messages.po\n"
 "X-Crowdin-File-ID: 11\n"
 
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:71
+msgid "Your account may already be suspended or at risk of suspension. See your notices for details."
+msgstr "Lehetséges, hogy a fiókodat végleges kitiltás fenyegeti, vagy már ki van tiltva. A részletekért ellenőrizd az értesítéseidet."
+
 #. placeholder {0}: record.text
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:95
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:100
 msgid "“{0}”"
 msgstr "„{0}”"
 
@@ -220,7 +224,7 @@ msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {bejegyzés} other {bejegyzés}}"
 
 #. placeholder {0}: policies.length
-#: src/screens/ModerationInbox/Notice.tsx:257
+#: src/screens/ModerationInbox/Notice.tsx:260
 msgid "{0, plural, one {Rule violated:} other {Rules violated:}}"
 msgstr "Megszegett {0, plural, one {szabály} other {szabályok}}:"
 
@@ -556,7 +560,7 @@ msgstr "Több, mint {count, plural, one {#} other {#}} csatlakozási kérelem"
 msgid "{date} at {time}"
 msgstr "{date}, {time}"
 
-#: src/screens/ModerationInbox/Notice.tsx:412
+#: src/screens/ModerationInbox/Notice.tsx:411
 msgid "{detailsLength} of {MAX_REPORT_REASON_GRAPHEME_LENGTH} characters used"
 msgstr "{MAX_REPORT_REASON_GRAPHEME_LENGTH}/{detailsLength} karakter"
 
@@ -622,7 +626,7 @@ msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesStrin
 msgstr "{hours, plural, one {# óra {minutesString}} other {# óra {minutesString}}}"
 
 #: src/features/liveNow/utils.ts:44
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
 msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# óra} other {# óra}}"
 
@@ -820,11 +824,11 @@ msgstr "{notificationCount, plural, one {# olvasatlan értesítés} other {# olv
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
 msgstr "{numMatches, plural, other {# névjegyet találtunk}}"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:92
 msgid "{policyLabel} – {duration}"
 msgstr "{policyLabel} – {duration}"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:83
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:91
 msgid "{policyLabel} – {duration}, now expired"
 msgstr "{policyLabel} – {duration}, elévült"
 
@@ -877,7 +881,7 @@ msgstr "{requestCount, plural, other {# felkérés}}"
 msgid "{requestCount}+ requests"
 msgstr "Több, mint {requestCount} kérelem"
 
-#: src/screens/ModerationInbox/Notice.tsx:229
+#: src/screens/ModerationInbox/Notice.tsx:232
 msgid "{serviceName} removed your content for violating our <0>Community Guidelines</0>."
 msgstr "A(z) {serviceName} eltávolította ezt a tartalmat a <0>közösségi irányelveink</0> megsértése miatt."
 
@@ -1151,30 +1155,30 @@ msgstr "Bármilyen tartalom, vízszintesen elrendezve. Minden elem a saját olda
 msgid "A kawaii scene"
 msgstr "Egy cukimuki jelenet"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:78
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:68
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:87
 msgid "A label was added to your account"
 msgstr "Feljegyzést alkalmaztak a fiókodra"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:63
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:81
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:71
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:90
 msgid "A label was added to your content"
 msgstr "Feljegyzést alkalmaztak a tartalmadra"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:62
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:80
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:70
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:89
 msgid "A label was added to your post"
 msgstr "Feljegyzést alkalmaztak a bejegyzésedre"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:104
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:112
 msgid "A label was removed from your account"
 msgstr "Feljegyzést távolítottak el a fiókodról"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:115
 msgid "A label was removed from your content"
 msgstr "Feljegyzést távolítottak el a tartalmadról"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:106
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:114
 msgid "A label was removed from your post"
 msgstr "Feljegyzést távolítottak el a bejegyzésedről"
 
@@ -1187,11 +1191,11 @@ msgstr "Egy kicsivel több tartalommal feltöltött kártya, mint az első."
 msgid "a message"
 msgstr "(üres üzenet)"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:43
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:46
 msgid "A moderator reviewed your appeal and reversed the original decision."
 msgstr "Egy moderátor ismét átvizsgálta a tartalmat és visszavonta a korábbi intézkedést."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:42
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:45
 msgid "A moderator reviewed your appeal and reversed the original decision. Your post has been restored and is visible again."
 msgstr "Egy moderátor ismét átvizsgálta a tartalmat és visszavonta a korábbi intézkedést. A bejegyzésed ismét láthatóvá vált."
 
@@ -1309,6 +1313,7 @@ msgstr "Akadálymentesítés"
 #: src/Navigation.tsx:451
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:22
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:23
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:74
 #: src/screens/Settings/AccountSettings.tsx:54
 #: src/screens/Settings/Settings.tsx:186
 #: src/screens/Settings/Settings.tsx:189
@@ -1384,7 +1389,7 @@ msgstr "A fiókot felfüggesztették"
 msgid "Account taken down"
 msgstr "A fiókot eltávolították"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:40
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:66
 msgid "Account unavailable"
 msgstr "A fiók nem elérhető"
 
@@ -1414,6 +1419,10 @@ msgstr "Fiók némítása feloldva"
 #: src/components/verification/VerifierDialog.tsx:101
 msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Bluesky."
 msgstr "Másokat hitelesíteni csak a <0><1/></0> recés pipával rendelkező fiókok képesek. Ezeket a megbízható hitelesítőket a Bluesky jelöli ki."
+
+#: src/screens/ModerationInbox/components/AccountActionTimeline.tsx:107
+msgid "Action reversed"
+msgstr "Megtett lépés visszavonva"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:46
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:51
@@ -1915,6 +1924,11 @@ msgstr "A helyettesítő szöveg össze lesz csukva. {MAX_ALT_TEXT, plural, othe
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr "Küldtünk egy e-mailt a(z) {0} címre. Ez a levél egy ellenőrzőkódot tartalmaz, amit alább adhatsz meg."
 
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:63
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:65
+msgid "An email was sent about your account"
+msgstr "E-mailt kaptál a fiókoddal kapcsolatban"
+
 #: src/components/Gallery/Storybook.tsx:757
 msgid "An empty gallery takes up no space. A single item behaves like any other, without dragging or arrow key navigation to go anywhere."
 msgstr "Egy üres galéria nem foglal helyet. Egy egyedülálló elem nem lapozható."
@@ -2158,7 +2172,7 @@ msgstr "Alkalmazásjelszók"
 #: src/components/moderation/LabelsOnMeDialog.tsx:169
 #: src/components/moderation/LabelsOnMeDialog.tsx:172
 #: src/components/moderation/ModerationDetailsDialog.tsx:223
-#: src/screens/ModerationInbox/Notice.tsx:465
+#: src/screens/ModerationInbox/Notice.tsx:464
 #: src/screens/ModerationInbox/Report.tsx:177
 #: src/screens/ModerationInbox/Report.tsx:178
 msgid "Appeal"
@@ -2169,11 +2183,13 @@ msgstr "Fellebbezés"
 msgid "Appeal \"{0}\" label"
 msgstr "A(z) „{0}” feljegyzés fellebbezése"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:40
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:43
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:44
 msgid "Appeal approved"
 msgstr "Fellebbezés jóváhagyva"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:46
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:49
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:46
 msgid "Appeal denied"
 msgstr "Fellebbezés elutasítva"
 
@@ -2185,11 +2201,12 @@ msgstr "Feljegyzés fellebbezése"
 msgid "Appeal livestream suspension"
 msgstr "Felfüggesztés fellebbezése"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:50
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:53
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:47
 msgid "Appeal resolved"
 msgstr "Fellebbezés feldolgozva"
 
-#: src/screens/ModerationInbox/Notice.tsx:405
+#: src/screens/ModerationInbox/Notice.tsx:404
 msgid "Appeal submitted"
 msgstr "Fellebbezés elküldve"
 
@@ -2213,9 +2230,9 @@ msgstr "Felfüggesztés fellebbezése"
 #: src/screens/Messages/components/ChatDisabled.tsx:79
 #: src/screens/Messages/components/ChatDisabled.tsx:130
 #: src/screens/Messages/components/ChatDisabled.tsx:132
-#: src/screens/ModerationInbox/Notice.tsx:306
-#: src/screens/ModerationInbox/Notice.tsx:317
-#: src/screens/ModerationInbox/Notice.tsx:460
+#: src/screens/ModerationInbox/Notice.tsx:309
+#: src/screens/ModerationInbox/Notice.tsx:320
+#: src/screens/ModerationInbox/Notice.tsx:459
 msgid "Appeal this decision"
 msgstr "Döntés fellebbezése"
 
@@ -2223,7 +2240,8 @@ msgstr "Döntés fellebbezése"
 msgid "Appeal this label"
 msgstr "Feljegyzés fellebbezése"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:36
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:39
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:34
 msgid "Appeal under review"
 msgstr "Átvizsgálás alatt"
 
@@ -2750,7 +2768,7 @@ msgstr "A Bluesky ismerősökkel még mókásabb. Szeretnél meghívni valakit? 
 msgid "Bluesky is part of a growing network of hundreds of social apps. Your account unlocks them all."
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:88
+#: src/screens/ModerationInbox/Notice.tsx:94
 #: src/screens/ModerationInbox/Report.tsx:72
 msgid "Bluesky Moderation Service"
 msgstr "Bluesky-moderálásiszolgáltatás"
@@ -2978,7 +2996,7 @@ msgstr "Kamera-hozzáférés szükséges"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:124
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
-#: src/screens/ModerationInbox/Notice.tsx:424
+#: src/screens/ModerationInbox/Notice.tsx:423
 #: src/screens/Profile/Header/EditProfileDialog.tsx:313
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
@@ -3003,7 +3021,7 @@ msgstr "Kamera-hozzáférés szükséges"
 msgid "Cancel"
 msgstr "Mégse"
 
-#: src/screens/ModerationInbox/Notice.tsx:417
+#: src/screens/ModerationInbox/Notice.tsx:416
 msgid "Cancel appeal"
 msgstr "Fellebbezés visszavonása"
 
@@ -3830,7 +3848,7 @@ msgstr "Tartalom eltávolítva"
 msgid "Content restored"
 msgstr "Tartalom visszaállítva"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:86
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:100
 msgid "Content unavailable"
 msgstr "Ez a tartalom nem elérhető"
 
@@ -4339,6 +4357,10 @@ msgstr "Jelenleg elérhető kísérleti funkciók"
 msgid "Current chat"
 msgstr "Jelenlegi csevegés"
 
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:127
+msgid "Current version of post"
+msgstr ""
+
 #: src/components/dialogs/ServerInput.tsx:152
 #: src/components/dialogs/ServerInput.tsx:154
 msgid "Custom"
@@ -4824,7 +4846,7 @@ msgstr "Ne aggódj! A korábbi üzeneteid és beállításaid nem vesztek el és
 #: src/lib/media/picker.tsx:37
 #: src/screens/Login/components/HostingProviderDialog.tsx:253
 #: src/screens/Login/components/HostingProviderDialog.tsx:255
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:97
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:152
 #: src/screens/Onboarding/StepProfile/index.tsx:355
 #: src/screens/Onboarding/StepProfile/index.tsx:358
 #: src/screens/Profile/Header/PronounsDialog.tsx:216
@@ -5836,7 +5858,7 @@ msgstr "A jelentés elküldése meghiúsult"
 msgid "Failed to submit appeal, please try again."
 msgstr "A fellebbezés elküldése meghiúsult. Próbáld újra."
 
-#: src/screens/ModerationInbox/Notice.tsx:373
+#: src/screens/ModerationInbox/Notice.tsx:377
 msgid "Failed to submit appeal. Please try again."
 msgstr "A fellebbezés elküldése meghiúsult. Próbáld újra."
 
@@ -6369,7 +6391,7 @@ msgstr "Betűméret"
 msgid "Food"
 msgstr "Étel-ital"
 
-#: src/screens/ModerationInbox/Notice.tsx:291
+#: src/screens/ModerationInbox/Notice.tsx:294
 msgid "For more information about our appeals and redress process, please see our <0>Terms of Service</0>."
 msgstr "A fellebbezési és helyreállítási eljárásról további információt a <0>felhasználási feltételekben</0> olvashatsz."
 
@@ -6446,6 +6468,10 @@ msgstr "A(z) <0/> hírfolyamból"
 #: src/screens/Search/components/AdvancedSearchDialog/hooks.tsx:30
 msgid "From these people"
 msgstr "az alábbi személyek által közzétett bejegyzések"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:66
+msgid "Further violations of our Community Guidelines could lead to permanent suspension."
+msgstr "A közösségi irányelvek ismételt megszegése végleges kitiltással járhat."
 
 #: src/components/Gallery/Storybook.tsx:43
 msgid "Gallery"
@@ -7663,7 +7689,7 @@ msgstr "Csatlakozási kérelem visszavonva."
 msgid "Join the conversation"
 msgstr "Csatlakozz hozzánk!"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:35
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:61
 msgid "Joined {createdAt}"
 msgstr "Regisztráció dátuma: {createdAt}"
 
@@ -7703,8 +7729,8 @@ msgstr "Feljegyzés eltávolítva"
 msgid "Label reply for algo"
 msgstr "Feljegyzés hozzárendelése"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:64
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:108
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:72
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:116
 msgid "Label: {labelName}"
 msgstr "Feljegyzés: {labelName}"
 
@@ -8036,7 +8062,7 @@ msgstr "Megosztott bejegyzések kedvelése"
 msgid "Likes on this post"
 msgstr "A bejegyzést kedvelők"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:87
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:96
 msgid "Limited profile"
 msgstr "Korlátozott fiók"
 
@@ -8277,8 +8303,8 @@ msgstr "Új bejegyzések betöltése"
 msgid "Load new posts from the people you follow"
 msgstr "Követett személyek új bejegyzéseinek betöltése"
 
-#: src/screens/ModerationInbox/Notice.tsx:162
-#: src/screens/ModerationInbox/Notice.tsx:171
+#: src/screens/ModerationInbox/Notice.tsx:168
+#: src/screens/ModerationInbox/Notice.tsx:177
 msgid "Load older actions"
 msgstr "Korábbi események megjelenítése"
 
@@ -8432,14 +8458,14 @@ msgstr "Elnémított szavak és címkék kezelése"
 msgid "Manual"
 msgstr "Kézi"
 
-#: src/screens/ModerationInbox/index.tsx:327
+#: src/screens/ModerationInbox/index.tsx:329
 msgid "Mark all actions as read"
 msgstr "Összes lépés megjelölése olvasottként"
 
 #: src/screens/Messages/Inbox.tsx:318
 #: src/screens/Messages/Inbox.tsx:324
-#: src/screens/ModerationInbox/index.tsx:201
-#: src/screens/ModerationInbox/index.tsx:333
+#: src/screens/ModerationInbox/index.tsx:206
+#: src/screens/ModerationInbox/index.tsx:335
 msgid "Mark all as read"
 msgstr "Összes megjelölése olvasottként"
 
@@ -8450,7 +8476,7 @@ msgstr "Összes megjelölése olvasottként"
 msgid "Mark all chats as read"
 msgstr "Összes csevegés megjelölése olvasottként"
 
-#: src/screens/ModerationInbox/index.tsx:195
+#: src/screens/ModerationInbox/index.tsx:200
 msgid "Mark all reports as read"
 msgstr "Összes jelentés megjelölése olvasottként"
 
@@ -8663,11 +8689,11 @@ msgstr "Moderálási részletek"
 
 #: src/Navigation.tsx:209
 #: src/screens/Moderation/index.tsx:291
-#: src/screens/ModerationInbox/index.tsx:93
+#: src/screens/ModerationInbox/index.tsx:98
 msgid "Moderation inbox"
 msgstr "Moderátori üzenetek"
 
-#: src/screens/ModerationInbox/index.tsx:100
+#: src/screens/ModerationInbox/index.tsx:105
 #: src/screens/ModerationInbox/Settings.tsx:44
 msgid "Moderation inbox settings"
 msgstr "Moderátorüzeneti beállítások"
@@ -8707,7 +8733,8 @@ msgstr "Moderálólisták"
 msgid "Moderation Lists"
 msgstr "Moderálólisták"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:32
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:119
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:35
 msgid "Moderation notice"
 msgstr "Moderálási értesítés"
 
@@ -9170,11 +9197,11 @@ msgctxt "Answer to a yes/no question"
 msgid "No"
 msgstr "Nem"
 
-#: src/screens/ModerationInbox/index.tsx:363
+#: src/screens/ModerationInbox/index.tsx:371
 msgid "No actions against you"
 msgstr "Nincsenek Veled szemben tett lépések"
 
-#: src/screens/ModerationInbox/index.tsx:364
+#: src/screens/ModerationInbox/index.tsx:372
 msgid "No actions match this filter"
 msgstr "Nincsenek találatok erre a szűrőre"
 
@@ -9367,7 +9394,7 @@ msgstr "Még nincsenek megjeleníthető válaszok"
 msgid "No replies yet"
 msgstr "Még nincsenek válaszok"
 
-#: src/screens/ModerationInbox/index.tsx:228
+#: src/screens/ModerationInbox/index.tsx:233
 msgid "No reports match this filter"
 msgstr "Nincsenek találatok erre a szűrőre"
 
@@ -9519,7 +9546,7 @@ msgid "Nothing saved yet"
 msgstr "Még semmit sem mentettél"
 
 #: src/Navigation.tsx:224
-#: src/screens/ModerationInbox/Notice.tsx:124
+#: src/screens/ModerationInbox/Notice.tsx:130
 msgid "Notice"
 msgstr "Értesítés"
 
@@ -9762,7 +9789,7 @@ msgstr "Hoppá!"
 msgid "Open {0}"
 msgstr "A(z) {0} megnyitása"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:58
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:84
 msgid "Open account"
 msgstr "Fiók megnyitása"
 
@@ -9786,7 +9813,7 @@ msgstr "Kamera megnyitása"
 #: src/components/dms/ChatInvite/Root.tsx:105
 #: src/components/intents/GroupChatJoinDialog.tsx:454
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ChatSubjectPreview.tsx:32
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:43
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:46
 msgid "Open chat"
 msgstr "Csevegés megnyitása"
 
@@ -9794,7 +9821,7 @@ msgstr "Csevegés megnyitása"
 msgid "Open chat member options for {displayName}"
 msgstr "{displayName} beállításainak megtekintése"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:43
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:46
 msgid "Open content"
 msgstr "Tartalom megnyitása"
 
@@ -9898,8 +9925,8 @@ msgstr "Elnémított szavak és címkék beállításainak megnyitása"
 msgid "Open pack"
 msgstr "Csomag megnyitása"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:134
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:138
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:144
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:148
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:51
 msgid "Open post"
 msgstr "Bejegyzés megtekintése"
@@ -10748,7 +10775,7 @@ msgstr "Bejegyzés kitűzve"
 msgid "Post type"
 msgstr "Bejegyzéstípus"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:147
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:157
 msgid "Post unavailable"
 msgstr "A bejegyzés nem elérhető"
 
@@ -10764,8 +10791,8 @@ msgstr "Bejegyzés melléklettel"
 
 #. placeholder {0}: i18n.date(POSTED_AT, { month: 'short', day: 'numeric', year: 'numeric', })
 #. placeholder {0}: i18n.date(new Date(record.createdAt), {dateStyle: 'medium'})
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:121
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:151
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:131
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:161
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:35
 msgid "Posted {0}"
 msgstr "Közzétéve: {0}"
@@ -10826,6 +10853,18 @@ msgstr "{pressCount}× megnyomva"
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:121
 msgid "Preview"
 msgstr "Előnézet"
+
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:39
+msgid "Previous appeal approved"
+msgstr "A korábbi fellebbezést jóváhagyták"
+
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:41
+msgid "Previous appeal denied"
+msgstr "A korábbi fellebbezést elutasították"
+
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:42
+msgid "Previous appeal resolved"
+msgstr "A korábbi fellebbezést lezárták"
 
 #: src/components/Lightbox/Lightbox.web.tsx:203
 msgid "Previous image"
@@ -11095,11 +11134,11 @@ msgstr "Blogbejegyzés megtekintése"
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:121
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:135
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:148
-#: src/screens/ModerationInbox/Notice.tsx:233
+#: src/screens/ModerationInbox/Notice.tsx:236
 msgid "Read our Community Guidelines"
 msgstr "Közösségi irányelvek megtekintése"
 
-#: src/screens/ModerationInbox/Notice.tsx:296
+#: src/screens/ModerationInbox/Notice.tsx:299
 msgid "Read our Terms of Service"
 msgstr "A felhasználási feltételek megtekintése"
 
@@ -11125,8 +11164,8 @@ msgstr "Valódi párbeszéd."
 msgid "Real people."
 msgstr "Valódi emberek."
 
-#: src/screens/ModerationInbox/Notice.tsx:498
-#: src/screens/ModerationInbox/Notice.tsx:516
+#: src/screens/ModerationInbox/Notice.tsx:497
+#: src/screens/ModerationInbox/Notice.tsx:515
 #: src/screens/Takendown.tsx:158
 #: src/screens/Takendown.tsx:166
 msgid "Reason for appeal"
@@ -11190,8 +11229,8 @@ msgstr "Csatlakozási kérelem elutasítása"
 msgid "Reload conversations"
 msgstr "Beszélgetések újratöltése"
 
-#: src/screens/ModerationInbox/Notice.tsx:482
-#: src/screens/ModerationInbox/Notice.tsx:491
+#: src/screens/ModerationInbox/Notice.tsx:481
+#: src/screens/ModerationInbox/Notice.tsx:490
 msgid "Reload notice"
 msgstr "Értesítés újratöltése"
 
@@ -11433,7 +11472,7 @@ msgstr "Eltávolítva"
 msgid "Removed from your feeds"
 msgstr "Eltávolítva a hírfolyamgyűjteményből"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:91
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:100
 msgid "Removed post"
 msgstr "Bejegyzés eltávolítva"
 
@@ -11543,7 +11582,7 @@ msgstr "A bejegyzés alatti válaszadás le van tiltva."
 
 #: src/components/dms/MessageContextMenu.tsx:181
 #: src/components/dms/MessageContextMenu.tsx:184
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:90
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:95
 msgid "Reply"
 msgstr "Válasz"
 
@@ -11580,7 +11619,7 @@ msgstr "Válaszok rendezése"
 msgid "Reply to {handle}"
 msgstr "Válasz neki: {handle}"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:89
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:94
 msgid "Reply to {parentName}"
 msgstr "Válasz neki: {parentName}"
 
@@ -11919,7 +11958,7 @@ msgstr "Alaphelyzet"
 msgid "Restore the {defaultChannel} deployment"
 msgstr "Visszaállítás a(z) {defaultChannel} csatornára"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:93
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:102
 msgid "Restored post"
 msgstr "Bejegyzés visszaállítva"
 
@@ -12157,6 +12196,11 @@ msgstr "Beolvasás"
 #: src/Navigation.tsx:363
 msgid "Scan QR code"
 msgstr "QR-kód beolvasása"
+
+#. placeholder {0}: i18n.date(new Date(enforcement.expiresAt), { dateStyle: 'medium', timeStyle: 'short', })
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:88
+msgid "Scheduled end: {0}"
+msgstr "Lejárati dátum: {0}"
 
 #: src/lib/interests.ts:71
 msgid "Science"
@@ -12883,7 +12927,7 @@ msgstr "Rövidített hivatkozások nem használhatók. Add meg a teljes hivatkoz
 msgid "Show"
 msgstr "Megjelenítés"
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:66
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:116
 msgid "Show account status"
 msgstr "Fiók állapotának megjelenítése"
 
@@ -13212,6 +13256,14 @@ msgstr "Ismert kedvelők megjelenítése"
 msgid "Software Dev"
 msgstr "Szoftverfejlesztő"
 
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:109
+msgid "Some account features may be restricted."
+msgstr "Lehetséges, hogy a fiókod bizonyos funkciói korlátozva vannak."
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:103
+msgid "Some account features may be restricted. Strikes come off your record over time."
+msgstr "Lehetséges, hogy a fiókod bizonyos funkciói korlátozva vannak. A figyelmeztetések idővel elévülnek."
+
 #: src/screens/Moderation/index.tsx:517
 msgid "Some moderation services in your list are no longer available."
 msgstr "A feliratkozott moderálólisták némelyike már nem elérhető."
@@ -13510,12 +13562,12 @@ msgstr "Az elérhető helyet kitöltő kártyák"
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:138
 #: src/screens/Messages/components/ChatDisabled.tsx:172
 #: src/screens/Messages/components/ChatDisabled.tsx:174
-#: src/screens/ModerationInbox/Notice.tsx:439
+#: src/screens/ModerationInbox/Notice.tsx:438
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:164
 msgid "Submit"
 msgstr "Küldés"
 
-#: src/screens/ModerationInbox/Notice.tsx:432
+#: src/screens/ModerationInbox/Notice.tsx:431
 #: src/screens/Takendown.tsx:76
 msgid "Submit appeal"
 msgstr "Fellebbezés beküldése"
@@ -13841,7 +13893,7 @@ msgstr "Mesélj magadról!"
 msgid "Tell us a little more"
 msgstr "További részletek"
 
-#: src/screens/ModerationInbox/Notice.tsx:471
+#: src/screens/ModerationInbox/Notice.tsx:470
 msgid "Tell us why you believe this decision was a mistake. We will review your appeal along with the original content."
 msgstr "Oszd meg, hogy miért gondolod úgy, hogy tévedésből távolítottuk el a bejegyzést. Az eltávolított tartalmat a fellebbezés fényében ismét átvizsgáljuk."
 
@@ -13952,11 +14004,11 @@ msgstr "A fiók ismét képes lesz kapcsolatba lépni veled, ha feloldod a letil
 msgid "The account you reported has been restored after another review. You can mute or block it if you’d rather not see its content. Read our <0>Community Guidelines</0>."
 msgstr "Az Általad jelentett fiókot egy második átvizsgálás után visszaállították. Ha nem akarod látni, akkor lehetőséged van elnémítani vagy letiltani. További információért olvasd el a <0>közösségi irányelveket</0>."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:55
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:62
 msgid "The action against your account was reversed"
 msgstr "A fiókod ellen tett lépést visszavonták"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:56
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:63
 msgid "The action against your content was reversed"
 msgstr "A tartalmad ellen tett lépést visszavonták"
 
@@ -13965,8 +14017,8 @@ msgstr "A tartalmad ellen tett lépést visszavonták"
 msgid "The app will be restarted"
 msgstr "A beállítások érvénybeléptetése érdekében az alkalmazás újra lesz indítva"
 
-#: src/screens/ModerationInbox/Notice.tsx:324
-#: src/screens/ModerationInbox/Notice.tsx:364
+#: src/screens/ModerationInbox/Notice.tsx:327
+#: src/screens/ModerationInbox/Notice.tsx:368
 msgid "The appeal window has closed."
 msgstr "A fellebbezési időszak lejárt."
 
@@ -14389,7 +14441,7 @@ msgstr "A megadott kód érvénytelen. Ha új kódot szeretnél, akkor küldd ú
 msgid "This confirmation code is not valid. Please try again."
 msgstr "A megadott megerősítőkód érvénytelen. Próbáld újra."
 
-#: src/screens/ModerationInbox/Notice.tsx:370
+#: src/screens/ModerationInbox/Notice.tsx:374
 msgid "This content could not be appealed. Please reload the notice and try again."
 msgstr "A fellebbezés meghiúsult. Nyisd meg újra az értesítést, majd próbáld újra."
 
@@ -14626,11 +14678,11 @@ msgstr "Ez az alábbi helyen fog tartományrekordot létrehozni:"
 msgid "This should only take a few minutes."
 msgstr "Ez a folyamat csupán néhány percet vesz igénybe."
 
-#: src/screens/ModerationInbox/Notice.tsx:367
+#: src/screens/ModerationInbox/Notice.tsx:371
 msgid "This subject can no longer be appealed."
 msgstr "Eme döntés ellen már nem lehet fellebbezni."
 
-#: src/screens/ModerationInbox/Notice.tsx:361
+#: src/screens/ModerationInbox/Notice.tsx:365
 msgid "This subject has already been appealed."
 msgstr "Eme döntést már fellebbezted."
 
@@ -14744,6 +14796,10 @@ msgstr "Három"
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/TimeIndicator.tsx:34
 msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr "Hátralévő idő: {0, plural, one {# másodperc} other {# másodperc}}"
+
+#: src/screens/ModerationInbox/components/AccountActionTimeline.tsx:24
+msgid "Timeline"
+msgstr "Idővonal"
 
 #: src/components/SendErrorReportDialog.tsx:68
 #: src/features/profileLinks/components/LinkFormDialog.tsx:364
@@ -15350,6 +15406,10 @@ msgstr "E-mail-cím frissítése"
 msgid "Update your location"
 msgstr "Tartózkodási hely frissítése"
 
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:67
+msgid "Updated"
+msgstr "Frissítve"
+
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:359
 msgctxt "toast"
 msgid "Updating quote attachment failed"
@@ -15865,7 +15925,7 @@ msgstr "Borítókép megtekintése"
 msgid "View publication"
 msgstr "Kiadvány megtekintése"
 
-#: src/screens/ModerationInbox/components/ReportRow.tsx:32
+#: src/screens/ModerationInbox/components/ReportRow.tsx:34
 msgid "View report details: {subject}"
 msgstr "A(z) „{subject}” c. jelentés részleteinek megtekintése"
 
@@ -16073,11 +16133,11 @@ msgstr "Kifogytunk a követett felhasználók bejegyzéseiből. A további tarta
 msgid "We recommend selecting at least two interests."
 msgstr "Legalább két érdeklődési kör megadása ajánlott."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:47
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:50
 msgid "We reviewed your appeal and are keeping our original decision in place."
 msgstr "A fellebbezést átvizsgáltuk, de nem vontuk vissza a korábbi döntésünket."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:33
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:36
 msgid "We reviewed your appeal. The current status of your content or account is shown below."
 msgstr "Átvizsgáltuk a fellebbezésedet. A tartalmad vagy fiókod jelenlegi állapota alább látható."
 
@@ -16093,10 +16153,6 @@ msgstr "Átvizsgáltuk a jelentésedet és úgy döntöttünk, hogy nem szegi me
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:250
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Küldtünk egy e-mailt a(z) <0>{0}</0> címre. Kattints rá a benne található hivatkozásra a visszaigazoláshoz."
-
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
-msgid "We sent you an email about your account"
-msgstr ""
 
 #: src/view/com/composer/state/video.ts:521
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
@@ -16242,13 +16298,17 @@ msgstr "Frissítettük a felhasználási feltételeket, adatvédelmi irányelvek
 msgid "We've confirmed your age assurance status. You can now close this dialog."
 msgstr "Az ellenőrzés sikeresen befejeződött. Bezárhatod ezt a párbeszédablakot."
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:43
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:76
 msgid "We’ve taken action on your account for violating our Community Guidelines, and strikes have been added to your record. More violations will lead to stronger enforcement, including suspension."
 msgstr "Megszegted a közösségi irányelveket, ezért figyelmeztetést kaptál. A további szabályszegések komolyabb következményekkel járhatnak, a fiókod felfüggesztését is beleértve."
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:37
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:60
 msgid "We’ve taken action on your account for violating our Community Guidelines. Your record now carries enough strikes that another violation could lead to permanent suspension."
 msgstr "Megszegted a közösségi irányelveket, ezért ismét figyelmeztetést kaptál. Még egy szabályszegés a fiókod végleges felfüggesztésével járhat."
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:82
+msgid "We’ve taken action on your account. See your notices for details."
+msgstr "Lépéseket tettünk meg a fiókoddal szemben. A részletekért ellenőrizd az értesítéseidet."
 
 #: src/screens/Deactivated.tsx:121
 msgid "Welcome back!"
@@ -16551,7 +16611,7 @@ msgstr "Emellett lehetőséged van letölteni a csevegési adataidat is, „JSON
 msgid "You can always opt out and delete your data"
 msgstr "Ezt az engedélyt bármikor visszavonhatod és törölheted az adataidat"
 
-#: src/screens/ModerationInbox/Notice.tsx:286
+#: src/screens/ModerationInbox/Notice.tsx:289
 msgid "You can appeal once per decision. A different moderator will review the appeal."
 msgstr "Minden moderátori döntéssel szemben csak egyszer fellebbezhetsz. A fellebbezést egy másik moderátor vizsgálja át."
 
@@ -16611,7 +16671,7 @@ msgstr "Továbbra is képes leszel az üzenetek elolvasására, de újakat nem t
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "Egy bejegyzéshez {MAX_GALLERY_IMAGES, plural, other {# kép}} csatolható."
 
-#: src/screens/ModerationInbox/Notice.tsx:281
+#: src/screens/ModerationInbox/Notice.tsx:284
 msgid "You can submit one account appeal at a time. A different moderator will review the appeal."
 msgstr "Egyszerre egy fiókkal kapcsolatos fellebbezést küldhetsz be. A fellebbezést egy másik moderátor vizsgálja át."
 
@@ -16755,7 +16815,7 @@ msgstr "Még egy egyéni hírfolyamot sem hoztál létre."
 msgid "You haven't muted any words or tags yet"
 msgstr "Még egy szót vagy címkét sem némítottál el"
 
-#: src/screens/ModerationInbox/index.tsx:227
+#: src/screens/ModerationInbox/index.tsx:232
 msgid "You haven’t reported anything yet"
 msgstr "Még semmit sem jelentettél"
 
@@ -17023,12 +17083,12 @@ msgstr "Elérted a napi videófeltöltési korlátot (videómennyiség meghaladv
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "Kifogytunk a videókból. Mit szólnál egy kis szünethez?"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:95
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:103
 msgid "Your ability to submit reports was restricted"
 msgstr "A jelentési képességed korlátozva van"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:88
-#: src/screens/ModerationInbox/index.tsx:112
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:97
+#: src/screens/ModerationInbox/index.tsx:117
 #: src/screens/Signup/index.tsx:191
 msgid "Your account"
 msgstr "Saját fiók"
@@ -17037,7 +17097,7 @@ msgstr "Saját fiók"
 msgid "Your account cannot submit reports while it is suspended."
 msgstr "Felfüggesztett fiókként nem küldhetsz jelentéseket."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
 msgid "Your account credentials were revoked"
 msgstr "A fiókod hitelesítési adatait visszavonták"
 
@@ -17045,15 +17105,24 @@ msgstr "A fiókod hitelesítési adatait visszavonták"
 msgid "Your account has been deleted, see ya! ✌️"
 msgstr "A fiókod törölve. Viszlát! ✌️"
 
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:39
 #: src/screens/Takendown.tsx:142
 msgid "Your account has been suspended"
 msgstr "A fiókod felfüggesztésre került"
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:34
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:48
+msgid "Your account has moderation actions"
+msgstr "Lépéseket tettek meg a fiókoddal szemben"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:47
 msgid "Your account has strikes against it"
 msgstr "A fiókodon vannak aktív figyelmeztetések"
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:33
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:98
+msgid "Your account has strikes against it. Strikes come off your record over time."
+msgstr "A fiókodon figyelmeztetések vannak. A figyelmeztetések idővel elévülnek."
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:43
 msgid "Your account is at risk of permanent suspension"
 msgstr "A fiókodat végleges kitiltás fenyegeti"
 
@@ -17061,9 +17130,32 @@ msgstr "A fiókodat végleges kitiltás fenyegeti"
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "A fiókod még nem elég idős a videók feltöltéséhez. Próbáld újra később."
 
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:57
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:23
+msgid "Your account is suspended"
+msgstr "A fiókod felfüggesztésre került"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:50
+msgid "Your account is suspended on Bluesky. See your notices for details and available appeal options."
+msgstr "A Bluesky-fiókod fel van függesztve. A részletekért és a fellebbezési lehetőségekért ellenőrizd az értesítéseidet."
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:41
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:59
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:25
+msgid "Your account is temporarily suspended"
+msgstr "A fiókod átmenetileg fel van függesztve"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:55
+msgid "Your account is temporarily suspended on Bluesky. See your notices for details and available appeal options."
+msgstr "A Bluesky-fiókod átmenetileg fel van függesztve. A részletekért és a fellebbezési lehetőségekért ellenőrizd az értesítéseidet."
+
 #: src/components/dms/InitiateChatFlow.tsx:836
 msgid "Your account is too new"
 msgstr "Új fiók"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:45
+msgid "Your account may be suspended or at risk of suspension"
+msgstr "Lehetséges, hogy a fiókodat végleges kitiltás fenyegeti, vagy már ki van tiltva"
 
 #: src/components/dms/InitiateChatFlow.tsx:837
 msgid "Your account must be at least 7 days old to create a new group chat."
@@ -17082,17 +17174,21 @@ msgstr "A fiókod adattára, ami az összes nyilvános adatodat tartalmazza, let
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
 msgstr "A fiókod megsértette a <0>Bluesky Social felhasználási feltételeit</0>. Küldtünk Számodra egy e-mailt a felfüggesztésed okáról és (adott esetben) hosszáról. Ha úgy gondolod, hogy a felfüggesztés tévedésből történt, lehetőséged van fellebbezni azt."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:67
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:91
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:73
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
+msgid "Your account was restored"
+msgstr "A fiókod visszaállításra került"
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:75
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:82
 msgid "Your account was suspended"
 msgstr "A fiókod felfüggesztésre került"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:65
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:74
 msgid "Your account was temporarily suspended for {hours, plural, one {# hour} other {# hours}}"
 msgstr "A fiókod átmenetileg fel van függesztve. Még {hours} óra van hátra."
 
-#: src/screens/ModerationInbox/Notice.tsx:224
+#: src/screens/ModerationInbox/Notice.tsx:227
 msgid "Your appeal has been submitted and is awaiting review."
 msgstr "A fellebbezést megkaptuk és jelenleg átvizsgálásra vár."
 
@@ -17124,14 +17220,18 @@ msgstr "A névjegyzékedben {name}"
 msgid "Your contact <0/> is on Bluesky"
 msgstr "Megtaláltuk egy ismerősödet a Blueskyon: <0/>"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:95
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:104
 msgid "Your content"
 msgstr "Saját tartalom"
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:84
 msgid "Your content was removed"
 msgstr "A tartalmadat eltávolították"
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:57
+msgid "Your content was restored"
+msgstr "A tartalmadat visszaállították"
 
 #. placeholder {0}: sanitizeHandle(currentAccount?.handle || '', '@')
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:531
@@ -17225,14 +17325,18 @@ msgstr "Megjegyzés:"
 msgid "Your password must be at least 8 characters long."
 msgstr "A jelszónak legalább 8 karakter hosszúnak kell lennie."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:94
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:103
 msgid "Your post"
 msgstr "Saját bejegyzés"
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:84
 msgid "Your post was removed"
 msgstr "A bejegyzésedet eltávolították"
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:56
+msgid "Your post was restored"
+msgstr "A bejegyzésedet visszaállították"
 
 #: src/view/com/composer/Composer.tsx:1239
 msgid "Your post was sent"
@@ -17281,7 +17385,7 @@ msgstr "A jelentést feldolgoztuk. <0>A közösségi irányelvek megtekintése</
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr "A jelentés címzettje: <0>{0}</0>."
 
-#: src/screens/ModerationInbox/index.tsx:112
+#: src/screens/ModerationInbox/index.tsx:117
 msgid "Your reports"
 msgstr "Saját jelentések"
 
@@ -17293,14 +17397,6 @@ msgstr "Jelentéssel kapcsolatos értesítések"
 #: src/screens/Settings/InterestsSettings.tsx:65
 msgid "Your selected interests help us serve you content you care about."
 msgstr "Az érdeklődési köreid megadásával személyre szabhatod a javasolt tartalmakat."
-
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:56
-msgid "Your standing doesn’t restrict your account right now, and strikes come off your record over time."
-msgstr ""
-
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:51
-msgid "Your standing may restrict certain features on your account. Strikes come off your record over time."
-msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1569
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."

@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-11-12 21:07\n"
+"PO-Revision-Date: 2026-11-13 21:02\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -18,8 +18,12 @@ msgstr ""
 "X-Crowdin-File: /main/src/locale/locales/en/messages.po\n"
 "X-Crowdin-File-ID: 11\n"
 
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:71
+msgid "Your account may already be suspended or at risk of suspension. See your notices for details."
+msgstr "Contul dvs. poate fi deja suspendat sau riscă suspendarea. Consultați notificările pentru detalii."
+
 #. placeholder {0}: record.text
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:95
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:100
 msgid "“{0}”"
 msgstr "„{0}”"
 
@@ -220,7 +224,7 @@ msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {postare} few {postări} other {de postări}}"
 
 #. placeholder {0}: policies.length
-#: src/screens/ModerationInbox/Notice.tsx:257
+#: src/screens/ModerationInbox/Notice.tsx:260
 msgid "{0, plural, one {Rule violated:} other {Rules violated:}}"
 msgstr "{0, plural, one {Regulă încălcată:} few {Reguli încălcate:} other {Reguli încălcate:}}"
 
@@ -556,7 +560,7 @@ msgstr "{count, plural, one {} few {Peste # cereri de alăturare}other {Peste # 
 msgid "{date} at {time}"
 msgstr "{date} la {time}"
 
-#: src/screens/ModerationInbox/Notice.tsx:412
+#: src/screens/ModerationInbox/Notice.tsx:411
 msgid "{detailsLength} of {MAX_REPORT_REASON_GRAPHEME_LENGTH} characters used"
 msgstr "{detailsLength} din {MAX_REPORT_REASON_GRAPHEME_LENGTH} caractere folosite"
 
@@ -622,7 +626,7 @@ msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesStrin
 msgstr "{hours, plural, one {# oră {minutesString}} few {# ore {minutesString}} other {# de ore {minutesString}}}"
 
 #: src/features/liveNow/utils.ts:44
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:76
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
 msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# oră } few {# ore} other {# de ore}}"
 
@@ -820,11 +824,11 @@ msgstr "{notificationCount, plural, one {Un element necitit} few {# elemente nec
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
 msgstr "{numMatches, plural, one {un contact găsit} few {# contacte găsite} other {# de contacte găsite}}"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:84
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:92
 msgid "{policyLabel} – {duration}"
 msgstr "{policyLabel} – {duration}"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:83
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:91
 msgid "{policyLabel} – {duration}, now expired"
 msgstr "{policyLabel}  – {duration}, expirată acum"
 
@@ -877,7 +881,7 @@ msgstr "{requestCount, plural, one {o cerere} few {# cereri} other {# de cereri}
 msgid "{requestCount}+ requests"
 msgstr "Încă {requestCount} de cereri"
 
-#: src/screens/ModerationInbox/Notice.tsx:229
+#: src/screens/ModerationInbox/Notice.tsx:232
 msgid "{serviceName} removed your content for violating our <0>Community Guidelines</0>."
 msgstr "{serviceName} v-a eliminat conținutul pentru încălcarea <0>Regulilor Comunității</0> noastre."
 
@@ -1151,30 +1155,30 @@ msgstr "O bandă orizontală cu orice conținut. Fiecare element își păstreaz
 msgid "A kawaii scene"
 msgstr "O scenă kawaii"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:78
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:68
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:87
 msgid "A label was added to your account"
 msgstr "O etichetă a fost adăugată contului dvs."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:63
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:81
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:71
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:90
 msgid "A label was added to your content"
 msgstr "O etichetă a fost adăugată conținutului dvs."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:62
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:80
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:70
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:89
 msgid "A label was added to your post"
 msgstr "O etichetă a fost adăugată postării dvs."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:104
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:112
 msgid "A label was removed from your account"
 msgstr "O etichetă a fost eliminată de pe contul dvs."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:115
 msgid "A label was removed from your content"
 msgstr "O etichetă a fost eliminată de pe conținutul dvs."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:106
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:114
 msgid "A label was removed from your post"
 msgstr "O etichetă a fost eliminată de pe postarea dvs."
 
@@ -1187,11 +1191,11 @@ msgstr "Puțin mai mult conținut decât primul card."
 msgid "a message"
 msgstr "un mesaj"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:43
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:46
 msgid "A moderator reviewed your appeal and reversed the original decision."
 msgstr "Un moderator v-a analizat contestația și a anulat decizia inițială."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:42
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:45
 msgid "A moderator reviewed your appeal and reversed the original decision. Your post has been restored and is visible again."
 msgstr "Un moderator v-a analizat contestația și a anulat decizia inițială. Postarea dvs. a fost restabilită și este vizibilă din nou."
 
@@ -1309,6 +1313,7 @@ msgstr "Setări de accesibilitate"
 #: src/Navigation.tsx:451
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:22
 #: src/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile.ts:23
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:74
 #: src/screens/Settings/AccountSettings.tsx:54
 #: src/screens/Settings/Settings.tsx:186
 #: src/screens/Settings/Settings.tsx:189
@@ -1384,7 +1389,7 @@ msgstr "Cont suspendat"
 msgid "Account taken down"
 msgstr "Cont eliminat"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:40
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:66
 msgid "Account unavailable"
 msgstr "Cont indisponibil"
 
@@ -1414,6 +1419,10 @@ msgstr "Cont dezamuțit"
 #: src/components/verification/VerifierDialog.tsx:101
 msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Bluesky."
 msgstr "Conturile cu bifa albastră în formă de feston <0><1/></0> pot verifica alte persoane. Acești verificatori de încredere sunt selectați de Bluesky."
+
+#: src/screens/ModerationInbox/components/AccountActionTimeline.tsx:107
+msgid "Action reversed"
+msgstr "Acțiune anulată"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:46
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:51
@@ -1915,6 +1924,11 @@ msgstr "Textul alternativ va fi trunchiat. {MAX_ALT_TEXT, plural, other {Limită
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr "Un e-mail a fost trimis la {0}. Acesta include un cod de confirmare pe care îl puteți introduce mai jos."
 
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:63
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:65
+msgid "An email was sent about your account"
+msgstr "A fost trimis un e-mail despre contul dvs."
+
 #: src/components/Gallery/Storybook.tsx:757
 msgid "An empty gallery takes up no space. A single item behaves like any other, without dragging or arrow key navigation to go anywhere."
 msgstr "O galerie goală nu ocupă spațiu. Un singur element se comportă ca oricare altul, fără posibilitatea de a trage sau de a naviga cu tastele săgeată."
@@ -2158,7 +2172,7 @@ msgstr "Parole de aplicație"
 #: src/components/moderation/LabelsOnMeDialog.tsx:169
 #: src/components/moderation/LabelsOnMeDialog.tsx:172
 #: src/components/moderation/ModerationDetailsDialog.tsx:223
-#: src/screens/ModerationInbox/Notice.tsx:465
+#: src/screens/ModerationInbox/Notice.tsx:464
 #: src/screens/ModerationInbox/Report.tsx:177
 #: src/screens/ModerationInbox/Report.tsx:178
 msgid "Appeal"
@@ -2169,11 +2183,13 @@ msgstr "Contestație"
 msgid "Appeal \"{0}\" label"
 msgstr "Contestați eticheta „{0}”"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:40
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:43
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:44
 msgid "Appeal approved"
 msgstr "Contestație aprobată"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:46
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:49
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:46
 msgid "Appeal denied"
 msgstr "Contestație respinsă"
 
@@ -2185,11 +2201,12 @@ msgstr "Contestare etichetă"
 msgid "Appeal livestream suspension"
 msgstr "Contestați suspendarea transmisiunii în direct"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:50
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:53
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:47
 msgid "Appeal resolved"
 msgstr "Contestație soluționată"
 
-#: src/screens/ModerationInbox/Notice.tsx:405
+#: src/screens/ModerationInbox/Notice.tsx:404
 msgid "Appeal submitted"
 msgstr "Contestație depusă"
 
@@ -2213,9 +2230,9 @@ msgstr "Contestare suspendare"
 #: src/screens/Messages/components/ChatDisabled.tsx:79
 #: src/screens/Messages/components/ChatDisabled.tsx:130
 #: src/screens/Messages/components/ChatDisabled.tsx:132
-#: src/screens/ModerationInbox/Notice.tsx:306
-#: src/screens/ModerationInbox/Notice.tsx:317
-#: src/screens/ModerationInbox/Notice.tsx:460
+#: src/screens/ModerationInbox/Notice.tsx:309
+#: src/screens/ModerationInbox/Notice.tsx:320
+#: src/screens/ModerationInbox/Notice.tsx:459
 msgid "Appeal this decision"
 msgstr "Contestați această decizie"
 
@@ -2223,7 +2240,8 @@ msgstr "Contestați această decizie"
 msgid "Appeal this label"
 msgstr "Contestați această etichetă"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:36
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:39
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:34
 msgid "Appeal under review"
 msgstr "Contestație în curs de examinare"
 
@@ -2750,7 +2768,7 @@ msgstr "Bluesky este mai distractiv cu prietenii. Doriți să vă invitați câ�
 msgid "Bluesky is part of a growing network of hundreds of social apps. Your account unlocks them all."
 msgstr ""
 
-#: src/screens/ModerationInbox/Notice.tsx:88
+#: src/screens/ModerationInbox/Notice.tsx:94
 #: src/screens/ModerationInbox/Report.tsx:72
 msgid "Bluesky Moderation Service"
 msgstr "Serviciul de Moderare Bluesky"
@@ -2978,7 +2996,7 @@ msgstr "Este necesar accesul la cameră"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:124
 #: src/screens/Messages/ConversationSettings/prompts.tsx:148
 #: src/screens/Messages/ConversationSettings/prompts.tsx:172
-#: src/screens/ModerationInbox/Notice.tsx:424
+#: src/screens/ModerationInbox/Notice.tsx:423
 #: src/screens/Profile/Header/EditProfileDialog.tsx:313
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
@@ -3003,7 +3021,7 @@ msgstr "Este necesar accesul la cameră"
 msgid "Cancel"
 msgstr "Anulare"
 
-#: src/screens/ModerationInbox/Notice.tsx:417
+#: src/screens/ModerationInbox/Notice.tsx:416
 msgid "Cancel appeal"
 msgstr "Anulare contestație"
 
@@ -3830,7 +3848,7 @@ msgstr "Conținut eliminat"
 msgid "Content restored"
 msgstr "Conținut restabilit"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:86
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:100
 msgid "Content unavailable"
 msgstr "Conținut indisponibil"
 
@@ -4339,6 +4357,10 @@ msgstr "Caracteristici beta curente"
 msgid "Current chat"
 msgstr "Conversația curentă"
 
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:127
+msgid "Current version of post"
+msgstr ""
+
 #: src/components/dialogs/ServerInput.tsx:152
 #: src/components/dialogs/ServerInput.tsx:154
 msgid "Custom"
@@ -4824,7 +4846,7 @@ msgstr "Nu vă faceți griji! Toate mesajele existente și setările sunt salvat
 #: src/lib/media/picker.tsx:37
 #: src/screens/Login/components/HostingProviderDialog.tsx:253
 #: src/screens/Login/components/HostingProviderDialog.tsx:255
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:97
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:152
 #: src/screens/Onboarding/StepProfile/index.tsx:355
 #: src/screens/Onboarding/StepProfile/index.tsx:358
 #: src/screens/Profile/Header/PronounsDialog.tsx:216
@@ -5836,7 +5858,7 @@ msgstr "Trimiterea raportului a eșuat"
 msgid "Failed to submit appeal, please try again."
 msgstr "Nu s-a putut trimite contestația, vă rugăm să încercați din nou."
 
-#: src/screens/ModerationInbox/Notice.tsx:373
+#: src/screens/ModerationInbox/Notice.tsx:377
 msgid "Failed to submit appeal. Please try again."
 msgstr "Trimiterea contestației a eșuat. Vă rugăm să încercați din nou."
 
@@ -6369,7 +6391,7 @@ msgstr "Dimensiune font"
 msgid "Food"
 msgstr "Gastronomie"
 
-#: src/screens/ModerationInbox/Notice.tsx:291
+#: src/screens/ModerationInbox/Notice.tsx:294
 msgid "For more information about our appeals and redress process, please see our <0>Terms of Service</0>."
 msgstr "Pentru mai multe informații despre procesul nostru de contestații și remediere, vă rugăm să consultați <0>Termenii de Serviciu</0>."
 
@@ -6446,6 +6468,10 @@ msgstr "De la <0/>"
 #: src/screens/Search/components/AdvancedSearchDialog/hooks.tsx:30
 msgid "From these people"
 msgstr "De la aceste persoane"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:66
+msgid "Further violations of our Community Guidelines could lead to permanent suspension."
+msgstr "Încălcări ulterioare ale Regulilor Comunității ar putea duce la suspendarea permanentă."
 
 #: src/components/Gallery/Storybook.tsx:43
 msgid "Gallery"
@@ -7663,7 +7689,7 @@ msgstr "Cererea de alăturare a fost anulată."
 msgid "Join the conversation"
 msgstr "Alăturați-vă conversației"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:35
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:61
 msgid "Joined {createdAt}"
 msgstr "S-a alăturat pe {createdAt}"
 
@@ -7703,8 +7729,8 @@ msgstr "Etichetă eliminată"
 msgid "Label reply for algo"
 msgstr "Etichetare răspuns pentru algoritm"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:64
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:108
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:72
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:116
 msgid "Label: {labelName}"
 msgstr "Etichetă: {labelName}"
 
@@ -8036,7 +8062,7 @@ msgstr "Aprecieri pentru repostările dvs."
 msgid "Likes on this post"
 msgstr "Aprecieri la această postare"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:87
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:96
 msgid "Limited profile"
 msgstr "Profil limitat"
 
@@ -8277,8 +8303,8 @@ msgstr "Încărcați postări noi"
 msgid "Load new posts from the people you follow"
 msgstr "Încărcați postări noi de la persoanele pe care le urmăriți"
 
-#: src/screens/ModerationInbox/Notice.tsx:162
-#: src/screens/ModerationInbox/Notice.tsx:171
+#: src/screens/ModerationInbox/Notice.tsx:168
+#: src/screens/ModerationInbox/Notice.tsx:177
 msgid "Load older actions"
 msgstr "Încărcați acțiuni mai vechi"
 
@@ -8432,14 +8458,14 @@ msgstr "Gestionați-vă cuvintele și etichetele amuțite"
 msgid "Manual"
 msgstr "Manual"
 
-#: src/screens/ModerationInbox/index.tsx:327
+#: src/screens/ModerationInbox/index.tsx:329
 msgid "Mark all actions as read"
 msgstr "Marcați toate acțiunile ca citite"
 
 #: src/screens/Messages/Inbox.tsx:318
 #: src/screens/Messages/Inbox.tsx:324
-#: src/screens/ModerationInbox/index.tsx:201
-#: src/screens/ModerationInbox/index.tsx:333
+#: src/screens/ModerationInbox/index.tsx:206
+#: src/screens/ModerationInbox/index.tsx:335
 msgid "Mark all as read"
 msgstr "Marcați toate ca citite"
 
@@ -8450,7 +8476,7 @@ msgstr "Marcați toate ca citite"
 msgid "Mark all chats as read"
 msgstr "Marcați toate conversațiile ca citite"
 
-#: src/screens/ModerationInbox/index.tsx:195
+#: src/screens/ModerationInbox/index.tsx:200
 msgid "Mark all reports as read"
 msgstr "Marcați toate raportările ca citite"
 
@@ -8663,11 +8689,11 @@ msgstr "Detalii moderare"
 
 #: src/Navigation.tsx:209
 #: src/screens/Moderation/index.tsx:291
-#: src/screens/ModerationInbox/index.tsx:93
+#: src/screens/ModerationInbox/index.tsx:98
 msgid "Moderation inbox"
 msgstr "Inbox moderare"
 
-#: src/screens/ModerationInbox/index.tsx:100
+#: src/screens/ModerationInbox/index.tsx:105
 #: src/screens/ModerationInbox/Settings.tsx:44
 msgid "Moderation inbox settings"
 msgstr "Setări inbox moderare"
@@ -8707,7 +8733,8 @@ msgstr "Liste de moderare"
 msgid "Moderation Lists"
 msgstr "Liste de moderare"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:32
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:119
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:35
 msgid "Moderation notice"
 msgstr "Notificare de moderare"
 
@@ -9170,11 +9197,11 @@ msgctxt "Answer to a yes/no question"
 msgid "No"
 msgstr "Nu"
 
-#: src/screens/ModerationInbox/index.tsx:363
+#: src/screens/ModerationInbox/index.tsx:371
 msgid "No actions against you"
 msgstr "Nicio acțiune împotriva dvs."
 
-#: src/screens/ModerationInbox/index.tsx:364
+#: src/screens/ModerationInbox/index.tsx:372
 msgid "No actions match this filter"
 msgstr "Nicio acțiune nu corespunde acestui filtru"
 
@@ -9367,7 +9394,7 @@ msgstr "Niciun răspuns de afișat încă"
 msgid "No replies yet"
 msgstr "Niciun răspuns încă"
 
-#: src/screens/ModerationInbox/index.tsx:228
+#: src/screens/ModerationInbox/index.tsx:233
 msgid "No reports match this filter"
 msgstr "Niciun raport nu corespunde acestui filtru"
 
@@ -9519,7 +9546,7 @@ msgid "Nothing saved yet"
 msgstr "Nimic salvat încă"
 
 #: src/Navigation.tsx:224
-#: src/screens/ModerationInbox/Notice.tsx:124
+#: src/screens/ModerationInbox/Notice.tsx:130
 msgid "Notice"
 msgstr "Observație"
 
@@ -9762,7 +9789,7 @@ msgstr "Hopa!"
 msgid "Open {0}"
 msgstr "Deschidere {0}"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:58
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/AccountSubjectPreview.tsx:84
 msgid "Open account"
 msgstr "Deschideți contul"
 
@@ -9786,7 +9813,7 @@ msgstr "Deschidere cameră"
 #: src/components/dms/ChatInvite/Root.tsx:105
 #: src/components/intents/GroupChatJoinDialog.tsx:454
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ChatSubjectPreview.tsx:32
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:43
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:46
 msgid "Open chat"
 msgstr "Deschidere conversație"
 
@@ -9794,7 +9821,7 @@ msgstr "Deschidere conversație"
 msgid "Open chat member options for {displayName}"
 msgstr "Deschideți opțiunile pentru membrii conversației pentru {displayName}"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:43
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:46
 msgid "Open content"
 msgstr "Deschideți conținutul"
 
@@ -9898,8 +9925,8 @@ msgstr "Deschideți cuvinte amuțite și setări etichete"
 msgid "Open pack"
 msgstr "Deschidere pachet"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:134
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:138
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:144
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:148
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:51
 msgid "Open post"
 msgstr "Deschidere postare"
@@ -10748,7 +10775,7 @@ msgstr "Postare fixată"
 msgid "Post type"
 msgstr "Tip de postare"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:147
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:157
 msgid "Post unavailable"
 msgstr "Postare indisponibilă"
 
@@ -10764,8 +10791,8 @@ msgstr "Postare cu conținut media"
 
 #. placeholder {0}: i18n.date(POSTED_AT, { month: 'short', day: 'numeric', year: 'numeric', })
 #. placeholder {0}: i18n.date(new Date(record.createdAt), {dateStyle: 'medium'})
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:121
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:151
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:131
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:161
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:35
 msgid "Posted {0}"
 msgstr "Postat pe {0}"
@@ -10826,6 +10853,18 @@ msgstr "Apăsat de {pressCount} ori"
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:121
 msgid "Preview"
 msgstr "Previzualizare"
+
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:39
+msgid "Previous appeal approved"
+msgstr "Contestație anterioară aprobată"
+
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:41
+msgid "Previous appeal denied"
+msgstr "Contestație anterioară respinsă"
+
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:42
+msgid "Previous appeal resolved"
+msgstr "Contestație anterioară soluționată"
 
 #: src/components/Lightbox/Lightbox.web.tsx:203
 msgid "Previous image"
@@ -11095,11 +11134,11 @@ msgstr "Citiți postarea noastră de pe blog"
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:121
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:135
 #: src/screens/ModerationInbox/components/ReportActionSummary.tsx:148
-#: src/screens/ModerationInbox/Notice.tsx:233
+#: src/screens/ModerationInbox/Notice.tsx:236
 msgid "Read our Community Guidelines"
 msgstr "Citiți Regulile Comunității noastre"
 
-#: src/screens/ModerationInbox/Notice.tsx:296
+#: src/screens/ModerationInbox/Notice.tsx:299
 msgid "Read our Terms of Service"
 msgstr "Citiți Termenii noștri de Serviciu"
 
@@ -11125,8 +11164,8 @@ msgstr "Conversații reale."
 msgid "Real people."
 msgstr "Oameni reali."
 
-#: src/screens/ModerationInbox/Notice.tsx:498
-#: src/screens/ModerationInbox/Notice.tsx:516
+#: src/screens/ModerationInbox/Notice.tsx:497
+#: src/screens/ModerationInbox/Notice.tsx:515
 #: src/screens/Takendown.tsx:158
 #: src/screens/Takendown.tsx:166
 msgid "Reason for appeal"
@@ -11190,8 +11229,8 @@ msgstr "Respingere cerere de alăturare"
 msgid "Reload conversations"
 msgstr "Reîncărcați conversațiile"
 
-#: src/screens/ModerationInbox/Notice.tsx:482
-#: src/screens/ModerationInbox/Notice.tsx:491
+#: src/screens/ModerationInbox/Notice.tsx:481
+#: src/screens/ModerationInbox/Notice.tsx:490
 msgid "Reload notice"
 msgstr "Reîncărcați notificarea"
 
@@ -11433,7 +11472,7 @@ msgstr "Eliminat din pachetul de pornire"
 msgid "Removed from your feeds"
 msgstr "Eliminat din fluxurile dvs."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:91
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:100
 msgid "Removed post"
 msgstr "Postare eliminată"
 
@@ -11543,7 +11582,7 @@ msgstr "Răspunsurile la această postare sunt dezactivate."
 
 #: src/components/dms/MessageContextMenu.tsx:181
 #: src/components/dms/MessageContextMenu.tsx:184
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:90
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:95
 msgid "Reply"
 msgstr "Răspundeți"
 
@@ -11580,7 +11619,7 @@ msgstr "Sortare răspunsuri"
 msgid "Reply to {handle}"
 msgstr "Răspuns la {handle}"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:89
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:94
 msgid "Reply to {parentName}"
 msgstr "Răspuns la {parentName}"
 
@@ -11919,7 +11958,7 @@ msgstr "Restaurare la valoarea implicită"
 msgid "Restore the {defaultChannel} deployment"
 msgstr "Restabiliți distribuția {defaultChannel}"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:93
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:102
 msgid "Restored post"
 msgstr "Postare restabilită"
 
@@ -12157,6 +12196,11 @@ msgstr "Scanare"
 #: src/Navigation.tsx:363
 msgid "Scan QR code"
 msgstr "Scanare cod QR"
+
+#. placeholder {0}: i18n.date(new Date(enforcement.expiresAt), { dateStyle: 'medium', timeStyle: 'short', })
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:88
+msgid "Scheduled end: {0}"
+msgstr "Sfârșit programat: {0}"
 
 #: src/lib/interests.ts:71
 msgid "Science"
@@ -12883,7 +12927,7 @@ msgstr "Linkurile scurte nu pot fi adăugate. Folosiți linkul complet în schim
 msgid "Show"
 msgstr "Afișare"
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:66
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:116
 msgid "Show account status"
 msgstr "Afișați starea contului"
 
@@ -13212,6 +13256,14 @@ msgstr "Dovada socială ale postărilor"
 msgid "Software Dev"
 msgstr "Dezvoltare software"
 
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:109
+msgid "Some account features may be restricted."
+msgstr "Unele caracteristici ale contului pot fi restricționate."
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:103
+msgid "Some account features may be restricted. Strikes come off your record over time."
+msgstr "Unele caracteristici ale contului pot fi restricționate. Avertismentele expiră din istoricul dvs. în timp."
+
 #: src/screens/Moderation/index.tsx:517
 msgid "Some moderation services in your list are no longer available."
 msgstr "Unele servicii de moderare din lista dvs. nu mai sunt disponibile."
@@ -13510,12 +13562,12 @@ msgstr "Carduri extensibile"
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:138
 #: src/screens/Messages/components/ChatDisabled.tsx:172
 #: src/screens/Messages/components/ChatDisabled.tsx:174
-#: src/screens/ModerationInbox/Notice.tsx:439
+#: src/screens/ModerationInbox/Notice.tsx:438
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:164
 msgid "Submit"
 msgstr "Trimitere"
 
-#: src/screens/ModerationInbox/Notice.tsx:432
+#: src/screens/ModerationInbox/Notice.tsx:431
 #: src/screens/Takendown.tsx:76
 msgid "Submit appeal"
 msgstr "Depuneți contestație"
@@ -13839,7 +13891,7 @@ msgstr "Spuneți-ne un pic despre dvs."
 msgid "Tell us a little more"
 msgstr "Spuneți-ne un pic mai mult"
 
-#: src/screens/ModerationInbox/Notice.tsx:471
+#: src/screens/ModerationInbox/Notice.tsx:470
 msgid "Tell us why you believe this decision was a mistake. We will review your appeal along with the original content."
 msgstr "Spuneți-ne de ce credeți că această decizie a fost o greșeală. Vă vom revizui contestația împreună cu conținutul original."
 
@@ -13950,11 +14002,11 @@ msgstr "Contul va putea interacționa cu dvs. după deblocare."
 msgid "The account you reported has been restored after another review. You can mute or block it if you’d rather not see its content. Read our <0>Community Guidelines</0>."
 msgstr "Contul pe care l-ați raportat a fost restabilit după o altă analiză. Îl puteți amuții sau bloca dacă preferați să nu îi vedeți conținutul. Citiți <0>Regulile Comunității</0>."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:55
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:62
 msgid "The action against your account was reversed"
 msgstr "Acțiunea împotriva contului dvs. a fost anulată"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:56
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:63
 msgid "The action against your content was reversed"
 msgstr "Acțiunea împotriva conținutului dvs. a fost anulată"
 
@@ -13963,8 +14015,8 @@ msgstr "Acțiunea împotriva conținutului dvs. a fost anulată"
 msgid "The app will be restarted"
 msgstr "Aplicația va fi repornită"
 
-#: src/screens/ModerationInbox/Notice.tsx:324
-#: src/screens/ModerationInbox/Notice.tsx:364
+#: src/screens/ModerationInbox/Notice.tsx:327
+#: src/screens/ModerationInbox/Notice.tsx:368
 msgid "The appeal window has closed."
 msgstr "Perioada pentru contestații s-a încheiat."
 
@@ -14387,7 +14439,7 @@ msgstr "Acest cod este invalid. Retrimiteți pentru a obține un cod nou."
 msgid "This confirmation code is not valid. Please try again."
 msgstr "Acest cod de confirmare nu este valid. Vă rugăm să încercați din nou."
 
-#: src/screens/ModerationInbox/Notice.tsx:370
+#: src/screens/ModerationInbox/Notice.tsx:374
 msgid "This content could not be appealed. Please reload the notice and try again."
 msgstr "Acest conținut nu a putut fi contestat. Vă rugăm să reîncărcați notificarea și să încercați din nou."
 
@@ -14624,11 +14676,11 @@ msgstr "Acest lucru ar trebui să creeze un registru la:"
 msgid "This should only take a few minutes."
 msgstr "Acest lucru ar trebui să dureze doar câteva minute."
 
-#: src/screens/ModerationInbox/Notice.tsx:367
+#: src/screens/ModerationInbox/Notice.tsx:371
 msgid "This subject can no longer be appealed."
 msgstr "Acest subiect nu mai poate fi contestat."
 
-#: src/screens/ModerationInbox/Notice.tsx:361
+#: src/screens/ModerationInbox/Notice.tsx:365
 msgid "This subject has already been appealed."
 msgstr "Acest subiect a fost deja contestat."
 
@@ -14742,6 +14794,10 @@ msgstr "Trei"
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/TimeIndicator.tsx:34
 msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr "Timp rămas: {0, plural, one {O secundă} few {# secunde} other {# secunde}}"
+
+#: src/screens/ModerationInbox/components/AccountActionTimeline.tsx:24
+msgid "Timeline"
+msgstr "Cronologie"
 
 #: src/components/SendErrorReportDialog.tsx:68
 #: src/features/profileLinks/components/LinkFormDialog.tsx:364
@@ -15348,6 +15404,10 @@ msgstr "Actualizați-vă e-mailul"
 msgid "Update your location"
 msgstr "Actualizați-vă locația"
 
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:67
+msgid "Updated"
+msgstr "Actualizat"
+
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:359
 msgctxt "toast"
 msgid "Updating quote attachment failed"
@@ -15863,7 +15923,7 @@ msgstr "Vizualizați bannerul profilului"
 msgid "View publication"
 msgstr "Vizualizare publicare"
 
-#: src/screens/ModerationInbox/components/ReportRow.tsx:32
+#: src/screens/ModerationInbox/components/ReportRow.tsx:34
 msgid "View report details: {subject}"
 msgstr "Vizualizați detaliile raportului: {subject}"
 
@@ -16071,11 +16131,11 @@ msgstr "Am rămas fără postări de la urmăritorii dvs. Iată cele mai recente
 msgid "We recommend selecting at least two interests."
 msgstr "Vă recomandăm să selectați cel puțin două interese."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:47
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:50
 msgid "We reviewed your appeal and are keeping our original decision in place."
 msgstr "V-am analizat contestația și menținem decizia noastră inițială."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:33
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:36
 msgid "We reviewed your appeal. The current status of your content or account is shown below."
 msgstr "V-am analizat contestația. Starea actuală a conținutului sau contului dvs. este afișată mai jos."
 
@@ -16091,10 +16151,6 @@ msgstr "V-am analizat raportul și am constatat că acest conținut nu încalcă
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:250
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Am trimis un e-mail la <0>{0}</0> care conține un link. Faceți clic pe el pentru a finaliza procesul de verificare a e-mailului."
-
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:55
-msgid "We sent you an email about your account"
-msgstr ""
 
 #: src/view/com/composer/state/video.ts:521
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
@@ -16240,13 +16296,17 @@ msgstr "Actualizăm Termenii de Serviciu, Politica de Confidențialitate și Pol
 msgid "We've confirmed your age assurance status. You can now close this dialog."
 msgstr "Am confirmat starea dvs. de verificare a vârstei. Acum puteți închide acest dialog."
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:43
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:76
 msgid "We’ve taken action on your account for violating our Community Guidelines, and strikes have been added to your record. More violations will lead to stronger enforcement, including suspension."
 msgstr "Am luat măsuri asupra contului dvs. pentru încălcarea Regulilor Comunității noastre, și avertismente au fost adăugate istoricului dvs. Alte încălcări ulterioare vor duce la măsuri mai severe, inclusiv suspendarea contului."
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:37
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:60
 msgid "We’ve taken action on your account for violating our Community Guidelines. Your record now carries enough strikes that another violation could lead to permanent suspension."
 msgstr "Am luat măsuri asupra contului dvs. pentru încălcarea Regulilor Comunității noastre. În prezent, ați acumulat suficiente avertismente, astfel încât o nouă încălcare ar putea duce la suspendarea definitivă."
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:82
+msgid "We’ve taken action on your account. See your notices for details."
+msgstr "Am luat măsuri asupra contului dvs. Consultați notificările pentru detalii."
 
 #: src/screens/Deactivated.tsx:121
 msgid "Welcome back!"
@@ -16549,7 +16609,7 @@ msgstr "De asemenea, puteți descărca datele de conversație ca fișier „JSON
 msgid "You can always opt out and delete your data"
 msgstr "Puteți renunța întotdeauna și șterge datele dvs."
 
-#: src/screens/ModerationInbox/Notice.tsx:286
+#: src/screens/ModerationInbox/Notice.tsx:289
 msgid "You can appeal once per decision. A different moderator will review the appeal."
 msgstr "Puteți face contestație o singură dată pentru fiecare decizie. Un alt moderator va analiza contestația."
 
@@ -16609,7 +16669,7 @@ msgstr "Puteți citi istoricul conversației, dar nu puteți trimite mesaje noi.
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "Puteți selecta până la {MAX_GALLERY_IMAGES, plural, one {} few {# imagini}other {# de imagini}} în total."
 
-#: src/screens/ModerationInbox/Notice.tsx:281
+#: src/screens/ModerationInbox/Notice.tsx:284
 msgid "You can submit one account appeal at a time. A different moderator will review the appeal."
 msgstr "Puteți trimite o singură contestație privind contul la un moment dat. Un alt moderator va analiza contestația."
 
@@ -16753,7 +16813,7 @@ msgstr "Nu ați creat încă niciun flux personalizat."
 msgid "You haven't muted any words or tags yet"
 msgstr "Nu ați amuțit încă niciun cuvânt sau etichetă"
 
-#: src/screens/ModerationInbox/index.tsx:227
+#: src/screens/ModerationInbox/index.tsx:232
 msgid "You haven’t reported anything yet"
 msgstr "Nu ați raportat încă nimic"
 
@@ -17021,12 +17081,12 @@ msgstr "Ați atins limita zilnică pentru încărcări de videoclipuri (prea mul
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "Ați rămas fără videoclipuri de vizionat. Poate e un moment bun pentru a face o pauză?"
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:95
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:103
 msgid "Your ability to submit reports was restricted"
 msgstr "Abilitatea dvs. de a trimite rapoarte a fost restricționată"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:88
-#: src/screens/ModerationInbox/index.tsx:112
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:97
+#: src/screens/ModerationInbox/index.tsx:117
 #: src/screens/Signup/index.tsx:191
 msgid "Your account"
 msgstr "Contul dvs."
@@ -17035,7 +17095,7 @@ msgstr "Contul dvs."
 msgid "Your account cannot submit reports while it is suspended."
 msgstr "Contul dvs. nu poate trimite rapoarte cât timp este suspendat."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:107
 msgid "Your account credentials were revoked"
 msgstr "Acreditările contului dvs. au fost revocate"
 
@@ -17043,15 +17103,24 @@ msgstr "Acreditările contului dvs. au fost revocate"
 msgid "Your account has been deleted, see ya! ✌️"
 msgstr "Contul dvs. a fost șters, pe curând! ✌️"
 
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:39
 #: src/screens/Takendown.tsx:142
 msgid "Your account has been suspended"
 msgstr "Contul dumneavoastră a fost suspendat"
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:34
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:48
+msgid "Your account has moderation actions"
+msgstr "Contul dvs. are acțiuni de moderare"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:47
 msgid "Your account has strikes against it"
 msgstr "Contul dvs. figurează cu avertismente"
 
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:33
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:98
+msgid "Your account has strikes against it. Strikes come off your record over time."
+msgstr "Contul dvs. figurează cu avertismente. Avertismentele expiră din istoricul dvs. în timp."
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:43
 msgid "Your account is at risk of permanent suspension"
 msgstr "Contul dvs. este în pericol de suspendare permanentă"
 
@@ -17059,9 +17128,32 @@ msgstr "Contul dvs. este în pericol de suspendare permanentă"
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Contul dvs. nu este încă suficient de vechi pentru a încărca videoclipuri. Vă rugăm să încercați din nou mai târziu."
 
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:57
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:23
+msgid "Your account is suspended"
+msgstr "Contul dvs. este suspendat"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:50
+msgid "Your account is suspended on Bluesky. See your notices for details and available appeal options."
+msgstr "Contul tău este suspendat pe Bluesky. Consultați notificările pentru detalii și opțiunile de contestație disponibile."
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:41
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:59
+#: src/screens/ModerationInbox/components/YourAccountRow.tsx:25
+msgid "Your account is temporarily suspended"
+msgstr "Contul dvs. este suspendat temporar"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:55
+msgid "Your account is temporarily suspended on Bluesky. See your notices for details and available appeal options."
+msgstr "Contul dvs. este suspendat temporar pe Bluesky. Consultați notificările pentru detalii și opțiunile de contestație disponibile."
+
 #: src/components/dms/InitiateChatFlow.tsx:836
 msgid "Your account is too new"
 msgstr "Contul dvs. este prea nou"
+
+#: src/screens/ModerationInbox/components/AccountStatus.tsx:45
+msgid "Your account may be suspended or at risk of suspension"
+msgstr "Contul dvs. poate fi suspendat sau riscă să fie suspendat"
 
 #: src/components/dms/InitiateChatFlow.tsx:837
 msgid "Your account must be at least 7 days old to create a new group chat."
@@ -17080,17 +17172,21 @@ msgstr "Repozitoriul contului dvs., care conține toate înregistrările de date
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
 msgstr "Contul dvs. a fost găsit încălcând <0>Termenii de Serviciu a Bluesky Social</0>. Vi s-a trimis un e-mail în care se indică perioada de încălcare specifică și de suspendare, dacă este cazul. Puteți contesta această decizie dacă credeți că a fost luată din greșeală."
 
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:67
-#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:91
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:73
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:60
+msgid "Your account was restored"
+msgstr "Contul dvs. a fost restabilit"
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:75
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:99
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:82
 msgid "Your account was suspended"
 msgstr "Contul dvs. a fost suspendat"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:65
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:74
 msgid "Your account was temporarily suspended for {hours, plural, one {# hour} other {# hours}}"
 msgstr "Contul dvs. a fost suspendat pentru {hours, plural, one {o oră} few {# ore} other {# de ore}}"
 
-#: src/screens/ModerationInbox/Notice.tsx:224
+#: src/screens/ModerationInbox/Notice.tsx:227
 msgid "Your appeal has been submitted and is awaiting review."
 msgstr "Contestația dvs. a fost trimisă și așteaptă să fie analizată."
 
@@ -17122,14 +17218,18 @@ msgstr "Contactul dvs. {name}"
 msgid "Your contact <0/> is on Bluesky"
 msgstr "Persoana dvs. de contact <0/> este pe Bluesky"
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:95
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:104
 msgid "Your content"
 msgstr "Conținutul dvs."
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:84
 msgid "Your content was removed"
 msgstr "Conținutul dvs. a fost eliminat"
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:57
+msgid "Your content was restored"
+msgstr "Conținutul dvs. a fost restaurat"
 
 #. placeholder {0}: sanitizeHandle(currentAccount?.handle || '', '@')
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:531
@@ -17223,14 +17323,18 @@ msgstr "Nota dvs.:"
 msgid "Your password must be at least 8 characters long."
 msgstr "Parola dvs. trebuie să aibă cel puțin 8 caractere."
 
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:94
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:103
 msgid "Your post"
 msgstr "Postarea dvs."
 
 #: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:49
-#: src/screens/ModerationInbox/components/util/noticeLabels.ts:75
+#: src/screens/ModerationInbox/components/util/noticeLabels.ts:84
 msgid "Your post was removed"
 msgstr "Postarea dvs. a fost eliminată"
+
+#: src/screens/ModerationInbox/components/hooks/useActionedSubjectLabels.ts:56
+msgid "Your post was restored"
+msgstr "Postarea dvs. a fost restaurată"
 
 #: src/view/com/composer/Composer.tsx:1239
 msgid "Your post was sent"
@@ -17279,7 +17383,7 @@ msgstr "Raportul dvs. a fost rezolvat. Citiți <0>Regulile Comunității</0>."
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr "Raportul dvs. va fi trimis la <0>{0}</0>."
 
-#: src/screens/ModerationInbox/index.tsx:112
+#: src/screens/ModerationInbox/index.tsx:117
 msgid "Your reports"
 msgstr "Rapoartele dvs."
 
@@ -17291,14 +17395,6 @@ msgstr "Notificări pentru rapoartele dvs."
 #: src/screens/Settings/InterestsSettings.tsx:65
 msgid "Your selected interests help us serve you content you care about."
 msgstr "Interesele dvs. selectate ne ajută să vă oferim conținut care vă interesează."
-
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:56
-msgid "Your standing doesn’t restrict your account right now, and strikes come off your record over time."
-msgstr ""
-
-#: src/screens/ModerationInbox/components/AccountStatus.tsx:51
-msgid "Your standing may restrict certain features on your account. Strikes come off your record over time."
-msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1569
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
