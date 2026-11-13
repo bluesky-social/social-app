@@ -3,7 +3,7 @@ import * as Clipboard from 'expo-clipboard'
 import {Share} from '@bsky.app/expo-bluesky-swiss-army'
 import {beforeEach, describe, expect, it, jest} from '@jest/globals'
 
-import {openSharePlatform} from './share'
+import {hasPasteFallback, needsPaste, openSharePlatform} from './share'
 
 let mockOS: 'ios' | 'android' | 'web' = 'ios'
 
@@ -55,6 +55,15 @@ describe('openSharePlatform', () => {
     expect(openURL).toHaveBeenCalledWith('sgnl://')
   })
 
+  it('copies the link and opens the app when asked to paste', async () => {
+    mockOS = 'ios'
+    await expect(
+      openSharePlatform('messenger', content, {paste: true}),
+    ).resolves.toEqual({copiedLink: true})
+    expect(Clipboard.setUrlAsync).toHaveBeenCalledWith(content.url)
+    expect(openURL).toHaveBeenCalledWith('fb-messenger://')
+  })
+
   it('leaves the clipboard alone when a copy-and-open app is gone', async () => {
     mockOS = 'ios'
     jest.spyOn(Linking, 'canOpenURL').mockResolvedValue(false)
@@ -91,5 +100,25 @@ describe('openSharePlatform', () => {
     await expect(openSharePlatform('whatsapp', content)).rejects.toThrow(
       'not supported',
     )
+  })
+})
+
+describe('needsPaste', () => {
+  it('is true for copy-and-open apps on iOS only', () => {
+    mockOS = 'ios'
+    expect(needsPaste('signal')).toBe(true)
+    expect(needsPaste('whatsapp')).toBe(false)
+    mockOS = 'android'
+    expect(needsPaste('signal')).toBe(false)
+  })
+})
+
+describe('hasPasteFallback', () => {
+  it('is true for apps with a paste fallback on iOS only', () => {
+    mockOS = 'ios'
+    expect(hasPasteFallback('messenger')).toBe(true)
+    expect(hasPasteFallback('whatsapp')).toBe(false)
+    mockOS = 'android'
+    expect(hasPasteFallback('messenger')).toBe(false)
   })
 })
