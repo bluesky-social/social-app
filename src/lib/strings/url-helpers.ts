@@ -1,4 +1,4 @@
-import {type AtIdentifierString, AtUri} from '@atproto/syntax'
+import {type AtIdentifierString, AtUri, isAtUriString} from '@atproto/syntax'
 import {parse} from 'psl'
 import TLDs from 'tlds'
 
@@ -282,6 +282,40 @@ export function feedUriToHref(url: string): string {
     return `/profile/${hostname}/feed/${rkey}`
   } catch {
     return ''
+  }
+}
+
+/**
+ * Resolves an AT-URI to the in-app path of the screen that displays it, e.g.
+ * `at://alice.test/app.bsky.feed.post/3k2a` becomes
+ * `/profile/alice.test/post/3k2a`. Returns `undefined` if the input is not a
+ * valid AT-URI, or if it points to a collection the app has no screen for.
+ */
+export function atUriToHref(uri: string): string | undefined {
+  if (!isAtUriString(uri, {strict: false})) {
+    return undefined
+  }
+  const {host, collection, rkey} = new AtUri(uri)
+  switch (collection) {
+    case '':
+    case 'app.bsky.actor.profile':
+    case 'app.bsky.labeler.service':
+      return `/profile/${host}`
+  }
+  if (!rkey) {
+    return undefined
+  }
+  switch (collection) {
+    case 'app.bsky.feed.post':
+      return `/profile/${host}/post/${rkey}`
+    case 'app.bsky.feed.generator':
+      return `/profile/${host}/feed/${rkey}`
+    case 'app.bsky.graph.list':
+      return `/profile/${host}/lists/${rkey}`
+    case 'app.bsky.graph.starterpack':
+      return `/starter-pack/${host}/${rkey}`
+    default:
+      return undefined
   }
 }
 
