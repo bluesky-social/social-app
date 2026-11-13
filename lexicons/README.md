@@ -8,22 +8,23 @@ against it. Do not hand-edit published schemas.
 ## Local extension: `app.bsky.embed.external`
 
 `viewGallery.photoCount` is an optional non-negative total photo count, distinct
-from the number of hydrated gallery items. This schema includes that local
-extension; its manifest CID is a locally calculated content-integrity pin, not
-the published record CID. Exclude it from scoped updates until the published
-schema includes the field.
+from the number of hydrated gallery items. Upstream added it in atproto PR 5880
+(`lexicons-overrides/app/bsky/embed/external.json` at
+`e9fbdab8e2302e3e01ea923c2db5ee4d7ff33681`), which this schema matches, but the
+published schema record does not include it yet. Its manifest CID is a locally
+calculated content-integrity pin, not the published record CID. Exclude it from
+scoped updates until the published schema includes the field.
 
 ## Unpublished Atmosphere schemas
 
 The `app.bsky.unspecced` namespace is intentionally unpublished (it is a DNS
 carveout upstream, and resolving it is a CI violation there), so the installer
-cannot fetch it. These schemas are copied from upstream sources:
+cannot fetch it. These schemas are copied from merged upstream sources:
 
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereExploreTab.json` at atproto
-  `473c744c3d43dee51f08316475cf8ee3138ec7a2` (from atproto PR 5892, not yet
-  merged)
+  `a704f10c040a989244cfa578e65f006ff7de0f83` (from atproto PR 5892)
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereApps.json` at atproto
-  `11f52c5588279d159ab12404a1b323731a467fdd` (from atproto PR 5801)
+  `a704f10c040a989244cfa578e65f006ff7de0f83` (from atproto PR 5892)
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereTimeline.json` at atproto
   `4ca55dbc6d9e04d721fc14abffb73ce33158e002` (from atproto PR 5871)
 - `lexicons-overrides/app/bsky/unspecced/getAtmosphereRecordViews.json` at atproto

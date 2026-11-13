@@ -434,7 +434,7 @@
     },
     "app.bsky.embed.external": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.embed.external",
-      "cid": "bafyreidxcisn72onozqk4iglrhiwwyulugsmucq6k4zbx4tm2ha5ng455a"
+      "cid": "bafyreieaiqypvddk6sp2b3z32jvqhxt435n334m6jdefyb5wr2nshgm4ha"
     },
     "app.bsky.embed.gallery": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.embed.gallery",
@@ -766,7 +766,7 @@
     },
     "app.bsky.unspecced.getAtmosphereApps": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.unspecced.getAtmosphereApps",
-      "cid": "bafyreihpi7hxe7j4uh7haawophxtppjwziojd4swq4anpgvnegigqk2234"
+      "cid": "bafyreibhdohdekwztogxf7fp6x2y2vtgj24r7se2vfshpyodn6wih2i5jq"
     },
     "app.bsky.unspecced.getAtmosphereExploreTab": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.unspecced.getAtmosphereExploreTab",

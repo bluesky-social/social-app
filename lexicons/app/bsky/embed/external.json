@@ -187,7 +187,7 @@
         "photoCount": {
           "type": "integer",
           "minimum": 0,
-          "description": "Total number of photos in the gallery, which may exceed the number of hydrated items."
+          "description": "Total number of gallery item backlinks, independent of the items included in this view."
         },
         "title": {
           "type": "string"
@@ -521,7 +521,7 @@
           "type": "ref"
         }
       },
-      "description": "The theme colors of an external source, such as a site.standard.publication. These colors may be used when rendering an embed from that source."
+      "description": "The theme colors of an external source, such as a standard.site publication. These colors may be used when rendering an embed from that source."
     },
     "viewArticlePublicationTheme": {
       "type": "object",
