@@ -5,7 +5,11 @@ import {fireEvent, render, screen} from '@testing-library/react-native'
 import {makeActivityListLink} from '#/screens/Atmosphere/ActivityList/links'
 import {ActivityRow} from '../components/ActivityRow'
 import {getStreamDuration, isLive} from '../components/LivestreamCard'
-import {type ActivityRow as ActivityRowModel, toActivityRows} from '../rows'
+import {
+  type ActivityRow as ActivityRowModel,
+  type TimelineEntry,
+  toActivityRows,
+} from '../rows'
 import {
   actorGroup,
   article,
@@ -21,9 +25,10 @@ import {
   manton,
   moderationOpts,
   NSID,
+  page,
   paul,
   publication,
-  recommendBucket,
+  related,
   subjectGroup,
 } from './fixtures'
 
@@ -134,8 +139,6 @@ jest.mock('../components/LivestreamCard', () => ({
 
 i18n.loadAndActivate({locale: 'en', messages: {}})
 
-const profiles = new Map([debbie, eric, manton, camp].map(p => [p.did, p]))
-
 function renderRow(row: ActivityRowModel) {
   return render(
     <I18nProvider i18n={i18n}>
@@ -144,8 +147,12 @@ function renderRow(row: ActivityRowModel) {
   )
 }
 
-function renderEntry(entry: Parameters<typeof toActivityRows>[0][number]) {
-  return renderRow(toActivityRows([entry], profiles, 0, moderationOpts)[0])
+function rowOf(entry: TimelineEntry) {
+  return toActivityRows(page([entry]), 0, moderationOpts)[0]
+}
+
+function renderEntry(entry: TimelineEntry) {
+  return renderRow(rowOf(entry))
 }
 
 /** The sentence, then "1h on" and the app name (just "1h" without an app). */
@@ -181,7 +188,7 @@ describe('ActivityRow', () => {
         actor: debbie,
         collection: NSID.document,
         view: article(),
-        relatedActivity: [recommendBucket([danielle, caelin, paul])],
+        relatedActivity: related([danielle, caelin, paul]),
       }),
     )
     expectHeader('Debbie Ridpath Ohi published an article', 'Leaflet')
@@ -201,8 +208,8 @@ describe('ActivityRow', () => {
     expectHeader('Danielle Yuhan and 2 others recommended an article')
   })
 
-  it('renders a recommend group without View all', () => {
-    renderEntry(
+  it('links View all on a recommend group to the recommended articles', () => {
+    const row = rowOf(
       actorGroup({
         actor: eric,
         collection: NSID.recommend,
@@ -210,9 +217,12 @@ describe('ActivityRow', () => {
         count: 16,
       }),
     )
+    renderRow(row)
     expectHeader('Eric recommended 16 articles')
-    // Its URIs are recommend records, not the articles, so there's no list.
-    expect(screen.queryByTestId('activityViewAll')).toBeNull()
+    expect(screen.getByTestId('activityViewAll')).toBeTruthy()
+    expect(mockLinkTo).toHaveBeenCalledWith(
+      makeActivityListLink(row.kind === 'card' ? (row.subjectUris ?? []) : []),
+    )
   })
 
   it('names the app of the newest article in a published group', () => {
@@ -228,24 +238,19 @@ describe('ActivityRow', () => {
   })
 
   it('links View all to the group as an activity list', () => {
-    const [row] = toActivityRows(
-      [
-        actorGroup({
-          actor: eric,
-          collection: NSID.document,
-          view: article('paul.pckt.blog'),
-          count: 3,
-        }),
-      ],
-      profiles,
-      0,
-      moderationOpts,
+    const row = rowOf(
+      actorGroup({
+        actor: eric,
+        collection: NSID.document,
+        view: article('paul.pckt.blog'),
+        count: 3,
+      }),
     )
     renderRow(row)
     expect(screen.getByTestId('activityViewAll')).toBeTruthy()
-    expect(row.kind === 'card' && row.uris).toHaveLength(3)
+    expect(row.kind === 'card' && row.subjectUris).toHaveLength(3)
     expect(mockLinkTo).toHaveBeenCalledWith(
-      makeActivityListLink(row.kind === 'card' ? (row.uris ?? []) : []),
+      makeActivityListLink(row.kind === 'card' ? (row.subjectUris ?? []) : []),
     )
   })
 

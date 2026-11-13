@@ -9,7 +9,6 @@ import {PublicationCard} from '#/components/atmosphere/SiteStandard/Publication'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {site} from '#/lexicons'
 import {
   type ActivityCardRow,
   type ActivityContent,
@@ -68,26 +67,15 @@ export function ActivityContentCard({content}: {content: ActivityContent}) {
   }
 }
 
-/** Opens every activity in an actor group as a list. */
+/** Opens what every activity in an actor group targets as a list. */
 function ViewAllLink({row}: {row: ActivityCardRow}) {
   const {t: l} = useLingui()
   const t = useTheme()
-  if (!row.uris) return null
-  /*
-   * Recommend and subscription groups only carry the URIs of those graph
-   * records, not the articles or publications they point at, so there's
-   * nothing to list until the timeline returns their subjects.
-   */
-  if (
-    row.collection === site.standard.graph.recommend.$type ||
-    row.collection === site.standard.graph.subscription.$type
-  ) {
-    return null
-  }
+  if (!row.subjectUris) return null
   return (
     <Link
       testID="activityViewAll"
-      to={makeActivityListLink(row.uris)}
+      to={makeActivityListLink(row.subjectUris)}
       label={l`View all activity`}
       style={[a.flex_row, a.align_center, a.gap_xs, a.self_start]}>
       <Text style={[a.text_sm, a.font_medium, {color: t.palette.primary_500}]}>

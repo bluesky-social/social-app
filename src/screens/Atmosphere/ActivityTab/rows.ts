@@ -1,4 +1,4 @@
-import {AtUri, type AtUriString} from '@atproto/syntax'
+import {type AtUriString} from '@atproto/syntax'
 import {type ModerationOpts, type ModerationUI} from '@bsky/sdk/moderation'
 
 import {
@@ -7,15 +7,19 @@ import {
 } from '#/screens/Atmosphere/data/exploreData'
 import {app, place, site, social} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import {type ActorProfiles} from './actorProfiles'
 import {isActivityHidden, isActorHidden, moderateActivity} from './moderation'
 
-const timeline = app.bsky.unspecced.getAtmosphereTimeline
+const timeline = app.bsky.unspecced.getAtmosphereTimelineV2
 
 type Profile = bsky.profile.AnyProfileView
-export type TimelineEntry =
-  app.bsky.unspecced.getAtmosphereTimeline.$OutputBody['feed'][number]
-type EntryView = app.bsky.unspecced.getAtmosphereTimeline.ActivityItem['view']
+type Profiles = ReadonlyMap<string, app.bsky.actor.defs.ProfileViewBasic>
+export type TimelinePage = Pick<
+  app.bsky.unspecced.getAtmosphereTimelineV2.$OutputBody,
+  'feed' | 'relatedViews'
+>
+export type TimelineEntry = TimelinePage['feed'][number]
+type SubjectView =
+  app.bsky.unspecced.getAtmosphereTimelineV2.ActivitySubject['view']
 
 /** Activity collections (record NSIDs) this tab knows how to render. */
 const ACTIVITY_COLLECTIONS = [
@@ -58,8 +62,11 @@ export type ActivityCardRow = {
   otherActorCount: number
   /** Activities in this row; more than one means an actor group. */
   activityCount: number
-  /** Every activity URI in an actor group, newest first. */
-  uris?: AtUriString[]
+  /**
+   * What each activity in an actor group targets (the articles, not the
+   * recommends), newest first, for View all.
+   */
+  subjectUris?: AtUriString[]
   indexedAt: string
   content: ActivityContent
   related: RelatedActivity[]
@@ -80,17 +87,19 @@ export type ActivityRow = ActivityCardRow | ActivityWarningRow
  * becomes at most one row. Moderation drops cards the user must not see (see
  * `isActivityHidden`); anything else we can't fully render becomes a visible
  * warning instead of being dropped.
- *
- * `profiles` resolves actors for entries that only carry a DID. It's
- * temporary until the timeline returns actor profiles itself.
  */
 export function toActivityRows(
-  feed: TimelineEntry[],
-  profiles: ActorProfiles,
+  {feed, relatedViews}: TimelinePage,
   /** Position of this page in the list; keeps fallback row keys unique. */
   pageIndex: number,
   moderationOpts: ModerationOpts,
 ): ActivityRow[] {
+  const profiles = new Map<string, app.bsky.actor.defs.ProfileViewBasic>()
+  for (const view of relatedViews) {
+    if (bsky.isType(app.bsky.actor.defs.profileViewBasic, view)) {
+      profiles.set(view.did, view)
+    }
+  }
   return feed.flatMap((entry, index) => {
     const row = toActivityRow(
       entry,
@@ -106,40 +115,56 @@ function toActivityRow(
   entry: TimelineEntry,
   /** For entries with no identity of their own. */
   fallbackKey: string,
-  profiles: ActorProfiles,
+  profiles: Profiles,
   moderationOpts: ModerationOpts,
 ): ActivityRow | undefined {
   if (bsky.isType(timeline.activityItem, entry)) {
     return toCardRow(moderationOpts, {
-      key: entry.record.uri,
+      key: entry.ref.uri,
       collection: entry.collection,
-      actor: profiles.get(new AtUri(entry.record.uri).host),
+      actor: profiles.get(entry.actor),
       otherActorCount: 0,
       activityCount: 1,
-      indexedAt: entry.record.indexedAt,
-      view: entry.view,
-      related: toRelatedActivity(entry.relatedActivity, moderationOpts),
+      indexedAt: entry.indexedAt,
+      view: entry.subject.view,
+      related: toRelatedActivity(
+        entry.relatedActivity,
+        profiles,
+        moderationOpts,
+      ),
     })
   }
   if (bsky.isType(timeline.activityActorGroup, entry)) {
     return toCardRow(moderationOpts, {
-      key: entry.id,
+      key: entry.activities[0].ref.uri,
       collection: entry.collection,
       actor: profiles.get(entry.actor),
       otherActorCount: 0,
-      activityCount: entry.uris.length,
-      uris: entry.uris,
+      activityCount: entry.activities.length,
+      subjectUris: distinct(entry.activities.map(a => a.subject)),
       indexedAt: entry.indexedAt,
-      view: entry.item.view,
-      related: toRelatedActivity(entry.item.relatedActivity, moderationOpts),
+      // Only the newest subject is hydrated.
+      view: entry.subjects[0].view,
+      related: [],
     })
   }
   if (bsky.isType(timeline.activitySubjectGroup, entry)) {
+    const actors = distinct(entry.activities.map(a => a.actor))
+    /*
+     * Lead with the newest actor the viewer can see, so one muted actor
+     * doesn't hide the group. If none is visible, the newest one leads and
+     * moderation drops the card.
+     */
+    const lead =
+      actors
+        .map(did => profiles.get(did))
+        .find(actor => actor && !isActorHidden(actor, moderationOpts)) ??
+      profiles.get(actors[0])
     return toCardRow(moderationOpts, {
-      key: entry.id,
+      key: entry.activities[0].ref.uri,
       collection: entry.collection,
-      actor: entry.actors[0],
-      otherActorCount: Math.max(entry.actors.length - 1, 0),
+      actor: lead,
+      otherActorCount: actors.length - 1,
       activityCount: 1,
       indexedAt: entry.indexedAt,
       view: entry.subject.view,
@@ -163,7 +188,7 @@ function toCardRow(
   > & {
     collection: string
     actor: Profile | undefined
-    view: EntryView
+    view: SubjectView
   },
 ): ActivityRow | undefined {
   if (!isActivityCollection(collection)) {
@@ -177,69 +202,81 @@ function toCardRow(
   return {kind: 'card', key, collection, actor, content, moderation, ...rest}
 }
 
+/** The content each collection's activities target. */
+const CONTENT_TYPES: Record<ActivityCollection, ActivityContent['type']> = {
+  [site.standard.document.$type]: 'article',
+  [site.standard.graph.recommend.$type]: 'article',
+  [site.standard.graph.subscription.$type]: 'publication',
+  [social.grain.gallery.$type]: 'gallery',
+  [place.stream.livestream.$type]: 'livestream',
+}
+
 /** Each collection must carry exactly one kind of view. */
 function toContent(
   collection: ActivityCollection,
-  view: EntryView,
+  view: SubjectView,
 ): ActivityContent | undefined {
-  const external = app.bsky.embed.external
-  switch (collection) {
-    case site.standard.document.$type:
-    case site.standard.graph.recommend.$type:
-      return bsky.isType(external.viewArticle, view)
-        ? {type: 'article', view}
-        : undefined
-    case site.standard.graph.subscription.$type:
-      return bsky.isType(external.viewArticlePublication, view)
-        ? {type: 'publication', view}
-        : undefined
-    case social.grain.gallery.$type: {
-      if (!bsky.isType(external.viewGallery, view)) return undefined
-      // The card needs a photo to show and an author for the photo dialog.
-      return getGalleryImage(view) &&
-        getAssociatedProfile(view.associatedProfiles)
-        ? {type: 'gallery', view}
-        : undefined
-    }
-    case place.stream.livestream.$type:
-      return bsky.isType(external.viewLivestream, view)
-        ? {type: 'livestream', view}
-        : undefined
-  }
+  const content = toViewContent(view)
+  return content?.type === CONTENT_TYPES[collection] ? content : undefined
 }
 
 /**
  * The card for one record on the activity list, or undefined when its view is
- * missing or doesn't match the record's collection.
+ * missing or can't be rendered.
  */
-export function toActivityListContent(
-  uri: AtUriString,
-  view: EntryView | undefined,
+export function toViewContent(
+  view: SubjectView | undefined,
 ): ActivityContent | undefined {
-  const {collection} = new AtUri(uri)
-  return view && isActivityCollection(collection)
-    ? toContent(collection, view)
-    : undefined
+  const external = app.bsky.embed.external
+  if (bsky.isType(external.viewArticle, view)) return {type: 'article', view}
+  if (bsky.isType(external.viewArticlePublication, view)) {
+    return {type: 'publication', view}
+  }
+  if (bsky.isType(external.viewGallery, view)) {
+    // The card needs a photo to show and an author for the photo dialog.
+    return getGalleryImage(view) &&
+      getAssociatedProfile(view.associatedProfiles)
+      ? {type: 'gallery', view}
+      : undefined
+  }
+  if (bsky.isType(external.viewLivestream, view)) {
+    return {type: 'livestream', view}
+  }
+  return undefined
 }
 
+/**
+ * One pill per related collection. The timeline only includes profiles for
+ * the newest few actors of each, so `actors` can be shorter than
+ * `actorCount` even before moderation.
+ */
 function toRelatedActivity(
-  buckets: app.bsky.unspecced.getAtmosphereTimeline.ActivityRelatedGroup[] = [],
+  activities: app.bsky.unspecced.getAtmosphereTimelineV2.ActivityItemRelatedActivity[] = [],
+  profiles: Profiles,
   moderationOpts: ModerationOpts,
 ): RelatedActivity[] {
-  return buckets.flatMap(bucket => {
-    // Recommends are the only related activity the timeline returns today.
-    if (bucket.collection !== site.standard.graph.recommend.$type) return []
-    const actors = bucket.actors.filter(
-      actor => !isActorHidden(actor, moderationOpts),
-    )
-    // With nobody left to name, there's no pill.
-    if (actors.length === 0) return []
-    return [
-      {
-        collection: site.standard.graph.recommend.$type,
-        actors,
-        actorCount: bucket.actors.length,
-      },
-    ]
+  // Recommends are the only related activity the timeline returns today.
+  const actorDids = distinct(
+    activities
+      .filter(a => a.collection === site.standard.graph.recommend.$type)
+      .map(a => a.actor),
+  )
+  const actors = actorDids.flatMap(did => {
+    const actor = profiles.get(did)
+    return actor && !isActorHidden(actor, moderationOpts) ? [actor] : []
   })
+  // With nobody left to name, there's no pill.
+  if (actors.length === 0) return []
+  return [
+    {
+      collection: site.standard.graph.recommend.$type,
+      actors,
+      actorCount: actorDids.length,
+    },
+  ]
+}
+
+/** Values in first-seen order, without repeats. */
+function distinct<T>(values: T[]): T[] {
+  return [...new Set(values)]
 }

@@ -25,7 +25,7 @@ import {
   useActivityListQuery,
 } from './useActivityListQuery'
 
-/** Every activity in an actor group ("View all"), as stacked cards. */
+/** What every activity in an actor group targets ("View all"), as cards. */
 export function AtmosphereActivityListScreen({
   route: {
     params: {uris},

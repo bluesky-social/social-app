@@ -1,4 +1,5 @@
 import {
+  actorGroup,
   article,
   caelin,
   danielle,
@@ -10,10 +11,11 @@ import {
   manton,
   moderationOpts,
   NSID,
+  page,
   paul,
   publication,
-  recommendBucket,
   recordUri,
+  related,
   subjectGroup,
 } from '#/screens/Atmosphere/ActivityTab/__tests__/fixtures'
 import {
@@ -29,8 +31,6 @@ import {
   type ProfileMapper,
 } from '../mapProfiles'
 
-const profiles = new Map([debbie, eric].map(p => [p.did, p]))
-
 /** Stands in for profile shadows: these DIDs come back with `viewer` changed. */
 function shadowing(viewers: Record<string, object>): ProfileMapper {
   return profile =>
@@ -40,8 +40,11 @@ function shadowing(viewers: Record<string, object>): ProfileMapper {
 }
 
 function rowsOf(map: ProfileMapper, ...feed: TimelineEntry[]) {
-  const page = mapTimelinePageProfiles({feed, profiles}, map)
-  return toActivityRows(page.feed, page.profiles, 0, moderationOpts)
+  return toActivityRows(
+    mapTimelinePageProfiles(page(feed), map),
+    0,
+    moderationOpts,
+  )
 }
 
 type ExploreTab = app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody
@@ -70,29 +73,34 @@ const blocked = {blocking: 'at://did:plc:me/app.bsky.graph.block/1'}
 describe('findProfiles', () => {
   it('finds a profile everywhere it appears in a timeline page', () => {
     const owned = {associatedProfiles: [manton]}
-    const page = {
-      profiles: new Map([[manton.did, manton]]),
-      feed: [
-        item({
-          actor: eric,
-          collection: NSID.recommend,
-          view: article(undefined, {
-            ...owned,
-            likers: [manton],
-            publisher: {...article().publisher!, ...owned},
-          }),
-          relatedActivity: [recommendBucket([manton, paul])],
+    const timelinePage = page([
+      item({
+        actor: eric,
+        collection: NSID.recommend,
+        view: article(undefined, {
+          ...owned,
+          likers: [manton],
+          publisher: {...article().publisher!, ...owned},
         }),
-        subjectGroup({
-          actors: [manton, caelin],
-          collection: NSID.recommend,
-          view: article(undefined, owned),
-        }),
-      ],
-    }
+      }),
+      actorGroup({
+        actor: eric,
+        collection: NSID.recommend,
+        view: article(undefined, owned),
+        count: 2,
+      }),
+      subjectGroup({
+        actors: [manton, caelin],
+        collection: NSID.recommend,
+        view: article(undefined, owned),
+      }),
+    ])
+    // relatedViews once, three in the item's article, one per group.
     expect(
-      findProfiles(manton.did, map => mapTimelinePageProfiles(page, map)),
-    ).toHaveLength(7)
+      findProfiles(manton.did, map =>
+        mapTimelinePageProfiles(timelinePage, map),
+      ),
+    ).toHaveLength(6)
   })
 
   it('finds a profile everywhere it appears in the Explore tab', () => {
@@ -162,7 +170,7 @@ describe('mapTimelinePageProfiles', () => {
         actor: debbie,
         collection: NSID.document,
         view: article(),
-        relatedActivity: [recommendBucket([danielle, caelin, paul])],
+        relatedActivity: related([danielle, caelin, paul]),
       }),
     )
     expect(row.kind === 'card' && row.related).toEqual([

@@ -15,16 +15,12 @@ import {
 } from '#/screens/Atmosphere/data/mapProfiles'
 import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
-import {type ActorProfiles, fetchActorProfiles} from './actorProfiles'
 import {toActivityRows} from './rows'
 
 const useActivityTimelineQueryRoot = 'useActivityTimelineQuery'
 
-export type ActivityTimelinePage =
-  app.bsky.unspecced.getAtmosphereTimeline.$OutputBody & {
-    /** TEMPORARY: see `actorProfiles.ts`. */
-    profiles: ActorProfiles
-  }
+type ActivityTimelinePage =
+  app.bsky.unspecced.getAtmosphereTimelineV2.$OutputBody
 
 /**
  * The viewer's activity timeline as rows. The cache holds raw pages, and
@@ -42,26 +38,23 @@ export function useActivityTimelineQuery() {
     queryKey: createQueryKey(useActivityTimelineQueryRoot, {viewer}),
     // Wait for moderation opts so hidden cards never flash in.
     enabled: !!viewer && !!moderationOpts,
-    queryFn: async ({pageParam}): Promise<ActivityTimelinePage> => {
-      const page = await client.call(app.bsky.unspecced.getAtmosphereTimeline, {
+    queryFn: ({pageParam}): Promise<ActivityTimelinePage> =>
+      client.call(app.bsky.unspecced.getAtmosphereTimelineV2, {
         cursor: pageParam,
-      })
-      const profiles = await fetchActorProfiles(client, page.feed)
-      return {...page, profiles}
-    },
+      }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: page => page.cursor,
     staleTime: STALE.SECONDS.FIFTEEN,
     select: data => ({
       pageParams: data.pageParams,
       pages: moderationOpts
-        ? data.pages.map((page, pageIndex) => {
-            const {feed, profiles} = mapTimelinePageProfiles(
-              page,
-              applyProfileShadow,
-            )
-            return toActivityRows(feed, profiles, pageIndex, moderationOpts)
-          })
+        ? data.pages.map((page, pageIndex) =>
+            toActivityRows(
+              mapTimelinePageProfiles(page, applyProfileShadow),
+              pageIndex,
+              moderationOpts,
+            ),
+          )
         : [],
     }),
   })

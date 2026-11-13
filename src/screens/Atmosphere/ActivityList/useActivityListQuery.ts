@@ -18,7 +18,7 @@ import {
 } from '#/screens/Atmosphere/ActivityTab/moderation'
 import {
   type ActivityContent,
-  toActivityListContent,
+  toViewContent,
 } from '#/screens/Atmosphere/ActivityTab/rows'
 import {
   findProfiles,
@@ -94,8 +94,7 @@ export function useActivityListQuery(uris: AtUriString[]) {
       pages: moderationOpts
         ? data.pages.map(page =>
             page.items.flatMap(({uri, view}): ActivityListItem[] => {
-              const content = toActivityListContent(
-                uri,
+              const content = toViewContent(
                 mapViewProfiles(view, applyProfileShadow),
               )
               if (!content) return [{uri, content}]
