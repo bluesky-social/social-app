@@ -4,6 +4,7 @@ import {useSift} from '@bsky.app/sift'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
+import {atUriToHref} from '#/lib/strings/url-helpers'
 import {atoms as a} from '#/alf'
 import {
   Autocomplete as AutocompleteBase,
@@ -11,6 +12,7 @@ import {
   useAutocomplete,
 } from '#/components/Autocomplete'
 import {SearchInput} from '#/components/forms/SearchInput'
+import {router} from '#/routes'
 
 export function DesktopSearch() {
   const navigation = useNavigation<NavigationProp>()
@@ -43,11 +45,24 @@ export function DesktopSearch() {
     setActive(false)
   }
 
+  /**
+   * AT-URIs aren't useful as search terms, so open the record they point to
+   * instead. Returns `false` if the query isn't an AT-URI the app can open.
+   */
+  const openAtUri = (q: string) => {
+    const href = atUriToHref(q.trim())
+    if (!href) return false
+    navigation.dispatch(StackActions.push(...router.matchPath(href)))
+    return true
+  }
+
   const onSubmit = () => {
     if (!query.length) return
     onClearText()
     sift.elements.input.blur()
-    navigation.dispatch(StackActions.push('Search', {q: query}))
+    if (!openAtUri(query)) {
+      navigation.dispatch(StackActions.push('Search', {q: query}))
+    }
   }
 
   const onSelect = (item: AutocompleteItem) => {
@@ -58,7 +73,9 @@ export function DesktopSearch() {
     } else if (item.type === 'search') {
       onClearText()
       sift.elements.input.blur()
-      navigation.navigate('Search', {q: item.value})
+      if (!openAtUri(item.value)) {
+        navigation.navigate('Search', {q: item.value})
+      }
     }
   }
 

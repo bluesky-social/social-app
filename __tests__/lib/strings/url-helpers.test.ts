@@ -1,12 +1,14 @@
 import {describe, expect, it} from '@jest/globals'
 
 import {
+  atUriToHref,
   getChatInviteCodeFromUrl,
   isPossiblyAUrl,
   isTrustedUrl,
   linkRequiresWarning,
   splitApexDomain,
 } from '../../../src/lib/strings/url-helpers'
+import {router} from '../../../src/routes'
 
 describe('linkRequiresWarning', () => {
   type Case = [string, string, boolean]
@@ -221,5 +223,89 @@ describe('getChatInviteCodeFromUrl', () => {
 
   it.each(cases)('given input %p, returns %p', (input, expected) => {
     expect(getChatInviteCodeFromUrl(input)).toEqual(expected)
+  })
+})
+
+describe('atUriToHref', () => {
+  type Case = [string, string | undefined]
+  const did = 'did:plc:z72i7hdynmk6r22z27h6tvur'
+  const cases: Case[] = [
+    // profiles
+    [`at://${did}`, `/profile/${did}`],
+    [`at://${did}/`, `/profile/${did}`],
+    ['at://bsky.app', '/profile/bsky.app'],
+    [`at://${did}/app.bsky.actor.profile/self`, `/profile/${did}`],
+    [`at://${did}/app.bsky.labeler.service/self`, `/profile/${did}`],
+
+    // records
+    [
+      `at://${did}/app.bsky.feed.post/3l3qo2vuowo2b`,
+      `/profile/${did}/post/3l3qo2vuowo2b`,
+    ],
+    [
+      'at://bsky.app/app.bsky.feed.post/3l3qo2vuowo2b',
+      '/profile/bsky.app/post/3l3qo2vuowo2b',
+    ],
+    [
+      `at://${did}/app.bsky.feed.generator/whats-hot`,
+      `/profile/${did}/feed/whats-hot`,
+    ],
+    [
+      `at://${did}/app.bsky.graph.list/3k3iwgggbkn2b`,
+      `/profile/${did}/lists/3k3iwgggbkn2b`,
+    ],
+    [
+      `at://${did}/app.bsky.graph.starterpack/3l5idg3onph2d`,
+      `/starter-pack/${did}/3l5idg3onph2d`,
+    ],
+
+    // record collections need a record key
+    [`at://${did}/app.bsky.feed.post`, undefined],
+    [`at://${did}/app.bsky.feed.post/`, undefined],
+    // collections without a screen
+    [`at://${did}/app.bsky.feed.like/3l3qo2vuowo2b`, undefined],
+    [`at://${did}/com.example.record/3l3qo2vuowo2b`, undefined],
+    // invalid AT-URIs
+    ['at://', undefined],
+    ['at://not-a-handle/app.bsky.feed.post/3l3qo2vuowo2b', undefined],
+    [`at://${did}/not-an-nsid/3l3qo2vuowo2b`, undefined],
+    [`at://${did}/app.bsky.feed.post/3l3qo2vuowo2b/extra`, undefined],
+    [`at://${did}/app.bsky.feed.post/3l3qo2vuowo2b from:me`, undefined],
+    // not AT-URIs
+    [`https://bsky.app/profile/${did}/post/3l3qo2vuowo2b`, undefined],
+    [`/profile/${did}`, undefined],
+    [did, undefined],
+    ['bluesky', undefined],
+    ['', undefined],
+  ]
+
+  it.each(cases)('given input %p, returns %p', (input, expected) => {
+    expect(atUriToHref(input)).toEqual(expected)
+  })
+
+  it.each([
+    [`at://${did}`, 'Profile', {name: did}],
+    [
+      `at://${did}/app.bsky.feed.post/3l3qo2vuowo2b`,
+      'PostThread',
+      {name: did, rkey: '3l3qo2vuowo2b'},
+    ],
+    [
+      `at://${did}/app.bsky.feed.generator/whats-hot`,
+      'CustomFeed',
+      {name: did, rkey: 'whats-hot'},
+    ],
+    [
+      `at://${did}/app.bsky.graph.list/3k3iwgggbkn2b`,
+      'ProfileList',
+      {name: did, rkey: '3k3iwgggbkn2b'},
+    ],
+    [
+      `at://${did}/app.bsky.graph.starterpack/3l5idg3onph2d`,
+      'StarterPack',
+      {name: did, rkey: '3l5idg3onph2d'},
+    ],
+  ])('routes %p to the %p screen', (input, screen, params) => {
+    expect(router.matchPath(atUriToHref(input)!)).toEqual([screen, params])
   })
 })
