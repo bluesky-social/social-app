@@ -273,9 +273,30 @@ function CappedPillRow({
   }
   const hiddenCount = folded && !expanded ? items.length - folded.size : 0
 
+  /*
+   * A pill measures up to a physical pixel differently out of flow than in
+   * the row, since Yoga snaps its edges to the pixel grid. Folding or showing
+   * it must not change its size, or a row that fits to within a pixel would
+   * flip between the two forever, so ignore changes under 1dp.
+   */
   const measure = (key: string) => (e: LayoutChangeEvent) => {
     const w = e.nativeEvent.layout.width
-    setSizes(prev => (prev[key] === w ? prev : {...prev, [key]: w}))
+    setSizes(prev =>
+      prev[key] != null && Math.abs(prev[key] - w) < 1
+        ? prev
+        : {...prev, [key]: w},
+    )
+  }
+
+  /*
+   * Keep the widest "+N" seen. Digits differ in width (in Inter "+7" is
+   * narrower than "+6"), so reserving only what the current count needs lets
+   * the row fold a pill, shrink the label, fit the pill back, widen the label
+   * and fold it again, every frame.
+   */
+  const measureMore = (e: LayoutChangeEvent) => {
+    const w = e.nativeEvent.layout.width
+    setMoreWidth(prev => Math.max(prev, w))
   }
 
   let revealIndex = 0
@@ -326,7 +347,7 @@ function CappedPillRow({
         <Animated.View
           exiting={FadeOut.duration(120)}
           layout={LinearTransition.duration(300).easing(EASE_OUT)}
-          onLayout={e => setMoreWidth(e.nativeEvent.layout.width)}>
+          onLayout={measureMore}>
           <MorePill count={hiddenCount} onPress={onExpand} />
         </Animated.View>
       ) : null}
