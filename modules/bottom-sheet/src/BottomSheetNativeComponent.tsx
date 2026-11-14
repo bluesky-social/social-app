@@ -188,8 +188,20 @@ function BottomSheetNativeComponentInner({
        * Without them an unsized absolute view shrinks to fit its content, which
        * squeezes `flex: 1` rows down to their icons (APP-3602). The state size
        * still wins, since a defined width takes precedence over the insets.
+       *
+       * A full-height sheet on iOS gets `top` and `bottom` too, for the same
+       * reason vertically. If its first layout shrinks to fit, Yoga keeps each
+       * `flex: 1` wrapper's content height as its flex basis and never shrinks
+       * it to the canvas that lands later
+       * (https://github.com/facebook/yoga/issues/2019). Tall content then
+       * overflows the sheet as it's presented, and an autofocused input raises
+       * the keyboard against that frame (APP-3658).
        */
-      style={{position: 'absolute', left: 0, right: 0}}
+      style={[
+        {position: 'absolute', left: 0, right: 0},
+        Platform.OS === 'ios' &&
+          rest.fullHeight === true && {top: 0, bottom: 0},
+      ]}
       containerBackgroundColor={nativeContainerBackgroundColor}>
       <View
         style={[
