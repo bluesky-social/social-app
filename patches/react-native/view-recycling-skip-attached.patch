@@ -1,0 +1,17 @@
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/uimanager/ViewManager.java b/ReactAndroid/src/main/java/com/facebook/react/uimanager/ViewManager.java
+index bc49f3a..255c3ea 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/uimanager/ViewManager.java
++++ b/ReactAndroid/src/main/java/com/facebook/react/uimanager/ViewManager.java
+@@ -266,6 +266,12 @@ public abstract class ViewManager<T extends View, C extends ReactShadowNode>
+     int surfaceId = themedReactContext.getSurfaceId();
+     @Nullable Stack<T> recyclableViews = getRecyclableViewStack(surfaceId, false);
+     if (recyclableViews != null) {
++      // Views are removed before they are deleted, so a parent here kept this view through its
++      // removal (ViewGroup#startViewTransition, used to animate views out) and may still draw it.
++      // removeView can't detach such a view, so adding it to a new parent would throw.
++      if (view.getParent() != null) {
++        return;
++      }
+       T recyclableView = prepareToRecycleView(themedReactContext, view);
+       if (recyclableView != null) {
+         recyclableViews.push(recyclableView);
