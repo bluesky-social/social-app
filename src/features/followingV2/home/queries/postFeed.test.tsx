@@ -24,6 +24,7 @@ import {
 } from '#/state/queries/post-feed'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {FALLBACK_MARKER_POST} from '#/features/followingV2/home/api/home'
+import {useHomePress} from '#/features/followingV2/home/useHomePress'
 import {
   LIST_REST_QUIET_MS,
   useListRest,
@@ -33,6 +34,7 @@ import {
   useNewPostsCheck,
 } from '#/features/followingV2/home/useNewPostsCheck'
 import {usePrependPill} from '#/features/followingV2/home/usePrependPill'
+import {useRevealTop} from '#/features/followingV2/home/useRevealTop'
 import {
   SETTLE_QUIET_MS,
   useSettleAtTop,
@@ -1764,6 +1766,7 @@ describe('staging new posts on Home Following', () => {
       pill: ReturnType<typeof usePrependPill>
       staged: StagedPage | undefined
       refresh: () => Promise<unknown>
+      pressHome: () => boolean
     }
     let first:
       | {
@@ -1811,6 +1814,12 @@ describe('staging new posts on Home Following', () => {
       })
       const offsetY = useSharedValue(400)
       const rows = rowsOf(pages)
+      const revealTop = useRevealTop({
+        topFetchedAt,
+        offsetY,
+        scrollToTop,
+        onJump: () => onHasNew(false),
+      })
       const pill = usePrependPill({
         enabled: true,
         isActive,
@@ -1818,7 +1827,7 @@ describe('staging new posts on Home Following', () => {
         rows,
         pages,
         offsetY,
-        scrollToTop,
+        scrollToTop: revealTop.reveal,
         onRead: prepend.markRead,
       })
       const onItemSeen = useNonReactiveCallback((row: Row) => {
@@ -1844,7 +1853,21 @@ describe('staging new posts on Home Following', () => {
         },
         offsetY,
       )
-      Object.assign(latest, {rows, pill, staged: prepend.staged, refresh})
+      const pressHome = useHomePress({
+        enabled: true,
+        offsetY,
+        prepend,
+        revealTop,
+        refresh,
+        onHasNew,
+      })
+      Object.assign(latest, {
+        rows,
+        pill,
+        staged: prepend.staged,
+        refresh,
+        pressHome,
+      })
       first ??= {scrollHandlers, onItemSeen, onLayout: listRest.onLayout}
       return null
     })
@@ -1885,7 +1908,11 @@ describe('staging new posts on Home Following', () => {
           <View isActive={isActive} />
         </QueryClientProvider>,
       )
-    return {latest, cached, list, onHasNew, setActive}
+    const pressHome = () =>
+      act(() => {
+        latest.pressHome()
+      })
+    return {latest, cached, list, onHasNew, setActive, pressHome}
   }
 
   /** Advances fake time by `ms`, letting what that sets off run. */
@@ -2177,6 +2204,57 @@ describe('staging new posts on Home Following', () => {
       newest = 16
       await anInterval()
       expect(postsOf(cached())[0]).toEqual(['p16', 'p15'])
+    })
+  })
+
+  describe('on a press of Home at the top', () => {
+    it('reads what is staged, and puts what is newer above it', async () => {
+      const {latest, cached, list, onHasNew, pressHome} = renderHome()
+      list.scroll(0)
+      newest = 14
+      await anInterval()
+
+      newest = 16
+      pressHome()
+      await wait(SECOND)
+
+      expect(requested().filter(request => request !== PEEK)).toEqual([
+        since(12),
+        since(14),
+      ])
+      expect(postsOf(cached())).toEqual([
+        ['p16', 'p15'],
+        ['p14', 'p13'],
+        ['p12', 'p11'],
+        ['p10'],
+      ])
+      expect(latest.staged?.offered).toBe(false)
+      expect(onHasNew).toHaveBeenLastCalledWith(false)
+    })
+
+    it('leaves what is staged to a prepend in progress that replaces it', async () => {
+      const {cached, list, pressHome} = renderHome()
+      list.scroll(0)
+      newest = 14
+      await anInterval()
+
+      newest = 16
+      const peek = holdNextRequest()
+      await anInterval()
+      peek.respondWith({feed: [post(16)]})
+      await wait(LATENCY / 2)
+      pressHome()
+      await wait(SECOND)
+
+      expect(requested().filter(request => request !== PEEK)).toEqual([
+        since(12),
+        since(12),
+      ])
+      expect(postsOf(cached())).toEqual([
+        ['p16', 'p15', 'p14', 'p13'],
+        ['p12', 'p11'],
+        ['p10'],
+      ])
     })
   })
 
