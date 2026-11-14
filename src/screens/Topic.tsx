@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
-import {type ListRenderItemInfo, View} from 'react-native'
+import {type ListRenderItemInfo, ScrollView, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -11,6 +11,7 @@ import {shareUrl} from '#/lib/sharing'
 import {cleanError} from '#/lib/strings/errors'
 import {enforceLen} from '#/lib/strings/helpers'
 import {useSearchPostsV2Query} from '#/state/queries/search-posts-v2'
+import {useSession} from '#/state/session'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
@@ -20,6 +21,7 @@ import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import * as Layout from '#/components/Layout'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {LoggedOutSearchFooter} from '#/components/LoggedOutSearchFooter'
 import {type app} from '#/lexicons'
 
 const renderItem = ({
@@ -124,6 +126,7 @@ function TopicScreenTab({
   const {t: l} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const [isPTR, setIsPTR] = useState(false)
+  const {hasSession} = useSession()
   const trackPostView = usePostViewTracking('Topic')
 
   const {
@@ -145,6 +148,7 @@ function TopicScreenTab({
   const posts = useMemo(() => {
     return data?.pages.flatMap(page => page.posts) || []
   }, [data])
+  const showLoggedOutFooter = !hasSession && !!data?.pages[0]?.cursor
 
   const onRefresh = useCallback(async () => {
     setIsPTR(true)
@@ -160,13 +164,16 @@ function TopicScreenTab({
   return (
     <>
       {posts.length < 1 ? (
-        <ListMaybePlaceholder
-          isLoading={isLoading || !isFetched}
-          isError={isError}
-          onRetry={refetch}
-          emptyType="results"
-          emptyMessage={l`We couldn't find any results for that topic.`}
-        />
+        <ScrollView style={a.flex_1}>
+          <ListMaybePlaceholder
+            isLoading={isLoading || !isFetched}
+            isError={isError}
+            onRetry={refetch}
+            emptyType="results"
+            emptyMessage={l`We couldn't find any results for that topic.`}
+          />
+          {showLoggedOutFooter && <LoggedOutSearchFooter />}
+        </ScrollView>
       ) : (
         <List
           data={posts}
@@ -179,11 +186,15 @@ function TopicScreenTab({
           onItemSeen={trackPostView}
           desktopFixedHeight
           ListFooterComponent={
-            <ListFooter
-              isFetchingNextPage={isFetchingNextPage}
-              error={cleanError(error)}
-              onRetry={fetchNextPage}
-            />
+            showLoggedOutFooter ? (
+              <LoggedOutSearchFooter />
+            ) : (
+              <ListFooter
+                isFetchingNextPage={isFetchingNextPage}
+                error={cleanError(error)}
+                onRetry={fetchNextPage}
+              />
+            )
           }
           initialNumToRender={initialNumToRender}
           windowSize={11}
