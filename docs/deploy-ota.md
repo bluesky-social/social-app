@@ -86,6 +86,10 @@ more than the number of OTA PRs already merged into that release branch. Once CI
 passes, squash-merge it, so each OTA shows up as a single commit on the release
 branch.
 
+The `fingerprint-native` check fails if the PR changes the native fingerprint
+relative to the release branch. That means one of the cherry-picked commits
+touches native code, so it can't ship as an OTA.
+
 ### 6. Run the GitHub actions
 
 You'll need to run two separate workflows: one to deploy the iOS/Android OTA
