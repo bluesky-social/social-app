@@ -3,16 +3,19 @@ import {Alert} from 'react-native'
 import * as Linking from 'expo-linking'
 import * as WebBrowser from 'expo-web-browser'
 import {Referrer} from '@bsky.app/expo-bluesky-swiss-army'
+import {useLingui} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
-import {CHAT_INVITE_CODE_REGEX} from '#/lib/strings/url-helpers'
+import {CHAT_INVITE_CODE_REGEX, parsePostAtUri} from '#/lib/strings/url-helpers'
 import {usePrefetchJoinLinkPreviews} from '#/state/queries/join-links'
+import {useGetPost} from '#/state/queries/post'
 import {useSession} from '#/state/session'
 import {useSetActiveLanding} from '#/state/shell/landing'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
+import * as Toast from '#/components/Toast'
 import {getTrendingTopicFeedUri} from '#/components/TrendingTopics'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
@@ -20,6 +23,7 @@ import {
   parseWidgetExploreClick,
   parseWidgetTopicClick,
 } from '#/features/trendingWidget/links'
+import {type app} from '#/lexicons'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
 
 type IntentType = 'compose' | 'verify-email' | 'age-assurance' | 'apply-ota'
@@ -83,10 +87,11 @@ export function useIntentHandler() {
 
       switch (intentType as IntentType) {
         case 'compose': {
-          composeIntent({
+          void composeIntent({
             text: params.get('text'),
             imageUrisStr: params.get('imageUris'),
             videoUri: params.get('videoUri'),
+            atUri: params.get('at-uri'),
           })
           return
         }
@@ -156,19 +161,58 @@ export function useComposeIntent() {
   const closeAllActiveElements = useCloseAllActiveElements()
   const {openComposer} = useOpenComposer()
   const {hasSession} = useSession()
+  const getPost = useGetPost()
+  const {t: l} = useLingui()
 
   return useCallback(
-    ({
+    async ({
       text,
       imageUrisStr,
       videoUri,
+      atUri,
     }: {
       text: string | null
       imageUrisStr: string | null
       videoUri: string | null
+      /** A post to quote, from apps sharing a post into Bluesky. */
+      atUri?: string | null
     }) => {
       if (!hasSession) return
       closeAllActiveElements()
+
+      /*
+       * The quote button checks these before opening the composer, and a link
+       * skips that button. When the post can't be quoted, still open the
+       * composer so the person keeps any text that came with the link.
+       */
+      const getQuote = async (
+        uri: string,
+      ): Promise<app.bsky.feed.defs.PostView | undefined> => {
+        let post: app.bsky.feed.defs.PostView
+        try {
+          post = await getPost({uri})
+        } catch {
+          Toast.show(l`Couldn’t load the post to quote`, {type: 'error'})
+          return
+        }
+        if (post.viewer?.embeddingDisabled) {
+          Toast.show(l`This post's author has disabled quote posts.`, {
+            type: 'warning',
+          })
+          return
+        }
+        const author = post.author.viewer
+        if (author?.blocking || author?.blockedBy || author?.blockingByList) {
+          Toast.show(l`Cannot interact with a blocked user`, {
+            type: 'warning',
+          })
+          return
+        }
+        return post
+      }
+      // Anything that isn't a post at-uri is ignored
+      const quoteUri = parsePostAtUri(atUri)
+      const quote = quoteUri ? await getQuote(quoteUri) : undefined
 
       // Whenever a video URI is present, we don't support adding images right now.
       if (videoUri) {
@@ -176,6 +220,7 @@ export function useComposeIntent() {
         openComposer({
           text: text ?? undefined,
           videoUri: {uri, width: Number(width), height: Number(height)},
+          quote,
           logContext: 'Deeplink',
         })
         return
@@ -202,11 +247,12 @@ export function useComposeIntent() {
         openComposer({
           text: text ?? undefined,
           imageUris: IS_NATIVE ? imageUris : undefined,
+          quote,
           logContext: 'Deeplink',
         })
       }, 500)
     },
-    [hasSession, closeAllActiveElements, openComposer],
+    [hasSession, closeAllActiveElements, openComposer, getPost, l],
   )
 }
 
