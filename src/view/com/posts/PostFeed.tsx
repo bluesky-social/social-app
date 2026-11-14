@@ -800,8 +800,17 @@ let PostFeed = ({
   }, [refetch, onHasNew])
 
   const onPressRetryLoadMore = useCallback(() => {
-    void fetchNextPage()
-  }, [fetchNextPage])
+    /*
+     * With no next page, the error came from refreshing what we already have,
+     * not from loading more. `fetchNextPage` would do nothing there, other than
+     * clear the error and leave the feed as stale as it was.
+     */
+    if (hasNextPage) {
+      void fetchNextPage()
+    } else {
+      void refetch()
+    }
+  }, [hasNextPage, fetchNextPage, refetch])
 
   // rendering
   // =
