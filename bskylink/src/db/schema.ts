@@ -24,6 +24,8 @@ export interface SafelinkRule {
   pattern: ToolsOzoneSafelinkDefs.PatternType
   action: ToolsOzoneSafelinkDefs.ActionType
   createdAt: string
+  /** When the rule stops applying, if it was given an expiry. */
+  expiresAt?: string | null
 }
 
 export interface SafelinkCursor {
