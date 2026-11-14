@@ -21,6 +21,22 @@ class BottomSheetModule : Module() {
           ),
         )
 
+        GroupView<BottomSheetView> {
+          AddChildView { parent, child: android.view.View, index ->
+            parent.addContentView(child, index)
+          }
+          GetChildCount { parent -> parent.contentChildCount }
+          GetChildViewAt { parent, index -> parent.getContentChildAt(index) }
+          RemoveChildView { parent, child: android.view.View ->
+            parent.removeContentView(child)
+          }
+          RemoveChildViewAt { parent, index -> parent.removeContentViewAt(index) }
+        }
+
+        OnViewDestroys { view ->
+          view.onDropInstance()
+        }
+
         AsyncFunction("dismiss") { view: BottomSheetView ->
           view.dismiss()
         }
