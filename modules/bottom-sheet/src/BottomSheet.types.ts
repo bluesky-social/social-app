@@ -69,8 +69,12 @@ export interface BottomSheetViewProps {
   fullHeight?: boolean
   minHeight?: number
   maxHeight?: number
-  /** Intrinsic content height used to size the sheet when its viewport is constrained. */
-  desiredContentHeight?: number
+  /**
+   * React tag of the content's ScrollView. On iOS the sheet adds the part of
+   * its content that doesn't fit to the content's height, so the content can be
+   * capped at the presented height and still size the sheet. Ignored on Android.
+   */
+  contentScrollViewTag?: number
 
   onAttemptDismiss?: (event: BottomSheetAttemptDismissEvent) => void
   onSnapPointChange?: (event: BottomSheetSnapPointChangeEvent) => void
