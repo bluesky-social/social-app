@@ -2,6 +2,7 @@ import {type ImagePickerAsset} from 'expo-image-picker'
 import {type BlobRef, type Client} from '@atproto/lex'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
+import {nanoid} from 'nanoid/non-secure'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {VIDEO_MAX_SIZE_MB} from '#/lib/constants'
@@ -11,7 +12,10 @@ import {MultipartUploadError} from '#/lib/media/video/multipart/api'
 import {type VideoTelemetry} from '#/lib/media/video/telemetry'
 import {type CompressedVideo} from '#/lib/media/video/types'
 import {uploadVideo} from '#/lib/media/video/upload'
-import {createTokenlessVideoServiceClient} from '#/lib/media/video/util'
+import {
+  createTokenlessVideoServiceClient,
+  mimeToExt,
+} from '#/lib/media/video/util'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {app} from '#/lexicons'
@@ -22,6 +26,7 @@ import {
 } from './videoProgress'
 
 type CaptionsTrack = {lang: string; file: File}
+type VideoAttachment = {localRefPath: string}
 
 export type VideoAction =
   | {
@@ -76,7 +81,7 @@ export const NO_VIDEO = Object.freeze({
 
 export type NoVideoState = typeof NO_VIDEO
 
-type ErrorState = {
+type ErrorState = VideoAttachment & {
   status: 'error'
   progress: number
   abortController: AbortController
@@ -90,7 +95,7 @@ type ErrorState = {
   captions: CaptionsTrack[]
 }
 
-type CompressingState = {
+type CompressingState = VideoAttachment & {
   status: 'compressing'
   progress: number
   abortController: AbortController
@@ -103,7 +108,7 @@ type CompressingState = {
   captions: CaptionsTrack[]
 }
 
-type UploadingState = {
+type UploadingState = VideoAttachment & {
   status: 'uploading'
   progress: number
   compressionSkipped: boolean
@@ -117,7 +122,7 @@ type UploadingState = {
   captions: CaptionsTrack[]
 }
 
-type ProcessingState = {
+type ProcessingState = VideoAttachment & {
   status: 'processing'
   progress: number
   abortController: AbortController
@@ -131,7 +136,7 @@ type ProcessingState = {
   captions: CaptionsTrack[]
 }
 
-type DoneState = {
+type DoneState = VideoAttachment & {
   status: 'done'
   progress: 1
   abortController: AbortController
@@ -151,9 +156,13 @@ export function createVideoState(
   asset: ImagePickerAsset,
   abortController: AbortController,
   telemetry: VideoTelemetry,
+  localRefPath?: string,
 ): CompressingState {
+  const mimeType = asset.mimeType || 'video/mp4'
   return {
     status: 'compressing',
+    localRefPath:
+      localRefPath || `video:${mimeType}:${nanoid()}.${mimeToExt(mimeType)}`,
     progress: 0,
     abortController,
     asset,
@@ -174,6 +183,7 @@ export function videoReducer(
   if (action.type === 'to_error') {
     return {
       status: 'error',
+      localRefPath: state.localRefPath,
       progress: state.progress,
       abortController: state.abortController,
       error: action.error,
@@ -209,6 +219,7 @@ export function videoReducer(
     if (state.status === 'compressing') {
       return {
         status: 'uploading',
+        localRefPath: state.localRefPath,
         progress: videoProgressForPhase(
           action.compressionSkipped
             ? 'uploadingWithoutCompression'
@@ -229,6 +240,7 @@ export function videoReducer(
     if (state.status === 'uploading') {
       return {
         status: 'processing',
+        localRefPath: state.localRefPath,
         progress: videoProgressForPhase('processing', 0),
         abortController: state.abortController,
         asset: state.asset,
@@ -259,6 +271,7 @@ export function videoReducer(
     if (state.status === 'processing') {
       return {
         status: 'done',
+        localRefPath: state.localRefPath,
         progress: 1,
         abortController: state.abortController,
         asset: state.asset,
