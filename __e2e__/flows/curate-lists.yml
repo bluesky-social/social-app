@@ -16,7 +16,7 @@ appId: xyz.blueskyweb.app
     label: "Create a curate list"
     id: "e2eGotoLists"
 - tapOn:
-    id: "newUserListBtn"
+    text: "New list"
 - waitForAnimationToEnd
 - assertVisible: "Create user list"
 - tapOn:
@@ -67,9 +67,9 @@ appId: xyz.blueskyweb.app
     id: "confirmBtn"
 
 - assertVisible:
-    id: "newUserListBtn"
+    text: "New list"
 - tapOn:
-    id: "newUserListBtn"
+    text: "New list"
 - assertVisible: "Create user list"
 - tapOn:
     id: "editListNameInput"

@@ -35,9 +35,19 @@ import {
 import {LoggedOut} from '#/view/com/auth/LoggedOut'
 import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
-import {atoms as a, useLayoutBreakpoints} from '#/alf'
+import {
+  atoms as a,
+  type Theme,
+  useAlf,
+  useLayoutBreakpoints,
+  useTheme,
+} from '#/alf'
+import {
+  NativeHeaderProvider,
+  useNativeHeaderEnabled,
+} from '#/components/Layout/Header/native/context'
 import {PolicyUpdateOverlay} from '#/components/PolicyUpdateOverlay'
-import {IS_NATIVE, IS_WEB} from '#/env'
+import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
@@ -49,6 +59,12 @@ const WEB_MAX_CACHED_SCREENS = 5
 export type NativeStackNavigationOptionsWithAuth =
   NativeStackNavigationOptions & {
     requireAuth?: boolean
+    /**
+     * Use the native header, built from the screen's `Layout.Header`, where
+     * supported (iOS phones, see `useNativeHeaderEnabled`). Elsewhere the
+     * screen renders its own header as usual.
+     */
+    nativeHeader?: boolean
   }
 
 function NativeStackNavigator({
@@ -121,6 +137,9 @@ function NativeStackNavigator({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile} = useWebMediaQueries()
   const {leftNavMinimal} = useLayoutBreakpoints()
+  const t = useTheme()
+  const {fonts} = useAlf()
+  const nativeHeadersSupported = useNativeHeaderEnabled(true)
   if (!hasSession && (activeRouteRequiresAuth || IS_NATIVE)) {
     return <LoggedOut />
   }
@@ -184,6 +203,39 @@ function NativeStackNavigator({
     }
   }
 
+  if (IS_NATIVE) {
+    const headerOptions = nativeHeadersSupported
+      ? getNativeHeaderOptions(t, fonts.family)
+      : undefined
+    const withNativeHeaders: typeof descriptors = {}
+    for (const key in finalDescriptors) {
+      const descriptor = finalDescriptors[key]
+      const requested = descriptor.options.nativeHeader
+      withNativeHeaders[key] = {
+        ...descriptor,
+        options:
+          requested && headerOptions
+            ? {
+                ...descriptor.options,
+                ...headerOptions,
+                // Until the screen's `Layout.Header` sets it
+                headerTitle: descriptor.options.headerTitle ?? '',
+              }
+            : descriptor.options,
+        /*
+         * Wrapping here rather than in `screenLayout` also covers screens
+         * whose `Stack.Group` sets its own layout.
+         */
+        render: () => (
+          <NativeHeaderProvider requested={requested}>
+            {descriptor.render()}
+          </NativeHeaderProvider>
+        ),
+      }
+    }
+    finalDescriptors = withNativeHeaders
+  }
+
   // Show the bottom bar if we have a session only on mobile web. If we don't have a session, we want to show it
   // on both tablet and mobile web so that we see the create account CTA.
   const showBottomBar = hasSession ? isMobile : leftNavMinimal
@@ -214,6 +266,38 @@ function NativeStackNavigator({
       {hasSession && <PolicyUpdateOverlay />}
     </NavigationContent>
   )
+}
+
+/**
+ * The look of every native header. The navigator's own `headerShown: false`
+ * default is overridden for screens that opt in with `nativeHeader`.
+ */
+function getNativeHeaderOptions(
+  t: Theme,
+  fontFamily: 'system' | 'theme' | undefined,
+): NativeStackNavigationOptions {
+  return {
+    headerShown: true,
+    /*
+     * Content scrolls under the header, which is what gives Liquid Glass its
+     * scroll edge effect. `Layout.Content` and `List` inset themselves.
+     */
+    headerTransparent: true,
+    // Before Liquid Glass, a transparent header needs its own background.
+    headerBlurEffect: IS_LIQUID_GLASS
+      ? undefined
+      : t.scheme === 'dark'
+        ? 'systemChromeMaterialDark'
+        : 'systemChromeMaterialLight',
+    headerShadowVisible: false,
+    headerBackButtonDisplayMode: 'minimal',
+    headerTintColor: t.atoms.text.color,
+    headerTitleStyle: {
+      color: t.atoms.text.color,
+      fontFamily: fontFamily === 'system' ? undefined : 'InterVariable',
+      fontWeight: '600',
+    },
+  }
 }
 
 export function createNativeStackNavigatorWithAuth<
