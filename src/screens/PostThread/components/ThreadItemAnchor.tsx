@@ -1,4 +1,4 @@
-import {memo, useMemo} from 'react'
+import {memo, useMemo, useState} from 'react'
 import {Text as RNText, View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
@@ -24,6 +24,7 @@ import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replie
 import {type PostSource} from '#/state/unstable-post-source'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {LikesStat} from '#/screens/PostThread/components/LikesStat'
+import {PostViewCount} from '#/screens/PostThread/components/PostViewCount'
 import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
   POST_NUMBER_INLINE_OFFSET,
@@ -38,7 +39,7 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
-import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
+import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/Calendar'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {GalleryBleed} from '#/components/images/Gallery'
 import {Link} from '#/components/Link'
@@ -561,26 +562,99 @@ function ExpandedPostDetails({
   const {i18n} = useLingui()
   const isRootPost = !('reply' in post.record)
 
+  const [widths, setWidths] = useState({
+    available: 0,
+    date: 0,
+    count: 0,
+    separator: 0,
+    reply: 0,
+  })
+  const hasCount = widths.count > 0
+  const wrapCount =
+    hasCount &&
+    widths.available > 0 &&
+    widths.date +
+      widths.separator +
+      widths.count +
+      a.gap_xs.gap * 2 +
+      widths.reply >
+      widths.available
+
+  const wrapReply =
+    widths.reply > 0 &&
+    widths.available > 0 &&
+    widths.date + widths.reply > widths.available
+
+  function measure(part: keyof typeof widths, width: number) {
+    setWidths(prev => (prev[part] === width ? prev : {...prev, [part]: width}))
+  }
+
+  const viewCount = (
+    <View
+      key="count"
+      style={[
+        {maxWidth: '100%'},
+        wrapCount && !wrapReply
+          ? {width: '100%'}
+          : {marginLeft: hasCount && !wrapCount ? a.gap_xs.gap : 0},
+      ]}>
+      <View
+        onLayout={e => measure('count', e.nativeEvent.layout.width)}
+        style={[a.flex_row, a.self_start, {maxWidth: '100%'}]}>
+        <PostViewCount key={post.uri} post={post} />
+      </View>
+    </View>
+  )
+  const reply = isRootPost ? (
+    <View
+      key="reply"
+      onLayout={e => measure('reply', e.nativeEvent.layout.width)}
+      style={{marginLeft: 'auto', paddingLeft: a.gap_md.gap, maxWidth: '100%'}}>
+      <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} plain />
+    </View>
+  ) : null
+
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
       <BackdatedPostIndicator post={post} />
       <View
+        onLayout={e => measure('available', e.nativeEvent.layout.width)}
         style={[
           a.self_stretch,
           a.flex_row,
           a.align_center,
           a.flex_wrap,
-          a.gap_md,
+          {rowGap: a.gap_sm.gap},
         ]}>
-        <Text
-          style={[a.text_sm, t.atoms.text_contrast_medium, {maxWidth: '100%'}]}>
-          {niceDate(i18n, post.indexedAt, 'dot separated')}
-        </Text>
-        {isRootPost && (
-          <View style={{marginLeft: 'auto'}}>
-            <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} plain />
-          </View>
-        )}
+        <View
+          style={[
+            a.flex_row,
+            a.align_center,
+            {columnGap: hasCount && !wrapCount ? a.gap_xs.gap : 0},
+            wrapReply && {width: '100%'},
+            {maxWidth: '100%'},
+          ]}>
+          <Text
+            onLayout={e => measure('date', e.nativeEvent.layout.width)}
+            style={[
+              a.text_sm,
+              t.atoms.text_contrast_medium,
+              {maxWidth: '100%'},
+            ]}>
+            {niceDate(i18n, post.indexedAt, 'dot separated')}
+          </Text>
+          <Text
+            aria-hidden
+            onLayout={e => measure('separator', e.nativeEvent.layout.width)}
+            style={[
+              a.text_sm,
+              t.atoms.text_contrast_medium,
+              (!hasCount || wrapCount) && [a.absolute, {opacity: 0}],
+            ]}>
+            ·
+          </Text>
+        </View>
+        {wrapCount && !wrapReply ? [reply, viewCount] : [viewCount, reply]}
       </View>
     </View>
   )

@@ -2,9 +2,10 @@ import {atoms as a, select, type Theme} from '#/alf'
 
 /**
  * Visual variant for the tooltip surface. `default` is a neutral floating card;
- * `primary` is a subtle blue surface matching the `primary_subtle` button.
+ * `primary` is a subtle blue surface matching the `primary_subtle` button;
+ * `outlined` adds a border to the neutral card.
  */
-export type TooltipColor = 'default' | 'primary'
+export type TooltipColor = 'default' | 'primary' | 'outlined'
 
 export const BUBBLE_MAX_WIDTH = 240
 export const ARROW_SIZE = 12
@@ -33,9 +34,9 @@ export function getTooltipStyle(t: Theme, color: TooltipColor) {
       dim: t.atoms.bg_contrast_100.backgroundColor,
     }),
     text: t.atoms.text.color,
-    border: {
-      color: undefined,
-      width: 0,
-    },
+    border:
+      color === 'outlined'
+        ? {color: t.atoms.border_contrast_low.borderColor, width: 1}
+        : {color: undefined, width: 0},
   }
 }
