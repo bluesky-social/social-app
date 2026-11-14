@@ -1,9 +1,62 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
 import {withNanoIcons} from 'react-native-nano-icons/metro'
 import {getBundleModeMetroConfig} from 'react-native-worklets/bundleMode/index.js'
+import {type CacheStore} from '@expo/metro/metro-cache'
 import {type CustomResolver} from '@expo/metro/metro-resolver'
 import {getDefaultConfig} from '@expo/metro-config'
+import {existsSync} from 'node:fs'
+import {createRequire} from 'node:module'
+import path from 'node:path'
 import {getSentryExpoConfig} from '@sentry/react-native/metro.js'
+
+const WORKLET_FILE_PREFIX = 'react-native-worklets/.worklets/'
+const workletsDir = path.join(
+  path.dirname(
+    createRequire(import.meta.url).resolve(
+      'react-native-worklets/package.json',
+    ),
+  ),
+  '.worklets',
+)
+
+/**
+ * In bundle mode the worklets Babel plugin writes each worklet to
+ * `node_modules/react-native-worklets/.worklets/<hash>.js` as a side effect
+ * of transforming the file that defines it. Metro's cache key is the
+ * project-relative path plus the file's contents, so a cache hit skips that
+ * side effect. When the cache was filled by another worktree (they all share
+ * `$TMPDIR/metro-cache`) or before a reinstall wiped `.worklets`, the hit
+ * imports a file that doesn't exist and the bundle fails with ENOENT. Treat
+ * such hits as misses so the file gets transformed, and its worklets written,
+ * again.
+ */
+function withWorkletFileCheck<
+  T extends {dependencies: readonly {name: string}[]},
+>(stores: readonly CacheStore<T>[]): CacheStore<T>[] {
+  return stores.map(store => ({
+    name: store.name,
+    async get(key) {
+      const result = await store.get(key)
+      if (
+        result?.dependencies.some(
+          dep =>
+            dep.name.startsWith(WORKLET_FILE_PREFIX) &&
+            !existsSync(
+              path.join(
+                workletsDir,
+                dep.name.slice(WORKLET_FILE_PREFIX.length),
+              ),
+            ),
+        )
+      ) {
+        return null
+      }
+      return result
+    },
+    set: (key, value) => store.set(key, value),
+    clear: () => store.clear(),
+  }))
+}
 
 let config = getSentryExpoConfig(import.meta.dirname, {
   // TODO: confirm this doesn't break anything when we switch to metro web
@@ -81,6 +134,12 @@ let config = getSentryExpoConfig(import.meta.dirname, {
 })
 
 config = getBundleModeMetroConfig(config)
+
+if (!Array.isArray(config.cacheStores)) {
+  throw Error('Update the worklets cache check: cacheStores is not an array.')
+}
+// @ts-expect-error readonly property
+config.cacheStores = withWorkletFileCheck(config.cacheStores)
 
 /*
  * The icon fonts are baked into the native binary, so a dev client built from
