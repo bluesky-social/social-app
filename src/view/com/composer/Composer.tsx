@@ -570,6 +570,7 @@ export const ComposePost = ({
             asset,
             abortController,
             telemetry,
+            localRefPath: videoInfo.localRefPath,
           },
         })
 

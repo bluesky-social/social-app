@@ -93,6 +93,8 @@ export type PostAction =
       asset: ImagePickerAsset
       abortController: AbortController
       telemetry: VideoTelemetry
+      /** Existing ref when restoring a saved draft. */
+      localRefPath?: string
     }
   | {type: 'embed_remove_video'}
   | {type: 'embed_update_video'; videoAction: VideoAction}
@@ -468,6 +470,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
             action.asset,
             action.abortController,
             action.telemetry,
+            action.localRefPath,
           ),
         }
       }
