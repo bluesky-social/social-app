@@ -5,10 +5,10 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native'
+import {type BottomSheetViewProps} from '@bsky.app/bottom-sheet'
+import {type BottomSheetSnapPoint} from '@bsky.app/bottom-sheet/src/BottomSheet.types'
 
 import {type ViewStyleProp} from '#/alf'
-import {type BottomSheetViewProps} from '../../../modules/bottom-sheet'
-import {type BottomSheetSnapPoint} from '../../../modules/bottom-sheet/src/BottomSheet.types'
 
 type A11yProps = Required<AccessibilityProps>
 
@@ -40,12 +40,26 @@ export type DialogControlProps = DialogControlRefProps & {
 export type DialogContextProps = {
   close: DialogControlProps['close']
   isNativeDialog: boolean
+  /** Actual content width of the presented native sheet or popover. */
+  availableWidth?: number
+  /** Distance between the presentation bottom and the presentation window bottom. */
+  presentationBottomOffset: number
+  isNativePopover: boolean
   nativeSnapPoint: BottomSheetSnapPoint
   disableDrag: boolean
+  /**
+   * Whether user dismissal (backdrop, swipe, back, Escape, close button) is
+   * currently prevented. `close` itself is never blocked.
+   */
+  preventDismiss: boolean
   setDisableDrag: React.Dispatch<React.SetStateAction<boolean>>
   // in the event that the hook is used outside of a dialog
   isWithinDialog: boolean
   isHeightConstrained: boolean
+  shouldMeasureContentHeight: boolean
+  setDesiredContentHeight: React.Dispatch<
+    React.SetStateAction<number | undefined>
+  >
 }
 
 export type DialogControlOpenOptions = {
@@ -56,11 +70,27 @@ export type DialogControlOpenOptions = {
    * 0, which is the first snap point (i.e. "open").
    */
   index?: number
+  /**
+   * NATIVE ONLY
+   *
+   * Optional source view for popover positioning or iOS 26+ zoom transitions.
+   */
+  sourceViewTag?: number
 }
 
 export type DialogOuterProps = {
   control: DialogControlProps
+  onOpen?: () => void
   onClose?: () => void
+  /**
+   * Prevents the user from dismissing the dialog (backdrop press, swipe, back
+   * button, Escape, and the close button), e.g. while a request is pending.
+   * Does not block `control.close()`, so the pending operation can still close
+   * the dialog itself when it finishes.
+   *
+   * @default false
+   */
+  preventDismiss?: boolean
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
   webOptions?: {
     alignCenter?: boolean
@@ -72,6 +102,11 @@ export type DialogOuterProps = {
 type DialogInnerPropsBase<T> = React.PropsWithChildren<ViewStyleProp> &
   T & {
     testID?: string
+    /**
+     * Native only. Lets content like drag-to-reorder lists pause scrolling
+     * while a gesture is active.
+     */
+    scrollEnabled?: ScrollViewProps['scrollEnabled']
   }
 export type DialogInnerProps =
   | DialogInnerPropsBase<{
@@ -79,14 +114,18 @@ export type DialogInnerProps =
       accessibilityLabelledBy: A11yProps['aria-labelledby']
       accessibilityDescribedBy: string
       keyboardDismissMode?: ScrollViewProps['keyboardDismissMode']
+      showsVerticalScrollIndicator?: ScrollViewProps['showsVerticalScrollIndicator']
       contentContainerStyle?: StyleProp<ViewStyle>
       header?: React.ReactNode
+      footer?: React.ReactNode
     }>
   | DialogInnerPropsBase<{
       label: string
       accessibilityLabelledBy?: undefined
       accessibilityDescribedBy?: undefined
       keyboardDismissMode?: ScrollViewProps['keyboardDismissMode']
+      showsVerticalScrollIndicator?: ScrollViewProps['showsVerticalScrollIndicator']
       contentContainerStyle?: StyleProp<ViewStyle>
       header?: React.ReactNode
+      footer?: React.ReactNode
     }>

@@ -1,28 +1,53 @@
 import {type TextInputProps, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
+import {checkAndFormatResetCode} from '#/lib/strings/password'
 import * as TextField from '#/components/forms/TextField'
 import {Shield_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
+import {IS_ANDROID} from '#/env'
 
+/**
+ * Uppercase letters and preserve digits and supplied hyphens without imposing
+ * a code format. The hosting provider determines which format is valid.
+ */
 export function normalizeCode(value: string) {
-  const normalized = value.toUpperCase().replace(/[^A-Z2-7]/g, '')
-  if (normalized.length <= 5) return normalized
-  return `${normalized.slice(0, 5)}-${normalized.slice(5)}`
+  return value.toUpperCase().replace(/[^A-Z0-9-]/g, '')
 }
 
 export function isValidCode(value?: string) {
-  return Boolean(value && /^[A-Z2-7]{5}-[A-Z2-7]{5}$/.test(value))
+  return Boolean(value && checkAndFormatResetCode(value))
 }
 
 export function TokenField({
+  testID,
+  autoFocus,
+  autoComplete = 'off',
+  returnKeyType,
+  blurOnSubmit,
+  accessibilityHint,
+  editable,
+  isInvalid = false,
   value,
   onChangeText,
+  onFocus,
   onSubmitEditing,
-}: Pick<TextInputProps, 'value' | 'onChangeText' | 'onSubmitEditing'>) {
-  const {_} = useLingui()
-  const isInvalid = Boolean(value && value.length > 10 && !isValidCode(value))
-
+}: {
+  isInvalid?: boolean
+} & Pick<
+  TextInputProps,
+  | 'testID'
+  | 'autoFocus'
+  | 'autoComplete'
+  | 'returnKeyType'
+  | 'blurOnSubmit'
+  | 'accessibilityHint'
+  | 'editable'
+  | 'value'
+  | 'onChangeText'
+  | 'onFocus'
+  | 'onSubmitEditing'
+>) {
+  const {t: l} = useLingui()
   const handleOnChangeText = (v: string) => {
     onChangeText?.(normalizeCode(v))
   }
@@ -32,14 +57,22 @@ export function TokenField({
       <TextField.Root>
         <TextField.Icon icon={Shield} />
         <TextField.Input
-          autoComplete="off"
+          testID={testID}
+          accessibilityHint={accessibilityHint}
+          autoCapitalize="characters"
+          autoComplete={autoComplete}
           autoCorrect={false}
+          spellCheck={false}
+          keyboardType={IS_ANDROID ? 'visible-password' : 'ascii-capable'}
+          autoFocus={autoFocus}
+          blurOnSubmit={blurOnSubmit}
+          editable={editable}
           isInvalid={isInvalid}
-          label={_(msg`Confirmation code`)}
-          maxLength={11}
-          placeholder="XXXXX-XXXXX"
+          label={l`Confirmation code`}
+          returnKeyType={returnKeyType}
           value={value}
           onChangeText={handleOnChangeText}
+          onFocus={onFocus}
           onSubmitEditing={onSubmitEditing}
         />
       </TextField.Root>

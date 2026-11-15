@@ -1,5 +1,4 @@
 import {useCallback, useMemo, useState} from 'react'
-import {type AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -11,8 +10,15 @@ import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {type app} from '#/lexicons'
 
-function renderItem({item, index}: {item: GetLikes.Like; index: number}) {
+function renderItem({
+  item,
+  index,
+}: {
+  item: app.bsky.feed.getLikes.Like
+  index: number
+}) {
   return (
     <ProfileCardWithFollowBtn
       key={item.actor.did}
@@ -22,7 +28,7 @@ function renderItem({item, index}: {item: GetLikes.Like; index: number}) {
   )
 }
 
-function keyExtractor(item: GetLikes.Like) {
+function keyExtractor(item: app.bsky.feed.getLikes.Like) {
   return item.actor.did
 }
 

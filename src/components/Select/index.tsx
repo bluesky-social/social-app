@@ -100,7 +100,16 @@ export function Trigger({children, hitSlop, label}: TriggerProps) {
   } else {
     return (
       <Button
-        hitSlop={hitSlop}
+        hitSlop={
+          typeof hitSlop === 'number'
+            ? {
+                top: hitSlop,
+                right: hitSlop,
+                bottom: hitSlop,
+                left: hitSlop,
+              }
+            : (hitSlop ?? undefined)
+        }
         label={label}
         onPress={control.open}
         style={[a.flex_1, a.justify_between, a.pl_lg, a.pr_md]}
@@ -113,9 +122,12 @@ export function Trigger({children, hitSlop, label}: TriggerProps) {
   }
 }
 
+const defaultValueText: NonNullable<ValueProps['children']> = value =>
+  value.label
+
 export function ValueText({
   placeholder,
-  children = value => value.label,
+  children = defaultValueText,
   style,
 }: ValueProps) {
   const [value] = useContext(ValueTextContext)

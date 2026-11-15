@@ -1,9 +1,8 @@
-import {type BskyAgent, type ChatBskyConvoGetLog} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 import {EventEmitter} from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {
   isErrorMaybeAppPasswordPermissions,
   isNetworkError,
@@ -21,13 +20,14 @@ import {
   type MessagesEventBusParams,
   MessagesEventBusStatus,
 } from '#/state/messages/events/types'
+import {chat} from '#/lexicons'
 
 const logger = Logger.create(Logger.Context.DMsAgent)
 
 export class MessagesEventBus {
   private id: string
 
-  private agent: BskyAgent
+  private chatClient: Client
   private emitter = new EventEmitter<{event: [MessagesEventBusEvent]}>()
 
   private status: MessagesEventBusStatus = MessagesEventBusStatus.Initializing
@@ -37,9 +37,18 @@ export class MessagesEventBus {
 
   constructor(params: MessagesEventBusParams) {
     this.id = nanoid(3)
-    this.agent = params.agent
+    this.chatClient = params.chatClient
 
     this.init()
+  }
+
+  /**
+   * Point the bus at a new chat client, for when the session bundle is
+   * replaced underneath it. The poll cursor and subscribers are unaffected: the
+   * same account is being served over a fresh session.
+   */
+  updateClient(chatClient: Client) {
+    this.chatClient = chatClient
   }
 
   requestPollInterval(interval: number) {
@@ -211,17 +220,9 @@ export class MessagesEventBus {
       }
       case MessagesEventBusStatus.Error: {
         switch (action.event) {
-          case MessagesEventBusDispatchEvent.UpdatePoll: {
-            // basically reset
-            this.status = MessagesEventBusStatus.Initializing
-            this.latestRev = undefined
-            this.init()
-            break
-          }
+          case MessagesEventBusDispatchEvent.UpdatePoll:
           case MessagesEventBusDispatchEvent.Resume: {
-            this.status = MessagesEventBusStatus.Ready
-            this.resetPoll()
-            this.emitter.emit('event', {type: 'connect'})
+            this.recoverFromError()
             break
           }
         }
@@ -238,19 +239,41 @@ export class MessagesEventBus {
     })
   }
 
+  private recoverFromError() {
+    logger.debug(`recoverFromError`, {hasRev: !!this.latestRev})
+
+    if (this.latestRev === undefined) {
+      /*
+       * init() never succeeded, so we have no cursor to resume from. Re-run
+       * init() to seed latestRev. Its success path dispatches Ready, which from
+       * Initializing transitions us to Ready + resetPoll + emit connect.
+       */
+      this.status = MessagesEventBusStatus.Initializing
+      this.init()
+    } else {
+      /*
+       * A poll failed mid-session but we still have a valid cursor. Resume
+       * polling from it directly. We must NOT route through init() here: its
+       * seeding logic takes the max of the existing rev and the server's
+       * current cursor, which would skip any events that arrived while we were
+       * offline.
+       */
+      this.status = MessagesEventBusStatus.Ready
+      this.resetPoll()
+      this.emitter.emit('event', {type: 'connect'})
+    }
+  }
+
   private async init() {
     logger.debug(`init`, {})
 
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getLog(
-          {},
-          {headers: DM_SERVICE_HEADERS},
-        )
+        return this.chatClient.call(chat.bsky.convo.getLog, {})
       })
       // throw new Error('UNCOMMENT TO TEST INIT FAILURE')
 
-      const {cursor} = response.data
+      const {cursor} = response
 
       // should always be defined
       if (cursor) {
@@ -337,22 +360,19 @@ export class MessagesEventBus {
     //   },
     // )
 
+    let needsEmit = false
+    let batch: chat.bsky.convo.getLog.$OutputBody['logs'] = []
+
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getLog(
-          {
-            cursor: this.latestRev,
-          },
-          {headers: DM_SERVICE_HEADERS},
-        )
+        return this.chatClient.call(chat.bsky.convo.getLog, {
+          cursor: this.latestRev,
+        })
       })
 
       // throw new Error('UNCOMMENT TO TEST POLL FAILURE')
 
-      const {logs: events} = response.data
-
-      let needsEmit = false
-      let batch: ChatBskyConvoGetLog.OutputSchema['logs'] = []
+      const {logs: events} = response
 
       for (const ev of events) {
         /*
@@ -373,13 +393,9 @@ export class MessagesEventBus {
           }
         }
       }
-
-      if (needsEmit) {
-        this.emitter.emit('event', {type: 'logs', logs: batch})
-      }
     } catch (e: any) {
       if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
-        logger.error(`poll events failed`, {
+        logger.warn(`poll events failed`, {
           safeMessage: e.message,
         })
       }
@@ -396,6 +412,23 @@ export class MessagesEventBus {
       })
     } finally {
       this.isPolling = false
+    }
+
+    /*
+     * Emit outside the try/catch above so a throwing subscriber is not
+     * misreported as a poll failure (which would show a network-error banner
+     * and drop the batch, since the revs have already been consumed). poll()
+     * runs from setInterval, so we must not let the exception escape - log it
+     * and move on without dispatching Error.
+     */
+    if (needsEmit) {
+      try {
+        this.emitter.emit('event', {type: 'logs', logs: batch})
+      } catch (e) {
+        logger.error(`subscriber error handling chat events`, {
+          safeMessage: e instanceof Error ? e.message : String(e),
+        })
+      }
     }
   }
 }

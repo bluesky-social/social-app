@@ -44,6 +44,13 @@ export function MediaInsetBorder({
               {opacity: 0.6},
             ],
         a.pointer_events_none,
+        /*
+         * On iOS, React Native only uses the system's border rendering when
+         * the view clips its content. Otherwise it draws the border into an
+         * image on the main thread, once per avatar or image, which is costly
+         * while scrolling. This view rarely has content, so clipping is free.
+         */
+        a.overflow_hidden,
         style,
       ]}>
       {children}

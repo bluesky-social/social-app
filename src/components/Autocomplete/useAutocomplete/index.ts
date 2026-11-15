@@ -1,18 +1,19 @@
-import {useCallback} from 'react'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {useCallback, useMemo} from 'react'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {keepPreviousData, useQuery} from '@tanstack/react-query'
 
 import {isJustAMute, moduiContainsHideableOffense} from '#/lib/moderation'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {
   type AutocompleteApi,
   type AutocompleteItem,
   type AutocompleteItemType,
   type AutocompleteProfile,
 } from '#/components/Autocomplete/types'
+import {app} from '#/lexicons'
 import {useEmojiSearch} from './useEmojiSearch'
 
 const DEFAULT_MOD_OPTS = {
@@ -31,7 +32,7 @@ export function useAutocomplete({
   limit?: number
   showSearchFallback?: boolean
 }): AutocompleteApi {
-  const agent = useAgent()
+  const client = useAppviewClient()
   const moderationOpts = useModerationOpts()
   const emojiSearch = useEmojiSearch()
 
@@ -52,12 +53,12 @@ export function useAutocomplete({
         // Going from "foo" to "foo." should not clear matches.
         q = q.toLowerCase().trim().replace(/\.$/, '')
 
-        const res = await agent.searchActorsTypeahead({
+        const data = await client.call(app.bsky.actor.searchActorsTypeahead, {
           q,
           limit: limit || 8,
         })
 
-        return (res?.data.actors || []).map(profile => ({
+        return (data?.actors || []).map(profile => ({
           key: profile.did,
           type: 'profile' as const,
           value: '@' + profile.handle,
@@ -90,24 +91,35 @@ export function useAutocomplete({
           }
         }
 
-        if (showSearchFallback && q) {
-          results.unshift({
-            key: `search-${q}`,
-            type: 'search' as const,
-            value: q,
-          })
-        }
-
         return results
       },
-      [q, showSearchFallback, moderationOpts],
+      [q, moderationOpts],
     ),
     placeholderData: keepPreviousData,
   })
 
+  const items = useMemo(() => {
+    if (!query.data) {
+      return []
+    }
+
+    const results = [...query.data]
+
+    if (showSearchFallback && q) {
+      results.unshift({
+        key: `search-${q}`,
+        type: 'search' as const,
+        value: q,
+      })
+    }
+
+    return results
+  }, [query.data, showSearchFallback, q])
+
   return {
     query: q,
-    items: query.data || [],
+    items,
+    isFetching: query.isFetching,
   }
 }
 

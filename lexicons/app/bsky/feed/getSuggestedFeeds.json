@@ -1,0 +1,46 @@
+{
+  "id": "app.bsky.feed.getSuggestedFeeds",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "feeds"
+          ],
+          "properties": {
+            "feeds": {
+              "type": "array",
+              "items": {
+                "ref": "app.bsky.feed.defs#generatorView",
+                "type": "ref"
+              }
+            },
+            "cursor": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Get a list of suggested feeds (feed generators) for the requesting account."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

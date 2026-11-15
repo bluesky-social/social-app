@@ -1,14 +1,8 @@
 import {useMemo, useState} from 'react'
-import {
-  LayoutAnimation,
-  type StyleProp,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {type ModerationUI} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
+import Animated, {FadeIn, LinearTransition} from 'react-native-reanimated'
+import {type ModerationUI} from '@bsky/sdk/moderation'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {
   ADULT_CONTENT_LABELS,
@@ -20,7 +14,7 @@ import {getDefinition, getLabelStrings} from '#/lib/moderation/useLabelInfo'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useLabelDefinitions} from '#/state/preferences'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import {
   ModerationDetailsDialog,
@@ -78,7 +72,7 @@ function ContentHiderActive({
   children?: React.ReactNode
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
   const [override, setOverride] = useState(false)
   const control = useModerationDetailsDialogControl()
@@ -97,49 +91,42 @@ function ContentHiderActive({
       (blur.type === 'label' && blur.source.type !== 'user')
     ) {
       if (desc.isSubjectAccount) {
-        return _(msg`${desc.name} (Account)`)
+        return l`${desc.name} (Account)`
       } else {
         return desc.name
       }
     }
 
+    const selfBlurCauses = []
     let hasAdultContentLabel = false
-    const selfBlurNames = modui.blurs
-      .filter(cause => {
-        if (cause.type !== 'label') {
-          return false
-        }
-        if (cause.source.type !== 'user') {
-          return false
-        }
-        if (ADULT_CONTENT_LABELS.includes(cause.label.val as AdultSelfLabel)) {
-          if (hasAdultContentLabel) {
-            return false
-          }
-          hasAdultContentLabel = true
-        }
-        return true
-      })
-      .slice(0, 2)
-      .map(cause => {
-        if (cause.type !== 'label') {
-          return
-        }
+    for (const cause of modui.blurs) {
+      if (cause.type !== 'label') continue
+      if (cause.source.type !== 'user') continue
+      if (ADULT_CONTENT_LABELS.includes(cause.label.val as AdultSelfLabel)) {
+        if (hasAdultContentLabel) continue
+        hasAdultContentLabel = true
+      }
+      selfBlurCauses.push(cause)
+    }
+    const selfBlurNames = selfBlurCauses.slice(0, 2).map(cause => {
+      if (cause.type !== 'label') {
+        return
+      }
 
-        const def = cause.labelDef || getDefinition(labelDefs, cause.label)
-        if (def.identifier === 'porn' || def.identifier === 'sexual') {
-          return _(msg`Adult Content`)
-        }
-        return getLabelStrings(i18n.locale, globalLabelStrings, def).name
-      })
+      const def = cause.labelDef || getDefinition(labelDefs, cause.label)
+      if (def.identifier === 'porn' || def.identifier === 'sexual') {
+        return l`Adult Content`
+      }
+      return getLabelStrings(i18n.locale, globalLabelStrings, def).name
+    })
 
     if (selfBlurNames.length === 0) {
       return desc.name
     }
     return [...new Set(selfBlurNames)].join(', ')
   }, [
-    _,
-    modui?.blurs,
+    l,
+    modui.blurs,
     blur,
     desc.name,
     desc.isSubjectAccount,
@@ -149,15 +136,16 @@ function ContentHiderActive({
   ])
 
   return (
-    <View testID={testID} style={[a.overflow_hidden, style]}>
+    <Animated.View
+      testID={testID}
+      layout={native(LinearTransition)}
+      style={[a.overflow_hidden, style]}>
       <ModerationDetailsDialog control={control} modcause={blur} />
-
       <Button
         onPress={e => {
           e.preventDefault()
           e.stopPropagation()
           if (!modui.noOverride) {
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
             setOverride(v => !v)
           } else {
             control.open()
@@ -166,10 +154,10 @@ function ContentHiderActive({
         label={desc.name}
         accessibilityHint={
           modui.noOverride
-            ? _(msg`Learn more about the moderation applied to this content`)
+            ? l`Learn more about the moderation applied to this content`
             : override
-              ? _(msg`Hides the content`)
-              : _(msg`Shows the content`)
+              ? l`Hides the content`
+              : l`Shows the content`
         }>
         {state => (
           <View
@@ -223,7 +211,6 @@ function ContentHiderActive({
           </View>
         )}
       </Button>
-
       {desc.source && blur.type === 'label' && !override && (
         <Button
           onPress={e => {
@@ -231,9 +218,7 @@ function ContentHiderActive({
             e.stopPropagation()
             control.open()
           }}
-          label={_(
-            msg`Learn more about the moderation applied to this content`,
-          )}
+          label={l`Learn more about the moderation applied to this content`}
           style={[a.pt_sm]}>
           {state => (
             <Text
@@ -252,7 +237,7 @@ function ContentHiderActive({
               )}{' '}
               <Text
                 style={[
-                  {color: t.palette.primary_500},
+                  t.atoms.text_link,
                   a.text_sm,
                   state.hovered && [web({textDecoration: 'underline'})],
                 ]}>
@@ -262,8 +247,11 @@ function ContentHiderActive({
           )}
         </Button>
       )}
-
-      {override && <View style={childContainerStyle}>{children}</View>}
-    </View>
+      {override && (
+        <Animated.View entering={native(FadeIn)} style={childContainerStyle}>
+          {children}
+        </Animated.View>
+      )}
+    </Animated.View>
   )
 }

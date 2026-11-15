@@ -3,8 +3,8 @@ import {Pressable, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import type Hls from 'hls.js'
 
+import {formatTime} from '#/lib/media/video/formatTime'
 import {clamp} from '#/lib/numbers'
 import {
   useAutoplayDisabled,
@@ -27,12 +27,13 @@ import {Pause_Filled_Corner0_Rounded as PauseIcon} from '#/components/icons/Paus
 import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_WEB_MOBILE_IOS, IS_WEB_TOUCH_DEVICE} from '#/env'
+import {IS_WEB_FIREFOX, IS_WEB_MOBILE_IOS, IS_WEB_TOUCH_DEVICE} from '#/env'
 import {GifPresentationControls} from '../../GifPresentationControls'
 import {TimeIndicator} from '../TimeIndicator'
 import {ControlButton} from './ControlButton'
 import {Scrubber} from './Scrubber'
-import {formatTime, useVideoElement} from './utils'
+import {useVideoElement} from './utils'
+import {type ControlsProps} from './VideoControls.shared'
 import {VolumeControl} from './VolumeControl'
 
 export function Controls({
@@ -49,21 +50,7 @@ export function Controls({
   isGif,
   altText,
   updateCuePositions,
-}: {
-  videoRef: React.RefObject<HTMLVideoElement | null>
-  hlsRef: React.RefObject<Hls | undefined | null>
-  active: boolean
-  setActive: () => void
-  focused: boolean
-  setFocused: (focused: boolean) => void
-  onScreen: boolean
-  fullscreenRef: React.RefObject<HTMLDivElement | null>
-  hlsLoading: boolean
-  hasSubtitleTrack: boolean
-  isGif: boolean
-  altText?: string
-  updateCuePositions: (controlsVisible?: boolean) => void
-}) {
+}: ControlsProps) {
   const {
     play,
     pause,
@@ -198,7 +185,9 @@ export function Controls({
   const onSeek = useCallback(
     (time: number) => {
       if (!videoRef.current) return
-      if (videoRef.current.fastSeek) {
+      // Avoid fastSeek on Firefox - it seeks video to the nearest keyframe
+      // but keeps audio at the precise time, causing audio/video desync
+      if (videoRef.current.fastSeek && !IS_WEB_FIREFOX) {
         videoRef.current.fastSeek(time)
       } else {
         videoRef.current.currentTime = time

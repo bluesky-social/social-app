@@ -1,0 +1,73 @@
+{
+  "id": "chat.bsky.convo.addReaction",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "convoId",
+            "messageId",
+            "value"
+          ],
+          "properties": {
+            "value": {
+              "type": "string",
+              "maxLength": 64,
+              "minLength": 1,
+              "maxGraphemes": 1,
+              "minGraphemes": 1
+            },
+            "convoId": {
+              "type": "string"
+            },
+            "messageId": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "errors": [
+        {
+          "name": "InvalidConvo"
+        },
+        {
+          "name": "ReactionNotAllowed",
+          "description": "Indicates that reactions are not allowed on this message, e.g. because it is a system message."
+        },
+        {
+          "name": "ReactionMessageDeleted",
+          "description": "Indicates that the message has been deleted and reactions can no longer be added/removed."
+        },
+        {
+          "name": "ReactionLimitReached",
+          "description": "Indicates that the message has the maximum number of reactions allowed for a single user, and the requested reaction wasn't yet present. If it was already present, the request will not fail since it is idempotent."
+        },
+        {
+          "name": "ReactionInvalidValue",
+          "description": "Indicates the value for the reaction is not acceptable. In general, this means it is not an emoji."
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "message"
+          ],
+          "properties": {
+            "message": {
+              "ref": "chat.bsky.convo.defs#messageView",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Adds an emoji reaction to a message. Requires authentication. It is idempotent, so multiple calls from the same user with the same emoji result in a single reaction."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

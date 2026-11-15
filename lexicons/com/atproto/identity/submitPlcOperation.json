@@ -1,0 +1,25 @@
+{
+  "id": "com.atproto.identity.submitPlcOperation",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "operation"
+          ],
+          "properties": {
+            "operation": {
+              "type": "unknown"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Validates a PLC operation to ensure that it doesn't violate a service's constraints or get the identity into a bad state, then submits it to the PLC registry"
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

@@ -1,0 +1,26 @@
+{
+  "id": "app.bsky.graph.unmuteActorList",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "list"
+          ],
+          "properties": {
+            "list": {
+              "type": "string",
+              "format": "at-uri"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Unmutes the specified list of accounts. Requires auth."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

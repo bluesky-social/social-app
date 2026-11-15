@@ -1,13 +1,10 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {saveBytesToDisk} from '#/lib/media/manip'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useChatClient, usePdsClient, useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -16,76 +13,79 @@ import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {chat, com} from '#/lexicons'
 
 export function ExportCarDialog({
   control,
 }: {
   control: Dialog.DialogControlProps
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
-  const agent = useAgent()
+  const {currentAccount} = useSession()
+  const pdsClient = usePdsClient()
+  const chatClient = useChatClient()
   const [loading, setLoading] = useState<'repo' | 'chat' | false>(false)
 
   const download = useCallback(async () => {
-    if (!agent.session) {
-      return // shouldnt ever happen
+    if (!currentAccount) {
+      return // shouldn't ever happen
     }
     try {
       setLoading('repo')
-      const did = agent.session.did
-      const downloadRes = await agent.com.atproto.sync.getRepo({did})
+      const did = currentAccount.did
+      const data = await pdsClient.call(com.atproto.sync.getRepo, {did})
+      /*
+       * getRepo declares `application/vnd.ipld.car`, so lex-client hands back
+       * the raw bytes unparsed and does not surface the response content-type.
+       * The old code already fell back to this same constant when the header was
+       * absent, and the endpoint always returns CAR.
+       */
       const saveRes = await saveBytesToDisk(
         'repo.car',
-        downloadRes.data,
-        downloadRes.headers['content-type'] || 'application/vnd.ipld.car',
+        data,
+        'application/vnd.ipld.car',
       )
 
       if (saveRes) {
-        Toast.show(_(msg`File saved successfully!`))
+        Toast.show(l`File saved successfully!`)
       }
     } catch (e) {
       logger.error('Error occurred while downloading CAR file', {message: e})
-      Toast.show(_(msg`Error occurred while saving file`), {type: 'error'})
-    } finally {
-      setLoading(false)
-      control.close()
+      Toast.show(l`Error occurred while saving file`, {type: 'error'})
     }
-  }, [_, control, agent])
+    setLoading(false)
+  }, [l, currentAccount, pdsClient])
 
   const downloadChatData = useCallback(async () => {
-    if (!agent.session) {
+    if (!currentAccount) {
       return
     }
     try {
       setLoading('chat')
-      // Using raw fetch because the XRPC client incorrectly tries to JSON-parse
-      // application/jsonl responses (substring match on application/json).
-      const res = await agent.sessionManager.fetchHandler(
-        '/xrpc/chat.bsky.actor.exportAccountData',
-        {headers: DM_SERVICE_HEADERS},
-      )
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`)
-      }
-      const data = new Uint8Array(await res.arrayBuffer())
+      /*
+       * lex-client only JSON-parses a response when the declared output encoding
+       * is `application/json`; this endpoint declares `application/jsonl`, so it
+       * returns the raw bytes. That removes the reason for the old low-level
+       * fetchHandler workaround, and the chat client emits the proxy header
+       * itself, so the per-call DM headers go away too.
+       */
+      const data = await chatClient.call(chat.bsky.actor.exportAccountData)
       const saveRes = await saveBytesToDisk(
         'chat.jsonl',
         data,
-        res.headers.get('content-type') || 'application/jsonl',
+        'application/jsonl',
       )
 
       if (saveRes) {
-        Toast.show(_(msg`File saved successfully!`))
+        Toast.show(l`File saved successfully!`)
       }
     } catch (e) {
       logger.error('Error occurred while downloading chat data', {message: e})
-      Toast.show(_(msg`Error occurred while saving file`), {type: 'error'})
-    } finally {
-      setLoading(false)
-      control.close()
+      Toast.show(l`Error occurred while saving file`, {type: 'error'})
     }
-  }, [_, control, agent])
+    setLoading(false)
+  }, [l, currentAccount, chatClient])
 
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
@@ -94,13 +94,20 @@ export function ExportCarDialog({
         accessibilityDescribedBy="dialog-description"
         accessibilityLabelledBy="dialog-title"
         style={web({maxWidth: 500})}>
-        <View style={[a.relative, a.gap_lg, a.w_full]}>
-          <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
-            <Trans>Export My Data</Trans>
+        <View style={[a.relative, a.w_full]}>
+          <Text
+            nativeID="dialog-title"
+            style={[a.mb_sm, a.text_2xl, a.font_bold]}>
+            <Trans>Export my profile data</Trans>
           </Text>
           <Text
             nativeID="dialog-description"
-            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
+            style={[
+              a.mb_lg,
+              a.text_sm,
+              a.leading_snug,
+              t.atoms.text_contrast_high,
+            ]}>
             <Trans>
               Your account repository, containing all public data records, can
               be downloaded as a "CAR" file. This file does not include media
@@ -112,17 +119,27 @@ export function ExportCarDialog({
           <Button
             color="primary"
             size="large"
-            label={_(msg`Download CAR file`)}
+            label={l`Download profile data`}
             disabled={!!loading}
-            onPress={download}>
-            <ButtonIcon icon={DownloadIcon} />
+            onPress={() => void download()}>
+            <ButtonIcon icon={loading === 'repo' ? Loader : DownloadIcon} />
             <ButtonText>
-              <Trans>Download CAR file</Trans>
+              <Trans context="button">Download profile data</Trans>
             </ButtonText>
-            {loading === 'repo' && <ButtonIcon icon={Loader} />}
           </Button>
 
-          <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
+          <Text
+            nativeID="dialog-title"
+            style={[a.mt_2xl, a.mb_sm, a.text_2xl, a.font_bold]}>
+            <Trans>Export my chat data</Trans>
+          </Text>
+          <Text
+            style={[
+              a.mb_lg,
+              a.text_sm,
+              a.leading_snug,
+              t.atoms.text_contrast_high,
+            ]}>
             <Trans>
               You can also download your chat data as a "JSONL" file. This file
               only includes chat messages that you have sent and does not
@@ -131,30 +148,30 @@ export function ExportCarDialog({
           </Text>
 
           <Button
-            color="secondary"
+            color="primary"
             size="large"
-            label={_(msg`Download chat data`)}
+            label={l`Download chat data`}
             disabled={!!loading}
-            onPress={downloadChatData}>
-            <ButtonIcon icon={DownloadIcon} />
+            onPress={() => void downloadChatData()}>
+            <ButtonIcon icon={loading === 'chat' ? Loader : DownloadIcon} />
             <ButtonText>
-              <Trans>Download chat data</Trans>
+              <Trans context="button">Download chat data</Trans>
             </ButtonText>
-            {loading === 'chat' && <ButtonIcon icon={Loader} />}
           </Button>
 
           <Text
             style={[
-              t.atoms.text_contrast_medium,
+              a.flex_1,
+              a.mt_2xl,
               a.text_sm,
               a.leading_snug,
-              a.flex_1,
+              t.atoms.text_contrast_medium,
             ]}>
             <Trans>
               This feature is in beta. You can read more about repository
               exports in{' '}
               <InlineLinkText
-                label={_(msg`View blogpost for more details`)}
+                label={l`View blogpost for more details`}
                 to="https://docs.bsky.app/blog/repo-export"
                 style={[a.text_sm]}>
                 this blogpost

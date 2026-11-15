@@ -1,13 +1,18 @@
 import {useEffect, useState} from 'react'
-import {RichText as RichTextAPI} from '@atproto/api'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 
 export function useRichText(text: string): [RichTextAPI, boolean] {
   const [prevText, setPrevText] = useState(text)
   const [rawRT, setRawRT] = useState(() => new RichTextAPI({text}))
   const [resolvedRT, setResolvedRT] = useState<RichTextAPI | null>(null)
-  const agent = useAgent()
+  /*
+   * Facet/mention resolution is an appview job - it resolves handles via
+   * `com.atproto.identity.resolveHandle` through the appview. The public
+   * fallback keeps mentions working on logged-out surfaces.
+   */
+  const client = useAppviewClient()
   if (text !== prevText) {
     setPrevText(text)
     setRawRT(new RichTextAPI({text}))
@@ -19,7 +24,7 @@ export function useRichText(text: string): [RichTextAPI, boolean] {
     async function resolveRTFacets() {
       // new each time
       const resolvedRT = new RichTextAPI({text})
-      await resolvedRT.detectFacets(agent)
+      await resolvedRT.detectFacets(client)
       if (!ignore) {
         setResolvedRT(resolvedRT)
       }
@@ -28,7 +33,7 @@ export function useRichText(text: string): [RichTextAPI, boolean] {
     return () => {
       ignore = true
     }
-  }, [text, agent])
+  }, [text, client])
   const isResolving = resolvedRT === null
   return [resolvedRT ?? rawRT, isResolving]
 }

@@ -1,4 +1,4 @@
-import {ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
+import {type DatetimeString, type HandleString} from '@atproto/syntax'
 import {useQuery} from '@tanstack/react-query'
 
 import {
@@ -7,10 +7,11 @@ import {
   PUBLIC_BSKY_SERVICE,
 } from '#/lib/constants'
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
+import {createServiceClient} from '#/lib/lexClient'
 import {createFullHandle} from '#/lib/strings/handles'
 import {useAnalytics} from '#/analytics'
+import {com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import {Agent} from '../session/agent'
 
 export const RQKEY_handleAvailability = (
   handle: string,
@@ -79,25 +80,33 @@ export async function checkHandleAvailability(
   },
 ) {
   if (serviceDid === BSKY_SERVICE_DID) {
-    const agent = new Agent(null, {service: BSKY_SERVICE})
+    /*
+     * Runs pre-auth during signup, so it goes through a one-off service client
+     * rather than a session-scoped one. The target is the fixed entryway rather
+     * than a user-supplied host, but there is still no session to hang a client
+     * off.
+     */
+    const client = createServiceClient(BSKY_SERVICE)
     // entryway has a special API for handle availability
-    const {data} = await agent.com.atproto.temp.checkHandleAvailability({
-      handle,
-      birthDate,
+    const data = await client.call(com.atproto.temp.checkHandleAvailability, {
+      // the caller assembles this from a validated username and domain
+      handle: handle as HandleString,
+      // callers pass an ISO date string built from the birth-date picker
+      birthDate: birthDate as DatetimeString | undefined,
       email,
     })
 
     if (
-      bsky.dangerousIsType<ComAtprotoTempCheckHandleAvailability.ResultAvailable>(
+      bsky.isType(
+        com.atproto.temp.checkHandleAvailability.resultAvailable,
         data.result,
-        ComAtprotoTempCheckHandleAvailability.isResultAvailable,
       )
     ) {
       return {available: true} as const
     } else if (
-      bsky.dangerousIsType<ComAtprotoTempCheckHandleAvailability.ResultUnavailable>(
+      bsky.isType(
+        com.atproto.temp.checkHandleAvailability.resultUnavailable,
         data.result,
-        ComAtprotoTempCheckHandleAvailability.isResultUnavailable,
       )
     ) {
       return {
@@ -110,14 +119,18 @@ export async function checkHandleAvailability(
       )
     }
   } else {
-    // 3rd party PDSes won't have this API so just try and resolve the handle
-    const agent = new Agent(null, {service: PUBLIC_BSKY_SERVICE})
+    /*
+     * 3rd party PDSes won't have this API so just try and resolve the handle.
+     * This is an unauthenticated public-appview read, not a call against the
+     * user's chosen host.
+     */
+    const client = createServiceClient(PUBLIC_BSKY_SERVICE)
     try {
-      const res = await agent.resolveHandle({
-        handle,
+      const data = await client.call(com.atproto.identity.resolveHandle, {
+        handle: handle as HandleString,
       })
 
-      if (res.data.did) {
+      if (data.did) {
         return {available: false} as const
       }
     } catch {}

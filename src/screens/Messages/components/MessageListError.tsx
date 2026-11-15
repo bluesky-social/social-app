@@ -43,6 +43,7 @@ export function MessageListError({item}: {item: ConvoItem & {type: 'error'}}) {
           {description}
           {item.retry && (
             <>
+              {' '}
               &middot;{' '}
               <InlineLinkText
                 label={help}

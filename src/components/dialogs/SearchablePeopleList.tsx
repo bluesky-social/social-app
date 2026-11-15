@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react'
 import {TextInput, View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
@@ -66,11 +66,7 @@ type ErrorItem = {
 }
 
 type Item =
-  | ProfileItem
-  | ExistingChatItem
-  | EmptyItem
-  | PlaceholderItem
-  | ErrorItem
+  ProfileItem | ExistingChatItem | EmptyItem | PlaceholderItem | ErrorItem
 
 export function SearchablePeopleList({
   title,
@@ -101,7 +97,7 @@ export function SearchablePeopleList({
   const [headerHeight, setHeaderHeight] = useState(0)
   const listRef = useRef<ListMethods>(null)
   const {currentAccount} = useSession()
-  const inputRef = useRef<TextInput>(null)
+  const inputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
 
   const [searchText, setSearchText] = useState('')
 
@@ -114,6 +110,7 @@ export function SearchablePeopleList({
   const {data: convos} = useListConvosQuery({
     enabled: showRecentConvos,
     status: 'accepted',
+    lockStatus: 'unlocked',
   })
 
   const items = useMemo(() => {
@@ -479,14 +476,15 @@ function ExistingChatCard({
   const {t: l} = useLingui()
   const enabled =
     convo.kind === 'group' ? convo.details.lockStatus === 'unlocked' : true
-  const moderation = moderateProfile(convo.primaryMember, moderationOpts)
   const name =
     convo.kind === 'group'
       ? convo.details.name
       : createSanitizedDisplayName(
           convo.primaryMember,
           true,
-          moderation.ui('displayName'),
+          moderateProfile(convo.primaryMember, moderationOpts).ui(
+            'displayName',
+          ),
         )
 
   const handleOnPress = useCallback(() => {
@@ -512,7 +510,7 @@ function ExistingChatCard({
           ]}>
           <ProfileCard.Header>
             {convo.kind === 'group' ? (
-              <AvatarBubbles profiles={convo.members} size="small" />
+              <AvatarBubbles profiles={convo.members} size={40} />
             ) : (
               <ProfileCard.Avatar
                 profile={convo.primaryMember}
@@ -551,7 +549,7 @@ function ExistingChatCard({
                       style={[a.leading_snug, t.atoms.text_contrast_medium]}
                       numberOfLines={2}>
                       <Plural
-                        value={convo.members.length}
+                        value={convo.details.memberCount}
                         one="# member"
                         other="# members"
                       />
@@ -636,7 +634,7 @@ function SearchInput({
   value: string
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInput | null>
+  inputRef: React.RefObject<React.ComponentRef<typeof TextInput> | null>
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -661,7 +659,6 @@ function SearchInput({
       />
 
       <TextInput
-        // @ts-ignore bottom sheet input types issue — esb
         ref={inputRef}
         placeholder={l`Search`}
         value={value}

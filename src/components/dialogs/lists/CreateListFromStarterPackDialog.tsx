@@ -1,15 +1,8 @@
 import {View} from 'react-native'
-import {
-  type $Typed,
-  type AppBskyGraphDefs,
-  type AppBskyGraphListitem,
-  type AppBskyGraphStarterpack,
-  AtUri,
-  type ComAtprotoRepoApplyWrites,
-} from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {type $Typed} from '@atproto/lex'
+import {AtUri, type AtUriString, toDatetimeString} from '@atproto/syntax'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -20,7 +13,7 @@ import {wait} from '#/lib/async/wait'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {getAllListMembers} from '#/state/queries/list-members'
-import {useAgent, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {atoms as a, platform, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
@@ -29,6 +22,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {app, com} from '#/lexicons'
 import {CreateOrEditListDialog} from './CreateOrEditListDialog'
 
 export function CreateListFromStarterPackDialog({
@@ -36,11 +30,12 @@ export function CreateListFromStarterPackDialog({
   starterPack,
 }: {
   control: Dialog.DialogControlProps
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: app.bsky.graph.defs.StarterPackView
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
@@ -48,7 +43,7 @@ export function CreateListFromStarterPackDialog({
   const createDialogControl = Dialog.useDialogControl()
   const loadingDialogControl = Dialog.useDialogControl()
 
-  const record = starterPack.record as AppBskyGraphStarterpack.Record
+  const record = starterPack.record as app.bsky.graph.starterpack.Main
 
   const onPressCreate = () => {
     control.close(() => createDialogControl.open())
@@ -73,16 +68,19 @@ export function CreateListFromStarterPackDialog({
       const listItems = await wait(
         3000,
         (async () => {
-          const items = await getAllListMembers(agent, starterPack.list!.uri)
+          const items = await getAllListMembers(
+            appviewClient,
+            starterPack.list!.uri,
+          )
 
           if (items.length > 0) {
-            const listitemWrites: $Typed<ComAtprotoRepoApplyWrites.Create>[] =
+            const listitemWrites: $Typed<com.atproto.repo.applyWrites.Create>[] =
               items.map(item => {
-                const listitemRecord: $Typed<AppBskyGraphListitem.Record> = {
+                const listitemRecord: $Typed<app.bsky.graph.listitem.Main> = {
                   $type: 'app.bsky.graph.listitem',
                   subject: item.subject.did,
-                  list: listUri,
-                  createdAt: new Date().toISOString(),
+                  list: listUri as AtUriString,
+                  createdAt: toDatetimeString(new Date()),
                 }
                 return {
                   $type: 'com.atproto.repo.applyWrites#create',
@@ -94,7 +92,7 @@ export function CreateListFromStarterPackDialog({
 
             const chunks = chunk(listitemWrites, 50)
             for (const c of chunks) {
-              await agent.com.atproto.repo.applyWrites({
+              await pdsClient.call(com.atproto.repo.applyWrites, {
                 repo: currentAccount.did,
                 writes: c,
               })
@@ -103,10 +101,10 @@ export function CreateListFromStarterPackDialog({
             await until(
               5,
               1e3,
-              (res: {data: {items: unknown[]}}) => res.data.items.length > 0,
+              res => !!res?.items.length,
               () =>
-                agent.app.bsky.graph.getList({
-                  list: listUri,
+                appviewClient.call(app.bsky.graph.getList, {
+                  list: listUri as AtUriString,
                   limit: 1,
                 }),
             )
@@ -116,7 +114,7 @@ export function CreateListFromStarterPackDialog({
         })(),
       )
 
-      queryClient.invalidateQueries({queryKey: ['list-members', listUri]})
+      void queryClient.invalidateQueries({queryKey: ['list-members', listUri]})
 
       ax.metric('starterPack:convertToList', {
         starterPack: starterPack.uri,
@@ -124,7 +122,7 @@ export function CreateListFromStarterPackDialog({
       })
     } catch (e) {
       logger.error('Failed to add members to list', {safeMessage: e})
-      Toast.show(_(msg`List created, but failed to add some members`), {
+      Toast.show(l`List created, but failed to add some members`, {
         type: 'error',
       })
     }
@@ -134,7 +132,7 @@ export function CreateListFromStarterPackDialog({
 
   const onListCreated = (listUri: string) => {
     loadingDialogControl.open()
-    addMembersAndNavigate(listUri)
+    void addMembersAndNavigate(listUri)
   }
 
   return (
@@ -145,24 +143,24 @@ export function CreateListFromStarterPackDialog({
         nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
         <Dialog.ScrollableInner
-          label={_(msg`Create list from starter pack`)}
+          label={l`Create list from Starter Pack`}
           style={web({maxWidth: 400})}>
           <View style={[a.gap_lg]}>
             <Text style={[a.text_xl, a.font_bold]}>
-              <Trans>Create list from starter pack</Trans>
+              <Trans>Create list from Starter Pack</Trans>
             </Text>
 
             <Text
               style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
               <Trans>
                 This will create a new list with the same name, description, and
-                members as this starter pack.
+                members as this Starter Pack.
               </Trans>
             </Text>
 
             <Admonition type="tip">
               <Trans>
-                Changes to the starter pack will not be reflected in the list
+                Changes to the Starter Pack will not be reflected in the list
                 after creation. The list will be an independent copy.
               </Trans>
             </Admonition>
@@ -177,7 +175,7 @@ export function CreateListFromStarterPackDialog({
                 a.pt_sm,
               ]}>
               <Button
-                label={_(msg`Create list`)}
+                label={l`Create list`}
                 onPress={onPressCreate}
                 size={platform({
                   web: 'small',
@@ -189,7 +187,7 @@ export function CreateListFromStarterPackDialog({
                 </ButtonText>
               </Button>
               <Button
-                label={_(msg`Cancel`)}
+                label={l`Cancel`}
                 onPress={() => control.close()}
                 size={platform({
                   web: 'small',
@@ -205,7 +203,6 @@ export function CreateListFromStarterPackDialog({
           <Dialog.Close />
         </Dialog.ScrollableInner>
       </Dialog.Outer>
-
       <CreateOrEditListDialog
         control={createDialogControl}
         purpose="app.bsky.graph.defs#curatelist"
@@ -216,13 +213,12 @@ export function CreateListFromStarterPackDialog({
           avatar: starterPack.list?.avatar,
         }}
       />
-
       <Dialog.Outer
         control={loadingDialogControl}
         nativeOptions={{preventDismiss: true}}>
         <Dialog.Handle />
         <Dialog.ScrollableInner
-          label={_(msg`Adding members to list...`)}
+          label={l`Adding members to list...`}
           style={web({maxWidth: 400})}>
           <View style={[a.align_center, a.gap_lg, a.py_5xl]}>
             <Loader size="xl" />

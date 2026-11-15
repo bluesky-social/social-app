@@ -5,6 +5,7 @@ import {default as createShortLink} from './createShortLink.js'
 import {default as health} from './health.js'
 import {default as redirect} from './redirect.js'
 import {default as root} from './root.js'
+import {default as safelinkCheck} from './safelinkCheck.js'
 import {default as shortLink} from './shortLink.js'
 import {default as siteAssociation} from './siteAssociation.js'
 
@@ -15,6 +16,7 @@ export default function (ctx: AppContext, app: Express) {
   app = siteAssociation(ctx, app) // GET /.well-known/apple-app-site-association
   app = redirect(ctx, app) // GET /redirect
   app = createShortLink(ctx, app) // POST /link
+  app = safelinkCheck(ctx, app) // GET /safelink/check
   app = root(ctx, app) // GET / (redirect to bsky.app on root)
   app = shortLink(ctx, app) // GET /:linkId (should go last due to permissive matching)
   return app

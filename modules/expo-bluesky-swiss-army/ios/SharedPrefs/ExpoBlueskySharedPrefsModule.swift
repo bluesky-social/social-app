@@ -21,14 +21,14 @@ public class ExpoBlueskySharedPrefsModule: Module {
       SharedPrefs.shared.setValue(key, value)
     }
 
-    Function("setValue") { (key: String, value: JavaScriptValue) in
-      if value.isNumber() {
-        SharedPrefs.shared.setValue(key, value.getDouble())
-      } else if value.isBool() {
-        SharedPrefs.shared.setValue(key, value.getBool())
-      } else if value.isNull() || value.isUndefined() {
-        SharedPrefs.shared.removeValue(key)
-      }
+    // Since SDK 58, `JavaScriptValue` can't be a `Function` argument, so each
+    // type gets its own setter and JS picks one.
+    Function("setNumber") { (key: String, value: Double) in
+      SharedPrefs.shared.setValue(key, value)
+    }
+
+    Function("setBool") { (key: String, value: Bool) in
+      SharedPrefs.shared.setValue(key, value)
     }
 
     Function("removeValue") { (key: String) in

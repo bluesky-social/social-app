@@ -1,6 +1,6 @@
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {TextInput, View, type ViewToken} from 'react-native'
-import {type ModerationOpts} from '@atproto/api'
+import {type ListViewToken as ViewToken, TextInput, View} from 'react-native'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -139,7 +139,6 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
   const [searchText, setSearchText] = useState(lastSearchText)
   const moderationOpts = useModerationOpts()
   const listRef = useRef<ListMethods>(null)
-  const inputRef = useRef<TextInput>(null)
   const [headerHeight, setHeaderHeight] = useState(0)
   const {currentAccount} = useSession()
 
@@ -249,6 +248,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
               moderationOpts={moderationOpts!}
               noBorder={index === 0}
               position={index}
+              recSource={hasSearchText ? 'Search' : undefined}
               recId={recIdForLogging}
               isGuide={isGuide}
             />
@@ -264,15 +264,11 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
           return null
       }
     },
-    [moderationOpts, recIdForLogging, isGuide],
+    [moderationOpts, hasSearchText, recIdForLogging, isGuide],
   )
 
   // Track seen profiles
   const seenProfilesRef = useRef<Set<string>>(new Set())
-  const itemsRef = useRef(items)
-  itemsRef.current = items
-  const selectedInterestRef = useRef(selectedInterest)
-  selectedInterestRef.current = selectedInterest
 
   const onViewableItemsChanged = useNonReactiveCallback(
     ({viewableItems}: {viewableItems: ViewToken[]}) => {
@@ -281,18 +277,17 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
         if (item.type === 'profile') {
           if (!seenProfilesRef.current.has(item.profile.did)) {
             seenProfilesRef.current.add(item.profile.did)
-            const position = itemsRef.current.findIndex(
+            const position = items.findIndex(
               i => i.type === 'profile' && i.profile.did === item.profile.did,
             )
             ax.metric('suggestedUser:seen', {
               logContext: isGuide ? 'ProgressGuide' : 'SeeMoreSuggestedUsers',
+              recSource: hasSearchText ? 'Search' : undefined,
               recId: recIdForLogging,
               position: position !== -1 ? position : 0,
               suggestedDid: item.profile.did,
               category:
-                selectedInterestRef.current === FOR_YOU_TAB
-                  ? null
-                  : selectedInterestRef.current,
+                selectedInterest === FOR_YOU_TAB ? null : selectedInterest,
             })
           }
         }
@@ -309,7 +304,6 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
   const onSelectTab = useCallback(
     (interest: string) => {
       setSelectedInterest(interest)
-      inputRef.current?.clear()
       setSearchText('')
       listRef.current?.scrollToOffset({
         offset: 0,
@@ -322,7 +316,6 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
   const listHeader = (
     <Header
       guide={guide}
-      inputRef={inputRef}
       listRef={listRef}
       searchText={searchText}
       onSelectTab={onSelectTab}
@@ -361,7 +354,6 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
 
 let Header = ({
   guide,
-  inputRef,
   listRef,
   searchText,
   onSelectTab,
@@ -372,7 +364,6 @@ let Header = ({
   interestsDisplayNames,
 }: {
   guide?: Follow10ProgressGuide
-  inputRef: React.RefObject<TextInput | null>
   listRef: React.RefObject<ListMethods | null>
   onSelectTab: (v: string) => void
   searchText: string
@@ -400,8 +391,7 @@ let Header = ({
 
       <View style={[web(a.pt_xs), a.pb_xs]}>
         <SearchInput
-          inputRef={inputRef}
-          defaultValue={searchText}
+          value={searchText}
           onChangeText={text => {
             setSearchText(text)
             listRef.current?.scrollToOffset({offset: 0, animated: false})
@@ -548,6 +538,7 @@ let FollowProfileCard = ({
   moderationOpts,
   noBorder,
   position,
+  recSource,
   recId,
   isGuide,
 }: {
@@ -555,6 +546,7 @@ let FollowProfileCard = ({
   moderationOpts: ModerationOpts
   noBorder?: boolean
   position: number
+  recSource?: 'Search'
   recId?: string
   isGuide: boolean
 }): React.ReactNode => {
@@ -564,6 +556,7 @@ let FollowProfileCard = ({
       moderationOpts={moderationOpts}
       noBorder={noBorder}
       position={position}
+      recSource={recSource}
       recId={recId}
       isGuide={isGuide}
     />
@@ -577,6 +570,7 @@ function FollowProfileCardInner({
   onFollow,
   noBorder,
   position,
+  recSource,
   recId,
   isGuide,
 }: {
@@ -585,6 +579,7 @@ function FollowProfileCardInner({
   onFollow?: () => void
   noBorder?: boolean
   position: number
+  recSource?: 'Search'
   recId?: string
   isGuide: boolean
 }) {
@@ -625,6 +620,7 @@ function FollowProfileCardInner({
                       ? 'ProgressGuide'
                       : 'SeeMoreSuggestedUsers',
                     location: 'Card',
+                    recSource,
                     recId,
                     position,
                     suggestedDid: profile.did,
@@ -666,13 +662,11 @@ function CardOuter({
 function SearchInput({
   onChangeText,
   onEscape,
-  inputRef,
-  defaultValue,
+  value,
 }: {
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInput | null>
-  defaultValue: string
+  value: string
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -696,9 +690,8 @@ function SearchInput({
         fill={interacted ? t.palette.primary_500 : t.palette.contrast_300}
       />
       <TextInput
-        ref={inputRef}
         placeholder={l`Search by name or interest`}
-        defaultValue={defaultValue}
+        value={value}
         onChangeText={onChangeText}
         onFocus={onFocus}
         onBlur={onBlur}

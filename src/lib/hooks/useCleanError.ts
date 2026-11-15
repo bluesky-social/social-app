@@ -1,6 +1,7 @@
 import {useCallback} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
+
+import {isNetworkError} from '#/lib/network-error'
 
 type CleanedError = {
   raw: string | undefined
@@ -8,9 +9,9 @@ type CleanedError = {
 }
 
 export function useCleanError() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
-  return useCallback<(error?: any) => CleanedError>(
+  return useCallback<(error?: unknown) => CleanedError>(
     error => {
       if (!error)
         return {
@@ -18,14 +19,17 @@ export function useCleanError() {
           clean: undefined,
         }
 
-      let raw = error.toString()
+      let raw =
+        error instanceof Error
+          ? error.message
+          : typeof error === 'string'
+            ? error
+            : JSON.stringify(error)
 
       if (isNetworkError(raw)) {
         return {
           raw,
-          clean: _(
-            msg`Unable to connect. Please check your internet connection and try again.`,
-          ),
+          clean: l`Unable to connect. Please check your internet connection and try again.`,
         }
       }
 
@@ -36,9 +40,7 @@ export function useCleanError() {
       ) {
         return {
           raw,
-          clean: _(
-            msg`The server appears to be experiencing issues. Please try again in a few moments.`,
-          ),
+          clean: l`The server appears to be experiencing issues. Please try again in a few moments.`,
         }
       }
 
@@ -51,27 +53,21 @@ export function useCleanError() {
       ) {
         return {
           raw,
-          clean: _(
-            msg`You cannot update your birthdate while using an app password. Please sign in with your main password to update your birthdate.`,
-          ),
+          clean: l`You cannot update your birthdate while using an app password. Please sign in with your main password to update your birthdate.`,
         }
       }
 
       if (raw.includes('Bad token scope') || raw.includes('Bad token method')) {
         return {
           raw,
-          clean: _(
-            msg`This feature is not available while using an app password. Please sign in with your main password.`,
-          ),
+          clean: l`This feature is not available while using an app password. Please sign in with your main password.`,
         }
       }
 
       if (raw.includes('Rate Limit Exceeded')) {
         return {
           raw,
-          clean: _(
-            msg`You've reached the maximum number of requests allowed. Please try again later.`,
-          ),
+          clean: l`You've reached the maximum number of requests allowed. Please try again later.`,
         }
       }
 
@@ -84,24 +80,6 @@ export function useCleanError() {
         clean: undefined,
       }
     },
-    [_],
+    [l],
   )
-}
-
-const NETWORK_ERRORS = [
-  'Abort',
-  'Network request failed',
-  'Failed to fetch',
-  'Load failed',
-  'Upstream service unreachable',
-]
-
-export function isNetworkError(e: unknown) {
-  const str = String(e)
-  for (const err of NETWORK_ERRORS) {
-    if (str.includes(err)) {
-      return true
-    }
-  }
-  return false
 }

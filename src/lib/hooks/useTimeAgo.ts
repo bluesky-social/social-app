@@ -58,12 +58,12 @@ export function dateDiff(
   if (diffSeconds < NOW) {
     diff = {
       value: 0,
-      unit: 'now' as DateDiff['unit'],
+      unit: 'now',
     }
   } else if (diffSeconds < MINUTE) {
     diff = {
       value: diffSeconds,
-      unit: 'second' as DateDiff['unit'],
+      unit: 'second',
     }
   } else if (diffSeconds < HOUR) {
     const value =
@@ -72,7 +72,7 @@ export function dateDiff(
         : Math.floor(diffSeconds / MINUTE)
     diff = {
       value,
-      unit: 'minute' as DateDiff['unit'],
+      unit: 'minute',
     }
   } else if (diffSeconds < DAY) {
     const value =
@@ -81,7 +81,7 @@ export function dateDiff(
         : Math.floor(diffSeconds / HOUR)
     diff = {
       value,
-      unit: 'hour' as DateDiff['unit'],
+      unit: 'hour',
     }
   } else if (diffSeconds < MONTH_30) {
     const value =
@@ -90,7 +90,7 @@ export function dateDiff(
         : Math.floor(diffSeconds / DAY)
     diff = {
       value,
-      unit: 'day' as DateDiff['unit'],
+      unit: 'day',
     }
   } else {
     const value =
@@ -99,7 +99,7 @@ export function dateDiff(
         : Math.floor(diffSeconds / MONTH_30)
     diff = {
       value,
-      unit: 'month' as DateDiff['unit'],
+      unit: 'month',
     }
   }
 
@@ -188,4 +188,26 @@ export function formatDateDiff({
       return i18n.date(new Date(diff.earlier))
     }
   }
+}
+
+/**
+ * Like `formatDateDiff` of the time since `timestamp`, but reads as a phrase,
+ * e.g. "7m ago".
+ */
+export function formatTimeAgo(i18n: I18n, timestamp: string) {
+  const diff = dateDiff(timestamp, Date.now())
+  const formatted = formatDateDiff({diff, i18n})
+
+  // "now", and dates over a year old, read fine on their own
+  if (diff.unit === 'now' || (diff.unit === 'month' && diff.value >= 12)) {
+    return formatted
+  }
+
+  return i18n._(
+    defineMessage({
+      message: `${formatted} ago`,
+      comment:
+        'How long ago something happened, e.g. "7m ago". The time is already abbreviated and translated.',
+    }),
+  )
 }

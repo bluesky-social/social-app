@@ -1,0 +1,132 @@
+{
+  "id": "com.atproto.admin.defs",
+  "defs": {
+    "repoRef": {
+      "type": "object",
+      "required": [
+        "did"
+      ],
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "did"
+        }
+      }
+    },
+    "statusAttr": {
+      "type": "object",
+      "required": [
+        "applied"
+      ],
+      "properties": {
+        "ref": {
+          "type": "string"
+        },
+        "applied": {
+          "type": "boolean"
+        }
+      }
+    },
+    "accountView": {
+      "type": "object",
+      "required": [
+        "did",
+        "handle",
+        "indexedAt"
+      ],
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "did"
+        },
+        "email": {
+          "type": "string"
+        },
+        "handle": {
+          "type": "string",
+          "format": "handle"
+        },
+        "invites": {
+          "type": "array",
+          "items": {
+            "ref": "com.atproto.server.defs#inviteCode",
+            "type": "ref"
+          }
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "invitedBy": {
+          "ref": "com.atproto.server.defs#inviteCode",
+          "type": "ref"
+        },
+        "inviteNote": {
+          "type": "string"
+        },
+        "deactivatedAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "relatedRecords": {
+          "type": "array",
+          "items": {
+            "type": "unknown"
+          }
+        },
+        "invitesDisabled": {
+          "type": "boolean"
+        },
+        "emailConfirmedAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "threatSignatures": {
+          "type": "array",
+          "items": {
+            "ref": "#threatSignature",
+            "type": "ref"
+          }
+        }
+      }
+    },
+    "repoBlobRef": {
+      "type": "object",
+      "required": [
+        "did",
+        "cid"
+      ],
+      "properties": {
+        "cid": {
+          "type": "string",
+          "format": "cid"
+        },
+        "did": {
+          "type": "string",
+          "format": "did"
+        },
+        "recordUri": {
+          "type": "string",
+          "format": "at-uri"
+        }
+      }
+    },
+    "threatSignature": {
+      "type": "object",
+      "required": [
+        "property",
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "property": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

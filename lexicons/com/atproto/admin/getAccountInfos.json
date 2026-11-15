@@ -1,0 +1,44 @@
+{
+  "id": "com.atproto.admin.getAccountInfos",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "infos"
+          ],
+          "properties": {
+            "infos": {
+              "type": "array",
+              "items": {
+                "ref": "com.atproto.admin.defs#accountView",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "dids"
+        ],
+        "properties": {
+          "dids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "did"
+            }
+          }
+        }
+      },
+      "description": "Get details about some accounts."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

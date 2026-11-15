@@ -1,18 +1,20 @@
-import {type AppBskyFeedDefs} from '@atproto/api'
+import {type app} from '#/lexicons'
 
 export interface FeedAPIResponse {
   cursor?: string
-  feed: AppBskyFeedDefs.FeedViewPost[]
+  feed: app.bsky.feed.defs.FeedViewPost[]
 }
 
 export interface FeedAPI {
-  peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost>
+  peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost>
   fetch({
     cursor,
     limit,
+    signal,
   }: {
     cursor: string | undefined
     limit: number
+    signal?: AbortSignal
   }): Promise<FeedAPIResponse>
 }
 

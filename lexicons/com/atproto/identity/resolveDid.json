@@ -1,0 +1,49 @@
+{
+  "id": "com.atproto.identity.resolveDid",
+  "defs": {
+    "main": {
+      "type": "query",
+      "errors": [
+        {
+          "name": "DidNotFound",
+          "description": "The DID resolution process confirmed that there is no current DID."
+        },
+        {
+          "name": "DidDeactivated",
+          "description": "The DID previously existed, but has been deactivated."
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "didDoc"
+          ],
+          "properties": {
+            "didDoc": {
+              "type": "unknown",
+              "description": "The complete DID document for the identity."
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "did"
+        ],
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "DID to resolve."
+          }
+        }
+      },
+      "description": "Resolves DID to DID document. Does not bi-directionally verify handle."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

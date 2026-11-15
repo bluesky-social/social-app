@@ -1,11 +1,7 @@
 import {useCallback, useEffect, useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  AtUri,
-  RichText as RichTextApi,
-} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {RichText as RichTextApi} from '@bsky/sdk/richtext'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -35,18 +31,26 @@ import {RichText, type RichTextProps} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useActiveLiveEventFeedUris} from '#/features/liveEvents/context'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from './icons/Trash'
 
 type Props = {
-  view: AppBskyFeedDefs.GeneratorView
+  view: app.bsky.feed.defs.GeneratorView
   onPress?: () => void
 }
 
-export function Default(props: Props) {
-  const {view} = props
+export type SavedFeedAction = 'save' | 'unsave' | 'pin' | 'unpin'
+
+export function Default({
+  view,
+  onSavedFeedChange,
+  ...props
+}: Props & {
+  onSavedFeedChange?: (action: SavedFeedAction) => void
+}) {
   return (
-    <Link {...props}>
+    <Link view={view} {...props}>
       <Outer>
         <Header>
           <Avatar src={view.avatar} />
@@ -55,7 +59,7 @@ export function Default(props: Props) {
             creator={view.creator}
             uri={view.uri}
           />
-          <SaveButton view={view} pin />
+          <SaveButton view={view} pin onSavedFeedChange={onSavedFeedChange} />
         </Header>
         <Description description={view.description} />
         <Likes count={view.likeCount || 0} />
@@ -256,26 +260,37 @@ export function Likes({count}: {count: number}) {
 export function SaveButton({
   view,
   pin,
+  onSavedFeedChange,
   ...props
 }: {
-  view: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
+  view: app.bsky.feed.defs.GeneratorView | app.bsky.graph.defs.ListView
   pin?: boolean
   text?: boolean
+  onSavedFeedChange?: (action: SavedFeedAction) => void
 } & Partial<ButtonProps>) {
   const {hasSession} = useSession()
   if (!hasSession) return null
-  return <SaveButtonInner view={view} pin={pin} {...props} />
+  return (
+    <SaveButtonInner
+      view={view}
+      pin={pin}
+      onSavedFeedChange={onSavedFeedChange}
+      {...props}
+    />
+  )
 }
 
 function SaveButtonInner({
   view,
   pin,
   text = true,
+  onSavedFeedChange,
   ...buttonProps
 }: {
-  view: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
+  view: app.bsky.feed.defs.GeneratorView | app.bsky.graph.defs.ListView
   pin?: boolean
   text?: boolean
+  onSavedFeedChange?: (action: SavedFeedAction) => void
 } & Partial<ButtonProps>) {
   const {t: l} = useLingui()
   const {data: preferences} = usePreferencesQuery()
@@ -298,17 +313,21 @@ function SaveButtonInner({
       e.preventDefault()
       e.stopPropagation()
 
+      const pinned = pin || false
+
       try {
         if (savedFeedConfig) {
           await removeFeed(savedFeedConfig)
+          onSavedFeedChange?.(pin ? 'unpin' : 'unsave')
         } else {
           await saveFeeds([
             {
               type,
               value: uri,
-              pinned: pin || false,
+              pinned,
             },
           ])
+          onSavedFeedChange?.(pin ? 'pin' : 'save')
         }
         Toast.show(l({message: 'Feeds updated!', context: 'toast'}))
       } catch (err: any) {
@@ -318,7 +337,16 @@ function SaveButtonInner({
         })
       }
     },
-    [l, pin, saveFeeds, removeFeed, uri, savedFeedConfig, type],
+    [
+      l,
+      pin,
+      saveFeeds,
+      removeFeed,
+      uri,
+      savedFeedConfig,
+      type,
+      onSavedFeedChange,
+    ],
   )
 
   const onPromptRemoveFeed = useCallback(
@@ -383,7 +411,7 @@ function SaveButtonInner({
 export function createProfileFeedHref({
   feed,
 }: {
-  feed: AppBskyFeedDefs.GeneratorView
+  feed: app.bsky.feed.defs.GeneratorView
 }) {
   const urip = new AtUri(feed.uri)
   const handleOrDid = feed.creator.handle || feed.creator.did

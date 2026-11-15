@@ -4,10 +4,11 @@
 
 {% block html_head_extra -%}
   <meta property="og:title" content="Bluesky" />
+  <meta property="og:type" content="website" />
   <meta name="twitter:title" content="Bluesky" />
 
   <meta name="description" content="Social media as it should be. Find your community among millions of users, unleash your creativity, and have some fun again." />
-  <meta name="og:description" content="Social media as it should be. Find your community among millions of users, unleash your creativity, and have some fun again." />
+  <meta property="og:description" content="Social media as it should be. Find your community among millions of users, unleash your creativity, and have some fun again." />
   <meta name="twitter:description" content="Social media as it should be. Find your community among millions of users, unleash your creativity, and have some fun again." />
 
   <meta property="og:url" content="https://bsky.app" />
@@ -21,5 +22,6 @@
 {%- endblock %}
 
 {% block noscript_extra %}
-<p>This is the home page.
+<h1 lang="en">Bluesky</h1>
+<p lang="en">Social media as it should be. Find your community among millions of users, unleash your creativity, and have some fun again.</p>
 {% endblock %}

@@ -1,12 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyGraphGetStarterPacksWithMembership,
-  AppBskyGraphStarterpack,
-} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
@@ -26,17 +20,18 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
-import {StarterPack} from '#/components/icons/StarterPack'
+import {StarterPackMultiPathLarge as StarterPackIcon} from '#/components/icons/StarterPack'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 type StarterPackWithMembership =
-  AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership
+  app.bsky.graph.getStarterPacksWithMembership.StarterPackWithMembership
 
 export type StarterPackDialogProps = {
   control: Dialog.DialogControlProps
@@ -70,7 +65,7 @@ export function StarterPackDialog({
   const wrappedNavToWizard = requireEmailVerification(navToWizard, {
     instructions: [
       <Trans key="nav">
-        Before creating a starter pack, you must first verify your email.
+        Before creating a Starter Pack, you must first verify your email.
       </Trans>,
     ],
   })
@@ -88,29 +83,28 @@ export function StarterPackDialog({
 }
 
 function Empty({onStartWizard}: {onStartWizard: () => void}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   return (
     <View style={[a.gap_2xl, {paddingTop: IS_WEB ? 100 : 64}]}>
       <View style={[a.gap_xs, a.align_center]}>
-        <StarterPack
+        <StarterPackIcon
           width={48}
           fill={t.atoms.border_contrast_medium.borderColor}
         />
         <Text style={[a.text_center]}>
-          <Trans>You have no starter packs.</Trans>
+          <Trans>You have no Starter Packs.</Trans>
         </Text>
       </View>
-
       <View style={[a.align_center]}>
         <Button
-          label={_(msg`Create starter pack`)}
+          label={l`Create Starter Pack`}
           color="secondary_inverted"
           size="small"
           onPress={onStartWizard}>
           <ButtonText>
-            <Trans comment="Text on button to create a new starter pack">
+            <Trans comment="Text on button to create a new Starter Pack">
               Create
             </Trans>
           </ButtonText>
@@ -131,7 +125,7 @@ function StarterPackList({
   enabled?: boolean
 }) {
   const control = Dialog.useDialogContext()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {data: subject} = useProfileQuery({did: targetDid})
 
   const {
@@ -181,10 +175,10 @@ function StarterPackList({
           native(a.pt_lg),
         ]}>
         <Text style={[a.text_lg, a.font_semi_bold]}>
-          <Trans>Add to starter packs</Trans>
+          <Trans>Add to Starter Packs</Trans>
         </Text>
         <Button
-          label={_(msg`Close`)}
+          label={l`Close`}
           onPress={onClose}
           variant="ghost"
           color="secondary"
@@ -199,15 +193,15 @@ function StarterPackList({
           <View
             style={[a.flex_row, a.justify_between, a.align_center, a.py_md]}>
             <Text style={[a.text_md, a.font_semi_bold]}>
-              <Trans>New starter pack</Trans>
+              <Trans>New Starter Pack</Trans>
             </Text>
             <Button
-              label={_(msg`Create starter pack`)}
+              label={l`Create Starter Pack`}
               color="secondary_inverted"
               size="small"
               onPress={onStartWizard}>
               <ButtonText>
-                <Trans comment="Text on button to create a new starter pack">
+                <Trans comment="Text on button to create a new Starter Pack">
                   Create
                 </Trans>
               </ButtonText>
@@ -237,7 +231,7 @@ function StarterPackList({
           ? () => 'starter_pack_dialog_loader'
           : (item: StarterPackWithMembership) => item.starterPack.uri
       }
-      onEndReached={onEndReached}
+      onEndReached={() => void onEndReached()}
       onEndReachedThreshold={0.1}
       ListHeaderComponent={listHeader}
       ListEmptyComponent={<Empty onStartWizard={onStartWizard} />}
@@ -260,7 +254,7 @@ function StarterPackItem({
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const isSelf = subject?.did === currentAccount?.did
 
@@ -271,26 +265,26 @@ function StarterPackItem({
     useListMembershipAddMutation({
       subject,
       onSuccess: () => {
-        Toast.show(_(msg`Added to starter pack`))
+        Toast.show(l`Added to Starter Pack`)
       },
       onError: err => {
         if (!isNetworkError(err)) {
-          logger.error('Failed to add to starter pack', {safeMessage: err})
+          logger.error('Failed to add to Starter Pack', {safeMessage: err})
         }
-        Toast.show(_(msg`Failed to add to starter pack`), {type: 'error'})
+        Toast.show(l`Failed to add to Starter Pack`, {type: 'error'})
       },
     })
 
   const {mutate: removeMembership, isPending: isPendingRemove} =
     useListMembershipRemoveMutation({
       onSuccess: () => {
-        Toast.show(_(msg`Removed from starter pack`))
+        Toast.show(l`Removed from Starter Pack`)
       },
       onError: err => {
         if (!isNetworkError(err)) {
-          logger.error('Failed to remove from starter pack', {safeMessage: err})
+          logger.error('Failed to remove from Starter Pack', {safeMessage: err})
         }
-        Toast.show(_(msg`Failed to remove from starter pack`), {type: 'error'})
+        Toast.show(l`Failed to remove from Starter Pack`, {type: 'error'})
       },
     })
 
@@ -324,12 +318,7 @@ function StarterPackItem({
 
   const {record} = starterPack
 
-  if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      record,
-      AppBskyGraphStarterpack.isRecord,
-    )
-  ) {
+  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
     return null
   }
 
@@ -371,9 +360,8 @@ function StarterPackItem({
             )}
         </View>
       </View>
-
       <Button
-        label={isInPack ? _(msg`Remove`) : _(msg`Add`)}
+        label={isInPack ? l`Remove` : l`Add`}
         color={isInPack ? 'secondary' : 'primary_subtle'}
         size="tiny"
         disabled={isPending || isSelf}

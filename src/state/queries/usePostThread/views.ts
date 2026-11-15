@@ -1,20 +1,15 @@
-import {
-  type $Typed,
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadV2,
-  AtUri,
-  moderatePost,
-  type ModerationOpts,
-} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
+import {AtUri} from '@atproto/syntax'
+import {moderatePost, type ModerationOpts} from '@bsky/sdk/moderation'
 
+import {type ValidFeedPostNumbering} from '#/lib/api/feed-manip'
 import {makeProfileLink} from '#/lib/routes/links'
 import {
   type ApiThreadItem,
   type ThreadItem,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
+import {type app} from '#/lexicons'
 
 export function threadPostNoUnauthenticated({
   uri,
@@ -26,8 +21,8 @@ export function threadPostNoUnauthenticated({
     key: uri,
     uri,
     depth,
-    value: value as AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated,
-    // @ts-ignore populated by the traversal
+    value: value as app.bsky.unspecced.defs.ThreadItemNoUnauthenticated,
+    // @ts-expect-error populated by the traversal
     ui: {},
   }
 }
@@ -42,7 +37,7 @@ export function threadPostNotFound({
     key: uri,
     uri,
     depth,
-    value: value as AppBskyUnspeccedDefs.ThreadItemNotFound,
+    value: value as app.bsky.unspecced.defs.ThreadItemNotFound,
   }
 }
 
@@ -56,7 +51,7 @@ export function threadPostBlocked({
     key: uri,
     uri,
     depth,
-    value: value as AppBskyUnspeccedDefs.ThreadItemBlocked,
+    value: value as app.bsky.unspecced.defs.ThreadItemBlocked,
   }
 }
 
@@ -69,7 +64,7 @@ export function threadPost({
 }: {
   uri: string
   depth: number
-  value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>
+  value: $Typed<app.bsky.unspecced.defs.ThreadItemPost>
   moderationOpts: ModerationOpts
   threadgateHiddenReplies: Set<string>
 }): Extract<ThreadItem, {type: 'threadPost'}> {
@@ -91,13 +86,13 @@ export function threadPost({
        * Do not spread anything here, load bearing for post shadow strict
        * equality reference checks.
        */
-      post: value.post as Omit<AppBskyFeedDefs.PostView, 'record'> & {
-        record: AppBskyFeedPost.Record
+      post: value.post as Omit<app.bsky.feed.defs.PostView, 'record'> & {
+        record: app.bsky.feed.post.Main
       },
     },
     isBlurred,
     moderation,
-    // @ts-ignore populated by the traversal
+    // @ts-expect-error populated by the traversal
     ui: {},
   }
 }
@@ -161,10 +156,11 @@ export function skeleton({
 }
 
 export function postViewToThreadPlaceholder(
-  post: AppBskyFeedDefs.PostView,
+  post: app.bsky.feed.defs.PostView,
+  postNumbering?: ValidFeedPostNumbering,
 ): $Typed<
-  Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
-    value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>
+  Omit<app.bsky.unspecced.getPostThreadV2.ThreadItem, 'value'> & {
+    value: $Typed<app.bsky.unspecced.defs.ThreadItemPost>
   }
 > {
   return {
@@ -174,7 +170,8 @@ export function postViewToThreadPlaceholder(
     value: {
       $type: 'app.bsky.unspecced.defs#threadItemPost',
       post,
-      opThread: false,
+      opThread: !!postNumbering,
+      ...postNumbering,
       moreParents: false,
       moreReplies: 0,
       hiddenByThreadgate: false,

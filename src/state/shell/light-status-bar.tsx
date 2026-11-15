@@ -1,16 +1,18 @@
 import {useEffect} from 'react'
-import {SystemBars} from 'react-native-edge-to-edge'
+import {StatusBar} from 'react-native'
+
+import {IS_NATIVE} from '#/env'
 
 export function useSetLightStatusBar(enabled: boolean) {
   useEffect(() => {
-    if (enabled) {
-      const entry = SystemBars.pushStackEntry({
-        style: {
-          statusBar: 'light',
-        },
+    // react-native-web's StatusBar has no stack API
+    if (enabled && IS_NATIVE) {
+      const entry = StatusBar.pushStackEntry({
+        barStyle: 'light-content',
+        animated: true,
       })
       return () => {
-        SystemBars.popStackEntry(entry)
+        StatusBar.popStackEntry(entry)
       }
     }
   }, [enabled])

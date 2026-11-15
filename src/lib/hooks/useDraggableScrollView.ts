@@ -1,18 +1,18 @@
 import {type ForwardedRef, useEffect, useMemo, useRef} from 'react'
-import {type ScrollView} from 'react-native'
-import {Platform} from 'react-native'
+import {Platform, type ScrollView} from 'react-native'
 
 import {mergeRefs} from '#/lib/merge-refs'
 
-type Props<Scrollable extends ScrollView = ScrollView> = {
+type ScrollViewInstance = React.ComponentRef<typeof ScrollView>
+
+type Props<Scrollable extends ScrollViewInstance = ScrollViewInstance> = {
   cursor?: string
   outerRef?: ForwardedRef<Scrollable>
 }
 
-export function useDraggableScroll<Scrollable extends ScrollView = ScrollView>({
-  outerRef,
-  cursor = 'grab',
-}: Props<Scrollable> = {}) {
+export function useDraggableScroll<
+  Scrollable extends ScrollViewInstance = ScrollViewInstance,
+>({outerRef, cursor = 'grab'}: Props<Scrollable> = {}) {
   const ref = useRef<Scrollable>(null)
 
   useEffect(() => {
@@ -74,8 +74,13 @@ export function useDraggableScroll<Scrollable extends ScrollView = ScrollView>({
     }
   }, [cursor])
 
+  /*
+   * Deferred into the callback so the merge does not happen during the render of
+   * whichever component uses this hook - see SearchInput for the full reasoning.
+   */
   const refs = useMemo(
-    () => mergeRefs(outerRef ? [ref, outerRef] : [ref]),
+    () => (node: Scrollable | null) =>
+      mergeRefs(outerRef ? [ref, outerRef] : [ref])(node),
     [ref, outerRef],
   )
 

@@ -1,10 +1,5 @@
 import {createContext, useContext, useMemo, useState} from 'react'
-import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type AppBskyUnspeccedGetPostThreadV2,
-  type ModerationDecision,
-} from '@atproto/api'
+import {type ModerationDecision} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -17,41 +12,35 @@ import {
   RQKEY_GIF_ROOT,
   RQKEY_LINK_ROOT,
 } from '#/state/queries/resolve-link'
-import {type EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker'
 import * as Toast from '#/components/Toast'
+import {type app} from '#/lexicons'
 
 export interface ComposerOptsPostRef {
   uri: string
   cid: string
   text: string
   langs?: string[]
-  author: AppBskyActorDefs.ProfileViewBasic
-  embed?: AppBskyFeedDefs.PostView['embed']
+  author: app.bsky.actor.defs.ProfileViewBasic
+  embed?: app.bsky.feed.defs.PostView['embed']
   moderation?: ModerationDecision
 }
 
 export type OnPostSuccessData =
   | {
       replyToUri?: string
-      posts: AppBskyUnspeccedGetPostThreadV2.ThreadItem[]
+      posts: app.bsky.unspecced.getPostThreadV2.ThreadItem[]
     }
   | undefined
 
 export type ComposerLogContext =
-  | 'Fab'
-  | 'PostReply'
-  | 'QuotePost'
-  | 'ProfileFeed'
-  | 'Deeplink'
-  | 'Other'
+  'Fab' | 'PostReply' | 'QuotePost' | 'ProfileFeed' | 'Deeplink' | 'Other'
 
 export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
   onPost?: (postUri: string | undefined) => void
   onPostSuccess?: (data: OnPostSuccessData) => void
-  quote?: AppBskyFeedDefs.PostView
+  quote?: app.bsky.feed.defs.PostView
   mention?: string // handle of user to mention
-  openEmojiPicker?: (pos: EmojiPickerPosition | undefined) => void
   text?: string
   imageUris?: {uri: string; width: number; height: number; altText?: string}[]
   videoUri?: {uri: string; width: number; height: number}
@@ -99,9 +88,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     const author = opts.replyTo?.author || opts.quote?.author
     const isBlocked = Boolean(
       author &&
-        (author.viewer?.blocking ||
-          author.viewer?.blockedBy ||
-          author.viewer?.blockingByList),
+      (author.viewer?.blocking ||
+        author.viewer?.blockedBy ||
+        author.viewer?.blockingByList),
     )
     if (isBlocked) {
       Toast.show(_(msg`Cannot interact with a blocked user`), {

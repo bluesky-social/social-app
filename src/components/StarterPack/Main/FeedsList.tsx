@@ -1,6 +1,5 @@
 import {forwardRef, useCallback, useImperativeHandle, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
 
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {List, type ListRef} from '#/view/com/util/List'
@@ -8,13 +7,14 @@ import {type SectionRef} from '#/screens/Profile/Sections/types'
 import {atoms as a, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {type app} from '#/lexicons'
 
-function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
+function keyExtractor(item: app.bsky.feed.defs.GeneratorView) {
   return item.uri
 }
 
 interface ProfilesListProps {
-  feeds: AppBskyFeedDefs.GeneratorView[]
+  feeds: app.bsky.feed.defs.GeneratorView[]
   headerHeight: number
   scrollElRef: ListRef
 }
@@ -39,7 +39,7 @@ export const FeedsList = forwardRef<SectionRef, ProfilesListProps>(
     const renderItem = ({
       item,
       index,
-    }: ListRenderItemInfo<AppBskyFeedDefs.GeneratorView>) => {
+    }: ListRenderItemInfo<app.bsky.feed.defs.GeneratorView>) => {
       return (
         <View
           style={[

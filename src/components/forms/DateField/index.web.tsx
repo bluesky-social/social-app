@@ -36,11 +36,13 @@ export function DateField({
   value,
   inputRef,
   onChangeDate,
+  onConfirm,
   label,
   isInvalid,
   testID,
   accessibilityHint,
   maximumDate,
+  minimumDate,
 }: DateFieldProps) {
   const handleOnChange = useCallback(
     (e: any) => {
@@ -49,23 +51,25 @@ export function DateField({
       if (date) {
         const formatted = toSimpleDateString(date)
         onChangeDate(formatted)
+        onConfirm?.(formatted)
       }
     },
-    [onChangeDate],
+    [onChangeDate, onConfirm],
   )
 
   return (
     <TextField.Root isInvalid={isInvalid}>
       <TextField.Icon icon={CalendarDays} />
       <Input
-        value={toSimpleDateString(value)}
-        inputRef={inputRef as React.Ref<TextInput>}
+        value={value === '' ? '' : toSimpleDateString(value)}
+        inputRef={inputRef as React.Ref<React.ComponentRef<typeof TextInput>>}
         label={label}
         onChange={handleOnChange}
         testID={testID}
         accessibilityHint={accessibilityHint}
         // @ts-expect-error not typed as <input type="date"> even though it is one
         max={maximumDate ? toSimpleDateString(maximumDate) : undefined}
+        min={minimumDate ? toSimpleDateString(minimumDate) : undefined}
       />
     </TextField.Root>
   )

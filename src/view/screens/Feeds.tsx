@@ -1,21 +1,19 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useFocusEffect} from '@react-navigation/native'
 import debounce from 'lodash.debounce'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {ComposeIcon2} from '#/lib/icons'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
+import {getLocalizedFeedName} from '#/lib/strings/feed-names'
 import {s} from '#/lib/styles'
 import {
   type SavedFeedItem,
@@ -24,11 +22,9 @@ import {
   useSearchPopularFeedsMutation,
 } from '#/state/queries/feed'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {List, type ListMethods} from '#/view/com/util/List'
-import {FeedFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
@@ -36,9 +32,11 @@ import {atoms as a, useTheme} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import * as FeedCard from '#/components/FeedCard'
+import {FeedCardListSkeleton} from '#/components/FeedCardSkeleton'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {IconCircle} from '#/components/IconCircle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
@@ -47,6 +45,7 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import * as ListCard from '#/components/ListCard'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {type app} from '#/lexicons'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
 
@@ -93,7 +92,7 @@ type FlatlistSlice =
       type: 'popularFeed'
       key: string
       feedUri: string
-      feed: AppBskyFeedDefs.GeneratorView
+      feed: app.bsky.feed.defs.GeneratorView
     }
   | {
       type: 'popularFeedsLoadingMore'
@@ -106,6 +105,7 @@ type FlatlistSlice =
 
 export function FeedsScreen(_props: Props) {
   const pal = usePalette('default')
+  const t = useTheme()
   const {openComposer} = useOpenComposer()
   const {isMobile} = useWebMediaQueries()
   const [query, setQuery] = useState('')
@@ -126,7 +126,6 @@ export function FeedsScreen(_props: Props) {
     hasNextPage: hasNextPopularFeedsPage,
   } = useGetPopularFeedsQuery()
   const {_} = useLingui()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {
     data: searchResults,
     mutate: search,
@@ -192,12 +191,6 @@ export function FeedsScreen(_props: Props) {
     hasNextPopularFeedsPage,
     fetchNextPopularFeedsPage,
   ])
-
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
 
   const items = useMemo(() => {
     let slices: FlatlistSlice[] = []
@@ -454,7 +447,7 @@ export function FeedsScreen(_props: Props) {
           </>
         )
       } else if (item.type === 'popularFeedsLoading') {
-        return <FeedFeedLoadingPlaceholder />
+        return <FeedCardListSkeleton />
       } else if (item.type === 'popularFeed') {
         return (
           <View style={[a.px_lg, a.pt_lg, a.gap_lg]}>
@@ -526,29 +519,29 @@ export function FeedsScreen(_props: Props) {
             </Link>
           </Layout.Header.Slot>
         </Layout.Header.Outer>
-
-        <List
-          ref={listRef}
-          data={items}
-          keyExtractor={item => item.key}
-          contentContainerStyle={styles.contentContainer}
-          renderItem={renderItem}
-          refreshing={isPTR}
-          onRefresh={isUserSearching ? undefined : onPullToRefresh}
-          initialNumToRender={10}
-          onEndReached={onEndReached}
-          desktopFixedHeight
-          keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag"
-          sideBorders={false}
-        />
       </Layout.Center>
+
+      <List
+        ref={listRef}
+        data={items}
+        keyExtractor={item => item.key}
+        contentContainerStyle={styles.contentContainer}
+        renderItem={renderItem}
+        refreshing={isPTR}
+        onRefresh={isUserSearching ? undefined : onPullToRefresh}
+        initialNumToRender={10}
+        onEndReached={onEndReached}
+        desktopFixedHeight
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        sideBorders={false}
+      />
 
       {hasSession && (
         <FAB
           testID="composeFAB"
           onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          icon={<EditBigIcon size="lg" fill={t.palette.white} />}
           accessibilityRole="button"
           accessibilityLabel={_(msg`New post`)}
           accessibilityHint=""
@@ -614,6 +607,7 @@ function SavedFeed({
   savedFeed: SavedFeedItem & {type: 'feed' | 'list'}
 }) {
   const t = useTheme()
+  const {i18n} = useLingui()
 
   const commonStyle = [
     a.w_full,
@@ -633,7 +627,9 @@ function SavedFeed({
           style={[commonStyle, (hovered || pressed) && t.atoms.bg_contrast_25]}>
           <FeedCard.Header>
             <FeedCard.Avatar src={savedFeed.view.avatar} size={28} />
-            <FeedCard.TitleAndByline title={savedFeed.view.displayName} />
+            <FeedCard.TitleAndByline
+              title={getLocalizedFeedName(savedFeed.view, i18n)}
+            />
 
             <ChevronRight size="sm" fill={t.atoms.text_contrast_low.color} />
           </FeedCard.Header>

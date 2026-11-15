@@ -1,0 +1,49 @@
+{
+  "id": "com.atproto.admin.searchAccounts",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "accounts"
+          ],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "accounts": {
+              "type": "array",
+              "items": {
+                "ref": "com.atproto.admin.defs#accountView",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Get list of accounts that matches your search query."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

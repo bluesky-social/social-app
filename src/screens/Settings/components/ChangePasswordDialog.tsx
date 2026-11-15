@@ -1,27 +1,29 @@
 import {useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {checkAndFormatResetCode} from '#/lib/strings/password'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
-import {useAgent, useSession} from '#/state/session'
+import {usePdsClient, useSession, useSessionApi} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {android, atoms as a, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {TokenField} from '#/components/dialogs/EmailDialog/components/TokenField'
+import {PasswordField} from '#/components/forms/PasswordField'
 import * as TextField from '#/components/forms/TextField'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {com} from '#/lexicons'
 
 enum Stages {
   RequestCode = 'RequestCode',
   ChangePassword = 'ChangePassword',
-  Done = 'Done',
 }
 
 export function ChangePasswordDialog({
@@ -30,47 +32,45 @@ export function ChangePasswordDialog({
   control: Dialog.DialogControlProps
 }) {
   const {height} = useWindowDimensions()
+  const [isProcessing, setIsProcessing] = useState(false)
 
   return (
     <Dialog.Outer
       control={control}
+      preventDismiss={isProcessing}
       nativeOptions={android({minHeight: height / 2})}>
       <Dialog.Handle />
-      <Inner />
+      <Inner isProcessing={isProcessing} setIsProcessing={setIsProcessing} />
     </Dialog.Outer>
   )
 }
 
-function Inner() {
-  const {_} = useLingui()
+function Inner({
+  isProcessing,
+  setIsProcessing,
+}: {
+  isProcessing: boolean
+  setIsProcessing: (isProcessing: boolean) => void
+}) {
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const client = usePdsClient()
+  const {logoutCurrentAccount} = useSessionApi()
   const control = Dialog.useDialogContext()
 
   const [stage, setStage] = useState(Stages.RequestCode)
-  const [isProcessing, setIsProcessing] = useState(false)
   const [resetCode, setResetCode] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [error, setError] = useState('')
 
   const uiStrings = {
     RequestCode: {
-      title: _(msg`Change your password`),
-      message: _(
-        msg`If you want to change your password, we will send you a code to verify that this is your account.`,
-      ),
+      title: l`Change your password`,
+      message: l`If you want to change your password, we will send you a code to verify that this is your account.`,
     },
     ChangePassword: {
-      title: _(msg`Enter code`),
-      message: _(
-        msg`Please enter the code you received and the new password you would like to use.`,
-      ),
-    },
-    Done: {
-      title: _(msg`Password changed`),
-      message: _(
-        msg`Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on.`,
-      ),
+      title: l`Enter code`,
+      message: l`Please enter the code you received and the new password you would like to use.`,
     },
   }
 
@@ -79,90 +79,93 @@ function Inner() {
       !currentAccount?.email ||
       !EmailValidator.validate(currentAccount.email)
     ) {
-      return setError(_(msg`Your email appears to be invalid.`))
+      return setError(l`Your email appears to be invalid.`)
     }
 
     setError('')
     setIsProcessing(true)
     try {
-      await agent.com.atproto.server.requestPasswordReset({
+      await client.call(com.atproto.server.requestPasswordReset, {
         email: currentAccount.email,
       })
       setStage(Stages.ChangePassword)
-    } catch (e: any) {
+    } catch (error) {
+      const e = error as Error
       if (isNetworkError(e)) {
         setError(
-          _(
-            msg`Unable to contact your service. Please check your internet connection and try again.`,
-          ),
+          l`Unable to contact your service. Please check your internet connection and try again.`,
         )
       } else {
         logger.error('Failed to request password reset', {safeMessage: e})
         setError(cleanError(e))
       }
-    } finally {
-      setIsProcessing(false)
     }
+    setIsProcessing(false)
   }
 
   const onChangePassword = async () => {
     const formattedCode = checkAndFormatResetCode(resetCode)
     if (!formattedCode) {
       setError(
-        _(
-          msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
-        ),
+        l`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
       )
       return
     }
     if (!newPassword) {
       setError(
-        _(msg`Please enter a password. It must be at least 8 characters long.`),
+        l`Please enter a password. It must be at least 8 characters long.`,
       )
       return
     }
     if (newPassword.length < 8) {
-      setError(_(msg`Password must be at least 8 characters long.`))
+      setError(l`Password must be at least 8 characters long.`)
       return
     }
 
     setError('')
     setIsProcessing(true)
     try {
-      await agent.com.atproto.server.resetPassword({
+      await client.call(com.atproto.server.resetPassword, {
         token: formattedCode,
         password: newPassword,
       })
-      setStage(Stages.Done)
-    } catch (e: any) {
+      setResetCode('')
+      setNewPassword('')
+      /*
+       * Resetting the password revokes every refresh token for this account,
+       * so the current session can no longer be refreshed. Sign out and ask
+       * the user to sign in again with the new password. Keep processing
+       * until the dialog has closed to prevent a second submission.
+       */
+      control.close(() => {
+        logoutCurrentAccount('Settings')
+        Toast.show(
+          l`Password successfully reset. Please sign in with your new password.`,
+          {type: 'success'},
+        )
+      })
+      return
+    } catch (error) {
+      const e = error as Error
       if (isNetworkError(e)) {
         setError(
-          _(
-            msg`Unable to contact your service. Please check your internet connection and try again.`,
-          ),
+          l`Unable to contact your service. Please check your internet connection and try again.`,
         )
-      } else if (e?.toString().includes('Token is invalid')) {
-        setError(_(msg`This confirmation code is not valid. Please try again.`))
+      } else if (
+        matchXrpcError(e, com.atproto.server.resetPassword) === 'InvalidToken'
+      ) {
+        setError(l`This confirmation code is not valid. Please try again.`)
       } else {
         logger.error('Failed to set new password', {safeMessage: e})
         setError(cleanError(e))
       }
-    } finally {
-      setIsProcessing(false)
     }
-  }
-
-  const onBlur = () => {
-    const formattedCode = checkAndFormatResetCode(resetCode)
-    if (!formattedCode) {
-      return
-    }
-    setResetCode(formattedCode)
+    setIsProcessing(false)
   }
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Change password dialog`)}
+      label={l`Change password dialog`}
       style={web({maxWidth: 400})}>
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
@@ -178,6 +181,12 @@ function Inner() {
           <Text style={[a.text_md, a.leading_snug]}>
             {uiStrings[stage].message}
           </Text>
+          <Text style={[a.text_md, a.leading_snug, a.font_semi_bold]}>
+            <Trans>
+              Changing your password will sign you out. You’ll need to sign in
+              again with your new password.
+            </Trans>
+          </Text>
         </View>
 
         {stage === Stages.ChangePassword && (
@@ -186,35 +195,20 @@ function Inner() {
               <TextField.LabelText>
                 <Trans>Confirmation code</Trans>
               </TextField.LabelText>
-              <TextField.Root>
-                <TextField.Input
-                  label={_(msg`Confirmation code`)}
-                  placeholder="XXXXX-XXXXX"
-                  value={resetCode}
-                  onChangeText={setResetCode}
-                  onBlur={onBlur}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  autoComplete="one-time-code"
-                />
-              </TextField.Root>
+              <TokenField value={resetCode} onChangeText={setResetCode} />
             </View>
             <View>
               <TextField.LabelText>
                 <Trans>New password</Trans>
               </TextField.LabelText>
-              <TextField.Root>
-                <TextField.Input
-                  label={_(msg`New password`)}
-                  placeholder={_(msg`At least 8 characters`)}
-                  value={newPassword}
-                  onChangeText={setNewPassword}
-                  secureTextEntry
-                  autoCapitalize="none"
-                  autoComplete="new-password"
-                  passwordRules="minlength: 8;"
-                />
-              </TextField.Root>
+              <PasswordField
+                label={l`New password`}
+                placeholder={l`At least 8 characters`}
+                value={newPassword}
+                onChangeText={setNewPassword}
+                autoComplete="new-password"
+                passwordRules="minlength: 8;"
+              />
             </View>
           </View>
         )}
@@ -223,18 +217,18 @@ function Inner() {
           {stage === Stages.RequestCode ? (
             <>
               <Button
-                label={_(msg`Request code`)}
+                label={l`Request code`}
                 color="primary"
                 size="large"
                 disabled={isProcessing}
-                onPress={onRequestCode}>
+                onPress={() => void onRequestCode()}>
                 <ButtonText>
                   <Trans>Request code</Trans>
                 </ButtonText>
                 {isProcessing && <ButtonIcon icon={Loader} />}
               </Button>
               <Button
-                label={_(msg`Already have a code?`)}
+                label={l`Already have a code?`}
                 onPress={() => setStage(Stages.ChangePassword)}
                 size="large"
                 color="primary_subtle"
@@ -245,7 +239,7 @@ function Inner() {
               </Button>
               {IS_NATIVE && (
                 <Button
-                  label={_(msg`Cancel`)}
+                  label={l`Cancel`}
                   color="secondary"
                   size="large"
                   disabled={isProcessing}
@@ -256,21 +250,21 @@ function Inner() {
                 </Button>
               )}
             </>
-          ) : stage === Stages.ChangePassword ? (
+          ) : (
             <>
               <Button
-                label={_(msg`Change password`)}
+                label={l`Change password`}
                 color="primary"
                 size="large"
                 disabled={isProcessing}
-                onPress={onChangePassword}>
+                onPress={() => void onChangePassword()}>
                 <ButtonText>
                   <Trans>Change password</Trans>
                 </ButtonText>
                 {isProcessing && <ButtonIcon icon={Loader} />}
               </Button>
               <Button
-                label={_(msg`Back`)}
+                label={l`Back`}
                 color="secondary"
                 size="large"
                 disabled={isProcessing}
@@ -283,17 +277,7 @@ function Inner() {
                 </ButtonText>
               </Button>
             </>
-          ) : stage === Stages.Done ? (
-            <Button
-              label={_(msg`Close`)}
-              color="primary"
-              size="large"
-              onPress={() => control.close()}>
-              <ButtonText>
-                <Trans>Close</Trans>
-              </ButtonText>
-            </Button>
-          ) : null}
+          )}
         </View>
       </View>
       <Dialog.Close />

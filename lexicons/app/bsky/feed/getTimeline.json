@@ -1,0 +1,58 @@
+{
+  "id": "app.bsky.feed.getTimeline",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "feed"
+          ],
+          "properties": {
+            "feed": {
+              "type": "array",
+              "items": {
+                "ref": "app.bsky.feed.defs#feedViewPost",
+                "type": "ref"
+              }
+            },
+            "cursor": {
+              "type": "string"
+            },
+            "startCursor": {
+              "type": "string",
+              "description": "Cursor identifying the newest item in this page. Pass it as since on a later request to fetch only newer content."
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "since": {
+            "type": "string",
+            "description": "Return only items newer than the position identified by this cursor value, newest first. Use the startCursor from a previous response. The item at that position is not returned because the caller already holds it. When the bounded range is exhausted, the returned cursor equals this value so that pagination continues below the boundary."
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "algorithm": {
+            "type": "string",
+            "description": "Variant 'algorithm' for timeline. Implementation-specific. NOTE: most feed flexibility has been moved to feed generator mechanism."
+          }
+        }
+      },
+      "description": "Get a view of the requesting account's home timeline. This is expected to be some form of reverse-chronological feed."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

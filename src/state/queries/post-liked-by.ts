@@ -1,4 +1,4 @@
-import {type AppBskyActorDefs, type AppBskyFeedGetLikes} from '@atproto/api'
+import {type AtUriString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -6,7 +6,8 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -16,22 +17,22 @@ const RQKEY_ROOT = 'liked-by'
 export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 
 export function useLikedByQuery(resolvedUri: string | undefined) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useInfiniteQuery<
-    AppBskyFeedGetLikes.OutputSchema,
+    app.bsky.feed.getLikes.$OutputBody,
     Error,
-    InfiniteData<AppBskyFeedGetLikes.OutputSchema>,
+    InfiniteData<app.bsky.feed.getLikes.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(resolvedUri || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.getLikes({
-        uri: resolvedUri || '',
+      return await client.call(app.bsky.feed.getLikes, {
+        // the enabled flag prevents this from running until resolvedUri is set
+        uri: (resolvedUri || '') as AtUriString,
         limit: PAGE_SIZE,
         cursor: pageParam,
       })
-      return res.data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
@@ -42,9 +43,9 @@ export function useLikedByQuery(resolvedUri: string | undefined) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<app.bsky.actor.defs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyFeedGetLikes.OutputSchema>
+    InfiniteData<app.bsky.feed.getLikes.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })

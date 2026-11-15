@@ -1,0 +1,43 @@
+{
+  "id": "com.atproto.server.updateEmail",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "email"
+          ],
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "token": {
+              "type": "string",
+              "description": "Requires a token from com.atproto.sever.requestEmailUpdate if the account's email has been confirmed."
+            },
+            "emailAuthFactor": {
+              "type": "boolean"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "errors": [
+        {
+          "name": "ExpiredToken"
+        },
+        {
+          "name": "InvalidToken"
+        },
+        {
+          "name": "TokenRequired"
+        }
+      ],
+      "description": "Update an account's email."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

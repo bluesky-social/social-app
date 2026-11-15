@@ -1,10 +1,7 @@
 import {Platform, View} from 'react-native'
 import {Image} from 'expo-image'
-import {
-  type AppBskyActorDefs,
-  type AppBskyActorGetProfile,
-  type AtpAgent,
-} from '@atproto/api'
+import {type Client} from '@atproto/lex'
+import {type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -13,7 +10,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {until} from '#/lib/async/until'
 import {isNetworkError} from '#/lib/strings/errors'
 import {RQKEY} from '#/state/queries/profile'
-import {useAgent, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -24,13 +21,20 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {
+  PILL_LEFT,
+  PILL_RIGHT_ARROW,
+  PILL_RIGHT_TEXT,
+  PILL_VERTICAL,
+} from '#/features/profileLinks/pillSize'
+import {app, com} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export function GermButton({
   germ,
   profile,
 }: {
-  germ: AppBskyActorDefs.ProfileAssociatedGerm
+  germ: app.bsky.actor.defs.ProfileAssociatedGerm
   profile: bsky.profile.AnyProfileView
 }) {
   const t = useTheme()
@@ -39,10 +43,7 @@ export function GermButton({
   const {currentAccount} = useSession()
   const linkWarningControl = Dialog.useDialogControl()
 
-  // exclude `none` and all unknown values
-  if (
-    !(germ.showButtonTo === 'everyone' || germ.showButtonTo === 'usersIFollow')
-  ) {
+  if (!isGermButtonVisible(germ)) {
     return null
   }
 
@@ -75,17 +76,21 @@ export function GermButton({
         label={_(msg`Open Germ DM`)}
         overridePresentation={false}
         shouldProxy={false}
-        style={[
-          t.atoms.bg_contrast_50,
-          a.rounded_full,
-          a.self_start,
-          {padding: 6},
-        ]}>
+        size="small"
+        color="secondary"
+        style={{
+          paddingVertical: PILL_VERTICAL,
+          paddingLeft: PILL_LEFT,
+          paddingRight: PILL_RIGHT_ARROW,
+        }}>
         <GermLogo size="small" />
-        <Text style={[a.text_sm, a.font_medium, a.ml_xs]}>
+        <ButtonText style={t.atoms.text}>
           <Trans>Germ DM</Trans>
-        </Text>
-        <ArrowTopRightIcon style={[t.atoms.text, a.mx_2xs]} width={14} />
+        </ButtonText>
+        <ArrowTopRightIcon
+          style={[t.atoms.text, {marginLeft: -4}]}
+          width={12}
+        />
       </Link>
       <CustomLinkWarningDialog
         control={linkWarningControl}
@@ -102,9 +107,10 @@ export function GermButton({
 function GermLogo({size}: {size: 'small' | 'large'}) {
   return (
     <Image
-      source={require('../../../../assets/images/germ_logo.webp')}
+      source={require('../../../../assets/icons/community/germ_logo.webp')}
       accessibilityIgnoresInvertColors={false}
       contentFit="cover"
+      useAppleWebpCodec
       style={[
         a.rounded_full,
         size === 'large' ? {width: 32, height: 32} : {width: 16, height: 16},
@@ -113,30 +119,63 @@ function GermLogo({size}: {size: 'small' | 'large'}) {
   )
 }
 
+/**
+ * Whether a Germ declaration produces a button at all. Excludes `none` and
+ * any unknown values.
+ */
+export function isGermButtonVisible(
+  germ: app.bsky.actor.defs.ProfileAssociatedGerm | undefined,
+): germ is app.bsky.actor.defs.ProfileAssociatedGerm {
+  return (
+    !!germ &&
+    (germ.showButtonTo === 'everyone' || germ.showButtonTo === 'usersIFollow')
+  )
+}
+
+/** Whether `GermButton` renders anything for this viewer. */
+export function isGermButtonShown(
+  germ: app.bsky.actor.defs.ProfileAssociatedGerm | undefined,
+  profile: bsky.profile.AnyProfileView,
+  viewerDid: string | undefined,
+): germ is app.bsky.actor.defs.ProfileAssociatedGerm {
+  if (!isGermButtonVisible(germ)) return false
+  if (viewerDid === profile.did) return true
+  if (germ.showButtonTo === 'usersIFollow' && !profile.viewer?.followedBy) {
+    return false
+  }
+  return !!constructGermUrl(germ, profile, viewerDid)
+}
+
 function GermSelfButton({did}: {did: string}) {
   const t = useTheme()
   const ax = useAnalytics()
   const {_} = useLingui()
   const selfExplanationDialogControl = Dialog.useDialogControl()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
 
   const {mutate: deleteDeclaration, isPending} = useMutation({
     mutationFn: async () => {
-      const previousRecord = await agent.com.germnetwork.declaration
-        .get({
-          repo: did,
+      const previousRecord = await pdsClient
+        // the component takes the did as a plain string prop
+        .get(com.germnetwork.declaration, {
+          repo: did as DidString,
           rkey: 'self',
         })
         .then(res => res.value)
         .catch(() => null)
 
-      await agent.com.germnetwork.declaration.delete({
-        repo: did,
+      await pdsClient.delete(com.germnetwork.declaration, {
+        repo: did as DidString,
         rkey: 'self',
       })
 
-      await whenAppViewReady(agent, did, res => !res.data.associated?.germ)
+      await whenAppViewReady(
+        appviewClient,
+        did,
+        res => !!res && !res.associated?.germ,
+      )
 
       return previousRecord
     },
@@ -146,14 +185,15 @@ function GermSelfButton({did}: {did: string}) {
       async function undo() {
         if (!previousRecord) return
         try {
-          await agent.com.germnetwork.declaration.put(
-            {
-              repo: did,
-              rkey: 'self',
-            },
-            previousRecord,
+          await pdsClient.put(com.germnetwork.declaration, previousRecord, {
+            repo: did as DidString,
+            rkey: 'self',
+          })
+          await whenAppViewReady(
+            appviewClient,
+            did,
+            res => !!res?.associated?.germ,
           )
-          await whenAppViewReady(agent, did, res => !!res.data.associated?.germ)
           await queryClient.refetchQueries({queryKey: RQKEY(did)})
 
           Toast.show(_(msg`Germ DM reconnected`))
@@ -213,16 +253,17 @@ function GermSelfButton({did}: {did: string}) {
           ax.metric('profile:associated:germ:click-self-info', {})
           selfExplanationDialogControl.open()
         }}
-        style={[
-          t.atoms.bg_contrast_50,
-          a.rounded_full,
-          a.self_start,
-          {padding: 6, paddingRight: 10},
-        ]}>
+        size="small"
+        color="secondary"
+        style={{
+          paddingVertical: PILL_VERTICAL,
+          paddingLeft: PILL_LEFT,
+          paddingRight: PILL_RIGHT_TEXT,
+        }}>
         <GermLogo size="small" />
-        <Text style={[a.text_sm, a.font_medium, a.ml_xs]}>
+        <ButtonText style={t.atoms.text}>
           <Trans>Germ DM</Trans>
-        </Text>
+        </ButtonText>
       </Button>
 
       <Dialog.Outer
@@ -276,7 +317,7 @@ function GermSelfButton({did}: {did: string}) {
 }
 
 function constructGermUrl(
-  declaration: AppBskyActorDefs.ProfileAssociatedGerm,
+  declaration: app.bsky.actor.defs.ProfileAssociatedGerm,
   profile: bsky.profile.AnyProfileView,
   viewerDid?: string,
 ) {
@@ -322,14 +363,20 @@ function platform() {
 }
 
 async function whenAppViewReady(
-  agent: AtpAgent,
+  appviewClient: Client,
   actor: string,
-  fn: (res: AppBskyActorGetProfile.Response) => boolean,
+  fn: (
+    res: app.bsky.actor.getProfile.$OutputBody | undefined,
+    err: unknown,
+  ) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
-    () => agent.app.bsky.actor.getProfile({actor}),
+    () =>
+      appviewClient.call(app.bsky.actor.getProfile, {
+        actor: actor as DidString,
+      }),
   )
 }

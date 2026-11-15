@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
-import {type AppBskyActorDefs, type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {Trans} from '@lingui/react/macro'
 
 import {useA11y} from '#/state/a11y'
@@ -18,14 +18,16 @@ import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 
-function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
+function keyExtractor(item: bsky.profile.AnyProfileView) {
   return item?.did ?? ''
 }
 
 export function StepProfiles({
   moderationOpts,
+  optedOutDids,
 }: {
   moderationOpts: ModerationOpts
+  optedOutDids: Set<string>
 }) {
   const t = useTheme()
   const [state, dispatch] = useWizardState()
@@ -59,6 +61,7 @@ export function StepProfiles({
         state={state}
         dispatch={dispatch}
         moderationOpts={moderationOpts}
+        subjectOptedOut={optedOutDids.has(item.did)}
       />
     )
   }
@@ -87,7 +90,9 @@ export function StepProfiles({
         sideBorders={false}
         style={[a.flex_1]}
         onEndReached={
-          !query && !screenReaderEnabled ? () => fetchNextPage() : undefined
+          !query && !screenReaderEnabled
+            ? () => void fetchNextPage()
+            : undefined
         }
         onEndReachedThreshold={IS_NATIVE ? 2 : 0.25}
         keyboardDismissMode="on-drag"
@@ -104,7 +109,11 @@ export function StepProfiles({
                   a.mt_lg,
                   a.leading_snug,
                 ]}>
-                <Trans>Nobody was found. Try searching for someone else.</Trans>
+                {query ? (
+                  <Trans>
+                    Nobody was found. Try searching for someone else.
+                  </Trans>
+                ) : null}
               </Text>
             )}
           </View>

@@ -1,11 +1,13 @@
-import {type AppBskyFeedGetFeed} from '@atproto/api'
+import {toDatetimeString} from '@atproto/syntax'
 import {subDays, subMinutes} from 'date-fns'
+
+import {type app} from '#/lexicons'
 
 const DID = `did:plc:z72i7hdynmk6r22z27h6tvur`
 const NOW = new Date()
-const POST_1_DATE = subMinutes(NOW, 2).toISOString()
-const POST_2_DATE = subMinutes(NOW, 4).toISOString()
-const POST_3_DATE = subMinutes(NOW, 5).toISOString()
+const POST_1_DATE = toDatetimeString(subMinutes(NOW, 2))
+const POST_2_DATE = toDatetimeString(subMinutes(NOW, 4))
+const POST_3_DATE = toDatetimeString(subMinutes(NOW, 5))
 
 export const DEMO_FEED = {
   feed: [
@@ -31,7 +33,7 @@ export const DEMO_FEED = {
                 issuer: DID,
                 uri: `at://${DID}/app.bsky.graph.verification/post1`,
                 isValid: true,
-                createdAt: subDays(NOW, 11).toISOString(),
+                createdAt: toDatetimeString(subDays(NOW, 11)),
               },
             ],
             verifiedStatus: 'valid',
@@ -197,6 +199,6 @@ export const DEMO_FEED = {
       },
     },
   ],
-} satisfies AppBskyFeedGetFeed.OutputSchema
+} satisfies app.bsky.feed.getFeed.$OutputBody
 
 export const BOTTOM_BAR_AVI = 'https://bsky.social/about/adi/user_avi.jpg'

@@ -1,27 +1,19 @@
-import {useCallback, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
-import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
+import * as DismissableLayer from '@radix-ui/react-dismissable-layer'
+import * as FocusGuards from '@radix-ui/react-focus-guards'
+import * as FocusScope from '@radix-ui/react-focus-scope'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useA11y} from '#/state/a11y'
-import {useModals} from '#/state/modals'
 import {type ComposerOpts, useComposerState} from '#/state/shell/composer'
-import {
-  EmojiPicker,
-  type EmojiPickerPosition,
-  type EmojiPickerState,
-} from '#/view/com/composer/text-input/web/EmojiPicker'
+import {ComposePost, useComposerCancelRef} from '#/view/com/composer/Composer'
 import {atoms as a, flatten, useBreakpoints, useTheme} from '#/alf'
-import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
 
 const BOTTOM_BAR_HEIGHT = 61
 
-export function Composer({}: {winHeight: number}) {
+export function Composer() {
   const state = useComposerState()
   const isActive = !!state
-
-  // rendering
-  // =
 
   if (!isActive) {
     return null
@@ -37,29 +29,9 @@ export function Composer({}: {winHeight: number}) {
 
 function Inner({state}: {state: ComposerOpts}) {
   const ref = useComposerCancelRef()
-  const {isModalActive} = useModals()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {reduceMotionEnabled} = useA11y()
-  const [pickerState, setPickerState] = useState<EmojiPickerState>({
-    isOpen: false,
-    pos: {top: 0, left: 0, right: 0, bottom: 0, nextFocusRef: null},
-  })
-
-  const onOpenPicker = useCallback((pos: EmojiPickerPosition | undefined) => {
-    if (!pos) return
-    setPickerState({
-      isOpen: true,
-      pos,
-    })
-  }, [])
-
-  const onClosePicker = useCallback(() => {
-    setPickerState(prev => ({
-      ...prev,
-      isOpen: false,
-    }))
-  }, [])
 
   FocusGuards.useFocusGuards()
 
@@ -79,15 +51,9 @@ function Inner({state}: {state: ComposerOpts}) {
         ])}
         onFocusOutside={evt => evt.preventDefault()}
         onInteractOutside={evt => evt.preventDefault()}
-        onDismiss={() => {
-          // TEMP: remove when all modals are ALF'd -sfn
-          if (!isModalActive) {
-            ref.current?.onPressCancel()
-          }
-        }}
+        onDismiss={() => ref.current?.onPressCancel()}
         onPointerDown={evt => {
-          // Dismiss when clicking the backdrop (not the inner composer)
-          if (evt.target === evt.currentTarget && !isModalActive) {
+          if (evt.target === evt.currentTarget) {
             ref.current?.onPressCancel()
           }
         }}>
@@ -110,13 +76,11 @@ function Inner({state}: {state: ComposerOpts}) {
             onPost={state.onPost}
             onPostSuccess={state.onPostSuccess}
             mention={state.mention}
-            openEmojiPicker={onOpenPicker}
             text={state.text}
             imageUris={state.imageUris}
             openGallery={state.openGallery}
           />
         </View>
-        <EmojiPicker state={pickerState} close={onClosePicker} />
       </DismissableLayer.DismissableLayer>
     </FocusScope.FocusScope>
   )
@@ -131,14 +95,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 0,
     borderWidth: 1,
-    // @ts-expect-error web only
     maxHeight: 'calc(100% - (40px * 2))',
     overflow: 'hidden',
   },
   containerMobile: {
     borderRadius: 0,
     marginBottom: BOTTOM_BAR_HEIGHT,
-    // @ts-expect-error web only
     maxHeight: `calc(100% - ${BOTTOM_BAR_HEIGHT}px)`,
   },
 })

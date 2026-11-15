@@ -1,0 +1,58 @@
+{
+  "id": "chat.bsky.group.editGroup",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "convoId",
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "maxLength": 500,
+              "minLength": 1,
+              "maxGraphemes": 50
+            },
+            "convoId": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "errors": [
+        {
+          "name": "ConvoLocked"
+        },
+        {
+          "name": "InvalidConvo"
+        },
+        {
+          "name": "InsufficientRole"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "convo"
+          ],
+          "properties": {
+            "convo": {
+              "ref": "chat.bsky.convo.defs#convoView",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Edits group settings."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

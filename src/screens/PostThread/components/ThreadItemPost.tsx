@@ -1,11 +1,7 @@
 import {memo, type ReactNode, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedThreadgate,
-  AtUri,
-  RichText as RichTextAPI,
-} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans} from '@lingui/react/macro'
 
 import {MAX_POST_LINES} from '#/lib/constants'
@@ -24,6 +20,11 @@ import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replie
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {
+  POST_NUMBER_INLINE_OFFSET,
+  ThreadItemPostNumber,
+  useHasThreadItemPostNumber,
+} from '#/screens/PostThread/components/ThreadItemPostNumber'
+import {
   LINEAR_AVI_WIDTH,
   OUTER_SPACE,
   REPLY_LINE_WIDTH,
@@ -36,9 +37,9 @@ import {
   GalleryBleed,
   maybeApplyGalleryOffsetStyles,
 } from '#/components/images/Gallery'
-import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {PostHider} from '#/components/moderation/PostHider'
+import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
@@ -49,6 +50,7 @@ import * as Skele from '#/components/Skeleton'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {useActorStatus} from '#/features/liveNow'
+import {type app} from '#/lexicons'
 
 export type ThreadItemPostProps = {
   item: Extract<ThreadItem, {type: 'threadPost'}>
@@ -57,7 +59,7 @@ export type ThreadItemPostProps = {
     topBorder?: boolean
   }
   onPostSuccess?: (data: OnPostSuccessData) => void
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: app.bsky.feed.threadgate.Main
 }
 
 export function ThreadItemPost({
@@ -73,13 +75,15 @@ export function ThreadItemPost({
   }
 
   return (
-    <ThreadItemPostInner
-      item={item}
-      postShadow={postShadow}
-      threadgateRecord={threadgateRecord}
-      overrides={overrides}
-      onPostSuccess={onPostSuccess}
-    />
+    <ReportDialogMetadataContext.Provider key={postShadow.uri}>
+      <ThreadItemPostInner
+        item={item}
+        postShadow={postShadow}
+        threadgateRecord={threadgateRecord}
+        overrides={overrides}
+        onPostSuccess={onPostSuccess}
+      />
+    </ReportDialogMetadataContext.Provider>
   )
 }
 
@@ -189,7 +193,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
   onPostSuccess,
   threadgateRecord,
 }: ThreadItemPostProps & {
-  postShadow: Shadow<AppBskyFeedDefs.PostView>
+  postShadow: Shadow<app.bsky.feed.defs.PostView>
 }) {
   const t = useTheme()
   const {openComposer} = useOpenComposer()
@@ -197,6 +201,8 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 
   const post = item.value.post
   const record = item.value.post.record
+  const postNumbering = item.value
+  const showPostNumber = useHasThreadItemPostNumber(postNumbering)
   const moderation = item.moderation
   const richText = useMemo(
     () =>
@@ -310,8 +316,8 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                   }),
                 ]}
               />
-              <LabelsOnMyPost post={post} style={[a.pb_xs]} />
               <PostAlerts
+                post={post}
                 modui={moderation.ui('contentList')}
                 style={[a.pb_2xs]}
                 additionalCauses={additionalPostAlerts}
@@ -325,15 +331,29 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     authorHandle={post.author.handle}
                     shouldProxyLinks={true}
+                    suffixOffset={POST_NUMBER_INLINE_OFFSET}
+                    suffix={
+                      !limitLines && showPostNumber ? (
+                        <ThreadItemPostNumber value={postNumbering} />
+                      ) : undefined
+                    }
                   />
                   {limitLines && (
-                    <ShowMoreTextButton
-                      style={[a.text_md]}
-                      onPress={onPressShowMore}
-                    />
+                    <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                      <ShowMoreTextButton
+                        style={[a.text_md]}
+                        onPress={onPressShowMore}
+                      />
+                      <ThreadItemPostNumber
+                        inline={false}
+                        value={postNumbering}
+                      />
+                    </View>
                   )}
                 </View>
-              ) : undefined}
+              ) : (
+                <ThreadItemPostNumber inline={false} value={postNumbering} />
+              )}
               <TranslatedPost hideTranslateLink post={post} />
               {post.embed && (
                 <View
@@ -349,6 +369,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                     embed={post.embed}
                     moderation={moderation}
                     viewContext={PostEmbedViewContext.Feed}
+                    post={post}
                   />
                 </View>
               )}

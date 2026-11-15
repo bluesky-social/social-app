@@ -1,17 +1,28 @@
-import {type JSX, useCallback, useMemo, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
-import {msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {useCallback, useMemo, useState} from 'react'
+import {
+  type GestureResponderEvent,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
+import {plural} from '@lingui/core/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
+import {UNREAD_NOTIFICATION_CAP} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
+import {
+  getCurrentRoute,
+  getTabState,
+  isCurrentProfileRoute,
+  isTab,
+  TabState,
+} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
+import {type SidebarTab} from '#/lib/routes/tab-to-nav-item'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
@@ -19,8 +30,10 @@ import {
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
+import {useHomeBadge} from '#/state/home-badge'
 import {useFetchHandle} from '#/state/queries/handle'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
+import {useModerationInboxUnreadCountQuery} from '#/state/queries/moderation-inbox'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
@@ -30,58 +43,99 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {atoms as a, tokens, useLayoutBreakpoints, useTheme, web} from '#/alf'
+import {
+  atoms as a,
+  native,
+  tokens,
+  useBreakpoints,
+  useLayoutBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
+import {BetaTag} from '#/components/BetaTag'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
-import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
+import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/Arrow'
 import {
-  Bell_Filled_Corner0_Rounded as BellFilled,
-  Bell_Stroke2_Corner0_Rounded as Bell,
+  Bell_Filled_Corner0_Rounded as BellFilledIcon,
+  Bell_Stroke2_Corner0_Rounded as BellIcon,
 } from '#/components/icons/Bell'
-import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
 import {
-  BulletList_Filled_Corner0_Rounded as ListFilled,
-  BulletList_Stroke2_Corner0_Rounded as List,
+  Bookmark_Filled_Corner0_Rounded as BookmarkFilledIcon,
+  Bookmark_Stroke2_Corner0_Rounded as BookmarkIcon,
+} from '#/components/icons/Bookmark'
+import {
+  BulletList_Filled_Corner0_Rounded as ListFilledIcon,
+  BulletList_Stroke2_Corner0_Rounded as ListIcon,
 } from '#/components/icons/BulletList'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
-import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
+import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Earth'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {
-  Hashtag_Filled_Corner0_Rounded as HashtagFilled,
-  Hashtag_Stroke2_Corner0_Rounded as Hashtag,
+  Hashtag_Filled_Corner0_Rounded as HashtagFilledIcon,
+  Hashtag_Stroke2_Corner0_Rounded as HashtagIcon,
 } from '#/components/icons/Hashtag'
 import {
-  HomeOpen_Filled_Corner0_Rounded as HomeFilled,
-  HomeOpen_Stoke2_Corner0_Rounded as Home,
-} from '#/components/icons/HomeOpen'
+  HomeOpen_Filled_Corner0_Rounded as HomeFilledIcon,
+  HomeOpen_Stroke2_Corner0_Rounded as HomeIcon,
+} from '#/components/icons/Home'
 import {
-  MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled,
-  MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlass,
+  MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilledIcon,
+  MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon,
 } from '#/components/icons/MagnifyingGlass'
 import {
-  Message_Stroke2_Corner0_Rounded as Message,
-  Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
+  Message_Stroke2_Corner0_Rounded as MessageIcon,
+  Message_Stroke2_Corner0_Rounded_Filled as MessageFilledIcon,
 } from '#/components/icons/Message'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {
-  SettingsGear2_Filled_Corner0_Rounded as SettingsFilled,
-  SettingsGear2_Stroke2_Corner0_Rounded as Settings,
-} from '#/components/icons/SettingsGear2'
+  SettingsGear2_Filled_Corner0_Rounded as SettingsFilledIcon,
+  SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon,
+} from '#/components/icons/Settings'
 import {
-  UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
-  UserCircle_Stroke2_Corner0_Rounded as UserCircle,
+  UserCircle_Filled_Corner0_Rounded as UserCircleFilledIcon,
+  UserCircle_Stroke2_Corner0_Rounded as UserCircleIcon,
 } from '#/components/icons/UserCircle'
-import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
+import {
+  CENTER_COLUMN_OFFSET,
+  CENTER_COLUMN_WIDTH,
+} from '#/components/Layout/const'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
+import {type Events} from '#/analytics/metrics/types'
+import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
+import {isFollowingV2HomeDotEnabled} from '#/features/followingV2/eligibility'
 import {useActorStatus} from '#/features/liveNow'
-import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
-import {router} from '../../../routes'
+import {type app} from '#/lexicons'
+import {router} from '#/routes'
+import {getComposeButtonLayout} from './composeButtonLayout'
 
+const LARGE_ELEMENT_SIZE = 48
 const NAV_ICON_WIDTH = 28
+const NAV_ITEM_TO_TAB: Partial<
+  Record<Events['nav:click']['item'], SidebarTab>
+> = {
+  home: 'Home',
+  search: 'Search',
+  chat: 'Messages',
+  notifications: 'Notifications',
+  profile: 'MyProfile',
+  atmosphere: 'Atmosphere',
+  feeds: 'Feeds',
+  lists: 'Lists',
+  saved: 'Bookmarks',
+  settings: 'Settings',
+}
 
-function ProfileCard() {
+export const LEFT_NAV_STANDARD_WIDTH = 240
+export const LEFT_NAV_MINIMAL_WIDTH = 80
+const LEFT_NAV_PWI_WIDTH = 245
+
+function ProfileCard({minimal}: {minimal: boolean}) {
   const {currentAccount, accounts} = useSession()
   const {logoutEveryAccount} = useSessionApi()
   const {isLoading, data} = useProfilesQuery({
@@ -89,11 +143,8 @@ function ProfileCard() {
   })
   const profiles = data?.profiles
   const signOutPromptControl = Prompt.usePromptControl()
-  const {leftNavMinimal} = useLayoutBreakpoints()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
-
-  const size = 48
 
   const profile = profiles?.find(p => p.did === currentAccount!.did)
   const otherAccounts = accounts
@@ -106,10 +157,10 @@ function ProfileCard() {
   const {isActive: live} = useActorStatus(profile)
 
   return (
-    <View style={[a.my_md, !leftNavMinimal && [a.w_full, a.align_start]]}>
+    <View style={[a.pb_md, !minimal && [a.w_full, a.align_start]]}>
       {!isLoading && profile ? (
         <Menu.Root>
-          <Menu.Trigger label={_(msg`Switch accounts`)}>
+          <Menu.Trigger label={l`Switch accounts`}>
             {({props, state, control}) => {
               const active = state.hovered || state.focused || control.isOpen
               return (
@@ -125,7 +176,7 @@ function ProfileCard() {
                     a.align_center,
                     a.flex_row,
                     {gap: 6},
-                    !leftNavMinimal && [a.pl_lg, a.pr_md],
+                    !minimal && [a.pl_lg, a.pr_md],
                   ]}>
                   <View
                     style={[
@@ -138,19 +189,19 @@ function ProfileCard() {
                       a.z_10,
                       active && {
                         transform: [
-                          {scale: !leftNavMinimal ? 2 / 3 : 0.8},
-                          {translateX: !leftNavMinimal ? -22 : 0},
+                          {scale: !minimal ? 2 / 3 : 0.8},
+                          {translateX: !minimal ? -22 : 0},
                         ],
                       },
                     ]}>
                     <UserAvatar
                       avatar={profile.avatar}
-                      size={size}
+                      size={LARGE_ELEMENT_SIZE}
                       type={profile?.associated?.labeler ? 'labeler' : 'user'}
                       live={live}
                     />
                   </View>
-                  {!leftNavMinimal && (
+                  {!minimal && (
                     <>
                       <View
                         style={[
@@ -163,6 +214,7 @@ function ProfileCard() {
                           },
                         ]}>
                         <Text
+                          emoji
                           style={[a.font_bold, a.text_sm, a.leading_snug]}
                           numberOfLines={1}>
                           {sanitizeDisplayName(
@@ -201,18 +253,18 @@ function ProfileCard() {
         </Menu.Root>
       ) : (
         <LoadingPlaceholder
-          width={size}
-          height={size}
-          style={[{borderRadius: size}, !leftNavMinimal && a.ml_lg]}
+          width={LARGE_ELEMENT_SIZE}
+          height={LARGE_ELEMENT_SIZE}
+          style={[a.rounded_full, !minimal && a.ml_lg]}
         />
       )}
       <Prompt.Basic
         control={signOutPromptControl}
-        title={_(msg`Sign out?`)}
-        description={_(msg`You will be signed out of all your accounts.`)}
+        title={l`Sign out?`}
+        description={l`You will be signed out of all your accounts.`}
         onConfirm={() => logoutEveryAccount('Settings')}
-        confirmButtonCta={_(msg`Sign out`)}
-        cancelButtonCta={_(msg`Cancel`)}
+        confirmButtonCta={l`Sign out`}
+        cancelButtonCta={l`Cancel`}
         confirmButtonColor="negative"
       />
     </View>
@@ -226,12 +278,31 @@ function SwitchMenuItems({
   accounts:
     | {
         account: SessionAccount
-        profile?: AppBskyActorDefs.ProfileViewDetailed
+        profile?: app.bsky.actor.defs.ProfileViewDetailed
       }[]
     | undefined
   signOutPromptControl: DialogControlProps
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
+  const {currentAccount} = useSession()
+  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
+  const navigation = useNavigation<NavigationProp>()
+  const {control} = Menu.useMenuContext()
+  const currentRouteInfo = useNavigationState(state => {
+    if (!state) {
+      return {name: 'Home'}
+    }
+    return getCurrentRoute(state)
+  })
+  const profileLink = currentAccount ? makeProfileLink(currentAccount) : '/'
+  const isCurrent = isCurrentProfileRoute({
+    routeName: currentRouteInfo.name,
+    profileName:
+      currentRouteInfo.name === 'Profile'
+        ? (currentRouteInfo.params as CommonNavigatorParams['Profile']).name
+        : undefined,
+    currentHandle: currentAccount?.handle,
+  })
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeEverything = useCloseAllActiveElements()
 
@@ -240,70 +311,19 @@ function SwitchMenuItems({
     closeEverything()
   }
 
-  return (
-    <Menu.Outer>
-      {accounts && accounts.length > 0 && (
-        <>
-          <Menu.Group>
-            <Menu.LabelText>
-              <Trans>Switch account</Trans>
-            </Menu.LabelText>
-            {accounts.map(other => (
-              <SwitchMenuItem
-                key={other.account.did}
-                account={other.account}
-                profile={other.profile}
-              />
-            ))}
-          </Menu.Group>
-          <Menu.Divider />
-        </>
-      )}
-      <SwitcherMenuProfileLink />
-      <Menu.Item
-        label={_(msg`Add another account`)}
-        onPress={onAddAnotherAccount}>
-        <Menu.ItemIcon icon={PlusIcon} />
-        <Menu.ItemText>
-          <Trans>Add another account</Trans>
-        </Menu.ItemText>
-      </Menu.Item>
-      <Menu.Item label={_(msg`Sign out`)} onPress={signOutPromptControl.open}>
-        <Menu.ItemIcon icon={LeaveIcon} />
-        <Menu.ItemText>
-          <Trans>Sign out</Trans>
-        </Menu.ItemText>
-      </Menu.Item>
-    </Menu.Outer>
-  )
-}
-
-function SwitcherMenuProfileLink() {
-  const {_} = useLingui()
-  const {currentAccount} = useSession()
-  const navigation = useNavigation()
-  const context = Menu.useMenuContext()
-  const profileLink = currentAccount ? makeProfileLink(currentAccount) : '/'
-  const [pathName] = useMemo(() => router.matchPath(profileLink), [profileLink])
-  const currentRouteInfo = useNavigationState(state => {
-    if (!state) {
-      return {name: 'Home'}
-    }
-    return getCurrentRoute(state)
-  })
-  let isCurrent =
-    currentRouteInfo.name === 'Profile'
-      ? isTab(currentRouteInfo.name, pathName) &&
-        (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
-          currentAccount?.handle
-      : isTab(currentRouteInfo.name, pathName)
-  const onProfilePress = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-      if (e.ctrlKey || e.metaKey || e.altKey) {
+  const onProfilePress = (e: GestureResponderEvent) => {
+    if (IS_WEB) {
+      const mouseEvent = e as unknown as React.MouseEvent<
+        HTMLAnchorElement,
+        MouseEvent
+      >
+      if (mouseEvent.ctrlKey || mouseEvent.metaKey || mouseEvent.altKey) {
         return
       }
-      e.preventDefault()
-      context.control.close()
+      mouseEvent.preventDefault()
+    }
+
+    const onNavigate = () => {
       if (isCurrent) {
         emitSoftReset()
       } else {
@@ -311,95 +331,165 @@ function SwitcherMenuProfileLink() {
         // @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
         navigation.navigate(screen, params, {pop: true})
       }
-    },
-    [navigation, profileLink, isCurrent, context],
-  )
+    }
+
+    if (IS_IOS) {
+      onNavigate()
+    } else if (IS_NATIVE) {
+      control.close()
+      onNavigate()
+    } else {
+      control.close(onNavigate)
+    }
+  }
+
   return (
-    <Menu.Item
-      label={_(msg`Go to profile`)}
-      // @ts-expect-error The function signature differs on web -inb
-      onPress={onProfilePress}
-      href={profileLink}>
-      <Menu.ItemIcon icon={UserCircle} />
-      <Menu.ItemText>
-        <Trans>Go to profile</Trans>
-      </Menu.ItemText>
-    </Menu.Item>
+    <Menu.Outer>
+      {accounts && accounts.length > 0 && (
+        <>
+          <Menu.LabelText>
+            <Trans>Switch account</Trans>
+          </Menu.LabelText>
+          <Menu.Group>
+            {/* Native groups require Menu.Item as a direct child. */}
+            {accounts.map(({account, profile}) => (
+              <Menu.Item
+                key={account.did}
+                disabled={!!pendingDid}
+                style={[a.gap_sm, {minWidth: 150}]}
+                label={l`Switch to ${sanitizeHandle(
+                  profile?.handle ?? account.handle,
+                  '@',
+                )}`}
+                onPress={() =>
+                  void onPressSwitchAccount(account, 'SwitchAccount')
+                }>
+                <SwitchMenuItemAvatar profile={profile} />
+                <Menu.ItemText>
+                  {sanitizeHandle(profile?.handle ?? account.handle, '@')}
+                </Menu.ItemText>
+              </Menu.Item>
+            ))}
+          </Menu.Group>
+          <Menu.Divider />
+        </>
+      )}
+      <Menu.Group>
+        <Menu.Item
+          label={l`Go to profile`}
+          onPress={onProfilePress}
+          // @ts-expect-error href is web-only -prf
+          href={profileLink}>
+          <Menu.ItemIcon icon={UserCircleIcon} />
+          <Menu.ItemText>
+            <Trans>Go to profile</Trans>
+          </Menu.ItemText>
+        </Menu.Item>
+        <Menu.Item label={l`Add another account`} onPress={onAddAnotherAccount}>
+          <Menu.ItemIcon icon={PlusIcon} />
+          <Menu.ItemText>
+            <Trans>Add another account</Trans>
+          </Menu.ItemText>
+        </Menu.Item>
+        <Menu.Item label={l`Sign out`} onPress={signOutPromptControl.open}>
+          <Menu.ItemIcon icon={LeaveIcon} />
+          <Menu.ItemText>
+            <Trans>Sign out</Trans>
+          </Menu.ItemText>
+        </Menu.Item>
+      </Menu.Group>
+    </Menu.Outer>
   )
 }
 
-function SwitchMenuItem({
-  account,
+function SwitchMenuItemAvatar({
   profile,
 }: {
-  account: SessionAccount
-  profile: AppBskyActorDefs.ProfileViewDetailed | undefined
+  profile: app.bsky.actor.defs.ProfileViewDetailed | undefined
 }) {
-  const {_} = useLingui()
-  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {isActive: live} = useActorStatus(profile)
 
   return (
-    <Menu.Item
-      disabled={!!pendingDid}
-      style={[a.gap_sm, {minWidth: 150}]}
-      key={account.did}
-      label={_(
-        msg`Switch to ${sanitizeHandle(
-          profile?.handle ?? account.handle,
-          '@',
-        )}`,
-      )}
-      onPress={() => void onPressSwitchAccount(account, 'SwitchAccount')}>
-      <View>
-        <UserAvatar
-          avatar={profile?.avatar}
-          size={20}
-          type={profile?.associated?.labeler ? 'labeler' : 'user'}
-          live={live}
-          hideLiveBadge
-        />
-      </View>
-      <Menu.ItemText>
-        {sanitizeHandle(profile?.handle ?? account.handle, '@')}
-      </Menu.ItemText>
-    </Menu.Item>
+    <View>
+      <UserAvatar
+        avatar={profile?.avatar}
+        size={20}
+        type={profile?.associated?.labeler ? 'labeler' : 'user'}
+        live={live}
+        hideLiveBadge
+      />
+    </View>
   )
 }
 
 interface NavItemProps {
+  beta?: boolean
   count?: string
+  exactMatch?: boolean
   hasNew?: boolean
   href: string
-  icon: JSX.Element
-  iconFilled: JSX.Element
+  icons: {
+    inactive: React.ComponentType<SVGIconProps>
+    active: React.ComponentType<SVGIconProps>
+  }
   label: string
+  minimal: boolean
+  navItem: Events['nav:click']['item']
+  onNavigateTab?: (tab: SidebarTab) => void
 }
-function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
+function NavItem({
+  beta,
+  count,
+  exactMatch = false,
+  hasNew,
+  href,
+  icons,
+  label,
+  minimal,
+  navItem,
+  onNavigateTab,
+}: NavItemProps) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
+  const accessibilityLabel = beta ? l`${label}, Beta` : label
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
-  const {leftNavMinimal} = useLayoutBreakpoints()
+
   const [pathName] = useMemo(() => router.matchPath(href), [href])
-  const currentRouteInfo = useNavigationState(state => {
-    if (!state) {
-      return {name: 'Home'}
-    }
-    return getCurrentRoute(state)
-  })
-  let isCurrent =
-    currentRouteInfo.name === 'Profile'
-      ? isTab(currentRouteInfo.name, pathName) &&
-        (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
-          currentAccount?.handle
+  const navigationState = useNavigationState(state => state)
+  const currentRouteInfo = getCurrentRoute(navigationState)
+  const tab = NAV_ITEM_TO_TAB[navItem]
+  const isCurrent =
+    navItem === 'profile'
+      ? isCurrentProfileRoute({
+          routeName: currentRouteInfo.name,
+          profileName:
+            currentRouteInfo.name === 'Profile'
+              ? (currentRouteInfo.params as CommonNavigatorParams['Profile'])
+                  .name
+              : undefined,
+          currentHandle: currentAccount?.handle,
+        })
       : isTab(currentRouteInfo.name, pathName)
+  const isSelected =
+    IS_NATIVE && tab
+      ? getTabState(navigationState, tab) !== TabState.Outside
+      : isCurrent
+  const isRelated = exactMatch
+    ? false
+    : currentRouteInfo.name.startsWith(pathName)
   const navigation = useNavigation<NavigationProp>()
   const onPressWrapped = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      ax.metric('nav:click', {item: navItem, surface: 'leftNav'})
       if (e.ctrlKey || e.metaKey || e.altKey) {
         return
       }
-      e.preventDefault()
+      e.preventDefault?.()
+      if (tab && onNavigateTab) {
+        onNavigateTab(tab)
+        return
+      }
       if (isCurrent) {
         emitSoftReset()
       } else {
@@ -408,8 +498,11 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
         navigation.navigate(screen, params, {pop: true})
       }
     },
-    [navigation, href, isCurrent],
+    [navigation, href, isCurrent, ax, navItem, onNavigateTab, tab],
   )
+
+  const Icon =
+    isSelected || (!IS_NATIVE && isRelated) ? icons.active : icons.inactive
 
   return (
     <PressableWithHover
@@ -417,7 +510,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
         a.flex_row,
         a.align_center,
         a.p_md,
-        a.rounded_sm,
+        a.rounded_full,
         a.gap_sm,
         a.outline_inset_1,
         a.transition_color,
@@ -428,7 +521,8 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
       href={href}
       dataSet={{noUnderline: 1}}
       role="link"
-      accessibilityLabel={label}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityState={IS_NATIVE ? {selected: isSelected} : undefined}
       accessibilityHint="">
       <View
         style={[
@@ -438,12 +532,9 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
             width: 24,
             height: 24,
           },
-          leftNavMinimal && {
-            width: 40,
-            height: 40,
-          },
+          a.z_10,
         ]}>
-        {isCurrent ? iconFilled : icon}
+        <Icon aria-hidden={true} width={NAV_ICON_WIDTH} style={t.atoms.text} />
         {typeof count === 'string' && count ? (
           <View
             style={[
@@ -452,12 +543,10 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
               {right: -20}, // more breathing room
             ]}>
             <Text
-              accessibilityLabel={_(
-                msg`${plural(count, {
-                  one: '# unread item',
-                  other: '# unread items',
-                })}`,
-              )}
+              accessibilityLabel={l`${plural(count, {
+                one: '# unread item',
+                other: '# unread items',
+              })}`}
               accessibilityHint=""
               accessible={true}
               numberOfLines={1}
@@ -479,12 +568,6 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
                   paddingVertical: 1,
                   minWidth: 16,
                 },
-                leftNavMinimal && [
-                  {
-                    top: '10%',
-                    left: count.length === 1 ? 20 : 16,
-                  },
-                ],
               ]}>
               {count}
             </Text>
@@ -502,29 +585,27 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
                 right: -2,
                 top: -4,
               },
-              leftNavMinimal && {
-                right: 4,
-                top: 2,
-              },
             ]}
           />
         ) : null}
       </View>
-      {!leftNavMinimal && (
-        <Text style={[a.text_xl, isCurrent ? a.font_bold : a.font_normal]}>
-          {label}
-        </Text>
+      {!minimal && (
+        <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+          <Text style={[a.text_xl, isSelected ? a.font_bold : a.font_normal]}>
+            {label}
+          </Text>
+          {beta && <BetaTag />}
+        </View>
       )}
     </PressableWithHover>
   )
 }
 
-function ComposeBtn() {
+function ComposeBtn({minimal}: {minimal: boolean}) {
   const {currentAccount} = useSession()
   const {getState} = useNavigation()
   const {openComposer} = useOpenComposer()
-  const {_} = useLingui()
-  const {leftNavMinimal} = useLayoutBreakpoints()
+  const {t: l} = useLingui()
   const [isFetchingHandle, setIsFetchingHandle] = useState(false)
   const fetchHandle = useFetchHandle()
 
@@ -543,9 +624,8 @@ function ComposeBtn() {
           handle = await fetchHandle(handle)
         } catch (e) {
           handle = undefined
-        } finally {
-          setIsFetchingHandle(false)
         }
+        setIsFetchingHandle(false)
       }
 
       if (
@@ -564,250 +644,243 @@ function ComposeBtn() {
   const onPressCompose = async () =>
     openComposer({mention: await getProfileHandle(), logContext: 'Fab'})
 
-  if (leftNavMinimal) {
-    return null
-  }
+  const layout = getComposeButtonLayout({minimal, isNative: IS_NATIVE})
 
   return (
-    <View style={[a.flex_row, a.pl_md, a.pt_xl]}>
+    <View style={layout.container}>
       <Button
         disabled={isFetchingHandle}
-        label={_(msg`Compose new post`)}
+        label={l`Compose new post`}
         onPress={() => void onPressCompose()}
         size="large"
-        variant="solid"
         color="primary"
-        style={[a.rounded_full]}>
-        <ButtonIcon icon={EditBig} position="left" />
-        <ButtonText>
-          <Trans context="action">New post</Trans>
-        </ButtonText>
+        style={layout.button}>
+        <ButtonIcon icon={EditBigIcon} size={minimal ? 'lg' : 'sm'} />
+        {!minimal && (
+          <ButtonText>
+            <Trans context="action">New post</Trans>
+          </ButtonText>
+        )}
       </Button>
     </View>
   )
 }
 
-function ChatNavItem() {
-  const pal = usePalette('default')
-  const {_} = useLingui()
-  const numUnreadMessages = useUnreadMessageCount()
-  const aa = useAgeAssurance()
-
-  return (
-    <NavItem
-      href="/messages"
-      count={aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread}
-      hasNew={aa.flags.chatDisabled ? false : numUnreadMessages.hasNew}
-      icon={
-        <Message style={pal.text} aria-hidden={true} width={NAV_ICON_WIDTH} />
-      }
-      iconFilled={
-        <MessageFilled
-          style={pal.text}
-          aria-hidden={true}
-          width={NAV_ICON_WIDTH}
-        />
-      }
-      label={_(msg`Chat`)}
-    />
-  )
-}
-
-export function DesktopLeftNav() {
+export function DesktopLeftNav({
+  routeName,
+  onNavigateTab,
+}: {
+  routeName: string
+  onNavigateTab?: (tab: SidebarTab) => void
+}) {
   const {hasSession, currentAccount} = useSession()
-  const pal = usePalette('default')
-  const {_} = useLingui()
-  const {isDesktop} = useWebMediaQueries()
-  const {leftNavMinimal, centerColumnOffset} = useLayoutBreakpoints()
-  const numUnreadNotifications = useUnreadNotifications()
+  const {i18n, t: l} = useLingui()
+  const ax = useAnalytics()
+  const {gtMobile} = useBreakpoints()
 
-  if (!hasSession && !isDesktop) {
+  const aa = useAgeAssurance()
+  // splitview uses the minimal variant of the leftnav. unfortunately there's no easy
+  // way to thread this data through because of the view hierarchy, so just check the route name
+  const isMessagesRelatedScreen =
+    !IS_NATIVE &&
+    routeName.startsWith('Messages') &&
+    aa.state.access === aa.Access.Full
+  const {leftNavMinimal: leftNavMinimalBreakpoint, centerColumnOffset} =
+    useLayoutBreakpoints()
+  const numUnreadNotifications = useUnreadNotifications()
+  const numUnreadMessages = useUnreadMessageCount()
+  const moderationInboxUnreadCountQuery = useModerationInboxUnreadCountQuery()
+  const moderationInboxUnreadCount =
+    moderationInboxUnreadCountQuery.data?.unreadCounts.total ?? 0
+  const numUnreadModerationInbox =
+    moderationInboxUnreadCount > 0
+      ? moderationInboxUnreadCount >= UNREAD_NOTIFICATION_CAP
+        ? l({
+            message: `${i18n.number(UNREAD_NOTIFICATION_CAP - 1)}+`,
+            comment:
+              'Displayed when the number of notifications exceeds the cap – for example, 99+',
+          })
+        : i18n.number(moderationInboxUnreadCount)
+      : undefined
+  const hasHomeBadge = useHomeBadge()
+  const isAtmosphereEnabled = ax.features.enabled(
+    ax.features.AtmosphereScreenEnable,
+  )
+  const insets = useSafeAreaInsets()
+
+  const leftNavMinimal = isMessagesRelatedScreen || leftNavMinimalBreakpoint
+
+  if (!hasSession && !gtMobile) {
     return null
   }
+
+  const content = (
+    <>
+      {hasSession ? (
+        <ProfileCard minimal={leftNavMinimal} />
+      ) : !leftNavMinimal ? (
+        <View style={[a.pt_xl]}>
+          <NavSignupCard />
+        </View>
+      ) : null}
+      {hasSession && (
+        <>
+          <NavItem
+            label={l`Home`}
+            href="/"
+            navItem="home"
+            onNavigateTab={onNavigateTab}
+            minimal={leftNavMinimal}
+            hasNew={hasHomeBadge && isFollowingV2HomeDotEnabled(ax)}
+            icons={{
+              inactive: HomeIcon,
+              active: HomeFilledIcon,
+            }}
+          />
+          <NavItem
+            label={l`Explore`}
+            href="/search"
+            navItem="search"
+            onNavigateTab={onNavigateTab}
+            minimal={leftNavMinimal}
+            icons={{
+              inactive: MagnifyingGlassIcon,
+              active: MagnifyingGlassFilledIcon,
+            }}
+          />
+          <NavItem
+            label={l`Notifications`}
+            href="/notifications"
+            navItem="notifications"
+            onNavigateTab={onNavigateTab}
+            minimal={leftNavMinimal}
+            count={numUnreadNotifications}
+            icons={{inactive: BellIcon, active: BellFilledIcon}}
+          />
+          <NavItem
+            label={l`Chat`}
+            href="/messages"
+            navItem="chat"
+            onNavigateTab={onNavigateTab}
+            minimal={leftNavMinimal}
+            count={
+              aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread
+            }
+            hasNew={!aa.flags.chatDisabled && numUnreadMessages.hasNew}
+            icons={{inactive: MessageIcon, active: MessageFilledIcon}}
+          />
+          {isAtmosphereEnabled && (
+            <NavItem
+              label={l`Atmosphere`}
+              href="/atmosphere"
+              navItem="atmosphere"
+              onNavigateTab={onNavigateTab}
+              exactMatch
+              minimal={leftNavMinimal}
+              beta
+              icons={{
+                inactive: EarthIcon,
+                active: EarthIcon,
+              }}
+            />
+          )}
+          <NavItem
+            label={l`Feeds`}
+            href="/feeds"
+            navItem="feeds"
+            onNavigateTab={onNavigateTab}
+            minimal={leftNavMinimal}
+            icons={{inactive: HashtagIcon, active: HashtagFilledIcon}}
+          />
+          <NavItem
+            label={l`Lists`}
+            href="/lists"
+            navItem="lists"
+            onNavigateTab={onNavigateTab}
+            minimal={leftNavMinimal}
+            icons={{inactive: ListIcon, active: ListFilledIcon}}
+          />
+          <NavItem
+            label={l({message: 'Saved', context: 'link to bookmarks screen'})}
+            href="/saved"
+            navItem="saved"
+            onNavigateTab={onNavigateTab}
+            minimal={leftNavMinimal}
+            icons={{inactive: BookmarkIcon, active: BookmarkFilledIcon}}
+          />
+          <NavItem
+            label={l`Profile`}
+            href={makeProfileLink(currentAccount!)}
+            navItem="profile"
+            onNavigateTab={onNavigateTab}
+            minimal={leftNavMinimal}
+            icons={{inactive: UserCircleIcon, active: UserCircleFilledIcon}}
+          />
+          <NavItem
+            label={l`Settings`}
+            href="/settings"
+            navItem="settings"
+            onNavigateTab={onNavigateTab}
+            minimal={leftNavMinimal}
+            count={numUnreadModerationInbox}
+            icons={{inactive: SettingsIcon, active: SettingsFilledIcon}}
+          />
+          <ComposeBtn minimal={leftNavMinimal} />
+        </>
+      )}
+    </>
+  )
 
   return (
     <View
       role="navigation"
+      pointerEvents={IS_NATIVE ? 'box-none' : undefined}
       style={[
-        a.px_xl,
+        a.fixed,
+        a.top_0,
+        web(a.p_lg),
         styles.leftNav,
-        !hasSession && !leftNavMinimal && styles.leftNavWide,
-        leftNavMinimal && styles.leftNavMinimal,
+        native(a.bottom_0),
+        !hasSession && !leftNavMinimal && {width: LEFT_NAV_PWI_WIDTH},
+        leftNavMinimal && [
+          {width: LEFT_NAV_MINIMAL_WIDTH},
+          !IS_NATIVE && a.h_full,
+          a.align_center,
+          web(a.overflow_x_hidden),
+        ],
+        web({maxHeight: '100vh', overflowY: 'auto', scrollbarWidth: 'thin'}),
         {
           transform: [
             {
               translateX:
-                -300 + (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0),
+                -(CENTER_COLUMN_WIDTH / 2) +
+                (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0) +
+                (!IS_NATIVE &&
+                isMessagesRelatedScreen &&
+                !leftNavMinimalBreakpoint
+                  ? LEFT_NAV_MINIMAL_WIDTH - LEFT_NAV_STANDARD_WIDTH
+                  : 0),
             },
             {translateX: '-100%'},
             ...a.scrollbar_offset.transform,
           ],
         },
       ]}>
-      {hasSession ? (
-        <ProfileCard />
-      ) : !leftNavMinimal ? (
-        <View style={[a.pt_xl]}>
-          <NavSignupCard />
-        </View>
-      ) : null}
-
-      {hasSession && (
-        <>
-          <NavItem
-            href="/"
-            icon={
-              <Home
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={pal.text}
-              />
-            }
-            iconFilled={
-              <HomeFilled
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={pal.text}
-              />
-            }
-            label={_(msg`Home`)}
-          />
-          <NavItem
-            href="/search"
-            icon={
-              <MagnifyingGlass
-                style={pal.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
-            }
-            iconFilled={
-              <MagnifyingGlassFilled
-                style={pal.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
-            }
-            label={_(msg`Explore`)}
-          />
-          <NavItem
-            href="/notifications"
-            count={numUnreadNotifications}
-            icon={
-              <Bell
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={pal.text}
-              />
-            }
-            iconFilled={
-              <BellFilled
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={pal.text}
-              />
-            }
-            label={_(msg`Notifications`)}
-          />
-          <ChatNavItem />
-          <NavItem
-            href="/feeds"
-            icon={
-              <Hashtag
-                style={pal.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
-            }
-            iconFilled={
-              <HashtagFilled
-                style={pal.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
-            }
-            label={_(msg`Feeds`)}
-          />
-          <NavItem
-            href="/lists"
-            icon={
-              <List
-                style={pal.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
-            }
-            iconFilled={
-              <ListFilled
-                style={pal.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
-            }
-            label={_(msg`Lists`)}
-          />
-          <NavItem
-            href="/saved"
-            icon={
-              <Bookmark
-                style={pal.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
-            }
-            iconFilled={
-              <BookmarkFilled
-                style={pal.text}
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-              />
-            }
-            label={_(
-              msg({
-                message: 'Saved',
-                context: 'link to bookmarks screen',
-              }),
-            )}
-          />
-          <NavItem
-            href={currentAccount ? makeProfileLink(currentAccount) : '/'}
-            icon={
-              <UserCircle
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={pal.text}
-              />
-            }
-            iconFilled={
-              <UserCircleFilled
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={pal.text}
-              />
-            }
-            label={_(msg`Profile`)}
-          />
-          <NavItem
-            href="/settings"
-            icon={
-              <Settings
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={pal.text}
-              />
-            }
-            iconFilled={
-              <SettingsFilled
-                aria-hidden={true}
-                width={NAV_ICON_WIDTH}
-                style={pal.text}
-              />
-            }
-            label={_(msg`Settings`)}
-          />
-
-          <ComposeBtn />
-        </>
+      {IS_NATIVE ? (
+        <ScrollView
+          style={[a.flex_1, a.w_full]}
+          contentContainerStyle={[
+            a.p_lg,
+            {
+              paddingTop: insets.top + tokens.space.lg,
+              paddingBottom: insets.bottom + tokens.space.lg,
+            },
+          ]}
+          showsVerticalScrollIndicator={false}>
+          {content}
+        </ScrollView>
+      ) : (
+        content
       )}
     </View>
   )
@@ -815,34 +888,7 @@ export function DesktopLeftNav() {
 
 const styles = StyleSheet.create({
   leftNav: {
-    ...a.fixed,
-    top: 0,
-    paddingTop: 10,
-    paddingBottom: 10,
     left: '50%',
-    width: 240,
-    // @ts-expect-error web only
-    maxHeight: '100vh',
-    overflowY: 'auto',
-  },
-  leftNavWide: {
-    width: 245,
-  },
-  leftNavMinimal: {
-    paddingTop: 0,
-    paddingBottom: 0,
-    paddingLeft: 0,
-    paddingRight: 0,
-    height: '100%',
-    width: 86,
-    alignItems: 'center',
-    ...web({overflowX: 'hidden'}),
-  },
-  backBtn: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    width: 30,
-    height: 30,
+    width: LEFT_NAV_STANDARD_WIDTH,
   },
 })

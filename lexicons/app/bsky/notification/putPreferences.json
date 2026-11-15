@@ -1,0 +1,25 @@
+{
+  "id": "app.bsky.notification.putPreferences",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "priority"
+          ],
+          "properties": {
+            "priority": {
+              "type": "boolean"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Set notification-related preferences for an account. Requires auth."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

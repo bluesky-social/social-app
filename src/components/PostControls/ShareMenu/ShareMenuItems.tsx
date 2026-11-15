@@ -1,15 +1,14 @@
 import {memo, useMemo} from 'react'
+import {Platform} from 'react-native'
 import * as ExpoClipboard from 'expo-clipboard'
-import {AtUri} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {AtUri} from '@atproto/syntax'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
-import {shareText, shareUrl} from '#/lib/sharing'
+import {shareUrl, simpleShareText} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {precachePost} from '#/state/queries/post'
@@ -30,14 +29,29 @@ import {IS_IOS} from '#/env'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {RecentChats} from './RecentChats'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'
+import {ShareSheetItems} from './ShareSheetItems'
 
-let ShareMenuItems = ({
+let ShareMenuItems = (props: ShareMenuItemsProps): React.ReactNode => {
+  const ax = useAnalytics()
+  if (ax.features.enabled(ax.features.ShareDestinationsEnable)) {
+    return <ShareSheetItems {...props} />
+  }
+  return <LegacyShareMenuItems {...props} />
+}
+ShareMenuItems = memo(ShareMenuItems)
+export {ShareMenuItems}
+
+/**
+ * The share menu before the redesign. Delete with the
+ * `share_destinations:enable` flag.
+ */
+function LegacyShareMenuItems({
   post,
   onShare: onShareProp,
-}: ShareMenuItemsProps): React.ReactNode => {
+}: ShareMenuItemsProps): React.ReactNode {
   const ax = useAnalytics()
   const {hasSession} = useSession()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const sendViaChatControl = useDialogControl()
   const [devModeEnabled] = useDevMode()
@@ -59,14 +73,27 @@ let ShareMenuItems = ({
   }, [postAuthor])
 
   const onSharePost = () => {
-    ax.metric('share:press:nativeShare', {})
+    ax.metric('share:press:nativeShare', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      entryPoint: 'ShareMenu',
+      os: Platform.OS,
+    })
     const url = toShareUrl(href)
-    shareUrl(url)
+    void shareUrl(url).then(result => {
+      if (!result) return
+      ax.metric('share:nativeShare:result', {
+        uri: postUri,
+        authorDid: postAuthor.did,
+        entryPoint: 'ShareMenu',
+        ...result,
+      })
+    })
     onShareProp()
   }
 
   const onCopyLink = async () => {
-    ax.metric('share:press:copyLink', {})
+    ax.metric('share:press:copyLink', {uri: postUri})
     const url = toShareUrl(href)
     if (IS_IOS) {
       // iOS only
@@ -74,7 +101,7 @@ let ShareMenuItems = ({
     } else {
       await ExpoClipboard.setStringAsync(url)
     }
-    Toast.show(_(msg`Copied to clipboard`), {
+    Toast.show(l`Copied to clipboard`, {
       type: 'success',
     })
     onShareProp()
@@ -85,19 +112,24 @@ let ShareMenuItems = ({
   }
 
   const onSelectChatToShareTo = (conversation: string) => {
+    ax.metric('share:press:dmSelected', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+    })
     onBeforeShareViaChat()
     navigation.navigate('MessagesConversation', {
       conversation,
       embed: postUri,
+      embedSource: 'chatSearch',
     })
   }
 
   const onShareATURI = () => {
-    shareText(postUri)
+    void simpleShareText(postUri)
   }
 
   const onShareAuthorDID = () => {
-    shareText(postAuthor.did)
+    void simpleShareText(postAuthor.did)
   }
 
   return (
@@ -108,18 +140,22 @@ let ShareMenuItems = ({
             <Menu.ContainerItem>
               <RecentChats
                 postUri={postUri}
+                authorDid={postAuthor.did}
                 onBeforePress={onBeforeShareViaChat}
               />
             </Menu.ContainerItem>
             <Menu.Item
               testID="postDropdownSendViaDMBtn"
-              label={_(msg`Send via direct message`)}
+              label={l`Send via chat`}
               onPress={() => {
-                ax.metric('share:press:openDmSearch', {})
+                ax.metric('share:press:openDmSearch', {
+                  uri: postUri,
+                  authorDid: postAuthor.did,
+                })
                 sendViaChatControl.open()
               }}>
               <Menu.ItemText>
-                <Trans>Send via direct message</Trans>
+                <Trans>Send via chat</Trans>
               </Menu.ItemText>
               <Menu.ItemIcon icon={PaperPlaneIcon} position="right" />
             </Menu.Item>
@@ -129,7 +165,7 @@ let ShareMenuItems = ({
         <Menu.Group>
           <Menu.Item
             testID="postDropdownShareBtn"
-            label={_(msg`Share via...`)}
+            label={l`Share via...`}
             onPress={onSharePost}>
             <Menu.ItemText>
               <Trans>Share via...</Trans>
@@ -139,8 +175,8 @@ let ShareMenuItems = ({
 
           <Menu.Item
             testID="postDropdownShareBtn"
-            label={_(msg`Copy link to post`)}
-            onPress={onCopyLink}>
+            label={l`Copy link to post`}
+            onPress={() => void onCopyLink()}>
             <Menu.ItemText>
               <Trans>Copy link to post</Trans>
             </Menu.ItemText>
@@ -164,7 +200,7 @@ let ShareMenuItems = ({
           <Menu.Group>
             <Menu.Item
               testID="postAtUriShareBtn"
-              label={_(msg`Share post at:// URI`)}
+              label={l`Share post at:// URI`}
               onPress={onShareATURI}>
               <Menu.ItemText>
                 <Trans>Share post at:// URI</Trans>
@@ -173,7 +209,7 @@ let ShareMenuItems = ({
             </Menu.Item>
             <Menu.Item
               testID="postAuthorDIDShareBtn"
-              label={_(msg`Share author DID`)}
+              label={l`Share author DID`}
               onPress={onShareAuthorDID}>
               <Menu.ItemText>
                 <Trans>Share author DID</Trans>
@@ -183,7 +219,6 @@ let ShareMenuItems = ({
           </Menu.Group>
         )}
       </Menu.Outer>
-
       <SendViaChatDialog
         control={sendViaChatControl}
         onSelectChat={onSelectChatToShareTo}
@@ -191,5 +226,3 @@ let ShareMenuItems = ({
     </>
   )
 }
-ShareMenuItems = memo(ShareMenuItems)
-export {ShareMenuItems}

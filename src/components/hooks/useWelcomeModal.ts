@@ -2,8 +2,9 @@ import {useEffect, useState} from 'react'
 
 import {useSession} from '#/state/session'
 import {IS_WEB} from '#/env'
+import {type WelcomeModalControl} from './useWelcomeModal.shared'
 
-export function useWelcomeModal() {
+export function useWelcomeModal(): WelcomeModalControl {
   const {hasSession} = useSession()
   const [isOpen, setIsOpen] = useState(false)
 

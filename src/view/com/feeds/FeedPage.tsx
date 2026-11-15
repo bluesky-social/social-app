@@ -7,7 +7,6 @@ import {
   useState,
 } from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {type NavigationProp, useNavigation} from '@react-navigation/native'
@@ -15,10 +14,8 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {ComposeIcon2} from '#/lib/icons'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
-import {type AllNavigatorParams} from '#/lib/routes/types'
-import {s} from '#/lib/styles'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {useSetHomeBadge} from '#/state/home-badge'
@@ -30,15 +27,21 @@ import {
 } from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
+import {PostFeed} from '#/view/com/posts/PostFeed'
+import {FAB} from '#/view/com/util/fab/FAB'
+import {type ListMethods} from '#/view/com/util/List'
+import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
+import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
+import {useBreakpoints, useTheme} from '#/alf'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
-import {PostFeed} from '../posts/PostFeed'
-import {FAB} from '../util/fab/FAB'
-import {type ListMethods} from '../util/List'
-import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
-import {MainScrollProvider} from '../util/MainScrollProvider'
+import {
+  isFollowingV2Eligible,
+  isFollowingV2HomeDotEnabled,
+} from '#/features/followingV2/eligibility'
+import {app} from '#/lexicons'
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -60,17 +63,16 @@ export function FeedPage({
   isPageAdjacent: boolean
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  savedFeedConfig?: app.bsky.actor.defs.SavedFeed
   feedInfo: FeedSourceInfo
 }) {
   const ax = useAnalytics()
   const {hasSession} = useSession()
   const {_} = useLingui()
-  const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
+  const navigation = useNavigation<NavigationProp<CommonNavigatorParams>>()
   const queryClient = useQueryClient()
   const {openComposer} = useOpenComposer()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
-  const setMinimalShellMode = useSetMinimalShellMode()
   const headerOffset = useHeaderOffset()
   const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useRef<ListMethods>(null)
@@ -79,10 +81,12 @@ export function FeedPage({
   const isVideoFeed = useMemo(() => {
     const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
     const feedIsVideoMode =
-      feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
+      feedInfo.contentMode === app.bsky.feed.defs.contentModeVideo.value
     const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
     return IS_NATIVE && _isVideoFeed
   }, [feedInfo])
+  const t = useTheme()
+  const {gtMobile} = useBreakpoints()
 
   useEffect(() => {
     if (isPageFocused) {
@@ -95,8 +99,7 @@ export function FeedPage({
       animated: IS_NATIVE,
       offset: -headerOffset,
     })
-    setMinimalShellMode(false)
-  }, [headerOffset, setMinimalShellMode])
+  }, [headerOffset])
 
   const onSoftReset = useCallback(() => {
     const isScreenFocused =
@@ -164,19 +167,26 @@ export function FeedPage({
           />
         </FeedFeedbackProvider>
       </MainScrollProvider>
-      {(isScrolledDown || hasNew) && (
-        <LoadLatestBtn
-          onPress={onPressLoadLatest}
-          label={_(msg`Load new posts`)}
-          showIndicator={hasNew}
-        />
-      )}
+      {/*
+       * With Following v2, native replaces Load Latest with the new posts pill
+       * and mobile web relies on the Home tab dot. Tablet and desktop web have
+       * no pill, so they keep the button.
+       */}
+      {(isScrolledDown || hasNew) &&
+        !isFollowingV2Eligible(ax) &&
+        !(isFollowingV2HomeDotEnabled(ax) && !gtMobile) && (
+          <LoadLatestBtn
+            onPress={onPressLoadLatest}
+            label={_(msg`Load new posts`)}
+            showIndicator={hasNew}
+          />
+        )}
 
       {hasSession && (
         <FAB
           testID="composeFAB"
           onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          icon={<EditBigIcon size="lg" fill={t.palette.white} />}
           accessibilityRole="button"
           accessibilityLabel={_(msg({message: `New post`, context: 'action'}))}
           accessibilityHint=""

@@ -1,0 +1,26 @@
+{
+  "id": "app.bsky.notification.updateSeen",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "seenAt"
+          ],
+          "properties": {
+            "seenAt": {
+              "type": "string",
+              "format": "datetime"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Notify server that the requesting account has seen notifications. Requires auth."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

@@ -1,0 +1,15 @@
+{
+  "info": {
+    "author": "xcode",
+    "version": 1
+  },
+  "properties": {
+    "symbol-rendering-intent": "template"
+  },
+  "symbols": [
+    {
+      "filename": "nano.Play_Filled_Corner2_Rounded.svg",
+      "idiom": "universal"
+    }
+  ]
+}

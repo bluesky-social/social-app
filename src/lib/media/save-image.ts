@@ -1,5 +1,5 @@
 import {useCallback} from 'react'
-import * as MediaLibrary from 'expo-media-library'
+import * as MediaLibrary from 'expo-media-library/legacy'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -12,10 +12,15 @@ import {saveImageToMediaLibrary} from './manip'
  */
 export function useSaveImageToMediaLibrary() {
   const {_} = useLingui()
-  const [permissionResponse, requestPermission, getPermission] =
-    MediaLibrary.usePermissions({
-      granularPermissions: ['photo'],
-    })
+  const [, requestPermission, getPermission] = MediaLibrary.usePermissions({
+    granularPermissions: ['photo'],
+    /*
+     * Don't query the permission on mount. Every image embed in the feed
+     * mounts this hook, so the eager query cost a native call and a
+     * re-render per post. The save handler fetches it on demand instead.
+     */
+    get: false,
+  })
   return useCallback(
     async (uri: string) => {
       if (!IS_NATIVE) {
@@ -34,7 +39,12 @@ export function useSaveImageToMediaLibrary() {
         }
       }
 
-      const permission = permissionResponse ?? (await getPermission())
+      /*
+       * Always ask the OS instead of reusing the hook's cached response. The
+       * lightbox keeps this hook mounted for the whole session, so a cached
+       * denial would outlive the user granting access in system settings.
+       */
+      const permission = await getPermission()
 
       if (permission.granted) {
         await save()
@@ -63,6 +73,6 @@ export function useSaveImageToMediaLibrary() {
         }
       }
     },
-    [permissionResponse, requestPermission, getPermission, _],
+    [requestPermission, getPermission, _],
   )
 }

@@ -8,6 +8,13 @@
       <string>com.apple.usernotifications.service</string>
       <key>NSExtensionPrincipalClass</key>
       <string>$(PRODUCT_MODULE_NAME).NotificationService</string>
+      <key>NSExtensionAttributes</key>
+      <dict>
+        <key>IntentsSupported</key>
+        <array>
+          <string>INSendMessageIntent</string>
+        </array>
+      </dict>
     </dict>
     <key>MainAppScheme</key>
     <string>bluesky</string>

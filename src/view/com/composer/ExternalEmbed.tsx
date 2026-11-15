@@ -1,20 +1,26 @@
 import {useMemo} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {type UriString} from '@atproto/lex'
 
 import {cleanError} from '#/lib/strings/errors'
 import {
   useResolveGifQuery,
   useResolveLinkQuery,
 } from '#/state/queries/resolve-link'
-import {type Gif} from '#/state/queries/tenor'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
+import {AtCard} from '#/components/Post/Embed/AtCard'
+import {getAtCardProvider} from '#/components/Post/Embed/AtCard/providers'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
 import {ModeratedFeedEmbed} from '#/components/Post/Embed/FeedEmbed'
+import {JoinRequestEmbed} from '#/components/Post/Embed/JoinRequestEmbed'
 import {ModeratedListEmbed} from '#/components/Post/Embed/ListEmbed'
+import {StandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed'
+import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Embed as StarterPackEmbed} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
+import {type Gif} from '#/features/gifPicker/types'
 
 export const ExternalEmbedGif = ({
   onRemove,
@@ -29,9 +35,9 @@ export const ExternalEmbedGif = ({
     () =>
       data && {
         title: data.title ?? data.uri,
-        uri: data.uri,
+        uri: data.uri as UriString,
         description: data.description ?? '',
-        thumb: data.thumb?.source.path,
+        thumb: data.thumb?.source.path as UriString | undefined,
       },
     [data],
   )
@@ -77,7 +83,7 @@ export const ExternalEmbedLink = ({
   hasQuote,
   onRemove,
 }: {
-  uri: string
+  uri: UriString
   hasQuote: boolean
   onRemove: () => void
 }) => {
@@ -86,17 +92,42 @@ export const ExternalEmbedLink = ({
   const linkComponent = useMemo(() => {
     if (data) {
       if (data.type === 'external') {
+        const atProvider = getAtCardProvider(uri)
+        if (
+          (data.view && isStandardSiteEmbed(data.view.external)) ||
+          atProvider
+        ) {
+          const Card = atProvider ? AtCard : StandardSiteEmbed
+          return (
+            <Card
+              preview
+              authorDid={data.authorDid}
+              view={{
+                ...data.view?.external,
+                title: data.view?.external?.title || data.title || uri,
+                uri,
+                description:
+                  data.view?.external?.description || data.description,
+                // prefer opengraph data to atproto record-derived image
+                thumb: (data.thumb?.source.path ||
+                  data.view?.external?.thumb) as UriString | undefined,
+              }}
+            />
+          )
+        }
         return (
           <ExternalEmbed
             link={{
               title: data.title || uri,
               uri,
               description: data.description,
-              thumb: data.thumb?.source.path,
+              thumb: data.thumb?.source.path as UriString | undefined,
             }}
             hideAlt
           />
         )
+      } else if (data.type === 'chat-invite') {
+        return <JoinRequestEmbed code={data.code} preview={data.view} />
       } else if (data.kind === 'feed') {
         return (
           <ModeratedFeedEmbed

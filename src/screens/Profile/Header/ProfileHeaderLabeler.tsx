@@ -1,12 +1,7 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  type AppBskyLabelerDefs,
-  moderateProfile,
-  type ModerationOpts,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
+import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -23,8 +18,10 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import {atoms as a, tokens, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogOuterProps, useDialogControl} from '#/components/Dialog'
+import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
+import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRight} from '#/components/icons/Arrow'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as Heart,
@@ -35,7 +32,11 @@ import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_IOS} from '#/env'
+import {IS_IOS, IS_NATIVE} from '#/env'
+import {InviteFriendsDialog} from '#/features/inviteFriends'
+import {ProfileHeaderLinks} from '#/features/profileLinks'
+import {type app} from '#/lexicons'
+import {GermButton, isGermButtonShown} from '../components/GermButton'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
@@ -43,8 +44,8 @@ import {ProfileHeaderMetrics} from './Metrics'
 import {ProfileHeaderShell} from './Shell'
 
 interface Props {
-  profile: AppBskyActorDefs.ProfileViewDetailed
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
+  labeler: app.bsky.labeler.defs.LabelerViewDetailed
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
@@ -59,13 +60,13 @@ let ProfileHeaderLabeler = ({
   hideBackButton = false,
   isPlaceholderProfile,
 }: Props): React.ReactNode => {
-  const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
+  const profile: Shadow<app.bsky.actor.defs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const t = useTheme()
   const ax = useAnalytics()
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const isSelf = currentAccount?.did === profile.did
 
   const moderation = useMemo(
@@ -83,7 +84,7 @@ let ProfileHeaderLabeler = ({
       return
     }
     try {
-      playHaptic()
+      haptics.tap()
 
       if (likeUri) {
         await unlikeMod({uri: likeUri})
@@ -103,7 +104,7 @@ let ProfileHeaderLabeler = ({
       )
       ax.logger.error(`Failed to toggle labeler like`, {message: e.message})
     }
-  }, [ax, labeler, playHaptic, likeUri, unlikeMod, likeMod, _])
+  }, [ax, labeler, haptics, likeUri, unlikeMod, likeMod, _])
 
   return (
     <ProfileHeaderShell
@@ -121,10 +122,10 @@ let ProfileHeaderLabeler = ({
         </View>
         <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_md]}>
           <ProfileHeaderDisplayName profile={profile} moderation={moderation} />
-          <ProfileHeaderHandle profile={profile} />
+          <ProfileHeaderHandle profile={profile} moderation={moderation} />
         </View>
         {!isPlaceholderProfile && (
-          <>
+          <View style={a.gap_md}>
             {isSelf && <ProfileHeaderMetrics profile={profile} />}
             {descriptionRT && !moderation.ui('profileView').blur ? (
               <View pointerEvents="auto">
@@ -135,11 +136,30 @@ let ProfileHeaderLabeler = ({
                   value={descriptionRT}
                   enableTags
                   authorHandle={profile.handle}
+                  shouldProxyLinks={true}
                 />
               </View>
             ) : undefined}
+
+            <ProfileHeaderLinks
+              profile={profile}
+              hidden={!!moderation.ui('profileView').blur}
+              germButton={
+                isGermButtonShown(
+                  profile.associated?.germ,
+                  profile,
+                  currentAccount?.did,
+                ) ? (
+                  <GermButton
+                    germ={profile.associated.germ}
+                    profile={profile}
+                  />
+                ) : undefined
+              }
+            />
+
             {!isAppLabeler(profile.did) && (
-              <View style={[a.flex_row, a.gap_xs, a.align_center, a.pt_lg]}>
+              <View style={[a.flex_row, a.gap_xs, a.align_center]}>
                 <Button
                   testID="toggleLikeBtn"
                   size="small"
@@ -193,7 +213,7 @@ let ProfileHeaderLabeler = ({
                 )}
               </View>
             )}
-          </>
+          </View>
         )}
       </View>
     </ProfileHeaderShell>
@@ -233,17 +253,18 @@ export function HeaderLabelerButtons({
   profile,
   minimal = false,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: Shadow<app.bsky.actor.defs.ProfileViewDetailed>
   /** disable the subscribe button */
   minimal?: boolean
 }) {
   const t = useTheme()
   const ax = useAnalytics()
   const {_} = useLingui()
-  const {currentAccount} = useSession()
+  const {currentAccount, hasSession} = useSession()
   const requireAuth = useRequireAuth()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const editProfileControl = useDialogControl()
+  const inviteFriendsControl = useDialogControl()
   const {data: preferences} = usePreferencesQuery()
   const {
     mutateAsync: toggleSubscription,
@@ -260,8 +281,11 @@ export function HeaderLabelerButtons({
 
   const onPressSubscribe = () =>
     requireAuth(async (): Promise<void> => {
-      playHaptic()
+      haptics.confirm()
       const subscribe = !isSubscribed
+      const subscribeMetric = subscribe
+        ? 'moderation:subscribedToLabeler'
+        : 'moderation:unsubscribedFromLabeler'
 
       try {
         await toggleSubscription({
@@ -269,12 +293,7 @@ export function HeaderLabelerButtons({
           subscribe,
         })
 
-        ax.metric(
-          subscribe
-            ? 'moderation:subscribedToLabeler'
-            : 'moderation:unsubscribedFromLabeler',
-          {},
-        )
+        ax.metric(subscribeMetric, {})
       } catch (e: any) {
         reset()
         if (e.message === 'MAX_LABELERS') {
@@ -286,20 +305,50 @@ export function HeaderLabelerButtons({
     })
   return (
     <>
+      {hasSession &&
+        !isMe &&
+        !profile.viewer?.blockedBy &&
+        !profile.viewer?.blocking && <MessageProfileButton profile={profile} />}
+
       {isMe ? (
         <>
           <Button
             testID="profileHeaderEditProfileButton"
             size="small"
             color="secondary"
-            onPress={editProfileControl.open}
+            onPress={() => {
+              haptics.tap()
+              editProfileControl.open()
+            }}
             label={_(msg`Edit profile`)}
             style={a.rounded_full}>
             <ButtonText>
               <Trans>Edit Profile</Trans>
             </ButtonText>
           </Button>
+          {/* Invite friends is a native-only share sheet (the dialog is a
+              no-op on web), so gate the entry point to avoid a dead button. */}
+          {IS_NATIVE && (
+            <Button
+              testID="profileHeaderShareButton"
+              size="small"
+              color="secondary"
+              shape="round"
+              // expand the 33pt button toward a 44pt touch target, capped
+              // horizontally at half the 4pt row gap so the target cannot
+              // overlap the neighboring buttons' own targets
+              hitSlop={{top: 6, bottom: 6, left: 2, right: 2}}
+              onPress={() => {
+                haptics.tap()
+                ax.metric('invite:dialog:open', {logContext: 'ProfileHeader'})
+                inviteFriendsControl.open()
+              }}
+              label={_(msg`Invite friends`)}>
+              <ButtonIcon icon={ArrowShareRight} />
+            </Button>
+          )}
           <EditProfileDialog profile={profile} control={editProfileControl} />
+          {IS_NATIVE && <InviteFriendsDialog control={inviteFriendsControl} />}
         </>
       ) : !isAppLabeler(profile.did) && !minimal ? (
         // hidden in the minimal header, because it's not shadowed so the two buttons

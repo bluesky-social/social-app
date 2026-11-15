@@ -1,12 +1,12 @@
-import React from 'react'
-import {StyleProp, ViewStyle} from 'react-native'
+import {useCallback} from 'react'
+import {type StyleProp, type ViewStyle} from 'react-native'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
-import {VisibilityViewProps} from './types'
+import {type VisibilityViewProps} from './types'
 const NativeView: React.ComponentType<{
   onChangeStatus: (e: {nativeEvent: {isActive: boolean}}) => void
   children: React.ReactNode
-  enabled: Boolean
+  enabled: boolean
   style: StyleProp<ViewStyle>
 }> = requireNativeViewManager('ExpoBlueskyVisibilityView')
 
@@ -21,7 +21,7 @@ export default function VisibilityView({
   onChangeStatus: onChangeStatusOuter,
   enabled,
 }: VisibilityViewProps) {
-  const onChangeStatus = React.useCallback(
+  const onChangeStatus = useCallback(
     (e: {nativeEvent: {isActive: boolean}}) => {
       onChangeStatusOuter(e.nativeEvent.isActive)
     },

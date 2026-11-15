@@ -1,0 +1,153 @@
+{
+  "id": "app.bsky.labeler.defs",
+  "defs": {
+    "labelerView": {
+      "type": "object",
+      "required": [
+        "uri",
+        "cid",
+        "creator",
+        "indexedAt"
+      ],
+      "properties": {
+        "cid": {
+          "type": "string",
+          "format": "cid"
+        },
+        "uri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "ref": "com.atproto.label.defs#label",
+            "type": "ref"
+          }
+        },
+        "viewer": {
+          "ref": "#labelerViewerState",
+          "type": "ref"
+        },
+        "creator": {
+          "ref": "app.bsky.actor.defs#profileView",
+          "type": "ref"
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "likeCount": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "labelerPolicies": {
+      "type": "object",
+      "required": [
+        "labelValues"
+      ],
+      "properties": {
+        "labelValues": {
+          "type": "array",
+          "items": {
+            "ref": "com.atproto.label.defs#labelValue",
+            "type": "ref"
+          },
+          "description": "The label values which this labeler publishes. May include global or custom labels."
+        },
+        "labelValueDefinitions": {
+          "type": "array",
+          "items": {
+            "ref": "com.atproto.label.defs#labelValueDefinition",
+            "type": "ref"
+          },
+          "description": "Label values created by this labeler and scoped exclusively to it. Labels defined here will override global label definitions for this labeler."
+        }
+      }
+    },
+    "labelerViewerState": {
+      "type": "object",
+      "properties": {
+        "like": {
+          "type": "string",
+          "format": "at-uri"
+        }
+      }
+    },
+    "labelerViewDetailed": {
+      "type": "object",
+      "required": [
+        "uri",
+        "cid",
+        "creator",
+        "policies",
+        "indexedAt"
+      ],
+      "properties": {
+        "cid": {
+          "type": "string",
+          "format": "cid"
+        },
+        "uri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "ref": "com.atproto.label.defs#label",
+            "type": "ref"
+          }
+        },
+        "viewer": {
+          "ref": "#labelerViewerState",
+          "type": "ref"
+        },
+        "creator": {
+          "ref": "app.bsky.actor.defs#profileView",
+          "type": "ref"
+        },
+        "policies": {
+          "ref": "app.bsky.labeler.defs#labelerPolicies",
+          "type": "ref"
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "likeCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reasonTypes": {
+          "type": "array",
+          "items": {
+            "ref": "com.atproto.moderation.defs#reasonType",
+            "type": "ref"
+          },
+          "description": "The set of report reason 'codes' which are in-scope for this service to review and action. These usually align to policy categories. If not defined (distinct from empty array), all reason types are allowed."
+        },
+        "subjectTypes": {
+          "type": "array",
+          "items": {
+            "ref": "com.atproto.moderation.defs#subjectType",
+            "type": "ref"
+          },
+          "description": "The set of subject types (account, record, etc) this service accepts reports on."
+        },
+        "subjectCollections": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "nsid"
+          },
+          "description": "Set of record types (collection NSIDs) which can be reported to this service. If not defined (distinct from empty array), default is any record type."
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

@@ -12,6 +12,11 @@ changes, a new client build will automatically be ran and deployed to TestFlight
 Production OTAs can only update the JavaScript bundle. Changes to native modules
 must be done as a full release cycle through the app stores.
 
+Every release has a `release-x.y.z` branch, created when the release is cut.
+Production OTAs are deployed from that branch: changes land on it through a PR,
+and the deploy workflows run against it. That way the release branch always
+matches what's live in production.
+
 > [!TIP]
 > If you're using a TestFlight build, in order to reference the correct build
 > number and to verify the success of an OTA, you will need to delete the
@@ -20,9 +25,18 @@ must be done as a full release cycle through the app stores.
 
 ### 1. Find the build numbers
 
-Find the latest production build numbers for iOS and Android in Slack. These are
-spit out into `#bot-client-builds` after each release. You can also find this
-information under the `About` section in app settings.
+Find the iOS build number and Android version code of the production builds. You
+can find these in App Store Connect and Google Play Console, but the quickest
+place to look is the summary of the latest successful [Build and Submit
+iOS](https://github.com/bluesky-social/social-app/actions/workflows/build-submit-ios.yml)
+and [Build and Submit
+Android](https://github.com/bluesky-social/social-app/actions/workflows/build-submit-android.yml)
+runs on the `release-x.y.z` branch, under "iOS build number" and "Android build
+number". They're also posted to `#bot-client-builds` after each release, and
+shown under the `About` section in app settings.
+
+If a platform was rebuilt during the release, check which build was actually
+submitted to the store. An OTA only reaches the exact build it targets.
 
 | Slack | In app |
 | ----- | ------ |
@@ -30,51 +44,53 @@ information under the `About` section in app settings.
 
 ### 2. Ensure the release is tagged
 
-You need to ensure that the latest release was properly tagged using the format
-`1.X.0`. If the commit is not properly tagged, then the OTA deployment will
-simply fail since the GitHub Action will not be able to find a commit to
-fingerprint and diff against.
+You need to ensure that the release was properly tagged using the format
+`x.y.z`. The OTA workflow fingerprints the release branch against this tag, and
+aborts if anything native has changed since. If the tag is missing, the
+deployment will simply fail since the GitHub Action will not be able to find a
+commit to fingerprint and diff against.
 
-### 3. Create an OTA branch
+### 3. Create a branch off the release branch
 
-Create a branch based off the last commit that was deployed in the most recent
-release. This could be the commit that was tagged `1.x.0`, or a later commit,
-but it **needs to be the tip of the latest production release** in any case.
-Double check yourself by ensuring that the `version` in `package.json` matches
-what's in the latest release.
+Create a branch off `release-x.y.z` with the pattern `release-x.y.z-ota-n`.
+Double check that the `version` in `package.json` is `x.y.z`.
 
-This new OTA branch should follow the format `1.X.0-ota-1`. If one or more OTAs
-have already been deployed for this release, incremement the branch name e.g.
-`1.x.0-ota-2`.
-
-### 4. Add commits to the OTA branch
-
-Cherry pick in the commits that need to be deployed on top of the most recent
-release or OTA.
-
-### 5. Manually set build numbers
-
-Log in to the EAS CLI with `eas login` and manually set the build numbers to the
-values you found in **Step 1**.
+Then cherry-pick the commits that need to be deployed, in the order they landed
+on `main`:
 
 ```sh
-> npx eas build:version:set -p ios
->
-> Project @blueskysocial/bluesky with bundle identifier "xyz.blueskyweb.app" is configured with buildNumber 1011.
-> ✔ What version would you like to set? … 1009
->
-> npx eas build:version:set -p android
->
-> Project @blueskysocial/bluesky with application ID "xyz.blueskyweb.app" is configured with versionCode 641.
-> ✔ What version would you like to set? … 639  
+git fetch origin
+git switch -c release-x.y.z-ota-1 origin/release-x.y.z --no-track
+git cherry-pick <sha> <sha> ...
 ```
 
-👉 **Save the previous values,** in this case `1011` and `641`, so you can reset
-them after the OTA completes.
+### 4. Pull translations
+
+Since translators may have added new strings, and positions within the code may
+have shifted, it's typically best to pull the latest translations. This needs a
+Crowdin personal access token, which you can create under Account Settings > API
+in Crowdin.
+
+Run this and commit the result as the last commit on the branch.
+
+```sh
+CROWDIN_PERSONAL_TOKEN=<token> pnpm intl:release
+git add src/locale
+git commit -m "intl:release"
+```
+
+### 5. Merge into the release branch
+
+Open a PR into `release-x.y.z` titled `Release x.y.z OTA N`, where `N` is one
+more than the number of OTA PRs already merged into that release branch. Once CI
+passes, squash-merge it, so each OTA shows up as a single commit on the release
+branch.
 
 ### 6. Run the GitHub actions
-You'll need to run two separate actions: one to deploy the iOS/Android OTA
-itself, and one to build the web Docker container.
+
+You'll need to run two separate workflows: one to deploy the iOS/Android OTA
+itself from `release-x.y.z`, and one to build and publish the web frontend
+using the workflow on `main` with the release branch's commit SHA.
 
 **For the iOS/Android OTA,** head to [Actions > Bundle and Deploy EAS
 Update](https://github.com/bluesky-social/social-app/actions/workflows/bundle-deploy-eas-update.yml)
@@ -82,28 +98,31 @@ and run the action.
 
 | Steps |     |
 | ----- | --- |
-| Select your OTA branch `1.x.0-ota-x`, select `production` in the dropdown, enter the git tag of the latest release `1.x.0`, and click "Run workflow"  | ![workflow](./img/ota_action.png) |
+| Select the `release-x.y.z` branch, select `production` in the dropdown, enter the git tag of the release `x.y.z`, enter the iOS build number and Android version code you found in **Step 1**, and click "Run workflow"  | ![workflow](./img/ota_action.png) |
+
+> [!NOTE]
+> Production OTAs are bound to the specific native build they target, so the
+> workflow requires the build numbers to be entered manually. There is no need
+> to change the global EAS build counters (and doing so is no longer necessary
+> for OTAs - they are only used when producing new native builds).
 
 > [!NOTE]
 > If you do enter an incorrect version here, the deployment will either:
 > - Fail, because the action cannot find a commit with your misentered version
-> - Succeed, but with no users receiving the update. This is because the version
->   you entered will not properly correlate to a _build number_ as well, so no
->   clients in the wild will be able to receive the update.
+> - Succeed, but with no users receiving the update. This is because the
+>   version and build numbers you entered will not match any clients in the
+>   wild, so none will be able to receive the update.
 
-**For web,** head to [Actions >
-build-and-push-bskyweb-aws](https://github.com/bluesky-social/social-app/actions/workflows/build-and-push-bskyweb-aws.yaml)
-and run the action.
-
-| Steps |     |
-| ----- | --- |
-| Select your OTA branch `1.x.0-ota-x` and click "Run workflow" | ![workflow](./img/web_action.png) |
+**For web,** in the **social-app repository**, run the
+[publish-web-statics GitHub Actions workflow](https://github.com/bluesky-social/social-app/actions/workflows/publish-web-statics.yml)
+with **"Use workflow from" set to `main`** and **`sha` set to the full
+40-character commit SHA of the OTA squash-merge on `release-x.y.z`**.
 
 ### 7. Deploy web
 
-Once the web Docker container build finishes, go to your `1.x.0-ota-x` branch,
-copy the most recent commit hash. Post this hash in `#ops-deploys` and request
-someone with web deploy access deploy the built container.
+After the workflow succeeds, open a PR in the **deploy repository** updating
+**`BSKY_APP_VERSION` in `apps/bapp/values.yaml`** to the same commit SHA used in
+`sha`. Post this hash in `#ops-deploys`, and merge the PR to deploy the frontend.
 
 ### 8. Confirm successful deployment
 
@@ -114,24 +133,7 @@ To confirm this, as mentioned above, you must completely clear the TestFlight
 build from your device and re-install from the App Store. Then, you'll need to:
 - Launch the app (or quit and reopen) and wait ~15s for the download to complete
 - Quit and reopen the app
-- Check the `Settings > About` page and confirm the has matches the most recent has on your OTA branch
-
-### 9. Reset build numbers
-
-Grab the build numbers you saved in **Step 5** and reverse the EAS CLI commands
-to reset the build numbers.
-
-```sh
-> npx eas build:version:set -p ios
->
-> Project @blueskysocial/bluesky with bundle identifier "xyz.blueskyweb.app" is configured with buildNumber 1009.
-> ✔ What version would you like to set? … 1011
->
-> npx eas build:version:set -p android
->
-> Project @blueskysocial/bluesky with application ID "xyz.blueskyweb.app" is configured with versionCode 639.
-> ✔ What version would you like to set? … 641
-```
+- Check the `Settings > About` page and confirm the hash matches the most recent hash on `release-x.y.z`
 
 ## Overview diagram
 

@@ -30,15 +30,3 @@ export function parseSearchQuery(rawQuery: string) {
     params,
   }
 }
-
-export function makeSearchQuery(query: string, params: Params) {
-  return [
-    query,
-    Object.entries(params)
-      .filter(([_, value]) => value)
-      .map(([name, value]) => `${name}:${value}`)
-      .join(' '),
-  ]
-    .filter(Boolean)
-    .join(' ')
-}

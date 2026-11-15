@@ -10,8 +10,6 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {useSession} from '#/state/session'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
-import {Lightbox} from '#/view/com/lightbox/Lightbox'
-import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Deactivated} from '#/screens/Deactivated'
 import {Takendown} from '#/screens/Takendown'
@@ -23,6 +21,7 @@ import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {useWelcomeModal} from '#/components/hooks/useWelcomeModal'
+import {Lightbox} from '#/components/Lightbox'
 import {GlobalReportDialog} from '#/components/moderation/ReportDialog'
 import {
   Outlet as PolicyUpdateOverlayPortalOutlet,
@@ -31,6 +30,7 @@ import {
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {WelcomeModal} from '#/components/WelcomeModal'
 import {useAgeAssurance} from '#/ageAssurance'
+import {DataUnavailableScreen} from '#/ageAssurance/components/DataUnavailableScreen'
 import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
 import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
 import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
@@ -64,8 +64,7 @@ function ShellInner() {
       <ErrorBoundary>
         <FlatNavigator layout={drawerLayout} />
       </ErrorBoundary>
-      <Composer winHeight={0} />
-      <ModalsContainer />
+      <Composer />
       <MutedWordsDialog />
       <SigninDialog />
       <EmailDialog />
@@ -169,7 +168,9 @@ export function Shell() {
         <Deactivated />
       ) : (
         <>
-          {aa.state.access === aa.Access.None ? (
+          {aa.state.error === 'account-data' ? (
+            <DataUnavailableScreen />
+          ) : aa.state.access === aa.Access.None ? (
             <NoAccessScreen />
           ) : (
             <RoutesContainer>

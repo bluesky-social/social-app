@@ -1,0 +1,26 @@
+{
+  "id": "app.bsky.graph.muteThread",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "root"
+          ],
+          "properties": {
+            "root": {
+              "type": "string",
+              "format": "at-uri"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Mutes a thread preventing notifications from the thread and any of its children. Mutes are private in Bluesky. Requires auth."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

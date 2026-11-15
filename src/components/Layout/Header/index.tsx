@@ -1,12 +1,14 @@
 import {createContext, useCallback, useContext} from 'react'
 import {type GestureResponderEvent, Keyboard, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {HITSLOP_30} from '#/lib/constants'
+import {getHomeNavigationAction} from '#/lib/routes/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useSetDrawerOpen} from '#/state/shell'
+import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
 import {
   atoms as a,
   platform,
@@ -23,12 +25,16 @@ import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {
   BUTTON_VISUAL_ALIGNMENT_OFFSET,
   CENTER_COLUMN_OFFSET,
+  CENTER_COLUMN_WIDTH,
   HEADER_SLOT_SIZE,
   SCROLLBAR_OFFSET,
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
+
+const HEADER_BUTTON_HITSLOP = {top: 30, bottom: 10, left: 30, right: 30}
 
 export function Outer({
   children,
@@ -38,7 +44,7 @@ export function Outer({
 }: {
   children: React.ReactNode
   noBottomBorder?: boolean
-  headerRef?: React.RefObject<View | null>
+  headerRef?: React.RefObject<React.ComponentRef<typeof View> | null>
   sticky?: boolean
 }) {
   const t = useTheme()
@@ -46,6 +52,13 @@ export function Outer({
   const {gtMobile} = useBreakpoints()
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
   const {centerColumnOffset} = useLayoutBreakpoints()
+  const {isWithinSplitView, isWithinLeftPanel} = useIsWithinSplitView()
+  /*
+   * Native headers sit 4px lower in their box to balance the status bar above
+   * them. Without a top inset (e.g. iPhone Duo, landscape) there's nothing to
+   * balance, so pad the top too
+   */
+  const hasTopInset = useSafeAreaInsets().top > 0
 
   return (
     <View
@@ -57,19 +70,22 @@ export function Outer({
         a.align_center,
         a.gap_sm,
         sticky && web([a.sticky, {top: 0}, a.z_10, t.atoms.bg]),
-        gutters,
+        isWithinLeftPanel ? a.px_lg : gutters,
         platform({
-          native: [a.pb_xs, {minHeight: 48}],
+          native: hasTopInset
+            ? [a.pb_xs, {minHeight: 48}]
+            : [a.py_xs, {minHeight: 52}],
           web: [a.py_xs, {minHeight: 52}],
         }),
         t.atoms.border_contrast_low,
-        gtMobile && [a.mx_auto, {maxWidth: 600}],
-        !isWithinOffsetView && {
-          transform: [
-            {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
-            {translateX: web(SCROLLBAR_OFFSET) ?? 0},
-          ],
-        },
+        gtMobile && [a.mx_auto, {maxWidth: CENTER_COLUMN_WIDTH}],
+        !isWithinOffsetView &&
+          !isWithinSplitView && {
+            transform: [
+              {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
+              {translateX: web(SCROLLBAR_OFFSET) ?? 0},
+            ],
+          },
       ]}>
       {children}
     </View>
@@ -116,7 +132,9 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
       if (navigation.canGoBack()) {
         navigation.goBack()
       } else {
-        navigation.navigate('Home')
+        navigation.dispatch(
+          getHomeNavigationAction(navigation.getState(), 'navigate'),
+        )
       }
     },
     [onPress, navigation],
@@ -131,7 +149,7 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
         color="secondary"
         shape="round"
         onPress={onPressBack}
-        hitSlop={HITSLOP_30}
+        hitSlop={HEADER_BUTTON_HITSLOP}
         style={[
           {marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET},
           a.bg_transparent,
@@ -146,13 +164,15 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
 
 export function MenuButton() {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const setDrawerOpen = useSetDrawerOpen()
   const {gtMobile} = useBreakpoints()
 
   const onPress = useCallback(() => {
+    ax.metric('nav:click', {item: 'menu', surface: 'topBar'})
     Keyboard.dismiss()
     setDrawerOpen(true)
-  }, [setDrawerOpen])
+  }, [setDrawerOpen, ax])
 
   return gtMobile ? null : (
     <Slot>
@@ -163,7 +183,7 @@ export function MenuButton() {
         color="secondary"
         shape="square"
         onPress={onPress}
-        hitSlop={HITSLOP_30}
+        hitSlop={HEADER_BUTTON_HITSLOP}
         style={[
           {marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET},
           a.bg_transparent,
@@ -179,12 +199,14 @@ export function TitleText({
   style,
 }: {children: React.ReactNode} & TextStyleProp) {
   const {gtMobile} = useBreakpoints()
+  const {isWithinLeftPanel} = useIsWithinSplitView()
   const align = useContext(AlignmentContext)
   return (
     <Text
       style={[
-        a.text_lg,
-        a.font_semi_bold,
+        isWithinLeftPanel
+          ? [a.text_xl, a.font_bold]
+          : [a.text_lg, a.font_semi_bold],
         a.leading_tight,
         IS_IOS && align === 'platform' && a.text_center,
         gtMobile && a.text_xl,
@@ -209,7 +231,7 @@ export function SubtitleText({children}: {children: React.ReactNode}) {
         IS_IOS && align === 'platform' && a.text_center,
         t.atoms.text_contrast_medium,
       ]}
-      numberOfLines={2}>
+      numberOfLines={1}>
       {children}
     </Text>
   )

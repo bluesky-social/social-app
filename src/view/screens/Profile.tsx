@@ -1,12 +1,9 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {StyleSheet} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {
-  type AppBskyActorDefs,
-  moderateProfile,
-  type ModerationOpts,
-  RichText as RichTextAPI,
-} from '@atproto/api'
+import {StyleSheet, useWindowDimensions} from 'react-native'
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
+import {ScrollForwarderView} from '@bsky.app/react-native-scroll-forwarder'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -16,7 +13,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {ComposeIcon2} from '#/lib/icons'
+import {getProfileTabIndex} from '#/lib/routes/profile-tabs'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -25,7 +22,7 @@ import {
 import {combinedDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {isInvalidHandle} from '#/lib/strings/handles'
-import {colors, s} from '#/lib/styles'
+import {colors} from '#/lib/styles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {listenSoftReset} from '#/state/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -33,19 +30,21 @@ import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
-import {useAgent, useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
+import {useAppviewClient, useSession} from '#/state/session'
 import {ProfileFeedgens} from '#/view/com/feeds/ProfileFeedgens'
 import {ProfileLists} from '#/view/com/lists/ProfileLists'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
+import {type PostFeedRef} from '#/view/com/posts/PostFeed'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListRef} from '#/view/com/util/List'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
+import {getProfileBannerSafeAreaCoverHeight} from '#/screens/Profile/Header/layout'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Circle_And_Square_Stroke1_Corner0_Rounded_Filled as CircleAndSquareIcon} from '#/components/icons/CircleAndSquare'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {Heart2_Stroke1_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
 import {Image_Stroke1_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {Message_Stroke1_Corner0_Rounded_Filled as MessageIcon} from '#/components/icons/Message'
@@ -53,8 +52,8 @@ import {VideoClip_Stroke1_Corner0_Rounded as VideoIcon} from '#/components/icons
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
+import {type app} from '#/lexicons'
 import {navigate} from '#/Navigation'
-import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -62,9 +61,29 @@ interface SectionRef {
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export function ProfileScreen(props: Props) {
+  const t = useTheme()
+  const {gtMobile} = useBreakpoints()
+  const {top: topInset} = useSafeAreaInsets()
+  const safeAreaCoverHeight = getProfileBannerSafeAreaCoverHeight({
+    gtMobile,
+    topInset,
+  })
+
   return (
     <Layout.Screen testID="profileScreen" style={[a.pt_0]}>
       <ProfileScreenInner {...props} />
+      {safeAreaCoverHeight > 0 && (
+        <Layout.Center
+          pointerEvents="none"
+          style={[
+            a.absolute,
+            a.top_0,
+            a.z_50,
+            {height: safeAreaCoverHeight, alignSelf: 'center'},
+            t.atoms.bg,
+          ]}
+        />
+      )}
     </Layout.Screen>
   )
 }
@@ -105,7 +124,7 @@ function ProfileScreenInner({route}: Props) {
     if (resolveError) {
       if (name === 'lulaoficial.bsky.social') {
         console.log('Applying redirect to lula.com.br')
-        void navigate('Profile', {name: 'lula.com.br'})
+        void navigate({name: 'Profile', params: {name: 'lula.com.br'}})
       }
     }
   }, [name, resolveError])
@@ -118,7 +137,9 @@ function ProfileScreenInner({route}: Props) {
   }, [queryClient, profile?.viewer?.blockedBy, resolvedDid])
 
   // Most pushes will happen here, since we will have only placeholder data
-  if (isDidPending || isProfilePending) {
+  // A disabled dependent query remains pending, so only consider the profile
+  // pending once handle resolution has produced a DID.
+  if (isDidPending || (!!resolvedDid && isProfilePending)) {
     return (
       <Layout.Content>
         <ProfileHeaderLoading />
@@ -141,10 +162,16 @@ function ProfileScreenInner({route}: Props) {
   if (profile && moderationOpts) {
     return (
       <ProfileScreenLoaded
+        key={
+          route.params.tab !== undefined
+            ? `${profile.did}-${route.params.tab}-${isPlaceholderProfile}`
+            : profile.did
+        }
         profile={profile}
         moderationOpts={moderationOpts}
         isPlaceholderProfile={isPlaceholderProfile}
         hideBackButton={!!route.params.hideBackButton}
+        tab={route.params.tab}
       />
     )
   }
@@ -167,15 +194,19 @@ function ProfileScreenLoaded({
   isPlaceholderProfile,
   moderationOpts,
   hideBackButton,
+  tab,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hideBackButton: boolean
   isPlaceholderProfile: boolean
+  tab?: string
 }) {
+  const t = useTheme()
+  const {gtMobile} = useBreakpoints()
+  const {height: windowHeight} = useWindowDimensions()
   const profile = useProfileShadow(profileUnshadowed)
   const {hasSession, currentAccount} = useSession()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useOpenComposer()
   const navigation = useNavigation<NavigationProp>()
   const requireEmailVerification = useRequireEmailVerification()
@@ -187,7 +218,7 @@ function ProfileScreenLoaded({
     did: profile.did,
     enabled: !!profile.associated?.labeler,
   })
-  const [currentPage, setCurrentPage] = useState(0)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const {_} = useLingui()
 
   const [scrollViewTag, setScrollViewTag] = useState<number | null>(null)
@@ -217,7 +248,8 @@ function ProfileScreenLoaded({
   const hasLabeler = !!profile.associated?.labeler
   const showFiltersTab = hasLabeler
   const showPostsTab = true
-  const showRepliesTab = hasSession
+  // Reply deep links must work without a session so crawlers can index reply-heavy profiles.
+  const showRepliesTab = hasSession || tab === 'replies'
   const showMediaTab = !hasLabeler
   const showVideosTab = !hasLabeler
   const showLikesTab = isMe
@@ -227,7 +259,9 @@ function ProfileScreenLoaded({
   const showStarterPacksTab = isMe || starterPackCount > 0
   // subtract starterpack count from list count, since starterpacks are a type of list
   const listCount = (profile.associated?.lists || 0) - starterPackCount
-  const showListsTab = hasSession && (isMe || listCount > 0)
+  // Lists are public, so direct links can bypass the logged-in-only tab visibility.
+  const showListsTab =
+    (hasSession || tab === 'lists') && (isMe || listCount > 0)
 
   const sectionTitles = [
     showFiltersTab ? _(msg`Labels`) : undefined,
@@ -255,6 +289,9 @@ function ProfileScreenLoaded({
   if (showFiltersTab) {
     filtersIndex = nextIndex++
   }
+  if (showListsTab && hasLabeler) {
+    listsIndex = nextIndex++
+  }
   if (showPostsTab) {
     postsIndex = nextIndex++
   }
@@ -276,9 +313,24 @@ function ProfileScreenLoaded({
   if (showStarterPacksTab) {
     starterPacksIndex = nextIndex++
   }
-  if (showListsTab) {
+  if (showListsTab && !hasLabeler) {
     listsIndex = nextIndex++
   }
+
+  const initialPage = getProfileTabIndex(
+    tab,
+    {
+      posts: postsIndex,
+      replies: repliesIndex,
+      media: mediaIndex,
+      videos: videosIndex,
+      feeds: feedsIndex,
+      'starter-packs': starterPacksIndex,
+      lists: listsIndex,
+    },
+    0,
+  )
+  const [currentPage, setCurrentPage] = useState(initialPage)
 
   const scrollSectionToTop = useCallback(
     (index: number) => {
@@ -317,11 +369,10 @@ function ProfileScreenLoaded({
 
   useFocusEffect(
     useCallback(() => {
-      setMinimalShellMode(false)
       return listenSoftReset(() => {
         scrollSectionToTop(currentPage)
       })
-    }, [setMinimalShellMode, currentPage, scrollSectionToTop]),
+    }, [currentPage, scrollSectionToTop]),
   )
 
   // events
@@ -350,10 +401,18 @@ function ProfileScreenLoaded({
   const wrappedNavToWizard = requireEmailVerification(navToWizard, {
     instructions: [
       <Trans key="nav">
-        Before creating a starter pack, you must first verify your email.
+        Before creating a Starter Pack, you must first verify your email.
       </Trans>,
     ],
   })
+
+  const postFeedRef = useRef<PostFeedRef>(null)
+
+  const onRefresh = async () => {
+    setIsRefreshing(true)
+    await postFeedRef.current?.refreshFeed()
+    setIsRefreshing(false)
+  }
 
   // rendering
   // =
@@ -364,7 +423,10 @@ function ProfileScreenLoaded({
     setMinimumHeight: (height: number) => void
   }) => {
     return (
-      <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
+      <ScrollForwarderView
+        scrollViewTag={scrollViewTag}
+        refreshing={isRefreshing}
+        onRefresh={onRefresh}>
         <ProfileHeader
           profile={profile}
           labeler={labelerInfo}
@@ -374,7 +436,7 @@ function ProfileScreenLoaded({
           isPlaceholderProfile={showPlaceholder}
           setMinimumHeight={setMinimumHeight}
         />
-      </ExpoScrollForwarderView>
+      </ScrollForwarderView>
     )
   }
 
@@ -382,16 +444,18 @@ function ProfileScreenLoaded({
     <ScreenHider
       testID="profileView"
       style={styles.container}
-      screenDescription={_(msg`profile`)}
+      screenDescription={_(msg`user`)}
       modui={moderation.ui('profileView')}>
       <PagerWithHeader
         testID="profilePager"
+        initialPage={initialPage}
         isHeaderReady={!showPlaceholder}
         items={sectionTitles}
         onPageSelected={onPageSelected}
         onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}
-        allowHeaderOverScroll>
+        allowHeaderOverScroll
+        headerOverflowInset={gtMobile ? windowHeight : undefined}>
         {showFiltersTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileLabelsSection
@@ -442,6 +506,7 @@ function ProfileScreenLoaded({
                       }
                     : undefined
                 }
+                postFeedRef={postFeedRef}
               />
             )
           : null}
@@ -590,7 +655,7 @@ function ProfileScreenLoaded({
         <FAB
           testID="composeFAB"
           onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          icon={<EditBigIcon size="lg" fill={t.palette.white} />}
           accessibilityRole="button"
           accessibilityLabel={_(msg`New post`)}
           accessibilityHint=""
@@ -601,7 +666,11 @@ function ProfileScreenLoaded({
 }
 
 function useRichText(text: string): [RichTextAPI, boolean] {
-  const agent = useAgent()
+  /*
+   * Facet/mention resolution is an appview job - it resolves handles through
+   * the appview, and the public fallback keeps it working when logged out.
+   */
+  const client = useAppviewClient()
   const [prevText, setPrevText] = useState(text)
   const [rawRT, setRawRT] = useState(() => new RichTextAPI({text}))
   const [resolvedRT, setResolvedRT] = useState<RichTextAPI | null>(null)
@@ -616,7 +685,7 @@ function useRichText(text: string): [RichTextAPI, boolean] {
     async function resolveRTFacets() {
       // new each time
       const resolvedRT = new RichTextAPI({text})
-      await resolvedRT.detectFacets(agent)
+      await resolvedRT.detectFacets(client)
       if (!ignore) {
         setResolvedRT(resolvedRT)
       }
@@ -625,7 +694,7 @@ function useRichText(text: string): [RichTextAPI, boolean] {
     return () => {
       ignore = true
     }
-  }, [text, agent])
+  }, [text, client])
   const isResolving = resolvedRT === null
   return [resolvedRT ?? rawRT, isResolving]
 }
@@ -634,7 +703,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     height: '100%',
-    // @ts-ignore Web-only.
+    // @ts-expect-error Web-only.
     overflowAnchor: 'none', // Fixes jumps when switching tabs while scrolled down.
   },
   loading: {

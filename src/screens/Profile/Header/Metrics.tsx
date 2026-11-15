@@ -1,5 +1,4 @@
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -9,11 +8,12 @@ import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useTheme} from '#/alf'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 
 export function ProfileHeaderMetrics({
   profile,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: Shadow<app.bsky.actor.defs.ProfileViewDetailed>
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
@@ -30,7 +30,8 @@ export function ProfileHeaderMetrics({
 
   return (
     <View
-      style={[a.flex_row, a.gap_sm, a.align_center]}
+      // 10pt has no gap atom; matches the handle-to-pronouns gap in Handle.tsx
+      style={[a.flex_row, a.align_center, {gap: 10}]}
       pointerEvents="box-none">
       <InlineLinkText
         testID="profileHeaderFollowersButton"

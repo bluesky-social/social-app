@@ -5,8 +5,8 @@ import {type Geolocation} from '#/geolocation/types'
 const localEnabled = false
 export const enabled = IS_DEV && (localEnabled || aaDebug.geolocation)
 export const geolocation: Geolocation = aaDebug.geolocation ?? {
-  countryCode: 'US',
-  regionCode: 'TX',
+  countryCode: 'AA',
+  regionCode: undefined,
 }
 
 const deviceLocalEnabled = false
@@ -14,8 +14,8 @@ export const deviceGeolocation: Geolocation | undefined =
   aaDebug.deviceGeolocation ||
   (deviceLocalEnabled
     ? {
-        countryCode: 'US',
-        regionCode: 'TX',
+        countryCode: 'AA',
+        regionCode: undefined,
       }
     : undefined)
 

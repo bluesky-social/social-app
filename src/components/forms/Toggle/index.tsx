@@ -81,6 +81,8 @@ export type ItemProps = ViewStyleProp & {
   isInvalid?: boolean
   children: ((props: ItemState) => React.ReactNode) | React.ReactNode
   hitSlop?: PressableProps['hitSlop']
+  highlightRow?: boolean
+  testID?: string
 }
 
 export function useItemContext() {
@@ -160,8 +162,11 @@ export function Item({
   style,
   type = 'checkbox',
   label,
+  highlightRow,
   ...rest
 }: ItemProps) {
+  const t = useTheme()
+
   const {
     values: selectedValues,
     type: groupType,
@@ -180,7 +185,7 @@ export function Item({
     onOut: onPressOut,
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
 
   const role = groupType === 'radio' ? 'radio' : type
   const selected = selectedValues.includes(name) || !!value
@@ -188,11 +193,11 @@ export function Item({
     groupDisabled || itemDisabled || (!selected && maxSelectionsReached)
 
   const onPress = useCallback(() => {
-    playHaptic('Light')
     const next = !selected
+    haptics.toggle(groupType === 'radio' || next)
     setFieldValue({name, value: next})
     onChange?.(next)
-  }, [playHaptic, name, selected, onChange, setFieldValue])
+  }, [haptics, groupType, name, selected, onChange, setFieldValue])
 
   const state = useMemo(
     () => ({
@@ -206,6 +211,15 @@ export function Item({
     }),
     [name, selected, disabled, hovered, pressed, focused, isInvalid],
   )
+
+  const highlightStyle = highlightRow
+    ? [
+        a.rounded_full,
+        a.p_md,
+        hovered && t.atoms.bg_contrast_25,
+        selected && {backgroundColor: t.palette.primary_50},
+      ]
+    : null
 
   return (
     <ItemContext.Provider value={state}>
@@ -232,7 +246,7 @@ export function Item({
         onPressOut={onPressOut}
         onFocus={onFocus}
         onBlur={onBlur}
-        style={[a.flex_row, a.align_center, a.gap_sm, style]}>
+        style={[a.flex_row, a.align_center, a.gap_sm, highlightStyle, style]}>
         {typeof children === 'function' ? children(state) : children}
       </Pressable>
     </ItemContext.Provider>
@@ -558,6 +572,32 @@ export function BaseRadio({
           ]}
         />
       )}
+    </View>
+  )
+}
+
+export function RadioWithLabel({
+  label,
+  selected,
+}: {
+  label: string
+  selected: boolean
+}) {
+  const t = useTheme()
+
+  return (
+    <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+      <Radio />
+      <LabelText
+        style={[
+          a.font_medium,
+          a.flex_1,
+          a.text_md,
+          a.leading_tight,
+          selected ? t.atoms.text : t.atoms.text_contrast_high,
+        ]}>
+        {label}
+      </LabelText>
     </View>
   )
 }

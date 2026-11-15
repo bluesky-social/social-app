@@ -9,4 +9,5 @@ export const GEOLOCATION_SERVICE_URL = `${GEOLOCATION_URL}/geolocation`
 export const FALLBACK_GEOLOCATION_SERVICE_RESPONSE: Geolocation = {
   countryCode: undefined,
   regionCode: undefined,
+  city: undefined,
 }

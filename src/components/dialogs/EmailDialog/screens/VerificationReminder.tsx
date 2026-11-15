@@ -1,7 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -19,7 +17,7 @@ export function VerificationReminder({
   showScreen,
 }: ScreenProps<ScreenID.VerificationReminder>) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtPhone, gtMobile} = useBreakpoints()
   const control = useDialogContext()
 
@@ -55,9 +53,7 @@ export function VerificationReminder({
           <ShieldIcon width={64} fill="white" style={[a.z_10]} />
         </View>
       </View>
-
       <View style={[a.mb_xs, {height: 150 - dialogPadding}]} />
-
       <View style={[a.gap_sm]}>
         <Text style={[a.text_xl, a.font_bold]}>
           <Trans>Please verify your email</Trans>
@@ -69,12 +65,10 @@ export function VerificationReminder({
           </Trans>
         </Text>
       </View>
-
       <Divider />
-
       <View style={[a.gap_sm, gtPhone && [a.flex_row_reverse]]}>
         <Button
-          label={_(msg`Get started`)}
+          label={l`Get started`}
           variant="solid"
           color="primary"
           size="large"
@@ -88,8 +82,8 @@ export function VerificationReminder({
           </ButtonText>
         </Button>
         <Button
-          label={_(msg`Maybe later`)}
-          accessibilityHint={_(msg`Snoozes the reminder`)}
+          label={l`Maybe later`}
+          accessibilityHint={l`Snoozes the reminder`}
           variant="ghost"
           color="secondary"
           size="large"

@@ -1,4 +1,3 @@
-import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -13,8 +12,9 @@ import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 
-export function SubscribeMenu({list}: {list: AppBskyGraphDefs.ListView}) {
+export function SubscribeMenu({list}: {list: app.bsky.graph.defs.ListView}) {
   const {_} = useLingui()
   const ax = useAnalytics()
   const subscribeMutePromptControl = Prompt.usePromptControl()

@@ -1,6 +1,11 @@
-import {ErrorRequestHandler, Request, RequestHandler, Response} from 'express'
+import {
+  type ErrorRequestHandler,
+  type Request,
+  type RequestHandler,
+  type Response,
+} from 'express'
 
-import {AppContext} from '../context.js'
+import {type AppContext} from '../context.js'
 import {httpLogger} from '../logger.js'
 
 export type Handler = (req: Request, res: Response) => Awaited<void>
@@ -34,3 +39,35 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   }
   return res.status(500).end('server error')
 }
+
+export async function getImage(url: string) {
+  const response = await fetch(ensureJpeg(url))
+  const arrayBuf = await response.arrayBuffer()
+  if (response.status !== 200) return null
+  return Buffer.from(arrayBuf)
+}
+
+// CDN URLs end with @jpeg, @webp, or no extension (which may default to webp).
+// We want to ensure the image URLs we use are for jpegs, required for compat with satori.
+function ensureJpeg(url: string) {
+  return url.replace(/(@[a-z]{3,5})?$/, '@jpeg')
+}
+
+export const hideAvatarLabels = new Set([
+  '!hide',
+  '!warn',
+  'porn',
+  'sexual',
+  'nudity',
+  'sexual-figurative',
+  'graphic-media',
+  'gore',
+  'self-harm',
+  'sensitive',
+  'security',
+  'impersonation',
+  'scam',
+  'spam',
+  'misleading',
+  'inauthentic',
+])

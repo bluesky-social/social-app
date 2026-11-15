@@ -2,7 +2,7 @@ import {createContext, useContext, useEffect, useState} from 'react'
 import {AppState} from 'react-native'
 
 import {MessagesEventBus} from '#/state/messages/events/agent'
-import {useAgent, useSession} from '#/state/session'
+import {useChatClient, useSession} from '#/state/session'
 
 const MessagesEventBusContext = createContext<MessagesEventBus | null>(null)
 MessagesEventBusContext.displayName = 'MessagesEventBusContext'
@@ -42,13 +42,23 @@ export function MessagesEventBusProviderInner({
 }: {
   children: React.ReactNode
 }) {
-  const agent = useAgent()
+  const chatClient = useChatClient()
   const [bus] = useState(
     () =>
       new MessagesEventBus({
-        agent,
+        chatClient,
       }),
   )
+
+  /*
+   * The bus outlives the client it was constructed with: replacing the session
+   * bundle (account switch, cross-tab token sync, expiry rescue) builds fresh
+   * clients over the new session and disposes the old ones, so a bus still
+   * holding the previous client would poll through a dead session.
+   */
+  useEffect(() => {
+    bus.updateClient(chatClient)
+  }, [bus, chatClient])
 
   useEffect(() => {
     bus.resume()

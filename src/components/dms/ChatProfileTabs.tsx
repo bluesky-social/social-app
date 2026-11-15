@@ -1,7 +1,7 @@
 import {useCallback, useEffect} from 'react'
 import {type ScrollView, View} from 'react-native'
 import Animated, {useAnimatedRef, useSharedValue} from 'react-native-reanimated'
-import {moderateProfile} from '@atproto/api'
+import {moderateProfile} from '@bsky/sdk/moderation'
 import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -95,6 +95,8 @@ function Tab({
     moderation.ui('displayName'),
   )
 
+  const isLabeler = profile.associated?.labeler
+
   const onPressItem = useCallback(
     (did: string) => {
       onRemove?.(did)
@@ -111,7 +113,7 @@ function Tab({
         a.border,
         a.justify_center,
         a.rounded_lg,
-        a.pl_xs,
+        isLabeler ? a.pl_sm : a.pl_xs,
         a.pr_sm,
         a.py_xs,
         t.atoms.border_contrast_low,

@@ -1,25 +1,27 @@
-import {init} from '@sentry/react-native'
+import {getGlobalScope, init} from '@sentry/react-native'
 
+import {featureFlagsIntegration} from '#/logger/sentry/featureFlags'
+import {dropExpectedNetworkErrors} from '#/logger/sentry/network-errors'
 import * as env from '#/env'
 
 init({
   enabled: !env.IS_DEV && !!env.SENTRY_DSN,
-  autoSessionTracking: false,
+  enableAutoSessionTracking: false,
+  enableTombstone: true,
   dsn: env.SENTRY_DSN,
+  sendDefaultPii: true,
   debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
   environment: env.ENV,
   dist: env.BUNDLE_IDENTIFIER,
-  release: env.RELEASE_VERSION,
+  release: env.SENTRY_RELEASE,
+  beforeSend: dropExpectedNetworkErrors,
+  integrations: [featureFlagsIntegration],
   ignoreErrors: [
     /*
      * Unknown internals errors
      */
     `t is not defined`,
     `Can't find variable: t`,
-    /*
-     * Un-useful errors
-     */
-    `Network request failed`,
   ],
   /**
    * Does not affect traces of error events or other logs, just disables
@@ -30,4 +32,19 @@ init({
    */
   attachStacktrace: false,
   sampleRate: env.IS_INTERNAL ? 1.0 : 0.1,
+  /**
+   * Sample rate for performance spans (video playback, video upload). Setting
+   * this also enables the SDK's default stall and slow/frozen frame tracking,
+   * whose measurements attach to every root span.
+   */
+  tracesSampleRate: env.IS_INTERNAL ? 1.0 : 0.01,
 })
+
+/*
+ * Events already carry react_native_context.fabric, but a tag is easier to
+ * filter and dashboard on. Detection matches the SDK's own isFabricEnabled.
+ */
+getGlobalScope().setTag(
+  'new_arch',
+  (global as {nativeFabricUIManager?: unknown}).nativeFabricUIManager != null,
+)

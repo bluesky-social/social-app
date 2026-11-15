@@ -1,4 +1,3 @@
-import {useCallback} from 'react'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -6,34 +5,41 @@ import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {APP_LANGUAGES} from '#/locale/languages'
 import * as Select from '#/components/Select'
 
+const DEFAULT_ITEMS = APP_LANGUAGES.map(l => ({
+  label: l.name,
+  value: l.code2,
+}))
+
 export function LanguageSelect({
   value,
   onChange,
-  items = APP_LANGUAGES.map(l => ({
-    label: l.name,
-    value: l.code2,
-  })),
+  items = DEFAULT_ITEMS,
   label,
+  disabledBlueskySupportedLanguageSanitization = false,
 }: {
   value?: string
   onChange: (value: string) => void
   items?: {label: string; value: string}[]
   label?: string
+  disabledBlueskySupportedLanguageSanitization?: boolean
 }) {
   const {_} = useLingui()
+  const selectValue =
+    value && !disabledBlueskySupportedLanguageSanitization
+      ? sanitizeAppLanguageSetting(value)
+      : value
 
-  const handleOnChange = useCallback(
-    (value: string) => {
-      if (!value) return
-      onChange(sanitizeAppLanguageSetting(value))
-    },
-    [onChange],
-  )
+  const handleOnChange = (value: string) => {
+    if (!value) return
+    onChange(
+      disabledBlueskySupportedLanguageSanitization
+        ? value
+        : sanitizeAppLanguageSetting(value),
+    )
+  }
 
   return (
-    <Select.Root
-      value={value ? sanitizeAppLanguageSetting(value) : undefined}
-      onValueChange={handleOnChange}>
+    <Select.Root value={selectValue} onValueChange={handleOnChange}>
       <Select.Trigger label={_(msg`Select language`)}>
         <Select.ValueText placeholder={_(msg`Select language`)} />
         <Select.Icon />

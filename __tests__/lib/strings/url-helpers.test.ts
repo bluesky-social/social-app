@@ -1,6 +1,7 @@
 import {describe, expect, it} from '@jest/globals'
 
 import {
+  getChatInviteCodeFromUrl,
   isPossiblyAUrl,
   isTrustedUrl,
   linkRequiresWarning,
@@ -176,5 +177,49 @@ describe('isTrustedUrl', () => {
   it.each(cases)('given input uri %p, returns %p', (str, expected) => {
     const output = isTrustedUrl(str)
     expect(output).toEqual(expected)
+  })
+})
+
+describe('getChatInviteCodeFromUrl', () => {
+  type Case = [string, string | undefined]
+
+  const cases: Case[] = [
+    ['https://bsky.app/chat/abcdefg', 'abcdefg'],
+    ['https://bsky.app/chat/abcdefghij', 'abcdefghij'],
+    // http is not recognized as a bsky.app url
+    ['http://bsky.app/chat/abcdefg', undefined],
+    ['https://bsky.app/chat/abcdefg?utm=foo', 'abcdefg'],
+    ['https://bsky.app/chat/abcdefg#section', 'abcdefg'],
+    ['/chat/abcdefg', 'abcdefg'],
+    ['/chat/abcdefg?utm=foo', 'abcdefg'],
+    ['/chat/abcdefg#section', 'abcdefg'],
+
+    // too short
+    ['https://bsky.app/chat/abcdef', undefined],
+    ['/chat/abcdef', undefined],
+    // too long
+    ['https://bsky.app/chat/abcdefghijk', undefined],
+    ['/chat/abcdefghijk', undefined],
+    // invalid characters
+    ['https://bsky.app/chat/abc-def', undefined],
+    ['/chat/abc def', undefined],
+    // trailing path
+    ['https://bsky.app/chat/abcdefg/extra', undefined],
+    ['/chat/abcdefg/extra', undefined],
+    // wrong path
+    ['https://bsky.app/profile/abcdefg', undefined],
+    ['https://bsky.app/chat', undefined],
+    // wrong host
+    ['https://example.com/chat/abcdefg', undefined],
+    // not a url, not a path
+    ['chat/abcdefg', undefined],
+    ['abcdefg', undefined],
+    ['', undefined],
+    // malformed url
+    ['https://[invalid/chat/abcdefg', undefined],
+  ]
+
+  it.each(cases)('given input %p, returns %p', (input, expected) => {
+    expect(getChatInviteCodeFromUrl(input)).toEqual(expected)
   })
 })

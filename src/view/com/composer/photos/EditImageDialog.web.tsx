@@ -16,7 +16,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
-import {type EditImageDialogProps} from './EditImageDialog'
+import {type EditImageDialogProps} from './EditImageDialog.shared'
 
 export function EditImageDialog(props: EditImageDialogProps) {
   return (

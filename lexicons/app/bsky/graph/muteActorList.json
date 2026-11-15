@@ -1,0 +1,26 @@
+{
+  "id": "app.bsky.graph.muteActorList",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "list"
+          ],
+          "properties": {
+            "list": {
+              "type": "string",
+              "format": "at-uri"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Creates a mute relationship for the specified list of accounts. Mutes are private in Bluesky. Requires auth."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

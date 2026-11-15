@@ -1,7 +1,7 @@
 import type * as bsky from '#/types/bsky'
 
 export function isBlockedOrBlocking(profile: bsky.profile.AnyProfileView) {
-  return profile.viewer?.blockedBy || profile.viewer?.blocking
+  return Boolean(profile.viewer?.blockedBy || profile.viewer?.blocking)
 }
 
 export function isMuted(profile: bsky.profile.AnyProfileView) {

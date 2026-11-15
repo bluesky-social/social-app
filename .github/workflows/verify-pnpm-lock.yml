@@ -1,0 +1,58 @@
+name: Lockfile
+
+on:
+  pull_request:
+concurrency:
+  group: "${{ github.workflow }}-${{ github.head_ref || github.ref }}"
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify-pnpm-lock:
+    name: No manual pnpm-lock.yaml edits
+    runs-on: ubuntu-latest
+    steps:
+      # Temporary until fixed runner images roll out:
+      # https://github.com/actions/runner-images/issues/15018
+      - name: Update Ubuntu CA certificates
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --only-upgrade --no-install-recommends -y ca-certificates
+
+      - name: ⬇️ Check out PR HEAD
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: ⬇️ Fetch base branch
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: git fetch origin $BASE_REF --depth=1
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - name: 🔧 Install node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
+
+      - name: ⏪ Reset pnpm-lock.yaml to base
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: git show "origin/$BASE_REF:pnpm-lock.yaml" > pnpm-lock.yaml
+
+      - name: 📦 pnpm install
+        # Fine to skip scripts since we don't run any code
+        run: pnpm clean && pnpm install --ignore-scripts --no-frozen-lockfile
+
+      - name: 🔍 Verify pnpm-lock.yaml
+        run: |
+          git diff --quiet --exit-code || {
+            echo '::error::`pnpm-lock.yaml` does not match what pnpm would generate given the base `pnpm-lock.yaml` and the head `package.json`.'
+            echo '::error:: - If this is intentional, you can ignore this check.'
+            echo '::error:: - If this is unintentional, apply the following diff:'
+            git --no-pager diff
+            exit 1
+          }

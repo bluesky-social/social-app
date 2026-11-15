@@ -1,0 +1,126 @@
+{
+  "id": "site.standard.document",
+  "defs": {
+    "main": {
+      "key": "tid",
+      "type": "record",
+      "record": {
+        "type": "object",
+        "required": [
+          "site",
+          "title",
+          "publishedAt"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Combine with site or publication url to construct a canonical URL to the document. Prepend with a leading slash."
+          },
+          "site": {
+            "type": "string",
+            "format": "uri",
+            "description": "Points to a publication record (at://) or a publication url (https://) for loose documents. Avoid trailing slashes."
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 1280,
+              "maxGraphemes": 128
+            },
+            "description": "Array of strings used to tag or categorize the document. Avoid prepending tags with hashtags."
+          },
+          "links": {
+            "refs": [],
+            "type": "union",
+            "description": "Array of values describing relationships between this document and external resources"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 5000,
+            "description": "Title of the document.",
+            "maxGraphemes": 500
+          },
+          "labels": {
+            "refs": [
+              "com.atproto.label.defs#selfLabels"
+            ],
+            "type": "union",
+            "description": "Self-label values for this post. Effectively content warnings."
+          },
+          "content": {
+            "refs": [],
+            "type": "union",
+            "closed": false,
+            "description": "Open union used to define the record's content. Each entry must specify a $type and may be extended with other lexicons to support additional content formats."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Timestamp of the documents last edit."
+          },
+          "coverImage": {
+            "type": "blob",
+            "accept": [
+              "image/*"
+            ],
+            "maxSize": 1000000,
+            "description": "Image to used for thumbnail or cover image. Less than 1MB is size."
+          },
+          "bskyPostRef": {
+            "ref": "com.atproto.repo.strongRef",
+            "type": "ref",
+            "description": "Strong reference to a Bluesky post. Useful to keep track of comments off-platform."
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 30000,
+            "description": "A brief description or excerpt from the document.",
+            "maxGraphemes": 3000
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Timestamp of the documents publish time."
+          },
+          "textContent": {
+            "type": "string",
+            "description": "Plaintext representation of the documents contents. Should not contain markdown or other formatting."
+          },
+          "contributors": {
+            "type": "array",
+            "items": {
+              "ref": "#contributor",
+              "type": "ref"
+            }
+          }
+        }
+      },
+      "description": "A document record representing a published article, blog post, or other content. Documents can belong to a publication or exist independently."
+    },
+    "contributor": {
+      "type": "object",
+      "required": [
+        "did"
+      ],
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "did"
+        },
+        "role": {
+          "type": "string",
+          "maxLength": 1000,
+          "maxGraphemes": 100
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 1000,
+          "maxGraphemes": 100
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

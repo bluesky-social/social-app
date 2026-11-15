@@ -1,3 +1,7 @@
+/**
+ * If a feature is in the beta program, be sure to add a localized description
+ * for it via getFeatureDescription().
+ */
 export enum Features {
   // core flags
   IsBskyTeam = 'is_bsky_team',
@@ -9,11 +13,23 @@ export enum Features {
   ImportContactsOnboardingDisable = 'import_contacts:onboarding:disable',
   ImportContactsSettingsDisable = 'import_contacts:settings:disable',
   LiveNowBetaDisable = 'live_now_beta:disable',
-  ImageUploadsHighResolution = 'image_uploads:high_resolution',
-  ImageUploadsBlobSize2mbEnabled = 'image_uploads:blob_size_2mb:enabled',
-  GroupChatsEnable = 'group_chats:enable',
-  DmsNewMessageComposerEnable = 'dms:new_message_composer:enable',
+  GroupChatsDisable = 'group_chats:disable',
+  ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
+  PostFeedKnownLikersEnable = 'post_feed:known_likers:enable',
+  PostThreadKnownLikersEnable = 'post_thread:known_likers:enable',
+  FollowSortEnable = 'follow_sort:enable',
+  FollowingV2Enable = 'following_v2:enable',
+  OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
+  AtmosphereScreenEnable = 'atmosphere_screen:enable',
+  ShareDestinationsEnable = 'share_destinations:enable',
+  ImageUploadsNativeCompressionEnable = 'image_uploads:native_compression:enable',
+  ImageUploadsWebCompressionEnable = 'image_uploads:web_compression:enable',
+
+  // values
+  StarterPacksConfig = 'starter_packs:config',
+  TrendingDiscoverValues = 'trending_discover:values',
+  TrendingExploreTopicsCountValue = 'trending_explore_topics_count:value',
 
   AATest = 'aa-test',
 }

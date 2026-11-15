@@ -1,4 +1,4 @@
-import {type Did} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 
 import packageJson from '#/../package.json'
 
@@ -14,11 +14,7 @@ export const RELEASE_VERSION: string =
  * The env the app is running in e.g. development, testflight, production, e2e
  */
 export const ENV: string = process.env.EXPO_PUBLIC_ENV as
-  | 'production'
-  | 'testflight'
-  | 'development'
-  | 'e2e'
-  | (string & {})
+  'production' | 'testflight' | 'development' | 'e2e' | (string & {})
 
 /**
  * Indicates whether the app is running in TestFlight
@@ -62,10 +58,7 @@ export const BUNDLE_DATE: number =
  * The log level for the app.
  */
 export const LOG_LEVEL = (process.env.EXPO_PUBLIC_LOG_LEVEL || 'info') as
-  | 'debug'
-  | 'info'
-  | 'warn'
-  | 'error'
+  'debug' | 'info' | 'warn' | 'error'
 
 /**
  * Enable debug logs for specific logger instances
@@ -75,14 +68,20 @@ export const LOG_DEBUG: string = process.env.EXPO_PUBLIC_LOG_DEBUG || ''
 /**
  * The DID of the Bluesky appview to proxy to
  */
-export const BLUESKY_PROXY_DID: Did =
+export const BLUESKY_PROXY_DID: DidString =
   process.env.EXPO_PUBLIC_BLUESKY_PROXY_DID || 'did:web:api.bsky.app'
 
 /**
  * The DID of the chat service to proxy to
  */
-export const CHAT_PROXY_DID: Did =
+export const CHAT_PROXY_DID: DidString =
   process.env.EXPO_PUBLIC_CHAT_PROXY_DID || 'did:web:api.bsky.chat'
+
+/**
+ * The DID of the moderation service to proxy requests to.
+ */
+export const MOD_PROXY_DID: DidString | undefined =
+  process.env.EXPO_PUBLIC_MOD_PROXY_DID
 
 /**
  * Metrics API host
@@ -106,6 +105,16 @@ export const GROWTHBOOK_CLIENT_KEY: string =
  * Sentry DSN for telemetry
  */
 export const SENTRY_DSN: string | undefined = process.env.EXPO_PUBLIC_SENTRY_DSN
+
+/**
+ * Sentry release name. Sentry only compares releases by version when they're
+ * named `package@version` - a bare version gets ordered by when its release
+ * record was created, which makes "resolved in release" regress on events
+ * from older builds. The package matches the native SDK's default release
+ * name. Source map uploads must use the same name, see `SENTRY_RELEASE` in
+ * the CI workflows, `Dockerfile` and `scripts/post-web-build.js`.
+ */
+export const SENTRY_RELEASE = `xyz.blueskyweb.app@${RELEASE_VERSION}`
 
 /**
  * Bitdrift API key. If undefined, Bitdrift should be disabled.

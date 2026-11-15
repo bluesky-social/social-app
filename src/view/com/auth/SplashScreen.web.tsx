@@ -1,15 +1,14 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {useLogoVariant} from '#/view/icons/useLogoVariant'
 import {
   AppClipOverlay,
   postAppClipMessage,
@@ -17,6 +16,7 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
+import {TimesLarge_Stroke2_Corner0_Rounded as TimesIcon} from '#/components/icons/Times'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -46,7 +46,8 @@ export const SplashScreen = ({
     }
   }, [])
 
-  const kawaii = useKawaiiMode()
+  const logoVariant = useLogoVariant()
+  const kawaii = logoVariant === 'kawaii'
 
   return (
     <>
@@ -61,13 +62,7 @@ export const SplashScreen = ({
             zIndex: 100,
           }}
           onPress={onDismiss}>
-          <FontAwesomeIcon
-            icon="x"
-            size={24}
-            style={{
-              color: String(t.atoms.text.color),
-            }}
-          />
+          <TimesIcon width={24} style={t.atoms.text} />
         </Pressable>
       )}
 
@@ -77,7 +72,6 @@ export const SplashScreen = ({
           style={[
             a.h_full,
             a.justify_center,
-            // @ts-expect-error web only
             {paddingBottom: '20vh'},
             IS_WEB_MOBILE && a.pb_5xl,
             t.atoms.border_contrast_medium,

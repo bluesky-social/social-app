@@ -1,9 +1,9 @@
 /* eslint-disable bsky-internal/avoid-unwrapped-text */
-import React from 'react'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 
 import {Butterfly} from './Butterfly.js'
 import {Img} from './Img.js'
+import * as bsky from '../types/bsky/index.js'
 
 export const STARTERPACK_HEIGHT = 630
 export const STARTERPACK_WIDTH = 1200
@@ -18,7 +18,10 @@ export function StarterPack(props: {
   images: Map<string, Buffer>
 }) {
   const {starterPack, images} = props
-  const record = AppBskyGraphStarterpack.isRecord(starterPack.record)
+  const record = bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+    starterPack.record,
+    AppBskyGraphStarterpack.isRecord,
+  )
     ? starterPack.record
     : null
   const imagesArray = [...images.values()]
@@ -54,6 +57,7 @@ export function StarterPack(props: {
         backgroundColor: 'black',
         color: 'white',
         fontFamily: 'Inter',
+        fontWeight: 700,
       }}>
       {/* image tiles */}
       <div
@@ -134,6 +138,7 @@ export function StarterPack(props: {
             fontSize: isLongTitle ? 55 : 65,
             display: 'flex',
             textAlign: 'center',
+            textWrap: 'balance',
           }}>
           {record?.name || 'Starter Pack'}
         </div>

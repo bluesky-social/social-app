@@ -41,7 +41,7 @@ export function FocusScope({children}: {children: React.ReactNode}) {
  */
 function FocusTrap({children}: {children: React.ReactNode}) {
   const {_} = useLingui()
-  const child = useRef<View>(null)
+  const child = useRef<React.ComponentRef<typeof View>>(null)
 
   /*
    * Here we add a ref to the first child of this component. This currently
@@ -66,13 +66,16 @@ function FocusTrap({children}: {children: React.ReactNode}) {
     })
   }, [children])
 
-  const focusNode = useCallback((ref: View | null) => {
-    if (!ref) return
-    const node = findNodeHandle(ref)
-    if (node) {
-      AccessibilityInfo.setAccessibilityFocus(node)
-    }
-  }, [])
+  const focusNode = useCallback(
+    (ref: React.ComponentRef<typeof View> | null) => {
+      if (!ref) return
+      const node = findNodeHandle(ref)
+      if (node) {
+        AccessibilityInfo.setAccessibilityFocus(node)
+      }
+    },
+    [],
+  )
 
   useEffect(() => {
     setTimeout(() => {

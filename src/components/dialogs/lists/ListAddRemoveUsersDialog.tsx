@@ -1,16 +1,14 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {type AppBskyGraphDefs, type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useAllListMembersQuery} from '#/state/queries/list-members'
 import {
-  getMembership,
-  type ListMembersip,
-  useDangerousListMembershipsQuery,
   useListMembershipAddMutation,
   useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships'
@@ -24,6 +22,7 @@ import {
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export function ListAddRemoveUsersDialog({
@@ -32,7 +31,7 @@ export function ListAddRemoveUsersDialog({
   onChange,
 }: {
   control: Dialog.DialogControlProps
-  list: AppBskyGraphDefs.ListView
+  list: app.bsky.graph.defs.ListView
   onChange?: (
     type: 'add' | 'remove',
     profile: bsky.profile.AnyProfileView,
@@ -53,7 +52,7 @@ function DialogInner({
   list,
   onChange,
 }: {
-  list: AppBskyGraphDefs.ListView
+  list: app.bsky.graph.defs.ListView
   onChange?: (
     type: 'add' | 'remove',
     profile: bsky.profile.AnyProfileView,
@@ -61,7 +60,7 @@ function DialogInner({
 }) {
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
-  const {data: memberships} = useDangerousListMembershipsQuery()
+  const {data: listMembers} = useAllListMembersQuery(list.uri)
 
   const renderProfileCard = useCallback(
     (item: ProfileItem) => {
@@ -69,13 +68,13 @@ function DialogInner({
         <UserResult
           profile={item.profile}
           onChange={onChange}
-          memberships={memberships}
+          listMembers={listMembers}
           list={list}
           moderationOpts={moderationOpts}
         />
       )
     },
-    [onChange, memberships, list, moderationOpts],
+    [onChange, listMembers, list, moderationOpts],
   )
 
   return (
@@ -86,16 +85,30 @@ function DialogInner({
   )
 }
 
+/**
+ * Returns undefined for pending, false for not a member, and string for a member (the URI of the membership record)
+ */
+function getMembership(
+  listMembers: app.bsky.graph.defs.ListItemView[] | undefined,
+  actorDid: string,
+): string | false | undefined {
+  if (!listMembers) {
+    return undefined
+  }
+  const member = listMembers.find(item => item.subject.did === actorDid)
+  return member ? member.uri : false
+}
+
 function UserResult({
   profile,
   list,
-  memberships,
+  listMembers,
   onChange,
   moderationOpts,
 }: {
   profile: bsky.profile.AnyProfileView
-  list: AppBskyGraphDefs.ListView
-  memberships: ListMembersip[] | undefined
+  list: app.bsky.graph.defs.ListView
+  listMembers: app.bsky.graph.defs.ListItemView[] | undefined
   onChange?: (
     type: 'add' | 'remove',
     profile: bsky.profile.AnyProfileView,
@@ -104,8 +117,8 @@ function UserResult({
 }) {
   const {_} = useLingui()
   const membership = useMemo(
-    () => getMembership(memberships, list.uri, profile.did),
-    [memberships, list.uri, profile.did],
+    () => getMembership(listMembers, profile.did),
+    [listMembers, profile.did],
   )
   const {mutate: listMembershipAdd, isPending: isAddingPending} =
     useListMembershipAddMutation({

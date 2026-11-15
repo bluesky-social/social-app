@@ -1,14 +1,14 @@
-import {useCallback, useLayoutEffect, useState} from 'react'
+import {useState} from 'react'
 import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {usePreventRemove} from '@react-navigation/native'
 
 import {
-  type AllNavigatorParams,
+  type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {useSetMinimalShellMode} from '#/state/shell'
+import {useEnableMinimalShellMode} from '#/state/shell'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {FindContactsFlow} from '#/components/contacts/FindContactsFlow'
 import {useFindContactsFlowState} from '#/components/contacts/state'
@@ -16,7 +16,7 @@ import * as Layout from '#/components/Layout'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {IS_NATIVE} from '#/env'
 
-type Props = NativeStackScreenProps<AllNavigatorParams, 'FindContactsFlow'>
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'FindContactsFlow'>
 export function FindContactsFlowScreen({navigation}: Props) {
   const {_} = useLingui()
 
@@ -36,12 +36,7 @@ export function FindContactsFlowScreen({navigation}: Props) {
     })
   })
 
-  const setMinimalShellMode = useSetMinimalShellMode()
-  const effect = useCallback(() => {
-    setMinimalShellMode(true)
-    return () => setMinimalShellMode(false)
-  }, [setMinimalShellMode])
-  useLayoutEffect(effect)
+  useEnableMinimalShellMode()
 
   return (
     <Layout.Screen>

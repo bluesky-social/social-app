@@ -1,0 +1,82 @@
+{
+  "id": "app.bsky.graph.getListsWithMembership",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "listsWithMembership"
+          ],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "listsWithMembership": {
+              "type": "array",
+              "items": {
+                "ref": "#listWithMembership",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "actor"
+        ],
+        "properties": {
+          "actor": {
+            "type": "string",
+            "format": "at-identifier",
+            "description": "The account (actor) to check for membership."
+          },
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "purposes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "knownValues": [
+                "modlist",
+                "curatelist"
+              ]
+            },
+            "description": "Optional filter by list purpose. If not specified, all supported types are returned."
+          }
+        }
+      },
+      "description": "Enumerates the lists created by the session user, and includes membership information about `actor` in those lists. Only supports curation and moderation lists (no reference lists, used in starter packs). Requires auth."
+    },
+    "listWithMembership": {
+      "type": "object",
+      "required": [
+        "list"
+      ],
+      "properties": {
+        "list": {
+          "ref": "app.bsky.graph.defs#listView",
+          "type": "ref"
+        },
+        "listItem": {
+          "ref": "app.bsky.graph.defs#listItemView",
+          "type": "ref"
+        }
+      },
+      "description": "A list and an optional list item indicating membership of a target user to that list."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

@@ -1,0 +1,54 @@
+/**
+ * Copyright (c) JOB TODAY S.A. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
+import {type TransformsStyle} from 'react-native'
+import {
+  type AnimatedRef,
+  type MeasuredDimensions,
+} from 'react-native-reanimated'
+
+export type Dimensions = {
+  width: number
+  height: number
+}
+
+export type Position = {
+  x: number
+  y: number
+}
+
+export type ImageSource = {
+  uri: string
+  dimensions: Dimensions | null
+  thumbUri: string
+  thumbDimensions: Dimensions | null
+  thumbRect: MeasuredDimensions | null
+  /**
+   * The thumbnail's container, which the lightbox animates from and back to,
+   * and hides while it's showing this image. Must be an Animated component:
+   * Reanimated only syncs setNativeProps changes back to React for those.
+   */
+  thumbRef?: AnimatedRef | null
+  thumbBorderRadius?: number
+  alt?: string
+  type: 'image' | 'circle-avi' | 'rect-avi'
+}
+
+export type Transform = Exclude<
+  TransformsStyle['transform'],
+  string | undefined
+>
+
+export type LightboxTransforms = {
+  scaleAndMoveTransform: Transform
+  cropFrameTransform: Transform
+  cropContentTransform: Transform
+  borderRadius: number
+  isResting: boolean
+  isHidden: boolean
+}

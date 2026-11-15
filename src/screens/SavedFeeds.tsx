@@ -1,13 +1,12 @@
-import {useCallback, useState} from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
 import type Animated from 'react-native-reanimated'
-import {useAnimatedRef, useScrollViewOffset} from 'react-native-reanimated'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {useAnimatedRef, useScrollOffset} from 'react-native-reanimated'
 import {TID} from '@atproto/common-web'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {RECOMMENDED_SAVED_FEEDS, TIMELINE_SAVED_FEED} from '#/lib/constants'
@@ -23,7 +22,6 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
@@ -44,6 +42,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 export function SavedFeeds({}: Props) {
@@ -66,12 +65,11 @@ function SavedFeedsInner({
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
     useOverwriteSavedFeedsMutation()
   const navigation = useNavigation<NavigationProp>()
   const scrollRef = useAnimatedRef<Animated.ScrollView>()
-  const scrollOffset = useScrollViewOffset(scrollRef)
+  const scrollOffset = useScrollOffset(scrollRef)
 
   /*
    * Use optimistic data if exists and no error, otherwise fallback to remote
@@ -87,12 +85,6 @@ function SavedFeedsInner({
   const noFollowingFeed =
     currentFeeds.every(f => f.type !== 'timeline') && !noSavedFeedsOfAnyType
   const [isDragging, setIsDragging] = useState(false)
-
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
 
   const onSaveChanges = async () => {
     try {
@@ -259,7 +251,6 @@ function SavedFeedsA11y({
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
     useOverwriteSavedFeedsMutation()
   const navigation = useNavigation<NavigationProp>()
@@ -273,12 +264,6 @@ function SavedFeedsA11y({
   const noSavedFeedsOfAnyType = pinnedFeeds.length + unpinnedFeeds.length === 0
   const noFollowingFeed =
     currentFeeds.every(f => f.type !== 'timeline') && !noSavedFeedsOfAnyType
-
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
 
   const onSaveChanges = async () => {
     try {
@@ -439,10 +424,10 @@ function PinnedFeedItem({
   onMoveUp,
   onMoveDown,
 }: {
-  feed: AppBskyActorDefs.SavedFeed
-  currentFeeds: AppBskyActorDefs.SavedFeed[]
+  feed: app.bsky.actor.defs.SavedFeed
+  currentFeeds: app.bsky.actor.defs.SavedFeed[]
   setCurrentFeeds: React.Dispatch<
-    React.SetStateAction<AppBskyActorDefs.SavedFeed[]>
+    React.SetStateAction<app.bsky.actor.defs.SavedFeed[]>
   >
   dragHandle?: React.ReactNode
   index?: number
@@ -452,11 +437,11 @@ function PinnedFeedItem({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const feedUri = feed.value
 
   const onTogglePinned = () => {
-    playHaptic()
+    haptics.confirm()
     setCurrentFeeds(
       currentFeeds.map(f =>
         f.id === feed.id ? {...feed, pinned: !feed.pinned} : f,
@@ -522,19 +507,19 @@ function UnpinnedFeedItem({
   currentFeeds,
   setCurrentFeeds,
 }: {
-  feed: AppBskyActorDefs.SavedFeed
-  currentFeeds: AppBskyActorDefs.SavedFeed[]
+  feed: app.bsky.actor.defs.SavedFeed
+  currentFeeds: app.bsky.actor.defs.SavedFeed[]
   setCurrentFeeds: React.Dispatch<
-    React.SetStateAction<AppBskyActorDefs.SavedFeed[]>
+    React.SetStateAction<app.bsky.actor.defs.SavedFeed[]>
   >
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const feedUri = feed.value
 
   const onTogglePinned = () => {
-    playHaptic()
+    haptics.confirm()
     setCurrentFeeds(
       currentFeeds.map(f =>
         f.id === feed.id ? {...feed, pinned: !feed.pinned} : f,
@@ -543,7 +528,7 @@ function UnpinnedFeedItem({
   }
 
   const onPressRemove = () => {
-    playHaptic()
+    haptics.confirm()
     setCurrentFeeds(currentFeeds.filter(f => f.id !== feed.id))
   }
 

@@ -3,7 +3,8 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 /**
@@ -13,13 +14,17 @@ import type * as bsky from '#/types/bsky'
  */
 export function useUpdateProfileVerificationCache() {
   const qc = useQueryClient()
-  const agent = useAgent()
+  const client = useAppviewClient()
 
   return useCallback(
     async ({profile}: {profile: bsky.profile.AnyProfileView}) => {
       try {
-        const {data: updated} = await agent.getProfile({
-          actor: profile.did ?? '',
+        if (!profile.did) {
+          logger.warn(`useUpdateProfileVerificationCache: no did`, {profile})
+          return
+        }
+        const updated = await client.call(app.bsky.actor.getProfile, {
+          actor: profile.did,
         })
         updateProfileShadow(qc, profile.did, {
           verification: updated.verification,
@@ -30,6 +35,6 @@ export function useUpdateProfileVerificationCache() {
         })
       }
     },
-    [agent, qc],
+    [client, qc],
   )
 }

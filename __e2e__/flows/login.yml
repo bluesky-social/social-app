@@ -9,9 +9,13 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "e2eOpenLoggedOutView"
 - tapOn: "Sign in"
+# the username input autofocuses, and the keyboard rising over the hosting
+# provider button would swallow the tap
+- waitForAnimationToEnd
 - tapOn:
     id: "selectServiceButton"
-- tapOn: "Custom"
+- tapOn:
+    id: "manualSelectBtn"
 - tapOn:
     id: "customServerTextInput"
 - inputText: "http://localhost:3000"
@@ -20,7 +24,8 @@ appId: xyz.blueskyweb.app
       platform: Android
     commands:
       - hideKeyboard
-- tapOn: "Done"
+- tapOn:
+    id: "doneBtn"
 - tapOn:
     id: "loginUsernameInput"
 - inputText: "Alice"

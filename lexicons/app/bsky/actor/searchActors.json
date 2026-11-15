@@ -1,0 +1,54 @@
+{
+  "id": "app.bsky.actor.searchActors",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "actors"
+          ],
+          "properties": {
+            "actors": {
+              "type": "array",
+              "items": {
+                "ref": "app.bsky.actor.defs#profileView",
+                "type": "ref"
+              }
+            },
+            "cursor": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "q": {
+            "type": "string",
+            "description": "Search query string. Syntax, phrase, boolean, and faceting is unspecified, but Lucene query syntax is recommended."
+          },
+          "term": {
+            "type": "string",
+            "description": "DEPRECATED: use 'q' instead."
+          },
+          "limit": {
+            "type": "integer",
+            "default": 25,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Find actors (profiles) matching search criteria. Does not require auth."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

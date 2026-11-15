@@ -3,11 +3,11 @@ import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {formatTime} from '#/lib/media/video/formatTime'
 import {clamp} from '#/lib/numbers'
 import {atoms as a, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {IS_WEB_FIREFOX, IS_WEB_TOUCH_DEVICE} from '#/env'
-import {formatTime} from './utils'
 
 export function Scrubber({
   duration,

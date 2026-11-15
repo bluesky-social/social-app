@@ -1,6 +1,6 @@
 import {memo, useEffect} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorSearchActors, type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {type InfiniteData} from '@tanstack/react-query'
@@ -8,12 +8,13 @@ import {type InfiniteData} from '@tanstack/react-query'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {logger} from '#/logger'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useTheme} from '#/alf'
 import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
 import {SubtleHover} from '#/components/SubtleHover'
 import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export function useLoadEnoughProfiles({
@@ -25,7 +26,7 @@ export function useLoadEnoughProfiles({
   fetchNextPage,
 }: {
   interest: string | null
-  data?: InfiniteData<AppBskyActorSearchActors.OutputSchema>
+  data?: InfiniteData<app.bsky.actor.searchActors.$OutputBody>
   isLoading: boolean
   isFetchingNextPage: boolean
   hasNextPage: boolean
@@ -71,26 +72,24 @@ export function SuggestedAccountsTabBar({
     .sort(boostInterests(personalizedInterests))
 
   return (
-    <BlockDrawerGesture>
-      <InterestTabs
-        interests={hideDefaultTab ? interests : ['all', ...interests]}
-        selectedInterest={
-          selectedInterest || (hideDefaultTab ? interests[0] : 'all')
-        }
-        onSelectTab={tab => {
-          ax.metric('explore:suggestedAccounts:tabPressed', {tab: tab})
-          onSelectInterest(tab === 'all' ? null : tab)
-        }}
-        interestsDisplayNames={
-          hideDefaultTab
-            ? interestsDisplayNames
-            : {
-                all: defaultTabLabel || _(msg`For You`),
-                ...interestsDisplayNames,
-              }
-        }
-      />
-    </BlockDrawerGesture>
+    <InterestTabs
+      interests={hideDefaultTab ? interests : ['all', ...interests]}
+      selectedInterest={
+        selectedInterest || (hideDefaultTab ? interests[0] : 'all')
+      }
+      onSelectTab={tab => {
+        ax.metric('explore:suggestedAccounts:tabPressed', {tab: tab})
+        onSelectInterest(tab === 'all' ? null : tab)
+      }}
+      interestsDisplayNames={
+        hideDefaultTab
+          ? interestsDisplayNames
+          : {
+              all: defaultTabLabel || _(msg`For You`),
+              ...interestsDisplayNames,
+            }
+      }
+    />
   )
 }
 
@@ -105,7 +104,7 @@ let SuggestedProfileCard = ({
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
-  recId?: number
+  recId?: string
   position: number
 }): React.ReactNode => {
   const t = useTheme()
@@ -140,6 +139,7 @@ let SuggestedProfileCard = ({
                 <ProfileCard.Avatar
                   profile={profile}
                   moderationOpts={moderationOpts}
+                  disableLink={IS_WEB}
                 />
                 <ProfileCard.NameAndHandle
                   profile={profile}

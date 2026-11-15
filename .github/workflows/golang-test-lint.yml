@@ -10,34 +10,59 @@ concurrency:
   group: "${{ github.workflow }}-${{ github.head_ref || github.ref }}"
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Git Checkout
-        uses: actions/checkout@v5
-      - name: Set up Go tooling
-        uses: actions/setup-go@v6
+      # Temporary until fixed runner images roll out:
+      # https://github.com/actions/runner-images/issues/15018
+      - name: Update Ubuntu CA certificates
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --only-upgrade --no-install-recommends -y ca-certificates
+
+      - name: ⬇️ Git Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: 🔧 Set up Go tooling
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: bskyweb/go.mod
-      - name: Dummy Static Files
-        run: touch bskyweb/static/js/blah.js && touch bskyweb/static/css/blah.txt && touch bskyweb/static/media/blah.txt
-      - name: Check
+          cache-dependency-path: bskyweb/go.sum
+      - name: 📄 Dummy Static Files
+        run: |
+          mkdir -p bskyweb/static/_expo bskyweb/static/assets
+          touch bskyweb/static/_expo/blah.js bskyweb/static/assets/blah.txt
+          touch bskyweb/templates/scripts.html bskyweb/templates/fonts.html
+      - name: 🔍 Check
         run: cd bskyweb/ && make check
-      - name: Build (binary)
+      - name: 🏗️ Build (binary)
         run: cd bskyweb/ && make build
-      - name: Test
+      - name: 🧪 Test
         run: cd bskyweb/ && make test
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Git Checkout
-        uses: actions/checkout@v5
-      - name: Set up Go tooling
-        uses: actions/setup-go@v6
+      # Temporary until fixed runner images roll out:
+      # https://github.com/actions/runner-images/issues/15018
+      - name: Update Ubuntu CA certificates
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --only-upgrade --no-install-recommends -y ca-certificates
+
+      - name: ⬇️ Git Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: 🔧 Set up Go tooling
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: bskyweb/go.mod
-      - name: Dummy Static Files
-        run: touch bskyweb/static/js/blah.js && touch bskyweb/static/css/blah.txt && touch bskyweb/static/media/blah.txt
-      - name: Lint
+          cache-dependency-path: bskyweb/go.sum
+      - name: 📄 Dummy Static Files
+        run: |
+          mkdir -p bskyweb/static/_expo bskyweb/static/assets
+          touch bskyweb/static/_expo/blah.js bskyweb/static/assets/blah.txt
+          touch bskyweb/templates/scripts.html bskyweb/templates/fonts.html
+      - name: 🧹 Lint
         run: cd bskyweb/ &&  make lint

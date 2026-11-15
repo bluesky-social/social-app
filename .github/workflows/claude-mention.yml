@@ -1,0 +1,29 @@
+name: claude-mention
+
+# Answers @claude on same-repository pull requests, for commenters with write
+# access. The workflow, its hardening, and its trust model live in
+# bluesky-social/.github.
+
+on:
+  # issue_comment is how @claude is reached from the PR conversation tab. The
+  # reusable workflow only answers same-repository PRs from commenters with
+  # write access, and passes the comment body to the model as action input,
+  # never through a shell.
+  issue_comment: # zizmor: ignore[dangerous-triggers]
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+
+permissions: {}
+
+jobs:
+  mention:
+    uses: bluesky-social/.github/.github/workflows/claude-mention.yml@a3e052de61c5f04144a821e2e80f2b3a00c93d15 # v1.0.0
+    permissions:
+      contents: read
+      pull-requests: write
+      actions: read
+    secrets:
+      AGENT_GATEWAY_CLAUDE_GH_REVIEW_KEY: ${{ secrets.AGENT_GATEWAY_CLAUDE_GH_REVIEW_KEY }}

@@ -1,0 +1,41 @@
+{
+  "id": "place.stream.chat.pinnedRecord",
+  "defs": {
+    "main": {
+      "key": "tid",
+      "type": "record",
+      "record": {
+        "type": "object",
+        "required": [
+          "pinnedMessage",
+          "createdAt"
+        ],
+        "properties": {
+          "pinnedBy": {
+            "type": "string",
+            "format": "did",
+            "description": "DID of the user who pinned the message."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When this pin was created."
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Optional expiration time. If set, the pin is considered inactive after this time."
+          },
+          "pinnedMessage": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT-URI of the pinned chat message."
+          }
+        }
+      },
+      "description": "Record pinning a chat message for prominent display."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

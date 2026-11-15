@@ -1,5 +1,4 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -18,6 +17,7 @@ import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Che
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Toast from '#/components/Toast'
 import {IS_IOS} from '#/env'
+import {type app} from '#/lexicons'
 import {GrowthHack} from './GrowthHack'
 
 export function ThreadItemAnchorFollowButton({
@@ -57,7 +57,7 @@ export function ThreadItemAnchorFollowButtonInner({
 function PostThreadFollowBtnLoaded({
   profile: profileUnshadowed,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
 }) {
   const navigation = useNavigation()
   const {_} = useLingui()

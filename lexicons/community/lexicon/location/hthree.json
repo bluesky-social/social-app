@@ -1,0 +1,24 @@
+{
+  "id": "community.lexicon.location.hthree",
+  "defs": {
+    "main": {
+      "type": "object",
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the location."
+        },
+        "value": {
+          "type": "string",
+          "description": "The h3 encoded location."
+        }
+      },
+      "description": "A physical location in the form of a H3 encoded location."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

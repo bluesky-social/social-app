@@ -1,0 +1,72 @@
+{
+  "id": "app.bsky.contact.importContacts",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "token",
+            "contacts"
+          ],
+          "properties": {
+            "token": {
+              "type": "string",
+              "description": "JWT to authenticate the call. Use the JWT received as a response to the call to `app.bsky.contact.verifyPhone`."
+            },
+            "contacts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "maxLength": 1000,
+              "minLength": 1,
+              "description": "List of phone numbers in global E.164 format (e.g., '+12125550123'). Phone numbers that cannot be normalized into a valid phone number will be discarded. Should not repeat the 'phone' input used in `app.bsky.contact.verifyPhone`."
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "errors": [
+        {
+          "name": "InvalidDid"
+        },
+        {
+          "name": "InvalidContacts"
+        },
+        {
+          "name": "TooManyContacts"
+        },
+        {
+          "name": "InvalidToken"
+        },
+        {
+          "name": "InternalError"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "matchesAndContactIndexes"
+          ],
+          "properties": {
+            "matchesAndContactIndexes": {
+              "type": "array",
+              "items": {
+                "ref": "app.bsky.contact.defs#matchAndContactIndex",
+                "type": "ref"
+              },
+              "description": "The users that matched during import and their indexes on the input contacts, so the client can correlate with its local list."
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Import contacts for securely matching with other users. This follows the protocol explained in https://docs.bsky.app/blog/contact-import-rfc. Requires authentication."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

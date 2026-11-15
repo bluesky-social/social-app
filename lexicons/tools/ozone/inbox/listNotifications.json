@@ -1,0 +1,76 @@
+{
+  "id": "tools.ozone.inbox.listNotifications",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "notifications"
+          ],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "notifications": {
+              "type": "array",
+              "items": {
+                "ref": "tools.ozone.inbox.defs#notification",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "Account to preview. Only Ozone staff can read another account; this does not change its read state."
+          },
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "knownValues": [
+                "reportResolved",
+                "reportReopened",
+                "actionTaken",
+                "actionReversed",
+                "appealResolved",
+                "standingChanged"
+              ]
+            }
+          },
+          "section": {
+            "type": "string",
+            "knownValues": [
+              "reports",
+              "subjects",
+              "accountStatus"
+            ]
+          },
+          "unreadOnly": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

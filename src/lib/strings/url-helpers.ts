@@ -1,5 +1,5 @@
-import {AtUri} from '@atproto/api'
-import psl from 'psl'
+import {type AtIdentifierString, AtUri} from '@atproto/syntax'
+import {parse} from 'psl'
 import TLDs from 'tlds'
 
 import {BSKY_SERVICE} from '#/lib/constants'
@@ -8,6 +8,7 @@ import {startUriToStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 
 export const BSKY_APP_HOST = 'https://bsky.app'
+export const BSKY_HOSTING_ENDSWITH = '.host.bsky.network'
 const BSKY_TRUSTED_HOSTS = [
   'bsky\\.app',
   'bsky\\.social',
@@ -26,6 +27,15 @@ const TRUSTED_REGEX = new RegExp(
   )})|/|#)`,
 )
 
+export function canParseUrl(url: string | URL, base?: string | URL): boolean {
+  try {
+    new URL(url, base)
+    return true
+  } catch {
+    return false
+  }
+}
+
 export function isValidDomain(str: string): boolean {
   return !!TLDs.find(tld => {
     let i = str.lastIndexOf(tld)
@@ -42,8 +52,8 @@ export function makeRecordUri(
   rkey: string,
 ) {
   const urip = new AtUri('at://placeholder.placeholder/')
-  // @ts-expect-error TODO new-sdk-migration
-  urip.host = didOrName
+  // the helper takes the did or handle as a plain string
+  urip.host = didOrName as AtIdentifierString
   urip.collection = collection
   urip.rkey = rkey
   return urip.toString()
@@ -89,6 +99,35 @@ export function toShareUrl(url: string): string {
 
 export function toBskyAppUrl(url: string): string {
   return new URL(url, BSKY_APP_HOST).toString()
+}
+
+export function toNiceHostingUrl(url: string): string {
+  try {
+    const urlp = new URL(url)
+    if (urlp.host.endsWith(BSKY_HOSTING_ENDSWITH)) {
+      return 'Bluesky'
+    }
+    return urlp.host
+  } catch {
+    return url
+  }
+}
+
+/**
+ * Whether the given service URL points at a Bluesky-operated PDS. True when the
+ * host is `bsky.social` (the {@link BSKY_SERVICE} host) or ends with
+ * `.host.bsky.network`. Returns false if the URL can't be parsed.
+ */
+export function isBlueskyHostedUrl(url: string): boolean {
+  try {
+    const {host} = new URL(url)
+    return (
+      host === new URL(BSKY_SERVICE).host ||
+      host.endsWith(BSKY_HOSTING_ENDSWITH)
+    )
+  } catch {
+    return false
+  }
 }
 
 export function isBskyAppUrl(url: string): boolean {
@@ -176,6 +215,29 @@ export function isBskyStarterPackUrl(url: string): boolean {
     }
   }
   return false
+}
+
+// Invite codes are 7 alphanumeric characters long, supporting up to 10 here to future-proof.
+export const CHAT_INVITE_CODE_REGEX = /^\/chat\/([a-zA-Z0-9]{7,10})$/
+
+export function getChatInviteCodeFromUrl(url: string): string | undefined {
+  let pathname: string
+  if (isBskyAppUrl(url)) {
+    try {
+      pathname = new URL(url).pathname
+    } catch {
+      return undefined
+    }
+  } else if (url.startsWith('/')) {
+    pathname = url.split('?')[0].split('#')[0]
+  } else {
+    return undefined
+  }
+  return pathname.match(CHAT_INVITE_CODE_REGEX)?.[1]
+}
+
+export function isBskyChatInviteUrl(url: string): boolean {
+  return getChatInviteCodeFromUrl(url) !== undefined
 }
 
 export function isBskyDownloadUrl(url: string): boolean {
@@ -306,7 +368,7 @@ export function isPossiblyAUrl(str: string): boolean {
 }
 
 export function splitApexDomain(hostname: string): [string, string] {
-  const hostnamep = psl.parse(hostname)
+  const hostnamep = parse(hostname)
   if (hostnamep.error || !hostnamep.listed || !hostnamep.domain) {
     return ['', hostname]
   }
@@ -344,7 +406,7 @@ export function shortLinkToHref(url: string): string {
   try {
     const urlp = new URL(url)
 
-    // For now we only support starter packs, but in the future we should add additional paths to this check
+    // For now we only support Starter Packs, but in the future we should add additional paths to this check
     const parts = urlp.pathname.split('/').filter(Boolean)
     if (parts.length === 1) {
       return `/starter-pack-short/${parts[0]}`

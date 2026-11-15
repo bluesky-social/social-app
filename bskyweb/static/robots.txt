@@ -6,6 +6,7 @@
 # codes are used for rate-limiting. Up to a handful concurrent requests should
 # be ok.
 User-Agent: *
+Disallow: /intent/compose
 Allow: /
 
 Sitemap: https://bsky.app/sitemap/users.xml.gz

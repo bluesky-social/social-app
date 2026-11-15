@@ -1,5 +1,5 @@
 import {NotImplementedError} from '../NotImplemented'
-import {AudioCategory} from './types'
+import {type AudioCategory} from './types'
 
 export function getIsReducedMotionEnabled(): boolean {
   if (typeof window === 'undefined') {

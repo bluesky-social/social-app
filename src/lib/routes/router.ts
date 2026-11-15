@@ -56,16 +56,17 @@ function createRoute(pattern: string): Route {
       return undefined
     },
     build(params = {}) {
-      const str = pattern.replace(
-        /:([\w]+)/g,
-        (_m, name) => params[encodeURIComponent(name)] || 'undefined',
-      )
+      const str = pattern.replace(/:([\w]+)/g, (_m, name) => {
+        const value = params[encodeURIComponent(name)]
+        const serialized = String(value)
+        return value ? serialized : 'undefined'
+      })
 
       let hasQp = false
       const qp = new URLSearchParams()
       for (const paramName in params) {
         if (!pathParamNames.has(paramName)) {
-          qp.set(paramName, params[paramName])
+          qp.set(paramName, String(params[paramName]))
           hasQp = true
         }
       }

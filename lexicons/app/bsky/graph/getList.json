@@ -1,0 +1,59 @@
+{
+  "id": "app.bsky.graph.getList",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "list",
+            "items"
+          ],
+          "properties": {
+            "list": {
+              "ref": "app.bsky.graph.defs#listView",
+              "type": "ref"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "ref": "app.bsky.graph.defs#listItemView",
+                "type": "ref"
+              }
+            },
+            "cursor": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "list"
+        ],
+        "properties": {
+          "list": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "Reference (AT-URI) of the list record to hydrate."
+          },
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Gets a 'view' (with additional context) of a specified list."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

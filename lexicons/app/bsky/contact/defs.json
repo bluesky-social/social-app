@@ -1,0 +1,67 @@
+{
+  "id": "app.bsky.contact.defs",
+  "defs": {
+    "syncStatus": {
+      "type": "object",
+      "required": [
+        "syncedAt",
+        "matchesCount"
+      ],
+      "properties": {
+        "syncedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Last date when contacts where imported."
+        },
+        "matchesCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of existing contact matches resulting of the user imports and of their imported contacts having imported the user. Matches stop being counted when the user either follows the matched contact or dismisses the match."
+        }
+      }
+    },
+    "notification": {
+      "type": "object",
+      "required": [
+        "from",
+        "to"
+      ],
+      "properties": {
+        "to": {
+          "type": "string",
+          "format": "did",
+          "description": "The DID of who this notification should go to."
+        },
+        "from": {
+          "type": "string",
+          "format": "did",
+          "description": "The DID of who this notification comes from."
+        }
+      },
+      "description": "A stash object to be sent via bsync representing a notification to be created."
+    },
+    "matchAndContactIndex": {
+      "type": "object",
+      "required": [
+        "match",
+        "contactIndex"
+      ],
+      "properties": {
+        "match": {
+          "ref": "app.bsky.actor.defs#profileView",
+          "type": "ref",
+          "description": "Profile of the matched user."
+        },
+        "contactIndex": {
+          "type": "integer",
+          "maximum": 999,
+          "minimum": 0,
+          "description": "The index of this match in the import contact input."
+        }
+      },
+      "description": "Associates a profile with the positional index of the contact import input in the call to `app.bsky.contact.importContacts`, so clients can know which phone caused a particular match."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

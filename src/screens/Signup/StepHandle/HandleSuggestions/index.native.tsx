@@ -1,0 +1,77 @@
+import Animated, {Easing, FadeInDown, FadeOut} from 'react-native-reanimated'
+import {Trans, useLingui} from '@lingui/react/macro'
+
+import {atoms as a, native, useTheme} from '#/alf'
+import {borderRadius} from '#/alf/tokens'
+import {Button} from '#/components/Button'
+import {Text} from '#/components/Typography'
+import {type HandleSuggestionsProps} from './shared'
+
+/**
+ * Native: suggestions render inline beneath the availability error, animating
+ * in with the surrounding requirement stack. See index.tsx for the web variant,
+ * which floats them in a Sift dropdown anchored to the input.
+ */
+export function HandleSuggestions({
+  suggestions,
+  onSelect,
+}: HandleSuggestionsProps) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  return (
+    <Animated.View
+      entering={native(FadeInDown.easing(Easing.out(Easing.exp)))}
+      exiting={native(FadeOut)}
+      style={[
+        a.flex_1,
+        a.border,
+        a.rounded_sm,
+        t.atoms.shadow_sm,
+        t.atoms.bg,
+        t.atoms.border_contrast_low,
+        a.mt_xs,
+        a.z_50,
+        a.w_full,
+        a.zoom_fade_in,
+      ]}>
+      {suggestions.map((suggestion, index) => (
+        <Button
+          label={l({
+            message: `Select ${suggestion.handle}`,
+            comment: `Accessibility label for a username suggestion in the account creation flow`,
+          })}
+          key={suggestion.handle}
+          onPress={() => onSelect(suggestion)}
+          hoverStyle={[t.atoms.bg_contrast_25]}
+          style={[
+            a.w_full,
+            a.flex_row,
+            a.align_center,
+            a.justify_between,
+            a.p_md,
+            a.border_b,
+            t.atoms.border_contrast_low,
+            index === 0 && {
+              borderTopStartRadius: borderRadius.sm,
+              borderTopEndRadius: borderRadius.sm,
+            },
+            index === suggestions.length - 1 && [
+              {
+                borderBottomStartRadius: borderRadius.sm,
+                borderBottomEndRadius: borderRadius.sm,
+              },
+              a.border_b_0,
+            ],
+          ]}>
+          <Text style={[a.text_md]}>{suggestion.handle}</Text>
+          <Text style={[a.text_sm, {color: t.palette.positive_700}]}>
+            <Trans comment="Shown next to an available username suggestion in the account creation flow">
+              Available
+            </Trans>
+          </Text>
+        </Button>
+      ))}
+    </Animated.View>
+  )
+}

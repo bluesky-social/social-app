@@ -1,0 +1,42 @@
+{
+  "id": "app.bsky.graph.verification",
+  "defs": {
+    "main": {
+      "key": "tid",
+      "type": "record",
+      "record": {
+        "type": "object",
+        "required": [
+          "subject",
+          "handle",
+          "displayName",
+          "createdAt"
+        ],
+        "properties": {
+          "handle": {
+            "type": "string",
+            "format": "handle",
+            "description": "Handle of the subject the verification applies to at the moment of verifying, which might not be the same at the time of viewing. The verification is only valid if the current handle matches the one at the time of verifying."
+          },
+          "subject": {
+            "type": "string",
+            "format": "did",
+            "description": "DID of the subject the verification applies to."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Date of when the verification was created."
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Display name of the subject the verification applies to at the moment of verifying, which might not be the same at the time of viewing. The verification is only valid if the current displayName matches the one at the time of verifying."
+          }
+        }
+      },
+      "description": "Record declaring a verification relationship between two accounts. Verifications are only considered valid by an app if issued by an account the app considers trusted."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

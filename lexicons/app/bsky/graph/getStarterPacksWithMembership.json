@@ -1,0 +1,71 @@
+{
+  "id": "app.bsky.graph.getStarterPacksWithMembership",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "starterPacksWithMembership"
+          ],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "starterPacksWithMembership": {
+              "type": "array",
+              "items": {
+                "ref": "#starterPackWithMembership",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "actor"
+        ],
+        "properties": {
+          "actor": {
+            "type": "string",
+            "format": "at-identifier",
+            "description": "The account (actor) to check for membership."
+          },
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Enumerates the starter packs created by the session user, and includes membership information about `actor` in those starter packs. Requires auth."
+    },
+    "starterPackWithMembership": {
+      "type": "object",
+      "required": [
+        "starterPack"
+      ],
+      "properties": {
+        "listItem": {
+          "ref": "app.bsky.graph.defs#listItemView",
+          "type": "ref"
+        },
+        "starterPack": {
+          "ref": "app.bsky.graph.defs#starterPackView",
+          "type": "ref"
+        }
+      },
+      "description": "A starter pack and an optional list item indicating membership of a target user to that starter pack."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

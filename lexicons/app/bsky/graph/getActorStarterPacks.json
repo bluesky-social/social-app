@@ -1,0 +1,53 @@
+{
+  "id": "app.bsky.graph.getActorStarterPacks",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "starterPacks"
+          ],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "starterPacks": {
+              "type": "array",
+              "items": {
+                "ref": "app.bsky.graph.defs#starterPackViewBasic",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "actor"
+        ],
+        "properties": {
+          "actor": {
+            "type": "string",
+            "format": "at-identifier"
+          },
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Get a list of starter packs created by the actor."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

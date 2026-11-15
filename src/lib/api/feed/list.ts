@@ -1,32 +1,33 @@
-import {
-  type Agent,
-  type AppBskyFeedDefs,
-  type AppBskyFeedGetListFeed as GetListFeed,
-} from '@atproto/api'
+import {type Client, type XrpcRequestParams} from '@atproto/lex'
 
+import {app} from '#/lexicons'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
+type GetListFeedParams = XrpcRequestParams<
+  typeof app.bsky.feed.getListFeed.main
+>
+
 export class ListFeedAPI implements FeedAPI {
-  agent: Agent
-  params: GetListFeed.QueryParams
+  client: Client
+  params: GetListFeedParams
 
   constructor({
-    agent,
+    client,
     feedParams,
   }: {
-    agent: Agent
-    feedParams: GetListFeed.QueryParams
+    client: Client
+    feedParams: GetListFeedParams
   }) {
-    this.agent = agent
+    this.client = client
     this.params = feedParams
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await this.agent.app.bsky.feed.getListFeed({
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
+    const data = await this.client.call(app.bsky.feed.getListFeed, {
       ...this.params,
       limit: 1,
     })
-    return res.data.feed[0]
+    return data.feed[0]
   }
 
   async fetch({
@@ -36,19 +37,20 @@ export class ListFeedAPI implements FeedAPI {
     cursor: string | undefined
     limit: number
   }): Promise<FeedAPIResponse> {
-    const res = await this.agent.app.bsky.feed.getListFeed({
+    /*
+     * A failed request rejects rather than resolving, so the error propagates
+     * to the query and drives the feed error UI. The agent behaved the same
+     * way - its `success` flag was only ever true - so the empty-page branch
+     * this replaces was unreachable.
+     */
+    const data = await this.client.call(app.bsky.feed.getListFeed, {
       ...this.params,
       cursor,
       limit,
     })
-    if (res.success) {
-      return {
-        cursor: res.data.cursor,
-        feed: res.data.feed,
-      }
-    }
     return {
-      feed: [],
+      cursor: data.cursor,
+      feed: data.feed,
     }
   }
 }

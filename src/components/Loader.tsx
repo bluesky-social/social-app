@@ -21,7 +21,7 @@ export function Loader(props: Props) {
   }))
 
   useEffect(() => {
-    rotation.set(() =>
+    rotation.set(
       withRepeat(withTiming(360, {duration: 500, easing: Easing.linear}), -1),
     )
   }, [rotation])
@@ -32,7 +32,7 @@ export function Loader(props: Props) {
         a.relative,
         a.justify_center,
         a.align_center,
-        {width: common.size, height: common.size},
+        {width: common.width, height: common.height},
         animatedStyles,
       ]}>
       <Icon

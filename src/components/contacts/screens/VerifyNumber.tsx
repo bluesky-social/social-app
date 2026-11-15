@@ -1,9 +1,5 @@
 import {useEffect, useMemo, useState} from 'react'
 import {Text as NestedText, View} from 'react-native'
-import {
-  AppBskyContactStartPhoneVerification,
-  AppBskyContactVerifyPhone,
-} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -11,8 +7,9 @@ import {useMutation} from '@tanstack/react-query'
 
 import {clamp} from '#/lib/numbers'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {OnboardingPosition} from '#/screens/Onboarding/Layout'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -25,6 +22,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import {OTPInput} from '../components/OTPInput'
 import {constructFullPhoneNumber, prettyPhoneNumber} from '../phone-number'
 import {type Action, type State, useOnPressBackButton} from '../state'
@@ -43,7 +41,7 @@ export function VerifyNumber({
   const t = useTheme()
   const {_} = useLingui()
   const ax = useAnalytics()
-  const agent = useAgent()
+  const client = useAppviewClient()
   const gutters = useGutters([0, 'wide'])
 
   const [otpCode, setOtpCode] = useState('')
@@ -72,8 +70,11 @@ export function VerifyNumber({
     isSuccess,
   } = useMutation({
     mutationFn: async (code: string) => {
-      const res = await agent.app.bsky.contact.verifyPhone({code, phone})
-      return res.data.token
+      const data = await client.call(app.bsky.contact.verifyPhone, {
+        code,
+        phone,
+      })
+      return data.token
     },
     onSuccess: async token => {
       // let the success state show for a moment
@@ -99,44 +100,47 @@ export function VerifyNumber({
             msg`A network error occurred. Please check your internet connection.`,
           ),
         })
-      } else if (err instanceof AppBskyContactVerifyPhone.InvalidCodeError) {
-        setError({
-          retryable: true,
-          isResendError: true,
-          message: _(msg`This code is invalid. Resend to get a new code.`),
-        })
-      } else if (err instanceof AppBskyContactVerifyPhone.InvalidPhoneError) {
-        setError({
-          retryable: false,
-          isResendError: false,
-          message: _(
-            msg`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
-          ),
-        })
-      } else if (
-        err instanceof AppBskyContactVerifyPhone.RateLimitExceededError
-      ) {
-        setError({
-          retryable: true,
-          isResendError: false,
-          message: _(
-            msg`Too many attempts. Please wait a few minutes and try again.`,
-          ),
-        })
-      } else {
-        logger.error('Verify phone number failed', {safeMessage: err})
-        setError({
-          retryable: true,
-          isResendError: false,
-          message: _(msg`An error occurred. ${cleanError(err)}`),
-        })
+        return
       }
+      switch (matchXrpcError(err, app.bsky.contact.verifyPhone)) {
+        case 'InvalidCode':
+          setError({
+            retryable: true,
+            isResendError: true,
+            message: _(msg`This code is invalid. Resend to get a new code.`),
+          })
+          return
+        case 'InvalidPhone':
+          setError({
+            retryable: false,
+            isResendError: false,
+            message: _(
+              msg`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
+            ),
+          })
+          return
+        case 'RateLimitExceeded':
+          setError({
+            retryable: true,
+            isResendError: false,
+            message: _(
+              msg`Too many attempts. Please wait a few minutes and try again.`,
+            ),
+          })
+          return
+      }
+      logger.error('Verify phone number failed', {safeMessage: err})
+      setError({
+        retryable: true,
+        isResendError: false,
+        message: _(msg`An error occurred. ${cleanError(err)}`),
+      })
     },
   })
 
   const {mutate: resendCode, isPending: isResendingCode} = useMutation({
     mutationFn: async () => {
-      await agent.app.bsky.contact.startPhoneVerification({phone: phone})
+      await client.call(app.bsky.contact.startPhoneVerification, {phone: phone})
     },
     onSuccess: () => {
       dispatch({type: 'RESEND_VERIFICATION_CODE'})
@@ -155,35 +159,34 @@ export function VerifyNumber({
             msg`A network error occurred. Please check your internet connection.`,
           ),
         })
-      } else if (
-        err instanceof AppBskyContactStartPhoneVerification.InvalidPhoneError
-      ) {
-        setError({
-          retryable: false,
-          isResendError: true,
-          message: _(
-            msg`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
-          ),
-        })
-      } else if (
-        err instanceof
-        AppBskyContactStartPhoneVerification.RateLimitExceededError
-      ) {
-        setError({
-          retryable: true,
-          isResendError: true,
-          message: _(
-            msg`Too many codes sent. Please wait a few minutes and try again.`,
-          ),
-        })
-      } else {
-        logger.error('Resend failed', {safeMessage: err})
-        setError({
-          retryable: true,
-          isResendError: true,
-          message: _(msg`An error occurred. ${cleanError(err)}`),
-        })
+        return
       }
+      switch (matchXrpcError(err, app.bsky.contact.startPhoneVerification)) {
+        case 'InvalidPhone':
+          setError({
+            retryable: false,
+            isResendError: true,
+            message: _(
+              msg`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
+            ),
+          })
+          return
+        case 'RateLimitExceeded':
+          setError({
+            retryable: true,
+            isResendError: true,
+            message: _(
+              msg`Too many codes sent. Please wait a few minutes and try again.`,
+            ),
+          })
+          return
+      }
+      logger.error('Resend failed', {safeMessage: err})
+      setError({
+        retryable: true,
+        isResendError: true,
+        message: _(msg`An error occurred. ${cleanError(err)}`),
+      })
     },
   })
 

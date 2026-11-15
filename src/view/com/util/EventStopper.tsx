@@ -22,7 +22,6 @@ export function EventStopper({
     <View
       onStartShouldSetResponder={_ => true}
       onTouchEnd={stop}
-      // @ts-ignore web only -prf
       onClick={stop}
       onKeyDown={onKeyDown ? stop : undefined}
       style={style}>

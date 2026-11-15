@@ -31,10 +31,7 @@ export type AutocompleteSearch = {
 }
 
 export type AutocompleteItem =
-  | AutocompleteProfile
-  | AutocompleteTag
-  | AutocompleteEmoji
-  | AutocompleteSearch
+  AutocompleteProfile | AutocompleteTag | AutocompleteEmoji | AutocompleteSearch
 
 export type AutocompleteItemType = AutocompleteItem['type']
 
@@ -45,4 +42,5 @@ export type AutocompleteItemProps = Parameters<
 export type AutocompleteApi = {
   query: string
   items: AutocompleteItem[]
+  isFetching: boolean
 }

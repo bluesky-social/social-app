@@ -1,0 +1,34 @@
+{
+  "id": "app.bsky.graph.muteActor",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "actor"
+          ],
+          "properties": {
+            "actor": {
+              "type": "string",
+              "format": "at-identifier"
+            },
+            "onlyReposts": {
+              "type": "boolean",
+              "description": "Restrict the mute to the account's reposts. When any 'only' scope is set, just the scoped content is muted; when none are set, the account is fully muted. Repeat calls replace the stored scope rather than adding to it."
+            },
+            "onlyQuoteposts": {
+              "type": "boolean",
+              "description": "Restrict the mute to the account's quote posts. See onlyReposts."
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Creates a mute relationship for the specified account. If a mute already exists for the account, it is updated in place: the stored scope is replaced with the scope in this request. Mutes are private in Bluesky. Requires auth."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

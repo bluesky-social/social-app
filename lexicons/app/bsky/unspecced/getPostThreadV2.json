@@ -1,0 +1,94 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.unspecced.getPostThreadV2",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "(NOTE: this endpoint is under development and WILL change without notice. Don't use it until it is moved out of `unspecced` or your application WILL break) Get posts in a thread. It is based in an anchor post at any depth of the tree, and returns posts above it (recursively resolving the parent, without further branching to their replies) and below it (recursive replies, with branching to their replies). Does not require auth, but additional metadata and filtering will be applied for authed requests.",
+      "parameters": {
+        "type": "params",
+        "required": ["anchor"],
+        "properties": {
+          "anchor": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "Reference (AT-URI) to post record. This is the anchor post, and the thread will be built around it. It can be any post in the tree, not necessarily a root post."
+          },
+          "above": {
+            "type": "boolean",
+            "description": "Whether to include parents above the anchor.",
+            "default": true
+          },
+          "below": {
+            "type": "integer",
+            "description": "How many levels of replies to include below the anchor.",
+            "default": 6,
+            "minimum": 0,
+            "maximum": 20
+          },
+          "branchingFactor": {
+            "type": "integer",
+            "description": "Maximum of replies to include at each level of the thread, except for the direct replies to the anchor, which are (NOTE: currently, during unspecced phase) all returned (NOTE: later they might be paginated).",
+            "default": 10,
+            "minimum": 0,
+            "maximum": 100
+          },
+          "sort": {
+            "type": "string",
+            "description": "Sorting for the thread replies.",
+            "knownValues": ["newest", "oldest", "top"],
+            "default": "oldest"
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["thread", "hasOtherReplies"],
+          "properties": {
+            "thread": {
+              "type": "array",
+              "description": "A flat list of thread items. The depth of each item is indicated by the depth property inside the item.",
+              "items": {
+                "type": "ref",
+                "ref": "#threadItem"
+              }
+            },
+            "threadgate": {
+              "type": "ref",
+              "ref": "app.bsky.feed.defs#threadgateView"
+            },
+            "hasOtherReplies": {
+              "type": "boolean",
+              "description": "Whether this thread has additional replies. If true, a call can be made to the `getPostThreadOtherV2` endpoint to retrieve them."
+            }
+          }
+        }
+      }
+    },
+    "threadItem": {
+      "type": "object",
+      "required": ["uri", "depth", "value"],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "depth": {
+          "type": "integer",
+          "description": "The nesting level of this item in the thread. Depth 0 means the anchor item. Items above have negative depths, items below have positive depths."
+        },
+        "value": {
+          "type": "union",
+          "refs": [
+            "app.bsky.unspecced.defs#threadItemPost",
+            "app.bsky.unspecced.defs#threadItemNoUnauthenticated",
+            "app.bsky.unspecced.defs#threadItemNotFound",
+            "app.bsky.unspecced.defs#threadItemBlocked"
+          ]
+        }
+      }
+    }
+  }
+}

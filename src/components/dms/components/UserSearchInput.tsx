@@ -14,7 +14,7 @@ export function UserSearchInput({
   value: string
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInput | null>
+  inputRef: React.RefObject<React.ComponentRef<typeof TextInput> | null>
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -38,7 +38,6 @@ export function UserSearchInput({
         fill={interacted ? t.palette.primary_500 : t.palette.contrast_300}
       />
       <TextInput
-        // @ts-ignore bottom sheet input types issue - esb
         ref={inputRef}
         placeholder={l`Search for people`}
         value={value}

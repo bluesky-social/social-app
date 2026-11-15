@@ -1,12 +1,7 @@
 import {memo, useMemo, useState} from 'react'
-import {type Insets} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type AppBskyFeedThreadgate,
-  AtUri,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
+import {type Insets, Platform} from 'react-native'
+import {AtUri} from '@atproto/syntax'
+import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -16,11 +11,13 @@ import {toShareUrl} from '#/lib/strings/url-helpers'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {EventStopper} from '#/view/com/util/EventStopper'
-import {native} from '#/alf'
+import {native, useBreakpoints} from '#/alf'
 import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon} from '#/components/icons/ArrowShareRight'
 import * as Menu from '#/components/Menu'
 import {useMenuControl} from '#/components/Menu'
 import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 import {PostControlButton, PostControlButtonIcon} from '../PostControlButton'
 import {ShareMenuItems} from './ShareMenuItems'
 
@@ -37,12 +34,12 @@ let ShareMenuButton = ({
   logContext,
 }: {
   testID: string
-  post: Shadow<AppBskyFeedDefs.PostView>
+  post: Shadow<app.bsky.feed.defs.PostView>
   big?: boolean
-  record: AppBskyFeedPost.Record
+  record: app.bsky.feed.post.Main
   richText: RichTextAPI
   timestamp: string
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: app.bsky.feed.threadgate.Main
   onShare: () => void
   hitSlop?: Insets
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
@@ -50,17 +47,35 @@ let ShareMenuButton = ({
   const ax = useAnalytics()
   const {_} = useLingui()
   const {feedDescriptor} = useFeedFeedbackContext()
+  const {gtMobile} = useBreakpoints()
+
+  /*
+   * Where `share_destinations:enable` changes the menu: the new sheet on
+   * native, and "Share via…" on desktop browsers with a share sheet (see
+   * `canShareVia` in ShareMenuItems.web.tsx).
+   */
+  const isShareDestinationsEligible =
+    IS_NATIVE || (gtMobile && typeof navigator?.share === 'function')
 
   const menuControl = useMenuControl()
   const [hasBeenOpen, setHasBeenOpen] = useState(false)
   const lazyMenuControl = useMemo(
     () => ({
       ...menuControl,
-      open() {
+      open(options?: Parameters<typeof menuControl.open>[0]) {
         setHasBeenOpen(true)
         // HACK. We need the state update to be flushed by the time
         // menuControl.open() fires but RN doesn't expose flushSync.
-        setTimeout(menuControl.open)
+        setTimeout(() => menuControl.open(options))
+
+        /*
+         * Checking the flag logs the experiment exposure. The menu checks it
+         * too, but only once it mounts, after `post:share`, so check it here
+         * first so this open counts as exposed.
+         */
+        if (isShareDestinationsEligible) {
+          ax.features.enabled(ax.features.ShareDestinationsEnable)
+        }
 
         ax.metric('post:share', {
           uri: post.uri,
@@ -74,6 +89,7 @@ let ShareMenuButton = ({
     [
       ax,
       menuControl,
+      isShareDestinationsEligible,
       setHasBeenOpen,
       big,
       logContext,
@@ -84,11 +100,24 @@ let ShareMenuButton = ({
   )
 
   const onNativeLongPress = () => {
-    ax.metric('share:press:nativeShare', {})
+    ax.metric('share:press:nativeShare', {
+      uri: post.uri,
+      authorDid: post.author.did,
+      entryPoint: 'LongPress',
+      os: Platform.OS,
+    })
     const urip = new AtUri(post.uri)
     const href = makeProfileLink(post.author, 'post', urip.rkey)
     const url = toShareUrl(href)
-    shareUrl(url)
+    void shareUrl(url).then(result => {
+      if (!result) return
+      ax.metric('share:nativeShare:result', {
+        uri: post.uri,
+        authorDid: post.author.did,
+        entryPoint: 'LongPress',
+        ...result,
+      })
+    })
     onShare()
   }
 
@@ -120,6 +149,7 @@ let ShareMenuButton = ({
             timestamp={timestamp}
             threadgateRecord={threadgateRecord}
             onShare={onShare}
+            logContext={logContext}
           />
         )}
       </Menu.Root>

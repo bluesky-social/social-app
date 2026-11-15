@@ -1,0 +1,33 @@
+{
+  "id": "app.bsky.graph.follow",
+  "defs": {
+    "main": {
+      "key": "tid",
+      "type": "record",
+      "record": {
+        "type": "object",
+        "required": [
+          "subject",
+          "createdAt"
+        ],
+        "properties": {
+          "via": {
+            "ref": "com.atproto.repo.strongRef",
+            "type": "ref"
+          },
+          "subject": {
+            "type": "string",
+            "format": "did"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      },
+      "description": "Record declaring a social 'follow' relationship of another account. Duplicate follows will be ignored by the AppView."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

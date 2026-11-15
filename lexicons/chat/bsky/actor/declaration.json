@@ -1,0 +1,37 @@
+{
+  "id": "chat.bsky.actor.declaration",
+  "defs": {
+    "main": {
+      "key": "literal:self",
+      "type": "record",
+      "record": {
+        "type": "object",
+        "required": [
+          "allowIncoming"
+        ],
+        "properties": {
+          "allowIncoming": {
+            "type": "string",
+            "knownValues": [
+              "all",
+              "none",
+              "following"
+            ]
+          },
+          "allowGroupInvites": {
+            "type": "string",
+            "description": "Declaration about group chat invitation preferences for the record owner.",
+            "knownValues": [
+              "all",
+              "none",
+              "following"
+            ]
+          }
+        }
+      },
+      "description": "A declaration of a Bluesky chat account."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

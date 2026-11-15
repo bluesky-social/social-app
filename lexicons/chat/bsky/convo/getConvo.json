@@ -1,0 +1,42 @@
+{
+  "id": "chat.bsky.convo.getConvo",
+  "defs": {
+    "main": {
+      "type": "query",
+      "errors": [
+        {
+          "name": "InvalidConvo"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "convo"
+          ],
+          "properties": {
+            "convo": {
+              "ref": "chat.bsky.convo.defs#convoView",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "convoId"
+        ],
+        "properties": {
+          "convoId": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Gets an existing conversation by its ID."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

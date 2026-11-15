@@ -1,0 +1,74 @@
+{
+  "id": "com.atproto.server.refreshSession",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "errors": [
+        {
+          "name": "AccountTakedown"
+        },
+        {
+          "name": "InvalidToken"
+        },
+        {
+          "name": "ExpiredToken"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "accessJwt",
+            "refreshJwt",
+            "handle",
+            "did"
+          ],
+          "properties": {
+            "did": {
+              "type": "string",
+              "format": "did"
+            },
+            "email": {
+              "type": "string"
+            },
+            "active": {
+              "type": "boolean"
+            },
+            "didDoc": {
+              "type": "unknown"
+            },
+            "handle": {
+              "type": "string",
+              "format": "handle"
+            },
+            "status": {
+              "type": "string",
+              "description": "Hosting status of the account. If not specified, then assume 'active'.",
+              "knownValues": [
+                "takendown",
+                "suspended",
+                "deactivated"
+              ]
+            },
+            "accessJwt": {
+              "type": "string"
+            },
+            "refreshJwt": {
+              "type": "string"
+            },
+            "emailConfirmed": {
+              "type": "boolean"
+            },
+            "emailAuthFactor": {
+              "type": "boolean"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Refresh an authentication session. Requires auth using the 'refreshJwt' (not the 'accessJwt')."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

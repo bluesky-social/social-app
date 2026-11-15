@@ -1,6 +1,4 @@
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -30,7 +28,7 @@ export function DraftsButton({
   canSaveDraft: boolean
   textLength: number
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const draftsDialogControl = Dialog.useDialogControl()
   const savePromptControl = Prompt.usePromptControl()
@@ -67,7 +65,7 @@ export function DraftsButton({
   return (
     <>
       <Button
-        label={_(msg`Drafts`)}
+        label={l`Drafts`}
         variant="ghost"
         color="primary"
         shape="default"
@@ -79,12 +77,10 @@ export function DraftsButton({
           <Trans>Drafts</Trans>
         </ButtonText>
       </Button>
-
       <DraftsListDialog
         control={draftsDialogControl}
         onSelectDraft={onSelectDraft}
       />
-
       <Prompt.Outer control={savePromptControl}>
         <Prompt.Content>
           <Prompt.TitleText>
@@ -122,17 +118,17 @@ export function DraftsButton({
         <Prompt.Actions>
           {canSaveDraft && (
             <Prompt.Action
-              cta={isEditingDraft ? _(msg`Save changes`) : _(msg`Save draft`)}
-              onPress={handleSaveAndOpen}
+              cta={isEditingDraft ? l`Save changes` : l`Save draft`}
+              onPress={() => void handleSaveAndOpen()}
               color="primary"
             />
           )}
+          <Prompt.Cancel cta={l`Keep editing`} />
           <Prompt.Action
-            cta={_(msg`Discard`)}
+            cta={l`Discard`}
             onPress={handleDiscardAndOpen}
             color="negative_subtle"
           />
-          <Prompt.Cancel cta={_(msg`Keep editing`)} />
         </Prompt.Actions>
       </Prompt.Outer>
     </>

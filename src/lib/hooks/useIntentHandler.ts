@@ -2,15 +2,24 @@ import {useCallback, useEffect} from 'react'
 import {Alert} from 'react-native'
 import * as Linking from 'expo-linking'
 import * as WebBrowser from 'expo-web-browser'
+import {Referrer} from '@bsky.app/expo-bluesky-swiss-army'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
+import {CHAT_INVITE_CODE_REGEX} from '#/lib/strings/url-helpers'
+import {usePrefetchJoinLinkPreviews} from '#/state/queries/join-links'
 import {useSession} from '#/state/session'
+import {useSetActiveLanding} from '#/state/shell/landing'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
+import {getTrendingTopicFeedUri} from '#/components/TrendingTopics'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
-import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
+import {
+  parseWidgetExploreClick,
+  parseWidgetTopicClick,
+} from '#/features/trendingWidget/links'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
 
 type IntentType = 'compose' | 'verify-email' | 'age-assurance' | 'apply-ota'
@@ -25,6 +34,7 @@ export function useIntentHandler() {
   const ax = useAnalytics()
   const composeIntent = useComposeIntent()
   const verifyEmailIntent = useVerifyEmailIntent()
+  const groupChatJoinIntent = useGroupChatJoinIntent()
   const {currentAccount} = useSession()
   const {tryApplyUpdate} = useApplyPullRequestOTAUpdate()
 
@@ -35,7 +45,7 @@ export function useIntentHandler() {
         await WebBrowser.dismissBrowser().catch(() => {})
       }
 
-      const referrerInfo = Referrer.getReferrerInfo()
+      const referrerInfo = await Referrer.getReferrerInfo()
       if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
         ax.metric('deepLink:referrerReceived', {
           to: url,
@@ -44,6 +54,24 @@ export function useIntentHandler() {
         })
       }
       const urlp = parseLinkingUrl(url)
+      const widgetTopicClick = parseWidgetTopicClick(urlp)
+      if (widgetTopicClick) {
+        ax.metric('trendingTopic:click', {
+          context: 'widget',
+          feedUri: getTrendingTopicFeedUri({link: widgetTopicClick.path}),
+          rank: widgetTopicClick.rank,
+          recId: widgetTopicClick.recId,
+        })
+      }
+      const widgetExploreClick = parseWidgetExploreClick(urlp)
+      if (widgetExploreClick) {
+        ax.metric('trendingWidget:explore:click', widgetExploreClick)
+      }
+      const chatInviteMatch = urlp.pathname.match(CHAT_INVITE_CODE_REGEX)
+      if (chatInviteMatch) {
+        groupChatJoinIntent(chatInviteMatch[1], url)
+        return
+      }
       const [, intent, intentType] = urlp.pathname.split('/')
 
       // On native, our links look like bluesky://intent/SomeIntent, so we have to check the hostname for the
@@ -74,11 +102,19 @@ export function useIntentHandler() {
         }
         case 'apply-ota': {
           const channel = params.get('channel')
+          const releaseVersion = params.get('releaseVersion')
+          const buildNumber = params.get(
+            IS_IOS ? 'iosBuildNumber' : 'androidBuildNumber',
+          )
+          const appVersion =
+            releaseVersion && buildNumber
+              ? `${releaseVersion}.${buildNumber}`
+              : null
           if (!channel) {
             Alert.alert('Error', 'No channel provided to look for.')
-          } else {
-            tryApplyUpdate(channel)
+            return
           }
+          tryApplyUpdate(channel, appVersion)
           return
         }
         default: {
@@ -91,7 +127,18 @@ export function useIntentHandler() {
       if (previousIntentUrl === incomingUrl) {
         return
       }
-      handleIncomingURL(incomingUrl)
+      handleIncomingURL(incomingUrl).finally(() => {
+        /*
+         * expo-linking caches the URL that launched the app and replays it to
+         * every new `useLinkingURL`/`getLinkingURL` caller, so an account
+         * switch (which remounts the tree, see `key={currentAccount?.did}` in
+         * `App.native.tsx`) or a runtime reload would hand us the same link
+         * again. Drop it now that it's been handled - this hook is the last
+         * consumer of the launch URL, everything else reads it while
+         * rendering, before this effect runs. No-op on web.
+         */
+        Linking.clearInitialURL()
+      })
       previousIntentUrl = incomingUrl
     }
   }, [
@@ -99,6 +146,7 @@ export function useIntentHandler() {
     ax,
     composeIntent,
     verifyEmailIntent,
+    groupChatJoinIntent,
     currentAccount,
     tryApplyUpdate,
   ])
@@ -159,6 +207,46 @@ export function useComposeIntent() {
       }, 500)
     },
     [hasSession, closeAllActiveElements, openComposer],
+  )
+}
+
+export function useGroupChatJoinIntent() {
+  const closeAllActiveElements = useCloseAllActiveElements()
+  const {hasSession} = useSession()
+  const {groupChatJoinDialogControl: control, setGroupChatJoinState: setState} =
+    useIntentDialogs()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const setActiveLanding = useSetActiveLanding()
+  const prefetchJoinLinkPreviews = usePrefetchJoinLinkPreviews()
+  return useCallback(
+    (code: string, uri?: string) => {
+      closeAllActiveElements()
+      if (hasSession) {
+        setState({code})
+        const prefetch = prefetchJoinLinkPreviews({
+          codes: [code],
+          hasSession: true,
+        })
+        void Promise.race([
+          prefetch,
+          new Promise(res => setTimeout(res, 200)),
+        ]).finally(() => {
+          control.open()
+        })
+      } else {
+        setActiveLanding({type: 'groupchat', uri: uri ?? '', code})
+        requestSwitchToAccount({requestedAccount: 'groupchat'})
+      }
+    },
+    [
+      closeAllActiveElements,
+      hasSession,
+      control,
+      setState,
+      prefetchJoinLinkPreviews,
+      requestSwitchToAccount,
+      setActiveLanding,
+    ],
   )
 }
 

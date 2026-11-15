@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useEffectEvent, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {
   useKeyboardHandler,
@@ -7,92 +7,163 @@ import {
 import Animated, {
   Extrapolation,
   interpolate,
-  runOnJS,
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
 import {GlassContainer} from 'expo-glass-effect'
 import {LinearGradient} from 'expo-linear-gradient'
+import {type $Typed} from '@atproto/lex'
 import {ScrollEdgeEffect} from '@bsky.app/expo-scroll-edge-effect'
 import {useLingui} from '@lingui/react/macro'
+import {type RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
+import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
-import {isBskyPostUrl} from '#/lib/strings/url-helpers'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
+import {isBskyChatInviteUrl, isBskyPostUrl} from '#/lib/strings/url-helpers'
 import {useEmail} from '#/state/email-verification'
 import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
-import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
-import {
-  type Emoji,
-  EmojiPicker,
-  type EmojiPickerState,
-} from '#/view/com/composer/text-input/web/EmojiPicker'
 import {atoms as a, native, platform, tokens, useTheme, utils} from '#/alf'
 import {Composer, useComposerInternalApiRef} from '#/components/Composer'
+import {useMessageReplies} from '#/components/dms/MessageReplies'
+import * as EmojiPicker from '#/components/EmojiPicker'
 import {GlassView} from '#/components/GlassView'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
+import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
-import {IS_ANDROID, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {type chat} from '#/lexicons'
+import {getMessageComposerHorizontalPadding} from './messageComposerLayout'
+import {type MessageEmbedState} from './MessageInputEmbed'
 
 const MIN_HEIGHT = 40
 
 export function MessageComposer({
   textInputId,
   onSendMessage,
-  hasEmbed,
+  messageEmbed,
   setEmbed,
   children,
+  loading = false,
 }: {
   textInputId?: string
-  onSendMessage: (message: string) => void
-  hasEmbed: boolean
+  onSendMessage: (
+    message: string,
+    embed?: MessageEmbedState,
+    replyTo?: $Typed<chat.bsky.convo.defs.MessageView>,
+  ) => void
+  messageEmbed: MessageEmbedState | undefined
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
+  loading?: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const {needsEmailVerification} = useEmail()
-  const editable = !needsEmailVerification
+  const editable = !needsEmailVerification && !loading
   const {getDraft, clearDraft} = useMessageDraft()
-  const [emojiPickerState, setEmojiPickerState] = useState<EmojiPickerState>({
-    isOpen: false,
-    pos: {top: 0, left: 0, right: 0, bottom: 0, nextFocusRef: null},
-  })
   const composerInternalApiRef = useComposerInternalApiRef()
+  const {replyTo, clearReply} = useMessageReplies()
 
   const [text, setText] = useState(getDraft)
   useSaveMessageDraft(text)
 
+  const route =
+    useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>()
+  const navigation =
+    useNavigation<
+      NavigationProp<CommonNavigatorParams, 'MessagesConversation'>
+    >()
+  const pendingText = route.params.text
+
+  /*
+   * Stages navigation-provided text (e.g. a shared URL) in the input once,
+   * appended to any existing draft. The input is uncontrolled, so it's
+   * replaced through the imperative API rather than by changing `text`.
+   * Reads the latest draft through an effect event so typing doesn't re-run
+   * the effect below.
+   */
+  const stagePendingText = useEffectEvent((pending: string) => {
+    const composerApi = composerInternalApiRef.current
+    if (!composerApi) return
+    const nextText = text ? `${text}\n${pending}` : pending
+    composerApi.clear()
+    composerApi.insert(nextText)
+    setText(nextText)
+    navigation.setParams({text: undefined})
+  })
+
+  /*
+   * Waits for `editable` so the text isn't consumed while the chat is still
+   * loading or email verification blocks input.
+   */
+  useEffect(() => {
+    if (pendingText && editable) {
+      stagePendingText(pendingText)
+    }
+  }, [pendingText, editable])
+
+  useEffect(() => {
+    if (!replyTo) return
+    composerInternalApiRef.current?.input?.focus()
+  }, [replyTo, composerInternalApiRef])
+
+  // On web, focus the input once the conversation is ready. The composer also
+  // mounts during the loading state (when it isn't editable), so a mount-time
+  // autoFocus would fire too early to land focus.
+  useEffect(() => {
+    if (IS_WEB && editable) {
+      composerInternalApiRef.current?.input?.focus()
+    }
+  }, [editable, composerInternalApiRef])
+
   // Android interactive dismiss sometimes doesn't blur the input
-  const blur = () => {
+  const blur = useNonReactiveCallback(() => {
     composerInternalApiRef.current?.input?.blur()
-  }
+  })
 
   useKeyboardHandler({
     onEnd: evt => {
       'worklet'
       if (IS_ANDROID && evt.progress === 0) {
-        runOnJS(blur)()
+        scheduleOnRN(blur)
       }
     },
   })
 
-  const submitDisabled = !editable || (!hasEmbed && text.trim().length === 0)
+  const submitDisabled =
+    !editable || (!messageEmbed && text.trim().length === 0)
 
-  const openEmojiPicker = (pos: any) => {
-    setEmojiPickerState({isOpen: true, pos})
-  }
+  /*
+   * Guards against a second `onSubmit` firing (a fast double-tap, or a
+   * native double-dispatch of onPress) before React has re-rendered with
+   * the cleared input. `submitDisabled`/`text` are state, so they lag a
+   * frame behind the synchronous `.clear()` call below - a ref is needed
+   * to block re-entry within that window.
+   */
+  const isSubmittingRef = useRef(false)
 
-  const onSubmit = () => {
+  const onSubmit = (
+    message: string,
+    embed: MessageEmbedState | undefined,
+    replyTo: chat.bsky.convo.defs.MessageView | null,
+  ) => {
     if (!editable) return
-    if (!hasEmbed && text.trim() === '') return
-    const graphemeCount = countGraphemes(text)
+    if (!embed && message.trim() === '') return
+    if (isSubmittingRef.current) return
+    const graphemeCount = countGraphemes(message)
     if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
       Toast.show(
         l`Message is too long (${graphemeCount}/${MAX_DM_GRAPHEME_LENGTH})`,
@@ -101,35 +172,78 @@ export function MessageComposer({
       return
     }
 
+    isSubmittingRef.current = true
     clearDraft()
-    onSendMessage(text)
-    playHaptic()
+    haptics.confirm()
     setEmbed(undefined)
+    clearReply()
     composerInternalApiRef.current?.clear()
 
     if (IS_WEB) {
       composerInternalApiRef.current?.input?.focus()
     }
+
+    // defer send by a frame so that the textinput resizes before we send the message
+    requestAnimationFrame(() => {
+      isSubmittingRef.current = false
+      onSendMessage(
+        message,
+        embed,
+        replyTo
+          ? {
+              ...replyTo,
+              $type: 'chat.bsky.convo.defs#messageView',
+            }
+          : undefined,
+      )
+    })
   }
 
-  useEffect(() => {
-    function onEmojiInserted(emoji: Emoji) {
-      composerInternalApiRef.current?.insert(emoji.native)
+  const isFlushingAutocorrectSuggestion = useRef(false)
+  const handleSubmit = () => {
+    if (IS_IOS) {
+      // HACKFIX: If there's a pending autocomplete suggestion, iOS will prioritize
+      // accepting the suggestion over any imperative `.clear()` action on the textinput.
+      // This means we'll send the message with the typo while the corrected text remains
+      // in the composer's textinput.
+      //
+      // In MessageInput, the previous iteration, we simply sent it, and if another text change
+      // event came in, we'd clear it again. However, it's nicer UX to actually accept the suggestion.
+      //
+      // Thus the solution:
+      // 1. Set a ref indicating we're flushing the autocorrect suggestion
+      // 2. Watch for incoming onChange events. If something comes in, it's almost certainly the corrected text,
+      // so send that
+      // 3. Meanwhile, race that against a simple timeout. If the timeout fires first, send the original text.
+      //
+      // Hopefully, it's delaying the send by no more than a couple frames -sfn
+      isFlushingAutocorrectSuggestion.current = true
+      setTimeout(() => {
+        if (isFlushingAutocorrectSuggestion.current) {
+          isFlushingAutocorrectSuggestion.current = false
+          onSubmit(text, messageEmbed, replyTo)
+        }
+      }, 20)
+    } else {
+      onSubmit(text, messageEmbed, replyTo)
     }
-    textInputWebEmitter.addListener('emoji-inserted', onEmojiInserted)
-    return () => {
-      textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted)
+  }
+
+  const handleChange = (nextText: string) => {
+    if (IS_IOS && isFlushingAutocorrectSuggestion.current) {
+      isFlushingAutocorrectSuggestion.current = false
+      onSubmit(nextText, messageEmbed, replyTo)
+    } else {
+      setText(nextText)
     }
-  }, [composerInternalApiRef])
+  }
 
   return (
     <ComposerContainer>
-      {children}
-
       <View
         collapsable={false}
         ref={native(
-          (node: View) =>
+          (node: React.ComponentRef<typeof View>) =>
             void composerInternalApiRef.current?.setAutocompleteAnchor(node),
         )}>
         <GlassContainer
@@ -141,99 +255,100 @@ export function MessageComposer({
             style={[a.flex_1, a.rounded_xl, {minHeight: MIN_HEIGHT}]}
             tintColor={t.palette.contrast_50}
             fallbackStyle={[t.atoms.bg_contrast_50]}>
-            {IS_WEB && (
-              <Pressable
-                onPress={e => {
-                  e.currentTarget.measure(
-                    (_fx, _fy, _width, _height, px, py) => {
-                      // TODO: rip this horrible system out
-                      openEmojiPicker?.({
-                        top: py,
-                        left: px - 400,
-                        right: px - 400,
-                        bottom: py,
-                        nextFocusRef: {
-                          current:
-                            composerInternalApiRef.current?.input?.element,
-                        },
-                      })
-                    },
-                  )
-                }}
-                style={[
-                  a.overflow_hidden,
-                  a.absolute,
-                  a.rounded_full,
-                  a.align_center,
-                  a.justify_center,
-                  a.z_30,
-                  {
-                    height: 20,
-                    width: 20,
-                    top: 10,
-                    right: 10,
-                  },
-                ]}
-                accessibilityLabel={l`Open emoji picker`}
-                accessibilityHint="">
-                {state => (
-                  <EmojiSmileIcon
-                    size="md"
-                    style={
-                      state.hovered ||
-                      state.focused ||
-                      state.pressed ||
-                      emojiPickerState.isOpen
-                        ? {color: t.palette.primary_500}
-                        : t.atoms.text_contrast_high
-                    }
-                  />
-                )}
-              </Pressable>
-            )}
+            {children}
+            <View style={[a.flex_1]}>
+              {IS_WEB && !loading ? (
+                <EmojiPicker.Root
+                  onEmojiSelect={emoji =>
+                    composerInternalApiRef.current?.insert(emoji.native)
+                  }
+                  nextFocusRef={() =>
+                    composerInternalApiRef.current?.input
+                      ?.element as unknown as
+                      {focus: () => void} | null | undefined
+                  }>
+                  <EmojiPicker.Trigger label={l`Open emoji picker`}>
+                    {({props, state, control}) => (
+                      <Pressable
+                        {...props}
+                        style={[
+                          a.overflow_hidden,
+                          a.absolute,
+                          a.rounded_full,
+                          a.align_center,
+                          a.justify_center,
+                          a.z_30,
+                          {
+                            height: 20,
+                            width: 20,
+                            top: 10,
+                            right: 10,
+                          },
+                        ]}>
+                        <EmojiSmileIcon
+                          size="md"
+                          style={
+                            state.hovered ||
+                            state.focused ||
+                            state.pressed ||
+                            control.isOpen
+                              ? {color: t.palette.primary_500}
+                              : t.atoms.text_contrast_high
+                          }
+                        />
+                      </Pressable>
+                    )}
+                  </EmojiPicker.Trigger>
+                  <EmojiPicker.Picker />
+                </EmojiPicker.Root>
+              ) : null}
 
-            <Composer
-              nativeID={textInputId}
-              label={l`Message input field`}
-              placeholder={l`Message`}
-              autocompletePlacement="top-start"
-              internalApiRef={composerInternalApiRef}
-              defaultValue={text}
-              editable={editable}
-              autoFocus={IS_WEB}
-              maxRows={12}
-              outerStyle={[a.flex_1]}
-              contentTextStyle={[a.text_md, a.leading_snug]}
-              contentPaddingStyle={{
-                paddingLeft: 16,
-                paddingTop: 10,
-                paddingBottom: 10,
-                paddingRight: 16 + platform({web: 20, default: 0}),
-              }}
-              onChange={setText}
-              onFacetCommitted={facet => {
-                if (facet.type === 'url' && isBskyPostUrl(facet.value)) {
-                  setEmbed(facet.value)
+              <Composer
+                nativeID={textInputId}
+                label={l`Message input field`}
+                placeholder={
+                  loading
+                    ? l({message: 'Loading chat…', context: 'placeholder'})
+                    : l({message: 'Message', context: 'description'})
                 }
-              }}
-              onRequestSubmit={req => {
-                if (req.platform === 'web' && req.shiftKey) return
-                req.nativeEvent.preventDefault()
-                onSubmit()
-              }}
-            />
+                autocompletePlacement="top-start"
+                internalApiRef={composerInternalApiRef}
+                defaultValue={text}
+                editable={editable}
+                maxRows={12}
+                outerStyle={[a.flex_1]}
+                contentTextStyle={[a.text_md, a.leading_snug]}
+                contentPaddingStyle={{
+                  paddingLeft: 16,
+                  paddingTop: 10,
+                  paddingBottom: 10,
+                  paddingRight: 16 + platform({web: 20, default: 0}),
+                }}
+                onChange={handleChange}
+                onFacetCommitted={facet => {
+                  if (
+                    facet.type === 'url' &&
+                    (isBskyPostUrl(facet.value) ||
+                      isBskyChatInviteUrl(facet.value))
+                  ) {
+                    setEmbed(facet.value)
+                  }
+                }}
+                onRequestSubmit={req => {
+                  if (req.platform === 'web' && req.shiftKey) return
+                  req.nativeEvent.preventDefault()
+                  handleSubmit()
+                }}
+              />
+            </View>
           </GlassView>
-          <SubmitButton onPress={onSubmit} disabled={submitDisabled} />
+          <SubmitButton
+            onPress={handleSubmit}
+            disabled={submitDisabled}
+            loading={loading}
+          />
         </GlassContainer>
       </View>
-
-      {IS_WEB && (
-        <EmojiPicker
-          pinToTop
-          state={emojiPickerState}
-          close={() => setEmojiPickerState(prev => ({...prev, isOpen: false}))}
-        />
-      )}
     </ComposerContainer>
   )
 }
@@ -241,64 +356,70 @@ export function MessageComposer({
 function SubmitButton({
   onPress,
   disabled,
+  loading,
 }: {
   onPress: () => void
   disabled: boolean
+  loading: boolean
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
 
   return (
-    <GlassView
-      isInteractive
-      glassEffectStyle="regular"
-      style={[a.rounded_full]}
-      tintColor={disabled ? t.palette.contrast_100 : t.palette.primary_500}
-      fallbackStyle={{
-        backgroundColor: disabled
-          ? t.palette.contrast_100
-          : t.palette.primary_500,
-      }}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={l`Send message`}
-        accessibilityHint=""
-        hitSlop={HITSLOP_10}
-        style={[
-          a.rounded_full,
-          a.align_center,
-          a.justify_center,
-          {height: MIN_HEIGHT, width: MIN_HEIGHT},
-        ]}
-        onPress={onPress}
-        disabled={disabled}>
-        <PaperPlaneIcon size="md" fill={t.palette.white} style={[a.mb_2xs]} />
-      </Pressable>
-    </GlassView>
+    <PressableScale
+      accessibilityRole="button"
+      accessibilityLabel={l`Send message`}
+      accessibilityHint=""
+      hitSlop={HITSLOP_10}
+      targetScale={0.95}
+      style={[
+        a.rounded_full,
+        a.align_center,
+        a.justify_center,
+        {height: MIN_HEIGHT, width: MIN_HEIGHT},
+      ]}
+      onPress={onPress}
+      disabled={disabled}>
+      <GlassView
+        pointerEvents="none"
+        glassEffectStyle="regular"
+        style={[a.absolute, a.inset_0, a.rounded_full]}
+        tintColor={disabled ? t.palette.contrast_100 : t.palette.primary_500}
+        fallbackStyle={{
+          backgroundColor: disabled
+            ? t.palette.contrast_100
+            : t.palette.primary_500,
+        }}
+      />
+      {loading ? (
+        <Loader size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+      ) : (
+        <PaperPlaneIcon
+          size="md"
+          fill={t.palette.white}
+          style={[a.relative, a.z_10, a.mb_2xs]}
+        />
+      )}
+    </PressableScale>
   )
 }
 
-// TODO: remove export when MessageInput is deleted
-export function ComposerContainer({children}: {children: React.ReactNode}) {
+function ComposerContainer({children}: {children: React.ReactNode}) {
   const {bottom: bottomInset} = useSafeAreaInsets()
   const {progress} = useReanimatedKeyboardAnimation()
   const t = useTheme()
+  const horizontalPadding = getMessageComposerHorizontalPadding(bottomInset)
 
   const animatedContainerStyle = useAnimatedStyle(() => ({
-    paddingHorizontal: interpolate(
-      progress.get(),
-      [0, 1],
-      [bottomInset, tokens.space.sm],
-      {
-        extrapolateRight: Extrapolation.CLAMP,
-        extrapolateLeft: Extrapolation.CLAMP,
-      },
-    ),
+    paddingHorizontal: interpolate(progress.get(), [0, 1], horizontalPadding, {
+      extrapolateRight: Extrapolation.CLAMP,
+      extrapolateLeft: Extrapolation.CLAMP,
+    }),
   }))
 
   if (IS_LIQUID_GLASS) {
     return (
-      <ScrollEdgeEffect edge="bottom">
+      <ScrollEdgeEffect edge="bottom" effect="soft">
         <Animated.View style={[a.w_full, animatedContainerStyle, a.pb_lg]}>
           {children}
         </Animated.View>
@@ -313,10 +434,10 @@ export function ComposerContainer({children}: {children: React.ReactNode}) {
             web: [
               a.pt_xs,
               a.pl_lg,
-              a.pb_lg,
+              {paddingBottom: tokens.space.lg + bottomInset},
               // prevent overlap with the scrollbar, which looks ugly
-              a.pr_xs, // xs + md = lg
-              {width: `calc(100% - ${tokens.space.md}px)` as '100%'},
+              a.pr_sm, // sm + sm = lg
+              {width: `calc(100% - ${tokens.space.sm}px)` as '100%'},
             ],
           })}
           key={t.name} // android does not update when you change the colors. sigh.

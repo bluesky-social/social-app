@@ -1,0 +1,43 @@
+{
+  "id": "com.atproto.server.createInviteCode",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "useCount"
+          ],
+          "properties": {
+            "useCount": {
+              "type": "integer"
+            },
+            "forAccount": {
+              "type": "string",
+              "format": "did"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "code"
+          ],
+          "properties": {
+            "code": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Create an invite code."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

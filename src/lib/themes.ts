@@ -17,19 +17,6 @@ export const defaultTheme: Theme = {
       textInverted: lightPalette.white,
       link: lightPalette.primary_500,
       border: lightPalette.contrast_100,
-      borderDark: lightPalette.contrast_200,
-      icon: lightPalette.contrast_500,
-
-      // non-standard
-      textVeryLight: lightPalette.contrast_400,
-      replyLine: lightPalette.contrast_100,
-      replyLineDot: lightPalette.contrast_200,
-      unreadNotifBg: lightPalette.primary_25,
-      unreadNotifBorder: lightPalette.primary_100,
-      postCtrl: lightPalette.contrast_500,
-      brandText: lightPalette.primary_500,
-      emptyStateIcon: lightPalette.contrast_300,
-      borderLinkHover: lightPalette.contrast_300,
     },
     primary: {
       background: colors.blue3,
@@ -39,8 +26,6 @@ export const defaultTheme: Theme = {
       textInverted: colors.blue3,
       link: colors.blue0,
       border: colors.blue4,
-      borderDark: colors.blue5,
-      icon: colors.blue4,
     },
     secondary: {
       background: colors.green3,
@@ -50,8 +35,6 @@ export const defaultTheme: Theme = {
       textInverted: colors.green4,
       link: colors.green1,
       border: colors.green4,
-      borderDark: colors.green5,
-      icon: colors.green4,
     },
     inverted: {
       background: darkPalette.black,
@@ -61,8 +44,6 @@ export const defaultTheme: Theme = {
       textInverted: darkPalette.black,
       link: darkPalette.primary_500,
       border: darkPalette.contrast_100,
-      borderDark: darkPalette.contrast_200,
-      icon: darkPalette.contrast_500,
     },
     error: {
       background: colors.red3,
@@ -72,8 +53,6 @@ export const defaultTheme: Theme = {
       textInverted: colors.red3,
       link: colors.red1,
       border: colors.red4,
-      borderDark: colors.red5,
-      icon: colors.red4,
     },
   },
   shapes: {
@@ -303,19 +282,6 @@ export const darkTheme: Theme = {
       textInverted: darkPalette.black,
       link: darkPalette.primary_500,
       border: darkPalette.contrast_100,
-      borderDark: darkPalette.contrast_200,
-      icon: darkPalette.contrast_500,
-
-      // non-standard
-      textVeryLight: darkPalette.contrast_400,
-      replyLine: darkPalette.contrast_200,
-      replyLineDot: darkPalette.contrast_200,
-      unreadNotifBg: darkPalette.primary_25,
-      unreadNotifBorder: darkPalette.primary_100,
-      postCtrl: darkPalette.contrast_500,
-      brandText: darkPalette.primary_500,
-      emptyStateIcon: darkPalette.contrast_300,
-      borderLinkHover: darkPalette.contrast_300,
     },
     primary: {
       ...defaultTheme.palette.primary,
@@ -333,8 +299,6 @@ export const darkTheme: Theme = {
       textInverted: darkPalette.white,
       link: lightPalette.primary_500,
       border: lightPalette.contrast_100,
-      borderDark: lightPalette.contrast_200,
-      icon: lightPalette.contrast_500,
     },
   },
 }
@@ -352,19 +316,6 @@ export const dimTheme: Theme = {
       textInverted: dimPalette.black,
       link: dimPalette.primary_500,
       border: dimPalette.contrast_100,
-      borderDark: dimPalette.contrast_200,
-      icon: dimPalette.contrast_500,
-
-      // non-standard
-      textVeryLight: dimPalette.contrast_400,
-      replyLine: dimPalette.contrast_200,
-      replyLineDot: dimPalette.contrast_200,
-      unreadNotifBg: dimPalette.primary_25,
-      unreadNotifBorder: dimPalette.primary_100,
-      postCtrl: dimPalette.contrast_500,
-      brandText: dimPalette.primary_500,
-      emptyStateIcon: dimPalette.contrast_300,
-      borderLinkHover: dimPalette.contrast_300,
     },
   },
 }

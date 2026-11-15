@@ -1,36 +1,25 @@
-import {
-  AppBskyEmbedExternal,
-  AppBskyEmbedImages,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyEmbedVideo,
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
-  AppBskyLabelerDefs,
-} from '@atproto/api'
+import {app} from '@bsky/sdk/lexicons'
 import {ComponentChildren, h} from 'preact'
 import {useMemo} from 'preact/hooks'
+
+import {Link} from '#/components/link'
+import {VerificationCheck} from '#/components/verification-check'
+import {Globe} from '#/icons/Globe'
+import {CONTENT_LABELS, labelsToInfo} from '#/labels'
+import {getRkey} from '#/util/rkey'
+import {getVerificationState} from '#/util/verification-state'
 
 import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
 import playIcon from '../../assets/play_filled_corner0_rounded.svg'
 import starterPackIcon from '../../assets/starterPack.svg'
-import {Globe} from '../icons/Globe'
-import {CONTENT_LABELS, labelsToInfo} from '../labels'
-import * as bsky from '../types/bsky'
-import {getRkey} from '../util/rkey'
-import {getVerificationState} from '../util/verification-state'
-import {Link} from './link'
-import {VerificationCheck} from './verification-check'
 
 export function Embed({
   content,
   labels,
   hideRecord,
 }: {
-  content: AppBskyFeedDefs.PostView['embed']
-  labels: AppBskyFeedDefs.PostView['labels']
+  content: app.bsky.feed.defs.PostView['embed']
+  labels: app.bsky.feed.defs.PostView['labels']
   hideRecord?: boolean
 }) {
   const labelInfo = useMemo(() => labelsToInfo(labels), [labels])
@@ -39,17 +28,22 @@ export function Embed({
 
   try {
     // Case 1: Image
-    if (AppBskyEmbedImages.isView(content)) {
+    if (app.bsky.embed.images.view.isTypeOf(content)) {
       return <ImageEmbed content={content} labelInfo={labelInfo} />
     }
 
+    // Case 1b: Gallery (Photos v2)
+    if (app.bsky.embed.gallery.view.isTypeOf(content)) {
+      return <GalleryEmbed content={content} labelInfo={labelInfo} />
+    }
+
     // Case 2: External link
-    if (AppBskyEmbedExternal.isView(content)) {
+    if (app.bsky.embed.external.view.isTypeOf(content)) {
       return <ExternalEmbed content={content} labelInfo={labelInfo} />
     }
 
     // Case 3: Record (quote or linked post)
-    if (AppBskyEmbedRecord.isView(content)) {
+    if (app.bsky.embed.record.view.isTypeOf(content)) {
       if (hideRecord) {
         return null
       }
@@ -57,7 +51,7 @@ export function Embed({
       const record = content.record
 
       // Case 3.1: Post
-      if (AppBskyEmbedRecord.isViewRecord(record)) {
+      if (app.bsky.embed.record.viewRecord.isTypeOf(record)) {
         const pwiOptOut = !!record.author.labels?.find(
           label => label.val === '!no-unauthenticated',
         )
@@ -70,10 +64,10 @@ export function Embed({
           )
         }
 
-        let text
-        if (AppBskyFeedPost.isRecord(record.value)) {
-          text = record.value.text
-        }
+        const validation = app.bsky.feed.post.$safeValidate(record.value, {
+          strict: false,
+        })
+        const text = validation.success ? validation.value.text : undefined
 
         const isAuthorLabeled = record.author.labels?.some(label =>
           CONTENT_LABELS.includes(label.val),
@@ -123,14 +117,17 @@ export function Embed({
       }
 
       // Case 3.2: List
-      if (AppBskyGraphDefs.isListView(record)) {
+      if (app.bsky.graph.defs.listView.isTypeOf(record)) {
+        if (labelInfo) {
+          return <Info>{labelInfo}</Info>
+        }
         return (
           <GenericWithImageEmbed
             image={record.avatar}
             title={record.name}
             href={`/profile/${record.creator.did}/lists/${getRkey(record)}`}
             subtitle={
-              record.purpose === AppBskyGraphDefs.MODLIST
+              record.purpose === app.bsky.graph.defs.modlist.value
                 ? `Moderation list by @${record.creator.handle}`
                 : `User list by @${record.creator.handle}`
             }
@@ -140,7 +137,10 @@ export function Embed({
       }
 
       // Case 3.3: Feed
-      if (AppBskyFeedDefs.isGeneratorView(record)) {
+      if (app.bsky.feed.defs.generatorView.isTypeOf(record)) {
+        if (labelInfo) {
+          return <Info>{labelInfo}</Info>
+        }
         return (
           <GenericWithImageEmbed
             image={record.avatar}
@@ -153,28 +153,28 @@ export function Embed({
       }
 
       // Case 3.4: Labeler
-      if (AppBskyLabelerDefs.isLabelerView(record)) {
+      if (app.bsky.labeler.defs.labelerView.isTypeOf(record)) {
         // Embed type does not exist in the app, so show nothing
         return null
       }
 
       // Case 3.5: Starter pack
-      if (AppBskyGraphDefs.isStarterPackViewBasic(record)) {
+      if (app.bsky.graph.defs.starterPackViewBasic.isTypeOf(record)) {
         return <StarterPackEmbed content={record} />
       }
 
       // Case 3.6: Post not found
-      if (AppBskyEmbedRecord.isViewNotFound(record)) {
+      if (app.bsky.embed.record.viewNotFound.isTypeOf(record)) {
         return <Info>Quoted post not found, it may have been deleted.</Info>
       }
 
       // Case 3.7: Post blocked
-      if (AppBskyEmbedRecord.isViewBlocked(record)) {
+      if (app.bsky.embed.record.viewBlocked.isTypeOf(record)) {
         return <Info>The quoted post is blocked.</Info>
       }
 
       // Case 3.8: Detached quote post
-      if (AppBskyEmbedRecord.isViewDetached(record)) {
+      if (app.bsky.embed.record.viewDetached.isTypeOf(record)) {
         // Just don't show anything
         return null
       }
@@ -184,14 +184,14 @@ export function Embed({
     }
 
     // Case 4: Video
-    if (AppBskyEmbedVideo.isView(content)) {
+    if (app.bsky.embed.video.view.isTypeOf(content)) {
       return <VideoEmbed content={content} />
     }
 
     // Case 5: Record with media
     if (
-      AppBskyEmbedRecordWithMedia.isView(content) &&
-      AppBskyEmbedRecord.isViewRecord(content.record.record)
+      app.bsky.embed.recordWithMedia.view.isTypeOf(content) &&
+      app.bsky.embed.record.viewRecord.isTypeOf(content.record.record)
     ) {
       return (
         <div className="flex flex-col gap-2">
@@ -230,30 +230,57 @@ function Info({children}: {children: ComponentChildren}) {
   )
 }
 
+type GridImage = {thumb: string; alt: string}
+
 function ImageEmbed({
   content,
   labelInfo,
 }: {
-  content: AppBskyEmbedImages.View
+  content: app.bsky.embed.images.View
   labelInfo?: string
 }) {
   if (labelInfo) {
     return <Info>{labelInfo}</Info>
   }
+  return (
+    <ImageGrid
+      images={content.images.map(i => ({thumb: i.thumb, alt: i.alt}))}
+    />
+  )
+}
 
-  switch (content.images.length) {
+function GalleryEmbed({
+  content,
+  labelInfo,
+}: {
+  content: app.bsky.embed.gallery.View
+  labelInfo?: string
+}) {
+  if (labelInfo) {
+    return <Info>{labelInfo}</Info>
+  }
+  const images = content.items
+    .filter(i => app.bsky.embed.gallery.viewImage.isTypeOf(i))
+    .map(i => ({thumb: i.thumbnail, alt: i.alt}))
+  return <ImageGrid images={images} />
+}
+
+function ImageGrid({images}: {images: GridImage[]}) {
+  switch (images.length) {
+    case 0:
+      return null
     case 1:
       return (
         <img
-          src={content.images[0].thumb}
-          alt={content.images[0].alt}
+          src={images[0].thumb}
+          alt={images[0].alt}
           className="w-full rounded-xl overflow-hidden object-cover h-auto max-h-[1000px]"
         />
       )
     case 2:
       return (
         <div className="flex gap-1 rounded-xl overflow-hidden w-full aspect-[2/1]">
-          {content.images.map((image, i) => (
+          {images.map((image, i) => (
             <img
               key={i}
               src={image.thumb}
@@ -268,13 +295,13 @@ function ImageEmbed({
         <div className="flex gap-1 rounded-xl overflow-hidden w-full aspect-[2/1]">
           <div className="flex-1 aspect-square">
             <img
-              src={content.images[0].thumb}
-              alt={content.images[0].alt}
+              src={images[0].thumb}
+              alt={images[0].alt}
               className="w-full h-full object-cover rounded-sm"
             />
           </div>
           <div className="flex flex-col gap-1 flex-1">
-            {content.images.slice(1).map((image, i) => (
+            {images.slice(1).map((image, i) => (
               <img
                 key={i}
                 src={image.thumb}
@@ -285,21 +312,36 @@ function ImageEmbed({
           </div>
         </div>
       )
-    case 4:
+    default: {
+      const remaining = images.length - 4
       return (
         <div className="grid grid-cols-2 gap-1 rounded-xl overflow-hidden">
-          {content.images.map((image, i) => (
-            <img
-              key={i}
-              src={image.thumb}
-              alt={image.alt}
-              className="aspect-[3/2] w-full object-cover rounded-sm"
-            />
-          ))}
+          {images.slice(0, 4).map((image, i) => {
+            const isOverflowCell = i === 3 && remaining > 0
+            return (
+              <div
+                key={i}
+                className="relative aspect-[3/2] rounded-sm overflow-hidden">
+                <img
+                  src={image.thumb}
+                  alt={image.alt}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                {isOverflowCell && (
+                  <div
+                    aria-label={`+${remaining} more image${remaining === 1 ? '' : 's'}, view post to see all`}
+                    className="absolute inset-0 flex items-center justify-center bg-black/50">
+                    <span className="text-white text-2xl font-semibold">
+                      +{remaining}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )
+          })}
         </div>
       )
-    default:
-      return null
+    }
   }
 }
 
@@ -307,7 +349,7 @@ function ExternalEmbed({
   content,
   labelInfo,
 }: {
-  content: AppBskyEmbedExternal.View
+  content: app.bsky.embed.external.View
   labelInfo?: string
 }) {
   function toNiceDomain(url: string): string {
@@ -341,9 +383,12 @@ function ExternalEmbed({
         <p className="text-sm leading-snug text-textLight dark:text-textDimmed line-clamp-2 mt-0.5">
           {content.external.description}
         </p>
-        <div className="flex flex-row items-center gap-1 border-t dark:border-slate-600 mt-1 pt-1.5">
-          <Globe size={12} className="text-textLight dark:text-textDimmed" />
-          <p className="text-sm leading-none text-textLight dark:text-textDimmed line-clamp-1">
+        <div className="flex flex-row items-end gap-1 border-t dark:border-slate-600 mt-1 pt-1.5">
+          <Globe
+            size={12}
+            className="text-textLight dark:text-textDimmed shrink-0"
+          />
+          <p className="text-sm leading-none overflow-y-visible overflow-x-clip min-w-0 text-textLight dark:text-textDimmed line-clamp-1">
             {toNiceDomain(content.external.uri)}
           </p>
         </div>
@@ -395,7 +440,7 @@ function GenericWithImageEmbed({
   )
 }
 
-function VideoEmbed({content}: {content: AppBskyEmbedVideo.View}) {
+function VideoEmbed({content}: {content: app.bsky.embed.video.View}) {
   let aspectRatio = 1
 
   if (content.aspectRatio) {
@@ -416,7 +461,9 @@ function VideoEmbed({content}: {content: AppBskyEmbedVideo.View}) {
         controls
         playsinline
         preload="metadata"
+        // @ts-expect-error https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/video#loading
         loading="lazy"
+        crossorigin="anonymous"
         aria-label={content.alt || undefined}
         onClickCapture={evt => evt.stopPropagation()}
         className="w-full rounded-xl bg-black"
@@ -444,16 +491,13 @@ function VideoEmbed({content}: {content: AppBskyEmbedVideo.View}) {
 function StarterPackEmbed({
   content,
 }: {
-  content: AppBskyGraphDefs.StarterPackViewBasic
+  content: app.bsky.graph.defs.StarterPackViewBasic
 }) {
-  if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      content.record,
-      AppBskyGraphStarterpack.isRecord,
-    )
-  ) {
+  const validation = app.bsky.graph.starterpack.$safeValidate(content.record)
+  if (!validation.success) {
     return null
   }
+  const record = validation.value
 
   const starterPackHref = getStarterPackHref(content)
   const imageUri = getStarterPackImage(content)
@@ -467,17 +511,15 @@ function StarterPackEmbed({
         <div className="flex space-x-2 items-center">
           <img src={starterPackIcon} className="w-10 h-10" />
           <div>
-            <p className="font-semibold leading-[21px]">
-              {content.record.name}
-            </p>
+            <p className="font-semibold leading-[21px]">{record.name}</p>
             <p className="text-sm text-textLight dark:text-textDimmed line-clamp-2 leading-[18px]">
               Starter pack by{' '}
               {content.creator.displayName || `@${content.creator.handle}`}
             </p>
           </div>
         </div>
-        {content.record.description && (
-          <p className="text-sm mt-1">{content.record.description}</p>
+        {record.description && (
+          <p className="text-sm mt-1">{record.description}</p>
         )}
         {!!content.joinedAllTimeCount && content.joinedAllTimeCount > 50 && (
           <p className="text-sm font-semibold text-textLight dark:text-textDimmed mt-1">
@@ -491,14 +533,14 @@ function StarterPackEmbed({
 
 // from #/lib/strings/starter-pack.ts
 function getStarterPackImage(
-  starterPack: AppBskyGraphDefs.StarterPackViewBasic,
+  starterPack: app.bsky.graph.defs.StarterPackViewBasic,
 ) {
   const rkey = getRkey({uri: starterPack.uri})
   return `https://ogcard.cdn.bsky.app/start/${starterPack.creator.did}/${rkey}`
 }
 
 function getStarterPackHref(
-  starterPack: AppBskyGraphDefs.StarterPackViewBasic,
+  starterPack: app.bsky.graph.defs.StarterPackViewBasic,
 ) {
   const rkey = getRkey({uri: starterPack.uri})
   const handleOrDid = starterPack.creator.handle || starterPack.creator.did

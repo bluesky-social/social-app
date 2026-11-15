@@ -1,15 +1,15 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useEffectEvent, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {ImageBackground} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
-import {FocusGuards, FocusScope} from 'radix-ui/internal'
+import {Trans, useLingui} from '@lingui/react/macro'
+import * as FocusGuards from '@radix-ui/react-focus-guards'
+import * as FocusScope from '@radix-ui/react-focus-scope'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, flatten, useBreakpoints, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {type WelcomeModalControl} from '#/components/hooks/useWelcomeModal.shared'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -17,15 +17,11 @@ import {useAnalytics} from '#/analytics'
 const welcomeModalBg = require('../../assets/images/welcome-modal-bg.jpg')
 
 interface WelcomeModalProps {
-  control: {
-    isOpen: boolean
-    open: () => void
-    close: () => void
-  }
+  control: WelcomeModalControl
 }
 
 export function WelcomeModal({control}: WelcomeModalProps) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const {gtMobile} = useBreakpoints()
@@ -40,11 +36,14 @@ export function WelcomeModal({control}: WelcomeModalProps) {
     }, 150)
   }
 
+  const onPresented = useEffectEvent(() => {
+    ax.metric('welcomeModal:presented', {})
+  })
+
   useEffect(() => {
     if (control.isOpen) {
-      ax.metric('welcomeModal:presented', {})
+      onPresented()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [control.isOpen])
 
   const onPressCreateAccount = () => {
@@ -107,7 +106,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                   a.p_0,
                 ]}>
                 <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                  <Logo width={26} />
+                  <Logo allowVariants={false} width={26} />
                   <Text
                     style={[
                       a.text_2xl,
@@ -155,7 +154,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                 <View>
                   <Button
                     onPress={onPressCreateAccount}
-                    label={_(msg`Create account`)}
+                    label={l`Create account`}
                     size="large"
                     color="primary"
                     style={{
@@ -168,7 +167,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                   </Button>
                   <Button
                     onPress={onPressExplore}
-                    label={_(msg`Explore the app`)}
+                    label={l`Explore the app`}
                     size="large"
                     color="primary"
                     variant="ghost"
@@ -191,10 +190,11 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     ]}>
                     <Trans>Already have an account?</Trans>{' '}
                     <Pressable
+                      onPress={onPressSignIn}
                       onPointerEnter={() => setSignInLinkHovered(true)}
                       onPointerLeave={() => setSignInLinkHovered(false)}
                       accessibilityRole="button"
-                      accessibilityLabel={_(msg`Sign in`)}
+                      accessibilityLabel={l`Sign in`}
                       accessibilityHint="">
                       <Text
                         style={[
@@ -204,8 +204,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                             fontSize: undefined,
                           },
                           signInLinkHovered && a.underline,
-                        ]}
-                        onPress={onPressSignIn}>
+                        ]}>
                         <Trans>Sign in</Trans>
                       </Text>
                     </Pressable>
@@ -214,7 +213,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
               </View>
             </View>
             <Button
-              label={_(msg`Close welcome modal`)}
+              label={l`Close welcome modal`}
               style={[
                 a.absolute,
                 {

@@ -1,0 +1,192 @@
+import {describe, expect, it} from '@jest/globals'
+
+import {
+  getLinkHost,
+  getSupportProvider,
+  isInsecureLink,
+  isShortenerLink,
+  normalizeProfileLinkUrl,
+  validateLinkInput,
+} from './providers'
+
+describe('getSupportProvider', () => {
+  it('matches a provider domain and its subdomains', () => {
+    expect(getSupportProvider('https://ko-fi.com/kat')?.name).toBe('Ko-fi')
+    expect(getSupportProvider('https://www.patreon.com/kat')?.name).toBe(
+      'Patreon',
+    )
+  })
+
+  it('matches account pages on subdomains or in the path', () => {
+    expect(getSupportProvider('https://kat.fanbox.cc')?.name).toBe(
+      'pixivFANBOX',
+    )
+    expect(getSupportProvider('https://www.fanbox.cc/@kat')?.name).toBe(
+      'pixivFANBOX',
+    )
+    expect(getSupportProvider('https://kat.booth.pm')?.name).toBe('BOOTH')
+    expect(getSupportProvider('https://skeb.jp/@kat')?.name).toBe('Skeb')
+    expect(getSupportProvider('https://www.givesendgo.com/kat')?.name).toBe(
+      'GiveSendGo',
+    )
+    expect(
+      getSupportProvider('https://www.backerkit.com/c/projects/kat/zine')?.name,
+    ).toBe('BackerKit')
+    expect(getSupportProvider('https://zine.backerkit.com')?.name).toBe(
+      'BackerKit',
+    )
+    expect(getSupportProvider('https://www.fanbox.cc')).toBe(undefined)
+  })
+
+  it('does not match lookalike domains', () => {
+    expect(getSupportProvider('https://ko-fi.com.example.net/kat')).toBe(
+      undefined,
+    )
+    expect(getSupportProvider('https://notpatreon.com/kat')).toBe(undefined)
+  })
+
+  it('requires the path prefix for shared domains', () => {
+    expect(getSupportProvider('https://paypal.com/paypalme/kat')?.name).toBe(
+      'PayPal',
+    )
+    expect(getSupportProvider('https://paypal.com/signin')).toBe(undefined)
+    expect(getSupportProvider('https://github.com/sponsors/kat')?.name).toBe(
+      'GitHub Sponsors',
+    )
+    expect(
+      getSupportProvider('https://www.github.com/sponsors/kat')?.name,
+    ).toBe('GitHub Sponsors')
+    expect(getSupportProvider('https://github.com/kat')).toBe(undefined)
+    expect(getSupportProvider('https://github.com/sponsors/')).toBe(undefined)
+  })
+
+  it('never treats a bare provider homepage as a support link', () => {
+    expect(getSupportProvider('https://ko-fi.com')).toBe(undefined)
+    expect(getSupportProvider('https://www.patreon.com/')).toBe(undefined)
+    expect(getSupportProvider('https://paypal.com/paypalme/')).toBe(undefined)
+  })
+
+  it('only counts campaign and gallery pages for path-based providers', () => {
+    expect(
+      getSupportProvider('https://chuffed.org/project/save-the-reef')?.name,
+    ).toBe('Chuffed')
+    expect(getSupportProvider('https://chuffed.org/campaign/kat')?.name).toBe(
+      'Chuffed',
+    )
+    expect(getSupportProvider('https://chuffed.org/about')).toBe(undefined)
+    expect(
+      getSupportProvider('https://www.inprnt.com/gallery/kat/')?.name,
+    ).toBe('INPRNT')
+    expect(getSupportProvider('https://www.inprnt.com/browse/')).toBe(undefined)
+    expect(getSupportProvider('https://throne.com/kat')?.name).toBe('Throne')
+  })
+
+  it('recognizes Substack publications and profiles', () => {
+    expect(getSupportProvider('https://kat.substack.com')?.name).toBe(
+      'Substack',
+    )
+    expect(getSupportProvider('https://substack.com/@kat')?.name).toBe(
+      'Substack',
+    )
+    expect(getSupportProvider('https://substack.com')).toBe(undefined)
+  })
+
+  it('recognizes accounts on a subdomain', () => {
+    expect(getSupportProvider('https://kat.itch.io')?.name).toBe('itch.io')
+    expect(getSupportProvider('https://kat.gumroad.com/')?.name).toBe('Gumroad')
+  })
+
+  it('matches specific provider hosts', () => {
+    expect(getSupportProvider('https://buy.stripe.com/abc123')?.name).toBe(
+      'Stripe',
+    )
+    expect(getSupportProvider('https://stripe.com/pricing')).toBe(undefined)
+  })
+
+  it('ignores non-web and invalid URLs', () => {
+    expect(getSupportProvider('mailto:kat@ko-fi.com')).toBe(undefined)
+    expect(getSupportProvider('not a url')).toBe(undefined)
+  })
+})
+
+describe('normalizeProfileLinkUrl', () => {
+  it('adds https to bare domains', () => {
+    expect(normalizeProfileLinkUrl(' patreon.com/kat ')).toBe(
+      'https://patreon.com/kat',
+    )
+  })
+
+  it('rejects input that is not a web link', () => {
+    expect(normalizeProfileLinkUrl('hello')).toBe(null)
+    expect(normalizeProfileLinkUrl('')).toBe(null)
+  })
+})
+
+describe('getLinkHost', () => {
+  it('strips www', () => {
+    expect(getLinkHost('https://www.spitfirenews.com/p/1')).toBe(
+      'spitfirenews.com',
+    )
+  })
+})
+
+describe('isShortenerLink', () => {
+  it('flags general-purpose shorteners and their subdomains', () => {
+    expect(isShortenerLink('https://bit.ly/abc')).toBe(true)
+    expect(isShortenerLink('https://www.tinyurl.com/abc')).toBe(true)
+    expect(isShortenerLink('https://x.gd/abc')).toBe(true)
+    expect(isShortenerLink('https://shorten.world/abc')).toBe(true)
+    expect(isShortenerLink('https://videy.at/v/abc')).toBe(true)
+  })
+
+  it('allows brand short links and lookalikes', () => {
+    expect(isShortenerLink('https://youtu.be/abc')).toBe(false)
+    expect(isShortenerLink('https://amzn.to/abc')).toBe(false)
+    expect(isShortenerLink('https://notbit.ly/abc')).toBe(false)
+  })
+})
+
+describe('other sites', () => {
+  it('can be added as regular links', () => {
+    for (const input of ['onlyfans.com/kat', 'fansly.com/kat']) {
+      const result = validateLinkInput(input)
+      expect(result.url).toBe(`https://${input}`)
+      expect(result.isShortener).toBe(false)
+      expect(result.provider).toBe(undefined)
+    }
+  })
+})
+
+describe('isInsecureLink', () => {
+  it('flags plain http links', () => {
+    expect(isInsecureLink('http://example.com')).toBe(true)
+    expect(isInsecureLink('https://example.com')).toBe(false)
+  })
+})
+
+describe('validateLinkInput', () => {
+  it('normalizes a typed link and recognizes support providers', () => {
+    const result = validateLinkInput(' ko-fi.com/kat ')
+    expect(result.url).toBe('https://ko-fi.com/kat')
+    expect(result.provider?.name).toBe('Ko-fi')
+    expect(result.isEmpty).toBe(false)
+    expect(result.isShortener).toBe(false)
+  })
+
+  it('flags short links and insecure links', () => {
+    expect(validateLinkInput('bit.ly/kat').isShortener).toBe(true)
+    expect(validateLinkInput('http://example.com').isInsecure).toBe(true)
+    expect(validateLinkInput('example.com').isInsecure).toBe(false)
+  })
+
+  it('flags an http link as soon as the scheme is typed', () => {
+    expect(validateLinkInput('http:').isInsecure).toBe(true)
+    expect(validateLinkInput('HTTP://').isInsecure).toBe(true)
+    expect(validateLinkInput('http://exa').isInsecure).toBe(true)
+    expect(validateLinkInput('http').isInsecure).toBe(false)
+    expect(validateLinkInput('https:').isInsecure).toBe(false)
+    expect(validateLinkInput('ko-fi.com/kat').isShortener).toBe(false)
+    expect(validateLinkInput('   ').isEmpty).toBe(true)
+    expect(validateLinkInput('hello').url).toBe(null)
+  })
+})

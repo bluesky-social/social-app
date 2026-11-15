@@ -1,0 +1,57 @@
+{
+  "id": "tools.ozone.inbox.getAccountStatus",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "src",
+            "standing",
+            "updatedAt"
+          ],
+          "properties": {
+            "src": {
+              "type": "string",
+              "format": "did",
+              "description": "DID of the moderation service returning this status."
+            },
+            "standing": {
+              "type": "string",
+              "knownValues": [
+                "good",
+                "warning",
+                "atRisk"
+              ]
+            },
+            "expiresAt": {
+              "type": "string",
+              "format": "datetime",
+              "description": "Time at which the current suspension expires. Present only for a temporary suspension."
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "datetime",
+              "description": "Newest account-status update or strike timestamp used to derive this standing, or the Unix epoch when neither exists. This is not a standing-transition timestamp; expiry can change standing without changing this value."
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "Account to preview. Only Ozone staff can read another account; this does not change its read state."
+          }
+        }
+      },
+      "description": "Get the authenticated account's current standing with this moderation service."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

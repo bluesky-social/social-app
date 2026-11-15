@@ -1,18 +1,16 @@
 import {Component, createRef} from 'react'
 import {
-  Dimensions,
-  type LayoutChangeEvent,
   type NativeSyntheticEvent,
   Platform,
   type StyleProp,
-  useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
+import {IS_IPAD} from '#/env'
 import {
+  type BottomSheetPresentationSizeChangeEvent,
   type BottomSheetState,
   type BottomSheetViewProps,
 } from './BottomSheet.types'
@@ -30,20 +28,11 @@ const NativeView: React.ComponentType<
 
 const NativeModule = requireNativeModule('BottomSheet')
 
-const IS_IOS15 =
-  Platform.OS === 'ios' &&
-  // semvar - can be 3 segments, so can't use Number(Platform.Version)
-  Number(Platform.Version.split('.').at(0)) < 16
-// older android versions (15 and below) aren't naturally edge-to-edge
-// and behave a little differently
-const IS_NON_E2E_ANDROID =
-  Platform.OS === 'android' && Number(Platform.Version) < 35
-
 export class BottomSheetNativeComponent extends Component<
   BottomSheetViewProps,
   {
     open: boolean
-    viewHeight?: number
+    presentationSize?: BottomSheetPresentationSizeChangeEvent['nativeEvent']
   }
 > {
   ref = createRef<any>()
@@ -54,11 +43,12 @@ export class BottomSheetNativeComponent extends Component<
     super(props)
     this.state = {
       open: false,
+      presentationSize: undefined,
     }
   }
 
   present() {
-    this.setState({open: true})
+    this.setState({open: true, presentationSize: undefined})
   }
 
   dismiss() {
@@ -70,8 +60,18 @@ export class BottomSheetNativeComponent extends Component<
   ) => {
     const {state} = event.nativeEvent
     const isOpen = state !== 'closed'
-    this.setState({open: isOpen})
+    this.setState({
+      open: isOpen,
+      presentationSize: isOpen ? this.state.presentationSize : undefined,
+    })
     this.props.onStateChange?.(event)
+  }
+
+  private onPresentationSizeChange = (
+    event: BottomSheetPresentationSizeChangeEvent,
+  ) => {
+    this.setState({presentationSize: event.nativeEvent})
+    this.props.onPresentationSizeChange?.(event)
   }
 
   static dismissAll = async () => {
@@ -90,36 +90,14 @@ export class BottomSheetNativeComponent extends Component<
       return null
     }
 
-    let extraStyles
-    if (IS_IOS15 && this.state.viewHeight) {
-      const screenHeight = Dimensions.get('screen').height
-      const {viewHeight} = this.state
-      const cornerRadius = this.props.cornerRadius ?? 0
-      if (viewHeight < screenHeight / 2) {
-        extraStyles = {
-          height: viewHeight,
-          marginTop: screenHeight / 2 - viewHeight,
-          borderTopLeftRadius: cornerRadius,
-          borderTopRightRadius: cornerRadius,
-        }
-      }
-    }
-
     return (
       <Portal>
         <BottomSheetNativeComponentInner
           {...this.props}
           nativeViewRef={this.ref}
           onStateChange={this.onStateChange}
-          extraStyles={extraStyles}
-          onLayout={
-            IS_IOS15
-              ? e => {
-                  const {height} = e.nativeEvent.layout
-                  this.setState({viewHeight: height})
-                }
-              : undefined
-          }
+          onPresentationSizeChange={this.onPresentationSizeChange}
+          presentationSize={this.state.presentationSize}
         />
       </Portal>
     )
@@ -129,60 +107,122 @@ export class BottomSheetNativeComponent extends Component<
 function BottomSheetNativeComponentInner({
   children,
   backgroundColor,
+  containerBackgroundColor,
+  desiredContentHeight,
   maxHeight,
-  onLayout,
   onStateChange,
+  onPresentationSizeChange,
+  popover = 'never',
+  popoverWidth,
+  presentationSize,
   nativeViewRef,
-  extraStyles,
   ...rest
 }: BottomSheetViewProps & {
-  extraStyles?: StyleProp<ViewStyle>
   onStateChange: (
     event: NativeSyntheticEvent<{state: BottomSheetState}>,
   ) => void
+  onPresentationSizeChange: BottomSheetViewProps['onPresentationSizeChange']
+  presentationSize?: BottomSheetPresentationSizeChangeEvent['nativeEvent']
   nativeViewRef: React.RefObject<View>
-  onLayout?: (event: LayoutChangeEvent) => void
 }) {
-  const insets = useSafeAreaInsets()
   const cornerRadius = rest.cornerRadius ?? 0
-  const {height: screenHeight} = useWindowDimensions()
+  const presentationHeight =
+    Platform.OS === 'ios' ? presentationSize?.height : undefined
+  const hasPresentedPopover = presentationSize?.isPopover === true
+  const usesReportedContentHeight =
+    (IS_IPAD || (Platform.OS === 'ios' && popover !== 'never')) &&
+    presentationHeight != null &&
+    desiredContentHeight != null
+  const isHeightConstrained =
+    maxHeight != null ||
+    rest.fullHeight === true ||
+    hasPresentedPopover ||
+    usesReportedContentHeight
+  const viewportMaxHeight =
+    maxHeight != null
+      ? presentationHeight != null
+        ? Math.min(maxHeight, presentationHeight)
+        : maxHeight
+      : (rest.fullHeight === true || hasPresentedPopover) &&
+          presentationHeight != null
+        ? presentationHeight
+        : undefined
 
-  // sigh... on older Android versions, screenHeight does not include safe area insets
-  // on newer Androids + iOS, it does. we need to find the inner bit + the bottom inset
-  // for the sheet content
-  const sheetHeight = IS_NON_E2E_ANDROID
-    ? screenHeight + insets.bottom
-    : screenHeight - insets.top
+  const effectiveViewportMaxHeight =
+    viewportMaxHeight ??
+    (usesReportedContentHeight ? presentationHeight : undefined)
+  const nativeContainerBackgroundColor =
+    Platform.OS === 'ios'
+      ? (containerBackgroundColor ?? backgroundColor)
+      : backgroundColor
 
   return (
     <NativeView
       {...rest}
+      {...(Platform.OS === 'ios'
+        ? {
+            desiredContentHeight,
+            popover,
+            popoverWidth,
+            onPresentationSizeChange,
+          }
+        : {})}
       maxHeight={maxHeight}
       onStateChange={onStateChange}
       ref={nativeViewRef}
-      style={{
-        position: 'absolute',
-        height: sheetHeight,
-        width: '100%',
-      }}
-      containerBackgroundColor={backgroundColor}>
+      /*
+       * On Android the native side owns this view's size - the canvas the sheet
+       * content is laid out on - and pushes it into the Fabric shadow tree through
+       * ExpoView's `setViewSize` state channel. It knows the real sheet frame
+       * (window insets, Material's max-width cap on tablets, rotation), which JS
+       * can only guess at. `width` and `height` must stay unset there:
+       * `ExpoViewComponentDescriptor::adopt()` only applies the state size on an
+       * axis where the style leaves that dimension undefined, so a style dimension
+       * would silently win and clip the content again.
+       *
+       * iOS now uses the same native sizing path. UIKit knows the actual presented
+       * controller bounds, including popover width, form-sheet width, and changes
+       * after adaptation or rotation.
+       *
+       * `left` and `right` are a fallback for when that state size hasn't landed.
+       * Without them an unsized absolute view shrinks to fit its content, which
+       * squeezes `flex: 1` rows down to their icons (APP-3602). The state size
+       * still wins, since a defined width takes precedence over the insets.
+       */
+      style={{position: 'absolute', left: 0, right: 0}}
+      containerBackgroundColor={nativeContainerBackgroundColor}>
       <View
         style={[
           {
             flex: 1,
-            backgroundColor,
+            backgroundColor:
+              Platform.OS === 'ios' ? 'transparent' : backgroundColor,
           },
-          maxHeight != null && {maxHeight},
+          effectiveViewportMaxHeight != null && {
+            maxHeight: effectiveViewportMaxHeight,
+          },
           Platform.OS === 'android' && {
+            /*
+             * The native canvas is sized after the first layout. Allow content
+             * measured without a height constraint to shrink to that canvas.
+             */
+            flexShrink: 1,
             borderTopLeftRadius: cornerRadius,
             borderTopRightRadius: cornerRadius,
             overflow: 'hidden',
           },
-          extraStyles,
         ]}>
         <View
-          onLayout={onLayout}
-          style={maxHeight == null ? undefined : {flex: 1}}>
+          style={
+            isHeightConstrained
+              ? [
+                  {flex: 1},
+                  effectiveViewportMaxHeight != null && {
+                    maxHeight: effectiveViewportMaxHeight,
+                  },
+                ]
+              : undefined
+          }>
           <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
         </View>
       </View>
