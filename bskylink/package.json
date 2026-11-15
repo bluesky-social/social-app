@@ -15,6 +15,8 @@
     "@atproto-labs/fetch-node": "^0.4.2",
     "@atproto/api": "^0.16.7",
     "@atproto/common": "^0.4.11",
+    "@aws-sdk/credential-providers": "^3.1169.0",
+    "@aws-sdk/rds-signer": "^3.1169.0",
     "@bsky.app/alf": "0.2.1",
     "@types/escape-html": "^1.0.4",
     "body-parser": "^1.20.9",

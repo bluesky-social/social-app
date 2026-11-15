@@ -34,6 +34,7 @@ export class AppContext {
       poolSize: cfg.db.pool.size,
       poolMaxUses: cfg.db.pool.maxUses,
       poolIdleTimeoutMs: cfg.db.pool.idleTimeoutMs,
+      awsIamAuth: cfg.db.awsIamAuth,
     })
     return new AppContext({
       cfg,
