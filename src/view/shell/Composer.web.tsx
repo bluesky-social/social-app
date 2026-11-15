@@ -1,3 +1,4 @@
+import {useEffect} from 'react'
 import {StyleSheet, View} from 'react-native'
 import * as DismissableLayer from '@radix-ui/react-dismissable-layer'
 import * as FocusGuards from '@radix-ui/react-focus-guards'
@@ -34,6 +35,38 @@ function Inner({state}: {state: ComposerOpts}) {
   const {reduceMotionEnabled} = useA11y()
 
   FocusGuards.useFocusGuards()
+
+  /*
+   * Push a history entry so that browser back (or a back swipe) is caught
+   * here instead of navigating the page underneath. It copies the current
+   * entry's state, including react-navigation's `id`, so react-navigation
+   * treats it as the same entry. On back, we restore the entry and go through
+   * the same path as pressing cancel, which asks whether to save a draft.
+   */
+  useEffect(() => {
+    const pushComposerEntry = () => {
+      history.pushState({...history.state, composer: true}, '')
+    }
+    pushComposerEntry()
+
+    const handlePopState = () => {
+      pushComposerEntry()
+      ref.current?.onPressCancel()
+    }
+    window.addEventListener('popstate', handlePopState)
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState)
+      /*
+       * Only pop our entry if it's still the current one. If navigation
+       * already pushed a new entry on top, leave the orphaned entry - it
+       * shares the same state so traversing through it is harmless.
+       */
+      if ((history.state as {composer?: boolean} | null)?.composer) {
+        history.back()
+      }
+    }
+  }, [ref])
 
   return (
     <FocusScope.FocusScope loop trapped asChild>
