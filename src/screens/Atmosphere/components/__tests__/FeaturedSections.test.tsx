@@ -1,7 +1,7 @@
 import {render, screen} from '@testing-library/react-native'
 
+import {type ItemFocusProps} from '#/components/Gallery'
 import {type app} from '#/lexicons'
-import {type ExploreGalleryFocusProps} from '../ExploreGallery'
 import {FeaturedArticles} from '../FeaturedArticles'
 import {FeaturedLivestreams} from '../FeaturedLivestreams'
 import {FeaturedPhotos} from '../FeaturedPhotos'
@@ -49,7 +49,7 @@ function mockCard(prefix: string, prop: string) {
     galleryFocus,
     ...rest
   }: Record<string, unknown> & {
-    galleryFocus?: ExploreGalleryFocusProps
+    galleryFocus?: ItemFocusProps
   }) => {
     const item = rest[prop] as {uri: string; title: string}
     return (

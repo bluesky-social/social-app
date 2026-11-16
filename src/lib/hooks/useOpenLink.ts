@@ -1,6 +1,7 @@
 import {useCallback} from 'react'
 import {Linking} from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
+import {AppLink} from '@bsky.app/expo-bluesky-swiss-army'
 
 import {
   createBskyAppAbsoluteUrl,
@@ -18,7 +19,12 @@ import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 
-export function useOpenLink() {
+export function useOpenLink({
+  preferNativeApp = false,
+}: {
+  /** Try an app-only handoff before browser consent, unless a browser is explicitly requested. */
+  preferNativeApp?: boolean
+} = {}) {
   const ax = useAnalytics()
   const enabled = useInAppBrowser()
   const t = useTheme()
@@ -36,44 +42,73 @@ export function useOpenLink() {
           domain: toNiceDomain(url),
           url,
         })
+      }
 
-        if (shouldProxy) {
+      const openInBrowser = () => {
+        if (!isBskyAppUrl(url) && shouldProxy) {
           url = createProxiedUrl(url)
         }
+
+        if (IS_NATIVE && !url.startsWith('mailto:')) {
+          if (override === undefined && enabled === undefined) {
+            /*
+             * The consent dialog is a global dialog. Sibling dialogs on iOS
+             * are not supported, so close any enclosing dialog first.
+             */
+            if (dialogContext.isWithinDialog) {
+              dialogContext.close(() => {
+                inAppBrowserConsentControl.open(url)
+              })
+            } else {
+              inAppBrowserConsentControl.open(url)
+            }
+            return
+          } else if (override ?? enabled) {
+            WebBrowser.openBrowserAsync(url, {
+              presentationStyle:
+                WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
+              toolbarColor: t.atoms.bg.backgroundColor,
+              controlsColor: t.palette.primary_500,
+              createTask: false,
+            }).catch(err => {
+              if (__DEV__)
+                logger.error('Could not open web browser', {message: err})
+              void Linking.openURL(url)
+            })
+            return
+          }
+        }
+        void Linking.openURL(url)
       }
 
-      if (IS_NATIVE && !url.startsWith('mailto:')) {
-        if (override === undefined && enabled === undefined) {
-          // consent dialog is a global dialog, and while it's possible to nest dialogs,
-          // the actual components need to be nested. sibling dialogs on iOS are not supported.
-          // thus, check if we're in a dialog, and if so, close the existing dialog before opening the
-          // consent dialog -sfn
-          if (dialogContext.isWithinDialog) {
-            dialogContext.close(() => {
-              inAppBrowserConsentControl.open(url)
-            })
-          } else {
-            inAppBrowserConsentControl.open(url)
+      if (IS_NATIVE && preferNativeApp && override === undefined) {
+        try {
+          const destination = new URL(url)
+          if (
+            (destination.protocol === 'https:' ||
+              destination.protocol === 'http:') &&
+            destination.hostname !== 'bsky.app'
+          ) {
+            void AppLink.tryOpen(url).then(opened => {
+              if (!opened) openInBrowser()
+            }, openInBrowser)
+            return
           }
-          return
-        } else if (override ?? enabled) {
-          WebBrowser.openBrowserAsync(url, {
-            presentationStyle:
-              WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
-            toolbarColor: t.atoms.bg.backgroundColor,
-            controlsColor: t.palette.primary_500,
-            createTask: false,
-          }).catch(err => {
-            if (__DEV__)
-              logger.error('Could not open web browser', {message: err})
-            void Linking.openURL(url)
-          })
-          return
+        } catch {
+          // An unavailable or failing bridge must not prevent browser fallback.
         }
       }
-      void Linking.openURL(url)
+
+      openInBrowser()
     },
-    [ax, enabled, inAppBrowserConsentControl, t, dialogContext],
+    [
+      ax,
+      enabled,
+      inAppBrowserConsentControl,
+      t,
+      dialogContext,
+      preferNativeApp,
+    ],
   )
 
   return openLink

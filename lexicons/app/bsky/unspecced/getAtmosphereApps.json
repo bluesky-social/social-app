@@ -65,6 +65,18 @@
           "format": "uri",
           "maxLength": 4096
         },
+        "appStoreUrl": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 4096,
+          "description": "Optional link to the app on the Apple App Store."
+        },
+        "googlePlayUrl": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 4096,
+          "description": "Optional link to the app on Google Play."
+        },
         "category": {
           "type": "string",
           "maxLength": 100
@@ -72,7 +84,7 @@
         "profile": {
           "type": "ref",
           "ref": "app.bsky.actor.defs#profileViewDetailed",
-          "description": "The app's account profile, when available."
+          "description": "The app's optional Bluesky account profile. Omitted when no profile is configured or the profile is unavailable."
         }
       }
     }

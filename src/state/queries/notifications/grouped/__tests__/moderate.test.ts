@@ -254,7 +254,11 @@ describe('moderateNotification', () => {
           },
         },
       })
-      expect(result).toEqual({...subscribed, items: rest})
+      expect(result).toEqual({
+        ...subscribed,
+        items: rest,
+        postUris: rest.map(item => item.post.uri),
+      })
     })
 
     it('trims labelled posts unless the viewer follows the author', () => {
@@ -268,7 +272,11 @@ describe('moderateNotification', () => {
         ARGS,
       )
       // The first author isn't followed, the other two are
-      expect(result).toEqual({...subscribed, items: [hidden[1], hidden[2]]})
+      expect(result).toEqual({
+        ...subscribed,
+        items: [hidden[1], hidden[2]],
+        postUris: [hidden[1].post.uri, hidden[2].post.uri],
+      })
     })
   })
 })

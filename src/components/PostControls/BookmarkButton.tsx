@@ -15,6 +15,7 @@ import {
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {type BookmarkEntryPoint} from '#/analytics/metrics/types'
 import {type app} from '#/lexicons'
 import {PostControlButton, PostControlButtonIcon} from './PostControlButton'
 
@@ -32,7 +33,11 @@ export const BookmarkButton = memo(function BookmarkButton({
   const t = useTheme()
   const {t: l} = useLingui()
   const requireAuth = useRequireAuth()
-  const {isBookmarked, toggleBookmark} = usePostBookmark({post, logContext})
+  const {isBookmarked, toggleBookmark} = usePostBookmark({
+    post,
+    logContext,
+    entryPoint: 'BookmarkButton',
+  })
 
   return (
     <PostControlButton
@@ -55,9 +60,12 @@ export const BookmarkButton = memo(function BookmarkButton({
 export function usePostBookmark({
   post,
   logContext,
+  entryPoint,
 }: {
   post: Shadow<app.bsky.feed.defs.PostView>
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+  /** Which control is saving, for metrics. */
+  entryPoint: BookmarkEntryPoint
 }) {
   const ax = useAnalytics()
   const {t: l} = useLingui()
@@ -83,6 +91,7 @@ export function usePostBookmark({
         uri: post.uri,
         authorDid: post.author.did,
         logContext,
+        entryPoint,
         feedDescriptor,
       })
       return true
@@ -106,6 +115,7 @@ export function usePostBookmark({
         uri: post.uri,
         authorDid: post.author.did,
         logContext,
+        entryPoint,
         feedDescriptor,
       })
 

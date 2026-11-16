@@ -113,6 +113,12 @@ describe('AppDialog', () => {
     ])
   })
 
+  it('hides Website without a url', () => {
+    render(<AppDialog control={control} app={{...app, url: undefined}} />)
+    expect(screen.queryByTestId('appDialogVisit')).toBeNull()
+    expect(screen.getByTestId('appDialogProfile')).toBeTruthy()
+  })
+
   it('hides View profile without a profile', () => {
     render(<AppDialog control={control} app={{...app, profile: undefined}} />)
     expect(screen.queryByTestId('appDialogProfile')).toBeNull()

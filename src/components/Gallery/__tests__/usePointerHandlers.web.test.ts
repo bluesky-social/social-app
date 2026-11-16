@@ -6,7 +6,13 @@ import {
 } from '#/components/Gallery/__tests__/fakeDom'
 import {usePointerHandlers} from '#/components/Gallery/usePointerHandlers.web'
 
-jest.mock('#/env', () => ({IS_WEB_SAFARI: false}))
+let mockSafari = false
+
+jest.mock('#/env', () => ({
+  get IS_WEB_SAFARI() {
+    return mockSafari
+  },
+}))
 
 let dom: ReturnType<typeof installFakeDom>
 let scroller: FakeElement
@@ -18,6 +24,7 @@ let scrollTo: jest.Mock
 let onSettle: jest.Mock
 
 beforeEach(() => {
+  mockSafari = false
   dom = installFakeDom()
   scroller = new FakeElement()
   scroller.scrollLeft = 100
@@ -34,7 +41,8 @@ afterEach(() => {
 })
 
 function setup({itemCount = 3} = {}) {
-  return renderHook(
+  const currentIndexRef = {current: 0}
+  const hook = renderHook(
     (props: {itemCount: number; resetKey: string}) =>
       usePointerHandlers({
         scrollRef: {current: {getScrollableNode: () => scroller}},
@@ -45,7 +53,7 @@ function setup({itemCount = 3} = {}) {
             [2, 200],
           ]),
         },
-        currentIndexRef: {current: 0},
+        currentIndexRef,
         scrollTo,
         onSettle,
         itemCount: props.itemCount,
@@ -53,6 +61,7 @@ function setup({itemCount = 3} = {}) {
       }),
     {initialProps: {itemCount, resetKey: 'abc'}},
   )
+  return {...hook, currentIndexRef}
 }
 
 function mouseDown(target: FakeElement, extra = {}) {
@@ -83,7 +92,7 @@ describe('usePointerHandlers (web)', () => {
     setup()
     mouseDown(text)
     drag(150) // 50px left
-    expect(scrollTo).toHaveBeenLastCalledWith(150)
+    expect(scrollTo).toHaveBeenLastCalledWith({offset: 150})
     expect(scroller.style.cursor).toBe('grabbing')
     expect(dom.selection.removeAllRanges).toHaveBeenCalled()
   })
@@ -201,13 +210,18 @@ describe('usePointerHandlers (web)', () => {
     expect(scroller.listenerCount('mousedown')).toBe(0)
   })
 
-  it('cleans up on unmount', () => {
+  it('cleans up listeners and pending motion on unmount', () => {
     const {unmount} = setup()
     expect(scroller.listenerCount('mousedown')).toBe(1)
     expect(dom.window.listenerCount('mousemove')).toBe(1)
     mouseDown(text)
     drag(100)
+    release()
+    scrollTo.mockClear()
     unmount()
+    dom.flushFrames()
+    expect(scrollTo).not.toHaveBeenCalled()
+    expect(onSettle).not.toHaveBeenCalled()
     expect(scroller.listenerCount('mousedown')).toBe(0)
     expect(scroller.listenerCount('dragstart')).toBe(0)
     expect(scroller.listenerCount('wheel')).toBe(0)
@@ -227,9 +241,20 @@ describe('usePointerHandlers (web)', () => {
     // The overscroll bounce runs first, then nothing else scrolls past the end
     dom.flushFrames()
     expect(onSettle).toHaveBeenCalledWith(2)
-    for (const [offset] of scrollTo.mock.calls) {
+    for (const [{offset}] of scrollTo.mock.calls) {
       expect(offset).toBeLessThanOrEqual(100)
     }
+  })
+
+  it('uses the current navigation index for Safari wheel scrolling', () => {
+    mockSafari = true
+    const {currentIndexRef} = setup()
+    scroller.scrollLeft = 0
+    currentIndexRef.current = 2
+
+    scroller.dispatch('wheel', {deltaX: 50, deltaY: 0})
+
+    expect(onSettle).toHaveBeenCalledWith(0)
   })
 
   it('drops an in-flight settle when the items change at the same count', () => {

@@ -32,7 +32,7 @@ import {FeedCardListSkeleton} from '#/components/FeedCardSkeleton'
 import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import * as ListCard from '#/components/ListCard'
 import {ListFooter} from '#/components/Lists'
-import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -217,7 +217,7 @@ export function ProfileLists({
   )
 
   useEffect(() => {
-    if (IS_IOS && enabled && scrollElRef.current) {
+    if (IS_NATIVE && enabled && scrollElRef.current) {
       const nativeTag = findListNativeTag(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }

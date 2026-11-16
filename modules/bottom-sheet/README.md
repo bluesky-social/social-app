@@ -62,7 +62,6 @@ The component uses a class-based approach to expose imperative methods (`present
 - **DialogRootViewGroup.kt**: Custom ViewGroup acting as RootView for the dialog
   - Forwards touch events to React Native event system
   - Reports its measured width to `BottomSheetView` so the content canvas can follow it
-  - Also carries the legacy `UIManagerModule.updateNodeSize()` shadow node sizing, which only runs on the old architecture
   - Based on React Native's ReactModalHostView pattern
 - **SheetManager.kt**: Singleton for tracking sheets (same pattern as iOS)
 
@@ -91,7 +90,7 @@ How the Android path works:
 - Seeding runs once per open cycle - re-seeding would fight the dimensions reported by the presentation controller and cause the two layouts to push each other back and forth.
 - Because the content measures 0x0 until that first state commit lands, `present()` bails out early when the content height is still zero. The commit resizes the native view, which re-fires `onLayout`, which re-enters `present()` - so presentation self-retries rather than needing an explicit callback. Full-height sheets skip the check, since they don't need a content measurement.
 - Rotation is handled by the container push: the RN activity handles configuration changes itself, so the view is never recreated. `screenHeight` is read per access so the computed height follows the rotation, and the container reports the new width (plus a deferred `updateLayout()` to reposition the sheet).
-- On the **old architecture** there is no state channel (`stateWrapper` is null, so `setViewSize` no-ops) and Android falls back to `DialogRootViewGroup`'s legacy `UIManagerModule.updateNodeSize()` path. The `present()` gate is skipped there for the same reason - nothing would ever resize the view.
+- `present()` only applies that gate when the view has a state channel (`stateWrapper`). Without one, `setViewSize` no-ops and nothing would ever resize the view, so the sheet would wait forever.
 
 ## Props
 

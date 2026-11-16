@@ -33,7 +33,7 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
-import {IS_IOS} from '#/env'
+import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
 
 interface SectionRef {
@@ -133,7 +133,7 @@ export function ProfileStarterPacks({
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
   useEffect(() => {
-    if (IS_IOS && enabled && scrollElRef.current) {
+    if (IS_NATIVE && enabled && scrollElRef.current) {
       const nativeTag = findListNativeTag(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }

@@ -159,9 +159,8 @@ class BottomSheetView(
 
       // The dialog container's measured WIDTH is the authoritative canvas width: it
       // already accounts for the window's horizontal insets, Material's max-width cap on
-      // tablets and the current rotation. DialogRootViewGroup's own updateNodeSize() path
-      // is a no-op on the new architecture (getNativeModule(UIManagerModule) returns null
-      // under Fabric), so this state channel is what actually gets the width across there.
+      // tablets and the current rotation. This state channel is the only way that width
+      // reaches the content's shadow node.
       //
       // Its measured HEIGHT is deliberately ignored - see canvasHeight.
       this.dialogRootViewGroup.setOnSizeChangeListener(
@@ -230,9 +229,7 @@ class BottomSheetView(
    * back and forth forever.
    *
    * stateWrapper is assigned while Fabric mounts the view, before the first layout pass,
-   * so setViewSize() should already reach the shadow tree from here. On the old
-   * architecture it is null and this no-ops, which is fine: DialogRootViewGroup's legacy
-   * updateNodeSize() path still sizes the content there.
+   * so setViewSize() should already reach the shadow tree from here.
    */
   private fun seedCanvasSize() {
     if (lastPushedCanvasWidth > 0f) return
@@ -306,8 +303,8 @@ class BottomSheetView(
     // re-fires onLayout, and onLayout re-enters present(). Full-height sheets don't
     // need a content measurement, so they can go ahead immediately.
     //
-    // Only gate when there is a state channel to wait on. Without one (old architecture)
-    // nothing would ever resize this view, and the sheet would never present.
+    // Only gate when there is a state channel to wait on. Without one nothing would ever
+    // resize this view, and the sheet would never present.
     if (stateWrapper != null && !fullHeight && contentHeight <= 0f) return
 
     var activityWindow: Window? = null
@@ -609,23 +606,80 @@ class BottomSheetView(
     child: View?,
     index: Int,
   ) {
-    this.innerView = child
-    (child as ViewGroup).let {
-      dialogRootViewGroup.addView(child, index)
-    }
+    if (child != null) addContentView(child, index)
   }
 
   override fun removeView(view: View?) {
-    UiThreadUtil.assertOnUiThread()
-    if (view != null) {
-      dialogRootViewGroup.removeView(view)
-    }
+    if (view != null) removeContentView(view)
   }
 
   override fun removeViewAt(index: Int) {
+    removeContentViewAt(index)
+  }
+
+  /*
+   * React children live in dialogRootViewGroup, not in this view. Fabric resolves
+   * children through the view manager (see the GroupView block in BottomSheetModule),
+   * so these are what it calls. Without them it looks up children on this (always
+   * empty) view, treats every removal as already done, and the content stays attached
+   * to the dialog root after React deletes it.
+   *
+   * getChildCount()/getChildAt() are deliberately not overridden on the view itself:
+   * this is a LinearLayout, and its measure pass would start walking the dialog's views.
+   */
+
+  val contentChildCount: Int
+    get() = dialogRootViewGroup.childCount
+
+  fun getContentChildAt(index: Int): View? = dialogRootViewGroup.getChildAt(index)
+
+  fun addContentView(
+    child: View,
+    index: Int,
+  ) {
     UiThreadUtil.assertOnUiThread()
-    val child = getChildAt(index)
+    this.innerView = child
+    dialogRootViewGroup.addView(child, index)
+  }
+
+  fun removeContentView(child: View) {
+    UiThreadUtil.assertOnUiThread()
     dialogRootViewGroup.removeView(child)
+    if (this.innerView === child) {
+      this.innerView = null
+    }
+  }
+
+  fun removeContentViewAt(index: Int) {
+    getContentChildAt(index)?.let { removeContentView(it) }
+  }
+
+  /**
+   * Called when Fabric deletes this view. The JS wrapper unmounts the native view after
+   * every close, so this runs once per sheet. Without it the ReactContext lifecycle
+   * listener keeps every sheet (and its dialog root) alive for the life of the React
+   * host, and a sheet deleted while showing would leave its dialog on screen.
+   */
+  fun onDropInstance() {
+    UiThreadUtil.assertOnUiThread()
+    (appContext.reactContext as? ReactContext)?.removeLifecycleEventListener(this)
+    this.stopObservingContentHeight()
+    // Clean up before dismissing, so a dismiss that throws can't skip it
+    val dialog = this.dialog
+    this.dialog = null
+    this.innerView = null
+    SheetManager.remove(this)
+    if (dialog == null) return
+    // Don't let the dismiss listener emit state events for a view React already deleted
+    dialog.setOnDismissListener(null)
+    /*
+     * When the activity is recreated with a sheet open, Android detaches the dialog's
+     * window before Fabric deletes this view, and dismiss() then throws "not attached
+     * to window manager".
+     */
+    if (dialog.isShowing && dialog.window?.decorView?.isAttachedToWindow == true) {
+      dialog.dismiss()
+    }
   }
 
   override fun addChildrenForAccessibility(outChildren: ArrayList<View>?) { }

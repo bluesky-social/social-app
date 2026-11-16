@@ -33,27 +33,10 @@ export function Default({
   )
 }
 
-export function Notification({
-  starterPack,
-}: {
-  starterPack?: bsky.starterPack.AnyStarterPackView
-}) {
-  if (!starterPack) return null
-  return (
-    <Link starterPack={starterPack}>
-      <Card starterPack={starterPack} noIcon={true} noDescription={true} />
-    </Link>
-  )
-}
-
 export function Card({
   starterPack,
-  noIcon,
-  noDescription,
 }: {
   starterPack: bsky.starterPack.AnyStarterPackView
-  noIcon?: boolean
-  noDescription?: boolean
 }) {
   const {record, creator, joinedAllTimeCount} = starterPack
 
@@ -69,7 +52,7 @@ export function Card({
   return (
     <View style={[a.w_full, a.gap_md]}>
       <View style={[a.flex_row, a.gap_sm, a.w_full]}>
-        {!noIcon ? <StarterPackIcon width={40} gradient="sky" /> : null}
+        <StarterPackIcon width={40} gradient="sky" />
         <View style={[a.flex_1]}>
           <Text
             emoji
@@ -87,7 +70,7 @@ export function Card({
           </Text>
         </View>
       </View>
-      {!noDescription && record.description ? (
+      {record.description ? (
         <Text emoji numberOfLines={3} style={[a.leading_snug]}>
           {record.description}
         </Text>

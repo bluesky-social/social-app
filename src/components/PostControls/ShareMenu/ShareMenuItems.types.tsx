@@ -15,4 +15,5 @@ export interface ShareMenuItemsProps {
   timestamp: string
   threadgateRecord?: app.bsky.feed.threadgate.Main
   onShare: () => void
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
 }

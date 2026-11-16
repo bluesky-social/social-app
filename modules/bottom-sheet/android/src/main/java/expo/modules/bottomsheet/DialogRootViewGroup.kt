@@ -4,13 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.MotionEvent
 import android.view.View
-import com.facebook.react.bridge.GuardedRunnable
 import com.facebook.react.config.ReactFeatureFlags
 import com.facebook.react.uimanager.JSPointerDispatcher
 import com.facebook.react.uimanager.JSTouchDispatcher
 import com.facebook.react.uimanager.RootView
 import com.facebook.react.uimanager.ThemedReactContext
-import com.facebook.react.uimanager.UIManagerModule
 import com.facebook.react.uimanager.events.EventDispatcher
 import com.facebook.react.views.view.ReactViewGroup
 
@@ -22,19 +20,14 @@ import com.facebook.react.views.view.ReactViewGroup
  * also responsible for acting as a RootView and handling touch events. It does this the same way
  * as ReactRootView.
  *
- * To get layout to work properly, we need to layout all the elements within the Modal as if they
- * can fill the entire window. To do that, we need to explicitly set the styleWidth and
- * styleHeight on the LayoutShadowNode to be the window size. This is done through the
- * UIManagerModule, and will then cause the children to layout as if they can fill the window.
+ * It doesn't size its children itself. It reports its measured size through
+ * [OnSizeChangeListener], and [BottomSheetView] pushes the canvas size into the Fabric shadow
+ * tree through ExpoView's state channel.
  */
 class DialogRootViewGroup(
   private val context: Context?,
 ) : ReactViewGroup(context),
   RootView {
-  private var hasAdjustedSize = false
-  private var viewWidth = 0
-  private var viewHeight = 0
-
   private val jSTouchDispatcher = JSTouchDispatcher(this)
   private var jSPointerDispatcher: JSPointerDispatcher? = null
   private var sizeChangeListener: OnSizeChangeListener? = null
@@ -63,48 +56,11 @@ class DialogRootViewGroup(
     oldh: Int,
   ) {
     super.onSizeChanged(w, h, oldw, oldh)
-
-    viewWidth = w
-    viewHeight = h
-    updateFirstChildView()
-
     sizeChangeListener?.onSizeChange(w, h)
   }
 
   fun setOnSizeChangeListener(listener: OnSizeChangeListener) {
     sizeChangeListener = listener
-  }
-
-  private fun updateFirstChildView() {
-    if (childCount > 0) {
-      hasAdjustedSize = false
-      val viewTag = getChildAt(0).id
-      reactContext.runOnNativeModulesQueueThread(
-        object : GuardedRunnable(reactContext) {
-          override fun runGuarded() {
-            val uiManager: UIManagerModule =
-              reactContext
-                .reactApplicationContext
-                .getNativeModule(UIManagerModule::class.java) ?: return
-
-            uiManager.updateNodeSize(viewTag, viewWidth, viewHeight)
-          }
-        },
-      )
-    } else {
-      hasAdjustedSize = true
-    }
-  }
-
-  override fun addView(
-    child: View,
-    index: Int,
-    params: LayoutParams,
-  ) {
-    super.addView(child, index, params)
-    if (hasAdjustedSize) {
-      updateFirstChildView()
-    }
   }
 
   override fun handleException(t: Throwable) {

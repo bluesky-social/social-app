@@ -80,6 +80,7 @@ export const exploreResponseFixture = {
         description: '',
         items: [image],
         associatedProfiles: [author],
+        ...(index === 0 ? {photoCount: 42} : {}),
         likeCount: 2,
         likers: [author],
       },

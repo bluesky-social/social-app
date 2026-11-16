@@ -300,9 +300,9 @@ function MultiPostRow({
    */
   children: React.ReactNode
 }) {
-  const {actor, posts} = notification
+  const {actor, posts, postUris} = notification
   const [post] = posts
-  const href = makeActivityListLink(posts.map(p => p.uri))
+  const href = makeActivityListLink(postUris)
   const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
   const mediaBlurred = Item.usePostMediaBlurred(post)
 
@@ -535,18 +535,16 @@ export function SubscribedPostNotification({
   notification: NotificationOf<'subscribedPost'>
 }) {
   const {t: l} = useLingui()
-  const {items, count} = notification
+  const {items, count, postUris} = notification
   // Items are newest first, so this is the post to preview
   const [{post, parent}] = items
   // Set when the group is a lone post that replies to another
   const replyParent = count === 1 ? parent : undefined
   const {actor, name, second, secondName, others} =
     Item.useGroupNames(notification)
-  const isOnePost = items.length === 1
+  const isOnePost = postUris.length === 1
   const isOneAuthor = others === 0
-  const href = isOnePost
-    ? makePostLink(post)
-    : makeActivityListLink(items.map(item => item.post.uri))
+  const href = isOnePost ? makePostLink(post) : makeActivityListLink(postUris)
   const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
   const mediaBlurred = Item.usePostMediaBlurred(post)
 

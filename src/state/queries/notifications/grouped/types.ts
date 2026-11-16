@@ -1,4 +1,4 @@
-import {type DidString} from '@atproto/syntax'
+import {type AtUriString, type DidString} from '@atproto/syntax'
 
 import {type app} from '#/lexicons'
 
@@ -64,6 +64,20 @@ export type ActorGroup = {
 }
 
 /**
+ * The posts in a group of notifications about several posts, like new posts
+ * from subscriptions or one person liking several of the viewer's posts.
+ */
+export type PostGroup = {
+  /**
+   * Every post in the group, newest first, including those without a view in
+   * `relatedViews`, for the activity list, which loads them itself. Leaves
+   * out posts known to be blocked or deleted, and list-time moderation
+   * removes hidden ones. May still be fewer than `count`.
+   */
+  postUris: AtUriString[]
+}
+
+/**
  * A notification group from `getGroupedNotifications`, with every DID and
  * at-uri resolved against the page's `relatedViews`.
  *
@@ -72,34 +86,38 @@ export type ActorGroup = {
  */
 export type NotificationView =
   | (Base & ActorGroup & {type: 'like'; post: PostView})
-  | (Base & {
-      type: 'multiPostLike'
-      actor: ProfileView
-      posts: NonEmptyArray<PostView>
-    })
-  | (Base & {
-      type: 'multiPostRepost'
-      actor: ProfileView
-      posts: NonEmptyArray<PostView>
-    })
-  | (Base & {
-      /**
-       * Likes of several posts via the viewer's reposts of them. `posts` are
-       * the original posts.
-       */
-      type: 'multiPostLikeViaRepost'
-      actor: ProfileView
-      posts: NonEmptyArray<PostView>
-    })
-  | (Base & {
-      /**
-       * Reposts of several posts via the viewer's reposts of them. `posts`
-       * are the original posts.
-       */
-      type: 'multiPostRepostViaRepost'
-      actor: ProfileView
-      posts: NonEmptyArray<PostView>
-    })
+  | (Base &
+      PostGroup & {
+        type: 'multiPostLike'
+        actor: ProfileView
+        posts: NonEmptyArray<PostView>
+      })
+  | (Base &
+      PostGroup & {
+        type: 'multiPostRepost'
+        actor: ProfileView
+        posts: NonEmptyArray<PostView>
+      })
+  | (Base &
+      PostGroup & {
+        /**
+         * Likes of several posts via the viewer's reposts of them. `posts` are
+         * the original posts.
+         */
+        type: 'multiPostLikeViaRepost'
+        actor: ProfileView
+        posts: NonEmptyArray<PostView>
+      })
+  | (Base &
+      PostGroup & {
+        /**
+         * Reposts of several posts via the viewer's reposts of them. `posts`
+         * are the original posts.
+         */
+        type: 'multiPostRepostViaRepost'
+        actor: ProfileView
+        posts: NonEmptyArray<PostView>
+      })
   | (Base & ActorGroup & {type: 'repost'; post: PostView})
   | (Base &
       ActorGroup & {
@@ -121,17 +139,18 @@ export type NotificationView =
          */
         starterPack?: StarterPackView
       })
-  | (Base & {
-      type: 'subscribedPost'
-      items: NonEmptyArray<{
-        actor: ProfileView
-        post: PostView
-        /**
-         * Set when the post replies to another.
-         */
-        parent?: ParentPost
-      }>
-    })
+  | (Base &
+      PostGroup & {
+        type: 'subscribedPost'
+        items: NonEmptyArray<{
+          actor: ProfileView
+          post: PostView
+          /**
+           * Set when the post replies to another.
+           */
+          parent?: ParentPost
+        }>
+      })
   | (Base & ActorGroup & {type: 'generatorLike'; generator: GeneratorView})
   | (Base & {type: 'reply'; post: PostView; parent: ParentPost})
   | (Base & {type: 'quote'; post: PostView; parent?: ParentPost})

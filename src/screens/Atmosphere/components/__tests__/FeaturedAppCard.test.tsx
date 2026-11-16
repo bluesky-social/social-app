@@ -61,7 +61,7 @@ const app: FeaturedApp = {
 }
 
 describe('FeaturedAppCard', () => {
-  it('links Visit app to the app url', () => {
+  it('links Website to the app url', () => {
     render(<FeaturedAppCard app={app} />)
 
     expect(
@@ -75,6 +75,13 @@ describe('FeaturedAppCard', () => {
     expect(
       screen.getByTestId('featuredAppProfile').props.accessibilityValue,
     ).toEqual({text: '/profile/app.test'})
+  })
+
+  it('hides Website without a url', () => {
+    render(<FeaturedAppCard app={{...app, url: undefined}} />)
+
+    expect(screen.queryByTestId('featuredAppVisit')).toBeNull()
+    expect(screen.getByTestId('featuredAppProfile')).toBeTruthy()
   })
 
   it('hides View profile without a profile', () => {

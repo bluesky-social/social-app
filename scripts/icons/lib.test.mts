@@ -29,6 +29,10 @@ async function fixture(t, lane, name, svg) {
 test('validates SVG path grammar', () => {
   validatePathData('M0 0h2v2H0Z')
   validatePathData('M0,0 2,2')
+  validatePathData('M0 0C2.18275e-05 11.3738 0.0923167 11.1239 0.277344 10.9131')
+  validatePathData('M1e1,2E+0L3e-1,4E-1')
+  assert.throws(() => validatePathData('M0 0C'), /C has no arguments/)
+  assert.throws(() => validatePathData('M0 0L1e999 0'), /invalid number/)
   assert.throws(() => validatePathData('M0 0 L nope'), /L has no arguments/)
   assert.throws(() => validatePathData('M0'), /too few arguments/)
   assert.throws(() => validatePathData('M0 0A1 1 0 2 0 3 4'), /large-arc-flag/)

@@ -68,7 +68,16 @@ function BetaFeaturesFeedbackDialogInner({
       }
       Sentry.captureFeedback(
         {name: currentAccount?.handle, message: feedback.trim()},
-        {captureContext: {contexts: {betaFeatures: {keys: [betaFeatureKey]}}}},
+        {
+          captureContext: {
+            tags: {
+              betaFeature: betaFeatureKey,
+            },
+            contexts: {
+              betaFeatures: {keys: betaFeatures.map(feature => feature.key)},
+            },
+          },
+        },
       )
       return Promise.resolve()
     },

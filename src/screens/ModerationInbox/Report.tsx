@@ -47,7 +47,6 @@ export function ModerationInboxReportDetailsScreen({
     silent: true,
   })
   const moderationOpts = useModerationOpts()
-  const isEnabled = ax.features.enabled(ax.features.ModerationInboxEnable)
   const moderationService = isValidDid(route.params.moderationService)
     ? route.params.moderationService
     : undefined
@@ -57,11 +56,10 @@ export function ModerationInboxReportDetailsScreen({
   const reportQuery = useModerationInboxReportQuery({
     moderationService,
     id,
-    enabled: isEnabled,
   })
   const {data: labeler} = useLabelerInfoQuery({
     did: moderationService,
-    enabled: isEnabled && id !== undefined,
+    enabled: id !== undefined,
   })
   const serviceName =
     labeler && moderationOpts
@@ -79,7 +77,6 @@ export function ModerationInboxReportDetailsScreen({
     matchXrpcError(reportQuery.error, tools.ozone.inbox.getReport) ===
     'NotFound'
   const canMarkSeen =
-    isEnabled &&
     hasSession &&
     !!moderationService &&
     id !== undefined &&
@@ -96,13 +93,13 @@ export function ModerationInboxReportDetailsScreen({
 
   useFocusEffect(
     useCallback(() => {
-      if (isEnabled && moderationService && id !== undefined && !notFound) {
+      if (moderationService && id !== undefined && !notFound) {
         ax.metric('moderation:inbox:viewReport', {})
       }
-    }, [ax, isEnabled, moderationService, id, notFound]),
+    }, [ax, moderationService, id, notFound]),
   )
 
-  if (!isEnabled || !moderationService || id === undefined || notFound) {
+  if (!moderationService || id === undefined || notFound) {
     return <NotFoundScreen />
   }
 

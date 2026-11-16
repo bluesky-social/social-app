@@ -1,12 +1,25 @@
 import {View} from 'react-native'
+import * as Clipboard from 'expo-clipboard'
+import {parseAtUriString} from '@atproto/syntax'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {type NavigationProp} from '#/lib/routes/types'
+import {shareUrl} from '#/lib/sharing'
+import {useRequireAuth, useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
+import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
+import {type ItemFocusProps} from '#/components/Gallery'
+import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
+import {Mark as BlueskyIcon} from '#/components/icons/brands/Mark'
+import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
+import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
+import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import {Person_Stroke2_Corner0_Rounded as PersonIcon} from '#/components/icons/Person'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ExternalLinkIcon} from '#/components/icons/Square'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
@@ -16,14 +29,29 @@ import {
   useGetCopyForSubject,
   useGlobalReportDialogControl,
 } from '#/components/moderation/ReportDialog'
-import {type app} from '#/lexicons'
-import {type ExploreGalleryFocusProps} from './ExploreGallery'
+import * as Toast from '#/components/Toast'
+import {useAgeAssurance} from '#/ageAssurance'
+import {IS_WEB} from '#/env'
+import {type app, place, site, social} from '#/lexicons'
+import {useDevMode} from '#/storage/hooks/dev-mode'
 
 const BUTTON_VISUAL_ADJUSTMENT = 4
 
 /**
+ * The records behind a card whose AT URIs dev mode can copy. An article's
+ * view also lists its publication; a gallery's lists its photos, which we skip.
+ */
+const DEV_RECORD_TYPES = {
+  article: [site.standard.document.$type, site.standard.publication.$type],
+  photo: [social.grain.gallery.$type],
+  publication: [site.standard.publication.$type],
+  livestream: [place.stream.livestream.$type],
+} as const
+
+/**
  * Top-right options menu for Atmosphere cards. Render it as a sibling
  * of the card's primary link, never inside it, so the two stay un-nested.
+ * Sharing actions always use the card's external URL (`item.uri`).
  * `children` are extra `Menu.Item`s shown before Report.
  */
 export function AtmosphereCardMenu({
@@ -50,7 +78,7 @@ export function AtmosphereCardMenu({
    * then left out.
    */
   author?: app.bsky.actor.defs.ProfileViewBasic
-  galleryFocus?: ExploreGalleryFocusProps
+  galleryFocus?: ItemFocusProps
   /**
    * Distance from the card's top edge.
    */
@@ -68,8 +96,14 @@ export function AtmosphereCardMenu({
   const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const openLink = useOpenLink()
+  const {hasSession} = useSession()
+  const aa = useAgeAssurance()
+  const requireAuth = useRequireAuth()
+  const {openComposer} = useOpenComposer()
+  const sendViaChatControl = useDialogControl()
   const reportDialogControl = useGlobalReportDialogControl()
   const getReportCopy = useGetCopyForSubject()
+  const [devModeEnabled] = useDevMode()
   let labels: {trigger: string; view: string; report: string}
   switch (type) {
     case 'article':
@@ -102,10 +136,37 @@ export function AtmosphereCardMenu({
       break
   }
 
+  const getCopyUriLabel = (collection: string) => {
+    switch (collection) {
+      case site.standard.document.$type:
+        return l`Copy article AT URI`
+      case site.standard.publication.$type:
+        return l`Copy publication AT URI`
+      case social.grain.gallery.$type:
+        return l`Copy gallery AT URI`
+      default:
+        return l`Copy livestream AT URI`
+    }
+  }
+
+  const canSendViaChat = hasSession && aa.state.access === aa.Access.Full
+  const shareLabel = IS_WEB ? l`Copy link` : l`Share`
+
   const reportTargets = getAssociatedReportSubjects(item.associatedRefs).filter(
     ({parsedSubject}) =>
       'nsid' in parsedSubject && reportableTypes.includes(parsedSubject.nsid),
   )
+
+  const devRecords = devModeEnabled
+    ? (item.associatedRefs ?? []).flatMap(({uri}) => {
+        const parsed = parseAtUriString(uri)
+        const recordTypes: readonly string[] = DEV_RECORD_TYPES[type]
+        const collection = parsed.success ? parsed.value.collection : undefined
+        return collection && recordTypes.includes(collection)
+          ? [{uri, collection}]
+          : []
+      })
+    : []
 
   return (
     <View
@@ -139,6 +200,39 @@ export function AtmosphereCardMenu({
           )}
         </Menu.Trigger>
         <Menu.Outer>
+          <Menu.Group>
+            <Menu.Item
+              testID="atmosphereCardShare"
+              label={shareLabel}
+              onPress={() => void shareUrl(item.uri)}>
+              <Menu.ItemText>{shareLabel}</Menu.ItemText>
+              <Menu.ItemIcon
+                icon={IS_WEB ? ChainLinkIcon : ArrowOutOfBoxIcon}
+                position="right"
+              />
+            </Menu.Item>
+            <Menu.Item
+              testID="atmosphereCardCreatePost"
+              label={l`Create post`}
+              onPress={() =>
+                requireAuth(() =>
+                  openComposer({text: item.uri, logContext: 'Other'}),
+                )
+              }>
+              <Menu.ItemText>{l`Post to Bluesky`}</Menu.ItemText>
+              <Menu.ItemIcon icon={BlueskyIcon} position="right" />
+            </Menu.Item>
+            {canSendViaChat && (
+              <Menu.Item
+                testID="atmosphereCardSendViaChat"
+                label={l`Send via chat`}
+                onPress={() => sendViaChatControl.open()}>
+                <Menu.ItemText>{l`Send via chat`}</Menu.ItemText>
+                <Menu.ItemIcon icon={PaperPlaneIcon} position="right" />
+              </Menu.Item>
+            )}
+          </Menu.Group>
+          <Menu.Divider />
           <Menu.Group>
             <Menu.Item label={labels.view} onPress={() => openLink(item.uri)}>
               <Menu.ItemText>{labels.view}</Menu.ItemText>
@@ -183,7 +277,40 @@ export function AtmosphereCardMenu({
               </Menu.Item>
             )}
           </Menu.Group>
+          {devRecords.length > 0 && (
+            <>
+              <Menu.Divider />
+              <Menu.Group>
+                {devRecords.map(({uri, collection}) => {
+                  const copyLabel = getCopyUriLabel(collection)
+                  return (
+                    <Menu.Item
+                      key={uri}
+                      testID="atmosphereCardCopyUri"
+                      label={copyLabel}
+                      onPress={() => {
+                        void Clipboard.setStringAsync(uri)
+                        Toast.show(l`Copied to clipboard`, {type: 'success'})
+                      }}>
+                      <Menu.ItemText>{copyLabel}</Menu.ItemText>
+                      <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+                    </Menu.Item>
+                  )
+                })}
+              </Menu.Group>
+            </>
+          )}
         </Menu.Outer>
+        {/* Outside Menu.Outer so it stays mounted after the menu closes. */}
+        <SendViaChatDialog
+          control={sendViaChatControl}
+          onSelectChat={conversation =>
+            navigation.navigate('MessagesConversation', {
+              conversation,
+              text: item.uri,
+            })
+          }
+        />
       </Menu.Root>
     </View>
   )

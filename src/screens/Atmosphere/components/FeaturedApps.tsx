@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react/macro'
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {type FeaturedApp} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a} from '#/alf'
-import {ExploreGallery} from './ExploreGallery'
+import * as Gallery from '#/components/Gallery'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
 import {FeaturedAppCard} from './FeaturedAppCard'
 
@@ -31,17 +31,24 @@ export function FeaturedApps({
             : undefined
         }
       />
-      <ExploreGallery
-        items={apps}
-        getKey={app => app.id}
+      <Gallery.Root
+        snapToItems
+        stretch
         label={l`Featured apps`}
         testID="atmosphereAppsGallery"
-        renderItem={(app, galleryFocus) => (
-          <View style={[a.flex_grow, {width: CARD_WIDTH}]}>
-            <FeaturedAppCard app={app} galleryFocus={galleryFocus} />
-          </View>
-        )}
-      />
+        footer={<Gallery.PageDots testID="atmosphereAppsGallery-dots" />}>
+        {apps.map(app => (
+          <Gallery.Item key={app.id} label={app.title}>
+            {galleryFocus => (
+              <View style={[a.flex_grow]}>
+                <View style={[a.flex_grow, {width: CARD_WIDTH}]}>
+                  <FeaturedAppCard app={app} galleryFocus={galleryFocus} />
+                </View>
+              </View>
+            )}
+          </Gallery.Item>
+        ))}
+      </Gallery.Root>
     </View>
   )
 }
