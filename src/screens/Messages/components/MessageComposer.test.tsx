@@ -32,6 +32,9 @@ jest.mock('#/components/dms/MessageReplies', () => ({
   useMessageReplies: () => ({replyTo: undefined, clearReply: () => {}}),
 }))
 jest.mock('#/lib/haptics', () => ({useHaptics: () => ({confirm: () => {}})}))
+jest.mock('#/features/verticalBar', () => ({
+  useVerticalBarFloatingMargins: () => null,
+}))
 jest.mock('#/lib/custom-animations/PressableScale', () => ({
   PressableScale:
     jest.requireActual<typeof import('react-native')>('react-native').Pressable,
