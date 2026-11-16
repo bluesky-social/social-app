@@ -1,6 +1,8 @@
 import {
   forwardRef,
   useCallback,
+  useEffect,
+  useEffectEvent,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -97,6 +99,8 @@ export function Outer({
   const prevSnapPoint = useRef<BottomSheetSnapPoint>(
     BottomSheetSnapPoint.Hidden,
   )
+  /** Whether this dialog is registered as open in the global dialog state. */
+  const isRegisteredOpen = useRef(false)
 
   const [disableDrag, setDisableDrag] = useState(false)
   const [presentation, setPresentation] =
@@ -161,6 +165,7 @@ export function Outer({
       )
       onOpen?.()
       setDialogIsOpen(control.id, true)
+      isRegisteredOpen.current = true
       ref.current?.present()
     },
     [
@@ -188,6 +193,7 @@ export function Outer({
     // This removes the dialog from our list of stored dialogs. Not super necessary on iOS, but on Android this
     // tells us that we need to toggle the accessibility overlay setting
     setDialogIsOpen(control.id, false)
+    isRegisteredOpen.current = false
     callQueuedCallbacks()
     onClose?.()
   }, [callQueuedCallbacks, control.id, onClose, setDialogIsOpen])
@@ -237,6 +243,22 @@ export function Outer({
     }),
     [open, close],
   )
+
+  /*
+   * If this unmounts while the sheet is open, the native side dismisses the
+   * orphaned sheet without sending a "closed" event, since the view is already
+   * gone from React. Release the global dialog state that event would have
+   * released.
+   */
+  const releaseOpenDialogState = useEffectEvent(() => {
+    if (!isRegisteredOpen.current) return
+    isRegisteredOpen.current = false
+    setDialogIsOpen(control.id, false)
+    if (prevSnapPoint.current === BottomSheetSnapPoint.Full) {
+      setFullyExpandedCount(c => c - 1)
+    }
+  })
+  useEffect(() => () => releaseOpenDialogState(), [])
 
   /*
    * Full-height and max-height sheets and popovers fill their presentation.
