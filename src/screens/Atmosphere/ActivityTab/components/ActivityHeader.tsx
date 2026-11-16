@@ -32,6 +32,7 @@ export function ActivityHeader({row}: {row: ActivityCardRow}) {
   const moderationOpts = useModerationOpts()
   const {actor} = row
   const app = getActivityApp(row)
+  const appName = app?.name
   const moderation = moderationOpts
     ? moderateProfile(actor, moderationOpts)
     : undefined
@@ -75,20 +76,37 @@ export function ActivityHeader({row}: {row: ActivityCardRow}) {
           />
         </Text>
         <TimeElapsed timestamp={row.indexedAt} timeToString={formatTimeAgo}>
-          {({timeElapsed}) => (
-            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-                {app ? (
-                  <Trans comment='Precedes an app icon and name, e.g. "6h ago on [icon] pckt". {timeElapsed} is already translated.'>
+          {({timeElapsed}) =>
+            app ? (
+              <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                {/*
+                 * The time, icon and app name are separate tags so translators
+                 * can reorder them. Wrapping the Trans in one Text would put
+                 * the icon inline, which needs baseline nudging, so the
+                 * comment asks translators to keep all text inside the tags.
+                 */}
+                {/* oxlint-disable-next-line bsky-internal/avoid-unwrapped-text */}
+                <Trans comment='When and on which app the activity happened, e.g. "6h ago on [icon] pckt". {timeElapsed} is already translated, e.g. "6h ago". <1/> is the app icon and <2>{appName}</2> is its name. You can reorder the tags. CAREFUL: any text outside <0> or <2> will not display correctly, so put every word (including particles such as で or 에서) inside one of them, e.g. "<1/><2>{appName}</2><0>で{timeElapsed}</0>".'>
+                  <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
                     {timeElapsed} on
-                  </Trans>
-                ) : (
-                  timeElapsed
-                )}
+                  </Text>
+                  <AppIcon app={app} />
+                  <Text
+                    style={[
+                      a.text_sm,
+                      a.font_semi_bold,
+                      t.atoms.text_contrast_medium,
+                    ]}>
+                    {appName}
+                  </Text>
+                </Trans>
+              </View>
+            ) : (
+              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                {timeElapsed}
               </Text>
-              {app ? <AppName app={app} /> : null}
-            </View>
-          )}
+            )
+          }
         </TimeElapsed>
       </View>
     </View>
@@ -125,16 +143,9 @@ function getActivityApp({
   }
 }
 
-function AppName({app}: {app: ActivityApp}) {
+function AppIcon({app}: {app: ActivityApp}) {
   const t = useTheme()
-  return (
-    <>
-      {app.Icon ? (
-        <app.Icon size="xs" fill={t.atoms.text_contrast_medium.color} />
-      ) : null}
-      <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
-        {app.name}
-      </Text>
-    </>
-  )
+  return app.Icon ? (
+    <app.Icon size="xs" fill={t.atoms.text_contrast_medium.color} />
+  ) : null
 }
