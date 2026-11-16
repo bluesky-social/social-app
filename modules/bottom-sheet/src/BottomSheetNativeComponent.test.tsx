@@ -19,7 +19,10 @@ type NativeViewProps = Pick<
   BottomSheetViewProps,
   'popover' | 'desiredContentHeight' | 'onPresentationSizeChange'
 > & {
-  children: React.ReactElement<{style: StyleProp<ViewStyle>}>
+  children: React.ReactElement<{
+    style: StyleProp<ViewStyle>
+    children?: React.ReactElement<{style: StyleProp<ViewStyle>}>
+  }>
   containerBackgroundColor?: string
   maxHeight?: number
   style: StyleProp<ViewStyle>
@@ -120,6 +123,17 @@ it.each(['always', 'adaptive', 'never'] as const)(
     expect(result.getByTestId('nativeBottomSheet')).toBeTruthy()
   },
 )
+
+it('lets the content of a full-height Android sheet shrink to the canvas', () => {
+  jest.replaceProperty(Platform, 'OS', 'android')
+  renderOpenSheet({fullHeight: true})
+
+  const innerView = lastNativeProps().children.props.children
+  expect(StyleSheet.flatten(innerView?.props.style)).toMatchObject({
+    flex: 1,
+    flexShrink: 1,
+  })
+})
 
 it('defaults the native iOS fill to the content background color', () => {
   jest.replaceProperty(Platform, 'OS', 'ios')
