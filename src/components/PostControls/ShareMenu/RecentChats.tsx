@@ -83,7 +83,7 @@ export function RecentChats({
   const isGrid = layout === 'grid'
   /*
    * On iOS the share sheet drags up to full height (`expandable` on
-   * `Menu.Outer`), and then the grid fills it. Until then a swipe on the grid
+   * `Menu.Outer`), and then the grid grows to fill it. Until then a swipe on the grid
    * should move the sheet, so the grid only scrolls at full height. Popovers
    * and Android sheets stay one height, so their grid always scrolls.
    */
@@ -159,25 +159,17 @@ export function RecentChats({
 
   if (isGrid) {
     return (
-      <View
-        style={[
-          a.relative,
-          isExpanded && a.flex_1,
-          {marginHorizontal: SHEET_GUTTER * -1},
-        ]}>
+      <View style={[a.relative, {marginHorizontal: SHEET_GUTTER * -1}]}>
         <ScrollView
           ref={gridRef}
-          style={
-            isExpanded
-              ? a.flex_1
-              : {
-                  // Full height while loading, and for the empty state
-                  height:
-                    convos && convos.length > 0
-                      ? getGridHeight(convos.length)
-                      : GRID_HEIGHT,
-                }
-          }
+          style={{
+            height:
+              // Full height while loading, and for the empty state
+              (convos && convos.length > 0
+                ? getGridHeight(convos.length)
+                : GRID_HEIGHT) +
+              (isExpanded ? control.fullHeightExtraSpace : 0),
+          }}
           scrollEnabled={!sheetExpands || isExpanded}
           contentContainerStyle={[
             a.flex_row,

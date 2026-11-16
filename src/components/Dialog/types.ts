@@ -46,6 +46,12 @@ export type DialogContextProps = {
   presentationBottomOffset: number
   isNativePopover: boolean
   nativeSnapPoint: BottomSheetSnapPoint
+  /**
+   * How much taller the sheet is than its content while it's held at full
+   * height (see `holdContentHeightWhenFull`), so content can grow by this
+   * much to fill it. 0 otherwise.
+   */
+  fullHeightExtraSpace: number
   disableDrag: boolean
   /**
    * Whether user dismissal (backdrop, swipe, back, Escape, close button) is

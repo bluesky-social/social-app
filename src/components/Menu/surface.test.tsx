@@ -34,7 +34,7 @@ jest.mock('#/components/Button', () => ({
   ButtonText: () => null,
 }))
 jest.mock('#/components/Typography', () => ({Text: () => null}))
-jest.mock('#/alf', () => ({atoms: {flex_grow: {flexGrow: 1}}}))
+jest.mock('#/alf', () => ({atoms: {}}))
 jest.mock('@lingui/react/macro', () => ({
   useLingui: () => ({t: () => 'Menu'}),
 }))
@@ -150,15 +150,11 @@ describe('native menu surface', () => {
   })
 
   it.each([
-    {
-      snapPoint: 'partial',
-      nativeSnapPoint: BottomSheetSnapPoint.Partial,
-      fill: false,
-    },
-    {snapPoint: 'full', nativeSnapPoint: BottomSheetSnapPoint.Full, fill: true},
+    {snapPoint: 'partial', nativeSnapPoint: BottomSheetSnapPoint.Partial},
+    {snapPoint: 'full', nativeSnapPoint: BottomSheetSnapPoint.Full},
   ])(
-    'only fills an expandable sheet at $snapPoint height when it is full',
-    ({nativeSnapPoint, fill}) => {
+    'only scrolls an expandable menu below full height: $snapPoint',
+    ({nativeSnapPoint}) => {
       jest
         .mocked(Dialog.useDialogContext)
         .mockReturnValue({nativeSnapPoint} as ReturnType<
@@ -171,9 +167,9 @@ describe('native menu surface', () => {
         </Menu.Root>,
       )
 
-      const props = jest.mocked(Dialog.ScrollableInner).mock.calls[0][0]
-      expect(props.scrollEnabled).toBe(!fill)
-      expect(props.contentContainerStyle).toEqual(fill ? {flexGrow: 1} : false)
+      expect(
+        jest.mocked(Dialog.ScrollableInner).mock.calls[0][0].scrollEnabled,
+      ).toBe(nativeSnapPoint !== BottomSheetSnapPoint.Full)
     },
   )
 })

@@ -23,6 +23,7 @@ export const Context = createContext<DialogContextProps>({
   presentationBottomOffset: 0,
   isNativePopover: false,
   nativeSnapPoint: BottomSheetSnapPoint.Hidden,
+  fullHeightExtraSpace: 0,
   disableDrag: false,
   preventDismiss: false,
   setDisableDrag: () => {},

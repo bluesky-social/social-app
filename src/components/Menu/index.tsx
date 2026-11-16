@@ -158,18 +158,12 @@ function OuterContent({
 }) {
   const {t: l} = useLingui()
   const {nativeSnapPoint} = Dialog.useDialogContext()
-  /*
-   * Only stretch at full height. At partial height the sheet is sized from
-   * the content's measured height, which can't shrink if it's stretched.
-   */
-  const fill = expandable && nativeSnapPoint === BottomSheetSnapPoint.Full
+  // At full height the content fills the sheet and scrolls itself
+  const isFull = expandable && nativeSnapPoint === BottomSheetSnapPoint.Full
 
   return (
-    <Dialog.ScrollableInner
-      label={l`Menu`}
-      contentContainerStyle={fill && a.flex_grow}
-      scrollEnabled={!fill}>
-      <View style={[a.gap_lg, fill && a.flex_1]}>{children}</View>
+    <Dialog.ScrollableInner label={l`Menu`} scrollEnabled={!isFull}>
+      <View style={[a.gap_lg]}>{children}</View>
     </Dialog.ScrollableInner>
   )
 }

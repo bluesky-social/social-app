@@ -136,6 +136,7 @@ export function Outer({
       presentationBottomOffset: 0,
       isNativePopover: false,
       nativeSnapPoint: 0,
+      fullHeightExtraSpace: 0,
       disableDrag: false,
       preventDismiss,
       setDisableDrag: () => {},

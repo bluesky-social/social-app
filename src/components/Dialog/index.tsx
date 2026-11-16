@@ -207,12 +207,8 @@ export function Outer({
   const onSnapPointChange = (e: BottomSheetSnapPointChangeEvent) => {
     const {snapPoint} = e.nativeEvent
     setSnapPoint(snapPoint)
-    if (holdContentHeightWhenFull) {
-      setHeldContentHeight(
-        snapPoint === BottomSheetSnapPoint.Full
-          ? desiredContentHeight
-          : undefined,
-      )
+    if (holdContentHeightWhenFull && snapPoint === BottomSheetSnapPoint.Full) {
+      setHeldContentHeight(prev => prev ?? desiredContentHeight)
     }
 
     if (
@@ -276,6 +272,27 @@ export function Outer({
         )
       : undefined
 
+  /*
+   * Release the hold once the sheet has left full height and the content has
+   * shrunk back. Releasing it as soon as the sheet leaves full height would
+   * send the still-grown height, and a tall enough one leaves the sheet only
+   * the large detent.
+   */
+  if (
+    heldContentHeight != null &&
+    snapPoint !== BottomSheetSnapPoint.Full &&
+    desiredContentHeight != null &&
+    desiredContentHeight <= heldContentHeight + 1
+  ) {
+    setHeldContentHeight(undefined)
+  }
+  const fullHeightExtraSpace =
+    heldContentHeight != null &&
+    snapPoint === BottomSheetSnapPoint.Full &&
+    presentation != null
+      ? Math.max(0, presentation.height - heldContentHeight)
+      : 0
+
   const context = useMemo(
     () => ({
       close,
@@ -284,6 +301,7 @@ export function Outer({
       presentationBottomOffset: presentation?.bottomOffset ?? 0,
       isNativePopover: IS_IOS && presentation?.isPopover === true,
       nativeSnapPoint: snapPoint,
+      fullHeightExtraSpace,
       disableDrag,
       preventDismiss: shouldPreventDismiss,
       setDisableDrag,
@@ -296,6 +314,7 @@ export function Outer({
       close,
       presentation,
       snapPoint,
+      fullHeightExtraSpace,
       disableDrag,
       shouldPreventDismiss,
       setDisableDrag,
