@@ -667,14 +667,22 @@ class BottomSheetView(
     UiThreadUtil.assertOnUiThread()
     (appContext.reactContext as? ReactContext)?.removeLifecycleEventListener(this)
     this.stopObservingContentHeight()
-    this.dialog?.let {
-      // Don't let the dismiss listener emit state events for a view React already deleted
-      it.setOnDismissListener(null)
-      if (it.isShowing) it.dismiss()
-    }
+    // Clean up before dismissing, so a dismiss that throws can't skip it
+    val dialog = this.dialog
     this.dialog = null
     this.innerView = null
     SheetManager.remove(this)
+    if (dialog == null) return
+    // Don't let the dismiss listener emit state events for a view React already deleted
+    dialog.setOnDismissListener(null)
+    /*
+     * When the activity is recreated with a sheet open, Android detaches the dialog's
+     * window before Fabric deletes this view, and dismiss() then throws "not attached
+     * to window manager".
+     */
+    if (dialog.isShowing && dialog.window?.decorView?.isAttachedToWindow == true) {
+      dialog.dismiss()
+    }
   }
 
   override fun addChildrenForAccessibility(outChildren: ArrayList<View>?) { }
