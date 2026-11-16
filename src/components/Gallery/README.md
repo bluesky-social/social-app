@@ -95,7 +95,15 @@ zero or one item. Optional `style` and `testID` props configure the row. The
 active dot grows from 8 to 30 pixels wide over 200ms as the previous dot shrinks;
 reduced motion makes the change immediate. Colors follow the theme.
 
-Dots are read-only on every platform, with no buttons or extra tab stops.
+`variant="subtle"` makes the dots smaller (5px, 12px active) in neutral
+colours, for galleries that sit inside content such as post images. Room for
+the hovered size is always reserved, so hovering never shifts layout.
+
+Dots are read-only by default, with no buttons or extra tab stops. On web,
+`interactive` makes each dot clickable (scrolling that item to the start of the
+viewport, reported through `onIndexChange`), and grows `subtle` dots while the
+pointer is over them. Interactive dots still add no tab stops or accessibility
+nodes, since keyboard users have arrow-key navigation.
 The row exposes a single translated position label to screen readers. Use
 the gallery's swipe, drag, trackpad, and arrow-key navigation to move between
 items.

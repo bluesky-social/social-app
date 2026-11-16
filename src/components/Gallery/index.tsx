@@ -280,6 +280,17 @@ export function Root({
 
   useImperativeHandle(ref, () => ({scrollIntoView}), [scrollIntoView])
 
+  /** Brings an item to the start of the viewport, e.g. from a page dot. */
+  const goToIndex = useNonReactiveCallback((index: number) => {
+    if (!Number.isInteger(index) || index < 0 || index >= itemCount) return
+    const offset = Math.min(
+      getOffsetForIndex(itemWidthsRef.current, index),
+      getMaxOffset(itemWidthsRef.current, itemCount, viewportWidth),
+    )
+    setCurrentIndex(index)
+    scrollTo({offset, animated: true})
+  })
+
   const onSettle = useNonReactiveCallback((index: number) => {
     setCurrentIndex(index)
     updatePageForOffset(getScrollNode()?.scrollLeft ?? scrollOffsetRef.current)
@@ -393,7 +404,7 @@ export function Root({
 
   return (
     <GalleryContext.Provider
-      value={{label, itemKeys: keys, activeIndex: pageIndex}}>
+      value={{label, itemKeys: keys, activeIndex: pageIndex, goToIndex}}>
       <View style={a.w_full}>
         <View
           ref={contentRef}
