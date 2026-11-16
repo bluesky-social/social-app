@@ -251,15 +251,26 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY_ID: ${{ github.repository_id }}
         run: |
+          set -o pipefail
           for platform in ios android; do
-            url=$(gh api \
-              "repos/${GITHUB_REPOSITORY}/actions/artifacts?name=testflight-$platform-build-number&per_page=100" \
-              --jq "[.artifacts[] | select(
-                .expired == false and
-                .workflow_run.head_branch == \"main\" and
-                .workflow_run.head_repository_id == (\$ENV.REPOSITORY_ID | tonumber)
-              )] | max_by(.created_at) | .archive_download_url" \
-              2>/dev/null || true)
+            # A delayed submission or rerun must not displace a newer workflow run.
+            url=$(
+              gh api \
+                "repos/${GITHUB_REPOSITORY}/actions/artifacts?name=testflight-$platform-build-number&per_page=100" \
+                --jq ".artifacts[] | select(
+                  .expired == false and
+                  .workflow_run.head_branch == \"main\" and
+                  .workflow_run.head_repository_id == (\$ENV.REPOSITORY_ID | tonumber)
+                ) | [.workflow_run.id, .archive_download_url] | @tsv" \
+                2>/dev/null |
+              while IFS=$'\t' read -r run_id artifact_url; do
+                created_at=$(gh api --cache 1h \
+                  "repos/${GITHUB_REPOSITORY}/actions/runs/$run_id" \
+                  --jq '.created_at' 2>/dev/null) || exit 1
+                printf '%s\t%s\n' "$created_at" "$artifact_url"
+              done |
+              sort | tail -n 1 | cut -f 2
+            ) || url=""
 
             number=""
             if [ -n "$url" ] && [ "$url" != "null" ]; then
