@@ -15,7 +15,10 @@ import {invalidateJoinLinkPreviewsForConvo} from '#/state/queries/join-links'
 import {useChatClient, useSession} from '#/state/session'
 import {chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import {RQKEY as CONVO_KEY} from './conversation'
+import {
+  RQKEY as CONVO_KEY,
+  RQKEY_ROOT as CONVO_RQKEY_ROOT,
+} from './conversation'
 import {
   RQKEY_PARTIAL as UNREAD_COUNTS_RQKEY_PARTIAL,
   UNREAD_ACCEPTED_CAP,
@@ -28,7 +31,10 @@ import {
   optimisticUpdate as optimisticUpdateRequest,
   RQKEY_ROOT as REQUESTS_RQKEY_ROOT,
 } from './list-conversation-requests'
-import {listConvoMembersQueryKey} from './list-convo-members'
+import {
+  listConvoMembersQueryKey,
+  RQKEY_ROOT as LIST_CONVO_MEMBERS_RQKEY_ROOT,
+} from './list-convo-members'
 
 const DEFAULT_LIMIT = 10
 
@@ -179,6 +185,19 @@ export function ListConvosProviderInner({
   useEffect(() => {
     const unsub = messagesBus.on(
       events => {
+        /*
+         * The bus skipped logs it was too far behind to replay, so nothing we
+         * derive from them can be trusted.
+         */
+        if (events.type === 'gap') {
+          debouncedRefetch()
+          debouncedInvalidateUnreadCounts()
+          void queryClient.invalidateQueries({queryKey: [CONVO_RQKEY_ROOT]})
+          void queryClient.invalidateQueries({
+            queryKey: [LIST_CONVO_MEMBERS_RQKEY_ROOT],
+          })
+          return
+        }
         if (events.type !== 'logs') return
 
         // Any log batch may change unread state (new message, read, accept,

@@ -5,7 +5,7 @@ import {createQueryKey} from '#/state/queries/util'
 import {useChatClient} from '#/state/session'
 import {chat} from '#/lexicons'
 
-const RQKEY_ROOT = 'listConvoMembers'
+export const RQKEY_ROOT = 'listConvoMembers'
 export const listConvoMembersQueryKey = (convoId: string) =>
   createQueryKey(RQKEY_ROOT, {convoId})
 
