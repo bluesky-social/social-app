@@ -249,12 +249,9 @@ export function Target({children}: {children: React.ReactNode}) {
 export function Content({
   children,
   label,
-  targetHandlesToggle = false,
 }: {
   children: React.ReactNode
   label: string
-  /** Let a pressable target handle its own tooltip dismissal. */
-  targetHandlesToggle?: boolean
 }) {
   const {
     position,
@@ -289,7 +286,6 @@ export function Content({
          * the context providers.
          */
         targetMeasurements={targetMeasurements}
-        targetHandlesToggle={targetHandlesToggle}
         requestClose={requestClose}>
         {children}
       </Bubble>
@@ -307,7 +303,6 @@ function Bubble({
   onClosed,
   requestClose,
   targetMeasurements,
-  targetHandlesToggle,
 }: {
   children: React.ReactNode
   label: string
@@ -317,7 +312,6 @@ function Bubble({
   closing: boolean
   onClosed: () => void
   requestClose: () => void
-  targetHandlesToggle: boolean
   targetMeasurements: Exclude<
     TargetContextType['targetMeasurements'],
     undefined
@@ -458,18 +452,11 @@ function Bubble({
           y > coords.top &&
           y < coords.bottom
 
-        // Let the target's press handler toggle the tooltip itself.
-        const isTarget =
-          x >= targetMeasurements.x &&
-          x <= targetMeasurements.x + targetMeasurements.width &&
-          y >= targetMeasurements.y &&
-          y <= targetMeasurements.y + targetMeasurements.height
-
-        if (!isInside && !(targetHandlesToggle && isTarget)) {
+        if (!isInside) {
           requestCloseWrapped()
         }
       },
-      [coords, requestCloseWrapped, targetMeasurements, targetHandlesToggle],
+      [coords, requestCloseWrapped],
     ),
   )
 

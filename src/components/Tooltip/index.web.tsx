@@ -76,8 +76,6 @@ export function Content({
 }: {
   children: React.ReactNode
   label: string
-  /** Native-only; web targets already toggle through Popover.Trigger. */
-  targetHandlesToggle?: boolean
 }) {
   const t = useTheme()
   const {position, color, maxWidth} = useContext(TooltipContext)

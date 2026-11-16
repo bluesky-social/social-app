@@ -68,7 +68,7 @@ export function PostViewCount({post}: {post: app.bsky.feed.defs.PostView}) {
           }}
         </Button>
       </Tooltip.Target>
-      <Tooltip.Content label={explanation} targetHandlesToggle>
+      <Tooltip.Content label={explanation}>
         <Text style={[a.text_sm, a.leading_snug, a.text_center, t.atoms.text]}>
           {explanation}
         </Text>
