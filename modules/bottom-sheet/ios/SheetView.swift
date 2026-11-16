@@ -105,8 +105,16 @@ class SheetView: ExpoView {
     SheetManager.shared.add(self)
   }
 
+  /*
+   * Fabric deletes this view without a JS close when its owner unmounts while
+   * the sheet is up. Dismiss the sheet here, or UIKit keeps an empty sheet
+   * presented. Don't send state events: the view is already gone from React.
+   */
   deinit {
-    self.destroy()
+    if let sheetVc = self.sheetVc {
+      Self.dismissOrphanedSheet(sheetVc)
+    }
+    self.teardown()
   }
 
   override func mountChildComponentView(
@@ -168,23 +176,29 @@ class SheetView: ExpoView {
     ))
   }
 
+  /** Resets state after the sheet is dismissed, which notifies JS that it closed. */
   private func destroy() {
     let shouldNotifyClosed =
       self.sheetVc != nil || self.isOpen || self.isOpening || self.isClosing
-    self.contentHeightObservation?.invalidate()
-    self.contentHeightObservation = nil
     if shouldNotifyClosed {
       self.isClosing = false
       self.isOpening = false
       self.isOpen = false
     }
-    self.sheetVc = nil
     self.selectedDetentIdentifier = nil
     self.didSeedCanvasSize = false
     self.lastPresentedSize = .zero
     self.lastPresentedInsets = nil
     self.lastPresentedBottomOffset = nil
     self.lastPresentedIsPopover = nil
+    self.teardown()
+  }
+
+  /** Releases native resources without sending any events. */
+  private func teardown() {
+    self.contentHeightObservation?.invalidate()
+    self.contentHeightObservation = nil
+    self.sheetVc = nil
 
     if let innerView = self.innerView {
       self.touchHandler?.detach(from: innerView)
@@ -388,6 +402,39 @@ class SheetView: ExpoView {
         self?.destroy()
       }
     }
+  }
+
+  /**
+   * Static so the closures never capture the deallocating view. Dismissing from
+   * the presenting controller also removes anything presented on top of the
+   * sheet.
+   *
+   * UIKit drops a dismiss while a transition is running, so wait for it to end
+   * and check again. That covers the present animation, an interactive swipe
+   * (one that completes dismisses the sheet itself, but one that springs back
+   * would otherwise leave the empty sheet up), and a sheet stacked on this one
+   * that's being dismissed. The hop to the next run loop lets UIKit finish the
+   * transition before we look at it again.
+   */
+  private static func dismissOrphanedSheet(_ sheetVc: SheetViewController) {
+    guard let presenting = sheetVc.presentingViewController else {
+      return
+    }
+
+    if let coordinator = sheetVc.transitionCoordinator
+      ?? sheetVc.presentedViewController?.transitionCoordinator {
+      coordinator.animate(alongsideTransition: nil) { _ in
+        DispatchQueue.main.async {
+          Self.dismissOrphanedSheet(sheetVc)
+        }
+      }
+      return
+    }
+
+    guard !sheetVc.isBeingDismissed else {
+      return
+    }
+    presenting.dismiss(animated: true)
   }
 
   // MARK: - Utils
