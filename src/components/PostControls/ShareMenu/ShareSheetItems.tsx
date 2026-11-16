@@ -204,10 +204,11 @@ export function ShareSheetItems({
   }
 
   return (
-    <Menu.Outer>
-      <View style={[a.gap_lg, a.pt_sm]}>
+    // Dragging up shows more chats, so there's nothing to expand without them
+    <Menu.Outer expandable={showChats}>
+      <View style={[a.flex_1, a.gap_lg, a.pt_sm]}>
         {showChats && (
-          <View style={[a.gap_xl]}>
+          <View style={[a.flex_1, a.gap_xl]}>
             <SearchChatsButton onPress={onOpenDmSearch} />
             <RecentChats
               layout="grid"

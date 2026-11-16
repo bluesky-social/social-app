@@ -92,6 +92,16 @@ export type DialogOuterProps = {
    */
   preventDismiss?: boolean
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
+  /**
+   * iOS only. Sheets that measure their content in JS (menus, and every
+   * dialog on iPad) re-pick their partial height whenever the content height
+   * changes, which pulls a fully open sheet back down. Set this when the
+   * content grows to fill the sheet at full height, so the partial height
+   * stays put until the sheet leaves full height.
+   *
+   * @default false
+   */
+  holdContentHeightWhenFull?: boolean
   webOptions?: {
     alignCenter?: boolean
     onBackgroundPress?: (e: GestureResponderEvent) => void

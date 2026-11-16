@@ -7,6 +7,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {BottomSheetSnapPoint} from '@bsky.app/bottom-sheet'
 import {Trans, useLingui} from '@lingui/react/macro'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
@@ -113,30 +114,63 @@ export function Outer({
   children,
   showCancel,
   popover = 'adaptive',
+  expandable = false,
 }: OuterProps) {
   const context = useMenuContext()
-  const {t: l} = useLingui()
+  /*
+   * Android sheets also return to half height when expanded content is
+   * shorter than the screen, so they stay at a fixed height for now.
+   */
+  const canExpand = expandable && IS_IOS
 
   return (
     <Dialog.Outer
       control={context.control}
+      holdContentHeightWhenFull={canExpand}
       nativeOptions={{
         popover: IS_IOS ? popover : 'never',
-        preventExpansion: true,
+        preventExpansion: !canExpand,
         minHeight: IS_IOS ? IOS_MENU_MIN_HEIGHT : undefined,
         ...(IS_IPAD && IS_LIQUID_GLASS ? {backgroundColor: 'transparent'} : {}),
       }}>
       <Dialog.Handle />
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>
-        <Dialog.ScrollableInner label={l`Menu`}>
-          <View style={[a.gap_lg]}>
-            {children}
-            {IS_NATIVE && showCancel && <Cancel />}
-          </View>
-        </Dialog.ScrollableInner>
+        <OuterContent expandable={canExpand}>
+          {children}
+          {IS_NATIVE && showCancel && <Cancel />}
+        </OuterContent>
       </Context.Provider>
     </Dialog.Outer>
+  )
+}
+
+/**
+ * The menu's scroll view. Its own component so it can read the sheet's snap
+ * point from the dialog context, which `Outer` renders.
+ */
+function OuterContent({
+  expandable,
+  children,
+}: {
+  expandable: boolean
+  children: React.ReactNode
+}) {
+  const {t: l} = useLingui()
+  const {nativeSnapPoint} = Dialog.useDialogContext()
+  /*
+   * Only stretch at full height. At partial height the sheet is sized from
+   * the content's measured height, which can't shrink if it's stretched.
+   */
+  const fill = expandable && nativeSnapPoint === BottomSheetSnapPoint.Full
+
+  return (
+    <Dialog.ScrollableInner
+      label={l`Menu`}
+      contentContainerStyle={fill && a.flex_grow}
+      scrollEnabled={!fill}>
+      <View style={[a.gap_lg, fill && a.flex_1]}>{children}</View>
+    </Dialog.ScrollableInner>
   )
 }
 

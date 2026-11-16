@@ -28,6 +28,16 @@ export type OuterProps = React.PropsWithChildren<
      * popover on iPhone, or 'never' to use a sheet. Ignored on Android and web.
      */
     popover?: BottomSheetPopoverMode
+    /**
+     * iOS only. Lets the sheet be dragged up to full height. The content
+     * stretches to fill the sheet, so a child with `flex: 1` takes the extra
+     * space, and the menu stops scrolling at full height so that child can
+     * scroll instead. Read `nativeSnapPoint` from `useDialogContext()` to
+     * tell when the sheet is fully open.
+     *
+     * @default false
+     */
+    expandable?: boolean
     onCloseAutoFocus?: (event: Event) => void
   }
 >

@@ -1,3 +1,4 @@
+import {BottomSheetSnapPoint} from '@bsky.app/bottom-sheet'
 import {render} from '@testing-library/react-native'
 
 import * as Dialog from '#/components/Dialog'
@@ -20,10 +21,12 @@ jest.mock('#/components/Dialog', () => {
       <View>{children}</View>
     )),
     Handle: () => null,
-    ScrollableInner: ({children}: React.PropsWithChildren) => (
+    ScrollableInner: jest.fn(({children}: React.PropsWithChildren) => (
       <View>{children}</View>
-    ),
+    )),
     useDialogControl: () => ({open: jest.fn(), close: jest.fn()}),
+    // Not at full height unless a test says so
+    useDialogContext: jest.fn(() => ({})),
   }
 })
 jest.mock('#/components/Button', () => ({
@@ -31,7 +34,7 @@ jest.mock('#/components/Button', () => ({
   ButtonText: () => null,
 }))
 jest.mock('#/components/Typography', () => ({Text: () => null}))
-jest.mock('#/alf', () => ({atoms: {}}))
+jest.mock('#/alf', () => ({atoms: {flex_grow: {flexGrow: 1}}}))
 jest.mock('@lingui/react/macro', () => ({
   useLingui: () => ({t: () => 'Menu'}),
 }))
@@ -116,6 +119,61 @@ describe('native menu surface', () => {
         preventExpansion: true,
         minHeight: undefined,
       })
+    },
+  )
+
+  it('lets an expandable iPhone menu reach full height', () => {
+    render(
+      <Menu.Root>
+        <Menu.Outer expandable />
+      </Menu.Root>,
+    )
+
+    const props = jest.mocked(Dialog.Outer).mock.calls[0][0]
+    expect(props.nativeOptions).toMatchObject({preventExpansion: false})
+    expect(props.holdContentHeightWhenFull).toBe(true)
+  })
+
+  it('keeps an expandable menu at a fixed height on Android', () => {
+    jest.replaceProperty(env, 'IS_IOS', false)
+    jest.replaceProperty(env, 'IS_ANDROID', true)
+
+    render(
+      <Menu.Root>
+        <Menu.Outer expandable />
+      </Menu.Root>,
+    )
+
+    const props = jest.mocked(Dialog.Outer).mock.calls[0][0]
+    expect(props.nativeOptions).toMatchObject({preventExpansion: true})
+    expect(props.holdContentHeightWhenFull).toBe(false)
+  })
+
+  it.each([
+    {
+      snapPoint: 'partial',
+      nativeSnapPoint: BottomSheetSnapPoint.Partial,
+      fill: false,
+    },
+    {snapPoint: 'full', nativeSnapPoint: BottomSheetSnapPoint.Full, fill: true},
+  ])(
+    'only fills an expandable sheet at $snapPoint height when it is full',
+    ({nativeSnapPoint, fill}) => {
+      jest
+        .mocked(Dialog.useDialogContext)
+        .mockReturnValue({nativeSnapPoint} as ReturnType<
+          typeof Dialog.useDialogContext
+        >)
+
+      render(
+        <Menu.Root>
+          <Menu.Outer expandable />
+        </Menu.Root>,
+      )
+
+      const props = jest.mocked(Dialog.ScrollableInner).mock.calls[0][0]
+      expect(props.scrollEnabled).toBe(!fill)
+      expect(props.contentContainerStyle).toEqual(fill ? {flexGrow: 1} : false)
     },
   )
 })

@@ -85,6 +85,7 @@ export function Outer({
   onClose,
   preventDismiss = false,
   nativeOptions,
+  holdContentHeightWhenFull = false,
   testID,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const themeName = useThemeName()
@@ -107,6 +108,11 @@ export function Outer({
     BottomSheetSnapPoint.Partial,
   )
   const [desiredContentHeight, setDesiredContentHeight] = useState<number>()
+  /**
+   * The measured height when the sheet reached full height, sent in place of
+   * later measurements. See `holdContentHeightWhenFull`.
+   */
+  const [heldContentHeight, setHeldContentHeight] = useState<number>()
   const shouldMeasureContentHeight = shouldMeasureDialogContentHeight({
     isIOS: IS_IOS,
     isIPad: IS_IPAD,
@@ -143,6 +149,7 @@ export function Outer({
         }),
       )
       setDesiredContentHeight(undefined)
+      setHeldContentHeight(undefined)
       /*
        * A full-height sheet only has the large detent, so it always opens at
        * Full. Set that before the content mounts rather than waiting for
@@ -200,6 +207,13 @@ export function Outer({
   const onSnapPointChange = (e: BottomSheetSnapPointChangeEvent) => {
     const {snapPoint} = e.nativeEvent
     setSnapPoint(snapPoint)
+    if (holdContentHeightWhenFull) {
+      setHeldContentHeight(
+        snapPoint === BottomSheetSnapPoint.Full
+          ? desiredContentHeight
+          : undefined,
+      )
+    }
 
     if (
       snapPoint === BottomSheetSnapPoint.Full &&
@@ -307,7 +321,9 @@ export function Outer({
       onStateChange={onStateChange}
       onPresentationSizeChange={onPresentationSizeChange}
       desiredContentHeight={
-        shouldMeasureContentHeight ? desiredContentHeight : undefined
+        shouldMeasureContentHeight
+          ? (heldContentHeight ?? desiredContentHeight)
+          : undefined
       }
       disableDrag={disableDrag}>
       <SafeAreaInsetsContext.Provider

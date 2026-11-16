@@ -1,5 +1,6 @@
-import {useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {ScrollView, View} from 'react-native'
+import {BottomSheetSnapPoint} from '@bsky.app/bottom-sheet'
 import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -24,6 +25,7 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import {SHEET_GUTTER} from '#/components/ShareDialog/const'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {IS_IOS} from '#/env'
 import {type chat} from '#/lexicons'
 
 const WIDTH = 80
@@ -79,6 +81,16 @@ export function RecentChats({
   const control = useDialogContext()
   const {currentAccount} = useSession()
   const isGrid = layout === 'grid'
+  /*
+   * On iOS the share sheet drags up to full height (`expandable` on
+   * `Menu.Outer`), and then the grid fills it. Until then a swipe on the grid
+   * should move the sheet, so the grid only scrolls at full height. Popovers
+   * and Android sheets stay one height, so their grid always scrolls.
+   */
+  const sheetExpands = isGrid && IS_IOS && !control.isNativePopover
+  const isExpanded =
+    sheetExpands && control.nativeSnapPoint === BottomSheetSnapPoint.Full
+  const gridRef = useRef<React.ComponentRef<typeof ScrollView>>(null)
   const {data} = useListConvosQuery({
     status: 'accepted',
     lockStatus: 'unlocked',
@@ -105,6 +117,13 @@ export function RecentChats({
   /** Shows a line at the top of the grid once chats scroll under it. */
   const [isScrolled, setIsScrolled] = useState(false)
   const t = useTheme()
+
+  // The grid can't scroll at partial height, so go back to its first rows
+  useEffect(() => {
+    if (!isExpanded) {
+      gridRef.current?.scrollTo({y: 0, animated: false})
+    }
+  }, [isExpanded])
 
   const onSelectChat = (convoId: string, position: number) => {
     onBeforePress?.()
@@ -140,15 +159,26 @@ export function RecentChats({
 
   if (isGrid) {
     return (
-      <View style={[a.relative, {marginHorizontal: SHEET_GUTTER * -1}]}>
+      <View
+        style={[
+          a.relative,
+          isExpanded && a.flex_1,
+          {marginHorizontal: SHEET_GUTTER * -1},
+        ]}>
         <ScrollView
-          // Full height while loading, and for the empty state
-          style={{
-            height:
-              convos && convos.length > 0
-                ? getGridHeight(convos.length)
-                : GRID_HEIGHT,
-          }}
+          ref={gridRef}
+          style={
+            isExpanded
+              ? a.flex_1
+              : {
+                  // Full height while loading, and for the empty state
+                  height:
+                    convos && convos.length > 0
+                      ? getGridHeight(convos.length)
+                      : GRID_HEIGHT,
+                }
+          }
+          scrollEnabled={!sheetExpands || isExpanded}
           contentContainerStyle={[
             a.flex_row,
             a.flex_wrap,
