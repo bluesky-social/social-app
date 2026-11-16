@@ -606,80 +606,23 @@ class BottomSheetView(
     child: View?,
     index: Int,
   ) {
-    if (child != null) addContentView(child, index)
+    this.innerView = child
+    (child as ViewGroup).let {
+      dialogRootViewGroup.addView(child, index)
+    }
   }
 
   override fun removeView(view: View?) {
-    if (view != null) removeContentView(view)
+    UiThreadUtil.assertOnUiThread()
+    if (view != null) {
+      dialogRootViewGroup.removeView(view)
+    }
   }
 
   override fun removeViewAt(index: Int) {
-    removeContentViewAt(index)
-  }
-
-  /*
-   * React children live in dialogRootViewGroup, not in this view. Fabric resolves
-   * children through the view manager (see the GroupView block in BottomSheetModule),
-   * so these are what it calls. Without them it looks up children on this (always
-   * empty) view, treats every removal as already done, and the content stays attached
-   * to the dialog root after React deletes it.
-   *
-   * getChildCount()/getChildAt() are deliberately not overridden on the view itself:
-   * this is a LinearLayout, and its measure pass would start walking the dialog's views.
-   */
-
-  val contentChildCount: Int
-    get() = dialogRootViewGroup.childCount
-
-  fun getContentChildAt(index: Int): View? = dialogRootViewGroup.getChildAt(index)
-
-  fun addContentView(
-    child: View,
-    index: Int,
-  ) {
     UiThreadUtil.assertOnUiThread()
-    this.innerView = child
-    dialogRootViewGroup.addView(child, index)
-  }
-
-  fun removeContentView(child: View) {
-    UiThreadUtil.assertOnUiThread()
+    val child = getChildAt(index)
     dialogRootViewGroup.removeView(child)
-    if (this.innerView === child) {
-      this.innerView = null
-    }
-  }
-
-  fun removeContentViewAt(index: Int) {
-    getContentChildAt(index)?.let { removeContentView(it) }
-  }
-
-  /**
-   * Called when Fabric deletes this view. The JS wrapper unmounts the native view after
-   * every close, so this runs once per sheet. Without it the ReactContext lifecycle
-   * listener keeps every sheet (and its dialog root) alive for the life of the React
-   * host, and a sheet deleted while showing would leave its dialog on screen.
-   */
-  fun onDropInstance() {
-    UiThreadUtil.assertOnUiThread()
-    (appContext.reactContext as? ReactContext)?.removeLifecycleEventListener(this)
-    this.stopObservingContentHeight()
-    // Clean up before dismissing, so a dismiss that throws can't skip it
-    val dialog = this.dialog
-    this.dialog = null
-    this.innerView = null
-    SheetManager.remove(this)
-    if (dialog == null) return
-    // Don't let the dismiss listener emit state events for a view React already deleted
-    dialog.setOnDismissListener(null)
-    /*
-     * When the activity is recreated with a sheet open, Android detaches the dialog's
-     * window before Fabric deletes this view, and dismiss() then throws "not attached
-     * to window manager".
-     */
-    if (dialog.isShowing && dialog.window?.decorView?.isAttachedToWindow == true) {
-      dialog.dismiss()
-    }
   }
 
   override fun addChildrenForAccessibility(outChildren: ArrayList<View>?) { }
