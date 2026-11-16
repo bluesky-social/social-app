@@ -67,6 +67,7 @@ const CHILDREN_CHUNK_SIZE = 50
 
 export function PostThread({uri}: {uri: string}) {
   const ax = useAnalytics()
+  const showViewCount = ax.features.enabled(ax.features.PostViewCountsEnable)
   const {gtMobile} = useBreakpoints()
   const {hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender()
@@ -480,6 +481,7 @@ export function PostThread({uri}: {uri: string}) {
               <FeedItemProvider value={anchorFeedItem}>
                 <ThreadItemAnchor
                   item={item}
+                  showViewCount={showViewCount}
                   threadgateRecord={thread.data.threadgate?.record ?? undefined}
                   onPostSuccess={optimisticOnPostReply}
                 />
@@ -555,7 +557,14 @@ export function PostThread({uri}: {uri: string}) {
       }
       return null
     },
-    [thread, optimisticOnPostReply, onReplyToAnchor, gtMobile, anchorFeedItem],
+    [
+      thread,
+      optimisticOnPostReply,
+      onReplyToAnchor,
+      gtMobile,
+      anchorFeedItem,
+      showViewCount,
+    ],
   )
 
   const defaultListFooterHeight = hasParents ? windowHeight - 200 : undefined

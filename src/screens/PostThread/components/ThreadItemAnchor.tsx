@@ -65,10 +65,12 @@ import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({
   item,
+  showViewCount = false,
   onPostSuccess,
   threadgateRecord,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
+  showViewCount?: boolean
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: app.bsky.feed.threadgate.Main
 }) {
@@ -84,6 +86,7 @@ export function ThreadItemAnchor({
     <ReportDialogMetadataContext.Provider key={postShadow.uri}>
       <ThreadItemAnchorInner
         item={item}
+        showViewCount={showViewCount}
         isRoot={isRoot}
         postShadow={postShadow}
         onPostSuccess={onPostSuccess}
@@ -161,12 +164,14 @@ function ThreadItemAnchorParentReplyLine({isRoot}: {isRoot: boolean}) {
 
 const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   item,
+  showViewCount,
   isRoot,
   postShadow,
   onPostSuccess,
   threadgateRecord,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
+  showViewCount: boolean
   isRoot: boolean
   postShadow: Shadow<app.bsky.feed.defs.PostView>
   onPostSuccess?: (data: OnPostSuccessData) => void
@@ -395,6 +400,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
             <ExpandedPostDetails
               post={item.value.post}
               isThreadAuthor={isThreadAuthor}
+              showViewCount={showViewCount}
             />
             {post.repostCount !== 0 ||
             post.likeCount !== 0 ||
@@ -507,9 +513,11 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 function ExpandedPostDetails({
   post,
   isThreadAuthor,
+  showViewCount,
 }: {
   post: Extract<ThreadItem, {type: 'threadPost'}>['value']['post']
   isThreadAuthor: boolean
+  showViewCount: boolean
 }) {
   const t = useTheme()
   const {i18n} = useLingui()
@@ -522,7 +530,7 @@ function ExpandedPostDetails({
     separator: 0,
     reply: 0,
   })
-  const hasCount = widths.count > 0
+  const hasCount = showViewCount && widths.count > 0
   const wrapCount =
     hasCount &&
     widths.available > 0 &&
@@ -542,7 +550,7 @@ function ExpandedPostDetails({
     setWidths(prev => (prev[part] === width ? prev : {...prev, [part]: width}))
   }
 
-  const viewCount = (
+  const viewCount = showViewCount ? (
     <View
       key="count"
       style={[
@@ -557,7 +565,7 @@ function ExpandedPostDetails({
         <PostViewCount key={post.uri} post={post} />
       </View>
     </View>
-  )
+  ) : null
   const reply = isRootPost ? (
     <View
       key="reply"
