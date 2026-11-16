@@ -129,12 +129,7 @@ function DocumentCompactBase({
         onFocus={onInteract}
         onBlur={onInteractOut}>
         <View style={containerStyle}>
-          <View
-            style={[
-              a.w_full,
-              a.gap_sm,
-              card && [a.rounded_lg, a.overflow_hidden],
-            ]}>
+          <View style={[a.w_full, a.gap_sm]}>
             {!!publisher && (
               <View
                 style={[

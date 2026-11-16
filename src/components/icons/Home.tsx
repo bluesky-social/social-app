@@ -21,13 +21,13 @@ export const Home_Stroke2_Corner2_Rounded = createSinglePathSVG({
 })
 
 export const HomeOpen_Filled_Corner0_Rounded = createSinglePathSVG({
-  path: 'M12.63 1.724a1 1 0 0 0-1.26 0l-8 6.5A1 1 0 0 0 3 9v11a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-6h4v6a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V9a1 1 0 0 0-.37-.776l-8-6.5Z',
+  path: 'M13.976 2.4a3 3 0 0 0-3.952 0l-6 5.25A3 3 0 0 0 3 9.907V18a3 3 0 0 0 3 3h2a2 2 0 0 0 2-2v-3a2 2 0 0 1 4 0v3a2 2 0 0 0 2 2h2a3 3 0 0 0 3-3V9.907a3 3 0 0 0-1.024-2.257l-6-5.25Z',
   viewBox: '0 0 24 24',
   glyph: 'HomeOpen_Filled_Corner0_Rounded',
 })
 
 export const HomeOpen_Stroke2_Corner0_Rounded = createSinglePathSVG({
-  path: 'M11.37 1.724a1 1 0 0 1 1.26 0l8 6.5A1 1 0 0 1 21 9v11a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1v-5h-2v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 .37-.776l8-6.5ZM5 9.476V19h4v-5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v5h4V9.476l-7-5.688-7 5.688Z',
+  path: 'M19 18V9.908a1 1 0 0 0-.342-.753l-6-5.25a1 1 0 0 0-1.316 0l-6 5.25A1 1 0 0 0 5 9.908V18a1 1 0 0 0 1 1h3v-3a3 3 0 1 1 6 0v3h3a1 1 0 0 0 1-1Zm2 0a3 3 0 0 1-3 3h-3a2 2 0 0 1-2-2v-3a1 1 0 1 0-2 0v3a2 2 0 0 1-2 2H6a3 3 0 0 1-3-3V9.908A3 3 0 0 1 4.024 7.65l6-5.25a3 3 0 0 1 3.952 0l6 5.25A3 3 0 0 1 21 9.908V18Z',
   viewBox: '0 0 24 24',
   glyph: 'HomeOpen_Stroke2_Corner0_Rounded',
 })

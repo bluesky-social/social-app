@@ -9,8 +9,11 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
-import {type NavigationState} from '@react-navigation/native'
-import {StackActions, useNavigation} from '@react-navigation/native'
+import {
+  type NavigationState,
+  StackActions,
+  useNavigation,
+} from '@react-navigation/native'
 
 import {
   FEEDBACK_FORM_URL,
@@ -222,7 +225,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   } = useNavigationTabState()
   const {hasSession, currentAccount} = useSession()
   const inviteFriendsControl = useDialogControl()
-  const isAtmosphereExploreEnabled = ax.features.enabled(
+  const isAtmosphereEnabled = ax.features.enabled(
     ax.features.AtmosphereScreenEnable,
   )
 
@@ -413,7 +416,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
               isActive={isAtNotifications}
               onPress={onPressNotifications}
             />
-            {isAtmosphereExploreEnabled && (
+            {isAtmosphereEnabled && (
               <AtmosphereMenuItem
                 isActive={isAtAtmosphere}
                 onPress={onPressAtmosphere}
@@ -543,27 +546,6 @@ let SearchMenuItem = ({
 }
 SearchMenuItem = memo(SearchMenuItem)
 
-function AtmosphereMenuItem({
-  isActive,
-  onPress,
-}: {
-  isActive: boolean
-  onPress: () => void
-}) {
-  const {t: l} = useLingui()
-  const t = useTheme()
-
-  return (
-    <MenuItem
-      icon={<EarthIcon style={[t.atoms.text]} width={iconWidth} />}
-      label={l`Atmosphere`}
-      beta
-      bold={isActive}
-      onPress={onPress}
-    />
-  )
-}
-
 let HomeMenuItem = ({
   isActive,
   onPress,
@@ -651,6 +633,26 @@ let NotificationsMenuItem = ({
   )
 }
 NotificationsMenuItem = memo(NotificationsMenuItem)
+
+function AtmosphereMenuItem({
+  isActive,
+  onPress,
+}: {
+  isActive: boolean
+  onPress: () => void
+}) {
+  const {t: l} = useLingui()
+  const t = useTheme()
+  return (
+    <MenuItem
+      icon={<EarthIcon width={iconWidth} style={[t.atoms.text]} />}
+      label={l`Atmosphere`}
+      beta
+      bold={isActive}
+      onPress={onPress}
+    />
+  )
+}
 
 let FeedsMenuItem = ({
   isActive,
@@ -746,16 +748,8 @@ ProfileMenuItem = memo(ProfileMenuItem)
 let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   const {i18n, t: l} = useLingui()
   const t = useTheme()
-  const ax = useAnalytics()
-  const isModerationInboxEnabled = ax.features.enabled(
-    ax.features.ModerationInboxEnable,
-  )
-  const unreadCountQuery = useModerationInboxUnreadCountQuery(
-    isModerationInboxEnabled,
-  )
-  const unreadCount = isModerationInboxEnabled
-    ? (unreadCountQuery.data?.unreadCounts.total ?? 0)
-    : 0
+  const unreadCountQuery = useModerationInboxUnreadCountQuery()
+  const unreadCount = unreadCountQuery.data?.unreadCounts.total ?? 0
   const count =
     unreadCount > 0
       ? unreadCount >= UNREAD_NOTIFICATION_CAP
@@ -787,23 +781,24 @@ let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
 SettingsMenuItem = memo(SettingsMenuItem)
 
 function MenuItem({
+  beta,
   icon,
   label,
   count,
   bold,
-  beta,
   onPress,
   accessibilityHint,
 }: MenuItemProps) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const accessibilityLabel = beta ? l`${label}, Beta` : label
   return (
     <Button
       testID={`menuItemButton-${label}`}
       onPress={onPress}
       accessibilityRole="tab"
       accessibilityHint={accessibilityHint}
-      label={beta ? l`${label}, Beta` : label}>
+      label={accessibilityLabel}>
       {({hovered, pressed}) => (
         <View
           style={[

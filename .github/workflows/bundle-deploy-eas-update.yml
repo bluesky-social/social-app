@@ -202,7 +202,7 @@ jobs:
         run: pnpm icons:check
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
+        uses: expo/expo-github-action@9da89d3617bb88139671bad31b09c65714c2ee06 # 9.0.1
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
           !steps.version.outputs.version-changed }}
         with:
@@ -254,6 +254,49 @@ jobs:
           app-id: ${{ vars.SYNC_INTERNAL_APP_ID }}
           private-key: ${{ secrets.SYNC_INTERNAL_PK }}
 
+      - name: ⬇️ Load main testflight build numbers
+        id: build-numbers
+        if: ${{ !steps.fingerprint.outputs.includes-changes &&
+          !steps.version.outputs.version-changed &&
+          (inputs.channel || 'testflight') == 'testflight' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY_ID: ${{ github.repository_id }}
+        run: |
+          set -o pipefail
+          for platform in ios android; do
+            # A delayed submission or rerun must not displace a newer workflow run.
+            url=$(
+              gh api \
+                "repos/${GITHUB_REPOSITORY}/actions/artifacts?name=testflight-$platform-build-number&per_page=100" \
+                --jq ".artifacts[] | select(
+                  .expired == false and
+                  .workflow_run.head_branch == \"main\" and
+                  .workflow_run.head_repository_id == (\$ENV.REPOSITORY_ID | tonumber)
+                ) | [.workflow_run.id, .archive_download_url] | @tsv" \
+                2>/dev/null |
+              while IFS=$'\t' read -r run_id artifact_url; do
+                created_at=$(gh api --cache 1h \
+                  "repos/${GITHUB_REPOSITORY}/actions/runs/$run_id" \
+                  --jq '.created_at' 2>/dev/null) || exit 1
+                printf '%s\t%s\n' "$created_at" "$artifact_url"
+              done |
+              sort | tail -n 1 | cut -f 2
+            ) || url=""
+
+            number=""
+            if [ -n "$url" ] && [ "$url" != "null" ]; then
+              curl -sSL -H "Authorization: Bearer $GH_TOKEN" -o "$platform.zip" "$url" \
+                && number=$(unzip -p "$platform.zip" "$platform-build-number" 2>/dev/null) || true
+            fi
+            if [[ "$number" =~ ^[0-9]+$ ]]; then
+              echo "$platform build number: $number"
+              echo "$platform=$number" >> "$GITHUB_OUTPUT"
+            else
+              echo "::warning::No $platform build number recorded from main; stamping with the global EAS counter."
+            fi
+          done
+
       - name: 🚀 Publish OTA to denis (S3)
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
           !steps.version.outputs.version-changed }}
@@ -263,8 +306,8 @@ jobs:
           CHANNEL_NAME: ${{ inputs.channel || 'testflight' }}
           # When set (required for production), these take precedence over the
           # global EAS counters inside the use-build-number wrapper
-          BSKY_IOS_BUILD_NUMBER: ${{ inputs.iosBuildNumber }}
-          BSKY_ANDROID_VERSION_CODE: ${{ inputs.androidVersionCode }}
+          BSKY_IOS_BUILD_NUMBER: ${{ inputs.iosBuildNumber || steps.build-numbers.outputs.ios }}
+          BSKY_ANDROID_VERSION_CODE: ${{ inputs.androidVersionCode || steps.build-numbers.outputs.android }}
 
   buildIfNecessaryIOS:
     name: Build and Submit iOS

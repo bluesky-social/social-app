@@ -564,12 +564,22 @@ function ExpandedPostDetails({
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
       <BackdatedPostIndicator post={post} />
-      <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
-        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+      <View
+        style={[
+          a.self_stretch,
+          a.flex_row,
+          a.align_center,
+          a.flex_wrap,
+          a.gap_md,
+        ]}>
+        <Text
+          style={[a.text_sm, t.atoms.text_contrast_medium, {maxWidth: '100%'}]}>
           {niceDate(i18n, post.indexedAt, 'dot separated')}
         </Text>
         {isRootPost && (
-          <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
+          <View style={{marginLeft: 'auto'}}>
+            <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} plain />
+          </View>
         )}
       </View>
     </View>

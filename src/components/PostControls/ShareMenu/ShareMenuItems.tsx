@@ -1,4 +1,5 @@
 import {memo, useMemo} from 'react'
+import {Platform} from 'react-native'
 import * as ExpoClipboard from 'expo-clipboard'
 import {AtUri} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -28,11 +29,26 @@ import {IS_IOS} from '#/env'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {RecentChats} from './RecentChats'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'
+import {ShareSheetItems} from './ShareSheetItems'
 
-let ShareMenuItems = ({
+let ShareMenuItems = (props: ShareMenuItemsProps): React.ReactNode => {
+  const ax = useAnalytics()
+  if (ax.features.enabled(ax.features.ShareDestinationsEnable)) {
+    return <ShareSheetItems {...props} />
+  }
+  return <LegacyShareMenuItems {...props} />
+}
+ShareMenuItems = memo(ShareMenuItems)
+export {ShareMenuItems}
+
+/**
+ * The share menu before the redesign. Delete with the
+ * `share_destinations:enable` flag.
+ */
+function LegacyShareMenuItems({
   post,
   onShare: onShareProp,
-}: ShareMenuItemsProps): React.ReactNode => {
+}: ShareMenuItemsProps): React.ReactNode {
   const ax = useAnalytics()
   const {hasSession} = useSession()
   const {t: l} = useLingui()
@@ -57,7 +73,12 @@ let ShareMenuItems = ({
   }, [postAuthor])
 
   const onSharePost = () => {
-    ax.metric('share:press:nativeShare', {})
+    ax.metric('share:press:nativeShare', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      entryPoint: 'ShareMenu',
+      os: Platform.OS,
+    })
     const url = toShareUrl(href)
     void shareUrl(url).then(result => {
       if (!result) return
@@ -91,10 +112,15 @@ let ShareMenuItems = ({
   }
 
   const onSelectChatToShareTo = (conversation: string) => {
+    ax.metric('share:press:dmSelected', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+    })
     onBeforeShareViaChat()
     navigation.navigate('MessagesConversation', {
       conversation,
       embed: postUri,
+      embedSource: 'chatSearch',
     })
   }
 
@@ -114,6 +140,7 @@ let ShareMenuItems = ({
             <Menu.ContainerItem>
               <RecentChats
                 postUri={postUri}
+                authorDid={postAuthor.did}
                 onBeforePress={onBeforeShareViaChat}
               />
             </Menu.ContainerItem>
@@ -121,7 +148,10 @@ let ShareMenuItems = ({
               testID="postDropdownSendViaDMBtn"
               label={l`Send via chat`}
               onPress={() => {
-                ax.metric('share:press:openDmSearch', {})
+                ax.metric('share:press:openDmSearch', {
+                  uri: postUri,
+                  authorDid: postAuthor.did,
+                })
                 sendViaChatControl.open()
               }}>
               <Menu.ItemText>
@@ -196,5 +226,3 @@ let ShareMenuItems = ({
     </>
   )
 }
-ShareMenuItems = memo(ShareMenuItems)
-export {ShareMenuItems}

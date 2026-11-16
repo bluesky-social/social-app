@@ -128,11 +128,15 @@ describe('useKeyboardHandlers (web)', () => {
     },
   )
 
-  it('stops listening on unmount', () => {
+  it('cancels pending navigation on unmount', () => {
     const {unmount} = setup()
     expect(dom.window.listenerCount('keydown')).toBe(1)
+    press('ArrowRight', button)
     unmount()
+    dom.flushFrames()
     expect(dom.window.listenerCount('keydown')).toBe(0)
+    expect(scrollTo).not.toHaveBeenCalled()
+    expect(onSettle).not.toHaveBeenCalled()
   })
 
   it('stops listening when items drop to one', () => {

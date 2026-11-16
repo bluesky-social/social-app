@@ -159,9 +159,8 @@ class BottomSheetView(
 
       // The dialog container's measured WIDTH is the authoritative canvas width: it
       // already accounts for the window's horizontal insets, Material's max-width cap on
-      // tablets and the current rotation. DialogRootViewGroup's own updateNodeSize() path
-      // is a no-op on the new architecture (getNativeModule(UIManagerModule) returns null
-      // under Fabric), so this state channel is what actually gets the width across there.
+      // tablets and the current rotation. This state channel is the only way that width
+      // reaches the content's shadow node.
       //
       // Its measured HEIGHT is deliberately ignored - see canvasHeight.
       this.dialogRootViewGroup.setOnSizeChangeListener(
@@ -230,9 +229,7 @@ class BottomSheetView(
    * back and forth forever.
    *
    * stateWrapper is assigned while Fabric mounts the view, before the first layout pass,
-   * so setViewSize() should already reach the shadow tree from here. On the old
-   * architecture it is null and this no-ops, which is fine: DialogRootViewGroup's legacy
-   * updateNodeSize() path still sizes the content there.
+   * so setViewSize() should already reach the shadow tree from here.
    */
   private fun seedCanvasSize() {
     if (lastPushedCanvasWidth > 0f) return
@@ -306,8 +303,8 @@ class BottomSheetView(
     // re-fires onLayout, and onLayout re-enters present(). Full-height sheets don't
     // need a content measurement, so they can go ahead immediately.
     //
-    // Only gate when there is a state channel to wait on. Without one (old architecture)
-    // nothing would ever resize this view, and the sheet would never present.
+    // Only gate when there is a state channel to wait on. Without one nothing would ever
+    // resize this view, and the sheet would never present.
     if (stateWrapper != null && !fullHeight && contentHeight <= 0f) return
 
     var activityWindow: Window? = null

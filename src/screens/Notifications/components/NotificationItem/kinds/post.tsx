@@ -2,7 +2,7 @@ import {View} from 'react-native'
 
 import {POST_TOMBSTONE, usePostShadow} from '#/state/cache/post-shadow'
 import {type ParentPost} from '#/state/queries/notifications/grouped/types'
-import {atoms as a} from '#/alf'
+import {atoms as a, web} from '#/alf'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {
   NotificationMentionSmall_Filled_Corner0_Rounded as MentionIcon,
@@ -97,7 +97,11 @@ function PostNotification({
       testID={`notification-${notification.type}-${notification.id}`}>
       <Item.Avatar profile={post.author} icon={icon} tone="conversation" />
       <Item.Content style={[a.gap_sm]}>
-        <View style={[a.gap_xs]}>
+        {/*
+         * Every View on web is a stacking context, so without the lift the
+         * actions paint over the timestamp's hover tooltip
+         */}
+        <View style={[a.gap_xs, web({zIndex: 1})]}>
           <Item.Author profile={post.author} />
           {parent && (
             <Item.ReplyContext parent={parent} variant={replyVariant} />

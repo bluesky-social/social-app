@@ -19,7 +19,7 @@ import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {LabelerLabelPreference} from '#/components/moderation/LabelPreference'
 import {Text} from '#/components/Typography'
-import {IS_IOS, IS_NATIVE} from '#/env'
+import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
 import {ErrorState} from '../ErrorState'
 import {type SectionRef} from './types'
@@ -61,7 +61,7 @@ export function ProfileLabelsSection({
   }))
 
   useEffect(() => {
-    if (IS_IOS && isFocused && scrollElRef.current) {
+    if (IS_NATIVE && isFocused && scrollElRef.current) {
       const nativeTag = findListNativeTag(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }

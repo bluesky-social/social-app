@@ -1,3 +1,4 @@
+import {Platform} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {useLingui} from '@lingui/react/macro'
 
@@ -53,7 +54,11 @@ export function PostMenuControlItems({
     feedDescriptor,
     logContext,
   )
-  const {isBookmarked, toggleBookmark} = usePostBookmark({post, logContext})
+  const {isBookmarked, toggleBookmark} = usePostBookmark({
+    post,
+    logContext,
+    entryPoint: 'PostMenu',
+  })
 
   const isReposted = Boolean(post.viewer?.repost)
   const embeddingDisabled = Boolean(post.viewer?.embeddingDisabled)
@@ -142,7 +147,12 @@ export function PostMenuControlItems({
     if (IS_WEB) {
       ax.metric('share:press:copyLink', {uri: post.uri})
     } else {
-      ax.metric('share:press:nativeShare', {})
+      ax.metric('share:press:nativeShare', {
+        uri: post.uri,
+        authorDid: post.author.did,
+        entryPoint: 'PostMenu',
+        os: Platform.OS,
+      })
     }
     const {rkey} = new AtUri(post.uri)
     void shareUrl(toShareUrl(makeProfileLink(post.author, 'post', rkey)))

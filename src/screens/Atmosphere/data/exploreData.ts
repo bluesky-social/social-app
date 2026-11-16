@@ -1,5 +1,11 @@
 import {type $Typed, type UriString} from '@atproto/lex'
+import {
+  mergeModUIResults,
+  type ModerationOpts,
+  type ModerationSubjectExternalView,
+} from '@bsky/sdk/moderation'
 
+import {moderateExternalView} from '#/lib/moderation/moderateExternalView'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
@@ -28,42 +34,83 @@ export function getAssociatedProfile(
     : undefined
 }
 
+/** The most images the photo dialog shows from one gallery. */
+const MAX_GALLERY_IMAGES = 10
+
+/**
+ * Valid, supported images in server order, capped at ten. Unsupported union
+ * members and images that fail schema validation are skipped.
+ */
+export function getGalleryImages(
+  gallery: app.bsky.embed.external.ViewGallery,
+): $Typed<app.bsky.embed.external.ViewGalleryImage>[] {
+  return gallery.items
+    .filter(
+      (item): item is $Typed<app.bsky.embed.external.ViewGalleryImage> =>
+        bsky.isType(app.bsky.embed.external.viewGalleryImage, item) &&
+        bsky.matches(app.bsky.embed.external.viewGalleryImage, item),
+    )
+    .slice(0, MAX_GALLERY_IMAGES)
+}
+
 export function getGalleryImage(
   gallery: app.bsky.embed.external.ViewGallery,
 ): $Typed<app.bsky.embed.external.ViewGalleryImage> | undefined {
-  return gallery.items.find(
-    (item): item is $Typed<app.bsky.embed.external.ViewGalleryImage> =>
-      bsky.isType(app.bsky.embed.external.viewGalleryImage, item) &&
-      bsky.matches(app.bsky.embed.external.viewGalleryImage, item),
+  return getGalleryImages(gallery)[0]
+}
+
+/** Explore omits cards that would need either a content or media blur. */
+function isExternalViewVisible(
+  view: ModerationSubjectExternalView,
+  opts: ModerationOpts,
+): boolean {
+  const moderation = moderateExternalView(view, opts)
+  const ui = mergeModUIResults(
+    moderation.ui('contentList'),
+    moderation.ui('contentView'),
+    moderation.ui('contentMedia'),
   )
+  return !ui.filter && !ui.blur
 }
 
 export function getAtmosphereArticles(
   data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody,
+  moderationOpts: ModerationOpts | undefined,
 ): app.bsky.embed.external.ViewArticle[] {
+  if (!moderationOpts) return []
   return dedupeBy(
     data.articles.items
       .map(({view}) => view)
-      .filter(article => article.publisher),
+      .filter(
+        article =>
+          article.publisher &&
+          isExternalViewVisible(article, moderationOpts) &&
+          isExternalViewVisible(article.publisher, moderationOpts),
+      ),
     article => article.uri,
   ).slice(0, 5)
 }
 
 export function getAtmospherePublications(
   data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody,
+  moderationOpts: ModerationOpts | undefined,
 ): app.bsky.embed.external.ViewArticlePublication[] {
+  if (!moderationOpts) return []
   return dedupeBy(
-    data.publications.items.map(({view}) => view),
+    data.publications.items
+      .map(({view}) => view)
+      .filter(publication =>
+        isExternalViewVisible(publication, moderationOpts),
+      ),
     publication => publication.uri,
   )
     .sort((a, b) => b.description.trim().length - a.description.trim().length)
     .slice(0, 5)
 }
-
 /**
  * Returns the valid apps, optionally limited to a raw backend `category`.
  * Omit `category` for all apps, including those with a missing or unknown
- * category.
+ * category. Apps need a website or a profile to link to.
  */
 export function getAtmosphereApps(
   data: app.bsky.unspecced.getAtmosphereApps.$OutputBody,
@@ -74,7 +121,7 @@ export function getAtmosphereApps(
       app =>
         app.id &&
         app.title &&
-        app.url &&
+        (app.url || app.profile) &&
         (category === undefined || app.category === category),
     ),
     app => app.id,
@@ -85,13 +132,13 @@ export function getAtmosphereApps(
 export type FeaturedApp = app.bsky.unspecced.getAtmosphereExploreTab.AppCard & {
   id: string
   title: string
-  url: UriString
   backgroundImage: UriString
 }
 
 /**
  * Returns the valid apps for the featured gallery. Unlike the Apps tab, these
- * need a banner image because the card is built around it.
+ * need a banner image because the card is built around it. Like the Apps tab,
+ * they need a website or a profile to link to.
  */
 export function getAtmosphereExploreApps(
   data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody,
@@ -99,7 +146,12 @@ export function getAtmosphereExploreApps(
   return dedupeBy(
     data.apps.filter(
       (app): app is FeaturedApp =>
-        !!(app.id && app.title && app.url && app.backgroundImage),
+        !!(
+          app.id &&
+          app.title &&
+          app.backgroundImage &&
+          (app.url || app.profile)
+        ),
     ),
     app => app.id,
   )
@@ -130,14 +182,17 @@ export function getAtmosphereLivestreams(
 
 export function getAtmospherePhotos(
   data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody,
+  moderationOpts: ModerationOpts | undefined,
 ): app.bsky.embed.external.ViewGallery[] {
+  if (!moderationOpts) return []
   return dedupeBy(
     data.photos.items
       .map(({view}) => view)
       .filter(
         photo =>
           getGalleryImage(photo) &&
-          getAssociatedProfile(photo.associatedProfiles),
+          getAssociatedProfile(photo.associatedProfiles) &&
+          isExternalViewVisible(photo, moderationOpts),
       ),
     photo => photo.uri,
   )

@@ -2,6 +2,7 @@ import {useState} from 'react'
 import {RefreshControl, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {
@@ -14,11 +15,11 @@ import {
 } from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
 import {atoms as a, useTheme} from '#/alf'
+import * as Gallery from '#/components/Gallery'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {AnnouncementBanner} from './components/AnnouncementBanner'
 import {AtmosphereNux} from './components/AtmosphereNux'
-import {ExploreGalleryBleed} from './components/ExploreGallery'
 import {FeaturedApps} from './components/FeaturedApps'
 import {FeaturedArticles} from './components/FeaturedArticles'
 import {FeaturedLivestreams} from './components/FeaturedLivestreams'
@@ -33,6 +34,7 @@ export function AtmosphereExploreTab({
   const t = useTheme()
   const {t: l} = useLingui()
   const {data, isError, isPending, refetch} = useAtmosphereExploreQuery()
+  const moderationOpts = useModerationOpts()
   const [isRefreshing, setIsRefreshing] = useState(false)
 
   async function onRefresh() {
@@ -92,8 +94,8 @@ export function AtmosphereExploreTab({
       alwaysBounceVertical
       refreshControl={refreshControl}
       contentContainerStyle={[a.pb_xl]}>
-      <ExploreGalleryBleed>
-        <View style={[a.gap_xl, a.py_lg]}>
+      <Gallery.Bleed>
+        <View style={[a.gap_lg, a.py_lg]}>
           {isError ? (
             <View style={{paddingHorizontal: EXPLORE_SECTION_PADDING}}>
               {errorMessage}
@@ -107,14 +109,16 @@ export function AtmosphereExploreTab({
             apps={getAtmosphereExploreApps(data)}
             onPressSeeMore={onPressSeeMoreApps}
           />
-          <FeaturedArticles articles={getAtmosphereArticles(data)} />
+          <FeaturedArticles
+            articles={getAtmosphereArticles(data, moderationOpts)}
+          />
           <FeaturedLivestreams livestreams={getAtmosphereLivestreams(data)} />
-          <FeaturedPhotos photos={getAtmospherePhotos(data)} />
+          <FeaturedPhotos photos={getAtmospherePhotos(data, moderationOpts)} />
           <FeaturedPublications
-            publications={getAtmospherePublications(data)}
+            publications={getAtmospherePublications(data, moderationOpts)}
           />
         </View>
-      </ExploreGalleryBleed>
+      </Gallery.Bleed>
     </Layout.Content>
   )
 }
