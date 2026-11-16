@@ -57,6 +57,7 @@ export function Composer() {
                 onPost={state?.onPost}
                 onPostSuccess={state?.onPostSuccess}
                 quote={state?.quote}
+                quoteUri={state?.quoteUri}
                 mention={state?.mention}
                 text={state?.text}
                 imageUris={state?.imageUris}

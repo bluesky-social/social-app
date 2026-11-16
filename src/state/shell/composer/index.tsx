@@ -40,6 +40,12 @@ export interface ComposerOpts {
   onPost?: (postUri: string | undefined) => void
   onPostSuccess?: (data: OnPostSuccessData) => void
   quote?: app.bsky.feed.defs.PostView
+  /**
+   * A post to quote by at-uri, for callers that only have the URI. Unlike
+   * `quote`, the composer fetches and checks the post itself, and drops the
+   * quote if it can't be loaded or quoted.
+   */
+  quoteUri?: string
   mention?: string // handle of user to mention
   text?: string
   imageUris?: {uri: string; width: number; height: number; altText?: string}[]
