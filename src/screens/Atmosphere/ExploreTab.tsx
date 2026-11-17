@@ -63,7 +63,8 @@ export function AtmosphereExploreTab({
     ? getAtmospherePublications(data, moderationOpts)
     : []
   const metrics = useLoadMetrics({
-    hasData: !!data,
+    // Moderated sections stay empty until moderation options load
+    hasData: !!data && !!moderationOpts,
     isError,
     itemCount:
       apps.length +

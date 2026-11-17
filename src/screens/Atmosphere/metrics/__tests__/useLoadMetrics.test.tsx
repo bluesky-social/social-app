@@ -86,6 +86,46 @@ it('waits until shown to log already loaded data', () => {
   ])
 })
 
+it('only counts time in view, and logs a load that settled while away on return', () => {
+  const update = renderTab({hasData: false, isError: false, itemCount: 0})
+  jest.setSystemTime(300)
+  update({hasData: false, isError: false, itemCount: 0}, false)
+  jest.setSystemTime(5000)
+  update({hasData: true, isError: false, itemCount: 2}, false)
+  expect(mockMetric).not.toHaveBeenCalled()
+
+  jest.setSystemTime(9000)
+  update({hasData: true, isError: false, itemCount: 2})
+  expect(loaded('atmosphere:content:loaded')).toEqual([
+    [
+      'atmosphere:content:loaded',
+      expect.objectContaining({
+        state: 'populated',
+        itemCount: 2,
+        durationMs: 300,
+        hasCachedData: false,
+      }),
+    ],
+  ])
+})
+
+it('keeps timing across a return before the load settles', () => {
+  const update = renderTab({hasData: false, isError: false, itemCount: 0})
+  jest.setSystemTime(200)
+  update({hasData: false, isError: false, itemCount: 0}, false)
+  jest.setSystemTime(4000)
+  update({hasData: false, isError: false, itemCount: 0})
+  jest.setSystemTime(4100)
+  update({hasData: false, isError: true, itemCount: 0})
+
+  expect(loaded('atmosphere:content:loaded')).toEqual([
+    [
+      'atmosphere:content:loaded',
+      expect.objectContaining({state: 'error', durationMs: 300}),
+    ],
+  ])
+})
+
 it('logs a failed first load as an error', () => {
   renderTab({hasData: false, isError: true, itemCount: 0})
 

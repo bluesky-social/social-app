@@ -7,10 +7,15 @@ import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/ex
 import {livestreamPreviewFixture} from '#/screens/Atmosphere/__tests__/fixtures/livestreamPreview'
 import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
 import {AtmosphereExploreTab} from '#/screens/Atmosphere/ExploreTab'
+import {
+  AtmosphereMetricsScope,
+  createVisit,
+} from '#/screens/Atmosphere/metrics/context'
 import {app} from '#/lexicons'
 
+const mockMetric = jest.fn()
 jest.mock('#/analytics', () => ({
-  useAnalytics: () => ({metric: jest.fn()}),
+  useAnalytics: () => ({metric: mockMetric}),
 }))
 
 jest.mock('@lingui/react', () => ({
@@ -20,6 +25,10 @@ jest.mock('@lingui/react', () => ({
   }),
 }))
 
+// Section impressions are covered elsewhere and need real host views
+jest.mock('#/screens/Atmosphere/metrics/visibility', () => ({
+  useIsVisible: () => false,
+}))
 jest.mock('#/state/preferences/moderation-opts', () => ({
   useModerationOpts: () => mockModerationOpts,
 }))
@@ -217,6 +226,35 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.queryByText(/^photos:/)).toBeNull()
     expect(screen.queryByText(/^publications:/)).toBeNull()
     expect(screen.getByText(/^apps:/)).toBeTruthy()
+  })
+
+  it('logs the first load once moderated sections can be counted', () => {
+    mockModerationOpts = undefined
+    setQuery({data})
+    const tree = () => (
+      <AtmosphereMetricsScope
+        tab="explore"
+        surface="tab"
+        isActive
+        visit={createVisit()}>
+        <AtmosphereExploreTab />
+      </AtmosphereMetricsScope>
+    )
+    const {rerender} = render(tree())
+    const loaded = () =>
+      mockMetric.mock.calls.filter(
+        ([name]) => name === 'atmosphere:content:loaded',
+      )
+    expect(loaded()).toEqual([])
+
+    mockModerationOpts = defaultModerationOpts
+    rerender(tree())
+    expect(loaded()).toEqual([
+      [
+        'atmosphere:content:loaded',
+        expect.objectContaining({state: 'populated', itemCount: 2}),
+      ],
+    ])
   })
 
   it('reapplies changed moderation preferences to cached views without refetching', () => {

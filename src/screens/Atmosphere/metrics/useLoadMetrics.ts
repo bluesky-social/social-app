@@ -12,7 +12,11 @@ export function useLoadMetrics({
   isError,
   itemCount,
 }: {
-  /** Whether the query has any data, even if a later fetch failed. */
+  /**
+   * Whether the query has data ready to show, even if a later fetch failed.
+   * Leave false until anything needed to count the items, like moderation
+   * options, is ready too.
+   */
   hasData: boolean
   isError: boolean
   itemCount: number
@@ -21,23 +25,48 @@ export function useLoadMetrics({
   const {scope} = useAtmosphereMetricsSnapshot()
   const context = scope && {tab: scope.tab, surface: scope.surface}
   const isActive = !!scope?.isActive
-  const shown = useRef<{at: number; hadData: boolean} | 'logged'>(undefined)
+  const wait = useRef<
+    | {
+        /** Time in view before the current stretch */
+        waitedMs: number
+        /** When the current stretch in view started, if it's in view */
+        activeSince?: number
+        hadData: boolean
+      }
+    | 'logged'
+  >(undefined)
 
   useEffect(() => {
-    if (!context || shown.current === 'logged') return
-    if (!shown.current) {
+    if (!context || wait.current === 'logged') return
+    const now = Date.now()
+    if (!wait.current) {
       if (!isActive) return
-      shown.current = {at: Date.now(), hadData: hasData}
+      wait.current = {waitedMs: 0, activeSince: now, hadData: hasData}
     }
+    const current = wait.current
+
+    /*
+     * Only time in view counts as waiting, and the outcome is logged once
+     * the user can see it, so loads that settle while away log on return.
+     */
+    if (!isActive) {
+      if (current.activeSince !== undefined) {
+        current.waitedMs += now - current.activeSince
+        current.activeSince = undefined
+      }
+      return
+    }
+    current.activeSince ??= now
     if (!hasData && !isError) return
+
     ax.metric('atmosphere:content:loaded', {
       ...context,
       state: !hasData ? 'error' : itemCount ? 'populated' : 'empty',
       itemCount,
-      durationMs: Date.now() - shown.current.at,
-      hasCachedData: shown.current.hadData,
+      durationMs: current.waitedMs + now - current.activeSince,
+      hasCachedData: current.hadData,
     })
-    shown.current = 'logged'
+    wait.current = 'logged'
   })
 
   return {
