@@ -138,6 +138,8 @@ export const Content = memo(function Content({
           : false)
       }
       indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
+      // Dialogs on this screen render inside it, see `List`
+      keyboardShouldPersistTaps="handled"
       // Header taps scroll to the top on iPadOS 26, see `List`
       scrollsToTop={IS_IPAD ? false : undefined}
       style={[

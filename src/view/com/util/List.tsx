@@ -188,6 +188,14 @@ let List = forwardRef<ListMethods, ListProps>(
       <ScrollbarOffsetContext.Provider value={offsetContext}>
         <FlatList_INTERNAL
           showsVerticalScrollIndicator // overridable
+          /*
+           * Dialogs declared in a row render in place, so the list's capture
+           * handler sees taps inside an open sheet. With the default "never",
+           * the first tap on a sheet button while the keyboard is up would
+           * only dismiss the keyboard. Taps on blank space still dismiss it.
+           * Overridable.
+           */
+          keyboardShouldPersistTaps="handled"
           onViewableItemsChanged={onViewableItemsChanged}
           viewabilityConfig={viewabilityConfig}
           {...props}
