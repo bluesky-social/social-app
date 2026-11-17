@@ -574,22 +574,14 @@ function NotificationsHeader({
   const height = useSharedValue(0)
   const updateHeight = useCallback(
     (headerHeight: number) => {
-      /*
-       * A web screen left under another is hidden and measures 0. Keeping
-       * the last height means coming back to it doesn't flash the lists
-       * under the header
-       */
+      // Hidden web screens measure 0, keep the last height for coming back
       if (headerHeight === 0) return
       height.set(headerHeight)
       onHeightChange(headerHeight)
     },
     [height, onHeightChange],
   )
-  /*
-   * Layout events only arrive after the first frame is drawn (on web, a
-   * timeout after a resize observer), so the lists would start a frame too
-   * high, under the header. Measuring up front sets the height before then
-   */
+  // onLayout arrives after the first paint, so measure before it
   useLayoutEffect(() => {
     updateHeight(ref.current?.getBoundingClientRect().height ?? 0)
   }, [updateHeight])
