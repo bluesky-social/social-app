@@ -43,7 +43,8 @@
           },
           "website": {
             "type": "string",
-            "format": "uri"
+            "format": "uri",
+            "description": "Deprecated: use links instead."
           },
           "pronouns": {
             "type": "string",

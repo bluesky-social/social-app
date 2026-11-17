@@ -59,6 +59,10 @@
         "likeCount": {
           "type": "integer"
         },
+        "viewCount": {
+          "type": "integer",
+          "description": "Approximate number of times the post has been viewed. Only included in authenticated responses to the post's author when eligible to see the count. Counts less than 100 are omitted."
+        },
         "quoteCount": {
           "type": "integer"
         },
@@ -154,7 +158,8 @@
             "app.bsky.feed.defs#interactionRepost",
             "app.bsky.feed.defs#interactionReply",
             "app.bsky.feed.defs#interactionQuote",
-            "app.bsky.feed.defs#interactionShare"
+            "app.bsky.feed.defs#interactionShare",
+            "app.bsky.feed.defs#interactionUnspecced"
           ]
         },
         "reqId": {
@@ -162,10 +167,23 @@
           "maxLength": 100,
           "description": "Unique identifier per request that may be passed back alongside interactions."
         },
+        "payload": {
+          "type": "unknown",
+          "description": "Additional data for the interaction, with an application-defined structure."
+        },
         "feedContext": {
           "type": "string",
           "maxLength": 2000,
           "description": "Context on a feed item that was originally supplied by the feed generator on getFeedSkeleton."
+        },
+        "viewContext": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "The view in which the interaction occurred.",
+          "knownValues": [
+            "feed",
+            "thread"
+          ]
         }
       }
     },
@@ -557,6 +575,10 @@
           "format": "at-uri"
         }
       }
+    },
+    "interactionUnspecced": {
+      "type": "token",
+      "description": "Application-defined interaction with the feed item"
     },
     "skeletonReasonRepost": {
       "type": "object",
