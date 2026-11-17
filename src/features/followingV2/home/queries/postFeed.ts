@@ -36,7 +36,7 @@ import {STALE} from '#/state/queries'
 import {RQKEY_ROOT} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
-import {useAutoPagination} from '#/state/queries/util'
+import {hasReachedPageFillLimit, useAutoPagination} from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {KnownError} from '#/view/com/posts/PostFeedErrorMessage'
@@ -314,9 +314,25 @@ export function usePostFeedQuery(
       itemCount += slice.items.length
     }
   }
-  useAutoPagination(query, itemCount, MIN_POSTS)
+  /**
+   * Repost-heavy profiles can leave Replies sparse even with server filtering.
+   * Keep this five-request hard stop Replies-only; other feeds can be sparse
+   * due to moderation but retain their existing pagination behavior.
+   */
+  const isPageFillLimited =
+    feedDesc.startsWith('author|') &&
+    feedDesc.endsWith('|posts_and_replies_only') &&
+    hasReachedPageFillLimit(query.data?.pages, MIN_POSTS)
+  const paginatedQuery = {
+    ...query,
+    isPageFillLimited,
+    hasNextPage: query.hasNextPage && !isPageFillLimited,
+    fetchNextPage: (...args: Parameters<typeof query.fetchNextPage>) =>
+      isPageFillLimited ? Promise.resolve(query) : query.fetchNextPage(...args),
+  }
+  useAutoPagination(paginatedQuery, itemCount, MIN_POSTS)
 
-  return query
+  return paginatedQuery
 }
 
 /**

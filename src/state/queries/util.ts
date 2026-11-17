@@ -17,6 +17,31 @@ import * as bsky from '#/types/bsky'
  */
 const MAX_ATTEMPTS = 5
 
+/**
+ * Bound each attempt to fill a client-visible page, including its first
+ * request. Partial results do not restart the budget. A full page does, so
+ * ordinary pagination can continue for feeds with enough visible content.
+ */
+export function hasReachedPageFillLimit(
+  pages:
+    {cursor: string | undefined; slices: {items: unknown[]}[]}[] | undefined,
+  pageSize: number,
+) {
+  let requests = 0
+  let itemCount = 0
+  for (const page of pages || []) {
+    requests++
+    for (const slice of page.slices) {
+      itemCount += slice.items.length
+    }
+    if (itemCount >= pageSize) {
+      requests = 0
+      itemCount = 0
+    }
+  }
+  return requests >= MAX_ATTEMPTS && Boolean(pages?.at(-1)?.cursor)
+}
+
 type AutoPaginationQuery = {
   data?: {pageParams: unknown[]}
   isLoading: boolean
