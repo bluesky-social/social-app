@@ -18,9 +18,9 @@ export function StarterPack(props: {
   images: Map<string, Buffer>
 }) {
   const {starterPack, images} = props
-  const record = bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+  const record = bsky.validate(
     starterPack.record,
-    AppBskyGraphStarterpack.isRecord,
+    AppBskyGraphStarterpack.validateRecord,
   )
     ? starterPack.record
     : null
