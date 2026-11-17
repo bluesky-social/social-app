@@ -1159,7 +1159,7 @@ let PostFeed = ({
         }}
         onScrolledDownChange={handleScrolledDownChange}
         onEndReached={() => void onEndReached()}
-        onEndReachedThreshold={2} // number of posts left to trigger load more
+        onEndReachedThreshold={2} // screen heights from the end, not posts
         removeClippedSubviews={true}
         extraData={extraData}
         desktopFixedHeight={
