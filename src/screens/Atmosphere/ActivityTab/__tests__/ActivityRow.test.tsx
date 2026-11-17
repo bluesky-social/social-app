@@ -34,6 +34,9 @@ import {
 
 const mockLinkTo = jest.fn()
 
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: jest.fn()}),
+}))
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
   useTheme: () => ({
@@ -142,7 +145,7 @@ i18n.loadAndActivate({locale: 'en', messages: {}})
 function renderRow(row: ActivityRowModel) {
   return render(
     <I18nProvider i18n={i18n}>
-      <ActivityRow row={row} />
+      <ActivityRow row={row} position={0} />
     </I18nProvider>,
   )
 }

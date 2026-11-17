@@ -9,6 +9,7 @@ import {ActivityHeader} from '#/screens/Atmosphere/ActivityTab/components/Activi
 import {ActivityContentCard} from '#/screens/Atmosphere/ActivityTab/components/ActivityRow'
 import {type ActivityCardRow} from '#/screens/Atmosphere/ActivityTab/rows'
 import {getAssociatedProfile} from '#/screens/Atmosphere/data/exploreData'
+import {AtmosphereContentItem} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -44,8 +45,8 @@ export function AtmosphereDiscoverTab() {
       testID="atmosphereDiscoverTab"
       data={data?.items ?? []}
       keyExtractor={(item: DiscoverItem) => item.content.view.uri}
-      renderItem={({item}: {item: DiscoverItem}) => (
-        <DiscoverCard item={item} />
+      renderItem={({item, index}: {item: DiscoverItem; index: number}) => (
+        <DiscoverCard item={item} position={index} />
       )}
       refreshing={isRefreshing}
       onRefresh={() => void onRefresh()}
@@ -74,7 +75,14 @@ export function AtmosphereDiscoverTab() {
   )
 }
 
-function DiscoverCard({item: {content, moderation}}: {item: DiscoverItem}) {
+function DiscoverCard({
+  item: {content, moderation},
+  position,
+}: {
+  item: DiscoverItem
+  /** 0-based, in the list. */
+  position: number
+}) {
   const t = useTheme()
   /** Infer a creation event; the recommendation response has no activities. */
   let row: ActivityCardRow | undefined
@@ -91,6 +99,7 @@ function DiscoverCard({item: {content, moderation}}: {item: DiscoverItem}) {
         actor,
         indexedAt: content.view.createdAt,
         activityCount: 1,
+        grouping: 'single',
         otherActorCount: 0,
         related: [],
         content,
@@ -105,7 +114,12 @@ function DiscoverCard({item: {content, moderation}}: {item: DiscoverItem}) {
       style={[a.gap_md, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
       {row ? <ActivityHeader row={row} /> : null}
       <ActivityContentHider moderation={moderation}>
-        <ActivityContentCard content={content} />
+        <AtmosphereContentItem
+          contentType={content.type}
+          contentId={content.view.uri}
+          position={position}>
+          <ActivityContentCard content={content} />
+        </AtmosphereContentItem>
       </ActivityContentHider>
     </View>
   )

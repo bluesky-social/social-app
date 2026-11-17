@@ -17,6 +17,7 @@ import {ActivityTab} from './ActivityTab'
 import {AtmosphereAppsTab} from './AppsTab'
 import {AtmosphereDiscoverTab} from './DiscoverTab'
 import {AtmosphereExploreTab} from './ExploreTab'
+import {AtmosphereMetricsScope} from './metrics/context'
 import {type AtmosphereTab} from './metrics/types'
 import {useTabMetrics} from './metrics/useTabMetrics'
 
@@ -105,9 +106,15 @@ function AtmosphereScreenInner() {
             />
           </Layout.Center>
         )}>
-        {sections.map(section => (
+        {sections.map((section, index) => (
           <View key={section.title} style={a.flex_1}>
-            {section.component}
+            <AtmosphereMetricsScope
+              tab={TABS[index]}
+              surface="tab"
+              isActive={tabMetrics.isShowing && tabMetrics.page === index}
+              visit={tabMetrics.visit}>
+              {section.component}
+            </AtmosphereMetricsScope>
           </View>
         ))}
       </Pager>

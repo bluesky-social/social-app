@@ -3,6 +3,10 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
+import {
+  AtmosphereContentItem,
+  useLogContentPress,
+} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a} from '#/alf'
 import {DocumentCompact} from '#/components/atmosphere/SiteStandard/DocumentCompact'
 import {Divider} from '#/components/Divider'
@@ -34,16 +38,27 @@ export function FeaturedArticles({
                 }}
               />
             )}
-            <DocumentCompact
-              view={article}
-              containerStyle={[
-                a.py_md,
-                {paddingHorizontal: EXPLORE_SECTION_PADDING},
-              ]}
-            />
+            <AtmosphereContentItem
+              contentType="article"
+              contentId={article.uri}
+              section="articles"
+              position={index}>
+              <Article article={article} />
+            </AtmosphereContentItem>
           </Fragment>
         ))}
       </View>
     </View>
+  )
+}
+
+function Article({article}: {article: app.bsky.embed.external.ViewArticle}) {
+  const logPress = useLogContentPress()
+  return (
+    <DocumentCompact
+      view={article}
+      containerStyle={[a.py_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}
+      onEmbedInteractionCallback={() => logPress('external')}
+    />
   )
 }

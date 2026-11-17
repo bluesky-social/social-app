@@ -9,7 +9,11 @@ import {type VideoCompressSkipReason} from '#/lib/media/video/types'
 import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
-import {type AtmosphereTab} from '#/screens/Atmosphere/metrics/types'
+import {
+  type AtmosphereContentMetricContext,
+  type AtmosphereMetricContext,
+  type AtmosphereTab,
+} from '#/screens/Atmosphere/metrics/types'
 import {type SharePlatformId} from '#/components/ShareDialog/catalog'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
@@ -1547,6 +1551,31 @@ export type Events = {
      * - `backgrounded`: the app left the foreground.
      */
     endReason: 'switched' | 'blurred' | 'backgrounded'
+  }
+  /**
+   * An Atmosphere content card was meaningfully visible: at least half of it,
+   * or half the screen for a card taller than that, in view for half a
+   * second, with its tab in view (see `atmosphere:tab:duration`). Masked
+   * cards don't count until revealed. Once per card per visit: each
+   * `atmosphere:tab:displayed`, or focus of the activity list, starts one.
+   */
+  'atmosphere:content:impression': AtmosphereContentMetricContext
+  /**
+   * The user pressed a content card. `external` hands off to the content's
+   * site or app, which doesn't mean they read or watched it.
+   */
+  'atmosphere:content:press': AtmosphereContentMetricContext & {
+    target: 'external' | 'photoDialog'
+  }
+  /** The user pressed a link to someone's profile. */
+  'atmosphere:profile:press': AtmosphereMetricContext & {
+    profileDid: string
+    source: 'activityHeader' | 'cardMenu' | 'photoDialog'
+  }
+  /** The user opened an activity group's "View all" list. */
+  'atmosphere:activity:viewAll': AtmosphereMetricContext & {
+    subjectCount: number
+    collection: string
   }
 
   'geo:debug': {}

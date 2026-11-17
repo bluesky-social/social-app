@@ -1,9 +1,11 @@
-import {useState} from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {type AtUriString} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {useAppState} from '#/lib/appState'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
@@ -14,12 +16,17 @@ import {
   ActivityContentCard,
   ActivityWarning,
 } from '#/screens/Atmosphere/ActivityTab/components/ActivityRow'
+import {
+  AtmosphereContentItem,
+  AtmosphereMetricsScope,
+  createVisit,
+} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/analytics'
-import {parseActivityListUris} from './links'
+import {parseActivityListUris, takeActivityListOrigin} from './links'
 import {
   type ActivityListItem as Item,
   useActivityListQuery,
@@ -54,6 +61,11 @@ export function AtmosphereActivityListScreen({
 }
 
 function ActivityList({uris}: {uris: AtUriString[]}) {
+  const [originTab] = useState(() => takeActivityListOrigin(uris))
+  const isFocused = useIsFocused()
+  const appState = useAppState()
+  const [visit, setVisit] = useState(createVisit)
+  useFocusEffect(useCallback(() => setVisit(createVisit()), []))
   const {t: l} = useLingui()
   const {
     data,
@@ -92,35 +104,48 @@ function ActivityList({uris}: {uris: AtUriString[]}) {
   }
 
   return (
-    <List
-      testID="atmosphereActivityList"
-      data={items}
-      keyExtractor={(item: Item, index: number) => `${item.uri}:${index}`}
-      renderItem={({item}: {item: Item}) => <ActivityListItem item={item} />}
-      refreshing={isPTRing}
-      onRefresh={() => void onRefresh()}
-      onEndReached={() => void onEndReached()}
-      onEndReachedThreshold={4}
-      ListFooterComponent={
-        <ListFooter
-          isFetchingNextPage={isFetchingNextPage}
-          hasNextPage={hasNextPage}
-          error={isError ? cleanError(error) : undefined}
-          onRetry={() => fetchNextPage()}
-        />
-      }
-      sideBorders={false}
-    />
+    <AtmosphereMetricsScope
+      tab={originTab}
+      surface="activityList"
+      isActive={isFocused && appState !== 'background'}
+      visit={visit}>
+      <List
+        testID="atmosphereActivityList"
+        data={items}
+        keyExtractor={(item: Item, index: number) => `${item.uri}:${index}`}
+        renderItem={({item, index}: {item: Item; index: number}) => (
+          <ActivityListItem item={item} position={index} />
+        )}
+        refreshing={isPTRing}
+        onRefresh={() => void onRefresh()}
+        onEndReached={() => void onEndReached()}
+        onEndReachedThreshold={4}
+        ListFooterComponent={
+          <ListFooter
+            isFetchingNextPage={isFetchingNextPage}
+            hasNextPage={hasNextPage}
+            error={isError ? cleanError(error) : undefined}
+            onRetry={() => fetchNextPage()}
+          />
+        }
+        sideBorders={false}
+      />
+    </AtmosphereMetricsScope>
   )
 }
 
-function ActivityListItem({item}: {item: Item}) {
+function ActivityListItem({item, position}: {item: Item; position: number}) {
   const t = useTheme()
   return (
     <View style={[a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
       {item.content ? (
         <ActivityContentHider moderation={item.moderation}>
-          <ActivityContentCard content={item.content} />
+          <AtmosphereContentItem
+            contentType={item.content.type}
+            contentId={item.content.view.uri}
+            position={position}>
+            <ActivityContentCard content={item.content} />
+          </AtmosphereContentItem>
         </ActivityContentHider>
       ) : (
         <ActivityWarning />

@@ -2,6 +2,7 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
+import {AtmosphereContentItem} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a} from '#/alf'
 import * as Gallery from '#/components/Gallery'
 import {type app} from '#/lexicons'
@@ -26,16 +27,21 @@ export function FeaturedLivestreams({
         stretch
         label={l`Featured livestreams`}
         testID="atmosphereLivestreamsGallery">
-        {livestreams.map(livestream => (
+        {livestreams.map((livestream, index) => (
           <Gallery.Item key={livestream.uri} label={livestream.title}>
             {galleryFocus => (
-              <View style={[a.flex_grow]}>
+              <AtmosphereContentItem
+                style={[a.flex_grow]}
+                contentType="livestream"
+                contentId={livestream.uri}
+                section="livestreams"
+                position={index}>
                 <LivestreamCard
                   livestream={livestream}
                   width={CARD_WIDTH}
                   galleryFocus={galleryFocus}
                 />
-              </View>
+              </AtmosphereContentItem>
             )}
           </Gallery.Item>
         ))}

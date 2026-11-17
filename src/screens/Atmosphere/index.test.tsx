@@ -43,7 +43,11 @@ jest.mock('#/analytics', () => ({
 }))
 jest.mock('@react-navigation/native', () => {
   const {useEffect} = jest.requireActual<typeof import('react')>('react')
-  return {useFocusEffect: useEffect}
+  return {
+    // Focused once on mount, like the real one with a stable callback
+    useFocusEffect: (effect: React.EffectCallback) =>
+      useEffect(effect, [effect]),
+  }
 })
 jest.mock('#/view/screens/NotFound', () => {
   const {View} = jest.requireActual('react-native')

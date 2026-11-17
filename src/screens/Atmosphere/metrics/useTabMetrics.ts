@@ -4,14 +4,18 @@ import {useFocusEffect} from '@react-navigation/native'
 
 import {onAppStateChange} from '#/lib/appState'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {createVisit, type Visit} from '#/screens/Atmosphere/metrics/context'
 import {type AtmosphereTab} from '#/screens/Atmosphere/metrics/types'
 import {createTabTaps} from '#/screens/Notifications/tabTaps'
 import {useAnalytics} from '#/analytics'
+import {type Metrics} from '#/analytics/metrics'
 
 /**
  * Logs `atmosphere:tab:displayed` and `atmosphere:tab:duration` for the
  * Atmosphere pager. Wire the returned handlers to the pager, and call
  * `onSeeMoreApps` just before switching pages for Explore's "See more".
+ * Also returns the tab in view, whether it's showing, and its visit, for the
+ * tabs' metrics scopes.
  */
 export function useTabMetrics(tabs: readonly AtmosphereTab[]) {
   const ax = useAnalytics()
@@ -22,11 +26,17 @@ export function useTabMetrics(tabs: readonly AtmosphereTab[]) {
   const shownAt = useRef<number | undefined>(undefined)
   const [tabTaps] = useState(createTabTaps)
   const [seeMoreTaps] = useState(createTabTaps)
+  const [view, setView] = useState<{
+    page: number
+    isShowing: boolean
+    visit: Visit
+  }>(() => ({page: 0, isShowing: false, visit: createVisit()}))
 
   const startShowing = () => {
-    if (isFocused.current && isForeground.current) {
-      shownAt.current ??= Date.now()
-    }
+    if (!isFocused.current || !isForeground.current) return
+    if (shownAt.current !== undefined) return
+    shownAt.current = Date.now()
+    setView(prev => ({...prev, isShowing: true}))
   }
   const stopShowing = (endReason: 'switched' | 'blurred' | 'backgrounded') => {
     if (shownAt.current === undefined) return
@@ -36,15 +46,21 @@ export function useTabMetrics(tabs: readonly AtmosphereTab[]) {
       endReason,
     })
     shownAt.current = undefined
+    setView(prev => ({...prev, isShowing: false}))
+  }
+  /** Each display starts a new visit, so its impressions count again. */
+  const logDisplayed = (
+    payload: Metrics['atmosphere:tab:displayed'],
+    index: number,
+  ) => {
+    ax.metric('atmosphere:tab:displayed', payload)
+    setView(prev => ({...prev, page: index, visit: createVisit()}))
   }
 
   useFocusEffect(
     useNonReactiveCallback(() => {
       isFocused.current = true
-      ax.metric('atmosphere:tab:displayed', {
-        tab: tabs[page.current],
-        reason: 'focus',
-      })
+      logDisplayed({tab: tabs[page.current], reason: 'focus'}, page.current)
       startShowing()
       return () => {
         stopShowing('blurred')
@@ -67,6 +83,7 @@ export function useTabMetrics(tabs: readonly AtmosphereTab[]) {
   }, [onAppState])
 
   return {
+    ...view,
     onTabPressed: (index: number) => {
       // Re-pressing the tab in view doesn't switch pages
       if (index !== page.current) tabTaps.tap(index)
@@ -81,11 +98,14 @@ export function useTabMetrics(tabs: readonly AtmosphereTab[]) {
       stopShowing('switched')
       const previousTab = tabs[page.current]
       page.current = index
-      ax.metric('atmosphere:tab:displayed', {
-        tab: tabs[index],
-        previousTab,
-        reason: isSeeMore ? 'seeMoreApps' : isTap ? 'tap' : 'swipe',
-      })
+      logDisplayed(
+        {
+          tab: tabs[index],
+          previousTab,
+          reason: isSeeMore ? 'seeMoreApps' : isTap ? 'tap' : 'swipe',
+        },
+        index,
+      )
       startShowing()
     },
   }

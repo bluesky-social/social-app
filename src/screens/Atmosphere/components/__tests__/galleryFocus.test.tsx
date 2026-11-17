@@ -5,6 +5,9 @@ import {type app} from '#/lexicons'
 import {LivestreamCard} from '../LivestreamCard'
 import {PhotoCard} from '../PhotoCard'
 
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: jest.fn()}),
+}))
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({
     _: (value: {message: string}) => value.message,

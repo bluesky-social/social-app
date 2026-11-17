@@ -17,6 +17,9 @@ let mockIsWeb = false
 
 /* Report availability relies on real CID validation, which the repo mocks. */
 jest.unmock('multiformats/cid')
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: jest.fn()}),
+}))
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({
     _: (value: {message: string}) => value.message,

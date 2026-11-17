@@ -9,6 +9,7 @@ import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {useRequireAuth, useSession} from '#/state/session'
+import {useAtmosphereMetricContext} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -31,6 +32,7 @@ import {
 } from '#/components/moderation/ReportDialog'
 import * as Toast from '#/components/Toast'
 import {useAgeAssurance} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {type app, place, site, social} from '#/lexicons'
 import {useDevMode} from '#/storage/hooks/dev-mode'
@@ -101,6 +103,8 @@ export function AtmosphereCardMenu({
   const requireAuth = useRequireAuth()
   const {openComposer} = useOpenComposer()
   const sendViaChatControl = useDialogControl()
+  const ax = useAnalytics()
+  const metricContext = useAtmosphereMetricContext()
   const reportDialogControl = useGlobalReportDialogControl()
   const getReportCopy = useGetCopyForSubject()
   const [devModeEnabled] = useDevMode()
@@ -241,9 +245,16 @@ export function AtmosphereCardMenu({
             {author && (
               <Menu.Item
                 label={l`View author profile`}
-                onPress={() =>
+                onPress={() => {
+                  if (metricContext) {
+                    ax.metric('atmosphere:profile:press', {
+                      ...metricContext,
+                      profileDid: author.did,
+                      source: 'cardMenu',
+                    })
+                  }
                   navigation.navigate('Profile', {name: author.did})
-                }>
+                }}>
                 <Menu.ItemText>{l`View author profile`}</Menu.ItemText>
                 <Menu.ItemIcon icon={PersonIcon} position="right" />
               </Menu.Item>

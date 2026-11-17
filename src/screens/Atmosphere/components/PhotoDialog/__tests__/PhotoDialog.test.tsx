@@ -8,6 +8,9 @@ const mockClose = jest.fn((_afterClose?: () => void) => {})
 const mockOpenLink = jest.fn()
 let mockIsNative = true
 
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: jest.fn()}),
+}))
 jest.mock('#/env', () =>
   Object.defineProperty(
     {...jest.requireActual<typeof import('#/env')>('#/env')},

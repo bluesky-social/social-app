@@ -5,6 +5,8 @@ import {
   makeActivityListLink,
   MAX_ACTIVITY_LIST_URIS,
   parseActivityListUris,
+  setActivityListOrigin,
+  takeActivityListOrigin,
 } from '../links'
 import {fetchActivityListPage} from '../useActivityListQuery'
 
@@ -70,5 +72,19 @@ describe('activity list links', () => {
     expect(
       parseActivityListUris(encodeURIComponent(`${uris[0]},nope,`)),
     ).toEqual([uris[0]])
+  })
+
+  it('hands the origin tab to the list it was set for, once', () => {
+    const uris = makeUris(MAX_ACTIVITY_LIST_URIS + 10)
+    const [, param] = makeActivityListLink(uris).split('?uris=')
+    setActivityListOrigin(uris, 'following')
+    expect(takeActivityListOrigin(parseActivityListUris(param))).toBe(
+      'following',
+    )
+    expect(takeActivityListOrigin(uris)).toBeUndefined()
+
+    setActivityListOrigin(uris, 'following')
+    expect(takeActivityListOrigin(makeUris(1))).toBeUndefined()
+    expect(takeActivityListOrigin(uris)).toBeUndefined()
   })
 })

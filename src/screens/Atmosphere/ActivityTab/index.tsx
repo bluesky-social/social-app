@@ -58,8 +58,8 @@ export function ActivityTab() {
       testID="activityList"
       data={rows}
       keyExtractor={(row: ActivityRowModel) => row.key}
-      renderItem={({item}: {item: ActivityRowModel}) => (
-        <ActivityRow row={item} />
+      renderItem={({item, index}: {item: ActivityRowModel; index: number}) => (
+        <ActivityRow row={item} position={index} />
       )}
       refreshing={isPTRing}
       onRefresh={() => void onRefresh()}
