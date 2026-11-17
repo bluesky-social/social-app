@@ -72,11 +72,11 @@ The host view is a zero-height, window-wide, `box-none` view, so it takes no spa
 - **Lists**: `VirtualizedListContextResetter` and `ScrollView.Context`, so a list inside a sheet declared in a list row isn't treated as nested in the outer list.
 - **Text**: inside `<Text>`, the host is wrapped in a 0x0 view so it doesn't become an inline attachment that reflows the text.
 - **Touches**: the content root claims the responder (`onStartShouldSetResponder`), so a tap on blank space in the sheet doesn't bubble to a `Pressable` around the place where the sheet is declared.
+- **Coordinates**: the sheet dispatches its own touches (an `RCTSurfaceTouchHandler` on iOS, `DialogRootViewGroup` on Android), relative to the sheet. The native view sets expo-modules-core's `layoutRoot`, which gives its shadow node the `RootNodeKind` trait, as React Native's `Modal` does, so `measure()` inside the sheet is relative to the sheet too. Without it, `measure()` would be relative to the place where the sheet is declared, and Pressability, which measures a button on press-in, would cancel a press as soon as the finger moved. The prop is a no-op on the native view, but it has to be declared in both module definitions so React Native passes it through.
 
 Things the wrapper can't reset:
 
 - **Capture-phase responders**: an ancestor's `onStartShouldSetResponderCapture` still sees touches in the sheet. With the default `keyboardShouldPersistTaps="never"`, an ancestor `ScrollView` takes the first tap while the keyboard is up and only dismisses the keyboard. `Layout.Content` and `List` default to `"handled"` for this reason. React Native's `Modal` has the same bug ([facebook/react-native#28871](https://github.com/facebook/react-native/issues/28871)).
-- **`measure()`**: measurements inside the sheet are relative to the place where it is declared rather than to the sheet. Fixing this needs native support (expo-modules-core's `layoutRoot`).
 
 `deferPresentation` keeps an open sheet unmounted until it turns false. The app uses it to hold dialogs behind the policy update overlay.
 

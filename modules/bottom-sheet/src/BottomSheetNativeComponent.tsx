@@ -37,6 +37,7 @@ const NativeView: React.ComponentType<
   BottomSheetViewProps & {
     ref: React.RefObject<any>
     style: StyleProp<ViewStyle>
+    layoutRoot: boolean
   }
 > = requireNativeViewManager('BottomSheet')
 
@@ -242,6 +243,14 @@ function BottomSheetNativeComponentInner({
        * still wins, since a defined width takes precedence over the insets.
        */
       style={{position: 'absolute', left: 0, right: 0}}
+      /*
+       * The sheet dispatches its own touches, in coordinates relative to the
+       * sheet. Without this, `measure()` inside it would be relative to the
+       * surface root, through wherever the sheet is declared, and Pressability
+       * would see any finger movement as leaving the press rect. RN's Modal
+       * sets the same trait.
+       */
+      layoutRoot
       containerBackgroundColor={nativeContainerBackgroundColor}>
       <View
         /*
