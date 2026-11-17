@@ -10,6 +10,7 @@ import {ActivityContentCard} from '#/screens/Atmosphere/ActivityTab/components/A
 import {type ActivityCardRow} from '#/screens/Atmosphere/ActivityTab/rows'
 import {getAssociatedProfile} from '#/screens/Atmosphere/data/exploreData'
 import {AtmosphereContentItem} from '#/screens/Atmosphere/metrics/context'
+import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -23,8 +24,14 @@ export function AtmosphereDiscoverTab() {
   const {t: l} = useLingui()
   const {data, isError, refetch} = useAtmosphereRecommendedActivityQuery()
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const metrics = useLoadMetrics({
+    hasData: !!data,
+    isError,
+    itemCount: data?.items.length ?? 0,
+  })
 
   async function onRefresh() {
+    metrics.logRefresh()
     setIsRefreshing(true)
     try {
       await refetch()
@@ -36,7 +43,10 @@ export function AtmosphereDiscoverTab() {
   const errorMessage = (
     <ErrorMessage
       message={l`Could not load recommendations. Please try again.`}
-      onPressTryAgain={() => void refetch()}
+      onPressTryAgain={() => {
+        metrics.logRetry('initial')
+        void refetch()
+      }}
     />
   )
 

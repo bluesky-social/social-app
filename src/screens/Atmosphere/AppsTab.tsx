@@ -8,6 +8,7 @@ import {getAtmosphereApps} from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereAppsQuery} from '#/screens/Atmosphere/data/useAtmosphereAppsQuery'
 import {getAppMetric} from '#/screens/Atmosphere/metrics/apps'
 import {useAtmosphereMetricContext} from '#/screens/Atmosphere/metrics/context'
+import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
@@ -26,6 +27,11 @@ export function AtmosphereAppsTab() {
   const ax = useAnalytics()
   const metricContext = useAtmosphereMetricContext()
   const dragProgress = useSharedValue(0)
+  const metrics = useLoadMetrics({
+    hasData: !!data,
+    isError,
+    itemCount: data ? getAtmosphereApps(data).length : 0,
+  })
 
   const categoryDefinitions = [
     {key: 'all', label: l`All`},
@@ -52,6 +58,7 @@ export function AtmosphereAppsTab() {
   }, [selectedIndex, dragProgress])
 
   async function onRefresh() {
+    metrics.logRefresh()
     setIsRefreshing(true)
     try {
       await refetch()
@@ -72,7 +79,10 @@ export function AtmosphereAppsTab() {
   const errorMessage = (
     <ErrorMessage
       message={l`Could not load Atmosphere content. Please try again.`}
-      onPressTryAgain={() => void refetch()}
+      onPressTryAgain={() => {
+        metrics.logRetry('initial')
+        void refetch()
+      }}
     />
   )
 

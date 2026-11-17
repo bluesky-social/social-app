@@ -1,0 +1,127 @@
+import {render} from '@testing-library/react-native'
+
+import {AtmosphereMetricsScope, createVisit} from '../context'
+import {useLoadMetrics} from '../useLoadMetrics'
+
+const mockMetric = jest.fn()
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: mockMetric}),
+}))
+
+type Load = Parameters<typeof useLoadMetrics>[0]
+const visit = createVisit()
+let metrics: ReturnType<typeof useLoadMetrics> | undefined
+
+function Tab(load: Load) {
+  metrics = useLoadMetrics(load)
+  return null
+}
+
+function renderTab(load: Load, isActive = true) {
+  const tree = (props: Load, active: boolean) => (
+    <AtmosphereMetricsScope
+      tab="following"
+      surface="tab"
+      isActive={active}
+      visit={visit}>
+      <Tab {...props} />
+    </AtmosphereMetricsScope>
+  )
+  const {rerender} = render(tree(load, isActive))
+  return (next: Load, active = true) => rerender(tree(next, active))
+}
+
+const loaded = (event: string) =>
+  mockMetric.mock.calls.filter(([name]) => name === event)
+
+beforeEach(() => {
+  jest.useFakeTimers({now: 0})
+  mockMetric.mockClear()
+})
+
+afterEach(() => {
+  jest.useRealTimers()
+})
+
+it('logs the first load once, timed from when the tab was first shown', () => {
+  const update = renderTab(
+    {hasData: false, isError: false, itemCount: 0},
+    false,
+  )
+  jest.setSystemTime(1000)
+  update({hasData: false, isError: false, itemCount: 0})
+  jest.setSystemTime(1500)
+  update({hasData: true, isError: false, itemCount: 3})
+  update({hasData: true, isError: false, itemCount: 0})
+
+  expect(loaded('atmosphere:content:loaded')).toEqual([
+    [
+      'atmosphere:content:loaded',
+      {
+        tab: 'following',
+        surface: 'tab',
+        state: 'populated',
+        itemCount: 3,
+        durationMs: 500,
+        hasCachedData: false,
+      },
+    ],
+  ])
+})
+
+it('waits until shown to log already loaded data', () => {
+  const update = renderTab({hasData: true, isError: false, itemCount: 0}, false)
+  expect(mockMetric).not.toHaveBeenCalled()
+
+  update({hasData: true, isError: false, itemCount: 0})
+  expect(loaded('atmosphere:content:loaded')).toEqual([
+    [
+      'atmosphere:content:loaded',
+      expect.objectContaining({
+        state: 'empty',
+        durationMs: 0,
+        hasCachedData: true,
+      }),
+    ],
+  ])
+})
+
+it('logs a failed first load as an error', () => {
+  renderTab({hasData: false, isError: true, itemCount: 0})
+
+  expect(loaded('atmosphere:content:loaded')).toEqual([
+    [
+      'atmosphere:content:loaded',
+      expect.objectContaining({state: 'error', itemCount: 0}),
+    ],
+  ])
+})
+
+it('logs further pages, not the first', () => {
+  renderTab({hasData: true, isError: false, itemCount: 2})
+  mockMetric.mockClear()
+
+  metrics?.logPageLoaded([[1, 2]])
+  metrics?.logPageLoaded([[1, 2], [3]])
+  expect(mockMetric.mock.calls).toEqual([
+    [
+      'atmosphere:list:pageLoaded',
+      {
+        tab: 'following',
+        surface: 'tab',
+        pageIndex: 1,
+        itemCount: 1,
+        totalItemCount: 3,
+      },
+    ],
+  ])
+})
+
+it('logs nothing outside a scope', () => {
+  render(<Tab hasData isError={false} itemCount={1} />)
+  metrics?.logRefresh()
+  metrics?.logRetry('initial')
+  metrics?.logPageLoaded([[1], [2]])
+
+  expect(mockMetric).not.toHaveBeenCalled()
+})

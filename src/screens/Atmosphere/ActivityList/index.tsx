@@ -21,6 +21,7 @@ import {
   AtmosphereMetricsScope,
   createVisit,
 } from '#/screens/Atmosphere/metrics/context'
+import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
@@ -66,6 +67,18 @@ function ActivityList({uris}: {uris: AtUriString[]}) {
   const appState = useAppState()
   const [visit, setVisit] = useState(createVisit)
   useFocusEffect(useCallback(() => setVisit(createVisit()), []))
+  return (
+    <AtmosphereMetricsScope
+      tab={originTab}
+      surface="activityList"
+      isActive={isFocused && appState !== 'background'}
+      visit={visit}>
+      <ActivityListContent uris={uris} />
+    </AtmosphereMetricsScope>
+  )
+}
+
+function ActivityListContent({uris}: {uris: AtUriString[]}) {
   const {t: l} = useLingui()
   const {
     data,
@@ -78,23 +91,37 @@ function ActivityList({uris}: {uris: AtUriString[]}) {
   } = useActivityListQuery(uris)
   const [isPTRing, setIsPTRing] = useState(false)
   const items = data?.pages.flat() ?? []
+  const metrics = useLoadMetrics({
+    hasData: !!data,
+    isError,
+    itemCount: items.length,
+  })
 
   async function onRefresh() {
+    metrics.logRefresh()
     setIsPTRing(true)
     await refetch()
     setIsPTRing(false)
   }
 
+  async function loadNextPage() {
+    const result = await fetchNextPage()
+    if (result.isSuccess) metrics.logPageLoaded(result.data.pages)
+  }
+
   async function onEndReached() {
     if (isFetchingNextPage || !hasNextPage || isError) return
-    await fetchNextPage()
+    await loadNextPage()
   }
 
   if (!data) {
     return isError ? (
       <ErrorMessage
         message={l`Could not load activity. Please try again.`}
-        onPressTryAgain={() => void refetch()}
+        onPressTryAgain={() => {
+          metrics.logRetry('initial')
+          void refetch()
+        }}
       />
     ) : (
       <View style={[a.align_center, a.justify_center, a.py_5xl]}>
@@ -104,33 +131,30 @@ function ActivityList({uris}: {uris: AtUriString[]}) {
   }
 
   return (
-    <AtmosphereMetricsScope
-      tab={originTab}
-      surface="activityList"
-      isActive={isFocused && appState !== 'background'}
-      visit={visit}>
-      <List
-        testID="atmosphereActivityList"
-        data={items}
-        keyExtractor={(item: Item, index: number) => `${item.uri}:${index}`}
-        renderItem={({item, index}: {item: Item; index: number}) => (
-          <ActivityListItem item={item} position={index} />
-        )}
-        refreshing={isPTRing}
-        onRefresh={() => void onRefresh()}
-        onEndReached={() => void onEndReached()}
-        onEndReachedThreshold={4}
-        ListFooterComponent={
-          <ListFooter
-            isFetchingNextPage={isFetchingNextPage}
-            hasNextPage={hasNextPage}
-            error={isError ? cleanError(error) : undefined}
-            onRetry={() => fetchNextPage()}
-          />
-        }
-        sideBorders={false}
-      />
-    </AtmosphereMetricsScope>
+    <List
+      testID="atmosphereActivityList"
+      data={items}
+      keyExtractor={(item: Item, index: number) => `${item.uri}:${index}`}
+      renderItem={({item, index}: {item: Item; index: number}) => (
+        <ActivityListItem item={item} position={index} />
+      )}
+      refreshing={isPTRing}
+      onRefresh={() => void onRefresh()}
+      onEndReached={() => void onEndReached()}
+      onEndReachedThreshold={4}
+      ListFooterComponent={
+        <ListFooter
+          isFetchingNextPage={isFetchingNextPage}
+          hasNextPage={hasNextPage}
+          error={isError ? cleanError(error) : undefined}
+          onRetry={() => {
+            metrics.logRetry('pagination')
+            return loadNextPage()
+          }}
+        />
+      }
+      sideBorders={false}
+    />
   )
 }
 

@@ -18,6 +18,7 @@ import {
   useAtmosphereMetricContext,
 } from '#/screens/Atmosphere/metrics/context'
 import {type AtmosphereSection} from '#/screens/Atmosphere/metrics/types'
+import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
 import {atoms as a, useTheme} from '#/alf'
 import * as Gallery from '#/components/Gallery'
 import * as Layout from '#/components/Layout'
@@ -54,8 +55,26 @@ export function AtmosphereExploreTab({
   const {data, isError, isPending, refetch} = useAtmosphereExploreQuery()
   const moderationOpts = useModerationOpts()
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const apps = data ? getAtmosphereExploreApps(data) : []
+  const articles = data ? getAtmosphereArticles(data, moderationOpts) : []
+  const livestreams = data ? getAtmosphereLivestreams(data) : []
+  const photos = data ? getAtmospherePhotos(data, moderationOpts) : []
+  const publications = data
+    ? getAtmospherePublications(data, moderationOpts)
+    : []
+  const metrics = useLoadMetrics({
+    hasData: !!data,
+    isError,
+    itemCount:
+      apps.length +
+      articles.length +
+      livestreams.length +
+      photos.length +
+      publications.length,
+  })
 
   async function onRefresh() {
+    metrics.logRefresh()
     setIsRefreshing(true)
     try {
       await refetch()
@@ -76,7 +95,10 @@ export function AtmosphereExploreTab({
   const errorMessage = (
     <ErrorMessage
       message={l`Could not load Atmosphere content. Please try again.`}
-      onPressTryAgain={() => void refetch()}
+      onPressTryAgain={() => {
+        metrics.logRetry('initial')
+        void refetch()
+      }}
     />
   )
 
@@ -103,12 +125,6 @@ export function AtmosphereExploreTab({
       </Layout.Content>
     )
   }
-
-  const apps = getAtmosphereExploreApps(data)
-  const articles = getAtmosphereArticles(data, moderationOpts)
-  const livestreams = getAtmosphereLivestreams(data)
-  const photos = getAtmospherePhotos(data, moderationOpts)
-  const publications = getAtmospherePublications(data, moderationOpts)
 
   return (
     <Layout.Content

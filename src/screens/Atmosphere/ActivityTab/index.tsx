@@ -5,6 +5,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {cleanError} from '#/lib/strings/errors'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List} from '#/view/com/util/List'
+import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
 import {atoms as a, useTheme} from '#/alf'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
@@ -26,23 +27,37 @@ export function ActivityTab() {
   } = useActivityTimelineQuery()
   const [isPTRing, setIsPTRing] = useState(false)
   const rows = data?.pages.flat() ?? []
+  const metrics = useLoadMetrics({
+    hasData: !!data,
+    isError,
+    itemCount: rows.length,
+  })
 
   async function onRefresh() {
+    metrics.logRefresh()
     setIsPTRing(true)
     await refetch()
     setIsPTRing(false)
   }
 
+  async function loadNextPage() {
+    const result = await fetchNextPage()
+    if (result.isSuccess) metrics.logPageLoaded(result.data.pages)
+  }
+
   async function onEndReached() {
     if (isFetchingNextPage || !hasNextPage || isError) return
-    await fetchNextPage()
+    await loadNextPage()
   }
 
   if (!data) {
     return isError ? (
       <ErrorMessage
         message={l`Could not load activity. Please try again.`}
-        onPressTryAgain={() => void refetch()}
+        onPressTryAgain={() => {
+          metrics.logRetry('initial')
+          void refetch()
+        }}
       />
     ) : (
       <View
@@ -71,7 +86,10 @@ export function ActivityTab() {
           isFetchingNextPage={isFetchingNextPage}
           hasNextPage={hasNextPage}
           error={isError ? cleanError(error) : undefined}
-          onRetry={() => fetchNextPage()}
+          onRetry={() => {
+            metrics.logRetry('pagination')
+            return loadNextPage()
+          }}
         />
       }
       sideBorders={false}

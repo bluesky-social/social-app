@@ -1638,6 +1638,34 @@ export type Events = {
     source: 'image' | 'viewOnGrain'
     imageIndex?: number
   }
+  /**
+   * How a tab's or activity list's first load went for the user, logged once
+   * per mount, when it settles after first coming into view.
+   */
+  'atmosphere:content:loaded': AtmosphereMetricContext & {
+    state: 'populated' | 'empty' | 'error'
+    itemCount: number
+    /** From first coming into view until settled; 0 if already loaded. */
+    durationMs: number
+    /** Whether it already had data, e.g. cached, when it came into view. */
+    hasCachedData: boolean
+  }
+  /** The user pulled to refresh a tab or activity list. */
+  'atmosphere:content:refresh': AtmosphereMetricContext
+  /**
+   * The user retried after an error, reloading everything (`initial`) or
+   * the next page (`pagination`).
+   */
+  'atmosphere:content:retry': AtmosphereMetricContext & {
+    phase: 'initial' | 'pagination'
+  }
+  /** Following or the activity list loaded another page. */
+  'atmosphere:list:pageLoaded': AtmosphereMetricContext & {
+    /** 0-based; the first page loaded with the list is 0. */
+    pageIndex: number
+    itemCount: number
+    totalItemCount: number
+  }
   /** The user opened a content card's options menu. */
   'atmosphere:menu:opened': AtmosphereContentMetricContext
   /**
