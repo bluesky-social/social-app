@@ -182,7 +182,11 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount, hasSession} = useSession()
-  const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
+  const feedFeedback = useFeedFeedback(
+    postSource?.feedSourceInfo,
+    hasSession,
+    'thread',
+  )
   const formatPostStatCount = useFormatPostStatCount()
 
   const post = postShadow

@@ -39,6 +39,12 @@ export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<
   'app.bsky.feed.defs#interactionSeen',
 ])
 
+/**
+ * Where an interaction happened, sent to the feed as `viewContext`. `thread` is
+ * the thread screen opened by tapping a post in a feed.
+ */
+export type FeedFeedbackViewContext = 'feed' | 'thread'
+
 export type StateContext = {
   enabled: boolean
   onItemSeen: (item: any) => void
@@ -59,6 +65,7 @@ stateContext.displayName = 'FeedFeedbackContext'
 export function useFeedFeedback(
   feedSourceInfo: FeedSourceInfo | undefined,
   hasSession: boolean,
+  viewContext: FeedFeedbackViewContext,
 ) {
   const ax = useAnalytics()
   const logger = ax.logger.useChild(ax.logger.Context.FeedFeedback)
@@ -134,7 +141,10 @@ export function useFeedFeedback(
   )
 
   const sendToFeedNoDelay = useCallback(() => {
-    const interactions = Array.from(queue.current).map(toInteraction)
+    const interactions = Array.from(queue.current, str => ({
+      ...toInteraction(str),
+      viewContext,
+    }))
     queue.current.clear()
 
     const interactionsToSend = interactions.filter(
@@ -172,7 +182,14 @@ export function useFeedFeedback(
     )
     throttledFlushAggregatedStats()
     logger.debug('flushed')
-  }, [client, throttledFlushAggregatedStats, proxyDid, enabled, feed])
+  }, [
+    client,
+    throttledFlushAggregatedStats,
+    proxyDid,
+    enabled,
+    feed,
+    viewContext,
+  ])
 
   const sendToFeed = useMemo(
     () =>

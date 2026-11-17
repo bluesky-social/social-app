@@ -209,7 +209,11 @@ function Feed() {
   }, [params])
   const feedUri = params.type === 'feedgen' ? params.uri : undefined
   const {data: feedInfo} = useFeedInfo(feedUri)
-  const feedFeedback = useFeedFeedback(feedInfo ?? undefined, hasSession)
+  const feedFeedback = useFeedFeedback(
+    feedInfo ?? undefined,
+    hasSession,
+    'feed',
+  )
   const feedParams =
     params.type === 'feedgen' && params.sourceInterstitial !== 'none'
       ? {feedCacheKey: params.sourceInterstitial}
