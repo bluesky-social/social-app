@@ -28,6 +28,7 @@ import {GalleryContext} from '#/components/Gallery/context'
 import {type GalleryRef} from '#/components/Gallery/types'
 import {useKeyboardHandlers} from '#/components/Gallery/useKeyboardHandlers'
 import {usePointerHandlers} from '#/components/Gallery/usePointerHandlers'
+import {useScrollNavigation} from '#/components/Gallery/useScrollNavigation'
 import {
   getIndexForOffset,
   getMaxOffset,
@@ -85,6 +86,7 @@ export function Root({
   onIndexChange,
   stretch = false,
   snapToItems = false,
+  reportBrowserScrolling = false,
   footer,
 }: {
   children?: React.ReactNode
@@ -101,11 +103,17 @@ export function Root({
   /**
    * Called when the user navigates to a different item via native swipe,
    * mouse drag, arrow keys, or Safari horizontal wheel events. Browser touch
-   * and non-Safari wheel scrolling do not report index changes. Not called on
-   * mount, for `scrollIntoView`, when focus
+   * and non-Safari wheel scrolling only report with `reportBrowserScrolling`.
+   * Not called on mount, for `scrollIntoView`, when focus
    * simply lands on an item, or when items are added, removed, or reordered.
    */
   onIndexChange?: (index: number, previousIndex: number) => void
+  /**
+   * Also report browser touch and Chrome/Firefox wheel scrolling to
+   * `onIndexChange` on web. Off by default, so existing consumers' counts
+   * don't change.
+   */
+  reportBrowserScrolling?: boolean
 }) {
   const {t: l} = useLingui()
   const {screenReaderEnabled} = useA11y()
@@ -347,6 +355,15 @@ export function Root({
     resetKey: keysSignature,
   })
 
+  useScrollNavigation({
+    scrollRef,
+    itemWidthsRef,
+    currentIndexRef,
+    itemCount,
+    resetKey: keysSignature,
+    onNavigate: reportBrowserScrolling ? setCurrentIndex : undefined,
+  })
+
   /*
    * Only count scrolls the user is doing. The rest are programmatic, or the
    * platform adjusting after a layout change, and just keep the index in sync.
@@ -368,7 +385,7 @@ export function Root({
       scrollOffsetRef.current = offset
       /*
        * Browser touch and trackpad scrolling must update the dots without
-       * changing the existing navigation callback or moving keyboard focus.
+       * moving keyboard focus. useScrollNavigation reports it, if asked.
        */
       updatePageForOffset(offset)
       return

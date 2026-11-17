@@ -1620,10 +1620,9 @@ export type Events = {
     resultCount: number
   }
   /**
-   * The user moved to another image in the photo dialog's carousel. Only
-   * reported for navigation the carousel can detect: native swipes, mouse
-   * drags, arrow keys, and Safari's horizontal wheel, not browser touch or
-   * other browsers' wheel scrolling.
+   * The user moved to another image in the photo dialog's carousel: a swipe,
+   * drag, arrow key, or wheel/trackpad scroll. Logged as each image becomes
+   * the leading one, so a long swipe can log several.
    */
   'atmosphere:photo:imageChanged': AtmosphereContentMetricContext & {
     fromIndex: number
