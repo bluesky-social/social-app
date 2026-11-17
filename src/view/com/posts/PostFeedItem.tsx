@@ -51,6 +51,7 @@ import {Features, useAnalytics} from '#/analytics'
 import {
   type FeedItem,
   FeedItemProvider,
+  repostVia,
   useFeedFeedbackContext,
 } from '#/features/feedFeedback'
 import {
@@ -125,12 +126,7 @@ export function PostFeedItem({
       authorDid: postShadowed.author.did,
       feedContext,
       reqId,
-      via:
-        bsky.isType(app.bsky.feed.defs.reasonRepost, reason) &&
-        reason.uri &&
-        reason.cid
-          ? {uri: reason.uri, cid: reason.cid}
-          : undefined,
+      via: repostVia(reason),
     }
     return (
       <ReportDialogMetadataContext.Provider key={postShadowed.uri}>
