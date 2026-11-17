@@ -4,7 +4,6 @@ import {Drawer} from 'react-native-drawer-layout'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {NavigationBar} from 'expo-navigation-bar'
 import {StatusBar} from 'expo-status-bar'
-import {BottomSheetOutlet} from '@bsky.app/bottom-sheet'
 import {updateActiveViewAsync} from '@bsky.app/expo-bluesky-swiss-army/src/VisibilityView'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
@@ -28,6 +27,7 @@ import {Takendown} from '#/screens/Takendown'
 import {atoms as a, select, useBreakpoints, useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
+import {PresentationGate as DialogPresentationGate} from '#/components/Dialog'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {InAppBrowserConsentDialog} from '#/components/dialogs/InAppBrowserConsent'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
@@ -102,30 +102,30 @@ function ShellInner() {
 
   return (
     <>
-      <View style={[a.h_full]}>
-        <ErrorBoundary
-          style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
-          <TabsNavigator layout={drawerLayout} />
-        </ErrorBoundary>
-      </View>
-      <Composer />
-      <MutedWordsDialog />
-      <SigninDialog />
-      <EmailDialog />
-      <AgeAssuranceRedirectDialog />
-      <InAppBrowserConsentDialog />
-      <LinkWarningDialog />
-      <Lightbox />
-      <NuxDialogs />
-      <GlobalReportDialog />
+      {/*
+       * Until the policy update has been completed by the user, hold back
+       * dialogs and anything that is portaled.
+       */}
+      <DialogPresentationGate enabled={policyUpdateState.completed}>
+        <View style={[a.h_full]}>
+          <ErrorBoundary
+            style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
+            <TabsNavigator layout={drawerLayout} />
+          </ErrorBoundary>
+        </View>
+        <Composer />
+        <MutedWordsDialog />
+        <SigninDialog />
+        <EmailDialog />
+        <AgeAssuranceRedirectDialog />
+        <InAppBrowserConsentDialog />
+        <LinkWarningDialog />
+        <Lightbox />
+        <NuxDialogs />
+        <GlobalReportDialog />
 
-      {/* Until policy update has been completed by the user, don't render anything that is portaled */}
-      {policyUpdateState.completed && (
-        <>
-          <PortalOutlet />
-          <BottomSheetOutlet />
-        </>
-      )}
+        {policyUpdateState.completed && <PortalOutlet />}
+      </DialogPresentationGate>
 
       <PolicyUpdateOverlayPortalOutlet />
     </>

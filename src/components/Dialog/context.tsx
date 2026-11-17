@@ -37,6 +37,32 @@ export function useDialogContext() {
   return useContext(Context)
 }
 
+const PresentationGateContext = createContext(true)
+PresentationGateContext.displayName = 'DialogPresentationGateContext'
+
+/**
+ * Holds back dialogs below it while `enabled` is false. A dialog opened in the
+ * meantime stays open in state and presents once `enabled` turns true. The
+ * shell uses this to keep dialogs behind the policy update overlay.
+ */
+export function PresentationGate({
+  enabled,
+  children,
+}: {
+  enabled: boolean
+  children: React.ReactNode
+}) {
+  return (
+    <PresentationGateContext value={enabled}>
+      {children}
+    </PresentationGateContext>
+  )
+}
+
+export function useIsDialogPresentationEnabled() {
+  return useContext(PresentationGateContext)
+}
+
 export function useDialogControl(): DialogOuterProps['control'] {
   const id = useId()
   const control = useRef<DialogControlRefProps>({

@@ -7,20 +7,12 @@ import {
   type BottomSheetViewProps,
 } from './src/BottomSheet.types'
 import {BottomSheetNativeComponent} from './src/BottomSheetNativeComponent'
-import {
-  BottomSheetOutlet,
-  BottomSheetPortalProvider,
-  BottomSheetProvider,
-} from './src/BottomSheetPortal'
 
 export {
   BottomSheet,
   BottomSheetNativeComponent,
-  BottomSheetOutlet,
   type BottomSheetPopoverMode,
-  BottomSheetPortalProvider,
   type BottomSheetPresentationSizeChangeEvent,
-  BottomSheetProvider,
   BottomSheetSnapPoint,
   type BottomSheetState,
   type BottomSheetViewProps,

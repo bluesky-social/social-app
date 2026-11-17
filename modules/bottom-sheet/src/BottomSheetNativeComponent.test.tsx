@@ -13,7 +13,6 @@ import {
   type BottomSheetViewProps,
 } from './BottomSheet.types'
 import {BottomSheetNativeComponent} from './BottomSheetNativeComponent'
-import {BottomSheetOutlet, BottomSheetProvider} from './BottomSheetPortal'
 
 type NativeViewProps = Pick<
   BottomSheetViewProps,
@@ -61,12 +60,9 @@ afterEach(() => {
 function renderOpenSheet(props: Omit<BottomSheetViewProps, 'children'>) {
   const ref = createRef<BottomSheetNativeComponent>()
   const result = render(
-    <BottomSheetProvider>
-      <BottomSheetNativeComponent ref={ref} {...props}>
-        <View />
-      </BottomSheetNativeComponent>
-      <BottomSheetOutlet />
-    </BottomSheetProvider>,
+    <BottomSheetNativeComponent ref={ref} {...props}>
+      <View />
+    </BottomSheetNativeComponent>,
   )
 
   act(() => ref.current?.present())
