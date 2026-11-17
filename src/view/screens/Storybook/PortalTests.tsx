@@ -1,4 +1,4 @@
-import {createContext, use, useState} from 'react'
+import {createContext, use, useRef, useState} from 'react'
 import {Pressable, ScrollView, View} from 'react-native'
 
 import {List} from '#/view/com/util/List'
@@ -29,6 +29,7 @@ export function PortalTests() {
       <InlineTextMenu />
       <GatedDialog />
       <DialogInsidePressable />
+      <MeasureInSheet />
     </View>
   )
 }
@@ -251,8 +252,8 @@ function KeyboardTapCheck() {
 }
 
 /**
- * Declared under a forced dark theme, like the video feed. The sheet is
- * painted in the app theme, so its content should follow the app theme too.
+ * Declared under a forced dark theme, like the video feed. The dialog should
+ * match the subtree it's declared in, sheet and content alike.
  */
 function DarkThemeDialog() {
   return (
@@ -285,7 +286,7 @@ function ThemeReport() {
   return (
     <Dialog.ScrollableInner label="Theme check">
       <H3>Theme inside the dialog: {t.name}</H3>
-      <Text>It should match the app theme, not “dark”.</Text>
+      <Text>It should be “dark”, like the subtree it’s declared in.</Text>
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )
@@ -423,5 +424,64 @@ function DialogInsidePressable() {
         </Dialog.ScrollableInner>
       </Dialog.Outer>
     </Pressable>
+  )
+}
+
+/**
+ * The sheet dispatches its own touches, in coordinates relative to the sheet,
+ * so `measure()` inside it has to be relative to the sheet too. Otherwise
+ * Pressability measures the button somewhere else and cancels a press as soon
+ * as the finger moves. This case sits at the bottom of the section, far from
+ * the screen origin.
+ */
+function MeasureInSheet() {
+  const control = Dialog.useDialogControl()
+  return (
+    <View>
+      <OpenButton
+        label="8. Open measure() check"
+        onPress={() => control.open()}
+      />
+      <Dialog.Outer control={control} testID="measure">
+        <Dialog.Handle />
+        <MeasureReport />
+      </Dialog.Outer>
+    </View>
+  )
+}
+
+function MeasureReport() {
+  const ref = useRef<React.ComponentRef<typeof View>>(null)
+  const [pageY, setPageY] = useState<number | null>(null)
+  const [presses, setPresses] = useState(0)
+  return (
+    <Dialog.ScrollableInner label="Measure check">
+      <View style={[a.gap_md]}>
+        <H3>measure() inside a sheet</H3>
+        <Text>
+          pageY should be small, measured from the top of the sheet, however far
+          down the page this dialog is declared.
+        </Text>
+        <View ref={ref} collapsable={false}>
+          <OpenButton
+            label={`Measure me (pageY: ${pageY ?? '?'})`}
+            onPress={() =>
+              ref.current?.measure((_x, _y, _width, _height, _pageX, y) =>
+                setPageY(Math.round(y)),
+              )
+            }
+          />
+        </View>
+        <Text>
+          Press, drag a few points without leaving the button, then let go. The
+          count should still go up.
+        </Text>
+        <OpenButton
+          label={`Drag-press me (${presses})`}
+          onPress={() => setPresses(p => p + 1)}
+        />
+      </View>
+      <Dialog.Close />
+    </Dialog.ScrollableInner>
   )
 }
