@@ -1,4 +1,5 @@
 import {Platform} from 'react-native'
+import {getCalendars} from 'expo-localization'
 import {AtUri} from '@atproto/syntax'
 
 import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
@@ -18,14 +19,18 @@ export function createBskyTopicsHeader(userInterests?: string) {
   }
 }
 
-/** Only disclose platform and service geolocation to Bluesky-owned feeds. */
+/**
+ * Only disclose platform, service geolocation and timezone to Bluesky-owned
+ * feeds.
+ */
 export function createBskyFeedHeaders(feedUri: string) {
   return isBlueskyOwnedFeed(feedUri) ? createBskyAppviewHeaders() : {}
 }
 
 /**
- * Platform and IP-based service data for Bluesky appview requests, never GPS.
- * Read at request time so callers pick up service updates.
+ * Platform, IP-based service data and the device timezone for Bluesky appview
+ * requests, never GPS. Read at request time so callers pick up service updates
+ * and timezone changes.
  */
 export function createBskyAppviewHeaders() {
   const headers: Record<string, string> = {
@@ -44,6 +49,12 @@ export function createBskyAppviewHeaders() {
   }
   if (geolocation?.ip) {
     headers['x-atproto-bsky-geo-ip'] = geolocation.ip
+  }
+
+  // IANA name, e.g. America/Sao_Paulo, so ranking can use local time of day
+  const timezone = getCalendars()[0]?.timeZone
+  if (timezone) {
+    headers['x-atproto-bsky-timezone'] = timezone
   }
   return headers
 }
