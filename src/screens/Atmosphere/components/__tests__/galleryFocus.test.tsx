@@ -168,6 +168,7 @@ jest.mock('#/components/Button', () => {
   }
 })
 jest.mock('#/components/Menu', () => ({
+  useMenuControl: () => ({open() {}}),
   Root: ({children}: {children: React.ReactNode}) => children,
   Trigger: ({
     children,

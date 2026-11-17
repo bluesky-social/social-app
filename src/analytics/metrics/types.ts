@@ -1638,6 +1638,25 @@ export type Events = {
     source: 'image' | 'viewOnGrain'
     imageIndex?: number
   }
+  /** The user opened a content card's options menu. */
+  'atmosphere:menu:opened': AtmosphereContentMetricContext
+  /**
+   * The user picked an action from a content card's options menu. This is
+   * intent, e.g. `createPost` opens the composer, but doesn't mean they
+   * posted, and `report` opens the report dialog.
+   */
+  'atmosphere:menu:action': AtmosphereContentMetricContext & {
+    action:
+      | 'share'
+      | 'copyLink'
+      | 'createPost'
+      | 'sendViaChat'
+      | 'viewExternal'
+      | 'viewProfile'
+      | 'report'
+    /** `report` only: the collection of the record being reported. */
+    reportCollection?: string
+  }
   /** The user opened an activity group's "View all" list. */
   'atmosphere:activity:viewAll': AtmosphereMetricContext & {
     subjectCount: number
