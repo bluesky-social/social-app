@@ -59,7 +59,7 @@ import {
 } from '#/features/feedFeedback'
 import {
   feedItemFromPostSource,
-  useUnstablePostSource,
+  usePostSource,
 } from '#/features/feedFeedback/postSource'
 
 const PARENT_CHUNK_SIZE = IS_NATIVE ? 5 : 20
@@ -71,7 +71,7 @@ export function PostThread({uri}: {uri: string}) {
   const {hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
-  const anchorPostSource = useUnstablePostSource(uri)
+  const anchorPostSource = usePostSource(uri)
   /*
    * Only the anchor is the feed item the user tapped, so only it reports feed
    * feedback. Parents and replies get the feed for analytics but no item.

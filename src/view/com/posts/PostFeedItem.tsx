@@ -54,10 +54,7 @@ import {
   repostVia,
   useFeedFeedbackContext,
 } from '#/features/feedFeedback'
-import {
-  buildPostSourceKey,
-  setUnstablePostSource,
-} from '#/features/feedFeedback/postSource'
+import {stashPostSource} from '#/features/feedFeedback/postSource'
 import {useActorStatus} from '#/features/liveNow'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -273,7 +270,7 @@ let FeedItemInner = ({
       feedDescriptor,
     })
     unstableCacheProfileView(queryClient, post.author)
-    setUnstablePostSource(buildPostSourceKey(post.uri, post.author.handle), {
+    stashPostSource({
       feedSourceInfo,
       post: {
         post,
