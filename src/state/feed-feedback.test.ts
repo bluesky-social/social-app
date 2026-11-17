@@ -174,4 +174,18 @@ describe('useFeedFeedback', () => {
       'app.bsky.feed.defs#interactionLike',
     ])
   })
+
+  it('sends follows to third-party feeds', () => {
+    const result = render('thread', thirdParty)
+    act(() => {
+      result.current.sendInteraction({
+        item: POST_URI,
+        event: 'app.bsky.feed.defs#interactionFollow',
+      })
+    })
+
+    expect(flush(thirdParty).map(interaction => interaction.event)).toEqual([
+      'app.bsky.feed.defs#interactionFollow',
+    ])
+  })
 })
