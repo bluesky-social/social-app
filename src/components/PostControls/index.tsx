@@ -311,6 +311,8 @@ let PostControls = ({
       <View style={[a.flex_row, a.justify_end, secondaryControlSpacingStyles]}>
         <BookmarkButton
           post={post}
+          feedContext={feedContext}
+          reqId={reqId}
           big={big}
           logContext={logContext}
           hitSlop={{
