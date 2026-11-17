@@ -18,9 +18,9 @@ export function StarterPack(props: {
   images: Map<string, Buffer>
 }) {
   const {starterPack, images} = props
-  const record = bsky.validate(
+  const record = bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
     starterPack.record,
-    AppBskyGraphStarterpack.validateRecord,
+    AppBskyGraphStarterpack.isRecord,
   )
     ? starterPack.record
     : null
@@ -136,14 +136,9 @@ export function StarterPack(props: {
           style={{
             padding: '75px 30px 0px',
             fontSize: isLongTitle ? 55 : 65,
-            display: 'block',
-            width: '100%',
+            display: 'flex',
             textAlign: 'center',
             textWrap: 'balance',
-            wordBreak: 'break-word',
-            lineClamp: 2,
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
           }}>
           {record?.name || 'Starter Pack'}
         </div>
