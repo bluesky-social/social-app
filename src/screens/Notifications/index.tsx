@@ -572,20 +572,27 @@ function NotificationsHeader({
 
   const ref = useRef<React.ComponentRef<typeof View>>(null)
   const height = useSharedValue(0)
+  const updateHeight = useCallback(
+    (headerHeight: number) => {
+      /*
+       * A web screen left under another is hidden and measures 0. Keeping
+       * the last height means coming back to it doesn't flash the lists
+       * under the header
+       */
+      if (headerHeight === 0) return
+      height.set(headerHeight)
+      onHeightChange(headerHeight)
+    },
+    [height, onHeightChange],
+  )
   /*
-   * Measured up front as well as on layout events, which only arrive after
-   * the first frame is drawn (on web, a timeout after a resize observer), so
-   * the lists would start a frame too high, under the header. A web screen
-   * left under another is hidden and measures 0, which is skipped so that
-   * coming back to it doesn't flash the same way
+   * Layout events only arrive after the first frame is drawn (on web, a
+   * timeout after a resize observer), so the lists would start a frame too
+   * high, under the header. Measuring up front sets the height before then
    */
-  const measure = useCallback(() => {
-    const headerHeight = ref.current?.getBoundingClientRect().height
-    if (!headerHeight) return
-    height.set(headerHeight)
-    onHeightChange(headerHeight)
-  }, [height, onHeightChange])
-  useLayoutEffect(() => measure(), [measure])
+  useLayoutEffect(() => {
+    updateHeight(ref.current?.getBoundingClientRect().height ?? 0)
+  }, [updateHeight])
   const [pillsHeight, setPillsHeight] = useState(0)
   /*
    * Shrinks the fade from the top as the pills move up, so that it always
@@ -605,7 +612,7 @@ function NotificationsHeader({
       ref={ref}
       pointerEvents="box-none"
       style={[a.fixed, a.z_10, a.top_0, a.left_0, a.right_0]}
-      onLayout={measure}>
+      onLayout={event => updateHeight(event.nativeEvent.layout.height)}>
       {/*
        * On native, the background fades out under the header, down to the
        * bottom of the pills as they move up. On web, the title and the pills
