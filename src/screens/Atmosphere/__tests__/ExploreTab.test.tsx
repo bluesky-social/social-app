@@ -9,6 +9,10 @@ import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphere
 import {AtmosphereExploreTab} from '#/screens/Atmosphere/ExploreTab'
 import {app} from '#/lexicons'
 
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: jest.fn()}),
+}))
+
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({
     _: (message: {message?: string} | string) =>

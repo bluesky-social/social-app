@@ -22,6 +22,10 @@ export type AtmosphereMetricContext = {
   surface: AtmosphereSurface
 }
 
+/** Explore's sections of featured apps and content. */
+export type AtmosphereSection =
+  'apps' | 'articles' | 'livestreams' | 'photos' | 'publications'
+
 /** One content card, as reported by Atmosphere's content events. */
 export type AtmosphereContentMetricContext = AtmosphereMetricContext & {
   contentType: 'article' | 'publication' | 'gallery' | 'livestream'
@@ -30,7 +34,7 @@ export type AtmosphereContentMetricContext = AtmosphereMetricContext & {
   /** 0-based, in its list or, on Explore, its section. */
   position: number
   /** Explore's section the card is in. */
-  section?: 'articles' | 'livestreams' | 'photos' | 'publications'
+  section?: Exclude<AtmosphereSection, 'apps'>
   /** Following only: the collection (record NSID) of the activity. */
   collection?: string
   /**

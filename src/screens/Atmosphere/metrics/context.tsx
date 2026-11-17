@@ -112,41 +112,39 @@ export function AtmosphereContentItem({
   ...item
 }: Item & {style?: StyleProp<ViewStyle>; children: React.ReactNode}) {
   const ax = useAnalytics()
-  const scope = useContext(ScopeContext)
-  const ref = useRef<React.ComponentRef<typeof View>>(null)
-  useImpression(
-    ref,
-    `${item.section ?? ''}:${item.contentType}:${item.contentId}`,
-    () => {
-      if (!scope) return
-      ax.metric('atmosphere:content:impression', {
-        tab: scope.tab,
-        surface: scope.surface,
-        ...item,
-      })
-    },
-  )
   return (
     <ItemContext value={item}>
-      <View ref={ref} style={style}>
+      <AtmosphereImpression
+        style={style}
+        impressionKey={`${item.section ?? ''}:${item.contentType}:${item.contentId}`}
+        onImpression={context =>
+          ax.metric('atmosphere:content:impression', {...context, ...item})
+        }>
         {children}
-      </View>
+      </AtmosphereImpression>
     </ItemContext>
   )
 }
 
 /**
- * Calls `onImpression` once `ref` has stayed mostly visible for
- * `MIN_VISIBLE_MS` while the scope is in view, at most once per `key` per
- * visit.
+ * Calls `onImpression` once its children have stayed mostly visible for
+ * `MIN_VISIBLE_MS` while the scope is in view, at most once per
+ * `impressionKey` per visit. Logs nothing outside a scope.
  */
-function useImpression(
-  ref: React.RefObject<React.ComponentRef<typeof View> | null>,
-  key: string,
-  onImpression: () => void,
-) {
+export function AtmosphereImpression({
+  impressionKey,
+  onImpression,
+  style,
+  children,
+}: {
+  impressionKey: string
+  onImpression: (context: AtmosphereMetricContext) => void
+  style?: StyleProp<ViewStyle>
+  children: React.ReactNode
+}) {
   const scope = useContext(ScopeContext)
   const visit = scope?.visit
+  const ref = useRef<React.ComponentRef<typeof View>>(null)
   // Re-renders once logged, to stop watching
   const [loggedVisit, setLoggedVisit] = useState<Visit>()
   const isVisible = useIsVisible(
@@ -154,18 +152,25 @@ function useImpression(
     !!scope?.isActive &&
       !!visit &&
       visit !== loggedVisit &&
-      !visit.seen.has(key),
+      !visit.seen.has(impressionKey),
   )
-  const log = useNonReactiveCallback(onImpression)
+  const log = useNonReactiveCallback(() => {
+    if (scope) onImpression({tab: scope.tab, surface: scope.surface})
+  })
   useEffect(() => {
     if (!isVisible || !visit) return
     const timeout = setTimeout(() => {
       setLoggedVisit(visit)
-      // Another mount of the same card may have logged it this visit
-      if (visit.seen.has(key)) return
-      visit.seen.add(key)
+      // Another mount with the same key may have logged it this visit
+      if (visit.seen.has(impressionKey)) return
+      visit.seen.add(impressionKey)
       log()
     }, MIN_VISIBLE_MS)
     return () => clearTimeout(timeout)
-  }, [isVisible, visit, key, log])
+  }, [isVisible, visit, impressionKey, log])
+  return (
+    <View ref={ref} style={style}>
+      {children}
+    </View>
+  )
 }

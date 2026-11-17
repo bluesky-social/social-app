@@ -12,6 +12,7 @@ import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {
   type AtmosphereContentMetricContext,
   type AtmosphereMetricContext,
+  type AtmosphereSection,
   type AtmosphereTab,
 } from '#/screens/Atmosphere/metrics/types'
 import {type SharePlatformId} from '#/components/ShareDialog/catalog'
@@ -1519,6 +1520,13 @@ export type Events = {
   // user dismisses the Atmosphere introduction banner
   'atmosphere:nux:bannerDismissed': {}
   /**
+   * The Atmosphere introduction banner was seen, once per Explore visit (see
+   * `atmosphere:content:impression`).
+   */
+  'atmosphere:nux:impression': {}
+  /** The user opened the About Atmosphere dialog from the banner. */
+  'atmosphere:nux:learnMore': {}
+  /**
    * A tab of the Atmosphere screen came into view: the tab it's on when the
    * screen gains focus, which includes mounting, and each tab the user
    * switches to, once the pager settles on it. Coming back to the app does
@@ -1571,6 +1579,19 @@ export type Events = {
   'atmosphere:profile:press': AtmosphereMetricContext & {
     profileDid: string
     source: 'activityHeader' | 'cardMenu' | 'photoDialog'
+  }
+  /**
+   * An Explore section was seen, once per visit, by the same rule as
+   * `atmosphere:content:impression`. Only non-empty sections show.
+   */
+  'atmosphere:section:impression': AtmosphereMetricContext & {
+    section: AtmosphereSection
+    itemCount: number
+  }
+  /** The user pressed a section's "See more", which switches tabs. */
+  'atmosphere:section:seeMore': AtmosphereMetricContext & {
+    section: 'apps'
+    destinationTab: 'apps'
   }
   /** The user opened an activity group's "View all" list. */
   'atmosphere:activity:viewAll': AtmosphereMetricContext & {

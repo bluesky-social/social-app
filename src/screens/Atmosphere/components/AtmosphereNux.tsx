@@ -7,12 +7,12 @@ import {HITSLOP_10} from '#/lib/constants'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {AboutAtmosphereDialog} from '#/screens/Atmosphere/components/AboutAtmosphereDialog'
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
+import {AtmosphereImpression} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, tokens, useAlf, utils} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {GradientFill} from '#/components/GradientFill'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/TimesLarge'
-import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
@@ -27,8 +27,6 @@ export function AtmosphereNux() {
   if (variables || nux?.completed) return null
 
   const dismiss = () => {
-    Toast.show(`TEMP: Dismissed the banner. Will remove for production.`)
-    return
     save({
       id: Nux.AtmosphereNux,
       completed: true,
@@ -43,7 +41,10 @@ export function AtmosphereNux() {
   }
 
   return (
-    <View style={[a.pb_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
+    <AtmosphereImpression
+      impressionKey="nux"
+      onImpression={() => ax.metric('atmosphere:nux:impression', {})}
+      style={[a.pb_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
       <View
         style={[
           a.w_full,
@@ -105,7 +106,10 @@ export function AtmosphereNux() {
             accessibilityHint={l`Opens a dialog with more information about the Atmosphere`}
             hitSlop={HITSLOP_10}
             testID="atmosphereNuxLearnMore"
-            onPress={aboutDialogControl.open}
+            onPress={() => {
+              ax.metric('atmosphere:nux:learnMore', {})
+              aboutDialogControl.open()
+            }}
             color="primary"
             size="small"
             style={[a.px_md, a.py_xs]}>
@@ -133,6 +137,6 @@ export function AtmosphereNux() {
         </Button>
       </View>
       <AboutAtmosphereDialog control={aboutDialogControl} />
-    </View>
+    </AtmosphereImpression>
   )
 }

@@ -13,10 +13,16 @@ import {
   getAtmospherePublications,
 } from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
+import {
+  AtmosphereImpression,
+  useAtmosphereMetricContext,
+} from '#/screens/Atmosphere/metrics/context'
+import {type AtmosphereSection} from '#/screens/Atmosphere/metrics/types'
 import {atoms as a, useTheme} from '#/alf'
 import * as Gallery from '#/components/Gallery'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {useAnalytics} from '#/analytics'
 import {AtmosphereNux} from './components/AtmosphereNux'
 import {FeaturedApps} from './components/FeaturedApps'
 import {FeaturedArticles} from './components/FeaturedArticles'
@@ -25,10 +31,24 @@ import {FeaturedPhotos} from './components/FeaturedPhotos'
 import {FeaturedPublications} from './components/FeaturedPublications'
 
 export function AtmosphereExploreTab({
-  onPressSeeMoreApps,
+  onPressSeeMoreApps: onPressSeeMoreAppsProp,
 }: {
   onPressSeeMoreApps?: () => void
 }) {
+  const ax = useAnalytics()
+  const metricContext = useAtmosphereMetricContext()
+  const onPressSeeMoreApps =
+    onPressSeeMoreAppsProp &&
+    (() => {
+      if (metricContext) {
+        ax.metric('atmosphere:section:seeMore', {
+          ...metricContext,
+          section: 'apps',
+          destinationTab: 'apps',
+        })
+      }
+      onPressSeeMoreAppsProp()
+    })
   const t = useTheme()
   const {t: l} = useLingui()
   const {data, isError, isPending, refetch} = useAtmosphereExploreQuery()
@@ -84,6 +104,12 @@ export function AtmosphereExploreTab({
     )
   }
 
+  const apps = getAtmosphereExploreApps(data)
+  const articles = getAtmosphereArticles(data, moderationOpts)
+  const livestreams = getAtmosphereLivestreams(data)
+  const photos = getAtmospherePhotos(data, moderationOpts)
+  const publications = getAtmospherePublications(data, moderationOpts)
+
   return (
     <Layout.Content
       testID="atmosphereExploreTab"
@@ -98,20 +124,53 @@ export function AtmosphereExploreTab({
             </View>
           ) : undefined}
           <AtmosphereNux />
-          <FeaturedApps
-            apps={getAtmosphereExploreApps(data)}
-            onPressSeeMore={onPressSeeMoreApps}
-          />
-          <FeaturedArticles
-            articles={getAtmosphereArticles(data, moderationOpts)}
-          />
-          <FeaturedLivestreams livestreams={getAtmosphereLivestreams(data)} />
-          <FeaturedPhotos photos={getAtmospherePhotos(data, moderationOpts)} />
-          <FeaturedPublications
-            publications={getAtmospherePublications(data, moderationOpts)}
-          />
+          <Section section="apps" itemCount={apps.length}>
+            <FeaturedApps apps={apps} onPressSeeMore={onPressSeeMoreApps} />
+          </Section>
+          <Section section="articles" itemCount={articles.length}>
+            <FeaturedArticles articles={articles} />
+          </Section>
+          <Section section="livestreams" itemCount={livestreams.length}>
+            <FeaturedLivestreams livestreams={livestreams} />
+          </Section>
+          <Section section="photos" itemCount={photos.length}>
+            <FeaturedPhotos photos={photos} />
+          </Section>
+          <Section section="publications" itemCount={publications.length}>
+            <FeaturedPublications publications={publications} />
+          </Section>
         </View>
       </Gallery.Bleed>
     </Layout.Content>
+  )
+}
+
+/**
+ * Logs the section's impression. Renders nothing for an empty section, which
+ * would otherwise leave an empty wrapper taking up a gap.
+ */
+function Section({
+  section,
+  itemCount,
+  children,
+}: {
+  section: AtmosphereSection
+  itemCount: number
+  children: React.ReactNode
+}) {
+  const ax = useAnalytics()
+  if (!itemCount) return null
+  return (
+    <AtmosphereImpression
+      impressionKey={`section:${section}`}
+      onImpression={context =>
+        ax.metric('atmosphere:section:impression', {
+          ...context,
+          section,
+          itemCount,
+        })
+      }>
+      {children}
+    </AtmosphereImpression>
   )
 }
