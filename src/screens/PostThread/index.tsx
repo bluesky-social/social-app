@@ -75,6 +75,7 @@ export function PostThread({uri}: {uri: string}) {
   const feedFeedback = useFeedFeedback(
     anchorPostSource?.feedSourceInfo,
     hasSession,
+    'thread',
   )
 
   /*
