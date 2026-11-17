@@ -281,7 +281,9 @@ export class SafelinkClient {
       if (this.stopped) {
         return
       }
-      redirectLogger.error({error: err}, 'error getting Ozone agent')
+      // `err`, not `error`: pino's serializer for that key logs the message,
+      // stack and cause chain, where a plain object key drops them all.
+      redirectLogger.error({err}, 'error getting Ozone agent')
       this.scheduleFetchEvents(SAFELINK_MAX_FETCH_INTERVAL)
       return
     }
@@ -302,10 +304,7 @@ export class SafelinkClient {
       if (this.stopped) {
         return
       }
-      redirectLogger.error(
-        {error: err},
-        'error fetching safelink events from Ozone',
-      )
+      redirectLogger.error({err}, 'error fetching safelink events from Ozone')
       this.scheduleFetchEvents(SAFELINK_MAX_FETCH_INTERVAL)
       return
     }
