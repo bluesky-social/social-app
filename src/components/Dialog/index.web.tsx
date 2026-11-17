@@ -18,11 +18,13 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {VirtualizedListContextResetter} from 'react-native-web/dist/vendor/react-native/VirtualizedList/VirtualizedListContext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import * as DismissableLayer from '@radix-ui/react-dismissable-layer'
 import * as FocusGuards from '@radix-ui/react-focus-guards'
 import * as FocusScope from '@radix-ui/react-focus-scope'
+import {createPortal} from 'react-dom'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {logger} from '#/logger'
@@ -31,16 +33,23 @@ import {useDialogStateControlContext} from '#/state/dialogs'
 import {type ListMethods} from '#/view/com/util/List'
 import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
-import {Context} from '#/components/Dialog/context'
+import {ContentBoundary} from '#/components/Dialog/ContentBoundary'
+import {
+  Context,
+  useIsDialogPresentationEnabled,
+} from '#/components/Dialog/context'
 import {
   type DialogControlProps,
   type DialogInnerProps,
   type DialogOuterProps,
 } from '#/components/Dialog/types'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {Portal} from '#/components/Portal'
 
-export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
+export {
+  PresentationGate,
+  useDialogContext,
+  useDialogControl,
+} from '#/components/Dialog/context'
 export * from '#/components/Dialog/shared'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
@@ -64,6 +73,7 @@ export function Outer({
   const {gtMobile} = useBreakpoints()
   const [isOpen, setIsOpen] = useState(false)
   const {setDialogIsOpen} = useDialogStateControlContext()
+  const isPresentationEnabled = useIsDialogPresentationEnabled()
 
   const open = useCallback(() => {
     onOpen?.()
@@ -147,53 +157,64 @@ export function Outer({
     [close, preventDismiss],
   )
 
-  return (
-    <>
-      {isOpen && (
-        <Portal>
-          <Context.Provider value={context}>
-            <RemoveScrollBar />
-            <Pressable
-              accessibilityHint={undefined}
-              accessibilityLabel={_(msg`Close active dialog`)}
-              onPointerDown={e => {
-                pressStartTarget.current = e.target
-              }}
-              onPress={handleBackgroundPress}>
+  /*
+   * A React portal rather than our state-based one, so the content renders in
+   * the same commit as its owner and keeps its context. React events still
+   * bubble along the React tree, but the backdrop Pressable below stops clicks
+   * and Enter key presses, and Inner stops clicks and touches, before they
+   * reach the owner. The list context is reset so a list in the dialog
+   * doesn't think it's nested in a list the dialog was declared in.
+   */
+  if (!isOpen || !isPresentationEnabled) {
+    return null
+  }
+
+  return createPortal(
+    <VirtualizedListContextResetter>
+      <ContentBoundary>
+        <Context.Provider value={context}>
+          <RemoveScrollBar />
+          <Pressable
+            accessibilityHint={undefined}
+            accessibilityLabel={_(msg`Close active dialog`)}
+            onPointerDown={e => {
+              pressStartTarget.current = e.target
+            }}
+            onPress={handleBackgroundPress}>
+            <View
+              style={[
+                web(a.fixed),
+                a.inset_0,
+                a.z_10,
+                a.px_xl,
+                webOptions?.alignCenter ? a.justify_center : undefined,
+                a.align_center,
+                {
+                  overflowY: 'auto',
+                  paddingVertical: gtMobile ? '10vh' : a.pt_xl.paddingTop,
+                },
+              ]}>
+              <Backdrop />
+              {/**
+               * This is needed to prevent centered dialogs from overflowing
+               * above the screen, and provides a "natural" centering so that
+               * stacked dialogs appear relatively aligned.
+               */}
               <View
                 style={[
-                  web(a.fixed),
-                  a.inset_0,
-                  a.z_10,
-                  a.px_xl,
-                  webOptions?.alignCenter ? a.justify_center : undefined,
+                  a.w_full,
+                  a.z_20,
                   a.align_center,
-                  {
-                    overflowY: 'auto',
-                    paddingVertical: gtMobile ? '10vh' : a.pt_xl.paddingTop,
-                  },
+                  web({minHeight: '60vh', position: 'static'}),
                 ]}>
-                <Backdrop />
-                {/**
-                 * This is needed to prevent centered dialogs from overflowing
-                 * above the screen, and provides a "natural" centering so that
-                 * stacked dialogs appear relatively aligned.
-                 */}
-                <View
-                  style={[
-                    a.w_full,
-                    a.z_20,
-                    a.align_center,
-                    web({minHeight: '60vh', position: 'static'}),
-                  ]}>
-                  {children}
-                </View>
+                {children}
               </View>
-            </Pressable>
-          </Context.Provider>
-        </Portal>
-      )}
-    </>
+            </View>
+          </Pressable>
+        </Context.Provider>
+      </ContentBoundary>
+    </VirtualizedListContextResetter>,
+    document.body,
   )
 }
 

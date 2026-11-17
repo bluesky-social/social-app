@@ -15,6 +15,7 @@ import {Deactivated} from '#/screens/Deactivated'
 import {Takendown} from '#/screens/Takendown'
 import {atoms as a, select, useBreakpoints, useTheme} from '#/alf'
 import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
+import {PresentationGate as DialogPresentationGate} from '#/components/Dialog'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
@@ -61,29 +62,30 @@ function ShellInner() {
   )
   return (
     <>
-      <ErrorBoundary>
-        <FlatNavigator layout={drawerLayout} />
-      </ErrorBoundary>
-      <Composer />
-      <MutedWordsDialog />
-      <SigninDialog />
-      <EmailDialog />
-      <AgeAssuranceRedirectDialog />
-      <LinkWarningDialog />
-      <Lightbox />
-      <NuxDialogs />
-      <GlobalReportDialog />
+      {/*
+       * Until the policy update has been completed by the user, hold back
+       * dialogs and anything that is portaled.
+       */}
+      <DialogPresentationGate enabled={policyUpdateState.completed}>
+        <ErrorBoundary>
+          <FlatNavigator layout={drawerLayout} />
+        </ErrorBoundary>
+        <Composer />
+        <MutedWordsDialog />
+        <SigninDialog />
+        <EmailDialog />
+        <AgeAssuranceRedirectDialog />
+        <LinkWarningDialog />
+        <Lightbox />
+        <NuxDialogs />
+        <GlobalReportDialog />
 
-      {welcomeModalControl.isOpen && (
-        <WelcomeModal control={welcomeModalControl} />
-      )}
+        {welcomeModalControl.isOpen && (
+          <WelcomeModal control={welcomeModalControl} />
+        )}
 
-      {/* Until policy update has been completed by the user, don't render anything that is portaled */}
-      {policyUpdateState.completed && (
-        <>
-          <PortalOutlet />
-        </>
-      )}
+        {policyUpdateState.completed && <PortalOutlet />}
+      </DialogPresentationGate>
 
       <PolicyUpdateOverlayPortalOutlet />
     </>

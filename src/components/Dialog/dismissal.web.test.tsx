@@ -27,8 +27,18 @@ jest.mock('#/alf', () => ({
   }),
 }))
 jest.mock('#/logger', () => ({logger: {error: jest.fn()}}))
-jest.mock('#/components/Portal', () => ({
-  Portal: ({children}: {children: React.ReactNode}) => <>{children}</>,
+jest.mock('react-dom', () => ({
+  createPortal: (children: React.ReactNode) => children,
+}))
+jest.mock(
+  'react-native-web/dist/vendor/react-native/VirtualizedList/VirtualizedListContext',
+  () => ({
+    VirtualizedListContextResetter: ({children}: {children: React.ReactNode}) =>
+      children,
+  }),
+)
+jest.mock('#/components/Dialog/ContentBoundary', () => ({
+  ContentBoundary: ({children}: {children: React.ReactNode}) => <>{children}</>,
 }))
 jest.mock('react-remove-scroll-bar', () => ({RemoveScrollBar: () => null}))
 jest.mock('@radix-ui/react-focus-guards', () => ({useFocusGuards: () => {}}))
@@ -116,6 +126,16 @@ const isCloseDisabled = () => {
 }
 
 describe('Dialog preventDismiss (web)', () => {
+  // The dialog portals into document.body, which this test environment lacks.
+  beforeAll(() => {
+    Object.defineProperty(globalThis, 'document', {
+      value: {body: {}},
+      configurable: true,
+    })
+  })
+  afterAll(() => {
+    Reflect.deleteProperty(globalThis, 'document')
+  })
   beforeEach(() => {
     jest.useFakeTimers()
     mockOnDismiss = undefined
