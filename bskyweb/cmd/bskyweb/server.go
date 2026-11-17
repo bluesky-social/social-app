@@ -869,7 +869,7 @@ func bskyProfileCanonicalURL(handle, tab string) string {
 func profileAuthorFeedFilter(tab string) (string, bool) {
 	switch tab {
 	case "replies":
-		return "posts_with_replies", true
+		return "posts_and_replies_only", true
 	case "media":
 		return "posts_with_media", true
 	case "videos":

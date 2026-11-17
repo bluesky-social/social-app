@@ -61,6 +61,7 @@ import {
   PostFeedVideoGridRowPlaceholder,
   useVideoGridColumns,
 } from '#/components/feeds/PostFeedVideoGridRow'
+import {RepliesFeedLimited} from '#/components/feeds/RepliesFeedLimited'
 import {FeedTrendingTopicsInterstitial} from '#/components/interstitials/FeedTrendingTopics'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
 import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
@@ -303,6 +304,7 @@ let PostFeed = ({
     error,
     refetch,
     hasNextPage,
+    isPageFillLimited,
     isFetchingNextPage,
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
@@ -443,7 +445,8 @@ let PostFeed = ({
     } else if (
       feedType === 'author' &&
       (feedTab === 'posts_and_author_threads' ||
-        feedTab === 'posts_with_replies')
+        feedTab === 'posts_with_replies' ||
+        feedTab === 'posts_and_replies_only')
     ) {
       feedKind = 'profile'
     }
@@ -809,7 +812,7 @@ let PostFeed = ({
   const renderItem = useCallback(
     ({item: row, index: rowIndex}: ListRenderItemInfo<FeedRow>) => {
       if (row.type === 'empty') {
-        return renderEmptyState()
+        return isPageFillLimited ? <RepliesFeedLimited /> : renderEmptyState()
       } else if (row.type === 'error') {
         return (
           <PostFeedErrorMessage
@@ -932,6 +935,7 @@ let PostFeed = ({
     },
     [
       renderEmptyState,
+      isPageFillLimited,
       feed,
       error,
       onPressTryAgain,
@@ -947,8 +951,15 @@ let PostFeed = ({
     ],
   )
 
+  const shouldRenderPageFillLimit =
+    isPageFillLimited && !isEmpty && !isFetching && !isError
   const shouldRenderEndOfFeed =
-    !hasNextPage && !isEmpty && !isFetching && !isError && !!renderEndOfFeed
+    !hasNextPage &&
+    !isPageFillLimited &&
+    !isEmpty &&
+    !isFetching &&
+    !isError &&
+    !!renderEndOfFeed
   const bottomBarOffset = useBottomBarOffset()
   const FeedFooter = useCallback(() => {
     /*
@@ -966,6 +977,10 @@ let PostFeed = ({
         <ActivityIndicator />
         <View style={{height: offset}} />
       </View>
+    ) : shouldRenderPageFillLimit ? (
+      <View style={{minHeight: offset}}>
+        <RepliesFeedLimited hasPosts />
+      </View>
     ) : shouldRenderEndOfFeed ? (
       <View style={{minHeight: offset}}>{renderEndOfFeed()}</View>
     ) : (
@@ -973,6 +988,7 @@ let PostFeed = ({
     )
   }, [
     isFetchingNextPage,
+    shouldRenderPageFillLimit,
     shouldRenderEndOfFeed,
     renderEndOfFeed,
     headerOffset,

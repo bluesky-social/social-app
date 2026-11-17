@@ -54,7 +54,7 @@ func TestProfileAuthorFeedFilter(t *testing.T) {
 	}{
 		{tab: "", wantFilter: "posts_no_replies", wantIncluded: true},
 		{tab: "posts", wantFilter: "posts_no_replies", wantIncluded: true},
-		{tab: "replies", wantFilter: "posts_with_replies", wantIncluded: true},
+		{tab: "replies", wantFilter: "posts_and_replies_only", wantIncluded: true},
 		{tab: "media", wantFilter: "posts_with_media", wantIncluded: true},
 		{tab: "videos", wantFilter: "posts_with_video", wantIncluded: true},
 		{tab: "feeds", wantIncluded: false},
