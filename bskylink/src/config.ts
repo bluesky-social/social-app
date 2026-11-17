@@ -1,5 +1,7 @@
 import {envBool, envInt, envList, envStr} from '@atproto/common'
 
+import {parseAwsIamDbUrl} from './db/awsIamAuth.js'
+
 export type Config = {
   service: ServiceConfig
   db: DbConfig
@@ -24,6 +26,8 @@ export type DbConfig = {
   migrationUrl?: string
   pool: DbPoolConfig
   schema?: string
+  /** Authenticate with AWS RDS IAM tokens instead of a password. */
+  awsIamAuth: boolean
 }
 
 export type DbPoolConfig = {
@@ -44,6 +48,7 @@ export type Environment = {
   dbPostgresPoolSize?: number
   dbPostgresPoolMaxUses?: number
   dbPostgresPoolIdleTimeoutMs?: number
+  dbPostgresAwsIamAuth?: boolean
   safelinkEnabled?: boolean
   safelinkPdsUrl?: string
   safelinkAgentIdentifier?: string
@@ -66,6 +71,7 @@ export const readEnv = (): Environment => {
     dbPostgresPoolIdleTimeoutMs: envInt(
       'LINK_DB_POSTGRES_POOL_IDLE_TIMEOUT_MS',
     ),
+    dbPostgresAwsIamAuth: envBool('LINK_DB_POSTGRES_AWS_IAM_AUTH'),
     safelinkEnabled: envBool('LINK_SAFELINK_ENABLED'),
     safelinkPdsUrl: envStr('LINK_SAFELINK_PDS_URL'),
     safelinkAgentIdentifier: envStr('LINK_SAFELINK_AGENT_IDENTIFIER'),
@@ -100,6 +106,14 @@ export const envToCfg = (env: Environment): Config => {
       maxUses: env.dbPostgresPoolMaxUses ?? Infinity,
       size: env.dbPostgresPoolSize ?? 10,
     },
+    awsIamAuth: env.dbPostgresAwsIamAuth ?? false,
+  }
+  if (dbCfg.awsIamAuth) {
+    // Refuse a URL that would bypass IAM auth before anything connects
+    parseAwsIamDbUrl(dbCfg.url, 'LINK_DB_POSTGRES_URL')
+    if (dbCfg.migrationUrl) {
+      parseAwsIamDbUrl(dbCfg.migrationUrl, 'LINK_DB_POSTGRES_MIGRATION_URL')
+    }
   }
 
   return {

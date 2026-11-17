@@ -14,6 +14,7 @@ import {
 import {default as Pg} from 'pg'
 
 import {dbLogger as log} from '../logger.js'
+import {awsIamPoolConfig} from './awsIamAuth.js'
 import {default as migrations} from './migrations/index.js'
 import {DbMigrationProvider} from './migrations/provider.js'
 import {type DbSchema} from './schema.js'
@@ -43,6 +44,7 @@ export class Database {
         poolSize: opts.poolSize,
         poolMaxUses: opts.poolMaxUses,
         poolIdleTimeoutMs: opts.poolIdleTimeoutMs,
+        awsIamAuth: !!opts.awsIamAuth,
       },
       'Creating database connection',
     )
@@ -50,7 +52,7 @@ export class Database {
     const pool =
       opts.pool ??
       new Pg.Pool({
-        connectionString: url,
+        ...(opts.awsIamAuth ? awsIamPoolConfig(url) : {connectionString: url}),
         max: opts.poolSize,
         maxUses: opts.poolMaxUses,
         idleTimeoutMillis: opts.poolIdleTimeoutMs,
@@ -209,6 +211,7 @@ type PgOptions = {
   poolMaxUses?: number
   poolIdleTimeoutMs?: number
   txLockNonce?: string
+  awsIamAuth?: boolean
 }
 
 class LeakyTxPlugin implements KyselyPlugin {
