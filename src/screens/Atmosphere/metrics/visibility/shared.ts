@@ -15,6 +15,6 @@ export function isMostlyVisible({
   viewportArea: number
 }) {
   return (
-    elementArea > 0 && visibleArea >= Math.min(elementArea, viewportArea) / 2
+    visibleArea > 0 && visibleArea >= Math.min(elementArea, viewportArea) / 2
   )
 }
