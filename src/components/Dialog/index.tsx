@@ -55,7 +55,6 @@ import {
   tokens,
   useTheme,
 } from '#/alf'
-import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {ContentBoundary} from '#/components/Dialog/ContentBoundary'
 import {
   Context,
@@ -96,8 +95,7 @@ export function Outer({
   nativeOptions,
   testID,
 }: React.PropsWithChildren<DialogOuterProps>) {
-  const themeName = useThemeName()
-  const t = useTheme(themeName)
+  const t = useTheme()
   const ref = useRef<BottomSheetNativeComponent>(null)
   const closeCallbacks = useRef<(() => void)[]>([])
   const {setDialogIsOpen, setFullyExpandedCount} =
