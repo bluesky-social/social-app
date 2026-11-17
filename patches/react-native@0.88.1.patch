@@ -314,6 +314,20 @@ index 0a1ea2abc558505f734b584066feef723bb93c00..97d829a24760741d1a3d8cbfa5c6b4c8
          }
        }
        into(hermesDir)
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/uimanager/ReactAccessibilityDelegate.kt b/ReactAndroid/src/main/java/com/facebook/react/uimanager/ReactAccessibilityDelegate.kt
+index e6c12f6368e4d43aae88b594386ec1b5b10ab43a..4541ff34f8fc41011064fa681937efa3e9a1acb0 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/uimanager/ReactAccessibilityDelegate.kt
++++ b/ReactAndroid/src/main/java/com/facebook/react/uimanager/ReactAccessibilityDelegate.kt
+@@ -995,7 +995,8 @@ public open class ReactAccessibilityDelegate( // The View this delegate is attac
+               isSpeakingNode(childNodeInfo, child) &&
+                   !isAccessibilityFocusable(childNodeInfo, child)
+           ) {
+-            val childNodeDescription = getTalkbackDescription(child, null)
++            // Initializing this node again can recursively synthesize its entire subtree again.
++            val childNodeDescription = getTalkbackDescription(child, childNodeInfo)
+             if (!childNodeDescription.isNullOrEmpty()) {
+               concatChildDescription.append(childNodeDescription.toString() + delimiter)
+             }
 diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
 index ae2e36ca1ed64d9f6cb44e6c2519a17fcca3ca18..0eeeb63b1225a3c575abb257a79aaef609659e2f 100644
 --- a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
