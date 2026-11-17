@@ -11,7 +11,10 @@ import throttle from 'lodash.throttle'
 
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useMessagesEventBus} from '#/state/messages/events'
-import {invalidateJoinLinkPreviewsForConvo} from '#/state/queries/join-links'
+import {
+  invalidateAllJoinLinkPreviews,
+  invalidateJoinLinkPreviewsForConvo,
+} from '#/state/queries/join-links'
 import {useChatClient, useSession} from '#/state/session'
 import {chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -196,6 +199,8 @@ export function ListConvosProviderInner({
           void queryClient.invalidateQueries({
             queryKey: [LIST_CONVO_MEMBERS_RQKEY_ROOT],
           })
+          // we may have missed a logLeaveConvo
+          void invalidateAllJoinLinkPreviews(queryClient)
           return
         }
         if (events.type !== 'logs') return
