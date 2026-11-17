@@ -6,11 +6,14 @@ import {useLingui} from '@lingui/react/macro'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {getAtmosphereApps} from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereAppsQuery} from '#/screens/Atmosphere/data/useAtmosphereAppsQuery'
+import {getAppMetric} from '#/screens/Atmosphere/metrics/apps'
+import {useAtmosphereMetricContext} from '#/screens/Atmosphere/metrics/context'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {AppCard} from './components/AppCard'
 import {useAtmosphereAppCategories} from './components/appCategories'
 
@@ -20,6 +23,8 @@ export function AtmosphereAppsTab() {
   const {data, isError, isPending, refetch} = useAtmosphereAppsQuery()
   const [selectedKey, setSelectedKey] = useState('all')
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const ax = useAnalytics()
+  const metricContext = useAtmosphereMetricContext()
   const dragProgress = useSharedValue(0)
 
   const categoryDefinitions = [
@@ -113,12 +118,36 @@ export function AtmosphereAppsTab() {
           tabs={categories}
           selectedTab={activeKey}
           dragProgress={dragProgress}
-          onSelectTab={setSelectedKey}
+          onSelectTab={key => {
+            if (key === activeKey) return
+            if (metricContext) {
+              ax.metric('atmosphere:apps:categorySelected', {
+                ...metricContext,
+                category: key,
+                previousCategory: activeKey,
+                resultCount: getAtmosphereApps(
+                  data,
+                  key === 'all' ? undefined : key,
+                ).length,
+              })
+            }
+            setSelectedKey(key)
+          }}
           getAccessibilityHint={tab => l`Shows ${tab.label} apps`}
         />
         <View style={[a.gap_md, a.px_lg]}>
           {apps.length ? (
-            apps.map(app => <AppCard key={app.id} app={app} />)
+            apps.map((app, index) => (
+              <AppCard
+                key={app.id}
+                app={app}
+                metric={getAppMetric({
+                  app,
+                  position: index,
+                  selectedCategory: activeKey,
+                })}
+              />
+            ))
           ) : (
             <Text
               style={[

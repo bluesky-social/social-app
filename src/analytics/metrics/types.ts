@@ -10,6 +10,7 @@ import {type GroupedNotificationsFeed} from '#/state/queries/notifications/group
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {
+  type AtmosphereAppMetricContext,
   type AtmosphereContentMetricContext,
   type AtmosphereMetricContext,
   type AtmosphereSection,
@@ -1592,6 +1593,31 @@ export type Events = {
   'atmosphere:section:seeMore': AtmosphereMetricContext & {
     section: 'apps'
     destinationTab: 'apps'
+  }
+  /**
+   * An app card was seen, once per app per visit, by the same rule as
+   * `atmosphere:content:impression`.
+   */
+  'atmosphere:app:impression': AtmosphereAppMetricContext
+  /** The user opened an Apps tab card's details dialog. */
+  'atmosphere:app:detailsOpened': AtmosphereAppMetricContext
+  /** The user pressed an app's website link, which leaves Bluesky. */
+  'atmosphere:app:websitePressed': AtmosphereAppMetricContext & {
+    source: 'featuredCard' | 'appDialog'
+  }
+  /** The user pressed an app's Bluesky profile link. */
+  'atmosphere:app:profilePressed': AtmosphereAppMetricContext & {
+    source: 'featuredCard' | 'appDialog'
+  }
+  /** The user pressed a featured app's "followers you know". */
+  'atmosphere:app:knownFollowersPressed': AtmosphereAppMetricContext
+  /** The user picked another category in the Apps tab. */
+  'atmosphere:apps:categorySelected': AtmosphereMetricContext & {
+    /** Category key, e.g. `writing`, or `all`. */
+    category: string
+    previousCategory: string
+    /** Apps shown in the new category. */
+    resultCount: number
   }
   /** The user opened an activity group's "View all" list. */
   'atmosphere:activity:viewAll': AtmosphereMetricContext & {

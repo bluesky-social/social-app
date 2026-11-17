@@ -3,12 +3,18 @@ import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 
 import {toNiceDomain} from '#/lib/strings/url-helpers'
+import {type AppMetric} from '#/screens/Atmosphere/metrics/apps'
+import {
+  AtmosphereImpression,
+  useAtmosphereMetricContext,
+} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {shouldShowKnownFollowers} from '#/components/KnownFollowers'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
 import {AppDialog} from './AppDialog'
 import {AppKnownFollowers} from './AppKnownFollowers'
@@ -17,11 +23,15 @@ const LOGO_SIZE = 40
 
 export function AppCard({
   app,
+  metric,
 }: {
   app: app.bsky.unspecced.getAtmosphereApps.AppCard
+  metric: AppMetric
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
+  const metricContext = useAtmosphereMetricContext()
   const control = useDialogControl()
 
   if (!app.title) return null
@@ -30,11 +40,23 @@ export function AppCard({
     app.profile && shouldShowKnownFollowers(app.profile.viewer?.knownFollowers)
 
   return (
-    <>
+    <AtmosphereImpression
+      impressionKey={`app:${metric.appId}`}
+      onImpression={context =>
+        ax.metric('atmosphere:app:impression', {...context, ...metric})
+      }>
       <Button
         label={l`View details for ${app.title}`}
         accessibilityHint=""
-        onPress={() => control.open()}
+        onPress={() => {
+          if (metricContext) {
+            ax.metric('atmosphere:app:detailsOpened', {
+              ...metricContext,
+              ...metric,
+            })
+          }
+          control.open()
+        }}
         style={[
           a.w_full,
           a.rounded_xl,
@@ -101,7 +123,8 @@ export function AppCard({
           </View>
         )}
       </Button>
-      <AppDialog control={control} app={app} />
-    </>
+      {/* Renders in a portal, so the impression only measures the card */}
+      <AppDialog control={control} app={app} metric={metric} />
+    </AtmosphereImpression>
   )
 }
