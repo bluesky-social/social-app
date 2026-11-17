@@ -26,14 +26,22 @@ type AutoPaginationQuery = {
   fetchNextPage: () => Promise<unknown>
 }
 
+/**
+ * Fetches another page when filtering left a page with fewer than half of
+ * `pageSize` visible items, so a heavily filtered page isn't left nearly empty.
+ * A page that only lost a few items is left alone, since topping it up costs a
+ * whole extra request.
+ */
 export function useAutoPagination(
   query: AutoPaginationQuery,
   itemCount: number,
+  /** How many items each request asks for. */
   pageSize: number,
 ) {
+  const minItems = Math.ceil(pageSize / 2)
   const lastItemCount = useRef(0)
   const lastPageParams = useRef(query.data?.pageParams)
-  const wantedItemCount = useRef(pageSize)
+  const wantedItemCount = useRef(minItems)
   const attemptCount = useRef(0)
 
   useEffect(() => {
@@ -55,7 +63,7 @@ export function useAutoPagination(
       previousPageParams &&
       !continuedPagination
     ) {
-      wantedItemCount.current = pageSize
+      wantedItemCount.current = minItems
       attemptCount.current = 0
     }
     lastPageParams.current = pageParams
@@ -63,17 +71,17 @@ export function useAutoPagination(
     if (itemCount !== lastItemCount.current) {
       attemptCount.current = 0
       if (itemCount < lastItemCount.current) {
-        wantedItemCount.current = Math.max(itemCount, pageSize)
+        wantedItemCount.current = Math.max(itemCount, minItems)
       }
       lastItemCount.current = itemCount
     }
 
     if (query.isLoading || query.isRefetching) {
-      wantedItemCount.current = pageSize
+      wantedItemCount.current = minItems
       attemptCount.current = 0
     } else if (query.isFetchingNextPage) {
       if (itemCount > wantedItemCount.current) {
-        wantedItemCount.current = itemCount + pageSize
+        wantedItemCount.current = itemCount + minItems
       }
     } else if (query.hasNextPage) {
       if (itemCount < wantedItemCount.current) {
@@ -90,7 +98,7 @@ export function useAutoPagination(
         attemptCount.current = 0
       }
     }
-  }, [itemCount, pageSize, query])
+  }, [itemCount, minItems, query])
 }
 
 export type StructuredQueryKey<T extends Record<string, unknown>> = readonly [

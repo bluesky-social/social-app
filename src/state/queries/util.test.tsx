@@ -31,6 +31,54 @@ describe('useAutoPagination', () => {
     expect(value.fetchNextPage).not.toHaveBeenCalled()
   })
 
+  it('leaves a first page alone when filtering removed less than half of it', () => {
+    const value = query()
+
+    renderHook(() => useAutoPagination(value, 28, 30))
+    renderHook(() => useAutoPagination(value, 15, 30))
+
+    expect(value.fetchNextPage).not.toHaveBeenCalled()
+  })
+
+  it('tops up a first page that filtering left under half full', () => {
+    const value = query()
+
+    renderHook(() => useAutoPagination(value, 14, 30))
+
+    expect(value.fetchNextPage).toHaveBeenCalledTimes(1)
+  })
+
+  it('only tops up a scrolled-to page that filtering left under half full', () => {
+    const fetchNextPage = jest.fn().mockResolvedValue(undefined)
+    let value = query({fetchNextPage})
+    let itemCount = 28
+    const {rerender} = renderHook(() => useAutoPagination(value, itemCount, 30))
+
+    // The list asks for the next page, which loses 2 of its 30 posts.
+    value = query({
+      fetchNextPage,
+      isFetchingNextPage: true,
+      data: {pageParams: [undefined]},
+    })
+    rerender(undefined)
+    value = query({fetchNextPage, data: {pageParams: [undefined, 'a']}})
+    itemCount = 56
+    rerender(undefined)
+    expect(fetchNextPage).not.toHaveBeenCalled()
+
+    // The next one loses 20 of its 30.
+    value = query({
+      fetchNextPage,
+      isFetchingNextPage: true,
+      data: {pageParams: [undefined, 'a']},
+    })
+    rerender(undefined)
+    value = query({fetchNextPage, data: {pageParams: [undefined, 'a', 'b']}})
+    itemCount = 66
+    rerender(undefined)
+    expect(fetchNextPage).toHaveBeenCalledTimes(1)
+  })
+
   it('stops when the server repeats a cursor', () => {
     const value = query({data: {pageParams: [undefined, 'a', 'a']}})
 
@@ -65,7 +113,7 @@ describe('useAutoPagination', () => {
     const {rerender} = renderHook(() => useAutoPagination(value, itemCount, 10))
 
     value = second
-    itemCount = 5
+    itemCount = 4
     rerender(undefined)
 
     expect(second.fetchNextPage).toHaveBeenCalledTimes(1)

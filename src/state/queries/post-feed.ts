@@ -127,9 +127,9 @@ export interface FeedPage {
 }
 
 /**
- * The minimum number of posts we want in a single "page" of results. Since we
- * filter out unwanted content, we may fetch more than this number to ensure
- * that we get _at least_ this number.
+ * The number of posts we ask for in a single "page" of results. Since we filter
+ * out unwanted content, a page can end up with fewer. If it ends up with fewer
+ * than half, `useAutoPagination` fetches another page.
  */
 const MIN_POSTS = 30
 
