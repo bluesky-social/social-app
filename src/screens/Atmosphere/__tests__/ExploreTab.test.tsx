@@ -65,16 +65,6 @@ jest.mock('#/screens/Atmosphere/components/AtmosphereNux', () => {
   return {AtmosphereNux: () => <Text>nux</Text>}
 })
 
-jest.mock('#/screens/Atmosphere/components/AnnouncementBanner', () => {
-  const {Text} =
-    jest.requireActual<typeof import('react-native')>('react-native')
-  return {
-    AnnouncementBanner: ({banner}: {banner: {title: string}}) => (
-      <Text>{`banner:${banner.title}`}</Text>
-    ),
-  }
-})
-
 function mockSection(name: string, prop: string) {
   const {Text} =
     jest.requireActual<typeof import('react-native')>('react-native')
@@ -141,7 +131,6 @@ const publisher: app.bsky.embed.external.ViewArticlePublication = {
 }
 
 const data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody = {
-  announcementBanner: {title: 'Launch', url: 'https://example.com/launch'},
   articles: {
     items: [
       {
@@ -203,7 +192,6 @@ describe('AtmosphereExploreTab', () => {
     render(<AtmosphereExploreTab />)
 
     expect(screen.getByText('nux')).toBeTruthy()
-    expect(screen.getByText('banner:Launch')).toBeTruthy()
     expect(screen.getByText('articles:Live article')).toBeTruthy()
     expect(screen.getByText('apps:Live app')).toBeTruthy()
     expect(screen.queryByText(/^livestreams:/)).toBeNull()
@@ -225,7 +213,6 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.queryByText(/^photos:/)).toBeNull()
     expect(screen.queryByText(/^publications:/)).toBeNull()
     expect(screen.getByText(/^apps:/)).toBeTruthy()
-    expect(screen.getByText(/^banner:/)).toBeTruthy()
   })
 
   it('reapplies changed moderation preferences to cached views without refetching', () => {
@@ -278,20 +265,15 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.queryByText(/Sixth/)).toBeNull()
   })
 
-  it('renders apps after the banners and before articles', () => {
+  it('renders apps after the intro banner and before articles', () => {
     setQuery({data})
     render(<AtmosphereExploreTab />)
 
     expect(
       screen
-        .getAllByText(/^(nux|banner:|apps:|articles:)/)
+        .getAllByText(/^(nux|apps:|articles:)/)
         .map(node => node.props.children),
-    ).toEqual([
-      'nux',
-      'banner:Launch',
-      'apps:Live app',
-      'articles:Live article',
-    ])
+    ).toEqual(['nux', 'apps:Live app', 'articles:Live article'])
   })
 
   it('hides only articles when recommendations are empty', () => {
@@ -308,7 +290,6 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.getByText(/^photos:/)).toBeTruthy()
     expect(screen.getByText(/^livestreams:/)).toBeTruthy()
     expect(screen.getByText(/^apps:/)).toBeTruthy()
-    expect(screen.getByText(/^banner:/)).toBeTruthy()
   })
 
   it('renders publications below photos', () => {

@@ -6,7 +6,6 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {
-  getAtmosphereAnnouncementBanner,
   getAtmosphereArticles,
   getAtmosphereExploreApps,
   getAtmosphereLivestreams,
@@ -18,7 +17,6 @@ import {atoms as a, useTheme} from '#/alf'
 import * as Gallery from '#/components/Gallery'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
-import {AnnouncementBanner} from './components/AnnouncementBanner'
 import {AtmosphereNux} from './components/AtmosphereNux'
 import {FeaturedApps} from './components/FeaturedApps'
 import {FeaturedArticles} from './components/FeaturedArticles'
@@ -86,8 +84,6 @@ export function AtmosphereExploreTab({
     )
   }
 
-  const announcementBanner = getAtmosphereAnnouncementBanner(data)
-
   return (
     <Layout.Content
       testID="atmosphereExploreTab"
@@ -102,9 +98,6 @@ export function AtmosphereExploreTab({
             </View>
           ) : undefined}
           <AtmosphereNux />
-          {announcementBanner ? (
-            <AnnouncementBanner banner={announcementBanner} />
-          ) : undefined}
           <FeaturedApps
             apps={getAtmosphereExploreApps(data)}
             onPressSeeMore={onPressSeeMoreApps}
