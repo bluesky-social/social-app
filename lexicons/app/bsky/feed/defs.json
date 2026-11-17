@@ -159,6 +159,7 @@
             "app.bsky.feed.defs#interactionReply",
             "app.bsky.feed.defs#interactionQuote",
             "app.bsky.feed.defs#interactionShare",
+            "app.bsky.feed.defs#interactionFollow",
             "app.bsky.feed.defs#interactionUnspecced"
           ]
         },
@@ -550,6 +551,10 @@
     "clickthroughEmbed": {
       "type": "token",
       "description": "User clicked through to the embedded content of the feed item"
+    },
+    "interactionFollow": {
+      "type": "token",
+      "description": "User followed the author of the feed item"
     },
     "interactionRepost": {
       "type": "token",

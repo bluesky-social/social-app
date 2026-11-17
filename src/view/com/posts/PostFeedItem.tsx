@@ -221,6 +221,15 @@ let FeedItemInner = ({
     })
   }
 
+  const onFollowAuthor = () => {
+    sendInteraction({
+      item: post.uri,
+      event: 'app.bsky.feed.defs#interactionFollow',
+      feedContext,
+      reqId,
+    })
+  }
+
   const onOpenReposter = () => {
     sendInteraction({
       item: post.uri,
@@ -392,6 +401,7 @@ let FeedItemInner = ({
               moderation={moderation.ui('avatar')}
               type={post.author.associated?.labeler ? 'labeler' : 'user'}
               onBeforePress={onOpenAuthor}
+              onFollow={onFollowAuthor}
               live={live}
             />
             {isThreadParent && (
@@ -425,6 +435,7 @@ let FeedItemInner = ({
               timestamp={post.indexedAt}
               postHref={href}
               onOpenAuthor={onOpenAuthor}
+              onFollowAuthor={onFollowAuthor}
             />
             {showReplyTo &&
               (parentAuthor || isParentBlocked || isParentNotFound) && (

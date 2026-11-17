@@ -34,6 +34,7 @@ export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<
   'app.bsky.feed.defs#interactionQuote',
   'app.bsky.feed.defs#interactionReply',
   'app.bsky.feed.defs#interactionRepost',
+  'app.bsky.feed.defs#interactionFollow',
   // This can be inferred from pagination requests for everything except the very last page
   // so it is fine to send. It is crucial for third party algorithmic feeds to receive these.
   'app.bsky.feed.defs#interactionSeen',
