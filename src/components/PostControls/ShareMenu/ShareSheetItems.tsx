@@ -1,5 +1,6 @@
-import {useMemo} from 'react'
-import {Platform, StyleSheet, View} from 'react-native'
+import {useMemo, useState} from 'react'
+import {AccessibilityInfo, Platform, StyleSheet, View} from 'react-native'
+import Animated, {FadeIn} from 'react-native-reanimated'
 import * as ExpoClipboard from 'expo-clipboard'
 import {AtUri} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -60,6 +61,7 @@ export function ShareSheetItems({
   const [devModeEnabled] = useDevMode()
   const aa = useAgeAssurance()
   const queryClient = useQueryClient()
+  const [pasteHint, setPasteHint] = useState<string>()
 
   const postUri = post.uri
   const postAuthor = useProfileShadow(post.author)
@@ -227,6 +229,7 @@ export function ShareSheetItems({
               paddingTop: tokens.space.sm + tokens.space.lg,
             },
           ]}>
+          {pasteHint && <PasteHint message={pasteHint} overChats={showChats} />}
           {showChats && (
             /*
              * A filled strip rather than a hairline border, which iOS
@@ -253,6 +256,10 @@ export function ShareSheetItems({
             uri={postUri}
             authorDid={postAuthor.did}
             onShare={onShareProp}
+            onPasteHint={message => {
+              setPasteHint(message)
+              AccessibilityInfo.announceForAccessibility(message)
+            }}
           />
 
           {hideInPWI && (
@@ -301,6 +308,39 @@ export function ShareSheetItems({
         onSelectChat={onSelectChatToShareTo}
       />
     </Menu.Outer>
+  )
+}
+
+/**
+ * A toast inside the sheet, over the bottom of the chat grid. A real toast
+ * would be hidden behind the sheet.
+ */
+function PasteHint({
+  message,
+  overChats,
+}: {
+  message: string
+  /** Sits just above the chat grid's bottom edge; otherwise over the top. */
+  overChats: boolean
+}) {
+  return (
+    <Animated.View
+      entering={FadeIn.duration(150)}
+      pointerEvents="none"
+      style={[
+        a.absolute,
+        a.align_center,
+        a.z_50,
+        {left: 0, right: 0},
+        overChats ? [{bottom: '100%'}, a.mb_sm] : {top: 0},
+      ]}>
+      <Toast.ToastConfigProvider id="sharePasteHint" type="success">
+        <Toast.Outer>
+          <Toast.Icon />
+          <Toast.Text>{message}</Toast.Text>
+        </Toast.Outer>
+      </Toast.ToastConfigProvider>
+    </Animated.View>
   )
 }
 
