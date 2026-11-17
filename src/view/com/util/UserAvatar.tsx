@@ -92,6 +92,8 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   disableNavigation?: boolean
   disableLink?: boolean
   onBeforePress?: () => void
+  /** Called after following the profile from its hover card. */
+  onFollow?: () => void
 }
 
 const BLUR_AMOUNT = IS_WEB ? 5 : 100
@@ -554,6 +556,7 @@ let PreviewableUserAvatar = ({
   disableNavigation,
   disableLink,
   onBeforePress,
+  onFollow,
   live,
   ...props
 }: PreviewableUserAvatarProps): React.ReactNode => {
@@ -591,7 +594,10 @@ let PreviewableUserAvatar = ({
       : {borderRadius: props.size > 32 ? 8 : 3}
 
   return (
-    <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
+    <ProfileHoverCard
+      did={profile.did}
+      disable={disableHoverCard}
+      onFollow={onFollow}>
       {disableNavigation ? (
         avatarEl
       ) : status.isActive && (IS_NATIVE || IS_WEB_TOUCH_DEVICE) ? (

@@ -23,27 +23,42 @@ import {GrowthHack} from './GrowthHack'
 export function ThreadItemAnchorFollowButton({
   did,
   enabled = true,
+  onFollow,
 }: {
   did: string
   enabled?: boolean
+  /** Called once a follow from this button succeeds. */
+  onFollow?: () => void
 }) {
   if (IS_IOS) {
     return (
       <GrowthHack>
-        <ThreadItemAnchorFollowButtonInner did={did} enabled={enabled} />
+        <ThreadItemAnchorFollowButtonInner
+          did={did}
+          enabled={enabled}
+          onFollow={onFollow}
+        />
       </GrowthHack>
     )
   }
 
-  return <ThreadItemAnchorFollowButtonInner did={did} enabled={enabled} />
+  return (
+    <ThreadItemAnchorFollowButtonInner
+      did={did}
+      enabled={enabled}
+      onFollow={onFollow}
+    />
+  )
 }
 
 export function ThreadItemAnchorFollowButtonInner({
   did,
   enabled = true,
+  onFollow,
 }: {
   did: string
   enabled?: boolean
+  onFollow?: () => void
 }) {
   const {data: profile, isLoading} = useProfileQuery({did})
 
@@ -51,13 +66,15 @@ export function ThreadItemAnchorFollowButtonInner({
   // but it keeps the typechecker happy
   if (!enabled || isLoading || !profile) return null
 
-  return <PostThreadFollowBtnLoaded profile={profile} />
+  return <PostThreadFollowBtnLoaded profile={profile} onFollow={onFollow} />
 }
 
 function PostThreadFollowBtnLoaded({
   profile: profileUnshadowed,
+  onFollow,
 }: {
   profile: app.bsky.actor.defs.ProfileViewDetailed
+  onFollow?: () => void
 }) {
   const navigation = useNavigation()
   const {_} = useLingui()
@@ -111,6 +128,7 @@ function PostThreadFollowBtnLoaded({
       requireAuth(async () => {
         try {
           await queueFollow()
+          onFollow?.()
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
             logger.error('Failed to follow', {message: String(e)})
@@ -134,7 +152,7 @@ function PostThreadFollowBtnLoaded({
         }
       })
     }
-  }, [isFollowing, requireAuth, queueFollow, _, queueUnfollow])
+  }, [isFollowing, requireAuth, queueFollow, _, queueUnfollow, onFollow])
 
   if (!showFollowBtn) return null
 

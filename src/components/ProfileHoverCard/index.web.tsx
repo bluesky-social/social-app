@@ -345,7 +345,12 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
             onPointerEnter={onPointerEnterCard}
             onPointerLeave={onPointerLeaveCard}>
             <div style={{willChange: 'transform', ...animationStyle}}>
-              <Card did={props.did} hide={onPress} navigation={navigation} />
+              <Card
+                did={props.did}
+                hide={onPress}
+                navigation={navigation}
+                onFollow={props.onFollow}
+              />
             </div>
           </div>
         </Portal>
@@ -358,10 +363,12 @@ let Card = ({
   did,
   hide,
   navigation,
+  onFollow,
 }: {
   did: string
   hide: () => void
   navigation: NavigationProp
+  onFollow?: () => void
 }): React.ReactNode => {
   const t = useTheme()
 
@@ -403,7 +410,12 @@ let Card = ({
             onPressOpenProfile={onPressOpenProfile}
           />
         ) : (
-          <Inner profile={data} moderationOpts={moderationOpts} hide={hide} />
+          <Inner
+            profile={data}
+            moderationOpts={moderationOpts}
+            hide={hide}
+            onFollow={onFollow}
+          />
         )
       ) : (
         <View
@@ -425,10 +437,12 @@ function Inner({
   profile,
   moderationOpts,
   hide,
+  onFollow,
 }: {
   profile: app.bsky.actor.defs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hide: () => void
+  onFollow?: () => void
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
@@ -442,6 +456,7 @@ function Inner({
   const {follow, unfollow} = useFollowMethods({
     profile: profileShadow,
     logContext: 'ProfileHoverCard',
+    onFollow,
   })
   const isBlockedUser =
     profile.viewer?.blocking ||

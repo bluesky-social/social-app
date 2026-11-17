@@ -298,6 +298,17 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     }
   }
 
+  const onFollowAuthor = () => {
+    if (postSource) {
+      feedFeedback.sendInteraction({
+        item: post.uri,
+        event: 'app.bsky.feed.defs#interactionFollow',
+        feedContext: postSource.post.feedContext,
+        reqId: postSource.post.reqId,
+      })
+    }
+  }
+
   const onOpenEmbed = () => {
     ax.metric('post:clickthroughEmbed', {
       uri: post.uri,
@@ -336,6 +347,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 type={post.author.associated?.labeler ? 'labeler' : 'user'}
                 live={live}
                 onBeforePress={onOpenAuthor}
+                onFollow={onFollowAuthor}
               />
             </View>
             <Link
@@ -347,7 +359,10 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               )}
               onPress={onOpenAuthor}>
               <View style={[a.flex_1, a.align_start]}>
-                <ProfileHoverCard did={post.author.did} style={[a.w_full]}>
+                <ProfileHoverCard
+                  did={post.author.did}
+                  style={[a.w_full]}
+                  onFollow={onFollowAuthor}>
                   <View style={[a.flex_row, a.align_center]}>
                     <Text
                       emoji
@@ -389,6 +404,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               <ThreadItemAnchorFollowButton
                 did={post.author.did}
                 enabled={showFollowButton}
+                onFollow={onFollowAuthor}
               />
             </View>
           </View>
