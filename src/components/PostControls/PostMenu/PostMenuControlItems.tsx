@@ -58,6 +58,7 @@ export function PostMenuControlItems({
     post,
     logContext,
     entryPoint: 'PostMenu',
+    feedItem: {feedContext: postFeedContext, reqId: postReqId},
   })
 
   const isReposted = Boolean(post.viewer?.repost)

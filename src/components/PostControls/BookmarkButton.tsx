@@ -4,7 +4,10 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {type Shadow} from '#/state/cache/post-shadow'
-import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {
+  unspeccedInteraction,
+  useFeedFeedbackContext,
+} from '#/state/feed-feedback'
 import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
 import {useRequireAuth} from '#/state/session'
 import {useTheme} from '#/alf'
@@ -21,11 +24,15 @@ import {PostControlButton, PostControlButtonIcon} from './PostControlButton'
 
 export const BookmarkButton = memo(function BookmarkButton({
   post,
+  feedContext,
+  reqId,
   big,
   logContext,
   hitSlop,
 }: {
   post: Shadow<app.bsky.feed.defs.PostView>
+  feedContext: string | undefined
+  reqId: string | undefined
   big?: boolean
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   hitSlop?: Insets
@@ -37,6 +44,7 @@ export const BookmarkButton = memo(function BookmarkButton({
     post,
     logContext,
     entryPoint: 'BookmarkButton',
+    feedItem: {feedContext, reqId},
   })
 
   return (
@@ -61,19 +69,37 @@ export function usePostBookmark({
   post,
   logContext,
   entryPoint,
+  feedItem,
 }: {
   post: Shadow<app.bsky.feed.defs.PostView>
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   /** Which control is saving, for metrics. */
   entryPoint: BookmarkEntryPoint
+  /**
+   * The feed item this post was shown as. When set, saves and unsaves are also
+   * sent to that feed as feed feedback.
+   */
+  feedItem?: {feedContext: string | undefined; reqId: string | undefined}
 }) {
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const {mutateAsync: bookmark} = useBookmarkMutation()
   const cleanError = useCleanError()
-  const {feedDescriptor} = useFeedFeedbackContext()
+  const {feedDescriptor, sendInteraction} = useFeedFeedbackContext()
 
   const isBookmarked = !!post.viewer?.bookmarked
+
+  const sendFeedback = (type: 'save' | 'unsave') => {
+    if (!feedItem) return
+    sendInteraction(
+      unspeccedInteraction({
+        item: post.uri,
+        feedContext: feedItem.feedContext,
+        reqId: feedItem.reqId,
+        payload: {type},
+      }),
+    )
+  }
 
   const undoLabel = l({
     message: `Undo`,
@@ -94,6 +120,7 @@ export function usePostBookmark({
         entryPoint,
         feedDescriptor,
       })
+      sendFeedback('save')
       return true
     } catch (e: any) {
       const {raw, clean} = cleanError(e)
@@ -118,6 +145,7 @@ export function usePostBookmark({
         entryPoint,
         feedDescriptor,
       })
+      sendFeedback('unsave')
 
       toast.show(
         <toast.Outer>

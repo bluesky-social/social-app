@@ -287,7 +287,7 @@ function Inner(
       // give time for user feedback
       setTimeout(() => {
         props.control.close(() => {
-          props.onAfterSubmit?.()
+          props.onAfterSubmit?.({reason: state.selectedOption?.reason})
         })
       }, 1e3)
     } catch (err) {

@@ -40,6 +40,49 @@ export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<
 ])
 
 /**
+ * The `payload` of an `interactionUnspecced` event. This is an implicit
+ * contract with Bluesky's own feeds, like our metrics: the lexicon leaves the
+ * shape open so we can add signals without a lexicon change. Third-party feeds
+ * never receive these events (see `isInteractionAllowed`).
+ *
+ * The item is the post the action was taken on. Actions with an undo send the
+ * undo as its own type, so the feed can reverse the signal.
+ */
+export type UnspeccedInteractionPayload =
+  | {type: 'save'}
+  | {type: 'unsave'}
+  | {type: 'hide'}
+  | {type: 'blockAuthor'}
+  | {type: 'muteAuthor'}
+  | {type: 'unmuteAuthor'}
+  /** `reason` is the report option the user picked. */
+  | {type: 'report'; reason?: string}
+
+/**
+ * An `interactionUnspecced` event about `item`, the post the action was taken
+ * on.
+ */
+export function unspeccedInteraction({
+  item,
+  feedContext,
+  reqId,
+  payload,
+}: {
+  item: app.bsky.feed.defs.Interaction['item']
+  feedContext: string | undefined
+  reqId: string | undefined
+  payload: UnspeccedInteractionPayload
+}): app.bsky.feed.defs.Interaction {
+  return {
+    item,
+    event: 'app.bsky.feed.defs#interactionUnspecced',
+    feedContext,
+    reqId,
+    payload,
+  }
+}
+
+/**
  * Where an interaction happened, sent to the feed as `viewContext`. `thread` is
  * the thread screen opened by tapping a post in a feed.
  */
@@ -82,7 +125,12 @@ export function useFeedFeedback(
   const enabled =
     Boolean(feed) && Boolean(proxyDid) && acceptsInteractions && hasSession
 
-  const queue = useRef<Set<string>>(new Set())
+  /*
+   * Keyed by `toKey` so the same interaction is only sent once per batch.
+   * Re-adding a key moves it to the end, so a toggle like save, unsave, save
+   * arrives as unsave then save, and the last event is the current state.
+   */
+  const queue = useRef<Map<string, app.bsky.feed.defs.Interaction>>(new Map())
   const history = useRef<
     // Use a WeakSet so that we don't need to clear it.
     // This assumes that referential identity of slice items maps 1:1 to feed (re)fetches.
@@ -141,8 +189,8 @@ export function useFeedFeedback(
   )
 
   const sendToFeedNoDelay = useCallback(() => {
-    const interactions = Array.from(queue.current, str => ({
-      ...toInteraction(str),
+    const interactions = Array.from(queue.current.values(), interaction => ({
+      ...interaction,
       viewContext,
     }))
     queue.current.clear()
@@ -221,14 +269,12 @@ export function useFeedFeedback(
       for (const {item: postItem, feedContext, reqId} of items) {
         if (!history.current.has(postItem)) {
           history.current.add(postItem)
-          queue.current.add(
-            toString({
-              item: postItem.uri,
-              event: 'app.bsky.feed.defs#interactionSeen',
-              feedContext,
-              reqId,
-            }),
-          )
+          enqueue(queue.current, {
+            item: postItem.uri,
+            event: 'app.bsky.feed.defs#interactionSeen',
+            feedContext,
+            reqId,
+          })
           sendToFeed()
         }
       }
@@ -246,7 +292,7 @@ export function useFeedFeedback(
       })
       if (!history.current.has(interaction)) {
         history.current.add(interaction)
-        queue.current.add(toString(interaction))
+        enqueue(queue.current, interaction)
         sendToFeed()
       }
     },
@@ -300,19 +346,23 @@ function isInteractionAllowed(
   return THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction)
 }
 
-function toString(interaction: app.bsky.feed.defs.Interaction): string {
-  return `${interaction.item}|${interaction.event}|${
-    interaction.feedContext || ''
-  }|${interaction.reqId || ''}`
+function enqueue(
+  queue: Map<string, app.bsky.feed.defs.Interaction>,
+  interaction: app.bsky.feed.defs.Interaction,
+) {
+  const key = toKey(interaction)
+  queue.delete(key)
+  queue.set(key, interaction)
 }
 
-function toInteraction(str: string): app.bsky.feed.defs.Interaction {
-  const [item, event, feedContext, reqId] = str.split('|')
-  /*
-   * The fields come from splitting an internally-built key, so neither the
-   * at-uri nor the event token is narrowed by the compiler here.
-   */
-  return {item, event, feedContext, reqId} as app.bsky.feed.defs.Interaction
+function toKey(interaction: app.bsky.feed.defs.Interaction): string {
+  return JSON.stringify([
+    interaction.item,
+    interaction.event,
+    interaction.feedContext ?? '',
+    interaction.reqId ?? '',
+    interaction.payload ?? null,
+  ])
 }
 
 type AggregatedStats = {

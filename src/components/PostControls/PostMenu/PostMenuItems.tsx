@@ -27,7 +27,11 @@ import {getPostLanguageTags} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {
+  unspeccedInteraction,
+  type UnspeccedInteractionPayload,
+  useFeedFeedbackContext,
+} from '#/state/feed-feedback'
 import {
   useHiddenPosts,
   useHiddenPostsApi,
@@ -197,6 +201,18 @@ let PostMenuItems = ({
     return makeProfileLink(postAuthor, 'post', urip.rkey)
   }, [postUri, postAuthor])
 
+  /** Tells the feed this post came from what the user did with it. */
+  const sendFeedFeedback = (payload: UnspeccedInteractionPayload) => {
+    feedFeedback.sendInteraction(
+      unspeccedInteraction({
+        item: postUri,
+        feedContext: postFeedContext,
+        reqId: postReqId,
+        payload,
+      }),
+    )
+  }
+
   const onDeletePost = () => {
     deletePostMutate({uri: postUri}).then(
       () => {
@@ -288,6 +304,7 @@ let PostMenuItems = ({
 
   const onHidePost = () => {
     hidePost({uri: postUri})
+    sendFeedFeedback({type: 'hide'})
     ax.metric('thread:click:hideReplyForMe', {})
   }
 
@@ -427,6 +444,7 @@ let PostMenuItems = ({
   const onBlockAuthor = async () => {
     try {
       await queueBlock()
+      sendFeedFeedback({type: 'blockAuthor'})
       Toast.show(l({message: 'Account blocked', context: 'toast'}))
     } catch (err) {
       const e = err as Error
@@ -449,6 +467,7 @@ let PostMenuItems = ({
     if (postAuthor.viewer?.muted) {
       try {
         await queueUnmute()
+        sendFeedFeedback({type: 'unmuteAuthor'})
         Toast.show(l({message: 'Account unmuted', context: 'toast'}))
       } catch (err) {
         const e = err as Error
@@ -468,6 +487,7 @@ let PostMenuItems = ({
     } else {
       try {
         await queueMute()
+        sendFeedFeedback({type: 'muteAuthor'})
         Toast.show(l({message: 'Account muted', context: 'toast'}))
       } catch (err) {
         const e = err as Error
@@ -850,7 +870,8 @@ let PostMenuItems = ({
           ...post,
           $type: 'app.bsky.feed.defs#postView',
         }}
-        onAfterSubmit={() => {
+        onAfterSubmit={({reason}) => {
+          sendFeedFeedback({type: 'report', reason})
           ax.metric('postMenu:reportPost', {
             uri: postUri,
             authorDid: postAuthor.did,
