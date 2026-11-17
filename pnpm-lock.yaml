@@ -278,8 +278,8 @@ importers:
         specifier: 0.2.0
         version: 0.2.0(expo@58.0.23)(react-native@0.88.1(patch_hash=905e68a17bb8b11f9e555f6c8dea94e2738f48b2c6e5f88e42ed2ef4e4778019)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)
       '@bsky/sdk':
-        specifier: 1.4.0
-        version: 1.4.0(@atproto/lex@0.3.8)
+        specifier: 1.5.0
+        version: 1.5.0(@atproto/lex@0.3.8)
       '@emoji-mart/data':
         specifier: ^1.2.1
         version: 1.2.1
@@ -1842,8 +1842,8 @@ packages:
       react: '*'
       react-native: '*'
 
-  '@bsky/sdk@1.4.0':
-    resolution: {integrity: sha512-fH8+BaGn3aCkloqJcmGIqJw4PQbAKMRROBePBxfbzx5M5vKI445zOOHp3kOe7orOPTsuD8JWgA/u18vH+hcOEQ==}
+  '@bsky/sdk@1.5.0':
+    resolution: {integrity: sha512-Al2FINxjBckRAxxDbQCsXTTcrW37xE9YEgQ6kK1dNDvqjtKh5IrmD8EVO55ACf3Ds+hKMIZlDPeBx1lKRwp9ig==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       '@atproto/lex': ^0.3.0
@@ -11109,7 +11109,7 @@ snapshots:
       react: 19.3.0
       react-native: 0.88.1(patch_hash=905e68a17bb8b11f9e555f6c8dea94e2738f48b2c6e5f88e42ed2ef4e4778019)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1)
 
-  '@bsky/sdk@1.4.0(@atproto/lex@0.3.8)':
+  '@bsky/sdk@1.5.0(@atproto/lex@0.3.8)':
     dependencies:
       '@atproto-labs/handle-resolver': 0.4.8
       '@atproto/lex': 0.3.8
