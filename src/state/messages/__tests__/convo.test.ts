@@ -39,6 +39,36 @@ function message(n: number) {
   } as chat.bsky.convo.defs.MessageView
 }
 
+function reacted(m: chat.bsky.convo.defs.MessageView) {
+  return {
+    ...m,
+    reactions: [
+      {value: '👍', sender: {did: SELF}, createdAt: new Date().toISOString()},
+    ],
+  } as chat.bsky.convo.defs.MessageView
+}
+
+function deleted(m: chat.bsky.convo.defs.MessageView) {
+  const {id, rev, sender, sentAt} = m
+  return {
+    $type: 'chat.bsky.convo.defs#deletedMessageView',
+    id,
+    rev,
+    sender,
+    sentAt,
+  }
+}
+
+/** A log of the given type, e.g. `logCreateMessage`, about `message`. */
+function log(type: string, n: number, message: object) {
+  return {
+    $type: `chat.bsky.convo.defs#${type}`,
+    rev: rev(n),
+    convoId: CONVO_ID,
+    message,
+  } as unknown as chat.bsky.convo.getLog.$OutputBody['logs'][number]
+}
+
 /** `["m{from}", ..., "m{to}"]` */
 function ids(from: number, to: number) {
   return Array.from({length: to - from + 1}, (_, i) => `m${from + i}`)
@@ -61,7 +91,11 @@ function createFakeChatService({latest}: {latest: number}) {
     unreadCount: 0,
     status: 'accepted',
   }
-  const state = {latest, historyHeld: false}
+  /*
+   * `historyHeld` holds pages of history, and `newestHeld` the newest page,
+   * until `release`. Either way the page is read when the call is made.
+   */
+  const state = {latest, historyHeld: false, newestHeld: false}
   const heldPages: (() => void)[] = []
 
   const call = jest.fn(
@@ -75,7 +109,7 @@ function createFakeChatService({latest}: {latest: number}) {
         const oldest = Math.max(1, newest - params.limit! + 1)
         const messages = []
         for (let n = newest; n >= oldest; n--) messages.push(message(n))
-        if (params.cursor && state.historyHeld) {
+        if (params.cursor ? state.historyHeld : state.newestHeld) {
           await new Promise<void>(resolve => heldPages.push(resolve))
         }
         return {messages, cursor: oldest > 1 ? rev(oldest) : undefined}
@@ -92,8 +126,9 @@ function createFakeChatService({latest}: {latest: number}) {
         ([method]) => method === chat.bsky.convo.getMessages,
       )
     },
-    releaseHistory() {
+    release() {
       state.historyHeld = false
+      state.newestHeld = false
       for (const release of heldPages.splice(0)) release()
     },
   }
@@ -136,6 +171,14 @@ async function createConvo({latest = 10}: {latest?: number} = {}) {
   convo.subscribe(() => statuses.push(convo.getSnapshot().status))
   await flush()
   return {convo, service, events, statuses}
+}
+
+function findMessage(convo: Convo, id: string) {
+  const state = convo.getSnapshot()
+  if (!('items' in state)) return
+  for (const item of state.items) {
+    if (item.type === 'message' && item.message.id === id) return item.message
+  }
 }
 
 function messageIds(convo: Convo) {
@@ -233,14 +276,7 @@ describe(`#/state/messages/convo`, () => {
       service.state.latest = 11
       events.emit({
         type: 'logs',
-        logs: [
-          {
-            $type: 'chat.bsky.convo.defs#logCreateMessage',
-            rev: rev(11),
-            convoId: CONVO_ID,
-            message: message(11),
-          } as unknown as chat.bsky.convo.getLog.$OutputBody['logs'][number],
-        ],
+        logs: [log('logCreateMessage', 11, message(11))],
       })
       expect(messageIds(convo)).toEqual(ids(1, 11))
 
@@ -278,7 +314,7 @@ describe(`#/state/messages/convo`, () => {
       const newest = ids(1000 - HISTORY_PAGE_SIZE + 1, 1000)
       expect(messageIds(convo)).toEqual(newest)
 
-      service.releaseHistory()
+      service.release()
       await staleFetch
       expect(messageIds(convo)).toEqual(newest)
 
@@ -287,6 +323,55 @@ describe(`#/state/messages/convo`, () => {
       expect(messageIds(convo)).toEqual(
         ids(1000 - HISTORY_PAGE_SIZE * 2 + 1, 1000),
       )
+    })
+
+    it(`fetches again when another gap arrives while it fetches`, async () => {
+      const {convo, service, events} = await createConvo()
+
+      service.state.newestHeld = true
+      service.state.latest = 500
+      events.emit({type: 'gap'})
+      await flush()
+
+      // the page above was read before this second gap
+      service.state.latest = 1000
+      events.emit({type: 'gap'})
+      await flush()
+
+      service.release()
+      await flush()
+
+      expect(messageIds(convo)).toEqual(ids(1000 - HISTORY_PAGE_SIZE + 1, 1000))
+      // the first page, then one per gap
+      expect(service.getMessagesCalls()).toHaveLength(3)
+    })
+
+    it(`keeps reactions and deletions that arrive while it fetches`, async () => {
+      const {convo, service, events} = await createConvo()
+      expect(messageIds(convo)).toEqual(ids(1, 10))
+
+      // the newest page will hold 1 to 20, as they were before the logs below
+      service.state.newestHeld = true
+      service.state.latest = 20
+      events.emit({type: 'gap'})
+      await flush()
+
+      events.emit({
+        type: 'logs',
+        logs: [
+          // loaded already
+          log('logAddReaction', 21, reacted(message(10))),
+          log('logDeleteMessage', 22, deleted(message(9))),
+          // not loaded yet, but on the page
+          log('logAddReaction', 23, reacted(message(15))),
+        ],
+      })
+      service.release()
+      await flush()
+
+      expect(messageIds(convo)).toEqual([...ids(1, 8), ...ids(10, 20)])
+      expect(findMessage(convo, 'm10')?.reactions).toHaveLength(1)
+      expect(findMessage(convo, 'm15')?.reactions).toHaveLength(1)
     })
   })
 })

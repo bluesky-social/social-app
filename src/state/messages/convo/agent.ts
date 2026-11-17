@@ -150,6 +150,13 @@ export class Convo {
   private needsResync = false
   private isResyncing = false
   /**
+   * The reactions and deletions the log reported while a resync was fetching,
+   * by message id, with `null` for a deletion. The page it fetched may predate
+   * them, and the log won't send them again, so they're applied on top of it.
+   */
+  private updatesDuringResync:
+    Map<string, chat.bsky.convo.defs.MessageView | null> | undefined
+  /**
    * Bumped whenever the loaded messages are replaced, so a history fetch that
    * started before then can tell its page no longer lines up.
    */
@@ -953,11 +960,19 @@ export class Convo {
    * skipped part of the log and the messages we have may no longer join up
    * with what comes next. Unlike `reset`, the convo stays `Ready` and keeps
    * rendering what it has until the new page lands. If this fails,
-   * `needsResync` stays set and it runs again on the next connect or resume.
+   * `needsResync` is set again and it runs again on the next connect or
+   * resume.
    */
   private async resync() {
     if (!this.needsResync || this.isResyncing) return
     this.isResyncing = true
+    /*
+     * Cleared before fetching, so that another gap during the fetch sets it
+     * again and we fetch once more: this page may predate that gap.
+     */
+    this.needsResync = false
+    const updates = new Map<string, chat.bsky.convo.defs.MessageView | null>()
+    this.updatesDuringResync = updates
 
     const generation = this.historyGeneration
     /*
@@ -981,7 +996,6 @@ export class Convo {
       if (generation !== this.historyGeneration) return
 
       this.startNewHistoryGeneration()
-      this.needsResync = false
       this.oldestRev = cursor ?? null
       this.fetchMessageHistoryError = undefined
 
@@ -1007,6 +1021,15 @@ export class Convo {
           this.newMessages.delete(id)
         }
       }
+      for (const [id, update] of updates) {
+        if (update === null) {
+          this.pastMessages.delete(id)
+          this.newMessages.delete(id)
+        } else {
+          if (this.pastMessages.has(id)) this.pastMessages.set(id, update)
+          if (this.newMessages.has(id)) this.newMessages.set(id, update)
+        }
+      }
 
       this.commit()
     } catch (err) {
@@ -1016,9 +1039,18 @@ export class Convo {
           safeMessage: e.message,
         })
       }
+      // unless reset() already started over
+      if (generation === this.historyGeneration) {
+        this.needsResync = true
+      }
+      return
     } finally {
       this.isResyncing = false
+      this.updatesDuringResync = undefined
     }
+
+    // another gap arrived while we were fetching
+    if (this.needsResync) void this.resync()
   }
 
   ingestFirehose(events: chat.bsky.convo.getLog.$OutputBody['logs']) {
@@ -1098,6 +1130,7 @@ export class Convo {
             this.pastMessages.delete(ev.message.id)
             this.newMessages.delete(ev.message.id)
             this.deletedMessages.add(ev.message.id)
+            this.updatesDuringResync?.set(ev.message.id, null)
             needsCommit = true
           } else if (
             (bsky.isType(chat.bsky.convo.defs.logAddReaction, ev) ||
@@ -1105,8 +1138,10 @@ export class Convo {
             bsky.isType(chat.bsky.convo.defs.messageView, ev.message)
           ) {
             /*
-             * Update if we have this in state - replace message wholesale. If we don't, don't worry about it.
+             * Replace the message wholesale if we have it in state. A resync's
+             * page may have it even if we don't, so that gets it too.
              */
+            this.updatesDuringResync?.set(ev.message.id, ev.message)
             if (this.pastMessages.has(ev.message.id)) {
               this.pastMessages.set(ev.message.id, ev.message)
               needsCommit = true
