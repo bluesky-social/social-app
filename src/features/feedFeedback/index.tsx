@@ -320,6 +320,62 @@ export function useFeedFeedbackContext() {
   return useContext(stateContext)
 }
 
+/**
+ * A post as it was shown in a feed. Feed items provide this, so that the
+ * controls inside them can send feed feedback about the post without it being
+ * passed down as props.
+ */
+export type FeedItem = {
+  uri: app.bsky.feed.defs.Interaction['item']
+  authorDid: string
+  feedContext: string | undefined
+  reqId: string | undefined
+  /**
+   * The repost the post was shown through, if any. Likes and reposts record it
+   * as `via`.
+   */
+  via: {uri: string; cid: string} | undefined
+}
+
+const feedItemContext = createContext<FeedItem | undefined>(undefined)
+feedItemContext.displayName = 'FeedItemContext'
+
+export const FeedItemProvider = feedItemContext.Provider
+
+/**
+ * The feed item this component is inside of, with helpers that send feed
+ * feedback about it. Outside a feed item, `item` is undefined and the helpers
+ * do nothing.
+ */
+export function useFeedItemFeedback() {
+  const {sendInteraction, feedDescriptor} = useFeedFeedbackContext()
+  const item = useContext(feedItemContext)
+
+  const send = (event: app.bsky.feed.defs.Interaction['event']) => {
+    if (!item) return
+    sendInteraction({
+      item: item.uri,
+      event,
+      feedContext: item.feedContext,
+      reqId: item.reqId,
+    })
+  }
+
+  const sendUnspecced = (payload: UnspeccedInteractionPayload) => {
+    if (!item) return
+    sendInteraction(
+      unspeccedInteraction({
+        item: item.uri,
+        feedContext: item.feedContext,
+        reqId: item.reqId,
+        payload,
+      }),
+    )
+  }
+
+  return {item, feedDescriptor, send, sendUnspecced}
+}
+
 // TODO
 // We will introduce a permissions framework for 3p feeds to
 // take advantage of the feed feedback API. Until that's in

@@ -4,9 +4,13 @@ import {act, renderHook} from '@testing-library/react-native'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {type FeedSourceFeedInfo} from '#/state/queries/feed'
 import {
+  FeedFeedbackProvider,
   type FeedFeedbackViewContext,
+  type FeedItem,
+  FeedItemProvider,
   unspeccedInteraction,
   useFeedFeedback,
+  useFeedItemFeedback,
 } from '#/features/feedFeedback'
 import {app} from '#/lexicons'
 
@@ -187,5 +191,64 @@ describe('useFeedFeedback', () => {
     expect(flush(thirdParty).map(interaction => interaction.event)).toEqual([
       'app.bsky.feed.defs#interactionFollow',
     ])
+  })
+})
+
+describe('useFeedItemFeedback', () => {
+  const item: FeedItem = {
+    uri: POST_URI,
+    authorDid: 'did:plc:author',
+    feedContext: 'context',
+    reqId: 'req',
+    via: undefined,
+  }
+
+  function renderItem(feedItem: FeedItem | undefined) {
+    function Wrapper({children}: {children: React.ReactNode}) {
+      const feedback = useFeedFeedback(discover, true, 'feed')
+      return (
+        <FeedFeedbackProvider value={feedback}>
+          <FeedItemProvider value={feedItem}>{children}</FeedItemProvider>
+        </FeedFeedbackProvider>
+      )
+    }
+    return renderHook(() => useFeedItemFeedback(), {wrapper: Wrapper}).result
+  }
+
+  it('sends events about the feed item it is inside', () => {
+    const result = renderItem(item)
+    act(() => {
+      result.current.send('app.bsky.feed.defs#interactionLike')
+      result.current.sendUnspecced({type: 'save'})
+    })
+
+    expect(flush()).toEqual([
+      {
+        item: POST_URI,
+        event: 'app.bsky.feed.defs#interactionLike',
+        feedContext: 'context',
+        reqId: 'req',
+        viewContext: 'feed',
+      },
+      {
+        item: POST_URI,
+        event: 'app.bsky.feed.defs#interactionUnspecced',
+        feedContext: 'context',
+        reqId: 'req',
+        payload: {type: 'save'},
+        viewContext: 'feed',
+      },
+    ])
+  })
+
+  it('sends nothing outside a feed item', () => {
+    const result = renderItem(undefined)
+    act(() => {
+      result.current.send('app.bsky.feed.defs#interactionLike')
+      result.current.sendUnspecced({type: 'save'})
+    })
+
+    expect(result.current.item).toBeUndefined()
+    expect(flush()).toEqual([])
   })
 })

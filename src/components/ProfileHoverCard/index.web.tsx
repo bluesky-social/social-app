@@ -43,6 +43,7 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {IS_WEB_TOUCH_DEVICE} from '#/env'
+import {useFeedItemFeedback} from '#/features/feedFeedback'
 import {useActorStatus} from '#/features/liveNow'
 import {LiveStatus} from '#/features/liveNow/components/LiveStatusDialog'
 import {type app} from '#/lexicons'
@@ -115,6 +116,16 @@ const HIDE_DURATION = 200
 
 export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   const navigation = useNavigation<NavigationProp>()
+  /*
+   * The card renders in a portal, outside the feed item's context, so read the
+   * feed item here and pass the follow handler down. Only following the feed
+   * item's author counts, not e.g. a reposter or a quoted post's author.
+   */
+  const feedItem = useFeedItemFeedback()
+  const onFollow =
+    feedItem.item?.authorDid === props.did
+      ? () => feedItem.send('app.bsky.feed.defs#interactionFollow')
+      : undefined
 
   const [currentState, dispatch] = useReducer(
     // Tip: console.log(state, action) when debugging.
@@ -349,7 +360,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
                 did={props.did}
                 hide={onPress}
                 navigation={navigation}
-                onFollow={props.onFollow}
+                onFollow={onFollow}
               />
             </div>
           </div>

@@ -57,7 +57,13 @@ import * as Skele from '#/components/Skeleton'
 import {Text} from '#/components/Typography'
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {Features, useAnalytics} from '#/analytics'
-import {FeedFeedbackProvider, useFeedFeedback} from '#/features/feedFeedback'
+import {
+  FeedFeedbackProvider,
+  type FeedItem,
+  FeedItemProvider,
+  useFeedFeedback,
+  useFeedFeedbackContext,
+} from '#/features/feedFeedback'
 import {type PostSource} from '#/features/feedFeedback/postSource'
 import {useActorStatus} from '#/features/liveNow'
 import {app} from '#/lexicons'
@@ -74,6 +80,12 @@ export function ThreadItemAnchor({
   threadgateRecord?: app.bsky.feed.threadgate.Main
   postSource?: PostSource
 }) {
+  const {hasSession} = useSession()
+  const feedFeedback = useFeedFeedback(
+    postSource?.feedSourceInfo,
+    hasSession,
+    'thread',
+  )
   const postShadow = usePostShadow(item.value.post)
   const threadRootUri = item.value.post.record.reply?.root?.uri || item.uri
   const isRoot = threadRootUri === item.uri
@@ -82,16 +94,35 @@ export function ThreadItemAnchor({
     return <ThreadItemAnchorDeleted isRoot={isRoot} />
   }
 
+  const reason = postSource?.post.reason
+  /** The feed item this post was opened from, if any. */
+  const feedItem: FeedItem | undefined = postSource && {
+    uri: postShadow.uri,
+    authorDid: postShadow.author.did,
+    feedContext: postSource.post.feedContext,
+    reqId: postSource.post.reqId,
+    via:
+      bsky.isType(app.bsky.feed.defs.reasonRepost, reason) &&
+      reason.uri &&
+      reason.cid
+        ? {uri: reason.uri, cid: reason.cid}
+        : undefined,
+  }
+
   return (
     <ReportDialogMetadataContext.Provider key={postShadow.uri}>
-      <ThreadItemAnchorInner
-        item={item}
-        isRoot={isRoot}
-        postShadow={postShadow}
-        onPostSuccess={onPostSuccess}
-        threadgateRecord={threadgateRecord}
-        postSource={postSource}
-      />
+      <FeedFeedbackProvider value={feedFeedback}>
+        <FeedItemProvider value={feedItem}>
+          <ThreadItemAnchorInner
+            item={item}
+            isRoot={isRoot}
+            postShadow={postShadow}
+            onPostSuccess={onPostSuccess}
+            threadgateRecord={threadgateRecord}
+            postSource={postSource}
+          />
+        </FeedItemProvider>
+      </FeedFeedbackProvider>
     </ReportDialogMetadataContext.Provider>
   )
 }
@@ -181,12 +212,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
-  const {currentAccount, hasSession} = useSession()
-  const feedFeedback = useFeedFeedback(
-    postSource?.feedSourceInfo,
-    hasSession,
-    'thread',
-  )
+  const {currentAccount} = useSession()
+  const feedFeedback = useFeedFeedbackContext()
   const formatPostStatCount = useFormatPostStatCount()
 
   const post = postShadow
@@ -241,21 +268,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const showFollowButton =
     currentAccount?.did !== post.author.did && !onlyFollowersCanReply
 
-  const viaRepost = useMemo(() => {
-    const reason = postSource?.post.reason
-
-    if (
-      bsky.isType(app.bsky.feed.defs.reasonRepost, reason) &&
-      reason.uri &&
-      reason.cid
-    ) {
-      return {
-        uri: reason.uri,
-        cid: reason.cid,
-      }
-    }
-  }, [postSource])
-
   const onPressReply = useNonReactiveCallback(() => {
     openComposer({
       replyTo: {
@@ -292,17 +304,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
       feedFeedback.sendInteraction({
         item: post.uri,
         event: 'app.bsky.feed.defs#clickthroughAuthor',
-        feedContext: postSource.post.feedContext,
-        reqId: postSource.post.reqId,
-      })
-    }
-  }
-
-  const onFollowAuthor = () => {
-    if (postSource) {
-      feedFeedback.sendInteraction({
-        item: post.uri,
-        event: 'app.bsky.feed.defs#interactionFollow',
         feedContext: postSource.post.feedContext,
         reqId: postSource.post.reqId,
       })
@@ -347,7 +348,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 type={post.author.associated?.labeler ? 'labeler' : 'user'}
                 live={live}
                 onBeforePress={onOpenAuthor}
-                onFollow={onFollowAuthor}
               />
             </View>
             <Link
@@ -359,10 +359,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               )}
               onPress={onOpenAuthor}>
               <View style={[a.flex_1, a.align_start]}>
-                <ProfileHoverCard
-                  did={post.author.did}
-                  style={[a.w_full]}
-                  onFollow={onFollowAuthor}>
+                <ProfileHoverCard did={post.author.did} style={[a.w_full]}>
                   <View style={[a.flex_row, a.align_center]}>
                     <Text
                       emoji
@@ -404,7 +401,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               <ThreadItemAnchorFollowButton
                 did={post.author.did}
                 enabled={showFollowButton}
-                onFollow={onFollowAuthor}
               />
             </View>
           </View>
@@ -547,20 +543,15 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   marginLeft: -5,
                 },
               ]}>
-              <FeedFeedbackProvider value={feedFeedback}>
-                <PostControls
-                  big
-                  post={postShadow}
-                  record={record}
-                  richText={richText}
-                  onPressReply={onPressReply}
-                  logContext="PostThreadItem"
-                  threadgateRecord={threadgateRecord}
-                  feedContext={postSource?.post?.feedContext}
-                  reqId={postSource?.post?.reqId}
-                  viaRepost={viaRepost}
-                />
-              </FeedFeedbackProvider>
+              <PostControls
+                big
+                post={postShadow}
+                record={record}
+                richText={richText}
+                onPressReply={onPressReply}
+                logContext="PostThreadItem"
+                threadgateRecord={threadgateRecord}
+              />
             </View>
             <DebugFieldDisplay subject={post} />
           </View>
