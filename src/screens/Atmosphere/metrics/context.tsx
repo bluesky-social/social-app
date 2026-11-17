@@ -54,19 +54,23 @@ export function useAtmosphereMetricContext() {
   return scope ? {tab: scope.tab, surface: scope.surface} : undefined
 }
 
+/**
+ * The content card to log, or undefined outside an Atmosphere content card.
+ */
+export function useAtmosphereContentContext() {
+  const scope = useContext(ScopeContext)
+  const item = useContext(ItemContext)
+  return scope && item
+    ? {tab: scope.tab, surface: scope.surface, ...item}
+    : undefined
+}
+
 /** Logs a press of the content card it's rendered in, if any. */
 export function useLogContentPress() {
   const ax = useAnalytics()
-  const scope = useContext(ScopeContext)
-  const item = useContext(ItemContext)
+  const content = useAtmosphereContentContext()
   return (target: 'external' | 'photoDialog') => {
-    if (!scope || !item) return
-    ax.metric('atmosphere:content:press', {
-      tab: scope.tab,
-      surface: scope.surface,
-      ...item,
-      target,
-    })
+    if (content) ax.metric('atmosphere:content:press', {...content, target})
   }
 }
 

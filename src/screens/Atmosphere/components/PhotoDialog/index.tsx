@@ -10,6 +10,7 @@ import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {getGalleryImages} from '#/screens/Atmosphere/data/exploreData'
 import {
   AtmosphereMetricsRestore,
+  useAtmosphereContentContext,
   useAtmosphereMetricContext,
   useAtmosphereMetricsSnapshot,
 } from '#/screens/Atmosphere/metrics/context'
@@ -81,6 +82,7 @@ function PhotoDialogInner({
   const moderationOpts = useModerationOpts()
   const ax = useAnalytics()
   const metricContext = useAtmosphereMetricContext()
+  const content = useAtmosphereContentContext()
 
   const createdAt = photo.createdAt
   const hasDate = !!createdAt && !Number.isNaN(Date.parse(createdAt))
@@ -191,7 +193,15 @@ function PhotoDialogInner({
         })}
         color="primary"
         size="large"
-        onPress={() => control.close(() => openLink(photo.uri))}>
+        onPress={() => {
+          if (content) {
+            ax.metric('atmosphere:photo:externalPressed', {
+              ...content,
+              source: 'viewOnGrain',
+            })
+          }
+          control.close(() => openLink(photo.uri))
+        }}>
         <View style={[a.p_2xs, a.rounded_xs, {backgroundColor: 'white'}]}>
           <GrainMark width={12} />
         </View>

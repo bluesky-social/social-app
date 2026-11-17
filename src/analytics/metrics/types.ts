@@ -1619,6 +1619,25 @@ export type Events = {
     /** Apps shown in the new category. */
     resultCount: number
   }
+  /**
+   * The user moved to another image in the photo dialog's carousel. Only
+   * reported for navigation the carousel can detect: native swipes, mouse
+   * drags, arrow keys, and Safari's horizontal wheel, not browser touch or
+   * other browsers' wheel scrolling.
+   */
+  'atmosphere:photo:imageChanged': AtmosphereContentMetricContext & {
+    fromIndex: number
+    toIndex: number
+    imageCount: number
+  }
+  /**
+   * The user left the photo dialog for the gallery on Grain, from an image
+   * (`imageIndex` is which one) or from "View on Grain".
+   */
+  'atmosphere:photo:externalPressed': AtmosphereContentMetricContext & {
+    source: 'image' | 'viewOnGrain'
+    imageIndex?: number
+  }
   /** The user opened an activity group's "View all" list. */
   'atmosphere:activity:viewAll': AtmosphereMetricContext & {
     subjectCount: number

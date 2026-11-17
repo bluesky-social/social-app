@@ -2,14 +2,20 @@ import {i18n} from '@lingui/core'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {PhotoDialog} from '#/screens/Atmosphere/components/PhotoDialog'
+import {
+  AtmosphereContentItem,
+  AtmosphereMetricsScope,
+  createVisit,
+} from '#/screens/Atmosphere/metrics/context'
 import {type app} from '#/lexicons'
 
 const mockClose = jest.fn((_afterClose?: () => void) => {})
 const mockOpenLink = jest.fn()
+const mockMetric = jest.fn()
 let mockIsNative = true
 
 jest.mock('#/analytics', () => ({
-  useAnalytics: () => ({metric: jest.fn()}),
+  useAnalytics: () => ({metric: mockMetric}),
 }))
 jest.mock('#/env', () =>
   Object.defineProperty(
@@ -380,4 +386,48 @@ it('opens the gallery link only after the dialog has closed', () => {
   mockClose.mock.calls[0][0]?.()
   expect(mockOpenLink).toHaveBeenCalledTimes(1)
   expect(mockOpenLink).toHaveBeenCalledWith('https://grain.social/gallery/42')
+})
+
+it('logs presses as the photo dialog of the card it was opened from', () => {
+  const card = {
+    contentType: 'gallery',
+    contentId: 'https://grain.social/gallery/1',
+    position: 4,
+  } as const
+  render(
+    <AtmosphereMetricsScope
+      tab="explore"
+      surface="tab"
+      isActive={false}
+      visit={createVisit()}>
+      <AtmosphereContentItem {...card} section="photos">
+        <PhotoDialog
+          control={{close: mockClose} as never}
+          photo={gallery()}
+          author={author}
+        />
+      </AtmosphereContentItem>
+    </AtmosphereMetricsScope>,
+  )
+
+  fireEvent.press(screen.getByRole('link', {name: 'Author profile'}))
+  fireEvent.press(screen.getByRole('button', {name: 'View on Grain'}))
+  const context = {
+    tab: 'explore',
+    surface: 'photoDialog',
+    ...card,
+    section: 'photos',
+  }
+  expect(mockMetric.mock.calls).toEqual([
+    [
+      'atmosphere:profile:press',
+      {
+        tab: 'explore',
+        surface: 'photoDialog',
+        profileDid: author.did,
+        source: 'photoDialog',
+      },
+    ],
+    ['atmosphere:photo:externalPressed', {...context, source: 'viewOnGrain'}],
+  ])
 })
