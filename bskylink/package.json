@@ -2,7 +2,7 @@
   "name": "bskylink",
   "version": "0.0.0",
   "type": "module",
-  "packageManager": "pnpm@11.28.5",
+  "packageManager": "pnpm@12.16.1",
   "main": "index.ts",
   "scripts": {
     "dev:preview": "NODE_ENV=development node --loader ts-node/esm --watch src/preview.ts",
