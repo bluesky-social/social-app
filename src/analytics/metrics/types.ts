@@ -9,6 +9,7 @@ import {type VideoCompressSkipReason} from '#/lib/media/video/types'
 import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
+import {type AtmosphereTab} from '#/screens/Atmosphere/metrics/types'
 import {type SharePlatformId} from '#/components/ShareDialog/catalog'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
@@ -1513,6 +1514,40 @@ export type Events = {
 
   // user dismisses the Atmosphere introduction banner
   'atmosphere:nux:bannerDismissed': {}
+  /**
+   * A tab of the Atmosphere screen came into view: the tab it's on when the
+   * screen gains focus, which includes mounting, and each tab the user
+   * switches to, once the pager settles on it. Coming back to the app does
+   * not count.
+   */
+  'atmosphere:tab:displayed': {
+    tab: AtmosphereTab
+    /** The tab switched from. Unset for `focus`. */
+    previousTab?: AtmosphereTab
+    /**
+     * - `focus`: the screen gained focus, or mounted, on the tab.
+     * - `tap`: the user pressed the tab.
+     * - `swipe`: the user swiped the pager to the tab, which only native
+     *   does.
+     * - `seeMoreApps`: Explore's "See more" on featured apps opened Apps.
+     */
+    reason: 'focus' | 'tap' | 'swipe' | 'seeMoreApps'
+  }
+  /**
+   * Time a tab was in view: its tab selected, the screen focused, and the
+   * app in the foreground. Each stretch is logged once it ends.
+   */
+  'atmosphere:tab:duration': {
+    tab: AtmosphereTab
+    durationMs: number
+    /**
+     * - `switched`: the user switched to another tab.
+     * - `blurred`: the screen lost focus, e.g. another screen opened over
+     *   it, or it closed.
+     * - `backgrounded`: the app left the foreground.
+     */
+    endReason: 'switched' | 'blurred' | 'backgrounded'
+  }
 
   'geo:debug': {}
 
