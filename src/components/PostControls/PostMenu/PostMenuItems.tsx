@@ -28,11 +28,6 @@ import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {
-  unspeccedInteraction,
-  type UnspeccedInteractionPayload,
-  useFeedFeedbackContext,
-} from '#/state/feed-feedback'
-import {
   useHiddenPosts,
   useHiddenPostsApi,
   useLanguagePrefs,
@@ -96,6 +91,11 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
+import {
+  unspeccedInteraction,
+  type UnspeccedInteractionPayload,
+  useFeedFeedbackContext,
+} from '#/features/feedFeedback'
 import {type app} from '#/lexicons'
 import {PostMenuControlItems} from './PostMenuControlItems'
 

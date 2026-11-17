@@ -15,11 +15,6 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {useSetPostTitle} from '#/lib/hooks/useSetPostTitle'
-import {
-  FeedFeedbackProvider,
-  type StateContext as FeedFeedbackStateContext,
-  useFeedFeedback,
-} from '#/state/feed-feedback'
 import {type ThreadViewOption} from '#/state/queries/preferences/useThreadPreferences'
 import {
   PostThreadContextProvider,
@@ -29,7 +24,6 @@ import {
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {useUnstablePostSource} from '#/state/unstable-post-source'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {HeaderDropdown} from '#/screens/PostThread/components/HeaderDropdown'
 import {ThreadComposePrompt} from '#/screens/PostThread/components/ThreadComposePrompt'
@@ -58,6 +52,12 @@ import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {
+  FeedFeedbackProvider,
+  type StateContext as FeedFeedbackStateContext,
+  useFeedFeedback,
+} from '#/features/feedFeedback'
+import {useUnstablePostSource} from '#/features/feedFeedback/postSource'
 
 const PARENT_CHUNK_SIZE = IS_NATIVE ? 5 : 20
 const CHILDREN_CHUNK_SIZE = 50

@@ -4,10 +4,6 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {type Shadow} from '#/state/cache/post-shadow'
-import {
-  unspeccedInteraction,
-  useFeedFeedbackContext,
-} from '#/state/feed-feedback'
 import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
 import {useRequireAuth} from '#/state/session'
 import {useTheme} from '#/alf'
@@ -19,6 +15,10 @@ import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Tra
 import * as toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {type BookmarkEntryPoint} from '#/analytics/metrics/types'
+import {
+  unspeccedInteraction,
+  useFeedFeedbackContext,
+} from '#/features/feedFeedback'
 import {type app} from '#/lexicons'
 import {PostControlButton, PostControlButtonIcon} from './PostControlButton'
 

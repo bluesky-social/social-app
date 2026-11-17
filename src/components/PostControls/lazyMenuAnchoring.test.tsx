@@ -101,7 +101,7 @@ jest.mock('#/analytics', () => ({
     },
   }),
 }))
-jest.mock('#/state/feed-feedback', () => ({
+jest.mock('#/features/feedFeedback', () => ({
   useFeedFeedbackContext: () => ({feedDescriptor: undefined}),
 }))
 jest.mock('#/lib/routes/links', () => ({makeProfileLink: jest.fn()}))

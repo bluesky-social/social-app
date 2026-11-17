@@ -450,6 +450,11 @@
       "count": 1
     }
   },
+  "src/features/feedFeedback/index.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 3
+    }
+  },
   "src/features/liveEvents/preferences.ts": {
     "typescript/no-floating-promises": {
       "count": 1
@@ -923,11 +928,6 @@
   "src/state/cache/types.ts": {
     "typescript/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/state/feed-feedback.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 3
     }
   },
   "src/state/gallery.ts": {
