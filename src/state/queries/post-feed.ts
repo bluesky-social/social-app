@@ -54,6 +54,7 @@ import {
 type ActorDid = string
 export type AuthorFilter =
   | 'posts_with_replies'
+  | 'posts_and_replies_only'
   | 'posts_no_replies'
   | 'posts_and_author_threads'
   | 'posts_with_media'

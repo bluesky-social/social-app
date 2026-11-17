@@ -640,7 +640,8 @@ let PostFeed = ({
     } else if (
       feedType === 'author' &&
       (feedTab === 'posts_and_author_threads' ||
-        feedTab === 'posts_with_replies')
+        feedTab === 'posts_with_replies' ||
+        feedTab === 'posts_and_replies_only')
     ) {
       feedKind = 'profile'
     }

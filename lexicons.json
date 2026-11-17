@@ -483,7 +483,7 @@
     },
     "app.bsky.feed.getAuthorFeed": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.feed.getAuthorFeed",
-      "cid": "bafyreiha5ca2lkguxvh22smjuehn2evxhyqk7isuiyqy6b23raljriv5a4"
+      "cid": "bafyreig62wjgho5nmm7ltc4usakw3nwv2mnowp2xjyx5jnzof5psnjwgn4"
     },
     "app.bsky.feed.getFeed": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.feed.getFeed",
