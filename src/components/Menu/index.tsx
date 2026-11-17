@@ -157,9 +157,16 @@ function OuterContent({
   children: React.ReactNode
 }) {
   const {t: l} = useLingui()
-  const {nativeSnapPoint} = Dialog.useDialogContext()
-  // At full height the content fills the sheet and scrolls itself
-  const isFull = expandable && nativeSnapPoint === BottomSheetSnapPoint.Full
+  const {nativeSnapPoint, fullHeightExtraSpace} = Dialog.useDialogContext()
+  /*
+   * At full height the content grows to fill the sheet and scrolls itself.
+   * Content already taller than the sheet has nothing to grow by, so the menu
+   * keeps scrolling, e.g. with a large text size on a small iPhone.
+   */
+  const isFull =
+    expandable &&
+    nativeSnapPoint === BottomSheetSnapPoint.Full &&
+    fullHeightExtraSpace > 0
 
   return (
     <Dialog.ScrollableInner label={l`Menu`} scrollEnabled={!isFull}>

@@ -150,14 +150,30 @@ describe('native menu surface', () => {
   })
 
   it.each([
-    {snapPoint: 'partial', nativeSnapPoint: BottomSheetSnapPoint.Partial},
-    {snapPoint: 'full', nativeSnapPoint: BottomSheetSnapPoint.Full},
+    {
+      name: 'partial',
+      nativeSnapPoint: BottomSheetSnapPoint.Partial,
+      fullHeightExtraSpace: 0,
+      scrollEnabled: true,
+    },
+    {
+      name: 'full, content grows to fill',
+      nativeSnapPoint: BottomSheetSnapPoint.Full,
+      fullHeightExtraSpace: 200,
+      scrollEnabled: false,
+    },
+    {
+      name: 'full, content taller than the sheet',
+      nativeSnapPoint: BottomSheetSnapPoint.Full,
+      fullHeightExtraSpace: 0,
+      scrollEnabled: true,
+    },
   ])(
-    'only scrolls an expandable menu below full height: $snapPoint',
-    ({nativeSnapPoint}) => {
+    'only stops scrolling an expandable menu when its content fills the sheet: $name',
+    ({nativeSnapPoint, fullHeightExtraSpace, scrollEnabled}) => {
       jest
         .mocked(Dialog.useDialogContext)
-        .mockReturnValue({nativeSnapPoint} as ReturnType<
+        .mockReturnValue({nativeSnapPoint, fullHeightExtraSpace} as ReturnType<
           typeof Dialog.useDialogContext
         >)
 
@@ -169,7 +185,7 @@ describe('native menu surface', () => {
 
       expect(
         jest.mocked(Dialog.ScrollableInner).mock.calls[0][0].scrollEnabled,
-      ).toBe(nativeSnapPoint !== BottomSheetSnapPoint.Full)
+      ).toBe(scrollEnabled)
     },
   )
 })

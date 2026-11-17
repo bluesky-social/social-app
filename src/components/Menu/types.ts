@@ -32,7 +32,8 @@ export type OuterProps = React.PropsWithChildren<
      * iOS only. Lets the sheet be dragged up to full height. The sheet keeps
      * its partial height while it's there, and the menu stops scrolling, so
      * a child should grow by `fullHeightExtraSpace` from `useDialogContext()`
-     * to fill the sheet and scroll itself.
+     * to fill the sheet and scroll itself. Content already taller than the
+     * sheet keeps scrolling.
      *
      * @default false
      */
