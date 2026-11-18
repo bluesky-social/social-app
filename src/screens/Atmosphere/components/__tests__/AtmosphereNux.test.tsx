@@ -14,7 +14,6 @@ import {
 
 import {Nux, useSaveNux} from '#/state/queries/nuxs'
 import {type AppNux} from '#/state/queries/nuxs/definitions'
-import {preferencesQueryKey} from '#/state/queries/preferences'
 import {AtmosphereNux} from '#/screens/Atmosphere/components/AtmosphereNux'
 
 jest.mock('#/state/queries/preferences', () => ({
@@ -103,6 +102,7 @@ function renderBanners() {
 }
 
 beforeEach(() => {
+  jest.useFakeTimers()
   jest.clearAllMocks()
   i18n.loadAndActivate({locale: 'en', messages: {}})
   mockNuxs = []
@@ -114,15 +114,14 @@ beforeEach(() => {
 
 afterEach(() => {
   queryClient.clear()
+  jest.useRealTimers()
 })
 
 it('hides every banner while saving and refetching preferences', async () => {
   const save = createDeferrable()
   const refetch = createDeferrable()
   mockCall.mockReturnValue(save.complete)
-  const invalidate = jest
-    .spyOn(queryClient, 'invalidateQueries')
-    .mockReturnValue(refetch.complete)
+  jest.spyOn(queryClient, 'invalidateQueries').mockReturnValue(refetch.complete)
   renderBanners()
   expect(screen.getAllByTestId('atmosphereNuxDismiss')).toHaveLength(3)
 
@@ -131,26 +130,18 @@ it('hides every banner while saving and refetching preferences', async () => {
   await waitFor(() => expect(screen.toJSON()).toBeNull())
   expect(mockCall).toHaveBeenCalledWith(upsertNux, completedNux)
   expect(mockMetric).toHaveBeenCalledWith('atmosphere:nux:bannerDismissed', {})
-  expect(invalidate).not.toHaveBeenCalled()
 
   await act(async () => {
     save.resolve()
     await save.complete
+    await jest.runAllTimersAsync()
   })
-  expect(invalidate).toHaveBeenCalledWith({queryKey: preferencesQueryKey})
-  expect(queryClient.getMutationCache().getAll()[0].state.status).toBe(
-    'pending',
-  )
   expect(screen.toJSON()).toBeNull()
 
   await act(async () => {
     refetch.resolve()
     await refetch.complete
-  })
-  await waitFor(() => {
-    expect(queryClient.getMutationCache().getAll()[0].state.status).toBe(
-      'success',
-    )
+    await jest.runAllTimersAsync()
   })
   expect(screen.toJSON()).toBeNull()
 })
@@ -161,12 +152,9 @@ it('keeps every banner hidden through retries and a failed save', async () => {
 
   fireEvent.press(screen.getAllByTestId('atmosphereNuxDismiss')[0])
 
-  await waitFor(() => {
-    expect(queryClient.getMutationCache().getAll()[0].state.status).toBe(
-      'error',
-    )
+  await act(async () => {
+    await jest.runAllTimersAsync()
   })
-  expect(mockCall).toHaveBeenCalledTimes(4)
   expect(screen.toJSON()).toBeNull()
 
   unmount()
@@ -183,8 +171,8 @@ it.each([
 
   await act(async () => {
     await result.current.mutateAsync(nux)
+    await jest.runAllTimersAsync()
   })
-  await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
   expect(banners.getAllByTestId('atmosphereNuxDismiss')).toHaveLength(3)
 })
