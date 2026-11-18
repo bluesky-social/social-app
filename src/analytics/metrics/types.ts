@@ -1645,11 +1645,6 @@ export type Events = {
   'atmosphere:content:loaded': AtmosphereMetricContext & {
     state: 'populated' | 'empty' | 'error'
     itemCount: number
-    /**
-     * How long the user waited with it in view, from first coming into view
-     * until settled; 0 if already loaded. Time away doesn't count.
-     */
-    durationMs: number
     /** Whether it already had data, e.g. cached, when it came into view. */
     hasCachedData: boolean
   }
