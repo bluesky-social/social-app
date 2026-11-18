@@ -260,14 +260,9 @@ function LinkFormInner({
   // the close button sits as far from the top as the content is from the sides
   const closeInset = IS_LIQUID_GLASS ? tokens.space._2xl : tokens.space.xl
 
-  const openSupportedSites = () => {
-    /*
-     * Put the link field's keyboard away before opening the next sheet. If it
-     * hides while that sheet is still sliding up, the sheet's ScrollView
-     * measures the keyboard against its off-screen position on iOS, and the
-     * list ends in about a screen of empty space (APP-3971).
-     */
-    void KeyboardController.dismiss().then(() => supportedSitesControl.open())
+  const openSupportedSites = async () => {
+    await KeyboardController.dismiss()
+    supportedSitesControl.open()
   }
 
   return (
@@ -302,7 +297,7 @@ function LinkFormInner({
               <InlineLinkText
                 label={l`View all support sites`}
                 style={[a.text_md, a.leading_snug]}
-                {...createStaticClick(openSupportedSites)}>
+                {...createStaticClick(() => void openSupportedSites())}>
                 View all support sites
               </InlineLinkText>
             </Trans>
