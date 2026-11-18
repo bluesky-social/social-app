@@ -12,8 +12,18 @@ export function RepliesFeedLimited({hasPosts = false}: {hasPosts?: boolean}) {
       icon={MessageIcon}
       message={
         hasPosts
-          ? l`No more posts or replies found in recent activity. Older posts are unavailable at this time.`
-          : l`No posts or replies found in recent activity. Older posts are unavailable at this time.`
+          ? l({
+              message:
+                'No more posts or replies found in recent activity. Older posts are unavailable at this time.',
+              comment:
+                'Shown only in the rare case where we cannot fully populate the replies feed for a user. "Activity" means posts, replies, reposts, etc. This variant appears after some posts or replies have been shown.',
+            })
+          : l({
+              message:
+                'No posts or replies found in recent activity. Older posts are unavailable at this time.',
+              comment:
+                'Shown only in the rare case where we cannot fully populate the replies feed for a user. "Activity" means posts, replies, reposts, etc. This variant appears when no posts or replies could be shown.',
+            })
       }
     />
   )
