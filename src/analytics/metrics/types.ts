@@ -1517,15 +1517,13 @@ export type Events = {
    */
   'blockedGeoOverlay:shown': {}
 
-  // user dismisses the Atmosphere introduction banner
+  /** The user dismissed the Atmosphere introduction banner. */
   'atmosphere:nux:bannerDismissed': {}
   /** The user opened the About Atmosphere dialog from the banner. */
   'atmosphere:nux:learnMore': {}
   /**
-   * A tab of the Atmosphere screen came into view: the tab it's on when the
-   * screen gains focus, which includes mounting, and each tab the user
-   * switches to, once the pager settles on it. Coming back to the app does
-   * not count.
+   * The screen gained focus on this tab, or the pager reported a tab change.
+   * Returning from the background alone does not count.
    */
   'atmosphere:tab:displayed': {
     tab: AtmosphereTab
@@ -1541,8 +1539,10 @@ export type Events = {
     reason: 'focus' | 'tap' | 'swipe' | 'seeMoreApps'
   }
   /**
-   * Time a tab was in view: its tab selected, the screen focused, and the
-   * app in the foreground. Each stretch is logged once it ends.
+   * Time with the tab selected, the screen focused, and the app in the
+   * foreground, logged when that period ends. This is not reading time:
+   * dialogs can cover the tab without stopping the timer. Whether the native
+   * in-app browser stops the timer has not been verified on-device.
    */
   'atmosphere:tab:duration': {
     tab: AtmosphereTab
@@ -1556,16 +1556,27 @@ export type Events = {
     endReason: 'switched' | 'blurred' | 'backgrounded'
   }
   /**
-   * A content row was seen in Discover, Following or the activity list,
-   * using the shared List's viewability rules. Blurred cards are excluded,
-   * even if revealed. Each content item counts once per mounted list. Items
-   * reported while inactive wait until activation, and only count if still
-   * eligible in the list's data. This does not track exits from view.
+   * Discover, Following and the activity list only. Each contentType/contentId
+   * pair counts once until its list is unmounted, regardless of position or
+   * activity group. Switching tabs does not reset the count.
+   *
+   * List waits 500 ms. Native needs 40% of the row visible; web needs any part
+   * visible above the bottom 200px of the browser viewport. The platforms use
+   * different visibility rules. Blurred cards never count, even if revealed.
+   *
+   * Rows reported while the tab or screen is inactive wait until it is shown,
+   * then count if still in the data and allowed by moderation. They may no
+   * longer be visible, and the 500 ms may have elapsed while inactive.
    */
   'atmosphere:content:impression': AtmosphereContentMetricContext
   /**
-   * The user pressed a content card. `external` hands off to the content's
-   * site or app, which doesn't mean they read or watched it.
+   * The user pressed a content card. Repeated presses count again. `external`
+   * does not confirm that its site or app opened, or that the content was read.
+   *
+   * Presses can occur without an impression, including Explore and revealed
+   * blurred cards. Dividing presses by impressions does not give the share of
+   * shown cards that were pressed. Opening an article from an iOS link preview
+   * is not counted (bluesky-social/toolbox#95; not tested on-device).
    */
   'atmosphere:content:press': AtmosphereContentMetricContext & {
     target: 'external' | 'photoDialog'
@@ -1582,7 +1593,7 @@ export type Events = {
   }
   /** The user opened an Apps tab card's details dialog. */
   'atmosphere:app:detailsOpened': AtmosphereAppMetricContext
-  /** The user pressed an app's website link, which leaves Bluesky. */
+  /** The user pressed an app's website link. Does not confirm it opened. */
   'atmosphere:app:websitePressed': AtmosphereAppMetricContext & {
     source: 'featuredCard' | 'appDialog'
   }
@@ -1601,9 +1612,9 @@ export type Events = {
     resultCount: number
   }
   /**
-   * The user moved to another image in the photo dialog's carousel: a swipe,
-   * drag, arrow key, or wheel/trackpad scroll. Logged as each image becomes
-   * the leading one, so a long swipe can log several.
+   * The photo dialog reported another image as the leading one. A long swipe
+   * can log several changes. Use as a sign of photo browsing, not an exact
+   * count of gestures or every image viewed.
    */
   'atmosphere:photo:imageChanged': AtmosphereContentMetricContext & {
     fromIndex: number
@@ -1611,8 +1622,8 @@ export type Events = {
     imageCount: number
   }
   /**
-   * The user left the photo dialog for the gallery on Grain, from an image
-   * (`imageIndex` is which one) or from "View on Grain".
+   * The user pressed an image or "View on Grain" to open the gallery on Grain.
+   * imageIndex identifies the pressed image. Does not confirm the gallery opened.
    */
   'atmosphere:photo:externalPressed': AtmosphereContentMetricContext & {
     source: 'image' | 'viewOnGrain'
@@ -1638,11 +1649,17 @@ export type Events = {
   'atmosphere:content:retry': AtmosphereMetricContext & {
     phase: 'initial' | 'pagination'
   }
-  /** Following or the activity list loaded another page. */
+  /**
+   * Following or the activity list added a page after the initial load.
+   * Initial/cached pages and refetches with no added pages do not count.
+   * This does not mean the user saw the new items.
+   */
   'atmosphere:list:pageLoaded': AtmosphereMetricContext & {
-    /** 0-based; the first page loaded with the list is 0. */
+    /** 0-based; page 0 is the initial load and does not emit this event. */
     pageIndex: number
+    /** Rows in the new page, including blurred cards and warnings. */
     itemCount: number
+    /** Rows through this page, not unique content or impressions. */
     totalItemCount: number
   }
   /** The user opened a content card's options menu. */

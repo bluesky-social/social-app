@@ -25,8 +25,8 @@ export type AtmosphereMetricContext = {
 }
 
 /**
- * One app card, as reported by Atmosphere's app events: Explore's featured
- * apps, and the Apps tab's directory.
+ * Details for Explore's featured apps and the Apps directory. App cards do
+ * not log impressions; these events count actions, not people who saw the card.
  */
 export type AtmosphereAppMetricContext = AtmosphereMetricContext & {
   appId: string
@@ -49,7 +49,10 @@ export type AtmosphereContentMetricContext = AtmosphereMetricContext & {
   contentType: 'article' | 'publication' | 'gallery' | 'livestream'
   /** The content's URL, which also keys it across responses. */
   contentId: string
-  /** 0-based, in its list or, on Explore, its section. */
+  /**
+   * 0-based, in its list or, on Explore, its section. Can differ between events
+   * for the same content.
+   */
   position: number
   /** Explore's section the card is in. */
   section?: Exclude<AtmosphereSection, 'apps'>
