@@ -11,6 +11,8 @@ import {usePdsClient} from '#/state/session'
 
 export {Nux} from '#/state/queries/nuxs/definitions'
 
+export const saveNuxMutationKey = ['saveNux'] as const
+
 export function useNuxs():
   | {
       nuxs: AppNux[]
@@ -101,6 +103,7 @@ export function useSaveNux() {
   const pdsClient = usePdsClient()
 
   return useMutation({
+    mutationKey: saveNuxMutationKey,
     retry: 3,
     mutationFn: async (nux: AppNux) => {
       await pdsClient.call(upsertNux, serializeAppNux(nux))

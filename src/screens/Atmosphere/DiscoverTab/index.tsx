@@ -8,6 +8,7 @@ import {ActivityContentHider} from '#/screens/Atmosphere/ActivityTab/components/
 import {ActivityHeader} from '#/screens/Atmosphere/ActivityTab/components/ActivityHeader'
 import {ActivityContentCard} from '#/screens/Atmosphere/ActivityTab/components/ActivityRow'
 import {type ActivityCardRow} from '#/screens/Atmosphere/ActivityTab/rows'
+import {AtmosphereNux} from '#/screens/Atmosphere/components/AtmosphereNux'
 import {getAssociatedProfile} from '#/screens/Atmosphere/data/exploreData'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
@@ -49,7 +50,12 @@ export function AtmosphereDiscoverTab() {
       )}
       refreshing={isRefreshing}
       onRefresh={() => void onRefresh()}
-      ListHeaderComponent={data && isError ? errorMessage : undefined}
+      ListHeaderComponent={
+        <>
+          <AtmosphereNux style={a.pt_lg} />
+          {data && isError ? errorMessage : undefined}
+        </>
+      }
       ListEmptyComponent={
         !data ? (
           isError ? (
