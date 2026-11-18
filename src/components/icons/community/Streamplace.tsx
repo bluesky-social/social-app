@@ -3,7 +3,7 @@
 import {createSinglePathSVG} from '../TEMPLATE'
 
 export const Streamplace = createSinglePathSVG({
-  path: 'M3.5 0h11A3.5 3.5 0 0 1 18 3.5v11a3.5 3.5 0 0 1-3.5 3.5h-11A3.5 3.5 0 0 1 0 14.5v-11A3.5 3.5 0 0 1 3.5 0Zm3.7 2.4v6.4L18 6.1v-1L7.2 2.4Zm3.6 13.2V9.2L0 11.9v1l10.8 2.7Z',
-  viewBox: '0 0 18 18',
+  path: 'M6.5 3h11A3.5 3.5 0 0 1 21 6.5v11a3.5 3.5 0 0 1-3.5 3.5h-11A3.5 3.5 0 0 1 3 17.5v-11A3.5 3.5 0 0 1 6.5 3Zm3.7 2.4v6.4L21 9.1v-1L10.2 5.4Zm3.6 13.2v-6.4L3 14.9v1l10.8 2.7Z',
+  viewBox: '0 0 24 24',
   glyph: 'Streamplace',
 })
