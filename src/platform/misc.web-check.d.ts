@@ -123,3 +123,14 @@ declare module 'expo-image-manipulator' {
   export {type ImageManipulatorContext} from 'expo-image-manipulator/build/ImageManipulatorContext'
   export {type ImageRef} from 'expo-image-manipulator/build/ImageRef'
 }
+
+/*
+ * react-native-web doesn't export its list context resetter, which the web
+ * Dialog needs for the same reason RN's Modal uses it on native. Kept in sync
+ * with the declaration in src/global.d.ts, which the native passes use.
+ */
+declare module 'react-native-web/dist/vendor/react-native/VirtualizedList/VirtualizedListContext' {
+  export function VirtualizedListContextResetter(props: {
+    children: React.ReactNode
+  }): React.ReactNode
+}

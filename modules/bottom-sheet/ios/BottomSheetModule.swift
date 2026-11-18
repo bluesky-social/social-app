@@ -82,6 +82,14 @@ public class BottomSheetModule: Module {
       Prop("sourceViewTag") { (view: SheetView, prop: Int?) in
         view.sourceViewTag = prop
       }
+
+      /*
+       Read by the Fabric shadow node (`ExpoViewShadowNode`), not the view.
+       It makes `measure()` inside the sheet relative to this view, the space
+       the sheet's own touch handler reports touches in. Declared here so the
+       prop reaches native.
+       */
+      Prop("layoutRoot") { (_: SheetView, _: Bool) in }
     }
   }
 }

@@ -11,7 +11,7 @@ Key features:
 - Content-height tracking through native observation or iPad intrinsic-height reporting
 - Configurable snap points (hidden, partial, full)
 - Drag-to-dismiss with prevention controls
-- Portal-based rendering for proper z-index layering
+- Renders where it is declared, with no JS portal (see [Rendering in place](#rendering-in-place))
 - Edge-to-edge support on modern Android versions
 - iOS 26+ zoom transition support
 
@@ -29,9 +29,7 @@ The module exposes a React component that handles rendering and state management
 
 - **BottomSheet.tsx** (Native): Main component wrapping the native view
 - **BottomSheet.web.tsx** (Web): Stub that throws an error
-- **BottomSheetNativeComponent.tsx**: React wrapper with portal integration
-- **BottomSheetPortal.tsx**: Portal system for rendering sheets above app content
-- **Portal.tsx**: Generic portal implementation for managing component hierarchy
+- **BottomSheetNativeComponent.tsx**: React wrapper that renders the sheet in place
 
 The component uses a class-based approach to expose imperative methods (`present()`, `dismiss()`, `dismissAll()`).
 
@@ -64,6 +62,23 @@ The component uses a class-based approach to expose imperative methods (`present
   - Reports its measured width to `BottomSheetView` so the content canvas can follow it
   - Based on React Native's ReactModalHostView pattern
 - **SheetManager.kt**: Singleton for tracking sheets (same pattern as iOS)
+
+### Rendering in place
+
+The sheet renders where it is declared in the React tree. Nothing needs to be mounted at the app root. The native view moves its children into the presented sheet (`SheetViewController` on iOS, a `DialogRootViewGroup` inside the `BottomSheetDialog` on Android), so the content appears above the app regardless of where the host view sits. Keeping the React tree means the content gets the context around it and renders in the same commit as its owner, so controlled inputs whose state lives above the sheet stay in sync.
+
+The host view is a zero-height, window-wide, `box-none` view, so it takes no space where it is declared. Some context should not reach the content, so the wrapper resets it, as React Native's `Modal` does:
+
+- **Lists**: `VirtualizedListContextResetter` and `ScrollView.Context`, so a list inside a sheet declared in a list row isn't treated as nested in the outer list.
+- **Text**: inside `<Text>`, the host is wrapped in a 0x0 view so it doesn't become an inline attachment that reflows the text.
+- **Touches**: the content root claims the responder (`onStartShouldSetResponder`), so a tap on blank space in the sheet doesn't bubble to a `Pressable` around the place where the sheet is declared.
+- **Coordinates**: the sheet dispatches its own touches (an `RCTSurfaceTouchHandler` on iOS, `DialogRootViewGroup` on Android), relative to the sheet. The native view sets expo-modules-core's `layoutRoot`, which gives its shadow node the `RootNodeKind` trait, as React Native's `Modal` does, so `measure()` inside the sheet is relative to the sheet too. Without it, `measure()` would be relative to the place where the sheet is declared, and Pressability, which measures a button on press-in, would cancel a press as soon as the finger moved. The prop is a no-op on the native view, but it has to be declared in both module definitions so React Native passes it through.
+
+Things the wrapper can't reset:
+
+- **Capture-phase responders**: an ancestor's `onStartShouldSetResponderCapture` still sees touches in the sheet. With the default `keyboardShouldPersistTaps="never"`, an ancestor `ScrollView` takes the first tap while the keyboard is up and only dismisses the keyboard. `Layout.Content` and `List` default to `"handled"` for this reason. React Native's `Modal` has the same bug ([facebook/react-native#28871](https://github.com/facebook/react-native/issues/28871)).
+
+`deferPresentation` keeps an open sheet unmounted until it turns false. The app uses it to hold dialogs behind the policy update overlay.
 
 ### Content Height Detection
 
@@ -118,6 +133,9 @@ interface BottomSheetViewProps {
   popover?: 'always' | 'adaptive' | 'never' // iOS presentation policy (default 'never')
   popoverWidth?: number             // Preferred popover width in points (default 320)
   colorScheme?: 'light' | 'dark'    // App colour scheme for the native chrome
+
+  // Presentation
+  deferPresentation?: boolean       // Hold an open sheet unmounted until this turns false
   
   // Events
   onAttemptDismiss?: (event: BottomSheetAttemptDismissEvent) => void
@@ -145,19 +163,8 @@ interface BottomSheetViewProps {
 ### Basic Example
 
 ```tsx
-import {BottomSheet, BottomSheetProvider, BottomSheetOutlet} from '@bsky.app/bottom-sheet'
+import {BottomSheet} from '@bsky.app/bottom-sheet'
 
-// In your app root:
-function App() {
-  return (
-    <BottomSheetProvider>
-      <YourApp />
-      <BottomSheetOutlet />
-    </BottomSheetProvider>
-  )
-}
-
-// In a component:
 function MyComponent() {
   const sheetRef = useRef<BottomSheet>(null)
   
@@ -191,18 +198,18 @@ function MyComponent() {
 
 ### Nested Sheets
 
-The module supports nesting sheets by using `BottomSheetPortalProvider` within sheet content:
+Declare the inner sheet inside the outer sheet's content. It presents on top of the outer sheet:
 
 ```tsx
 <BottomSheet ref={outerSheetRef}>
-  <BottomSheetPortalProvider>
-    <Button onPress={() => innerSheetRef.current?.present()} />
-    <BottomSheet ref={innerSheetRef}>
-      <Text>Inner sheet content</Text>
-    </BottomSheet>
-  </BottomSheetPortalProvider>
+  <Button onPress={() => innerSheetRef.current?.present()} />
+  <BottomSheet ref={innerSheetRef}>
+    <Text>Inner sheet content</Text>
+  </BottomSheet>
 </BottomSheet>
 ```
+
+On iOS, a sheet presents from the view controller of the place where it is declared. A sheet declared outside an open sheet can't present on top of it.
 
 ### Dismiss All Sheets
 
@@ -253,10 +260,8 @@ BottomSheetNativeComponent.dismissAll()
 - `src/BottomSheet.types.ts` - TypeScript type definitions
 - `src/BottomSheet.tsx` - Native component (re-export)
 - `src/BottomSheet.web.tsx` - Web stub
-- `src/BottomSheetNativeComponent.tsx` - Native wrapper with portal integration
+- `src/BottomSheetNativeComponent.tsx` - Native wrapper that renders the sheet in place
 - `src/BottomSheetNativeComponent.web.tsx` - Web stub for native component
-- `src/BottomSheetPortal.tsx` - Portal context and providers
-- `src/lib/Portal.tsx` - Generic portal implementation
 
 ### iOS
 - `ios/BottomSheetModule.swift` - Module definition

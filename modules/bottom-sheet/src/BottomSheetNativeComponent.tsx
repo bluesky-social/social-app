@@ -1,12 +1,16 @@
-import {Component, createRef} from 'react'
+import {Component, createRef, use} from 'react'
 import {
   type NativeSyntheticEvent,
   Platform,
+  ScrollView,
   type StyleProp,
+  unstable_TextAncestorContext as TextAncestorContext,
+  useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
+import * as VirtualizedLists from '@react-native/virtualized-lists'
 
 import {IS_IPAD} from '#/env'
 import {
@@ -14,15 +18,26 @@ import {
   type BottomSheetState,
   type BottomSheetViewProps,
 } from './BottomSheet.types'
-import {
-  BottomSheetPortalProvider,
-  Context as PortalContext,
-} from './BottomSheetPortal'
+
+/*
+ * The resetter is only reachable through the package's untyped default export,
+ * which is also how RN's own Modal gets it.
+ */
+const {VirtualizedListContextResetter} = (
+  VirtualizedLists as unknown as {
+    default: {
+      VirtualizedListContextResetter: React.ComponentType<{
+        children: React.ReactNode
+      }>
+    }
+  }
+).default
 
 const NativeView: React.ComponentType<
   BottomSheetViewProps & {
     ref: React.RefObject<any>
     style: StyleProp<ViewStyle>
+    layoutRoot: boolean
   }
 > = requireNativeViewManager('BottomSheet')
 
@@ -36,8 +51,6 @@ export class BottomSheetNativeComponent extends Component<
   }
 > {
   ref = createRef<any>()
-
-  static contextType = PortalContext
 
   constructor(props: BottomSheetViewProps) {
     super(props)
@@ -79,30 +92,70 @@ export class BottomSheetNativeComponent extends Component<
   }
 
   render() {
-    const Portal = this.context as React.ContextType<typeof PortalContext>
-    if (!Portal) {
-      throw new Error(
-        'BottomSheet: You need to wrap your component tree with a <BottomSheetPortalProvider> to use the bottom sheet.',
-      )
-    }
-
-    if (!this.state.open) {
+    const {deferPresentation, ...props} = this.props
+    if (!this.state.open || deferPresentation) {
       return null
     }
 
     return (
-      <Portal>
+      <InPlaceHost>
         <BottomSheetNativeComponentInner
-          {...this.props}
+          {...props}
           nativeViewRef={this.ref}
           onStateChange={this.onStateChange}
           onPresentationSizeChange={this.onPresentationSizeChange}
           presentationSize={this.state.presentationSize}
         />
-      </Portal>
+      </InPlaceHost>
     )
   }
 }
+
+/**
+ * The native view moves its content into a natively presented controller (iOS)
+ * or dialog window (Android), so it can be rendered right where the sheet is
+ * declared, without a JS portal. That keeps the content in the same React
+ * commit as its owner, and nested sheets present from their parent sheet
+ * because their native view sits inside it.
+ *
+ * What stays behind in the parent is an empty native view. This host keeps it
+ * out of the parent's layout and resets the list contexts that would otherwise
+ * leak into the content, as RN's `Modal` does.
+ */
+function InPlaceHost({children}: {children: React.ReactNode}) {
+  const hasTextAncestor = use(TextAncestorContext)
+  const {width} = useWindowDimensions()
+
+  const host = (
+    <View
+      pointerEvents="box-none"
+      /*
+       * The native view's `left` and `right` are its width fallback until the
+       * native canvas size lands, so give them the window width rather than
+       * whatever the surrounding parent happens to be.
+       */
+      style={{position: 'absolute', top: 0, left: 0, width, height: 0}}>
+      <VirtualizedListContextResetter>
+        <ScrollView.Context.Provider value={null}>
+          {children}
+        </ScrollView.Context.Provider>
+      </VirtualizedListContextResetter>
+    </View>
+  )
+
+  if (!hasTextAncestor) {
+    return host
+  }
+
+  /*
+   * Inside a <Text>, such as a hashtag menu, a view becomes an inline
+   * attachment sized by its own layout, and position is ignored. A 0x0
+   * wrapper keeps it from taking up space in the text.
+   */
+  return <View style={{width: 0, height: 0}}>{host}</View>
+}
+
+const claimResponder = () => true
 
 function BottomSheetNativeComponentInner({
   children,
@@ -190,8 +243,22 @@ function BottomSheetNativeComponentInner({
        * still wins, since a defined width takes precedence over the insets.
        */
       style={{position: 'absolute', left: 0, right: 0}}
+      /*
+       * The sheet dispatches its own touches, in coordinates relative to the
+       * sheet. Without this, `measure()` inside it would be relative to the
+       * surface root, through wherever the sheet is declared, and Pressability
+       * would see any finger movement as leaving the press rect. RN's Modal
+       * sets the same trait.
+       */
+      layoutRoot
       containerBackgroundColor={nativeContainerBackgroundColor}>
       <View
+        /*
+         * The content's React ancestors are wherever the sheet is declared,
+         * like a post's Pressable. Claim touches nothing inside handled, so
+         * they don't bubble out to them, as RN's Modal does.
+         */
+        onStartShouldSetResponder={claimResponder}
         style={[
           {
             flex: 1,
@@ -223,7 +290,7 @@ function BottomSheetNativeComponentInner({
                 ]
               : undefined
           }>
-          <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
+          {children}
         </View>
       </View>
     </NativeView>

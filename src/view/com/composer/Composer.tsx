@@ -45,7 +45,6 @@ import * as FileSystem from 'expo-file-system'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {type Client, type UriString} from '@atproto/lex'
 import {AtUri, type AtUriString} from '@atproto/syntax'
-import {BottomSheetPortalProvider} from '@bsky.app/bottom-sheet'
 import {type RichText} from '@bsky/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -1421,164 +1420,159 @@ export const ComposePost = ({
 
   const IS_WEBFooterSticky = !IS_NATIVE && thread.posts.length > 1
   return (
-    <BottomSheetPortalProvider>
-      <KeyboardAvoidingView
-        testID="composePostView"
-        behavior={IS_IOS ? 'padding' : 'height'}
-        keyboardVerticalOffset={keyboardVerticalOffset}
-        automaticOffset={IS_IPAD}
-        style={a.flex_1}>
-        <View
-          style={[a.flex_1, viewStyles]}
-          aria-modal
-          accessibilityViewIsModal>
-          <ComposerTopBar
-            canPost={canPost}
-            isReply={!!replyTo}
-            isPublishQueued={publishOnUpload}
-            isPublishing={isPublishing}
-            isSavingDraft={isSavingDraft}
-            isThread={thread.posts.length > 1}
-            publishingStage={publishingStage}
-            topBarAnimatedStyle={topBarAnimatedStyle}
-            onCancel={onPressCancel}
-            onPublish={() => void onPressPublish()}
-            onSelectDraft={draft => void handleSelectDraft(draft)}
-            onSaveDraft={saveCurrentDraft}
-            onDiscard={handleClearComposer}
-            isEmpty={isComposerEmpty}
-            isDirty={composerState.isDirty}
-            isEditingDraft={!!composerState.draftId}
-            canSaveDraft={allPostsWithinLimit}
-            textLength={thread.posts[0].richtext.text.length}>
-            {missingAltError && <AltTextReminder error={missingAltError} />}
-            <ErrorBanner
-              error={error}
-              videoState={erroredVideo}
-              clearError={() => setError('')}
-              clearVideo={
-                erroredVideoPostId
-                  ? () => clearVideo(erroredVideoPostId)
-                  : () => {}
-              }
-            />
-          </ComposerTopBar>
-
-          <Animated.ScrollView
-            ref={scrollViewRef}
-            onScroll={scrollHandler}
-            contentContainerStyle={a.flex_grow}
-            style={[
-              a.flex_1,
-              web({
-                scrollbarGutter: 'stable',
-                scrollbarColor: `${t.palette.contrast_200} transparent`,
-                // Prevent horizontal trackpad swipes from triggering the
-                // browser's back/forward overscroll-navigation gesture.
-                // Handles Chrome and Firefox; Safari is handled separately
-                // via a wheel listener since it ignores overscroll-behavior.
-                overscrollBehaviorX: 'contain',
-              }),
-            ]}
-            keyboardShouldPersistTaps="always"
-            onContentSizeChange={onScrollViewContentSizeChange}
-            onLayout={onScrollViewLayout}>
-            {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
-            {thread.posts.map((post, index) => (
-              <Fragment key={post.id + (composerState.draftId ?? '')}>
-                <ComposerPost
-                  post={post}
-                  dispatch={composerDispatch}
-                  textInputRef={post.id === activePost.id ? textInputRef : null}
-                  isFirstPost={index === 0}
-                  isLastPost={index === thread.posts.length - 1}
-                  isPartOfThread={thread.posts.length > 1}
-                  isReply={index > 0 || !!replyTo}
-                  isActive={post.id === activePost.id}
-                  canRemovePost={thread.posts.length > 1}
-                  canRemoveQuote={index > 0 || !initQuote}
-                  onSelectVideo={selectVideo}
-                  onClearVideo={clearVideo}
-                  onPublish={onComposerPostPublish}
-                  onError={setError}
-                />
-                {IS_WEBFooterSticky && post.id === activePost.id && (
-                  <View style={styles.stickyFooterWeb}>{footer}</View>
-                )}
-              </Fragment>
-            ))}
-          </Animated.ScrollView>
-          {!IS_WEBFooterSticky && footer}
-        </View>
-
-        {replyTo ? (
-          <Prompt.Basic
-            control={discardPromptControl}
-            title={l`Discard draft?`}
-            description=""
-            confirmButtonCta={l`Discard`}
-            confirmButtonColor="negative"
-            onConfirm={handleDiscard}
+    <KeyboardAvoidingView
+      testID="composePostView"
+      behavior={IS_IOS ? 'padding' : 'height'}
+      keyboardVerticalOffset={keyboardVerticalOffset}
+      automaticOffset={IS_IPAD}
+      style={a.flex_1}>
+      <View style={[a.flex_1, viewStyles]} aria-modal accessibilityViewIsModal>
+        <ComposerTopBar
+          canPost={canPost}
+          isReply={!!replyTo}
+          isPublishQueued={publishOnUpload}
+          isPublishing={isPublishing}
+          isSavingDraft={isSavingDraft}
+          isThread={thread.posts.length > 1}
+          publishingStage={publishingStage}
+          topBarAnimatedStyle={topBarAnimatedStyle}
+          onCancel={onPressCancel}
+          onPublish={() => void onPressPublish()}
+          onSelectDraft={draft => void handleSelectDraft(draft)}
+          onSaveDraft={saveCurrentDraft}
+          onDiscard={handleClearComposer}
+          isEmpty={isComposerEmpty}
+          isDirty={composerState.isDirty}
+          isEditingDraft={!!composerState.draftId}
+          canSaveDraft={allPostsWithinLimit}
+          textLength={thread.posts[0].richtext.text.length}>
+          {missingAltError && <AltTextReminder error={missingAltError} />}
+          <ErrorBanner
+            error={error}
+            videoState={erroredVideo}
+            clearError={() => setError('')}
+            clearVideo={
+              erroredVideoPostId
+                ? () => clearVideo(erroredVideoPostId)
+                : () => {}
+            }
           />
-        ) : (
-          <Prompt.Outer control={discardPromptControl}>
-            <Prompt.Content>
-              <Prompt.TitleText>
-                {allPostsWithinLimit ? (
-                  composerState.draftId ? (
-                    <Trans>Save changes?</Trans>
-                  ) : (
-                    <Trans>Save draft?</Trans>
-                  )
-                ) : (
-                  <Trans>Discard post?</Trans>
-                )}
-              </Prompt.TitleText>
-              <Prompt.DescriptionText>
-                {allPostsWithinLimit ? (
-                  composerState.draftId ? (
-                    <Trans>
-                      You have unsaved changes to this draft, would you like to
-                      save them?
-                    </Trans>
-                  ) : (
-                    <Trans>
-                      Would you like to save this as a draft to edit later?
-                    </Trans>
-                  )
-                ) : (
-                  <Trans>You can only save drafts up to 1000 characters.</Trans>
-                )}
-              </Prompt.DescriptionText>
-            </Prompt.Content>
-            <Prompt.Actions>
-              {allPostsWithinLimit && (
-                <Prompt.Action
-                  cta={composerState.draftId ? l`Save changes` : l`Save draft`}
-                  onPress={() => void handleSaveDraft()}
-                  color="primary"
-                />
-              )}
-              <Prompt.Cancel cta={l`Keep editing`} />
-              <Prompt.Action
-                cta={l`Discard`}
-                onPress={handleDiscard}
-                color="negative_subtle"
-              />
-            </Prompt.Actions>
-          </Prompt.Outer>
-        )}
+        </ComposerTopBar>
 
+        <Animated.ScrollView
+          ref={scrollViewRef}
+          onScroll={scrollHandler}
+          contentContainerStyle={a.flex_grow}
+          style={[
+            a.flex_1,
+            web({
+              scrollbarGutter: 'stable',
+              scrollbarColor: `${t.palette.contrast_200} transparent`,
+              // Prevent horizontal trackpad swipes from triggering the
+              // browser's back/forward overscroll-navigation gesture.
+              // Handles Chrome and Firefox; Safari is handled separately
+              // via a wheel listener since it ignores overscroll-behavior.
+              overscrollBehaviorX: 'contain',
+            }),
+          ]}
+          keyboardShouldPersistTaps="always"
+          onContentSizeChange={onScrollViewContentSizeChange}
+          onLayout={onScrollViewLayout}>
+          {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
+          {thread.posts.map((post, index) => (
+            <Fragment key={post.id + (composerState.draftId ?? '')}>
+              <ComposerPost
+                post={post}
+                dispatch={composerDispatch}
+                textInputRef={post.id === activePost.id ? textInputRef : null}
+                isFirstPost={index === 0}
+                isLastPost={index === thread.posts.length - 1}
+                isPartOfThread={thread.posts.length > 1}
+                isReply={index > 0 || !!replyTo}
+                isActive={post.id === activePost.id}
+                canRemovePost={thread.posts.length > 1}
+                canRemoveQuote={index > 0 || !initQuote}
+                onSelectVideo={selectVideo}
+                onClearVideo={clearVideo}
+                onPublish={onComposerPostPublish}
+                onError={setError}
+              />
+              {IS_WEBFooterSticky && post.id === activePost.id && (
+                <View style={styles.stickyFooterWeb}>{footer}</View>
+              )}
+            </Fragment>
+          ))}
+        </Animated.ScrollView>
+        {!IS_WEBFooterSticky && footer}
+      </View>
+
+      {replyTo ? (
         <Prompt.Basic
-          control={emptyPostsPromptControl}
-          title={l`Skip empty posts?`}
-          description={l`Your thread has empty posts that will be skipped. The remaining posts will be published as a thread.`}
-          confirmButtonCta={l`Post anyway`}
-          cancelButtonCta={l`Keep editing`}
-          onConfirm={handleConfirmSkipEmpty}
+          control={discardPromptControl}
+          title={l`Discard draft?`}
+          description=""
+          confirmButtonCta={l`Discard`}
+          confirmButtonColor="negative"
+          onConfirm={handleDiscard}
         />
-      </KeyboardAvoidingView>
-    </BottomSheetPortalProvider>
+      ) : (
+        <Prompt.Outer control={discardPromptControl}>
+          <Prompt.Content>
+            <Prompt.TitleText>
+              {allPostsWithinLimit ? (
+                composerState.draftId ? (
+                  <Trans>Save changes?</Trans>
+                ) : (
+                  <Trans>Save draft?</Trans>
+                )
+              ) : (
+                <Trans>Discard post?</Trans>
+              )}
+            </Prompt.TitleText>
+            <Prompt.DescriptionText>
+              {allPostsWithinLimit ? (
+                composerState.draftId ? (
+                  <Trans>
+                    You have unsaved changes to this draft, would you like to
+                    save them?
+                  </Trans>
+                ) : (
+                  <Trans>
+                    Would you like to save this as a draft to edit later?
+                  </Trans>
+                )
+              ) : (
+                <Trans>You can only save drafts up to 1000 characters.</Trans>
+              )}
+            </Prompt.DescriptionText>
+          </Prompt.Content>
+          <Prompt.Actions>
+            {allPostsWithinLimit && (
+              <Prompt.Action
+                cta={composerState.draftId ? l`Save changes` : l`Save draft`}
+                onPress={() => void handleSaveDraft()}
+                color="primary"
+              />
+            )}
+            <Prompt.Cancel cta={l`Keep editing`} />
+            <Prompt.Action
+              cta={l`Discard`}
+              onPress={handleDiscard}
+              color="negative_subtle"
+            />
+          </Prompt.Actions>
+        </Prompt.Outer>
+      )}
+
+      <Prompt.Basic
+        control={emptyPostsPromptControl}
+        title={l`Skip empty posts?`}
+        description={l`Your thread has empty posts that will be skipped. The remaining posts will be published as a thread.`}
+        confirmButtonCta={l`Post anyway`}
+        cancelButtonCta={l`Keep editing`}
+        onConfirm={handleConfirmSkipEmpty}
+      />
+    </KeyboardAvoidingView>
   )
 }
 

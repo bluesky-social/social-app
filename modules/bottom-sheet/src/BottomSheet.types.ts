@@ -71,6 +71,11 @@ export interface BottomSheetViewProps {
   maxHeight?: number
   /** Intrinsic content height used to size the sheet when its viewport is constrained. */
   desiredContentHeight?: number
+  /**
+   * While true, an open sheet isn't mounted natively. It presents once this
+   * turns false, so callers can hold sheets back behind a blocking screen.
+   */
+  deferPresentation?: boolean
 
   onAttemptDismiss?: (event: BottomSheetAttemptDismissEvent) => void
   onSnapPointChange?: (event: BottomSheetSnapPointChangeEvent) => void

@@ -26,6 +26,7 @@ import {Links} from './Links'
 import {Menus} from './Menus'
 import {NewPostsPill} from './NewPostsPill'
 import {Notifications} from './Notifications'
+import {PortalTests} from './PortalTests'
 import {ProfileBadges} from './ProfileBadges'
 import {Settings} from './Settings'
 import {Shadows} from './Shadows'
@@ -50,6 +51,7 @@ export default function Storybook() {
       <View style={[a.p_xl, a.gap_5xl, {paddingBottom: 100}]}>
         {!showContainedList ? (
           <>
+            <PortalTests />
             <View style={[a.flex_row, a.align_start, a.gap_md]}>
               <Button
                 color="primary"

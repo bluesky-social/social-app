@@ -50,6 +50,14 @@ class BottomSheetModule : Module() {
         }
 
         Prop("sourceViewTag") { _: BottomSheetView, _: Int? -> }
+
+        /*
+         * Read by the Fabric shadow node (`ExpoViewShadowNode`), not the view.
+         * It makes `measure()` inside the sheet relative to this view, the
+         * space `DialogRootViewGroup` dispatches touches in. Declared here so
+         * the prop reaches native.
+         */
+        Prop("layoutRoot") { _: BottomSheetView, _: Boolean -> }
       }
     }
 }

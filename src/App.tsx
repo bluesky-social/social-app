@@ -10,7 +10,6 @@ import {
 import * as ScreenOrientation from 'expo-screen-orientation'
 import * as SplashScreen from 'expo-splash-screen'
 import * as SystemUI from 'expo-system-ui'
-import {BottomSheetProvider} from '@bsky.app/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '@bsky.app/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {useLingui} from '@lingui/react/macro'
 
@@ -245,14 +244,12 @@ function App() {
                         <DialogStateProvider>
                           <LightboxStateProvider>
                             <PortalProvider>
-                              <BottomSheetProvider>
-                                <LandingProvider>
-                                  <SafeAreaProvider
-                                    initialMetrics={initialWindowMetrics}>
-                                    <InnerApp />
-                                  </SafeAreaProvider>
-                                </LandingProvider>
-                              </BottomSheetProvider>
+                              <LandingProvider>
+                                <SafeAreaProvider
+                                  initialMetrics={initialWindowMetrics}>
+                                  <InnerApp />
+                                </SafeAreaProvider>
+                              </LandingProvider>
                             </PortalProvider>
                           </LightboxStateProvider>
                         </DialogStateProvider>

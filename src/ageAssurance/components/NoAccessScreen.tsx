@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useEffectEvent} from 'react'
 import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {BottomSheetOutlet} from '@bsky.app/bottom-sheet'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
@@ -356,10 +355,9 @@ export function NoAccessScreen() {
 
       {/*
        * While this blocking overlay is up, other dialogs in the shell
-       * are not mounted, so it _should_ be safe to use these here
+       * are not mounted, so it _should_ be safe to use this here
        * without fear of other modals showing up.
        */}
-      <BottomSheetOutlet />
       <PortalOutlet />
     </>
   )

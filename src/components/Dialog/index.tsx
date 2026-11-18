@@ -55,8 +55,12 @@ import {
   tokens,
   useTheme,
 } from '#/alf'
-import {useThemeName} from '#/alf/util/useColorModeTheme'
-import {Context, useDialogContext} from '#/components/Dialog/context'
+import {ContentBoundary} from '#/components/Dialog/ContentBoundary'
+import {
+  Context,
+  useDialogContext,
+  useIsDialogPresentationEnabled,
+} from '#/components/Dialog/context'
 import {
   getMeasuredDialogContentHeight,
   shouldMeasureDialogContentHeight,
@@ -71,7 +75,11 @@ import {createInput} from '#/components/forms/TextField'
 import {useOnKeyboard} from '#/components/hooks/useOnKeyboard'
 import {IS_ANDROID, IS_IOS, IS_IPAD, IS_LIQUID_GLASS} from '#/env'
 
-export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
+export {
+  PresentationGate,
+  useDialogContext,
+  useDialogControl,
+} from '#/components/Dialog/context'
 export * from '#/components/Dialog/shared'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
@@ -87,13 +95,13 @@ export function Outer({
   nativeOptions,
   testID,
 }: React.PropsWithChildren<DialogOuterProps>) {
-  const themeName = useThemeName()
-  const t = useTheme(themeName)
+  const t = useTheme()
   const ref = useRef<BottomSheetNativeComponent>(null)
   const closeCallbacks = useRef<(() => void)[]>([])
   const {setDialogIsOpen, setFullyExpandedCount} =
     useDialogStateControlContext()
   const safeAreaInsets = useSafeAreaInsets()
+  const isPresentationEnabled = useIsDialogPresentationEnabled()
 
   const prevSnapPoint = useRef<BottomSheetSnapPoint>(
     BottomSheetSnapPoint.Hidden,
@@ -309,27 +317,30 @@ export function Outer({
       desiredContentHeight={
         shouldMeasureContentHeight ? desiredContentHeight : undefined
       }
-      disableDrag={disableDrag}>
-      <SafeAreaInsetsContext.Provider
-        value={presentation?.safeAreaInsets ?? safeAreaInsets}>
-        <Context.Provider value={context}>
-          <BreakpointWidthContext.Provider value={presentation?.width}>
-            <SheetGestureRoot style={isHeightConstrained && a.flex_1}>
-              <View
-                testID={testID}
-                style={[
-                  a.relative,
-                  isHeightConstrained && a.flex_1,
-                  presentationMaxHeight != null && {
-                    maxHeight: presentationMaxHeight,
-                  },
-                ]}>
-                {children}
-              </View>
-            </SheetGestureRoot>
-          </BreakpointWidthContext.Provider>
-        </Context.Provider>
-      </SafeAreaInsetsContext.Provider>
+      disableDrag={disableDrag}
+      deferPresentation={!isPresentationEnabled}>
+      <ContentBoundary>
+        <SafeAreaInsetsContext.Provider
+          value={presentation?.safeAreaInsets ?? safeAreaInsets}>
+          <Context.Provider value={context}>
+            <BreakpointWidthContext.Provider value={presentation?.width}>
+              <SheetGestureRoot style={isHeightConstrained && a.flex_1}>
+                <View
+                  testID={testID}
+                  style={[
+                    a.relative,
+                    isHeightConstrained && a.flex_1,
+                    presentationMaxHeight != null && {
+                      maxHeight: presentationMaxHeight,
+                    },
+                  ]}>
+                  {children}
+                </View>
+              </SheetGestureRoot>
+            </BreakpointWidthContext.Provider>
+          </Context.Provider>
+        </SafeAreaInsetsContext.Provider>
+      </ContentBoundary>
     </BottomSheet>
   )
 }
