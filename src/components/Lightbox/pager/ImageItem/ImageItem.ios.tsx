@@ -270,11 +270,7 @@ const ImageItemContent = ({
                 accessibilityLabel={imageSrc.alt}
                 accessibilityHint=""
                 enableLiveTextInteraction={showControls && !scaled}
-                /*
-                 * expo-image downscales to the view's layout size, which
-                 * zooming doesn't change, so zooming would magnify that
-                 * smaller copy. Switch to the full-resolution image instead.
-                 */
+                // zooming doesn't change the size expo-image downscales to
                 allowDownscaling={!scaled}
                 accessibilityIgnoresInvertColors
                 onLoad={
