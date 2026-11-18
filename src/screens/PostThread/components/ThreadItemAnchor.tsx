@@ -527,19 +527,13 @@ function ExpandedPostDetails({
     available: 0,
     date: 0,
     count: 0,
-    separator: 0,
     reply: 0,
   })
   const hasCount = showViewCount && widths.count > 0
   const wrapCount =
     hasCount &&
     widths.available > 0 &&
-    widths.date +
-      widths.separator +
-      widths.count +
-      a.gap_xs.gap * 2 +
-      widths.reply >
-      widths.available
+    widths.date + a.gap_md.gap + widths.count + widths.reply > widths.available
 
   const wrapReply =
     widths.reply > 0 &&
@@ -557,7 +551,7 @@ function ExpandedPostDetails({
         {maxWidth: '100%'},
         wrapCount && !wrapReply
           ? {width: '100%'}
-          : {marginLeft: hasCount && !wrapCount ? a.gap_xs.gap : 0},
+          : {marginLeft: hasCount && !wrapCount ? a.gap_md.gap : 0},
       ]}>
       <View
         onLayout={e => measure('count', e.nativeEvent.layout.width)}
@@ -591,7 +585,6 @@ function ExpandedPostDetails({
           style={[
             a.flex_row,
             a.align_center,
-            {columnGap: hasCount && !wrapCount ? a.gap_xs.gap : 0},
             wrapReply && {width: '100%'},
             {maxWidth: '100%'},
           ]}>
@@ -603,16 +596,6 @@ function ExpandedPostDetails({
               {maxWidth: '100%'},
             ]}>
             {niceDate(i18n, post.indexedAt, 'dot separated')}
-          </Text>
-          <Text
-            aria-hidden
-            onLayout={e => measure('separator', e.nativeEvent.layout.width)}
-            style={[
-              a.text_sm,
-              t.atoms.text_contrast_medium,
-              (!hasCount || wrapCount) && [a.absolute, {opacity: 0}],
-            ]}>
-            ·
           </Text>
         </View>
         {wrapCount && !wrapReply ? [reply, viewCount] : [viewCount, reply]}
