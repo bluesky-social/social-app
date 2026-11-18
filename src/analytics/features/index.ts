@@ -125,6 +125,22 @@ export function getFeatureDescription(feature: Features, i18n: I18n) {
           }),
         ),
       }
+    case Features.PostViewCountsEnable:
+      return {
+        key: feature,
+        name: i18n._(
+          msg({
+            message: 'Post view counts',
+            comment: 'Name for a feature flag',
+          }),
+        ),
+        description: i18n._(
+          msg({
+            message: 'See how often your posts were seen.',
+            comment: 'Description of a feature flag (Post view counts)',
+          }),
+        ),
+      }
     default:
       return null
   }

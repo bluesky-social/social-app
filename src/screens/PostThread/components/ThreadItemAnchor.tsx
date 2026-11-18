@@ -1,4 +1,4 @@
-import {memo, useMemo} from 'react'
+import {memo, useMemo, useState} from 'react'
 import {Text as RNText, View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
@@ -22,6 +22,7 @@ import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {LikesStat} from '#/screens/PostThread/components/LikesStat'
+import {PostViewCount} from '#/screens/PostThread/components/PostViewCount'
 import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
   POST_NUMBER_INLINE_OFFSET,
@@ -36,7 +37,7 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
-import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
+import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/Calendar'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {GalleryBleed} from '#/components/images/Gallery'
 import {Link} from '#/components/Link'
@@ -64,10 +65,12 @@ import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({
   item,
+  showViewCount = false,
   onPostSuccess,
   threadgateRecord,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
+  showViewCount?: boolean
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: app.bsky.feed.threadgate.Main
 }) {
@@ -83,6 +86,7 @@ export function ThreadItemAnchor({
     <ReportDialogMetadataContext.Provider key={postShadow.uri}>
       <ThreadItemAnchorInner
         item={item}
+        showViewCount={showViewCount}
         isRoot={isRoot}
         postShadow={postShadow}
         onPostSuccess={onPostSuccess}
@@ -160,12 +164,14 @@ function ThreadItemAnchorParentReplyLine({isRoot}: {isRoot: boolean}) {
 
 const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   item,
+  showViewCount,
   isRoot,
   postShadow,
   onPostSuccess,
   threadgateRecord,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
+  showViewCount: boolean
   isRoot: boolean
   postShadow: Shadow<app.bsky.feed.defs.PostView>
   onPostSuccess?: (data: OnPostSuccessData) => void
@@ -394,6 +400,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
             <ExpandedPostDetails
               post={item.value.post}
               isThreadAuthor={isThreadAuthor}
+              showViewCount={showViewCount}
             />
             {post.repostCount !== 0 ||
             post.likeCount !== 0 ||
@@ -506,34 +513,109 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 function ExpandedPostDetails({
   post,
   isThreadAuthor,
+  showViewCount,
 }: {
   post: Extract<ThreadItem, {type: 'threadPost'}>['value']['post']
   isThreadAuthor: boolean
+  showViewCount: boolean
 }) {
   const t = useTheme()
   const {i18n} = useLingui()
   const isRootPost = !('reply' in post.record)
 
+  const [widths, setWidths] = useState({
+    available: 0,
+    date: 0,
+    count: 0,
+    separator: 0,
+    reply: 0,
+  })
+  const hasCount = showViewCount && widths.count > 0
+  const wrapCount =
+    hasCount &&
+    widths.available > 0 &&
+    widths.date +
+      widths.separator +
+      widths.count +
+      a.gap_xs.gap * 2 +
+      widths.reply >
+      widths.available
+
+  const wrapReply =
+    widths.reply > 0 &&
+    widths.available > 0 &&
+    widths.date + widths.reply > widths.available
+
+  function measure(part: keyof typeof widths, width: number) {
+    setWidths(prev => (prev[part] === width ? prev : {...prev, [part]: width}))
+  }
+
+  const viewCount = showViewCount ? (
+    <View
+      key="count"
+      style={[
+        {maxWidth: '100%'},
+        wrapCount && !wrapReply
+          ? {width: '100%'}
+          : {marginLeft: hasCount && !wrapCount ? a.gap_xs.gap : 0},
+      ]}>
+      <View
+        onLayout={e => measure('count', e.nativeEvent.layout.width)}
+        style={[a.flex_row, a.self_start, {maxWidth: '100%'}]}>
+        <PostViewCount key={post.uri} post={post} />
+      </View>
+    </View>
+  ) : null
+  const reply = isRootPost ? (
+    <View
+      key="reply"
+      onLayout={e => measure('reply', e.nativeEvent.layout.width)}
+      style={{marginLeft: 'auto', paddingLeft: a.gap_md.gap, maxWidth: '100%'}}>
+      <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} plain />
+    </View>
+  ) : null
+
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
       <BackdatedPostIndicator post={post} />
       <View
+        onLayout={e => measure('available', e.nativeEvent.layout.width)}
         style={[
           a.self_stretch,
           a.flex_row,
           a.align_center,
           a.flex_wrap,
-          a.gap_md,
+          {rowGap: a.gap_sm.gap},
         ]}>
-        <Text
-          style={[a.text_sm, t.atoms.text_contrast_medium, {maxWidth: '100%'}]}>
-          {niceDate(i18n, post.indexedAt, 'dot separated')}
-        </Text>
-        {isRootPost && (
-          <View style={{marginLeft: 'auto'}}>
-            <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} plain />
-          </View>
-        )}
+        <View
+          style={[
+            a.flex_row,
+            a.align_center,
+            {columnGap: hasCount && !wrapCount ? a.gap_xs.gap : 0},
+            wrapReply && {width: '100%'},
+            {maxWidth: '100%'},
+          ]}>
+          <Text
+            onLayout={e => measure('date', e.nativeEvent.layout.width)}
+            style={[
+              a.text_sm,
+              t.atoms.text_contrast_medium,
+              {maxWidth: '100%'},
+            ]}>
+            {niceDate(i18n, post.indexedAt, 'dot separated')}
+          </Text>
+          <Text
+            aria-hidden
+            onLayout={e => measure('separator', e.nativeEvent.layout.width)}
+            style={[
+              a.text_sm,
+              t.atoms.text_contrast_medium,
+              (!hasCount || wrapCount) && [a.absolute, {opacity: 0}],
+            ]}>
+            ·
+          </Text>
+        </View>
+        {wrapCount && !wrapReply ? [reply, viewCount] : [viewCount, reply]}
       </View>
     </View>
   )
