@@ -19,6 +19,7 @@ const AVATAR_STACK_SIZE = 18
 export function AppKnownFollowers({
   profile,
   link = false,
+  onPress,
 }: {
   profile: app.bsky.actor.defs.ProfileViewDetailed
   /**
@@ -26,6 +27,8 @@ export function AppKnownFollowers({
    * inside another pressable.
    */
   link?: boolean
+  /** Called when the link is pressed. */
+  onPress?: () => void
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
@@ -70,6 +73,7 @@ export function AppKnownFollowers({
     <Link
       label={l`View followers of this account that you also follow`}
       to={makeProfileLink(profile, 'known-followers')}
+      onPress={onPress}
       style={[a.self_start, a.max_w_full]}>
       {({hovered}) => content({hovered})}
     </Link>

@@ -3,6 +3,7 @@ import {useLingui} from '@lingui/react/macro'
 
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {type FeaturedApp} from '#/screens/Atmosphere/data/exploreData'
+import {getAppMetric} from '#/screens/Atmosphere/metrics/apps'
 import {atoms as a} from '#/alf'
 import * as Gallery from '#/components/Gallery'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
@@ -37,17 +38,24 @@ export function FeaturedApps({
         label={l`Featured apps`}
         testID="atmosphereAppsGallery"
         footer={<Gallery.PageDots testID="atmosphereAppsGallery-dots" />}>
-        {apps.map(app => (
-          <Gallery.Item key={app.id} label={app.title}>
-            {galleryFocus => (
-              <View style={[a.flex_grow]}>
-                <View style={[a.flex_grow, {width: CARD_WIDTH}]}>
-                  <FeaturedAppCard app={app} galleryFocus={galleryFocus} />
+        {apps.map((app, index) => {
+          const metric = getAppMetric({app, position: index})
+          return (
+            <Gallery.Item key={app.id} label={app.title}>
+              {galleryFocus => (
+                <View style={[a.flex_grow]}>
+                  <View style={[a.flex_grow, {width: CARD_WIDTH}]}>
+                    <FeaturedAppCard
+                      app={app}
+                      metric={metric}
+                      galleryFocus={galleryFocus}
+                    />
+                  </View>
                 </View>
-              </View>
-            )}
-          </Gallery.Item>
-        ))}
+              )}
+            </Gallery.Item>
+          )
+        })}
       </Gallery.Root>
     </View>
   )

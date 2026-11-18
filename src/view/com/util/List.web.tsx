@@ -54,7 +54,8 @@ export type ListProps<ItemT = any> = Omit<
   headerOffset?: number
   refreshing?: boolean
   onRefresh?: () => void
-  onItemSeen?: (item: ItemT) => void
+  /** The index may be unavailable for native viewability tokens. */
+  onItemSeen?: (item: ItemT, index: number | undefined) => void
   desktopFixedHeight?: number | boolean
   // Web only prop to contain the scroll to the container rather than the window
   disableFullWindowScroll?: boolean
@@ -647,7 +648,7 @@ let Row = function RowImpl<ItemT>({
   renderItem:
     null | undefined | ((info: ListRenderItemInfo<ItemT>) => React.ReactNode)
   extraData: unknown
-  onItemSeen: ((item: ItemT) => void) | undefined
+  onItemSeen: ListProps<ItemT>['onItemSeen']
   registerRowNode: (index: number, node: HTMLElement | null) => void
 }): React.ReactNode {
   const rowRef = useRef(null)
@@ -666,7 +667,7 @@ let Row = function RowImpl<ItemT>({
             if (!intersectionTimeout.current) {
               intersectionTimeout.current = setTimeout(() => {
                 intersectionTimeout.current = undefined
-                onItemSeen(item)
+                onItemSeen(item, index)
               }, ON_ITEM_SEEN_WAIT_DURATION)
             }
           } else {
@@ -731,7 +732,7 @@ Row = memo(Row) as <ItemT>(props: {
   renderItem:
     null | undefined | ((info: ListRenderItemInfo<ItemT>) => React.ReactNode)
   extraData: unknown
-  onItemSeen: ((item: ItemT) => void) | undefined
+  onItemSeen: ListProps<ItemT>['onItemSeen']
   registerRowNode: (index: number, node: HTMLElement | null) => void
 }) => React.ReactNode
 

@@ -7,6 +7,9 @@ import {FeaturedLivestreams} from '../FeaturedLivestreams'
 import {FeaturedPhotos} from '../FeaturedPhotos'
 import {FeaturedPublications} from '../FeaturedPublications'
 
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: jest.fn()}),
+}))
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({_: (value: {message: string}) => value.message}),
 }))

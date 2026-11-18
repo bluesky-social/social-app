@@ -1,0 +1,39 @@
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactHorizontalScrollView.kt b/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactHorizontalScrollView.kt
+index 289cd05..4412866 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactHorizontalScrollView.kt
++++ b/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactHorizontalScrollView.kt
+@@ -740,7 +740,7 @@ constructor(context: Context, private val fpsListener: FpsListener? = null) :
+ 
+     velocityHelper.calculateVelocity(ev)
+     val action = ev.actionMasked
+-    if (action == MotionEvent.ACTION_UP && dragging) {
++    if ((action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) && dragging) {
+       ReactScrollViewHelper.updateFabricScrollState(this)
+ 
+       val velocityX = velocityHelper.xVelocity
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactNestedScrollView.kt b/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactNestedScrollView.kt
+index b284e24..45806a2 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactNestedScrollView.kt
++++ b/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactNestedScrollView.kt
+@@ -598,7 +598,7 @@ constructor(context: Context, private val fpsListener: FpsListener? = null) :
+ 
+     velocityHelper.calculateVelocity(ev)
+     val action = ev.actionMasked
+-    if (action == MotionEvent.ACTION_UP && dragging) {
++    if ((action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) && dragging) {
+       ReactScrollViewHelper.updateFabricScrollState(this)
+       val velocityX = velocityHelper.xVelocity
+       val velocityY = velocityHelper.yVelocity
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollView.kt b/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollView.kt
+index b553f6a..7265c04 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollView.kt
++++ b/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollView.kt
+@@ -590,7 +590,7 @@ constructor(context: Context, private val fpsListener: FpsListener? = null) :
+ 
+     velocityHelper.calculateVelocity(ev)
+     val action = ev.actionMasked
+-    if (action == MotionEvent.ACTION_UP && dragging) {
++    if ((action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) && dragging) {
+       ReactScrollViewHelper.updateFabricScrollState(this)
+       val velocityX = velocityHelper.xVelocity
+       val velocityY = velocityHelper.yVelocity

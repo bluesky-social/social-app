@@ -6,7 +6,6 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {
-  getAtmosphereAnnouncementBanner,
   getAtmosphereArticles,
   getAtmosphereExploreApps,
   getAtmosphereLivestreams,
@@ -14,11 +13,13 @@ import {
   getAtmospherePublications,
 } from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
+import {useAtmosphereMetricContext} from '#/screens/Atmosphere/metrics/context'
+import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
 import {atoms as a, useTheme} from '#/alf'
 import * as Gallery from '#/components/Gallery'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
-import {AnnouncementBanner} from './components/AnnouncementBanner'
+import {useAnalytics} from '#/analytics'
 import {AtmosphereNux} from './components/AtmosphereNux'
 import {FeaturedApps} from './components/FeaturedApps'
 import {FeaturedArticles} from './components/FeaturedArticles'
@@ -27,17 +28,50 @@ import {FeaturedPhotos} from './components/FeaturedPhotos'
 import {FeaturedPublications} from './components/FeaturedPublications'
 
 export function AtmosphereExploreTab({
-  onPressSeeMoreApps,
+  onPressSeeMoreApps: onPressSeeMoreAppsProp,
 }: {
   onPressSeeMoreApps?: () => void
 }) {
+  const ax = useAnalytics()
+  const metricContext = useAtmosphereMetricContext()
+  const onPressSeeMoreApps =
+    onPressSeeMoreAppsProp &&
+    (() => {
+      if (metricContext) {
+        ax.metric('atmosphere:section:seeMore', {
+          ...metricContext,
+          section: 'apps',
+          destinationTab: 'apps',
+        })
+      }
+      onPressSeeMoreAppsProp()
+    })
   const t = useTheme()
   const {t: l} = useLingui()
   const {data, isError, isPending, refetch} = useAtmosphereExploreQuery()
   const moderationOpts = useModerationOpts()
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const apps = data ? getAtmosphereExploreApps(data) : []
+  const articles = data ? getAtmosphereArticles(data, moderationOpts) : []
+  const livestreams = data ? getAtmosphereLivestreams(data) : []
+  const photos = data ? getAtmospherePhotos(data, moderationOpts) : []
+  const publications = data
+    ? getAtmospherePublications(data, moderationOpts)
+    : []
+  const metrics = useLoadMetrics({
+    // Moderated sections stay empty until moderation options load
+    hasData: !!data && !!moderationOpts,
+    isError,
+    itemCount:
+      apps.length +
+      articles.length +
+      livestreams.length +
+      photos.length +
+      publications.length,
+  })
 
   async function onRefresh() {
+    metrics.logRefresh()
     setIsRefreshing(true)
     try {
       await refetch()
@@ -58,7 +92,10 @@ export function AtmosphereExploreTab({
   const errorMessage = (
     <ErrorMessage
       message={l`Could not load Atmosphere content. Please try again.`}
-      onPressTryAgain={() => void refetch()}
+      onPressTryAgain={() => {
+        metrics.logRetry('initial')
+        void refetch()
+      }}
     />
   )
 
@@ -86,8 +123,6 @@ export function AtmosphereExploreTab({
     )
   }
 
-  const announcementBanner = getAtmosphereAnnouncementBanner(data)
-
   return (
     <Layout.Content
       testID="atmosphereExploreTab"
@@ -102,21 +137,11 @@ export function AtmosphereExploreTab({
             </View>
           ) : undefined}
           <AtmosphereNux />
-          {announcementBanner ? (
-            <AnnouncementBanner banner={announcementBanner} />
-          ) : undefined}
-          <FeaturedApps
-            apps={getAtmosphereExploreApps(data)}
-            onPressSeeMore={onPressSeeMoreApps}
-          />
-          <FeaturedArticles
-            articles={getAtmosphereArticles(data, moderationOpts)}
-          />
-          <FeaturedLivestreams livestreams={getAtmosphereLivestreams(data)} />
-          <FeaturedPhotos photos={getAtmospherePhotos(data, moderationOpts)} />
-          <FeaturedPublications
-            publications={getAtmospherePublications(data, moderationOpts)}
-          />
+          <FeaturedApps apps={apps} onPressSeeMore={onPressSeeMoreApps} />
+          <FeaturedArticles articles={articles} />
+          <FeaturedLivestreams livestreams={livestreams} />
+          <FeaturedPhotos photos={photos} />
+          <FeaturedPublications publications={publications} />
         </View>
       </Gallery.Bleed>
     </Layout.Content>

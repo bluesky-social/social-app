@@ -13,6 +13,9 @@ import {type ActivityContent} from '#/screens/Atmosphere/ActivityTab/rows'
 import {AtmosphereDiscoverTab} from '../index'
 import {useAtmosphereRecommendedActivityQuery} from '../useAtmosphereRecommendedActivityQuery'
 
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: jest.fn()}),
+}))
 jest.mock('../useAtmosphereRecommendedActivityQuery', () => ({
   useAtmosphereRecommendedActivityQuery: jest.fn(),
 }))
@@ -27,6 +30,11 @@ jest.mock('#/components/Typography', () => ({
   Text: jest.requireActual<typeof import('react-native')>('react-native').Text,
 }))
 jest.mock('#/components/Loader', () => ({Loader: () => null}))
+jest.mock('#/screens/Atmosphere/components/AtmosphereNux', () => {
+  const {Text} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {AtmosphereNux: () => <Text>nux</Text>}
+})
 jest.mock('#/state/preferences/moderation-opts', () => ({
   useModerationOpts: () => undefined,
 }))
@@ -128,6 +136,7 @@ it('renders cards in order, with refresh but no load-more handler', async () => 
   const screen = renderTab()
   const list = () => screen.getByTestId('atmosphereDiscoverTab')
 
+  expect(screen.getByText('nux')).toBeTruthy()
   expect(screen.getAllByTestId('atmosphereDiscoverCard')).toHaveLength(2)
   expect(
     screen
@@ -223,6 +232,7 @@ it('shows loading, retryable errors, and an empty state', () => {
       <AtmosphereDiscoverTab />
     </I18nProvider>,
   )
+  expect(screen.getByText('nux')).toBeTruthy()
   expect(screen.getByTestId('atmosphereDiscoverEmpty')).toBeTruthy()
   expect(screen.queryByLabelText('Loading recommendations')).toBeNull()
 })
@@ -236,6 +246,7 @@ it('keeps cached cards visible with a retry when refresh fails', () => {
     } as never,
   })
   const screen = renderTab()
+  expect(screen.getByText('nux')).toBeTruthy()
   expect(screen.getByText(article().title)).toBeTruthy()
   fireEvent.press(screen.getByText(errorMessage))
   expect(refetch).toHaveBeenCalledTimes(1)

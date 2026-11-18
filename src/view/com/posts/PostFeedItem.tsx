@@ -51,12 +51,10 @@ import {Features, useAnalytics} from '#/analytics'
 import {
   type FeedItem,
   FeedItemProvider,
+  repostVia,
   useFeedFeedbackContext,
 } from '#/features/feedFeedback'
-import {
-  buildPostSourceKey,
-  setUnstablePostSource,
-} from '#/features/feedFeedback/postSource'
+import {stashPostSource} from '#/features/feedFeedback/postSource'
 import {useActorStatus} from '#/features/liveNow'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -125,12 +123,7 @@ export function PostFeedItem({
       authorDid: postShadowed.author.did,
       feedContext,
       reqId,
-      via:
-        bsky.isType(app.bsky.feed.defs.reasonRepost, reason) &&
-        reason.uri &&
-        reason.cid
-          ? {uri: reason.uri, cid: reason.cid}
-          : undefined,
+      via: repostVia(reason),
     }
     return (
       <ReportDialogMetadataContext.Provider key={postShadowed.uri}>
@@ -277,7 +270,7 @@ let FeedItemInner = ({
       feedDescriptor,
     })
     unstableCacheProfileView(queryClient, post.author)
-    setUnstablePostSource(buildPostSourceKey(post.uri, post.author.handle), {
+    stashPostSource({
       feedSourceInfo,
       post: {
         post,

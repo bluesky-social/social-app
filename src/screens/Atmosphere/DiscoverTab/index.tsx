@@ -8,7 +8,13 @@ import {ActivityContentHider} from '#/screens/Atmosphere/ActivityTab/components/
 import {ActivityHeader} from '#/screens/Atmosphere/ActivityTab/components/ActivityHeader'
 import {ActivityContentCard} from '#/screens/Atmosphere/ActivityTab/components/ActivityRow'
 import {type ActivityCardRow} from '#/screens/Atmosphere/ActivityTab/rows'
+import {AtmosphereNux} from '#/screens/Atmosphere/components/AtmosphereNux'
 import {getAssociatedProfile} from '#/screens/Atmosphere/data/exploreData'
+import {
+  AtmosphereContentItem,
+  useLogContentImpression,
+} from '#/screens/Atmosphere/metrics/context'
+import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -22,8 +28,25 @@ export function AtmosphereDiscoverTab() {
   const {t: l} = useLingui()
   const {data, isError, refetch} = useAtmosphereRecommendedActivityQuery()
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const onItemSeen = useLogContentImpression(
+    data?.items ?? [],
+    (item, position) => {
+      if (item.moderation.blur) return
+      return {
+        contentType: item.content.type,
+        contentId: item.content.view.uri,
+        position,
+      }
+    },
+  )
+  const metrics = useLoadMetrics({
+    hasData: !!data,
+    isError,
+    itemCount: data?.items.length ?? 0,
+  })
 
   async function onRefresh() {
+    metrics.logRefresh()
     setIsRefreshing(true)
     try {
       await refetch()
@@ -35,7 +58,10 @@ export function AtmosphereDiscoverTab() {
   const errorMessage = (
     <ErrorMessage
       message={l`Could not load recommendations. Please try again.`}
-      onPressTryAgain={() => void refetch()}
+      onPressTryAgain={() => {
+        metrics.logRetry('initial')
+        void refetch()
+      }}
     />
   )
 
@@ -44,12 +70,18 @@ export function AtmosphereDiscoverTab() {
       testID="atmosphereDiscoverTab"
       data={data?.items ?? []}
       keyExtractor={(item: DiscoverItem) => item.content.view.uri}
-      renderItem={({item}: {item: DiscoverItem}) => (
-        <DiscoverCard item={item} />
+      renderItem={({item, index}: {item: DiscoverItem; index: number}) => (
+        <DiscoverCard item={item} position={index} />
       )}
+      onItemSeen={onItemSeen}
       refreshing={isRefreshing}
       onRefresh={() => void onRefresh()}
-      ListHeaderComponent={data && isError ? errorMessage : undefined}
+      ListHeaderComponent={
+        <>
+          <AtmosphereNux style={a.pt_lg} />
+          {data && isError ? errorMessage : undefined}
+        </>
+      }
       ListEmptyComponent={
         !data ? (
           isError ? (
@@ -74,7 +106,14 @@ export function AtmosphereDiscoverTab() {
   )
 }
 
-function DiscoverCard({item: {content, moderation}}: {item: DiscoverItem}) {
+function DiscoverCard({
+  item: {content, moderation},
+  position,
+}: {
+  item: DiscoverItem
+  /** 0-based, in the list. */
+  position: number
+}) {
   const t = useTheme()
   /** Infer a creation event; the recommendation response has no activities. */
   let row: ActivityCardRow | undefined
@@ -91,6 +130,7 @@ function DiscoverCard({item: {content, moderation}}: {item: DiscoverItem}) {
         actor,
         indexedAt: content.view.createdAt,
         activityCount: 1,
+        grouping: 'single',
         otherActorCount: 0,
         related: [],
         content,
@@ -105,7 +145,12 @@ function DiscoverCard({item: {content, moderation}}: {item: DiscoverItem}) {
       style={[a.gap_md, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
       {row ? <ActivityHeader row={row} /> : null}
       <ActivityContentHider moderation={moderation}>
-        <ActivityContentCard content={content} />
+        <AtmosphereContentItem
+          contentType={content.type}
+          contentId={content.view.uri}
+          position={position}>
+          <ActivityContentCard content={content} />
+        </AtmosphereContentItem>
       </ActivityContentHider>
     </View>
   )

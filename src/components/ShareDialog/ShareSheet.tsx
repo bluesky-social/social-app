@@ -1,4 +1,6 @@
-import {Platform, StyleSheet, View} from 'react-native'
+import {useState} from 'react'
+import {AccessibilityInfo, Platform, StyleSheet, View} from 'react-native'
+import Animated, {FadeIn} from 'react-native-reanimated'
 import * as ExpoClipboard from 'expo-clipboard'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -231,6 +233,7 @@ export function ShareSheetOuter({
             actions={allActions}
             subject={subject}
             onShare={onShare}
+            overChats={showChats}
           />
 
           {subject.loggedInOnlyNotice && (
@@ -262,18 +265,70 @@ export function ShareSheetOuter({
 }
 
 /**
- * The share row with the installed apps filled in. Its own component so it
- * mounts with the sheet, which checks the installed apps again on every open.
+ * A toast inside the sheet, over the bottom of the chat grid. A real toast
+ * would be hidden behind the sheet.
+ */
+function PasteHint({
+  message,
+  overChats,
+}: {
+  message: string
+  /** Sits just above the chat grid's bottom edge; otherwise over the top. */
+  overChats: boolean
+}) {
+  return (
+    <Animated.View
+      entering={FadeIn.duration(150)}
+      pointerEvents="none"
+      style={[
+        a.absolute,
+        a.align_center,
+        a.z_50,
+        {left: 0, right: 0},
+        overChats ? [{bottom: '100%'}, a.mb_sm] : {top: 0},
+      ]}>
+      <Toast.ToastConfigProvider id="sharePasteHint" type="success">
+        <Toast.Outer>
+          <Toast.Icon />
+          <Toast.Text>{message}</Toast.Text>
+        </Toast.Outer>
+      </Toast.ToastConfigProvider>
+    </Animated.View>
+  )
+}
+
+/**
+ * The share row with the installed apps filled in, plus its paste hint. Its
+ * own component so it mounts with the sheet, which checks the installed apps
+ * again and clears the hint on every open.
  */
 function InstalledAppsShareRow({
   showApps,
+  overChats,
   ...props
-}: {showApps: boolean} & Omit<
+}: {
+  showApps: boolean
+  /** Where the paste hint sits, see `PasteHint`. */
+  overChats: boolean
+} & Omit<
   React.ComponentProps<typeof ShareRow>,
-  'platformIds'
+  'platformIds' | 'onPasteHint'
 >) {
   const installed = useInstalledSharePlatforms({enabled: showApps})
-  return <ShareRow platformIds={(showApps && installed) || []} {...props} />
+  const [pasteHint, setPasteHint] = useState<string>()
+  return (
+    <>
+      {pasteHint && <PasteHint message={pasteHint} overChats={overChats} />}
+      <ShareRow
+        platformIds={(showApps && installed) || []}
+        onPasteHint={message => {
+          setPasteHint(message)
+          AccessibilityInfo.announceForAccessibility(message)
+        }}
+        {...props}
+      />
+    </>
+  )
 }
 
 /**

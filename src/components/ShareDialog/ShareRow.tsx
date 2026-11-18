@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {ScrollView, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
@@ -29,9 +29,9 @@ const GAP = tokens.space.sm
  */
 const COLUMNS = 4.5
 /**
- * How long the "paste it" toast stays up after the sheet closes, before the
- * app opens. Long enough to read; once the app is open, Bluesky is in the
- * background and the toast can't be seen.
+ * How long the "paste it" hint shows in the sheet before it closes and the app
+ * opens. Long enough to read; once the app is open, Bluesky is in the
+ * background and a hint there can't be seen.
  */
 const PASTE_HINT_MS = 800
 
@@ -71,6 +71,7 @@ export function ShareRow({
   actions = [],
   subject,
   onShare,
+  onPasteHint,
 }: {
   /** Which platforms to show, in order. Usually the installed ones. */
   platformIds: readonly SharePlatformId[]
@@ -80,17 +81,35 @@ export function ShareRow({
   subject: ShareSubject
   /** Runs when an app is picked, after it's logged. */
   onShare: () => void
+  /**
+   * Shows a hint in the sheet, e.g. "Link copied – paste it in Discord". A
+   * toast would be hidden behind the sheet.
+   */
+  onPasteHint: (message: string) => void
 }) {
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const control = useDialogContext()
   const [itemWidth, setItemWidth] = useState(MIN_ITEM_WIDTH)
+  /**
+   * The timer that closes the sheet and opens the app after the paste hint.
+   * Set while the hint shows, so a second tap doesn't open two apps.
+   */
+  const pasteTimeout = useRef<ReturnType<typeof setTimeout>>(undefined)
+
+  /*
+   * The sheet unmounts this row when it closes. If that happens during the
+   * hint (swipe, backdrop, a chat), the timer would queue the app launch on a
+   * closed sheet, and it would fire the next time the sheet opens.
+   */
+  useEffect(() => () => clearTimeout(pasteTimeout.current), [])
 
   const onPressPlatform = (
     id: SharePlatformId,
     label: string,
     position: number,
   ) => {
+    if (pasteTimeout.current) return
     ax.metric('share:press:platform', {
       uri: subject.uri,
       authorDid: subject.authorDid,
@@ -108,23 +127,24 @@ export function ShareRow({
       Toast.show(l`Couldn’t open ${label}`, {type: 'error'})
     }
     const content: ShareContent = {url: subject.url, title: subject.title}
-    const showPasteHint = () => {
-      Toast.show(l`Link copied – paste it in ${label}`, {type: 'success'})
-    }
+    const pasteHint = l`Link copied – paste it in ${label}`
     const openWithPaste = () => {
       openSharePlatform(id, content, {paste: true}).catch(onOpenFailed)
     }
     const open = () => {
       openSharePlatform(id, content).catch(() => {
         if (!hasPasteFallback(id)) return onOpenFailed()
-        // The share link didn't open, so we're still here to show the hint
-        showPasteHint()
+        // The sheet has closed, but the share link didn't open, so we're still here to see a toast
+        Toast.show(pasteHint, {type: 'success'})
         setTimeout(openWithPaste, PASTE_HINT_MS)
       })
     }
     if (needsPaste(id)) {
-      showPasteHint()
-      control.close(() => setTimeout(openWithPaste, PASTE_HINT_MS))
+      onPasteHint(pasteHint)
+      pasteTimeout.current = setTimeout(
+        () => control.close(openWithPaste),
+        PASTE_HINT_MS,
+      )
     } else {
       control.close(open)
     }
@@ -135,6 +155,8 @@ export function ShareRow({
     if (action.stayOpen) {
       action.onPress()
     } else {
+      // Picking an action instead cancels the app the hint is waiting to open
+      clearTimeout(pasteTimeout.current)
       control.close(action.onPress)
     }
   }

@@ -28,6 +28,7 @@ import {GalleryContext} from '#/components/Gallery/context'
 import {type GalleryRef} from '#/components/Gallery/types'
 import {useKeyboardHandlers} from '#/components/Gallery/useKeyboardHandlers'
 import {usePointerHandlers} from '#/components/Gallery/usePointerHandlers'
+import {useScrollNavigation} from '#/components/Gallery/useScrollNavigation'
 import {
   getIndexForOffset,
   getMaxOffset,
@@ -99,10 +100,9 @@ export function Root({
   /** Snap native scrolling to item boundaries. Ignored on web. */
   snapToItems?: boolean
   /**
-   * Called when the user navigates to a different item via native swipe,
-   * mouse drag, arrow keys, or Safari horizontal wheel events. Browser touch
-   * and non-Safari wheel scrolling do not report index changes. Not called on
-   * mount, for `scrollIntoView`, when focus
+   * Called when the user navigates to a different item: native swipes, and on
+   * web touch scrolling, mouse drags, arrow keys, and horizontal wheel or
+   * trackpad scrolling. Not called on mount, for `scrollIntoView`, when focus
    * simply lands on an item, or when items are added, removed, or reordered.
    */
   onIndexChange?: (index: number, previousIndex: number) => void
@@ -347,6 +347,15 @@ export function Root({
     resetKey: keysSignature,
   })
 
+  useScrollNavigation({
+    scrollRef,
+    itemWidthsRef,
+    currentIndexRef,
+    itemCount,
+    resetKey: keysSignature,
+    onNavigate: setCurrentIndex,
+  })
+
   /*
    * Only count scrolls the user is doing. The rest are programmatic, or the
    * platform adjusting after a layout change, and just keep the index in sync.
@@ -368,7 +377,7 @@ export function Root({
       scrollOffsetRef.current = offset
       /*
        * Browser touch and trackpad scrolling must update the dots without
-       * changing the existing navigation callback or moving keyboard focus.
+       * moving keyboard focus. useScrollNavigation reports it.
        */
       updatePageForOffset(offset)
       return

@@ -63,6 +63,12 @@ export type ActivityCardRow = {
   /** Activities in this row; more than one means an actor group. */
   activityCount: number
   /**
+   * The timeline entry the row came from: one activity, one actor's
+   * activities (`actorGroup`), or several actors' on one record
+   * (`subjectGroup`).
+   */
+  grouping: 'single' | 'actorGroup' | 'subjectGroup'
+  /**
    * What each activity in an actor group targets (the articles, not the
    * recommends), newest first, for View all.
    */
@@ -125,6 +131,7 @@ function toActivityRow(
       actor: profiles.get(entry.actor),
       otherActorCount: 0,
       activityCount: 1,
+      grouping: 'single',
       indexedAt: entry.indexedAt,
       view: entry.subject.view,
       related: toRelatedActivity(
@@ -141,6 +148,7 @@ function toActivityRow(
       actor: profiles.get(entry.actor),
       otherActorCount: 0,
       activityCount: entry.activities.length,
+      grouping: 'actorGroup',
       subjectUris: distinct(entry.activities.map(a => a.subject)),
       indexedAt: entry.indexedAt,
       // Only the newest subject is hydrated.
@@ -166,6 +174,7 @@ function toActivityRow(
       actor: lead,
       otherActorCount: actors.length - 1,
       activityCount: 1,
+      grouping: 'subjectGroup',
       indexedAt: entry.indexedAt,
       view: entry.subject.view,
       related: [],

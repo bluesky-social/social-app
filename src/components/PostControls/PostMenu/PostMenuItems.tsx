@@ -590,7 +590,7 @@ let PostMenuItems = ({
           )}
         </Menu.Group>
 
-        {hasSession && feedFeedback.enabled && (
+        {hasSession && feedFeedback.enabled && feedItem.item && (
           <>
             <Menu.Divider />
             <Menu.Group>

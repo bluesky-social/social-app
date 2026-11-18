@@ -1,14 +1,19 @@
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
+import {AtmosphereMetricsScope} from '#/screens/Atmosphere/metrics/context'
 import {type app as lexApp} from '#/lexicons'
 import {AppDialog} from '../AppDialog'
 
 const calls: string[] = []
+const mockMetric = jest.fn()
 const mockOpenLink = jest.fn((url: string) => calls.push(`open:${url}`))
 const mockNavigate = jest.fn((...args: unknown[]) =>
   calls.push(`navigate:${JSON.stringify(args)}`),
 )
 
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: mockMetric}),
+}))
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({_: (value: {message: string}) => value.message}),
 }))
@@ -91,6 +96,7 @@ const app: lexApp.bsky.unspecced.getAtmosphereApps.AppCard = {
 }
 
 const control = {} as React.ComponentProps<typeof AppDialog>['control']
+const metric = {appId: 'app', position: 3, hasKnownFollowers: false}
 
 beforeEach(() => {
   jest.clearAllMocks()
@@ -99,13 +105,13 @@ beforeEach(() => {
 
 describe('AppDialog', () => {
   it('closes, then opens the app url', () => {
-    render(<AppDialog control={control} app={app} />)
+    render(<AppDialog control={control} metric={metric} app={app} />)
     fireEvent.press(screen.getByTestId('appDialogVisit'))
     expect(calls).toEqual(['close', `open:${app.url}`])
   })
 
   it('closes, then navigates to the profile', () => {
-    render(<AppDialog control={control} app={app} />)
+    render(<AppDialog control={control} metric={metric} app={app} />)
     fireEvent.press(screen.getByTestId('appDialogProfile'))
     expect(calls).toEqual([
       'close',
@@ -114,21 +120,61 @@ describe('AppDialog', () => {
   })
 
   it('hides Website without a url', () => {
-    render(<AppDialog control={control} app={{...app, url: undefined}} />)
+    render(
+      <AppDialog
+        control={control}
+        metric={metric}
+        app={{...app, url: undefined}}
+      />,
+    )
     expect(screen.queryByTestId('appDialogVisit')).toBeNull()
     expect(screen.getByTestId('appDialogProfile')).toBeTruthy()
   })
 
   it('hides View profile without a profile', () => {
-    render(<AppDialog control={control} app={{...app, profile: undefined}} />)
+    render(
+      <AppDialog
+        control={control}
+        metric={metric}
+        app={{...app, profile: undefined}}
+      />,
+    )
     expect(screen.queryByTestId('appDialogProfile')).toBeNull()
   })
 
   it('shows the mapped category label, and omits unknown ones', () => {
-    const {rerender} = render(<AppDialog control={control} app={app} />)
+    const {rerender} = render(
+      <AppDialog control={control} metric={metric} app={app} />,
+    )
     expect(screen.getByText('Blogging')).toBeTruthy()
-    rerender(<AppDialog control={control} app={{...app, category: 'nope'}} />)
+    rerender(
+      <AppDialog
+        control={control}
+        metric={metric}
+        app={{...app, category: 'nope'}}
+      />,
+    )
     expect(screen.queryByText('Blogging')).toBeNull()
     expect(screen.queryByText('nope')).toBeNull()
+  })
+
+  it('logs website and profile presses as the app dialog', () => {
+    render(
+      <AtmosphereMetricsScope tab="apps" surface="tab" isActive>
+        <AppDialog control={control} metric={metric} app={app} />
+      </AtmosphereMetricsScope>,
+    )
+    fireEvent.press(screen.getByTestId('appDialogVisit'))
+    fireEvent.press(screen.getByTestId('appDialogProfile'))
+    expect(mockMetric.mock.calls).toEqual([
+      [
+        'atmosphere:app:websitePressed',
+        {tab: 'apps', surface: 'appDialog', ...metric, source: 'appDialog'},
+      ],
+      [
+        'atmosphere:app:profilePressed',
+        {tab: 'apps', surface: 'appDialog', ...metric, source: 'appDialog'},
+      ],
+    ])
   })
 })

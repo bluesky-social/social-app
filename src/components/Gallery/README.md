@@ -107,9 +107,12 @@ state is separate from `onIndexChange`, which follows the rules under
 
 ### Navigation callbacks
 
-`onIndexChange` reports native swiping, mouse dragging, arrow keys, and
-Safari horizontal-wheel navigation. Browser touch scrolling and Chrome/Firefox
-trackpad scrolling move the content, but do not report index changes.
+`onIndexChange` reports native swiping, and on web mouse dragging, arrow keys,
+touch scrolling, and horizontal wheel or trackpad scrolling. For touch and
+wheel scrolling, it reports each item that becomes the leading one while a
+finger scrolls the gallery, through its momentum, or during a horizontal wheel
+scroll (until scrolling is idle for 150ms). Taps and vertical wheels don't
+count, and focus stays where it is.
 `onIndexChange` is **not** called on mount, for `scrollIntoView`, when focus
 simply lands on an item (for example a click just before opening a lightbox),
 or when items are added, removed, or reordered.

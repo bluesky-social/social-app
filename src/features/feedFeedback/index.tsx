@@ -20,6 +20,7 @@ import {useAppviewClient} from '#/state/session'
 import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
 import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
 
@@ -335,6 +336,20 @@ export type FeedItem = {
    * as `via`.
    */
   via: {uri: string; cid: string} | undefined
+}
+
+/**
+ * The `via` for a feed item shown because of `reason`: the repost, if it was
+ * shown as one.
+ */
+export function repostVia(reason: unknown): FeedItem['via'] {
+  if (
+    bsky.isType(app.bsky.feed.defs.reasonRepost, reason) &&
+    reason.uri &&
+    reason.cid
+  ) {
+    return {uri: reason.uri, cid: reason.cid}
+  }
 }
 
 const feedItemContext = createContext<FeedItem | undefined>(undefined)

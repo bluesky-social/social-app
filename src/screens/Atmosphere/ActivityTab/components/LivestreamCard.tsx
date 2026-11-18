@@ -5,6 +5,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
 import {getAssociatedProfile} from '#/screens/Atmosphere/data/exploreData'
+import {useLogContentPress} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Play_Filled_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
@@ -25,6 +26,7 @@ export function LivestreamCard({
   const {t: l} = useLingui()
   const t = useTheme()
   const {state: interacted, onIn, onOut} = useInteractionState()
+  const logPress = useLogContentPress()
   const live = isLive(view)
 
   return (
@@ -33,6 +35,7 @@ export function LivestreamCard({
         testID="activityLivestreamCard"
         to={view.uri}
         label={l`Open livestream: ${view.title}`}
+        onPress={() => logPress('external')}
         onHoverIn={onIn}
         onHoverOut={onOut}
         onFocus={onIn}

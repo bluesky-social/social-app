@@ -8,6 +8,12 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {getGalleryImages} from '#/screens/Atmosphere/data/exploreData'
+import {
+  AtmosphereMetricsRestore,
+  useAtmosphereContentContext,
+  useAtmosphereMetricContext,
+  useAtmosphereMetricsSnapshot,
+} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -20,6 +26,7 @@ import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ExternalLinkIcon} from '#
 import * as ProfileCard from '#/components/ProfileCard'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
 import {PhotoDialogGallery} from './PhotoDialogGallery'
@@ -34,6 +41,7 @@ export function PhotoDialog({
   author: app.bsky.actor.defs.ProfileViewBasic
 }) {
   const {t: l} = useLingui()
+  const metricsSnapshot = useAtmosphereMetricsSnapshot()
   const title = photo.title
 
   return (
@@ -47,7 +55,11 @@ export function PhotoDialog({
               'Accessibility label for a dialog (a popup window) showing a photo gallery. {title} is the gallery title, written by its author.',
           })}
           style={[web({maxWidth: 600})]}>
-          <PhotoDialogInner control={control} photo={photo} author={author} />
+          <AtmosphereMetricsRestore
+            snapshot={metricsSnapshot}
+            surface="photoDialog">
+            <PhotoDialogInner control={control} photo={photo} author={author} />
+          </AtmosphereMetricsRestore>
           <Dialog.Close />
         </Dialog.ScrollableInner>
       </Gallery.Bleed>
@@ -68,6 +80,9 @@ function PhotoDialogInner({
   const t = useTheme()
   const openLink = useOpenLink({preferNativeApp: true})
   const moderationOpts = useModerationOpts()
+  const ax = useAnalytics()
+  const metricContext = useAtmosphereMetricContext()
+  const content = useAtmosphereContentContext()
 
   const createdAt = photo.createdAt
   const hasDate = !!createdAt && !Number.isNaN(Date.parse(createdAt))
@@ -91,13 +106,23 @@ function PhotoDialogInner({
       </View>
       <ProfileCard.Link
         profile={author}
-        onPress={() => control.close()}
+        onPress={() => {
+          if (metricContext) {
+            ax.metric('atmosphere:profile:press', {
+              ...metricContext,
+              profileDid: author.did,
+              source: 'photoDialog',
+            })
+          }
+          control.close()
+        }}
         style={[a.flex_row, a.align_center, a.gap_md, a.py_sm, a.pb_xs]}>
         <ProfileCard.Header>
           <ProfileCard.Avatar
             size={40}
             profile={author}
             moderationOpts={moderationOpts}
+            disableLink
           />
 
           <ProfileCard.NameAndHandle
@@ -169,7 +194,15 @@ function PhotoDialogInner({
         })}
         color="primary"
         size="large"
-        onPress={() => control.close(() => openLink(photo.uri))}>
+        onPress={() => {
+          if (content) {
+            ax.metric('atmosphere:photo:externalPressed', {
+              ...content,
+              source: 'viewOnGrain',
+            })
+          }
+          control.close(() => openLink(photo.uri))
+        }}>
         <View style={[a.p_2xs, a.rounded_xs, {backgroundColor: 'white'}]}>
           <GrainMark width={12} />
         </View>

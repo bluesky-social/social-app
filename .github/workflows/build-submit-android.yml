@@ -118,7 +118,7 @@ jobs:
           expo-token: ${{ secrets.EXPO_TOKEN }}
           eas-version: '25.3.0'
 
-      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
         with:
           distribution: "temurin"
           java-version: "17"
@@ -254,7 +254,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' &&
           needs.build.outputs.source-sha == github.sha &&
           (inputs.profile || 'testflight-android') == 'testflight-android' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: testflight-android-build-number
           path: android-build-number
@@ -283,7 +283,7 @@ jobs:
 
       # bundletool needs a JRE. ubuntu-latest ships a default JDK, but pin it explicitly
       # like the build job so the toolchain is deterministic.
-      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
         with:
           distribution: "temurin"
           java-version: "17"

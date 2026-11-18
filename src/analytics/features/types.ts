@@ -25,6 +25,7 @@ export enum Features {
   ShareDestinationsEnable = 'share_destinations:enable',
   ImageUploadsNativeCompressionEnable = 'image_uploads:native_compression:enable',
   ImageUploadsWebCompressionEnable = 'image_uploads:web_compression:enable',
+  PostViewCountsEnable = 'post_view_counts:enable',
 
   // values
   StarterPacksConfig = 'starter_packs:config',
