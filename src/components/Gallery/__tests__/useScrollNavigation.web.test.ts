@@ -114,6 +114,39 @@ describe('useScrollNavigation (web)', () => {
     expect(onNavigate.mock.calls).toEqual([[1], [2]])
   })
 
+  it.each([
+    ['wheel', 'keydown'],
+    ['wheel', 'mousedown'],
+    ['touch', 'keydown'],
+    ['touch', 'mousedown'],
+  ])('hands %s scrolling over to %s navigation', (input, event) => {
+    const {currentIndexRef} = setup()
+    if (input === 'wheel') {
+      scroller.dispatch('wheel', {deltaX: 50, deltaY: 0})
+    } else {
+      scroller.dispatch('touchstart')
+    }
+    scrollTo(150)
+    if (input === 'touch') scroller.dispatch('touchend')
+    expect(onNavigate.mock.calls).toEqual([[1]])
+    onNavigate.mockClear()
+
+    jest.advanceTimersByTime(30)
+    scroller.dispatch(event, {key: 'ArrowRight', button: 0})
+    // The other handler's animation must not report intermediate items.
+    scrollTo(350)
+    currentIndexRef.current = 2
+    // A clamped final offset must not undo that handler's settled index.
+    scrollTo(300)
+    expect(onNavigate).not.toHaveBeenCalled()
+    expect(currentIndexRef.current).toBe(2)
+
+    // A fresh wheel still takes over and reports navigation normally.
+    scroller.dispatch('wheel', {deltaX: -50, deltaY: 0})
+    scrollTo(150)
+    expect(onNavigate.mock.calls).toEqual([[1]])
+  })
+
   it("doesn't count a vertical wheel, unless Shift turns it sideways", () => {
     setup()
     scroller.dispatch('wheel', {deltaX: 0, deltaY: 50})
@@ -123,6 +156,15 @@ describe('useScrollNavigation (web)', () => {
     scroller.dispatch('wheel', {deltaX: 0, deltaY: 50, shiftKey: true})
     scrollTo(350)
     expect(onNavigate.mock.calls).toEqual([[2]])
+  })
+
+  it('keeps reporting Shift+wheel while Shift is held', () => {
+    setup()
+    scroller.dispatch('wheel', {deltaX: 0, deltaY: 50, shiftKey: true})
+    scrollTo(50)
+    scroller.dispatch('keydown', {key: 'Shift', repeat: true})
+    scrollTo(150)
+    expect(onNavigate.mock.calls).toEqual([[1]])
   })
 
   it("leaves Safari's wheel to its own handler", () => {

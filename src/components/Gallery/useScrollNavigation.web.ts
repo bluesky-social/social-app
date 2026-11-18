@@ -70,6 +70,21 @@ export function useScrollNavigation({
       if (index !== currentIndexRef.current) onNavigate(index)
     }
 
+    /** The other handlers' animations and focus changes aren't touch/wheel momentum. */
+    const stopUserScrolling = () => {
+      clearTimeout(idleTimer)
+      isTouching = false
+      isUserScrolling = false
+    }
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      // Modifiers don't take over navigation; Shift may be held for a wheel.
+      if (['Shift', 'Control', 'Alt', 'Meta'].includes(e.key)) return
+      stopUserScrolling()
+    }
+
+    el.addEventListener('keydown', onKeyDown)
+    el.addEventListener('mousedown', stopUserScrolling)
     el.addEventListener('touchstart', onTouchStart, {passive: true})
     el.addEventListener('touchend', onTouchEnd)
     el.addEventListener('touchcancel', onTouchEnd)
@@ -78,6 +93,8 @@ export function useScrollNavigation({
 
     return () => {
       clearTimeout(idleTimer)
+      el.removeEventListener('keydown', onKeyDown)
+      el.removeEventListener('mousedown', stopUserScrolling)
       el.removeEventListener('touchstart', onTouchStart)
       el.removeEventListener('touchend', onTouchEnd)
       el.removeEventListener('touchcancel', onTouchEnd)
