@@ -116,11 +116,12 @@ it('flushes Discover rows on activation, excluding blurred content', () => {
   const screen = render(tree(false))
   const seen = screen.getByTestId('atmosphereDiscoverTab').props.onItemSeen as (
     item: unknown,
+    index: number,
   ) => void
   act(() => {
-    seen(blurred)
-    seen(normal)
-    seen(normal)
+    seen(blurred, 0)
+    seen(normal, 1)
+    seen(normal, 1)
   })
   expect(mockMetric).not.toHaveBeenCalled()
   screen.rerender(tree(true))
@@ -159,12 +160,13 @@ it('flushes Following cards on activation without a second List callback', () =>
   const screen = render(tree(false))
   const seen = screen.getByTestId('activityList').props.onItemSeen as (
     item: unknown,
+    index: number,
   ) => void
   act(() => {
-    seen(warning)
-    seen(hidden)
-    seen(card)
-    seen(card)
+    seen(warning, 0)
+    seen(hidden, 1)
+    seen(card, 2)
+    seen(card, 2)
   })
   expect(mockMetric).not.toHaveBeenCalled()
   screen.rerender(tree(true))
@@ -199,12 +201,12 @@ it('logs activity list cards without a tab, excluding warnings and blur', () => 
     </I18nProvider>,
   )
   const seen = screen.getByTestId('atmosphereActivityList').props
-    .onItemSeen as (item: unknown) => void
+    .onItemSeen as (item: unknown, index: number) => void
   act(() => {
-    seen(warning)
-    seen(hidden)
-    seen(card)
-    seen(card)
+    seen(warning, 0)
+    seen(hidden, 1)
+    seen(card, 2)
+    seen(card, 2)
   })
   expect(mockMetric).not.toHaveBeenCalled()
   act(() => mockSetFocused?.(true))

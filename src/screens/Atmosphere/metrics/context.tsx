@@ -142,11 +142,10 @@ export function useLogContentImpression<T>(
     pending.current.clear()
   }, [scope?.isActive, items, getItem, log])
 
-  return useNonReactiveCallback((row: T) => {
+  return useNonReactiveCallback((row: T, position: number | undefined) => {
     // List callbacks can still arrive after unmount or a data replacement.
     if (!mounted.current || !scope) return
-    const position = items.indexOf(row)
-    if (position < 0) return
+    if (position == null || items[position] !== row) return
     const item = getItem(row, position)
     if (!item) return
     if (scope.isActive) {

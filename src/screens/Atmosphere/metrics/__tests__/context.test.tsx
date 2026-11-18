@@ -44,8 +44,8 @@ describe('useLogContentImpression', () => {
       {wrapper},
     )
     const callback = result.current
-    callback(ITEM)
-    callback(ITEM)
+    callback(ITEM, 0)
+    callback(ITEM, 0)
     expect(mockMetric).not.toHaveBeenCalled()
 
     isActive = true
@@ -58,21 +58,21 @@ describe('useLogContentImpression', () => {
       ],
     ])
 
-    callback(ITEM)
+    callback(ITEM, 0)
     isActive = false
     rerender({})
-    callback(ITEM)
+    callback(ITEM, 0)
     isActive = true
     rerender({})
     expect(mockMetric).toHaveBeenCalledTimes(1)
 
-    callback(SECOND)
+    callback(SECOND, 1)
     expect(mockMetric).toHaveBeenLastCalledWith(
       'atmosphere:content:impression',
       {tab: 'following', surface: 'tab', ...SECOND, position: 1},
     )
     unmount()
-    callback(THIRD)
+    callback(THIRD, 2)
     expect(mockMetric).toHaveBeenCalledTimes(2)
   })
 
@@ -88,9 +88,9 @@ describe('useLogContentImpression', () => {
       () => useLogContentImpression(items, getItem),
       {wrapper},
     )
-    result.current(ITEM)
-    result.current(SECOND)
-    result.current(THIRD)
+    result.current(ITEM, 0)
+    result.current(SECOND, 1)
+    result.current(THIRD, 2)
 
     items = [
       {contentId: SECOND.contentId, blurred: true},
@@ -105,20 +105,49 @@ describe('useLogContentImpression', () => {
       ],
     ])
 
-    result.current(items[1])
+    result.current(items[1], 1)
     expect(mockMetric).toHaveBeenCalledTimes(1)
 
     items = [SECOND, THIRD]
     rerender({})
-    result.current(ITEM)
+    result.current(ITEM, 0)
     expect(mockMetric).toHaveBeenCalledTimes(1)
-    result.current(SECOND)
+    result.current(SECOND, 0)
     expect(mockMetric).toHaveBeenCalledTimes(2)
+  })
+
+  it('rejects missing and stale positions without attributing the wrong row', () => {
+    let items = [ITEM, SECOND]
+    const wrapper = ({children}: {children: React.ReactNode}) => (
+      <AtmosphereMetricsScope tab="following" surface="tab" isActive>
+        {children}
+      </AtmosphereMetricsScope>
+    )
+    const {result, rerender} = renderHook(
+      () => useLogContentImpression(items, getItem),
+      {wrapper},
+    )
+    result.current(ITEM, undefined)
+    result.current(ITEM, -1)
+    result.current(ITEM, 1)
+    result.current(SECOND, 2)
+    expect(mockMetric).not.toHaveBeenCalled()
+
+    items = [SECOND, ITEM]
+    rerender({})
+    result.current(ITEM, 0)
+    expect(mockMetric).not.toHaveBeenCalled()
+    result.current(ITEM, 1)
+    expect(mockMetric).toHaveBeenLastCalledWith(
+      'atmosphere:content:impression',
+      {tab: 'following', surface: 'tab', ...ITEM, position: 1},
+    )
+    expect(mockMetric).toHaveBeenCalledTimes(1)
   })
 
   it('does nothing outside a scope', () => {
     const {result} = renderHook(() => useLogContentImpression([ITEM], getItem))
-    result.current(ITEM)
+    result.current(ITEM, 0)
     expect(mockMetric).not.toHaveBeenCalled()
   })
 })
