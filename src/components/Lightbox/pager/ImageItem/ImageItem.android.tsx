@@ -424,6 +424,8 @@ const ImageItem = ({
                 style={{flex: 1, borderRadius}}
                 accessibilityHint=""
                 accessibilityIgnoresInvertColors
+                // zooming doesn't change the size expo-image downscales to
+                allowDownscaling={!isScaled}
                 cachePolicy="memory"
               />
             </Animated.View>
