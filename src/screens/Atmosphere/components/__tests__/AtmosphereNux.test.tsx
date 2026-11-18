@@ -1,11 +1,33 @@
+import {createDeferrable} from '@atproto/common-web'
+import {upsertNux} from '@bsky/sdk'
 import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
-import {fireEvent, render, screen} from '@testing-library/react-native'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import {
+  act,
+  fireEvent,
+  render,
+  renderHook,
+  screen,
+  waitFor,
+} from '@testing-library/react-native'
 
-import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
+import {Nux, useSaveNux} from '#/state/queries/nuxs'
+import {type AppNux} from '#/state/queries/nuxs/definitions'
+import {preferencesQueryKey} from '#/state/queries/preferences'
 import {AtmosphereNux} from '#/screens/Atmosphere/components/AtmosphereNux'
 
-jest.mock('#/state/queries/nuxs')
+jest.mock('#/state/queries/preferences', () => ({
+  preferencesQueryKey: ['preferences'],
+  usePreferencesQuery: () => ({
+    data: {bskyAppState: {nuxs: mockNuxs}},
+    isSuccess: true,
+    isError: false,
+  }),
+}))
+jest.mock('#/state/session', () => ({
+  usePdsClient: () => ({call: mockCall}),
+}))
 jest.mock('#/analytics', () => ({
   useAnalytics: () => ({metric: mockMetric}),
 }))
@@ -50,61 +72,135 @@ jest.mock('#/components/Button', () => {
   }
 })
 
-const mockSave = jest.fn()
+const mockCall = jest.fn()
 const mockMetric = jest.fn()
 const mockOpenDialog = jest.fn()
-const mockUseNux = jest.mocked(useNux)
-const mockUseSaveNux = jest.mocked(useSaveNux)
-const completedNux = {
+let mockNuxs: AppNux[]
+let queryClient: QueryClient
+const completedNux: AppNux = {
   id: Nux.AtmosphereNux,
   completed: true,
   data: undefined,
 }
 
-function banner() {
+function Wrapper({children}: {children: React.ReactNode}) {
   return (
-    <I18nProvider i18n={i18n}>
-      <AtmosphereNux style={{paddingTop: 16}} />
-    </I18nProvider>
+    <QueryClientProvider client={queryClient}>
+      <I18nProvider i18n={i18n}>{children}</I18nProvider>
+    </QueryClientProvider>
+  )
+}
+
+function renderBanners() {
+  return render(
+    <>
+      <AtmosphereNux />
+      <AtmosphereNux />
+      <AtmosphereNux />
+    </>,
+    {wrapper: Wrapper},
   )
 }
 
 beforeEach(() => {
   jest.clearAllMocks()
   i18n.loadAndActivate({locale: 'en', messages: {}})
-  mockUseNux.mockReturnValue({nux: undefined, status: 'ready'})
-  mockUseSaveNux.mockReturnValue({mutate: mockSave} as never)
+  mockNuxs = []
+  mockCall.mockResolvedValue(undefined)
+  queryClient = new QueryClient({
+    defaultOptions: {mutations: {retryDelay: 0}},
+  })
 })
 
-it('saves dismissal and hides immediately while the preference is saving', () => {
-  const {rerender} = render(banner())
+afterEach(() => {
+  queryClient.clear()
+})
 
-  fireEvent.press(screen.getByTestId('atmosphereNuxDismiss'))
+it('hides every banner while saving and refetching preferences', async () => {
+  const save = createDeferrable()
+  const refetch = createDeferrable()
+  mockCall.mockReturnValue(save.complete)
+  const invalidate = jest
+    .spyOn(queryClient, 'invalidateQueries')
+    .mockReturnValue(refetch.complete)
+  renderBanners()
+  expect(screen.getAllByTestId('atmosphereNuxDismiss')).toHaveLength(3)
 
-  expect(mockSave).toHaveBeenCalledWith(completedNux)
+  fireEvent.press(screen.getAllByTestId('atmosphereNuxDismiss')[0])
+
+  await waitFor(() => expect(screen.toJSON()).toBeNull())
+  expect(mockCall).toHaveBeenCalledWith(upsertNux, completedNux)
   expect(mockMetric).toHaveBeenCalledWith('atmosphere:nux:bannerDismissed', {})
+  expect(invalidate).not.toHaveBeenCalled()
 
-  mockUseSaveNux.mockReturnValue({
-    mutate: mockSave,
-    variables: completedNux,
-  } as never)
-  rerender(banner())
+  await act(async () => {
+    save.resolve()
+    await save.complete
+  })
+  expect(invalidate).toHaveBeenCalledWith({queryKey: preferencesQueryKey})
+  expect(queryClient.getMutationCache().getAll()[0].state.status).toBe(
+    'pending',
+  )
+  expect(screen.toJSON()).toBeNull()
+
+  await act(async () => {
+    refetch.resolve()
+    await refetch.complete
+  })
+  await waitFor(() => {
+    expect(queryClient.getMutationCache().getAll()[0].state.status).toBe(
+      'success',
+    )
+  })
   expect(screen.toJSON()).toBeNull()
 })
 
-it('does not render the banner or its spacing for a saved dismissal', () => {
-  mockUseNux.mockReturnValue({nux: completedNux, status: 'ready'})
-  render(banner())
+it('keeps every banner hidden through retries and a failed save', async () => {
+  mockCall.mockRejectedValue(new Error('offline'))
+  const {unmount} = renderBanners()
 
-  expect(mockUseNux).toHaveBeenCalledWith(Nux.AtmosphereNux)
+  fireEvent.press(screen.getAllByTestId('atmosphereNuxDismiss')[0])
+
+  await waitFor(() => {
+    expect(queryClient.getMutationCache().getAll()[0].state.status).toBe(
+      'error',
+    )
+  })
+  expect(mockCall).toHaveBeenCalledTimes(4)
+  expect(screen.toJSON()).toBeNull()
+
+  unmount()
+  renderBanners()
+  expect(screen.toJSON()).toBeNull()
+})
+
+it.each([
+  {id: Nux.BookmarksAnnouncement, completed: true, data: undefined},
+  {id: Nux.AtmosphereNux, completed: false, data: undefined},
+])('does not hide for a save of $id with completed=$completed', async nux => {
+  const banners = renderBanners()
+  const {result} = renderHook(useSaveNux, {wrapper: Wrapper})
+
+  await act(async () => {
+    await result.current.mutateAsync(nux)
+  })
+  await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+  expect(banners.getAllByTestId('atmosphereNuxDismiss')).toHaveLength(3)
+})
+
+it('does not render the banner or its spacing for a saved dismissal', () => {
+  mockNuxs = [completedNux]
+  render(<AtmosphereNux style={{paddingTop: 16}} />, {wrapper: Wrapper})
+
   expect(screen.toJSON()).toBeNull()
 })
 
 it('still opens the about dialog without dismissing the banner', () => {
-  render(banner())
+  render(<AtmosphereNux />, {wrapper: Wrapper})
 
   fireEvent.press(screen.getByTestId('atmosphereNuxLearnMore'))
 
   expect(mockOpenDialog).toHaveBeenCalledTimes(1)
-  expect(mockSave).not.toHaveBeenCalled()
+  expect(mockCall).not.toHaveBeenCalled()
 })

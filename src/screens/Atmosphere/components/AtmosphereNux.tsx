@@ -2,9 +2,11 @@ import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {useMutationState} from '@tanstack/react-query'
 
 import {HITSLOP_10} from '#/lib/constants'
-import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
+import {Nux, saveNuxMutationKey, useNux, useSaveNux} from '#/state/queries/nuxs'
+import {type AppNux} from '#/state/queries/nuxs/definitions'
 import {AboutAtmosphereDialog} from '#/screens/Atmosphere/components/AboutAtmosphereDialog'
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {atoms as a, tokens, useAlf, utils} from '#/alf'
@@ -20,10 +22,18 @@ export function AtmosphereNux({style}: {style?: StyleProp<ViewStyle>}) {
   const ax = useAnalytics()
   const {themes} = useAlf()
   const {nux} = useNux(Nux.AtmosphereNux)
-  const {mutate: save, variables} = useSaveNux()
+  const {mutate: save} = useSaveNux()
+  /** Include failed saves so every tab keeps the same optimistic dismissal. */
+  const dismissals = useMutationState({
+    filters: {mutationKey: saveNuxMutationKey},
+    select: mutation => {
+      const nux = mutation.state.variables as AppNux | undefined
+      return nux?.id === Nux.AtmosphereNux && nux.completed
+    },
+  })
   const aboutDialogControl = Dialog.useDialogControl()
 
-  if (variables || nux?.completed) return null
+  if (dismissals.some(Boolean) || nux?.completed) return null
 
   const dismiss = () => {
     save({
