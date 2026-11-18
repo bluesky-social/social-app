@@ -16,6 +16,7 @@ import {
   type StandardSiteHost,
 } from '#/components/atmosphere/SiteStandard/publishers'
 import {GrainMark} from '#/components/icons/community/Grain'
+import {Streamplace} from '#/components/icons/community/Streamplace'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {place, site, social} from '#/lexicons'
@@ -104,8 +105,7 @@ function getActivityApp({
     case social.grain.gallery.$type:
       return {name: 'Grain', Icon: GrainMark}
     case place.stream.livestream.$type:
-      // No Streamplace icon exists yet.
-      return {name: 'Streamplace'}
+      return {name: 'Streamplace', Icon: Streamplace}
     default:
       return undefined
   }
