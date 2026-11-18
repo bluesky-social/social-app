@@ -51,6 +51,7 @@ The icons in this directory are the marks of third-party services that appear in
 | `Reddit.svg` | [Reddit](https://www.reddit.com) |
 | `Signal.svg` | [Signal Technology Foundation](https://signal.org) |
 | `Snapchat.svg` | [Snap Inc.](https://www.snapchat.com) |
+| `Streamplace.svg` | [Aquareum Inc.](https://stream.place) |
 | `Telegram.svg` | [Telegram](https://telegram.org) |
 | `Threads.svg` | [Meta Platforms](https://www.threads.com) |
 | `WhatsApp.svg` | [Meta Platforms](https://www.whatsapp.com) |
