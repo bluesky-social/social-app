@@ -4,10 +4,7 @@ import {useLingui} from '@lingui/react/macro'
 
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {type AppMetric} from '#/screens/Atmosphere/metrics/apps'
-import {
-  AtmosphereImpression,
-  useAtmosphereMetricContext,
-} from '#/screens/Atmosphere/metrics/context'
+import {useAtmosphereMetricContext} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -40,11 +37,7 @@ export function AppCard({
     app.profile && shouldShowKnownFollowers(app.profile.viewer?.knownFollowers)
 
   return (
-    <AtmosphereImpression
-      impressionKey={`app:${metric.appId}`}
-      onImpression={context =>
-        ax.metric('atmosphere:app:impression', {...context, ...metric})
-      }>
+    <>
       <Button
         label={l`View details for ${app.title}`}
         accessibilityHint=""
@@ -123,8 +116,7 @@ export function AppCard({
           </View>
         )}
       </Button>
-      {/* Renders in a portal, so the impression only measures the card */}
       <AppDialog control={control} app={app} metric={metric} />
-    </AtmosphereImpression>
+    </>
   )
 }

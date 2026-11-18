@@ -7,7 +7,6 @@ import {HITSLOP_10} from '#/lib/constants'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {AboutAtmosphereDialog} from '#/screens/Atmosphere/components/AboutAtmosphereDialog'
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
-import {AtmosphereImpression} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, tokens, useAlf, utils} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -41,10 +40,7 @@ export function AtmosphereNux() {
   }
 
   return (
-    <AtmosphereImpression
-      impressionKey="nux"
-      onImpression={() => ax.metric('atmosphere:nux:impression', {})}
-      style={[a.pb_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
+    <View style={[a.pb_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
       <View
         style={[
           a.w_full,
@@ -137,6 +133,6 @@ export function AtmosphereNux() {
         </Button>
       </View>
       <AboutAtmosphereDialog control={aboutDialogControl} />
-    </AtmosphereImpression>
+    </View>
   )
 }

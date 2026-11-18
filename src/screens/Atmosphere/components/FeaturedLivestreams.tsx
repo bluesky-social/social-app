@@ -30,18 +30,19 @@ export function FeaturedLivestreams({
         {livestreams.map((livestream, index) => (
           <Gallery.Item key={livestream.uri} label={livestream.title}>
             {galleryFocus => (
-              <AtmosphereContentItem
-                style={[a.flex_grow]}
-                contentType="livestream"
-                contentId={livestream.uri}
-                section="livestreams"
-                position={index}>
-                <LivestreamCard
-                  livestream={livestream}
-                  width={CARD_WIDTH}
-                  galleryFocus={galleryFocus}
-                />
-              </AtmosphereContentItem>
+              <View style={[a.flex_grow]}>
+                <AtmosphereContentItem
+                  contentType="livestream"
+                  contentId={livestream.uri}
+                  section="livestreams"
+                  position={index}>
+                  <LivestreamCard
+                    livestream={livestream}
+                    width={CARD_WIDTH}
+                    galleryFocus={galleryFocus}
+                  />
+                </AtmosphereContentItem>
+              </View>
             )}
           </Gallery.Item>
         ))}

@@ -31,16 +31,17 @@ export function FeaturedPhotos({
         {photos.map((photo, index) => (
           <Gallery.Item key={photo.uri} label={photo.title}>
             {galleryFocus => (
-              <AtmosphereContentItem
-                style={[a.flex_grow]}
-                contentType="gallery"
-                contentId={photo.uri}
-                section="photos"
-                position={index}>
-                <View style={[a.flex_grow, {width: CARD_WIDTH}]}>
-                  <PhotoCard photo={photo} galleryFocus={galleryFocus} />
-                </View>
-              </AtmosphereContentItem>
+              <View style={[a.flex_grow]}>
+                <AtmosphereContentItem
+                  contentType="gallery"
+                  contentId={photo.uri}
+                  section="photos"
+                  position={index}>
+                  <View style={[a.flex_grow, {width: CARD_WIDTH}]}>
+                    <PhotoCard photo={photo} galleryFocus={galleryFocus} />
+                  </View>
+                </AtmosphereContentItem>
+              </View>
             )}
           </Gallery.Item>
         ))}

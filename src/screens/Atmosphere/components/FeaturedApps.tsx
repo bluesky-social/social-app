@@ -4,10 +4,8 @@ import {useLingui} from '@lingui/react/macro'
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {type FeaturedApp} from '#/screens/Atmosphere/data/exploreData'
 import {getAppMetric} from '#/screens/Atmosphere/metrics/apps'
-import {AtmosphereImpression} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a} from '#/alf'
 import * as Gallery from '#/components/Gallery'
-import {useAnalytics} from '#/analytics'
 import {ExploreSectionHeader} from './ExploreSectionHeader'
 import {FeaturedAppCard} from './FeaturedAppCard'
 
@@ -21,7 +19,6 @@ export function FeaturedApps({
   onPressSeeMore?: () => void
 }) {
   const {t: l} = useLingui()
-  const ax = useAnalytics()
 
   if (!apps.length) return null
 
@@ -46,15 +43,7 @@ export function FeaturedApps({
           return (
             <Gallery.Item key={app.id} label={app.title}>
               {galleryFocus => (
-                <AtmosphereImpression
-                  style={[a.flex_grow]}
-                  impressionKey={`app:${app.id}`}
-                  onImpression={context =>
-                    ax.metric('atmosphere:app:impression', {
-                      ...context,
-                      ...metric,
-                    })
-                  }>
+                <View style={[a.flex_grow]}>
                   <View style={[a.flex_grow, {width: CARD_WIDTH}]}>
                     <FeaturedAppCard
                       app={app}
@@ -62,7 +51,7 @@ export function FeaturedApps({
                       galleryFocus={galleryFocus}
                     />
                   </View>
-                </AtmosphereImpression>
+                </View>
               )}
             </Gallery.Item>
           )

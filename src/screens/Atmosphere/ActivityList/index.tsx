@@ -6,6 +6,7 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useAppState} from '#/lib/appState'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
@@ -20,6 +21,7 @@ import {
   AtmosphereContentItem,
   AtmosphereMetricsScope,
   createVisit,
+  useLogContentImpression,
 } from '#/screens/Atmosphere/metrics/context'
 import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
 import {atoms as a, useTheme} from '#/alf'
@@ -89,6 +91,17 @@ function ActivityListContent({uris}: {uris: AtUriString[]}) {
   } = useActivityListQuery(uris)
   const [isPTRing, setIsPTRing] = useState(false)
   const items = data?.pages.flat() ?? []
+  const logImpression = useLogContentImpression()
+  const onItemSeen = useNonReactiveCallback((item: Item) => {
+    if (!item.content || item.moderation.blur) return
+    const position = items.indexOf(item)
+    if (position < 0) return
+    logImpression({
+      contentType: item.content.type,
+      contentId: item.content.view.uri,
+      position,
+    })
+  })
   const metrics = useLoadMetrics({
     hasData: !!data,
     isError,
@@ -136,6 +149,7 @@ function ActivityListContent({uris}: {uris: AtUriString[]}) {
       renderItem={({item, index}: {item: Item; index: number}) => (
         <ActivityListItem item={item} position={index} />
       )}
+      onItemSeen={onItemSeen}
       refreshing={isPTRing}
       onRefresh={() => void onRefresh()}
       onEndReached={() => void onEndReached()}

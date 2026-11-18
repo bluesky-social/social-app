@@ -2,6 +2,7 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List} from '#/view/com/util/List'
 import {ActivityContentHider} from '#/screens/Atmosphere/ActivityTab/components/ActivityContentHider'
@@ -9,7 +10,10 @@ import {ActivityHeader} from '#/screens/Atmosphere/ActivityTab/components/Activi
 import {ActivityContentCard} from '#/screens/Atmosphere/ActivityTab/components/ActivityRow'
 import {type ActivityCardRow} from '#/screens/Atmosphere/ActivityTab/rows'
 import {getAssociatedProfile} from '#/screens/Atmosphere/data/exploreData'
-import {AtmosphereContentItem} from '#/screens/Atmosphere/metrics/context'
+import {
+  AtmosphereContentItem,
+  useLogContentImpression,
+} from '#/screens/Atmosphere/metrics/context'
 import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
@@ -24,6 +28,17 @@ export function AtmosphereDiscoverTab() {
   const {t: l} = useLingui()
   const {data, isError, refetch} = useAtmosphereRecommendedActivityQuery()
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const logImpression = useLogContentImpression()
+  const onItemSeen = useNonReactiveCallback((item: DiscoverItem) => {
+    if (item.moderation.blur) return
+    const position = data?.items.indexOf(item) ?? -1
+    if (position < 0) return
+    logImpression({
+      contentType: item.content.type,
+      contentId: item.content.view.uri,
+      position,
+    })
+  })
   const metrics = useLoadMetrics({
     hasData: !!data,
     isError,
@@ -58,6 +73,7 @@ export function AtmosphereDiscoverTab() {
       renderItem={({item, index}: {item: DiscoverItem; index: number}) => (
         <DiscoverCard item={item} position={index} />
       )}
+      onItemSeen={onItemSeen}
       refreshing={isRefreshing}
       onRefresh={() => void onRefresh()}
       ListHeaderComponent={data && isError ? errorMessage : undefined}

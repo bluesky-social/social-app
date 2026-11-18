@@ -25,10 +25,6 @@ jest.mock('@lingui/react', () => ({
   }),
 }))
 
-// Section impressions are covered elsewhere and need real host views
-jest.mock('#/screens/Atmosphere/metrics/visibility', () => ({
-  useIsVisible: () => false,
-}))
 jest.mock('#/state/preferences/moderation-opts', () => ({
   useModerationOpts: () => mockModerationOpts,
 }))

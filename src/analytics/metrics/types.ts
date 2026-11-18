@@ -13,7 +13,6 @@ import {
   type AtmosphereAppMetricContext,
   type AtmosphereContentMetricContext,
   type AtmosphereMetricContext,
-  type AtmosphereSection,
   type AtmosphereTab,
 } from '#/screens/Atmosphere/metrics/types'
 import {type SharePlatformId} from '#/components/ShareDialog/catalog'
@@ -1520,11 +1519,6 @@ export type Events = {
 
   // user dismisses the Atmosphere introduction banner
   'atmosphere:nux:bannerDismissed': {}
-  /**
-   * The Atmosphere introduction banner was seen, once per Explore visit (see
-   * `atmosphere:content:impression`).
-   */
-  'atmosphere:nux:impression': {}
   /** The user opened the About Atmosphere dialog from the banner. */
   'atmosphere:nux:learnMore': {}
   /**
@@ -1562,11 +1556,10 @@ export type Events = {
     endReason: 'switched' | 'blurred' | 'backgrounded'
   }
   /**
-   * An Atmosphere content card was meaningfully visible: at least half of it,
-   * or half the screen for a card taller than that, in view for half a
-   * second, with its tab in view (see `atmosphere:tab:duration`). Masked
-   * cards don't count until revealed. Once per card per visit: each
-   * `atmosphere:tab:displayed`, or focus of the activity list, starts one.
+   * A content row was seen in Discover, Following or the activity list,
+   * using the shared List's viewability rules. Blurred cards are excluded,
+   * even if revealed. At most once per card per visit while in view; an item
+   * already seen by the List while inactive may not be reported on return.
    */
   'atmosphere:content:impression': AtmosphereContentMetricContext
   /**
@@ -1581,24 +1574,11 @@ export type Events = {
     profileDid: string
     source: 'activityHeader' | 'cardMenu' | 'photoDialog'
   }
-  /**
-   * An Explore section was seen, once per visit, by the same rule as
-   * `atmosphere:content:impression`. Only non-empty sections show.
-   */
-  'atmosphere:section:impression': AtmosphereMetricContext & {
-    section: AtmosphereSection
-    itemCount: number
-  }
   /** The user pressed a section's "See more", which switches tabs. */
   'atmosphere:section:seeMore': AtmosphereMetricContext & {
     section: 'apps'
     destinationTab: 'apps'
   }
-  /**
-   * An app card was seen, once per app per visit, by the same rule as
-   * `atmosphere:content:impression`.
-   */
-  'atmosphere:app:impression': AtmosphereAppMetricContext
   /** The user opened an Apps tab card's details dialog. */
   'atmosphere:app:detailsOpened': AtmosphereAppMetricContext
   /** The user pressed an app's website link, which leaves Bluesky. */

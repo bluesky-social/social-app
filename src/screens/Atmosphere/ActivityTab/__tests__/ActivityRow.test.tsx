@@ -42,9 +42,6 @@ const mockMetric = jest.fn()
 jest.mock('#/analytics', () => ({
   useAnalytics: () => ({metric: mockMetric}),
 }))
-jest.mock('#/screens/Atmosphere/metrics/visibility', () => ({
-  useIsVisible: () => false,
-}))
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
   useTheme: () => ({

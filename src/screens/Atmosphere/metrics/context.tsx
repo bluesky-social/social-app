@@ -1,5 +1,4 @@
-import {createContext, useContext, useEffect, useRef, useState} from 'react'
-import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {createContext, useContext, useEffect, useRef} from 'react'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useAnalytics} from '#/analytics'
@@ -8,8 +7,6 @@ import {
   type AtmosphereMetricContext,
   type AtmosphereSurface,
 } from './types'
-import {useIsVisible} from './visibility'
-import {MIN_VISIBLE_MS} from './visibility/shared'
 
 /**
  * Impressions count once per visit. Start a new one each time the tab or
@@ -105,76 +102,35 @@ export function AtmosphereMetricsRestore({
   )
 }
 
-/**
- * Wraps a content card: logs its impression, and gives the card's own
- * events (presses, its menu, its dialog) what to report. Put it inside any
- * moderation mask, so a masked card isn't counted as seen.
- */
+/** Gives a content card's presses, menu and dialog their attribution. */
 export function AtmosphereContentItem({
-  style,
   children,
   ...item
-}: Item & {style?: StyleProp<ViewStyle>; children: React.ReactNode}) {
-  const ax = useAnalytics()
-  return (
-    <ItemContext value={item}>
-      <AtmosphereImpression
-        style={style}
-        impressionKey={`${item.section ?? ''}:${item.contentType}:${item.contentId}`}
-        onImpression={context =>
-          ax.metric('atmosphere:content:impression', {...context, ...item})
-        }>
-        {children}
-      </AtmosphereImpression>
-    </ItemContext>
-  )
+}: Item & {children: React.ReactNode}) {
+  return <ItemContext value={item}>{children}</ItemContext>
 }
 
-/**
- * Calls `onImpression` once its children have stayed mostly visible for
- * `MIN_VISIBLE_MS` while the scope is in view, at most once per
- * `impressionKey` per visit. Logs nothing outside a scope.
- */
-export function AtmosphereImpression({
-  impressionKey,
-  onImpression,
-  style,
-  children,
-}: {
-  impressionKey: string
-  onImpression: (context: AtmosphereMetricContext) => void
-  style?: StyleProp<ViewStyle>
-  children: React.ReactNode
-}) {
+/** Logs a list item seen by the shared List, at most once per visit. */
+export function useLogContentImpression() {
+  const ax = useAnalytics()
   const scope = useContext(ScopeContext)
-  const visit = scope?.visit
-  const ref = useRef<React.ComponentRef<typeof View>>(null)
-  // Re-renders once logged, to stop watching
-  const [loggedVisit, setLoggedVisit] = useState<Visit>()
-  const isVisible = useIsVisible(
-    ref,
-    !!scope?.isActive &&
-      !!visit &&
-      visit !== loggedVisit &&
-      !visit.seen.has(impressionKey),
-  )
-  const log = useNonReactiveCallback(() => {
-    if (scope) onImpression({tab: scope.tab, surface: scope.surface})
-  })
+  const mounted = useRef(false)
   useEffect(() => {
-    if (!isVisible || !visit) return
-    const timeout = setTimeout(() => {
-      setLoggedVisit(visit)
-      // Another mount with the same key may have logged it this visit
-      if (visit.seen.has(impressionKey)) return
-      visit.seen.add(impressionKey)
-      log()
-    }, MIN_VISIBLE_MS)
-    return () => clearTimeout(timeout)
-  }, [isVisible, visit, impressionKey, log])
-  return (
-    <View ref={ref} style={style}>
-      {children}
-    </View>
-  )
+    mounted.current = true
+    return () => {
+      mounted.current = false
+    }
+  }, [])
+  return useNonReactiveCallback((item: Item) => {
+    // List callbacks can still arrive after the list unmounts.
+    if (!mounted.current || !scope?.isActive) return
+    const key = `${item.section ?? ''}:${item.contentType}:${item.contentId}`
+    if (scope.visit.seen.has(key)) return
+    scope.visit.seen.add(key)
+    ax.metric('atmosphere:content:impression', {
+      tab: scope.tab,
+      surface: scope.surface,
+      ...item,
+    })
+  })
 }

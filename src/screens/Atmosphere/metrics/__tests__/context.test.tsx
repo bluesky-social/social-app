@@ -1,4 +1,4 @@
-import {act, render} from '@testing-library/react-native'
+import {render, renderHook} from '@testing-library/react-native'
 
 import {
   AtmosphereContentItem,
@@ -6,8 +6,8 @@ import {
   AtmosphereMetricsScope,
   createVisit,
   useAtmosphereMetricsSnapshot,
+  useLogContentImpression,
   useLogContentPress,
-  type Visit,
 } from '../context'
 
 const mockMetric = jest.fn()
@@ -15,116 +15,70 @@ jest.mock('#/analytics', () => ({
   useAnalytics: () => ({metric: mockMetric}),
 }))
 
-let mockIsVisible = true
-jest.mock('../visibility', () => ({
-  useIsVisible: (_ref: unknown, enabled: boolean) => enabled && mockIsVisible,
-}))
-
 const ITEM = {
   contentType: 'article',
   contentId: 'https://example.com/a',
   position: 2,
-  section: 'articles',
 } as const
 
-let logPress: ReturnType<typeof useLogContentPress> | undefined
-function Card() {
-  logPress = useLogContentPress()
-  return null
-}
+beforeEach(() => mockMetric.mockClear())
 
-function Screen({
-  isActive = true,
-  visit,
-  cards = 1,
-}: {
-  isActive?: boolean
-  visit: Visit
-  cards?: number
-}) {
-  return (
-    <AtmosphereMetricsScope
-      tab="explore"
-      surface="tab"
-      isActive={isActive}
-      visit={visit}>
-      {Array.from({length: cards}, (_, i) => (
-        <AtmosphereContentItem key={i} {...ITEM}>
-          <Card />
-        </AtmosphereContentItem>
-      ))}
-    </AtmosphereMetricsScope>
-  )
-}
-
-const impressions = () =>
-  mockMetric.mock.calls.filter(
-    ([event]) => event === 'atmosphere:content:impression',
-  )
-
-beforeEach(() => {
-  jest.useFakeTimers()
-  mockMetric.mockClear()
-  mockIsVisible = true
-})
-
-afterEach(() => {
-  jest.useRealTimers()
-})
-
-describe('AtmosphereContentItem', () => {
-  it('logs an impression after half a second in view, once per visit', () => {
+describe('useLogContentImpression', () => {
+  it('requires an active scope and deduplicates each visit', () => {
     const visit = createVisit()
-    const {rerender} = render(<Screen visit={visit} cards={2} />)
-    act(() => jest.advanceTimersByTime(499))
-    expect(impressions()).toEqual([])
+    let isActive = false
+    let currentVisit = visit
+    const wrapper = ({children}: {children: React.ReactNode}) => (
+      <AtmosphereMetricsScope
+        tab="following"
+        surface="tab"
+        isActive={isActive}
+        visit={currentVisit}>
+        {children}
+      </AtmosphereMetricsScope>
+    )
+    const {result, rerender, unmount} = renderHook(useLogContentImpression, {
+      wrapper,
+    })
+    const callback = result.current
+    callback(ITEM)
+    expect(mockMetric).not.toHaveBeenCalled()
 
-    act(() => jest.advanceTimersByTime(1))
-    expect(impressions()).toEqual([
+    isActive = true
+    rerender({})
+    expect(result.current).toBe(callback)
+    callback(ITEM)
+    callback({...ITEM, position: 5})
+    expect(mockMetric.mock.calls).toEqual([
       [
         'atmosphere:content:impression',
-        {tab: 'explore', surface: 'tab', ...ITEM},
+        {tab: 'following', surface: 'tab', ...ITEM},
       ],
     ])
 
-    // Remounting doesn't count again within the visit
-    rerender(<Screen visit={visit} cards={0} />)
-    rerender(<Screen visit={visit} cards={1} />)
-    act(() => jest.advanceTimersByTime(1000))
-    expect(impressions()).toHaveLength(1)
-
-    rerender(<Screen visit={createVisit()} cards={1} />)
-    act(() => jest.advanceTimersByTime(500))
-    expect(impressions()).toHaveLength(2)
+    currentVisit = createVisit()
+    rerender({})
+    callback(ITEM)
+    expect(mockMetric).toHaveBeenCalledTimes(2)
+    unmount()
+    callback({...ITEM, contentId: 'https://example.com/b'})
+    expect(mockMetric).toHaveBeenCalledTimes(2)
   })
 
-  it("doesn't log while the scope is out of view or the card isn't visible", () => {
-    const visit = createVisit()
-    const {rerender} = render(<Screen visit={visit} isActive={false} />)
-    act(() => jest.advanceTimersByTime(1000))
-    expect(impressions()).toEqual([])
-
-    mockIsVisible = false
-    rerender(<Screen visit={visit} />)
-    act(() => jest.advanceTimersByTime(1000))
-    expect(impressions()).toEqual([])
-  })
-
-  it('logs presses with the card and scope', () => {
-    mockIsVisible = false
-    render(<Screen visit={createVisit()} />)
-    logPress?.('external')
-    expect(mockMetric).toHaveBeenCalledWith('atmosphere:content:press', {
-      tab: 'explore',
-      surface: 'tab',
-      ...ITEM,
-      target: 'external',
-    })
+  it('does nothing outside a scope', () => {
+    const {result} = renderHook(useLogContentImpression)
+    result.current(ITEM)
+    expect(mockMetric).not.toHaveBeenCalled()
   })
 })
 
-describe('AtmosphereMetricsRestore', () => {
-  it('carries the card and tab into a dialog, as its surface', () => {
+describe('content attribution', () => {
+  it('carries the card and tab into a dialog as its surface', () => {
+    let logPress: ReturnType<typeof useLogContentPress> | undefined
+    function Card() {
+      logPress = useLogContentPress()
+      return null
+    }
     function Dialog() {
       const snapshot = useAtmosphereMetricsSnapshot()
       return (
@@ -133,7 +87,6 @@ describe('AtmosphereMetricsRestore', () => {
         </AtmosphereMetricsRestore>
       )
     }
-    mockIsVisible = false
     render(
       <AtmosphereMetricsScope
         tab="following"
