@@ -1,4 +1,4 @@
-import {useRef, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {ScrollView, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
@@ -95,15 +95,25 @@ export function ShareRow({
   const {t: l} = useLingui()
   const control = useDialogContext()
   const [itemWidth, setItemWidth] = useState(MIN_ITEM_WIDTH)
-  /** Set while the paste hint shows, so a second tap doesn't open two apps. */
-  const isPastePending = useRef(false)
+  /**
+   * The timer that closes the sheet and opens the app after the paste hint.
+   * Set while the hint shows, so a second tap doesn't open two apps.
+   */
+  const pasteTimeout = useRef<ReturnType<typeof setTimeout>>(undefined)
+
+  /*
+   * The sheet unmounts this row when it closes. If that happens during the
+   * hint (swipe, backdrop, a chat), the timer would queue the app launch on a
+   * closed sheet, and it would fire the next time the sheet opens.
+   */
+  useEffect(() => () => clearTimeout(pasteTimeout.current), [])
 
   const onPressPlatform = (
     id: SharePlatformId,
     label: string,
     position: number,
   ) => {
-    if (isPastePending.current) return
+    if (pasteTimeout.current) return
     ax.metric('share:press:platform', {
       uri,
       authorDid,
@@ -131,9 +141,11 @@ export function ShareRow({
       })
     }
     if (needsPaste(id)) {
-      isPastePending.current = true
       onPasteHint(pasteHint)
-      setTimeout(() => control.close(openWithPaste), PASTE_HINT_MS)
+      pasteTimeout.current = setTimeout(
+        () => control.close(openWithPaste),
+        PASTE_HINT_MS,
+      )
     } else {
       control.close(open)
     }
@@ -144,6 +156,8 @@ export function ShareRow({
     if (action.stayOpen) {
       action.onPress()
     } else {
+      // Picking an action instead cancels the app the hint is waiting to open
+      clearTimeout(pasteTimeout.current)
       control.close(action.onPress)
     }
   }
