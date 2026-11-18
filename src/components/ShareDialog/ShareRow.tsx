@@ -13,6 +13,7 @@ import {type ShareContent, type SharePlatformId} from './catalog'
 import {SHEET_GUTTER} from './const'
 import {hasPasteFallback, needsPaste, openSharePlatform} from './share'
 import {SharePlatformIcon, useSharePlatformLabel} from './SharePlatformIcon'
+import {type ShareSubject} from './types'
 
 /**
  * The tile's circle. The icons and logos inside are sized on their own, so
@@ -61,16 +62,14 @@ function getItemWidth(rowWidth: number) {
 }
 
 /**
- * Two rows: the apps to share a post to, then neutral actions like "Copy
- * link". Each scrolls edge to edge, so this sits directly in the sheet's
- * padded content.
+ * Two rows: the apps to share to, then neutral actions like "Copy link".
+ * Each scrolls edge to edge, so this sits directly in the sheet's padded
+ * content.
  */
 export function ShareRow({
   platformIds,
   actions = [],
-  content,
-  uri,
-  authorDid,
+  subject,
   onShare,
   onPasteHint,
 }: {
@@ -78,11 +77,8 @@ export function ShareRow({
   platformIds: readonly SharePlatformId[]
   /** Actions shown in the second row, under the platforms. */
   actions?: ShareAction[]
-  /** What to fill in when an app opens. */
-  content: ShareContent
-  /** The post's AT URI, for metrics. */
-  uri: string
-  authorDid: string
+  /** What's shared: filled in when an app opens, and logged. */
+  subject: ShareSubject
   /** Runs when an app is picked, after it's logged. */
   onShare: () => void
   /**
@@ -115,19 +111,22 @@ export function ShareRow({
   ) => {
     if (pasteTimeout.current) return
     ax.metric('share:press:platform', {
-      uri,
-      authorDid,
+      uri: subject.uri,
+      authorDid: subject.authorDid,
+      subjectType: subject.type,
       platform: id,
       position,
     })
     const onOpenFailed = () => {
       ax.metric('share:platform:openFailed', {
-        uri,
-        authorDid,
+        uri: subject.uri,
+        authorDid: subject.authorDid,
+        subjectType: subject.type,
         platform: id,
       })
       Toast.show(l`Couldn’t open ${label}`, {type: 'error'})
     }
+    const content: ShareContent = {url: subject.url, title: subject.title}
     const pasteHint = l`Link copied – paste it in ${label}`
     const openWithPaste = () => {
       openSharePlatform(id, content, {paste: true}).catch(onOpenFailed)
