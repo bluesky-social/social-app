@@ -11,6 +11,7 @@ export function useLoadMetrics({
   hasData,
   isError,
   itemCount,
+  pages,
 }: {
   /**
    * Whether the query has data ready to show, even if a later fetch failed.
@@ -20,6 +21,8 @@ export function useLoadMetrics({
   hasData: boolean
   isError: boolean
   itemCount: number
+  /** Selected pagination pages; omit for non-paginated tabs. */
+  pages?: readonly (readonly unknown[])[]
 }) {
   const ax = useAnalytics()
   const {scope} = useAtmosphereMetricsSnapshot()
@@ -27,6 +30,7 @@ export function useLoadMetrics({
   const isActive = !!scope?.isActive
   const logged = useRef(false)
   const hadDataOnFirstDisplay = useRef<boolean | undefined>(undefined)
+  const pageCount = useRef(pages?.length ?? 0)
 
   useEffect(() => {
     if (!context || !isActive || logged.current) return
@@ -42,22 +46,42 @@ export function useLoadMetrics({
     logged.current = true
   })
 
+  /*
+   * Observe page growth, not fetch promises: overlapping or cancelled callers
+   * can resolve successfully with the same pages. Refetches do not add pages.
+   */
+  useEffect(() => {
+    const previousPageCount = pageCount.current
+    pageCount.current = pages?.length ?? 0
+    if (
+      !context ||
+      !pages ||
+      previousPageCount === 0 ||
+      pages.length <= previousPageCount
+    ) {
+      return
+    }
+
+    let totalItemCount = 0
+    for (const [pageIndex, page] of pages.entries()) {
+      totalItemCount += page.length
+      if (pageIndex >= previousPageCount) {
+        ax.metric('atmosphere:list:pageLoaded', {
+          ...context,
+          pageIndex,
+          itemCount: page.length,
+          totalItemCount,
+        })
+      }
+    }
+  })
+
   return {
     logRefresh() {
       if (context) ax.metric('atmosphere:content:refresh', context)
     },
     logRetry(phase: 'initial' | 'pagination') {
       if (context) ax.metric('atmosphere:content:retry', {...context, phase})
-    },
-    /** Call with all pages once another has loaded. */
-    logPageLoaded(pages: unknown[][]) {
-      if (!context || pages.length < 2) return
-      ax.metric('atmosphere:list:pageLoaded', {
-        ...context,
-        pageIndex: pages.length - 1,
-        itemCount: pages[pages.length - 1].length,
-        totalItemCount: pages.reduce((total, page) => total + page.length, 0),
-      })
     },
   }
 }

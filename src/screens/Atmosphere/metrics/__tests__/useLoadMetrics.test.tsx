@@ -117,12 +117,14 @@ it('logs a failed first load as an error', () => {
   ])
 })
 
-it('logs further pages, not the first', () => {
-  renderTab({hasData: true, isError: false, itemCount: 2})
+it('logs page growth once, not the initial load or unchanged page counts', () => {
+  const update = renderTab({hasData: false, isError: false, itemCount: 0})
+  const load = {hasData: true, isError: false, itemCount: 2}
+  update({...load, pages: [[1, 2]]})
   mockMetric.mockClear()
 
-  metrics?.logPageLoaded([[1, 2]])
-  metrics?.logPageLoaded([[1, 2], [3]])
+  update({...load, itemCount: 3, pages: [[1, 2], [3]]})
+  update({...load, itemCount: 3, pages: [[1, 2], [3]]})
   expect(mockMetric.mock.calls).toEqual([
     [
       'atmosphere:list:pageLoaded',
@@ -137,11 +139,67 @@ it('logs further pages, not the first', () => {
   ])
 })
 
+it('counts each new page when multiple pages arrive before a render', () => {
+  const load = {hasData: true, isError: false, itemCount: 2}
+  const update = renderTab({...load, pages: [[1, 2]]})
+  mockMetric.mockClear()
+
+  update({...load, itemCount: 5, pages: [[1, 2], [3], [4, 5]]})
+  expect(loaded('atmosphere:list:pageLoaded')).toEqual([
+    [
+      'atmosphere:list:pageLoaded',
+      {
+        tab: 'following',
+        surface: 'tab',
+        pageIndex: 1,
+        itemCount: 1,
+        totalItemCount: 3,
+      },
+    ],
+    [
+      'atmosphere:list:pageLoaded',
+      {
+        tab: 'following',
+        surface: 'tab',
+        pageIndex: 2,
+        itemCount: 2,
+        totalItemCount: 5,
+      },
+    ],
+  ])
+})
+
+it('does not recount cached pages and allows new pages after the list shrinks', () => {
+  const load = {hasData: true, isError: false, itemCount: 3}
+  const update = renderTab({...load, pages: [[1, 2], [3]]})
+  expect(loaded('atmosphere:list:pageLoaded')).toEqual([])
+  mockMetric.mockClear()
+
+  update({...load, itemCount: 2, pages: [[10, 11]]})
+  update({...load, itemCount: 3, pages: [[10, 11], [12]]})
+  expect(loaded('atmosphere:list:pageLoaded')).toEqual([
+    [
+      'atmosphere:list:pageLoaded',
+      {
+        tab: 'following',
+        surface: 'tab',
+        pageIndex: 1,
+        itemCount: 1,
+        totalItemCount: 3,
+      },
+    ],
+  ])
+})
+
 it('logs nothing outside a scope', () => {
-  render(<Tab hasData isError={false} itemCount={1} />)
+  const screen = render(
+    <Tab hasData isError={false} itemCount={1} pages={[[1]]} />,
+  )
   metrics?.logRefresh()
   metrics?.logRetry('initial')
-  metrics?.logPageLoaded([[1], [2]])
+  screen.rerender(
+    <Tab hasData isError={false} itemCount={2} pages={[[1], [2]]} />,
+  )
 
   expect(mockMetric).not.toHaveBeenCalled()
 })

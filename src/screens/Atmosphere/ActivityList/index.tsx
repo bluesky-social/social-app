@@ -98,6 +98,7 @@ function ActivityListContent({uris}: {uris: AtUriString[]}) {
     hasData: !!data,
     isError,
     itemCount: items.length,
+    pages: data?.pages,
   })
 
   async function onRefresh() {
@@ -107,14 +108,9 @@ function ActivityListContent({uris}: {uris: AtUriString[]}) {
     setIsPTRing(false)
   }
 
-  async function loadNextPage() {
-    const result = await fetchNextPage()
-    if (result.isSuccess) metrics.logPageLoaded(result.data.pages)
-  }
-
   async function onEndReached() {
     if (isFetchingNextPage || !hasNextPage || isError) return
-    await loadNextPage()
+    await fetchNextPage()
   }
 
   if (!data) {
@@ -153,7 +149,7 @@ function ActivityListContent({uris}: {uris: AtUriString[]}) {
           error={isError ? cleanError(error) : undefined}
           onRetry={() => {
             metrics.logRetry('pagination')
-            return loadNextPage()
+            return fetchNextPage()
           }}
         />
       }

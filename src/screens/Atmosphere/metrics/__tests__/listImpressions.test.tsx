@@ -64,7 +64,6 @@ jest.mock('#/screens/Atmosphere/metrics/useLoadMetrics', () => ({
   useLoadMetrics: () => ({
     logRefresh: () => {},
     logRetry: () => {},
-    logPageLoaded: () => {},
   }),
 }))
 jest.mock(
