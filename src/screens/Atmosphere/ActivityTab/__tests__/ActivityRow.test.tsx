@@ -3,6 +3,10 @@ import {I18nProvider} from '@lingui/react'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {makeActivityListLink} from '#/screens/Atmosphere/ActivityList/links'
+import {
+  AtmosphereMetricsScope,
+  createVisit,
+} from '#/screens/Atmosphere/metrics/context'
 import {ActivityRow} from '../components/ActivityRow'
 import {getStreamDuration, isLive} from '../components/LivestreamCard'
 import {
@@ -33,9 +37,13 @@ import {
 } from './fixtures'
 
 const mockLinkTo = jest.fn()
+const mockMetric = jest.fn()
 
 jest.mock('#/analytics', () => ({
-  useAnalytics: () => ({metric: jest.fn()}),
+  useAnalytics: () => ({metric: mockMetric}),
+}))
+jest.mock('#/screens/Atmosphere/metrics/visibility', () => ({
+  useIsVisible: () => false,
 }))
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
@@ -60,13 +68,19 @@ jest.mock('#/components/Link', () => {
       children,
       to,
       testID,
+      onPress,
     }: {
       children: React.ReactNode
       to: string
       testID?: string
+      onPress?: () => void
     }) => {
       mockLinkTo(to)
-      return <Text testID={testID}>{children}</Text>
+      return (
+        <Text testID={testID} onPress={onPress}>
+          {children}
+        </Text>
+      )
     },
   }
 })
@@ -255,6 +269,46 @@ describe('ActivityRow', () => {
     expect(mockLinkTo).toHaveBeenCalledWith(
       makeActivityListLink(row.kind === 'card' ? (row.subjectUris ?? []) : []),
     )
+  })
+
+  it('logs one View all event with the tab it was opened from', () => {
+    mockMetric.mockClear()
+    const row = rowOf(
+      actorGroup({
+        actor: eric,
+        collection: NSID.document,
+        view: article('paul.pckt.blog'),
+        count: 3,
+      }),
+    )
+    render(
+      <I18nProvider i18n={i18n}>
+        <AtmosphereMetricsScope
+          tab="following"
+          surface="tab"
+          isActive
+          visit={createVisit()}>
+          <ActivityRow row={row} position={0} />
+        </AtmosphereMetricsScope>
+      </I18nProvider>,
+    )
+
+    fireEvent.press(screen.getByTestId('activityViewAll'))
+    expect(
+      mockMetric.mock.calls.filter(
+        ([name]) => name === 'atmosphere:activity:viewAll',
+      ),
+    ).toEqual([
+      [
+        'atmosphere:activity:viewAll',
+        {
+          tab: 'following',
+          surface: 'tab',
+          subjectCount: 3,
+          collection: NSID.document,
+        },
+      ],
+    ])
   })
 
   it.each([

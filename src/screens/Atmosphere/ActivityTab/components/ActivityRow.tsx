@@ -1,10 +1,7 @@
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {
-  makeActivityListLink,
-  setActivityListOrigin,
-} from '#/screens/Atmosphere/ActivityList/links'
+import {makeActivityListLink} from '#/screens/Atmosphere/ActivityList/links'
 import {
   AtmosphereContentItem,
   useAtmosphereMetricContext,
@@ -126,7 +123,6 @@ function ViewAllLink({row}: {row: ActivityCardRow}) {
       label={l`View all activity`}
       onPress={() => {
         if (!metricContext) return
-        setActivityListOrigin(subjectUris, metricContext.tab)
         ax.metric('atmosphere:activity:viewAll', {
           ...metricContext,
           subjectCount: subjectUris.length,

@@ -27,7 +27,7 @@ import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/analytics'
-import {parseActivityListUris, takeActivityListOrigin} from './links'
+import {parseActivityListUris} from './links'
 import {
   type ActivityListItem as Item,
   useActivityListQuery,
@@ -62,14 +62,12 @@ export function AtmosphereActivityListScreen({
 }
 
 function ActivityList({uris}: {uris: AtUriString[]}) {
-  const [originTab] = useState(() => takeActivityListOrigin(uris))
   const isFocused = useIsFocused()
   const appState = useAppState()
   const [visit, setVisit] = useState(createVisit)
   useFocusEffect(useCallback(() => setVisit(createVisit()), []))
   return (
     <AtmosphereMetricsScope
-      tab={originTab}
       surface="activityList"
       isActive={isFocused && appState !== 'background'}
       visit={visit}>

@@ -17,8 +17,8 @@ export type AtmosphereSurface =
 
 export type AtmosphereMetricContext = {
   /**
-   * The tab the event happened on, or the activity list or dialog was opened
-   * from. Unset when it isn't known, e.g. an activity list opened from a link.
+   * The tab the event happened on, or a dialog was opened from. Unset for
+   * activity lists and dialogs opened from them.
    */
   tab?: AtmosphereTab
   surface: AtmosphereSurface
