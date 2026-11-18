@@ -28,3 +28,24 @@ enumeration also decompressed them; skipping it then only moved that cost to
 the JS thread's first text measurement.
 
 **TODO: Remove when Expo computes `systemFonts` lazily.**
+
+### iOS: find each view's event dispatchers without a full search
+
+`installEventDispatcher` runs for each event of each new Expo view. It walks
+`Mirror(reflecting: view).children` to find the `EventDispatcher` property for
+the event, which reads every stored property before the match. For
+expo-image's `ImageView` that is about 130 reads per view. Fabric never
+recycles Expo views, so a scrolling feed pays this for every image it mounts.
+
+The patch remembers, per view class and event, the position of the matching
+child, and later views of that class read only that child. The child must
+still pass the same check as the search, so a wrong position falls back to
+the search and can't connect the wrong dispatcher.
+
+On an iPhone 14, in a constant-speed feed scroll (APP-3837),
+`installEventDispatchers` went from 110 to 9 ms per 6 s scroll, and the main
+thread total from 1,125 to 1,085 ms.
+
+Upstream: https://github.com/expo/expo/pull/53174
+
+**TODO: Remove when the upstream PR ships.**
