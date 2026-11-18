@@ -1,7 +1,6 @@
 import {removeNuxs, upsertNux} from '@bsky/sdk'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {IS_DEV} from '#/env'
 import {type AppNux, type Nux} from '#/state/queries/nuxs/definitions'
 import {parseAppNux, serializeAppNux} from '#/state/queries/nuxs/util'
 import {
@@ -9,7 +8,6 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {usePdsClient} from '#/state/session'
-import * as Toast from '#/components/Toast'
 
 export {Nux} from '#/state/queries/nuxs/definitions'
 
@@ -108,10 +106,6 @@ export function useSaveNux() {
     mutationKey: saveNuxMutationKey,
     retry: 3,
     mutationFn: async (nux: AppNux) => {
-      if (IS_DEV) {
-        Toast.show(`(dev only) saving ${nux.id}`)
-        return
-      }
       await pdsClient.call(upsertNux, serializeAppNux(nux))
       // triggers a refetch
       await queryClient.invalidateQueries({
