@@ -527,19 +527,13 @@ function ExpandedPostDetails({
     available: 0,
     date: 0,
     count: 0,
-    separator: 0,
     reply: 0,
   })
   const hasCount = showViewCount && widths.count > 0
   const wrapCount =
     hasCount &&
     widths.available > 0 &&
-    widths.date +
-      widths.separator +
-      widths.count +
-      a.gap_xs.gap * 2 +
-      widths.reply >
-      widths.available
+    widths.date + a.gap_md.gap + widths.count + widths.reply > widths.available
 
   const wrapReply =
     widths.reply > 0 &&
@@ -591,7 +585,6 @@ function ExpandedPostDetails({
           style={[
             a.flex_row,
             a.align_center,
-            {columnGap: hasCount && !wrapCount ? a.gap_xs.gap : 0},
             wrapReply && {width: '100%'},
             {maxWidth: '100%'},
           ]}>
