@@ -122,6 +122,7 @@ function PhotoDialogInner({
             size={40}
             profile={author}
             moderationOpts={moderationOpts}
+            disableLink
           />
 
           <ProfileCard.NameAndHandle
