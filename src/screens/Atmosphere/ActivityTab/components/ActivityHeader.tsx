@@ -9,6 +9,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {useAtmosphereMetricContext} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
 import {
   matchStandardSiteHostByPublication,
@@ -18,12 +19,15 @@ import {
 import {GrainMark} from '#/components/icons/community/Grain'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {place, site, social} from '#/lexicons'
 import {type ActivityCardRow} from '../rows'
 import {ActivitySentence} from './ActivitySentence'
 
 export function ActivityHeader({row}: {row: ActivityCardRow}) {
   const t = useTheme()
+  const ax = useAnalytics()
+  const metricContext = useAtmosphereMetricContext()
   const moderationOpts = useModerationOpts()
   const {actor} = row
   const app = getActivityApp(row)
@@ -34,6 +38,14 @@ export function ActivityHeader({row}: {row: ActivityCardRow}) {
     actor.displayName || sanitizeHandle(actor.handle),
     moderation?.ui('displayName'),
   )
+  const logProfilePress = () => {
+    if (!metricContext) return
+    ax.metric('atmosphere:profile:press', {
+      ...metricContext,
+      profileDid: actor.did,
+      source: 'activityHeader',
+    })
+  }
 
   return (
     <View style={[a.flex_row, a.align_center, a.gap_md]}>
@@ -42,6 +54,7 @@ export function ActivityHeader({row}: {row: ActivityCardRow}) {
         size={42}
         profile={actor}
         moderation={moderation?.ui('avatar')}
+        onBeforePress={logProfilePress}
       />
       <View style={[a.flex_1]}>
         <Text emoji style={[a.text_sm, a.leading_snug, t.atoms.text]}>
@@ -51,6 +64,7 @@ export function ActivityHeader({row}: {row: ActivityCardRow}) {
               <InlineLinkText
                 to={makeProfileLink(actor)}
                 label={name}
+                onPress={logProfilePress}
                 emoji
                 disableUnderline
                 style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>

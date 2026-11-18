@@ -7,7 +7,13 @@ import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/ex
 import {livestreamPreviewFixture} from '#/screens/Atmosphere/__tests__/fixtures/livestreamPreview'
 import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
 import {AtmosphereExploreTab} from '#/screens/Atmosphere/ExploreTab'
+import {AtmosphereMetricsScope} from '#/screens/Atmosphere/metrics/context'
 import {app} from '#/lexicons'
+
+const mockMetric = jest.fn()
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: mockMetric}),
+}))
 
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({
@@ -63,16 +69,6 @@ jest.mock('#/screens/Atmosphere/components/AtmosphereNux', () => {
   const {Text} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {AtmosphereNux: () => <Text>nux</Text>}
-})
-
-jest.mock('#/screens/Atmosphere/components/AnnouncementBanner', () => {
-  const {Text} =
-    jest.requireActual<typeof import('react-native')>('react-native')
-  return {
-    AnnouncementBanner: ({banner}: {banner: {title: string}}) => (
-      <Text>{`banner:${banner.title}`}</Text>
-    ),
-  }
 })
 
 function mockSection(name: string, prop: string) {
@@ -141,7 +137,6 @@ const publisher: app.bsky.embed.external.ViewArticlePublication = {
 }
 
 const data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody = {
-  announcementBanner: {title: 'Launch', url: 'https://example.com/launch'},
   articles: {
     items: [
       {
@@ -203,7 +198,6 @@ describe('AtmosphereExploreTab', () => {
     render(<AtmosphereExploreTab />)
 
     expect(screen.getByText('nux')).toBeTruthy()
-    expect(screen.getByText('banner:Launch')).toBeTruthy()
     expect(screen.getByText('articles:Live article')).toBeTruthy()
     expect(screen.getByText('apps:Live app')).toBeTruthy()
     expect(screen.queryByText(/^livestreams:/)).toBeNull()
@@ -225,7 +219,31 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.queryByText(/^photos:/)).toBeNull()
     expect(screen.queryByText(/^publications:/)).toBeNull()
     expect(screen.getByText(/^apps:/)).toBeTruthy()
-    expect(screen.getByText(/^banner:/)).toBeTruthy()
+  })
+
+  it('logs the first load once moderated sections can be counted', () => {
+    mockModerationOpts = undefined
+    setQuery({data})
+    const tree = () => (
+      <AtmosphereMetricsScope tab="explore" surface="tab" isActive>
+        <AtmosphereExploreTab />
+      </AtmosphereMetricsScope>
+    )
+    const {rerender} = render(tree())
+    const loaded = () =>
+      mockMetric.mock.calls.filter(
+        ([name]) => name === 'atmosphere:content:loaded',
+      )
+    expect(loaded()).toEqual([])
+
+    mockModerationOpts = defaultModerationOpts
+    rerender(tree())
+    expect(loaded()).toEqual([
+      [
+        'atmosphere:content:loaded',
+        expect.objectContaining({state: 'populated', itemCount: 2}),
+      ],
+    ])
   })
 
   it('reapplies changed moderation preferences to cached views without refetching', () => {
@@ -278,20 +296,15 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.queryByText(/Sixth/)).toBeNull()
   })
 
-  it('renders apps after the banners and before articles', () => {
+  it('renders apps after the intro banner and before articles', () => {
     setQuery({data})
     render(<AtmosphereExploreTab />)
 
     expect(
       screen
-        .getAllByText(/^(nux|banner:|apps:|articles:)/)
+        .getAllByText(/^(nux|apps:|articles:)/)
         .map(node => node.props.children),
-    ).toEqual([
-      'nux',
-      'banner:Launch',
-      'apps:Live app',
-      'articles:Live article',
-    ])
+    ).toEqual(['nux', 'apps:Live app', 'articles:Live article'])
   })
 
   it('hides only articles when recommendations are empty', () => {
@@ -308,7 +321,6 @@ describe('AtmosphereExploreTab', () => {
     expect(screen.getByText(/^photos:/)).toBeTruthy()
     expect(screen.getByText(/^livestreams:/)).toBeTruthy()
     expect(screen.getByText(/^apps:/)).toBeTruthy()
-    expect(screen.getByText(/^banner:/)).toBeTruthy()
   })
 
   it('renders publications below photos', () => {

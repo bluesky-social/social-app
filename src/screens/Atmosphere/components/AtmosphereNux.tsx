@@ -113,7 +113,10 @@ export function AtmosphereNux({style}: {style?: StyleProp<ViewStyle>}) {
             accessibilityHint={l`Opens a dialog with more information about the Atmosphere`}
             hitSlop={HITSLOP_10}
             testID="atmosphereNuxLearnMore"
-            onPress={aboutDialogControl.open}
+            onPress={() => {
+              ax.metric('atmosphere:nux:learnMore', {})
+              aboutDialogControl.open()
+            }}
             color="primary"
             size="small"
             style={[a.px_md, a.py_xs]}>

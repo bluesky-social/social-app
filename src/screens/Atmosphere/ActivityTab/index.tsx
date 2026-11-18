@@ -6,6 +6,8 @@ import {cleanError} from '#/lib/strings/errors'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List} from '#/view/com/util/List'
 import {AtmosphereNux} from '#/screens/Atmosphere/components/AtmosphereNux'
+import {useLogContentImpression} from '#/screens/Atmosphere/metrics/context'
+import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
 import {atoms as a, useTheme} from '#/alf'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
@@ -27,8 +29,25 @@ export function ActivityTab() {
   } = useActivityTimelineQuery()
   const [isPTRing, setIsPTRing] = useState(false)
   const rows = data?.pages.flat() ?? []
+  const onItemSeen = useLogContentImpression(rows, (row, position) => {
+    if (row.kind !== 'card' || row.moderation.blur) return
+    return {
+      contentType: row.content.type,
+      contentId: row.content.view.uri,
+      position,
+      collection: row.collection,
+      grouping: row.grouping,
+    }
+  })
+  const metrics = useLoadMetrics({
+    hasData: !!data,
+    isError,
+    itemCount: rows.length,
+    pages: data?.pages,
+  })
 
   async function onRefresh() {
+    metrics.logRefresh()
     setIsPTRing(true)
     await refetch()
     setIsPTRing(false)
@@ -43,7 +62,10 @@ export function ActivityTab() {
     return isError ? (
       <ErrorMessage
         message={l`Could not load activity. Please try again.`}
-        onPressTryAgain={() => void refetch()}
+        onPressTryAgain={() => {
+          metrics.logRetry('initial')
+          void refetch()
+        }}
       />
     ) : (
       <View
@@ -59,9 +81,10 @@ export function ActivityTab() {
       testID="activityList"
       data={rows}
       keyExtractor={(row: ActivityRowModel) => row.key}
-      renderItem={({item}: {item: ActivityRowModel}) => (
-        <ActivityRow row={item} />
+      renderItem={({item, index}: {item: ActivityRowModel; index: number}) => (
+        <ActivityRow row={item} position={index} />
       )}
+      onItemSeen={onItemSeen}
       refreshing={isPTRing}
       onRefresh={() => void onRefresh()}
       onEndReached={() => void onEndReached()}
@@ -73,7 +96,10 @@ export function ActivityTab() {
           isFetchingNextPage={isFetchingNextPage}
           hasNextPage={hasNextPage}
           error={isError ? cleanError(error) : undefined}
-          onRetry={() => fetchNextPage()}
+          onRetry={() => {
+            metrics.logRetry('pagination')
+            return fetchNextPage()
+          }}
         />
       }
       sideBorders={false}

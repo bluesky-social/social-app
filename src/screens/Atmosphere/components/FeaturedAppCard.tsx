@@ -5,12 +5,15 @@ import {useLingui} from '@lingui/react/macro'
 import {makeProfileLink} from '#/lib/routes/links'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {type FeaturedApp} from '#/screens/Atmosphere/data/exploreData'
+import {type AppMetric} from '#/screens/Atmosphere/metrics/apps'
+import {useAtmosphereMetricContext} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, ThemeProvider, useTheme} from '#/alf'
 import {ButtonIcon, ButtonText} from '#/components/Button'
 import {type ItemFocusProps} from '#/components/Gallery'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ExternalLinkIcon} from '#/components/icons/Square'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {useAtmosphereAppCategories} from './appCategories'
 import {AppKnownFollowers} from './AppKnownFollowers'
 
@@ -24,16 +27,18 @@ const BACKGROUND_BLUR_RADIUS = 50
  */
 export function FeaturedAppCard({
   app,
+  metric,
   galleryFocus,
 }: {
   app: FeaturedApp
+  metric: AppMetric
   galleryFocus?: ItemFocusProps
 }) {
   const t = useTheme()
 
   return (
     <ThemeProvider theme={t.name === 'light' ? 'dark' : 'light'}>
-      <CardContent app={app} galleryFocus={galleryFocus} />
+      <CardContent app={app} metric={metric} galleryFocus={galleryFocus} />
     </ThemeProvider>
   )
 }
@@ -41,13 +46,23 @@ export function FeaturedAppCard({
 /** Separate from the card so its tokens come from the inverted theme. */
 function CardContent({
   app,
+  metric,
   galleryFocus,
 }: {
   app: FeaturedApp
+  metric: AppMetric
   galleryFocus?: ItemFocusProps
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
+  const metricContext = useAtmosphereMetricContext()
+  const logPress = (
+    event: 'atmosphere:app:websitePressed' | 'atmosphere:app:profilePressed',
+  ) => {
+    if (!metricContext) return
+    ax.metric(event, {...metricContext, ...metric, source: 'featuredCard'})
+  }
   const categories = useAtmosphereAppCategories()
   const categoryLabel = categories.find(({key}) => key === app.category)?.label
   const profile = app.profile
@@ -124,7 +139,19 @@ function CardContent({
               {app.description}
             </Text>
           ) : undefined}
-          {profile ? <AppKnownFollowers profile={profile} link /> : undefined}
+          {profile ? (
+            <AppKnownFollowers
+              profile={profile}
+              link
+              onPress={() => {
+                if (!metricContext) return
+                ax.metric('atmosphere:app:knownFollowersPressed', {
+                  ...metricContext,
+                  ...metric,
+                })
+              }}
+            />
+          ) : undefined}
         </View>
         <View style={[a.flex_row, a.gap_sm, a.pt_xs, a.mt_auto]}>
           {app.url ? (
@@ -135,6 +162,7 @@ function CardContent({
               size="small"
               color="secondary_inverted"
               style={[a.flex_1, a.justify_center]}
+              onPress={() => logPress('atmosphere:app:websitePressed')}
               ref={galleryFocus?.focusRef}
               tabIndex={galleryFocus?.tabIndex}
               onFocus={galleryFocus?.onFocus}>
@@ -150,6 +178,7 @@ function CardContent({
               size="small"
               color="secondary"
               style={[a.flex_1, a.justify_center]}
+              onPress={() => logPress('atmosphere:app:profilePressed')}
               ref={app.url ? undefined : galleryFocus?.focusRef}
               tabIndex={galleryFocus?.tabIndex}
               onFocus={galleryFocus?.onFocus}>

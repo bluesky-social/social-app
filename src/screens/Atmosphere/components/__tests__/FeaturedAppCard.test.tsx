@@ -3,6 +3,9 @@ import {render, screen} from '@testing-library/react-native'
 import {type FeaturedApp} from '#/screens/Atmosphere/data/exploreData'
 import {FeaturedAppCard} from '../FeaturedAppCard'
 
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: jest.fn()}),
+}))
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({_: (value: {message: string}) => value.message}),
 }))
@@ -60,9 +63,11 @@ const app: FeaturedApp = {
   profile: {did: 'did:plc:6ayddqghxhciedbaofoxkcbs', handle: 'app.test'},
 }
 
+const metric = {appId: 'app', position: 0, hasKnownFollowers: false}
+
 describe('FeaturedAppCard', () => {
   it('links Website to the app url', () => {
-    render(<FeaturedAppCard app={app} />)
+    render(<FeaturedAppCard metric={metric} app={app} />)
 
     expect(
       screen.getByTestId('featuredAppVisit').props.accessibilityValue,
@@ -70,7 +75,7 @@ describe('FeaturedAppCard', () => {
   })
 
   it('links View profile to the profile', () => {
-    render(<FeaturedAppCard app={app} />)
+    render(<FeaturedAppCard metric={metric} app={app} />)
 
     expect(
       screen.getByTestId('featuredAppProfile').props.accessibilityValue,
@@ -78,14 +83,16 @@ describe('FeaturedAppCard', () => {
   })
 
   it('hides Website without a url', () => {
-    render(<FeaturedAppCard app={{...app, url: undefined}} />)
+    render(<FeaturedAppCard metric={metric} app={{...app, url: undefined}} />)
 
     expect(screen.queryByTestId('featuredAppVisit')).toBeNull()
     expect(screen.getByTestId('featuredAppProfile')).toBeTruthy()
   })
 
   it('hides View profile without a profile', () => {
-    render(<FeaturedAppCard app={{...app, profile: undefined}} />)
+    render(
+      <FeaturedAppCard metric={metric} app={{...app, profile: undefined}} />,
+    )
 
     expect(screen.getByTestId('featuredAppVisit')).toBeTruthy()
     expect(screen.queryByTestId('featuredAppProfile')).toBeNull()

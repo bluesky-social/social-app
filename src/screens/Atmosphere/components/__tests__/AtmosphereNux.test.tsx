@@ -190,5 +190,6 @@ it('still opens the about dialog without dismissing the banner', () => {
   fireEvent.press(screen.getByTestId('atmosphereNuxLearnMore'))
 
   expect(mockOpenDialog).toHaveBeenCalledTimes(1)
+  expect(mockMetric).toHaveBeenCalledWith('atmosphere:nux:learnMore', {})
   expect(mockCall).not.toHaveBeenCalled()
 })

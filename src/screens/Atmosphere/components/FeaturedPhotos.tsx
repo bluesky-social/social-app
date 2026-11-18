@@ -2,6 +2,7 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
+import {AtmosphereContentItem} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a} from '#/alf'
 import * as Gallery from '#/components/Gallery'
 import {type app} from '#/lexicons'
@@ -27,13 +28,19 @@ export function FeaturedPhotos({
         stretch
         label={l`Featured photos`}
         testID="atmospherePhotosGallery">
-        {photos.map(photo => (
+        {photos.map((photo, index) => (
           <Gallery.Item key={photo.uri} label={photo.title}>
             {galleryFocus => (
               <View style={[a.flex_grow]}>
-                <View style={[a.flex_grow, {width: CARD_WIDTH}]}>
-                  <PhotoCard photo={photo} galleryFocus={galleryFocus} />
-                </View>
+                <AtmosphereContentItem
+                  contentType="gallery"
+                  contentId={photo.uri}
+                  section="photos"
+                  position={index}>
+                  <View style={[a.flex_grow, {width: CARD_WIDTH}]}>
+                    <PhotoCard photo={photo} galleryFocus={galleryFocus} />
+                  </View>
+                </AtmosphereContentItem>
               </View>
             )}
           </Gallery.Item>

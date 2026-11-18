@@ -3,7 +3,6 @@ import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/exploreResponse'
 import {livestreamPreviewFixture} from '#/screens/Atmosphere/__tests__/fixtures/livestreamPreview'
 import {
-  getAtmosphereAnnouncementBanner,
   getAtmosphereApps,
   getAtmosphereArticles,
   getAtmosphereExploreApps,
@@ -251,9 +250,6 @@ describe('Atmosphere Explore response fixtures', () => {
     expect(photos[0]).toBe(fixtureData.photos.items[0].view)
     expect(photos[1]).toBe(fixtureData.photos.items[1].view)
     expect(photos[0].associatedProfiles?.[0].handle).toBe('author.test')
-    expect(getAtmosphereAnnouncementBanner(fixtureData)).toBe(
-      fixtureData.announcementBanner,
-    )
   })
 
   it('caps articles after deduplication, keeping original views and response metadata', () => {
@@ -622,29 +618,12 @@ describe('Atmosphere Explore response fixtures', () => {
   })
 
   it('safely handles absent optional data, empty arrays, and gallery variants', () => {
-    expect(getAtmosphereAnnouncementBanner(emptyData)).toBeUndefined()
-    expect(
-      getAtmosphereAnnouncementBanner({
-        ...emptyData,
-        announcementBanner: {
-          title: 'Title only',
-          url: 'https://example.com/announcement',
-        },
-      }),
-    ).toEqual({
-      title: 'Title only',
-      url: 'https://example.com/announcement',
-    })
     expect(getAtmosphereArticles(emptyData, moderationOpts)).toEqual([])
     expect(getAtmosphereLivestreams(emptyData)).toEqual([])
     expect(getAtmospherePhotos(emptyData, moderationOpts)).toEqual([])
 
     const sparseData = parseData({
       ...emptyData,
-      announcementBanner: {
-        title: 'Title only',
-        url: 'https://example.com/announcement',
-      },
       articles: {
         items: [
           {

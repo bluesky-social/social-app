@@ -2,6 +2,11 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {makeActivityListLink} from '#/screens/Atmosphere/ActivityList/links'
+import {
+  AtmosphereContentItem,
+  useAtmosphereMetricContext,
+  useLogContentPress,
+} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {DocumentCompactCard} from '#/components/atmosphere/SiteStandard/DocumentCompact'
@@ -9,6 +14,7 @@ import {PublicationCard} from '#/components/atmosphere/SiteStandard/Publication'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {
   type ActivityCardRow,
   type ActivityContent,
@@ -20,23 +26,47 @@ import {GalleryCard} from './GalleryCard'
 import {LivestreamCard} from './LivestreamCard'
 import {RelatedActivityPill} from './RelatedActivityPill'
 
-export function ActivityRow({row}: {row: ActivityRowModel}) {
+export function ActivityRow({
+  row,
+  position,
+}: {
+  row: ActivityRowModel
+  /** 0-based, in the list. */
+  position: number
+}) {
   const t = useTheme()
   return (
     <View
       testID={row.kind === 'card' ? 'activityRow' : 'activityWarningRow'}
       style={[a.gap_md, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
-      {row.kind === 'card' ? <ActivityCard row={row} /> : <ActivityWarning />}
+      {row.kind === 'card' ? (
+        <ActivityCard row={row} position={position} />
+      ) : (
+        <ActivityWarning />
+      )}
     </View>
   )
 }
 
-function ActivityCard({row}: {row: ActivityCardRow}) {
+function ActivityCard({
+  row,
+  position,
+}: {
+  row: ActivityCardRow
+  position: number
+}) {
   return (
     <>
       <ActivityHeader row={row} />
       <ActivityContentHider moderation={row.moderation}>
-        <ActivityContentCard content={row.content} />
+        <AtmosphereContentItem
+          contentType={row.content.type}
+          contentId={row.content.view.uri}
+          position={position}
+          collection={row.collection}
+          grouping={row.grouping}>
+          <ActivityContentCard content={row.content} />
+        </AtmosphereContentItem>
       </ActivityContentHider>
       {row.related.map(related => (
         <RelatedActivityPill key={related.collection} related={related} />
@@ -55,11 +85,22 @@ export function ActivityWarning() {
 }
 
 export function ActivityContentCard({content}: {content: ActivityContent}) {
+  const logPress = useLogContentPress()
   switch (content.type) {
     case 'article':
-      return <DocumentCompactCard view={content.view} />
+      return (
+        <DocumentCompactCard
+          view={content.view}
+          onEmbedInteractionCallback={() => logPress('external')}
+        />
+      )
     case 'publication':
-      return <PublicationCard view={content.view} />
+      return (
+        <PublicationCard
+          view={content.view}
+          onEmbedInteractionCallback={() => logPress('external')}
+        />
+      )
     case 'gallery':
       return <GalleryCard content={content} />
     case 'livestream':
@@ -71,12 +112,23 @@ export function ActivityContentCard({content}: {content: ActivityContent}) {
 function ViewAllLink({row}: {row: ActivityCardRow}) {
   const {t: l} = useLingui()
   const t = useTheme()
-  if (!row.subjectUris) return null
+  const ax = useAnalytics()
+  const metricContext = useAtmosphereMetricContext()
+  const subjectUris = row.subjectUris
+  if (!subjectUris) return null
   return (
     <Link
       testID="activityViewAll"
-      to={makeActivityListLink(row.subjectUris)}
+      to={makeActivityListLink(subjectUris)}
       label={l`View all activity`}
+      onPress={() => {
+        if (!metricContext) return
+        ax.metric('atmosphere:activity:viewAll', {
+          ...metricContext,
+          subjectCount: subjectUris.length,
+          collection: row.collection,
+        })
+      }}
       style={[a.flex_row, a.align_center, a.gap_xs, a.self_start]}>
       <Text style={[a.text_sm, a.font_medium, {color: t.palette.primary_500}]}>
         <Trans>View all</Trans>

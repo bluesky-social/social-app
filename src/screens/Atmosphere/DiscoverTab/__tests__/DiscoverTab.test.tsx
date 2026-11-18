@@ -13,6 +13,9 @@ import {type ActivityContent} from '#/screens/Atmosphere/ActivityTab/rows'
 import {AtmosphereDiscoverTab} from '../index'
 import {useAtmosphereRecommendedActivityQuery} from '../useAtmosphereRecommendedActivityQuery'
 
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: jest.fn()}),
+}))
 jest.mock('../useAtmosphereRecommendedActivityQuery', () => ({
   useAtmosphereRecommendedActivityQuery: jest.fn(),
 }))

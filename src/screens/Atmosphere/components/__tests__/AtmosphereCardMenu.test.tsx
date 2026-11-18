@@ -1,5 +1,9 @@
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
+import {
+  AtmosphereContentItem,
+  AtmosphereMetricsScope,
+} from '#/screens/Atmosphere/metrics/context'
 import * as Menu from '#/components/Menu'
 import {type app, place, site, social} from '#/lexicons'
 import {AtmosphereCardMenu} from '../AtmosphereCardMenu'
@@ -11,12 +15,18 @@ const mockShareUrl = jest.fn()
 const mockOpenComposer = jest.fn()
 const mockRequireAuth = jest.fn((fn: () => unknown) => fn())
 const mockOpenSendViaChat = jest.fn()
+const mockMetric = jest.fn()
+const mockMenuOpen = jest.fn()
+let mockMenuControl: {open: () => void} | undefined
 let mockHasSession = true
 let mockHasFullAccess = true
 let mockIsWeb = false
 
 /* Report availability relies on real CID validation, which the repo mocks. */
 jest.unmock('multiformats/cid')
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: mockMetric}),
+}))
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({
     _: (value: {message: string}) => value.message,
@@ -161,7 +171,22 @@ jest.mock('#/components/Menu', () => {
     </Pressable>
   )
   return {
-    Root: ({children}: {children: React.ReactNode}) => children,
+    useMenuControl: () => ({
+      id: 'menu',
+      ref: {current: null},
+      open: mockMenuOpen,
+      close() {},
+    }),
+    Root: ({
+      children,
+      control,
+    }: {
+      children: React.ReactNode
+      control: {open: () => void}
+    }) => {
+      mockMenuControl = control
+      return children
+    },
     Trigger: ({
       children,
       label,
@@ -521,5 +546,81 @@ describe('AtmosphereCardMenu dev mode', () => {
     renderMenu('photo')
     fireEvent.press(screen.getByLabelText('Copy gallery AT URI'))
     expect(mockSetString).toHaveBeenCalledWith(galleryRef.uri)
+  })
+})
+
+describe('AtmosphereCardMenu metrics', () => {
+  const card = {
+    contentType: 'gallery',
+    contentId: view.uri,
+    position: 2,
+  } as const
+  const context = {tab: 'following', surface: 'tab', ...card}
+
+  function renderInCard() {
+    render(
+      <AtmosphereMetricsScope tab="following" surface="tab" isActive={false}>
+        <AtmosphereContentItem {...card}>
+          <AtmosphereCardMenu
+            type="photo"
+            item={items.photo as never}
+            reportableTypes={[social.grain.gallery.$type]}
+            author={author}
+          />
+        </AtmosphereContentItem>
+      </AtmosphereMetricsScope>,
+    )
+  }
+
+  it('logs opening the menu and each action picked', () => {
+    renderInCard()
+
+    mockMenuControl?.open()
+    expect(mockMenuOpen).toHaveBeenCalledTimes(1)
+    for (const label of [
+      'Share',
+      'Create post',
+      'Send via chat',
+      'View photo',
+      'View author profile',
+      'Report this gallery',
+    ]) {
+      fireEvent.press(screen.getByLabelText(label))
+    }
+
+    expect(
+      mockMetric.mock.calls.filter(
+        ([event]) => event !== 'atmosphere:profile:press',
+      ),
+    ).toEqual([
+      ['atmosphere:menu:opened', context],
+      ...[
+        'share',
+        'createPost',
+        'sendViaChat',
+        'viewExternal',
+        'viewProfile',
+      ].map(action => [
+        'atmosphere:menu:action',
+        {...context, action, reportCollection: undefined},
+      ]),
+      [
+        'atmosphere:menu:action',
+        {
+          ...context,
+          action: 'report',
+          reportCollection: social.grain.gallery.$type,
+        },
+      ],
+    ])
+  })
+
+  it('logs nothing outside an Atmosphere card', () => {
+    renderMenu('photo')
+
+    mockMenuControl?.open()
+    fireEvent.press(screen.getByLabelText('Share'))
+    expect(mockMenuOpen).toHaveBeenCalledTimes(1)
+    expect(mockMetric).not.toHaveBeenCalled()
   })
 })

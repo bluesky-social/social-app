@@ -8,6 +8,7 @@ import {
   getAssociatedProfile,
   getGalleryImage,
 } from '#/screens/Atmosphere/data/exploreData'
+import {useLogContentPress} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -31,6 +32,7 @@ export function GalleryCard({
   const t = useTheme()
   const dialogControl = useDialogControl()
   const {state: interacted, onIn, onOut} = useInteractionState()
+  const logPress = useLogContentPress()
   const image = getGalleryImage(view)
   const author = getAssociatedProfile(view.associatedProfiles)
 
@@ -57,7 +59,10 @@ export function GalleryCard({
             'Accessibility label for a card that opens a photo gallery. {view.title} is the gallery title, written by its author.',
         })}
         accessibilityHint={l`Opens the photos in a dialog`}
-        onPress={() => dialogControl.open()}
+        onPress={() => {
+          logPress('photoDialog')
+          dialogControl.open()
+        }}
         onHoverIn={onIn}
         onHoverOut={onOut}
         onFocus={onIn}

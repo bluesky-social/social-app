@@ -9,6 +9,10 @@ import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {useRequireAuth, useSession} from '#/state/session'
+import {
+  useAtmosphereContentContext,
+  useAtmosphereMetricContext,
+} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -31,6 +35,8 @@ import {
 } from '#/components/moderation/ReportDialog'
 import * as Toast from '#/components/Toast'
 import {useAgeAssurance} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
+import {type Metrics} from '#/analytics/metrics'
 import {IS_WEB} from '#/env'
 import {type app, place, site, social} from '#/lexicons'
 import {useDevMode} from '#/storage/hooks/dev-mode'
@@ -101,6 +107,25 @@ export function AtmosphereCardMenu({
   const requireAuth = useRequireAuth()
   const {openComposer} = useOpenComposer()
   const sendViaChatControl = useDialogControl()
+  const ax = useAnalytics()
+  const metricContext = useAtmosphereMetricContext()
+  const content = useAtmosphereContentContext()
+  const logAction = (
+    action: Metrics['atmosphere:menu:action']['action'],
+    reportCollection?: string,
+  ) => {
+    if (!content) return
+    ax.metric('atmosphere:menu:action', {...content, action, reportCollection})
+  }
+  const menuControl = Menu.useMenuControl()
+  /** Logs every way the menu opens: press, keyboard (web), and so on. */
+  const loggedMenuControl: Menu.MenuControlProps = {
+    ...menuControl,
+    open: (...args) => {
+      if (content) ax.metric('atmosphere:menu:opened', content)
+      menuControl.open(...args)
+    },
+  }
   const reportDialogControl = useGlobalReportDialogControl()
   const getReportCopy = useGetCopyForSubject()
   const [devModeEnabled] = useDevMode()
@@ -178,7 +203,7 @@ export function AtmosphereCardMenu({
           right: offsetX > 0 ? offsetX - BUTTON_VISUAL_ADJUSTMENT : 0,
         },
       ]}>
-      <Menu.Root>
+      <Menu.Root control={loggedMenuControl}>
         <Menu.Trigger label={labels.trigger}>
           {({props}) => (
             <Button
@@ -204,7 +229,10 @@ export function AtmosphereCardMenu({
             <Menu.Item
               testID="atmosphereCardShare"
               label={shareLabel}
-              onPress={() => void shareUrl(item.uri)}>
+              onPress={() => {
+                logAction(IS_WEB ? 'copyLink' : 'share')
+                void shareUrl(item.uri)
+              }}>
               <Menu.ItemText>{shareLabel}</Menu.ItemText>
               <Menu.ItemIcon
                 icon={IS_WEB ? ChainLinkIcon : ArrowOutOfBoxIcon}
@@ -214,11 +242,12 @@ export function AtmosphereCardMenu({
             <Menu.Item
               testID="atmosphereCardCreatePost"
               label={l`Create post`}
-              onPress={() =>
+              onPress={() => {
+                logAction('createPost')
                 requireAuth(() =>
                   openComposer({text: item.uri, logContext: 'Other'}),
                 )
-              }>
+              }}>
               <Menu.ItemText>{l`Post to Bluesky`}</Menu.ItemText>
               <Menu.ItemIcon icon={BlueskyIcon} position="right" />
             </Menu.Item>
@@ -226,7 +255,10 @@ export function AtmosphereCardMenu({
               <Menu.Item
                 testID="atmosphereCardSendViaChat"
                 label={l`Send via chat`}
-                onPress={() => sendViaChatControl.open()}>
+                onPress={() => {
+                  logAction('sendViaChat')
+                  sendViaChatControl.open()
+                }}>
                 <Menu.ItemText>{l`Send via chat`}</Menu.ItemText>
                 <Menu.ItemIcon icon={PaperPlaneIcon} position="right" />
               </Menu.Item>
@@ -234,16 +266,29 @@ export function AtmosphereCardMenu({
           </Menu.Group>
           <Menu.Divider />
           <Menu.Group>
-            <Menu.Item label={labels.view} onPress={() => openLink(item.uri)}>
+            <Menu.Item
+              label={labels.view}
+              onPress={() => {
+                logAction('viewExternal')
+                openLink(item.uri)
+              }}>
               <Menu.ItemText>{labels.view}</Menu.ItemText>
               <Menu.ItemIcon icon={ExternalLinkIcon} position="right" />
             </Menu.Item>
             {author && (
               <Menu.Item
                 label={l`View author profile`}
-                onPress={() =>
+                onPress={() => {
+                  logAction('viewProfile')
+                  if (metricContext) {
+                    ax.metric('atmosphere:profile:press', {
+                      ...metricContext,
+                      profileDid: author.did,
+                      source: 'cardMenu',
+                    })
+                  }
                   navigation.navigate('Profile', {name: author.did})
-                }>
+                }}>
                 <Menu.ItemText>{l`View author profile`}</Menu.ItemText>
                 <Menu.ItemIcon icon={PersonIcon} position="right" />
               </Menu.Item>
@@ -264,7 +309,15 @@ export function AtmosphereCardMenu({
                   <Menu.Item
                     key={subject.uri}
                     label={title}
-                    onPress={() => reportDialogControl.open({subject})}>
+                    onPress={() => {
+                      logAction(
+                        'report',
+                        'nsid' in parsedSubject
+                          ? parsedSubject.nsid
+                          : undefined,
+                      )
+                      reportDialogControl.open({subject})
+                    }}>
                     <Menu.ItemText>{title}</Menu.ItemText>
                     <Menu.ItemIcon icon={WarningIcon} position="right" />
                   </Menu.Item>
