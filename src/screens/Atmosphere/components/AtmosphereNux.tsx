@@ -1,4 +1,4 @@
-import {View} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -12,11 +12,10 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {GradientFill} from '#/components/GradientFill'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/TimesLarge'
-import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
-export function AtmosphereNux() {
+export function AtmosphereNux({style}: {style?: StyleProp<ViewStyle>}) {
   const {t: l} = useLingui()
   const ax = useAnalytics()
   const {themes} = useAlf()
@@ -27,8 +26,6 @@ export function AtmosphereNux() {
   if (variables || nux?.completed) return null
 
   const dismiss = () => {
-    Toast.show(`TEMP: Dismissed the banner. Will remove for production.`)
-    return
     save({
       id: Nux.AtmosphereNux,
       completed: true,
@@ -43,7 +40,8 @@ export function AtmosphereNux() {
   }
 
   return (
-    <View style={[a.pb_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}>
+    <View
+      style={[a.pb_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}, style]}>
       <View
         style={[
           a.w_full,
