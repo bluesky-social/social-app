@@ -57,14 +57,7 @@ import * as Skele from '#/components/Skeleton'
 import {Text} from '#/components/Typography'
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {Features, useAnalytics} from '#/analytics'
-import {
-  FeedFeedbackProvider,
-  type FeedItem,
-  FeedItemProvider,
-  useFeedFeedback,
-  useFeedFeedbackContext,
-} from '#/features/feedFeedback'
-import {type PostSource} from '#/features/feedFeedback/postSource'
+import {useFeedItemFeedback} from '#/features/feedFeedback'
 import {useActorStatus} from '#/features/liveNow'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -73,19 +66,11 @@ export function ThreadItemAnchor({
   item,
   onPostSuccess,
   threadgateRecord,
-  postSource,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: app.bsky.feed.threadgate.Main
-  postSource?: PostSource
 }) {
-  const {hasSession} = useSession()
-  const feedFeedback = useFeedFeedback(
-    postSource?.feedSourceInfo,
-    hasSession,
-    'thread',
-  )
   const postShadow = usePostShadow(item.value.post)
   const threadRootUri = item.value.post.record.reply?.root?.uri || item.uri
   const isRoot = threadRootUri === item.uri
@@ -94,35 +79,15 @@ export function ThreadItemAnchor({
     return <ThreadItemAnchorDeleted isRoot={isRoot} />
   }
 
-  const reason = postSource?.post.reason
-  /** The feed item this post was opened from, if any. */
-  const feedItem: FeedItem | undefined = postSource && {
-    uri: postShadow.uri,
-    authorDid: postShadow.author.did,
-    feedContext: postSource.post.feedContext,
-    reqId: postSource.post.reqId,
-    via:
-      bsky.isType(app.bsky.feed.defs.reasonRepost, reason) &&
-      reason.uri &&
-      reason.cid
-        ? {uri: reason.uri, cid: reason.cid}
-        : undefined,
-  }
-
   return (
     <ReportDialogMetadataContext.Provider key={postShadow.uri}>
-      <FeedFeedbackProvider value={feedFeedback}>
-        <FeedItemProvider value={feedItem}>
-          <ThreadItemAnchorInner
-            item={item}
-            isRoot={isRoot}
-            postShadow={postShadow}
-            onPostSuccess={onPostSuccess}
-            threadgateRecord={threadgateRecord}
-            postSource={postSource}
-          />
-        </FeedItemProvider>
-      </FeedFeedbackProvider>
+      <ThreadItemAnchorInner
+        item={item}
+        isRoot={isRoot}
+        postShadow={postShadow}
+        onPostSuccess={onPostSuccess}
+        threadgateRecord={threadgateRecord}
+      />
     </ReportDialogMetadataContext.Provider>
   )
 }
@@ -199,21 +164,19 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   postShadow,
   onPostSuccess,
   threadgateRecord,
-  postSource,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
   isRoot: boolean
   postShadow: Shadow<app.bsky.feed.defs.PostView>
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: app.bsky.feed.threadgate.Main
-  postSource?: PostSource
 }) {
   const t = useTheme()
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()
-  const feedFeedback = useFeedFeedbackContext()
+  const feedItem = useFeedItemFeedback()
   const formatPostStatCount = useFormatPostStatCount()
 
   const post = postShadow
@@ -283,14 +246,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
       logContext: 'PostReply',
     })
 
-    if (postSource) {
-      feedFeedback.sendInteraction({
-        item: post.uri,
-        event: 'app.bsky.feed.defs#interactionReply',
-        feedContext: postSource.post.feedContext,
-        reqId: postSource.post.reqId,
-      })
-    }
+    feedItem.send('app.bsky.feed.defs#interactionReply')
   })
 
   const onOpenAuthor = () => {
@@ -298,16 +254,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
       uri: post.uri,
       authorDid: post.author.did,
       logContext: 'PostThreadItem',
-      feedDescriptor: feedFeedback.feedDescriptor,
+      feedDescriptor: feedItem.feedDescriptor,
     })
-    if (postSource) {
-      feedFeedback.sendInteraction({
-        item: post.uri,
-        event: 'app.bsky.feed.defs#clickthroughAuthor',
-        feedContext: postSource.post.feedContext,
-        reqId: postSource.post.reqId,
-      })
-    }
+    feedItem.send('app.bsky.feed.defs#clickthroughAuthor')
   }
 
   const onOpenEmbed = () => {
@@ -315,16 +264,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
       uri: post.uri,
       authorDid: post.author.did,
       logContext: 'PostThreadItem',
-      feedDescriptor: feedFeedback.feedDescriptor,
+      feedDescriptor: feedItem.feedDescriptor,
     })
-    if (postSource) {
-      feedFeedback.sendInteraction({
-        item: post.uri,
-        event: 'app.bsky.feed.defs#clickthroughEmbed',
-        feedContext: postSource.post.feedContext,
-        reqId: postSource.post.reqId,
-      })
-    }
+    feedItem.send('app.bsky.feed.defs#clickthroughEmbed')
   }
 
   return (
@@ -444,7 +386,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     viewContext={PostEmbedViewContext.ThreadHighlighted}
                     onOpen={onOpenEmbed}
                     post={post}
-                    feedDescriptor={feedFeedback.feedDescriptor}
+                    feedDescriptor={feedItem.feedDescriptor}
                   />
                 </View>
               )}

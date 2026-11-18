@@ -3,6 +3,7 @@ import {type AtIdentifierString, AtUri} from '@atproto/syntax'
 
 import {Logger} from '#/logger'
 import {type FeedSourceInfo} from '#/state/queries/feed'
+import {type FeedItem, repostVia} from '#/features/feedFeedback'
 import {type app} from '#/lexicons'
 
 /**
@@ -74,6 +75,19 @@ export function useUnstablePostSource(key: string) {
   }, [id])
 
   return source
+}
+
+/**
+ * The feed item a post source describes, for `FeedItemProvider`.
+ */
+export function feedItemFromPostSource({post: feedPost}: PostSource): FeedItem {
+  return {
+    uri: feedPost.post.uri,
+    authorDid: feedPost.post.author.did,
+    feedContext: feedPost.feedContext,
+    reqId: feedPost.reqId,
+    via: repostVia(feedPost.reason),
+  }
 }
 
 /**
