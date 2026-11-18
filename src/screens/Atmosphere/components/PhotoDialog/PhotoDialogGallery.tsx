@@ -92,7 +92,6 @@ export function PhotoDialogGallery({
           'Accessibility label for a scrollable row of photos. The number is how many photos are in it.',
       })}
       footer={<Gallery.PageDots />}
-      reportBrowserScrolling
       onIndexChange={(toIndex, fromIndex) => {
         if (!content) return
         ax.metric('atmosphere:photo:imageChanged', {

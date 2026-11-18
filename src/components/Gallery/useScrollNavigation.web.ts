@@ -23,7 +23,7 @@ export function useScrollNavigation({
   onNavigate,
 }: ScrollNavigationArgs) {
   useEffect(() => {
-    if (!onNavigate || itemCount <= 1) return
+    if (itemCount <= 1) return
 
     const el = scrollRef.current?.getScrollableNode() as HTMLElement | null
     if (!el) return

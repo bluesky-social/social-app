@@ -26,8 +26,8 @@ export type ScrollNavigationArgs = Pick<
   NavigationHandlerArgs,
   'scrollRef' | 'itemWidthsRef' | 'currentIndexRef' | 'itemCount' | 'resetKey'
 > & {
-  /** Called with the new leading item. Leave unset to report nothing. */
-  onNavigate?: (index: number) => void
+  /** Called with the new leading item. */
+  onNavigate: (index: number) => void
 }
 
 export type GalleryRef = {

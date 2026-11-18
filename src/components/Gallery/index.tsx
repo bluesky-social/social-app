@@ -86,7 +86,6 @@ export function Root({
   onIndexChange,
   stretch = false,
   snapToItems = false,
-  reportBrowserScrolling = false,
   footer,
 }: {
   children?: React.ReactNode
@@ -101,19 +100,12 @@ export function Root({
   /** Snap native scrolling to item boundaries. Ignored on web. */
   snapToItems?: boolean
   /**
-   * Called when the user navigates to a different item via native swipe,
-   * mouse drag, arrow keys, or Safari horizontal wheel events. Browser touch
-   * and non-Safari wheel scrolling only report with `reportBrowserScrolling`.
-   * Not called on mount, for `scrollIntoView`, when focus
+   * Called when the user navigates to a different item: native swipes, and on
+   * web touch scrolling, mouse drags, arrow keys, and horizontal wheel or
+   * trackpad scrolling. Not called on mount, for `scrollIntoView`, when focus
    * simply lands on an item, or when items are added, removed, or reordered.
    */
   onIndexChange?: (index: number, previousIndex: number) => void
-  /**
-   * Also report browser touch and Chrome/Firefox wheel scrolling to
-   * `onIndexChange` on web. Off by default, so existing consumers' counts
-   * don't change.
-   */
-  reportBrowserScrolling?: boolean
 }) {
   const {t: l} = useLingui()
   const {screenReaderEnabled} = useA11y()
@@ -361,7 +353,7 @@ export function Root({
     currentIndexRef,
     itemCount,
     resetKey: keysSignature,
-    onNavigate: reportBrowserScrolling ? setCurrentIndex : undefined,
+    onNavigate: setCurrentIndex,
   })
 
   /*
@@ -385,7 +377,7 @@ export function Root({
       scrollOffsetRef.current = offset
       /*
        * Browser touch and trackpad scrolling must update the dots without
-       * moving keyboard focus. useScrollNavigation reports it, if asked.
+       * moving keyboard focus. useScrollNavigation reports it.
        */
       updatePageForOffset(offset)
       return

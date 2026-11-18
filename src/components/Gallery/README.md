@@ -66,7 +66,6 @@ Anything else, at any size:
 | `stretch`       | Optional boolean, default false. Stretch slides to the tallest sibling.                     |
 | `snapToItems`   | Optional boolean, default false. Snap native scrolling to slide boundaries. Ignored on web. |
 | `onIndexChange` | `(index, previousIndex) => void`. Called when the user navigates to a different item.       |
-| `reportBrowserScrolling` | Optional boolean, default false. Also report browser touch and Chrome/Firefox wheel scrolling to `onIndexChange`. |
 | `children`      | `Gallery.Item`s. Fragments, arrays, and conditional `null`s are flattened.                  |
 
 `footer` optionally renders non-scrolling content within the gallery context,
@@ -108,14 +107,12 @@ state is separate from `onIndexChange`, which follows the rules under
 
 ### Navigation callbacks
 
-`onIndexChange` reports native swiping, mouse dragging, arrow keys, and
-Safari horizontal-wheel navigation. Browser touch scrolling and Chrome/Firefox
-trackpad scrolling move the content, but only report index changes with
-`reportBrowserScrolling`. That's off by default so existing consumers' counts
-don't change. With it, `onIndexChange` reports each item that becomes the
-leading one while a finger scrolls the gallery, through its momentum, or
-during a horizontal wheel scroll (until scrolling is idle for 150ms). Taps and
-vertical wheels don't count, and focus stays where it is.
+`onIndexChange` reports native swiping, and on web mouse dragging, arrow keys,
+touch scrolling, and horizontal wheel or trackpad scrolling. For touch and
+wheel scrolling, it reports each item that becomes the leading one while a
+finger scrolls the gallery, through its momentum, or during a horizontal wheel
+scroll (until scrolling is idle for 150ms). Taps and vertical wheels don't
+count, and focus stays where it is.
 `onIndexChange` is **not** called on mount, for `scrollIntoView`, when focus
 simply lands on an item (for example a click just before opening a lightbox),
 or when items are added, removed, or reordered.

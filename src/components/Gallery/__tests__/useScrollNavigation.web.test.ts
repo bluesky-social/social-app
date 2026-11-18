@@ -19,7 +19,7 @@ let scroller: FakeElement
 let onNavigate: jest.Mock
 
 /* Three 200px items, 208px apart: the leading item changes at 104 and 312. */
-function setup({report = true} = {}) {
+function setup() {
   const currentIndexRef = {current: 0}
   // Like the gallery, only reports changes and remembers the index
   onNavigate = jest.fn((index: number) => {
@@ -38,7 +38,7 @@ function setup({report = true} = {}) {
       currentIndexRef,
       itemCount: 3,
       resetKey: 'abc',
-      onNavigate: report ? onNavigate : undefined,
+      onNavigate,
     }),
   )
   return {currentIndexRef}
@@ -185,11 +185,5 @@ describe('useScrollNavigation (web)', () => {
     expect(onNavigate).not.toHaveBeenCalled()
     scrollTo(0)
     expect(onNavigate.mock.calls).toEqual([[0]])
-  })
-
-  it('does nothing unless asked to report', () => {
-    setup({report: false})
-    expect(scroller.listenerCount('scroll')).toBe(0)
-    expect(scroller.listenerCount('touchstart')).toBe(0)
   })
 })

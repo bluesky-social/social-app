@@ -10,7 +10,6 @@ import {type app} from '#/lexicons'
 
 const mockMetric = jest.fn()
 let mockOnIndexChange: ((index: number, previous: number) => void) | undefined
-let mockReportBrowserScrolling: boolean | undefined
 
 jest.mock('#/analytics', () => ({
   useAnalytics: () => ({metric: mockMetric}),
@@ -36,15 +35,12 @@ jest.mock('#/components/Gallery', () => {
       children,
       footer,
       onIndexChange,
-      reportBrowserScrolling,
     }: {
       children: React.ReactNode
       footer: React.ReactNode
       onIndexChange?: (index: number, previous: number) => void
-      reportBrowserScrolling?: boolean
     }) => {
       mockOnIndexChange = onIndexChange
-      mockReportBrowserScrolling = reportBrowserScrolling
       return (
         <View testID="carousel">
           {children}
@@ -262,8 +258,6 @@ describe('metrics', () => {
 
   it('logs image changes and image presses', () => {
     renderInCard([image(1), image(2), image(3)])
-    // Browser touch and wheel scrolling count too, not just drags and keys
-    expect(mockReportBrowserScrolling).toBe(true)
 
     mockOnIndexChange?.(2, 0)
     fireEvent.press(screen.getAllByTestId('link')[2])
