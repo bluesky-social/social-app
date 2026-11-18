@@ -365,9 +365,12 @@ class SheetView: ExpoView {
   private func measureContentHeight() -> CGFloat? {
     guard let contentView = self.innerView?.subviews.first else { return nil }
     var height = contentView.bounds.height
+    // Until the content size lands, the content isn't capped yet, so its
+    // laid-out height is already the natural height
     if let componentView = self.contentScrollComponentView,
        let scrollView = self.contentScrollView,
-       componentView.isDescendant(of: contentView) {
+       componentView.isDescendant(of: contentView),
+       scrollView.contentSize.height > 0 {
       height += scrollView.contentSize.height - componentView.bounds.height
     }
     return height
@@ -391,7 +394,7 @@ class SheetView: ExpoView {
   // which has a prevLayoutDetentIdentifier guard that can block legitimate
   // content-driven updates when detent identifiers drift during animations.
   private func updateContentHeight() {
-    guard (self.isOpen || self.isOpening),
+    guard self.isOpen || self.isOpening,
           !self.isClosing,
           !self.fullHeight,
           let height = self.measureContentHeight(),
