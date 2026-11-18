@@ -457,11 +457,7 @@ function MeasureReport() {
   return (
     <Dialog.ScrollableInner label="Measure check">
       <View style={[a.gap_md]}>
-        <H3>measure() inside a sheet</H3>
-        <Text>
-          pageY should be small, measured from the top of the sheet, however far
-          down the page this dialog is declared.
-        </Text>
+        {/* Buttons first, so they stay reachable at large text sizes. */}
         <View ref={ref} collapsable={false}>
           <OpenButton
             label={`Measure me (pageY: ${pageY ?? '?'})`}
@@ -472,14 +468,16 @@ function MeasureReport() {
             }
           />
         </View>
-        <Text>
-          Press, drag a few points without leaving the button, then let go. The
-          count should still go up.
-        </Text>
         <OpenButton
           label={`Drag-press me (${presses})`}
           onPress={() => setPresses(p => p + 1)}
         />
+        <Text>
+          “Measure me” should report a small pageY, measured from the top of the
+          sheet, however far down the page this dialog is declared. For
+          “Drag-press me”, press, drag a few points without leaving the button,
+          then let go. The count should still go up.
+        </Text>
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
