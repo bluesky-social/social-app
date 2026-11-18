@@ -502,7 +502,12 @@ function Bubble({
               borderLeftWidth: style.border.width,
               width: ARROW_SIZE,
               height: ARROW_SIZE,
-              transform: [{rotate: '45deg'}],
+              transform: [
+                {
+                  rotate:
+                    coords.computedPosition === 'top' ? '225deg' : '45deg',
+                },
+              ],
               top: coords.tipTop,
               left: coords.tipLeft,
             },
