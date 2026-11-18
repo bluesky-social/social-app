@@ -5,7 +5,6 @@ import {PhotoDialog} from '#/screens/Atmosphere/components/PhotoDialog'
 import {
   AtmosphereContentItem,
   AtmosphereMetricsScope,
-  createVisit,
 } from '#/screens/Atmosphere/metrics/context'
 import {type app} from '#/lexicons'
 
@@ -395,11 +394,7 @@ it('logs presses as the photo dialog of the card it was opened from', () => {
     position: 4,
   } as const
   render(
-    <AtmosphereMetricsScope
-      tab="explore"
-      surface="tab"
-      isActive={false}
-      visit={createVisit()}>
+    <AtmosphereMetricsScope tab="explore" surface="tab" isActive={false}>
       <AtmosphereContentItem {...card} section="photos">
         <PhotoDialog
           control={{close: mockClose} as never}

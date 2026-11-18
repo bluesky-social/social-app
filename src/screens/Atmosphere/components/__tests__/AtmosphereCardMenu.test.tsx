@@ -3,7 +3,6 @@ import {fireEvent, render, screen} from '@testing-library/react-native'
 import {
   AtmosphereContentItem,
   AtmosphereMetricsScope,
-  createVisit,
 } from '#/screens/Atmosphere/metrics/context'
 import * as Menu from '#/components/Menu'
 import {type app, place, site, social} from '#/lexicons'
@@ -560,11 +559,7 @@ describe('AtmosphereCardMenu metrics', () => {
 
   function renderInCard() {
     render(
-      <AtmosphereMetricsScope
-        tab="following"
-        surface="tab"
-        isActive={false}
-        visit={createVisit()}>
+      <AtmosphereMetricsScope tab="following" surface="tab" isActive={false}>
         <AtmosphereContentItem {...card}>
           <AtmosphereCardMenu
             type="photo"

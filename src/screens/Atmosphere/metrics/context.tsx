@@ -8,23 +8,12 @@ import {
   type AtmosphereSurface,
 } from './types'
 
-/**
- * Impressions count once per visit. Start a new one each time the tab or
- * screen comes into view.
- */
-export type Visit = {seen: Set<string>}
-
-export function createVisit(): Visit {
-  return {seen: new Set()}
-}
-
 type Scope = AtmosphereMetricContext & {
   /**
    * Whether the scope is in view: its screen focused, the app in the
    * foreground, and its tab, if any, selected. Impressions only count then.
    */
   isActive: boolean
-  visit: Visit
 }
 
 type Item = Omit<AtmosphereContentMetricContext, keyof AtmosphereMetricContext>
@@ -110,10 +99,19 @@ export function AtmosphereContentItem({
   return <ItemContext value={item}>{children}</ItemContext>
 }
 
-/** Logs a list item seen by the shared List, at most once per visit. */
-export function useLogContentImpression() {
+/**
+ * Logs each content item once per mounted list, using List's onItemSeen.
+ * Inactive notifications wait until activation, then only count content
+ * still eligible in the current data. This is a queue, not a visibility map.
+ */
+export function useLogContentImpression<T>(
+  items: readonly T[],
+  getItem: (item: T, position: number) => Item | undefined,
+) {
   const ax = useAnalytics()
   const scope = useContext(ScopeContext)
+  const seen = useRef(new Set<string>())
+  const pending = useRef(new Set<string>())
   const mounted = useRef(false)
   useEffect(() => {
     mounted.current = true
@@ -121,16 +119,44 @@ export function useLogContentImpression() {
       mounted.current = false
     }
   }, [])
-  return useNonReactiveCallback((item: Item) => {
-    // List callbacks can still arrive after the list unmounts.
+
+  const log = useNonReactiveCallback((item: Item) => {
     if (!mounted.current || !scope?.isActive) return
-    const key = `${item.section ?? ''}:${item.contentType}:${item.contentId}`
-    if (scope.visit.seen.has(key)) return
-    scope.visit.seen.add(key)
+    const key = impressionKey(item)
+    pending.current.delete(key)
+    if (seen.current.has(key)) return
+    seen.current.add(key)
     ax.metric('atmosphere:content:impression', {
       tab: scope.tab,
       surface: scope.surface,
       ...item,
     })
   })
+
+  useEffect(() => {
+    if (!scope?.isActive || !pending.current.size) return
+    for (const [position, row] of items.entries()) {
+      const item = getItem(row, position)
+      if (item && pending.current.has(impressionKey(item))) log(item)
+    }
+    pending.current.clear()
+  }, [scope?.isActive, items, getItem, log])
+
+  return useNonReactiveCallback((row: T) => {
+    // List callbacks can still arrive after unmount or a data replacement.
+    if (!mounted.current || !scope) return
+    const position = items.indexOf(row)
+    if (position < 0) return
+    const item = getItem(row, position)
+    if (!item) return
+    if (scope.isActive) {
+      log(item)
+    } else if (!seen.current.has(impressionKey(item))) {
+      pending.current.add(impressionKey(item))
+    }
+  })
+}
+
+function impressionKey(item: Item) {
+  return `${item.contentType}:${item.contentId}`
 }

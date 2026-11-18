@@ -3,10 +3,7 @@ import {I18nProvider} from '@lingui/react'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {makeActivityListLink} from '#/screens/Atmosphere/ActivityList/links'
-import {
-  AtmosphereMetricsScope,
-  createVisit,
-} from '#/screens/Atmosphere/metrics/context'
+import {AtmosphereMetricsScope} from '#/screens/Atmosphere/metrics/context'
 import {ActivityRow} from '../components/ActivityRow'
 import {getStreamDuration, isLive} from '../components/LivestreamCard'
 import {
@@ -280,11 +277,7 @@ describe('ActivityRow', () => {
     )
     render(
       <I18nProvider i18n={i18n}>
-        <AtmosphereMetricsScope
-          tab="following"
-          surface="tab"
-          isActive
-          visit={createVisit()}>
+        <AtmosphereMetricsScope tab="following" surface="tab" isActive>
           <ActivityRow row={row} position={0} />
         </AtmosphereMetricsScope>
       </I18nProvider>,

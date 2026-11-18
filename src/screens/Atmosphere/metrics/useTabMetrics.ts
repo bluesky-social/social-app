@@ -4,7 +4,6 @@ import {useFocusEffect} from '@react-navigation/native'
 
 import {onAppStateChange} from '#/lib/appState'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {createVisit, type Visit} from '#/screens/Atmosphere/metrics/context'
 import {type AtmosphereTab} from '#/screens/Atmosphere/metrics/types'
 import {createTabTaps} from '#/screens/Notifications/tabTaps'
 import {useAnalytics} from '#/analytics'
@@ -14,8 +13,8 @@ import {type Metrics} from '#/analytics/metrics'
  * Logs `atmosphere:tab:displayed` and `atmosphere:tab:duration` for the
  * Atmosphere pager. Wire the returned handlers to the pager, and call
  * `onSeeMoreApps` just before switching pages for Explore's "See more".
- * Also returns the tab in view, whether it's showing, and its visit, for the
- * tabs' metrics scopes.
+ * Also returns the tab in view and whether it's showing, for the tabs'
+ * metrics scopes.
  */
 export function useTabMetrics(tabs: readonly AtmosphereTab[]) {
   const ax = useAnalytics()
@@ -29,8 +28,7 @@ export function useTabMetrics(tabs: readonly AtmosphereTab[]) {
   const [view, setView] = useState<{
     page: number
     isShowing: boolean
-    visit: Visit
-  }>(() => ({page: 0, isShowing: false, visit: createVisit()}))
+  }>({page: 0, isShowing: false})
 
   const startShowing = () => {
     if (!isFocused.current || !isForeground.current) return
@@ -48,13 +46,12 @@ export function useTabMetrics(tabs: readonly AtmosphereTab[]) {
     shownAt.current = undefined
     setView(prev => ({...prev, isShowing: false}))
   }
-  /** Each display starts a new visit, so its impressions count again. */
   const logDisplayed = (
     payload: Metrics['atmosphere:tab:displayed'],
     index: number,
   ) => {
     ax.metric('atmosphere:tab:displayed', payload)
-    setView(prev => ({...prev, page: index, visit: createVisit()}))
+    setView(prev => ({...prev, page: index}))
   }
 
   useFocusEffect(

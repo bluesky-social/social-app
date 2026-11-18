@@ -1,12 +1,11 @@
-import {useCallback, useState} from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
 import {type AtUriString} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useAppState} from '#/lib/appState'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
@@ -20,7 +19,6 @@ import {
 import {
   AtmosphereContentItem,
   AtmosphereMetricsScope,
-  createVisit,
   useLogContentImpression,
 } from '#/screens/Atmosphere/metrics/context'
 import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
@@ -66,13 +64,10 @@ export function AtmosphereActivityListScreen({
 function ActivityList({uris}: {uris: AtUriString[]}) {
   const isFocused = useIsFocused()
   const appState = useAppState()
-  const [visit, setVisit] = useState(createVisit)
-  useFocusEffect(useCallback(() => setVisit(createVisit()), []))
   return (
     <AtmosphereMetricsScope
       surface="activityList"
-      isActive={isFocused && appState !== 'background'}
-      visit={visit}>
+      isActive={isFocused && appState !== 'background'}>
       <ActivityListContent uris={uris} />
     </AtmosphereMetricsScope>
   )
@@ -91,16 +86,13 @@ function ActivityListContent({uris}: {uris: AtUriString[]}) {
   } = useActivityListQuery(uris)
   const [isPTRing, setIsPTRing] = useState(false)
   const items = data?.pages.flat() ?? []
-  const logImpression = useLogContentImpression()
-  const onItemSeen = useNonReactiveCallback((item: Item) => {
+  const onItemSeen = useLogContentImpression(items, (item, position) => {
     if (!item.content || item.moderation.blur) return
-    const position = items.indexOf(item)
-    if (position < 0) return
-    logImpression({
+    return {
       contentType: item.content.type,
       contentId: item.content.view.uri,
       position,
-    })
+    }
   })
   const metrics = useLoadMetrics({
     hasData: !!data,

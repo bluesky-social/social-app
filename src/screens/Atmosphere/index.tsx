@@ -111,8 +111,7 @@ function AtmosphereScreenInner() {
             <AtmosphereMetricsScope
               tab={TABS[index]}
               surface="tab"
-              isActive={tabMetrics.isShowing && tabMetrics.page === index}
-              visit={tabMetrics.visit}>
+              isActive={tabMetrics.isShowing && tabMetrics.page === index}>
               {section.component}
             </AtmosphereMetricsScope>
           </View>

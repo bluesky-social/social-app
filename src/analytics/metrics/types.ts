@@ -1558,8 +1558,9 @@ export type Events = {
   /**
    * A content row was seen in Discover, Following or the activity list,
    * using the shared List's viewability rules. Blurred cards are excluded,
-   * even if revealed. At most once per card per visit while in view; an item
-   * already seen by the List while inactive may not be reported on return.
+   * even if revealed. Each content item counts once per mounted list. Items
+   * reported while inactive wait until activation, and only count if still
+   * eligible in the list's data. This does not track exits from view.
    */
   'atmosphere:content:impression': AtmosphereContentMetricContext
   /**

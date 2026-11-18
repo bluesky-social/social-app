@@ -2,7 +2,6 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {cleanError} from '#/lib/strings/errors'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List} from '#/view/com/util/List'
@@ -30,18 +29,15 @@ export function ActivityTab() {
   } = useActivityTimelineQuery()
   const [isPTRing, setIsPTRing] = useState(false)
   const rows = data?.pages.flat() ?? []
-  const logImpression = useLogContentImpression()
-  const onItemSeen = useNonReactiveCallback((row: ActivityRowModel) => {
+  const onItemSeen = useLogContentImpression(rows, (row, position) => {
     if (row.kind !== 'card' || row.moderation.blur) return
-    const position = rows.indexOf(row)
-    if (position < 0) return
-    logImpression({
+    return {
       contentType: row.content.type,
       contentId: row.content.view.uri,
       position,
       collection: row.collection,
       grouping: row.grouping,
-    })
+    }
   })
   const metrics = useLoadMetrics({
     hasData: !!data,

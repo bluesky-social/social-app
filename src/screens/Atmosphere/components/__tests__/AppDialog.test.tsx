@@ -1,9 +1,6 @@
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
-import {
-  AtmosphereMetricsScope,
-  createVisit,
-} from '#/screens/Atmosphere/metrics/context'
+import {AtmosphereMetricsScope} from '#/screens/Atmosphere/metrics/context'
 import {type app as lexApp} from '#/lexicons'
 import {AppDialog} from '../AppDialog'
 
@@ -163,11 +160,7 @@ describe('AppDialog', () => {
 
   it('logs website and profile presses as the app dialog', () => {
     render(
-      <AtmosphereMetricsScope
-        tab="apps"
-        surface="tab"
-        isActive
-        visit={createVisit()}>
+      <AtmosphereMetricsScope tab="apps" surface="tab" isActive>
         <AppDialog control={control} metric={metric} app={app} />
       </AtmosphereMetricsScope>,
     )

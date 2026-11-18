@@ -7,10 +7,7 @@ import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/ex
 import {livestreamPreviewFixture} from '#/screens/Atmosphere/__tests__/fixtures/livestreamPreview'
 import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
 import {AtmosphereExploreTab} from '#/screens/Atmosphere/ExploreTab'
-import {
-  AtmosphereMetricsScope,
-  createVisit,
-} from '#/screens/Atmosphere/metrics/context'
+import {AtmosphereMetricsScope} from '#/screens/Atmosphere/metrics/context'
 import {app} from '#/lexicons'
 
 const mockMetric = jest.fn()
@@ -228,11 +225,7 @@ describe('AtmosphereExploreTab', () => {
     mockModerationOpts = undefined
     setQuery({data})
     const tree = () => (
-      <AtmosphereMetricsScope
-        tab="explore"
-        surface="tab"
-        isActive
-        visit={createVisit()}>
+      <AtmosphereMetricsScope tab="explore" surface="tab" isActive>
         <AtmosphereExploreTab />
       </AtmosphereMetricsScope>
     )

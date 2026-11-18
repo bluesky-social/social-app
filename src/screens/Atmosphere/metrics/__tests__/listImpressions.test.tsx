@@ -5,10 +5,11 @@ import {act, render} from '@testing-library/react-native'
 import {AtmosphereActivityListScreen} from '#/screens/Atmosphere/ActivityList'
 import {ActivityTab} from '#/screens/Atmosphere/ActivityTab'
 import {AtmosphereDiscoverTab} from '#/screens/Atmosphere/DiscoverTab'
-import {AtmosphereMetricsScope, createVisit} from '../context'
+import {AtmosphereMetricsScope} from '../context'
 
 const mockMetric = jest.fn()
 let mockFocused = true
+let mockSetFocused: React.Dispatch<React.SetStateAction<boolean>> | undefined
 let mockData: unknown[] = []
 
 jest.mock('#/analytics', () => ({
@@ -18,8 +19,12 @@ jest.mock('#/analytics', () => ({
   }),
 }))
 jest.mock('@react-navigation/native', () => ({
-  useFocusEffect: () => {},
-  useIsFocused: () => mockFocused,
+  useIsFocused: () => {
+    const {useState} = jest.requireActual<typeof import('react')>('react')
+    const [isFocused, setFocused] = useState(mockFocused)
+    mockSetFocused = setFocused
+    return isFocused
+  },
 }))
 jest.mock('#/lib/appState', () => ({useAppState: () => 'active'}))
 jest.mock('#/alf', () => ({
@@ -97,21 +102,19 @@ beforeEach(() => {
   i18n.loadAndActivate({locale: 'en', messages: {}})
   mockMetric.mockClear()
   mockFocused = true
+  mockSetFocused = undefined
 })
 
-it('logs Discover rows, excluding blurred content', () => {
+it('flushes Discover rows on activation, excluding blurred content', () => {
   mockData = [blurred, normal]
-  const screen = render(
+  const tree = (isActive: boolean) => (
     <I18nProvider i18n={i18n}>
-      <AtmosphereMetricsScope
-        tab="discover"
-        surface="tab"
-        isActive
-        visit={createVisit()}>
+      <AtmosphereMetricsScope tab="discover" surface="tab" isActive={isActive}>
         <AtmosphereDiscoverTab />
       </AtmosphereMetricsScope>
-    </I18nProvider>,
+    </I18nProvider>
   )
+  const screen = render(tree(false))
   const seen = screen.getByTestId('atmosphereDiscoverTab').props.onItemSeen as (
     item: unknown,
   ) => void
@@ -120,6 +123,8 @@ it('logs Discover rows, excluding blurred content', () => {
     seen(normal)
     seen(normal)
   })
+  expect(mockMetric).not.toHaveBeenCalled()
+  screen.rerender(tree(true))
   expect(mockMetric.mock.calls).toEqual([
     [
       'atmosphere:content:impression',
@@ -134,7 +139,7 @@ it('logs Discover rows, excluding blurred content', () => {
   ])
 })
 
-it('logs Following cards with activity metadata, excluding warnings and blur', () => {
+it('flushes Following cards on activation without a second List callback', () => {
   const warning = {kind: 'warning', key: 'warning'}
   const hidden = {kind: 'card', key: 'hidden', ...blurred}
   const card = {
@@ -145,17 +150,14 @@ it('logs Following cards with activity metadata, excluding warnings and blur', (
     grouping: 'single',
   }
   mockData = [warning, hidden, card]
-  const screen = render(
+  const tree = (isActive: boolean) => (
     <I18nProvider i18n={i18n}>
-      <AtmosphereMetricsScope
-        tab="following"
-        surface="tab"
-        isActive
-        visit={createVisit()}>
+      <AtmosphereMetricsScope tab="following" surface="tab" isActive={isActive}>
         <ActivityTab />
       </AtmosphereMetricsScope>
-    </I18nProvider>,
+    </I18nProvider>
   )
+  const screen = render(tree(false))
   const seen = screen.getByTestId('activityList').props.onItemSeen as (
     item: unknown,
   ) => void
@@ -165,6 +167,8 @@ it('logs Following cards with activity metadata, excluding warnings and blur', (
     seen(card)
     seen(card)
   })
+  expect(mockMetric).not.toHaveBeenCalled()
+  screen.rerender(tree(true))
   expect(mockMetric.mock.calls).toEqual([
     [
       'atmosphere:content:impression',
@@ -187,24 +191,14 @@ it('logs activity list cards without a tab, excluding warnings and blur', () => 
   const card = {uri: 'at://example/card', ...normal}
   mockData = [warning, hidden, card]
   mockFocused = false
-  const tree = () => (
+  const screen = render(
     <I18nProvider i18n={i18n}>
       <AtmosphereActivityListScreen
         route={{params: {uris: ''}} as never}
-        navigation={{focus: mockFocused} as never}
+        navigation={{} as never}
       />
-    </I18nProvider>
+    </I18nProvider>,
   )
-  const inactive = render(tree())
-  const inactiveSeen = inactive.getByTestId('atmosphereActivityList').props
-    .onItemSeen as (item: unknown) => void
-  act(() => {
-    inactiveSeen(card)
-  })
-  expect(mockMetric).not.toHaveBeenCalled()
-  inactive.unmount()
-  mockFocused = true
-  const screen = render(tree())
   const seen = screen.getByTestId('atmosphereActivityList').props
     .onItemSeen as (item: unknown) => void
   act(() => {
@@ -213,6 +207,8 @@ it('logs activity list cards without a tab, excluding warnings and blur', () => 
     seen(card)
     seen(card)
   })
+  expect(mockMetric).not.toHaveBeenCalled()
+  act(() => mockSetFocused?.(true))
   expect(mockMetric.mock.calls).toEqual([
     [
       'atmosphere:content:impression',

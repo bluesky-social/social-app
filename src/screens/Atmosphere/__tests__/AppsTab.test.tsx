@@ -4,10 +4,7 @@ import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
 import {AtmosphereAppsTab} from '#/screens/Atmosphere/AppsTab'
 import {useAtmosphereAppsQuery} from '#/screens/Atmosphere/data/useAtmosphereAppsQuery'
-import {
-  AtmosphereMetricsScope,
-  createVisit,
-} from '#/screens/Atmosphere/metrics/context'
+import {AtmosphereMetricsScope} from '#/screens/Atmosphere/metrics/context'
 import {type app} from '#/lexicons'
 
 const mockMetric = jest.fn()
@@ -259,11 +256,7 @@ describe('AtmosphereAppsTab', () => {
   it('logs category changes with their app count', () => {
     setQuery({data})
     render(
-      <AtmosphereMetricsScope
-        tab="apps"
-        surface="tab"
-        isActive={false}
-        visit={createVisit()}>
+      <AtmosphereMetricsScope tab="apps" surface="tab" isActive={false}>
         <AtmosphereAppsTab />
       </AtmosphereMetricsScope>,
     )

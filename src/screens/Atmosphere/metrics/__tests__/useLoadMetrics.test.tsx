@@ -1,6 +1,6 @@
 import {render} from '@testing-library/react-native'
 
-import {AtmosphereMetricsScope, createVisit} from '../context'
+import {AtmosphereMetricsScope} from '../context'
 import {useLoadMetrics} from '../useLoadMetrics'
 
 const mockMetric = jest.fn()
@@ -9,7 +9,6 @@ jest.mock('#/analytics', () => ({
 }))
 
 type Load = Parameters<typeof useLoadMetrics>[0]
-const visit = createVisit()
 let metrics: ReturnType<typeof useLoadMetrics> | undefined
 
 function Tab(load: Load) {
@@ -19,11 +18,7 @@ function Tab(load: Load) {
 
 function renderTab(load: Load, isActive = true) {
   const tree = (props: Load, active: boolean) => (
-    <AtmosphereMetricsScope
-      tab="following"
-      surface="tab"
-      isActive={active}
-      visit={visit}>
+    <AtmosphereMetricsScope tab="following" surface="tab" isActive={active}>
       <Tab {...props} />
     </AtmosphereMetricsScope>
   )

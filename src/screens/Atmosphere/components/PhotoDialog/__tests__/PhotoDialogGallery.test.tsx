@@ -4,7 +4,6 @@ import {PhotoDialogGallery} from '#/screens/Atmosphere/components/PhotoDialog/Ph
 import {
   AtmosphereContentItem,
   AtmosphereMetricsScope,
-  createVisit,
 } from '#/screens/Atmosphere/metrics/context'
 import {type app} from '#/lexicons'
 
@@ -160,8 +159,7 @@ function renderInCard(items: unknown[]) {
     <AtmosphereMetricsScope
       tab="following"
       surface="photoDialog"
-      isActive={false}
-      visit={createVisit()}>
+      isActive={false}>
       <AtmosphereContentItem {...card}>
         <PhotoDialogGallery
           photo={
