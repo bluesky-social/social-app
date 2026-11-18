@@ -80,12 +80,6 @@
     }
   },
   "src/analytics/metrics/client.test.ts": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 8
-    },
     "typescript/require-await": {
       "count": 5
     }
