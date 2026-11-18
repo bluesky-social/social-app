@@ -33,8 +33,6 @@ interface PostMetaOpts {
   showAvatar?: boolean
   avatarSize?: number
   onOpenAuthor?: () => void
-  /** Called after following the author from their hover card. */
-  onFollowAuthor?: () => void
   style?: StyleProp<ViewStyle>
 }
 
@@ -86,7 +84,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         </View>
       )}
       <View style={[a.flex_row, a.align_end, a.flex_shrink]}>
-        <ProfileHoverCard did={author.did} onFollow={opts.onFollowAuthor}>
+        <ProfileHoverCard did={author.did}>
           <View style={[a.flex_row, a.align_end, a.flex_shrink]}>
             <MaybeLinkText
               emoji
