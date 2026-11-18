@@ -54,11 +54,13 @@ export function DesktopSearch() {
     if (item.type === 'profile') {
       onClearText()
       sift.elements.input.blur()
-      navigation.navigate('Profile', {name: item.profile.handle})
+      navigation.dispatch(
+        StackActions.push('Profile', {name: item.profile.handle}),
+      )
     } else if (item.type === 'search') {
       onClearText()
       sift.elements.input.blur()
-      navigation.navigate('Search', {q: item.value})
+      navigation.dispatch(StackActions.push('Search', {q: item.value}))
     }
   }
 

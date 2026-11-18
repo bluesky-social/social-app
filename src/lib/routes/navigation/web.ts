@@ -30,7 +30,7 @@ export type NavigationProp<
 
 export function getTabNavigationAction(tab: SidebarTab, profileName = 'me') {
   if (tab === 'MyProfile') {
-    return CommonActions.navigate('Profile', {name: profileName})
+    return StackActions.push('Profile', {name: profileName})
   }
   return CommonActions.navigate(tab)
 }

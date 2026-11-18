@@ -22,13 +22,21 @@ import {
 } from '#/lib/constants'
 import {type PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
-import {getTabState, TabState} from '#/lib/routes/helpers'
+import {
+  getCurrentRoute,
+  getTabState,
+  isCurrentProfileRoute,
+  TabState,
+} from '#/lib/routes/helpers'
 import {
   getTabNavigationAction,
   getTabResetAction,
 } from '#/lib/routes/navigation'
 import {type SharedNavTab, TAB_TO_NAV_ITEM} from '#/lib/routes/tab-to-nav-item'
-import {type RootNavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type RootNavigationProp,
+} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
 import {useModerationInboxUnreadCountQuery} from '#/state/queries/moderation-inbox'
@@ -241,7 +249,25 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
       const state: NavigationState = navigation.getState()
       setDrawerOpen(false)
       if (IS_WEB) {
-        navigation.dispatch(getTabNavigationAction(tab, currentAccount?.handle))
+        const currentRoute = getCurrentRoute(state)
+        const isCurrentProfile =
+          tab === 'MyProfile' &&
+          isCurrentProfileRoute({
+            routeName: currentRoute.name,
+            profileName:
+              currentRoute.name === 'Profile'
+                ? (currentRoute.params as CommonNavigatorParams['Profile'])
+                    ?.name
+                : undefined,
+            currentHandle: currentAccount?.handle,
+          })
+        if (isCurrentProfile) {
+          emitSoftReset()
+        } else {
+          navigation.dispatch(
+            getTabNavigationAction(tab, currentAccount?.handle),
+          )
+        }
       } else {
         const tabState = getTabState(state, tab)
         if (tabState === TabState.InsideAtRoot) {

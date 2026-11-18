@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {parseAtUriString} from '@atproto/syntax'
 import {useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
+import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
@@ -242,7 +242,9 @@ export function AtmosphereCardMenu({
               <Menu.Item
                 label={l`View author profile`}
                 onPress={() =>
-                  navigation.navigate('Profile', {name: author.did})
+                  navigation.dispatch(
+                    StackActions.push('Profile', {name: author.did}),
+                  )
                 }>
                 <Menu.ItemText>{l`View author profile`}</Menu.ItemText>
                 <Menu.ItemIcon icon={PersonIcon} position="right" />

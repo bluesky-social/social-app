@@ -4,7 +4,7 @@ import {AtUri} from '@atproto/syntax'
 import {msg as msgLingui} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
+import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -134,7 +134,7 @@ function FeedgenErrorMessage({
   const {mutateAsync: removeFeed} = useRemoveFeedMutation()
 
   const onViewProfile = useCallback(() => {
-    navigation.navigate('Profile', {name: ownerDid})
+    navigation.dispatch(StackActions.push('Profile', {name: ownerDid}))
   }, [navigation, ownerDid])
 
   const onPressRemoveFeed = useCallback(() => {
