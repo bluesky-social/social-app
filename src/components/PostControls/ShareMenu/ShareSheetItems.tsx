@@ -61,7 +61,6 @@ export function ShareSheetItems({
   const [devModeEnabled] = useDevMode()
   const aa = useAgeAssurance()
   const queryClient = useQueryClient()
-  const [pasteHint, setPasteHint] = useState<string>()
 
   const postUri = post.uri
   const postAuthor = useProfileShadow(post.author)
@@ -229,7 +228,6 @@ export function ShareSheetItems({
               paddingTop: tokens.space.sm + tokens.space.lg,
             },
           ]}>
-          {pasteHint && <PasteHint message={pasteHint} overChats={showChats} />}
           {showChats && (
             /*
              * A filled strip rather than a hairline border, which iOS
@@ -256,10 +254,7 @@ export function ShareSheetItems({
             uri={postUri}
             authorDid={postAuthor.did}
             onShare={onShareProp}
-            onPasteHint={message => {
-              setPasteHint(message)
-              AccessibilityInfo.announceForAccessibility(message)
-            }}
+            overChats={showChats}
           />
 
           {hideInPWI && (
@@ -345,18 +340,37 @@ function PasteHint({
 }
 
 /**
- * The share row with the installed apps filled in. Its own component so it
- * mounts with the sheet, which checks the installed apps again on every open.
+ * The share row with the installed apps filled in, plus its paste hint. Its
+ * own component so it mounts with the sheet, which checks the installed apps
+ * again and clears the hint on every open.
  */
 function InstalledAppsShareRow({
   showApps,
+  overChats,
   ...props
-}: {showApps: boolean} & Omit<
+}: {
+  showApps: boolean
+  /** Where the paste hint sits, see `PasteHint`. */
+  overChats: boolean
+} & Omit<
   React.ComponentProps<typeof ShareRow>,
-  'platformIds'
+  'platformIds' | 'onPasteHint'
 >) {
   const installed = useInstalledSharePlatforms({enabled: showApps})
-  return <ShareRow platformIds={(showApps && installed) || []} {...props} />
+  const [pasteHint, setPasteHint] = useState<string>()
+  return (
+    <>
+      {pasteHint && <PasteHint message={pasteHint} overChats={overChats} />}
+      <ShareRow
+        platformIds={(showApps && installed) || []}
+        onPasteHint={message => {
+          setPasteHint(message)
+          AccessibilityInfo.announceForAccessibility(message)
+        }}
+        {...props}
+      />
+    </>
+  )
 }
 
 /**
