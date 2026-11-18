@@ -205,6 +205,10 @@ function BottomSheetNativeComponentInner({
             /*
              * The native canvas is sized after the first layout. Allow content
              * measured without a height constraint to shrink to that canvas.
+             * Yoga keeps a child's flex basis from that first, unsized pass, so
+             * a `flex: 1` view stays as tall as its content unless it can
+             * shrink. Every `flex: 1` wrapper between here and a height
+             * constrained scroll view needs this too.
              */
             flexShrink: 1,
             borderTopLeftRadius: cornerRadius,
@@ -220,6 +224,8 @@ function BottomSheetNativeComponentInner({
                   effectiveViewportMaxHeight != null && {
                     maxHeight: effectiveViewportMaxHeight,
                   },
+                  // see the flexShrink note on the wrapper above
+                  Platform.OS === 'android' && {flexShrink: 1},
                 ]
               : undefined
           }>

@@ -17,48 +17,34 @@ import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Che
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Toast from '#/components/Toast'
 import {IS_IOS} from '#/env'
+import {useFeedItemFeedback} from '#/features/feedFeedback'
 import {type app} from '#/lexicons'
 import {GrowthHack} from './GrowthHack'
 
 export function ThreadItemAnchorFollowButton({
   did,
   enabled = true,
-  onFollow,
 }: {
   did: string
   enabled?: boolean
-  /** Called once a follow from this button succeeds. */
-  onFollow?: () => void
 }) {
   if (IS_IOS) {
     return (
       <GrowthHack>
-        <ThreadItemAnchorFollowButtonInner
-          did={did}
-          enabled={enabled}
-          onFollow={onFollow}
-        />
+        <ThreadItemAnchorFollowButtonInner did={did} enabled={enabled} />
       </GrowthHack>
     )
   }
 
-  return (
-    <ThreadItemAnchorFollowButtonInner
-      did={did}
-      enabled={enabled}
-      onFollow={onFollow}
-    />
-  )
+  return <ThreadItemAnchorFollowButtonInner did={did} enabled={enabled} />
 }
 
 export function ThreadItemAnchorFollowButtonInner({
   did,
   enabled = true,
-  onFollow,
 }: {
   did: string
   enabled?: boolean
-  onFollow?: () => void
 }) {
   const {data: profile, isLoading} = useProfileQuery({did})
 
@@ -66,15 +52,13 @@ export function ThreadItemAnchorFollowButtonInner({
   // but it keeps the typechecker happy
   if (!enabled || isLoading || !profile) return null
 
-  return <PostThreadFollowBtnLoaded profile={profile} onFollow={onFollow} />
+  return <PostThreadFollowBtnLoaded profile={profile} />
 }
 
 function PostThreadFollowBtnLoaded({
   profile: profileUnshadowed,
-  onFollow,
 }: {
   profile: app.bsky.actor.defs.ProfileViewDetailed
-  onFollow?: () => void
 }) {
   const navigation = useNavigation()
   const {_} = useLingui()
@@ -85,6 +69,7 @@ function PostThreadFollowBtnLoaded({
     'PostThreadItem',
   )
   const requireAuth = useRequireAuth()
+  const feedItem = useFeedItemFeedback()
 
   const isFollowing = !!profile.viewer?.following
   const isFollowedBy = !!profile.viewer?.followedBy
@@ -128,7 +113,9 @@ function PostThreadFollowBtnLoaded({
       requireAuth(async () => {
         try {
           await queueFollow()
-          onFollow?.()
+          if (feedItem.item?.authorDid === profile.did) {
+            feedItem.send('app.bsky.feed.defs#interactionFollow')
+          }
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
             logger.error('Failed to follow', {message: String(e)})
@@ -152,7 +139,15 @@ function PostThreadFollowBtnLoaded({
         }
       })
     }
-  }, [isFollowing, requireAuth, queueFollow, _, queueUnfollow, onFollow])
+  }, [
+    isFollowing,
+    requireAuth,
+    queueFollow,
+    _,
+    queueUnfollow,
+    feedItem,
+    profile.did,
+  ])
 
   if (!showFollowBtn) return null
 

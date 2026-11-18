@@ -15,8 +15,6 @@ import {PostMenuItems} from './PostMenuItems'
 let PostMenuButton = ({
   testID,
   post,
-  postFeedContext,
-  postReqId,
   big,
   record,
   richText,
@@ -30,8 +28,6 @@ let PostMenuButton = ({
 }: {
   testID: string
   post: Shadow<app.bsky.feed.defs.PostView>
-  postFeedContext: string | undefined
-  postReqId: string | undefined
   big?: boolean
   record: app.bsky.feed.post.Main
   richText: RichTextAPI
@@ -85,8 +81,6 @@ let PostMenuButton = ({
           <PostMenuItems
             testID={testID}
             post={post}
-            postFeedContext={postFeedContext}
-            postReqId={postReqId}
             record={record}
             richText={richText}
             timestamp={timestamp}

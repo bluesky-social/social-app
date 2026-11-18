@@ -31,6 +31,9 @@ jest.mock('#/components/Typography', () => ({
 }))
 jest.mock('#/components/Loader', () => ({Loader: () => null}))
 jest.mock('#/components/Lists', () => ({ListFooter: () => null}))
+jest.mock('#/screens/Atmosphere/components/AtmosphereNux', () => ({
+  AtmosphereNux: () => null,
+}))
 jest.mock('#/components/Layout', () => {
   const {View, Text} =
     jest.requireActual<typeof import('react-native')>('react-native')

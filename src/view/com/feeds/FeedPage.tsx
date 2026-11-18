@@ -17,7 +17,6 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {listenSoftReset} from '#/state/events'
-import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {useSetHomeBadge} from '#/state/home-badge'
 import {type FeedSourceInfo} from '#/state/queries/feed'
 import {
@@ -37,6 +36,7 @@ import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {FeedFeedbackProvider, useFeedFeedback} from '#/features/feedFeedback'
 import {
   isFollowingV2Eligible,
   isFollowingV2HomeDotEnabled,

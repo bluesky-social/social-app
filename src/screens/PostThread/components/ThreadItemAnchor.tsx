@@ -1,4 +1,4 @@
-import {memo, useMemo} from 'react'
+import {memo, useMemo, useState} from 'react'
 import {Text as RNText, View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
@@ -16,14 +16,13 @@ import {
   usePostShadow,
 } from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {type ThreadItem} from '#/state/queries/usePostThread/types'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {type PostSource} from '#/state/unstable-post-source'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {LikesStat} from '#/screens/PostThread/components/LikesStat'
+import {PostViewCount} from '#/screens/PostThread/components/PostViewCount'
 import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
   POST_NUMBER_INLINE_OFFSET,
@@ -38,7 +37,7 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
-import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
+import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/Calendar'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {GalleryBleed} from '#/components/images/Gallery'
 import {Link} from '#/components/Link'
@@ -59,20 +58,21 @@ import * as Skele from '#/components/Skeleton'
 import {Text} from '#/components/Typography'
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {Features, useAnalytics} from '#/analytics'
+import {useFeedItemFeedback} from '#/features/feedFeedback'
 import {useActorStatus} from '#/features/liveNow'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({
   item,
+  showViewCount = false,
   onPostSuccess,
   threadgateRecord,
-  postSource,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
+  showViewCount?: boolean
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: app.bsky.feed.threadgate.Main
-  postSource?: PostSource
 }) {
   const postShadow = usePostShadow(item.value.post)
   const threadRootUri = item.value.post.record.reply?.root?.uri || item.uri
@@ -86,11 +86,11 @@ export function ThreadItemAnchor({
     <ReportDialogMetadataContext.Provider key={postShadow.uri}>
       <ThreadItemAnchorInner
         item={item}
+        showViewCount={showViewCount}
         isRoot={isRoot}
         postShadow={postShadow}
         onPostSuccess={onPostSuccess}
         threadgateRecord={threadgateRecord}
-        postSource={postSource}
       />
     </ReportDialogMetadataContext.Provider>
   )
@@ -164,29 +164,25 @@ function ThreadItemAnchorParentReplyLine({isRoot}: {isRoot: boolean}) {
 
 const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   item,
+  showViewCount,
   isRoot,
   postShadow,
   onPostSuccess,
   threadgateRecord,
-  postSource,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
+  showViewCount: boolean
   isRoot: boolean
   postShadow: Shadow<app.bsky.feed.defs.PostView>
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: app.bsky.feed.threadgate.Main
-  postSource?: PostSource
 }) {
   const t = useTheme()
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
-  const {currentAccount, hasSession} = useSession()
-  const feedFeedback = useFeedFeedback(
-    postSource?.feedSourceInfo,
-    hasSession,
-    'thread',
-  )
+  const {currentAccount} = useSession()
+  const feedItem = useFeedItemFeedback()
   const formatPostStatCount = useFormatPostStatCount()
 
   const post = postShadow
@@ -241,21 +237,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const showFollowButton =
     currentAccount?.did !== post.author.did && !onlyFollowersCanReply
 
-  const viaRepost = useMemo(() => {
-    const reason = postSource?.post.reason
-
-    if (
-      bsky.isType(app.bsky.feed.defs.reasonRepost, reason) &&
-      reason.uri &&
-      reason.cid
-    ) {
-      return {
-        uri: reason.uri,
-        cid: reason.cid,
-      }
-    }
-  }, [postSource])
-
   const onPressReply = useNonReactiveCallback(() => {
     openComposer({
       replyTo: {
@@ -271,14 +252,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
       logContext: 'PostReply',
     })
 
-    if (postSource) {
-      feedFeedback.sendInteraction({
-        item: post.uri,
-        event: 'app.bsky.feed.defs#interactionReply',
-        feedContext: postSource.post.feedContext,
-        reqId: postSource.post.reqId,
-      })
-    }
+    feedItem.send('app.bsky.feed.defs#interactionReply')
   })
 
   const onOpenAuthor = () => {
@@ -286,27 +260,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
       uri: post.uri,
       authorDid: post.author.did,
       logContext: 'PostThreadItem',
-      feedDescriptor: feedFeedback.feedDescriptor,
+      feedDescriptor: feedItem.feedDescriptor,
     })
-    if (postSource) {
-      feedFeedback.sendInteraction({
-        item: post.uri,
-        event: 'app.bsky.feed.defs#clickthroughAuthor',
-        feedContext: postSource.post.feedContext,
-        reqId: postSource.post.reqId,
-      })
-    }
-  }
-
-  const onFollowAuthor = () => {
-    if (postSource) {
-      feedFeedback.sendInteraction({
-        item: post.uri,
-        event: 'app.bsky.feed.defs#interactionFollow',
-        feedContext: postSource.post.feedContext,
-        reqId: postSource.post.reqId,
-      })
-    }
+    feedItem.send('app.bsky.feed.defs#clickthroughAuthor')
   }
 
   const onOpenEmbed = () => {
@@ -314,16 +270,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
       uri: post.uri,
       authorDid: post.author.did,
       logContext: 'PostThreadItem',
-      feedDescriptor: feedFeedback.feedDescriptor,
+      feedDescriptor: feedItem.feedDescriptor,
     })
-    if (postSource) {
-      feedFeedback.sendInteraction({
-        item: post.uri,
-        event: 'app.bsky.feed.defs#clickthroughEmbed',
-        feedContext: postSource.post.feedContext,
-        reqId: postSource.post.reqId,
-      })
-    }
+    feedItem.send('app.bsky.feed.defs#clickthroughEmbed')
   }
 
   return (
@@ -347,7 +296,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 type={post.author.associated?.labeler ? 'labeler' : 'user'}
                 live={live}
                 onBeforePress={onOpenAuthor}
-                onFollow={onFollowAuthor}
               />
             </View>
             <Link
@@ -359,10 +307,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               )}
               onPress={onOpenAuthor}>
               <View style={[a.flex_1, a.align_start]}>
-                <ProfileHoverCard
-                  did={post.author.did}
-                  style={[a.w_full]}
-                  onFollow={onFollowAuthor}>
+                <ProfileHoverCard did={post.author.did} style={[a.w_full]}>
                   <View style={[a.flex_row, a.align_center]}>
                     <Text
                       emoji
@@ -404,7 +349,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               <ThreadItemAnchorFollowButton
                 did={post.author.did}
                 enabled={showFollowButton}
-                onFollow={onFollowAuthor}
               />
             </View>
           </View>
@@ -448,7 +392,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     viewContext={PostEmbedViewContext.ThreadHighlighted}
                     onOpen={onOpenEmbed}
                     post={post}
-                    feedDescriptor={feedFeedback.feedDescriptor}
+                    feedDescriptor={feedItem.feedDescriptor}
                   />
                 </View>
               )}
@@ -456,6 +400,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
             <ExpandedPostDetails
               post={item.value.post}
               isThreadAuthor={isThreadAuthor}
+              showViewCount={showViewCount}
             />
             {post.repostCount !== 0 ||
             post.likeCount !== 0 ||
@@ -547,20 +492,15 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   marginLeft: -5,
                 },
               ]}>
-              <FeedFeedbackProvider value={feedFeedback}>
-                <PostControls
-                  big
-                  post={postShadow}
-                  record={record}
-                  richText={richText}
-                  onPressReply={onPressReply}
-                  logContext="PostThreadItem"
-                  threadgateRecord={threadgateRecord}
-                  feedContext={postSource?.post?.feedContext}
-                  reqId={postSource?.post?.reqId}
-                  viaRepost={viaRepost}
-                />
-              </FeedFeedbackProvider>
+              <PostControls
+                big
+                post={postShadow}
+                record={record}
+                richText={richText}
+                onPressReply={onPressReply}
+                logContext="PostThreadItem"
+                threadgateRecord={threadgateRecord}
+              />
             </View>
             <DebugFieldDisplay subject={post} />
           </View>
@@ -573,34 +513,109 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 function ExpandedPostDetails({
   post,
   isThreadAuthor,
+  showViewCount,
 }: {
   post: Extract<ThreadItem, {type: 'threadPost'}>['value']['post']
   isThreadAuthor: boolean
+  showViewCount: boolean
 }) {
   const t = useTheme()
   const {i18n} = useLingui()
   const isRootPost = !('reply' in post.record)
 
+  const [widths, setWidths] = useState({
+    available: 0,
+    date: 0,
+    count: 0,
+    separator: 0,
+    reply: 0,
+  })
+  const hasCount = showViewCount && widths.count > 0
+  const wrapCount =
+    hasCount &&
+    widths.available > 0 &&
+    widths.date +
+      widths.separator +
+      widths.count +
+      a.gap_xs.gap * 2 +
+      widths.reply >
+      widths.available
+
+  const wrapReply =
+    widths.reply > 0 &&
+    widths.available > 0 &&
+    widths.date + widths.reply > widths.available
+
+  function measure(part: keyof typeof widths, width: number) {
+    setWidths(prev => (prev[part] === width ? prev : {...prev, [part]: width}))
+  }
+
+  const viewCount = showViewCount ? (
+    <View
+      key="count"
+      style={[
+        {maxWidth: '100%'},
+        wrapCount && !wrapReply
+          ? {width: '100%'}
+          : {marginLeft: hasCount && !wrapCount ? a.gap_xs.gap : 0},
+      ]}>
+      <View
+        onLayout={e => measure('count', e.nativeEvent.layout.width)}
+        style={[a.flex_row, a.self_start, {maxWidth: '100%'}]}>
+        <PostViewCount key={post.uri} post={post} />
+      </View>
+    </View>
+  ) : null
+  const reply = isRootPost ? (
+    <View
+      key="reply"
+      onLayout={e => measure('reply', e.nativeEvent.layout.width)}
+      style={{marginLeft: 'auto', paddingLeft: a.gap_md.gap, maxWidth: '100%'}}>
+      <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} plain />
+    </View>
+  ) : null
+
   return (
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
       <BackdatedPostIndicator post={post} />
       <View
+        onLayout={e => measure('available', e.nativeEvent.layout.width)}
         style={[
           a.self_stretch,
           a.flex_row,
           a.align_center,
           a.flex_wrap,
-          a.gap_md,
+          {rowGap: a.gap_sm.gap},
         ]}>
-        <Text
-          style={[a.text_sm, t.atoms.text_contrast_medium, {maxWidth: '100%'}]}>
-          {niceDate(i18n, post.indexedAt, 'dot separated')}
-        </Text>
-        {isRootPost && (
-          <View style={{marginLeft: 'auto'}}>
-            <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} plain />
-          </View>
-        )}
+        <View
+          style={[
+            a.flex_row,
+            a.align_center,
+            {columnGap: hasCount && !wrapCount ? a.gap_xs.gap : 0},
+            wrapReply && {width: '100%'},
+            {maxWidth: '100%'},
+          ]}>
+          <Text
+            onLayout={e => measure('date', e.nativeEvent.layout.width)}
+            style={[
+              a.text_sm,
+              t.atoms.text_contrast_medium,
+              {maxWidth: '100%'},
+            ]}>
+            {niceDate(i18n, post.indexedAt, 'dot separated')}
+          </Text>
+          <Text
+            aria-hidden
+            onLayout={e => measure('separator', e.nativeEvent.layout.width)}
+            style={[
+              a.text_sm,
+              t.atoms.text_contrast_medium,
+              (!hasCount || wrapCount) && [a.absolute, {opacity: 0}],
+            ]}>
+            ·
+          </Text>
+        </View>
+        {wrapCount && !wrapReply ? [reply, viewCount] : [viewCount, reply]}
       </View>
     </View>
   )

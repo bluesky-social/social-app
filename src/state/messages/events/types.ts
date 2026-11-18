@@ -69,3 +69,11 @@ export type MessagesEventBusEvent =
       type: 'logs'
       logs: chat.bsky.convo.getLog.$OutputBody['logs']
     }
+  | {
+      /**
+       * The bus fell too far behind to replay the log, so it skipped ahead to
+       * the present. The logs in between are never emitted, so subscribers
+       * should refetch whatever they derive from them.
+       */
+      type: 'gap'
+    }
