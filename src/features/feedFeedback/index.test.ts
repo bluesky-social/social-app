@@ -3,12 +3,12 @@ import {act, renderHook} from '@testing-library/react-native'
 
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {type FeedSourceFeedInfo} from '#/state/queries/feed'
-import {app} from '#/lexicons'
 import {
   type FeedFeedbackViewContext,
   unspeccedInteraction,
   useFeedFeedback,
-} from './feed-feedback'
+} from '#/features/feedFeedback'
+import {app} from '#/lexicons'
 
 const mockCall = jest.fn((..._args: unknown[]) => Promise.resolve())
 const mockAnalytics = {

@@ -16,10 +16,10 @@ import {
   type FeedDescriptor,
   type FeedPostSliceItem,
 } from '#/state/queries/post-feed'
+import {useAppviewClient} from '#/state/session'
 import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
 import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
-import {useAppviewClient} from './session'
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
 
