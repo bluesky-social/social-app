@@ -557,7 +557,7 @@ function ExpandedPostDetails({
         {maxWidth: '100%'},
         wrapCount && !wrapReply
           ? {width: '100%'}
-          : {marginLeft: hasCount && !wrapCount ? a.gap_xs.gap : 0},
+          : {marginLeft: hasCount && !wrapCount ? a.gap_md.gap : 0},
       ]}>
       <View
         onLayout={e => measure('count', e.nativeEvent.layout.width)}
@@ -603,16 +603,6 @@ function ExpandedPostDetails({
               {maxWidth: '100%'},
             ]}>
             {niceDate(i18n, post.indexedAt, 'dot separated')}
-          </Text>
-          <Text
-            aria-hidden
-            onLayout={e => measure('separator', e.nativeEvent.layout.width)}
-            style={[
-              a.text_sm,
-              t.atoms.text_contrast_medium,
-              (!hasCount || wrapCount) && [a.absolute, {opacity: 0}],
-            ]}>
-            ·
           </Text>
         </View>
         {wrapCount && !wrapReply ? [reply, viewCount] : [viewCount, reply]}
