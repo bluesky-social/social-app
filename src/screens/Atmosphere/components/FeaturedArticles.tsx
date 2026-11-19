@@ -4,6 +4,11 @@ import {useLingui} from '@lingui/react/macro'
 
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
 import {
+  type AtmosphereFeedbackForContent,
+  AtmosphereFeedbackProvider,
+  useAtmosphereFeedback,
+} from '#/screens/Atmosphere/feedback'
+import {
   AtmosphereContentItem,
   useLogContentPress,
 } from '#/screens/Atmosphere/metrics/context'
@@ -15,8 +20,10 @@ import {ExploreSectionHeader} from './ExploreSectionHeader'
 
 export function FeaturedArticles({
   articles,
+  feedback,
 }: {
   articles: app.bsky.embed.external.ViewArticle[]
+  feedback?: AtmosphereFeedbackForContent
 }) {
   const {t: l} = useLingui()
 
@@ -43,7 +50,10 @@ export function FeaturedArticles({
               contentId={article.uri}
               section="articles"
               position={index}>
-              <Article article={article} />
+              <AtmosphereFeedbackProvider
+                value={feedback?.({type: 'article', view: article})}>
+                <Article article={article} />
+              </AtmosphereFeedbackProvider>
             </AtmosphereContentItem>
           </Fragment>
         ))}
@@ -54,11 +64,18 @@ export function FeaturedArticles({
 
 function Article({article}: {article: app.bsky.embed.external.ViewArticle}) {
   const logPress = useLogContentPress()
+  const sendFeedback = useAtmosphereFeedback()
   return (
     <DocumentCompact
       view={article}
       containerStyle={[a.py_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}
-      onEmbedInteractionCallback={() => logPress('external')}
+      onPressCallback={() => {
+        logPress('external')
+        sendFeedback?.('app.bsky.feed.defs#clickthroughItem')
+      }}
+      onShareCallback={() =>
+        sendFeedback?.('app.bsky.feed.defs#interactionShare')
+      }
     />
   )
 }

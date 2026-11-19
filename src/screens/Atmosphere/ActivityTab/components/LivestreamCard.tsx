@@ -5,6 +5,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
 import {getAssociatedProfile} from '#/screens/Atmosphere/data/exploreData'
+import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
 import {useLogContentPress} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -27,6 +28,7 @@ export function LivestreamCard({
   const t = useTheme()
   const {state: interacted, onIn, onOut} = useInteractionState()
   const logPress = useLogContentPress()
+  const sendFeedback = useAtmosphereFeedback()
   const live = isLive(view)
 
   return (
@@ -35,7 +37,10 @@ export function LivestreamCard({
         testID="activityLivestreamCard"
         to={view.uri}
         label={l`Open livestream: ${view.title}`}
-        onPress={() => logPress('external')}
+        onPress={() => {
+          logPress('external')
+          sendFeedback?.('app.bsky.feed.defs#clickthroughItem')
+        }}
         onHoverIn={onIn}
         onHoverOut={onOut}
         onFocus={onIn}

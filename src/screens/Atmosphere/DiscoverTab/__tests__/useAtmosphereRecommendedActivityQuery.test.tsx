@@ -93,6 +93,10 @@ it('fetches one batch in recommendation order and keeps the raw response and rec
     'article',
   ])
   expect(result.current.data?.recIdStr).toBe(data.recIdStr)
+  expect(result.current.data?.items.map(item => item.reqId)).toEqual([
+    data.recIdStr,
+    data.recIdStr,
+  ])
   expect(queryClient.getQueryCache().getAll()[0].state.data).toBe(data)
 })
 

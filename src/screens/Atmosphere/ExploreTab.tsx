@@ -4,7 +4,11 @@ import {useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
+import {
+  EXPLORE_ARTICLES_FEEDBACK,
+  EXPLORE_PHOTOS_FEEDBACK,
+  EXPLORE_SECTION_PADDING,
+} from '#/screens/Atmosphere/const'
 import {
   getAtmosphereArticles,
   getAtmosphereExploreApps,
@@ -13,6 +17,7 @@ import {
   getAtmospherePublications,
 } from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
+import {useExploreFeedback} from '#/screens/Atmosphere/feedback'
 import {useAtmosphereMetricContext} from '#/screens/Atmosphere/metrics/context'
 import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
 import {atoms as a, useTheme} from '#/alf'
@@ -51,6 +56,14 @@ export function AtmosphereExploreTab({
   const {data, isError, isPending, refetch} = useAtmosphereExploreQuery()
   const moderationOpts = useModerationOpts()
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const articleFeedback = useExploreFeedback(
+    EXPLORE_ARTICLES_FEEDBACK,
+    data?.articles.recIdStr,
+  )
+  const photoFeedback = useExploreFeedback(
+    EXPLORE_PHOTOS_FEEDBACK,
+    data?.photos.recIdStr,
+  )
   const apps = data ? getAtmosphereExploreApps(data) : []
   const articles = data ? getAtmosphereArticles(data, moderationOpts) : []
   const livestreams = data ? getAtmosphereLivestreams(data) : []
@@ -138,9 +151,9 @@ export function AtmosphereExploreTab({
           ) : undefined}
           <AtmosphereNux />
           <FeaturedApps apps={apps} onPressSeeMore={onPressSeeMoreApps} />
-          <FeaturedArticles articles={articles} />
+          <FeaturedArticles articles={articles} feedback={articleFeedback} />
           <FeaturedLivestreams livestreams={livestreams} />
-          <FeaturedPhotos photos={photos} />
+          <FeaturedPhotos photos={photos} feedback={photoFeedback} />
           <FeaturedPublications publications={publications} />
         </View>
       </Gallery.Bleed>

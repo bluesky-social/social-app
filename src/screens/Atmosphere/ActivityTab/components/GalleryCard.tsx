@@ -8,6 +8,7 @@ import {
   getAssociatedProfile,
   getGalleryImage,
 } from '#/screens/Atmosphere/data/exploreData'
+import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
 import {useLogContentPress} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
@@ -33,6 +34,7 @@ export function GalleryCard({
   const dialogControl = useDialogControl()
   const {state: interacted, onIn, onOut} = useInteractionState()
   const logPress = useLogContentPress()
+  const sendFeedback = useAtmosphereFeedback()
   const image = getGalleryImage(view)
   const author = getAssociatedProfile(view.associatedProfiles)
 
@@ -61,6 +63,7 @@ export function GalleryCard({
         accessibilityHint={l`Opens the photos in a dialog`}
         onPress={() => {
           logPress('photoDialog')
+          sendFeedback?.('app.bsky.feed.defs#clickthroughItem')
           dialogControl.open()
         }}
         onHoverIn={onIn}

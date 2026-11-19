@@ -36,6 +36,8 @@ type RecommendedActivity =
   app.bsky.unspecced.getAtmosphereRecommendedActivity.$OutputBody
 
 export type DiscoverItem = {
+  /** Kept on each row so stale visibility callbacks cannot use a new request. */
+  reqId: string
   content: ActivityContent
   moderation: ModerationUI
 }
@@ -96,7 +98,7 @@ export function useAtmosphereRecommendedActivityQuery() {
               if (isActivityHidden(moderation)) return []
               // Hydrated URLs can repeat even for different source records.
               seen.add(content.view.uri)
-              return [{content, moderation}]
+              return [{content, moderation, reqId: data.recIdStr}]
             })
           : [],
       }

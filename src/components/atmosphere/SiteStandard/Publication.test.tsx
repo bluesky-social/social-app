@@ -1,7 +1,11 @@
 import {render, screen} from '@testing-library/react-native'
 
+import {shareUrl} from '#/lib/sharing'
 import {type app} from '#/lexicons'
 import {Publication, PublicationCard} from './Publication'
+
+let mockIsNative = false
+let mockOnLongPress: (() => void) | undefined
 
 const mockMenu = jest.fn<
   void,
@@ -29,7 +33,11 @@ jest.mock('#/alf', () => ({
   useTheme: () => ({atoms: new Proxy({}, {get: () => ({})})}),
   web: () => undefined,
 }))
-jest.mock('#/env', () => ({IS_NATIVE: false}))
+jest.mock('#/env', () => ({
+  get IS_NATIVE() {
+    return mockIsNative
+  },
+}))
 jest.mock('#/analytics', () => ({useAnalytics: () => ({metric: jest.fn()})}))
 jest.mock('#/lib/haptics', () => ({
   useHaptics: () => ({tap: jest.fn(), longPress: jest.fn()}),
@@ -38,9 +46,12 @@ jest.mock('#/lib/sharing', () => ({shareUrl: jest.fn()}))
 jest.mock('#/components/Link', () => ({
   Link: ({
     children,
+    onLongPress,
   }: {
     children: (state: {pressed: boolean}) => React.ReactNode
+    onLongPress?: () => void
   }) => {
+    mockOnLongPress = onLongPress
     const {View} =
       jest.requireActual<typeof import('react-native')>('react-native')
     return <View testID="link">{children({pressed: false})}</View>
@@ -88,7 +99,11 @@ const menuOffsets = () => {
   return {offsetY, offsetX}
 }
 
-beforeEach(() => mockMenu.mockClear())
+beforeEach(() => {
+  jest.clearAllMocks()
+  mockIsNative = false
+  mockOnLongPress = undefined
+})
 
 describe('Publication', () => {
   it.each([Publication, PublicationCard])(
@@ -166,6 +181,33 @@ describe('Publication', () => {
     expect(mockMenu.mock.calls[0][0].author).toBe(owner)
   })
 })
+
+describe.each([Publication, PublicationCard])(
+  'native sharing (%p)',
+  Component => {
+    it.each([true, false])(
+      'supports an optional onShareCallback: %s',
+      withCallback => {
+        mockIsNative = true
+        const onShare = jest.fn()
+        const onPress = jest.fn()
+        render(
+          <Component
+            view={view}
+            onShareCallback={withCallback ? onShare : undefined}
+            onPressCallback={onPress}
+          />,
+        )
+
+        expect(mockOnLongPress).toEqual(expect.any(Function))
+        mockOnLongPress?.()
+        expect(shareUrl).toHaveBeenCalledWith(view.uri)
+        expect(onShare).toHaveBeenCalledTimes(withCallback ? 1 : 0)
+        expect(onPress).not.toHaveBeenCalled()
+      },
+    )
+  },
+)
 
 describe('PublicationCard', () => {
   it('aligns the menu with its default padding', () => {
