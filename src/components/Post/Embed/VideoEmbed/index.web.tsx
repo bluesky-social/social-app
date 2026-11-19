@@ -25,7 +25,6 @@ import {
   VideoNotFoundError,
 } from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb'
 import {useAnalytics} from '#/analytics'
-import {IS_WEB_FIREFOX} from '#/env'
 import {type app} from '#/lexicons'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
@@ -107,7 +106,8 @@ export function VideoEmbed({
 
   useEffect(() => {
     if (!ref.current) return
-    if (isFullscreen && !IS_WEB_FIREFOX) return
+    // paused while fullscreen - see ViewportObserver
+    if (isFullscreen) return
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]
@@ -306,7 +306,13 @@ function ViewportObserver({
   // observing a div of 100vh height
   useEffect(() => {
     if (!ref.current) return
-    if (isFullscreen && !IS_WEB_FIREFOX) return
+    /*
+     * Pause while any video is fullscreen. Fullscreen resizes the window, so
+     * the page behind the video can reflow into another layout (e.g. mobile to
+     * desktop) and move this embed offscreen. Observing that would unmount the
+     * fullscreen player via OnlyNearScreen, which exits fullscreen.
+     */
+    if (isFullscreen) return
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]
