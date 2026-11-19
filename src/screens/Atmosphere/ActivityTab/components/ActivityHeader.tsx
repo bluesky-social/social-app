@@ -1,4 +1,4 @@
-import {View} from 'react-native'
+import {PixelRatio, View} from 'react-native'
 import {moderateProfile} from '@bsky/sdk/moderation'
 import {Trans} from '@lingui/react/macro'
 
@@ -10,12 +10,14 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {useAtmosphereMetricContext} from '#/screens/Atmosphere/metrics/context'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useAlf, useTheme} from '#/alf'
+import {useNativeFontScale} from '#/alf/util/dimensions'
 import {
   matchStandardSiteHostByPublication,
   matchStandardSiteHostByUrl,
   type StandardSiteHost,
 } from '#/components/atmosphere/SiteStandard/publishers'
+import {sizes} from '#/components/icons/common'
 import {GrainMark} from '#/components/icons/community/Grain'
 import {Streamplace} from '#/components/icons/community/Streamplace'
 import {InlineLinkText} from '#/components/Link'
@@ -76,37 +78,17 @@ export function ActivityHeader({row}: {row: ActivityCardRow}) {
           />
         </Text>
         <TimeElapsed timestamp={row.indexedAt} timeToString={formatTimeAgo}>
-          {({timeElapsed}) =>
-            app ? (
-              <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                {/*
-                 * The time, icon and app name are separate tags so translators
-                 * can reorder them. Wrapping the Trans in one Text would put
-                 * the icon inline, which needs baseline nudging, so the
-                 * comment asks translators to keep all text inside the tags.
-                 */}
-                {/* oxlint-disable-next-line bsky-internal/avoid-unwrapped-text */}
-                <Trans comment='When and on which app the activity happened, e.g. "6h ago on [icon] pckt". {timeElapsed} is already translated, e.g. "6h ago". <1/> is the app icon and <2>{appName}</2> is its name. You can reorder the tags. CAREFUL: any text outside <0> or <2> will not display correctly, so put every word (including particles such as で or 에서) inside one of them, e.g. "<1/><2>{appName}</2><0>で{timeElapsed}</0>".'>
-                  <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-                    {timeElapsed} on
-                  </Text>
-                  <AppIcon app={app} />
-                  <Text
-                    style={[
-                      a.text_sm,
-                      a.font_semi_bold,
-                      t.atoms.text_contrast_medium,
-                    ]}>
-                    {appName}
-                  </Text>
+          {({timeElapsed}) => (
+            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              {app ? (
+                <Trans comment='When and on which app the activity happened, e.g. "6h ago on pckt". {timeElapsed} is already translated. The app name includes its icon. You can reorder the time and app name, e.g. "<0>{appName}</0>で{timeElapsed}".'>
+                  {timeElapsed} on <AppName app={app}>{appName}</AppName>
                 </Trans>
-              </View>
-            ) : (
-              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-                {timeElapsed}
-              </Text>
-            )
-          }
+              ) : (
+                timeElapsed
+              )}
+            </Text>
+          )}
         </TimeElapsed>
       </View>
     </View>
@@ -143,9 +125,39 @@ function getActivityApp({
   }
 }
 
-function AppIcon({app}: {app: ActivityApp}) {
+/** Centers the app marks on text_sm's cap height rather than its baseline. */
+const INLINE_ICON_OFFSET = 1.5
+
+function AppName({
+  app,
+  children,
+}: {
+  app: ActivityApp
+  children: React.ReactNode
+}) {
   const t = useTheme()
-  return app.Icon ? (
-    <app.Icon size="xs" fill={t.atoms.text_contrast_medium.color} />
-  ) : null
+  const {fonts} = useAlf()
+  const nativeFontScale = useNativeFontScale()
+  const scaleMultiplier = fonts.scaleMultiplier * nativeFontScale
+  /** Inline views do not inherit the surrounding text's font scaling. */
+  const iconSize = PixelRatio.roundToNearestPixel(sizes.xs * scaleMultiplier)
+
+  return (
+    <Text style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
+      {app.Icon ? (
+        <>
+          <app.Icon
+            width={iconSize}
+            fill={t.atoms.text_contrast_medium.color}
+            style={{
+              transform: [{translateY: INLINE_ICON_OFFSET * scaleMultiplier}],
+            }}
+          />
+          {/* Keep the icon and name on the same line. */}
+          {'\u00a0'}
+        </>
+      ) : null}
+      {children}
+    </Text>
+  )
 }
