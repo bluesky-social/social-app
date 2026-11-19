@@ -85,6 +85,7 @@ export function FeedSubjectPreview({
         uri={uri}
         subjectLabel={l`Feed`}
         liveLabels={view?.labels}
+        liveCid={view?.uri === uri.toString() ? view.cid : undefined}
       />
     )
   }

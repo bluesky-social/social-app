@@ -90,6 +90,7 @@ export function ListSubjectPreview({
         uri={uri}
         subjectLabel={l`List`}
         liveLabels={view?.labels}
+        liveCid={view?.uri === uri.toString() ? view.cid : undefined}
       />
     )
   }

@@ -117,6 +117,11 @@ export function PostSubjectPreview({
         uri={uri}
         subjectLabel={subjectLabel}
         liveLabels={postQuery.data?.labels}
+        liveCid={
+          postQuery.data?.uri === uri.toString()
+            ? postQuery.data.cid
+            : undefined
+        }
       />
     )
   }

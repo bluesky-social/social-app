@@ -16,6 +16,7 @@ export function BskyRecordSnapshotPreview({
   uri,
   subjectLabel,
   liveLabels,
+  liveCid,
 }: {
   report: Pick<
     tools.ozone.inbox.getReport.$OutputBody['report'],
@@ -24,6 +25,7 @@ export function BskyRecordSnapshotPreview({
   uri: AtUri
   subjectLabel: string
   liveLabels?: com.atproto.label.defs.Label[]
+  liveCid?: string
 }) {
   const {i18n, t: l} = useLingui()
   const {query, profile, opts} = useSubjectPreviewProfile(uri.host)
@@ -56,10 +58,13 @@ export function BskyRecordSnapshotPreview({
             ? [{...profile, $type: 'app.bsky.actor.defs#profileViewBasic'}]
             : [],
           labels: [
+            // Also respect warnings on the current revision of this record.
             ...(liveLabels?.filter(
               label =>
                 label.uri === ref.uri &&
-                (!label.cid || label.cid === ref.cid) &&
+                (!label.cid ||
+                  label.cid === ref.cid ||
+                  label.cid === liveCid) &&
                 !label.neg,
             ) ?? []),
             ...(snapshot.labels?.map(({val}) => ({

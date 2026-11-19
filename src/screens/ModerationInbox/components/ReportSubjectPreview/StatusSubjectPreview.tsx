@@ -80,6 +80,7 @@ export function StatusSubjectPreview({
         uri={uri}
         subjectLabel={l`Account status`}
         liveLabels={status?.labels}
+        liveCid={status?.uri === uri.toString() ? status.cid : undefined}
       />
     )
   }

@@ -121,6 +121,9 @@ export function StarterPackSubjectPreview({
         uri={uri}
         subjectLabel={l`Starter Pack`}
         liveLabels={query.data?.labels}
+        liveCid={
+          query.data?.uri === uri.toString() ? query.data.cid : undefined
+        }
       />
     )
   }

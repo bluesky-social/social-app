@@ -117,7 +117,8 @@ describe('PostSubjectPreview', () => {
 
   it.each([
     ['the same URI', uri.toString(), undefined, true],
-    ['a different record revision', uri.toString(), 'different-cid', false],
+    ['the current record revision', uri.toString(), 'different-cid', true],
+    ['an unrelated record revision', uri.toString(), 'other-cid', false],
     [
       'a different URI',
       'at://did:plc:aaaaaaaaaaaaaaaaaaaaaaaa/app.bsky.feed.post/other',
@@ -129,6 +130,7 @@ describe('PostSubjectPreview', () => {
     mockOpts.prefs.labelers = [{did: labeler, labels: {}}]
     mockPostQuery = {
       data: {
+        uri: uri.toString(),
         cid: 'different-cid',
         record,
         labels: [
