@@ -19,6 +19,16 @@ plus `viewLivestream.lastSeenAt` and `viewArticlePublication.viewer` (atproto PR
 published record CID. Exclude it from scoped updates until the published schema
 includes these fields.
 
+## Local extension: `tools.ozone.inbox.getReport`
+
+The schema matches the version in atproto commit
+`57ac20d8f387707e66fc88cdf57ff88b76678331` (PR 5947), adding the optional
+`accountStatus` and `subjectStatus` fields. As of 2026-11-19 the published
+record does not include them. The manifest CID is a locally calculated
+content-integrity pin, not the published record CID. Exclude this schema from
+updates until the published record includes the fields, then replace the local
+copy and pin with the published version.
+
 ## Unpublished Atmosphere schemas
 
 The `app.bsky.unspecced` namespace is intentionally unpublished (it is a DNS

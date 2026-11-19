@@ -11,12 +11,12 @@ export function getReportedSubjectStatusLabels({
   'accountStatus' | 'subjectStatus'
 >): MessageDescriptor[] {
   const labels: MessageDescriptor[] = []
-  const enforcement =
-    accountStatus?.enforcement === 'none'
-      ? accountStatus.hosting
-      : accountStatus?.enforcement
-  if (enforcement === 'takendown') labels.push(msg`Account taken down`)
-  else if (enforcement === 'suspended') labels.push(msg`Account suspended`)
+  const accountStates = new Set([
+    accountStatus?.enforcement,
+    accountStatus?.hosting,
+  ])
+  if (accountStates.has('takendown')) labels.push(msg`Account taken down`)
+  if (accountStates.has('suspended')) labels.push(msg`Account suspended`)
 
   if (accountStatus?.hosting === 'deleted') labels.push(msg`Account deleted`)
   else if (accountStatus?.hosting === 'deactivated')

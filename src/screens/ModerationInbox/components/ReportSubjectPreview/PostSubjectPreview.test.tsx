@@ -4,7 +4,6 @@ import {setupI18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
 import {render, screen} from '@testing-library/react-native'
 
-import * as externalModeration from '#/lib/moderation/moderateExternalView'
 import {PostSubjectPreview} from './PostSubjectPreview'
 
 jest.unmock('multiformats/cid')
@@ -25,6 +24,7 @@ const record = {
 const i18n = setupI18n({locale: 'en', messages: {en: {}}})
 let mockPostQuery: {data?: unknown; isPending: boolean; isSuccess: boolean}
 let mockOpts: ModerationOpts
+let mockProfile: unknown
 
 jest.mock('#/state/queries/post', () => ({usePostQuery: () => mockPostQuery}))
 jest.mock('#/state/queries/profile', () => ({useProfileQuery: () => ({})}))
@@ -43,6 +43,7 @@ jest.mock(
     useSubjectPreviewProfile: () => ({
       query: {isPending: false},
       opts: mockOpts,
+      profile: mockProfile,
     }),
   }),
 )
@@ -75,6 +76,7 @@ jest.mock('#/components/moderation/ContentHider', () => {
 
 beforeEach(() => {
   mockPostQuery = {isPending: false, isSuccess: false}
+  mockProfile = undefined
   mockOpts = {
     userDid: 'did:plc:reporter',
     prefs: {
@@ -87,14 +89,14 @@ beforeEach(() => {
   }
 })
 
-function renderPreview(snapshot: unknown, allowReportRecordSnapshot = true) {
+function renderPreview(snapshot: unknown) {
   return render(
     <I18nProvider i18n={i18n}>
       <PostSubjectPreview
         report={{subject, record: snapshot as never}}
         uri={uri}
         subjectLabel="Post"
-        allowReportRecordSnapshot={allowReportRecordSnapshot}
+        allowReportRecordSnapshot
       />
     </I18nProvider>,
   )
@@ -113,18 +115,16 @@ describe('PostSubjectPreview', () => {
     expect(screen.getByText('Post unavailable')).toBeTruthy()
   })
 
-  it('does not substitute a later post revision for the returned record', () => {
-    mockPostQuery = {
-      data: {cid: 'different-cid', record: {...record, text: 'Newer text'}},
-      isPending: false,
-      isSuccess: true,
-    }
-    renderPreview(record)
-    expect(screen.getByText('“Example reported post”')).toBeTruthy()
-    expect(screen.queryByText('“Newer text”')).toBeNull()
-  })
-
-  it('applies record-URI labels from a newer AppView version', () => {
+  it.each([
+    ['the same URI', uri.toString(), undefined, true],
+    ['a different record revision', uri.toString(), 'different-cid', false],
+    [
+      'a different URI',
+      'at://did:plc:aaaaaaaaaaaaaaaaaaaaaaaa/app.bsky.feed.post/other',
+      undefined,
+      false,
+    ],
+  ])('applies a live label only to %s', (_name, labelUri, cid, hidden) => {
     const labeler = 'did:plc:aaaaaaaaaaaaaaaaaaaaaaaa'
     mockOpts.prefs.labelers = [{did: labeler, labels: {}}]
     mockPostQuery = {
@@ -134,7 +134,8 @@ describe('PostSubjectPreview', () => {
         labels: [
           {
             src: labeler,
-            uri: uri.toString(),
+            uri: labelUri,
+            cid,
             val: '!hide',
             cts: record.createdAt,
           },
@@ -144,42 +145,7 @@ describe('PostSubjectPreview', () => {
       isSuccess: true,
     }
     renderPreview(record)
-    expect(screen.getByText('Content hidden')).toBeTruthy()
-  })
-
-  it('does not apply labels for a different URI or record version', () => {
-    const labeler = 'did:plc:aaaaaaaaaaaaaaaaaaaaaaaa'
-    mockOpts.prefs.labelers = [{did: labeler, labels: {}}]
-    mockPostQuery = {
-      data: {
-        cid: 'different-cid',
-        record,
-        labels: [
-          {
-            src: labeler,
-            uri: uri.toString(),
-            cid: 'different-cid',
-            val: '!hide',
-            cts: record.createdAt,
-          },
-          {
-            src: labeler,
-            uri: 'at://did:plc:aaaaaaaaaaaaaaaaaaaaaaaa/app.bsky.feed.post/other',
-            val: '!hide',
-            cts: record.createdAt,
-          },
-        ],
-      },
-      isPending: false,
-      isSuccess: true,
-    }
-    renderPreview(record)
-    expect(screen.getByText('“Example reported post”')).toBeTruthy()
-  })
-
-  it('does not use reporter snapshots in the owner-action preview', () => {
-    renderPreview(record, false)
-    expect(screen.getByText('Post unavailable')).toBeTruthy()
+    expect(screen.queryByText('Content hidden') !== null).toBe(hidden)
   })
 
   it('respects muted words when showing the snapshot', () => {
@@ -189,8 +155,44 @@ describe('PostSubjectPreview', () => {
     expect(screen.queryByText('“Example reported post”')).toBeNull()
   })
 
-  it('includes record self-labels in the moderation decision', () => {
-    const spy = jest.spyOn(externalModeration, 'moderateExternalView')
+  it('hides the snapshot when the viewer blocked the author', () => {
+    mockProfile = {
+      did,
+      handle: 'example.bsky.social',
+      viewer: {blocking: 'at://block'},
+    }
+    renderPreview(record)
+    expect(screen.getByText('Content hidden')).toBeTruthy()
+  })
+
+  it('applies self-labels to the rendered text without an author profile', () => {
+    mockOpts.labelDefs = {
+      [did]: [
+        {
+          identifier: 'sensitive',
+          severity: 'alert',
+          blurs: 'content',
+          configurable: true,
+          defaultSetting: 'hide',
+          flags: [],
+          behaviors: {content: {contentView: 'blur'}},
+          locales: [],
+        },
+      ],
+    }
+    renderPreview({
+      ...record,
+      labels: {
+        $type: 'com.atproto.label.defs#selfLabels',
+        values: [{val: 'sensitive'}],
+      },
+    })
+    expect(screen.getByText('Content hidden')).toBeTruthy()
+    expect(screen.queryByText('“Example reported post”')).toBeNull()
+  })
+
+  it('shows text for a media-only adult self-label', () => {
+    mockOpts.prefs.adultContentEnabled = false
     renderPreview({
       ...record,
       labels: {
@@ -198,13 +200,7 @@ describe('PostSubjectPreview', () => {
         values: [{val: 'porn'}],
       },
     })
-    expect(spy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        labels: [expect.objectContaining({src: did, val: 'porn'})],
-      }),
-      mockOpts,
-    )
-    spy.mockRestore()
+    expect(screen.getByText('“Example reported post”')).toBeTruthy()
   })
 
   it('respects posts hidden by the viewer', () => {

@@ -20,6 +20,11 @@ describe('report subject status labels', () => {
         accountStatus: {enforcement: 'none', hosting: 'takendown'},
       }).map(label => label.message),
     ).toEqual(['Account taken down'])
+    expect(
+      getReportedSubjectStatusLabels({
+        accountStatus: {enforcement: 'suspended', hosting: 'takendown'},
+      }).map(label => label.message),
+    ).toEqual(['Account taken down', 'Account suspended'])
   })
 
   it('does not infer a status from missing, unknown, or active values', () => {
