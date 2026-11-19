@@ -1,4 +1,4 @@
-import {type AtUri, isValidDid} from '@atproto/syntax'
+import {type AtUri, isValidDid, normalizeDatetimeAlways} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {moderateExternalView} from '#/lib/moderation/moderateExternalView'
@@ -67,11 +67,13 @@ export function BskyRecordSnapshotPreview({
                   label.cid === liveCid) &&
                 !label.neg,
             ) ?? []),
+            // AppView also converts record self-labels to view labels. The
+            // inbox record has no separately verified CID to attach here.
             ...(snapshot.labels?.map(({val}) => ({
               src: did,
               uri: ref.uri,
               val,
-              cts: '1970-01-01T00:00:00.000Z' as const,
+              cts: normalizeDatetimeAlways(snapshot.createdAt),
             })) ?? []),
           ],
         },
