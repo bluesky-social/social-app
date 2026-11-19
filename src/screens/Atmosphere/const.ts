@@ -1,3 +1,4 @@
+import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {atoms as a} from '#/alf'
 
 type FeedbackDestination = {
@@ -6,17 +7,17 @@ type FeedbackDestination = {
   feedDid: string
 }
 
-/** Disabled until Atmosphere has its own feedback-only feeds. */
+/** Feedback-only feeds for Atmosphere's recommendation surfaces. */
 export const DISCOVER_FEEDBACK: FeedbackDestination = {
-  feedUri: undefined,
+  feedUri: PROD_DEFAULT_FEED('atmosphere-activity'),
   feedDid: 'did:web:discover.bsky.app',
 }
 export const EXPLORE_ARTICLES_FEEDBACK: FeedbackDestination = {
-  feedUri: undefined,
+  feedUri: PROD_DEFAULT_FEED('atmosphere-articles'),
   feedDid: 'did:web:discover.bsky.app',
 }
 export const EXPLORE_PHOTOS_FEEDBACK: FeedbackDestination = {
-  feedUri: undefined,
+  feedUri: PROD_DEFAULT_FEED('atmosphere-galleries'),
   feedDid: 'did:web:discover.bsky.app',
 }
 

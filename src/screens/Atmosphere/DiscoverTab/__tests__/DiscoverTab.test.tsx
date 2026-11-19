@@ -4,7 +4,7 @@ import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
 import {act, fireEvent, render} from '@testing-library/react-native'
 
-import {DISCOVER_FEED_URI} from '#/lib/constants'
+import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {
   article,
   debbie,
@@ -20,6 +20,8 @@ import {
   useAtmosphereRecommendedActivityQuery,
 } from '../useAtmosphereRecommendedActivityQuery'
 
+const FEED_URI = PROD_DEFAULT_FEED('atmosphere-activity')
+const defaultFeedUri = DISCOVER_FEEDBACK.feedUri
 const mockCall = jest.fn((..._args: unknown[]) => Promise.resolve())
 const mockClient = {call: mockCall}
 const mockLogger = {debug: jest.fn()}
@@ -162,7 +164,7 @@ beforeEach(() => {
   jest.clearAllMocks()
   jest.useFakeTimers()
   mockHasSession = true
-  DISCOVER_FEEDBACK.feedUri = DISCOVER_FEED_URI
+  DISCOVER_FEEDBACK.feedUri = defaultFeedUri
   i18n.loadAndActivate({locale: 'en', messages: {}})
 })
 
@@ -344,7 +346,7 @@ it('batches attributed record impressions through Discover without changing cont
   expect(mockCall).toHaveBeenCalledWith(
     app.bsky.feed.sendInteractions,
     {
-      feed: DISCOVER_FEED_URI,
+      feed: FEED_URI,
       interactions: [
         {
           item: DOCUMENT_REF.uri,

@@ -3,7 +3,7 @@ import {createDeferrable} from '@atproto/common-web'
 import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
-import {DISCOVER_FEED_URI} from '#/lib/constants'
+import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {exploreResponseFixture} from '#/screens/Atmosphere/__tests__/fixtures/exploreResponse'
 import {livestreamPreviewFixture} from '#/screens/Atmosphere/__tests__/fixtures/livestreamPreview'
 import {
@@ -17,6 +17,15 @@ import {type AtmosphereFeedbackForContent} from '#/screens/Atmosphere/feedback'
 import {AtmosphereMetricsScope} from '#/screens/Atmosphere/metrics/context'
 import {app} from '#/lexicons'
 
+const FEED_URIS = {
+  articles: PROD_DEFAULT_FEED('atmosphere-articles'),
+  photos: PROD_DEFAULT_FEED('atmosphere-galleries'),
+}
+const defaultFeedUris = {
+  discover: DISCOVER_FEEDBACK.feedUri,
+  articles: EXPLORE_ARTICLES_FEEDBACK.feedUri,
+  photos: EXPLORE_PHOTOS_FEEDBACK.feedUri,
+}
 const mockMetric = jest.fn()
 const mockCall = jest.fn((..._args: unknown[]) => Promise.resolve())
 const mockClient = {call: mockCall}
@@ -197,9 +206,9 @@ beforeEach(() => {
   jest.clearAllMocks()
   mockModerationOpts = defaultModerationOpts
   mockHasSession = true
-  DISCOVER_FEEDBACK.feedUri = DISCOVER_FEED_URI
-  EXPLORE_ARTICLES_FEEDBACK.feedUri = DISCOVER_FEED_URI
-  EXPLORE_PHOTOS_FEEDBACK.feedUri = DISCOVER_FEED_URI
+  DISCOVER_FEEDBACK.feedUri = defaultFeedUris.discover
+  EXPLORE_ARTICLES_FEEDBACK.feedUri = defaultFeedUris.articles
+  EXPLORE_PHOTOS_FEEDBACK.feedUri = defaultFeedUris.photos
   delete mockFeedback.articles
   delete mockFeedback.photos
 })
@@ -554,12 +563,12 @@ describe('Explore recommendation feedback', () => {
       flushFeedback()
       expect(mockCall.mock.calls).toEqual(
         [
-          [DOCUMENT_URI, ARTICLE_REQUEST],
-          [GALLERY_URI, PHOTO_REQUEST],
-        ].map(([item, reqId]) => [
+          [DOCUMENT_URI, ARTICLE_REQUEST, FEED_URIS.articles],
+          [GALLERY_URI, PHOTO_REQUEST, FEED_URIS.photos],
+        ].map(([item, reqId, feed]) => [
           app.bsky.feed.sendInteractions,
           {
-            feed: DISCOVER_FEED_URI,
+            feed,
             interactions: [
               'app.bsky.feed.defs#requestMore',
               'app.bsky.feed.defs#requestLess',
@@ -600,7 +609,7 @@ describe('Explore recommendation feedback', () => {
       expect(mockCall).toHaveBeenCalledWith(
         app.bsky.feed.sendInteractions,
         {
-          feed: DISCOVER_FEED_URI,
+          feed: FEED_URIS[other],
           interactions: [
             {
               item: other === 'articles' ? DOCUMENT_URI : GALLERY_URI,
@@ -612,7 +621,9 @@ describe('Explore recommendation feedback', () => {
         },
         {service: 'did:web:discover.bsky.app#bsky_fg'},
       )
-      expect(DISCOVER_FEEDBACK.feedUri).toBe(DISCOVER_FEED_URI)
+      expect(DISCOVER_FEEDBACK.feedUri).toBe(
+        PROD_DEFAULT_FEED('atmosphere-activity'),
+      )
     },
   )
 
@@ -672,12 +683,12 @@ describe('Explore recommendation feedback', () => {
     flushFeedback()
     expect(mockCall.mock.calls).toEqual(
       [
-        [DOCUMENT_URI, ARTICLE_REQUEST],
-        [GALLERY_URI, PHOTO_REQUEST],
-      ].map(([item, reqId]) => [
+        [DOCUMENT_URI, ARTICLE_REQUEST, FEED_URIS.articles],
+        [GALLERY_URI, PHOTO_REQUEST, FEED_URIS.photos],
+      ].map(([item, reqId, feed]) => [
         app.bsky.feed.sendInteractions,
         {
-          feed: DISCOVER_FEED_URI,
+          feed,
           interactions: events.map(event => ({
             item,
             reqId,
@@ -709,12 +720,12 @@ describe('Explore recommendation feedback', () => {
     flushFeedback()
     expect(mockCall.mock.calls).toEqual(
       [
-        [DOCUMENT_URI, ARTICLE_REQUEST],
-        [GALLERY_URI, PHOTO_REQUEST],
-      ].map(([item, reqId]) => [
+        [DOCUMENT_URI, ARTICLE_REQUEST, FEED_URIS.articles],
+        [GALLERY_URI, PHOTO_REQUEST, FEED_URIS.photos],
+      ].map(([item, reqId, feed]) => [
         app.bsky.feed.sendInteractions,
         {
-          feed: DISCOVER_FEED_URI,
+          feed,
           interactions: [
             {
               item,
