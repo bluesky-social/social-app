@@ -13,12 +13,12 @@ import {
   writeAsStringAsync,
 } from 'expo-file-system/legacy'
 import {SaveFormat} from 'expo-image-manipulator'
-import * as MediaLibrary from 'expo-media-library/legacy'
 import * as Sharing from 'expo-sharing'
 
 import {logger} from '#/logger'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {renderImage} from './image-manipulator'
+import {Album, Asset} from './media-library'
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
 import {convertCdnPreset, getResizedDimensions} from './util'
@@ -123,52 +123,31 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
       // android triggers an annoying permission prompt if you try and move an image
       // between albums. therefore, we need to either create the album with the image
       // as the starting image, or put it directly into the album
-      const album = await MediaLibrary.getAlbumAsync(ALBUM_NAME)
+      const album = await Album.get(ALBUM_NAME)
       if (album) {
-        // try and migrate if needed
-        try {
-          if (await MediaLibrary.albumNeedsMigrationAsync(album)) {
-            await MediaLibrary.migrateAlbumIfNeededAsync(album)
-          }
-        } catch (err) {
-          logger.info('Attempted and failed to migrate album', {
-            safeMessage: err,
-          })
-        }
-
         try {
           // if album exists, put the image straight in there
-          await MediaLibrary.createAssetAsync(imagePath, album)
+          await Asset.create(imagePath, album)
         } catch (err) {
           logger.info('Failed to create asset', {safeMessage: err})
           // however, it's possible that we don't have write permission to the album
           // try making a new one!
           try {
-            await MediaLibrary.createAlbumAsync(
-              ALBUM_NAME,
-              undefined,
-              undefined,
-              imagePath,
-            )
+            await Album.create(ALBUM_NAME, [imagePath])
           } catch (err2) {
             logger.info('Failed to create asset in a fresh album', {
               safeMessage: err2,
             })
             // ... and if all else fails, just put it in DCIM
-            await MediaLibrary.createAssetAsync(imagePath)
+            await Asset.create(imagePath)
           }
         }
       } else {
         // otherwise, create album with asset (albums must always have at least one asset)
-        await MediaLibrary.createAlbumAsync(
-          ALBUM_NAME,
-          undefined,
-          undefined,
-          imagePath,
-        )
+        await Album.create(ALBUM_NAME, [imagePath])
       }
     } else {
-      await MediaLibrary.saveToLibraryAsync(imagePath)
+      await Asset.create(imagePath)
     }
   } catch (err) {
     logger.error(err instanceof Error ? err : String(err), {
