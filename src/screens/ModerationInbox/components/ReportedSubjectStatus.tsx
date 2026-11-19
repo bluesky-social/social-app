@@ -1,3 +1,4 @@
+import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -19,18 +20,15 @@ export function ReportedSubjectStatus({
   if (!labels.length) return null
 
   return (
-    <Text
-      testID="moderationInboxReportedSubjectStatus"
-      style={[a.text_sm, t.atoms.text_contrast_medium]}>
-      <Trans>Current status:</Trans>{' '}
-      {labels.map((label, index) => (
-        <Text
-          key={label.id}
-          style={[a.font_semi_bold, t.atoms.text_contrast_high]}>
-          {index > 0 ? ' · ' : ''}
+    <View testID="moderationInboxReportedSubjectStatus" style={[a.gap_2xs]}>
+      <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
+        <Trans>Current status:</Trans>
+      </Text>
+      {labels.map(label => (
+        <Text key={label.id} style={[a.text_md]}>
           {i18n._(label)}
         </Text>
       ))}
-    </Text>
+    </View>
   )
 }
