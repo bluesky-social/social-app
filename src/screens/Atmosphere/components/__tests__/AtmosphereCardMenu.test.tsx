@@ -9,6 +9,9 @@ import {type app, place, site, social} from '#/lexicons'
 import {AtmosphereCardMenu} from '../AtmosphereCardMenu'
 
 const mockOpenLink = jest.fn()
+const mockUseOpenLink = jest.fn(
+  (_opts?: {preferNativeApp?: boolean}) => mockOpenLink,
+)
 const mockNavigate = jest.fn()
 const mockOpenReport = jest.fn()
 const mockShareUrl = jest.fn()
@@ -40,7 +43,7 @@ jest.mock('#/env', () => ({
   },
 }))
 jest.mock('#/lib/hooks/useOpenLink', () => ({
-  useOpenLink: () => mockOpenLink,
+  useOpenLink: (opts?: {preferNativeApp?: boolean}) => mockUseOpenLink(opts),
 }))
 jest.mock('#/lib/hooks/useOpenComposer', () => ({
   useOpenComposer: () => ({openComposer: mockOpenComposer}),
@@ -393,6 +396,9 @@ describe.each([
     it('opens the external uri', () => {
       renderMenu(type)
 
+      expect(mockUseOpenLink).toHaveBeenCalledWith({
+        preferNativeApp: type === 'photo',
+      })
       fireEvent.press(screen.getByLabelText(viewLabel))
       expect(mockOpenLink).toHaveBeenCalledWith(view.uri)
     })

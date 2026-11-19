@@ -101,7 +101,7 @@ export function AtmosphereCardMenu({
 }) {
   const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
-  const openLink = useOpenLink()
+  const openLink = useOpenLink({preferNativeApp: type === 'photo'})
   const {hasSession} = useSession()
   const aa = useAgeAssurance()
   const requireAuth = useRequireAuth()

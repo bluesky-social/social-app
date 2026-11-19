@@ -85,11 +85,13 @@ jest.mock('#/components/Link', () => {
     Link: ({
       to,
       label,
+      preferNativeApp,
       onPress,
       children,
     }: {
       to: string
       label: string
+      preferNativeApp?: boolean
       onPress?: () => void
       children: React.ReactNode
     }) => (
@@ -98,6 +100,7 @@ jest.mock('#/components/Link', () => {
         accessibilityRole="link"
         accessibilityLabel={label}
         accessibilityHint=""
+        accessibilityState={{selected: Boolean(preferNativeApp)}}
         accessibilityValue={{text: to}}
         onPress={onPress}>
         {children}
@@ -185,6 +188,7 @@ describe('a single image', () => {
     const link = screen.getByTestId('link')
     expect(link.props.accessibilityLabel).toBe('Alt text')
     expect((link.props.accessibilityValue as {text: string}).text).toBe(URI)
+    expect(link.props.accessibilityState).toEqual({selected: true})
     expect(
       (screen.getByTestId('image').props.accessibilityValue as {text: string})
         .text,
@@ -217,6 +221,7 @@ describe('several images', () => {
     ])
     for (const link of links) {
       expect((link.props.accessibilityValue as {text: string}).text).toBe(URI)
+      expect(link.props.accessibilityState).toEqual({selected: true})
     }
     expect(
       screen
