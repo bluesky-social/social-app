@@ -1,4 +1,3 @@
-import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {atoms as a} from '#/alf'
 
 type FeedbackDestination = {
@@ -7,17 +6,17 @@ type FeedbackDestination = {
   feedDid: string
 }
 
-/** Temporary destinations until Atmosphere has its own feedback-only feeds. */
+/** Disabled until Atmosphere has its own feedback-only feeds. */
 export const DISCOVER_FEEDBACK: FeedbackDestination = {
-  feedUri: DISCOVER_FEED_URI,
+  feedUri: undefined,
   feedDid: 'did:web:discover.bsky.app',
 }
 export const EXPLORE_ARTICLES_FEEDBACK: FeedbackDestination = {
-  feedUri: DISCOVER_FEED_URI,
+  feedUri: undefined,
   feedDid: 'did:web:discover.bsky.app',
 }
 export const EXPLORE_PHOTOS_FEEDBACK: FeedbackDestination = {
-  feedUri: DISCOVER_FEED_URI,
+  feedUri: undefined,
   feedDid: 'did:web:discover.bsky.app',
 }
 
