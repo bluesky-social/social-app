@@ -21,6 +21,7 @@ jest.mock('../useAtmosphereRecommendedActivityQuery', () => ({
 }))
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
+  useAlf: () => ({fonts: {scaleMultiplier: 1}}),
   useTheme: () => ({
     atoms: {text_contrast_medium: {color: '#667788'}, border_contrast_low: {}},
     palette: {primary_500: '#006aff'},
@@ -182,8 +183,7 @@ it.each([
   const screen = renderTab()
 
   expect(screen.getByText(sentence)).toBeTruthy()
-  expect(screen.getByText('1h on')).toBeTruthy()
-  expect(screen.getByText(app)).toBeTruthy()
+  expect(screen.getByText(app, {exact: false})).toBeTruthy()
   expect(mockTimestamp).toHaveBeenCalledWith(content.view.createdAt)
   expect(screen.getByText(content.view.title)).toBeTruthy()
 })

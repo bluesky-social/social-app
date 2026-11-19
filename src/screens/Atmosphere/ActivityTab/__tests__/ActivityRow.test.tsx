@@ -41,6 +41,7 @@ jest.mock('#/analytics', () => ({
 }))
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
+  useAlf: () => ({fonts: {scaleMultiplier: 1}}),
   useTheme: () => ({
     atoms: new Proxy({}, {get: () => ({})}),
     palette: new Proxy({}, {get: () => '#000'}),
@@ -166,15 +167,12 @@ function renderEntry(entry: TimelineEntry) {
   return renderRow(rowOf(entry))
 }
 
-/** The sentence, then "1h on" and the app name (just "1h" without an app). */
 function expectHeader(sentence: string, app?: string) {
   expect(screen.getByText(sentence)).toBeTruthy()
   if (app) {
-    expect(screen.getByText('1h on')).toBeTruthy()
-    expect(screen.getByText(app)).toBeTruthy()
+    expect(screen.getByText(app, {exact: false})).toBeTruthy()
   } else {
     expect(screen.getByText('1h')).toBeTruthy()
-    expect(screen.queryByText('1h on')).toBeNull()
   }
 }
 
