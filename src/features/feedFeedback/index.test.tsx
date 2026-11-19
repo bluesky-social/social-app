@@ -3,6 +3,8 @@ import {act, renderHook} from '@testing-library/react-native'
 
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {type FeedSourceFeedInfo} from '#/state/queries/feed'
+import {type FeedPostSliceItem} from '#/state/queries/post-feed'
+import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
 import {
   FeedFeedbackProvider,
   type FeedFeedbackViewContext,
@@ -10,6 +12,7 @@ import {
   FeedItemProvider,
   unspeccedInteraction,
   useFeedFeedback,
+  useFeedFeedbackCore,
   useFeedItemFeedback,
 } from '#/features/feedFeedback'
 import {app} from '#/lexicons'
@@ -30,7 +33,7 @@ jest.mock('#/state/session', () => ({
 }))
 jest.mock('#/analytics', () => ({useAnalytics: () => mockAnalytics}))
 // Only used by onItemSeen, and importing it pulls in the whole feed list.
-jest.mock('#/view/com/posts/PostFeed', () => ({getItemsForFeedback: () => []}))
+jest.mock('#/view/com/posts/PostFeed', () => ({getItemsForFeedback: jest.fn()}))
 // The real module imports Reanimated, which needs its native half.
 jest.mock('#/state/queries/feed', () => ({
   isFeedSourceFeedInfo: (feed: {type: string}) => feed.type === 'feed',
@@ -57,6 +60,7 @@ function feed(uri: string, did: string) {
 beforeEach(() => {
   jest.useFakeTimers()
   mockCall.mockClear()
+  jest.mocked(getItemsForFeedback).mockReturnValue([])
 })
 afterEach(() => {
   jest.useRealTimers()
@@ -96,6 +100,28 @@ function save(type: 'save' | 'unsave') {
 }
 
 describe('useFeedFeedback', () => {
+  it('preserves seen attribution and deduplicates by post identity', () => {
+    const item = {uri: POST_URI} as unknown as FeedPostSliceItem
+    jest
+      .mocked(getItemsForFeedback)
+      .mockReturnValue([{item, feedContext: 'context', reqId: 'req'}])
+    const result = render()
+    act(() => {
+      result.current.onItemSeen({})
+      result.current.onItemSeen({})
+    })
+
+    expect(flush()).toEqual([
+      {
+        item: POST_URI,
+        event: 'app.bsky.feed.defs#interactionSeen',
+        feedContext: 'context',
+        reqId: 'req',
+        viewContext: 'feed',
+      },
+    ])
+  })
+
   it.each(['feed', 'thread'] as const)(
     'sends where the interaction happened: %s',
     viewContext => {
@@ -191,6 +217,27 @@ describe('useFeedFeedback', () => {
     expect(flush(thirdParty).map(interaction => interaction.event)).toEqual([
       'app.bsky.feed.defs#interactionFollow',
     ])
+  })
+})
+
+describe('useFeedFeedbackCore', () => {
+  it('sends non-post feedback without feed metadata', () => {
+    const {result} = renderHook(() =>
+      useFeedFeedbackCore({
+        feedUri: DISCOVER_FEED_URI,
+        feedDid: 'did:web:discover.test',
+        enabled: true,
+        viewContext: 'feed',
+      }),
+    )
+    const interaction: app.bsky.feed.defs.Interaction = {
+      item: 'at://did:plc:author/site.standard.document/1',
+      event: 'app.bsky.feed.defs#requestMore',
+      reqId: '9007199254740993123',
+    }
+    act(() => result.current.sendInteraction(interaction))
+
+    expect(flush()).toEqual([{...interaction, viewContext: 'feed'}])
   })
 })
 

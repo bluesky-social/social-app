@@ -112,10 +112,6 @@ export function useFeedFeedback(
   hasSession: boolean,
   viewContext: FeedFeedbackViewContext,
 ) {
-  const ax = useAnalytics()
-  const logger = ax.logger.useChild(ax.logger.Context.FeedFeedback)
-  const client = useAppviewClient()
-
   const feed =
     !!feedSourceInfo && isFeedSourceFeedInfo(feedSourceInfo)
       ? feedSourceInfo
@@ -123,9 +119,71 @@ export function useFeedFeedback(
 
   const isDiscover = isDiscoverFeed(feed?.feedDescriptor)
   const acceptsInteractions = Boolean(isDiscover || feed?.acceptsInteractions)
-  const proxyDid = feed?.view?.did
-  const enabled =
-    Boolean(feed) && Boolean(proxyDid) && acceptsInteractions && hasSession
+  const {enabled, sendInteraction} = useFeedFeedbackCore({
+    feedUri: feed?.uri,
+    feedDid: feed?.view?.did,
+    enabled: acceptsInteractions && hasSession,
+    viewContext,
+  })
+  /** Slice item identity maps to feed (re)fetches, not individual renders. */
+  const history = useRef<WeakSet<FeedPostSliceItem>>(new WeakSet())
+
+  const onItemSeen = useCallback(
+    (feedItem: any) => {
+      if (!enabled) {
+        return
+      }
+      const items = getItemsForFeedback(feedItem)
+      for (const {item: postItem, feedContext, reqId} of items) {
+        if (!history.current.has(postItem)) {
+          history.current.add(postItem)
+          sendInteraction({
+            item: postItem.uri,
+            event: 'app.bsky.feed.defs#interactionSeen',
+            feedContext,
+            reqId,
+          })
+        }
+      }
+    },
+    [enabled, sendInteraction],
+  )
+
+  return useMemo(() => {
+    return {
+      enabled,
+      // pass this method to the <List> onItemSeen
+      onItemSeen,
+      // call on various events
+      // queues the event to be sent with the throttled sendToFeed call
+      sendInteraction,
+      feedDescriptor: feed?.feedDescriptor,
+      feedSourceInfo: typeof feed === 'object' ? feed : undefined,
+    }
+  }, [enabled, onItemSeen, sendInteraction, feed])
+}
+
+/** Sends feedback without requiring feed metadata or post-feed rows. */
+export function useFeedFeedbackCore({
+  feedUri,
+  feedDid: proxyDid,
+  enabled: isEnabled,
+  viewContext,
+}: {
+  feedUri: string | undefined
+  /** The generator's service DID, not the account that owns the feed record. */
+  feedDid: string | undefined
+  enabled: boolean
+  viewContext: FeedFeedbackViewContext
+}) {
+  const ax = useAnalytics()
+  const logger = ax.logger.useChild(ax.logger.Context.FeedFeedback)
+  const client = useAppviewClient()
+
+  const enabled = Boolean(isEnabled && feedUri && proxyDid)
+  const feedDescriptor: FeedDescriptor | undefined = feedUri
+    ? `feedgen|${feedUri}`
+    : undefined
 
   /*
    * Keyed by `toKey` so the same interaction is only sent once per batch.
@@ -133,11 +191,7 @@ export function useFeedFeedback(
    * arrives as unsave then save, and the last event is the current state.
    */
   const queue = useRef<Map<string, app.bsky.feed.defs.Interaction>>(new Map())
-  const history = useRef<
-    // Use a WeakSet so that we don't need to clear it.
-    // This assumes that referential identity of slice items maps 1:1 to feed (re)fetches.
-    WeakSet<FeedPostSliceItem | app.bsky.feed.defs.Interaction>
-  >(new WeakSet())
+  const history = useRef<WeakSet<app.bsky.feed.defs.Interaction>>(new WeakSet())
 
   const flushEvents = useCallback(
     (stats: AggregatedStats | null, feedDescriptor: string) => {
@@ -176,18 +230,14 @@ export function useFeedFeedback(
   const throttledFlushAggregatedStats = useMemo(
     () =>
       throttle(
-        () =>
-          flushEvents(
-            aggregatedStats.current,
-            feed?.feedDescriptor ?? 'unknown',
-          ),
+        () => flushEvents(aggregatedStats.current, feedDescriptor ?? 'unknown'),
         45e3,
         {
           leading: true, // The outer call is already throttled somewhat.
           trailing: true,
         },
       ),
-    [feed?.feedDescriptor, flushEvents],
+    [feedDescriptor, flushEvents],
   )
 
   const sendToFeedNoDelay = useCallback(() => {
@@ -200,7 +250,7 @@ export function useFeedFeedback(
     const interactionsToSend = interactions.filter(
       interaction =>
         interaction.event &&
-        isInteractionAllowed(enabled, feed?.feedDescriptor, interaction.event),
+        isInteractionAllowed(enabled, feedDescriptor, interaction.event),
     )
 
     if (interactionsToSend.length === 0) {
@@ -217,7 +267,7 @@ export function useFeedFeedback(
         app.bsky.feed.sendInteractions,
         {
           interactions: interactionsToSend,
-          feed: feed?.uri as AtUriString | undefined,
+          feed: feedUri as AtUriString | undefined,
         },
         {service: `${proxyDid as DidString}#bsky_fg`},
       )
@@ -237,7 +287,8 @@ export function useFeedFeedback(
     throttledFlushAggregatedStats,
     proxyDid,
     enabled,
-    feed,
+    feedUri,
+    feedDescriptor,
     viewContext,
   ])
 
@@ -262,36 +313,11 @@ export function useFeedFeedback(
     return () => sub.remove()
   }, [enabled, sendToFeed])
 
-  const onItemSeen = useCallback(
-    (feedItem: any) => {
-      if (!enabled) {
-        return
-      }
-      const items = getItemsForFeedback(feedItem)
-      for (const {item: postItem, feedContext, reqId} of items) {
-        if (!history.current.has(postItem)) {
-          history.current.add(postItem)
-          enqueue(queue.current, {
-            item: postItem.uri,
-            event: 'app.bsky.feed.defs#interactionSeen',
-            feedContext,
-            reqId,
-          })
-          sendToFeed()
-        }
-      }
-    },
-    [enabled, sendToFeed],
-  )
-
   const sendInteraction = useCallback(
     (interaction: app.bsky.feed.defs.Interaction) => {
       if (!enabled) {
         return
       }
-      logger.debug('sendInteraction', {
-        ...interaction,
-      })
       if (!history.current.has(interaction)) {
         history.current.add(interaction)
         enqueue(queue.current, interaction)
@@ -301,18 +327,7 @@ export function useFeedFeedback(
     [enabled, sendToFeed],
   )
 
-  return useMemo(() => {
-    return {
-      enabled,
-      // pass this method to the <List> onItemSeen
-      onItemSeen,
-      // call on various events
-      // queues the event to be sent with the throttled sendToFeed call
-      sendInteraction,
-      feedDescriptor: feed?.feedDescriptor,
-      feedSourceInfo: typeof feed === 'object' ? feed : undefined,
-    }
-  }, [enabled, onItemSeen, sendInteraction, feed])
+  return {enabled, sendInteraction}
 }
 
 export const FeedFeedbackProvider = stateContext.Provider
