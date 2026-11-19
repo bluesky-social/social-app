@@ -9,17 +9,21 @@ import {atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {app, type tools} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+import {canShowBskyRecordSnapshot} from './bskyRecordSnapshot'
+import {BskyRecordSnapshotPreview} from './BskyRecordSnapshotPreview'
 import {PreviewContent} from './PreviewContent'
 
 export function FeedSubjectPreview({
   report,
   uri,
+  allowReportRecordSnapshot = false,
 }: {
   report: Pick<
     tools.ozone.inbox.getReport.$OutputBody['report'],
     'subject' | 'record'
   >
   uri: AtUri
+  allowReportRecordSnapshot?: boolean
 }) {
   const {i18n, t: l} = useLingui()
   const query = useFeedSourceInfoQuery({uri: uri.toString()})
@@ -39,6 +43,8 @@ export function FeedSubjectPreview({
   const moderation =
     view && opts ? moderateFeedGenerator(view, opts) : creatorModeration
   const available = !!matches && !!moderation
+  const isLoading =
+    query.isPending || creatorQuery.isPending || (!!matches && !opts)
   const feedName = available
     ? (record?.displayName ?? view?.displayName)
     : undefined
@@ -67,13 +73,27 @@ export function FeedSubjectPreview({
     )
   }
 
+  if (
+    allowReportRecordSnapshot &&
+    !isLoading &&
+    !available &&
+    canShowBskyRecordSnapshot(uri, report)
+  ) {
+    return (
+      <BskyRecordSnapshotPreview
+        report={report}
+        uri={uri}
+        subjectLabel={l`Feed`}
+        liveLabels={view?.labels}
+      />
+    )
+  }
+
   return (
     <PreviewContent
       testID="moderationInboxFeedPreview"
       title={title}
-      loading={
-        query.isPending || creatorQuery.isPending || (!!matches && !opts)
-      }
+      loading={isLoading}
       moderation={moderation?.ui('contentView')}
       metadataText={metadataText}
       to={

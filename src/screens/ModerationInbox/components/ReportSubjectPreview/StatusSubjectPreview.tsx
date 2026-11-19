@@ -7,17 +7,21 @@ import {atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {app, type tools} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+import {canShowBskyRecordSnapshot} from './bskyRecordSnapshot'
+import {BskyRecordSnapshotPreview} from './BskyRecordSnapshotPreview'
 import {PreviewContent} from './PreviewContent'
 
 export function StatusSubjectPreview({
   report,
   uri,
+  allowReportRecordSnapshot = false,
 }: {
   report: Pick<
     tools.ozone.inbox.getReport.$OutputBody['report'],
     'subject' | 'record'
   >
   uri: AtUri
+  allowReportRecordSnapshot?: boolean
 }) {
   const {i18n, t: l} = useLingui()
   const {
@@ -38,6 +42,7 @@ export function StatusSubjectPreview({
       ? moderateStatus(profile, opts)
       : creatorModeration
   const available = !!matches && !!moderation
+  const isLoading = query.isPending || (!!matches && !opts)
   const record = bsky.matches(app.bsky.actor.status, report.record)
     ? report.record
     : undefined
@@ -63,11 +68,27 @@ export function StatusSubjectPreview({
     }
   }
 
+  if (
+    allowReportRecordSnapshot &&
+    !isLoading &&
+    !available &&
+    canShowBskyRecordSnapshot(uri, report)
+  ) {
+    return (
+      <BskyRecordSnapshotPreview
+        report={report}
+        uri={uri}
+        subjectLabel={l`Account status`}
+        liveLabels={status?.labels}
+      />
+    )
+  }
+
   return (
     <PreviewContent
       testID="moderationInboxStatusPreview"
       title={title}
-      loading={query.isPending || (!!matches && !opts)}
+      loading={isLoading}
       moderation={moderation?.ui('contentView')}
       metadataText={metadataText}>
       {!available || !record ? (

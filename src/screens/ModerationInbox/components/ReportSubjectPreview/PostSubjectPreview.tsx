@@ -17,6 +17,8 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
 import {app, type tools} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+import {canShowBskyRecordSnapshot} from './bskyRecordSnapshot'
+import {BskyRecordSnapshotPreview} from './BskyRecordSnapshotPreview'
 import {postCidMatch} from './postCidMatch'
 
 type Report = Pick<
@@ -30,12 +32,14 @@ export function PostSubjectPreview({
   uri,
   subjectLabel,
   allowOwnRecordSnapshot = false,
+  allowReportRecordSnapshot = false,
 }: {
   report: Report
   enforcement?: tools.ozone.inbox.defs.EnforcementView
   uri: AtUri
   subjectLabel: string
   allowOwnRecordSnapshot?: boolean
+  allowReportRecordSnapshot?: boolean
 }) {
   const t = useTheme()
   const {i18n, t: l} = useLingui()
@@ -60,7 +64,7 @@ export function PostSubjectPreview({
           : undefined
   /*
    * Ozone can return the owner's removed record even when appview cannot.
-   * Report previews still require a live, moderated post with the same CID.
+   * Owners can view their own removed record when the AppView cannot return it.
    */
   const canUseSnapshot =
     allowOwnRecordSnapshot &&
@@ -100,6 +104,22 @@ export function PostSubjectPreview({
       <Trans>“{record.text}”</Trans>
     </Text>
   ) : null
+
+  if (
+    allowReportRecordSnapshot &&
+    !isLoading &&
+    !post &&
+    canShowBskyRecordSnapshot(uri, report)
+  ) {
+    return (
+      <BskyRecordSnapshotPreview
+        report={report}
+        uri={uri}
+        subjectLabel={subjectLabel}
+        liveLabels={postQuery.data?.labels}
+      />
+    )
+  }
 
   return (
     <View testID="moderationInboxPostPreview" style={[a.gap_sm]}>

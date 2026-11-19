@@ -189,7 +189,7 @@ function ReportDetails({
       <ReportActionSummary report={report} resolution={resolution} />
 
       <ContentBlock header={l`What you reported`}>
-        <ReportSubjectPreview report={report} />
+        <ReportSubjectPreview report={report} allowReportRecordSnapshot />
         <ReportedSubjectStatus report={report} />
 
         <View style={[a.gap_2xs]}>

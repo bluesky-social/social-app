@@ -10,17 +10,21 @@ import {atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {app, type tools} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+import {canShowBskyRecordSnapshot} from './bskyRecordSnapshot'
+import {BskyRecordSnapshotPreview} from './BskyRecordSnapshotPreview'
 import {PreviewContent} from './PreviewContent'
 
 export function ListSubjectPreview({
   report,
   uri,
+  allowReportRecordSnapshot = false,
 }: {
   report: Pick<
     tools.ozone.inbox.getReport.$OutputBody['report'],
     'subject' | 'record'
   >
   uri: AtUri
+  allowReportRecordSnapshot?: boolean
 }) {
   const {i18n, t: l} = useLingui()
   const query = useListQuery(uri.toString())
@@ -40,6 +44,8 @@ export function ListSubjectPreview({
   const moderation =
     view && opts ? moderateUserList(view, opts) : creatorModeration
   const available = !!matches && !!moderation
+  const isLoading =
+    query.isPending || creatorQuery.isPending || (!!matches && !opts)
   const listName = available ? (record?.name ?? view?.name) : undefined
   const title = listName ? l`List “${sanitizeDisplayName(listName)}”` : l`List`
   const description =
@@ -72,13 +78,27 @@ export function ListSubjectPreview({
     )
   }
 
+  if (
+    allowReportRecordSnapshot &&
+    !isLoading &&
+    !available &&
+    canShowBskyRecordSnapshot(uri, report)
+  ) {
+    return (
+      <BskyRecordSnapshotPreview
+        report={report}
+        uri={uri}
+        subjectLabel={l`List`}
+        liveLabels={view?.labels}
+      />
+    )
+  }
+
   return (
     <PreviewContent
       testID="moderationInboxListPreview"
       title={title}
-      loading={
-        query.isPending || creatorQuery.isPending || (!!matches && !opts)
-      }
+      loading={isLoading}
       moderation={moderation?.ui('contentView')}
       metadataText={metadataText}
       to={
