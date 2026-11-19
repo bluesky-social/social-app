@@ -390,7 +390,7 @@ it('opens the gallery link only after the dialog has closed', () => {
 it('logs presses as the photo dialog of the card it was opened from', () => {
   const card = {
     contentType: 'gallery',
-    contentId: 'https://grain.social/gallery/1',
+    uri: 'https://grain.social/gallery/1',
     position: 4,
   } as const
   render(

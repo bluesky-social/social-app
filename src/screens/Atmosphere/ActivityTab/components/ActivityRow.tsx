@@ -2,6 +2,7 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {makeActivityListLink} from '#/screens/Atmosphere/ActivityList/links'
+import {getContentMetricContextProps} from '#/screens/Atmosphere/metrics/content'
 import {
   AtmosphereContentItem,
   useAtmosphereMetricContext,
@@ -60,8 +61,7 @@ function ActivityCard({
       <ActivityHeader row={row} />
       <ActivityContentHider moderation={row.moderation}>
         <AtmosphereContentItem
-          contentType={row.content.type}
-          contentId={row.content.view.uri}
+          {...getContentMetricContextProps(row.content.type, row.content.view)}
           position={position}
           collection={row.collection}
           grouping={row.grouping}>

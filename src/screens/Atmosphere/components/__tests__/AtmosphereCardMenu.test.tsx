@@ -558,7 +558,7 @@ describe('AtmosphereCardMenu dev mode', () => {
 describe('AtmosphereCardMenu metrics', () => {
   const card = {
     contentType: 'gallery',
-    contentId: view.uri,
+    uri: view.uri,
     position: 2,
   } as const
   const context = {tab: 'following', surface: 'tab', ...card}

@@ -54,7 +54,12 @@ export type AtmosphereSection =
 export type AtmosphereContentMetricContext = AtmosphereMetricContext & {
   contentType: 'article' | 'publication' | 'gallery' | 'livestream'
   /** The content's URL, which also keys it across responses. */
-  contentId: string
+  uri: string
+  /**
+   * The DID of the content's author: whoever owns the card's own record, such
+   * as the gallery. Unset if the view doesn't reference that record.
+   */
+  authorDid?: string
   /**
    * 0-based, in its list or, on Explore, its section. Can differ between events
    * for the same content.

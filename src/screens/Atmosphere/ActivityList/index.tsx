@@ -16,6 +16,7 @@ import {
   ActivityContentCard,
   ActivityWarning,
 } from '#/screens/Atmosphere/ActivityTab/components/ActivityRow'
+import {getContentMetricContextProps} from '#/screens/Atmosphere/metrics/content'
 import {
   AtmosphereContentItem,
   AtmosphereMetricsScope,
@@ -89,8 +90,7 @@ function ActivityListContent({uris}: {uris: AtUriString[]}) {
   const onItemSeen = useLogContentImpression(items, (item, position) => {
     if (!item.content || item.moderation.blur) return
     return {
-      contentType: item.content.type,
-      contentId: item.content.view.uri,
+      ...getContentMetricContextProps(item.content.type, item.content.view),
       position,
     }
   })
@@ -165,8 +165,10 @@ function ActivityListItem({item, position}: {item: Item; position: number}) {
       {item.content ? (
         <ActivityContentHider moderation={item.moderation}>
           <AtmosphereContentItem
-            contentType={item.content.type}
-            contentId={item.content.view.uri}
+            {...getContentMetricContextProps(
+              item.content.type,
+              item.content.view,
+            )}
             position={position}>
             <ActivityContentCard content={item.content} />
           </AtmosphereContentItem>

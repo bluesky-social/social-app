@@ -16,16 +16,16 @@ jest.mock('#/analytics', () => ({
 
 const ITEM = {
   contentType: 'article',
-  contentId: 'https://example.com/a',
+  uri: 'https://example.com/a',
   position: 2,
 } as const
-const SECOND = {...ITEM, contentId: 'https://example.com/b'}
-const THIRD = {...ITEM, contentId: 'https://example.com/c'}
-type Row = {contentId: string; blurred?: boolean}
+const SECOND = {...ITEM, uri: 'https://example.com/b'}
+const THIRD = {...ITEM, uri: 'https://example.com/c'}
+type Row = {uri: string; blurred?: boolean}
 
 function getItem(row: Row, position: number) {
   if (row.blurred) return
-  return {contentType: 'article' as const, contentId: row.contentId, position}
+  return {contentType: 'article' as const, uri: row.uri, position}
 }
 
 beforeEach(() => mockMetric.mockClear())
@@ -92,10 +92,7 @@ describe('useLogContentImpression', () => {
     result.current(SECOND, 1)
     result.current(THIRD, 2)
 
-    items = [
-      {contentId: SECOND.contentId, blurred: true},
-      {contentId: ITEM.contentId},
-    ]
+    items = [{uri: SECOND.uri, blurred: true}, {uri: ITEM.uri}]
     isActive = true
     rerender({})
     expect(mockMetric.mock.calls).toEqual([

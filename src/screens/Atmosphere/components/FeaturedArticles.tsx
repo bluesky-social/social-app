@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
+import {getContentMetricContextProps} from '#/screens/Atmosphere/metrics/content'
 import {
   AtmosphereContentItem,
   useLogContentPress,
@@ -39,8 +40,7 @@ export function FeaturedArticles({
               />
             )}
             <AtmosphereContentItem
-              contentType="article"
-              contentId={article.uri}
+              {...getContentMetricContextProps('article', article)}
               section="articles"
               position={index}>
               <Article article={article} />

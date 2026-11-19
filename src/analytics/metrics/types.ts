@@ -1563,7 +1563,7 @@ export type Events = {
     endReason: 'switched' | 'blurred' | 'backgrounded'
   }
   /**
-   * Discover, Following and the activity list only. Each contentType/contentId
+   * Discover, Following and the activity list only. Each contentType/uri
    * pair counts once until its list is unmounted, regardless of position or
    * activity group. Switching tabs does not reset the count.
    *

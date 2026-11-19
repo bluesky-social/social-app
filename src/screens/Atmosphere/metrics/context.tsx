@@ -157,5 +157,5 @@ export function useLogContentImpression<T>(
 }
 
 function impressionKey(item: Item) {
-  return `${item.contentType}:${item.contentId}`
+  return `${item.contentType}:${item.uri}`
 }

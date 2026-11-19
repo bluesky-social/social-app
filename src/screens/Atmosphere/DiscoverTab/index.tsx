@@ -10,6 +10,7 @@ import {ActivityContentCard} from '#/screens/Atmosphere/ActivityTab/components/A
 import {type ActivityCardRow} from '#/screens/Atmosphere/ActivityTab/rows'
 import {AtmosphereNux} from '#/screens/Atmosphere/components/AtmosphereNux'
 import {getAssociatedProfile} from '#/screens/Atmosphere/data/exploreData'
+import {getContentMetricContextProps} from '#/screens/Atmosphere/metrics/content'
 import {
   AtmosphereContentItem,
   useLogContentImpression,
@@ -33,8 +34,7 @@ export function AtmosphereDiscoverTab() {
     (item, position) => {
       if (item.moderation.blur) return
       return {
-        contentType: item.content.type,
-        contentId: item.content.view.uri,
+        ...getContentMetricContextProps(item.content.type, item.content.view),
         position,
       }
     },
@@ -146,8 +146,7 @@ function DiscoverCard({
       {row ? <ActivityHeader row={row} /> : null}
       <ActivityContentHider moderation={moderation}>
         <AtmosphereContentItem
-          contentType={content.type}
-          contentId={content.view.uri}
+          {...getContentMetricContextProps(content.type, content.view)}
           position={position}>
           <ActivityContentCard content={content} />
         </AtmosphereContentItem>

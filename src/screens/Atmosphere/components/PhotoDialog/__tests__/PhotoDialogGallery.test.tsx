@@ -155,7 +155,7 @@ function renderGallery(items: unknown[]) {
   )
 }
 
-const card = {contentType: 'gallery', contentId: URI, position: 0} as const
+const card = {contentType: 'gallery', uri: URI, position: 0} as const
 
 function renderInCard(items: unknown[]) {
   render(
