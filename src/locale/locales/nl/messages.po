@@ -8,7 +8,7 @@ msgstr ""
 "Language: nl\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-11-19 02:15\n"
+"PO-Revision-Date: 2026-11-19 02:46\n"
 "Last-Translator: \n"
 "Language-Team: Dutch\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -228,6 +228,11 @@ msgstr "{0, plural, one {#ma} other {#ma}}"
 #. placeholder {0}: draft.meta.replyCount
 #: src/view/com/composer/drafts/DraftItem.tsx:144
 msgid "{0, plural, one {1 more post} other {# more posts}}"
+msgstr ""
+
+#. placeholder {0}: 8 - items.length
+#: src/screens/StarterPack/Wizard/index.tsx:611
+msgid "{0, plural, one {Add # more to continue} other {Add # more to continue}}"
 msgstr ""
 
 #. placeholder {0}: profile.followersCount || 0
@@ -1604,11 +1609,6 @@ msgstr ""
 #: src/components/Gallery/Storybook.tsx:597
 msgid "Add"
 msgstr "Toevoegen"
-
-#. placeholder {0}: 8 - items.length
-#: src/screens/StarterPack/Wizard/index.tsx:611
-msgid "Add {0} more to continue"
-msgstr "Voeg er nog {0} toe om door te gaan"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:62
 msgid "Add {displayName} to Starter Pack"
