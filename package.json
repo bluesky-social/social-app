@@ -29,8 +29,7 @@
     "autolinking": {
       "android": {
         "buildFromSource": [
-          "expo-notifications",
-          "expo-media-library"
+          "expo-notifications"
         ]
       }
     },
