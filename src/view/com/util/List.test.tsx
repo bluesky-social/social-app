@@ -5,7 +5,13 @@ import {List} from '#/view/com/util/List'
 import {List as WebList} from '#/view/com/util/List.web'
 
 jest.mock('#/analytics', () => ({
-  useAnalytics: () => ({metric: jest.fn()}),
+  useAnalytics: () => ({
+    metric: jest.fn(),
+    features: {
+      enabled: () => false,
+      WebListVirtualizationEnable: 'web_list:virtualization:enable',
+    },
+  }),
 }))
 jest.mock('#/alf', () => ({
   useBreakpoints: () => ({gtMobile: false}),
