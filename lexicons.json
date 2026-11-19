@@ -1450,7 +1450,7 @@
     },
     "tools.ozone.inbox.getReport": {
       "uri": "at://did:plc:33dt5kftu3jq2h5h4jjlqezt/com.atproto.lexicon.schema/tools.ozone.inbox.getReport",
-      "cid": "bafyreidvdxq2ll2dbecioat7njavkbqozpwauuwlpxfrmy35ubt6454yo4"
+      "cid": "bafyreifnaroigsapokdv4whn3yaplwxgbnlvhc7uh4jy7of3rdbs6yjide"
     },
     "tools.ozone.inbox.getUnreadCount": {
       "uri": "at://did:plc:33dt5kftu3jq2h5h4jjlqezt/com.atproto.lexicon.schema/tools.ozone.inbox.getUnreadCount",

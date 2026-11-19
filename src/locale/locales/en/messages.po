@@ -4015,13 +4015,16 @@ msgid "Content promoting or depicting self-harm"
 msgstr ""
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:26
-#: src/screens/ModerationInbox/components/util/reportedSubjectStatus.ts:25
 msgid "Content removed"
 msgstr "Content removed"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:28
 msgid "Content restored"
 msgstr "Content restored"
+
+#: src/screens/ModerationInbox/components/util/reportedSubjectStatus.ts:25
+msgid "Content taken down by moderation"
+msgstr "Content taken down by moderation"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/AtmosphereSubjectPreview.tsx:74
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:113

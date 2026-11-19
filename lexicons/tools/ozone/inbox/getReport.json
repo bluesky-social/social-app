@@ -182,12 +182,12 @@
     "recordStatus": {
       "type": "object",
       "required": [
-        "removed"
+        "takendown"
       ],
       "properties": {
-        "removed": {
+        "takendown": {
           "type": "boolean",
-          "description": "Whether this moderation service has removed the record."
+          "description": "Whether this moderation service has taken down the record."
         },
         "deleted": {
           "type": "boolean",

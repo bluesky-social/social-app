@@ -4,12 +4,12 @@ describe('report subject status labels', () => {
   it('shows overlapping account and content states independently', () => {
     const labels = getReportedSubjectStatusLabels({
       accountStatus: {enforcement: 'suspended', hosting: 'deleted'},
-      subjectStatus: {removed: true, deleted: true},
+      subjectStatus: {takendown: true, deleted: true},
     })
     expect(labels.map(label => label.message)).toEqual([
       'Account suspended',
       'Account deleted',
-      'Content removed',
+      'Content taken down by moderation',
       'Content deleted',
     ])
   })
@@ -27,7 +27,7 @@ describe('report subject status labels', () => {
     expect(
       getReportedSubjectStatusLabels({
         accountStatus: {enforcement: 'none', hosting: 'active'},
-        subjectStatus: {removed: false},
+        subjectStatus: {takendown: false},
       }),
     ).toEqual([])
   })
