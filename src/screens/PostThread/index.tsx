@@ -680,7 +680,6 @@ export function PostThread({uri}: {uri: string}) {
   )
 }
 
-
 function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
   const hasNativeTabs = useHasNativeTabs()
   return hasNativeTabs ? (

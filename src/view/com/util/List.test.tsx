@@ -13,6 +13,9 @@ jest.mock('#/alf', () => ({
   web: (style: unknown) => style,
 }))
 jest.mock('#/lib/ScrollContext', () => ({useScrollHandlers: () => ({})}))
+jest.mock('#/features/verticalBar', () => ({
+  useHorizontalSafeAreaInsets: () => ({left: 0, right: 0}),
+}))
 jest.mock('#/screens/Messages/components/splitView/context', () => ({
   useIsWithinSplitView: () => ({isWithinSplitView: false}),
 }))
