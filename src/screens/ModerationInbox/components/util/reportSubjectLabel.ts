@@ -2,7 +2,7 @@ import {AtUri, isAtUriString} from '@atproto/syntax'
 import {type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
-import {type tools} from '#/lexicons'
+import {place, site, social, type tools} from '#/lexicons'
 
 export type ReportSubject =
   tools.ozone.inbox.getReport.$OutputBody['report']['subject']
@@ -35,7 +35,17 @@ export function getReportSubjectLabel(
       case 'app.bsky.feed.post':
         return authorName ? msg`Post by ${authorName}` : msg`Post`
       case 'app.bsky.actor.status':
+        return authorName
+          ? msg`Account status by ${authorName}`
+          : msg`Account status`
+      case place.stream.livestream.$type:
         return authorName ? msg`Livestream by ${authorName}` : msg`Livestream`
+      case site.standard.document.$type:
+        return authorName ? msg`Article by ${authorName}` : msg`Article`
+      case site.standard.publication.$type:
+        return authorName ? msg`Publication by ${authorName}` : msg`Publication`
+      case social.grain.gallery.$type:
+        return authorName ? msg`Gallery by ${authorName}` : msg`Gallery`
       case 'app.bsky.graph.list':
         return authorName ? msg`List by ${authorName}` : msg`List`
       case 'app.bsky.feed.generator':
