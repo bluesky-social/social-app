@@ -22,7 +22,8 @@ export function getReportedSubjectStatusLabels({
   else if (accountStatus?.hosting === 'deactivated')
     labels.push(msg`Account deactivated`)
 
-  if (subjectStatus?.takendown) labels.push(msg`Content taken down by moderation`)
+  if (subjectStatus?.takendown)
+    labels.push(msg`Content taken down by moderation`)
   if (subjectStatus?.deleted) labels.push(msg`Content deleted`)
   return labels
 }
