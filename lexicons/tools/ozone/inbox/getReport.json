@@ -107,14 +107,58 @@
           "description": "The exact fully-qualified reason NSID submitted with and stored on the report."
         },
         "accountStatus": {
-          "type": "ref",
           "ref": "#accountStatus",
+          "type": "ref",
           "description": "Current status of the reported account or record owner, independent of the report's resolution."
         },
         "subjectStatus": {
-          "type": "ref",
           "ref": "#recordStatus",
+          "type": "ref",
           "description": "Current status of a reported record, when known."
+        }
+      }
+    },
+    "recordStatus": {
+      "type": "object",
+      "required": [
+        "takendown"
+      ],
+      "properties": {
+        "deleted": {
+          "type": "boolean",
+          "description": "Whether the record has been deleted by its repository, omitted when unknown."
+        },
+        "takendown": {
+          "type": "boolean",
+          "description": "Whether this moderation service has taken down the record."
+        }
+      }
+    },
+    "accountStatus": {
+      "type": "object",
+      "required": [
+        "enforcement"
+      ],
+      "properties": {
+        "hosting": {
+          "type": "string",
+          "description": "Last known account hosting state, omitted when unknown.",
+          "knownValues": [
+            "active",
+            "deleted",
+            "deactivated",
+            "suspended",
+            "takendown"
+          ]
+        },
+        "enforcement": {
+          "type": "string",
+          "description": "Current enforcement by this moderation service.",
+          "knownValues": [
+            "none",
+            "suspended",
+            "takendown"
+          ]
         }
       }
     },
@@ -148,50 +192,6 @@
         "actionTaken": {
           "type": "string",
           "description": "Public action associated with this report's resolution. See the public action vocabulary table."
-        }
-      }
-    },
-    "accountStatus": {
-      "type": "object",
-      "required": [
-        "enforcement"
-      ],
-      "properties": {
-        "enforcement": {
-          "type": "string",
-          "knownValues": [
-            "none",
-            "suspended",
-            "takendown"
-          ],
-          "description": "Current enforcement by this moderation service."
-        },
-        "hosting": {
-          "type": "string",
-          "knownValues": [
-            "active",
-            "deleted",
-            "deactivated",
-            "suspended",
-            "takendown"
-          ],
-          "description": "Last known account hosting state, omitted when unknown."
-        }
-      }
-    },
-    "recordStatus": {
-      "type": "object",
-      "required": [
-        "takendown"
-      ],
-      "properties": {
-        "takendown": {
-          "type": "boolean",
-          "description": "Whether this moderation service has taken down the record."
-        },
-        "deleted": {
-          "type": "boolean",
-          "description": "Whether the record has been deleted by its repository, omitted when unknown."
         }
       }
     }
