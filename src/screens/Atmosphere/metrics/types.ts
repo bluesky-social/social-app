@@ -29,13 +29,19 @@ export type AtmosphereMetricContext = {
  * not log impressions; these events count actions, not people who saw the card.
  */
 export type AtmosphereAppMetricContext = AtmosphereMetricContext & {
-  appId: string
+  /** The DID of the app's Bluesky profile, if it has one. */
+  appProfileDid?: string
+  /** The app's website. An app has a website, a profile, or both. */
+  appUrl?: string
   /** The app's own category key, e.g. `writing`, if any. */
   appCategory?: string
   /** 0-based, in Explore's featured apps or the Apps tab's filtered list. */
   position: number
-  /** Whether the card shows followers of the app's profile you know. */
-  hasKnownFollowers: boolean
+  /**
+   * Whether the card shows social proof: people you follow who also follow the
+   * app's Bluesky profile.
+   */
+  hasSocialProof: boolean
   /** Apps tab only: the category filter in use, e.g. `all`. */
   selectedCategory?: string
 }

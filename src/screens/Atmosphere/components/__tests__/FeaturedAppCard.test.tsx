@@ -63,7 +63,7 @@ const app: FeaturedApp = {
   profile: {did: 'did:plc:6ayddqghxhciedbaofoxkcbs', handle: 'app.test'},
 }
 
-const metric = {appId: 'app', position: 0, hasKnownFollowers: false}
+const metric = {position: 0, hasSocialProof: false}
 
 describe('FeaturedAppCard', () => {
   it('links Website to the app url', () => {
