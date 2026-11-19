@@ -690,18 +690,49 @@ describe('Explore recommendation feedback', () => {
     )
   })
 
-  it('ignores seen events and unsupported signals', () => {
+  it('forwards events without an Explore allowlist and preserves report payloads', () => {
     const response = recommendations()
+    const payload = {
+      type: 'report',
+      reason: 'tools.ozone.report.defs#reasonMisleadingSpam',
+    } as const
     setQuery({data: response})
     render(<AtmosphereExploreTab />)
+    expect(mockCall).not.toHaveBeenCalled()
     act(() => {
       for (const section of ['articles', 'photos'] as const) {
         const send = mockFeedback[section]?.(sectionContent(section, response))
         send?.('app.bsky.feed.defs#interactionSeen')
-        send?.('app.bsky.feed.defs#interactionUnspecced', {type: 'report'})
+        send?.('app.bsky.feed.defs#interactionUnspecced', payload)
       }
     })
     flushFeedback()
-    expect(mockCall).not.toHaveBeenCalled()
+    expect(mockCall.mock.calls).toEqual(
+      [
+        [DOCUMENT_URI, ARTICLE_REQUEST],
+        [GALLERY_URI, PHOTO_REQUEST],
+      ].map(([item, reqId]) => [
+        app.bsky.feed.sendInteractions,
+        {
+          feed: DISCOVER_FEED_URI,
+          interactions: [
+            {
+              item,
+              reqId,
+              event: 'app.bsky.feed.defs#interactionSeen',
+              viewContext: 'feed',
+            },
+            {
+              item,
+              reqId,
+              event: 'app.bsky.feed.defs#interactionUnspecced',
+              payload,
+              viewContext: 'feed',
+            },
+          ],
+        },
+        {service: 'did:web:discover.bsky.app#bsky_fg'},
+      ]),
+    )
   })
 })

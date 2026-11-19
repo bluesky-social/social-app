@@ -166,10 +166,7 @@ export function AtmosphereExploreTab({
   )
 }
 
-/**
- * Explore sends more/less, shares, and clickthroughs, but no impressions.
- * Curated sections omit a recommendation ID and do not accept feedback.
- */
+/** Curated sections omit a recommendation ID and do not accept feedback. */
 function useExploreFeedback(
   destination: {feedUri: string | undefined; feedDid: string},
   reqId: string | undefined,
@@ -184,17 +181,12 @@ function useExploreFeedback(
     if (!enabled || !reqId) return
     const uri = getAtmosphereFeedbackUri(content)
     if (!uri) return
-    return event => {
-      if (
-        event !== 'app.bsky.feed.defs#requestMore' &&
-        event !== 'app.bsky.feed.defs#requestLess' &&
-        event !== 'app.bsky.feed.defs#interactionShare' &&
-        event !== 'app.bsky.feed.defs#clickthroughItem' &&
-        event !== 'app.bsky.feed.defs#clickthroughAuthor'
-      ) {
-        return
-      }
-      sendInteraction({item: uri, event, reqId})
-    }
+    return (event, payload) =>
+      sendInteraction({
+        item: uri,
+        event,
+        reqId,
+        ...(payload ? {payload} : {}),
+      })
   }
 }
