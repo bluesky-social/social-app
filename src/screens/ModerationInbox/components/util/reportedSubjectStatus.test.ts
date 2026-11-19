@@ -1,0 +1,34 @@
+import {getReportedSubjectStatusLabels} from './reportedSubjectStatus'
+
+describe('report subject status labels', () => {
+  it('shows overlapping account and content states independently', () => {
+    const labels = getReportedSubjectStatusLabels({
+      accountStatus: {enforcement: 'suspended', hosting: 'deleted'},
+      subjectStatus: {removed: true, deleted: true},
+    })
+    expect(labels.map(label => label.message)).toEqual([
+      'Account suspended',
+      'Account deleted',
+      'Content removed',
+      'Content deleted',
+    ])
+  })
+
+  it('shows hosting enforcement when local enforcement is absent', () => {
+    expect(
+      getReportedSubjectStatusLabels({
+        accountStatus: {enforcement: 'none', hosting: 'takendown'},
+      }).map(label => label.message),
+    ).toEqual(['Account taken down'])
+  })
+
+  it('does not infer a status from missing, unknown, or active values', () => {
+    expect(getReportedSubjectStatusLabels({})).toEqual([])
+    expect(
+      getReportedSubjectStatusLabels({
+        accountStatus: {enforcement: 'none', hosting: 'active'},
+        subjectStatus: {removed: false},
+      }),
+    ).toEqual([])
+  })
+})

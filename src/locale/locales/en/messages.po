@@ -41,7 +41,7 @@ msgstr "“{0}” list by @{1} on Bluesky"
 msgid "\"{interestsDisplayName}\" category (active)"
 msgstr ""
 
-#: src/screens/ModerationInbox/Report.tsx:208
+#: src/screens/ModerationInbox/Report.tsx:210
 msgid "“{note}”"
 msgstr "“{note}”"
 
@@ -1470,6 +1470,14 @@ msgctxt "toast"
 msgid "Account blocked"
 msgstr ""
 
+#: src/screens/ModerationInbox/components/util/reportedSubjectStatus.ts:23
+msgid "Account deactivated"
+msgstr "Account deactivated"
+
+#: src/screens/ModerationInbox/components/util/reportedSubjectStatus.ts:21
+msgid "Account deleted"
+msgstr "Account deleted"
+
 #: src/view/com/profile/ProfileMenu.tsx:239
 msgctxt "toast"
 msgid "Account followed"
@@ -1525,10 +1533,12 @@ msgid "Account status by {authorName}"
 msgstr "Account status by {authorName}"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:30
+#: src/screens/ModerationInbox/components/util/reportedSubjectStatus.ts:19
 msgid "Account suspended"
 msgstr "Account suspended"
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:32
+#: src/screens/ModerationInbox/components/util/reportedSubjectStatus.ts:18
 msgid "Account taken down"
 msgstr "Account taken down"
 
@@ -2314,8 +2324,8 @@ msgstr ""
 #: src/components/moderation/LabelsOnMeDialog.tsx:172
 #: src/components/moderation/ModerationDetailsDialog.tsx:223
 #: src/screens/ModerationInbox/Notice.tsx:464
-#: src/screens/ModerationInbox/Report.tsx:177
 #: src/screens/ModerationInbox/Report.tsx:178
+#: src/screens/ModerationInbox/Report.tsx:179
 msgid "Appeal"
 msgstr ""
 
@@ -2930,7 +2940,7 @@ msgid "Bluesky is part of an open ecosystem of hundreds of apps and integrations
 msgstr "Bluesky is part of an open ecosystem of hundreds of apps and integrations. Your account unlocks them all."
 
 #: src/screens/ModerationInbox/Notice.tsx:94
-#: src/screens/ModerationInbox/Report.tsx:72
+#: src/screens/ModerationInbox/Report.tsx:73
 msgid "Bluesky Moderation Service"
 msgstr "Bluesky Moderation Service"
 
@@ -3983,6 +3993,10 @@ msgstr ""
 msgid "Content by {authorName}"
 msgstr "Content by {authorName}"
 
+#: src/screens/ModerationInbox/components/util/reportedSubjectStatus.ts:26
+msgid "Content deleted"
+msgstr "Content deleted"
+
 #: src/screens/Moderation/index.tsx:415
 msgid "Content filters"
 msgstr ""
@@ -4001,6 +4015,7 @@ msgid "Content promoting or depicting self-harm"
 msgstr ""
 
 #: src/screens/ModerationInbox/components/util/reportActionLabel.ts:26
+#: src/screens/ModerationInbox/components/util/reportedSubjectStatus.ts:25
 msgid "Content removed"
 msgstr "Content removed"
 
@@ -4564,6 +4579,10 @@ msgstr "Current beta features"
 #: src/components/moderation/BlockDialog.tsx:494
 msgid "Current chat"
 msgstr "Current chat"
+
+#: src/screens/ModerationInbox/components/ReportedSubjectStatus.tsx:25
+msgid "Current status:"
+msgstr "Current status:"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:127
 msgid "Current version of post"
@@ -11520,7 +11539,7 @@ msgstr ""
 msgid "Reason for appeal"
 msgstr ""
 
-#: src/screens/ModerationInbox/Report.tsx:195
+#: src/screens/ModerationInbox/Report.tsx:197
 msgid "Reason:"
 msgstr "Reason:"
 
@@ -15685,7 +15704,7 @@ msgstr ""
 msgid "Unfortunately, your declared age indicates that you are not old enough to access Bluesky in your region."
 msgstr ""
 
-#: src/screens/ModerationInbox/Report.tsx:183
+#: src/screens/ModerationInbox/Report.tsx:184
 msgid "Unknown report reason"
 msgstr "Unknown report reason"
 
@@ -16900,7 +16919,7 @@ msgstr "What do you want to call your Starter Pack?"
 msgid "What is the Atmosphere?"
 msgstr "What is the Atmosphere?"
 
-#: src/screens/ModerationInbox/Report.tsx:190
+#: src/screens/ModerationInbox/Report.tsx:191
 msgid "What you reported"
 msgstr "What you reported"
 
@@ -17911,7 +17930,7 @@ msgstr ""
 msgid "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
 msgstr "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
 
-#: src/screens/ModerationInbox/Report.tsx:205
+#: src/screens/ModerationInbox/Report.tsx:207
 msgid "Your note:"
 msgstr "Your note:"
 
@@ -17966,7 +17985,7 @@ msgid "Your reply was sent"
 msgstr ""
 
 #: src/Navigation.tsx:225
-#: src/screens/ModerationInbox/Report.tsx:112
+#: src/screens/ModerationInbox/Report.tsx:113
 msgid "Your report"
 msgstr "Your report"
 
