@@ -38,6 +38,7 @@ patchedDependencies:
   '@expo/cli@58.1.19': patches/@expo__cli@58.1.19.patch
   '@expo/ui@58.0.27': patches/@expo__ui@58.0.27.patch
   '@formatjs/bigdecimal@0.2.5': patches/@formatjs__bigdecimal@0.2.5.patch
+  '@react-navigation/bottom-tabs@7.16.0': patches/@react-navigation__bottom-tabs@7.16.0.patch
   '@sentry/expo-upload-sourcemaps@8.26.0': patches/@sentry__expo-upload-sourcemaps@8.26.0.patch
   'expo-image@58.0.18': patches/expo-image@58.0.18.patch
   'expo-media-library@58.0.13': patches/expo-media-library@58.0.13.patch

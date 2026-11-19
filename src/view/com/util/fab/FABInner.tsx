@@ -14,7 +14,14 @@ import {useHaptics} from '#/lib/haptics'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {clamp} from '#/lib/numbers'
 import {atoms as a, ios, useBreakpoints, useTheme} from '#/alf'
+import {GlassView} from '#/components/GlassView'
 import {IS_WEB} from '#/env'
+import {
+  NATIVE_TAB_BAR_SIDE_MARGIN,
+  useNativeTabBarPlacement,
+  usePhoneHorizontalSafeAreaInsets,
+  useVerticalBarFloatingMargins,
+} from '#/features/verticalBar'
 
 /**
  * Minimum time between the press-in and release haptics on iOS, so a quick tap
@@ -30,6 +37,10 @@ export interface FABProps extends ComponentProps<typeof Pressable> {
 
 export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
   const insets = useSafeAreaInsets()
+  const sideInsets = usePhoneHorizontalSafeAreaInsets()
+  const placement = useNativeTabBarPlacement()
+  const railMargins = useVerticalBarFloatingMargins()
+  const hasNativeTabs = placement !== null
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
   const haptics = useHaptics()
@@ -40,7 +51,25 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
 
   const tabletSpacing = gtMobile
     ? {right: 50, bottom: 50}
-    : {right: 24, bottom: clamp(insets.bottom, 15, 60) + 15}
+    : railMargins
+      ? // Beside the vertical bar's rail, level with its bottom
+        {
+          right: sideInsets.right + railMargins.right,
+          bottom: railMargins.bottom,
+        }
+      : {
+          // Line up with the floating native tab bar's edge
+          right:
+            placement === 'bottom'
+              ? NATIVE_TAB_BAR_SIDE_MARGIN
+              : 24 + sideInsets.right,
+          /*
+           * With native tabs, the inset includes the tab bar (which is much
+           * taller than the clamp allows), see `useHasNativeTabs`.
+           */
+          bottom:
+            (hasNativeTabs ? insets.bottom : clamp(insets.bottom, 15, 60)) + 15,
+        }
 
   return (
     <Animated.View
@@ -73,12 +102,22 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
         style={[
           a.rounded_full,
           size,
-          {backgroundColor: t.palette.primary_500},
+          !hasNativeTabs && {backgroundColor: t.palette.primary_500},
           a.align_center,
           a.justify_center,
           style,
         ]}
         {...props}>
+        {/* Liquid Glass, to match the native tab bar */}
+        {hasNativeTabs && (
+          <GlassView
+            pointerEvents="none"
+            glassEffectStyle="regular"
+            tintColor={t.palette.primary_500}
+            style={[a.absolute, a.inset_0, a.rounded_full]}
+            fallbackStyle={{backgroundColor: t.palette.primary_500}}
+          />
+        )}
         {icon}
       </PressableScale>
     </Animated.View>

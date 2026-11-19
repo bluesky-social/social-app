@@ -10,14 +10,21 @@ import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, ios, native, useBreakpoints, useTheme} from '#/alf'
 import {transparentifyColor} from '#/alf/util/colorGeneration'
+import {GlassView} from '#/components/GlassView'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text} from '#/components/Typography'
 
 export function ThreadComposePrompt({
   onPressCompose,
+  glass = false,
   style,
 }: {
   onPressCompose: () => void
+  /**
+   * A glass pill with no backdrop, for floating over the thread rather than
+   * sitting on the bottom bar. The caller provides the spacing around it.
+   */
+  glass?: boolean
   style?: StyleProp<ViewStyle>
 }) {
   const {currentAccount} = useSession()
@@ -42,13 +49,15 @@ export function ThreadComposePrompt({
   return (
     <View
       style={[
-        a.px_sm,
-        gtMobile
-          ? [a.py_xs, a.border_t, t.atoms.border_contrast_low, t.atoms.bg]
-          : [a.pb_2xs],
+        !glass && [
+          a.px_sm,
+          gtMobile
+            ? [a.py_xs, a.border_t, t.atoms.border_contrast_low, t.atoms.bg]
+            : [a.pb_2xs],
+        ],
         style,
       ]}>
-      {!gtMobile && (
+      {!gtMobile && !glass && (
         <LinearGradient
           key={t.name} // android does not update when you change the colors. sigh.
           start={[0.5, 0]}
@@ -85,10 +94,24 @@ export function ThreadComposePrompt({
           a.p_sm,
           a.gap_sm,
           a.rounded_full,
-          (!gtMobile || hovered || pressed) && t.atoms.bg_contrast_25,
-          !gtMobile && native([a.border, t.atoms.border_contrast_low]),
+          !glass && [
+            (!gtMobile || hovered || pressed) && t.atoms.bg_contrast_25,
+            !gtMobile && native([a.border, t.atoms.border_contrast_low]),
+          ],
           a.transition_color,
         ]}>
+        {glass && (
+          <GlassView
+            pointerEvents="none"
+            glassEffectStyle="regular"
+            style={[a.absolute, a.inset_0, a.rounded_full]}
+            fallbackStyle={[
+              a.border,
+              t.atoms.bg_contrast_25,
+              t.atoms.border_contrast_low,
+            ]}
+          />
+        )}
         <UserAvatar
           size={24}
           avatar={profile?.avatar}

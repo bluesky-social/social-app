@@ -24,3 +24,16 @@ index f20efaaa4ed2fbd0413e285a4dc3f95d9a299139..3e55ed55dd523b9c55e9abfb0211a2e1
  }
  
  // The paragraph view is the direct superview of an inline icon; a couple of
+diff --git a/lib/commonjs/src/core/symbols/layers.js b/lib/commonjs/src/core/symbols/layers.js
+index e62b27e693163a18dc3d263d76b4f087c9869058..93b37f567b4a81729313dd93f00d37bc67435b72 100644
+--- a/lib/commonjs/src/core/symbols/layers.js
++++ b/lib/commonjs/src/core/symbols/layers.js
+@@ -159,7 +159,7 @@ function contentBounds(PathKit, ds) {
+         const p = PathKit.FromSVGString(d);
+         if (!p)
+             continue;
+-        const b = p.getBounds();
++        const b = p.computeTightBounds();
+         p.delete?.();
+         if (!Number.isFinite(b.fLeft) ||
+             !Number.isFinite(b.fTop) ||

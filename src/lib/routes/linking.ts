@@ -12,6 +12,7 @@ import {
 import {CHAT_INVITE_CODE_REGEX} from '#/lib/strings/url-helpers'
 import {IS_NATIVE} from '#/env'
 import {stripWidgetTopicParams} from '#/features/trendingWidget/links'
+import {getNativeTabsEnabled} from '#/features/verticalBar/nativeTabsEnabled'
 import {router} from '#/routes'
 
 /**
@@ -87,11 +88,13 @@ export const LINKING = {
         return buildStateObject('MessagesTab', 'Messages', params)
       }
       if (
-        name === 'Atmosphere' ||
-        name === 'Feeds' ||
-        name === 'Lists' ||
-        name === 'Bookmarks' ||
-        name === 'Settings'
+        (name === 'Atmosphere' ||
+          name === 'Feeds' ||
+          name === 'Lists' ||
+          name === 'Bookmarks' ||
+          name === 'Settings') &&
+        // Native tabs only hold the primary tabs, so push these onto Home
+        !getNativeTabsEnabled()
       ) {
         return buildStateObject(`${name}Tab`, name, params)
       }

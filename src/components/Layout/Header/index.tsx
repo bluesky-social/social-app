@@ -33,6 +33,7 @@ import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
+import {useHorizontalSafeAreaInsets} from '#/features/verticalBar'
 
 const HEADER_BUTTON_HITSLOP = {top: 30, bottom: 10, left: 30, right: 30}
 
@@ -59,6 +60,12 @@ export function Outer({
    * balance, so pad the top too
    */
   const hasTopInset = useSafeAreaInsets().top > 0
+  /*
+   * Keep the header's content clear of the vertical bar (iPhone Duo), with
+   * the border running underneath it. Tablet headers are a centered column.
+   */
+  const sideInsets = useHorizontalSafeAreaInsets()
+  const padsSideInsets = !gtMobile && !isWithinSplitView
 
   return (
     <View
@@ -71,6 +78,10 @@ export function Outer({
         a.gap_sm,
         sticky && web([a.sticky, {top: 0}, a.z_10, t.atoms.bg]),
         isWithinLeftPanel ? a.px_lg : gutters,
+        padsSideInsets && {
+          paddingLeft: gutters.paddingLeft + sideInsets.left,
+          paddingRight: gutters.paddingRight + sideInsets.right,
+        },
         platform({
           native: hasTopInset
             ? [a.pb_xs, {minHeight: 48}]
