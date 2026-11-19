@@ -32,6 +32,7 @@ import {GroupChatProfileCard} from '#/components/dms/components/GroupChatProfile
 import {ProfileCardSkeleton} from '#/components/dms/components/ProfileCardSkeleton'
 import {UserLabel} from '#/components/dms/components/UserLabel'
 import {UserSearchInput} from '#/components/dms/components/UserSearchInput'
+import {useGroupChatSearch} from '#/components/dms/useGroupChatSearch'
 import {
   canBeAddedToGroup,
   canBeMessaged,
@@ -287,6 +288,14 @@ export function InitiateChatFlow({
     isFetching,
   } = useActorAutocompleteQuery(searchText, true, 12)
   const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
+  const {groups: matchingGroups, isFetching: isFetchingGroups} =
+    useGroupChatSearch({
+      searchText,
+      enabled:
+        showRecentConvos &&
+        !!onSelectExistingChat &&
+        chatState === ChatState.NEW_CHAT,
+    })
 
   const newGroupChatTitle = l`New group chat`
   const groupNameTitle = l`Group name`
@@ -346,6 +355,15 @@ export function InitiateChatFlow({
           _items = _items.sort(compareByMessageDeclaration)
         }
       }
+
+      // Group chats named like the search go first, before the people
+      _items.unshift(
+        ...matchingGroups.map(convo => ({
+          type: 'existingChat' as const,
+          key: convo.view.id,
+          convo,
+        })),
+      )
     } else {
       const placeholders: Item[] = Array(10)
         .fill(0)
@@ -463,9 +481,16 @@ export function InitiateChatFlow({
     aa.flags.groupChatDisabled,
     showRecentConvos,
     sortByMessageDeclaration,
+    matchingGroups,
   ])
 
-  if (searchText && !isFetching && !items.length && !isError) {
+  if (
+    searchText &&
+    !isFetching &&
+    !isFetchingGroups &&
+    !items.length &&
+    !isError
+  ) {
     items.push({type: 'empty', key: 'empty', message: l`No results`})
   }
 
