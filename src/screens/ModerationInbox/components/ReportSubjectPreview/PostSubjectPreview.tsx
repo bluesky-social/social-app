@@ -63,8 +63,8 @@ export function PostSubjectPreview({
           ? post.record
           : undefined
   /*
-   * Ozone can return the owner's removed record even when appview cannot.
-   * Owners can view their own removed record when the AppView cannot return it.
+   * Ozone can return the owner's removed record even when AppView cannot.
+   * Reported records use the separate text-only fallback below.
    */
   const canUseSnapshot =
     allowOwnRecordSnapshot &&
