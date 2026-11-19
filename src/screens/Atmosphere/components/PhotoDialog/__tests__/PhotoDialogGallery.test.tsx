@@ -10,6 +10,10 @@ import {type app} from '#/lexicons'
 const mockMetric = jest.fn()
 let mockOnIndexChange: ((index: number, previous: number) => void) | undefined
 
+jest.mock('#/features/feedFeedback', () => ({useFeedFeedbackCore: jest.fn()}))
+jest.mock('#/state/session', () => ({
+  useSession: () => ({hasSession: false}),
+}))
 jest.mock('#/analytics', () => ({
   useAnalytics: () => ({metric: mockMetric}),
 }))

@@ -3,7 +3,6 @@ import {RefreshControl, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {
   EXPLORE_ARTICLES_FEEDBACK,
@@ -18,10 +17,7 @@ import {
   getAtmospherePublications,
 } from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
-import {
-  type AtmosphereFeedbackForContent,
-  getAtmosphereFeedbackUri,
-} from '#/screens/Atmosphere/feedback'
+import {useExploreFeedback} from '#/screens/Atmosphere/feedback'
 import {useAtmosphereMetricContext} from '#/screens/Atmosphere/metrics/context'
 import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
 import {atoms as a, useTheme} from '#/alf'
@@ -29,7 +25,6 @@ import * as Gallery from '#/components/Gallery'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/analytics'
-import {useFeedFeedbackCore} from '#/features/feedFeedback'
 import {AtmosphereNux} from './components/AtmosphereNux'
 import {FeaturedApps} from './components/FeaturedApps'
 import {FeaturedArticles} from './components/FeaturedArticles'
@@ -164,29 +159,4 @@ export function AtmosphereExploreTab({
       </Gallery.Bleed>
     </Layout.Content>
   )
-}
-
-/** Curated sections omit a recommendation ID and do not accept feedback. */
-function useExploreFeedback(
-  destination: {feedUri: string | undefined; feedDid: string},
-  reqId: string | undefined,
-): AtmosphereFeedbackForContent {
-  const {hasSession} = useSession()
-  const {enabled, sendInteraction} = useFeedFeedbackCore({
-    ...destination,
-    enabled: hasSession && !!reqId,
-    viewContext: 'feed',
-  })
-  return content => {
-    if (!enabled || !reqId) return
-    const uri = getAtmosphereFeedbackUri(content)
-    if (!uri) return
-    return (event, payload) =>
-      sendInteraction({
-        item: uri,
-        event,
-        reqId,
-        ...(payload ? {payload} : {}),
-      })
-  }
 }

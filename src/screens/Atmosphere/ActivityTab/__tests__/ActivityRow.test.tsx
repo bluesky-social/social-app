@@ -40,6 +40,10 @@ import {
 const mockLinkTo = jest.fn()
 const mockMetric = jest.fn()
 
+jest.mock('#/features/feedFeedback', () => ({useFeedFeedbackCore: jest.fn()}))
+jest.mock('#/state/session', () => ({
+  useSession: () => ({hasSession: false}),
+}))
 jest.mock('#/analytics', () => ({
   useAnalytics: () => ({metric: mockMetric}),
 }))

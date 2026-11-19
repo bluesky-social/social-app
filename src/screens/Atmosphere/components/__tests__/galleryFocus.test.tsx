@@ -6,6 +6,7 @@ import {type app} from '#/lexicons'
 import {LivestreamCard} from '../LivestreamCard'
 import {PhotoCard} from '../PhotoCard'
 
+jest.mock('#/features/feedFeedback', () => ({useFeedFeedbackCore: jest.fn()}))
 jest.mock('#/analytics', () => ({
   useAnalytics: () => ({metric: jest.fn()}),
 }))

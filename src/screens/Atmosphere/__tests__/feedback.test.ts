@@ -7,6 +7,12 @@ import {
 import {type ActivityContent} from '#/screens/Atmosphere/ActivityTab/rows'
 import {getAtmosphereFeedbackUri} from '#/screens/Atmosphere/feedback'
 
+jest.mock('#/features/feedFeedback', () => ({useFeedFeedbackCore: jest.fn()}))
+jest.mock('#/state/session', () => ({
+  useSession: () => ({hasSession: false}),
+}))
+jest.mock('#/alf', () => ({atoms: {p_lg: {padding: 16}}}))
+
 const DOCUMENT = 'at://did:web:author.test/site.standard.document/1'
 const PUBLICATION = 'at://did:web:author.test/site.standard.publication/1'
 const GALLERY = 'at://did:web:author.test/social.grain.gallery/1'

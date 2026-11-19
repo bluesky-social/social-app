@@ -14,6 +14,10 @@ const mockOpenLink = jest.fn()
 const mockMetric = jest.fn()
 let mockIsNative = true
 
+jest.mock('#/features/feedFeedback', () => ({useFeedFeedbackCore: jest.fn()}))
+jest.mock('#/state/session', () => ({
+  useSession: () => ({hasSession: false}),
+}))
 jest.mock('#/analytics', () => ({
   useAnalytics: () => ({metric: mockMetric}),
 }))

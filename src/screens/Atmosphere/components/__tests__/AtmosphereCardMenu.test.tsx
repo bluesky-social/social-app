@@ -27,6 +27,7 @@ let mockIsWeb = false
 
 /* Report availability relies on real CID validation, which the repo mocks. */
 jest.unmock('multiformats/cid')
+jest.mock('#/features/feedFeedback', () => ({useFeedFeedbackCore: jest.fn()}))
 jest.mock('#/analytics', () => ({
   useAnalytics: () => ({metric: mockMetric}),
 }))
