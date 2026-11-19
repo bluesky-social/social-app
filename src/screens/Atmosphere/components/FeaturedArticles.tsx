@@ -58,7 +58,7 @@ function Article({article}: {article: app.bsky.embed.external.ViewArticle}) {
     <DocumentCompact
       view={article}
       containerStyle={[a.py_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}
-      onEmbedInteractionCallback={() => logPress('external')}
+      onPressCallback={() => logPress('external')}
     />
   )
 }

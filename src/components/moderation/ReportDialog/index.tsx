@@ -79,7 +79,13 @@ export function useGlobalReportDialogControl() {
 
 export function GlobalReportDialog() {
   const {value, control} = useGlobalReportDialogControl()
-  return <ReportDialog control={control} subject={value?.subject} />
+  return (
+    <ReportDialog
+      control={control}
+      subject={value?.subject}
+      onAfterSubmit={value?.onAfterSubmit}
+    />
+  )
 }
 
 export function ReportDialog(

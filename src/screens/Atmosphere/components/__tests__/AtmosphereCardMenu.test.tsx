@@ -1,5 +1,6 @@
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
+import {AtmosphereFeedbackProvider} from '#/screens/Atmosphere/feedback'
 import {
   AtmosphereContentItem,
   AtmosphereMetricsScope,
@@ -10,13 +11,15 @@ import {AtmosphereCardMenu} from '../AtmosphereCardMenu'
 
 const mockOpenLink = jest.fn()
 const mockNavigate = jest.fn()
-const mockOpenReport = jest.fn()
+const mockOpenReport = jest.fn((_value: unknown) => {})
 const mockShareUrl = jest.fn()
 const mockOpenComposer = jest.fn()
 const mockRequireAuth = jest.fn((fn: () => unknown) => fn())
 const mockOpenSendViaChat = jest.fn()
 const mockMetric = jest.fn()
 const mockMenuOpen = jest.fn()
+const mockSendFeedback = jest.fn()
+let mockFeedbackEnabled = false
 let mockMenuControl: {open: () => void} | undefined
 let mockHasSession = true
 let mockHasFullAccess = true
@@ -285,7 +288,12 @@ function renderMenu(
     author: withAuthor ? author : undefined,
     children,
   } as unknown as React.ComponentProps<typeof AtmosphereCardMenu>
-  return render(<AtmosphereCardMenu {...props} />)
+  return render(
+    <AtmosphereFeedbackProvider
+      value={mockFeedbackEnabled ? mockSendFeedback : undefined}>
+      <AtmosphereCardMenu {...props} />
+    </AtmosphereFeedbackProvider>,
+  )
 }
 
 beforeEach(() => {
@@ -294,6 +302,7 @@ beforeEach(() => {
   mockHasFullAccess = true
   mockIsWeb = false
   mockDevMode = false
+  mockFeedbackEnabled = false
 })
 
 describe.each([
@@ -514,6 +523,61 @@ it('does not offer reports when the callsite allows no record types', () => {
 
   expect(screen.getByLabelText('Report article')).toBeDisabled()
   expect(screen.queryByLabelText('Report this article')).toBeNull()
+})
+
+describe('AtmosphereCardMenu recommendation feedback', () => {
+  beforeEach(() => {
+    mockFeedbackEnabled = true
+  })
+
+  it('renders direct native menu items independently of reporting availability', () => {
+    renderMenu('article', {}, undefined, [])
+    fireEvent.press(screen.getByRole('menuitem', {name: 'Show more like this'}))
+    fireEvent.press(screen.getByRole('menuitem', {name: 'Show less like this'}))
+    expect(mockSendFeedback.mock.calls).toEqual([
+      ['app.bsky.feed.defs#requestMore'],
+      ['app.bsky.feed.defs#requestLess'],
+    ])
+  })
+
+  it('omits recommendation controls when signed out', () => {
+    mockHasSession = false
+    renderMenu('photo')
+    expect(
+      screen.queryByRole('menuitem', {name: 'Show more like this'}),
+    ).toBeNull()
+    expect(
+      screen.queryByRole('menuitem', {name: 'Show less like this'}),
+    ).toBeNull()
+  })
+
+  it('sends existing share and clickthrough signals while actions retain the external URL', () => {
+    renderMenu('article')
+    fireEvent.press(screen.getByRole('menuitem', {name: 'Share'}))
+    fireEvent.press(screen.getByRole('menuitem', {name: 'View article'}))
+    fireEvent.press(screen.getByRole('menuitem', {name: 'View author profile'}))
+    expect(mockSendFeedback.mock.calls).toEqual([
+      ['app.bsky.feed.defs#interactionShare'],
+      ['app.bsky.feed.defs#clickthroughItem'],
+      ['app.bsky.feed.defs#clickthroughAuthor'],
+    ])
+    expect(mockShareUrl).toHaveBeenCalledWith(view.uri)
+    expect(mockOpenLink).toHaveBeenCalledWith(view.uri)
+  })
+
+  it('sends report feedback only after successful submission, with its reason', () => {
+    renderMenu('article')
+    fireEvent.press(screen.getByRole('menuitem', {name: 'Report this article'}))
+    expect(mockSendFeedback).not.toHaveBeenCalled()
+    const {onAfterSubmit} = mockOpenReport.mock.calls[0][0] as {
+      onAfterSubmit: (report: {reason: string}) => void
+    }
+    onAfterSubmit({reason: 'tools.ozone.report.defs#reasonMisleadingSpam'})
+    expect(mockSendFeedback).toHaveBeenCalledWith(
+      'app.bsky.feed.defs#interactionUnspecced',
+      {type: 'report', reason: 'tools.ozone.report.defs#reasonMisleadingSpam'},
+    )
+  })
 })
 
 describe('AtmosphereCardMenu dev mode', () => {

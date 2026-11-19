@@ -3,6 +3,7 @@ import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {getGalleryImages} from '#/screens/Atmosphere/data/exploreData'
+import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
 import {useAtmosphereContentContext} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as Gallery from '#/components/Gallery'
@@ -34,12 +35,14 @@ export function PhotoDialogGallery({
   const {gtPhone, gtMobile} = useBreakpoints()
   const ax = useAnalytics()
   const content = useAtmosphereContentContext()
+  const sendFeedback = useAtmosphereFeedback()
   const images = getGalleryImages(photo)
 
   if (images.length === 0) return null
 
   const total = images.length
   const logImagePress = (imageIndex: number) => {
+    sendFeedback?.('app.bsky.feed.defs#clickthroughItem')
     if (!content) return
     ax.metric('atmosphere:photo:externalPressed', {
       ...content,
