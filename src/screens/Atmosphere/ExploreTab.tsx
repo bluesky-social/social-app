@@ -3,8 +3,13 @@ import {RefreshControl, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
+import {
+  EXPLORE_ARTICLES_FEEDBACK,
+  EXPLORE_PHOTOS_FEEDBACK,
+  EXPLORE_SECTION_PADDING,
+} from '#/screens/Atmosphere/const'
 import {
   getAtmosphereArticles,
   getAtmosphereExploreApps,
@@ -13,6 +18,10 @@ import {
   getAtmospherePublications,
 } from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereExploreQuery} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
+import {
+  type AtmosphereFeedbackForContent,
+  getAtmosphereFeedbackUri,
+} from '#/screens/Atmosphere/feedback'
 import {useAtmosphereMetricContext} from '#/screens/Atmosphere/metrics/context'
 import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
 import {atoms as a, useTheme} from '#/alf'
@@ -20,6 +29,7 @@ import * as Gallery from '#/components/Gallery'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/analytics'
+import {useFeedFeedbackCore} from '#/features/feedFeedback'
 import {AtmosphereNux} from './components/AtmosphereNux'
 import {FeaturedApps} from './components/FeaturedApps'
 import {FeaturedArticles} from './components/FeaturedArticles'
@@ -51,6 +61,14 @@ export function AtmosphereExploreTab({
   const {data, isError, isPending, refetch} = useAtmosphereExploreQuery()
   const moderationOpts = useModerationOpts()
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const articleFeedback = useExploreFeedback(
+    EXPLORE_ARTICLES_FEEDBACK,
+    data?.articles.recIdStr,
+  )
+  const photoFeedback = useExploreFeedback(
+    EXPLORE_PHOTOS_FEEDBACK,
+    data?.photos.recIdStr,
+  )
   const apps = data ? getAtmosphereExploreApps(data) : []
   const articles = data ? getAtmosphereArticles(data, moderationOpts) : []
   const livestreams = data ? getAtmosphereLivestreams(data) : []
@@ -138,12 +156,45 @@ export function AtmosphereExploreTab({
           ) : undefined}
           <AtmosphereNux />
           <FeaturedApps apps={apps} onPressSeeMore={onPressSeeMoreApps} />
-          <FeaturedArticles articles={articles} />
+          <FeaturedArticles articles={articles} feedback={articleFeedback} />
           <FeaturedLivestreams livestreams={livestreams} />
-          <FeaturedPhotos photos={photos} />
+          <FeaturedPhotos photos={photos} feedback={photoFeedback} />
           <FeaturedPublications publications={publications} />
         </View>
       </Gallery.Bleed>
     </Layout.Content>
   )
+}
+
+/**
+ * Explore sends more/less, shares, and clickthroughs, but no impressions.
+ * Curated sections omit a recommendation ID and do not accept feedback.
+ */
+function useExploreFeedback(
+  destination: {feedUri: string | undefined; feedDid: string},
+  reqId: string | undefined,
+): AtmosphereFeedbackForContent {
+  const {hasSession} = useSession()
+  const {enabled, sendInteraction} = useFeedFeedbackCore({
+    ...destination,
+    enabled: hasSession && !!reqId,
+    viewContext: 'feed',
+  })
+  return content => {
+    if (!enabled || !reqId) return
+    const uri = getAtmosphereFeedbackUri(content)
+    if (!uri) return
+    return event => {
+      if (
+        event !== 'app.bsky.feed.defs#requestMore' &&
+        event !== 'app.bsky.feed.defs#requestLess' &&
+        event !== 'app.bsky.feed.defs#interactionShare' &&
+        event !== 'app.bsky.feed.defs#clickthroughItem' &&
+        event !== 'app.bsky.feed.defs#clickthroughAuthor'
+      ) {
+        return
+      }
+      sendInteraction({item: uri, event, reqId})
+    }
+  }
 }

@@ -10,6 +10,10 @@ export type AtmosphereFeedback = (
   payload?: UnspeccedInteractionPayload,
 ) => void
 
+export type AtmosphereFeedbackForContent = (
+  content: ActivityContent,
+) => AtmosphereFeedback | undefined
+
 const Context = createContext<AtmosphereFeedback | undefined>(undefined)
 Context.displayName = 'AtmosphereFeedbackContext'
 

@@ -1,5 +1,6 @@
 import {fireEvent, render, screen, within} from '@testing-library/react-native'
 
+import {AtmosphereFeedbackProvider} from '#/screens/Atmosphere/feedback'
 import {type ItemFocusProps} from '#/components/Gallery'
 import {type app} from '#/lexicons'
 import {LivestreamCard} from '../LivestreamCard'
@@ -357,17 +358,28 @@ describe('PhotoCard counts', () => {
 })
 
 describe('PhotoCard activation', () => {
-  it('opens the photo dialog instead of the external url', () => {
-    render(<PhotoCard photo={photo} />)
+  it.each([true, false])(
+    'opens the photo dialog and only sends a click inside a feedback scope: %s',
+    inScope => {
+      const sendFeedback = jest.fn()
+      render(
+        <AtmosphereFeedbackProvider value={inScope ? sendFeedback : undefined}>
+          <PhotoCard photo={photo} />
+        </AtmosphereFeedbackProvider>,
+      )
 
-    expect(screen.queryAllByRole('link')).toHaveLength(0)
-    fireEvent.press(screen.getByTestId('atmospherePhotoCard'))
+      expect(screen.queryAllByRole('link')).toHaveLength(0)
+      fireEvent.press(screen.getByTestId('atmospherePhotoCard'))
 
-    expect(mockOpenPhotoDialog).toHaveBeenCalledTimes(1)
-    expect(mockOpenLink).not.toHaveBeenCalled()
-    expect(mockNavigate).not.toHaveBeenCalled()
-    expect(screen.getByLabelText('A photo by author.test')).toBeTruthy()
-  })
+      expect(mockOpenPhotoDialog).toHaveBeenCalledTimes(1)
+      expect(mockOpenLink).not.toHaveBeenCalled()
+      expect(mockNavigate).not.toHaveBeenCalled()
+      expect(screen.getByLabelText('A photo by author.test')).toBeTruthy()
+      expect(sendFeedback.mock.calls).toEqual(
+        inScope ? [['app.bsky.feed.defs#clickthroughItem']] : [],
+      )
+    },
+  )
 })
 
 const interactions = [

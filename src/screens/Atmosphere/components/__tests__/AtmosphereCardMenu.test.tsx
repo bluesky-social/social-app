@@ -540,6 +540,20 @@ describe('AtmosphereCardMenu recommendation feedback', () => {
     ])
   })
 
+  it.each(['article', 'photo'] as const)(
+    'omits %s recommendation controls without an enabled item scope',
+    type => {
+      mockFeedbackEnabled = false
+      renderMenu(type)
+      expect(
+        screen.queryByRole('menuitem', {name: 'Show more like this'}),
+      ).toBeNull()
+      expect(
+        screen.queryByRole('menuitem', {name: 'Show less like this'}),
+      ).toBeNull()
+    },
+  )
+
   it('omits recommendation controls when signed out', () => {
     mockHasSession = false
     renderMenu('photo')

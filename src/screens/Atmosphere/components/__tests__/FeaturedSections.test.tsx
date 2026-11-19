@@ -1,5 +1,11 @@
-import {render, screen} from '@testing-library/react-native'
+import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
+import {
+  type AtmosphereFeedbackForContent,
+  AtmosphereFeedbackProvider,
+} from '#/screens/Atmosphere/feedback'
+import {AtmosphereMetricsScope} from '#/screens/Atmosphere/metrics/context'
+import {DocumentCompact} from '#/components/atmosphere/SiteStandard/DocumentCompact'
 import {type ItemFocusProps} from '#/components/Gallery'
 import {type app} from '#/lexicons'
 import {FeaturedArticles} from '../FeaturedArticles'
@@ -7,8 +13,9 @@ import {FeaturedLivestreams} from '../FeaturedLivestreams'
 import {FeaturedPhotos} from '../FeaturedPhotos'
 import {FeaturedPublications} from '../FeaturedPublications'
 
+const mockMetric = jest.fn()
 jest.mock('#/analytics', () => ({
-  useAnalytics: () => ({metric: jest.fn()}),
+  useAnalytics: () => ({metric: mockMetric}),
 }))
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({_: (value: {message: string}) => value.message}),
@@ -46,6 +53,9 @@ jest.mock('../ExploreSectionHeader', () => {
  * is wired up the way the real cards wire their Link.
  */
 function mockCard(prefix: string, prop: string) {
+  const {useAtmosphereFeedback} = jest.requireActual<
+    typeof import('#/screens/Atmosphere/feedback')
+  >('#/screens/Atmosphere/feedback')
   const {Pressable} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return ({
@@ -55,6 +65,7 @@ function mockCard(prefix: string, prop: string) {
     galleryFocus?: ItemFocusProps
   }) => {
     const item = rest[prop] as {uri: string; title: string}
+    const sendFeedback = useAtmosphereFeedback()
     return (
       <Pressable
         testID={`${prefix}-${item.uri.split('/').at(-1)}`}
@@ -64,12 +75,14 @@ function mockCard(prefix: string, prop: string) {
         ref={galleryFocus?.focusRef}
         tabIndex={galleryFocus?.tabIndex}
         onFocus={galleryFocus?.onFocus}
+        onPress={() => sendFeedback?.('app.bsky.feed.defs#requestMore')}
+        onLongPress={() => sendFeedback?.('app.bsky.feed.defs#requestLess')}
       />
     )
   }
 }
 jest.mock('#/components/atmosphere/SiteStandard/DocumentCompact', () => ({
-  DocumentCompact: mockCard('article', 'view'),
+  DocumentCompact: jest.fn(mockCard('article', 'view')),
 }))
 jest.mock('#/components/Divider', () => {
   const {View} =
@@ -132,7 +145,66 @@ function slides() {
   )
 }
 
+it.each(['articles', 'photos'] as const)(
+  'scopes %s feedback per card without inheriting an unrelated scope',
+  section => {
+    const send = jest.fn()
+    const unrelated = jest.fn()
+    const items = section === 'articles' ? articles : photos
+    const feedback: AtmosphereFeedbackForContent = content =>
+      content.view.uri === items[0].uri ? send : undefined
+    render(
+      <AtmosphereFeedbackProvider value={unrelated}>
+        {section === 'articles' ? (
+          <FeaturedArticles articles={articles} feedback={feedback} />
+        ) : (
+          <FeaturedPhotos photos={photos} feedback={feedback} />
+        )}
+      </AtmosphereFeedbackProvider>,
+    )
+    const prefix = section === 'articles' ? 'article-a' : 'photo-p'
+    fireEvent.press(screen.getByTestId(prefix + '1'))
+    fireEvent(screen.getByTestId(prefix + '1'), 'longPress')
+    fireEvent.press(screen.getByTestId(prefix + '2'))
+    expect(send.mock.calls).toEqual([
+      ['app.bsky.feed.defs#requestMore'],
+      ['app.bsky.feed.defs#requestLess'],
+    ])
+    expect(unrelated).not.toHaveBeenCalled()
+  },
+)
+
 describe('FeaturedArticles', () => {
+  it('forwards primary clicks and native shares while preserving press analytics', () => {
+    const sendFeedback = jest.fn()
+    render(
+      <AtmosphereMetricsScope tab="explore" surface="tab" isActive>
+        <FeaturedArticles
+          articles={[articles[0]]}
+          feedback={() => sendFeedback}
+        />
+      </AtmosphereMetricsScope>,
+    )
+    const props = jest.mocked(DocumentCompact).mock.calls.at(-1)?.[0]
+    act(() => {
+      props?.onPressCallback?.()
+      props?.onShareCallback?.()
+    })
+    expect(sendFeedback.mock.calls).toEqual([
+      ['app.bsky.feed.defs#clickthroughItem'],
+      ['app.bsky.feed.defs#interactionShare'],
+    ])
+    expect(mockMetric).toHaveBeenCalledWith('atmosphere:content:press', {
+      tab: 'explore',
+      surface: 'tab',
+      section: 'articles',
+      contentType: 'article',
+      contentId: articles[0].uri,
+      position: 0,
+      target: 'external',
+    })
+  })
+
   it('renders compact documents in response order with dividers only between rows', () => {
     render(<FeaturedArticles articles={articles} />)
 

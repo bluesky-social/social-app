@@ -11,6 +11,7 @@ import {
   gallery,
 } from '#/screens/Atmosphere/ActivityTab/__tests__/fixtures'
 import {type ActivityContent} from '#/screens/Atmosphere/ActivityTab/rows'
+import {DISCOVER_FEEDBACK} from '#/screens/Atmosphere/const'
 import {AtmosphereMetricsScope} from '#/screens/Atmosphere/metrics/context'
 import {app} from '#/lexicons'
 import {AtmosphereDiscoverTab} from '../index'
@@ -116,6 +117,8 @@ jest.mock('#/screens/Atmosphere/ActivityTab/components/ActivityRow', () => {
       return (
         <Pressable
           accessibilityLabel={content.view.title}
+          accessibilityState={{disabled: !sendFeedback}}
+          testID="discoverFeedbackCard"
           accessibilityHint=""
           onPress={() => sendFeedback?.('app.bsky.feed.defs#clickthroughItem')}>
           <Text>{content.view.title}</Text>
@@ -159,6 +162,7 @@ beforeEach(() => {
   jest.clearAllMocks()
   jest.useFakeTimers()
   mockHasSession = true
+  DISCOVER_FEEDBACK.feedUri = DISCOVER_FEED_URI
   i18n.loadAndActivate({locale: 'en', messages: {}})
 })
 
@@ -363,6 +367,20 @@ it('batches attributed record impressions through Discover without changing cont
       ([event]) => event === 'atmosphere:content:impression',
     ),
   ).toHaveLength(1)
+})
+
+it('disables item feedback and impressions when the Discover feed URI is undefined', () => {
+  DISCOVER_FEEDBACK.feedUri = undefined
+  const item = recommended()
+  setBatch(item)
+  const screen = renderTab()
+  expect(
+    screen.getByTestId('discoverFeedbackCard').props.accessibilityState,
+  ).toEqual({disabled: true})
+  seen(screen, item)
+  fireEvent.press(screen.getByText(item.content.view.title))
+  flushFeedback()
+  expect(mockCall).not.toHaveBeenCalled()
 })
 
 it('allows a new impression after refresh and ignores stale row callbacks', () => {
