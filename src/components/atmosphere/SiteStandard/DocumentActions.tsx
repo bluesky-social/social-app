@@ -16,7 +16,7 @@ import {useRequireAuth} from '#/state/session'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
 import {atoms as a, useTheme, utils} from '#/alf'
-import {matchStandardSiteHostByPublication} from '#/components/atmosphere/SiteStandard/publishers'
+import {getAtmosphereProvider} from '#/components/atmosphere/providers'
 import {useDocumentRecommend} from '#/components/atmosphere/SiteStandard/recommend'
 import {StandardSiteThemeProvider} from '#/components/atmosphere/SiteStandard/StandardSiteThemeProvider'
 import {getPublicationTheme} from '#/components/atmosphere/SiteStandard/utils'
@@ -62,11 +62,11 @@ export function DocumentActions({
   const {canRecommend, isRecommended, likeCount, recommend, unrecommend} =
     useDocumentRecommend(view)
   const publisher = view.publisher
-  const host = publisher ? matchStandardSiteHostByPublication(publisher) : null
+  const provider = getAtmosphereProvider(view.providerId)
 
-  const readText = host
+  const readText = provider
     ? l({
-        message: `Read on ${host.name}`,
+        message: `Read on ${provider.name}`,
         comment:
           'Button that opens an article on the platform it was published with, e.g. “Read on Leaflet”',
       })
@@ -136,9 +136,9 @@ export function DocumentActions({
       color="secondary_inverted"
       /* Link left-aligns its content by default. */
       style={[a.flex_1, a.justify_center]}>
-      {host ? (
+      {provider ? (
         <>
-          <ButtonIcon icon={host.Icon} />
+          <ButtonIcon icon={provider.Icon} />
           <ButtonText>{readText}</ButtonText>
         </>
       ) : (

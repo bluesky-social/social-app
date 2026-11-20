@@ -8,8 +8,8 @@ import {shareUrl} from '#/lib/sharing'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
 import {atoms as a, extractPadding, useTheme, web} from '#/alf'
+import {getAtmosphereProvider} from '#/components/atmosphere/providers'
 import {PublicationIcon} from '#/components/atmosphere/SiteStandard/PublicationIcon'
-import {matchStandardSiteHostByUrl} from '#/components/atmosphere/SiteStandard/publishers'
 import {StandardSiteMetaRow} from '#/components/atmosphere/SiteStandard/StandardSiteMetaRow'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
 import {isStandardSitePublicationUri} from '#/components/atmosphere/SiteStandard/utils'
@@ -84,7 +84,7 @@ function PublicationBase({
   const author = authorDid
     ? view.associatedProfiles?.find(p => p.did === authorDid)
     : undefined
-  const articlePublisher = matchStandardSiteHostByUrl(view.uri)
+  const provider = getAtmosphereProvider(view.providerId)
   const hasSubscribers = !!view.subscribers?.length || !!view.subscriptionCount
 
   const onPress = () => {
@@ -182,7 +182,7 @@ function PublicationBase({
                 </Text>
               )}
 
-              {(hasSubscribers || !!articlePublisher) && (
+              {(hasSubscribers || !!provider) && (
                 <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                   {!!view.subscribers?.length && (
                     <AvatarStack
@@ -208,10 +208,10 @@ function PublicationBase({
                     </Text>
                   )}
 
-                  {!!articlePublisher && (
+                  {!!provider && (
                     <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
                       {hasSubscribers ? ' • ' : ''}
-                      {l`Powered by ${articlePublisher.name}`}
+                      {l`Powered by ${provider.name}`}
                     </Text>
                   )}
                 </View>

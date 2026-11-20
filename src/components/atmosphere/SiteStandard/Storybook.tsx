@@ -93,12 +93,14 @@ const noLikersDocument = {
 const leafletPublication = {
   ...publication,
   uri: 'https://fieldnotes.leaflet.pub',
+  providerId: 'leaflet.pub',
   theme: {accent: '#4a7318', accentForeground: '#ffffff'},
 } satisfies app.bsky.embed.external.ViewArticlePublication
 
 const leafletDocument = {
   ...document,
   uri: 'https://fieldnotes.leaflet.pub/looking-closely',
+  providerId: 'leaflet.pub',
   publisher: leafletPublication,
 } satisfies app.bsky.embed.external.ViewArticle
 
