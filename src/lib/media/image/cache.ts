@@ -1,14 +1,22 @@
 import {Directory, File, Paths} from 'expo-file-system'
 import {nanoid} from 'nanoid/non-secure'
 
-import {IS_NATIVE} from '#/env'
+import {IS_ANDROID, IS_NATIVE} from '#/env'
 
-let _imageCacheDirectory: Directory
+let _composerImageDirectory: Directory
 
-export function getImageCacheDirectory(): Directory | null {
+/**
+ * Where the composer keeps its own copies of attached images until the post is
+ * sent. On Android this is outside the cache directory, because a nearly full
+ * device deletes app caches about once a minute, including images in an open
+ * composer. iOS only clears caches while the app isn't running, so they can
+ * stay there. The composer purges this directory when it closes and when the
+ * app launches.
+ */
+export function getComposerImageDirectory(): Directory | null {
   if (IS_NATIVE) {
-    return (_imageCacheDirectory ??= new Directory(
-      Paths.cache,
+    return (_composerImageDirectory ??= new Directory(
+      IS_ANDROID ? Paths.document : Paths.cache,
       'bsky-composer',
     ))
   }
@@ -17,13 +25,13 @@ export function getImageCacheDirectory(): Directory | null {
 }
 
 export async function moveIfNecessary(from: string) {
-  const cacheDir = IS_NATIVE && getImageCacheDirectory()
+  const composerDir = IS_NATIVE && getComposerImageDirectory()
 
-  if (cacheDir && !from.startsWith(cacheDir.uri)) {
+  if (composerDir && !from.startsWith(composerDir.uri)) {
     const source = new File(from.startsWith('/') ? `file://${from}` : from)
-    const destination = new File(cacheDir, nanoid(36))
+    const destination = new File(composerDir, nanoid(36))
 
-    cacheDir.create({idempotent: true, intermediates: true})
+    composerDir.create({idempotent: true, intermediates: true})
     await source.move(destination)
 
     return destination.uri
