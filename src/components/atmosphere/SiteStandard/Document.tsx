@@ -45,6 +45,7 @@ export function Document({
    */
   const hasMenu = !preview
   const menuClearance = hasMenu && !hasMedia && a.pr_5xl
+  const actionsStyle = [a.px_md, a.pt_xs, a.pb_md]
 
   const {
     state: interacted,
@@ -75,8 +76,6 @@ export function Document({
         a.w_full,
         a.border,
         interacted ? t.atoms.border_contrast_high : t.atoms.border_contrast_low,
-        /* Matches the link's hover fill so it extends behind the actions. */
-        interacted && t.atoms.bg_contrast_25,
         preview && a.pointer_events_none,
         style,
       ]}>
@@ -169,11 +168,16 @@ export function Document({
                 </View>
               </View>
             )}
+
+            <DocumentActions ghost view={view} style={actionsStyle} />
           </View>
         )}
       </Link>
 
-      <DocumentActions view={view} style={[a.px_md, a.pt_xs, a.pb_md]} />
+      <DocumentActions
+        view={view}
+        style={[a.absolute, a.left_0, a.right_0, a.bottom_0, actionsStyle]}
+      />
 
       {hasMenu && (
         <AtmosphereCardMenu

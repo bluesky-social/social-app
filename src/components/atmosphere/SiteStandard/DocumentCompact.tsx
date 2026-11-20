@@ -98,19 +98,7 @@ function DocumentCompactBase({
     : undefined
 
   return (
-    <View
-      style={[
-        a.relative,
-        card && [a.rounded_lg, a.border],
-        preview && a.pointer_events_none,
-        t.atoms.bg,
-        interacted && t.atoms.bg_contrast_25,
-        card &&
-          (interacted
-            ? t.atoms.border_contrast_high
-            : t.atoms.border_contrast_low),
-        style,
-      ]}>
+    <View style={[a.relative, preview && a.pointer_events_none, style]}>
       <Link
         testID={card ? 'documentCompactCard' : 'documentCompact'}
         peek
@@ -124,13 +112,17 @@ function DocumentCompactBase({
           a.flex_col,
           a.align_stretch,
           a.w_full,
-          card && a.rounded_lg,
+          card && [a.rounded_lg, a.border],
           /*
            * The peek lifts this view on a clear background, so it needs its own
            * fill for the padding to show.
            */
           t.atoms.bg,
           interacted && t.atoms.bg_contrast_25,
+          card &&
+            (interacted
+              ? t.atoms.border_contrast_high
+              : t.atoms.border_contrast_low),
         ]}
         {...web({
           onMouseEnter: onInteract,
@@ -138,8 +130,7 @@ function DocumentCompactBase({
         })}
         onFocus={onInteract}
         onBlur={onInteractOut}>
-        {/* Bottom padding moves below the actions, outside the link. */}
-        <View style={[containerStyle, {paddingBottom: 0}]}>
+        <View style={containerStyle}>
           <View style={[a.w_full, a.gap_sm]}>
             {!!publisher && (
               <View
@@ -187,12 +178,18 @@ function DocumentCompactBase({
               )}
             </View>
           </View>
+
+          <DocumentActions ghost view={view} style={[a.pt_md]} />
         </View>
       </Link>
 
       <DocumentActions
         view={view}
-        style={[a.pt_md, {paddingLeft, paddingRight, paddingBottom}]}
+        style={[
+          a.absolute,
+          a.pt_md,
+          {left: paddingLeft, right: paddingRight, bottom: paddingBottom},
+        ]}
       />
 
       {hasMenu && (

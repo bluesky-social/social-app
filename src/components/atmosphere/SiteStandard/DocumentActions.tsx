@@ -1,4 +1,9 @@
-import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {
+  type PressableProps,
+  type StyleProp,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, utils} from '#/alf'
@@ -11,14 +16,22 @@ import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons
 import {type app} from '#/lexicons'
 
 /**
- * "Read" and "Recommend" buttons below a document card. Rendered as a sibling
- * of the card's article link, since interactive elements can't nest in one.
+ * "Read" and "Recommend" buttons for a document card. Interactive elements
+ * can't nest in the card's article link, so cards render a `ghost` inside the
+ * link to reserve space, and overlay the real buttons on it.
  */
 export function DocumentActions({
   view,
+  ghost = false,
   style,
 }: {
   view: app.bsky.embed.external.ViewArticle
+  /**
+   * Renders an invisible, non-interactive copy that takes up the same space
+   * as the real buttons. Sizing comes from the same `Button` styles, so it
+   * tracks font scaling with no measuring or layout shift.
+   */
+  ghost?: boolean
   style?: StyleProp<ViewStyle>
 }) {
   const {t: l} = useLingui()
@@ -51,9 +64,12 @@ export function DocumentActions({
     useCustomTheme = ratio !== null && ratio >= 4.5
   }
 
+  const PressableComponent = ghost ? GhostPressable : undefined
+
   // TODO: hook up Read and Recommend
   const readButton = (
     <Button
+      PressableComponent={PressableComponent}
       label={readText}
       size="small"
       color="secondary_inverted"
@@ -74,7 +90,16 @@ export function DocumentActions({
   )
 
   return (
-    <View style={[a.flex_row, a.gap_sm, style]}>
+    <View
+      aria-hidden={ghost}
+      accessibilityElementsHidden={ghost}
+      importantForAccessibility={ghost ? 'no-hide-descendants' : 'auto'}
+      style={[
+        a.flex_row,
+        a.gap_sm,
+        ghost && [a.pointer_events_none, {opacity: 0}],
+        style,
+      ]}>
       {publisher && useCustomTheme ? (
         <StandardSiteThemeProvider view={publisher}>
           {readButton}
@@ -83,6 +108,7 @@ export function DocumentActions({
         readButton
       )}
       <Button
+        PressableComponent={PressableComponent}
         label={recommendText}
         size="small"
         color="secondary"
@@ -91,6 +117,18 @@ export function DocumentActions({
         <ButtonIcon icon={SparkleIcon} />
         <ButtonText>{recommendText}</ButtonText>
       </Button>
+    </View>
+  )
+}
+
+/**
+ * Stands in for `Button`'s `Pressable` in a ghost, keeping its styles and
+ * children so the layout matches without rendering anything interactive.
+ */
+function GhostPressable({style, children}: PressableProps) {
+  return (
+    <View style={typeof style === 'function' ? undefined : style}>
+      {typeof children === 'function' ? null : children}
     </View>
   )
 }
