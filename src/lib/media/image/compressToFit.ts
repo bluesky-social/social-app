@@ -1,7 +1,9 @@
+import {File} from 'expo-file-system'
 import {compressImage as compressNatively} from '@bsky.app/expo-bluesky-image-compressor'
 
 import {moveIfNecessary} from '#/lib/media/image/cache'
 import {compressWithManipulator} from '#/lib/media/image/compressWithManipulator'
+import {ImageMissingError} from '#/lib/media/image/errors'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {logger} from '#/logger'
 import {type ImageMeta} from '#/state/gallery'
@@ -15,6 +17,8 @@ export async function compressToFit(
   source: ImageMeta,
   {maxDimension, maxSize}: {maxDimension: number; maxSize: number},
 ): Promise<PickerImage> {
+  assertImageExists(source.path)
+
   if (!features.isOn(Features.ImageUploadsNativeCompressionEnable)) {
     return compressWithManipulator(source, {maxDimension, maxSize})
   }
@@ -35,5 +39,17 @@ export async function compressToFit(
     height: res.height,
     mime: 'image/jpeg',
     size: res.size,
+  }
+}
+
+/**
+ * Both compressors report a missing file differently (the manipulator only says
+ * "Loading bitmap failed"), so check up front to give the composer an error it
+ * can explain. Only local files can go missing.
+ */
+function assertImageExists(path: string) {
+  const uri = path.startsWith('/') ? `file://${path}` : path
+  if (uri.startsWith('file://') && !new File(uri).exists) {
+    throw new ImageMissingError(path)
   }
 }
