@@ -1,0 +1,51 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.unspecced.getAtmosphereActivityRecommendations",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get an ordered skeleton of recommended Standard.site articles and Grain galleries. Intended to be called and hydrated by app.bsky.unspecced.getAtmosphereRecommendedActivity.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "viewer": {
+            "type": "string",
+            "format": "did",
+            "description": "DID of the account making the request. Omitted for unauthenticated requests."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 25
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["items", "recIdStr"],
+          "properties": {
+            "items": {
+              "type": "array",
+              "maxLength": 100,
+              "items": { "type": "ref", "ref": "#item" }
+            },
+            "recIdStr": {
+              "type": "string",
+              "description": "Snowflake for this recommendation, use when submitting recommendation events."
+            }
+          }
+        }
+      }
+    },
+    "item": {
+      "type": "object",
+      "required": ["uri"],
+      "properties": {
+        "uri": { "type": "string", "format": "at-uri" }
+      }
+    }
+  }
+}

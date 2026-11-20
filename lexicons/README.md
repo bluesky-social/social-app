@@ -11,32 +11,28 @@ builds them like any other file.
 
 ## Local extension: `app.bsky.embed.external`
 
-This schema matches upstream `lexicons-overrides/app/bsky/embed/external.json`
-at atproto `f0653de696169e16dc003f11877b9eb0ae6533c0`, which is ahead of the
-published schema record: it adds `viewGallery.photoCount` (atproto PR 5880),
-plus `viewLivestream.lastSeenAt` and `viewArticlePublication.viewer` (atproto PR
-5893). It also adds `viewArticle.viewer` and `viewGallery.viewer` from atproto
-PR 5967 (unmerged, at `f1f31663997bd8da8082cce57bf26f22bd4844b5`). Its manifest CID is a locally calculated content-integrity pin, not the
-published record CID. Exclude it from scoped updates until the published schema
-includes these fields.
+This schema is a copy of `lexicons/app/bsky/embed/external.json` from
+[bluesky-social/bsky](https://github.com/bluesky-social/bsky) `main` at
+`697e0100ed21244a5597e4541111416cab4fec95`, which is ahead of the published
+schema record (it adds article and gallery `viewer` state, `providerId`, and
+`view.data`, among others). Its manifest CID is calculated from that file and
+matches the pin in atproto's `packages/bsky/lexicons.json` (atproto PR 5973),
+not the published record CID. Exclude it from scoped updates until the
+published schema includes these fields.
 
 ## Unpublished Atmosphere schemas
 
 The `app.bsky.unspecced` namespace is intentionally unpublished (it is a DNS
 carveout upstream, and resolving it is a CI violation there), so the installer
-cannot fetch it. These schemas are files only, with no `lexicons.json` entry,
-and are copied from merged upstream sources:
+cannot fetch it. These schemas are files only, with no `lexicons.json` entry.
+The `getAtmosphere*` schemas are copied from `lexicons/app/bsky/unspecced/` in
+bluesky-social/bsky `main` at `697e0100ed21244a5597e4541111416cab4fec95`, the
+same source atproto pins since PR 5973. `getAtmosphereTimeline` (v1) is
+intentionally omitted in favor of `getAtmosphereTimelineV2`.
 
-- `lexicons-overrides/app/bsky/unspecced/getAtmosphereExploreTab.json` at atproto
-  `a704f10c040a989244cfa578e65f006ff7de0f83` (from atproto PR 5892)
-- `lexicons-overrides/app/bsky/unspecced/getAtmosphereApps.json` at atproto
-  `a704f10c040a989244cfa578e65f006ff7de0f83` (from atproto PR 5892)
-- `lexicons-overrides/app/bsky/unspecced/getAtmosphereTimelineV2.json` at atproto
-  `f0653de696169e16dc003f11877b9eb0ae6533c0` (from atproto PR 5893)
-- `lexicons-overrides/app/bsky/unspecced/getAtmosphereRecordViews.json` at atproto
-  `3fb2578a59813b3183fb1e443120e25a43ab4aba` (from atproto PR 5860)
-- `lexicons-overrides/app/bsky/unspecced/getAtmosphereRecommendedActivity.json`
-  at atproto `156b4a4ed722d02f0f30f8ab9a00aa366c74782c` (from atproto PR 5899)
+Other `app.bsky.unspecced` schemas are not synced from bsky `main`: some there
+lack fields the app uses (such as `recIdStr`) that atproto still adds through
+`lexicons-overrides`.
 
 To update one, copy the upstream JSON over the file. Don't add these schemas to
 `lexicons.json`: the installer would try to fetch them from the network, and

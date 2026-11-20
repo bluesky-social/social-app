@@ -1,0 +1,56 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.unspecced.getAtmosphereRecordView",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get a hydrated view of one Atmosphere record. Requires authentication. Without `cid` the latest version of the record is returned; with `cid` exactly that version is returned, never another. Dependencies of the record are always latest. Returns an empty object when the record is missing or not visible. When the record is visible but cannot produce a view, only the associations are returned.",
+      "parameters": {
+        "type": "params",
+        "required": ["uri"],
+        "properties": {
+          "uri": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "Complete DID-based AT-URI of the record, including collection and record key."
+          },
+          "cid": {
+            "type": "string",
+            "format": "cid",
+            "description": "Optional CID pinning the exact record version at `uri`."
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "view": {
+              "type": "union",
+              "refs": [
+                "app.bsky.embed.external#viewArticle",
+                "app.bsky.embed.external#viewArticlePublication",
+                "app.bsky.embed.external#viewGallery",
+                "app.bsky.embed.external#viewLivestream"
+              ],
+              "description": "Hydrated view of the record. Present only when the records supply enough information to populate the required fields."
+            },
+            "associatedRefs": {
+              "type": "array",
+              "items": { "type": "ref", "ref": "com.atproto.repo.strongRef" },
+              "description": "StrongRefs (URI+CID) of the record itself, followed by the dependency records selected for its collection (a document's publication; a gallery's items and photos). Index-aligned with `associatedRecords`."
+            },
+            "associatedRecords": {
+              "type": "array",
+              "items": {
+                "type": "unknown",
+                "description": "The raw record data, index-aligned with `associatedRefs`."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
