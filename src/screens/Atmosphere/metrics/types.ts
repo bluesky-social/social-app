@@ -47,7 +47,7 @@ export type AtmosphereAppMetricContext = AtmosphereMetricContext & {
 }
 
 /** Explore's sections of featured apps and content. */
-export type AtmosphereSection =
+export type AtmosphereExploreTabSection =
   'apps' | 'articles' | 'livestreams' | 'photos' | 'publications'
 
 /** One content card, as reported by Atmosphere's content events. */
@@ -68,7 +68,7 @@ export type AtmosphereContentMetricContext = AtmosphereMetricContext & {
    */
   position: number
   /** Explore's section the card is in. */
-  section?: Exclude<AtmosphereSection, 'apps'>
+  section?: Exclude<AtmosphereExploreTabSection, 'apps'>
   /**
    * Following only: the collection (record NSID) of the activity that got the
    * content shown, e.g. a recommend, which can differ from `collection`.
