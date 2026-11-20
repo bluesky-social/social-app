@@ -26,6 +26,7 @@ export enum Features {
   ImageUploadsNativeCompressionEnable = 'image_uploads:native_compression:enable',
   ImageUploadsWebCompressionEnable = 'image_uploads:web_compression:enable',
   PostViewCountsEnable = 'post_view_counts:enable',
+  WebListVirtualizationEnable = 'web_list:virtualization:enable',
 
   // values
   StarterPacksConfig = 'starter_packs:config',
