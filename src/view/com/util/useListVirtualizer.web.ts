@@ -28,6 +28,47 @@ function cacheHeight(key: string, width: number, height: number) {
   }
 }
 
+/**
+ * Plain text of rows that have left the window, by item key. Unmounted rows
+ * render it inside `hidden="until-found"` placeholders so the browser's
+ * find-in-page can still match them.
+ */
+const textCache = new Map<string, string>()
+
+function cacheText(key: string, text: string) {
+  textCache.delete(key)
+  textCache.set(key, text)
+  if (textCache.size > HEIGHT_CACHE_LIMIT) {
+    const oldest = textCache.keys().next().value
+    if (oldest !== undefined) textCache.delete(oldest)
+  }
+}
+
+/**
+ * The row's text. Adjacent text nodes are kept together, as find-in-page sees
+ * them, so words split across inline elements (links, emoji) still match.
+ */
+function snapshotText(node: HTMLElement) {
+  return node.textContent ?? ''
+}
+
+let supportsFindInPage: boolean | undefined
+
+/**
+ * Whether find-in-page searches `hidden="until-found"` content (Chrome 102,
+ * Firefox 139, Safari 26.2). Older browsers treat it as plain `hidden`, i.e.
+ * `display: none`, which would collapse the placeholders' height.
+ */
+function canFindHiddenText() {
+  if (supportsFindInPage === undefined) {
+    supportsFindInPage =
+      typeof document !== 'undefined' && 'onbeforematch' in document.body
+  }
+  return supportsFindInPage
+}
+
+export type ListPlaceholder = {key: string; height: number; text: string}
+
 let supportsScrollAnchoring: boolean | undefined
 
 /**
@@ -77,6 +118,9 @@ export function useListVirtualizer({
   const [heights, setHeights] = useState<ReadonlyMap<string, number>>(() =>
     seedHeights(new Map(), keys, undefined),
   )
+  const [texts, setTexts] = useState<ReadonlyMap<string, string>>(() =>
+    seedTexts(new Map(), keys),
+  )
   /** Null until the window has been computed against the real viewport. */
   const [range, setRange] = useState<Range | null>(null)
 
@@ -104,20 +148,41 @@ export function useListVirtualizer({
   }
 
   const estimate = getEstimate(heights)
+  const findable = enabled && canFindHiddenText()
   let topSpacerHeight = 0
   let bottomSpacerHeight = 0
+  const placeholdersBefore: ListPlaceholder[] = []
+  const placeholdersAfter: ListPlaceholder[] = []
   if (enabled) {
     for (let i = 0; i < start; i++) {
-      topSpacerHeight += heights.get(keys[i]) ?? estimate
+      const height = heights.get(keys[i]) ?? estimate
+      topSpacerHeight += height
+      if (findable) {
+        placeholdersBefore.push({
+          key: keys[i],
+          height,
+          text: texts.get(keys[i]) ?? '',
+        })
+      }
     }
     for (let i = end; i < itemCount; i++) {
-      bottomSpacerHeight += heights.get(keys[i]) ?? estimate
+      const height = heights.get(keys[i]) ?? estimate
+      bottomSpacerHeight += height
+      if (findable) {
+        placeholdersAfter.push({
+          key: keys[i],
+          height,
+          text: texts.get(keys[i]) ?? '',
+        })
+      }
     }
   }
 
   // Latest values for the imperative code below (scroll, resize, observers).
   const keysRef = useRef(keys)
   const heightsRef = useRef(heights)
+  const textsRef = useRef(texts)
+  const pendingTextsRef = useRef<Map<string, string> | null>(null)
   const rangeRef = useRef({start, end})
   const enabledRef = useRef(enabled)
   const widthRef = useRef<number | undefined>(undefined)
@@ -134,6 +199,7 @@ export function useListVirtualizer({
   useLayoutEffect(() => {
     keysRef.current = keys
     heightsRef.current = heights
+    if (!pendingTextsRef.current) textsRef.current = texts
     rangeRef.current = {start, end}
     enabledRef.current = enabled
   })
@@ -310,6 +376,30 @@ export function useListVirtualizer({
     [maintainAnchor, scheduleRecompute],
   )
 
+  /*
+   * Keep the text of a row that's leaving the window for its find-in-page
+   * placeholder. Rows usually leave in batches, so the state update is
+   * deferred until the batch is done.
+   */
+  const rememberText = useCallback((key: string, node: HTMLElement) => {
+    if (!canFindHiddenText()) return
+    const text = snapshotText(node)
+    cacheText(key, text)
+    if ((pendingTextsRef.current ?? textsRef.current).get(key) === text) return
+    if (!pendingTextsRef.current) {
+      pendingTextsRef.current = new Map(textsRef.current)
+      queueMicrotask(() => {
+        const next = pendingTextsRef.current
+        pendingTextsRef.current = null
+        if (next) {
+          textsRef.current = next
+          setTexts(next)
+        }
+      })
+    }
+    pendingTextsRef.current.set(key, text)
+  }, [])
+
   /** Called by each mounted row so its height can be tracked. */
   const observeRow = useCallback(
     (key: string, node: HTMLElement | null) => {
@@ -319,6 +409,7 @@ export function useListVirtualizer({
       const resizeObserver = resizeObserverRef.current
       const previous = keyToNodeRef.current.get(key)
       if (previous && previous !== node) {
+        rememberText(key, previous)
         resizeObserver.unobserve(previous)
         nodeToKeyRef.current.delete(previous)
         keyToNodeRef.current.delete(key)
@@ -329,7 +420,7 @@ export function useListVirtualizer({
         resizeObserver.observe(node)
       }
     },
-    [handleResize],
+    [handleResize, rememberText],
   )
 
   useEffect(() => {
@@ -348,6 +439,13 @@ export function useListVirtualizer({
     if (seeded !== heightsRef.current) {
       heightsRef.current = seeded
       setHeights(seeded)
+    }
+    if (canFindHiddenText() && !pendingTextsRef.current) {
+      const seededTexts = seedTexts(textsRef.current, keys)
+      if (seededTexts !== textsRef.current) {
+        textsRef.current = seededTexts
+        setTexts(seededTexts)
+      }
     }
   }, [enabled, keys])
 
@@ -396,6 +494,13 @@ export function useListVirtualizer({
     end,
     topSpacerHeight,
     bottomSpacerHeight,
+    /**
+     * When set, render these in place of the spacers so find-in-page can
+     * match rows outside the window.
+     */
+    placeholders: findable
+      ? {before: placeholdersBefore, after: placeholdersAfter}
+      : undefined,
     markerRef,
     observeRow: enabled ? observeRow : undefined,
     getScrollOffsetForIndex,
@@ -427,4 +532,21 @@ function seedHeights(
     next.set(key, cached.height)
   }
   return next ?? heights
+}
+
+/** Adds cached text for keys this list has no text for. */
+function seedTexts(
+  texts: ReadonlyMap<string, string>,
+  keys: string[],
+): ReadonlyMap<string, string> {
+  if (!canFindHiddenText()) return texts
+  let next: Map<string, string> | undefined
+  for (const key of keys) {
+    if (texts.has(key)) continue
+    const cached = textCache.get(key)
+    if (cached === undefined) continue
+    if (!next) next = new Map(texts)
+    next.set(key, cached)
+  }
+  return next ?? texts
 }
