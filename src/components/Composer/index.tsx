@@ -30,6 +30,7 @@ import {
   AutocompleteItemEmoji,
   AutocompleteItemProfile,
   parseAutocompleteItemType,
+  shouldShowAutocomplete,
   useAutocomplete,
 } from '#/components/Autocomplete'
 import {
@@ -379,7 +380,7 @@ export function Composer({
         </AutosizedTextarea>
       </View>
 
-      {activeFacet && activeFacet.type !== 'url' && (
+      {activeFacet && shouldShowAutocomplete(activeFacet) && (
         <AutocompleteInner
           inverted={autocompletePlacement?.startsWith('top')}
           sift={sift}
