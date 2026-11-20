@@ -18,6 +18,7 @@ import {AvatarStack} from '#/components/AvatarStack'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon} from '#/components/icons/Arrow'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
+import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 
@@ -31,6 +32,7 @@ export function DocumentActions({
   view,
   ghost = false,
   interacted = false,
+  onReadPress,
   style,
 }: {
   view: app.bsky.embed.external.ViewArticle
@@ -42,6 +44,8 @@ export function DocumentActions({
   ghost?: boolean
   /** Whether the card is hovered or focused, to match its background. */
   interacted?: boolean
+  /** The card's own press handler, so reading tracks like a card press. */
+  onReadPress?: () => void
   style?: StyleProp<ViewStyle>
 }) {
   const {t: l} = useLingui()
@@ -76,15 +80,17 @@ export function DocumentActions({
 
   const PressableComponent = ghost ? GhostPressable : undefined
 
-  // TODO: hook up Read and Recommend
   const readButton = (
-    <Button
+    <Link
       PressableComponent={PressableComponent}
+      shouldProxy
+      to={view.uri}
+      onPress={onReadPress}
       label={readText}
       size="small"
       color="secondary_inverted"
-      style={[a.flex_1]}
-      onPress={() => {}}>
+      /* Link left-aligns its content by default. */
+      style={[a.flex_1, a.justify_center]}>
       {host ? (
         <>
           <ButtonIcon icon={host.Icon} />
@@ -96,7 +102,7 @@ export function DocumentActions({
           <ButtonIcon icon={ArrowTopRightIcon} />
         </>
       )}
-    </Button>
+    </Link>
   )
 
   return (
@@ -119,6 +125,7 @@ export function DocumentActions({
         ) : (
           readButton
         )}
+        {/* TODO: hook up Recommend */}
         <Button
           PressableComponent={PressableComponent}
           label={recommendText}

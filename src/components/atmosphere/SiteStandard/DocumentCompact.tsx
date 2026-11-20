@@ -186,6 +186,7 @@ function DocumentCompactBase({
       <DocumentActions
         view={view}
         interacted={interacted}
+        onReadPress={onPress}
         style={[
           a.absolute,
           a.pt_md,
