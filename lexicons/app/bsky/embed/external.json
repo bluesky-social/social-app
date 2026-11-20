@@ -191,15 +191,6 @@
         "likeCount": {
           "type": "integer",
           "minimum": 0
-        },
-        "likers": {
-          "type": "array",
-          "maxLength": 3,
-          "description": "Available profile previews. Selected deterministically by DID; not a ranking.",
-          "items": {
-            "type": "ref",
-            "ref": "app.bsky.actor.defs#profileViewBasic"
-          }
         }
       }
     },
@@ -211,6 +202,20 @@
           "type": "string",
           "format": "at-uri",
           "description": "The requesting account's site.standard.graph.recommend record for this article, if recommended."
+        },
+        "knownLikers": {
+          "type": "array",
+          "maxLength": 3,
+          "description": "Up to 3 accounts the requesting account follows that recommended the subject, newest first. Never includes the requesting account.",
+          "items": {
+            "type": "ref",
+            "ref": "app.bsky.actor.defs#profileViewBasic"
+          }
+        },
+        "knownLikerCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of accounts the requesting account follows that recommended the subject, including those in knownLikers."
         }
       }
     },
@@ -273,6 +278,20 @@
           "type": "string",
           "format": "at-uri",
           "description": "The requesting account's site.standard.graph.subscription record for this publication, if subscribed."
+        },
+        "knownSubscribers": {
+          "type": "array",
+          "maxLength": 3,
+          "description": "Up to 3 accounts the requesting account follows that subscribed to the subject, newest first. Never includes the requesting account.",
+          "items": {
+            "type": "ref",
+            "ref": "app.bsky.actor.defs#profileViewBasic"
+          }
+        },
+        "knownSubscriberCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of accounts the requesting account follows that subscribed to the subject, including those in knownSubscribers."
         }
       }
     },
@@ -343,15 +362,6 @@
         "likeCount": {
           "type": "integer",
           "minimum": 0
-        },
-        "likers": {
-          "type": "array",
-          "maxLength": 3,
-          "description": "Available profile previews. Selected deterministically by DID; not a ranking.",
-          "items": {
-            "type": "ref",
-            "ref": "app.bsky.actor.defs#profileViewBasic"
-          }
         }
       }
     },
@@ -363,6 +373,20 @@
           "type": "string",
           "format": "at-uri",
           "description": "The requesting account's social.grain.favorite record for this gallery, if favorited."
+        },
+        "knownLikers": {
+          "type": "array",
+          "maxLength": 3,
+          "description": "Up to 3 accounts the requesting account follows that favorited the subject, newest first. Never includes the requesting account.",
+          "items": {
+            "type": "ref",
+            "ref": "app.bsky.actor.defs#profileViewBasic"
+          }
+        },
+        "knownLikerCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of accounts the requesting account follows that favorited the subject, including those in knownLikers."
         }
       }
     },

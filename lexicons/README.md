@@ -15,10 +15,14 @@ This schema is a copy of `lexicons/app/bsky/embed/external.json` from
 [bluesky-social/bsky](https://github.com/bluesky-social/bsky) `main` at
 `697e0100ed21244a5597e4541111416cab4fec95`, which is ahead of the published
 schema record (it adds article and gallery `viewer` state, `providerId`, and
-`view.data`, among others). Its manifest CID is calculated from that file and
-matches the pin in atproto's `packages/bsky/lexicons.json` (atproto PR 5973),
-not the published record CID. Exclude it from scoped updates until the
-published schema includes these fields.
+`view.data`, among others). Its manifest CID is calculated from that file, not
+the published record CID. Exclude it from scoped updates until the published
+schema includes these fields.
+
+It is also ahead of bsky `main` with a local proposal not yet in the appview:
+`knownLikers`/`knownLikerCount` on article and gallery `viewer` state and
+`knownSubscribers`/`knownSubscriberCount` on publication `viewer` state, in
+place of the article and gallery `likers` previews, which are removed.
 
 ## Unpublished Atmosphere schemas
 

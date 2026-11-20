@@ -64,9 +64,8 @@ const document = {
   image: IMAGE,
   createdAt: '2026-01-15T12:00:00.000Z',
   readingTime: 5,
-  viewer: {},
+  viewer: {knownLikers: likers, knownLikerCount: 5},
   likeCount: 27,
-  likers,
   publisher: publication,
   associatedRefs: [
     {
@@ -78,22 +77,22 @@ const document = {
   associatedProfiles: [author],
 } satisfies app.bsky.embed.external.ViewArticle
 
-const singleLikerDocument = {
+const singleKnownLikerDocument = {
   ...document,
-  likeCount: 1,
-  likers: likers.slice(0, 1),
+  likeCount: 12,
+  viewer: {knownLikers: likers.slice(0, 1), knownLikerCount: 1},
 } satisfies app.bsky.embed.external.ViewArticle
 
-/* Like Discover and Following, which don't hydrate liker previews. */
-const noLikerPreviewsDocument = {
+/* Recommended, but by nobody the viewer follows. */
+const noKnownLikersDocument = {
   ...document,
-  likers: undefined,
+  viewer: {},
 } satisfies app.bsky.embed.external.ViewArticle
 
 const noLikersDocument = {
   ...document,
   likeCount: 0,
-  likers: [],
+  viewer: {},
 } satisfies app.bsky.embed.external.ViewArticle
 
 const leafletPublication = {
@@ -131,29 +130,29 @@ export function SiteStandardStorybook() {
       </View>
 
       <View style={[a.gap_md]}>
-        <H2>Document compact card, recommenders you follow</H2>
+        <H2>Document compact card, one known recommender</H2>
+        <DocumentCompactCard view={singleKnownLikerDocument} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document compact card, no known recommenders</H2>
+        <DocumentCompactCard view={noKnownLikersDocument} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document compact card, Following related activity first</H2>
         <DocumentCompactCard
           view={document}
+          recommenders={{actors: likers.slice(1, 2), actorCount: 1}}
+        />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document compact card, Following related activity only</H2>
+        <DocumentCompactCard
+          view={noKnownLikersDocument}
           recommenders={{actors: likers, actorCount: likers.length}}
         />
-      </View>
-
-      <View style={[a.gap_md]}>
-        <H2>Document compact card, only recommender is someone you follow</H2>
-        <DocumentCompactCard
-          view={singleLikerDocument}
-          recommenders={{actors: likers.slice(0, 1), actorCount: 1}}
-        />
-      </View>
-
-      <View style={[a.gap_md]}>
-        <H2>Document compact card, single recommender</H2>
-        <DocumentCompactCard view={singleLikerDocument} />
-      </View>
-
-      <View style={[a.gap_md]}>
-        <H2>Document compact card, no recommender previews</H2>
-        <DocumentCompactCard view={noLikerPreviewsDocument} />
       </View>
 
       <View style={[a.gap_md]}>

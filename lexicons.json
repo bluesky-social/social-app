@@ -430,7 +430,7 @@
     },
     "app.bsky.embed.external": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.embed.external",
-      "cid": "bafyreie26k3xh2usobpgfogum2rk52irpvpaxore7ciqfmajsjj3hpe4m4"
+      "cid": "bafyreig6cjqeqlqy7yt2ley4liirgrleii7lvv463ymzlbysvp577wmezq"
     },
     "app.bsky.embed.gallery": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.embed.gallery",

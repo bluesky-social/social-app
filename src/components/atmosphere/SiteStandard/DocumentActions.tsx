@@ -14,6 +14,7 @@ import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useRequireAuth, useSession} from '#/state/session'
 import {formatCount} from '#/view/com/util/numeric/format'
+import {isActorHidden} from '#/screens/Atmosphere/ActivityTab/moderation'
 import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
 import {atoms as a, useTheme, utils} from '#/alf'
 import {getAtmosphereProvider} from '#/components/atmosphere/providers'
@@ -30,8 +31,8 @@ import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 
 /**
- * Recommenders the viewer has a relationship with, such as the people they
- * follow on the Following tab, to name in the social proof.
+ * People the viewer follows who recommended the document within the same
+ * stretch of timeline, named in the social proof ahead of `knownLikers`.
  */
 export type DocumentRecommenders = {
   /** The ones to show, with moderated actors left out. Never empty. */
@@ -73,7 +74,7 @@ export function DocumentActions({
   const haptics = useHaptics()
   const requireAuth = useRequireAuth()
   const sendFeedback = useAtmosphereFeedback()
-  const {canRecommend, isRecommended, likeCount, recommend, unrecommend} =
+  const {canRecommend, isRecommended, recommend, unrecommend} =
     useDocumentRecommend(view)
   const publisher = view.publisher
   const provider = getAtmosphereProvider(view.providerId)
@@ -202,7 +203,6 @@ export function DocumentActions({
       <SocialProof
         view={view}
         recommenders={recommenders}
-        likeCount={likeCount}
         interacted={interacted}
       />
     </View>
@@ -210,90 +210,59 @@ export function DocumentActions({
 }
 
 /**
- * "Recommended by {name} +N others" when there are `recommenders` to name,
- * otherwise "Recommended by N people" with the view's preview `likers` as
- * avatars. Those are picked by DID, not relevance, so they're never named.
- * Without profiles to show there's no row; the count is in the card's stats.
+ * "Recommended by {name} +N others", naming only people the viewer follows:
+ * `recommenders` from the same stretch of timeline first, then the view's
+ * `knownLikers`. The total count is in the card's stats, not here, and with
+ * nobody to name there's no row.
  */
 function SocialProof({
   view,
   recommenders,
-  likeCount,
   interacted,
 }: {
   view: app.bsky.embed.external.ViewArticle
   recommenders?: DocumentRecommenders
-  /** Includes the viewer's optimistic recommendation. */
-  likeCount: number
   interacted: boolean
 }) {
   const t = useTheme()
   const {i18n} = useLingui()
   const moderationOpts = useModerationOpts()
-
   const {currentAccount} = useSession()
 
-  /* The viewer still counts toward the total, but isn't shown to themselves. */
-  const isOther = (profile: {did: string}) =>
-    profile.did !== currentAccount?.did
-  const shownRecommenders = recommenders?.actors.filter(isOther)
-  const named = shownRecommenders?.[0]
-  const avatars =
-    (named ? shownRecommenders : view.likers?.filter(isOther))?.slice(0, 3) ??
-    []
-  /* The related list can be fresher than the count. */
-  const total = Math.max(likeCount, recommenders?.actorCount ?? 0)
-  if (avatars.length === 0 || total <= 0) return null
+  const knownLikers = view.viewer?.knownLikers ?? []
+  /* `recommenders` are already moderated; the viewer is never shown. */
+  const shown = uniqueByDid([
+    ...(recommenders?.actors ?? []),
+    ...knownLikers.filter(
+      profile => moderationOpts && !isActorHidden(profile, moderationOpts),
+    ),
+  ]).filter(profile => profile.did !== currentAccount?.did)
+  const named = shown[0]
+  if (!named) return null
 
-  let text: React.ReactNode
-  if (named) {
-    const name = sanitizeDisplayName(
-      named.displayName || named.handle,
-      moderationOpts
-        ? moderateProfile(named, moderationOpts).ui('displayName')
-        : undefined,
-    )
-    const nameStyle = [a.font_semi_bold, t.atoms.text_contrast_medium]
-    /* The named recommender is one of the total, so they're not in the +N. */
-    const others = total - 1
-    const othersCount = formatCount(i18n, others)
-    text =
-      others > 0 ? (
-        <Trans comment="Social proof below an article; the bolded name is someone the viewer follows who recommended it">
-          Recommended by{' '}
-          <Text emoji style={nameStyle}>
-            {name}
-          </Text>{' '}
-          <Plural
-            value={others}
-            one={`+${othersCount} other`}
-            other={`+${othersCount} others`}
-          />
-        </Trans>
-      ) : (
-        <Trans comment="Social proof below an article; the bolded name is the only person who recommended it">
-          Recommended by{' '}
-          <Text emoji style={nameStyle}>
-            {name}
-          </Text>
-        </Trans>
-      )
-  } else {
-    const count = formatCount(i18n, total)
-    text = (
-      <Plural
-        comment="Social proof below an article: how many people recommended it"
-        value={total}
-        one={`Recommended by ${count} person`}
-        other={`Recommended by ${count} people`}
-      />
-    )
-  }
+  /*
+   * Hidden actors still count. The timeline's related activity can be fresher
+   * than the view's count.
+   */
+  const total = Math.max(
+    view.viewer?.knownLikerCount ?? 0,
+    recommenders?.actorCount ?? 0,
+    shown.length,
+  )
+  const others = total - 1
+  const othersCount = formatCount(i18n, others)
+  const name = sanitizeDisplayName(
+    named.displayName || named.handle,
+    moderationOpts
+      ? moderateProfile(named, moderationOpts).ui('displayName')
+      : undefined,
+  )
+  const nameStyle = [a.font_semi_bold, t.atoms.text_contrast_medium]
 
   return (
     <View pointerEvents="none" style={[a.flex_row, a.align_center, a.gap_xs]}>
       <AvatarStack
-        profiles={avatars}
+        profiles={shown.slice(0, 3)}
         size={20}
         overlap={6}
         backgroundColor={
@@ -306,10 +275,38 @@ function SocialProof({
         emoji
         numberOfLines={1}
         style={[a.flex_shrink, a.text_sm, t.atoms.text_contrast_medium]}>
-        {text}
+        {others > 0 ? (
+          <Trans comment="Social proof below an article; the bolded name is someone the viewer follows who recommended it, and the count is how many more people the viewer follows recommended it">
+            Recommended by{' '}
+            <Text emoji style={nameStyle}>
+              {name}
+            </Text>{' '}
+            <Plural
+              value={others}
+              one={`+${othersCount} other`}
+              other={`+${othersCount} others`}
+            />
+          </Trans>
+        ) : (
+          <Trans comment="Social proof below an article; the bolded name is the only person the viewer follows who recommended it">
+            Recommended by{' '}
+            <Text emoji style={nameStyle}>
+              {name}
+            </Text>
+          </Trans>
+        )}
       </Text>
     </View>
   )
+}
+
+function uniqueByDid<P extends {did: string}>(profiles: P[]): P[] {
+  const seen = new Set<string>()
+  return profiles.filter(profile => {
+    if (seen.has(profile.did)) return false
+    seen.add(profile.did)
+    return true
+  })
 }
 
 /**

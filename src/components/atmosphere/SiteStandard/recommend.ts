@@ -80,7 +80,7 @@ export function useDocumentRecommend(
   view: app.bsky.embed.external.ViewArticle,
 ) {
   const pdsClient = usePdsClient()
-  const {did, documentUri, key, likeUri, likeCount} = useRecommendState(view)
+  const {did, documentUri, key, likeUri} = useRecommendState(view)
 
   const queueToggle = useToggleMutationQueue<AtUriString | undefined>({
     initialState: likeUri === 'pending' ? undefined : likeUri,
@@ -115,7 +115,6 @@ export function useDocumentRecommend(
      */
     canRecommend: !!documentUri && (!did || !!view.viewer),
     isRecommended: !!likeUri,
-    likeCount,
     recommend() {
       if (key) updateShadow(key, 'pending', view)
       return queueToggle(true)

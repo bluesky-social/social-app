@@ -79,7 +79,7 @@ describe('findProfiles', () => {
         collection: NSID.recommend,
         view: article(undefined, {
           ...owned,
-          likers: [manton],
+          viewer: {knownLikers: [manton], knownLikerCount: 1},
           publisher: {...article().publisher!, ...owned},
         }),
       }),
@@ -107,7 +107,12 @@ describe('findProfiles', () => {
     const data = explore({
       articles: [article(undefined, {associatedProfiles: [manton]})],
       publications: [{...publication(), subscribers: [manton]}],
-      photos: [{...gallery(manton), likers: [manton]}],
+      photos: [
+        {
+          ...gallery(manton),
+          viewer: {knownLikers: [manton], knownLikerCount: 1},
+        },
+      ],
       livestreams: [livestream({associatedProfiles: [manton]})],
     })
     expect(
