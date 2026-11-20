@@ -91,8 +91,12 @@ export function useDocumentRecommend(
   })
 
   return {
-    /** Only standard.site documents can be recommended. */
-    canRecommend: !!documentUri,
+    /*
+     * Only standard.site documents can be recommended. Signed-in views always
+     * carry `viewer` unless the appview failed to look up the recommendation,
+     * and recommending then could create a duplicate.
+     */
+    canRecommend: !!documentUri && (!did || !!view.viewer),
     isRecommended: !!likeUri,
     likeCount,
     recommend() {
