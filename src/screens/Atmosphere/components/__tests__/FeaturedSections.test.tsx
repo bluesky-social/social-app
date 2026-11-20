@@ -103,8 +103,15 @@ jest.mock('#/components/atmosphere/SiteStandard/Publication', () => ({
 }))
 jest.mock('../PhotoCard', () => ({PhotoCard: mockCard('photo', 'photo')}))
 
+const ARTICLE_URI =
+  'at://did:plc:6ayddqghxhciedbaofoxkcbs/site.standard.document/a1'
 const articles: app.bsky.embed.external.ViewArticle[] = [
-  {uri: 'https://example.com/a1', title: 'First article', description: ''},
+  {
+    uri: 'https://example.com/a1',
+    title: 'First article',
+    description: '',
+    associatedRefs: [{uri: ARTICLE_URI, cid: 'bafycid'}],
+  },
   {uri: 'https://example.com/a2', title: 'Second article', description: ''},
 ]
 const livestreams: app.bsky.embed.external.ViewLivestream[] = [
@@ -202,10 +209,11 @@ describe('FeaturedArticles', () => {
       tab: 'explore',
       surface: 'tab',
       section: 'articles',
-      contentType: 'article',
-      contentId: articles[0].uri,
+      uri: ARTICLE_URI,
+      collection: 'site.standard.document',
+      authorDid: 'did:plc:6ayddqghxhciedbaofoxkcbs',
       position: 0,
-      target: 'external',
+      destination: 'external',
     })
   })
 

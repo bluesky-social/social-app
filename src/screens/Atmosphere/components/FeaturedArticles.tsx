@@ -8,6 +8,7 @@ import {
   AtmosphereFeedbackProvider,
   useAtmosphereFeedback,
 } from '#/screens/Atmosphere/feedback'
+import {getContentMetricContextProps} from '#/screens/Atmosphere/metrics/content'
 import {
   AtmosphereContentItem,
   useLogContentPress,
@@ -46,10 +47,10 @@ export function FeaturedArticles({
               />
             )}
             <AtmosphereContentItem
-              contentType="article"
-              contentId={article.uri}
-              section="articles"
-              position={index}>
+              item={getContentMetricContextProps('article', article, {
+                section: 'articles',
+                position: index,
+              })}>
               <AtmosphereFeedbackProvider
                 value={feedback?.({type: 'article', view: article})}>
                 <Article article={article} />

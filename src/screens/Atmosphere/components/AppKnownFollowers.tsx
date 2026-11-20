@@ -1,11 +1,9 @@
 import {View} from 'react-native'
-import {Plural, useLingui} from '@lingui/react/macro'
+import {Plural} from '@lingui/react/macro'
 
-import {makeProfileLink} from '#/lib/routes/links'
 import {atoms as a, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {shouldShowKnownFollowers} from '#/components/KnownFollowers'
-import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 
@@ -18,25 +16,15 @@ const AVATAR_STACK_SIZE = 18
  */
 export function AppKnownFollowers({
   profile,
-  link = false,
-  onPress,
 }: {
   profile: app.bsky.actor.defs.ProfileViewDetailed
-  /**
-   * Link to the profile's known followers screen. Leave off when the row sits
-   * inside another pressable.
-   */
-  link?: boolean
-  /** Called when the link is pressed. */
-  onPress?: () => void
 }) {
-  const {t: l} = useLingui()
   const t = useTheme()
   const knownFollowers = profile.viewer?.knownFollowers
 
   if (!knownFollowers || !shouldShowKnownFollowers(knownFollowers)) return null
 
-  const content = ({hovered = false}: {hovered?: boolean}) => (
+  return (
     <View
       style={[
         a.flex_row,
@@ -55,7 +43,6 @@ export function AppKnownFollowers({
           a.text_xs,
           a.leading_snug,
           t.atoms.text_contrast_medium,
-          hovered && {textDecorationLine: 'underline'},
         ]}
         numberOfLines={1}>
         <Plural
@@ -65,17 +52,5 @@ export function AppKnownFollowers({
         />
       </Text>
     </View>
-  )
-
-  if (!link) return content({})
-
-  return (
-    <Link
-      label={l`View followers of this account that you also follow`}
-      to={makeProfileLink(profile, 'known-followers')}
-      onPress={onPress}
-      style={[a.self_start, a.max_w_full]}>
-      {({hovered}) => content({hovered})}
-    </Link>
   )
 }

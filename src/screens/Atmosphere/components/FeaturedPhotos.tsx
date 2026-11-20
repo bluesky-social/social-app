@@ -6,6 +6,7 @@ import {
   type AtmosphereFeedbackForContent,
   AtmosphereFeedbackProvider,
 } from '#/screens/Atmosphere/feedback'
+import {getContentMetricContextProps} from '#/screens/Atmosphere/metrics/content'
 import {AtmosphereContentItem} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a} from '#/alf'
 import * as Gallery from '#/components/Gallery'
@@ -39,10 +40,10 @@ export function FeaturedPhotos({
             {galleryFocus => (
               <View style={[a.flex_grow]}>
                 <AtmosphereContentItem
-                  contentType="gallery"
-                  contentId={photo.uri}
-                  section="photos"
-                  position={index}>
+                  item={getContentMetricContextProps('gallery', photo, {
+                    section: 'photos',
+                    position: index,
+                  })}>
                   <View style={[a.flex_grow, {width: CARD_WIDTH}]}>
                     <AtmosphereFeedbackProvider
                       value={feedback?.({type: 'gallery', view: photo})}>

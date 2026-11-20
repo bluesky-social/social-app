@@ -10,6 +10,9 @@ import {type app, place, site, social} from '#/lexicons'
 import {AtmosphereCardMenu} from '../AtmosphereCardMenu'
 
 const mockOpenLink = jest.fn()
+const mockUseOpenLink = jest.fn(
+  (_opts?: {preferNativeApp?: boolean}) => mockOpenLink,
+)
 const mockNavigate = jest.fn()
 const mockOpenReport = jest.fn((_value: unknown) => {})
 const mockShareUrl = jest.fn()
@@ -44,7 +47,7 @@ jest.mock('#/env', () => ({
   },
 }))
 jest.mock('#/lib/hooks/useOpenLink', () => ({
-  useOpenLink: () => mockOpenLink,
+  useOpenLink: (opts?: {preferNativeApp?: boolean}) => mockUseOpenLink(opts),
 }))
 jest.mock('#/lib/hooks/useOpenComposer', () => ({
   useOpenComposer: () => ({openComposer: mockOpenComposer}),
@@ -403,6 +406,9 @@ describe.each([
     it('opens the external uri', () => {
       renderMenu(type)
 
+      expect(mockUseOpenLink).toHaveBeenCalledWith({
+        preferNativeApp: type === 'photo',
+      })
       fireEvent.press(screen.getByLabelText(viewLabel))
       expect(mockOpenLink).toHaveBeenCalledWith(view.uri)
     })
@@ -630,8 +636,9 @@ describe('AtmosphereCardMenu dev mode', () => {
 
 describe('AtmosphereCardMenu metrics', () => {
   const card = {
-    contentType: 'gallery',
-    contentId: view.uri,
+    uri: galleryRef.uri,
+    collection: social.grain.gallery.$type,
+    authorDid: 'did:plc:6ayddqghxhciedbaofoxkcbs',
     position: 2,
   } as const
   const context = {tab: 'following', surface: 'tab', ...card}
@@ -639,7 +646,7 @@ describe('AtmosphereCardMenu metrics', () => {
   function renderInCard() {
     render(
       <AtmosphereMetricsScope tab="following" surface="tab" isActive={false}>
-        <AtmosphereContentItem {...card}>
+        <AtmosphereContentItem item={card}>
           <AtmosphereCardMenu
             type="photo"
             item={items.photo as never}

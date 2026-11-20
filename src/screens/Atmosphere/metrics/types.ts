@@ -29,39 +29,55 @@ export type AtmosphereMetricContext = {
  * not log impressions; these events count actions, not people who saw the card.
  */
 export type AtmosphereAppMetricContext = AtmosphereMetricContext & {
-  appId: string
+  /** The DID of the app's Bluesky profile, if it has one. */
+  appProfileDid?: string
+  /** The app's website. An app has a website, a profile, or both. */
+  appUrl?: string
   /** The app's own category key, e.g. `writing`, if any. */
   appCategory?: string
   /** 0-based, in Explore's featured apps or the Apps tab's filtered list. */
   position: number
-  /** Whether the card shows followers of the app's profile you know. */
-  hasKnownFollowers: boolean
+  /**
+   * Whether the card shows social proof: people you follow who also follow the
+   * app's Bluesky profile.
+   */
+  hasSocialProof: boolean
   /** Apps tab only: the category filter in use, e.g. `all`. */
   selectedCategory?: string
 }
 
 /** Explore's sections of featured apps and content. */
-export type AtmosphereSection =
+export type AtmosphereExploreTabSection =
   'apps' | 'articles' | 'livestreams' | 'photos' | 'publications'
 
 /** One content card, as reported by Atmosphere's content events. */
 export type AtmosphereContentMetricContext = AtmosphereMetricContext & {
-  contentType: 'article' | 'publication' | 'gallery' | 'livestream'
-  /** The content's URL, which also keys it across responses. */
-  contentId: string
+  /**
+   * The AT URI of the content's own record, such as the article, which also
+   * keys it across responses. On a recommendation it's the recommended
+   * article, not the recommendation.
+   */
+  uri: string
+  /** The collection (record NSID) in `uri`. */
+  collection: string
+  /** The DID in `uri`: whoever owns the content. */
+  authorDid: string
   /**
    * 0-based, in its list or, on Explore, its section. Can differ between events
    * for the same content.
    */
   position: number
   /** Explore's section the card is in. */
-  section?: Exclude<AtmosphereSection, 'apps'>
-  /** Following only: the collection (record NSID) of the activity. */
-  collection?: string
+  section?: Exclude<AtmosphereExploreTabSection, 'apps'>
+  /**
+   * Following only: the collection (record NSID) of the activity that got the
+   * content shown, e.g. a recommend, which can differ from `collection`.
+   */
+  activityReferrerCollection?: string
   /**
    * Following only: one activity, one actor's activities on several records
    * (`actorGroup`), or several actors' activity on one record
    * (`subjectGroup`).
    */
-  grouping?: 'single' | 'actorGroup' | 'subjectGroup'
+  activityReferrerGrouping?: 'single' | 'actorGroup' | 'subjectGroup'
 }

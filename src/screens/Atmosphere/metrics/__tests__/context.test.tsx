@@ -15,17 +15,18 @@ jest.mock('#/analytics', () => ({
 }))
 
 const ITEM = {
-  contentType: 'article',
-  contentId: 'https://example.com/a',
+  uri: 'at://did:plc:abc/site.standard.document/a',
+  collection: 'site.standard.document',
+  authorDid: 'did:plc:abc',
   position: 2,
 } as const
-const SECOND = {...ITEM, contentId: 'https://example.com/b'}
-const THIRD = {...ITEM, contentId: 'https://example.com/c'}
-type Row = {contentId: string; blurred?: boolean}
+const SECOND = {...ITEM, uri: 'at://did:plc:abc/site.standard.document/b'}
+const THIRD = {...ITEM, uri: 'at://did:plc:abc/site.standard.document/c'}
+type Row = {uri: string; blurred?: boolean}
 
 function getItem(row: Row, position: number) {
   if (row.blurred) return
-  return {contentType: 'article' as const, contentId: row.contentId, position}
+  return {...ITEM, uri: row.uri, position}
 }
 
 beforeEach(() => mockMetric.mockClear())
@@ -92,10 +93,7 @@ describe('useLogContentImpression', () => {
     result.current(SECOND, 1)
     result.current(THIRD, 2)
 
-    items = [
-      {contentId: SECOND.contentId, blurred: true},
-      {contentId: ITEM.contentId},
-    ]
+    items = [{uri: SECOND.uri, blurred: true}, {uri: ITEM.uri}]
     isActive = true
     rerender({})
     expect(mockMetric.mock.calls).toEqual([
@@ -169,7 +167,7 @@ describe('content attribution', () => {
     }
     render(
       <AtmosphereMetricsScope tab="following" surface="tab" isActive>
-        <AtmosphereContentItem {...ITEM}>
+        <AtmosphereContentItem item={ITEM}>
           <Dialog />
         </AtmosphereContentItem>
       </AtmosphereMetricsScope>,
@@ -179,7 +177,7 @@ describe('content attribution', () => {
       tab: 'following',
       surface: 'photoDialog',
       ...ITEM,
-      target: 'photoDialog',
+      destination: 'photoDialog',
     })
   })
 })

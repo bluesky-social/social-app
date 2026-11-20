@@ -22,14 +22,16 @@ export function getAppMetric({
   position: number
   selectedCategory?: string
 }): AppMetric {
+  const hasSocialProof = !!shouldShowKnownFollowers(
+    app.profile?.viewer?.knownFollowers,
+  )
+
   return {
-    // Apps without an ID are filtered out before they render
-    appId: app.id ?? '',
+    appProfileDid: app.profile?.did,
+    appUrl: app.url,
     appCategory: app.category,
     position,
-    hasKnownFollowers: !!shouldShowKnownFollowers(
-      app.profile?.viewer?.knownFollowers,
-    ),
+    hasSocialProof,
     selectedCategory,
   }
 }

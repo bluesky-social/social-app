@@ -16,6 +16,7 @@ import {
   AtmosphereFeedbackProvider,
   useDiscoverFeedback,
 } from '#/screens/Atmosphere/feedback'
+import {getContentMetricContextProps} from '#/screens/Atmosphere/metrics/content'
 import {
   AtmosphereContentItem,
   useLogContentImpression,
@@ -39,11 +40,11 @@ export function AtmosphereDiscoverTab() {
     data?.items ?? [],
     (item, position) => {
       if (item.moderation.blur) return
-      return {
-        contentType: item.content.type,
-        contentId: item.content.view.uri,
-        position,
-      }
+      return getContentMetricContextProps(
+        item.content.type,
+        item.content.view,
+        {position},
+      )
     },
   )
   const onItemSeen = useNonReactiveCallback(
@@ -72,7 +73,6 @@ export function AtmosphereDiscoverTab() {
     <ErrorMessage
       message={l`Could not load recommendations. Please try again.`}
       onPressTryAgain={() => {
-        metrics.logRetry('initial')
         void refetch()
       }}
     />
@@ -167,9 +167,9 @@ function DiscoverCard({
       {row ? <ActivityHeader row={row} /> : null}
       <ActivityContentHider moderation={moderation}>
         <AtmosphereContentItem
-          contentType={content.type}
-          contentId={content.view.uri}
-          position={position}>
+          item={getContentMetricContextProps(content.type, content.view, {
+            position,
+          })}>
           <AtmosphereFeedbackProvider value={feedback}>
             <ActivityContentCard content={content} />
           </AtmosphereFeedbackProvider>

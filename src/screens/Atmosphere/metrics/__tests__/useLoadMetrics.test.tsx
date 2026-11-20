@@ -50,7 +50,6 @@ it('logs the first load once after the tab is shown', () => {
         surface: 'tab',
         state: 'populated',
         itemCount: 3,
-        hasCachedData: false,
       },
     ],
   ])
@@ -62,13 +61,7 @@ it('waits until shown to log already loaded data', () => {
 
   update({hasData: true, isError: false, itemCount: 0})
   expect(loaded('atmosphere:content:loaded')).toEqual([
-    [
-      'atmosphere:content:loaded',
-      expect.objectContaining({
-        state: 'empty',
-        hasCachedData: true,
-      }),
-    ],
+    ['atmosphere:content:loaded', expect.objectContaining({state: 'empty'})],
   ])
 })
 
@@ -85,7 +78,6 @@ it('logs a load that settled while away only on return', () => {
       expect.objectContaining({
         state: 'populated',
         itemCount: 2,
-        hasCachedData: false,
       }),
     ],
   ])
@@ -99,10 +91,7 @@ it('waits for the load to settle after returning to a loading tab', () => {
 
   update({hasData: false, isError: true, itemCount: 0})
   expect(loaded('atmosphere:content:loaded')).toEqual([
-    [
-      'atmosphere:content:loaded',
-      expect.objectContaining({state: 'error', hasCachedData: false}),
-    ],
+    ['atmosphere:content:loaded', expect.objectContaining({state: 'error'})],
   ])
 })
 
@@ -196,7 +185,6 @@ it('logs nothing outside a scope', () => {
     <Tab hasData isError={false} itemCount={1} pages={[[1]]} />,
   )
   metrics?.logRefresh()
-  metrics?.logRetry('initial')
   screen.rerender(
     <Tab hasData isError={false} itemCount={2} pages={[[1], [2]]} />,
   )

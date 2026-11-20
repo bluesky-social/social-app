@@ -16,6 +16,7 @@ import {
   ActivityContentCard,
   ActivityWarning,
 } from '#/screens/Atmosphere/ActivityTab/components/ActivityRow'
+import {getContentMetricContextProps} from '#/screens/Atmosphere/metrics/content'
 import {
   AtmosphereContentItem,
   AtmosphereMetricsScope,
@@ -88,11 +89,9 @@ function ActivityListContent({uris}: {uris: AtUriString[]}) {
   const items = data?.pages.flat() ?? []
   const onItemSeen = useLogContentImpression(items, (item, position) => {
     if (!item.content || item.moderation.blur) return
-    return {
-      contentType: item.content.type,
-      contentId: item.content.view.uri,
+    return getContentMetricContextProps(item.content.type, item.content.view, {
       position,
-    }
+    })
   })
   const metrics = useLoadMetrics({
     hasData: !!data,
@@ -118,7 +117,6 @@ function ActivityListContent({uris}: {uris: AtUriString[]}) {
       <ErrorMessage
         message={l`Could not load activity. Please try again.`}
         onPressTryAgain={() => {
-          metrics.logRetry('initial')
           void refetch()
         }}
       />
@@ -147,10 +145,7 @@ function ActivityListContent({uris}: {uris: AtUriString[]}) {
           isFetchingNextPage={isFetchingNextPage}
           hasNextPage={hasNextPage}
           error={isError ? cleanError(error) : undefined}
-          onRetry={() => {
-            metrics.logRetry('pagination')
-            return fetchNextPage()
-          }}
+          onRetry={() => fetchNextPage()}
         />
       }
       sideBorders={false}
@@ -165,9 +160,11 @@ function ActivityListItem({item, position}: {item: Item; position: number}) {
       {item.content ? (
         <ActivityContentHider moderation={item.moderation}>
           <AtmosphereContentItem
-            contentType={item.content.type}
-            contentId={item.content.view.uri}
-            position={position}>
+            item={getContentMetricContextProps(
+              item.content.type,
+              item.content.view,
+              {position},
+            )}>
             <ActivityContentCard content={item.content} />
           </AtmosphereContentItem>
         </ActivityContentHider>

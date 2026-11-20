@@ -6,6 +6,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List} from '#/view/com/util/List'
 import {AtmosphereNux} from '#/screens/Atmosphere/components/AtmosphereNux'
+import {getContentMetricContextProps} from '#/screens/Atmosphere/metrics/content'
 import {useLogContentImpression} from '#/screens/Atmosphere/metrics/context'
 import {useLoadMetrics} from '#/screens/Atmosphere/metrics/useLoadMetrics'
 import {atoms as a, useTheme} from '#/alf'
@@ -31,13 +32,11 @@ export function ActivityTab() {
   const rows = data?.pages.flat() ?? []
   const onItemSeen = useLogContentImpression(rows, (row, position) => {
     if (row.kind !== 'card' || row.moderation.blur) return
-    return {
-      contentType: row.content.type,
-      contentId: row.content.view.uri,
+    return getContentMetricContextProps(row.content.type, row.content.view, {
       position,
-      collection: row.collection,
-      grouping: row.grouping,
-    }
+      activityReferrerCollection: row.collection,
+      activityReferrerGrouping: row.grouping,
+    })
   })
   const metrics = useLoadMetrics({
     hasData: !!data,
@@ -63,7 +62,6 @@ export function ActivityTab() {
       <ErrorMessage
         message={l`Could not load activity. Please try again.`}
         onPressTryAgain={() => {
-          metrics.logRetry('initial')
           void refetch()
         }}
       />
@@ -96,10 +94,7 @@ export function ActivityTab() {
           isFetchingNextPage={isFetchingNextPage}
           hasNextPage={hasNextPage}
           error={isError ? cleanError(error) : undefined}
-          onRetry={() => {
-            metrics.logRetry('pagination')
-            return fetchNextPage()
-          }}
+          onRetry={() => fetchNextPage()}
         />
       }
       sideBorders={false}

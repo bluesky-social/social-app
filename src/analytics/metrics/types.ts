@@ -1563,8 +1563,8 @@ export type Events = {
     endReason: 'switched' | 'blurred' | 'backgrounded'
   }
   /**
-   * Discover, Following and the activity list only. Each contentType/contentId
-   * pair counts once until its list is unmounted, regardless of position or
+   * Discover, Following and the activity list only. Each uri
+   * counts once until its list is unmounted, regardless of position or
    * activity group. Switching tabs does not reset the count.
    *
    * List waits 500 ms. Native needs 40% of the row visible; web needs any part
@@ -1586,7 +1586,7 @@ export type Events = {
    * is not counted (bluesky-social/toolbox#95; not tested on-device).
    */
   'atmosphere:content:press': AtmosphereContentMetricContext & {
-    target: 'external' | 'photoDialog'
+    destination: 'external' | 'photoDialog'
   }
   /** The user pressed a link to someone's profile. */
   'atmosphere:profile:press': AtmosphereMetricContext & {
@@ -1608,8 +1608,6 @@ export type Events = {
   'atmosphere:app:profilePressed': AtmosphereAppMetricContext & {
     source: 'featuredCard' | 'appDialog'
   }
-  /** The user pressed a featured app's "followers you know". */
-  'atmosphere:app:knownFollowersPressed': AtmosphereAppMetricContext
   /** The user picked another category in the Apps tab. */
   'atmosphere:apps:categorySelected': AtmosphereMetricContext & {
     /** Category key, e.g. `writing`, or `all`. */
@@ -1629,11 +1627,12 @@ export type Events = {
     imageCount: number
   }
   /**
-   * The user pressed an image or "View on Grain" to open the gallery on Grain.
-   * imageIndex identifies the pressed image. Does not confirm the gallery opened.
+   * The user pressed an image, or the dialog's call-to-action button (`cta`,
+   * e.g. "View on Grain"), to open the gallery in its photo app. imageIndex
+   * identifies the pressed image. Does not confirm the gallery opened.
    */
   'atmosphere:photo:externalPressed': AtmosphereContentMetricContext & {
-    source: 'image' | 'viewOnGrain'
+    source: 'image' | 'cta'
     imageIndex?: number
   }
   /**
@@ -1644,18 +1643,9 @@ export type Events = {
   'atmosphere:content:loaded': AtmosphereMetricContext & {
     state: 'populated' | 'empty' | 'error'
     itemCount: number
-    /** Whether it already had data, e.g. cached, when it came into view. */
-    hasCachedData: boolean
   }
   /** The user pulled to refresh a tab or activity list. */
   'atmosphere:content:refresh': AtmosphereMetricContext
-  /**
-   * The user retried after an error, reloading everything (`initial`) or
-   * the next page (`pagination`).
-   */
-  'atmosphere:content:retry': AtmosphereMetricContext & {
-    phase: 'initial' | 'pagination'
-  }
   /**
    * Following or the activity list added a page after the initial load.
    * Initial/cached pages and refetches with no added pages do not count.

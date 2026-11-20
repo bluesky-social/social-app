@@ -96,7 +96,7 @@ const app: lexApp.bsky.unspecced.getAtmosphereApps.AppCard = {
 }
 
 const control = {} as React.ComponentProps<typeof AppDialog>['control']
-const metric = {appId: 'app', position: 3, hasKnownFollowers: false}
+const metric = {position: 3, hasSocialProof: false}
 
 beforeEach(() => {
   jest.clearAllMocks()

@@ -69,7 +69,6 @@ jest.mock('#/view/com/util/List', () => ({
 jest.mock('#/screens/Atmosphere/metrics/useLoadMetrics', () => ({
   useLoadMetrics: () => ({
     logRefresh: () => {},
-    logRetry: () => {},
   }),
 }))
 jest.mock(
@@ -99,7 +98,20 @@ jest.mock(
   }),
 )
 
-const content = {type: 'article', view: {uri: 'https://example.com/article'}}
+const AUTHOR = 'did:plc:6ayddqghxhciedbaofoxkcbs'
+const ARTICLE_URI = `at://${AUTHOR}/site.standard.document/3kdoc`
+const content = {
+  type: 'article',
+  view: {
+    uri: 'https://example.com/article',
+    associatedRefs: [{uri: ARTICLE_URI}],
+  },
+}
+const identity = {
+  uri: ARTICLE_URI,
+  collection: 'site.standard.document',
+  authorDid: AUTHOR,
+}
 const normal = {content, moderation: {}}
 const blurred = {content, moderation: {blur: true}}
 
@@ -137,8 +149,7 @@ it('flushes Discover rows on activation, excluding blurred content', () => {
       {
         tab: 'discover',
         surface: 'tab',
-        contentType: 'article',
-        contentId: content.view.uri,
+        ...identity,
         position: 1,
       },
     ],
@@ -182,11 +193,10 @@ it('flushes Following cards on activation without a second List callback', () =>
       {
         tab: 'following',
         surface: 'tab',
-        contentType: 'article',
-        contentId: content.view.uri,
+        ...identity,
         position: 2,
-        collection: 'site.standard.document',
-        grouping: 'single',
+        activityReferrerCollection: 'site.standard.document',
+        activityReferrerGrouping: 'single',
       },
     ],
   ])
@@ -222,8 +232,7 @@ it('logs activity list cards without a tab, excluding warnings and blur', () => 
       {
         tab: undefined,
         surface: 'activityList',
-        contentType: 'article',
-        contentId: content.view.uri,
+        ...identity,
         position: 2,
       },
     ],

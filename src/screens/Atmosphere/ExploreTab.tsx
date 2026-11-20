@@ -106,7 +106,6 @@ export function AtmosphereExploreTab({
     <ErrorMessage
       message={l`Could not load Atmosphere content. Please try again.`}
       onPressTryAgain={() => {
-        metrics.logRetry('initial')
         void refetch()
       }}
     />

@@ -89,11 +89,13 @@ jest.mock('#/components/Link', () => {
     Link: ({
       to,
       label,
+      preferNativeApp,
       onPress,
       children,
     }: {
       to: string
       label: string
+      preferNativeApp?: boolean
       onPress?: () => void
       children: React.ReactNode
     }) => (
@@ -102,6 +104,7 @@ jest.mock('#/components/Link', () => {
         accessibilityRole="link"
         accessibilityLabel={label}
         accessibilityHint=""
+        accessibilityState={{selected: Boolean(preferNativeApp)}}
         accessibilityValue={{text: to}}
         onPress={onPress}>
         {children}
@@ -156,7 +159,12 @@ function renderGallery(items: unknown[]) {
   )
 }
 
-const card = {contentType: 'gallery', contentId: URI, position: 0} as const
+const card = {
+  uri: 'at://did:plc:6ayddqghxhciedbaofoxkcbs/social.grain.gallery/1',
+  collection: 'social.grain.gallery',
+  authorDid: 'did:plc:6ayddqghxhciedbaofoxkcbs',
+  position: 0,
+} as const
 
 function renderInCard(items: unknown[]) {
   render(
@@ -164,7 +172,7 @@ function renderInCard(items: unknown[]) {
       tab="following"
       surface="photoDialog"
       isActive={false}>
-      <AtmosphereContentItem {...card}>
+      <AtmosphereContentItem item={card}>
         <PhotoDialogGallery
           photo={
             {
@@ -189,6 +197,7 @@ describe('a single image', () => {
     const link = screen.getByTestId('link')
     expect(link.props.accessibilityLabel).toBe('Alt text')
     expect((link.props.accessibilityValue as {text: string}).text).toBe(URI)
+    expect(link.props.accessibilityState).toEqual({selected: true})
     expect(
       (screen.getByTestId('image').props.accessibilityValue as {text: string})
         .text,
@@ -221,6 +230,7 @@ describe('several images', () => {
     ])
     for (const link of links) {
       expect((link.props.accessibilityValue as {text: string}).text).toBe(URI)
+      expect(link.props.accessibilityState).toEqual({selected: true})
     }
     expect(
       screen

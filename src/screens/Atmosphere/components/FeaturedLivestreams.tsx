@@ -2,6 +2,7 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {EXPLORE_SECTION_PADDING} from '#/screens/Atmosphere/const'
+import {getContentMetricContextProps} from '#/screens/Atmosphere/metrics/content'
 import {AtmosphereContentItem} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a} from '#/alf'
 import * as Gallery from '#/components/Gallery'
@@ -32,10 +33,10 @@ export function FeaturedLivestreams({
             {galleryFocus => (
               <View style={[a.flex_grow]}>
                 <AtmosphereContentItem
-                  contentType="livestream"
-                  contentId={livestream.uri}
-                  section="livestreams"
-                  position={index}>
+                  item={getContentMetricContextProps('livestream', livestream, {
+                    section: 'livestreams',
+                    position: index,
+                  })}>
                   <LivestreamCard
                     livestream={livestream}
                     width={CARD_WIDTH}

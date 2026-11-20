@@ -210,7 +210,7 @@ function PhotoDialogInner({
           if (content) {
             ax.metric('atmosphere:photo:externalPressed', {
               ...content,
-              source: 'viewOnGrain',
+              source: 'cta',
             })
           }
           sendFeedback?.('app.bsky.feed.defs#clickthroughItem')

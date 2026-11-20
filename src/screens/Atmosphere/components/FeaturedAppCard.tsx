@@ -139,19 +139,7 @@ function CardContent({
               {app.description}
             </Text>
           ) : undefined}
-          {profile ? (
-            <AppKnownFollowers
-              profile={profile}
-              link
-              onPress={() => {
-                if (!metricContext) return
-                ax.metric('atmosphere:app:knownFollowersPressed', {
-                  ...metricContext,
-                  ...metric,
-                })
-              }}
-            />
-          ) : undefined}
+          {profile ? <AppKnownFollowers profile={profile} /> : undefined}
         </View>
         <View style={[a.flex_row, a.gap_sm, a.pt_xs, a.mt_auto]}>
           {app.url ? (

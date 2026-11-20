@@ -68,6 +68,7 @@ export function PhotoDialogGallery({
     return (
       <Link
         to={photo.uri}
+        preferNativeApp
         label={image.alt || photo.title}
         accessibilityHint=""
         onPress={() => logImagePress(0)}
@@ -114,6 +115,7 @@ export function PhotoDialogGallery({
             {({focusRef, tabIndex, onFocus}) => (
               <Link
                 to={photo.uri}
+                preferNativeApp
                 label={label(image, index)}
                 accessibilityHint=""
                 onPress={() => logImagePress(index)}

@@ -3,6 +3,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {makeActivityListLink} from '#/screens/Atmosphere/ActivityList/links'
 import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
+import {getContentMetricContextProps} from '#/screens/Atmosphere/metrics/content'
 import {
   AtmosphereContentItem,
   useAtmosphereMetricContext,
@@ -61,11 +62,15 @@ function ActivityCard({
       <ActivityHeader row={row} />
       <ActivityContentHider moderation={row.moderation}>
         <AtmosphereContentItem
-          contentType={row.content.type}
-          contentId={row.content.view.uri}
-          position={position}
-          collection={row.collection}
-          grouping={row.grouping}>
+          item={getContentMetricContextProps(
+            row.content.type,
+            row.content.view,
+            {
+              position,
+              activityReferrerCollection: row.collection,
+              activityReferrerGrouping: row.grouping,
+            },
+          )}>
           <ActivityContentCard content={row.content} />
         </AtmosphereContentItem>
       </ActivityContentHider>
