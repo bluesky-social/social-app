@@ -8,6 +8,7 @@ import {useSession} from '#/state/session'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {isActorHidden} from '#/screens/Atmosphere/ActivityTab/moderation'
 import {atoms as a, useTheme, utils} from '#/alf'
+import {AtmosphereFirstActionWelcomeDialog} from '#/components/atmosphere/AtmosphereFirstActionWelcomeDialog'
 import {GhostPressable} from '#/components/atmosphere/GhostPressable'
 import {useAtmosphereLike} from '#/components/atmosphere/likes'
 import {getAtmosphereProvider} from '#/components/atmosphere/providers'
@@ -66,6 +67,7 @@ export function DocumentActions({
     canLike: canRecommend,
     isLiked: isRecommended,
     toggle: toggleRecommend,
+    firstActionWelcomeDialogControl,
   } = useAtmosphereLike(view, 'recommend')
   const publisher = view.publisher
   const provider = getAtmosphereProvider(view.providerId)
@@ -168,6 +170,11 @@ export function DocumentActions({
         recommenders={recommenders}
         interacted={interacted}
       />
+      {!ghost && (
+        <AtmosphereFirstActionWelcomeDialog
+          control={firstActionWelcomeDialogControl}
+        />
+      )}
     </View>
   )
 }

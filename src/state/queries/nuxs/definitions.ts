@@ -8,6 +8,7 @@ export enum Nux {
   InitialVerificationAnnouncement = 'InitialVerificationAnnouncement',
   ActivitySubscriptions = 'ActivitySubscriptions',
   AtmosphereNux = 'AtmosphereNux',
+  AtmosphereFirstActionWelcomeDialog = 'AtmosphereFirstActionWelcomeDialog',
   AgeAssuranceDismissibleNotice = 'AgeAssuranceDismissibleNotice',
   AgeAssuranceDismissibleFeedBanner = 'AgeAssuranceDismissibleFeedBanner',
   BookmarksAnnouncement = 'BookmarksAnnouncement',
@@ -46,6 +47,10 @@ export type AppNux = BaseNux<
     }
   | {
       id: Nux.AtmosphereNux
+      data: undefined
+    }
+  | {
+      id: Nux.AtmosphereFirstActionWelcomeDialog
       data: undefined
     }
   | {
@@ -100,6 +105,7 @@ export const NuxSchemas: Record<Nux, zod.ZodObject<any> | undefined> = {
   [Nux.InitialVerificationAnnouncement]: undefined,
   [Nux.ActivitySubscriptions]: undefined,
   [Nux.AtmosphereNux]: undefined,
+  [Nux.AtmosphereFirstActionWelcomeDialog]: undefined,
   [Nux.AgeAssuranceDismissibleNotice]: undefined,
   [Nux.AgeAssuranceDismissibleFeedBanner]: undefined,
   [Nux.PolicyUpdate202508]: undefined,

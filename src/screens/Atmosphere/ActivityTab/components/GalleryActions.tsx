@@ -2,6 +2,7 @@ import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
+import {AtmosphereFirstActionWelcomeDialog} from '#/components/atmosphere/AtmosphereFirstActionWelcomeDialog'
 import {GhostPressable} from '#/components/atmosphere/GhostPressable'
 import {useAtmosphereLike} from '#/components/atmosphere/likes'
 import {getAtmosphereProvider} from '#/components/atmosphere/providers'
@@ -40,6 +41,7 @@ export function GalleryActions({
     canLike: canFavorite,
     isLiked: isFavorited,
     toggle: toggleFavorite,
+    firstActionWelcomeDialogControl,
   } = useAtmosphereLike(view, 'favorite')
   const provider = getAtmosphereProvider(view.providerId)
 
@@ -118,6 +120,11 @@ export function GalleryActions({
           <ButtonIcon icon={isFavorited ? HeartFilledIcon : HeartIcon} />
           <ButtonText>{favoriteText}</ButtonText>
         </Button>
+      )}
+      {!ghost && (
+        <AtmosphereFirstActionWelcomeDialog
+          control={firstActionWelcomeDialogControl}
+        />
       )}
     </View>
   )

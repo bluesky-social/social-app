@@ -19,6 +19,7 @@ import {
   useAtmosphereMetricsSnapshot,
 } from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme, web} from '#/alf'
+import {AtmosphereFirstActionWelcomeDialog} from '#/components/atmosphere/AtmosphereFirstActionWelcomeDialog'
 import {useAtmosphereLike} from '#/components/atmosphere/likes'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -107,6 +108,7 @@ function PhotoDialogInner({
     isLiked: isFavorited,
     likeCount,
     toggle: toggleFavorite,
+    firstActionWelcomeDialogControl,
   } = useAtmosphereLike(photo, 'favorite')
   const photoCount = photo.photoCount ?? getGalleryImages(photo).length
   const favorites = formatCount(i18n, likeCount)
@@ -280,6 +282,9 @@ function PhotoDialogInner({
           </ButtonText>
         </Button>
       )}
+      <AtmosphereFirstActionWelcomeDialog
+        control={firstActionWelcomeDialogControl}
+      />
     </View>
   )
 }

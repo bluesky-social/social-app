@@ -37,6 +37,9 @@ jest.mock('#/components/atmosphere/likes', () => ({
     toggle: () => {},
   }),
 }))
+jest.mock('#/components/atmosphere/AtmosphereFirstActionWelcomeDialog', () => ({
+  AtmosphereFirstActionWelcomeDialog: () => null,
+}))
 
 jest.mock('@lingui/react', () => {
   const fill = (message: string, values: Record<string, unknown> = {}) =>

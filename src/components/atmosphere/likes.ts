@@ -15,6 +15,7 @@ import {isNetworkError} from '#/lib/network-error'
 import {logger} from '#/logger'
 import {usePdsClient, useRequireAuth, useSession} from '#/state/session'
 import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
+import {useAtmosphereFirstActionWelcome} from '#/components/atmosphere/AtmosphereFirstActionWelcomeDialog'
 import * as Toast from '#/components/Toast'
 import {type com, site, social} from '#/lexicons'
 
@@ -142,7 +143,9 @@ export function useAtmosphereLikeCount(
 /**
  * Likes and unlikes a record from any of its views. Toggles queue, so rapid
  * presses settle on the last one, and every view of the record updates
- * optimistically.
+ * optimistically. The first like welcomes the viewer to the Atmosphere, so
+ * callers must render `AtmosphereFirstActionWelcomeDialog` with
+ * `firstActionWelcomeDialogControl`.
  */
 export function useAtmosphereLike(
   view: LikeableView,
@@ -153,6 +156,7 @@ export function useAtmosphereLike(
   const haptics = useHaptics()
   const requireAuth = useRequireAuth()
   const sendFeedback = useAtmosphereFeedback()
+  const firstActionWelcome = useAtmosphereFirstActionWelcome()
   const {did, subjectUri, key, likeUri, likeCount} = useLikeState(view, kind)
 
   const queueToggle = useToggleMutationQueue<AtUriString | undefined>({
@@ -184,6 +188,7 @@ export function useAtmosphereLike(
           await queueToggle(false)
         } else {
           if (key) updateShadow(key, 'pending', view)
+          firstActionWelcome.onCreate()
           await queueToggle(true)
           sendFeedback?.('app.bsky.feed.defs#interactionLike')
         }
@@ -219,5 +224,6 @@ export function useAtmosphereLike(
     isLiked,
     likeCount,
     toggle,
+    firstActionWelcomeDialogControl: firstActionWelcome.control,
   }
 }
