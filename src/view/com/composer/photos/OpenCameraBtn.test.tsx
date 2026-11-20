@@ -140,6 +140,19 @@ it('does not save or attach anything when the camera is cancelled', async () => 
   expect(Asset.create).not.toHaveBeenCalled()
   expect(createComposerImage).not.toHaveBeenCalled()
   expect(onAdd).not.toHaveBeenCalled()
+  expect(Toast.show).not.toHaveBeenCalled()
+})
+
+it('stays silent when the camera throws, e.g. on cancel', async () => {
+  jest
+    .mocked(openCamera)
+    .mockRejectedValueOnce(new Error('User cancelled image selection'))
+  const onAdd = takePicture()
+
+  await waitFor(() => expect(logger.warn).toHaveBeenCalled())
+  expect(createComposerImage).not.toHaveBeenCalled()
+  expect(onAdd).not.toHaveBeenCalled()
+  expect(Toast.show).not.toHaveBeenCalled()
 })
 
 it('tells the user when the photo cannot be added', async () => {
