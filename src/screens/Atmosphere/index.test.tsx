@@ -77,9 +77,9 @@ jest.mock('./ActivityTab', () => {
   const {View} = jest.requireActual('react-native')
   return {ActivityTab: () => <View testID="activityTab" />}
 })
-jest.mock('./DiscoverTab', () => {
+jest.mock('./ForYouTab', () => {
   const {View} = jest.requireActual('react-native')
-  return {AtmosphereDiscoverTab: () => <View testID="atmosphereDiscoverTab" />}
+  return {AtmosphereForYouTab: () => <View testID="atmosphereForYouTab" />}
 })
 jest.mock('./AppsTab', () => {
   const {View} = jest.requireActual('react-native')
@@ -218,20 +218,20 @@ describe('AtmosphereScreen', () => {
     expect(mockMetric).not.toHaveBeenCalled()
   })
 
-  it('defaults to Discover and switches between tabs', () => {
+  it('defaults to For You and switches between tabs', () => {
     const screen = renderScreen()
 
     expect(
       screen.getAllByRole('tab').map(tab => tab.props.accessibilityLabel),
-    ).toEqual(['Discover', 'Following', 'Explore', 'Apps'])
+    ).toEqual(['For You', 'Activity', 'Explore', 'Apps'])
     expect(
-      screen.getByRole('tab', {name: 'Discover'}).props.accessibilityState,
+      screen.getByRole('tab', {name: 'For You'}).props.accessibilityState,
     ).toEqual({selected: true})
-    expect(screen.getByTestId('atmosphereDiscoverTab')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereForYouTab')).toBeTruthy()
 
-    fireEvent.press(screen.getByRole('tab', {name: 'Following'}))
+    fireEvent.press(screen.getByRole('tab', {name: 'Activity'}))
     expect(screen.getByTestId('activityTab')).toBeTruthy()
-    expect(screen.queryByTestId('atmosphereDiscoverTab')).toBeNull()
+    expect(screen.queryByTestId('atmosphereForYouTab')).toBeNull()
 
     fireEvent.press(screen.getByRole('tab', {name: 'Explore'}))
     expect(screen.getByTestId('atmosphereExploreTab')).toBeTruthy()

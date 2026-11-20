@@ -5,7 +5,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useSession} from '#/state/session'
 import {type ActivityContent} from '#/screens/Atmosphere/ActivityTab/rows'
 import {DISCOVER_FEEDBACK} from '#/screens/Atmosphere/const'
-import {type DiscoverItem} from '#/screens/Atmosphere/DiscoverTab/useAtmosphereRecommendedActivityQuery'
+import {type ForYouItem} from '#/screens/Atmosphere/ForYouTab/useAtmosphereRecommendedActivityQuery'
 import {useAtmosphereIsActive} from '#/screens/Atmosphere/metrics/context'
 import {
   type UnspeccedInteractionPayload,
@@ -33,13 +33,13 @@ export function useAtmosphereFeedback() {
 }
 
 /**
- * Adapts Discover's non-post rows to the shared feedback sender, which has no
+ * Adapts For You's non-post rows to the shared feedback sender, which has no
  * knowledge of list visibility or moderation. Unlike content analytics, feed
  * impressions are deduplicated per record and recommendation request. Stale
  * or blurred rows are ignored, and inactive impressions wait for activation.
  */
-export function useDiscoverFeedback(
-  data: {items: DiscoverItem[]; recIdStr: string} | undefined,
+export function useForYouFeedback(
+  data: {items: ForYouItem[]; recIdStr: string} | undefined,
 ) {
   const {hasSession} = useSession()
   const isActive = useAtmosphereIsActive()
@@ -49,7 +49,7 @@ export function useDiscoverFeedback(
     viewContext: 'feed',
   })
   const seen = useRef(new Set<string>())
-  const pending = useRef(new Map<DiscoverItem, number>())
+  const pending = useRef(new Map<ForYouItem, number>())
   const mounted = useRef(false)
   useEffect(() => {
     mounted.current = true
@@ -58,7 +58,7 @@ export function useDiscoverFeedback(
     }
   }, [])
 
-  const forItem = (item: DiscoverItem): AtmosphereFeedback | undefined => {
+  const forItem = (item: ForYouItem): AtmosphereFeedback | undefined => {
     const uri = getAtmosphereFeedbackUri(item.content)
     if (!enabled || !item.reqId || !uri) return
     return (event, payload) =>
@@ -71,7 +71,7 @@ export function useDiscoverFeedback(
   }
 
   const onItemSeen = useNonReactiveCallback(
-    (item: DiscoverItem, position: number | undefined) => {
+    (item: ForYouItem, position: number | undefined) => {
       if (
         !mounted.current ||
         position == null ||

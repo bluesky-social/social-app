@@ -14,7 +14,7 @@ import {getAssociatedProfile} from '#/screens/Atmosphere/data/exploreData'
 import {
   type AtmosphereFeedback,
   AtmosphereFeedbackProvider,
-  useDiscoverFeedback,
+  useForYouFeedback,
 } from '#/screens/Atmosphere/feedback'
 import {getContentMetricContextProps} from '#/screens/Atmosphere/metrics/content'
 import {
@@ -27,15 +27,15 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {site, social} from '#/lexicons'
 import {
-  type DiscoverItem,
+  type ForYouItem,
   useAtmosphereRecommendedActivityQuery,
 } from './useAtmosphereRecommendedActivityQuery'
 
-export function AtmosphereDiscoverTab() {
+export function AtmosphereForYouTab() {
   const {t: l} = useLingui()
   const {data, isError, refetch} = useAtmosphereRecommendedActivityQuery()
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const feedback = useDiscoverFeedback(data)
+  const feedback = useForYouFeedback(data)
   const logImpression = useLogContentImpression(
     data?.items ?? [],
     (item, position) => {
@@ -48,7 +48,7 @@ export function AtmosphereDiscoverTab() {
     },
   )
   const onItemSeen = useNonReactiveCallback(
-    (item: DiscoverItem, position: number | undefined) => {
+    (item: ForYouItem, position: number | undefined) => {
       logImpression(item, position)
       feedback.onItemSeen(item, position)
     },
@@ -80,13 +80,13 @@ export function AtmosphereDiscoverTab() {
 
   return (
     <List
-      testID="atmosphereDiscoverTab"
+      testID="atmosphereForYouTab"
       data={data?.items ?? []}
-      keyExtractor={(item: DiscoverItem) =>
+      keyExtractor={(item: ForYouItem) =>
         `${item.reqId}:${item.content.view.uri}`
       }
-      renderItem={({item, index}: {item: DiscoverItem; index: number}) => (
-        <DiscoverCard
+      renderItem={({item, index}: {item: ForYouItem; index: number}) => (
+        <ForYouCard
           item={item}
           position={index}
           feedback={feedback.forItem(item)}
@@ -107,7 +107,7 @@ export function AtmosphereDiscoverTab() {
             errorMessage
           ) : (
             <View
-              testID="atmosphereDiscoverLoading"
+              testID="atmosphereForYouLoading"
               accessible
               accessibilityRole="progressbar"
               accessibilityLabel={l`Loading recommendations`}
@@ -125,12 +125,12 @@ export function AtmosphereDiscoverTab() {
   )
 }
 
-function DiscoverCard({
+function ForYouCard({
   item: {content, moderation},
   position,
   feedback,
 }: {
-  item: DiscoverItem
+  item: ForYouItem
   /** 0-based, in the list. */
   position: number
   feedback: AtmosphereFeedback | undefined
@@ -162,7 +162,7 @@ function DiscoverCard({
 
   return (
     <View
-      testID="atmosphereDiscoverCard"
+      testID="atmosphereForYouCard"
       style={[a.gap_md, a.p_lg, a.border_b, t.atoms.border_contrast_low]}>
       {row ? <ActivityHeader row={row} /> : null}
       <ActivityContentHider moderation={moderation}>
@@ -183,7 +183,7 @@ function EmptyState() {
   const t = useTheme()
   return (
     <View
-      testID="atmosphereDiscoverEmpty"
+      testID="atmosphereForYouEmpty"
       style={[a.align_center, a.px_xl, a.py_5xl]}>
       <Text style={[a.text_md, a.text_center, t.atoms.text_contrast_medium]}>
         <Trans>No recommendations right now. Check back soon.</Trans>

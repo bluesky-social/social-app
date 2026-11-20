@@ -2,7 +2,11 @@
  * Types only, so `#/analytics/metrics/types` can import them.
  */
 
-/** The Atmosphere screen's tabs, in pager order. */
+/**
+ * The Atmosphere screen's tabs, in pager order. `'discover'` and `'following'`
+ * are the For You and Activity tabs; the values are kept so event data stays
+ * continuous with what was logged before the tabs were renamed.
+ */
 export type AtmosphereTab = 'discover' | 'following' | 'explore' | 'apps'
 
 /**
@@ -70,12 +74,12 @@ export type AtmosphereContentMetricContext = AtmosphereMetricContext & {
   /** Explore's section the card is in. */
   section?: Exclude<AtmosphereExploreTabSection, 'apps'>
   /**
-   * Following only: the collection (record NSID) of the activity that got the
+   * Activity only: the collection (record NSID) of the activity that got the
    * content shown, e.g. a recommend, which can differ from `collection`.
    */
   activityReferrerCollection?: string
   /**
-   * Following only: one activity, one actor's activities on several records
+   * Activity only: one activity, one actor's activities on several records
    * (`actorGroup`), or several actors' activity on one record
    * (`subjectGroup`).
    */

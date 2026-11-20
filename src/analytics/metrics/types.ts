@@ -1563,7 +1563,7 @@ export type Events = {
     endReason: 'switched' | 'blurred' | 'backgrounded'
   }
   /**
-   * Discover, Following and the activity list only. Each uri
+   * For You, Activity and the activity list only. Each uri
    * counts once until its list is unmounted, regardless of position or
    * activity group. Switching tabs does not reset the count.
    *
@@ -1647,7 +1647,7 @@ export type Events = {
   /** The user pulled to refresh a tab or activity list. */
   'atmosphere:content:refresh': AtmosphereMetricContext
   /**
-   * Following or the activity list added a page after the initial load.
+   * Activity or the activity list added a page after the initial load.
    * Initial/cached pages and refetches with no added pages do not count.
    * This does not mean the user saw the new items.
    */

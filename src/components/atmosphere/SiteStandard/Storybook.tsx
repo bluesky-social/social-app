@@ -140,7 +140,7 @@ export function SiteStandardStorybook() {
       </View>
 
       <View style={[a.gap_md]}>
-        <H2>Document compact card, Following related activity first</H2>
+        <H2>Document compact card, Activity tab related activity first</H2>
         <DocumentCompactCard
           view={document}
           recommenders={{actors: likers.slice(1, 2), actorCount: 1}}
@@ -148,7 +148,7 @@ export function SiteStandardStorybook() {
       </View>
 
       <View style={[a.gap_md]}>
-        <H2>Document compact card, Following related activity only</H2>
+        <H2>Document compact card, Activity tab related activity only</H2>
         <DocumentCompactCard
           view={noKnownLikersDocument}
           recommenders={{actors: likers, actorCount: likers.length}}

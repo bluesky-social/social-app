@@ -15,8 +15,8 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {ActivityTab} from './ActivityTab'
 import {AtmosphereAppsTab} from './AppsTab'
-import {AtmosphereDiscoverTab} from './DiscoverTab'
 import {AtmosphereExploreTab} from './ExploreTab'
+import {AtmosphereForYouTab} from './ForYouTab'
 import {AtmosphereMetricsScope} from './metrics/context'
 import {type AtmosphereTab} from './metrics/types'
 import {useTabMetrics} from './metrics/useTabMetrics'
@@ -44,8 +44,8 @@ function AtmosphereScreenInner() {
   const tabMetrics = useTabMetrics(TABS)
 
   const sections = [
-    {title: l`Discover`, component: <AtmosphereDiscoverTab />},
-    {title: l`Following`, component: <ActivityTab />},
+    {title: l`For You`, component: <AtmosphereForYouTab />},
+    {title: l`Activity`, component: <ActivityTab />},
     {
       title: l`Explore`,
       component: (

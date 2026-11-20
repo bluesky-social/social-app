@@ -36,7 +36,7 @@ import {findAllProfilesInQueryData as findAllProfilesInPostThreadV2QueryData} fr
 import {findAllProfilesInQueryData as findAllProfilesInAtmosphereActivityListQueryData} from '#/screens/Atmosphere/ActivityList/useActivityListQuery'
 import {findAllProfilesInQueryData as findAllProfilesInAtmosphereActivityTimelineQueryData} from '#/screens/Atmosphere/ActivityTab/useActivityTimelineQuery'
 import {findAllProfilesInQueryData as findAllProfilesInAtmosphereExploreQueryData} from '#/screens/Atmosphere/data/useAtmosphereExploreQuery'
-import {findAllProfilesInQueryData as findAllProfilesInAtmosphereRecommendedActivityQueryData} from '#/screens/Atmosphere/DiscoverTab/useAtmosphereRecommendedActivityQuery'
+import {findAllProfilesInQueryData as findAllProfilesInAtmosphereRecommendedActivityQueryData} from '#/screens/Atmosphere/ForYouTab/useAtmosphereRecommendedActivityQuery'
 import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {castAsShadow, type Shadow} from './types'
