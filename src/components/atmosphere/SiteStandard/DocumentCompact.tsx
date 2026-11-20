@@ -8,7 +8,6 @@ import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
 import {atoms as a, extractPadding, useTheme, web} from '#/alf'
 import {DocumentPublicationRow} from '#/components/atmosphere/SiteStandard/DocumentPublicationRow'
-import {DocumentStats} from '#/components/atmosphere/SiteStandard/DocumentStats'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Link} from '#/components/Link'
@@ -177,8 +176,6 @@ function DocumentCompactBase({
                 />
               )}
             </View>
-
-            <DocumentStats view={view} />
           </View>
         </View>
       </Link>

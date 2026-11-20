@@ -66,9 +66,6 @@ jest.mock(
     DocumentPublicationRow: () => null,
   }),
 )
-jest.mock('#/components/atmosphere/SiteStandard/DocumentStats', () => ({
-  DocumentStats: () => null,
-}))
 jest.mock('#/screens/Atmosphere/components/AtmosphereCardMenu', () => ({
   AtmosphereCardMenu: (props: {offsetY?: number; offsetX?: number}) =>
     mockMenu(props),

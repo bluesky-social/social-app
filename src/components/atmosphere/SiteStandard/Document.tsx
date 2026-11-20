@@ -8,7 +8,6 @@ import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
 import {atoms as a, useTheme, web} from '#/alf'
 import {DocumentPublicationRow} from '#/components/atmosphere/SiteStandard/DocumentPublicationRow'
-import {DocumentStats} from '#/components/atmosphere/SiteStandard/DocumentStats'
 import {StandardSiteMetaRow} from '#/components/atmosphere/SiteStandard/StandardSiteMetaRow'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
 import {Divider} from '#/components/Divider'
@@ -156,8 +155,6 @@ export function Document({
                     </Text>
                   ) : undefined}
                 </View>
-
-                <DocumentStats view={view} />
               </View>
             </View>
 
