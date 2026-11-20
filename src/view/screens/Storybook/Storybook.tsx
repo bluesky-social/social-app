@@ -87,6 +87,8 @@ export default function Storybook() {
               </Button>
             </View>
 
+            <SiteStandardStorybook />
+
             <Button
               color="primary"
               size="small"
@@ -150,7 +152,6 @@ export default function Storybook() {
             <Admonitions />
             <Settings />
             <GalleryStorybook />
-            <SiteStandardStorybook />
 
             <Button
               color="primary"
