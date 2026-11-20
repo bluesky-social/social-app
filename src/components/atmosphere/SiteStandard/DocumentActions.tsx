@@ -5,7 +5,6 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {moderateProfile} from '@bsky/sdk/moderation'
-import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -105,8 +104,14 @@ export function DocumentActions({
       aria-hidden={ghost}
       accessibilityElementsHidden={ghost}
       importantForAccessibility={ghost ? 'no-hide-descendants' : 'auto'}
-      style={[a.gap_md, ghost && [a.pointer_events_none, {opacity: 0}], style]}>
-      <View style={[a.flex_row, a.gap_sm]}>
+      /*
+       * Only the buttons take touches; gaps and social proof fall through to
+       * the card's link beneath. The prop, not the style, since react-native-web
+       * drops inline `box-none`.
+       */
+      pointerEvents={ghost ? 'none' : 'box-none'}
+      style={[{gap: 10}, ghost && {opacity: 0}, style]}>
+      <View pointerEvents="box-none" style={[a.flex_row, a.gap_sm]}>
         {publisher && useCustomTheme ? (
           <StandardSiteThemeProvider view={publisher}>
             {readButton}
@@ -125,11 +130,7 @@ export function DocumentActions({
           <ButtonText>{recommendText}</ButtonText>
         </Button>
       </View>
-      <SocialProof
-        view={view}
-        interacted={interacted}
-        PressableComponent={PressableComponent}
-      />
+      <SocialProof view={view} interacted={interacted} />
     </View>
   )
 }
@@ -141,14 +142,12 @@ export function DocumentActions({
 function SocialProof({
   view,
   interacted,
-  PressableComponent,
 }: {
   view: app.bsky.embed.external.ViewArticle
   interacted: boolean
-  PressableComponent?: React.ComponentType<PressableProps>
 }) {
   const t = useTheme()
-  const {t: l, i18n} = useLingui()
+  const {i18n} = useLingui()
   const moderationOpts = useModerationOpts()
 
   const likers = view.likers?.slice(0, 3) ?? []
@@ -163,25 +162,10 @@ function SocialProof({
   )
   const others = Math.max((view.likeCount ?? 0) - 1, 0)
   const othersCount = formatCount(i18n, others)
-  const label =
-    others > 0
-      ? l({
-          message: plural(others, {
-            one: `Recommended by ${name} and ${othersCount} other`,
-            other: `Recommended by ${name} and ${othersCount} others`,
-          }),
-          comment: 'Accessibility label for who recommended an article',
-        })
-      : l`Recommended by ${name}`
   const nameStyle = [a.font_semi_bold, t.atoms.text_contrast_medium]
 
-  // TODO: open the list of recommenders
   return (
-    <Button
-      PressableComponent={PressableComponent}
-      label={label}
-      style={[a.self_start, a.max_w_full, a.justify_start, a.gap_xs]}
-      onPress={() => {}}>
+    <View pointerEvents="none" style={[a.flex_row, a.align_center, a.gap_xs]}>
       <AvatarStack
         profiles={likers}
         size={20}
@@ -217,7 +201,7 @@ function SocialProof({
           </Trans>
         )}
       </Text>
-    </Button>
+    </View>
   )
 }
 
