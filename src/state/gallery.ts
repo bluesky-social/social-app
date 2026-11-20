@@ -268,13 +268,16 @@ export function purgeTemporaryImageFiles() {
     return
   }
 
+  /*
+   * Not recreated: copyToComposerDirectory and moveIfNecessary create it before
+   * writing, so on a launch after a clean session this is one exists check.
+   */
   const composerDir = getComposerImageDirectory()
   if (composerDir) {
     try {
       if (composerDir.exists) {
         composerDir.delete()
       }
-      composerDir.create()
     } catch (err) {
       logger.warn('Failed to purge composer images', {safeMessage: err})
     }
