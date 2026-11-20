@@ -268,10 +268,6 @@ export function purgeTemporaryImageFiles() {
     return
   }
 
-  /*
-   * Not recreated: copyToComposerDirectory and moveIfNecessary create it before
-   * writing, so on a launch after a clean session this is one exists check.
-   */
   const composerDir = getComposerImageDirectory()
   if (composerDir) {
     try {
