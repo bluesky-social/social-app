@@ -56,6 +56,18 @@ const document = {
   associatedProfiles: [author],
 } satisfies app.bsky.embed.external.ViewArticle
 
+const leafletPublication = {
+  ...publication,
+  uri: 'https://fieldnotes.leaflet.pub',
+  theme: {accent: '#4a7318', accentForeground: '#ffffff'},
+} satisfies app.bsky.embed.external.ViewArticlePublication
+
+const leafletDocument = {
+  ...document,
+  uri: 'https://fieldnotes.leaflet.pub/looking-closely',
+  publisher: leafletPublication,
+} satisfies app.bsky.embed.external.ViewArticle
+
 export function SiteStandardStorybook() {
   return (
     <View testID="siteStandardStorybook" style={[a.gap_lg]}>
@@ -72,6 +84,11 @@ export function SiteStandardStorybook() {
       </View>
 
       <View style={[a.gap_md]}>
+        <H2>Document compact card, themed Leaflet publication</H2>
+        <DocumentCompactCard view={leafletDocument} />
+      </View>
+
+      <View style={[a.gap_md]}>
         <H2>Document compact with containerStyle</H2>
         <DocumentCompact view={document} containerStyle={[a.px_lg, a.py_md]} />
       </View>
@@ -79,6 +96,11 @@ export function SiteStandardStorybook() {
       <View style={[a.gap_md]}>
         <H2>Document</H2>
         <Document view={document} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document, themed Leaflet publication</H2>
+        <Document view={leafletDocument} />
       </View>
 
       <View style={[a.gap_md]}>

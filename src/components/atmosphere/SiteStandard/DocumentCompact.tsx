@@ -7,6 +7,7 @@ import {shareUrl} from '#/lib/sharing'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
 import {atoms as a, extractPadding, useTheme, web} from '#/alf'
+import {DocumentActions} from '#/components/atmosphere/SiteStandard/DocumentActions'
 import {DocumentPublicationRow} from '#/components/atmosphere/SiteStandard/DocumentPublicationRow'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -70,7 +71,8 @@ function DocumentCompactBase({
   const haptics = useHaptics()
   const niceUrl = toNiceDomain(view.uri)
   const publisher = view.publisher
-  const {paddingTop, paddingRight} = extractPadding(containerStyle)
+  const {paddingTop, paddingRight, paddingBottom, paddingLeft} =
+    extractPadding(containerStyle)
   /* A sibling of the article link; interactive elements can't nest in one. */
   const hasMenu = !preview
   const {
@@ -96,7 +98,19 @@ function DocumentCompactBase({
     : undefined
 
   return (
-    <View style={[a.relative, style]}>
+    <View
+      style={[
+        a.relative,
+        card && [a.rounded_lg, a.border],
+        preview && a.pointer_events_none,
+        t.atoms.bg,
+        interacted && t.atoms.bg_contrast_25,
+        card &&
+          (interacted
+            ? t.atoms.border_contrast_high
+            : t.atoms.border_contrast_low),
+        style,
+      ]}>
       <Link
         testID={card ? 'documentCompactCard' : 'documentCompact'}
         peek
@@ -110,18 +124,13 @@ function DocumentCompactBase({
           a.flex_col,
           a.align_stretch,
           a.w_full,
-          card && [a.rounded_lg, a.border],
-          preview && a.pointer_events_none,
+          card && a.rounded_lg,
           /*
            * The peek lifts this view on a clear background, so it needs its own
            * fill for the padding to show.
            */
           t.atoms.bg,
           interacted && t.atoms.bg_contrast_25,
-          card &&
-            (interacted
-              ? t.atoms.border_contrast_high
-              : t.atoms.border_contrast_low),
         ]}
         {...web({
           onMouseEnter: onInteract,
@@ -129,7 +138,8 @@ function DocumentCompactBase({
         })}
         onFocus={onInteract}
         onBlur={onInteractOut}>
-        <View style={containerStyle}>
+        {/* Bottom padding moves below the actions, outside the link. */}
+        <View style={[containerStyle, {paddingBottom: 0}]}>
           <View style={[a.w_full, a.gap_sm]}>
             {!!publisher && (
               <View
@@ -179,6 +189,11 @@ function DocumentCompactBase({
           </View>
         </View>
       </Link>
+
+      <DocumentActions
+        view={view}
+        style={[a.pt_md, {paddingLeft, paddingRight, paddingBottom}]}
+      />
 
       {hasMenu && (
         <AtmosphereCardMenu

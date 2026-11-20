@@ -7,6 +7,7 @@ import {shareUrl} from '#/lib/sharing'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
 import {atoms as a, useTheme, web} from '#/alf'
+import {DocumentActions} from '#/components/atmosphere/SiteStandard/DocumentActions'
 import {DocumentPublicationRow} from '#/components/atmosphere/SiteStandard/DocumentPublicationRow'
 import {StandardSiteMetaRow} from '#/components/atmosphere/SiteStandard/StandardSiteMetaRow'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
@@ -74,6 +75,8 @@ export function Document({
         a.w_full,
         a.border,
         interacted ? t.atoms.border_contrast_high : t.atoms.border_contrast_low,
+        /* Matches the link's hover fill so it extends behind the actions. */
+        interacted && t.atoms.bg_contrast_25,
         preview && a.pointer_events_none,
         style,
       ]}>
@@ -169,6 +172,8 @@ export function Document({
           </View>
         )}
       </Link>
+
+      <DocumentActions view={view} style={[a.px_md, a.pt_xs, a.pb_md]} />
 
       {hasMenu && (
         <AtmosphereCardMenu
