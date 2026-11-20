@@ -1,0 +1,223 @@
+import {useSyncExternalStore} from 'react'
+import {type Client} from '@atproto/lex'
+import {
+  AtUri,
+  type AtUriString,
+  type DidString,
+  toDatetimeString,
+} from '@atproto/syntax'
+import {useLingui} from '@lingui/react/macro'
+import {EventEmitter} from 'eventemitter3'
+
+import {useHaptics} from '#/lib/haptics'
+import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
+import {isNetworkError} from '#/lib/network-error'
+import {logger} from '#/logger'
+import {usePdsClient, useRequireAuth, useSession} from '#/state/session'
+import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
+import * as Toast from '#/components/Toast'
+import {type com, site, social} from '#/lexicons'
+
+/**
+ * The like-style records the viewer can write for external views: a
+ * recommend of a standard.site document, or a favorite of a Grain gallery.
+ * The appview returns the viewer's record for either as `viewer.like`.
+ */
+export type AtmosphereLikeKind = 'recommend' | 'favorite'
+
+/** The parts of an article or gallery view a like needs. */
+type LikeableView = {
+  likeCount?: number
+  viewer?: {like?: AtUriString}
+  associatedRefs?: com.atproto.repo.strongRef.Main[]
+}
+
+const KINDS: Record<
+  AtmosphereLikeKind,
+  {
+    /** The collection of the record being liked, found in `associatedRefs`. */
+    subjectCollection: string
+    create(
+      client: Client,
+      repo: DidString,
+      subject: AtUriString,
+    ): Promise<{uri: AtUriString}>
+    delete(client: Client, repo: DidString, rkey: string): Promise<unknown>
+  }
+> = {
+  recommend: {
+    subjectCollection: site.standard.document.$type,
+    create: (client, repo, document) =>
+      client.create(
+        site.standard.graph.recommend,
+        {document, createdAt: toDatetimeString(new Date())},
+        {repo},
+      ),
+    delete: (client, repo, rkey) =>
+      client.delete(site.standard.graph.recommend, {repo, rkey}),
+  },
+  favorite: {
+    subjectCollection: social.grain.gallery.$type,
+    create: (client, repo, subject) =>
+      client.create(
+        social.grain.favorite,
+        {subject, createdAt: toDatetimeString(new Date())},
+        {repo},
+      ),
+    delete: (client, repo, rkey) =>
+      client.delete(social.grain.favorite, {repo, rkey}),
+  },
+}
+
+/**
+ * Optimistic override of a record's `viewer.like`, shared by every view of
+ * the record whichever query it came from. It only applies while a view
+ * still has the server state it was based on, so once a refetch catches up,
+ * the server wins.
+ */
+type LikeShadow = {
+  /** `'pending'` while the record is being created. */
+  likeUri: AtUriString | 'pending' | undefined
+  baseLike: AtUriString | undefined
+  baseCount: number
+}
+
+const shadows = new Map<string, LikeShadow>()
+const emitter = new EventEmitter()
+
+function updateShadow(
+  key: string,
+  likeUri: LikeShadow['likeUri'],
+  view: LikeableView,
+) {
+  shadows.set(key, {
+    likeUri,
+    baseLike: view.viewer?.like,
+    baseCount: view.likeCount ?? 0,
+  })
+  emitter.emit(key)
+}
+
+/** The viewer's like of a record and its count, with any optimistic change. */
+function useLikeState(view: LikeableView, kind: AtmosphereLikeKind) {
+  const {currentAccount} = useSession()
+  const {subjectCollection} = KINDS[kind]
+  const subjectUri = view.associatedRefs?.find(
+    ref => new AtUri(ref.uri).collection === subjectCollection,
+  )?.uri
+  const did = currentAccount?.did
+  const key = did && subjectUri ? `${did}:${subjectUri}` : undefined
+
+  const shadow = useSyncExternalStore(
+    onChange => {
+      if (!key) return () => {}
+      emitter.on(key, onChange)
+      return () => {
+        emitter.off(key, onChange)
+      }
+    },
+    () => (key ? shadows.get(key) : undefined),
+  )
+
+  const serverLike = view.viewer?.like
+  const serverCount = view.likeCount ?? 0
+  const isShadowed =
+    shadow?.baseLike === serverLike && shadow?.baseCount === serverCount
+  const likeUri = isShadowed ? shadow.likeUri : serverLike
+  const likeCount = isShadowed
+    ? Math.max(0, serverCount + Number(!!likeUri) - Number(!!serverLike))
+    : serverCount
+
+  return {did, subjectUri, key, likeUri, likeCount}
+}
+
+/** A record's like count, including the viewer's optimistic like. */
+export function useAtmosphereLikeCount(
+  view: LikeableView,
+  kind: AtmosphereLikeKind,
+) {
+  return useLikeState(view, kind).likeCount
+}
+
+/**
+ * Likes and unlikes a record from any of its views. Toggles queue, so rapid
+ * presses settle on the last one, and every view of the record updates
+ * optimistically.
+ */
+export function useAtmosphereLike(
+  view: LikeableView,
+  kind: AtmosphereLikeKind,
+) {
+  const {t: l} = useLingui()
+  const pdsClient = usePdsClient()
+  const haptics = useHaptics()
+  const requireAuth = useRequireAuth()
+  const sendFeedback = useAtmosphereFeedback()
+  const {did, subjectUri, key, likeUri, likeCount} = useLikeState(view, kind)
+
+  const queueToggle = useToggleMutationQueue<AtUriString | undefined>({
+    initialState: likeUri === 'pending' ? undefined : likeUri,
+    runMutation: async (prevUri, shouldLike) => {
+      if (!did || !subjectUri) return prevUri
+      if (shouldLike) {
+        const res = await KINDS[kind].create(pdsClient, did, subjectUri)
+        return res.uri
+      }
+      if (prevUri) {
+        await KINDS[kind].delete(pdsClient, did, new AtUri(prevUri).rkey)
+      }
+      return undefined
+    },
+    onSuccess(finalUri) {
+      if (key) updateShadow(key, finalUri, view)
+    },
+  })
+
+  const isLiked = !!likeUri
+
+  const toggle = () =>
+    requireAuth(async () => {
+      haptics.tap()
+      try {
+        if (isLiked) {
+          if (key) updateShadow(key, undefined, view)
+          await queueToggle(false)
+        } else {
+          if (key) updateShadow(key, 'pending', view)
+          await queueToggle(true)
+          sendFeedback?.('app.bsky.feed.defs#interactionLike')
+        }
+      } catch (e) {
+        // A newer toggle replaced this one.
+        if ((e as Error)?.name === 'AbortError') return
+        if (!isNetworkError(e)) {
+          logger.error(`Failed to update Atmosphere ${kind}`, {
+            safeMessage: e,
+          })
+        }
+        Toast.show(
+          kind === 'recommend'
+            ? l({
+                message: 'Couldn’t update your recommendation',
+                context: 'toast',
+              })
+            : l({
+                message: 'Couldn’t update your favorite',
+                context: 'toast',
+              }),
+          {type: 'error'},
+        )
+      }
+    })
+
+  return {
+    /*
+     * Signed-in views always carry `viewer` unless the appview failed to look
+     * up the viewer's like, and liking then could create a duplicate.
+     */
+    canLike: !!subjectUri && (!did || !!view.viewer),
+    isLiked,
+    likeCount,
+    toggle,
+  }
+}

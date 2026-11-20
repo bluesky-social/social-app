@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react/macro'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useTheme} from '#/alf'
-import {useDocumentRecommendCount} from '#/components/atmosphere/SiteStandard/recommend'
+import {useAtmosphereLikeCount} from '#/components/atmosphere/likes'
 import {ChainLink_Stroke2_Corner0_Rounded as LinkIcon} from '#/components/icons/ChainLink'
 import {Clock_Stroke2_Corner0_Rounded as ClockIcon} from '#/components/icons/Clock'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
@@ -24,7 +24,7 @@ export function DocumentStats({
 }) {
   const {t: l, i18n} = useLingui()
   const t = useTheme()
-  const likeCount = useDocumentRecommendCount(view)
+  const likeCount = useAtmosphereLikeCount(view, 'recommend')
   const readingTime = view.readingTime
 
   const textStyle = [a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]

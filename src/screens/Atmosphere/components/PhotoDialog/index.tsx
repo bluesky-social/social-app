@@ -19,12 +19,16 @@ import {
   useAtmosphereMetricsSnapshot,
 } from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme, web} from '#/alf'
+import {useAtmosphereLike} from '#/components/atmosphere/likes'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Gallery from '#/components/Gallery'
 import {Clock_Stroke2_Corner0_Rounded as ClockIcon} from '#/components/icons/Clock'
 import {GrainFull, GrainMark} from '#/components/icons/community/Grain'
-import {Heart2_Stroke2_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
+import {
+  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilledIcon,
+  Heart2_Stroke2_Corner0_Rounded as HeartIcon,
+} from '#/components/icons/Heart2'
 import {Image_Stroke2_Corner2_Rounded as ImageIcon} from '#/components/icons/Image'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ExternalLinkIcon} from '#/components/icons/Square'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -98,9 +102,14 @@ function PhotoDialogInner({
 
   const createdAt = photo.createdAt
   const hasDate = !!createdAt && !Number.isNaN(Date.parse(createdAt))
-  const likeCount = photo.likeCount ?? 0
+  const {
+    canLike: canFavorite,
+    isLiked: isFavorited,
+    likeCount,
+    toggle: toggleFavorite,
+  } = useAtmosphereLike(photo, 'favorite')
   const photoCount = photo.photoCount ?? getGalleryImages(photo).length
-  const likes = formatCount(i18n, likeCount)
+  const favorites = formatCount(i18n, likeCount)
   const photos = formatCount(i18n, photoCount)
   if (!author || !moderationOpts) return null
 
@@ -164,11 +173,11 @@ function PhotoDialogInner({
               icon={HeartIcon}
               label={l({
                 message: plural(likeCount, {
-                  one: `${likes} like`,
-                  other: `${likes} likes`,
+                  one: `${favorites} favorite`,
+                  other: `${favorites} favorites`,
                 }),
                 comment:
-                  'Number of likes on a photo gallery. {likes} is already abbreviated and formatted, e.g. "1.2K".',
+                  'Number of people who favorited (liked) a photo gallery. {favorites} is already abbreviated and formatted, e.g. "1.2K".',
               })}
             />
           ) : null}
@@ -226,6 +235,38 @@ function PhotoDialogInner({
         </ButtonText>
         <ButtonIcon icon={ExternalLinkIcon} size="sm" />
       </Button>
+      {canFavorite && (
+        <Button
+          testID="atmospherePhotoDialogFavorite"
+          label={
+            isFavorited
+              ? l({
+                  message: 'Remove your favorite',
+                  comment:
+                    'Accessibility label for a button that unfavorites (unlikes) a photo gallery',
+                })
+              : l({
+                  message: 'Favorite',
+                  comment: 'Button that favorites (likes) a photo gallery',
+                })
+          }
+          color={isFavorited ? 'primary_subtle' : 'secondary'}
+          size="large"
+          onPress={toggleFavorite}>
+          <ButtonIcon icon={isFavorited ? HeartFilledIcon : HeartIcon} />
+          <ButtonText>
+            {isFavorited ? (
+              <Trans comment="Button showing the viewer has favorited (liked) a gallery">
+                Favorited
+              </Trans>
+            ) : (
+              <Trans comment="Button that favorites (likes) a photo gallery">
+                Favorite
+              </Trans>
+            )}
+          </ButtonText>
+        </Button>
+      )}
       {IS_NATIVE && (
         <Button
           testID="atmospherePhotoDialogClose"

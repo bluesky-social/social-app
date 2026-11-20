@@ -3,6 +3,10 @@ import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
+import {
+  GalleryCountPills,
+  useGalleryCounts,
+} from '#/screens/Atmosphere/components/GalleryCountPills'
 import {PhotoDialog} from '#/screens/Atmosphere/components/PhotoDialog'
 import {
   getAssociatedProfile,
@@ -17,13 +21,19 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text} from '#/components/Typography'
 import {social} from '#/lexicons'
 import {type ActivityContent} from '../rows'
-import {CardStats} from './CardStats'
+import {GalleryActions} from './GalleryActions'
 
 /** Keeps very tall or very wide photos from dominating the timeline. */
 const MIN_ASPECT_RATIO = 4 / 5
 const MAX_ASPECT_RATIO = 2
 
-/** A Grain gallery: title, stats, and its first photo. Opens the photo dialog. */
+/** Space between the card's edge and its content: its padding plus border. */
+const CARD_INSET = a.p_md.padding + a.border.borderWidth
+
+/**
+ * A Grain gallery: title, its first photo with counts, and actions. Opens the
+ * photo dialog.
+ */
 export function GalleryCard({
   content: {view},
 }: {
@@ -37,10 +47,12 @@ export function GalleryCard({
   const sendFeedback = useAtmosphereFeedback()
   const image = getGalleryImage(view)
   const author = getAssociatedProfile(view.associatedProfiles)
+  const {favoriteCount, photoCount, label: countsLabel} = useGalleryCounts(view)
 
   // `toActivityRows` already turns galleries without these into warnings.
   if (!image || !author) return null
 
+  const title = view.title
   const aspectRatio = image.aspectRatio
     ? Math.min(
         Math.max(
@@ -56,9 +68,9 @@ export function GalleryCard({
       <Button
         testID="activityGalleryCard"
         label={l({
-          message: `View photos in ${view.title}`,
+          message: `View photos in ${title}, ${countsLabel}`,
           comment:
-            'Accessibility label for a card that opens a photo gallery. {view.title} is the gallery title, written by its author.',
+            'Accessibility label for a card that opens a photo gallery. {title} is the gallery title, written by its author. {countsLabel} is the already-translated number of favorites and photos, e.g. “3 favorites, 12 photos”.',
         })}
         accessibilityHint={l`Opens the photos in a dialog`}
         onPress={() => {
@@ -99,28 +111,41 @@ export function GalleryCard({
               {view.description}
             </Text>
           )}
-          <View style={[a.pt_xs]}>
-            <CardStats
-              date={view.createdAt}
-              likeCount={view.likeCount}
-              photoCount={view.photoCount || view.items.length}
-            />
-          </View>
         </View>
-        <Image
-          source={{uri: image.thumbnail}}
-          contentFit="cover"
-          accessibilityLabel={image.alt}
-          accessibilityHint=""
-          accessible={!!image.alt}
+        <View
           style={[
             a.w_full,
+            a.overflow_hidden,
             a.rounded_md,
             t.atoms.bg_contrast_25,
             {aspectRatio},
-          ]}
-        />
+          ]}>
+          <Image
+            source={{uri: image.thumbnail}}
+            contentFit="cover"
+            accessibilityLabel={image.alt}
+            accessibilityHint=""
+            accessible={!!image.alt}
+            style={[a.w_full, a.h_full]}
+          />
+          <GalleryCountPills
+            favoriteCount={favoriteCount}
+            photoCount={photoCount}
+          />
+        </View>
+        <GalleryActions ghost view={view} style={[a.pt_md]} />
       </Button>
+      <GalleryActions
+        view={view}
+        onViewPress={() => {
+          logPress('external')
+          sendFeedback?.('app.bsky.feed.defs#clickthroughItem')
+        }}
+        style={[
+          a.absolute,
+          {left: CARD_INSET, right: CARD_INSET, bottom: CARD_INSET},
+        ]}
+      />
       <AtmosphereCardMenu
         type="photo"
         item={view}

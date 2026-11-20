@@ -29,6 +29,14 @@ jest.mock('#/env', () =>
   ),
 )
 jest.mock('#/lib/hooks/useOpenLink', () => ({useOpenLink: () => mockOpenLink}))
+jest.mock('#/components/atmosphere/likes', () => ({
+  useAtmosphereLike: (view: {likeCount?: number}) => ({
+    canLike: false,
+    isLiked: false,
+    likeCount: view.likeCount ?? 0,
+    toggle: () => {},
+  }),
+}))
 
 jest.mock('@lingui/react', () => {
   const fill = (message: string, values: Record<string, unknown> = {}) =>
@@ -329,10 +337,10 @@ describe('stats', () => {
   const stat = (name: 'Likes' | 'Photos' | 'Time') =>
     screen.queryByTestId(`atmospherePhotoDialog${name}`)
 
-  it('shows likes, hydrated photo count and relative date', () => {
+  it('shows favorites, hydrated photo count and relative date', () => {
     renderDialog()
 
-    expect(stat('Likes')).toHaveTextContent(/^12 likes$/)
+    expect(stat('Likes')).toHaveTextContent(/^12 favorites$/)
     expect(stat('Photos')).toHaveTextContent(/^3 photos$/)
     expect(stat('Time')).toHaveTextContent(/^4d ago$/)
   })
@@ -353,11 +361,11 @@ describe('stats', () => {
   it('uses singular forms', () => {
     renderDialog(gallery({likeCount: 1, items: [image(1)] as never}))
 
-    expect(stat('Likes')).toHaveTextContent(/^1 like$/)
+    expect(stat('Likes')).toHaveTextContent(/^1 favorite$/)
     expect(stat('Photos')).toHaveTextContent(/^1 photo$/)
   })
 
-  it('omits likes when there are none', () => {
+  it('omits favorites when there are none', () => {
     renderDialog(gallery({likeCount: undefined}))
 
     expect(stat('Likes')).toBeNull()

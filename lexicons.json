@@ -274,6 +274,7 @@
     "site.standard.graph.recommend",
     "site.standard.graph.subscription",
     "site.standard.publication",
+    "social.grain.favorite",
     "social.grain.gallery",
     "social.grain.photo",
     "tools.ozone.inbox.appealActionedSubject",
@@ -1419,6 +1420,10 @@
     "social.grain.defs": {
       "uri": "at://did:plc:e7rftrdyz5e2rw4y6ocszew2/com.atproto.lexicon.schema/social.grain.defs",
       "cid": "bafyreia3nt5ow66tq325s2p4vxqwzntvfgnasf5circqmaa7cqhlrq327e"
+    },
+    "social.grain.favorite": {
+      "uri": "at://did:plc:e7rftrdyz5e2rw4y6ocszew2/com.atproto.lexicon.schema/social.grain.favorite",
+      "cid": "bafyreiel6ieloydobeb4nmgkfb2pz7h65h6t6fssil26cb2jlf4lg3llhy"
     },
     "social.grain.gallery": {
       "uri": "at://did:plc:e7rftrdyz5e2rw4y6ocszew2/com.atproto.lexicon.schema/social.grain.gallery",
