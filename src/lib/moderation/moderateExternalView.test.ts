@@ -17,7 +17,7 @@ const opts: ModerationOpts = {
     hiddenPosts: [],
   },
 }
-const view: app.bsky.embed.external.ViewArticle = {
+const view = {
   uri: 'https://owner.test/article',
   title: 'An article',
   description: 'Some text',
@@ -28,7 +28,7 @@ const view: app.bsky.embed.external.ViewArticle = {
     },
   ],
   associatedProfiles: [owner],
-}
+} satisfies app.bsky.embed.external.ViewArticle
 
 /*
  * The SDK covers owner moderation and muted-word matching itself; these cover
@@ -54,7 +54,7 @@ it('applies muted words to gallery image alt text', () => {
     $type: 'app.bsky.embed.external#viewGallery',
     associatedRefs: [
       {
-        ...view.associatedRefs![0],
+        ...view.associatedRefs[0],
         uri: 'at://did:web:owner.test/social.grain.gallery/1',
       },
     ],

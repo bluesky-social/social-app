@@ -7,11 +7,17 @@ import {
 import {moderateProfile} from '@bsky/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
+import {useHaptics} from '#/lib/haptics'
+import {isNetworkError} from '#/lib/network-error'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useRequireAuth} from '#/state/session'
 import {formatCount} from '#/view/com/util/numeric/format'
+import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
 import {atoms as a, useTheme, utils} from '#/alf'
 import {matchStandardSiteHostByPublication} from '#/components/atmosphere/SiteStandard/publishers'
+import {useDocumentRecommend} from '#/components/atmosphere/SiteStandard/recommend'
 import {StandardSiteThemeProvider} from '#/components/atmosphere/SiteStandard/StandardSiteThemeProvider'
 import {getPublicationTheme} from '#/components/atmosphere/SiteStandard/utils'
 import {AvatarStack} from '#/components/AvatarStack'
@@ -19,6 +25,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon} from '#/components/icons/Arrow'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import {Link} from '#/components/Link'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 
@@ -49,6 +56,11 @@ export function DocumentActions({
   style?: StyleProp<ViewStyle>
 }) {
   const {t: l} = useLingui()
+  const haptics = useHaptics()
+  const requireAuth = useRequireAuth()
+  const sendFeedback = useAtmosphereFeedback()
+  const {canRecommend, isRecommended, likeCount, recommend, unrecommend} =
+    useDocumentRecommend(view)
   const publisher = view.publisher
   const host = publisher ? matchStandardSiteHostByPublication(publisher) : null
 
@@ -59,10 +71,43 @@ export function DocumentActions({
           'Button that opens an article on the platform it was published with, e.g. “Read on Leaflet”',
       })
     : l`Read article`
-  const recommendText = l({
-    message: 'Recommend',
-    comment: 'Button that recommends (likes) an article',
-  })
+  const recommendText = isRecommended
+    ? l({
+        message: 'Recommended',
+        comment: 'Button showing the viewer has recommended (liked) an article',
+      })
+    : l({
+        message: 'Recommend',
+        comment: 'Button that recommends (likes) an article',
+      })
+
+  const onPressRecommend = () =>
+    requireAuth(async () => {
+      haptics.tap()
+      try {
+        if (isRecommended) {
+          await unrecommend()
+        } else {
+          await recommend()
+          sendFeedback?.('app.bsky.feed.defs#interactionLike')
+        }
+      } catch (e) {
+        // A newer toggle replaced this one.
+        if ((e as Error)?.name === 'AbortError') return
+        if (!isNetworkError(e)) {
+          logger.error('Failed to update document recommendation', {
+            safeMessage: e,
+          })
+        }
+        Toast.show(
+          l({
+            message: 'Couldn’t update your recommendation',
+            context: 'toast',
+          }),
+          {type: 'error'},
+        )
+      }
+    })
 
   /*
    * The custom site theme paints the button background with `accent` and the
@@ -125,19 +170,22 @@ export function DocumentActions({
         ) : (
           readButton
         )}
-        {/* TODO: hook up Recommend */}
-        <Button
-          PressableComponent={PressableComponent}
-          label={recommendText}
-          size="small"
-          color="secondary"
-          style={[a.flex_1]}
-          onPress={() => {}}>
-          <ButtonIcon icon={SparkleIcon} />
-          <ButtonText>{recommendText}</ButtonText>
-        </Button>
+        {canRecommend && (
+          <Button
+            PressableComponent={PressableComponent}
+            label={
+              isRecommended ? l`Remove your recommendation` : recommendText
+            }
+            size="small"
+            color={isRecommended ? 'primary_subtle' : 'secondary'}
+            style={[a.flex_1]}
+            onPress={onPressRecommend}>
+            <ButtonIcon icon={SparkleIcon} />
+            <ButtonText>{recommendText}</ButtonText>
+          </Button>
+        )}
       </View>
-      <SocialProof view={view} interacted={interacted} />
+      <SocialProof view={view} likeCount={likeCount} interacted={interacted} />
     </View>
   )
 }
@@ -148,9 +196,12 @@ export function DocumentActions({
  */
 function SocialProof({
   view,
+  likeCount,
   interacted,
 }: {
   view: app.bsky.embed.external.ViewArticle
+  /** Includes the viewer's optimistic recommendation. */
+  likeCount: number
   interacted: boolean
 }) {
   const t = useTheme()
@@ -167,7 +218,7 @@ function SocialProof({
       ? moderateProfile(liker, moderationOpts).ui('displayName')
       : undefined,
   )
-  const others = Math.max((view.likeCount ?? 0) - 1, 0)
+  const others = Math.max(likeCount - 1, 0)
   const othersCount = formatCount(i18n, others)
   const nameStyle = [a.font_semi_bold, t.atoms.text_contrast_medium]
 

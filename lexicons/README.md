@@ -15,7 +15,8 @@ This schema matches upstream `lexicons-overrides/app/bsky/embed/external.json`
 at atproto `f0653de696169e16dc003f11877b9eb0ae6533c0`, which is ahead of the
 published schema record: it adds `viewGallery.photoCount` (atproto PR 5880),
 plus `viewLivestream.lastSeenAt` and `viewArticlePublication.viewer` (atproto PR
-5893). Its manifest CID is a locally calculated content-integrity pin, not the
+5893). It also adds `viewArticle.viewer` and `viewGallery.viewer` from atproto
+PR 5967 (unmerged, at `f1f31663997bd8da8082cce57bf26f22bd4844b5`). Its manifest CID is a locally calculated content-integrity pin, not the
 published record CID. Exclude it from scoped updates until the published schema
 includes these fields.
 

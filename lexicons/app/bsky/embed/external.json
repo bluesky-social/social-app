@@ -158,6 +158,10 @@
             "ref": "app.bsky.actor.defs#profileViewBasic",
             "type": "ref"
           }
+        },
+        "viewer": {
+          "type": "ref",
+          "ref": "#viewArticleViewerState"
         }
       }
     },
@@ -236,6 +240,10 @@
             "ref": "app.bsky.actor.defs#profileViewBasic",
             "type": "ref"
           }
+        },
+        "viewer": {
+          "type": "ref",
+          "ref": "#viewGalleryViewerState"
         }
       }
     },
@@ -561,6 +569,28 @@
           "type": "string",
           "format": "at-uri",
           "description": "The requesting account's site.standard.graph.subscription record for this publication, if subscribed."
+        }
+      }
+    },
+    "viewArticleViewerState": {
+      "type": "object",
+      "description": "Metadata about the requesting account's relationship with the subject article. Only has meaningful content for authed requests.",
+      "properties": {
+        "like": {
+          "type": "string",
+          "format": "at-uri",
+          "description": "The requesting account's site.standard.graph.recommend record for this article, if recommended."
+        }
+      }
+    },
+    "viewGalleryViewerState": {
+      "type": "object",
+      "description": "Metadata about the requesting account's relationship with the subject gallery. Only has meaningful content for authed requests.",
+      "properties": {
+        "like": {
+          "type": "string",
+          "format": "at-uri",
+          "description": "The requesting account's social.grain.favorite record for this gallery, if favorited."
         }
       }
     }
