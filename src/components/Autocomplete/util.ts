@@ -15,10 +15,12 @@ export function parseAutocompleteItemType(type: string) {
  * `:` is both the emoji trigger and the eyes of most emoticons, and the emoji
  * search is fuzzy, so `:)` alone would open the menu with `:a:` selected.
  * Like Slack, wait for two shortcode characters, starting with a letter or
- * digit. A complete `:shortcode:` always counts, so the composer can still
- * convert short ones like `:a:` when the closing colon is typed.
+ * digit. `+1` and `-1` are the only shortcodes that start with a symbol, so
+ * `:+` and `:-` open straight away, but `:-D` and `:-P` don't. A complete
+ * `:shortcode:` always counts, so the composer can still convert short ones
+ * like `:a:` when the closing colon is typed.
  */
-const EMOJI_QUERY = /^[a-z0-9][a-z0-9_+-]+$/i
+const EMOJI_QUERY = /^([a-z0-9][a-z0-9_+-]+|[+-]1?)$/i
 const EMOJI_SHORTCODE = /^:[a-z0-9_+-]+:$/i
 
 export function shouldShowAutocomplete(facet: {

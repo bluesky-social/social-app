@@ -12,7 +12,7 @@ describe('shouldShowAutocomplete', () => {
     },
   )
 
-  it.each(['-)', '-(', '-P', '-D', "'(", 'o)', '/', '//', ')?'])(
+  it.each(['-)', '-(', '-P', '-D', '+D', "'(", 'o)', '/', '//', ')?'])(
     'stays closed for emoticons: %j',
     value => {
       expect(shouldShowAutocomplete(emoji(':' + value))).toBe(false)
@@ -21,6 +21,13 @@ describe('shouldShowAutocomplete', () => {
 
   it.each(['sm', 'smile', 'thumbs_up', 't-rex', '100', 'DD'])(
     'opens for a shortcode prefix: %j',
+    value => {
+      expect(shouldShowAutocomplete(emoji(':' + value))).toBe(true)
+    },
+  )
+
+  it.each(['+', '-', '+1', '-1'])(
+    'opens for a thumbs up or down prefix: %j',
     value => {
       expect(shouldShowAutocomplete(emoji(':' + value))).toBe(true)
     },
