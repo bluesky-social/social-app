@@ -36,11 +36,12 @@ function updateShadow(
   emitter.emit(key)
 }
 
-export function useDocumentRecommend(
-  view: app.bsky.embed.external.ViewArticle,
-) {
+/**
+ * The viewer's recommendation of a document and its count, with any
+ * optimistic change applied.
+ */
+function useRecommendState(view: app.bsky.embed.external.ViewArticle) {
   const {currentAccount} = useSession()
-  const pdsClient = usePdsClient()
   const documentUri = view.associatedRefs?.find(isStandardSiteDocumentUri)?.uri
   const did = currentAccount?.did
   const key = did && documentUri ? `${did}:${documentUri}` : undefined
@@ -64,6 +65,22 @@ export function useDocumentRecommend(
   const likeCount = isShadowed
     ? Math.max(0, serverCount + Number(!!likeUri) - Number(!!serverLike))
     : serverCount
+
+  return {did, documentUri, key, likeUri, likeCount}
+}
+
+/** A document's recommendation count, including the viewer's optimistic one. */
+export function useDocumentRecommendCount(
+  view: app.bsky.embed.external.ViewArticle,
+) {
+  return useRecommendState(view).likeCount
+}
+
+export function useDocumentRecommend(
+  view: app.bsky.embed.external.ViewArticle,
+) {
+  const pdsClient = usePdsClient()
+  const {did, documentUri, key, likeUri, likeCount} = useRecommendState(view)
 
   const queueToggle = useToggleMutationQueue<AtUriString | undefined>({
     initialState: likeUri === 'pending' ? undefined : likeUri,

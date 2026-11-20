@@ -12,7 +12,7 @@ import {isNetworkError} from '#/lib/network-error'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useRequireAuth} from '#/state/session'
+import {useRequireAuth, useSession} from '#/state/session'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
 import {atoms as a, useTheme, utils} from '#/alf'
@@ -213,6 +213,7 @@ export function DocumentActions({
  * "Recommended by {name} +N others" when there are `recommenders` to name,
  * otherwise "Recommended by N people" with the view's preview `likers` as
  * avatars. Those are picked by DID, not relevance, so they're never named.
+ * Without profiles to show there's no row; the count is in the card's stats.
  */
 function SocialProof({
   view,
@@ -230,11 +231,19 @@ function SocialProof({
   const {i18n} = useLingui()
   const moderationOpts = useModerationOpts()
 
-  const named = recommenders?.actors[0]
-  const avatars = (named ? recommenders.actors : view.likers)?.slice(0, 3) ?? []
+  const {currentAccount} = useSession()
+
+  /* The viewer still counts toward the total, but isn't shown to themselves. */
+  const isOther = (profile: {did: string}) =>
+    profile.did !== currentAccount?.did
+  const shownRecommenders = recommenders?.actors.filter(isOther)
+  const named = shownRecommenders?.[0]
+  const avatars =
+    (named ? shownRecommenders : view.likers?.filter(isOther))?.slice(0, 3) ??
+    []
   /* The related list can be fresher than the count. */
   const total = Math.max(likeCount, recommenders?.actorCount ?? 0)
-  if (total <= 0) return null
+  if (avatars.length === 0 || total <= 0) return null
 
   let text: React.ReactNode
   if (named) {
@@ -283,18 +292,16 @@ function SocialProof({
 
   return (
     <View pointerEvents="none" style={[a.flex_row, a.align_center, a.gap_xs]}>
-      {avatars.length > 0 && (
-        <AvatarStack
-          profiles={avatars}
-          size={20}
-          overlap={6}
-          backgroundColor={
-            interacted
-              ? t.atoms.bg_contrast_25.backgroundColor
-              : t.atoms.bg.backgroundColor
-          }
-        />
-      )}
+      <AvatarStack
+        profiles={avatars}
+        size={20}
+        overlap={6}
+        backgroundColor={
+          interacted
+            ? t.atoms.bg_contrast_25.backgroundColor
+            : t.atoms.bg.backgroundColor
+        }
+      />
       <Text
         emoji
         numberOfLines={1}

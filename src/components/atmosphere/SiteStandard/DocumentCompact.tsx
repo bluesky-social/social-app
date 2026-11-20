@@ -12,6 +12,7 @@ import {
   type DocumentRecommenders,
 } from '#/components/atmosphere/SiteStandard/DocumentActions'
 import {DocumentPublicationRow} from '#/components/atmosphere/SiteStandard/DocumentPublicationRow'
+import {DocumentStats} from '#/components/atmosphere/SiteStandard/DocumentStats'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Link} from '#/components/Link'
@@ -165,6 +166,7 @@ function DocumentCompactBase({
                     {view.description}
                   </Text>
                 )}
+                <DocumentStats view={view} />
               </View>
 
               {!!view.image && (
