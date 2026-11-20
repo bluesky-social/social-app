@@ -30,6 +30,17 @@ import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 
 /**
+ * Recommenders the viewer has a relationship with, such as the people they
+ * follow on the Following tab, to name in the social proof.
+ */
+export type DocumentRecommenders = {
+  /** The ones to show, with moderated actors left out. Never empty. */
+  actors: app.bsky.actor.defs.ProfileViewBasic[]
+  /** Every one, including moderated actors. */
+  actorCount: number
+}
+
+/**
  * "Read" and "Recommend" buttons for a document card, plus recommender social
  * proof. Interactive elements can't nest in the card's article link, so cards
  * render a `ghost` inside the link to reserve space, and overlay the real
@@ -37,12 +48,15 @@ import {type app} from '#/lexicons'
  */
 export function DocumentActions({
   view,
+  recommenders,
   ghost = false,
   interacted = false,
   onReadPress,
   style,
 }: {
   view: app.bsky.embed.external.ViewArticle
+  /** Named in the social proof instead of the generic count, when present. */
+  recommenders?: DocumentRecommenders
   /**
    * Renders an invisible, non-interactive copy that takes up the same space
    * as the real actions. Sizing comes from the same components, so it
@@ -185,21 +199,29 @@ export function DocumentActions({
           </Button>
         )}
       </View>
-      <SocialProof view={view} likeCount={likeCount} interacted={interacted} />
+      <SocialProof
+        view={view}
+        recommenders={recommenders}
+        likeCount={likeCount}
+        interacted={interacted}
+      />
     </View>
   )
 }
 
 /**
- * "Recommended by {name} +N others", from the view's preview `likers` (up to
- * three). The named liker is one of `likeCount`, so they're not in the +N.
+ * "Recommended by {name} +N others" when there are `recommenders` to name,
+ * otherwise "Recommended by N people" with the view's preview `likers` as
+ * avatars. Those are picked by DID, not relevance, so they're never named.
  */
 function SocialProof({
   view,
+  recommenders,
   likeCount,
   interacted,
 }: {
   view: app.bsky.embed.external.ViewArticle
+  recommenders?: DocumentRecommenders
   /** Includes the viewer's optimistic recommendation. */
   likeCount: number
   interacted: boolean
@@ -208,56 +230,76 @@ function SocialProof({
   const {i18n} = useLingui()
   const moderationOpts = useModerationOpts()
 
-  const likers = view.likers?.slice(0, 3) ?? []
-  const liker = likers[0]
-  if (!liker) return null
+  const named = recommenders?.actors[0]
+  const avatars = (named ? recommenders.actors : view.likers)?.slice(0, 3) ?? []
+  /* The related list can be fresher than the count. */
+  const total = Math.max(likeCount, recommenders?.actorCount ?? 0)
+  if (total <= 0) return null
 
-  const name = sanitizeDisplayName(
-    liker.displayName || liker.handle,
-    moderationOpts
-      ? moderateProfile(liker, moderationOpts).ui('displayName')
-      : undefined,
-  )
-  const others = Math.max(likeCount - 1, 0)
-  const othersCount = formatCount(i18n, others)
-  const nameStyle = [a.font_semi_bold, t.atoms.text_contrast_medium]
+  let text: React.ReactNode
+  if (named) {
+    const name = sanitizeDisplayName(
+      named.displayName || named.handle,
+      moderationOpts
+        ? moderateProfile(named, moderationOpts).ui('displayName')
+        : undefined,
+    )
+    const nameStyle = [a.font_semi_bold, t.atoms.text_contrast_medium]
+    /* The named recommender is one of the total, so they're not in the +N. */
+    const others = total - 1
+    const othersCount = formatCount(i18n, others)
+    text =
+      others > 0 ? (
+        <Trans comment="Social proof below an article; the bolded name is someone the viewer follows who recommended it">
+          Recommended by{' '}
+          <Text emoji style={nameStyle}>
+            {name}
+          </Text>{' '}
+          <Plural
+            value={others}
+            one={`+${othersCount} other`}
+            other={`+${othersCount} others`}
+          />
+        </Trans>
+      ) : (
+        <Trans comment="Social proof below an article; the bolded name is the only person who recommended it">
+          Recommended by{' '}
+          <Text emoji style={nameStyle}>
+            {name}
+          </Text>
+        </Trans>
+      )
+  } else {
+    const count = formatCount(i18n, total)
+    text = (
+      <Plural
+        comment="Social proof below an article: how many people recommended it"
+        value={total}
+        one={`Recommended by ${count} person`}
+        other={`Recommended by ${count} people`}
+      />
+    )
+  }
 
   return (
     <View pointerEvents="none" style={[a.flex_row, a.align_center, a.gap_xs]}>
-      <AvatarStack
-        profiles={likers}
-        size={20}
-        overlap={6}
-        backgroundColor={
-          interacted
-            ? t.atoms.bg_contrast_25.backgroundColor
-            : t.atoms.bg.backgroundColor
-        }
-      />
+      {avatars.length > 0 && (
+        <AvatarStack
+          profiles={avatars}
+          size={20}
+          overlap={6}
+          backgroundColor={
+            interacted
+              ? t.atoms.bg_contrast_25.backgroundColor
+              : t.atoms.bg.backgroundColor
+          }
+        />
+      )}
       <Text
         emoji
         numberOfLines={1}
         style={[a.flex_shrink, a.text_sm, t.atoms.text_contrast_medium]}>
-        {others > 0 ? (
-          <Trans comment="Social proof below an article; the bolded name is someone who recommended it">
-            Recommended by{' '}
-            <Text emoji style={nameStyle}>
-              {name}
-            </Text>{' '}
-            <Plural
-              value={others}
-              one={`+${othersCount} other`}
-              other={`+${othersCount} others`}
-            />
-          </Trans>
-        ) : (
-          <Trans comment="Social proof below an article; the bolded name is the only person who recommended it">
-            Recommended by{' '}
-            <Text emoji style={nameStyle}>
-              {name}
-            </Text>
-          </Trans>
-        )}
+        {text}
       </Text>
     </View>
   )

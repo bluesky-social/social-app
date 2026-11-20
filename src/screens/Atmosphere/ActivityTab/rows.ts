@@ -43,7 +43,10 @@ export type ActivityContent =
   | {type: 'gallery'; view: app.bsky.embed.external.ViewGallery}
   | {type: 'livestream'; view: app.bsky.embed.external.ViewLivestream}
 
-/** One pill below the card, e.g. "Recommended by Danielle +2". */
+/**
+ * Activity on the card's content by people the viewer follows, named in its
+ * social proof, e.g. "Recommended by Danielle +2 others".
+ */
 export type RelatedActivity = {
   collection: typeof site.standard.graph.recommend.$type
   /** Actors to show, with moderated ones left out. Never empty. */
@@ -255,7 +258,7 @@ export function toViewContent(
 }
 
 /**
- * One pill per related collection. The timeline only includes profiles for
+ * One entry per related collection. The timeline only includes profiles for
  * the newest few actors of each, so `actors` can be shorter than
  * `actorCount` even before moderation.
  */
@@ -274,7 +277,7 @@ function toRelatedActivity(
     const actor = profiles.get(did)
     return actor && !isActorHidden(actor, moderationOpts) ? [actor] : []
   })
-  // With nobody left to name, there's no pill.
+  // With nobody left to name, the card falls back to its generic count.
   if (actors.length === 0) return []
   return [
     {

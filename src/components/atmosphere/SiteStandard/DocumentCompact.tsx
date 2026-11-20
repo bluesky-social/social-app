@@ -7,7 +7,10 @@ import {shareUrl} from '#/lib/sharing'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {AtmosphereCardMenu} from '#/screens/Atmosphere/components/AtmosphereCardMenu'
 import {atoms as a, extractPadding, useTheme, web} from '#/alf'
-import {DocumentActions} from '#/components/atmosphere/SiteStandard/DocumentActions'
+import {
+  DocumentActions,
+  type DocumentRecommenders,
+} from '#/components/atmosphere/SiteStandard/DocumentActions'
 import {DocumentPublicationRow} from '#/components/atmosphere/SiteStandard/DocumentPublicationRow'
 import type * as ssTypes from '#/components/atmosphere/SiteStandard/types'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -20,6 +23,8 @@ import {type app, site} from '#/lexicons'
 type DocumentCompactProps = ssTypes.PreviewProps &
   ssTypes.PublicApiProps & {
     view: app.bsky.embed.external.ViewArticle
+    /** Recommenders to name in the social proof, e.g. people the viewer follows. */
+    recommenders?: DocumentRecommenders
     /**
      * Applied to the outer wrapper around the article link and its menu, so
      * outer layout (margins, flex) moves both together.
@@ -60,6 +65,7 @@ function DocumentCompactBase({
   card,
   preview,
   view,
+  recommenders,
   onPressCallback,
   onShareCallback,
   style,
@@ -179,12 +185,18 @@ function DocumentCompactBase({
             </View>
           </View>
 
-          <DocumentActions ghost view={view} style={[a.pt_md]} />
+          <DocumentActions
+            ghost
+            view={view}
+            recommenders={recommenders}
+            style={[a.pt_md]}
+          />
         </View>
       </Link>
 
       <DocumentActions
         view={view}
+        recommenders={recommenders}
         interacted={interacted}
         onReadPress={onPress}
         style={[

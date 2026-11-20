@@ -84,6 +84,12 @@ const singleLikerDocument = {
   likers: likers.slice(0, 1),
 } satisfies app.bsky.embed.external.ViewArticle
 
+/* Like Discover and Following, which don't hydrate liker previews. */
+const noLikerPreviewsDocument = {
+  ...document,
+  likers: undefined,
+} satisfies app.bsky.embed.external.ViewArticle
+
 const noLikersDocument = {
   ...document,
   likeCount: 0,
@@ -125,8 +131,29 @@ export function SiteStandardStorybook() {
       </View>
 
       <View style={[a.gap_md]}>
+        <H2>Document compact card, recommenders you follow</H2>
+        <DocumentCompactCard
+          view={document}
+          recommenders={{actors: likers, actorCount: likers.length}}
+        />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document compact card, only recommender is someone you follow</H2>
+        <DocumentCompactCard
+          view={singleLikerDocument}
+          recommenders={{actors: likers.slice(0, 1), actorCount: 1}}
+        />
+      </View>
+
+      <View style={[a.gap_md]}>
         <H2>Document compact card, single recommender</H2>
         <DocumentCompactCard view={singleLikerDocument} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document compact card, no recommender previews</H2>
+        <DocumentCompactCard view={noLikerPreviewsDocument} />
       </View>
 
       <View style={[a.gap_md]}>

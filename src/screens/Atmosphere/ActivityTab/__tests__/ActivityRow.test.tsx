@@ -39,6 +39,7 @@ import {
 
 const mockLinkTo = jest.fn()
 const mockMetric = jest.fn()
+const mockDocumentCard = jest.fn()
 
 jest.mock('#/features/feedFeedback', () => ({useFeedFeedbackCore: jest.fn()}))
 jest.mock('#/state/session', () => ({
@@ -144,21 +145,22 @@ jest.mock('#/components/atmosphere/SiteStandard/DocumentCompact', () => {
   const {Pressable} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {
-    DocumentCompactCard: ({
-      onPressCallback,
-      onShareCallback,
-    }: {
+    DocumentCompactCard: (props: {
       onPressCallback: () => void
       onShareCallback?: () => void
-    }) => (
-      <Pressable
-        testID="documentCard"
-        accessibilityLabel="Article"
-        accessibilityHint=""
-        onPress={onPressCallback}
-        onLongPress={onShareCallback}
-      />
-    ),
+    }) => {
+      mockDocumentCard(props)
+      const {onPressCallback, onShareCallback} = props
+      return (
+        <Pressable
+          testID="documentCard"
+          accessibilityLabel="Article"
+          accessibilityHint=""
+          onPress={onPressCallback}
+          onLongPress={onShareCallback}
+        />
+      )
+    },
   }
 })
 jest.mock('#/components/atmosphere/SiteStandard/Publication', () => ({
@@ -248,7 +250,15 @@ describe('ActivityRow', () => {
       }),
     )
     expectHeader('Debbie Ridpath Ohi published an article', 'Leaflet')
-    expect(screen.getByText('Recommended by Danielle Yuhan +2')).toBeTruthy()
+    // The card names them in its social proof.
+    expect(mockDocumentCard).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        recommenders: expect.objectContaining({
+          actors: [danielle, caelin, paul],
+          actorCount: 3,
+        }),
+      }),
+    )
     expect(screen.queryByTestId('activityViewAll')).toBeNull()
   })
 

@@ -11,12 +11,14 @@ import {
 } from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
+import {type DocumentRecommenders} from '#/components/atmosphere/SiteStandard/DocumentActions'
 import {DocumentCompactCard} from '#/components/atmosphere/SiteStandard/DocumentCompact'
 import {PublicationCard} from '#/components/atmosphere/SiteStandard/Publication'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {site} from '#/lexicons'
 import {
   type ActivityCardRow,
   type ActivityContent,
@@ -26,7 +28,6 @@ import {ActivityContentHider} from './ActivityContentHider'
 import {ActivityHeader} from './ActivityHeader'
 import {GalleryCard} from './GalleryCard'
 import {LivestreamCard} from './LivestreamCard'
-import {RelatedActivityPill} from './RelatedActivityPill'
 
 export function ActivityRow({
   row,
@@ -71,12 +72,15 @@ function ActivityCard({
               activityReferrerGrouping: row.grouping,
             },
           )}>
-          <ActivityContentCard content={row.content} />
+          <ActivityContentCard
+            content={row.content}
+            recommenders={row.related.find(
+              related =>
+                related.collection === site.standard.graph.recommend.$type,
+            )}
+          />
         </AtmosphereContentItem>
       </ActivityContentHider>
-      {row.related.map(related => (
-        <RelatedActivityPill key={related.collection} related={related} />
-      ))}
       <ViewAllLink row={row} />
     </>
   )
@@ -90,7 +94,14 @@ export function ActivityWarning() {
   )
 }
 
-export function ActivityContentCard({content}: {content: ActivityContent}) {
+export function ActivityContentCard({
+  content,
+  recommenders,
+}: {
+  content: ActivityContent
+  /** Named in an article's social proof. */
+  recommenders?: DocumentRecommenders
+}) {
   const logPress = useLogContentPress()
   const sendFeedback = useAtmosphereFeedback()
   const onPress = () => {
@@ -103,6 +114,7 @@ export function ActivityContentCard({content}: {content: ActivityContent}) {
       return (
         <DocumentCompactCard
           view={content.view}
+          recommenders={recommenders}
           onPressCallback={onPress}
           onShareCallback={onShare}
         />
