@@ -1608,8 +1608,6 @@ export type Events = {
   'atmosphere:app:profilePressed': AtmosphereAppMetricContext & {
     source: 'featuredCard' | 'appDialog'
   }
-  /** The user pressed a featured app's "followers you know". */
-  'atmosphere:app:knownFollowersPressed': AtmosphereAppMetricContext
   /** The user picked another category in the Apps tab. */
   'atmosphere:apps:categorySelected': AtmosphereMetricContext & {
     /** Category key, e.g. `writing`, or `all`. */
