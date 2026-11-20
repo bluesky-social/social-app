@@ -22,6 +22,26 @@ const author = {
   displayName: 'Riley Rivers',
 } satisfies app.bsky.actor.defs.ProfileViewBasic
 
+const likers = [
+  {
+    did: 'did:plc:liker1liker1liker1liker1l',
+    handle: 'danielle.example.com',
+    displayName: 'danielle yuhan',
+    avatar: IMAGE,
+  },
+  {
+    did: 'did:plc:liker2liker2liker2liker2l',
+    handle: 'sam.example.com',
+    displayName: 'Sam Okafor',
+    avatar: IMAGE,
+  },
+  {
+    did: 'did:plc:liker3liker3liker3liker3l',
+    handle: 'jo.example.com',
+    avatar: IMAGE,
+  },
+] satisfies app.bsky.actor.defs.ProfileViewBasic[]
+
 const publication = {
   uri: 'https://example.com/field-notes',
   title: 'Field Notes',
@@ -44,7 +64,8 @@ const document = {
   image: IMAGE,
   createdAt: '2026-01-15T12:00:00.000Z',
   readingTime: 5,
-  likeCount: 23,
+  likeCount: 27,
+  likers,
   publisher: publication,
   associatedRefs: [
     {
@@ -54,6 +75,18 @@ const document = {
     ...publication.associatedRefs,
   ],
   associatedProfiles: [author],
+} satisfies app.bsky.embed.external.ViewArticle
+
+const singleLikerDocument = {
+  ...document,
+  likeCount: 1,
+  likers: likers.slice(0, 1),
+} satisfies app.bsky.embed.external.ViewArticle
+
+const noLikersDocument = {
+  ...document,
+  likeCount: 0,
+  likers: [],
 } satisfies app.bsky.embed.external.ViewArticle
 
 const leafletPublication = {
@@ -86,6 +119,16 @@ export function SiteStandardStorybook() {
       <View style={[a.gap_md]}>
         <H2>Document compact card, themed Leaflet publication</H2>
         <DocumentCompactCard view={leafletDocument} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document compact card, single recommender</H2>
+        <DocumentCompactCard view={singleLikerDocument} />
+      </View>
+
+      <View style={[a.gap_md]}>
+        <H2>Document compact card, no recommenders</H2>
+        <DocumentCompactCard view={noLikersDocument} />
       </View>
 
       <View style={[a.gap_md]}>

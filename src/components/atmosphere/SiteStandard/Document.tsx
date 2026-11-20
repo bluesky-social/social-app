@@ -176,6 +176,7 @@ export function Document({
 
       <DocumentActions
         view={view}
+        interacted={interacted}
         style={[a.absolute, a.left_0, a.right_0, a.bottom_0, actionsStyle]}
       />
 

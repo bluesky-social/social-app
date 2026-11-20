@@ -185,6 +185,7 @@ function DocumentCompactBase({
 
       <DocumentActions
         view={view}
+        interacted={interacted}
         style={[
           a.absolute,
           a.pt_md,
