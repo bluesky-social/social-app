@@ -32,12 +32,11 @@ export function ActivityTab() {
   const rows = data?.pages.flat() ?? []
   const onItemSeen = useLogContentImpression(rows, (row, position) => {
     if (row.kind !== 'card' || row.moderation.blur) return
-    return {
-      ...getContentMetricContextProps(row.content.type, row.content.view),
+    return getContentMetricContextProps(row.content.type, row.content.view, {
       position,
-      collection: row.collection,
-      grouping: row.grouping,
-    }
+      activityReferrerCollection: row.collection,
+      activityReferrerGrouping: row.grouping,
+    })
   })
   const metrics = useLoadMetrics({
     hasData: !!data,

@@ -389,13 +389,14 @@ it('opens the gallery link only after the dialog has closed', () => {
 
 it('logs presses as the photo dialog of the card it was opened from', () => {
   const card = {
-    contentType: 'gallery',
-    uri: 'https://grain.social/gallery/1',
+    uri: 'at://did:plc:6ayddqghxhciedbaofoxkcbs/social.grain.gallery/1',
+    collection: 'social.grain.gallery',
+    authorDid: 'did:plc:6ayddqghxhciedbaofoxkcbs',
     position: 4,
   } as const
   render(
     <AtmosphereMetricsScope tab="explore" surface="tab" isActive={false}>
-      <AtmosphereContentItem {...card} section="photos">
+      <AtmosphereContentItem item={{...card, section: 'photos'}}>
         <PhotoDialog
           control={{close: mockClose} as never}
           photo={gallery()}

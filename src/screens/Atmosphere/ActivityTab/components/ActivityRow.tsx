@@ -61,10 +61,15 @@ function ActivityCard({
       <ActivityHeader row={row} />
       <ActivityContentHider moderation={row.moderation}>
         <AtmosphereContentItem
-          {...getContentMetricContextProps(row.content.type, row.content.view)}
-          position={position}
-          collection={row.collection}
-          grouping={row.grouping}>
+          item={getContentMetricContextProps(
+            row.content.type,
+            row.content.view,
+            {
+              position,
+              activityReferrerCollection: row.collection,
+              activityReferrerGrouping: row.grouping,
+            },
+          )}>
           <ActivityContentCard content={row.content} />
         </AtmosphereContentItem>
       </ActivityContentHider>

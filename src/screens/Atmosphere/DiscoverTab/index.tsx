@@ -33,10 +33,11 @@ export function AtmosphereDiscoverTab() {
     data?.items ?? [],
     (item, position) => {
       if (item.moderation.blur) return
-      return {
-        ...getContentMetricContextProps(item.content.type, item.content.view),
-        position,
-      }
+      return getContentMetricContextProps(
+        item.content.type,
+        item.content.view,
+        {position},
+      )
     },
   )
   const metrics = useLoadMetrics({
@@ -146,8 +147,9 @@ function DiscoverCard({
       {row ? <ActivityHeader row={row} /> : null}
       <ActivityContentHider moderation={moderation}>
         <AtmosphereContentItem
-          {...getContentMetricContextProps(content.type, content.view)}
-          position={position}>
+          item={getContentMetricContextProps(content.type, content.view, {
+            position,
+          })}>
           <ActivityContentCard content={content} />
         </AtmosphereContentItem>
       </ActivityContentHider>

@@ -557,8 +557,9 @@ describe('AtmosphereCardMenu dev mode', () => {
 
 describe('AtmosphereCardMenu metrics', () => {
   const card = {
-    contentType: 'gallery',
-    uri: view.uri,
+    uri: galleryRef.uri,
+    collection: social.grain.gallery.$type,
+    authorDid: 'did:plc:6ayddqghxhciedbaofoxkcbs',
     position: 2,
   } as const
   const context = {tab: 'following', surface: 'tab', ...card}
@@ -566,7 +567,7 @@ describe('AtmosphereCardMenu metrics', () => {
   function renderInCard() {
     render(
       <AtmosphereMetricsScope tab="following" surface="tab" isActive={false}>
-        <AtmosphereContentItem {...card}>
+        <AtmosphereContentItem item={card}>
           <AtmosphereCardMenu
             type="photo"
             item={items.photo as never}

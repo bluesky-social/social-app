@@ -155,7 +155,12 @@ function renderGallery(items: unknown[]) {
   )
 }
 
-const card = {contentType: 'gallery', uri: URI, position: 0} as const
+const card = {
+  uri: 'at://did:plc:6ayddqghxhciedbaofoxkcbs/social.grain.gallery/1',
+  collection: 'social.grain.gallery',
+  authorDid: 'did:plc:6ayddqghxhciedbaofoxkcbs',
+  position: 0,
+} as const
 
 function renderInCard(items: unknown[]) {
   render(
@@ -163,7 +168,7 @@ function renderInCard(items: unknown[]) {
       tab="following"
       surface="photoDialog"
       isActive={false}>
-      <AtmosphereContentItem {...card}>
+      <AtmosphereContentItem item={card}>
         <PhotoDialogGallery
           photo={
             {

@@ -91,12 +91,18 @@ export function AtmosphereMetricsRestore({
   )
 }
 
-/** Gives a content card's presses, menu and dialog their attribution. */
+/**
+ * Gives a content card's presses, menu and dialog their attribution. Without
+ * an `item` they log nothing.
+ */
 export function AtmosphereContentItem({
   children,
-  ...item
-}: Item & {children: React.ReactNode}) {
-  return <ItemContext value={item}>{children}</ItemContext>
+  item,
+}: {
+  item: Item | undefined
+  children: React.ReactNode
+}) {
+  return <ItemContext value={item ?? null}>{children}</ItemContext>
 }
 
 /**
@@ -157,5 +163,5 @@ export function useLogContentImpression<T>(
 }
 
 function impressionKey(item: Item) {
-  return `${item.contentType}:${item.uri}`
+  return item.uri
 }

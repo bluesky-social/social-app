@@ -27,9 +27,10 @@ export function FeaturedPublications({
       {publications.map((publication, index) => (
         <AtmosphereContentItem
           key={publication.uri}
-          {...getContentMetricContextProps('publication', publication)}
-          section="publications"
-          position={index}>
+          item={getContentMetricContextProps('publication', publication, {
+            section: 'publications',
+            position: index,
+          })}>
           <Publication publication={publication} />
         </AtmosphereContentItem>
       ))}

@@ -15,17 +15,18 @@ jest.mock('#/analytics', () => ({
 }))
 
 const ITEM = {
-  contentType: 'article',
-  uri: 'https://example.com/a',
+  uri: 'at://did:plc:abc/site.standard.document/a',
+  collection: 'site.standard.document',
+  authorDid: 'did:plc:abc',
   position: 2,
 } as const
-const SECOND = {...ITEM, uri: 'https://example.com/b'}
-const THIRD = {...ITEM, uri: 'https://example.com/c'}
+const SECOND = {...ITEM, uri: 'at://did:plc:abc/site.standard.document/b'}
+const THIRD = {...ITEM, uri: 'at://did:plc:abc/site.standard.document/c'}
 type Row = {uri: string; blurred?: boolean}
 
 function getItem(row: Row, position: number) {
   if (row.blurred) return
-  return {contentType: 'article' as const, uri: row.uri, position}
+  return {...ITEM, uri: row.uri, position}
 }
 
 beforeEach(() => mockMetric.mockClear())
@@ -166,7 +167,7 @@ describe('content attribution', () => {
     }
     render(
       <AtmosphereMetricsScope tab="following" surface="tab" isActive>
-        <AtmosphereContentItem {...ITEM}>
+        <AtmosphereContentItem item={ITEM}>
           <Dialog />
         </AtmosphereContentItem>
       </AtmosphereMetricsScope>,

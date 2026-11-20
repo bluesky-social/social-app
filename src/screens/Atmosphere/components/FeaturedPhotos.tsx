@@ -34,9 +34,10 @@ export function FeaturedPhotos({
             {galleryFocus => (
               <View style={[a.flex_grow]}>
                 <AtmosphereContentItem
-                  {...getContentMetricContextProps('gallery', photo)}
-                  section="photos"
-                  position={index}>
+                  item={getContentMetricContextProps('gallery', photo, {
+                    section: 'photos',
+                    position: index,
+                  })}>
                   <View style={[a.flex_grow, {width: CARD_WIDTH}]}>
                     <PhotoCard photo={photo} galleryFocus={galleryFocus} />
                   </View>

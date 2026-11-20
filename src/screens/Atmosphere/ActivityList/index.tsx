@@ -89,10 +89,9 @@ function ActivityListContent({uris}: {uris: AtUriString[]}) {
   const items = data?.pages.flat() ?? []
   const onItemSeen = useLogContentImpression(items, (item, position) => {
     if (!item.content || item.moderation.blur) return
-    return {
-      ...getContentMetricContextProps(item.content.type, item.content.view),
+    return getContentMetricContextProps(item.content.type, item.content.view, {
       position,
-    }
+    })
   })
   const metrics = useLoadMetrics({
     hasData: !!data,
@@ -165,11 +164,11 @@ function ActivityListItem({item, position}: {item: Item; position: number}) {
       {item.content ? (
         <ActivityContentHider moderation={item.moderation}>
           <AtmosphereContentItem
-            {...getContentMetricContextProps(
+            item={getContentMetricContextProps(
               item.content.type,
               item.content.view,
-            )}
-            position={position}>
+              {position},
+            )}>
             <ActivityContentCard content={item.content} />
           </AtmosphereContentItem>
         </ActivityContentHider>

@@ -40,9 +40,10 @@ export function FeaturedArticles({
               />
             )}
             <AtmosphereContentItem
-              {...getContentMetricContextProps('article', article)}
-              section="articles"
-              position={index}>
+              item={getContentMetricContextProps('article', article, {
+                section: 'articles',
+                position: index,
+              })}>
               <Article article={article} />
             </AtmosphereContentItem>
           </Fragment>

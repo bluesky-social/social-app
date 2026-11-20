@@ -33,9 +33,10 @@ export function FeaturedLivestreams({
             {galleryFocus => (
               <View style={[a.flex_grow]}>
                 <AtmosphereContentItem
-                  {...getContentMetricContextProps('livestream', livestream)}
-                  section="livestreams"
-                  position={index}>
+                  item={getContentMetricContextProps('livestream', livestream, {
+                    section: 'livestreams',
+                    position: index,
+                  })}>
                   <LivestreamCard
                     livestream={livestream}
                     width={CARD_WIDTH}
