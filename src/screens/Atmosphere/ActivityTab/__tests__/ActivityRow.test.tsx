@@ -3,6 +3,10 @@ import {I18nProvider} from '@lingui/react'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {makeActivityListLink} from '#/screens/Atmosphere/ActivityList/links'
+import {
+  type AtmosphereFeedback,
+  AtmosphereFeedbackProvider,
+} from '#/screens/Atmosphere/feedback'
 import {AtmosphereMetricsScope} from '#/screens/Atmosphere/metrics/context'
 import {ActivityRow} from '../components/ActivityRow'
 import {getStreamDuration, isLive} from '../components/LivestreamCard'
@@ -36,6 +40,10 @@ import {
 const mockLinkTo = jest.fn()
 const mockMetric = jest.fn()
 
+jest.mock('#/features/feedFeedback', () => ({useFeedFeedbackCore: jest.fn()}))
+jest.mock('#/state/session', () => ({
+  useSession: () => ({hasSession: false}),
+}))
 jest.mock('#/analytics', () => ({
   useAnalytics: () => ({metric: mockMetric}),
 }))
@@ -133,9 +141,25 @@ jest.mock('#/state/preferences/moderation-opts', () => ({
   useModerationOpts: () => undefined,
 }))
 jest.mock('#/components/atmosphere/SiteStandard/DocumentCompact', () => {
-  const {View} =
+  const {Pressable} =
     jest.requireActual<typeof import('react-native')>('react-native')
-  return {DocumentCompactCard: () => <View testID="documentCard" />}
+  return {
+    DocumentCompactCard: ({
+      onPressCallback,
+      onShareCallback,
+    }: {
+      onPressCallback: () => void
+      onShareCallback?: () => void
+    }) => (
+      <Pressable
+        testID="documentCard"
+        accessibilityLabel="Article"
+        accessibilityHint=""
+        onPress={onPressCallback}
+        onLongPress={onShareCallback}
+      />
+    ),
+  }
 })
 jest.mock('#/components/atmosphere/SiteStandard/Publication', () => ({
   PublicationCard: () => null,
@@ -151,10 +175,12 @@ jest.mock('../components/LivestreamCard', () => ({
 
 i18n.loadAndActivate({locale: 'en', messages: {}})
 
-function renderRow(row: ActivityRowModel) {
+function renderRow(row: ActivityRowModel, feedback?: AtmosphereFeedback) {
   return render(
     <I18nProvider i18n={i18n}>
-      <ActivityRow row={row} position={0} />
+      <AtmosphereFeedbackProvider value={feedback}>
+        <ActivityRow row={row} position={0} />
+      </AtmosphereFeedbackProvider>
     </I18nProvider>,
   )
 }
@@ -177,6 +203,27 @@ function expectHeader(sentence: string, app?: string) {
 }
 
 describe('ActivityRow', () => {
+  it.each([true, false])(
+    'only sends clickthrough and share feedback inside a recommendation scope: %s',
+    inScope => {
+      const feedback = jest.fn()
+      const row = rowOf(
+        item({actor: debbie, collection: NSID.document, view: article()}),
+      )
+      renderRow(row, inScope ? feedback : undefined)
+      fireEvent.press(screen.getByTestId('documentCard'))
+      fireEvent(screen.getByTestId('documentCard'), 'longPress')
+      if (inScope) {
+        expect(feedback.mock.calls).toEqual([
+          ['app.bsky.feed.defs#clickthroughItem'],
+          ['app.bsky.feed.defs#interactionShare'],
+        ])
+      } else {
+        expect(feedback).not.toHaveBeenCalled()
+      }
+    },
+  )
+
   it('masks a card the user can click through until they reveal it', () => {
     renderEntry(
       item({

@@ -7,8 +7,8 @@ export type PreviewProps = {
 }
 
 export type PublicApiProps = {
-  /**
-   * Passed down from feed contexts etc, used to fire off interaction tracking
-   */
-  onEmbedInteractionCallback?: () => void
+  /** Called when the card's primary link is pressed. */
+  onPressCallback?: () => void
+  /** Called when a native long press opens the share sheet. */
+  onShareCallback?: () => void
 }

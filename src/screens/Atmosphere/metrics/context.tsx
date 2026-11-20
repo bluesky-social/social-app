@@ -34,6 +34,11 @@ export function AtmosphereMetricsScope({
   return <ScopeContext value={scope}>{children}</ScopeContext>
 }
 
+/** Whether this Atmosphere surface is focused, foregrounded, and selected. */
+export function useAtmosphereIsActive() {
+  return useContext(ScopeContext)?.isActive ?? false
+}
+
 /** The tab and surface to log, or undefined outside Atmosphere. */
 export function useAtmosphereMetricContext() {
   const scope = useContext(ScopeContext)

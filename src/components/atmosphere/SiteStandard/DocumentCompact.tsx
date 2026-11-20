@@ -60,7 +60,8 @@ function DocumentCompactBase({
   card,
   preview,
   view,
-  onEmbedInteractionCallback,
+  onPressCallback,
+  onShareCallback,
   style,
   containerStyle,
 }: DocumentCompactProps & {card: boolean}) {
@@ -81,13 +82,14 @@ function DocumentCompactBase({
 
   const onPress = () => {
     haptics.tap()
-    onEmbedInteractionCallback?.()
+    onPressCallback?.()
     ax.metric('embed:standardSite:article:press', {url: view.uri})
   }
   const onLongPress = IS_NATIVE
     ? () => {
         if (view.uri) {
           haptics.longPress()
+          onShareCallback?.()
           void shareUrl(view.uri)
           ax.metric('embed:standardSite:article:longPress', {url: view.uri})
         }

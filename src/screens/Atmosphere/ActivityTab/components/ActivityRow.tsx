@@ -2,6 +2,7 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {makeActivityListLink} from '#/screens/Atmosphere/ActivityList/links'
+import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
 import {getContentMetricContextProps} from '#/screens/Atmosphere/metrics/content'
 import {
   AtmosphereContentItem,
@@ -91,19 +92,27 @@ export function ActivityWarning() {
 
 export function ActivityContentCard({content}: {content: ActivityContent}) {
   const logPress = useLogContentPress()
+  const sendFeedback = useAtmosphereFeedback()
+  const onPress = () => {
+    logPress('external')
+    sendFeedback?.('app.bsky.feed.defs#clickthroughItem')
+  }
+  const onShare = () => sendFeedback?.('app.bsky.feed.defs#interactionShare')
   switch (content.type) {
     case 'article':
       return (
         <DocumentCompactCard
           view={content.view}
-          onEmbedInteractionCallback={() => logPress('external')}
+          onPressCallback={onPress}
+          onShareCallback={onShare}
         />
       )
     case 'publication':
       return (
         <PublicationCard
           view={content.view}
-          onEmbedInteractionCallback={() => logPress('external')}
+          onPressCallback={onPress}
+          onShareCallback={onShare}
         />
       )
     case 'gallery':

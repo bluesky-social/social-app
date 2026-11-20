@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.138.0",
+  "version": "1.139.0",
   "private": true,
   "sideEffects": [
     "*.css",
@@ -29,8 +29,7 @@
     "autolinking": {
       "android": {
         "buildFromSource": [
-          "expo-notifications",
-          "expo-media-library"
+          "expo-notifications"
         ]
       }
     },

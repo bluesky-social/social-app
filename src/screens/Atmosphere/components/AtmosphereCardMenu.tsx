@@ -9,6 +9,7 @@ import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {useRequireAuth, useSession} from '#/state/session'
+import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
 import {
   useAtmosphereContentContext,
   useAtmosphereMetricContext,
@@ -23,6 +24,10 @@ import {Mark as BlueskyIcon} from '#/components/icons/brands/Mark'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
+import {
+  EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
+  EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,
+} from '#/components/icons/Emoji'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import {Person_Stroke2_Corner0_Rounded as PersonIcon} from '#/components/icons/Person'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ExternalLinkIcon} from '#/components/icons/Square'
@@ -110,6 +115,7 @@ export function AtmosphereCardMenu({
   const ax = useAnalytics()
   const metricContext = useAtmosphereMetricContext()
   const content = useAtmosphereContentContext()
+  const sendFeedback = useAtmosphereFeedback()
   const logAction = (
     action: Metrics['atmosphere:menu:action']['action'],
     reportCollection?: string,
@@ -231,6 +237,7 @@ export function AtmosphereCardMenu({
               label={shareLabel}
               onPress={() => {
                 logAction(IS_WEB ? 'copyLink' : 'share')
+                sendFeedback?.('app.bsky.feed.defs#interactionShare')
                 void shareUrl(item.uri)
               }}>
               <Menu.ItemText>{shareLabel}</Menu.ItemText>
@@ -265,11 +272,49 @@ export function AtmosphereCardMenu({
             )}
           </Menu.Group>
           <Menu.Divider />
+          {sendFeedback && hasSession && (
+            <>
+              <Menu.Group>
+                <Menu.Item
+                  testID="atmosphereCardShowMore"
+                  label={l`Show more like this`}
+                  onPress={() => {
+                    sendFeedback('app.bsky.feed.defs#requestMore')
+                    Toast.show(
+                      l({
+                        message: 'Feedback sent to feed operator',
+                        context: 'toast',
+                      }),
+                    )
+                  }}>
+                  <Menu.ItemText>{l`Show more like this`}</Menu.ItemText>
+                  <Menu.ItemIcon icon={EmojiSmile} position="right" />
+                </Menu.Item>
+                <Menu.Item
+                  testID="atmosphereCardShowLess"
+                  label={l`Show less like this`}
+                  onPress={() => {
+                    sendFeedback('app.bsky.feed.defs#requestLess')
+                    Toast.show(
+                      l({
+                        message: 'Feedback sent to feed operator',
+                        context: 'toast',
+                      }),
+                    )
+                  }}>
+                  <Menu.ItemText>{l`Show less like this`}</Menu.ItemText>
+                  <Menu.ItemIcon icon={EmojiSad} position="right" />
+                </Menu.Item>
+              </Menu.Group>
+              <Menu.Divider />
+            </>
+          )}
           <Menu.Group>
             <Menu.Item
               label={labels.view}
               onPress={() => {
                 logAction('viewExternal')
+                sendFeedback?.('app.bsky.feed.defs#clickthroughItem')
                 openLink(item.uri)
               }}>
               <Menu.ItemText>{labels.view}</Menu.ItemText>
@@ -280,6 +325,7 @@ export function AtmosphereCardMenu({
                 label={l`View author profile`}
                 onPress={() => {
                   logAction('viewProfile')
+                  sendFeedback?.('app.bsky.feed.defs#clickthroughAuthor')
                   if (metricContext) {
                     ax.metric('atmosphere:profile:press', {
                       ...metricContext,
@@ -316,7 +362,25 @@ export function AtmosphereCardMenu({
                           ? parsedSubject.nsid
                           : undefined,
                       )
-                      reportDialogControl.open({subject})
+                      reportDialogControl.open({
+                        subject,
+                        ...(sendFeedback
+                          ? {
+                              onAfterSubmit: ({
+                                reason,
+                              }: {
+                                reason: string | undefined
+                              }) =>
+                                sendFeedback(
+                                  'app.bsky.feed.defs#interactionUnspecced',
+                                  {
+                                    type: 'report',
+                                    reason,
+                                  },
+                                ),
+                            }
+                          : {}),
+                      })
                     }}>
                     <Menu.ItemText>{title}</Menu.ItemText>
                     <Menu.ItemIcon icon={WarningIcon} position="right" />
@@ -357,12 +421,13 @@ export function AtmosphereCardMenu({
         {/* Outside Menu.Outer so it stays mounted after the menu closes. */}
         <SendViaChatDialog
           control={sendViaChatControl}
-          onSelectChat={conversation =>
+          onSelectChat={conversation => {
+            sendFeedback?.('app.bsky.feed.defs#interactionShare')
             navigation.navigate('MessagesConversation', {
               conversation,
               text: item.uri,
             })
-          }
+          }}
         />
       </Menu.Root>
     </View>

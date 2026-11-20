@@ -2,6 +2,7 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List} from '#/view/com/util/List'
 import {ActivityContentHider} from '#/screens/Atmosphere/ActivityTab/components/ActivityContentHider'
@@ -10,6 +11,11 @@ import {ActivityContentCard} from '#/screens/Atmosphere/ActivityTab/components/A
 import {type ActivityCardRow} from '#/screens/Atmosphere/ActivityTab/rows'
 import {AtmosphereNux} from '#/screens/Atmosphere/components/AtmosphereNux'
 import {getAssociatedProfile} from '#/screens/Atmosphere/data/exploreData'
+import {
+  type AtmosphereFeedback,
+  AtmosphereFeedbackProvider,
+  useDiscoverFeedback,
+} from '#/screens/Atmosphere/feedback'
 import {getContentMetricContextProps} from '#/screens/Atmosphere/metrics/content'
 import {
   AtmosphereContentItem,
@@ -29,7 +35,8 @@ export function AtmosphereDiscoverTab() {
   const {t: l} = useLingui()
   const {data, isError, refetch} = useAtmosphereRecommendedActivityQuery()
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const onItemSeen = useLogContentImpression(
+  const feedback = useDiscoverFeedback(data)
+  const logImpression = useLogContentImpression(
     data?.items ?? [],
     (item, position) => {
       if (item.moderation.blur) return
@@ -38,6 +45,12 @@ export function AtmosphereDiscoverTab() {
         item.content.view,
         {position},
       )
+    },
+  )
+  const onItemSeen = useNonReactiveCallback(
+    (item: DiscoverItem, position: number | undefined) => {
+      logImpression(item, position)
+      feedback.onItemSeen(item, position)
     },
   )
   const metrics = useLoadMetrics({
@@ -69,9 +82,15 @@ export function AtmosphereDiscoverTab() {
     <List
       testID="atmosphereDiscoverTab"
       data={data?.items ?? []}
-      keyExtractor={(item: DiscoverItem) => item.content.view.uri}
+      keyExtractor={(item: DiscoverItem) =>
+        `${item.reqId}:${item.content.view.uri}`
+      }
       renderItem={({item, index}: {item: DiscoverItem; index: number}) => (
-        <DiscoverCard item={item} position={index} />
+        <DiscoverCard
+          item={item}
+          position={index}
+          feedback={feedback.forItem(item)}
+        />
       )}
       onItemSeen={onItemSeen}
       refreshing={isRefreshing}
@@ -109,10 +128,12 @@ export function AtmosphereDiscoverTab() {
 function DiscoverCard({
   item: {content, moderation},
   position,
+  feedback,
 }: {
   item: DiscoverItem
   /** 0-based, in the list. */
   position: number
+  feedback: AtmosphereFeedback | undefined
 }) {
   const t = useTheme()
   /** Infer a creation event; the recommendation response has no activities. */
@@ -149,7 +170,9 @@ function DiscoverCard({
           item={getContentMetricContextProps(content.type, content.view, {
             position,
           })}>
-          <ActivityContentCard content={content} />
+          <AtmosphereFeedbackProvider value={feedback}>
+            <ActivityContentCard content={content} />
+          </AtmosphereFeedbackProvider>
         </AtmosphereContentItem>
       </ActivityContentHider>
     </View>

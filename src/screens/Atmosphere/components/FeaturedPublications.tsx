@@ -47,7 +47,7 @@ function Publication({
   return (
     <PublicationCard
       view={publication}
-      onEmbedInteractionCallback={() => logPress('external')}
+      onPressCallback={() => logPress('external')}
     />
   )
 }

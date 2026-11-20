@@ -9,6 +9,10 @@ import {formatCount} from '#/view/com/util/numeric/format'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {getGalleryImages} from '#/screens/Atmosphere/data/exploreData'
 import {
+  AtmosphereFeedbackProvider,
+  useAtmosphereFeedback,
+} from '#/screens/Atmosphere/feedback'
+import {
   AtmosphereMetricsRestore,
   useAtmosphereContentContext,
   useAtmosphereMetricContext,
@@ -42,6 +46,7 @@ export function PhotoDialog({
 }) {
   const {t: l} = useLingui()
   const metricsSnapshot = useAtmosphereMetricsSnapshot()
+  const sendFeedback = useAtmosphereFeedback()
   const title = photo.title
 
   return (
@@ -58,7 +63,13 @@ export function PhotoDialog({
           <AtmosphereMetricsRestore
             snapshot={metricsSnapshot}
             surface="photoDialog">
-            <PhotoDialogInner control={control} photo={photo} author={author} />
+            <AtmosphereFeedbackProvider value={sendFeedback}>
+              <PhotoDialogInner
+                control={control}
+                photo={photo}
+                author={author}
+              />
+            </AtmosphereFeedbackProvider>
           </AtmosphereMetricsRestore>
           <Dialog.Close />
         </Dialog.ScrollableInner>
@@ -83,6 +94,7 @@ function PhotoDialogInner({
   const ax = useAnalytics()
   const metricContext = useAtmosphereMetricContext()
   const content = useAtmosphereContentContext()
+  const sendFeedback = useAtmosphereFeedback()
 
   const createdAt = photo.createdAt
   const hasDate = !!createdAt && !Number.isNaN(Date.parse(createdAt))
@@ -201,6 +213,7 @@ function PhotoDialogInner({
               source: 'cta',
             })
           }
+          sendFeedback?.('app.bsky.feed.defs#clickthroughItem')
           control.close(() => openLink(photo.uri))
         }}>
         <View style={[a.p_2xs, a.rounded_xs, {backgroundColor: 'white'}]}>

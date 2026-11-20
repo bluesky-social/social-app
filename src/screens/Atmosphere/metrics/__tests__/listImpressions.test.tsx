@@ -12,6 +12,12 @@ let mockFocused = true
 let mockSetFocused: React.Dispatch<React.SetStateAction<boolean>> | undefined
 let mockData: unknown[] = []
 
+jest.mock('#/state/session', () => ({
+  useSession: () => ({hasSession: false}),
+}))
+jest.mock('#/features/feedFeedback', () => ({
+  useFeedFeedbackCore: () => ({enabled: false, sendInteraction: () => {}}),
+}))
 jest.mock('#/analytics', () => ({
   useAnalytics: () => ({
     metric: mockMetric,

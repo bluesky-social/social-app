@@ -22,7 +22,8 @@ import {type app, site} from '#/lexicons'
 export function Document({
   preview,
   view,
-  onEmbedInteractionCallback,
+  onPressCallback,
+  onShareCallback,
   style,
 }: ssTypes.PreviewProps &
   ssTypes.PublicApiProps & {
@@ -52,13 +53,14 @@ export function Document({
   } = useInteractionState()
   const onPress = () => {
     haptics.tap()
-    onEmbedInteractionCallback?.()
+    onPressCallback?.()
     ax.metric('embed:standardSite:article:press', {url: view.uri})
   }
   const onLongPress = IS_NATIVE
     ? () => {
         if (view.uri) {
           haptics.longPress()
+          onShareCallback?.()
           void shareUrl(view.uri)
           ax.metric('embed:standardSite:article:longPress', {url: view.uri})
         }
