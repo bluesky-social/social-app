@@ -198,7 +198,7 @@ function PhotoDialogInner({
           if (content) {
             ax.metric('atmosphere:photo:externalPressed', {
               ...content,
-              source: 'viewOnGrain',
+              source: 'cta',
             })
           }
           control.close(() => openLink(photo.uri))

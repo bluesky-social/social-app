@@ -1627,11 +1627,12 @@ export type Events = {
     imageCount: number
   }
   /**
-   * The user pressed an image or "View on Grain" to open the gallery on Grain.
-   * imageIndex identifies the pressed image. Does not confirm the gallery opened.
+   * The user pressed an image, or the dialog's call-to-action button (`cta`,
+   * e.g. "View on Grain"), to open the gallery in its photo app. imageIndex
+   * identifies the pressed image. Does not confirm the gallery opened.
    */
   'atmosphere:photo:externalPressed': AtmosphereContentMetricContext & {
-    source: 'image' | 'viewOnGrain'
+    source: 'image' | 'cta'
     imageIndex?: number
   }
   /**

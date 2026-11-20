@@ -424,6 +424,6 @@ it('logs presses as the photo dialog of the card it was opened from', () => {
         source: 'photoDialog',
       },
     ],
-    ['atmosphere:photo:externalPressed', {...context, source: 'viewOnGrain'}],
+    ['atmosphere:photo:externalPressed', {...context, source: 'cta'}],
   ])
 })
