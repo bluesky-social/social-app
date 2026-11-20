@@ -117,7 +117,6 @@ function ActivityListContent({uris}: {uris: AtUriString[]}) {
       <ErrorMessage
         message={l`Could not load activity. Please try again.`}
         onPressTryAgain={() => {
-          metrics.logRetry('initial')
           void refetch()
         }}
       />
@@ -146,10 +145,7 @@ function ActivityListContent({uris}: {uris: AtUriString[]}) {
           isFetchingNextPage={isFetchingNextPage}
           hasNextPage={hasNextPage}
           error={isError ? cleanError(error) : undefined}
-          onRetry={() => {
-            metrics.logRetry('pagination')
-            return fetchNextPage()
-          }}
+          onRetry={() => fetchNextPage()}
         />
       }
       sideBorders={false}

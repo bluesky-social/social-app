@@ -5,7 +5,7 @@ import {useAtmosphereMetricsSnapshot} from './context'
 
 /**
  * Logs the load health of a tab or activity list: its first load, and the
- * user's refreshes, retries and further pages. Logs nothing outside a scope.
+ * user's refreshes and further pages. Logs nothing outside a scope.
  */
 export function useLoadMetrics({
   hasData,
@@ -29,19 +29,16 @@ export function useLoadMetrics({
   const context = scope && {tab: scope.tab, surface: scope.surface}
   const isActive = !!scope?.isActive
   const logged = useRef(false)
-  const hadDataOnFirstDisplay = useRef<boolean | undefined>(undefined)
   const pageCount = useRef(pages?.length ?? 0)
 
   useEffect(() => {
     if (!context || !isActive || logged.current) return
-    hadDataOnFirstDisplay.current ??= hasData
     if (!hasData && !isError) return
 
     ax.metric('atmosphere:content:loaded', {
       ...context,
       state: !hasData ? 'error' : itemCount ? 'populated' : 'empty',
       itemCount,
-      hasCachedData: hadDataOnFirstDisplay.current,
     })
     logged.current = true
   })
@@ -79,9 +76,6 @@ export function useLoadMetrics({
   return {
     logRefresh() {
       if (context) ax.metric('atmosphere:content:refresh', context)
-    },
-    logRetry(phase: 'initial' | 'pagination') {
-      if (context) ax.metric('atmosphere:content:retry', {...context, phase})
     },
   }
 }

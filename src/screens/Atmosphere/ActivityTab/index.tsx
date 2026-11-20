@@ -62,7 +62,6 @@ export function ActivityTab() {
       <ErrorMessage
         message={l`Could not load activity. Please try again.`}
         onPressTryAgain={() => {
-          metrics.logRetry('initial')
           void refetch()
         }}
       />
@@ -95,10 +94,7 @@ export function ActivityTab() {
           isFetchingNextPage={isFetchingNextPage}
           hasNextPage={hasNextPage}
           error={isError ? cleanError(error) : undefined}
-          onRetry={() => {
-            metrics.logRetry('pagination')
-            return fetchNextPage()
-          }}
+          onRetry={() => fetchNextPage()}
         />
       }
       sideBorders={false}

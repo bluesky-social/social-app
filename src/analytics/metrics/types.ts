@@ -1643,18 +1643,9 @@ export type Events = {
   'atmosphere:content:loaded': AtmosphereMetricContext & {
     state: 'populated' | 'empty' | 'error'
     itemCount: number
-    /** Whether it already had data, e.g. cached, when it came into view. */
-    hasCachedData: boolean
   }
   /** The user pulled to refresh a tab or activity list. */
   'atmosphere:content:refresh': AtmosphereMetricContext
-  /**
-   * The user retried after an error, reloading everything (`initial`) or
-   * the next page (`pagination`).
-   */
-  'atmosphere:content:retry': AtmosphereMetricContext & {
-    phase: 'initial' | 'pagination'
-  }
   /**
    * Following or the activity list added a page after the initial load.
    * Initial/cached pages and refetches with no added pages do not count.

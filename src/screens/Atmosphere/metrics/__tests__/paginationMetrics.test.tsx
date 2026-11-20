@@ -241,11 +241,6 @@ describe.each([
         {tab, surface, pageIndex: 1, itemCount: 1, totalItemCount: 3},
       ],
     ])
-    expect(mockMetric).toHaveBeenCalledWith('atmosphere:content:retry', {
-      tab,
-      surface,
-      phase: 'pagination',
-    })
   })
 
   it('does not count refetched pages and allows pagination after a reset', async () => {

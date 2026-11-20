@@ -60,7 +60,6 @@ export function AtmosphereDiscoverTab() {
     <ErrorMessage
       message={l`Could not load recommendations. Please try again.`}
       onPressTryAgain={() => {
-        metrics.logRetry('initial')
         void refetch()
       }}
     />
