@@ -20,5 +20,10 @@ class ExpoPlatformInfoModule : Module() {
           return@Function false
         }
       }
+
+      Function("reportFullyDrawn") {
+        val activity = appContext.currentActivity
+        activity?.runOnUiThread { activity.reportFullyDrawn() }
+      }
     }
 }
