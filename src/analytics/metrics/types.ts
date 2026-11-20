@@ -1586,7 +1586,7 @@ export type Events = {
    * is not counted (bluesky-social/toolbox#95; not tested on-device).
    */
   'atmosphere:content:press': AtmosphereContentMetricContext & {
-    target: 'external' | 'photoDialog'
+    destination: 'external' | 'photoDialog'
   }
   /** The user pressed a link to someone's profile. */
   'atmosphere:profile:press': AtmosphereMetricContext & {

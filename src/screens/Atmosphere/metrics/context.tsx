@@ -55,8 +55,9 @@ export function useAtmosphereContentContext() {
 export function useLogContentPress() {
   const ax = useAnalytics()
   const content = useAtmosphereContentContext()
-  return (target: 'external' | 'photoDialog') => {
-    if (content) ax.metric('atmosphere:content:press', {...content, target})
+  return (destination: 'external' | 'photoDialog') => {
+    if (content)
+      ax.metric('atmosphere:content:press', {...content, destination})
   }
 }
 

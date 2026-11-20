@@ -177,7 +177,7 @@ describe('content attribution', () => {
       tab: 'following',
       surface: 'photoDialog',
       ...ITEM,
-      target: 'photoDialog',
+      destination: 'photoDialog',
     })
   })
 })
