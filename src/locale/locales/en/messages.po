@@ -6205,6 +6205,11 @@ msgstr ""
 msgid "Feed menu"
 msgstr ""
 
+#. Name for a feature flag
+#: src/analytics/features/index.ts:150
+msgid "Feed rendering improvements"
+msgstr "Feed rendering improvements"
+
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:58
 msgid "Feed toggle"
 msgstr ""
@@ -6244,6 +6249,11 @@ msgstr ""
 #: src/view/com/home/HomeHeader.tsx:37
 msgid "Feeds ✨"
 msgstr "Feeds ✨"
+
+#. Description of a feature flag (Feed rendering improvements)
+#: src/analytics/features/index.ts:156
+msgid "Feeds and lists keep only nearby posts in the page, so performance stays steady however far you scroll."
+msgstr "Feeds and lists keep only nearby posts in the page, so performance stays steady however far you scroll."
 
 #: src/screens/SavedFeeds.tsx:227
 #: src/screens/SavedFeeds.tsx:398
