@@ -2,6 +2,7 @@ import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
+import {ZoomTransition} from '@bsky.app/expo-bluesky-swiss-army'
 import {type ModerationDecision} from '@bsky/sdk/moderation'
 import {useLingui} from '@lingui/react/macro'
 
@@ -20,6 +21,7 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
+import {IS_IOS} from '#/env'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
@@ -116,6 +118,7 @@ export function VideoPostCard({
         params: {
           ...sourceContext,
           initialPostUri: post.uri,
+          zoomTransition: IS_IOS ? true : undefined,
         },
       }}
       onPress={() => {
@@ -132,7 +135,8 @@ export function VideoPostCard({
       ]}>
       <Hider.Outer modui={mergedModui}>
         <Hider.Mask>
-          <View
+          <ZoomTransition.Source
+            identifier={post.uri}
             style={[
               a.justify_center,
               a.rounded_md,
@@ -168,7 +172,7 @@ export function VideoPostCard({
                 <Text style={[a.text_sm, {color: 'white'}]}>{l`Hidden`}</Text>
               </View>
             </View>
-          </View>
+          </ZoomTransition.Source>
           {listModUi.blur ? (
             <VideoPostCardTextPlaceholder author={post.author} />
           ) : (
@@ -176,7 +180,8 @@ export function VideoPostCard({
           )}
         </Hider.Mask>
         <Hider.Content>
-          <View
+          <ZoomTransition.Source
+            identifier={post.uri}
             style={[
               a.justify_center,
               a.rounded_md,
@@ -234,7 +239,7 @@ export function VideoPostCard({
                 </View>
               </View>
             </View>
-          </View>
+          </ZoomTransition.Source>
           {textAndAuthor}
         </Hider.Content>
       </Hider.Outer>
@@ -393,6 +398,7 @@ export function CompactVideoPostCard({
         params: {
           ...sourceContext,
           initialPostUri: post.uri,
+          zoomTransition: IS_IOS ? true : undefined,
         },
       }}
       onPress={() => {
@@ -411,7 +417,8 @@ export function CompactVideoPostCard({
       ]}>
       <Hider.Outer modui={mergedModui}>
         <Hider.Mask>
-          <View
+          <ZoomTransition.Source
+            identifier={post.uri}
             style={[
               a.justify_center,
               a.rounded_xl,
@@ -451,10 +458,11 @@ export function CompactVideoPostCard({
                 <Text style={[a.text_sm, {color: 'white'}]}>{l`Hidden`}</Text>
               </View>
             </View>
-          </View>
+          </ZoomTransition.Source>
         </Hider.Mask>
         <Hider.Content>
-          <View
+          <ZoomTransition.Source
+            identifier={post.uri}
             style={[
               a.justify_center,
               a.rounded_xl,
@@ -530,7 +538,7 @@ export function CompactVideoPostCard({
                 </View>
               )}
             </View>
-          </View>
+          </ZoomTransition.Source>
         </Hider.Content>
       </Hider.Outer>
     </Link>

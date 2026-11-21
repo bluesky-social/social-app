@@ -124,7 +124,13 @@ export type CommonNavigatorParams = {
     onSuccess?: () => void
   }
   StarterPackEdit: {rkey?: string}
-  VideoFeed: VideoFeedSourceContext
+  VideoFeed: VideoFeedSourceContext & {
+    /**
+     * iOS only. Zoom in from the video card with the matching post URI. Set
+     * by `VideoPostCard`; deep links open with the normal transition.
+     */
+    zoomTransition?: boolean
+  }
   Bookmarks: undefined
   FindContactsFlow: undefined
 }

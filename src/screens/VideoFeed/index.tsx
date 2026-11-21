@@ -24,6 +24,7 @@ import {Image, type ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {createVideoPlayer, type VideoPlayer, VideoView} from 'expo-video'
 import {AtUri} from '@atproto/syntax'
+import {ZoomTransition} from '@bsky.app/expo-bluesky-swiss-army'
 import {type ModerationDecision} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -453,8 +454,23 @@ function Feed() {
 
   const renderEndMessage = useCallback(() => <EndMessage />, [])
 
+  /*
+   * Zoom back into the card for whichever video is showing, not just the one
+   * that was tapped. If that card isn't on screen, UIKit falls back to a zoom
+   * with no source.
+   */
+  const zoomSourceUri =
+    videos.at(currentIndex)?.post.uri ?? params.initialPostUri
+
   return (
     <FeedFeedbackProvider value={feedFeedback}>
+      {params.zoomTransition && (
+        <ZoomTransition.Enabler
+          sourceIdentifier={zoomSourceUri}
+          // Vertical swipes page between videos, so only a back swipe dismisses
+          dismissGesture="horizontal"
+        />
+      )}
       <GestureDetector gesture={scrollGesture}>
         <List
           disableTabletLayout
