@@ -1,0 +1,19 @@
+# Gitignored local files to copy into new worktrees. Read by Claude Code and
+# Paseo from the checkout the worktree is created from. Uses .gitignore syntax,
+# and only files that are also gitignored get copied.
+#
+# Keep patterns anchored with a leading / so they can't match files inside
+# node_modules (some packages ship their own .env).
+
+# Expo env vars (.env.e2e and .env.example are tracked, so never copied)
+/.env
+/.env.*
+
+# Firebase config for Android builds
+/google-services.json
+
+# bskyweb dev server config
+/bskyweb/.env
+
+# Personal Claude Code settings, e.g. permission allowlists
+/.claude/settings.local.json
