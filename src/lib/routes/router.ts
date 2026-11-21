@@ -49,7 +49,10 @@ function createRoute(pattern: string): Route {
       const {pathname, searchParams} = new URL(path, 'http://throwaway.com')
       const addedParams = Object.fromEntries(searchParams.entries())
 
-      const res = matcherRe.exec(pathname)
+      const normalizedPathname =
+        pathname === '/' ? pathname : pathname.replace(/\/+$/, '')
+
+      const res = matcherRe.exec(normalizedPathname)
       if (res) {
         return {params: Object.assign(addedParams, res.groups || {})}
       }
