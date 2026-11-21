@@ -2,7 +2,10 @@ import {
   type KeyboardStickyViewProps,
   useReanimatedKeyboardAnimation,
 } from 'react-native-keyboard-controller'
-import Animated, {useAnimatedStyle} from 'react-native-reanimated'
+import Animated, {
+  useAnimatedStyle,
+  useDerivedValue,
+} from 'react-native-reanimated'
 
 // Vendored from https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/src/components/KeyboardStickyView/index.tsx
 // Converted to Reanimated to support `minimumOffset` clamping.
@@ -21,24 +24,22 @@ export function KeyboardStickyView({
 }) {
   const {height, progress} = useReanimatedKeyboardAnimation()
 
-  const animatedStyle = useAnimatedStyle(() => {
+  // Derived so frames where the clamped offset stays the same are skipped
+  const translateY = useDerivedValue(() => {
     const offset = closed + (opened - closed) * progress.get()
-    let translateY: number
-
-    if (enabled) {
-      let h = height.get()
-      if (minimumOffset != null) {
-        h = Math.min(h, -minimumOffset)
-      }
-      translateY = h + offset
-    } else {
-      translateY = closed
+    if (!enabled) {
+      return closed
     }
-
-    return {
-      transform: [{translateY}],
+    let h = height.get()
+    if (minimumOffset != null) {
+      h = Math.min(h, -minimumOffset)
     }
+    return h + offset
   })
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{translateY: translateY.get()}],
+  }))
 
   return (
     <Animated.View style={[animatedStyle, style]} {...props}>
