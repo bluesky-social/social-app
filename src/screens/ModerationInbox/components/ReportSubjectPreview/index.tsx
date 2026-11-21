@@ -28,10 +28,12 @@ export function ReportSubjectPreview({
   report,
   enforcement,
   allowOwnRecordSnapshot = false,
+  allowReportRecordSnapshot = false,
 }: {
   report: Report
   enforcement?: tools.ozone.inbox.defs.EnforcementView
   allowOwnRecordSnapshot?: boolean
+  allowReportRecordSnapshot?: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -76,20 +78,45 @@ export function ReportSubjectPreview({
             uri={uri}
             subjectLabel={subjectLabel}
             allowOwnRecordSnapshot={allowOwnRecordSnapshot}
+            allowReportRecordSnapshot={allowReportRecordSnapshot}
           />
         )
         break
       case 'app.bsky.graph.starterpack':
-        preview = <StarterPackSubjectPreview report={report} uri={uri} />
+        preview = (
+          <StarterPackSubjectPreview
+            report={report}
+            uri={uri}
+            allowReportRecordSnapshot={allowReportRecordSnapshot}
+          />
+        )
         break
       case 'app.bsky.feed.generator':
-        preview = <FeedSubjectPreview report={report} uri={uri} />
+        preview = (
+          <FeedSubjectPreview
+            report={report}
+            uri={uri}
+            allowReportRecordSnapshot={allowReportRecordSnapshot}
+          />
+        )
         break
       case 'app.bsky.graph.list':
-        preview = <ListSubjectPreview report={report} uri={uri} />
+        preview = (
+          <ListSubjectPreview
+            report={report}
+            uri={uri}
+            allowReportRecordSnapshot={allowReportRecordSnapshot}
+          />
+        )
         break
       case 'app.bsky.actor.status':
-        preview = <StatusSubjectPreview report={report} uri={uri} />
+        preview = (
+          <StatusSubjectPreview
+            report={report}
+            uri={uri}
+            allowReportRecordSnapshot={allowReportRecordSnapshot}
+          />
+        )
         break
       case site.standard.document.$type:
       case site.standard.publication.$type:
