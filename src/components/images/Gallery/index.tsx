@@ -194,6 +194,18 @@ export function Gallery({
       label={l`Image gallery, ${images.length} images`}
       onIndexChange={(index, previousIndex) =>
         debouncedSwipeMetric(previousIndex, index)
+      }
+      footer={
+        // with only two images, both are mostly in view, so skip the dots
+        images.length >= 3 && (
+          <GalleryPrimitive.PageDots
+            variant="subtle"
+            interactive
+            // offset the first dot's padding so it lines up with the image edge
+            style={[a.justify_start, {marginLeft: -2}]}
+            testID="imageGallery-dots"
+          />
+        )
       }>
       {images.map((image, index) => {
         const openLightboxAtIndex = onPress
@@ -217,7 +229,6 @@ export function Gallery({
                 image={image}
                 contentHeight={contentHeight}
                 index={index}
-                imageCount={images.length}
                 focusRef={focusRef}
                 tabIndex={tabIndex}
                 onFocus={onFocus}
@@ -239,7 +250,6 @@ function GalleryImage({
   contentHeight: height,
   image,
   index,
-  imageCount,
   focusRef,
   tabIndex,
   onFocus,
@@ -253,7 +263,6 @@ function GalleryImage({
   contentHeight: number
   image: app.bsky.embed.images.ViewImage
   index: number
-  imageCount: number
   focusRef: GalleryPrimitive.ItemFocusProps['focusRef']
   tabIndex: GalleryPrimitive.ItemFocusProps['tabIndex']
   onFocus: GalleryPrimitive.ItemFocusProps['onFocus']
@@ -351,39 +360,6 @@ function GalleryImage({
             }}
             useAppleWebpCodec
           />
-
-          {imageCount > 1 ? (
-            <View
-              accessible={false}
-              pointerEvents="none"
-              style={[
-                a.absolute,
-                a.justify_center,
-                a.rounded_sm,
-                a.p_xs,
-                t.atoms.bg_contrast_25,
-                {
-                  top: a.p_xs.padding,
-                  right: a.p_xs.padding,
-                  opacity: 0.8,
-                },
-                largeAltBadge && {
-                  padding: 6,
-                },
-              ]}>
-              <Text
-                style={[
-                  a.font_bold,
-                  largeAltBadge ? a.text_xs : {fontSize: 8},
-                ]}>
-                <Trans
-                  context="gallery-badge-image-position-numbers"
-                  comment="Badge showing the current image position out of the total number of images in a gallery.">
-                  {index + 1}/{imageCount}
-                </Trans>
-              </Text>
-            </View>
-          ) : null}
 
           {hasAlt || isCropped ? (
             <View
