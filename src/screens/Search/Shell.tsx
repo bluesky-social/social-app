@@ -52,9 +52,9 @@ import {
   parseHistoryEntry,
   readSearchFilters,
   type SearchFilters,
-  serializeHistoryEntry,
   withoutFilterParams,
 } from '#/screens/Search/searchParams'
+import {useSearchHistory} from '#/screens/Search/util/useSearchHistory'
 import {
   atoms as a,
   native,
@@ -73,7 +73,6 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
-import {account, useStorage} from '#/storage'
 import type * as bsky from '#/types/bsky'
 import {AdvancedSearchDialog} from './components/AdvancedSearchDialog'
 import {AutocompleteResults} from './components/AutocompleteResults'
@@ -130,7 +129,6 @@ export function SearchScreenShell({
   const route = useRoute()
   const textInput = useRef<React.ComponentRef<typeof TextInput>>(null)
   const {t: l} = useLingui()
-  const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   const isFocused = useIsFocused()
 
@@ -171,69 +169,20 @@ export function SearchScreenShell({
 
   const [showAutocomplete, setShowAutocomplete] = useState(false)
 
-  const [termHistory = [], setTermHistory] = useStorage(account, [
-    currentAccount?.did ?? 'pwi',
-    'searchTermHistory',
-  ] as const)
-  const [accountHistory = [], setAccountHistory] = useStorage(account, [
-    currentAccount?.did ?? 'pwi',
-    'searchAccountHistory',
-  ])
+  const {
+    termHistory,
+    accountHistory,
+    updateSearchHistory,
+    updateProfileHistory,
+    deleteSearchHistoryItem,
+    deleteProfileHistoryItem,
+    clearAllHistory,
+  } = useSearchHistory()
 
   const {data: accountHistoryProfiles} = useProfilesQuery({
     handles: accountHistory,
     maintainData: true,
   })
-
-  const updateSearchHistory = useCallback(
-    (q: string, searchFilters: SearchFilters = {}) => {
-      if (!q) return
-      /*
-       * Store the query plus any advanced-search filters. Term-only searches
-       * serialize to a plain string (back-compatible with existing history);
-       * filtered searches serialize to JSON. Dedupe on the serialized form.
-       */
-      const item = serializeHistoryEntry(q, searchFilters)
-      const newSearchHistory = [
-        item,
-        ...termHistory.filter(search => search !== item),
-      ].slice(0, 6)
-      setTermHistory(newSearchHistory)
-    },
-    [termHistory, setTermHistory],
-  )
-
-  const updateProfileHistory = useCallback(
-    (item: bsky.profile.AnyProfileView) => {
-      const newAccountHistory = [
-        item.did,
-        ...accountHistory.filter(p => p !== item.did),
-      ].slice(0, 10)
-      setAccountHistory(newAccountHistory)
-    },
-    [accountHistory, setAccountHistory],
-  )
-
-  const deleteSearchHistoryItem = useCallback(
-    (item: string) => {
-      setTermHistory(termHistory.filter(search => search !== item))
-    },
-    [termHistory, setTermHistory],
-  )
-  const deleteProfileHistoryItem = useCallback(
-    (item: bsky.profile.AnyProfileView) => {
-      setAccountHistory(accountHistory.filter(p => p !== item.did))
-    },
-    [accountHistory, setAccountHistory],
-  )
-  const clearAllHistory = useCallback(() => {
-    ax.metric('search:recent:clearAll', {
-      termCount: termHistory.length,
-      profileCount: accountHistory.length,
-    })
-    setTermHistory([])
-    setAccountHistory([])
-  }, [ax, termHistory, accountHistory, setTermHistory, setAccountHistory])
 
   const showFilters = Boolean((query || hasFilters) && !showAutocomplete)
 

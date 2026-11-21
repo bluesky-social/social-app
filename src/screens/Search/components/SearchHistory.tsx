@@ -142,16 +142,37 @@ export function SearchHistory({
         )}
       </View>
 
-      <Prompt.Basic
+      <ClearSearchHistoryPrompt
         control={clearAllPromptControl}
-        title={l`Clear all recent searches?`}
-        description={l`This can’t be undone, and all of your recent searches will be removed.`}
         onConfirm={onClearAll}
-        confirmButtonCta={l({message: 'Clear', context: 'action'})}
-        cancelButtonCta={l`Cancel`}
-        confirmButtonColor="negative"
       />
     </Layout.Content>
+  )
+}
+
+/**
+ * Confirmation shown before wiping all recent searches. Shared with the
+ * desktop sidebar search so both places ask the same question.
+ */
+export function ClearSearchHistoryPrompt({
+  control,
+  onConfirm,
+}: {
+  control: Prompt.PromptControlProps
+  onConfirm: () => void
+}) {
+  const {t: l} = useLingui()
+
+  return (
+    <Prompt.Basic
+      control={control}
+      title={l`Clear all recent searches?`}
+      description={l`This can’t be undone, and all of your recent searches will be removed.`}
+      onConfirm={onConfirm}
+      confirmButtonCta={l({message: 'Clear', context: 'action'})}
+      cancelButtonCta={l`Cancel`}
+      confirmButtonColor="negative"
+    />
   )
 }
 
