@@ -50,7 +50,7 @@ import {type RichText} from '@bsky/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
-import {useQueries, useQueryClient} from '@tanstack/react-query'
+import {useQueries, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
@@ -256,6 +256,7 @@ export const ComposePost = ({
   onPost,
   onPostSuccess,
   quote: initQuote,
+  quoteUri: initQuoteUri,
   mention: initMention,
   text: initText,
   imageUris: initImageUris,
@@ -361,7 +362,7 @@ export const ComposePost = ({
     composerReducer,
     {
       initImageUris,
-      initQuoteUri: initQuote?.uri,
+      initQuoteUri: initQuote?.uri ?? initQuoteUri,
       initText,
       initMention,
       initInteractionSettings: preferences?.postInteractionSettings,
@@ -370,6 +371,57 @@ export const ComposePost = ({
   )
 
   const thread = composerState.thread
+
+  /*
+   * A quote opened by URI (from a deep link) skips the quote button's checks,
+   * so run them once the post resolves. When it can't be quoted, drop the
+   * quote and keep whatever else came with it.
+   */
+  const [uncheckedQuoteUri] = useState(() =>
+    initQuoteUri && !initQuote ? thread.posts[0].embed.quote?.uri : undefined,
+  )
+  const {data: uncheckedQuote, error: uncheckedQuoteError} = useQuery({
+    ...resolveLinkQueryOptions(
+      {appviewClient: client, chatClient},
+      uncheckedQuoteUri ?? '',
+    ),
+    enabled: !!uncheckedQuoteUri,
+  })
+  useEffect(() => {
+    if (!uncheckedQuoteUri) return
+    let problem: {message: string; type: 'error' | 'warning'} | undefined
+    if (uncheckedQuoteError) {
+      problem =
+        uncheckedQuoteError instanceof EmbeddingDisabledError
+          ? {
+              message: l`This post's author has disabled quote posts.`,
+              type: 'warning',
+            }
+          : {message: l`Couldn’t load the post to quote`, type: 'error'}
+    } else if (
+      uncheckedQuote?.type === 'record' &&
+      uncheckedQuote.kind === 'post'
+    ) {
+      const author = uncheckedQuote.view.author.viewer
+      if (author?.blocking || author?.blockedBy || author?.blockingByList) {
+        problem = {
+          message: l`Cannot interact with a blocked user`,
+          type: 'warning',
+        }
+      }
+    }
+    if (!problem) return
+    const post = thread.posts.find(
+      p => p.embed.quote?.uri === uncheckedQuoteUri,
+    )
+    if (!post) return
+    composerDispatch({
+      type: 'update_post',
+      postId: post.id,
+      postAction: {type: 'embed_remove_quote'},
+    })
+    Toast.show(problem.message, {type: problem.type})
+  }, [uncheckedQuoteUri, uncheckedQuote, uncheckedQuoteError, thread, l])
 
   // Clear error when composer content changes, but only if all posts are
   // back within the character limit.
@@ -494,7 +546,7 @@ export const ComposePost = ({
     ax.metric('composer:open', {
       logContext: logContext ?? 'Other',
       isReply: !!replyTo,
-      hasQuote: !!initQuote,
+      hasQuote: !!initQuote || !!initQuoteUri,
       hasDraft: false,
     })
   })()
