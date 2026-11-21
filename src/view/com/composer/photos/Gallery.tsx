@@ -192,6 +192,8 @@ const GalleryItem = ({
   return (
     <View
       ref={altBtnRef}
+      // the alt text sheet zooms out of this view, so Fabric mustn't flatten it
+      collapsable={false}
       style={imageStyle}
       // Fixes ALT and icons appearing with half opacity when the post is inactive
       renderToHardwareTextureAndroid>
