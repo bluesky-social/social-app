@@ -19,6 +19,11 @@ import {
   useUpdates,
 } from 'expo-updates'
 
+import {
+  logOTAUpdateError,
+  type OTAUpdateStage,
+  type OTAUpdateTrigger,
+} from '#/lib/hooks/otaUpdateDiagnostics'
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -411,28 +416,35 @@ export function useOTAUpdates() {
   const currentChannel = getRunningChannel(currentlyRunning)
   const defaultChannel = currentlyRunning?.channel || DEFAULT_CHANNEL
 
-  const setCheckTimeout = useCallback(() => {
-    timeout.current = setTimeout(async () => {
-      if (hasRequestedDeployment) return
-      try {
-        await setExtraParams(defaultChannel)
+  const setCheckTimeout = useCallback(
+    (trigger: OTAUpdateTrigger) => {
+      timeout.current = setTimeout(async () => {
+        if (hasRequestedDeployment) return
+        const startedAt = Date.now()
+        let stage: OTAUpdateStage = 'configure'
+        try {
+          await setExtraParams(defaultChannel)
 
-        logger.debug('Checking for update...')
-        const res = await checkForUpdateAsync()
+          stage = 'check'
+          logger.debug('Checking for update...')
+          const res = await checkForUpdateAsync()
 
-        if (res.isAvailable) {
-          logger.debug('Attempting to fetch update...')
-          await fetchUpdateAsync()
-        } else {
-          logger.debug('No update available.')
+          if (res.isAvailable) {
+            stage = 'fetch'
+            logger.debug('Attempting to fetch update...')
+            await fetchUpdateAsync()
+          } else {
+            logger.debug('No update available.')
+          }
+        } catch (err) {
+          if (!isNetworkError(err)) {
+            await logOTAUpdateError({error: err, stage, trigger, startedAt})
+          }
         }
-      } catch (err) {
-        if (!isNetworkError(err)) {
-          logger.error('OTA Update Error', {safeMessage: err})
-        }
-      }
-    }, 10e3)
-  }, [defaultChannel])
+      }, 10e3)
+    },
+    [defaultChannel],
+  )
 
   const onIsTestFlight = useCallback(async () => {
     try {
@@ -461,7 +473,7 @@ export function useOTAUpdates() {
       return
     }
 
-    setCheckTimeout()
+    setCheckTimeout('launch')
     ranInitialCheck.current = true
   }, [onIsTestFlight, currentChannel, setCheckTimeout, shouldReceiveUpdates])
 
@@ -491,7 +503,7 @@ export function useOTAUpdates() {
                 reloadScreenOptions: splash(t.scheme),
               })
             } else {
-              setCheckTimeout()
+              setCheckTimeout('resume')
             }
           }
         } else {
