@@ -8,9 +8,15 @@ import {
   tryParse,
   tryStringify,
 } from '#/state/persisted/schema'
+import {
+  applySessionUpdate,
+  type SessionCredentialMutation,
+} from './session-merge'
+import {runWithPersistedStorageLock} from './storage-lock'
 import {type PersistedApi} from './types'
 import {normalizeData} from './util'
 
+export type {SessionCredentialMutation} from './session-merge'
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
 
@@ -62,37 +68,75 @@ export function readLatest<K extends keyof Schema>(key: K): Schema[K] {
 }
 readLatest satisfies PersistedApi['readLatest']
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export async function write<K extends keyof Schema>(
+export function write<K extends keyof Schema>(
   key: K,
   value: Schema[K],
 ): Promise<void> {
-  const next = readFromStorage()
-  if (next) {
-    // The storage could have been updated by a different tab before this tab is notified.
-    // Make sure this write is applied on top of the latest data in the storage as long as it's valid.
-    _state = next
-    // Don't fire the update listeners yet to avoid a loop.
-    // If there was a change, we'll receive the broadcast event soon enough which will do that.
+  if (key === 'session') {
+    throw new Error(
+      'Session state must be written through persisted.writeSession()',
+    )
   }
-  try {
-    if (JSON.stringify({v: _state[key]}) === JSON.stringify({v: value})) {
-      // Fast path for updates that are guaranteed to be noops.
-      // This is good mostly because it avoids useless broadcasts to other tabs.
-      return
-    }
-  } catch (e) {
-    // Ignore and go through the normal path.
-  }
-  _state = normalizeData({
-    ..._state,
-    [key]: value,
+  return runWithPersistedStorageLock({
+    operation: () => {
+      const next = readFromStorage()
+      if (next) {
+        // The storage could have been updated by a different tab before this tab is notified.
+        // Make sure this write is applied on top of the latest data in the storage as long as it's valid.
+        _state = next
+        // Don't fire the update listeners yet to avoid a loop.
+        // If there was a change, we'll receive the broadcast event soon enough which will do that.
+      }
+      try {
+        if (JSON.stringify({v: _state[key]}) === JSON.stringify({v: value})) {
+          // Fast path for updates that are guaranteed to be noops.
+          // This is good mostly because it avoids useless broadcasts to other tabs.
+          return
+        }
+      } catch (e) {
+        // Ignore and go through the normal path.
+      }
+      const updated = normalizeData({
+        ..._state,
+        [key]: value,
+      })
+      writeToStorage(updated)
+      _state = updated
+      broadcastUpdate({key})
+    },
   })
-  writeToStorage(_state)
-  broadcast.postMessage({event: {type: UPDATE_EVENT, key}})
-  broadcast.postMessage({event: UPDATE_EVENT}) // Backcompat while upgrading
 }
 write satisfies PersistedApi['write']
+
+/** Commit a conditional session merge while holding the root storage lock. */
+export function writeSession({
+  nextSession,
+  credentialMutations,
+  currentAccountDid,
+}: {
+  nextSession: Schema['session']
+  credentialMutations: SessionCredentialMutation[]
+  currentAccountDid?: string
+}): Promise<Schema['session']> {
+  return runWithPersistedStorageLock({
+    operation: () => {
+      const stored = readFromStorage() ?? _state
+      const session = applySessionUpdate({
+        storedSession: stored.session,
+        nextSession,
+        credentialMutations,
+        currentAccountDid,
+      })
+      const updated = normalizeData({...stored, session})
+      writeToStorage(updated)
+      _state = updated
+
+      broadcastUpdate({key: 'session'})
+      return session
+    },
+  })
+}
+writeSession satisfies PersistedApi['writeSession']
 
 export function onUpdate<K extends keyof Schema>(
   key: K,
@@ -108,13 +152,16 @@ export function onUpdate<K extends keyof Schema>(
 }
 onUpdate satisfies PersistedApi['onUpdate']
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export async function clearStorage() {
-  try {
-    localStorage.removeItem(BSKY_STORAGE)
-  } catch (e: any) {
-    // Expected on the web in private mode.
-  }
+export function clearStorage(): Promise<void> {
+  return runWithPersistedStorageLock({
+    operation: () => {
+      try {
+        localStorage.removeItem(BSKY_STORAGE)
+      } catch (e: any) {
+        // Expected on the web in private mode.
+      }
+    },
+  })
 }
 clearStorage satisfies PersistedApi['clearStorage']
 
@@ -156,14 +203,22 @@ async function onBroadcastMessage({data}: MessageEvent) {
   }
 }
 
+function broadcastUpdate({key}: {key: keyof Schema}) {
+  broadcast.postMessage({event: {type: UPDATE_EVENT, key}})
+}
+
 function writeToStorage(value: Schema) {
   const rawData = tryStringify(value)
-  if (rawData) {
-    try {
-      localStorage.setItem(BSKY_STORAGE, rawData)
-    } catch (e) {
-      // Expected on the web in private mode.
-    }
+  if (!rawData) {
+    throw new Error('Failed to serialize persisted state')
+  }
+  try {
+    localStorage.setItem(BSKY_STORAGE, rawData)
+  } catch (error) {
+    logger.error('persisted state: failed writing root state to storage', {
+      message: error,
+    })
+    throw error
   }
 }
 
