@@ -12,6 +12,7 @@ This module consolidates several native features into a single Expo module:
 - **SharedPrefs**: Shared preferences storage using native platform APIs (UserDefaults on iOS, SharedPreferences on Android)
 - **VisibilityView**: A native view component that tracks which view is currently visible on screen
 - **NotificationSettings**: iOS handler that routes the system "notification settings" intent into the app
+- **ZoomTransition**: iOS 18+ zoom navigation transition between a view and the screen it opens
 
 ## Modules
 
@@ -139,6 +140,43 @@ This is useful for features like video autoplay, where you want to know which vi
 - iOS: Full support using UIView position tracking
 - Android: Full support using View position tracking
 - Web: Passthrough component (renders children without tracking)
+
+### ZoomTransition
+
+iOS 18+ only. The zoom navigation transition from UIKit
+(`UIViewController.preferredTransition = .zoom`): the pushed screen grows out of
+a view on the previous screen and shrinks back into it on pop. Ported from
+expo-router's `Link.AppleZoom`, without the router.
+
+```tsx
+// On the screen you navigate from
+<ZoomTransition.Source identifier={post.uri} style={styles.thumbnail}>
+  <Image ... />
+</ZoomTransition.Source>
+
+// Inside the destination screen
+<ZoomTransition.Enabler sourceIdentifier={currentPostUri} />
+```
+
+- `Source` behaves like a View. Its own frame and corner radius are what the
+  transition zooms from.
+- `Enabler` renders nothing. It finds its screen's view controller and sets the
+  transition before the push starts. UIKit asks for the source view again on
+  pop, so changing `sourceIdentifier` while the screen is open changes where it
+  zooms back into (e.g. the video you scrolled to).
+- Sources are looked up only inside the screen being zoomed from, and only if
+  they are currently on screen. Otherwise UIKit falls back to a zoom with no
+  source.
+- `dismissGesture`: `default` keeps UIKit's swipe-down / pinch / edge-swipe
+  dismissal. `horizontal` only allows gestures that start out moving right,
+  for screens that scroll vertically. `none` disables interactive dismissal.
+- Only works with the default native-stack animation. A custom
+  `stackAnimation` makes react-native-screens supply its own animator, which
+  overrides the zoom.
+
+**Platform Support:**
+- iOS 18+: Full support
+- iOS < 18, Android, Web: `Source` is a plain View and `Enabler` renders nothing
 
 ### NotificationSettings
 
