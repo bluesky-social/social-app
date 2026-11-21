@@ -21,6 +21,7 @@ import {type ListMethods} from '#/view/com/util/List'
 import {android, atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {useGroupChatSearch} from '#/components/dms/useGroupChatSearch'
 import {
   canBeMessaged,
   type ConvoWithDetails,
@@ -112,6 +113,11 @@ export function SearchablePeopleList({
     status: 'accepted',
     lockStatus: 'unlocked',
   })
+  const {groups: matchingGroups, isFetching: isFetchingGroups} =
+    useGroupChatSearch({
+      searchText,
+      enabled: !!showRecentConvos && !renderProfileCard,
+    })
 
   const items = useMemo(() => {
     let _items: Item[] = []
@@ -141,6 +147,15 @@ export function SearchablePeopleList({
           })
         }
       }
+
+      // Group chats named like the search go first, before the people
+      _items.unshift(
+        ...matchingGroups.map(convo => ({
+          type: 'existingChat' as const,
+          key: convo.view.id,
+          convo,
+        })),
+      )
     } else {
       const placeholders: Item[] = Array(10)
         .fill(0)
@@ -240,9 +255,16 @@ export function SearchablePeopleList({
     convos,
     showRecentConvos,
     sortByMessageDeclaration,
+    matchingGroups,
   ])
 
-  if (searchText && !isFetching && !items.length && !isError) {
+  if (
+    searchText &&
+    !isFetching &&
+    !isFetchingGroups &&
+    !items.length &&
+    !isError
+  ) {
     items.push({type: 'empty', key: 'empty', message: l`No results`})
   }
 
