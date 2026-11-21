@@ -265,8 +265,8 @@ importers:
         specifier: ^2.7.2
         version: 2.7.2(react-native@0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)
       '@bsky.app/sift':
-        specifier: ^0.3.9
-        version: 0.3.9(expo@58.0.23)(react-native-safe-area-context@5.11.0(react-native@0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0))(react-native@0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)
+        specifier: ^0.4.2
+        version: 0.4.2(expo@58.0.23)(react-native-safe-area-context@5.11.0(react-native@0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0))(react-native@0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)
       '@bsky.app/tapper':
         specifier: ^0.6.1
         version: 0.6.1(expo@58.0.23)(react-native@0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)(tlds@1.261.0)
@@ -1811,13 +1811,13 @@ packages:
       react: '*'
       react-native: '>=0.81.5'
 
-  '@bsky.app/sift@0.3.9':
-    resolution: {integrity: sha512-EmwK6EGtxl6Mz4Z96J2EFi5aeiKeGiqueVCQHVms9C6ms6wMS0/HcqC/48RgFN+nSsM7Wr8sFCg1EcNnWyOQMQ==}
+  '@bsky.app/sift@0.4.2':
+    resolution: {integrity: sha512-sfUlzQ8JUtE4BlAvDlsT2XUZzXVMnC39nK18OFCPfw0DLWnUGsNGNOlWzrtSEeuseRcLayLTJdJDvYimJ7fScQ==}
     peerDependencies:
       expo: '*'
       react: '*'
       react-native: '*'
-      react-native-safe-area-context: ~5.6.0
+      react-native-safe-area-context: '>=5.6.0 <6'
 
   '@bsky.app/tapper@0.6.1':
     resolution: {integrity: sha512-+suwTIQcZmMbFb/adzWAlAs7gzRsMmHAerzrpzZfMtt2cVrwPgOqI5IOeEEO8SmvEEImpE8IcHindG8hkCZrKA==}
@@ -11081,7 +11081,7 @@ snapshots:
       react: 19.3.0
       react-native: 0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1)
 
-  '@bsky.app/sift@0.3.9(expo@58.0.23)(react-native-safe-area-context@5.11.0(react-native@0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0))(react-native@0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)':
+  '@bsky.app/sift@0.4.2(expo@58.0.23)(react-native-safe-area-context@5.11.0(react-native@0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0))(react-native@0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)':
     dependencies:
       expo: 58.0.23(patch_hash=928cb4167c53b38ce825fa72af267d9faa046b83e189c8cbee672a7d45c2f089)(6a84e197a89d6d1d019340305b6979d8)
       react: 19.3.0
