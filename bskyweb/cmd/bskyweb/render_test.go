@@ -87,12 +87,26 @@ func TestRenderPost_OGImageMatchesJSONLD(t *testing.T) {
 		"requestURI":   "https://bsky.app/profile/alice.bsky.social/post/abc123",
 		"canonicalURL": "https://bsky.app/profile/alice.bsky.social/post/abc123",
 		"postJSONLD":   ld,
-		"imgThumbUrls": []string{thumb1, thumb2},
+		"postImages": []postImage{
+			{Thumb: thumb1, Alt: `a "cool" cat`},
+			{Thumb: thumb2},
+		},
 	})
 
 	// og:image and JSON-LD image[] must be byte-identical.
 	if !strings.Contains(html, `<meta property="og:image" content="`+thumb1+`">`) {
 		t.Errorf("og:image[0] not found in rendered HTML")
+	}
+	// Alt text emits as og:image:alt / twitter:image:alt, HTML-escaped.
+	if !strings.Contains(html, `<meta property="og:image:alt" content="a &quot;cool&quot; cat">`) {
+		t.Errorf("og:image:alt not found or not escaped in rendered HTML:\n%s", html)
+	}
+	if !strings.Contains(html, `<meta property="twitter:image:alt" content="a &quot;cool&quot; cat">`) {
+		t.Errorf("twitter:image:alt not found or not escaped in rendered HTML")
+	}
+	// Images without alt text must not emit an empty og:image:alt.
+	if strings.Count(html, `og:image:alt`) != 1 {
+		t.Errorf("expected exactly one og:image:alt (second image has no alt); got:\n%s", html)
 	}
 	body := extractJSONLD(t, html)
 	var parsed map[string]any
@@ -112,14 +126,14 @@ func TestRenderPost_OGImageMatchesJSONLD_Gallery(t *testing.T) {
 	thumb1 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g1@jpeg"
 	thumb2 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g2@jpeg"
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "gallery", withGallery(thumb1, thumb2))
-	thumbs := extractPostMedia(pv, false)
+	postImages := extractPostMedia(pv, false)
 	ld, _ := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", "", hideEmbedLabels, hideReplyLabels)
 	html := renderTemplate(t, "post.html", pongo2.Context{
 		"postView":     pv,
 		"requestURI":   "https://bsky.app/profile/alice.bsky.social/post/abc123",
 		"canonicalURL": "https://bsky.app/profile/alice.bsky.social/post/abc123",
 		"postJSONLD":   ld,
-		"imgThumbUrls": thumbs,
+		"postImages":   postImages,
 	})
 
 	if !strings.Contains(html, `<meta property="og:image" content="`+thumb1+`">`) {
@@ -229,8 +243,9 @@ func TestRenderPost_OGUrlMatchesCanonical(t *testing.T) {
 }
 
 // og:video must emit even when there is no thumbnail. Previously the
-// {% if videoUrl %} block was nested inside {% if imgThumbUrls %}, so a
-// video without a thumbnail dropped og:video entirely.
+// {% if videoUrl %} block was nested inside the image block (then keyed on
+// imgThumbUrls, now postImages), so a video without a thumbnail dropped
+// og:video entirely.
 func TestRenderPost_VideoWithoutThumbnailEmitsOGVideo(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "watch")
 	ld, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
@@ -244,10 +259,10 @@ func TestRenderPost_VideoWithoutThumbnailEmitsOGVideo(t *testing.T) {
 		"videoType":    "application/x-mpegURL",
 	})
 	if !strings.Contains(html, `<meta property="og:video" content="`+videoURL+`">`) {
-		t.Errorf("og:video should emit even without imgThumbUrls; got:\n%s", html)
+		t.Errorf("og:video should emit even without postImages; got:\n%s", html)
 	}
 	if !strings.Contains(html, `<meta property="og:video:type" content="application/x-mpegURL">`) {
-		t.Errorf("og:video:type should emit even without imgThumbUrls; got:\n%s", html)
+		t.Errorf("og:video:type should emit even without postImages; got:\n%s", html)
 	}
 }
 
