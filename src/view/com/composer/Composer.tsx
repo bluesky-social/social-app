@@ -65,6 +65,7 @@ import {
   VIDEO_MAX_DURATION_MS,
 } from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {ImageMissingError} from '#/lib/media/image/errors'
 import {createVideoTelemetry} from '#/lib/media/video/telemetry'
 import {mimeToExt} from '#/lib/media/video/util'
 import {useCallOnce} from '#/lib/once'
@@ -1143,6 +1144,8 @@ export const ComposePost = ({
         err = l`We're sorry! The post you are replying to has been deleted.`
       } else if (e instanceof EmbeddingDisabledError) {
         err = l`This post's author has disabled quote posts.`
+      } else if (e instanceof ImageMissingError) {
+        err = l`One or more images couldn’t be found, which can happen when your device is out of storage. Free up some space, then remove the images and add them again.`
       }
       setError(err)
       setIsPublishing(false)
@@ -2205,23 +2208,47 @@ function ComposerFooter({
 
       if (assets.length) {
         if (type === 'image') {
-          const selectedImages: ComposerImage[] = []
-
-          await Promise.all(
-            assets.map(async image => {
-              const composerImage = await createComposerImage({
+          const results = await Promise.allSettled(
+            assets.map(image =>
+              createComposerImage({
                 path: image.uri,
                 width: image.width,
                 height: image.height,
                 mime: image.mimeType!,
-              })
-              selectedImages.push(composerImage)
-            }),
-          ).catch(e => {
+              }),
+            ),
+          )
+          const selectedImages: ComposerImage[] = []
+          const failures: unknown[] = []
+          for (const result of results) {
+            if (result.status === 'fulfilled') {
+              selectedImages.push(result.value)
+            } else {
+              failures.push(result.reason)
+            }
+          }
+
+          if (failures.length > 0) {
+            /*
+             * Copying a picked image only really fails when the device has no
+             * space left for the copy.
+             */
             logger.error(`createComposerImage failed`, {
-              safeMessage: e instanceof Error ? e.message : String(e),
+              safeMessage:
+                failures[0] instanceof Error
+                  ? failures[0].message
+                  : String(failures[0]),
+              failedCount: failures.length,
             })
-          })
+            Toast.show(
+              plural(failures.length, {
+                one: 'Couldn’t add # image. Your device might be out of storage.',
+                other:
+                  'Couldn’t add # images. Your device might be out of storage.',
+              }),
+              {type: 'error'},
+            )
+          }
 
           onImageAdd(selectedImages)
         } else if (type === 'video') {

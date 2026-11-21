@@ -2,13 +2,16 @@ import {Directory, File, Paths} from 'expo-file-system'
 import {type ImageManipulatorContext, SaveFormat} from 'expo-image-manipulator'
 import {nanoid} from 'nanoid/non-secure'
 
-import {getImageCacheDirectory, moveIfNecessary} from '#/lib/media/image/cache'
+import {
+  getComposerImageDirectory,
+  moveIfNecessary,
+} from '#/lib/media/image/cache'
 import {renderImage} from '#/lib/media/image-manipulator'
 import {getImageDim} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
 import {isCancelledError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {IS_NATIVE, IS_WEB} from '#/env'
+import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
 
 export {compressImage} from '#/lib/media/image/compress'
 
@@ -52,8 +55,8 @@ export async function createComposerImage(
     alt: '',
     source: {
       id: nanoid(),
-      // Copy to cache to ensure file survives OS temporary file cleanup
-      path: await copyToCache(raw.path),
+      // Copy so the file survives OS temporary file cleanup
+      path: await copyToComposerDirectory(raw.path),
       width: raw.width,
       height: raw.height,
       mime: raw.mime,
@@ -179,13 +182,13 @@ export function resetImageManipulation(
 }
 
 /**
- * Copy a file from a potentially temporary location to our cache directory.
- * This ensures picker files are available for draft saving even if the original
- * temporary files are cleaned up by the OS.
+ * Copy a file from a potentially temporary location to the composer's image
+ * directory. This ensures picker files are available for posting and draft
+ * saving even if the original temporary files are cleaned up by the OS.
  *
  * On web, converts blob URLs to data URIs immediately to prevent revocation issues.
  */
-async function copyToCache(from: string): Promise<string> {
+async function copyToComposerDirectory(from: string): Promise<string> {
   // Data URIs don't need any conversion
   if (from.startsWith('data:')) {
     return from
@@ -207,14 +210,13 @@ async function copyToCache(from: string): Promise<string> {
     return from
   }
 
-  // Native: copy to cache directory to survive OS temp file cleanup
-  const cacheDir = getImageCacheDirectory()
-  if (!cacheDir || from.startsWith(cacheDir.uri)) {
+  const composerDir = getComposerImageDirectory()
+  if (!composerDir || from.startsWith(composerDir.uri)) {
     return from
   }
 
-  const destination = new File(cacheDir, nanoid(36))
-  cacheDir.create({idempotent: true, intermediates: true})
+  const destination = new File(composerDir, nanoid(36))
+  composerDir.create({idempotent: true, intermediates: true})
 
   await new File(normalizeFileUri(from)).copy(destination)
   return destination.uri
@@ -240,31 +242,40 @@ function blobToDataUri(blob: Blob): Promise<string> {
 
 /**
  * Caches that the OS image picker and manipulator write into when attaching
- * media to a post. They live alongside our own `bsky-composer` dir under the OS
- * cache directory. expo-image-picker copies every originally selected photo and
+ * media to a post. expo-image-picker copies every originally selected photo and
  * video here, and expo-image-manipulator leaves intermediate full-resolution
  * outputs here (compressImage makes several rendering passes, only the last of
  * which gets moved into `bsky-composer`). Nothing else cleans these up,
  * so on iOS - where the OS exposes no "clear cache" - they accumulate
  * indefinitely, one full-resolution copy per attached item.
+ *
+ * On Android this also covers `bsky-composer` from before the composer's
+ * images moved out of the cache directory.
  */
-const SYSTEM_MEDIA_CACHE_DIRS = ['ImagePicker', 'ImageManipulator']
+const SYSTEM_MEDIA_CACHE_DIRS = [
+  'ImagePicker',
+  'ImageManipulator',
+  ...(IS_ANDROID ? ['bsky-composer'] : []),
+]
 
-/** Purge files that were created to accomodate image manipulation */
+/**
+ * Purge files that were created to accomodate image manipulation. Only call
+ * this when no composer is open: on composer close, and on app launch to clean
+ * up after a composer that was open when the app was killed.
+ */
 export function purgeTemporaryImageFiles() {
   if (!IS_NATIVE) {
     return
   }
 
-  const cacheDir = getImageCacheDirectory()
-  if (cacheDir) {
+  const composerDir = getComposerImageDirectory()
+  if (composerDir) {
     try {
-      if (cacheDir.exists) {
-        cacheDir.delete()
+      if (composerDir.exists) {
+        composerDir.delete()
       }
-      cacheDir.create()
     } catch (err) {
-      logger.warn('Failed to purge composer image cache', {safeMessage: err})
+      logger.warn('Failed to purge composer images', {safeMessage: err})
     }
   }
 

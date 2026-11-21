@@ -8,6 +8,7 @@ import {Asset, usePermissions} from '#/lib/media/media-library'
 import {openCamera} from '#/lib/media/picker'
 import {logger} from '#/logger'
 import {createComposerImage} from '#/state/gallery'
+import * as Toast from '#/components/Toast'
 import * as env from '#/env'
 import {OpenCameraBtn} from './OpenCameraBtn'
 
@@ -27,8 +28,9 @@ jest.mock('#/lib/media/media-library', () => ({
   usePermissions: jest.fn(),
 }))
 jest.mock('#/lib/media/picker', () => ({openCamera: jest.fn()}))
-jest.mock('#/logger', () => ({logger: {warn: jest.fn()}}))
+jest.mock('#/logger', () => ({logger: {error: jest.fn(), warn: jest.fn()}}))
 jest.mock('#/state/gallery', () => ({createComposerImage: jest.fn()}))
+jest.mock('#/components/Toast', () => ({show: jest.fn()}))
 jest.mock('#/alf', () => ({
   atoms: {p_sm: {}},
   useTheme: () => ({atoms: {text_contrast_low: {}}}),
@@ -137,5 +139,35 @@ it('does not save or attach anything when the camera is cancelled', async () => 
   await waitFor(() => expect(openCamera).toHaveBeenCalled())
   expect(Asset.create).not.toHaveBeenCalled()
   expect(createComposerImage).not.toHaveBeenCalled()
+  expect(onAdd).not.toHaveBeenCalled()
+  expect(Toast.show).not.toHaveBeenCalled()
+})
+
+it('stays silent when the camera throws, e.g. on cancel', async () => {
+  jest
+    .mocked(openCamera)
+    .mockRejectedValueOnce(new Error('User cancelled image selection'))
+  const onAdd = takePicture()
+
+  await waitFor(() => expect(logger.warn).toHaveBeenCalled())
+  expect(createComposerImage).not.toHaveBeenCalled()
+  expect(onAdd).not.toHaveBeenCalled()
+  expect(Toast.show).not.toHaveBeenCalled()
+})
+
+it('tells the user when the photo cannot be added', async () => {
+  const error = new Error('No space left on device')
+  jest.mocked(createComposerImage).mockRejectedValueOnce(error)
+  const onAdd = takePicture()
+
+  await waitFor(() =>
+    expect(Toast.show).toHaveBeenCalledWith(
+      'Couldn’t add the photo. Your device might be out of storage.',
+      {type: 'error'},
+    ),
+  )
+  expect(logger.error).toHaveBeenCalledWith('Failed to add camera photo', {
+    safeMessage: error,
+  })
   expect(onAdd).not.toHaveBeenCalled()
 })
