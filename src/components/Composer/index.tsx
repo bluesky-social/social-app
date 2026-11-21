@@ -30,7 +30,6 @@ import {
   AutocompleteItemEmoji,
   AutocompleteItemProfile,
   parseAutocompleteItemType,
-  shouldShowAutocomplete,
   useAutocomplete,
 } from '#/components/Autocomplete'
 import {
@@ -145,7 +144,7 @@ export function Composer({
   })
   const inputRef = mergeRefs<TextInputInstance>([
     ref,
-    tapper.inputProps.ref as React.Ref<TextInputInstance>,
+    tapper.inputProps.ref,
     sift.targetProps.ref as React.Ref<TextInputInstance>,
   ])
 
@@ -380,7 +379,7 @@ export function Composer({
         </AutosizedTextarea>
       </View>
 
-      {activeFacet && shouldShowAutocomplete(activeFacet) && (
+      {activeFacet && activeFacet.type !== 'url' && (
         <AutocompleteInner
           inverted={autocompletePlacement?.startsWith('top')}
           sift={sift}
