@@ -89,7 +89,15 @@ export function GifPresentationControls({
               opacity: 0.8,
             },
           ]}>
-          <Text style={[a.font_bold, largeBadge ? a.text_xs : {fontSize: 8}]}>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="clip"
+            textBreakStrategy="simple"
+            style={[
+              a.font_bold,
+              largeBadge ? a.text_xs : {fontSize: 8},
+              {includeFontPadding: false},
+            ]}>
             <Trans>GIF</Trans>
           </Text>
         </View>

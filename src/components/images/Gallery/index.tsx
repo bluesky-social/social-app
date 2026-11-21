@@ -372,9 +372,13 @@ function GalleryImage({
                 },
               ]}>
               <Text
+                numberOfLines={1}
+                ellipsizeMode="clip"
+                textBreakStrategy="simple"
                 style={[
                   a.font_bold,
                   largeAltBadge ? a.text_xs : {fontSize: 8},
+                  {includeFontPadding: false},
                 ]}>
                 <Trans
                   context="gallery-badge-image-position-numbers"
@@ -436,9 +440,13 @@ function GalleryImage({
                     },
                   ]}>
                   <Text
+                    numberOfLines={1}
+                    ellipsizeMode="clip"
+                    textBreakStrategy="simple"
                     style={[
                       a.font_bold,
                       largeAltBadge ? a.text_xs : {fontSize: 8},
+                      {includeFontPadding: false},
                     ]}>
                     <Trans>ALT</Trans>
                   </Text>
