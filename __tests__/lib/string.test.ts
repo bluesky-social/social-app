@@ -201,6 +201,49 @@ describe('enforceLen', () => {
       expect(result).toEqual(outputs[i])
     }
   })
+
+  /*
+   * A code-unit slice can land inside an emoji. The leftover renders as a
+   * replacement character instead of the emoji - see #11390.
+   */
+  const RAINBOW_FLAG = '\u{1F3F3}\uFE0F\u200D\u{1F308}'
+  const LONE_SURROGATE =
+    /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/
+
+  it('drops a trailing emoji rather than cutting it in half', () => {
+    // 'Max Dubler ' is 11 code units, the flag sequence is another 6
+    expect(enforceLen(`Max Dubler ${RAINBOW_FLAG}`, 12, true)).toEqual(
+      'Max Dubler …',
+    )
+  })
+
+  it('keeps a trailing emoji that fits whole', () => {
+    expect(enforceLen(`Max Dubler ${RAINBOW_FLAG}!`, 17, true)).toEqual(
+      `Max Dubler ${RAINBOW_FLAG}…`,
+    )
+  })
+
+  it('never leaves a lone surrogate', () => {
+    for (let len = 0; len < 8; len++) {
+      for (const mode of ['end', 'middle'] as const) {
+        for (const ellipsis of [true, false]) {
+          const result = enforceLen('🎉🎉🎉🎉', len, ellipsis, mode)
+          expect(result).not.toMatch(LONE_SURROGATE)
+        }
+      }
+    }
+  })
+
+  it('does not split emoji when truncating in the middle', () => {
+    expect(enforceLen('🎉'.repeat(10), 6, true, 'middle')).toEqual('🎉…🎉')
+  })
+
+  it('never returns more code units than the requested length', () => {
+    const str = `hi ${RAINBOW_FLAG} there 🎉`
+    for (let len = 0; len < str.length; len++) {
+      expect(enforceLen(str, len, false).length).toBeLessThanOrEqual(len)
+    }
+  })
 })
 
 describe('cleanError', () => {
