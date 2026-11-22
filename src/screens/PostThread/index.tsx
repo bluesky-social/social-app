@@ -8,6 +8,7 @@ import {
 } from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
+import {ZoomTransition} from '@bsky.app/expo-bluesky-swiss-army'
 import {Trans} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -571,6 +572,17 @@ export function PostThread({uri}: {uri: string}) {
 
   return (
     <PostThreadContextProvider context={thread.context}>
+      {/*
+       * On iOS, a thread opened from a feed item zooms out of that item, and
+       * back into it on close. Only a back swipe dismisses, so vertical drags
+       * stay with the list.
+       */}
+      {anchorPostSource && (
+        <ZoomTransition.Enabler
+          sourceIdentifier={anchorPostSource.post.post.uri}
+          dismissGesture="horizontal"
+        />
+      )}
       <Layout.Header.Outer headerRef={headerRef}>
         <Layout.Header.BackButton />
         <Layout.Header.Content>
