@@ -34,7 +34,9 @@ const mockResizedImage = {
 }
 
 describe('downloadAndResize', () => {
-  const errorSpy = jest.spyOn(global.console, 'error')
+  const errorSpy = jest
+    .spyOn(global.console, 'error')
+    .mockImplementation(() => {})
 
   beforeEach(() => {
     const mockedDownload = File.downloadFileAsync as jest.Mock
