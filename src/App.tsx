@@ -31,6 +31,7 @@ import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
+import {purgeTemporaryImageFiles} from '#/state/gallery'
 import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {MessagesProvider} from '#/state/messages'
@@ -107,6 +108,12 @@ void Geo.resolve()
 void prefetchAgeAssuranceConfig()
 void prefetchLiveEvents()
 void prefetchAppConfig()
+/**
+ * A composer that was open when the app was killed never got to purge its
+ * copies of attached images. Nothing can be using them yet, so clear them out
+ * before any composer opens.
+ */
+purgeTemporaryImageFiles()
 
 function InnerApp() {
   const [isReady, setIsReady] = useState(false)
