@@ -173,6 +173,14 @@ expo-router's `Link.AppleZoom`, without the router.
 - Only works with the default native-stack animation. A custom
   `stackAnimation` makes react-native-screens supply its own animator, which
   overrides the zoom.
+- `ZoomTransition.isSupported` says whether `Enabler` does anything on this
+  device. Where it does, turn off react-native-screens' back gestures for the
+  screen (`gestureEnabled: false`; in the app, `#/components/ZoomTransitionEnabler`
+  does both). react-native-screens becomes the delegate of the navigation
+  controller's back swipes, and with `fullScreenGestureEnabled` it lets them
+  start on zoomed screens too. They race the zoom's own dismiss gestures, and
+  when one of them wins (a fast flick, or a swipe while a cancelled one is
+  still springing back) the screen pops without following the finger.
 - In debug builds, a back swipe that starts away from the edge doesn't follow
   the finger: the screen only zooms back when you let go. expo-dev-menu's
   three-finger long press on the window holds UIKit's swipe-to-dismiss until

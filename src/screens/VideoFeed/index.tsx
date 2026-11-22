@@ -24,7 +24,6 @@ import {Image, type ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {createVideoPlayer, type VideoPlayer, VideoView} from 'expo-video'
 import {AtUri} from '@atproto/syntax'
-import {ZoomTransition} from '@bsky.app/expo-bluesky-swiss-army'
 import {type ModerationDecision} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -100,6 +99,7 @@ import * as ReportDialogMetadataContext from '#/components/moderation/ReportDial
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {ZoomTransitionEnabler} from '#/components/ZoomTransitionEnabler'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID} from '#/env'
 import {
@@ -465,7 +465,7 @@ function Feed() {
   return (
     <FeedFeedbackProvider value={feedFeedback}>
       {params.zoomTransition && (
-        <ZoomTransition.Enabler
+        <ZoomTransitionEnabler
           sourceIdentifier={zoomSourceUri}
           // Vertical swipes page between videos, so only a back swipe dismisses
           dismissGesture="horizontal"

@@ -19,3 +19,8 @@ export function Source({
 export function Enabler(_props: ZoomTransitionEnablerProps) {
   return null
 }
+
+/**
+ * Whether `Enabler` gives screens a zoom transition on this device.
+ */
+export const isSupported = false

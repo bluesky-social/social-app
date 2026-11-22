@@ -1,3 +1,4 @@
+import {Platform} from 'react-native'
 import {requireNativeViewManager} from 'expo-modules-core'
 
 import {
@@ -42,3 +43,8 @@ export function Enabler(props: ZoomTransitionEnablerProps) {
     />
   )
 }
+
+/**
+ * Whether `Enabler` gives screens a zoom transition on this device (iOS 18+).
+ */
+export const isSupported = parseInt(String(Platform.Version), 10) >= 18
