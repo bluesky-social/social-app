@@ -173,6 +173,11 @@ expo-router's `Link.AppleZoom`, without the router.
 - Only works with the default native-stack animation. A custom
   `stackAnimation` makes react-native-screens supply its own animator, which
   overrides the zoom.
+- In debug builds, a back swipe that starts away from the edge doesn't follow
+  the finger: the screen only zooms back when you let go. expo-dev-menu's
+  three-finger long press on the window holds UIKit's swipe-to-dismiss until
+  the touch ends. Release builds don't include the dev menu, so they aren't
+  affected.
 
 **Platform Support:**
 - iOS 18+: Full support
