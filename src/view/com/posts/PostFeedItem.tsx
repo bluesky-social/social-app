@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo, useState} from 'react'
+import {memo, useCallback, useId, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {ZoomTransition} from '@bsky.app/expo-bluesky-swiss-army'
@@ -29,6 +29,7 @@ import {
   ThreadItemPostNumber,
   useHasThreadItemPostNumber,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
+import {stashPostZoomSource} from '#/screens/PostThread/zoomSource'
 import {atoms as a, select, useTheme} from '#/alf'
 import {
   GalleryBleed,
@@ -189,6 +190,7 @@ let FeedItemInner = ({
   const {currentAccount} = useSession()
 
   const [hover, setHover] = useState(false)
+  const zoomSourceId = useId()
 
   const [href] = useMemo(() => {
     const urip = new AtUri(post.uri)
@@ -271,6 +273,7 @@ let FeedItemInner = ({
       feedDescriptor,
     })
     unstableCacheProfileView(queryClient, post.author)
+    stashPostZoomSource({post, identifier: zoomSourceId})
     stashPostSource({
       feedSourceInfo,
       post: {
@@ -337,11 +340,8 @@ let FeedItemInner = ({
   }, [post, currentAccount?.did, threadgateHiddenReplies])
 
   return (
-    /*
-     * Opening the post zooms its thread out of this item on iOS. The thread
-     * screen knows which item it came from via `stashPostSource` above.
-     */
-    <ZoomTransition.Source identifier={post.uri}>
+    // On iOS, the thread zooms out of this item (see `stashPostZoomSource`)
+    <ZoomTransition.Source identifier={zoomSourceId}>
       <GalleryBleed>
         <Link
           testID={`feedItem-by-${post.author.handle}`}

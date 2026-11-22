@@ -1,7 +1,8 @@
-import {useCallback, useMemo} from 'react'
+import {useId, useMemo} from 'react'
 import {View} from 'react-native'
 import {type $Typed} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
+import {ZoomTransition} from '@bsky.app/expo-bluesky-swiss-army'
 import {
   mergeModUIResults,
   moderatePost,
@@ -24,6 +25,7 @@ import {
   ThreadItemPostNumber,
   useHasThreadItemPostNumber,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
+import {stashPostZoomSource} from '#/screens/PostThread/zoomSource'
 import {atoms as a, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {GalleryBleed} from '#/components/images/Gallery'
@@ -344,10 +346,12 @@ export function QuoteEmbed({
       : undefined
   }, [quote.record])
 
-  const onBeforePress = useCallback(() => {
+  const zoomSourceId = useId()
+  const onBeforePress = () => {
     unstableCacheProfileView(queryClient, quote.author)
+    stashPostZoomSource({post: quote, identifier: zoomSourceId})
     onOpen?.()
-  }, [queryClient, quote.author, onOpen])
+  }
 
   const {
     state: hover,
@@ -417,39 +421,42 @@ export function QuoteEmbed({
         style={[viewContext !== PostEmbedViewContext.ChatMessage && a.mt_sm]}
         onPointerEnter={linkDisabled ? undefined : onPointerEnter}
         onPointerLeave={linkDisabled ? undefined : onPointerLeave}>
-        <ContentHider
-          modui={moderation?.ui('contentList')}
-          style={[a.rounded_md, a.border, t.atoms.border_contrast_low, style]}
-          activeStyle={[a.p_md, a.pt_sm]}
-          childContainerStyle={[a.pt_sm]}>
-          {({active}) => (
-            <>
-              {!active && !linkDisabled && (
-                <SubtleHover
-                  native
-                  hover={hover || pressed}
-                  style={[a.rounded_md]}
-                />
-              )}
-              {linkDisabled ? (
-                <View style={[!active && a.p_md]} pointerEvents="none">
-                  {contents}
-                </View>
-              ) : (
-                <Link
-                  style={[!active && a.p_md]}
-                  hoverStyle={t.atoms.border_contrast_high}
-                  href={itemHref}
-                  title={itemTitle}
-                  onBeforePress={onBeforePress}
-                  onPressIn={onPressIn}
-                  onPressOut={onPressOut}>
-                  {contents}
-                </Link>
-              )}
-            </>
-          )}
-        </ContentHider>
+        {/* On iOS, the quoted post's thread zooms out of this box */}
+        <ZoomTransition.Source identifier={zoomSourceId} style={a.rounded_md}>
+          <ContentHider
+            modui={moderation?.ui('contentList')}
+            style={[a.rounded_md, a.border, t.atoms.border_contrast_low, style]}
+            activeStyle={[a.p_md, a.pt_sm]}
+            childContainerStyle={[a.pt_sm]}>
+            {({active}) => (
+              <>
+                {!active && !linkDisabled && (
+                  <SubtleHover
+                    native
+                    hover={hover || pressed}
+                    style={[a.rounded_md]}
+                  />
+                )}
+                {linkDisabled ? (
+                  <View style={[!active && a.p_md]} pointerEvents="none">
+                    {contents}
+                  </View>
+                ) : (
+                  <Link
+                    style={[!active && a.p_md]}
+                    hoverStyle={t.atoms.border_contrast_high}
+                    href={itemHref}
+                    title={itemTitle}
+                    onBeforePress={onBeforePress}
+                    onPressIn={onPressIn}
+                    onPressOut={onPressOut}>
+                    {contents}
+                  </Link>
+                )}
+              </>
+            )}
+          </ContentHider>
+        </ZoomTransition.Source>
       </View>
     </GalleryBleed>
   )
