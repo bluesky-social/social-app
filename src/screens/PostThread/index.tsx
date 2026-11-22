@@ -8,7 +8,6 @@ import {
 } from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
-import {ZoomTransition} from '@bsky.app/expo-bluesky-swiss-army'
 import {Trans} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -52,6 +51,7 @@ import {usePostZoomSource} from '#/screens/PostThread/zoomSource'
 import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
+import {ZoomTransitionEnabler} from '#/components/ZoomTransitionEnabler'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {
@@ -580,7 +580,7 @@ export function PostThread({uri}: {uri: string}) {
        * vertical drags stay with the list.
        */}
       {zoomSourceId && (
-        <ZoomTransition.Enabler
+        <ZoomTransitionEnabler
           sourceIdentifier={zoomSourceId}
           dismissGesture="horizontal"
         />
