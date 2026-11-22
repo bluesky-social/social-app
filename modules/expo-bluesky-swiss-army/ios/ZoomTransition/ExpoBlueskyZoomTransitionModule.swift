@@ -1,7 +1,7 @@
 import ExpoModulesCore
 
 /**
- * Native pieces for the iOS 18+ zoom navigation transition
+ * Native pieces for the iOS 26+ zoom navigation transition
  * (`UIViewController.preferredTransition = .zoom`). Based on expo-router's
  * `Link.AppleZoom`, without the router.
  *

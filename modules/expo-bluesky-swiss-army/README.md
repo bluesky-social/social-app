@@ -12,7 +12,7 @@ This module consolidates several native features into a single Expo module:
 - **SharedPrefs**: Shared preferences storage using native platform APIs (UserDefaults on iOS, SharedPreferences on Android)
 - **VisibilityView**: A native view component that tracks which view is currently visible on screen
 - **NotificationSettings**: iOS handler that routes the system "notification settings" intent into the app
-- **ZoomTransition**: iOS 18+ zoom navigation transition between a view and the screen it opens
+- **ZoomTransition**: iOS 26+ zoom navigation transition between a view and the screen it opens
 
 ## Modules
 
@@ -143,7 +143,7 @@ This is useful for features like video autoplay, where you want to know which vi
 
 ### ZoomTransition
 
-iOS 18+ only. The zoom navigation transition from UIKit
+iOS 26+ only. The zoom navigation transition from UIKit
 (`UIViewController.preferredTransition = .zoom`): the pushed screen grows out of
 a view on the previous screen and shrinks back into it on pop. Ported from
 expo-router's `Link.AppleZoom`, without the router.
@@ -173,14 +173,22 @@ expo-router's `Link.AppleZoom`, without the router.
 - Only works with the default native-stack animation. A custom
   `stackAnimation` makes react-native-screens supply its own animator, which
   overrides the zoom.
-- `ZoomTransition.isSupported` says whether `Enabler` does anything on this
-  device. Where it does, turn off react-native-screens' back gestures for the
-  screen (`gestureEnabled: false`; in the app, `#/components/ZoomTransitionEnabler`
-  does both). react-native-screens becomes the delegate of the navigation
+- Turn off react-native-screens' back gestures for the screen
+  (`gestureEnabled: false`; in the app, `#/components/ZoomTransitionEnabler`
+  does this). react-native-screens becomes the delegate of the navigation
   controller's back swipes, and with `fullScreenGestureEnabled` it lets them
   start on zoomed screens too. They race the zoom's own dismiss gestures, and
   when one of them wins (a fast flick, or a swipe while a cancelled one is
   still springing back) the screen pops without following the finger.
+- Why not iOS 18, where the API exists: there the zoom can only be swiped back
+  from the edge, so the app's swipe back from anywhere has to come from
+  react-native-screens. But while a screen has a zoom transition, UIKit ignores
+  the interaction controller react-native-screens supplies, so that swipe pops
+  the screen without following the finger, and can't be cancelled.
+- When a zoom dismiss gesture starts, `Enabler` cancels the React Native
+  touches in progress, like react-native-screens does for its own back
+  gestures. Otherwise releasing a swipe that started on a pressable would
+  press it.
 - In debug builds, a back swipe that starts away from the edge doesn't follow
   the finger: the screen only zooms back when you let go. expo-dev-menu's
   three-finger long press on the window holds UIKit's swipe-to-dismiss until
@@ -188,8 +196,8 @@ expo-router's `Link.AppleZoom`, without the router.
   affected.
 
 **Platform Support:**
-- iOS 18+: Full support
-- iOS < 18, Android, Web: `Source` is a plain View and `Enabler` renders nothing
+- iOS 26+: Full support
+- iOS < 26, Android, Web: `Source` is a plain View and `Enabler` renders nothing
 
 ### NotificationSettings
 

@@ -6,7 +6,7 @@ import {
 } from './types'
 
 /**
- * The zoom transition is iOS 18+ only. Elsewhere the source is a plain View
+ * The zoom transition is iOS 26+ only. Elsewhere the source is a plain View
  * and the screen uses its normal transition.
  */
 export function Source({
@@ -19,8 +19,3 @@ export function Source({
 export function Enabler(_props: ZoomTransitionEnablerProps) {
   return null
 }
-
-/**
- * Whether `Enabler` gives screens a zoom transition on this device.
- */
-export const isSupported = false

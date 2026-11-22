@@ -3,8 +3,10 @@ import {ZoomTransition} from '@bsky.app/expo-bluesky-swiss-army'
 import {type ParamListBase, useNavigation} from '@react-navigation/native'
 import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
 
+import {IOS_MAJOR_VERSION} from '#/env'
+
 /**
- * Gives the screen it's rendered in a zoom transition on iOS 18+, out of the
+ * Gives the screen it's rendered in a zoom transition on iOS 26+, out of the
  * matching `ZoomTransition.Source` on the previous screen.
  *
  * It also turns off react-native-screens' back gestures for the screen.
@@ -20,7 +22,7 @@ export function ZoomTransitionEnabler(
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
 
   useLayoutEffect(() => {
-    if (ZoomTransition.isSupported) {
+    if (IOS_MAJOR_VERSION >= 26) {
       navigation.setOptions({gestureEnabled: false})
     }
   }, [navigation])

@@ -1,5 +1,6 @@
 import ExpoModulesCore
 import UIKit
+import UIKit.UIGestureRecognizerSubclass
 
 /**
  * State shared with the closures UIKit keeps hold of. The closures must not
@@ -64,7 +65,8 @@ class ZoomTransitionEnablerView: ExpoView {
 
   private func configure() {
     #if os(iOS)
-    guard #available(iOS 18.0, *), superview != nil, let controller = findScreenController() else {
+    // See the README for why this is iOS 26+ even though the API is iOS 18+
+    guard #available(iOS 26.0, *), superview != nil, let controller = findScreenController() else {
       return
     }
     if controller === configuredController && configuredDismissGesture == state.dismissGesture {
@@ -75,18 +77,20 @@ class ZoomTransitionEnablerView: ExpoView {
 
     let state = self.state
     let options = UIViewController.Transition.ZoomOptions()
-    // Leaving this unset keeps UIKit's default dismissal behaviour.
-    if state.dismissGesture != .default {
-      options.interactiveDismissShouldBegin = { context in
-        switch state.dismissGesture {
-        case .default:
-          return true
-        case .horizontal:
-          return context.velocity.dx > abs(context.velocity.dy)
-        case .none:
-          return false
-        }
+    options.interactiveDismissShouldBegin = { [weak controller] context in
+      let shouldBegin: Bool
+      switch state.dismissGesture {
+      case .default:
+        shouldBegin = context.willBegin
+      case .horizontal:
+        shouldBegin = context.velocity.dx > abs(context.velocity.dy)
+      case .none:
+        shouldBegin = false
       }
+      if shouldBegin, let view = controller?.view {
+        ZoomTransitionEnablerView.cancelReactTouches(above: view)
+      }
+      return shouldBegin
     }
     controller.preferredTransition = .zoom(options: options) { context in
       guard
@@ -98,6 +102,29 @@ class ZoomTransitionEnablerView: ExpoView {
       return ZoomTransitionRegistry.shared.source(for: identifier, in: container)
     }
     #endif
+  }
+
+  /**
+   * Cancels the React Native touches in progress, like react-native-screens
+   * does when its back gesture starts. UIKit's zoom dismiss gestures don't
+   * cancel them, and since the screen moves with the finger, the touch never
+   * leaves whatever it started on: releasing the swipe would press it.
+   * Toggling the surface's touch handler sends JS a touch cancel.
+   */
+  private static func cancelReactTouches(above view: UIView) {
+    guard let touchHandlerClass = NSClassFromString("RCTSurfaceTouchHandler") else {
+      return
+    }
+    var ancestor = view.superview
+    while let current = ancestor {
+      if let touchHandler = current.gestureRecognizers?.first(where: { $0.isKind(of: touchHandlerClass) }) {
+        touchHandler.isEnabled = false
+        touchHandler.isEnabled = true
+        touchHandler.reset()
+        return
+      }
+      ancestor = current.superview
+    }
   }
 
   /**
