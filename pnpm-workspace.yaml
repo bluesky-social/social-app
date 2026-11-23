@@ -1,4 +1,5 @@
 packages:
+  - 'packages/*'
   - 'services/*'
 nodeLinker: 'hoisted'
 autoInstallPeers: true # default: true

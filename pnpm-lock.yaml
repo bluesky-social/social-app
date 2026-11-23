@@ -271,26 +271,26 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2(react-native@0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)
       '@bsky.app/bottom-sheet':
-        specifier: link:./modules/bottom-sheet
-        version: link:modules/bottom-sheet
+        specifier: workspace:*
+        version: link:packages/bottom-sheet
       '@bsky.app/expo-background-notification-handler':
-        specifier: link:./modules/expo-background-notification-handler
-        version: link:modules/expo-background-notification-handler
+        specifier: workspace:*
+        version: link:packages/background-notification-handler
       '@bsky.app/expo-bluesky-gif-view':
-        specifier: link:./modules/expo-bluesky-gif-view
-        version: link:modules/expo-bluesky-gif-view
+        specifier: workspace:*
+        version: link:packages/gif-view
       '@bsky.app/expo-bluesky-image-compressor':
-        specifier: link:./modules/expo-bluesky-image-compressor
-        version: link:modules/expo-bluesky-image-compressor
+        specifier: workspace:*
+        version: link:packages/image-compressor
       '@bsky.app/expo-bluesky-swiss-army':
-        specifier: link:./modules/expo-bluesky-swiss-army
-        version: link:modules/expo-bluesky-swiss-army
+        specifier: workspace:*
+        version: link:packages/swiss-army
       '@bsky.app/expo-dynamic-app-icon':
         specifier: ^1.8.5
         version: 1.8.5(@typescript/typescript6@6.0.2)(expo@58.0.23)(react-native@0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)(supports-color@8.1.1)
       '@bsky.app/expo-emoji-picker':
-        specifier: link:./modules/expo-emoji-picker
-        version: link:modules/expo-emoji-picker
+        specifier: workspace:*
+        version: link:packages/emoji-picker
       '@bsky.app/expo-guess-language':
         specifier: ^0.2.8
         version: 0.2.8(expo@58.0.23)(react-native@0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)
@@ -307,8 +307,8 @@ importers:
         specifier: ^0.3.2
         version: 0.3.2(expo@58.0.23)(react-native@0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)
       '@bsky.app/react-native-scroll-forwarder':
-        specifier: link:./modules/react-native-scroll-forwarder
-        version: link:modules/react-native-scroll-forwarder
+        specifier: workspace:*
+        version: link:packages/scroll-forwarder
       '@bsky.app/react-native-uitextview':
         specifier: ^2.7.2
         version: 2.7.2(react-native@0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)
@@ -857,8 +857,8 @@ importers:
         specifier: 9.8.1
         version: 9.8.1
       eslint-plugin-bsky-internal:
-        specifier: link:lint-rules
-        version: link:lint-rules
+        specifier: workspace:*
+        version: link:packages/lint-rules
       eslint-plugin-react-native-a11y:
         specifier: ^3.5.1
         version: 3.5.1(eslint@8.57.1(supports-color@8.1.1))
@@ -913,6 +913,26 @@ importers:
       typescript:
         specifier: npm:@typescript/typescript6@^6.0.2
         version: '@typescript/typescript6@6.0.2'
+
+  packages/background-notification-handler: {}
+
+  packages/bottom-sheet: {}
+
+  packages/emoji-picker: {}
+
+  packages/gif-view: {}
+
+  packages/image-compressor: {}
+
+  packages/lint-rules: {}
+
+  packages/scroll-forwarder:
+    dependencies:
+      react-native:
+        specifier: '*'
+        version: 0.88.1(patch_hash=3249fa4923b2b2d462478c709bb95fc2c8b5f685b8838abe9f9224db8949733a)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1)
+
+  packages/swiss-army: {}
 
   services/embed:
     dependencies:
