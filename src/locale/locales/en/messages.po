@@ -1637,8 +1637,8 @@ msgstr ""
 #: src/view/com/composer/GifAltText.tsx:84
 #: src/view/com/composer/GifAltText.tsx:167
 #: src/view/com/composer/GifAltText.tsx:237
-#: src/view/com/composer/photos/Gallery.tsx:201
-#: src/view/com/composer/photos/Gallery.tsx:236
+#: src/view/com/composer/photos/Gallery.tsx:203
+#: src/view/com/composer/photos/Gallery.tsx:238
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:86
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:94
 msgid "Add alt text"
@@ -2031,7 +2031,7 @@ msgstr ""
 #: src/components/images/Gallery/index.tsx:443
 #: src/components/images/ImageLayoutGridItem.tsx:138
 #: src/view/com/composer/GifAltText.tsx:108
-#: src/view/com/composer/photos/Gallery.tsx:211
+#: src/view/com/composer/photos/Gallery.tsx:213
 msgid "ALT"
 msgstr ""
 
@@ -5230,7 +5230,7 @@ msgstr "Edit group name"
 
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:86
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:90
-#: src/view/com/composer/photos/Gallery.tsx:218
+#: src/view/com/composer/photos/Gallery.tsx:220
 msgid "Edit image"
 msgstr ""
 
@@ -11733,7 +11733,7 @@ msgstr ""
 msgid "Remove from your feeds?"
 msgstr ""
 
-#: src/view/com/composer/photos/Gallery.tsx:227
+#: src/view/com/composer/photos/Gallery.tsx:229
 msgid "Remove image"
 msgstr ""
 
