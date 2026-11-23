@@ -1,8 +1,6 @@
-import {compressWithManipulator} from '#/lib/media/image/compressWithManipulator'
 import {QualitySearch} from '#/lib/media/image/qualitySearch'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {type ImageMeta} from '#/state/gallery'
-import {Features, features} from '#/analytics/features'
 
 /** Same as expo-bluesky-image-compressor on native. */
 const MAX_DIMENSION_ATTEMPTS = 4
@@ -18,10 +16,6 @@ export async function compressToFit(
   source: ImageMeta,
   {maxDimension, maxSize}: {maxDimension: number; maxSize: number},
 ): Promise<PickerImage> {
-  if (!features.isOn(Features.ImageUploadsWebCompressionEnable)) {
-    return compressWithManipulator(source, {maxDimension, maxSize})
-  }
-
   const image = await decode(source)
   try {
     let longSide = Math.min(Math.max(image.width, image.height), maxDimension)

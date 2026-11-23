@@ -23,8 +23,6 @@ export enum Features {
   OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
   AtmosphereScreenEnable = 'atmosphere_screen:enable',
   ShareDestinationsEnable = 'share_destinations:enable',
-  ImageUploadsNativeCompressionEnable = 'image_uploads:native_compression:enable',
-  ImageUploadsWebCompressionEnable = 'image_uploads:web_compression:enable',
   PostViewCountsEnable = 'post_view_counts:enable',
   WebListVirtualizationEnable = 'web_list:virtualization:enable',
 
