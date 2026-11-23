@@ -47,7 +47,13 @@ export function TakendownNavigator() {
   const {showLoggedOut} = useLoggedOutView()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   if (showLoggedOut) {
-    return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+    return (
+      <>
+        <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+        <PortalOutlet />
+        <BottomSheetOutlet />
+      </>
+    )
   }
   return (
     <RoutesContainer restricted>

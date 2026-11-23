@@ -135,7 +135,7 @@ export function useNotificationsHandler() {
   // eslint-disable-next-line react-compiler/react-compiler
   const logger = ax.logger.useChild(ax.logger.Context.Notifications)
   const {currentAccount, accounts} = useSession()
-  const {onPressSwitchAccount} = useAccountSwitcher()
+  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const navigation = useNavigation<NavigationProp>()
   const {currentConvoId} = useCurrentConvoId()
   const {setShowLoggedOut} = useLoggedOutViewControls()
@@ -255,13 +255,15 @@ export function useNotificationsHandler() {
 
       if (isModerationNotificationPayload(payload)) {
         if (payload.recipientDid !== currentAccount?.did) {
-          if (!storedAccountSwitchPayload) {
-            storePayloadForAccountSwitch(payload)
-            closeAllActiveElements()
-            const account = accounts.find(a => a.did === payload.recipientDid)
-            if (account) void onPressSwitchAccount(account, 'Notification')
-            else setShowLoggedOut(true)
-          }
+          // A switch already in progress cannot be redirected to another
+          // account. Preserve its destination until the switch finishes.
+          if (pendingDid && pendingDid !== payload.recipientDid) return
+          storePayloadForAccountSwitch(payload)
+          if (pendingDid) return
+          closeAllActiveElements()
+          const account = accounts.find(a => a.did === payload.recipientDid)
+          if (account) void onPressSwitchAccount(account, 'Notification')
+          else setShowLoggedOut(true)
           return
         }
         void queryClient.invalidateQueries({
@@ -477,6 +479,7 @@ export function useNotificationsHandler() {
     currentAccount?.did,
     navigation,
     onPressSwitchAccount,
+    pendingDid,
     queryClient,
     setShowLoggedOut,
   ])

@@ -18,9 +18,23 @@ jest.mock('#/state/shell/logged-out', () => ({
 }))
 jest.mock('#/view/com/auth/LoggedOut', () => ({
   LoggedOut: () => {
-    const {Text} =
+    const {Button, Text} =
       jest.requireActual<typeof import('react-native')>('react-native')
-    return <Text>Sign in</Text>
+    const {useState} = jest.requireActual<typeof import('react')>('react')
+    const {Portal} = jest.requireActual<typeof import('#/components/Portal')>(
+      '#/components/Portal',
+    )
+    const [open, setOpen] = useState(false)
+    return (
+      <>
+        <Button title="Sign in" onPress={() => setOpen(true)} />
+        {open && (
+          <Portal>
+            <Text>Sign-in dialog</Text>
+          </Portal>
+        )}
+      </>
+    )
   },
 }))
 jest.mock('@bsky.app/bottom-sheet', () => ({
@@ -112,8 +126,14 @@ it('opens the inbox and renders dialog outlets for a restricted account', async 
   expect(screen.getByTestId('bottom-sheet-outlet')).toBeTruthy()
 })
 
-it('shows sign-in when an account switch needs authentication', () => {
+it('renders sign-in dialogs when an account switch needs authentication', async () => {
   mockShowLoggedOut = true
-  const screen = render(<TakendownNavigator />)
-  expect(screen.getByText('Sign in')).toBeTruthy()
+  const screen = render(
+    <PortalProvider>
+      <TakendownNavigator />
+    </PortalProvider>,
+  )
+  fireEvent.press(screen.getByText('Sign in'))
+  await waitFor(() => expect(screen.getByText('Sign-in dialog')).toBeTruthy())
+  expect(screen.getByTestId('bottom-sheet-outlet')).toBeTruthy()
 })
