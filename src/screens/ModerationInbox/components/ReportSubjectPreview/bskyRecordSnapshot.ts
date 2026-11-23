@@ -24,6 +24,9 @@ export function getBskyRecordSnapshot(collection: string, record: unknown) {
     return {
       kind: 'post' as const,
       text: record.text,
+      facets: record.facets,
+      tags: record.tags,
+      langs: record.langs,
       createdAt: record.createdAt,
       labels: selfLabels(record.labels),
     }

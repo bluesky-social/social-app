@@ -4,6 +4,7 @@ import {setupI18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
 import {render, screen} from '@testing-library/react-native'
 
+import {BskyRecordSnapshotPreview} from './BskyRecordSnapshotPreview'
 import {PostSubjectPreview} from './PostSubjectPreview'
 
 jest.unmock('multiformats/cid')
@@ -25,6 +26,8 @@ const i18n = setupI18n({locale: 'en', messages: {en: {}}})
 let mockPostQuery: {data?: unknown; isPending: boolean; isSuccess: boolean}
 let mockOpts: ModerationOpts
 let mockProfile: unknown
+let mockSnapshotOptsAvailable = true
+let mockSnapshotPending = false
 
 jest.mock('#/state/queries/post', () => ({usePostQuery: () => mockPostQuery}))
 jest.mock('#/state/queries/profile', () => ({useProfileQuery: () => ({})}))
@@ -41,8 +44,8 @@ jest.mock(
   '#/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile',
   () => ({
     useSubjectPreviewProfile: () => ({
-      query: {isPending: false},
-      opts: mockOpts,
+      query: {isPending: mockSnapshotPending},
+      opts: mockSnapshotOptsAvailable ? mockOpts : undefined,
       profile: mockProfile,
     }),
   }),
@@ -77,6 +80,8 @@ jest.mock('#/components/moderation/ContentHider', () => {
 beforeEach(() => {
   mockPostQuery = {isPending: false, isSuccess: false}
   mockProfile = undefined
+  mockSnapshotOptsAvailable = true
+  mockSnapshotPending = false
   mockOpts = {
     userDid: 'did:plc:reporter',
     prefs: {
@@ -157,6 +162,36 @@ describe('PostSubjectPreview', () => {
     expect(screen.queryByText('“Example reported post”')).toBeNull()
   })
 
+  it.each([
+    [
+      'hashtag facets',
+      {
+        text: '#spoiler',
+        facets: [
+          {
+            index: {byteStart: 0, byteEnd: 8},
+            features: [{$type: 'app.bsky.richtext.facet#tag', tag: 'spoiler'}],
+          },
+        ],
+      },
+      {value: 'spoiler', targets: ['tag']},
+    ],
+    [
+      'outline tags',
+      {text: 'Example post', tags: ['spoiler']},
+      {value: 'spoiler', targets: ['tag']},
+    ],
+    [
+      'Japanese text',
+      {text: 'これはネタバレです', langs: ['ja']},
+      {value: 'ネタバレ', targets: ['content']},
+    ],
+  ])('respects muted words in %s', (_name, data, mutedWord) => {
+    mockOpts.prefs.mutedWords = [mutedWord]
+    renderPreview({...record, ...data})
+    expect(screen.getByText('Content hidden')).toBeTruthy()
+  })
+
   it('hides the snapshot when the viewer blocked the author', () => {
     mockProfile = {
       did,
@@ -210,4 +245,36 @@ describe('PostSubjectPreview', () => {
     renderPreview(record)
     expect(screen.getByText('Content hidden')).toBeTruthy()
   })
+})
+
+it('keeps the snapshot title generic until moderation and profile loading finish', () => {
+  const feedUri = new AtUri(`at://${did}/app.bsky.feed.generator/3feed`)
+  const preview = () => (
+    <I18nProvider i18n={i18n}>
+      <BskyRecordSnapshotPreview
+        report={{
+          subject: {...subject, uri: feedUri.toString()},
+          record: {
+            $type: 'app.bsky.feed.generator',
+            did,
+            displayName: 'Private feed name',
+            createdAt: record.createdAt,
+          },
+        }}
+        uri={feedUri}
+        subjectLabel="Feed"
+      />
+    </I18nProvider>
+  )
+  mockSnapshotOptsAvailable = false
+  const {rerender} = render(preview())
+  expect(screen.getByText('Feed')).toBeTruthy()
+  expect(screen.queryByText(/Private feed name/)).toBeNull()
+  mockSnapshotOptsAvailable = true
+  mockSnapshotPending = true
+  rerender(preview())
+  expect(screen.queryByText(/Private feed name/)).toBeNull()
+  mockSnapshotPending = false
+  rerender(preview())
+  expect(screen.getByText('Feed “Private feed name”')).toBeTruthy()
 })

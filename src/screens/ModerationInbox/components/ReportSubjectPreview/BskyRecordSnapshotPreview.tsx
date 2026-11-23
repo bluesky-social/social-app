@@ -1,4 +1,8 @@
 import {type AtUri, isValidDid, normalizeDatetimeAlways} from '@atproto/syntax'
+import {
+  matchMuteWords,
+  moderateExternalView as moderateExternalViewSdk,
+} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {moderateExternalView} from '#/lib/moderation/moderateExternalView'
@@ -36,6 +40,7 @@ export function BskyRecordSnapshotPreview({
   const did = isValidDid(uri.host) ? uri.host : undefined
   if (!snapshot || !ref || !did) return null
 
+  const isLoading = query.isPending || !opts
   let title = subjectLabel
   if (snapshot.kind === 'feed')
     title = l`Feed “${sanitizeDisplayName(snapshot.name)}”`
@@ -47,16 +52,20 @@ export function BskyRecordSnapshotPreview({
 
   const text = snapshot.kind === 'post' ? snapshot.text : ''
   const description = 'description' in snapshot ? snapshot.description : ''
+  const author = profile
+    ? {...profile, $type: 'app.bsky.actor.defs#profileViewBasic' as const}
+    : undefined
+  // Post text uses the SDK's post matcher below, including facets and language.
+  const moderateSnapshot =
+    snapshot.kind === 'post' ? moderateExternalViewSdk : moderateExternalView
   const moderation = opts
-    ? moderateExternalView(
+    ? moderateSnapshot(
         {
           uri: ref.uri,
           title: snapshot.kind === 'post' ? text : title,
           description: description ?? '',
           associatedRefs: [ref],
-          associatedProfiles: profile
-            ? [{...profile, $type: 'app.bsky.actor.defs#profileViewBasic'}]
-            : [],
+          associatedProfiles: author ? [author] : [],
           labels: [
             // Also respect warnings on the current revision of this record.
             ...(liveLabels?.filter(
@@ -80,8 +89,20 @@ export function BskyRecordSnapshotPreview({
         opts,
       )
     : undefined
-  if (snapshot.kind === 'post' && opts?.prefs.hiddenPosts?.includes(ref.uri)) {
-    moderation?.addHidden(true)
+  if (snapshot.kind === 'post' && opts && moderation) {
+    if (did !== opts.userDid) {
+      moderation.addMutedWord(
+        matchMuteWords({
+          mutedWords: opts.prefs.mutedWords,
+          text: snapshot.text,
+          facets: snapshot.facets,
+          outlineTags: snapshot.tags,
+          languages: snapshot.langs,
+          actor: author,
+        }),
+      )
+    }
+    if (opts.prefs.hiddenPosts?.includes(ref.uri)) moderation.addHidden(true)
   }
   const date = i18n.date(new Date(snapshot.createdAt), {dateStyle: 'medium'})
   const dateLabel =
@@ -94,8 +115,8 @@ export function BskyRecordSnapshotPreview({
   return (
     <PreviewContent
       testID="moderationInboxRecordSnapshotPreview"
-      title={title}
-      loading={query.isPending || !opts}
+      title={isLoading ? subjectLabel : title}
+      loading={isLoading}
       moderation={moderation?.ui('contentView')}
       metadataText={[dateLabel]}>
       {text ? (
