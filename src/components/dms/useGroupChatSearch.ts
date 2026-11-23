@@ -12,7 +12,7 @@ const GROUP_CHAT_SEARCH_LIMIT = 100
  * Group chats whose name contains `searchText`. Profile search only finds
  * people, so group chats can't be found by their name otherwise. Fetches the
  * group chats the first time it's enabled with some text, then filters them
- * locally as the text changes.
+ * locally as the text changes. `isLoading` is only true for that first fetch.
  */
 export function useGroupChatSearch({
   searchText,
@@ -20,10 +20,10 @@ export function useGroupChatSearch({
 }: {
   searchText: string
   enabled: boolean
-}): {groups: ConvoWithDetails[]; isFetching: boolean} {
+}): {groups: ConvoWithDetails[]; isLoading: boolean} {
   const {currentAccount} = useSession()
   const query = searchText.trim().toLocaleLowerCase()
-  const {data, isFetching} = useListConvosQuery({
+  const {data, isLoading} = useListConvosQuery({
     enabled: enabled && query.length > 0,
     status: 'accepted',
     lockStatus: 'unlocked',
@@ -31,7 +31,7 @@ export function useGroupChatSearch({
     limit: GROUP_CHAT_SEARCH_LIMIT,
   })
 
-  if (!enabled || !query || !data) return {groups: [], isFetching}
+  if (!enabled || !query || !data) return {groups: [], isLoading}
 
   const groups: ConvoWithDetails[] = []
   for (const convoView of data.pages[0].convos) {
@@ -40,5 +40,5 @@ export function useGroupChatSearch({
     if (!convo.details.name.toLocaleLowerCase().includes(query)) continue
     groups.push(convo)
   }
-  return {groups, isFetching}
+  return {groups, isLoading}
 }

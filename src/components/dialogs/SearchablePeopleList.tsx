@@ -106,6 +106,7 @@ export function SearchablePeopleList({
     data: results,
     isError,
     isFetching,
+    isPlaceholderData,
   } = useActorAutocompleteQuery(searchText, true, 12)
   const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
   const {data: convos} = useListConvosQuery({
@@ -113,14 +114,27 @@ export function SearchablePeopleList({
     status: 'accepted',
     lockStatus: 'unlocked',
   })
-  const {groups: matchingGroups, isFetching: isFetchingGroups} =
+  const {groups: matchingGroups, isLoading: isLoadingGroups} =
     useGroupChatSearch({
       searchText,
       enabled: !!showRecentConvos && !renderProfileCard,
     })
+  /*
+   * Wait for both people and group chats before showing search results, so
+   * the groups don't pop in above people already on screen. Once there are
+   * results, keep showing them while the next search loads.
+   */
+  const isSearchPending =
+    (isPlaceholderData && !results?.length) || isLoadingGroups
 
   const items = useMemo(() => {
     let _items: Item[] = []
+    const placeholders: Item[] = Array(10)
+      .fill(0)
+      .map((__, i) => ({
+        type: 'placeholder',
+        key: i + '',
+      }))
 
     if (isError) {
       _items.push({
@@ -129,41 +143,38 @@ export function SearchablePeopleList({
         message: l`We're having network issues, try again`,
       })
     } else if (searchText.length) {
-      if (results?.length) {
-        for (const profile of results) {
-          if (profile.did === currentAccount?.did) continue
-          _items.push({
-            type: 'profile',
-            key: profile.did,
-            profile,
-          })
+      if (isSearchPending) {
+        _items.push(...placeholders)
+      } else {
+        if (results?.length) {
+          for (const profile of results) {
+            if (profile.did === currentAccount?.did) continue
+            _items.push({
+              type: 'profile',
+              key: profile.did,
+              profile,
+            })
+          }
+
+          if (sortByMessageDeclaration) {
+            _items = _items.sort(item => {
+              return item.type === 'profile' && canBeMessaged(item.profile)
+                ? -1
+                : 1
+            })
+          }
         }
 
-        if (sortByMessageDeclaration) {
-          _items = _items.sort(item => {
-            return item.type === 'profile' && canBeMessaged(item.profile)
-              ? -1
-              : 1
-          })
-        }
+        // Group chats named like the search go first, before the people
+        _items.unshift(
+          ...matchingGroups.map(convo => ({
+            type: 'existingChat' as const,
+            key: convo.view.id,
+            convo,
+          })),
+        )
       }
-
-      // Group chats named like the search go first, before the people
-      _items.unshift(
-        ...matchingGroups.map(convo => ({
-          type: 'existingChat' as const,
-          key: convo.view.id,
-          convo,
-        })),
-      )
     } else {
-      const placeholders: Item[] = Array(10)
-        .fill(0)
-        .map((__, i) => ({
-          type: 'placeholder',
-          key: i + '',
-        }))
-
       if (showRecentConvos) {
         if (convos && follows) {
           const usedDids = new Set()
@@ -256,15 +267,10 @@ export function SearchablePeopleList({
     showRecentConvos,
     sortByMessageDeclaration,
     matchingGroups,
+    isSearchPending,
   ])
 
-  if (
-    searchText &&
-    !isFetching &&
-    !isFetchingGroups &&
-    !items.length &&
-    !isError
-  ) {
+  if (searchText && !isFetching && !items.length && !isError) {
     items.push({type: 'empty', key: 'empty', message: l`No results`})
   }
 

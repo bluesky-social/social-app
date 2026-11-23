@@ -286,9 +286,10 @@ export function InitiateChatFlow({
     data: results,
     isError,
     isFetching,
+    isPlaceholderData,
   } = useActorAutocompleteQuery(searchText, true, 12)
   const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
-  const {groups: matchingGroups, isFetching: isFetchingGroups} =
+  const {groups: matchingGroups, isLoading: isLoadingGroups} =
     useGroupChatSearch({
       searchText,
       enabled:
@@ -296,6 +297,13 @@ export function InitiateChatFlow({
         !!onSelectExistingChat &&
         chatState === ChatState.NEW_CHAT,
     })
+  /*
+   * Wait for both people and group chats before showing search results, so
+   * the groups don't pop in above people already on screen. Once there are
+   * results, keep showing them while the next search loads.
+   */
+  const isSearchPending =
+    (isPlaceholderData && !results?.length) || isLoadingGroups
 
   const newGroupChatTitle = l`New group chat`
   const groupNameTitle = l`Group name`
@@ -322,6 +330,12 @@ export function InitiateChatFlow({
       item.type === 'profile' && checker(item.profile) ? 0 : 1
     const compareByMessageDeclaration = (a: Item, b: Item) =>
       messageDeclarationRank(a) - messageDeclarationRank(b)
+    const placeholders: Item[] = Array(10)
+      .fill(0)
+      .map((__, i) => ({
+        type: 'placeholder',
+        key: i + '',
+      }))
 
     if (isError) {
       _items.push({
@@ -341,37 +355,34 @@ export function InitiateChatFlow({
         message: l`New group chat with:`,
       })
     } else if (searchText.length) {
-      if (results?.length) {
-        for (const profile of results) {
-          if (profile.did === currentAccount?.did) continue
-          _items.push({
-            type: 'profile',
-            key: profile.did,
-            profile,
-          })
+      if (isSearchPending) {
+        _items.push(...placeholders)
+      } else {
+        if (results?.length) {
+          for (const profile of results) {
+            if (profile.did === currentAccount?.did) continue
+            _items.push({
+              type: 'profile',
+              key: profile.did,
+              profile,
+            })
+          }
+
+          if (sortByMessageDeclaration) {
+            _items = _items.sort(compareByMessageDeclaration)
+          }
         }
 
-        if (sortByMessageDeclaration) {
-          _items = _items.sort(compareByMessageDeclaration)
-        }
+        // Group chats named like the search go first, before the people
+        _items.unshift(
+          ...matchingGroups.map(convo => ({
+            type: 'existingChat' as const,
+            key: convo.view.id,
+            convo,
+          })),
+        )
       }
-
-      // Group chats named like the search go first, before the people
-      _items.unshift(
-        ...matchingGroups.map(convo => ({
-          type: 'existingChat' as const,
-          key: convo.view.id,
-          convo,
-        })),
-      )
     } else {
-      const placeholders: Item[] = Array(10)
-        .fill(0)
-        .map((__, i) => ({
-          type: 'placeholder',
-          key: i + '',
-        }))
-
       if (
         chatState === ChatState.NEW_CHAT &&
         showRecentConvos &&
@@ -482,15 +493,10 @@ export function InitiateChatFlow({
     showRecentConvos,
     sortByMessageDeclaration,
     matchingGroups,
+    isSearchPending,
   ])
 
-  if (
-    searchText &&
-    !isFetching &&
-    !isFetchingGroups &&
-    !items.length &&
-    !isError
-  ) {
+  if (searchText && !isFetching && !items.length && !isError) {
     items.push({type: 'empty', key: 'empty', message: l`No results`})
   }
 
@@ -1022,11 +1028,12 @@ function ExistingChatCard({
           ]}>
           <ProfileCard.Header>
             {convo.kind === 'group' ? (
-              <AvatarBubbles profiles={convo.members} size={40} />
+              <AvatarBubbles profiles={convo.members} size={44} />
             ) : (
               <ProfileCard.Avatar
                 profile={convo.primaryMember}
                 moderationOpts={moderationOpts}
+                size={44}
                 disabledPreview
               />
             )}
