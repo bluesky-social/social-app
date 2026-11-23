@@ -424,7 +424,10 @@ const ImageItem = ({
                 style={{flex: 1, borderRadius}}
                 accessibilityHint=""
                 accessibilityIgnoresInvertColors
-                cachePolicy="memory"
+                // zooming doesn't change the size expo-image downscales to
+                allowDownscaling={!isScaled}
+                // the zoomed load re-reads the file from disk instead of downloading again
+                cachePolicy="memory-disk"
               />
             </Animated.View>
           </Animated.View>

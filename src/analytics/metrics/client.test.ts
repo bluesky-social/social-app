@@ -1,11 +1,17 @@
+import {onAppStateChange} from '#/lib/appState'
+import * as env from '#/env'
 import {MetricsClient} from './client'
 
-let appStateCallback: (state: string) => void
+const mockAppStateListeners = new Set<(state: string) => void>()
+
+function appStateCallback(state: string) {
+  for (const listener of [...mockAppStateListeners]) listener(state)
+}
 
 jest.mock('#/lib/appState', () => ({
   onAppStateChange: jest.fn(cb => {
-    appStateCallback = cb
-    return {remove: jest.fn()}
+    mockAppStateListeners.add(cb)
+    return {remove: () => mockAppStateListeners.delete(cb)}
   }),
 }))
 
@@ -28,25 +34,41 @@ jest.mock('#/env', () => ({
 type TestEvents = {
   click: {button: string}
   view: {screen: string}
+  'atmosphere:tab:duration': {
+    tab: string
+    durationMs: number
+    endReason: 'backgrounded'
+  }
+}
+
+type TestBatch = {
+  events: {
+    event: keyof TestEvents
+    payload: TestEvents[keyof TestEvents]
+  }[]
 }
 
 describe('MetricsClient', () => {
   let fetchMock: jest.Mock
-  let fetchRequests: {body: any}[]
+  let fetchRequests: {body: TestBatch}[]
 
   beforeEach(() => {
     jest.useFakeTimers({advanceTimers: true})
+    mockAppStateListeners.clear()
     fetchRequests = []
-    fetchMock = jest.fn().mockImplementation(async (_url, options) => {
-      const body = JSON.parse(options.body)
-      fetchRequests.push({body})
-      return {ok: true, status: 200}
-    })
+    fetchMock = jest
+      .fn()
+      .mockImplementation(async (_url, options: {body: string}) => {
+        const body = JSON.parse(options.body)
+        fetchRequests.push({body})
+        return {ok: true, status: 200}
+      })
     global.fetch = fetchMock
   })
 
   afterEach(() => {
     jest.useRealTimers()
+    jest.restoreAllMocks()
     jest.clearAllMocks()
   })
 
@@ -90,7 +112,7 @@ describe('MetricsClient', () => {
   it('retries failed events once on 500 response', async () => {
     let requestCount = 0
 
-    fetchMock.mockImplementation(async (_url, options) => {
+    fetchMock.mockImplementation(async (_url, options: {body: string}) => {
       requestCount++
       const body = JSON.parse(options.body)
 
@@ -228,6 +250,112 @@ describe('MetricsClient', () => {
     expect(retried).toHaveLength(5)
     expect(retried[0].payload.button).toBe('btn-1')
     expect(retried[4].payload.button).toBe('btn-5')
+  })
+
+  it.each(['before', 'after'])(
+    'flushes duration from an app-state listener registered %s the client',
+    order => {
+      const client = new MetricsClient<TestEvents>()
+      const duration = {
+        tab: 'discover',
+        durationMs: 2000,
+        endReason: 'backgrounded' as const,
+      }
+      const recordDuration = (state: string) => {
+        if (state === 'background') {
+          client.track('atmosphere:tab:duration', duration)
+        }
+      }
+      if (order === 'before') onAppStateChange(recordDuration)
+      client.track('view', {screen: 'discover'})
+      if (order === 'after') onAppStateChange(recordDuration)
+
+      appStateCallback('background')
+      jest.runAllTicks()
+
+      expect(fetchRequests).toHaveLength(1)
+      expect(fetchRequests[0].body.events).toEqual([
+        expect.objectContaining({event: 'view'}),
+        expect.objectContaining({
+          event: 'atmosphere:tab:duration',
+          payload: duration,
+        }),
+      ])
+      client.flush()
+      expect(fetchRequests).toHaveLength(1)
+    },
+  )
+
+  it('flushes background duration even after an inactive flush', () => {
+    const client = new MetricsClient<TestEvents>()
+    client.track('view', {screen: 'discover'})
+    onAppStateChange(state => {
+      if (state === 'background') {
+        client.track('atmosphere:tab:duration', {
+          tab: 'discover',
+          durationMs: 2000,
+          endReason: 'backgrounded',
+        })
+      }
+    })
+
+    appStateCallback('inactive')
+    jest.runAllTicks()
+    expect(fetchRequests).toHaveLength(1)
+
+    appStateCallback('background')
+    jest.runAllTicks()
+    expect(fetchRequests).toHaveLength(2)
+    expect(fetchRequests[1].body.events).toEqual([
+      expect.objectContaining({event: 'atmosphere:tab:duration'}),
+    ])
+    client.flush()
+    expect(fetchRequests).toHaveLength(2)
+  })
+
+  it('includes background duration in the web beacon', async () => {
+    jest.replaceProperty(env, 'IS_WEB', true)
+    const descriptor = Object.getOwnPropertyDescriptor(globalThis, 'navigator')
+    const sendBeacon = jest.fn<boolean, [string, Blob]>(() => true)
+    Object.defineProperty(globalThis, 'navigator', {
+      configurable: true,
+      value: {sendBeacon},
+    })
+
+    try {
+      const client = new MetricsClient<TestEvents>()
+      client.track('view', {screen: 'discover'})
+      onAppStateChange(state => {
+        if (state === 'background') {
+          client.track('atmosphere:tab:duration', {
+            tab: 'discover',
+            durationMs: 2000,
+            endReason: 'backgrounded',
+          })
+        }
+      })
+
+      appStateCallback('background')
+      jest.runAllTicks()
+
+      expect(sendBeacon).toHaveBeenCalledTimes(1)
+      const [url, blob] = sendBeacon.mock.calls[0]
+      expect(url).toBe('https://test.metrics.api/t')
+      const {events} = JSON.parse(await blob.text()) as TestBatch
+      expect(events.map(event => event.event)).toEqual([
+        'view',
+        'atmosphere:tab:duration',
+      ])
+      expect(fetchMock).not.toHaveBeenCalled()
+      client.flush()
+      expect(sendBeacon).toHaveBeenCalledTimes(1)
+    } finally {
+      if (descriptor) {
+        Object.defineProperty(globalThis, 'navigator', descriptor)
+      } else {
+        Reflect.deleteProperty(globalThis, 'navigator')
+      }
+    }
   })
 
   it('flushes when app goes to background', async () => {

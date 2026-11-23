@@ -1,4 +1,4 @@
-import {useCallback, useRef, useState} from 'react'
+import {useCallback, useLayoutEffect, useRef, useState} from 'react'
 import {type LayoutChangeEvent, View} from 'react-native'
 import Animated, {
   interpolate,
@@ -570,7 +570,21 @@ function NotificationsHeader({
     }
   })
 
+  const ref = useRef<React.ComponentRef<typeof View>>(null)
   const height = useSharedValue(0)
+  const updateHeight = useCallback(
+    (headerHeight: number) => {
+      // Hidden web screens measure 0, keep the last height for coming back
+      if (headerHeight === 0) return
+      height.set(headerHeight)
+      onHeightChange(headerHeight)
+    },
+    [height, onHeightChange],
+  )
+  // onLayout arrives after the first paint, so measure before it
+  useLayoutEffect(() => {
+    updateHeight(ref.current?.getBoundingClientRect().height ?? 0)
+  }, [updateHeight])
   const [pillsHeight, setPillsHeight] = useState(0)
   /*
    * Shrinks the fade from the top as the pills move up, so that it always
@@ -587,12 +601,10 @@ function NotificationsHeader({
 
   return (
     <View
+      ref={ref}
       pointerEvents="box-none"
       style={[a.fixed, a.z_10, a.top_0, a.left_0, a.right_0]}
-      onLayout={event => {
-        height.set(event.nativeEvent.layout.height)
-        onHeightChange(event.nativeEvent.layout.height)
-      }}>
+      onLayout={event => updateHeight(event.nativeEvent.layout.height)}>
       {/*
        * On native, the background fades out under the header, down to the
        * bottom of the pills as they move up. On web, the title and the pills

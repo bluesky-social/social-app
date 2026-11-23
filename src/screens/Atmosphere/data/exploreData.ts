@@ -157,13 +157,6 @@ export function getAtmosphereExploreApps(
   )
 }
 
-export function getAtmosphereAnnouncementBanner(
-  data: app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody,
-): app.bsky.unspecced.getAtmosphereExploreTab.AnnouncementBanner | undefined {
-  const banner = data.announcementBanner
-  return banner?.title && banner.url ? banner : undefined
-}
-
 export function getAtmosphereLivestreams(
   data: Pick<
     app.bsky.unspecced.getAtmosphereExploreTab.$OutputBody,

@@ -22,6 +22,14 @@ export type NavigationHandlerArgs = {
   resetKey: string
 }
 
+export type ScrollNavigationArgs = Pick<
+  NavigationHandlerArgs,
+  'scrollRef' | 'itemWidthsRef' | 'currentIndexRef' | 'itemCount' | 'resetKey'
+> & {
+  /** Called with the new leading item. */
+  onNavigate: (index: number) => void
+}
+
 export type GalleryRef = {
   /**
    * Scrolls the minimum distance needed to bring the item at `index` into

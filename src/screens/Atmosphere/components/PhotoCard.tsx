@@ -12,6 +12,8 @@ import {
   getAssociatedProfile,
   getGalleryImages,
 } from '#/screens/Atmosphere/data/exploreData'
+import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
+import {useLogContentPress} from '#/screens/Atmosphere/metrics/context'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -39,6 +41,8 @@ export function PhotoCard({
     onOut: onInteractOut,
   } = useInteractionState()
   const dialogControl = useDialogControl()
+  const logPress = useLogContentPress()
+  const sendFeedback = useAtmosphereFeedback()
   const moderationOpts = useModerationOpts()
   const authorProfile = getAssociatedProfile(photo.associatedProfiles)
   const photos = getGalleryImages(photo)
@@ -82,7 +86,11 @@ export function PhotoCard({
         })}
         ref={galleryFocus?.focusRef}
         tabIndex={galleryFocus?.tabIndex}
-        onPress={() => dialogControl.open()}
+        onPress={() => {
+          logPress('photoDialog')
+          sendFeedback?.('app.bsky.feed.defs#clickthroughItem')
+          dialogControl.open()
+        }}
         onHoverIn={onInteract}
         onHoverOut={onInteractOut}
         onFocus={() => {

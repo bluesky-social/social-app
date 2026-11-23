@@ -22,12 +22,12 @@ import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/i
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Menu from '#/components/Menu'
+import {RecentChats} from '#/components/ShareDialog/RecentChats'
 import * as Toast from '#/components/Toast'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
 import {useDevMode} from '#/storage/hooks/dev-mode'
-import {RecentChats} from './RecentChats'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'
 import {ShareSheetItems} from './ShareSheetItems'
 
@@ -124,6 +124,20 @@ function LegacyShareMenuItems({
     })
   }
 
+  const onSelectRecentChat = (conversation: string, position: number) => {
+    ax.metric('share:press:recentDm', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      position,
+    })
+    onBeforeShareViaChat()
+    navigation.navigate('MessagesConversation', {
+      conversation,
+      embed: postUri,
+      embedSource: 'recentChat',
+    })
+  }
+
   const onShareATURI = () => {
     void simpleShareText(postUri)
   }
@@ -138,11 +152,7 @@ function LegacyShareMenuItems({
         {hasSession && aa.state.access === aa.Access.Full && (
           <Menu.Group>
             <Menu.ContainerItem>
-              <RecentChats
-                postUri={postUri}
-                authorDid={postAuthor.did}
-                onBeforePress={onBeforeShareViaChat}
-              />
+              <RecentChats onSelectChat={onSelectRecentChat} />
             </Menu.ContainerItem>
             <Menu.Item
               testID="postDropdownSendViaDMBtn"

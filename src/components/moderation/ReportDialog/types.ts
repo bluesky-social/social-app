@@ -102,9 +102,10 @@ export type ReportDialogProps = {
   control: Dialog.DialogOuterProps['control']
   subject: ParsedReportSubject
   /**
-   * Called if the report was successfully submitted.
+   * Called if the report was successfully submitted, with the reason the user
+   * picked.
    */
-  onAfterSubmit?: () => void
+  onAfterSubmit?: (report: {reason: string | undefined}) => void
   /**
    * Called after the dialog finishes closing.
    */

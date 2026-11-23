@@ -43,7 +43,11 @@ export class MetricsClient<M extends Record<string, any>> {
       if (state === 'active') {
         this.retryFailedLogs()
       } else {
-        this.flush()
+        /*
+         * Later app-state listeners may enqueue final duration events. Include
+         * them in this transition's flush without waiting for another timer.
+         */
+        queueMicrotask(() => this.flush())
       }
     })
   }

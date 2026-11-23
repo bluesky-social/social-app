@@ -12,7 +12,6 @@ import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {listenSoftReset} from '#/state/events'
-import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {
   type FeedSourceFeedInfo,
   useFeedSourceInfoQuery,
@@ -38,6 +37,7 @@ import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/componen
 import * as Layout from '#/components/Layout'
 import {PostFeedSkeleton} from '#/components/PostFeedSkeleton'
 import {IS_NATIVE} from '#/env'
+import {FeedFeedbackProvider, useFeedFeedback} from '#/features/feedFeedback'
 import {app} from '#/lexicons'
 import {
   CustomFeedHeader,
@@ -143,7 +143,7 @@ export function CustomFeedScreenInner({
   const [hasNew, setHasNew] = useState(false)
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const queryClient = useQueryClient()
-  const feedFeedback = useFeedFeedback(feedInfo, hasSession)
+  const feedFeedback = useFeedFeedback(feedInfo, hasSession, 'feed')
   const scrollElRef = useAnimatedRef() as ListRef
 
   const onScrollToTop = useCallback(() => {

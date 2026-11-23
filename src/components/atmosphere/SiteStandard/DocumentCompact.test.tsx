@@ -1,7 +1,12 @@
 import {render} from '@testing-library/react-native'
 
+import {shareUrl} from '#/lib/sharing'
 import {type app} from '#/lexicons'
+import {Document} from './Document'
 import {DocumentCompact, DocumentCompactCard} from './DocumentCompact'
+
+let mockIsNative = false
+let mockOnLongPress: (() => void) | undefined
 
 const mockMenu = jest.fn<null, [{offsetY?: number; offsetX?: number}]>(
   () => null,
@@ -25,7 +30,11 @@ jest.mock('#/alf', () => ({
   useTheme: () => ({atoms: new Proxy({}, {get: () => ({})})}),
   web: () => undefined,
 }))
-jest.mock('#/env', () => ({IS_NATIVE: false}))
+jest.mock('#/env', () => ({
+  get IS_NATIVE() {
+    return mockIsNative
+  },
+}))
 jest.mock('#/analytics', () => ({useAnalytics: () => ({metric: jest.fn()})}))
 jest.mock('#/lib/haptics', () => ({
   useHaptics: () => ({tap: jest.fn(), longPress: jest.fn()}),
@@ -33,7 +42,22 @@ jest.mock('#/lib/haptics', () => ({
 jest.mock('#/lib/sharing', () => ({shareUrl: jest.fn()}))
 jest.mock('expo-image', () => ({Image: () => null}))
 jest.mock('#/components/Link', () => ({
-  Link: ({children}: {children: React.ReactNode}) => children,
+  Link: ({
+    children,
+    onLongPress,
+  }: {
+    children: React.ReactNode | ((state: {pressed: boolean}) => React.ReactNode)
+    onLongPress?: () => void
+  }) => {
+    mockOnLongPress = onLongPress
+    return typeof children === 'function'
+      ? children({pressed: false})
+      : children
+  },
+}))
+jest.mock('#/components/Divider', () => ({Divider: () => null}))
+jest.mock('#/components/atmosphere/SiteStandard/StandardSiteMetaRow', () => ({
+  StandardSiteMetaRow: () => null,
 }))
 jest.mock('#/components/Typography', () => ({Text: () => null}))
 jest.mock(
@@ -60,7 +84,11 @@ const menuOffsets = () => {
   return {offsetY, offsetX}
 }
 
-beforeEach(() => mockMenu.mockClear())
+beforeEach(() => {
+  jest.clearAllMocks()
+  mockIsNative = false
+  mockOnLongPress = undefined
+})
 
 it.each([DocumentCompact, DocumentCompactCard])(
   'aligns the menu with the container padding (%p)',
@@ -93,3 +121,30 @@ it('hides the menu in preview', () => {
 
   expect(mockMenu).not.toHaveBeenCalled()
 })
+
+describe.each([Document, DocumentCompact, DocumentCompactCard])(
+  'native sharing (%p)',
+  Component => {
+    it.each([true, false])(
+      'supports an optional onShareCallback: %s',
+      withCallback => {
+        mockIsNative = true
+        const onShare = jest.fn()
+        const onPress = jest.fn()
+        render(
+          <Component
+            view={view}
+            onShareCallback={withCallback ? onShare : undefined}
+            onPressCallback={onPress}
+          />,
+        )
+
+        expect(mockOnLongPress).toEqual(expect.any(Function))
+        mockOnLongPress?.()
+        expect(shareUrl).toHaveBeenCalledWith(view.uri)
+        expect(onShare).toHaveBeenCalledTimes(withCallback ? 1 : 0)
+        expect(onPress).not.toHaveBeenCalled()
+      },
+    )
+  },
+)

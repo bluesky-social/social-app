@@ -314,12 +314,19 @@ export function Outer({
         value={presentation?.safeAreaInsets ?? safeAreaInsets}>
         <Context.Provider value={context}>
           <BreakpointWidthContext.Provider value={presentation?.width}>
-            <SheetGestureRoot style={isHeightConstrained && a.flex_1}>
+            {/*
+             * On Android the sheet canvas is sized after the first layout, and
+             * a `flex: 1` view keeps the height it measured then. Without
+             * shrinking, a long ScrollableInner stays as tall as its content
+             * and can't scroll. See BottomSheetNativeComponent.
+             */}
+            <SheetGestureRoot
+              style={isHeightConstrained && [a.flex_1, a.flex_shrink]}>
               <View
                 testID={testID}
                 style={[
                   a.relative,
-                  isHeightConstrained && a.flex_1,
+                  isHeightConstrained && [a.flex_1, android(a.flex_shrink)],
                   presentationMaxHeight != null && {
                     maxHeight: presentationMaxHeight,
                   },

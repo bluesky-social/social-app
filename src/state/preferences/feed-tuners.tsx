@@ -13,8 +13,11 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
 
   return useMemo(() => {
     if (feedDesc.startsWith('author')) {
-      if (feedDesc.endsWith('|posts_with_replies')) {
-        // TODO: Do this on the server instead.
+      if (
+        feedDesc.endsWith('|posts_with_replies') ||
+        feedDesc.endsWith('|posts_and_replies_only')
+      ) {
+        // Older AppViews may return reposts for the new filter.
         return [FeedTuner.removeReposts]
       }
     }

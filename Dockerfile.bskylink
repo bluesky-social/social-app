@@ -12,6 +12,7 @@ RUN pnpm install --frozen-lockfile
 COPY ./bskylink/tsconfig.json ./
 COPY ./bskylink/src ./src
 COPY ./bskylink/locales ./locales
+COPY ./bskylink/certs ./certs
 
 # build then prune dev deps
 RUN pnpm build

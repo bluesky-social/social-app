@@ -32,15 +32,6 @@ const image = {
 
 /** Small synthetic response for schema, selection, and screen tests. */
 export const exploreResponseFixture = {
-  announcementBanner: {
-    id: 'banner',
-    title: 'Test announcement',
-    description: 'An announcement description',
-    url: 'https://example.com/announcement',
-    image: 'https://example.com/banner.jpg',
-    overlayColor: '#000000',
-    textColor: '#ffffff',
-  },
   articles: {
     items: [
       {

@@ -13,10 +13,13 @@ import type * as bsky from '#/types/bsky'
 export function useFollowMethods({
   profile,
   logContext,
+  onFollow,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
   logContext: Metrics['profile:follow']['logContext'] &
     Metrics['profile:unfollow']['logContext']
+  /** Called once a follow succeeds. */
+  onFollow?: () => void
 }) {
   const {_} = useLingui()
   const requireAuth = useRequireAuth()
@@ -29,6 +32,7 @@ export function useFollowMethods({
     requireAuth(async () => {
       try {
         await queueFollow()
+        onFollow?.()
       } catch (e: any) {
         logger.error(`useFollowMethods: failed to follow`, {message: String(e)})
         if (e?.name !== 'AbortError') {
@@ -38,7 +42,7 @@ export function useFollowMethods({
         }
       }
     })
-  }, [_, queueFollow, requireAuth])
+  }, [_, queueFollow, requireAuth, onFollow])
 
   const unfollow = useCallback(() => {
     requireAuth(async () => {

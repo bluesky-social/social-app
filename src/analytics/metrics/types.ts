@@ -9,7 +9,14 @@ import {type VideoCompressSkipReason} from '#/lib/media/video/types'
 import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
+import {
+  type AtmosphereAppMetricContext,
+  type AtmosphereContentMetricContext,
+  type AtmosphereMetricContext,
+  type AtmosphereTab,
+} from '#/screens/Atmosphere/metrics/types'
 import {type SharePlatformId} from '#/components/ShareDialog/catalog'
+import {type ShareSubjectType} from '#/components/ShareDialog/types'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
 /** Where the system share sheet was opened from. */
@@ -17,6 +24,13 @@ type NativeShareEntryPoint = 'ShareMenu' | 'LongPress' | 'PostMenu'
 
 /** Which control saved or removed a post. */
 export type BookmarkEntryPoint = 'BookmarkButton' | 'PostMenu' | 'ShareMenu'
+
+/**
+ * What the share sheet was sharing. Unset from the share menu before the
+ * redesign and from long-pressing a post's share button, which only share
+ * posts.
+ */
+type ShareSubjectField = {subjectType?: ShareSubjectType}
 
 export type Events = {
   // App events
@@ -1345,23 +1359,22 @@ export type Events = {
     postContext: 'feed' | 'thread'
     position?: number
   }
-  'share:press:copyLink': {uri: string}
+  'share:press:copyLink': {uri: string} & ShareSubjectField
   /**
    * Fires when the user opens the system share sheet, or the browser's on
    * desktop web ("Share via…").
    */
-  'share:press:nativeShare': {
+  'share:press:nativeShare': ShareSubjectField & {
     uri: string
     authorDid: string
     entryPoint: NativeShareEntryPoint
     os: Platform['OS']
   }
   /**
-   * Fires when the system share sheet closes after sharing a post. Not
-   * logged from the post menu, or on Android builds without the native share
-   * module.
+   * Fires when the system share sheet closes after sharing. Not logged from
+   * the post menu, or on Android builds without the native share module.
    */
-  'share:nativeShare:result': {
+  'share:nativeShare:result': ShareSubjectField & {
     uri: string
     authorDid: string
     entryPoint: NativeShareEntryPoint
@@ -1377,18 +1390,18 @@ export type Events = {
      */
     target?: string
   }
-  'share:press:openDmSearch': {
+  'share:press:openDmSearch': ShareSubjectField & {
     uri: string
     authorDid: string
   }
   /**
    * Fires when the user picks a chat from the "Send via chat" search.
    */
-  'share:press:dmSelected': {
+  'share:press:dmSelected': ShareSubjectField & {
     uri: string
     authorDid: string
   }
-  'share:press:recentDm': {
+  'share:press:recentDm': ShareSubjectField & {
     uri: string
     authorDid: string
     /**
@@ -1420,7 +1433,7 @@ export type Events = {
    * `x` or `whatsapp`. Which apps were shown is never logged, since that
    * reveals which apps are installed.
    */
-  'share:press:platform': {
+  'share:press:platform': ShareSubjectField & {
     uri: string
     authorDid: string
     platform: SharePlatformId
@@ -1434,7 +1447,7 @@ export type Events = {
    * Fires when the app picked from the share sheet's row couldn't be opened,
    * e.g. it was uninstalled after the row was shown.
    */
-  'share:platform:openFailed': {
+  'share:platform:openFailed': ShareSubjectField & {
     uri: string
     authorDid: string
     platform: SharePlatformId
@@ -1511,8 +1524,165 @@ export type Events = {
    */
   'blockedGeoOverlay:shown': {}
 
-  // user dismisses the Atmosphere introduction banner
+  /** The user dismissed the Atmosphere introduction banner. */
   'atmosphere:nux:bannerDismissed': {}
+  /** The user opened the About Atmosphere dialog from the banner. */
+  'atmosphere:nux:learnMore': {}
+  /**
+   * The screen gained focus on this tab, or the pager reported a tab change.
+   * Returning from the background alone does not count.
+   */
+  'atmosphere:tab:displayed': {
+    tab: AtmosphereTab
+    /** The tab switched from. Unset for `focus`. */
+    previousTab?: AtmosphereTab
+    /**
+     * - `focus`: the screen gained focus, or mounted, on the tab.
+     * - `tap`: the user pressed the tab.
+     * - `swipe`: the user swiped the pager to the tab, which only native
+     *   does.
+     * - `seeMoreApps`: Explore's "See more" on featured apps opened Apps.
+     */
+    reason: 'focus' | 'tap' | 'swipe' | 'seeMoreApps'
+  }
+  /**
+   * Time with the tab selected, the screen focused, and the app in the
+   * foreground, logged when that period ends. This is not reading time:
+   * dialogs can cover the tab without stopping the timer. Whether the native
+   * in-app browser stops the timer has not been verified on-device.
+   */
+  'atmosphere:tab:duration': {
+    tab: AtmosphereTab
+    durationMs: number
+    /**
+     * - `switched`: the user switched to another tab.
+     * - `blurred`: the screen lost focus, e.g. another screen opened over
+     *   it, or it closed.
+     * - `backgrounded`: the app left the foreground.
+     */
+    endReason: 'switched' | 'blurred' | 'backgrounded'
+  }
+  /**
+   * Discover, Following and the activity list only. Each uri
+   * counts once until its list is unmounted, regardless of position or
+   * activity group. Switching tabs does not reset the count.
+   *
+   * List waits 500 ms. Native needs 40% of the row visible; web needs any part
+   * visible above the bottom 200px of the browser viewport. The platforms use
+   * different visibility rules. Blurred cards never count, even if revealed.
+   *
+   * Rows reported while the tab or screen is inactive wait until it is shown,
+   * then count if still in the data and allowed by moderation. They may no
+   * longer be visible, and the 500 ms may have elapsed while inactive.
+   */
+  'atmosphere:content:impression': AtmosphereContentMetricContext
+  /**
+   * The user pressed a content card. Repeated presses count again. `external`
+   * does not confirm that its site or app opened, or that the content was read.
+   *
+   * Presses can occur without an impression, including Explore and revealed
+   * blurred cards. Dividing presses by impressions does not give the share of
+   * shown cards that were pressed. Opening an article from an iOS link preview
+   * is not counted (bluesky-social/toolbox#95; not tested on-device).
+   */
+  'atmosphere:content:press': AtmosphereContentMetricContext & {
+    destination: 'external' | 'photoDialog'
+  }
+  /** The user pressed a link to someone's profile. */
+  'atmosphere:profile:press': AtmosphereMetricContext & {
+    profileDid: string
+    source: 'activityHeader' | 'cardMenu' | 'photoDialog'
+  }
+  /** The user pressed a section's "See more", which switches tabs. */
+  'atmosphere:section:seeMore': AtmosphereMetricContext & {
+    section: 'apps'
+    destinationTab: 'apps'
+  }
+  /** The user opened an Apps tab card's details dialog. */
+  'atmosphere:app:detailsOpened': AtmosphereAppMetricContext
+  /** The user pressed an app's website link. Does not confirm it opened. */
+  'atmosphere:app:websitePressed': AtmosphereAppMetricContext & {
+    source: 'featuredCard' | 'appDialog'
+  }
+  /** The user pressed an app's Bluesky profile link. */
+  'atmosphere:app:profilePressed': AtmosphereAppMetricContext & {
+    source: 'featuredCard' | 'appDialog'
+  }
+  /** The user picked another category in the Apps tab. */
+  'atmosphere:apps:categorySelected': AtmosphereMetricContext & {
+    /** Category key, e.g. `writing`, or `all`. */
+    category: string
+    previousCategory: string
+    /** Apps shown in the new category. */
+    resultCount: number
+  }
+  /**
+   * The photo dialog reported another image as the leading one. A long swipe
+   * can log several changes. Use as a sign of photo browsing, not an exact
+   * count of gestures or every image viewed.
+   */
+  'atmosphere:photo:imageChanged': AtmosphereContentMetricContext & {
+    fromIndex: number
+    toIndex: number
+    imageCount: number
+  }
+  /**
+   * The user pressed an image, or the dialog's call-to-action button (`cta`,
+   * e.g. "View on Grain"), to open the gallery in its photo app. imageIndex
+   * identifies the pressed image. Does not confirm the gallery opened.
+   */
+  'atmosphere:photo:externalPressed': AtmosphereContentMetricContext & {
+    source: 'image' | 'cta'
+    imageIndex?: number
+  }
+  /**
+   * How a tab's or activity list's first load went for the user, logged once
+   * per mount, when its outcome is in view. A load that settles while the
+   * user is away logs when they come back.
+   */
+  'atmosphere:content:loaded': AtmosphereMetricContext & {
+    state: 'populated' | 'empty' | 'error'
+    itemCount: number
+  }
+  /** The user pulled to refresh a tab or activity list. */
+  'atmosphere:content:refresh': AtmosphereMetricContext
+  /**
+   * Following or the activity list added a page after the initial load.
+   * Initial/cached pages and refetches with no added pages do not count.
+   * This does not mean the user saw the new items.
+   */
+  'atmosphere:list:pageLoaded': AtmosphereMetricContext & {
+    /** 0-based; page 0 is the initial load and does not emit this event. */
+    pageIndex: number
+    /** Rows in the new page, including blurred cards and warnings. */
+    itemCount: number
+    /** Rows through this page, not unique content or impressions. */
+    totalItemCount: number
+  }
+  /** The user opened a content card's options menu. */
+  'atmosphere:menu:opened': AtmosphereContentMetricContext
+  /**
+   * The user picked an action from a content card's options menu. This is
+   * intent, e.g. `createPost` opens the composer, but doesn't mean they
+   * posted, and `report` opens the report dialog.
+   */
+  'atmosphere:menu:action': AtmosphereContentMetricContext & {
+    action:
+      | 'share'
+      | 'copyLink'
+      | 'createPost'
+      | 'sendViaChat'
+      | 'viewExternal'
+      | 'viewProfile'
+      | 'report'
+    /** `report` only: the collection of the record being reported. */
+    reportCollection?: string
+  }
+  /** The user opened an activity group's "View all" list. */
+  'atmosphere:activity:viewAll': AtmosphereMetricContext & {
+    subjectCount: number
+    collection: string
+  }
 
   'geo:debug': {}
 

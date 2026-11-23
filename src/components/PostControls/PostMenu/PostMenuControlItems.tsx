@@ -8,7 +8,6 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {type Shadow} from '#/state/cache/post-shadow'
-import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {usePostRepostMutationQueue} from '#/state/queries/post'
 import {useRequireAuth} from '#/state/session'
 import {ArrowShareRight_Stroke2_Corner2_Rounded as ShareIcon} from '#/components/icons/ArrowShareRight'
@@ -23,6 +22,7 @@ import * as Menu from '#/components/Menu'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {useFeedItemFeedback} from '#/features/feedFeedback'
 import {type app} from '#/lexicons'
 import {usePostBookmark} from '../BookmarkButton'
 
@@ -33,13 +33,9 @@ import {usePostBookmark} from '../BookmarkButton'
  */
 export function PostMenuControlItems({
   post,
-  postFeedContext,
-  postReqId,
   logContext,
 }: {
   post: Shadow<app.bsky.feed.defs.PostView>
-  postFeedContext: string | undefined
-  postReqId: string | undefined
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
 }) {
   const {t: l} = useLingui()
@@ -47,10 +43,11 @@ export function PostMenuControlItems({
   const haptics = useHaptics()
   const requireAuth = useRequireAuth()
   const {openComposer} = useOpenComposer()
-  const {feedDescriptor, sendInteraction} = useFeedFeedbackContext()
+  const feedItem = useFeedItemFeedback()
+  const {feedDescriptor} = feedItem
   const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
     post,
-    undefined,
+    feedItem.item?.via,
     feedDescriptor,
     logContext,
   )
@@ -92,12 +89,7 @@ export function PostMenuControlItems({
         )
       } else {
         haptics.confirm()
-        sendInteraction({
-          item: post.uri,
-          event: 'app.bsky.feed.defs#interactionRepost',
-          feedContext: postFeedContext,
-          reqId: postReqId,
-        })
+        feedItem.send('app.bsky.feed.defs#interactionRepost')
         await queueRepost()
         Toast.show(l({message: 'Reposted', context: 'Toast after reposting'}), {
           type: 'success',
@@ -117,12 +109,7 @@ export function PostMenuControlItems({
       return
     }
     haptics.confirm()
-    sendInteraction({
-      item: post.uri,
-      event: 'app.bsky.feed.defs#interactionQuote',
-      feedContext: postFeedContext,
-      reqId: postReqId,
-    })
+    feedItem.send('app.bsky.feed.defs#interactionQuote')
     ax.metric('post:clickQuotePost', {
       uri: post.uri,
       authorDid: post.author.did,
@@ -156,12 +143,7 @@ export function PostMenuControlItems({
     }
     const {rkey} = new AtUri(post.uri)
     void shareUrl(toShareUrl(makeProfileLink(post.author, 'post', rkey)))
-    sendInteraction({
-      item: post.uri,
-      event: 'app.bsky.feed.defs#interactionShare',
-      feedContext: postFeedContext,
-      reqId: postReqId,
-    })
+    feedItem.send('app.bsky.feed.defs#interactionShare')
   }
 
   const onBookmark = async () => {

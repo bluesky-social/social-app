@@ -60,7 +60,8 @@ function PublicationBase({
   card,
   preview,
   view,
-  onEmbedInteractionCallback,
+  onPressCallback,
+  onShareCallback,
   style,
   containerStyle,
 }: PublicationProps & {card: boolean}) {
@@ -88,12 +89,13 @@ function PublicationBase({
 
   const onPress = () => {
     haptics.tap()
-    onEmbedInteractionCallback?.()
+    onPressCallback?.()
     ax.metric('embed:standardSite:publication:press', {url: view.uri})
   }
   const onLongPress = IS_NATIVE
     ? () => {
         haptics.longPress()
+        onShareCallback?.()
         void shareUrl(view.uri)
         ax.metric('embed:standardSite:publication:longPress', {url: view.uri})
       }

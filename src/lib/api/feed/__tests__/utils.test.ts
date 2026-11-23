@@ -1,4 +1,5 @@
 import {Platform} from 'react-native'
+import {getCalendars} from 'expo-localization'
 import {afterEach, beforeEach, describe, expect, it, jest} from '@jest/globals'
 
 import {BSKY_FEED_OWNER_DIDS, DISCOVER_FEED_URI} from '#/lib/constants'
@@ -16,6 +17,7 @@ import {
 
 beforeEach(() => {
   jest.mocked(device.get).mockReset()
+  jest.mocked(getCalendars).mockClear()
   jest.replaceProperty(Platform, 'OS', 'ios')
 })
 afterEach(() => {
@@ -57,13 +59,36 @@ describe('createBskyFeedHeaders', () => {
     },
   )
 
-  it('does not send platform or read location for third-party feeds', () => {
+  it('does not send platform, location or timezone to third-party feeds', () => {
     expect(
       createBskyFeedHeaders(
         'at://did:example:feed/app.bsky.feed.generator/test',
       ),
     ).toEqual({})
     expect(device.get).not.toHaveBeenCalled()
+    expect(getCalendars).not.toHaveBeenCalled()
+  })
+
+  it('sends the device timezone and reads it on each request', () => {
+    const calendars = jest.mocked(getCalendars)
+    calendars.mockReturnValueOnce([calendar('Asia/Tokyo')])
+    expect(createBskyFeedHeaders(DISCOVER_FEED_URI)).toEqual({
+      'x-atproto-bsky-platform': 'ios',
+      'x-atproto-bsky-timezone': 'Asia/Tokyo',
+    })
+
+    calendars.mockReturnValueOnce([calendar('America/Sao_Paulo')])
+    expect(createBskyFeedHeaders(DISCOVER_FEED_URI)).toEqual({
+      'x-atproto-bsky-platform': 'ios',
+      'x-atproto-bsky-timezone': 'America/Sao_Paulo',
+    })
+  })
+
+  it('omits the timezone when the device does not report one', () => {
+    jest.mocked(getCalendars).mockReturnValueOnce([calendar(null)])
+    expect(createBskyFeedHeaders(DISCOVER_FEED_URI)).toEqual({
+      'x-atproto-bsky-platform': 'ios',
+    })
   })
 
   it('omits missing values and reads updated service data on each request', () => {
@@ -85,6 +110,10 @@ describe('createBskyFeedHeaders', () => {
     })
   })
 })
+
+function calendar(timeZone: string | null) {
+  return {calendar: null, uses24hourClock: null, firstWeekday: null, timeZone}
+}
 
 function preferences(
   interests: Pick<

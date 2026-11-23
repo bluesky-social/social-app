@@ -8,9 +8,10 @@ import {atoms as a, useTheme} from '#/alf'
 import {ButtonText} from '#/components/Button'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {type tools} from '#/lexicons'
+import {place, site, social, type tools} from '#/lexicons'
 import {getAccountPreview} from '../util/accountData'
 import {AccountSubjectPreview} from './AccountSubjectPreview'
+import {AtmosphereSubjectPreview} from './AtmosphereSubjectPreview'
 import {ChatSubjectPreview} from './ChatSubjectPreview'
 import {FeedSubjectPreview} from './FeedSubjectPreview'
 import {ListSubjectPreview} from './ListSubjectPreview'
@@ -89,6 +90,18 @@ export function ReportSubjectPreview({
         break
       case 'app.bsky.actor.status':
         preview = <StatusSubjectPreview report={report} uri={uri} />
+        break
+      case site.standard.document.$type:
+      case site.standard.publication.$type:
+      case place.stream.livestream.$type:
+      case social.grain.gallery.$type:
+        preview = (
+          <AtmosphereSubjectPreview
+            report={report}
+            uri={uri}
+            subjectLabel={subjectLabel}
+          />
+        )
         break
       default:
         preview = (

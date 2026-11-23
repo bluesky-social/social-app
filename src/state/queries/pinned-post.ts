@@ -100,7 +100,7 @@ export function usePinnedPostMutation() {
         })
         queryClient.invalidateQueries({
           queryKey: FEED_RQKEY(
-            `author|${currentAccount.did}|posts_with_replies`,
+            `author|${currentAccount.did}|posts_and_replies_only`,
           ),
         })
       } catch (e: any) {

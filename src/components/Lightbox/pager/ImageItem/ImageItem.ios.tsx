@@ -270,6 +270,8 @@ const ImageItemContent = ({
                 accessibilityLabel={imageSrc.alt}
                 accessibilityHint=""
                 enableLiveTextInteraction={showControls && !scaled}
+                // zooming doesn't change the size expo-image downscales to
+                allowDownscaling={!scaled}
                 accessibilityIgnoresInvertColors
                 onLoad={
                   hasLoaded

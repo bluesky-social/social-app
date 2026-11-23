@@ -2,12 +2,25 @@ import {i18n} from '@lingui/core'
 import {fireEvent, render, screen} from '@testing-library/react-native'
 
 import {PhotoDialog} from '#/screens/Atmosphere/components/PhotoDialog'
+import {AtmosphereFeedbackProvider} from '#/screens/Atmosphere/feedback'
+import {
+  AtmosphereContentItem,
+  AtmosphereMetricsScope,
+} from '#/screens/Atmosphere/metrics/context'
 import {type app} from '#/lexicons'
 
 const mockClose = jest.fn((_afterClose?: () => void) => {})
 const mockOpenLink = jest.fn()
+const mockMetric = jest.fn()
 let mockIsNative = true
 
+jest.mock('#/features/feedFeedback', () => ({useFeedFeedbackCore: jest.fn()}))
+jest.mock('#/state/session', () => ({
+  useSession: () => ({hasSession: false}),
+}))
+jest.mock('#/analytics', () => ({
+  useAnalytics: () => ({metric: mockMetric}),
+}))
 jest.mock('#/env', () =>
   Object.defineProperty(
     {...jest.requireActual<typeof import('#/env')>('#/env')},
@@ -194,12 +207,22 @@ jest.mock('#/components/Button', () => {
     ButtonIcon: () => null,
   }
 })
-jest.mock('#/components/Dialog', () => ({
-  Outer: ({children}: {children: React.ReactNode}) => children,
-  Handle: () => null,
-  Close: () => null,
-  ScrollableInner: ({children}: {children: React.ReactNode}) => children,
-}))
+jest.mock('#/components/Dialog', () => {
+  const {AtmosphereFeedbackProvider} = jest.requireActual<
+    typeof import('#/screens/Atmosphere/feedback')
+  >('#/screens/Atmosphere/feedback')
+  return {
+    // Simulate a portal dropping the card's inherited feedback context.
+    Outer: ({children}: {children: React.ReactNode}) => (
+      <AtmosphereFeedbackProvider value={undefined}>
+        {children}
+      </AtmosphereFeedbackProvider>
+    ),
+    Handle: () => null,
+    Close: () => null,
+    ScrollableInner: ({children}: {children: React.ReactNode}) => children,
+  }
+})
 
 const author: app.bsky.actor.defs.ProfileViewBasic = {
   did: 'did:plc:6ayddqghxhciedbaofoxkcbs',
@@ -377,4 +400,62 @@ it('opens the gallery link only after the dialog has closed', () => {
   mockClose.mock.calls[0][0]?.()
   expect(mockOpenLink).toHaveBeenCalledTimes(1)
   expect(mockOpenLink).toHaveBeenCalledWith('https://grain.social/gallery/42')
+})
+
+it('restores recommendation attribution across the dialog portal', () => {
+  const sendFeedback = jest.fn()
+  render(
+    <AtmosphereFeedbackProvider value={sendFeedback}>
+      <PhotoDialog
+        control={{close: mockClose} as never}
+        photo={gallery()}
+        author={author}
+      />
+    </AtmosphereFeedbackProvider>,
+  )
+  fireEvent.press(screen.getByRole('button', {name: 'View on Grain'}))
+  expect(sendFeedback).toHaveBeenCalledWith(
+    'app.bsky.feed.defs#clickthroughItem',
+  )
+})
+
+it('logs presses as the photo dialog of the card it was opened from', () => {
+  const card = {
+    uri: 'at://did:plc:6ayddqghxhciedbaofoxkcbs/social.grain.gallery/1',
+    collection: 'social.grain.gallery',
+    authorDid: 'did:plc:6ayddqghxhciedbaofoxkcbs',
+    position: 4,
+  } as const
+  render(
+    <AtmosphereMetricsScope tab="explore" surface="tab" isActive={false}>
+      <AtmosphereContentItem item={{...card, section: 'photos'}}>
+        <PhotoDialog
+          control={{close: mockClose} as never}
+          photo={gallery()}
+          author={author}
+        />
+      </AtmosphereContentItem>
+    </AtmosphereMetricsScope>,
+  )
+
+  fireEvent.press(screen.getByRole('link', {name: 'Author profile'}))
+  fireEvent.press(screen.getByRole('button', {name: 'View on Grain'}))
+  const context = {
+    tab: 'explore',
+    surface: 'photoDialog',
+    ...card,
+    section: 'photos',
+  }
+  expect(mockMetric.mock.calls).toEqual([
+    [
+      'atmosphere:profile:press',
+      {
+        tab: 'explore',
+        surface: 'photoDialog',
+        profileDid: author.did,
+        source: 'photoDialog',
+      },
+    ],
+    ['atmosphere:photo:externalPressed', {...context, source: 'cta'}],
+  ])
 })

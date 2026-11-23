@@ -21,6 +21,7 @@ async function main() {
         safelinkEnabled: cfg.service.safelinkEnabled,
         hasDbUrl: !!cfg.db.url,
         hasDbMigrationUrl: !!cfg.db.migrationUrl,
+        dbAwsIamAuth: cfg.db.awsIamAuth,
       },
       'Configuration loaded',
     )
@@ -30,6 +31,7 @@ async function main() {
       const migrateDb = Database.postgres({
         url: cfg.db.migrationUrl,
         schema: cfg.db.schema,
+        awsIamAuth: cfg.db.awsIamAuth,
       })
       await migrateDb.migrateToLatestOrThrow()
       await migrateDb.close()
