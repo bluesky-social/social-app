@@ -1,4 +1,4 @@
-import {type BottomSheetPopoverMode} from '../../../modules/bottom-sheet'
+import {type BottomSheetPopoverMode} from '@bsky.app/bottom-sheet'
 
 /**
  * Content-sized sheet measurement is needed on iPad to avoid measuring the

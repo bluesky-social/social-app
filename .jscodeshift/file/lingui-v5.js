@@ -13,7 +13,7 @@
  *   l`Lorem ipsum`
  *
  * Usage: jscodeshift -t .jscodeshift/file/lingui-v5.js <file-path>
- * Example: jscodeshift -t .jscodeshift/file/lingui-v5.js modules/bottom-sheet/src/lib/Portal.tsx
+ * Example: jscodeshift -t .jscodeshift/file/lingui-v5.js packages/bottom-sheet/src/lib/Portal.tsx
  */
 
 /* eslint-disable */
