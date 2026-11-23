@@ -1,4 +1,4 @@
-import {View} from 'react-native'
+import {Image, type ImageSourcePropType, View} from 'react-native'
 import Svg, {Circle, Defs, LinearGradient, Stop} from 'react-native-svg'
 import {useLingui} from '@lingui/react/macro'
 
@@ -16,9 +16,15 @@ import {WhatsApp} from '#/components/icons/community/WhatsApp'
 import {X} from '#/components/icons/community/X'
 import {IS_IOS} from '#/env'
 import {getSharePlatform, type SharePlatformId} from './catalog'
-import {GmailColor, MailEnvelope, MessagesBubble, SnapchatGhost} from './icons'
+import {
+  GmailColor,
+  InstagramGlyph,
+  MailEnvelope,
+  MessagesBubble,
+  SnapchatGhost,
+} from './icons'
 
-type Appearance = {
+export type BrandAppearance = {
   /**
    * The logo, drawn in white. The full-color logos in `./icons` (Gmail, Mail,
    * Snapchat) draw their own colors.
@@ -40,6 +46,11 @@ type Appearance = {
    * the circle. See below.
    */
   center: [x: number, y: number]
+  /**
+   * A full-color logo already cut to a circle, drawn instead of `icon`, for
+   * marks that can't be a white glyph (Instagram's gradient).
+   */
+  image?: ImageSourcePropType
 }
 
 /*
@@ -60,7 +71,7 @@ type Appearance = {
  * their measured size, Facebook about 25% under and X about 40% under, since
  * at the measured size they read as too big.
  */
-const APPEARANCE: Record<SharePlatformId, Appearance> = {
+const APPEARANCE: Record<SharePlatformId, BrandAppearance> = {
   messages: {
     icon: MessagesBubble,
     color: '#34C759',
@@ -190,7 +201,7 @@ export function useSharePlatformLabel(id: SharePlatformId): string {
 }
 
 /**
- * The round, brand-colored tile for a platform, with its logo.
+ * A share platform's logo in a circle of its brand color.
  */
 export function SharePlatformIcon({
   id,
@@ -201,10 +212,66 @@ export function SharePlatformIcon({
   size: number
   pressed?: boolean
 }) {
+  return (
+    <BrandIcon
+      appearance={APPEARANCE[id]}
+      gradientId={`share-platform-${id}`}
+      size={size}
+      pressed={pressed}
+    />
+  )
+}
+
+/**
+ * Instagram's glyph for the Story tile, which opens our story screen rather
+ * than a share link, so it isn't in the catalog.
+ */
+export const INSTAGRAM_APPEARANCE: BrandAppearance = {
+  icon: InstagramGlyph,
+  color: '#D62976',
+  scale: 0.5,
+  center: [12, 12],
+  // Instagram's 2022 icon from Wikimedia's SVG, cropped to a circle
+  image: require('../../../assets/images/share_instagram.png'),
+}
+
+/**
+ * A logo in a circle of its brand color, sized for the share sheet's tiles.
+ */
+export function BrandIcon({
+  appearance,
+  gradientId,
+  size,
+  pressed = false,
+}: {
+  appearance: BrandAppearance
+  /** Unique per brand, for the gradient's SVG id. */
+  gradientId: string
+  size: number
+  pressed?: boolean
+}) {
   const t = useTheme()
-  const {icon: Icon, color, gradient, outline, scale, center} = APPEARANCE[id]
+  const {
+    icon: Icon,
+    color,
+    gradient,
+    outline,
+    scale,
+    center,
+    image,
+  } = appearance
   const iconSize = LOGO_REFERENCE_SIZE * scale
   const [cx, cy] = center
+
+  if (image) {
+    return (
+      <Image
+        source={image}
+        accessibilityIgnoresInvertColors
+        style={{width: size, height: size, opacity: pressed ? 0.8 : 1}}
+      />
+    )
+  }
 
   return (
     <View
@@ -223,12 +290,7 @@ export function SharePlatformIcon({
       {gradient && (
         <Svg width={size} height={size} style={[a.absolute, a.inset_0]}>
           <Defs>
-            <LinearGradient
-              id={`share-platform-${id}`}
-              x1="0"
-              y1="0"
-              x2="0"
-              y2="1">
+            <LinearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
               <Stop offset={0} stopColor={gradient[0]} />
               <Stop offset={1} stopColor={gradient[1]} />
             </LinearGradient>
@@ -237,7 +299,7 @@ export function SharePlatformIcon({
             cx={size / 2}
             cy={size / 2}
             r={size / 2}
-            fill={`url(#share-platform-${id})`}
+            fill={`url(#${gradientId})`}
           />
         </Svg>
       )}

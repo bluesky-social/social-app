@@ -18,6 +18,7 @@ import {
 import {type SharePlatformId} from '#/components/ShareDialog/catalog'
 import {type ShareSubjectType} from '#/components/ShareDialog/types'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
+import {type PostImageMode, type StorySky} from '#/features/postImage/const'
 
 /** Where the system share sheet was opened from. */
 type NativeShareEntryPoint = 'ShareMenu' | 'LongPress' | 'PostMenu'
@@ -1451,6 +1452,45 @@ export type Events = {
     uri: string
     authorDid: string
     platform: SharePlatformId
+  }
+  /**
+   * Fires when the user picks the Story tile (`story`) or the Image action
+   * (`image`) in a post's share sheet, which opens the share-as-image screen.
+   */
+  'share:press:postImage': {
+    uri: string
+    authorDid: string
+    mode: PostImageMode
+  }
+  /**
+   * Fires once the share-as-image screen has handed the image off: Instagram
+   * opened (`story`), or the system share sheet closed (`image`). The system
+   * sheet doesn't say whether the user shared or dismissed it.
+   */
+  'share:postImage:share': {
+    uri: string
+    authorDid: string
+    mode: PostImageMode
+    sky: StorySky
+  }
+  /** Fires once the share-as-image screen has saved the image to Photos. */
+  'share:postImage:save': {
+    uri: string
+    authorDid: string
+    mode: PostImageMode
+    sky: StorySky
+  }
+  /**
+   * Fires when the share-as-image screen couldn't share or save the image.
+   * `notInstalled` is Instagram missing, `noPermission` is Photos access
+   * refused, and `error` is anything else, e.g. the image failed to draw.
+   */
+  'share:postImage:failed': {
+    uri: string
+    authorDid: string
+    mode: PostImageMode
+    action: 'share' | 'save'
+    reason: 'notInstalled' | 'noPermission' | 'error'
   }
 
   'embed:standardSite:view': {url: string}

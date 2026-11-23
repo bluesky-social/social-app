@@ -12,7 +12,12 @@ import {useAnalytics} from '#/analytics'
 import {type ShareContent, type SharePlatformId} from './catalog'
 import {SHEET_GUTTER} from './const'
 import {hasPasteFallback, needsPaste, openSharePlatform} from './share'
-import {SharePlatformIcon, useSharePlatformLabel} from './SharePlatformIcon'
+import {
+  type BrandAppearance,
+  BrandIcon,
+  SharePlatformIcon,
+  useSharePlatformLabel,
+} from './SharePlatformIcon'
 import {type ShareSubject} from './types'
 
 /**
@@ -34,6 +39,11 @@ const COLUMNS = 4.5
  * background and a hint there can't be seen.
  */
 const PASTE_HINT_MS = 800
+
+/** A brand tile in the apps row. See `appTiles` on `ShareRow`. */
+export type ShareAppTile = Omit<ShareAction, 'icon' | 'active' | 'stayOpen'> & {
+  appearance: BrandAppearance
+}
 
 /**
  * A non-platform item in the row, e.g. "Copy link", drawn as a neutral tile.
@@ -68,6 +78,7 @@ function getItemWidth(rowWidth: number) {
  */
 export function ShareRow({
   platformIds,
+  appTiles = [],
   actions = [],
   subject,
   onShare,
@@ -75,6 +86,11 @@ export function ShareRow({
 }: {
   /** Which platforms to show, in order. Usually the installed ones. */
   platformIds: readonly SharePlatformId[]
+  /**
+   * Brand tiles at the start of the apps row that open something of ours
+   * rather than a share link, like the Instagram story screen.
+   */
+  appTiles?: ShareAppTile[]
   /** Actions shown in the second row, under the platforms. */
   actions?: ShareAction[]
   /** What's shared: filled in when an app opens, and logged. */
@@ -151,7 +167,7 @@ export function ShareRow({
     onShare()
   }
 
-  const onPressAction = (action: ShareAction) => {
+  const onPressAction = (action: Pick<ShareAction, 'stayOpen' | 'onPress'>) => {
     if (action.stayOpen) {
       action.onPress()
     } else {
@@ -170,8 +186,16 @@ export function ShareRow({
         {marginHorizontal: SHEET_GUTTER * -1},
       ]}
       onLayout={e => setItemWidth(getItemWidth(e.nativeEvent.layout.width))}>
-      {platformIds.length > 0 && (
+      {appTiles.length + platformIds.length > 0 && (
         <TileRow>
+          {appTiles.map(tile => (
+            <ShareAppButton
+              key={tile.id}
+              tile={tile}
+              width={itemWidth}
+              onPress={() => onPressAction(tile)}
+            />
+          ))}
           {platformIds.map((id, index) => (
             <SharePlatformButton
               key={id}
@@ -281,6 +305,36 @@ function SharePlatformButton({
         <>
           <SharePlatformIcon id={id} size={ICON_SIZE} pressed={pressed} />
           <TileLabel>{label}</TileLabel>
+        </>
+      )}
+    </Button>
+  )
+}
+
+function ShareAppButton({
+  tile,
+  width,
+  onPress,
+}: {
+  tile: ShareAppTile
+  width: number
+  onPress: () => void
+}) {
+  return (
+    <Button
+      testID={`shareApp-${tile.id}`}
+      label={tile.accessibilityLabel ?? tile.label}
+      onPress={onPress}
+      style={[a.flex_col, a.gap_xs, a.justify_start, a.align_center, {width}]}>
+      {({pressed}) => (
+        <>
+          <BrandIcon
+            appearance={tile.appearance}
+            gradientId={`share-app-${tile.id}`}
+            size={ICON_SIZE}
+            pressed={pressed}
+          />
+          <TileLabel>{tile.label}</TileLabel>
         </>
       )}
     </Button>

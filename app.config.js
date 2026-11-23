@@ -92,7 +92,11 @@ module.exports = function (_config) {
           CADisableMinimumFrameDurationOnPhone: true,
           UIBackgroundModes: ['remote-notification'],
           NSUserActivityTypes: ['INSendMessageIntent'],
-          LSApplicationQueriesSchemes: SHARE_PLATFORM_QUERIES.iosSchemes,
+          LSApplicationQueriesSchemes: [
+            ...SHARE_PLATFORM_QUERIES.iosSchemes,
+            // Sharing a post to Instagram Stories
+            'instagram-stories',
+          ],
           NSCameraUsageDescription:
             'Used for profile pictures, posts, and other kinds of content.',
           NSPhotoLibraryAddUsageDescription:
