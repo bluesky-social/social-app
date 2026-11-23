@@ -16,7 +16,10 @@ import {
   type AtmosphereTab,
 } from '#/screens/Atmosphere/metrics/types'
 import {type SharePlatformId} from '#/components/ShareDialog/catalog'
-import {type ShareSubjectType} from '#/components/ShareDialog/types'
+import {
+  type OpenSharePlatformStep,
+  type ShareSubjectType,
+} from '#/components/ShareDialog/types'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
 /** Where the system share sheet was opened from. */
@@ -1451,6 +1454,18 @@ export type Events = {
     uri: string
     authorDid: string
     platform: SharePlatformId
+    /** Which step failed. Unset on older app versions. */
+    step?: OpenSharePlatformStep
+    /**
+     * The error's message, with links cut down to their scheme. Unset on
+     * older app versions.
+     */
+    error?: string
+    /**
+     * The app's state when it failed, to tell timing problems (not yet
+     * `active`) from the OS refusing. Unset on older app versions.
+     */
+    appState?: string
   }
 
   'embed:standardSite:view': {url: string}

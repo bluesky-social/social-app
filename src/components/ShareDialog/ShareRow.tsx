@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react'
-import {ScrollView, View} from 'react-native'
+import {AppState, ScrollView, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, tokens, useTheme} from '#/alf'
@@ -11,7 +11,12 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type ShareContent, type SharePlatformId} from './catalog'
 import {SHEET_GUTTER} from './const'
-import {hasPasteFallback, needsPaste, openSharePlatform} from './share'
+import {
+  hasPasteFallback,
+  needsPaste,
+  openSharePlatform,
+  OpenSharePlatformError,
+} from './share'
 import {SharePlatformIcon, useSharePlatformLabel} from './SharePlatformIcon'
 import {type ShareSubject} from './types'
 
@@ -117,12 +122,15 @@ export function ShareRow({
       platform: id,
       position,
     })
-    const onOpenFailed = () => {
+    const onOpenFailed = (error: unknown) => {
       ax.metric('share:platform:openFailed', {
         uri: subject.uri,
         authorDid: subject.authorDid,
         subjectType: subject.type,
         platform: id,
+        step: error instanceof OpenSharePlatformError ? error.step : 'unknown',
+        error: error instanceof Error ? error.message : String(error),
+        appState: AppState.currentState ?? undefined,
       })
       Toast.show(l`Couldn’t open ${label}`, {type: 'error'})
     }
@@ -132,8 +140,8 @@ export function ShareRow({
       openSharePlatform(id, content, {paste: true}).catch(onOpenFailed)
     }
     const open = () => {
-      openSharePlatform(id, content).catch(() => {
-        if (!hasPasteFallback(id)) return onOpenFailed()
+      openSharePlatform(id, content).catch(error => {
+        if (!hasPasteFallback(id)) return onOpenFailed(error)
         // The sheet has closed, but the share link didn't open, so we're still here to see a toast
         Toast.show(pasteHint, {type: 'success'})
         setTimeout(openWithPaste, PASTE_HINT_MS)

@@ -8,6 +8,7 @@ import {
   type ShareContent,
   type SharePlatformId,
 } from './catalog'
+import {type OpenSharePlatformStep} from './types'
 
 export type OpenSharePlatformResult = {
   /**
@@ -33,9 +34,41 @@ export function hasPasteFallback(id: SharePlatformId): boolean {
   return IS_IOS && !!getSharePlatform(id).ios?.pasteFallback
 }
 
+/** Why opening a platform's app failed, and at which step. */
+export class OpenSharePlatformError extends Error {
+  step: OpenSharePlatformStep
+
+  constructor(step: OpenSharePlatformStep, message: string) {
+    super(message)
+    this.name = 'OpenSharePlatformError'
+    this.step = step
+  }
+}
+
 /**
- * Opens a platform's app with the post ready to send. Rejects when the app
- * can't be opened, e.g. it was uninstalled after the row was shown.
+ * Runs one step of opening an app, so a failure says which step it was. The
+ * OS's error message can include the link it tried to open, which may carry
+ * a title (e.g. for email), so that's swapped for just its scheme before it's
+ * logged.
+ */
+async function step<T>(
+  name: OpenSharePlatformStep,
+  run: () => Promise<T>,
+  url?: string,
+): Promise<T> {
+  try {
+    return await run()
+  } catch (e) {
+    let message = e instanceof Error ? e.message : String(e)
+    if (url) message = message.replaceAll(url, `${url.split(':')[0]}:<link>`)
+    throw new OpenSharePlatformError(name, message)
+  }
+}
+
+/**
+ * Opens a platform's app with the post ready to send. Rejects with an
+ * `OpenSharePlatformError` when the app can't be opened, e.g. it was
+ * uninstalled after the row was shown.
  */
 export async function openSharePlatform(
   id: SharePlatformId,
@@ -54,28 +87,46 @@ export async function openSharePlatform(
     if (ios.copyAndOpen || paste) {
       const appUrl = `${ios.scheme}://`
       // Check first, so a failed open doesn't overwrite the clipboard
-      if (!(await Linking.canOpenURL(appUrl))) {
-        throw new Error(`${id} is not installed`)
+      if (!(await step('notInstalled', () => Linking.canOpenURL(appUrl)))) {
+        throw new OpenSharePlatformError(
+          'notInstalled',
+          `${id} is not installed`,
+        )
       }
-      await Clipboard.setUrlAsync(content.url)
-      await Linking.openURL(appUrl)
+      await step('clipboard', () => Clipboard.setUrlAsync(content.url))
+      await step('openUrl', () => Linking.openURL(appUrl), appUrl)
       return {copiedLink: true}
     }
-    await Linking.openURL(ios.getShareUrl(content))
+    const shareUrl = ios.getShareUrl(content)
+    await step('openUrl', () => Linking.openURL(shareUrl), shareUrl)
     return {copiedLink: false}
   }
 
   if (IS_ANDROID && platform.android) {
     const android = platform.android
     if (android.directShare) {
-      const [pkg] = (await Share.getInstalledPackages(android.packages)) ?? []
-      if (!pkg) throw new Error(`${id} is not installed`)
-      await Share.shareTextToPackage(content.url, pkg)
+      const [pkg] =
+        (await step('notInstalled', () =>
+          Share.getInstalledPackages(android.packages),
+        )) ?? []
+      if (!pkg) {
+        throw new OpenSharePlatformError(
+          'notInstalled',
+          `${id} is not installed`,
+        )
+      }
+      await step('shareToPackage', () =>
+        Share.shareTextToPackage(content.url, pkg),
+      )
       return {copiedLink: false}
     }
-    await Linking.openURL(android.getShareUrl(content))
+    const shareUrl = android.getShareUrl(content)
+    await step('openUrl', () => Linking.openURL(shareUrl), shareUrl)
     return {copiedLink: false}
   }
 
-  throw new Error(`${id} is not supported on this platform`)
+  throw new OpenSharePlatformError(
+    'unsupported',
+    `${id} is not supported on this platform`,
+  )
 }

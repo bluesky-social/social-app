@@ -25,3 +25,21 @@ export type ShareSubject = {
    */
   chatEmbed?: string
 }
+
+/**
+ * Where opening an app from the apps row failed. Logged with
+ * `share:platform:openFailed`.
+ */
+export type OpenSharePlatformStep =
+  /** The app's scheme or package wasn't found when tapped. */
+  | 'notInstalled'
+  /** Copying the link before opening the app failed (iOS). */
+  | 'clipboard'
+  /** The OS refused to open the app or its share link. */
+  | 'openUrl'
+  /** Sending the link straight to the app failed (Android). */
+  | 'shareToPackage'
+  /** The app has no config for this OS. */
+  | 'unsupported'
+  /** Something else threw. */
+  | 'unknown'
