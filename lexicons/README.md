@@ -15,8 +15,8 @@ This schema is a copy of `lexicons/app/bsky/embed/external.json` from
 [bluesky-social/bsky](https://github.com/bluesky-social/bsky) `main` at
 `697e0100ed21244a5597e4541111416cab4fec95`, which is ahead of the published
 schema record (it adds article and gallery `viewer` state, `providerId`, and
-`view.data`, among others). Its manifest CID is calculated from that file, not
-the published record CID. Exclude it from scoped updates until the published
+`view.data`, among others), reformatted to the installer's layout. Its manifest
+CID is calculated from this file, not the published record CID. Exclude it from scoped updates until the published
 schema includes these fields.
 
 It is also ahead of bsky `main` with a local proposal not yet in the appview:
@@ -31,8 +31,9 @@ carveout upstream, and resolving it is a CI violation there), so the installer
 cannot fetch it. These schemas are files only, with no `lexicons.json` entry.
 The `getAtmosphere*` schemas are copied from `lexicons/app/bsky/unspecced/` in
 bluesky-social/bsky `main` at `697e0100ed21244a5597e4541111416cab4fec95`, the
-same source atproto pins since PR 5973. `getAtmosphereTimeline` (v1) is
-intentionally omitted in favor of `getAtmosphereTimelineV2`.
+same source atproto pins since PR 5973. Only the schemas the app calls are
+copied; `getAtmosphereTimeline` (v1) is intentionally omitted in favor of
+`getAtmosphereTimelineV2`.
 
 Other `app.bsky.unspecced` schemas are not synced from bsky `main`: some there
 lack fields the app uses (such as `recIdStr`) that atproto still adds through
