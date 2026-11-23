@@ -27,6 +27,7 @@ import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {STORY_HEIGHT, STORY_WIDTH, type StorySky} from '../const'
+import {getQuotedPostView} from '../useCanSharePostImage'
 
 /*
  * Sizes are the ad generator's (bluesky-ad-generator-2) divided by three, so
@@ -600,6 +601,8 @@ function getImageUrls(post: app.bsky.feed.defs.PostView): string[] {
 type QuotedPost = {
   author: app.bsky.actor.defs.ProfileViewBasic
   text: string
+  /** The quote as a post view, to moderate its author's avatar and name. */
+  view: app.bsky.feed.defs.PostView
 }
 
 /** A plain quoted post (not one with media), drawn like the ad's. */
@@ -608,10 +611,10 @@ function getQuotedPost(
 ): QuotedPost | undefined {
   const embed = post.embed
   if (!embed || !bsky.isType(app.bsky.embed.record.view, embed)) return
-  const quoted = embed.record
-  if (!bsky.isType(app.bsky.embed.record.viewRecord, quoted)) return
-  const value = quoted.value as {text?: string}
-  return {author: quoted.author, text: value.text ?? ''}
+  const view = getQuotedPostView(post)
+  if (!view) return
+  const value = view.record as {text?: string}
+  return {author: view.author, text: value.text ?? '', view}
 }
 
 function StoryQuote({
@@ -623,7 +626,16 @@ function StoryQuote({
   fontSize: number
   colors: CardColors
 }) {
-  const name = createSanitizedDisplayName(quoted.author, false)
+  const moderationOpts = useModerationOpts()
+  // Its own moderation: the quoting post's would only downgrade these labels
+  const moderation = moderationOpts
+    ? moderatePost(quoted.view, moderationOpts)
+    : undefined
+  const name = createSanitizedDisplayName(
+    quoted.author,
+    false,
+    moderation?.ui('displayName'),
+  )
   return (
     <View
       style={{
@@ -639,6 +651,7 @@ function StoryQuote({
         <UserAvatar
           avatar={quoted.author.avatar}
           size={40 / 3}
+          moderation={moderation?.ui('avatar')}
           type={quoted.author.associated?.labeler ? 'labeler' : 'user'}
         />
         <Text

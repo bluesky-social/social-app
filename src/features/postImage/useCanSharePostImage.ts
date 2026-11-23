@@ -43,7 +43,7 @@ function isShareable(
  * downgrades the quote's labels (they'd blur the quote, not the whole post),
  * so the quote needs its own check before it's drawn into the image.
  */
-function getQuotedPostView(
+export function getQuotedPostView(
   post: app.bsky.feed.defs.PostView,
 ): app.bsky.feed.defs.PostView | undefined {
   const embed = post.embed
