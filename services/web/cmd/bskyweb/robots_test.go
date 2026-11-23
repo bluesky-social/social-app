@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/bluesky-social/social-app/bskyweb"
+	bskyweb "github.com/bluesky-social/social-app/services/web"
 	"github.com/labstack/echo/v4"
 )
 

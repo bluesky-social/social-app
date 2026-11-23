@@ -18,7 +18,7 @@ import (
 	"github.com/bluesky-social/indigo/atproto/identity"
 	"github.com/bluesky-social/indigo/util/cliutil"
 	"github.com/bluesky-social/indigo/xrpc"
-	"github.com/bluesky-social/social-app/bskyweb"
+	bskyweb "github.com/bluesky-social/social-app/services/web"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/labstack/echo-contrib/echoprometheus"
