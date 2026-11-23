@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {AccessibilityInfo, Platform, StyleSheet, View} from 'react-native'
 import Animated, {FadeIn} from 'react-native-reanimated'
 import * as ExpoClipboard from 'expo-clipboard'
@@ -26,8 +26,9 @@ import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
+import {account} from '#/storage'
 import {SHEET_GUTTER} from './const'
-import {RecentChats} from './RecentChats'
+import {RecentChats, useRecentChats} from './RecentChats'
 import {type ShareAction, ShareRow} from './ShareRow'
 import {type ShareSubject} from './types'
 import {useInstalledSharePlatforms} from './useInstalledSharePlatforms'
@@ -83,9 +84,8 @@ export function ShareSheetOuter({
   onBeforeSendToChat,
   children,
 }: ShareSheetProps) {
-  const t = useTheme()
   const ax = useAnalytics()
-  const {hasSession} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const sendViaChatControl = useDialogControl()
@@ -93,7 +93,6 @@ export function ShareSheetOuter({
 
   const {uri, authorDid, type: subjectType} = subject
   const showChats = hasSession && aa.state.access === aa.Access.Full
-  const loggedInOnly = !!subject.loggedInOnlyNotice
 
   const onNativeShare = () => {
     ax.metric('share:press:nativeShare', {
@@ -161,6 +160,10 @@ export function ShareSheetOuter({
 
   const onSelectSearchedChat = (conversation: string) => {
     ax.metric('share:press:dmSelected', {uri, authorDid, subjectType})
+    // They have a chat now, so the next share shows the grid
+    if (currentAccount) {
+      account.set([currentAccount.did, 'shareSheetHasChats'], true)
+    }
     openChat(conversation, 'chatSearch')
   }
 
@@ -192,69 +195,15 @@ export function ShareSheetOuter({
 
   return (
     <Menu.Outer>
-      <View style={[a.gap_lg, a.pt_sm]}>
-        {showChats && (
-          <View style={[a.gap_xl]}>
-            <SearchChatsButton onPress={onOpenDmSearch} />
-            <RecentChats layout="grid" onSelectChat={onSelectRecentChat} />
-          </View>
-        )}
-
-        {/* Pulled up so the line sits right where the chat grid cuts off */}
-        <View
-          style={[
-            a.gap_lg,
-            showChats && {
-              marginTop: -tokens.space.lg,
-              paddingTop: tokens.space.sm + tokens.space.lg,
-            },
-          ]}>
-          {showChats && (
-            /*
-             * A filled strip rather than a hairline border, which iOS
-             * doesn't draw at some fractional positions.
-             */
-            <View
-              style={[
-                a.absolute,
-                t.atoms.bg_contrast_100,
-                {
-                  top: 0,
-                  left: SHEET_GUTTER * -1,
-                  right: SHEET_GUTTER * -1,
-                  height: StyleSheet.hairlineWidth,
-                },
-              ]}
-            />
-          )}
-          <InstalledAppsShareRow
-            // Logged-out viewers can't open it, so only link options show
-            showApps={!loggedInOnly}
-            actions={allActions}
-            subject={subject}
-            onShare={onShare}
-            overChats={showChats}
-          />
-
-          {subject.loggedInOnlyNotice && (
-            <View
-              style={[
-                a.flex_row,
-                a.align_center,
-                a.justify_center,
-                a.gap_xs,
-                a.pb_xs,
-              ]}>
-              <WarningIcon size="sm" fill={t.atoms.text.color} />
-              <Text style={[a.text_sm, a.leading_snug, t.atoms.text]}>
-                {subject.loggedInOnlyNotice}
-              </Text>
-            </View>
-          )}
-
-          {children}
-        </View>
-      </View>
+      <ShareSheetBody
+        showChats={showChats}
+        onOpenDmSearch={onOpenDmSearch}
+        onSelectRecentChat={onSelectRecentChat}
+        actions={allActions}
+        subject={subject}
+        onShare={onShare}>
+        {children}
+      </ShareSheetBody>
 
       <StackedSendViaChatDialog
         control={sendViaChatControl}
@@ -262,6 +211,129 @@ export function ShareSheetOuter({
       />
     </Menu.Outer>
   )
+}
+
+/**
+ * Everything in the share sheet except the stacked chat search. Its own
+ * component so it mounts each time the sheet opens, which is when it decides
+ * whether to show the chat grid.
+ */
+function ShareSheetBody({
+  showChats,
+  onOpenDmSearch,
+  onSelectRecentChat,
+  actions,
+  subject,
+  onShare,
+  children,
+}: {
+  /** Shows the chat search, and the grid of recent chats if there are any. */
+  showChats: boolean
+  onOpenDmSearch: () => void
+  onSelectRecentChat: (conversation: string, position: number) => void
+  actions: ShareAction[]
+  subject: ShareSubject
+  onShare: () => void
+  children?: React.ReactNode
+}) {
+  const t = useTheme()
+  const showChatGrid = useShowChatGrid({enabled: showChats})
+
+  return (
+    <View style={[a.gap_lg, a.pt_sm]}>
+      {showChats && (
+        <View style={[a.gap_xl]}>
+          <SearchChatsButton onPress={onOpenDmSearch} />
+          {showChatGrid && (
+            <RecentChats layout="grid" onSelectChat={onSelectRecentChat} />
+          )}
+        </View>
+      )}
+
+      <View
+        style={[
+          a.gap_lg,
+          showChats && {paddingTop: tokens.space.sm + tokens.space.lg},
+          // Pulled up so the line sits right where the chat grid cuts off
+          showChatGrid && {marginTop: -tokens.space.lg},
+        ]}>
+        {showChats && (
+          /*
+           * A filled strip rather than a hairline border, which iOS
+           * doesn't draw at some fractional positions.
+           */
+          <View
+            style={[
+              a.absolute,
+              t.atoms.bg_contrast_100,
+              {
+                top: 0,
+                left: SHEET_GUTTER * -1,
+                right: SHEET_GUTTER * -1,
+                height: StyleSheet.hairlineWidth,
+              },
+            ]}
+          />
+        )}
+        <InstalledAppsShareRow
+          // Logged-out viewers can't open it, so only link options show
+          showApps={!subject.loggedInOnlyNotice}
+          actions={actions}
+          subject={subject}
+          onShare={onShare}
+          overChats={showChatGrid}
+        />
+
+        {subject.loggedInOnlyNotice && (
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.justify_center,
+              a.gap_xs,
+              a.pb_xs,
+            ]}>
+            <WarningIcon size="sm" fill={t.atoms.text.color} />
+            <Text style={[a.text_sm, a.leading_snug, t.atoms.text]}>
+              {subject.loggedInOnlyNotice}
+            </Text>
+          </View>
+        )}
+
+        {children}
+      </View>
+    </View>
+  )
+}
+
+/**
+ * Whether the share sheet shows its grid of recent chats. The grid is hidden
+ * for accounts without chats, keeping the sheet short. The chat search stays,
+ * so they can still start one.
+ *
+ * The sheet can shrink once it's open, but it isn't built to grow. So the grid
+ * only ever hides while the sheet is open, never appears. If the last open
+ * found no chats, it starts hidden, and stays hidden even if chats load. If
+ * not, it shows placeholders until the chats load, then hides if there are
+ * none.
+ */
+function useShowChatGrid({enabled}: {enabled: boolean}) {
+  const {currentAccount} = useSession()
+  const did = currentAccount?.did
+  // Read once, when the sheet opens
+  const [hadChats] = useState(() =>
+    did ? account.get([did, 'shareSheetHasChats']) : undefined,
+  )
+  const chats = useRecentChats({layout: 'grid', enabled})
+  const hasChats = chats ? chats.length > 0 : undefined
+
+  useEffect(() => {
+    if (did && hasChats !== undefined) {
+      account.set([did, 'shareSheetHasChats'], hasChats)
+    }
+  }, [did, hasChats])
+
+  return enabled && hadChats !== false && hasChats !== false
 }
 
 /**
