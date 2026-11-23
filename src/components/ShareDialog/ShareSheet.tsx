@@ -25,7 +25,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
-import {IS_IOS, IS_NATIVE} from '#/env'
+import {IS_IOS, IS_IPAD, IS_LIQUID_GLASS, IS_NATIVE} from '#/env'
 import {SHEET_GUTTER} from './const'
 import {RecentChats} from './RecentChats'
 import {type ShareAction, ShareRow} from './ShareRow'
@@ -209,10 +209,12 @@ export function ShareSheetOuter({
               paddingTop: tokens.space.sm + tokens.space.lg,
             },
           ]}>
-          {showChats && (
+          {showChats && !(IS_IPAD && IS_LIQUID_GLASS) && (
             /*
              * The sheet's background behind the apps and links, casting a
              * soft shadow up onto the chats to separate the two sections.
+             * Skipped on iPad's glass popover, which has no solid background
+             * to match, so it would show as an opaque band.
              */
             <View
               style={[
