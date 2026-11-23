@@ -87,7 +87,7 @@ export async function openSharePlatform(
     if (ios.copyAndOpen || paste) {
       const appUrl = `${ios.scheme}://`
       // Check first, so a failed open doesn't overwrite the clipboard
-      if (!(await step('notInstalled', () => Linking.canOpenURL(appUrl)))) {
+      if (!(await step('checkInstalled', () => Linking.canOpenURL(appUrl)))) {
         throw new OpenSharePlatformError(
           'notInstalled',
           `${id} is not installed`,
@@ -106,7 +106,7 @@ export async function openSharePlatform(
     const android = platform.android
     if (android.directShare) {
       const [pkg] =
-        (await step('notInstalled', () =>
+        (await step('checkInstalled', () =>
           Share.getInstalledPackages(android.packages),
         )) ?? []
       if (!pkg) {

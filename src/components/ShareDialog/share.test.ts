@@ -128,6 +128,29 @@ describe('openSharePlatform errors', () => {
     expect(error.step).toBe('notInstalled')
   })
 
+  it('says the check failed, not that the app is gone, when it throws', async () => {
+    mockOS = 'ios'
+    jest
+      .spyOn(Linking, 'canOpenURL')
+      .mockRejectedValueOnce(
+        new Error(
+          'Unable to open URL: sgnl://. Add sgnl to LSApplicationQueriesSchemes',
+        ),
+      )
+    const error = await getError(openSharePlatform('signal', content))
+    expect(error.step).toBe('checkInstalled')
+    expect(Clipboard.setUrlAsync).not.toHaveBeenCalled()
+  })
+
+  it('says the check failed when listing packages throws on Android', async () => {
+    mockOS = 'android'
+    jest
+      .mocked(Share.getInstalledPackages)
+      .mockRejectedValueOnce(new Error('no module'))
+    const error = await getError(openSharePlatform('signal', content))
+    expect(error.step).toBe('checkInstalled')
+  })
+
   it('says copying failed when the clipboard throws', async () => {
     mockOS = 'ios'
     jest.mocked(Clipboard.setUrlAsync).mockRejectedValueOnce(new Error('nope'))
