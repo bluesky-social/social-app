@@ -1,3 +1,5 @@
+packages:
+  - 'services/*'
 nodeLinker: 'hoisted'
 autoInstallPeers: true # default: true
 strictPeerDependencies: false # default: false
@@ -24,8 +26,16 @@ overrides:
   'psl': '1.9.0'
   '@types/psl': '1.1.1'
   'react-native-screens': '4.30.1'
+  # security floors carried over from the bskylink and bskyogcard workspaces
+  'body-parser@<1.20.9': '^1.20.9'
+  'body-parser@>=2.0.0 <2.4.0': '^2.4.0'
+  # bskylink's @bsky.app/alf has an optional react-native peer. In this workspace
+  # pnpm satisfies it with the app's copy, which would put react-native and
+  # metro in bskylink's image. Bump the version here if bskylink bumps alf.
+  '@bsky.app/alf@0.2.1>react-native': '-'
 allowBuilds:
   '@sentry/cli': true
+  'cbor-extract': true
   '@swc/core': false
   'core-js': false
   'core-js-pure': false

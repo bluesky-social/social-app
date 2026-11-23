@@ -3,13 +3,6 @@
   "version": "0.0.0",
   "type": "module",
   "main": "src/index.ts",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "12.16.1",
-      "onFail": "warn"
-    }
-  },
   "scripts": {
     "start": "tsx ./src/bin.ts",
     "test": "node --import tsx --test ./tests/*.test.ts",
@@ -22,6 +15,7 @@
     "@atproto-labs/fetch-node": "^0.4.2",
     "@atproto/api": "0.20.13",
     "@atproto/common": "^0.6.1",
+    "@atproto/lexicon": "^0.7.1",
     "@resvg/resvg-js": "^2.6.2",
     "express": "^4.19.2",
     "express-prom-bundle": "^7.0.0",
