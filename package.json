@@ -82,7 +82,7 @@
     "typecheck:ios": "tsc --project ./tsconfig.check.ios.json",
     "typecheck:android": "tsc --project ./tsconfig.check.android.json",
     "typecheck:web": "tsc --project ./tsconfig.check.web.json",
-    "e2e:mock-server": "cd dev-env && pnpm start",
+    "e2e:mock-server": "cd tools/dev-env && pnpm start",
     "e2e:build": "EXPO_PUBLIC_ENV=e2e NODE_ENV=development RN_SRC_EXT=e2e.ts,e2e.tsx expo prebuild --platform ios && EXPO_PUBLIC_ENV=e2e NODE_ENV=development RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
     "e2e:build-android": "EXPO_PUBLIC_ENV=e2e NODE_ENV=development RN_SRC_EXT=e2e.ts,e2e.tsx expo prebuild --platform android && EXPO_PUBLIC_ENV=e2e NODE_ENV=development RN_SRC_EXT=e2e.ts,e2e.tsx expo run:android",
     "e2e:start": "EXPO_PUBLIC_ENV=e2e NODE_ENV=development RN_SRC_EXT=e2e.ts,e2e.tsx expo start -c",
@@ -108,9 +108,9 @@
     "upload-native-sourcemaps": "pnpm exec sentry-expo-upload-sourcemaps dist",
     "generate-web-stats": "EXPO_ATLAS=1 pnpm build-web",
     "open-analyzer": "npx expo-atlas .expo/atlas.jsonl",
-    "icons:generate": "node ./scripts/icons/generate.mts",
-    "icons:check": "node ./scripts/icons/generate.mts --check",
-    "icons:test": "node --test ./scripts/icons/lib.test.mts",
+    "icons:generate": "node ./tools/icons/generate.mts",
+    "icons:check": "node ./tools/icons/generate.mts --check",
+    "icons:test": "node --test ./tools/icons/lib.test.mts",
     "prettier": "prettier --check ."
   },
   "dependencies": {

@@ -43,8 +43,8 @@ if [[ "$platform" == "ios" ]]; then
   fi
   [[ -n "$device_id" ]] && xcrun simctl shutdown "$device_id" >/dev/null 2>&1 || true
 else
-  docker compose -f dev-env/dev-infra/docker-compose.yaml logs --no-color \
+  docker compose -f tools/dev-env/dev-infra/docker-compose.yaml logs --no-color \
     >>"$artifact_dir/docker-services.log" 2>&1 || true
-  docker compose -f dev-env/dev-infra/docker-compose.yaml down --volumes --remove-orphans >/dev/null 2>&1 || true
+  docker compose -f tools/dev-env/dev-infra/docker-compose.yaml down --volumes --remove-orphans >/dev/null 2>&1 || true
   [[ -n "$device_id" ]] && adb -s "$device_id" emu kill >/dev/null 2>&1 || true
 fi

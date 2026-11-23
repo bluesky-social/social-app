@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-source tooling/scripts/release/common.sh
+source tooling/tools/release/common.sh
 BASE_SHA=$(git -C source rev-parse HEAD)
 validate_source source
 [[ ! -e "source/$FILE" ]] || fail 'Source already contains this release document.'

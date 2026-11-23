@@ -39,7 +39,7 @@ we're allowed to check. The OS reports anything undeclared as not installed.
 |---|---|
 | Add an app, or change its iOS `scheme` or Android `packages`/`scheme` | Native release |
 | Change a share link, label or order | OTA update |
-| Add an icon | OTA update via `assets/icons/tmp/`, then into the font before the next native release (see `scripts/icons/README.md`) |
+| Add an icon | OTA update via `assets/icons/tmp/`, then into the font before the next native release (see `tools/icons/README.md`) |
 
 `fingerprint.config.js` ignores `catalog.ts` itself, so only edits that change
 the resolved native config change the fingerprint.

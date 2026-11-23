@@ -60,7 +60,7 @@ jobs:
           java-version: "17"
 
       - name: 📦 Install dev-env dependencies
-        run: pnpm --dir dev-env install --frozen-lockfile 2>&1 | tee artifacts/ios/dependencies.log
+        run: pnpm --dir tools/dev-env install --frozen-lockfile 2>&1 | tee artifacts/ios/dependencies.log
 
       - name: 🔤 Compile translations
         uses: $/.github/actions/compile-i18n
@@ -198,7 +198,7 @@ jobs:
           java-version: "17"
 
       - name: 📦 Install dev-env dependencies
-        run: pnpm --dir dev-env install --frozen-lockfile 2>&1 | tee artifacts/android/dependencies.log
+        run: pnpm --dir tools/dev-env install --frozen-lockfile 2>&1 | tee artifacts/android/dependencies.log
 
       - name: 🔤 Compile translations
         uses: $/.github/actions/compile-i18n

@@ -67,5 +67,5 @@ it to `false`. Build and submission recovery is separate work.
 ## Implementation
 
 - [Preparation workflow and checks](release-preparation/README.md)
-- `scripts/release/model.mjs`: document creation, validation, and changelog parsing.
-- `scripts/release/cli.mjs`: command-line access to the document helpers.
+- `tools/release/model.mjs`: document creation, validation, and changelog parsing.
+- `tools/release/cli.mjs`: command-line access to the document helpers.

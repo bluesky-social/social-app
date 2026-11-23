@@ -5,11 +5,11 @@ set -euo pipefail
 # BlueskyNSE and useNotificationsHandler without a real APNS round-trip.
 #
 # Usage:
-#   scripts/push-test/send.sh <payload-name> [--did <did>] [--device <udid>] [--bundle <id>]
+#   tools/push-notification/send.sh <payload-name> [--did <did>] [--device <udid>] [--bundle <id>]
 #
 # Examples:
-#   scripts/push-test/send.sh like --did did:plc:abc123
-#   BLUESKY_TEST_DID=did:plc:abc123 scripts/push-test/send.sh chat-message
+#   tools/push-notification/send.sh like --did did:plc:abc123
+#   BLUESKY_TEST_DID=did:plc:abc123 tools/push-notification/send.sh chat-message
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PAYLOAD_DIR="$SCRIPT_DIR/payloads"

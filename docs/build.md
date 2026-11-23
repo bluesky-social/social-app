@@ -134,7 +134,7 @@ This is NOT required for app development but if you also want to develop the Blu
   - `pnpm build`
   - Start the docker daemon (on MacOS this entails starting the Docker Desktop app)
   - Launch a Postgres database on port 5432
-  - `cd packages/dev-env && pnpm start`
+  - `cd tools/dev-env && pnpm start`
   
 Run the account with the AppView proxy DID passed in as an environment variable: `EXPO_PUBLIC_BLUESKY_PROXY_DID=did:plc:dw4kbjf5mn7nhenabiqpkyh3 pnpm start`
 

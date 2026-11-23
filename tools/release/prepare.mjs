@@ -191,7 +191,7 @@ if (
     const [version, source, output, ...extra] = process.argv.slice(2)
     if (!version || !source || extra.length) {
       throw new Error(
-        'Usage: node scripts/release/prepare.mjs VERSION SOURCE_DIRECTORY [NEW_OUTPUT_DIRECTORY]',
+        'Usage: node tools/release/prepare.mjs VERSION SOURCE_DIRECTORY [NEW_OUTPUT_DIRECTORY]',
       )
     }
     const report = prepareRelease(source, version)
