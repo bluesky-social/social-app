@@ -3,9 +3,12 @@ on:
   pull_request:
     paths:
       - Dockerfile
-      - Dockerfile.bskylink
-      - Dockerfile.bskyogcard
-      - Dockerfile.embedr
+      - .dockerignore
+      - services/**
+      - pnpm-workspace.yaml
+      - pnpm-lock.yaml
+      - scripts/post-embed-build.js
+      - scripts/post-web-build.js
       - .github/workflows/build-and-push-bskyweb-ghcr.yaml
   push:
     branches:
@@ -32,11 +35,11 @@ jobs:
           - image: bskyweb
             file: Dockerfile
           - image: bskylink
-            file: Dockerfile.bskylink
+            file: services/link/Dockerfile
           - image: bskyogcard
-            file: Dockerfile.bskyogcard
+            file: services/ogcard/Dockerfile
           - image: embedr
-            file: Dockerfile.embedr
+            file: services/embed/Dockerfile
     steps:
       # Temporary until fixed runner images roll out:
       # https://github.com/actions/runner-images/issues/15018
