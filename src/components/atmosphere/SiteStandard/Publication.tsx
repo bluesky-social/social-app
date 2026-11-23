@@ -89,7 +89,7 @@ function PublicationBase({
 
   const onPress = () => {
     haptics.tap()
-    onPressCallback?.()
+    onPressCallback?.('card')
     ax.metric('embed:standardSite:publication:press', {url: view.uri})
   }
   const onLongPress = IS_NATIVE

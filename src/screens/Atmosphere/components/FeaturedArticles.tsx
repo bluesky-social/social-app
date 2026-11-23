@@ -70,8 +70,8 @@ function Article({article}: {article: app.bsky.embed.external.ViewArticle}) {
     <DocumentCompact
       view={article}
       containerStyle={[a.py_md, {paddingHorizontal: EXPLORE_SECTION_PADDING}]}
-      onPressCallback={() => {
-        logPress('external')
+      onPressCallback={source => {
+        logPress('external', source)
         sendFeedback?.('app.bsky.feed.defs#clickthroughItem')
       }}
       onShareCallback={() =>

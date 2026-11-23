@@ -68,7 +68,7 @@ export function DocumentActions({
     isLiked: isRecommended,
     toggle: toggleRecommend,
     firstActionWelcomeDialogControl,
-  } = useAtmosphereLike(view, 'recommend')
+  } = useAtmosphereLike(view, 'recommend', 'card')
   const publisher = view.publisher
   const provider = getAtmosphereProvider(view.providerId)
 

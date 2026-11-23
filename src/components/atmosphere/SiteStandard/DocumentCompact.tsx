@@ -88,9 +88,9 @@ function DocumentCompactBase({
     onOut: onInteractOut,
   } = useInteractionState()
 
-  const onPress = () => {
+  const onPress = (source: 'card' | 'cta') => {
     haptics.tap()
-    onPressCallback?.()
+    onPressCallback?.(source)
     ax.metric('embed:standardSite:article:press', {url: view.uri})
   }
   const onLongPress = IS_NATIVE
@@ -112,7 +112,7 @@ function DocumentCompactBase({
         shouldProxy
         to={view.uri}
         label={view.title || l`Open link to ${niceUrl}`}
-        onPress={onPress}
+        onPress={() => onPress('card')}
         onLongPress={onLongPress}
         style={[
           /* Override Button's row/center layout so the padded content stretches. */
@@ -200,7 +200,7 @@ function DocumentCompactBase({
         view={view}
         recommenders={recommenders}
         interacted={interacted}
-        onReadPress={onPress}
+        onReadPress={() => onPress('cta')}
         style={[
           a.absolute,
           a.pt_md,

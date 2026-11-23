@@ -42,7 +42,7 @@ export function GalleryActions({
     isLiked: isFavorited,
     toggle: toggleFavorite,
     firstActionWelcomeDialogControl,
-  } = useAtmosphereLike(view, 'favorite')
+  } = useAtmosphereLike(view, 'favorite', 'card')
   const provider = getAtmosphereProvider(view.providerId)
 
   const viewText = provider

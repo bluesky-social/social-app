@@ -104,8 +104,8 @@ export function ActivityContentCard({
 }) {
   const logPress = useLogContentPress()
   const sendFeedback = useAtmosphereFeedback()
-  const onPress = () => {
-    logPress('external')
+  const onPress = (source: 'card' | 'cta') => {
+    logPress('external', source)
     sendFeedback?.('app.bsky.feed.defs#clickthroughItem')
   }
   const onShare = () => sendFeedback?.('app.bsky.feed.defs#interactionShare')

@@ -138,7 +138,7 @@ export function GalleryCard({
       <GalleryActions
         view={view}
         onViewPress={() => {
-          logPress('external')
+          logPress('external', 'cta')
           sendFeedback?.('app.bsky.feed.defs#clickthroughItem')
         }}
         style={[

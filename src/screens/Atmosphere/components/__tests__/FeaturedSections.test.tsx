@@ -198,7 +198,7 @@ describe('FeaturedArticles', () => {
     )
     const props = jest.mocked(DocumentCompact).mock.calls.at(-1)?.[0]
     act(() => {
-      props?.onPressCallback?.()
+      props?.onPressCallback?.('cta')
       props?.onShareCallback?.()
     })
     expect(sendFeedback.mock.calls).toEqual([
@@ -214,6 +214,7 @@ describe('FeaturedArticles', () => {
       authorDid: 'did:plc:6ayddqghxhciedbaofoxkcbs',
       position: 0,
       destination: 'external',
+      source: 'cta',
     })
   })
 

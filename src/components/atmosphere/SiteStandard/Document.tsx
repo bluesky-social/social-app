@@ -53,9 +53,9 @@ export function Document({
     onIn: onInteract,
     onOut: onInteractOut,
   } = useInteractionState()
-  const onPress = () => {
+  const onPress = (source: 'card' | 'cta') => {
     haptics.tap()
-    onPressCallback?.()
+    onPressCallback?.(source)
     ax.metric('embed:standardSite:article:press', {url: view.uri})
   }
   const onLongPress = IS_NATIVE
@@ -89,7 +89,7 @@ export function Document({
         shouldProxy
         to={view.uri}
         label={view.title || l`Open link to ${niceUrl}`}
-        onPress={onPress}
+        onPress={() => onPress('card')}
         onLongPress={onLongPress}
         style={[a.rounded_lg]}
         {...web({
@@ -179,7 +179,7 @@ export function Document({
       <DocumentActions
         view={view}
         interacted={interacted}
-        onReadPress={onPress}
+        onReadPress={() => onPress('cta')}
         style={[a.absolute, a.left_0, a.right_0, a.bottom_0, actionsStyle]}
       />
 

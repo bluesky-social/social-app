@@ -112,7 +112,7 @@ function PhotoDialogInner({
     likeCount,
     toggle: toggleFavorite,
     firstActionWelcomeDialogControl,
-  } = useAtmosphereLike(photo, 'favorite')
+  } = useAtmosphereLike(photo, 'favorite', 'photoDialog')
   const photoCount = photo.photoCount ?? getGalleryImages(photo).length
   const favorites = formatCount(i18n, likeCount)
   const photos = formatCount(i18n, photoCount)

@@ -60,9 +60,25 @@ export function useAtmosphereContentContext() {
 export function useLogContentPress() {
   const ax = useAnalytics()
   const content = useAtmosphereContentContext()
-  return (destination: 'external' | 'photoDialog') => {
+  return (
+    destination: 'external' | 'photoDialog',
+    source: 'card' | 'cta' = 'card',
+  ) => {
     if (content)
-      ax.metric('atmosphere:content:press', {...content, destination})
+      ax.metric('atmosphere:content:press', {...content, destination, source})
+  }
+}
+
+/** Logs a recommend or favorite, or undoing one, on the current content. */
+export function useLogContentAction() {
+  const ax = useAnalytics()
+  const content = useAtmosphereContentContext()
+  return (action: {
+    kind: 'recommend' | 'favorite'
+    action: 'add' | 'remove'
+    source: 'card' | 'photoDialog'
+  }) => {
+    if (content) ax.metric('atmosphere:content:action', {...content, ...action})
   }
 }
 

@@ -15,6 +15,7 @@ import {isNetworkError} from '#/lib/network-error'
 import {logger} from '#/logger'
 import {usePdsClient, useRequireAuth, useSession} from '#/state/session'
 import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
+import {useLogContentAction} from '#/screens/Atmosphere/metrics/context'
 import {useAtmosphereFirstActionWelcome} from '#/components/atmosphere/AtmosphereFirstActionWelcomeDialog'
 import * as Toast from '#/components/Toast'
 import {type com, site, social} from '#/lexicons'
@@ -150,12 +151,15 @@ export function useAtmosphereLikeCount(
 export function useAtmosphereLike(
   view: LikeableView,
   kind: AtmosphereLikeKind,
+  /** Where the button is, for metrics. */
+  source: 'card' | 'photoDialog',
 ) {
   const {t: l} = useLingui()
   const pdsClient = usePdsClient()
   const haptics = useHaptics()
   const requireAuth = useRequireAuth()
   const sendFeedback = useAtmosphereFeedback()
+  const logAction = useLogContentAction()
   const firstActionWelcome = useAtmosphereFirstActionWelcome()
   const {did, subjectUri, key, likeUri, likeCount} = useLikeState(view, kind)
 
@@ -182,6 +186,7 @@ export function useAtmosphereLike(
   const toggle = () =>
     requireAuth(async () => {
       haptics.tap()
+      logAction({kind, action: isLiked ? 'remove' : 'add', source})
       try {
         if (isLiked) {
           if (key) updateShadow(key, undefined, view)

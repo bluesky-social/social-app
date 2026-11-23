@@ -1587,6 +1587,18 @@ export type Events = {
    */
   'atmosphere:content:press': AtmosphereContentMetricContext & {
     destination: 'external' | 'photoDialog'
+    /** The card itself, or its call-to-action button, e.g. "Read". */
+    source: 'card' | 'cta'
+  }
+  /**
+   * The signed-in user recommended or favorited content, or undid it. Logged
+   * per accepted press; rapid presses can cancel each other's writes, so this
+   * counts intent, not records written.
+   */
+  'atmosphere:content:action': AtmosphereContentMetricContext & {
+    kind: 'recommend' | 'favorite'
+    action: 'add' | 'remove'
+    source: 'card' | 'photoDialog'
   }
   /** The user pressed a link to someone's profile. */
   'atmosphere:profile:press': AtmosphereMetricContext & {
