@@ -1,10 +1,10 @@
 {
-  "bskylink/src/routes/redirect.ts": {
+  "services/link/src/routes/redirect.ts": {
     "typescript/no-misused-promises": {
       "count": 1
     }
   },
-  "bskylink/src/routes/safelinkCheck.ts": {
+  "services/link/src/routes/safelinkCheck.ts": {
     "typescript/no-misused-promises": {
       "count": 1
     }

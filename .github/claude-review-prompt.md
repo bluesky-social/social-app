@@ -90,8 +90,8 @@ Apply these checks only where the diff makes them relevant:
 - For navigation, deep links, and push notifications, check cold/warm app state,
   signed-in/signed-out state, malformed or stale inputs, and platform-specific
   routing where applicable.
-- `bskyembed`, `bskyweb`, `bskyogcard`, and Go services ship separately from the
-  React Native app. Review them using their own runtime and deployment context.
+- Everything in `services/` (the bskyweb and embedr Go servers, bskyembed,
+  bskylink and bskyogcard) ships separately from the React Native app. Review them using their own runtime and deployment context.
 
 These are investigation prompts, not reasons to invent findings. Repository
 conventions in `AGENTS.md` inform the review, but a convention violation is only

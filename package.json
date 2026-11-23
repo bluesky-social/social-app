@@ -64,7 +64,7 @@
     "build-ios": "pnpm use-build-number-with-bump eas build -p ios",
     "build-android": "pnpm use-build-number-with-bump eas build -p android",
     "build": "pnpm use-build-number-with-bump eas build",
-    "build-embed": "cd bskyembed && pnpm build && pnpm build-snippet && cd .. && node ./scripts/post-embed-build.js",
+    "build-embed": "pnpm --filter bskyembed build && pnpm --filter bskyembed build-snippet && node ./scripts/post-embed-build.js",
     "start": "expo start --dev-client",
     "start:prod": "expo start --dev-client --no-dev --minify",
     "test": "NODE_ENV=test jest --forceExit --testTimeout=20000 --bail",
@@ -373,8 +373,8 @@
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",
       "__e2e__/.*",
-      "bskylink/.*",
-      "bskyogcard/.*"
+      "services/link/.*",
+      "services/ogcard/.*"
     ],
     "coveragePathIgnorePatterns": [
       "<rootDir>/node_modules/",

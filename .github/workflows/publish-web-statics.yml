@@ -84,8 +84,8 @@ jobs:
             echo "EXPO_PUBLIC_SENTRY_DSN=$SENTRY_DSN"
           } > .env
 
-      # post-web-build.js writes the statics into bskyweb/static/ and the
-      # template fragments into bskyweb/templates/, and uploads source maps
+      # post-web-build.js writes the statics into services/web/static/ and the
+      # template fragments into services/web/templates/, and uploads source maps
       - name: 🏗️ Build web
         env:
           NODE_OPTIONS: --max-old-space-size=8192
@@ -108,8 +108,8 @@ jobs:
         env:
           DEST: s3://bsky-app-web-statics-prod/${{ steps.source.outputs.sha }}
         run: |
-          aws s3 cp bskyweb/static/_expo "$DEST/_expo" --recursive --no-overwrite --only-show-errors
-          aws s3 cp bskyweb/static/assets "$DEST/assets" --recursive --no-overwrite --only-show-errors
-          aws s3 cp bskyweb/templates/scripts.html "$DEST/scripts.html" --no-overwrite --only-show-errors
-          aws s3 cp bskyweb/templates/fonts.html "$DEST/fonts.html" --no-overwrite --only-show-errors
+          aws s3 cp services/web/static/_expo "$DEST/_expo" --recursive --no-overwrite --only-show-errors
+          aws s3 cp services/web/static/assets "$DEST/assets" --recursive --no-overwrite --only-show-errors
+          aws s3 cp services/web/templates/scripts.html "$DEST/scripts.html" --no-overwrite --only-show-errors
+          aws s3 cp services/web/templates/fonts.html "$DEST/fonts.html" --no-overwrite --only-show-errors
           echo "Published $DEST"

@@ -127,13 +127,13 @@ src/lexicons/
 *.ipa
 
 # ogcard assets
-bskyogcard/src/assets/fonts/noto-*
+services/ogcard/src/assets/fonts/noto-*
 
 # bskyweb build output
-bskyweb/static/media/*.webp
-bskyweb/static/media/*.jpg
-bskyweb/static/media/*.png
-bskyweb/static/media/*.svg
+services/web/static/media/*.webp
+services/web/static/media/*.jpg
+services/web/static/media/*.png
+services/web/static/media/*.svg
 
 # superpowers plugin plans/specs — local-only workspace
 docs/superpowers/
