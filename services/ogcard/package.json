@@ -12,7 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@atproto-labs/fetch-node": "^0.4.2",
+    "@atproto-labs/fetch-node": "catalog:",
     "@atproto/api": "0.20.13",
     "@atproto/common": "^0.6.1",
     "@atproto/lexicon": "^0.7.1",

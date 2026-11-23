@@ -2,6 +2,17 @@ packages:
   - 'packages/*'
   - 'services/*'
 nodeLinker: 'hoisted'
+# Versions that every project using these packages should share. Reference
+# them with `catalog:`. Projects that are knowingly on another version (such as
+# bskyogcard's react) keep their own specifier until they're brought in line.
+catalog:
+  '@atproto-labs/fetch-node': ^0.4.2
+  '@types/react': ^19.3.0
+  expo: 58.0.23
+  react: 19.3.0
+  react-dom: 19.3.0
+  react-native: 0.88.1
+  react-test-renderer: 19.3.0
 autoInstallPeers: true # default: true
 strictPeerDependencies: false # default: false
 packageExtensions:
