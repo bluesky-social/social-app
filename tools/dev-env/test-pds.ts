@@ -88,7 +88,7 @@ export async function createServer(
   if (testNet.bsky.serverDid !== E2E_APPVIEW_DID) {
     await testNet.close()
     throw new Error(
-      `E2E AppView DID changed from ${E2E_APPVIEW_DID} to ${testNet.bsky.serverDid}. Update E2E_APPVIEW_DID in dev-env/constants.ts.`,
+      `E2E AppView DID changed from ${E2E_APPVIEW_DID} to ${testNet.bsky.serverDid}. Update E2E_APPVIEW_DID in tools/dev-env/constants.ts.`,
     )
   }
 

@@ -74,9 +74,9 @@ cleanup() {
       "$postgres_bin/pg_ctl" -D "${RUNNER_TEMP:-/tmp}/nightly-e2e-postgres" -m fast stop >/dev/null 2>&1 || true
     fi
   else
-    docker compose -f dev-env/dev-infra/docker-compose.yaml logs --no-color \
+    docker compose -f tools/dev-env/dev-infra/docker-compose.yaml logs --no-color \
       >>"$artifact_dir/docker-services.log" 2>&1 || true
-    docker compose -f dev-env/dev-infra/docker-compose.yaml down --volumes --remove-orphans >/dev/null 2>&1 || true
+    docker compose -f tools/dev-env/dev-infra/docker-compose.yaml down --volumes --remove-orphans >/dev/null 2>&1 || true
   fi
 }
 
@@ -127,9 +127,9 @@ if [[ "$platform" == "ios" ]]; then
 
   wait_for_port 5433 "PostgreSQL"
   wait_for_port 6380 "Redis"
-  pnpm --dir dev-env start:external >"$artifact_dir/mock-server.log" 2>&1 &
+  pnpm --dir tools/dev-env start:external >"$artifact_dir/mock-server.log" 2>&1 &
 else
-  pnpm --dir dev-env start >"$artifact_dir/mock-server.log" 2>&1 &
+  pnpm --dir tools/dev-env start >"$artifact_dir/mock-server.log" 2>&1 &
 fi
 printf '%s\n' "$!" >"$artifact_dir/mock-server.pid"
 wait_for_port 1986 "the E2E mock-server manager"

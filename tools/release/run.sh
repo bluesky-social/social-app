@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-source tooling/scripts/release/common.sh
+source tooling/tools/release/common.sh
 [[ "$PREPARED_SHA" =~ ^[0-9a-f]{40}$ ]] || fail 'Expected full prepared SHA.'
 [[ "$(git -C source rev-parse HEAD)" == "$PREPARED_SHA" ]] || fail 'Checkout does not match prepared SHA.'
 [[ "$(git -C source show -s --format=%P HEAD)" == "$BASE_SHA" ]] || fail 'Prepared commit must have exactly the selected source as its parent.'

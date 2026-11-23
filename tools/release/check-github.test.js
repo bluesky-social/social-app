@@ -3,11 +3,9 @@ import {spawnSync} from 'node:child_process'
 import {resolve} from 'node:path'
 import {pathToFileURL} from 'node:url'
 
-const plannerUrl = pathToFileURL(resolve('scripts/release/plan.mjs')).href
+const plannerUrl = pathToFileURL(resolve('tools/release/plan.mjs')).href
 
-const moduleUrl = pathToFileURL(
-  resolve('scripts/release/check-github.mjs'),
-).href
+const moduleUrl = pathToFileURL(resolve('tools/release/check-github.mjs')).href
 
 /** Run the real checker with a strict fake reader; no network calls. */
 function check(scenario) {
@@ -289,7 +287,7 @@ test('planned build inputs match the actual dispatch definitions and no live opt
   expect(result.status).toBe(0)
   const live = spawnSync(
     process.execPath,
-    [resolve('scripts/release/plan.mjs'), 'report', 'owner/repo', '--apply'],
+    [resolve('tools/release/plan.mjs'), 'report', 'owner/repo', '--apply'],
     {encoding: 'utf8'},
   )
   expect(live.status).toBe(1)

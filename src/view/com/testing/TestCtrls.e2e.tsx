@@ -1,7 +1,7 @@
 import {LogBox, Pressable, View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {E2E_APPVIEW_DID} from '../../../../dev-env/constants'
+import {E2E_APPVIEW_DID} from '../../../../tools/dev-env/constants'
 import {BLUESKY_PROXY_HEADER} from '#/lib/constants'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'

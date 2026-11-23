@@ -231,7 +231,7 @@ if (
     const [directory, repository, ...extra] = process.argv.slice(2)
     if (!directory || !repository || extra.length)
       throw new Error(
-        'Usage: node scripts/release/check-github.mjs REPORT_DIRECTORY OWNER/REPO',
+        'Usage: node tools/release/check-github.mjs REPORT_DIRECTORY OWNER/REPO',
       )
     const report = await checkGitHub(
       JSON.parse(readFileSync(join(directory, 'report.json'), 'utf8')),

@@ -3,10 +3,10 @@
 Make sure you've copied `.env.example` to `.env.test` and provided any required
 values.
 
-Install dependencies in `/dev-env`
+Install dependencies in `/tools/dev-env`
 
 ```
-cd dev-env && pnpm i
+cd tools/dev-env && pnpm i
 ```
 
 ## Using Maestro
@@ -53,7 +53,7 @@ emulator; port 1986 remains host-side because Maestro JavaScript calls it from
 the runner. Android uses the existing Docker Compose PostgreSQL 14 and Redis 7
 services on ports 5433 and 6380. GitHub-hosted macOS cannot run nested Docker
 virtualization, so iOS provisions ephemeral native PostgreSQL 14.x and Redis
-7.4.7 on those same ports and starts `pnpm --dir dev-env start:external`.
+7.4.7 on those same ports and starts `pnpm --dir tools/dev-env start:external`.
 
 Each platform uploads a `nightly-e2e-<platform>-<run-id>` artifact for 14 days.
 It contains JUnit at `report.xml`, Maestro screenshots, videos, command metadata

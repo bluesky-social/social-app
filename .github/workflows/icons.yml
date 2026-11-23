@@ -5,7 +5,7 @@ on:
     paths:
       - 'assets/icons/**'
       - 'assets/nano-icons/**'
-      - 'scripts/icons/**'
+      - 'tools/icons/**'
       - 'src/components/icons/**'
       - 'app.config.js'
       - 'package.json'
@@ -17,7 +17,7 @@ on:
     paths:
       - 'assets/icons/**'
       - 'assets/nano-icons/**'
-      - 'scripts/icons/**'
+      - 'tools/icons/**'
       - 'src/components/icons/**'
       - 'app.config.js'
       - 'package.json'

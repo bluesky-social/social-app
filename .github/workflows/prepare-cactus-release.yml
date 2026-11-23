@@ -57,12 +57,12 @@ jobs:
           if [ "$GITHUB_EVENT_NAME" = "push" ]; then
             RELEASE_VERSION=$(node -p "require('./source/package.json').version")
           fi
-          node tooling/scripts/release/prepare.mjs "$RELEASE_VERSION" source release-preparation
+          node tooling/tools/release/prepare.mjs "$RELEASE_VERSION" source release-preparation
       - name: Plan release requests and recheck GitHub
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_REPOSITORY: ${{ github.repository }}
-        run: node tooling/scripts/release/plan.mjs release-preparation "$RELEASE_REPOSITORY"
+        run: node tooling/tools/release/plan.mjs release-preparation "$RELEASE_REPOSITORY"
       - name: Print report including conflicts
         if: ${{ !cancelled() && hashFiles('release-preparation/README.md') != '' }}
         run: cat release-preparation/README.md >> "$GITHUB_STEP_SUMMARY"

@@ -9,8 +9,8 @@
  *   import { useEffect } from 'react'
  *   useEffect(() => {}, [])
  *
- * Usage: jscodeshift -t .jscodeshift/repo/react-import.js <file-path>
- * Example: jscodeshift -t .jscodeshift/repo/react-import.js src/App.native.tsx
+ * Usage: jscodeshift -t tools/codemods/repo/react-import.js <file-path>
+ * Example: jscodeshift -t tools/codemods/repo/react-import.js src/App.native.tsx
  */
 
 /* eslint-disable */

@@ -14,12 +14,12 @@ import {
 
 function usage() {
   return `Usage:
-  node scripts/release/cli.mjs identity <version>
-  node scripts/release/cli.mjs create <version> <changelog-file> <output-file>
-  node scripts/release/cli.mjs validate <release-file> [prepared|final]
-  node scripts/release/cli.mjs extract-public <release-file>
-  node scripts/release/cli.mjs append-ota <release-file> <sequence> <changelog-file>
-  node scripts/release/cli.mjs finalize <release-file> <source-tag> <source-sha> <ios-build-number> <android-version-code>`
+  node tools/release/cli.mjs identity <version>
+  node tools/release/cli.mjs create <version> <changelog-file> <output-file>
+  node tools/release/cli.mjs validate <release-file> [prepared|final]
+  node tools/release/cli.mjs extract-public <release-file>
+  node tools/release/cli.mjs append-ota <release-file> <sequence> <changelog-file>
+  node tools/release/cli.mjs finalize <release-file> <source-tag> <source-sha> <ios-build-number> <android-version-code>`
 }
 
 function requireArgs(args, count) {

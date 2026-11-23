@@ -264,7 +264,7 @@ if (
     const [directory, repository, ...extra] = process.argv.slice(2)
     if (!directory || !repository || extra.length)
       throw new Error(
-        'Usage: node scripts/release/plan.mjs REPORT_DIRECTORY OWNER/REPO. Live execution is not available.',
+        'Usage: node tools/release/plan.mjs REPORT_DIRECTORY OWNER/REPO. Live execution is not available.',
       )
     const report = await dryRunRelease(
       JSON.parse(readFileSync(join(directory, 'report.json'), 'utf8')),

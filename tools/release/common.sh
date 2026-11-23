@@ -28,7 +28,7 @@ validate_source() {
   git -C source merge-base --is-ancestor "$BASE_SHA" "$TOOLING_SHA" || fail 'Source is not in the trusted main history.'
   [[ "$(git -C source rev-parse --is-shallow-repository)" == false ]] || fail 'Full source history is required.'
   [[ -z "$(git -C source status --porcelain)" ]] || fail 'Source checkout is dirty.'
-  node tooling/scripts/release/validate.cjs source "$VERSION" "$1"
+  node tooling/tools/release/validate.cjs source "$VERSION" "$1"
   api '' | jq -e '.permissions.push == true' >/dev/null || fail 'Cannot establish visibility of all draft releases.'
   for workflow in "${WORKFLOWS[@]}"; do
     cmp "tooling/.github/workflows/$workflow" "source/.github/workflows/$workflow" || fail "Unreviewed build workflow: $workflow"
