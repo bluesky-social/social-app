@@ -295,13 +295,6 @@ module.exports = function (_config) {
         [
           'expo-media-library',
           {
-            /*
-             * With limited photo access, iOS otherwise asks the user to
-             * "Select More Photos" once per launch, the first time
-             * expo-image-picker reads a picked video through PhotoKit. The
-             * system picker shows the whole library regardless of the
-             * selection, so the prompt doesn't help.
-             */
             preventAutomaticLimitedAccessAlert: true,
           },
         ],
