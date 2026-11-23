@@ -55,7 +55,10 @@ export function PhotoDialog({
   const title = photo.title
 
   return (
-    <Dialog.Outer control={control} testID="atmospherePhotoDialog">
+    <Dialog.Outer
+      control={control}
+      testID="atmospherePhotoDialog"
+      nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Gallery.Bleed>
         <Dialog.ScrollableInner
