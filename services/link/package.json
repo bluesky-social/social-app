@@ -11,7 +11,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@atproto-labs/fetch-node": "^0.4.2",
+    "@atproto-labs/fetch-node": "catalog:",
     "@atproto/api": "^0.16.7",
     "@atproto/common": "^0.4.11",
     "@aws-sdk/credential-providers": "^3.1169.0",
