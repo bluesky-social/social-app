@@ -1,0 +1,3 @@
+# Every Dockerfile installs its own dependencies, so never send local installs
+# or build output as build context.
+**/node_modules

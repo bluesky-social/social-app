@@ -67,8 +67,8 @@ RUN SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
 # Stage 2: build the bskyweb Go binary, embedding the assets from stage 1.
 #
 # post-web-build.js (run by `pnpm build-web`) writes the bundled JS/CSS/media
-# into bskyweb/static/* and regenerates bskyweb/templates/scripts.html, so
-# copying the bskyweb/ tree from stage 1 is enough for go:embed to find
+# into services/web/static/* and regenerates services/web/templates/scripts.html,
+# so copying the services/web/ tree from stage 1 is enough for go:embed to find
 # everything.
 #
 FROM golang:1.26.10-bookworm AS go-build
@@ -81,16 +81,16 @@ ENV GOARCH="amd64"
 ENV CGO_ENABLED=1
 ENV GOEXPERIMENT="loopvar"
 
-COPY --from=web-build /app/bskyweb ./bskyweb
+COPY --from=web-build /app/services/web ./services/web
 
 # DEBUG
-RUN find ./bskyweb/static
+RUN find ./services/web/static
 
-RUN cd bskyweb/ && \
+RUN cd services/web/ && \
   go mod download && \
   go mod verify
 
-RUN cd bskyweb/ && \
+RUN cd services/web/ && \
   go build \
     -v  \
     -trimpath \
