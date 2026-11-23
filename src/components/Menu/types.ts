@@ -5,11 +5,11 @@ import {
   type PressableProps,
   type View,
 } from 'react-native'
+import {type BottomSheetPopoverMode} from '@bsky.app/bottom-sheet'
 
 import {type TextStyleProp, type ViewStyleProp} from '#/alf'
 import type * as Dialog from '#/components/Dialog'
 import {type Props as SVGIconProps} from '#/components/icons/common'
-import {type BottomSheetPopoverMode} from '../../../modules/bottom-sheet'
 
 export type ContextType = {
   control: Dialog.DialogOuterProps['control']

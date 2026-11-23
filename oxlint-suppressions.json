@@ -1,15 +1,15 @@
 {
-  "services/link/src/routes/redirect.ts": {
-    "typescript/no-misused-promises": {
+  "packages/background-notification-handler/src/BackgroundNotificationHandlerProvider.tsx": {
+    "typescript/no-floating-promises": {
       "count": 1
     }
   },
-  "services/link/src/routes/safelinkCheck.ts": {
-    "typescript/no-misused-promises": {
-      "count": 1
+  "packages/background-notification-handler/src/ExpoBackgroundNotificationHandlerModule.web.ts": {
+    "typescript/require-await": {
+      "count": 4
     }
   },
-  "modules/bottom-sheet/src/BottomSheetNativeComponent.tsx": {
+  "packages/bottom-sheet/src/BottomSheetNativeComponent.tsx": {
     "typescript/no-explicit-any": {
       "count": 2
     },
@@ -20,17 +20,7 @@
       "count": 2
     }
   },
-  "modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
-  "modules/expo-background-notification-handler/src/ExpoBackgroundNotificationHandlerModule.web.ts": {
-    "typescript/require-await": {
-      "count": 4
-    }
-  },
-  "modules/expo-bluesky-swiss-army/src/PlatformInfo/index.native.ts": {
+  "packages/swiss-army/src/PlatformInfo/index.native.ts": {
     "typescript/no-unsafe-call": {
       "count": 3
     },
@@ -38,7 +28,7 @@
       "count": 3
     }
   },
-  "modules/expo-bluesky-swiss-army/src/Referrer/index.android.ts": {
+  "packages/swiss-army/src/Referrer/index.android.ts": {
     "typescript/no-unsafe-call": {
       "count": 2
     },
@@ -46,7 +36,7 @@
       "count": 2
     }
   },
-  "modules/expo-bluesky-swiss-army/src/VisibilityView/index.native.tsx": {
+  "packages/swiss-army/src/VisibilityView/index.native.tsx": {
     "typescript/no-unsafe-call": {
       "count": 1
     },
@@ -54,8 +44,18 @@
       "count": 1
     }
   },
-  "modules/expo-bluesky-swiss-army/src/VisibilityView/index.tsx": {
+  "packages/swiss-army/src/VisibilityView/index.tsx": {
     "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "services/link/src/routes/redirect.ts": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "services/link/src/routes/safelinkCheck.ts": {
+    "typescript/no-misused-promises": {
       "count": 1
     }
   },

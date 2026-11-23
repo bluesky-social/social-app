@@ -3,9 +3,9 @@ import {
   type GestureResponderEvent,
   type View,
 } from 'react-native'
+import {type BottomSheetPopoverMode} from '@bsky.app/bottom-sheet'
 
 import {type DialogControlOpenOptions} from '#/components/Dialog/types'
-import {type BottomSheetPopoverMode} from '../../../modules/bottom-sheet'
 
 /**
  * Keep explicit anchors for programmatic opens, but only infer an anchor from
