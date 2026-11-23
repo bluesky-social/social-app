@@ -2,10 +2,9 @@
 
 ## Preview the link warning pages
 
-From `bskylink/`, run:
+Run `pnpm install` from the repo root, then from `services/link/`:
 
 ```sh
-pnpm install
 pnpm dev:preview
 ```
 

@@ -37,5 +37,5 @@
       }
     ]
   },
-  "exclude": ["bskyweb", "bskyembed", "web-build", "dist"]
+  "exclude": ["services", "web-build", "dist"]
 }

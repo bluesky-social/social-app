@@ -12,7 +12,7 @@ The tracked `Inter-Bold.ttf`, `Inter-Regular.ttf`, and `Inter-SemiBold.ttf` file
 
 ## Noto Sans
 
-[`bskyogcard/scripts/install-fonts.ts`](../../../scripts/install-fonts.ts) downloads Noto Sans Arabic, Hebrew, HK, JP, KR, SC, TC, and Thai into this directory. The build copies them into `bskyogcard/dist/assets/fonts/`, and the Docker image contains both locations.
+[`services/ogcard/scripts/install-fonts.ts`](../../../scripts/install-fonts.ts) downloads Noto Sans Arabic, Hebrew, HK, JP, KR, SC, TC, and Thai into this directory. The build copies them into `services/ogcard/dist/assets/fonts/`, and the Docker image contains both locations.
 
 ```
 (c) 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.

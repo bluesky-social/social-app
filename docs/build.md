@@ -156,7 +156,7 @@ To run the build with Go, use staging credentials, your own, or any other accoun
 ```
 cd social-app
 pnpm install && pnpm build-web
-cd bskyweb/
+cd services/web/
 go mod tidy
 go build -v -tags timetzdata -o bskyweb ./cmd/bskyweb
 ./bskyweb serve --appview-host=https://public.api.bsky.app

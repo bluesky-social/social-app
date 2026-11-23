@@ -4,8 +4,8 @@ const {execFileSync} = require('node:child_process')
 
 const projectRoot = path.join(__dirname, '..')
 const distDir = path.join(projectRoot, 'dist')
-const bskywebStatic = path.join(projectRoot, 'bskyweb', 'static')
-const templatesDir = path.join(projectRoot, 'bskyweb', 'templates')
+const bskywebStatic = path.join(projectRoot, 'services', 'web', 'static')
+const templatesDir = path.join(projectRoot, 'services', 'web', 'templates')
 const templateFile = path.join(templatesDir, 'scripts.html')
 const fontsTemplateFile = path.join(templatesDir, 'fonts.html')
 
@@ -14,7 +14,7 @@ const fontsTemplateFile = path.join(templatesDir, 'fonts.html')
 // /_expo/static/ paths, optionally prefixed by `experiments.baseUrl` (e.g. /static).
 // We capture from /_expo/static/ onward so the captured path is independent of baseUrl.
 //
-// We preserve the _expo/static/ structure when copying to bskyweb/static, because
+// We preserve the _expo/static/ structure when copying to services/web/static, because
 // Metro's runtime chunk loader and source maps embed these paths. Rewriting them
 // would mean rewriting the chunk loader and every .map file's references; not worth it.
 const indexHtml = fs.readFileSync(path.join(distDir, 'index.html'), 'utf8')
@@ -49,7 +49,7 @@ console.log(`Found ${cssEntries.length} CSS entrypoints`)
 
 // Generate scripts.html template.
 // Map /_expo/static/... to {{ staticCDNHost }}/static/_expo/static/... so the
-// path matches what we copy into bskyweb/static below.
+// path matches what we copy into services/web/static below.
 const outputLines = []
 
 for (const href of cssEntries) {

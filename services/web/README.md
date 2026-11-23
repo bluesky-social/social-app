@@ -30,14 +30,14 @@ pnpm build-web
 
 Install golang. We generally develop against the current stable release of the language, as declared in `go.mod`.
 
-In this directory (`bskyweb/`):
+In this directory (`services/web/`):
 
 ```bash
 # re-build and run daemon
 go run ./cmd/bskyweb serve
 
 # build and output a binary
-go build -o bskyweb ./cmd/bskyweb/
+go build -o bskyweb ./cmd/services/web/
 ```
 
 The easiest way to configure the daemon is to copy `example.env` to `.env` and

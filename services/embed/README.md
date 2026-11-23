@@ -1,10 +1,11 @@
 ## Run / Test
 
-Install dependencies:
+Install dependencies from the repo root (bskyembed is part of the root pnpm
+workspace):
 
 ```bash
-cd bskyembed
-pnpm
+pnpm install
+cd services/embed
 ```
 
 Run the dev server:

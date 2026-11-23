@@ -57,9 +57,9 @@
     ".husky/**",
     "patches/**",
     "*.html",
-    "bskyweb/**",
-    "bskyembed/**",
-    "bskyogcard/**",
+    "services/web/**",
+    "services/embed/**",
+    "services/ogcard/**",
     "lint-rules/**",
     "src/locale/locales/_build/**",
     "src/locale/locales/**/*.js",
@@ -390,8 +390,8 @@
     },
     {
       "files": [
-        "bskylink/**/*.{js,jsx,ts,tsx}",
-        "bskyogcard/**/*.{js,jsx,ts,tsx}",
+        "services/link/**/*.{js,jsx,ts,tsx}",
+        "services/ogcard/**/*.{js,jsx,ts,tsx}",
         "dev-env/**/*.{js,jsx,ts,tsx}"
       ],
       "rules": {

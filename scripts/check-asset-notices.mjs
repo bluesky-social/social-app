@@ -26,7 +26,7 @@ function extractPaths(markdown) {
   for (const [, token] of markdown.matchAll(/`([^`\n]+)`/g)) {
     const t = token.trim()
     // Only validate tokens that are unambiguously repo-relative paths. Bare filenames that
-    // appear in comma-separated lists ("`bskyweb/static/favicon.png`, `favicon-16x16.png`")
+    // appear in comma-separated lists ("`services/web/static/favicon.png`, `favicon-16x16.png`")
     // are reported separately rather than guessed at.
     if (!t.includes('/') || NOT_A_PATH.test(t) || t.includes(' ')) continue
     out.add(t.replace(/^\.\//, ''))
@@ -40,7 +40,7 @@ function pathExists(p) {
   if (existsSync(full)) return true
   if (!p.includes('*')) return false
 
-  // Handle one glob in the final segment, e.g. bskyweb/static/media/MaterialIcons.*.ttf
+  // Handle one glob in the final segment, e.g. services/web/static/media/MaterialIcons.*.ttf
   const dir = dirname(full)
   const pattern = p.split('/').pop()
   if (!existsSync(dir)) return false
