@@ -278,3 +278,30 @@ it('keeps the snapshot title generic until moderation and profile loading finish
   rerender(preview())
   expect(screen.getByText('Feed “Private feed name”')).toBeTruthy()
 })
+
+it('matches muted words against the record name, not the preview label', () => {
+  const listUri = new AtUri(`at://${did}/app.bsky.graph.list/3list`)
+  const preview = () => (
+    <I18nProvider i18n={i18n}>
+      <BskyRecordSnapshotPreview
+        report={{
+          subject: {...subject, uri: listUri.toString()},
+          record: {
+            $type: 'app.bsky.graph.list',
+            name: 'Friends',
+            purpose: 'app.bsky.graph.defs#curatelist',
+            createdAt: record.createdAt,
+          },
+        }}
+        uri={listUri}
+        subjectLabel="List"
+      />
+    </I18nProvider>
+  )
+  mockOpts.prefs.mutedWords = [{value: 'list', targets: ['content']}]
+  const {rerender} = render(preview())
+  expect(screen.getByText('List “Friends”')).toBeTruthy()
+  mockOpts.prefs.mutedWords = [{value: 'friends', targets: ['content']}]
+  rerender(preview())
+  expect(screen.getByText('Content hidden')).toBeTruthy()
+})

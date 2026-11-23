@@ -62,7 +62,12 @@ export function BskyRecordSnapshotPreview({
     ? moderateSnapshot(
         {
           uri: ref.uri,
-          title: snapshot.kind === 'post' ? text : title,
+          title:
+            snapshot.kind === 'post'
+              ? snapshot.text
+              : 'name' in snapshot && typeof snapshot.name === 'string'
+                ? sanitizeDisplayName(snapshot.name)
+                : '',
           description: description ?? '',
           associatedRefs: [ref],
           associatedProfiles: author ? [author] : [],
