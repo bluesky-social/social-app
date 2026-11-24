@@ -19,6 +19,8 @@ export class CardService {
   public metricsServer?: http.Server
   private terminator?: HttpTerminator
   private stopMetrics?: () => Promise<void>
+  private draining = false
+  private shutdown?: Promise<void>
 
   public app: express.Application
   public ctx: AppContext
@@ -32,7 +34,7 @@ export class CardService {
   }
 
   static async create(cfg: Config, workerSlot = 0): Promise<CardService> {
-    let app = express()
+    const app = express()
 
     const ctx = await AppContext.fromConfig(cfg)
     const registry = new Registry()
@@ -63,8 +65,17 @@ export class CardService {
     })
     app.use(metricsMiddleware)
 
-    app = routes(ctx, app)
     const service = new CardService(app, ctx, registry)
+    app.use((_req, res, next) => {
+      if (service.draining) {
+        return res
+          .status(503)
+          .set('connection', 'close')
+          .end('service unavailable')
+      }
+      next()
+    })
+    routes(ctx, app)
     app.use(errorHandler(() => service.onFatalError?.()))
     return service
   }
@@ -90,15 +101,44 @@ export class CardService {
     }
   }
 
-  async destroy() {
+  destroy() {
+    this.shutdown ??= this.stop()
+    return this.shutdown
+  }
+
+  private async stop() {
+    this.draining = true
     const startTime = Date.now()
 
     this.ctx.abortController.abort()
 
     const shutdownPromises = []
+    const server = this.server
+    const closingListener = server?.listening === true
+
+    if (closingListener) {
+      shutdownPromises.push(
+        new Promise<void>((resolve, reject) => {
+          server.close(err => (err ? reject(err) : resolve()))
+        }),
+      )
+    }
 
     if (this.terminator) {
-      shutdownPromises.push(this.terminator.terminate())
+      shutdownPromises.push(
+        this.terminator.terminate().catch(err => {
+          /* http-terminator closes the listener again after draining sockets. */
+          if (
+            closingListener &&
+            err instanceof Error &&
+            'code' in err &&
+            err.code === 'ERR_SERVER_NOT_RUNNING'
+          ) {
+            return
+          }
+          throw err
+        }),
+      )
     }
 
     if (this.stopMetrics) {
