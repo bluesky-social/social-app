@@ -101,9 +101,10 @@ export function Root({
   snapToItems?: boolean
   /**
    * Called when the user navigates to a different item: native swipes, and on
-   * web touch scrolling, mouse drags, arrow keys, and horizontal wheel or
-   * trackpad scrolling. Not called on mount, for `scrollIntoView`, when focus
-   * simply lands on an item, or when items are added, removed, or reordered.
+   * web touch scrolling, mouse drags, arrow keys, horizontal wheel or trackpad
+   * scrolling, and page-dot navigation that scrolls to a different navigation
+   * index. Not called on mount, for `scrollIntoView`, when focus simply lands on
+   * an item, or when items are added, removed, or reordered.
    */
   onIndexChange?: (index: number, previousIndex: number) => void
 }) {
@@ -327,7 +328,7 @@ export function Root({
     },
   )
 
-  useKeyboardHandlers({
+  const cancelKeyboardNavigation = useKeyboardHandlers({
     scrollRef,
     itemWidthsRef,
     currentIndexRef,
@@ -337,7 +338,7 @@ export function Root({
     resetKey: keysSignature,
   })
 
-  usePointerHandlers({
+  const cancelPointerNavigation = usePointerHandlers({
     scrollRef,
     itemWidthsRef,
     currentIndexRef,
@@ -347,7 +348,7 @@ export function Root({
     resetKey: keysSignature,
   })
 
-  useScrollNavigation({
+  const stopScrollNavigation = useScrollNavigation({
     scrollRef,
     itemWidthsRef,
     currentIndexRef,
@@ -355,6 +356,22 @@ export function Root({
     resetKey: keysSignature,
     onNavigate: setCurrentIndex,
   })
+
+  const revealIndex = (index: number) => {
+    if (!Number.isInteger(index) || index < 0 || index >= itemCount) return
+    cancelKeyboardNavigation()
+    cancelPointerNavigation()
+    stopScrollNavigation()
+    const current = getScrollNode()?.scrollLeft ?? 0
+    const next = Math.min(
+      getOffsetForIndex(itemWidthsRef.current, index),
+      getMaxOffset(itemWidthsRef.current, itemCount, viewportWidth),
+    )
+    if (next === current) return
+    scrollTo({offset: next})
+    setCurrentIndex(index)
+    setFocusIndex(index)
+  }
 
   /*
    * Only count scrolls the user is doing. The rest are programmatic, or the
@@ -402,7 +419,7 @@ export function Root({
 
   return (
     <GalleryContext.Provider
-      value={{label, itemKeys: keys, activeIndex: pageIndex}}>
+      value={{label, itemKeys: keys, activeIndex: pageIndex, revealIndex}}>
       <View style={a.w_full}>
         <View
           ref={contentRef}

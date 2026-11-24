@@ -4,6 +4,8 @@ export const GalleryContext = createContext<{
   label: string
   itemKeys: string[]
   activeIndex: number
+  /** Left-aligns an item within the scroll bounds without selecting its dot. */
+  revealIndex: (index: number) => void
 } | null>(null)
 GalleryContext.displayName = 'GalleryContext'
 

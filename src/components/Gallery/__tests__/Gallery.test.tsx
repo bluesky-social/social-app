@@ -47,7 +47,13 @@ jest.mock('#/alf', () => ({
     flex_shrink_0: {flexShrink: 0},
   },
   web: () => undefined,
-  useTheme: () => ({palette: {primary_500: 'blue', contrast_200: 'gray'}}),
+  useTheme: () => ({
+    palette: {
+      primary_500: 'blue',
+      contrast_200: 'gray',
+      contrast_300: 'darkgray',
+    },
+  }),
 }))
 
 const scrollTo = (ScrollView.prototype as unknown as {scrollTo: jest.Mock})
@@ -195,31 +201,156 @@ describe('Gallery.PageDots', () => {
     expect(screen.queryByTestId('galleryPageDots')).toBeNull()
   })
 
-  it.each([false, true])(
-    'exposes position without buttons or tab stops (web: %s)',
-    isWeb => {
-      mockEnv.IS_WEB = isWeb
-      threeCards({footer: dots})
+  it('exposes position without buttons or tab stops on native', () => {
+    threeCards({footer: dots})
+    expect(
+      screen.getByRole('text', {
+        name: 'Cards, item 1 of 3',
+      }),
+    ).toBeTruthy()
+    expect(screen.queryAllByRole('button')).toHaveLength(0)
+    for (const id of [
+      'galleryPageDots',
+      'galleryPageDots-0',
+      'galleryPageDots-1',
+      'galleryPageDots-2',
+    ]) {
+      expect(screen.getByTestId(id).props.tabIndex).toBeUndefined()
+    }
+    userScroll(120)
+    expectPosition(1)
+    userScroll(330)
+    expectPosition(2)
+  })
+
+  it('exposes labeled reveal buttons on web, including with a screen reader', () => {
+    mockEnv.IS_WEB = true
+    mockA11y.screenReaderEnabled = true
+    threeCards({footer: dots})
+    expectPosition(0)
+    expect(screen.getAllByRole('button')).toHaveLength(3)
+    for (let index = 0; index < 3; index++) {
       expect(
-        screen.getByRole(isWeb ? 'image' : 'text', {
-          name: 'Cards, item 1 of 3',
-        }),
+        screen.getByRole('button', {name: `Show item ${index + 1} of 3`}),
       ).toBeTruthy()
-      expect(screen.queryAllByRole('button')).toHaveLength(0)
-      for (const id of [
-        'galleryPageDots',
-        'galleryPageDots-0',
-        'galleryPageDots-1',
-        'galleryPageDots-2',
-      ]) {
-        expect(screen.getByTestId(id).props.tabIndex).toBeUndefined()
-      }
-      userScroll(120)
-      expectPosition(1)
-      userScroll(330)
-      expectPosition(2)
-    },
-  )
+    }
+    expect(screen.getByTestId('galleryPageDots').props.accessible).toBe(false)
+    expect(screen.getByTestId('galleryPageDots').props.accessibilityRole).toBe(
+      'group',
+    )
+  })
+
+  it('reveals a clicked item once and keeps highlighting tied to the offset', () => {
+    mockEnv.IS_WEB = true
+    const onIndexChange = jest.fn()
+    threeCards({footer: dots, onIndexChange})
+    layout('gallery', 400, 100)
+    fireEvent.press(screen.getByRole('button', {name: 'Show item 3 of 3'}))
+    expect(scrollTo).toHaveBeenLastCalledWith({x: 216, animated: false})
+    expect(onIndexChange.mock.calls).toEqual([[2, 0]])
+    expectPosition(0)
+
+    scrollBy(216)
+    expectPosition(1)
+    expect(onIndexChange.mock.calls).toEqual([[2, 0]])
+    expect(screen.getByTestId('c').props.tabIndex).toBe(0)
+  })
+
+  it('left-aligns an already-visible item when there is room', () => {
+    mockEnv.IS_WEB = true
+    const onIndexChange = jest.fn()
+    render(
+      <Gallery.Root
+        testID="gallery"
+        label="Cards"
+        footer={dots}
+        onIndexChange={onIndexChange}>
+        {card('a', 100, 100)}
+        {card('b', 100, 100)}
+        {card('c', 400, 100)}
+      </Gallery.Root>,
+    )
+    layout('gallery', 300, 100)
+    layout('a', 100, 100)
+    layout('b', 100, 100)
+    layout('c', 400, 100)
+
+    fireEvent.press(screen.getByRole('button', {name: 'Show item 2 of 3'}))
+    expect(scrollTo).toHaveBeenLastCalledWith({x: 108, animated: false})
+    expect(onIndexChange.mock.calls).toEqual([[1, 0]])
+    expectPosition(0)
+    scrollBy(108)
+    expectPosition(1)
+  })
+
+  it('does nothing when all the items fit', () => {
+    mockEnv.IS_WEB = true
+    const onIndexChange = jest.fn()
+    threeCards({footer: dots, onIndexChange})
+    layout('gallery', 800, 100)
+    fireEvent.press(screen.getByRole('button', {name: 'Show item 3 of 3'}))
+    expect(scrollTo).not.toHaveBeenCalled()
+    expect(onIndexChange).not.toHaveBeenCalled()
+    expectPosition(0)
+    expect(screen.getByTestId('a').props.tabIndex).toBe(0)
+  })
+
+  it('uses the live scroll offset for repeat presses and backward navigation', () => {
+    mockEnv.IS_WEB = true
+    const node = {scrollLeft: 0}
+    jest
+      .spyOn(ScrollView.prototype, 'getScrollableNode')
+      .mockReturnValueOnce(node)
+      .mockReturnValueOnce(node)
+      .mockReturnValueOnce(node)
+    const onIndexChange = jest.fn()
+    threeCards({footer: dots, onIndexChange})
+
+    fireEvent.press(screen.getByRole('button', {name: 'Show item 2 of 3'}))
+    expect(scrollTo).toHaveBeenLastCalledWith({x: 208, animated: false})
+    node.scrollLeft = 208
+    scrollBy(208)
+    scrollTo.mockClear()
+
+    fireEvent.press(screen.getByRole('button', {name: 'Show item 2 of 3'}))
+    expect(scrollTo).not.toHaveBeenCalled()
+    expect(onIndexChange.mock.calls).toEqual([[1, 0]])
+
+    fireEvent.press(screen.getByRole('button', {name: 'Show item 1 of 3'}))
+    expect(scrollTo).toHaveBeenLastCalledWith({x: 0, animated: false})
+    expect(onIndexChange.mock.calls).toEqual([
+      [1, 0],
+      [0, 1],
+    ])
+  })
+
+  it('does not report the same navigation index again after focus changed it', () => {
+    mockEnv.IS_WEB = true
+    const onIndexChange = jest.fn()
+    threeCards({footer: dots, onIndexChange})
+    fireEvent(screen.getByTestId('c'), 'focus')
+    fireEvent.press(screen.getByRole('button', {name: 'Show item 3 of 3'}))
+    expect(scrollTo).toHaveBeenLastCalledWith({x: 316, animated: false})
+    expect(onIndexChange).not.toHaveBeenCalled()
+  })
+
+  it('darkens inactive dots on hover and keeps the active dot blue', () => {
+    mockEnv.IS_WEB = true
+    threeCards({footer: dots})
+    const color = (index: number) =>
+      flat(
+        screen.getByTestId(`galleryPageDots-${index}`).findByType(Animated.View)
+          .props.style,
+      ).backgroundColor
+
+    expect(color(1)).toBe('gray')
+    fireEvent(screen.getByTestId('galleryPageDots-1'), 'hoverIn')
+    expect(color(1)).toBe('darkgray')
+    fireEvent(screen.getByTestId('galleryPageDots-1'), 'hoverOut')
+    expect(color(1)).toBe('gray')
+    fireEvent(screen.getByTestId('galleryPageDots-0'), 'hoverIn')
+    expect(color(0)).toBe('blue')
+  })
 
   it('animates between 8 and 30 pixels unless reduced motion is enabled', () => {
     const timing = jest.spyOn(Animated, 'timing')

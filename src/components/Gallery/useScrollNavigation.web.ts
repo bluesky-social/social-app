@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 
 import {type ScrollNavigationArgs} from '#/components/Gallery/types'
 import {getIndexForOffset} from '#/components/Gallery/utils'
@@ -22,6 +22,8 @@ export function useScrollNavigation({
   resetKey,
   onNavigate,
 }: ScrollNavigationArgs) {
+  const stopRef = useRef<(() => void) | null>(null)
+
   useEffect(() => {
     if (itemCount <= 1) return
 
@@ -76,6 +78,7 @@ export function useScrollNavigation({
       isTouching = false
       isUserScrolling = false
     }
+    stopRef.current = stopUserScrolling
 
     const onKeyDown = (e: KeyboardEvent) => {
       // Modifiers don't take over navigation; Shift may be held for a wheel.
@@ -92,7 +95,8 @@ export function useScrollNavigation({
     el.addEventListener('scroll', onScroll, {passive: true})
 
     return () => {
-      clearTimeout(idleTimer)
+      stopUserScrolling()
+      stopRef.current = null
       el.removeEventListener('keydown', onKeyDown)
       el.removeEventListener('mousedown', stopUserScrolling)
       el.removeEventListener('touchstart', onTouchStart)
@@ -109,4 +113,6 @@ export function useScrollNavigation({
     resetKey,
     onNavigate,
   ])
+
+  return () => stopRef.current?.()
 }

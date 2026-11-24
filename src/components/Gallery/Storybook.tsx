@@ -68,7 +68,7 @@ function PageDotsExample() {
   return (
     <Section
       titleText="Optional page dots"
-      descriptionText="One dot per item, even when several cards fit. Swipe, drag, or use a trackpad to update them. The dots are a read-only position indicator."
+      descriptionText="One dot per item, even when several cards fit. On web, click a dot to left-align its card, stopping at the end of the gallery. Highlighting follows the scroll position, so an earlier dot may stay highlighted. Dots are read-only on native."
       testID="galleryStorybook-dots">
       <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
         <Button
