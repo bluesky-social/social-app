@@ -18,7 +18,7 @@ msgid "Your account may already be suspended or at risk of suspension. See your 
 msgstr "Your account may already be suspended or at risk of suspension. See your notices for details."
 
 #. placeholder {0}: record.text
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:100
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:104
 msgid "“{0}”"
 msgstr "“{0}”"
 
@@ -48,6 +48,10 @@ msgstr "“{note}”"
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:32
 msgid "“{post}”"
 msgstr "“{post}”"
+
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/BskyRecordSnapshotPreview.tsx:129
+msgid "“{text}”"
+msgstr "“{text}”"
 
 #. A reply summary in chat
 #: src/components/dms/MessageItem.tsx:917
@@ -531,11 +535,11 @@ msgstr ""
 msgid "{0}s"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:75
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:79
 msgid "{accountCount, plural, one {# account} other {# accounts}}"
 msgstr "{accountCount, plural, one {# account} other {# accounts}}"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:71
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:75
 msgid "{accountCount, plural, one {# account} other {# accounts}}, {feedCount, plural, one {# feed} other {# feeds}}"
 msgstr "{accountCount, plural, one {# account} other {# accounts}}, {feedCount, plural, one {# feed} other {# feeds}}"
 
@@ -599,7 +603,7 @@ msgstr "{badge, plural, one {# update} other {# updates}}"
 msgid "{count, plural, =0 {No requests to join} one {# request to join} other {# requests to join}}"
 msgstr "{count, plural, =0 {No requests to join} one {# request to join} other {# requests to join}}"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:52
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:58
 msgid "{count, plural, one {# account} other {# accounts}}"
 msgstr "{count, plural, one {# account} other {# accounts}}"
 
@@ -671,7 +675,7 @@ msgstr ""
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:79
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:83
 msgid "{feedCount, plural, one {# feed} other {# feeds}}"
 msgstr "{feedCount, plural, one {# feed} other {# feeds}}"
 
@@ -1396,7 +1400,7 @@ msgid "A small kawaii scene with no ratio on record"
 msgstr "A small kawaii scene with no ratio on record"
 
 #: src/Navigation.tsx:534
-#: src/screens/Settings/AboutSettings.tsx:83
+#: src/screens/Settings/AboutSettings.tsx:86
 #: src/screens/Settings/Settings.tsx:285
 #: src/screens/Settings/Settings.tsx:288
 msgid "About"
@@ -1523,7 +1527,8 @@ msgstr ""
 msgid "Account restored"
 msgstr "Account restored"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:51
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:56
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:81
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:40
 msgid "Account status"
 msgstr "Account status"
@@ -1619,8 +1624,8 @@ msgstr ""
 msgid "Add {displayName} to Starter Pack"
 msgstr "Add {displayName} to Starter Pack"
 
+#: src/view/com/composer/labels/LabelsBtn.tsx:98
 #: src/view/com/composer/labels/LabelsBtn.tsx:103
-#: src/view/com/composer/labels/LabelsBtn.tsx:108
 msgid "Add a content warning"
 msgstr ""
 
@@ -1857,7 +1862,7 @@ msgstr ""
 msgid "Admin"
 msgstr "Admin"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:155
+#: src/view/com/composer/labels/LabelsBtn.tsx:150
 msgid "Adult"
 msgstr ""
 
@@ -1868,7 +1873,7 @@ msgstr ""
 #: src/components/moderation/ContentHider.tsx:118
 #: src/lib/moderation/useGlobalLabelStrings.ts:29
 #: src/lib/moderation/useModerationCauseDescription.ts:146
-#: src/view/com/composer/labels/LabelsBtn.tsx:123
+#: src/view/com/composer/labels/LabelsBtn.tsx:116
 msgid "Adult Content"
 msgstr ""
 
@@ -1880,8 +1885,8 @@ msgstr ""
 msgid "Adult content is disabled."
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:134
-#: src/view/com/composer/labels/LabelsBtn.tsx:192
+#: src/view/com/composer/labels/LabelsBtn.tsx:119
+#: src/view/com/composer/labels/LabelsBtn.tsx:177
 msgid "Adult Content labels"
 msgstr ""
 
@@ -2529,7 +2534,7 @@ msgstr "Article by {authorName}"
 msgid "Article options"
 msgstr "Article options"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:167
+#: src/view/com/composer/labels/LabelsBtn.tsx:163
 msgid "Artistic or non-erotic nudity."
 msgstr ""
 
@@ -3069,12 +3074,12 @@ msgstr "Buttons and text fields work without starting a drag. Type, select text 
 msgid "By {0}"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:84
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:88
 msgid "By {authorName}"
 msgstr "By {authorName}"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:48
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:55
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:54
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:61
 msgid "By {name}"
 msgstr "By {name}"
 
@@ -3620,8 +3625,8 @@ msgstr "Clear date"
 msgid "Clear GIF search"
 msgstr "Clear GIF search"
 
-#: src/screens/Settings/AboutSettings.tsx:132
-#: src/screens/Settings/AboutSettings.tsx:136
+#: src/screens/Settings/AboutSettings.tsx:135
+#: src/screens/Settings/AboutSettings.tsx:139
 msgid "Clear image cache"
 msgstr ""
 
@@ -3744,8 +3749,8 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/components/Dialog/index.web.tsx:158
-#: src/components/Dialog/index.web.tsx:378
+#: src/components/Dialog/index.web.tsx:157
+#: src/components/Dialog/index.web.tsx:377
 msgid "Close active dialog"
 msgstr ""
 
@@ -3993,7 +3998,7 @@ msgstr ""
 msgid "Content by {authorName}"
 msgstr "Content by {authorName}"
 
-#: src/screens/ModerationInbox/components/util/reportedSubjectStatus.ts:26
+#: src/screens/ModerationInbox/components/util/reportedSubjectStatus.ts:27
 msgid "Content deleted"
 msgstr "Content deleted"
 
@@ -4022,12 +4027,12 @@ msgstr "Content removed"
 msgid "Content restored"
 msgstr "Content restored"
 
-#: src/screens/ModerationInbox/components/util/reportedSubjectStatus.ts:25
+#: src/screens/ModerationInbox/components/util/reportedSubjectStatus.ts:26
 msgid "Content taken down by moderation"
 msgstr "Content taken down by moderation"
 
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/AtmosphereSubjectPreview.tsx:74
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:113
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:140
 msgid "Content unavailable"
 msgstr "Content unavailable"
 
@@ -4038,7 +4043,7 @@ msgstr "Content unavailable"
 msgid "Content Warning"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:61
+#: src/view/com/composer/labels/LabelsBtn.tsx:58
 msgid "Content warnings"
 msgstr ""
 
@@ -4118,7 +4123,7 @@ msgstr "Conversation not found."
 msgid "Conversation with {authorName}"
 msgstr "Conversation with {authorName}"
 
-#: src/screens/Settings/AboutSettings.tsx:167
+#: src/screens/Settings/AboutSettings.tsx:170
 msgid "Copied build version to clipboard"
 msgstr ""
 
@@ -4144,7 +4149,7 @@ msgstr ""
 msgid "Copied!"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:143
+#: src/screens/Settings/AboutSettings.tsx:146
 msgid "Copies build version to clipboard"
 msgstr ""
 
@@ -4554,12 +4559,13 @@ msgstr ""
 msgid "Created {0}"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:53
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:90
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:59
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:94
 msgid "Created {createdAt}"
 msgstr "Created {createdAt}"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:58
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/BskyRecordSnapshotPreview.tsx:118
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:64
 msgid "Created {date}"
 msgstr "Created {date}"
 
@@ -4587,7 +4593,7 @@ msgstr "Current chat"
 msgid "Current status:"
 msgstr "Current status:"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:127
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:152
 msgid "Current version of post"
 msgstr "Current version of post"
 
@@ -4792,12 +4798,13 @@ msgstr "Description (1000 characters max)"
 
 #. placeholder {0}: record.description
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/AtmosphereSubjectPreview.tsx:68
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:103
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:107
 msgid "Description: “{0}”"
 msgstr "Description: “{0}”"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:65
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:70
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/BskyRecordSnapshotPreview.tsx:133
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:71
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:76
 msgid "Description: “{description}”"
 msgstr "Description: “{description}”"
 
@@ -4819,12 +4826,12 @@ msgstr ""
 msgid "Dev"
 msgstr "Dev"
 
-#: src/screens/Settings/AboutSettings.tsx:156
+#: src/screens/Settings/AboutSettings.tsx:159
 msgctxt "toast"
 msgid "Developer mode disabled"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:150
+#: src/screens/Settings/AboutSettings.tsx:153
 msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr ""
@@ -4968,7 +4975,7 @@ msgstr ""
 msgid "Discover the Atmosphere"
 msgstr "Discover the Atmosphere"
 
-#: src/components/Dialog/index.tsx:619
+#: src/components/Dialog/index.tsx:606
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:86
 msgid "Dismiss"
 msgstr ""
@@ -5085,8 +5092,8 @@ msgstr ""
 #: src/screens/Profile/Header/PronounsDialog.tsx:223
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
-#: src/view/com/composer/labels/LabelsBtn.tsx:219
-#: src/view/com/composer/labels/LabelsBtn.tsx:226
+#: src/view/com/composer/labels/LabelsBtn.tsx:207
+#: src/view/com/composer/labels/LabelsBtn.tsx:213
 #: src/view/com/composer/videos/SubtitleDialog.tsx:192
 #: src/view/com/composer/videos/SubtitleDialog.tsx:203
 msgid "Done"
@@ -5096,7 +5103,7 @@ msgstr ""
 msgid "Double tap or long press the message to add a reaction"
 msgstr ""
 
-#: src/components/Dialog/index.tsx:620
+#: src/components/Dialog/index.tsx:607
 msgid "Double tap to close the dialog"
 msgstr ""
 
@@ -6188,13 +6195,16 @@ msgid "Featured publications"
 msgstr "Featured publications"
 
 #: src/Navigation.tsx:344
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:45
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:51
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:86
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:52
 msgid "Feed"
 msgstr ""
 
 #. placeholder {0}: sanitizeDisplayName(feedName)
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:45
+#. placeholder {0}: sanitizeDisplayName(snapshot.name)
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/BskyRecordSnapshotPreview.tsx:46
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:51
 msgid "Feed “{0}”"
 msgstr "Feed “{0}”"
 
@@ -6236,7 +6246,7 @@ msgstr "Feed rendering improvements"
 msgid "Feed toggle"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:59
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:65
 #: src/view/com/feeds/MissingFeed.tsx:74
 msgid "Feed unavailable"
 msgstr ""
@@ -7041,8 +7051,8 @@ msgstr "Grant access"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:41
 #: src/lib/moderation/useGlobalLabelStrings.ts:45
-#: src/view/com/composer/labels/LabelsBtn.tsx:197
-#: src/view/com/composer/labels/LabelsBtn.tsx:200
+#: src/view/com/composer/labels/LabelsBtn.tsx:184
+#: src/view/com/composer/labels/LabelsBtn.tsx:190
 msgid "Graphic Media"
 msgstr ""
 
@@ -7543,13 +7553,13 @@ msgstr "Image {0}"
 msgid "Image {0} of {1}"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:72
+#: src/screens/Settings/AboutSettings.tsx:75
 msgid "Image cache cleared"
 msgstr ""
 
 #. Android-only toast message which includes amount of space freed using localized number formatting
 #. placeholder {0}: i18n.number( Math.abs(sizeDiffBytes / 1024 / 1024), { notation: 'compact', style: 'unit', unit: 'megabyte', }, )
-#: src/screens/Settings/AboutSettings.tsx:58
+#: src/screens/Settings/AboutSettings.tsx:61
 msgid "Image cache cleared, freed {0}"
 msgstr ""
 
@@ -8003,12 +8013,12 @@ msgstr ""
 msgid "Labeled by the author."
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:70
+#: src/view/com/composer/labels/LabelsBtn.tsx:65
 #: src/view/screens/Profile.tsx:267
 msgid "Labels"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:68
+#: src/view/com/composer/labels/LabelsBtn.tsx:63
 msgid "Labels added"
 msgstr ""
 
@@ -8374,13 +8384,16 @@ msgid "Links to these sites show as a green support button."
 msgstr "Links to these sites show as a green support button."
 
 #: src/Navigation.tsx:304
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:44
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:50
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:91
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:50
 msgid "List"
 msgstr ""
 
 #. placeholder {0}: sanitizeDisplayName(listName)
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:44
+#. placeholder {0}: sanitizeDisplayName(snapshot.name)
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/BskyRecordSnapshotPreview.tsx:48
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:50
 msgid "List “{0}”"
 msgstr "List “{0}”"
 
@@ -8458,7 +8471,7 @@ msgstr ""
 msgid "List name is too long. {DISPLAY_NAME_MAX_GRAPHEMES, plural, other {The maximum number of characters is #.}}"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:64
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:70
 msgid "List unavailable"
 msgstr "List unavailable"
 
@@ -8530,11 +8543,12 @@ msgid "Live link"
 msgstr ""
 
 #. placeholder {0}: url.hostname
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:58
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:63
 msgid "Live link: “{0}”"
 msgstr "Live link: “{0}”"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:53
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/BskyRecordSnapshotPreview.tsx:51
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:58
 msgid "Live status"
 msgstr "Live status"
 
@@ -8588,7 +8602,7 @@ msgstr "Load older actions"
 msgid "Loading Atmosphere content"
 msgstr "Loading Atmosphere content"
 
-#: src/screens/Messages/components/MessageComposer.tsx:311
+#: src/screens/Messages/components/MessageComposer.tsx:309
 msgctxt "placeholder"
 msgid "Loading chat…"
 msgstr "Loading chat…"
@@ -8810,7 +8824,7 @@ msgstr ""
 msgid "Media stored on another device"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:206
+#: src/view/com/composer/labels/LabelsBtn.tsx:198
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr ""
 
@@ -8867,7 +8881,7 @@ msgctxt "action"
 msgid "Message"
 msgstr "Message"
 
-#: src/screens/Messages/components/MessageComposer.tsx:312
+#: src/screens/Messages/components/MessageComposer.tsx:310
 msgctxt "description"
 msgid "Message"
 msgstr "Message"
@@ -8909,7 +8923,7 @@ msgstr ""
 msgid "Message from server: {0}"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:308
+#: src/screens/Messages/components/MessageComposer.tsx:306
 msgid "Message input field"
 msgstr ""
 
@@ -9903,8 +9917,8 @@ msgstr ""
 msgid "now"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:146
-#: src/view/com/composer/labels/LabelsBtn.tsx:149
+#: src/view/com/composer/labels/LabelsBtn.tsx:135
+#: src/view/com/composer/labels/LabelsBtn.tsx:140
 msgid "Nudity"
 msgstr ""
 
@@ -10126,7 +10140,7 @@ msgstr ""
 #: src/components/dms/ChatInvite/Root.tsx:105
 #: src/components/intents/GroupChatJoinDialog.tsx:454
 #: src/screens/ModerationInbox/components/ReportSubjectPreview/ChatSubjectPreview.tsx:32
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:47
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:49
 msgid "Open chat"
 msgstr "Open chat"
 
@@ -10134,7 +10148,7 @@ msgstr "Open chat"
 msgid "Open chat member options for {displayName}"
 msgstr "Open chat member options for {displayName}"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:47
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/index.tsx:49
 msgid "Open content"
 msgstr "Open content"
 
@@ -10151,12 +10165,12 @@ msgstr ""
 msgid "Open drawer menu"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:270
+#: src/screens/Messages/components/MessageComposer.tsx:268
 #: src/view/com/composer/Composer.tsx:2279
 msgid "Open emoji picker"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:84
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/FeedSubjectPreview.tsx:105
 msgid "Open feed"
 msgstr "Open feed"
 
@@ -10204,7 +10218,7 @@ msgstr "Open link"
 msgid "Open link to {niceUrl}"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:89
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/ListSubjectPreview.tsx:110
 msgid "Open list"
 msgstr "Open list"
 
@@ -10237,8 +10251,8 @@ msgstr ""
 msgid "Open pack"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:144
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:148
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:169
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:173
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:51
 msgid "Open post"
 msgstr "Open post"
@@ -10265,7 +10279,7 @@ msgstr "Open settings"
 msgid "Open share menu"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:120
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:143
 msgid "Open starter pack"
 msgstr "Open starter pack"
 
@@ -10296,7 +10310,7 @@ msgstr "Opens {0} outside Bluesky"
 msgid "Opens {displayName} feed"
 msgstr "Opens {displayName} feed"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:63
+#: src/view/com/composer/labels/LabelsBtn.tsx:59
 msgid "Opens a dialog to add a content warning to your post"
 msgstr ""
 
@@ -10495,7 +10509,7 @@ msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:237
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:241
-#: src/view/com/composer/labels/LabelsBtn.tsx:181
+#: src/view/com/composer/labels/LabelsBtn.tsx:174
 msgid "Other"
 msgstr ""
 
@@ -10726,7 +10740,7 @@ msgstr "Photos: {title}"
 msgid "Pick a color theme"
 msgstr "Pick a color theme"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:165
+#: src/view/com/composer/labels/LabelsBtn.tsx:159
 msgid "Pictures meant for adults."
 msgstr ""
 
@@ -10809,7 +10823,7 @@ msgstr ""
 msgid "Plays the video"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:111
+#: src/view/com/composer/labels/LabelsBtn.tsx:107
 msgid "Please add any content warning labels that are applicable for the media you are posting."
 msgstr ""
 
@@ -10983,7 +10997,7 @@ msgstr ""
 msgid "Politics"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:152
+#: src/view/com/composer/labels/LabelsBtn.tsx:145
 msgid "Porn"
 msgstr ""
 
@@ -11132,7 +11146,7 @@ msgstr "Post to Bluesky"
 msgid "Post type"
 msgstr "Post type"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:157
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:182
 msgid "Post unavailable"
 msgstr "Post unavailable"
 
@@ -11153,11 +11167,15 @@ msgstr "Post with media"
 
 #. placeholder {0}: i18n.date(POSTED_AT, { month: 'short', day: 'numeric', year: 'numeric', })
 #. placeholder {0}: i18n.date(new Date(record.createdAt), {dateStyle: 'medium'})
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:131
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:161
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:156
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:186
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:35
 msgid "Posted {0}"
 msgstr "Posted {0}"
+
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/BskyRecordSnapshotPreview.tsx:115
+msgid "Posted {date}"
+msgstr "Posted {date}"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:254
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:266
@@ -11272,8 +11290,8 @@ msgstr ""
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:36
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:103
 #: src/Navigation.tsx:389
-#: src/screens/Settings/AboutSettings.tsx:100
 #: src/screens/Settings/AboutSettings.tsx:103
+#: src/screens/Settings/AboutSettings.tsx:106
 #: src/view/screens/PrivacyPolicy.tsx:25
 #: src/view/shell/Drawer.tsx:885
 #: src/view/shell/Drawer.tsx:886
@@ -11975,7 +11993,7 @@ msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:181
 #: src/components/dms/MessageContextMenu.tsx:184
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:95
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:99
 msgid "Reply"
 msgstr "Reply"
 
@@ -12012,7 +12030,7 @@ msgstr ""
 msgid "Reply to {handle}"
 msgstr "Reply to {handle}"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:94
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/PostSubjectPreview.tsx:98
 msgid "Reply to {parentName}"
 msgstr "Reply to {parentName}"
 
@@ -13081,8 +13099,8 @@ msgstr ""
 
 #: src/components/SendErrorReportDialog.tsx:60
 #: src/components/SendErrorReportDialog.tsx:64
-#: src/screens/Settings/AboutSettings.tsx:123
 #: src/screens/Settings/AboutSettings.tsx:126
+#: src/screens/Settings/AboutSettings.tsx:129
 msgid "Send error report"
 msgstr "Send error report"
 
@@ -13090,7 +13108,7 @@ msgstr "Send error report"
 msgid "Send feedback"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:371
+#: src/screens/Messages/components/MessageComposer.tsx:369
 msgid "Send message"
 msgstr ""
 
@@ -13140,9 +13158,13 @@ msgstr ""
 msgid "Server address"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:49
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:54
 msgid "Set {createdAt}"
 msgstr "Set {createdAt}"
+
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/BskyRecordSnapshotPreview.tsx:117
+msgid "Set {date}"
+msgstr "Set {date}"
 
 #. placeholder {0}: icon.name
 #: src/screens/Settings/AppIconSettings/index.tsx:176
@@ -13247,7 +13269,7 @@ msgctxt "toast"
 msgid "Settings saved"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:169
+#: src/view/com/composer/labels/LabelsBtn.tsx:167
 msgid "Sexual activity or erotic nudity."
 msgstr ""
 
@@ -13959,13 +13981,19 @@ msgstr ""
 
 #: src/Navigation.tsx:601
 #: src/Navigation.tsx:606
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:60
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:64
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:122
 #: src/screens/ModerationInbox/components/util/reportSubjectLabel.ts:56
 #: src/screens/StarterPack/Wizard/index.tsx:196
 msgid "Starter Pack"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:60
+#. placeholder {0}: sanitizeDisplayName(snapshot.name)
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/BskyRecordSnapshotPreview.tsx:50
+msgid "Starter Pack “{0}”"
+msgstr "Starter Pack “{0}”"
+
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:64
 msgid "Starter Pack “{name}”"
 msgstr "Starter Pack “{name}”"
 
@@ -14000,7 +14028,7 @@ msgstr "Starter Pack by you"
 msgid "Starter Pack is invalid"
 msgstr "Starter Pack is invalid"
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:97
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StarterPackSubjectPreview.tsx:101
 msgid "Starter pack unavailable"
 msgstr "Starter pack unavailable"
 
@@ -14019,16 +14047,16 @@ msgstr "Starter Packs let you easily share your favorite feeds and people with y
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:44
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:49
 msgid "Status by {name}"
 msgstr "Status by {name}"
 
-#: src/screens/Settings/AboutSettings.tsx:108
 #: src/screens/Settings/AboutSettings.tsx:111
+#: src/screens/Settings/AboutSettings.tsx:114
 msgid "Status Page"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:75
+#: src/screens/ModerationInbox/components/ReportSubjectPreview/StatusSubjectPreview.tsx:97
 msgid "Status unavailable"
 msgstr "Status unavailable"
 
@@ -14170,8 +14198,8 @@ msgstr ""
 msgid "Suggested for you"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:140
-#: src/view/com/composer/labels/LabelsBtn.tsx:143
+#: src/view/com/composer/labels/LabelsBtn.tsx:125
+#: src/view/com/composer/labels/LabelsBtn.tsx:130
 msgid "Suggestive"
 msgstr ""
 
@@ -14261,8 +14289,8 @@ msgid "System"
 msgstr ""
 
 #: src/screens/Log.tsx:49
-#: src/screens/Settings/AboutSettings.tsx:115
 #: src/screens/Settings/AboutSettings.tsx:118
+#: src/screens/Settings/AboutSettings.tsx:121
 #: src/screens/Settings/Settings.tsx:473
 msgid "System log"
 msgstr ""
@@ -14418,8 +14446,8 @@ msgstr ""
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:31
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:98
 #: src/Navigation.tsx:394
-#: src/screens/Settings/AboutSettings.tsx:92
 #: src/screens/Settings/AboutSettings.tsx:95
+#: src/screens/Settings/AboutSettings.tsx:98
 #: src/view/screens/TermsOfService.tsx:25
 #: src/view/shell/Drawer.tsx:878
 #: src/view/shell/Drawer.tsx:880
@@ -16229,8 +16257,8 @@ msgid "Verifying..."
 msgstr ""
 
 #. placeholder {0}: env.APP_VERSION
-#: src/screens/Settings/AboutSettings.tsx:142
-#: src/screens/Settings/AboutSettings.tsx:171
+#: src/screens/Settings/AboutSettings.tsx:145
+#: src/screens/Settings/AboutSettings.tsx:174
 msgid "Version {0}"
 msgstr ""
 
