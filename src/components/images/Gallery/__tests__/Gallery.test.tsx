@@ -137,16 +137,19 @@ jest.mock('#/components/Gallery', () => {
       ref,
       label,
       onIndexChange,
+      footer,
     }: {
       children: React.ReactNode
       ref: React.Ref<unknown>
       label: string
       onIndexChange?: (index: number, previous: number) => void
+      footer?: React.ReactNode
     }) => {
       mockRoot.props = {label, onIndexChange}
       useImperativeHandle(ref, () => ({scrollIntoView: mockScrollIntoView}))
-      return createElement(View, {testID: 'root'}, children)
+      return createElement(View, {testID: 'root'}, children, footer)
     },
+    PageDots: ({testID}: {testID?: string}) => createElement(View, {testID}),
     Item: ({
       children,
       label,
@@ -312,12 +315,12 @@ describe('image gallery adapter', () => {
   })
 
   describe('badges', () => {
-    it('shows the position only with more than one image', () => {
+    it('shows page dots instead of per-image position badges', () => {
       const {rerender} = render(<Gallery images={three} />)
-      expect(screen.getByText('1/3')).toBeTruthy()
-      expect(screen.getByText('3/3')).toBeTruthy()
-      rerender(<Gallery images={[image(0)]} />)
-      expect(screen.queryByText('1/1')).toBeNull()
+      expect(screen.getByTestId('imageGallery-dots')).toBeTruthy()
+      expect(screen.queryByText('1/3')).toBeNull()
+      rerender(<Gallery images={[image(0), image(1)]} />)
+      expect(screen.queryByTestId('imageGallery-dots')).toBeNull()
     })
 
     it('shows ALT only for images with alt text', () => {
@@ -350,8 +353,7 @@ describe('image gallery adapter', () => {
       unmount()
       mockEnv.largeAlt = true
       render(<Gallery images={[image(0, {alt: 'A cat'}), image(1)]} />)
-      // two position badges, and one ALT badge
-      expect(paddedViews()).toHaveLength(3)
+      expect(paddedViews()).toHaveLength(1)
     })
   })
 

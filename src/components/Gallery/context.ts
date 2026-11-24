@@ -4,6 +4,8 @@ export const GalleryContext = createContext<{
   label: string
   itemKeys: string[]
   activeIndex: number
+  /** Scroll so the item at `index` is in view, as user navigation */
+  goToIndex: (index: number) => void
 } | null>(null)
 GalleryContext.displayName = 'GalleryContext'
 
