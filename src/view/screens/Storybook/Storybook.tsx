@@ -1,178 +1,106 @@
-import {useState} from 'react'
+import {lazy, Suspense, useState} from 'react'
 import {View} from 'react-native'
-import {useNavigation} from '@react-navigation/native'
 
-import {type NavigationProp} from '#/lib/routes/types'
-import {useSetThemePrefs} from '#/state/shell'
-import {ListContained} from '#/view/screens/Storybook/ListContained'
-import {atoms as a, ThemeProvider} from '#/alf'
-import {SiteStandardStorybook} from '#/components/atmosphere/SiteStandard/Storybook'
-import {Button, ButtonText} from '#/components/Button'
-import * as Dialog from '#/components/Dialog'
-import {GalleryStorybook} from '#/components/Gallery/Storybook'
-import {InviteFriendsDialog} from '#/features/inviteFriends'
-import {
-  useDeviceGeolocationApi,
-  useRequestDeviceGeolocation,
-} from '#/geolocation'
-import {Admonitions} from './Admonitions'
-import {Breakpoints} from './Breakpoints'
-import {Buttons} from './Buttons'
-import {Dialogs} from './Dialogs'
-import {Forms} from './Forms'
-import {Haptics} from './Haptics'
-import {Icons} from './Icons'
-import {Links} from './Links'
-import {Menus} from './Menus'
-import {NewPostsPill} from './NewPostsPill'
-import {Notifications} from './Notifications'
-import {ProfileBadges} from './ProfileBadges'
-import {Settings} from './Settings'
-import {Shadows} from './Shadows'
-import {SharePlatforms} from './SharePlatforms'
-import {Spacing} from './Spacing'
-import {Splash} from './Splash'
-import {Theming} from './Theming'
-import {Toasts} from './Toasts'
-import {Tooltips} from './Tooltips'
-import {Typography} from './Typography'
+import {Pager} from '#/view/com/pager/Pager'
+import {TabBar} from '#/view/com/pager/TabBar'
+import {ThemeMenu} from '#/view/screens/Storybook/ThemeMenu'
+import {atoms as a, useTheme, web} from '#/alf'
+import * as Layout from '#/components/Layout'
+import {Loader} from '#/components/Loader'
+import {IS_IPAD} from '#/env'
+
+const PAGES = [
+  {title: 'Foundations', component: lazy(() => import('./FoundationsPage'))},
+  {title: 'Components', component: lazy(() => import('./ComponentsPage'))},
+  {
+    title: 'Overlays & feedback',
+    component: lazy(() => import('./OverlaysFeedbackPage')),
+  },
+  {
+    title: 'Screens & patterns',
+    component: lazy(() => import('./ScreensPatternsPage')),
+  },
+  {title: 'Device & tools', component: lazy(() => import('./DeviceToolsPage'))},
+]
 
 export default function Storybook() {
-  const {setColorMode, setDarkTheme} = useSetThemePrefs()
-  const [showContainedList, setShowContainedList] = useState(false)
-  const navigation = useNavigation<NavigationProp>()
-  const requestDeviceGeolocation = useRequestDeviceGeolocation()
-  const {setDeviceGeolocation} = useDeviceGeolocationApi()
-  const inviteFriendsControl = Dialog.useDialogControl()
+  const t = useTheme()
+  const [selectedPage, setSelectedPage] = useState(0)
+  const [visitedPages, setVisitedPages] = useState(() => new Set([0]))
+
+  function visitPage(index: number) {
+    setVisitedPages(current => {
+      if (current.has(index)) return current
+      return new Set([...current, index])
+    })
+  }
 
   return (
-    <>
-      <View style={[a.p_xl, a.gap_5xl, {paddingBottom: 100}]}>
-        {!showContainedList ? (
-          <>
-            <View style={[a.flex_row, a.align_start, a.gap_md]}>
-              <Button
-                color="primary"
-                size="small"
-                label='Set theme to "system"'
-                onPress={() => setColorMode('system')}>
-                <ButtonText>System</ButtonText>
-              </Button>
-              <Button
-                color="secondary"
-                size="small"
-                label='Set theme to "light"'
-                onPress={() => setColorMode('light')}>
-                <ButtonText>Light</ButtonText>
-              </Button>
-              <Button
-                color="secondary"
-                size="small"
-                label='Set theme to "dim"'
-                onPress={() => {
-                  setColorMode('dark')
-                  setDarkTheme('dim')
-                }}>
-                <ButtonText>Dim</ButtonText>
-              </Button>
-              <Button
-                color="secondary"
-                size="small"
-                label='Set theme to "dark"'
-                onPress={() => {
-                  setColorMode('dark')
-                  setDarkTheme('dark')
-                }}>
-                <ButtonText>Dark</ButtonText>
-              </Button>
+    <Pager
+      testID="storybookPager"
+      onTabPressed={visitPage}
+      onPageSelected={index => {
+        visitPage(index)
+        setSelectedPage(index)
+      }}
+      renderTabBar={({tabBarAnchor, ...props}) => (
+        <>
+          {tabBarAnchor}
+          <Layout.Center
+            style={[a.z_10, t.atoms.bg, web([a.sticky, {top: 0}])]}>
+            <Layout.Header.Outer sticky={false}>
+              <Layout.Header.BackButton />
+              <Layout.Header.Content>
+                <Layout.Header.TitleText>Storybook</Layout.Header.TitleText>
+              </Layout.Header.Content>
+              <Layout.Header.Slot>
+                <ThemeMenu />
+              </Layout.Header.Slot>
+            </Layout.Header.Outer>
+            <TabBar
+              {...props}
+              testID="storybookTabs"
+              items={PAGES.map(page => page.title)}
+              align="left"
+            />
+          </Layout.Center>
+        </>
+      )}>
+      {PAGES.map(({title, component: Page}, index) => (
+        <View
+          key={title}
+          style={a.flex_1}
+          accessibilityElementsHidden={selectedPage !== index}
+          importantForAccessibility={
+            selectedPage === index ? 'auto' : 'no-hide-descendants'
+          }>
+          <Layout.Content
+            testID={`storybookPage-${index}`}
+            keyboardShouldPersistTaps="handled"
+            scrollsToTop={selectedPage === index && !IS_IPAD}>
+            <View style={[a.p_xl, a.gap_5xl, {paddingBottom: 100}]}>
+              {visitedPages.has(index) && (
+                <Suspense fallback={<PageLoading />}>
+                  <Page />
+                </Suspense>
+              )}
             </View>
+          </Layout.Content>
+        </View>
+      ))}
+    </Pager>
+  )
+}
 
-            <Button
-              color="primary"
-              size="small"
-              onPress={() => navigation.navigate('SharedPreferencesTester')}
-              label="two"
-              testID="sharedPrefsTestOpenBtn">
-              <ButtonText>Open Shared Prefs Tester</ButtonText>
-            </Button>
-            <Button
-              color="primary_subtle"
-              size="large"
-              onPress={() => {
-                void requestDeviceGeolocation().then(req => {
-                  if (req.granted && req.location) {
-                    setDeviceGeolocation(req.location)
-                  }
-                })
-              }}
-              label="crash">
-              <ButtonText>Get GPS Location</ButtonText>
-            </Button>
-
-            <Button
-              color="primary"
-              size="large"
-              onPress={() => inviteFriendsControl.open()}
-              label="Open invite friends sheet (APP-2142)">
-              <ButtonText>Open invite friends sheet (APP-2142)</ButtonText>
-            </Button>
-            <InviteFriendsDialog control={inviteFriendsControl} />
-
-            <ThemeProvider theme="light">
-              <Theming />
-            </ThemeProvider>
-            <ThemeProvider theme="dim">
-              <Theming />
-            </ThemeProvider>
-            <ThemeProvider theme="dark">
-              <Theming />
-            </ThemeProvider>
-
-            <Splash />
-            <Haptics />
-            <SharePlatforms />
-            <Toasts />
-            <Buttons />
-            <NewPostsPill />
-            <Notifications />
-            <Forms />
-            <Typography />
-            <ProfileBadges />
-            <Spacing />
-            <Shadows />
-            <Icons />
-            <Links />
-            <Tooltips />
-            <Dialogs />
-            <Menus />
-            <Breakpoints />
-            <Dialogs />
-            <Admonitions />
-            <Settings />
-            <GalleryStorybook />
-            <SiteStandardStorybook />
-
-            <Button
-              color="primary"
-              size="large"
-              label="Switch to Contained List"
-              onPress={() => setShowContainedList(true)}>
-              <ButtonText>Switch to Contained List</ButtonText>
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button
-              color="primary"
-              size="large"
-              label="Switch to Storybook"
-              onPress={() => setShowContainedList(false)}>
-              <ButtonText>Switch to Storybook</ButtonText>
-            </Button>
-            <ListContained />
-          </>
-        )}
-      </View>
-    </>
+function PageLoading() {
+  return (
+    <View
+      style={[a.align_center, a.py_5xl]}
+      accessible
+      accessibilityRole="progressbar"
+      accessibilityLabel="Loading stories"
+      accessibilityHint="">
+      <Loader size="xl" />
+    </View>
   )
 }
