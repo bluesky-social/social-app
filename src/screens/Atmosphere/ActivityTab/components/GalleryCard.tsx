@@ -1,5 +1,6 @@
 import {useRef, useState} from 'react'
 import {View} from 'react-native'
+import {useReducedMotion} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
@@ -15,7 +16,7 @@ import {
 } from '#/screens/Atmosphere/data/exploreData'
 import {useAtmosphereFeedback} from '#/screens/Atmosphere/feedback'
 import {useLogContentPress} from '#/screens/Atmosphere/metrics/context'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {AtmosphereFirstActionWelcomeDialog} from '#/components/atmosphere/AtmosphereFirstActionWelcomeDialog'
 import {useAtmosphereLike} from '#/components/atmosphere/likes'
 import {AvatarStack} from '#/components/AvatarStack'
@@ -43,6 +44,9 @@ const MIN_CAROUSEL_ASPECT_RATIO = 1 / 2
  * peeks in.
  */
 const MAX_CAROUSEL_WIDTH = 0.85
+
+/** Space between the favorite pill's edge and its heart. */
+const FAVORITE_PILL_INSET = 8
 
 const OVERLAY_COLOR = 'rgba(0, 0, 0, 0.6)'
 
@@ -354,7 +358,6 @@ function CarouselOverlay({onNext}: {onNext: (index: number) => void}) {
 /** The heart and favorite count, which favorite or unfavorite the gallery. */
 function FavoriteButton({view}: {view: app.bsky.embed.external.ViewGallery}) {
   const {t: l, i18n} = useLingui()
-  const t = useTheme()
   const {
     canLike: canFavorite,
     isLiked: isFavorited,
@@ -372,26 +375,7 @@ function FavoriteButton({view}: {view: app.bsky.embed.external.ViewGallery}) {
     comment:
       'Number of people who favorited (liked) a photo gallery, read out by screen readers. {count} is already formatted.',
   })
-  const Icon = isFavorited ? HeartFilledIcon : HeartIcon
-  const color = isFavorited
-    ? t.palette.pink
-    : t.atoms.text_contrast_medium.color
-  const content = (
-    <>
-      <Icon size="sm" fill={color} />
-      {likeCount > 0 && (
-        <Text
-          style={[
-            a.text_sm,
-            a.font_medium,
-            {color, fontVariant: ['tabular-nums']},
-          ]}>
-          {count}
-        </Text>
-      )}
-    </>
-  )
-  const style = [a.flex_row, a.align_center, a.gap_xs]
+  const shownCount = likeCount > 0 ? count : undefined
 
   if (!canFavorite) {
     if (likeCount === 0 && !isFavorited) return null
@@ -400,8 +384,8 @@ function FavoriteButton({view}: {view: app.bsky.embed.external.ViewGallery}) {
         accessible
         accessibilityLabel={countLabel}
         accessibilityHint=""
-        style={style}>
-        {content}
+        style={{marginLeft: -FAVORITE_PILL_INSET}}>
+        <FavoritePill favorited={isFavorited} count={shownCount} />
       </View>
     )
   }
@@ -426,15 +410,91 @@ function FavoriteButton({view}: {view: app.bsky.embed.external.ViewGallery}) {
           comment:
             'Accessibility label for a gallery’s favorite button, e.g. “Favorite, 3 favorites”. Both parts are already translated.',
         })}
-        hitSlop={8}
-        style={style}
+        hitSlop={4}
+        style={[a.rounded_full, {marginLeft: -FAVORITE_PILL_INSET}]}
         onPress={toggleFavorite}>
-        {content}
+        {({hovered, focused, pressed}) => (
+          <FavoritePill
+            favorited={isFavorited}
+            count={shownCount}
+            hovered={hovered || focused || pressed}
+          />
+        )}
       </Button>
       <AtmosphereFirstActionWelcomeDialog
         control={firstActionWelcomeDialogControl}
       />
     </>
+  )
+}
+
+/**
+ * The heart and count, blue once favorited. Hovered, a pill appears behind
+ * them. The pill's left padding is pulled back out with a negative margin, so
+ * the heart stays on the text line either way.
+ */
+function FavoritePill({
+  favorited,
+  count,
+  hovered = false,
+}: {
+  favorited: boolean
+  /** Formatted, or undefined to show the heart alone. */
+  count?: string
+  /** Hovered, focused or pressed. */
+  hovered?: boolean
+}) {
+  const t = useTheme()
+  const reducedMotion = useReducedMotion()
+  const highlighted = favorited || hovered
+  const Icon = favorited ? HeartFilledIcon : HeartIcon
+  const color = highlighted
+    ? t.palette.primary_700
+    : t.atoms.text_contrast_medium.color
+
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.gap_xs,
+        a.rounded_full,
+        {
+          paddingVertical: 4,
+          // The heart's built-in ~2px makes 8 read like the count side's 10.
+          paddingLeft: FAVORITE_PILL_INSET,
+          paddingRight: 10,
+        },
+        hovered && {
+          backgroundColor: favorited
+            ? t.palette.primary_100
+            : t.palette.primary_50,
+        },
+        !reducedMotion &&
+          web([a.transition_color, a.transition_timing_default]),
+      ]}>
+      <View
+        style={[
+          !reducedMotion &&
+            web([
+              a.transition_transform,
+              a.transition_timing_default,
+              hovered && {transform: [{scale: 1.15}]},
+            ]),
+        ]}>
+        <Icon size="sm" fill={color} />
+      </View>
+      {count && (
+        <Text
+          style={[
+            a.text_sm,
+            a.font_medium,
+            {color, fontVariant: ['tabular-nums']},
+          ]}>
+          {count}
+        </Text>
+      )}
+    </View>
   )
 }
 
