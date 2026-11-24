@@ -367,9 +367,11 @@ export function Root({
       getOffsetForIndex(itemWidthsRef.current, index),
       getMaxOffset(itemWidthsRef.current, itemCount, viewportWidth),
     )
+    // Browser zoom can leave an aligned scroll offset a fraction of a pixel away.
+    const isAligned = Math.abs(next - current) < 1
     /* An immediate scroll also stops an earlier smooth scroll at this offset. */
-    scrollTo({offset: next, animated: next !== current && !reduceMotionEnabled})
-    if (next === current) return
+    scrollTo({offset: next, animated: !isAligned && !reduceMotionEnabled})
+    if (isAligned) return
     setCurrentIndex(index)
     setFocusIndex(index)
   }

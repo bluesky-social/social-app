@@ -315,6 +315,41 @@ describe('Gallery.PageDots', () => {
     ])
   })
 
+  it.each([207.2, 207.6, 208.4, 208.8])(
+    'treats fractional scroll offset %s as aligned without animation or navigation',
+    scrollLeft => {
+      mockEnv.IS_WEB = true
+      mockA11y.reduceMotionEnabled = false
+      jest
+        .spyOn(ScrollView.prototype, 'getScrollableNode')
+        .mockReturnValueOnce({scrollLeft})
+      const onIndexChange = jest.fn()
+      threeCards({footer: dots, onIndexChange})
+
+      fireEvent.press(screen.getByRole('button', {name: 'Show item 2 of 3'}))
+      expect(scrollTo).toHaveBeenLastCalledWith({x: 208, animated: false})
+      expect(onIndexChange).not.toHaveBeenCalled()
+      expect(screen.getByTestId('a').props.tabIndex).toBe(0)
+    },
+  )
+
+  it.each([206.8, 207, 209, 209.2])(
+    'still animates a scroll of at least one pixel from %s',
+    scrollLeft => {
+      mockEnv.IS_WEB = true
+      mockA11y.reduceMotionEnabled = false
+      jest
+        .spyOn(ScrollView.prototype, 'getScrollableNode')
+        .mockReturnValueOnce({scrollLeft})
+      const onIndexChange = jest.fn()
+      threeCards({footer: dots, onIndexChange})
+
+      fireEvent.press(screen.getByRole('button', {name: 'Show item 2 of 3'}))
+      expect(scrollTo).toHaveBeenLastCalledWith({x: 208, animated: true})
+      expect(onIndexChange.mock.calls).toEqual([[1, 0]])
+    },
+  )
+
   it('left-aligns an already-visible item when there is room', () => {
     mockEnv.IS_WEB = true
     const onIndexChange = jest.fn()
