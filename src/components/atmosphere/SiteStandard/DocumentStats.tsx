@@ -14,8 +14,9 @@ import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 
 /**
- * "{domain} • {n} recommends • {reading time}" below an article's
- * description. The count and reading time only show when they're non-zero.
+ * A row of icon and text items below an article's description: the link
+ * domain, the recommend count, and the reading time in minutes. The count and
+ * reading time only show when they're non-zero.
  */
 export function DocumentStats({
   view,

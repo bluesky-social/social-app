@@ -48,7 +48,7 @@ export function DocumentActions({
   style,
 }: {
   view: app.bsky.embed.external.ViewArticle
-  /** Named in the social proof instead of the generic count, when present. */
+  /** Named in the social proof ahead of the view's `knownLikers`. */
   recommenders?: DocumentRecommenders
   /**
    * Renders an invisible, non-interactive copy that takes up the same space

@@ -277,7 +277,7 @@ function toRelatedActivity(
     const actor = profiles.get(did)
     return actor && !isActorHidden(actor, moderationOpts) ? [actor] : []
   })
-  // With nobody left to name, the card falls back to its generic count.
+  // With nobody left to name, social proof uses the view's knownLikers.
   if (actors.length === 0) return []
   return [
     {
