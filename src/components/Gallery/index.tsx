@@ -109,7 +109,7 @@ export function Root({
   onIndexChange?: (index: number, previousIndex: number) => void
 }) {
   const {t: l} = useLingui()
-  const {screenReaderEnabled} = useA11y()
+  const {screenReaderEnabled, reduceMotionEnabled} = useA11y()
 
   const slides = flattenReactChildren(children).filter(isValidElement)
   const keys = slides.map(slide => String(slide.key))
@@ -367,8 +367,9 @@ export function Root({
       getOffsetForIndex(itemWidthsRef.current, index),
       getMaxOffset(itemWidthsRef.current, itemCount, viewportWidth),
     )
+    /* An immediate scroll also stops an earlier smooth scroll at this offset. */
+    scrollTo({offset: next, animated: next !== current && !reduceMotionEnabled})
     if (next === current) return
-    scrollTo({offset: next})
     setCurrentIndex(index)
     setFocusIndex(index)
   }

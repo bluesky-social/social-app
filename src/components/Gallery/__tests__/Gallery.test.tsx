@@ -256,6 +256,65 @@ describe('Gallery.PageDots', () => {
     expect(screen.getByTestId('c').props.tabIndex).toBe(0)
   })
 
+  it.each([
+    [false, false],
+    [false, true],
+    [true, false],
+    [true, true],
+  ])(
+    'animates unless reduced motion is enabled (reduced: %s, screen reader: %s)',
+    (reduceMotionEnabled, screenReaderEnabled) => {
+      mockEnv.IS_WEB = true
+      mockA11y.reduceMotionEnabled = reduceMotionEnabled
+      mockA11y.screenReaderEnabled = screenReaderEnabled
+      const onIndexChange = jest.fn()
+      threeCards({footer: dots, onIndexChange})
+      layout('gallery', 400, 100)
+
+      fireEvent.press(screen.getByRole('button', {name: 'Show item 3 of 3'}))
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        x: 216,
+        animated: !reduceMotionEnabled,
+      })
+      expectPosition(0)
+      scrollBy(120)
+      expectPosition(1)
+      scrollBy(216)
+      expectPosition(1)
+      expect(onIndexChange.mock.calls).toEqual([[2, 0]])
+    },
+  )
+
+  it('retargets rapid presses and stops smooth scrolling at an aligned item', () => {
+    mockEnv.IS_WEB = true
+    mockA11y.reduceMotionEnabled = false
+    const node = {scrollLeft: 0}
+    jest
+      .spyOn(ScrollView.prototype, 'getScrollableNode')
+      .mockReturnValueOnce(node)
+      .mockReturnValueOnce(node)
+      .mockReturnValueOnce(node)
+    const onIndexChange = jest.fn()
+    threeCards({footer: dots, onIndexChange})
+
+    fireEvent.press(screen.getByRole('button', {name: 'Show item 3 of 3'}))
+    node.scrollLeft = 104
+    scrollBy(104)
+    fireEvent.press(screen.getByRole('button', {name: 'Show item 1 of 3'}))
+    node.scrollLeft = 0
+    fireEvent.press(screen.getByRole('button', {name: 'Show item 1 of 3'}))
+
+    expect(scrollTo.mock.calls).toEqual([
+      [{x: 316, animated: true}],
+      [{x: 0, animated: true}],
+      [{x: 0, animated: false}],
+    ])
+    expect(onIndexChange.mock.calls).toEqual([
+      [2, 0],
+      [0, 2],
+    ])
+  })
+
   it('left-aligns an already-visible item when there is room', () => {
     mockEnv.IS_WEB = true
     const onIndexChange = jest.fn()
@@ -283,13 +342,13 @@ describe('Gallery.PageDots', () => {
     expectPosition(1)
   })
 
-  it('does nothing when all the items fit', () => {
+  it('does not move or report navigation when all the items fit', () => {
     mockEnv.IS_WEB = true
     const onIndexChange = jest.fn()
     threeCards({footer: dots, onIndexChange})
     layout('gallery', 800, 100)
     fireEvent.press(screen.getByRole('button', {name: 'Show item 3 of 3'}))
-    expect(scrollTo).not.toHaveBeenCalled()
+    expect(scrollTo).toHaveBeenLastCalledWith({x: 0, animated: false})
     expect(onIndexChange).not.toHaveBeenCalled()
     expectPosition(0)
     expect(screen.getByTestId('a').props.tabIndex).toBe(0)
@@ -313,7 +372,7 @@ describe('Gallery.PageDots', () => {
     scrollTo.mockClear()
 
     fireEvent.press(screen.getByRole('button', {name: 'Show item 2 of 3'}))
-    expect(scrollTo).not.toHaveBeenCalled()
+    expect(scrollTo).toHaveBeenLastCalledWith({x: 208, animated: false})
     expect(onIndexChange.mock.calls).toEqual([[1, 0]])
 
     fireEvent.press(screen.getByRole('button', {name: 'Show item 1 of 3'}))

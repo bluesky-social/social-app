@@ -95,11 +95,12 @@ zero or one item. Optional `style` and `testID` props configure the row. The
 active dot grows from 8 to 30 pixels wide over 200ms as the previous dot shrinks;
 reduced motion makes the change immediate. Colors follow the theme.
 
-On web, each dot is a button that left-aligns its corresponding item, clamped
-to the scrollable range, without animation or moving focus away from the
-button. If the gallery is already at that offset, it does not scroll or report
-navigation. Buttons have translated destination labels, and the group label
-describes the current scroll position. Inactive dots darken slightly on hover.
+On web, each dot is a button that smoothly scrolls its corresponding item into
+left alignment, clamped to the scrollable range, without moving focus away from
+the button. Reduced motion makes scrolling immediate. If the gallery is already
+at that offset, it stops any earlier smooth scroll without reporting navigation.
+Buttons have translated destination labels, and the group label describes the
+current scroll position. Inactive dots darken slightly on hover.
 On iOS and Android the dots remain read-only, with a single translated position
 label and no buttons or extra tab stops.
 
@@ -274,6 +275,6 @@ pnpm test --runInBand src/components/Gallery/__tests__ src/components/images/Gal
   scrollable range, while focus stays on the button. Inactive dots darken on
   hover. Reveal the last card in Storybook and check the indicator still follows
   the scroll position, including when multiple cards fit. Check that reduced
-  motion skips the dot-width animation.
+  motion skips both the scroll and dot-width animations.
 - Screen reader: items are reachable and labelled, and the image adapter shows
   its vertical list of images.
