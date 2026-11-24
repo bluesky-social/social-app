@@ -435,6 +435,46 @@ index 17b14c439f16534365c1fb41b3f10a4e12f59001..9c46cd9906ad31621534009a6151e004
    TextLayoutContext textLayoutContext{
        .pointScaleFactor = layoutContext.pointScaleFactor,
        .surfaceId = getSurfaceId(),
+diff --git a/ReactCommon/react/renderer/components/view/YogaLayoutableShadowNode.cpp b/ReactCommon/react/renderer/components/view/YogaLayoutableShadowNode.cpp
+index eaf72fdb2cce606196551822a0e407ae83eca73d..1e57d4aaf305bcd2eee8e09a0c3af7992e716169 100644
+--- a/ReactCommon/react/renderer/components/view/YogaLayoutableShadowNode.cpp
++++ b/ReactCommon/react/renderer/components/view/YogaLayoutableShadowNode.cpp
+@@ -587,11 +587,20 @@ YogaLayoutableShadowNode& YogaLayoutableShadowNode::cloneChildInPlace(
+ void YogaLayoutableShadowNode::setSize(Size size) const {
+   ensureUnsealed();
+ 
++  auto width = yoga::StyleSizeLength::points(size.width);
++  auto height = yoga::StyleSizeLength::points(size.height);
++
++  // Component descriptors call this from `adopt`, which runs on every clone.
++  // Dirtying the node when nothing changed would make every commit that clones
++  // it re-run layout over the whole tree.
+   auto style = yogaNode_.style();
+-  style.setDimension(
+-      yoga::Dimension::Width, yoga::StyleSizeLength::points(size.width));
+-  style.setDimension(
+-      yoga::Dimension::Height, yoga::StyleSizeLength::points(size.height));
++  if (width == style.dimension(yoga::Dimension::Width) &&
++      height == style.dimension(yoga::Dimension::Height)) {
++    return;
++  }
++
++  style.setDimension(yoga::Dimension::Width, width);
++  style.setDimension(yoga::Dimension::Height, height);
+   yogaNode_.setStyle(style);
+   yogaNode_.setDirty(true);
+ }
+@@ -626,6 +635,10 @@ void YogaLayoutableShadowNode::setPositionType(
+   ensureUnsealed();
+ 
+   auto style = yogaNode_.style();
++  if (style.positionType() == yoga::scopedEnum(positionType)) {
++    return;
++  }
++
+   style.setPositionType(yoga::scopedEnum(positionType));
+   yogaNode_.setStyle(style);
+   yogaNode_.setDirty(true);
 diff --git a/ReactCommon/react/renderer/scheduler/Scheduler.cpp b/ReactCommon/react/renderer/scheduler/Scheduler.cpp
 index e74e8025c267022145beca65dbb525b8fc1c7836..1b6123318a0748cb9ef10a36b177b04c72d70ffa 100644
 --- a/ReactCommon/react/renderer/scheduler/Scheduler.cpp
