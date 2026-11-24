@@ -66,12 +66,6 @@ function PostSkeleton({index}: {index: number}) {
       <Skele.Row style={[a.align_start, {gap: 10}]}>
         <Skele.Circle size={AVATAR_SIZE} />
 
-        {/*
-         * flex_1 rather than Col's default flex_grow, so the column is bounded
-         * by the space left after the avatar. With a flex_basis of auto, the
-         * image's w_full resolves against the whole row and pushes the column
-         * past the right edge.
-         */}
         <Skele.Col style={[a.flex_1, a.gap_xs]}>
           <Skele.Row style={[a.gap_sm]}>
             <Skele.Text style={[a.text_md, {width: name}]} />
