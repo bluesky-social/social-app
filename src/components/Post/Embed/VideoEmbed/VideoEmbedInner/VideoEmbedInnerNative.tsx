@@ -129,12 +129,7 @@ export function VideoEmbedInnerNative({
           setIsPlaying(e.nativeEvent.status === 'playing')
         }}
         onTimeRemainingChange={e => {
-          const {timeRemaining} = e.nativeEvent
-          /*
-           * TODO: drop the cast once @bsky.app/video reports `duration`
-           * (bluesky-social/bluesky-video#69). Until then it's undefined.
-           */
-          const {duration} = e.nativeEvent as {duration?: number}
+          const {timeRemaining, duration} = e.nativeEvent
           setTimeRemaining(timeRemaining)
           if (Number.isFinite(timeRemaining) && timeRemaining >= 0) {
             maxTimeRemainingSeconds.current = Math.max(

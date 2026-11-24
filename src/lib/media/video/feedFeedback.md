@@ -57,8 +57,8 @@ somewhere to put them. As of 2026-11-24 Iris drops both. That's Algo's work.
   when unknown. Never zero or estimated. Web reads the media element's
   `duration`, the immersive feed reads expo-video's `sourceLoad` event for
   this item's own source, and native inline embeds read `duration` from
-  `@bsky.app/video`'s progress event (bluesky-social/bluesky-video#69; absent
-  until that ships). Pooled immersive players can miss the load event of a
+  `@bsky.app/video`'s progress event (0.5.0+). Pooled immersive players can
+  miss the load event of a
   preloaded source, in which case it's omitted too.
 - `loop` is which time through the video this is: 0 for the first watch, 1 for
   the second, and so on. Looping, replaying after the end and seeking back to

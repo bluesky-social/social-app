@@ -271,8 +271,8 @@ importers:
         specifier: ^0.8.0
         version: 0.8.0(expo@58.0.23)(react-native@0.88.1(patch_hash=f3600467b577e319e2611f9fa8c97e12826db682ce562f6e5c548439e777d4ce)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)(tlds@1.261.0)
       '@bsky.app/video':
-        specifier: 0.4.2
-        version: 0.4.2(expo@58.0.23)(react-native@0.88.1(patch_hash=f3600467b577e319e2611f9fa8c97e12826db682ce562f6e5c548439e777d4ce)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)
+        specifier: 0.5.0
+        version: 0.5.0(expo@58.0.23)(react-native@0.88.1(patch_hash=f3600467b577e319e2611f9fa8c97e12826db682ce562f6e5c548439e777d4ce)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)
       '@bsky.app/video-compressor':
         specifier: 0.3.2
         version: 0.3.2(expo@58.0.23)(react-native@0.88.1(patch_hash=f3600467b577e319e2611f9fa8c97e12826db682ce562f6e5c548439e777d4ce)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)
@@ -1834,8 +1834,8 @@ packages:
       react: '*'
       react-native: '*'
 
-  '@bsky.app/video@0.4.2':
-    resolution: {integrity: sha512-ENThrqDrDqhymdpBD/yJwUX6sapUJGGS1twrBWIjDXbyFq7ymtSymzpyZXqg1o+cQdY1iLy69D0+Jb2s2Ba52g==}
+  '@bsky.app/video@0.5.0':
+    resolution: {integrity: sha512-KzHr2tRvFAjK/lvHeXvRDYSfi4V9SQHqbdnzwGPDQedKjZzKMKXqaS3e5yr3+FIj9mb2rG557GLZF8VphbEdag==}
     peerDependencies:
       expo: '*'
       react: '*'
@@ -11109,7 +11109,7 @@ snapshots:
       react: 19.3.0
       react-native: 0.88.1(patch_hash=f3600467b577e319e2611f9fa8c97e12826db682ce562f6e5c548439e777d4ce)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1)
 
-  '@bsky.app/video@0.4.2(expo@58.0.23)(react-native@0.88.1(patch_hash=f3600467b577e319e2611f9fa8c97e12826db682ce562f6e5c548439e777d4ce)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)':
+  '@bsky.app/video@0.5.0(expo@58.0.23)(react-native@0.88.1(patch_hash=f3600467b577e319e2611f9fa8c97e12826db682ce562f6e5c548439e777d4ce)(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.3.0)(react@19.3.0)(supports-color@8.1.1))(react@19.3.0)':
     dependencies:
       expo: 58.0.23(patch_hash=928cb4167c53b38ce825fa72af267d9faa046b83e189c8cbee672a7d45c2f089)(f63b31922fb7e58d55a9808c0beddc7f)
       react: 19.3.0
