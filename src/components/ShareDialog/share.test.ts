@@ -170,6 +170,24 @@ describe('openSharePlatform errors', () => {
     expect(error.message).toBe('Unable to open URL: whatsapp:<link>')
   })
 
+  it('redacts the link when the OS repeats it decoded', async () => {
+    mockOS = 'android'
+    const shareUrl = `https://x.com/intent/post?text=${encodeURIComponent(content.url)}`
+    jest
+      .spyOn(Linking, 'openURL')
+      .mockRejectedValueOnce(
+        new Error(
+          `Could not open URL '${shareUrl}': No Activity found to handle Intent { act=android.intent.action.VIEW dat=${decodeURIComponent(shareUrl)} }`,
+        ),
+      )
+    const error = await getError(openSharePlatform('x', content))
+    expect(error.step).toBe('openUrl')
+    expect(error.message).not.toContain('bsky.app')
+    expect(error.message).toBe(
+      "Could not open URL 'https:<link>': No Activity found to handle Intent { act=android.intent.action.VIEW dat=https:<link> }",
+    )
+  })
+
   it('says sending failed when direct share throws on Android', async () => {
     mockOS = 'android'
     jest

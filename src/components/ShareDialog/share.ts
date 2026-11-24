@@ -46,10 +46,26 @@ export class OpenSharePlatformError extends Error {
 }
 
 /**
- * Runs one step of opening an app, so a failure says which step it was. The
- * OS's error message can include the link it tried to open, which may carry
- * a title (e.g. for email), so that's swapped for just its scheme before it's
- * logged.
+ * Swaps the link in an OS error message for just its scheme. The link may
+ * carry a title (e.g. for email), and the message is logged. It's matched as
+ * passed and decoded too, since the OS doesn't always repeat it as given:
+ * Android describes a failed intent with its link decoded, for schemes it
+ * doesn't mask.
+ */
+export function redactLink(message: string, url: string): string {
+  const forms = [url]
+  try {
+    forms.push(decodeURIComponent(url))
+  } catch {
+    // Not valid percent-encoding, so it can only appear as passed
+  }
+  const redacted = `${url.split(':')[0]}:<link>`
+  return forms.reduce((text, form) => text.replaceAll(form, redacted), message)
+}
+
+/**
+ * Runs one step of opening an app, so a failure says which step it was. Any
+ * link in the error is redacted before it's logged (see `redactLink`).
  */
 async function step<T>(
   name: OpenSharePlatformStep,
@@ -60,7 +76,7 @@ async function step<T>(
     return await run()
   } catch (e) {
     let message = e instanceof Error ? e.message : String(e)
-    if (url) message = message.replaceAll(url, `${url.split(':')[0]}:<link>`)
+    if (url) message = redactLink(message, url)
     throw new OpenSharePlatformError(name, message)
   }
 }
